@@ -1,0 +1,17 @@
+import * as THREE from 'three';
+import {KTX2Loader} from 'three/addons/loaders/KTX2Loader.js';
+import {createFarImpostorPrototype} from './far-impostor-prototype.js';
+
+try{
+ const renderer=new THREE.WebGLRenderer({antialias:false}),gl=renderer.getContext(),debug=gl.getExtension('WEBGL_debug_renderer_info');if(!gl.getExtension('EXT_texture_compression_bptc'))throw Error('BC7 unavailable');renderer.setSize(512,512);renderer.outputColorSpace=THREE.SRGBColorSpace;
+ const manifest=await (await fetch('/content/far-vegetation.json')).json(),metadata=manifest.biomes.canyons.find(m=>m.slot===0),response=await fetch('/assets/far-vegetation/canyons-0-day.webp');if(!response.ok)throw Error('Missing source atlas');
+ // Mirrors loadingTexture(..., {flipY:true, premultiplyAlpha:false}).
+ const bitmap=await createImageBitmap(await response.blob(),{imageOrientation:'flipY',premultiplyAlpha:'none',colorSpaceConversion:'none'}),original=new THREE.Texture(bitmap);original.flipY=false;original.needsUpdate=true;
+ const preflipped=new URLSearchParams(location.search).has('preflipped'),loader=new KTX2Loader().detectSupport(renderer),native=await loader.loadAsync(preflipped?'/qa/ktx2-fixture/far-canyons-day-flipped-bc7.ktx2':'/qa/ktx2-fixture/far-canyons-day-bc7.ktx2');
+ const scene=new THREE.Scene(),source={geometry:new THREE.BoxGeometry(),material:new THREE.MeshBasicMaterial()},prototype=createFarImpostorPrototype(source,original,metadata,[{id:'tree',x:0,y:0,z:0,yaw:0,scale:1}],{start:0,end:1,nativeModels:false,prelitAtlas:{day:original,night:original,rotations:8,views:8,resolution:128,premultipliedLinear:true}});scene.add(prototype.impostors);scene.background=new THREE.Color(0x808080);
+ const height=metadata.impostorHeight,camera=new THREE.PerspectiveCamera(35,1,.1,10000);camera.position.set(0,height*.5,height*2.5);camera.lookAt(0,height*.5,0);camera.updateMatrixWorld();const target=new THREE.WebGLRenderTarget(512,512);target.texture.colorSpace=THREE.SRGBColorSpace;
+ function draw(texture){prototype.uniforms.uPrelitDay.value=texture;prototype.uniforms.uPrelitNight.value=texture;renderer.setRenderTarget(target);renderer.render(scene,camera);const pixels=new Uint8Array(512*512*4);renderer.readRenderTargetPixels(target,0,0,512,512,pixels);return pixels;}
+ const a=draw(original),b=draw(native);let sum=0,changed=0;for(let i=0;i<a.length;i+=4){let delta=0;for(let c=0;c<3;c++){const d=Math.abs(a[i+c]-b[i+c]);sum+=d;delta=Math.max(delta,d);}if(delta>10)changed++;}
+ const canvas=document.createElement('canvas'),unflipped=document.createElement('canvas');canvas.width=canvas.height=unflipped.width=unflipped.height=512;const context=canvas.getContext('2d'),raw=unflipped.getContext('2d');window.farBc7Images={};for(const [name,pixels] of [['original',a],['native',b]]){raw.putImageData(new ImageData(new Uint8ClampedArray(pixels),512,512),0,0);context.save();context.translate(0,512);context.scale(1,-1);context.drawImage(unflipped,0,0);context.restore();window.farBc7Images[name]=canvas.toDataURL('image/png');}
+ window.farBc7Result={device:debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER),sourceEncoding:metadata.prelitAlphaEncoding,originalBitmapFlipY:true,nativePreflipped:preflipped,meanRgbError:sum/(512*512*3),pixelsAbove10:changed,pixels:512*512,glError:gl.getError(),scope:'Single canyon tree using the real far-impostor material at one angle, no terrain, lighting cycle or game camera. No performance comparison.'};
+}catch(error){window.farBc7Error=error.stack||String(error);}
