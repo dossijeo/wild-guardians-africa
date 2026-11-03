@@ -1223,3 +1223,18 @@ the diagnostic history retains at most 64 entries, and neither is a performance
 or full-game frequency benchmark. They justify avoiding unconditional tutorial
 invalidations, not declaring an absence of invalidation storms. Twenty-four
 focused tests passed; GPU playback and a safe dynamic-body horizon remain open.
+
+Batch invalidations now also report event types, whether an event directly
+references the observed actor and whether the navigation topology revision
+changed. In one day-31 savanna QA run, three event boundaries contained
+`AnimalTargetUnavailable`; one also contained crop damage/destruction and a
+logical hit. None directly named the observed animal and none changed the
+reported topology revision. This does **not** prove they are irrelevant:
+another body may change its route or a crop event may alter future behavior.
+The choices are to discard only proven informational events, to infer relevance
+from actor IDs and topology alone, or to track spatial and temporal dependencies
+of all bodies. The second is insufficient for the collision guarantee; the
+first needs per-event proof and the third remains necessary for general playback.
+The conservative boundary is unchanged and does not trigger replanning. This
+single run used direct QA input on Edge reporting a GTX 1660, not a full-campaign
+frequency, collision or performance benchmark.
