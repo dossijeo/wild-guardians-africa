@@ -736,6 +736,21 @@ even if the old plan's state or resident chunks are stale. The native postgame
 test verifies this after a successful prepared application. New commands still
 require all preparation checks; the Worker UI remains guarded.
 
+An experimental `foundVillage` authority command now performs isolated
+preparation, loads its required missing chunks, applies the prepared center
+assignments and checks the complete resulting snapshot and ordered events before
+publication. A mismatch or application exception fails the Worker rather than
+publishing a partial result; this is fail-closed, not rollback or automatic
+recovery. Active physics and cinematic pauses reject the command. The UI uses
+it only with `qa-worker-village`; otherwise its existing Worker guard remains.
+The native authority test covers a missing site chunk, duplicate replay and a
+different-culture rejection. `tools/experiments/audit_worker_village.mjs --ui`
+also confirmed founding and IndexedDB save through the actual UI in one
+synthetic desert postgame, with direct QA placement. It does not cover active
+physics, real pointer placement, other cultures, concurrent input, recovery
+after a failed commit, a full campaign or render-frame performance. Preview
+still runs on the presentation thread; the command is not production-ready.
+
 When a microevent holds night speed, the game now sends the corresponding
 fast-forward policy to the installed Worker runtime, and restores it when the
 hold ends. Only changes are sent. Unit tests cover policy transitions and the

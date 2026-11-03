@@ -9,6 +9,7 @@ import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-se
 import {createSpatialNavigationMovement,SpatialChunkUnavailable} from '../src/world/wild-engine/spatial-navigation-movement.js';
 import {centerServicePoint} from '../src/world/centers.js';
 import {prepareVillageIsolated,applyVillageIsolatedPlan} from '../src/simulation/isolated-village-preflight.js';
+import {createSimulationAuthority} from '../src/simulation/simulation-authority.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL(
   '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
@@ -83,9 +84,18 @@ test('a paid native postgame village gets a valid entry and survives reload',asy
     }finally{sparse.dispose();}
     const started=performance.now(),prepared=prepareVillageIsolated(module,source,[...loaded.keys()],{id:'native-second-village',culture:'suajili',...site,payload},{bounds:[x-120,z-120,x+120,z+120]}),preparationMs=performance.now()-started;
     assert.equal(prepared.value,true);assert.deepEqual(prepared.addedChunks,[]);
+    const authority=createSimulationAuthority(module,source,[...loaded.keys()],{navigationView:{bounds:[x-120,z-120,x+120,z+120],eye:{x:0,z:0},target:{x:0,z:0}}});
+    try{
+      const result=authority.execute({sequence:1,kind:'foundVillage',id:'native-second-village',culture:'suajili',...site,payload});
+      assert.equal(result.value,true);assert.equal(result.snapshot,prepared.snapshot);assert.deepEqual(result.events,prepared.events);
+      const replay=authority.execute({sequence:2,kind:'foundVillage',id:'native-second-village',culture:'suajili',...site,payload});assert.equal(replay.value,false);assert.equal(replay.snapshot,result.snapshot);assert.deepEqual(replay.events,[]);
+      const wrong=authority.execute({sequence:3,kind:'foundVillage',id:'wrong-culture',culture:'mapungubwe',...site,payload});assert.equal(wrong.value,false);assert.match(wrong.rejection,/cultura de la partida/);assert.equal(wrong.snapshot,result.snapshot);assert.deepEqual(wrong.events,[]);
+    }finally{authority.dispose();}
     const siteChunk=`${Math.floor((site.x+24)/48)},${Math.floor((site.z+24)/48)}`;
     const retried=prepareVillageIsolated(module,source,[...loaded.keys()].filter(key=>key!==siteChunk),{id:'native-second-village',culture:'suajili',...site,payload},{bounds:[x-120,z-120,x+120,z+120]});
     assert.ok(retried.addedChunks.includes(siteChunk),'preflight loads the missing site region');assert.equal(retried.snapshot,prepared.snapshot);assert.deepEqual(retried.events,prepared.events);
+    const sparseAuthority=createSimulationAuthority(module,source,[...loaded.keys()].filter(key=>key!==siteChunk),{navigationView:{bounds:[x-120,z-120,x+120,z+120],eye:{x:0,z:0},target:{x:0,z:0}}});
+    try{const result=sparseAuthority.execute({sequence:1,kind:'foundVillage',id:'native-second-village',culture:'suajili',...site,payload});assert.equal(result.value,true);assert.equal(result.snapshot,prepared.snapshot);assert.deepEqual(result.events,prepared.events);assert.ok(result.commandLoadedChunks.includes(siteChunk));}finally{sparseAuthority.dispose();}
     const plannedState=deserialize(source),plannedLoaded=new Map(),plannedSession=createSpatialGameSession(module,plannedState,{loaded:()=>plannedLoaded,onData:data=>plannedLoaded.set(`${data.cx},${data.cz}`,data)});
     try{
       for(const key of loaded.keys()){const [px,pz]=key.split(',').map(Number);plannedSession.core.addChunk(px,pz);plannedLoaded.set(key,{...plannedSession.core.chunkPayload(),terrainRevision:0});}
