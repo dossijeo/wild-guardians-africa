@@ -32,9 +32,9 @@ test('hosted runtime rejects startup and command results that precede their publ
 });
 test('diagnostic acknowledgements follow successful publication and are disabled otherwise',async()=>{
  const enabled=setup({diagnostics:true}),start=enabled.runtime.start();enabled.worker.onmessage({data:{kind:'publication',session:'s',publication:{sequence:1,elapsed:0}}});
- assert.deepEqual(enabled.messages.at(-1),{kind:'publicationAck',session:'s',sequence:1});assert.deepEqual(enabled.seen,[1]);
+ assert.deepEqual(enabled.messages.at(-1),{kind:'publicationAck',session:'s',sequence:1});assert.deepEqual(enabled.seen,[1]);assert.equal(enabled.runtime.status().reception.count,1);assert.ok(enabled.runtime.status().reception.mean>=0);
  enabled.worker.onmessage({data:{kind:'started',session:'s',sequence:1,status:{}}});await start;enabled.runtime.dispose();
- const disabled=setup(),ready=disabled.runtime.start();disabled.worker.onmessage({data:{kind:'publication',session:'s',publication:{sequence:1,elapsed:0}}});assert.equal(disabled.messages.length,1);
+ const disabled=setup(),ready=disabled.runtime.start();disabled.worker.onmessage({data:{kind:'publication',session:'s',publication:{sequence:1,elapsed:0}}});assert.equal(disabled.messages.length,1);assert.equal(disabled.runtime.status().reception,undefined);
  disabled.worker.onmessage({data:{kind:'started',session:'s',sequence:1,status:{}}});await ready;disabled.runtime.dispose();
 });
 test('folded camera confirmation returns the original unchanged receipt',async()=>{

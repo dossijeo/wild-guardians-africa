@@ -123,7 +123,7 @@ const marks=[.065,.27,.53,.78,1];
 const profileSources={olderMale:'Ganadero_Mayor',olderFemale:'Amara_Mayor',youngMale:'Kofi_Joven',youngFemale:'Amara_Joven'};
 const animalSources={warthog:'Facoquero',hyena:'Hiena',buffalo:'Bufalo',lion:'Leon',rhino:'Rinoceronte'};
 export class WorldScene {
-  createConfirmedReceiver(session){return createConfirmedSceneReceiver(this.state,session,this);}
+  createConfirmedReceiver(session){return createConfirmedSceneReceiver(this.state,session,this,{repeatDecode:import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-worker-double-decode')});}
   createWorkerRuntime(options){return createWorkerGameRuntime({...options,world:this});}
   constructor(canvas,onPick,{approvedVisuals=false,visualSearch=globalThis.location?.search??''}={}) {
     this.approvedVisuals=approvedVisuals;this.requestedVisualSearch=visualSearch;

@@ -10,9 +10,9 @@ function validMotionTrace(t){
 }
 // Applies a single ordered authority publication to the existing scene state.
 // It does not advance simulation or install a second physics owner.
-export function createConfirmedSceneReceiver(state,session,world){
+export function createConfirmedSceneReceiver(state,session,world,{repeatDecode=false}={}){
  if(!world||world.state!==state||!(world.mixers instanceof Map))throw TypeError('Invalid confirmed scene');
- let pending=null,decoded=null;const receiver=createConfirmedStateReceiver(state,session,{decodeSnapshot:text=>{if(!decoded||decoded.text!==text)throw Error('Missing validated scene snapshot');return decoded.value;},onReconciled:()=>{
+ let pending=null,decoded=null;const receiver=createConfirmedStateReceiver(state,session,{decodeSnapshot:text=>{if(!decoded||decoded.text!==text)throw Error('Missing validated scene snapshot');return repeatDecode?deserializeConfirmedState(text):decoded.value;},onReconciled:()=>{
   if(!pending)throw Error('Missing confirmed scene poses');const previous=world.confirmedAnimalPoses??new Map();for(const id of previous.keys())if(!pending.has(id)){const rig=world.mixers.get(id);if(rig)rig.key=null;}world.confirmedAnimalPoses=pending;
  }});
  return {
