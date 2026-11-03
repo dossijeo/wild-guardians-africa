@@ -448,6 +448,7 @@ function toggleAwakening(){
 }
 function confirmAwakening(){
   if(tool?.kind!=='awakening'||!tool.targetId)return;
+  if(world?.workerRuntime){const owner=world,ownerState=state,ownerTool=tool;return owner.workerRuntime.submit({kind:'bless',id:commandId(),targetId:ownerTool.targetId}).then(async result=>{if(owner!==world||ownerState!==state)return;if(result.rejection)throw Error(result.rejection);if(result.value){if(tool===ownerTool)cancelTool();await save();}});}
   if(Game.bless(state,commandId(),tool.targetId)){cancelTool();save();}
 }
 function startDueCinematic(){

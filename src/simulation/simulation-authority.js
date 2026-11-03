@@ -1,6 +1,9 @@
 import {deserialize} from '../persistence/snapshots.js';
 import {serializeConfirmedState,confirmedStateSaveAvailable} from './confirmed-live-state.js';
-import {advanceReal,cast,previewSpell,plant,PlantPlacementError,validatePlant,validatePlantPurchase,harvest,requestRepair,validateHarvest,validateRepair,hire,hireAdditional,validateHire,validateHireAdditional,openInitialHiring,wallCapacity,previewWallChain,buildWallChain,placeStructure,prepareStructurePlacement,StructurePlacementError,observeGameEvents,pause,removeWall,resume} from './game.js';
+import {advanceReal,cast,previewSpell,plant,PlantPlacementError,validatePlant,validatePlantPurchase,harvest,requestRepair,validateHarvest,validateRepair,hire,hireAdditional,validateHire,validateHireAdditional,openInitialHiring,wallCapacity,previewWallChain,buildWallChain,placeStructure,prepareStructurePlacement,StructurePlacementError,observeGameEvents,pause,removeWall,resume,bless} from './game.js';
+import {previewBlessing} from './blessings.js';
+import {AWAKENINGS} from './awakening-config.js';
+import {awakeningState} from './awakenings.js';
 import {permission} from './rules.js';
 import {ensurePurchaseBudget,RESERVE_MESSAGE} from './budget.js';
 import {createSpatialGameSession} from '../world/wild-engine/spatial-game-session.js';
@@ -110,6 +113,11 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      if(!rejection&&!duplicate&&!permission(game,'plant'))rejection='Esta acción no está disponible ahora';
      if(!rejection&&!duplicate)try{validatePlantPurchase(game,command.species);}catch(error){if(error?.code!=='hiring-reserve'&&error?.message!=='Cultivo desconocido')throw error;rejection=error.message;}
      value=rejection?false:plant(game,command.id,command.species,target.x,target.z,nav);
+    }else if(command.kind==='bless'){
+     if(typeof command.id!=='string'||!command.id||typeof command.targetId!=='string'||!command.targetId)throw TypeError('Invalid blessing command');
+     const duplicate=game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id);
+     if(!duplicate){if(!permission(game,'awakening'))rejection='Esta acción no está disponible ahora';else{const draft=previewBlessing(game,command.targetId);if(!draft.valid)rejection=draft.reason;else{const a=awakeningState(game);if(a.enabled===false||a.progress<AWAKENINGS.maximum)rejection='El Despertar todavía está recargando.';}}}
+     value=rejection?false:bless(game,command.id,command.targetId);
     }else if(command.kind==='harvest'||command.kind==='requestRepair'){
      if(typeof command.id!=='string'||!command.id||typeof command.targetId!=='string'||!command.targetId)throw TypeError('Invalid farm command');
      try{(command.kind==='harvest'?validateHarvest:validateRepair)(game,command.targetId);}catch(error){rejection=error.message;}

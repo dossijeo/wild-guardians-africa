@@ -3,12 +3,13 @@ import {createSimulation} from './mobility-worker-simulation-core.js';
 import {serialize} from '../../src/persistence/snapshots.js';
 import {serializeConfirmedState} from '../../src/simulation/confirmed-live-state.js';
 import {cropSpec} from '../../src/simulation/rules.js';
-import {harvest,requestRepair,pause,resume,observeGameEvents} from '../../src/simulation/game.js';
+import {harvest,requestRepair,pause,resume,observeGameEvents,bless} from '../../src/simulation/game.js';
+import {awakeningState} from '../../src/simulation/awakenings.js';
 import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
 window.audit=async()=>{
  const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
  const fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),{game,nav}=fixture.diagnosticWorld();game.raid=null;game.time=100;game.pauses=[];
- const plant=game.plants.find(p=>p.alive),center=game.structures.find(s=>s.kind==='center'&&s.status==='intact');if(!plant||!center)throw Error('Missing farm fixture');plant.growth=cropSpec(plant.species).growth_seconds;center.hp=Math.max(1,center.maxHp-1);nav.setState(game);
+ const plant=game.plants.find(p=>p.alive),center=game.structures.find(s=>s.kind==='center'&&s.status==='intact');if(!plant||!center)throw Error('Missing farm fixture');plant.growth=cropSpec(plant.species).growth_seconds;center.hp=Math.max(1,center.maxHp-1);awakeningState(game).progress=100;nav.setState(game);
  const source=serialize(game),client=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,session:'farm-commands'}),events=[],stop=observeGameEvents(game,e=>events.push(structuredClone(e)));let sequence=0;
  try{
   await client.ready;
@@ -18,11 +19,17 @@ window.audit=async()=>{
   const duplicate=await compare({kind:'harvest',id:'harvest-1',targetId:plant.id},()=>harvest(game,'harvest-1',plant.id));
   const badRepair=await compare({kind:'requestRepair',id:'bad-repair',targetId:'missing'},()=>requestRepair(game,'bad-repair','missing'));
   const goodRepair=await compare({kind:'requestRepair',id:'repair-1',targetId:center.id},()=>requestRepair(game,'repair-1',center.id));
+  const badBless=await compare({kind:'bless',id:'bad-bless',targetId:'missing'},()=>bless(game,'bad-bless','missing'));
+  const goodBless=await compare({kind:'bless',id:'bless-1',targetId:plant.id},()=>bless(game,'bless-1',plant.id));
+  const duplicateBless=await compare({kind:'bless',id:'bless-1',targetId:plant.id},()=>bless(game,'bless-1',plant.id));
+  const nextPlant=game.plants.find(p=>p.alive&&p.id!==plant.id);if(!nextPlant)throw Error('Missing second plant');
+  const recharge=await compare({kind:'bless',id:'bless-recharge',targetId:nextPlant.id},()=>bless(game,'bless-recharge',nextPlant.id));
   await compare({kind:'pause',reason:'test-menu'},()=>{pause(game,'test-menu');return null;});
   const paused=await compare({kind:'requestRepair',id:'paused-repair',targetId:center.id},()=>requestRepair(game,'paused-repair',center.id));
+  const pausedBless=await compare({kind:'bless',id:'paused-bless',targetId:plant.id},()=>bless(game,'paused-bless',plant.id));
   await compare({kind:'resume',reason:'test-menu'},()=>{resume(game,'test-menu');return null;});
-  if(!badHarvest.rejection||!goodHarvest.value||duplicate.value!==false||!badRepair.rejection||!goodRepair.value||!paused.rejection||client.status().state!=='ready')throw Error('Incomplete farm command coverage');
-  return {sequence,harvestEvents:goodHarvest.events.map(e=>e.type),repairEvents:goodRepair.events.map(e=>e.type),invalidHarvest:badHarvest.rejection,invalidRepair:badRepair.rejection,pausedRepair:paused.rejection,duplicate:duplicate.value,scope:'Programmatic commands on a modified peaceful island-mangrove capture, compared against direct Game functions on the main thread. No player UI, save/restore, long-running campaign or production integration.'};
+  if(!badHarvest.rejection||!goodHarvest.value||duplicate.value!==false||!badRepair.rejection||!goodRepair.value||!badBless.rejection||!goodBless.value||duplicateBless.value!==false||!recharge.rejection||!pausedBless.rejection||!paused.rejection||client.status().state!=='ready')throw Error('Incomplete farm command coverage');
+  return {sequence,harvestEvents:goodHarvest.events.map(e=>e.type),repairEvents:goodRepair.events.map(e=>e.type),blessingEvents:goodBless.events.map(e=>e.type),invalidBlessing:badBless.rejection,recharge:recharge.rejection,pausedBlessing:pausedBless.rejection,duplicateBlessing:duplicateBless.value,invalidHarvest:badHarvest.rejection,invalidRepair:badRepair.rejection,pausedRepair:paused.rejection,duplicate:duplicate.value,scope:'Programmatic commands on a modified peaceful island-mangrove capture, compared against direct Game functions on the main thread. No player UI, save/restore, long-running campaign or production integration.'};
  }finally{stop();client.dispose();fixture.dispose();}
 };window.ready=true;
 </script>

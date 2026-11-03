@@ -512,6 +512,14 @@ The diagnostic peak was 119 unacknowledged publications in that run; this
 includes transit and startup, and is not a memory measurement. There is no
 controlled before/after timing comparison, so no FPS improvement is claimed.
 
+The experimental game now submits awakening blessings to the authoritative
+Worker rather than mutating the presentation copy. The existing mangrove
+command comparison checks a plant blessing and its event, invalid target,
+recharge, pause and duplicate against direct game execution, including the
+confirmed snapshot. This does not exercise the player UI or a blessed wall in
+the Worker. Village founding, postgame actions and microevent economy still
+have main-thread authority paths and prevent production activation.
+
 Optional `qa-worker-diagnostics` records time inside the simulation Worker.
 In these individual runs the animal's asynchronous physics admission took
 721 ms (16-step run) and 702 ms (one-step run); execution of the subsequent
