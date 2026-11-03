@@ -88,15 +88,10 @@
     }
   ],
   "duplicateRejected": true,
-  "clientQueueMatched": false,
-  "reconstructionDifferences": [
-    {
-      "path": "/raid/animals/7/raidWait/epoch",
-      "worker": "5,536",
-      "reference": "5,540"
-    }
-  ],
+  "clientQueueMatched": true,
+  "reconstructionDifferences": [],
+  "postTransferSteps": 200,
   "shieldCommandMatched": true,
   "renderer": "none",
-  "scope": "Real simulation and Wild Engine from one restored island-mangrove raid snapshot, 24 explicitly supplied chunks, ordered advances/pause/resume, shield, duplicate shield and snapshot. The second client initializes after shield and is compared to the uninterrupted reference, exposing native reconstruction differences when present. No input integration, physics manager or rendered game."
+  "scope": "Real simulation and Wild Engine from one restored island-mangrove raid snapshot, 24 explicitly supplied chunks, ordered advances/pause/resume, shield, duplicate shield and snapshot. The second client initializes after shield with wait bindings and is compared to the uninterrupted reference for 200 further intervals; local native wait epoch values are compared by current/stale meaning. No input integration, physics manager or rendered game."
 }

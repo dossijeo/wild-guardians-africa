@@ -6,7 +6,7 @@ self.onmessage=async ({data})=>{
   if(data?.kind==='initialize'){
    if(authority||initializing)throw Error('Simulation authority already initialized');if(typeof data.session!=='string'||!data.session)throw TypeError('Invalid session');initializing=true;session=data.session;
    const response=await fetch(wasmUrl);if(!response.ok)throw Error(`Wild Engine fetch failed: ${response.status}`);
-   const module=await WebAssembly.compile(await response.arrayBuffer());authority=createSimulationAuthority(module,data.snapshot,data.chunkKeys);
+   const module=await WebAssembly.compile(await response.arrayBuffer());authority=createSimulationAuthority(module,data.snapshot,data.chunkKeys,{raidWaitBindings:data.raidWaitBindings??null});
    postMessage({kind:'ready',session:data.session});return;
   }
   if(data?.session!==session)throw Error('Simulation session mismatch');
