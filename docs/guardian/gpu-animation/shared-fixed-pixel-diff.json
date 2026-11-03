@@ -1,5 +1,5 @@
 {
-  "scope": "Two independently loaded paused island-mangrove sessions after the same real-time camera route and settled preparation. Clock fixed only for capture. Repeat controls estimate same-session noise. Identical camera does not guarantee identical full visual or GPU state; no motion, context loss or performance claim.",
+  "scope": "Four independently loaded paused island-mangrove sessions after the same real-time camera route and settled preparation. Clock fixed only for capture. Repeat controls estimate same-session noise. Identical camera does not guarantee identical full visual or GPU state; no motion, context loss or performance claim.",
   "result": {
     "originalRepeat": {
       "width": 1280,
@@ -17,6 +17,15 @@
         "3:0": 1
       }
     },
+    "original2Repeat": {
+      "width": 1280,
+      "height": 720,
+      "changed": 1505,
+      "over3": 0,
+      "max": 2,
+      "bounds": null,
+      "tiles": {}
+    },
     "sharedRepeat": {
       "width": 1280,
       "height": 720,
@@ -32,6 +41,22 @@
       "tiles": {
         "8:0": 1,
         "3:0": 1
+      }
+    },
+    "shared2Repeat": {
+      "width": 1280,
+      "height": 720,
+      "changed": 1745,
+      "over3": 1,
+      "max": 5,
+      "bounds": [
+        1069,
+        23,
+        1069,
+        23
+      ],
+      "tiles": {
+        "8:0": 1
       }
     },
     "between": {
@@ -51,6 +76,105 @@
         "5:0": 123,
         "8:0": 2,
         "9:0": 263,
+        "8:1": 11,
+        "9:1": 3
+      }
+    },
+    "originalSessions": {
+      "width": 1280,
+      "height": 720,
+      "changed": 1464,
+      "over3": 698,
+      "max": 183,
+      "bounds": [
+        755,
+        14,
+        1279,
+        94
+      ],
+      "tiles": {
+        "6:0": 225,
+        "5:0": 123,
+        "9:0": 349,
+        "8:0": 1
+      }
+    },
+    "sharedSessions": {
+      "width": 1280,
+      "height": 720,
+      "changed": 1298,
+      "over3": 612,
+      "max": 183,
+      "bounds": [
+        420,
+        14,
+        1279,
+        63
+      ],
+      "tiles": {
+        "6:0": 225,
+        "5:0": 122,
+        "9:0": 263,
+        "3:0": 1,
+        "8:0": 1
+      }
+    },
+    "crossA2B": {
+      "width": 1280,
+      "height": 720,
+      "changed": 496,
+      "over3": 101,
+      "max": 63,
+      "bounds": [
+        1069,
+        23,
+        1279,
+        239
+      ],
+      "tiles": {
+        "8:0": 1,
+        "9:0": 86,
+        "8:1": 11,
+        "9:1": 3
+      }
+    },
+    "crossAB2": {
+      "width": 1280,
+      "height": 720,
+      "changed": 645,
+      "over3": 16,
+      "max": 63,
+      "bounds": [
+        420,
+        23,
+        1276,
+        239
+      ],
+      "tiles": {
+        "8:0": 1,
+        "3:0": 1,
+        "8:1": 11,
+        "9:1": 3
+      }
+    },
+    "crossA2B2": {
+      "width": 1280,
+      "height": 720,
+      "changed": 1517,
+      "over3": 713,
+      "max": 183,
+      "bounds": [
+        420,
+        14,
+        1279,
+        239
+      ],
+      "tiles": {
+        "6:0": 225,
+        "5:0": 122,
+        "8:0": 2,
+        "9:0": 349,
+        "3:0": 1,
         "8:1": 11,
         "9:1": 3
       }
