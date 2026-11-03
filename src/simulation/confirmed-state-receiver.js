@@ -1,6 +1,6 @@
 import {deserializeConfirmedState} from './confirmed-live-state.js';
 import {notifyConfirmedPresentationEvent} from '../simulation/game.js';
-import {hasQuietPhysics} from './host-publication-queue.js';
+import {physicsOwners} from './host-publication-queue.js';
 
 function isRecord(value){return value!==null&&typeof value==='object'&&!Array.isArray(value);}
 function keyed(array){return array.length>0&&array.every(item=>isRecord(item)&&typeof item.id==='string')&&new Set(array.map(item=>item.id)).size===array.length;}
@@ -40,7 +40,7 @@ export function createConfirmedStateReceiver(state,session,{onReconciled=null}={
    if(!Number.isSafeInteger(message.sequence)||message.sequence<1)return {accepted:false,reason:'sequence'};
    if(message.sequence<=sequence)return {accepted:false,reason:'stale'};
    if(!Number.isSafeInteger(firstSequence)||firstSequence!==sequence+1||firstSequence>message.sequence)return {accepted:false,reason:'gap'};
-   if(firstSequence!==message.sequence&&(!Array.isArray(message.events)||message.events.length||!hasQuietPhysics(message)))throw TypeError('Invalid coalesced publication');
+   if(firstSequence!==message.sequence&&(!Array.isArray(message.events)||message.events.length||physicsOwners(message)===null))throw TypeError('Invalid coalesced publication');
    if(typeof message.snapshot!=='string'||!Array.isArray(message.events))throw TypeError('Invalid confirmed state');
    const next=deserializeConfirmedState(message.snapshot);if(next.elapsed<lastElapsed)throw Error('Confirmed simulation time moved backwards');if(next.slotId!==state.slotId||!Number.isSafeInteger(next.sequence)||next.sequence<state.sequence)throw Error('Confirmed simulation identity or sequence changed');
    let nextEvent=Math.max(lastEvent,state.sequence-1);for(const event of message.events){const match=typeof event?.id==='string'?/^event-(0|[1-9]\d*)$/.exec(event.id):null,n=match?Number(match[1]):NaN;if(!Number.isSafeInteger(n)||n<=nextEvent||n>=next.sequence||typeof event.type!=='string')throw TypeError('Invalid confirmed event sequence');nextEvent=n;}
