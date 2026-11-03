@@ -21,5 +21,12 @@ try{
  if(!target)throw Error('No visible clickable animal');await page.mouse.click(target.x,target.y);
  await page.waitForFunction(()=>{const q=window.wildGuardiansWorkerQa();return q.events.includes('GuardianMagicHit')||q.status?.fault;},null,{timeout:60000});
  const hit=await page.evaluate(()=>window.wildGuardiansWorkerQa());if(hit.status?.fault||!hit.events.includes('GuardianMagicHit')||errors.length)throw Error('Attack failed: '+JSON.stringify({hit,errors}));
- console.log(JSON.stringify({animals:hit.animals,initialElapsed:start.qa.elapsed,finalElapsed:hit.elapsed,readyActors:end.visibility.actors.filter(a=>a.ready).length,sequence:hit.status.confirmedSequence,attacked:target.id,scope:'Opt-in real game using a day-31 savanna capture: raid starts, and a real pointer attack is confirmed by the Worker. No save/restore, full raid completion or performance comparison.'}));
+ let completed=null;if(process.argv.includes('--complete')){
+  for(let i=0;i<12;i++){
+   await page.waitForTimeout(15000);const q=await page.evaluate(()=>window.wildGuardiansWorkerQa());console.log('RAID',JSON.stringify({elapsed:q.elapsed,time:q.time,animals:q.animals,sequence:q.status?.confirmedSequence,fault:q.status?.fault}));
+   if(q.status?.fault||errors.length)throw Error('Raid failed: '+JSON.stringify({q,errors}));if(!q.animals&&q.events.includes('RaidEnded')){completed=q;break;}
+  }
+  if(!completed)throw Error('Raid did not complete within the test window: '+JSON.stringify(await page.evaluate(()=>window.wildGuardiansWorkerQa())));
+ }
+ console.log(JSON.stringify({animals:hit.animals,initialElapsed:start.qa.elapsed,finalElapsed:(completed??hit).elapsed,readyActors:end.visibility.actors.filter(a=>a.ready).length,sequence:(completed??hit).status.confirmedSequence,attacked:target.id,completed:!!completed,scope:'Opt-in real game using a day-31 savanna capture and a real pointer attack; no save/restore, full deterministic comparison or performance comparison.'}));
 }finally{await browser.close();}

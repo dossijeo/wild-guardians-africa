@@ -339,6 +339,15 @@ determinism, saturation, multiple impacts and all biomes remain unverified.
 The tutorial currently causes frequent Worker publications. No claim of a
 global frame-time improvement follows from these tests.
 
+With the optional `--complete` argument, `audit_worker_main_raid.mjs` also
+waits for the actual `RaidEnded` event. In one headless Edge/SwiftShader run,
+the day-31 savanna capture spawned 13 animals, accepted a pointer attack and
+reached `RaidEnded` at simulation elapsed 176.69 s without a reported Worker
+fault. This is one functional run, not a deterministic A/B comparison or proof
+of contact fidelity, active-physics saving, other scenarios or performance.
+The test observed thousands of ordered Worker publications during the raid;
+the cause and total frame impact have not yet been measured.
+
 The application save function now uses ordered Worker checkpoints whenever a
 runtime is installed, including the action paths that requested a Worker save.
 An unavailable active-physics checkpoint reports failure and prevents the
