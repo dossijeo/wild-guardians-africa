@@ -721,6 +721,15 @@ make `nav.setState` atomic or prove the plan against different native residency,
 physics, multiple centers or concurrent Worker commands. It is not connected to
 the Worker UI, and the existing guard remains in place.
 
+The experimental application additionally requires an exact match between the
+resident chunk keys reported by the caller and those used by the successful
+isolated preparation, and checks the center assignments against that result.
+The native test rejects missing and extra chunks and altered assignments before
+changing the authoritative state. Matching keys are not proof that native
+revisions or chunk contents match, and the caller must supply the true resident
+set. Native installation is still not atomic; this remains disconnected from
+the Worker command path.
+
 When a microevent holds night speed, the game now sends the corresponding
 fast-forward policy to the installed Worker runtime, and restores it when the
 hold ends. Only changes are sent. Unit tests cover policy transitions and the

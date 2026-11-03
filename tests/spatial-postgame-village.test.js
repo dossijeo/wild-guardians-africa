@@ -90,11 +90,15 @@ test('a paid native postgame village gets a valid entry and survives reload',asy
     try{
       for(const key of loaded.keys()){const [px,pz]=key.split(',').map(Number);plannedSession.core.addChunk(px,pz);plannedLoaded.set(key,{...plannedSession.core.chunkPayload(),terrainRevision:0});}
       const plannedNav=createSpatialNavigationMovement(plannedSession,plannedState);plannedNav.setActiveBounds([x-120,z-120,x+120,z+120]);
-      const stale=deserialize(source);stale.elapsed+=.1;assert.throws(()=>applyVillageIsolatedPlan(stale,plannedNav,prepared),/Stale/);
+      const residentChunks=[...plannedLoaded.keys()],stale=deserialize(source);stale.elapsed+=.1;assert.throws(()=>applyVillageIsolatedPlan(stale,plannedNav,prepared,{residentChunks}),/Stale/);
+      assert.throws(()=>applyVillageIsolatedPlan(plannedState,plannedNav,prepared,{residentChunks:residentChunks.slice(1)}),/Stale/);
+      assert.throws(()=>applyVillageIsolatedPlan(plannedState,plannedNav,prepared,{residentChunks:[...residentChunks,'999,999']}),/Stale/);
+      const altered=structuredClone(prepared);altered.preparedCenters[0].villageId='forged';assert.throws(()=>applyVillageIsolatedPlan(plannedState,plannedNav,altered,{residentChunks}),/Invalid village preparation/);
+      assert.equal(serialize(plannedState),source,'rejected plans must not mutate the authority');
       const setState=plannedNav.setState.bind(plannedNav),path=plannedNav.path.bind(plannedNav);let committed=false;
       plannedNav.setState=s=>{const result=setState(s);committed=true;return result;};plannedNav.path=(a,b,...args)=>{if(committed)throw Error('Unexpected post-commit route');return path(a,b,...args);};
       const events=[],stop=Game.observeGameEvents(plannedState,event=>events.push(structuredClone(event)));
-      try{assert.equal(applyVillageIsolatedPlan(plannedState,plannedNav,prepared),true);}finally{stop();}
+      try{assert.equal(applyVillageIsolatedPlan(plannedState,plannedNav,prepared,{residentChunks}),true);}finally{stop();}
       assert.equal(serialize(plannedState),prepared.snapshot);assert.deepEqual(events,prepared.events);
     }finally{plannedSession.dispose();}
     assert.throws(()=>prepareVillageIsolated(module,source,[...loaded.keys()].filter(key=>key!==siteChunk),{id:'native-second-village',culture:'suajili',...site,payload},{bounds:[x-120,z-120,x+120,z+120],maxAdded:0}),SpatialChunkUnavailable,'preflight respects the missing-region limit');
