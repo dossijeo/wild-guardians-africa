@@ -710,6 +710,17 @@ authority remained unchanged. This is an injected failure, not evidence that a
 particular live site actually requests that missing chunk; it demonstrates why
 retrying the existing mutating command is not a safe Worker transaction.
 
+An isolated preparation can now provide its resulting center assignments to an
+experimental application path. It checks that the authoritative serialized
+state still equals the preparation input and validates the center list before
+charging, then avoids center route queries after native installation. In the
+native desert fixture this produced the same complete state and ordered events
+as the original, even with post-install route calls forced to fail; a stale plan
+was rejected. Nineteen native and village acceptance tests passed. This does not
+make `nav.setState` atomic or prove the plan against different native residency,
+physics, multiple centers or concurrent Worker commands. It is not connected to
+the Worker UI, and the existing guard remains in place.
+
 When a microevent holds night speed, the game now sends the corresponding
 fast-forward policy to the installed Worker runtime, and restores it when the
 hold ends. Only changes are sent. Unit tests cover policy transitions and the

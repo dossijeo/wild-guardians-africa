@@ -8,7 +8,7 @@ import {createSpatialCampaignOpening} from '../tools/experiments/spatial-campaig
 import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement,SpatialChunkUnavailable} from '../src/world/wild-engine/spatial-navigation-movement.js';
 import {centerServicePoint} from '../src/world/centers.js';
-import {prepareVillageIsolated} from '../src/simulation/isolated-village-preflight.js';
+import {prepareVillageIsolated,applyVillageIsolatedPlan} from '../src/simulation/isolated-village-preflight.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL(
   '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
@@ -86,6 +86,17 @@ test('a paid native postgame village gets a valid entry and survives reload',asy
     const siteChunk=`${Math.floor((site.x+24)/48)},${Math.floor((site.z+24)/48)}`;
     const retried=prepareVillageIsolated(module,source,[...loaded.keys()].filter(key=>key!==siteChunk),{id:'native-second-village',culture:'suajili',...site,payload},{bounds:[x-120,z-120,x+120,z+120]});
     assert.ok(retried.addedChunks.includes(siteChunk),'preflight loads the missing site region');assert.equal(retried.snapshot,prepared.snapshot);assert.deepEqual(retried.events,prepared.events);
+    const plannedState=deserialize(source),plannedLoaded=new Map(),plannedSession=createSpatialGameSession(module,plannedState,{loaded:()=>plannedLoaded,onData:data=>plannedLoaded.set(`${data.cx},${data.cz}`,data)});
+    try{
+      for(const key of loaded.keys()){const [px,pz]=key.split(',').map(Number);plannedSession.core.addChunk(px,pz);plannedLoaded.set(key,{...plannedSession.core.chunkPayload(),terrainRevision:0});}
+      const plannedNav=createSpatialNavigationMovement(plannedSession,plannedState);plannedNav.setActiveBounds([x-120,z-120,x+120,z+120]);
+      const stale=deserialize(source);stale.elapsed+=.1;assert.throws(()=>applyVillageIsolatedPlan(stale,plannedNav,prepared),/Stale/);
+      const setState=plannedNav.setState.bind(plannedNav),path=plannedNav.path.bind(plannedNav);let committed=false;
+      plannedNav.setState=s=>{const result=setState(s);committed=true;return result;};plannedNav.path=(a,b,...args)=>{if(committed)throw Error('Unexpected post-commit route');return path(a,b,...args);};
+      const events=[],stop=Game.observeGameEvents(plannedState,event=>events.push(structuredClone(event)));
+      try{assert.equal(applyVillageIsolatedPlan(plannedState,plannedNav,prepared),true);}finally{stop();}
+      assert.equal(serialize(plannedState),prepared.snapshot);assert.deepEqual(events,prepared.events);
+    }finally{plannedSession.dispose();}
     assert.throws(()=>prepareVillageIsolated(module,source,[...loaded.keys()].filter(key=>key!==siteChunk),{id:'native-second-village',culture:'suajili',...site,payload},{bounds:[x-120,z-120,x+120,z+120],maxAdded:0}),SpatialChunkUnavailable,'preflight respects the missing-region limit');
     const poor=deserialize(source);poor.ledger.balance=rational(1);
     assert.throws(()=>prepareVillageIsolated(module,serialize(poor),[...loaded.keys()],{id:'no-funds',culture:'suajili',...site,payload},{bounds:[x-120,z-120,x+120,z+120]}),error=>error.code==='hiring-reserve');

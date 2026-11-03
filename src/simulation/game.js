@@ -1670,14 +1670,17 @@ export function previewVillage(s,culture,x,z,payload,nav) {
   const entry=checks.every(c=>c.valid)?findVillageEntry(nav,buildings,x,z):null;
   return {culture,x,z,buildings,entry,cost:villageCost(s.villages.length+1),valid:checks.every(c=>c.valid)&&!!entry,suppress:[...new Set(checks.flatMap(c=>c.suppress??[]))],reason:checks.find(c=>!c.valid)?.reason??(!entry?'El poblado no tiene una salida transitable':undefined)};
 }
-export function foundVillage(s,id,culture,x,z,payload,nav) {
+export function foundVillage(s,id,culture,x,z,payload,nav,{preparedCenters=null}={}) {
   return commit(s,id,'village',()=>{
     // Replayed commands must stop before validating their already occupied site.
     // New confirmations still revalidate the complete layout before charging.
     const preview=previewVillage(s,culture,x,z,payload,nav);if(!preview.valid)throw new Error(preview.reason);x=preview.x;z=preview.z;
+    const centers=s.structures.filter(operational);
+    if(preparedCenters!==null&&(!Array.isArray(preparedCenters)||preparedCenters.length!==centers.length||preparedCenters.some((p,i)=>!p||p.id!==centers[i].id||typeof p.villageId!=='string'&&p.villageId!==null||typeof p.culture!=='string'&&p.culture!==null)))throw Error('Invalid prepared village centers');
     ensurePurchaseBudget(s,preview.cost);transact(s.ledger,id,rational(-preview.cost));s.villages.push({id:`village-${s.nextId++}`,culture,x,z,buildings:preview.buildings,entry:preview.entry});s.suppressed.push(...preview.suppress);
     nav.setState(s);
-    for(const center of s.structures.filter(operational)) {
+    if(preparedCenters!==null){for(let i=0;i<centers.length;i++){const center=centers[i],prepared=preparedCenters[i];if(prepared.culture!==null)center.culture=prepared.culture;if(prepared.villageId!==null)center.villageId=prepared.villageId;}}
+    else for(const center of centers) {
       const departure=centerServicePoint(center,s);
       const nearestRoute=nearestVillageRoute(nav,departure,s.villages);
       if(nearestRoute){center.culture??=centerCulture(center,s);center.villageId=nearestRoute.v.id;}
