@@ -195,9 +195,10 @@ function changeSimulationPause(paused,reason,{sound=false}={}){
   return result;
 }
 const workerSaveCoordinators=new WeakMap();
+const experimentalWorkerPhysicsSave=()=>import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-worker-game')&&new URLSearchParams(location.search).has('qa-worker-physics-save');
 function ensureWorkerSave(owner,ownerState){
   const runtime=owner.workerRuntime;if(!runtime||!ownerState)throw Error('Worker save integration is unavailable');
-  let entry=workerSaveCoordinators.get(runtime);if(!entry){entry={slotId:ownerState.slotId,coordinator:createWorkerSaveCoordinator({runtime,repository:saves,slotId:ownerState.slotId})};workerSaveCoordinators.set(runtime,entry);}
+  let entry=workerSaveCoordinators.get(runtime);if(!entry){entry={slotId:ownerState.slotId,coordinator:createWorkerSaveCoordinator({runtime,repository:saves,slotId:ownerState.slotId,experimentalPhysics:experimentalWorkerPhysicsSave()})};workerSaveCoordinators.set(runtime,entry);}
   if(entry.slotId!==ownerState.slotId)throw Error('Worker save slot changed');
   owner.workerSave=({confirm=false}={})=>saveWorkerGame(entry.coordinator,{confirm,onError:error,onConfirm:()=>juice?.savedSuccessfully()});return owner.workerSave;
 }
@@ -289,6 +290,7 @@ async function startGame(loaded=null,{slotId,preview}={}) {
       next=await world.loadReady(saves.loadPrepared(slotId,{signal:world.loading.signal,onDiagnostic:diagnostic=>{progressQa?.snapshotDecode(diagnostic);if(diagnostic.mode==='synchronous-fallback')console.warn('Snapshot compatibility fallback: '+diagnostic.reason);}}));assertLoading();loaded=next;
       loadingDiorama.show(next);audioOwner.setState(next);audioOwner.start();loadingDiorama.render(0,loadingProgress.value);refreshLoadingOverlay();
     }
+    if(next.workerPhysicsCheckpoint&&!experimentalWorkerPhysicsSave())throw Error('Esta partida experimental necesita el modo Worker con restauración de física.');
     const villages=await json('/content/villages.json');assertLoading();
     villageCatalog=villages;
     const payload=villages.find(v=>v.id===(next.culture==='saheliana'?'saheliano':next.culture));
@@ -736,5 +738,5 @@ function frame(now) {
   }
   if(globalFrameSchedulerEnabled())globalFrameScheduler.endFrame();
 }
-async function boot() {try {await window.WildGuardiansLanguageReady;[selector,thumbnails]=await Promise.all([json('/content/selector.json'),json('/content/crop-thumbnails.json')]);if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-worker-raid')){requestAnimationFrame(frame);await startGame(await json('/docs/guardian/phase2/performance-components/native-raid-snapshot.json'));}else if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-worker-start')){requestAnimationFrame(frame);await startGame();}else if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-microevents-fixture')){requestAnimationFrame(frame);const fixture={wood:'microevent-wood',wet:'microevent-wet',rocks:'microevent-rocks'}[new URLSearchParams(location.search).get('qa-microevents-fixture')]??'microevent-world';await startGame(await json('/tests/fixtures/'+fixture+'.json'));}else{menu();requestAnimationFrame(frame);}}catch(e){app.textContent='No se pudo iniciar Wild Guardians: '+e.message;}}
+async function boot() {try {await window.WildGuardiansLanguageReady;[selector,thumbnails]=await Promise.all([json('/content/selector.json'),json('/content/crop-thumbnails.json')]);if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-worker-load-slot')){requestAnimationFrame(frame);await startGame(null,{slotId:new URLSearchParams(location.search).get('qa-worker-load-slot')});}else if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-worker-raid')){requestAnimationFrame(frame);await startGame(await json('/docs/guardian/phase2/performance-components/native-raid-snapshot.json'));}else if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-worker-start')){requestAnimationFrame(frame);await startGame();}else if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-microevents-fixture')){requestAnimationFrame(frame);const fixture={wood:'microevent-wood',wet:'microevent-wet',rocks:'microevent-rocks'}[new URLSearchParams(location.search).get('qa-microevents-fixture')]??'microevent-world';await startGame(await json('/tests/fixtures/'+fixture+'.json'));}else{menu();requestAnimationFrame(frame);}}catch(e){app.textContent='No se pudo iniciar Wild Guardians: '+e.message;}}
 boot();

@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import {newGame} from '../src/simulation/game.js';
 import {serialize} from '../src/persistence/snapshots.js';
 import {createWorkerSaveCoordinator} from '../src/persistence/worker-save.js';
+import {encodePhysicsCheckpoint} from '../src/simulation/physics-checkpoint-codec.js';
+import {serializeConfirmedState} from '../src/simulation/confirmed-live-state.js';
 
 const deferred=()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};};
 const packet=(state,sequence,saveAvailable=true)=>({sequence,saveAvailable,snapshot:serialize(state),raidWaitBindings:[]});
@@ -23,6 +25,12 @@ test('unsafe physics checkpoint does not write or wait for the simulation to res
  const state=newGame({seed:712,slotId:'a'});let writes=0;
  const saves=createWorkerSaveCoordinator({runtime:{submit:async()=>packet(state,4,false)},repository:{save(){writes++;}},slotId:'a'});
  assert.deepEqual(await saves.request(),{saved:false,reason:'physics-active',sequence:4});assert.equal(writes,0);
+});
+test('experimental physics save accepts an encoded supported checkpoint but not an unavailable one',async()=>{
+ const state=newGame({seed:712,slotId:'a'}),physical=encodePhysicsCheckpoint({version:1,fall:{solver:{world:new Uint8Array([1,2,3])}}}),sent=[],writes=[];let checkpoint=null;
+ const saves=createWorkerSaveCoordinator({runtime:{submit:async command=>{sent.push(command);return {...packet(state,1,false),snapshot:serializeConfirmedState(state),physicsCheckpoint:checkpoint};}},repository:{save(s){writes.push(s);}},slotId:'a',experimentalPhysics:true});
+ assert.equal((await saves.request()).saved,false);checkpoint=physical;assert.equal((await saves.request()).saved,true);assert.equal(writes[0].workerPhysicsCheckpoint,physical);assert.deepEqual(sent.map(x=>x.physicsCheckpoint),['encoded','encoded']);
+ state.pauses.push('campaign-cinematic');assert.equal((await saves.request()).saved,false);assert.equal(writes.length,1);
 });
 
 test('failed and cross-slot checkpoints do not block later saves',async()=>{

@@ -936,5 +936,19 @@ published pose for 60 ticks after a JSON round trip with two simultaneously
 active animals (833,445 UTF-8 bytes). A separate rolling checkpoint matched for
 120 ticks through recovery and release (448,971 bytes). These are single
 headless scenarios, not measurements of storage latency or peak memory. Active
-recovery checkpoints, baked fallbacks, corrupt-data hardening, disk writes and
-normal UI restore remain open; the production save gate remains unchanged.
+recovery checkpoints, baked fallbacks and complete corrupt-data hardening remain
+open; the production save gate remains unchanged.
+
+The opt-in `qa-worker-physics-save` path now asks the authority for an encoded
+checkpoint and writes supported falling/rolling states through the ordered save
+coordinator. The worker rebuilds physics from the stored data on load and removes
+the checkpoint from subsequent live snapshots. A savanna game test saved during
+a fall through the actual pause menu into IndexedDB, reloaded the slot and found
+the same animal still under physical control at the saved simulation time. A
+subsequent attempt to open the file without the experimental option was rejected
+before writing, leaving the checkpoint intact. Two-Worker mangrove comparisons
+also round-tripped stored JSON for simultaneous falls and for rolling through
+recovery. The UI test used direct attack input and SwiftShader, and did not
+compare a whole resumed campaign or rendering. Saving during an already-running
+recovery or baked fallback remains blocked. The feature is development-only and
+does not enable active-physics saving in the normal game.

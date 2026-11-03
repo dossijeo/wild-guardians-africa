@@ -13,6 +13,7 @@ function wholeMoney(value){
 }
 export function validateSnapshot(state) {
   if(!state || state.saveVersion!==SAVE_VERSION || typeof state.slotId!=='string')throw new Error('Guardado incompatible');
+  if(state.workerPhysicsCheckpoint!==undefined&&(typeof state.workerPhysicsCheckpoint!=='string'||!state.workerPhysicsCheckpoint.length||state.workerPhysicsCheckpoint.length>32*1024*1024))throw new Error('Física guardada inválida');
   if(state.guardianAttackStartedAt!==undefined&&(!Number.isFinite(state.guardianAttackStartedAt)||state.guardianAttackStartedAt<0||state.guardianAttackStartedAt>state.elapsed))throw new Error('Gesto de ataque inválido');
   if(state.mangroveSettlementVersion!==undefined&&(![1,2].includes(state.mangroveSettlementVersion)||state.biome!=='manglares'||!state.mangroveNetwork))throw new Error('Reserva de Manglares incompatible');
   if(state.mangroveNetwork!==undefined&&(typeof state.mangroveNetwork!=='boolean'||state.biome!=='manglares'))throw new Error('Variante de Manglares inválida');
@@ -46,7 +47,7 @@ export function validateSnapshot(state) {
   if(!validRaidContention(state))throw new Error('Turnos de incursión inválidos');
   const ids=new Set();
   for(const animal of state.raid?.animals??[]){
-    if(animal.magicDown!==undefined){const d=animal.magicDown;if(!d||!['falling','recovering'].includes(d.phase)||![d.since,d.until].every(Number.isFinite)||d.since<0||d.since>state.elapsed||d.until<d.since||d.until-d.since>12)throw new Error('Derribo mágico inválido');}
+    if(animal.magicDown!==undefined){const d=animal.magicDown;if(!d||!(['falling','recovering'].includes(d.phase)||d.phase==='rolling'&&state.workerPhysicsCheckpoint!==undefined)||![d.since,d.until].every(Number.isFinite)||d.since<0||d.since>state.elapsed||d.until<d.since||d.until-d.since>12)throw new Error('Derribo mágico inválido');}
     if(animal.magicHealth!==undefined&&(!Number.isFinite(animal.magicHealth)||animal.magicHealth<0||animal.magicHealth>1000))throw new Error('Resistencia mágica inválida');
     if(animal.magicStunUntil!==undefined&&(!Number.isFinite(animal.magicStunUntil)||animal.magicStunUntil<0))throw new Error('Interrupción mágica inválida');
     if(animal.magicImpact!==undefined){const h=animal.magicImpact;if(!h||!Number.isFinite(h.at)||h.at<0||h.at>state.elapsed||(h.impactAt!==undefined&&(!Number.isFinite(h.impactAt)||h.impactAt<h.at||h.impactAt-h.at>.5))||(h.ground!==undefined&&!Number.isFinite(h.ground))||(h.intensity!==undefined&&(!Number.isFinite(h.intensity)||h.intensity<0||h.intensity>2))||![h.point,h.direction,h.origin].every(p=>p&&[p.x,p.y,p.z].every(Number.isFinite)))throw new Error('Impacto mágico inválido');}
