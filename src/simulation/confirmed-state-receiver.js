@@ -24,6 +24,15 @@ export function createConfirmedStateReceiver(state,session,{onReconciled=null}={
  if(onReconciled!==null&&typeof onReconciled!=='function')throw TypeError('Invalid reconciliation callback');
  let sequence=0,lastElapsed=state.elapsed,lastEvent=state.sequence-1,fault=false;
  return {
+  acceptUnchanged(message){
+   if(fault)return {accepted:false,reason:'fault'};
+   if(message?.session!==session)return {accepted:false,reason:'session'};
+   if(!Number.isSafeInteger(message.sequence)||message.sequence<1)return {accepted:false,reason:'sequence'};
+   if(message.sequence<=sequence)return {accepted:false,reason:'stale'};
+   if(message.sequence!==sequence+1)return {accepted:false,reason:'gap'};
+   if(!sequence||message.unchanged!==true||message.slotId!==state.slotId||message.stateSequence!==state.sequence||message.elapsed!==lastElapsed||state.elapsed!==lastElapsed||!Array.isArray(message.events)||message.events.length||!Array.isArray(message.pauses)||JSON.stringify(message.pauses)!==JSON.stringify(state.pauses)||typeof message.saveAvailable!=='boolean'||Object.hasOwn(message,'snapshot')||Object.hasOwn(message,'physicsPose')||Object.hasOwn(message,'physicsPoses'))throw TypeError('Invalid unchanged publication');
+   sequence=message.sequence;return {accepted:true,sequence};
+  },
   accept(message){
    if(fault)return {accepted:false,reason:'fault'};
    if(message?.session!==session)return {accepted:false,reason:'session'};

@@ -6,17 +6,18 @@ import {createSimulationAuthorityClient} from '../../src/simulation/simulation-a
 window.audit=async()=>{
  const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
  const fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),{game,nav}=fixture.diagnosticWorld(),snapshot=serialize(game),raidWaitBindings=captureRaidWaitBindings(game,nav),animal=game.raid.animals.find(a=>a.species==='hyena'),physics=new URLSearchParams(location.search).has('physics');fixture.dispose();
- const a=createSimulationAuthorityClient({snapshot,chunkKeys:chunks,raidWaitBindings,...(physics?{physicsActorId:animal.id}:{}),session:'batch-single'}),b=createSimulationAuthorityClient({snapshot,chunkKeys:chunks,raidWaitBindings,...(physics?{physicsActorId:animal.id}:{}),session:'batch-many'});
+ const compact=new URLSearchParams(location.search).has('compact'),a=createSimulationAuthorityClient({snapshot,chunkKeys:chunks,raidWaitBindings,...(physics?{physicsActorId:animal.id}:{}),session:'batch-single'}),b=createSimulationAuthorityClient({snapshot,chunkKeys:chunks,raidWaitBindings,compactViewAcks:compact,...(physics?{physicsActorId:animal.id}:{}),session:'batch-many'});
  const send=async(client,command)=>{const r=client.submit(command);if(!r.accepted)throw Error('Worker command rejected');return r.result;};
  try{await Promise.all([a.ready,b.ready]);let count=0,batches=0,events=0,missingCount=0,active=0;
   if(physics){const attack={kind:'castAttack',id:'batch-hit',targetId:animal.id,x:animal.x,z:animal.z},[left,right]=await Promise.all([send(a,attack),send(b,attack)]);if(left.snapshot!==right.snapshot||JSON.stringify(left.events)!==JSON.stringify(right.events))throw Error('Attack mismatch');}
-  while(count<100){const batch=await send(b,{kind:'advance',seconds:.05,nightFastForward:true,steps:Math.min(10,100-count)}),received=[];let last;
+  while(count<100){if(compact){const view={bounds:[0,-48,288,144],eye:{x:100+count,z:5},target:{x:90,z:0}},[full,ack]=await Promise.all([send(a,{kind:'setNavigationView',view}),send(b,{kind:'setNavigationView',view})]);if(!ack.unchanged||ack.snapshot!==undefined||ack.elapsed!==full.elapsed||ack.stateSequence!==JSON.parse(full.snapshot).sequence||JSON.stringify(ack.events)!==JSON.stringify(full.events))throw Error('View acknowledgement mismatch');}
+   const batch=await send(b,{kind:'advance',seconds:.05,nightFastForward:true,steps:Math.min(10,100-count)}),received=[];let last;
    for(let i=0;i<batch.stepsExecuted;i++){last=await send(a,{kind:'advance',seconds:.05,nightFastForward:true});received.push(...last.events);if(i+1<batch.stepsExecuted&&last.residency.missing.length)throw Error('Batch skipped an intermediate residency demand');}
    if(batch.snapshot!==last.snapshot||JSON.stringify(batch.events)!==JSON.stringify(received)||JSON.stringify(batch.residency)!==JSON.stringify(last.residency)||JSON.stringify(batch.physicsPose)!==JSON.stringify(last.physicsPose)||batch.saveAvailable!==last.saveAvailable)throw Error('Batched simulation diverged at '+count);
    if(batch.physicsPose?.active)active++;
    count+=batch.stepsExecuted;batches++;events+=received.length;for(const key of batch.residency.missing){await send(a,{kind:'addChunk',key});await send(b,{kind:'addChunk',key});missingCount++;}
   }
-  if(physics&&!active)throw Error('No active physics compared');return {steps:count,batches,events,missingCount,physics,active,scope:'Same island-mangrove raid snapshot, two real Workers, comparing 100 individual steps with batches, ordered events, residency and final physics poses. No rendering or performance measurement.'};
+  if(physics&&!active)throw Error('No active physics compared');return {steps:count,batches,events,missingCount,physics,compact,active,scope:'Same island-mangrove raid snapshot, two real Workers, comparing 100 individual steps with batches, ordered events, residency and final physics poses. No rendering or performance measurement.'};
  }finally{a.dispose();b.dispose();}
 };window.ready=true;
 </script>

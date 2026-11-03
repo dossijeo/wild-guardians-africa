@@ -21,7 +21,7 @@ export function createWorkerGameRuntime({client,world,session,stepSeconds=.05,ni
   let request;try{request=client.submit(command);if(!request.accepted)throw Error('Worker command not admitted: '+request.reason);busy=true;activeItem=item;activeSteps=planned;}
   catch(error){if(item.kind==='command')item.reject(error);fail(error);return;}
   request.result.then(result=>{
-   if(closed||fault)return;if(planned>1&&(!Number.isSafeInteger(result.stepsExecuted)||result.stepsExecuted<1||result.stepsExecuted>planned||result.stepsExecuted<planned&&!result.residency?.missing?.length))throw Error('Invalid worker batch result');const accepted=receiver.accept(result);if(!accepted.accepted)throw Error('Confirmed scene publication rejected: '+accepted.reason);
+   if(closed||fault)return;if(planned>1&&(!Number.isSafeInteger(result.stepsExecuted)||result.stepsExecuted<1||result.stepsExecuted>planned||result.stepsExecuted<planned&&!result.residency?.missing?.length))throw Error('Invalid worker batch result');if(result.unchanged===true&&command.kind!=='setNavigationView')throw Error('Unexpected unchanged publication');const accepted=result.unchanged===true?receiver.acceptUnchanged(result):receiver.accept(result);if(!accepted.accepted)throw Error('Confirmed scene publication rejected: '+accepted.reason);
    if(planned>1&&result.stepsExecuted<planned)queue.unshift({kind:'steps',count:planned-result.stepsExecuted,fast:item.fast});
    if(diagnostics&&result.diagnostics?.kind==='castAttack')lastAttackDiagnostic=result.diagnostics;
    confirmed=result;if(item.kind==='chunk')pendingChunks.delete(item.key);addDemands(result);if(item.kind==='command')item.resolve(result);busy=false;activeItem=null;activeSteps=0;pump();

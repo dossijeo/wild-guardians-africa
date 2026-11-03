@@ -403,6 +403,31 @@ confirmed it held 71 steps and 75 view commands. A separate one-step run saw
 backlog and test-generated work are present; the earlier pause figures cannot
 be attributed solely to the application.
 
+#### Experimental unchanged-view acknowledgements
+
+For the camera backlog, three designs were considered: stop sending views while
+no entry is expected (requires proving that an immediate follow-on wave cannot
+need the current view); coalesce queued views (can change which view an
+intervening simulation step sees); or retain every ordered view change while
+acknowledging a view-only command without reserializing unchanged game state.
+The third is implemented behind `qa-worker-view-ack` for evaluation. The
+receiver checks the session, command sequence, game sequence, elapsed time,
+pause reasons and absence of events and physics poses before accepting it.
+The next state-changing command still publishes the complete confirmed state.
+
+`tests/browser/worker-view-ack-benchmark.html` executes the same 100 view
+changes and simulation steps in four alternating real Worker runs, with one
+active hyena ragdoll. Full responses took 3191 and 3310 ms overall and about
+115.3 million view-response JSON characters; compact responses took 2163 and
+2188 ms and about 41,000 characters. The full snapshot, ordered events and final physics pose matched.
+The view command's measured Worker execution total fell from about 888–895 ms
+to 188–195 ms. These are isolated Worker measurements with no scene rendering
+or GPU timing. A real-game exploratory run completed an attack and safe save,
+but its pixel search alone took 3.03 s; its 2.56 s pause confirmation is not a
+clean comparison with the previous samples. Keep the option experimental until
+camera motion, complete raids, frame p95/p99 and end-to-end latency are tested
+with a nonblocking, reproducible input trace.
+
 Optional `qa-worker-diagnostics` records time inside the simulation Worker.
 In these individual runs the animal's asynchronous physics admission took
 721 ms (16-step run) and 702 ms (one-step run); execution of the subsequent

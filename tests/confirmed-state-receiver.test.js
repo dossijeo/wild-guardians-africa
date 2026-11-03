@@ -7,3 +7,12 @@ test('gaps and invalid events do not mutate state; observer failure fails closed
 test('an already delivered event cannot be replayed under a new command sequence',()=>{const display=fixture(),authority=deserialize(serialize(display)),receiver=createConfirmedStateReceiver(display,'s');emit(authority,'Test');const event=authority.events.at(-1),snapshot=serialize(authority);receiver.accept({session:'s',sequence:1,snapshot,events:[event]});assert.throws(()=>receiver.accept({session:'s',sequence:2,snapshot,events:[event]}),/event sequence/);assert.equal(receiver.status().sequence,1);});
 
 test('a reconciliation callback failure prevents event delivery and faults the receiver',()=>{const display=fixture(),authority=deserialize(serialize(display)),seen=[],stop=observePresentationGameEvents(display,e=>seen.push(e.id));try{emit(authority,'Test');const event=authority.events.at(-1),receiver=createConfirmedStateReceiver(display,'s',{onReconciled:()=>{throw Error('scene failed');}}),packet={session:'s',sequence:1,snapshot:serialize(authority),events:[event]};assert.throws(()=>receiver.accept(packet),/scene failed/);assert.deepEqual(seen,[]);assert.equal(receiver.status().fault,true);assert.equal(receiver.accept(packet).reason,'fault');}finally{stop();}});
+
+test('unchanged camera confirmations advance only the protocol sequence',()=>{
+ const state=fixture(),before=serialize(state);let reconciled=0;const receiver=createConfirmedStateReceiver(state,'s',{onReconciled:()=>reconciled++});
+ assert.deepEqual(receiver.accept({session:'s',sequence:1,snapshot:before,events:[]}),{accepted:true,sequence:1});
+ const ack={session:'s',sequence:2,unchanged:true,slotId:state.slotId,stateSequence:state.sequence,elapsed:state.elapsed,pauses:[...state.pauses],events:[],saveAvailable:true};
+ for(const invalid of [{...ack,stateSequence:state.sequence+1},{...ack,elapsed:state.elapsed+1},{...ack,events:[{id:'event-1'}]},{...ack,snapshot:before}])assert.throws(()=>receiver.acceptUnchanged(invalid),/Invalid unchanged/);
+ assert.deepEqual(receiver.acceptUnchanged(ack),{accepted:true,sequence:2});assert.equal(reconciled,1);assert.equal(serialize(state),before);
+ assert.deepEqual(receiver.accept({session:'s',sequence:3,snapshot:before,events:[]}),{accepted:true,sequence:3});
+});

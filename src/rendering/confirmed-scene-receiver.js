@@ -11,6 +11,7 @@ export function createConfirmedSceneReceiver(state,session,world){
   if(!pending)throw Error('Missing confirmed scene poses');const previous=world.confirmedAnimalPoses??new Map();for(const id of previous.keys())if(!pending.has(id)){const rig=world.mixers.get(id);if(rig)rig.key=null;}world.confirmedAnimalPoses=pending;
  }});
  return {
+  acceptUnchanged(message){return receiver.acceptUnchanged(message);},
   accept(message){
    const status=receiver.status();if(status.fault)return {accepted:false,reason:'fault'};if(message?.session!==session||!Number.isSafeInteger(message?.sequence)||message.sequence!==status.sequence+1)return receiver.accept(message);
    const snapshot=deserializeConfirmedState(message.snapshot),actors=new Map((snapshot.raid?.animals??[]).map(a=>[a.id,a]));

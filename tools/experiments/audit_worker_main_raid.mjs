@@ -4,7 +4,7 @@ const browser=await chromium.launch({channel:'msedge',headless:true,args:['--ena
 try{
  const page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[];page.on('pageerror',error=>errors.push(String(error)));
  await page.addInitScript(()=>{const probe=window.__workerFrameProbe={samples:[],enabled:false};let last=null;function frame(now){if(probe.enabled&&last!==null)probe.samples.push(now-last);last=now;requestAnimationFrame(frame);}requestAnimationFrame(frame);});
- await page.goto(`${process.env.QA_BASE_URL??'http://127.0.0.1:5175'}/?qa-worker-game&qa-worker-raid&qa-visibility&qa-worker-diagnostics&wildEngineThreads=0&qa-worker-batch=${process.env.QA_BATCH??1}`,{waitUntil:'domcontentloaded'});
+ await page.goto(`${process.env.QA_BASE_URL??'http://127.0.0.1:5175'}/?qa-worker-game&qa-worker-raid&qa-visibility&qa-worker-diagnostics&wildEngineThreads=0&qa-worker-batch=${process.env.QA_BATCH??1}${process.env.QA_VIEW_ACK==='1'?'&qa-worker-view-ack':''}`,{waitUntil:'domcontentloaded'});
  await page.waitForFunction(()=>window.wildGuardiansWorkerQa?.().screen==='game'||document.querySelector('.error-banner'),null,{timeout:180000});
  console.log('STARTUP',JSON.stringify(await page.evaluate(()=>window.wildGuardiansWorkerQa())));
  try{await page.waitForFunction(()=>{const q=window.wildGuardiansWorkerQa?.();return q?.animals>0||q?.status?.fault||document.querySelector('.error-banner');},null,{timeout:60000});}

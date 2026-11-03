@@ -196,8 +196,8 @@ async function installWorkerGame(owner,ownerState,navigation){
     try{templates[culture]=captureStructureTemplate(sample);}finally{sample.dispose();}
   }
   const navigationView={bounds:[...navigation.activeBounds],eye:{...navigation.raidView.eye},target:{...navigation.raidView.target}};
-  const diagnostics=new URLSearchParams(location.search).has('qa-worker-diagnostics');
-  const session=crypto.randomUUID(),client=createSimulationAuthorityClient({snapshot:serialize(ownerState),chunkKeys:[...owner.chunks.keys()],raidWaitBindings:captureRaidWaitBindings(ownerState,navigation),navigationView,session,dynamicPhysics:true,structureTemplates:templates,diagnostics});
+  const diagnostics=new URLSearchParams(location.search).has('qa-worker-diagnostics'),compactViewAcks=new URLSearchParams(location.search).has('qa-worker-view-ack');
+  const session=crypto.randomUUID(),client=createSimulationAuthorityClient({snapshot:serialize(ownerState),chunkKeys:[...owner.chunks.keys()],raidWaitBindings:captureRaidWaitBindings(ownerState,navigation),navigationView,session,dynamicPhysics:true,structureTemplates:templates,diagnostics,compactViewAcks});
   const maxBatchSteps=Number(new URLSearchParams(location.search).get('qa-worker-batch')??1);
   const runtime=owner.createWorkerRuntime({client,session,maxBatchSteps,diagnostics,onError:failure=>{if(owner===world&&ownerState===state)error(failure.message);}});
   try{await runtime.start();if(owner.disposed)throw Error('World closed during worker startup');owner.workerRuntime=runtime;return runtime;}catch(failure){runtime.dispose();throw failure;}
