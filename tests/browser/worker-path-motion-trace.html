@@ -1,0 +1,22 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {captureRaidWaitBindings} from '../../src/simulation/raid-wait-handoff.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+window.audit=async()=>{
+ const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
+ const fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),{game,nav}=fixture.diagnosticWorld(),actors=[...game.raid.animals,...game.workers],source=serialize(game),bindings=captureRaidWaitBindings(game,nav);fixture.dispose();
+ const discovery=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,raidWaitBindings:bindings,session:'discover'});let actor;
+ try{await discovery.ready;let last;for(let i=0;i<30;i++){const req=discovery.submit({kind:'advance',seconds:.05,steps:4,nightFastForward:true});last=await req.result;}const end=JSON.parse(last.snapshot),byId=new Map([...(end.raid?.animals??[]),...end.workers].map(a=>[a.id,a]));actor=actors.find(a=>{const b=byId.get(a.id);return b&&Math.hypot(a.x-b.x,a.z-b.z)>.1;});if(!actor)throw Error('No moving actor in fixture');}finally{discovery.dispose();}
+ const a=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,raidWaitBindings:bindings,session:'baseline'}),b=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,raidWaitBindings:bindings,session:'observed'});
+ const send=async(c,command)=>{const r=c.submit(command);if(!r.accepted)throw Error('Not admitted');return r.result;};
+ try{await Promise.all([a.ready,b.ready]);await Promise.all([send(a,{kind:'snapshot'}),send(b,{kind:'trackPathMotion',actorId:actor.id})]);const [,missing]=await Promise.all([send(a,{kind:'snapshot'}),send(b,{kind:'trackPathMotion',actorId:'missing-actor'})]);if(missing.value!==false||!missing.rejection)throw Error('Missing actor was accepted');let segments=0,continuous=0;
+  for(let i=0;i<30;i++){const cmd={kind:'advance',seconds:.05,steps:4,nightFastForward:true},[left,right]=await Promise.all([send(a,cmd),send(b,cmd)]),trace=right.motionTrace,state=JSON.parse(right.snapshot),entity=[...(state.raid?.animals??[]),...state.workers].find(x=>x.id===actor.id);
+   if(left.snapshot!==right.snapshot||JSON.stringify(left.events)!==JSON.stringify(right.events)||!trace||trace.actorId!==actor.id||trace.end.at!==right.elapsed||trace.end.x!==entity.x||trace.end.z!==entity.z)throw Error('Motion observation changed simulation at '+i);
+   segments+=trace.segments.length;if(trace.continuous)continuous++;
+  }
+ if(!segments){const s=JSON.parse((await send(b,{kind:'snapshot'})).snapshot);throw Error('Fixture did not produce path segments: '+JSON.stringify({pauses:s.pauses,animal:s.raid.animals.find(a=>a.id===actor.id),elapsed:s.elapsed}));}await send(b,{kind:'trackPathMotion',actorId:null});const last=await send(b,{kind:'advance',seconds:.05,nightFastForward:true});if(last.motionTrace)throw Error('Observation continued after stop');
+  return {actorId:actor.id,commands:30,segments,continuous,scope:'Observed segments from one animal in a real mangrove Worker compared against an unobserved Worker; no presentation, timing certificate, physical fall or GPU integration.'};
+ }finally{a.dispose();b.dispose();}
+};window.ready=true;
+</script>

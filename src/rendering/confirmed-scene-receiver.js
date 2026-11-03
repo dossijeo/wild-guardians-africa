@@ -3,6 +3,8 @@ import {deserializeConfirmedState} from '../simulation/confirmed-live-state.js';
 import {validateConfirmedAnimalPose} from './confirmed-animal-pose.js';
 
 const validTransform=value=>Array.isArray(value)&&value.length===10&&value.every(Number.isFinite);
+const validPoint=p=>p&&[p.at,p.x,p.z].every(Number.isFinite);
+function validMotionTrace(t){return t&&typeof t.actorId==='string'&&!!t.actorId&&validPoint(t.start)&&validPoint(t.end)&&t.end.at>=t.start.at&&typeof t.continuous==='boolean'&&Array.isArray(t.segments)&&t.segments.every(s=>s&&[s.at,s.x0,s.z0,s.x1,s.z1].every(Number.isFinite)&&s.at>=t.start.at&&s.at<=t.end.at);}
 // Applies a single ordered authority publication to the existing scene state.
 // It does not advance simulation or install a second physics owner.
 export function createConfirmedSceneReceiver(state,session,world){
@@ -25,7 +27,8 @@ export function createConfirmedSceneReceiver(state,session,world){
     const animal=actors.get(pose.actorId);if(!animal?.magicDown)throw Error('Confirmed pose lacks active animal');
     const rig=world.mixers.get(pose.actorId);if(rig)validateConfirmedAnimalPose(rig.model,pose);next.set(pose.actorId,pose);
    }
-   pending=next;try{return receiver.accept(message,{firstSequence});}finally{pending=null;}
+   if(message.motionTrace!==undefined&&!validMotionTrace(message.motionTrace))throw TypeError('Invalid observed path motion');
+   pending=next;try{const result=receiver.accept(message,{firstSequence});if(result.accepted&&message.motionTrace)world.lastObservedPathMotion=message.motionTrace;return result;}finally{pending=null;}
   },
   status(){return receiver.status();},
  };

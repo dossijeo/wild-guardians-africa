@@ -19,6 +19,7 @@ import {createWorkerTutorial} from './worker-tutorial.js';
 import {dueCinematicAct,finishCinematicAct} from '../app/campaign-cinematics.js';
 import {reserveEvent,settleEvent,disableMicroEconomy,trackIncome,microState,validateMicroState} from '../microevents/economy.js';
 import {prepareVillageIsolated,applyVillageIsolatedPlan} from './isolated-village-preflight.js';
+import {observePathMotion} from './locomotion.js';
 
 export function parseSimulationChunkKey(key){
  if(typeof key!=='string'||!/^(-?\d+),(-?\d+)$/.test(key))throw TypeError('Invalid chunk key');
@@ -30,7 +31,7 @@ export function parseSimulationChunkKey(key){
 export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBindings=null,navigationView=null,compactViewAcks=false,restoringPhysics=false}={}){
  if(!(module instanceof WebAssembly.Module)||typeof snapshot!=='string'||!Array.isArray(chunkKeys)||new Set(chunkKeys).size!==chunkKeys.length)throw TypeError('Invalid simulation authority initialization');
  for(const key of chunkKeys)parseSimulationChunkKey(key);
- const game=(restoringPhysics?deserializeConfirmedState:deserialize)(snapshot),loaded=new Map(),savedWaitBindings=game.workerRaidWaitBindings??null;delete game.workerRaidWaitBindings;delete game.workerPhysicsCheckpoint;let session,stopTasks,stopWorld,stopEvents,physics=null,physicsInitializing=false,tutorial=null,closed=false,sequence=0,events=[],trackMicroIncome=false;
+ const game=(restoringPhysics?deserializeConfirmedState:deserialize)(snapshot),loaded=new Map(),savedWaitBindings=game.workerRaidWaitBindings??null;delete game.workerRaidWaitBindings;delete game.workerPhysicsCheckpoint;let session,stopTasks,stopWorld,stopEvents,physics=null,physicsInitializing=false,tutorial=null,closed=false,sequence=0,events=[],trackMicroIncome=false,trackedActor=null,stopMotion=null,motionSegments=null;
  try{
   session=createSpatialGameSession(module,game,{loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
   for(const key of chunkKeys){const [x,z]=parseSimulationChunkKey(key);if(session.core.selectChunk(x,z)<0&&session.core.addChunk(x,z)<0)throw Error('Could not add simulation chunk '+key);loaded.set(key,{...session.core.chunkPayload(),terrainRevision:0});}
@@ -84,10 +85,16 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
    execute(command){
     if(closed)throw Error('Simulation authority is closed');if(physicsInitializing)throw Error('Worker physics is initializing');
     if(!command||command.sequence!==sequence+1)throw Error('Simulation command out of order');
-    let value=null,rejection=null,stepsExecuted=null;const commandLoadedChunks=[];
+    let value=null,rejection=null,stepsExecuted=null,motionTrace=null;const commandLoadedChunks=[];
     if(command.kind==='advance'){
      if(!Number.isFinite(command.seconds)||command.seconds<=0||command.seconds>1||typeof command.nightFastForward!=='boolean'||command.steps!==undefined&&(!Number.isSafeInteger(command.steps)||command.steps<1||command.steps>256))throw TypeError('Invalid real-time interval');
-     const steps=command.steps??1;for(let i=0;i<steps;i++){advanceReal(game,command.seconds,nav,{nightFastForward:command.nightFastForward});if(trackMicroIncome)trackIncome(game,[]);nav.serviceRaidConnectivityDemand?.();stepsExecuted=i+1;if(i+1<steps&&residency().missing.length)break;}
+     const start=trackedActor?{at:game.elapsed,x:trackedActor.x,z:trackedActor.z}:null;if(start)motionSegments=[];
+     const steps=command.steps??1;try{for(let i=0;i<steps;i++){advanceReal(game,command.seconds,nav,{nightFastForward:command.nightFastForward});if(trackMicroIncome)trackIncome(game,[]);nav.serviceRaidConnectivityDemand?.();stepsExecuted=i+1;if(i+1<steps&&residency().missing.length)break;}}finally{if(start){const end={at:game.elapsed,x:trackedActor.x,z:trackedActor.z},segments=motionSegments;motionSegments=null;let x=start.x,z=start.z,continuous=true;for(const segment of segments){if(segment.x0!==x||segment.z0!==z)continuous=false;x=segment.x1;z=segment.z1;}if(end.x!==x||end.z!==z||!(game.raid?.animals??[]).includes(trackedActor)&&!game.workers.includes(trackedActor))continuous=false;motionTrace={actorId:trackedActor.id,start,end,segments,continuous};}}
+    }else if(command.kind==='trackPathMotion'){
+     if(command.actorId!==null&&(typeof command.actorId!=='string'||!command.actorId))throw TypeError('Invalid motion actor');
+     const next=command.actorId===null?null:[...(game.raid?.animals??[]),...game.workers].find(a=>a.id===command.actorId)??null;
+     if(command.actorId!==null&&!next){rejection='No existe ese personaje';value=false;}
+     else{stopMotion?.();stopMotion=null;trackedActor=next;if(trackedActor)stopMotion=observePathMotion(trackedActor,(x0,z0,x1,z1)=>{if(motionSegments)motionSegments.push({at:game.elapsed,x0,z0,x1,z1});});value=true;}
     }else if(command.kind==='pause'||command.kind==='resume'){
      if(typeof command.reason!=='string'||!command.reason)throw TypeError('Invalid pause reason');
      (command.kind==='pause'?pause:resume)(game,command.reason);
@@ -198,9 +205,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     if(compactViewAcks&&command.kind==='setNavigationView'&&!emitted.length)return {sequence,value,unchanged:true,slotId:game.slotId,stateSequence:game.sequence,elapsed:game.elapsed,pauses:[...game.pauses],events:[],residency:resident,saveAvailable:saveAvailable()};
     const physicsPoses=physics?.poses()??null;
     const physical=command.kind==='snapshot'&&(command.physicsCheckpoint===true||command.physicsCheckpoint==='encoded')?physics?.checkpointFall()??null:undefined;
-    return {sequence,value,...(command.steps!==undefined?{stepsExecuted}:{}),...(rejection?{rejection}:{}),...(commandLoadedChunks.length?{commandLoadedChunks}:{}),...(physical===undefined?{}:{physicsCheckpoint:physical&&command.physicsCheckpoint==='encoded'?encodePhysicsCheckpoint(physical):physical}),residency:resident,physicsPose:physicsPoses?.[0]??null,...(physicsPoses?.length>1?{physicsPoses}:{}),elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,raidWaitBindings:captureRaidWaitBindings(game,nav),saveAvailable:saveAvailable(),snapshot:serializeConfirmedState(game)};
+    return {sequence,value,...(command.steps!==undefined?{stepsExecuted}:{}),...(motionTrace?{motionTrace}:{}),...(rejection?{rejection}:{}),...(commandLoadedChunks.length?{commandLoadedChunks}:{}),...(physical===undefined?{}:{physicsCheckpoint:physical&&command.physicsCheckpoint==='encoded'?encodePhysicsCheckpoint(physical):physical}),residency:resident,physicsPose:physicsPoses?.[0]??null,...(physicsPoses?.length>1?{physicsPoses}:{}),elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,raidWaitBindings:captureRaidWaitBindings(game,nav),saveAvailable:saveAvailable(),snapshot:serializeConfirmedState(game)};
    },
-   dispose(){if(closed)return;closed=true;stopEvents?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{session.dispose();}},
+   dispose(){if(closed)return;closed=true;stopMotion?.();stopEvents?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{session.dispose();}},
   };
  }catch(error){stopEvents?.();stopTasks?.();stopWorld?.();session?.dispose();throw error;}
 }

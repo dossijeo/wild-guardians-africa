@@ -5,6 +5,13 @@ import {waitForGate} from './gates.js';
 // User gameplay revision: travel +50%; walking/carrying cadence +50%,
 // running cadence retains the original animation clock.
 export const WORKER_SPEED_MULTIPLIER=1.5;
+const pathObservers=new WeakMap();let pathObserverCount=0;
+// Optional diagnostic stream of actual path segments, not a prediction or a
+// collision certificate. Observers never become part of saved actor state.
+export function observePathMotion(actor,listener){
+  if(!actor||typeof actor!=='object'||typeof listener!=='function'||pathObservers.has(actor))throw TypeError('Invalid path motion observer');
+  pathObservers.set(actor,listener);pathObserverCount++;return ()=>{if(pathObservers.get(actor)===listener){pathObservers.delete(actor);pathObserverCount--;}};
+}
 export const dailyRunMetres=()=>L.longTripMetres*B.workers.daily_run_distance_long_trips;
 export function urgentWork(state,worker){
   // These counts must stay live: earlier employees can finish tasks or leave
@@ -26,8 +33,10 @@ export function movePath(actor,metres,clear=null){
     const point=actor.path[0],distance=Math.hypot(actor.x-point.x,actor.z-point.z);
     const amount=Math.min(distance,left),end=distance?{x:actor.x+(point.x-actor.x)*amount/distance,z:actor.z+(point.z-actor.z)*amount/distance}:point;
     if(clear&&!clear(actor,end))break;
+    const observer=pathObserverCount?pathObservers.get(actor):null,startX=actor.x,startZ=actor.z;
     if(distance<=left){actor.x=point.x;actor.z=point.z;left-=distance;actor.path.shift();}
     else{actor.x+=(point.x-actor.x)*left/distance;actor.z+=(point.z-actor.z)*left/distance;left=0;}
+    if(observer&&(actor.x!==startX||actor.z!==startZ))observer(startX,startZ,actor.x,actor.z);
   }
   return metres-left;
 }

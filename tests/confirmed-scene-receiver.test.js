@@ -13,3 +13,8 @@ test('scene rejects mismatched or duplicate poses before mutating state',()=>{
  const state=fixture(),authority=deserialize(serialize(state)),animal=authority.raid.animals[0],world={state,mixers:new Map()},receiver=createConfirmedSceneReceiver(state,'s',world),pose={actorId:animal.id,active:true,root:transform(),model:transform(),bones:[]};animal.magicDown={phase:'falling',since:authority.elapsed,until:authority.elapsed+1};const packet={session:'s',sequence:1,snapshot:serializeConfirmedState(authority),events:[],physicsPose:pose,physicsPoses:[pose,pose]},before=serialize(state);
  assert.throws(()=>receiver.accept(packet),/Invalid confirmed animal pose/);assert.equal(serialize(state),before);assert.equal(receiver.status().sequence,0);
 });
+test('scene accepts observed motion only with a confirmed publication',()=>{
+ const state=fixture(),world={state,mixers:new Map()},receiver=createConfirmedSceneReceiver(state,'s',world),id=state.raid.animals[0].id,trace={actorId:id,start:{at:1,x:0,z:0},end:{at:2,x:1,z:0},segments:[{at:2,x0:0,z0:0,x1:1,z1:0}],continuous:true},packet={session:'s',sequence:1,snapshot:serializeConfirmedState(state),events:[],physicsPose:null,motionTrace:trace};
+ assert.throws(()=>receiver.accept({...packet,motionTrace:{...trace,segments:[{...trace.segments[0],at:3}]}}),/Invalid observed path motion/);assert.equal(receiver.status().sequence,0);assert.equal(world.lastObservedPathMotion,undefined);
+ assert.equal(receiver.accept(packet).accepted,true);assert.equal(world.lastObservedPathMotion,trace);
+});

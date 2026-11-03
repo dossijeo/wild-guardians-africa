@@ -2,6 +2,15 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHostPublicationQueue} from '../src/simulation/host-publication-queue.js';
 const packet=(sequence,events=[],physicsPose=null)=>({sequence,events,physicsPose,snapshot:String(sequence)});
+test('folding preserves observed path segments and refuses discontinuous boundaries',()=>{
+ const sent=[],q=createHostPublicationQueue({session:'s',send:value=>sent.push(value)}),trace=(start,end)=>({actorId:'a',start:{at:start,x:start,z:0},end:{at:end,x:end,z:0},segments:[{at:end,x0:start,z0:0,x1:end,z1:0}],continuous:true});
+ q.publication(packet(1),true);q.publication({...packet(2),motionTrace:trace(0,1)},true);q.publication({...packet(3),motionTrace:trace(1,2)},true);q.publication({...packet(4),motionTrace:trace(3,4)},true);q.ack(1);
+ assert.equal(sent[1].publication.sequence,3);assert.equal(sent[1].publication.motionTrace.segments.length,2);assert.equal(sent[1].publication.motionTrace.end.x,2);q.ack(3);assert.equal(sent[2].publication.sequence,4);
+});
+test('observed paths are not discarded when tracking changes or the segment cap is reached',()=>{
+ const sent=[],q=createHostPublicationQueue({session:'s',send:value=>sent.push(value)}),point={at:1,x:0,z:0},trace={actorId:'a',start:point,end:point,segments:Array(4096).fill({at:1,x0:0,z0:0,x1:0,z1:0}),continuous:true};
+ q.publication(packet(1),true);q.publication({...packet(2),motionTrace:trace},true);q.publication({...packet(3),motionTrace:{...trace,segments:[trace.segments[0]]}},true);q.publication(packet(4),true);q.ack(1);assert.equal(sent[1].publication.sequence,2);q.ack(2);assert.equal(sent[2].publication.sequence,3);q.ack(3);assert.equal(sent[3].publication.sequence,4);
+});
 test('coalesces only adjacent quiet ticks while preserving events, poses and command barriers',()=>{
  const sent=[],q=createHostPublicationQueue({session:'s',send:value=>sent.push(value)});
  q.publication(packet(1),true);q.publication(packet(2),true);q.publication(packet(3),true);q.publication(packet(4,[{id:'e'}]),true);q.publication(packet(5),true);q.message({kind:'commandResult',id:4,sequence:5});q.publication(packet(6),true);q.publication(packet(7,[],{active:true}),true);

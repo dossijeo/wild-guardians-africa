@@ -5,6 +5,12 @@ export function physicsOwners(p){
  const poses=p.physicsPoses??[p.physicsPose];if(!Array.isArray(poses)||!poses.length||!p.physicsPose||poses[0]?.actorId!==p.physicsPose.actorId||poses[0]?.active!==p.physicsPose.active)return null;
  const seen=new Set(),active=[];for(const pose of poses){if(!pose||typeof pose.actorId!=='string'||!pose.actorId||typeof pose.active!=='boolean'||seen.has(pose.actorId))return null;seen.add(pose.actorId);if(pose.active)active.push(pose.actorId);}return JSON.stringify(active.sort());
 }
+// The diagnostic path stream may be folded only when its boundaries match;
+// preserving an event does not permit silently losing intervening segments.
+function mergedMotion(a,b){
+ if(!a&&!b)return undefined;if(!a||!b||a.actorId!==b.actorId||a.end.at!==b.start.at||a.end.x!==b.start.x||a.end.z!==b.start.z||!Array.isArray(a.segments)||!Array.isArray(b.segments)||a.segments.length+b.segments.length>4096)return null;
+ return {actorId:a.actorId,start:a.start,end:b.end,segments:[...a.segments,...b.segments],continuous:a.continuous&&b.continuous};
+}
 export function createHostPublicationQueue({session,send,diagnostics=false,foldViews=false}){
  if(typeof session!=='string'||!session||typeof send!=='function'||typeof diagnostics!=='boolean'||typeof foldViews!=='boolean')throw TypeError('Invalid publication queue');
  const queue=[];let inFlight=0,lastSent=0,acknowledged=0,coalesced=0,foldedViewCount=0,queuedPublications=0,eventfulPublications=0,tickPublications=0,unchangedPublications=0,snapshotChars=0,peakSnapshotChars=0,peakEventfulPublications=0;
@@ -18,7 +24,8 @@ export function createHostPublicationQueue({session,send,diagnostics=false,foldV
   publication(publication,tick,{backgroundView=false}={}){let item={kind:'publication',publication,tick,backgroundView,firstSequence:publication.sequence};const previous=queue.at(-1);let folded=false;
    if(previous&&background(previous)&&previous.publication.sequence+1===publication.sequence&&(background(item)&&sameState(previous.publication,publication)||eligible(item))){item.firstSequence=previous.firstSequence;account(previous,-1);queue[queue.length-1]=item;coalesced++;account(item,1);drain();return false;}
    if(foldViews&&publication.unchanged===true&&Array.isArray(publication.events)&&publication.events.length===0&&!Object.hasOwn(publication,'snapshot')&&previous&&replaceable(previous)&&previous.publication.sequence+1===publication.sequence&&previous.publication.elapsed===publication.elapsed&&JSON.stringify(previous.publication.pauses)===JSON.stringify(publication.pauses)&&previous.publication.saveAvailable===publication.saveAvailable){const snapshot=JSON.parse(previous.publication.snapshot);if(snapshot.slotId===publication.slotId&&snapshot.sequence===publication.stateSequence&&snapshot.elapsed===publication.elapsed){item={kind:'publication',publication:{...previous.publication,sequence:publication.sequence},tick:true,firstSequence:previous.firstSequence};folded=true;foldedViewCount++;}}
-   if(folded||eligible(item)&&previous&&replaceable(previous)&&physicsOwners(item.publication)===physicsOwners(previous.publication)&&previous.publication.sequence+1===publication.sequence){item.firstSequence=previous.firstSequence;account(previous,-1);queue[queue.length-1]=item;coalesced++;}else queue.push(item);account(item,1);drain();return folded;},
+   const motion=previous?mergedMotion(previous.publication?.motionTrace,item.publication.motionTrace):undefined;
+   if(folded||motion!==null&&eligible(item)&&previous&&replaceable(previous)&&physicsOwners(item.publication)===physicsOwners(previous.publication)&&previous.publication.sequence+1===publication.sequence){if(!folded&&motion)item.publication={...item.publication,motionTrace:motion};item.firstSequence=previous.firstSequence;account(previous,-1);queue[queue.length-1]=item;coalesced++;}else queue.push(item);account(item,1);drain();return folded;},
   message(message){queue.push(message);drain();},
   ack(sequence){if(!Number.isSafeInteger(sequence)||sequence!==inFlight||sequence<=acknowledged||sequence>lastSent)throw Error('Invalid publication acknowledgement');acknowledged=sequence;inFlight=0;drain();},
   status(){return {inFlight,queued:queue.length,coalesced,acknowledged,foldedViewCount,...(diagnostics?{queuedPublications,eventfulPublications,tickPublications,unchangedPublications,snapshotChars,peakSnapshotChars,peakEventfulPublications}:{})};}

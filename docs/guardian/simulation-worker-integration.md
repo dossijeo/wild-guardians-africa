@@ -1156,3 +1156,18 @@ in all four runs. These few runs support reduced repeated admission work, but do
 not establish frame-time improvement, first-attack improvement, memory cost,
 visual equivalence, or performance across species and machines. The first attack
 still performs full preparation, and the experiment remains opt-in.
+
+An opt-in `trackPathMotion` Worker command now records the actual segments
+executed by `movePath` for one animal or worker; it does not change the actor's
+logical state. The stream reports tick-end simulation time, command boundaries
+and whether observed segment endpoints connect to the final position. It is an
+observation, not a timed trajectory or a collision certificate: Rapier motion,
+other position changes and per-segment timing are not covered. The host combines
+adjacent traces only when actor and boundary match, retaining segment order; at
+4,096 segments it stops combining, so a stalled renderer can still accumulate
+publications. A two-Worker mangrove comparison matched state and events over 30
+batched advances and recorded 383 segments. A day-31 savanna game using
+`qa-worker-path-trace` received a trace from animal-368 and completed an attack;
+Edge reported a GTX 1660. The trace is not used for rendering, no GPU movement or
+skeleton migration is claimed, and its CPU, transfer and frame-time overhead
+remain unmeasured.
