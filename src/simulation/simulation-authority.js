@@ -3,7 +3,7 @@ import {serializeConfirmedState,confirmedStateSaveAvailable} from './confirmed-l
 import {advanceReal,cast,previewSpell,plant,PlantPlacementError,validatePlant,validatePlantPurchase,harvest,requestRepair,validateHarvest,validateRepair,observeGameEvents,pause,removeWall,resume} from './game.js';
 import {permission} from './rules.js';
 import {createSpatialGameSession} from '../world/wild-engine/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../world/wild-engine/spatial-navigation-movement.js';
+import {createSpatialNavigationMovement,SpatialChunkUnavailable} from '../world/wild-engine/spatial-navigation-movement.js';
 import {createEventDrivenTaskPlanner} from '../world/wild-engine/spatial-intent-bridge.js';
 import {captureRaidWaitBindings,restoreRaidWaitBindings} from './raid-wait-handoff.js';
 import {raidEntryChunks,raidResidentDemand} from '../world/raid-entry-residency.js';
@@ -33,13 +33,28 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
    for(const p of [command.selection?.origin,command.selection?.contact])if(p&&![p.x,p.y,p.z].every(Number.isFinite))return 'Impacto mágico inválido';
    return null;
   }
+  function addResidentChunk(key){
+   const [x,z]=parseSimulationChunkKey(key);if(loaded.has(key))return false;
+   if(session.core.selectChunk(x,z)<0&&session.core.addChunk(x,z)<0)throw Error('Could not add simulation chunk '+key);
+   session.stream.onData(session.core.chunkPayload());return true;
+  }
+  function validateResidentPlant(command,added){
+   for(;;){
+    try{return validatePlant(game,command.x,command.z,nav);}catch(error){
+     if(!(error instanceof SpatialChunkUnavailable))throw error;
+     if(!Array.isArray(error.missing)||!error.missing.length||error.missing.length+added.length>64)throw error;
+     let progress=false;for(const {cx,cz} of error.missing){const key=`${cx},${cz}`;if(addResidentChunk(key)){added.push(key);progress=true;}}
+     if(!progress)throw error;
+    }
+   }
+  }
   return {
    async enableBeastPhysics(actorId,{actorIds=undefined,structureTemplates=null,allowEmpty=false}={}){if(closed||physics||physicsInitializing)throw Error('Worker physics unavailable');physicsInitializing=true;try{const {createWorkerBeastPhysics}=await import('./worker-beast-physics.js');const driver=await createWorkerBeastPhysics(game,nav,{actorId,actorIds,structureTemplates,allowEmpty});if(closed){driver.dispose();throw Error('Simulation authority closed during physics initialization');}physics=driver;}finally{physicsInitializing=false;}},
    async prepareBeastAttack(command){if(closed||physicsInitializing||!physics)throw Error('Worker physics unavailable');if(!command||command.kind!=='castAttack'||command.sequence!==sequence+1||typeof command.id!=='string'||!command.id||typeof command.targetId!=='string'||!command.targetId||!Number.isFinite(command.x)||!Number.isFinite(command.z))throw TypeError('Invalid attack command');if(game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id)||spellRejection(command,'attack'))return false;if(!physics.supports(command.targetId)){physicsInitializing=true;try{return await physics.admit(command.targetId);}finally{physicsInitializing=false;}}return false;},
    execute(command){
     if(closed)throw Error('Simulation authority is closed');if(physicsInitializing)throw Error('Worker physics is initializing');
     if(!command||command.sequence!==sequence+1)throw Error('Simulation command out of order');
-    let value=null,rejection=null;
+    let value=null,rejection=null;const commandLoadedChunks=[];
     if(command.kind==='advance'){
      if(!Number.isFinite(command.seconds)||command.seconds<=0||command.seconds>1||typeof command.nightFastForward!=='boolean')throw TypeError('Invalid real-time interval');
      advanceReal(game,command.seconds,nav,{nightFastForward:command.nightFastForward});nav.serviceRaidConnectivityDemand?.();
@@ -59,7 +74,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      rejection=spellRejection(command,command.spell);value=rejection?false:cast(game,command.id,command.spell,command.x,command.z,nav,command.selection??null);
     }else if(command.kind==='plant'){
      if(typeof command.id!=='string'||!command.id||typeof command.species!=='string'||!command.species||!Number.isFinite(command.x)||!Number.isFinite(command.z))throw TypeError('Invalid plant command');
-     try{validatePlant(game,command.x,command.z,nav);}catch(error){if(!(error instanceof PlantPlacementError))throw error;rejection=error.message;}
+     try{validateResidentPlant(command,commandLoadedChunks);}catch(error){if(!(error instanceof PlantPlacementError))throw error;rejection=error.message;}
      const duplicate=game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id);
      if(!rejection&&!duplicate&&!permission(game,'plant'))rejection='Esta acción no está disponible ahora';
      if(!rejection&&!duplicate)try{validatePlantPurchase(game,command.species);}catch(error){if(error?.code!=='hiring-reserve'&&error?.message!=='Cultivo desconocido')throw error;rejection=error.message;}
@@ -70,8 +85,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      if(!rejection&&!game.commandIds.includes(command.id)&&!Object.hasOwn(game.ledger.entries,command.id)&&!permission(game,command.kind==='harvest'?'harvest':'repair'))rejection='Esta acción no está disponible ahora';
      value=rejection?false:(command.kind==='harvest'?harvest:requestRepair)(game,command.id,command.targetId);
     }else if(command.kind==='addChunk'){
-     const [x,z]=parseSimulationChunkKey(command.key);value=!loaded.has(command.key);
-     if(value){if(session.core.selectChunk(x,z)<0&&session.core.addChunk(x,z)<0)throw Error('Could not add simulation chunk '+command.key);session.stream.onData(session.core.chunkPayload());}
+     value=addResidentChunk(command.key);
     }else if(command.kind==='removeWall'){
      if(typeof command.id!=='string'||!command.id||typeof command.targetId!=='string'||!command.targetId)throw TypeError('Invalid wall removal command');
      value=removeWall(game,command.id,command.targetId,nav);
@@ -80,7 +94,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     const required=[...new Set([...raidResidentDemand(game,nav),...workerChunkDemand(game)])].sort();
     const residency={required,missing:required.filter(key=>!loaded.has(key))};
     const physicsPoses=physics?.poses()??null;
-    return {sequence,value,...(rejection?{rejection}:{}),residency,physicsPose:physicsPoses?.[0]??null,...(physicsPoses?.length>1?{physicsPoses}:{}),elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,raidWaitBindings:captureRaidWaitBindings(game,nav),saveAvailable:confirmedStateSaveAvailable(game),snapshot:serializeConfirmedState(game)};
+    return {sequence,value,...(rejection?{rejection}:{}),...(commandLoadedChunks.length?{commandLoadedChunks}:{}),residency,physicsPose:physicsPoses?.[0]??null,...(physicsPoses?.length>1?{physicsPoses}:{}),elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,raidWaitBindings:captureRaidWaitBindings(game,nav),saveAvailable:confirmedStateSaveAvailable(game),snapshot:serializeConfirmedState(game)};
    },
    dispose(){if(closed)return;closed=true;stopEvents?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{session.dispose();}},
   };
