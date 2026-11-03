@@ -1,4 +1,4 @@
-import {deserialize} from '../persistence/snapshots.js';
+import {deserializeConfirmedState} from './confirmed-live-state.js';
 import {notifyConfirmedPresentationEvent} from '../simulation/game.js';
 
 function isRecord(value){return value!==null&&typeof value==='object'&&!Array.isArray(value);}
@@ -30,7 +30,7 @@ export function createConfirmedStateReceiver(state,session){
    if(message.sequence<=sequence)return {accepted:false,reason:'stale'};
    if(message.sequence!==sequence+1)return {accepted:false,reason:'gap'};
    if(typeof message.snapshot!=='string'||!Array.isArray(message.events))throw TypeError('Invalid confirmed state');
-   const next=deserialize(message.snapshot);if(next.elapsed<lastElapsed)throw Error('Confirmed simulation time moved backwards');if(next.slotId!==state.slotId||!Number.isSafeInteger(next.sequence)||next.sequence<state.sequence)throw Error('Confirmed simulation identity or sequence changed');
+   const next=deserializeConfirmedState(message.snapshot);if(next.elapsed<lastElapsed)throw Error('Confirmed simulation time moved backwards');if(next.slotId!==state.slotId||!Number.isSafeInteger(next.sequence)||next.sequence<state.sequence)throw Error('Confirmed simulation identity or sequence changed');
    let nextEvent=Math.max(lastEvent,state.sequence-1);for(const event of message.events){const match=typeof event?.id==='string'?/^event-(0|[1-9]\d*)$/.exec(event.id):null,n=match?Number(match[1]):NaN;if(!Number.isSafeInteger(n)||n<=nextEvent||n>=next.sequence||typeof event.type!=='string')throw TypeError('Invalid confirmed event sequence');nextEvent=n;}
    try{reconcile(state,next);for(const event of message.events)notifyConfirmedPresentationEvent(state,event);}
    catch(error){fault=true;throw error;}
