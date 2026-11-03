@@ -21,6 +21,10 @@ test('native BC7 falls back to the original texture when the GPU lacks BPTC supp
  const assets=new Assets(),original=new THREE.Texture();let compressedLoads=0,ordinaryLoads=0;assets.experimentalKtx={renderer:{getContext:()=>({getExtension:()=>null})},variant:'bc7',asset:'tree01'};assets.experimentalKtxTexture=async()=>{compressedLoads++;throw Error('BC7 should not be requested');};assets.textures={loadAsync:async()=>{ordinaryLoads++;return original;}};
  assert.equal(await assets.texture('content/trees-near/savanna/tree_01/baseColor.webp',true),original);assert.equal(compressedLoads,0);assert.equal(ordinaryLoads,1);assets.disposeModels();
 });
+test('native BC7 model selection uses the original when BPTC is unavailable',async()=>{
+ const assets=new Assets(),urls=[];assets.experimentalNativeModel={renderer:{getContext:()=>({getExtension:()=>null})}};assets.loader={loadAsync:async url=>{urls.push(url);return {scene:new THREE.Group()};}};assets.prepareNativeModelLoader=()=>{throw Error('Native loader should not run');};
+ await assets.model('/content/character-lod/hyena.glb');assert.deepEqual(urls,['/content/character-lod/hyena.glb']);assets.disposeModels();
+});
 test('pending shared GLTF promises are not cache hits and a completed model is',async()=>{
  const owner=new LoadingTransferOwner(),assets=new Assets();let finish;assets.loader={loadAsync:()=>new Promise(resolve=>finish=resolve)};
  const first=assets.model('/same.glb'),second=assets.model('/same.glb');assert.equal(owner.downloads.snapshot().pending,1);assert.equal(owner.downloads.snapshot().cacheHits,0);

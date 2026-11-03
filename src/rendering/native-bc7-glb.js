@@ -1,4 +1,4 @@
-// Private QA extension: KTX2 contains pretranscoded BC7 blocks, not Basis.
+// Private experimental extension; BC7 is already GPU-compressed, not Basis.
 export function registerNativeBc7Glb(loader,ktx2Loader){
   loader.register(parser=>({
     name:'WG_native_ktx2',

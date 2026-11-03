@@ -33,7 +33,11 @@ export class Assets {
   ownModel(gltf){gltf.scene.traverse(mesh=>{if(!mesh.isMesh)return;this.own(mesh.geometry);for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material]){this.own(material);for(const value of Object.values(material))if(value?.isTexture)this.own(value);}});return gltf;}
   async model(url) {
     this.assertOpen();
-    if(!this.cache.has(url)){const source=assetUrl(url),transfer=beginAssetTransfer(source,'gltf');this.activeModelTransfers.add(source);const pending=this.loader.loadAsync(source,event=>updateAssetTransfer(transfer,event.loaded,event.lengthComputable?event.total:null)).then(async gltf=>{finishAssetTransfer(transfer);this.activeModelTransfers.delete(source);this.ownModel(gltf);if(nativeAmbientVisibilityEnabled(this.visualSearch??globalThis.location?.search??''))await this.modelVisibility(gltf,url);if(!this.modelsDisposed)this.modelSources.set(url,gltf);return gltf;},error=>{finishAssetTransfer(transfer,{failed:true});this.activeModelTransfers.delete(source);throw error;});this.cache.set(url,pending);pending.catch(()=>{if(this.cache.get(url)===pending)this.cache.delete(url);});}else if(this.modelSources.has(url))cachedAssetTransfer(assetUrl(url));return this.cache.get(url);
+    if(!this.cache.has(url)){const native=url==='/content/character-lod/hyena.glb'&&!!this.experimentalNativeModel?.renderer.getContext().getExtension('EXT_texture_compression_bptc'),source=native?'/content/ktx2-native/pilot/hyena-lod-bc7.glb':assetUrl(url),transfer=beginAssetTransfer(source,'gltf');this.activeModelTransfers.add(source);const load=()=>this.loader.loadAsync(source,event=>updateAssetTransfer(transfer,event.loaded,event.lengthComputable?event.total:null));const pending=(native?this.prepareNativeModelLoader().then(load):load()).then(async gltf=>{finishAssetTransfer(transfer);this.activeModelTransfers.delete(source);this.ownModel(gltf);if(nativeAmbientVisibilityEnabled(this.visualSearch??globalThis.location?.search??''))await this.modelVisibility(gltf,url);if(!this.modelsDisposed)this.modelSources.set(url,gltf);return gltf;},error=>{finishAssetTransfer(transfer,{failed:true});this.activeModelTransfers.delete(source);throw error;});this.cache.set(url,pending);pending.catch(()=>{if(this.cache.get(url)===pending)this.cache.delete(url);});}else if(this.modelSources.has(url))cachedAssetTransfer(assetUrl(url));return this.cache.get(url);
+  }
+  async prepareNativeModelLoader(){
+    this.nativeModelPreparation??=Promise.all([import('three/addons/loaders/KTX2Loader.js'),import('./native-bc7-glb.js')]).then(([{KTX2Loader},{registerNativeBc7Glb}])=>{this.assertOpen();this.nativeModelKtxLoader=new KTX2Loader().detectSupport(this.experimentalNativeModel.renderer);registerNativeBc7Glb(this.loader,this.nativeModelKtxLoader);});
+    return this.nativeModelPreparation;
   }
   async modelVisibility(gltf,url){
     this.assertOpen();
@@ -50,7 +54,7 @@ export class Assets {
     // Also owns packed biome/village/wall prototypes and standalone textures,
     // including resources whose meshes never entered the rendered scene.
     for(const resource of this.ownedResources)this.release(resource);
-    this.preparation.abort();this.transfers.release();this.activeModelTransfers.clear();this.loadedTextureKeys.clear();this.releaseLoadingImageDecoder();this.experimentalKtxLoader?.dispose();this.ownedResources.clear();this.modelSources.clear();this.cache.clear();
+    this.preparation.abort();this.transfers.release();this.activeModelTransfers.clear();this.loadedTextureKeys.clear();this.releaseLoadingImageDecoder();this.experimentalKtxLoader?.dispose();this.nativeModelKtxLoader?.dispose();this.ownedResources.clear();this.modelSources.clear();this.cache.clear();
   }
   async experimentalKtxTexture(){
     const {KTX2Loader}=await import('three/addons/loaders/KTX2Loader.js');this.assertOpen();

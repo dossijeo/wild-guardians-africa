@@ -4,6 +4,24 @@
   "scope": "Generated authoring sidecars. Not automatically installed in the game; source textures and unsupported GPU fallback remain unchanged.",
   "records": [
     {
+      "source": "public/content/trees-near/volcanoes/tree_02/baseColor.webp",
+      "kind": "color",
+      "uses": [
+        {
+          "biome": "volcanoes",
+          "where": "near:tree_02",
+          "role": "baseColor"
+        }
+      ],
+      "sourceSha256": "007a784a2c0d27495d8f986a99c6baee5857438ce64ee0b801e1fabfbdbd6c87",
+      "width": 1024,
+      "height": 1024,
+      "alpha": false,
+      "output": "content/ktx2-native/biomes/007a784a2c0d27495d8f986a99c6baee5857438ce64ee0b801e1fabfbdbd6c87-color-uastc2-bc7.ktx2",
+      "outputSha256": "d808fb14685b344deffe987c018edbc01ec9d4499b84729a29738fc47b9760a2",
+      "outputBytes": 1398560
+    },
+    {
       "source": "public/assets/images/01e1c811b957b401a88c30717e4c0cb02f5364d925de5bba40e701718dac83a7.webp",
       "kind": "color",
       "uses": [
@@ -130,6 +148,24 @@
       "outputBytes": 5592880
     },
     {
+      "source": "public/content/trees-near/volcanoes/tree_02/metallicRoughness.webp",
+      "kind": "data",
+      "uses": [
+        {
+          "biome": "volcanoes",
+          "where": "near:tree_02",
+          "role": "metallicRoughness"
+        }
+      ],
+      "sourceSha256": "145b8c90e863f098c745be7a2a6298a445be88c2b67df6f60e790ea6f53ccb74",
+      "width": 1024,
+      "height": 1024,
+      "alpha": false,
+      "output": "content/ktx2-native/biomes/145b8c90e863f098c745be7a2a6298a445be88c2b67df6f60e790ea6f53ccb74-data-uastc2-bc7.ktx2",
+      "outputSha256": "8edf1b58301e04170dbf10e3de37a00b4e95fa53400a908f38f75214e4541a23",
+      "outputBytes": 1398560
+    },
+    {
       "source": "public/content/trees-near/grand_river/shrub_01/baseColor.webp",
       "kind": "color",
       "uses": [
@@ -146,6 +182,24 @@
       "output": "content/ktx2-native/biomes/183174c9b1a7524d7bfe4248a2e5c0af90d053ee98f5f9bb52537eb2f30276fd-color-uastc2-bc7.ktx2",
       "outputSha256": "f87f862ea79cdfd131b91e7c1b1cd6fd3aeb56e8a5e12cdfa41289ea6a24d5e2",
       "outputBytes": 5592880
+    },
+    {
+      "source": "public/content/trees-near/savanna/tree_04/baseColor.webp",
+      "kind": "color",
+      "uses": [
+        {
+          "biome": "savanna",
+          "where": "near:tree_04",
+          "role": "baseColor"
+        }
+      ],
+      "sourceSha256": "18349e39922b107a6f31dca72a0778ce23f8ae9937435c0607f9902e66908836",
+      "width": 1024,
+      "height": 1024,
+      "alpha": false,
+      "output": "content/ktx2-native/biomes/18349e39922b107a6f31dca72a0778ce23f8ae9937435c0607f9902e66908836-color-uastc2-bc7.ktx2",
+      "outputSha256": "50c4214b0dbd4d62fcf90337889a4b497e2ba3b0b0c008a9677f32ba3411165f",
+      "outputBytes": 1398560
     },
     {
       "source": "public/assets/trees-20261026/1bff10a33767b2643a113102e62d068b12ee84450af18c7dada8329077ca5f32.webp",
@@ -202,6 +256,24 @@
       "outputBytes": 5592880
     },
     {
+      "source": "public/content/trees-near/savanna/tree_02/baseColor.webp",
+      "kind": "color",
+      "uses": [
+        {
+          "biome": "savanna",
+          "where": "near:tree_02",
+          "role": "baseColor"
+        }
+      ],
+      "sourceSha256": "332d7f6641f24a17877e2c28379456cf46f0a7f8c622c6bcc34ace12bcdd9407",
+      "width": 1024,
+      "height": 1024,
+      "alpha": false,
+      "output": "content/ktx2-native/biomes/332d7f6641f24a17877e2c28379456cf46f0a7f8c622c6bcc34ace12bcdd9407-color-uastc2-bc7.ktx2",
+      "outputSha256": "247fce6ef98fc1d7cd4eccc47c8620de6c09f21b6f8b9b1176df1e7158d8038a",
+      "outputBytes": 1398560
+    },
+    {
       "source": "public/assets/3394121fb4f4d6b98d19ea4aed27015ed8dc732757a42e23a5b8a0f121cb01ed.webp",
       "kind": "data",
       "uses": [
@@ -256,6 +328,24 @@
       "outputBytes": 1398560
     },
     {
+      "source": "public/content/trees-near/savanna/tree_03/baseColor.webp",
+      "kind": "color",
+      "uses": [
+        {
+          "biome": "savanna",
+          "where": "near:tree_03",
+          "role": "baseColor"
+        }
+      ],
+      "sourceSha256": "3fd383491b6f05b76fd54b7a0959aa7472c65cba0f51099dd6ababc6df09b417",
+      "width": 2048,
+      "height": 2048,
+      "alpha": false,
+      "output": "content/ktx2-native/biomes/3fd383491b6f05b76fd54b7a0959aa7472c65cba0f51099dd6ababc6df09b417-color-uastc2-bc7.ktx2",
+      "outputSha256": "fc98dafb2f88f1ff94f6b47adf41b374575775731ae77e99b48a52684610ddc9",
+      "outputBytes": 5592880
+    },
+    {
       "source": "public/content/trees-near/canyons/tree_02/metallicRoughness.webp",
       "kind": "data",
       "uses": [
@@ -289,6 +379,24 @@
       "alpha": false,
       "output": "content/ktx2-native/biomes/4f0a3b48e9f7720535cbe1ab2f88104c0bfc763089dbffd6b896f1e051e066ad-color-uastc2-bc7.ktx2",
       "outputSha256": "9cb479e54a9c9437a73cd2374838e07dec5ff04e995ea49c8af5507d02cbcc8d",
+      "outputBytes": 1398560
+    },
+    {
+      "source": "public/content/trees-near/volcanoes/tree_01/baseColor.webp",
+      "kind": "color",
+      "uses": [
+        {
+          "biome": "volcanoes",
+          "where": "near:tree_01",
+          "role": "baseColor"
+        }
+      ],
+      "sourceSha256": "4fdc98a1a4f5dcea8c7ca6c47905c7bba47958e2f955d7d337678885b97d54a9",
+      "width": 1024,
+      "height": 1024,
+      "alpha": false,
+      "output": "content/ktx2-native/biomes/4fdc98a1a4f5dcea8c7ca6c47905c7bba47958e2f955d7d337678885b97d54a9-color-uastc2-bc7.ktx2",
+      "outputSha256": "0c6fbb1d2e3963b6adea480b0b42a8fa2aa3830a55a0b8ba1bc9120b5d668bd3",
       "outputBytes": 1398560
     },
     {
@@ -415,6 +523,24 @@
       "alpha": false,
       "output": "content/ktx2-native/biomes/71399e6ac6216b236587a5663a024da886cb478fa2329af8129d34c83f28d9f0-color-uastc2-bc7.ktx2",
       "outputSha256": "8950c1e057542d84fc8ec1b43c645ccc48b5bcc63056caefe105792e011f3fd9",
+      "outputBytes": 5592880
+    },
+    {
+      "source": "public/content/trees-near/volcanoes/tree_03/baseColor.webp",
+      "kind": "color",
+      "uses": [
+        {
+          "biome": "volcanoes",
+          "where": "near:tree_03",
+          "role": "baseColor"
+        }
+      ],
+      "sourceSha256": "74ea781c21664ebc0334825e49cbd744a6c1103520ad526a276e36083d568c27",
+      "width": 2048,
+      "height": 2048,
+      "alpha": false,
+      "output": "content/ktx2-native/biomes/74ea781c21664ebc0334825e49cbd744a6c1103520ad526a276e36083d568c27-color-uastc2-bc7.ktx2",
+      "outputSha256": "93dad5e58c0b81e0a90ae4feba5259cca60354f605f9136228d27164f5aeedd2",
       "outputBytes": 5592880
     },
     {
@@ -598,6 +724,24 @@
       "outputBytes": 1398560
     },
     {
+      "source": "public/content/trees-near/volcanoes/shrub_01/baseColor.webp",
+      "kind": "color",
+      "uses": [
+        {
+          "biome": "volcanoes",
+          "where": "near:shrub_01",
+          "role": "baseColor"
+        }
+      ],
+      "sourceSha256": "a06f719074df89a2ac9fd3a679b84505d1d220f5884db11cb9a0f33e3e80e4df",
+      "width": 1024,
+      "height": 1024,
+      "alpha": false,
+      "output": "content/ktx2-native/biomes/a06f719074df89a2ac9fd3a679b84505d1d220f5884db11cb9a0f33e3e80e4df-color-uastc2-bc7.ktx2",
+      "outputSha256": "1eac5e6b8276ac79af11916201d688292bd4bc95842be852ae1fcbe53354c740",
+      "outputBytes": 1398560
+    },
+    {
       "source": "public/content/trees-near/grand_river/tree_03/baseColor.webp",
       "kind": "color",
       "uses": [
@@ -652,6 +796,24 @@
       "outputBytes": 1398560
     },
     {
+      "source": "public/content/trees-near/volcanoes/tree_03/metallicRoughness.webp",
+      "kind": "data",
+      "uses": [
+        {
+          "biome": "volcanoes",
+          "where": "near:tree_03",
+          "role": "metallicRoughness"
+        }
+      ],
+      "sourceSha256": "a8e2337118fcdc06b6ed732b2c3e7676db67d30869565bc4a7a0c69a34a432a6",
+      "width": 2048,
+      "height": 2048,
+      "alpha": false,
+      "output": "content/ktx2-native/biomes/a8e2337118fcdc06b6ed732b2c3e7676db67d30869565bc4a7a0c69a34a432a6-data-uastc2-bc7.ktx2",
+      "outputSha256": "f53b7267761ec689a1118322fca90b87d19f079902633ff1a78c05d304a2b1c9",
+      "outputBytes": 5592880
+    },
+    {
       "source": "public/assets/images/a968ae6a9ee49d5b701c40f3fc9b251f3151401f3516659c4e7f63c4eee07374.webp",
       "kind": "data",
       "uses": [
@@ -685,6 +847,42 @@
       "alpha": false,
       "output": "content/ktx2-native/biomes/afed06860b080dd234fa6a3bfdc76322adefca15983a043396a0b05a9884dadd-color-uastc2-bc7.ktx2",
       "outputSha256": "3218545417ff702275b7a46965375e00372fc8487eccda6d9f90d826120619f6",
+      "outputBytes": 1398560
+    },
+    {
+      "source": "public/content/trees-near/volcanoes/tree_01/metallicRoughness.webp",
+      "kind": "data",
+      "uses": [
+        {
+          "biome": "volcanoes",
+          "where": "near:tree_01",
+          "role": "metallicRoughness"
+        }
+      ],
+      "sourceSha256": "b3d898659775a6b5039ef86823ea3935bb282c74172d5ed7a8aca8721d73ac81",
+      "width": 1024,
+      "height": 1024,
+      "alpha": false,
+      "output": "content/ktx2-native/biomes/b3d898659775a6b5039ef86823ea3935bb282c74172d5ed7a8aca8721d73ac81-data-uastc2-bc7.ktx2",
+      "outputSha256": "8baf396b68b2d846d23210c3b7f15d8a63070a81488936139720969422585618",
+      "outputBytes": 1398560
+    },
+    {
+      "source": "public/content/trees-near/volcanoes/tree_04/metallicRoughness.webp",
+      "kind": "data",
+      "uses": [
+        {
+          "biome": "volcanoes",
+          "where": "near:tree_04",
+          "role": "metallicRoughness"
+        }
+      ],
+      "sourceSha256": "b9dd2ed78dc6fce4b90f25783622f89c0e5dbf4c88c8288d194fb138dad1cbc5",
+      "width": 1024,
+      "height": 1024,
+      "alpha": false,
+      "output": "content/ktx2-native/biomes/b9dd2ed78dc6fce4b90f25783622f89c0e5dbf4c88c8288d194fb138dad1cbc5-data-uastc2-bc7.ktx2",
+      "outputSha256": "d7eb02e71b22a8d1e906ff69bdcf82fc310723bbce16481eefb4bd900ea5dba3",
       "outputBytes": 1398560
     },
     {
@@ -724,6 +922,24 @@
       "outputBytes": 5592880
     },
     {
+      "source": "public/content/trees-near/mangrove/tree_04/baseColor.webp",
+      "kind": "color",
+      "uses": [
+        {
+          "biome": "mangrove",
+          "where": "near:tree_04",
+          "role": "baseColor"
+        }
+      ],
+      "sourceSha256": "bd39aeadf4e1958f54b5afda2ac9fd4682094c7b0ea8b2f29fb7019b92f396a1",
+      "width": 1024,
+      "height": 1024,
+      "alpha": false,
+      "output": "content/ktx2-native/biomes/bd39aeadf4e1958f54b5afda2ac9fd4682094c7b0ea8b2f29fb7019b92f396a1-color-uastc2-bc7.ktx2",
+      "outputSha256": "765ef8718474d6f794b5d602d38b521a18a3ce18a29d3894e8194fb4dffeb0e3",
+      "outputBytes": 1398560
+    },
+    {
       "source": "public/assets/trees-20261026/c2e9c0ef799e1856c8b9b01057aa80a31543f2324fca8b521f480a4c6b4cb5aa.webp",
       "kind": "data",
       "uses": [
@@ -739,6 +955,24 @@
       "alpha": false,
       "output": "content/ktx2-native/biomes/c2e9c0ef799e1856c8b9b01057aa80a31543f2324fca8b521f480a4c6b4cb5aa-data-uastc2-bc7.ktx2",
       "outputSha256": "8a534635fdea618e1cbcdba3a49337be7d58974818fe5285338b484e416249ee",
+      "outputBytes": 1398560
+    },
+    {
+      "source": "public/content/trees-near/savanna/tree_01/baseColor.webp",
+      "kind": "color",
+      "uses": [
+        {
+          "biome": "savanna",
+          "where": "near:tree_01",
+          "role": "baseColor"
+        }
+      ],
+      "sourceSha256": "c3243443b1ee3c14897e8f2576d4416bb67ed49ab1ea58b0b812f6aea146ec19",
+      "width": 1024,
+      "height": 1024,
+      "alpha": false,
+      "output": "content/ktx2-native/biomes/c3243443b1ee3c14897e8f2576d4416bb67ed49ab1ea58b0b812f6aea146ec19-color-uastc2-bc7.ktx2",
+      "outputSha256": "cd339e7b24c20791d5df18cdf3cbedeeda67e35ef90a3fac4290613faa6dd7da",
       "outputBytes": 1398560
     },
     {
@@ -850,6 +1084,24 @@
       "outputBytes": 5592880
     },
     {
+      "source": "public/content/trees-near/volcanoes/tree_04/baseColor.webp",
+      "kind": "color",
+      "uses": [
+        {
+          "biome": "volcanoes",
+          "where": "near:tree_04",
+          "role": "baseColor"
+        }
+      ],
+      "sourceSha256": "d63bc4076a616dc76228d75495de06e4cc5706fd4dd604d82408f61a9f9f81d9",
+      "width": 1024,
+      "height": 1024,
+      "alpha": false,
+      "output": "content/ktx2-native/biomes/d63bc4076a616dc76228d75495de06e4cc5706fd4dd604d82408f61a9f9f81d9-color-uastc2-bc7.ktx2",
+      "outputSha256": "b66a662037bf0119e9f014c2ae9970eb5f3839dc345bdb48af5ed699ac4a60c5",
+      "outputBytes": 1398560
+    },
+    {
       "source": "public/assets/d6d08173ea1531974a954c363f260be4656dddeb254da5e46fe94dc6253514b2.webp",
       "kind": "normal",
       "uses": [
@@ -937,6 +1189,24 @@
       "alpha": false,
       "output": "content/ktx2-native/biomes/e4a8efab4bc542f3a4e3a6999d220631763e41f8fae0fefcf3cb673985a700b2-color-uastc2-bc7.ktx2",
       "outputSha256": "ff155a5749be1c6cbd484e7ef62f07d7c4c2dd4de777f161992e24ded1ff2693",
+      "outputBytes": 1398560
+    },
+    {
+      "source": "public/content/trees-near/volcanoes/shrub_01/metallicRoughness.webp",
+      "kind": "data",
+      "uses": [
+        {
+          "biome": "volcanoes",
+          "where": "near:shrub_01",
+          "role": "metallicRoughness"
+        }
+      ],
+      "sourceSha256": "ee2d3ab39712b0d7b53cb3e3244e529ce95855f1cc2f1e8947a0fef4fc730dba",
+      "width": 1024,
+      "height": 1024,
+      "alpha": false,
+      "output": "content/ktx2-native/biomes/ee2d3ab39712b0d7b53cb3e3244e529ce95855f1cc2f1e8947a0fef4fc730dba-data-uastc2-bc7.ktx2",
+      "outputSha256": "d2237ea0e436ba72de45beff83834faaae3d0f5f4d32d294b5fae8d1089c7b85",
       "outputBytes": 1398560
     },
     {
@@ -2088,6 +2358,307 @@
       "output": "content/ktx2-native/glb/5b766d13ab49bd770705b90645b347c97068025dc371387f1446bc3c015098e5-color-uastc2-bc7.ktx2",
       "outputSha256": "c09fc7f5166d81b6245a0e993fa2f02a3ccaac60698c25043cd2ad8408a3eb68",
       "outputBytes": 5592880
+    },
+    {
+      "source": ".cache/ktx2-native/glb-sources/5c1906ac92ea890d217c62be421c51d87f06f7f6046132ca8155abafb6781664.webp",
+      "kind": "normal",
+      "uses": [
+        {
+          "model": "assets/web/eddde4e46932cf9fd056315e34af03f07595cd1ce4de61b4d7d6ac7be5d873e9.glb",
+          "imageIndex": 0,
+          "roles": [
+            "normal"
+          ]
+        }
+      ],
+      "sourceSha256": "5c1906ac92ea890d217c62be421c51d87f06f7f6046132ca8155abafb6781664",
+      "width": 2048,
+      "height": 2048,
+      "alpha": false,
+      "output": "content/ktx2-native/glb/5c1906ac92ea890d217c62be421c51d87f06f7f6046132ca8155abafb6781664-normal-uastc2-bc7.ktx2",
+      "outputSha256": "3b0714dc430050d539d1cd401ef3b77c7bc47d80dc5a6898dc0b83c321f36364",
+      "outputBytes": 5592880
+    },
+    {
+      "source": ".cache/ktx2-native/glb-sources/5c98c35288647560bb3a5a945a9dc456cd0ea0056fb04672dc4e69ed8bbc5e4c.png",
+      "kind": "normal",
+      "uses": [
+        {
+          "model": "content/character-lod/rhino.glb",
+          "imageIndex": 0,
+          "roles": [
+            "normal"
+          ]
+        }
+      ],
+      "sourceSha256": "5c98c35288647560bb3a5a945a9dc456cd0ea0056fb04672dc4e69ed8bbc5e4c",
+      "width": 256,
+      "height": 256,
+      "alpha": false,
+      "output": "content/ktx2-native/glb/5c98c35288647560bb3a5a945a9dc456cd0ea0056fb04672dc4e69ed8bbc5e4c-normal-uastc2-bc7.ktx2",
+      "outputSha256": "799130f6b861c173bcc885093dd8af3c68426543f06b659048b467c153be5998",
+      "outputBytes": 87792
+    },
+    {
+      "source": ".cache/ktx2-native/glb-sources/60902e2198cdf7f66c1afb3016f2d121dff1a058dfe5955f1f0e86defd2ef244.webp",
+      "kind": "data",
+      "uses": [
+        {
+          "model": "assets/web/6c43390aa864c32555795b2be638f8e1e8d4154fa85e6991580ebb0d7fcde309.glb",
+          "imageIndex": 2,
+          "roles": [
+            "metallicRoughness"
+          ]
+        }
+      ],
+      "sourceSha256": "60902e2198cdf7f66c1afb3016f2d121dff1a058dfe5955f1f0e86defd2ef244",
+      "width": 2048,
+      "height": 2048,
+      "alpha": false,
+      "output": "content/ktx2-native/glb/60902e2198cdf7f66c1afb3016f2d121dff1a058dfe5955f1f0e86defd2ef244-data-uastc2-bc7.ktx2",
+      "outputSha256": "448a209e5503401a4c2b8edc61bef820c081d951e47e1ae349f3bbf75172d001",
+      "outputBytes": 5592880
+    },
+    {
+      "source": ".cache/ktx2-native/glb-sources/644c513c12bb69175f0d3ffe73ab8ca50a3877f742b1ca4c96392e42afe20794.webp",
+      "kind": "color",
+      "uses": [
+        {
+          "model": "assets/web/928855d54c35ce754eef5ca29cdf00223f1ca674f94d2831acb40c85dd38c222.glb",
+          "imageIndex": 1,
+          "roles": [
+            "baseColor"
+          ]
+        },
+        {
+          "model": "assets/web/b27ce08a5f860912783d5978cec8a012b28d7a55e2c7a69cc992f91f8bbd5a76.glb",
+          "imageIndex": 1,
+          "roles": [
+            "baseColor"
+          ]
+        }
+      ],
+      "sourceSha256": "644c513c12bb69175f0d3ffe73ab8ca50a3877f742b1ca4c96392e42afe20794",
+      "width": 2048,
+      "height": 2048,
+      "alpha": false,
+      "output": "content/ktx2-native/glb/644c513c12bb69175f0d3ffe73ab8ca50a3877f742b1ca4c96392e42afe20794-color-uastc2-bc7.ktx2",
+      "outputSha256": "46a53f4ea93eeff70624b6c720992fe83403c8702b7f8d802d8296705a3d95ee",
+      "outputBytes": 5592880
+    },
+    {
+      "source": ".cache/ktx2-native/glb-sources/68266763c8da5e30941306d1ccb29a962b19496c70b7d74d905080e9dd30e1d5.webp",
+      "kind": "color",
+      "uses": [
+        {
+          "model": "assets/web/f3ae53d5ce3b57419fd31e74e2572ada9cc61392c2e7ac20dac484ec194d5e9f.glb",
+          "imageIndex": 1,
+          "roles": [
+            "baseColor"
+          ]
+        }
+      ],
+      "sourceSha256": "68266763c8da5e30941306d1ccb29a962b19496c70b7d74d905080e9dd30e1d5",
+      "width": 2048,
+      "height": 2048,
+      "alpha": false,
+      "output": "content/ktx2-native/glb/68266763c8da5e30941306d1ccb29a962b19496c70b7d74d905080e9dd30e1d5-color-uastc2-bc7.ktx2",
+      "outputSha256": "58c0b6af92d1b2a4bd803379dfb3301a60ab3970ac5764308bd966f18fb21952",
+      "outputBytes": 5592880
+    },
+    {
+      "source": ".cache/ktx2-native/glb-sources/6baf04028b884fa2f9d3c821ffcf7acfafbe67d5c1ad144621f0576996ef47ff.png",
+      "kind": "color",
+      "uses": [
+        {
+          "model": "content/character-lod/rhino.glb",
+          "imageIndex": 1,
+          "roles": [
+            "baseColor"
+          ]
+        }
+      ],
+      "sourceSha256": "6baf04028b884fa2f9d3c821ffcf7acfafbe67d5c1ad144621f0576996ef47ff",
+      "width": 256,
+      "height": 256,
+      "alpha": false,
+      "output": "content/ktx2-native/glb/6baf04028b884fa2f9d3c821ffcf7acfafbe67d5c1ad144621f0576996ef47ff-color-uastc2-bc7.ktx2",
+      "outputSha256": "503675d4edbfc54bd8e0dc9a674afe26bdc4326d48adf2753bfd68bb3f6e03e2",
+      "outputBytes": 87792
+    },
+    {
+      "source": ".cache/ktx2-native/glb-sources/6bc5d4ed8e23d0640d1be2e1459d4e895f9debb865ab8a9177602db2f6e254ba.jpg",
+      "kind": "color",
+      "uses": [
+        {
+          "model": "content/guardian/guardian.glb",
+          "imageIndex": 3,
+          "roles": [
+            "baseColor"
+          ]
+        }
+      ],
+      "sourceSha256": "6bc5d4ed8e23d0640d1be2e1459d4e895f9debb865ab8a9177602db2f6e254ba",
+      "width": 1024,
+      "height": 1024,
+      "alpha": false,
+      "output": "content/ktx2-native/glb/6bc5d4ed8e23d0640d1be2e1459d4e895f9debb865ab8a9177602db2f6e254ba-color-uastc2-bc7.ktx2",
+      "outputSha256": "bde5616e47cec2e35e9d6d1416b5eee62b7afe055769130fa2a3054e34775835",
+      "outputBytes": 1398560
+    },
+    {
+      "source": ".cache/ktx2-native/glb-sources/6d86738a13411de6865bc96a01db65cd7df293cb2504060afa8a1ad341e321fa.jpg",
+      "kind": "normal",
+      "uses": [
+        {
+          "model": "content/guardian/guardian.glb",
+          "imageIndex": 0,
+          "roles": [
+            "normal"
+          ]
+        }
+      ],
+      "sourceSha256": "6d86738a13411de6865bc96a01db65cd7df293cb2504060afa8a1ad341e321fa",
+      "width": 1024,
+      "height": 1024,
+      "alpha": false,
+      "output": "content/ktx2-native/glb/6d86738a13411de6865bc96a01db65cd7df293cb2504060afa8a1ad341e321fa-normal-uastc2-bc7.ktx2",
+      "outputSha256": "4cf73ff187f643d1cc956878ff08c223b787c6a691a6f01a88f6b68d4a79f532",
+      "outputBytes": 1398560
+    },
+    {
+      "source": ".cache/ktx2-native/glb-sources/6dd33b3bd7eaf625c4f386353466fe456f5b3b2cc3e926fc9e8974ad45610422.webp",
+      "kind": "data",
+      "uses": [
+        {
+          "model": "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+          "imageIndex": 2,
+          "roles": [
+            "metallicRoughness"
+          ]
+        }
+      ],
+      "sourceSha256": "6dd33b3bd7eaf625c4f386353466fe456f5b3b2cc3e926fc9e8974ad45610422",
+      "width": 1024,
+      "height": 1024,
+      "alpha": false,
+      "output": "content/ktx2-native/glb/6dd33b3bd7eaf625c4f386353466fe456f5b3b2cc3e926fc9e8974ad45610422-data-uastc2-bc7.ktx2",
+      "outputSha256": "71f2ac7f40cd19b014a0e9a198596a32f39217272a83bb14946cc0762b9a738d",
+      "outputBytes": 1398560
+    },
+    {
+      "source": ".cache/ktx2-native/glb-sources/6f16604a4a8ef7c50015d67cd7ecfd0415b3c34e2b76e05e6a1eb6ab3b0bc320.webp",
+      "kind": "data",
+      "uses": [
+        {
+          "model": "assets/web/88552fdb555a88e55f8e392bfe381cbad0c6af861e993213a4ebc42cd0996d2b.glb",
+          "imageIndex": 2,
+          "roles": [
+            "metallicRoughness"
+          ]
+        }
+      ],
+      "sourceSha256": "6f16604a4a8ef7c50015d67cd7ecfd0415b3c34e2b76e05e6a1eb6ab3b0bc320",
+      "width": 2048,
+      "height": 2048,
+      "alpha": false,
+      "output": "content/ktx2-native/glb/6f16604a4a8ef7c50015d67cd7ecfd0415b3c34e2b76e05e6a1eb6ab3b0bc320-data-uastc2-bc7.ktx2",
+      "outputSha256": "e268170f3fd3ac49c84f961ab2e687b05baf0f6ffe8bf107bb38b8a0182f5767",
+      "outputBytes": 5592880
+    },
+    {
+      "source": ".cache/ktx2-native/glb-sources/6f9023998bc0853a50beaeafe984bc204639ba886a1f64a450dba998cd239e51.webp",
+      "kind": "color",
+      "uses": [
+        {
+          "model": "assets/web/8f6c9ef7472a2d7f8ffda7f08a78f8027f91d14a8f92b8eeca4084b0f379da36.glb",
+          "imageIndex": 1,
+          "roles": [
+            "baseColor"
+          ]
+        },
+        {
+          "model": "assets/web/be4bb7e7eab2149516c1ecc0c364d77c4a62f116c4847cf0ef6f3308dc6180ef.glb",
+          "imageIndex": 1,
+          "roles": [
+            "baseColor"
+          ]
+        }
+      ],
+      "sourceSha256": "6f9023998bc0853a50beaeafe984bc204639ba886a1f64a450dba998cd239e51",
+      "width": 2048,
+      "height": 2048,
+      "alpha": false,
+      "output": "content/ktx2-native/glb/6f9023998bc0853a50beaeafe984bc204639ba886a1f64a450dba998cd239e51-color-uastc2-bc7.ktx2",
+      "outputSha256": "c0a93216c2b576d37f4d788f6043f2825ad5d67c2a1588417012a1486b103710",
+      "outputBytes": 5592880
+    },
+    {
+      "source": ".cache/ktx2-native/glb-sources/7038580308f80f72cf3539fa9cdd644ed6f2e09d32cb9fc28db64b0c771c4ad6.png",
+      "kind": "color",
+      "uses": [
+        {
+          "model": "content/character-lod/lion.glb",
+          "imageIndex": 2,
+          "roles": [
+            "baseColor"
+          ]
+        }
+      ],
+      "sourceSha256": "7038580308f80f72cf3539fa9cdd644ed6f2e09d32cb9fc28db64b0c771c4ad6",
+      "width": 256,
+      "height": 256,
+      "alpha": false,
+      "output": "content/ktx2-native/glb/7038580308f80f72cf3539fa9cdd644ed6f2e09d32cb9fc28db64b0c771c4ad6-color-uastc2-bc7.ktx2",
+      "outputSha256": "ed0dcc5fe8c470953b293b0f4028be490cbc0b2419187ec88805408e7f3bdb4f",
+      "outputBytes": 87792
+    },
+    {
+      "source": ".cache/ktx2-native/glb-sources/7224eec70940332b11a2cf00102b13ac525e0f46d59a0cbbdcd4e86fda366e8d.webp",
+      "kind": "normal",
+      "uses": [
+        {
+          "model": "assets/web/53c8f76ba3af3c972206a86e9fb4c9c25be3bb890077caa99c9c0b1bc3240b89.glb",
+          "imageIndex": 0,
+          "roles": [
+            "normal"
+          ]
+        },
+        {
+          "model": "assets/web/6d41a31b6bc7ac4163f8e484f001c7a4b7debac0fc6c93fefd3ff4a9a9fec275.glb",
+          "imageIndex": 0,
+          "roles": [
+            "normal"
+          ]
+        }
+      ],
+      "sourceSha256": "7224eec70940332b11a2cf00102b13ac525e0f46d59a0cbbdcd4e86fda366e8d",
+      "width": 2048,
+      "height": 2048,
+      "alpha": false,
+      "output": "content/ktx2-native/glb/7224eec70940332b11a2cf00102b13ac525e0f46d59a0cbbdcd4e86fda366e8d-normal-uastc2-bc7.ktx2",
+      "outputSha256": "6f39e6bd1f14744ab3645293d53e6de84cc906fd37f107ce17b04fc7dbf7bb01",
+      "outputBytes": 5592880
+    },
+    {
+      "source": ".cache/ktx2-native/glb-sources/72d6083187d80973060123d5e3d11238e093f10052aba394a3782e826da65ff8.jpg",
+      "kind": "data",
+      "uses": [
+        {
+          "model": "content/guardian/guardian.glb",
+          "imageIndex": 2,
+          "roles": [
+            "metallicRoughness"
+          ]
+        }
+      ],
+      "sourceSha256": "72d6083187d80973060123d5e3d11238e093f10052aba394a3782e826da65ff8",
+      "width": 1024,
+      "height": 1024,
+      "alpha": false,
+      "output": "content/ktx2-native/glb/72d6083187d80973060123d5e3d11238e093f10052aba394a3782e826da65ff8-data-uastc2-bc7.ktx2",
+      "outputSha256": "e54e31fcb9032e9e2149a7783b2226a4216794d98d1fe5bdafe747395bd21023",
+      "outputBytes": 1398560
     }
   ]
 }
