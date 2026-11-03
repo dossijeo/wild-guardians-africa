@@ -571,7 +571,7 @@ async function villageCulturePanel() {
 function villageConfirmPanel() {
   if(state.pauses.includes('hiring'))return;
   const p=pendingVillage;showHudPanel('Fundar poblado',`<div><p>${p.valid?'Ubicación válida':'Ubicación inválida: '+esc(p.reason)}</p><p>${formatWholeCoins(p.cost,moneyLocale())} monedas. Toca otra posición para recolocar.</p>${button('found-village','Confirmar poblado')}${button('cancel-village','Cancelar')}</div>`);document.querySelector('#found-village').disabled=!p.valid||!permission(state,'village');
-  bind('found-village',()=>{const payload=villageCatalog.find(v=>v.id===(p.culture==='saheliana'?'saheliano':p.culture));Game.foundVillage(state,commandId(),p.culture,p.x,p.z,payload,nav);world.clearVillagePreview();pendingVillage=null;tool=null;hideHudPanel();save();world.syncResidentProps();});bind('cancel-village',cancelVillagePreview);
+  bind('found-village',()=>{if(world.workerRuntime)throw Error('La fundación de poblados aún no está disponible en el modo experimental Worker.');const payload=villageCatalog.find(v=>v.id===(p.culture==='saheliana'?'saheliano':p.culture));Game.foundVillage(state,commandId(),p.culture,p.x,p.z,payload,nav);world.clearVillagePreview();pendingVillage=null;tool=null;hideHudPanel();save();world.syncResidentProps();});bind('cancel-village',cancelVillagePreview);
 }
 function repairStructure(targetId,{persist=false}={}){
   const owner=world,ownerState=state,runtime=owner.workerRuntime;if(!runtime){const value=Game.requestRepair(state,commandId(),targetId);if(persist)save();return value;}

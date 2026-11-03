@@ -651,6 +651,11 @@ would risk partial effects. The eventual Worker implementation must establish
 all required residency or make the whole command transactional before applying
 those mutations. This experiment does not yet provide that guarantee.
 
+Until that transaction exists, confirming a village in the experimental Worker
+game now reports that the action is unavailable before mutating local state or
+charging the player. The ordinary game path is unchanged. This is an explicit
+temporary limitation, not an implementation of Worker village founding.
+
 The proposed provisional `nav.setState` approach was tested against Wild
 Engine and removed: native prop suppression is irreversible inside a session,
 so restoring the JavaScript arrays fails with “A spatial prop suppression
