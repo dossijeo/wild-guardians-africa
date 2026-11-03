@@ -29,7 +29,7 @@ export function parseSimulationChunkKey(key){
 
 // Owns the game state and a native world inside the simulation worker. Chunk
 // residency is explicit: callers must provide the confirmed simulation demand.
-export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBindings=null,navigationView=null,compactViewAcks=false,restoringPhysics=false}={}){
+export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBindings=null,navigationView=null,compactViewAcks=false,compactPhysicsPoses=false,restoringPhysics=false}={}){
  if(!(module instanceof WebAssembly.Module)||typeof snapshot!=='string'||!Array.isArray(chunkKeys)||new Set(chunkKeys).size!==chunkKeys.length)throw TypeError('Invalid simulation authority initialization');
  for(const key of chunkKeys)parseSimulationChunkKey(key);
  const game=(restoringPhysics?deserializeConfirmedState:deserialize)(snapshot),loaded=new Map(),savedWaitBindings=game.workerRaidWaitBindings??null;delete game.workerRaidWaitBindings;delete game.workerPhysicsCheckpoint;let session,stopTasks,stopWorld,stopEvents,physics=null,physicsInitializing=false,tutorial=null,closed=false,sequence=0,events=[],trackMicroIncome=false,trackedActor=null,trackMotionPeers=false,stopMotion=null,motionSegments=null;
@@ -212,7 +212,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     sequence=command.sequence;const emitted=events;events=[];
     const resident=residency();
     if(compactViewAcks&&command.kind==='setNavigationView'&&!emitted.length)return {sequence,value,unchanged:true,slotId:game.slotId,stateSequence:game.sequence,elapsed:game.elapsed,pauses:[...game.pauses],events:[],residency:resident,saveAvailable:saveAvailable()};
-    const physicsPoses=physics?.poses()??null;
+    const physicsPoses=physics?.poses({activeOnly:compactPhysicsPoses})??null;
     const physical=command.kind==='snapshot'&&(command.physicsCheckpoint===true||command.physicsCheckpoint==='encoded')?physics?.checkpointFall()??null:undefined;
     return {sequence,value,...(command.steps!==undefined?{stepsExecuted}:{}),...(motionTrace?{motionTrace}:{}),...(motionInvalidation?{motionInvalidation}:{}),...(rejection?{rejection}:{}),...(commandLoadedChunks.length?{commandLoadedChunks}:{}),...(physical===undefined?{}:{physicsCheckpoint:physical&&command.physicsCheckpoint==='encoded'?encodePhysicsCheckpoint(physical):physical}),residency:resident,physicsPose:physicsPoses?.[0]??null,...(physicsPoses?.length>1?{physicsPoses}:{}),elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,raidWaitBindings:captureRaidWaitBindings(game,nav),saveAvailable:saveAvailable(),snapshot:serializeConfirmedState(game)};
    },

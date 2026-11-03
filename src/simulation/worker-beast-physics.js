@@ -53,8 +53,8 @@ export async function createWorkerBeastPhysics(game,nav,{actorId,actorIds=actorI
   }
   return rawStep(state,dt);
  };
- function poses(){return loaded.map(({animal,root,rig})=>{
-  const actorId=animal.id,model=rig.model,active=manager.entries.has(actorId)||manager.baked.has(actorId);if(active){manager.before(actorId);root.position.set(animal.x,nav.actorSurface(animal.x,animal.z),animal.z);root.updateMatrixWorld(true);manager.render(actorId);root.updateMatrixWorld(true);}const transform=node=>[...node.position.toArray(),...node.quaternion.toArray(),...node.scale.toArray()],bones=[];model.traverse(node=>{if(node.isBone)bones.push({name:node.name,transform:transform(node)});});return {actorId,root:transform(root),model:transform(model),bones,active};
- });}
+ function poses({activeOnly=false}={}){const result=[];for(const {animal,root,rig} of loaded){
+  const actorId=animal.id,model=rig.model,active=manager.entries.has(actorId)||manager.baked.has(actorId);if(activeOnly&&!active)continue;if(active){manager.before(actorId);root.position.set(animal.x,nav.actorSurface(animal.x,animal.z),animal.z);root.updateMatrixWorld(true);manager.render(actorId);root.updateMatrixWorld(true);}const transform=node=>[...node.position.toArray(),...node.quaternion.toArray(),...node.scale.toArray()],bones=[];model.traverse(node=>{if(node.isBone)bones.push({name:node.name,transform:transform(node)});});result.push({actorId,root:transform(root),model:transform(model),bones,active});
+ }return result;}
  return {get actorId(){return loaded[0]?.animal.id;},get actorIds(){return [...ids];},supports:id=>ids.has(id),admit,manager,assertEnvironment,checkpointFall(){if(!manager.canCheckpointFall())return null;return {version:1,actorIds:[...ids],fall:manager.checkpointFall()};},pose:()=>poses()[0],poses,dispose(){disposed=true;manager.dispose();structures?.dispose();for(const {rig} of loaded)rig.model.traverse(o=>{if(o.isSkinnedMesh){o.geometry.dispose();o.material.dispose();o.skeleton.dispose();}});}};
 }
