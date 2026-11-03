@@ -491,6 +491,21 @@ without bound, so the option remains experimental and does not yet satisfy a
 bounded, lossless backlog requirement. No GPU trajectory presentation is
 integrated.
 
+With diagnostics enabled, the host outbox now records pending publications,
+event-bearing publications, tick publications, unchanged confirmations and
+UTF-16 code units in queued snapshot strings. Peaks are observed during queue
+operations and can include a snapshot immediately sent; they exclude the
+in-flight message, event and physics objects, runtime queues and browser
+overhead. In one headless savanna raid, a sample before attack showed ten
+queued publications: four ticks, four unchanged confirmations and two other
+command publications; none contained events. Their snapshot strings totaled
+831,095 code units, and the run's peak was 2,080,034 code units. The run
+accepted attack, pause and safe post-recovery save. This single SwiftShader
+run is diagnostic only. Command barriers and unchanged camera confirmations
+can separate otherwise mergeable ticks; discarding them would require a
+separate ordering design and validation of camera-dependent raid decisions.
+This instrumentation is disabled without diagnostics.
+
 `tests/browser/worker-coalesced-events-parity.html` compares two real mangrove
 simulation Workers for 100 identical ticks, holding the coalesced presentation
 until the end. It delivered three publications instead of 100, preserved all
