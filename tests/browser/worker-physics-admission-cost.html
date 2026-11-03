@@ -1,0 +1,16 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {loadWorkerPhysicsRig} from '../../src/simulation/worker-physics-rig.js';
+import {loadWorkerPhysicsClips} from '../../src/simulation/worker-physics-clips.js';
+import {prepareAnimalModel,animalGroundSamples} from '../../src/rendering/animal-actions.js';
+window.audit=async(species='hyena')=>{
+ const results=[];
+ for(let i=0;i<3;i++){
+  const start=performance.now();let rigEnd,clipsEnd;
+  const [model,clips]=await Promise.all([loadWorkerPhysicsRig(species).then(v=>(rigEnd=performance.now(),v)),loadWorkerPhysicsClips(species).then(v=>(clipsEnd=performance.now(),v))]);
+  const loaded=performance.now();prepareAnimalModel(model,species);const prepared=performance.now(),samples=animalGroundSamples(model),sampled=performance.now();
+  results.push({rigMs:rigEnd-start,clipsMs:clipsEnd-start,parallelLoadMs:loaded-start,prepareMs:prepared-loaded,samplesMs:sampled-prepared,totalMs:sampled-start,clips:clips.length,samples:samples?.length??null});
+  model.traverse(o=>{if(o.isSkinnedMesh){o.geometry.dispose();o.material.dispose();o.skeleton.dispose();}});
+ }
+ return {species,results,scope:'Isolated repeated rig and clip fetch/decode and CPU preparation on the browser main thread, without simulation, rendering or physical admission. Network/cache state and overlap affect timings; this is not a gameplay or Worker latency measurement.'};
+};window.ready=true;
+</script>

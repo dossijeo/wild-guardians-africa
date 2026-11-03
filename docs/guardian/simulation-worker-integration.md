@@ -992,3 +992,19 @@ attack confirmation 2,127 ms, and the 14 sampled frame intervals had a maximum
 and p99 of 1,133 ms. The test does not measure input-to-first-camera-frame or
 prove that the new grouping was exercised. These severe pauses remain unresolved;
 do not interpret this smoke test as a responsiveness or performance improvement.
+
+First-impact admission currently awaits a fresh rig and clip load before the
+authority executes `castAttack`; each loader fetches and decodes the species GLB
+independently. The reproducible isolated probe
+`tests/browser/worker-physics-admission-cost.html` measured three preparations
+on the browser main thread: hyena 208–291 ms and buffalo 666–749 ms. This is
+not the actual Worker execution time or a direct decomposition of the previous
+gameplay result; caching, concurrency and resource contention differ. It does
+show that animal admission is substantial work to schedule before an interaction,
+and that per-instance full rig and clip reconstruction should not be assumed
+necessary. Candidate approaches are preparing eligible animals outside the
+authoritative command path, sharing immutable species clip data, or transferring
+prebuilt rig data from a separate preparation Worker. Any integration must keep
+simulation ordering and rejection semantics, and compare readiness, memory,
+latency and real frame times; simply running this preparation on the render
+thread would introduce a new source of stutter.
