@@ -772,3 +772,13 @@ An unavailable active-physics checkpoint reports failure and prevents the
 menu-exit path from claiming success. A browser test exercises the save adapter
 with a real Worker and restores its checkpoint; it does not cover active physics
 or the production UI. The ordinary game still does not install the runtime.
+
+Experimental Worker presentation: Grow and Multiply start the guardian when the
+command is submitted, before the Worker responds. The target effect waits for
+its matching `SpellActivated.commandId`; rejection cancels the provisional
+summon. A provisional pose uses presentation time and holds while waiting, and
+a matching late event continues it instead of starting another summon. This is
+wired into the actual Worker-enabled input path but has only unit coverage so
+far, not a visual or latency measurement in a running raid. It does not cover
+buildings, crops, awakenings, or speculative attack physics. The ordinary game
+still uses the non-Worker path.

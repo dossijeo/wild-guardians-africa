@@ -50,3 +50,12 @@ test('picked spell dispatch waits for the Worker and reports its rejection',asyn
  const pending=dispatchPickedSpell(state,'worker-spell','growth',pick,nav,runtime);assert.equal(sent.length,1);assert.equal(sent[0].kind,'castAgricultural');resolve({value:false,rejection:'No disponible'});await assert.rejects(pending,/No disponible/);
  assert.equal(dispatchPickedSpell(state,'empty','growth',{entityId:null},nav,runtime),false);assert.equal(sent.length,1);
 });
+test('provisional feedback starts before the Worker resolves and is cancelled on rejection',async()=>{
+ const state=ready(),plant=state.plants[0],calls=[];let resolve;
+ const runtime={submit(command){calls.push(['submit',command.id]);return new Promise(r=>{resolve=r;});}};
+ const presentation={begin:command=>calls.push(['begin',command.id]),reject:id=>calls.push(['reject',id])};
+ const pending=dispatchPickedSpell(state,'provisional','growth',{entityId:plant.id},nav,runtime,presentation);
+ assert.deepEqual(calls,[['begin','provisional'],['submit','provisional']]);
+ resolve({rejection:'No disponible'});await assert.rejects(pending,/No disponible/);
+ assert.deepEqual(calls.at(-1),['reject','provisional']);
+});

@@ -100,9 +100,26 @@ export class GuardianSummons{
   return true;
  }
  liveCropTarget(event){return !['growth','multiply'].includes(event.kind)||!event.targetId||!!this.world.state.plants?.some(p=>p.id===event.targetId&&p.alive);}
+ beginProvisional(command){
+  if(!['growth','multiply'].includes(command.spell)||!this.slots.length)return;
+  const event={type:'SpellActivated',commandId:command.id,kind:command.spell,targetId:command.selection.targetId,x:command.x,z:command.z,provisional:true,startedAt:performance.now(),presentation:{elapsed:this.world.state.elapsed,origin:command.selection.origin,contact:command.selection.contact}};
+  this.start(event);
+ }
+ rejectProvisional(id){
+  this.pending=this.pending.filter(event=>!(event.provisional&&event.commandId===id));
+  for(const slot of this.slots)if(slot.event?.provisional&&slot.event.commandId===id)this.hide(slot);
+ }
+ confirmProvisional(event){
+  const slot=this.slots.find(s=>s.event?.provisional&&s.event.commandId===event.commandId);
+  if(slot){const age=Math.min(.65,Math.max(0,(performance.now()-slot.event.startedAt)/1000));slot.at=this.world.state.elapsed-age;slot.event={...event,presentation:{...event.presentation,elapsed:slot.at}};return true;}
+  const pending=this.pending.find(e=>e.provisional&&e.commandId===event.commandId);
+  if(pending){Object.assign(pending,event,{provisional:false});return true;}
+  return false;
+ }
  start(event,dequeued=false){if(!this.slots.length)return;const w=this.world,s=this.slots[0];
   if(!this.liveCropTarget(event)||event.kind==='attack'&&!this.liveAttackTarget(event.targetId))return;
-  if(!dequeued&&(this.pending.length||(s.event?.kind==='attack'&&w.state.elapsed<s.at+ATTACK_TIMING.impact+ATTACK_TIMING.afterglow))){this.pending.push(event);return;}
+  if(!dequeued&&(this.pending.length||s.event?.provisional||(s.event?.kind==='attack'&&w.state.elapsed<s.at+ATTACK_TIMING.impact+ATTACK_TIMING.afterglow))){this.pending.push(event);return;}
+  if(dequeued&&event.provisional)event.startedAt=performance.now();
   if(s.event)this.stats.reused++;
   this.hide(s);this.guiding=false;
   s.model.scale.setScalar(2.4);s.lastAge=0;s.outroSound=false;s.event=event;s.at=event.presentation?.elapsed??w.state.elapsed;s.origin=event.presentation?.origin??this.plan(event.targetId,{x:event.x,z:event.z},{hoverAbove:event.kind==='awakening'});if(!s.origin){s.event=null;return;}
@@ -113,12 +130,12 @@ export class GuardianSummons{
   if(state!==this.presentationState||state.elapsed<this.lastElapsed){this.clear();this.anchor=state.events.at(-1);}
   this.presentationState=state;this.lastElapsed=state.elapsed;
   const events=state.events,index=this.anchor?events.lastIndexOf(this.anchor):-1;
-  for(let i=index+1;i<events.length;i++){const e=events[i];if(e.type==='SpellActivated'&&state.elapsed-(e.presentation?.elapsed??-Infinity)<.5)this.start(e);else if(e.type==='BlessingApplied'&&state.elapsed-(e.presentation?.elapsed??-Infinity)<.5)this.start({...e,kind:'awakening',x:e.presentation.x,z:e.presentation.z});}this.anchor=events.at(-1);
+  for(let i=index+1;i<events.length;i++){const e=events[i];if(e.type==='SpellActivated'){if(!(e.commandId&&this.confirmProvisional(e))&&state.elapsed-(e.presentation?.elapsed??-Infinity)<.5)this.start(e);}else if(e.type==='BlessingApplied'&&state.elapsed-(e.presentation?.elapsed??-Infinity)<.5)this.start({...e,kind:'awakening',x:e.presentation.x,z:e.presentation.z});}this.anchor=events.at(-1);
   while(this.pending.length&&(!this.liveCropTarget(this.pending[0])||this.pending[0].kind==='attack'&&!this.liveAttackTarget(this.pending[0].targetId)))this.pending.shift();
-  if(this.pending.length&&(!this.slots[0].event||state.elapsed>=this.slots[0].at+ATTACK_TIMING.impact+ATTACK_TIMING.afterglow)){const next=this.pending.shift();this.start({...next,presentation:{...next.presentation,elapsed:state.elapsed}},true);}
+  if(this.pending.length&&!this.slots[0].event?.provisional&&(!this.slots[0].event||state.elapsed>=this.slots[0].at+ATTACK_TIMING.impact+ATTACK_TIMING.afterglow)){const next=this.pending.shift();this.start({...next,presentation:{...next.presentation,elapsed:state.elapsed}},true);}
   const guideStart=performance.now(),guideActive=this.updateGuide();
   let anim=performance.now()-guideStart,vfx=0,auraAdvanceMs=0,active=guideActive?1:0;
-  for(const s of this.slots){if(!s.event)continue;if(!this.liveCropTarget(s.event)){this.hide(s);continue;}const age=state.elapsed-s.at;
+  for(const s of this.slots){if(!s.event)continue;if(!this.liveCropTarget(s.event)){this.hide(s);continue;}const age=s.event.provisional?Math.min(.65,Math.max(0,(performance.now()-s.event.startedAt)/1000)):state.elapsed-s.at;
    // Cancel if the target vanished before any contact frame was presented.
    // A slow frame may cross the marker; current age alone cannot prove a hit.
    // Keep fading an impact that was already presented with a live victim.
@@ -141,7 +158,7 @@ export class GuardianSummons{
    const visual=performance.now();s.vortex.update(age,COLORS[kind],s.height,s.bottom);const auraStarted=performance.now();s.aura.advance(Math.max(0,age-(s.lastAge??0)));auraAdvanceMs+=performance.now()-auraStarted;s.lastAge=age;
    const attack=kind==='attack',impactAge=state.elapsed-(s.at+ATTACK_TIMING.impact);
    const flight=THREE.MathUtils.clamp((age-ATTACK_TIMING.release)/(ATTACK_TIMING.impact-ATTACK_TIMING.release),0,1);
-   const release=attack?(age<ATTACK_TIMING.impact?ease(age/ATTACK_TIMING.release):Math.max(0,1-impactAge/ATTACK_TIMING.afterglow)):Math.sin(Math.PI*Math.min(1,age/1.25));
+   const release=s.event.provisional?0:attack?(age<ATTACK_TIMING.impact?ease(age/ATTACK_TIMING.release):Math.max(0,1-impactAge/ATTACK_TIMING.afterglow)):Math.sin(Math.PI*Math.min(1,age/1.25));
    s.material.opacity=release*(attack?.9:.7);const beam=s.beam;
    beam.visible=release>.01&&(!attack||age>=ATTACK_TIMING.release);
    s.impact.visible=release>.01&&(!attack||impactAge>=0);s.core.visible=release>.01;

@@ -2,6 +2,15 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {GuardianSummons} from '../src/rendering/guardian-summons.js';
+test('provisional crop cast waits for its matching confirmation without duplicate effects',async()=>{
+ const plant={id:'crop',alive:true},world={state:{events:[],elapsed:1,time:150,plants:[plant]},scene:new THREE.Scene(),assets:{model:async()=>({scene:new THREE.Group(),animations:[]})},vfxLibrary:{create:()=>Object.assign(new THREE.Group(),{sprites:{material:{}},ribbons:{material:{}},localLights:[],clear(){},seek(){},advance(){},prepare(){return false;},dispose(){}})}};
+ const summons=new GuardianSummons(world);await summons.ready;
+ const command={id:'cast-1',spell:'growth',x:0,z:0,selection:{targetId:'crop',origin:{x:3,y:2,z:0},contact:{x:0,y:1,z:0}}};
+ summons.beginProvisional(command);summons.update();const slot=summons.slots[0];assert.equal(slot.event.commandId,'cast-1');assert.equal(slot.event.provisional,true);assert.equal(slot.impact.visible,false);
+ world.state.elapsed=2;world.state.events.push({type:'SpellActivated',commandId:'cast-1',kind:'growth',targetId:'crop',x:0,z:0,presentation:{elapsed:1,origin:command.selection.origin,contact:command.selection.contact}});summons.update();
+ assert.equal(slot.event.commandId,'cast-1');assert.equal(slot.event.provisional,undefined);assert.equal(summons.stats.reused,0);
+ summons.beginProvisional({...command,id:'cast-2'});summons.rejectProvisional('cast-2');assert.equal(slot.event,null);summons.dispose();
+});
 test('consecutive spells reuse exactly one body and clear the previous presentation',async()=>{
  const world={state:{events:[],elapsed:1,time:150},scene:new THREE.Scene(),assets:{model:async()=>({scene:new THREE.Group(),animations:[]})},vfxLibrary:{create:()=>Object.assign(new THREE.Group(),{sprites:{material:{}},ribbons:{material:{}},localLights:[],clear(){this.clears=(this.clears??0)+1;},seek(){},advance(){},prepare(){return false;},dispose(){}})}};
  const summons=new GuardianSummons(world);await summons.ready;

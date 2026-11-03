@@ -357,7 +357,8 @@ function onPick({entityId,point,hitPoint,gestureSeconds=null}) {
     if(tool?.kind==='spell'){
       const applicationStarted=performance.now(),owner=world,ownerState=state,ownerTool=tool,spell=tool.spell,runtime=owner.workerRuntime??null;
       if(runtime)ensureWorkerSave(owner,ownerState);
-      const result=dispatchPickedSpell(ownerState,commandId(),spell,{entityId,point,hitPoint,origin:()=>owner.guardianSummons?.plan(entityId,point)},nav,runtime),applicationCpuSeconds=(performance.now()-applicationStarted)/1000;
+      const presentation=runtime&&['growth','multiply'].includes(spell)?{begin:command=>owner.guardianSummons?.beginProvisional(command),reject:id=>owner.guardianSummons?.rejectProvisional(id)}:null;
+      const result=dispatchPickedSpell(ownerState,commandId(),spell,{entityId,point,hitPoint,origin:()=>owner.guardianSummons?.plan(entityId,point)},nav,runtime,presentation),applicationCpuSeconds=(performance.now()-applicationStarted)/1000;
       const finish=committed=>{if(owner!==world||ownerState!==state||!committed)return;if(spell!=='attack')manualMagicActivity.applied(state,state.spells.at(-1),{gestureSeconds,applicationCpuSeconds,benefited:state.events.at(-1)?.benefited});if(tool===ownerTool)toolSession.used(performance.now()/1000);return runtime?owner.workerSave():save();};
       if(result?.then)return result.then(async value=>{await finish(value);if(owner===world&&ownerState===state)updateUI(true);},error=>{if(owner===world&&ownerState===state)throw error;});
       finish(result);return;
