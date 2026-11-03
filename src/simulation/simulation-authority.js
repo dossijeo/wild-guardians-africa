@@ -1,7 +1,8 @@
 import {deserialize} from '../persistence/snapshots.js';
 import {serializeConfirmedState,confirmedStateSaveAvailable} from './confirmed-live-state.js';
-import {advanceReal,cast,previewSpell,plant,PlantPlacementError,validatePlant,validatePlantPurchase,harvest,requestRepair,validateHarvest,validateRepair,hire,hireAdditional,validateHire,validateHireAdditional,openInitialHiring,observeGameEvents,pause,removeWall,resume} from './game.js';
+import {advanceReal,cast,previewSpell,plant,PlantPlacementError,validatePlant,validatePlantPurchase,harvest,requestRepair,validateHarvest,validateRepair,hire,hireAdditional,validateHire,validateHireAdditional,openInitialHiring,previewWallChain,buildWallChain,observeGameEvents,pause,removeWall,resume} from './game.js';
 import {permission} from './rules.js';
+import {ensurePurchaseBudget} from './budget.js';
 import {createSpatialGameSession} from '../world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement,SpatialChunkUnavailable} from '../world/wild-engine/spatial-navigation-movement.js';
 import {createEventDrivenTaskPlanner} from '../world/wild-engine/spatial-intent-bridge.js';
@@ -38,9 +39,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
    if(session.core.selectChunk(x,z)<0&&session.core.addChunk(x,z)<0)throw Error('Could not add simulation chunk '+key);
    session.stream.onData(session.core.chunkPayload());return true;
   }
-  function validateResidentPlant(command,added){
+  function withResidentChunks(operation,added){
    for(;;){
-    try{return validatePlant(game,command.x,command.z,nav);}catch(error){
+    try{return operation();}catch(error){
      if(!(error instanceof SpatialChunkUnavailable))throw error;
      if(!Array.isArray(error.missing)||!error.missing.length||error.missing.length+added.length>64)throw error;
      let progress=false;for(const {cx,cz} of error.missing){const key=`${cx},${cz}`;if(addResidentChunk(key)){added.push(key);progress=true;}}
@@ -74,7 +75,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      rejection=spellRejection(command,command.spell);value=rejection?false:cast(game,command.id,command.spell,command.x,command.z,nav,command.selection??null);
     }else if(command.kind==='plant'){
      if(typeof command.id!=='string'||!command.id||typeof command.species!=='string'||!command.species||!Number.isFinite(command.x)||!Number.isFinite(command.z))throw TypeError('Invalid plant command');
-     try{validateResidentPlant(command,commandLoadedChunks);}catch(error){if(!(error instanceof PlantPlacementError))throw error;rejection=error.message;}
+     try{withResidentChunks(()=>validatePlant(game,command.x,command.z,nav),commandLoadedChunks);}catch(error){if(!(error instanceof PlantPlacementError))throw error;rejection=error.message;}
      const duplicate=game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id);
      if(!rejection&&!duplicate&&!permission(game,'plant'))rejection='Esta acción no está disponible ahora';
      if(!rejection&&!duplicate)try{validatePlantPurchase(game,command.species);}catch(error){if(error?.code!=='hiring-reserve'&&error?.message!=='Cultivo desconocido')throw error;rejection=error.message;}
@@ -90,6 +91,15 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      if(typeof command.id!=='string'||!command.id||!command.selection||typeof command.selection!=='object'||Array.isArray(command.selection)||command.kind==='hireAdditional'&&(typeof command.centerId!=='string'||!command.centerId))throw TypeError('Invalid hiring command');
      try{if(command.kind==='hire')validateHire(game,command.id,command.selection);else validateHireAdditional(game,command.id,command.selection,command.centerId);}catch(error){rejection=error.message;}
      value=rejection?false:(command.kind==='hire'?hire(game,command.id,command.selection):hireAdditional(game,command.id,command.selection,command.centerId))??null;
+    }else if(command.kind==='buildWallChain'){
+     if(typeof command.id!=='string'||!command.id||typeof command.material!=='string'||!command.material||!Array.isArray(command.points)||command.options!==undefined&&(!command.options||typeof command.options!=='object'||Array.isArray(command.options)||Object.hasOwn(command.options,'preparedPlan')))throw TypeError('Invalid wall chain command');
+     if(game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id))value=false;
+     else{
+      const options=command.options??{};let plan;
+      try{plan=withResidentChunks(()=>previewWallChain(game,command.material,command.points,nav,options),commandLoadedChunks);if(plan.pieces.length)ensurePurchaseBudget(game,plan.cost);}
+      catch(error){if(error?.code!=='hiring-reserve'&&!['Esta acción no está disponible ahora','No hay monedas suficientes para todo el trazado','Trazado de muralla inválido','Material desconocido'].includes(error?.message))throw error;rejection=error.message;}
+      value=rejection?false:plan.pieces.length?buildWallChain(game,command.id,command.material,command.points,nav,{...options,preparedPlan:plan}):false;
+     }
     }else if(command.kind==='addChunk'){
      value=addResidentChunk(command.key);
     }else if(command.kind==='removeWall'){

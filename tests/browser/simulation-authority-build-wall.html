@@ -1,0 +1,26 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {serializeConfirmedState} from '../../src/simulation/confirmed-live-state.js';
+import {previewWallChain,buildWallChain,advanceReal,observeGameEvents} from '../../src/simulation/game.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+window.audit=async()=>{
+ const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
+ let fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),{game,nav}=fixture.diagnosticWorld();game.raid=null;game.time=100;game.pauses=[];game.dayPlan=null;game.nightPlan=null;game.structures=game.structures.filter(s=>s.kind==='center');nav.setState(game);
+ const center=game.structures.find(s=>s.kind==='center'&&s.status==='intact'),options={maxPieces:3,smooth:false,snap:false};if(!center)throw Error('Missing center');let points=null;
+ for(let dz=-60;dz<=60&&!points;dz+=4)for(let dx=-60;dx<=60&&!points;dx+=4)for(const [sx,sz] of [[5,0],[0,5]]){const candidate=[[center.x+dx,center.z+dz],[center.x+dx+sx,center.z+dz+sz]];try{if(previewWallChain(game,'zarzas',candidate,nav,options).pieces.length){points=candidate;break;}}catch(error){if(error.name!=='SpatialChunkUnavailable')throw error;}}
+ if(!points)throw Error('No buildable wall');const source=serialize(game);fixture.dispose();fixture=await createSimulation({mangrove:true,snapshotSource:source,chunkKeys:chunks});({game,nav}=fixture.diagnosticWorld());const client=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,session:'build-wall'}),events=[],stop=observeGameEvents(game,e=>events.push(structuredClone(e)));let sequence=0;
+ try{await client.ready;
+  async function compare(command,fn){let value=null,rejection=null;try{value=fn()??null;}catch(error){rejection=error.message;}const expectedEvents=events.splice(0),request=client.submit(command);if(!request.accepted)throw Error('Command not admitted');const result=await request.result,local=serializeConfirmedState(game);if(result.sequence!==++sequence||result.value!==(rejection?false:value)||(result.rejection??null)!==rejection||result.snapshot!==local||JSON.stringify(result.events)!==JSON.stringify(expectedEvents)){const a=JSON.parse(local),b=JSON.parse(result.snapshot),keys=Object.keys(a).filter(k=>JSON.stringify(a[k])!==JSON.stringify(b[k]));throw Error('Wall command divergence at '+sequence+': '+JSON.stringify({rejection,remote:result.rejection,value,remoteValue:result.value,keys,expectedEvents,actualEvents:result.events}));}return result;}
+  const input={kind:'buildWallChain',id:'wall-1',material:'zarzas',points,options},built=await compare(input,()=>buildWallChain(game,'wall-1','zarzas',points,nav,options));
+  const duplicate=await compare(input,()=>buildWallChain(game,'wall-1','zarzas',points,nav,options));
+  const invalidPoints=[[Number.NaN,0],[0,0]],invalid=await compare({kind:'buildWallChain',id:'bad-wall',material:'zarzas',points:invalidPoints,options},()=>buildWallChain(game,'bad-wall','zarzas',invalidPoints,nav,options));
+  const badMaterial=await compare({kind:'buildWallChain',id:'bad-material',material:'missing',points,options},()=>buildWallChain(game,'bad-material','missing',points,nav,options));
+  for(let i=0;i<20;i++)await compare({kind:'advance',seconds:.05,nightFastForward:true},()=>{advanceReal(game,.05,nav,{nightFastForward:true});nav.serviceRaidConnectivityDemand?.();});
+  if(!built.value||!built.events.some(e=>e.type==='WallChainBuilt')||duplicate.value!==false||!invalid.rejection||!badMaterial.rejection||client.status().state!=='ready')throw Error('Incomplete wall build coverage');
+  const empty=createSimulationAuthorityClient({snapshot:source,chunkKeys:[],session:'build-wall-empty'});let loaded;
+  try{await empty.ready;const request=empty.submit(input),result=await request.result;if(!result.value||!result.commandLoadedChunks?.length||result.snapshot!==built.snapshot||JSON.stringify(result.events)!==JSON.stringify(built.events))throw Error('Wall build with missing chunks diverged');loaded=result.commandLoadedChunks;}finally{empty.dispose();}
+  return {sequence,points,wallEvent:built.events.find(e=>e.type==='WallChainBuilt'),duplicate:duplicate.value,invalid:invalid.rejection,loaded,subsequentAdvances:20,scope:'Programmatic wall chain in a modified peaceful island-mangrove capture, compared against direct Game functions and a Worker initially without resident regions. No user gesture, changing raid barriers, save/restore or production integration.'};
+ }finally{stop();client.dispose();fixture.dispose();}
+};window.ready=true;
+</script>
