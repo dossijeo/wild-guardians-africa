@@ -3,11 +3,13 @@ import {createRequire} from 'node:module';
 
 // Visual inspection only: recorded camera paths are not frame-synchronized.
 const {chromium}=createRequire(import.meta.url)(process.env.PLAYWRIGHT_MODULE??'playwright');
+const stem=process.env.CAMERA_VIDEO_STEM??'camera-video',outputStem=process.env.CAMERA_CONTACT_STEM??'camera-contact',names=(process.env.CAMERA_VIDEO_NAMES??'base,fade01').split(',');
+if(!/^[a-z0-9-]+$/.test(stem)||!/^[a-z0-9-]+$/.test(outputStem)||names.length!==2||names.some(name=>!/^[a-z0-9-]+$/.test(name)))throw Error('Invalid video selection');
 const browser=await chromium.launch({channel:'msedge',headless:true});
 try{
  const page=await browser.newPage();
- for(const name of ['base','fade01']){
-  const bytes=(await readFile(`docs/guardian/gpu-animation/camera-video-${name}.webm`)).toString('base64');
+ for(const name of names){
+  const bytes=(await readFile(`docs/guardian/gpu-animation/${stem}-${name}.webm`)).toString('base64');
   const result=await page.evaluate(async bytes=>{
    const video=document.createElement('video');video.src='data:video/webm;base64,'+bytes;
    await new Promise((resolve,reject)=>{video.onloadedmetadata=resolve;video.onerror=()=>reject(Error('Video metadata failed'));});
@@ -19,7 +21,7 @@ try{
    return {width:video.videoWidth,height:video.videoHeight,times,png:canvas.toDataURL('image/png')};
   },bytes);
   if(result.width!==1280||result.height!==720)throw Error('Unexpected video size');
-  await writeFile(`docs/guardian/gpu-animation/camera-contact-${name}.png`,Buffer.from(result.png.split(',')[1],'base64'));
+  await writeFile(`docs/guardian/gpu-animation/${outputStem}-${name}.png`,Buffer.from(result.png.split(',')[1],'base64'));
   console.log(JSON.stringify({name,width:result.width,height:result.height,times:result.times}));
  }
 }finally{await browser.close();}
