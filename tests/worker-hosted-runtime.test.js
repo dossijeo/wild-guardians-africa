@@ -1,9 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {MessageChannel} from 'node:worker_threads';
+import {once} from 'node:events';
 import {createWorkerHostedRuntime} from '../src/simulation/worker-hosted-runtime.js';
 
 function setup(runtimeOptions={}){
- const messages=[],worker={postMessage:value=>messages.push(value),terminate(){this.terminated=true;}},seen=[];let sequence=0,elapsed=0;
+ const messages=[],worker={postMessage:value=>messages.push(structuredClone(value)),terminate(){this.terminated=true;}},seen=[];let sequence=0,elapsed=0;
  const world={createConfirmedReceiver(){return {accept(packet){seen.push(packet.sequence);sequence=packet.sequence;elapsed=packet.elapsed;return {accepted:true};},acceptUnchanged(packet){sequence=packet.sequence;elapsed=packet.elapsed;return {accepted:true};},status(){return {sequence,lastElapsed:elapsed};}};}};
  const runtime=createWorkerHostedRuntime({world,session:'s',clientOptions:{snapshot:'x',chunkKeys:[],compactViewAcks:runtimeOptions.backgroundViews===true},runtimeOptions,workerFactory:()=>worker});return {runtime,worker,messages,seen};
 }
@@ -45,4 +47,15 @@ test('background camera updates do not wait for a command result and accept orde
  const {runtime,worker,messages}=setup({coalescePublications:true,backgroundViews:true}),start=runtime.start();worker.onmessage({data:{kind:'publication',session:'s',publication:{sequence:1,elapsed:0}}});worker.onmessage({data:{kind:'started',session:'s',sequence:1,status:{}}});await start;
  const view={bounds:[0,1,2,3],eye:{x:1,z:2},target:{x:3,z:4}};assert.equal(runtime.setNavigationView(view),undefined);assert.deepEqual(messages.at(-1),{kind:'view',session:'s',command:{kind:'setNavigationView',view}});
  worker.onmessage({data:{kind:'publication',session:'s',backgroundView:true,firstSequence:2,publication:{sequence:3,elapsed:0,unchanged:true}}});assert.equal(runtime.status().confirmedSequence,3);assert.equal(messages.at(-1).kind,'publicationAck');runtime.dispose();
+});
+test('posting camera and action isolates later caller mutations and rejects uncloneable payloads',async()=>{
+ const {runtime,worker,messages}=setup({coalescePublications:true,backgroundViews:true}),start=runtime.start();worker.onmessage({data:{kind:'publication',session:'s',publication:{sequence:1,elapsed:0}}});worker.onmessage({data:{kind:'started',session:'s',sequence:1,status:{}}});await start;
+ const view={bounds:[0,1,2,3],eye:{x:1,z:2},target:{x:3,z:4}},command={kind:'plant',position:{x:7,z:8}};runtime.setNavigationView(view);const postedView=messages.at(-1);view.eye.x=99;view.bounds[0]=99;assert.equal(postedView.command.view.eye.x,1);assert.equal(postedView.command.view.bounds[0],0);
+ const pending=runtime.submit(command),postedCommand=messages.at(-1);command.position.x=99;assert.equal(postedCommand.command.position.x,7);await assert.rejects(runtime.submit({kind:'plant',value:()=>{}}),/clone/i);assert.equal(runtime.status().fault,null);assert.throws(()=>runtime.setNavigationView({bad:()=>{}}),/clone/i);
+ const disposed=assert.rejects(pending,/disposed/);runtime.dispose();await disposed;
+});
+test('native message channel captures mutable input at post time',async()=>{
+ const {port1,port2}=new MessageChannel(),worker={postMessage:value=>port1.postMessage(value),terminate(){port1.close();port2.close();}},world={createConfirmedReceiver(){let sequence=0;return {accept(message){sequence=message.sequence;return {accepted:true};},status:()=>({sequence,lastElapsed:0})};}};
+ const runtime=createWorkerHostedRuntime({world,session:'s',clientOptions:{compactViewAcks:true},runtimeOptions:{coalescePublications:true,backgroundViews:true},workerFactory:()=>worker});const initialized=once(port2,'message'),start=runtime.start();await initialized;worker.onmessage({data:{kind:'publication',session:'s',publication:{sequence:1,elapsed:0}}});await once(port2,'message');worker.onmessage({data:{kind:'started',session:'s',sequence:1,status:{}}});await start;
+ const view={eye:{x:3},target:{x:5},bounds:[1,2,3,4]},received=once(port2,'message');runtime.setNavigationView(view);view.eye.x=9;view.bounds[0]=9;const [message]=await received;assert.equal(message.command.view.eye.x,3);assert.equal(message.command.view.bounds[0],1);runtime.dispose();
 });
