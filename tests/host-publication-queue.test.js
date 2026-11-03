@@ -19,6 +19,11 @@ test('a motion invalidation stays ordered between observed path publications',()
  const sent=[],q=createHostPublicationQueue({session:'s',send:value=>sent.push(value)}),p={at:1,x:0,z:0},trace={actorId:'a',start:p,end:p,segments:[],continuous:true,timed:true},invalidation={actorId:'a',at:1,x:0,z:0,reason:'pause'};
  q.publication(packet(1),true);q.publication({...packet(2),motionTrace:trace},true);q.publication({...packet(3),motionInvalidation:invalidation},false);q.publication({...packet(4),motionTrace:trace},true);q.ack(1);assert.equal(sent[1].publication.sequence,2);q.ack(2);assert.deepEqual(sent[2].publication.motionInvalidation,invalidation);q.ack(3);assert.equal(sent[3].publication.sequence,4);
 });
+test('a quiet tick carrying a motion invalidation cannot be absorbed by later ticks',()=>{
+ const sent=[],q=createHostPublicationQueue({session:'s',send:value=>sent.push(value)}),p={at:1,x:0,z:0},trace={actorId:'a',start:p,end:p,segments:[],continuous:true,timed:true},invalidation={actorId:'a',...p,reason:'peer-motion-unknown'};
+ q.publication(packet(1),true);q.publication({...packet(2),motionTrace:trace,motionInvalidation:invalidation},true);q.publication({...packet(3),motionTrace:trace},true);q.publication({...packet(4,[{id:'e'}]),motionTrace:trace},true);
+ q.ack(1);assert.equal(sent[1].publication.sequence,2);assert.deepEqual(sent[1].publication.motionInvalidation,invalidation);q.ack(2);assert.equal(sent[2].publication.sequence,4);assert.deepEqual(sent[2].publication.events,[{id:'e'}]);
+});
 test('an eventful batch retains its boundary when earlier path samples are folded',()=>{
  const sent=[],q=createHostPublicationQueue({session:'s',send:value=>sent.push(value)}),point=(at,x)=>({at,x,z:0}),trace=(a,b)=>({actorId:'a',start:point(a,a),end:point(b,b),segments:[{at:b,x0:a,z0:0,x1:b,z1:0,t0:a,t1:b}],continuous:true,timed:true});
  const barrier={actorId:'a',...point(1,1),reason:'simulation-event'};q.publication(packet(1),true);q.publication({...packet(2),motionTrace:trace(0,1)},true);q.publication({...packet(3,[{id:'event-1'}]),motionTrace:trace(1,2),motionInvalidation:barrier},true);q.ack(1);

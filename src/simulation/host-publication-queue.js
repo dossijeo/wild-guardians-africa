@@ -18,7 +18,9 @@ export function createHostPublicationQueue({session,send,diagnostics=false,foldV
  function account(item,sign){if(!diagnostics||item.kind!=='publication')return;queuedPublications+=sign;eventfulPublications+=sign*(item.publication.events?.length>0?1:0);tickPublications+=sign*(item.tick?1:0);unchangedPublications+=sign*(item.publication.unchanged===true?1:0);snapshotChars+=sign*(typeof item.publication.snapshot==='string'?item.publication.snapshot.length:0);peakSnapshotChars=Math.max(peakSnapshotChars,snapshotChars);peakEventfulPublications=Math.max(peakEventfulPublications,eventfulPublications);}
  function drain(){if(inFlight)return;while(queue.length){const item=queue.shift();account(item,-1);if(item.kind==='publication'){inFlight=item.publication.sequence;lastSent=inFlight;send({...item,session});return;}send({...item,session});}}
  const eligible=item=>item.kind==='publication'&&item.tick&&item.publication.unchanged!==true&&Array.isArray(item.publication.events)&&physicsOwners(item.publication)!==null;
- const replaceable=item=>eligible(item)&&item.publication.events.length===0;
+ // An invalidation is an ordered boundary even when no gameplay event was
+ // emitted. Absorbing it would let a consumer retain an obsolete trajectory.
+ const replaceable=item=>eligible(item)&&item.publication.events.length===0&&!item.publication.motionInvalidation;
  const background=item=>item?.kind==='publication'&&item.backgroundView===true&&item.publication.unchanged===true&&Array.isArray(item.publication.events)&&item.publication.events.length===0&&!Object.hasOwn(item.publication,'snapshot');
  const sameState=(a,b)=>a.slotId===b.slotId&&a.stateSequence===b.stateSequence&&a.elapsed===b.elapsed&&a.saveAvailable===b.saveAvailable&&JSON.stringify(a.pauses)===JSON.stringify(b.pauses);
  return {
