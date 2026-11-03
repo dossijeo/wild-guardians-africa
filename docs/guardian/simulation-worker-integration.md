@@ -971,3 +971,11 @@ updates normally enter the ordered command queue; the optional background-view
 path also submits them into that queue. Replacing queued views across simulation
 ticks or gameplay commands could change simulation outcomes, so latest-only
 coalescing and any priority changes need deterministic tests before integration.
+
+The opt-in background-view path now replaces consecutive pending views only when
+no tick or gameplay command separates them, retaining the last view at that
+boundary. The runtime test covers multiple views separated by a player action
+and an elapsed tick, as well as their completion order. This does not overtake
+an in-flight operation or eliminate all queued camera updates, and is not yet a
+real-game latency or performance result. The ordinary hosted game continues to
+use ordered view commands until that path has broader validation.

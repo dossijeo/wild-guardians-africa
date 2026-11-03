@@ -49,3 +49,14 @@ test('batch window groups elapsed steps and commands flush earlier without losin
  time=100;wake();assert.equal(sent[1].command.steps,2);await complete(1,{stepsExecuted:2});
  time=150;const paused=runtime.submit({kind:'pause',reason:'menu'});assert.equal(sent[2].command.kind,'advance');assert.equal(sent[2].command.steps,undefined);await complete(2);assert.equal(sent[3].command.kind,'pause');await complete(3);await paused;runtime.dispose();
 });
+test('background camera views coalesce only between simulation and command boundaries',async()=>{
+ let time=0,seq=0;const sent=[],client={ready:Promise.resolve(),submit(command){let resolve;const result=new Promise(r=>{resolve=r;});sent.push({command,resolve,sequence:++seq});return {accepted:true,result};},dispose(){}};
+ const world={createConfirmedReceiver(){let sequence=0;return {accept(message){sequence=message.sequence;return {accepted:true};},status(){return {sequence,lastElapsed:0};}};}};
+ const runtime=createWorkerGameRuntime({client,world,session:'s',now:()=>time,schedule:()=>1,cancel:()=>{}}),complete=async(index)=>{sent[index].resolve({sequence:sent[index].sequence,residency:{missing:[]}});await flush();};
+ const starting=runtime.start();await flush();await complete(0);await starting;
+ const blocker=runtime.submit({kind:'pause',reason:'menu'}),view=x=>runtime.submit({kind:'setNavigationView',view:{x}},{backgroundView:true});
+ const a=view(1),b=view(2);assert.equal(a,b);const action=runtime.submit({kind:'plant',id:'crop'});const c=view(3),d=view(4);assert.equal(c,d);
+ time=50;const e=view(5),f=view(6);assert.equal(e,f);assert.notEqual(d,e);
+ await complete(1);assert.equal(sent[2].command.view.x,2);await complete(2);assert.equal(sent[3].command.kind,'plant');await complete(3);assert.equal(sent[4].command.view.x,4);await complete(4);assert.equal(sent[5].command.kind,'advance');await complete(5);assert.equal(sent[6].command.view.x,6);await complete(6);
+ await Promise.all([blocker,a,b,action,c,d,e,f]);runtime.dispose();
+});
