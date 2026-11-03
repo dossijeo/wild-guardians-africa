@@ -15,8 +15,19 @@ window.audit=async()=>{
   await runtime.start();const initial=state.elapsed;clock=250;const [id,wake]=timers.entries().next().value;timers.delete(id);wake();
   const paused=runtime.submit({kind:'pause',reason:'save-test'}),result=await save.request();await paused;
   const saved=deserialize(stored);if(!result.saved||!saved.pauses.includes('save-test')||Math.abs(saved.elapsed-initial-.25)>1e-6||saved.savedAt!==123)throw Error('Checkpoint did not preserve ordered worker state');
+  if(!Array.isArray(saved.workerRaidWaitBindings))throw Error('Missing navigation wait bindings');
   await runtime.submit({kind:'resume',reason:'save-test'});if(!saved.pauses.includes('save-test')||state.pauses.includes('save-test'))throw Error('Saved state was mutated by later publication');
-  return {sequence:result.sequence,elapsed:saved.elapsed,paused:saved.pauses.includes('save-test'),scope:'Real simulation Worker with ordered pause and detached checkpoint; no physics restore or complete game UI.'};
+  const restored=createSimulationAuthorityClient({snapshot:stored,chunkKeys:chunks,session:'save-restore'});
+  try{
+   await restored.ready;const resume=restored.submit({kind:'resume',reason:'save-test'});if(!resume.accepted)throw Error('Restore resume rejected');await resume.result;
+   for(let i=0;i<30;i++){
+    clock+=50;const left=runtime.submit({kind:'snapshot'}),right=restored.submit({kind:'advance',seconds:.05,nightFastForward:true});
+    if(!right.accepted)throw Error('Restore advance rejected');const [a,b]=await Promise.all([left,right.result]);
+    const view=packet=>{const s=JSON.parse(packet.snapshot);delete s.savedAt;for(const animal of s.raid?.animals??[])if(animal.raidWait)delete animal.raidWait.epoch;return JSON.stringify({state:s,waits:packet.raidWaitBindings.map(({id,current})=>({id,current}))});};
+    if(view(a)!==view(b)){const x=JSON.parse(view(a)),y=JSON.parse(view(b)),differences=[];const scan=(l,r,path='')=>{if(differences.length>=8)return;if(l&&r&&typeof l==='object'&&typeof r==='object'){for(const key of new Set([...Object.keys(l),...Object.keys(r)]))scan(l[key],r[key],path+'/'+key);}else if(!Object.is(l,r))differences.push({path,left:l,right:r});};scan(x,y);throw Error('Restored raid diverged at tick '+i+': '+JSON.stringify(differences));}
+   }
+  }finally{restored.dispose();}
+  return {sequence:result.sequence,elapsed:saved.elapsed,paused:saved.pauses.includes('save-test'),savedWaits:saved.workerRaidWaitBindings.length,restoredTicks:30,scope:'Real simulation Worker checkpoint and restored island-mangrove raid compared for 30 ticks. No active physics restore or complete game UI.'};
  }finally{runtime.dispose();}
 };window.ready=true;
 </script>

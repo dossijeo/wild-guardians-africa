@@ -1,5 +1,6 @@
 import {deserialize} from './snapshots.js';
 import {confirmedStateSaveAvailable} from '../simulation/confirmed-live-state.js';
+import {validateRaidWaitBindings} from '../simulation/raid-wait-handoff.js';
 
 // Snapshot requests enter the simulation queue immediately. Repository writes
 // remain ordered even when storage is asynchronous or an earlier write fails.
@@ -18,6 +19,8 @@ export function createWorkerSaveCoordinator({runtime,repository,slotId,now=()=>D
    const state=deserialize(result.snapshot);
    if(state.slotId!==slotId)throw Error('Worker checkpoint slot mismatch');
    if(!confirmedStateSaveAvailable(state))throw Error('Worker checkpoint is not restorable');
+   validateRaidWaitBindings(state,result.raidWaitBindings);
+   state.workerRaidWaitBindings=structuredClone(result.raidWaitBindings);
    state.savedAt=now();
    await repository.save(state);
    return {saved:true,sequence:result.sequence,elapsed:state.elapsed};

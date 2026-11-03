@@ -242,3 +242,11 @@ path or simulation to the Worker. Active Rapier state is not serialised, and
 restoring a running raid with identical future navigation and physics has not
 been established. The checkpoint therefore must not be advertised as complete
 save/restore support or used to enable the Worker in the main game yet.
+
+Worker checkpoints now retain the validity of native raid-wait bindings. The
+new Worker validates and remaps them against its own native revisions, then
+removes the handoff data from the live state. A browser test restored the
+island-mangrove raid checkpoint and matched an uninterrupted Worker for 30
+ticks. That capture contained no active waits; current and stale waits are
+covered separately by handoff tests, not by this end-to-end comparison. Active
+physics, longer campaigns and production UI save/restore remain unverified.

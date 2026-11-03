@@ -5,7 +5,7 @@ import {serialize} from '../src/persistence/snapshots.js';
 import {createWorkerSaveCoordinator} from '../src/persistence/worker-save.js';
 
 const deferred=()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};};
-const packet=(state,sequence,saveAvailable=true)=>({sequence,saveAvailable,snapshot:serialize(state)});
+const packet=(state,sequence,saveAvailable=true)=>({sequence,saveAvailable,snapshot:serialize(state),raidWaitBindings:[]});
 
 test('worker checkpoints are captured immediately and written in request order',async()=>{
  const state=newGame({seed:712,slotId:'a'}),barriers=[],writes=[],firstWrite=deferred();
@@ -30,4 +30,10 @@ test('failed and cross-slot checkpoints do not block later saves',async()=>{
  const saves=createWorkerSaveCoordinator({runtime:{submit(){n++;if(n===1)return Promise.reject(Error('worker failed'));return Promise.resolve(packet(n===2?other:state,n));}},repository:{save(){writes++;}},slotId:'a'});
  await assert.rejects(saves.request(),/worker failed/);await assert.rejects(saves.request(),/slot mismatch/);
  assert.equal((await saves.request()).saved,true);assert.equal(writes,1);
+});
+
+test('invalid navigation wait bindings cannot be persisted',async()=>{
+ const state=newGame({seed:712,slotId:'a'}),bad={...packet(state,1),raidWaitBindings:[{id:'missing',epoch:null,current:true}]};let writes=0;
+ const saves=createWorkerSaveCoordinator({runtime:{submit:async()=>bad},repository:{save(){writes++;}},slotId:'a'});
+ await assert.rejects(saves.request(),/bindings do not match/);assert.equal(writes,0);
 });

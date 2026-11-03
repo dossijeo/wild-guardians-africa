@@ -20,12 +20,12 @@ export function parseSimulationChunkKey(key){
 export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBindings=null}={}){
  if(!(module instanceof WebAssembly.Module)||typeof snapshot!=='string'||!Array.isArray(chunkKeys)||new Set(chunkKeys).size!==chunkKeys.length)throw TypeError('Invalid simulation authority initialization');
  for(const key of chunkKeys)parseSimulationChunkKey(key);
- const game=deserialize(snapshot),loaded=new Map();let session,stopTasks,stopWorld,stopEvents,physics=null,physicsInitializing=false,closed=false,sequence=0,events=[];
+ const game=deserialize(snapshot),loaded=new Map(),savedWaitBindings=game.workerRaidWaitBindings??null;delete game.workerRaidWaitBindings;let session,stopTasks,stopWorld,stopEvents,physics=null,physicsInitializing=false,closed=false,sequence=0,events=[];
  try{
   session=createSpatialGameSession(module,game,{loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
   for(const key of chunkKeys){const [x,z]=parseSimulationChunkKey(key);if(session.core.selectChunk(x,z)<0&&session.core.addChunk(x,z)<0)throw Error('Could not add simulation chunk '+key);loaded.set(key,{...session.core.chunkPayload(),terrainRevision:0});}
   const planner=createEventDrivenTaskPlanner(session);planner.resetFromState(game);
-  const nav=createSpatialNavigationMovement(session,game);stopTasks=planner.observeTasks(game);stopWorld=planner.observeWorld(game);nav.intentTaskPlanner=planner;nav.raidEntryResident=(entry,radii)=>[...raidEntryChunks(entry,radii)].every(key=>loaded.has(key));if(raidWaitBindings!==null)restoreRaidWaitBindings(game,nav,raidWaitBindings);
+  const nav=createSpatialNavigationMovement(session,game);stopTasks=planner.observeTasks(game);stopWorld=planner.observeWorld(game);nav.intentTaskPlanner=planner;nav.raidEntryResident=(entry,radii)=>[...raidEntryChunks(entry,radii)].every(key=>loaded.has(key));if(raidWaitBindings!==null||savedWaitBindings!==null)restoreRaidWaitBindings(game,nav,raidWaitBindings??savedWaitBindings);
   stopEvents=observeGameEvents(game,event=>events.push(structuredClone(event)));
   function spellRejection(command,kind){
    if(game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id))return null;
