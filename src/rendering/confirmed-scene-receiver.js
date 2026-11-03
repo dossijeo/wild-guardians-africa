@@ -12,8 +12,8 @@ export function createConfirmedSceneReceiver(state,session,world){
  }});
  return {
   acceptUnchanged(message){return receiver.acceptUnchanged(message);},
-  accept(message){
-   const status=receiver.status();if(status.fault)return {accepted:false,reason:'fault'};if(message?.session!==session||!Number.isSafeInteger(message?.sequence)||message.sequence!==status.sequence+1)return receiver.accept(message);
+  accept(message,{firstSequence=message?.sequence}={}){
+   const status=receiver.status();if(status.fault)return {accepted:false,reason:'fault'};if(message?.session!==session||!Number.isSafeInteger(message?.sequence)||firstSequence!==status.sequence+1)return receiver.accept(message,{firstSequence});
    const snapshot=deserializeConfirmedState(message.snapshot),actors=new Map((snapshot.raid?.animals??[]).map(a=>[a.id,a]));
    if(!Object.hasOwn(message,'physicsPose'))throw TypeError('Missing confirmed physics pose');
    const poses=message.physicsPoses??(message.physicsPose?[message.physicsPose]:[]);
@@ -25,7 +25,7 @@ export function createConfirmedSceneReceiver(state,session,world){
     const animal=actors.get(pose.actorId);if(!animal?.magicDown)throw Error('Confirmed pose lacks active animal');
     const rig=world.mixers.get(pose.actorId);if(rig)validateConfirmedAnimalPose(rig.model,pose);next.set(pose.actorId,pose);
    }
-   pending=next;try{return receiver.accept(message);}finally{pending=null;}
+   pending=next;try{return receiver.accept(message,{firstSequence});}finally{pending=null;}
   },
   status(){return receiver.status();},
  };

@@ -16,3 +16,10 @@ test('unchanged camera confirmations advance only the protocol sequence',()=>{
  assert.deepEqual(receiver.acceptUnchanged(ack),{accepted:true,sequence:2});assert.equal(reconciled,1);assert.equal(serialize(state),before);
  assert.deepEqual(receiver.accept({session:'s',sequence:3,snapshot:before,events:[]}),{accepted:true,sequence:3});
 });
+test('coalesced ranges accept only contiguous quiet pose-free publications',()=>{
+ const state=fixture(),source=serialize(state),receiver=createConfirmedStateReceiver(state,'s');receiver.accept({session:'s',sequence:1,snapshot:source,events:[]});
+ const message={session:'s',sequence:4,snapshot:source,events:[],physicsPose:null};
+ assert.equal(receiver.accept(message,{firstSequence:3}).reason,'gap');assert.throws(()=>receiver.accept({...message,events:[{id:'event-1',type:'Test'}]},{firstSequence:2}),/Invalid coalesced/);
+ assert.throws(()=>receiver.accept({...message,physicsPose:{active:true}},{firstSequence:2}),/Invalid coalesced/);
+ assert.equal(receiver.accept(message,{firstSequence:2}).sequence,4);assert.equal(receiver.accept({...message,sequence:5},{firstSequence:2}).reason,'gap');
+});

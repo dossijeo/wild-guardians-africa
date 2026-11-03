@@ -467,6 +467,20 @@ controlled before/after benchmark, a GTX 1660 measurement or a hard backlog
 bound. Eventful publications still accumulate if presentation stalls for long
 enough; a bounded lossless event/state protocol remains necessary.
 
+The additional opt-in `qa-worker-coalesce` path keeps one publication in
+flight and coalesces consecutive queued advance snapshots only when they have
+no events and no active physical poses. Eventful snapshots, active poses and
+command responses remain ordered barriers. The simulation Worker does not
+wait for acknowledgements. A unit test reduces 1,000 quiet pending ticks to one
+snapshot and verifies barriers; a real two-Worker test with a 500 ms main-thread
+block coalesced five ticks and retained pause/resume. A separate headless real
+savanna raid accepted an attack, pause and a post-recovery save. That run also
+observed an outbox of 85 items during active physics and a 900 ms maximum frame
+gap in 22 samples. Results are not a controlled comparison and do not establish
+an FPS benefit. Active-pose and eventful publications can still grow without
+bound, so the option remains experimental and does not yet satisfy a bounded,
+lossless backlog requirement. No GPU trajectory presentation is integrated.
+
 `qa-worker-clock` moves the existing runtime's clock, step queue, command
 admission and residency coordination into a dedicated Worker. That Worker
 owns a nested simulation Worker, which remains the only game authority. The
