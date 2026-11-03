@@ -40,3 +40,12 @@ test('batched steps stop for residency and preserve the pending pause order',asy
  const pause=runtime.submit({kind:'pause',reason:'menu'});await complete(1,{stepsExecuted:2,residency:{missing:['1,2']}});assert.deepEqual(sent[2].command,{kind:'addChunk',key:'1,2'});
  await complete(2);assert.equal(sent[3].command.steps,3);await complete(3,{stepsExecuted:3});assert.equal(sent[4].command.kind,'pause');await complete(4);await pause;assert.equal(runtime.status().pendingSteps,0);runtime.dispose();
 });
+test('batch window groups elapsed steps and commands flush earlier without losing order',async()=>{
+ let time=0,seq=0,wake,delay;const sent=[],client={ready:Promise.resolve(),submit(command){let resolve;const result=new Promise(r=>{resolve=r;});sent.push({command,resolve,sequence:++seq});return {accepted:true,result};},dispose(){}};
+ const world={createConfirmedReceiver(){let sequence=0;return {accept(message){sequence=message.sequence;return {accepted:true};},status(){return {sequence,lastElapsed:0};}};}};
+ const runtime=createWorkerGameRuntime({client,world,session:'s',maxBatchSteps:8,batchWindowSteps:2,now:()=>time,schedule:(fn,ms)=>(wake=fn,delay=ms,1),cancel:()=>{}});
+ const complete=async(index,extra={})=>{sent[index].resolve({sequence:sent[index].sequence,residency:{missing:[]},...extra});await flush();};
+ const starting=runtime.start();await flush();await complete(0);await starting;assert.equal(delay,100);
+ time=100;wake();assert.equal(sent[1].command.steps,2);await complete(1,{stepsExecuted:2});
+ time=150;const paused=runtime.submit({kind:'pause',reason:'menu'});assert.equal(sent[2].command.kind,'advance');assert.equal(sent[2].command.steps,undefined);await complete(2);assert.equal(sent[3].command.kind,'pause');await complete(3);await paused;runtime.dispose();
+});

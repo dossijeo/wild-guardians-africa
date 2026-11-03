@@ -447,6 +447,26 @@ default, and the remaining response latency is still too high.
 
 ### Experimental Worker-hosted clock
 
+The hosted game now defaults to a two-step publication window: with the
+existing 50 ms simulation step, the coordinator normally requests two steps
+and one accumulated publication every 100 ms. A command admits already
+elapsed steps immediately and stays ordered after them; larger backlogs may use
+up to 16 steps per request. `qa-worker-window=1` and `qa-worker-batch=1`
+retain the previous behavior. This changes presentation update cadence and
+adds up to one extra 50 ms step of state latency; autonomous visual trajectory
+interpolation is not yet integrated. The Worker game remains opt-in.
+
+A deterministic mangrove comparison of 100 single steps against ten batches
+matched snapshots, all ten emitted events in order, residency and final active
+physics poses. A separate real opt-in savanna raid with 13 animals accepted an
+attack, paused and stored a safe post-recovery checkpoint; it did not complete
+the entire wave or establish visual equivalence. In that short headless
+Edge/SwiftShader run, diagnostic peak unacknowledged publications was 60,
+attack confirmation 1.52 s and pause confirmation 291 ms; this is not a
+controlled before/after benchmark, a GTX 1660 measurement or a hard backlog
+bound. Eventful publications still accumulate if presentation stalls for long
+enough; a bounded lossless event/state protocol remains necessary.
+
 `qa-worker-clock` moves the existing runtime's clock, step queue, command
 admission and residency coordination into a dedicated Worker. That Worker
 owns a nested simulation Worker, which remains the only game authority. The
@@ -605,10 +625,13 @@ visual controller to the Worker economy in the Worker game. It uses separate
 local scheduling memory, waits for a reservation before displaying an event,
 settles through the Worker before requesting a save, and leaves income tracking
 to the Worker. Unit tests cover ordered reserve/save/settle and cancellation
-while saving; the existing 56 microevent tests pass. This path is not enabled by
-default: scheduling history, RNG and cooldowns are not yet persisted back to
-the authority, and real UI, cancellation on disposal, deliveries, accelerated
-time and reload need end-to-end validation. It is not equivalent gameplay yet.
+while saving; the existing 56 microevent tests pass. Scheduling history, RNG
+and cooldowns are now sent to the authority at reservation and settlement. A
+forced visual event completed in the real opt-in game and cleared its ticket;
+the test used programmatic completion and produced no reward. This path remains
+off by default: cancellation on disposal, deliveries, accelerated time,
+gesture input and reload need end-to-end validation. It is not equivalent
+gameplay yet.
 
 In the experimental Worker game, a due campaign cinematic now requests an
 ordered `cinematicStart` before playback, adding an independent pause. Its

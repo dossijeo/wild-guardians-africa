@@ -204,9 +204,9 @@ async function installWorkerGame(owner,ownerState,navigation){
   const navigationView={bounds:[...navigation.activeBounds],eye:{...navigation.raidView.eye},target:{...navigation.raidView.target}};
   const diagnostics=new URLSearchParams(location.search).has('qa-worker-diagnostics'),compactViewAcks=new URLSearchParams(location.search).has('qa-worker-view-ack');
   const session=crypto.randomUUID(),clientOptions={snapshot:serialize(ownerState),chunkKeys:[...owner.chunks.keys()],raidWaitBindings:captureRaidWaitBindings(ownerState,navigation),navigationView,dynamicPhysics:true,structureTemplates:templates,diagnostics,compactViewAcks};
-  const maxBatchSteps=Number(new URLSearchParams(location.search).get('qa-worker-batch')??1);
-  const onError=failure=>{if(owner===world&&ownerState===state)error(failure.message);},hosted=new URLSearchParams(location.search).has('qa-worker-clock');
-  const runtime=hosted?createWorkerHostedRuntime({world:owner,session,clientOptions,runtimeOptions:{maxBatchSteps,diagnostics},onError}):owner.createWorkerRuntime({client:createSimulationAuthorityClient({...clientOptions,session}),session,maxBatchSteps,diagnostics,onError});
+  const params=new URLSearchParams(location.search),hosted=params.has('qa-worker-clock'),maxBatchSteps=Number(params.get('qa-worker-batch')??(hosted?16:1)),batchWindowSteps=Number(params.get('qa-worker-window')??(hosted&&maxBatchSteps>1?2:1));
+  const onError=failure=>{if(owner===world&&ownerState===state)error(failure.message);};
+  const runtime=hosted?createWorkerHostedRuntime({world:owner,session,clientOptions,runtimeOptions:{maxBatchSteps,batchWindowSteps,diagnostics},onError}):owner.createWorkerRuntime({client:createSimulationAuthorityClient({...clientOptions,session}),session,maxBatchSteps,batchWindowSteps,diagnostics,onError});
   try{await runtime.start();if(owner.disposed)throw Error('World closed during worker startup');owner.workerRuntime=runtime;return runtime;}catch(failure){runtime.dispose();throw failure;}
 }
 const exitDesktop=createDesktopExit({host:window,save,hasGame:()=>!!state,onError:failure=>error(moneyLocale().startsWith('es')?'No se pudo cerrar la aplicación: '+failure.message:'Could not close the application: '+failure.message)});
