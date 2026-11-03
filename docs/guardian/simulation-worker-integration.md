@@ -702,6 +702,14 @@ or apply a verified transaction plan containing the exact village, suppressions
 and center assignments, which requires an atomic native commit. None is yet
 safe enough to remove the Worker UI guard.
 
+The native postgame test now injects `SpatialChunkUnavailable` specifically
+after the village has been installed and before center rerouting completes.
+In the disposable session the village and 50,000-coin debit were already
+present, but the command ID and `VillageFounded` event were absent. The live
+authority remained unchanged. This is an injected failure, not evidence that a
+particular live site actually requests that missing chunk; it demonstrates why
+retrying the existing mutating command is not a safe Worker transaction.
+
 When a microevent holds night speed, the game now sends the corresponding
 fast-forward policy to the installed Worker runtime, and restores it when the
 hold ends. Only changes are sent. Unit tests cover policy transitions and the

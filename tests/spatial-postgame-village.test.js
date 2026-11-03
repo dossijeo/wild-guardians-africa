@@ -58,6 +58,22 @@ test('a paid native postgame village gets a valid entry and survives reload',asy
     assert(nav.walkable(house.x,house.z,.28,null,true),
       'the provisional building barrier is removed after preview');
     const source=serialize(state);
+    // A failure after native mutation is materially different from a missing
+    // chunk during preview: the purchase is already partly applied and a
+    // blind retry cannot safely reconstruct the original command.
+    const partialState=deserialize(source),partialLoaded=new Map(),partialSession=createSpatialGameSession(module,partialState,{loaded:()=>partialLoaded,onData:data=>partialLoaded.set(`${data.cx},${data.cz}`,data)});
+    try{
+      for(const key of loaded.keys()){const [px,pz]=key.split(',').map(Number);partialSession.core.addChunk(px,pz);partialLoaded.set(key,{...partialSession.core.chunkPayload(),terrainRevision:0});}
+      const partialNav=createSpatialNavigationMovement(partialSession,partialState);partialNav.setActiveBounds([x-120,z-120,x+120,z+120]);
+      const setState=partialNav.setState.bind(partialNav),path=partialNav.path.bind(partialNav);let committed=false;
+      partialNav.setState=s=>{const result=setState(s);committed=true;return result;};
+      partialNav.path=(a,b,...args)=>{if(committed)throw new SpatialChunkUnavailable(a,b,[{cx:999,cz:999}]);return path(a,b,...args);};
+      const balance=numberOf(partialState.ledger.balance),count=partialState.villages.length;
+      assert.throws(()=>Game.foundVillage(partialState,'partial-village','suajili',site.x,site.z,payload,partialNav),SpatialChunkUnavailable);
+      assert.equal(partialState.villages.length,count+1);assert.equal(numberOf(partialState.ledger.balance),balance-50000);
+      assert.equal(partialState.commandIds.includes('partial-village'),false);assert.equal(partialState.events.some(e=>e.type==='VillageFounded'&&e.targetId===partialState.villages.at(-1).id),false);
+      assert.equal(serialize(state),source,'a partial isolated commit must not mutate the live authority');
+    }finally{partialSession.dispose();}
     const sparseState=deserialize(source),sparseLoaded=new Map(),sparse=createSpatialGameSession(module,sparseState,{loaded:()=>sparseLoaded,onData:data=>sparseLoaded.set(`${data.cx},${data.cz}`,data)});
     try{
       const sparseNav=createSpatialNavigationMovement(sparse,sparseState);sparseNav.setActiveBounds([x-120,z-120,x+120,z+120]);
