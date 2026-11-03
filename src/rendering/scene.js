@@ -779,7 +779,7 @@ export class WorldScene {
       data.lod?.update(this.camera,this.renderer.domElement.height,this.characterLodForce??null);return;
     }
     const confirmedPose=this.confirmedAnimalPoses?.get(entity.id);
-    if(confirmedPose){if(confirmedPose.actorId!==entity.id)throw Error('Confirmed animal pose belongs to another actor');restoreAnimalImpact(data);applyConfirmedAnimalPose(this.objects.get(entity.id),data.model,confirmedPose);applyActorExpression(data,entity,'animal',this.state.elapsed);data.lod?.update(this.camera,this.renderer.domElement.height,this.characterLodForce??null);return;}
+    if(confirmedPose){if(confirmedPose.actorId!==entity.id)throw Error('Confirmed animal pose belongs to another actor');this.provisionalBeastImpact?.physicalPose(entity.id);restoreAnimalImpact(data);applyConfirmedAnimalPose(this.objects.get(entity.id),data.model,confirmedPose);applyActorExpression(data,entity,'animal',this.state.elapsed);data.lod?.update(this.camera,this.renderer.domElement.height,this.characterLodForce??null);return;}
     if(data.cachedSkinning===undefined)data.cachedSkinning=this.animalGroundFast?2:false;
     this.beastPhysics?.before(entity.id);restoreAnimalImpact(data);const provisional=this.provisionalBeastImpact?.sample(entity,this.state.elapsed);captureAnimalImpact(data,provisional?.animal??entity,provisional?.elapsed??this.state.elapsed);applyAnimalPose(data,entity,this.state.elapsed);if(!entity.magicDown)applyAnimalImpact(data,provisional?.animal??entity,provisional?.elapsed??this.state.elapsed);
     this.objects.get(entity.id).rotation.y=entity.heading??0;

@@ -1,4 +1,5 @@
 import {guardianImpactTime,GUARDIAN_ATTACK_TIMING} from '../simulation/guardian-timing.js';
+import {impactResponse} from './animal-impact.js';
 
 // Presentation-only recoil. It never changes the actor, collider or game state.
 // The authoritative pose replaces it when the matching command settles.
@@ -13,7 +14,8 @@ export class ProvisionalBeastImpact {
   const startedAt=this.now(),hit={at:-startedAt-1,impactAt:GUARDIAN_ATTACK_TIMING.impact,point:{...contact},direction:{x:dx/length,y:dy/length,z:dz/length},intensity:1,ground};
   const entry={id:command.id,targetId:animal.id,startedAt,hit};this.byTarget.set(animal.id,entry);this.byCommand.set(command.id,entry);return true;
  }
- sample(animal,simulationTime){const entry=this.byTarget.get(animal.id);if(!entry||animal.magicDown||animal.magicImpact&&simulationTime-guardianImpactTime(animal.magicImpact)<=1.1)return null;const age=Math.max(0,(this.now()-entry.startedAt)/1000);if(age<guardianImpactTime(entry.hit)||age>guardianImpactTime(entry.hit)+1.1)return null;return {animal:{...animal,magicImpact:entry.hit},elapsed:age};}
- end(id){const entry=this.byCommand.get(id);if(!entry)return false;this.byCommand.delete(id);if(this.byTarget.get(entry.targetId)===entry)this.byTarget.delete(entry.targetId);return true;}
+ sample(animal,simulationTime){const entry=this.byTarget.get(animal.id);if(!entry)return null;const age=Math.max(0,(this.now()-entry.startedAt)/1000);if(animal.magicDown||animal.magicImpact&&simulationTime-guardianImpactTime(animal.magicImpact)<=1.1||age<guardianImpactTime(entry.hit)||age>guardianImpactTime(entry.hit)+1.1){entry.lastSample=null;return null;}const visual={...animal,magicImpact:entry.hit};entry.lastSample={age,animal:visual};entry.lastAppliedAge=age;entry.sampleCount=(entry.sampleCount??0)+1;return {animal:visual,elapsed:age};}
+ physicalPose(targetId){const entry=this.byTarget.get(targetId);if(entry)entry.lastSample=null;}
+ end(id){const entry=this.byCommand.get(id);if(!entry)return false;const sample=entry.lastSample;this.lastResolution={targetId:entry.targetId,elapsed:(this.now()-entry.startedAt)/1000,sampleCount:entry.sampleCount??0,lastAppliedAge:entry.lastAppliedAge??null,lastSample:sample?{age:sample.age,response:impactResponse(sample.animal,sample.age)}:null};this.byCommand.delete(id);if(this.byTarget.get(entry.targetId)===entry)this.byTarget.delete(entry.targetId);return true;}
  clear(){this.byTarget.clear();this.byCommand.clear();}
 }
