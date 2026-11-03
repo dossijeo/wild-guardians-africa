@@ -1,0 +1,27 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {captureRaidWaitBindings} from '../../src/simulation/raid-wait-handoff.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+window.audit=async()=>{
+ const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
+ const fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),{game,nav}=fixture.diagnosticWorld(),animal=game.raid.animals.find(a=>a.species==='hyena'),source=serialize(game),bindings=captureRaidWaitBindings(game,nav);fixture.dispose();
+ const original=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,raidWaitBindings:bindings,dynamicPhysics:true,session:'original'});let restored;
+ const submit=async(client,command)=>{const request=client.submit(command);if(!request.accepted)throw Error('Command not admitted');return request.result;};
+ try{
+  await original.ready;const attack=await submit(original,{kind:'castAttack',id:'active-checkpoint-attack',targetId:animal.id,x:animal.x,z:animal.z});if(!attack.value)throw Error('Attack rejected');
+  const rolling=new URLSearchParams(location.search).has('rolling');let phase=null;
+  for(let i=0;i<(rolling?240:20);i++){const current=await submit(original,{kind:'advance',seconds:.05,nightFastForward:true});phase=JSON.parse(current.snapshot).raid?.animals.find(a=>a.id===animal.id)?.magicDown?.phase;if(rolling&&phase==='rolling')break;}
+  if(rolling&&phase!=='rolling')throw Error('Animal did not reach rolling phase');
+  const checkpoint=await submit(original,{kind:'snapshot',physicsCheckpoint:true});if(checkpoint.saveAvailable||!checkpoint.physicsPose?.active||!checkpoint.physicsCheckpoint)throw Error('No experimental active fall checkpoint');
+  restored=createSimulationAuthorityClient({snapshot:checkpoint.snapshot,chunkKeys:chunks,raidWaitBindings:checkpoint.raidWaitBindings,physicsCheckpoint:checkpoint.physicsCheckpoint,session:'restored'});await restored.ready;
+  const phases=new Set(),ticks=rolling?120:60;let active=0;for(let i=0;i<ticks;i++){
+   const command={kind:'advance',seconds:.05,nightFastForward:true},[a,b]=await Promise.all([submit(original,command),submit(restored,command)]);
+   const normalized=p=>{const state=JSON.parse(p.snapshot);for(const actor of state.raid?.animals??[])if(actor.raidWait)delete actor.raidWait.epoch;return JSON.stringify(state);};
+   if(normalized(a)!==normalized(b)||JSON.stringify(a.events)!==JSON.stringify(b.events)||JSON.stringify(a.physicsPose)!==JSON.stringify(b.physicsPose)){const differences=[];const scan=(x,y,path='')=>{if(differences.length>=8)return;if(x&&y&&typeof x==='object'&&typeof y==='object'){for(const key of new Set([...Object.keys(x),...Object.keys(y)]))scan(x[key],y[key],path+'/'+key);}else if(!Object.is(x,y))differences.push({path,left:x,right:y});};scan(a.physicsPose,b.physicsPose);throw Error('Restored active fall diverged at tick '+i+': '+JSON.stringify({state:normalized(a)===normalized(b),events:JSON.stringify(a.events)===JSON.stringify(b.events),differences}));}
+   if(a.physicsPose?.active)active++;const current=JSON.parse(a.snapshot).raid?.animals.find(a=>a.id===animal.id)?.magicDown?.phase;if(current)phases.add(current);
+  }
+  if(!active)throw Error('No active physics');return {phase,ticks,active,phases:[...phases],scope:'Structured-clone active physics checkpoint between two real Workers in mangroves; no disk persistence, UI or full recovery checkpoint.'};
+ }finally{original.dispose();restored?.dispose();}
+};window.ready=true;
+</script>

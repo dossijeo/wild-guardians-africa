@@ -24,7 +24,7 @@ export class BeastCombatPhysics{
  // authored recovery or baked fallback owns a body. No save path uses it yet.
  checkpointFall(){
   if(!this.solver||!this.environment||!this.entries.size||this.baked?.entries.size||[...this.entries.values()].some(e=>e.recovery||!Number.isFinite(e.hitAt)))throw Error('Unsupported beast checkpoint phase');
-  const transform=o=>({position:o.position.toArray(),quaternion:o.quaternion.toArray(),scale:o.scale.toArray()});
+  const transform=o=>({position:o.position.toArray(),quaternion:o.quaternion.toArray(),rotation:o.rotation.toArray(),scale:o.scale.toArray()});
   return {version:1,solver:this.solver.checkpoint(),environment:this.environment.checkpoint(),accumulator:this.accumulator,seen:[...this.seen],entries:[...this.entries].map(([id,e])=>({id,binding:e.binding.checkpoint(),root:transform(e.root),model:transform(e.data.model),offset:{...e.offset},hitAt:e.hitAt,settledAt:e.settledAt,rolling:!!e.rolling}))};
  }
  restoreFall(checkpoint){
@@ -34,9 +34,9 @@ export class BeastCombatPhysics{
    environment.restoreCheckpoint(checkpoint.environment);
    for(const saved of checkpoint.entries){
     const animal=this.world.state.raid?.animals.find(a=>a.id===saved.id),data=this.world.mixers.get(saved.id),root=this.world.objects.get(saved.id),actor=solver.actors.get(saved.id);
-    const check=t=>t&&valid(t.position,3)&&valid(t.quaternion,4)&&Math.hypot(...t.quaternion)>1e-6&&valid(t.scale,3);
+    const check=t=>t&&valid(t.position,3)&&valid(t.quaternion,4)&&Math.hypot(...t.quaternion)>1e-6&&Array.isArray(t.rotation)&&t.rotation.length===4&&t.rotation.slice(0,3).every(Number.isFinite)&&['XYZ','YZX','ZXY','XZY','YXZ','ZYX'].includes(t.rotation[3])&&valid(t.scale,3);
     if(!animal?.magicDown||!data||!root||!actor||entries.has(saved.id)||!check(saved.root)||!check(saved.model)||![saved.offset?.x,saved.offset?.z].every(Number.isFinite)||!Number.isFinite(saved.hitAt)||saved.settledAt!==null&&!Number.isFinite(saved.settledAt)||typeof saved.rolling!=='boolean')throw Error('Invalid beast fall entry');
-    const set=(o,t)=>{o.position.fromArray(t.position);o.quaternion.fromArray(t.quaternion);o.scale.fromArray(t.scale);};set(root,saved.root);set(data.model,saved.model);root.updateMatrixWorld(true);
+    const set=(o,t)=>{o.position.fromArray(t.position);o.rotation.fromArray(t.rotation);o.scale.fromArray(t.scale);};set(root,saved.root);set(data.model,saved.model);root.updateMatrixWorld(true);
     const binding=new BeastRagdollBinding(data.model);binding.restoreCheckpoint(saved.binding);entries.set(saved.id,{animal,data,root,binding,solver,actor,offset:{...saved.offset},accumulator:0,hitAt:saved.hitAt,settledAt:saved.settledAt,rolling:saved.rolling,recovery:null});
    }
    if(entries.size!==solver.actors.size)throw Error('Unmatched checkpoint actors');this.solver=solver;this.environment=environment;this.entries=entries;this.accumulator=checkpoint.accumulator;this.seen=new Map(checkpoint.seen);this.stats.active=entries.size;

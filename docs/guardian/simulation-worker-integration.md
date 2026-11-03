@@ -915,3 +915,16 @@ This has not captured an already-running recovery or baked fallback, and lacks
 JSON/binary persistence, Worker integration, complete corrupt-input hardening,
 multi-actor manager tests and full game replay. The active-physics save gate is
 unchanged.
+
+The simulation Worker can now explicitly export an experimental in-memory
+fall/roll checkpoint with a snapshot and initialize a second Worker from it.
+Structured clone preserves the Rapier bytes and controller values; this is not
+a persisted save and does not change `saveAvailable`. In a mangrove test one
+restored falling hyena matched an uninterrupted Worker for 60 ticks, and one
+restored rolling hyena matched for 120 ticks through recovery and release,
+including state, events and published poses. An initial test exposed a root
+orientation mismatch: restoring Euler representation as well as orientation
+fixed the discrepancy in that scenario. Multiple simultaneous actors, baked
+fallbacks, checkpoints taken during recovery, disk encoding, full UI load and
+corrupt inputs remain unverified. The ordinary game still blocks active-physics
+saves.
