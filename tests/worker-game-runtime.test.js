@@ -19,3 +19,15 @@ test('disposing rejects an in-flight command even if its reply arrives later',as
  const runtime=createWorkerGameRuntime({client,world,session:'s',now:()=>0,schedule:()=>1,cancel:()=>{}}),starting=runtime.start();await flush();sent[0].resolve({sequence:1,residency:{missing:[]},saveAvailable:true});await starting;
  const pending=runtime.submit({kind:'pause',reason:'menu'}),rejected=assert.rejects(pending,/disposed/);runtime.dispose();await rejected;sent[1].resolve({sequence:2,residency:{missing:[]},saveAvailable:true});await flush();assert.equal(sequence,1);
 });
+test('pause and save barriers retain ordered reserved capacity under saturation',async()=>{
+ const sent=[],client={ready:Promise.resolve(),submit(command){let resolve;const result=new Promise(r=>{resolve=r;});sent.push({command,resolve});return {accepted:true,result};},dispose(){}};let sequence=0;
+ const world={createConfirmedReceiver(){return {accept(message){sequence=message.sequence;return {accepted:true};},status(){return {sequence,lastElapsed:0};}};}};
+ const runtime=createWorkerGameRuntime({client,world,session:'s',maxCommands:1,controlReserve:2,now:()=>0,schedule:()=>1,cancel:()=>{}}),complete=async()=>{const item=sent[sequence];item.resolve({sequence:sequence+1,residency:{missing:[]},saveAvailable:true});await flush();};
+ const starting=runtime.start();await flush();await complete();await starting;
+ const first=runtime.submit({kind:'plant',id:'1'}),second=runtime.submit({kind:'plant',id:'2'});
+ await assert.rejects(runtime.submit({kind:'plant',id:'3'}),/queue is full/);
+ const paused=runtime.submit({kind:'pause',reason:'menu'}),saved=runtime.submit({kind:'snapshot'});
+ await assert.rejects(runtime.submit({kind:'resume',reason:'menu'}),/queue is full/);
+ for(let i=0;i<4;i++)await complete();await Promise.all([first,second,paused,saved]);
+ assert.deepEqual(sent.map(x=>x.command.kind),['snapshot','plant','plant','pause','snapshot']);runtime.dispose();
+});

@@ -348,6 +348,18 @@ of contact fidelity, active-physics saving, other scenarios or performance.
 The test observed thousands of ordered Worker publications during the raid;
 the cause and total frame impact have not yet been measured.
 
+The optional `--save-check` test exposed a control saturation failure after an
+attack: the runtime queue rejected the menu pause when ordinary commands filled
+its admission limit. A bounded reserve now admits pause, resume and snapshot
+commands while preserving FIFO order; a unit test exercises saturation and the
+reserve limit. A subsequent real-game run admitted the pause, but 186 earlier
+simulation steps were already queued: it took effect roughly 9.35 simulation
+seconds after the observed hit, after the physical fall had ended. Therefore
+`--save-check` still fails its active-physics timing assertion. The reserve is a
+correctness guard, not a solution for this response latency or a demonstration
+that active-physics save and restore works. Reducing the backlog and measuring
+end-to-end command latency are required before this path can be enabled.
+
 The application save function now uses ordered Worker checkpoints whenever a
 runtime is installed, including the action paths that requested a Worker save.
 An unavailable active-physics checkpoint reports failure and prevents the

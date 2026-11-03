@@ -21,6 +21,18 @@ try{
  if(!target)throw Error('No visible clickable animal');await page.mouse.click(target.x,target.y);
  await page.waitForFunction(()=>{const q=window.wildGuardiansWorkerQa();return q.events.includes('GuardianMagicHit')||q.status?.fault;},null,{timeout:60000});
  const hit=await page.evaluate(()=>window.wildGuardiansWorkerQa());if(hit.status?.fault||!hit.events.includes('GuardianMagicHit')||errors.length)throw Error('Attack failed: '+JSON.stringify({hit,errors}));
+ let saved=null;if(process.argv.includes('--save-check')){
+  if(hit.status.saveAvailable)throw Error('Impact was unexpectedly advertised as restorable');
+  await page.locator('#menuButton').evaluate(element=>element.click());try{await page.waitForFunction(()=>window.wildGuardiansWorkerQa().pauses.includes('menu')||window.wildGuardiansWorkerQa().status.fault,null,{timeout:30000});}catch{throw Error('Pause was not confirmed: '+JSON.stringify(await page.evaluate(()=>({qa:window.wildGuardiansWorkerQa(),text:document.body.innerText.slice(-800)}))));}
+  const paused=await page.evaluate(()=>window.wildGuardiansWorkerQa());if(paused.status.saveAvailable)throw Error('Physics completed before pause: '+JSON.stringify({hit,paused}));
+  await page.locator('#save').click();await page.waitForFunction(()=>document.body.innerText.includes('espera a que termine la caída física'),null,{timeout:30000});
+  await page.locator('#resume').click();await page.waitForFunction(()=>{const q=window.wildGuardiansWorkerQa();return !q.pauses.includes('menu')&&q.status.saveAvailable||q.status.fault;},null,{timeout:90000});
+  const ready=await page.evaluate(()=>window.wildGuardiansWorkerQa());if(ready.status.fault)throw Error('Worker failed before safe save: '+JSON.stringify(ready));
+  await page.locator('#menuButton').click();await page.waitForFunction(()=>window.wildGuardiansWorkerQa().pauses.includes('menu'),null,{timeout:30000});
+  const before=await page.evaluate(()=>window.wildGuardiansWorkerQa());await page.locator('#save').click();
+  await page.waitForFunction(async({slot,elapsed})=>{try{const {BrowserSaveRepository}=await import('/src/persistence/browser-saves.js');const value=await new BrowserSaveRepository(localStorage).load(slot);return value?.elapsed>=elapsed&&Array.isArray(value.workerRaidWaitBindings);}catch{return false;}},{slot:before.slotId,elapsed:before.elapsed},{timeout:30000});
+  saved={elapsed:before.elapsed,physicsBlocked:true,safeCheckpointStored:true};await page.locator('#resume').click();
+ }
  let completed=null;if(process.argv.includes('--complete')){
   for(let i=0;i<12;i++){
    await page.waitForTimeout(15000);const q=await page.evaluate(()=>window.wildGuardiansWorkerQa());console.log('RAID',JSON.stringify({elapsed:q.elapsed,time:q.time,animals:q.animals,sequence:q.status?.confirmedSequence,fault:q.status?.fault}));
@@ -28,5 +40,5 @@ try{
   }
   if(!completed)throw Error('Raid did not complete within the test window: '+JSON.stringify(await page.evaluate(()=>window.wildGuardiansWorkerQa())));
  }
- console.log(JSON.stringify({animals:hit.animals,initialElapsed:start.qa.elapsed,finalElapsed:(completed??hit).elapsed,readyActors:end.visibility.actors.filter(a=>a.ready).length,sequence:(completed??hit).status.confirmedSequence,attacked:target.id,completed:!!completed,scope:'Opt-in real game using a day-31 savanna capture and a real pointer attack; no save/restore, full deterministic comparison or performance comparison.'}));
+ console.log(JSON.stringify({animals:hit.animals,initialElapsed:start.qa.elapsed,finalElapsed:(completed??hit).elapsed,readyActors:end.visibility.actors.filter(a=>a.ready).length,sequence:(completed??hit).status.confirmedSequence,attacked:target.id,completed:!!completed,saved,scope:'Opt-in real game using a day-31 savanna capture and a real pointer attack; no active-physics restore, full deterministic comparison or performance comparison.'}));
 }finally{await browser.close();}
