@@ -3,7 +3,7 @@ const {chromium}=createRequire(import.meta.url)(process.env.PLAYWRIGHT_MODULE??'
 const browser=await chromium.launch({channel:'msedge',headless:true,args:['--enable-unsafe-swiftshader']});
 try{
  const page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[];page.on('pageerror',error=>errors.push(String(error)));
- await page.goto(`${process.env.QA_BASE_URL??'http://127.0.0.1:5175'}/?qa-worker-game&qa-worker-raid&qa-visibility&wildEngineThreads=0`,{waitUntil:'domcontentloaded'});
+ await page.goto(`${process.env.QA_BASE_URL??'http://127.0.0.1:5175'}/?qa-worker-game&qa-worker-raid&qa-visibility&wildEngineThreads=0&qa-worker-batch=${process.env.QA_BATCH??1}`,{waitUntil:'domcontentloaded'});
  await page.waitForFunction(()=>window.wildGuardiansWorkerQa?.().screen==='game'||document.querySelector('.error-banner'),null,{timeout:180000});
  console.log('STARTUP',JSON.stringify(await page.evaluate(()=>window.wildGuardiansWorkerQa())));
  try{await page.waitForFunction(()=>{const q=window.wildGuardiansWorkerQa?.();return q?.animals>0||q?.status?.fault||document.querySelector('.error-banner');},null,{timeout:60000});}
@@ -23,7 +23,7 @@ try{
  const hit=await page.evaluate(()=>window.wildGuardiansWorkerQa());if(hit.status?.fault||!hit.events.includes('GuardianMagicHit')||errors.length)throw Error('Attack failed: '+JSON.stringify({hit,errors}));
  let saved=null;if(process.argv.includes('--save-check')){
   if(hit.status.saveAvailable)throw Error('Impact was unexpectedly advertised as restorable');
-  await page.locator('#menuButton').evaluate(element=>element.click());try{await page.waitForFunction(()=>window.wildGuardiansWorkerQa().pauses.includes('menu')||window.wildGuardiansWorkerQa().status.fault,null,{timeout:30000});}catch{throw Error('Pause was not confirmed: '+JSON.stringify(await page.evaluate(()=>({qa:window.wildGuardiansWorkerQa(),text:document.body.innerText.slice(-800)}))));}
+  const pauseRequested=Date.now();await page.locator('#menuButton').evaluate(element=>element.click());try{await page.waitForFunction(()=>window.wildGuardiansWorkerQa().pauses.includes('menu')||window.wildGuardiansWorkerQa().status.fault,null,{timeout:30000});}catch{throw Error('Pause was not confirmed: '+JSON.stringify(await page.evaluate(()=>({qa:window.wildGuardiansWorkerQa(),text:document.body.innerText.slice(-800)}))));}console.log('PAUSE',JSON.stringify({batch:Number(process.env.QA_BATCH??1),realMs:Date.now()-pauseRequested,hitElapsed:hit.elapsed,paused:await page.evaluate(()=>window.wildGuardiansWorkerQa())}));
   const paused=await page.evaluate(()=>window.wildGuardiansWorkerQa());if(paused.status.saveAvailable)throw Error('Physics completed before pause: '+JSON.stringify({hit,paused}));
   await page.locator('#save').click();await page.waitForFunction(()=>document.body.innerText.includes('espera a que termine la caída física'),null,{timeout:30000});
   await page.locator('#resume').click();await page.waitForFunction(()=>{const q=window.wildGuardiansWorkerQa();return !q.pauses.includes('menu')&&q.status.saveAvailable||q.status.fault;},null,{timeout:90000});

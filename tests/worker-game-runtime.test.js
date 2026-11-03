@@ -31,3 +31,12 @@ test('pause and save barriers retain ordered reserved capacity under saturation'
  for(let i=0;i<4;i++)await complete();await Promise.all([first,second,paused,saved]);
  assert.deepEqual(sent.map(x=>x.command.kind),['snapshot','plant','plant','pause','snapshot']);runtime.dispose();
 });
+test('batched steps stop for residency and preserve the pending pause order',async()=>{
+ let time=0,seq=0,wake;const sent=[],client={ready:Promise.resolve(),submit(command){let resolve;const result=new Promise(r=>{resolve=r;});sent.push({command,resolve,sequence:++seq});return {accepted:true,result};},dispose(){}};
+ const world={createConfirmedReceiver(){let sequence=0;return {accept(message){sequence=message.sequence;return {accepted:true};},status(){return {sequence,lastElapsed:0};}};}};
+ const runtime=createWorkerGameRuntime({client,world,session:'s',maxBatchSteps:8,now:()=>time,schedule:fn=>(wake=fn,1),cancel:()=>{}});
+ const complete=async(index,extra={})=>{sent[index].resolve({sequence:sent[index].sequence,residency:{missing:[]},...extra});await flush();};
+ const starting=runtime.start();await flush();await complete(0);await starting;time=250;wake();assert.equal(sent[1].command.steps,5);
+ const pause=runtime.submit({kind:'pause',reason:'menu'});await complete(1,{stepsExecuted:2,residency:{missing:['1,2']}});assert.deepEqual(sent[2].command,{kind:'addChunk',key:'1,2'});
+ await complete(2);assert.equal(sent[3].command.steps,3);await complete(3,{stepsExecuted:3});assert.equal(sent[4].command.kind,'pause');await complete(4);await pause;assert.equal(runtime.status().pendingSteps,0);runtime.dispose();
+});

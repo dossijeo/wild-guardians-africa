@@ -31,6 +31,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   const nav=createSpatialNavigationMovement(session,game);stopTasks=planner.observeTasks(game);stopWorld=planner.observeWorld(game);nav.intentTaskPlanner=planner;nav.raidEntryResident=(entry,radii)=>[...raidEntryChunks(entry,radii)].every(key=>loaded.has(key));if(raidWaitBindings!==null||savedWaitBindings!==null)restoreRaidWaitBindings(game,nav,raidWaitBindings??savedWaitBindings);
   function setNavigationView(view){if(!view||!Array.isArray(view.bounds)||![view.eye?.x,view.eye?.z,view.target?.x,view.target?.z].every(Number.isFinite))throw TypeError('Invalid navigation view');nav.setActiveBounds(view.bounds);nav.setRaidView(view.eye,view.target);}
   if(navigationView!==null)setNavigationView(navigationView);
+  function residency(){const required=[...new Set([...raidResidentDemand(game,nav),...workerChunkDemand(game)])].sort();return {required,missing:required.filter(key=>!loaded.has(key))};}
   stopEvents=observeGameEvents(game,event=>events.push(structuredClone(event)));
   function spellRejection(command,kind){
    if(game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id))return null;
@@ -74,10 +75,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
    execute(command){
     if(closed)throw Error('Simulation authority is closed');if(physicsInitializing)throw Error('Worker physics is initializing');
     if(!command||command.sequence!==sequence+1)throw Error('Simulation command out of order');
-    let value=null,rejection=null;const commandLoadedChunks=[];
+    let value=null,rejection=null,stepsExecuted=null;const commandLoadedChunks=[];
     if(command.kind==='advance'){
-     if(!Number.isFinite(command.seconds)||command.seconds<=0||command.seconds>1||typeof command.nightFastForward!=='boolean')throw TypeError('Invalid real-time interval');
-     advanceReal(game,command.seconds,nav,{nightFastForward:command.nightFastForward});nav.serviceRaidConnectivityDemand?.();
+     if(!Number.isFinite(command.seconds)||command.seconds<=0||command.seconds>1||typeof command.nightFastForward!=='boolean'||command.steps!==undefined&&(!Number.isSafeInteger(command.steps)||command.steps<1||command.steps>256))throw TypeError('Invalid real-time interval');
+     const steps=command.steps??1;for(let i=0;i<steps;i++){advanceReal(game,command.seconds,nav,{nightFastForward:command.nightFastForward});nav.serviceRaidConnectivityDemand?.();stepsExecuted=i+1;if(i+1<steps&&residency().missing.length)break;}
     }else if(command.kind==='pause'||command.kind==='resume'){
      if(typeof command.reason!=='string'||!command.reason)throw TypeError('Invalid pause reason');
      (command.kind==='pause'?pause:resume)(game,command.reason);
@@ -146,10 +147,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      value=rejection?false:removeWall(game,command.id,command.targetId,nav);
     }else if(command.kind!=='snapshot')throw TypeError('Unknown simulation command');
     sequence=command.sequence;const emitted=events;events=[];
-    const required=[...new Set([...raidResidentDemand(game,nav),...workerChunkDemand(game)])].sort();
-    const residency={required,missing:required.filter(key=>!loaded.has(key))};
+    const resident=residency();
     const physicsPoses=physics?.poses()??null;
-    return {sequence,value,...(rejection?{rejection}:{}),...(commandLoadedChunks.length?{commandLoadedChunks}:{}),residency,physicsPose:physicsPoses?.[0]??null,...(physicsPoses?.length>1?{physicsPoses}:{}),elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,raidWaitBindings:captureRaidWaitBindings(game,nav),saveAvailable:confirmedStateSaveAvailable(game),snapshot:serializeConfirmedState(game)};
+    return {sequence,value,...(command.steps!==undefined?{stepsExecuted}:{}),...(rejection?{rejection}:{}),...(commandLoadedChunks.length?{commandLoadedChunks}:{}),residency:resident,physicsPose:physicsPoses?.[0]??null,...(physicsPoses?.length>1?{physicsPoses}:{}),elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,raidWaitBindings:captureRaidWaitBindings(game,nav),saveAvailable:confirmedStateSaveAvailable(game),snapshot:serializeConfirmedState(game)};
    },
    dispose(){if(closed)return;closed=true;stopEvents?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{session.dispose();}},
   };

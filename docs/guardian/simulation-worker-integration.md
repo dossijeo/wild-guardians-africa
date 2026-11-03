@@ -360,6 +360,36 @@ correctness guard, not a solution for this response latency or a demonstration
 that active-physics save and restore works. Reducing the backlog and measuring
 end-to-end command latency are required before this path can be enabled.
 
+### Experimental catch-up batches
+
+The response backlog was examined as an integration blocker. Three approaches
+were considered: move the authoritative clock and command ordering fully into
+the Worker (the target architecture, but a larger change); replace full
+snapshots with a versioned delta/event stream (requires a new recovery and
+publication contract); or combine adjacent already-queued fixed steps into one
+Worker request. The third is a reversible experiment, not a substitute for the
+first two. It keeps each 0.05 s simulation step, preserves intervening command
+order, and stops at a missing residency demand. Its configurable batch limit is
+a responsiveness/safety bound, not a rendering frame budget. The default
+remains one step; `qa-worker-batch=16` opts in for development only.
+
+Two real Workers matched state, event order and residency for 100 steps of the
+island-mangrove raid, including a separate run with an active hyena ragdoll and
+matching final physics poses. A runtime unit test checks that a partial batch
+loads missing terrain before continuing and before a queued pause. This does not
+establish equivalence of intermediate visual events or multi-actor physics.
+
+For an exploratory comparison, `audit_worker_main_raid.mjs --save-check` was
+run alternately with `QA_BATCH=16` and `QA_BATCH=1`, twice each, on the same
+headless Edge/SwiftShader setup. Pause confirmation took 3.430 and 3.657 s for
+16 steps, versus 9.189 and 8.326 s for one step. All four runs rejected a save
+during the fall and stored a checkpoint after recovery. These are four samples
+of response latency, not a frame-time or GPU benchmark; inputs and click timing
+were not deterministically replayed. Seconds of pause latency remain
+unacceptable, active physics still cannot be saved, and no p95/p99, full raid
+equivalence or global performance improvement has been established. Keep this
+experiment opt-in until those conditions are addressed.
+
 The application save function now uses ordered Worker checkpoints whenever a
 runtime is installed, including the action paths that requested a Worker save.
 An unavailable active-physics checkpoint reports failure and prevents the
