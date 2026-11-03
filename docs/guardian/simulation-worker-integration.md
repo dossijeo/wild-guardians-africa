@@ -499,6 +499,16 @@ each event observer as well as the final state. This deterministic check has
 no physical rigs, rendering, player commands or game UI; it does not bound
 event-heavy backlog or establish a frame-time improvement.
 
+A separate local experiment replaced consecutive pending camera-view commands
+only when no simulation step or other command intervened, retaining every
+caller's response. Its ordering unit test passed, but in one headless savanna
+raid with coalescing enabled only one view was eliminated: most queued views
+were separated by simulation steps. That run accepted an attack and a safe
+post-recovery save, but its 21 frame samples and non-replayed inputs cannot
+establish a performance improvement. The change was discarded. Removing views
+across ticks would change which camera is available for raid-entry decisions
+and requires a separate functional design and deterministic validation.
+
 `qa-worker-clock` moves the existing runtime's clock, step queue, command
 admission and residency coordination into a dedicated Worker. That Worker
 owns a nested simulation Worker, which remains the only game authority. The
@@ -660,9 +670,11 @@ to the Worker. Unit tests cover ordered reserve/save/settle and cancellation
 while saving; the existing 56 microevent tests pass. Scheduling history, RNG
 and cooldowns are now sent to the authority at reservation and settlement. A
 forced visual event completed in the real opt-in game and cleared its ticket;
-the test used programmatic completion and produced no reward. This path remains
+the test used programmatic completion and produced no reward. A later run of
+`tools/experiments/audit_worker_main_microevent.mjs` also reloaded the saved
+history and cooldown through the browser save repository. This path remains
 off by default: cancellation on disposal, deliveries, accelerated time,
-gesture input and reload need end-to-end validation. It is not equivalent
+gesture input and full-session reload need end-to-end validation. It is not equivalent
 gameplay yet.
 
 In the experimental Worker game, a due campaign cinematic now requests an
