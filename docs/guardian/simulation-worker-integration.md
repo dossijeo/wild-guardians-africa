@@ -1035,6 +1035,17 @@ events and poses. It does not prove visual equivalence or body-contact coverage.
 Long active-physics checkpoints can still be rejected by the save format; this
 change does not claim they are restorable. Clip sharing remains unintegrated.
 
+The experimental save format now permits a physical recovery longer than 12
+seconds when a Worker physics checkpoint is present. Ordinary saves retain the
+previous limit and all numeric checks. In the `long-save` variant of the
+two-animal mangrove test, the save coordinator captured a recovery after its
+extended deadline exceeded 12 seconds; after restoring a second Worker, state,
+events and active presentation poses matched for 40 ticks. Inactive pose data
+is not compared because the scene receiver explicitly discards it; its ordering
+and tiny transform values differed after restoring. This does not validate the
+browser save UI, all recovery types, corrupt checkpoints, or a complete campaign;
+procedural and baked fallbacks remain unsupported.
+
 Clip sharing is now available behind `qa-worker-shared-clips`, disabled by
 default. The `same-species` variant of
 `tests/browser/simulation-authority-dynamic-physics.html` compares a Worker
