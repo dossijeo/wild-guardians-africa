@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import * as Game from '../src/simulation/game.js';
-import {castPickedSpell,pickedSpellCommand} from '../src/app/spell-placement.js';
+import {castPickedSpell,pickedSpellCommand,dispatchPickedSpell} from '../src/app/spell-placement.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 
 const nav={placement:()=>({valid:true}),setState(){},path:(_a,b)=>[{x:b.x,z:b.z}]};
@@ -43,4 +43,9 @@ for(const kind of ['shield','growth','multiply'])test(`${kind}: transferable com
 test('transferable command retains missing-target behavior and tolerates failed visual placement',()=>{
  const s=ready();assert.equal(pickedSpellCommand(s,'none','growth',{entityId:null,point:{x:1,z:2}}),null);assert.throws(()=>pickedSpellCommand(s,'none','attack',{entityId:'missing'}),/bestia/);
  const command=pickedSpellCommand(s,'shield','shield',{point:{x:40,z:50},origin:()=>{throw Error('visual failure');}});assert.equal(command.selection.origin,null);
+});
+test('picked spell dispatch waits for the Worker and reports its rejection',async()=>{
+ const state=ready(),plant=state.plants[0],sent=[];let resolve;const runtime={submit(command){sent.push(command);return new Promise(r=>{resolve=r;});}},pick={entityId:plant.id,origin:()=>({x:1,y:2,z:3})};
+ const pending=dispatchPickedSpell(state,'worker-spell','growth',pick,nav,runtime);assert.equal(sent.length,1);assert.equal(sent[0].kind,'castAgricultural');resolve({value:false,rejection:'No disponible'});await assert.rejects(pending,/No disponible/);
+ assert.equal(dispatchPickedSpell(state,'empty','growth',{entityId:null},nav,runtime),false);assert.equal(sent.length,1);
 });

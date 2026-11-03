@@ -34,7 +34,7 @@ import {wallCollisionFrame} from '../../src/world/wall-collision-frame.js';
 import {findInitialLocationAsync} from '../../src/world/villages.js';
 import {WorldScene} from '../../src/rendering/scene.js';
 import {json} from '../../src/rendering/assets.js';
-import {castPickedSpell} from '../../src/app/spell-placement.js';
+import {dispatchPickedSpell} from '../../src/app/spell-placement.js';
 import {AudioSystem} from '../../src/audio/audio.js';
 import {installRollCapture} from './guardian-roll-capture.js';
 if(new URLSearchParams(location.search).has('captureRoll'))installRollCapture(document.querySelector('header'));
@@ -67,7 +67,7 @@ try{
  const trialBiome=new URLSearchParams(location.search).get('biome')??'sabana';
  if(!biomeAssets[trialBiome]||(campaign&&trialBiome!=='sabana'))throw Error('Unsupported biome trial');
  const trialCulture=campaign?'mapungubwe':new URLSearchParams(location.search).get('culture')??'suajili';
- const makeWorld=()=>new WorldScene($('world'),({entityId,point,hitPoint})=>{lastPick={entityId,point,hitPoint,elapsed:state.elapsed};if(new URLSearchParams(location.search).has('pickProbe'))return;try{const origin=world.guardianSummons.plan(entityId,point);castPickedSpell(state,'qa-pick-'+serial++,'attack',{entityId,point,hitPoint,origin},nav);}catch(e){fail(e);}},{approvedVisuals:new URLSearchParams(location.search).has('lightingReview')});let reviewSpatial=null;
+ const makeWorld=()=>new WorldScene($('world'),({entityId,point,hitPoint})=>{lastPick={entityId,point,hitPoint,elapsed:state.elapsed};if(new URLSearchParams(location.search).has('pickProbe'))return;try{const origin=world.guardianSummons.plan(entityId,point),result=dispatchPickedSpell(state,'qa-pick-'+serial++,'attack',{entityId,point,hitPoint,origin},nav,world.workerRuntime??null);if(result?.catch)result.catch(fail);}catch(e){fail(e);}},{approvedVisuals:new URLSearchParams(location.search).has('lightingReview')});let reviewSpatial=null;
  const lodMode=new URLSearchParams(location.search).get('characterLod');
 
  const pack=await json('/content/biome-'+biomeAssets[trialBiome]+'.json');let payload=(await json('/content/villages.json')).find(v=>v.id===(trialCulture==='saheliana'?'saheliano':trialCulture));

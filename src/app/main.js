@@ -29,7 +29,7 @@ import {syncTutorialActionPause} from '../tutorial/action-pause.js';
 import {TutorialHudGuide,tutorialHudHandTarget} from '../ui/tutorial-hud-hand.js';
 import {GameScreenWakeLock} from '../ui/screen-wake-lock.js';
 import {spellCardsMarkup,refreshSpellCards} from '../ui/spell-cards.js';
-import {castPickedSpell} from './spell-placement.js';
+import {dispatchPickedSpell} from './spell-placement.js';
 import {plantNearTouch} from './plant-placement.js';
 import {UiAudio,guidedPlacementKind} from '../audio/ui-audio.js';
 import {ToolSession} from '../ui/tool-session.js';
@@ -308,11 +308,12 @@ function onPick({entityId,point,hitPoint,gestureSeconds=null}) {
     }
     const pickedPlant=state.plants.find(p=>p.id===entityId&&p.alive);
     if(tool?.kind==='spell'){
-      const applicationStarted=performance.now();
-      if(castPickedSpell(state,commandId(),tool.spell,{entityId,point,hitPoint,origin:()=>world.guardianSummons?.plan(entityId,point)},nav)){
-        if(tool.spell!=='attack')manualMagicActivity.applied(state,state.spells.at(-1),{gestureSeconds,applicationCpuSeconds:(performance.now()-applicationStarted)/1000,benefited:state.events.at(-1)?.benefited});
-        toolSession.used(performance.now()/1000);save();
-      }return;
+      const applicationStarted=performance.now(),owner=world,ownerState=state,ownerTool=tool,spell=tool.spell,runtime=owner.workerRuntime??null;
+      if(runtime&&typeof owner.workerSave!=='function')throw Error('Worker save integration is unavailable');
+      const result=dispatchPickedSpell(ownerState,commandId(),spell,{entityId,point,hitPoint,origin:()=>owner.guardianSummons?.plan(entityId,point)},nav,runtime),applicationCpuSeconds=(performance.now()-applicationStarted)/1000;
+      const finish=committed=>{if(owner!==world||ownerState!==state||!committed)return;if(spell!=='attack')manualMagicActivity.applied(state,state.spells.at(-1),{gestureSeconds,applicationCpuSeconds,benefited:state.events.at(-1)?.benefited});if(tool===ownerTool)toolSession.used(performance.now()/1000);return runtime?owner.workerSave():save();};
+      if(result?.then)return result.then(async value=>{await finish(value);if(owner===world&&ownerState===state)updateUI(true);},error=>{if(owner===world&&ownerState===state)throw error;});
+      finish(result);return;
     }
     if(pickedPlant&&tool?.kind!=='spell'&&tool?.kind!=='plant'){cancelTool();closeSurface();selection=null;return;}
     const pickedCenter=state.structures.find(s=>s.id===entityId&&s.kind==='center'&&operational(s));

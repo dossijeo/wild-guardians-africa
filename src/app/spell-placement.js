@@ -28,3 +28,10 @@ export function pickedSpellCommand(state,id,kind,pick){
   if(kind==='growth'||kind==='multiply')return {kind:'castAgricultural',spell:kind,id,x:target.x,z:target.z,selection:{...selection,targetId:target.selection.targetId}};
   throw Error('Magia desconocida');
 }
+// The local route remains synchronous. A Worker-backed scene resolves only
+// after the ordered authoritative publication has reached presentation.
+export function dispatchPickedSpell(state,id,kind,pick,nav,runtime=null){
+  if(!runtime)return castPickedSpell(state,id,kind,pick,nav);
+  const command=pickedSpellCommand(state,id,kind,pick);if(!command)return false;
+  return runtime.submit(command).then(result=>{if(result.rejection)throw Error(result.rejection);return result.value;});
+}
