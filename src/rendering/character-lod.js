@@ -46,10 +46,14 @@ export class CharacterLod {
  dispose(){if(this.disposed)return;this.disposed=true;this.beforePose();this.root.removeFromParent();for(const s of this.skeletons)s.dispose();for(const m of this.materials)m.dispose();}
 }
 
+// The loading primer and live actors must apply the same material recipe.
+export function prepareCharacterLodAppearance(root,id,profile){
+ root.traverse(o=>{if(!o.isMesh)return;for(const m of Array.isArray(o.material)?o.material:[o.material]){if(!profile){m.userData.beastSurface=true;m.userData.furLightingMask=id==='buffalo'&&!!o.geometry.getAttribute('_fur_light');if(id==='warthog')m.userData.warthogSurface=true;}if(id==='olderMale'&&m.name==='BakedMaterial'){m.userData.matteWorkerBody=true;m.roughness=.88;m.metalness=0;}}});
+}
 export async function attachCharacterLod(world,data,id,{prepare=null}={}){
  const asset=await world.assets.model('/content/character-lod/'+id+'.glb');
  if(world.disposed||!data.model.parent||data.lod||![...world.mixers.values()].includes(data))return;
- const lod=new CharacterLod(data.model,asset.scene,{prepareRoot:root=>root.traverse(o=>{if(!o.isMesh)return;for(const m of Array.isArray(o.material)?o.material:[o.material]){if(!data.profile){m.userData.beastSurface=true;m.userData.furLightingMask=id==='buffalo'&&!!o.geometry.getAttribute('_fur_light');if(id==='warthog')m.userData.warthogSurface=true;}if(id==='olderMale'&&m.name==='BakedMaterial'){m.userData.matteWorkerBody=true;m.roughness=.88;m.metalness=0;}}})});
+ const lod=new CharacterLod(data.model,asset.scene,{prepareRoot:root=>prepareCharacterLodAppearance(root,id,data.profile)});
  data.lod=lod;
  if(prepare){lod.pendingPreparation=true;try{const ready=await prepare(lod);if(ready!==false&&!lod.disposed)lod.pendingPreparation=false;}catch(error){if(!lod.disposed)throw error;}}
 }

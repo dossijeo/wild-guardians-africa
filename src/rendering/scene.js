@@ -3,6 +3,7 @@ import {createConfirmedSceneReceiver} from './confirmed-scene-receiver.js';
 import {createWorkerGameRuntime} from '../simulation/worker-game-runtime.js';
 import {prepareWorkerMaterials} from './worker-materials.js';
 import {attachCharacterLod} from './character-lod.js';
+import {prepareCharacterPreload} from './character-preload.js';
 import {cinematicGroundBounce} from './cinematic-lighting.js';
 import {supportAnimalOnTerrain} from './animal-terrain-support.js';
 import {prepareWorkerClips} from './worker-clips.js';
@@ -575,16 +576,20 @@ export class WorldScene {
     const pacing=this.loadingCpuBudget?{cpuBudget:true,getFrame:()=>this.loadingPresentationEpoch??0,frameBudget:16,batchSize:8}:{};
     const compile=(scene,camera,target,{screen=true}={})=>this.loadingProgress?(screen?compileLoadingProgramsBatched:compileLoadingPrograms)(this.renderer,scene,camera,target,{signal:this.loading.signal,cancelled:()=>this.disposed,screen,frameBudget:6,onSubmit:this.onLoadingSpan,frameSlack:this.loadingFrameSlack,...pacing}):this.renderer.compileAsync(scene,camera,target);
     const rigs=await this.animalPreload.spares();if(this.disposed)return;
-    const staging=new THREE.Group();
+    const staging=new THREE.Group(),experimentalCharacters=import.meta.env.DEV&&new URLSearchParams(this.requestedVisualSearch).get('qa-character-preload')==='1',characterStage=experimentalCharacters?new THREE.Group():staging;if(experimentalCharacters)staging.add(characterStage);
     const originals=[];
-    for(const rig of rigs)staging.add(rig.model);
+    for(const rig of rigs)characterStage.add(rig.model);
     // Restored actors stay parented to their world roots. Warm their private
     // bone textures even if the saved raid lies outside the opening camera.
     const active=(this.state.raid?.animals??[]).filter(a=>a.status!=='gone').map(a=>this.mixers.get(a.id)).filter(Boolean);
     for(const rig of [...rigs,...active])rig.model.traverse(mesh=>{if(mesh.isMesh){originals.push([mesh,mesh.frustumCulled]);mesh.frustumCulled=false;}});
-    this.scene.add(staging);let vfxPrimer=null,fluidPrimer=null,prepared=false;
+    this.scene.add(staging);let vfxPrimer=null,fluidPrimer=null,characterPrimer=null,prepared=false;
     this.guardianSummons?.beginPrewarm();
     try{
+      if(experimentalCharacters){
+        characterStage.position.copy(this.controls.target);
+        characterPrimer=await phase('warm-character-models',()=>prepareCharacterPreload({assets:this.assets,staging:characterStage,animalRigs:rigs,workerLibraries:this.workerLibraries,cancelled:()=>this.disposed||this.loading.signal.aborted}));
+      }
       vfxPrimer=new VfxGpuPreload(this.vfxLibrary,this.destructionPass,this.camera,this.scene,this.controls.target);staging.add(vfxPrimer);
       fluidPrimer=new FluidGpuPreload(this.fluidMaterial,{instanced:this.waterPrototypes.some(Boolean)});staging.add(fluidPrimer);
       await phase('warm-compile-staging',()=>compile(staging,this.camera,this.scene));if(this.disposed)return;
@@ -638,6 +643,7 @@ export class WorldScene {
       try{
         if(this.loadingProgress)await phase('warm-draw-batches',()=>renderScreenPreloadBatched(this.renderer,this.scene,this.camera,{warmShadows:true,frameBudget:6,onSubmit:this.onLoadingSpan,frameSlack:this.loadingFrameSlack,...pacing,cancelled:()=>this.disposed,onBatch:(done,total)=>this.loadingProgress.update('gpu',done*.8,total)}));
         else renderScreenPreload(this.renderer,this.scene,this.camera);
+        if(characterPrimer){const camera=this.camera.clone(),target=characterStage.position.clone().add(new THREE.Vector3(0,1,0));camera.position.copy(target).add(new THREE.Vector3(0,2,8));camera.lookAt(target);camera.updateMatrixWorld();await phase('warm-character-pixels',()=>renderScreenPreloadBatched(this.renderer,this.scene,camera,{focus:characterStage,pixels:true,warmShadows:true,frameBudget:6,onSubmit:this.onLoadingSpan,frameSlack:this.loadingFrameSlack,...pacing,cancelled:()=>this.disposed}));}
       }finally{shadows?.dispose();}
       // The first sprite effect captures world depth with shadows disabled.
       // Warm that actual pass while the loading screen still covers the world,
@@ -649,11 +655,14 @@ export class WorldScene {
     }finally{
       this.guardianSummons?.endPrewarm();
       fluidPrimer?.dispose();
+      characterPrimer?.release(prepared&&!this.disposed);
+      if(characterPrimer?.materials.length)(this.characterWarmMaterials??=[]).push(...characterPrimer.materials);
       vfxPrimer?.dispose({retainPrograms:prepared&&!this.disposed});
       for(const [mesh,culled] of originals)mesh.frustumCulled=culled;
-      staging.clear();this.scene.remove(staging);this.releaseNativeShadow?.cache.invalidate();
+      characterStage.clear();staging.clear();this.scene.remove(staging);this.releaseNativeShadow?.cache.invalidate();
     }
   }
+  releaseCharacterWarmMaterials(){for(const material of this.characterWarmMaterials??[])material.dispose();this.characterWarmMaterials=[];}
   restoreCachedGraphics(){
     // Render targets survive as JS objects, but their pixels do not survive loss.
     const cache=this.mangroveMaterialCache;
@@ -954,6 +963,6 @@ export class WorldScene {
   drawWorldFrame() {return withRenderOrigin({scene:this.scene,camera:this.camera,origin:this.renderOrigin,detached:[this.assetGroups.shadowRoot],minMax:()=>renderOriginBounds(this.scene,this.materialRegistry.enabled?this.materialRegistry.materials.keys():null),minSize:()=>[...(this.awakeningRoots?.bounds()??[]),this.contacts.uniforms.uContactBounds.value,...this.terrainMeshes.map(m=>m.material.userData.biomeGround?.uGroundRect.value).filter(Boolean),...((this.horizon?.group?.children??[]).map(m=>m.material?.userData.biomeGround?.uGroundRect.value).filter(Boolean))]},()=>{this.destructionPass.render(this.camera,this.scene);const summonDepth=!!this.guardianSummons?.prepare(this.camera),workDepth=!!this.workVfx?.prepare(this.camera),attackDepth=!!this.attackVfx?.prepare(this.camera),shieldDepth=!!this.shieldVfx?.prepare(this.camera),agricultureDepth=!!this.agricultureVfx?.prepare(this.camera),blessingDepth=!!this.blessingVfx?.prepare(this.camera),materialDepth=!!this.materialVfx?.prepare(this.camera),locomotionDepth=!!this.locomotionVfx?.prepare(this.camera),depth=summonDepth||workDepth||attackDepth||shieldDepth||agricultureDepth||blessingDepth||materialDepth||locomotionDepth;this.vfxLibrary.updateWorldLights(this.camera);this.toon.update(skyNight(this.state),this.sun,this.state.biome);this.materialRegistry.update(waterTime(this.state.elapsed));const autoClear=this.renderer.autoClear;try{this.renderer.autoClear=false;this.renderer.clear();this.sky.render(this.renderer,this.camera,this.state);
 // The existing sky draw advances Three geometry updates before shadowless depth capture.
 if(depth)this.destructionPass.captureDepth(this.camera,this.scene);this.renderer.render(this.scene,this.camera);}finally{this.renderer.autoClear=autoClear;}this.destructionPass.renderSmoke(this.camera,this.scene,{depthPrepared:depth});});}
-  dispose() {if(this.disposed)return;this.disposed=true;this.awakeningGlow?.dispose();this.awakeningRoots?.dispose();this.mudEdgeExecutor?.dispose();this.releaseRetainedPrograms();this.mangroveMaterialCache?.dispose();this.mangroveMaterialCache=null;if(this.nav)delete this.nav.raidEntryResident;this.loading?.abort();this.loadingActorQueue?.dispose();this.canvasEvents?.abort();this.animalPreload?.dispose();this.beastPhysics?.dispose();this.guardianSummons?.dispose();for(const rig of this.mixers?.values()??[])releaseActorRig(rig);this.mixers?.clear();this.spellPreview.dispose();this.materialRegistry.dispose();this.farVegetation?.dispose();this.groundDetails?.dispose();this.chunkStream?.dispose();this.releaseAssetShadows?.();this.releaseNativeShadow?.();this.assetGroups.dispose();for(const group of this.chunks.values())disposeAssetShadows(group);this.contacts.dispose();this.horizon?.dispose();this.sky.dispose();this.workVfx?.dispose();this.attackVfx?.dispose();this.shieldVfx?.dispose();this.agricultureVfx?.dispose();this.blessingVfx?.dispose();this.materialVfx?.dispose();this.locomotionVfx?.dispose();this.vfxLibrary?.dispose();this.wallDrawing.dispose();this.strokePreview.dispose();this.clearWallPreview();this.provisionalWalls?.dispose();this.provisionalBuildings?.dispose();this.provisionalBeastImpact?.clear();this.hands?.dispose();this.groundDepth?.dispose();this.destructionPass.dispose();for(const template of this.buildingTemplates.values())template.dispose();this.resizeObserver.disconnect();this.releaseCameraExclusion?.();this.releaseCameraIntent?.();this.controls.dispose();this.cropBatch?.dispose();this.scene.traverse(o=>{if(o.isMesh){if(o.isInstancedMesh)o.dispose();if(!o.userData.borrowedWaterGeometry&&(!o.isInstancedMesh||o.geometry.userData.obstruction||o.geometry.userData.nativeChunkClip))o.geometry.dispose();const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>{if(m!==this.fluidMaterial)m.dispose();});}});this.waterPrototypes?.forEach(g=>g?.dispose());this.fluidMaterial?.dispose();this.sun.shadow.dispose();this.biomeGround?.dispose();this.mudPatches?.dispose();this.assets?.disposeModels();this.renderer.dispose();this.glResourceEpoch?.dispose();this.renderer.forceContextLoss();this.state=null;}
+  dispose() {if(this.disposed)return;this.disposed=true;this.awakeningGlow?.dispose();this.awakeningRoots?.dispose();this.mudEdgeExecutor?.dispose();this.releaseRetainedPrograms();this.releaseCharacterWarmMaterials();this.mangroveMaterialCache?.dispose();this.mangroveMaterialCache=null;if(this.nav)delete this.nav.raidEntryResident;this.loading?.abort();this.loadingActorQueue?.dispose();this.canvasEvents?.abort();this.animalPreload?.dispose();this.beastPhysics?.dispose();this.guardianSummons?.dispose();for(const rig of this.mixers?.values()??[])releaseActorRig(rig);this.mixers?.clear();this.spellPreview.dispose();this.materialRegistry.dispose();this.farVegetation?.dispose();this.groundDetails?.dispose();this.chunkStream?.dispose();this.releaseAssetShadows?.();this.releaseNativeShadow?.();this.assetGroups.dispose();for(const group of this.chunks.values())disposeAssetShadows(group);this.contacts.dispose();this.horizon?.dispose();this.sky.dispose();this.workVfx?.dispose();this.attackVfx?.dispose();this.shieldVfx?.dispose();this.agricultureVfx?.dispose();this.blessingVfx?.dispose();this.materialVfx?.dispose();this.locomotionVfx?.dispose();this.vfxLibrary?.dispose();this.wallDrawing.dispose();this.strokePreview.dispose();this.clearWallPreview();this.provisionalWalls?.dispose();this.provisionalBuildings?.dispose();this.provisionalBeastImpact?.clear();this.hands?.dispose();this.groundDepth?.dispose();this.destructionPass.dispose();for(const template of this.buildingTemplates.values())template.dispose();this.resizeObserver.disconnect();this.releaseCameraExclusion?.();this.releaseCameraIntent?.();this.controls.dispose();this.cropBatch?.dispose();this.scene.traverse(o=>{if(o.isMesh){if(o.isInstancedMesh)o.dispose();if(!o.userData.borrowedWaterGeometry&&(!o.isInstancedMesh||o.geometry.userData.obstruction||o.geometry.userData.nativeChunkClip))o.geometry.dispose();const materials=Array.isArray(o.material)?o.material:[o.material];materials.forEach(m=>{if(m!==this.fluidMaterial)m.dispose();});}});this.waterPrototypes?.forEach(g=>g?.dispose());this.fluidMaterial?.dispose();this.sun.shadow.dispose();this.biomeGround?.dispose();this.mudPatches?.dispose();this.assets?.disposeModels();this.renderer.dispose();this.glResourceEpoch?.dispose();this.renderer.forceContextLoss();this.state=null;}
 
 }
