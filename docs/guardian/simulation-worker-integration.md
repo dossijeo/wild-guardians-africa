@@ -763,6 +763,19 @@ improvement or test explicit cancellation, different biomes or real pointer
 placement. Drawing the provisional meshes and
 sampling their terrain heights still happen on the presentation thread.
 
+An A/B/B/A headless Edge comparison using the same synthetic desert fixture
+and two direct QA placements measured the second preview handler at 16.68 and
+16.53 ms with local validation, versus 6.22 and 7.22 ms with Worker validation.
+The time until the final confirmation button was enabled varied substantially:
+162/1,121 ms locally versus 1,215/1,273 ms with the Worker. During the short
+measurement window the largest observed frame intervals were 933–967 ms locally
+and 900–933 ms with the Worker. Frame samples were sparse (6–39 per run), and
+include asset preparation and contention; these are not reliable p95/p99 or a
+general gameplay benchmark. They demonstrate less synchronous handler work in
+this fixture but do not demonstrate smoother rendering or lower validation
+latency. The `qa-worker-local-village-preview` flag exists only to reproduce
+the comparison. GPU identity was not recorded for these runs.
+
 When a microevent holds night speed, the game now sends the corresponding
 fast-forward policy to the installed Worker runtime, and restores it when the
 hold ends. Only changes are sent. Unit tests cover policy transitions and the
