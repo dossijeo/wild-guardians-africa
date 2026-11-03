@@ -825,3 +825,17 @@ The Worker still revalidates commands against its own state.
 New village founding uses the culture selected for the game, enforced in the
 simulation as well as the UI. Existing mixed-culture saves retain their villages,
 so their center previews can still differ from the selected authoritative site.
+
+The experimental hosted game now enables compact camera acknowledgements,
+coalescing and view folding by default; `qa-worker-legacy-publications` restores
+the earlier path. The regular non-Worker game is unchanged. A deterministic
+two-Worker mangrove comparison with two species and physics repeated 300 ticks,
+96 folded views and 288 coalesced publications; events, their observed states
+and final poses matched, but there were no simultaneous active ragdolls or frames.
+Two separate headless savanna smoke runs confirmed the same target attack with
+both settings. Their sparse frame samples (17 versus 8), different simulation
+times and SwiftShader cannot establish a performance improvement: the maxima
+were 333 ms and 1,200 ms respectively. The compact run observed 17 queued items
+at its attack sample and a 93-sequence peak backlog; eventful and command
+barriers remain unbounded. Do not treat these numbers as a controlled benchmark
+or the queue problem as solved.
