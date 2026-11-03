@@ -520,6 +520,15 @@ folded 31 views by the pause. That run is not a controlled performance or
 visual comparison, and the queue remains unbounded for eventful states and
 command barriers. The option stays experimental.
 
+The same deterministic comparison now also supports `?views&physics`: two
+real mangrove Workers received the same attack, 100 ticks and 34 view changes.
+They matched every authoritative snapshot, event and physics pose per tick;
+after withholding presentation until the end, the merged receiver matched
+each event's observed state and the final physical pose. Ninety-six ticks had
+active physics and 33 view confirmations were folded. This is one animal and
+no rendered frames, so it does not establish visual continuity, multi-animal
+equivalence, frame-time improvement or a bounded event-heavy queue.
+
 `tests/browser/worker-coalesced-events-parity.html` compares two real mangrove
 simulation Workers for 100 identical ticks, holding the coalesced presentation
 until the end. It delivered three publications instead of 100, preserved all
