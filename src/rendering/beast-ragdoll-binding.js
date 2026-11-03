@@ -28,6 +28,23 @@ export class BeastRagdollBinding{
   const physical=new Set(this.entries.map(e=>e.bone));this.passive=[...new Set(this.bones.values())].filter(bone=>!physical.has(bone)).map(bone=>({bone,capturedP:bone.position.clone(),capturedQ:bone.quaternion.clone(),animatedP:new Vector3(),animatedQ:new Quaternion()}));
   this.v=new Vector3();this.q=new Quaternion();this.parentQ=new Quaternion();this.y=new Vector3(0,1,0);this.hip=new Vector3();
  }
+ // Experimental checkpoint of binding data; the physics bodies are stored
+ // separately. Preserve both the displayed pose and the pose to restore before
+ // the next animation/physics step when an application is currently active.
+ checkpoint(){
+  const transform=e=>({name:e.bone.name,position:e.bone.position.toArray(),quaternion:e.bone.quaternion.toArray(),animatedP:e.animatedP.toArray(),animatedQ:e.animatedQ.toArray()});
+  return {version:1,applied:!!this.applied,entries:this.entries.map(e=>({...transform(e),offset:e.offset.toArray(),length:e.length})),passive:this.passive.map(e=>({...transform(e),capturedP:e.capturedP.toArray(),capturedQ:e.capturedQ.toArray()}))};
+ }
+ restoreCheckpoint(data){
+  const valid=(a,n)=>Array.isArray(a)&&a.length===n&&a.every(Number.isFinite),validQ=q=>valid(q,4)&&Math.hypot(...q)>1e-6;
+  if(!data||data.version!==1||typeof data.applied!=='boolean'||!Array.isArray(data.entries)||data.entries.length!==this.entries.length||!Array.isArray(data.passive)||data.passive.length!==this.passive.length)throw Error('Invalid ragdoll binding checkpoint');
+  const check=(item,e,physical)=>item&&item.name===e.bone.name&&valid(item.position,3)&&validQ(item.quaternion)&&valid(item.animatedP,3)&&validQ(item.animatedQ)&&(physical?validQ(item.offset)&&Number.isFinite(item.length)&&item.length>0:valid(item.capturedP,3)&&validQ(item.capturedQ));
+  if(data.entries.some((item,i)=>!check(item,this.entries[i],true))||data.passive.some((item,i)=>!check(item,this.passive[i],false)))throw Error('Invalid ragdoll binding pose');
+  const apply=(item,e)=>{e.bone.position.fromArray(item.position);e.bone.quaternion.fromArray(item.quaternion);e.animatedP.fromArray(item.animatedP);e.animatedQ.fromArray(item.animatedQ);};
+  data.entries.forEach((item,i)=>{const e=this.entries[i];apply(item,e);e.offset.fromArray(item.offset);e.length=item.length;});
+  data.passive.forEach((item,i)=>{const e=this.passive[i];apply(item,e);e.capturedP.fromArray(item.capturedP);e.capturedQ.fromArray(item.capturedQ);});
+  this.applied=data.applied;this.model.updateWorldMatrix(true,true);
+ }
  capture(){
   for(const e of this.passive){e.capturedP.copy(e.bone.position);e.capturedQ.copy(e.bone.quaternion);}
   this.model.updateWorldMatrix(true,true);this.model.updateMatrixWorld(true);const pose={};for(const [name,bone] of this.bones){const p=bone.getWorldPosition(new Vector3());pose[name]={x:p.x,y:p.y,z:p.z};}

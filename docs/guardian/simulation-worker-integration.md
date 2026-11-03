@@ -907,8 +907,11 @@ snapshot, actor/body/joint handles, obstacle handles, roll controller state and
 recovery-collider set. Node tests restored two animals interacting with each
 other and obstacles in falling, rolling and kinematic phases, then matched
 their physical poses step-for-step for 120 solver steps. This is a solver test,
-not a save format: bindings, environment maps, animation recovery controllers,
-JSON/binary persistence, Worker integration, corrupt-input hardening and full
-game replay are still missing. In particular the higher-level recovery phase
-cannot yet be resumed just because its kinematic bodies were restored. The
-active-physics save gate is unchanged.
+not a save format. A further in-memory experiment reconnects bone bindings and
+environment collider maps and restores the actual fall/roll manager. One hyena
+continued with matching logical positions and physical poses for 120 steps; a
+second test restored a roll and matched its transition into authored recovery.
+This has not captured an already-running recovery or baked fallback, and lacks
+JSON/binary persistence, Worker integration, complete corrupt-input hardening,
+multi-actor manager tests and full game replay. The active-physics save gate is
+unchanged.

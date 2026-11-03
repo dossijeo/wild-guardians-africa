@@ -5,6 +5,11 @@ import {wallCollisionBounds} from '../world/wall-collision-frame.js';
 // admission/removal, not every frame; overlapping actors never duplicate ground.
 export class BeastPhysicsEnvironment {
  constructor(world,solver){this.world=world;this.solver=solver;this.colliders=new Map();}
+ checkpoint(){return {version:1,colliders:[...this.colliders].map(([key,collider])=>[key,collider?.handle??null])};}
+ restoreCheckpoint(data){
+  if(!data||data.version!==1||!Array.isArray(data.colliders))throw Error('Invalid beast environment checkpoint');
+  const restored=new Map();for(const row of data.colliders){if(!Array.isArray(row)||row.length!==2||typeof row[0]!=='string'||!row[0]||restored.has(row[0]))throw Error('Invalid beast environment entry');const collider=row[1]===null?null:this.solver.world.getCollider(row[1]);if(row[1]!==null&&(!collider||!this.solver.obstacles.includes(collider)))throw Error('Missing beast environment collider');restored.set(row[0],collider);}this.colliders=restored;
+ }
  // Structures can be destroyed by other animals during a fall. Remove only
  // obsolete solids; terrain and surviving collider handles remain untouched.
  pruneDestroyed(){
