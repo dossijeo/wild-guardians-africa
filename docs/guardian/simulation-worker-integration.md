@@ -807,6 +807,13 @@ an accepted individual gate and a rejected overlapping center in a peaceful fixt
 with an increased starting balance. It does not cover an accepted center, real
 pointer input or visual equivalence. Awakening and attack previews are experimental.
 
+An awakening starts a provisional ritual and target marker while its Worker
+command is pending. A headless peaceful-fixture test with a prepared charge
+issued two confirmations before the first response: initially the crop remained
+unblessed and the charge remained full; the Worker committed one blessing and
+the duplicate provisional ritual was removed. Unit tests also cover rejection
+cleanup. This uses direct input and does not establish visual equivalence.
+
 Attack now uses the existing 1.74-second gesture marker rather than the former
 12-second global cooldown. The authority rejects targets in impact, falling,
 rolling or recovery and accepts a different standing animal after the gesture.
