@@ -49,7 +49,12 @@ export class Assets {
     // Also owns packed biome/village/wall prototypes and standalone textures,
     // including resources whose meshes never entered the rendered scene.
     for(const resource of this.ownedResources)this.release(resource);
-    this.preparation.abort();this.transfers.release();this.activeModelTransfers.clear();this.loadedTextureKeys.clear();this.releaseLoadingImageDecoder();this.ownedResources.clear();this.modelSources.clear();this.cache.clear();
+    this.preparation.abort();this.transfers.release();this.activeModelTransfers.clear();this.loadedTextureKeys.clear();this.releaseLoadingImageDecoder();this.experimentalKtxLoader?.dispose();this.ownedResources.clear();this.modelSources.clear();this.cache.clear();
+  }
+  async experimentalKtxTexture(){
+    const {KTX2Loader}=await import('three/addons/loaders/KTX2Loader.js');this.assertOpen();
+    this.experimentalKtxLoader??=new KTX2Loader().setTranscoderPath('/node_modules/three/examples/jsm/libs/basis/').detectSupport(this.experimentalKtx.renderer);
+    return this.experimentalKtxLoader.loadAsync(`/qa/ktx2-fixture/savanna-color-${this.experimentalKtx.variant}.ktx2`);
   }
   async building(descriptor){
     this.assertOpen();const key='building:'+descriptor.url;
@@ -62,7 +67,7 @@ export class Assets {
   }
   async texture(url,color=false) {
     this.assertOpen();const key=url+color;
-    if(!this.cache.has(key)){const bitmapPath=this.asyncTextureImages&&typeof Worker!=='undefined'&&typeof createImageBitmap==='function',load=bitmapPath?this.loadingTexture(url):this.textures.loadAsync(assetUrl(url));const pending=load.then(async texture=>{if(color)texture.colorSpace=THREE.SRGBColorSpace;texture.flipY=false;if(this.asyncTextureImages&&!bitmapPath){try{await prepareLoadingImage(texture,{cancelled:()=>this.modelsDisposed,onDiagnostic:this.loadingDiagnostics});}catch(error){this.release(texture);throw error;}}const owned=this.own(texture);if(!this.modelsDisposed)this.loadedTextureKeys.add(key);return owned;});this.cache.set(key,pending);pending.catch(()=>{if(this.cache.get(key)===pending)this.cache.delete(key);});}
+    if(!this.cache.has(key)){const bitmapPath=this.asyncTextureImages&&typeof Worker!=='undefined'&&typeof createImageBitmap==='function',ktx=!!this.experimentalKtx&&new URL(url,globalThis.location?.href??'http://localhost/').pathname==='/assets/images/01e1c811b957b401a88c30717e4c0cb02f5364d925de5bba40e701718dac83a7.webp',load=ktx?this.experimentalKtxTexture():bitmapPath?this.loadingTexture(url):this.textures.loadAsync(assetUrl(url));const pending=load.then(async texture=>{if(color)texture.colorSpace=THREE.SRGBColorSpace;texture.flipY=false;if(this.asyncTextureImages&&!bitmapPath&&!ktx){try{await prepareLoadingImage(texture,{cancelled:()=>this.modelsDisposed,onDiagnostic:this.loadingDiagnostics});}catch(error){this.release(texture);throw error;}}const owned=this.own(texture);if(!this.modelsDisposed)this.loadedTextureKeys.add(key);return owned;});this.cache.set(key,pending);pending.catch(()=>{if(this.cache.get(key)===pending)this.cache.delete(key);});}
     if(this.loadedTextureKeys.has(key))cachedAssetTransfer(assetUrl(url));
     return this.cache.get(key);
   }

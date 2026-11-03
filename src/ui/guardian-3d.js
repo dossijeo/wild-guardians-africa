@@ -5,10 +5,13 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {GuardianFace} from './guardian-face.js';
 import {assetUrl} from '../rendering/asset-url.js';
+import {compileLoadingPrograms} from '../rendering/loading-programs.js';
+import {initializeValidatedProgramBindings} from '../rendering/program-bindings.js';
 export class Guardian3D {
  constructor(canvas,{modelUrl='content/guardian/guardian.glb'}={}){
   this.modelUrl=modelUrl;
   this.canvas=canvas;this.renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'low-power'});this.renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.5));this.renderer.setClearColor(0,0);this.renderer.outputColorSpace=THREE.SRGBColorSpace;this.renderer.toneMapping=THREE.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.15;
+  this.pendingProgramPreparation=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-guardian-program-warm')&&!!this.renderer.getContext().getExtension('KHR_parallel_shader_compile');
   this.scene=new THREE.Scene();this.camera=new THREE.OrthographicCamera(-.56,.56,.56,-.56,.01,10);this.camera.position.set(0,0,2);this.camera.lookAt(0,0,0);
   this.scene.add(new THREE.HemisphereLight(0xfff4dc,0x786b60,2.2));
   const key=new THREE.DirectionalLight(0xffecd9,3);key.position.set(-2,3,4);this.scene.add(key);const fill=new THREE.DirectionalLight(0xd9edff,1.5);fill.position.set(2,1,2);this.scene.add(fill);
@@ -22,12 +25,13 @@ export class Guardian3D {
   for(const a of this.actions.values())a.play();
   this.eyes=['L','R'].map(side=>{const bone=this.model.getObjectByName('Eye'+side)??this.model.getObjectByName('Eye.'+side);return bone?{bone,side,rest:bone.quaternion.clone()}:null;}).filter(Boolean);
   this.face=new GuardianFace(this.model,{resolve:assetUrl});if(this.record)this.face.setRecord(this.record);this.resize();
+  if(this.pendingProgramPreparation){await compileLoadingPrograms(this.renderer,this.scene,this.camera,this.scene,{screen:true,cancelled:()=>this.disposed,onProgramReady:program=>initializeValidatedProgramBindings(this.renderer,program)});if(!this.disposed)this.pendingProgramPreparation=false;}
  }
  setRecord(record){this.record=record;return this.face?.setRecord(record);}
  lookAt(target,side=null){if(side)this.eyeTargets[side]=target.clone();else{this.target.copy(target);this.eyeTargets={};}}
  resize(){const w=Math.max(2,this.canvas.clientWidth),h=Math.max(2,this.canvas.clientHeight);this.renderer.setSize(w,h,false);const a=w/h;const half=Math.max(.56,.36/a);this.camera.left=-half*a;this.camera.right=half*a;this.camera.top=half;this.camera.bottom=-half;this.camera.updateProjectionMatrix();}
  draw({time=0,audio=null,gesture='idle',reduced=false}={}){
-  if(!this.model||this.disposed)return;
+  if(!this.model||this.disposed||this.pendingProgramPreparation)return;
   const start=performance.now();const speaking=audio&&!audio.ended;const clock=speaking?audio.currentTime:time;
   const event=speaking?this.face.data?.gestures?.find(e=>clock>=e.start&&clock<e.end):null;
   const envelope=event?Math.min(1,(clock-event.start)/.35,(event.end-clock)/.45):0;

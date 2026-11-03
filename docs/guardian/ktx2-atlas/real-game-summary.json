@@ -1,0 +1,143 @@
+{
+  "rows": [
+    {
+      "name": "etc1s-game",
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "startupMs": 48109,
+      "texture": {
+        "url": "http://127.0.0.1:5175/assets/images/01e1c811b957b401a88c30717e4c0cb02f5364d925de5bba40e701718dac83a7.webp",
+        "compressed": true,
+        "format": 36492,
+        "mips": 12,
+        "bytes": 5592432
+      },
+      "prelude": {
+        "count": 130,
+        "mean": 58.46153846153846,
+        "p95": 166.62999999999738,
+        "p99": 233.31500000000233,
+        "max": 366.6650000000009
+      },
+      "attacks": [
+        {
+          "id": "animal-368",
+          "handlerMs": 12.799999997019768,
+          "frames": {
+            "count": 29,
+            "max": 333.34999999999854
+          }
+        },
+        {
+          "id": "animal-369",
+          "handlerMs": 4.2349999994039536,
+          "frames": {
+            "count": 29,
+            "max": 66.80500000000029
+          }
+        }
+      ]
+    },
+    {
+      "name": "webp-game",
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "startupMs": 62237,
+      "texture": null,
+      "prelude": {
+        "count": 134,
+        "mean": 57.71048507462688,
+        "p95": 133.30999999999767,
+        "p99": 300.1050000000032,
+        "max": 400.0200000000041
+      },
+      "attacks": [
+        {
+          "id": "animal-368",
+          "handlerMs": 10.939999997615814,
+          "frames": {
+            "count": 32,
+            "max": 266.68500000000495
+          }
+        },
+        {
+          "id": "animal-369",
+          "handlerMs": 3.8399999886751175,
+          "frames": {
+            "count": 29,
+            "max": 66.67499999999563
+          }
+        }
+      ]
+    },
+    {
+      "name": "etc1s-game-2",
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "startupMs": 47493,
+      "texture": {
+        "url": "http://127.0.0.1:5175/assets/images/01e1c811b957b401a88c30717e4c0cb02f5364d925de5bba40e701718dac83a7.webp",
+        "compressed": true,
+        "uploaded": true,
+        "materials": 1027,
+        "format": 36492,
+        "mips": 12,
+        "bytes": 5592432
+      },
+      "prelude": {
+        "count": 130,
+        "mean": 57.691423076923094,
+        "p95": 133.33000000000175,
+        "p99": 266.7150000000038,
+        "max": 366.63499999999476
+      },
+      "attacks": [
+        {
+          "id": "animal-368",
+          "handlerMs": 12.114999994635582,
+          "frames": {
+            "count": 29,
+            "max": 299.9750000000058
+          }
+        },
+        {
+          "id": "animal-369",
+          "handlerMs": 4.125,
+          "frames": {
+            "count": 28,
+            "max": 66.70000000000437
+          }
+        }
+      ]
+    },
+    {
+      "name": "webp-game-2",
+      "gpu": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "startupMs": 47747,
+      "texture": null,
+      "prelude": {
+        "count": 135,
+        "mean": 56.05022222222221,
+        "p95": 133.38000000000466,
+        "p99": 233.33000000000175,
+        "max": 233.4449999999997
+      },
+      "attacks": [
+        {
+          "id": "animal-368",
+          "handlerMs": 10.940000012516975,
+          "frames": {
+            "count": 30,
+            "max": 233.37000000000262
+          }
+        },
+        {
+          "id": "animal-369",
+          "handlerMs": 5.340000003576279,
+          "frames": {
+            "count": 28,
+            "max": 66.77999999999884
+          }
+        }
+      ]
+    }
+  ],
+  "limitations": "Separate exploratory runs, unmatched input and runtime timing, frame instrumentation overhead, no GPU query or deterministic outcome comparison; first two included screenshots and baseline had live source changes during startup."
+}
