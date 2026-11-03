@@ -1008,3 +1008,17 @@ prebuilt rig data from a separate preparation Worker. Any integration must keep
 simulation ordering and rejection semantics, and compare readiness, memory,
 latency and real frame times; simply running this preparation on the render
 thread would introduce a new source of stutter.
+
+An isolated experiment reused prepared clips by species across independent
+animal mixers; rigs remained per animal. In an alternating isolated
+main-thread comparison, repeat hyena admission took 126/125 ms with prepared
+clips versus 350/259 ms without; buffalo took 377/408 ms versus 645/634 ms.
+Three sampled walking poses matched exactly. These four measurements per species
+are not a Worker or full-game A/B benchmark, do not validate every animation or
+measure memory, and do not remove the first animal's preparation delay. The
+existing dynamic physics test failed to complete its second impact, so the
+sharing change was not retained in the Worker pending a representative functional
+test. The failure alone does not establish that clip sharing caused it.
+Repeating the test after reverting sharing produced the same failure: the
+second actor never entered physical simulation within 500 steps. The fixture
+needs updating or diagnosis before it can validate chained attacks.
