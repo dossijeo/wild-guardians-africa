@@ -1,3 +1,4 @@
+import {applyConfirmedAnimalPose} from './confirmed-animal-pose.js';
 import {prepareWorkerMaterials} from './worker-materials.js';
 import {attachCharacterLod} from './character-lod.js';
 import {cinematicGroundBounce} from './cinematic-lighting.js';
@@ -765,6 +766,8 @@ export class WorldScene {
       else if(entity.path?.length){const next=entity.path[0];this.objects.get(entity.id).rotation.y=Math.atan2(next.x-entity.x,next.z-entity.z);}
       data.lod?.update(this.camera,this.renderer.domElement.height,this.characterLodForce??null);return;
     }
+    const confirmedPose=this.confirmedAnimalPoses?.get(entity.id);
+    if(confirmedPose){if(confirmedPose.actorId!==entity.id)throw Error('Confirmed animal pose belongs to another actor');applyConfirmedAnimalPose(this.objects.get(entity.id),data.model,confirmedPose);applyActorExpression(data,entity,'animal',this.state.elapsed);data.lod?.update(this.camera,this.renderer.domElement.height,this.characterLodForce??null);return;}
     if(data.cachedSkinning===undefined)data.cachedSkinning=this.animalGroundFast?2:false;
     this.beastPhysics?.before(entity.id);restoreAnimalImpact(data);captureAnimalImpact(data,entity,this.state.elapsed);applyAnimalPose(data,entity,this.state.elapsed);if(!entity.magicDown)applyAnimalImpact(data,entity,this.state.elapsed);
     this.objects.get(entity.id).rotation.y=entity.heading??0;

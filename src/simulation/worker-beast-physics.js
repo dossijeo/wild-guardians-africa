@@ -29,5 +29,5 @@ export async function createWorkerBeastPhysics(game,nav,{actorId}={}){
   }
   return rawStep(state,dt);
  };
- return {actorId,manager,assertEnvironment,pose(){const transform=node=>[...node.position.toArray(),...node.quaternion.toArray(),...node.scale.toArray()],bones=[];model.traverse(node=>{if(node.isBone)bones.push({name:node.name,transform:transform(node)});});return {actorId,root:transform(root),model:transform(model),bones,active:manager.entries.has(actorId)};},dispose(){manager.dispose();model.traverse(o=>{if(o.isSkinnedMesh){o.geometry.dispose();o.material.dispose();o.skeleton.dispose();}});}};
+ return {actorId,manager,assertEnvironment,pose(){if(manager.entries.has(actorId)){manager.before(actorId);root.position.set(animal.x,nav.actorSurface(animal.x,animal.z),animal.z);root.updateMatrixWorld(true);manager.render(actorId);root.updateMatrixWorld(true);}const transform=node=>[...node.position.toArray(),...node.quaternion.toArray(),...node.scale.toArray()],bones=[];model.traverse(node=>{if(node.isBone)bones.push({name:node.name,transform:transform(node)});});return {actorId,root:transform(root),model:transform(model),bones,active:manager.entries.has(actorId)};},dispose(){manager.dispose();model.traverse(o=>{if(o.isSkinnedMesh){o.geometry.dispose();o.material.dispose();o.skeleton.dispose();}});}};
 }
