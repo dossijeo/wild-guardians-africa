@@ -12,7 +12,7 @@ function validMotionTrace(t){
 // It does not advance simulation or install a second physics owner.
 export function createConfirmedSceneReceiver(state,session,world){
  if(!world||world.state!==state||!(world.mixers instanceof Map))throw TypeError('Invalid confirmed scene');
- let pending=null;const receiver=createConfirmedStateReceiver(state,session,{onReconciled:()=>{
+ let pending=null,decoded=null;const receiver=createConfirmedStateReceiver(state,session,{decodeSnapshot:text=>{if(!decoded||decoded.text!==text)throw Error('Missing validated scene snapshot');return decoded.value;},onReconciled:()=>{
   if(!pending)throw Error('Missing confirmed scene poses');const previous=world.confirmedAnimalPoses??new Map();for(const id of previous.keys())if(!pending.has(id)){const rig=world.mixers.get(id);if(rig)rig.key=null;}world.confirmedAnimalPoses=pending;
  }});
  return {
@@ -34,7 +34,7 @@ export function createConfirmedSceneReceiver(state,session,world){
     if(trace.peers!==undefined){if(!Array.isArray(trace.peers)||typeof trace.rosterChanged!=='boolean')throw TypeError('Invalid observed peer motion');const seen=new Set([trace.actorId]);for(const peer of trace.peers){const body=actors.get(peer?.actorId)??snapshot.workers.find(w=>w.id===peer?.actorId);if(!validMotionTrace(peer)||seen.has(peer.actorId)||peer.start.at!==trace.start.at||peer.end.at!==trace.end.at||!Number.isFinite(peer.radius)||peer.radius<=0||typeof peer.startStatus!=='string'||typeof peer.endStatus!=='string'||peer.continuous&&(!body||peer.end.x!==body.x||peer.end.z!==body.z))throw TypeError('Invalid observed peer motion');seen.add(peer.actorId);}}
    }
    const invalidation=message.motionInvalidation;if(invalidation!==undefined&&(!invalidation||typeof invalidation.actorId!=='string'||!invalidation.actorId||!validPoint(invalidation)||invalidation.at<0||!Number.isFinite(message.elapsed)||invalidation.at>message.elapsed||message.elapsed!==snapshot.elapsed||typeof invalidation.reason!=='string'||!invalidation.reason||trace&&(invalidation.actorId!==trace.actorId||invalidation.at<trace.start.at||invalidation.at>trace.end.at)))throw TypeError('Invalid path motion invalidation');
-   pending=next;try{const result=receiver.accept(message,{firstSequence});if(result.accepted){if(invalidation){if(world.lastObservedPathMotion?.actorId===invalidation.actorId)world.lastObservedPathMotion=null;world.lastObservedPathInvalidation=invalidation;if(Array.isArray(world.observedPathInvalidations)){if(trace)world.lastObservedUnusablePathMotion=trace;world.observedPathInvalidations.push(invalidation);if(world.observedPathInvalidations.length>64)world.observedPathInvalidations.shift();}}else if(trace)world.lastObservedPathMotion=trace;}return result;}finally{pending=null;}
+   pending=next;decoded={text:message.snapshot,value:snapshot};try{const result=receiver.accept(message,{firstSequence});if(result.accepted){if(invalidation){if(world.lastObservedPathMotion?.actorId===invalidation.actorId)world.lastObservedPathMotion=null;world.lastObservedPathInvalidation=invalidation;if(Array.isArray(world.observedPathInvalidations)){if(trace)world.lastObservedUnusablePathMotion=trace;world.observedPathInvalidations.push(invalidation);if(world.observedPathInvalidations.length>64)world.observedPathInvalidations.shift();}}else if(trace)world.lastObservedPathMotion=trace;}return result;}finally{pending=null;decoded=null;}
   },
   status(){return receiver.status();},
  };
