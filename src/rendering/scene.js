@@ -498,6 +498,10 @@ export class WorldScene {
     const logicalBounds=this.farResidentRange==null?region.bounds:nativeNearRegion({x:cx*48,z:cz*48},this.quality).bounds;
     const raidPins=raidResidentDemand(this.state??{},this.nav);
     this.nearBounds=visibleRegion.bounds;this.nav.setActiveBounds?.(includeRaidBounds(logicalBounds,raidPins));this.nav.setRaidView?.(this.camera.position,this.controls.target);
+    if(this.workerRuntime){
+      const owner=this.workerRuntime,view={bounds:[...this.nav.activeBounds],eye:{...this.nav.raidView.eye},target:{...this.nav.raidView.target}},key=JSON.stringify(view);
+      if(this.workerNavigationViewKey!==key){this.workerNavigationViewKey=key;owner.submit({kind:'setNavigationView',view}).catch(error=>{if(this.workerRuntime===owner){if(this.workerNavigationViewKey===key)this.workerNavigationViewKey=null;this.onError?.(error);}});}
+    }
     const desired=new Set();for(let dz=-range;dz<=range;dz++)for(let dx=-range;dx<=range;dx++)desired.add(`${cx+dx},${cz+dz}`);
     // Retain the adopted hole while preparing the destination in parallel.
     // Only the latest requested destination is retained if the camera changes.

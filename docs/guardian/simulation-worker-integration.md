@@ -313,6 +313,32 @@ in-memory storage backend. Runtime installation, full UI and voice, temporal
 ordering under load, tutorial interruptions and real raids are not validated;
 the ordinary game remains on its original execution path.
 
+### Real-game development activation
+
+The development-only `qa-worker-game` switch installs the Worker runtime after
+loading the real scene. `qa-worker-start` starts a new savanna game and
+`qa-worker-raid` loads the existing day-31 savanna pre-raid capture. These are
+diagnostic switches, not production activation. Runtime teardown now disposes
+the Worker with the scene. The application supplies the scene's active bounds
+and raid camera view to the Worker at initialization and updates them when
+they change; without this information the tested 13-animal raid could not find
+its exterior entry and waited indefinitely.
+
+Reproducible browser checks: `tools/experiments/audit_worker_main_game.mjs`
+starts the real game and uses the actual UI to pause, resume, build a center,
+plant and hire one worker. `tools/experiments/audit_worker_main_raid.mjs`
+loads the capture, observes 13 animals enter, and uses a real pointer attack
+that produces a confirmed `GuardianMagicHit`. Both were run with headless Edge
+and SwiftShader enabled; these are functional checks, not GPU benchmarks.
+
+This does not establish a completed raid or production readiness. The runtime
+clock and presentation reconciliation still run on the main thread; ordinary
+actor presentation and skeletal animation remain CPU-driven. Microevents,
+several game actions, result screens, active-physics save/restore, full
+determinism, saturation, multiple impacts and all biomes remain unverified.
+The tutorial currently causes frequent Worker publications. No claim of a
+global frame-time improvement follows from these tests.
+
 The application save function now uses ordered Worker checkpoints whenever a
 runtime is installed, including the action paths that requested a Worker save.
 An unavailable active-physics checkpoint reports failure and prevents the
