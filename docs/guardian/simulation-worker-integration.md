@@ -390,6 +390,31 @@ unacceptable, active physics still cannot be saved, and no p95/p99, full raid
 equivalence or global performance improvement has been established. Keep this
 experiment opt-in until those conditions are addressed.
 
+#### Diagnostic correction
+
+The pause timings above are exploratory and must not be treated as a clean
+performance comparison. The test's automatic search for a clickable animal
+itself performs repeated scene picking on the presentation thread. After
+reducing the search, one 16-step run still spent 1.93 s locating a pixel. Its
+queue already held 78 simulation steps and 21 camera-view commands before the
+search; afterwards it held 51 steps and 33 view commands. When the attack was
+confirmed it held 71 steps and 75 view commands. A separate one-step run saw
+123 view commands queued at attack confirmation. Thus both a pre-existing
+backlog and test-generated work are present; the earlier pause figures cannot
+be attributed solely to the application.
+
+Optional `qa-worker-diagnostics` records time inside the simulation Worker.
+In these individual runs the animal's asynchronous physics admission took
+721 ms (16-step run) and 702 ms (one-step run); execution of the subsequent
+attack command, including its publication, took 8.1 and 5.6 ms respectively.
+The observed click-to-confirmation times were 3.66 and 9.27 s. During those
+intervals the measured requestAnimationFrame gaps had p95 around 66.7 ms and
+maxima of 1.17 s and 700 ms respectively, on headless Edge with SwiftShader.
+Those short, non-replayed samples neither isolate GPU time nor prove that the
+Worker itself caused the frame gaps. They do show that per-camera-update
+publications are a concrete integration cost to investigate while preserving
+the view needed for raid entries and the ordering of simulation commands.
+
 The application save function now uses ordered Worker checkpoints whenever a
 runtime is installed, including the action paths that requested a Worker save.
 An unavailable active-physics checkpoint reports failure and prevents the
