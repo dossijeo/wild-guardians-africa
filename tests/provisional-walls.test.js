@@ -13,3 +13,8 @@ test('provisional wall instances share geometry and are released independently',
  walls.remove('first');assert.equal(scene.children.includes(first),false);assert.equal(scene.children.includes(second),true);
  walls.dispose();assert.equal(scene.children.length,0);assert.equal(walls.entries.size,0);geometry.dispose();prototype.material.dispose();
 });
+test('individual gate preview uses the gate prototype and scale',()=>{
+ const scene=new THREE.Scene(),geometry=new THREE.BoxGeometry(),prototype=new THREE.Mesh(geometry,new THREE.MeshBasicMaterial());
+ const walls=new ProvisionalWalls(scene,{piedra_puerta:prototype},()=>0);assert.equal(walls.begin('gate','piedra',[{x:0,z:0}],{gate:true}),true);
+ const matrix=new THREE.Matrix4();walls.entries.get('gate').mesh.getMatrixAt(0,matrix);const scale=new THREE.Vector3();matrix.decompose(new THREE.Vector3(),new THREE.Quaternion(),scale);assert.ok(Math.abs(scale.x-1.4)<1e-6);walls.dispose();geometry.dispose();prototype.material.dispose();
+});

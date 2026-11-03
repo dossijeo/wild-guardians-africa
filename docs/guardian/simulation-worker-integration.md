@@ -792,7 +792,7 @@ position over 200 ms; a rejected command removes the preview. Unit tests cover
 interpolation and rejection. A headless browser test uses the peaceful fixture
 and submits on an occupied crop, confirming that the Worker selects an adjusted
 position and only one authoritative crop appears. This is not a visual quality
-or performance comparison, and building/awakening/attack feedback remains open.
+or performance comparison.
 
 Wall strokes in the opt-in Worker game now use a translucent, softly pulsing
 render-only preview built from shared wall geometry. The preview follows the
@@ -800,4 +800,9 @@ stroke sampling and current capacity, but cannot anticipate Worker-side blocked
 pieces or automatic gates; it is removed on confirmation or rejection. A
 headless peaceful-fixture test covers one accepted stroke and one stroke with no
 accepted pieces, without pointer gestures, visual comparison or performance
-measurements. Single gates, centers, awakening and attack previews remain open.
+measurements. Individual walls, gates and work centers also have presentation-only
+translucent previews. The center uses the nearest village's loaded appearance,
+which can differ from the Worker-selected site or culture. A browser test checks
+an accepted individual gate and a rejected overlapping center in a peaceful fixture
+with an increased starting balance. It does not cover an accepted center, real
+pointer input or visual equivalence. Awakening and attack previews remain open.
