@@ -45,6 +45,7 @@ import {createWorkerSaveCoordinator} from '../persistence/worker-save.js';
 import {dispatchSimulationPause} from './simulation-pause.js';
 import {createWorkerNightSpeedBridge} from './worker-night-speed.js';
 import {Microevents} from '../microevents/controller.js';
+import {createWorkerMicroeventEconomy} from '../microevents/worker-economy.js';
 import {recordMicroeventFrame} from './microevents-frame-qa.js';
 import {disableMicroEconomy} from '../microevents/economy.js';
 import {agriculturalDawnMessage} from '../ui/agricultural-notice.js';
@@ -145,10 +146,11 @@ let microevents=null;
 const syncWorkerNightSpeed=createWorkerNightSpeedBridge();
 function installMicroevents(){
   if(import.meta.env.VITE_MICROEVENTS==='off'||settings.microevents==='off'){
-    microevents?.dispose();microevents=null;if(state)disableMicroEconomy(state);if(import.meta.env.DEV)delete window.__microevents;return;
+    const runtime=world?.workerRuntime,migrated=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-worker-microevents')&&runtime;microevents?.dispose();microevents=null;if(migrated){runtime.submit({kind:'microDisable'}).catch(failure=>error(failure.message));runtime.submit({kind:'microIncome',enabled:false}).catch(failure=>error(failure.message));}else if(state)disableMicroEconomy(state);if(import.meta.env.DEV)delete window.__microevents;return;
   }
   if(!state||screen!=='game'||!world||microevents)return;
-  microevents=new Microevents({state,world,stage:document.querySelector('#stage'),save:()=>save(),settings,sound:id=>audio.sound(id,{bus:'world',emitter:'microevent',gain:.35}),context:()=>({surface:surfaces.active,tool:tool?.kind,tutorial:!!tutorial?.presentation({record:false}),cinematic:!!campaignCinema?.active,notification:budgetWarningVisible()||!!document.querySelector('.notice-card.urgent')}),debug:import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-microevents')});
+  const runtime=world.workerRuntime,workerEconomy=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-worker-microevents')&&runtime?createWorkerMicroeventEconomy(runtime):null;if(workerEconomy)runtime.submit({kind:'microIncome',enabled:true}).catch(failure=>error(failure.message));
+  microevents=new Microevents({state,world,stage:document.querySelector('#stage'),save:()=>save(),settings,workerEconomy,sound:id=>audio.sound(id,{bus:'world',emitter:'microevent',gain:.35}),context:()=>({surface:surfaces.active,tool:tool?.kind,tutorial:!!tutorial?.presentation({record:false}),cinematic:!!campaignCinema?.active,notification:budgetWarningVisible()||!!document.querySelector('.notice-card.urgent')}),debug:import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-microevents')});
   if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-microevents'))window.__microevents=microevents;
 }
 settings.resolution=worldResolution(settings.resolution);

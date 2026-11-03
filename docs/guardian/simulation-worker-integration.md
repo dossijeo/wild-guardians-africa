@@ -600,6 +600,16 @@ state and checks that repeating settlement cannot pay again. This uses an
 in-memory repository and directly invokes the adapter; it does not yet connect
 the visual director, migrate income accounting or validate UI cancellation.
 
+The additional development-only `qa-worker-microevents` flag connects the
+visual controller to the Worker economy in the Worker game. It uses separate
+local scheduling memory, waits for a reservation before displaying an event,
+settles through the Worker before requesting a save, and leaves income tracking
+to the Worker. Unit tests cover ordered reserve/save/settle and cancellation
+while saving; the existing 56 microevent tests pass. This path is not enabled by
+default: scheduling history, RNG and cooldowns are not yet persisted back to
+the authority, and real UI, cancellation on disposal, deliveries, accelerated
+time and reload need end-to-end validation. It is not equivalent gameplay yet.
+
 In the experimental Worker game, a due campaign cinematic now requests an
 ordered `cinematicStart` before playback, adding an independent pause. Its
 completion records the chapter and removes that pause in one Worker command;
