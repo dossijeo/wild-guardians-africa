@@ -288,3 +288,10 @@ discarding a command based on an older publication. The deterministic Worker
 clock test checks that elapsed simulation time stays fixed while paused. Result
 screens, tutorial pauses and error handling are not migrated, and actual UI
 interactions have not yet been verified with the runtime installed.
+
+The actionable tutorial-hand pause is now a Worker command: presentation sends
+only whether guidance targets are available, and the authority decides from
+its own game state whether to pause. A new-game Worker test covers stopping,
+open selection, an intervening menu pause and resumption. Tutorial message
+selection, profile recording, reading and dismissal still execute locally;
+the full tutorial remains an integration blocker.

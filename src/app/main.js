@@ -25,6 +25,7 @@ import {guardianCopy} from '../tutorial/guardian-copy.js';
 import {tutorialMessageShownToday,recordTutorialMessageToday} from '../tutorial/daily-messages.js';
 import {NoticeLifetime,tutorialCoversNotice} from './notices.js';
 const noticeLifetime=new NoticeLifetime();
+const workerTutorialGuidance=new WeakMap();
 import {syncTutorialActionPause} from '../tutorial/action-pause.js';
 import {TutorialHudGuide,tutorialHudHandTarget} from '../ui/tutorial-hud-hand.js';
 import {GameScreenWakeLock} from '../ui/screen-wake-lock.js';
@@ -544,7 +545,12 @@ function refreshTutorialGuidance(){
   const guidedStep=['magic.growth','magic.multiply'].includes(message?.id)||message?.id==='basic.'+state.tutorial.step||state.tutorial.guideAfterAuto?.includes('basic.'+state.tutorial.step);
   world.tutorialToolKind=tool?.kind??null;world.tutorialSpellKind=tool?.spell??null;world.tutorialHandsEnabled=guideAllowed&&guidedStep;
   guardian?.setGuide(hudHand.rect);
-  syncTutorialActionPause(state,{hudTarget:hudHand.visible,worldTarget:guideAllowed?world.tutorialGuideTarget():null,selectionOpen:surfaces.active==='panel'&&guidedStep});
+  const targets={hudTarget:!!hudHand.visible,worldTarget:!!(guideAllowed&&world.tutorialGuideTarget()),selectionOpen:surfaces.active==='panel'&&guidedStep};
+  if(!world.workerRuntime)syncTutorialActionPause(state,targets);
+  else{
+    const owner=world,ownerState=state,key=JSON.stringify([targets,state.day,state.pauses,state.result,state.tutorial.basicSkipped,state.tutorial.step,state.tutorial.reading]);
+    if(workerTutorialGuidance.get(owner)!==key){workerTutorialGuidance.set(owner,key);owner.workerRuntime.submit({kind:'tutorialActionPause',...targets}).catch(failure=>{if(workerTutorialGuidance.get(owner)===key)workerTutorialGuidance.delete(owner);if(owner===world&&ownerState===state)error(failure.message);});}
+  }
 }
 function ensureGuardianView() {
   const el=document.querySelector('#narrator');guardian??=new NativeGuardian(el,e=>error(e.message),phase=>audio.guardianPhase(phase),new SpiritVoice({url:assetUrl,volume:()=>settings.sfx}));

@@ -10,6 +10,7 @@ import {captureRaidWaitBindings,restoreRaidWaitBindings} from './raid-wait-hando
 import {raidEntryChunks,raidResidentDemand} from '../world/raid-entry-residency.js';
 import {workerChunkDemand} from '../rendering/worker-chunk-residency.js';
 import {plantTouchTarget} from './plant-touch-target.js';
+import {syncTutorialActionPause} from '../tutorial/action-pause.js';
 
 export function parseSimulationChunkKey(key){
  if(typeof key!=='string'||!/^(-?\d+),(-?\d+)$/.test(key))throw TypeError('Invalid chunk key');
@@ -77,6 +78,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     }else if(command.kind==='pause'||command.kind==='resume'){
      if(typeof command.reason!=='string'||!command.reason)throw TypeError('Invalid pause reason');
      (command.kind==='pause'?pause:resume)(game,command.reason);
+    }else if(command.kind==='tutorialActionPause'){
+     if(typeof command.hudTarget!=='boolean'||typeof command.worldTarget!=='boolean'||typeof command.selectionOpen!=='boolean')throw TypeError('Invalid tutorial guidance');
+     value=syncTutorialActionPause(game,command);
     }else if(command.kind==='castAttack'){
      if(typeof command.id!=='string'||!command.id||!Number.isFinite(command.x)||!Number.isFinite(command.z))throw TypeError('Invalid attack command');
      rejection=spellRejection(command,'attack');
