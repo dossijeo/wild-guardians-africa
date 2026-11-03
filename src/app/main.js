@@ -94,7 +94,7 @@ let juice=null;
 let awakeningHud=null;
 function layoutHud(stage){const dims=layoutNativeHud(stage);return awakeningHud?.layout(dims)??dims;}
 let campaignCinema=null;
-let selector,thumbnails,state=null,nav=null,world=null,tool=null,selection=null,screen='menu',lastFrame=0,starting=false,raidLoading=null,lastUI=0,villageCatalog=null,pendingVillage=null;
+let selector,thumbnails,state=null,nav=null,world=null,tool=null,selection=null,screen='menu',lastFrame=0,starting=false,raidLoading=null,lastUI=0,villageCatalog=null,pendingVillage=null,initialHiringPending=null;
 if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-visibility'))globalThis.wildGuardiansVisibilityQa=()=>({
   hidden:document.hidden,screen,snapshot:state?JSON.stringify(state):null,
   frameAt:lastFrame,observedAt:performance.now(),
@@ -428,7 +428,10 @@ function updateUI(force=false) {
   awakeningHud?.render(state,{selecting:world.awakeningSelecting,blocked:!!surfaces.active});
   manualMagicActivity.update(state);
   if(tool&&(['plant','center','wall'].includes(tool.kind)||tool.kind==='spell'&&tool.spell!=='shield')&&toolSession.expired(now/1000,tool.kind==='wall'&&world.wallDrawing.active))cancelTool();
-  if(state.day===1&&state.initialPreparation&&!tool&&!surfaces.active&&state.plants.some(p=>p.alive)&&state.structures.some(operational))Game.openInitialHiring(state);
+  if(state.day===1&&state.initialPreparation&&!tool&&!surfaces.active&&!state.pauses.includes('hiring')&&state.plants.some(p=>p.alive)&&state.structures.some(operational)){
+    if(!world.workerRuntime)Game.openInitialHiring(state);
+    else if(initialHiringPending!==world){const owner=world,ownerState=state;initialHiringPending=owner;owner.workerRuntime.submit({kind:'openInitialHiring'}).then(()=>{if(owner===world&&ownerState===state)updateUI(true);},failure=>{if(owner===world&&ownerState===state)error(failure.message);}).finally(()=>{if(initialHiringPending===owner)initialHiringPending=null;});}
+  }
   const balance=numberOf(state.ledger.balance);if(balance>lastBudgetBalance&&balance>BUDGET_WARNING_THRESHOLD)reserveWarningShown=false;if(balance<=BUDGET_WARNING_THRESHOLD&&lastBudgetBalance>BUDGET_WARNING_THRESHOLD&&!reserveWarningShown){reserveWarningShown=true;budgetWarningUntil=now+18000;}lastBudgetBalance=balance;
   world.wallDrawing.setEnabled(tool?.kind==='wall'&&!tool.gate&&permission(state,'wall'));
   refreshBuildPermissions(document,state);refreshSpellCards(document,state);
@@ -574,13 +577,18 @@ function hiringDialog(centerId=null) {
   }
   const refresh=()=>{
     for(const [i,p] of NPC_TYPES.entries())selection[p.id]=Number(document.querySelector(`#crewCount${i}`).value);
-    if(!additional)state.hiringSelection={...selection};
+    if(!additional&&!world.workerRuntime)state.hiringSelection={...selection};
     try {const available=numberOf(state.ledger.balance),{cost,canConfirm,message}=hiringConfirmation(selection,available,additional?{time:state.time}:{});document.querySelector('#hireAvailable').textContent=localMoney(state.ledger.balance);document.querySelector('#hireCost').textContent=cost.toLocaleString(window.WildGuardiansLanguage?.locale()??'en-US');document.querySelector('#hireBalance').textContent=(available-cost).toLocaleString(window.WildGuardiansLanguage?.locale()??'en-US');document.querySelector('#hireConfirm').disabled=!canConfirm;document.querySelector('#hireBudgetMessage').textContent=message;}
     catch(e){document.querySelector('#hireConfirm').disabled=true;document.querySelector('#hireBudgetMessage').textContent=e.message;}
   };
   document.querySelectorAll('[data-crew-step]').forEach(el=>el.onclick=()=>{const input=document.querySelector(`#crewCount${el.dataset.crewStep}`);input.value=Math.max(0,Number(input.value)+Number(el.dataset.delta));refresh();});document.querySelectorAll('[data-crew-count]').forEach(el=>el.oninput=refresh);
   document.querySelector('[data-hire="clear"]').onclick=()=>{document.querySelectorAll('[data-crew-count]').forEach(el=>el.value=0);refresh();};
-  bind('hireConfirm',()=>{if(!hiringConfirmation(selection,numberOf(state.ledger.balance),additional?{time:state.time}:{}).canConfirm)return;additional?Game.hireAdditional(state,commandId(),selection,centerId):Game.hire(state,commandId(),selection);closeSurface();save();audio.gameplay(state.day).catch(()=>{});});refresh();
+  bind('hireConfirm',()=>{if(!hiringConfirmation(selection,numberOf(state.ledger.balance),additional?{time:state.time}:{}).canConfirm)return;
+    const owner=world,ownerState=state,runtime=owner.workerRuntime;if(!runtime){additional?Game.hireAdditional(state,commandId(),selection,centerId):Game.hire(state,commandId(),selection);closeSurface();save();audio.gameplay(state.day).catch(()=>{});return;}
+    if(typeof owner.workerSave!=='function')throw Error('Worker save integration is unavailable');
+    const button=document.querySelector('#hireConfirm');button.disabled=true;const command={kind:additional?'hireAdditional':'hire',id:commandId(),selection:{...selection},...(additional?{centerId}:{})};
+    return runtime.submit(command).then(async result=>{if(owner!==world||ownerState!==state)return;if(result.rejection)throw Error(result.rejection);if(result.value===false){refresh();return;}closeSurface();await owner.workerSave();if(owner===world&&ownerState===state){audio.gameplay(state.day).catch(()=>{});updateUI(true);}}).catch(failure=>{if(owner===world&&ownerState===state&&button.isConnected)refresh();throw failure;});
+  });refresh();
   paintPanelFrame(modal,stage,'No se ha podido cargar el marco de contratación.');
 }
 window.addEventListener('resize',()=>{if(screen==='game')layoutHud(document.querySelector('#stage'));});

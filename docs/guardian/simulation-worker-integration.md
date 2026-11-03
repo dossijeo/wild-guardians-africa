@@ -273,3 +273,11 @@ return normal rejections instead of terminating the authority. Browser tests
 compare repair and removal with direct game commands in a peaceful mangrove
 fixture, including 50 intervals after removal. These tests do not cover the
 actual menus or prove that menu pauses have been migrated to the Worker.
+
+The hiring dialog and initial-hiring trigger can now submit to an installed
+Worker runtime. The selection stays in the dialog until confirmed; a pending
+initial trigger is deduplicated and the confirmation button waits for the
+ordered reply. The existing Worker test compares initial and additional hiring
+against direct game commands, including costs and invalid requests. The dialog
+itself and its menu pause have not yet been exercised with a Worker runtime;
+the ordinary game continues to use its original synchronous path.
