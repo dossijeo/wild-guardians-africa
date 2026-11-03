@@ -268,7 +268,7 @@
       ],
       "width": 1254,
       "height": 1254,
-      "reason": "Current packer requires dimensions divisible by four"
+      "reason": "WebGL BPTC requires top-level dimensions divisible by four"
     }
   ],
   "scope": "Manifest ground materials only; raw ground base samples use BC7 UNORM, while mud patch base also requires an sRGB variant. Visual labs and procedurally generated ground masks are excluded."
