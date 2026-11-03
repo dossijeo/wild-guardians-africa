@@ -16,6 +16,7 @@ import {plantTouchTarget} from './plant-touch-target.js';
 import {syncTutorialActionPause} from '../tutorial/action-pause.js';
 import {createWorkerTutorial} from './worker-tutorial.js';
 import {dueCinematicAct,finishCinematicAct} from '../app/campaign-cinematics.js';
+import {reserveEvent,settleEvent,disableMicroEconomy} from '../microevents/economy.js';
 
 export function parseSimulationChunkKey(key){
  if(typeof key!=='string'||!/^(-?\d+),(-?\d+)$/.test(key))throw TypeError('Invalid chunk key');
@@ -124,6 +125,14 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      if(!rejection&&!duplicate&&!permission(game,'plant'))rejection='Esta acción no está disponible ahora';
      if(!rejection&&!duplicate)try{validatePlantPurchase(game,command.species);}catch(error){if(error?.code!=='hiring-reserve'&&error?.message!=='Cultivo desconocido')throw error;rejection=error.message;}
      value=rejection?false:plant(game,command.id,command.species,target.x,target.z,nav);
+    }else if(command.kind==='microReserve'){
+     if(typeof command.eventType!=='string'||!command.eventType||typeof command.targetId!=='string'||!command.targetId)throw TypeError('Invalid microevent reservation');
+     value=reserveEvent(game,command.eventType,command.targetId);
+    }else if(command.kind==='microSettle'){
+     if(!command.ticket||typeof command.ticket!=='object'||Array.isArray(command.ticket)||typeof command.ticket.id!=='string'||typeof command.ticket.type!=='string'||typeof command.ticket.targetId!=='string'||!['completed','ignored','cancelled'].includes(command.outcome)||typeof command.enabled!=='boolean'||typeof command.losses!=='boolean')throw TypeError('Invalid microevent settlement');
+     value=settleEvent(game,command.ticket,command.outcome,{enabled:command.enabled,losses:command.losses});
+    }else if(command.kind==='microDisable'){
+     disableMicroEconomy(game);
     }else if(command.kind==='bless'){
      if(typeof command.id!=='string'||!command.id||typeof command.targetId!=='string'||!command.targetId)throw TypeError('Invalid blessing command');
      const duplicate=game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id);

@@ -572,6 +572,16 @@ under presentation stalls remain outstanding. This does not migrate the
 microevent director, ticket or economy authority, which still prevents the
 Worker game from being production ready.
 
+The authority client and simulation Worker now accept experimental
+`microReserve`, `microSettle` and `microDisable` commands, using the existing
+economy functions and ordered publications. A real Worker test compares
+reservation, reward, repeated settlement, ignored event, paused settlement
+and disable against direct execution in a synthetic mangrove state; 57 related
+unit tests pass. The visual director still reserves and settles locally, and
+income tracking, persistent scheduling and UI/save coordination have not
+been migrated. These commands are therefore not wired to gameplay and do not
+yet establish correct microevents in the Worker game.
+
 In the experimental Worker game, a due campaign cinematic now requests an
 ordered `cinematicStart` before playback, adding an independent pause. Its
 completion records the chapter and removes that pause in one Worker command;
