@@ -15,6 +15,21 @@ const payload=JSON.parse(readFileSync(new URL(
   '../public/content/villages.json',import.meta.url),'utf8'))
   .find(item=>item.id==='suajili');
 
+test('native suppression cannot be rolled back by restoring the game state',async()=>{
+  const {state,nav,session,start}=await createSpatialCampaignOpening({seed:712,biome:'desierto',culture:'mapungubwe',slotId:'village-suppression-proof'});
+  try{
+    state.tutorial.step='done';state.initialPreparation=false;state.day=101;state.completedNights=100;state.result='victory';state.ledger.balance=rational(200000);
+    Game.continuePostgame(state);Game.hire(state,'native-postgame-hire',{});
+    const {x,z}=start.site.center,cx=Math.floor((x+24)/48),cz=Math.floor((z+24)/48),jobs=new Map();
+    for(let dz=-3;dz<=3;dz++)for(let dx=-3;dx<=3;dx++)jobs.set(`${cx+dx},${cz+dz}`,{cx:cx+dx,cz:cz+dz,score:Math.hypot(dx,dz)});
+    session.stream.plan(jobs);await session.stream.whenIdle();nav.setActiveBounds([x-120,z-120,x+120,z+120]);
+    const preview=Game.previewVillage(state,'suajili',94.64685702961343,43.466662183008076,payload,nav);
+    assert.ok(preview.valid&&preview.suppress.length,'fixture must suppress native props');
+    const count=state.suppressed.length;state.suppressed.push(...preview.suppress);nav.setState(state);state.suppressed.length=count;
+    assert.throws(()=>nav.setState(state),/suppression cannot be undone/);
+  }finally{session.dispose();}
+});
+
 test('a paid native postgame village gets a valid entry and survives reload',async()=>{
   const {state,nav,session,loaded,start}=await createSpatialCampaignOpening({
     seed:712,biome:'desierto',culture:'mapungubwe',slotId:'spatial-postgame-village'});

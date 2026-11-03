@@ -531,17 +531,16 @@ would risk partial effects. The eventual Worker implementation must establish
 all required residency or make the whole command transactional before applying
 those mutations. This experiment does not yet provide that guarantee.
 
-An isolated `prepareRoutes` option on `foundVillage` now installs the proposed
-geometry provisionally and computes center routes before charging. If a route
-query throws, it restores villages, suppressions and navigation before the
-error escapes; the original game path remains the default. A controlled
-suajili test matches the successful original snapshot and events, and an
-injected route failure leaves money, geometry and other saved game fields
-unchanged and allows a retry. The legacy navigation version advances during
-rollback, so the failed attempt is not byte-identical. Native Wild Engine
-rollback, actual missing-chunk retries, observers, multiple centers and
-Worker/UI integration still require validation. The option is not used by the
-game or Worker and is not yet a complete transaction guarantee.
+The proposed provisional `nav.setState` approach was tested against Wild
+Engine and removed: native prop suppression is irreversible inside a session,
+so restoring the JavaScript arrays fails with “A spatial prop suppression
+cannot be undone within a session”. A regression test in
+`tests/spatial-postgame-village.test.js` reproduces this on a real desert
+settlement, and the original founding/reload test continues to pass. A safe
+design must avoid committing suppressions while testing routes, for example
+using a native provisional overlay with equivalent route selection or an
+isolated disposable spatial session. Neither option has yet established
+equivalence or bounded cost; founding remains on the existing path.
 
 When a microevent holds night speed, the game now sends the corresponding
 fast-forward policy to the installed Worker runtime, and restores it when the
