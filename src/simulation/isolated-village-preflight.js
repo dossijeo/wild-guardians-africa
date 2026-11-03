@@ -27,6 +27,10 @@ export function prepareVillageIsolated(module,snapshot,chunkKeys,command,{bounds
 // Experimental: verifies the state boundary before using assignments from a
 // successful isolated run. Native mutation itself is not yet transactional.
 export function applyVillageIsolatedPlan(state,nav,plan,{residentChunks}={}){
+ const id=plan?.command?.id;if(typeof id!=='string'||!id)throw TypeError('Invalid village command');
+ // Match commit(): a repeated command is a no-op even when its original
+ // preparation has become stale or its former regions are no longer resident.
+ if(state.commandIds.includes(id)||Object.hasOwn(state.ledger.entries,id))return false;
  if(!plan||typeof plan.source!=='string'||typeof plan.snapshot!=='string'||!plan.command||!Array.isArray(plan.preparedCenters)||!Array.isArray(plan.requiredChunks)||!Array.isArray(residentChunks)||new Set(residentChunks).size!==residentChunks.length||JSON.stringify([...residentChunks].sort())!==JSON.stringify(plan.requiredChunks)||serialize(state)!==plan.source)throw Error('Stale village preparation');
  const expected=deserialize(plan.snapshot).structures.filter(operational).map(c=>({id:c.id,villageId:c.villageId??null,culture:c.culture??null}));
  if(JSON.stringify(expected)!==JSON.stringify(plan.preparedCenters))throw Error('Invalid village preparation');

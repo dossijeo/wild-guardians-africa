@@ -730,6 +730,12 @@ revisions or chunk contents match, and the caller must supply the true resident
 set. Native installation is still not atomic; this remains disconnected from
 the Worker command path.
 
+Reapplying an already committed village plan now follows the original command
+idempotency rule: it returns false without charging or touching native state,
+even if the old plan's state or resident chunks are stale. The native postgame
+test verifies this after a successful prepared application. New commands still
+require all preparation checks; the Worker UI remains guarded.
+
 When a microevent holds night speed, the game now sends the corresponding
 fast-forward policy to the installed Worker runtime, and restores it when the
 hold ends. Only changes are sent. Unit tests cover policy transitions and the

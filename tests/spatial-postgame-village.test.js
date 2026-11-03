@@ -100,6 +100,7 @@ test('a paid native postgame village gets a valid entry and survives reload',asy
       const events=[],stop=Game.observeGameEvents(plannedState,event=>events.push(structuredClone(event)));
       try{assert.equal(applyVillageIsolatedPlan(plannedState,plannedNav,prepared,{residentChunks}),true);}finally{stop();}
       assert.equal(serialize(plannedState),prepared.snapshot);assert.deepEqual(events,prepared.events);
+      const savedCommitted=serialize(plannedState);assert.equal(applyVillageIsolatedPlan(plannedState,plannedNav,prepared,{residentChunks:[]}),false);assert.equal(serialize(plannedState),savedCommitted,'a repeated plan never pays or changes the village twice');
     }finally{plannedSession.dispose();}
     assert.throws(()=>prepareVillageIsolated(module,source,[...loaded.keys()].filter(key=>key!==siteChunk),{id:'native-second-village',culture:'suajili',...site,payload},{bounds:[x-120,z-120,x+120,z+120],maxAdded:0}),SpatialChunkUnavailable,'preflight respects the missing-region limit');
     const poor=deserialize(source);poor.ledger.balance=rational(1);
