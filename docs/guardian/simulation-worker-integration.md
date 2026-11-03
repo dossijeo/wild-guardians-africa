@@ -281,3 +281,10 @@ ordered reply. The existing Worker test compares initial and additional hiring
 against direct game commands, including costs and invalid requests. The dialog
 itself and its menu pause have not yet been exercised with a Worker runtime;
 the ordinary game continues to use its original synchronous path.
+
+Menu, visibility and graphics-context pauses now have a Worker dispatch path.
+It submits pause and resume in order without editing the presentation state or
+discarding a command based on an older publication. The deterministic Worker
+clock test checks that elapsed simulation time stays fixed while paused. Result
+screens, tutorial pauses and error handling are not migrated, and actual UI
+interactions have not yet been verified with the runtime installed.

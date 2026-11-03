@@ -4,13 +4,14 @@ import {serialize,deserialize} from '../../src/persistence/snapshots.js';
 import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
 import {createConfirmedStateReceiver} from '../../src/simulation/confirmed-state-receiver.js';
 import {createWorkerGameRuntime} from '../../src/simulation/worker-game-runtime.js';
+import {dispatchSimulationPause} from '../../src/app/simulation-pause.js';
 window.audit=async()=>{
  const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
  const fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),source=serialize(fixture.diagnosticWorld().game),state=deserialize(source);fixture.dispose();
  let clock=0,nextTimer=0;const timers=new Map(),session='runtime-pause',client=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,session}),world={createConfirmedReceiver:id=>createConfirmedStateReceiver(state,id)},runtime=createWorkerGameRuntime({client,world,session,stepSeconds:.05,now:()=>clock,schedule:fn=>{const id=++nextTimer;timers.set(id,fn);return id;},cancel:id=>timers.delete(id)});
  const wake=()=>{const [id,fn]=timers.entries().next().value??[];if(!fn)throw Error('No runtime timer');timers.delete(id);fn();};
- try{await runtime.start();const initial=state.elapsed;clock=250;wake();const paused=await runtime.submit({kind:'pause',reason:'runtime-test'}),pausedAt=state.elapsed;if(!state.pauses.includes('runtime-test')||Math.abs(pausedAt-initial-.25)>1e-6)throw Error('Pause did not follow elapsed ticks');
-  clock=1250;wake();const resumed=await runtime.submit({kind:'resume',reason:'runtime-test'});if(state.pauses.includes('runtime-test')||Math.abs(state.elapsed-pausedAt)>1e-6)throw Error('Simulation advanced while paused');
+ try{await runtime.start();const initial=state.elapsed;clock=250;wake();const paused=await dispatchSimulationPause(state,runtime,true,'runtime-test'),pausedAt=state.elapsed;if(!state.pauses.includes('runtime-test')||Math.abs(pausedAt-initial-.25)>1e-6)throw Error('Pause did not follow elapsed ticks');
+  clock=1250;wake();const resumed=await dispatchSimulationPause(state,runtime,false,'runtime-test');if(state.pauses.includes('runtime-test')||Math.abs(state.elapsed-pausedAt)>1e-6)throw Error('Simulation advanced while paused');
   clock=1350;wake();const barrier=await runtime.submit({kind:'snapshot'});if(Math.abs(state.elapsed-pausedAt-.1)>1e-6||runtime.status().fault)throw Error('Resume did not restore elapsed ticks');
   return {initial,pausedAt,resumedAt:resumed.elapsed,finalElapsed:barrier.elapsed,sequences:[paused.sequence,resumed.sequence,barrier.sequence],pausedTimePreserved:true,scope:'Real simulation Worker driven by a deterministic test clock, with a presentation-only state. Tests queued pause and resume without a rendering loop; no full UI, save/restore, GPU presentation or frame-time measurement.'};
  }finally{runtime.dispose();}

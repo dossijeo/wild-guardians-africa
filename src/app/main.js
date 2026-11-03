@@ -40,6 +40,7 @@ import {resumeLoadedWorld} from './resume-loaded-world.js';
 import '../ui/styles.css';
 import {autosaveEventAfter} from './autosave-events.js';
 import {saveGame} from './save-game.js';
+import {dispatchSimulationPause} from './simulation-pause.js';
 import {Microevents} from '../microevents/controller.js';
 import {recordMicroeventFrame} from './microevents-frame-qa.js';
 import {disableMicroEconomy} from '../microevents/economy.js';
@@ -161,6 +162,12 @@ const button=(id,text,cls='primary')=>`<button id="${id}" class="${cls}">${text}
 const CONTEXT_LOST_MESSAGE='Se ha perdido el contexto gráfico. La partida está pausada.';
 function error(message,{silent=false,loadingFailure=false}={}){if(String(message)===RESERVE_MESSAGE){if(reserveWarningShown)return;reserveWarningShown=true;budgetWarningUntil=performance.now()+18000;}if(!silent)uiAudio.error();if(loadingFailure){showLoadingFailure(message,{document,locale:moneyLocale()});return;}if(state&&screen==='game'){commandFeedback=String(message);refreshCommandFeedback();return;}document.querySelector('.error-banner')?.remove();const el=document.createElement('div');el.className='error-banner';el.role='alert';el.textContent=message;document.body.append(el);setTimeout(()=>el.remove(),6000);}
 function safe(action){if(leaving)return;commandFeedback='';try{const result=action();if(result?.catch)result.catch(e=>error(e.message));}catch(e){error(e.message);}updateUI(true);}
+function changeSimulationPause(paused,reason,{sound=false}={}){
+  const owner=world,ownerState=state,before=state.pauses.slice(),result=dispatchSimulationPause(state,owner?.workerRuntime??null,paused,reason);
+  const confirmed=()=>{if(owner!==world||ownerState!==state)return;if(sound)uiAudio.pause(before,state.pauses);};
+  if(result?.then)result.then(confirmed,failure=>{if(owner===world&&ownerState===state)error(failure.message);});else confirmed();
+  return result;
+}
 function save({confirm=false}={}){const owner=juice;return saveGame(state,saves,{confirm,onError:error,onConfirm:()=>owner?.savedSuccessfully()});}
 const exitDesktop=createDesktopExit({host:window,save,hasGame:()=>!!state,onError:failure=>error(moneyLocale().startsWith('es')?'No se pudo cerrar la aplicación: '+failure.message:'Could not close the application: '+failure.message)});
 function bind(id,fn){document.getElementById(id)?.addEventListener('click',()=>safe(fn));}
@@ -262,7 +269,7 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     document.querySelector('[data-menu="grow"]').onclick=()=>safe(()=>guidedHudAction('grow',()=>toolPanel('plant')));
     document.querySelector('[data-menu="magic"]').onclick=()=>safe(()=>toolPanel('spell'));
     document.querySelector('[data-menu="build"]').onclick=()=>safe(()=>guidedHudAction('build',buildPanel));
-    world.onError=e=>{if(starting&&world===prepared.world){loadingProgress?.fail(e);cancelLoading(e);}else error(e.message);};world.onChunkProgress=progress=>{if(starting&&loadingProgress&&world===prepared.world)loadingProgress.update('chunks',progress.loaded,Math.max(1,progress.desired));};world.onWallStroke=points=>safe(()=>buildWallStroke(points));world.onWallGesture=phase=>uiAudio.wallGesture(phase);world.qualitySetting(settings.quality);applyWorldResolution(world,settings.resolution);world.onContextLost=()=>{if(screen==='loading'){cancelLoading(new Error(moneyLocale().startsWith('es')?'Se ha perdido el contexto gráfico durante la carga.':'Graphics context lost during loading.'));return;}Game.pause(state,'context-lost');error(CONTEXT_LOST_MESSAGE);};world.onContextRestored=()=>{Game.resume(state,'context-lost');if(commandFeedback===CONTEXT_LOST_MESSAGE){commandFeedback='';refreshCommandFeedback();}};
+    world.onError=e=>{if(starting&&world===prepared.world){loadingProgress?.fail(e);cancelLoading(e);}else error(e.message);};world.onChunkProgress=progress=>{if(starting&&loadingProgress&&world===prepared.world)loadingProgress.update('chunks',progress.loaded,Math.max(1,progress.desired));};world.onWallStroke=points=>safe(()=>buildWallStroke(points));world.onWallGesture=phase=>uiAudio.wallGesture(phase);world.qualitySetting(settings.quality);applyWorldResolution(world,settings.resolution);world.onContextLost=()=>{if(screen==='loading'){cancelLoading(new Error(moneyLocale().startsWith('es')?'Se ha perdido el contexto gráfico durante la carga.':'Graphics context lost during loading.'));return;}changeSimulationPause(true,'context-lost');error(CONTEXT_LOST_MESSAGE);};world.onContextRestored=()=>{changeSimulationPause(false,'context-lost');if(commandFeedback===CONTEXT_LOST_MESSAGE){commandFeedback='';refreshCommandFeedback();}};
     world.destructionPass.onDestructionCue=(counts,entity)=>audio.destructionCue(counts,entity,{state,listener:world.controls.target});
     if(progressQa){progressQa.preparationPolicy(world.farIsolatedPreparation,world.farZeroVertexPreparation);world.onLoadingSpan=span=>progressQa.loadingSpan(span);world.onLoadingActorQueue=stats=>progressQa.actorQueue(stats);world.onLoadingGpuDraw=run=>progressQa.gpuInvocation('preparation-far-upload-draw',run);}
     await world.load(state,nav,payload,{spatialSession,farVegetation:(spatialSession&&new URLSearchParams(world.visualSearch).get('spatialFar')!=='1')||settings.farVegetation===false?false:farVegetationProfile({quality:settings.quality,biome:nav.config.biome},farGroundReviewOverrides(nav.config.biome,world.visualSearch)),loadingProgress});assertLoading();
@@ -378,22 +385,21 @@ function openSurface(kind,key=kind){
   if(!surfaces.open(kind,{mandatory:kind==='hiring',force:kind==='result'}))return false;
   if(tool?.kind==='awakening')cancelTool();
   dialogVoice.stop();
-  const beforePause=state.pauses.slice();
   setTutorialInteraction(false);if(!(kind==='panel'&&['basic.center','basic.plant','magic.growth','magic.multiply'].includes(state.tutorial.reading)))guardian?.hide({immediate:true,interrupt:true});
   if(kind!=='context'){selection=null;document.querySelector('#context').replaceChildren();}
   if(kind!=='panel')document.querySelector('#panel').replaceChildren();
   if(kind!=='modal'&&kind!=='hiring'&&kind!=='result')document.querySelector('#modal').replaceChildren();
   document.querySelector('#stage').classList.remove('hiring-open');
-  if(kind!=='modal')Game.resume(state,'menu');
-  uiAudio.surface(kind,key);uiAudio.pause(beforePause,state.pauses);return true;
+  if(kind!=='modal')changeSimulationPause(false,'menu',{sound:true});
+  uiAudio.surface(kind,key);return true;
 }
 function closeSurface(){
   dialogVoice.stop();
   if(surfaces.mandatory&&state.pauses.includes('hiring'))return;
-  const beforePause=state.pauses.slice(),kind=surfaces.close({resolved:!state.pauses.includes('hiring')});uiAudio.close();
+  const kind=surfaces.close({resolved:!state.pauses.includes('hiring')});uiAudio.close();
   document.querySelector('#panel').replaceChildren();document.querySelector('#context').replaceChildren();document.querySelector('#modal').replaceChildren();
   document.querySelector('#stage').classList.remove('hiring-open');selection=null;
-  if(kind==='modal')Game.resume(state,'menu');uiAudio.pause(beforePause,state.pauses);
+  if(kind==='modal')changeSimulationPause(false,'menu',{sound:true});
   if(pendingVillage)cancelVillagePreview();
 }
 function armTool(value){tool=toolSession.select(value,performance.now()/1000);world?.focusTutorialPlacement(value.kind);}
@@ -558,7 +564,7 @@ function narrator() {
 function hiringDialog(centerId=null) {
   const additional=centerId!==null;
   if(!openSurface(additional?'modal':'hiring',additional?'additional-hiring':undefined))return;
-  if(additional)Game.pause(state,'menu');
+  if(additional)changeSimulationPause(true,'menu');
   const selection=additional?{}:{...state.hiringSelection},modal=document.querySelector('#modal');
   modal.innerHTML=`<div class="overlay native-hiring" id="hiring-dialog">${hiringMarkup({day:state.day,clock:Game.clockLabel(state),hiring:{hasPrevious:state.day>1,draft:NPC_TYPES.map(p=>selection[p.id]??0)}})}</div>`;
   const agricultural=agriculturalDawnMessage(state);
@@ -594,7 +600,7 @@ function hiringDialog(centerId=null) {
 window.addEventListener('resize',()=>{if(screen==='game')layoutHud(document.querySelector('#stage'));});
 function pauseDialog() {
   if(!openSurface('modal','pause'))return;
-  const beforePause=state.pauses.slice();Game.pause(state,'menu');uiAudio.pause(beforePause,state.pauses);document.querySelector('#modal').innerHTML=`<div class="overlay"><section class="dialog" role="dialog" aria-modal="true"><h2>Un respiro</h2><p>El tiempo se detiene mientras escuchas al poblado.</p><div class="menu-actions">${button('resume','Volver a la finca')}${button('save','Guardar partida')}${button('game-settings','Ajustes')}${button('exit','Guardar y volver al menú')}</div></section></div>`;
+  changeSimulationPause(true,'menu',{sound:true});document.querySelector('#modal').innerHTML=`<div class="overlay"><section class="dialog" role="dialog" aria-modal="true"><h2>Un respiro</h2><p>El tiempo se detiene mientras escuchas al poblado.</p><div class="menu-actions">${button('resume','Volver a la finca')}${button('save','Guardar partida')}${button('game-settings','Ajustes')}${button('exit','Guardar y volver al menú')}</div></section></div>`;
   bind('resume',closeSurface);bind('save',()=>save({confirm:true}));bind('game-settings',()=>settingsDialog(true));bind('exit',menu);
 }
 function settingsDialog(inGame=false) {
@@ -622,9 +628,9 @@ function libraryScreen() {
   clearWorld();screen='library';app.innerHTML=`<main class="screen"><header class="topbar"><div class="brand">Biblioteca</div>${button('back','← Volver','ghost')}</header><h2>Los archivos del poblado</h2><p class="muted">Laboratorios originales aislados de tus partidas. Los recursos se cargan al abrir cada demostración.</p><div class="library-grid">${[['crops','Cultivos','Ocho especies, cinco etapas y transiciones locales.'],['walls','Bastión','Materiales, puertas reforzadas y estados de daño.'],['destruction','Destrucción','Daño normalizado y colapso de los edificios.'],['sfx','Sonidos','126 sonidos originales, con usos y reservas documentados.']].map(([id,title,description])=>`<article class="library-card"><h3>${title}</h3><p class="muted">${description}</p><button data-demo="${id}">Abrir demostración →</button></article>`).join('')}</div><p class="muted">Modelos originales Meshy · Audio original ElevenLabs y paquetes musicales suministrados · Ga Maamli y Banga bajo SIL OFL.</p></main>`;
   bind('back',menu);document.querySelectorAll('[data-demo]').forEach(el=>el.onclick=()=>{libraryViewer=new LibraryViewer(app,el.dataset.demo,{onBack:libraryScreen,onMenu:menu});});
 }
-document.addEventListener('visibilitychange',()=>{if(state){if(document.hidden){Game.pause(state,'hidden');guardian?.hide({immediate:true});dialogVoice.stop();campaignCinema?.voice.pause();audio.suspend();}else {Game.resume(state,'hidden');lastFrame=performance.now();audio.resume();if(campaignCinema?.active)campaignCinema.voice.play().catch(()=>{});else narrateResultDialog();}}});
+document.addEventListener('visibilitychange',()=>{if(state){if(document.hidden){changeSimulationPause(true,'hidden');guardian?.hide({immediate:true});dialogVoice.stop();campaignCinema?.voice.pause();audio.suspend();}else {changeSimulationPause(false,'hidden');lastFrame=performance.now();audio.resume();if(campaignCinema?.active)campaignCinema.voice.play().catch(()=>{});else narrateResultDialog();}}});
 document.addEventListener('keydown',e=>hudShortcut(e,document,{enabled:screen==='game'&&!!state&&!starting&&!campaignCinema?.active&&!tutorial?.presentation({record:false})?.blocking&&!document.querySelector('#modal')?.children.length}));
-document.addEventListener('keydown',e=>{if(leaving)return;if(e.key==='Escape'&&campaignCinema?.active){e.preventDefault();campaignCinema.finish();return;}if(e.key==='Escape'&&state&&screen==='game'&&!starting){if(tutorial?.presentation({record:false})?.blocking){tutorial.dismiss({automatic:true});save();}else if(surfaces.active){closeSurface();}else if(tool){tool=null;commandFeedback='';hideHudPanel();}else if(state.pauses.includes('menu')){Game.resume(state,'menu');document.querySelector('#modal').innerHTML='';}else pauseDialog();updateUI(true);}});
+document.addEventListener('keydown',e=>{if(leaving)return;if(e.key==='Escape'&&campaignCinema?.active){e.preventDefault();campaignCinema.finish();return;}if(e.key==='Escape'&&state&&screen==='game'&&!starting){if(tutorial?.presentation({record:false})?.blocking){tutorial.dismiss({automatic:true});save();}else if(surfaces.active){closeSurface();}else if(tool){tool=null;commandFeedback='';hideHudPanel();}else if(state.pauses.includes('menu')){changeSimulationPause(false,'menu');document.querySelector('#modal').innerHTML='';}else pauseDialog();updateUI(true);}});
 document.addEventListener('pointerdown',()=>{if(campaignCinema?.active)return;audio.unlock().then(()=>screen==='loading'?loadingAudio?.start():screen==='menu'?audio.menu():state?audio.gameplay(state.day):null).catch(()=>{});});
 window.addEventListener('pagehide',()=>{guardian?.voice?.dispose();dialogVoice.dispose();});
 window.addEventListener('wild-guardians:language-change',()=>{if(state){dialogVoice.stop();if(guardian){guardian.voice?.stop();guardian.key=null;}updateUI(true);narrateResultDialog();}const draft=document.querySelector('#hireConfirm');if(draft){document.querySelector('#crewCount0').dispatchEvent(new Event('input'));for(const [i,profile] of NPC_TYPES.entries()){const pace=document.querySelector(`[data-crew-card="${i}"] .hire-stats b`);if(pace)pace.textContent='×'+profile.speed.toLocaleString(moneyLocale(),{minimumFractionDigits:2,maximumFractionDigits:2});}}});
