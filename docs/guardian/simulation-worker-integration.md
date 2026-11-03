@@ -547,8 +547,14 @@ cinematic pause is active, and becomes available again when it finishes,
 subject to the existing physics restrictions. Invalid and repeated acts are rejected. A
 real Worker test compared state with direct operations in a synthetic day-11
 mangrove, including an attempted advance while paused. Twelve unit tests passed.
-The rendered cinematic, save/restore while it is active, failure recovery,
-victory cinematic, and a complete campaign have not been validated. An
+`tools/experiments/audit_worker_main_cinematic.mjs` also exercises the real
+opt-in game with two Workers and a synthetic savanna milestone. It waits for
+the cinematic UI, checks a 600 ms pause and save unavailability, skips the
+cinematic and reloads the saved chapter through `BrowserSaveRepository`.
+Both runs passed; the temporary cinematic pause was absent after reload and
+the hiring pause remained. This does not validate the complete rendered
+cinematic, save/restore while it is active, failure recovery, victory
+cinematic, or a complete campaign. An
 asynchronous start can still arrive after the exact presentation frame that
 detected the milestone; this is not evidence of deterministic timing parity.
 
