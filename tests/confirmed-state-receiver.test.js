@@ -19,7 +19,11 @@ test('unchanged camera confirmations advance only the protocol sequence',()=>{
 test('coalesced ranges accept only contiguous quiet pose-free publications',()=>{
  const state=fixture(),source=serialize(state),receiver=createConfirmedStateReceiver(state,'s');receiver.accept({session:'s',sequence:1,snapshot:source,events:[]});
  const message={session:'s',sequence:4,snapshot:source,events:[],physicsPose:null};
- assert.equal(receiver.accept(message,{firstSequence:3}).reason,'gap');assert.throws(()=>receiver.accept({...message,events:[{id:'event-1',type:'Test'}]},{firstSequence:2}),/Invalid coalesced/);
+ assert.equal(receiver.accept(message,{firstSequence:3}).reason,'gap');assert.throws(()=>receiver.accept({...message,events:[{id:'event-1',type:'Test'}]},{firstSequence:2}),/event sequence/);
  assert.throws(()=>receiver.accept({...message,physicsPose:{active:true}},{firstSequence:2}),/Invalid coalesced/);
  assert.equal(receiver.accept(message,{firstSequence:2}).sequence,4);assert.equal(receiver.accept({...message,sequence:5},{firstSequence:2}).reason,'gap');
+});
+test('coalesced event is delivered once with its own confirmed state',()=>{
+ const state=fixture(),authority=deserialize(serialize(state)),seen=[],stop=observePresentationGameEvents(state,event=>seen.push({id:event.id,elapsed:state.elapsed}));
+ try{const receiver=createConfirmedStateReceiver(state,'s');receiver.accept({session:'s',sequence:1,snapshot:serialize(authority),events:[]});authority.elapsed+=.1;emit(authority,'Test');const event=authority.events.at(-1),message={session:'s',sequence:4,snapshot:serialize(authority),events:[event],physicsPose:null};assert.equal(receiver.accept(message,{firstSequence:2}).sequence,4);assert.deepEqual(seen,[{id:event.id,elapsed:authority.elapsed}]);}finally{stop();}
 });
