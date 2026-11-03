@@ -12,7 +12,7 @@ import {createWorld} from './mobility-worker-world-change.js';
 const status=document.querySelector('#status'),canvas=document.querySelector('#view');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:false,alpha:true});renderer.setPixelRatio(1);renderer.setSize(640,360,false);renderer.setClearColor(0x000000,0);
 const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(35,640/360,.1,100);camera.position.set(3.5,2.7,8);camera.lookAt(0,1,0);scene.add(new THREE.HemisphereLight(0xffffff,0x555555,2));const light=new THREE.DirectionalLight(0xffffff,2);light.position.set(3,5,4);scene.add(light);
-const clock={value:0},horizon={value:3.5};let compiled=0,workerError=null;
+const clock={value:0},horizon={value:3.5},velocity={value:new THREE.Vector2(.4,0)};let compiled=0,workerError=null;
 const worker=new Worker(new URL('./mobility-worker.js',import.meta.url),{type:'module'}),pending=new Map();
 const ready=new Promise((resolve,reject)=>{worker.addEventListener('error',event=>{workerError=String(event.message);reject(Error(workerError));});worker.addEventListener('message',event=>{const row=event.data;if(row.kind==='ready')resolve();else if(row.kind==='error'){workerError=row.error;reject(Error(row.error));}else{const current=pending.get(row.id);if(!current)return;if(row.kind==='started')current.startedAt=row.startedEpoch-performance.timeOrigin;if(row.kind==='done'){Object.assign(current,{startedAt:row.startedEpoch-performance.timeOrigin,finishedAt:row.finishedEpoch-performance.timeOrigin,receivedAt:performance.now(),elapsed:row.elapsed,queries:row.queries,found:row.found,unknown:row.unknown});pending.delete(row.id);}}});});
 
@@ -21,7 +21,7 @@ function installVisual(model){
   if(!object.isMesh)return;object.frustumCulled=false;
   for(const material of Array.isArray(object.material)?object.material:[object.material]){
    const before=material.onBeforeCompile?.bind(material),key=material.customProgramCacheKey?.bind(material);
-   material.onBeforeCompile=shader=>{before?.(shader);shader.uniforms.uLabSimulationTime=clock;shader.uniforms.uLabHorizon=horizon;shader.vertexShader='uniform float uLabSimulationTime;\nuniform float uLabHorizon;\n'+shader.vertexShader;const marker='#include <project_vertex>';if(!shader.vertexShader.includes(marker))throw Error('Projection shader changed');shader.vertexShader=shader.vertexShader.replace(marker,`${marker}\nfloat labTime=clamp(uLabSimulationTime,0.0,uLabHorizon);\nvec4 labOffset=viewMatrix*vec4(labTime*0.4,0.0,0.0,0.0);\ngl_Position=projectionMatrix*(mvPosition+labOffset);`);compiled++;};
+   material.onBeforeCompile=shader=>{before?.(shader);shader.uniforms.uLabSimulationTime=clock;shader.uniforms.uLabHorizon=horizon;shader.uniforms.uLabVelocity=velocity;shader.vertexShader='uniform float uLabSimulationTime;\nuniform float uLabHorizon;\nuniform vec2 uLabVelocity;\n'+shader.vertexShader;const marker='#include <project_vertex>';if(!shader.vertexShader.includes(marker))throw Error('Projection shader changed');shader.vertexShader=shader.vertexShader.replace(marker,`${marker}\nfloat labTime=clamp(uLabSimulationTime,0.0,uLabHorizon);\nvec4 labOffset=viewMatrix*vec4(labTime*uLabVelocity.x,0.0,labTime*uLabVelocity.y,0.0);\ngl_Position=projectionMatrix*(mvPosition+labOffset);`);compiled++;};
    material.customProgramCacheKey=()=>`${key?.()??''}|mobility-worker-lab`;material.needsUpdate=true;
   }
  });
@@ -144,6 +144,15 @@ try{
    const stats=a=>{const v=[...a].sort((x,y)=>x-y);return {count:v.length,p95:v[Math.floor((v.length-1)*.95)]??null,p99:v[Math.floor((v.length-1)*.99)]??null,max:v.at(-1)??null};};return {info,hold,wrong,decision,worker:result,responseMs:performance.now()-sent,frames:stats(frames),moving,before,held,after,scope:'QA-only one static pose and synthetic trajectory; Worker owns separate native island mangrove world and applies a barrier after at least 500 ms of synthetic native route queries. Stop confirmation and world versions are a narrow test protocol, not game authority. No dynamic bodies, Rapier, real input or gameplay integration.'};
   }finally{horizon.value=3.5;backend.terminate();}
  };
+ window.runPendingRealActorAudit=async()=>{
+  const backend=new Worker(new URL('./mobility-pending-real-actor-worker.js',import.meta.url),{type:'module'});let failure=null,result=null;
+  try{
+   const info=await new Promise((resolve,reject)=>{backend.onerror=e=>{failure=e.message;reject(Error(failure));};backend.onmessage=({data})=>{if(data.kind==='ready'||data.kind==='unavailable')resolve(data);else if(data.kind==='error'){failure=data.error;reject(Error(failure));}else if(data.kind==='changed')result=data;};});if(info.kind==='unavailable')return {...info,scope:'Diagnostic native static sweeps of observed actor endpoints; entering or special-motion semantics and dynamic blockers are not certified.'};const duration=info.endTime-info.startTime;if(!info.biome||!(duration>0))throw Error('Invalid simulation trajectory');
+   const gate=createPendingWorldChangeGate('actor-lab',info.actor.id,{worldVersion:1}),route={session:'actor-lab',actorId:info.actor.id,version:1,worldVersion:1,kind:'trajectory',startTime:info.startTime,points:[info.from,info.to],durations:[duration],movementMode:'walk',animationState:'walk'};if(!gate.install(route,info.startTime).accepted)throw Error('Route rejected');gate.presented(info.endTime);velocity.value.set((info.to.x-info.from.x)/duration,(info.to.z-info.from.z)/duration);horizon.value=duration+1;const moving=inspectPixels(duration+1),before=inspectPixels(duration),hold=gate.begin('command-1');horizon.value=duration;const sent=performance.now();backend.postMessage({kind:'change',token:'command-1',actorId:info.actor.id,worldVersion:1});
+   const frames=[],deadline=performance.now()+8000;let last=null;while(!result){await new Promise(requestAnimationFrame);if(failure||performance.now()>deadline)throw Error(failure||'Worker timeout');const now=performance.now();if(last!==null)frames.push(now-last);last=now;clock.value=duration+(now-sent)/1000;renderer.render(scene,camera);}
+   const held=inspectPixels(duration+1),decision=gate.confirm(result.token,result.event),after=inspectPixels(duration+1),pose=gate.sample(info.endTime+1);if(moving.hash===before.hash||before.hash!==held.hash||held.hash!==after.hash||!decision.accepted||!result.stopSafe||!result.futureBlocked||Math.hypot(pose.x-info.to.x,pose.z-info.to.z)>1e-6)throw Error('Real actor hold failed');return {info,hold,worker:result,decision,frames:{count:frames.length,max:frames.length?Math.max(...frames):null},moving,before,held,after,scope:'Isolated reconstructed native simulation, real animal positions sampled five steps apart with a static-world direct sweep. Worker adds a diagnostic barrier, not a game command. Shader shows one static surrogate with relative displacement; no dynamic-body proof, Rapier, real input, live world or production integration.'};
+  }finally{velocity.value.set(.4,0);horizon.value=3.5;backend.terminate();}
+ };
  window.runColdProfileAudit=async mode=>{
   if(!['idle','worker'].includes(mode))throw Error('Invalid cold profile mode');
   const backend=new Worker(new URL('./mobility-worker-cold-profile.js',import.meta.url),{type:'module'});let failure=null,started=null,result=null,cancel=null,currentVersion=1,invalidatedAt=null;
@@ -239,3 +248,5 @@ try{
   return {mode,device,frames:frames.length,intervals:{p95:percentile(intervals,.95),p99:percentile(intervals,.99),max:Math.max(...intervals)},jobs:workWindows,gpu:{reason:gpu.reason,samples:gpu.samples.length,p95:percentile(gpu.samples.map(s=>s.ms),.95),p99:percentile(gpu.samples.map(s=>s.ms),.99),discarded:gpu.discarded},visual:window.mobilityWorkerReady};
  };
 }catch(error){window.mobilityWorkerError=String(error?.stack??error);status.textContent=window.mobilityWorkerError;}
+
+
