@@ -12,21 +12,23 @@ window.audit=async()=>{
  const submit=async(client,command)=>{const request=client.submit(command);if(!request.accepted)throw Error('Command not admitted');return request.result;};
  try{
   await original.ready;const attack=await submit(original,{kind:'castAttack',id:'active-checkpoint-attack',targetId:animal.id,x:animal.x,z:animal.z});if(!attack.value)throw Error('Attack rejected');
-  const params=new URLSearchParams(location.search),rolling=params.has('rolling'),multi=params.has('multi');let phase=null,current;
-  for(let i=0;i<(rolling?240:multi?36:20);i++){current=await submit(original,{kind:'advance',seconds:.05,nightFastForward:true});phase=JSON.parse(current.snapshot).raid?.animals.find(a=>a.id===animal.id)?.magicDown?.phase;if(rolling&&phase==='rolling')break;}
+  const params=new URLSearchParams(location.search),rolling=params.has('rolling'),recovering=params.has('recovering'),multi=params.has('multi');let phase=null,current;
+  for(let i=0;i<(rolling||recovering?300:multi?36:20);i++){current=await submit(original,{kind:'advance',seconds:.05,nightFastForward:true});phase=JSON.parse(current.snapshot).raid?.animals.find(a=>a.id===animal.id)?.magicDown?.phase;if(rolling&&phase==='rolling'||recovering&&phase==='recovering')break;}
   if(multi){const target=JSON.parse(current.snapshot).raid?.animals.find(a=>a.id===second.id),hit=await submit(original,{kind:'castAttack',id:'second-active-hit',targetId:target.id,x:target.x,z:target.z});if(!hit.value)throw Error('Second attack rejected: '+hit.rejection);for(let i=0;i<8;i++)await submit(original,{kind:'advance',seconds:.05,nightFastForward:true});}
   if(rolling&&phase!=='rolling')throw Error('Animal did not reach rolling phase');
+  if(recovering&&phase!=='recovering')throw Error('Animal did not reach recovery phase');
+  if(recovering)for(let i=0;i<15;i++){const step=await submit(original,{kind:'advance',seconds:.05,nightFastForward:true});if(JSON.parse(step.snapshot).raid?.animals.find(a=>a.id===animal.id)?.magicDown?.phase!=='recovering')throw Error('Recovery ended before checkpoint');}
   const checkpoint=await submit(original,{kind:'snapshot',physicsCheckpoint:true});if(checkpoint.saveAvailable||!checkpoint.physicsPose?.active||!checkpoint.physicsCheckpoint||multi&&(checkpoint.physicsPoses??[]).filter(p=>p.active).length<2)throw Error('No experimental active fall checkpoint');
   const encoded=encodePhysicsCheckpoint(checkpoint.physicsCheckpoint),decoded=decodePhysicsCheckpoint(encoded);if(!decoded.fall)throw Error('Encoded fall missing');let stored=null;
   const saver=createWorkerSaveCoordinator({runtime:{submit:command=>submit(original,command)},repository:{save:state=>{stored=serialize(state);}},slotId:game.slotId,experimentalPhysics:true,now:()=>123});const receipt=await saver.request();if(!receipt.saved||!stored)throw Error('Active fall save rejected');
   restored=createSimulationAuthorityClient({snapshot:stored,chunkKeys:chunks,session:'restored'});await restored.ready;
-  const phases=new Set(),ticks=rolling?120:60;let active=0;for(let i=0;i<ticks;i++){
+  const phases=new Set(),ticks=rolling||recovering?120:60;let active=0;for(let i=0;i<ticks;i++){
    const command={kind:'advance',seconds:.05,nightFastForward:true},[a,b]=await Promise.all([submit(original,command),submit(restored,command)]);
    const normalized=p=>{const state=JSON.parse(p.snapshot);delete state.savedAt;for(const actor of state.raid?.animals??[])if(actor.raidWait)delete actor.raidWait.epoch;return JSON.stringify(state);};
    if(normalized(a)!==normalized(b)||JSON.stringify(a.events)!==JSON.stringify(b.events)||JSON.stringify(a.physicsPose)!==JSON.stringify(b.physicsPose)||JSON.stringify(a.physicsPoses)!==JSON.stringify(b.physicsPoses)){const differences=[];const scan=(x,y,path='')=>{if(differences.length>=8)return;if(x&&y&&typeof x==='object'&&typeof y==='object'){for(const key of new Set([...Object.keys(x),...Object.keys(y)]))scan(x[key],y[key],path+'/'+key);}else if(!Object.is(x,y))differences.push({path,left:x,right:y});};scan(a.physicsPoses??a.physicsPose,b.physicsPoses??b.physicsPose);throw Error('Restored active fall diverged at tick '+i+': '+JSON.stringify({state:normalized(a)===normalized(b),events:JSON.stringify(a.events)===JSON.stringify(b.events),differences}));}
    if((a.physicsPoses??[a.physicsPose]).filter(p=>p?.active).length>=(multi?2:1))active++;const current=JSON.parse(a.snapshot).raid?.animals.find(a=>a.id===animal.id)?.magicDown?.phase;if(current)phases.add(current);
   }
-  if(!active)throw Error('No active physics');return {phase,multi,ticks,active,encodedBytes:new TextEncoder().encode(encoded).byteLength,phases:[...phases],scope:'Saved JSON active physics checkpoint via save coordinator between two real Workers in mangroves; no browser storage, UI or full recovery checkpoint.'};
+  if(!active)throw Error('No active physics');return {phase,multi,ticks,active,encodedBytes:new TextEncoder().encode(encoded).byteLength,phases:[...phases],scope:'Saved JSON active physics checkpoint via save coordinator between two real Workers in mangroves; no browser storage, UI or complete campaign comparison.'};
  }finally{original.dispose();restored?.dispose();}
 };window.ready=true;
 </script>

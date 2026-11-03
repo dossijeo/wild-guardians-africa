@@ -952,3 +952,22 @@ recovery. The UI test used direct attack input and SwiftShader, and did not
 compare a whole resumed campaign or rendering. Saving during an already-running
 recovery or baked fallback remains blocked. The feature is development-only and
 does not enable active-physics saving in the normal game.
+
+The experimental checkpoint now also captures an already-running authored
+recovery, including pose samples, contact reference and kinematic state. A
+two-Worker mangrove test restored a checkpoint 0.75 seconds into recovery and
+matched state, events and physics poses for 120 ticks; the animal remained under
+physical control for 65 of them. A separate savanna UI test saved and reloaded
+during recovery and verified that opening the slot without the experimental
+option left the checkpoint intact. This does not validate every species, crowd,
+obstacle or visual transition. Procedural recoveries and baked fallbacks remain
+unsupported and must still reject active-physics saves; normal saves are
+unchanged.
+
+Camera controls update locally during rendering and do not wait for simulation
+acknowledgements. The navigation view is separately sent to the authority because
+it can affect raid entry and residency. In the current hosted experiment those
+updates normally enter the ordered command queue; the optional background-view
+path also submits them into that queue. Replacing queued views across simulation
+ticks or gameplay commands could change simulation outcomes, so latest-only
+coalescing and any priority changes need deterministic tests before integration.

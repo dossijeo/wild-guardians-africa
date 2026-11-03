@@ -20,12 +20,13 @@ export async function beastPhysicsRuntime(){initialization??=import('@dimforge/r
 // Bounded to three articulated actors, with no physical world while inactive.
 export class BeastCombatPhysics{
  constructor(world,R){this.world=world;this.R=R;this.entries=new Map();this.solver=null;this.environment=null;this.accumulator=0;this.seen=new Map();this.v=new Vector3();this.stats={active:0,physicsMs:0,recoveryMs:0,rejected:0,startMs:0,maxStepMs:0,solverMs:0,solverSteps:0,bindingMs:0,recoverySetupMs:0,creationMs:0,lastCreation:null};world.nav.beastPhysics=this;}
- // Experimental fall/roll checkpoint, intentionally unavailable once an
- // authored recovery or baked fallback owns a body. No save path uses it yet.
+ // Experimental checkpoint; procedural recovery and baked fallbacks remain
+ // unsupported until their complete state can be restored.
+ canCheckpointFall(){return !!this.solver&&!!this.environment&&this.entries.size>0&&!this.baked?.entries.size&&![...this.entries.values()].some(e=>e.recovery&&!(e.recovery instanceof AuthoredBeastRecovery)||!Number.isFinite(e.hitAt));}
  checkpointFall(){
-  if(!this.solver||!this.environment||!this.entries.size||this.baked?.entries.size||[...this.entries.values()].some(e=>e.recovery||!Number.isFinite(e.hitAt)))throw Error('Unsupported beast checkpoint phase');
+  if(!this.canCheckpointFall())throw Error('Unsupported beast checkpoint phase');
   const transform=o=>({position:o.position.toArray(),quaternion:o.quaternion.toArray(),rotation:o.rotation.toArray(),scale:o.scale.toArray()});
-  return {version:1,solver:this.solver.checkpoint(),environment:this.environment.checkpoint(),accumulator:this.accumulator,seen:[...this.seen],entries:[...this.entries].map(([id,e])=>({id,binding:e.binding.checkpoint(),root:transform(e.root),model:transform(e.data.model),offset:{...e.offset},hitAt:e.hitAt,settledAt:e.settledAt,rolling:!!e.rolling}))};
+  return {version:1,solver:this.solver.checkpoint(),environment:this.environment.checkpoint(),accumulator:this.accumulator,seen:[...this.seen],entries:[...this.entries].map(([id,e])=>({id,binding:e.binding.checkpoint(),root:transform(e.root),model:transform(e.data.model),offset:{...e.offset},hitAt:e.hitAt,settledAt:e.settledAt,rolling:!!e.rolling,...(e.recovery?{recovery:{state:e.recovery.checkpoint(),age:e.recoveryAge,sample:e.recoverySample.checkpoint(),kinematicPose:Array.from(e.kinematicPose),kinematicStart:Array.from(e.kinematicStart)}}:{})}))};
  }
  restoreFall(checkpoint){
   if(this.solver||this.entries.size||this.baked?.entries.size||!checkpoint||checkpoint.version!==1||!Array.isArray(checkpoint.entries)||!checkpoint.entries.length||!Array.isArray(checkpoint.seen)||!Number.isFinite(checkpoint.accumulator)||checkpoint.accumulator<0)throw Error('Invalid beast fall checkpoint');
@@ -40,7 +41,15 @@ export class BeastCombatPhysics{
     const binding=new BeastRagdollBinding(data.model);binding.restoreCheckpoint(saved.binding);entries.set(saved.id,{animal,data,root,binding,solver,actor,offset:{...saved.offset},accumulator:0,hitAt:saved.hitAt,settledAt:saved.settledAt,rolling:saved.rolling,recovery:null});
    }
    if(entries.size!==solver.actors.size)throw Error('Unmatched checkpoint actors');this.solver=solver;this.environment=environment;this.entries=entries;this.accumulator=checkpoint.accumulator;this.seen=new Map(checkpoint.seen);this.stats.active=entries.size;
-  }catch(error){solver.dispose();throw error;}
+   for(const saved of checkpoint.entries)if(saved.recovery){
+    const e=entries.get(saved.id),r=saved.recovery,clip=this.recoveryClips?.get(e.animal.species);
+    if(!clip||!e.actor.kinematic||!Number.isFinite(r.age)||r.age<0||!valid(r.kinematicPose,98)||!valid(r.kinematicStart,98)||!Array.isArray(r.state?.entries))throw Error('Invalid beast recovery checkpoint');
+    const bones=[];e.data.model.traverse(o=>{if(o.isBone)bones.push(o);});if(bones.length!==r.state.entries.length)throw Error('Mismatched beast recovery rig');
+    r.state.entries.forEach((item,i)=>{if(item.name!==bones[i].name||!valid(item.standingP,3)||!valid(item.standingQ,4))throw Error('Invalid beast recovery rig');bones[i].position.fromArray(item.standingP);bones[i].quaternion.fromArray(item.standingQ);});e.root.updateMatrixWorld(true);
+    const contacts=BakedSolidContacts.forAnimal(this.world,e.animal,e.binding,{peers:true}),recovery=new AuthoredBeastRecovery(e.binding,e.actor.pose,{clip,surface:(x,z)=>this.world.nav.field.surface(x,z),solidContacts:contacts});recovery.restoreCheckpoint(r.state);e.binding.restoreCheckpoint(saved.binding);
+    e.recovery=recovery;e.recoveryAge=r.age;e.recoverySample=new RecoveryPoseSample(e.data.model);e.recoverySample.restoreCheckpoint(r.sample);e.kinematicPose=new Float32Array(r.kinematicPose);e.kinematicStart=new Float32Array(r.kinematicStart);
+   }
+  }catch(error){this.solver=null;this.environment=null;this.entries=new Map();solver.dispose();throw error;}
  }
  static async create(world){
   const R=await beastPhysicsRuntime();

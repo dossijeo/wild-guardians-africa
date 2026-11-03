@@ -26,6 +26,7 @@ export async function createWorkerBeastPhysics(game,nav,{actorId,actorIds=actorI
  const ids=new Set(actorIds),world={state:game,nav,objects:new Map(loaded.map(x=>[x.animal.id,x.root])),mixers:new Map(loaded.map(x=>[x.animal.id,x.rig])),onError:error=>{throw error;}};
  const structures=structureTemplates===null?null:createWorkerStructureObjects(game,nav,structureTemplates);
  const manager=new BeastCombatPhysics(world,R);manager.recoveryClips=recoveries;manager.baked=new BakedBeastFallbacks(world,falls,recoveries);
+ if(checkpoint&&structures){for(const animal of animals)structures.sync(animal);for(const [id,object] of structures.objects)world.objects.set(id,object);}
  if(checkpoint)manager.restoreFall(checkpoint.fall);
  let disposed=false,admitting=false;
  async function admit(id){
@@ -53,5 +54,5 @@ export async function createWorkerBeastPhysics(game,nav,{actorId,actorIds=actorI
  function poses(){return loaded.map(({animal,root,rig})=>{
   const actorId=animal.id,model=rig.model,active=manager.entries.has(actorId)||manager.baked.has(actorId);if(active){manager.before(actorId);root.position.set(animal.x,nav.actorSurface(animal.x,animal.z),animal.z);root.updateMatrixWorld(true);manager.render(actorId);root.updateMatrixWorld(true);}const transform=node=>[...node.position.toArray(),...node.quaternion.toArray(),...node.scale.toArray()],bones=[];model.traverse(node=>{if(node.isBone)bones.push({name:node.name,transform:transform(node)});});return {actorId,root:transform(root),model:transform(model),bones,active};
  });}
- return {get actorId(){return loaded[0]?.animal.id;},get actorIds(){return [...ids];},supports:id=>ids.has(id),admit,manager,assertEnvironment,checkpointFall(){if(!manager.solver||!manager.entries.size||manager.baked?.entries.size||[...manager.entries.values()].some(e=>e.recovery||!Number.isFinite(e.hitAt)))return null;return {version:1,actorIds:[...ids],fall:manager.checkpointFall()};},pose:()=>poses()[0],poses,dispose(){disposed=true;manager.dispose();structures?.dispose();for(const {rig} of loaded)rig.model.traverse(o=>{if(o.isSkinnedMesh){o.geometry.dispose();o.material.dispose();o.skeleton.dispose();}});}};
+ return {get actorId(){return loaded[0]?.animal.id;},get actorIds(){return [...ids];},supports:id=>ids.has(id),admit,manager,assertEnvironment,checkpointFall(){if(!manager.canCheckpointFall())return null;return {version:1,actorIds:[...ids],fall:manager.checkpointFall()};},pose:()=>poses()[0],poses,dispose(){disposed=true;manager.dispose();structures?.dispose();for(const {rig} of loaded)rig.model.traverse(o=>{if(o.isSkinnedMesh){o.geometry.dispose();o.material.dispose();o.skeleton.dispose();}});}};
 }

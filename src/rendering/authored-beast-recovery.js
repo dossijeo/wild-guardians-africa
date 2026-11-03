@@ -18,6 +18,13 @@ export class AuthoredBeastRecovery{
   this.hip=binding.bones.get('Hips');const hipTrack=this.tracks.find(t=>t.entry.bone===this.hip&&t.property==='position');if(!hipTrack)throw Error('Recovery clip lacks hips');
   this.hipOffset=byName.get(this.hip.name).standingP.clone().sub(new Vector3().fromArray(hipTrack.interpolant.evaluate(clip.duration)));
  }
+ checkpoint(){return {version:1,age:this.age,entryDuration:this.entryDuration,playDuration:this.playDuration,exitDuration:this.exitDuration,entryClearance:this.entryClearance,hipOffset:this.hipOffset.toArray(),entries:this.entries.map(e=>({name:e.bone.name,standingP:e.standingP.toArray(),standingQ:e.standingQ.toArray(),fallenP:e.fallenP.toArray(),fallenQ:e.fallenQ.toArray()})),contacts:this.solidContacts?{reference:this.solidContacts.reference.toArray(),peerOffset:this.solidContacts.peerOffset.toArray()}:null};}
+ restoreCheckpoint(data){
+  const vec=(v,n)=>Array.isArray(v)&&v.length===n&&v.every(Number.isFinite),quat=v=>vec(v,4)&&Math.hypot(...v)>1e-6;
+  if(!data||data.version!==1||![data.age,data.entryDuration,data.playDuration,data.exitDuration].every(Number.isFinite)||data.age<0||data.entryDuration<=0||data.playDuration<=0||data.exitDuration<=0||!(Number.isFinite(data.entryClearance)||data.entryClearance===Infinity)||!vec(data.hipOffset,3)||!Array.isArray(data.entries)||data.entries.length!==this.entries.length||data.entries.some((e,i)=>e.name!==this.entries[i].bone.name||!vec(e.standingP,3)||!quat(e.standingQ)||!vec(e.fallenP,3)||!quat(e.fallenQ))||!!data.contacts!==!!this.solidContacts||data.contacts&&(!vec(data.contacts.reference,3)||!vec(data.contacts.peerOffset,3)))throw Error('Invalid authored recovery checkpoint');
+  this.age=data.age;this.entryDuration=data.entryDuration;this.playDuration=data.playDuration;this.exitDuration=data.exitDuration;this.duration=data.entryDuration+data.playDuration+data.exitDuration;this.entryClearance=data.entryClearance;this.hipOffset.fromArray(data.hipOffset);
+  data.entries.forEach((saved,i)=>{const e=this.entries[i];e.standingP.fromArray(saved.standingP);e.standingQ.fromArray(saved.standingQ);e.fallenP.fromArray(saved.fallenP);e.fallenQ.fromArray(saved.fallenQ);});if(data.contacts){this.solidContacts.reference.fromArray(data.contacts.reference);this.solidContacts.peerOffset.fromArray(data.contacts.peerOffset);}
+ }
  apply(dt){
   this.age=Math.min(this.duration,this.age+Math.max(0,dt));const entry=smooth(this.age/this.entryDuration),exit=smooth((this.age-this.entryDuration-this.playDuration)/this.exitDuration),time=Math.max(0,Math.min(1,(this.age-this.entryDuration)/this.playDuration))*this.clipDuration;
   for(const e of this.entries){e.bone.position.copy(e.standingP);e.bone.quaternion.copy(e.standingQ);}
