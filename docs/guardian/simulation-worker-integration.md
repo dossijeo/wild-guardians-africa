@@ -552,9 +552,17 @@ check remained unchanged. The same test now checks insufficient funds,
 duplicate command idempotency and rejection when the missing-region limit is
 zero. One full-residency preflight took 1.9–2.3 s in
 individual local Node runs; these are not a benchmark or render-thread timing.
+The preflight now also returns events observed in its successful attempt, and
+the native test checks their order and contents against live founding. An
+attempt retried after a missing region returns the same events, and a repeated
+command emits none. Failed attempts dispose their event observers along with
+their isolated sessions.
 The test covers one site and one center, not Worker integration, concurrent
 world changes, all cultures or a guarantee that later execution on the live
-session cannot request more regions. It remains disconnected from gameplay.
+session cannot request more regions. Promoting its result would also need to
+preserve the existing authority's active physics, tutorial controller, native
+intent state, event subscriptions, view and command sequence; a snapshot alone
+does not establish that. It remains disconnected from gameplay.
 
 When a microevent holds night speed, the game now sends the corresponding
 fast-forward policy to the installed Worker runtime, and restores it when the

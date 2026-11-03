@@ -69,22 +69,23 @@ test('a paid native postgame village gets a valid entry and survives reload',asy
     assert.equal(prepared.value,true);assert.deepEqual(prepared.addedChunks,[]);
     const siteChunk=`${Math.floor((site.x+24)/48)},${Math.floor((site.z+24)/48)}`;
     const retried=prepareVillageIsolated(module,source,[...loaded.keys()].filter(key=>key!==siteChunk),{id:'native-second-village',culture:'suajili',...site,payload},{bounds:[x-120,z-120,x+120,z+120]});
-    assert.ok(retried.addedChunks.includes(siteChunk),'preflight loads the missing site region');assert.equal(retried.snapshot,prepared.snapshot);
+    assert.ok(retried.addedChunks.includes(siteChunk),'preflight loads the missing site region');assert.equal(retried.snapshot,prepared.snapshot);assert.deepEqual(retried.events,prepared.events);
     assert.throws(()=>prepareVillageIsolated(module,source,[...loaded.keys()].filter(key=>key!==siteChunk),{id:'native-second-village',culture:'suajili',...site,payload},{bounds:[x-120,z-120,x+120,z+120],maxAdded:0}),SpatialChunkUnavailable,'preflight respects the missing-region limit');
     const poor=deserialize(source);poor.ledger.balance=rational(1);
     assert.throws(()=>prepareVillageIsolated(module,serialize(poor),[...loaded.keys()],{id:'no-funds',culture:'suajili',...site,payload},{bounds:[x-120,z-120,x+120,z+120]}),error=>error.code==='hiring-reserve');
     const duplicate=prepareVillageIsolated(module,prepared.snapshot,[...loaded.keys()],{id:'native-second-village',culture:'suajili',...site,payload},{bounds:[x-120,z-120,x+120,z+120]});
-    assert.equal(duplicate.value,false);assert.equal(duplicate.snapshot,prepared.snapshot,'replayed command does not charge twice');
+    assert.equal(duplicate.value,false);assert.equal(duplicate.snapshot,prepared.snapshot,'replayed command does not charge twice');assert.deepEqual(duplicate.events,[]);
     assert.equal(serialize(state),source,'isolated preparation leaves the authoritative state untouched');
     assert(nav.walkable(house.x,house.z,.28,null,true),'isolated preparation does not install a live barrier');
     const before=numberOf(state.ledger.balance);
-    assert.equal(Game.foundVillage(state,'native-second-village','suajili',
-      site.x,site.z,payload,nav),true);
+    const emitted=[],stopEvents=Game.observeGameEvents(state,event=>emitted.push(structuredClone(event)));
+    try{assert.equal(Game.foundVillage(state,'native-second-village','suajili',site.x,site.z,payload,nav),true);}finally{stopEvents();}
     assert.equal(state.villages.length,2);
     assert.equal(before-numberOf(state.ledger.balance),50000);
     assert.equal(state.villages[1].entry.x,preview.entry.x);
     assert.equal(state.villages[1].entry.z,preview.entry.z);
     assert.equal(state.events.filter(event=>event.type==='VillageFounded').length,1);
+    assert.deepEqual(prepared.events,emitted,'isolated founding preserves ordered emitted events');
     assert.equal(serialize(state),prepared.snapshot,'isolated and authoritative founding produce the same snapshot');
     console.log('Isolated village preparation ms:',preparationMs.toFixed(1));
     assert.equal(nav.walkable(house.x,house.z,.28,null,true),false,

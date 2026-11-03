@@ -1,5 +1,5 @@
 import {deserialize,serialize} from '../persistence/snapshots.js';
-import {foundVillage} from './game.js';
+import {foundVillage,observeGameEvents} from './game.js';
 import {createSpatialGameSession} from '../world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement,SpatialChunkUnavailable} from '../world/wild-engine/spatial-navigation-movement.js';
 
@@ -9,16 +9,16 @@ export function prepareVillageIsolated(module,snapshot,chunkKeys,command,{bounds
  if(!(module instanceof WebAssembly.Module)||typeof snapshot!=='string'||!Array.isArray(chunkKeys)||!command||!Number.isSafeInteger(maxAdded)||maxAdded<0)throw TypeError('Invalid isolated village preparation');
  const keys=new Set(chunkKeys),initialSize=keys.size,added=[];
  for(;;){
-  const state=deserialize(snapshot),loaded=new Map(),session=createSpatialGameSession(module,state,{loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  const state=deserialize(snapshot),loaded=new Map(),session=createSpatialGameSession(module,state,{loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)}),events=[],stopEvents=observeGameEvents(state,event=>events.push(structuredClone(event)));
   try{
    for(const key of keys){if(typeof key!=='string'||!/^(-?\d+),(-?\d+)$/.test(key))throw TypeError('Invalid chunk key');const [cx,cz]=key.split(',').map(Number);if(!Number.isSafeInteger(cx)||!Number.isSafeInteger(cz)||cx<-2147483648||cx>2147483647||cz<-2147483648||cz>2147483647||`${cx},${cz}`!==key)throw TypeError('Invalid chunk coordinates');if(session.core.selectChunk(cx,cz)<0&&session.core.addChunk(cx,cz)<0)throw Error('Could not add isolated chunk '+key);loaded.set(key,{...session.core.chunkPayload(),terrainRevision:0});}
    const nav=createSpatialNavigationMovement(session,state);if(bounds!==null)nav.setActiveBounds(bounds);
    const value=foundVillage(state,command.id,command.culture,command.x,command.z,command.payload,nav);
-   return {value,snapshot:serialize(state),addedChunks:added};
+   return {value,snapshot:serialize(state),events,addedChunks:added};
   }catch(error){
    if(!(error instanceof SpatialChunkUnavailable)||!Array.isArray(error.missing)||!error.missing.length)throw error;
    let progress=false;for(const {cx,cz} of error.missing){if(!Number.isInteger(cx)||!Number.isInteger(cz)||cx<-2147483648||cx>2147483647||cz<-2147483648||cz>2147483647)throw error;const key=`${cx},${cz}`;if(!keys.has(key)){keys.add(key);added.push(key);progress=true;}}
    if(!progress||keys.size-initialSize>maxAdded)throw error;
-  }finally{session.dispose();}
+  }finally{stopEvents();session.dispose();}
  }
 }
