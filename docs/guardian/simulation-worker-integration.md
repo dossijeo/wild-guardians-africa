@@ -295,3 +295,10 @@ its own game state whether to pause. A new-game Worker test covers stopping,
 open selection, an intervening menu pause and resumption. Tutorial message
 selection, profile recording, reading and dismissal still execute locally;
 the full tutorial remains an integration blocker.
+
+The application save function now uses ordered Worker checkpoints whenever a
+runtime is installed, including the action paths that requested a Worker save.
+An unavailable active-physics checkpoint reports failure and prevents the
+menu-exit path from claiming success. A browser test exercises the save adapter
+with a real Worker and restores its checkpoint; it does not cover active physics
+or the production UI. The ordinary game still does not install the runtime.

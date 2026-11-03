@@ -40,7 +40,8 @@ import {GameSurfaces} from '../ui/game-surfaces.js';
 import {resumeLoadedWorld} from './resume-loaded-world.js';
 import '../ui/styles.css';
 import {autosaveEventAfter} from './autosave-events.js';
-import {saveGame} from './save-game.js';
+import {saveGame,saveWorkerGame} from './save-game.js';
+import {createWorkerSaveCoordinator} from '../persistence/worker-save.js';
 import {dispatchSimulationPause} from './simulation-pause.js';
 import {Microevents} from '../microevents/controller.js';
 import {recordMicroeventFrame} from './microevents-frame-qa.js';
@@ -169,7 +170,14 @@ function changeSimulationPause(paused,reason,{sound=false}={}){
   if(result?.then)result.then(confirmed,failure=>{if(owner===world&&ownerState===state)error(failure.message);});else confirmed();
   return result;
 }
-function save({confirm=false}={}){const owner=juice;return saveGame(state,saves,{confirm,onError:error,onConfirm:()=>owner?.savedSuccessfully()});}
+const workerSaveCoordinators=new WeakMap();
+function ensureWorkerSave(owner,ownerState){
+  const runtime=owner.workerRuntime;if(!runtime||!ownerState)throw Error('Worker save integration is unavailable');
+  let entry=workerSaveCoordinators.get(runtime);if(!entry){entry={slotId:ownerState.slotId,coordinator:createWorkerSaveCoordinator({runtime,repository:saves,slotId:ownerState.slotId})};workerSaveCoordinators.set(runtime,entry);}
+  if(entry.slotId!==ownerState.slotId)throw Error('Worker save slot changed');
+  owner.workerSave=({confirm=false}={})=>saveWorkerGame(entry.coordinator,{confirm,onError:error,onConfirm:()=>juice?.savedSuccessfully()});return owner.workerSave;
+}
+function save({confirm=false}={}){const owner=juice;if(state&&world?.workerRuntime)return ensureWorkerSave(world,state)({confirm});return saveGame(state,saves,{confirm,onError:error,onConfirm:()=>owner?.savedSuccessfully()});}
 const exitDesktop=createDesktopExit({host:window,save,hasGame:()=>!!state,onError:failure=>error(moneyLocale().startsWith('es')?'No se pudo cerrar la aplicación: '+failure.message:'Could not close the application: '+failure.message)});
 function bind(id,fn){document.getElementById(id)?.addEventListener('click',()=>safe(fn));}
 
@@ -317,7 +325,7 @@ function onPick({entityId,point,hitPoint,gestureSeconds=null}) {
     const pickedPlant=state.plants.find(p=>p.id===entityId&&p.alive);
     if(tool?.kind==='spell'){
       const applicationStarted=performance.now(),owner=world,ownerState=state,ownerTool=tool,spell=tool.spell,runtime=owner.workerRuntime??null;
-      if(runtime&&typeof owner.workerSave!=='function')throw Error('Worker save integration is unavailable');
+      if(runtime)ensureWorkerSave(owner,ownerState);
       const result=dispatchPickedSpell(ownerState,commandId(),spell,{entityId,point,hitPoint,origin:()=>owner.guardianSummons?.plan(entityId,point)},nav,runtime),applicationCpuSeconds=(performance.now()-applicationStarted)/1000;
       const finish=committed=>{if(owner!==world||ownerState!==state||!committed)return;if(spell!=='attack')manualMagicActivity.applied(state,state.spells.at(-1),{gestureSeconds,applicationCpuSeconds,benefited:state.events.at(-1)?.benefited});if(tool===ownerTool)toolSession.used(performance.now()/1000);return runtime?owner.workerSave():save();};
       if(result?.then)return result.then(async value=>{await finish(value);if(owner===world&&ownerState===state)updateUI(true);},error=>{if(owner===world&&ownerState===state)throw error;});
@@ -331,7 +339,7 @@ function onPick({entityId,point,hitPoint,gestureSeconds=null}) {
       if(tool.kind==='village') {const payload=villageCatalog.find(v=>v.id===(tool.culture==='saheliana'?'saheliano':tool.culture));pendingVillage=Game.previewVillage(state,tool.culture,point.x,point.z,payload,nav);world.showVillagePreview(pendingVillage);villageConfirmPanel();return;}
       const guided=guidedPlacementKind(tool,world.hands,world.guardianSummons?.guiding?world.guardianSummons.guide:null);let committed=false;
       if(world.workerRuntime&&(tool.kind==='center'||tool.kind==='wall'||tool.kind==='plant')){
-        const owner=world,ownerState=state,ownerTool=tool,runtime=owner.workerRuntime;if(typeof owner.workerSave!=='function')throw Error('Worker save integration is unavailable');
+        const owner=world,ownerState=state,ownerTool=tool,runtime=owner.workerRuntime;ensureWorkerSave(owner,ownerState);
         const id=commandId(),command=ownerTool.kind==='plant'?{kind:'plant',id,species:ownerTool.species,x:point.x,z:point.z,nearTouch:true}:{kind:'placeStructure',id,structure:{...ownerTool,x:point.x,z:point.z}};
         return runtime.submit(command).then(async result=>{if(owner!==world||ownerState!==state)return;if(result.rejection)throw Error(result.rejection);if(result.value===false)return;uiAudio.guidedPlacement(guided);if(tool===ownerTool)toolSession.used(performance.now()/1000);owner.syncResidentProps();await owner.workerSave();if(owner===world&&ownerState===state)updateUI(true);});
       }
@@ -348,7 +356,7 @@ function hideHudPanel({silent=false}={}){document.querySelector('#panel').replac
 function buildWallStroke(points){
   if(state.pauses.includes('hiring')||tool?.kind!=='wall'||tool.gate)return;
   if(world.workerRuntime){
-    const owner=world,ownerState=state,ownerTool=tool;if(typeof owner.workerSave!=='function')throw Error('Worker save integration is unavailable');
+    const owner=world,ownerState=state,ownerTool=tool;ensureWorkerSave(owner,ownerState);
     return owner.workerRuntime.submit({kind:'buildWallChain',id:commandId(),material:ownerTool.material,points,capacityLimit:true}).then(async result=>{if(owner!==world||ownerState!==state)return;if(result.rejection){if(result.rejection===RESERVE_MESSAGE)uiAudio.error({force:true});throw Error(result.rejection);}if(result.value===false){uiAudio.error({force:true});return;}if(tool===ownerTool)toolSession.used(performance.now()/1000);owner.clearWallPreview();owner.syncResidentProps();await owner.workerSave();if(owner===world&&ownerState===state)updateUI(true);});
   }
   const maxPieces=Game.wallCapacity(state,tool.material);if(!maxPieces){uiAudio.error({force:true});error(RESERVE_MESSAGE,{silent:true});return;}
@@ -511,12 +519,12 @@ function villageConfirmPanel() {
 }
 function repairStructure(targetId,{persist=false}={}){
   const owner=world,ownerState=state,runtime=owner.workerRuntime;if(!runtime){const value=Game.requestRepair(state,commandId(),targetId);if(persist)save();return value;}
-  if(typeof owner.workerSave!=='function')throw Error('Worker save integration is unavailable');
+  ensureWorkerSave(owner,ownerState);
   return runtime.submit({kind:'requestRepair',id:commandId(),targetId}).then(async result=>{if(owner!==world||ownerState!==state)return;if(result.rejection)throw Error(result.rejection);if(result.value&&persist)await owner.workerSave();if(owner===world&&ownerState===state)updateUI(true);return result.value;});
 }
 function removeSelectedWall(targetId){
   const owner=world,ownerState=state,runtime=owner.workerRuntime;if(!runtime){Game.removeWall(state,commandId(),targetId,nav);selection=null;save();return;}
-  if(typeof owner.workerSave!=='function')throw Error('Worker save integration is unavailable');
+  ensureWorkerSave(owner,ownerState);
   return runtime.submit({kind:'removeWall',id:commandId(),targetId}).then(async result=>{if(owner!==world||ownerState!==state)return;if(result.rejection)throw Error(result.rejection);if(result.value){if(selection===targetId)selection=null;await owner.workerSave();}if(owner===world&&ownerState===state)updateUI(true);});
 }
 function contextPanel() {
@@ -597,7 +605,7 @@ function hiringDialog(centerId=null) {
   document.querySelector('[data-hire="clear"]').onclick=()=>{document.querySelectorAll('[data-crew-count]').forEach(el=>el.value=0);refresh();};
   bind('hireConfirm',()=>{if(!hiringConfirmation(selection,numberOf(state.ledger.balance),additional?{time:state.time}:{}).canConfirm)return;
     const owner=world,ownerState=state,runtime=owner.workerRuntime;if(!runtime){additional?Game.hireAdditional(state,commandId(),selection,centerId):Game.hire(state,commandId(),selection);closeSurface();save();audio.gameplay(state.day).catch(()=>{});return;}
-    if(typeof owner.workerSave!=='function')throw Error('Worker save integration is unavailable');
+    ensureWorkerSave(owner,ownerState);
     const button=document.querySelector('#hireConfirm');button.disabled=true;const command={kind:additional?'hireAdditional':'hire',id:commandId(),selection:{...selection},...(additional?{centerId}:{})};
     return runtime.submit(command).then(async result=>{if(owner!==world||ownerState!==state)return;if(result.rejection)throw Error(result.rejection);if(result.value===false){refresh();return;}closeSurface();await owner.workerSave();if(owner===world&&ownerState===state){audio.gameplay(state.day).catch(()=>{});updateUI(true);}}).catch(failure=>{if(owner===world&&ownerState===state&&button.isConnected)refresh();throw failure;});
   });refresh();
