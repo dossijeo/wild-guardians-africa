@@ -1,0 +1,8 @@
+import * as THREE from 'three';
+import {KTX2Loader} from 'three/addons/loaders/KTX2Loader.js';
+// Authoring tool: transcode once, then write the native blocks to disk in Node.
+try{
+ const params=new URLSearchParams(location.search),name=params.get('name');if(name&&!/^[a-z0-9-]+\.ktx2$/.test(name))throw Error('Invalid fixture name');const renderer=new THREE.WebGLRenderer({canvas:document.querySelector('#probe')}),gl=renderer.getContext();if(!gl.getExtension('EXT_texture_compression_bptc'))throw Error('Offline BC7 target unavailable');
+ const loader=new KTX2Loader().setTranscoderPath('/node_modules/three/examples/jsm/libs/basis/').detectSupport(renderer),base64=data=>{let out='';for(let i=0;i<data.length;i+=0x8000)out+=String.fromCharCode(...data.subarray(i,i+0x8000));return btoa(out);};window.transcodeBc7=async encoded=>{const binary=Uint8Array.from(atob(encoded),c=>c.charCodeAt(0)),texture=await new Promise((resolve,reject)=>loader.parse(binary.buffer,resolve,reject));try{if(texture.format!==THREE.RGBA_BPTC_Format||!texture.isCompressedTexture)throw Error('Transcoder did not return BC7');return {width:texture.image.width,height:texture.image.height,colorSpace:texture.colorSpace,levels:texture.mipmaps.map(level=>({width:level.width,height:level.height,data:base64(level.data)}))};}finally{texture.dispose();}};window.offlineBc7Ready=true;
+ if(name){const response=await fetch(`/qa/ktx2-fixture/${name}`);if(!response.ok)throw Error('Offline source unavailable');window.offlineBc7=await window.transcodeBc7(base64(new Uint8Array(await response.arrayBuffer())));}
+}catch(error){window.offlineBc7Error=String(error?.stack??error);}

@@ -16,6 +16,7 @@ import {prepareNativeBuilding,prepareNativeBuildingAsync} from './buildings.js';
 import {nativeAssetMaterial} from './asset-surface.js';
 import {computeTangents} from './surface-source.js';
 import {nearTreeGeometry,removeReviewedTreeTriangles} from './near-tree-textures.js';
+const experimentalKtxTargets={savanna:{path:'/assets/images/01e1c811b957b401a88c30717e4c0cb02f5364d925de5bba40e701718dac83a7.webp',name:'savanna-color'},tree01:{path:'/content/trees-near/savanna/tree_01/baseColor.webp',name:'tree01-color'},'savanna-normal':{path:'/assets/6279d0fc866dcdec85af0c876fff55362b9b20beccf4eae791a2074547b4f49c.webp',name:'savanna-normal'}};
 export class Assets {
   constructor(){this.preparation=new AbortController();this.activeModelTransfers=new Set();this.loadedTextureKeys=new Set();const manager=new THREE.LoadingManager();this.transfers=observeLoadingManager(manager,{skip:url=>this.activeModelTransfers.has(url)});this.loader=new GLTFLoader(manager).setMeshoptDecoder(MeshoptDecoder);this.textures=new THREE.TextureLoader(manager);this.cache=new Map();this.modelSources=new Map();this.ownedResources=new Set();this.disposedResources=new WeakSet();}
   assertOpen(){if(this.modelsDisposed)throw new Error('Asset collection is disposed');}
@@ -54,7 +55,7 @@ export class Assets {
   async experimentalKtxTexture(){
     const {KTX2Loader}=await import('three/addons/loaders/KTX2Loader.js');this.assertOpen();
     this.experimentalKtxLoader??=new KTX2Loader().setTranscoderPath('/node_modules/three/examples/jsm/libs/basis/').detectSupport(this.experimentalKtx.renderer);
-    const name=this.experimentalKtx.asset==='tree01'?'tree01-color':'savanna-color';return this.experimentalKtxLoader.loadAsync(`/qa/ktx2-fixture/${name}-${this.experimentalKtx.variant}.ktx2`);
+    const name=experimentalKtxTargets[this.experimentalKtx.asset??'savanna'].name,path=this.experimentalKtx.variant==='bc7'&&this.experimentalKtx.asset==='tree01'?'/content/ktx2-native/pilot/tree01-color-bc7.ktx2':`/qa/ktx2-fixture/${name}-${this.experimentalKtx.variant}.ktx2`;return this.experimentalKtxLoader.loadAsync(assetUrl(path));
   }
   async building(descriptor){
     this.assertOpen();const key='building:'+descriptor.url;
@@ -67,7 +68,7 @@ export class Assets {
   }
   async texture(url,color=false) {
     this.assertOpen();const key=url+color;
-    if(!this.cache.has(key)){const bitmapPath=this.asyncTextureImages&&typeof Worker!=='undefined'&&typeof createImageBitmap==='function',target=this.experimentalKtx?.asset==='tree01'?'/content/trees-near/savanna/tree_01/baseColor.webp':'/assets/images/01e1c811b957b401a88c30717e4c0cb02f5364d925de5bba40e701718dac83a7.webp',ktx=!!this.experimentalKtx&&new URL(assetUrl(url),globalThis.location?.href??'http://localhost/').pathname===target,load=ktx?this.experimentalKtxTexture():bitmapPath?this.loadingTexture(url):this.textures.loadAsync(assetUrl(url));const pending=load.then(async texture=>{if(color)texture.colorSpace=THREE.SRGBColorSpace;texture.flipY=false;if(this.asyncTextureImages&&!bitmapPath&&!ktx){try{await prepareLoadingImage(texture,{cancelled:()=>this.modelsDisposed,onDiagnostic:this.loadingDiagnostics});}catch(error){this.release(texture);throw error;}}const owned=this.own(texture);if(!this.modelsDisposed)this.loadedTextureKeys.add(key);return owned;});this.cache.set(key,pending);pending.catch(()=>{if(this.cache.get(key)===pending)this.cache.delete(key);});}
+    if(!this.cache.has(key)){const bitmapPath=this.asyncTextureImages&&typeof Worker!=='undefined'&&typeof createImageBitmap==='function',target=experimentalKtxTargets[this.experimentalKtx?.asset??'savanna'].path,ktx=!!this.experimentalKtx&&new URL(assetUrl(url),globalThis.location?.href??'http://localhost/').pathname===target&&(this.experimentalKtx.variant!=='bc7'||!!this.experimentalKtx.renderer.getContext().getExtension('EXT_texture_compression_bptc')),load=ktx?this.experimentalKtxTexture():bitmapPath?this.loadingTexture(url):this.textures.loadAsync(assetUrl(url));const pending=load.then(async texture=>{if(color)texture.colorSpace=THREE.SRGBColorSpace;texture.flipY=false;if(this.asyncTextureImages&&!bitmapPath&&!ktx){try{await prepareLoadingImage(texture,{cancelled:()=>this.modelsDisposed,onDiagnostic:this.loadingDiagnostics});}catch(error){this.release(texture);throw error;}}const owned=this.own(texture);if(!this.modelsDisposed)this.loadedTextureKeys.add(key);return owned;});this.cache.set(key,pending);pending.catch(()=>{if(this.cache.get(key)===pending)this.cache.delete(key);});}
     if(this.loadedTextureKeys.has(key))cachedAssetTransfer(assetUrl(url));
     return this.cache.get(key);
   }

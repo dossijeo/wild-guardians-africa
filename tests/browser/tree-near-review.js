@@ -6,7 +6,7 @@ const renderer=new T.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
 const scene=new T.Scene();scene.background=new T.Color('#a3b8c5');scene.add(new T.HemisphereLight(0xc8dcff,0x87744c,2));
 const sun=new T.DirectionalLight(0xffe4af,3);sun.position.set(-6,12,8);scene.add(sun);
 const camera=new T.PerspectiveCamera(40,innerWidth/innerHeight,.1,1000),controls=new OrbitControls(camera,renderer.domElement);
-const assets=new Assets();assets.visualSearch='?noNativeAO';const ktx=query.get('qa-ktx2-atlas');if((ktx==='etc1s'||ktx==='uastc')&&biome==='savanna'&&slot==='tree_01')assets.experimentalKtx={renderer,variant:ktx,asset:'tree01'};
+const assets=new Assets();assets.visualSearch='?noNativeAO';const ktx=query.get('qa-ktx2-atlas');if((['etc1s','uastc','bc7'].includes(ktx))&&biome==='savanna'&&slot==='tree_01')assets.experimentalKtx={renderer,variant:ktx,asset:'tree01'};
 try{
  const pack=await fetch(`/content/biome-${biome}.json`).then(r=>r.json());
  // This isolated side-by-side view compares full texture endpoints at any
