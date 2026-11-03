@@ -1,4 +1,5 @@
 import {createSimulation} from './mobility-worker-simulation-core.js';
+import {probeColdProfileWorld} from './mobility-cold-profile-probe.js';
 let simulation;
 self.onmessage=async({data})=>{
  try{
@@ -17,6 +18,7 @@ self.onmessage=async({data})=>{
    const at=performance.now(),result=simulation.run(data.steps,data.dt);
    postMessage({kind:'ticked',ms:performance.now()-at,...result});return;
   }
+  if(data.kind==='probe'){if(!simulation)throw Error('Simulation not initialized');postMessage({kind:'probed',rows:probeColdProfileWorld(simulation)});return;}
   if(data.kind==='damage-center'){
    if(!simulation)throw Error('Simulation not initialized');
    const at=performance.now();simulation.damageCenter();
