@@ -37,9 +37,3 @@ test('diagnostic acknowledgements follow successful publication and are disabled
  const disabled=setup(),ready=disabled.runtime.start();disabled.worker.onmessage({data:{kind:'publication',session:'s',publication:{sequence:1,elapsed:0}}});assert.equal(disabled.messages.length,1);
  disabled.worker.onmessage({data:{kind:'started',session:'s',sequence:1,status:{}}});await ready;disabled.runtime.dispose();
 });
-test('publication transport batches preserve states and acknowledge only after the last item',async()=>{
- const {runtime,worker,messages,seen}=setup({coalescePublications:true,publicationBatchSize:3}),start=runtime.start();
- worker.onmessage({data:{kind:'publication',session:'s',publication:{sequence:1,elapsed:0}}});worker.onmessage({data:{kind:'started',session:'s',sequence:1,status:{}}});await start;
- worker.onmessage({data:{kind:'publications',session:'s',publications:[{kind:'publication',publication:{sequence:2,elapsed:.1}},{kind:'publication',publication:{sequence:3,elapsed:.2}}]}});
- assert.deepEqual(seen,[1,2]);assert.equal(messages.at(-1).sequence,1);await new Promise(resolve=>setTimeout(resolve,10));assert.deepEqual(seen,[1,2,3]);assert.deepEqual(messages.at(-1),{kind:'publicationAck',session:'s',sequence:3});runtime.dispose();
-});

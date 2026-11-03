@@ -493,22 +493,23 @@ integrated.
 
 `tests/browser/worker-coalesced-events-parity.html` compares two real mangrove
 simulation Workers for 100 identical ticks, holding the coalesced presentation
-until the end. It delivered three publications in two transport messages
-instead of 100, preserved all
+until the end. It delivered three publications instead of 100, preserved all
 ten retreat-related events in order and matched the full state observed by
 each event observer as well as the final state. This deterministic check has
 no physical rigs, rendering, player commands or game UI; it does not bound
 event-heavy backlog or establish a frame-time improvement.
 
-The opt-in `qa-worker-publication-batch=N` (with `qa-worker-coalesce`) can pack
-up to N consecutive publications into one transport message without merging
-their snapshots or crossing command barriers. The presentation applies them in
-order in separate tasks and acknowledges after the last. N defaults to 1 and
-is capped at 8; this is independent from the number of simulation ticks in a
-publication. Unit tests cover state order and barriers, and a real nested-Worker
-physics stall test passes with N=4. Packing retains every eventful snapshot in
-memory and can add scheduling latency; no production performance or visual
-comparison has been established, so it does not solve unbounded backlog.
+An additional experiment packed up to four consecutive event-bearing
+publications into one transport message while applying their states in
+separate tasks. It preserved ordering in a synthetic test but retained all
+snapshots, so it did not bound memory. One headless savanna raid run used 33
+such batches before the attack; attack confirmation took 1.74 s and pause
+confirmation 309 ms. A separate run without transport packing took 1.32 s
+and 222 ms. The captures used Edge headless/SwiftShader, only 20 and 8 frame
+samples during confirmation, and the input time and camera were not exactly
+replayed; they do not establish a causal performance difference. Because this
+experiment did not demonstrate a global benefit, it was removed. The existing
+tick consolidation and event-preserving queue remain experimental.
 
 A separate local experiment replaced consecutive pending camera-view commands
 only when no simulation step or other command intervened, retaining every

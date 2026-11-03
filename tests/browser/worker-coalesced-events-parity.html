@@ -10,15 +10,15 @@ window.audit=async()=>{
  const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
  const fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),{game,nav}=fixture.diagnosticWorld(),source=serialize(game),bindings=captureRaidWaitBindings(game,nav);fixture.dispose();
  const a=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,raidWaitBindings:bindings,session:'direct'}),b=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,raidWaitBindings:bindings,session:'merged'}),left=deserialize(source),right=deserialize(source),direct=createConfirmedStateReceiver(left,'direct'),merged=createConfirmedStateReceiver(right,'merged'),seenA=[],seenB=[],stopA=observePresentationGameEvents(left,e=>seenA.push({event:structuredClone(e),state:serialize(left)})),stopB=observePresentationGameEvents(right,e=>seenB.push({event:structuredClone(e),state:serialize(right)})),sent=[];
- const queue=createHostPublicationQueue({session:'merged',maxBatchPublications:4,send:message=>sent.push(message)}),send=async(client,command)=>{const request=client.submit(command);if(!request.accepted)throw Error('Command not accepted');return request.result;};
+ const queue=createHostPublicationQueue({session:'merged',send:message=>sent.push(message)}),send=async(client,command)=>{const request=client.submit(command);if(!request.accepted)throw Error('Command not accepted');return request.result;};
  try{await Promise.all([a.ready,b.ready]);let mergedCount=0;
   for(let i=0;i<100;i++){
    const command={kind:'advance',seconds:.05,nightFastForward:true},[one,two]=await Promise.all([send(a,command),send(b,command)]);if(one.snapshot!==two.snapshot||JSON.stringify(one.events)!==JSON.stringify(two.events))throw Error('Authority mismatch at '+i);
    const accepted=direct.accept(one);if(!accepted.accepted)throw Error('Direct receiver failed');queue.publication(two,true);
   }
-  let cursor=0,batches=0;while(cursor<sent.length){const item=sent[cursor++],items=item.kind==='publication'?[item]:item.kind==='publications'?item.publications:null;if(!items)throw Error('Unexpected queue message');if(items.length>1)batches++;for(const part of items){const accepted=merged.accept(part.publication,{firstSequence:part.firstSequence});if(!accepted.accepted)throw Error('Merged receiver failed');mergedCount++;}queue.ack(items.at(-1).publication.sequence);}
+  let cursor=0;while(cursor<sent.length){const item=sent[cursor++];if(item.kind!=='publication')throw Error('Unexpected queue message');const accepted=merged.accept(item.publication,{firstSequence:item.firstSequence});if(!accepted.accepted)throw Error('Merged receiver failed');queue.ack(item.publication.sequence);mergedCount++;}
   if(!seenA.length||JSON.stringify(seenA)!==JSON.stringify(seenB)||serialize(left)!==serialize(right)||queue.status().coalesced===0)throw Error('Event or state delivery mismatch');
-  return {ticks:100,publications:mergedCount,messages:cursor,batches,coalesced:queue.status().coalesced,events:seenA.map(x=>x.event.type),scope:'Two real mangrove simulation Workers; presentation queue held until all ticks complete, comparing every event and its observed state. No physics rigs, rendered frames or real game UI.'};
+  return {ticks:100,publications:mergedCount,coalesced:queue.status().coalesced,events:seenA.map(x=>x.event.type),scope:'Two real mangrove simulation Workers; presentation queue held until all ticks complete, comparing every event and its observed state. No physics rigs, rendered frames or real game UI.'};
  }finally{stopA();stopB();a.dispose();b.dispose();}
 };window.ready=true;
 </script>
