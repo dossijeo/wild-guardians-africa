@@ -853,3 +853,13 @@ headless savanna raid accepted an attack with the experiment enabled, with seven
 queued items at one sample and a 1,300 ms maximum in eight measured frames;
 this is not an A/B performance result. Camera gestures, eventful saturation and
 hardware rendering still require validation; the experiment remains opt-in.
+
+A later headless savanna raid used a real right-button camera drag immediately
+after submitting an attack through the input handler. The camera eye changed
+from approximately (109.09, 26.85, 49.09) to (81.47, 26.85, 32.77), and the
+impact was unconfirmed both before and after the drag. Worker attack preparation
+reported 881 ms and the attack was subsequently confirmed. This demonstrates
+that this gesture can change the visual camera while the attack is pending; it
+does not prove smooth presentation. Fourteen sampled frame intervals included a
+733 ms maximum, under SwiftShader, with no comparison or GPU timing. The test
+does not simulate every camera gesture or impose a controlled Worker delay.

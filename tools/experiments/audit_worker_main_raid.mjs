@@ -21,6 +21,13 @@ try{
   if(!target)await page.waitForTimeout(500);
  }
  if(!target)throw Error('No visible clickable animal');const beforeAttack=await page.evaluate(()=>{window.__workerFrameProbe.samples=[];window.__workerFrameProbe.enabled=true;return window.wildGuardiansWorkerQa();}),attackRequested=Date.now();console.log('SCAN_DIAGNOSTIC',JSON.stringify({direct,scanMs:attackRequested-scanStarted,before:scanInitial.status,after:beforeAttack.status,target:target.id}));if(direct)await page.evaluate(id=>window.wildGuardiansWorkerAttackQa(id),target.id);else await page.mouse.click(target.x,target.y);
+ let cameraGesture=null;if(process.argv.includes('--camera-gesture')){
+  const before=await page.evaluate(()=>({view:window.wildGuardiansVisibilityQa().camera,hit:window.wildGuardiansWorkerQa().events.includes('GuardianMagicHit')}));
+  const gestureStarted=Date.now();
+  await page.mouse.move(640,360);await page.mouse.down({button:'right'});await page.mouse.move(720,390,{steps:4});await page.mouse.up({button:'right'});
+  await page.waitForFunction(eye=>{const current=window.wildGuardiansVisibilityQa().camera.eye;return current.some((v,i)=>Math.abs(v-eye[i])>.001);},before.view.eye,{timeout:15000});
+  const after=await page.evaluate(()=>({view:window.wildGuardiansVisibilityQa().camera,hit:window.wildGuardiansWorkerQa().events.includes('GuardianMagicHit')}));cameraGesture={realMs:Date.now()-gestureStarted,beforeHit:before.hit,afterHit:after.hit,eyeBefore:before.view.eye,eyeAfter:after.view.eye};console.log('CAMERA_GESTURE',JSON.stringify(cameraGesture));
+ }
  try{await page.waitForFunction(()=>{const q=window.wildGuardiansWorkerQa();return q.events.includes('GuardianMagicHit')||q.status?.fault;},null,{timeout:60000});}
  catch{throw Error('Attack was not confirmed: '+JSON.stringify(await page.evaluate(()=>({qa:window.wildGuardiansWorkerQa(),text:document.body.innerText.slice(-800)})))+'; page errors: '+JSON.stringify(errors));}
  const hit=await page.evaluate(()=>window.wildGuardiansWorkerQa());if(hit.status?.fault||!hit.events.includes('GuardianMagicHit')||errors.length)throw Error('Attack failed: '+JSON.stringify({hit,errors}));
@@ -45,5 +52,5 @@ try{
   }
   if(!completed)throw Error('Raid did not complete within the test window: '+JSON.stringify(await page.evaluate(()=>window.wildGuardiansWorkerQa())));
  }
- console.log(JSON.stringify({animals:hit.animals,initialElapsed:start.qa.elapsed,finalElapsed:(completed??hit).elapsed,readyActors:end.visibility.actors.filter(a=>a.ready).length,sequence:(completed??hit).status.confirmedSequence,attacked:target.id,completed:!!completed,saved,scope:direct?'Opt-in real game using a day-31 savanna capture; attack invokes the game input handler directly without pointer picking. No active-physics restore or deterministic comparison.':'Opt-in real game using a day-31 savanna capture and a real pointer attack; no active-physics restore, full deterministic comparison or performance comparison.'}));
+ console.log(JSON.stringify({animals:hit.animals,initialElapsed:start.qa.elapsed,finalElapsed:(completed??hit).elapsed,readyActors:end.visibility.actors.filter(a=>a.ready).length,sequence:(completed??hit).status.confirmedSequence,attacked:target.id,cameraGesture,completed:!!completed,saved,scope:direct?'Opt-in real game using a day-31 savanna capture; attack invokes the game input handler directly without pointer picking. No active-physics restore or deterministic comparison.':'Opt-in real game using a day-31 savanna capture and a real pointer attack; no active-physics restore, full deterministic comparison or performance comparison.'}));
 }finally{await browser.close();}
