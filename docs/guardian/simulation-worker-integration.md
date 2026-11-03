@@ -491,6 +491,14 @@ without bound, so the option remains experimental and does not yet satisfy a
 bounded, lossless backlog requirement. No GPU trajectory presentation is
 integrated.
 
+`tests/browser/worker-coalesced-events-parity.html` compares two real mangrove
+simulation Workers for 100 identical ticks, holding the coalesced presentation
+until the end. It delivered three publications instead of 100, preserved all
+ten retreat-related events in order and matched the full state observed by
+each event observer as well as the final state. This deterministic check has
+no physical rigs, rendering, player commands or game UI; it does not bound
+event-heavy backlog or establish a frame-time improvement.
+
 `qa-worker-clock` moves the existing runtime's clock, step queue, command
 admission and residency coordination into a dedicated Worker. That Worker
 owns a nested simulation Worker, which remains the only game authority. The
