@@ -13,10 +13,12 @@ window.audit=async()=>{
  const runtime=createWorkerHostedRuntime({world:{createConfirmedReceiver:id=>createConfirmedStateReceiver(state,id)},session:'micro-save',clientOptions:{snapshot:source,chunkKeys:chunks},runtimeOptions:{maxBatchSteps:8}});let saved=null;
  try{await runtime.start();const economy=createWorkerMicroeventEconomy(runtime),save=createWorkerSaveCoordinator({runtime,slotId:state.slotId,repository:{async save(s){saved=serialize(s);}}});
   const ticket=await economy.reserve('seeds',plant.id);if(!ticket)throw Error('Reservation rejected');const first=await save.request();if(!first.saved||JSON.parse(saved).microevents.ticket?.id!==ticket.id)throw Error('Reservation was not checkpointed');
+  const restoredPending=deserialize(saved),reload=createWorkerHostedRuntime({world:{createConfirmedReceiver:id=>createConfirmedStateReceiver(restoredPending,id)},session:'micro-reload',clientOptions:{snapshot:saved,chunkKeys:chunks},runtimeOptions:{maxBatchSteps:8}});
+  try{await reload.start();const reloadedEconomy=createWorkerMicroeventEconomy(reload,{pendingTicket:restoredPending.microevents.ticket}),replacement=await reloadedEconomy.reserve('seeds',plant.id);if(!replacement||replacement.id===ticket.id||restoredPending.microevents.ticket?.id!==replacement.id||Object.hasOwn(restoredPending.ledger.entries,ticket.id))throw Error('Pending reservation did not reconcile on reload');}finally{reload.dispose();}
   const settled=await economy.settle(ticket,'completed');if(settled.delta!==1)throw Error('Reward missing');const second=await save.request(),restored=deserialize(saved);
   if(!second.saved||restored.microevents.ticket!==null||!Object.hasOwn(restored.ledger.entries,ticket.id))throw Error('Settlement checkpoint mismatch');
   const duplicate=await economy.settle(ticket,'completed');if(duplicate.applied)throw Error('Settlement replay paid twice');
-  return {reservation:first.sequence,settlement:second.sequence,ticket:ticket.id,reward:settled.delta,scope:'Real hosted simulation Worker with synthetic mangrove state, direct economy bridge and save coordinator; no director/UI integration or real storage.'};
+  return {reservation:first.sequence,settlement:second.sequence,ticket:ticket.id,reward:settled.delta,recoveredPending:true,scope:'Real hosted simulation Workers with synthetic mangrove state, direct economy bridge and save coordinator; no director/UI integration or real storage.'};
  }finally{runtime.dispose();}
 };window.ready=true;
 </script>
