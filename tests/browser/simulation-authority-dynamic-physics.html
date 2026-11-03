@@ -3,6 +3,7 @@ import {createSimulation} from './mobility-worker-simulation-core.js';
 import {serialize} from '../../src/persistence/snapshots.js';
 import {createSimulationAuthority} from '../../src/simulation/simulation-authority.js';
 import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+import {attackGestureActive} from '../../src/simulation/guardian-combat.js';
 window.audit=async()=>{
  const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
  const init=await createSimulation({mangrove:true,chunkKeys:chunks}),game=init.diagnosticWorld().game,first=game.raid.animals.find(a=>a.species==='hyena'&&!['gone','retreating'].includes(a.status)),second=game.raid.animals.find(a=>a.id!==first?.id&&['hyena','lion','warthog','buffalo','rhino'].includes(a.species)&&!['gone','retreating'].includes(a.status));if(!first||!second)throw Error('Need two active animals');
@@ -14,8 +15,8 @@ window.audit=async()=>{
   await command({kind:'castAttack',id:'multi-attack-1',targetId:ids[0],x:first.x,z:first.z});
   for(let i=0;i<500;i++){
    const state=JSON.parse(last.snapshot),target=state.raid?.animals.find(a=>a.id===ids[1]);
-   if(!secondHit&&state.cooldowns.attack<=0&&target&&!['gone','retreating'].includes(target.status)){await command({kind:'castAttack',id:'multi-attack-2',targetId:ids[1],x:target.x,z:target.z});secondHit=true;}
-   else await command({kind:'advance',seconds:.05,nightFastForward:true});
+   if(!secondHit&&!attackGestureActive(state)&&target&&!['gone','retreating'].includes(target.status)){const result=await command({kind:'castAttack',id:'multi-attack-2',targetId:ids[1],x:target.x,z:target.z});if(!result.value)throw Error('Second attack rejected: '+result.rejection);secondHit=true;}
+   else try{await command({kind:'advance',seconds:.05,nightFastForward:true});}catch(error){throw Error(error.message+'; previous: '+JSON.stringify({elapsed:state.elapsed,animals:state.raid?.animals.filter(a=>ids.includes(a.id)).map(a=>({id:a.id,down:a.magicDown}))}));}
    if(secondHit&&secondSteps&&(last.physicsPoses??[last.physicsPose]).every(p=>!p.active)){finished=true;break;}
   }
   if(!secondHit||!finished||!firstSteps||!secondSteps)throw Error('Physical actors did not complete: '+JSON.stringify({secondHit,finished,firstSteps,secondSteps,overlap,cooldown:JSON.parse(last.snapshot).cooldowns.attack}));

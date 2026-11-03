@@ -1022,3 +1022,15 @@ test. The failure alone does not establish that clip sharing caused it.
 Repeating the test after reverting sharing produced the same failure: the
 second actor never entered physical simulation within 500 steps. The fixture
 needs updating or diagnosis before it can validate chained attacks.
+
+The two-attack test was still waiting on the removed global cooldown; it now
+waits for the actual guardian gesture and checks that the second command is
+accepted. This exposed a separate live-state failure when a physical recovery
+exceeded the 12-second save-format limit. Confirmed live publications now allow
+long physical recoveries while retaining finite values and the other snapshot
+checks; ordinary save validation remains unchanged. With this correction the
+mangrove comparison completed 277 ordered commands, including 181 steps with
+both animals physically active, with matching Worker and reference states,
+events and poses. It does not prove visual equivalence or body-contact coverage.
+Long active-physics checkpoints can still be rejected by the save format; this
+change does not claim they are restorable. Clip sharing remains unintegrated.
