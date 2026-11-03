@@ -1,5 +1,6 @@
 import {applyConfirmedAnimalPose} from './confirmed-animal-pose.js';
 import {createConfirmedSceneReceiver} from './confirmed-scene-receiver.js';
+import {createWorkerGameRuntime} from '../simulation/worker-game-runtime.js';
 import {prepareWorkerMaterials} from './worker-materials.js';
 import {attachCharacterLod} from './character-lod.js';
 import {cinematicGroundBounce} from './cinematic-lighting.js';
@@ -120,6 +121,7 @@ const profileSources={olderMale:'Ganadero_Mayor',olderFemale:'Amara_Mayor',young
 const animalSources={warthog:'Facoquero',hyena:'Hiena',buffalo:'Bufalo',lion:'Leon',rhino:'Rinoceronte'};
 export class WorldScene {
   createConfirmedReceiver(session){return createConfirmedSceneReceiver(this.state,session,this);}
+  createWorkerRuntime(options){return createWorkerGameRuntime({...options,world:this});}
   constructor(canvas,onPick,{approvedVisuals=false,visualSearch=globalThis.location?.search??''}={}) {
     this.approvedVisuals=approvedVisuals;this.requestedVisualSearch=visualSearch;
     this.visualSearch=approvedVisuals?approvedVisualSearch(null,visualSearch):visualSearch;
