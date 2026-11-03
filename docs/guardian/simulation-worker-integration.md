@@ -227,3 +227,18 @@ No se ha conectado `pickedSpellCommand` a `onPick` ni se ha probado un gesto rea
 `audit_worker_pointer_attack.mjs` probó un clic real sobre una hiena en la `WorldScene` QA de manglares de islotes, con la simulación local detenida y el coordinador Worker instalado en la escena. El picking y el despachador compartido enviaron el ataque al Worker; se confirmó `GuardianMagicHit`, se entregaron dos eventos visuales y ninguno a observadores de simulación local. El control superpuesto del laboratorio se deshabilitó para el puntero y se comprobó que el clic alcanzara el lienzo. Resultado: `gpu-animation/worker-pointer-attack.json`. Pasaron 39 pruebas de magia, selección y coordinación, y se comprobó la sintaxis de la aplicación y del laboratorio.
 
 La prueba no usa el bucle normal de la aplicación, ni prueba guardado, recuperación completa, tutorial o microeventos. La escena de QA no implementa el contrato `workerSave` de la aplicación. El origen visual se calcula antes de la confirmación del Worker; la UI y el guardado deben integrarse de forma ordenada antes de habilitar esta ruta en una partida. `Game.advanceReal` sigue ejecutándose en el hilo principal de la partida normal y las poses aún se aplican en CPU.
+# Worker save checkpoint (experimental)
+
+`createWorkerSaveCoordinator` requests a snapshot through the runtime command
+queue, captures that confirmed state independently of later presentation
+updates, and orders asynchronous repository writes. It checks the slot and
+refuses snapshots reported as unavailable during active impact physics; it does
+not wait for a paused simulation to advance. The caller must handle that
+rejection and retry explicitly. A real Worker browser test covers ordered pause,
+save and resume; unit tests cover concurrent writes and failures.
+
+This is infrastructure only: the production game has not switched its save
+path or simulation to the Worker. Active Rapier state is not serialised, and
+restoring a running raid with identical future navigation and physics has not
+been established. The checkpoint therefore must not be advertised as complete
+save/restore support or used to enable the Worker in the main game yet.
