@@ -70,6 +70,11 @@ test('a paid native postgame village gets a valid entry and survives reload',asy
     const siteChunk=`${Math.floor((site.x+24)/48)},${Math.floor((site.z+24)/48)}`;
     const retried=prepareVillageIsolated(module,source,[...loaded.keys()].filter(key=>key!==siteChunk),{id:'native-second-village',culture:'suajili',...site,payload},{bounds:[x-120,z-120,x+120,z+120]});
     assert.ok(retried.addedChunks.includes(siteChunk),'preflight loads the missing site region');assert.equal(retried.snapshot,prepared.snapshot);
+    assert.throws(()=>prepareVillageIsolated(module,source,[...loaded.keys()].filter(key=>key!==siteChunk),{id:'native-second-village',culture:'suajili',...site,payload},{bounds:[x-120,z-120,x+120,z+120],maxAdded:0}),SpatialChunkUnavailable,'preflight respects the missing-region limit');
+    const poor=deserialize(source);poor.ledger.balance=rational(1);
+    assert.throws(()=>prepareVillageIsolated(module,serialize(poor),[...loaded.keys()],{id:'no-funds',culture:'suajili',...site,payload},{bounds:[x-120,z-120,x+120,z+120]}),error=>error.code==='hiring-reserve');
+    const duplicate=prepareVillageIsolated(module,prepared.snapshot,[...loaded.keys()],{id:'native-second-village',culture:'suajili',...site,payload},{bounds:[x-120,z-120,x+120,z+120]});
+    assert.equal(duplicate.value,false);assert.equal(duplicate.snapshot,prepared.snapshot,'replayed command does not charge twice');
     assert.equal(serialize(state),source,'isolated preparation leaves the authoritative state untouched');
     assert(nav.walkable(house.x,house.z,.28,null,true),'isolated preparation does not install a live barrier');
     const before=numberOf(state.ledger.balance);

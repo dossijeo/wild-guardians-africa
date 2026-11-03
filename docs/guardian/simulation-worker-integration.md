@@ -548,7 +548,9 @@ errors in a fresh session, with a configurable cap on added regions. A real
 desert postgame test found the same suajili village as the live session and
 matched its serialized result, both with all regions loaded and with the site
 region missing initially. The live state and a building-site walkability
-check remained unchanged. One full-residency preflight took 1.9–2.3 s in
+check remained unchanged. The same test now checks insufficient funds,
+duplicate command idempotency and rejection when the missing-region limit is
+zero. One full-residency preflight took 1.9–2.3 s in
 individual local Node runs; these are not a benchmark or render-thread timing.
 The test covers one site and one center, not Worker integration, concurrent
 world changes, all cultures or a guarantee that later execution on the live
