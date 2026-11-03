@@ -1,0 +1,19 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {advanceReal,observeGameEvents,removeWall} from '../../src/simulation/game.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+window.audit=async()=>{
+ const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
+ const initial=await createSimulation({mangrove:true,chunkKeys:chunks}),sourceGame=initial.diagnosticWorld().game;sourceGame.raid=null;sourceGame.time=100;sourceGame.dayPlan=null;sourceGame.nightPlan=null;sourceGame.result=null;const source=serialize(sourceGame);initial.dispose();
+ const reference=await createSimulation({mangrove:true,snapshotSource:source,chunkKeys:chunks}),{game,nav}=reference.diagnosticWorld(),events=[];const stop=observeGameEvents(game,e=>events.push(structuredClone(e)));const wall=game.structures.find(s=>s.kind==='wall');if(!wall)throw Error('No wall in fixture');const targetId=wall.id;
+ const client=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,session:'world-command'});let compared=0,removedEvent=false,duplicateReturnedFalse=false;
+ try{
+  await client.ready;
+  for(const command of [{kind:'removeWall',id:'worker-wall-removal',targetId},{kind:'removeWall',id:'worker-wall-removal',targetId},...Array.from({length:50},()=>({kind:'advance',seconds:.05,nightFastForward:true}))]){
+   const accepted=client.submit(command);if(!accepted.accepted)throw Error('Command queue full');let value=null;if(command.kind==='removeWall')value=removeWall(game,command.id,command.targetId,nav);else{advanceReal(game,command.seconds,nav,{nightFastForward:command.nightFastForward});nav.serviceRaidConnectivityDemand?.();}const reply=await accepted.result;if(reply.value!==value||reply.snapshot!==serialize(game)||JSON.stringify(reply.events)!==JSON.stringify(events.splice(0)))throw Error(`Diverged at ${accepted.sequence}`);if(reply.events.some(e=>e.type==='WallRemoved'))removedEvent=true;if(command.kind==='removeWall'&&compared===1)duplicateReturnedFalse=reply.value===false&&reply.events.length===0;compared++;
+  }
+  if(!removedEvent||!duplicateReturnedFalse||game.structures.some(s=>s.id===targetId))throw Error('Wall removal or duplicate not applied correctly');return {targetId,compared,removedEvent,duplicateReturnedFalse,finalSnapshotMatched:true,scope:'Restored island-mangrove fixture converted to peaceful daytime; real wall removal and 50 subsequent intervals compared after each command. No game UI, rendering, attack physics, transfer from a live world or further structural changes.'};
+ }finally{client.dispose();stop();reference.dispose();}
+};window.ready=true;
+</script>
