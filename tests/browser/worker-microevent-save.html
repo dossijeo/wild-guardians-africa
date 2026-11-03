@@ -1,0 +1,22 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {serialize,deserialize} from '../../src/persistence/snapshots.js';
+import {microState} from '../../src/microevents/economy.js';
+import {createConfirmedStateReceiver} from '../../src/simulation/confirmed-state-receiver.js';
+import {createWorkerHostedRuntime} from '../../src/simulation/worker-hosted-runtime.js';
+import {createWorkerMicroeventEconomy} from '../../src/microevents/worker-economy.js';
+import {createWorkerSaveCoordinator} from '../../src/persistence/worker-save.js';
+window.audit=async()=>{
+ const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
+ const fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),game=fixture.diagnosticWorld().game;game.raid=null;game.pauses=[];game.time=100;game.dayPlan=null;game.nightPlan=null;microState(game).previousIncome=10000;
+ const plant=game.plants.find(p=>p.alive),source=serialize(game),state=deserialize(source);fixture.dispose();if(!plant)throw Error('Missing plant');
+ const runtime=createWorkerHostedRuntime({world:{createConfirmedReceiver:id=>createConfirmedStateReceiver(state,id)},session:'micro-save',clientOptions:{snapshot:source,chunkKeys:chunks},runtimeOptions:{maxBatchSteps:8}});let saved=null;
+ try{await runtime.start();const economy=createWorkerMicroeventEconomy(runtime),save=createWorkerSaveCoordinator({runtime,slotId:state.slotId,repository:{async save(s){saved=serialize(s);}}});
+  const ticket=await economy.reserve('seeds',plant.id);if(!ticket)throw Error('Reservation rejected');const first=await save.request();if(!first.saved||JSON.parse(saved).microevents.ticket?.id!==ticket.id)throw Error('Reservation was not checkpointed');
+  const settled=await economy.settle(ticket,'completed');if(settled.delta!==1)throw Error('Reward missing');const second=await save.request(),restored=deserialize(saved);
+  if(!second.saved||restored.microevents.ticket!==null||!Object.hasOwn(restored.ledger.entries,ticket.id))throw Error('Settlement checkpoint mismatch');
+  const duplicate=await economy.settle(ticket,'completed');if(duplicate.applied)throw Error('Settlement replay paid twice');
+  return {reservation:first.sequence,settlement:second.sequence,ticket:ticket.id,reward:settled.delta,scope:'Real hosted simulation Worker with synthetic mangrove state, direct economy bridge and save coordinator; no director/UI integration or real storage.'};
+ }finally{runtime.dispose();}
+};window.ready=true;
+</script>

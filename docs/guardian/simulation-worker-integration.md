@@ -582,6 +582,14 @@ income tracking, persistent scheduling and UI/save coordination have not
 been migrated. These commands are therefore not wired to gameplay and do not
 yet establish correct microevents in the Worker game.
 
+`createWorkerMicroeventEconomy` provides an asynchronous command adapter.
+`tests/browser/worker-microevent-save.html` exercises it with the hosted
+simulation Workers and the actual ordered save coordinator: it checkpoints a
+reservation, settles a reward, checkpoints the result, reloads the serialized
+state and checks that repeating settlement cannot pay again. This uses an
+in-memory repository and directly invokes the adapter; it does not yet connect
+the visual director, migrate income accounting or validate UI cancellation.
+
 In the experimental Worker game, a due campaign cinematic now requests an
 ordered `cinematicStart` before playback, adding an independent pause. Its
 completion records the chapter and removes that pause in one Worker command;
