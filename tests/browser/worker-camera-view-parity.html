@@ -1,0 +1,23 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {captureRaidWaitBindings} from '../../src/simulation/raid-wait-handoff.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+window.audit=async()=>{
+ const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
+ const fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),{game,nav}=fixture.diagnosticWorld(),snapshot=serialize(game),raidWaitBindings=captureRaidWaitBindings(game,nav);fixture.dispose();
+ const options={snapshot,chunkKeys:chunks,raidWaitBindings,compactViewAcks:true},a=createSimulationAuthorityClient({...options,session:'all'}),b=createSimulationAuthorityClient({...options,session:'last'});
+ const send=async(client,command)=>{const request=client.submit(command);if(!request.accepted)throw Error('Command not admitted');return request.result;};
+ try{await Promise.all([a.ready,b.ready]);let events=0;
+  for(let tick=0;tick<100;tick++){
+   const views=Array.from({length:3},(_,i)=>({bounds:[0,-48,288,144],eye:{x:100+tick+i*.1,z:5},target:{x:90,z:0}}));
+   for(const view of views)await send(a,{kind:'setNavigationView',view});
+   await send(b,{kind:'setNavigationView',view:views.at(-1)});
+   const command={kind:'advance',seconds:.05,nightFastForward:true},[one,two]=await Promise.all([send(a,command),send(b,command)]);
+   if(one.snapshot!==two.snapshot||JSON.stringify(one.events)!==JSON.stringify(two.events)||JSON.stringify(one.residency)!==JSON.stringify(two.residency))throw Error('View parity failed at tick '+tick);
+   events+=one.events.length;
+  }
+  return {ticks:100,viewsAll:300,viewsLast:100,events,scope:'Two real mangrove authority Workers: three consecutive views versus their final view before each tick; state, events and residency compared after every tick. Does not test view updates across ticks, gameplay commands, rendering or camera latency.'};
+ }finally{a.dispose();b.dispose();}
+};window.ready=true;
+</script>

@@ -979,3 +979,16 @@ and an elapsed tick, as well as their completion order. This does not overtake
 an in-flight operation or eliminate all queued camera updates, and is not yet a
 real-game latency or performance result. The ordinary hosted game continues to
 use ordered view commands until that path has broader validation.
+
+Follow-up validation: `tests/browser/worker-camera-view-parity.html` compared
+two real mangrove authority Workers for 100 ticks, sending three successive
+views to one and only the last to the other before each tick. Snapshots, events
+and residency matched at every tick (10 events total). A day-31 savanna game
+with `qa-worker-clock`, `qa-worker-background-views` and batch size 16 accepted
+an attack while the camera moved, without a Worker fault. Edge reported ANGLE
+on a GeForce GTX 1660. This was one headless run with an attack invoked through
+the QA input handler, not a reproducible A/B benchmark: the gesture took 800 ms,
+attack confirmation 2,127 ms, and the 14 sampled frame intervals had a maximum
+and p99 of 1,133 ms. The test does not measure input-to-first-camera-frame or
+prove that the new grouping was exercised. These severe pauses remain unresolved;
+do not interpret this smoke test as a responsiveness or performance improvement.
