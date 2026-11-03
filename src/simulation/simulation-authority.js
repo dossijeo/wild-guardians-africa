@@ -26,7 +26,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   const nav=createSpatialNavigationMovement(session,game);stopTasks=planner.observeTasks(game);stopWorld=planner.observeWorld(game);nav.intentTaskPlanner=planner;nav.raidEntryResident=(entry,radii)=>[...raidEntryChunks(entry,radii)].every(key=>loaded.has(key));if(raidWaitBindings!==null)restoreRaidWaitBindings(game,nav,raidWaitBindings);
   stopEvents=observeGameEvents(game,event=>events.push(structuredClone(event)));
   return {
-   async enableBeastPhysics(actorId,{structureTemplates=null}={}){if(closed||physics||physicsInitializing)throw Error('Worker physics unavailable');physicsInitializing=true;try{const {createWorkerBeastPhysics}=await import('./worker-beast-physics.js');const driver=await createWorkerBeastPhysics(game,nav,{actorId,structureTemplates});if(closed){driver.dispose();throw Error('Simulation authority closed during physics initialization');}physics=driver;}finally{physicsInitializing=false;}},
+   async enableBeastPhysics(actorId,{actorIds=undefined,structureTemplates=null}={}){if(closed||physics||physicsInitializing)throw Error('Worker physics unavailable');physicsInitializing=true;try{const {createWorkerBeastPhysics}=await import('./worker-beast-physics.js');const driver=await createWorkerBeastPhysics(game,nav,{actorId,actorIds,structureTemplates});if(closed){driver.dispose();throw Error('Simulation authority closed during physics initialization');}physics=driver;}finally{physicsInitializing=false;}},
    execute(command){
     if(closed)throw Error('Simulation authority is closed');if(physicsInitializing)throw Error('Worker physics is initializing');
     if(!command||command.sequence!==sequence+1)throw Error('Simulation command out of order');
@@ -38,7 +38,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      if(typeof command.reason!=='string'||!command.reason)throw TypeError('Invalid pause reason');
      (command.kind==='pause'?pause:resume)(game,command.reason);
     }else if(command.kind==='castAttack'){
-     if(!physics||command.targetId!==physics.actorId)throw Error('Target is not supported by worker physics');
+     if(!physics||!physics.supports(command.targetId))throw Error('Target is not supported by worker physics');
      if(typeof command.id!=='string'||!command.id||!Number.isFinite(command.x)||!Number.isFinite(command.z))throw TypeError('Invalid attack command');
      if(!game.commandIds.includes(command.id))physics.assertEnvironment();
      value=cast(game,command.id,'attack',command.x,command.z,nav,{...(command.selection??{}),targetId:command.targetId});
@@ -55,7 +55,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     sequence=command.sequence;const emitted=events;events=[];
     const required=[...new Set([...raidResidentDemand(game,nav),...workerChunkDemand(game)])].sort();
     const residency={required,missing:required.filter(key=>!loaded.has(key))};
-    return {sequence,value,residency,physicsPose:physics?.pose()??null,elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,raidWaitBindings:captureRaidWaitBindings(game,nav),saveAvailable:confirmedStateSaveAvailable(game),snapshot:serializeConfirmedState(game)};
+    const physicsPoses=physics?.poses()??null;
+    return {sequence,value,residency,physicsPose:physicsPoses?.[0]??null,...(physicsPoses?.length>1?{physicsPoses}:{}),elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,raidWaitBindings:captureRaidWaitBindings(game,nav),saveAvailable:confirmedStateSaveAvailable(game),snapshot:serializeConfirmedState(game)};
    },
    dispose(){if(closed)return;closed=true;stopEvents?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{session.dispose();}},
   };
