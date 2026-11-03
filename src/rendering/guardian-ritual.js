@@ -10,10 +10,12 @@ export class GuardianRitual {
   this.geometry=new THREE.BufferGeometry();this.geometry.setAttribute('position',new THREE.InterleavedBufferAttribute(buffer,3,0));this.geometry.setAttribute('normal',new THREE.InterleavedBufferAttribute(buffer,3,3));
   this.material=new THREE.MeshBasicMaterial({color:0x38ffd1,transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false,toneMapped:false});
   this.leaves=new THREE.InstancedMesh(this.geometry,this.material,48);this.leaves.instanceMatrix.setUsage(THREE.DynamicDrawUsage);this.leaves.frustumCulled=false;this.leaves.visible=false;scene.add(this.leaves);
+  this.previewMaterial=new THREE.MeshBasicMaterial({color:0x68ffda,transparent:true,opacity:.45,side:THREE.DoubleSide,depthWrite:false,toneMapped:false});this.preview=new THREE.Mesh(new THREE.RingGeometry(.55,.7,32),this.previewMaterial);this.preview.rotation.x=-Math.PI/2;this.preview.visible=false;scene.add(this.preview);
   this.temp=new THREE.Object3D();this.hand=new THREE.Vector3();this.point=new THREE.Vector3();this.scene=scene;
  }
  update(owner,s,age){
   const w=owner.world,concentration=ease((age-.2)/.45)*(1-ease((age-RITUAL.pulse)/.45));
+  this.preview.visible=!!s.event.provisional;if(this.preview.visible){this.preview.position.copy(s.target);this.preview.position.y+=.04;this.previewMaterial.opacity=.3+.2*Math.sin(age*6)**2;}
   const fade=ease(age/.25)*(1-ease((age-2.35)/.45));
   s.group.visible=true;s.group.position.set(s.origin.x,s.origin.y+Math.sin(age*Math.PI/RITUAL.duration)*.16,s.origin.z);
   const targetYaw=Math.atan2(w.camera.position.x-s.origin.x,w.camera.position.z-s.origin.z);
@@ -39,6 +41,6 @@ export class GuardianRitual {
   s.beam.visible=false;s.aura.visible=false;s.core.visible=false;s.impact.visible=age>=RITUAL.pulse&&age<2.55;s.material.color.setHex(0x57ffdc);s.material.opacity=(1-ease((age-RITUAL.pulse)/.5))*.85;
   s.impact.position.copy(s.target);s.impact.position.y+=.1;s.impact.rotation.set(-Math.PI/2,0,0);s.impact.scale.setScalar(radius+Math.max(0,age-RITUAL.pulse)*4);
  }
- hide(){this.leaves.visible=false;}
- dispose(){this.scene.remove(this.leaves);this.leaves.dispose();this.geometry.dispose();this.material.dispose();}
+ hide(){this.leaves.visible=false;this.preview.visible=false;}
+ dispose(){this.scene.remove(this.leaves,this.preview);this.leaves.dispose();this.geometry.dispose();this.material.dispose();this.preview.geometry.dispose();this.previewMaterial.dispose();}
 }

@@ -4,7 +4,7 @@ import {spellWindBinding,applySpellWind} from './guardian-spell-wind.js';
 import {GuardianPose} from './guardian-pose.js';
 import {GuardianLapPose} from './guardian-lap-pose.js';
 import {GuardianRitual} from './guardian-ritual.js';
-import {RITUAL,beginAwakening,revealAwakening} from './awakening-presentation.js';
+import {RITUAL,beginAwakening,restartAwakening,cancelAwakening,revealAwakening} from './awakening-presentation.js';
 import {pointGuardian} from './guardian-pointing.js';
 import {GUARDIAN_ATTACK_TIMING as ATTACK_TIMING} from '../simulation/guardian-timing.js';
 import * as THREE from 'three';
@@ -105,13 +105,17 @@ export class GuardianSummons{
   const event={type:'SpellActivated',commandId:command.id,kind:command.spell,targetId:command.selection.targetId,x:command.x,z:command.z,provisional:true,startedAt:performance.now(),presentation:{elapsed:this.world.state.elapsed,origin:command.selection.origin,contact:command.selection.contact}};
   this.start(event);
  }
+ beginProvisionalAwakening(id,targetId){
+  const target=this.world.state.plants.find(p=>p.id===targetId)??this.world.state.structures.find(s=>s.id===targetId);if(!target||!this.slots.length)return;
+  this.start({type:'BlessingApplied',commandId:id,kind:'awakening',targetId,x:target.x,z:target.z,provisional:true,startedAt:performance.now(),presentation:{elapsed:this.world.state.elapsed}});
+ }
  rejectProvisional(id){
   this.pending=this.pending.filter(event=>!(event.provisional&&event.commandId===id));
   for(const slot of this.slots)if(slot.event?.provisional&&slot.event.commandId===id)this.hide(slot);
  }
  confirmProvisional(event){
   const slot=this.slots.find(s=>s.event?.provisional&&s.event.commandId===event.commandId);
-  if(slot){const age=Math.min(.65,Math.max(0,(performance.now()-slot.event.startedAt)/1000));slot.at=this.world.state.elapsed-age;slot.event={...event,presentation:{...event.presentation,elapsed:slot.at}};return true;}
+  if(slot){const age=Math.min(.65,Math.max(0,(performance.now()-slot.event.startedAt)/1000));slot.at=this.world.state.elapsed-age;if(slot.event.kind==='awakening')restartAwakening(slot.ritualTarget,slot.at);slot.event={...event,presentation:{...event.presentation,elapsed:slot.at}};return true;}
   const pending=this.pending.find(e=>e.provisional&&e.commandId===event.commandId);
   if(pending){Object.assign(pending,event,{provisional:false});return true;}
   return false;
@@ -130,7 +134,7 @@ export class GuardianSummons{
   if(state!==this.presentationState||state.elapsed<this.lastElapsed){this.clear();this.anchor=state.events.at(-1);}
   this.presentationState=state;this.lastElapsed=state.elapsed;
   const events=state.events,index=this.anchor?events.lastIndexOf(this.anchor):-1;
-  for(let i=index+1;i<events.length;i++){const e=events[i];if(e.type==='SpellActivated'){if(!(e.commandId&&this.confirmProvisional(e))&&state.elapsed-(e.presentation?.elapsed??-Infinity)<.5)this.start(e);}else if(e.type==='BlessingApplied'&&state.elapsed-(e.presentation?.elapsed??-Infinity)<.5)this.start({...e,kind:'awakening',x:e.presentation.x,z:e.presentation.z});}this.anchor=events.at(-1);
+  for(let i=index+1;i<events.length;i++){const e=events[i];if(e.type==='SpellActivated'){if(!(e.commandId&&this.confirmProvisional(e))&&state.elapsed-(e.presentation?.elapsed??-Infinity)<.5)this.start(e);}else if(e.type==='BlessingApplied'){const ritual={...e,kind:'awakening',x:e.presentation.x,z:e.presentation.z};if(!(e.commandId&&this.confirmProvisional(ritual))&&state.elapsed-(e.presentation?.elapsed??-Infinity)<.5)this.start(ritual);}}this.anchor=events.at(-1);
   while(this.pending.length&&(!this.liveCropTarget(this.pending[0])||this.pending[0].kind==='attack'&&!this.liveAttackTarget(this.pending[0].targetId)))this.pending.shift();
   if(this.pending.length&&!this.slots[0].event?.provisional&&(!this.slots[0].event||state.elapsed>=this.slots[0].at+ATTACK_TIMING.impact+ATTACK_TIMING.afterglow)){const next=this.pending.shift();this.start({...next,presentation:{...next.presentation,elapsed:state.elapsed}},true);}
   const guideStart=performance.now(),guideActive=this.updateGuide();
@@ -140,7 +144,7 @@ export class GuardianSummons{
    // A slow frame may cross the marker; current age alone cannot prove a hit.
    // Keep fading an impact that was already presented with a live victim.
    if(s.event.kind==='attack'&&s.lastAge<ATTACK_TIMING.impact&&!this.liveAttackTarget(s.event.targetId)){this.hide(s);continue;}
-   if(s.event.kind==='awakening'){if(!s.ritualTarget?.blessing||(!s.ritualTarget.alive&&s.ritualTarget.kind!=='wall')||(s.ritualTarget.kind==='wall'&&s.ritualTarget.status!=='intact')){this.hide(s);continue;}if(age>=RITUAL.duration){this.hide(s);continue;}active++;const ritualStart=performance.now();this.ritual.update(this,s,age);anim+=performance.now()-ritualStart;if(age>=2.35&&!s.outroSound){s.outroSound=true;w.onGuardianPresence?.('spirit_disappear',s.origin);}continue;}if(age>2.2){this.hide(s);continue;}active++;
+   if(s.event.kind==='awakening'){if(!s.ritualTarget||!s.event.provisional&&!s.ritualTarget.blessing||(!s.ritualTarget.alive&&s.ritualTarget.kind!=='wall')||(s.ritualTarget.kind==='wall'&&s.ritualTarget.status!=='intact')){this.hide(s);continue;}if(age>=RITUAL.duration){this.hide(s);continue;}active++;const ritualStart=performance.now();this.ritual.update(this,s,age);anim+=performance.now()-ritualStart;if(age>=2.35&&!s.outroSound){s.outroSound=true;w.onGuardianPresence?.('spirit_disappear',s.origin);}continue;}if(age>2.2){this.hide(s);continue;}active++;
    if(age>=1.5&&!s.outroSound){s.outroSound=true;w.onGuardianPresence?.('spirit_disappear',s.origin);}
    const started=performance.now(),kind=s.event.kind,opacity=ease((age-(kind==='attack'?0:.06))/(kind==='attack'?.1:.18))*(1-ease((age-1.8)/.4));s.group.visible=true;
    for(const m of s.materials){m.opacity=opacity;m.uniforms.opacity.value=opacity;m.uniforms.uSpiritTint.value.setHex(COLORS[kind]);m.uniforms.uSpiritGlow.value=.13+.65*Math.exp(-(((age-(kind==='attack'?ATTACK_TIMING.impact:.48))/.14)**2));m.uniforms.uReveal.value=ease((age-(kind==='attack'?.02:.16))/(kind==='attack'?.12:.4))*1.12;m.uniforms.uDissolve.value=ease((age-1.5)/.7)*1.05;m.uniforms.uBottom.value=s.origin.y+s.bottom;m.uniforms.uHeight.value=s.height;}
@@ -196,7 +200,7 @@ export class GuardianSummons{
  prepare(camera){const started=performance.now();let depth=false;for(const s of this.slots)if(s.event){depth=s.aura.prepare(camera,this.world.scene)||depth;for(const light of s.aura.localLights)light.visible=false;}this.stats.vfxPrepareMs=performance.now()-started;this.stats.vfxMs+=this.stats.vfxPrepareMs;return depth;}
  beginPrewarm(){for(const s of this.slots){s.group.visible=true;s.group.position.copy(this.world.controls.target);for(const m of s.materials)m.opacity=1;for(const [name,a] of s.actions){a.enabled=['Idle','Float','Mantle_Breeze'].includes(name);a.time=0;}s.pose.update();for(const m of [s.beam,s.impact,s.core]){m.visible=true;m.position.copy(s.group.position);m.frustumCulled=false;}s.vortex.position.copy(s.group.position);s.vortex.update(.3,0xa8ed8b,s.height,s.bottom);s.material.opacity=.5;s.aura.position.copy(s.group.position);s.aura.visible=true;s.aura.seek(.5);s.aura.prepare(this.world.camera,this.world.scene);for(const light of s.aura.localLights)light.visible=false;}}
  endPrewarm(){this.clear();}
- hide(s){if(s.event?.kind==='awakening')revealAwakening(s.ritualTarget,this.world.state.elapsed);s.ritualTarget=null;this.ritual?.hide();s.event=null;s.lastAge=0;s.aura.clear();for(const o of [s.group,s.aura,s.beam,s.impact,s.core,s.vortex])o.visible=false;}
+ hide(s){if(s.event?.kind==='awakening'){if(s.event.provisional)cancelAwakening(s.ritualTarget);else revealAwakening(s.ritualTarget,this.world.state.elapsed);}s.ritualTarget=null;this.ritual?.hide();s.event=null;s.lastAge=0;s.aura.clear();for(const o of [s.group,s.aura,s.beam,s.impact,s.core,s.vortex])o.visible=false;}
  clear(){this.pending.length=0;this.guiding=false;this.guide=null;this.guideKey=null;this.guideOrigin=null;for(const s of this.slots)this.hide(s);Object.assign(this.stats,{active:0,retainedAttacks:0,animationMs:0,vfxMs:0,vfxUpdateMs:0,vfxPrepareMs:0,auraAdvanceMs:0});}
  dispose(){if(this.disposed)return;this.disposed=true;this.clear();this.ritual?.dispose();for(const s of this.slots){s.lod?.dispose();s.mixer.stopAllAction();s.mixer.uncacheRoot(s.model);s.model.traverse(o=>o.skeleton?.dispose());for(const m of s.materials)if(!s.lod?.materials.includes(m))m.dispose();s.face.dispose();s.vortex.dispose();s.aura.dispose();s.beam.dispose();s.material.dispose();for(const o of [s.group,s.aura,s.beam,s.impact,s.core,s.vortex])this.world.scene.remove(o);}this.beamGeometry?.dispose();this.ringGeometry?.dispose();this.coreGeometry?.dispose();this.slots.length=0;}
 }
