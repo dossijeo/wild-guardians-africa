@@ -70,9 +70,9 @@ test('downed, recovering and pending targets do not start a provisional attack',
 });
 test('a completed provisional gesture permits another target while its first reply is pending',async()=>{
  const s=ready();s.day=5;s.time=400;s.elapsed=10;const a={id:'a',x:1,z:2,status:'walking'},b={id:'b',x:3,z:4,status:'walking'};s.raid={animals:[a,b]};
- const replies=new Map(),begun=[],rejected=[];let gestureDone=false;const runtime={submit(command){return new Promise(resolve=>replies.set(command.id,resolve));}},presentation={canBeginAttack:()=>gestureDone,begin:command=>begun.push(command.id),reject:id=>rejected.push(id)};
+ const replies=new Map(),begun=[],rejected=[],confirmed=[];let gestureDone=false;const runtime={submit(command){return new Promise(resolve=>replies.set(command.id,resolve));}},presentation={canBeginAttack:()=>gestureDone,begin:command=>begun.push(command.id),reject:id=>rejected.push(id),confirm:id=>confirmed.push(id)};
  gestureDone=true;const first=dispatchPickedSpell(s,'first','attack',{entityId:a.id},nav,runtime,presentation);gestureDone=false;
  assert.equal(dispatchPickedSpell(s,'early','attack',{entityId:b.id},nav,runtime,presentation),false);gestureDone=true;
  assert.equal(dispatchPickedSpell(s,'duplicate','attack',{entityId:a.id},nav,runtime,presentation),false);const second=dispatchPickedSpell(s,'second','attack',{entityId:b.id},nav,runtime,presentation);
- assert.deepEqual(begun,['first','second']);replies.get('first')({value:false,rejection:'No disponible'});await assert.rejects(first,/No disponible/);assert.deepEqual(rejected,['first']);assert.equal(dispatchPickedSpell(s,'duplicate-second','attack',{entityId:b.id},nav,runtime,presentation),false);replies.get('second')({value:true});assert.equal(await second,true);
+ assert.deepEqual(begun,['first','second']);replies.get('first')({value:false,rejection:'No disponible'});await assert.rejects(first,/No disponible/);assert.deepEqual(rejected,['first']);assert.equal(dispatchPickedSpell(s,'duplicate-second','attack',{entityId:b.id},nav,runtime,presentation),false);replies.get('second')({value:true});assert.equal(await second,true);assert.deepEqual(confirmed,['second']);
 });
