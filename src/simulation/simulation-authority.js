@@ -15,6 +15,7 @@ import {workerChunkDemand} from '../rendering/worker-chunk-residency.js';
 import {plantTouchTarget} from './plant-touch-target.js';
 import {syncTutorialActionPause} from '../tutorial/action-pause.js';
 import {createWorkerTutorial} from './worker-tutorial.js';
+import {dueCinematicAct,finishCinematicAct} from '../app/campaign-cinematics.js';
 
 export function parseSimulationChunkKey(key){
  if(typeof key!=='string'||!/^(-?\d+),(-?\d+)$/.test(key))throw TypeError('Invalid chunk key');
@@ -35,6 +36,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   function setNavigationView(view){if(!view||!Array.isArray(view.bounds)||![view.eye?.x,view.eye?.z,view.target?.x,view.target?.z].every(Number.isFinite))throw TypeError('Invalid navigation view');nav.setActiveBounds(view.bounds);nav.setRaidView(view.eye,view.target);}
   if(navigationView!==null)setNavigationView(navigationView);
   function residency(){const required=[...new Set([...raidResidentDemand(game,nav),...workerChunkDemand(game)])].sort();return {required,missing:required.filter(key=>!loaded.has(key))};}
+  // Cinematic presentation is not restorable; do not persist its transient pause.
+  function saveAvailable(){return !game.pauses.includes('campaign-cinematic')&&confirmedStateSaveAvailable(game);}
   stopEvents=observeGameEvents(game,event=>events.push(structuredClone(event)));
   function spellRejection(command,kind){
    if(game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id))return null;
@@ -87,6 +90,12 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      (command.kind==='pause'?pause:resume)(game,command.reason);
     }else if(command.kind==='continuePostgame'){
      resume(game,'result');continuePostgame(game);
+    }else if(command.kind==='cinematicStart'||command.kind==='cinematicFinish'){
+     if(!Number.isSafeInteger(command.act)||command.act<1||command.act>10)throw TypeError('Invalid cinematic act');
+     const active=game.pauses.includes('campaign-cinematic');
+     if(dueCinematicAct(game)!==command.act||(command.kind==='cinematicStart'?active:!active))rejection='La cinemática ya no corresponde al estado de la partida';
+     else if(command.kind==='cinematicStart'){pause(game,'campaign-cinematic');value=true;}
+     else{finishCinematicAct(game,command.act);resume(game,'campaign-cinematic');value=true;}
     }else if(command.kind==='setNavigationView'){
      setNavigationView(command.view);
     }else if(command.kind==='tutorialStart'){
@@ -158,9 +167,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     }else if(command.kind!=='snapshot')throw TypeError('Unknown simulation command');
     sequence=command.sequence;const emitted=events;events=[];
     const resident=residency();
-    if(compactViewAcks&&command.kind==='setNavigationView'&&!emitted.length)return {sequence,value,unchanged:true,slotId:game.slotId,stateSequence:game.sequence,elapsed:game.elapsed,pauses:[...game.pauses],events:[],residency:resident,saveAvailable:confirmedStateSaveAvailable(game)};
+    if(compactViewAcks&&command.kind==='setNavigationView'&&!emitted.length)return {sequence,value,unchanged:true,slotId:game.slotId,stateSequence:game.sequence,elapsed:game.elapsed,pauses:[...game.pauses],events:[],residency:resident,saveAvailable:saveAvailable()};
     const physicsPoses=physics?.poses()??null;
-    return {sequence,value,...(command.steps!==undefined?{stepsExecuted}:{}),...(rejection?{rejection}:{}),...(commandLoadedChunks.length?{commandLoadedChunks}:{}),residency:resident,physicsPose:physicsPoses?.[0]??null,...(physicsPoses?.length>1?{physicsPoses}:{}),elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,raidWaitBindings:captureRaidWaitBindings(game,nav),saveAvailable:confirmedStateSaveAvailable(game),snapshot:serializeConfirmedState(game)};
+    return {sequence,value,...(command.steps!==undefined?{stepsExecuted}:{}),...(rejection?{rejection}:{}),...(commandLoadedChunks.length?{commandLoadedChunks}:{}),residency:resident,physicsPose:physicsPoses?.[0]??null,...(physicsPoses?.length>1?{physicsPoses}:{}),elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,raidWaitBindings:captureRaidWaitBindings(game,nav),saveAvailable:saveAvailable(),snapshot:serializeConfirmedState(game)};
    },
    dispose(){if(closed)return;closed=true;stopEvents?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{session.dispose();}},
   };

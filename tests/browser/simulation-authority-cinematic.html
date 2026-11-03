@@ -1,0 +1,22 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {serializeConfirmedState} from '../../src/simulation/confirmed-live-state.js';
+import {pause,resume,advanceReal} from '../../src/simulation/game.js';
+import {finishCinematicAct} from '../../src/app/campaign-cinematics.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+window.audit=async()=>{
+ const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
+ const fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),{game,nav}=fixture.diagnosticWorld();game.raid=null;game.day=11;game.completedNights=10;game.cinematicSeenAct=0;game.pauses=['hiring'];game.result=null;game.postgame=false;game.dayPlan=null;game.nightPlan=null;
+ const client=createSimulationAuthorityClient({snapshot:serialize(game),chunkKeys:chunks,session:'cinematic'});let sequence=0;
+ try{await client.ready;
+  async function compare(command,apply){apply();const req=client.submit(command);if(!req.accepted)throw Error('Command not admitted');const result=await req.result;if(result.sequence!==++sequence||result.snapshot!==serializeConfirmedState(game))throw Error('Cinematic state differs at '+sequence);return result;}
+  const invalid=await compare({kind:'cinematicStart',act:2},()=>{});if(!invalid.rejection)throw Error('Incorrect act accepted');
+  const started=await compare({kind:'cinematicStart',act:1},()=>pause(game,'campaign-cinematic'));if(!started.value||started.saveAvailable)throw Error('Cinematic not paused or unsafe save accepted');
+  const elapsed=game.elapsed;await compare({kind:'advance',seconds:.5,nightFastForward:true},()=>advanceReal(game,.5,nav,{nightFastForward:true}));if(game.elapsed!==elapsed)throw Error('Simulation advanced');
+  const ended=await compare({kind:'cinematicFinish',act:1},()=>{finishCinematicAct(game,1);resume(game,'campaign-cinematic');});if(!ended.value||!ended.saveAvailable||game.cinematicSeenAct!==1||!game.pauses.includes('hiring'))throw Error('Cinematic did not finish');
+  const repeated=await compare({kind:'cinematicFinish',act:1},()=>{});if(!repeated.rejection)throw Error('Duplicate finish accepted');
+  return {sequence,elapsed,act:game.cinematicSeenAct,pauses:game.pauses,scope:'Synthetic day-11 mangrove, real simulation Worker, compared to original progress and pause operations. No rendered cinematic, save/restore, or campaign.'};
+ }finally{client.dispose();fixture.dispose();}
+};window.ready=true;
+</script>

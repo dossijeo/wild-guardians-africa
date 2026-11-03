@@ -537,8 +537,20 @@ hold ends. Only changes are sent. Unit tests cover policy transitions and the
 existing local clock behavior; a real-Worker microevent test and exact timing
 under presentation stalls remain outstanding. This does not migrate the
 microevent director, ticket or economy authority, which still prevents the
-Worker game from being production ready. Cinematic progress and the handling
-of the simulation clock during cinematics also still need Worker integration.
+Worker game from being production ready.
+
+In the experimental Worker game, a due campaign cinematic now requests an
+ordered `cinematicStart` before playback, adding an independent pause. Its
+completion records the chapter and removes that pause in one Worker command;
+other pause causes are retained. Saving is unavailable while that transient
+cinematic pause is active, and becomes available again when it finishes,
+subject to the existing physics restrictions. Invalid and repeated acts are rejected. A
+real Worker test compared state with direct operations in a synthetic day-11
+mangrove, including an attempted advance while paused. Twelve unit tests passed.
+The rendered cinematic, save/restore while it is active, failure recovery,
+victory cinematic, and a complete campaign have not been validated. An
+asynchronous start can still arrive after the exact presentation frame that
+detected the milestone; this is not evidence of deterministic timing parity.
 
 Optional `qa-worker-diagnostics` records time inside the simulation Worker.
 In these individual runs the animal's asynchronous physics admission took

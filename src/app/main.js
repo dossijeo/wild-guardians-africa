@@ -456,13 +456,18 @@ function confirmAwakening(){
 function startDueCinematic(){
   if(campaignCinema||document.hidden)return false;
   const act=dueCinematicAct(state);if(!act)return false;
+  const ownerWorld=world,ownerState=state,runtime=ownerWorld?.workerRuntime??null;
   microevents?.cancel('cinematic');guardian?.hide({immediate:true,interrupt:true});dialogVoice.stop();
   if(audio.musicGain)audio.musicGain.gain.value=0;
   const owner=new CampaignCinematics({host:document.body,onError:failure=>error((moneyLocale().startsWith('es')?'No se pudo reproducir la cinemática: ':'Could not play cinematic: ')+failure.message),onComplete:()=>{
     if(campaignCinema!==owner)return;
-    campaignCinema=null;finishCinematicAct(state,act);audio.volume();save();updateUI(true);
+    const complete=async()=>{if(runtime){const result=await runtime.submit({kind:'cinematicFinish',act});if(result.rejection)throw Error(result.rejection);}else finishCinematicAct(ownerState,act);if(campaignCinema!==owner||world!==ownerWorld||state!==ownerState)return;campaignCinema=null;audio.volume();await save();updateUI(true);};
+    complete().catch(failure=>{if(campaignCinema===owner)error(failure.message);});
   }});
-  campaignCinema=owner;owner.play(act);return true;
+  campaignCinema=owner;
+  if(runtime)runtime.submit({kind:'cinematicStart',act}).then(result=>{if(result.rejection)throw Error(result.rejection);if(campaignCinema===owner&&world===ownerWorld&&state===ownerState)owner.play(act);}).catch(failure=>{if(campaignCinema===owner){campaignCinema=null;owner.dispose();audio.volume();error(failure.message);}});
+  else owner.play(act);
+  return true;
 }
 function updateUI(force=false) {
   if(screen!=='game'||!state)return;
