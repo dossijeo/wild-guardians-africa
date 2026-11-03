@@ -531,6 +531,15 @@ would risk partial effects. The eventual Worker implementation must establish
 all required residency or make the whole command transactional before applying
 those mutations. This experiment does not yet provide that guarantee.
 
+When a microevent holds night speed, the game now sends the corresponding
+fast-forward policy to the installed Worker runtime, and restores it when the
+hold ends. Only changes are sent. Unit tests cover policy transitions and the
+existing local clock behavior; a real-Worker microevent test and exact timing
+under presentation stalls remain outstanding. This does not migrate the
+microevent director, ticket or economy authority, which still prevents the
+Worker game from being production ready. Cinematic progress and the handling
+of the simulation clock during cinematics also still need Worker integration.
+
 Optional `qa-worker-diagnostics` records time inside the simulation Worker.
 In these individual runs the animal's asynchronous physics admission took
 721 ms (16-step run) and 702 ms (one-step run); execution of the subsequent

@@ -43,6 +43,7 @@ import {autosaveEventAfter} from './autosave-events.js';
 import {saveGame,saveWorkerGame} from './save-game.js';
 import {createWorkerSaveCoordinator} from '../persistence/worker-save.js';
 import {dispatchSimulationPause} from './simulation-pause.js';
+import {createWorkerNightSpeedBridge} from './worker-night-speed.js';
 import {Microevents} from '../microevents/controller.js';
 import {recordMicroeventFrame} from './microevents-frame-qa.js';
 import {disableMicroEconomy} from '../microevents/economy.js';
@@ -141,6 +142,7 @@ const fontStyles=document.createElement('link');fontStyles.rel='stylesheet';font
 const settings=(()=>{try{return {...{sfx:.7,music:.4,quality:'media'},...JSON.parse(localStorage.getItem('wild-guardians:settings')??'{}')};}catch{return {sfx:.7,music:.4,quality:'media'};}})();
 settings.microevents=['off','low','adaptive','high'].includes(settings.microevents)?settings.microevents:'adaptive';
 let microevents=null;
+const syncWorkerNightSpeed=createWorkerNightSpeedBridge();
 function installMicroevents(){
   if(import.meta.env.VITE_MICROEVENTS==='off'||settings.microevents==='off'){
     microevents?.dispose();microevents=null;if(state)disableMicroEconomy(state);if(import.meta.env.DEV)delete window.__microevents;return;
@@ -703,7 +705,7 @@ function frame(now) {
     ensureWorkerTutorial();
     const eventIndex=state.events.at(-1)?.id;
 
-    try {if(!campaignCinema?.active){tutorial?.update();if(tutorial?.advance(dt,{visible:!guardian?.voice?.active&&!surfaces.active&&!document.hidden&&!state.pauses.includes('menu')&&now>=budgetWarningUntil}))save();refreshTutorialGuidance();microevents?.beforeSimulation();if(!world.workerRuntime&&world.actorsReady()&&!(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-microevents-fixture')))Game.advanceReal(state,dt,nav,{nightFastForward:!microevents?.holdsNightSpeed});tutorial?.update();juice?.process(state);if(gameplayGpuQa)gameplayGpuQa.frame(now,world.renderer,()=>world.render(dt));else world.render(dt);updateRaidLoading();audio.process(state.events,{state,listener:world.controls.target});audio.updateMusic(state);audio.updateUnlocks(state);audio.updateAmbient(state,{listener:world.controls.target,waterRevision:nav.version,waterAt:(x,z)=>({...nav.field.waterInfo(x,z),active:!!(nav.field.wetland||nav.field.riverActive)})});audio.updateFarmActors(state,{listener:world.controls.target});audio.updateAnimals(state,{listener:world.controls.target});audio.updateMovement(state,{listener:world.controls.target,surfaceAt:world.movementSurfaceAt});updateUI();guardian?.setWorldPresence((world.guardianSummons?.stats.active??0)>0,world.guardianSummons?.guideScreenPosition());guardian?.update();juice?.update(state);}}
+    try {if(!campaignCinema?.active){tutorial?.update();if(tutorial?.advance(dt,{visible:!guardian?.voice?.active&&!surfaces.active&&!document.hidden&&!state.pauses.includes('menu')&&now>=budgetWarningUntil}))save();refreshTutorialGuidance();microevents?.beforeSimulation();syncWorkerNightSpeed(world.workerRuntime,!!microevents?.holdsNightSpeed);if(!world.workerRuntime&&world.actorsReady()&&!(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-microevents-fixture')))Game.advanceReal(state,dt,nav,{nightFastForward:!microevents?.holdsNightSpeed});tutorial?.update();juice?.process(state);if(gameplayGpuQa)gameplayGpuQa.frame(now,world.renderer,()=>world.render(dt));else world.render(dt);updateRaidLoading();audio.process(state.events,{state,listener:world.controls.target});audio.updateMusic(state);audio.updateUnlocks(state);audio.updateAmbient(state,{listener:world.controls.target,waterRevision:nav.version,waterAt:(x,z)=>({...nav.field.waterInfo(x,z),active:!!(nav.field.wetland||nav.field.riverActive)})});audio.updateFarmActors(state,{listener:world.controls.target});audio.updateAnimals(state,{listener:world.controls.target});audio.updateMovement(state,{listener:world.controls.target,surfaceAt:world.movementSurfaceAt});updateUI();guardian?.setWorldPresence((world.guardianSummons?.stats.active??0)>0,world.guardianSummons?.guideScreenPosition());guardian?.update();juice?.update(state);}}
 
     catch(e){Game.pause(state,'runtime-error');guardian?.hide({immediate:true});dialogVoice.stop();error(e.message);console.error(e);}
     if(autosaveEventAfter(state.events,eventIndex))save();
