@@ -578,9 +578,19 @@ economy functions and ordered publications. A real Worker test compares
 reservation, reward, repeated settlement, ignored event, paused settlement
 and disable against direct execution in a synthetic mangrove state; 57 related
 unit tests pass. The visual director still reserves and settles locally, and
-income tracking, persistent scheduling and UI/save coordination have not
-been migrated. These commands are therefore not wired to gameplay and do not
+income tracking, persistent scheduling and UI/save coordination are not yet
+connected. These commands are therefore not wired to gameplay and do not
 yet establish correct microevents in the Worker game.
+
+An opt-in `microIncome` policy tracks delivery and dawn events inside the
+simulation authority and reconciles skipped days after advances. It is off by
+default and is not persisted; a future director integration must enable it
+after startup. A synthetic peaceful mangrove dawn matched direct simulation
+state and events, including rollover of 125 coins; 58 related unit tests
+passed. Actual crate delivery, batched multi-day advances, policy changes, UI
+and saved-session restart remain unverified. The existing visual director still
+tracks income locally, so enabling the policy in the game before that director
+is migrated would duplicate responsibility.
 
 `createWorkerMicroeventEconomy` provides an asynchronous command adapter.
 `tests/browser/worker-microevent-save.html` exercises it with the hosted
