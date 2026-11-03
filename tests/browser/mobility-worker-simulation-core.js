@@ -7,7 +7,7 @@ import {createEventDrivenTaskPlanner} from '../../src/world/wild-engine/spatial-
 import {observeCoordinateWrites} from './mobility-motion-recorder.js';
 
 // Isolated parity experiment. This owns one simulation and one WASM world.
-export async function createSimulation({mangrove=false,snapshotSource=null,chunkKeys=null,motionTrace=false,segmentTrace=false}={}){
+export async function createSimulation({mangrove=false,snapshotSource=null,chunkKeys=null,motionTrace=false,segmentTrace=false,trustedChunks=false}={}){
  const [binary,fixture]=await Promise.all([fetch('/src/world/wild-engine/spatial-savanna.wasm'),snapshotSource===null?fetch(mangrove?'/tests/fixtures/manglares-123-d10-raid-state.json.gz':'/tests/fixtures/sabana712-d6-native-multi-reservation.json.gz'):null]);
  if(!binary.ok||fixture&&!fixture.ok)throw Error(`Missing fixture: ${binary.status}/${fixture?.status}`);
  const body=fixture?(fixture.headers.get('content-encoding')?.includes('gzip')?fixture.body:fixture.body.pipeThrough(new DecompressionStream('gzip'))):null;
@@ -17,7 +17,7 @@ export async function createSimulation({mangrove=false,snapshotSource=null,chunk
  const v=game.villages[0],cx=Math.floor((v.x+24)/48),cz=Math.floor((v.z+24)/48),bounds=mangrove?{xmin:cx-1,xmax:cx+1,zmin:cz-1,zmax:cz+1}:{xmin:1,xmax:3,zmin:-1,zmax:2};
  const chunks=chunkKeys??Array.from({length:bounds.zmax-bounds.zmin+1},(_,z)=>Array.from({length:bounds.xmax-bounds.xmin+1},(_,x)=>`${x+bounds.xmin},${z+bounds.zmin}`)).flat();
  if(!Array.isArray(chunks)||chunks.some(key=>typeof key!=='string'||!/^[-]?\d+,[-]?\d+$/.test(key)))throw TypeError('Invalid chunk keys');
- for(const key of chunks){const [x,z]=key.split(',').map(Number);if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);loaded.set(key,{...session.core.chunkPayload(),terrainRevision:0});}
+ for(const key of chunks){const [x,z]=key.split(',').map(Number);if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);const payload=session.core.chunkPayload();if(trustedChunks)session.stream.onData(payload);else loaded.set(key,{...payload,terrainRevision:0});}
  const planner=createEventDrivenTaskPlanner(session),restored=planner.resetFromState(game),nav=createSpatialNavigationMovement(session,game),stopTasks=planner.observeTasks(game),stopWorld=planner.observeWorld(game);nav.intentTaskPlanner=planner;
  const recorder=motionTrace?observeCoordinateWrites([...game.workers,...(game.raid?.animals??[])],{stacks:motionTrace==='stacks'}):null;
  let segments=null;if(segmentTrace)nav.movementSegmentObserver=(actor,from,to)=>segments?.push({id:actor.id,from,to});
