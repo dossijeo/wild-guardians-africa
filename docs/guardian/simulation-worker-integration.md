@@ -749,7 +749,19 @@ also confirmed founding and IndexedDB save through the actual UI in one
 synthetic desert postgame, with direct QA placement. It does not cover active
 physics, real pointer placement, other cultures, concurrent input, recovery
 after a failed commit, a full campaign or render-frame performance. Preview
-still runs on the presentation thread; the command is not production-ready.
+originally ran on the presentation thread; the command is not production-ready.
+
+With `qa-worker-village`, the full placement preview now runs as an ordered
+Worker command. The presentation immediately draws an approximate layout in a
+neutral color and disables confirmation while validation is pending; an obsolete
+reply is ignored if the tool, world or proposal has changed. The final founding
+command still revalidates against the latest state. The native test matched the
+preview and unchanged state against the original, and the synthetic desert UI
+test confirmed two successive provisional previews, the final Worker approval,
+founding at the second site and IndexedDB save. This does not measure frame-time
+improvement or test explicit cancellation, different biomes or real pointer
+placement. Drawing the provisional meshes and
+sampling their terrain heights still happen on the presentation thread.
 
 When a microevent holds night speed, the game now sends the corresponding
 fast-forward policy to the installed Worker runtime, and restores it when the

@@ -86,10 +86,11 @@ test('a paid native postgame village gets a valid entry and survives reload',asy
     assert.equal(prepared.value,true);assert.deepEqual(prepared.addedChunks,[]);
     const authority=createSimulationAuthority(module,source,[...loaded.keys()],{navigationView:{bounds:[x-120,z-120,x+120,z+120],eye:{x:0,z:0},target:{x:0,z:0}}});
     try{
-      const result=authority.execute({sequence:1,kind:'foundVillage',id:'native-second-village',culture:'suajili',...site,payload});
+      const draft=authority.execute({sequence:1,kind:'previewVillage',culture:'suajili',...site,payload});assert.deepEqual(draft.value,preview);assert.equal(draft.snapshot,source);assert.deepEqual(draft.events,[]);
+      const result=authority.execute({sequence:2,kind:'foundVillage',id:'native-second-village',culture:'suajili',...site,payload});
       assert.equal(result.value,true);assert.equal(result.snapshot,prepared.snapshot);assert.deepEqual(result.events,prepared.events);
-      const replay=authority.execute({sequence:2,kind:'foundVillage',id:'native-second-village',culture:'suajili',...site,payload});assert.equal(replay.value,false);assert.equal(replay.snapshot,result.snapshot);assert.deepEqual(replay.events,[]);
-      const wrong=authority.execute({sequence:3,kind:'foundVillage',id:'wrong-culture',culture:'mapungubwe',...site,payload});assert.equal(wrong.value,false);assert.match(wrong.rejection,/cultura de la partida/);assert.equal(wrong.snapshot,result.snapshot);assert.deepEqual(wrong.events,[]);
+      const replay=authority.execute({sequence:3,kind:'foundVillage',id:'native-second-village',culture:'suajili',...site,payload});assert.equal(replay.value,false);assert.equal(replay.snapshot,result.snapshot);assert.deepEqual(replay.events,[]);
+      const wrong=authority.execute({sequence:4,kind:'foundVillage',id:'wrong-culture',culture:'mapungubwe',...site,payload});assert.equal(wrong.value,false);assert.match(wrong.rejection,/cultura de la partida/);assert.equal(wrong.snapshot,result.snapshot);assert.deepEqual(wrong.events,[]);
     }finally{authority.dispose();}
     const siteChunk=`${Math.floor((site.x+24)/48)},${Math.floor((site.z+24)/48)}`;
     const retried=prepareVillageIsolated(module,source,[...loaded.keys()].filter(key=>key!==siteChunk),{id:'native-second-village',culture:'suajili',...site,payload},{bounds:[x-120,z-120,x+120,z+120]});

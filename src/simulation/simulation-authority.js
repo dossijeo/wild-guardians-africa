@@ -1,7 +1,7 @@
 import {deserialize} from '../persistence/snapshots.js';
 import {serializeConfirmedState,deserializeConfirmedState,confirmedStateSaveAvailable} from './confirmed-live-state.js';
 import {encodePhysicsCheckpoint} from './physics-checkpoint-codec.js';
-import {advanceReal,cast,previewSpell,plant,PlantPlacementError,validatePlant,validatePlantPurchase,harvest,requestRepair,validateHarvest,validateRepair,hire,hireAdditional,validateHire,validateHireAdditional,openInitialHiring,wallCapacity,previewWallChain,buildWallChain,placeStructure,prepareStructurePlacement,StructurePlacementError,observeGameEvents,pause,removeWall,resume,bless,continuePostgame} from './game.js';
+import {advanceReal,cast,previewSpell,previewVillage,plant,PlantPlacementError,validatePlant,validatePlantPurchase,harvest,requestRepair,validateHarvest,validateRepair,hire,hireAdditional,validateHire,validateHireAdditional,openInitialHiring,wallCapacity,previewWallChain,buildWallChain,placeStructure,prepareStructurePlacement,StructurePlacementError,observeGameEvents,pause,removeWall,resume,bless,continuePostgame} from './game.js';
 import {previewBlessing} from './blessings.js';
 import {AWAKENINGS} from './awakening-config.js';
 import {awakeningState} from './awakenings.js';
@@ -172,6 +172,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
       catch(error){if(!(error instanceof StructurePlacementError)&&error?.code!=='hiring-reserve'&&error?.message!=='Material desconocido')throw error;rejection=error.message;}
       value=rejection||!plan?false:placeStructure(game,command.id,command.structure,nav);
      }
+    }else if(command.kind==='previewVillage'){
+     if(typeof command.culture!=='string'||!Number.isFinite(command.x)||!Number.isFinite(command.z)||!command.payload||typeof command.payload!=='object'||!Array.isArray(command.payload.units))throw TypeError('Invalid village preview');
+     try{value=withResidentChunks(()=>previewVillage(game,command.culture,command.x,command.z,command.payload,nav),commandLoadedChunks);}catch(error){rejection=String(error?.message??error);value=false;}
     }else if(command.kind==='foundVillage'){
      if(typeof command.id!=='string'||!command.id||typeof command.culture!=='string'||!Number.isFinite(command.x)||!Number.isFinite(command.z)||!command.payload||typeof command.payload!=='object'||!Array.isArray(command.payload.units))throw TypeError('Invalid village command');
      if(game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id))value=false;

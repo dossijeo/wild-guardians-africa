@@ -553,7 +553,7 @@ export class WorldScene {
   async ensureVillage(culture,payload) {await this.loadReady(this.ensureBuilding(culture));if(!this.villageTemplates.has(culture))this.villageTemplates.set(culture,await this.loadReady(this.assets.village(payload)));}
   showVillagePreview(preview) {
     this.clearVillagePreview();this.villagePreview=this.villageMesh(preview);
-    this.villagePreview.traverse(o=>{if(o.isMesh){o.material=o.material.clone();o.material.transparent=true;o.material.opacity=.45;o.material.depthWrite=false;o.material.color.set(preview.valid?'#d4f3c2':'#f4a198');}});this.scene.add(this.villagePreview);
+    this.villagePreview.traverse(o=>{if(o.isMesh){o.material=o.material.clone();o.material.transparent=true;o.material.opacity=.45;o.material.depthWrite=false;o.material.color.set(preview.pending?'#f0e5b9':preview.valid?'#d4f3c2':'#f4a198');}});this.scene.add(this.villagePreview);
   }
   clearVillagePreview() {if(this.villagePreview){this.villagePreview.traverse(o=>{if(o.isMesh)o.material.dispose();});this.scene.remove(this.villagePreview);this.villagePreview=null;}}
   centerMesh(entity) {
