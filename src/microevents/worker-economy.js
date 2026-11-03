@@ -4,6 +4,7 @@ export function createWorkerMicroeventEconomy(runtime){
  if(typeof runtime?.submit!=='function')throw TypeError('Invalid microevent runtime');
  return {
   async reserve(eventType,targetId){const result=await runtime.submit({kind:'microReserve',eventType,targetId});return result.value;},
+  async schedule(memory){const {rng,cooldown,eventCooldowns,ignored,history,negativeTimes}=memory;await runtime.submit({kind:'microSchedule',schedule:structuredClone({rng,cooldown,eventCooldowns,ignored,history,negativeTimes})});},
   async settle(ticket,outcome,{enabled=true,losses=true}={}){const result=await runtime.submit({kind:'microSettle',ticket,outcome,enabled,losses});return result.value;},
   async disable(){await runtime.submit({kind:'microDisable'});},
  };

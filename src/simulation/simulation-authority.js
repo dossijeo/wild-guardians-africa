@@ -16,7 +16,7 @@ import {plantTouchTarget} from './plant-touch-target.js';
 import {syncTutorialActionPause} from '../tutorial/action-pause.js';
 import {createWorkerTutorial} from './worker-tutorial.js';
 import {dueCinematicAct,finishCinematicAct} from '../app/campaign-cinematics.js';
-import {reserveEvent,settleEvent,disableMicroEconomy,trackIncome} from '../microevents/economy.js';
+import {reserveEvent,settleEvent,disableMicroEconomy,trackIncome,microState,validateMicroState} from '../microevents/economy.js';
 
 export function parseSimulationChunkKey(key){
  if(typeof key!=='string'||!/^(-?\d+),(-?\d+)$/.test(key))throw TypeError('Invalid chunk key');
@@ -125,6 +125,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      if(!rejection&&!duplicate&&!permission(game,'plant'))rejection='Esta acción no está disponible ahora';
      if(!rejection&&!duplicate)try{validatePlantPurchase(game,command.species);}catch(error){if(error?.code!=='hiring-reserve'&&error?.message!=='Cultivo desconocido')throw error;rejection=error.message;}
      value=rejection?false:plant(game,command.id,command.species,target.x,target.z,nav);
+    }else if(command.kind==='microSchedule'){
+     const keys=['rng','cooldown','eventCooldowns','ignored','history','negativeTimes'];if(!command.schedule||typeof command.schedule!=='object'||Array.isArray(command.schedule)||Object.keys(command.schedule).length!==keys.length||keys.some(key=>!Object.hasOwn(command.schedule,key)))throw TypeError('Invalid microevent schedule');
+     const memory=microState(game),next={...memory,...structuredClone(command.schedule)};validateMicroState({...game,microevents:next});for(const key of keys)memory[key]=next[key];
     }else if(command.kind==='microIncome'){
      if(typeof command.enabled!=='boolean')throw TypeError('Invalid microevent income policy');trackMicroIncome=command.enabled;if(trackMicroIncome)trackIncome(game,[]);
     }else if(command.kind==='microReserve'){

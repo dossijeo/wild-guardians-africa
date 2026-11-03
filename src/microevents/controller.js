@@ -42,6 +42,7 @@ export class Microevents {
     try{
       ticket=this.workerEconomy?await this.workerEconomy.reserve(def.id,anchor.entity.id):reserveEvent(this.state,def.id,anchor.entity.id);if(!ticket)return false;
       this.director.m.cooldown=MICROEVENT_CONFIG.cooldown;this.director.reserve(def);
+      if(this.workerEconomy)await this.workerEconomy.schedule(this.director.m);
       await this.billboards.ready;const saved=await this.save();
       const cameraUnsafe=this.cameraPointers.size>0||this.owned.size>0||this.clock()<(this.wheelUntil??0)||poseChanged(cameraPose(this.world.camera),pose)||!force&&this.director.cameraStable<MICROEVENT_CONFIG.stable;
       if(!saved||this.disposed||this.blocked().length||cameraUnsafe||this.state.commandIds.length!==commandCount||this.settings.microevents==='off'||!compatible(def,this.state)||!eligibleAnchor(def,anchor.entity)||!this.project(anchor)){if(this.workerEconomy)await this.workerEconomy.settle(ticket,'cancelled',{enabled:false});else settleEvent(this.state,ticket,'cancelled',{enabled:false});return false;}
@@ -53,7 +54,7 @@ export class Microevents {
     const options={enabled:a.economy&&this.settings.microeventEconomy!==false&&this.settings.microevents!=='off',losses:this.settings.microeventLosses!==false};
     const complete=result=>{this.log('economy',{eventId:a.ticket.id,eventType:a.def.id,targetId:a.ticket.targetId,...result,dailyCredit:(this.workerEconomy?this.state.microevents:this.director.m)?.rewards,dailyReservedLoss:(this.workerEconomy?this.state.microevents:this.director.m)?.losses});if(outcome==='completed'&&a.def.sound&&(a.def.sound!=='eco_gain'||result.delta>0)){try{Promise.resolve(this.sound(a.def.sound)).catch(()=>{});}catch{}}void this.save();};
     this.director.finish(outcome);
-    if(this.workerEconomy)this.workerEconomy.settle(a.ticket,outcome,options).then(complete,e=>{this.failed=true;this.log('error',{message:e.message});});else complete(settleEvent(this.state,a.ticket,outcome,options));
+    if(this.workerEconomy)this.workerEconomy.settle(a.ticket,outcome,options).then(async result=>{await this.workerEconomy.schedule(this.director.m);complete(result);}).catch(e=>{this.failed=true;this.log('error',{message:e.message});});else complete(settleEvent(this.state,a.ticket,outcome,options));
     if(outcome==='completed'){this.learned?.add(a.def.primary.mode);this.log('completion-gesture',{eventType:a.def.id,method:this.particles?.usedFallback?'accessible-hold':a.def.primary.mode});}
   }
   cancel(reason){if(this.active&&!this.active.outcome){this.log('cancel',{reason});this.finish('cancelled');}this.active=null;this.pointer.owned=false;this.billboards.clear();}
