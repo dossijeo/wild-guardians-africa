@@ -34,6 +34,7 @@ try{
  try{await page.waitForFunction(()=>{const q=window.wildGuardiansWorkerQa();return q.events.includes('GuardianMagicHit')||q.status?.fault;},null,{timeout:60000});}
  catch{throw Error('Attack was not confirmed: '+JSON.stringify(await page.evaluate(()=>({qa:window.wildGuardiansWorkerQa(),text:document.body.innerText.slice(-800)})))+'; page errors: '+JSON.stringify(errors));}
  const hit=await page.evaluate(()=>window.wildGuardiansWorkerQa());if(hit.status?.fault||!hit.events.includes('GuardianMagicHit')||errors.length)throw Error('Attack failed: '+JSON.stringify({hit,errors}));
+ if(process.env.QA_PATH_TRACE==='1'){const invalidation=await page.evaluate(()=>window.wildGuardiansWorkerPathInvalidationQa());if(invalidation?.actorId!=='animal-368'||invalidation.reason!=='castAttack')throw Error('Attack did not invalidate observed movement: '+JSON.stringify(invalidation));console.log('PATH_INVALIDATION',JSON.stringify(invalidation));}
  const attackLatencyMs=Date.now()-attackRequested,frames=await page.evaluate(()=>{const p=window.__workerFrameProbe;p.enabled=false;const values=p.samples.slice().sort((a,b)=>a-b),at=q=>values.length?values[Math.min(values.length-1,Math.ceil(values.length*q)-1)]:null;return {count:values.length,p95:at(.95),p99:at(.99),max:values.at(-1)??null};});
  console.log('ATTACK_DIAGNOSTIC',JSON.stringify({batch:Number(process.env.QA_BATCH??1),scanMs:attackRequested-scanStarted,attackLatencyMs,before:beforeAttack.status,after:hit.status,frames}));
  let sustained=null;if(process.argv.includes('--sustain')){

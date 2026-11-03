@@ -1181,9 +1181,26 @@ cases and a two-Worker mangrove comparison validate those boundaries without
 changing the simulated state; the latter recorded 383 timed segments over 30
 batched advances. These timings model movement within a tick, not a proof of
 continuous safety against simultaneously moving actors or changing geometry.
-Rapier, idle walking without a clock, interruption ordering, playback, safe
-horizons and GPU presentation are still unimplemented. Do not extrapolate from
+Rapier, interruption ordering, playback, safe horizons and GPU presentation
+are still unimplemented. Do not extrapolate from
 this stream or enable visual playback based only on `timed`/`continuous`.
 The real-game savanna QA run also accepted observed path publications and
 completed an attack on the tracked animal with Edge reporting a GTX 1660; it
 did not verify the visual trajectory or compare frame times.
+
+Ambient worker walking now receives the same simulation-time clock when its
+state is available; calls without simulation time remain explicitly untimed.
+While path observation is enabled, non-advance gameplay commands conservatively
+publish an invalidation at their confirmed time and position, including pauses,
+attacks and stopping the observation. Snapshot, view and preview commands do
+not. The scene records the invalidation only after accepting the corresponding
+publication and clears the matching last trace. This is diagnostic plumbing,
+not an event dependency index: rejected commands can invalidate too, and
+structural changes or collisions occurring inside an advance are not yet
+certified. The 30-command real Worker comparison checked pause and stop
+ordering; 53 focused tests passed. No GPU playback or performance gain is
+claimed.
+An additional day-31 savanna game run received a `castAttack` invalidation for
+the tracked animal and confirmed the hit; Edge reported a GTX 1660. This used
+direct QA input and does not establish collision-safe playback or frame-time
+independence.

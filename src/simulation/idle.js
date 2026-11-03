@@ -1,5 +1,5 @@
 import {LOCOMOTION as L} from './locomotion-calibration.js';
-import {moveWorker} from './locomotion.js';
+import {moveWorker,pathMotionClock,WORKER_SPEED_MULTIPLIER} from './locomotion.js';
 import {prepareActorMotion} from './actor-motion.js';
 
 // Cosmetic choices have their own persisted stream: waiting never consumes a raid/event roll.
@@ -36,7 +36,8 @@ export function updateIdle(worker,anchor,seconds,nav,seed,gates=[],state=null,wo
     // merely stopping at another worker can trap both near a shared entrance.
     const index=typeof workerIndex==='function'?workerIndex():workerIndex;
     const clear=state?prepareActorMotion(state,worker,nav,true,index):null;
-    const arrived=moveWorker(worker,seconds,{gates,clear}); // Ambient walking never requests a run.
+    const clock=state?pathMotionClock(worker,state.elapsed-seconds,state.elapsed,L.walkMetresPerSecond*WORKER_SPEED_MULTIPLIER):null;
+    const arrived=moveWorker(worker,seconds,{gates,clear,clock}); // Ambient walking never requests a run.
     if(Math.hypot(worker.x-previous.x,worker.z-previous.z)>1e-9)worker.heading=Math.atan2(worker.x-previous.x,worker.z-previous.z);
     if(arrived)cancelWalk(worker,idle,source);
     return;

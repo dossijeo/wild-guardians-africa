@@ -31,7 +31,8 @@ export function createConfirmedSceneReceiver(state,session,world){
     const rig=world.mixers.get(pose.actorId);if(rig)validateConfirmedAnimalPose(rig.model,pose);next.set(pose.actorId,pose);
    }
    if(message.motionTrace!==undefined&&!validMotionTrace(message.motionTrace))throw TypeError('Invalid observed path motion');
-   pending=next;try{const result=receiver.accept(message,{firstSequence});if(result.accepted&&message.motionTrace)world.lastObservedPathMotion=message.motionTrace;return result;}finally{pending=null;}
+   const invalidation=message.motionInvalidation;if(invalidation!==undefined&&(!invalidation||typeof invalidation.actorId!=='string'||!invalidation.actorId||!validPoint(invalidation)||invalidation.at!==message.elapsed||typeof invalidation.reason!=='string'||!invalidation.reason))throw TypeError('Invalid path motion invalidation');
+   pending=next;try{const result=receiver.accept(message,{firstSequence});if(result.accepted){if(message.motionTrace)world.lastObservedPathMotion=message.motionTrace;else if(invalidation){if(world.lastObservedPathMotion?.actorId===invalidation.actorId)world.lastObservedPathMotion=null;world.lastObservedPathInvalidation=invalidation;}}return result;}finally{pending=null;}
   },
   status(){return receiver.status();},
  };
