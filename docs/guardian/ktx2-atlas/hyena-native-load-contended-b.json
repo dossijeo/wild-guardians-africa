@@ -1,0 +1,57 @@
+{
+  "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "fetch": {
+    "original": {
+      "bytes": 706864,
+      "ms": 10.339999988675117
+    },
+    "native": {
+      "bytes": 647420,
+      "ms": 6.590000003576279
+    }
+  },
+  "samples": [
+    {
+      "mode": "original",
+      "parseMs": 36.25,
+      "submitMs": 4.260000005364418,
+      "fenceMs": 18.564999997615814,
+      "gpuMs": 2.115584,
+      "disjoint": false,
+      "textureCount": 3,
+      "estimatedGpuBytes": 1048578
+    },
+    {
+      "mode": "native",
+      "parseMs": 12.415000006556511,
+      "submitMs": 0.4700000137090683,
+      "fenceMs": 8.245000004768372,
+      "gpuMs": 0.074144,
+      "disjoint": false,
+      "textureCount": 3,
+      "estimatedGpuBytes": 262224
+    },
+    {
+      "mode": "native",
+      "parseMs": 185.1899999976158,
+      "submitMs": 0.3050000071525574,
+      "fenceMs": 6.174999997019768,
+      "gpuMs": 0.075296,
+      "disjoint": false,
+      "textureCount": 3,
+      "estimatedGpuBytes": 262224
+    },
+    {
+      "mode": "original",
+      "parseMs": 10.055000007152557,
+      "submitMs": 0.5399999916553497,
+      "fenceMs": 6.284999996423721,
+      "gpuMs": 0.493216,
+      "disjoint": false,
+      "textureCount": 3,
+      "estimatedGpuBytes": 1048578
+    }
+  ],
+  "scope": "Isolated same-page ABBA GLB parse and initTexture; downloads happen once before sampling. File sizes include all model data; texture memory is estimated. Fence latency includes scheduling. No draw, shader compilation, cold-cache simulation, game frame time or global performance.",
+  "transcoderRequests": []
+}

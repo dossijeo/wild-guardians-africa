@@ -1,0 +1,21 @@
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {KTX2Loader} from 'three/addons/loaders/KTX2Loader.js';
+import {registerNativeBc7Glb} from '../../src/rendering/native-bc7-glb.js';
+
+try{
+ const renderer=new THREE.WebGLRenderer({antialias:false}),gl=renderer.getContext(),info=gl.getExtension('WEBGL_debug_renderer_info'),timer=gl.getExtension('EXT_disjoint_timer_query_webgl2');
+ if(!gl.getExtension('EXT_texture_compression_bptc'))throw Error('BC7 unsupported');
+ const paths={original:'/content/character-lod/hyena.glb',native:'/content/ktx2-native/pilot/hyena-lod-bc7.glb'},files={};
+ for(const [mode,path] of Object.entries(paths)){const t=performance.now(),res=await fetch(path,{cache:'no-store'});if(!res.ok)throw Error('Fetch failed '+path);const data=await res.arrayBuffer();files[mode]={data,fetchMs:performance.now()-t,bytes:data.byteLength};}
+ const fence=async()=>{const sync=gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE,0);gl.flush();const start=performance.now();try{for(;;){const state=gl.clientWaitSync(sync,0,0);if(state===gl.ALREADY_SIGNALED||state===gl.CONDITION_SATISFIED)return performance.now()-start;if(state===gl.WAIT_FAILED||performance.now()-start>30000)throw Error('GPU fence failed');await new Promise(r=>setTimeout(r,1));}}finally{gl.deleteSync(sync);}};
+ const samples=[];
+ for(const mode of ['original','native','native','original']){
+  const ktx=new KTX2Loader().detectSupport(renderer),loader=registerNativeBc7Glb(new GLTFLoader(),ktx),start=performance.now(),gltf=await loader.parseAsync(files[mode].data.slice(0),'');const parseMs=performance.now()-start;
+  const textures=new Set(),geometries=new Set(),materials=new Set();gltf.scene.traverse(o=>{if(!o.isMesh)return;geometries.add(o.geometry);for(const m of Array.isArray(o.material)?o.material:[o.material]){materials.add(m);for(const value of Object.values(m))if(value?.isTexture)textures.add(value);}});
+  let query=null;if(timer){query=gl.createQuery();gl.beginQuery(timer.TIME_ELAPSED_EXT,query);}const submit=performance.now();for(const texture of textures)renderer.initTexture(texture);const submitMs=performance.now()-submit;if(query)gl.endQuery(timer.TIME_ELAPSED_EXT);const fenceMs=await fence();let gpuMs=null,disjoint=false;if(query){for(let i=0;i<1000&&!gl.getQueryParameter(query,gl.QUERY_RESULT_AVAILABLE);i++)await new Promise(r=>setTimeout(r,1));disjoint=gl.getParameter(timer.GPU_DISJOINT_EXT);if(!disjoint&&gl.getQueryParameter(query,gl.QUERY_RESULT_AVAILABLE))gpuMs=gl.getQueryParameter(query,gl.QUERY_RESULT)/1e6;gl.deleteQuery(query);}
+  let estimatedGpuBytes=0;for(const t of textures){if(t.isCompressedTexture)estimatedGpuBytes+=t.mipmaps.reduce((n,m)=>n+m.data.byteLength,0);else estimatedGpuBytes+=Math.ceil(t.image.width*t.image.height*4*4/3);}
+  samples.push({mode,parseMs,submitMs,fenceMs,gpuMs,disjoint,textureCount:textures.size,estimatedGpuBytes});for(const t of textures){t.dispose();t.image?.close?.();}for(const m of materials)m.dispose();for(const g of geometries)g.dispose();ktx.dispose();
+ }
+ window.nativeGlbLoadResult={device:info?gl.getParameter(info.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER),fetch:Object.fromEntries(Object.entries(files).map(([mode,f])=>[mode,{bytes:f.bytes,ms:f.fetchMs}])),samples,scope:'Isolated same-page ABBA GLB parse and initTexture; downloads happen once before sampling. File sizes include all model data; texture memory is estimated. Fence latency includes scheduling. No draw, shader compilation, cold-cache simulation, game frame time or global performance.'};renderer.dispose();
+}catch(error){window.nativeGlbLoadError=error.stack||String(error);}
