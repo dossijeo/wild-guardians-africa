@@ -1,5 +1,5 @@
 import {deserialize,serialize} from '../persistence/snapshots.js';
-import {advanceReal,observeGameEvents,pause,resume} from './game.js';
+import {advanceReal,cast,observeGameEvents,pause,resume} from './game.js';
 import {createSpatialGameSession} from '../world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../world/wild-engine/spatial-navigation-movement.js';
 import {createEventDrivenTaskPlanner} from '../world/wild-engine/spatial-intent-bridge.js';
@@ -19,15 +19,19 @@ export function createSimulationAuthority(module,snapshot,chunkKeys){
    execute(command){
     if(closed)throw Error('Simulation authority is closed');
     if(!command||command.sequence!==sequence+1)throw Error('Simulation command out of order');
+    let value=null;
     if(command.kind==='advance'){
      if(!Number.isFinite(command.seconds)||command.seconds<=0||command.seconds>1||typeof command.nightFastForward!=='boolean')throw TypeError('Invalid real-time interval');
      advanceReal(game,command.seconds,nav,{nightFastForward:command.nightFastForward});nav.serviceRaidConnectivityDemand?.();
     }else if(command.kind==='pause'||command.kind==='resume'){
      if(typeof command.reason!=='string'||!command.reason)throw TypeError('Invalid pause reason');
      (command.kind==='pause'?pause:resume)(game,command.reason);
+    }else if(command.kind==='castShield'){
+     if(typeof command.id!=='string'||!command.id||!Number.isFinite(command.x)||!Number.isFinite(command.z))throw TypeError('Invalid shield command');
+     value=cast(game,command.id,'shield',command.x,command.z,nav,command.selection??null);
     }else if(command.kind!=='snapshot')throw TypeError('Unknown simulation command');
     sequence=command.sequence;const emitted=events;events=[];
-    return {sequence,elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,snapshot:serialize(game)};
+    return {sequence,value,elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,snapshot:serialize(game)};
    },
    dispose(){if(closed)return;closed=true;stopEvents?.();stopTasks?.();stopWorld?.();session.dispose();},
   };
