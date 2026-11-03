@@ -1,6 +1,6 @@
 import {deserialize} from '../persistence/snapshots.js';
 import {serializeConfirmedState,confirmedStateSaveAvailable} from './confirmed-live-state.js';
-import {advanceReal,cast,previewSpell,plant,PlantPlacementError,validatePlant,validatePlantPurchase,harvest,requestRepair,validateHarvest,validateRepair,hire,hireAdditional,validateHire,validateHireAdditional,openInitialHiring,previewWallChain,buildWallChain,observeGameEvents,pause,removeWall,resume} from './game.js';
+import {advanceReal,cast,previewSpell,plant,PlantPlacementError,validatePlant,validatePlantPurchase,harvest,requestRepair,validateHarvest,validateRepair,hire,hireAdditional,validateHire,validateHireAdditional,openInitialHiring,previewWallChain,buildWallChain,placeStructure,prepareStructurePlacement,StructurePlacementError,observeGameEvents,pause,removeWall,resume} from './game.js';
 import {permission} from './rules.js';
 import {ensurePurchaseBudget} from './budget.js';
 import {createSpatialGameSession} from '../world/wild-engine/spatial-game-session.js';
@@ -48,6 +48,14 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      if(!progress)throw error;
     }
    }
+  }
+  function prepareResidentStructure(structure){
+   if((structure.kind??'center')!=='center')return prepareStructurePlacement(game,structure,nav);
+   const original=nav.withCenterPreview;if(!original)return prepareStructurePlacement(game,structure,nav);
+   nav.withCenterPreview=(building,suppressed,inspect)=>original(building,suppressed,routes=>inspect({...routes,
+    walkable:(x,z,...rest)=>{const result=routes.walkable(x,z,...rest);if(result===null||result===undefined)throw new SpatialChunkUnavailable({x,z},{x,z},[]);return result;},
+    reachCost:(start,end)=>{const result=routes.reachCost(start,end);if(result?.status==='unknown')throw new SpatialChunkUnavailable(start,end,[]);return result;}}));
+   try{return prepareStructurePlacement(game,structure,nav);}finally{nav.withCenterPreview=original;}
   }
   return {
    async enableBeastPhysics(actorId,{actorIds=undefined,structureTemplates=null,allowEmpty=false}={}){if(closed||physics||physicsInitializing)throw Error('Worker physics unavailable');physicsInitializing=true;try{const {createWorkerBeastPhysics}=await import('./worker-beast-physics.js');const driver=await createWorkerBeastPhysics(game,nav,{actorId,actorIds,structureTemplates,allowEmpty});if(closed){driver.dispose();throw Error('Simulation authority closed during physics initialization');}physics=driver;}finally{physicsInitializing=false;}},
@@ -99,6 +107,13 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
       try{plan=withResidentChunks(()=>previewWallChain(game,command.material,command.points,nav,options),commandLoadedChunks);if(plan.pieces.length)ensurePurchaseBudget(game,plan.cost);}
       catch(error){if(error?.code!=='hiring-reserve'&&!['Esta acción no está disponible ahora','No hay monedas suficientes para todo el trazado','Trazado de muralla inválido','Material desconocido'].includes(error?.message))throw error;rejection=error.message;}
       value=rejection?false:plan.pieces.length?buildWallChain(game,command.id,command.material,command.points,nav,{...options,preparedPlan:plan}):false;
+     }
+    }else if(command.kind==='placeStructure'){
+     if(typeof command.id!=='string'||!command.id||!command.structure||typeof command.structure!=='object'||Array.isArray(command.structure)||!Number.isFinite(command.structure.x)||!Number.isFinite(command.structure.z))throw TypeError('Invalid structure command');
+     if(game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id))value=false;
+     else{let plan;try{plan=withResidentChunks(()=>prepareResidentStructure(command.structure),commandLoadedChunks);if(plan&&!permission(game,plan.kind==='center'?'center':'wall'))throw new StructurePlacementError('Esta acción no está disponible ahora');if(plan)ensurePurchaseBudget(game,plan.cost);}
+      catch(error){if(!(error instanceof StructurePlacementError)&&error?.code!=='hiring-reserve'&&error?.message!=='Material desconocido')throw error;rejection=error.message;}
+      value=rejection||!plan?false:placeStructure(game,command.id,command.structure,nav);
      }
     }else if(command.kind==='addChunk'){
      value=addResidentChunk(command.key);

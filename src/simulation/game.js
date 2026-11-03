@@ -190,16 +190,16 @@ export function previewCenter(s,{x,z,yaw=0},nav) {
   candidates.sort((a,b)=>a.routeLength-b.routeLength||a.villageId.localeCompare(b.villageId));
   return candidates[0]??{valid:false,cost:B.work_center.cost,reason:buildable?'El centro no tiene un camino válido al poblado':failure??'El centro no tiene un camino válido al poblado'};
 }
-export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,x,z,yaw=0},nav) {
-  if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
-  if(kind==='wall'&&!permission(s,'wall'))throw new Error('Esta acción no está disponible ahora');
+export class StructurePlacementError extends Error {}
+export function prepareStructurePlacement(s,{kind='center',material='zarzas',gate=false,x,z,yaw=0},nav) {
+  if(kind==='wall'&&!permission(s,'wall'))throw new StructurePlacementError('Esta acción no está disponible ahora');
   const draft=kind==='center'?previewCenter(s,{x,z,yaw},nav):null;
   const village=draft?s.villages.find(v=>v.id===draft.villageId):nearest(s.villages,{x,z}),culture=draft?.culture??village?.culture??s.culture;
   if(draft?.valid){x=draft.x;z=draft.z;}
   const candidate={kind,x,z,yaw,culture};
   const check=draft??(nav.wallPlacement?.({...candidate,material,gate})??nav.placement(x,z,.8));
-  if(!check.valid){if(kind==='wall')return false;throw new Error(check.reason);}
-  if(kind!=='center'&&kind!=='wall')throw new Error('Construcción desconocida');
+  if(!check.valid){if(kind==='wall')return false;throw new StructurePlacementError(check.reason);}
+  if(kind!=='center'&&kind!=='wall')throw new StructurePlacementError('Construcción desconocida');
   const cost=kind==='center'?B.work_center.cost:wallSpec(material).cost;
   const maxHp=structureHealth(kind,material,gate),entity={id:`structure-${s.nextId}`,created:s.sequence,kind,material,gate,x,z,yaw,...(kind==='center'?{culture}:{}),maxHp,hp:maxHp,status:'intact',villageId:village?.id,cost,collapseRemaining:0};
   if(kind==='wall'&&!gate){
@@ -209,6 +209,12 @@ export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,
     for(const update of gatePlan)Object.assign(entity,update);
   }
   const suppression=entity.autoGate?nav.wallPlacement(entity).suppress??[]:check.suppress??[];
+  return {kind,x,z,entity,suppression,cost};
+}
+export function placeStructure(s,id,options,nav) {
+  if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
+  const plan=prepareStructurePlacement(s,options,nav);if(!plan)return false;
+  const {kind,x,z,entity,suppression,cost}=plan;
   return commit(s,id,kind==='center'?'center':'wall',()=>{
     ensurePurchaseBudget(s,cost);transact(s.ledger,id,rational(-cost));
     const replaced=kind==='wall'?replaceCoincidentRuins(s,[entity]):[];
