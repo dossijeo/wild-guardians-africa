@@ -594,13 +594,19 @@ export function removeWall(s,id,targetId,nav) {
     emit(s,'WallRemoved',{targetId,refund:numberOf(refund)});
   });
 }
-export function plant(s,id,species,x,z,nav) {
+export class PlantPlacementError extends Error {}
+export function validatePlant(s,x,z,nav) {
   const check=nav.placement(x,z,.4);
-  if(!check.valid)throw new Error(check.reason);
-  if(activeCrops(s.plants).some(p=>p.alive&&dist(p,{x,z})<1.1))throw new Error('Necesitas separar las plantas');
+  if(!check.valid)throw new PlantPlacementError(check.reason);
+  if(activeCrops(s.plants).some(p=>p.alive&&dist(p,{x,z})<1.1))throw new PlantPlacementError('Necesitas separar las plantas');
   const center=nearest(s.structures.filter(operational),{x,z});
+  return {check,center};
+}
+export function validatePlantPurchase(s,species){ensurePurchaseBudget(s,cropSpec(species).plant_cost);}
+export function plant(s,id,species,x,z,nav) {
+  const {check,center}=validatePlant(s,x,z,nav);
   return commit(s,id,'plant',()=>{
-    ensurePurchaseBudget(s,cropSpec(species).plant_cost);transact(s.ledger,id,rational(-cropSpec(species).plant_cost));
+    validatePlantPurchase(s,species);transact(s.ledger,id,rational(-cropSpec(species).plant_cost));
     const p=createPlant(`plant-${s.nextId++}`,species,x,z,center.id);
     if(spellAt(s,'multiply',p))p.multiplyHarvest=true;
     s.plants.push(p);enqueue(s,center.id,'initial',p.id);

@@ -1,6 +1,6 @@
 import {deserialize} from '../persistence/snapshots.js';
 import {serializeConfirmedState,confirmedStateSaveAvailable} from './confirmed-live-state.js';
-import {advanceReal,cast,previewSpell,harvest,requestRepair,validateHarvest,validateRepair,observeGameEvents,pause,removeWall,resume} from './game.js';
+import {advanceReal,cast,previewSpell,plant,PlantPlacementError,validatePlant,validatePlantPurchase,harvest,requestRepair,validateHarvest,validateRepair,observeGameEvents,pause,removeWall,resume} from './game.js';
 import {permission} from './rules.js';
 import {createSpatialGameSession} from '../world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../world/wild-engine/spatial-navigation-movement.js';
@@ -54,6 +54,16 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     }else if(command.kind==='castShield'){
      if(typeof command.id!=='string'||!command.id||!Number.isFinite(command.x)||!Number.isFinite(command.z))throw TypeError('Invalid shield command');
      rejection=spellRejection(command,'shield');value=rejection?false:cast(game,command.id,'shield',command.x,command.z,nav,command.selection??null);
+    }else if(command.kind==='castAgricultural'){
+     if(typeof command.id!=='string'||!command.id||!['growth','multiply'].includes(command.spell)||!Number.isFinite(command.x)||!Number.isFinite(command.z))throw TypeError('Invalid agricultural spell command');
+     rejection=spellRejection(command,command.spell);value=rejection?false:cast(game,command.id,command.spell,command.x,command.z,nav,command.selection??null);
+    }else if(command.kind==='plant'){
+     if(typeof command.id!=='string'||!command.id||typeof command.species!=='string'||!command.species||!Number.isFinite(command.x)||!Number.isFinite(command.z))throw TypeError('Invalid plant command');
+     try{validatePlant(game,command.x,command.z,nav);}catch(error){if(!(error instanceof PlantPlacementError))throw error;rejection=error.message;}
+     const duplicate=game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id);
+     if(!rejection&&!duplicate&&!permission(game,'plant'))rejection='Esta acción no está disponible ahora';
+     if(!rejection&&!duplicate)try{validatePlantPurchase(game,command.species);}catch(error){if(error?.code!=='hiring-reserve'&&error?.message!=='Cultivo desconocido')throw error;rejection=error.message;}
+     value=rejection?false:plant(game,command.id,command.species,command.x,command.z,nav);
     }else if(command.kind==='harvest'||command.kind==='requestRepair'){
      if(typeof command.id!=='string'||!command.id||typeof command.targetId!=='string'||!command.targetId)throw TypeError('Invalid farm command');
      try{(command.kind==='harvest'?validateHarvest:validateRepair)(game,command.targetId);}catch(error){rejection=error.message;}
