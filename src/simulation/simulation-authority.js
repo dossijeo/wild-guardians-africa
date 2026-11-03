@@ -1,6 +1,6 @@
 import {deserialize} from '../persistence/snapshots.js';
 import {serializeConfirmedState,confirmedStateSaveAvailable} from './confirmed-live-state.js';
-import {advanceReal,cast,previewSpell,plant,PlantPlacementError,validatePlant,validatePlantPurchase,harvest,requestRepair,validateHarvest,validateRepair,hire,hireAdditional,validateHire,validateHireAdditional,openInitialHiring,wallCapacity,previewWallChain,buildWallChain,placeStructure,prepareStructurePlacement,StructurePlacementError,observeGameEvents,pause,removeWall,resume,bless} from './game.js';
+import {advanceReal,cast,previewSpell,plant,PlantPlacementError,validatePlant,validatePlantPurchase,harvest,requestRepair,validateHarvest,validateRepair,hire,hireAdditional,validateHire,validateHireAdditional,openInitialHiring,wallCapacity,previewWallChain,buildWallChain,placeStructure,prepareStructurePlacement,StructurePlacementError,observeGameEvents,pause,removeWall,resume,bless,continuePostgame} from './game.js';
 import {previewBlessing} from './blessings.js';
 import {AWAKENINGS} from './awakening-config.js';
 import {awakeningState} from './awakenings.js';
@@ -85,6 +85,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     }else if(command.kind==='pause'||command.kind==='resume'){
      if(typeof command.reason!=='string'||!command.reason)throw TypeError('Invalid pause reason');
      (command.kind==='pause'?pause:resume)(game,command.reason);
+    }else if(command.kind==='continuePostgame'){
+     resume(game,'result');continuePostgame(game);
     }else if(command.kind==='setNavigationView'){
      setNavigationView(command.view);
     }else if(command.kind==='tutorialStart'){

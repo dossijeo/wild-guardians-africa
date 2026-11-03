@@ -517,8 +517,19 @@ Worker rather than mutating the presentation copy. The existing mangrove
 command comparison checks a plant blessing and its event, invalid target,
 recharge, pause and duplicate against direct game execution, including the
 confirmed snapshot. This does not exercise the player UI or a blessed wall in
-the Worker. Village founding, postgame actions and microevent economy still
-have main-thread authority paths and prevent production activation.
+the Worker. Village founding and microevent economy still have main-thread
+authority paths and prevent production activation.
+
+The result dialog now sends its pause to the Worker, and the victory-to-
+postgame transition resumes the result pause and enters postgame in one
+ordered Worker command. A browser test compares the complete confirmed state,
+`PostgameStarted` event and hiring pause with direct execution on a restored
+synthetic mangrove victory; it does not exercise the dialog or a real campaign.
+Village founding remains local: it can mutate the ledger and village list
+before recomputing center routes, so retrying it after missing spatial chunks
+would risk partial effects. The eventual Worker implementation must establish
+all required residency or make the whole command transactional before applying
+those mutations. This experiment does not yet provide that guarantee.
 
 Optional `qa-worker-diagnostics` records time inside the simulation Worker.
 In these individual runs the animal's asynchronous physics admission took
