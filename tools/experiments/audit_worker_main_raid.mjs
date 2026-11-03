@@ -1,10 +1,12 @@
 import {createRequire} from 'node:module';
 const {chromium}=createRequire(import.meta.url)(process.env.PLAYWRIGHT_MODULE??'playwright');
-const browser=await chromium.launch({channel:'msedge',headless:true,args:['--enable-unsafe-swiftshader']});
+const browser=await chromium.launch({channel:'msedge',headless:process.env.QA_HEADFUL!=='1',args:process.env.QA_NATIVE_GPU==='1'?[]:['--enable-unsafe-swiftshader']});
 try{
  const page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[];page.on('pageerror',error=>errors.push(String(error)));
  await page.addInitScript(()=>{const probe=window.__workerFrameProbe={samples:[],enabled:false};let last=null;function frame(now){if(probe.enabled&&last!==null)probe.samples.push(now-last);last=now;requestAnimationFrame(frame);}requestAnimationFrame(frame);});
  await page.goto(`${process.env.QA_BASE_URL??'http://127.0.0.1:5175'}/?qa-worker-game&qa-worker-raid&qa-visibility&qa-worker-diagnostics&wildEngineThreads=0&qa-worker-batch=${process.env.QA_BATCH??1}${process.env.QA_VIEW_ACK==='1'?'&qa-worker-view-ack':''}${process.env.QA_CLOCK==='1'?'&qa-worker-clock':''}${process.env.QA_LEGACY==='1'?'&qa-worker-legacy-publications':''}${process.env.QA_COALESCE==='1'?'&qa-worker-coalesce':''}${process.env.QA_FOLD_VIEW==='1'?'&qa-worker-fold-view':''}${process.env.QA_BACKGROUND_VIEWS==='1'?'&qa-worker-background-views':''}`,{waitUntil:'domcontentloaded'});
+ const device=await page.evaluate(()=>{const canvas=document.createElement('canvas'),gl=canvas.getContext('webgl2');if(!gl)return null;const ext=gl.getExtension('WEBGL_debug_renderer_info');return {renderer:ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER),vendor:ext?gl.getParameter(ext.UNMASKED_VENDOR_WEBGL):gl.getParameter(gl.VENDOR)};});console.log('DEVICE',JSON.stringify(device));
+ if(process.env.QA_EXPECT_GPU&&!device?.renderer.includes(process.env.QA_EXPECT_GPU))throw Error('Unexpected WebGL device: '+JSON.stringify(device));
  await page.waitForFunction(()=>window.wildGuardiansWorkerQa?.().screen==='game'||document.querySelector('.error-banner'),null,{timeout:180000});
  console.log('STARTUP',JSON.stringify(await page.evaluate(()=>window.wildGuardiansWorkerQa())));
  try{await page.waitForFunction(()=>{const q=window.wildGuardiansWorkerQa?.();return q?.animals>0||q?.status?.fault||document.querySelector('.error-banner');},null,{timeout:60000});}
@@ -33,6 +35,11 @@ try{
  const hit=await page.evaluate(()=>window.wildGuardiansWorkerQa());if(hit.status?.fault||!hit.events.includes('GuardianMagicHit')||errors.length)throw Error('Attack failed: '+JSON.stringify({hit,errors}));
  const attackLatencyMs=Date.now()-attackRequested,frames=await page.evaluate(()=>{const p=window.__workerFrameProbe;p.enabled=false;const values=p.samples.slice().sort((a,b)=>a-b),at=q=>values.length?values[Math.min(values.length-1,Math.ceil(values.length*q)-1)]:null;return {count:values.length,p95:at(.95),p99:at(.99),max:values.at(-1)??null};});
  console.log('ATTACK_DIAGNOSTIC',JSON.stringify({batch:Number(process.env.QA_BATCH??1),scanMs:attackRequested-scanStarted,attackLatencyMs,before:beforeAttack.status,after:hit.status,frames}));
+ let sustained=null;if(process.argv.includes('--sustain')){
+  await page.evaluate(()=>{window.__workerFrameProbe.samples=[];window.__workerFrameProbe.enabled=true;});await page.waitForTimeout(12000);
+  sustained=await page.evaluate(()=>{const p=window.__workerFrameProbe;p.enabled=false;const values=p.samples.slice().sort((a,b)=>a-b),at=q=>values.length?values[Math.min(values.length-1,Math.ceil(values.length*q)-1)]:null;return {count:values.length,mean:values.reduce((a,b)=>a+b,0)/Math.max(1,values.length),p95:at(.95),p99:at(.99),max:values.at(-1)??null,qa:window.wildGuardiansWorkerQa()};});
+  if(sustained.qa.status?.fault||errors.length)throw Error('Sustained raid failed: '+JSON.stringify({sustained,errors}));console.log('SUSTAINED_DIAGNOSTIC',JSON.stringify(sustained));
+ }
  let saved=null;if(process.argv.includes('--save-check')){
   if(hit.status.saveAvailable)throw Error('Impact was unexpectedly advertised as restorable');
   const pauseRequested=Date.now();await page.locator('#menuButton').evaluate(element=>element.click());try{await page.waitForFunction(()=>window.wildGuardiansWorkerQa().pauses.includes('menu')||window.wildGuardiansWorkerQa().status.fault,null,{timeout:30000});}catch{throw Error('Pause was not confirmed: '+JSON.stringify(await page.evaluate(()=>({qa:window.wildGuardiansWorkerQa(),text:document.body.innerText.slice(-800)}))));}console.log('PAUSE',JSON.stringify({batch:Number(process.env.QA_BATCH??1),realMs:Date.now()-pauseRequested,hitElapsed:hit.elapsed,paused:await page.evaluate(()=>window.wildGuardiansWorkerQa())}));
@@ -52,5 +59,5 @@ try{
   }
   if(!completed)throw Error('Raid did not complete within the test window: '+JSON.stringify(await page.evaluate(()=>window.wildGuardiansWorkerQa())));
  }
- console.log(JSON.stringify({animals:hit.animals,initialElapsed:start.qa.elapsed,finalElapsed:(completed??hit).elapsed,readyActors:end.visibility.actors.filter(a=>a.ready).length,sequence:(completed??hit).status.confirmedSequence,attacked:target.id,cameraGesture,completed:!!completed,saved,scope:direct?'Opt-in real game using a day-31 savanna capture; attack invokes the game input handler directly without pointer picking. No active-physics restore or deterministic comparison.':'Opt-in real game using a day-31 savanna capture and a real pointer attack; no active-physics restore, full deterministic comparison or performance comparison.'}));
+ console.log(JSON.stringify({device,animals:hit.animals,initialElapsed:start.qa.elapsed,finalElapsed:(completed??hit).elapsed,readyActors:end.visibility.actors.filter(a=>a.ready).length,sequence:(completed??hit).status.confirmedSequence,attacked:target.id,cameraGesture,sustained,completed:!!completed,saved,scope:direct?'Opt-in real game using a day-31 savanna capture; attack invokes the game input handler directly without pointer picking. No active-physics restore or deterministic comparison.':'Opt-in real game using a day-31 savanna capture and a real pointer attack; no active-physics restore, full deterministic comparison or performance comparison.'}));
 }finally{await browser.close();}

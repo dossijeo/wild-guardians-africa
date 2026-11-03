@@ -863,3 +863,22 @@ that this gesture can change the visual camera while the attack is pending; it
 does not prove smooth presentation. Fourteen sampled frame intervals included a
 733 ms maximum, under SwiftShader, with no comparison or GPU timing. The test
 does not simulate every camera gesture or impose a controlled Worker delay.
+
+Hardware check: Edge headless reported `ANGLE (NVIDIA, NVIDIA GeForce GTX 1660
+(0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)` and `nvidia-smi` reported driver
+581.29. Four sequential 12-second post-impact samples used the same day-31
+savanna capture, 13 animals, 32 workers and the Worker game: standard camera
+receipts, background views, background views, standard receipts. Each attack
+used the direct input handler. The respective rAF interval summaries (count,
+mean, p95, p99, max, ms) were (358, 33.613, 33.455, 33.485, 66.795),
+(358, 33.613, 33.445, 33.485, 66.790), (358, 33.706, 33.445, 33.490,
+99.960), and (357, 33.800, 33.440, 66.645, 66.775). The near-33 ms cadence
+may be imposed by the headless environment. Attack samples themselves were much
+shorter; the latter three runs reported 7–13 intervals and maxima of 800–1167
+ms, which are not useful p95/p99 estimates. Worker admission reported roughly
+738–844 ms. These runs verify the hardware-backed browser and establish a
+limited reference; they do not measure GPU execution time, control the camera
+path or exact simulation evolution, prove visual equivalence, or demonstrate a
+performance gain. Reproduce with `QA_NATIVE_GPU=1`, `QA_EXPECT_GPU=GTX 1660`,
+`QA_CLOCK=1`, `QA_BATCH=16`, `QA_BACKGROUND_VIEWS=0/1` and
+`audit_worker_main_raid.mjs --direct --sustain`.
