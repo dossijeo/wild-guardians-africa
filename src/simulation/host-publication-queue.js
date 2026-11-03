@@ -9,7 +9,8 @@ export function physicsOwners(p){
 // preserving an event does not permit silently losing intervening segments.
 function mergedMotion(a,b){
  if(!a&&!b)return undefined;if(!a||!b||a.actorId!==b.actorId||a.end.at!==b.start.at||a.end.x!==b.start.x||a.end.z!==b.start.z||!Array.isArray(a.segments)||!Array.isArray(b.segments)||a.segments.length+b.segments.length>4096)return null;
- return {actorId:a.actorId,start:a.start,end:b.end,segments:[...a.segments,...b.segments],continuous:a.continuous&&b.continuous,timed:a.timed===true&&b.timed===true};
+ let peers;if(a.peers!==undefined||b.peers!==undefined){if(!Array.isArray(a.peers)||!Array.isArray(b.peers)||a.rosterChanged||b.rosterChanged||a.peers.length!==b.peers.length)return null;let count=a.segments.length+b.segments.length;peers=[];for(let i=0;i<a.peers.length;i++){const left=a.peers[i],right=b.peers[i];if(left.radius!==right.radius||left.endStatus!==right.startStatus)return null;const merged=mergedMotion(left,right);if(!merged)return null;count+=merged.segments.length;if(count>4096)return null;peers.push({...merged,radius:left.radius,startStatus:left.startStatus,endStatus:right.endStatus});}}
+ return {actorId:a.actorId,start:a.start,end:b.end,segments:[...a.segments,...b.segments],continuous:a.continuous&&b.continuous,timed:a.timed===true&&b.timed===true,...(peers?{peers,rosterChanged:false}:{})};
 }
 export function createHostPublicationQueue({session,send,diagnostics=false,foldViews=false}){
  if(typeof session!=='string'||!session||typeof send!=='function'||typeof diagnostics!=='boolean'||typeof foldViews!=='boolean')throw TypeError('Invalid publication queue');

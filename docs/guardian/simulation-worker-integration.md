@@ -1238,3 +1238,11 @@ first needs per-event proof and the third remains necessary for general playback
 The conservative boundary is unchanged and does not trigger replanning. This
 single run used direct QA input on Edge reporting a GTX 1660, not a full-campaign
 frequency, collision or performance benchmark.
+
+### Experimental synchronized body traces
+
+The opt-in `trackPathMotion` diagnostic can capture movement segments for a selected actor and the other bodies in the same simulation interval. Publications fold only contiguous compatible traces; changed rosters, discontinuities, or the 4096-segment limit preserve separate publications. Unobserved movement and structural changes invalidate the diagnostic conservatively. The trace does not drive presentation or certify collision safety. A roster change is currently detected at interval boundaries; a body created and removed within one interval is not independently guaranteed to be detected.
+
+A deterministic mangrove comparison of two real Workers over 30 commands retained identical states and events: 383 selected-actor segments and 10,624 peer segments, with no observed peer gaps. The peer arrays occupied 1,827,881 JSON characters (not a measurement of structured-clone transfer bytes). A separate opt-in day-31 savanna game run on a GTX 1660 received an accepted sample with 44 peers and 30 peer segments; this was not a deterministic comparison. The diagnostic run reached a peak publication backlog of 105 and an attack response of 885 ms, with substantial concurrent instrumentation and no baseline. These numbers do not establish a performance regression or improvement, but demonstrate that the raw capture is unsuitable for production without bounding and measuring its cost.
+
+Next steps are to reduce and bound transferred dependencies, detect roster changes reliably inside an interval, and establish a safe horizon before any autonomous presentation can consume these data. Physics, gameplay authority, GPU playback, and production behavior remain unchanged by this opt-in diagnostic.

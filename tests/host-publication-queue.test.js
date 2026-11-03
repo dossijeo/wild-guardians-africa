@@ -7,6 +7,10 @@ test('folding preserves observed path segments and refuses discontinuous boundar
  q.publication(packet(1),true);q.publication({...packet(2),motionTrace:trace(0,1)},true);q.publication({...packet(3),motionTrace:trace(1,2)},true);q.publication({...packet(4),motionTrace:trace(3,4)},true);q.ack(1);
  assert.equal(sent[1].publication.sequence,3);assert.equal(sent[1].publication.motionTrace.segments.length,2);assert.equal(sent[1].publication.motionTrace.end.x,2);assert.equal(sent[1].publication.motionTrace.timed,true);q.ack(3);assert.equal(sent[2].publication.sequence,4);
 });
+test('folded peer traces preserve every body and refuse a roster change',()=>{
+ const sent=[],q=createHostPublicationQueue({session:'s',send:v=>sent.push(v)}),point=(at,x)=>({at,x,z:0}),series=(id,a,b)=>({actorId:id,start:point(a,a),end:point(b,b),segments:[{at:b,x0:a,z0:0,x1:b,z1:0,t0:a,t1:b}],continuous:true,timed:true}),trace=(a,b)=>({...series('a',a,b),peers:[{...series('b',a,b),radius:.28,startStatus:'walking',endStatus:'walking'}],rosterChanged:false});
+ q.publication(packet(1),true);q.publication({...packet(2),motionTrace:trace(0,1)},true);q.publication({...packet(3),motionTrace:trace(1,2)},true);q.publication({...packet(4),motionTrace:{...trace(2,3),rosterChanged:true}},true);q.ack(1);assert.equal(sent[1].publication.sequence,3);assert.equal(sent[1].publication.motionTrace.peers[0].segments.length,2);q.ack(3);assert.equal(sent[2].publication.sequence,4);
+});
 test('observed paths are not discarded when tracking changes or the segment cap is reached',()=>{
  const sent=[],q=createHostPublicationQueue({session:'s',send:value=>sent.push(value)}),point={at:1,x:0,z:0},trace={actorId:'a',start:point,end:point,segments:Array(4096).fill({at:1,x0:0,z0:0,x1:0,z1:0}),continuous:true};
  q.publication(packet(1),true);q.publication({...packet(2),motionTrace:trace},true);q.publication({...packet(3),motionTrace:{...trace,segments:[trace.segments[0]]}},true);q.publication(packet(4),true);q.ack(1);assert.equal(sent[1].publication.sequence,2);q.ack(2);assert.equal(sent[2].publication.sequence,3);q.ack(3);assert.equal(sent[3].publication.sequence,4);
