@@ -498,6 +498,20 @@ resume still succeeded. This test has no renderer or active physics and does
 not establish a production memory bound. The count exposes backlog; it does
 not limit it or justify dropping events or snapshots.
 
+The coordinator now sends a command completion as the sequence number of its
+already delivered publication instead of cloning the entire result twice. The
+presentation resolves the command with that same confirmed publication and
+fails closed if the sequence is not the most recently applied one. This also
+applies to the initial response; snapshots, events, poses and save data remain
+available to the caller. The change removes the redundant coordinator-to-main
+copy for commands; it does not reduce regular tick publications or bound the
+backlog. Sixteen focused tests and the real-Worker stall test passed. A
+headless day-31 savanna run with 13 animals also accepted an attack, rejected
+the unsafe save during physics and stored a safe checkpoint after recovery.
+The diagnostic peak was 119 unacknowledged publications in that run; this
+includes transit and startup, and is not a memory measurement. There is no
+controlled before/after timing comparison, so no FPS improvement is claimed.
+
 Optional `qa-worker-diagnostics` records time inside the simulation Worker.
 In these individual runs the animal's asynchronous physics admission took
 721 ms (16-step run) and 702 ms (one-step run); execution of the subsequent

@@ -12,7 +12,7 @@ self.onmessage=async({data})=>{
    initializing=true;session=data.session;measureBacklog=data.runtimeOptions?.diagnostics===true;const client=createSimulationAuthorityClient({...data.clientOptions,session});let lastElapsed=0;
    const world={createConfirmedReceiver(){const forward=message=>{if(message.session!==session||message.sequence!==sequence+1)throw Error('Host publication out of order');sequence=message.sequence;lastElapsed=message.elapsed;if(measureBacklog)peakBacklog=Math.max(peakBacklog,sequence-acknowledged);postMessage({kind:'publication',session,publication:message});return {accepted:true,sequence};};return {accept:forward,acceptUnchanged:forward,status:()=>({sequence,lastElapsed})};}};
    runtime=createWorkerGameRuntime({...data.runtimeOptions,client,world,session,onError:error=>postMessage({kind:'failure',session,message:String(error?.stack??error)})});
-   const initial=await runtime.start();initializing=false;postMessage({kind:'started',session,initial,status:runtime.status()});monitor=setInterval(()=>postMessage({kind:'status',session,status:{...runtime.status(),...(measureBacklog?{publicationBacklog:sequence-acknowledged,peakPublicationBacklog:peakBacklog}:{})}}),250);return;
+   const initial=await runtime.start();initializing=false;postMessage({kind:'started',session,sequence:initial.sequence,status:runtime.status()});monitor=setInterval(()=>postMessage({kind:'status',session,status:{...runtime.status(),...(measureBacklog?{publicationBacklog:sequence-acknowledged,peakPublicationBacklog:peakBacklog}:{})}}),250);return;
   }
   if(data?.session!==session||!runtime)throw Error('Invalid runtime host session');
   if(data.kind==='dispose'){if(monitor!==null)clearInterval(monitor);runtime.dispose();runtime=null;close();return;}
@@ -20,7 +20,7 @@ self.onmessage=async({data})=>{
   if(data.kind==='speed'){runtime.setNightFastForward(data.value);return;}
   if(data.kind==='command'){
    if(!Number.isSafeInteger(data.id)||data.id<1)throw TypeError('Invalid host command id');
-   try{const result=await runtime.submit(data.command);postMessage({kind:'commandResult',session,id:data.id,result});}
+   try{const result=await runtime.submit(data.command);postMessage({kind:'commandResult',session,id:data.id,sequence:result.sequence});}
    catch(error){postMessage({kind:'commandFailure',session,id:data.id,message:String(error?.message??error)});}return;
   }
   throw Error('Unknown runtime host message');
