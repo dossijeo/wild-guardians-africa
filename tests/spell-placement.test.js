@@ -2,8 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import * as Game from '../src/simulation/game.js';
-import {castPickedSpell} from '../src/app/spell-placement.js';
-import {serialize} from '../src/persistence/snapshots.js';
+import {castPickedSpell,pickedSpellCommand} from '../src/app/spell-placement.js';
+import {serialize,deserialize} from '../src/persistence/snapshots.js';
 
 const nav={placement:()=>({valid:true}),setState(){},path:(_a,b)=>[{x:b.x,z:b.z}]};
 function ready(){
@@ -34,4 +34,13 @@ test('agricultural powers require a live plant hit, while Shield keeps free plac
  }
  const s=ready();castPickedSpell(s,'shield','shield',{entityId:null,point:{x:40,z:50}},nav);
  assert.deepEqual([s.spells[0].x,s.spells[0].z],[40,50]);
+});
+for(const kind of ['shield','growth','multiply'])test(`${kind}: transferable command preserves picked target and spell outcome`,()=>{
+ const local=ready(),remote=deserialize(serialize(local)),p=local.plants[0],pick={entityId:p.id,point:{x:90,z:90},hitPoint:new THREE.Vector3(p.x,3,p.z),origin:()=>new THREE.Vector3(p.x+5,6,p.z+10)};
+ const command=pickedSpellCommand(remote,'transfer',kind,pick);assert.doesNotThrow(()=>structuredClone(command));assert.equal(typeof command.selection.origin,'object');assert.deepEqual(command.selection.origin,{x:p.x+5,y:6,z:p.z+10});
+ assert.equal(castPickedSpell(local,'transfer',kind,pick,nav),true);assert.equal(Game.cast(remote,command.id,kind,command.x,command.z,nav,command.selection),true);assert.equal(serialize(remote),serialize(local));
+});
+test('transferable command retains missing-target behavior and tolerates failed visual placement',()=>{
+ const s=ready();assert.equal(pickedSpellCommand(s,'none','growth',{entityId:null,point:{x:1,z:2}}),null);assert.throws(()=>pickedSpellCommand(s,'none','attack',{entityId:'missing'}),/bestia/);
+ const command=pickedSpellCommand(s,'shield','shield',{point:{x:40,z:50},origin:()=>{throw Error('visual failure');}});assert.equal(command.selection.origin,null);
 });

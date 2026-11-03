@@ -1,0 +1,18 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {serializeConfirmedState} from '../../src/simulation/confirmed-live-state.js';
+import {castPickedSpell,pickedSpellCommand} from '../../src/app/spell-placement.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+window.audit=async()=>{
+ const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
+ const fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),{game,nav}=fixture.diagnosticWorld(),animal=game.raid.animals.find(a=>a.species==='hyena');if(!animal)throw Error('Missing animal');
+ const source=serialize(game),floor=nav.field.surface(animal.x,animal.z),hitPoint={x:animal.x,y:floor+animal.radius,z:animal.z},origin={x:animal.x-2,y:hitPoint.y+1,z:animal.z+2};let plans=0;
+ const pick={entityId:animal.id,point:{x:animal.x+10,z:animal.z+10},hitPoint,origin:()=>{plans++;return origin;}},command=pickedSpellCommand(game,'picked-attack','attack',pick);structuredClone(command);
+ const client=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,dynamicPhysics:true,session:'picked-spell'});
+ try{await client.ready;const before=game.sequence,local=castPickedSpell(game,'picked-attack','attack',pick,nav),request=client.submit(command);if(!request.accepted)throw Error('Command rejected');const result=await request.result,events=game.events.filter(event=>Number(event.id.slice(6))>=before);
+  if(!local||!result.value||result.snapshot!==serializeConfirmedState(game)||JSON.stringify(result.events)!==JSON.stringify(events)||plans!==2){const a=JSON.parse(serializeConfirmedState(game)),b=JSON.parse(result.snapshot),keys=Object.keys(a).filter(k=>JSON.stringify(a[k])!==JSON.stringify(b[k]));throw Error('Picked attack diverged '+JSON.stringify({local,remote:result.value,plans,keys,events,remoteEvents:result.events}));}
+  return {sequence:result.sequence,actorId:animal.id,events:result.events.map(e=>e.type),origin:command.selection.origin,contact:command.selection.contact,transferable:true,scope:'A programmatic pick from an island-mangrove capture is resolved using the application selection helper and sent to a real Worker. Compared with direct castPickedSpell. No actual pointer gesture, scene presentation, save/restore or production Worker integration.'};
+ }finally{client.dispose();fixture.dispose();}
+};window.ready=true;
+</script>
