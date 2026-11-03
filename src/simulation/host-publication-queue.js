@@ -9,7 +9,7 @@ export function physicsOwners(p){
 // preserving an event does not permit silently losing intervening segments.
 function mergedMotion(a,b){
  if(!a&&!b)return undefined;if(!a||!b||a.actorId!==b.actorId||a.end.at!==b.start.at||a.end.x!==b.start.x||a.end.z!==b.start.z||!Array.isArray(a.segments)||!Array.isArray(b.segments)||a.segments.length+b.segments.length>4096)return null;
- return {actorId:a.actorId,start:a.start,end:b.end,segments:[...a.segments,...b.segments],continuous:a.continuous&&b.continuous};
+ return {actorId:a.actorId,start:a.start,end:b.end,segments:[...a.segments,...b.segments],continuous:a.continuous&&b.continuous,timed:a.timed===true&&b.timed===true};
 }
 export function createHostPublicationQueue({session,send,diagnostics=false,foldViews=false}){
  if(typeof session!=='string'||!session||typeof send!=='function'||typeof diagnostics!=='boolean'||typeof foldViews!=='boolean')throw TypeError('Invalid publication queue');

@@ -4,7 +4,10 @@ import {validateConfirmedAnimalPose} from './confirmed-animal-pose.js';
 
 const validTransform=value=>Array.isArray(value)&&value.length===10&&value.every(Number.isFinite);
 const validPoint=p=>p&&[p.at,p.x,p.z].every(Number.isFinite);
-function validMotionTrace(t){return t&&typeof t.actorId==='string'&&!!t.actorId&&validPoint(t.start)&&validPoint(t.end)&&t.end.at>=t.start.at&&typeof t.continuous==='boolean'&&Array.isArray(t.segments)&&t.segments.every(s=>s&&[s.at,s.x0,s.z0,s.x1,s.z1].every(Number.isFinite)&&s.at>=t.start.at&&s.at<=t.end.at);}
+function validMotionTrace(t){
+ if(!t||typeof t.actorId!=='string'||!t.actorId||!validPoint(t.start)||!validPoint(t.end)||t.end.at<t.start.at||typeof t.continuous!=='boolean'||typeof t.timed!=='boolean'||!Array.isArray(t.segments))return false;
+ let last=t.start.at;for(const s of t.segments){if(!s||![s.at,s.x0,s.z0,s.x1,s.z1].every(Number.isFinite)||s.at<t.start.at-1e-8||s.at>t.end.at+1e-8)return false;if(t.timed){if(!Number.isFinite(s.t0)||!Number.isFinite(s.t1)||s.t0<last-1e-8||s.t1<s.t0||s.t1>s.at+1e-8||s.t1>t.end.at+1e-8)return false;last=s.t1;}}return true;
+}
 // Applies a single ordered authority publication to the existing scene state.
 // It does not advance simulation or install a second physics owner.
 export function createConfirmedSceneReceiver(state,session,world){

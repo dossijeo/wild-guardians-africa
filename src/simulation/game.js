@@ -44,7 +44,7 @@ import {wallStroke,wallLayout,wallStrokeLine,gateScale} from '../world/wall-layo
 import {selectEvent,applyEvent} from './events.js';
 import {villageLayout,findVillageEntry,nearestVillageRoute} from '../world/villages.js';
 import {LOCOMOTION as L} from './locomotion-calibration.js';
-import {dailyRunMetres,urgentWork,moveWorker,movePath,movePathWithGates} from './locomotion.js';
+import {dailyRunMetres,urgentWork,moveWorker,movePath,movePathWithGates,pathMotionClock} from './locomotion.js';
 import {workerSlopeRecoveryPath} from '../world/worker-slope-recovery.js';
 import {animalWallOverlapRecovery,workerWallOverlapRecoveryPath} from '../world/worker-wall-overlap-recovery.js';
 import {createUrgencyPass} from './work-urgency.js';
@@ -1004,7 +1004,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     const {exit,wallIds}=w.wallEscape,remaining=dist(w,exit);
     if(remaining>1e-8){
       const metres=movePath(w,Math.min(speed*dt,remaining),
-        (a,b)=>nav.wallOverlapMotionClear(a,b,w.radius??.28,wallIds,false));
+        (a,b)=>nav.wallOverlapMotionClear(a,b,w.radius??.28,wallIds,false),pathMotionClock(w,s.elapsed-dt,s.elapsed,speed));
       w.motionPhase=(w.motionPhase??0)+metres/speed;
       if(metres>1e-8){w.heading=Math.atan2(w.x-previous.x,w.z-previous.z);
         w.dynamicStallSeconds=0;}
@@ -1064,8 +1064,9 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
   if(nav.tickProfile){nav.tickProfile.prepareMotion+=performance.now()-motionMark;motionMark=performance.now();}
   const routeClearance=worker?workerRiskClearance(w,nav,{radius:w.radius??.28,ignore},dynamicClear):animalRouteClearance(w,nav,{radius:w.radius??.28,ignore,escapeProps:expandRoute},dynamicClear);
   const clear=routeClearance?.clear??dynamicClear;
-  if(motion)moveWorker(w,dt,{...motion,gates:worker?s.structures:[],clear});else {
-    const metres=worker?movePathWithGates(w,speed*dt,s.structures,clear):movePath(w,speed*dt,clear);w.motionPhase=(w.motionPhase??0)+metres/speed;
+  const motionClock=pathMotionClock(w,s.elapsed-dt,s.elapsed,speed);
+  if(motion)moveWorker(w,dt,{...motion,gates:worker?s.structures:[],clear,clock:motionClock});else {
+    const metres=worker?movePathWithGates(w,speed*dt,s.structures,clear,motionClock):movePath(w,speed*dt,clear,motionClock);w.motionPhase=(w.motionPhase??0)+metres/speed;
   }
   if(nav.tickProfile)nav.tickProfile.moveMotion+=performance.now()-motionMark;
   if(dist(previous,w)>1e-9)w.heading=Math.atan2(w.x-previous.x,w.z-previous.z);
