@@ -901,3 +901,14 @@ refused during the actual fall and succeeds after recovery. This does not save
 or restore an active Rapier world, and the pre-impact case has not yet been
 tested through the full game's save/load UI or across multiple simultaneous
 impacts. Active fall, roll and recovery checkpoints remain unavailable.
+
+An independent in-memory Rapier solver checkpoint now stores the binary world
+snapshot, actor/body/joint handles, obstacle handles, roll controller state and
+recovery-collider set. Node tests restored two animals interacting with each
+other and obstacles in falling, rolling and kinematic phases, then matched
+their physical poses step-for-step for 120 solver steps. This is a solver test,
+not a save format: bindings, environment maps, animation recovery controllers,
+JSON/binary persistence, Worker integration, corrupt-input hardening and full
+game replay are still missing. In particular the higher-level recovery phase
+cannot yet be resumed just because its kinematic bodies were restored. The
+active-physics save gate is unchanged.

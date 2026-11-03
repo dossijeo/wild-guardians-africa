@@ -33,6 +33,25 @@ export class BeastRagdollSolver{
   this.targetPosition=vector();this.targetRotation={x:0,y:0,z:0,w:1};
   this.stats={active:0,stepMs:0,steps:0,rejected:0};
  }
+ // Experimental in-memory checkpoint. Higher-level bindings, recovery clips,
+ // terrain indices and persisted encoding remain the caller's responsibility.
+ checkpoint(){
+  return {version:1,capacity:this.capacity,step:this.stepSize,world:this.world.takeSnapshot(),obstacles:this.obstacles.map(c=>c.handle),recoveryColliders:[...this.recoveryColliders],actors:[...this.actors].map(([id,a])=>({id,group:a.group,age:a.age,quiet:a.quiet,settled:a.settled,kinematic:!!a.kinematic,roll:a.roll?structuredClone(a.roll):null,parts:a.parts.map(p=>({handle:p.body.handle,center:{...p.center},rotation:{...p.rotation},length:p.length,radius:p.radius})),joints:a.joints.map(j=>j.handle)}))};
+ }
+ static restoreCheckpoint(R,checkpoint){
+  if(!checkpoint||checkpoint.version!==1||!(checkpoint.world instanceof Uint8Array)||!Number.isInteger(checkpoint.capacity)||checkpoint.capacity<1||!Number.isFinite(checkpoint.step)||checkpoint.step<=0||!Array.isArray(checkpoint.actors)||checkpoint.actors.length>checkpoint.capacity||!Array.isArray(checkpoint.obstacles)||!Array.isArray(checkpoint.recoveryColliders))throw Error('Invalid ragdoll checkpoint');
+  const solver=new BeastRagdollSolver(R,{capacity:checkpoint.capacity,step:checkpoint.step});
+  try{
+   const restored=R.World.restoreSnapshot(checkpoint.world);solver.world.free();solver.world=restored;solver.obstacles=checkpoint.obstacles.map(handle=>{const collider=restored.getCollider(handle);if(!collider)throw Error('Missing checkpoint obstacle');return collider;});
+   for(const data of checkpoint.actors){
+    if(typeof data.id!=='string'||!data.id||solver.actors.has(data.id)||!Array.isArray(data.parts)||data.parts.length!==RAGDOLL_LINKS.length||!Array.isArray(data.joints)||![data.age,data.quiet].every(Number.isFinite))throw Error('Invalid checkpoint actor');
+    const parts=data.parts.map(part=>{if(!part||![part.length,part.radius,part.center?.x,part.center?.y,part.center?.z,part.rotation?.x,part.rotation?.y,part.rotation?.z,part.rotation?.w].every(Number.isFinite)||part.length<=0||part.radius<=0)throw Error('Invalid checkpoint part');const body=restored.getRigidBody(part.handle);if(!body)throw Error('Missing checkpoint body');return {body,center:{...part.center},rotation:{...part.rotation},length:part.length,radius:part.radius};});
+    const joints=data.joints.map(handle=>{const joint=restored.getImpulseJoint(handle);if(!joint)throw Error('Missing checkpoint joint');return joint;});
+    const actor={group:data.group,parts,joints,age:data.age,quiet:data.quiet,settled:data.settled,kinematic:data.kinematic,roll:data.roll?structuredClone(data.roll):null,pose:new Float32Array(RAGDOLL_LINKS.length*7)};solver.actors.set(data.id,actor);solver.snapshot(actor);
+   }
+   solver.recoveryColliders=new Set(checkpoint.recoveryColliders);solver.stats.active=solver.actors.size;return solver;
+  }catch(error){solver.dispose();throw error;}
+ }
  // Each scene supplies a local terrain patch and conservative solid volumes.
  // Static colliders are retained across steps; never rebuild them per frame.
  // Suppress artificial contact normals on internal terrain triangle edges.
