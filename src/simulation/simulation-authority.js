@@ -41,7 +41,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     }else if(command.kind==='castAttack'){
      if(!physics||!physics.supports(command.targetId))throw Error('Target is not supported by worker physics');
      if(typeof command.id!=='string'||!command.id||!Number.isFinite(command.x)||!Number.isFinite(command.z))throw TypeError('Invalid attack command');
-     if(!game.commandIds.includes(command.id)){if(physics.manager.entries.size>=3&&!physics.manager.entries.has(command.targetId))throw Error('Worker physics capacity exhausted');physics.assertEnvironment(command.targetId);}
+     if(!game.commandIds.includes(command.id))physics.assertEnvironment(command.targetId);
      value=cast(game,command.id,'attack',command.x,command.z,nav,{...(command.selection??{}),targetId:command.targetId});
     }else if(command.kind==='castShield'){
      if(typeof command.id!=='string'||!command.id||!Number.isFinite(command.x)||!Number.isFinite(command.z))throw TypeError('Invalid shield command');
