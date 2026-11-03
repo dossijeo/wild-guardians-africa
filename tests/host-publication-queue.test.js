@@ -17,3 +17,8 @@ test('active pose snapshots coalesce only while their owners remain the same',()
  q.publication(packet(2,[],{actorId:'a',active:true}),true);q.publication(packet(3,[],{actorId:'a',active:true}),true);q.publication(packet(4,[],{actorId:'b',active:true}),true);q.publication(packet(5,[],{actorId:'b',active:false}),true);
  assert.equal(q.status().coalesced,1);q.ack(1);assert.equal(sent[1].firstSequence,2);assert.equal(sent[1].publication.sequence,3);q.ack(3);assert.equal(sent[2].publication.sequence,4);q.ack(4);assert.equal(sent[3].publication.sequence,5);
 });
+test('eventful publications share transport but keep separate states and stop at command barriers',()=>{
+ const sent=[],q=createHostPublicationQueue({session:'s',maxBatchPublications:3,send:value=>sent.push(value)});q.publication(packet(1),true);
+ q.publication(packet(2,[{id:'e2'}]),true);q.publication(packet(3,[{id:'e3'}]),true);q.message({kind:'commandResult',id:1,sequence:3});q.publication(packet(4),true);
+ q.ack(1);assert.equal(sent[1].kind,'publications');assert.deepEqual(sent[1].publications.map(p=>p.publication.sequence),[2,3]);assert.deepEqual(sent[1].publications.map(p=>p.publication.events[0].id),['e2','e3']);q.ack(3);assert.equal(sent[2].kind,'commandResult');assert.equal(sent[3].publication.sequence,4);
+});

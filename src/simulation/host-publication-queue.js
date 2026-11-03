@@ -5,10 +5,10 @@ export function physicsOwners(p){
  const poses=p.physicsPoses??[p.physicsPose];if(!Array.isArray(poses)||!poses.length||!p.physicsPose||poses[0]?.actorId!==p.physicsPose.actorId||poses[0]?.active!==p.physicsPose.active)return null;
  const seen=new Set(),active=[];for(const pose of poses){if(!pose||typeof pose.actorId!=='string'||!pose.actorId||typeof pose.active!=='boolean'||seen.has(pose.actorId))return null;seen.add(pose.actorId);if(pose.active)active.push(pose.actorId);}return JSON.stringify(active.sort());
 }
-export function createHostPublicationQueue({session,send}){
- if(typeof session!=='string'||!session||typeof send!=='function')throw TypeError('Invalid publication queue');
+export function createHostPublicationQueue({session,send,maxBatchPublications=1}){
+ if(typeof session!=='string'||!session||typeof send!=='function'||!Number.isSafeInteger(maxBatchPublications)||maxBatchPublications<1||maxBatchPublications>8)throw TypeError('Invalid publication queue');
  const queue=[];let inFlight=0,lastSent=0,acknowledged=0,coalesced=0;
- function drain(){if(inFlight)return;while(queue.length){const item=queue.shift();if(item.kind==='publication'){inFlight=item.publication.sequence;lastSent=inFlight;send({...item,session});return;}send({...item,session});}}
+ function drain(){if(inFlight)return;while(queue.length){const item=queue.shift();if(item.kind==='publication'){const items=[item];while(items.length<maxBatchPublications&&queue[0]?.kind==='publication')items.push(queue.shift());inFlight=items.at(-1).publication.sequence;lastSent=inFlight;send(items.length===1?{...item,session}:{kind:'publications',session,publications:items});return;}send({...item,session});}}
  const eligible=item=>item.kind==='publication'&&item.tick&&item.publication.unchanged!==true&&Array.isArray(item.publication.events)&&physicsOwners(item.publication)!==null;
  const replaceable=item=>eligible(item)&&item.publication.events.length===0;
  return {

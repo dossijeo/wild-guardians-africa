@@ -493,11 +493,22 @@ integrated.
 
 `tests/browser/worker-coalesced-events-parity.html` compares two real mangrove
 simulation Workers for 100 identical ticks, holding the coalesced presentation
-until the end. It delivered three publications instead of 100, preserved all
+until the end. It delivered three publications in two transport messages
+instead of 100, preserved all
 ten retreat-related events in order and matched the full state observed by
 each event observer as well as the final state. This deterministic check has
 no physical rigs, rendering, player commands or game UI; it does not bound
 event-heavy backlog or establish a frame-time improvement.
+
+The opt-in `qa-worker-publication-batch=N` (with `qa-worker-coalesce`) can pack
+up to N consecutive publications into one transport message without merging
+their snapshots or crossing command barriers. The presentation applies them in
+order in separate tasks and acknowledges after the last. N defaults to 1 and
+is capped at 8; this is independent from the number of simulation ticks in a
+publication. Unit tests cover state order and barriers, and a real nested-Worker
+physics stall test passes with N=4. Packing retains every eventful snapshot in
+memory and can add scheduling latency; no production performance or visual
+comparison has been established, so it does not solve unbounded backlog.
 
 A separate local experiment replaced consecutive pending camera-view commands
 only when no simulation step or other command intervened, retaining every
