@@ -1,4 +1,5 @@
 import {createSimulationAuthority} from './simulation-authority.js';
+import {guardianImpactTime} from './guardian-timing.js';
 import wasmUrl from '../world/wild-engine/spatial-savanna.wasm?url';
 let authority=null,initializing=false,session=null,dynamicPhysics=false,diagnostics=false;
 self.onmessage=async ({data})=>{
@@ -6,7 +7,7 @@ self.onmessage=async ({data})=>{
   if(data?.kind==='initialize'){
    if(authority||initializing)throw Error('Simulation authority already initialized');if(typeof data.session!=='string'||!data.session)throw TypeError('Invalid session');initializing=true;session=data.session;diagnostics=data.diagnostics===true;
    const response=await fetch(wasmUrl);if(!response.ok)throw Error(`Wild Engine fetch failed: ${response.status}`);
-   const module=await WebAssembly.compile(await response.arrayBuffer());authority=createSimulationAuthority(module,data.snapshot,data.chunkKeys,{raidWaitBindings:data.raidWaitBindings??null,navigationView:data.navigationView??null,compactViewAcks:data.compactViewAcks===true});dynamicPhysics=data.dynamicPhysics===true;if(dynamicPhysics||data.physicsActorId!==undefined||data.physicsActorIds!==undefined)await authority.enableBeastPhysics(data.physicsActorId,{actorIds:data.physicsActorIds,structureTemplates:data.structureTemplates??null,allowEmpty:dynamicPhysics});
+   const module=await WebAssembly.compile(await response.arrayBuffer());authority=createSimulationAuthority(module,data.snapshot,data.chunkKeys,{raidWaitBindings:data.raidWaitBindings??null,navigationView:data.navigationView??null,compactViewAcks:data.compactViewAcks===true});const saved=JSON.parse(data.snapshot),pendingImpact=(saved.raid?.animals??[]).some(a=>a.magicImpact&&saved.elapsed<guardianImpactTime(a.magicImpact));dynamicPhysics=data.dynamicPhysics===true||pendingImpact;if(dynamicPhysics||data.physicsActorId!==undefined||data.physicsActorIds!==undefined)await authority.enableBeastPhysics(data.physicsActorId,{actorIds:data.physicsActorIds,structureTemplates:data.structureTemplates??null,allowEmpty:dynamicPhysics});
    postMessage({kind:'ready',session:data.session});return;
   }
   if(data?.session!==session)throw Error('Simulation session mismatch');

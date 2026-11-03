@@ -889,3 +889,15 @@ path or exact simulation evolution, prove visual equivalence, or demonstrate a
 performance gain. Reproduce with `QA_NATIVE_GPU=1`, `QA_EXPECT_GPU=GTX 1660`,
 `QA_CLOCK=1`, `QA_BATCH=16`, `QA_BACKGROUND_VIEWS=0/1` and
 `audit_worker_main_raid.mjs --direct --sustain`.
+
+The Worker checkpoint now permits a confirmed projectile before its impact
+marker, while no physical body exists. On restore the simulation Worker detects
+the pending impact, initializes physics and loads the affected animal rig before
+continuing. The actual save coordinator and two real Workers reproduced 60
+mangrove ticks after a checkpoint at 0.15 seconds into the projectile; all
+observed events, state and physical poses matched, with 59 active-pose ticks.
+An opt-in savanna game run on the GTX 1660 also confirmed that a save remains
+refused during the actual fall and succeeds after recovery. This does not save
+or restore an active Rapier world, and the pre-impact case has not yet been
+tested through the full game's save/load UI or across multiple simultaneous
+impacts. Active fall, roll and recovery checkpoints remain unavailable.

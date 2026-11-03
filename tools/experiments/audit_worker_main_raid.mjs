@@ -41,7 +41,8 @@ try{
   if(sustained.qa.status?.fault||errors.length)throw Error('Sustained raid failed: '+JSON.stringify({sustained,errors}));console.log('SUSTAINED_DIAGNOSTIC',JSON.stringify(sustained));
  }
  let saved=null;if(process.argv.includes('--save-check')){
-  if(hit.status.saveAvailable)throw Error('Impact was unexpectedly advertised as restorable');
+  await page.waitForFunction(id=>window.wildGuardiansWorkerCombatQa().animals.find(a=>a.id===id)?.down,target.id,{timeout:30000});
+  const active=await page.evaluate(()=>window.wildGuardiansWorkerQa());if(active.status.saveAvailable)throw Error('Active physics was unexpectedly advertised as restorable');
   const pauseRequested=Date.now();await page.locator('#menuButton').evaluate(element=>element.click());try{await page.waitForFunction(()=>window.wildGuardiansWorkerQa().pauses.includes('menu')||window.wildGuardiansWorkerQa().status.fault,null,{timeout:30000});}catch{throw Error('Pause was not confirmed: '+JSON.stringify(await page.evaluate(()=>({qa:window.wildGuardiansWorkerQa(),text:document.body.innerText.slice(-800)}))));}console.log('PAUSE',JSON.stringify({batch:Number(process.env.QA_BATCH??1),realMs:Date.now()-pauseRequested,hitElapsed:hit.elapsed,paused:await page.evaluate(()=>window.wildGuardiansWorkerQa())}));
   const paused=await page.evaluate(()=>window.wildGuardiansWorkerQa());if(paused.status.saveAvailable)throw Error('Physics completed before pause: '+JSON.stringify({hit,paused}));
   await page.locator('#save').click();await page.waitForFunction(()=>document.body.innerText.includes('espera a que termine la caída física'),null,{timeout:30000});

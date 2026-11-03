@@ -10,4 +10,4 @@ function validationView(state){
 }
 export function serializeConfirmedState(state){validateSnapshot(validationView(state));return JSON.stringify(state);}
 export function deserializeConfirmedState(source){const state=JSON.parse(source);validateSnapshot(validationView(state));return state;}
-export function confirmedStateSaveAvailable(state){return !(state.raid?.animals??[]).some(a=>a.magicDown||a.magicImpact&&state.elapsed-guardianImpactTime(a.magicImpact)<.5);}
+export function confirmedStateSaveAvailable(state){return !(state.raid?.animals??[]).some(a=>a.magicDown||a.magicImpact&&state.elapsed>=guardianImpactTime(a.magicImpact)&&state.elapsed-guardianImpactTime(a.magicImpact)<.5);}
