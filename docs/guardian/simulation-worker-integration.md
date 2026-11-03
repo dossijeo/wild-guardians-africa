@@ -304,6 +304,15 @@ its dismissal and timed guidance with the existing controller. The game UI
 does not yet connect this controller to voice, persistent profile storage or
 its per-frame tutorial flow; longer lessons and interruptions need validation.
 
+The application now has a conditional bridge for an installed Worker runtime:
+it forwards tutorial commands, supplies the currently narrated message and
+persists confirmed profile records through `TutorialProfile`. It also skips
+the local `Game.advanceReal` call while the Worker runtime is present. A real
+Worker test covers the bridge with the actual profile implementation and an
+in-memory storage backend. Runtime installation, full UI and voice, temporal
+ordering under load, tutorial interruptions and real raids are not validated;
+the ordinary game remains on its original execution path.
+
 The application save function now uses ordered Worker checkpoints whenever a
 runtime is installed, including the action paths that requested a Worker save.
 An unavailable active-physics checkpoint reports failure and prevents the

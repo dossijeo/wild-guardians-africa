@@ -78,6 +78,7 @@ import {NativeGuardian} from '../ui/guardian.js';
 import {hudShortcut} from '../ui/hud-shortcuts.js';
 import {refreshBuildPermissions} from '../ui/build-permissions.js';
 import {TutorialController} from '../tutorial/controller.js';
+import {createWorkerTutorialBridge} from '../tutorial/worker-bridge.js';
 import {TutorialProfile} from '../tutorial/profile.js';
 import '../ui/tutorial.css';
 
@@ -178,10 +179,15 @@ function ensureWorkerSave(owner,ownerState){
   owner.workerSave=({confirm=false}={})=>saveWorkerGame(entry.coordinator,{confirm,onError:error,onConfirm:()=>juice?.savedSuccessfully()});return owner.workerSave;
 }
 function save({confirm=false}={}){const owner=juice;if(state&&world?.workerRuntime)return ensureWorkerSave(world,state)({confirm});return saveGame(state,saves,{confirm,onError:error,onConfirm:()=>owner?.savedSuccessfully()});}
+function ensureWorkerTutorial(){
+  if(!world?.workerRuntime||tutorial?.worker)return;
+  const owner=world,ownerState=state,bridge=createWorkerTutorialBridge({runtime:owner.workerRuntime,profile:tutorialProfile,narrating:()=>guardian?.voice?.active?guardian.key?.split(':')[0]??null:null,onError:failure=>{if(owner===world&&ownerState===state)error(failure.message);},onChange:details=>{if(owner===world&&ownerState===state){if(details?.dismissed)save();updateUI(true);}}});
+  tutorial=bridge;bridge.start().catch(failure=>{if(owner===world&&ownerState===state)error(failure.message);});
+}
 const exitDesktop=createDesktopExit({host:window,save,hasGame:()=>!!state,onError:failure=>error(moneyLocale().startsWith('es')?'No se pudo cerrar la aplicación: '+failure.message:'Could not close the application: '+failure.message)});
 function bind(id,fn){document.getElementById(id)?.addEventListener('click',()=>safe(fn));}
 
-function clearWorld(){awakeningHud?.dispose();awakeningHud=null;microevents?.dispose();microevents=null;if(import.meta.env.DEV)delete window.__microevents;nativeIntentCleanup?.();nativeIntentCleanup=null;if(import.meta.env.DEV)delete globalThis.wildGuardiansSpatialQa;campaignCinema?.dispose();campaignCinema=null;juice?.dispose();juice=null;gameplayGpuQa?.close();clearLoadingPresentation();libraryViewer?.dispose();libraryViewer=null;dialogVoice.stop();raidLoading?.remove();raidLoading=null;noticeLifetime.reset();eventCards=null;surfaces.reset();uiAudio.reset();toolSession.clear();manualMagicActivity.reset();budgetWarningUntil=0;lastBudgetBalance=Infinity;reserveWarningShown=false;pendingVillage=null;commandFeedback='';setTutorialInteraction(false);tutorial=null;hudHand?.dispose();hudHand=null;guardian?.dispose();guardian=null;world?.dispose();world=null;wildEngineSession?.dispose();wildEngineSession=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}
+function clearWorld(){awakeningHud?.dispose();awakeningHud=null;microevents?.dispose();microevents=null;if(import.meta.env.DEV)delete window.__microevents;nativeIntentCleanup?.();nativeIntentCleanup=null;if(import.meta.env.DEV)delete globalThis.wildGuardiansSpatialQa;campaignCinema?.dispose();campaignCinema=null;juice?.dispose();juice=null;gameplayGpuQa?.close();clearLoadingPresentation();libraryViewer?.dispose();libraryViewer=null;dialogVoice.stop();raidLoading?.remove();raidLoading=null;noticeLifetime.reset();eventCards=null;surfaces.reset();uiAudio.reset();toolSession.clear();manualMagicActivity.reset();budgetWarningUntil=0;lastBudgetBalance=Infinity;reserveWarningShown=false;pendingVillage=null;commandFeedback='';setTutorialInteraction(false);tutorial?.dispose?.();tutorial=null;hudHand?.dispose();hudHand=null;guardian?.dispose();guardian=null;world?.dispose();world=null;wildEngineSession?.dispose();wildEngineSession=null;nav=null;audio.stop();tool=null;selection=null;document.querySelector('#native-hud-style')?.remove();}
 let leaving=false;
 async function menu() {
   if(leaving)return;leaving=true;
@@ -569,7 +575,7 @@ function narrator() {
   tutorial?.update();const warning=budgetWarningVisible();const message=surfaces.active&&!(surfaces.active==='panel'&&['basic.center','basic.plant','magic.growth','magic.multiply'].includes(state.tutorial.reading))?null:warning?{id:'budget.reserve',gesture:'warning',text:RESERVE_MESSAGE,blocking:false}:tutorial?.presentation();setTutorialInteraction(false);
   refreshTutorialGuidance();
   if(!message){guardian.hide({immediate:state.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p))});return null;}
-  recordTutorialMessageToday(state,message.id);
+  if(!world.workerRuntime)recordTutorialMessageToday(state,message.id);
   const advance=message.reading?()=>safe(()=>{tutorial.dismiss({automatic:true,message});save();}):null;
   guardian.show({key:message.id+':'+(message.reading?'reading':'action')+':'+(message.variant??''),text:message.text,gesture:message.gesture,blocking:message.blocking,result:message.result,advance,onVoiceEnded:()=>safe(()=>{if(warning)budgetWarningUntil=0;else tutorial.dismiss({automatic:true,message});save();}),dismiss:()=>safe(()=>{if(warning)budgetWarningUntil=0;else tutorial.dismiss({message});save();}),
     skip:message.canSkip?()=>safe(()=>{tutorial.skipBasic();save();}):null});
@@ -672,9 +678,10 @@ function frame(now) {
     }catch(e){loadingProgress?.fail(e);cancelLoading(e);}
   }
   if(screen==='game'&&world&&state&&!state.pauses.includes('runtime-error')) {
+    ensureWorkerTutorial();
     const eventIndex=state.events.at(-1)?.id;
 
-    try {if(!campaignCinema?.active){tutorial?.update();if(tutorial?.advance(dt,{visible:!guardian?.voice?.active&&!surfaces.active&&!document.hidden&&!state.pauses.includes('menu')&&now>=budgetWarningUntil}))save();refreshTutorialGuidance();microevents?.beforeSimulation();if(world.actorsReady()&&!(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-microevents-fixture')))Game.advanceReal(state,dt,nav,{nightFastForward:!microevents?.holdsNightSpeed});tutorial?.update();juice?.process(state);if(gameplayGpuQa)gameplayGpuQa.frame(now,world.renderer,()=>world.render(dt));else world.render(dt);updateRaidLoading();audio.process(state.events,{state,listener:world.controls.target});audio.updateMusic(state);audio.updateUnlocks(state);audio.updateAmbient(state,{listener:world.controls.target,waterRevision:nav.version,waterAt:(x,z)=>({...nav.field.waterInfo(x,z),active:!!(nav.field.wetland||nav.field.riverActive)})});audio.updateFarmActors(state,{listener:world.controls.target});audio.updateAnimals(state,{listener:world.controls.target});audio.updateMovement(state,{listener:world.controls.target,surfaceAt:world.movementSurfaceAt});updateUI();guardian?.setWorldPresence((world.guardianSummons?.stats.active??0)>0,world.guardianSummons?.guideScreenPosition());guardian?.update();juice?.update(state);}}
+    try {if(!campaignCinema?.active){tutorial?.update();if(tutorial?.advance(dt,{visible:!guardian?.voice?.active&&!surfaces.active&&!document.hidden&&!state.pauses.includes('menu')&&now>=budgetWarningUntil}))save();refreshTutorialGuidance();microevents?.beforeSimulation();if(!world.workerRuntime&&world.actorsReady()&&!(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-microevents-fixture')))Game.advanceReal(state,dt,nav,{nightFastForward:!microevents?.holdsNightSpeed});tutorial?.update();juice?.process(state);if(gameplayGpuQa)gameplayGpuQa.frame(now,world.renderer,()=>world.render(dt));else world.render(dt);updateRaidLoading();audio.process(state.events,{state,listener:world.controls.target});audio.updateMusic(state);audio.updateUnlocks(state);audio.updateAmbient(state,{listener:world.controls.target,waterRevision:nav.version,waterAt:(x,z)=>({...nav.field.waterInfo(x,z),active:!!(nav.field.wetland||nav.field.riverActive)})});audio.updateFarmActors(state,{listener:world.controls.target});audio.updateAnimals(state,{listener:world.controls.target});audio.updateMovement(state,{listener:world.controls.target,surfaceAt:world.movementSurfaceAt});updateUI();guardian?.setWorldPresence((world.guardianSummons?.stats.active??0)>0,world.guardianSummons?.guideScreenPosition());guardian?.update();juice?.update(state);}}
 
     catch(e){Game.pause(state,'runtime-error');guardian?.hide({immediate:true});dialogVoice.stop();error(e.message);console.error(e);}
     if(autosaveEventAfter(state.events,eventIndex))save();

@@ -4,6 +4,8 @@ import {serialize,deserialize} from '../../src/persistence/snapshots.js';
 import {TutorialController} from '../../src/tutorial/controller.js';
 import {createSimulation} from './mobility-worker-simulation-core.js';
 import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+import {createWorkerTutorialBridge} from '../../src/tutorial/worker-bridge.js';
+import {TutorialProfile} from '../../src/tutorial/profile.js';
 window.audit=async()=>{
  const fixture=await createSimulation({mangrove:true}),villages=structuredClone(fixture.diagnosticWorld().game.villages);fixture.dispose();
  const initial=newGame({seed:712,biome:'manglares',slotId:'worker-tutorial'});initial.villages=villages;const source=serialize(initial),local=deserialize(source),records=[],events=[],seen=new Set(),profile={read:()=>new Set(seen),record(id){seen.add(id);records.push(id);},get basicCompleted(){return seen.has('basic.complete');}};
@@ -21,7 +23,13 @@ window.audit=async()=>{
   await compare({kind:'tutorialCommand',action:'update'},()=>{controller.update();return null;});
   await compare({kind:'tutorialCommand',action:'advance',seconds:1,visible:false},()=>controller.advance(1,{visible:false}));
   await compare({kind:'tutorialCommand',action:'advance',seconds:30,visible:true},()=>controller.advance(30,{visible:true}));
-  return {introduction:start.presentation.id,next:dismissed.presentation.id,profileRecords:dismissed.profileRecords,scope:'Programmatic tutorial controller commands compared with the original controller on a new game; no rendered tutorial, voice or profile persistence.'};
+  const other=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,session:'tutorial-bridge'}),storage=new Map(),bridgeProfile=new TutorialProfile({getItem:key=>storage.get(key)??null,setItem:(key,value)=>storage.set(key,value)});
+  try{await other.ready;const runtime={submit(command){const request=other.submit(command);if(!request.accepted)throw Error('Bridge command rejected');return request.result;}},bridge=createWorkerTutorialBridge({runtime,profile:bridgeProfile});
+   await bridge.start();await bridge.present();const intro=bridge.presentation();if(intro?.id!=='basic.introduction')throw Error('Bridge did not present introduction');
+   if(!await bridge.dismiss({automatic:true,message:intro})||!bridgeProfile.has('basic.introduction')||bridge.presentation()?.id!=='basic.center')throw Error('Bridge did not persist tutorial acknowledgement');
+   if(await bridge.dismiss({message:intro}))throw Error('Bridge accepted stale dismissal');bridge.dispose();
+  }finally{other.dispose();}
+  return {introduction:start.presentation.id,next:dismissed.presentation.id,profileRecords:dismissed.profileRecords,scope:'Programmatic tutorial commands compared with the original controller, plus a real profile backed by in-memory storage. No rendered tutorial or voice.'};
  }finally{stop();client.dispose();}
 };window.ready=true;
 </script>
