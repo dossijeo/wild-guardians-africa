@@ -1,0 +1,25 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {serializeConfirmedState} from '../../src/simulation/confirmed-live-state.js';
+import {hire,hireAdditional,openInitialHiring,observeGameEvents} from '../../src/simulation/game.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+window.audit=async()=>{
+ const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
+ const fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),{game,nav}=fixture.diagnosticWorld();game.raid=null;game.time=100;game.pauses=[];game.hiringPaidDay=null;game.initialPreparation=true;nav.setState(game);const center=game.structures.find(s=>s.kind==='center'&&s.status==='intact');if(!center||!game.plants.some(p=>p.alive))throw Error('Missing hiring fixture');
+ const source=serialize(game),client=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,session:'hiring'}),events=[],stop=observeGameEvents(game,e=>events.push(structuredClone(e)));let sequence=0;
+ try{await client.ready;
+  async function compare(command,fn){let value=null,rejection=null;try{value=fn()??null;}catch(error){rejection=error.message;}const expectedEvents=events.splice(0),request=client.submit(command);if(!request.accepted)throw Error('Command not admitted');const result=await request.result;if(result.sequence!==++sequence||result.value!==(rejection?false:value)||(result.rejection??null)!==rejection||result.snapshot!==serializeConfirmedState(game)||JSON.stringify(result.events)!==JSON.stringify(expectedEvents))throw Error('Hiring divergence at '+sequence+': '+JSON.stringify({rejection,remote:result.rejection,value,remoteValue:result.value}));return result;}
+  const selection={olderMale:1},extra={olderFemale:1};
+  await compare({kind:'openInitialHiring'},()=>openInitialHiring(game));
+  const invalid=await compare({kind:'hire',id:'bad-hire',selection:{unknown:1}},()=>hire(game,'bad-hire',{unknown:1}));
+  const expensive=await compare({kind:'hire',id:'expensive-hire',selection:{olderMale:100000}},()=>hire(game,'expensive-hire',{olderMale:100000}));
+  const hired=await compare({kind:'hire',id:'hire-1',selection},()=>hire(game,'hire-1',selection));
+  const duplicate=await compare({kind:'hire',id:'hire-1',selection},()=>hire(game,'hire-1',selection));
+  const noCenter=await compare({kind:'hireAdditional',id:'bad-extra',selection:extra,centerId:'missing'},()=>hireAdditional(game,'bad-extra',extra,'missing'));
+  const additional=await compare({kind:'hireAdditional',id:'extra-1',selection:extra,centerId:center.id},()=>hireAdditional(game,'extra-1',extra,center.id));
+  if(!invalid.rejection||!expensive.rejection||!hired.events.some(e=>e.type==='HiringConfirmed')||duplicate.value!==false||!noCenter.rejection||!additional.value||client.status().state!=='ready')throw Error('Incomplete hiring coverage');
+  return {sequence,initialEvents:hired.events.map(e=>e.type),additionalEvents:additional.events.map(e=>e.type),invalid:invalid.rejection,expensive:expensive.rejection,noCenter:noCenter.rejection,duplicate:duplicate.value,workers:game.workers.length,scope:'Programmatic initial and additional hiring from a modified peaceful island-mangrove capture compared with direct Game functions. No player UI, subsequent work simulation, save/restore or production integration.'};
+ }finally{stop();client.dispose();fixture.dispose();}
+};window.ready=true;
+</script>

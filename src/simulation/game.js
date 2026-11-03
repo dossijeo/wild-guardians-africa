@@ -669,23 +669,31 @@ function addHiredWorker(s,profileId,centerId,usedPeople){
   s.workers.push({id:`worker-${s.nextId++}`,personId:person.id,profile:profileId,contractDay:s.day,centerId:centerId??null,villageId:village.id,x:entry.x,z:entry.z,status:center?'arriving':'waiting',taskId:null,crateId:null,path:null,hits:0,incapacitated:false,recovering:s.day<=person.recoveryUntil,runRemaining:dailyRunMetres(),actionRemaining:0});
   notifyWorkerPlanningChange(s,s.workers.at(-1));
 }
-export function hireAdditional(s,id,selection,centerId){
-  if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
+export function validateHireAdditional(s,id,selection,centerId){
+  if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return {skip:true};
   if(s.result||s.raid||s.hiringPaidDay!==s.day||s.time>=300||s.pauses.some(p=>!['menu','tutorial-action'].includes(p)))throw new Error('La contratación adicional no está disponible ahora');
   if(!s.structures.some(c=>c.id===centerId&&operational(c)))throw new Error('El centro de trabajo no está disponible');
   const cost=hiringCost(selection,{time:s.time}),total=Object.values(selection).reduce((n,c)=>n+c,0);
-  if(!total)return false;
+  if(!total)return {skip:true};
+  if(compare(s.ledger.balance,rational(cost))<0)throw new Error('Fondos insuficientes');
+  return {cost,total};
+}
+export function hireAdditional(s,id,selection,centerId){
+  const checked=validateHireAdditional(s,id,selection,centerId);if(checked.skip)return false;const {cost,total}=checked;
   transact(s.ledger,id,rational(-cost));
   const usedPeople=new Set(s.workers.map(w=>w.personId));
   for(const p of PROFILES)for(let i=0;i<(selection[p.id]??0);i++)addHiredWorker(s,p.id,centerId,usedPeople);
   for(const p of PROFILES)s.hiringSelection[p.id]=(s.hiringSelection[p.id]??0)+(selection[p.id]??0);
   s.commandIds.push(id);emit(s,'HiringConfirmed',{count:total,additional:true,centerId,cost});return true;
 }
-export function hire(s,id,selection) {
-  if(s.hiringPaidDay===s.day)return false;
-  if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
+export function validateHire(s,id,selection){
+  if(s.hiringPaidDay===s.day)return {skip:true};
+  if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return {skip:true};
   if(!s.pauses.includes('hiring'))throw new Error('La contratación no está abierta');
-  const cost=hiringCost(selection);transact(s.ledger,id,rational(-cost));
+  const cost=hiringCost(selection);if(compare(s.ledger.balance,rational(cost))<0)throw new Error('Fondos insuficientes');return {cost};
+}
+export function hire(s,id,selection) {
+  const checked=validateHire(s,id,selection);if(checked.skip)return false;const {cost}=checked;transact(s.ledger,id,rational(-cost));
   const living=activeCrops(s.plants);
   const centers=s.structures.filter(operational).map(c=>({...c,plants:living.filter(p=>p.alive&&!p.blessing&&p.centerId===c.id).length}));
   const total=Object.values(selection).reduce((a,b)=>a+b,0),quotas=allocateWorkers(centers,total),assigned=distributeProfiles(quotas,selection);
