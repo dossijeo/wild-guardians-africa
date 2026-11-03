@@ -2,6 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {GuardianSummons} from '../src/rendering/guardian-summons.js';
+test('a late confirmed provisional attack does not replace the next guardian gesture',async()=>{
+ const animals=[{id:'a',status:'walking'},{id:'b',status:'walking'}],world={state:{events:[],elapsed:10,time:400,raid:{animals}},scene:new THREE.Scene(),assets:{model:async()=>({scene:new THREE.Group(),animations:[]})},vfxLibrary:{create:()=>Object.assign(new THREE.Group(),{sprites:{material:{}},ribbons:{material:{}},localLights:[],clear(){},seek(){},advance(){},prepare(){return false;},dispose(){}})}};
+ const summons=new GuardianSummons(world);await summons.ready;const command=id=>({kind:'castAttack',id,targetId:id==='first'?'a':'b',x:0,z:0,selection:{origin:{x:3,y:2,z:0},contact:{x:0,y:1,z:0}}});
+ summons.beginProvisional(command('first'));assert.equal(summons.canBeginAttack(),false);summons.slots[0].event.startedAt=performance.now()-200;summons.update();assert.equal(summons.slots[0].beam.visible,true);assert.equal(summons.slots[0].impact.visible,false);summons.slots[0].event.startedAt=performance.now()-1800;summons.update();assert.equal(summons.canBeginAttack(),true);summons.beginProvisional(command('second'));assert.equal(summons.slots[0].event.commandId,'second');
+ const event={type:'SpellActivated',kind:'attack',commandId:'first',targetId:'a',x:0,z:0,presentation:{elapsed:world.state.elapsed,origin:{x:3,y:2,z:0},contact:{x:0,y:1,z:0}}};assert.equal(summons.confirmProvisional(event),true);assert.equal(summons.slots[0].event.commandId,'second');summons.rejectProvisional('first');assert.equal(summons.slots[0].event.commandId,'second');summons.dispose();
+});
 test('provisional crop cast waits for its matching confirmation without duplicate effects',async()=>{
  const plant={id:'crop',alive:true},world={state:{events:[],elapsed:1,time:150,plants:[plant]},scene:new THREE.Scene(),assets:{model:async()=>({scene:new THREE.Group(),animations:[]})},vfxLibrary:{create:()=>Object.assign(new THREE.Group(),{sprites:{material:{}},ribbons:{material:{}},localLights:[],clear(){},seek(){},advance(){},prepare(){return false;},dispose(){}})}};
  const summons=new GuardianSummons(world);await summons.ready;
