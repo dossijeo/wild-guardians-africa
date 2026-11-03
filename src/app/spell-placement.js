@@ -1,4 +1,6 @@
 import {cast} from '../simulation/game.js';
+import {attackGestureActive,attackTargetAvailable} from '../simulation/guardian-combat.js';
+const pendingAttacks=new WeakMap();
 
 // A tall crop can occlude terrain several metres behind it. Entity selection
 // takes precedence so a power aimed at that crop actually covers the crop.
@@ -32,7 +34,12 @@ export function pickedSpellCommand(state,id,kind,pick){
 // after the ordered authoritative publication has reached presentation.
 export function dispatchPickedSpell(state,id,kind,pick,nav,runtime=null,presentation=null){
   if(!runtime)return castPickedSpell(state,id,kind,pick,nav);
+  if(kind==='attack'){
+    const animal=state.raid?.animals.find(a=>a.id===pick.entityId);
+    if(pendingAttacks.has(runtime)||attackGestureActive(state)||!attackTargetAvailable(state,animal))return false;
+  }
   const command=pickedSpellCommand(state,id,kind,pick);if(!command)return false;
-  presentation?.begin?.(command);
-  return runtime.submit(command).then(result=>{if(result.rejection)throw Error(result.rejection);if(!result.value)presentation?.reject?.(id);return result.value;}).catch(error=>{presentation?.reject?.(id);throw error;});
+  if(kind==='attack')pendingAttacks.set(runtime,id);
+  let request;try{presentation?.begin?.(command);request=runtime.submit(command);}catch(error){if(kind==='attack')pendingAttacks.delete(runtime);presentation?.reject?.(id);throw error;}
+  return Promise.resolve(request).then(result=>{if(result.rejection)throw Error(result.rejection);if(!result.value)presentation?.reject?.(id);return result.value;}).catch(error=>{presentation?.reject?.(id);throw error;}).finally(()=>{if(kind==='attack'&&pendingAttacks.get(runtime)===id)pendingAttacks.delete(runtime);});
 }

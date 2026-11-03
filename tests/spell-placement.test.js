@@ -59,3 +59,12 @@ test('provisional feedback starts before the Worker resolves and is cancelled on
  resolve({rejection:'No disponible'});await assert.rejects(pending,/No disponible/);
  assert.deepEqual(calls.at(-1),['reject','provisional']);
 });
+test('downed, recovering and pending targets do not start a provisional attack',async()=>{
+ const s=ready();s.day=5;s.time=400;s.elapsed=10;const animal={id:'beast',x:1,z:2,status:'walking',magicDown:{phase:'rolling'}},other={id:'other',x:3,z:4,status:'walking'};s.raid={animals:[animal,other]};
+ const calls=[];let resolve;const runtime={submit(command){calls.push(['submit',command.id]);return new Promise(r=>{resolve=r;});}},presentation={begin:c=>calls.push(['begin',c.id]),reject:id=>calls.push(['reject',id])};
+ const attack=(id,target)=>dispatchPickedSpell(s,id,'attack',{entityId:target.id,origin:()=>({x:1,y:2,z:3})},nav,runtime,presentation);
+ assert.equal(attack('rolling',animal),false);animal.magicDown.phase='recovering';assert.equal(attack('recovering',animal),false);assert.deepEqual(calls,[]);
+ delete animal.magicDown;const pending=attack('first',animal);assert.deepEqual(calls,[['begin','first'],['submit','first']]);assert.equal(attack('duplicate',animal),false);assert.equal(attack('other',other),false);
+ resolve({value:false,rejection:'No disponible'});await assert.rejects(pending,/No disponible/);assert.equal(calls.at(-1)[0],'reject');
+ const next=attack('next',other);resolve({value:true});assert.equal(await next,true);
+});

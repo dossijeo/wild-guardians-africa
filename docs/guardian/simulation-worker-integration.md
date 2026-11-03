@@ -816,6 +816,11 @@ change its health. The guardian begins provisionally, but speculative animal
 ragdoll is not implemented: the animal still reacts after confirmation. This
 test uses direct input and SwiftShader, without visual or performance comparison;
 the publication queue reached 141 pending messages in this run.
+Presentation now rejects a known downed, recovering or still-pending target
+before creating a provisional guardian attack. A later headless Worker raid
+confirmed that clicking the rolling first beast did not start a provisional
+summon or change its health, while attacks against two distinct beasts worked.
+The Worker still revalidates commands against its own state.
 
 New village founding uses the culture selected for the game, enforced in the
 simulation as well as the UI. Existing mixed-culture saves retain their villages,
