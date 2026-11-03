@@ -1,6 +1,10 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import {createWorkerGameRuntime} from '../src/simulation/worker-game-runtime.js';
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
+test('diagnostic command counts distinguish tutorial actions without changing execution',async()=>{
+ let seq=0;const client={ready:Promise.resolve(),submit(){return {accepted:true,result:Promise.resolve({sequence:++seq,residency:{missing:[]},saveAvailable:true})};},dispose(){}},world={createConfirmedReceiver(){let sequence=0;return {accept(message){sequence=message.sequence;return {accepted:true};},status(){return {sequence,lastElapsed:0};}};}};
+ const runtime=createWorkerGameRuntime({client,world,session:'s',diagnostics:true,now:()=>0,schedule:()=>1,cancel:()=>{}});await runtime.start();await runtime.submit({kind:'tutorialCommand',action:'update'});await runtime.submit({kind:'tutorialCommand',action:'advance'});assert.deepEqual(runtime.status().completedKinds,{snapshot:1,'tutorialCommand:update':1,'tutorialCommand:advance':1});runtime.dispose();
+});
 test('runtime orders elapsed ticks, residency and pause commands without a render loop',async()=>{
  let time=0,nextTimer=0,nextSequence=0;const timers=new Map(),sent=[],accepted=[],client={ready:Promise.resolve(),submit(command){let resolve,reject;const result=new Promise((a,b)=>{resolve=a;reject=b;});sent.push({command,resolve,reject,sequence:++nextSequence});return {accepted:true,result};},dispose(){}};
  const world={createConfirmedReceiver(){let sequence=0;return {accept(message){if(message.sequence!==sequence+1)return {accepted:false,reason:'gap'};sequence=message.sequence;accepted.push(sequence);return {accepted:true,sequence};},status(){return {sequence,lastElapsed:0,fault:false};}};}};
