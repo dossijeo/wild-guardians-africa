@@ -4,17 +4,25 @@ import {createSpatialGameSession} from '../world/wild-engine/spatial-game-sessio
 import {createSpatialNavigationMovement} from '../world/wild-engine/spatial-navigation-movement.js';
 import {createEventDrivenTaskPlanner} from '../world/wild-engine/spatial-intent-bridge.js';
 import {captureRaidWaitBindings,restoreRaidWaitBindings} from './raid-wait-handoff.js';
+import {raidEntryChunks,raidResidentDemand} from '../world/raid-entry-residency.js';
+import {workerChunkDemand} from '../rendering/worker-chunk-residency.js';
+
+export function parseSimulationChunkKey(key){
+ if(typeof key!=='string'||!/^(-?\d+),(-?\d+)$/.test(key))throw TypeError('Invalid chunk key');
+ const coords=key.split(',').map(Number);if(coords.some(n=>!Number.isInteger(n)||n<-2147483648||n>2147483647)||coords.join(',')!==key)throw TypeError('Invalid chunk coordinates');return coords;
+}
 
 // Owns the game state and a native world inside the simulation worker. Chunk
 // residency is explicit: callers must provide the confirmed simulation demand.
 export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBindings=null}={}){
- if(!(module instanceof WebAssembly.Module)||typeof snapshot!=='string'||!Array.isArray(chunkKeys)||new Set(chunkKeys).size!==chunkKeys.length||chunkKeys.some(key=>typeof key!=='string'||!/^[-]?\d+,[-]?\d+$/.test(key)))throw TypeError('Invalid simulation authority initialization');
+ if(!(module instanceof WebAssembly.Module)||typeof snapshot!=='string'||!Array.isArray(chunkKeys)||new Set(chunkKeys).size!==chunkKeys.length)throw TypeError('Invalid simulation authority initialization');
+ for(const key of chunkKeys)parseSimulationChunkKey(key);
  const game=deserialize(snapshot),loaded=new Map();let session,stopTasks,stopWorld,stopEvents,closed=false,sequence=0,events=[];
  try{
   session=createSpatialGameSession(module,game,{loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
-  for(const key of chunkKeys){const [x,z]=key.split(',').map(Number);if(!Number.isSafeInteger(x)||!Number.isSafeInteger(z))throw TypeError('Invalid chunk coordinates');if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);loaded.set(key,{...session.core.chunkPayload(),terrainRevision:0});}
+  for(const key of chunkKeys){const [x,z]=parseSimulationChunkKey(key);if(session.core.selectChunk(x,z)<0&&session.core.addChunk(x,z)<0)throw Error('Could not add simulation chunk '+key);loaded.set(key,{...session.core.chunkPayload(),terrainRevision:0});}
   const planner=createEventDrivenTaskPlanner(session);planner.resetFromState(game);
-  const nav=createSpatialNavigationMovement(session,game);stopTasks=planner.observeTasks(game);stopWorld=planner.observeWorld(game);nav.intentTaskPlanner=planner;if(raidWaitBindings!==null)restoreRaidWaitBindings(game,nav,raidWaitBindings);
+  const nav=createSpatialNavigationMovement(session,game);stopTasks=planner.observeTasks(game);stopWorld=planner.observeWorld(game);nav.intentTaskPlanner=planner;nav.raidEntryResident=(entry,radii)=>[...raidEntryChunks(entry,radii)].every(key=>loaded.has(key));if(raidWaitBindings!==null)restoreRaidWaitBindings(game,nav,raidWaitBindings);
   stopEvents=observeGameEvents(game,event=>events.push(structuredClone(event)));
   return {
    execute(command){
@@ -30,12 +38,17 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     }else if(command.kind==='castShield'){
      if(typeof command.id!=='string'||!command.id||!Number.isFinite(command.x)||!Number.isFinite(command.z))throw TypeError('Invalid shield command');
      value=cast(game,command.id,'shield',command.x,command.z,nav,command.selection??null);
+    }else if(command.kind==='addChunk'){
+     const [x,z]=parseSimulationChunkKey(command.key);value=!loaded.has(command.key);
+     if(value){if(session.core.selectChunk(x,z)<0&&session.core.addChunk(x,z)<0)throw Error('Could not add simulation chunk '+command.key);session.stream.onData(session.core.chunkPayload());}
     }else if(command.kind==='removeWall'){
      if(typeof command.id!=='string'||!command.id||typeof command.targetId!=='string'||!command.targetId)throw TypeError('Invalid wall removal command');
      value=removeWall(game,command.id,command.targetId,nav);
     }else if(command.kind!=='snapshot')throw TypeError('Unknown simulation command');
     sequence=command.sequence;const emitted=events;events=[];
-    return {sequence,value,elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,raidWaitBindings:captureRaidWaitBindings(game,nav),snapshot:serialize(game)};
+    const required=[...new Set([...raidResidentDemand(game,nav),...workerChunkDemand(game)])].sort();
+    const residency={required,missing:required.filter(key=>!loaded.has(key))};
+    return {sequence,value,residency,elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,raidWaitBindings:captureRaidWaitBindings(game,nav),snapshot:serialize(game)};
    },
    dispose(){if(closed)return;closed=true;stopEvents?.();stopTasks?.();stopWorld?.();session.dispose();},
   };

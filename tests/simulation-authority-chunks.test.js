@@ -1,0 +1,2 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {parseSimulationChunkKey} from '../src/simulation/simulation-authority.js';
+test('authority chunk keys are canonical signed 32-bit coordinates',()=>{assert.deepEqual(parseSimulationChunkKey('-2147483648,2147483647'),[-2147483648,2147483647]);for(const value of ['2147483648,0','-2147483649,0','01,2','-0,0','1.5,2','1,2,3','1, 2','',null])assert.throws(()=>parseSimulationChunkKey(value));});
