@@ -8,14 +8,15 @@ import {loadWorkerPhysicsRig} from './worker-physics-rig.js';
 import {loadWorkerPhysicsClips} from './worker-physics-clips.js';
 import {guardianImpactTime} from './guardian-timing.js';
 
-// Initial, explicitly constrained path for one real hyena rig. It cannot be
+// Initial, explicitly constrained path for one real animal rig. It cannot be
 // used as the general game physics owner until all obstacle models and actors
 // are available in the worker. Missing collision data fails closed.
 export async function createWorkerBeastPhysics(game,nav,{actorId}={}){
  const animal=game.raid?.animals.find(a=>a.id===actorId);
- if(!animal||animal.species!=='hyena'||game.raid.animals.some(a=>a.magicDown||a.magicImpact&&game.elapsed-guardianImpactTime(a.magicImpact)<.5))throw Error('Worker physics requires one fresh hyena impact');
- const [R,model,clips,recoveries]=await Promise.all([beastPhysicsRuntime(),loadWorkerPhysicsRig('hyena'),loadWorkerPhysicsClips('hyena'),loadRecoveryClips()]);
- prepareAnimalModel(model,'hyena');const root=new Group();root.add(model);const rig={model,mixer:new AnimationMixer(model),clips,groundSamples:animalGroundSamples(model)};
+ if(!animal||!['hyena','lion','warthog','buffalo','rhino'].includes(animal.species)||game.raid.animals.some(a=>a.magicDown||a.magicImpact&&game.elapsed-guardianImpactTime(a.magicImpact)<.5))throw Error('Worker physics requires one supported animal without an active impact');
+ const species=animal.species;
+ const [R,model,clips,recoveries]=await Promise.all([beastPhysicsRuntime(),loadWorkerPhysicsRig(species),loadWorkerPhysicsClips(species),loadRecoveryClips()]);
+ prepareAnimalModel(model,species);const root=new Group();root.add(model);const rig={model,mixer:new AnimationMixer(model),clips,groundSamples:animalGroundSamples(model)};
  const world={state:game,nav,objects:new Map([[animal.id,root]]),mixers:new Map([[animal.id,rig]]),onError:error=>{throw error;}};
  const manager=new BeastCombatPhysics(world,R);manager.recoveryClips=recoveries;
  function assertEnvironment(){

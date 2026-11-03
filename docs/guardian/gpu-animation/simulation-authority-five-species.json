@@ -1,0 +1,138 @@
+{
+  "network": true,
+  "chunks": 25,
+  "results": [
+    {
+      "species": "hyena",
+      "id": "qa-beast-1000000",
+      "site": {
+        "x": 54.59110991546882,
+        "z": -36.89417145876975
+      },
+      "compared": 86,
+      "activeSteps": 82,
+      "saveBlocked": 85,
+      "phases": [
+        "released",
+        "falling",
+        "rolling",
+        "recovering"
+      ],
+      "lastPhase": "released",
+      "events": [
+        "GuardianMagicHit",
+        "SpellActivated",
+        "AnimalTargetUnavailable",
+        "CropHit",
+        "CropDestroyed",
+        "AnimalLogicalHit",
+        "ActorMobileCollisionRecovery"
+      ]
+    },
+    {
+      "species": "lion",
+      "id": "qa-beast-1",
+      "site": {
+        "x": 54.59110991546882,
+        "z": -36.89417145876975
+      },
+      "compared": 63,
+      "activeSteps": 59,
+      "saveBlocked": 62,
+      "phases": [
+        "released",
+        "falling",
+        "rolling",
+        "recovering"
+      ],
+      "lastPhase": "released",
+      "events": [
+        "GuardianMagicHit",
+        "SpellActivated",
+        "AnimalTargetUnavailable",
+        "CropHit",
+        "CropDestroyed",
+        "AnimalLogicalHit"
+      ]
+    },
+    {
+      "species": "warthog",
+      "id": "qa-beast-2",
+      "site": {
+        "x": 54.59110991546882,
+        "z": -36.89417145876975
+      },
+      "compared": 81,
+      "activeSteps": 77,
+      "saveBlocked": 80,
+      "phases": [
+        "released",
+        "falling",
+        "rolling",
+        "recovering"
+      ],
+      "lastPhase": "released",
+      "events": [
+        "GuardianMagicHit",
+        "SpellActivated",
+        "AnimalTargetUnavailable",
+        "CropHit",
+        "CropDestroyed",
+        "AnimalLogicalHit"
+      ]
+    },
+    {
+      "species": "buffalo",
+      "id": "qa-beast-3",
+      "site": {
+        "x": 54.59110991546882,
+        "z": -36.89417145876975
+      },
+      "compared": 63,
+      "activeSteps": 59,
+      "saveBlocked": 62,
+      "phases": [
+        "released",
+        "falling",
+        "rolling",
+        "recovering"
+      ],
+      "lastPhase": "released",
+      "events": [
+        "GuardianMagicHit",
+        "SpellActivated",
+        "AnimalTargetUnavailable",
+        "CropHit",
+        "CropDestroyed",
+        "AnimalLogicalHit"
+      ]
+    },
+    {
+      "species": "rhino",
+      "id": "qa-beast-4",
+      "site": {
+        "x": 70.59110991546882,
+        "z": -36.89417145876975
+      },
+      "compared": 104,
+      "activeSteps": 100,
+      "saveBlocked": 103,
+      "phases": [
+        "released",
+        "falling",
+        "rolling",
+        "recovering"
+      ],
+      "lastPhase": "released",
+      "events": [
+        "GuardianMagicHit",
+        "SpellActivated",
+        "AnimalTargetUnavailable",
+        "CropHit",
+        "CropDestroyed",
+        "AnimalLogicalHit"
+      ]
+    }
+  ],
+  "scope": "Five independent single-actor impacts from a 20-animal island-mangrove QA scene, each target relocated away from unsupported buildings. Worker physics compared exactly with the same driver on the main thread. No original WorldScene physical comparison, multi-ragdoll collisions, building impacts, user input, GPU or production integration."
+}
