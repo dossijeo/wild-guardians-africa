@@ -1,0 +1,19 @@
+{
+  "invalidTarget": "Selecciona una bestia activa",
+  "cooldown": "La magia está recargando",
+  "shield": "El Escudo solapa un animal",
+  "sequences": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "stateUnchangedForRejectedCommands": true,
+  "duplicateIdempotent": true,
+  "validAttackAfterRejection": true,
+  "advanceAfterRejection": true,
+  "scope": "Programmatic Worker commands against island-mangrove capture. Checks normal spell rejections, ordered continuation and no game-state mutation; no player UI or full gameplay integration."
+}
