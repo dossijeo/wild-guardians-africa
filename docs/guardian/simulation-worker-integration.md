@@ -428,6 +428,23 @@ clean comparison with the previous samples. Keep the option experimental until
 camera motion, complete raids, frame p95/p99 and end-to-end latency are tested
 with a nonblocking, reproducible input trace.
 
+An additional exploratory ABBA run uses `--direct --save-check`, which selects
+the attack through the real UI and invokes its existing input handler for the
+same animal without the expensive pixel search. All runs use `QA_BATCH=16`;
+`QA_VIEW_ACK=0` is A and `QA_VIEW_ACK=1` is B. In order A/B/B/A, attack
+confirmation took 3.343/2.339/1.799/3.603 s; pause confirmation took
+3.782/1.692/0.837/3.894 s. Before attack, the A runs had 20 and 24 pending
+steps; B had 13 and 8. All four reached the safe post-recovery checkpoint.
+During attack confirmation, requestAnimationFrame p95 gaps were
+66.7/66.7/99.9/66.7 ms and p99 gaps were 733/733/800/767 ms, with only
+74/44/25/79 samples respectively. These are diagnostic observations from the
+same headless Edge/SwiftShader environment, not GTX 1660 or isolated GPU
+measurements. The simulation time and camera at input were not exactly
+replayed, and the direct hook bypasses pointer picking. Therefore the results
+suggest a response-latency benefit but do not establish deterministic visual
+equivalence or a global frame-time improvement. The option remains off by
+default, and the remaining response latency is still too high.
+
 Optional `qa-worker-diagnostics` records time inside the simulation Worker.
 In these individual runs the animal's asynchronous physics admission took
 721 ms (16-step run) and 702 ms (one-step run); execution of the subsequent
