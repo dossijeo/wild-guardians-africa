@@ -1034,3 +1034,12 @@ both animals physically active, with matching Worker and reference states,
 events and poses. It does not prove visual equivalence or body-contact coverage.
 Long active-physics checkpoints can still be rejected by the save format; this
 change does not claim they are restorable. Clip sharing remains unintegrated.
+
+Clip sharing is now available behind `qa-worker-shared-clips`, disabled by
+default. The `same-species` variant of
+`tests/browser/simulation-authority-dynamic-physics.html` compares a Worker
+sharing warthog clips against the original controller loading them separately.
+For 227 ordered commands the state, events and poses matched, including 169
+steps with both physical bodies active. This is one mangrove fixture and does
+not validate other species, save/restore, presentation or real-game performance.
+The option should remain experimental until those comparisons are complete.

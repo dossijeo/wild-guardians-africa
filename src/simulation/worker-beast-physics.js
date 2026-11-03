@@ -12,7 +12,7 @@ import {BakedBeastFallbacks,loadBakedFalls} from '../rendering/baked-beast-fallb
 
 // Experimental registry; the shared Rapier world retains its existing capacity.
 // Unknown bodies and missing obstacle data fail closed.
-export async function createWorkerBeastPhysics(game,nav,{actorId,actorIds=actorId===undefined?[]:[actorId],structureTemplates=null,allowEmpty=false,checkpoint=null}={}){
+export async function createWorkerBeastPhysics(game,nav,{actorId,actorIds=actorId===undefined?[]:[actorId],structureTemplates=null,allowEmpty=false,checkpoint=null,shareSpeciesClips=false}={}){
  if(checkpoint!==null){if(checkpoint.version!==1||!Array.isArray(checkpoint.actorIds)||!checkpoint.fall)throw Error('Invalid Worker physics checkpoint');actorIds=checkpoint.actorIds;}
  if(!Array.isArray(actorIds)||(!allowEmpty&&!actorIds.length)||new Set(actorIds).size!==actorIds.length)throw Error('Worker physics requires distinct initial animals');
  // Before the impact marker there is no Rapier body yet. Reconstruct the
@@ -21,7 +21,9 @@ export async function createWorkerBeastPhysics(game,nav,{actorId,actorIds=actorI
  const animals=actorIds.map(id=>game.raid?.animals.find(a=>a.id===id));
  const checkpointIds=new Set(checkpoint?.fall?.entries?.map(e=>e.id)??[]);
  if(animals.some(a=>!a||!['hyena','lion','warthog','buffalo','rhino'].includes(a.species))||(game.raid?.animals??[]).some(a=>!checkpointIds.has(a.id)&&(a.magicDown||a.magicImpact&&game.elapsed>=guardianImpactTime(a.magicImpact)&&game.elapsed-guardianImpactTime(a.magicImpact)<.5)))throw Error('Worker physics requires supported animals without an active impact');
- async function loadAnimal(animal){const [model,clips]=await Promise.all([loadWorkerPhysicsRig(animal.species),loadWorkerPhysicsClips(animal.species)]);prepareAnimalModel(model,animal.species);const root=new Group();root.add(model);return {animal,root,rig:{model,mixer:new AnimationMixer(model),clips,groundSamples:animalGroundSamples(model)}};}
+ const speciesClips=new Map();
+ function clipsFor(species){if(!shareSpeciesClips)return loadWorkerPhysicsClips(species);let promise=speciesClips.get(species);if(!promise){promise=loadWorkerPhysicsClips(species).catch(error=>{speciesClips.delete(species);throw error;});speciesClips.set(species,promise);}return promise;}
+ async function loadAnimal(animal){const [model,clips]=await Promise.all([loadWorkerPhysicsRig(animal.species),clipsFor(animal.species)]);prepareAnimalModel(model,animal.species);const root=new Group();root.add(model);return {animal,root,rig:{model,mixer:new AnimationMixer(model),clips,groundSamples:animalGroundSamples(model)}};}
  const [R,recoveries,falls,...loaded]=await Promise.all([beastPhysicsRuntime(),loadRecoveryClips(),loadBakedFalls(),...animals.map(loadAnimal)]);
  const ids=new Set(actorIds),world={state:game,nav,objects:new Map(loaded.map(x=>[x.animal.id,x.root])),mixers:new Map(loaded.map(x=>[x.animal.id,x.rig])),onError:error=>{throw error;}};
  const structures=structureTemplates===null?null:createWorkerStructureObjects(game,nav,structureTemplates);
