@@ -1,0 +1,19 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {advanceReal,observeGameEvents,pause,resume} from '../../src/simulation/game.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+window.audit=async()=>{
+ const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
+ const reference=await createSimulation({mangrove:true,chunkKeys:chunks}),{game,nav}=reference.diagnosticWorld(),worker=new Worker(new URL('../../src/simulation/simulation-authority-worker.js',import.meta.url),{type:'module'}),events=[];const stop=observeGameEvents(game,event=>events.push(structuredClone(event)));let seq=0;
+ const messages=[];let wake=null;worker.onmessage=({data})=>{messages.push(data);wake?.();};worker.onerror=e=>{messages.push({kind:'browser-error',message:e.message});wake?.();};
+ const next=async()=>{while(!messages.length)await new Promise(resolve=>wake=resolve);wake=null;return messages.shift();};
+ try{
+  worker.postMessage({kind:'initialize',session:'test',snapshot:serialize(game),chunkKeys:chunks});let message=await next();if(message.kind!=='ready')throw Error(JSON.stringify(message));
+  const commands=[{kind:'advance',seconds:.013,nightFastForward:true},{kind:'advance',seconds:.025,nightFastForward:true},{kind:'pause',reason:'test'},{kind:'advance',seconds:.03,nightFastForward:true},{kind:'resume',reason:'test'},{kind:'advance',seconds:.016,nightFastForward:true},{kind:'snapshot'}],results=[];
+  for(const command of commands){worker.postMessage({kind:'command',session:'test',command:{...command,sequence:++seq}});if(command.kind==='advance'){advanceReal(game,command.seconds,nav,{nightFastForward:command.nightFastForward});nav.serviceRaidConnectivityDemand?.();}else if(command.kind==='pause')pause(game,command.reason);else if(command.kind==='resume')resume(game,command.reason);message=await next();if(message.kind!=='result'||message.sequence!==seq||message.snapshot!==serialize(game)||JSON.stringify(message.events)!==JSON.stringify(events.splice(0)))throw Error(`Mismatch at ${seq}: ${JSON.stringify(message).slice(0,600)}`);results.push({sequence:seq,kind:command.kind,elapsed:message.elapsed,pauses:message.pauses});}
+  worker.postMessage({kind:'command',session:'test',command:{kind:'snapshot',sequence:seq}});message=await next();if(message.kind!=='error')throw Error('Duplicate accepted');worker.postMessage({kind:'command',session:'test',command:{kind:'snapshot',sequence:++seq}});message=await next();if(message.kind!=='result'||message.snapshot!==serialize(game))throw Error('Duplicate changed state');
+  const client=createSimulationAuthorityClient({snapshot:serialize(game),chunkKeys:chunks,session:'client-test',capacity:3});try{const queued=[client.submit({kind:'pause',reason:'client-test'}),client.submit({kind:'resume',reason:'client-test'}),client.submit({kind:'advance',seconds:.02,nightFastForward:true})];if(queued.some(x=>!x.accepted)||client.submit({kind:'snapshot'}).reason!=='capacity')throw Error('Client capacity mismatch');await client.ready;pause(game,'client-test');resume(game,'client-test');advanceReal(game,.02,nav,{nightFastForward:true});nav.serviceRaidConnectivityDemand?.();const published=await Promise.all(queued.map(x=>x.result));if(published.at(-1).snapshot!==serialize(game))throw Error('Client snapshot mismatch');}finally{client.dispose();}return {results,duplicateRejected:true,clientQueueMatched:true,renderer:'none',scope:'Real simulation and Wild Engine from one restored island-mangrove raid snapshot, 24 explicitly supplied chunks, ordered advances/pause/resume and snapshot. No input integration, physics manager or rendered game.'};
+ }finally{stop();reference.dispose();worker.terminate();}
+};window.ready=true;
+</script>

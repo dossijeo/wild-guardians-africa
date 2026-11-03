@@ -1,0 +1,54 @@
+{
+  "results": [
+    {
+      "sequence": 1,
+      "kind": "advance",
+      "elapsed": 6069.013000003833,
+      "pauses": []
+    },
+    {
+      "sequence": 2,
+      "kind": "advance",
+      "elapsed": 6069.038000003834,
+      "pauses": []
+    },
+    {
+      "sequence": 3,
+      "kind": "pause",
+      "elapsed": 6069.038000003834,
+      "pauses": [
+        "test"
+      ]
+    },
+    {
+      "sequence": 4,
+      "kind": "advance",
+      "elapsed": 6069.038000003834,
+      "pauses": [
+        "test"
+      ]
+    },
+    {
+      "sequence": 5,
+      "kind": "resume",
+      "elapsed": 6069.038000003834,
+      "pauses": []
+    },
+    {
+      "sequence": 6,
+      "kind": "advance",
+      "elapsed": 6069.054000003834,
+      "pauses": []
+    },
+    {
+      "sequence": 7,
+      "kind": "snapshot",
+      "elapsed": 6069.054000003834,
+      "pauses": []
+    }
+  ],
+  "duplicateRejected": true,
+  "clientQueueMatched": true,
+  "renderer": "none",
+  "scope": "Real simulation and Wild Engine from one restored island-mangrove raid snapshot, 24 explicitly supplied chunks, ordered advances/pause/resume and snapshot. No input integration, physics manager or rendered game."
+}
