@@ -529,6 +529,14 @@ active physics and 33 view confirmations were folded. This is one animal and
 no rendered frames, so it does not establish visual continuity, multi-animal
 equivalence, frame-time improvement or a bounded event-heavy queue.
 
+With `?views&physics&multi`, the same test now loads a hyena and a warthog,
+performs two attacks separated by the existing 12-second cooldown, and
+compares 300 ticks, every event and both physical pose arrays. Two real Workers
+matched; the delayed presentation delivered 114 publications, coalesced 288
+and folded 96 view acknowledgements. The two physical effects did not overlap
+(zero simultaneously active ticks), so this does not validate simultaneous
+multi-body impacts. There is still no rendering or full UI in this test.
+
 `tests/browser/worker-coalesced-events-parity.html` compares two real mangrove
 simulation Workers for 100 identical ticks, holding the coalesced presentation
 until the end. It delivered three publications instead of 100, preserved all
