@@ -542,6 +542,18 @@ using a native provisional overlay with equivalent route selection or an
 isolated disposable spatial session. Neither option has yet established
 equivalence or bounded cost; founding remains on the existing path.
 
+`prepareVillageIsolated` is an experimental disposable-session preflight.
+It reconstructs a native world from a snapshot and retries missing-region
+errors in a fresh session, with a configurable cap on added regions. A real
+desert postgame test found the same suajili village as the live session and
+matched its serialized result, both with all regions loaded and with the site
+region missing initially. The live state and a building-site walkability
+check remained unchanged. One full-residency preflight took 1.9–2.3 s in
+individual local Node runs; these are not a benchmark or render-thread timing.
+The test covers one site and one center, not Worker integration, concurrent
+world changes, all cultures or a guarantee that later execution on the live
+session cannot request more regions. It remains disconnected from gameplay.
+
 When a microevent holds night speed, the game now sends the corresponding
 fast-forward policy to the installed Worker runtime, and restores it when the
 hold ends. Only changes are sent. Unit tests cover policy transitions and the

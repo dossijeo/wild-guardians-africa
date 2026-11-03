@@ -6,8 +6,9 @@ import {rational,numberOf} from '../src/simulation/money.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {createSpatialCampaignOpening} from '../tools/experiments/spatial-campaign-opening.mjs';
 import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
-import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
+import {createSpatialNavigationMovement,SpatialChunkUnavailable} from '../src/world/wild-engine/spatial-navigation-movement.js';
 import {centerServicePoint} from '../src/world/centers.js';
+import {prepareVillageIsolated} from '../src/simulation/isolated-village-preflight.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL(
   '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
@@ -56,6 +57,21 @@ test('a paid native postgame village gets a valid entry and survives reload',asy
     const house=preview.buildings.find(building=>building.kind!=='Zona común');
     assert(nav.walkable(house.x,house.z,.28,null,true),
       'the provisional building barrier is removed after preview');
+    const source=serialize(state);
+    const sparseState=deserialize(source),sparseLoaded=new Map(),sparse=createSpatialGameSession(module,sparseState,{loaded:()=>sparseLoaded,onData:data=>sparseLoaded.set(`${data.cx},${data.cz}`,data)});
+    try{
+      const sparseNav=createSpatialNavigationMovement(sparse,sparseState);sparseNav.setActiveBounds([x-120,z-120,x+120,z+120]);
+      assert.throws(()=>Game.foundVillage(sparseState,'native-second-village','suajili',site.x,site.z,payload,sparseNav),SpatialChunkUnavailable);
+      assert.equal(serialize(state),source,'a failed isolated attempt cannot modify the authoritative state');
+      assert(nav.walkable(house.x,house.z,.28,null,true),'a failed isolated attempt cannot alter live geometry');
+    }finally{sparse.dispose();}
+    const started=performance.now(),prepared=prepareVillageIsolated(module,source,[...loaded.keys()],{id:'native-second-village',culture:'suajili',...site,payload},{bounds:[x-120,z-120,x+120,z+120]}),preparationMs=performance.now()-started;
+    assert.equal(prepared.value,true);assert.deepEqual(prepared.addedChunks,[]);
+    const siteChunk=`${Math.floor((site.x+24)/48)},${Math.floor((site.z+24)/48)}`;
+    const retried=prepareVillageIsolated(module,source,[...loaded.keys()].filter(key=>key!==siteChunk),{id:'native-second-village',culture:'suajili',...site,payload},{bounds:[x-120,z-120,x+120,z+120]});
+    assert.ok(retried.addedChunks.includes(siteChunk),'preflight loads the missing site region');assert.equal(retried.snapshot,prepared.snapshot);
+    assert.equal(serialize(state),source,'isolated preparation leaves the authoritative state untouched');
+    assert(nav.walkable(house.x,house.z,.28,null,true),'isolated preparation does not install a live barrier');
     const before=numberOf(state.ledger.balance);
     assert.equal(Game.foundVillage(state,'native-second-village','suajili',
       site.x,site.z,payload,nav),true);
@@ -64,6 +80,8 @@ test('a paid native postgame village gets a valid entry and survives reload',asy
     assert.equal(state.villages[1].entry.x,preview.entry.x);
     assert.equal(state.villages[1].entry.z,preview.entry.z);
     assert.equal(state.events.filter(event=>event.type==='VillageFounded').length,1);
+    assert.equal(serialize(state),prepared.snapshot,'isolated and authoritative founding produce the same snapshot');
+    console.log('Isolated village preparation ms:',preparationMs.toFixed(1));
     assert.equal(nav.walkable(house.x,house.z,.28,null,true),false,
       'the paid village installs its permanent native building barrier');
     const saved=serialize(state),restored=deserialize(saved);
