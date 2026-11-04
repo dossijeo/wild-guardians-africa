@@ -1,8 +1,9 @@
 // Presentation receives confirmed publications asynchronously. It does not
 // own the simulation clock, queue, or nested simulation Worker.
-export function createWorkerHostedRuntime({world,session,clientOptions,runtimeOptions={},maxPending=256,controlReserve=8,onError=()=>{},onViewError=onError,terrainPort=null,workerFactory=()=>new Worker(new URL('./worker-runtime-host.js',import.meta.url),{type:'module'})}){
+export function createWorkerHostedRuntime({world,session,clientOptions,runtimeOptions={},maxPending=256,controlReserve=8,onError=()=>{},onViewError=onError,terrainPort=null,presentationPort=null,workerFactory=()=>new Worker(new URL('./worker-runtime-host.js',import.meta.url),{type:'module'})}){
  if(typeof world?.createConfirmedReceiver!=='function'||typeof session!=='string'||!session||!clientOptions||typeof clientOptions!=='object'||!Number.isSafeInteger(maxPending)||maxPending<1||!Number.isSafeInteger(controlReserve)||controlReserve<1)throw TypeError('Invalid hosted runtime');
  if(runtimeOptions.backgroundViews===true&&(!runtimeOptions.coalescePublications||!clientOptions.compactViewAcks))throw TypeError('Background views require compact coalescing');
+ if(terrainPort&&terrainPort===presentationPort)throw TypeError('Terrain and state need distinct ports');
  const worker=workerFactory(),receiver=world.createConfirmedReceiver(session),pending=new Map(),receptionSamples=[];let phase='new',next=1,resolveStart,rejectStart,lastStatus={},lastPublication=null,lastAttackDiagnostic=null,fault=null;
  function receptionStats(){if(!receptionSamples.length)return null;const values=[...receptionSamples].sort((a,b)=>a-b),at=q=>values[Math.min(values.length-1,Math.ceil(values.length*q)-1)];return {count:values.length,mean:values.reduce((a,b)=>a+b,0)/values.length,p95:at(.95),p99:at(.99),max:values.at(-1)};}
  function fail(error){if(phase==='closed'||phase==='failed')return;fault=error instanceof Error?error:Error(String(error));phase='failed';rejectStart?.(fault);for(const p of pending.values())p.reject(fault);pending.clear();worker.terminate();try{onError(fault);}catch{}}
@@ -19,7 +20,7 @@ export function createWorkerHostedRuntime({world,session,clientOptions,runtimeOp
  worker.onerror=event=>fail(Error(event.message||'Runtime host failed'));worker.onmessageerror=()=>fail(Error('Runtime host message failed'));
  return {
   backgroundViews:runtimeOptions.backgroundViews===true,
-  start(){if(phase!=='new')return Promise.reject(Error('Hosted runtime cannot start'));phase='starting';return new Promise((resolve,reject)=>{resolveStart=resolve;rejectStart=reject;try{worker.postMessage({kind:'initialize',session,clientOptions,runtimeOptions,...(terrainPort?{terrainPort}:{})},terrainPort?[terrainPort]:[]);}catch(error){fail(error);}});},
+  start(){if(phase!=='new')return Promise.reject(Error('Hosted runtime cannot start'));phase='starting';return new Promise((resolve,reject)=>{resolveStart=resolve;rejectStart=reject;try{const ports=[terrainPort,presentationPort].filter(Boolean);worker.postMessage({kind:'initialize',session,clientOptions,runtimeOptions,...(terrainPort?{terrainPort}:{}),...(presentationPort?{presentationPort}:{})},ports);}catch(error){fail(error);}});},
   // postMessage performs the structured clone synchronously; a prior explicit
   // clone duplicated main-thread work without providing additional isolation.
   submit(command){if(phase!=='running')return Promise.reject(fault??Error('Hosted runtime is not running'));const control=['pause','resume','snapshot'].includes(command?.kind);if(pending.size>=maxPending+(control?controlReserve:0))return Promise.reject(Error('Hosted runtime queue is full'));const id=next++;return new Promise((resolve,reject)=>{pending.set(id,{resolve,reject,kind:command?.kind});try{worker.postMessage({kind:'command',session,id,command});}catch(error){pending.delete(id);reject(error);}});},

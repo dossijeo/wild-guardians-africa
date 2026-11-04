@@ -1,0 +1,9 @@
+# Direct confirmed presentation stream
+
+The hosted simulation can optionally send ordered confirmed publications directly to a presentation Worker through a dedicated MessagePort. It uses the existing bounded publication queue: one in-flight publication, coalescing compatible quiet ticks, retaining event and invalidation boundaries. An acknowledgement advances the independent presentation queue; a malformed acknowledgement or more than 256 pending entries closes that visual stream without stopping the authoritative simulation. This is not recovery from visual stream failure: restarting and resynchronizing a presentation Worker remains necessary.
+
+The receiver reconciles authoritative state and events before releasing terrain for that sequence. This stream does not itself move actors, render physics poses, or provide the complete production scene. It is optional and does not replace the existing game renderer.
+
+`tools/experiments/audit_webgpu_confirmed_terrain.mjs` runs the real hosted simulation and a WebGPU-only OffscreenCanvas Worker with separate direct state and terrain channels. The recorded run in `webgpu-direct-state-terrain.json` used the mangrove island network, received both requested native terrain chunks at confirmed sequence 8 and drew them. It is a functional smoke test, not a performance comparison or a gameplay validation. Its run did not deliver gameplay events; ordered event reconciliation and gap rejection are covered by `tests/confirmed-presentation-stream.test.js`, and queue coalescing and barriers by `tests/host-publication-queue.test.js`.
+
+Remaining integration: production WebGPU world and materials, actor and physics presentation, complete event handling, session restart/resynchronization, gameplay, deterministic campaign comparisons, and actual latency/frame-time measurements. The WebGPU character/terrain Workers do not yet constitute a migrated playable raid.
