@@ -177,3 +177,24 @@ publications: this is not the target's full simulation/render decoupling. The
 normal path remains immediate; the hold is a DEV-only diagnostic and has not
 yet been validated in a real WebGPU session or benchmarked. It does not certify
 animation, VFX, physical poses, terrain history or a safe movement horizon.
+
+## Confirmed clock for baked hyena walking
+
+The existing `qa-webgpu-baked-hyena` presentation now supplies its baked
+walking meshes with one shared GPU uniform for the **committed** presentation
+time. Each animal's phase offset is set from its current confirmed pose; a
+paused or held publication does not advance the uniform. The old per-actor
+phase uniform remains selectable with `qa-webgpu-baked-clock-legacy`, and
+physical poses, unsupported clips and transitions retain their existing paths.
+To avoid visible phase discontinuities due to float precision, the GPU falls
+back to that direct phase when reconstructing it from the shared clock would
+differ by more than 0.1 ms or cross the clip boundary.
+
+This is wired to the real QA animal roster, not a replacement for the world
+timeline. It changes time only on confirmed publication, still updates each
+actor's phase offset during roster reconciliation, and does not make movement
+or animation advance independently between those publications. Other rigs and
+visual effects are not yet governed by this clock. Node tests cover two real
+hyena rigs, phases and fallback, and holding/committing a publication. They do
+not prove WGSL rendering, visual parity, shadow behavior or a performance
+gain; those need a bounded real WebGPU session.

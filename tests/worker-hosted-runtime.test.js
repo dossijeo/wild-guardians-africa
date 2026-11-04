@@ -4,6 +4,23 @@ import {MessageChannel} from 'node:worker_threads';
 import {once} from 'node:events';
 import {createWorkerHostedRuntime} from '../src/simulation/worker-hosted-runtime.js';
 
+test('confirmed events are delivered after each reconciliation before ACK without an event backlog',async()=>{
+ const messages=[],order=[],worker={postMessage:value=>messages.push(value),terminate(){this.terminated=true;}};let sequence=0;
+ const world={createConfirmedReceiver(){return {accept(p){sequence=p.sequence;order.push(`state-${sequence}`);return {accepted:true};},status(){return {sequence,lastElapsed:0};}};}};
+ const runtime=createWorkerHostedRuntime({world,session:'s',clientOptions:{},runtimeOptions:{coalescePublications:true},workerFactory:()=>worker,onConfirmedEvents:events=>order.push(...events.map(event=>event.id))});
+ const start=runtime.start();worker.onmessage({data:{kind:'publication',session:'s',publication:{sequence:1,elapsed:0,events:[]}}});worker.onmessage({data:{kind:'started',session:'s',sequence:1,status:{}}});await start;
+ const events=Array.from({length:205},(_,i)=>({id:`event-${i+1}`,type:'unused'}));worker.onmessage({data:{kind:'publication',session:'s',publication:{sequence:2,elapsed:1,events}}});
+ worker.onmessage({data:{kind:'publication',session:'s',publication:{sequence:3,elapsed:2,events:[{id:'event-206',type:'unused'}]}}});
+ assert.equal(runtime.confirmedEventDelivery,true);assert.equal(order[1],'state-2');assert.equal(order[2],'event-1');assert.equal(order[206],'event-205');assert.equal(order[207],'state-3');assert.equal(order[208],'event-206');assert.equal(messages.at(-1).sequence,3);runtime.dispose();
+});
+test('presentation event failure is reported without terminating the authority',async()=>{
+ const messages=[],errors=[],worker={postMessage:value=>messages.push(value),terminate(){this.terminated=true;}};let sequence=0;
+ const world={createConfirmedReceiver(){return {accept(p){sequence=p.sequence;return {accepted:true};},status(){return {sequence,lastElapsed:0};}};}};
+ const runtime=createWorkerHostedRuntime({world,session:'s',clientOptions:{},runtimeOptions:{coalescePublications:true},workerFactory:()=>worker,onConfirmedEvents:()=>{throw Error('presentation');},onViewError:error=>errors.push(error.message)});
+ const start=runtime.start();worker.onmessage({data:{kind:'publication',session:'s',publication:{sequence:1,elapsed:0,events:[]}}});worker.onmessage({data:{kind:'started',session:'s',sequence:1,status:{}}});await start;
+ worker.onmessage({data:{kind:'publication',session:'s',publication:{sequence:2,elapsed:1,events:[{id:'event-1'}]}}});assert.deepEqual(errors,['presentation']);assert.equal(runtime.status().fault,null);assert.equal(worker.terminated,undefined);assert.equal(messages.at(-1).sequence,2);runtime.dispose();
+});
+
 function setup(runtimeOptions={}){
  const messages=[],worker={postMessage:value=>messages.push(structuredClone(value)),terminate(){this.terminated=true;}},seen=[];let sequence=0,elapsed=0;
  const world={createConfirmedReceiver(){return {accept(packet){seen.push(packet.sequence);sequence=packet.sequence;elapsed=packet.elapsed;return {accepted:true};},acceptUnchanged(packet){sequence=packet.sequence;elapsed=packet.elapsed;return {accepted:true};},status(){return {sequence,lastElapsed:elapsed};}};}};

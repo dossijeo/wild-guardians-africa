@@ -8,6 +8,15 @@ import {GameJuiceModel} from '../src/ui/game-juice-model.js';
 import {saveGame} from '../src/app/save-game.js';
 import {observeSettlements} from '../src/simulation/settlement-observers.js';
 
+test('confirmed publication events survive ring overflow and are not repeated on frames',()=>{
+ const state=Game.newGame({seed:712}),model=new GameJuiceModel(state);
+ const events=Array.from({length:205},(_,i)=>({id:`event-${i+1}`,type:i===0?'NightStarted':'Unused'}));
+ state.events=events.slice(-200);assert.deepEqual(model.consume(state,events),[{kind:'overlay',effect:'nightfall'}]);
+ assert.deepEqual(model.consume(state,events),[]);assert.deepEqual(model.consume(state,[]),[]);
+ const next={id:'event-206',type:'RaidSpawned'};state.events=[...state.events.slice(1),next];assert.deepEqual(model.consume(state,[next]),[{kind:'overlay',effect:'raid'}]);assert.deepEqual(model.consume(state,[]),[]);
+ model.dispose();
+});
+
 test('real paid placements use confirmed transaction IDs and never displayed prices',()=>{
  const state=Game.newGame({seed:712}),model=new GameJuiceModel(state),nav=clearNavigation();
  Game.placeStructure(state,'center-paid',{x:4,z:0},nav);Game.plant(state,'seed-paid','mijo',8,0,nav);

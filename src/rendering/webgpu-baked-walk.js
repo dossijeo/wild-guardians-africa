@@ -33,9 +33,9 @@ export function createBakedWalkNodes(bake,{bindMatrix,canonicalMeshInverse,phase
 
 // Opt-in only: separate meshes retain the live rig for attacks and physical
 // poses. Materials and geometry are never modified on the source rig.
-export function createBakedWalkPresentation({model,root,renderer,bake}={}){
- if(!model?.isObject3D||!root?.isObject3D||!renderer?.backend?.isWebGPUBackend||!bake?.texture)throw TypeError('Invalid baked presentation');
- root.updateWorldMatrix(true,true);const rootInverse=new Matrix4().copy(root.matrixWorld).invert(),meshes=[],materials=[],phase=uniform(0);let enabled=false,disposed=false;
+export function createBakedWalkPresentation({model,root,renderer,bake,confirmedClock=null}={}){
+ if(!model?.isObject3D||!root?.isObject3D||!renderer?.backend?.isWebGPUBackend||!bake?.texture||confirmedClock!==null&&(!confirmedClock.node?.isNode||!Number.isFinite(confirmedClock.elapsed)))throw TypeError('Invalid baked presentation');
+ root.updateWorldMatrix(true,true);const rootInverse=new Matrix4().copy(root.matrixWorld).invert(),meshes=[],materials=[],phaseOffset=uniform(0),clockEnabled=uniform(0),phase=confirmedClock?confirmedClock.node.mul(clockEnabled).add(phaseOffset).max(0):phaseOffset;let enabled=false,disposed=false;
  try{
   model.traverse(source=>{if(!source.isSkinnedMesh)return;
    const channel=bake.meta.channels.find(c=>c.name===source.name);if(!channel||source.skeleton.bones.map(b=>b.name).join('\0')!==bake.bones.join('\0'))throw Error('Unsupported baked walking rig');
@@ -46,5 +46,5 @@ export function createBakedWalkPresentation({model,root,renderer,bake}={}){
   });
   if(!meshes.length||meshes.length!==bake.meta.channels.length)throw Error('Incomplete baked walking rig');for(const item of meshes)item.source.parent.add(item.mesh);
  }catch(error){for(const item of meshes)item.mesh.removeFromParent();for(const material of materials)material.dispose();throw error;}
- return {set(time){if(disposed||!Number.isFinite(time)||time<0)throw TypeError('Invalid baked walking phase');phase.value=time;for(const item of meshes){item.source.visible=false;item.mesh.visible=item.visible;}enabled=true;},isEnabled(){return enabled;},disable(){if(disposed||!enabled)return;for(const item of meshes){item.source.visible=item.visible;item.mesh.visible=false;}enabled=false;},dispose(){if(disposed)return;this.disable();disposed=true;for(const item of meshes)item.mesh.removeFromParent();for(const material of materials)material.dispose();}};
+ return {set(time){if(disposed||!Number.isFinite(time)||time<0)throw TypeError('Invalid baked walking phase');if(confirmedClock){const now=confirmedClock.elapsed,offset=time-now,reconstructed=Math.fround(Math.fround(now)+Math.fround(offset)),safe=Number.isFinite(reconstructed)&&reconstructed>=0&&reconstructed<bake.meta.duration&&Math.abs(reconstructed-time)<=.0001;clockEnabled.value=safe?1:0;phaseOffset.value=safe?offset:time;}else phaseOffset.value=time;for(const item of meshes){item.source.visible=false;item.mesh.visible=item.visible;}enabled=true;},isEnabled(){return enabled;},status(){return {enabled,confirmedClock:!!confirmedClock,phaseOffset:phaseOffset.value,clockWeight:clockEnabled.value};},disable(){if(disposed||!enabled)return;for(const item of meshes){item.source.visible=item.visible;item.mesh.visible=false;}enabled=false;},dispose(){if(disposed)return;this.disable();disposed=true;for(const item of meshes)item.mesh.removeFromParent();for(const material of materials)material.dispose();}};
 }

@@ -3,9 +3,16 @@
 import {observeSettlements} from '../simulation/settlement-observers.js';
 export class GameJuiceModel {
  constructor(state){this.cursor=state.events.at(-1)?.id;this.cooldowns={...state.cooldowns};this.day=state.day;this.critical=new Set();this.income=0n;this.expense=0n;this.release=observeSettlements(state.ledger,(_id,n)=>{const value=BigInt(n);if(value>0n)this.income+=value;else this.expense+=value;});}
- consume(state){
-  const events=state.events,index=events.at(-1)?.id===this.cursor?events.length-1:events.findIndex(e=>e.id===this.cursor),fresh=index<0?events:events.slice(index+1),out=[];
-  this.cursor=events.at(-1)?.id;
+ consume(state,confirmedEvents=null){
+  let fresh;
+  if(confirmedEvents===null){const events=state.events,index=events.at(-1)?.id===this.cursor?events.length-1:events.findIndex(e=>e.id===this.cursor);fresh=index<0?events:events.slice(index+1);this.cursor=events.at(-1)?.id;}
+  else{
+   if(!Array.isArray(confirmedEvents))throw TypeError('Invalid confirmed game events');
+   const number=id=>{const match=typeof id==='string'&&/^event-(0|[1-9]\d*)$/.exec(id),value=match?Number(match[1]):NaN;return Number.isSafeInteger(value)?value:null;};
+   let last=number(this.cursor)??-1;fresh=[];
+   for(const event of confirmedEvents){const n=number(event?.id);if(n===null)throw TypeError('Invalid confirmed event identity');if(n<=last)continue;last=n;fresh.push(event);this.cursor=event.id;}
+  }
+  const out=[];
   if(this.day!==state.day){this.day=state.day;this.critical.clear();}
   const income=this.income,expense=this.expense;this.income=0n;this.expense=0n;let entities;
   for(const e of fresh){

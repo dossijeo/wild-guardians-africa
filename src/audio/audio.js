@@ -243,7 +243,10 @@ export class AudioSystem {
           !state?.pauses?.some(p=>['menu','hidden','context-lost','runtime-error'].includes(p))}).catch(()=>{});
     }
     this.eventHistory=events;this.eventCursor=events.length;this.eventAnchor=events.at(-1);
-    if(this.seen.size>2000)this.seen=new Set(events.map(e=>e.id));
+    // Explicit Worker publications can be much shorter than the state ring.
+    // Retain both when compacting the deduplication set so a later transition
+    // back to ring-based delivery cannot replay recent confirmed sounds.
+    if(this.seen.size>2000)this.seen=new Set([...(state?.events??[]),...events].map(e=>e.id));
   }
   preparePowerReadySound(state){
     if(this.context?.state!=='running'||state.result||state.pauses?.length||!(state.cooldowns?.shield>0))return;

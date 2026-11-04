@@ -25,8 +25,8 @@ export class GameJuice {
  }
  remove(effect){effect.node.remove();this.effects.splice(this.effects.indexOf(effect),1);}
  savedSuccessfully(){if(this.disposed)return;this.saved.textContent='✓ '+this.copy().saved;this.saved.classList.add('visible');this.savedUntil=this.now()+2200;this.pulse(this.saved);}
- process(state){
-  for(const event of this.model.consume(state)){
+ process(state,confirmedEvents=null){
+  for(const event of this.model.consume(state,confirmedEvents)){
    if(event.kind==='overlay')this.overlays.request(event.effect);
    else if(event.kind==='money'){
     const sign=event.value>0n?'income':'expense';this.pending.set(sign,(this.pending.get(sign)??0n)+event.value);if(!this.flushAt)this.flushAt=this.now()+120;
