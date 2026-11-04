@@ -11,19 +11,24 @@ function estimateBytes(value,seen=new WeakSet()){
 }
 // Retains publication boundaries for a replacement presentation worker.
 // A candidate is not a replay base until its exact publication is acknowledged.
-export function createPresentationRecoveryJournal({capacity=256,highWatermark=128,maxBytes=268435456,highWatermarkBytes=201326592}={}){
- if(!Number.isSafeInteger(capacity)||capacity<2||!Number.isSafeInteger(highWatermark)||highWatermark<1||highWatermark>=capacity||!Number.isSafeInteger(maxBytes)||maxBytes<1||!Number.isSafeInteger(highWatermarkBytes)||highWatermarkBytes<1||highWatermarkBytes>=maxBytes)throw TypeError('Invalid presentation journal capacity');
+export function createPresentationRecoveryJournal({capacity=256,highWatermark=128,maxBytes=268435456,highWatermarkBytes=201326592,compactTicks=false}={}){
+ if(!Number.isSafeInteger(capacity)||capacity<2||!Number.isSafeInteger(highWatermark)||highWatermark<1||highWatermark>=capacity||!Number.isSafeInteger(maxBytes)||maxBytes<1||!Number.isSafeInteger(highWatermarkBytes)||highWatermarkBytes<1||highWatermarkBytes>=maxBytes||typeof compactTicks!=='boolean')throw TypeError('Invalid presentation journal capacity');
  let base=null,candidate=null,last=null,entries=[],bytes=0,closed=false;
  function ensure(){if(closed)throw Error('Presentation recovery journal closed');}
  function sequence(value){if(!Number.isSafeInteger(value)||value<1)throw TypeError('Invalid presentation journal sequence');return value;}
+ // Replay may skip intermediate states only when no observer-facing boundary,
+ // terrain, pose or motion is crossed. Eventful ticks retain their own state.
+ function quiet(item){const p=item?.publication;return item?.kind==='publication'&&item.tick===true&&!item.options?.backgroundView&&p?.unchanged!==true&&typeof p?.snapshot==='string'&&Array.isArray(p.events)&&p.events.length===0&&(p.presentationJournal===undefined||Array.isArray(p.presentationJournal)&&p.presentationJournal.length===0)&&p.physicsPose===null&&p.physicsPoses===undefined&&p.motionTrace===undefined&&p.motionInvalidation===undefined&&p.terrainCheckpoint===undefined&&Array.isArray(p.pauses);}
  return {
   append(message,tick,options={}){
    ensure();const n=sequence(message?.sequence);if(typeof tick!=='boolean'||!options||typeof options!=='object')throw TypeError('Invalid journal publication');
    if(last===null)return false;
    if(n!==last+1)throw Error('Presentation journal sequence gap');
-   if(entries.length>=capacity)throw Error('Presentation recovery journal capacity exceeded');
-   const item={kind:'publication',sequence:n,publication:structuredClone(message),tick,options:structuredClone(options)},size=estimateBytes(item);if(size>maxBytes-bytes)throw Error('Presentation recovery journal byte capacity exceeded');
-   entries.push({item,size});bytes+=size;last=n;return true;
+   const item={kind:'publication',sequence:n,publication:structuredClone(message),tick,options:structuredClone(options)},previous=entries.at(-1),fold=compactTicks&&previous&&!previous.sealed&&candidate!==previous.item.sequence&&quiet(previous.item)&&quiet(item)&&JSON.stringify(previous.item.publication.pauses)===JSON.stringify(item.publication.pauses);
+   if(fold)item.firstSequence=previous.item.firstSequence??previous.item.sequence;
+   if(!fold&&entries.length>=capacity)throw Error('Presentation recovery journal capacity exceeded');
+   const size=estimateBytes(item),retained=bytes-(fold?previous.size:0);if(size>maxBytes-retained)throw Error('Presentation recovery journal byte capacity exceeded');
+   if(fold)entries[entries.length-1]={item,size};else entries.push({item,size});bytes=retained+size;last=n;return true;
   },
   // The terrain worker delivers batches before the corresponding result.
   appendTerrain(value,chunks){
@@ -44,7 +49,7 @@ export function createPresentationRecoveryJournal({capacity=256,highWatermark=12
    base=n;candidate=null;entries=entries.filter(entry=>entry.item.sequence>n);bytes=entries.reduce((total,entry)=>total+entry.size,0);return base;
   },
   snapshot(){ensure();if(base===null)throw Error('Presentation checkpoint is not acknowledged');return {base,through:last,entries:structuredClone(entries.map(entry=>entry.item))};},
-  entry(index){ensure();if(base===null)throw Error('Presentation checkpoint is not acknowledged');if(!Number.isSafeInteger(index)||index<0)throw TypeError('Invalid presentation journal index');return index<entries.length?structuredClone(entries[index].item):null;},
+  entry(index){ensure();if(base===null)throw Error('Presentation checkpoint is not acknowledged');if(!Number.isSafeInteger(index)||index<0)throw TypeError('Invalid presentation journal index');if(index>=entries.length)return null;entries[index].sealed=true;return structuredClone(entries[index].item);},
   status(){return {base,candidate,through:last,entries:entries.length,bytes,capacity,highWatermark,maxBytes,highWatermarkBytes,pendingTerrain:entries.at(-1)?.item.kind==='terrain',saturated:entries.length>=highWatermark||bytes>=highWatermarkBytes,closed};},
   dispose(){closed=true;entries=[];bytes=0;base=candidate=last=null;}
  };

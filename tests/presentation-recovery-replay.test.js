@@ -26,3 +26,11 @@ test('base promotion during replay is rejected instead of replaying a truncated 
 test('a publication appended after a provisional catch-up is delivered before the next catch-up',()=>{
  const f=fixture();f.ack();assert.deepEqual(f.caught,[{sequence:1,entries:0}]);f.journal.append(publication(2,[{id:'late'}]),true);f.replay.wake();assert.equal(f.sent.at(-1).publication.events[0].id,'late');f.ack();assert.deepEqual(f.caught.at(-1),{sequence:2,entries:1});
 });
+
+test('compacted quiet range replays with the original first sequence and endpoint ACK',()=>{
+ const sent=[],errors=[],caught=[],port={postMessage:m=>sent.push(structuredClone(m)),start(){}},journal=createPresentationRecoveryJournal({compactTicks:true});journal.begin(1);journal.confirm(1);
+ const q=n=>({sequence:n,snapshot:'s'+n,events:[],physicsPose:null,pauses:[]});journal.append(q(2),true);journal.append(q(3),true);journal.append({...q(4),events:[{id:'event-4'}]},true);
+ const replay=createPresentationRecoveryReplay({port,session:'s',checkpoint:publication(1),journal,onCaughtUp:x=>caught.push(x),onError:e=>errors.push(e.message)});
+ const ack=()=>{const m=sent.at(-1);port.onmessage({data:{kind:'recoveryAck',session:'s',id:m.id,phase:m.kind.slice(8).toLowerCase(),sequence:m.sequence}})};
+ ack();assert.equal(sent.at(-1).firstSequence,2);assert.equal(sent.at(-1).sequence,3);assert.equal(sent.at(-1).publication.snapshot,'s3');ack();assert.equal(sent.at(-1).firstSequence,4);assert.equal(sent.at(-1).publication.events[0].id,'event-4');ack();assert.equal(caught.at(-1).sequence,4);assert.deepEqual(errors,[]);replay.dispose();
+});

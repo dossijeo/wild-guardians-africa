@@ -11,9 +11,10 @@ export function createPresentationRecoveryReplay({port,session,checkpoint,journa
   const state=journal.status();if(state.closed||state.base!==base)throw Error('Recovery journal base changed during replay');
   if(!started){started=true;send('checkpoint',base,{checkpoint});return;}
   const entry=journal.entry(index);if(!entry){if(!terrainPending&&!caught){caught=true;onCaughtUp({sequence:cursor,entries:index});}return;}caught=false;
-  if(!Number.isSafeInteger(entry.sequence)||entry.sequence!==cursor+1)throw Error('Recovery journal sequence gap');
-  if(entry.kind==='terrain'){if(!Array.isArray(entry.chunks))throw Error('Invalid recovery terrain');send('terrain',entry.sequence,{chunks:entry.chunks});}
-  else if(entry.kind==='publication'){if(entry.publication?.sequence!==entry.sequence||typeof entry.tick!=='boolean')throw Error('Invalid recovery publication');send('publication',entry.sequence,{publication:entry.publication,tick:entry.tick,options:entry.options});}
+  const firstSequence=entry.firstSequence??entry.sequence;
+  if(!Number.isSafeInteger(entry.sequence)||!Number.isSafeInteger(firstSequence)||firstSequence!==cursor+1||firstSequence>entry.sequence)throw Error('Recovery journal sequence gap');
+  if(entry.kind==='terrain'){if(firstSequence!==entry.sequence||!Array.isArray(entry.chunks))throw Error('Invalid recovery terrain');send('terrain',entry.sequence,{chunks:entry.chunks});}
+  else if(entry.kind==='publication'){if(entry.publication?.sequence!==entry.sequence||typeof entry.tick!=='boolean'||firstSequence!==entry.sequence&&entry.tick!==true)throw Error('Invalid recovery publication');send('publication',entry.sequence,{publication:entry.publication,tick:entry.tick,options:entry.options,firstSequence});}
   else throw Error('Invalid recovery journal entry');
  }catch(error){fail(error);}}
  port.onmessage=({data})=>{if(closed||failed)return;try{

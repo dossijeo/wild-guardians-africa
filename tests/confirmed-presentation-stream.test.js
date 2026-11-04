@@ -63,3 +63,15 @@ test('publication journal drives real WebGPU guardian after snapshot reconciliat
  port.onmessage({data:{kind:'publication',session:'s',tick:true,firstSequence:1,publication:{session:'s',sequence:1,snapshot:serialize(authority),events:[event],presentationJournal:[{kind:'event',eventId:event.id},{kind:'animalGone',actorId:animal.id}]}}});
  assert.deepEqual(errors,[]);assert.equal(guardian.status().active,null);assert.equal(acks[0].sequence,1);stream.dispose();guardian.dispose();
 });
+
+test('compacted quiet recovery ticks preserve final state and ordered event against reference replay',async()=>{
+ const {createPresentationRecoveryJournal}=await import('../src/simulation/presentation-recovery-journal.js');
+ const authority=fixture(),reference=deserialize(serialize(authority)),compacted=deserialize(serialize(authority)),eventsA=[],eventsB=[],errors=[];
+ const stopA=observePresentationGameEvents(reference,e=>eventsA.push(e.id)),stopB=observePresentationGameEvents(compacted,e=>eventsB.push(e.id));
+ const portA={postMessage(){},close(){},start(){}},portB={postMessage(){},close(){},start(){}};
+ const a=createConfirmedPresentationStream({port:portA,session:'s',state:reference,initialSequence:1,terrain:{confirm(){}},onError:e=>errors.push(e)}),b=createConfirmedPresentationStream({port:portB,session:'s',state:compacted,initialSequence:1,terrain:{confirm(){}},onError:e=>errors.push(e)});
+ const journal=createPresentationRecoveryJournal({compactTicks:true});journal.begin(1);journal.confirm(1);
+ for(let n=2;n<=4;n++){authority.elapsed+=.01;authority.time+=.01;let events=[];if(n===4){emit(authority,'Test');events=[authority.events.at(-1)];}const p={session:'s',sequence:n,snapshot:serialize(authority),events,physicsPose:null,pauses:[...authority.pauses]};journal.append(p,true);portA.onmessage({data:{kind:'publication',session:'s',publication:p,tick:true,firstSequence:n}});}
+ for(const item of journal.snapshot().entries)portB.onmessage({data:{kind:'publication',session:'s',publication:item.publication,tick:item.tick,firstSequence:item.firstSequence??item.sequence}});
+ assert.deepEqual(errors,[]);assert.equal(serialize(compacted),serialize(reference));assert.deepEqual(eventsB,eventsA);assert.equal(b.status().sequence,4);a.dispose();b.dispose();stopA();stopB();
+});
