@@ -64,3 +64,21 @@ Se instrumentaron también llamadas reales de la API WebGPU y se contaron cadena
 En la repetición caliente del mismo contexto no se crearon módulos ni pipelines nuevos en ninguno de los dos modos. Las cifras son llamadas de creación, no memoria, tiempo GPU ni número de pipelines residentes; una cadena WGSL es una etapa, no un programa completo. Introducir el material compartido **como capa temporal adicional** incrementó los códigos y llamadas observados en este caso, porque la sustitución sigue necesitando los materiales finales. Por sí solo no demuestra que una familia compartida capaz de conservar el aspecto final fuese peor o mejor: ese experimento sigue pendiente. Datos completos en `results/uber-shader-count-individual.json` y `results/uber-shader-count-shared.json`.
 
 Reproducir la comparación visual con `node tools/experiments/check_shared_material_real.mjs`; usar `WG_PERTURB=1` para su control positivo y `WG_SCREENSHOT` para guardar la captura. Para los recuentos, ejecutar el auditor con `WG_TRACE=1`, `WG_SOURCE=full`, `WG_BACKEND=webgpu`, `WG_MODE=swap`, `WG_SWAP_PREPARATION=scope`, `WG_MATCH_SWAP_TARGET=1` y alternar `WG_SHARED_FALLBACK=0/1`.
+
+## Cobertura visual aproximada de los materiales compartidos
+
+Se ha añadido una prueba de cuatro ángulos para cada uno de los diez GLB completos en su pose estática. La imagen se vuelve a dibujar con una máscara sólida: rojo para mallas elegibles y verde para las demás. Los porcentajes indican la proporción roja de los píxeles de la silueta, no la proporción de mallas. La máscara respeta profundidad y lado de cada material, pero sustituye su shader y no reproduce transparencia, recorte alfa, sombras ni animación; es una estimación para orientar la investigación, no una medida exacta de cobertura en partida. Captura: `uber-character-coverage.png`; datos y recetas observadas: `results/uber-character-coverage.json`.
+
+| Modelo | Mallas elegibles | Cobertura visible en cuatro vistas |
+| --- | ---: | --- |
+| Guardián | 3/4 | 0–2,1 % |
+| Hiena | 2/4 | 0,3–2,1 % |
+| León | 1/5 | 0–0,4 % |
+| Rinoceronte | 5/5 | 100 % |
+| Búfalo | 3/3 | 100 % |
+| Jabalí | 2/4 | 0–0,5 % |
+| Cuatro trabajadores | 25/27, 25/27, 25/28 y 25/28 | 0 % en estas vistas |
+
+Las superficies visibles excluidas de varias bestias y de los trabajadores son principalmente `MeshPhysicalMaterial`; el guardián también incluye un material estándar con mapas de rugosidad y metalicidad. Los materiales físicos observados tienen clearcoat, transmisión, sheen, iridiscencia y anisotropía a cero, pero usan distintas intensidades especulares y algunos mapas de normales, rugosidad o metalicidad. No pueden reducirse a la familia estándar actual sin comprobar la equivalencia: la intensidad especular afecta el resultado y sigue pendiente la paridad con el renderizador AfricanToon real. Estos datos indican que el siguiente prototipo útil debe cubrir las superficies físicas visibles y sus mapas, o bien demostrar por qué pueden transformarse sin pérdida visual; optimizar las 100 mallas de trabajadores que quedan ocultas no resolvería la compilación de su superficie principal.
+
+Ejecutar `node tools/experiments/check_shared_material_coverage.mjs`, con `WG_SCREENSHOT` y `WG_OUTPUT` opcionales. La prueba rechaza WebGL y comprueba que las cuatro vistas de cada modelo tengan una silueta no vacía. No mide rendimiento ni demuestra ahorro.
