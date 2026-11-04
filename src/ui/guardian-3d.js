@@ -8,20 +8,20 @@ import {assetUrl} from '../rendering/asset-url.js';
 import {compileLoadingPrograms} from '../rendering/loading-programs.js';
 import {initializeValidatedProgramBindings} from '../rendering/program-bindings.js';
 export class Guardian3D {
- constructor(canvas,{modelUrl='content/guardian/guardian.glb',viewport=null,resolve=assetUrl}={}){
+ constructor(canvas,{modelUrl='content/guardian/guardian.glb',viewport=null,resolve=assetUrl,renderer=null,createVortex=()=>new GuardianVortex(),prepareModel=()=>{}}={}){
   this.modelUrl=modelUrl;this.resolve=resolve;
-  this.canvas=canvas;this.viewport=viewport;this.renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'low-power'});this.renderer.setPixelRatio(Math.min(viewport?.dpr??globalThis.devicePixelRatio??1,1.5));this.renderer.setClearColor(0,0);this.renderer.outputColorSpace=THREE.SRGBColorSpace;this.renderer.toneMapping=THREE.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.15;
-  this.pendingProgramPreparation=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-guardian-program-warm')&&!!this.renderer.getContext().getExtension('KHR_parallel_shader_compile');
+  this.canvas=canvas;this.viewport=viewport;this.prepareModel=prepareModel;this.renderer=renderer??new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'low-power'});this.renderer.setPixelRatio(Math.min(viewport?.dpr??globalThis.devicePixelRatio??1,1.5));this.renderer.setClearColor(0,0);this.renderer.outputColorSpace=THREE.SRGBColorSpace;this.renderer.toneMapping=THREE.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.15;
+  this.pendingProgramPreparation=this.renderer.isWebGLRenderer&&import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-guardian-program-warm')&&!!this.renderer.getContext().getExtension('KHR_parallel_shader_compile');
   this.scene=new THREE.Scene();this.camera=new THREE.OrthographicCamera(-.56,.56,.56,-.56,.01,10);this.camera.position.set(0,0,2);this.camera.lookAt(0,0,0);
   this.scene.add(new THREE.HemisphereLight(0xfff4dc,0x786b60,2.2));
   const key=new THREE.DirectionalLight(0xffecd9,3);key.position.set(-2,3,4);this.scene.add(key);const fill=new THREE.DirectionalLight(0xd9edff,1.5);fill.position.set(2,1,2);this.scene.add(fill);
-  this.vortex=new GuardianVortex();this.vortex.scale.setScalar(.32);this.scene.add(this.vortex);
+  this.vortex=createVortex();this.vortex.scale.setScalar(.32);this.scene.add(this.vortex);
   this.eyeTargets={};this.target=new THREE.Vector3(0,.27,2);this.gazeOffset=new THREE.Vector3();this.temp=new THREE.Vector3();this.q=new THREE.Quaternion();this.yAxis=new THREE.Vector3(0,1,0);this.manual={};this.record=null;this.ready=this.load();
  }
  async load(){
   const gltf=await new GLTFLoader().loadAsync(this.resolve(this.modelUrl));
   if(this.disposed){this.release(gltf.scene);return;}
-  this.model=gltf.scene;this.scene.add(this.model);this.mixer=new THREE.AnimationMixer(this.model);this.pose=new GuardianPose(this.model,this.mixer);this.actions=new Map(gltf.animations.map(clip=>[clip.name,this.mixer.clipAction(clip)]));
+  this.model=gltf.scene;this.prepareModel(this.model,this.renderer);this.scene.add(this.model);this.mixer=new THREE.AnimationMixer(this.model);this.pose=new GuardianPose(this.model,this.mixer);this.actions=new Map(gltf.animations.map(clip=>[clip.name,this.mixer.clipAction(clip)]));
   for(const a of this.actions.values())a.play();
   this.eyes=['L','R'].map(side=>{const bone=this.model.getObjectByName('Eye'+side)??this.model.getObjectByName('Eye.'+side);return bone?{bone,side,rest:bone.quaternion.clone()}:null;}).filter(Boolean);
   this.face=new GuardianFace(this.model,{resolve:this.resolve});if(this.record)this.face.setRecord(this.record);this.resize();
@@ -57,7 +57,7 @@ export class Guardian3D {
   this.vortex.update(reduced?0:time,0xb8edce,3,-1.5,true);
   this.updateMs=performance.now()-start;this.renderer.render(this.scene,this.camera);
  }
- get metrics(){const info=this.renderer.info;return {updateMs:this.updateMs,drawCalls:info.render.calls,triangles:info.render.triangles,geometries:info.memory.geometries,textures:info.memory.textures,bones:this.model?.getObjectByProperty('type','SkinnedMesh')?.skeleton.bones.length};}
+ get metrics(){const info=this.renderer.info;return {updateMs:this.updateMs,drawCalls:info.render.calls??info.render.drawCalls,triangles:info.render.triangles,geometries:info.memory?.geometries,textures:info.memory?.textures,bones:this.model?.getObjectByProperty('type','SkinnedMesh')?.skeleton.bones.length};}
  release(root){root.traverse(o=>{o.skeleton?.dispose();o.geometry?.dispose();for(const m of o.material?(Array.isArray(o.material)?o.material:[o.material]):[]){for(const v of Object.values(m))if(v?.isTexture)v.dispose();m.dispose();}});}
  dispose(){this.disposed=true;this.face?.dispose();this.mixer?.stopAllAction();if(this.model){this.mixer.uncacheRoot(this.model);this.release(this.model);}this.vortex.dispose();this.renderer.dispose();}
 }
