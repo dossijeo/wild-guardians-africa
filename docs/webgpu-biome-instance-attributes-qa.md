@@ -88,3 +88,13 @@ proves shadow or occlusion parity. Local logs are
 [attributes log](biome-live-mangrove-attributes-clear.txt). The attempted
 occluder diagnostic yielded no real evidence and was removed. The default is
 unchanged.
+
+To investigate availability, the live harness recorded navigation, Vite
+messages, page errors, error banners and worker lifetimes. An interrupted run
+overlapped source edits and recorded repeated full navigations and worker
+closures ([log](biome-worker-loss-hmr-interrupted.txt)). A second run with
+source edits frozen had no additional navigation or error banner and
+completed 15 picking requests before normal shutdown
+([log](biome-worker-loss-stable.txt)). This supports HMR as the explanation
+for the contaminated run; it does not establish the cause of each earlier
+unavailable picker. No runtime fix was made without a reproducible failure.
