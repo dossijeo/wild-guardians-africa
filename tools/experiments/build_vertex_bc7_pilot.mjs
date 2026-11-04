@@ -10,7 +10,7 @@ const [baseDirectory, outputRoot] = process.argv.slice(2);
 if (!baseDirectory || !outputRoot) throw Error('Usage: node build_vertex_bc7_pilot.mjs <original-materials-dir> <output-root>');
 const metadata = JSON.parse(await readFile(join(baseDirectory, 'materials.gltf'), 'utf8'));
 const mapping = JSON.parse(await readFile(join(baseDirectory, 'mapping.json'), 'utf8'));
-if (!['hyena', 'buffalo', 'mapungubweCenter', 'suajiliCenter', 'etiopeCenter', 'sahelianaCenter', 'musgumCenter'].includes(mapping.id) || !/^[a-f0-9]{64}$/.test(mapping.sourceSha256 ?? '')) throw Error('Unsupported pilot source');
+if (!['hyena', 'buffalo', 'lion', 'rhino', 'warthog', 'mapungubweCenter', 'suajiliCenter', 'etiopeCenter', 'sahelianaCenter', 'musgumCenter'].includes(mapping.id) || !/^[a-f0-9]{64}$/.test(mapping.sourceSha256 ?? '')) throw Error('Unsupported pilot source');
 const report = JSON.parse(await readFile('.cache/ktx2-native/glb/report.json', 'utf8'));
 const model = `assets/web/${mapping.sourceSha256}.glb`;
 const runtime = readGlb(await readFile(`public/${model}`)).json;
