@@ -94,3 +94,22 @@ Con esa corrección se compararon imágenes WebGPU a 192 × 192 de los diez GLB 
 Una prueba separada de dos objetos confirma que intercambiar colores y texturas produce los píxeles esperados sin crear otro pipeline en ese caso: 1→1 para colores y 2→2 para texturas (`results/uber-physical-parameters.json`). Se ejecutaron además dos tests unitarios de parámetros y rechazo de características incompatibles. Reproducir con `node tools/experiments/check_shared_physical_real.mjs`, `node tools/experiments/check_shared_physical_gpu.mjs` y `node --test tests/shared-physical-material.test.js`; el control visual usa `WG_PERTURB=1`.
 
 Estas pruebas son una demostración inicial para materiales físicos estándar, no una validación de AfricanToon, sombras, día/noche, movimientos, impactos, coste GPU, memoria ni escenarios reales. La prueba no demuestra todavía reducción global de pipelines ni elimina los tirones. Falta integrar esta familia únicamente en la escena comparativa, repetir A/B con varios personajes y medir si sustituir los materiales finales —en vez de añadir otro material provisional— reduce de verdad las compilaciones y mejora los tiempos sin degradar la apariencia.
+
+## Familia física como material final: aparición progresiva
+
+El laboratorio admite `physicalFinal=1` para sustituir directamente las mallas físicas compatibles por la familia compartida, conservando los demás materiales. El banco vive durante toda la secuencia; se liberan las referencias por actor al retirarlo. No se añade un material provisional ni se llama a `compileAsync`: se compara la aparición inmediata de diez GLB completos, uno por uno, con animación, luces y sombras de la escena del laboratorio. Se sustituyen 18 mallas de las 135. Esto no reproduce AfricanToon ni es una incursión del juego.
+
+Se ejecutó una serie A/B/B/A sin instrumentación (A materiales originales, B familia física) en Edge headless, WebGPU real, GTX 1660, con recursos GLB cargados antes de la secuencia y sin precalentamiento de personajes. Cada ejecución crea un navegador y contexto nuevos y luego repite en el mismo contexto. El caché del controlador no se ha vaciado ni se declara frío. Dos repeticiones por opción son insuficientes para una conclusión estadística, y las pausas dejan solo 14–16 intervalos RAF medidos en contexto nuevo, por lo que p95 y p99 son especialmente débiles. En el mismo contexto el entorno headless se estabiliza alrededor de 33,3 ms.
+
+| Orden | Familia | RAF muestras | Media ms | p95/p99 ms | Máximo ms | >50 ms |
+| ---: | --- | ---: | ---: | ---: | ---: | ---: |
+| A | Original | 16 | 481,2 | 2166,6 | 2166,6 | 9 |
+| B | Compartida | 14 | 550,0 | 1699,9 | 1699,9 | 9 |
+| B | Compartida | 14 | 545,2 | 1700,0 | 1700,0 | 9 |
+| A | Original | 14 | 533,3 | 1733,4 | 1733,4 | 9 |
+
+Las cuatro repeticiones calientes tuvieron media, p95 y p99 de aproximadamente 33,3–33,4 ms y ningún intervalo >50 ms. Los grandes máximos se mantienen en ambos tratamientos: **no se demuestra una mejora de fluidez**. Los intervalos incluyen carga de texturas y buffers, compilación y contención; no hay medición de tiempo de ejecución GPU ni atribución causal. Datos en `results/uber-physical-final-abba-{0,1,2,3}.json`.
+
+Se hicieron otras dos ejecuciones instrumentadas solo para contar llamadas y cadenas WGSL distintas; la instrumentación afecta a los tiempos. En contexto nuevo, tanto el original como la familia crearon 100 módulos con 100 cadenas WGSL distintas y 82 pipelines síncronos, y ninguna llamada asíncrona. Las repeticiones calientes no crearon módulos ni pipelines. El resultado indica que la familia compartida **no reduce la cantidad observada de shaders ni pipelines en esta secuencia**; Three ya puede reutilizar programas entre materiales distintos. No establece qué ocurriría con otras geometrías, instancias o familias completas, ni demuestra equivalencia visual de las sombras. Datos: `results/uber-physical-final-trace-{0,1}.json`.
+
+Reproducir con `WG_SOURCE=full`, `WG_BACKEND=webgpu`, `WG_MODE=direct` y alternar `WG_PHYSICAL_FINAL=0/1` en `tools/experiments/audit_webgpu_on_demand.mjs`; añadir `WG_TRACE=1` solo para diagnosticar. No se integra el prototipo en producción. Antes de plantear una migración hacen falta comparar familias con AfricanToon y recursos del mundo, identificar qué diferencias estructurales originan realmente los pipelines y analizar subidas de recursos y ejecución GPU.

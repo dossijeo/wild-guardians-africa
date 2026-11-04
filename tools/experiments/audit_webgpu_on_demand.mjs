@@ -16,7 +16,7 @@ try{
   for(const name of ['createProgram','linkProgram','getProgramInfoLog','createTexture','texImage2D','texSubImage2D','compressedTexImage2D','bufferData'])wrap(globalThis.WebGL2RenderingContext?.prototype,name);
  });
  const base=process.env.WG_BASE_URL??'http://127.0.0.1:5175',started=Date.now();
- await page.goto(`${base}/webgpu-on-demand.html?backend=${backend}&source=${source}${process.env.WG_QUEUE_FENCE==='1'?'&queueFence=1':''}${process.env.WG_TARGET==='live'?'&target=live':''}${['actor','scope'].includes(process.env.WG_SWAP_PREPARATION)?`&swapPreparation=${process.env.WG_SWAP_PREPARATION}`:''}${process.env.WG_MATCH_SWAP_TARGET==='1'?'&matchSwapTarget=1':''}${process.env.WG_SHARED_FALLBACK==='1'?'&sharedFallback=1':''}`,{waitUntil:'domcontentloaded'});
+ await page.goto(`${base}/webgpu-on-demand.html?backend=${backend}&source=${source}${process.env.WG_QUEUE_FENCE==='1'?'&queueFence=1':''}${process.env.WG_TARGET==='live'?'&target=live':''}${['actor','scope'].includes(process.env.WG_SWAP_PREPARATION)?`&swapPreparation=${process.env.WG_SWAP_PREPARATION}`:''}${process.env.WG_MATCH_SWAP_TARGET==='1'?'&matchSwapTarget=1':''}${process.env.WG_SHARED_FALLBACK==='1'?'&sharedFallback=1':''}${process.env.WG_PHYSICAL_FINAL==='1'?'&physicalFinal=1':''}`,{waitUntil:'domcontentloaded'});
  await page.waitForFunction(()=>window.wildGuardiansWebGpuLabStatus?.().backend||window.wildGuardiansWebGpuLabStatus?.().errors,null,{timeout:60000});
  let initial=await page.evaluate(()=>window.wildGuardiansWebGpuLabReport());
  if(initial.errors.length||initial.backendActual!==(backend==='webgpu'?'WebGPU real':'WebGL2'))throw Error('Backend mismatch: '+JSON.stringify(initial));
@@ -37,6 +37,7 @@ try{
   const sample=await page.evaluate(start=>({report:window.wildGuardiansWebGpuLabReport(),trace:window.__pipelineTrace.filter(row=>row.start>=start),countsAfter:{...window.__pipelineCounts},uniqueShaderCodesAfter:window.__shaderCodes.size}),start);sample.countsBefore=countsBefore;sample.uniqueShaderCodesBefore=uniqueShaderCodesBefore;
   sample.cpuProfile=cpuProfile;
   if(sample.report.errors.length||sample.report.appearances.some(row=>!row.success||row.drewBeforeReady))throw Error('Scenario failed: '+JSON.stringify(sample.report.errors));
+  if(process.env.WG_PHYSICAL_FINAL==='1'&&(!sample.report.physicalFinal||!sample.report.appearances.some(row=>row.physicalMeshes>0)))throw Error('Shared physical material path was not exercised');
   if(mode==='swap'||mode==='swap-direct')for(const row of sample.report.appearances){if(row.fallbackFirstDrawAt===null||row.finalFirstDrawAt===null||row.upgradedAt===null||(mode==='swap'&&(row.compileResolvedAt===null||row.upgradedAt<row.compileResolvedAt)))throw Error('Material replacement was not observed in order: '+JSON.stringify(row));}
   samples.push({cache,start,...sample});
   if(cache==='fresh-context'&&process.env.WG_SCREENSHOT)await page.screenshot({path:process.env.WG_SCREENSHOT});

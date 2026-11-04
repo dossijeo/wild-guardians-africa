@@ -3,6 +3,7 @@ import { WebGPURenderer } from 'three/webgpu';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { clone as cloneSkeleton } from 'three/addons/utils/SkeletonUtils.js';
 import {createSharedCharacterFallback} from './shared-character-material.js';
+import {createSharedPhysicalMaterial,physicalFamilyKey} from './shared-physical-material.js';
 
 const modelNames = [
   'guardian', 'hyena', 'lion', 'rhino', 'buffalo', 'warthog',
@@ -16,6 +17,7 @@ const compileTarget = qs.get('target') === 'live' ? 'live' : 'separate';
 const swapPreparation = ['actor','scope'].includes(qs.get('swapPreparation')) ? qs.get('swapPreparation') : 'clone';
 const matchSwapTarget = qs.get('matchSwapTarget') === '1';
 const sharedFallback = qs.get('sharedFallback') === '1' && backend === 'webgpu';
+const physicalFinal = qs.get('physicalFinal') === '1' && backend === 'webgpu';
 const elements = Object.fromEntries([
   'viewport', 'load', 'spawn', 'sequence', 'clear', 'model', 'mode',
   'status', 'metrics', 'events', 'reset', 'copy',
@@ -39,6 +41,7 @@ const report = {
   swapPreparation,
   matchSwapTarget,
   sharedFallback,
+  physicalFinal,
   resources: [],
   backendDetails: null,
   environment:{userAgent:navigator.userAgent,devicePixelRatio:devicePixelRatio||1,visibility:document.visibilityState,visibilityChanges:[]},
@@ -70,6 +73,7 @@ const assets = new Map();
 const actors = [];
 const fallbackMaterials = new Map();
 const sharedMaterials=new Map();
+const physicalMaterials=new Map();
 const intervalLimit = 5000;
 try { new PerformanceObserver(list => { for (const entry of list.getEntries()) report.longTasks.push({start:entry.startTime,duration:entry.duration}); }).observe({type:'longtask',buffered:true}); } catch {}
 document.addEventListener('visibilitychange',()=>report.environment.visibilityChanges.push({at:performance.now(),state:document.visibilityState}));
@@ -169,9 +173,10 @@ async function spawn(name = elements.model.value) {
   setButtons();
   const strategy = elements.mode.value;
   const begin = now();
-  const row = {name, strategy, requestedAt:begin, actorPreparedAt:null, compileRequestedAt:null, compileReturnedAt:null, compileResolvedAt:null, addedAt:null, firstDrawAt:null, fallbackFirstDrawAt:null, upgradeRequestedAt:null, upgradedAt:null, finalFirstDrawAt:null, fallbackDrawsWhilePending:0, fallbackFramesWhilePending:0, drewBeforeReady:false, msUntilAdded:null, msUntilFirstDraw:null, changedMaterials:0, sharedMeshes:0, totalMeshes:0, success:false};
+  const row = {name, strategy, requestedAt:begin, actorPreparedAt:null, compileRequestedAt:null, compileReturnedAt:null, compileResolvedAt:null, addedAt:null, firstDrawAt:null, fallbackFirstDrawAt:null, upgradeRequestedAt:null, upgradedAt:null, finalFirstDrawAt:null, fallbackDrawsWhilePending:0, fallbackFramesWhilePending:0, drewBeforeReady:false, msUntilAdded:null, msUntilFirstDraw:null, changedMaterials:0, sharedMeshes:0, physicalMeshes:0, totalMeshes:0, success:false};
   try {
     const actor = makeActor(name);
+    if(physicalFinal)actor.root.traverse(object=>{if(!object.isMesh||Array.isArray(object.material)||!object.material.isMeshPhysicalMaterial)return;const original=object.material,key=physicalFamilyKey(original);let family=physicalMaterials.get(key);if(!family){const candidate=createSharedPhysicalMaterial(original);if(candidate.supports(object,original)){family=candidate;physicalMaterials.set(key,family);}else candidate.dispose();}if(family?.bind(object,original)){object.material=family.material;row.physicalMeshes++;}});
     row.actorPreparedAt=now();
     const replacing=strategy==='swap'||strategy==='swap-direct',materials=[],changed=new Set();let resolveFallback,preparing=false;
     const fallbackDrawn=new Promise(resolve=>resolveFallback=resolve);
@@ -270,7 +275,7 @@ function clearActors() {
   for (const actor of actors) {
     actor.mixer?.stopAllAction();
     scene.remove(actor.root);
-    const skeletons=new Set();actor.root.traverse(object=>{if(object.isSkinnedMesh)skeletons.add(object.skeleton);for(const shared of sharedMaterials.values())shared.release(object);});
+    const skeletons=new Set();actor.root.traverse(object=>{if(object.isSkinnedMesh)skeletons.add(object.skeleton);for(const shared of sharedMaterials.values())shared.release(object);for(const family of physicalMaterials.values())family.release(object);});
     for(const skeleton of skeletons)skeleton.dispose();
   }
   actors.length = 0;
