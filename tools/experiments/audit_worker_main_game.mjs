@@ -4,7 +4,7 @@ const browser=await chromium.launch({channel:'msedge',headless:true,args:['--ena
 try{
  const page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[];
  page.on('pageerror',error=>errors.push(String(error)));
- await page.goto(`${process.env.QA_BASE_URL??'http://127.0.0.1:5175'}/?qa-worker-game&qa-worker-start&qa-visibility&qa-seed=712&wildEngineThreads=0${process.env.QA_CLOCK==='1'?'&qa-worker-clock':''}`,{waitUntil:'domcontentloaded'});
+ await page.goto(`${process.env.QA_BASE_URL??'http://127.0.0.1:5175'}/?qa-worker-game&qa-worker-start&qa-visibility&qa-seed=712&wildEngineThreads=0${process.env.QA_CLOCK==='1'?'&qa-worker-clock':''}${process.env.QA_GUARDIAN_WORKER==='1'?'&qa-guardian-3d-worker':''}`,{waitUntil:'domcontentloaded'});
  await page.waitForFunction(()=>{const q=window.wildGuardiansWorkerQa?.();return q?.screen==='game'&&q?.status?.running||document.querySelector('.error-banner');},null,{timeout:180000});
  const initial=await page.evaluate(()=>({qa:window.wildGuardiansWorkerQa(),failure:document.querySelector('.error-banner')?.textContent}));
  if(initial.failure||!initial.qa.status?.running)throw Error('Worker game did not start: '+JSON.stringify(initial));
@@ -31,5 +31,6 @@ try{
  await page.locator('#hiring-dialog').waitFor({state:'visible',timeout:30000});await page.locator('[data-crew-step="0"][data-delta="1"]').click();await page.locator('#hireConfirm').click();
  await page.waitForFunction(()=>window.wildGuardiansWorkerQa().workers===1,null,{timeout:30000});
  const hired=await page.evaluate(()=>window.wildGuardiansWorkerQa());if(hired.status.fault||errors.length)throw Error(JSON.stringify({fault:hired.status.fault,errors}));
- console.log(JSON.stringify({initial:initial.qa.elapsed,paused:paused.elapsed,resumed:resumed.elapsed,sequence:hired.status.confirmedSequence,tutorial:hired.tutorial.step,centers:hired.centers,plants:hired.plants,workers:hired.workers,scope:'Opt-in development startup in the real game, new savanna world, Worker tutorial, pause menu, center, crop and hiring through the UI; no raid, saved restore or performance comparison.'}));
+ let guardianWorker=null;if(process.env.QA_GUARDIAN_WORKER==='1'){guardianWorker={live:page.workers().some(worker=>worker.url().includes('guardian-3d-worker.js')),transferred:await page.evaluate(()=>{try{document.querySelector('#guardian-avatar').getContext('webgl2');return false;}catch(error){return error.name==='InvalidStateError';}})};if(!guardianWorker.live||!guardianWorker.transferred)throw Error('Guardian Worker fell back: '+JSON.stringify(guardianWorker));}
+ console.log(JSON.stringify({initial:initial.qa.elapsed,paused:paused.elapsed,resumed:resumed.elapsed,sequence:hired.status.confirmedSequence,tutorial:hired.tutorial.step,centers:hired.centers,plants:hired.plants,workers:hired.workers,guardianWorker,scope:'Opt-in development startup in the real game, new savanna world, Worker tutorial, pause menu, center, crop and hiring through the UI; no raid, saved restore or performance comparison.'}));
 }finally{await browser.close();}
