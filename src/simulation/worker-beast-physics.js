@@ -5,6 +5,7 @@ import {prepareAnimalModel,animalGroundSamples,applyAnimalPose} from '../renderi
 import {restoreAnimalImpact,captureAnimalImpact,applyAnimalImpact} from '../rendering/animal-impact.js';
 import {supportAnimalOnTerrain} from '../rendering/animal-terrain-support.js';
 import {loadWorkerPhysicsRig} from './worker-physics-rig.js';
+import {createWorkerPhysicsRigBank} from './worker-physics-rig-bank.js';
 import {loadWorkerPhysicsClips} from './worker-physics-clips.js';
 import {guardianImpactTime} from './guardian-timing.js';
 import {createWorkerStructureObjects} from './worker-structure-geometry.js';
@@ -12,7 +13,7 @@ import {BakedBeastFallbacks,loadBakedFalls} from '../rendering/baked-beast-fallb
 
 // Experimental registry; the shared Rapier world retains its existing capacity.
 // Unknown bodies and missing obstacle data fail closed.
-export async function createWorkerBeastPhysics(game,nav,{actorId,actorIds=actorId===undefined?[]:[actorId],structureTemplates=null,allowEmpty=false,checkpoint=null,shareSpeciesClips=false}={}){
+export async function createWorkerBeastPhysics(game,nav,{actorId,actorIds=actorId===undefined?[]:[actorId],structureTemplates=null,allowEmpty=false,checkpoint=null,shareSpeciesClips=false,shareSpeciesRigs=false}={}){
  if(checkpoint!==null){if(checkpoint.version!==1||!Array.isArray(checkpoint.actorIds)||!checkpoint.fall)throw Error('Invalid Worker physics checkpoint');actorIds=checkpoint.actorIds;}
  if(!Array.isArray(actorIds)||(!allowEmpty&&!actorIds.length)||new Set(actorIds).size!==actorIds.length)throw Error('Worker physics requires distinct initial animals');
  // Before the impact marker there is no Rapier body yet. Reconstruct the
@@ -21,10 +22,12 @@ export async function createWorkerBeastPhysics(game,nav,{actorId,actorIds=actorI
  const animals=actorIds.map(id=>game.raid?.animals.find(a=>a.id===id));
  const checkpointIds=new Set(checkpoint?.fall?.entries?.map(e=>e.id)??[]);
  if(animals.some(a=>!a||!['hyena','lion','warthog','buffalo','rhino'].includes(a.species))||(game.raid?.animals??[]).some(a=>!checkpointIds.has(a.id)&&(a.magicDown||a.magicImpact&&game.elapsed>=guardianImpactTime(a.magicImpact)&&game.elapsed-guardianImpactTime(a.magicImpact)<.5)))throw Error('Worker physics requires supported animals without an active impact');
- const speciesClips=new Map();
+ const speciesClips=new Map(),rigBank=shareSpeciesRigs?createWorkerPhysicsRigBank():null;
  function clipsFor(species){if(!shareSpeciesClips)return loadWorkerPhysicsClips(species);let promise=speciesClips.get(species);if(!promise){promise=loadWorkerPhysicsClips(species).catch(error=>{speciesClips.delete(species);throw error;});speciesClips.set(species,promise);}return promise;}
- async function loadAnimal(animal){const [model,clips]=await Promise.all([loadWorkerPhysicsRig(animal.species),clipsFor(animal.species)]);prepareAnimalModel(model,animal.species);const root=new Group();root.add(model);return {animal,root,rig:{model,mixer:new AnimationMixer(model),clips,groundSamples:animalGroundSamples(model)}};}
- const [R,recoveries,falls,...loaded]=await Promise.all([beastPhysicsRuntime(),loadRecoveryClips(),loadBakedFalls(),...animals.map(loadAnimal)]);
+ async function loadAnimal(animal){if(!rigBank){const [model,clips]=await Promise.all([loadWorkerPhysicsRig(animal.species),clipsFor(animal.species)]);prepareAnimalModel(model,animal.species);const root=new Group();root.add(model);return {animal,root,rig:{model,mixer:new AnimationMixer(model),clips,groundSamples:animalGroundSamples(model)}};}const lease=await rigBank.acquire(animal.species),model=lease.model;try{const clips=await clipsFor(animal.species);prepareAnimalModel(model,animal.species);const root=new Group();root.add(model);return {animal,root,release:lease.release,rig:{model,mixer:new AnimationMixer(model),clips,groundSamples:animalGroundSamples(model)}};}catch(error){lease.release();throw error;}}
+ const pending=[beastPhysicsRuntime(),loadRecoveryClips(),loadBakedFalls(),...animals.map(loadAnimal)];let results;
+ if(rigBank){const settled=await Promise.allSettled(pending),failure=settled.find(item=>item.status==='rejected');if(failure){for(const item of settled.slice(3))if(item.status==='fulfilled')item.value.release();rigBank.dispose();throw failure.reason;}results=settled.map(item=>item.value);}else results=await Promise.all(pending);
+ const [R,recoveries,falls,...loaded]=results;
  const ids=new Set(actorIds),world={state:game,nav,objects:new Map(loaded.map(x=>[x.animal.id,x.root])),mixers:new Map(loaded.map(x=>[x.animal.id,x.rig])),onError:error=>{throw error;}};
  const structures=structureTemplates===null?null:createWorkerStructureObjects(game,nav,structureTemplates);
  const manager=new BeastCombatPhysics(world,R);manager.recoveryClips=recoveries;manager.baked=new BakedBeastFallbacks(world,falls,recoveries);
@@ -34,7 +37,7 @@ export async function createWorkerBeastPhysics(game,nav,{actorId,actorIds=actorI
  async function admit(id){
   if(disposed||admitting)throw Error('Worker physics admission unavailable');if(ids.has(id))return false;
   const animal=game.raid?.animals.find(a=>a.id===id);if(!animal||!['hyena','lion','warthog','buffalo','rhino'].includes(animal.species)||animal.magicDown||animal.magicImpact&&game.elapsed-guardianImpactTime(animal.magicImpact)<.5)throw Error('Cannot admit worker physics animal');
-  admitting=true;try{const entry=await loadAnimal(animal);if(disposed){entry.rig.model.traverse(o=>{if(o.isSkinnedMesh){o.geometry.dispose();o.material.dispose();o.skeleton.dispose();}});throw Error('Worker physics disposed during admission');}loaded.push(entry);ids.add(id);world.objects.set(id,entry.root);world.mixers.set(id,entry.rig);return true;}finally{admitting=false;}
+  admitting=true;try{const entry=await loadAnimal(animal);if(disposed){if(entry.release)entry.release();else entry.rig.model.traverse(o=>{if(o.isSkinnedMesh){o.geometry.dispose();o.material.dispose();o.skeleton.dispose();}});throw Error('Worker physics disposed during admission');}loaded.push(entry);ids.add(id);world.objects.set(id,entry.root);world.mixers.set(id,entry.rig);return true;}finally{admitting=false;}
  }
  function assertEnvironment(targetId=null){
   for(const {animal} of loaded){
@@ -56,5 +59,5 @@ export async function createWorkerBeastPhysics(game,nav,{actorId,actorIds=actorI
  function poses({activeOnly=false}={}){const result=[];for(const {animal,root,rig} of loaded){
   const actorId=animal.id,model=rig.model,active=manager.entries.has(actorId)||manager.baked.has(actorId);if(activeOnly&&!active)continue;if(active){manager.before(actorId);root.position.set(animal.x,nav.actorSurface(animal.x,animal.z),animal.z);root.updateMatrixWorld(true);manager.render(actorId);root.updateMatrixWorld(true);}const transform=node=>[...node.position.toArray(),...node.quaternion.toArray(),...node.scale.toArray()],bones=[];model.traverse(node=>{if(node.isBone)bones.push({name:node.name,transform:transform(node)});});result.push({actorId,root:transform(root),model:transform(model),bones,active});
  }return result;}
- return {get actorId(){return loaded[0]?.animal.id;},get actorIds(){return [...ids];},supports:id=>ids.has(id),admit,manager,assertEnvironment,checkpointFall(){if(!manager.canCheckpointFall())return null;return {version:1,actorIds:[...ids],fall:manager.checkpointFall()};},pose:()=>poses()[0],poses,dispose(){disposed=true;manager.dispose();structures?.dispose();for(const {rig} of loaded)rig.model.traverse(o=>{if(o.isSkinnedMesh){o.geometry.dispose();o.material.dispose();o.skeleton.dispose();}});}};
+ return {get actorId(){return loaded[0]?.animal.id;},get actorIds(){return [...ids];},supports:id=>ids.has(id),admit,manager,assertEnvironment,checkpointFall(){if(!manager.canCheckpointFall())return null;return {version:1,actorIds:[...ids],fall:manager.checkpointFall()};},pose:()=>poses()[0],poses,dispose(){disposed=true;manager.dispose();structures?.dispose();for(const {rig,release} of loaded)if(release)release();else rig.model.traverse(o=>{if(o.isSkinnedMesh){o.geometry.dispose();o.material.dispose();o.skeleton.dispose();}});rigBank?.dispose();}};
 }
