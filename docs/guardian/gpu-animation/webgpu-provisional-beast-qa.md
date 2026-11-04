@@ -24,3 +24,13 @@ not full-game visual parity, immediate ragdoll in all hardware conditions, or
 the absence of discontinuity when the provisional pose is replaced by Rapier.
 Use the temporary QA server documented in `webgpu-hyena-walking-qa.md` if the
 normal Vite server is unavailable.
+
+An additional direct WebGPU visual control (`tests/browser/webgpu-provisional-beast.html`)
+renders the real hyena on level terrain using the same actor and baked-fall
+implementation. Captures are in `webgpu-provisional-review/`. The intermediate
+pose has conspicuously extended arms, so this fall must remain opt-in pending
+artistic and transition review. The original Worker capture initially aimed
+below the ground: the actor root was at y=3.32 while the camera aimed at y=1.
+Correcting camera height showed terrain but still did not produce a useful
+close-up of the animal. The isolated control does not validate the visual
+transition into an actual Rapier pose.
