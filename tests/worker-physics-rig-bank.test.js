@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {Group,Vector3} from 'three';
+import {BufferGeometry,Group,MeshBasicMaterial,SkinnedMesh,Vector3} from 'three';
 import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
 import {loadWorkerPhysicsRig} from '../src/simulation/worker-physics-rig.js';
 import {createWorkerPhysicsRigBank} from '../src/simulation/worker-physics-rig-bank.js';
@@ -30,7 +30,15 @@ test('failed source is retried without poisoning the bank',async()=>{
  await assert.rejects(bank.acquire('hyena'),/temporary/);const lease=await bank.acquire('hyena');assert.equal(calls,2);lease.release();bank.dispose();
 });
 
+test('failed contact-mask initialization releases the template and can retry',async()=>{
+ let calls=0,geometryDisposals=0,materialDisposals=0;const bank=createWorkerPhysicsRigBank({load:async()=>{
+  if(++calls>1)return new Group();
+  const geometry=new BufferGeometry(),material=new MeshBasicMaterial(),model=new Group();geometry.addEventListener('dispose',()=>geometryDisposals++);material.addEventListener('dispose',()=>materialDisposals++);model.add(new SkinnedMesh(geometry,material));return model;
+ }});
+ await assert.rejects(bank.acquire('warthog'));assert.equal(geometryDisposals,1);assert.equal(materialDisposals,1);const lease=await bank.acquire('warthog');assert.equal(calls,2);lease.release();bank.dispose();
+});
+
 test('real warthog rigs retain independent hoof preparation and matching ground samples',async()=>{
  const bytes=await readFile(new URL('../public'+ANIMAL_ACTIONS.animals.warthog.url,import.meta.url)),oldFetch=globalThis.fetch;let requests=0;globalThis.fetch=async()=>{requests++;return new Response(bytes);};
- try{const original=await loadWorkerPhysicsRig('warthog'),bank=createWorkerPhysicsRigBank(),[a,b]=await Promise.all([bank.acquire('warthog'),bank.acquire('warthog')]);prepareAnimalModel(original,'warthog');prepareAnimalModel(a.model,'warthog');prepareAnimalModel(b.model,'warthog');const project=model=>animalGroundSamples(model).map(({mesh,index})=>[mesh.name,index]);assert.deepEqual(project(a.model),project(original));assert.deepEqual(project(b.model),project(original));assert.equal(requests,2);a.release();b.release();bank.dispose();}finally{globalThis.fetch=oldFetch;}
+ try{const original=await loadWorkerPhysicsRig('warthog'),bank=createWorkerPhysicsRigBank(),[a,b]=await Promise.all([bank.acquire('warthog'),bank.acquire('warthog')]);prepareAnimalModel(original,'warthog');const masks=model=>{const result=[];model.traverse(mesh=>{if(mesh.isSkinnedMesh){const mask=mesh.geometry.getAttribute('tailContactExempt');result.push(mask?[...mask.array]:null);}});return result;};const referenceMasks=masks(original),sharedBefore=masks(a.model);assert.ok(referenceMasks.some(Boolean));assert.deepEqual(sharedBefore,referenceMasks);assert.deepEqual(masks(b.model),referenceMasks);prepareAnimalModel(a.model,'warthog');assert.deepEqual(masks(b.model),sharedBefore);prepareAnimalModel(b.model,'warthog');const project=model=>animalGroundSamples(model).map(({mesh,index})=>[mesh.name,index]);assert.deepEqual(project(a.model),project(original));assert.deepEqual(project(b.model),project(original));assert.equal(requests,2);a.release();b.release();bank.dispose();}finally{globalThis.fetch=oldFetch;}
 });
