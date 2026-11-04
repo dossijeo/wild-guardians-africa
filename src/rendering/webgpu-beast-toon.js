@@ -1,4 +1,4 @@
-import { attribute, cameraPosition, clamp, diffuseColor, dot, fwidth, length, max, mix, normalize, normalWorld, positionWorld, pow, smoothstep, uniform, vec3, vec4 } from 'three/tsl';
+import { attribute, cameraPosition, clamp, diffuseColor, dot, fwidth, length, max, mix, normalize, normalWorld, positionWorld, pow, shadow, smoothstep, uniform, vec3, vec4 } from 'three/tsl';
 import * as THREE from 'three';
 import {skyNight} from './sky.js';
 
@@ -46,7 +46,7 @@ export function createBeastToonOutput({ fur = false, night = uniform(0), sun = u
 // reflection is not yet ported, and native shadows require caller visibility.
 export function createWebGpuBeastStyle({renderer,light,visibility=null}={}){
  if(!renderer?.backend?.isWebGPUBackend||!renderer.library||!light?.isDirectionalLight)throw TypeError('Invalid WebGPU beast style');
- const night=uniform(0),sun=uniform(new THREE.Vector3()),base=createBeastToonOutput({night,sun,visibility}),fur=createBeastToonOutput({night,sun,visibility,fur:true});let closed=false;
+ const night=uniform(0),sun=uniform(new THREE.Vector3()),shadowVisibility=visibility??(renderer.shadowMap?.enabled&&light.castShadow?shadow(light).r:null),base=createBeastToonOutput({night,sun,visibility:shadowVisibility}),fur=createBeastToonOutput({night,sun,visibility:shadowVisibility,fur:true});let closed=false;
  function configure(material,object){if(closed)throw Error('Beast style disposed');if(!material?.isNodeMaterial||!object?.isMesh||material.transparent)return false;material.outputNode=(prepareWebGpuFurAttribute(object)?fur:base).output;material.needsUpdate=true;return true;}
  function convert(model){if(closed||!model?.isObject3D)throw TypeError('Invalid beast model');const variants=new Map(),originals=new Set(),created=new Set(),changes=[];
   try{model.traverse(object=>{if(!object.isMesh)return;const previous=object.material,values=Array.isArray(previous)?previous:[previous],converted=values.map(source=>{if(!source?.isMeshStandardMaterial||source.transparent)return source;const masked=!!object.geometry.getAttribute('_fur_light');let pair=variants.get(source);if(!pair){pair={};variants.set(source,pair);}const key=masked?'fur':'base';if(!pair[key]){const node=renderer.library.fromMaterial(source);if(!node?.isNodeMaterial)throw Error('Unsupported beast material');created.add(node);configure(node,object);pair[key]=node;originals.add(source);}else if(masked)prepareWebGpuFurAttribute(object);return pair[key];});changes.push({object,previous});object.material=Array.isArray(previous)?converted:converted[0];});}
