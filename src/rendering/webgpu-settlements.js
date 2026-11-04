@@ -5,6 +5,7 @@ import {MeshStandardNodeMaterial} from 'three/webgpu';
 import {attribute,mix,texture as textureNode,uniform} from 'three/tsl';
 import {assetUrl} from './asset-url.js';
 import {NativeWall} from './walls.js';
+import {createSettlementHeightSampler} from './webgpu-settlement-height.js';
 import {wallBufferReader} from './wall-buffer-reader.js';
 import {centerCulture} from '../world/centers.js';
 import {openProgressiveWebGpuCharacter} from './webgpu-progressive-character.js';
@@ -15,14 +16,14 @@ import {createWebGpuCenterDestructionTemplate,confirmedCenterDamage} from './web
 // needs migration from the original GLSL pipeline; this is an experimental path.
 export function createWebGpuSettlements({scene,state,residency,renderer=null,onError=()=>{},onTextureError=()=>{}}={}){
  if(!scene?.isScene||!state||typeof residency?.get!=='function'||typeof onError!=='function')throw TypeError('Invalid WebGPU settlements');
- const abort=new AbortController(),manager=new THREE.LoadingManager(),resources=new Set(),bitmaps=new Set(),entries=new Map(),banks=new Map(),transitions=[],villageTransitions=[],progressiveCenters=new Set(),centerTemplates=new Set(),ray=new THREE.Raycaster();let closed=false,catalogues=null,terrainEpoch=0,failure=null,textureFailure=null,centerTextured=0;
+ const abort=new AbortController(),manager=new THREE.LoadingManager(),resources=new Set(),bitmaps=new Set(),entries=new Map(),banks=new Map(),transitions=[],villageTransitions=[],progressiveCenters=new Set(),centerTemplates=new Set();let closed=false,catalogues=null,terrainEpoch=0,failure=null,textureFailure=null,centerTextured=0;
  const ensure=()=>{if(closed||abort.signal.aborted)throw new DOMException('Settlements disposed','AbortError');};
  const own=r=>{if(closed){r.dispose();throw new DOMException('Settlements disposed','AbortError');}resources.add(r);return r;};
  const read=async url=>{const response=await fetch(assetUrl(url),{signal:abort.signal});if(!response.ok)throw Error(`Settlement asset ${response.status}: ${url}`);return response;};
  const bytes=async url=>(await read(url)).arrayBuffer();
  const json=async url=>(await read(url)).json();
  async function texture(url){const bitmap=await createImageBitmap(await (await read(url)).blob());if(closed){bitmap.close();ensure();}bitmaps.add(bitmap);const result=own(new THREE.Texture(bitmap));result.flipY=false;result.colorSpace=THREE.SRGBColorSpace;result.needsUpdate=true;return result;}
- function surface(x,z){const mesh=residency.get(Math.floor((x+24)/48),Math.floor((z+24)/48));if(!mesh)return null;mesh.updateWorldMatrix(true,false);ray.set(new THREE.Vector3(x,1000,z),new THREE.Vector3(0,-1,0));return ray.intersectObject(mesh,false)[0]?.point.y??null;}
+ const surface=createSettlementHeightSampler(residency);
  function rememberModel(gltf){gltf.scene.traverse(o=>{if(!o.isMesh)return;own(o.geometry);for(const m of Array.isArray(o.material)?o.material:[o.material]){own(m);for(const value of Object.values(m))if(value?.isTexture){own(value);if(typeof value.source?.data?.close==='function')bitmaps.add(value.source.data);}}});}
  async function catalog(){if(!catalogues)catalogues=Promise.all([json('/content/villages.json'),json('/content/destruction.json'),json('/content/walls.json')]);return catalogues;}
  async function villageBank(culture){const [villages]=await catalog(),payload=villages.find(v=>v.id===(culture==='saheliana'?'saheliano':culture));if(!payload)throw Error('Unknown village culture '+culture);
