@@ -157,3 +157,23 @@ Serie A/B/B/A sin instrumentación, donde A ya incluye normalización WGSL y B a
 En caliente los intervalos fueron ~33,3 ms y ninguno superó 50 ms. Las medianas CPU de `render` con diez actores calientes fueron 7,16/7,08 ms en A y 7,61/7,55 ms en B. La muestra es pequeña, la instrumentación de imágenes y la de pipelines se efectuó separadamente, y no hay medición GPU. **La reducción de 13 creaciones no demuestra mejora de fluidez y los tirones persisten.** No se integra esta clave en producción. Datos: `results/uber-morph-abba-{0,1,2,3}.json`.
 
 Para reproducir el rendimiento, ejecutar `tools/experiments/audit_webgpu_on_demand.mjs` con `WG_SOURCE=full`, `WG_BACKEND=webgpu`, `WG_MODE=direct`, `WG_CANONICAL_VERTEX=1` y alternar `WG_MORPH_PIPELINE=0/1`; usar `WG_TRACE=1` y `WG_DEEP_TRACE=1` solo para los descriptores. La comparación visual utiliza `tools/experiments/check_morph_pipeline_visual.mjs` con `WG_MORPH_PIPELINE=0/1`, después `tools/experiments/compare_morph_pipeline_visual.mjs` sobre ambos JSON; `WG_ZERO_MORPH=1` activa el control de pesos cero. Ejecutar también `node --test tests/morph-pipeline-key.test.js`.
+
+## Trazas del navegador: hilo principal y proceso gráfico
+
+Tras reducir las creaciones de pipeline se ha obtenido una traza Chromium independiente para cada modo de aparición de los diez modelos completos, con `target=live`: una inmediata y otra que usa `compileAsync`. Ambas son WebGPU real, GTX 1660 y Edge headless; se trazó después de cargar los GLB, con contexto nuevo y sin afirmar que la caché del controlador esté vacía. La instrumentación modifica el comportamiento. Son dos trazas diagnósticas, no un A/B de rendimiento estadísticamente válido. La secuencia asíncrona dura más y produce más tareas y fotogramas, por lo que no deben compararse sus recuentos como tasas directamente.
+
+| Magnitud observada | Inmediata | Asíncrona |
+| --- | ---: | ---: |
+| Intervalos RAF registrados | 14 | 204 |
+| RAF p95/p99 y máximo | 1733/1733 ms | 233/400 ms; máximo 567 ms |
+| Mayor tarea del hilo principal del renderizador, tiempo transcurrido | 378 ms | 198 ms |
+| Mayor tiempo de CPU de una tarea del hilo principal | 346 ms | 197 ms |
+| Mayor tarea del hilo principal del proceso gráfico, tiempo transcurrido | 387 ms | 604 ms |
+| Mayor tiempo de CPU de una tarea del proceso gráfico | 339 ms | 579 ms |
+| Tareas del proceso gráfico >50 ms con evento WebGPU anidado | 31 de 33 | 15 de 19 |
+
+Las columnas de tiempo transcurrido y CPU no tienen por qué corresponder a la misma tarea. Por ejemplo, la mayor tarea principal inmediata duró 378 ms y acumuló 171 ms de CPU de ese hilo: el resto no puede atribuirse únicamente a compilación o espera del controlador con esta información. Las tareas largas del proceso gráfico contienen con frecuencia eventos etiquetados `WebGPU`, pero esto **no mide el tiempo de ejecución de la GPU ni demuestra qué parte corresponde a compilación, subida o sincronización**; el proceso también puede recibir trabajo de otros contextos. Los tiempos de los distintos hilos se solapan y no deben sumarse. La traza anterior de API registró una copia `copyExternalImageToTexture` de hasta 121 ms en CPU, en una ejecución distinta.
+
+La compilación bajo demanda sigue teniendo trabajo síncrono en el hilo principal y trabajo prolongado en el proceso gráfico incluso cuando su API devuelve una promesa. La evidencia no permite concluir que WebGPU por sí solo elimine los tirones, ni que eliminar pipelines duplicados vaya a resolver los costes restantes. Es necesario medir separadamente subidas y ejecución GPU, y comprobar la experiencia en una escena real antes de decidir una migración.
+
+Trazas completas comprimidas: `results/uber-frame-trace-{direct,async}.json.gz`; se ha redactado únicamente la línea de comandos de metadatos que contenía la ruta local del perfil temporal. Los eventos se conservaron. Informes y resúmenes: `results/uber-frame-{report,summary}-{direct,async}.json`. `tools/experiments/trace_webgpu_frame_stalls.mjs` captura la traza con `WG_MODE=direct|async`, `WG_TRACE_PATH` y `WG_OUTPUT`; `tools/experiments/summarize_webgpu_frame_trace.mjs TRACE REPORT [OUTPUT]` acepta JSON o gzip. La correlación por aparición usa marcas temporales aproximadas y expresa solapamiento, no causalidad.
