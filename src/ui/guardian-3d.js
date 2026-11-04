@@ -8,8 +8,8 @@ import {assetUrl} from '../rendering/asset-url.js';
 import {compileLoadingPrograms} from '../rendering/loading-programs.js';
 import {initializeValidatedProgramBindings} from '../rendering/program-bindings.js';
 export class Guardian3D {
- constructor(canvas,{modelUrl='content/guardian/guardian.glb',viewport=null}={}){
-  this.modelUrl=modelUrl;
+ constructor(canvas,{modelUrl='content/guardian/guardian.glb',viewport=null,resolve=assetUrl}={}){
+  this.modelUrl=modelUrl;this.resolve=resolve;
   this.canvas=canvas;this.viewport=viewport;this.renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'low-power'});this.renderer.setPixelRatio(Math.min(viewport?.dpr??globalThis.devicePixelRatio??1,1.5));this.renderer.setClearColor(0,0);this.renderer.outputColorSpace=THREE.SRGBColorSpace;this.renderer.toneMapping=THREE.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.15;
   this.pendingProgramPreparation=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-guardian-program-warm')&&!!this.renderer.getContext().getExtension('KHR_parallel_shader_compile');
   this.scene=new THREE.Scene();this.camera=new THREE.OrthographicCamera(-.56,.56,.56,-.56,.01,10);this.camera.position.set(0,0,2);this.camera.lookAt(0,0,0);
@@ -19,12 +19,12 @@ export class Guardian3D {
   this.eyeTargets={};this.target=new THREE.Vector3(0,.27,2);this.gazeOffset=new THREE.Vector3();this.temp=new THREE.Vector3();this.q=new THREE.Quaternion();this.yAxis=new THREE.Vector3(0,1,0);this.manual={};this.record=null;this.ready=this.load();
  }
  async load(){
-  const gltf=await new GLTFLoader().loadAsync(assetUrl(this.modelUrl));
+  const gltf=await new GLTFLoader().loadAsync(this.resolve(this.modelUrl));
   if(this.disposed){this.release(gltf.scene);return;}
   this.model=gltf.scene;this.scene.add(this.model);this.mixer=new THREE.AnimationMixer(this.model);this.pose=new GuardianPose(this.model,this.mixer);this.actions=new Map(gltf.animations.map(clip=>[clip.name,this.mixer.clipAction(clip)]));
   for(const a of this.actions.values())a.play();
   this.eyes=['L','R'].map(side=>{const bone=this.model.getObjectByName('Eye'+side)??this.model.getObjectByName('Eye.'+side);return bone?{bone,side,rest:bone.quaternion.clone()}:null;}).filter(Boolean);
-  this.face=new GuardianFace(this.model,{resolve:assetUrl});if(this.record)this.face.setRecord(this.record);this.resize();
+  this.face=new GuardianFace(this.model,{resolve:this.resolve});if(this.record)this.face.setRecord(this.record);this.resize();
   if(this.pendingProgramPreparation){await compileLoadingPrograms(this.renderer,this.scene,this.camera,this.scene,{screen:true,cancelled:()=>this.disposed,onProgramReady:program=>initializeValidatedProgramBindings(this.renderer,program)});if(!this.disposed)this.pendingProgramPreparation=false;}
  }
  setRecord(record){this.record=record;return this.face?.setRecord(record);}

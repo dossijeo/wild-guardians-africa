@@ -5,7 +5,9 @@ let actor, closed = false, diagnostics = false;
 self.onmessage = async ({ data }) => {
  try {
   if (data.type === 'init') {
-   diagnostics = data.diagnostics === true; actor = new Guardian3D(data.canvas, { viewport: data.viewport });
+   diagnostics = data.diagnostics === true;
+   const resolve = path => path.startsWith('content/guardian/lipsync/') ? new URL(path.slice('content/guardian/lipsync/'.length), data.cueBase).href : path;
+   actor = new Guardian3D(data.canvas, { viewport: data.viewport, modelUrl: data.modelUrl, resolve });
    await actor.ready;
    if (!closed) self.postMessage({ type: 'ready' });
   } else if (data.type === 'record') {

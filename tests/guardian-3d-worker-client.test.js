@@ -23,3 +23,8 @@ test('sends latest frame only after acknowledgement, preserving audio clock and 
 test('startup failure rejects readiness and disposes the Worker',async()=>{
  const x=setup();x.receive({type:'error',message:'failed'});await assert.rejects(x.client.ready,/failed/);assert.equal(x.worker.terminated,true);
 });
+test('a failed record transfer triggers runtime fallback',async()=>{
+ let failure;const x=setup();x.client.onFailure=error=>{failure=error;};x.receive({type:'ready'});await x.client.ready;
+ x.worker.postMessage=()=>{throw Error('transfer failed');};x.client.setRecord({id:'ES_01'});
+ assert.match(failure.message,/transfer failed/);assert.equal(x.worker.terminated,true);
+});

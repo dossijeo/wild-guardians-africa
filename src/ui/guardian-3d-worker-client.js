@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {assetUrl} from '../rendering/asset-url.js';
 
 // Latest visual state wins. Narration and input remain on the main thread;
 // the OffscreenCanvas and every WebGL resource belong to this Worker.
@@ -9,7 +10,7 @@ export class Guardian3DWorkerClient {
   this.ready = new Promise((resolve, reject) => { this.resolve = resolve; this.reject = reject; });
   this.timer = setTimeout(() => this.fail(Error('Guardian Worker startup timeout')), 15000);
   try { this.worker = createWorker(); this.worker.onmessage = ({ data }) => this.receive(data); this.worker.onerror = event => { event.preventDefault?.(); this.fail(Error(event.message ?? 'Guardian Worker failed')); };
-   this.resize(); const surface = canvas.transferControlToOffscreen(); this.transferred = true; this.worker.postMessage({ type: 'init', canvas: surface, viewport: this.viewport, diagnostics }, [surface]); }
+   this.resize(); const modelUrl = assetUrl('content/guardian/guardian.glb'), cueBase = assetUrl('content/guardian/lipsync/'); const surface = canvas.transferControlToOffscreen(); this.transferred = true; this.worker.postMessage({ type: 'init', canvas: surface, viewport: this.viewport, diagnostics, modelUrl, cueBase }, [surface]); }
   catch (error) { this.fail(error); }
  }
  resize() {
@@ -18,7 +19,7 @@ export class Guardian3DWorkerClient {
   if (!old || old.width !== width || old.height !== height || old.dpr !== dpr) this.resizePending = true;
   const a = width / height, half = Math.max(.56,.36/a); Object.assign(this.camera, { left: -half*a, right: half*a, top: half, bottom: -half }); this.camera.updateProjectionMatrix(); this.camera.updateMatrixWorld();
  }
- setRecord(record) { if (!this.closed) this.worker.postMessage({ type: 'record', record: record ?? null }); }
+ setRecord(record) { if (!this.closed) try { this.worker.postMessage({ type: 'record', record: record ?? null }); } catch (error) { this.fail(error); } }
  draw(frame) {
   if (this.closed) return;
   const audio = frame.audio ? { currentTime: frame.audio.currentTime, ended: frame.audio.ended } : null;
