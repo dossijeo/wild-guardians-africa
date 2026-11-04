@@ -58,3 +58,23 @@ Changing clip direction or advancing the clip more quickly did not reproduce
 the Rapier pose for this case, and can change contact and flight in other
 cases. No such adjustment was accepted. The fall remains QA-only; the test
 does not demonstrate a seamless visual transition or collision-safe blending.
+
+## Experimental pose reconciliation
+
+The same QA switch now permits a 150 ms visual blend of model and local bone
+poses from the provisional fall to the latest confirmed Rapier pose. Root
+position and orientation are applied immediately from Rapier; simulation,
+collisions and damage are unchanged. The roster continues ticking only actors
+that are actively blending. At the end of the interval the displayed bone
+pose is the confirmed pose. The default path does not enable this blend.
+
+`tools/experiments/audit_webgpu_fall_blend.mjs` captures the matched hyena at
+the start, middle and end of this interpolation in `reconcile-000.png`,
+`reconcile-075.png` and `reconcile-150.png`. In this controlled view the final
+image matches the captured Rapier reference, and the intermediate pose avoids
+an instantaneous full-rig snap. The unblended authoritative root nevertheless
+causes an observable screen-space shift at the start. In addition, interpolated
+limbs may intersect terrain, obstacles or other bodies: collision safety and
+the effect of subsequently changing Rapier poses have not been established.
+The capture holds one Rapier pose fixed during the 150 ms. This remains a QA
+experiment and is not evidence for enabling the blend in production.

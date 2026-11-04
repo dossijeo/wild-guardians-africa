@@ -22,3 +22,10 @@ test('applies confirmed physics and restores normal pose when authority releases
  assert.throws(()=>actor.validatePose({...physical,bones:[...physical.bones,{name:'LeftToeBase',transform:transform(0)}]}),/Duplicate auxiliary/);
  physical=null;actor.update();assert.equal(actor.root.position.x,8);assert.equal(actor.root.position.z,9);assert.equal(model.position.y,0);assert.equal(bone.position.x,0);actor.dispose();assert.equal(released,1);
 });
+test('QA bone reconciliation ends on the authoritative pose while root remains authoritative',async()=>{
+ const scene=new Scene(),model=new Group(),bone=new Bone();bone.name='Spine';model.add(bone);const animal={id:'a',species:'hyena',status:'walking',x:0,z:0,heading:0,radius:.7},game={raid:{animals:[animal]},elapsed:1},bank={async acquire(){return {model,clips:[new AnimationClip('Walking',1,[])],release(){}};}};let now=0,physical=null;
+ const hit={at:0,impactAt:0,point:{x:0,y:1,z:0},direction:{x:1,y:0,z:0},intensity:1,ground:0},sample={animal:{...animal,magicImpact:hit},elapsed:.1};
+ const actor=await createWebGpuConfirmedAnimal({scene,residency:{get:()=>null},state:game,actorId:'a',assetBank:bank,experimentalPoseReconciliation:true,clock:()=>now,getPose:()=>physical,getProvisional:()=>sample});actor.update();const initial=bone.quaternion.clone(),transform=(x=0)=>[x,0,0,0,0,0,1,1,1,1];
+ physical={actorId:'a',active:true,root:transform(7),model:transform(),bones:[{name:'Spine',transform:[0,0,0,0,Math.SQRT1_2,0,Math.SQRT1_2,1,1,1]}]};actor.update();assert.equal(actor.root.position.x,7);assert.ok(bone.quaternion.angleTo(initial)<1e-6);assert.equal(actor.isReconciling(),true);
+ now=150;actor.update();assert.equal(actor.isReconciling(),false);assert.ok(bone.quaternion.angleTo(new Bone().quaternion.set(0,Math.SQRT1_2,0,Math.SQRT1_2))<1e-6);actor.dispose();
+});
