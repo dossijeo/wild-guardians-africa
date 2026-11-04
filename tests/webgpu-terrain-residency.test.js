@@ -15,3 +15,8 @@ test('invalid replacement leaves the current surface intact',()=>{
  const scene=new THREE.Scene(),residency=createWebGpuTerrainResidency({scene,material:new THREE.MeshBasicMaterial()}),data=chunk();residency.replace(data,1);const current=residency.get(0,0),bad=chunk();bad.terrain.indices=new Uint16Array(3);
  assert.throws(()=>residency.replace(bad,2),/Invalid Wild Engine/);assert.equal(residency.get(0,0),current);assert.equal(scene.children.length,1);residency.dispose();
 });
+test('keeps water paired with its confirmed chunk and disposes old geometry',()=>{
+ const scene=new THREE.Scene(),waterMaterial=new THREE.MeshBasicMaterial(),residency=createWebGpuTerrainResidency({scene,material:new THREE.MeshBasicMaterial(),waterMaterial}),data=chunk(1,-2);data.water=new Float32Array([0,1,0,1,1,0,0,1,1]);residency.replace(data,1);const water=residency.getWater(1,-2);assert.deepEqual(water.position.toArray(),[48,0,-96]);assert.equal(water.geometry.attributes.position.array,data.water);assert.equal(water.material,waterMaterial);let disposed=0;water.geometry.addEventListener('dispose',()=>disposed++);
+ const bad=chunk(1,-2);bad.water=new Float32Array([1]);assert.throws(()=>residency.replace(bad,2),/Invalid Wild Engine water/);assert.equal(residency.getWater(1,-2),water);assert.equal(disposed,0);
+ const dry=chunk(1,-2);dry.water=new Float32Array(0);residency.replace(dry,2);assert.equal(disposed,1);assert.equal(residency.getWater(1,-2),null);assert.equal(residency.waterSize,0);assert.equal(residency.replace(data,1),false);residency.dispose();assert.equal(scene.children.length,0);
+});

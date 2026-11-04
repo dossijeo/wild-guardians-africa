@@ -8,13 +8,14 @@ export function createTerrainPublication({port,session,maxPending=512}={}){
  function pump(){
   if(closed||inflight||!pending.size)return;
   const [key,entry]=pending.entries().next().value;pending.delete(key);inflight={id:++serial,key};
-  try{const {payload,sequence,revision}=entry;port.postMessage({kind:'terrain',session,id:inflight.id,sequence,revision,payload},[payload.terrain.positions.buffer,payload.terrain.colors.buffer,payload.terrain.indices.buffer]);}catch(error){fail(error);}
+  try{const {payload,sequence,revision}=entry;const transfer=[payload.terrain.positions.buffer,payload.terrain.colors.buffer,payload.terrain.indices.buffer];if(payload.water)transfer.push(payload.water.buffer);port.postMessage({kind:'terrain',session,id:inflight.id,sequence,revision,payload},transfer);}catch(error){fail(error);}
  }
  function stage(data){
   if(closed)return false;
   if(data?.authority!=='spatial-wasm'||!Number.isSafeInteger(data.cx)||!Number.isSafeInteger(data.cz)||!(data.terrain?.positions instanceof Float32Array)||!(data.terrain?.colors instanceof Float32Array)||!(data.terrain?.indices instanceof Uint16Array))throw TypeError('Invalid authoritative terrain');
+  if(data.water!==undefined&&(!(data.water instanceof Float32Array)||data.water.length%9!==0))throw TypeError('Invalid authoritative water');
   const key=`${data.cx},${data.cz}`;if(!staged.has(key)&&!pending.has(key)&&staged.size+pending.size>=maxPending){fail(Error('Terrain publication capacity exceeded'));return false;}
-  staged.set(key,{authority:data.authority,cx:data.cx,cz:data.cz,terrain:{positions:data.terrain.positions.slice(),colors:data.terrain.colors.slice(),indices:data.terrain.indices.slice()}});return true;
+  staged.set(key,{authority:data.authority,cx:data.cx,cz:data.cz,terrain:{positions:data.terrain.positions.slice(),colors:data.terrain.colors.slice(),indices:data.terrain.indices.slice()},...(data.water===undefined?{}:{water:data.water.slice()})});return true;
  }
  function commit(sequence){
   if(closed)return false;if(!Number.isSafeInteger(sequence)||sequence<=lastSequence)throw TypeError('Invalid confirmed terrain sequence');lastSequence=sequence;
