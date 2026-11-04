@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { copyFile, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { basename, join } from 'node:path';
 import { read, VK_FORMAT_BC7_SRGB_BLOCK, VK_FORMAT_BC7_UNORM_BLOCK } from 'three/addons/libs/ktx-parse.module.js';
+import { readGlb } from '../glb-container.mjs';
 
 // Offline QA fixture: compare the same already-converted runtime WebP images
 // with their native BC7 sidecars. Never modifies source assets.
@@ -9,9 +10,15 @@ const [baseDirectory, outputRoot] = process.argv.slice(2);
 if (!baseDirectory || !outputRoot) throw Error('Usage: node build_vertex_bc7_pilot.mjs <original-materials-dir> <output-root>');
 const metadata = JSON.parse(await readFile(join(baseDirectory, 'materials.gltf'), 'utf8'));
 const mapping = JSON.parse(await readFile(join(baseDirectory, 'mapping.json'), 'utf8'));
-if (mapping.id !== 'hyena') throw Error('Pilot currently covers hyena only');
+if (!['hyena', 'buffalo'].includes(mapping.id) || !/^[a-f0-9]{64}$/.test(mapping.sourceSha256 ?? '')) throw Error('Pilot supports known hyena and buffalo sources only');
 const report = JSON.parse(await readFile('.cache/ktx2-native/glb/report.json', 'utf8'));
-const model = 'assets/web/022436860982f39f1bac2989423fcbc9d2be99f6433809ba1f60a664d6be307f.glb';
+const model = `assets/web/${mapping.sourceSha256}.glb`;
+const runtime = readGlb(await readFile(`public/${model}`)).json;
+if (JSON.stringify(runtime.materials) !== JSON.stringify(metadata.materials) || runtime.images.length !== metadata.images.length || runtime.textures.length !== metadata.textures.length) throw Error('Runtime material layout differs from source');
+for (const [index, entry] of metadata.textures.entries()) {
+  const optimized = runtime.textures[index], imageIndex = optimized?.extensions?.EXT_texture_webp?.source ?? optimized?.source;
+  if (entry.source !== imageIndex || entry.sampler !== optimized?.sampler) throw Error(`Runtime texture mapping differs at ${index}`);
+}
 const records = [];
 for (let index = 0; index < metadata.images.length; index++) {
   const candidates = report.records.filter(row => row.uses?.some(use => use.model === model && use.imageIndex === index));

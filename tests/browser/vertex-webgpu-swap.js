@@ -1,23 +1,34 @@
 import * as THREE from 'three';
 import { WebGPURenderer } from 'three/webgpu';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { clone } from 'three/addons/utils/SkeletonUtils.js';
 import { prepareHydration } from './vertex-preview-hydrate.js';
 import { makeStableVertexMaterials } from './vertex-stable-material.js';
 import { createBeastToonOutput, prepareWebGpuFurAttribute } from './vertex-beast-toon.js';
 import { shadow } from 'three/tsl';
+import { selectCharacterPreviewVariant } from '../../src/rendering/character-preview-package.js';
 
 // Isolated request-time preparation. The old material remains visible while
 // compileAsync is pending. This does not promise asynchronous texture upload.
-export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders = false, canvas = null, nativeBc7 = false, count = 1, beastToon = false, beastShadow = false }) {
+export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders = false, canvas = null, nativeBc7 = false, count = 1, beastToon = false, beastShadow = false, autoVariant = false, disableBc7 = false }) {
   if (!['async', 'target', 'coverage', 'whole', 'sequential', 'staged', 'stable', 'direct'].includes(mode)) throw Error('Unknown mode');
+  if (autoVariant && mode !== 'stable') throw Error('Automatic selection requires stable mode');
   if (!Number.isInteger(count) || count < 1 || count > 16) throw Error('Invalid actor count');
   if (count > 1 && mode !== 'stable') throw Error('Crowd mode requires shared stable materials');
   if (beastShadow && (!beastToon || mode !== 'stable')) throw Error('Beast shadows require stable toon mode');
-  const loader = new GLTFLoader(), preview = await loader.loadAsync('/hydration-files/preview.glb');
+  const bootstrapStart = performance.now(), loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder), preview = await loader.loadAsync('/hydration-files/preview.glb');
+  const previewLoadMs = performance.now() - bootstrapStart;
   const renderer = new WebGPURenderer({ antialias: false, ...(canvas ? { canvas } : {}) }); await renderer.init();
   if (!renderer.backend?.isWebGPUBackend) throw Error('WebGPU backend unavailable');
   renderer.setSize(512, 512, false); if (!canvas) document.body.replaceChildren(renderer.domElement);
+  let selectedVariant = null, assetBase = '/hydration-files/';
+  if (autoVariant) {
+    const response = await fetch('/hydration-package/package.json'); if (!response.ok) throw Error('Missing package manifest');
+    const manifest = await response.json(), features = renderer.hasFeature('texture-compression-bc') && !disableBc7 ? ['texture-compression-bc'] : [];
+    selectedVariant = selectCharacterPreviewVariant(manifest, features).name;
+    nativeBc7 = selectedVariant === 'bc7'; assetBase = `/hydration-package/${selectedVariant}/`;
+  }
   const sun = new THREE.DirectionalLight(0xfff0d4, 3); sun.position.set(-6, 12, 9);
   if (beastShadow) { renderer.shadowMap.enabled = true; sun.castShadow = true; sun.shadow.mapSize.set(1024, 1024); preview.scene.traverse(object => { if (object.isMesh) object.receiveShadow = true; }); }
   let ktxLoader = null;
@@ -29,7 +40,7 @@ export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders =
   }
   let stableResources = null;
   if (mode === 'stable') {
-    const [metadata, mapping] = await Promise.all([fetch('/hydration-files/materials.gltf').then(r => r.json()), fetch('/hydration-files/mapping.json').then(r => r.json())]);
+    const [metadata, mapping] = await Promise.all([fetch(`${assetBase}materials.gltf`).then(r => r.json()), fetch(`${assetBase}mapping.json`).then(r => r.json())]);
     // Metadata and a one-pixel in-memory stand-in establish the final material
     // structure without downloading the final images before the first frame.
     const pixel = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAADUlEQVQImWP4////fwAJ+wP9CNHoHgAAAABJRU5ErkJggg==';
@@ -39,7 +50,7 @@ export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders =
       metadata.extensionsUsed = (metadata.extensionsUsed ?? []).filter(name => name !== 'WG_native_ktx2');
       metadata.extensionsRequired = (metadata.extensionsRequired ?? []).filter(name => name !== 'WG_native_ktx2');
     }
-    const placeholderMaterials = await loader.parseAsync(JSON.stringify(metadata), '/hydration-files/');
+    const placeholderMaterials = await loader.parseAsync(JSON.stringify(metadata), assetBase);
     const visibility = beastShadow ? shadow(sun).r : null;
     const toon = beastToon ? createBeastToonOutput({ visibility }) : null;
     const furToon = toon ? createBeastToonOutput({ fur: true, night: toon.night, sun: toon.sun, visibility }) : null;
@@ -85,7 +96,7 @@ export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders =
   camera.far = radius * Math.max(20, count * 4); camera.updateProjectionMatrix();
   camera.position.copy(center).add(new THREE.Vector3(1.5, 1, 2.5).normalize().multiplyScalar(radius * (count === 1 ? 2.5 : Math.max(columns, rows) * 2))); camera.lookAt(center);
   const mixers = actors.map(actor => { const mixer = new THREE.AnimationMixer(actor); if (preview.animations.length) mixer.clipAction(preview.animations[0]).play(); return mixer; });
-  const intervals = [], renderCpu = [], events = {}, start = performance.now(), absoluteStart = performance.timeOrigin + performance.now();
+  const intervals = [], renderCpu = [], events = {}, bootstrapMs = performance.now() - bootstrapStart, start = performance.now(), absoluteStart = performance.timeOrigin + performance.now();
   let frame = 0, previous = 0, ready = false, applied = false, failure = null, apply;
   const provisional = []; for (const actor of actors) actor.traverse(object => { if (object.isMesh) provisional.push({ object, material: object.material }); });
   events.framesWhileCompiling = 0;
@@ -95,7 +106,7 @@ export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders =
     if (mode === 'stable') {
       events.compileStart = performance.now() - start;
       (async () => {
-        const materials = await loader.loadAsync('/hydration-files/materials.gltf');
+        const materials = await loader.loadAsync(`${assetBase}materials.gltf`);
         const textures = await stableResources.resolveFinal(materials);
         if (!textures.length) throw Error('No final textures were resolved');
         events.materialsReadyAt = performance.now() - start;
@@ -176,11 +187,11 @@ export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders =
       else {
         if (!applied) return reject(Error('Timed out waiting for materials'));
         if (mode !== 'direct' && !(events.applyAt >= events.compileResolved)) return reject(Error('Material applied before compile resolved'));
-        const imageRequests = performance.getEntriesByType('resource').filter(entry => /\/hydration-files\/[^/]+\.(png|jpg|webp|ktx2)(?:\?|$)/i.test(entry.name)).map(entry => ({ name: entry.name, at: entry.startTime - start, duration: entry.duration }));
+        const imageRequests = performance.getEntriesByType('resource').filter(entry => /\/hydration-(?:files|package)\/(?:webp\/|bc7\/)?[^/]+\.(png|jpg|webp|ktx2)(?:\?|$)/i.test(entry.name)).map(entry => ({ name: entry.name, at: entry.startTime - start, duration: entry.duration }));
         if (mode === 'stable' && (!imageRequests.length || imageRequests.some(entry => entry.at < events.requestedAt))) return reject(Error('Final image request occurred before the on-demand request, or was not observed'));
         const transcoderRequests = performance.getEntriesByType('resource').filter(entry => /basis_transcoder\.(js|wasm)/.test(entry.name)).map(entry => entry.name);
         if (nativeBc7 && transcoderRequests.length) return reject(Error('Native BC7 unexpectedly loaded a Basis transcoder'));
-        resolve({ mode, count, beastToon, beastShadow, sharedMaterials, independentSkeletons: new Set(firstSkeletons).size, renderInfo: { ...renderer.info.render }, backend: 'WebGPU', nativeBc7, transcoderRequests, absoluteStart, adapter: { vendor: info.vendor, architecture: info.architecture, device: info.device, description: info.description }, intervals, renderCpu, events, errors, imageRequests, gpuCalls: gpuCalls.map(call => ({ ...call, at: call.at - start })) });
+        resolve({ mode, count, beastToon, beastShadow, selectedVariant, sharedMaterials, independentSkeletons: new Set(firstSkeletons).size, renderInfo: { ...renderer.info.render }, backend: 'WebGPU', nativeBc7, previewLoadMs, bootstrapMs, transcoderRequests, absoluteStart, adapter: { vendor: info.vendor, architecture: info.architecture, device: info.device, description: info.description }, intervals, renderCpu, events, errors, imageRequests, gpuCalls: gpuCalls.map(call => ({ ...call, at: call.at - start })) });
         ktxLoader?.dispose(); renderer.dispose();
       }
     }
