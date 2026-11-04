@@ -9,3 +9,7 @@ test('rejects unordered or overlapping publications without touching the scene',
  let error;const port={postMessage(){},close(){},start(){}},r=createConfirmedTerrainReceiver({port,session:'s',residency:{replace(){throw Error('unexpected');}},onError:e=>{error=e;}});
  port.onmessage({data:{kind:'terrain',session:'s',id:1,sequence:2,revision:1,payload:{}}});port.onmessage({data:{kind:'terrain',session:'s',id:2,sequence:3,revision:1,payload:{}}});assert.match(error.message,/Invalid terrain/);assert.equal(r.status().closed,true);
 });
+test('notifies presentation after applying a revision and before acknowledgement',()=>{
+ const order=[],port={postMessage:()=>order.push('ack'),close(){},start(){}},r=createConfirmedTerrainReceiver({port,session:'s',residency:{replace:()=>{order.push('replace');return true;}},onApplied:()=>order.push('applied')});
+ port.onmessage({data:{kind:'terrain',session:'s',id:1,sequence:0,revision:1,payload:{}}});assert.deepEqual(order,['replace','applied','ack']);r.dispose();
+});

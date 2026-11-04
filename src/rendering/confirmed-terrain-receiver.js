@@ -1,10 +1,10 @@
 // Terrain arrives on a channel independent of confirmed game publications.
 // Never expose a chunk from a sequence the presentation has not confirmed.
-export function createConfirmedTerrainReceiver({port,session,residency,confirmedSequence=0,onError=()=>{}}={}){
- if(!port||typeof port.postMessage!=='function'||typeof session!=='string'||!session||typeof residency?.replace!=='function'||!Number.isSafeInteger(confirmedSequence)||confirmedSequence<0)throw TypeError('Invalid confirmed terrain receiver');
+export function createConfirmedTerrainReceiver({port,session,residency,confirmedSequence=0,onError=()=>{},onApplied=()=>{}}={}){
+ if(!port||typeof port.postMessage!=='function'||typeof session!=='string'||!session||typeof residency?.replace!=='function'||!Number.isSafeInteger(confirmedSequence)||confirmedSequence<0||typeof onApplied!=='function')throw TypeError('Invalid confirmed terrain receiver');
  let closed=false,lastId=0,pending=null;
  function fail(error){if(closed)return;closed=true;pending=null;try{port.close();}catch{}try{onError(error instanceof Error?error:Error(String(error)));}catch{}}
- function pump(){if(closed||!pending||pending.sequence>confirmedSequence)return;const message=pending;pending=null;try{residency.replace(message.payload,message.revision);port.postMessage({kind:'terrainAck',session,id:message.id});}catch(error){fail(error);}}
+ function pump(){if(closed||!pending||pending.sequence>confirmedSequence)return;const message=pending;pending=null;try{if(residency.replace(message.payload,message.revision)!==false)onApplied(message.payload,message.revision);port.postMessage({kind:'terrainAck',session,id:message.id});}catch(error){fail(error);}}
  port.onmessage=({data})=>{if(closed)return;try{if(data?.kind==='terrainFailure'&&data.session===session)throw Error(data.message||'Terrain producer failed');if(data?.kind!=='terrain'||data.session!==session||!Number.isSafeInteger(data.id)||data.id!==lastId+1||!Number.isSafeInteger(data.sequence)||data.sequence<0||!Number.isSafeInteger(data.revision)||data.revision<1||pending)throw Error('Invalid terrain publication');lastId=data.id;pending=data;pump();}catch(error){fail(error);}};
  port.onmessageerror=()=>fail(Error('Terrain publication transfer failed'));port.start?.();
  return {confirm(sequence){if(closed)return;if(!Number.isSafeInteger(sequence)||sequence<confirmedSequence)throw TypeError('Terrain confirmation out of order');confirmedSequence=sequence;pump();},dispose(){if(closed)return;closed=true;pending=null;port.close();},status(){return {closed,confirmedSequence,pending:pending!==null,lastId};}};
