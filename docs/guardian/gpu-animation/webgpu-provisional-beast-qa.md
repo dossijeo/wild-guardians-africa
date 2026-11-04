@@ -28,8 +28,14 @@ normal Vite server is unavailable.
 An additional direct WebGPU visual control (`tests/browser/webgpu-provisional-beast.html`)
 renders the real hyena on level terrain using the same actor and baked-fall
 implementation. Captures are in `webgpu-provisional-review/`. The intermediate
-pose has conspicuously extended arms, so this fall must remain opt-in pending
-artistic and transition review. The original Worker capture initially aimed
+pose originally had conspicuously extended arms. An experimental smooth blend
+from the initial arm pose now reduces this at 0.5 seconds; see
+`fall-050.png` and `fall-050-adjusted.png`. Captures `rapier-reference-step-4.png`
+and `rapier-reference-step-8.png` show real Rapier poses from the mangrove
+fixture, reproduced with `tools/experiments/capture_webgpu_provisional_rapier.mjs`.
+The Rapier actor's heading and trajectory differ from the isolated fall, so
+these images are not a controlled visual-parity or seamless-transition test.
+The fall remains opt-in pending that review. The original Worker capture initially aimed
 below the ground: the actor root was at y=3.32 while the camera aimed at y=1.
 Correcting camera height showed terrain but still did not produce a useful
 close-up of the animal. The isolated control does not validate the visual
