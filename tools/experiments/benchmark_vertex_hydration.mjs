@@ -33,14 +33,14 @@ try {
     });
     await page.route('**/hydration-package/**', async route => {
       const path = new URL(route.request().url()).pathname.replace(/^\/hydration-package\//, '');
-      if (!/^(?:package\.json|(?:webp|bc7)\/[\w.-]+)$/.test(path)) throw Error('Invalid package path');
+      if (!/^(?:package\.json|preview\.glb|(?:webp|bc7)\/[\w.-]+)$/.test(path)) throw Error('Invalid package path');
       const type = path.endsWith('.gltf') || path.endsWith('.json') ? 'application/json' : path.endsWith('.webp') ? 'image/webp' : 'application/octet-stream';
       await route.fulfill({ status: 200, contentType: type, body: await readFile(join(directory, path)) });
     });
     await page.goto(`${process.env.WG_BASE_URL ?? 'http://127.0.0.1:5175'}/hydration-page`);
     const result = webgpu
       ? process.env.WG_RENDER_WORKER === '1'
-        ? await page.evaluate(async ({ mode, nativeBc7, count, beastToon, beastShadow, autoVariant, disableBc7 }) => (await import('/tests/browser/vertex-webgpu-worker-host.js')).runWorkerSwap(mode, nativeBc7, count, beastToon, beastShadow, autoVariant, disableBc7), { mode, nativeBc7, count, beastToon: process.env.WG_BEAST_TOON === '1', beastShadow: process.env.WG_BEAST_SHADOW === '1', autoVariant: process.env.WG_AUTO_VARIANT === '1', disableBc7: process.env.WG_DISABLE_BC7 === '1' })
+        ? await page.evaluate(async ({ mode, nativeBc7, count, beastToon, beastShadow, autoVariant, disableBc7, verifiedStream }) => (await import('/tests/browser/vertex-webgpu-worker-host.js')).runWorkerSwap(mode, nativeBc7, count, beastToon, beastShadow, autoVariant, disableBc7, verifiedStream), { mode, nativeBc7, count, beastToon: process.env.WG_BEAST_TOON === '1', beastShadow: process.env.WG_BEAST_SHADOW === '1', autoVariant: process.env.WG_AUTO_VARIANT === '1', disableBc7: process.env.WG_DISABLE_BC7 === '1', verifiedStream: process.env.WG_VERIFIED_STREAM === '1' })
         : await page.evaluate(async ({ mode, captureShaders, nativeBc7, count, beastToon, beastShadow, autoVariant, disableBc7 }) => (await import('/tests/browser/vertex-webgpu-swap.js')).runVertexWebGpuSwap({ mode, captureShaders, nativeBc7, count, beastToon, beastShadow, autoVariant, disableBc7 }), { mode, captureShaders: process.env.WG_CAPTURE_SHADERS === '1', nativeBc7, count, beastToon: process.env.WG_BEAST_TOON === '1', beastShadow: process.env.WG_BEAST_SHADOW === '1', autoVariant: process.env.WG_AUTO_VARIANT === '1', disableBc7: process.env.WG_DISABLE_BC7 === '1' })
       : await page.evaluate(async ({ mode, sourceUrl }) => (await import('/tests/browser/vertex-hydration-benchmark.js')).runHydrationBenchmark({ mode, sourceUrl }), { mode, sourceUrl });
     if (errors.length) throw Error(JSON.stringify(errors));

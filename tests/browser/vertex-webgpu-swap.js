@@ -8,27 +8,35 @@ import { makeStableVertexMaterials } from './vertex-stable-material.js';
 import { createBeastToonOutput, prepareWebGpuFurAttribute } from './vertex-beast-toon.js';
 import { shadow } from 'three/tsl';
 import { selectCharacterPreviewVariant } from '../../src/rendering/character-preview-package.js';
+import { openCharacterPreviewStream } from '../../src/rendering/character-preview-stream.js';
 
 // Isolated request-time preparation. The old material remains visible while
 // compileAsync is pending. This does not promise asynchronous texture upload.
-export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders = false, canvas = null, nativeBc7 = false, count = 1, beastToon = false, beastShadow = false, autoVariant = false, disableBc7 = false }) {
+export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders = false, canvas = null, nativeBc7 = false, count = 1, beastToon = false, beastShadow = false, autoVariant = false, disableBc7 = false, verifiedStream = false }) {
   if (!['async', 'target', 'coverage', 'whole', 'sequential', 'staged', 'stable', 'direct'].includes(mode)) throw Error('Unknown mode');
   if (autoVariant && mode !== 'stable') throw Error('Automatic selection requires stable mode');
   if (!Number.isInteger(count) || count < 1 || count > 16) throw Error('Invalid actor count');
   if (count > 1 && mode !== 'stable') throw Error('Crowd mode requires shared stable materials');
   if (beastShadow && (!beastToon || mode !== 'stable')) throw Error('Beast shadows require stable toon mode');
-  const bootstrapStart = performance.now(), loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder), preview = await loader.loadAsync('/hydration-files/preview.glb');
-  const previewLoadMs = performance.now() - bootstrapStart;
+  if (verifiedStream && (!canvas || !autoVariant || mode !== 'stable')) throw Error('Verified stream requires the Worker and automatic stable mode');
+  const bootstrapStart = performance.now(), loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
   const renderer = new WebGPURenderer({ antialias: false, ...(canvas ? { canvas } : {}) }); await renderer.init();
   if (!renderer.backend?.isWebGPUBackend) throw Error('WebGPU backend unavailable');
   renderer.setSize(512, 512, false); if (!canvas) document.body.replaceChildren(renderer.domElement);
-  let selectedVariant = null, assetBase = '/hydration-files/';
+  let selectedVariant = null, assetBase = '/hydration-files/', stream = null, streamMetadata = null;
   if (autoVariant) {
-    const response = await fetch('/hydration-package/package.json'); if (!response.ok) throw Error('Missing package manifest');
-    const manifest = await response.json(), features = renderer.hasFeature('texture-compression-bc') && !disableBc7 ? ['texture-compression-bc'] : [];
-    selectedVariant = selectCharacterPreviewVariant(manifest, features).name;
+    const features = renderer.hasFeature('texture-compression-bc') && !disableBc7 ? ['texture-compression-bc'] : [];
+    if (verifiedStream) {
+      stream = await openCharacterPreviewStream(new URL('/hydration-package/package.json', location.href), { features });
+      selectedVariant = stream.variant;
+    } else {
+      const response = await fetch('/hydration-package/package.json'); if (!response.ok) throw Error('Missing package manifest');
+      selectedVariant = selectCharacterPreviewVariant(await response.json(), features).name;
+    }
     nativeBc7 = selectedVariant === 'bc7'; assetBase = `/hydration-package/${selectedVariant}/`;
   }
+  const preview = stream ? await loader.parseAsync((await stream.loadPreview()).buffer, '/hydration-package/') : await loader.loadAsync('/hydration-files/preview.glb');
+  const previewLoadMs = performance.now() - bootstrapStart;
   const sun = new THREE.DirectionalLight(0xfff0d4, 3); sun.position.set(-6, 12, 9);
   if (beastShadow) { renderer.shadowMap.enabled = true; sun.castShadow = true; sun.shadow.mapSize.set(1024, 1024); preview.scene.traverse(object => { if (object.isMesh) object.receiveShadow = true; }); }
   let ktxLoader = null;
@@ -40,7 +48,8 @@ export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders =
   }
   let stableResources = null;
   if (mode === 'stable') {
-    const [metadata, mapping] = await Promise.all([fetch(`${assetBase}materials.gltf`).then(r => r.json()), fetch(`${assetBase}mapping.json`).then(r => r.json())]);
+    if (stream) streamMetadata = await stream.loadMetadata();
+    const [metadata, mapping] = stream ? [structuredClone(streamMetadata.materials), streamMetadata.mapping] : await Promise.all([fetch(`${assetBase}materials.gltf`).then(r => r.json()), fetch(`${assetBase}mapping.json`).then(r => r.json())]);
     // Metadata and a one-pixel in-memory stand-in establish the final material
     // structure without downloading the final images before the first frame.
     const pixel = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAADUlEQVQImWP4////fwAJ+wP9CNHoHgAAAABJRU5ErkJggg==';
@@ -106,8 +115,18 @@ export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders =
     if (mode === 'stable') {
       events.compileStart = performance.now() - start;
       (async () => {
-        const materials = await loader.loadAsync(`${assetBase}materials.gltf`);
-        const textures = await stableResources.resolveFinal(materials);
+        let materials, textures;
+        if (stream) {
+          const imageData = await stream.loadTextures(streamMetadata), metadata = structuredClone(streamMetadata.materials), urls = [];
+          try {
+            metadata.images.forEach((image, index) => { const url = URL.createObjectURL(new Blob([imageData.get(streamMetadata.texturePaths[index])], { type: nativeBc7 ? 'image/ktx2' : 'image/webp' })); urls.push(url); image.uri = url; });
+            materials = await loader.parseAsync(JSON.stringify(metadata), assetBase);
+            textures = await stableResources.resolveFinal(materials);
+          } finally { urls.forEach(url => URL.revokeObjectURL(url)); }
+        } else {
+          materials = await loader.loadAsync(`${assetBase}materials.gltf`);
+          textures = await stableResources.resolveFinal(materials);
+        }
         if (!textures.length) throw Error('No final textures were resolved');
         events.materialsReadyAt = performance.now() - start;
         events.textureCalls = [];
@@ -192,7 +211,7 @@ export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders =
         const transcoderRequests = performance.getEntriesByType('resource').filter(entry => /basis_transcoder\.(js|wasm)/.test(entry.name)).map(entry => entry.name);
         if (nativeBc7 && transcoderRequests.length) return reject(Error('Native BC7 unexpectedly loaded a Basis transcoder'));
         resolve({ mode, count, beastToon, beastShadow, selectedVariant, sharedMaterials, independentSkeletons: new Set(firstSkeletons).size, renderInfo: { ...renderer.info.render }, backend: 'WebGPU', nativeBc7, previewLoadMs, bootstrapMs, transcoderRequests, absoluteStart, adapter: { vendor: info.vendor, architecture: info.architecture, device: info.device, description: info.description }, intervals, renderCpu, events, errors, imageRequests, gpuCalls: gpuCalls.map(call => ({ ...call, at: call.at - start })) });
-        ktxLoader?.dispose(); renderer.dispose();
+        stream?.close(); ktxLoader?.dispose(); renderer.dispose();
       }
     }
     requestAnimationFrame(tick);
