@@ -18,3 +18,6 @@ test('publishes a detached copy of the authoritative water together with its ter
 test('stages detached authoritative prop instances with their committed terrain',()=>{
  const {sent,publisher}=fixture(),data=chunk(0,0);data.instances=Array.from({length:20},()=>[]);data.instances[0].push({id:'spatial:0:0:0',slot:0,x:1,y:2,z:3,yaw:0,sx:1,sy:1,sz:1});publisher.stage(data);data.instances[0][0].x=99;publisher.commit(1);assert.equal(sent[0].message.payload.instances[0][0].x,1);publisher.dispose();
 });
+test('publishes an owned, validated ground mask with its confirmed revision',()=>{
+ const {sent,publisher,ack}=fixture(),data=chunk(1,2);data.groundMask=new Uint8Array(35*35*4);data.groundMask[0]=19;publisher.stage(data);data.groundMask[0]=99;publisher.commit(1);assert.equal(sent[0].message.payload.groundMask[0],19);assert.equal(sent[0].transfer[3],sent[0].message.payload.groundMask.buffer);assert.notEqual(sent[0].transfer[3],data.groundMask.buffer);const invalid=chunk(2,0);invalid.groundMask=new Uint8Array(2);assert.throws(()=>publisher.stage(invalid),/ground mask/);publisher.stage(chunk(2,0));publisher.commit(2);ack(1);assert.equal(sent[1].message.sequence,2);assert.equal(sent[1].message.payload.groundMask,undefined);publisher.dispose();
+});

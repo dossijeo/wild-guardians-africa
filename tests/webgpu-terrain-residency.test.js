@@ -20,3 +20,7 @@ test('keeps water paired with its confirmed chunk and disposes old geometry',()=
  const bad=chunk(1,-2);bad.water=new Float32Array([1]);assert.throws(()=>residency.replace(bad,2),/Invalid Wild Engine water/);assert.equal(residency.getWater(1,-2),water);assert.equal(disposed,0);
  const dry=chunk(1,-2);dry.water=new Float32Array(0);residency.replace(dry,2);assert.equal(disposed,1);assert.equal(residency.getWater(1,-2),null);assert.equal(residency.waterSize,0);assert.equal(residency.replace(data,1),false);residency.dispose();assert.equal(scene.children.length,0);
 });
+
+test('owns per-chunk materials and preserves the fallback',()=>{
+ const scene=new THREE.Scene(),fallback=new THREE.MeshBasicMaterial(),owned=[],residency=createWebGpuTerrainResidency({scene,material:fallback,materialFactory:data=>{if(!data.groundMask)return null;const material=new THREE.MeshBasicMaterial();material.addEventListener('dispose',()=>owned.push(data.cx));return material;}}),first=chunk();first.groundMask=new Uint8Array(35*35*4);residency.replace(first,1);assert.notEqual(residency.get(0,0).material,fallback);residency.replace(chunk(),2);assert.deepEqual(owned,[0]);assert.equal(residency.get(0,0).material,fallback);residency.dispose();
+});
