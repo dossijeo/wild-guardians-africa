@@ -7,6 +7,11 @@ function fixture(){const sent=[],errors=[],caught=[],port={postMessage:m=>sent.p
 test('recovery sends checkpoint once then terrain, events and poses in order with strict ACKs',()=>{
  const f=fixture();f.journal.appendTerrain(2,[{cx:1,bytes:new Uint8Array([7])}]);f.journal.appendTerrain(2,[{cx:2}]);f.journal.append(publication(2,[{id:'new'}]),true);assert.equal(f.sent[0].kind,'recoveryCheckpoint');f.ack();assert.equal(f.sent[1].kind,'recoveryTerrain');f.ack();assert.equal(f.sent[2].kind,'recoveryTerrain');assert.notEqual(f.sent[1].id,f.sent[2].id);f.ack();assert.equal(f.sent[3].kind,'recoveryPublication');assert.equal(f.sent[3].publication.events[0].id,'new');f.ack();assert.deepEqual(f.caught,[{sequence:2,entries:3}]);assert.deepEqual(f.errors,[]);f.replay.dispose();
 });
+test('a recovery-only base is still sent as a full reconstruction checkpoint',()=>{
+ const sent=[],port={postMessage:m=>sent.push(structuredClone(m)),start(){}},journal=createPresentationRecoveryJournal(),checkpoint={...publication(1),terrainCheckpoint:{sequence:1,chunks:[{cx:0,cz:0}],recoveryOnly:true}};
+ journal.begin(1);journal.confirm(1);const replay=createPresentationRecoveryReplay({port,session:'s',checkpoint,journal});
+ assert.equal(sent[0].kind,'recoveryCheckpoint');assert.equal(sent[0].checkpoint.terrainCheckpoint.recoveryOnly,true);assert.deepEqual(sent[0].checkpoint.terrainCheckpoint.chunks,[{cx:0,cz:0}]);replay.dispose();
+});
 test('in-flight recovery captures new entries and never signals caught-up between terrain and its publication',()=>{
  const f=fixture();f.journal.appendTerrain(2,[{cx:0}]);f.ack();f.ack();assert.equal(f.caught.length,0);f.journal.append(publication(2),true);f.replay.wake();assert.equal(f.sent.at(-1).kind,'recoveryPublication');f.journal.append(publication(3,[{id:'last'}]),true);f.ack();assert.equal(f.sent.at(-1).publication.events[0].id,'last');f.ack();assert.equal(f.caught.at(-1).sequence,3);
 });

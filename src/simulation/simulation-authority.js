@@ -220,7 +220,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      const selected=session.core.currentChunk(),chunks=[];
      try{for(const key of loaded.keys()){const [x,z]=parseSimulationChunkKey(key);if(session.core.selectChunk(x,z)<0)throw Error('Resident native chunk disappeared: '+key);chunks.push(session.core.chunkPayload());}}
      finally{if(selected&&session.core.selectChunk(selected.cx,selected.cz)<0)throw Error('Could not restore selected native chunk');}
-     terrainCheckpoint={sequence,chunks};
+     terrainCheckpoint={sequence,chunks,...(command.visualRecoveryOnly===true?{recoveryOnly:true}:{})};
     }
     const physicsPoses=physics?.poses({activeOnly:command.visualTerrain===true?false:compactPhysicsPoses})??null;
     const physical=command.kind==='snapshot'&&(command.physicsCheckpoint===true||command.physicsCheckpoint==='encoded')?physics?.checkpointFall()??null:undefined;

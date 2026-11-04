@@ -7,9 +7,15 @@ import {gunzipSync} from 'node:zlib';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {emit,observePresentationGameEvents} from '../src/simulation/game.js';
 import {createConfirmedPresentationStream} from '../src/rendering/confirmed-presentation-stream.js';
+import {acceptLiveTerrainCheckpoint} from '../src/rendering/live-terrain-checkpoint.js';
 import {createConfirmedMotionFeed} from '../src/rendering/confirmed-motion-feed.js';
 import {serializeConfirmedState} from '../src/simulation/confirmed-live-state.js';
 const fixture=()=>deserialize(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString());
+test('automatic checkpoint confirms terrain then acknowledges its exact sequence without rebuilding',()=>{
+ const state=fixture(),order=[],port={postMessage:m=>order.push(['ack',m.sequence]),close(){},start(){}},stream=createConfirmedPresentationStream({port,session:'s',state,terrain:{confirm:n=>order.push(['terrain',n])},onConfirmed:m=>{const result=acceptLiveTerrainCheckpoint(m,'s',()=>{throw Error('unexpected rebuild');});order.push(['checkpoint',result.sequence]);}});
+ port.onmessage({data:{kind:'publication',session:'s',publication:{session:'s',sequence:1,snapshot:serialize(state),events:[],physicsPose:null,terrainCheckpoint:{sequence:1,chunks:[],recoveryOnly:true}}}});
+ assert.deepEqual(order,[['terrain',1],['checkpoint',1],['ack',1]]);stream.dispose();
+});
 test('reconciles state and events before releasing terrain and acknowledging',()=>{
  const state=fixture(),authority=deserialize(serialize(state)),order=[],port={postMessage:m=>order.push(['ack',m.sequence]),close(){},start(){}},stop=observePresentationGameEvents(state,e=>order.push(['event',e.id])),stream=createConfirmedPresentationStream({port,session:'s',state,terrain:{confirm:sequence=>order.push(['terrain',sequence])},onConfirmed:m=>order.push(['confirmed',m.sequence])});
  emit(authority,'Test');const event=authority.events.at(-1);port.onmessage({data:{kind:'publication',session:'s',tick:false,firstSequence:1,publication:{session:'s',sequence:1,snapshot:serialize(authority),events:[event]}}});

@@ -29,6 +29,8 @@ Una comparación determinista con dos Workers de simulación y Rapier reales eje
 
 La copia periódica completa del terreno, la retención de snapshots y la contrapresión si falla o se demora el ACK siguen siendo limitaciones de QA. No hay recuperación de pérdida espontánea del dispositivo, ni validación completa del replay de eventos posteriores; esta renovación no convierte el mecanismo en una solución de producción ni elimina el acoplamiento temporal.
 
+En la renovación automática, el Worker gráfico vivo registra ahora el checkpoint como base de recuperación sin reconstruir los chunks que ya recibe por su canal de terreno. Tampoco descarta mensajes tardíos de ese canal. Los checkpoints explícitos y la reconstrucción de un Worker nuevo siguen aplicando la base completa. Las pruebas verifican el ACK exacto, la recepción de terreno tardío y el envío de una base automática completa al replay. El cambio elimina una reconstrucción periódica de geometría e instancias, pero no se ha medido todavía su efecto sobre la memoria ni se ha demostrado que explique la espera observada.
+
 ## Auditoría de evento posterior: resultado inconcluso
 
 Tras introducir la renovación se inició `tools/experiments/audit_live_webgpu_reconnect_event.mjs` contra Vite local, con Edge headless y `--enable-unsafe-swiftshader`. La prueba alcanzó el arranque de partida, confirmó un backend WebGPU y un actor preparado, y entró en la etapa de checkpoint. No se observó confirmación del checkpoint ni finalización de la prueba. La salida quedó en el hito `QA stage: checkpoint`; tampoco se observó el diagnóstico posterior al límite instrumentado. Por tanto, no se alcanzaron ni el evento posterior ni el reenganche.

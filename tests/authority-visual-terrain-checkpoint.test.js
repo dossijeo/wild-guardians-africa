@@ -12,5 +12,6 @@ test('visual checkpoint captures native resident chunks at the ordered state bou
   assert.equal(first.terrainCheckpoint.sequence,first.sequence);assert.deepEqual(first.terrainCheckpoint.chunks.map(c=>`${c.cx},${c.cz}`),keys);
   const second=authority.execute({kind:'snapshot',sequence:2,visualTerrain:true});assert.equal(second.terrainCheckpoint.sequence,2);assert.equal(second.snapshot,first.snapshot);
   for(let i=0;i<keys.length;i++){const a=first.terrainCheckpoint.chunks[i],b=second.terrainCheckpoint.chunks[i];assert.deepEqual(a.terrain.positions,b.terrain.positions);assert.deepEqual(a.terrain.colors,b.terrain.colors);assert.deepEqual(a.groundMask,b.groundMask);assert.deepEqual(a.instances,b.instances);}
+  const renewal=authority.execute({kind:'snapshot',sequence:3,visualTerrain:true,visualRecoveryOnly:true});assert.equal(renewal.terrainCheckpoint.recoveryOnly,true);assert.deepEqual(renewal.terrainCheckpoint.chunks.map(c=>`${c.cx},${c.cz}`),keys);assert.equal(renewal.snapshot,first.snapshot);assert.equal(first.terrainCheckpoint.recoveryOnly,undefined);
  }finally{authority.dispose();opening.session.dispose();}
 });
