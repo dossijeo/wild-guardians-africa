@@ -2,11 +2,13 @@ import * as THREE from 'three';
 import {WebGPURenderer} from 'three/webgpu';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {createSharedPhysicalMaterial,physicalFamilyKey} from '../../src/labs/shared-physical-material.js';
+import {canonicalizeNodeBufferNames} from '../../src/labs/canonical-wgsl.js';
 
 const result={errors:[],models:[]};window.sharedPhysicalRealResult=result;
 try {
  const renderer=new WebGPURenderer({canvas:document.querySelector('#view'),antialias:false});
  await renderer.init();if(!renderer.backend?.isWebGPUBackend)throw Error('Expected WebGPU, got fallback');
+ if(new URLSearchParams(location.search).get('canonicalVertex')==='1'){const pipelines=renderer._pipelines,original=pipelines.getForRender;pipelines.getForRender=function(object,...args){const state=object.getNodeBuilderState();state.vertexShader=canonicalizeNodeBufferNames(state.vertexShader);return original.call(this,object,...args);};}
  renderer.setSize(192,192,false);renderer.outputColorSpace=THREE.LinearSRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;
  const target=new THREE.RenderTarget(192,192,{depthBuffer:true,stencilBuffer:false});renderer.setRenderTarget(target);
  const scene=new THREE.Scene();scene.background=new THREE.Color(0x202020);scene.add(new THREE.HemisphereLight(0xe7f0e7,0x70624e,2));
@@ -27,7 +29,8 @@ try {
   renderer.render(scene,camera);const actual=Uint8Array.from(await renderer.readRenderTargetPixelsAsync(target,0,0,192,192));
   let absolute=0,max=0,changedPixels=0,changedOver5=0,objectPixels=0,objectAbsolute=0;
   for(let i=0;i<baseline.length;i+=4){let pixelMax=0,pixelSum=0;for(let c=0;c<3;c++){const d=Math.abs(baseline[i+c]-actual[i+c]);absolute+=d;pixelSum+=d;pixelMax=Math.max(pixelMax,d);max=Math.max(max,d);}if(pixelMax)changedPixels++;if(pixelMax>5)changedOver5++;if(baseline[i]!==baseline[0]||baseline[i+1]!==baseline[1]||baseline[i+2]!==baseline[2]){objectPixels++;objectAbsolute+=pixelSum;}}
-  result.models.push({name,sharedMeshes,totalMeshes,meanAbsoluteRgb:absolute/(192*192*3),objectMeanAbsoluteRgb:objectAbsolute/(Math.max(objectPixels,1)*3),maxChannelDifference:max,changedPixels,changedOver5,objectPixels});
+  const digest=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',baseline))).map(value=>value.toString(16).padStart(2,'0')).join('');
+  result.models.push({name,sharedMeshes,totalMeshes,baselineSha256:digest,meanAbsoluteRgb:absolute/(192*192*3),objectMeanAbsoluteRgb:objectAbsolute/(Math.max(objectPixels,1)*3),maxChannelDifference:max,changedPixels,changedOver5,objectPixels});
   const display=document.createElement('canvas');display.width=384;display.height=192;display.title=name;const ctx=display.getContext('2d');ctx.putImageData(new ImageData(new Uint8ClampedArray(baseline),192,192),0,0);ctx.putImageData(new ImageData(new Uint8ClampedArray(actual),192,192),192,0);document.querySelector('#comparisons').append(name,display,document.createElement('br'));
   scene.remove(root);for(const item of objects)for(const copy of item.copies)copy.dispose();for(const bank of banks.values())bank.dispose();
  }
