@@ -1,0 +1,20 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {deserializeConfirmedState} from '../../src/simulation/confirmed-live-state.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+import {confirmedAnimalPoses} from '../../src/rendering/confirmed-animal-poses.js';
+window.audit=async()=>{
+ const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
+ const fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),game=fixture.diagnosticWorld().game,animal=game.raid.animals.find(a=>a.species==='hyena'&&!['gone','retreating'].includes(a.status));if(!animal)throw Error('No active hyena');const source=serialize(game),target={id:animal.id,x:animal.x,z:animal.z};fixture.dispose();
+ const client=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,dynamicPhysics:true,compactPhysicsPoses:true,session:'active-checkpoint'}),send=async command=>{const r=client.submit(command);if(!r.accepted)throw Error(r.reason);return r.result;};
+ try{await client.ready;const hit=await send({kind:'castAttack',id:'active-checkpoint-hit',targetId:target.id,x:target.x,z:target.z});if(!hit.value)throw Error('Attack rejected: '+hit.rejection);
+ let active;for(let i=0;i<200;i++){const next=await send({kind:'advance',seconds:.05,nightFastForward:true});if(next.physicsPose?.active){active=next;break;}}if(!active)throw Error('No active Rapier pose');
+ const checkpoint=await send({kind:'snapshot',visualTerrain:true});if(checkpoint.sequence!==active.sequence+1||checkpoint.elapsed!==active.elapsed||checkpoint.terrainCheckpoint?.sequence!==checkpoint.sequence||checkpoint.snapshot!==active.snapshot)throw Error('Snapshot did not capture the same authority boundary');
+ const poses=confirmedAnimalPoses(checkpoint,deserializeConfirmedState(checkpoint.snapshot)),pose=poses.get(target.id);if(!pose||JSON.stringify(pose)!==JSON.stringify(active.physicsPose))throw Error('Active pose changed or failed validation');
+ if(checkpoint.terrainCheckpoint.chunks.length!==chunks.length)throw Error('Wrong resident chunk count');
+ const next=await send({kind:'advance',seconds:.05,nightFastForward:true});if(next.sequence!==checkpoint.sequence+1||next.elapsed<checkpoint.elapsed)throw Error('Subsequent update out of order');
+ return {actorId:target.id,sequence:checkpoint.sequence,chunks:chunks.length,activePoses:poses.size,bones:pose.bones.length,elapsed:checkpoint.elapsed,nextSequence:next.sequence,scope:'Real simulation Worker and Rapier, validated with presentation pose contract; no graphics rig or gameplay UI.'};
+ }finally{client.dispose();}
+};window.ready=true;
+</script>

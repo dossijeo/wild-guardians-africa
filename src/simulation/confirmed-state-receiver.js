@@ -31,7 +31,7 @@ export function createConfirmedStateReceiver(state,session,{onReconciled=null,de
    if(!Number.isSafeInteger(message.sequence)||message.sequence<1)return {accepted:false,reason:'sequence'};
    if(message.sequence<=sequence)return {accepted:false,reason:'stale'};
    if(!Number.isSafeInteger(firstSequence)||firstSequence!==sequence+1||firstSequence>message.sequence)return {accepted:false,reason:'gap'};
-   if(!sequence||message.unchanged!==true||message.slotId!==state.slotId||message.stateSequence!==state.sequence||message.elapsed!==lastElapsed||state.elapsed!==lastElapsed||!Array.isArray(message.events)||message.events.length||!Array.isArray(message.pauses)||JSON.stringify(message.pauses)!==JSON.stringify(state.pauses)||typeof message.saveAvailable!=='boolean'||Object.hasOwn(message,'snapshot')||Object.hasOwn(message,'physicsPose')||Object.hasOwn(message,'physicsPoses'))throw TypeError('Invalid unchanged publication');
+   if(!sequence||message.unchanged!==true||message.slotId!==state.slotId||message.stateSequence!==state.sequence||message.elapsed!==lastElapsed||state.elapsed!==lastElapsed||!Array.isArray(message.events)||message.events.length||message.presentationJournal?.length||!Array.isArray(message.pauses)||JSON.stringify(message.pauses)!==JSON.stringify(state.pauses)||typeof message.saveAvailable!=='boolean'||Object.hasOwn(message,'snapshot')||Object.hasOwn(message,'physicsPose')||Object.hasOwn(message,'physicsPoses'))throw TypeError('Invalid unchanged publication');
    sequence=message.sequence;return {accepted:true,sequence};
   },
   accept(message,{firstSequence=message?.sequence}={}){
@@ -42,7 +42,14 @@ export function createConfirmedStateReceiver(state,session,{onReconciled=null,de
    if(!Number.isSafeInteger(firstSequence)||firstSequence!==sequence+1||firstSequence>message.sequence)return {accepted:false,reason:'gap'};
    if(firstSequence!==message.sequence&&(!Array.isArray(message.events)||physicsOwners(message)===null))throw TypeError('Invalid coalesced publication');
    if(typeof message.snapshot!=='string'||!Array.isArray(message.events))throw TypeError('Invalid confirmed state');
+   if(message.presentationJournal!==undefined){
+    if(!Array.isArray(message.presentationJournal))throw TypeError('Invalid presentation lifecycle journal');
+    const ids=new Map(message.events.map((event,index)=>[event?.id,index])),relevant=new Set(message.events.filter(event=>['SpellActivated','CropPicked','CropDestroyed','RaidEnded'].includes(event.type)).map(event=>event.id)),gone=new Set();let last=-1;
+    for(const fact of message.presentationJournal){if(!fact||typeof fact!=='object')throw TypeError('Invalid presentation lifecycle fact');if(fact.kind==='event'){const index=ids.get(fact.eventId);if(index===undefined||index<=last||!relevant.delete(fact.eventId))throw TypeError('Invalid presentation lifecycle event order');last=index;}else if(fact.kind!=='animalGone'||typeof fact.actorId!=='string'||!fact.actorId||gone.has(fact.actorId))throw TypeError('Invalid presentation lifecycle fact');else gone.add(fact.actorId);}
+    if(relevant.size)throw TypeError('Incomplete presentation lifecycle journal');
+   }
    const next=decodeSnapshot(message.snapshot);if(next.elapsed<lastElapsed)throw Error('Confirmed simulation time moved backwards');if(next.slotId!==state.slotId||!Number.isSafeInteger(next.sequence)||next.sequence<state.sequence)throw Error('Confirmed simulation identity or sequence changed');
+   if(message.presentationJournal)for(const fact of message.presentationJournal)if(fact.kind==='animalGone'){const animal=next.raid?.animals?.find(a=>a.id===fact.actorId);if(animal&&animal.status!=='gone')throw TypeError('Presentation lifecycle conflicts with state');}
    let nextEvent=Math.max(lastEvent,state.sequence-1);for(const event of message.events){const match=typeof event?.id==='string'?/^event-(0|[1-9]\d*)$/.exec(event.id):null,n=match?Number(match[1]):NaN;if(!Number.isSafeInteger(n)||n<=nextEvent||n>=next.sequence||typeof event.type!=='string')throw TypeError('Invalid confirmed event sequence');nextEvent=n;}
    try{reconcile(state,next);onReconciled?.(message);for(const event of message.events)notifyConfirmedPresentationEvent(state,event);}
    catch(error){fault=true;throw error;}

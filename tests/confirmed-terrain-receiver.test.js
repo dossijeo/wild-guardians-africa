@@ -13,3 +13,10 @@ test('notifies presentation after applying a revision and before acknowledgement
  const order=[],port={postMessage:()=>order.push('ack'),close(){},start(){}},r=createConfirmedTerrainReceiver({port,session:'s',residency:{replace:()=>{order.push('replace');return true;}},onApplied:()=>order.push('applied')});
  port.onmessage({data:{kind:'terrain',session:'s',id:1,sequence:0,revision:1,payload:{}}});assert.deepEqual(order,['replace','applied','ack']);r.dispose();
 });
+
+test('checkpoint discards late terrain through its boundary and preserves later updates',()=>{
+ const applied=[],acks=[],port={postMessage:m=>acks.push(m.id),close(){},start(){}},r=createConfirmedTerrainReceiver({port,session:'s',confirmedSequence:5,residency:{replace:(payload,revision)=>applied.push([payload.id,revision])}});
+ assert.throws(()=>r.checkpoint(4),/boundary/);r.checkpoint(5);
+ port.onmessage({data:{kind:'terrain',session:'s',id:1,sequence:5,revision:2,payload:{id:'old'}}});
+ port.onmessage({data:{kind:'terrain',session:'s',id:2,sequence:6,revision:3,payload:{id:'new'}}});assert.deepEqual(acks,[1]);assert.deepEqual(applied,[]);r.confirm(6);assert.deepEqual(acks,[1,2]);assert.deepEqual(applied,[['new',3]]);r.dispose();
+});

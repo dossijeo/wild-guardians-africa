@@ -1,0 +1,29 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+import {createTerrainPublication} from '../../src/simulation/terrain-publication.js';
+import {createConfirmedTerrainReceiver} from '../../src/rendering/confirmed-terrain-receiver.js';
+window.audit=async()=>{
+ const chunks=['0,0','1,0'],fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),source=serialize(fixture.diagnosticWorld().game);fixture.dispose();
+ const client=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,session:'checkpoint-audit'}),send=async command=>{const r=client.submit(command);if(!r.accepted)throw Error(r.reason);return r.result;};
+ let publisher,receiver;
+ try{
+  await client.ready;
+  const before=await send({kind:'snapshot',visualTerrain:true});
+  await send({kind:'addChunk',key:'2,0'});
+  const checkpoint=await send({kind:'snapshot',visualTerrain:true});
+  if(checkpoint.terrainCheckpoint.sequence!==checkpoint.sequence||checkpoint.terrainCheckpoint.chunks.length!==before.terrainCheckpoint.chunks.length+1)throw Error('Checkpoint boundary or residency mismatch');
+  const channel=new MessageChannel(),applied=[],errors=[];
+  receiver=createConfirmedTerrainReceiver({port:channel.port1,session:'checkpoint-audit',confirmedSequence:checkpoint.sequence-1,residency:{replace:(payload,revision)=>{applied.push({key:`${payload.cx},${payload.cz}`,revision,positions:payload.terrain.positions.length});}},onError:e=>errors.push(String(e))});
+  publisher=createTerrainPublication({port:channel.port2,session:'checkpoint-audit'});
+  for(const chunk of checkpoint.terrainCheckpoint.chunks)publisher.stage(chunk);
+  publisher.commit(checkpoint.sequence);
+  await new Promise(resolve=>setTimeout(resolve,30));if(applied.length)throw Error('Terrain appeared before confirmed sequence');
+  receiver.confirm(checkpoint.sequence);
+  const deadline=performance.now()+5000;while(applied.length<checkpoint.terrainCheckpoint.chunks.length&&performance.now()<deadline)await new Promise(resolve=>setTimeout(resolve,10));
+  if(errors.length||applied.length!==checkpoint.terrainCheckpoint.chunks.length)throw Error('Terrain replay failed: '+JSON.stringify({errors,applied}));
+  return {sequence:checkpoint.sequence,initial:before.terrainCheckpoint.chunks.length,restored:applied.length,keys:applied.map(x=>x.key),snapshot:!!checkpoint.snapshot,physicsPose:checkpoint.physicsPose};
+ }finally{publisher?.dispose();receiver?.dispose();client.dispose();}
+};
+</script>

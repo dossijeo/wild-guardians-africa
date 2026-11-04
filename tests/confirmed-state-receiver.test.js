@@ -28,3 +28,15 @@ test('coalesced event is delivered once with its own confirmed state',()=>{
  const state=fixture(),authority=deserialize(serialize(state)),seen=[],stop=observePresentationGameEvents(state,event=>seen.push({id:event.id,elapsed:state.elapsed}));
  try{const receiver=createConfirmedStateReceiver(state,'s');receiver.accept({session:'s',sequence:1,snapshot:serialize(authority),events:[]});authority.elapsed+=.1;emit(authority,'Test');const event=authority.events.at(-1),message={session:'s',sequence:4,snapshot:serialize(authority),events:[event],physicsPose:null};assert.equal(receiver.accept(message,{firstSequence:2}).sequence,4);assert.deepEqual(seen,[{id:event.id,elapsed:authority.elapsed}]);}finally{stop();}
 });
+
+test('lifecycle journal rejects missing or reordered event references before reconciling',()=>{
+ const state=fixture(),source=serialize(state),receiver=createConfirmedStateReceiver(state,'s');
+ for(const presentationJournal of [[{kind:'event',eventId:'absent'}],[{kind:'animalGone',actorId:''}],[{kind:'bogus'}]])assert.throws(()=>receiver.accept({session:'s',sequence:1,snapshot:source,events:[],presentationJournal}),/lifecycle/);
+ assert.equal(receiver.status().sequence,0);assert.equal(serialize(state),source);
+});
+
+test('lifecycle journal rejects missing relevant events, duplicate exits and exits contradicted by snapshot',()=>{
+ const state=fixture(),authority=deserialize(serialize(state)),animal=authority.raid.animals.find(a=>a.status!=='gone');assert.ok(animal);emit(authority,'SpellActivated',{kind:'attack',targetId:animal.id});const event=authority.events.at(-1),receiver=createConfirmedStateReceiver(state,'s'),packet={session:'s',sequence:1,snapshot:serialize(authority),events:[event]};
+ for(const presentationJournal of [[],[{kind:'event',eventId:event.id},{kind:'event',eventId:event.id}],[{kind:'event',eventId:event.id},{kind:'animalGone',actorId:animal.id},{kind:'animalGone',actorId:animal.id}],[{kind:'event',eventId:event.id},{kind:'animalGone',actorId:animal.id}]])assert.throws(()=>receiver.accept({...packet,presentationJournal}),/lifecycle/);
+ assert.equal(receiver.status().sequence,0);
+});

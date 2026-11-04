@@ -1,3 +1,5 @@
+import * as THREE from 'three';
+import {createWebGpuGuardianAttack} from '../src/rendering/webgpu-guardian-attack.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -45,4 +47,13 @@ test('validates all physical poses before reconciliation and installs them befor
 test('rejects a physical pose for an animal which is not down before mutating state',()=>{
  const state=fixture(),before=serialize(state),actor=state.raid.animals[0],errors=[],port={postMessage(){throw Error('unexpected ack');},close(){},start(){}},stream=createConfirmedPresentationStream({port,session:'s',state,terrain:{confirm(){throw Error('unexpected terrain');}},onPhysics(){throw Error('unexpected pose');},onError:error=>errors.push(error)}),transform=[0,0,0,0,0,0,1,1,1,1];
  port.onmessage({data:{kind:'publication',session:'s',publication:{session:'s',sequence:1,snapshot:serialize(state),events:[],physicsPose:{actorId:actor.id,active:true,root:transform,model:transform,bones:[]}}}});assert.match(errors[0].message,/lacks active animal/);assert.equal(serialize(state),before);assert.equal(stream.status().sequence,0);stream.dispose();
+});
+
+test('publication journal drives real WebGPU guardian after snapshot reconciliation and suppresses same-publication exit',()=>{
+ const state=fixture(),authority=deserialize(serialize(state)),animal=authority.raid.animals[0],errors=[],acks=[],port={postMessage:m=>acks.push(m),close(){},start(){}},scene=new THREE.Scene();
+ const guardian=createWebGpuGuardianAttack({scene,state,renderer:{backend:{isWebGPUBackend:true}},loadModel:()=>new Promise(()=>{})});
+ const stream=createConfirmedPresentationStream({port,session:'s',state,terrain:{confirm(){}},onConfirmed:m=>guardian.sync(m.presentationJournal,m.events),onError:e=>errors.push(e)});
+ const selection={origin:{x:0,y:2,z:0},contact:{x:1,y:1,z:0}};emit(authority,'SpellActivated',{kind:'attack',targetId:animal.id,commandId:'cast',presentation:{elapsed:authority.elapsed,...selection}});const event=authority.events.at(-1);animal.status='gone';
+ port.onmessage({data:{kind:'publication',session:'s',tick:true,firstSequence:1,publication:{session:'s',sequence:1,snapshot:serialize(authority),events:[event],presentationJournal:[{kind:'event',eventId:event.id},{kind:'animalGone',actorId:animal.id}]}}});
+ assert.deepEqual(errors,[]);assert.equal(guardian.status().active,null);assert.equal(acks[0].sequence,1);stream.dispose();guardian.dispose();
 });

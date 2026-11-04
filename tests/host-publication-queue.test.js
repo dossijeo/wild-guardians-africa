@@ -71,3 +71,14 @@ test('observed camera receipts and mismatched states remain separate barriers',(
 test('bounded admission preserves every event and pose across a stalled presentation',()=>{
  const sent=[],q=createHostPublicationQueue({session:'s',send:v=>sent.push(v)});let sequence=1,peak=0;q.publication(packet(sequence,[{id:`event-${sequence}`}],{actorId:'a',active:true}),true);while(sequence<129){sequence++;q.publication(packet(sequence,[{id:`event-${sequence}`}],{actorId:'a',active:true}),true);peak=Math.max(peak,q.status().queued);}assert.equal(q.status().queued,128);let acknowledged=0;while(acknowledged<1000){const item=sent[acknowledged];assert.equal(item.publication.sequence,acknowledged+1);assert.equal(item.publication.events[0].id,`event-${acknowledged+1}`);assert.equal(item.publication.physicsPose.actorId,'a');q.ack(++acknowledged);if(sequence<1000){sequence++;q.publication(packet(sequence,[{id:`event-${sequence}`}],{actorId:'a',active:true}),true);peak=Math.max(peak,q.status().queued);}}assert.equal(peak,128);assert.equal(q.status().queued,0);
 });
+
+test('presentation lifecycle facts are boundaries even without gameplay events',()=>{
+ const sent=[],q=createHostPublicationQueue({session:'s',send:v=>sent.push(v)});
+ q.publication(packet(1),true);q.publication({...packet(2),presentationJournal:[{kind:'animalGone',actorId:'a'}]},true);q.publication(packet(3),true);q.ack(1);assert.equal(sent[1].publication.sequence,2);assert.equal(sent[1].publication.presentationJournal[0].actorId,'a');q.ack(2);assert.equal(sent[2].publication.sequence,3);
+});
+
+test('a visual checkpoint stays ordered with poses and events when the receiver is slow',()=>{
+ const sent=[],q=createHostPublicationQueue({session:'s',send:value=>sent.push(value)}),pose={actorId:'a',active:true},checkpoint={sequence:3,chunks:[{cx:1,cz:2}]};
+ q.publication(packet(1,[{id:'event-1'}],pose),true);q.publication(packet(2,[{id:'event-2'}],pose),true);q.publication({...packet(3,[],pose),terrainCheckpoint:checkpoint},false);q.publication(packet(4,[{id:'event-4'}],pose),true);
+ assert.equal(sent.length,1);q.ack(1);assert.equal(sent[1].publication.events[0].id,'event-2');q.ack(2);assert.deepEqual(sent[2].publication.terrainCheckpoint,checkpoint);assert.deepEqual(sent[2].publication.physicsPose,pose);q.ack(3);assert.equal(sent[3].publication.events[0].id,'event-4');q.ack(4);assert.equal(q.status().queued,0);
+});

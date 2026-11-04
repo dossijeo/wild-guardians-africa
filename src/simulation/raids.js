@@ -1,3 +1,4 @@
+import {publishAnimalGone} from './presentation-lifecycle.js';
 import {canyonRaidFormation} from './canyon-raid-formation.js';
 import {agriculturalRayClear,resolveAgriculturalImpact,validDamageProfile} from './raid-agricultural-impact.js';
 import {liveWaitQueue,occupiedEligibleGroup,enqueueWait,leaveWait,observeWaitProgress,waitEpoch,RAID_WAIT_SECONDS} from './raid-contention.js';
@@ -407,7 +408,7 @@ function finishUnknownRetreat(s,a,nav,reason){
   emit(s,'AnimalRetreatExitAbandoned',{actorId:a.id,x:a.x,z:a.z,
     elapsed:s.elapsed,reason,hitsRemaining:a.hitsRemaining??0,
     seconds:s.elapsed-(a.retreatRouteUnknown?.since??s.elapsed)});
-  a.status='gone';a.path=null;
+  a.status='gone';publishAnimalGone(s,a.id);a.path=null;
   delete a.retreatRouteUnknown;delete a.exitConnectorSearch;
   nav.intentTaskPlanner?.finishRetreatIntent?.(a.id);
 }
@@ -874,7 +875,7 @@ export function updateRaid(s,dt,nav) {
         if(walkTo(s,a,exit,dt,nav,
           {speed:3.8,worker:false,expandRoute:true,routeVia:a.spawn,
             externallyPlanned:native})){
-          a.status='gone';nav.intentTaskPlanner?.finishRetreatIntent?.(a.id);
+          a.status='gone';publishAnimalGone(s,a.id);nav.intentTaskPlanner?.finishRetreatIntent?.(a.id);
         }else if(native&&!a.path)nav.intentTaskPlanner?.finishRetreatIntent?.(a.id);
         delete a.retreatRouteUnknown;
       }catch(error){

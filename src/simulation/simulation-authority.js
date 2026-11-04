@@ -1,3 +1,4 @@
+import {createPresentationLifecycleJournal} from './presentation-lifecycle.js';
 import {deserialize} from '../persistence/snapshots.js';
 import {serializeConfirmedState,deserializeConfirmedState,confirmedStateSaveAvailable} from './confirmed-live-state.js';
 import {encodePhysicsCheckpoint} from './physics-checkpoint-codec.js';
@@ -45,6 +46,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   // Cinematic presentation is not restorable; do not persist its transient pause.
   function saveAvailable(){return !game.pauses.includes('campaign-cinematic')&&confirmedStateSaveAvailable(game);}
   stopEvents=observeGameEvents(game,event=>{events.push(structuredClone(event));if(trackMicroIncome&&(event.type==='Dawn'||event.type==='CrateDelivered'))trackIncome(game,[event]);});
+  const presentationJournal=createPresentationLifecycleJournal(game,observeGameEvents);
   function spellRejection(command,kind){
    if(game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id))return null;
    const draft=previewSpell(game,kind,command.x,command.z,nav,kind==='attack'?command.targetId:command.selection?.targetId);
@@ -210,14 +212,21 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     const peerGap=motionTrace?.peers&&(motionTrace.rosterChanged||motionTrace.peers.some(p=>!p.continuous||!p.timed)),topologyChanged=motionTrace&&motionTopologyBefore!==nav.version;
     const batchInvalidation=motionTrace&&(events.length>0||!motionTrace.continuous||!motionTrace.timed||peerGap||topologyChanged);
     const motionInvalidation=batchInvalidation?{actorId:motionTrace.actorId,...motionTrace.start,reason:events.length?'simulation-event':!motionTrace.continuous?'unobserved-motion':!motionTrace.timed?'untimed-motion':peerGap?'peer-motion-unknown':'topology-changed',eventTypes:events.map(e=>e.type),actorRelated:events.some(e=>[e.actorId,e.targetId,e.workerId,e.animalId].includes(motionTrace.actorId)),topologyChanged:!!topologyChanged}:invalidated?{actorId:previousTrackedActor.id,at:game.elapsed,x:previousTrackedActor.x,z:previousTrackedActor.z,reason:command.kind}:null;
-    sequence=command.sequence;const emitted=events;events=[];
+    sequence=command.sequence;const emitted=events;events=[];const lifecycle=presentationJournal.drain();
     const resident=residency();
-    if(compactViewAcks&&command.kind==='setNavigationView'&&!emitted.length)return {sequence,value,unchanged:true,slotId:game.slotId,stateSequence:game.sequence,elapsed:game.elapsed,pauses:[...game.pauses],events:[],residency:resident,saveAvailable:saveAvailable()};
-    const physicsPoses=physics?.poses({activeOnly:compactPhysicsPoses})??null;
+    if(compactViewAcks&&command.kind==='setNavigationView'&&!emitted.length&&!lifecycle.length)return {sequence,value,unchanged:true,slotId:game.slotId,stateSequence:game.sequence,elapsed:game.elapsed,pauses:[...game.pauses],events:[],residency:resident,saveAvailable:saveAvailable()};
+    let terrainCheckpoint;
+    if(command.kind==='snapshot'&&command.visualTerrain===true){
+     const selected=session.core.currentChunk(),chunks=[];
+     try{for(const key of loaded.keys()){const [x,z]=parseSimulationChunkKey(key);if(session.core.selectChunk(x,z)<0)throw Error('Resident native chunk disappeared: '+key);chunks.push(session.core.chunkPayload());}}
+     finally{if(selected&&session.core.selectChunk(selected.cx,selected.cz)<0)throw Error('Could not restore selected native chunk');}
+     terrainCheckpoint={sequence,chunks};
+    }
+    const physicsPoses=physics?.poses({activeOnly:command.visualTerrain===true?false:compactPhysicsPoses})??null;
     const physical=command.kind==='snapshot'&&(command.physicsCheckpoint===true||command.physicsCheckpoint==='encoded')?physics?.checkpointFall()??null:undefined;
-    return {sequence,value,...(command.steps!==undefined?{stepsExecuted}:{}),...(motionTrace?{motionTrace}:{}),...(motionInvalidation?{motionInvalidation}:{}),...(rejection?{rejection}:{}),...(commandLoadedChunks.length?{commandLoadedChunks}:{}),...(physical===undefined?{}:{physicsCheckpoint:physical&&command.physicsCheckpoint==='encoded'?encodePhysicsCheckpoint(physical):physical}),residency:resident,physicsPose:physicsPoses?.[0]??null,...(physicsPoses?.length>1?{physicsPoses}:{}),elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,raidWaitBindings:captureRaidWaitBindings(game,nav),saveAvailable:saveAvailable(),snapshot:serializeConfirmedState(game)};
+    return {sequence,value,...(terrainCheckpoint?{terrainCheckpoint}:{}),...(command.steps!==undefined?{stepsExecuted}:{}),...(motionTrace?{motionTrace}:{}),...(motionInvalidation?{motionInvalidation}:{}),...(rejection?{rejection}:{}),...(commandLoadedChunks.length?{commandLoadedChunks}:{}),...(physical===undefined?{}:{physicsCheckpoint:physical&&command.physicsCheckpoint==='encoded'?encodePhysicsCheckpoint(physical):physical}),residency:resident,physicsPose:physicsPoses?.[0]??null,...(physicsPoses?.length>1?{physicsPoses}:{}),elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,presentationJournal:lifecycle,raidWaitBindings:captureRaidWaitBindings(game,nav),saveAvailable:saveAvailable(),snapshot:serializeConfirmedState(game)};
    },
-   dispose(){if(closed)return;closed=true;stopMotion?.();stopEvents?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{session.dispose();}},
+   dispose(){if(closed)return;closed=true;presentationJournal.dispose();stopMotion?.();stopEvents?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{session.dispose();}},
   };
  }catch(error){stopEvents?.();stopTasks?.();stopWorld?.();session?.dispose();throw error;}
 }

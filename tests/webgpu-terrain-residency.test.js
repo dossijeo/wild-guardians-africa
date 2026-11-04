@@ -31,3 +31,11 @@ test('keeps water paired with its confirmed chunk and disposes old geometry',()=
 test('owns per-chunk materials and preserves the fallback',()=>{
  const scene=new THREE.Scene(),fallback=new THREE.MeshBasicMaterial(),owned=[],residency=createWebGpuTerrainResidency({scene,material:fallback,materialFactory:data=>{if(!data.groundMask)return null;const material=new THREE.MeshBasicMaterial();material.addEventListener('dispose',()=>owned.push(data.cx));return material;}}),first=chunk();first.groundMask=new Uint8Array(35*35*4);residency.replace(first,1);assert.notEqual(residency.get(0,0).material,fallback);residency.replace(chunk(),2);assert.deepEqual(owned,[0]);assert.equal(residency.get(0,0).material,fallback);residency.dispose();
 });
+
+test('checkpoint replaces terrain without consuming the next authoritative revision',()=>{
+ const residency=createWebGpuTerrainResidency({scene:new THREE.Scene(),material:new THREE.MeshBasicMaterial()}),old=chunk(),checkpoint=chunk(),future=chunk();
+ checkpoint.terrain.positions[1]=17;future.terrain.positions[1]=23;residency.replace(old,4);residency.restoreCheckpoint(checkpoint);
+ assert.equal(residency.get(0,0).geometry.attributes.position.array[1],17);
+ assert.equal(residency.replace(old,4),false);assert.equal(residency.replace(future,5),true);
+ assert.equal(residency.get(0,0).geometry.attributes.position.array[1],23);residency.dispose();
+});
