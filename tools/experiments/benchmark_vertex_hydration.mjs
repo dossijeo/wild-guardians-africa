@@ -29,11 +29,21 @@ try {
     });
     await page.goto(`${process.env.WG_BASE_URL ?? 'http://127.0.0.1:5175'}/hydration-page`);
     const result = webgpu
-      ? await page.evaluate(async ({ mode, captureShaders }) => (await import('/tests/browser/vertex-webgpu-swap.js')).runVertexWebGpuSwap({ mode, captureShaders }), { mode, captureShaders: process.env.WG_CAPTURE_SHADERS === '1' })
+      ? process.env.WG_RENDER_WORKER === '1'
+        ? await page.evaluate(async mode => (await import('/tests/browser/vertex-webgpu-worker-host.js')).runWorkerSwap(mode), mode)
+        : await page.evaluate(async ({ mode, captureShaders }) => (await import('/tests/browser/vertex-webgpu-swap.js')).runVertexWebGpuSwap({ mode, captureShaders }), { mode, captureShaders: process.env.WG_CAPTURE_SHADERS === '1' })
       : await page.evaluate(async ({ mode, sourceUrl }) => (await import('/tests/browser/vertex-hydration-benchmark.js')).runHydrationBenchmark({ mode, sourceUrl }), { mode, sourceUrl });
     if (errors.length) throw Error(JSON.stringify(errors));
     observations.push(result); await context.close();
   }
-  const json = JSON.stringify({ note: `Headless controlled ${webgpu ? 'WebGPU' : 'WebGL'} experiment; local Playwright routes; contexts isolated but process and driver caches may be warm.`, observations }, null, 2);
+  let transferProbe;
+  if (webgpu && process.env.WG_TRANSFER_PROBE === '1') {
+    const page = await browser.newPage();
+    await page.route('**/hydration-page', route => route.fulfill({ status: 200, contentType: 'text/html', body: '<!doctype html><body></body>' }));
+    await page.goto(`${process.env.WG_BASE_URL ?? 'http://127.0.0.1:5175'}/hydration-page`);
+    transferProbe = await page.evaluate(async () => (await import('/tests/browser/vertex-webgpu-worker-host.js')).probeWebGpuTransfer());
+    await page.close();
+  }
+  const json = JSON.stringify({ note: `Headless controlled ${webgpu ? 'WebGPU' : 'WebGL'} experiment; local Playwright routes; contexts isolated but process and driver caches may be warm.`, observations, transferProbe }, null, 2);
   if (process.env.WG_OUTPUT) await writeFile(process.env.WG_OUTPUT, json); else console.log(json);
 } finally { await browser.close(); }
