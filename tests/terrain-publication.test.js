@@ -15,3 +15,6 @@ test('capacity overflow closes the visual channel without accepting more terrain
 test('publishes a detached copy of the authoritative water together with its terrain revision',()=>{
  const {sent,publisher}=fixture(),data=chunk(1,2);data.water=new Float32Array([0,1,2,3,4,5,6,7,8]);publisher.stage(data);data.water[0]=99;publisher.commit(1);assert.equal(sent[0].message.payload.water[0],0);assert.equal(sent[0].transfer.length,4);assert.equal(sent[0].transfer[3],sent[0].message.payload.water.buffer);publisher.dispose();
 });
+test('stages detached authoritative prop instances with their committed terrain',()=>{
+ const {sent,publisher}=fixture(),data=chunk(0,0);data.instances=Array.from({length:20},()=>[]);data.instances[0].push({id:'spatial:0:0:0',slot:0,x:1,y:2,z:3,yaw:0,sx:1,sy:1,sz:1});publisher.stage(data);data.instances[0][0].x=99;publisher.commit(1);assert.equal(sent[0].message.payload.instances[0][0].x,1);publisher.dispose();
+});

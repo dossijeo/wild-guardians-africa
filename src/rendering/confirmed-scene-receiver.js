@@ -1,13 +1,9 @@
 import {createConfirmedStateReceiver} from '../simulation/confirmed-state-receiver.js';
 import {deserializeConfirmedState} from '../simulation/confirmed-live-state.js';
 import {validateConfirmedAnimalPose} from './confirmed-animal-pose.js';
+import {validateConfirmedMotion} from './confirmed-motion-validation.js';
 
 const validTransform=value=>Array.isArray(value)&&value.length===10&&value.every(Number.isFinite);
-const validPoint=p=>p&&[p.at,p.x,p.z].every(Number.isFinite);
-function validMotionTrace(t){
- if(!t||typeof t.actorId!=='string'||!t.actorId||!validPoint(t.start)||!validPoint(t.end)||t.end.at<t.start.at||typeof t.continuous!=='boolean'||typeof t.timed!=='boolean'||!Array.isArray(t.segments))return false;
- let last=t.start.at,x=t.start.x,z=t.start.z;for(const s of t.segments){if(!s||![s.at,s.x0,s.z0,s.x1,s.z1].every(Number.isFinite)||s.at<t.start.at-1e-8||s.at>t.end.at+1e-8||t.continuous&&(s.x0!==x||s.z0!==z))return false;x=s.x1;z=s.z1;if(t.timed){if(!Number.isFinite(s.t0)||!Number.isFinite(s.t1)||s.t0<last-1e-8||s.t1<s.t0||s.t1>s.at+1e-8||s.t1>t.end.at+1e-8)return false;last=s.t1;}}return !t.continuous||x===t.end.x&&z===t.end.z;
-}
 // Applies a single ordered authority publication to the existing scene state.
 // It does not advance simulation or install a second physics owner.
 export function createConfirmedSceneReceiver(state,session,world,{repeatDecode=false}={}){
@@ -30,10 +26,7 @@ export function createConfirmedSceneReceiver(state,session,world,{repeatDecode=f
     const animal=actors.get(pose.actorId);if(!animal?.magicDown)throw Error('Confirmed pose lacks active animal');
     const rig=world.mixers.get(pose.actorId);if(rig)validateConfirmedAnimalPose(rig.model,pose);next.set(pose.actorId,pose);
    }
-   const trace=message.motionTrace;if(trace!==undefined){const actor=actors.get(trace?.actorId)??snapshot.workers.find(w=>w.id===trace?.actorId);if(!validMotionTrace(trace)||trace.start.at<status.lastElapsed-1e-8||trace.end.at!==snapshot.elapsed||trace.continuous&&(!actor||trace.end.x!==actor.x||trace.end.z!==actor.z))throw TypeError('Invalid observed path motion');
-    if(trace.peers!==undefined){if(!Array.isArray(trace.peers)||typeof trace.rosterChanged!=='boolean')throw TypeError('Invalid observed peer motion');const seen=new Set([trace.actorId]);for(const peer of trace.peers){const body=actors.get(peer?.actorId)??snapshot.workers.find(w=>w.id===peer?.actorId);if(!validMotionTrace(peer)||seen.has(peer.actorId)||peer.start.at!==trace.start.at||peer.end.at!==trace.end.at||!Number.isFinite(peer.radius)||peer.radius<=0||typeof peer.startStatus!=='string'||typeof peer.endStatus!=='string'||peer.continuous&&(!body||peer.end.x!==body.x||peer.end.z!==body.z))throw TypeError('Invalid observed peer motion');seen.add(peer.actorId);}}
-   }
-   const invalidation=message.motionInvalidation;if(invalidation!==undefined&&(!invalidation||typeof invalidation.actorId!=='string'||!invalidation.actorId||!validPoint(invalidation)||invalidation.at<0||!Number.isFinite(message.elapsed)||invalidation.at>message.elapsed||message.elapsed!==snapshot.elapsed||typeof invalidation.reason!=='string'||!invalidation.reason||trace&&(invalidation.actorId!==trace.actorId||invalidation.at<trace.start.at||invalidation.at>trace.end.at)))throw TypeError('Invalid path motion invalidation');
+   const {trace,invalidation}=validateConfirmedMotion(message,snapshot,status.lastElapsed);
    pending=next;decoded={text:message.snapshot,value:snapshot};try{const result=receiver.accept(message,{firstSequence});if(result.accepted){if(invalidation){if(world.lastObservedPathMotion?.actorId===invalidation.actorId)world.lastObservedPathMotion=null;world.lastObservedPathInvalidation=invalidation;if(Array.isArray(world.observedPathInvalidations)){if(trace)world.lastObservedUnusablePathMotion=trace;world.observedPathInvalidations.push(invalidation);if(world.observedPathInvalidations.length>64)world.observedPathInvalidations.shift();}}else if(trace)world.lastObservedPathMotion=trace;}return result;}finally{pending=null;decoded=null;}
   },
   status(){return receiver.status();},
