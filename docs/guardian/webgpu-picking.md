@@ -5,3 +5,5 @@
 This is not connected to game clicks. Resident terrain, building and vegetation geometry now occludes targets. The client sends the latest camera and rejects responses after a newer request, camera change or below the requested minimum state sequence. Actual visible target picking still needs real-world validation; alpha-cutout leaves and GPU-deformed geometry are not represented exactly by CPU raycasts. The result is not a performance measurement.
 
 A real-scene QA probe selected animals and plants and verified a wall occlusion with the same camera and state: a crop was hidden by the wall and became selectable when only that wall was hidden. No suitable real tree occlusion case was found. Edge reported an NVIDIA Turing adapter without exposing its exact model; this is a functional test, not a benchmark.
+
+The QA picker now samples cutout texture alpha lazily, falling back to conservative occlusion when pixels or UVs are unavailable. Unit tests cover transparent cutouts; a bounded real-scene search did not find a suitable controlled tree case. Filtering, mipmaps and GPU-deformed geometry can differ from the raycast, so this path remains QA-only.
