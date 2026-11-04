@@ -4,6 +4,13 @@ import * as THREE from 'three';
 import {createWebGpuTerrainResidency} from '../src/rendering/webgpu-terrain-residency.js';
 
 function chunk(cx=0,cz=0){const positions=new Float32Array(49*49*3),colors=new Float32Array(49*49*3),indices=new Uint16Array(48*48*6);for(let z=0;z<49;z++)for(let x=0;x<49;x++){const i=(z*49+x)*3;positions.set([x-24,(x+z)/10,z-24],i);colors.set([.2,.4,.6],i);}for(let z=0;z<48;z++)for(let x=0;x<48;x++){const a=z*49+x,k=(z*48+x)*6;indices.set([a,a+49,a+1,a+1,a+49,a+50],k);}return {authority:'spatial-wasm',cx,cz,terrain:{positions,colors,indices}};}
+test('samples the confirmed terrain triangles exactly, including replacement and chunk boundaries',()=>{
+ const scene=new THREE.Scene(),residency=createWebGpuTerrainResidency({scene,material:new THREE.MeshBasicMaterial({side:THREE.DoubleSide})}),data=chunk(-1,1);
+ for(let i=0;i<data.terrain.positions.length/3;i++)data.terrain.positions[i*3+1]=Math.fround(Math.sin(i*.3)*3);
+ residency.replace(data,1);const mesh=residency.get(-1,1);mesh.updateWorldMatrix(true,false);const ray=new THREE.Raycaster(),down=new THREE.Vector3(0,-1,0);
+ for(let z=24;z<72;z+=.731)for(let x=-72;x< -24;x+=.829){ray.set(new THREE.Vector3(x,1000,z),down);const expected=ray.intersectObject(mesh,false)[0]?.point.y;assert.ok(Math.abs(residency.surface(x,z)-expected)<1e-5,`${x},${z}`);}
+ assert.equal(residency.surface(-24,30),null);const newer=chunk(-1,1);newer.terrain.positions.forEach((v,i)=>{if(i%3===1)newer.terrain.positions[i]=10;});residency.replace(newer,2);assert.equal(residency.surface(-60,40),10);assert.equal(residency.replace(data,1),false);assert.equal(residency.surface(-60,40),10);residency.remove(-1,1,3);assert.equal(residency.surface(-60,40),null);residency.dispose();
+});
 test('keeps native chunk geometry and rejects stale updates and removals',()=>{
  const scene=new THREE.Scene(),material=new THREE.MeshBasicMaterial(),residency=createWebGpuTerrainResidency({scene,material}),data=chunk(1,-2);
  assert.equal(residency.replace(data,1),true);const mesh=residency.get(1,-2);assert.deepEqual(mesh.position.toArray(),[48,0,-96]);assert.equal(mesh.geometry.attributes.position.array,data.terrain.positions);assert.equal(mesh.material,material);assert.equal(mesh.geometry.index.count,48*48*6);

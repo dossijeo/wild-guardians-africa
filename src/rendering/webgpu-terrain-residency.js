@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import {nativeTerrainBuffer} from './terrain-geometry.js';
 import {nativeWaterBuffer} from './water-geometry.js';
+import {SpatialSurfaceView} from '../world/wild-engine/spatial-surface-view.js';
 
 // Worker-owned render residency for the existing Wild Engine chunk payload.
 // The caller owns the material and ensures it is ready before publication.
@@ -9,7 +10,7 @@ import {nativeWaterBuffer} from './water-geometry.js';
 export function createWebGpuTerrainResidency({scene,material,waterMaterial=null,materialFactory=null}={}){
  if(typeof document!=='undefined')throw Error('WebGPU terrain residency requires a Worker');
  if(!scene?.isScene||!material?.isMaterial||waterMaterial!==null&&!waterMaterial.isMaterial||materialFactory!==null&&typeof materialFactory!=='function')throw TypeError('Terrain residency requires a scene and material');
- const entries=new Map(),waters=new Map(),versions=new Map();let closed=false;
+ const entries=new Map(),waters=new Map(),versions=new Map(),surfaceView=new SpatialSurfaceView();let closed=false;
  function releaseWater(key){const water=waters.get(key);if(water){scene.remove(water);water.geometry.dispose();waters.delete(key);}}
  const check=(cx,cz,revision)=>{
   if(closed)throw Error('Terrain residency disposed');
@@ -25,13 +26,13 @@ export function createWebGpuTerrainResidency({scene,material,waterMaterial=null,
   let geometry,mesh,waterGeometry,water,chunkMaterial;
   try{geometry=nativeTerrainBuffer(terrain);chunkMaterial=materialFactory?.(payload)??material;if(!chunkMaterial?.isMaterial)throw TypeError('Invalid chunk material');mesh=new THREE.Mesh(geometry,chunkMaterial);mesh.position.set(payload.cx*48,0,payload.cz*48);mesh.receiveShadow=true;mesh.userData.ground=true;mesh.userData.spatialAuthority=payload.authority;mesh.userData.spatialTerrainRevision=revision;if(payload.water?.length){waterGeometry=nativeWaterBuffer(payload.water);water=new THREE.Mesh(waterGeometry,waterMaterial);water.position.copy(mesh.position);water.userData.nativeFluid='chunk';water.userData.spatialTerrainRevision=revision;}scene.add(mesh);if(water)scene.add(water);}
   catch(error){if(mesh?.parent===scene)scene.remove(mesh);if(water?.parent===scene)scene.remove(water);geometry?.dispose();if(chunkMaterial&&chunkMaterial!==material)chunkMaterial.dispose();waterGeometry?.dispose();throw error;}
-  const old=entries.get(key);entries.set(key,mesh);versions.set(key,revision);
+  const old=entries.get(key);entries.set(key,mesh);versions.set(key,revision);surfaceView.install(payload);
   if(old){scene.remove(old);old.geometry.dispose();if(old.material!==material)old.material.dispose();}releaseWater(key);if(water)waters.set(key,water);return true;
  }
  function remove(cx,cz,revision){
   const key=check(cx,cz,revision),previous=versions.get(key);if(previous!==undefined&&revision<=previous)return false;
-  versions.set(key,revision);const old=entries.get(key);if(old){entries.delete(key);scene.remove(old);old.geometry.dispose();if(old.material!==material)old.material.dispose();}releaseWater(key);return true;
+  versions.set(key,revision);const old=entries.get(key);if(old){entries.delete(key);surfaceView.remove(cx,cz);scene.remove(old);old.geometry.dispose();if(old.material!==material)old.material.dispose();}releaseWater(key);return true;
  }
- function dispose(){if(closed)return;closed=true;for(const mesh of entries.values()){scene.remove(mesh);mesh.geometry.dispose();if(mesh.material!==material)mesh.material.dispose();}for(const key of waters.keys())releaseWater(key);entries.clear();versions.clear();}
- return {replace,remove,dispose,get groundMaterialCount(){let count=0;for(const mesh of entries.values())if(mesh.material!==material)count++;return count;},get size(){return entries.size;},get waterSize(){return waters.size;},get(cx,cz){return entries.get(`${cx},${cz}`)??null;},getWater(cx,cz){return waters.get(`${cx},${cz}`)??null;}};
+ function dispose(){if(closed)return;closed=true;for(const mesh of entries.values()){scene.remove(mesh);mesh.geometry.dispose();if(mesh.material!==material)mesh.material.dispose();}for(const key of waters.keys())releaseWater(key);entries.clear();versions.clear();surfaceView.clear();}
+ return {replace,remove,dispose,surface(x,z){if(!Number.isFinite(x)||!Number.isFinite(z)||!entries.has(`${Math.floor((x+24)/48)},${Math.floor((z+24)/48)}`))return null;return surfaceView.surface(x,z)??null;},get groundMaterialCount(){let count=0;for(const mesh of entries.values())if(mesh.material!==material)count++;return count;},get size(){return entries.size;},get waterSize(){return waters.size;},get(cx,cz){return entries.get(`${cx},${cz}`)??null;},getWater(cx,cz){return waters.get(`${cx},${cz}`)??null;}};
 }
