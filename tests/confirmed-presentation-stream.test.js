@@ -11,6 +11,28 @@ import {acceptLiveTerrainCheckpoint} from '../src/rendering/live-terrain-checkpo
 import {createConfirmedMotionFeed} from '../src/rendering/confirmed-motion-feed.js';
 import {serializeConfirmedState} from '../src/simulation/confirmed-live-state.js';
 const fixture=()=>deserialize(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString());
+test('QA hold retains one confirmed publication without exposing events, terrain or its ACK',()=>{
+ const state=fixture(),next=deserialize(serialize(state)),actor=state.raid.animals[0],before=serialize(state),order=[],port={postMessage:m=>order.push(['ack',m.sequence]),close(){},start(){}},stop=observePresentationGameEvents(state,event=>order.push(['event',event.id]));
+ const stream=createConfirmedPresentationStream({port,session:'s',state,allowPresentationHold:true,terrain:{confirm:n=>order.push(['terrain',n])},onConfirmed:m=>order.push(['confirmed',m.sequence])});
+ try{next.elapsed+=.05;next.raid.animals[0].x+=1;emit(next,'Test');const event=next.events.at(-1);stream.holdPresentation();port.onmessage({data:{kind:'publication',session:'s',publication:{session:'s',sequence:1,snapshot:serialize(next),events:[event]}}});
+  assert.equal(serialize(state),before);assert.equal(state.raid.animals[0],actor);assert.deepEqual(order,[]);assert.equal(stream.status().sequence,0);assert.equal(stream.status().receivedSequence,1);assert.equal(stream.status().receivedElapsed,next.elapsed);assert.equal(stream.status().held,true);
+  stream.releasePresentation();assert.equal(state.raid.animals[0],actor);assert.equal(serialize(state),serialize(next));assert.deepEqual(order,[['event',event.id],['terrain',1],['confirmed',1],['ack',1]]);assert.equal(stream.status().sequence,1);assert.equal(stream.status().held,false);
+ }finally{stream.dispose();stop();}
+});
+test('QA hold cancellation before receipt resumes immediately; dispose with held state never acknowledges it',()=>{
+ const state=fixture(),port={acks:[],postMessage(m){this.acks.push(m)},close(){this.closed=true},start(){}},stream=createConfirmedPresentationStream({port,session:'s',state,allowPresentationHold:true,terrain:{confirm(){}}});
+ stream.holdPresentation();stream.releasePresentation();port.onmessage({data:{kind:'publication',session:'s',publication:{session:'s',sequence:1,snapshot:serialize(state),events:[]}}});assert.equal(port.acks.length,1);
+ stream.holdPresentation();port.onmessage({data:{kind:'publication',session:'s',publication:{session:'s',sequence:2,snapshot:serialize(state),events:[]}}});stream.dispose();assert.equal(port.acks.length,1);assert.equal(port.closed,true);assert.throws(()=>stream.releasePresentation(),/not held/);
+});
+test('QA hold validates physical poses immediately but applies them only with their state',()=>{
+ const state=fixture(),next=deserialize(serialize(state)),actor=next.raid.animals[0],order=[],port={postMessage:()=>order.push('ack'),close(){},start(){}},stop=observePresentationGameEvents(state,()=>order.push('event'));
+ actor.magicDown={phase:'falling',since:next.elapsed,until:next.elapsed+2};emit(next,'Test');const transform=[0,0,0,0,0,0,1,1,1,1],pose={actorId:actor.id,active:true,root:transform,model:transform,bones:[]},stream=createConfirmedPresentationStream({port,session:'s',state,allowPresentationHold:true,terrain:{confirm:()=>order.push('terrain')},validatePhysics:()=>order.push('validate'),onPhysics:()=>order.push('physics')});
+ try{stream.holdPresentation();port.onmessage({data:{kind:'publication',session:'s',publication:{session:'s',sequence:1,snapshot:serializeConfirmedState(next),events:[next.events.at(-1)],physicsPose:pose}}});assert.deepEqual(order,['validate']);stream.releasePresentation();assert.deepEqual(order,['validate','physics','event','terrain','ack']);}finally{stream.dispose();stop();}
+});
+test('QA hold fails closed on an unexpected second publication and never acknowledges either',()=>{
+ const state=fixture(),errors=[],port={postMessage(){throw Error('unexpected ack')},close(){this.closed=true},start(){}},stream=createConfirmedPresentationStream({port,session:'s',state,allowPresentationHold:true,terrain:{confirm(){throw Error('unexpected terrain')}},onError:e=>errors.push(e)}),before=serialize(state);
+ stream.holdPresentation();port.onmessage({data:{kind:'publication',session:'s',publication:{session:'s',sequence:1,snapshot:before,events:[]}}});port.onmessage({data:{kind:'publication',session:'s',publication:{session:'s',sequence:2,snapshot:before,events:[]}}});assert.match(errors[0].message,/Invalid presentation publication/);assert.equal(stream.status().closed,true);assert.equal(port.closed,true);assert.equal(serialize(state),before);
+});
 test('automatic checkpoint confirms terrain then acknowledges its exact sequence without rebuilding',()=>{
  const state=fixture(),order=[],port={postMessage:m=>order.push(['ack',m.sequence]),close(){},start(){}},stream=createConfirmedPresentationStream({port,session:'s',state,terrain:{confirm:n=>order.push(['terrain',n])},onConfirmed:m=>{const result=acceptLiveTerrainCheckpoint(m,'s',()=>{throw Error('unexpected rebuild');});order.push(['checkpoint',result.sequence]);}});
  port.onmessage({data:{kind:'publication',session:'s',publication:{session:'s',sequence:1,snapshot:serialize(state),events:[],physicsPose:null,terrainCheckpoint:{sequence:1,chunks:[],recoveryOnly:true}}}});

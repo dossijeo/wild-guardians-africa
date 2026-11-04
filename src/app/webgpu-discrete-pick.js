@@ -1,11 +1,11 @@
-// General selection and placement retain the legacy picker until every kind
-// of selectable object is represented by the Worker.
+// Placement and wall strokes retain the legacy picker; discrete selection can
+// fall back when the confirmed visual scene is not yet complete.
 export function createWebGpuDiscretePick({context,deliver,fallback=null,onError=()=>{}}){
  if(typeof context!=='function'||typeof deliver!=='function'||fallback!==null&&typeof fallback!=='function'||typeof onError!=='function')throw TypeError('Invalid WebGPU pick adapter');
  return (event,gesture)=>{
   const initial=context();
-  const supported=initial?.tool?.kind==='awakening'||initial?.tool?.kind==='spell'&&['attack','growth','multiply'].includes(initial.tool.spell);
-  if(!initial?.client||!supported||initial.tool.kind==='awakening'&&!fallback)return false;
+  const supported=!initial?.tool||initial.tool.kind==='awakening'||initial.tool.kind==='spell'&&['attack','growth','multiply'].includes(initial.tool.spell);
+  if(!initial?.client||!supported||(!initial.tool||initial.tool.kind==='awakening')&&!fallback)return false;
   const rect=initial.canvas.getBoundingClientRect();
   if(!rect.width||!rect.height)return false;
   const input={clientX:event.clientX,clientY:event.clientY},coordinate={x:(input.clientX-rect.left)/rect.width*2-1,y:1-(input.clientY-rect.top)/rect.height*2};

@@ -32,7 +32,7 @@ export function createConfirmedStateReceiver(state,session,{onReconciled=null,de
    if(message.sequence<=sequence)return {accepted:false,reason:'stale'};
    if(!Number.isSafeInteger(firstSequence)||firstSequence!==sequence+1||firstSequence>message.sequence)return {accepted:false,reason:'gap'};
    if(!sequence||message.unchanged!==true||message.slotId!==state.slotId||message.stateSequence!==state.sequence||message.elapsed!==lastElapsed||state.elapsed!==lastElapsed||!Array.isArray(message.events)||message.events.length||message.presentationJournal?.length||!Array.isArray(message.pauses)||JSON.stringify(message.pauses)!==JSON.stringify(state.pauses)||typeof message.saveAvailable!=='boolean'||Object.hasOwn(message,'snapshot')||Object.hasOwn(message,'physicsPose')||Object.hasOwn(message,'physicsPoses'))throw TypeError('Invalid unchanged publication');
-   const token=Object.freeze({});pending={token,unchanged:true,sequence:message.sequence};return {accepted:true,token};
+   const token=Object.freeze({});pending={token,unchanged:true,sequence:message.sequence};return {accepted:true,token,elapsed:lastElapsed};
  }
  function prepare(message,{firstSequence=message?.sequence}={}){
    if(pending)throw Error('Confirmed publication already prepared');
@@ -54,7 +54,7 @@ export function createConfirmedStateReceiver(state,session,{onReconciled=null,de
    let nextEvent=Math.max(lastEvent,state.sequence-1);for(const event of message.events){const match=typeof event?.id==='string'?/^event-(0|[1-9]\d*)$/.exec(event.id):null,n=match?Number(match[1]):NaN;if(!Number.isSafeInteger(n)||n<=nextEvent||n>=next.sequence||typeof event.type!=='string')throw TypeError('Invalid confirmed event sequence');nextEvent=n;}
    // The caller retains no right to mutate the transferred publication until
    // commit or discard. Its decoded snapshot is private to this receiver.
-   const token=Object.freeze({});pending={token,sequence:message.sequence,next,nextEvent,message};return {accepted:true,token};
+   const token=Object.freeze({});pending={token,sequence:message.sequence,next,nextEvent,message};return {accepted:true,token,elapsed:next.elapsed};
  }
  function commit(token){
   if(!pending||pending.token!==token)throw Error('Invalid prepared publication token');

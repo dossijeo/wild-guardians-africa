@@ -153,3 +153,27 @@ future asynchronous scheduler must enforce that ownership or copy the mutable
 parts it retains. One pending token is allowed, and observer failure faults the
 receiver. This boundary does not supply a presentation clock, terrain history,
 physics timeline, complete trajectories or a safe interval.
+
+## Bounded QA presentation hold
+
+In a development game started with `qa-webgpu-hold-presentation`,
+`wildGuardiansWebGpuPresentationControlQa('hold')` asks the real WebGPU
+Worker to retain the next validated publication. Its state and physical poses,
+events and terrain are not exposed until `wildGuardiansWebGpuPresentationControlQa('release')`.
+The Worker continues drawing with the prior **confirmed state**; diagnostics
+report the received sequence/time separately from the presented sequence/time.
+This does not freeze every visual layer: `surface.render()` still runs
+`roster.tick(performance.now())`, and the guardian's provisional gesture uses
+its real-time clock. Reconciliation and texture transitions can also advance
+on real time. The hold therefore does not establish a single visual clock or
+claim a frozen image. It does not advance confirmed simulation time or provide
+an interpolated trajectory. Disposing the stream drops the held publication
+without acknowledging it; an unexpected second publication fails closed.
+
+The held message is the Worker's exclusive transferred object and is bounded to
+one. Its ACK is intentionally delayed until the publication and terrain have
+been applied in order. Consequently the host may queue or throttle subsequent
+publications: this is not the target's full simulation/render decoupling. The
+normal path remains immediate; the hold is a DEV-only diagnostic and has not
+yet been validated in a real WebGPU session or benchmarked. It does not certify
+animation, VFX, physical poses, terrain history or a safe movement horizon.

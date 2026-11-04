@@ -16,6 +16,7 @@ test('selects the nearest visible worker or structure while respecting terrain a
  const worker=new THREE.Group();worker.add(box());worker.position.set(0,1,3);scene.add(worker);
  const state={workers:[{id:'worker',status:'working'}]},picker=createWebGpuPicker({scene,camera,state,animals:{get:()=>null},workers:{get:()=>({root:worker})},cropBounds:()=>[]});
  assert.equal(picker.pick({x:0,y:0}).entityId,'worker');worker.visible=false;assert.equal(picker.pick({x:0,y:0}).entityId,'wall');
+ const crate=new THREE.Group();crate.userData.entityId='crate';crate.position.set(0,1,4);crate.add(box());scene.add(crate);assert.equal(picker.pick({x:0,y:0}).entityId,'crate');crate.visible=false;
  const prop=box();prop.userData.nativePropSlot=0;prop.position.set(0,1,6);scene.add(prop);assert.equal(picker.pick({x:0,y:0}).entityId,null);
  prop.visible=false;const floor=box();floor.userData.ground=true;floor.position.set(0,1,6);scene.add(floor);assert.equal(picker.pick({x:0,y:0}).entityId,null);
  floor.visible=false;state.workers[0].status='home';worker.visible=true;assert.equal(picker.pick({x:0,y:0}).entityId,'wall');
@@ -34,5 +35,5 @@ test('reports an incomplete visual scene until all confirmed selectable objects 
  const ready={animals:{ready:1},workers:{ready:1},settlements:{walls:1,centers:1,villages:1},crops:{plants:1},terrain:{closed:false,pending:false}};
  assert.equal(webGpuPickerReady(state,ready),true);
  for(const [key,empty] of Object.entries({animals:{ready:0},workers:{ready:0},settlements:{walls:0,centers:1,villages:1},crops:{plants:0},terrain:{pending:true}}))assert.equal(webGpuPickerReady(state,{...ready,[key]:empty}),false,key);
- assert.equal(webGpuPickerReady({...state,crates:[{id:'crate'}]},ready),false);assert.equal(webGpuPickerReady({...state,structures:[...state.structures,{kind:'unknown'}]},ready),false);
+ const crates=[{id:'crate'},{id:'delivered',delivered:true},{id:'carried',carrierId:'worker'}];assert.equal(webGpuPickerReady({...state,crates},ready),false);assert.equal(webGpuPickerReady({...state,crates},{...ready,crates:{ready:1}}),true);assert.equal(webGpuPickerReady({...state,structures:[...state.structures,{kind:'unknown'}]},ready),false);
 });
