@@ -15,12 +15,14 @@ export function createConfirmedMotionFeed({onChange=()=>{},maxActors=256,maxSegm
   const physicalIds=new Set(poses.filter(p=>p?.active===true&&typeof p.actorId==='string').map(p=>p.actorId));if(event.physicsPose?.active===true&&typeof event.physicsPose.actorId==='string')physicalIds.add(event.physicsPose.actorId);
   // On every confirmed publication, physical ownership or pause immediately
   // revokes an earlier trace, even if the publication contains no new trace.
-  for(const [actorId,previous] of actors){if(actorId===id)continue;const physical=available?physicalIds.has(actorId):previous.physical,revoked=physical||paused||!available,needsRevocation=revoked&&previous.trace!==null;if(!needsRevocation&&previous.physical===physical&&previous.paused===paused)continue;
-   const value={...previous,sequence:event.sequence,elapsed:event.elapsed,paused,physical,...(needsRevocation?{trace:null,representable:false,invalidation:{actorId,at:event.elapsed,reason:physical?'physical-pose':paused?'paused':'physics-unavailable'}}:{})};actors.set(actorId,value);onChange(value);
+  for(const [actorId,previous] of actors){if(actorId===id)continue;const physical=available?physicalIds.has(actorId):previous.physical,expired=previous.trace!==null&&event.elapsed>previous.trace.end.at+1e-8,revoked=physical||paused||!available||expired,needsRevocation=revoked&&previous.trace!==null;if(!needsRevocation&&previous.physical===physical&&previous.paused===paused)continue;
+   const value={...previous,sequence:event.sequence,elapsed:event.elapsed,paused,physical,...(needsRevocation?{trace:null,representable:false,invalidation:{actorId,at:event.elapsed,reason:physical?'physical-pose':paused?'paused':!available?'physics-unavailable':'horizon-expired'}}:{})};actors.set(actorId,value);onChange(value);
   }
   let value=null;if(id){const physical=physicalIds.has(id),revoked=!!invalidation||physical||paused||!available;
    const representable=!!trace&&!revoked&&trace.continuous===true&&trace.timed===true&&Array.isArray(trace.segments)&&trace.segments.length<=maxSegments&&trace.segments.every(segment=>segment.t1>segment.t0);
-   value={sequence:event.sequence,elapsed:event.elapsed,paused,actorId:id,trace:revoked?null:trace,invalidation:invalidation??(physical?{actorId:id,at:event.elapsed,reason:'physical-pose'}:paused?{actorId:id,at:event.elapsed,reason:'paused'}:!available?{actorId:id,at:event.elapsed,reason:'physics-unavailable'}:null),physical,representable};actors.set(id,value);onChange(value);
+   // A structurally representable trace is historical observation, not an
+   // authority to replay it after the rest of the world has advanced.
+   value={sequence:event.sequence,elapsed:event.elapsed,paused,actorId:id,trace:revoked?null:trace,invalidation:invalidation??(physical?{actorId:id,at:event.elapsed,reason:'physical-pose'}:paused?{actorId:id,at:event.elapsed,reason:'paused'}:!available?{actorId:id,at:event.elapsed,reason:'physics-unavailable'}:null),physical,representable,safeForAutonomousPlayback:false};actors.set(id,value);onChange(value);
   }
   lastSequence=event.sequence;return value;
  }
