@@ -134,3 +134,26 @@ Se ejecutó también A/B/B/A sin instrumentación, con diez personajes completos
 La diferencia observada no demuestra una mejora reproducible: la muestra es pequeña, los tiempos incluyen subida, compilación y contención, y el controlador puede conservar caché. En las repeticiones calientes los intervalos rondaron 33,3 ms y ningún intervalo superó 50 ms. La mediana CPU de `render` en los 51 fotogramas con diez actores calientes fue 6,78/6,97 ms en A y 7,16/7,04 ms en B; son solo dos muestras de ejecución y el hook añade trabajo en cada llamada. No hay medida GPU. **No se integra esta normalización en el juego.**
 
 Reproducir con `WG_SOURCE=full`, `WG_BACKEND=webgpu`, `WG_MODE=direct`, alternando `WG_CANONICAL_VERTEX=0/1`; para la traza añadir `WG_TRACE=1` y `WG_DEEP_TRACE=1`. `tools/experiments/summarize_webgpu_pipeline_trace.mjs` resume la traza, y `tools/experiments/compare_canonical_images.mjs` compara las huellas visuales. Los datos completos están en `results/uber-pipeline-structure-{original,canonical}.json`, sus resúmenes `uber-pipeline-summary-*.json`, `uber-canonical-abba-*.json` y `uber-canonical-image-*.json`.
+
+## Reutilización experimental de pipelines con morph targets
+
+La traza profunda ahora captura también los descriptores de `createBindGroupLayout` y `createPipelineLayout`, en vez de comparar solo la identidad de los objetos. Con la normalización de nombres activa, las 82 creaciones correspondían a 68 descriptores completos distintos al incluir las definiciones capturadas de layout y excluir solo su identidad. Se observaron diez definiciones de pipeline layout. La [especificación de WebGPU](https://www.w3.org/TR/webgpu/#bind-group-layout-compatibility) define la equivalencia de layouts por sus entradas y restricciones de exclusividad; comparar descriptores es una señal útil, pero no valida por sí sola los recursos ni todos los usos posteriores.
+
+Se probó una clave alternativa **solo para el pipeline** en `src/labs/morph-pipeline-key.js`: mantiene atributos de geometría, nombres y número de morph targets, pero omite los identificadores individuales de sus buffers al formar la clave de pipeline. No modifica la clave que Three usa para crear y asociar los `NodeBuilder` y sus texturas de morph, ni comparte datos de animación. Requiere la normalización de WGSL anterior y utiliza métodos privados de Three r180. Este experimento no comprueba formalmente la equivalencia de todos los layouts posibles y no es apto para producción.
+
+En dos ejecuciones instrumentadas separadas, con diez GLB completos y la misma normalización de WGSL, el control creó 82 pipelines y la clave experimental 69; ambos generaron 86 módulos de shader. Se mantuvieron 68 descriptores completos distintos; la captura de objetos y descriptores no garantiza que el driver haya reutilizado internamente los mismos recursos. Las trazas registran cero errores de WebGPU en el escenario probado. Datos: `results/uber-layout-descriptors.json`, `results/uber-morph-pipeline-trace.json` y los resúmenes correspondientes.
+
+Se compararon dos renderizados deterministas con los diez modelos simultáneos, luz y sombras, sus primeros clips a 0, 0,25, 0,8 y 1,3 s y pesos distintos en 37 mallas con 130 valores de morph. Las cuatro imágenes fueron idénticas píxel a píxel según SHA-256, sin errores detectados en un error scope de validación y tras esperar la cola GPU. Un control que pone todos los pesos de morph a cero cambia las cuatro imágenes. La prueba utiliza un encuadre general con algunas superposiciones y no cubre todas las animaciones, caras, cámaras o materiales AfricanToon. Captura: `uber-morph-animated.png`; datos: `results/uber-morph-visual-{0,1}.json` y `uber-morph-visual-zero.json`.
+
+Serie A/B/B/A sin instrumentación, donde A ya incluye normalización WGSL y B añade la clave de morph. Hardware y entorno iguales al experimento anterior; una ejecución por fila, 22–37 intervalos en contexto nuevo y dos repeticiones por opción:
+
+| Orden | Clave morph | RAF | Media ms | p95 ms | p99/máximo ms | >50 ms |
+| ---: | --- | ---: | ---: | ---: | ---: | ---: |
+| A | No | 37 | 227,9 | 899,9 | 1100,1 | 11 |
+| B | Sí | 22 | 374,2 | 1200,0 | 1666,7 | 10 |
+| B | Sí | 24 | 344,4 | 1133,3 | 1633,3 | 10 |
+| A | No | 25 | 326,7 | 1100,0 | 1766,8 | 10 |
+
+En caliente los intervalos fueron ~33,3 ms y ninguno superó 50 ms. Las medianas CPU de `render` con diez actores calientes fueron 7,16/7,08 ms en A y 7,61/7,55 ms en B. La muestra es pequeña, la instrumentación de imágenes y la de pipelines se efectuó separadamente, y no hay medición GPU. **La reducción de 13 creaciones no demuestra mejora de fluidez y los tirones persisten.** No se integra esta clave en producción. Datos: `results/uber-morph-abba-{0,1,2,3}.json`.
+
+Para reproducir el rendimiento, ejecutar `tools/experiments/audit_webgpu_on_demand.mjs` con `WG_SOURCE=full`, `WG_BACKEND=webgpu`, `WG_MODE=direct`, `WG_CANONICAL_VERTEX=1` y alternar `WG_MORPH_PIPELINE=0/1`; usar `WG_TRACE=1` y `WG_DEEP_TRACE=1` solo para los descriptores. La comparación visual utiliza `tools/experiments/check_morph_pipeline_visual.mjs` con `WG_MORPH_PIPELINE=0/1`, después `tools/experiments/compare_morph_pipeline_visual.mjs` sobre ambos JSON; `WG_ZERO_MORPH=1` activa el control de pesos cero. Ejecutar también `node --test tests/morph-pipeline-key.test.js`.

@@ -5,6 +5,7 @@ import { clone as cloneSkeleton } from 'three/addons/utils/SkeletonUtils.js';
 import {createSharedCharacterFallback} from './shared-character-material.js';
 import {createSharedPhysicalMaterial,physicalFamilyKey} from './shared-physical-material.js';
 import {canonicalizeNodeBufferNames} from './canonical-wgsl.js';
+import {installExperimentalMorphPipelineKey} from './morph-pipeline-key.js';
 
 const modelNames = [
   'guardian', 'hyena', 'lion', 'rhino', 'buffalo', 'warthog',
@@ -19,7 +20,8 @@ const swapPreparation = ['actor','scope'].includes(qs.get('swapPreparation')) ? 
 const matchSwapTarget = qs.get('matchSwapTarget') === '1';
 const sharedFallback = qs.get('sharedFallback') === '1' && backend === 'webgpu';
 const physicalFinal = qs.get('physicalFinal') === '1' && backend === 'webgpu';
-const canonicalVertex = qs.get('canonicalVertex') === '1' && backend === 'webgpu';
+const morphPipeline = qs.get('morphPipeline') === '1' && backend === 'webgpu';
+const canonicalVertex = (qs.get('canonicalVertex') === '1' || morphPipeline) && backend === 'webgpu';
 const elements = Object.fromEntries([
   'viewport', 'load', 'spawn', 'sequence', 'clear', 'model', 'mode',
   'status', 'metrics', 'events', 'reset', 'copy',
@@ -46,6 +48,8 @@ const report = {
   physicalFinal,
   canonicalVertex,
   canonicalVertexChanges:0,
+  morphPipeline,
+  morphPipelineKeys:0,
   resources: [],
   backendDetails: null,
   environment:{userAgent:navigator.userAgent,devicePixelRatio:devicePixelRatio||1,visibility:document.visibilityState,visibilityChanges:[]},
@@ -338,6 +342,10 @@ async function main() {
       // Private Three r180 hooks, restricted to this lab; never enable in game.
       const pipelines=renderer._pipelines,original=pipelines.getForRender;
       pipelines.getForRender=function(renderObject,...args){const state=renderObject.getNodeBuilderState(),before=state.vertexShader;state.vertexShader=canonicalizeNodeBufferNames(before);if(state.vertexShader!==before)report.canonicalVertexChanges++;return original.call(this,renderObject,...args);};
+    }
+    if(morphPipeline){
+      installExperimentalMorphPipelineKey(renderer.backend,()=>report.morphPipelineKeys++);
+      renderer.backend.device.addEventListener('uncapturederror',event=>{report.errors.push('WebGPU validation: '+event.error.message);});
     }
     report.backendActual = 'WebGPU real';
     const info=renderer.backend.device.adapterInfo;
