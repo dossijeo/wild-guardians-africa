@@ -40,10 +40,15 @@ try {
     await page.goto(`${process.env.WG_BASE_URL ?? 'http://127.0.0.1:5175'}/hydration-page`);
     const result = webgpu
       ? process.env.WG_RENDER_WORKER === '1'
-        ? await page.evaluate(async ({ mode, nativeBc7, count, beastToon, beastShadow, autoVariant, disableBc7, verifiedStream }) => (await import('/tests/browser/vertex-webgpu-worker-host.js')).runWorkerSwap(mode, nativeBc7, count, beastToon, beastShadow, autoVariant, disableBc7, verifiedStream), { mode, nativeBc7, count, beastToon: process.env.WG_BEAST_TOON === '1', beastShadow: process.env.WG_BEAST_SHADOW === '1', autoVariant: process.env.WG_AUTO_VARIANT === '1', disableBc7: process.env.WG_DISABLE_BC7 === '1', verifiedStream: process.env.WG_VERIFIED_STREAM === '1' })
+        ? await page.evaluate(async ({ mode, nativeBc7, count, beastToon, beastShadow, autoVariant, disableBc7, verifiedStream, captureBlend }) => (await import('/tests/browser/vertex-webgpu-worker-host.js')).runWorkerSwap(mode, nativeBc7, count, beastToon, beastShadow, autoVariant, disableBc7, verifiedStream, captureBlend), { mode, nativeBc7, count, beastToon: process.env.WG_BEAST_TOON === '1', beastShadow: process.env.WG_BEAST_SHADOW === '1', autoVariant: process.env.WG_AUTO_VARIANT === '1', disableBc7: process.env.WG_DISABLE_BC7 === '1', verifiedStream: process.env.WG_VERIFIED_STREAM === '1', captureBlend: !!process.env.WG_BLEND_CAPTURE_PREFIX })
         : await page.evaluate(async ({ mode, captureShaders, nativeBc7, count, beastToon, beastShadow, autoVariant, disableBc7 }) => (await import('/tests/browser/vertex-webgpu-swap.js')).runVertexWebGpuSwap({ mode, captureShaders, nativeBc7, count, beastToon, beastShadow, autoVariant, disableBc7 }), { mode, captureShaders: process.env.WG_CAPTURE_SHADERS === '1', nativeBc7, count, beastToon: process.env.WG_BEAST_TOON === '1', beastShadow: process.env.WG_BEAST_SHADOW === '1', autoVariant: process.env.WG_AUTO_VARIANT === '1', disableBc7: process.env.WG_DISABLE_BC7 === '1' })
       : await page.evaluate(async ({ mode, sourceUrl }) => (await import('/tests/browser/vertex-hydration-benchmark.js')).runHydrationBenchmark({ mode, sourceUrl }), { mode, sourceUrl });
     if (errors.length) throw Error(JSON.stringify(errors));
+    if (process.env.WG_BLEND_CAPTURE_PREFIX) {
+      if (observations.length || result.captures.length !== 3) throw Error('Blend capture requires exactly one run and three frames');
+      for (const capture of result.captures) await writeFile(`${process.env.WG_BLEND_CAPTURE_PREFIX}-${capture.level}.png`, Buffer.from(capture.bytes));
+      delete result.captures;
+    }
     if (process.env.WG_SCREENSHOT && observations.length === 0) await page.screenshot({ path: process.env.WG_SCREENSHOT });
     observations.push({ ...result, variant }); await context.close();
   }

@@ -12,13 +12,14 @@ import { openCharacterPreviewStream } from '../../src/rendering/character-previe
 
 // Isolated request-time preparation. The old material remains visible while
 // compileAsync is pending. This does not promise asynchronous texture upload.
-export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders = false, canvas = null, nativeBc7 = false, count = 1, beastToon = false, beastShadow = false, autoVariant = false, disableBc7 = false, verifiedStream = false }) {
+export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders = false, canvas = null, nativeBc7 = false, count = 1, beastToon = false, beastShadow = false, autoVariant = false, disableBc7 = false, verifiedStream = false, captureBlend = false }) {
   if (!['async', 'target', 'coverage', 'whole', 'sequential', 'staged', 'stable', 'direct'].includes(mode)) throw Error('Unknown mode');
   if (autoVariant && mode !== 'stable') throw Error('Automatic selection requires stable mode');
   if (!Number.isInteger(count) || count < 1 || count > 16) throw Error('Invalid actor count');
   if (count > 1 && mode !== 'stable') throw Error('Crowd mode requires shared stable materials');
   if (beastShadow && (!beastToon || mode !== 'stable')) throw Error('Beast shadows require stable toon mode');
   if (verifiedStream && (!canvas || !autoVariant || mode !== 'stable')) throw Error('Verified stream requires the Worker and automatic stable mode');
+  if (captureBlend && !verifiedStream) throw Error('Blend capture requires verified Worker stream');
   const bootstrapStart = performance.now(), loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
   const renderer = new WebGPURenderer({ antialias: false, ...(canvas ? { canvas } : {}) }); await renderer.init();
   if (!renderer.backend?.isWebGPUBackend) throw Error('WebGPU backend unavailable');
@@ -107,6 +108,7 @@ export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders =
   const mixers = actors.map(actor => { const mixer = new THREE.AnimationMixer(actor); if (preview.animations.length) mixer.clipAction(preview.animations[0]).play(); return mixer; });
   const intervals = [], renderCpu = [], events = {}, bootstrapMs = performance.now() - bootstrapStart, start = performance.now(), absoluteStart = performance.timeOrigin + performance.now();
   let frame = 0, previous = 0, ready = false, applied = false, failure = null, apply, blendStart = null;
+  const captures = [], captureLevels = captureBlend ? [0, .5, 1] : [];
   const provisional = []; for (const actor of actors) actor.traverse(object => { if (object.isMesh) provisional.push({ object, material: object.material }); });
   events.framesWhileCompiling = 0;
   const errors = []; device.addEventListener('uncapturederror', e => errors.push(e.error.message));
@@ -191,17 +193,28 @@ export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders =
       }).catch(error => { failure = String(error?.stack ?? error); });
   }
   return await new Promise((resolve, reject) => {
-    function tick(now) {
+    async function tick(now) {
       if (failure || errors.length) return reject(Error(JSON.stringify({ failure, errors })));
-      if (previous) { intervals.push({ frame, ms: now - previous }); for (const mixer of mixers) mixer.update(Math.min((now - previous) / 1000, .1)); } previous = now;
+      if (previous) { intervals.push({ frame, ms: now - previous }); if (!captureBlend) for (const mixer of mixers) mixer.update(Math.min((now - previous) / 1000, .1)); } previous = now;
       if (frame === 30) request();
       if (events.compileStart !== undefined && events.compileResolved === undefined) {
         if (provisional.some(item => item.object.material !== item.material)) return reject(Error('Provisional material changed while compilation was pending'));
         events.framesWhileCompiling++;
       }
       if (ready && !applied) { events.applyFrame = frame; events.applyAt = performance.now() - start; const t = performance.now(); apply(); events.applyCpuMs = performance.now() - t; applied = true; if (verifiedStream) blendStart = now; }
-      if (blendStart !== null) { const blend = Math.min(1, (now - blendStart) / 300); stableResources.setBlend(blend); if (blend === 1) { events.blendCompleteAt = performance.now() - start; blendStart = null; } }
+      let blend = null;
+      if (blendStart !== null) { blend = Math.min(1, (now - blendStart) / 300); if (captureLevels.length && blend >= captureLevels[0]) blend = captureLevels[0]; stableResources.setBlend(blend); if (blend === 1) { events.blendCompleteAt = performance.now() - start; blendStart = null; } }
       const t = performance.now(); renderer.render(scene, camera); renderCpu.push({ frame, ms: performance.now() - t });
+      if (captureLevels.length && blend === captureLevels[0]) {
+        const level = captureLevels.shift();
+        try {
+          const blob = await canvas.convertToBlob({ type: 'image/png' });
+          captures.push({ level, bytes: Array.from(new Uint8Array(await blob.arrayBuffer())) });
+        } catch (error) { return reject(error); }
+        // Diagnostic captures must not skip intermediate blend values due to
+        // readback/encoding latency; no timing claims are made from this run.
+        if (blendStart !== null) blendStart = performance.now() - level * 300;
+      }
       frame++;
       if (frame < frames || (!applied && frame < 1200)) requestAnimationFrame(tick);
       else {
@@ -211,7 +224,7 @@ export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders =
         if (mode === 'stable' && (!imageRequests.length || imageRequests.some(entry => entry.at < events.requestedAt))) return reject(Error('Final image request occurred before the on-demand request, or was not observed'));
         const transcoderRequests = performance.getEntriesByType('resource').filter(entry => /basis_transcoder\.(js|wasm)/.test(entry.name)).map(entry => entry.name);
         if (nativeBc7 && transcoderRequests.length) return reject(Error('Native BC7 unexpectedly loaded a Basis transcoder'));
-        resolve({ mode, count, beastToon, beastShadow, selectedVariant, sharedMaterials, independentSkeletons: new Set(firstSkeletons).size, renderInfo: { ...renderer.info.render }, backend: 'WebGPU', nativeBc7, previewLoadMs, bootstrapMs, transcoderRequests, absoluteStart, adapter: { vendor: info.vendor, architecture: info.architecture, device: info.device, description: info.description }, intervals, renderCpu, events, errors, imageRequests, gpuCalls: gpuCalls.map(call => ({ ...call, at: call.at - start })) });
+        resolve({ mode, count, beastToon, beastShadow, selectedVariant, sharedMaterials, independentSkeletons: new Set(firstSkeletons).size, renderInfo: { ...renderer.info.render }, backend: 'WebGPU', nativeBc7, previewLoadMs, bootstrapMs, transcoderRequests, absoluteStart, adapter: { vendor: info.vendor, architecture: info.architecture, device: info.device, description: info.description }, intervals, renderCpu, events, errors, imageRequests, captures, gpuCalls: gpuCalls.map(call => ({ ...call, at: call.at - start })) });
         stream?.close(); ktxLoader?.dispose(); renderer.dispose();
       }
     }
