@@ -55,7 +55,7 @@ An additional bounded mangrove run with `QA_RAID=1`, `QA_REQUIRE_ACTOR=0`,
 `QA_PROPS=1`, `QA_PICK=1`, `QA_BIOME_ATTRIBUTES=1` and
 `QA_TIMEOUT_MS=45000` timed out during boot while waiting for the simulation
 to report a running game. It did not reach inspection, picking or capture.
-The local log is [stage log](biome-live-mangrove-timeout.log). This is not evidence
+The local log is [stage log](biome-live-mangrove-timeout.txt). This is not evidence
 of an instancing, selection or shadow defect, and does not close the above
 validation gaps. The audit now bounds individual inspection and pick waits.
 
@@ -66,7 +66,7 @@ picking phase rejected a request as `Stale WebGPU pick` while the camera
 version changed. It did not reach the screenshot. This is evidence of stale
 request rejection, not evidence that vegetation selection is incorrect or
 that visual and shadow parity holds. The local stage and error log is
-[stage log](biome-live-mangrove-stale.log); the contract remains QA-only.
+[stage log](biome-live-mangrove-stale.txt); the contract remains QA-only.
 
 A single follow-up paused the game and waited five seconds before picking.
 It completed with WebGPU, 28 chunks and 409 prop meshes; all 15 picks
@@ -74,5 +74,5 @@ returned without a stale-camera rejection, with confirmed sequence numbers
 278–309. All returned terrain and no entity, so they do not demonstrate
 vegetation occlusion. The capture is obscured by the pause menu and cannot
 validate shadows or visual parity. Local evidence is
-[stage log](biome-live-mangrove-stable.log) and
+[stage log](biome-live-mangrove-stable.txt) and
 the local capture `.cache/biome-live-mangrove-stable.png`. No production default was changed.
