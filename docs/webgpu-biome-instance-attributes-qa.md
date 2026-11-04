@@ -76,3 +76,15 @@ vegetation occlusion. The capture is obscured by the pause menu and cannot
 validate shadows or visual parity. Local evidence is
 [stage log](biome-live-mangrove-stable.txt) and
 the local capture `.cache/biome-live-mangrove-stable.png`. No production default was changed.
+
+Further live comparison attempts hid the pause overlay after settling the
+camera. In the native run, the picker reported `WebGPU picker unavailable`
+after the world initially reported ready. In the attributes run, a mangrove
+capture was saved to [the QA capture](biome-live-mangrove-attributes-clear.png), but
+the QA pick function was unavailable afterward. Backend continuity at capture
+was not confirmed, and there is no comparable native capture; neither run
+proves shadow or occlusion parity. Local logs are
+[native log](biome-live-mangrove-native-clear.txt) and
+[attributes log](biome-live-mangrove-attributes-clear.txt). The attempted
+occluder diagnostic yielded no real evidence and was removed. The default is
+unchanged.
