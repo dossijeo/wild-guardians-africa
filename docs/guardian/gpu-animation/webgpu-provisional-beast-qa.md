@@ -40,3 +40,21 @@ below the ground: the actor root was at y=3.32 while the camera aimed at y=1.
 Correcting camera height showed terrain but still did not produce a useful
 close-up of the animal. The isolated control does not validate the visual
 transition into an actual Rapier pose.
+
+## Matched attack comparison
+
+On 2026-11-04, `tools/experiments/audit_webgpu_fall_reconciliation.mjs`
+replayed the same hyena fixture with the original heading, attack origin,
+contact point and ground height. At 0.5 seconds after the attack, the QA
+fall and actual Worker Rapier pose are shown in `matched-provisional-050.png`
+and `matched-rapier-050.png`. Both use the same camera and spatial anchor; the
+Rapier sample includes its actual resulting movement. The provisional hyena
+is still nearly standing while the physical hyena is seated. 36,241 of 480,000
+pixels differ by more than 3/255 and the whole-image mean absolute channel
+difference is 7.17/255. These are diagnostic image differences, not a visual
+acceptance threshold.
+
+Changing clip direction or advancing the clip more quickly did not reproduce
+the Rapier pose for this case, and can change contact and flight in other
+cases. No such adjustment was accepted. The fall remains QA-only; the test
+does not demonstrate a seamless visual transition or collision-safe blending.
