@@ -159,3 +159,15 @@ test('crop occupancy events retain committed location after snapshot changes, wi
   hits.length=0;markGroundDetailEvent(details,state,{type,targetId:plant.id,presentation:{x:NaN,z:0}});assert.deepEqual(hits,expected);
  }
 });
+
+test('structural occupancy facts survive later state changes and preserve legacy lookup',()=>{
+ const state=Game.newGame({slotId:'ground-structural-events',seed:712}),nav=clearNavigation();Game.resume(state,'intro');
+ Game.placeStructure(state,'center',{x:0,z:0},nav);const placed=state.events.find(e=>e.type==='PlacementCommitted');assert.ok(placed);
+ Game.buildWallChain(state,'wall-chain','adobe',[[15,0],[20,0]],nav,{smooth:false,snap:false});
+ const chain=state.events.find(e=>e.type==='WallChainBuilt');assert.ok(chain);const pieces=state.structures.filter(p=>p.kind==='wall');assert.equal(chain.presentation.points.length,chain.count);
+ const wall=pieces[0];Game.removeWall(state,'remove',wall.id,nav);const removed=state.events.find(e=>e.type==='WallRemoved'&&e.targetId===wall.id);assert.deepEqual(removed.presentation,{x:wall.x,z:wall.z});
+ const chosen=pieces.at(-1);chosen.status='collapsing';chosen.collapseRemaining=0;state.initialPreparation=false;Game.tick(state,.01,nav);const ruined=state.events.find(e=>e.type==='StructureRuined'&&e.targetId===chosen.id);assert.ok(ruined);
+ const cases=[[placed,[placed.presentation]],[chain,chain.presentation.points],[removed,[removed.presentation]],[ruined,[ruined.presentation]], [{type:'RepairApplied',targetId:chosen.id,repair:{previousStatus:'ruined'},presentation:{x:99,z:99,structure:{x:chosen.x,z:chosen.z}}},[{x:chosen.x,z:chosen.z}]]];
+ for(const [event,points] of cases){const actual=[],d={enabled:true,markDirtyAt:(x,z)=>actual.push({x,z})};markGroundDetailEvent(d,{plants:[],structures:[]},structuredClone(event));assert.deepEqual(actual,points.map(({x,z})=>({x,z})));}
+ const legacy=[],d={enabled:true,markDirtyAt:(x,z)=>legacy.push({x,z})};markGroundDetailEvent(d,{structures:[chosen]}, {type:'StructureRuined',targetId:chosen.id});assert.deepEqual(legacy,[{x:chosen.x,z:chosen.z}]);
+});

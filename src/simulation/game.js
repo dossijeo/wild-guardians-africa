@@ -224,7 +224,7 @@ export function placeStructure(s,id,options,nav) {
     s.nextId++;s.sequence++;s.structures.push(entity);
     s.suppressed.push(...suppression);nav.setState(s);
     for(const ruin of replaced)emit(s,'WallRemoved',{
-      targetId:ruin.id,refund:0,replacedBy:entity.id});
+      targetId:ruin.id,refund:0,replacedBy:entity.id,presentation:{x:ruin.x,z:ruin.z}});
     emit(s,'PlacementCommitted',{kind,targetId:s.structures.at(-1).id,presentation:{x,z}});
     if(kind==='center'){recoverDisplacedWorkers(s);enqueueLooseCrates(s);}
     if(kind==='center'&&s.tutorial.step==='center')s.tutorial.step='plant';
@@ -586,8 +586,8 @@ export function buildWallChain(s,id,material,points,nav,options={}) {
     s.structures.push(...newPieces);s.nextId+=newPieces.length;s.sequence+=newPieces.length;s.suppressed.push(...plan.suppressed.filter(key=>!s.suppressed.includes(key)));nav.setState(s);
     for(const ruin of replaced)emit(s,'WallRemoved',{
       targetId:ruin.id,refund:0,replacedBy:newPieces.find(piece=>
-        Math.hypot(ruin.x-piece.x,ruin.z-piece.z)<.35)?.id});
-    emit(s,'WallChainBuilt',{material,count:newPieces.length,gates:plan.gates,targetId:newPieces[0].id,presentation:{x:newPieces[0].x,z:newPieces[0].z}});
+        Math.hypot(ruin.x-piece.x,ruin.z-piece.z)<.35)?.id,presentation:{x:ruin.x,z:ruin.z}});
+    emit(s,'WallChainBuilt',{material,count:newPieces.length,gates:plan.gates,targetId:newPieces[0].id,presentation:{x:newPieces[0].x,z:newPieces[0].z,points:newPieces.map(({x,z})=>({x,z}))}});
   });
 }
 export function removeWall(s,id,targetId,nav) {
@@ -600,7 +600,7 @@ export function removeWall(s,id,targetId,nav) {
     const blessingLoss=loseBlessing(s,target,{removed:true});
     if(blessingLoss){emit(s,'BlessingRemoved',blessingLoss);notice(s,'Has retirado una muralla mágica. Su Despertar se ha perdido.',targetId,{category:'awakening-lost',location:blessingLoss.presentation});}
     // Removal opens the graph: never call ensureAutomaticGates here or on reload.
-    emit(s,'WallRemoved',{targetId,refund:numberOf(refund)});
+    emit(s,'WallRemoved',{targetId,refund:numberOf(refund),presentation:{x:target.x,z:target.z}});
   });
 }
 export class PlantPlacementError extends Error {}
@@ -1331,7 +1331,7 @@ function completeTask(s,w,t,target,nav) {
         // fractional before transact rounds the actual payment to whole coins.
         emit(s,'RepairApplied',{workerId:w.id,targetId:target.id,
           repair:{taskId:t.id,paymentId,paidCoins:-numberOf(s.ledger.entries[paymentId]),previousHp,previousStatus,restoredHp:target.hp,maxHp:target.maxHp},
-          presentation:{elapsed:s.elapsed,x:w.x,z:w.z,yaw:w.heading??0}});
+          presentation:{elapsed:s.elapsed,x:w.x,z:w.z,yaw:w.heading??0,structure:{x:target.x,z:target.z}}});
         if(target.kind==='center'){recoverDisplacedWorkers(s);enqueueLooseCrates(s);}
       }
     }
@@ -1725,7 +1725,7 @@ export function tick(s,seconds,nav) {
       s.cooldowns[kind]=remaining>1e-9?remaining:0;
     }
     for(const structure of s.structures)if(structure.status==='collapsing') {
-      structure.collapseRemaining-=step;if(structure.collapseRemaining<=1e-9){structure.status='ruined';structure.hp=0;nav.setState(s);emit(s,'StructureRuined',{targetId:structure.id});}
+      structure.collapseRemaining-=step;if(structure.collapseRemaining<=1e-9){structure.status='ruined';structure.hp=0;nav.setState(s);emit(s,'StructureRuined',{targetId:structure.id,presentation:{x:structure.x,z:structure.z}});}
     }
     if(previousTime<300) {
       const growthStep=s.spells.some(spell=>spell.kind==='growth'&&spell.remaining>0)?growthPowerStep(s):null;
