@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import {applyWorkerPose} from './worker-actions.js';
 import {applyActorExpression} from './actor-expression.js';
+import {createActorTerrainSampler} from './webgpu-actor-terrain.js';
 
 // Consumes confirmed state only. Actor motion, interactions and collision
 // authority remain in Wild Engine; this is a Worker-owned visual rig.
@@ -8,11 +9,11 @@ export async function createWebGpuConfirmedWorker({scene,residency,state,actorId
  if(!scene?.isScene||!residency||!state||!assetBank||typeof actorId!=='string'||!actorId)throw TypeError('Invalid confirmed worker');
  const worker=state.workers.find(item=>item.id===actorId),profile=worker?.profile;if(!profile)throw Error('Confirmed worker unavailable');
  if(signal?.aborted)throw new DOMException('Worker presentation cancelled','AbortError');
- const shared=await assetBank.acquire(profile),model=shared.model,root=new THREE.Group(),ray=new THREE.Raycaster(),mixer=new THREE.AnimationMixer(model),data={model,mixer,clips:shared.clips,action:null,name:null};let closed=false;
+ const shared=await assetBank.acquire(profile),model=shared.model,root=new THREE.Group(),sampleTerrain=createActorTerrainSampler(residency),mixer=new THREE.AnimationMixer(model),data={model,mixer,clips:shared.clips,action:null,name:null};let closed=false;
  if(signal?.aborted){shared.release();throw new DOMException('Worker presentation cancelled','AbortError');}
  model.traverse(o=>{if(o.isMesh){o.castShadow=o.receiveShadow=true;o.frustumCulled=false;}});root.add(model);scene.add(root);
  function update(){if(closed)return;const entity=state.workers.find(item=>item.id===actorId);if(!entity||entity.status==='home'){root.visible=false;return;}if(entity.profile!==profile)throw Error('Confirmed worker profile changed');root.visible=true;
-  const mesh=residency.get(Math.floor((entity.x+24)/48),Math.floor((entity.z+24)/48));let height=0;if(mesh){mesh.updateWorldMatrix(true,false);ray.set(new THREE.Vector3(entity.x,1000,entity.z),new THREE.Vector3(0,-1,0));height=ray.intersectObject(mesh,false)[0]?.point.y??0;}
+  const height=sampleTerrain(entity.x,entity.z);
   root.position.set(entity.x,height+.025,entity.z);root.rotation.y=entity.downHeading!==undefined&&(entity.fallRemaining>0||entity.recovery)?entity.downHeading:entity.path?.length?Math.atan2(entity.path[0].x-entity.x,entity.path[0].z-entity.z):entity.heading??0;
   const task=state.tasks.find(item=>item.id===entity.taskId);applyWorkerPose(data,entity,task,state.elapsed,shared.library);applyActorExpression(data,entity,'worker',state.elapsed);
  }

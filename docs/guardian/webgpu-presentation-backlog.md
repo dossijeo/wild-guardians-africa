@@ -16,3 +16,18 @@ Reproduce using Vite on 127.0.0.1:5175 and `PLAYWRIGHT_MODULE` pointing to Playw
 The second no-reuse run follows two cached runs; the last run restores reuse. Measurements are wall-clock Worker callback times, not GPU or FPS; load/asset preparation and system contention remain included. They are not long-session or cross-hardware benchmarks. Regression test `node --test tests/webgpu-settlement-height.test.js tests/confirmed-presentation-stream.test.js` checks moved positions, chunk replacement, and publication event/pose order.
 
 `node tools/experiments/audit_live_webgpu_first_wall_hit.mjs` passed after the change with confirmed wall impact and WebGPU: authority sequence 326, presentation sequence 298; authority elapsed 25.299745 s and presentation elapsed 24.999745 s (0.30 s lag at that sample). This is a single sample, not p95/p99 backlog or a controlled before/after timing. Frame interval values include loading and cannot establish a frame-rate improvement. Further measurements must include controlled repeated raids, event-to-display latency, memory, and physical handoffs.
+
+## Worker actor floor samples
+
+Worker presentation used to raycast the same terrain on every confirmed publication, even when the actor and resident chunk had not changed. The new actor sampler retains only the last coordinate and chunk mesh identity per worker. Any x/z change, chunk replacement, loading or eviction invalidates it; the same raycast and zero-height fallback remain in use. Animal presentation is unchanged.
+
+Run `node tools/experiments/audit_webgpu_presentation_timing.mjs` with Vite on port 5175 and `PLAYWRIGHT_MODULE` set. Set `QA_DISABLE_ACTOR_REUSE=1` to disable reuse through a QA-only route. Four sequential runs in A/B/B/A order on the same machine, 35–36 publications per run:
+
+| Variant | Worker synchronization mean / p95 ms | Full receipt mean / p95 ms |
+| --- | --- | --- |
+| No reuse A1 | 12.92 / 23.1 | 47.80 / 65.5 |
+| Reuse B1 | 2.02 / 13.9 | 29.01 / 44.0 |
+| Reuse B2 | 1.36 / 12.6 | 28.21 / 40.7 |
+| No reuse A2 | 17.56 / 29.4 | 51.36 / 74.4 |
+
+All runs used the real confirmed mangrove scene on WebGPU, with 16 animals and a confirmed Shield. The figures are Worker wall-clock timings and include initial loading, not frame rates or a long-session performance test; the test does not establish complete visual parity. `node --test tests/webgpu-actor-terrain.test.js tests/webgpu-worker-roster.test.js` verifies reuse, movement, replacement, eviction and roster behavior. The QA audit also retains the separate settlement reuse control.
