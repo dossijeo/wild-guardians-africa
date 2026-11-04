@@ -7,6 +7,7 @@ import {GameJuice} from '../ui/game-juice.js';
 import {CampaignCinematics} from '../ui/campaign-cinematics.js';
 import {dueCinematicAct,finishCinematicAct,initializeCinematicProgress} from './campaign-cinematics.js';
 import {installLoadingGameplayGpuQa} from './loading-gameplay-gpu-qa.js';
+import {renderWithOptionalWebGpuPresentation} from './webgpu-legacy-draw.js';
 import {LibraryViewer} from '../ui/library-viewer.js';
 import {EventCards} from '../ui/event-cards.js';
 import {LoadingDiorama} from '../rendering/loading-diorama.js';
@@ -93,6 +94,7 @@ import '../ui/tutorial.css';
 const app=document.querySelector('#app'),saves=new BrowserSaveRepository(localStorage);
 const guidanceQa=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-guidance');
 const cropSpellFrameQa=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-crop-spell-frame');
+const skipLegacyDrawQa=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-webgpu-skip-legacy-draw');
 const gameplayGpuQa=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading-gpu-gameplay')?installLoadingGameplayGpuQa(document):null;
 const progressQa=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')?installLoadingProgressQa(document,{throttleReady:!new URLSearchParams(location.search).has('qa-loading-unthrottled'),gpu:new URLSearchParams(location.search).has('qa-loading-gpu')}):null;
 // Hints come only from already-validated slot listings. The decoded save remains
@@ -755,7 +757,7 @@ function frame(now) {
     ensureWorkerTutorial();
     const eventIndex=state.events.at(-1)?.id;
 
-    try {if(!campaignCinema?.active){tutorial?.update();if(tutorial?.advance(dt,{visible:!guardian?.voice?.active&&!surfaces.active&&!document.hidden&&!state.pauses.includes('menu')&&now>=budgetWarningUntil}))save();refreshTutorialGuidance();microevents?.beforeSimulation();syncWorkerNightSpeed(world.workerRuntime,!!microevents?.holdsNightSpeed);if(!world.workerRuntime&&world.actorsReady()&&!(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-microevents-fixture')))Game.advanceReal(state,dt,nav,{nightFastForward:!microevents?.holdsNightSpeed});tutorial?.update();juice?.process(state);if(gameplayGpuQa)gameplayGpuQa.frame(now,world.renderer,()=>world.render(dt));else world.render(dt);world.webGpuWorld?.sync();updateRaidLoading();audio.process(state.events,{state,listener:world.controls.target});audio.updateMusic(state);audio.updateUnlocks(state);audio.updateAmbient(state,{listener:world.controls.target,waterRevision:nav.version,waterAt:(x,z)=>({...nav.field.waterInfo(x,z),active:!!(nav.field.wetland||nav.field.riverActive)})});audio.updateFarmActors(state,{listener:world.controls.target});audio.updateAnimals(state,{listener:world.controls.target});audio.updateMovement(state,{listener:world.controls.target,surfaceAt:world.movementSurfaceAt});updateUI();guardian?.setWorldPresence((world.guardianSummons?.stats.active??0)>0,world.guardianSummons?.guideScreenPosition());guardian?.update();juice?.update(state);}}
+    try {if(!campaignCinema?.active){tutorial?.update();if(tutorial?.advance(dt,{visible:!guardian?.voice?.active&&!surfaces.active&&!document.hidden&&!state.pauses.includes('menu')&&now>=budgetWarningUntil}))save();refreshTutorialGuidance();microevents?.beforeSimulation();syncWorkerNightSpeed(world.workerRuntime,!!microevents?.holdsNightSpeed);if(!world.workerRuntime&&world.actorsReady()&&!(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-microevents-fixture')))Game.advanceReal(state,dt,nav,{nightFastForward:!microevents?.holdsNightSpeed});tutorial?.update();juice?.process(state);if(gameplayGpuQa)gameplayGpuQa.frame(now,world.renderer,()=>world.render(dt));else renderWithOptionalWebGpuPresentation(world,dt,skipLegacyDrawQa);world.webGpuWorld?.sync();updateRaidLoading();audio.process(state.events,{state,listener:world.controls.target});audio.updateMusic(state);audio.updateUnlocks(state);audio.updateAmbient(state,{listener:world.controls.target,waterRevision:nav.version,waterAt:(x,z)=>({...nav.field.waterInfo(x,z),active:!!(nav.field.wetland||nav.field.riverActive)})});audio.updateFarmActors(state,{listener:world.controls.target});audio.updateAnimals(state,{listener:world.controls.target});audio.updateMovement(state,{listener:world.controls.target,surfaceAt:world.movementSurfaceAt});updateUI();guardian?.setWorldPresence((world.guardianSummons?.stats.active??0)>0,world.guardianSummons?.guideScreenPosition());guardian?.update();juice?.update(state);}}
 
     catch(e){const owner=world;runtimeErrorWorld=owner;if(owner.workerRuntime)owner.workerRuntime.submit({kind:'pause',reason:'runtime-error'}).catch(failure=>{if(owner===world)error(failure.message);});else Game.pause(state,'runtime-error');guardian?.hide({immediate:true});dialogVoice.stop();error(e.message);console.error(e);}
     if(autosaveEventAfter(state.events,eventIndex))save();
