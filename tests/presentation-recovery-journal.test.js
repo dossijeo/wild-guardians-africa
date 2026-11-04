@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createPresentationRecoveryJournal,assertPresentationRecoveryBoundary} from '../src/simulation/presentation-recovery-journal.js';
+import {createPresentationRecoveryJournal,assertPresentationRecoveryBoundary,shouldRenewPresentationCheckpoint} from '../src/simulation/presentation-recovery-journal.js';
 const publication=(sequence,events=[])=>({sequence,events,snapshot:'snapshot-'+sequence,physicsPose:{actorId:'a',active:true,bones:[sequence]},presentationJournal:events.map(e=>({kind:'event',eventId:e.id}))});
 test('checkpoint promotion retains every later publication, pose and event in order',()=>{
  const j=createPresentationRecoveryJournal({capacity:8,highWatermark:5});
@@ -38,3 +38,14 @@ test('recovery boundary fails closed on channel error, missing publication, pend
  j.appendTerrain(2,[{cx:0}]);assert.throws(()=>assertPresentationRecoveryBoundary(j,stream,checkpoint,1),/incomplete/);j.append(publication(2),true);assert.equal(assertPresentationRecoveryBoundary(j,stream,checkpoint,2),2);
  j.begin(2);assert.throws(()=>assertPresentationRecoveryBoundary(j,stream,checkpoint,2),/incomplete/);j.confirm(2);j.append(publication(3),true);j.append(publication(4),true);j.append(publication(5),true);j.append(publication(6),true);assert.throws(()=>assertPresentationRecoveryBoundary(j,stream,{sequence:2},6),/saturated/);
 });
+
+test('checkpoint renewal starts early and waits for exact candidate acknowledgement',()=>{
+ const j=createPresentationRecoveryJournal({capacity:8,highWatermark:4,maxBytes:100000,highWatermarkBytes:90000});
+ assert.equal(shouldRenewPresentationCheckpoint(j.status()),false);j.begin(1);j.confirm(1);
+ const p=n=>({sequence:n,snapshot:'x',events:[],physicsPose:null});
+ j.append(p(2),true);assert.equal(shouldRenewPresentationCheckpoint(j.status()),false);
+ j.append(p(3),true);assert.equal(shouldRenewPresentationCheckpoint(j.status()),true);
+ j.begin(3);assert.equal(shouldRenewPresentationCheckpoint(j.status()),false);j.append(p(4),true);j.confirm(3);
+ assert.equal(shouldRenewPresentationCheckpoint(j.status()),false);assert.equal(j.status().through,4);
+});
+

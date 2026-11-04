@@ -214,9 +214,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     const motionInvalidation=batchInvalidation?{actorId:motionTrace.actorId,...motionTrace.start,reason:events.length?'simulation-event':!motionTrace.continuous?'unobserved-motion':!motionTrace.timed?'untimed-motion':peerGap?'peer-motion-unknown':'topology-changed',eventTypes:events.map(e=>e.type),actorRelated:events.some(e=>[e.actorId,e.targetId,e.workerId,e.animalId].includes(motionTrace.actorId)),topologyChanged:!!topologyChanged}:invalidated?{actorId:previousTrackedActor.id,at:game.elapsed,x:previousTrackedActor.x,z:previousTrackedActor.z,reason:command.kind}:null;
     sequence=command.sequence;const emitted=events;events=[];const lifecycle=presentationJournal.drain();
     const resident=residency();
-    if(compactViewAcks&&command.kind==='setNavigationView'&&!emitted.length&&!lifecycle.length)return {sequence,value,unchanged:true,slotId:game.slotId,stateSequence:game.sequence,elapsed:game.elapsed,pauses:[...game.pauses],events:[],residency:resident,saveAvailable:saveAvailable()};
+    if(compactViewAcks&&command.kind==='setNavigationView'&&command.visualTerrain!==true&&!emitted.length&&!lifecycle.length)return {sequence,value,unchanged:true,slotId:game.slotId,stateSequence:game.sequence,elapsed:game.elapsed,pauses:[...game.pauses],events:[],residency:resident,saveAvailable:saveAvailable()};
     let terrainCheckpoint;
-    if(command.kind==='snapshot'&&command.visualTerrain===true){
+    if(command.visualTerrain===true){
      const selected=session.core.currentChunk(),chunks=[];
      try{for(const key of loaded.keys()){const [x,z]=parseSimulationChunkKey(key);if(session.core.selectChunk(x,z)<0)throw Error('Resident native chunk disappeared: '+key);chunks.push(session.core.chunkPayload());}}
      finally{if(selected&&session.core.selectChunk(selected.cx,selected.cz)<0)throw Error('Could not restore selected native chunk');}

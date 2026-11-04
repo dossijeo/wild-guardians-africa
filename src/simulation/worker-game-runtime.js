@@ -15,8 +15,9 @@ export function createWorkerGameRuntime({client,world,session,stepSeconds=.05,ni
   queue.unshift(...add);
  }
  function pump(){
-  if(!running||busy||closed||fault||!queue.length||!canDispatch())return;
+  if(!running||busy||closed||fault||!queue.length)return;
   const item=queue[0],planned=item.kind==='steps'?Math.min(item.count,maxBatchSteps):0,command=item.kind==='steps'?{kind:'advance',seconds:stepSeconds,nightFastForward:item.fast,...(planned>1?{steps:planned}:{})}:item.kind==='chunk'?{kind:'addChunk',key:item.key}:item.command;
+  if(!canDispatch(command))return;
   if(item.kind==='steps'){item.count-=planned;if(!item.count)queue.shift();}else queue.shift();
   let request;try{request=client.submit(command);if(!request.accepted)throw Error('Worker command not admitted: '+request.reason);busy=true;activeItem=item;activeSteps=planned;}
   catch(error){if(item.kind==='command')item.reject(error);fail(error);return;}

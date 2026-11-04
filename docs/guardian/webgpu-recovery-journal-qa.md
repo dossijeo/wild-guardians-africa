@@ -20,3 +20,11 @@ Pruebas dirigidas reproducibles con Node 20 del repositorio:
 ```
 
 34 pruebas pasaron tras añadir las guardas fail-closed. Cubren orden, ACK y cursor, eventos y poses en publicaciones, tandas de terreno, límites, duplicados, journal incompleto y overflow. Son pruebas de contrato; no sustituyen validación visual, rendimiento sostenido o recuperación real tras pérdida de dispositivo.
+
+## Renovación experimental sobre comandos existentes
+
+La vía QA solicita un nuevo checkpoint al llegar a la mitad del límite del journal, adjuntándolo al siguiente comando que ya le corresponde por orden. No encola un snapshot adicional ni adelanta órdenes. El candidato no reemplaza la base hasta su ACK exacto; una solicitud explícita de checkpoint espera en su posición mientras hay otro candidato. La publicación que lleva el checkpoint constituye una frontera que no se fusiona con ticks vecinos.
+
+Una comparación determinista con dos Workers de simulación y Rapier reales ejecutó 120 pasos posteriores a un impacto, con pose activa en los 120 y 30 checkpoints adjuntos a pasos normales. Los snapshots, eventos y poses físicas activas fueron idénticos entre ambas ejecuciones. Esta prueba cubre ese impacto y no demuestra equivalencia de todos los escenarios físicos. Las pruebas unitarias también ejercitan 400 publicaciones con ACK inmediato, superando 128 y promoviendo bases sucesivas; no prueban rendimiento sostenido del juego ni ausencia de bloqueo si el renderizador deja de responder.
+
+La copia periódica completa del terreno, la retención de snapshots y la contrapresión si falla o se demora el ACK siguen siendo limitaciones de QA. No hay recuperación de pérdida espontánea del dispositivo, ni validación completa del replay de eventos posteriores; esta renovación no convierte el mecanismo en una solución de producción ni elimina el acoplamiento temporal.

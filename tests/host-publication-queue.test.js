@@ -82,3 +82,9 @@ test('a visual checkpoint stays ordered with poses and events when the receiver 
  q.publication(packet(1,[{id:'event-1'}],pose),true);q.publication(packet(2,[{id:'event-2'}],pose),true);q.publication({...packet(3,[],pose),terrainCheckpoint:checkpoint},false);q.publication(packet(4,[{id:'event-4'}],pose),true);
  assert.equal(sent.length,1);q.ack(1);assert.equal(sent[1].publication.events[0].id,'event-2');q.ack(2);assert.deepEqual(sent[2].publication.terrainCheckpoint,checkpoint);assert.deepEqual(sent[2].publication.physicsPose,pose);q.ack(3);assert.equal(sent[3].publication.events[0].id,'event-4');q.ack(4);assert.equal(q.status().queued,0);
 });
+
+test('checkpoint on a tick keeps its exact sequence across queued quiet ticks and views',()=>{
+ const sent=[],q=createHostPublicationQueue({session:'s',foldViews:true,send:value=>sent.push(value)});
+ q.publication(packet(1),true);q.publication(packet(2),true);q.publication({...packet(3),terrainCheckpoint:{sequence:3,chunks:[]}},true);q.publication(packet(4),true);q.publication(packet(5),true);
+ q.ack(1);assert.equal(sent[1].publication.sequence,2);q.ack(2);assert.equal(sent[2].publication.sequence,3);assert.equal(sent[2].publication.terrainCheckpoint.sequence,3);q.ack(3);assert.equal(sent[3].publication.sequence,5);
+});

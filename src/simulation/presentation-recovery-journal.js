@@ -58,3 +58,10 @@ export function assertPresentationRecoveryBoundary(journal,stream,checkpoint,aut
  }
  return status.through;
 }
+
+// Request a replacement before the admission watermark, and only once until
+// the ordered checkpoint ACK has promoted the candidate.
+export function shouldRenewPresentationCheckpoint(status){
+ if(!status||status.closed||status.base===null||status.candidate!==null)return false;
+ return status.entries>=Math.max(1,Math.floor(status.highWatermark/2))||status.bytes>=Math.max(1,Math.floor(status.highWatermarkBytes/2));
+}
