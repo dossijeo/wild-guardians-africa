@@ -14,7 +14,11 @@ const observations = [];
 try {
   const webgpu = process.env.WG_WEBGPU === '1';
   const modes = process.env.WG_MODES ? process.env.WG_MODES.split(',') : webgpu ? (process.env.WG_MATCH_TARGET === '1' ? ['async', 'target', 'target', 'async'] : ['direct', 'async', 'async', 'direct']) : id ? ['control', 'textured', 'textured', 'control'] : ['control', 'hydrate', 'hydrate', 'control'];
-  for (const mode of modes) {
+  const runs = process.env.WG_VARIANTS ? process.env.WG_VARIANTS.split(',').map(variant => ({ mode: 'stable', variant })) : modes.map(mode => ({ mode, variant: null }));
+  for (const { mode, variant } of runs) {
+    if (variant && !['webp', 'bc7'].includes(variant)) throw Error(`Invalid variant ${variant}`);
+    const materialDirectory = variant ? join(directory, variant) : directory;
+    const nativeBc7 = variant ? variant === 'bc7' : process.env.WG_NATIVE_BC7 === '1';
     const context = await browser.newContext({ viewport: { width: 512, height: 512 } });
     const page = await context.newPage(), errors = [];
     page.on('pageerror', error => errors.push(String(error)));
@@ -23,18 +27,18 @@ try {
     await page.route('**/hydration-files/*', async route => {
       const name = basename(new URL(route.request().url()).pathname);
       if (!/^[\w.-]+$/.test(name)) throw Error('Invalid filename');
-      const file = name === 'preview.glb' ? previewPath : join(directory, name);
-      const type = name.endsWith('.gltf') || name.endsWith('.json') ? 'application/json' : name.endsWith('.png') ? 'image/png' : name.endsWith('.jpg') ? 'image/jpeg' : 'application/octet-stream';
+      const file = name === 'preview.glb' ? previewPath : join(materialDirectory, name);
+      const type = name.endsWith('.gltf') || name.endsWith('.json') ? 'application/json' : name.endsWith('.png') ? 'image/png' : name.endsWith('.jpg') ? 'image/jpeg' : name.endsWith('.webp') ? 'image/webp' : 'application/octet-stream';
       await route.fulfill({ status: 200, contentType: type, body: await readFile(file) });
     });
     await page.goto(`${process.env.WG_BASE_URL ?? 'http://127.0.0.1:5175'}/hydration-page`);
     const result = webgpu
       ? process.env.WG_RENDER_WORKER === '1'
-        ? await page.evaluate(async mode => (await import('/tests/browser/vertex-webgpu-worker-host.js')).runWorkerSwap(mode), mode)
-        : await page.evaluate(async ({ mode, captureShaders }) => (await import('/tests/browser/vertex-webgpu-swap.js')).runVertexWebGpuSwap({ mode, captureShaders }), { mode, captureShaders: process.env.WG_CAPTURE_SHADERS === '1' })
+        ? await page.evaluate(async ({ mode, nativeBc7 }) => (await import('/tests/browser/vertex-webgpu-worker-host.js')).runWorkerSwap(mode, nativeBc7), { mode, nativeBc7 })
+        : await page.evaluate(async ({ mode, captureShaders, nativeBc7 }) => (await import('/tests/browser/vertex-webgpu-swap.js')).runVertexWebGpuSwap({ mode, captureShaders, nativeBc7 }), { mode, captureShaders: process.env.WG_CAPTURE_SHADERS === '1', nativeBc7 })
       : await page.evaluate(async ({ mode, sourceUrl }) => (await import('/tests/browser/vertex-hydration-benchmark.js')).runHydrationBenchmark({ mode, sourceUrl }), { mode, sourceUrl });
     if (errors.length) throw Error(JSON.stringify(errors));
-    observations.push(result); await context.close();
+    observations.push({ ...result, variant }); await context.close();
   }
   let transferProbe;
   if (webgpu && process.env.WG_TRANSFER_PROBE === '1') {

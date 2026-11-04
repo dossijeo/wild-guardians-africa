@@ -6,12 +6,19 @@ import { makeStableVertexMaterials } from './vertex-stable-material.js';
 
 // Isolated request-time preparation. The old material remains visible while
 // compileAsync is pending. This does not promise asynchronous texture upload.
-export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders = false, canvas = null }) {
+export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders = false, canvas = null, nativeBc7 = false }) {
   if (!['async', 'target', 'coverage', 'whole', 'sequential', 'staged', 'stable', 'direct'].includes(mode)) throw Error('Unknown mode');
   const loader = new GLTFLoader(), preview = await loader.loadAsync('/hydration-files/preview.glb');
   const renderer = new WebGPURenderer({ antialias: false, ...(canvas ? { canvas } : {}) }); await renderer.init();
   if (!renderer.backend?.isWebGPUBackend) throw Error('WebGPU backend unavailable');
   renderer.setSize(512, 512, false); if (!canvas) document.body.replaceChildren(renderer.domElement);
+  let ktxLoader = null;
+  if (nativeBc7) {
+    if (!renderer.hasFeature('texture-compression-bc')) throw Error('Native BC7 unavailable on this device');
+    const { KTX2Loader } = await import('three/addons/loaders/KTX2Loader.js');
+    ktxLoader = new KTX2Loader().setTranscoderPath('/node_modules/three/examples/jsm/libs/basis/').detectSupport(renderer);
+    loader.register(parser => ({ name: 'WG_native_ktx2', loadTexture(index) { const ext = parser.json.textures[index].extensions?.WG_native_ktx2; return ext ? parser.loadTextureImage(index, ext.source, ktxLoader) : null; } }));
+  }
   let stableResources = null;
   if (mode === 'stable') {
     const [metadata, mapping] = await Promise.all([fetch('/hydration-files/materials.gltf').then(r => r.json()), fetch('/hydration-files/mapping.json').then(r => r.json())]);
@@ -19,6 +26,11 @@ export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders =
     // structure without downloading the final images before the first frame.
     const pixel = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAADUlEQVQImWP4////fwAJ+wP9CNHoHgAAAABJRU5ErkJggg==';
     metadata.images = metadata.images.map(image => ({ ...image, uri: pixel }));
+    if (nativeBc7) {
+      for (const entry of metadata.textures) { const ext = entry.extensions?.WG_native_ktx2; if (ext) { entry.source = ext.source; delete entry.extensions.WG_native_ktx2; } }
+      metadata.extensionsUsed = (metadata.extensionsUsed ?? []).filter(name => name !== 'WG_native_ktx2');
+      metadata.extensionsRequired = (metadata.extensionsRequired ?? []).filter(name => name !== 'WG_native_ktx2');
+    }
     const placeholderMaterials = await loader.parseAsync(JSON.stringify(metadata), '/hydration-files/');
     stableResources = await makeStableVertexMaterials(renderer, preview, placeholderMaterials, mapping);
   }
@@ -141,10 +153,12 @@ export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders =
       else {
         if (!applied) return reject(Error('Timed out waiting for materials'));
         if (mode !== 'direct' && !(events.applyAt >= events.compileResolved)) return reject(Error('Material applied before compile resolved'));
-        const imageRequests = performance.getEntriesByType('resource').filter(entry => /\/hydration-files\/[^/]+\.(png|jpg|webp)(?:\?|$)/i.test(entry.name)).map(entry => ({ name: entry.name, at: entry.startTime - start, duration: entry.duration }));
+        const imageRequests = performance.getEntriesByType('resource').filter(entry => /\/hydration-files\/[^/]+\.(png|jpg|webp|ktx2)(?:\?|$)/i.test(entry.name)).map(entry => ({ name: entry.name, at: entry.startTime - start, duration: entry.duration }));
         if (mode === 'stable' && (!imageRequests.length || imageRequests.some(entry => entry.at < events.requestedAt))) return reject(Error('Final image request occurred before the on-demand request, or was not observed'));
-        resolve({ mode, backend: 'WebGPU', absoluteStart, adapter: { vendor: info.vendor, architecture: info.architecture, device: info.device, description: info.description }, intervals, renderCpu, events, errors, imageRequests, gpuCalls: gpuCalls.map(call => ({ ...call, at: call.at - start })) });
-        renderer.dispose();
+        const transcoderRequests = performance.getEntriesByType('resource').filter(entry => /basis_transcoder\.(js|wasm)/.test(entry.name)).map(entry => entry.name);
+        if (nativeBc7 && transcoderRequests.length) return reject(Error('Native BC7 unexpectedly loaded a Basis transcoder'));
+        resolve({ mode, backend: 'WebGPU', nativeBc7, transcoderRequests, absoluteStart, adapter: { vendor: info.vendor, architecture: info.architecture, device: info.device, description: info.description }, intervals, renderCpu, events, errors, imageRequests, gpuCalls: gpuCalls.map(call => ({ ...call, at: call.at - start })) });
+        ktxLoader?.dispose(); renderer.dispose();
       }
     }
     requestAnimationFrame(tick);
