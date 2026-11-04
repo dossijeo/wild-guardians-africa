@@ -1,0 +1,17 @@
+import {createRequire} from 'node:module';
+import {readFile} from 'node:fs/promises';
+import {gunzipSync} from 'node:zlib';
+const {chromium}=createRequire(import.meta.url)(process.env.PLAYWRIGHT_MODULE??'playwright');
+const browser=await chromium.launch({channel:'msedge',headless:true,args:['--enable-unsafe-swiftshader']});
+try{
+ const page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[];page.on('pageerror',error=>errors.push(String(error)));
+ if(process.env.QA_RAID==='1'){const fixture=JSON.parse(gunzipSync(await readFile('tests/fixtures/manglares-123-d10-raid-state.json.gz')));fixture.mangroveNetwork=true;fixture.mangroveSettlementVersion=2;fixture.wildEngineWorldVersion=1;await page.route('**/docs/guardian/phase2/performance-components/native-raid-snapshot.json',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(fixture)}));}
+ await page.goto((process.env.QA_BASE_URL??'http://127.0.0.1:5175')+`/?qa-worker-game&${process.env.QA_RAID==='1'?'qa-worker-raid&qa-webgpu-actor=buffalo':'qa-worker-start'}&qa-webgpu-world&qa-seed=712&wildEngineThreads=0`,{waitUntil:'domcontentloaded'});
+ await page.waitForFunction(()=>{const q=window.wildGuardiansWorkerQa?.();return q?.screen==='game'&&q?.status?.running||document.querySelector('.error-banner');},null,{timeout:180000});
+ const initial=await page.evaluate(()=>({qa:window.wildGuardiansWorkerQa(),failure:document.querySelector('.error-banner')?.textContent}));if(initial.failure||!initial.qa.status?.running)throw Error(JSON.stringify(initial));
+ await page.waitForFunction(async()=>{try{const s=await window.wildGuardiansWebGpuWorldQa();return s.backend==='WebGPU'&&s.state?.sequence>0&&s.resident>0;}catch{return false;}},null,{timeout:60000});
+ if(process.env.QA_RAID==='1')await page.waitForFunction(async()=>{try{const s=await window.wildGuardiansWebGpuWorldQa();return s.actorTextured||!!s.actorTextureError;}catch{return false;}},null,{timeout:60000});
+ const status=await page.evaluate(()=>window.wildGuardiansWebGpuWorldQa());if(status.state.fault||status.terrain.closed||status.actorTextureError||process.env.QA_RAID==='1'&&(!status.actor||!status.actorTextured)||errors.length)throw Error(JSON.stringify({status,errors}));
+ await page.locator('#menuButton').click();await page.waitForFunction(()=>window.wildGuardiansWorkerQa().pauses.includes('menu'),null,{timeout:30000});const paused=await page.evaluate(()=>window.wildGuardiansWorkerQa().elapsed);await page.waitForTimeout(300);if(await page.evaluate(()=>window.wildGuardiansWorkerQa().elapsed)!==paused)throw Error('Simulation did not pause');
+ if(process.env.QA_CAPTURE)await page.screenshot({path:process.env.QA_CAPTURE});console.log(JSON.stringify({backend:status.backend,confirmed:status.state.sequence,resident:status.resident,actor:status.actor,actorTextured:status.actorTextured,paused:true,scope:'Opt-in incomplete WebGPU canvas attached to a real game; legacy scene still runs. Not production parity or a performance benchmark.'}));
+}finally{await browser.close();}
