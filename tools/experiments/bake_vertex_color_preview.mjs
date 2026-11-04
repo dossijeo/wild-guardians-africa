@@ -1,0 +1,29 @@
+import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import {basename,join} from 'node:path';
+import sharp from 'sharp';
+
+// Offline QA baker. Emits reversible sidecars; source GLBs are never modified.
+const fixture=JSON.parse(await readFile('tests/fixtures/character-lod-sources.json','utf8'));
+const output=process.argv[2]??'public/qa/vertex-color-preview';await mkdir(output,{recursive:true});
+const hash=bytes=>createHash('sha256').update(bytes).digest('hex'),srgb=x=>{x/=255;return x<=.04045?x/12.92:Math.pow((x+.055)/1.055,2.4);};
+const components={SCALAR:1,VEC2:2,VEC3:3,VEC4:4},sizes={5120:1,5121:1,5122:2,5123:2,5125:4,5126:4};
+function accessor(json,bin,index){const a=json.accessors[index],view=json.bufferViews[a.bufferView];if(!a||a.sparse||!view||view.buffer!==0||!components[a.type]||!sizes[a.componentType])throw Error(`Unsupported accessor ${index}`);const n=components[a.type],size=sizes[a.componentType],stride=view.byteStride??n*size,start=(view.byteOffset??0)+(a.byteOffset??0);if(start+(a.count-1)*stride+n*size>bin.length)throw Error('Accessor outside BIN');function value(i,c){const p=start+i*stride+c*size;let v;switch(a.componentType){case 5120:v=bin.readInt8(p);break;case 5121:v=bin.readUInt8(p);break;case 5122:v=bin.readInt16LE(p);break;case 5123:v=bin.readUInt16LE(p);break;case 5125:v=bin.readUInt32LE(p);break;case 5126:v=bin.readFloatLE(p);break;default:throw Error('Unsupported component');}if(a.normalized){const max={5120:127,5121:255,5122:32767,5123:65535,5125:4294967295}[a.componentType];v=Math.max(-1,v/max);}return v;}return {count:a.count,components:n,value};}
+function wrap(index,size,mode){if(mode===33071)return Math.max(0,Math.min(size-1,index));if(mode===10497)return ((index%size)+size)%size;if(mode===33648){const period=size*2,n=((index%period)+period)%period;return n<size?n:period-1-n;}throw Error(`Unsupported wrap mode ${mode}`);}
+function pixel(image,u,v,sampler){const {data,width,height}=image,x=u*width-.5,y=v*height-.5,x0=Math.floor(x),y0=Math.floor(y),tx=x-x0,ty=y-y0,out=[0,0,0];for(let j=0;j<2;j++)for(let i=0;i<2;i++){const xx=wrap(x0+i,width,sampler.wrapS??10497),yy=wrap(y0+j,height,sampler.wrapT??10497),weight=(i?tx:1-tx)*(j?ty:1-ty),offset=(yy*width+xx)*4;for(let c=0;c<3;c++)out[c]+=srgb(data[offset+c])*weight;}return out;}
+const manifest={schemaVersion:1,colorSpace:'linear-srgb',encoding:'RGB8_UNORM',assets:[]};
+for(const item of fixture){
+ const source=await readFile(item.source);if(source.readUInt32LE(0)!==0x46546c67||source.readUInt32LE(4)!==2)throw Error(`Not GLB2: ${item.source}`);const jsonLength=source.readUInt32LE(12),json=JSON.parse(source.subarray(20,20+jsonLength).toString('utf8')),binHeader=20+jsonLength;if(source.readUInt32LE(binHeader+4)!==0x004e4942)throw Error('Missing GLB binary chunk');const bin=source.subarray(binHeader+8,binHeader+8+source.readUInt32LE(binHeader)),images=new Map(),chunks=[],records=[];let offset=0,totalVertices=0;
+ for(const [meshIndex,mesh] of (json.meshes??[]).entries())for(const [primitiveIndex,primitive] of mesh.primitives.entries()){
+  const material=json.materials?.[primitive.material],pbr=material?.pbrMetallicRoughness??{},info=pbr.baseColorTexture;if(!info)continue;
+  if((material.alphaMode??'OPAQUE')!=='OPAQUE'||info.extensions||primitive.extensions||primitive.mode!=null&&primitive.mode!==4)throw Error(`Unsupported material/geometry ${item.id}/${meshIndex}/${primitiveIndex}`);
+  const texture=json.textures[info.index];if(texture.extensions||texture.source==null)throw Error('Unsupported texture extension');const image=json.images[texture.source],imageView=json.bufferViews[image.bufferView];if(!imageView||imageView.buffer!==0)throw Error('Only embedded images are supported');
+  if(!images.has(texture.source)){const bytes=bin.subarray(imageView.byteOffset??0,(imageView.byteOffset??0)+imageView.byteLength);const decoded=await sharp(bytes).ensureAlpha().raw().toBuffer({resolveWithObject:true});if(decoded.info.channels!==4)throw Error('Expected RGBA image');images.set(texture.source,{data:decoded.data,width:decoded.info.width,height:decoded.info.height});}
+  const position=accessor(json,bin,primitive.attributes.POSITION),uvIndex=primitive.attributes[`TEXCOORD_${info.texCoord??0}`];if(uvIndex==null)throw Error('Missing texture UV');const uv=accessor(json,bin,uvIndex),existing=primitive.attributes.COLOR_0==null?null:accessor(json,bin,primitive.attributes.COLOR_0);if(uv.count!==position.count||existing&&existing.count!==position.count)throw Error('Vertex count mismatch');
+  const base=pbr.baseColorFactor??[1,1,1,1],sampler=json.samplers?.[texture.sampler]??{},bytes=Buffer.alloc(position.count*3);for(let i=0;i<position.count;i++){const rgb=pixel(images.get(texture.source),uv.value(i,0),uv.value(i,1),sampler);for(let c=0;c<3;c++){const linear=rgb[c]*base[c]*(existing?existing.value(i,c):1);bytes[i*3+c]=Math.round(Math.min(1,Math.max(0,linear))*255);}}
+  records.push({mesh:meshIndex,primitive:primitiveIndex,vertices:position.count,offset,bytes:bytes.length,material:material.name??''});offset+=bytes.length;totalVertices+=position.count;chunks.push(bytes);
+ }
+ const data=Buffer.concat(chunks),file=`${item.id}.rgb8`;await writeFile(join(output,file),data);manifest.assets.push({id:item.id,source:item.source,sourceSha256:hash(source),file,sha256:hash(data),bytes:data.length,vertices:totalVertices,primitives:records});
+ console.log(`${item.id}: ${records.length} primitives, ${totalVertices} mapped vertices, ${data.length} bytes`);
+}
+await writeFile(join(output,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');

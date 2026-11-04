@@ -1,0 +1,32 @@
+import * as THREE from 'three';
+import {WebGPURenderer} from 'three/webgpu';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+const result={errors:[],models:[]};window.vertexPreviewResult=result;
+try{
+ const renderer=new WebGPURenderer({canvas:document.querySelector('#view'),antialias:false});await renderer.init();if(!renderer.backend?.isWebGPUBackend)throw Error('Expected WebGPU');renderer._animation.stop();renderer.info.autoReset=false;
+ const device=renderer.backend.device;device.addEventListener('uncapturederror',event=>result.errors.push(event.error.message));device.pushErrorScope('validation');renderer.setSize(256,256,false);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;
+ const target=new THREE.RenderTarget(256,256,{depthBuffer:true,stencilBuffer:false});target.texture.colorSpace=THREE.SRGBColorSpace;renderer.setRenderTarget(target);
+ const scene=new THREE.Scene();scene.background=new THREE.Color(0x777777);scene.add(new THREE.HemisphereLight(0xe7f0e7,0x70624e,2));const sun=new THREE.DirectionalLight(0xfff0d4,3);sun.position.set(-6,12,9);scene.add(sun);
+ const camera=new THREE.PerspectiveCamera(35,1,.001,1000),manifest=await (await fetch('/qa/vertex-color-preview/manifest.json')).json(),loader=new GLTFLoader();
+ for(const entry of manifest.assets){
+  // Construct the source URL from its hash: the dev server rewrites literal
+  // public asset paths in JSON to compressed runtime GLBs with different data.
+  const sourceUrl=entry.id==='guardian'?'/content/guardian/'+'guardian.glb':'/assets/'+entry.sourceSha256+'.glb';
+  const [asset,sidecar]=await Promise.all([loader.loadAsync(sourceUrl),fetch('/qa/vertex-color-preview/'+entry.file).then(r=>{if(!r.ok)throw Error('Missing color sidecar');return r.arrayBuffer();})]);
+  if(sidecar.byteLength!==entry.bytes)throw Error(`Sidecar length mismatch: ${entry.id}`);const digest=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',sidecar))).map(v=>v.toString(16).padStart(2,'0')).join('');if(digest!==entry.sha256)throw Error(`Sidecar checksum mismatch: ${entry.id}`);
+  const root=asset.scene;scene.add(root);root.updateMatrixWorld(true);const box=new THREE.Box3().setFromObject(root),center=box.getCenter(new THREE.Vector3()),size=box.getSize(new THREE.Vector3()),radius=Math.max(size.x,size.y,size.z,.01);camera.near=radius/1000;camera.far=radius*20;camera.updateProjectionMatrix();
+  const records=new Map(entry.primitives.map(value=>[`${value.mesh}:${value.primitive}`,value])),objects=[];let covered=0;
+  root.traverse(object=>{if(!object.isMesh)return;const association=asset.parser.associations.get(object),key=association?`${association.meshes}:${association.primitives??0}`:'',record=records.get(key);if(!record)return;if(Array.isArray(object.material)||object.geometry.attributes.position.count!==record.vertices)throw Error(`Primitive mismatch: ${entry.id}/${key}`);const geometry=object.geometry.clone(),colors=new Uint8Array(sidecar.slice(record.offset,record.offset+record.bytes));if(new URLSearchParams(location.search).get('black')==='1')colors.fill(0);const aligned=new Uint8Array(record.vertices*4);for(let i=0;i<record.vertices;i++){aligned.set(colors.subarray(i*3,i*3+3),i*4);aligned[i*4+3]=255;}geometry.setAttribute('color',new THREE.BufferAttribute(aligned,4,true));const material=object.material.clone();material.map=null;material.normalMap=null;material.roughnessMap=null;material.metalnessMap=null;material.aoMap=null;material.emissiveMap=null;material.vertexColors=true;material.color.setRGB(1,1,1);material.needsUpdate=true;objects.push({object,originalGeometry:object.geometry,originalMaterial:object.material,geometry,material});covered++;});
+  if(covered!==entry.primitives.length)throw Error(`Mapped ${covered}/${entry.primitives.length} primitives for ${entry.id}`);
+  const views=[];for(const [view,direction] of [[1.5,1,2.5],[-2.5,1,1.5]].entries()){
+   camera.position.copy(center).add(new THREE.Vector3(...direction).normalize().multiplyScalar(radius*2.5));camera.lookAt(center);camera.updateMatrixWorld(true);
+   for(const item of objects){item.object.geometry=item.originalGeometry;item.object.material=item.originalMaterial;}renderer.info.reset();renderer._nodes.nodeFrame.update();renderer.info.frame=renderer._nodes.nodeFrame.frameId;renderer.render(scene,camera);const original=Uint8Array.from(await renderer.readRenderTargetPixelsAsync(target,0,0,256,256));
+   for(const item of objects){item.object.geometry=item.geometry;item.object.material=item.material;}renderer.info.reset();renderer._nodes.nodeFrame.update();renderer.info.frame=renderer._nodes.nodeFrame.frameId;renderer.render(scene,camera);const preview=Uint8Array.from(await renderer.readRenderTargetPixelsAsync(target,0,0,256,256));
+   let foregroundPixels=0,total=0,over20=0,max=0;for(let i=0;i<original.length;i+=4){if(original[i]===original[0]&&original[i+1]===original[1]&&original[i+2]===original[2])continue;foregroundPixels++;let local=0;for(let c=0;c<3;c++){let difference=Math.abs(original[i+c]-preview[i+c]);total+=difference;local=Math.max(local,difference);max=Math.max(max,difference);}if(local>20)over20++;}
+   views.push({view,foregroundPixels,meanAbsoluteRgb:total/(Math.max(foregroundPixels,1)*3),pixelsOver20:over20,fractionOver20:over20/Math.max(foregroundPixels,1),maxChannelDifference:max});
+   const display=document.createElement('canvas');display.width=512;display.height=256;display.title=`${entry.id}-${view}`;const ctx=display.getContext('2d');ctx.putImageData(new ImageData(new Uint8ClampedArray(original),256,256),0,0);ctx.putImageData(new ImageData(new Uint8ClampedArray(preview),256,256),256,0);document.querySelector('#comparisons').append(`${entry.id} vista ${view}`,display,document.createElement('br'));
+  }
+  result.models.push({id:entry.id,sourceSha256:entry.sourceSha256,sidecarBytes:entry.bytes,vertices:entry.vertices,coveredPrimitives:covered,views});scene.remove(root);for(const item of objects){item.geometry.dispose();item.material.dispose();}
+ }
+ await device.queue.onSubmittedWorkDone();const error=await device.popErrorScope();if(error)result.errors.push(error.message);result.backend='WebGPU real';renderer.setRenderTarget(null);target.dispose();renderer.dispose();result.done=true;
+}catch(error){result.errors.push(String(error?.stack??error));result.done=true;}
