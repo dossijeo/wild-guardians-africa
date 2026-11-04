@@ -4,6 +4,8 @@ import * as THREE from 'three';
 import {TerrainField} from '../src/world/terrain.js';
 import {BlenderGroundDetails,markGroundDetailEvent} from '../src/rendering/blender-ground-details.js';
 import {groundSample417} from '../src/rendering/ground-mask.js';
+import * as Game from '../src/simulation/game.js';
+import {clearNavigation} from './clear-navigation.js';
 
 const biomes=['savanna','grand_river','mangrove','volcanoes','canyons','desert'];
 const state={plants:[{x:7,z:8,alive:true}],structures:[{x:12,z:12,kind:'wall',status:'active'}],villages:[]};
@@ -140,4 +142,20 @@ test('multiple changes in one frame coalesce, while non-topological damage is ig
   d.flush(field,game);
   assert.equal(d.refreshStats.chunks,2);
   d.dispose();d.geometry.dispose();d.material.dispose();
+});
+
+test('crop occupancy events retain committed location after snapshot changes, with legacy fallback',()=>{
+ const state=Game.newGame({slotId:'ground-events',seed:712}),nav=clearNavigation();Game.resume(state,'intro');
+ Game.placeStructure(state,'center',{x:0,z:0},nav);Game.plant(state,'crop','mijo',8,0,nav);
+ const plant=state.plants.at(-1);assert.ok(plant);const placed=state.events.find(e=>e.type==='CropPlaced');
+ assert.deepEqual(placed.presentation,{x:plant.x,z:plant.z});
+ for(const type of ['CropPlaced','CropPicked','CropDestroyed']) {
+  if(type!=='CropPlaced')Game.emit(state,type,{targetId:plant.id});
+  const event=type==='CropPlaced'?placed:state.events.at(-1);assert.deepEqual(event.presentation,{x:plant.x,z:plant.z});
+  const hits=[],details={enabled:true,markDirtyAt:(x,z)=>hits.push([x,z])};
+  markGroundDetailEvent(details,state,{type,targetId:plant.id});const expected=hits.splice(0);
+  markGroundDetailEvent(details,{plants:[],structures:[]},structuredClone(event));assert.deepEqual(hits,expected);
+  hits.length=0;markGroundDetailEvent(details,{plants:[{...plant,x:99,z:99}],structures:[]},event);assert.deepEqual(hits,expected);
+  hits.length=0;markGroundDetailEvent(details,state,{type,targetId:plant.id,presentation:{x:NaN,z:0}});assert.deepEqual(hits,expected);
+ }
 });

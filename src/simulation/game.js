@@ -104,7 +104,10 @@ export function notifyConfirmedPresentationEvent(s,event){
 }
 export function emit(s,type,detail={}) {
   const wallLoss=type==='StructureRuined'?loseBlessing(s,s.structures.find(p=>p.id===detail.targetId)??{}):null;
-  const event={id:`event-${s.sequence++}`,type,...detail};
+  // Occupancy consumers need the committed crop location even if a later state has removed it.
+  const crop=['CropPlaced','CropPicked','CropDestroyed'].includes(type)?s.plants.find(p=>p.id===(detail.targetId??detail.cropId)):null;
+  const presentation=crop&&Number.isFinite(crop.x)&&Number.isFinite(crop.z)?{...detail.presentation,x:crop.x,z:crop.z}:detail.presentation;
+  const event={id:`event-${s.sequence++}`,type,...detail,...(presentation?{presentation}:{})};
   if(s.awakenings?.enabled!==false)recordAwakeningEvent(s,event);
   s.events.push(event);if(s.events.length>200)s.events.shift();
   for(const callback of eventObservers.get(s)??[])callback(event);

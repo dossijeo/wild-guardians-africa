@@ -24,7 +24,8 @@ export function markGroundDetailEvent(details,state,event,previousPosition=()=>n
   if(!details?.enabled)return;
   const mark=point=>{if(point)details.markDirtyAt(point.x,point.z);};
   if(['CropPlaced','CropPicked','CropDestroyed'].includes(event.type)){
-    mark(state.plants.find(plant=>plant.id===(event.targetId??event.cropId)));
+    const point=event.presentation;
+    mark(Number.isFinite(point?.x)&&Number.isFinite(point?.z)?point:state.plants.find(plant=>plant.id===(event.targetId??event.cropId)));
   }else if(event.type==='PlacementCommitted'){
     mark(state.structures.find(structure=>structure.id===event.targetId)??event.presentation);
   }else if(event.type==='WallChainBuilt'){
