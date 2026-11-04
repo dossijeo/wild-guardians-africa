@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import {MeshStandardNodeMaterial} from 'three/webgpu';
 import {Fn,attribute,normalLocal,positionLocal,vec3} from 'three/tsl';
+import {biomeShadowCutout} from './webgpu-biome-shadow-cutout.js';
 import {BIOME_IDS} from '../world/biome-ids.js';
 import {assetUrl} from './asset-url.js';
 import {nearTreeGeometry,removeReviewedTreeTriangles} from './near-tree-textures.js';
@@ -11,8 +12,8 @@ import {SLOTS} from '../world/terrain.js';
 // payload used by the game. Navigation and suppression remain authoritative.
 // Slots 0-18 cover vegetation and solid biome props; slot 19 needs the
 // separate native fluid/clipping presentation. Materials remain provisional.
-export function createWebGpuBiomeProps({scene,state,onError=()=>{},instanceContract='native',shareCompatibleMaterials=instanceContract==='attributes'}={}){
- if(!scene?.isScene||!state||!BIOME_IDS[state.biome]||typeof onError!=='function'||typeof shareCompatibleMaterials!=='boolean'||!['native','attributes'].includes(instanceContract))throw TypeError('Invalid biome props');
+export function createWebGpuBiomeProps({scene,state,onError=()=>{},instanceContract='native',shareCompatibleMaterials=instanceContract==='attributes',experimentalShadowCutout=false}={}){
+ if(!scene?.isScene||!state||!BIOME_IDS[state.biome]||typeof onError!=='function'||typeof shareCompatibleMaterials!=='boolean'||typeof experimentalShadowCutout!=='boolean'||!['native','attributes'].includes(instanceContract))throw TypeError('Invalid biome props');
  const controller=new AbortController(),chunks=new Map(),versions=new Map(),resources=new Set(),bitmaps=new Set(),materials=new Map();let closed=false,prototypes=null,suppressionKey='',failure=null;
  const ensure=()=>{if(closed)throw new DOMException('Biome props disposed','AbortError');};
  const own=resource=>{if(closed){resource.dispose();throw new DOMException('Biome props disposed','AbortError');}resources.add(resource);return resource;};
@@ -45,7 +46,7 @@ export function createWebGpuBiomeProps({scene,state,onError=()=>{},instanceContr
    // surface value are identical; each chunk still owns its instance buffer.
    // Near-tree texture clones keep their distinct channel and bindings.
    const key=JSON.stringify([maps.baseColor?.id??null,maps.normal?.id??null,maps.metallicRoughness?.id??null,surface.params[0],surface.params[1],factor,asset.doubleSidedFoliage?THREE.DoubleSide:THREE.FrontSide,pack.material.normalScale??.6]);let material=shareCompatibleMaterials?materials.get(key):null;
-   if(!material){const Material=instanceContract==='attributes'?MeshStandardNodeMaterial:THREE.MeshStandardMaterial;material=own(new Material({map:maps.baseColor,normalMap:maps.normal,roughnessMap:maps.metallicRoughness,metalnessMap:maps.metallicRoughness,roughness:surface.params[0],metalness:surface.params[1],alphaTest:.35,opacity:factor[3],side:asset.doubleSidedFoliage?THREE.DoubleSide:THREE.FrontSide}));if(positionNode)material.positionNode=positionNode;material.color.fromArray(factor);material.normalScale.setScalar(pack.material.normalScale??.6);if(shareCompatibleMaterials)materials.set(key,material);}next.push({geometry:selected,material});
+   if(!material){const Material=instanceContract==='attributes'?MeshStandardNodeMaterial:THREE.MeshStandardMaterial;material=own(new Material({map:maps.baseColor,normalMap:maps.normal,roughnessMap:maps.metallicRoughness,metalnessMap:maps.metallicRoughness,roughness:surface.params[0],metalness:surface.params[1],alphaTest:.35,opacity:factor[3],side:asset.doubleSidedFoliage?THREE.DoubleSide:THREE.FrontSide}));if(positionNode)material.positionNode=positionNode;if(experimentalShadowCutout&&maps.baseColor)material.castShadowNode=biomeShadowCutout(maps.baseColor).node;material.color.fromArray(factor);material.normalScale.setScalar(pack.material.normalScale??.6);if(shareCompatibleMaterials)materials.set(key,material);}next.push({geometry:selected,material});
   }
   ensure();prototypes=next;const removed=suppressed();for(const entry of chunks.values())rebuild(entry,removed);return true;
  })().catch(error=>{if(!closed){failure=String(error?.message??error);onError(error);}return false;});

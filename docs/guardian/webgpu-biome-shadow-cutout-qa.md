@@ -1,0 +1,7 @@
+# Recorte alfa de sombras de bioma en WebGPU — QA
+
+La ruta experimental `qa-webgpu-biome-shadow-cutout`, combinada con `qa-webgpu-world`, transmite un `castShadowNode` TSL al pase de sombras de Three.js. La ruta normal no cambia. El nodo lee el alfa de `object.material.map` y la opacidad del material del objeto, y Three conserva el `alphaTest` y la deformación del material original durante el pase. Se comparte un grafo por canal UV para evitar crear uno por objeto o textura; las texturas cercanas que usan `uv1` mantienen su propio grafo.
+
+La necesidad se observó en Three.js r180: el material temporal de sombra tiene un color opaco y el renderer copia `alphaTest` y `alphaMap`, pero no copia `map`. En la ruta de biomas el recorte está en el alfa de `map`, por lo que el pase no dispone de ese alfa por defecto. No se utiliza `alphaMap` como sustituto, ya que su canal de muestreo no es el alfa de la textura de color.
+
+Las pruebas Node ejercitan `Renderer.renderObject` y `NodeFrame` reales de Three.js: el override recibe el nodo y la deformación originales, y las referencias se actualizan entre objetos, opacidades, texturas y matrices UV. También se comprueba la selección de canal UV y que el flag permanece desactivado por defecto. Estas pruebas **no compilan WGSL ni verifican el dibujo**, las sombras visuales, el número real de pipelines, el rendimiento ni el comportamiento en todos los adaptadores. La ruta sigue siendo solo QA hasta disponer de comparaciones visuales y de pipelines en una partida real.
