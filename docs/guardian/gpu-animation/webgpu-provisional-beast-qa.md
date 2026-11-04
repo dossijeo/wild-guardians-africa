@@ -142,3 +142,32 @@ fixture's original hyena start/end are both non-walkable, which also prevents
 interpreting that particular segment test as a clean obstacle check. Body
 contacts, unloaded terrain and continuous visual motion remain unverified.
 The terrain correction and interpolation remain QA-only.
+
+## Anatomical support prototype
+
+`tools/guardian/bake_anatomic_support.mjs` generates experimental bone-local
+extreme points from the dominant skin region of each bone, with a source GLB
+hash per species. `webgpu-anatomic-support.js` transforms those points and
+groups them into 16 horizontal cells, performing at most one terrain raycast per
+occupied cell. It lifts only the visual model. This is injected only by the
+isolated QA fixture using `?anatomic`; the game roster does not enable it and
+retains the earlier QA route for comparison. It cannot certify collisions with
+walls or bodies, unloaded terrain, or surface features between sampled points.
+
+With a 6 cm margin and the same three translated Rapier poses on the sampled
+savanna slope, full-vertex checks found no penetration beyond 3 cm: hyena
+minima were +0.104/+0.050/+0.047 m over 22,242 vertices, warthog
++0.035/+0.044/+0.095 m over 20,421, and buffalo +0.055/−0.0018/−0.0028 m
+over 51,598. The 9.5 cm warthog minimum also shows possible visible floating.
+A previous 3 cm margin missed 5 and 8 buffalo vertices by just over 3 cm in
+the last two phases. Thus this is not a general contact guarantee.
+
+The single measured midpoint `actor.update()` was 5.87 ms for hyena, 7.74 ms
+for warthog and 6.80 ms for buffalo, compared with 3,341 ms in the earlier
+single hyena test with vertex-based raycasts on that mesh. These are isolated
+measurements, not repeated p95/p99, total-frame or crowd benchmarks. Results
+and reproduction use `audit_webgpu_anatomic_support.mjs` and the three
+`webgpu-anatomic-*-qa.txt` files. No change to simulation or Rapier is made.
+Because of possible floating, incomplete species/phase coverage and the
+unresolved wall/body checks, this candidate remains isolated and must not be
+enabled in production on these results.
