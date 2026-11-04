@@ -5,20 +5,28 @@ import { prepareHydration } from './vertex-preview-hydrate.js';
 
 // Isolated request-time preparation. The old material remains visible while
 // compileAsync is pending. This does not promise asynchronous texture upload.
-export async function runVertexWebGpuSwap({ mode, frames = 180 }) {
-  if (!['async', 'direct'].includes(mode)) throw Error('Unknown mode');
+export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders = false }) {
+  if (!['async', 'target', 'coverage', 'whole', 'direct'].includes(mode)) throw Error('Unknown mode');
   const loader = new GLTFLoader(), preview = await loader.loadAsync('/hydration-files/preview.glb');
   const renderer = new WebGPURenderer({ antialias: false }); await renderer.init();
   if (!renderer.backend?.isWebGPUBackend) throw Error('WebGPU backend unavailable');
   renderer.setSize(512, 512); document.body.replaceChildren(renderer.domElement);
   const device = renderer.backend.device, adapter = await navigator.gpu.requestAdapter();
   const info = adapter?.info ?? {};
-  const gpuCalls = [];
+  const gpuCalls = [], shaderCodes = new WeakMap();
+  const createShader = device.createShaderModule.bind(device);
+  device.createShaderModule = descriptor => {
+    const module = createShader(descriptor); let hash = 2166136261;
+    for (let i = 0; i < descriptor.code.length; i++) hash = Math.imul(hash ^ descriptor.code.charCodeAt(i), 16777619);
+    shaderCodes.set(module, { hash: (hash >>> 0).toString(16), code: descriptor.code }); return module;
+  };
   function instrument(target, name) {
     const original = target[name].bind(target);
     target[name] = (...args) => {
       const start = performance.now(), result = original(...args), elapsed = performance.now() - start;
-      gpuCalls.push({ name, at: start, cpuMs: elapsed });
+      const descriptor = args[0];
+      const vertex = name.includes('Pipeline') ? shaderCodes.get(descriptor.vertex?.module) : null, fragment = name.includes('Pipeline') ? shaderCodes.get(descriptor.fragment?.module) : null;
+      gpuCalls.push({ name, at: start, cpuMs: elapsed, ...(name.includes('Pipeline') ? { label: descriptor.label ?? '', vertexShaderHash: vertex?.hash ?? null, fragmentShaderHash: fragment?.hash ?? null, ...(captureShaders ? { vertexShader: vertex?.code ?? null } : {}), topology: descriptor.primitive?.topology ?? '', colorFormats: descriptor.fragment?.targets?.map(target => target?.format) ?? [], depthFormat: descriptor.depthStencil?.format ?? null, sampleCount: descriptor.multisample?.count ?? 1, vertexBuffers: descriptor.vertex?.buffers?.map(buffer => ({ stride: buffer.arrayStride, step: buffer.stepMode, attributes: buffer.attributes?.map(a => ({ location: a.shaderLocation, format: a.format, offset: a.offset })) })) ?? [] } : {}) });
       return result;
     };
   }
@@ -33,6 +41,8 @@ export async function runVertexWebGpuSwap({ mode, frames = 180 }) {
   const mixer = new THREE.AnimationMixer(preview.scene); if (preview.animations.length) mixer.clipAction(preview.animations[0]).play();
   const intervals = [], renderCpu = [], events = {}, start = performance.now();
   let frame = 0, previous = 0, ready = false, applied = false, failure = null, apply;
+  const provisional = []; preview.scene.traverse(object => { if (object.isMesh) provisional.push({ object, material: object.material }); });
+  events.framesWhileCompiling = 0;
   const errors = []; device.addEventListener('uncapturederror', e => errors.push(e.error.message));
   function request() {
     events.requestedAt = performance.now() - start;
@@ -41,13 +51,25 @@ export async function runVertexWebGpuSwap({ mode, frames = 180 }) {
         events.materialManifestAt = performance.now() - start;
         apply = await prepareHydration(preview, materials, mapping);
         events.materialsReadyAt = performance.now() - start;
-        if (mode === 'async') {
+        if (mode !== 'direct') {
           const saved = [];
-          preview.scene.traverse(object => { if (object.isMesh) saved.push({ object, material: object.material, color: object.geometry.getAttribute('color') }); });
+          preview.scene.traverse(object => { if (object.isMesh) saved.push({ object, material: object.material, color: object.geometry.getAttribute('color'), frustumCulled: object.frustumCulled }); });
           events.compileStart = performance.now() - start;
           let pending;
-          try { apply(); pending = renderer.compileAsync(preview.scene, camera, scene); }
-          finally { for (const item of saved) { item.object.material = item.material; if (item.color) item.object.geometry.setAttribute('color', item.color); else item.object.geometry.deleteAttribute('color'); } }
+          const previousTarget = renderer.getRenderTarget();
+          try {
+            apply();
+            if (mode === 'coverage' || mode === 'whole') for (const item of saved) item.object.frustumCulled = false;
+            if (mode === 'target' || mode === 'coverage' || mode === 'whole') {
+              if (typeof renderer._getFrameBufferTarget !== 'function') throw Error('No framebuffer matching support');
+              const target = renderer._getFrameBufferTarget(); if (!target) throw Error('No intermediate framebuffer');
+              renderer.setRenderTarget(target);
+            }
+            pending = mode === 'whole' ? renderer.compileAsync(scene, camera) : renderer.compileAsync(preview.scene, camera, scene);
+          } finally {
+            renderer.setRenderTarget(previousTarget);
+            for (const item of saved) { item.object.material = item.material; item.object.frustumCulled = item.frustumCulled; if (item.color) item.object.geometry.setAttribute('color', item.color); else item.object.geometry.deleteAttribute('color'); }
+          }
           events.compileReturned = performance.now() - start;
           await pending; events.compileResolved = performance.now() - start;
         }
@@ -59,13 +81,17 @@ export async function runVertexWebGpuSwap({ mode, frames = 180 }) {
       if (failure || errors.length) return reject(Error(JSON.stringify({ failure, errors })));
       if (previous) { intervals.push({ frame, ms: now - previous }); mixer.update(Math.min((now - previous) / 1000, .1)); } previous = now;
       if (frame === 30) request();
+      if (events.compileStart !== undefined && events.compileResolved === undefined) {
+        if (provisional.some(item => item.object.material !== item.material)) return reject(Error('Provisional material changed while compilation was pending'));
+        events.framesWhileCompiling++;
+      }
       if (ready && !applied) { events.applyFrame = frame; events.applyAt = performance.now() - start; const t = performance.now(); apply(); events.applyCpuMs = performance.now() - t; applied = true; }
       const t = performance.now(); renderer.render(scene, camera); renderCpu.push({ frame, ms: performance.now() - t });
       frame++;
       if (frame < frames || (!applied && frame < 1200)) requestAnimationFrame(tick);
       else {
         if (!applied) return reject(Error('Timed out waiting for materials'));
-        if (mode === 'async' && !(events.applyAt >= events.compileResolved)) return reject(Error('Material applied before compile resolved'));
+        if (mode !== 'direct' && !(events.applyAt >= events.compileResolved)) return reject(Error('Material applied before compile resolved'));
         resolve({ mode, backend: 'WebGPU', adapter: { vendor: info.vendor, architecture: info.architecture, device: info.device, description: info.description }, intervals, renderCpu, events, errors, gpuCalls: gpuCalls.map(call => ({ ...call, at: call.at - start })) });
         renderer.dispose();
       }

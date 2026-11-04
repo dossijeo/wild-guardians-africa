@@ -13,7 +13,7 @@ const browser = await chromium.launch({ channel: 'msedge', headless: true });
 const observations = [];
 try {
   const webgpu = process.env.WG_WEBGPU === '1';
-  const modes = webgpu ? ['direct', 'async', 'async', 'direct'] : id ? ['control', 'textured', 'textured', 'control'] : ['control', 'hydrate', 'hydrate', 'control'];
+  const modes = process.env.WG_MODES ? process.env.WG_MODES.split(',') : webgpu ? (process.env.WG_MATCH_TARGET === '1' ? ['async', 'target', 'target', 'async'] : ['direct', 'async', 'async', 'direct']) : id ? ['control', 'textured', 'textured', 'control'] : ['control', 'hydrate', 'hydrate', 'control'];
   for (const mode of modes) {
     const context = await browser.newContext({ viewport: { width: 512, height: 512 } });
     const page = await context.newPage(), errors = [];
@@ -29,7 +29,7 @@ try {
     });
     await page.goto(`${process.env.WG_BASE_URL ?? 'http://127.0.0.1:5175'}/hydration-page`);
     const result = webgpu
-      ? await page.evaluate(async mode => (await import('/tests/browser/vertex-webgpu-swap.js')).runVertexWebGpuSwap({ mode }), mode)
+      ? await page.evaluate(async ({ mode, captureShaders }) => (await import('/tests/browser/vertex-webgpu-swap.js')).runVertexWebGpuSwap({ mode, captureShaders }), { mode, captureShaders: process.env.WG_CAPTURE_SHADERS === '1' })
       : await page.evaluate(async ({ mode, sourceUrl }) => (await import('/tests/browser/vertex-hydration-benchmark.js')).runHydrationBenchmark({ mode, sourceUrl }), { mode, sourceUrl });
     if (errors.length) throw Error(JSON.stringify(errors));
     observations.push(result); await context.close();
