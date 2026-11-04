@@ -814,6 +814,25 @@ export class WorldScene {
     applyActorExpression(data,entity,'animal',this.state.elapsed);
     data.lod?.update(this.camera,this.renderer.domElement.height,this.characterLodForce??null);
   }
+  // While the WebGPU presentation owns visible poses, keep only the legacy
+  // root transform used by interaction, watering and locomotion effects.
+  updateDeferredActorRoot(entity,mesh,type) {
+    if(!this.mixers.has(entity.id))return;
+    const pose=type==='animal'?this.confirmedAnimalPoses?.get(entity.id):null;
+    if(pose){if(pose.actorId!==entity.id)throw Error('Confirmed animal pose belongs to another actor');this.provisionalBeastImpact?.physicalPose(entity.id);mesh.position.fromArray(pose.root,0);mesh.quaternion.fromArray(pose.root,3);mesh.scale.fromArray(pose.root,7);return;}
+    if(type==='animal')mesh.rotation.y=entity.heading??0;
+    else if(entity.status==='acting'){const task=this.state.tasks.find(t=>t.id===entity.taskId);if(task?.kind==='initial'||task?.kind==='water')mesh.rotation.y=entity.heading??0;}
+    if(entity.downHeading!==undefined&&(entity.fallRemaining>0||entity.recovery))mesh.rotation.y=entity.downHeading;
+    else if(entity.path?.length){const next=entity.path[0];mesh.rotation.y=Math.atan2(next.x-entity.x,next.z-entity.z);}
+  }
+  // Legacy picking can still be required during resource loading or for a
+  // tool not yet migrated. Recreate the confirmed pose only for that request.
+  prepareDeferredActorPoses() {
+    if(!this.legacyActorPosesDeferred||!this.state)return;
+    const actors=[...this.state.workers.filter(w=>w.status!=='home'),...(this.state.raid?.animals.filter(a=>a.status!=='gone')??[])];
+    for(const actor of actors){const root=this.objects.get(actor.id);if(!root||!this.mixers.has(actor.id))continue;const worker='profile' in actor;root.position.set(actor.x,this.nav.actorSurface(actor.x,actor.z)+(worker ? .025 : 0),actor.z);this.updateActor(actor,0,worker?'worker':'animal');}
+    this.scene.updateMatrixWorld(true);
+  }
   prepareUpcomingAnimalRigs(s=this.state,now=performance.now()) {
     if(!s||this.disposed)return;
     const upcoming=s.nightPlan?.group??(!s.postgame&&s.day<=5?[Object.keys(animalSources)[s.day-1]]:[]);
@@ -831,8 +850,9 @@ export class WorldScene {
       }}).catch(error=>{if(!this.disposed&&this.animalReserveKey===reserveKey){this.animalReserveKey=null;this.animalReserveRetryAt=performance.now()+3000;this.onError?.(error);}});
     }
   }
-  sync(dt) {
+  sync(dt,{legacyDraw=true}={}) {
     const s=this.state;if(!s||!this.cropModels)return;
+    const deferActorPoses=!legacyDraw&&!!this.workerRuntime;this.legacyActorPosesDeferred=deferActorPoses;
     this.provisionalWalls?.update();this.provisionalBuildings?.update();
     this.groundDetails?.flush(this.nav.field,s);
     this.awakeningRoots?.flush();
@@ -876,7 +896,7 @@ export class WorldScene {
         if(mesh.userData.stageKey!==key){mesh.clear();mesh.add(this.cropModels[cropIds.indexOf(e.species)*5+stage].clone());mesh.userData.stageKey=key;}
         if(growth<.065){const amount=Math.max(.06,growth/.065);mesh.scale.set(.4+.6*amount,amount,.4+.6*amount);}else mesh.scale.set(1,1,1);
       }
-      if(!('value' in e)&&('profile' in e||'hitsRemaining' in e))this.updateActor(e,dt,'profile' in e?'worker':'animal');
+      if(!('value' in e)&&('profile' in e||'hitsRemaining' in e)){const type='profile' in e?'worker':'animal';if(deferActorPoses)this.updateDeferredActorRoot(e,mesh,type);else this.updateActor(e,dt,type);}
     }
     for(const [id,mesh] of this.objects)if(!desired.has(id)){this.scene.remove(mesh);if(mesh.userData.nativeWall||mesh.userData.nativeBuilding)mesh.dispose();releaseActorRig(this.mixers.get(id));this.objects.delete(id);this.mixers.delete(id);if(mesh.userData.nativeWall||mesh.userData.nativeBuilding||mesh.userData.units||this.cameraExclusion?.registry.roots.has(id)){this.cameraVolumesDirty=true;this.cameraDirtyEntities?.set(id,null);}}
     const night=s.time>=300,tint=night?'#263747':this.pack.profile.bg;
@@ -887,6 +907,7 @@ export class WorldScene {
     protectTerrainCamera(this.camera,this.controls,this.nav?.field);
     const rect=this.canvas.getBoundingClientRect();this.cursor.set((event.clientX-rect.left)/rect.width*2-1,-(event.clientY-rect.top)/rect.height*2+1);this.raycaster.setFromCamera(this.cursor,this.camera);
     if(terrainOnly){const ground=this.raycaster.intersectObjects(this.terrainMeshes,false)[0];return {entityId:null,point:ground?{x:ground.point.x,z:ground.point.z}:null};}
+    this.prepareDeferredActorPoses();
     const hits=this.raycaster.intersectObjects([...this.objects.values()],true);
     let hitPoint=null,entityId=null;for(const hit of hits){let object=hit.object;while(object&&!object.userData.entityId)object=object.parent;if(object){entityId=object.userData.entityId;hitPoint={x:hit.point.x,y:hit.point.y,z:hit.point.z};break;}}
     let closest=hits[0]?.distance??Infinity;const point=new THREE.Vector3(),box=new THREE.Box3();
@@ -944,7 +965,7 @@ export class WorldScene {
   *renderFrameUpdates(dt,farVisualDt=dt,{legacyDraw=true}={}) {
     if(this.beastPhysics)this.beastPhysics.stats.recoveryMs=0;
     if(this.shaderFailure.current)throw this.shaderFailure.current;this.resize();if(!this.cinematic){this.updateCamera();this.raidCamera?.update(this.state,dt);}this.strokePreview.render(this.camera,this.nav.field);if(this.renderOrigin.update(this.controls.target))this.releaseNativeShadow.cache.invalidate();this.syncChunks();yield;
-    this.lodStats=updateAssetLods(this.chunks,this.camera,this.quality);const simulated=Math.max(0,this.state.elapsed-this.simElapsed);this.simElapsed=this.state.elapsed;const loadingFog=this.loadingProgress&&!this.loadingProgress.ready&&this.farVegetation?.enabled?this.scene.fog:null;this.sync(simulated);if(loadingFog)this.scene.fog=loadingFog;yield;
+    this.lodStats=updateAssetLods(this.chunks,this.camera,this.quality);const simulated=Math.max(0,this.state.elapsed-this.simElapsed);this.simElapsed=this.state.elapsed;const loadingFog=this.loadingProgress&&!this.loadingProgress.ready&&this.farVegetation?.enabled?this.scene.fog:null;this.sync(simulated,{legacyDraw});if(loadingFog)this.scene.fog=loadingFog;yield;
     if(legacyDraw)this.obstructionStats=updateObstructions(this.chunks,this.camera,this.controls.target,dt,{enabled:this.obstructionEnabled!==false});yield;
     this.farVegetation?.update(farVisualDt);yield;
     if(legacyDraw)this.groupStats=this.assetGroups.update(this.chunks,this.camera,this.renderOrigin,this.sun);yield;
