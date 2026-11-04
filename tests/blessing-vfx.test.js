@@ -78,3 +78,17 @@ test('young crop halos scale with their plant and open walls never receive a cen
   assert.ok(vfx.geometry.boundingSphere.radius>4,'culling includes tall animated particles');
  }finally{vfx.dispose();}
 });
+
+test('confirmed hit facts retain impact time on delayed delivery and old events use current state',()=>{
+  const {state,vfx}=fixture();
+  try {
+    awakeningState(state).progress=100;Game.bless(state,'bless','plant-2');state.elapsed=5;vfx.update(state);
+    for(const type of ['CropHit','StructureHit']) {
+      const immediate={id:'immediate-'+type,type,targetId:'plant-2',presentation:{elapsed:5}};
+      Game.notifyConfirmedPresentationEvent(state,immediate);assert.equal(vfx.damageAt.get('plant-2'),5);
+      state.elapsed=8;Game.notifyConfirmedPresentationEvent(state,{...immediate,id:'delayed-'+type});assert.equal(vfx.damageAt.get('plant-2'),5);
+      Game.notifyConfirmedPresentationEvent(state,{id:'legacy-'+type,type,targetId:'plant-2'});assert.equal(vfx.damageAt.get('plant-2'),8);
+      state.elapsed=5;
+    }
+  } finally { vfx.dispose(); }
+});

@@ -808,17 +808,17 @@ export function updateRaid(s,dt,nav) {
           if(!shield){
             if('alive' in target){
               if(agriculturalImpact){
-                for(const hit of agriculturalImpact.hits){emit(s,'CropHit',{...hit,hits:hit.after});if(hit.destroyed){emit(s,'CropDestroyed',{targetId:hit.targetId,attackId:a.attackId,animalId:a.id});}}
+                for(const hit of agriculturalImpact.hits){emit(s,'CropHit',{...hit,hits:hit.after,presentation:{elapsed:s.elapsed}});if(hit.destroyed){emit(s,'CropDestroyed',{targetId:hit.targetId,attackId:a.attackId,animalId:a.id});}}
               }else if(!legacyCropOccluded){
                 const hit=applyCropImpact(s,target,1);
-                if(hit){emit(s,'CropHit',{targetId:target.id,...hit,hits:hit.after});if(hit.destroyed)emit(s,'CropDestroyed',{targetId:target.id});}
+                if(hit){emit(s,'CropHit',{targetId:target.id,...hit,hits:hit.after,presentation:{elapsed:s.elapsed}});if(hit.destroyed)emit(s,'CropDestroyed',{targetId:target.id});}
               }
             }
             else {
               const previousHp=target.hp;hitStructure(target,validDamageProfile(a.damageProfile)?a.damageProfile.structureDamage:animalSpec(a.species).structure_hit_damage,s.elapsed,s);
               const hitIds=s.raid.attackedStructureIds??=[],firstHitThisRaid=target.hp<previousHp&&!hitIds.includes(target.id);
               if(firstHitThisRaid){hitIds.push(target.id);s.raid.attackedStructureIds=hitIds;}
-              emit(s,'StructureHit',{animalId:a.id,targetId:target.id,structureHit:{kind:target.kind,x:target.x,z:target.z,previousHp,hp:target.hp,maxHp:target.maxHp,
+              emit(s,'StructureHit',{animalId:a.id,targetId:target.id,presentation:{elapsed:s.elapsed},structureHit:{kind:target.kind,x:target.x,z:target.z,previousHp,hp:target.hp,maxHp:target.maxHp,
                 criticalThreshold:collapseThreshold(target)*2,firstHitThisRaid}});
             }
           }

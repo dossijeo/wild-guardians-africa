@@ -32,7 +32,7 @@ export class BlessingVfx {
       const target=this.state.plants.find(p=>p.id===event.targetId)??this.state.structures.find(p=>p.id===event.targetId);
       if(!target)return;beginAwakening(target,event.presentation?.elapsed??this.state.elapsed);this.pending.set(target.id,target);
     }else if(event.type==='CropHit'||event.type==='StructureHit'){
-      if(this.sources.has(event.targetId))this.damageAt.set(event.targetId,this.state.elapsed);
+      if(this.sources.has(event.targetId))this.damageAt.set(event.targetId,Number.isFinite(event.presentation?.elapsed)?event.presentation.elapsed:this.state.elapsed);
     }else if(event.type==='BlessingDestroyed'||event.type==='BlessingRemoved'){
       this.pending.delete(event.targetId);const source=this.sources.get(event.targetId);if(!source)return;
       source.dead=this.state.elapsed;this.expiring.add(event.targetId);this.dirty=true;this.damageAt.delete(event.targetId);
