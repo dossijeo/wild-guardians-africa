@@ -20,6 +20,17 @@ const fixture=()=>{
 };
 const bless=(s,p,id='bless')=>{awakeningState(s).progress=100;assert.equal(Game.bless(s,id,p.id),true);};
 
+test('blessing presentation events retain causal source context after target changes and save restore',()=>{
+ const {s,source}=fixture();source.growth=12;bless(s,source);
+ const applied=s.events.find(event=>event.type==='BlessingApplied'),appliedSource=applied.presentation.source;
+ assert.deepEqual(appliedSource,{id:source.id,kind:'plant',x:source.x,z:source.z,species:'maiz',growth:12});
+ s.elapsed=4;source.growth=15;const hit=applyCropImpact(s,source,3);Game.emit(s,'CropHit',{targetId:source.id,...hit});
+ const lost=s.events.find(event=>event.type==='BlessingDestroyed');assert.equal(lost.presentation.elapsed,4);assert.equal(lost.presentation.source.growth,15);
+ source.x+=7;source.growth=30;s.plants=s.plants.filter(plant=>plant!==source);
+ assert.equal(appliedSource.growth,12);assert.notEqual(appliedSource.x,source.x);assert.equal(lost.presentation.source.growth,15);
+ const restored=deserialize(serialize(s));assert.deepEqual(restored.events.find(event=>event.id===applied.id).presentation.source,appliedSource);
+});
+
 test('every original crop can awaken without changing its identity or geometry, watering or harvest',()=>{
   for(const spec of BALANCE.crops){
     const {s,source}=fixture();source.species=spec.id;source.water=createPlant('x',spec.id,0,0).water;

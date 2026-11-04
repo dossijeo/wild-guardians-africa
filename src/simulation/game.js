@@ -5,7 +5,7 @@ import {attackTarget,attackTargetAvailable,attackGestureActive,applyGuardianAtta
 import {commitAgriculturalPower,growthPowerStep,settleMultiplyPower} from './agricultural-power.js';
 import {awakeningState,recordAgriculturalCare,recordAwakeningEvent,evaluateAwakeningDay,startAwakeningDay} from './awakenings.js';
 import {AWAKENINGS} from './awakening-config.js';
-import {blessingTarget,previewBlessing,loseBlessing} from './blessings.js';
+import {blessingTarget,previewBlessing,loseBlessing,blessingPresentationSource} from './blessings.js';
 import {blessingInfluence,invalidateBlessingInfluence} from './blessing-influence.js';
 import {cropImpactDamage,CROP_HIT_POINTS} from './crop-impact-health.js';
 export {previewBlessing} from './blessings.js';
@@ -666,7 +666,7 @@ export function bless(s,id,targetId){
     }
     a.total++;a.progress=0;invalidateBlessingInfluence(s);
     emit(s,'BlessingApplied',{commandId:id,targetId,kind:target.species?'plant':target.kind,blessing,
-      presentation:{x:target.x,z:target.z,elapsed:s.elapsed}});
+      presentation:{x:target.x,z:target.z,elapsed:s.elapsed,source:blessingPresentationSource(target)}});
     notice(s,target.species?'La planta ha despertado: es una fuente permanente de fertilidad.':'La muralla ha despertado: protege esta sección y sus conexiones.',targetId,{category:'awakening-applied',location:target});
   });
 }
