@@ -4,10 +4,11 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { clone } from 'three/addons/utils/SkeletonUtils.js';
 import { prepareHydration } from './vertex-preview-hydrate.js';
 import { makeStableVertexMaterials } from './vertex-stable-material.js';
+import { createBeastToonOutput } from './vertex-beast-toon.js';
 
 // Isolated request-time preparation. The old material remains visible while
 // compileAsync is pending. This does not promise asynchronous texture upload.
-export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders = false, canvas = null, nativeBc7 = false, count = 1 }) {
+export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders = false, canvas = null, nativeBc7 = false, count = 1, beastToon = false }) {
   if (!['async', 'target', 'coverage', 'whole', 'sequential', 'staged', 'stable', 'direct'].includes(mode)) throw Error('Unknown mode');
   if (!Number.isInteger(count) || count < 1 || count > 16) throw Error('Invalid actor count');
   if (count > 1 && mode !== 'stable') throw Error('Crowd mode requires shared stable materials');
@@ -35,7 +36,7 @@ export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders =
       metadata.extensionsRequired = (metadata.extensionsRequired ?? []).filter(name => name !== 'WG_native_ktx2');
     }
     const placeholderMaterials = await loader.parseAsync(JSON.stringify(metadata), '/hydration-files/');
-    stableResources = await makeStableVertexMaterials(renderer, preview, placeholderMaterials, mapping);
+    stableResources = await makeStableVertexMaterials(renderer, preview, placeholderMaterials, mapping, { toonOutput: beastToon ? createBeastToonOutput().output : null });
   }
   const device = renderer.backend.device, adapter = await navigator.gpu.requestAdapter();
   const info = adapter?.info ?? {};
@@ -168,7 +169,7 @@ export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders =
         if (mode === 'stable' && (!imageRequests.length || imageRequests.some(entry => entry.at < events.requestedAt))) return reject(Error('Final image request occurred before the on-demand request, or was not observed'));
         const transcoderRequests = performance.getEntriesByType('resource').filter(entry => /basis_transcoder\.(js|wasm)/.test(entry.name)).map(entry => entry.name);
         if (nativeBc7 && transcoderRequests.length) return reject(Error('Native BC7 unexpectedly loaded a Basis transcoder'));
-        resolve({ mode, count, sharedMaterials, independentSkeletons: new Set(firstSkeletons).size, renderInfo: { ...renderer.info.render }, backend: 'WebGPU', nativeBc7, transcoderRequests, absoluteStart, adapter: { vendor: info.vendor, architecture: info.architecture, device: info.device, description: info.description }, intervals, renderCpu, events, errors, imageRequests, gpuCalls: gpuCalls.map(call => ({ ...call, at: call.at - start })) });
+        resolve({ mode, count, beastToon, sharedMaterials, independentSkeletons: new Set(firstSkeletons).size, renderInfo: { ...renderer.info.render }, backend: 'WebGPU', nativeBc7, transcoderRequests, absoluteStart, adapter: { vendor: info.vendor, architecture: info.architecture, device: info.device, description: info.description }, intervals, renderCpu, events, errors, imageRequests, gpuCalls: gpuCalls.map(call => ({ ...call, at: call.at - start })) });
         ktxLoader?.dispose(); renderer.dispose();
       }
     }

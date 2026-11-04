@@ -3,7 +3,7 @@ import { attribute, mix, texture, uniform, vec4 } from 'three/tsl';
 
 // Structural experiment only. Source identifiers must agree before any
 // original texture can replace the provisional appearance.
-export async function makeStableVertexMaterials(renderer, preview, originalMaterials, mapping, { nativeColor = false } = {}) {
+export async function makeStableVertexMaterials(renderer, preview, originalMaterials, mapping, { nativeColor = false, toonOutput = null } = {}) {
   const sourceHash = mapping?.sourceSha256;
   if (!/^[a-f0-9]{64}$/.test(sourceHash ?? '')) throw Error('Missing or invalid source hash');
   const assertSource = asset => { if (asset?.parser?.json?.asset?.extras?.wgVertexPreviewSourceSha256 !== sourceHash) throw Error('Material or preview source mismatch'); };
@@ -42,6 +42,7 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
       if (nodeMaterial.clearcoatNormalScale) nodeMaterial.clearcoatNormalScale.y *= -1;
     }
     if (!item.object.geometry.getAttribute('normal')) nodeMaterial.flatShading = true;
+    if (toonOutput && !source.transparent) nodeMaterial.outputNode = toonOutput;
     // Keep the existence of every map stable; use neutral textures until ready.
     for (const [key, value] of Object.entries(source)) {
       if (!value?.isTexture) continue;

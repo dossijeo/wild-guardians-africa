@@ -1,5 +1,5 @@
 // Capture main-thread rAF alongside the renderer worker's own render loop.
-export async function runWorkerSwap(mode, nativeBc7 = false, count = 1) {
+export async function runWorkerSwap(mode, nativeBc7 = false, count = 1, beastToon = false) {
   const canvas = document.createElement('canvas'); canvas.width = canvas.height = 512; document.body.replaceChildren(canvas);
   const offscreen = canvas.transferControlToOffscreen();
   const worker = new Worker(new URL('./vertex-webgpu-render-worker.js', import.meta.url), { type: 'module' });
@@ -13,7 +13,7 @@ export async function runWorkerSwap(mode, nativeBc7 = false, count = 1) {
     const result = await new Promise((resolve, reject) => {
       worker.onerror = event => reject(Error(event.message));
       worker.onmessage = ({ data }) => data.error ? reject(Error(data.error)) : resolve(data.result);
-      worker.postMessage({ mode, nativeBc7, count, canvas: offscreen }, [offscreen]);
+      worker.postMessage({ mode, nativeBc7, count, beastToon, canvas: offscreen }, [offscreen]);
     });
     return { ...result, mainIntervals: intervals };
   } finally { finished = true; worker.terminate(); }
