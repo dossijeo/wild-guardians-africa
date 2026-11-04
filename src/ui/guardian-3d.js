@@ -8,9 +8,9 @@ import {assetUrl} from '../rendering/asset-url.js';
 import {compileLoadingPrograms} from '../rendering/loading-programs.js';
 import {initializeValidatedProgramBindings} from '../rendering/program-bindings.js';
 export class Guardian3D {
- constructor(canvas,{modelUrl='content/guardian/guardian.glb'}={}){
+ constructor(canvas,{modelUrl='content/guardian/guardian.glb',viewport=null}={}){
   this.modelUrl=modelUrl;
-  this.canvas=canvas;this.renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'low-power'});this.renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.5));this.renderer.setClearColor(0,0);this.renderer.outputColorSpace=THREE.SRGBColorSpace;this.renderer.toneMapping=THREE.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.15;
+  this.canvas=canvas;this.viewport=viewport;this.renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'low-power'});this.renderer.setPixelRatio(Math.min(viewport?.dpr??globalThis.devicePixelRatio??1,1.5));this.renderer.setClearColor(0,0);this.renderer.outputColorSpace=THREE.SRGBColorSpace;this.renderer.toneMapping=THREE.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.15;
   this.pendingProgramPreparation=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-guardian-program-warm')&&!!this.renderer.getContext().getExtension('KHR_parallel_shader_compile');
   this.scene=new THREE.Scene();this.camera=new THREE.OrthographicCamera(-.56,.56,.56,-.56,.01,10);this.camera.position.set(0,0,2);this.camera.lookAt(0,0,0);
   this.scene.add(new THREE.HemisphereLight(0xfff4dc,0x786b60,2.2));
@@ -29,7 +29,7 @@ export class Guardian3D {
  }
  setRecord(record){this.record=record;return this.face?.setRecord(record);}
  lookAt(target,side=null){if(side)this.eyeTargets[side]=target.clone();else{this.target.copy(target);this.eyeTargets={};}}
- resize(){const w=Math.max(2,this.canvas.clientWidth),h=Math.max(2,this.canvas.clientHeight);this.renderer.setSize(w,h,false);const a=w/h;const half=Math.max(.56,.36/a);this.camera.left=-half*a;this.camera.right=half*a;this.camera.top=half;this.camera.bottom=-half;this.camera.updateProjectionMatrix();}
+ resize(viewport=this.viewport){if(viewport)this.viewport=viewport;const w=Math.max(2,viewport?.width??this.canvas.clientWidth),h=Math.max(2,viewport?.height??this.canvas.clientHeight);if(viewport)this.renderer.setPixelRatio(Math.min(viewport.dpr??1,1.5));this.renderer.setSize(w,h,false);const a=w/h;const half=Math.max(.56,.36/a);this.camera.left=-half*a;this.camera.right=half*a;this.camera.top=half;this.camera.bottom=-half;this.camera.updateProjectionMatrix();}
  draw({time=0,audio=null,gesture='idle',reduced=false}={}){
   if(!this.model||this.disposed||this.pendingProgramPreparation)return;
   const start=performance.now();const speaking=audio&&!audio.ended;const clock=speaking?audio.currentTime:time;

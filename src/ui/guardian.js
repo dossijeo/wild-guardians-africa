@@ -3,6 +3,7 @@ import {guardianCopy} from '../tutorial/guardian-copy.js';
 import './guardian-native.css';
 import './guardian-3d.css';
 import {Guardian3D} from './guardian-3d.js';
+import {Guardian3DWorkerClient} from './guardian-3d-worker-client.js';
 const GESTURE_MIN_SECONDS={greeting:5.8,speak:5.8,acknowledge:6.8,curious:6.8,warning:6.2,reveal:7.8,idle:7,farewell:6.8};
 import {GuardianLifecycle} from './guardian-lifecycle.js';
 import {spiritVoice} from '../audio/spirit-voice.js';
@@ -29,11 +30,16 @@ export class NativeGuardian {
   }
   async load(){
     try{
-      this.mesh=new Guardian3D(this.canvas);await this.mesh.ready;
+      const workerTrial=new URLSearchParams(globalThis.location?.search??'').has('qa-guardian-3d-worker')&&typeof this.canvas.transferControlToOffscreen==='function';
+      if(workerTrial){
+        const failed=error=>{if(this.disposed)return;this.restoreCanvas();this.mesh=new Guardian3D(this.canvas);this.mesh.ready.then(()=>{if(!this.disposed){if(this.voiceRecord)this.mesh.setRecord(this.voiceRecord);this.resize();}},this.onError);};
+        try{this.mesh=new Guardian3DWorkerClient(this.canvas,{onFailure:failed});await this.mesh.ready;}catch(error){if(this.disposed)return;this.mesh?.dispose();this.restoreCanvas();this.mesh=new Guardian3D(this.canvas);await this.mesh.ready;}
+      }else{this.mesh=new Guardian3D(this.canvas);await this.mesh.ready;}
       if(this.disposed)return;
       if(this.voiceRecord)this.mesh.setRecord(this.voiceRecord);this.resize();
     }catch(error){if(!this.disposed)this.onError(error);}
   }
+  restoreCanvas(){const old=this.canvas,next=old.cloneNode(false);this.observer.unobserve(old);old.replaceWith(next);this.canvas=next;this.observer.observe(next);}
   show({key,text,gesture='speak',advance=null,dismiss=null,closeAfter=false,blocking=false,skip=null,result=false,onVoiceEnded=null}){
     const language=window.WildGuardiansLanguage?.getLanguage()??'en';
     if(this.disposed||(this.key===key&&this.language===language))return;
