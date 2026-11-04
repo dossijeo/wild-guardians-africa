@@ -3,7 +3,7 @@ import { attribute, mix, texture, uniform, vec4 } from 'three/tsl';
 
 // Structural experiment only: the original materials are already decoded in
 // CPU memory. Texture upload and the appearance change happen on demand later.
-export async function makeStableVertexMaterials(renderer, preview, originalMaterials, mapping) {
+export async function makeStableVertexMaterials(renderer, preview, originalMaterials, mapping, { nativeColor = false } = {}) {
   const records = new Map(mapping.primitives.map(record => [`${record.mesh}:${record.primitive}`, record]));
   const entries = [];
   preview.scene.traverse(object => {
@@ -26,6 +26,15 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
   for (const [index, item] of entries.entries()) {
     const source = sources[index], nodeMaterial = renderer.library.fromMaterial(source);
     if (!nodeMaterial) throw Error(`Unsupported material type ${source.type}`);
+    // GLTFLoader.assignFinalMaterial flips these scales for meshes without
+    // tangents. fromMaterial copies by reference, so clone before adjusting.
+    if (nodeMaterial.normalScale) nodeMaterial.normalScale = nodeMaterial.normalScale.clone();
+    if (nodeMaterial.clearcoatNormalScale) nodeMaterial.clearcoatNormalScale = nodeMaterial.clearcoatNormalScale.clone();
+    if (!item.object.geometry.getAttribute('tangent')) {
+      if (nodeMaterial.normalScale) nodeMaterial.normalScale.y *= -1;
+      if (nodeMaterial.clearcoatNormalScale) nodeMaterial.clearcoatNormalScale.y *= -1;
+    }
+    if (!item.object.geometry.getAttribute('normal')) nodeMaterial.flatShading = true;
     // Keep the existence of every map stable; use neutral textures until ready.
     for (const [key, value] of Object.entries(source)) {
       if (!value?.isTexture) continue;
@@ -36,6 +45,12 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
       const geometry = item.object.geometry;
       if (!geometry.getAttribute('color')) throw Error('Missing baked vertex color');
       let original = item.record.colorAccessor == null ? null : await preview.parser.getDependency('accessor', item.record.colorAccessor);
+      if (nativeColor) {
+        if (original) geometry.setAttribute('color', original); else geometry.deleteAttribute('color');
+        nodeMaterial.vertexColors = !!original;
+        item.object.material = nodeMaterial;
+        continue;
+      }
       if (!original) original = new THREE.BufferAttribute(new Uint8Array(geometry.attributes.position.count * 4).fill(255), 4, true);
       geometry.setAttribute('wgOriginalColor', original);
       const sampled = texture(placeholder(source.map, false));
