@@ -1,8 +1,8 @@
 // Confirmed terrain changes for a presentation Worker. The authority retains
 // its own chunk arrays; only the copied rendering buffers are transferred.
 // One publication may be in flight. Pending updates are coalesced per chunk.
-export function createTerrainPublication({port,session,maxPending=512}={}){
- if(!port||typeof port.postMessage!=='function'||typeof session!=='string'||!session||!Number.isSafeInteger(maxPending)||maxPending<1)throw TypeError('Invalid terrain publication');
+export function createTerrainPublication({port,session,maxPending=512,onCommitted=null}={}){
+ if(!port||typeof port.postMessage!=='function'||typeof session!=='string'||!session||!Number.isSafeInteger(maxPending)||maxPending<1||onCommitted!==null&&typeof onCommitted!=='function')throw TypeError('Invalid terrain publication');
  const pending=new Map(),staged=new Map(),revisions=new Map();let inflight=null,serial=0,closed=false,failure=null,lastSequence=-1;
  function fail(error){if(closed)return;failure=error instanceof Error?error:Error(String(error));closed=true;pending.clear();staged.clear();try{port.postMessage({kind:'terrainFailure',session,message:failure.message});}catch{}try{port.close();}catch{}}
  function pump(){
@@ -21,6 +21,7 @@ export function createTerrainPublication({port,session,maxPending=512}={}){
  }
  function commit(sequence){
   if(closed)return false;if(!Number.isSafeInteger(sequence)||sequence<=lastSequence)throw TypeError('Invalid confirmed terrain sequence');lastSequence=sequence;
+  if(onCommitted&&staged.size)onCommitted(sequence,[...staged.values()]);
   for(const [key,payload] of staged){const revision=(revisions.get(key)??0)+1;revisions.set(key,revision);pending.set(key,{payload,sequence,revision});}staged.clear();pump();return !closed;
  }
  function discard(){staged.clear();}

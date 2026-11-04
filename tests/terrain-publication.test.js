@@ -21,3 +21,7 @@ test('stages detached authoritative prop instances with their committed terrain'
 test('publishes an owned, validated ground mask with its confirmed revision',()=>{
  const {sent,publisher,ack}=fixture(),data=chunk(1,2);data.groundMask=new Uint8Array(35*35*4);data.groundMask[0]=19;publisher.stage(data);data.groundMask[0]=99;publisher.commit(1);assert.equal(sent[0].message.payload.groundMask[0],19);assert.equal(sent[0].transfer[3],sent[0].message.payload.groundMask.buffer);assert.notEqual(sent[0].transfer[3],data.groundMask.buffer);const invalid=chunk(2,0);invalid.groundMask=new Uint8Array(2);assert.throws(()=>publisher.stage(invalid),/ground mask/);publisher.stage(chunk(2,0));publisher.commit(2);ack(1);assert.equal(sent[1].message.sequence,2);assert.equal(sent[1].message.payload.groundMask,undefined);publisher.dispose();
 });
+test('journal observes each committed terrain batch before publication',()=>{
+ const order=[],port={postMessage:m=>order.push(['send',m.sequence]),start(){},close(){}},publisher=createTerrainPublication({port,session:'s',onCommitted:(sequence,chunks)=>{order.push(['journal',sequence,chunks[0].terrain.positions[0]]);}});
+ publisher.stage(chunk(0,7));publisher.commit(2);assert.deepEqual(order,[['journal',2,7],['send',2]]);publisher.dispose();
+});

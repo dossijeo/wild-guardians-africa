@@ -20,10 +20,10 @@ function merge(target,source){if(Array.isArray(source))return Array.isArray(targ
 // The caller supplies a state dedicated to presentation, not the authority.
 // On observer failure the bridge becomes unusable: partial effects cannot be
 // rolled back safely and must not be replayed as if they had been confirmed.
-export function createConfirmedStateReceiver(state,session,{onReconciled=null,decodeSnapshot=deserializeConfirmedState}={}){
+export function createConfirmedStateReceiver(state,session,{onReconciled=null,decodeSnapshot=deserializeConfirmedState,initialSequence=0}={}){
  if(!state||typeof state!=='object'||typeof session!=='string'||!session||!Number.isSafeInteger(state.sequence)||state.sequence<1)throw TypeError('Invalid presentation receiver');
- if(onReconciled!==null&&typeof onReconciled!=='function'||typeof decodeSnapshot!=='function')throw TypeError('Invalid reconciliation callback or decoder');
- let sequence=0,lastElapsed=state.elapsed,lastEvent=state.sequence-1,fault=false;
+ if(!Number.isSafeInteger(initialSequence)||initialSequence<0||onReconciled!==null&&typeof onReconciled!=='function'||typeof decodeSnapshot!=='function')throw TypeError('Invalid reconciliation callback or decoder');
+ let sequence=initialSequence,lastElapsed=state.elapsed,lastEvent=state.sequence-1,fault=false;
  return {
   acceptUnchanged(message,{firstSequence=message?.sequence}={}){
    if(fault)return {accepted:false,reason:'fault'};

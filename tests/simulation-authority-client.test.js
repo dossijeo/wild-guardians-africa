@@ -11,3 +11,7 @@ test('worker command error terminates authority and cannot publish another journ
  assert.deepEqual((await results).map(r=>r.status),['rejected','rejected']);assert.equal(f.worker.terminated,true);assert.equal(f.client.submit({kind:'snapshot'}).reason,'failed');
  assert.equal(f.sent.filter(m=>m.kind==='command').length,1);
 });
+test('terrain journal is delivered before its matching command result',async()=>{
+ const sent=[],seen=[],worker={postMessage:m=>sent.push(m),terminate(){}},client=createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session:'s',onTerrainJournal:(sequence,chunks)=>seen.push({sequence,chunks}),workerFactory:()=>worker});
+ worker.onmessage({data:{kind:'ready',session:'s'}});await client.ready;const request=client.submit({kind:'snapshot'});worker.onmessage({data:{kind:'terrainJournal',session:'s',sequence:1,chunks:[{cx:0,cz:0}]}});worker.onmessage({data:{kind:'result',session:'s',sequence:1}});await request.result;assert.deepEqual(seen,[{sequence:1,chunks:[{cx:0,cz:0}]}]);client.dispose();
+});
