@@ -63,18 +63,27 @@ does not demonstrate a seamless visual transition or collision-safe blending.
 
 The same QA switch now permits a 150 ms visual blend of model and local bone
 poses from the provisional fall to the latest confirmed Rapier pose. Root
-position and orientation are applied immediately from Rapier; simulation,
-collisions and damage are unchanged. The roster continues ticking only actors
-that are actively blending. At the end of the interval the displayed bone
-pose is the confirmed pose. The default path does not enable this blend.
+position and orientation are applied immediately from Rapier; a temporary
+model-space visual offset preserves the previous visible world pose and decays
+to zero. Simulation, collisions and damage are unchanged. The roster continues
+ticking only actors that are actively blending. At the end of the interval the
+displayed bone pose is the confirmed pose. The default path does not enable
+this blend.
 
 `tools/experiments/audit_webgpu_fall_blend.mjs` captures the matched hyena at
 the start, middle and end of this interpolation in `reconcile-000.png`,
 `reconcile-075.png` and `reconcile-150.png`. In this controlled view the final
 image matches the captured Rapier reference, and the intermediate pose avoids
-an instantaneous full-rig snap. The unblended authoritative root nevertheless
-causes an observable screen-space shift at the start. In addition, interpolated
-limbs may intersect terrain, obstacles or other bodies: collision safety and
-the effect of subsequently changing Rapier poses have not been established.
-The capture holds one Rapier pose fixed during the 150 ms. This remains a QA
+an instantaneous full-rig snap. After adding the visual offset, the first
+reconciled image matched the preceding provisional image exactly in this
+capture. The capture holds one Rapier pose fixed during the 150 ms.
+
+The temporary offset and interpolated limbs can intersect terrain, obstacles
+or other bodies. A full-vertex diagnostic against the *flat* floor of this
+isolated control measured minimum heights +0.088, −0.297 and −0.611 at the
+start, midpoint and end. Even the unmodified final Rapier pose intersects that
+flat floor after normalization; the actual fixture terrain is not flat, so
+these measurements do not establish penetration depth in the game. They do
+show why the blend cannot be treated as contact-safe. Dynamic Rapier targets,
+slopes, body contacts and obstacles remain unverified. This remains a QA
 experiment and is not evidence for enabling the blend in production.
