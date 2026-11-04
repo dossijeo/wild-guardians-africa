@@ -9,7 +9,7 @@ function setup() {
  return {client,worker,messages,canvas,receive:data=>worker.onmessage({data})};
 }
 test('sends latest frame only after acknowledgement, preserving audio clock and resize',async()=>{
- const x=setup();x.receive({type:'ready'});await x.client.ready;
+ const x=setup();x.receive({type:'ready',backend:'webgpu'});await x.client.ready;
  x.client.draw({time:1,audio:{currentTime:2,ended:false,uncloneable:()=>{}},gesture:'speak'});
  x.client.draw({time:2});x.canvas.clientWidth=250;x.client.resize();x.client.draw({time:3});
  assert.equal(x.messages.filter(m=>m.type==='frame').length,1);
@@ -23,8 +23,15 @@ test('sends latest frame only after acknowledgement, preserving audio clock and 
 test('startup failure rejects readiness and disposes the Worker',async()=>{
  const x=setup();x.receive({type:'error',message:'failed'});await assert.rejects(x.client.ready,/failed/);assert.equal(x.worker.terminated,true);
 });
-test('a failed record transfer triggers runtime fallback',async()=>{
- let failure;const x=setup();x.client.onFailure=error=>{failure=error;};x.receive({type:'ready'});await x.client.ready;
+test('a failed record transfer reports the runtime error',async()=>{
+ let failure;const x=setup();x.client.onFailure=error=>{failure=error;};x.receive({type:'ready',backend:'webgpu'});await x.client.ready;
  x.worker.postMessage=()=>{throw Error('transfer failed');};x.client.setRecord({id:'ES_01'});
  assert.match(failure.message,/transfer failed/);assert.equal(x.worker.terminated,true);
+});
+test('reports the backend selected by the Worker',async()=>{
+ const x=setup();x.receive({type:'ready',backend:'webgpu'});await x.client.ready;
+ assert.equal(x.client.backend,'webgpu');x.client.dispose();
+});
+test('rejects a non-WebGPU backend',async()=>{
+ const x=setup();x.receive({type:'ready',backend:'webgl'});await assert.rejects(x.client.ready,/WebGPU/);assert.equal(x.worker.terminated,true);
 });

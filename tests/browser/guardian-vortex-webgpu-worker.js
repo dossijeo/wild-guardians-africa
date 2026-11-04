@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import {WebGPURenderer} from 'three/webgpu';
-import {GuardianVortexWebGPU} from './guardian-vortex-webgpu.js';
+import {GuardianVortexWebGPU} from '../../src/rendering/guardian-vortex-webgpu.js';
 
 self.onmessage=async({data})=>{
  try{
