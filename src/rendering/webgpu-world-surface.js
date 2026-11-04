@@ -27,7 +27,7 @@ import {createWebGpuGuardianAttack} from './webgpu-guardian-attack.js';
 // Worker-owned foundation for the WebGPU world. The simulation supplies state
 // and terrain; this surface owns GPU resources, never the authoritative state.
 // The terrain material is provisional until the world material is migrated.
-export async function createWebGpuWorldSurface({canvas,session,terrainPort,presentationPort=null,snapshot=null,experimentalActorId=null,experimentalAllActors=false,experimentalActorPackageUrl=null,experimentalMotionFeed=false,experimentalBakedHyena=false,experimentalShadows=true,experimentalMangroveGround=false,experimentalPicking=false,width=512,height=512,onError=()=>{},onGuardianError=()=>{},onConfirmed=()=>{},onActorReady=()=>{},onActorTextured=()=>{},onActorTextureError=()=>{},onSettlementTextureError=()=>{}}={}){
+export async function createWebGpuWorldSurface({canvas,session,terrainPort,presentationPort=null,snapshot=null,experimentalActorId=null,experimentalAllActors=false,experimentalActorPackageUrl=null,experimentalMotionFeed=false,experimentalBakedHyena=false,experimentalShadows=true,experimentalMangroveGround=false,experimentalPicking=false,experimentalWallFragments=false,width=512,height=512,onError=()=>{},onGuardianError=()=>{},onConfirmed=()=>{},onActorReady=()=>{},onActorTextured=()=>{},onActorTextureError=()=>{},onSettlementTextureError=()=>{}}={}){
  if(typeof document!=='undefined'||!canvas||!terrainPort||typeof session!=='string'||!session||!Number.isInteger(width)||width<1||!Number.isInteger(height)||height<1||typeof onError!=='function'||typeof onConfirmed!=='function'||typeof onActorReady!=='function'||Boolean(presentationPort)!==Boolean(snapshot))throw TypeError('Invalid WebGPU world surface');
  let renderer,scene,material,waterMaterial,residency,terrain,stream,roster,workers,settlements,crops,agricultureVfx,blessingVfx,guardianAttack,sky,biomeProps,motionFeed,beastStyle,bakedWalk,ground,groundError=null,lightingNight=0,closed=false;
  try{
@@ -38,7 +38,7 @@ export async function createWebGpuWorldSurface({canvas,session,terrainPort,prese
   if(state)biomeProps=createWebGpuBiomeProps({scene,state,onError});
   if(state){settlements=createWebGpuSettlements({scene,state,residency,renderer,onError,onTextureError:onSettlementTextureError});settlements.sync();}
   if(state){crops=createWebGpuCropRoster({scene,state,residency,renderer,onError});crops.sync();}
-  if(state){agricultureVfx=createWebGpuAgricultureVfx({scene,state,residency,includeCombat:true,includeShield:true,includeWallImpact:true,onError});agricultureVfx.sync();}
+  if(state){agricultureVfx=createWebGpuAgricultureVfx({scene,state,residency,includeCombat:true,includeShield:true,includeWallImpact:true,includeWallFragments:experimentalWallFragments,onError});agricultureVfx.sync();}
   if(state)blessingVfx=createWebGpuBlessingVfx({scene,state,residency});
   if(state)guardianAttack=createWebGpuGuardianAttack({scene,state,renderer,onError:onGuardianError,aura:plan=>agricultureVfx?.setGuardianAura(plan)});
   if(experimentalBakedHyena){try{const responses=await Promise.all([fetch('/qa/gpu-bake/walking.json'),fetch('/qa/gpu-bake/walking.bin')]);if(responses.some(r=>!r.ok))throw Error('Baked walking assets unavailable');bakedWalk=createBakedWalkTexture(await responses[0].json(),await responses[1].arrayBuffer());}catch(error){onActorTextureError(error);}}
