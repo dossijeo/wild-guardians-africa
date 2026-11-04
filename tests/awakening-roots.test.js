@@ -107,3 +107,16 @@ test('growing occupied bounds preserves the previous mask in world coordinates d
   assert.ok(previous>0,'old light stays at its world position instead of stretching to new bounds');
  }finally{layer.dispose();}
 });
+
+test('crop change invalidates roots from confirmed event location when later state no longer contains the crop',()=>{
+ const state=fixture(),layer=new AwakeningRoots(state,{resolution:64});
+ try{
+  layer.uniforms(0,0);layer.flush();const plant=state.plants[1];
+  for(const type of ['CropPlaced','CropPicked','CropDestroyed']){
+   layer.dirty.clear();const event={id:'delayed-'+type,type,targetId:plant.id,presentation:{x:plant.x,z:plant.z}};
+   const saved=state.plants;state.plants=[saved[0]];Game.notifyConfirmedPresentationEvent(state,event);assert.deepEqual([...layer.dirty],['0,0']);
+   layer.dirty.clear();state.plants=saved;Game.notifyConfirmedPresentationEvent(state,{id:'old-'+type,type,targetId:plant.id});assert.deepEqual([...layer.dirty],['0,0']);
+   layer.dirty.clear();Game.notifyConfirmedPresentationEvent(state,{...event,presentation:{x:999,z:999}});assert.equal(layer.dirty.size,0);
+  }
+ }finally{layer.dispose();}
+});

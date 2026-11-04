@@ -26,7 +26,8 @@ export class AwakeningRoots {
       this.pending.delete(event.targetId);const source=this.sources.get(event.targetId);
       if(source){this.sources.delete(source.id);this.mark(source);}
     }else if(['CropPlaced','CropPicked','CropDestroyed'].includes(event.type)){
-      const plant=this.state.plants.find(p=>p.id===event.targetId);
+      const point=event.presentation;
+      const plant=Number.isFinite(point?.x)&&Number.isFinite(point?.z)?point:this.state.plants.find(p=>p.id===event.targetId);
       if(plant)for(const source of this.sources.values())if(Math.hypot(source.x-plant.x,source.z-plant.z)<=A.radius+.3)this.mark(source);
     }
   }
