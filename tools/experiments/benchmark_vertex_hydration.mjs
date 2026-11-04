@@ -12,7 +12,9 @@ const { chromium } = createRequire(import.meta.url)(process.env.PLAYWRIGHT_MODUL
 const browser = await chromium.launch({ channel: 'msedge', headless: true });
 const observations = [];
 try {
-  for (const mode of id ? ['control', 'textured', 'textured', 'control'] : ['control', 'hydrate', 'hydrate', 'control']) {
+  const webgpu = process.env.WG_WEBGPU === '1';
+  const modes = webgpu ? ['direct', 'async', 'async', 'direct'] : id ? ['control', 'textured', 'textured', 'control'] : ['control', 'hydrate', 'hydrate', 'control'];
+  for (const mode of modes) {
     const context = await browser.newContext({ viewport: { width: 512, height: 512 } });
     const page = await context.newPage(), errors = [];
     page.on('pageerror', error => errors.push(String(error)));
@@ -26,10 +28,12 @@ try {
       await route.fulfill({ status: 200, contentType: type, body: await readFile(file) });
     });
     await page.goto(`${process.env.WG_BASE_URL ?? 'http://127.0.0.1:5175'}/hydration-page`);
-    const result = await page.evaluate(async ({ mode, sourceUrl }) => (await import('/tests/browser/vertex-hydration-benchmark.js')).runHydrationBenchmark({ mode, sourceUrl }), { mode, sourceUrl });
+    const result = webgpu
+      ? await page.evaluate(async mode => (await import('/tests/browser/vertex-webgpu-swap.js')).runVertexWebGpuSwap({ mode }), mode)
+      : await page.evaluate(async ({ mode, sourceUrl }) => (await import('/tests/browser/vertex-hydration-benchmark.js')).runHydrationBenchmark({ mode, sourceUrl }), { mode, sourceUrl });
     if (errors.length) throw Error(JSON.stringify(errors));
     observations.push(result); await context.close();
   }
-  const json = JSON.stringify({ note: 'Headless controlled WebGL experiment; local Playwright routes; contexts isolated but process and driver caches may be warm.', observations }, null, 2);
+  const json = JSON.stringify({ note: `Headless controlled ${webgpu ? 'WebGPU' : 'WebGL'} experiment; local Playwright routes; contexts isolated but process and driver caches may be warm.`, observations }, null, 2);
   if (process.env.WG_OUTPUT) await writeFile(process.env.WG_OUTPUT, json); else console.log(json);
 } finally { await browser.close(); }
