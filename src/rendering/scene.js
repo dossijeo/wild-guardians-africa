@@ -941,16 +941,16 @@ export class WorldScene {
     this.guardianSummons?.setGuide(config);
     this.hands?.show(null,[]);
   }
-  *renderFrameUpdates(dt,farVisualDt=dt) {
+  *renderFrameUpdates(dt,farVisualDt=dt,{legacyDraw=true}={}) {
     if(this.beastPhysics)this.beastPhysics.stats.recoveryMs=0;
     if(this.shaderFailure.current)throw this.shaderFailure.current;this.resize();if(!this.cinematic){this.updateCamera();this.raidCamera?.update(this.state,dt);}this.strokePreview.render(this.camera,this.nav.field);if(this.renderOrigin.update(this.controls.target))this.releaseNativeShadow.cache.invalidate();this.syncChunks();yield;
     this.lodStats=updateAssetLods(this.chunks,this.camera,this.quality);const simulated=Math.max(0,this.state.elapsed-this.simElapsed);this.simElapsed=this.state.elapsed;const loadingFog=this.loadingProgress&&!this.loadingProgress.ready&&this.farVegetation?.enabled?this.scene.fog:null;this.sync(simulated);if(loadingFog)this.scene.fog=loadingFog;yield;
-    this.obstructionStats=updateObstructions(this.chunks,this.camera,this.controls.target,dt,{enabled:this.obstructionEnabled!==false});yield;
+    if(legacyDraw)this.obstructionStats=updateObstructions(this.chunks,this.camera,this.controls.target,dt,{enabled:this.obstructionEnabled!==false});yield;
     this.farVegetation?.update(farVisualDt);yield;
-    this.groupStats=this.assetGroups.update(this.chunks,this.camera,this.renderOrigin,this.sun);yield;
+    if(legacyDraw)this.groupStats=this.assetGroups.update(this.chunks,this.camera,this.renderOrigin,this.sun);yield;
     if(!this.cinematic)this.updateHands(dt);this.workVfx?.update(this.state);this.attackVfx?.update(this.state);this.shieldVfx?.update(this.state);this.agricultureVfx?.update(this.state);this.guardianSummons?.beforeLods();this.guardianSummons?.update();this.guardianSummons?.updateLods();this.materialVfx?.update(this.state);this.locomotionVfx?.update(this.state,this.objects);yield;
-    this.toon.uniforms.uWorldOrigin.value.set(this.renderOrigin.x,this.renderOrigin.z);yield;
-    this.prepareFrameResources();yield;
+    if(legacyDraw)this.toon.uniforms.uWorldOrigin.value.set(this.renderOrigin.x,this.renderOrigin.z);yield;
+    if(legacyDraw)this.prepareFrameResources();yield;
   }
   async renderLoadingFrame({nextFrame=()=>new Promise(resolve=>requestAnimationFrame(resolve)),afterRender=()=>{}}={}) {
     const stages=this.renderFrameUpdates(0),check=()=>{if(this.disposed||this.loading.signal.aborted)throw Error('Loading frame cancelled');};

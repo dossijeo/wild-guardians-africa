@@ -4,7 +4,7 @@
 export function renderWithOptionalWebGpuPresentation(world,dt,skipLegacyDraw=false){
  const status=skipLegacyDraw?world.webGpuWorld?.client?.status():null;
  if(status?.phase==='running'&&status.backend==='WebGPU'){
-  for(const step of world.renderFrameUpdates(dt)){};
+  for(const step of world.renderFrameUpdates(dt,dt,{legacyDraw:false})){};
   return;
  }
  return world.render(dt);
