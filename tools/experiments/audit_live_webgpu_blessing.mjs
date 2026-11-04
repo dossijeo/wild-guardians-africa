@@ -12,6 +12,7 @@ try{
  await page.waitForFunction(({id,command})=>{const q=window.wildGuardiansWorkerAwakeningStatusQa(id);return q.blessed&&q.progress===0&&q.queued===0&&q.event?.commandId===command&&!q.event.provisional;},{id:start.targetId,command:start.event.commandId},{timeout:30000});
  const gpu=await page.evaluate(async id=>{const deadline=Date.now()+90000;while(Date.now()<deadline){try{const q=await window.wildGuardiansWebGpuWorldQa();if(q.backend==='WebGPU'&&q.blessingVfx?.sourceIds.includes(id))return q;}catch{}await new Promise(resolve=>setTimeout(resolve,150));}throw Error('Confirmed target blessing did not appear in WebGPU');},start.targetId);
  const end=await page.evaluate(id=>({awakening:window.wildGuardiansWorkerAwakeningStatusQa(id),game:window.wildGuardiansWorkerQa()}),start.targetId);
+ if(gpu.guardianAttack?.confirmed!==1||gpu.guardianAttack?.lastCommand!==start.event.commandId)throw Error('Guardian did not reconcile confirmed awakening '+JSON.stringify(gpu.guardianAttack));
  if(end.game.status?.fault||errors.length)throw Error(JSON.stringify({end,errors}));
- console.log(JSON.stringify({start,end,gpu:gpu.blessingVfx,scope:'Opt-in Worker game, peaceful fixture with prepared awakening charge, direct input and duplicate command; headless SwiftShader, no visual comparison.'}));
+ console.log(JSON.stringify({start,end,gpu:gpu.blessingVfx,guardian:gpu.guardianAttack,scope:'Opt-in Worker game, peaceful fixture with prepared awakening charge, direct input and duplicate command; headless SwiftShader, no visual comparison.'}));
 }finally{await browser.close();}
