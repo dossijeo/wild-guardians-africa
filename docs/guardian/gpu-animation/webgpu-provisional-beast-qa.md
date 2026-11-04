@@ -91,9 +91,9 @@ experiment and is not evidence for enabling the blend in production.
 
 ## QA terrain-support experiment
 
-The QA path now samples every sixteenth vertex of visible skinned meshes and
-raycasts against resident terrain. It lifts only the rendered model enough to
-clear sampled terrain; the Rapier root, colliders, game state and confirmed
+The QA path now samples every eighth vertex of visible skinned meshes and
+raycasts against resident terrain, with a 3 cm margin. It lifts only the rendered
+model enough to clear sampled terrain; the Rapier root, colliders, game state and confirmed
 poses are unchanged. This visual correction can remain after the 150 ms blend
 while a physical pose is active, so its final mesh is intentionally elevated
 relative to the uncorrected Rapier rendering. No correction is possible where
@@ -109,9 +109,36 @@ The visual control renders a flat support plane; terrain validation queries the
 actual Wild Engine surface. The three new images are `reconcile-ground-000`,
 `reconcile-ground-075` and `reconcile-ground-150` in the review directory.
 
-The fixture's native 0.9 m animal navigation check reported both initial and
-final center positions non-walkable and their connecting segment not clear;
-it does not distinguish a self/body conflict here, and is not a validation of
-the visual body against obstacles. Slopes, walls, peer bodies, disconnected or
-unloaded terrain, all animation phases, and the runtime cost remain untested.
+## Additional species, slope and wall checks
+
+`audit_webgpu_fall_species_terrain.mjs` captures actual mangrove Rapier poses for
+hyaena, warthog and buffalo. On the locally flat fixture surface, the warthog
+check covered 20,421 vertices and the buffalo check 51,598. No vertices in the
+three measured phases were more than 3 cm below the surface. An earlier 1/16
+sampling with a 1 cm margin missed two warthog vertices at −3.9 cm; that result
+motivated the QA-only 1/8 sampling and 3 cm margin. These are three phases of
+one attack per species, not exhaustive contact tests.
+
+`audit_webgpu_fall_slope_transfer.mjs` transfers those *captured* Rapier poses
+to a mesh sampled from the real savanna Wild Engine surface at (108, −28),
+where the local height changes by approximately 0.68 m per horizontal metre.
+It does not run Rapier on that slope. Full-vertex checks at three phases found
+no penetration greater than 3 cm for hyena (22,242 vertices), warthog (20,421)
+or buffalo (51,598). Minima in metres were respectively +0.104/+0.030/+0.030,
++0.030/+0.030/+0.017 and +0.026/+0.030/+0.030. Results are recorded in
+`webgpu-fall-slope-{hyena,warthog,buffalo}-qa.txt`.
+
+This implementation is far too costly for production: on the 7,200-triangle
+slope mesh, one isolated hyena `actor.update()` took approximately **3,341 ms**
+because it raycasts for each sampled vertex. This single diagnostic is not a
+global benchmark, but it rules out enabling the current approach in play. The
+ordinary path does not execute this QA-only correction.
+
+`audit_webgpu_fall_wall_guard.mjs` identified real mangrove wall `structure-684`:
+the animal-radius endpoints on either side are walkable, while Wild Engine
+rejects the connecting segment. The current visual blend does not request such
+a certificate, so it can cross an obstacle and is **not obstacle-safe**. The
+fixture's original hyena start/end are both non-walkable, which also prevents
+interpreting that particular segment test as a clean obstacle check. Body
+contacts, unloaded terrain and continuous visual motion remain unverified.
 The terrain correction and interpolation remain QA-only.
