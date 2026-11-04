@@ -21,3 +21,11 @@ test('late-loading actor receives the latest confirmed physical pose and release
  const roster=createWebGpuAnimalRoster({scene:{},residency:{},state,renderer:{},assetBank:bank,createAnimal:({getPose})=>new Promise(done=>{resolve=()=>done({update(){values.push(getPose());},validatePose(pose){if(pose.bad)throw Error('bad rig');},dispose(){}});})});
  roster.sync();await flush();const first={actorId:'a',active:true},latest={actorId:'a',active:true,revision:2};roster.setPoses(new Map([['a',first]]));roster.setPoses(new Map([['a',latest]]));resolve();await flush();assert.equal(values.at(-1),latest);assert.throws(()=>roster.validatePoses(new Map([['a',{bad:true}]])),/bad rig/);roster.setPoses(new Map());roster.sync();assert.equal(values.at(-1),null);roster.dispose();
 });
+test('provisional attack is visual only, rejects cleanly and yields to confirmed physics',async()=>{
+ const animal={id:'a',species:'hyena',status:'walking',x:2,z:3,radius:.7},state={elapsed:10,raid:{animals:[animal]}},before=JSON.stringify(state),bank={tick(){},dispose(){}};let hooks,updates=0;
+ const roster=createWebGpuAnimalRoster({scene:{},residency:{get:()=>null},state,assetBank:bank,createAnimal:args=>{hooks=args;return {update(){updates++;if(hooks.getPose())hooks.onPhysical();},dispose(){}};}});roster.sync();await flush();
+ const command={kind:'castAttack',id:'one',targetId:'a',selection:{origin:{x:0,y:1,z:0},contact:{x:2,y:1,z:3}}};assert.equal(roster.beginImpact(command),true);assert.equal(roster.beginImpact(command),false);assert.equal(roster.status().provisionalImpacts,1);assert.equal(JSON.stringify(state),before);
+ roster.resolveImpact('one',false);assert.equal(roster.status().provisionalImpacts,0);assert.ok(updates>=2);assert.equal(JSON.stringify(state),before);
+ assert.equal(roster.beginImpact({...command,id:'two'}),true);roster.resolveImpact('two',true);assert.equal(roster.status().provisionalImpacts,1);roster.setPoses(new Map([['a',{actorId:'a',active:true}]]));roster.sync();assert.equal(roster.status().provisionalImpacts,0);assert.equal(JSON.stringify(state),before);
+ roster.setPoses(new Map());animal.magicDown={phase:'falling'};assert.equal(roster.beginImpact({...command,id:'three'}),false);roster.dispose();
+});

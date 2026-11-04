@@ -10,3 +10,8 @@ test('provisional recoil affects only the rendered rig and ends by command ID',(
 test('downed or actively confirmed actors do not receive provisional recoil',()=>{
  let now=0;const manager=new ProvisionalBeastImpact({now:()=>now}),animal={id:'a',species:'hyena',x:0,z:0,status:'walking'},state={raid:{animals:[animal]}},command={kind:'castAttack',id:'a1',targetId:'a',selection:{}};assert.equal(manager.begin(command,state,()=>0),true);now=400;animal.magicDown={phase:'falling'};assert.equal(manager.sample(animal,4),null);delete animal.magicDown;animal.magicImpact={at:3.8,impactAt:3.8};assert.equal(manager.sample(animal,4),null);manager.clear();assert.equal(manager.byTarget.size,0);
 });
+test('Worker presentation holds a bounded provisional pose until physical reconciliation',()=>{
+ let now=0;const manager=new ProvisionalBeastImpact({now:()=>now}),animal={id:'a',species:'hyena',x:0,z:0,status:'walking'},state={raid:{animals:[animal]}};
+ assert.equal(manager.begin({kind:'castAttack',id:'a1',targetId:'a',selection:{}},state,()=>0),true);animal.magicDown={phase:'falling'};animal.magicImpact={at:2,impactAt:2.2};now=3000;
+ const sample=manager.sample(animal,3,{holdUntilPhysical:true});assert.ok(sample);assert.equal(sample.elapsed,1.34);manager.end('a1');assert.equal(manager.sample(animal,3,{holdUntilPhysical:true}),null);
+});

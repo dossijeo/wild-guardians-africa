@@ -17,7 +17,7 @@ self.onmessage=async({data})=>{try{
  if(import.meta.env.DEV&&data.kind==='qa-lose-device'){if(!surface?.renderer.backend?.device)throw Error('WebGPU device unavailable');surface.renderer.backend.device.destroy();return;}
  if(data.kind==='camera'){latestCamera=data.camera;if(surface)surface.setCamera(data.camera);postMessage({kind:'cameraAck'});return;}
  if(data.kind==='resize'){latestSize={width:data.width,height:data.height};if(surface)surface.resize(data.width,data.height);return;}
- if(data.kind==='guardianBegin'){surface?.guardianAttack?.begin(data.command);return;}
- if(data.kind==='guardianResolve'){surface?.guardianAttack?.resolve(data.id,data.accepted);return;}
+ if(data.kind==='guardianBegin'){if(surface?.guardianAttack?.begin(data.command))surface.animalRoster?.beginImpact(data.command);return;}
+ if(data.kind==='guardianResolve'){surface?.guardianAttack?.resolve(data.id,data.accepted);surface?.animalRoster?.resolveImpact(data.id,data.accepted);return;}
  throw Error('Unknown world worker message');
  }catch(error){fail(error);}};
