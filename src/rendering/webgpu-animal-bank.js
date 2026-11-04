@@ -8,17 +8,18 @@ import {openProgressiveWebGpuCharacter} from './webgpu-progressive-character.js'
 
 // The Worker owns one source, geometry, materials and textures per species.
 // Each actor gets its own skeleton and mixer; the source stays until disposal.
-export function createWebGpuAnimalBank({renderer,packages={},onTextured=()=>{},onTextureError=()=>{},loadAsset=null}={}){
- if(!renderer?.backend?.isWebGPUBackend||!packages||typeof packages!=='object'||typeof onTextured!=='function'||typeof onTextureError!=='function')throw TypeError('Invalid animal bank');
+export function createWebGpuAnimalBank({renderer,packages={},onTextured=()=>{},onTextureError=()=>{},loadAsset=null,materialStyle=null}={}){
+ if(!renderer?.backend?.isWebGPUBackend||!packages||typeof packages!=='object'||typeof onTextured!=='function'||typeof onTextureError!=='function'||materialStyle!==null&&(typeof materialStyle.configure!=='function'||typeof materialStyle.convert!=='function'))throw TypeError('Invalid animal bank');
  const entries=new Map(),controller=new AbortController();let closed=false;
  function disposeOriginal(gltf){const resources=new Set(),images=new Set();gltf.scene.traverse(object=>{if(!object.isMesh)return;resources.add(object.geometry);for(const material of Array.isArray(object.material)?object.material:[object.material]){resources.add(material);for(const value of Object.values(material))if(value?.isTexture){resources.add(value);if(typeof value.source?.data?.close==='function')images.add(value.source.data);}}});for(const resource of resources)resource.dispose();for(const image of images)image.close();}
  async function load(species){
   const spec=ANIMAL_ACTIONS.animals[species];if(!spec)throw Error('Unknown species '+species);
   if(loadAsset)return loadAsset(species,controller.signal);
-  if(packages[species]){const progressive=await openProgressiveWebGpuCharacter({renderer,packageUrl:packages[species],species,signal:controller.signal,onTextured:()=>onTextured(species),onError:error=>onTextureError(species,error)});progressive.start();return {scene:progressive.preview.scene,clips:prepareAnimalClips(progressive.preview.animations),tick:now=>progressive.tick(now),dispose:()=>progressive.dispose()};}
+  if(packages[species]){const progressive=await openProgressiveWebGpuCharacter({renderer,packageUrl:packages[species],species,signal:controller.signal,onTextured:()=>onTextured(species),onError:error=>onTextureError(species,error),...(materialStyle?{configureMaterial:(material,object)=>materialStyle.configure(material,object)}:{})});progressive.start();return {scene:progressive.preview.scene,clips:prepareAnimalClips(progressive.preview.animations),tick:now=>progressive.tick(now),dispose:()=>progressive.dispose()};}
   const manager=new THREE.LoadingManager(),abort=()=>manager.abort();controller.signal.addEventListener('abort',abort,{once:true});let gltf;
   try{gltf=await new GLTFLoader(manager).setMeshoptDecoder(MeshoptDecoder).loadAsync(spec.url);}finally{controller.signal.removeEventListener('abort',abort);}
-  return {scene:gltf.scene,clips:prepareAnimalClips(gltf.animations),dispose:()=>disposeOriginal(gltf)};
+  let converted;try{converted=materialStyle?.convert(gltf.scene);}catch(error){disposeOriginal(gltf);throw error;}
+  return {scene:gltf.scene,clips:prepareAnimalClips(gltf.animations),dispose(){disposeOriginal(gltf);for(const material of converted?.originals??[])material.dispose();}};
  }
  function source(species){let entry=entries.get(species);if(!entry){entry={refs:0,pending:0,asset:null,promise:null};entry.promise=load(species).then(asset=>{if(!asset?.scene?.isObject3D||!Array.isArray(asset.clips)||typeof asset.dispose!=='function')throw TypeError('Invalid animal asset');if(closed){asset.dispose();throw new DOMException('Animal bank disposed','AbortError');}entry.asset=asset;return asset;}).catch(error=>{if(entries.get(species)===entry)entries.delete(species);throw error;});entries.set(species,entry);}return entry;}
  function releaseUnused(species,entry){if(!closed&&entry.refs===0&&entry.pending===0&&entry.asset&&entries.get(species)===entry){entries.delete(species);entry.asset.dispose();entry.asset=null;}}
