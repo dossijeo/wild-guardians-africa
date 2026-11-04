@@ -198,3 +198,31 @@ Se midió aparte una serie A/B/B/A en contexto nuevo, con los recursos y pipelin
 No hubo intervalos >50 ms y no se demuestra diferencia de rendimiento en régimen estable. Dos repeticiones por opción son insuficientes para afirmar equivalencia estadística. La prueba no mide carga bajo demanda, tiempo de compilación, memoria GPU, terreno o una partida; por tanto **no demuestra que se hayan eliminado tirones de producción**. Las cuatro ejecuciones completas están en `results/uber-grass-abba-{0,1,2,3}.json`.
 
 Reproducir con el servidor Vite activo y `WG_GRASS_SHARED=0/1 node tools/experiments/check_uber_grass_real.mjs`, repetir con `WG_GRASS_SWAP=1` y comparar los cuatro JSON mediante `tools/experiments/compare_uber_grass.mjs`. Para la prueba calentada usar `tools/experiments/bench_uber_grass_real.mjs` con `WG_GRASS_SHARED=0/1` y `WG_OUTPUT` por ejecución. Se necesita Playwright mediante `NODE_PATH`. No se ha sustituido ningún material de la partida.
+
+## Incorporación bajo demanda del segundo bioma
+
+El modo `demand=1` del laboratorio mantiene la hierba de Sabana animándose y, tras 1,5 s, incorpora Gran Río en un recuadro sin haber dibujado ni compilado previamente su hierba. Ambos usan el mismo renderizador y contexto; la ruta compartida usa el mismo material TSL y la original mantiene sus materiales independientes. Los snapshots, geometrías CPU y texturas **ya están descargados y decodificados** antes de medir: la prueba aísla su primera preparación y subida GPU, no el coste completo de streaming, IO o decodificación. No hay terreno, sombras de producción ni simulación. Captura: `uber-grass-demand.webp`.
+
+En dos trazas diagnósticas separadas, tras solicitar Gran Río en contexto nuevo:
+
+| Llamadas observadas | Material original | Compartido |
+| --- | ---: | ---: |
+| `createShaderModule` / `createRenderPipeline` | 1 / 1 | 0 / 0 |
+| `createTexture` / `copyExternalImageToTexture` | 1 / 1 | 1 / 1 |
+| `createBuffer` | 24 | 23 |
+| Mayor copia de imagen, tiempo de llamada CPU | 22,28 ms | 22,32 ms |
+
+La copia no mide la finalización de la transferencia ni tiempo GPU, y las trazas alteran los tiempos. En la repetición con el mismo contexto y recursos ya usados, ninguna ruta creó pipelines, shaders, texturas o buffers nuevos tras la solicitud. Datos: `results/uber-grass-demand-trace-{0,1}.json`.
+
+En una serie A/B/B/A sin instrumentación se midieron dos contextos nuevos por opción y luego una repetición caliente de cada uno. Se registró tanto el timestamp RAF como `performance.now()` al entrar en cada callback: en Edge headless el primero pudo avanzar solo ~33 ms mientras el callback previo ocupaba 43–45 ms, por lo que la tabla usa el **intervalo real entre callbacks**. La columna CPU incluye el renderizado de Sabana y el primer renderizado del recuadro de Gran Río. p95/p99 y máximo corresponden a los intervalos entre callbacks desde que se solicita el segundo bioma; hay solo 74–76 muestras por ejecución.
+
+| Orden | Material | CPU primer render ms | Intervalo real siguiente ms | Intervalos p95 / p99 / máximo ms | >50 ms |
+| ---: | --- | ---: | ---: | ---: | ---: |
+| A | Original | 42,63 | 43,03 | 33,60 / 85,36 / 85,36 | 1 |
+| B | Compartido | 34,36 | 34,76 | 33,46 / 34,76 / 34,76 | 0 |
+| B | Compartido | 33,85 | 34,37 | 33,51 / 34,37 / 34,37 | 0 |
+| A | Original | 44,90 | 45,29 | 33,45 / 45,29 / 45,29 | 0 |
+
+Las repeticiones calientes tuvieron un primer render de 1,05–1,22 ms y ningún intervalo >50 ms. La diferencia observada es prometedora para esta escena, pero dos repeticiones por opción y una muestra tan corta no demuestran mejora general ni permiten atribuir la diferencia exclusivamente a la compilación; en ambos modos queda una subida de textura que puede superar un presupuesto de 16,7 ms. `onBeforeRender` se usa solo para verificar el orden del primer envío CPU: no acredita que la GPU haya terminado ni que la imagen se haya presentado. Los resultados sin instrumentar están en `results/uber-grass-demand-abba-{0,1,2,3}.json`.
+
+Reproducir con `tools/experiments/audit_uber_grass_demand.mjs`, alternando `WG_GRASS_SHARED=0/1` y usando `WG_OUTPUT` diferente. Añadir `WG_TRACE=1` solo en ejecuciones diagnósticas, y `WG_SCREENSHOT` para una captura. `tools/experiments/summarize_uber_grass_demand.mjs INPUT [OUTPUT]` calcula las estadísticas y comprueba las dos fases. La herramienta valida que el intervalo real siguiente no sea menor que el trabajo CPU anterior. No se ha cambiado el juego ni se ha sustituido su precalentamiento.

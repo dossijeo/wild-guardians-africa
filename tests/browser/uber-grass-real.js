@@ -4,7 +4,7 @@ import {createSharedGrassMaterial} from '../../src/labs/uber-grass/grass-shared.
 
 const result={errors:[],frames:[],scenes:[]};window.uberGrassResult=result;
 try{
- const query=new URLSearchParams(location.search),shared=query.get('shared')==='1',swap=query.get('swap')==='1',bench=query.get('bench')==='1';
+ const query=new URLSearchParams(location.search),shared=query.get('shared')==='1',swap=query.get('swap')==='1',bench=query.get('bench')==='1',demand=query.get('demand')==='1';
  const renderer=new THREE.WebGPURenderer({canvas:document.querySelector('#view'),antialias:false,trackTimestamp:bench});await renderer.init();if(!renderer.backend?.isWebGPUBackend)throw Error('Expected WebGPU');
  renderer._animation.stop();renderer.info.autoReset=false;
  if(bench){const init=renderer.backend.initTimestampQuery;renderer.backend.initTimestampQuery=function(type,uid,descriptor){if(!this.trackTimestamp){delete descriptor.timestampWrites;return;}return init.call(this,type,uid,descriptor);};}
@@ -27,7 +27,26 @@ try{
   }
   scene.updateMatrixWorld(true);scenes.push({scene,camera,items,snapshot});result.scenes.push({biome:snapshot.biome,instances,triangles,materials:shared?1:items.length});
  }
- for(const [frame,step] of [{time:0,night:0},{time:1.25,night:0},{time:1.25,night:1},{time:2.5,night:1}].entries())for(const item of scenes){
+ if(demand){
+  renderer.setRenderTarget(null);renderer.autoClear=false;let runRow=null;
+  for(const {mesh} of scenes[1].items)mesh.onBeforeRender=()=>{if(runRow?.requestedAt!=null&&runRow.firstDrawAt==null)runRow.firstDrawAt=performance.now();};
+  result.demandReady=true;result.demandRuns=[];
+  await new Promise(resolve=>{
+   window.runUberGrassDemand=async()=>{
+    if(runRow)throw Error('Demand run already active');const row={frames:[],requestedAt:null,firstDrawAt:null,countsBefore:null,countsAfter:null};runRow=row;
+    const raf=()=>new Promise(done=>requestAnimationFrame(done));let previous=await raf(),previousWall=performance.now(),start=previous;
+    for(;;){const now=await raf(),callbackWall=performance.now(),elapsed=now-start;if(elapsed>=1500&&row.requestedAt==null){row.requestedAt=performance.now();row.countsBefore={...(window.__gpuCounts??{})};}
+     const cpuStart=performance.now();renderer.info.reset();renderer._nodes.nodeFrame.update();renderer.info.frame=renderer._nodes.nodeFrame.frameId;renderer.setScissorTest(false);renderer.setViewport(0,0,640,360);renderer.clear();
+     for(const {mesh,handle} of scenes[0].items)if(shared)handle.update(mesh,elapsed/1000,0);else handle.setTime(elapsed/1000);
+     renderer.render(scenes[0].scene,scenes[0].camera);
+     if(row.requestedAt!=null){renderer.clearDepth();renderer.setScissor(320,0,320,180);renderer.setScissorTest(true);renderer.setViewport(320,0,320,180);for(const {mesh,handle} of scenes[1].items)if(shared)handle.update(mesh,elapsed/1000,0);else handle.setTime(elapsed/1000);renderer.render(scenes[1].scene,scenes[1].camera);renderer.setScissorTest(false);}
+     row.frames.push({at:now,callbackWall,intervalMs:now-previous,wallIntervalMs:callbackWall-previousWall,cpuMs:performance.now()-cpuStart,second:row.requestedAt!=null});previous=now;previousWall=callbackWall;if(elapsed>=4000)break;
+    }
+    await device.queue.onSubmittedWorkDone();row.countsAfter={...(window.__gpuCounts??{})};result.demandRuns.push(row);runRow=null;return row;
+   };
+   window.finishUberGrassDemand=()=>resolve();
+  });
+ }else for(const [frame,step] of [{time:0,night:0},{time:1.25,night:0},{time:1.25,night:1},{time:2.5,night:1}].entries())for(const item of scenes){
   for(const {mesh,handle} of item.items)if(shared)handle.update(mesh,step.time,step.night);else{handle.setTime(step.time);handle.setNight(step.night);}
   renderer.info.reset();renderer._nodes.nodeFrame.update();renderer.info.frame=renderer._nodes.nodeFrame.frameId;renderer.render(item.scene,item.camera);const drawCalls=renderer.info.render.drawCalls,triangles=renderer.info.render.triangles;const pixels=Uint8Array.from(await renderer.readRenderTargetPixelsAsync(target,0,0,640,360));const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',pixels))).map(v=>v.toString(16).padStart(2,'0')).join('');let nonBackground=0;for(let i=0;i<pixels.length;i+=4)if(pixels[i]!==pixels[0]||pixels[i+1]!==pixels[1]||pixels[i+2]!==pixels[2])nonBackground++;
   result.frames.push({biome:item.snapshot.biome,frame,time:step.time,night:step.night,sha256:hash,nonBackground,pipelines:window.__pipelineCount??0,shaders:window.__shaderCount??0,drawCalls,triangles});
