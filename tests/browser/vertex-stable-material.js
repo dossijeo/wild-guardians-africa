@@ -20,7 +20,7 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
   const sources = await Promise.all(entries.map(item => originalMaterials.parser.getDependency('material', item.record.material)));
   const placeholders = new Map(), textureNodes = [], mapBindings = [], changes = [], createdMaterials = [];
   const ready = uniform(0);
-  let generation = 0, cancelled = false, resolved = false;
+  let generation = 0, cancelled = false, resolved = false, applied = false;
   function placeholder(source, normal) {
     const key = `${source.colorSpace}:${normal}`;
     if (!placeholders.has(key)) {
@@ -100,12 +100,20 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
       resolved = true;
       return [...textures];
     },
-    apply() {
+    apply({ blend = 1 } = {}) {
       if (cancelled) throw Error('Material preparation cancelled');
       if (!resolved) throw Error('Final textures not ready');
+      if (!Number.isFinite(blend) || blend < 0 || blend > 1) throw Error('Invalid texture blend');
       for (const binding of mapBindings) binding.material[binding.key] = binding.final;
       for (const item of textureNodes) item.node.value = item.final;
-      ready.value = 1;
+      ready.value = blend; applied = true;
+    },
+    setBlend(value) {
+      if (cancelled) throw Error('Material preparation cancelled');
+      if (!resolved) throw Error('Final textures not ready');
+      if (!applied) throw Error('Final textures not applied');
+      if (!Number.isFinite(value) || value < 0 || value > 1) throw Error('Invalid texture blend');
+      ready.value = value;
     },
     cancel() { cancelled = true; resolved = false; generation++; },
   };

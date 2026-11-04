@@ -37,6 +37,18 @@ test('stable material refuses premature or mismatched texture application', asyn
   assert.equal(x.mesh.material.normalMap, x.material.normalMap);
 });
 
+test('texture blending requires a resolved material and accepts only finite proportions', async () => {
+  const x = setup(), stable = await makeStableVertexMaterials(x.renderer, x.preview, x.asset(x.material), x.mapping);
+  assert.throws(() => stable.setBlend(.5), /not ready/);
+  await stable.resolveFinal(x.asset(x.material));
+  assert.throws(() => stable.setBlend(.5), /not applied/);
+  assert.throws(() => stable.apply({ blend: NaN }), /Invalid texture blend/);
+  stable.apply({ blend: 0 });
+  stable.setBlend(.5); stable.setBlend(1);
+  assert.throws(() => stable.setBlend(1.1), /Invalid texture blend/);
+  stable.cancel(); assert.throws(() => stable.setBlend(.5), /cancelled/);
+});
+
 test('cancellation prevents in-flight and later application', async () => {
   const x = setup(), stable = await makeStableVertexMaterials(x.renderer, x.preview, x.asset(x.material), x.mapping);
   const placeholder = x.mesh.material.map; let finish;

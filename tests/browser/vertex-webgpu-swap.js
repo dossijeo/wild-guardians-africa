@@ -106,7 +106,7 @@ export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders =
   camera.position.copy(center).add(new THREE.Vector3(1.5, 1, 2.5).normalize().multiplyScalar(radius * (count === 1 ? 2.5 : Math.max(columns, rows) * 2))); camera.lookAt(center);
   const mixers = actors.map(actor => { const mixer = new THREE.AnimationMixer(actor); if (preview.animations.length) mixer.clipAction(preview.animations[0]).play(); return mixer; });
   const intervals = [], renderCpu = [], events = {}, bootstrapMs = performance.now() - bootstrapStart, start = performance.now(), absoluteStart = performance.timeOrigin + performance.now();
-  let frame = 0, previous = 0, ready = false, applied = false, failure = null, apply;
+  let frame = 0, previous = 0, ready = false, applied = false, failure = null, apply, blendStart = null;
   const provisional = []; for (const actor of actors) actor.traverse(object => { if (object.isMesh) provisional.push({ object, material: object.material }); });
   events.framesWhileCompiling = 0;
   const errors = []; device.addEventListener('uncapturederror', e => errors.push(e.error.message));
@@ -135,7 +135,7 @@ export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders =
           const t = performance.now(); renderer.initTexture(texture);
           events.textureCalls.push({ cpuMs: performance.now() - t, width: texture.image?.width ?? null, height: texture.image?.height ?? null });
         }
-        apply = () => stableResources.apply(); events.compileResolved = performance.now() - start; ready = true; events.readyAt = events.compileResolved;
+        apply = () => stableResources.apply(verifiedStream ? { blend: 0 } : undefined); events.compileResolved = performance.now() - start; ready = true; events.readyAt = events.compileResolved;
       })().catch(error => { failure = String(error?.stack ?? error); });
       return;
     }
@@ -199,7 +199,8 @@ export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders =
         if (provisional.some(item => item.object.material !== item.material)) return reject(Error('Provisional material changed while compilation was pending'));
         events.framesWhileCompiling++;
       }
-      if (ready && !applied) { events.applyFrame = frame; events.applyAt = performance.now() - start; const t = performance.now(); apply(); events.applyCpuMs = performance.now() - t; applied = true; }
+      if (ready && !applied) { events.applyFrame = frame; events.applyAt = performance.now() - start; const t = performance.now(); apply(); events.applyCpuMs = performance.now() - t; applied = true; if (verifiedStream) blendStart = now; }
+      if (blendStart !== null) { const blend = Math.min(1, (now - blendStart) / 300); stableResources.setBlend(blend); if (blend === 1) { events.blendCompleteAt = performance.now() - start; blendStart = null; } }
       const t = performance.now(); renderer.render(scene, camera); renderCpu.push({ frame, ms: performance.now() - t });
       frame++;
       if (frame < frames || (!applied && frame < 1200)) requestAnimationFrame(tick);
