@@ -2,7 +2,7 @@ import {createRequire} from 'node:module';
 import {writeFile} from 'node:fs/promises';
 const {chromium}=createRequire(import.meta.url)(process.env.PLAYWRIGHT_MODULE??'playwright');
 const backend=process.env.WG_BACKEND??'webgpu',mode=process.env.WG_MODE??'async',source=process.env.WG_SOURCE??'lod';
-if(!['webgpu','webgl'].includes(backend)||!['async','direct'].includes(mode)||!['lod','full'].includes(source))throw Error('Invalid WG_BACKEND, WG_MODE or WG_SOURCE');
+if(!['webgpu','webgl'].includes(backend)||!['async','direct','swap','swap-direct'].includes(mode)||!['lod','full'].includes(source))throw Error('Invalid WG_BACKEND, WG_MODE or WG_SOURCE');
 const browser=await chromium.launch({channel:'msedge',headless:true,args:['--disable-gpu-shader-disk-cache','--disable-http-cache',...(process.env.WG_UNSAFE_WEBGPU==='1'?['--enable-unsafe-webgpu']:[])]});
 try{
  const page=await browser.newPage({viewport:{width:1280,height:900}}),errors=[];
@@ -16,7 +16,7 @@ try{
   for(const name of ['createProgram','linkProgram','getProgramInfoLog','createTexture','texImage2D','texSubImage2D','compressedTexImage2D','bufferData'])wrap(globalThis.WebGL2RenderingContext?.prototype,name);
  });
  const base=process.env.WG_BASE_URL??'http://127.0.0.1:5175',started=Date.now();
- await page.goto(`${base}/webgpu-on-demand.html?backend=${backend}&source=${source}${process.env.WG_QUEUE_FENCE==='1'?'&queueFence=1':''}${process.env.WG_TARGET==='live'?'&target=live':''}`,{waitUntil:'domcontentloaded'});
+ await page.goto(`${base}/webgpu-on-demand.html?backend=${backend}&source=${source}${process.env.WG_QUEUE_FENCE==='1'?'&queueFence=1':''}${process.env.WG_TARGET==='live'?'&target=live':''}${['actor','scope'].includes(process.env.WG_SWAP_PREPARATION)?`&swapPreparation=${process.env.WG_SWAP_PREPARATION}`:''}${process.env.WG_MATCH_SWAP_TARGET==='1'?'&matchSwapTarget=1':''}${process.env.WG_SHARED_FALLBACK==='1'?'&sharedFallback=1':''}`,{waitUntil:'domcontentloaded'});
  await page.waitForFunction(()=>window.wildGuardiansWebGpuLabStatus?.().backend||window.wildGuardiansWebGpuLabStatus?.().errors,null,{timeout:60000});
  let initial=await page.evaluate(()=>window.wildGuardiansWebGpuLabReport());
  if(initial.errors.length||initial.backendActual!==(backend==='webgpu'?'WebGPU real':'WebGL2'))throw Error('Backend mismatch: '+JSON.stringify(initial));
@@ -37,6 +37,7 @@ try{
   const sample=await page.evaluate(start=>({report:window.wildGuardiansWebGpuLabReport(),trace:window.__pipelineTrace.filter(row=>row.start>=start),countsAfter:{...window.__pipelineCounts}}),start);sample.countsBefore=countsBefore;
   sample.cpuProfile=cpuProfile;
   if(sample.report.errors.length||sample.report.appearances.some(row=>!row.success||row.drewBeforeReady))throw Error('Scenario failed: '+JSON.stringify(sample.report.errors));
+  if(mode==='swap'||mode==='swap-direct')for(const row of sample.report.appearances){if(row.fallbackFirstDrawAt===null||row.finalFirstDrawAt===null||row.upgradedAt===null||(mode==='swap'&&(row.compileResolvedAt===null||row.upgradedAt<row.compileResolvedAt)))throw Error('Material replacement was not observed in order: '+JSON.stringify(row));}
   samples.push({cache,start,...sample});
   if(cache==='fresh-context'&&process.env.WG_SCREENSHOT)await page.screenshot({path:process.env.WG_SCREENSHOT});
  }

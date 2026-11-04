@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { WebGPURenderer } from 'three/webgpu';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { clone as cloneSkeleton } from 'three/addons/utils/SkeletonUtils.js';
+import {createSharedCharacterFallback} from './shared-character-material.js';
 
 const modelNames = [
   'guardian', 'hyena', 'lion', 'rhino', 'buffalo', 'warthog',
@@ -12,6 +13,9 @@ const backend = qs.get('backend') === 'webgl' ? 'webgl' : 'webgpu';
 const source = qs.get('source') === 'lod' ? 'lod' : 'full';
 const queueFence = qs.get('queueFence') === '1';
 const compileTarget = qs.get('target') === 'live' ? 'live' : 'separate';
+const swapPreparation = ['actor','scope'].includes(qs.get('swapPreparation')) ? qs.get('swapPreparation') : 'clone';
+const matchSwapTarget = qs.get('matchSwapTarget') === '1';
+const sharedFallback = qs.get('sharedFallback') === '1' && backend === 'webgpu';
 const elements = Object.fromEntries([
   'viewport', 'load', 'spawn', 'sequence', 'clear', 'model', 'mode',
   'status', 'metrics', 'events', 'reset', 'copy',
@@ -19,9 +23,11 @@ const elements = Object.fromEntries([
 document.getElementById(backend + '-link').classList.add('active');
 document.getElementById('source-'+source).classList.add('active');
 document.getElementById('target-'+compileTarget).classList.add('active');
+document.getElementById(sharedFallback?'fallback-shared':'fallback-faithful').classList.add('active');
 for(const value of ['webgl','webgpu'])document.getElementById(value+'-link').href=`?backend=${value}&source=${source}&target=${compileTarget}`;
 for(const value of ['lod','full'])document.getElementById('source-'+value).href=`?backend=${backend}&source=${value}&target=${compileTarget}`;
 for(const value of ['live','separate'])document.getElementById('target-'+value).href=`?backend=${backend}&source=${source}&target=${value}`;
+for(const value of ['faithful','shared'])document.getElementById('fallback-'+value).href=`?backend=${backend}&source=${source}&target=${compileTarget}&sharedFallback=${value==='shared'?1:0}`;
 
 const report = {
   backendRequested: backend,
@@ -30,6 +36,9 @@ const report = {
   source,
   queueFence,
   compileTarget,
+  swapPreparation,
+  matchSwapTarget,
+  sharedFallback,
   resources: [],
   backendDetails: null,
   environment:{userAgent:navigator.userAgent,devicePixelRatio:devicePixelRatio||1,visibility:document.visibilityState,visibilityChanges:[]},
@@ -50,14 +59,17 @@ const log = message => {
 };
 const now = () => performance.now();
 const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
-let renderer, camera, scene, preparationScene;
+let renderer, camera, scene, preparationScene,swapScene;
 let busy = false;
 let sequenceRunning = false;
 let resourcesLoaded = false;
 let lastFrame = null;
 let lastTelemetry = 0;
+let frameNumber = 0;
 const assets = new Map();
 const actors = [];
+const fallbackMaterials = new Map();
+const sharedMaterials=new Map();
 const intervalLimit = 5000;
 try { new PerformanceObserver(list => { for (const entry of list.getEntries()) report.longTasks.push({start:entry.startTime,duration:entry.duration}); }).observe({type:'longtask',buffered:true}); } catch {}
 document.addEventListener('visibilitychange',()=>report.environment.visibilityChanges.push({at:performance.now(),state:document.visibilityState}));
@@ -157,11 +169,33 @@ async function spawn(name = elements.model.value) {
   setButtons();
   const strategy = elements.mode.value;
   const begin = now();
-  const row = {name, strategy, requestedAt:begin, actorPreparedAt:null, compileRequestedAt:null, compileReturnedAt:null, compileResolvedAt:null, addedAt:null, firstDrawAt:null, drewBeforeReady:false, msUntilAdded:null, msUntilFirstDraw:null, success:false};
+  const row = {name, strategy, requestedAt:begin, actorPreparedAt:null, compileRequestedAt:null, compileReturnedAt:null, compileResolvedAt:null, addedAt:null, firstDrawAt:null, fallbackFirstDrawAt:null, upgradeRequestedAt:null, upgradedAt:null, finalFirstDrawAt:null, fallbackDrawsWhilePending:0, fallbackFramesWhilePending:0, drewBeforeReady:false, msUntilAdded:null, msUntilFirstDraw:null, changedMaterials:0, sharedMeshes:0, totalMeshes:0, success:false};
   try {
     const actor = makeActor(name);
     row.actorPreparedAt=now();
-    actor.root.traverse(object=>{if(!object.isMesh)return;const previous=object.onBeforeRender;object.onBeforeRender=function(renderer,drawScene,...rest){previous.call(this,renderer,drawScene,...rest);if(drawScene!==scene)return;if(row.firstDrawAt===null){row.firstDrawAt=now();row.msUntilFirstDraw=row.firstDrawAt-begin;}if(strategy==='async'&&row.compileResolvedAt===null)row.drewBeforeReady=true;};});
+    const replacing=strategy==='swap'||strategy==='swap-direct',materials=[],changed=new Set();let resolveFallback,preparing=false;
+    const fallbackDrawn=new Promise(resolve=>resolveFallback=resolve);
+    actor.root.traverse(object=>{if(!object.isMesh)return;row.totalMeshes++;const original=object.material;
+      if(replacing){const source=Array.isArray(original)?original:[original];if(sharedFallback&&!Array.isArray(original)&&original.type==='MeshStandardMaterial'){const key=[original.side,original.vertexColors,!!original.map].join(':');let shared=sharedMaterials.get(key);if(!shared){const candidate=createSharedCharacterFallback(original);if(candidate.supports(object,original)){shared=candidate;sharedMaterials.set(key,shared);}else candidate.dispose();}if(shared?.bind(object,original)){object.material=shared.material;row.sharedMeshes++;}}if(object.material===original){const old=source.map(material=>{let fallback=fallbackMaterials.get(material);if(!fallback){fallback=material.clone();fallback.normalMap=null;fallbackMaterials.set(material,fallback);}return fallback;});object.material=Array.isArray(original)?old:old[0];}for(const material of source)if(material.normalMap)changed.add(material);materials.push({object,original,fallback:object.material});}
+      const previous=object.onBeforeRender;object.onBeforeRender=function(renderer,drawScene,...rest){previous.call(this,renderer,drawScene,...rest);if(drawScene!==scene||preparing)return;const at=now();if(row.firstDrawAt===null){row.firstDrawAt=at;row.msUntilFirstDraw=at-begin;}if(replacing){if(row.upgradeRequestedAt===null){if(row.fallbackFirstDrawAt===null){row.fallbackFirstDrawAt=at;resolveFallback();}}else if(row.upgradedAt===null){row.fallbackDrawsWhilePending++;if(row.lastPendingFrame!==frameNumber){row.lastPendingFrame=frameNumber;row.fallbackFramesWhilePending++;}const finalMaterials=Array.isArray(original)?original:[original];if(strategy==='swap'&&row.compileResolvedAt===null&&finalMaterials.includes(rest[2]))row.drewBeforeReady=true;}else row.finalFirstDrawAt??=at;}else if(strategy==='async'&&row.compileResolvedAt===null)row.drewBeforeReady=true;};});
+    row.changedMaterials=changed.size;
+    if(replacing){
+      scene.add(actor.root);actors.push(actor);row.addedAt=now();row.msUntilAdded=row.addedAt-begin;
+      // The existing look is actually drawn before requesting its replacement.
+      await Promise.race([fallbackDrawn,pause(10000).then(()=>{throw Error('El material anterior no llegó a dibujarse');})]);await pause(250);row.upgradeRequestedAt=now();
+      if(strategy==='swap'){
+        for(const item of materials)item.object.material=item.original;
+        let pending,temporary=null;
+        try{
+          try{if(swapPreparation==='clone'){temporary=cloneSkeleton(actor.root);temporary.traverse(object=>{if(object.isMesh)object.frustumCulled=false;});swapScene.add(temporary);temporary.updateMatrixWorld(true);}const previousTarget=renderer.getRenderTarget(),restore=[];try{if(swapPreparation==='scope'){const selected=new Set();actor.root.traverse(object=>selected.add(object));scene.traverse(object=>{if(!(object.isMesh||object.isLine||object.isPoints))return;if(selected.has(object)){const previous=object.frustumCulled;object.frustumCulled=false;restore.push(()=>object.frustumCulled=previous);}else{const previous=object.visible;object.visible=false;restore.push(()=>object.visible=previous);}});}if(matchSwapTarget){if(backend!=='webgpu'||typeof renderer._getFrameBufferTarget!=='function')throw Error('Target matching requires the experimental WebGPU renderer');const target=renderer._getFrameBufferTarget();if(!target)throw Error('No intermediate framebuffer target');renderer.setRenderTarget(target);}row.compileRequestedAt=now();preparing=true;try{pending=renderer.compileAsync(swapPreparation==='scope'?scene:temporary?swapScene:actor.root,camera,scene);}finally{preparing=false;}row.compileReturnedAt=now();}finally{if(matchSwapTarget)renderer.setRenderTarget(previousTarget);for(const reset of restore)reset();}}finally{for(const item of materials)item.object.material=item.fallback;}
+          await pending;row.compileResolvedAt=now();
+        }finally{if(temporary){swapScene.remove(temporary);const skeletons=new Set();temporary.traverse(object=>{if(object.isSkinnedMesh)skeletons.add(object.skeleton);});for(const skeleton of skeletons)skeleton.dispose();}}
+      }
+      for(const item of materials)item.object.material=item.original;
+      row.upgradedAt=now();row.success=true;
+      log(name+': '+strategy+'; material sustituido tras '+(row.upgradedAt-row.upgradeRequestedAt).toFixed(1)+' ms');
+      return;
+    }
     if (strategy === 'async') {
       // The model stays in a separate preparation scene until compileAsync resolves.
       // Matching lights minimize program-variant differences after adoption.
@@ -236,7 +270,7 @@ function clearActors() {
   for (const actor of actors) {
     actor.mixer?.stopAllAction();
     scene.remove(actor.root);
-    const skeletons=new Set();actor.root.traverse(object=>{if(object.isSkinnedMesh)skeletons.add(object.skeleton);});
+    const skeletons=new Set();actor.root.traverse(object=>{if(object.isSkinnedMesh)skeletons.add(object.skeleton);for(const shared of sharedMaterials.values())shared.release(object);});
     for(const skeleton of skeletons)skeleton.dispose();
   }
   actors.length = 0;
@@ -306,6 +340,7 @@ async function main() {
   scene = new THREE.Scene();
   scene.background = new THREE.Color('#8097a4');
   preparationScene = new THREE.Scene();
+  swapScene = new THREE.Scene();
   addLights(scene);
   if(compileTarget==='separate')addLights(preparationScene);
   camera = new THREE.PerspectiveCamera(46, 960/540, 0.1, 200);
@@ -322,6 +357,7 @@ async function main() {
   marker.position.set(0,1.4,0);marker.castShadow=true;scene.add(marker);
   const clock = new THREE.Clock();
   renderer.setAnimationLoop(t => {
+    frameNumber++;
     if (lastFrame != null) {
       const dt = t - lastFrame;
       if (dt > 0) {

@@ -37,6 +37,10 @@
     <a class="mode" id="target-live" href="?target=live">Compilar con luces de escena real</a>
     <a class="mode" id="target-separate" href="?target=separate">Luces equivalentes separadas</a>
   </nav>
+  <nav class="actions" aria-label="Material temporal">
+    <a class="mode" id="fallback-faithful" href="?sharedFallback=0">Material anterior</a>
+    <a class="mode" id="fallback-shared" href="?sharedFallback=1">Material compartido experimental (WebGPU)</a>
+  </nav>
   <div class="grid">
     <section class="card">
       <canvas id="viewport" width="960" height="540"></canvas>
@@ -69,6 +73,8 @@
       <select id="mode">
         <option value="async">Compilar bajo demanda; mostrar al estar listo</option>
         <option value="direct">Mostrar inmediatamente (control)</option>
+        <option value="swap">Mantener material anterior y cambiar al estar listo</option>
+        <option value="swap-direct">Cambiar material anterior inmediatamente (control)</option>
       </select>
       <h2>Telemetría</h2>
       <pre class="metrics" id="metrics">Sin muestras.</pre>
