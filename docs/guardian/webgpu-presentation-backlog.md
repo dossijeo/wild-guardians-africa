@@ -31,3 +31,7 @@ Run `node tools/experiments/audit_webgpu_presentation_timing.mjs` with Vite on p
 | No reuse A2 | 17.56 / 29.4 | 51.36 / 74.4 |
 
 All runs used the real confirmed mangrove scene on WebGPU, with 16 animals and a confirmed Shield. The figures are Worker wall-clock timings and include initial loading, not frame rates or a long-session performance test; the test does not establish complete visual parity. `node --test tests/webgpu-actor-terrain.test.js tests/webgpu-worker-roster.test.js` verifies reuse, movement, replacement, eviction and roster behavior. The QA audit also retains the separate settlement reuse control.
+
+## Animals
+
+The same actor-local sampler now avoids a terrain raycast for an animal only when its X/Z position and resident chunk mesh are unchanged. Moving, loading or replacing the chunk causes the original exact raycast. Confirmed physical poses continue on their existing path. In short A/B/B/A runs with 16 animals and confirmed Shield, animal sync mean/p95 was 8.48/15.4 and 7.36/10.3 ms without reuse, versus 0.66/1.2 and 0.74/2.8 ms with reuse. Full receipt timings were affected by loading and VFX and did not establish a global improvement. This is not an FPS or long-session measurement.

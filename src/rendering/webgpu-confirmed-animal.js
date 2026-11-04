@@ -11,6 +11,7 @@ import {BakedBeastFall} from './baked-beast-fall.js';
 import {RAGDOLL_LINKS} from '../simulation/beast-ragdoll.js';
 import {guardianImpactTime} from '../simulation/guardian-timing.js';
 import {createAnatomicSupport} from './webgpu-anatomic-support.js';
+import {createActorTerrainSampler} from './webgpu-actor-terrain.js';
 
 // Experimental single confirmed animal, owned entirely by the render Worker.
 // This does not implement combat physics, expressions, or production grounding.
@@ -19,7 +20,7 @@ export async function createWebGpuConfirmedAnimal({scene,residency,state,actorId
  const animal=state.raid?.animals.find(item=>item.id===actorId),species=animal?.species,spec=animal&&ANIMAL_ACTIONS.animals[species];if(!spec)throw Error('Confirmed animal unavailable');
  if(signal?.aborted)throw new DOMException('Character load cancelled','AbortError');const manager=new THREE.LoadingManager(),abort=()=>manager.abort();signal?.addEventListener('abort',abort,{once:true});let gltf,progressive,shared;
  try{if(assetBank)shared=await assetBank.acquire(species);else if(packageUrl){progressive=await openProgressiveWebGpuCharacter({renderer,packageUrl,species,signal,onTextured,onError:onTextureError,configureMaterial});gltf=progressive.preview;}else gltf=await new GLTFLoader(manager).setMeshoptDecoder(MeshoptDecoder).loadAsync(spec.url);}finally{signal?.removeEventListener('abort',abort);}
- const model=shared?.model??gltf.scene,clips=shared?.clips??prepareAnimalClips(gltf.animations),mixer=new THREE.AnimationMixer(model),root=new THREE.Group(),ray=new THREE.Raycaster(),resources=new Set(),impactData={model};let action=null,key=null,closed=false,wasPhysical=false,provisionalFall=null,fallToken=null,reconcile=null;
+ const model=shared?.model??gltf.scene,clips=shared?.clips??prepareAnimalClips(gltf.animations),mixer=new THREE.AnimationMixer(model),root=new THREE.Group(),sampleTerrain=createActorTerrainSampler(residency),resources=new Set(),impactData={model};let action=null,key=null,closed=false,wasPhysical=false,provisionalFall=null,fallToken=null,reconcile=null;
  if(!progressive&&!shared)model.traverse(object=>{if(!object.isMesh)return;resources.add(object.geometry);for(const material of Array.isArray(object.material)?object.material:[object.material]){resources.add(material);for(const value of Object.values(material))if(value?.isTexture)resources.add(value);}});
  if(signal?.aborted){shared?.release();progressive?.dispose();for(const resource of resources)resource.dispose();throw new DOMException('Character load cancelled','AbortError');}
  model.scale.setScalar(spec.presentation.scale);root.add(model);scene.add(root);const rest=[],visualBoneNames=new Set();model.traverse(node=>{if(node===model||node.isBone)rest.push({node,position:node.position.clone(),quaternion:node.quaternion.clone(),scale:node.scale.clone()});if(node.isBone)visualBoneNames.add(node.name);});
@@ -39,8 +40,7 @@ export async function createWebGpuConfirmedAnimal({scene,residency,state,actorId
   root.visible=true;if(physical){provisionalFall=null;fallToken=null;baked?.disable();restoreAnimalImpact(impactData);onPhysical();if(physical.actorId!==actorId)throw Error('Confirmed animal pose belongs to another actor');applyConfirmedAnimalPose(root,model,visualPose(physical));if(reconcile){if(!reconcile.anchored){const item=reconcile.values[0],inverseRoot=root.getWorldQuaternion(new THREE.Quaternion()).invert();item.position.copy(root.worldToLocal(reconcile.worldPosition));item.quaternion.copy(inverseRoot.multiply(reconcile.worldQuaternion));reconcile.anchored=true;}const t=THREE.MathUtils.clamp((clock()-reconcile.at)/150,0,1),blend=t*t*(3-2*t);for(const item of reconcile.values){item.node.position.lerpVectors(item.position,item.node.position,blend);item.node.quaternion.slerp(item.quaternion,1-blend);}root.updateMatrixWorld(true);if(t>=1)reconcile=null;}if(experimentalPoseReconciliation){if(anatomic)anatomic.apply();else supportPhysical();}wasPhysical=true;return;}
   reconcile=null;
   if(wasPhysical){action?.stop();key=null;root.quaternion.identity();root.scale.set(1,1,1);for(const item of rest){item.node.position.copy(item.position);item.node.quaternion.copy(item.quaternion);item.node.scale.copy(item.scale);}wasPhysical=false;}
-  const mesh=residency.get(Math.floor((entity.x+24)/48),Math.floor((entity.z+24)/48));let height=0;
-  if(mesh){mesh.updateWorldMatrix(true,false);ray.set(new THREE.Vector3(entity.x,1000,entity.z),new THREE.Vector3(0,-1,0));height=ray.intersectObject(mesh,false)[0]?.point.y??0;}
+  const height=sampleTerrain(entity.x,entity.z);
   root.position.set(entity.x,height,entity.z);root.rotation.y=entity.downHeading!==undefined&&(entity.fallRemaining>0||entity.recovery)?entity.downHeading:entity.path?.length?Math.atan2(entity.path[0].x-entity.x,entity.path[0].z-entity.z):entity.heading??0;
   const pose=animalPose(entity,state.elapsed),clip=clips.find(item=>item.name===pose.name);if(!clip)throw Error('Missing confirmed animal clip '+pose.name);
   const provisional=getProvisional(entity,state.elapsed);if(!provisional){provisionalFall=null;fallToken=null;}restoreAnimalImpact(impactData);
