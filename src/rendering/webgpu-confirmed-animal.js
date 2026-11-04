@@ -6,11 +6,14 @@ import {animalPose,prepareAnimalClips} from './animal-actions.js';
 
 // Experimental single confirmed animal, owned entirely by the render Worker.
 // This does not implement combat physics, expressions, or production grounding.
-export async function createWebGpuConfirmedAnimal({scene,residency,state,actorId}={}){
- if(!scene?.isScene||!residency||!state||typeof actorId!=='string'||!actorId)throw TypeError('Invalid confirmed animal');
+export async function createWebGpuConfirmedAnimal({scene,residency,state,actorId,signal}={}){
+ if(!scene?.isScene||!residency||!state||typeof actorId!=='string'||!actorId||signal&&typeof signal.addEventListener!=='function')throw TypeError('Invalid confirmed animal');
  const animal=state.raid?.animals.find(item=>item.id===actorId),spec=animal&&ANIMAL_ACTIONS.animals[animal.species];if(!spec)throw Error('Confirmed animal unavailable');
- const gltf=await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(spec.url),model=gltf.scene,clips=prepareAnimalClips(gltf.animations),mixer=new THREE.AnimationMixer(model),root=new THREE.Group(),ray=new THREE.Raycaster(),resources=new Set();let action=null,key=null,closed=false;
+ if(signal?.aborted)throw new DOMException('Character load cancelled','AbortError');const manager=new THREE.LoadingManager(),abort=()=>manager.abort();signal?.addEventListener('abort',abort,{once:true});let gltf;
+ try{gltf=await new GLTFLoader(manager).setMeshoptDecoder(MeshoptDecoder).loadAsync(spec.url);}finally{signal?.removeEventListener('abort',abort);}
+ const model=gltf.scene,clips=prepareAnimalClips(gltf.animations),mixer=new THREE.AnimationMixer(model),root=new THREE.Group(),ray=new THREE.Raycaster(),resources=new Set();let action=null,key=null,closed=false;
  model.traverse(object=>{if(!object.isMesh)return;resources.add(object.geometry);for(const material of Array.isArray(object.material)?object.material:[object.material]){resources.add(material);for(const value of Object.values(material))if(value?.isTexture)resources.add(value);}});
+ if(signal?.aborted){for(const resource of resources)resource.dispose();throw new DOMException('Character load cancelled','AbortError');}
  model.scale.setScalar(spec.presentation.scale);root.add(model);scene.add(root);
  function update(){
   if(closed)return;const entity=state.raid?.animals.find(item=>item.id===actorId);if(!entity||entity.status==='gone'){root.visible=false;return;}if(entity.species!==animal.species)throw Error('Confirmed animal species changed');
