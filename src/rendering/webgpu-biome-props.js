@@ -5,7 +5,8 @@ import {nearTreeGeometry,removeReviewedTreeTriangles} from './near-tree-textures
 
 // Worker-owned visual instances from the same confirmed Wild Engine chunk
 // payload used by the game. Navigation and suppression remain authoritative.
-// Only tree, shrub and plant slots are migrated; materials are provisional.
+// Slots 0-18 cover vegetation and solid biome props; slot 19 needs the
+// separate native fluid/clipping presentation. Materials remain provisional.
 export function createWebGpuBiomeProps({scene,state,onError=()=>{}}={}){
  if(!scene?.isScene||!state||!BIOME_IDS[state.biome]||typeof onError!=='function')throw TypeError('Invalid biome props');
  const controller=new AbortController(),chunks=new Map(),versions=new Map(),resources=new Set(),bitmaps=new Set();let closed=false,prototypes=null,suppressionKey='',failure=null;
@@ -16,7 +17,7 @@ export function createWebGpuBiomeProps({scene,state,onError=()=>{}}={}){
  function clear(record){for(const mesh of record.meshes){scene.remove(mesh);mesh.dispose();}record.meshes=[];}
  function rebuild(record,suppressed){
   if(!prototypes||closed)return;const next=[],dummy=new THREE.Object3D();
-  try{for(let slot=0;slot<10;slot++){const proto=prototypes[slot],items=record.instances[slot].filter(p=>!suppressed.has(p.id));if(!proto||!items.length)continue;const mesh=new THREE.InstancedMesh(proto.geometry,proto.material,items.length);mesh.position.set(record.cx*48,0,record.cz*48);for(let i=0;i<items.length;i++){const p=items[i];dummy.position.set(p.x-record.cx*48,p.y,p.z-record.cz*48);dummy.rotation.y=p.yaw;dummy.scale.set(p.sx,p.sy,p.sz);dummy.updateMatrix();mesh.setMatrixAt(i,dummy.matrix);}mesh.instanceMatrix.needsUpdate=true;mesh.receiveShadow=true;mesh.castShadow=true;mesh.userData.nativePropSlot=slot;mesh.userData.spatialChunk=`${record.cx},${record.cz}`;scene.add(mesh);next.push(mesh);}}
+  try{for(let slot=0;slot<19;slot++){const proto=prototypes[slot],items=record.instances[slot].filter(p=>!suppressed.has(p.id));if(!proto||!items.length)continue;const mesh=new THREE.InstancedMesh(proto.geometry,proto.material,items.length);mesh.position.set(record.cx*48,0,record.cz*48);for(let i=0;i<items.length;i++){const p=items[i];dummy.position.set(p.x-record.cx*48,p.y,p.z-record.cz*48);dummy.rotation.y=p.yaw;dummy.scale.set(p.sx,p.sy,p.sz);dummy.updateMatrix();mesh.setMatrixAt(i,dummy.matrix);}mesh.instanceMatrix.needsUpdate=true;mesh.receiveShadow=true;mesh.castShadow=true;mesh.userData.nativePropSlot=slot;mesh.userData.spatialChunk=`${record.cx},${record.cz}`;scene.add(mesh);next.push(mesh);}}
   catch(error){for(const mesh of next){scene.remove(mesh);mesh.dispose();}throw error;}clear(record);record.meshes=next;
  }
  function suppressed(){return new Set(state.suppressed??[]);}
@@ -26,7 +27,7 @@ export function createWebGpuBiomeProps({scene,state,onError=()=>{}}={}){
   const cache=new Map(),loadTexture=(url,color)=>{const key=url+':'+color;if(!cache.has(key))cache.set(key,image(url,color));return cache.get(key);};
   async function textureSet(entries){return Object.fromEntries(await Promise.all(entries.map(async t=>[t.role,await loadTexture(t.base64.url,t.role==='baseColor')])));}
   const [base,sets]=await Promise.all([textureSet(pack.textures),Promise.all((pack.textureSets??[]).map(textureSet))]);ensure();const types={'<f4':Float32Array,'<u2':Uint16Array,'<u4':Uint32Array},attribute=desc=>new types[desc.type](buffer,desc.offset,desc.count),next=[];
-  for(let slot=0;slot<10;slot++){
+  for(let slot=0;slot<19;slot++){
    const asset=pack.assets[slot],lod=asset.lods[0],geometry=own(new THREE.BufferGeometry());geometry.setAttribute('position',new THREE.BufferAttribute(attribute(lod.position),3));geometry.setAttribute('normal',new THREE.BufferAttribute(attribute(lod.normal),3));geometry.setAttribute('uv',new THREE.BufferAttribute(attribute(lod.uv),2));geometry.setIndex(new THREE.BufferAttribute(attribute(lod.index),1));geometry.computeBoundingBox();geometry.computeBoundingSphere();
    const maps={...(asset.textureSet===undefined?base:sets[asset.textureSet])},factor=pack.material.baseColorFactor??[1,1,1,1];let selected=geometry;
    if(asset.nearTextures){const [uv,entries]=await Promise.all([(await load(asset.nearTextures.cornerUV)).arrayBuffer(),Promise.all(Object.entries(asset.nearTextures.textures).map(async([role,url])=>[role,await loadTexture(url,role==='baseColor')]))]);ensure();selected=own(nearTreeGeometry(geometry,new Float32Array(uv)));for(const [role,near] of entries){const copy=own(near.clone());copy.channel=1;copy.needsUpdate=true;maps[role]=copy;}}
