@@ -47,15 +47,17 @@ export async function openCharacterPreviewStream(packageUrl, { features = [], si
     const jsonPath = `${variant.name}/materials.gltf`, mappingPath = `${variant.name}/mapping.json`;
     let closed = false; const validMetadata = new WeakSet();
     const assertOpen = () => { if (closed || controller.signal.aborted) throw abortError(); };
-    async function load(file) {
+    async function load(file, loadSignal = controller.signal) {
       assertOpen();
+      if (loadSignal.aborted) throw abortError();
       if (file.bytes > FILE_LIMIT) throw Error(`Character file exceeds limit: ${file.path}`);
       const target = new URL(file.path, url);
       if (target.origin !== url.origin) throw Error('Character package escaped its origin');
-      const data = await readBounded(await fetchImpl(target.href, { signal: controller.signal, redirect: 'error' }), file.bytes, controller.signal);
+      const data = await readBounded(await fetchImpl(target.href, { signal: loadSignal, redirect: 'error' }), file.bytes, loadSignal);
       if (data.length !== file.bytes) throw Error(`Character file size mismatch: ${file.path}`);
       const digest = Array.from(new Uint8Array(await subtle.digest('SHA-256', data))).map(byte => byte.toString(16).padStart(2, '0')).join('');
-      assertOpen(); if (digest !== file.sha256) throw Error(`Character file hash mismatch: ${file.path}`);
+      assertOpen(); if (loadSignal.aborted) throw abortError();
+      if (digest !== file.sha256) throw Error(`Character file hash mismatch: ${file.path}`);
       return data;
     }
     return {
@@ -79,8 +81,14 @@ export async function openCharacterPreviewStream(packageUrl, { features = [], si
       async loadTextures(metadata) {
         assertOpen();
         if (!metadata || !validMetadata.has(metadata)) throw Error('Invalid character texture request');
-        const entries = await Promise.all(metadata.texturePaths.map(async path => [path, await load(files.get(path))]));
-        assertOpen(); return new Map(entries);
+        const batch = new AbortController(), cancelBatch = () => batch.abort();
+        controller.signal.addEventListener('abort', cancelBatch, { once: true });
+        try {
+          const entries = await Promise.all(metadata.texturePaths.map(async path => [path, await load(files.get(path), batch.signal)]));
+          assertOpen(); return new Map(entries);
+        } catch (error) {
+          batch.abort(); throw error;
+        } finally { controller.signal.removeEventListener('abort', cancelBatch); }
       },
       close() { if (closed) return; closed = true; cancel(); signal?.removeEventListener('abort', cancel); },
     };

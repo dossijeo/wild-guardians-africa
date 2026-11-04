@@ -62,3 +62,23 @@ test('rejects an image outside the declared package', async () => {
   x.files.set('package.json', Buffer.from(JSON.stringify(x.manifest)));
   const stream = await open(x); await assert.rejects(stream.loadMetadata(), /Invalid character texture URI/); stream.close();
 });
+
+test('a failed texture cancels its concurrent downloads without closing the stream', async () => {
+  const x = fixture(), name = 'webp/materials.gltf';
+  const material = JSON.parse(x.files.get(name)); material.images.push({ uri: 'pending.webp' });
+  const bytes = Buffer.from(JSON.stringify(material)); x.files.set(name, bytes);
+  Object.assign(x.manifest.variants.webp.files.find(file => file.path === name), { bytes: bytes.length, sha256: hash(bytes) });
+  const pendingBytes = Buffer.from('pending'); x.files.set('webp/pending.webp', pendingBytes);
+  x.manifest.variants.webp.files.push({ path: 'webp/pending.webp', bytes: pendingBytes.length, sha256: hash(pendingBytes) });
+  x.files.set('package.json', Buffer.from(JSON.stringify(x.manifest)));
+  const originalFetch = x.fetchImpl; let cancelled = false;
+  x.fetchImpl = (url, options) => new URL(url).pathname.endsWith('pending.webp')
+    ? new Promise((resolve, reject) => options.signal.addEventListener('abort', () => { cancelled = true; reject(new DOMException('aborted', 'AbortError')); }, { once: true }))
+    : originalFetch(url, options);
+  const stream = await open(x), metadata = await stream.loadMetadata();
+  x.files.set('webp/tex.webp', Buffer.from('corrupt'));
+  await assert.rejects(stream.loadTextures(metadata), /hash mismatch/);
+  assert.equal(cancelled, true);
+  assert.equal(Buffer.from(await stream.loadPreview()).toString(), 'geometry');
+  stream.close();
+});
