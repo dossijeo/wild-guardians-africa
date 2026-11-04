@@ -173,7 +173,7 @@ export class WorldScene {
     const tap=new PreciseTap();
     canvas.addEventListener('pointerdown',e=>tap.down(e),listenerOptions);
     canvas.addEventListener('pointermove',e=>tap.move(e),listenerOptions);
-    canvas.addEventListener('pointerup',e=>{const gesture=tap.up(e);if(this.controls.enabled&&this.state&&gesture)onPick({...this.pick(e),...gesture});},listenerOptions);
+    canvas.addEventListener('pointerup',e=>{const gesture=tap.up(e);if(this.controls.enabled&&this.state&&gesture&&!this.onDiscretePick?.(e,gesture))onPick({...this.pick(e),...gesture});},listenerOptions);
     canvas.addEventListener('pointercancel',e=>tap.up(e,true),listenerOptions);
     this.resizeObserver=new ResizeObserver(()=>this.resize());this.resizeObserver.observe(canvas);this.quality='media';this.resize();
     canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();this.onContextLost?.();},listenerOptions);canvas.addEventListener('webglcontextrestored',()=>{this.restoreCachedGraphics();this.onContextRestored?.();},listenerOptions);
