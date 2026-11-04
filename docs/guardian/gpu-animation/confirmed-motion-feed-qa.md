@@ -100,3 +100,43 @@ Relevant existing regression entry points include
 `tests/confirmed-gpu-motion.test.js`. They cover parts of native route
 invalidation, observation, publication and GPU helper behavior; none proves a
 complete collision-safe autonomous presentation.
+
+## Binding shared materials and baked skinning
+
+The confirmed WebGPU animal roster still applies each received state directly:
+`webgpu-confirmed-animal.js` sets the root position from the latest actor and
+either samples the mixer or sets the phase of the experimental baked hyena.
+The world stream immediately reconciles the latest snapshot, while other
+presentation components use `state.elapsed` or a real-time clock. A historical
+trace is therefore not a safe time base for just one actor in this scene.
+Neither the native route validity nor the peer samples establish the missing
+world-wide safe interval.
+
+The existing GPU helper cannot be attached unchanged to the shared animal
+materials. `createConfirmedGpuMotion` owns a texture and uniforms per actor;
+its `bind` rejects a material with an existing `positionNode` and assigns a
+new one. The baked walking path already supplies a `positionNode` for skinning,
+and `webgpu-animal-bank.js` shares its source materials between actors of a
+species. Installing an actor-specific node on those materials would either
+move every actor using that material or require private materials and their
+associated resource and pipeline validation.
+
+Three.js r180's `reference` node resolves an unspecified object from
+`state.object` and updates at `NodeUpdateType.OBJECT`. This provides a possible
+way to give each drawn mesh a stable index into a shared, persistent trajectory
+and animation buffer while retaining one material graph. A composed position
+node would apply the authoritative translation to the **result** of the baked
+skinning node, while preserving its normal and shadow deformation. This is an
+implementation option, not evidence that the current pipelines, bindings,
+mesh transforms or performance meet that contract; it needs WebGPU draw tests
+with multiple actors, shared materials, shadows, animation, cleanup and buffer
+updates before use.
+
+The first gameplay integration still requires one bounded presentation window
+for the **whole** visible world: an initial confirmed state, complete timed
+body and physical-pose information or an explicit stop when it is missing,
+ordered events, and the terrain/structural revisions valid throughout the
+interval. The display clock, animations, effects and geometry must all follow
+that same interval and stop at its confirmed end. Retain a latest-confirmed
+fallback when any dependency is unavailable. No trajectory has been bound to a
+live actor by this review, and no new future-safety guarantee is implied.
