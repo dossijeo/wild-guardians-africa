@@ -1,0 +1,12 @@
+import {Box3,Raycaster,Vector2,Vector3} from 'three';
+
+// Runs only on demand in the presentation Worker, against its confirmed state
+// and resident scene. Simulation validates every action using the returned ID.
+export function createWebGpuPicker({scene,camera,state,animals,cropBounds,sequence=()=>-1}={}){
+ if(!scene?.isScene||!camera?.isCamera||!state||typeof animals?.get!=='function'||typeof cropBounds!=='function'||typeof sequence!=='function')throw TypeError('Invalid WebGPU picker');
+ const ray=new Raycaster(),cursor=new Vector2(),box=new Box3(),point=new Vector3();
+ return {pick({x,y,terrainOnly=false}={}){if(!Number.isFinite(x)||!Number.isFinite(y)||Math.abs(x)>1||Math.abs(y)>1||typeof terrainOnly!=='boolean')throw TypeError('Invalid picking coordinate');scene.updateMatrixWorld(true);camera.updateMatrixWorld(true);ray.setFromCamera(cursor.set(x,y),camera);const terrain=ray.intersectObjects(scene.children.filter(o=>o.userData.ground),false)[0],ground=terrain?{x:terrain.point.x,z:terrain.point.z}:null;if(terrainOnly)return {entityId:null,hitPoint:null,point:ground,sequence:sequence()};
+  let entityId=null,hitPoint=null,closest=Infinity;for(const animal of state.raid?.animals??[]){if(animal.status==='gone')continue;const root=animals.get(animal.id)?.root;if(!root?.visible)continue;const hit=ray.intersectObject(root,true)[0];if(hit&&hit.distance<closest){closest=hit.distance;entityId=animal.id;hitPoint={x:hit.point.x,y:hit.point.y,z:hit.point.z};}}
+  for(const candidate of cropBounds()){if(!candidate?.id||![candidate.x,candidate.y,candidate.z,candidate.radius,candidate.height].every(Number.isFinite)||candidate.radius<=0||candidate.height<=0)throw TypeError('Invalid confirmed crop bounds');box.min.set(candidate.x-candidate.radius,candidate.y,candidate.z-candidate.radius);box.max.set(candidate.x+candidate.radius,candidate.y+candidate.height,candidate.z+candidate.radius);if(ray.ray.intersectBox(box,point)){const distance=point.distanceTo(ray.ray.origin);if(distance<closest){closest=distance;entityId=candidate.id;hitPoint={x:point.x,y:point.y,z:point.z};}}}
+  return {entityId,hitPoint,point:ground,sequence:sequence()};}};
+}

@@ -1,0 +1,7 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import * as THREE from 'three';
+import {createWebGpuPicker} from '../src/rendering/webgpu-picker.js';
+test('picks confirmed animal, nearest crop, and terrain without the old scene',()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(45,1,.1,100);camera.position.set(0,5,10);camera.lookAt(0,0,0);camera.updateProjectionMatrix();const floor=new THREE.Mesh(new THREE.PlaneGeometry(20,20),new THREE.MeshBasicMaterial({side:THREE.DoubleSide}));floor.rotation.x=-Math.PI/2;floor.userData.ground=true;scene.add(floor);const root=new THREE.Group(),mesh=new THREE.Mesh(new THREE.BoxGeometry(1,1,1),new THREE.MeshBasicMaterial());mesh.position.set(0,.5,0);root.add(mesh);scene.add(root);const state={raid:{animals:[{id:'animal',status:'walking'}]}},picker=createWebGpuPicker({scene,camera,state,animals:{get:()=>({root})},cropBounds:()=>[],sequence:()=>42});const animal=picker.pick({x:0,y:0});assert.equal(animal.entityId,'animal');assert.equal(animal.sequence,42);assert.ok(animal.point);state.raid.animals[0].status='gone';const empty=picker.pick({x:0,y:0});assert.equal(empty.entityId,null);assert.ok(empty.point);const cropPicker=createWebGpuPicker({scene,camera,state,animals:{get:()=>null},cropBounds:()=>[{id:'crop',x:0,y:0,z:0,radius:.45,height:1}],sequence:()=>43});assert.equal(cropPicker.pick({x:0,y:0}).entityId,'crop');assert.equal(cropPicker.pick({x:0,y:0,terrainOnly:true}).entityId,null);assert.throws(()=>cropPicker.pick({x:2,y:0}),/coordinate/);
+});
