@@ -14,8 +14,8 @@ const observations = [];
 try {
   const webgpu = process.env.WG_WEBGPU === '1';
   const modes = process.env.WG_MODES ? process.env.WG_MODES.split(',') : webgpu ? (process.env.WG_MATCH_TARGET === '1' ? ['async', 'target', 'target', 'async'] : ['direct', 'async', 'async', 'direct']) : id ? ['control', 'textured', 'textured', 'control'] : ['control', 'hydrate', 'hydrate', 'control'];
-  const runs = process.env.WG_VARIANTS ? process.env.WG_VARIANTS.split(',').map(variant => ({ mode: 'stable', variant })) : modes.map(mode => ({ mode, variant: null }));
-  for (const { mode, variant } of runs) {
+  const runs = process.env.WG_COUNTS ? process.env.WG_COUNTS.split(',').map(count => ({ mode: 'stable', variant: null, count: Number(count) })) : process.env.WG_VARIANTS ? process.env.WG_VARIANTS.split(',').map(variant => ({ mode: 'stable', variant })) : modes.map(mode => ({ mode, variant: null }));
+  for (const { mode, variant, count = Number(process.env.WG_ACTOR_COUNT ?? 1) } of runs) {
     if (variant && !['webp', 'bc7'].includes(variant)) throw Error(`Invalid variant ${variant}`);
     const materialDirectory = variant ? join(directory, variant) : directory;
     const nativeBc7 = variant ? variant === 'bc7' : process.env.WG_NATIVE_BC7 === '1';
@@ -34,10 +34,11 @@ try {
     await page.goto(`${process.env.WG_BASE_URL ?? 'http://127.0.0.1:5175'}/hydration-page`);
     const result = webgpu
       ? process.env.WG_RENDER_WORKER === '1'
-        ? await page.evaluate(async ({ mode, nativeBc7 }) => (await import('/tests/browser/vertex-webgpu-worker-host.js')).runWorkerSwap(mode, nativeBc7), { mode, nativeBc7 })
-        : await page.evaluate(async ({ mode, captureShaders, nativeBc7 }) => (await import('/tests/browser/vertex-webgpu-swap.js')).runVertexWebGpuSwap({ mode, captureShaders, nativeBc7 }), { mode, captureShaders: process.env.WG_CAPTURE_SHADERS === '1', nativeBc7 })
+        ? await page.evaluate(async ({ mode, nativeBc7, count }) => (await import('/tests/browser/vertex-webgpu-worker-host.js')).runWorkerSwap(mode, nativeBc7, count), { mode, nativeBc7, count })
+        : await page.evaluate(async ({ mode, captureShaders, nativeBc7, count }) => (await import('/tests/browser/vertex-webgpu-swap.js')).runVertexWebGpuSwap({ mode, captureShaders, nativeBc7, count }), { mode, captureShaders: process.env.WG_CAPTURE_SHADERS === '1', nativeBc7, count })
       : await page.evaluate(async ({ mode, sourceUrl }) => (await import('/tests/browser/vertex-hydration-benchmark.js')).runHydrationBenchmark({ mode, sourceUrl }), { mode, sourceUrl });
     if (errors.length) throw Error(JSON.stringify(errors));
+    if (process.env.WG_SCREENSHOT && observations.length === 0) await page.screenshot({ path: process.env.WG_SCREENSHOT });
     observations.push({ ...result, variant }); await context.close();
   }
   let transferProbe;

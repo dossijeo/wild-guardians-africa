@@ -1,13 +1,16 @@
 import * as THREE from 'three';
 import { WebGPURenderer } from 'three/webgpu';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { clone } from 'three/addons/utils/SkeletonUtils.js';
 import { prepareHydration } from './vertex-preview-hydrate.js';
 import { makeStableVertexMaterials } from './vertex-stable-material.js';
 
 // Isolated request-time preparation. The old material remains visible while
 // compileAsync is pending. This does not promise asynchronous texture upload.
-export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders = false, canvas = null, nativeBc7 = false }) {
+export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders = false, canvas = null, nativeBc7 = false, count = 1 }) {
   if (!['async', 'target', 'coverage', 'whole', 'sequential', 'staged', 'stable', 'direct'].includes(mode)) throw Error('Unknown mode');
+  if (!Number.isInteger(count) || count < 1 || count > 16) throw Error('Invalid actor count');
+  if (count > 1 && mode !== 'stable') throw Error('Crowd mode requires shared stable materials');
   const loader = new GLTFLoader(), preview = await loader.loadAsync('/hydration-files/preview.glb');
   const renderer = new WebGPURenderer({ antialias: false, ...(canvas ? { canvas } : {}) }); await renderer.init();
   if (!renderer.backend?.isWebGPUBackend) throw Error('WebGPU backend unavailable');
@@ -60,11 +63,19 @@ export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders =
   const sun = new THREE.DirectionalLight(0xfff0d4, 3); sun.position.set(-6, 12, 9); scene.add(sun);
   const box = new THREE.Box3().setFromObject(preview.scene), center = box.getCenter(new THREE.Vector3()), size = box.getSize(new THREE.Vector3());
   const radius = Math.max(size.x, size.y, size.z, .01), camera = new THREE.PerspectiveCamera(35, 1, radius / 1000, radius * 20);
-  camera.position.copy(center).add(new THREE.Vector3(1.5, 1, 2.5).normalize().multiplyScalar(radius * 2.5)); camera.lookAt(center);
-  const mixer = new THREE.AnimationMixer(preview.scene); if (preview.animations.length) mixer.clipAction(preview.animations[0]).play();
+  const actors = [preview.scene], columns = Math.ceil(Math.sqrt(count)), rows = Math.ceil(count / columns);
+  for (let index = 1; index < count; index++) { const actor = clone(preview.scene); scene.add(actor); actors.push(actor); }
+  for (const [index, actor] of actors.entries()) actor.position.set((index % columns - (columns - 1) / 2) * radius * .75, 0, (Math.floor(index / columns) - (rows - 1) / 2) * radius * .75);
+  const actorMeshes = actors.map(actor => { const meshes = []; actor.traverse(object => { if (object.isMesh) meshes.push(object); }); return meshes; });
+  const sharedMaterials = actorMeshes.every(meshes => meshes.length === actorMeshes[0].length && meshes.every((mesh, index) => mesh.material === actorMeshes[0][index].material));
+  const firstSkeletons = actorMeshes.map(meshes => meshes.find(mesh => mesh.isSkinnedMesh)?.skeleton).filter(Boolean);
+  if (!sharedMaterials || new Set(firstSkeletons).size !== firstSkeletons.length) throw Error('Crowd rig sharing invariant failed');
+  camera.far = radius * Math.max(20, count * 4); camera.updateProjectionMatrix();
+  camera.position.copy(center).add(new THREE.Vector3(1.5, 1, 2.5).normalize().multiplyScalar(radius * (count === 1 ? 2.5 : Math.max(columns, rows) * 2))); camera.lookAt(center);
+  const mixers = actors.map(actor => { const mixer = new THREE.AnimationMixer(actor); if (preview.animations.length) mixer.clipAction(preview.animations[0]).play(); return mixer; });
   const intervals = [], renderCpu = [], events = {}, start = performance.now(), absoluteStart = performance.timeOrigin + performance.now();
   let frame = 0, previous = 0, ready = false, applied = false, failure = null, apply;
-  const provisional = []; preview.scene.traverse(object => { if (object.isMesh) provisional.push({ object, material: object.material }); });
+  const provisional = []; for (const actor of actors) actor.traverse(object => { if (object.isMesh) provisional.push({ object, material: object.material }); });
   events.framesWhileCompiling = 0;
   const errors = []; device.addEventListener('uncapturederror', e => errors.push(e.error.message));
   function request() {
@@ -140,7 +151,7 @@ export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders =
   return await new Promise((resolve, reject) => {
     function tick(now) {
       if (failure || errors.length) return reject(Error(JSON.stringify({ failure, errors })));
-      if (previous) { intervals.push({ frame, ms: now - previous }); mixer.update(Math.min((now - previous) / 1000, .1)); } previous = now;
+      if (previous) { intervals.push({ frame, ms: now - previous }); for (const mixer of mixers) mixer.update(Math.min((now - previous) / 1000, .1)); } previous = now;
       if (frame === 30) request();
       if (events.compileStart !== undefined && events.compileResolved === undefined) {
         if (provisional.some(item => item.object.material !== item.material)) return reject(Error('Provisional material changed while compilation was pending'));
@@ -157,7 +168,7 @@ export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders =
         if (mode === 'stable' && (!imageRequests.length || imageRequests.some(entry => entry.at < events.requestedAt))) return reject(Error('Final image request occurred before the on-demand request, or was not observed'));
         const transcoderRequests = performance.getEntriesByType('resource').filter(entry => /basis_transcoder\.(js|wasm)/.test(entry.name)).map(entry => entry.name);
         if (nativeBc7 && transcoderRequests.length) return reject(Error('Native BC7 unexpectedly loaded a Basis transcoder'));
-        resolve({ mode, backend: 'WebGPU', nativeBc7, transcoderRequests, absoluteStart, adapter: { vendor: info.vendor, architecture: info.architecture, device: info.device, description: info.description }, intervals, renderCpu, events, errors, imageRequests, gpuCalls: gpuCalls.map(call => ({ ...call, at: call.at - start })) });
+        resolve({ mode, count, sharedMaterials, independentSkeletons: new Set(firstSkeletons).size, renderInfo: { ...renderer.info.render }, backend: 'WebGPU', nativeBc7, transcoderRequests, absoluteStart, adapter: { vendor: info.vendor, architecture: info.architecture, device: info.device, description: info.description }, intervals, renderCpu, events, errors, imageRequests, gpuCalls: gpuCalls.map(call => ({ ...call, at: call.at - start })) });
         ktxLoader?.dispose(); renderer.dispose();
       }
     }
