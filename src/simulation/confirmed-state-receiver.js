@@ -23,18 +23,19 @@ function merge(target,source){if(Array.isArray(source))return Array.isArray(targ
 export function createConfirmedStateReceiver(state,session,{onReconciled=null,decodeSnapshot=deserializeConfirmedState,initialSequence=0}={}){
  if(!state||typeof state!=='object'||typeof session!=='string'||!session||!Number.isSafeInteger(state.sequence)||state.sequence<1)throw TypeError('Invalid presentation receiver');
  if(!Number.isSafeInteger(initialSequence)||initialSequence<0||onReconciled!==null&&typeof onReconciled!=='function'||typeof decodeSnapshot!=='function')throw TypeError('Invalid reconciliation callback or decoder');
- let sequence=initialSequence,lastElapsed=state.elapsed,lastEvent=state.sequence-1,fault=false;
- return {
-  acceptUnchanged(message,{firstSequence=message?.sequence}={}){
+ let sequence=initialSequence,lastElapsed=state.elapsed,lastEvent=state.sequence-1,fault=false,pending=null;
+ function prepareUnchanged(message,{firstSequence=message?.sequence}={}){
+   if(pending)throw Error('Confirmed publication already prepared');
    if(fault)return {accepted:false,reason:'fault'};
    if(message?.session!==session)return {accepted:false,reason:'session'};
    if(!Number.isSafeInteger(message.sequence)||message.sequence<1)return {accepted:false,reason:'sequence'};
    if(message.sequence<=sequence)return {accepted:false,reason:'stale'};
    if(!Number.isSafeInteger(firstSequence)||firstSequence!==sequence+1||firstSequence>message.sequence)return {accepted:false,reason:'gap'};
    if(!sequence||message.unchanged!==true||message.slotId!==state.slotId||message.stateSequence!==state.sequence||message.elapsed!==lastElapsed||state.elapsed!==lastElapsed||!Array.isArray(message.events)||message.events.length||message.presentationJournal?.length||!Array.isArray(message.pauses)||JSON.stringify(message.pauses)!==JSON.stringify(state.pauses)||typeof message.saveAvailable!=='boolean'||Object.hasOwn(message,'snapshot')||Object.hasOwn(message,'physicsPose')||Object.hasOwn(message,'physicsPoses'))throw TypeError('Invalid unchanged publication');
-   sequence=message.sequence;return {accepted:true,sequence};
-  },
-  accept(message,{firstSequence=message?.sequence}={}){
+   const token=Object.freeze({});pending={token,unchanged:true,sequence:message.sequence};return {accepted:true,token};
+ }
+ function prepare(message,{firstSequence=message?.sequence}={}){
+   if(pending)throw Error('Confirmed publication already prepared');
    if(fault)return {accepted:false,reason:'fault'};
    if(message?.session!==session)return {accepted:false,reason:'session'};
    if(!Number.isSafeInteger(message.sequence)||message.sequence<1)return {accepted:false,reason:'sequence'};
@@ -51,10 +52,24 @@ export function createConfirmedStateReceiver(state,session,{onReconciled=null,de
    const next=decodeSnapshot(message.snapshot);if(next.elapsed<lastElapsed)throw Error('Confirmed simulation time moved backwards');if(next.slotId!==state.slotId||!Number.isSafeInteger(next.sequence)||next.sequence<state.sequence)throw Error('Confirmed simulation identity or sequence changed');
    if(message.presentationJournal)for(const fact of message.presentationJournal)if(fact.kind==='animalGone'){const animal=next.raid?.animals?.find(a=>a.id===fact.actorId);if(animal&&animal.status!=='gone')throw TypeError('Presentation lifecycle conflicts with state');}
    let nextEvent=Math.max(lastEvent,state.sequence-1);for(const event of message.events){const match=typeof event?.id==='string'?/^event-(0|[1-9]\d*)$/.exec(event.id):null,n=match?Number(match[1]):NaN;if(!Number.isSafeInteger(n)||n<=nextEvent||n>=next.sequence||typeof event.type!=='string')throw TypeError('Invalid confirmed event sequence');nextEvent=n;}
-   try{reconcile(state,next);onReconciled?.(message);for(const event of message.events)notifyConfirmedPresentationEvent(state,event);}
-   catch(error){fault=true;throw error;}
-   sequence=message.sequence;lastElapsed=next.elapsed;lastEvent=nextEvent;return {accepted:true,sequence};
-  },
+   // The caller retains no right to mutate the transferred publication until
+   // commit or discard. Its decoded snapshot is private to this receiver.
+   const token=Object.freeze({});pending={token,sequence:message.sequence,next,nextEvent,message};return {accepted:true,token};
+ }
+ function commit(token){
+  if(!pending||pending.token!==token)throw Error('Invalid prepared publication token');
+  const item=pending;pending=null;
+  if(item.unchanged){sequence=item.sequence;return {accepted:true,sequence};}
+  try{reconcile(state,item.next);onReconciled?.(item.message);for(const event of item.message.events)notifyConfirmedPresentationEvent(state,event);}
+  catch(error){fault=true;throw error;}
+  sequence=item.sequence;lastElapsed=item.next.elapsed;lastEvent=item.nextEvent;return {accepted:true,sequence};
+ }
+ function acceptPrepared(result){return result.accepted?commit(result.token):result;}
+ return {
+  prepare,prepareUnchanged,commit,
+  discard(token){if(!pending||pending.token!==token)throw Error('Invalid prepared publication token');pending=null;},
+  accept(message,options){return acceptPrepared(prepare(message,options));},
+  acceptUnchanged(message,options){return acceptPrepared(prepareUnchanged(message,options));},
   status(){return {sequence,lastElapsed,fault};}
  };
 }

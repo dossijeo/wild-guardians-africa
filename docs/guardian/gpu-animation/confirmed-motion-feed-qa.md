@@ -140,3 +140,16 @@ interval. The display clock, animations, effects and geometry must all follow
 that same interval and stop at its confirmed end. Retain a latest-confirmed
 fallback when any dependency is unavailable. No trajectory has been bound to a
 live actor by this review, and no new future-safety guarantee is implied.
+
+## Receive/commit boundary
+
+The confirmed-state receiver now exposes a `prepare`/`commit` boundary: it
+validates and decodes one publication without mutating the displayed state or
+notifying observers, then reconciles the same displayed object and emits its
+events on commit. The WebGPU presentation stream uses both steps immediately,
+in its existing order; it does not buffer or delay presentation. The caller
+must own the publication and leave it unchanged until commit or discard. A
+future asynchronous scheduler must enforce that ownership or copy the mutable
+parts it retains. One pending token is allowed, and observer failure faults the
+receiver. This boundary does not supply a presentation clock, terrain history,
+physics timeline, complete trajectories or a safe interval.
