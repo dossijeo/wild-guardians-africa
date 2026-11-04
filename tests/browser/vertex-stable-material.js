@@ -42,7 +42,7 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
       if (nodeMaterial.clearcoatNormalScale) nodeMaterial.clearcoatNormalScale.y *= -1;
     }
     if (!item.object.geometry.getAttribute('normal')) nodeMaterial.flatShading = true;
-    if (toonOutput && !source.transparent) nodeMaterial.outputNode = toonOutput;
+    if (toonOutput && !source.transparent) nodeMaterial.outputNode = typeof toonOutput === 'function' ? toonOutput(item.object) : toonOutput;
     // Keep the existence of every map stable; use neutral textures until ready.
     for (const [key, value] of Object.entries(source)) {
       if (!value?.isTexture) continue;

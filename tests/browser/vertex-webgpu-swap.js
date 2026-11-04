@@ -4,18 +4,22 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { clone } from 'three/addons/utils/SkeletonUtils.js';
 import { prepareHydration } from './vertex-preview-hydrate.js';
 import { makeStableVertexMaterials } from './vertex-stable-material.js';
-import { createBeastToonOutput } from './vertex-beast-toon.js';
+import { createBeastToonOutput, prepareWebGpuFurAttribute } from './vertex-beast-toon.js';
+import { shadow } from 'three/tsl';
 
 // Isolated request-time preparation. The old material remains visible while
 // compileAsync is pending. This does not promise asynchronous texture upload.
-export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders = false, canvas = null, nativeBc7 = false, count = 1, beastToon = false }) {
+export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders = false, canvas = null, nativeBc7 = false, count = 1, beastToon = false, beastShadow = false }) {
   if (!['async', 'target', 'coverage', 'whole', 'sequential', 'staged', 'stable', 'direct'].includes(mode)) throw Error('Unknown mode');
   if (!Number.isInteger(count) || count < 1 || count > 16) throw Error('Invalid actor count');
   if (count > 1 && mode !== 'stable') throw Error('Crowd mode requires shared stable materials');
+  if (beastShadow && (!beastToon || mode !== 'stable')) throw Error('Beast shadows require stable toon mode');
   const loader = new GLTFLoader(), preview = await loader.loadAsync('/hydration-files/preview.glb');
   const renderer = new WebGPURenderer({ antialias: false, ...(canvas ? { canvas } : {}) }); await renderer.init();
   if (!renderer.backend?.isWebGPUBackend) throw Error('WebGPU backend unavailable');
   renderer.setSize(512, 512, false); if (!canvas) document.body.replaceChildren(renderer.domElement);
+  const sun = new THREE.DirectionalLight(0xfff0d4, 3); sun.position.set(-6, 12, 9);
+  if (beastShadow) { renderer.shadowMap.enabled = true; sun.castShadow = true; sun.shadow.mapSize.set(1024, 1024); preview.scene.traverse(object => { if (object.isMesh) object.receiveShadow = true; }); }
   let ktxLoader = null;
   if (nativeBc7) {
     if (!renderer.hasFeature('texture-compression-bc')) throw Error('Native BC7 unavailable on this device');
@@ -36,7 +40,10 @@ export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders =
       metadata.extensionsRequired = (metadata.extensionsRequired ?? []).filter(name => name !== 'WG_native_ktx2');
     }
     const placeholderMaterials = await loader.parseAsync(JSON.stringify(metadata), '/hydration-files/');
-    stableResources = await makeStableVertexMaterials(renderer, preview, placeholderMaterials, mapping, { toonOutput: beastToon ? createBeastToonOutput().output : null });
+    const visibility = beastShadow ? shadow(sun).r : null;
+    const toon = beastToon ? createBeastToonOutput({ visibility }) : null;
+    const furToon = toon ? createBeastToonOutput({ fur: true, night: toon.night, sun: toon.sun, visibility }) : null;
+    stableResources = await makeStableVertexMaterials(renderer, preview, placeholderMaterials, mapping, { toonOutput: toon ? object => prepareWebGpuFurAttribute(object) ? furToon.output : toon.output : null });
   }
   const device = renderer.backend.device, adapter = await navigator.gpu.requestAdapter();
   const info = adapter?.info ?? {};
@@ -61,9 +68,13 @@ export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders =
   for (const name of ['copyExternalImageToTexture', 'writeTexture']) instrument(device.queue, name);
   const scene = new THREE.Scene(); scene.background = new THREE.Color(0x777777); scene.add(preview.scene);
   scene.add(new THREE.HemisphereLight(0xe7f0e7, 0x70624e, 2));
-  const sun = new THREE.DirectionalLight(0xfff0d4, 3); sun.position.set(-6, 12, 9); scene.add(sun);
+  scene.add(sun);
   const box = new THREE.Box3().setFromObject(preview.scene), center = box.getCenter(new THREE.Vector3()), size = box.getSize(new THREE.Vector3());
   const radius = Math.max(size.x, size.y, size.z, .01), camera = new THREE.PerspectiveCamera(35, 1, radius / 1000, radius * 20);
+  if (beastShadow) {
+    Object.assign(sun.shadow.camera, { left: -radius * 2, right: radius * 2, top: radius * 2, bottom: -radius * 2, near: .01, far: 50 }); sun.shadow.camera.updateProjectionMatrix();
+    const blocker = new THREE.Mesh(new THREE.BoxGeometry(radius * .42, radius * .42, radius * .42), new THREE.MeshStandardMaterial({ color: 0x4b4a44 })); blocker.position.copy(center).add(sun.position.clone().normalize().multiplyScalar(radius * .8)); blocker.castShadow = true; scene.add(blocker);
+  }
   const actors = [preview.scene], columns = Math.ceil(Math.sqrt(count)), rows = Math.ceil(count / columns);
   for (let index = 1; index < count; index++) { const actor = clone(preview.scene); scene.add(actor); actors.push(actor); }
   for (const [index, actor] of actors.entries()) actor.position.set((index % columns - (columns - 1) / 2) * radius * .75, 0, (Math.floor(index / columns) - (rows - 1) / 2) * radius * .75);
@@ -169,7 +180,7 @@ export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders =
         if (mode === 'stable' && (!imageRequests.length || imageRequests.some(entry => entry.at < events.requestedAt))) return reject(Error('Final image request occurred before the on-demand request, or was not observed'));
         const transcoderRequests = performance.getEntriesByType('resource').filter(entry => /basis_transcoder\.(js|wasm)/.test(entry.name)).map(entry => entry.name);
         if (nativeBc7 && transcoderRequests.length) return reject(Error('Native BC7 unexpectedly loaded a Basis transcoder'));
-        resolve({ mode, count, beastToon, sharedMaterials, independentSkeletons: new Set(firstSkeletons).size, renderInfo: { ...renderer.info.render }, backend: 'WebGPU', nativeBc7, transcoderRequests, absoluteStart, adapter: { vendor: info.vendor, architecture: info.architecture, device: info.device, description: info.description }, intervals, renderCpu, events, errors, imageRequests, gpuCalls: gpuCalls.map(call => ({ ...call, at: call.at - start })) });
+        resolve({ mode, count, beastToon, beastShadow, sharedMaterials, independentSkeletons: new Set(firstSkeletons).size, renderInfo: { ...renderer.info.render }, backend: 'WebGPU', nativeBc7, transcoderRequests, absoluteStart, adapter: { vendor: info.vendor, architecture: info.architecture, device: info.device, description: info.description }, intervals, renderCpu, events, errors, imageRequests, gpuCalls: gpuCalls.map(call => ({ ...call, at: call.at - start })) });
         ktxLoader?.dispose(); renderer.dispose();
       }
     }

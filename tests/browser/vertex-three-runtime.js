@@ -2,3 +2,4 @@
 export * as THREE from 'three';
 export { WebGPURenderer } from 'three/webgpu';
 export { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+export { shadow } from 'three/tsl';

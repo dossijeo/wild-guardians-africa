@@ -34,8 +34,8 @@ try {
     await page.goto(`${process.env.WG_BASE_URL ?? 'http://127.0.0.1:5175'}/hydration-page`);
     const result = webgpu
       ? process.env.WG_RENDER_WORKER === '1'
-        ? await page.evaluate(async ({ mode, nativeBc7, count, beastToon }) => (await import('/tests/browser/vertex-webgpu-worker-host.js')).runWorkerSwap(mode, nativeBc7, count, beastToon), { mode, nativeBc7, count, beastToon: process.env.WG_BEAST_TOON === '1' })
-        : await page.evaluate(async ({ mode, captureShaders, nativeBc7, count, beastToon }) => (await import('/tests/browser/vertex-webgpu-swap.js')).runVertexWebGpuSwap({ mode, captureShaders, nativeBc7, count, beastToon }), { mode, captureShaders: process.env.WG_CAPTURE_SHADERS === '1', nativeBc7, count, beastToon: process.env.WG_BEAST_TOON === '1' })
+        ? await page.evaluate(async ({ mode, nativeBc7, count, beastToon, beastShadow }) => (await import('/tests/browser/vertex-webgpu-worker-host.js')).runWorkerSwap(mode, nativeBc7, count, beastToon, beastShadow), { mode, nativeBc7, count, beastToon: process.env.WG_BEAST_TOON === '1', beastShadow: process.env.WG_BEAST_SHADOW === '1' })
+        : await page.evaluate(async ({ mode, captureShaders, nativeBc7, count, beastToon, beastShadow }) => (await import('/tests/browser/vertex-webgpu-swap.js')).runVertexWebGpuSwap({ mode, captureShaders, nativeBc7, count, beastToon, beastShadow }), { mode, captureShaders: process.env.WG_CAPTURE_SHADERS === '1', nativeBc7, count, beastToon: process.env.WG_BEAST_TOON === '1', beastShadow: process.env.WG_BEAST_SHADOW === '1' })
       : await page.evaluate(async ({ mode, sourceUrl }) => (await import('/tests/browser/vertex-hydration-benchmark.js')).runHydrationBenchmark({ mode, sourceUrl }), { mode, sourceUrl });
     if (errors.length) throw Error(JSON.stringify(errors));
     if (process.env.WG_SCREENSHOT && observations.length === 0) await page.screenshot({ path: process.env.WG_SCREENSHOT });
