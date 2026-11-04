@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import {BIOME_IDS} from '../world/biome-ids.js';
 import {assetUrl} from './asset-url.js';
 import {nearTreeGeometry,removeReviewedTreeTriangles} from './near-tree-textures.js';
+import {describeSurface} from './surface-source.js';
+import {SLOTS} from '../world/terrain.js';
 
 // Worker-owned visual instances from the same confirmed Wild Engine chunk
 // payload used by the game. Navigation and suppression remain authoritative.
@@ -32,7 +34,8 @@ export function createWebGpuBiomeProps({scene,state,onError=()=>{}}={}){
    const maps={...(asset.textureSet===undefined?base:sets[asset.textureSet])},factor=pack.material.baseColorFactor??[1,1,1,1];let selected=geometry;
    if(asset.nearTextures){const [uv,entries]=await Promise.all([(await load(asset.nearTextures.cornerUV)).arrayBuffer(),Promise.all(Object.entries(asset.nearTextures.textures).map(async([role,url])=>[role,await loadTexture(url,role==='baseColor')]))]);ensure();selected=own(nearTreeGeometry(geometry,new Float32Array(uv)));for(const [role,near] of entries){const copy=own(near.clone());copy.channel=1;copy.needsUpdate=true;maps[role]=copy;}}
    removeReviewedTreeTriangles(selected,asset.geometryCleanup?.removedTriangles?.[0]);
-   const material=own(new THREE.MeshStandardMaterial({map:maps.baseColor,normalMap:maps.normal,roughnessMap:maps.metallicRoughness,metalnessMap:maps.metallicRoughness,roughness:1,metalness:0,alphaTest:.35,opacity:factor[3],side:asset.doubleSidedFoliage?THREE.DoubleSide:THREE.FrontSide}));material.color.fromArray(factor);material.normalScale.setScalar(pack.material.normalScale??.6);next.push({geometry:selected,material});
+   const surface=describeSurface({...asset,name:asset.name??'',group:pack.profile?.assetGroups?.[slot]??SLOTS[slot].g},0,pack.biomeId??BIOME_IDS[state.biome]);
+   const material=own(new THREE.MeshStandardMaterial({map:maps.baseColor,normalMap:maps.normal,roughnessMap:maps.metallicRoughness,metalnessMap:maps.metallicRoughness,roughness:surface.params[0],metalness:surface.params[1],alphaTest:.35,opacity:factor[3],side:asset.doubleSidedFoliage?THREE.DoubleSide:THREE.FrontSide}));material.color.fromArray(factor);material.normalScale.setScalar(pack.material.normalScale??.6);next.push({geometry:selected,material});
   }
   ensure();prototypes=next;const removed=suppressed();for(const entry of chunks.values())rebuild(entry,removed);return true;
  })().catch(error=>{if(!closed){failure=String(error?.message??error);onError(error);}return false;});
