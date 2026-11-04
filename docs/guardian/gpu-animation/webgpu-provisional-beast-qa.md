@@ -73,8 +73,9 @@ this blend.
 `tools/experiments/audit_webgpu_fall_blend.mjs` captures the matched hyena at
 the start, middle and end of this interpolation in `reconcile-000.png`,
 `reconcile-075.png` and `reconcile-150.png`. In this controlled view the final
-image matches the captured Rapier reference, and the intermediate pose avoids
-an instantaneous full-rig snap. After adding the visual offset, the first
+image matched the captured Rapier reference before the later terrain-support
+experiment, and the intermediate pose avoids an instantaneous full-rig snap.
+After adding the visual offset, the first
 reconciled image matched the preceding provisional image exactly in this
 capture. The capture holds one Rapier pose fixed during the 150 ms.
 
@@ -87,3 +88,30 @@ these measurements do not establish penetration depth in the game. They do
 show why the blend cannot be treated as contact-safe. Dynamic Rapier targets,
 slopes, body contacts and obstacles remain unverified. This remains a QA
 experiment and is not evidence for enabling the blend in production.
+
+## QA terrain-support experiment
+
+The QA path now samples every sixteenth vertex of visible skinned meshes and
+raycasts against resident terrain. It lifts only the rendered model enough to
+clear sampled terrain; the Rapier root, colliders, game state and confirmed
+poses are unchanged. This visual correction can remain after the 150 ms blend
+while a physical pose is active, so its final mesh is intentionally elevated
+relative to the uncorrected Rapier rendering. No correction is possible where
+the relevant terrain chunk is missing. The sampling and raycast cost has not
+been established for crowds.
+
+`tools/experiments/audit_webgpu_fall_real_terrain.mjs` checks every one of
+22,242 skin vertices at the start, midpoint and end of the matched case
+against `nav.actorSurface` from the real mangrove Wild Engine fixture. In this
+locally almost-flat case, minima after the correction were +0.0878, −0.0011 and
+−0.0087 m, with zero vertices more than 3 cm below that surface at each point.
+The visual control renders a flat support plane; terrain validation queries the
+actual Wild Engine surface. The three new images are `reconcile-ground-000`,
+`reconcile-ground-075` and `reconcile-ground-150` in the review directory.
+
+The fixture's native 0.9 m animal navigation check reported both initial and
+final center positions non-walkable and their connecting segment not clear;
+it does not distinguish a self/body conflict here, and is not a validation of
+the visual body against obstacles. Slopes, walls, peer bodies, disconnected or
+unloaded terrain, all animation phases, and the runtime cost remain untested.
+The terrain correction and interpolation remain QA-only.
