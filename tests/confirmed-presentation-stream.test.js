@@ -6,6 +6,7 @@ import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {emit,observePresentationGameEvents} from '../src/simulation/game.js';
 import {createConfirmedPresentationStream} from '../src/rendering/confirmed-presentation-stream.js';
 import {createConfirmedMotionFeed} from '../src/rendering/confirmed-motion-feed.js';
+import {serializeConfirmedState} from '../src/simulation/confirmed-live-state.js';
 const fixture=()=>deserialize(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString());
 test('reconciles state and events before releasing terrain and acknowledging',()=>{
  const state=fixture(),authority=deserialize(serialize(state)),order=[],port={postMessage:m=>order.push(['ack',m.sequence]),close(){},start(){}},stop=observePresentationGameEvents(state,e=>order.push(['event',e.id])),stream=createConfirmedPresentationStream({port,session:'s',state,terrain:{confirm:sequence=>order.push(['terrain',sequence])},onConfirmed:m=>order.push(['confirmed',m.sequence])});
@@ -35,4 +36,13 @@ test('forwards physical ownership even when the publication has no motion payloa
  const state=fixture(),actor=state.raid.animals[0],feed=createConfirmedMotionFeed(),errors=[],port={postMessage(){},close(){},start(){}},stream=createConfirmedPresentationStream({port,session:'s',state,terrain:{confirm(){}},onMotion:event=>feed.accept(event),onError:error=>errors.push(error)});
  const point={at:state.elapsed,x:actor.x,z:actor.z},trace={actorId:actor.id,start:point,end:{...point},segments:[],continuous:true,timed:true},packet={session:'s',sequence:1,elapsed:state.elapsed,snapshot:serialize(state),events:[],physicsPose:null,motionTrace:trace};port.onmessage({data:{kind:'publication',session:'s',publication:packet}});assert.ok(feed.get(actor.id).trace);
  port.onmessage({data:{kind:'publication',session:'s',publication:{session:'s',sequence:2,elapsed:state.elapsed,snapshot:serialize(state),events:[],physicsPose:{actorId:actor.id,active:true}}}});assert.equal(feed.get(actor.id).trace,null);assert.equal(feed.get(actor.id).physical,true);assert.equal(feed.get(actor.id).invalidation.reason,'physical-pose');assert.deepEqual(errors,[]);stream.dispose();feed.dispose();
+});
+test('validates all physical poses before reconciliation and installs them before confirmed events',()=>{
+ const state=fixture(),next=deserialize(serialize(state)),actor=next.raid.animals[0],order=[],errors=[],port={postMessage:()=>order.push('ack'),close(){},start(){}},stop=observePresentationGameEvents(state,()=>order.push('event'));
+ actor.magicDown={phase:'falling',since:next.elapsed,until:next.elapsed+2};emit(next,'Test');const transform=[0,0,0,0,0,0,1,1,1,1],pose={actorId:actor.id,active:true,root:transform,model:transform,bones:[]},stream=createConfirmedPresentationStream({port,session:'s',state,terrain:{confirm:()=>order.push('terrain')},validatePhysics:poses=>{assert.equal(poses.get(actor.id),pose);order.push('validate');},onPhysics:poses=>{assert.equal(poses.get(actor.id),pose);order.push('physics');},onError:error=>errors.push(error)});
+ port.onmessage({data:{kind:'publication',session:'s',publication:{session:'s',sequence:1,snapshot:serializeConfirmedState(next),events:[next.events.at(-1)],physicsPose:pose}}});assert.deepEqual(order,['validate','physics','event','terrain','ack']);assert.equal(errors.length,0);stream.dispose();stop();
+});
+test('rejects a physical pose for an animal which is not down before mutating state',()=>{
+ const state=fixture(),before=serialize(state),actor=state.raid.animals[0],errors=[],port={postMessage(){throw Error('unexpected ack');},close(){},start(){}},stream=createConfirmedPresentationStream({port,session:'s',state,terrain:{confirm(){throw Error('unexpected terrain');}},onPhysics(){throw Error('unexpected pose');},onError:error=>errors.push(error)}),transform=[0,0,0,0,0,0,1,1,1,1];
+ port.onmessage({data:{kind:'publication',session:'s',publication:{session:'s',sequence:1,snapshot:serialize(state),events:[],physicsPose:{actorId:actor.id,active:true,root:transform,model:transform,bones:[]}}}});assert.match(errors[0].message,/lacks active animal/);assert.equal(serialize(state),before);assert.equal(stream.status().sequence,0);stream.dispose();
 });

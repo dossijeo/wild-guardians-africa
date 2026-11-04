@@ -16,3 +16,8 @@ test('reconciles appearances, updates and removal and discards late loads',async
 test('disposal during a shared load releases the late resource without publishing a model',async()=>{
  let resolve,disposed=0;const wait=new Promise(r=>{resolve=r;}),bank=createWebGpuAnimalBank({renderer:{backend:{isWebGPUBackend:true}},loadAsset:()=>wait});const pending=bank.acquire('buffalo');bank.dispose();resolve({scene:new Group(),clips:[],dispose(){disposed++;}});await assert.rejects(pending,{name:'AbortError'});assert.equal(disposed,1);
 });
+test('late-loading actor receives the latest confirmed physical pose and releases it',async()=>{
+ const state={raid:{animals:[{id:'a',species:'hyena',status:'entering'}]}},bank={tick(){},dispose(){}},values=[];let resolve;
+ const roster=createWebGpuAnimalRoster({scene:{},residency:{},state,renderer:{},assetBank:bank,createAnimal:({getPose})=>new Promise(done=>{resolve=()=>done({update(){values.push(getPose());},validatePose(pose){if(pose.bad)throw Error('bad rig');},dispose(){}});})});
+ roster.sync();await flush();const first={actorId:'a',active:true},latest={actorId:'a',active:true,revision:2};roster.setPoses(new Map([['a',first]]));roster.setPoses(new Map([['a',latest]]));resolve();await flush();assert.equal(values.at(-1),latest);assert.throws(()=>roster.validatePoses(new Map([['a',{bad:true}]])),/bad rig/);roster.setPoses(new Map());roster.sync();assert.equal(values.at(-1),null);roster.dispose();
+});

@@ -1,16 +1,18 @@
 import { createHash } from 'node:crypto';
 import { readFile, writeFile } from 'node:fs/promises';
+import {dirname,join} from 'node:path';
 
 // Offline, deliberately limited GLB prototype. The authoritative asset is untouched.
 const [id, output] = process.argv.slice(2);
 if (!id || !output) throw Error('Usage: node pack_vertex_color_preview.mjs <asset-id> <output.glb>');
-const manifest = JSON.parse(await readFile('public/qa/vertex-color-preview/manifest.json', 'utf8'));
+const manifestPath=process.env.WG_VERTEX_MANIFEST??'public/qa/vertex-color-preview/manifest.json';
+const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
 const entry = manifest.assets.find(asset => asset.id === id);
 if (!entry) throw Error(`Unknown asset: ${id}`);
 const source = await readFile(entry.source);
 const digest = bytes => createHash('sha256').update(bytes).digest('hex');
 if (digest(source) !== entry.sourceSha256) throw Error('Source checksum differs from baked colors');
-const colors = await readFile(`public/qa/vertex-color-preview/${entry.file}`);
+const colors = await readFile(join(dirname(manifestPath),entry.file));
 if (digest(colors) !== entry.sha256 || colors.length !== entry.bytes) throw Error('Invalid baked colors');
 if (source.readUInt32LE(0) !== 0x46546c67 || source.readUInt32LE(4) !== 2) throw Error('Expected GLB 2');
 const jsonLength = source.readUInt32LE(12);

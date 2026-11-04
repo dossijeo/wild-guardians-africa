@@ -17,7 +17,7 @@ export function partitionGateTriangle(vertices,leaf){
   return {frame,leaf:remaining.length>=3?remaining:[]};
 }
 export function splitGateBridge(source,leaf){
-  const attributes=source.visibility?[...fields,['visibility',1]]:fields;
+  const attributes=[...fields,...(source.visibility?[['visibility',1]]:[]),...(source.color?[['color',3]]:[])];
   const result=Object.fromEntries(attributes.map(([key])=>[key,[]])),flags=[];
   for(let start=0;start<source.pos.length/3;start+=3){
     const vertices=[0,1,2].map(j=>attributes.flatMap(([key,size])=>[...source[key].subarray((start+j)*size,(start+j+1)*size)]));

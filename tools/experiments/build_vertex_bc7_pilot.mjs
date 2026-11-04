@@ -10,14 +10,14 @@ const [baseDirectory, outputRoot] = process.argv.slice(2);
 if (!baseDirectory || !outputRoot) throw Error('Usage: node build_vertex_bc7_pilot.mjs <original-materials-dir> <output-root>');
 const metadata = JSON.parse(await readFile(join(baseDirectory, 'materials.gltf'), 'utf8'));
 const mapping = JSON.parse(await readFile(join(baseDirectory, 'mapping.json'), 'utf8'));
-if (!['hyena', 'buffalo'].includes(mapping.id) || !/^[a-f0-9]{64}$/.test(mapping.sourceSha256 ?? '')) throw Error('Pilot supports known hyena and buffalo sources only');
+if (!['hyena', 'buffalo', 'mapungubweCenter'].includes(mapping.id) || !/^[a-f0-9]{64}$/.test(mapping.sourceSha256 ?? '')) throw Error('Unsupported pilot source');
 const report = JSON.parse(await readFile('.cache/ktx2-native/glb/report.json', 'utf8'));
 const model = `assets/web/${mapping.sourceSha256}.glb`;
 const runtime = readGlb(await readFile(`public/${model}`)).json;
 if (JSON.stringify(runtime.materials) !== JSON.stringify(metadata.materials) || runtime.images.length !== metadata.images.length || runtime.textures.length !== metadata.textures.length) throw Error('Runtime material layout differs from source');
 for (const [index, entry] of metadata.textures.entries()) {
   const optimized = runtime.textures[index], imageIndex = optimized?.extensions?.EXT_texture_webp?.source ?? optimized?.source;
-  if (entry.source !== imageIndex || entry.sampler !== optimized?.sampler) throw Error(`Runtime texture mapping differs at ${index}`);
+  if ((entry.extensions?.EXT_texture_webp?.source??entry.source) !== imageIndex || entry.sampler !== optimized?.sampler) throw Error(`Runtime texture mapping differs at ${index}`);
 }
 const records = [];
 for (let index = 0; index < metadata.images.length; index++) {
@@ -38,9 +38,9 @@ for (const variant of ['webp', 'bc7']) {
     gltf.images[row.index] = { uri: basename(file) };
   }
   if (variant === 'bc7') {
-    for (const texture of gltf.textures) { if (!Number.isInteger(texture.source)) throw Error('Unexpected source texture'); texture.extensions = { ...texture.extensions, WG_native_ktx2: { source: texture.source } }; delete texture.source; }
-    gltf.extensionsUsed = [...new Set([...(gltf.extensionsUsed ?? []), 'WG_native_ktx2'])];
-    gltf.extensionsRequired = [...new Set([...(gltf.extensionsRequired ?? []), 'WG_native_ktx2'])];
+    for (const texture of gltf.textures) {const source=texture.extensions?.EXT_texture_webp?.source??texture.source;if(!Number.isInteger(source))throw Error('Unexpected source texture');texture.extensions={...texture.extensions,WG_native_ktx2:{source}};delete texture.extensions.EXT_texture_webp;delete texture.source;}
+    gltf.extensionsUsed = [...new Set([...(gltf.extensionsUsed ?? []).filter(name=>name!=='EXT_texture_webp'), 'WG_native_ktx2'])];
+    gltf.extensionsRequired = [...new Set([...(gltf.extensionsRequired ?? []).filter(name=>name!=='EXT_texture_webp'), 'WG_native_ktx2'])];
   }
   await writeFile(join(directory, 'materials.gltf'), JSON.stringify(gltf));
   await copyFile(join(baseDirectory, 'mapping.json'), join(directory, 'mapping.json'));

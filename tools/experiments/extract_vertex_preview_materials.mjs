@@ -5,7 +5,7 @@ import { join } from 'node:path';
 // Material-only glTF for the vertex-color experiment; no geometry is duplicated.
 const [id, output] = process.argv.slice(2);
 if (!id || !output) throw Error('Usage: node extract_vertex_preview_materials.mjs <asset-id> <output-directory>');
-const manifest = JSON.parse(await readFile('public/qa/vertex-color-preview/manifest.json', 'utf8'));
+const manifest = JSON.parse(await readFile(process.env.WG_VERTEX_MANIFEST??'public/qa/vertex-color-preview/manifest.json', 'utf8'));
 const entry = manifest.assets.find(asset => asset.id === id);
 if (!entry) throw Error(`Unknown asset: ${id}`);
 const source = await readFile(entry.source);

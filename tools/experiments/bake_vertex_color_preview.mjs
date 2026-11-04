@@ -4,7 +4,7 @@ import {basename,join} from 'node:path';
 import sharp from 'sharp';
 
 // Offline QA baker. Emits reversible sidecars; source GLBs are never modified.
-const fixture=JSON.parse(await readFile('tests/fixtures/character-lod-sources.json','utf8'));
+const fixture=JSON.parse(await readFile(process.env.WG_VERTEX_SOURCES??'tests/fixtures/character-lod-sources.json','utf8'));
 const output=process.argv[2]??'public/qa/vertex-color-preview';await mkdir(output,{recursive:true});
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex'),srgb=x=>{x/=255;return x<=.04045?x/12.92:Math.pow((x+.055)/1.055,2.4);};
 const components={SCALAR:1,VEC2:2,VEC3:3,VEC4:4},sizes={5120:1,5121:1,5122:2,5123:2,5125:4,5126:4};
@@ -17,10 +17,10 @@ for(const item of fixture){
  for(const [meshIndex,mesh] of (json.meshes??[]).entries())for(const [primitiveIndex,primitive] of mesh.primitives.entries()){
   const material=json.materials?.[primitive.material],pbr=material?.pbrMetallicRoughness??{},info=pbr.baseColorTexture;if(!info)continue;
   if((material.alphaMode??'OPAQUE')!=='OPAQUE'||info.extensions||primitive.extensions||primitive.mode!=null&&primitive.mode!==4)throw Error(`Unsupported material/geometry ${item.id}/${meshIndex}/${primitiveIndex}`);
-  const texture=json.textures[info.index];if(texture.extensions||texture.source==null)throw Error('Unsupported texture extension');const image=json.images[texture.source],imageView=json.bufferViews[image.bufferView];if(!imageView||imageView.buffer!==0)throw Error('Only embedded images are supported');
-  if(!images.has(texture.source)){const bytes=bin.subarray(imageView.byteOffset??0,(imageView.byteOffset??0)+imageView.byteLength);const decoded=await sharp(bytes).ensureAlpha().raw().toBuffer({resolveWithObject:true});if(decoded.info.channels!==4)throw Error('Expected RGBA image');images.set(texture.source,{data:decoded.data,width:decoded.info.width,height:decoded.info.height});}
+  const texture=json.textures[info.index],extensions=Object.keys(texture.extensions??{});if(extensions.some(key=>key!=='EXT_texture_webp'))throw Error('Unsupported texture extension');const source=texture.extensions?.EXT_texture_webp?.source??texture.source;if(source==null)throw Error('Missing texture source');const image=json.images[source],imageView=json.bufferViews[image.bufferView];if(!imageView||imageView.buffer!==0)throw Error('Only embedded images are supported');
+  if(!images.has(source)){const bytes=bin.subarray(imageView.byteOffset??0,(imageView.byteOffset??0)+imageView.byteLength);const decoded=await sharp(bytes).ensureAlpha().raw().toBuffer({resolveWithObject:true});if(decoded.info.channels!==4)throw Error('Expected RGBA image');images.set(source,{data:decoded.data,width:decoded.info.width,height:decoded.info.height});}
   const position=accessor(json,bin,primitive.attributes.POSITION),uvIndex=primitive.attributes[`TEXCOORD_${info.texCoord??0}`];if(uvIndex==null)throw Error('Missing texture UV');const uv=accessor(json,bin,uvIndex),existing=primitive.attributes.COLOR_0==null?null:accessor(json,bin,primitive.attributes.COLOR_0);if(uv.count!==position.count||existing&&existing.count!==position.count)throw Error('Vertex count mismatch');
-  const base=pbr.baseColorFactor??[1,1,1,1],sampler=json.samplers?.[texture.sampler]??{},bytes=Buffer.alloc(position.count*3);for(let i=0;i<position.count;i++){const rgb=pixel(images.get(texture.source),uv.value(i,0),uv.value(i,1),sampler);for(let c=0;c<3;c++){const linear=rgb[c]*base[c]*(existing?existing.value(i,c):1);bytes[i*3+c]=Math.round(Math.min(1,Math.max(0,linear))*255);}}
+  const base=pbr.baseColorFactor??[1,1,1,1],sampler=json.samplers?.[texture.sampler]??{},bytes=Buffer.alloc(position.count*3);for(let i=0;i<position.count;i++){const rgb=pixel(images.get(source),uv.value(i,0),uv.value(i,1),sampler);for(let c=0;c<3;c++){const linear=rgb[c]*base[c]*(existing?existing.value(i,c):1);bytes[i*3+c]=Math.round(Math.min(1,Math.max(0,linear))*255);}}
   records.push({mesh:meshIndex,primitive:primitiveIndex,vertices:position.count,offset,bytes:bytes.length,material:material.name??''});offset+=bytes.length;totalVertices+=position.count;chunks.push(bytes);
  }
  const data=Buffer.concat(chunks),file=`${item.id}.rgb8`;await writeFile(join(output,file),data);manifest.assets.push({id:item.id,source:item.source,sourceSha256:hash(source),file,sha256:hash(data),bytes:data.length,vertices:totalVertices,primitives:records});
