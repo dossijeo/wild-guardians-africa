@@ -20,6 +20,16 @@ function frame(species,animal,target){
 }
 function shieldFor(state,target){return state.spells.find(s=>s.kind==='shield'&&s.remaining>0&&Math.hypot(s.x-target.x,s.z-target.z)<=s.radius);}
 
+// Version 1 hit facts contain every value needed to position the dissipating
+// visual, independently of a later target or raid snapshot. Older saves remain
+// on the existing snapshot-aware compatibility path below.
+export function attackVfxPlanFromEvent(event,elapsed){
+ const p=event?.presentation,contact=attackVfxContacts[event?.species],point=t=>t&&Number.isFinite(t.x)&&Number.isFinite(t.z);
+ if(event?.type!=='AnimalLogicalHit'||p?.version!==1||!contact||!Number.isFinite(elapsed)||!Number.isFinite(p.elapsed)||!point(p.animal)||!point(p.target)||p.shield&&(!point(p.shield)||!(p.shield.radius>0))||!p.shield&&p.target.kind==='center'&&(typeof p.target.culture!=='string'||!Number.isFinite(p.target.yaw)))return null;
+ const age=elapsed-p.elapsed,time=contact.time+age;if(age<0||time>=definitions.get(event.species).duration)return null;
+ return {key:event.attackId,id:event.species,...frame(event.species,p.animal,p.shield??p.target),time,blocked:!!p.shield};
+}
+
 export function attackVfxPlans(state){
   const plans=new Map(),targets=new Map([...state.plants,...state.structures].map(t=>[t.id,t]));
   for(const animal of state.raid?.animals??[]){
@@ -34,6 +44,7 @@ export function attackVfxPlans(state){
   // after the animal/raid has left. Old saves without this metadata remain valid.
   for(const event of state.events){
     if(event.type!=='AnimalLogicalHit'||!event.presentation)continue;
+    const standalone=attackVfxPlanFromEvent(event,state.elapsed);if(standalone){plans.set(event.attackId,standalone);continue;}
     const p=event.presentation,contact=attackVfxContacts[event.species],point=t=>t&&Number.isFinite(t.x)&&Number.isFinite(t.z);
     if(!contact||!Number.isFinite(p.elapsed)||!point(p.animal)||!point(p.target)||p.shield&&(!point(p.shield)||!(p.shield.radius>0)))continue;
     const age=state.elapsed-p.elapsed,time=contact.time+age;
