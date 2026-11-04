@@ -7,10 +7,10 @@ const browser=await chromium.launch({channel:'msedge',headless:true,args:['--dis
 try{
  const page=await browser.newPage({viewport:{width:1280,height:900}}),errors=[];
  page.on('pageerror',error=>errors.push(String(error.stack??error)));
- await page.addInitScript(()=>{window.__pipelineTrace=[];window.__pipelineCounts={};});
+ await page.addInitScript(()=>{window.__pipelineTrace=[];window.__pipelineCounts={};window.__shaderCodes=new Set();});
  if(process.env.WG_TRACE==='1')await page.addInitScript(()=>{
   const trace=[];window.__pipelineTrace=trace;
-  function wrap(proto,name,promise=false){if(!proto||typeof proto[name]!=='function')return;const original=proto[name];proto[name]=function(...args){const start=performance.now();try{const value=original.apply(this,args),row={name,start,returnMs:performance.now()-start,settledMs:null};if(name==='createRenderPipeline'||name==='createRenderPipelineAsync'){const d=args[0];row.pipeline={label:d.label??'',vertex:d.vertex?.module?.label??'',fragment:d.fragment?.module?.label??'',depth:d.depthStencil?.format??null,targets:d.fragment?.targets?.map(t=>t?.format??null)??[]};}window.__pipelineCounts[name]=(window.__pipelineCounts[name]??0)+1;if(!['writeBuffer','createBuffer'].includes(name)||row.returnMs>=2)trace.push(row);if(promise&&value?.then)value.then(()=>{row.settledMs=performance.now()-start;},error=>{row.settledMs=performance.now()-start;row.error=String(error);});return value;}catch(error){trace.push({name,start,returnMs:performance.now()-start,error:String(error)});throw error;}};}
+  function wrap(proto,name,promise=false){if(!proto||typeof proto[name]!=='function')return;const original=proto[name];proto[name]=function(...args){const start=performance.now();try{const value=original.apply(this,args),row={name,start,returnMs:performance.now()-start,settledMs:null};if(name==='createShaderModule'&&typeof args[0]?.code==='string')window.__shaderCodes.add(args[0].code);if(name==='createRenderPipeline'||name==='createRenderPipelineAsync'){const d=args[0];row.pipeline={label:d.label??'',vertex:d.vertex?.module?.label??'',fragment:d.fragment?.module?.label??'',depth:d.depthStencil?.format??null,targets:d.fragment?.targets?.map(t=>t?.format??null)??[]};}window.__pipelineCounts[name]=(window.__pipelineCounts[name]??0)+1;if(!['writeBuffer','createBuffer'].includes(name)||row.returnMs>=2)trace.push(row);if(promise&&value?.then)value.then(()=>{row.settledMs=performance.now()-start;},error=>{row.settledMs=performance.now()-start;row.error=String(error);});return value;}catch(error){trace.push({name,start,returnMs:performance.now()-start,error:String(error)});throw error;}};}
   for(const name of ['createRenderPipeline','createRenderPipelineAsync','createShaderModule','createBuffer','createTexture'])wrap(globalThis.GPUDevice?.prototype,name,name.endsWith('Async'));
   for(const name of ['writeBuffer','writeTexture','copyExternalImageToTexture'])wrap(globalThis.GPUQueue?.prototype,name);
   for(const name of ['createProgram','linkProgram','getProgramInfoLog','createTexture','texImage2D','texSubImage2D','compressedTexImage2D','bufferData'])wrap(globalThis.WebGL2RenderingContext?.prototype,name);
@@ -28,13 +28,13 @@ try{
  const samples=[];
  for(const cache of ['fresh-context','warm-same-context']){
   if(cache!=='fresh-context')await page.click('#clear');
-  await page.click('#reset');const {start,countsBefore}=await page.evaluate(()=>({start:performance.now(),countsBefore:{...window.__pipelineCounts}}));
+  await page.click('#reset');const {start,countsBefore,uniqueShaderCodesBefore}=await page.evaluate(()=>({start:performance.now(),countsBefore:{...window.__pipelineCounts},uniqueShaderCodesBefore:window.__shaderCodes.size}));
   if(profiler&&cache==='fresh-context')await profiler.send('Profiler.start');
   await page.click('#sequence');
   await page.waitForFunction(()=>{const status=window.wildGuardiansWebGpuLabStatus();return status.appearances===10&&!status.running;},null,{timeout:240000});
   await page.waitForTimeout(1000);
   let cpuProfile=null;if(profiler&&cache==='fresh-context'){const {profile}=await profiler.send('Profiler.stop'),nodes=new Map(profile.nodes.map(node=>[node.id,node])),counts=new Map();for(const id of profile.samples??[])counts.set(id,(counts.get(id)??0)+1);cpuProfile=[...counts].sort((a,b)=>b[1]-a[1]).slice(0,30).map(([id,count])=>({samples:count,frame:nodes.get(id)?.callFrame??null}));}
-  const sample=await page.evaluate(start=>({report:window.wildGuardiansWebGpuLabReport(),trace:window.__pipelineTrace.filter(row=>row.start>=start),countsAfter:{...window.__pipelineCounts}}),start);sample.countsBefore=countsBefore;
+  const sample=await page.evaluate(start=>({report:window.wildGuardiansWebGpuLabReport(),trace:window.__pipelineTrace.filter(row=>row.start>=start),countsAfter:{...window.__pipelineCounts},uniqueShaderCodesAfter:window.__shaderCodes.size}),start);sample.countsBefore=countsBefore;sample.uniqueShaderCodesBefore=uniqueShaderCodesBefore;
   sample.cpuProfile=cpuProfile;
   if(sample.report.errors.length||sample.report.appearances.some(row=>!row.success||row.drewBeforeReady))throw Error('Scenario failed: '+JSON.stringify(sample.report.errors));
   if(mode==='swap'||mode==='swap-direct')for(const row of sample.report.appearances){if(row.fallbackFirstDrawAt===null||row.finalFirstDrawAt===null||row.upgradedAt===null||(mode==='swap'&&(row.compileResolvedAt===null||row.upgradedAt<row.compileResolvedAt)))throw Error('Material replacement was not observed in order: '+JSON.stringify(row));}
