@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "id": "olderFemale",
+  "sourceModel": "assets/web/a736e7adbeb454f3cfc3e3b23bb0b493116fcfe9f64bfe36cc6554bb0ed32d0c.glb",
+  "preview": {
+    "path": "preview.glb",
+    "bytes": 3411100,
+    "sha256": "ce89443612f40cc2df082b2b11d9370cb10c6f0242413ea544f78474f4adefa0",
+    "requires": [
+      "EXT_meshopt_compression"
+    ]
+  },
+  "variants": {
+    "webp": {
+      "requires": [],
+      "files": [
+        {
+          "path": "webp/2c5d53e96d76851b2c9a25969f935d61928cff19af9dac1a84933989f03a1555.webp",
+          "bytes": 343144,
+          "sha256": "2c5d53e96d76851b2c9a25969f935d61928cff19af9dac1a84933989f03a1555"
+        },
+        {
+          "path": "webp/4b19d0835b33493693a9128c7bd1a48eac59dcad55abd9197266845a7dd037a6.webp",
+          "bytes": 740002,
+          "sha256": "4b19d0835b33493693a9128c7bd1a48eac59dcad55abd9197266845a7dd037a6"
+        },
+        {
+          "path": "webp/c4b3c8b8ee20fe3c11756c28bb62661eb7ddf1d8723d44b77c4dc4faf15cdd19.webp",
+          "bytes": 4068770,
+          "sha256": "c4b3c8b8ee20fe3c11756c28bb62661eb7ddf1d8723d44b77c4dc4faf15cdd19"
+        },
+        {
+          "path": "webp/mapping.json",
+          "bytes": 1735,
+          "sha256": "aaf6e7a103a565f62e8614dd36106dd6a21da9ba8b87379653ac4cba9d81d66c"
+        },
+        {
+          "path": "webp/materials.gltf",
+          "bytes": 3887,
+          "sha256": "141d29da687c001d1ff229fedc3eb2fc63204a85cdd0ab67a3193f0b00be48a9"
+        }
+      ]
+    },
+    "bc7": {
+      "requires": [
+        "texture-compression-bc"
+      ],
+      "files": [
+        {
+          "path": "bc7/2c5d53e96d76851b2c9a25969f935d61928cff19af9dac1a84933989f03a1555-data-uastc2-bc7.ktx2",
+          "bytes": 5592880,
+          "sha256": "6a1050b6a960e387b018297eb3801ce50e6c81ab49b3a1ba02e3af117631efb9"
+        },
+        {
+          "path": "bc7/4b19d0835b33493693a9128c7bd1a48eac59dcad55abd9197266845a7dd037a6-color-uastc2-bc7.ktx2",
+          "bytes": 5592880,
+          "sha256": "e86c147d00d2ef1f1d54e5d1513d19a511e754ff7d8f27d279e56fea47671d46"
+        },
+        {
+          "path": "bc7/c4b3c8b8ee20fe3c11756c28bb62661eb7ddf1d8723d44b77c4dc4faf15cdd19-normal-uastc2-bc7.ktx2",
+          "bytes": 5592880,
+          "sha256": "d68a753bd90acb1628dd0bfd59cf23be82f1d4763b8be309b76fbb5b166ee5fa"
+        },
+        {
+          "path": "bc7/mapping.json",
+          "bytes": 1735,
+          "sha256": "aaf6e7a103a565f62e8614dd36106dd6a21da9ba8b87379653ac4cba9d81d66c"
+        },
+        {
+          "path": "bc7/materials.gltf",
+          "bytes": 4097,
+          "sha256": "11c805452fbc8a85d5b9a80a21f29f93752588ab2837b45c92add03a12dfa457"
+        }
+      ]
+    }
+  }
+}

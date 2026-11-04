@@ -7,7 +7,7 @@ import { promisify } from 'node:util';
 
 // Builds an isolated pilot package. Existing game assets are never changed.
 const [id, outputArg] = process.argv.slice(2);
-if (!['hyena', 'buffalo', 'lion', 'rhino', 'warthog'].includes(id) || !outputArg) throw Error('Usage: node build_character_preview_package.mjs <hyena|buffalo|lion|rhino|warthog> <new-output-directory>');
+if (!['hyena', 'buffalo', 'lion', 'rhino', 'warthog', 'youngMale', 'olderMale', 'olderFemale', 'youngFemale'].includes(id) || !outputArg) throw Error('Usage: node build_character_preview_package.mjs <hyena|buffalo|lion|rhino|warthog|youngMale|olderMale|olderFemale|youngFemale> <new-output-directory>');
 const run = promisify(execFile), output = resolve(outputArg), tempRoot = await realpath(tmpdir());
 const scratch = await mkdtemp(join(tempRoot, 'wg-character-package-'));
 const actualScratch = await realpath(scratch), rel = relative(tempRoot, actualScratch);

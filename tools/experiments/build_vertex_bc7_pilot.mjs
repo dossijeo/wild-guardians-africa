@@ -10,10 +10,10 @@ const [baseDirectory, outputRoot] = process.argv.slice(2);
 if (!baseDirectory || !outputRoot) throw Error('Usage: node build_vertex_bc7_pilot.mjs <original-materials-dir> <output-root>');
 const metadata = JSON.parse(await readFile(join(baseDirectory, 'materials.gltf'), 'utf8'));
 const mapping = JSON.parse(await readFile(join(baseDirectory, 'mapping.json'), 'utf8'));
-if (!['hyena', 'buffalo', 'lion', 'rhino', 'warthog', 'mapungubweCenter', 'suajiliCenter', 'etiopeCenter', 'sahelianaCenter', 'musgumCenter'].includes(mapping.id) || !/^[a-f0-9]{64}$/.test(mapping.sourceSha256 ?? '')) throw Error('Unsupported pilot source');
+if (!['hyena', 'buffalo', 'lion', 'rhino', 'warthog', 'youngMale', 'olderMale', 'olderFemale', 'youngFemale', 'mapungubweCenter', 'suajiliCenter', 'etiopeCenter', 'sahelianaCenter', 'musgumCenter'].includes(mapping.id) || !/^[a-f0-9]{64}$/.test(mapping.sourceSha256 ?? '')) throw Error('Unsupported pilot source');
 const report = JSON.parse(await readFile('.cache/ktx2-native/glb/report.json', 'utf8'));
 const model = `assets/web/${mapping.sourceSha256}.glb`;
-const runtime = readGlb(await readFile(`public/${model}`)).json;
+const container = readGlb(await readFile(`public/${model}`)), runtime = container.json;
 if (JSON.stringify(runtime.materials) !== JSON.stringify(metadata.materials) || runtime.images.length !== metadata.images.length || runtime.textures.length !== metadata.textures.length) throw Error('Runtime material layout differs from source');
 for (const [index, entry] of metadata.textures.entries()) {
   const optimized = runtime.textures[index], imageIndex = optimized?.extensions?.EXT_texture_webp?.source ?? optimized?.source;
@@ -21,7 +21,10 @@ for (const [index, entry] of metadata.textures.entries()) {
 }
 const records = [];
 for (let index = 0; index < metadata.images.length; index++) {
-  const candidates = report.records.filter(row => row.uses?.some(use => use.model === model && use.imageIndex === index));
+  let candidates = report.records.filter(row => row.uses?.some(use => use.model === model && use.imageIndex === index));
+  // Unused embedded images may have no model-use record. Match their exact
+  // runtime bytes to an existing converted sidecar without inventing a role.
+  if (!candidates.length) { const view = runtime.bufferViews[runtime.images[index].bufferView], start = view.byteOffset ?? 0; const hash = createHash('sha256').update(container.bin.subarray(start, start + view.byteLength)).digest('hex'); candidates = report.records.filter(row => row.sha256 === hash); }
   if (candidates.length !== 1) throw Error(`Missing unique native sidecar for image ${index}`);
   const row = candidates[0], source = await readFile(row.source), native = await readFile(row.output);
   if (createHash('sha256').update(source).digest('hex') !== row.sha256) throw Error('Runtime source hash mismatch');
