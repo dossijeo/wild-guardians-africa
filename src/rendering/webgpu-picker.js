@@ -9,11 +9,21 @@ export function createCutoutHitTest(){const cache=new WeakMap();function pixels(
 
 // Runs only on demand in the presentation Worker, against its confirmed state
 // and resident scene. Simulation validates every action using the returned ID.
-export function createWebGpuPicker({scene,camera,state,animals,cropBounds,sequence=()=>-1}={}){
- if(!scene?.isScene||!camera?.isCamera||!state||typeof animals?.get!=='function'||typeof cropBounds!=='function'||typeof sequence!=='function')throw TypeError('Invalid WebGPU picker');
+export function createWebGpuPicker({scene,camera,state,animals,workers={get:()=>null},cropBounds,sequence=()=>-1,isReady=()=>true}={}){
+ if(!scene?.isScene||!camera?.isCamera||!state||typeof animals?.get!=='function'||typeof workers?.get!=='function'||typeof cropBounds!=='function'||typeof sequence!=='function'||typeof isReady!=='function')throw TypeError('Invalid WebGPU picker');
  const opaque=createCutoutHitTest(),ray=new Raycaster(),cursor=new Vector2(),box=new Box3(),point=new Vector3();
+ const visibleHit=hit=>{for(let object=hit.object;object;object=object.parent)if(!object.visible)return false;return opaque(hit);};
  return {pick({x,y,terrainOnly=false}={}){if(!Number.isFinite(x)||!Number.isFinite(y)||Math.abs(x)>1||Math.abs(y)>1||typeof terrainOnly!=='boolean')throw TypeError('Invalid picking coordinate');scene.updateMatrixWorld(true);camera.updateMatrixWorld(true);ray.setFromCamera(cursor.set(x,y),camera);const terrain=ray.intersectObjects(scene.children.filter(o=>o.userData.ground),false)[0],ground=terrain?{x:terrain.point.x,z:terrain.point.z}:null;if(terrainOnly)return {entityId:null,hitPoint:null,point:ground,sequence:sequence()};
-  let entityId=null,hitPoint=null,closest=Infinity;const occluders=scene.children.filter(o=>o.visible&&(o.userData.ground||o.userData.entityId||Number.isInteger(o.userData.nativePropSlot)));const blocked=ray.intersectObjects(occluders,true).find(hit=>{for(let o=hit.object;o;o=o.parent)if(!o.visible)return false;return opaque(hit);});if(blocked)closest=blocked.distance;for(const animal of state.raid?.animals??[]){if(animal.status==='gone')continue;const root=animals.get(animal.id)?.root;if(!root?.visible)continue;const hit=ray.intersectObject(root,true)[0];if(hit&&hit.distance<closest){closest=hit.distance;entityId=animal.id;hitPoint={x:hit.point.x,y:hit.point.y,z:hit.point.z};}}
+  let entityId=null,hitPoint=null,closest=Infinity;const occluders=scene.children.filter(o=>o.visible&&(o.userData.ground||o.userData.entityId||Number.isInteger(o.userData.nativePropSlot)));const blocked=ray.intersectObjects(occluders,true).find(visibleHit);if(blocked){closest=blocked.distance;for(let object=blocked.object;object;object=object.parent)if(object.userData.entityId){entityId=object.userData.entityId;hitPoint={x:blocked.point.x,y:blocked.point.y,z:blocked.point.z};break;}}
+  for(const [entities,roster,skip] of [[state.raid?.animals??[],animals,'gone'],[state.workers??[],workers,'home']])for(const entity of entities){if(entity.status===skip)continue;const root=roster.get(entity.id)?.root;if(!root?.visible)continue;const hit=ray.intersectObject(root,true).find(visibleHit);if(hit&&hit.distance<closest){closest=hit.distance;entityId=entity.id;hitPoint={x:hit.point.x,y:hit.point.y,z:hit.point.z};}}
   for(const candidate of cropBounds()){if(!candidate?.id||![candidate.x,candidate.y,candidate.z,candidate.radius,candidate.height].every(Number.isFinite)||candidate.radius<=0||candidate.height<=0)throw TypeError('Invalid confirmed crop bounds');box.min.set(candidate.x-candidate.radius,candidate.y,candidate.z-candidate.radius);box.max.set(candidate.x+candidate.radius,candidate.y+candidate.height,candidate.z+candidate.radius);if(ray.ray.intersectBox(box,point)){const distance=point.distanceTo(ray.ray.origin);if(distance<closest){closest=distance;entityId=candidate.id;hitPoint={x:point.x,y:point.y,z:point.z};}}}
-  return {entityId,hitPoint,point:ground,sequence:sequence()};}};
+  return {entityId,hitPoint,point:ground,sequence:sequence(),...(isReady()?{}:{incomplete:true})};}};
+}
+
+// Do not route a gameplay click to an incomplete visual scene: missing
+// actors or structures could otherwise expose a target behind them.
+export function webGpuPickerReady(state,{animals,workers,settlements,crops,terrain}={}){
+ const expectedAnimals=(state.raid?.animals??[]).filter(a=>a.status!=='gone').length,expectedWorkers=(state.workers??[]).filter(w=>w.status!=='home').length;
+ const structures=state.structures??[],expectedWalls=structures.filter(s=>s.kind==='wall').length,expectedCenters=structures.filter(s=>s.kind==='center').length,expectedVillages=(state.villages??[]).length,expectedPlants=(state.plants??[]).filter(p=>p.alive).length;
+ return !(state.crates??[]).length&&!structures.some(s=>s.kind!=='wall'&&s.kind!=='center')&&!terrain?.closed&&!terrain?.pending&&(animals?.ready??0)>=expectedAnimals&&(workers?.ready??0)>=expectedWorkers&&(settlements?.walls??0)>=expectedWalls&&(settlements?.centers??0)>=expectedCenters&&(settlements?.villages??0)>=expectedVillages&&(crops?.plants??0)>=expectedPlants;
 }
