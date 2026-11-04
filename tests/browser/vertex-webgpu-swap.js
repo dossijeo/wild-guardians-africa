@@ -108,7 +108,7 @@ export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders =
   const mixers = actors.map(actor => { const mixer = new THREE.AnimationMixer(actor); if (preview.animations.length) mixer.clipAction(preview.animations[0]).play(); return mixer; });
   const intervals = [], renderCpu = [], events = {}, bootstrapMs = performance.now() - bootstrapStart, start = performance.now(), absoluteStart = performance.timeOrigin + performance.now();
   let frame = 0, previous = 0, ready = false, applied = false, failure = null, apply, blendStart = null;
-  const captures = [], captureLevels = captureBlend ? [0, .5, 1] : [];
+  const captures = [], captureLevels = captureBlend ? [-1, 0, .5, 1] : [];
   const provisional = []; for (const actor of actors) actor.traverse(object => { if (object.isMesh) provisional.push({ object, material: object.material }); });
   events.framesWhileCompiling = 0;
   const errors = []; device.addEventListener('uncapturederror', e => errors.push(e.error.message));
@@ -205,7 +205,7 @@ export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders =
       let blend = null;
       if (blendStart !== null) { blend = Math.min(1, (now - blendStart) / 300); if (captureLevels.length && blend >= captureLevels[0]) blend = captureLevels[0]; stableResources.setBlend(blend); if (blend === 1) { events.blendCompleteAt = performance.now() - start; blendStart = null; } }
       const t = performance.now(); renderer.render(scene, camera); renderCpu.push({ frame, ms: performance.now() - t });
-      if (captureLevels.length && blend === captureLevels[0]) {
+      if (captureLevels.length && (blend === captureLevels[0] || (captureLevels[0] === -1 && frame === 29))) {
         const level = captureLevels.shift();
         try {
           const blob = await canvas.convertToBlob({ type: 'image/png' });

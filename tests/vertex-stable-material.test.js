@@ -44,7 +44,9 @@ test('texture blending requires a resolved material and accepts only finite prop
   assert.throws(() => stable.setBlend(.5), /not applied/);
   assert.throws(() => stable.apply({ blend: NaN }), /Invalid texture blend/);
   stable.apply({ blend: 0 });
-  stable.setBlend(.5); stable.setBlend(1);
+  assert.equal(x.mesh.material.normalScale.x, 0);
+  stable.setBlend(.5); assert.equal(x.mesh.material.normalScale.x, .5);
+  stable.setBlend(1); assert.equal(x.mesh.material.normalScale.x, 1);
   assert.throws(() => stable.setBlend(1.1), /Invalid texture blend/);
   stable.cancel(); assert.throws(() => stable.setBlend(.5), /cancelled/);
 });

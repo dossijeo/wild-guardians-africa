@@ -45,7 +45,7 @@ try {
       : await page.evaluate(async ({ mode, sourceUrl }) => (await import('/tests/browser/vertex-hydration-benchmark.js')).runHydrationBenchmark({ mode, sourceUrl }), { mode, sourceUrl });
     if (errors.length) throw Error(JSON.stringify(errors));
     if (process.env.WG_BLEND_CAPTURE_PREFIX) {
-      if (observations.length || result.captures.length !== 3) throw Error('Blend capture requires exactly one run and three frames');
+      if (observations.length || result.captures.length !== 4) throw Error('Blend capture requires exactly one run and four frames');
       for (const capture of result.captures) await writeFile(`${process.env.WG_BLEND_CAPTURE_PREFIX}-${capture.level}.png`, Buffer.from(capture.bytes));
       delete result.captures;
     }

@@ -18,7 +18,7 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
     entries.push({ object, record });
   });
   const sources = await Promise.all(entries.map(item => originalMaterials.parser.getDependency('material', item.record.material)));
-  const placeholders = new Map(), textureNodes = [], mapBindings = [], changes = [], createdMaterials = [];
+  const placeholders = new Map(), textureNodes = [], mapBindings = [], changes = [], createdMaterials = [], normalScales = [];
   const ready = uniform(0);
   let generation = 0, cancelled = false, resolved = false, applied = false;
   function placeholder(source, normal) {
@@ -41,6 +41,7 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
       if (nodeMaterial.normalScale) nodeMaterial.normalScale.y *= -1;
       if (nodeMaterial.clearcoatNormalScale) nodeMaterial.clearcoatNormalScale.y *= -1;
     }
+    if (source.normalMap && nodeMaterial.normalScale) normalScales.push({ scale: nodeMaterial.normalScale, original: nodeMaterial.normalScale.clone() });
     if (!item.object.geometry.getAttribute('normal')) nodeMaterial.flatShading = true;
     if (toonOutput && !source.transparent) nodeMaterial.outputNode = typeof toonOutput === 'function' ? toonOutput(item.object) : toonOutput;
     // Keep the existence of every map stable; use neutral textures until ready.
@@ -106,6 +107,7 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
       if (!Number.isFinite(blend) || blend < 0 || blend > 1) throw Error('Invalid texture blend');
       for (const binding of mapBindings) binding.material[binding.key] = binding.final;
       for (const item of textureNodes) item.node.value = item.final;
+      for (const item of normalScales) item.scale.copy(item.original).multiplyScalar(blend);
       ready.value = blend; applied = true;
     },
     setBlend(value) {
@@ -113,6 +115,7 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
       if (!resolved) throw Error('Final textures not ready');
       if (!applied) throw Error('Final textures not applied');
       if (!Number.isFinite(value) || value < 0 || value > 1) throw Error('Invalid texture blend');
+      for (const item of normalScales) item.scale.copy(item.original).multiplyScalar(value);
       ready.value = value;
     },
     cancel() { cancelled = true; resolved = false; generation++; },
