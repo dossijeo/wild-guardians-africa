@@ -15,6 +15,7 @@ if (digest(colors) !== entry.sha256 || colors.length !== entry.bytes) throw Erro
 if (source.readUInt32LE(0) !== 0x46546c67 || source.readUInt32LE(4) !== 2) throw Error('Expected GLB 2');
 const jsonLength = source.readUInt32LE(12);
 const json = JSON.parse(source.subarray(20, 20 + jsonLength).toString('utf8'));
+json.asset.extras = { ...json.asset.extras, wgVertexPreviewSourceSha256: entry.sourceSha256 };
 const binHeader = 20 + jsonLength;
 if (source.readUInt32LE(binHeader + 4) !== 0x004e4942) throw Error('Missing BIN chunk');
 const bin = source.subarray(binHeader + 8, binHeader + 8 + source.readUInt32LE(binHeader));

@@ -1,10 +1,15 @@
 import * as THREE from 'three';
 import { attribute, mix, texture, uniform, vec4 } from 'three/tsl';
 
-// Structural experiment only: the original materials are already decoded in
-// CPU memory. Texture upload and the appearance change happen on demand later.
+// Structural experiment only. Source identifiers must agree before any
+// original texture can replace the provisional appearance.
 export async function makeStableVertexMaterials(renderer, preview, originalMaterials, mapping, { nativeColor = false } = {}) {
+  const sourceHash = mapping?.sourceSha256;
+  if (!/^[a-f0-9]{64}$/.test(sourceHash ?? '')) throw Error('Missing or invalid source hash');
+  const assertSource = asset => { if (asset?.parser?.json?.asset?.extras?.wgVertexPreviewSourceSha256 !== sourceHash) throw Error('Material or preview source mismatch'); };
+  assertSource(preview); assertSource(originalMaterials);
   const records = new Map(mapping.primitives.map(record => [`${record.mesh}:${record.primitive}`, record]));
+  if (records.size !== mapping.primitives.length) throw Error('Duplicate primitive mapping');
   const entries = [];
   preview.scene.traverse(object => {
     if (!object.isMesh) return;
@@ -13,8 +18,9 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
     entries.push({ object, record });
   });
   const sources = await Promise.all(entries.map(item => originalMaterials.parser.getDependency('material', item.record.material)));
-  const placeholders = new Map(), textureNodes = [], mapBindings = [];
+  const placeholders = new Map(), textureNodes = [], mapBindings = [], changes = [], createdMaterials = [];
   const ready = uniform(0);
+  let generation = 0, cancelled = false, resolved = false;
   function placeholder(source, normal) {
     const key = `${source.colorSpace}:${normal}`;
     if (!placeholders.has(key)) {
@@ -23,9 +29,10 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
     }
     return placeholders.get(key);
   }
-  for (const [index, item] of entries.entries()) {
+  try { for (const [index, item] of entries.entries()) {
     const source = sources[index], nodeMaterial = renderer.library.fromMaterial(source);
     if (!nodeMaterial) throw Error(`Unsupported material type ${source.type}`);
+    createdMaterials.push(nodeMaterial);
     // GLTFLoader.assignFinalMaterial flips these scales for meshes without
     // tangents. fromMaterial copies by reference, so clone before adjusting.
     if (nodeMaterial.normalScale) nodeMaterial.normalScale = nodeMaterial.normalScale.clone();
@@ -46,37 +53,59 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
       if (!geometry.getAttribute('color')) throw Error('Missing baked vertex color');
       let original = item.record.colorAccessor == null ? null : await preview.parser.getDependency('accessor', item.record.colorAccessor);
       if (nativeColor) {
-        if (original) geometry.setAttribute('color', original); else geometry.deleteAttribute('color');
         nodeMaterial.vertexColors = !!original;
-        item.object.material = nodeMaterial;
+        changes.push({ object: item.object, material: nodeMaterial, color: original, replaceColor: true });
         continue;
       }
       if (!original) original = new THREE.BufferAttribute(new Uint8Array(geometry.attributes.position.count * 4).fill(255), 4, true);
-      geometry.setAttribute('wgOriginalColor', original);
       const sampled = texture(placeholder(source.map, false));
       textureNodes.push({ index, node: sampled, final: source.map });
       nodeMaterial.vertexColors = false;
       nodeMaterial.colorNode = vec4(mix(attribute('color', 'vec4').rgb, sampled.rgb.mul(uniform(source.color.clone())).mul(attribute('wgOriginalColor', 'vec4').rgb), ready), 1);
+      changes.push({ object: item.object, material: nodeMaterial, originalColor: original });
+    } else {
+      changes.push({ object: item.object, material: nodeMaterial });
     }
-    item.object.material = nodeMaterial;
+  } } catch (error) {
+    for (const material of createdMaterials) material.dispose();
+    for (const texture of placeholders.values()) texture.dispose();
+    throw error;
+  }
+  for (const change of changes) {
+    const geometry = change.object.geometry;
+    if (change.replaceColor) { if (change.color) geometry.setAttribute('color', change.color); else geometry.deleteAttribute('color'); }
+    if (change.originalColor) geometry.setAttribute('wgOriginalColor', change.originalColor);
+    change.object.material = change.material;
   }
   return {
     placeholders: [...placeholders.values()],
     async resolveFinal(asset) {
+      if (cancelled) throw Error('Material preparation cancelled');
+      const current = ++generation;
+      resolved = false;
+      assertSource(asset);
       const finalSources = await Promise.all(entries.map(item => asset.parser.getDependency('material', item.record.material)));
+      if (cancelled || generation !== current) throw Error('Material preparation cancelled or superseded');
       const textures = new Set();
+      const resolvedBindings = [], resolvedNodes = [];
       for (const binding of mapBindings) {
         const value = finalSources[binding.index][binding.key];
         if (!value?.isTexture) throw Error(`Final texture missing: ${binding.key}`);
-        binding.final = value; textures.add(value);
+        resolvedBindings.push({ binding, value }); textures.add(value);
       }
-      for (const item of textureNodes) { item.final = finalSources[item.index].map; if (!item.final?.isTexture) throw Error('Final base texture missing'); }
+      for (const item of textureNodes) { const value = finalSources[item.index].map; if (!value?.isTexture) throw Error('Final base texture missing'); resolvedNodes.push({ item, value }); }
+      for (const { binding, value } of resolvedBindings) binding.final = value;
+      for (const { item, value } of resolvedNodes) item.final = value;
+      resolved = true;
       return [...textures];
     },
     apply() {
+      if (cancelled) throw Error('Material preparation cancelled');
+      if (!resolved) throw Error('Final textures not ready');
       for (const binding of mapBindings) binding.material[binding.key] = binding.final;
       for (const item of textureNodes) item.node.value = item.final;
       ready.value = 1;
     },
+    cancel() { cancelled = true; resolved = false; generation++; },
   };
 }

@@ -30,7 +30,7 @@ for (const image of original.images ?? []) {
   await writeFile(join(output, name), data); imageBytes += data.length;
   images.push({ ...image, bufferView: undefined, mimeType: undefined, uri: name });
 }
-const materials = { asset: { version: '2.0' }, scene: 0, scenes: [{ nodes: [] }], materials: original.materials ?? [], textures: original.textures ?? [], samplers: original.samplers ?? [], images };
+const materials = { asset: { version: '2.0', extras: { wgVertexPreviewSourceSha256: entry.sourceSha256 } }, scene: 0, scenes: [{ nodes: [] }], materials: original.materials ?? [], textures: original.textures ?? [], samplers: original.samplers ?? [], images };
 if (original.extensionsUsed) materials.extensionsUsed = original.extensionsUsed;
 if (original.extensionsRequired) materials.extensionsRequired = original.extensionsRequired;
 const primitives = original.meshes.flatMap((mesh, meshIndex) => mesh.primitives.map((primitive, primitiveIndex) => ({ mesh: meshIndex, primitive: primitiveIndex, material: primitive.material ?? null, colorAccessor: primitive.attributes.COLOR_0 ?? null })));
