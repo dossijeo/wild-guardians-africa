@@ -2,15 +2,26 @@ import * as THREE from 'three';
 import { WebGPURenderer } from 'three/webgpu';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { prepareHydration } from './vertex-preview-hydrate.js';
+import { makeStableVertexMaterials } from './vertex-stable-material.js';
 
 // Isolated request-time preparation. The old material remains visible while
 // compileAsync is pending. This does not promise asynchronous texture upload.
 export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders = false, canvas = null }) {
-  if (!['async', 'target', 'coverage', 'whole', 'sequential', 'staged', 'direct'].includes(mode)) throw Error('Unknown mode');
+  if (!['async', 'target', 'coverage', 'whole', 'sequential', 'staged', 'stable', 'direct'].includes(mode)) throw Error('Unknown mode');
   const loader = new GLTFLoader(), preview = await loader.loadAsync('/hydration-files/preview.glb');
   const renderer = new WebGPURenderer({ antialias: false, ...(canvas ? { canvas } : {}) }); await renderer.init();
   if (!renderer.backend?.isWebGPUBackend) throw Error('WebGPU backend unavailable');
   renderer.setSize(512, 512, false); if (!canvas) document.body.replaceChildren(renderer.domElement);
+  let stableResources = null;
+  if (mode === 'stable') {
+    const [metadata, mapping] = await Promise.all([fetch('/hydration-files/materials.gltf').then(r => r.json()), fetch('/hydration-files/mapping.json').then(r => r.json())]);
+    // Metadata and a one-pixel in-memory stand-in establish the final material
+    // structure without downloading the final images before the first frame.
+    const pixel = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAADUlEQVQImWP4////fwAJ+wP9CNHoHgAAAABJRU5ErkJggg==';
+    metadata.images = metadata.images.map(image => ({ ...image, uri: pixel }));
+    const placeholderMaterials = await loader.parseAsync(JSON.stringify(metadata), '/hydration-files/');
+    stableResources = await makeStableVertexMaterials(renderer, preview, placeholderMaterials, mapping);
+  }
   const device = renderer.backend.device, adapter = await navigator.gpu.requestAdapter();
   const info = adapter?.info ?? {};
   const gpuCalls = [], shaderCodes = new WeakMap();
@@ -46,6 +57,23 @@ export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders =
   const errors = []; device.addEventListener('uncapturederror', e => errors.push(e.error.message));
   function request() {
     events.requestedAt = performance.now() - start;
+    if (mode === 'stable') {
+      events.compileStart = performance.now() - start;
+      (async () => {
+        const materials = await loader.loadAsync('/hydration-files/materials.gltf');
+        const textures = await stableResources.resolveFinal(materials);
+        if (!textures.length) throw Error('No final textures were resolved');
+        events.materialsReadyAt = performance.now() - start;
+        events.textureCalls = [];
+        for (const texture of textures) {
+          await new Promise(requestAnimationFrame);
+          const t = performance.now(); renderer.initTexture(texture);
+          events.textureCalls.push({ cpuMs: performance.now() - t, width: texture.image?.width ?? null, height: texture.image?.height ?? null });
+        }
+        apply = () => stableResources.apply(); events.compileResolved = performance.now() - start; ready = true; events.readyAt = events.compileResolved;
+      })().catch(error => { failure = String(error?.stack ?? error); });
+      return;
+    }
     Promise.all([loader.loadAsync('/hydration-files/materials.gltf'), fetch('/hydration-files/mapping.json').then(r => r.json())])
       .then(async ([materials, mapping]) => {
         events.materialManifestAt = performance.now() - start;
@@ -113,7 +141,9 @@ export async function runVertexWebGpuSwap({ mode, frames = 180, captureShaders =
       else {
         if (!applied) return reject(Error('Timed out waiting for materials'));
         if (mode !== 'direct' && !(events.applyAt >= events.compileResolved)) return reject(Error('Material applied before compile resolved'));
-        resolve({ mode, backend: 'WebGPU', absoluteStart, adapter: { vendor: info.vendor, architecture: info.architecture, device: info.device, description: info.description }, intervals, renderCpu, events, errors, gpuCalls: gpuCalls.map(call => ({ ...call, at: call.at - start })) });
+        const imageRequests = performance.getEntriesByType('resource').filter(entry => /\/hydration-files\/[^/]+\.(png|jpg|webp)(?:\?|$)/i.test(entry.name)).map(entry => ({ name: entry.name, at: entry.startTime - start, duration: entry.duration }));
+        if (mode === 'stable' && (!imageRequests.length || imageRequests.some(entry => entry.at < events.requestedAt))) return reject(Error('Final image request occurred before the on-demand request, or was not observed'));
+        resolve({ mode, backend: 'WebGPU', absoluteStart, adapter: { vendor: info.vendor, architecture: info.architecture, device: info.device, description: info.description }, intervals, renderCpu, events, errors, imageRequests, gpuCalls: gpuCalls.map(call => ({ ...call, at: call.at - start })) });
         renderer.dispose();
       }
     }
