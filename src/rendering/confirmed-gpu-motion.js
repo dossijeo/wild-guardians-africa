@@ -1,6 +1,8 @@
 import {DataTexture, FloatType, NearestFilter, RGBAFormat, Vector3} from 'three';
 import {Fn, If, Loop, clamp, float, ivec2, mix, modelWorldMatrixInverse, positionLocal, textureLoad, uniform, vec3, vec4} from 'three/tsl';
 
+const materialOwners=new WeakMap();
+
 // Replays only already-confirmed, timed path segments; it never predicts a
 // safe route or owns an actor. A caller must supply a presentation clock and
 // freeze it for pauses, invalidations and unavailable state. Coordinates are
@@ -27,7 +29,9 @@ export function createConfirmedGpuMotion({actorId,clock,maxSegments=64}={}){
   if(x!==end.x||z!==end.z)throw TypeError('Motion endpoint differs from confirmed state');
   data.set(next);path.needsUpdate=true;count.value=trace.segments.length;startTime.value=start.at;endTime.value=end.at-start.at;horizon.value=endTime.value;anchor.value.x=start.x;anchor.value.z=start.z;sequence=publicationSequence;installed={start:{...start},end:{...end},segments:trace.segments.length};return installed;
  }
+ function sample(at){if(disposed||!installed||!Number.isFinite(at))throw TypeError('Invalid motion sample');const time=Math.max(0,Math.min(Math.fround(at)-Math.fround(startTime.value),horizon.value,endTime.value));let x=anchor.value.x,z=anchor.value.z;for(let i=0;i<count.value;i++){const j=i*8,t0=data[j],t1=data[j+1];if(time>=t0){const t=Math.max(0,Math.min(1,(time-t0)/(t1-t0)));x=data[j+2]+(data[j+4]-data[j+2])*t;z=data[j+3]+(data[j+5]-data[j+3])*t;}}return {x,z,dx:x-anchor.value.x,dz:z-anchor.value.z};}
  function hold(at){if(disposed)throw Error('GPU motion disposed');if(!installed||!Number.isFinite(at)||at<installed.start.at||at>installed.end.at||at-installed.start.at>horizon.value+1e-8)throw TypeError('Invalid motion hold');horizon.value=at-installed.start.at;}
- function bind(material){if(disposed)throw Error('GPU motion disposed');if(!material?.isNodeMaterial||material.positionNode)throw TypeError('Expected node material without position override');const node=positionLocal.add(offset);material.positionNode=node;bindings.set(material,node);material.needsUpdate=true;return material;}
- return {install,hold,bind,get texture(){return path;},status(){return {sequence,disposed,installed,horizon:installed?installed.start.at+horizon.value:null};},dispose(){if(disposed)return;disposed=true;for(const [material,node] of bindings)if(material.positionNode===node){material.positionNode=null;material.needsUpdate=true;}bindings.clear();path.dispose();}};
+ function bind(material){if(disposed)throw Error('GPU motion disposed');if(!material?.isNodeMaterial||material.castShadowPositionNode)throw TypeError('Expected compatible node material');if(bindings.has(material))return material;if(materialOwners.has(material))throw Error('Motion material already owned');const previous=material.positionNode,node=(previous??positionLocal).add(offset);material.positionNode=node;bindings.set(material,{node,previous});materialOwners.set(material,bindings);material.needsUpdate=true;return material;}
+ function unbind(material){const binding=bindings.get(material);if(!binding)return false;if(material.positionNode===binding.node){material.positionNode=binding.previous;material.needsUpdate=true;}if(materialOwners.get(material)===bindings)materialOwners.delete(material);bindings.delete(material);return true;}
+ return {actorId,install,hold,sample,bind,unbind,get texture(){return path;},status(){return {sequence,disposed,installed,horizon:installed?installed.start.at+horizon.value:null};},dispose(){if(disposed)return;disposed=true;for(const material of [...bindings.keys()])unbind(material);path.dispose();}};
 }

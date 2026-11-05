@@ -7,17 +7,24 @@ export function createCutoutHitTest(){const cache=new WeakMap();function pixels(
  function sample(texture,hit,channel){if(!texture)return 1;const source=pixels(texture),uv=texture.channel===1?hit.uv1:hit.uv;if(!source||!uv)return null;const p=uv.clone();if(texture.matrixAutoUpdate)texture.updateMatrix();texture.transformUv(p);const x=Math.max(0,Math.min(source.width-1,Math.floor(p.x*source.width))),y=Math.max(0,Math.min(source.height-1,Math.floor(p.y*source.height)));return source.data[(y*source.width+x)*4+channel]/255;}
  return hit=>{const object=hit.object,material=Array.isArray(object.material)?object.material[hit.face?.materialIndex??0]:object.material;if(!material||!(material.alphaTest>0))return true;const alpha=sample(material.map,hit,3),mask=sample(material.alphaMap,hit,1);if(alpha===null||mask===null)return true;return (material.opacity??1)*alpha*mask>=material.alphaTest;};}
 
+// One frozen simulation time per complete pick; revocation happens only after
+// every candidate has been evaluated against the same presentation.
+export function createWebGpuMotionPickSession({getTime,revoke}={}){
+ if(typeof getTime!=='function'||typeof revoke!=='function')throw TypeError('Invalid motion pick session');let at=null;
+ return {getPickTime(){return at;},begin(){if(at!==null)throw Error('Nested motion pick');const next=getTime();if(!Number.isFinite(next))throw Error('Invalid motion pick time');at=next;},end(){if(at===null)throw Error('No motion pick');at=null;revoke();}};
+}
+
 // Runs only on demand in the presentation Worker, against its confirmed state
 // and resident scene. Simulation validates every action using the returned ID.
-export function createWebGpuPicker({scene,camera,state,animals,workers={get:()=>null},cropBounds,sequence=()=>-1,isReady=()=>true}={}){
- if(!scene?.isScene||!camera?.isCamera||!state||typeof animals?.get!=='function'||typeof workers?.get!=='function'||typeof cropBounds!=='function'||typeof sequence!=='function'||typeof isReady!=='function')throw TypeError('Invalid WebGPU picker');
+export function createWebGpuPicker({scene,camera,state,animals,workers={get:()=>null},cropBounds,sequence=()=>-1,isReady=()=>true,motionInteraction=null}={}){
+ if(!scene?.isScene||!camera?.isCamera||!state||typeof animals?.get!=='function'||typeof workers?.get!=='function'||typeof cropBounds!=='function'||typeof sequence!=='function'||typeof isReady!=='function'||motionInteraction!==null&&(typeof motionInteraction.begin!=='function'||typeof motionInteraction.end!=='function'))throw TypeError('Invalid WebGPU picker');
  const opaque=createCutoutHitTest(),ray=new Raycaster(),cursor=new Vector2(),box=new Box3(),point=new Vector3();
  const visibleHit=hit=>{for(let object=hit.object;object;object=object.parent)if(!object.visible)return false;return opaque(hit);};
- return {pick({x,y,terrainOnly=false}={}){if(!Number.isFinite(x)||!Number.isFinite(y)||Math.abs(x)>1||Math.abs(y)>1||typeof terrainOnly!=='boolean')throw TypeError('Invalid picking coordinate');scene.updateMatrixWorld(true);camera.updateMatrixWorld(true);ray.setFromCamera(cursor.set(x,y),camera);const terrain=ray.intersectObjects(scene.children.filter(o=>o.userData.ground),false)[0],ground=terrain?{x:terrain.point.x,z:terrain.point.z}:null;if(terrainOnly)return {entityId:null,hitPoint:null,point:ground,sequence:sequence()};
+ return {pick({x,y,terrainOnly=false}={}){if(!Number.isFinite(x)||!Number.isFinite(y)||Math.abs(x)>1||Math.abs(y)>1||typeof terrainOnly!=='boolean')throw TypeError('Invalid picking coordinate');motionInteraction?.begin();try{scene.updateMatrixWorld(true);camera.updateMatrixWorld(true);ray.setFromCamera(cursor.set(x,y),camera);const terrain=ray.intersectObjects(scene.children.filter(o=>o.userData.ground),false)[0],ground=terrain?{x:terrain.point.x,z:terrain.point.z}:null;if(terrainOnly)return {entityId:null,hitPoint:null,point:ground,sequence:sequence()};
   let entityId=null,hitPoint=null,closest=Infinity;const occluders=scene.children.filter(o=>o.visible&&(o.userData.ground||o.userData.entityId||Number.isInteger(o.userData.nativePropSlot)));const blocked=ray.intersectObjects(occluders,true).find(visibleHit);if(blocked){closest=blocked.distance;for(let object=blocked.object;object;object=object.parent)if(object.userData.entityId){entityId=object.userData.entityId;hitPoint={x:blocked.point.x,y:blocked.point.y,z:blocked.point.z};break;}}
   for(const [entities,roster,skip] of [[state.raid?.animals??[],animals,'gone'],[state.workers??[],workers,'home']])for(const entity of entities){if(entity.status===skip)continue;const root=roster.get(entity.id)?.root;if(!root?.visible)continue;const hit=ray.intersectObject(root,true).find(visibleHit);if(hit&&hit.distance<closest){closest=hit.distance;entityId=entity.id;hitPoint={x:hit.point.x,y:hit.point.y,z:hit.point.z};}}
   for(const candidate of cropBounds()){if(!candidate?.id||![candidate.x,candidate.y,candidate.z,candidate.radius,candidate.height].every(Number.isFinite)||candidate.radius<=0||candidate.height<=0)throw TypeError('Invalid confirmed crop bounds');box.min.set(candidate.x-candidate.radius,candidate.y,candidate.z-candidate.radius);box.max.set(candidate.x+candidate.radius,candidate.y+candidate.height,candidate.z+candidate.radius);if(ray.ray.intersectBox(box,point)){const distance=point.distanceTo(ray.ray.origin);if(distance<closest){closest=distance;entityId=candidate.id;hitPoint={x:point.x,y:point.y,z:point.z};}}}
-  return {entityId,hitPoint,point:ground,sequence:sequence(),...(isReady()?{}:{incomplete:true})};}};
+  return {entityId,hitPoint,point:ground,sequence:sequence(),...(isReady()?{}:{incomplete:true})};}finally{motionInteraction?.end();}}};
 }
 
 // Do not route a gameplay click to an incomplete visual scene: missing
