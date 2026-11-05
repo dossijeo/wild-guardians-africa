@@ -3,6 +3,25 @@ import assert from 'node:assert/strict';
 import {MessageChannel} from 'node:worker_threads';
 import {once} from 'node:events';
 import {createWorkerHostedRuntime} from '../src/simulation/worker-hosted-runtime.js';
+import {resolvePresentationRecoveryOptions} from '../src/simulation/presentation-recovery-options.js';
+
+test('generic recovery options are explicit, compatible and fail closed',()=>{
+ assert.deepEqual(resolvePresentationRecoveryOptions({}),{enabled:false,concurrent:false,work:false,backpressure:false,compactTicks:false});
+ assert.deepEqual(resolvePresentationRecoveryOptions({visualRecovery:{enabled:true,concurrent:true,work:true,backpressure:true}}),{enabled:true,concurrent:true,work:true,backpressure:true,compactTicks:false});
+ assert.throws(()=>resolvePresentationRecoveryOptions({visualRecovery:{enabled:true,backpressure:true}}),/configuration/);
+ assert.throws(()=>resolvePresentationRecoveryOptions({visualRecovery:{enabled:true,unknown:true}}),/Unknown/);
+ assert.throws(()=>resolvePresentationRecoveryOptions({visualRecovery:{enabled:true},qaVisualRecovery:true}),/Conflicting/);
+ assert.equal(resolvePresentationRecoveryOptions({qaVisualRecovery:true},{allowQa:false}).enabled,false);
+});
+
+test('generic recovery API preserves session, request identity and transferred ports',async()=>{
+ const messages=[],worker={postMessage:(message,transfer)=>messages.push({message,transfer}),terminate(){}},receiver={accept(p){this.sequence=p.sequence;return {accepted:true};},acceptUnchanged(){return {accepted:true};},status(){return {sequence:this.sequence??0,lastElapsed:0};}};
+ const runtime=createWorkerHostedRuntime({confirmedReceiver:receiver,session:'s',clientOptions:{},runtimeOptions:{visualRecovery:{enabled:true,concurrent:true,work:true}},workerFactory:()=>worker});
+ await assert.rejects(runtime.start(),/requires terrain and presentation/);const start=runtime.start({terrainPort:{},presentationPort:{}});worker.onmessage({data:{kind:'publication',session:'s',publication:{sequence:1,elapsed:0,events:[]}}});worker.onmessage({data:{kind:'started',session:'s',sequence:1,status:{}}});await start;
+ const prepare=runtime.prepareVisualRecovery(),request=messages.at(-1).message;assert.equal(request.kind,'prepareVisualRecovery');worker.onmessage({data:{kind:'visualRecoveryPrepared',session:'s',id:request.id,checkpoint:{sequence:1}}});assert.equal((await prepare).checkpoint.sequence,1);
+ const terrainPort={},presentationPort={},recoveryPort={},attach=runtime.attachVisualRecovery({terrainPort,presentationPort,recoveryPort}),call=messages.at(-1);assert.deepEqual(call.transfer,[terrainPort,presentationPort,recoveryPort]);worker.onmessage({data:{kind:'visualRecoveryAttached',session:'s',id:call.message.id,sequence:1}});assert.equal((await attach).sequence,1);
+ runtime.finishVisualRecovery();assert.equal(messages.at(-1).message.kind,'finishVisualRecovery');runtime.dispose();
+});
 test('backpressure notification is delivered separately from command results',async()=>{
  const notifications=[],worker={postMessage(){},terminate(){}},receiver={accept(p){this.sequence=p.sequence;return {accepted:true};},acceptUnchanged(){return {accepted:true};},status(){return {sequence:this.sequence??0,lastElapsed:0};}},options={qaVisualRecovery:true,qaVisualRecoveryConcurrent:true,qaVisualWorkRecovery:true,qaVisualBackpressureRecovery:true};
  const runtime=createWorkerHostedRuntime({confirmedReceiver:receiver,session:'s',clientOptions:{},runtimeOptions:options,onVisualBackpressure:info=>notifications.push(info),workerFactory:()=>worker}),start=runtime.start();
