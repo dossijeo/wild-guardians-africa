@@ -85,6 +85,13 @@ test('view folding rejects mismatched confirmed state',()=>{
  const sent=[],q=createHostPublicationQueue({session:'s',foldViews:true,send:value=>sent.push(value)}),full=sequence=>({sequence,events:[],physicsPose:null,elapsed:1,pauses:[],saveAvailable:true,snapshot:JSON.stringify({slotId:'slot',sequence:7,elapsed:1})});
  q.publication(full(1),true);q.publication(full(2),true);assert.equal(q.publication({sequence:3,unchanged:true,slotId:'slot',stateSequence:8,elapsed:1,pauses:[],events:[],saveAvailable:true},false),false);q.ack(1);assert.equal(sent[1].publication.sequence,2);q.ack(2);assert.equal(sent[2].publication.sequence,3);
 });
+test('view folding cannot discard a new input receipt, terrain revision or unknown field',()=>{
+ for(const extra of [{presentationInput:42},{rejection:'denied'},{terrainChanged:true},{newProtocolField:'important'}]){
+  const sent=[],q=createHostPublicationQueue({session:'s',foldViews:true,send:value=>sent.push(value)}),full=sequence=>({sequence,events:[],physicsPose:null,elapsed:1,pauses:[],saveAvailable:true,snapshot:JSON.stringify({slotId:'slot',sequence:7,elapsed:1})});
+  q.publication(full(1),true);q.publication(full(2),true);const view={sequence:3,unchanged:true,slotId:'slot',stateSequence:7,elapsed:1,pauses:[],events:[],saveAvailable:true,...extra};
+  assert.equal(q.publication(view,false),false);q.ack(1);assert.equal(sent[1].publication.sequence,2);q.ack(2);assert.deepEqual(sent[2].publication,view);
+ }
+});
 test('unobserved views merge only with adjacent equal states or a later tick',()=>{
  const sent=[],q=createHostPublicationQueue({session:'s',send:value=>sent.push(value)}),view=sequence=>({sequence,unchanged:true,slotId:'slot',stateSequence:7,elapsed:1,pauses:[],events:[],saveAvailable:true});
  q.publication(packet(1),true);q.publication(view(2),false,{backgroundView:true});q.publication(view(3),false,{backgroundView:true});
