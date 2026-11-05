@@ -14,6 +14,9 @@ test('new candidate does not discard old replay until its exact acknowledgement'
  const j=createPresentationRecoveryJournal({capacity:8,highWatermark:5});j.begin(1);j.confirm(1);j.append(publication(2),true);j.append(publication(3,[{id:'event-3'}]),true);j.begin(3);j.append(publication(4,[{id:'event-4'}]),true);
  assert.equal(j.snapshot().base,1);assert.deepEqual(j.snapshot().entries.map(e=>e.publication.sequence),[2,3,4]);assert.throws(()=>j.confirm(2),/mismatch/);j.confirm(3);assert.equal(j.snapshot().base,3);assert.deepEqual(j.snapshot().entries.map(e=>e.publication.sequence),[4]);
 });
+test('a lost graphical channel cannot promote an unacknowledged candidate or hide its pending history',()=>{
+ const journal=createPresentationRecoveryJournal({capacity:8,highWatermark:6});journal.begin(1);journal.confirm(1);journal.append(publication(2,[{id:'event-2'}]),true);journal.begin(2);journal.append(publication(3,[{id:'event-3'}]),true);assert.throws(()=>assertPresentationRecoveryBoundary(journal,{status:()=>({active:false})},{sequence:1},3),/incomplete/);const saved=journal.snapshot();assert.equal(saved.base,1);assert.deepEqual(saved.entries.map(entry=>entry.publication.events[0].id),['event-2','event-3']);assert.equal(journal.status().candidate,2);journal.dispose();
+});
 test('journal signals saturation before capacity and never silently drops a publication',()=>{
  const j=createPresentationRecoveryJournal({capacity:3,highWatermark:2});j.begin(1);j.confirm(1);j.append(publication(2),true);j.append(publication(3),true);assert.equal(j.status().saturated,true);j.append(publication(4),true);assert.throws(()=>j.append(publication(5),true),/capacity/);assert.deepEqual(j.snapshot().entries.map(e=>e.publication.sequence),[2,3,4]);assert.throws(()=>j.append(publication(6),true),/gap/);j.dispose();assert.throws(()=>j.snapshot(),/closed/);
 });

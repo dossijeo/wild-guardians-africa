@@ -54,6 +54,7 @@ export function createPresentationRecoveryJournal({capacity=256,highWatermark=12
    ensure();const n=sequence(value);if(n!==candidate)throw Error('Presentation checkpoint acknowledgement mismatch');
    base=n;candidate=null;entries=entries.filter(entry=>entry.item.sequence>n);bytes=entries.reduce((total,entry)=>total+entry.size,0);return base;
   },
+  abandonCandidate(value){ensure();const n=sequence(value);if(base===null||candidate!==n)throw Error('Presentation checkpoint candidate mismatch');candidate=null;return base;},
   snapshot(){ensure();if(base===null)throw Error('Presentation checkpoint is not acknowledged');return {base,through:last,entries:structuredClone(entries.map(entry=>entry.item))};},
   entry(index){ensure();if(base===null)throw Error('Presentation checkpoint is not acknowledged');if(!Number.isSafeInteger(index)||index<0)throw TypeError('Invalid presentation journal index');if(index>=entries.length)return null;entries[index].sealed=true;return structuredClone(entries[index].item);},
   status(){return {base,candidate,through:last,entries:entries.length,bytes,capacity,highWatermark,maxBytes,highWatermarkBytes,pendingTerrain:entries.at(-1)?.item.kind==='terrain',saturated:entries.length>=highWatermark||bytes>=highWatermarkBytes,closed};},

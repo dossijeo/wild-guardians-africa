@@ -64,3 +64,25 @@ y la compactación del journal. Sus límites y backpressure siguen activos, por
 lo que puede saturarse; no es una optimización de producción. Se mantiene la
 ruta heredada, y aún falta comprobar una caída real del dispositivo y la
 reconexión automática; no se considera resuelta la recuperación arbitraria.
+
+El host dispone de una operación QA explícita `markVisualLostForQa()`: tras
+comprobar que existe una base reconocida y que el journal es íntegro, separa
+el canal gráfico perdido, abandona solo un candidato aún sin ACK y conserva
+sus publicaciones y eventos. Las publicaciones posteriores siguen entrando
+en el journal acotado; al saturarse se aplica backpressure. La operación no se
+invoca automáticamente y aún necesita una prueba de extremo a extremo con
+pérdida real de dispositivo antes de conectar esa activación.
+
+La fixture `tests/browser/worker-visual-loss-recovery.html` prueba el host y la
+autoridad reales con consumidores gráficos y de terreno simulados. En una
+ejecución, partió del checkpoint confirmado 14, retuvo el candidato 20,
+registró la pérdida en la secuencia 32 y reprodujo 18 publicaciones hasta la
+32, con el evento confirmado una sola vez. La autoridad aceptó otra consulta
+tras el reenganche. No ejecuta WebGPU ni reconstruye partículas reales. Con
+Vite en `http://127.0.0.1:5187` y Playwright accesible mediante `NODE_PATH`, se
+reproduce con `node tools/experiments/audit_worker_visual_loss_recovery.mjs`.
+
+Si se pierde el canal de terreno con un ACK pendiente, la autoridad
+puede seguir ocupada; `markVisualLostForQa()` espera un límite y rechaza la
+operación si este no se alcanza. Ese caso no dispone todavía de recuperación
+demostrada y no debe activar el protocolo automáticamente.
