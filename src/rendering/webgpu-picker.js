@@ -1,4 +1,5 @@
 import {Box3,Raycaster,Vector2,Vector3} from 'three';
+import {insideChunkClip} from './webgpu-chunk-clip.js';
 
 // Read cutout alpha lazily in the presentation Worker. If pixels or a UV set
 // cannot be read we conservatively retain the hit; GPU deformation and mip
@@ -19,7 +20,7 @@ export function createWebGpuMotionPickSession({getTime,revoke}={}){
 export function createWebGpuPicker({scene,camera,state,animals,workers={get:()=>null},cropBounds,sequence=()=>-1,isReady=()=>true,motionInteraction=null}={}){
  if(!scene?.isScene||!camera?.isCamera||!state||typeof animals?.get!=='function'||typeof workers?.get!=='function'||typeof cropBounds!=='function'||typeof sequence!=='function'||typeof isReady!=='function'||motionInteraction!==null&&(typeof motionInteraction.begin!=='function'||typeof motionInteraction.end!=='function'))throw TypeError('Invalid WebGPU picker');
  const opaque=createCutoutHitTest(),ray=new Raycaster(),cursor=new Vector2(),box=new Box3(),point=new Vector3();
- const visibleHit=hit=>{for(let object=hit.object;object;object=object.parent)if(!object.visible)return false;return opaque(hit);};
+ const visibleHit=hit=>{for(let object=hit.object;object;object=object.parent)if(!object.visible)return false;return insideChunkClip(hit.point,hit.object.geometry?.getAttribute('wgChunkClip'))&&opaque(hit);};
  return {pick({x,y,terrainOnly=false}={}){if(!Number.isFinite(x)||!Number.isFinite(y)||Math.abs(x)>1||Math.abs(y)>1||typeof terrainOnly!=='boolean')throw TypeError('Invalid picking coordinate');motionInteraction?.begin();try{scene.updateMatrixWorld(true);camera.updateMatrixWorld(true);ray.setFromCamera(cursor.set(x,y),camera);const terrain=ray.intersectObjects(scene.children.filter(o=>o.userData.ground),false)[0],ground=terrain?{x:terrain.point.x,z:terrain.point.z}:null;if(terrainOnly)return {entityId:null,hitPoint:null,point:ground,sequence:sequence()};
   let entityId=null,hitPoint=null,closest=Infinity;const occluders=scene.children.filter(o=>o.visible&&(o.userData.ground||o.userData.entityId||Number.isInteger(o.userData.nativePropSlot)));const blocked=ray.intersectObjects(occluders,true).find(visibleHit);if(blocked){closest=blocked.distance;for(let object=blocked.object;object;object=object.parent)if(object.userData.entityId){entityId=object.userData.entityId;hitPoint={x:blocked.point.x,y:blocked.point.y,z:blocked.point.z};break;}}
   for(const [entities,roster,skip] of [[state.raid?.animals??[],animals,'gone'],[state.workers??[],workers,'home']])for(const entity of entities){if(entity.status===skip)continue;const actor=roster.get(entity.id),root=actor?.root;if(!root?.visible)continue;const restore=actor.preparePick?.();let hit;try{hit=ray.intersectObject(root,true).find(visibleHit);}finally{restore?.();}if(hit&&hit.distance<closest){closest=hit.distance;entityId=entity.id;hitPoint={x:hit.point.x,y:hit.point.y,z:hit.point.z};}}
