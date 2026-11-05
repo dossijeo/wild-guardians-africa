@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {Texture} from 'three';
-import {prepareWebGpuTexture,releaseAfterWebGpuUploads} from '../src/rendering/webgpu-texture-upload.js';
+import {prepareWebGpuTexture,releaseAfterWebGpuUploads,releaseAfterWebGpuWork} from '../src/rendering/webgpu-texture-upload.js';
 
 const turn=()=>new Promise(resolve=>setImmediate(resolve));
 function fixture(){let finish,lose,uploads=0,releases=0;const submitted=new Promise(resolve=>{finish=resolve;}),lost=new Promise(resolve=>{lose=resolve;}),texture=new Texture(),renderer={backend:{isWebGPUBackend:true,device:{lost,queue:{onSubmittedWorkDone:()=>submitted}}},initTexture(value){assert.equal(value,texture);uploads++;}},release=()=>{releases++;texture.dispose();};return {renderer,texture,release,finish,lose,get uploads(){return uploads;},get releases(){return releases;}};}
@@ -11,3 +11,6 @@ test('device loss rejects and releases even if the work completion never arrives
 test('already cancelled requests release without submitting',async()=>{const f=fixture(),controller=new AbortController();controller.abort();await assert.rejects(prepareWebGpuTexture({...f,signal:controller.signal}),{name:'AbortError'});assert.equal(f.uploads,0);assert.equal(f.releases,1);});
 test('a disposed progressive asset retains its resources until submitted uploads settle',async()=>{const f=fixture(),pending=releaseAfterWebGpuUploads(f.renderer,f.release);await turn();assert.equal(f.releases,0);f.finish();await pending;assert.equal(f.releases,1);f.lose({reason:'destroyed'});await turn();assert.equal(f.releases,1);});
 test('device loss releases a disposed progressive asset even when uploads never finish',async()=>{const f=fixture(),pending=releaseAfterWebGpuUploads(f.renderer,f.release);f.lose({reason:'destroyed'});await pending;assert.equal(f.releases,1);});
+test('shared resources outlive both pending compilation and upload in either order',async()=>{
+ for(const uploadFirst of [true,false]){const f=fixture();let compileDone;const admission={deferCompilations:callback=>{compileDone=callback;}};releaseAfterWebGpuWork({renderer:f.renderer,admission,uploadsPending:true,release:f.release});if(uploadFirst){f.finish();await turn();assert.equal(f.releases,0);compileDone();}else{compileDone();assert.equal(f.releases,0);f.finish();await turn();}assert.equal(f.releases,1);f.lose({reason:'destroyed'});await turn();assert.equal(f.releases,1);}
+});

@@ -10,6 +10,17 @@ export function releaseAfterWebGpuUploads(renderer,release){
  return Promise.race([settled,...(lost?[lost]:[])]).then(release);
 }
 
+// Owners stop creating work before calling this. Compilation and uploads may
+// settle in either order; neither is allowed to free their shared resources.
+export function releaseAfterWebGpuWork({renderer,admission=null,uploadsPending=false,release,onError=()=>{}}={}){
+ if(typeof uploadsPending!=='boolean'||typeof release!=='function'||typeof onError!=='function')throw TypeError('Invalid WebGPU resource release');
+ let compilationDone=typeof admission?.deferCompilations!=='function',uploadDone=!uploadsPending,released=false;
+ const finish=()=>{if(compilationDone&&uploadDone&&!released){released=true;release();}};
+ if(!compilationDone)admission.deferCompilations(()=>{compilationDone=true;finish();});
+ if(uploadsPending)void releaseAfterWebGpuUploads(renderer,()=>{uploadDone=true;finish();}).catch(onError);
+ finish();
+}
+
 export async function prepareWebGpuTexture({renderer,texture,signal,release}={}){
  const device=renderer?.backend?.device,queue=device?.queue;if(!renderer?.backend?.isWebGPUBackend||typeof renderer.initTexture!=='function'||!texture?.isTexture||typeof queue?.onSubmittedWorkDone!=='function'||typeof release!=='function')throw TypeError('Invalid WebGPU texture preparation');
  if(signal?.aborted){release();throw new DOMException('Texture preparation cancelled','AbortError');}
