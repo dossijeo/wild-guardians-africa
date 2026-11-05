@@ -1,15 +1,16 @@
 import {deserialize} from './snapshots.js';
 import {confirmedStateSaveAvailable,deserializeConfirmedState} from '../simulation/confirmed-live-state.js';
+import {validateNativeAuthorityCheckpoint} from '../simulation/native-authority-checkpoint.js';
 import {validateRaidWaitBindings} from '../simulation/raid-wait-handoff.js';
 
 // Snapshot requests enter the simulation queue immediately. Repository writes
 // remain ordered even when storage is asynchronous or an earlier write fails.
-export function createWorkerSaveCoordinator({runtime,repository,slotId,now=()=>Date.now(),experimentalPhysics=false}){
+export function createWorkerSaveCoordinator({runtime,repository,slotId,now=()=>Date.now(),experimentalPhysics=false,experimentalNativeAuthority=false}){
  if(typeof runtime?.submit!=='function'||typeof repository?.save!=='function'||typeof slotId!=='string'||!slotId||typeof now!=='function')throw TypeError('Invalid worker save coordinator');
  let tail=Promise.resolve();
  function request(){
   let checkpoint;
-  try{checkpoint=Promise.resolve(runtime.submit({kind:'snapshot',...(experimentalPhysics?{physicsCheckpoint:'encoded'}:{})})).then(value=>({value}),error=>({error}));}
+  try{checkpoint=Promise.resolve(runtime.submit({kind:'snapshot',...(experimentalPhysics?{physicsCheckpoint:'encoded'}:{}),...(experimentalNativeAuthority?{nativeAuthorityCheckpoint:true}:{})})).then(value=>({value}),error=>({error}));}
   catch(error){checkpoint=Promise.resolve({error});}
   const operation=tail.then(async()=>{
    const outcome=await checkpoint;if(outcome.error)throw outcome.error;
@@ -23,6 +24,7 @@ export function createWorkerSaveCoordinator({runtime,repository,slotId,now=()=>D
    else if(!confirmedStateSaveAvailable(state))throw Error('Worker checkpoint is not restorable');
    validateRaidWaitBindings(state,result.raidWaitBindings);
    state.workerRaidWaitBindings=structuredClone(result.raidWaitBindings);
+   if(experimentalNativeAuthority){validateNativeAuthorityCheckpoint(result.nativeAuthorityCheckpoint);state.workerNativeAuthorityCheckpoint=structuredClone(result.nativeAuthorityCheckpoint);}
    state.savedAt=now();
    await repository.save(state);
    return {saved:true,sequence:result.sequence,elapsed:state.elapsed};

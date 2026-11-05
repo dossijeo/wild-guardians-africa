@@ -28,3 +28,11 @@ $env:NODE_PATH='C:\Users\Gabriel\.cache\codex-runtimes\codex-primary-runtime\dep
 ```
 
 `QA_BASE_URL` y `PLAYWRIGHT_MODULE` permiten cambiar servidor o instalación. Detener Vite al terminar.
+
+### Guardado de frontera nativa (QA)
+
+Con `qa-worker-game&qa-worker-native-save`, el coordinador real de guardado solicita al Worker una captura de residencia, topología nativa y vista en la misma orden que el estado confirmado. La guarda en `workerNativeAuthorityCheckpoint` junto a las vinculaciones de espera; las partidas normales conservan el formato anterior. `savedNativeAuthorityOptions` valida y transforma ese guardado para crear una autoridad: el Worker reconstruye desde el estado y compara la topología y claves antes de anunciar `ready`, rechazando divergencias. Los metadatos se eliminan del estado lógico activo tras restaurar.
+
+La fixture `tests/browser/authority-native-bootstrap.html`, ejecutada con `tools/experiments/audit_authority_native_bootstrap.mjs`, solicita el guardado al Worker real, recupera una segunda autoridad desde el resultado serializado, compara cuatro avances y eventos y comprueba el rechazo de topología alterada. Ejecutar Vite en 5194 y después `$env:NODE_PATH='C:\Users\Gabriel\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules'; .\.cache\tooling\node20.exe tools/experiments/audit_authority_native_bootstrap.mjs`. La prueba usa un mundo pequeño, dos chunks, sin WorldScene, física Rapier ni renderizador; no demuestra paridad de una partida completa ni mide rendimiento.
+
+El flujo de Continue todavía prepara `WorldScene` antes de instalar el Worker. Falta que el host admita el arranque antes de disponer de `world.createConfirmedReceiver`, que se conecten más tarde los puertos de terreno/presentación y que se definan cancelación, estado confirmado inicial y reconciliación de UI. Los guardados anteriores carecen de residencia y vista, por lo que no se inventan: siguen la ruta antigua. La combinación con restauración Rapier queda pendiente de prueba real. Este checkpoint es experimental y no debe habilitarse en producción; la verificación nativa del Worker también es exclusiva de desarrollo.

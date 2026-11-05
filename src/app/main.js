@@ -226,7 +226,7 @@ const workerSaveCoordinators=new WeakMap();
 const experimentalWorkerPhysicsSave=()=>import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-worker-game')&&new URLSearchParams(location.search).has('qa-worker-physics-save');
 function ensureWorkerSave(owner,ownerState){
   const runtime=owner.workerRuntime;if(!runtime||!ownerState)throw Error('Worker save integration is unavailable');
-  let entry=workerSaveCoordinators.get(runtime);if(!entry){entry={slotId:ownerState.slotId,coordinator:createWorkerSaveCoordinator({runtime,repository:saves,slotId:ownerState.slotId,experimentalPhysics:experimentalWorkerPhysicsSave()})};workerSaveCoordinators.set(runtime,entry);}
+  let entry=workerSaveCoordinators.get(runtime);if(!entry){entry={slotId:ownerState.slotId,coordinator:createWorkerSaveCoordinator({runtime,repository:saves,slotId:ownerState.slotId,experimentalPhysics:experimentalWorkerPhysicsSave(),experimentalNativeAuthority:import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-worker-native-save')})};workerSaveCoordinators.set(runtime,entry);}
   if(entry.slotId!==ownerState.slotId)throw Error('Worker save slot changed');
   owner.workerSave=({confirm=false}={})=>saveWorkerGame(entry.coordinator,{confirm,onError:error,onConfirm:()=>juice?.savedSuccessfully()});return owner.workerSave;
 }

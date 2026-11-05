@@ -45,3 +45,12 @@ test('invalid navigation wait bindings cannot be persisted',async()=>{
  const saves=createWorkerSaveCoordinator({runtime:{submit:async()=>bad},repository:{save(){writes++;}},slotId:'a'});
  await assert.rejects(saves.request(),/bindings do not match/);assert.equal(writes,0);
 });
+
+test('native checkpoint is saved only when requested and validates before persistence',async()=>{
+ const state=newGame({seed:712,slotId:'a'}),writes=[],sent=[];let native=null;
+ const saves=createWorkerSaveCoordinator({runtime:{submit:async command=>{sent.push(command);return {...packet(state,1),nativeAuthorityCheckpoint:native};}},repository:{save(s){writes.push(s);}},slotId:'a',experimentalNativeAuthority:true});
+ await assert.rejects(saves.request(),/native authority checkpoint/);assert.equal(writes.length,0);
+ native={version:1,chunkKeys:['0,0'],spatialState:{version:5,seed:712,biome:'savanna',settlements:[],barriers:[],polygons:[],removedProps:[],nextBarrierId:1,nextPolygonId:1},navigationView:null};
+ assert.equal((await saves.request()).saved,true);assert.deepEqual(writes[0].workerNativeAuthorityCheckpoint,native);assert.deepEqual(sent,[{kind:'snapshot',nativeAuthorityCheckpoint:true},{kind:'snapshot',nativeAuthorityCheckpoint:true}]);
+ native.chunkKeys.push('0,0');await assert.rejects(saves.request(),/native authority checkpoint/);assert.equal(writes.length,1);
+});
