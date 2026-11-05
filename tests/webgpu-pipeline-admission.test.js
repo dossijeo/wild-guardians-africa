@@ -182,6 +182,25 @@ test('aborting an actor does not retire the shared renderer or publish a late re
  await Promise.resolve();controller.abort();await assert.rejects(pending,{name:'AbortError'});finish();assert.deepEqual(failures,[]);admission.dispose();
 });
 
+test('a cancelled active compile must settle before the next compile starts',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),first=new THREE.Group(),second=new THREE.Group(),controller=new AbortController(),calls=[];let finish;
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(object){calls.push(object);return object===first?new Promise(resolve=>{finish=resolve;}):Promise.resolve();}};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera}),cancelled=admission.prepare(first,{signal:controller.signal});await Promise.resolve();controller.abort();await assert.rejects(cancelled,{name:'AbortError'});
+ const next=admission.prepare(second);await new Promise(resolve=>setImmediate(resolve));assert.deepEqual(calls,[first]);finish();await next;assert.deepEqual(calls,[first,second]);admission.dispose();
+});
+
+test('a cancelled shadow compile also serializes the next preparation',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),first=new THREE.Mesh(),second=new THREE.Mesh(),sun=new THREE.DirectionalLight(),controller=new AbortController(),calls=[];first.castShadow=true;sun.castShadow=true;sun.shadow.map={};let finish;
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(object){calls.push(object);return Promise.resolve();},compileShadowAsync(){return new Promise(resolve=>{finish=resolve;});}},admission=createWebGpuPipelineAdmission({renderer,scene,camera,shadowLights:[sun],includeShadowPass:true});
+ const cancelled=admission.prepare(first,{signal:controller.signal});await new Promise(resolve=>setImmediate(resolve));controller.abort();await assert.rejects(cancelled,{name:'AbortError'});const next=admission.prepare(second);await new Promise(resolve=>setImmediate(resolve));assert.deepEqual(calls,[first]);finish();await next;assert.deepEqual(calls,[first,second]);admission.dispose();
+});
+
+test('late failure of a cancelled compile rejects queued work before it starts',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),controller=new AbortController(),failures=[];let reject,calls=0;
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(){calls++;return new Promise((_,fail)=>{reject=fail;});}},admission=createWebGpuPipelineAdmission({renderer,scene,camera,onFatal:error=>failures.push(error.message)});
+ const cancelled=admission.prepare(new THREE.Group(),{signal:controller.signal});await Promise.resolve();controller.abort();await assert.rejects(cancelled,{name:'AbortError'});const queued=admission.prepare(new THREE.Group()),result=assert.rejects(queued,/closed/);reject(Error('late failure'));await result;assert.equal(calls,1);assert.deepEqual(failures,['late failure']);
+});
+
 test('a cancelled compilation that later fails still retires its renderer',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),controller=new AbortController(),failures=[];let reject;
  const renderer={backend:{isWebGPUBackend:true},compileAsync:()=>new Promise((_,r)=>{reject=r;})};

@@ -121,6 +121,8 @@ El renderer consume únicamente recursos admitidos. Un fallo de preparación con
 
 Centralizar la adaptación a Three.js en una capa pequeña. Confirmar propagación de rechazos, device loss y disponibilidad de pipelines; cancelar lógicamente solicitudes obsoletas aunque el driver no pueda detener una compilación. No convertir `createRenderPipeline()` en una promesa mediante un parche indiscriminado: los contratos de devolución son distintos.
 
+La cola de admisión ya distingue la cancelación lógica de la finalización de la compilación: rechaza inmediatamente al solicitante, pero no inicia otra compilación hasta que termine la anterior. Si esta falla después de cancelarse, retira el renderizador antes de procesar la cola. La espera de un shadow target no ocupa esa exclusión. Las pruebas usan compiladores simulados; falta asegurar mediante un contrato común que los recursos usados por una compilación cancelada no se liberen prematuramente. Si una compilación no llega a completarse, la cola permanece detenida hasta cerrar o recuperar el dispositivo; todavía falta una política de recuperación para esa situación.
+
 La fase JavaScript de `compileAsync()` y la preparación de bindings siguen compartiendo el Worker gráfico. Limitar concurrencia y tamaño de los trabajos gráficos, conservar oportunidades de dibujo y enviar procesamiento de datos transferibles a auxiliares. Esto no reintroduce presupuestos de FPS en navegación o simulación.
 
 **Entrega:** admisión obligatoria, estados, cancelación y publicación atómica. **Cierre interno:** ninguna ruta de incorporación visible evita el servicio; casos de rechazo y obsolescencia cubiertos. La ausencia de picos del controlador se comprobará en C, no se presupone por usar promesas.
