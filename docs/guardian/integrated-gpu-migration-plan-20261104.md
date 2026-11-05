@@ -119,6 +119,8 @@ El catálogo distingue claves del motor, shaders generados y descriptores finale
 
 Crear un único servicio de preparación en el Worker gráfico, conectado a los cargadores y bancos existentes. Su máquina de estados debe distinguir al menos: solicitado, datos disponibles, preparando, listo, publicado, retirado y fallido/cancelado. Pipelines y recursos mantienen requisitos independientes; una descarga terminada no marca todo como listo.
 
+Los paquetes progresivos usados por personajes y centros retienen sus recursos e imágenes si se cierran mientras hay subidas WebGPU enviadas; los liberan tras completarse la cola o perderse el dispositivo. La cancelación no bloquea el hilo principal ni la retirada visual. Las pruebas verifican la vida útil con una cola simulada; no demuestran el comportamiento real del controlador ni eliminan el trabajo síncrono de `initTexture` dentro del Worker gráfico.
+
 La clave de preparación incluye receta, layout geométrico, pase/target, revisión del recurso y generación del dispositivo. Solicitudes equivalentes comparten trabajo. Las sustituciones pendientes conservan el material anterior o una representación provisional ya preparada.
 
 Antes de publicar:

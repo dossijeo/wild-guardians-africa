@@ -1,6 +1,15 @@
 // A single resource upload, never awaited by the render loop. Three's
 // initTexture submits work synchronously; completion is a queue-wide WebGPU
 // signal and does not by itself prove a hitch-free first draw.
+export function releaseAfterWebGpuUploads(renderer,release){
+ const device=renderer?.backend?.device;if(!renderer?.backend?.isWebGPUBackend||typeof device?.queue?.onSubmittedWorkDone!=='function'||typeof release!=='function')throw TypeError('Invalid WebGPU upload release');
+ let submitted;try{submitted=Promise.resolve(device.queue.onSubmittedWorkDone());}catch(error){submitted=Promise.reject(error);}
+ // Rejection or device loss also ends ownership of the submitted work. The
+ // release must happen once, even if both signals settle independently.
+ const settled=submitted.then(()=>null,()=>null),lost=device.lost?.then(()=>null,()=>null);
+ return Promise.race([settled,...(lost?[lost]:[])]).then(release);
+}
+
 export async function prepareWebGpuTexture({renderer,texture,signal,release}={}){
  const device=renderer?.backend?.device,queue=device?.queue;if(!renderer?.backend?.isWebGPUBackend||typeof renderer.initTexture!=='function'||!texture?.isTexture||typeof queue?.onSubmittedWorkDone!=='function'||typeof release!=='function')throw TypeError('Invalid WebGPU texture preparation');
  if(signal?.aborted){release();throw new DOMException('Texture preparation cancelled','AbortError');}
