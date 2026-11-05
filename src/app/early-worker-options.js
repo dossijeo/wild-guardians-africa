@@ -1,5 +1,10 @@
 // The early authority is configured before the presentation exists. Keep its
 // capabilities explicit so a product bootstrap does not depend on QA URLs.
+export function workerDiagnosticParams(params,dev){
+ if(!(params instanceof URLSearchParams)||typeof dev!=='boolean')throw TypeError('Invalid worker diagnostics');
+ return dev?new URLSearchParams(params):new URLSearchParams();
+}
+
 export function earlyWorkerOptions({initial,metadataOnlySpatial=false,guardianPlacement=false,presentationInputs=false,recoveryOptions={},diagnostics={}}={}){
  if(!initial||typeof metadataOnlySpatial!=='boolean'||typeof guardianPlacement!=='boolean'||typeof presentationInputs!=='boolean'||!recoveryOptions||!diagnostics)throw TypeError('Invalid early worker options');
  const d=diagnostics,legacy=d.legacyPublications===true,compactViewAcks=d.viewAck===true||!legacy,maxBatchSteps=d.batchSteps??16,batchWindowSteps=d.batchWindow??(maxBatchSteps>1?2:1);

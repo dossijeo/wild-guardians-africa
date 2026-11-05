@@ -77,7 +77,7 @@ import {prepareFreshWorkerBootstrapInWorker,repairSavedVillageInWorker,prepareSa
 import {createSimulationAuthorityClient} from '../simulation/simulation-authority-client.js';
 import {createWorkerHostedRuntime} from '../simulation/worker-hosted-runtime.js';
 import {createEarlyWorkerAuthority} from './early-worker-authority.js';
-import {earlyWorkerOptions} from './early-worker-options.js';
+import {earlyWorkerOptions,workerDiagnosticParams} from './early-worker-options.js';
 import {createWebGpuWorldClient} from '../rendering/webgpu-world-client.js';
 import {captureRaidWaitBindings} from '../simulation/raid-wait-handoff.js';
 import {captureStructureTemplate} from '../simulation/worker-structure-geometry.js';
@@ -269,7 +269,7 @@ async function installWorkerGame(owner,ownerState,navigation,{visualRecovery=nul
     try{templates[culture]=captureStructureTemplate(sample);}finally{sample.dispose();}
   }
   const navigationView={bounds:[...navigation.activeBounds],eye:{...navigation.raidView.eye},target:{...navigation.raidView.target}};
-  const params=new URLSearchParams(location.search),hosted=!params.has('qa-worker-main-clock'),legacyPublications=params.has('qa-worker-legacy-publications');
+  const params=workerDiagnosticParams(new URLSearchParams(location.search),import.meta.env.DEV),hosted=!params.has('qa-worker-main-clock'),legacyPublications=params.has('qa-worker-legacy-publications');
   const diagnostics=params.has('qa-worker-diagnostics'),compactViewAcks=params.has('qa-worker-view-ack')||hosted&&!legacyPublications;
   const trackVisualHeadings=import.meta.env.DEV&&skipLegacyDrawQa&&hosted&&params.has('qa-webgpu-world')&&params.has('qa-worker-visual-headings');
   const presentationWorkerHeadingSeed=trackVisualHeadings?ownerState.workers.filter(worker=>worker.status!=='home'&&owner.mixers.has(worker.id)&&owner.objects.has(worker.id)).map(worker=>({id:worker.id,yaw:owner.objects.get(worker.id).rotation.y})):null;

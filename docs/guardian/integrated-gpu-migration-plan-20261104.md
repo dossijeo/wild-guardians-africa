@@ -62,6 +62,8 @@ La ruta de producto debe funcionar sin `import.meta.env.DEV` ni parámetros `qa-
 
 El perfil común del Worker gráfico ignora en producción las opciones `qa-*` que antes podían cambiar selección de actores, modelos, trazas, materiales o pases. Las capacidades explícitas siguen aplicándose y el mismo perfil se reutiliza al recuperar la presentación. Una prueba compara el perfil de producción con y sin todos esos parámetros y conserva sus efectos en desarrollo. Esto no activa por sí mismo la ruta WebGPU de producto: el bootstrap, otros usos de opciones de diagnóstico y los subsistemas pendientes siguen por migrar.
 
+La instalación del host de simulación también separa sus parámetros de diagnóstico antes de configurar reloj, lotes, publicaciones y trazas. En producción una URL de QA ya no puede seleccionar el reloj del hilo principal ni desactivar la acumulación; en desarrollo se mantiene la configuración anterior. Las pruebas cubren el filtro y los perfiles de los dos Workers. La ruta sin escena antigua todavía es experimental y esta separación no la activa.
+
 **Entrega:** contratos, interfaz única y bootstrap desacoplado. **Cierre interno:** revisión de dependencias y comprobaciones que impiden construir, actualizar o dibujar el mundo antiguo en la ruta WebGPU.
 
 ### A2. Comunicación incremental y reloj común
