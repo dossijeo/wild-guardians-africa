@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
-import {WorldScene} from '../rendering/scene.js';
 import {approvedVisualSearch} from '../rendering/approved-visual-profile.js';
 import {configureTerrainControls,installTerrainCameraIntent} from '../rendering/terrain-camera.js';
 import {WallDrawing} from '../rendering/wall-drawing.js';
@@ -15,7 +14,7 @@ import {installEarlyWorkerWorldServices} from './early-worker-world-services.js'
 // deliberately creates no renderer or graphics context on the main thread.
 export function createEarlyWorkerWorld(canvas,onPick,{visualSearch=globalThis.location?.search??''}={}){
  if(!canvas||typeof onPick!=='function')throw TypeError('Invalid worker world');
- const world=Object.create(WorldScene.prototype);Object.assign(world,{canvas,requestedVisualSearch:visualSearch,visualSearch:approvedVisualSearch(null,visualSearch),approvedVisuals:true,loading:new AbortController(),canvasEvents:new AbortController(),objects:new Map(),mixers:new Map(),chunks:new Map(),buildingTemplates:new Map(),terrainMeshes:[],quality:'media',pixelRatioLimit:Infinity,destructionPass:{},provisionalCrops:new ProvisionalCrops(),scene:new THREE.Scene(),raycaster:new THREE.Raycaster(),cursor:new THREE.Vector2(),disposed:false});
+ const world={canvas,requestedVisualSearch:visualSearch,visualSearch:approvedVisualSearch(null,visualSearch),approvedVisuals:true,metadataOnlySpatial:true,loading:new AbortController(),canvasEvents:new AbortController(),objects:new Map(),mixers:new Map(),chunks:new Map(),buildingTemplates:new Map(),quality:'media',pixelRatioLimit:Infinity,destructionPass:{},provisionalCrops:new ProvisionalCrops(),disposed:false};
  world.camera=new THREE.PerspectiveCamera(42,1,.1,500);world.camera.position.set(40,35,50);world.controls=new OrbitControls(world.camera,canvas);world.controls.enableDamping=true;configureTerrainControls(world.controls);world.releaseCameraIntent=installTerrainCameraIntent(world.camera,world.controls,()=>world.cameraField());world.controls.enableRotate=true;world.controls.mouseButtons={LEFT:THREE.MOUSE.PAN,MIDDLE:THREE.MOUSE.DOLLY,RIGHT:THREE.MOUSE.ROTATE};
  world.cameraField=()=>world.cameraTerrainField??world.nav?.field;
  if(new URLSearchParams(visualSearch).has('qa-webgpu-camera-terrain')){let attached=false;const active=()=>{if(world.webGpuWorld)attached=true;return attached;},field=()=>world.webGpuWorld?.client.cameraTerrain??null;world.cameraField=()=>active()?field():world.nav?.field;const guard=guardConfirmedCamera({camera:world.camera,controls:world.controls,active,field,onBlocked:()=>clearBlockedOrbitMomentum(world.controls)});world.confirmedCameraGuard=guard;globalThis.wildGuardiansConfirmedCameraQa=()=>({attached,confirmed:attached&&!!field()&&world.cameraField()===field(),status:field()?.status()??null,eye:world.camera.position.toArray(),target:world.controls.target.toArray()});}
