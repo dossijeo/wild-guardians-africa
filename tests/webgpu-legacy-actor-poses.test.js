@@ -82,6 +82,6 @@ test('provisional impact is applied when the legacy pose is requested',()=>{
 });
 
 test('Worker loss restores all legacy actor poses before the first fallback draw',()=>{
- const f=fixture();let status={phase:'running',backend:'WebGPU'};f.owner.webGpuWorld={client:{status:()=>status}};f.owner.renderFrameUpdates=function*(dt,farDt,options){WorldScene.prototype.sync.call(this,dt,options);yield;};f.owner.render=function(dt){WorldScene.prototype.sync.call(this,dt);f.calls.push(['draw']);};
+ const f=fixture();let status={phase:'running',backend:'WebGPU',firstFrameRendered:true};f.owner.webGpuWorld={client:{status:()=>status}};f.owner.renderFrameUpdates=function*(dt,farDt,options){WorldScene.prototype.sync.call(this,dt,options);yield;};f.owner.render=function(dt){WorldScene.prototype.sync.call(this,dt);f.calls.push(['draw']);};
  renderWithOptionalWebGpuPresentation(f.owner,.1,true);assert.deepEqual(f.calls,[]);status={phase:'failed',backend:'WebGPU'};renderWithOptionalWebGpuPresentation(f.owner,.1,true);assert.deepEqual(f.calls.map(call=>call[0]),['pose','pose','draw']);assert.equal(f.owner.legacyActorPosesDeferred,false);
 });
