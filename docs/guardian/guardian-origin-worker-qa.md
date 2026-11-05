@@ -17,4 +17,6 @@ Con Vite en 5194 y Playwright disponible mediante `NODE_PATH`:
 .\.cache\tooling\node20.exe tools/experiments/audit_guardian_origin_ui.mjs
 ```
 
-La segunda prueba debe ejecutarse con GPU disponible y fuentes congeladas. La captura visual y la consulta son todavía pasos separados: una respuesta calculada anteriormente no puede aplicarse a un Attack posterior sin una validación atómica de la frontera autoritativa. El flujo de combate sigue deshabilitado en la vista temprana.
+La segunda prueba debe ejecutarse con GPU disponible y fuentes congeladas. Para Attack QA, el contexto capturado durante la selección acompaña ahora a la orden: la autoridad comprueba la secuencia y la época del canal de terreno, recalcula el origen y aplica el impacto en una misma operación. Una respuesta anterior de la consulta de lectura no se utiliza como origen autoritativo.
+
+`tools/experiments/audit_guardian_attack_atomic.mjs` verifica con una captura real de incursión, Worker autoritativo y Rapier que el origen emitido coincide con el planificador y que una frontera obsoleta no produce daño ni eventos. Utiliza volúmenes sintéticos de edificios; no prueba el selector gráfico ni una partida completa. La prueba UI de Attack con contexto gráfico real y su reconciliación sigue pendiente antes de considerar esta integración lista para producción.

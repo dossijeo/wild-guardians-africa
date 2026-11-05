@@ -1,6 +1,6 @@
 // Placement and wall strokes retain the legacy picker; discrete selection can
 // fall back when the confirmed visual scene is not yet complete.
-export function createWebGpuDiscretePick({context,deliver,fallback=null,onError=()=>{},allowTerrainTools=false,onTrace=null}){
+export function createWebGpuDiscretePick({context,deliver,fallback=null,onError=()=>{},allowTerrainTools=false,allowStableCameraPick=false,onTrace=null}){
  if(typeof context!=='function'||typeof deliver!=='function'||fallback!==null&&typeof fallback!=='function'||typeof onError!=='function'||onTrace!==null&&typeof onTrace!=='function')throw TypeError('Invalid WebGPU pick adapter');
  return (event,gesture)=>{
   const initial=context();
@@ -13,13 +13,13 @@ export function createWebGpuDiscretePick({context,deliver,fallback=null,onError=
   const started=onTrace?performance.now():0,trace=onTrace?(stage,details={})=>{try{onTrace({stage,elapsed:performance.now()-started,coordinate,...details});}catch{}}:null;trace?.('requested');
   // Synchronize camera before taking the version captured by the pick client.
   initial.sync();
-  Promise.resolve().then(()=>initial.client.pick(terrainTool?{...coordinate,terrainOnly:true}:coordinate)).then(result=>{
+  Promise.resolve().then(()=>initial.client.pick(terrainTool?{...coordinate,terrainOnly:true}:coordinate,allowStableCameraPick&&initial.tool?.kind==='spell'&&initial.tool.spell==='attack'?{allowStableCamera:true}:undefined)).then(result=>{
    const current=context();
    if(current?.owner!==initial.owner||current?.state!==initial.state||current?.tool!==initial.tool||current?.client!==initial.client){trace?.('context-changed');return;}
    if(terrainTool&&!result.point){trace?.('no-terrain',{sequence:result.sequence});return;}
    if(result.incomplete===true&&fallback){trace?.('fallback',{sequence:result.sequence,entityId:result.entityId});fallback(initial,input,gesture);return;}
    trace?.('delivered',{sequence:result.sequence,entityId:result.entityId,incomplete:result.incomplete===true});deliver({...result,...gesture});
-  }).catch(error=>{if(error?.message==='Stale WebGPU pick'){trace?.('stale',{reason:error.reason??null});return;}trace?.('error',{message:String(error?.message??error)});const current=context();if(current?.owner===initial.owner&&current?.state===initial.state&&current?.client===initial.client)onError(error);});
+  }).catch(error=>{if(error?.message==='Stale WebGPU pick'){trace?.('stale',{reason:error.reason??null,details:error.details??null});return;}trace?.('error',{message:String(error?.message??error)});const current=context();if(current?.owner===initial.owner&&current?.state===initial.state&&current?.client===initial.client)onError(error);});
   return true;
  };
 }

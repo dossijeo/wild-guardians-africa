@@ -13,7 +13,7 @@ export function createPresentationRecoveryReplay({port,session,checkpoint,journa
   const entry=journal.entry(index);if(!entry){if(!terrainPending&&!caught){caught=true;onCaughtUp({sequence:cursor,entries:index});}return;}caught=false;
   const firstSequence=entry.firstSequence??entry.sequence;
   if(!Number.isSafeInteger(entry.sequence)||!Number.isSafeInteger(firstSequence)||firstSequence!==cursor+1||firstSequence>entry.sequence)throw Error('Recovery journal sequence gap');
-  if(entry.kind==='terrain'){if(firstSequence!==entry.sequence||!Array.isArray(entry.chunks))throw Error('Invalid recovery terrain');send('terrain',entry.sequence,{chunks:entry.chunks});}
+  if(entry.kind==='terrain'){if(firstSequence!==entry.sequence||!Array.isArray(entry.chunks))throw Error('Invalid recovery terrain');send('terrain',entry.sequence,{chunks:entry.chunks,...(entry.terrainManifest?{terrainManifest:entry.terrainManifest}:{})});}
   else if(entry.kind==='publication'){if(entry.publication?.sequence!==entry.sequence||typeof entry.tick!=='boolean'||firstSequence!==entry.sequence&&entry.tick!==true)throw Error('Invalid recovery publication');send('publication',entry.sequence,{publication:entry.publication,tick:entry.tick,options:entry.options,firstSequence});}
   else throw Error('Invalid recovery journal entry');
  }catch(error){fail(error);}}

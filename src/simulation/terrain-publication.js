@@ -1,9 +1,10 @@
 // Confirmed terrain changes for a presentation Worker. The authority retains
 // its own chunk arrays; only the copied rendering buffers are transferred.
 // One publication may be in flight. Pending updates are coalesced per chunk.
-export function createTerrainPublication({port,session,epoch=null,maxPending=512,onCommitted=null}={}){
+export function createTerrainPublication({port,session,epoch=null,initialState=null,maxPending=512,onCommitted=null}={}){
  if(!port||typeof port.postMessage!=='function'||typeof session!=='string'||!session||epoch!==null&&(typeof epoch!=='string'||!epoch)||!Number.isSafeInteger(maxPending)||maxPending<1||onCommitted!==null&&typeof onCommitted!=='function')throw TypeError('Invalid terrain publication');
  const pending=new Map(),staged=new Map(),revisions=new Map();let inflight=null,serial=0,closed=false,failure=null,lastSequence=-1,manifestCache=null;
+ if(initialState!==null){if(!initialState||epoch===null||initialState.epoch!==epoch||!Number.isSafeInteger(initialState.lastSequence)||initialState.lastSequence<0||!Array.isArray(initialState.chunks))throw TypeError('Invalid terrain handoff');for(const chunk of initialState.chunks){if(!Number.isSafeInteger(chunk?.cx)||!Number.isSafeInteger(chunk?.cz)||!Number.isSafeInteger(chunk?.revision)||chunk.revision<1)throw TypeError('Invalid terrain handoff chunk');const key=chunk.cx+','+chunk.cz;if(revisions.has(key))throw TypeError('Duplicate terrain handoff chunk');revisions.set(key,chunk.revision);}lastSequence=initialState.lastSequence;}
  function fail(error){if(closed)return;failure=error instanceof Error?error:Error(String(error));closed=true;pending.clear();staged.clear();try{port.postMessage({kind:'terrainFailure',session,message:failure.message});}catch{}try{port.close();}catch{}}
  function pump(){
   if(closed||inflight||!pending.size)return;
@@ -21,12 +22,12 @@ export function createTerrainPublication({port,session,epoch=null,maxPending=512
  }
  function commit(sequence){
   if(closed)return false;if(!Number.isSafeInteger(sequence)||sequence<=lastSequence)throw TypeError('Invalid confirmed terrain sequence');lastSequence=sequence;
-  if(onCommitted&&staged.size)onCommitted(sequence,[...staged.values()]);
+  if(onCommitted&&staged.size)onCommitted(sequence,[...staged.values()],epoch===null?null:{epoch,chunks:[...staged.keys()].map(key=>{const [cx,cz]=key.split(',').map(Number);return {cx,cz,revision:(revisions.get(key)??0)+1};})});
   if(staged.size)manifestCache=null;
   for(const [key,payload] of staged){const revision=(revisions.get(key)??0)+1;revisions.set(key,revision);pending.set(key,{payload,sequence,revision});}staged.clear();pump();return !closed;
  }
  function discard(){staged.clear();}
  port.onmessage=({data})=>{if(closed)return;if(data?.kind!=='terrainAck'||data.session!==session||!inflight||data.id!==inflight.id){fail(Error('Invalid terrain acknowledgement'));return;}inflight=null;pump();};
  port.onmessageerror=()=>fail(Error('Terrain acknowledgement failed'));port.start?.();
- return {stage,commit,discard,fail,manifest(){if(closed||epoch===null||!revisions.size)return null;return manifestCache??(manifestCache={epoch,chunks:[...revisions].map(([key,revision])=>{const [cx,cz]=key.split(',').map(Number);return {cx,cz,revision};})});},dispose(){if(closed)return;closed=true;pending.clear();staged.clear();port.close();},status(){return {closed,failure:failure?.message??null,inflight:!!inflight,pending:pending.size,staged:staged.size};}};
+ return {stage,commit,discard,fail,handoff(){if(closed||epoch===null||lastSequence<0||staged.size)throw Error('Terrain publication cannot hand off');return {epoch,lastSequence,chunks:[...revisions].map(([key,revision])=>{const [cx,cz]=key.split(',').map(Number);return {cx,cz,revision};})};},manifest(){if(closed||epoch===null||!revisions.size)return null;return manifestCache??(manifestCache={epoch,chunks:[...revisions].map(([key,revision])=>{const [cx,cz]=key.split(',').map(Number);return {cx,cz,revision};})});},dispose(){if(closed)return;closed=true;pending.clear();staged.clear();port.close();},status(){return {closed,failure:failure?.message??null,inflight:!!inflight,pending:pending.size,staged:staged.size};}};
 }

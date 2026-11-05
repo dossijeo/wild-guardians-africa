@@ -1,0 +1,110 @@
+{
+  "causalInputs": 0,
+  "picks": [
+    {
+      "stage": "requested",
+      "elapsed": 0.04499998688697815,
+      "coordinate": {
+        "x": 0.19551191329956064,
+        "y": 0.34983308580186634
+      }
+    },
+    {
+      "stage": "stale",
+      "elapsed": 99.9249999821186,
+      "coordinate": {
+        "x": 0.19551191329956064,
+        "y": 0.34983308580186634
+      },
+      "reason": "frame",
+      "details": {
+        "expected": {
+          "sequence": 508,
+          "terrainGeneration": 25
+        },
+        "actual": {
+          "sequence": 512,
+          "terrainGeneration": 25,
+          "pending": false
+        },
+        "condition": "sequence"
+      }
+    }
+  ],
+  "elapsed": 86.84974499999664,
+  "confirmedSequence": 3635,
+  "visualPublication": {
+    "active": true,
+    "detached": false,
+    "inFlight": 3357,
+    "queued": 128,
+    "coalesced": 2132,
+    "acknowledged": 3356,
+    "foldedViewCount": 789,
+    "queuedPublications": 128,
+    "eventfulPublications": 3,
+    "tickPublications": 56,
+    "unchangedPublications": 5,
+    "snapshotChars": 23072333,
+    "peakSnapshotChars": 24040750,
+    "peakEventfulPublications": 12,
+    "peakQueuedPublications": 128,
+    "peakQueuedMessages": 128
+  },
+  "gpu": {
+    "sequence": 3363,
+    "elapsed": 81.94974499999692,
+    "timing": {
+      "samples": 512,
+      "decode": {
+        "mean": 1.3997949218610302,
+        "p95": 2.070000022649765,
+        "max": 2.2999999821186066
+      },
+      "reconcile": {
+        "mean": 1.4360546880634502,
+        "p95": 2.274999976158142,
+        "max": 6.100000023841858
+      },
+      "hooks": {
+        "mean": 1.69913085893495,
+        "p95": 4.53999999165535,
+        "max": 7.770000010728836
+      },
+      "total": {
+        "mean": 4.53498046885943,
+        "p95": 7.995000004768372,
+        "max": 13.889999985694885
+      }
+    },
+    "actors": {
+      "closed": false,
+      "count": 3,
+      "ready": 3,
+      "visible": 3,
+      "pending": 0,
+      "physical": 0,
+      "physicalApplied": 0,
+      "bakedWalking": 0,
+      "provisionalFalling": 0,
+      "fallsReady": false,
+      "fallLoadError": null,
+      "provisionalImpacts": 0
+    },
+    "guardian": {
+      "closed": false,
+      "began": 0,
+      "confirmed": 0,
+      "rejected": 0,
+      "provisionalFrames": 0,
+      "lastCommand": null,
+      "active": null,
+      "ritualPreview": false,
+      "cropBeams": 0,
+      "modelReady": false,
+      "beamVisible": false,
+      "coreVisible": false
+    }
+  },
+  "text": "02:08\n99,34K\nDía 31\nVolver\nConstruir\nCultivar\nMagia\nDespertar\n0 / 100"
+}

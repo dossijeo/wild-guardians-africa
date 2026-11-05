@@ -37,12 +37,12 @@ export function createPresentationRecoveryJournal({capacity=256,highWatermark=12
    if(fold)entries[entries.length-1]={item,size};else entries.push({item,size});bytes=retained+size;last=n;return true;
   },
   // The terrain worker delivers batches before the corresponding result.
-  appendTerrain(value,chunks){
+  appendTerrain(value,chunks,terrainManifest=null){
    ensure();const n=sequence(value);if(!Array.isArray(chunks))throw TypeError('Invalid presentation terrain batch');
    if(last===null)return false;
    if(n!==last+1)throw Error('Presentation terrain journal sequence gap');
    if(entries.length>=capacity)throw Error('Presentation recovery journal capacity exceeded');
-   const item={kind:'terrain',sequence:n,chunks:structuredClone(chunks)},size=estimateBytes(item);if(size>maxBytes-bytes)throw Error('Presentation recovery journal byte capacity exceeded');
+   const item={kind:'terrain',sequence:n,chunks:structuredClone(chunks),...(terrainManifest===null?{}:{terrainManifest:structuredClone(terrainManifest)})},size=estimateBytes(item);if(size>maxBytes-bytes)throw Error('Presentation recovery journal byte capacity exceeded');
    entries.push({item,size});bytes+=size;return true;
   },
   begin(value){
