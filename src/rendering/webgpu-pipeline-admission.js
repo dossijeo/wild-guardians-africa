@@ -1,13 +1,17 @@
 // Serializes renderer compilation setup while allowing the draw loop to run
 // during asynchronous pipeline creation. The owner must keep objects hidden
 // until the returned promise resolves.
-export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=>{}}){
- if(!renderer?.backend?.isWebGPUBackend||typeof renderer.compileAsync!=='function'||!scene?.isScene||!camera?.isCamera||typeof onFatal!=='function')throw TypeError('Invalid pipeline admission');
+export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=>{},shadowLights=null}){
+ if(!renderer?.backend?.isWebGPUBackend||typeof renderer.compileAsync!=='function'||!scene?.isScene||!camera?.isCamera||typeof onFatal!=='function'||shadowLights!==null&&!Array.isArray(shadowLights))throw TypeError('Invalid pipeline admission');
+ const lights=new Map();
+ function addLight(light){if(!light?.isLight||!light.shadow)throw TypeError('Invalid admission shadow light');lights.set(light,(lights.get(light)??0)+1);}
+ if(shadowLights===null)scene.traverse(node=>{if(node.isLight&&node.shadow)addLight(node);});else for(const light of shadowLights)addLight(light);
  let closed=false,generation=0,tail=Promise.resolve(),cancel;
  const cancelled=new Promise(resolve=>{cancel=()=>resolve(Error('Pipeline admission cancelled'));});
  const lost=renderer.backend.device?.lost?.then(info=>Error('WebGPU device lost: '+(info?.message||info?.reason||'unknown')));
- function retire(error){if(!closed){closed=true;generation++;cancel();try{onFatal(error);}catch{}}}
+ function retire(error){if(!closed){closed=true;generation++;cancel();lights.clear();try{onFatal(error);}catch{}}}
  return {
+  registerShadowLight(light){if(closed)throw Error('Pipeline admission closed');addLight(light);let released=false;return ()=>{if(released)return;released=true;const count=lights.get(light)??0;if(count<=1)lights.delete(light);else lights.set(light,count-1);};},
   prepare(object,{signal}={}){
    if(closed)return Promise.reject(Error('Pipeline admission closed'));
    if(!object?.isObject3D)return Promise.reject(TypeError('Invalid admission object'));
@@ -28,7 +32,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
      // Three r180 updates shadow nodes during compileAsync. Prevent that
      // setup from issuing a real shadow draw while keeping shadow features in
      // the shader graph; restore all flags before the next visible frame.
-     scene.traverse(node=>{if(node.isLight&&node.shadow){const shadow=node.shadow;shadows.push([shadow,shadow.autoUpdate,shadow.needsUpdate]);shadow.autoUpdate=false;shadow.needsUpdate=false;}});
+     for(const light of lights.keys()){const shadow=light.shadow;shadows.push([shadow,shadow.autoUpdate,shadow.needsUpdate]);shadow.autoUpdate=false;shadow.needsUpdate=false;}
      object.traverse(node=>{if(node.isMesh||node.isLine||node.isPoints){culling.push([node,node.frustumCulled]);node.frustumCulled=false;}});
      object.visible=true;pending=renderer.compileAsync(object,camera,scene);
     }finally{
@@ -53,6 +57,6 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
    tail=task.catch(()=>{});
    return task;
   },
-  dispose(){if(closed)return;closed=true;generation++;cancel();},
+  dispose(){if(closed)return;closed=true;generation++;cancel();lights.clear();},
  };
 }

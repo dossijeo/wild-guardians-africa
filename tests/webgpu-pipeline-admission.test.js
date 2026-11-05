@@ -62,6 +62,20 @@ test('synchronous preparation failure restores the original shadow flags',async(
  await assert.rejects(admission.prepare(object),/setup failed/);assert.equal(sun.shadow.autoUpdate,true);assert.equal(sun.shadow.needsUpdate,true);
 });
 
+test('shadow lights can be registered and removed without scanning the scene per admission',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),sun=new THREE.DirectionalLight();sun.shadow.autoUpdate=true;let calls=0;
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(){calls++;assert.equal(sun.shadow.autoUpdate,calls>1);return Promise.resolve();}};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera,shadowLights:[]}),remove=admission.registerShadowLight(sun);
+ scene.traverse=()=>{throw Error('unexpected scene scan');};await admission.prepare(object);remove();await admission.prepare(object);assert.equal(calls,2);admission.dispose();
+});
+
+test('a shared shadow light stays registered until every owner releases it',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),sun=new THREE.DirectionalLight();let expected=false;
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(){assert.equal(sun.shadow.autoUpdate,expected);return Promise.resolve();}};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera,shadowLights:[]}),a=admission.registerShadowLight(sun),b=admission.registerShadowLight(sun);
+ a();a();await admission.prepare(object);b();expected=true;await admission.prepare(object);admission.dispose();
+});
+
 test('aborting an actor does not retire the shared renderer or publish a late result',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),controller=new AbortController(),failures=[];let finish;
  const renderer={backend:{isWebGPUBackend:true},compileAsync:()=>new Promise(resolve=>{finish=resolve;})};
