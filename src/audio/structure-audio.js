@@ -20,10 +20,12 @@ export function structureDetailSound(event,state){
   // The intact-to-damaged morph starts at the first real loss of HP. Wood and
   // thorns retain their own contact sounds; masonry alone adds the small crack.
   if(!(hit.maxHp>0)||hit.previousHp!==hit.maxHp||!(hit.hp>0))return null;
-  const target=state?.structures?.find(structure=>structure.id===event.targetId);
+  const target=typeof hit.material==='string'?hit:state?.structures?.find(structure=>structure.id===event.targetId);
   return target?.kind==='wall'&&['piedra','adobe','reforzado'].includes(target.material)?STRUCTURE_DETAIL_SOUNDS['StructureHit:first-masonry-damage']:null;
 }
 export function structureHitSound(event,state){
+  if(event?.structureHit?.kind==='center')return 'beast_hit_structure';
+  if(event?.structureHit?.kind==='wall'&&typeof event.structureHit.material==='string')return WALL_HIT_SOUNDS[event.structureHit.material]??'beast_hit_structure';
   const target=state?.structures?.find(structure=>structure.id===event.targetId);
   return target?.kind==='wall' ? WALL_HIT_SOUNDS[target.material]??'beast_hit_structure' : 'beast_hit_structure';
 }
