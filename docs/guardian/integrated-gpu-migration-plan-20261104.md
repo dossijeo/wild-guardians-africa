@@ -161,6 +161,8 @@ Las solicitudes de preparación de guardián, construcción y cultivos devuelven
 
 Los bancos de construcciones y cultivos notifican los errores de sus recursos al controlador de interfaz por un canal separado del fallo fatal del renderer. Un activo confirmado que falle puede quedar sin representación y se notifica al jugador; no se presume que todos los bancos puedan reintentar una carga parcial. La admisión conserva su propio canal fatal para una caché de pipelines inválida o la pérdida del dispositivo.
 
+La carga de las 40 etapas de cultivo valida el paquete completo antes de publicarlo; si falla, libera sus recursos parciales y una nueva solicitud explícita puede reintentarlo. Los consumidores simultáneos comparten el intento en curso. El catálogo de construcciones también descarta una petición fallida para permitir un nuevo intento. Las pruebas usan modelos y respuestas simuladas; los puentes de crecimiento y otras cargas aún no tienen esta garantía de reintento completo.
+
 **Entrega:** input, provisionales, lifecycle y recuperación comunes. **Cierre interno:** errores y reinicios no crean una segunda autoridad, duplican efectos ni reutilizan recursos de un dispositivo perdido.
 
 ### Cierre del bloque A

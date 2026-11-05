@@ -29,3 +29,9 @@ test('closing the scene cancels a pending center without publishing it',async()=
 test('a failed admission reports the error and does not expose the center',async()=>{
  const f=await fixture();try{f.fail(Error('pipeline failed'));await turn();assert.deepEqual(f.errors,['pipeline failed']);assert.equal(f.view.status().centers,0);assert.equal(f.scene.children.length,0);assert.equal(f.started,0);}finally{f.cleanup();}
 });
+
+test('a failed catalogue request can be retried for a structure preview',async()=>{
+ const previousFetch=globalThis.fetch;let unavailable=true,requests=0;globalThis.fetch=async url=>{if(String(url).includes('villages')){requests++;if(unavailable)throw Error('catalogue offline');}return {ok:true,json:async()=>String(url).includes('destruction')?{buildings:[{culture:'mapungubwe',url:'/center.glb'}]}:[]};};
+ const root=new THREE.Group(),geometry=new THREE.BoxGeometry(),material=new THREE.MeshBasicMaterial();root.add(new THREE.Mesh(geometry,material));const errors=[],view=createWebGpuSettlements({scene:new THREE.Scene(),state:{culture:'mapungubwe',elapsed:0,villages:[],structures:[]},residency:{get:()=>null},renderer:{backend:{isWebGPUBackend:true}},enableStructurePreviews:true,onError:error=>errors.push(error.message),loadProgressiveCenter:async()=>({preview:{scene:root},start(){},tick(){},dispose(){}})});
+ try{await assert.rejects(view.preparePreview('center','mapungubwe'),/catalogue offline/);unavailable=false;await view.preparePreview('center','mapungubwe');assert.equal(requests,2);assert.deepEqual(errors,['catalogue offline']);}finally{view.dispose();geometry.dispose();material.dispose();globalThis.fetch=previousFetch;}
+});
