@@ -2,6 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {webGpuWorldOptions,guardianPlacementForWorld,confirmedCameraTerrainEnabled} from '../src/app/webgpu-world-options.js';
 
+test('water Hi-SSR is opt-in for development and cannot be enabled in production by URL',()=>{
+ const params=new URLSearchParams('qa-webgpu-water-hissr'),state={raid:null},field={};assert.equal(webGpuWorldOptions({params,state,field,dev:true}).experimentalWaterHiSsr,true);assert.equal(webGpuWorldOptions({params,state,field,dev:false}).experimentalWaterHiSsr,false);assert.equal(webGpuWorldOptions({params:new URLSearchParams(),state,field,dev:true}).experimentalWaterHiSsr,false);
+});
+
 test('camera terrain follows product capabilities and ignores diagnostic URLs in production',()=>{
  const search='?qa-webgpu-camera-terrain';assert.equal(confirmedCameraTerrainEnabled({search}),false);assert.equal(confirmedCameraTerrainEnabled({search,dev:true}),true);assert.equal(confirmedCameraTerrainEnabled({requested:true}),true);assert.throws(()=>confirmedCameraTerrainEnabled({requested:'true'}),/profile/);
 });

@@ -33,13 +33,18 @@ export function createWebGpuWaterReflectionCapture(width,height,{maxLevels=8}={}
   render(renderer,scene,camera){
    if(closed)throw Error('Reflection capture disposed');
    if(!renderer?.backend?.isWebGPUBackend||!scene?.isScene||!camera?.isCamera||typeof renderer.render!=='function'||typeof renderer.getRenderTarget!=='function'||typeof renderer.setRenderTarget!=='function')throw TypeError('Invalid reflection capture inputs');
-   const previous=renderer.getRenderTarget(),face=renderer.getActiveCubeFace?.(),mip=renderer.getActiveMipmapLevel?.(),mrt=renderer.getMRT?.(),shadow=renderer.shadowMap,shadowAuto=shadow?.autoUpdate,shadowNeeds=shadow?.needsUpdate,hidden=[];
+   const previous=renderer.getRenderTarget(),face=renderer.getActiveCubeFace?.(),mip=renderer.getActiveMipmapLevel?.(),mrt=renderer.getMRT?.(),shadow=renderer.shadowMap,shadowAuto=shadow?.autoUpdate,shadowNeeds=shadow?.needsUpdate,background=scene.background,backgroundNode=scene.backgroundNode,autoClear=renderer.autoClear,autoClearColor=renderer.autoClearColor,autoClearDepth=renderer.autoClearDepth,hidden=[];
    try{
     scene.traverse(object=>{if(object.visible&&excludedFromReflection(object)){hidden.push(object);object.visible=false;}});
+    // The sky is supplied separately by the water's environment map. The
+    // depth attachment must be cleared even when the world renderer has
+    // disabled automatic clears; no background shader is needed here.
+    scene.background=null;scene.backgroundNode=null;renderer.autoClear=true;renderer.autoClearColor=true;renderer.autoClearDepth=true;
     if(shadow){shadow.autoUpdate=false;shadow.needsUpdate=false;}
-    renderer.setMRT?.(null);renderer.setRenderTarget(target);renderer.render(scene,camera);hierarchy.render(renderer);
+    renderer.setMRT?.(null);renderer.setRenderTarget(target);renderer.render(scene,camera);renderer.autoClear=false;hierarchy.render(renderer);
    }finally{
     for(const object of hidden)object.visible=true;
+    scene.background=background;scene.backgroundNode=backgroundNode;renderer.autoClear=autoClear;renderer.autoClearColor=autoClearColor;renderer.autoClearDepth=autoClearDepth;
     if(shadow){shadow.autoUpdate=shadowAuto;shadow.needsUpdate=shadowNeeds;}
     renderer.setRenderTarget(previous,face,mip);if(mrt!==undefined)renderer.setMRT(mrt);
    }
