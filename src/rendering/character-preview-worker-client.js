@@ -9,6 +9,12 @@ export function createCharacterPreviewDataClient({workerFactory=()=>new Worker(n
  function request(session,kind,extra={}){if(closed||!sessions.has(session))return Promise.reject(cancelled());const id=nextRequest++;return new Promise((resolve,reject)=>{pending.set(id,{session,resolve,reject});try{worker.postMessage({id,session,kind,...extra});}catch(error){pending.delete(id);reject(error);}});}
  function closeSession(session){const item=sessions.get(session);if(!item)return;sessions.delete(session);item.signal?.removeEventListener('abort',item.onAbort);for(const [id,request] of pending)if(request.session===session){pending.delete(id);request.reject(cancelled());}if(!closed)try{worker.postMessage({id:nextRequest++,session,kind:'close'});}catch(error){fail(error);}}
  return {
+  async loadArrayBuffer(url,{signal}={}){
+   const target=typeof url==='string'?url:url instanceof URL?url.href:'';
+   if(closed||!target||signal!==undefined&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Invalid binary request');
+   if(signal?.aborted)throw cancelled();const session=nextSession++,item={signal,onAbort:()=>closeSession(session)};sessions.set(session,item);signal?.addEventListener('abort',item.onAbort,{once:true});if(signal?.aborted){closeSession(session);throw cancelled();}
+   try{return await request(session,'array-buffer',{url:target});}finally{closeSession(session);}
+  },
   async loadBitmap(url,{signal}={}){
    const target=typeof url==='string'?url:url instanceof URL?url.href:'';
    if(closed||!target||signal!==undefined&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Invalid bitmap request');

@@ -25,6 +25,10 @@ self.onmessage=async({data})=>{
    if(sessions.has(session)||typeof data.url!=='string'||!data.url||typeof createImageBitmap!=='function')throw Error('Bitmap preparation unavailable');
    const item={controller:new AbortController()};sessions.set(session,item);const response=await fetch(data.url,{signal:item.controller.signal});if(!response.ok)throw Error(`Bitmap HTTP ${response.status}`);const bitmap=await createImageBitmap(await response.blob());if(sessions.get(session)!==item){bitmap.close();return;}try{self.postMessage({id,session,kind:'bitmap',result:bitmap},[bitmap]);}catch(error){bitmap.close();throw error;}return;
   }
+  if(kind==='array-buffer'){
+   if(sessions.has(session)||typeof data.url!=='string'||!data.url)throw Error('Binary preparation unavailable');
+   const item={controller:new AbortController()};sessions.set(session,item);const response=await fetch(data.url,{signal:item.controller.signal});if(!response.ok)throw Error(`Binary HTTP ${response.status}`);const buffer=await response.arrayBuffer();if(sessions.get(session)!==item)return;self.postMessage({id,session,kind:'array-buffer',result:buffer},[buffer]);return;
+  }
   const item=sessions.get(session);if(!item)throw Error('Character data session closed');
   if(kind==='close'){sessions.delete(session);item.controller.abort();item.stream?.close();return;}
   if(!item.stream)throw Error('Character data session not ready');
@@ -39,5 +43,5 @@ self.onmessage=async({data})=>{
    try{const entries=results.map(result=>result.value);self.postMessage({id,session,kind:'bitmaps',result:entries},entries.map(([,bitmap])=>bitmap));}catch(error){for(const bitmap of created)bitmap.close();throw error;}return;
   }
   throw Error('Unknown character data request');
- }catch(error){if(sessions.has(session)||kind==='open'||kind==='bitmap')self.postMessage({id,session,error:{name:error?.name??'Error',message:String(error?.message??error)}});}
+ }catch(error){if(sessions.has(session)||kind==='open'||kind==='bitmap'||kind==='array-buffer')self.postMessage({id,session,error:{name:error?.name??'Error',message:String(error?.message??error)}});}
 };

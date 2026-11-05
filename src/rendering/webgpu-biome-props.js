@@ -23,11 +23,12 @@ export async function loadWebGpuBiomePack(biome,{signal,fetchImpl=globalThis.fet
 // payload used by the game. Navigation and suppression remain authoritative.
 // Slot 19 includes its authored fluid. World-space chunk bounds prevent
 // duplicate edges, and lava consumes the confirmed presentation clock.
-export function createWebGpuBiomeProps({scene,state,pipelineAdmission=null,onError=()=>{},instanceContract='native',shareCompatibleMaterials=instanceContract==='attributes',experimentalShadowCutout=false,onCameraTreeChunk=null,onSelectableChange=null,initialSlots=null,confirmedClock=null,biomePack=null,fluidMaterial=null,imageLoader=null,demandDriven=false}={}){
+export function createWebGpuBiomeProps({scene,state,pipelineAdmission=null,onError=()=>{},instanceContract='native',shareCompatibleMaterials=instanceContract==='attributes',experimentalShadowCutout=false,onCameraTreeChunk=null,onSelectableChange=null,initialSlots=null,confirmedClock=null,biomePack=null,fluidMaterial=null,imageLoader=null,byteLoader=null,demandDriven=false}={}){
  if(!scene?.isScene||!state||!BIOME_IDS[state.biome]||pipelineAdmission!==null&&typeof pipelineAdmission.prepare!=='function'||typeof onError!=='function'||typeof shareCompatibleMaterials!=='boolean'||typeof experimentalShadowCutout!=='boolean'||onCameraTreeChunk!==null&&typeof onCameraTreeChunk!=='function'||onSelectableChange!==null&&typeof onSelectableChange!=='function'||!['native','attributes'].includes(instanceContract))throw TypeError('Invalid biome props');
  if(confirmedClock!==null&&!confirmedClock.node?.isNode)throw TypeError('Invalid biome clock');
  if(fluidMaterial!==null&&!fluidMaterial.isMaterial)throw TypeError('Invalid biome fluid material');
  if(imageLoader!==null&&typeof imageLoader!=='function')throw TypeError('Invalid biome image loader');
+ if(byteLoader!==null&&typeof byteLoader!=='function')throw TypeError('Invalid biome binary loader');
  if(typeof demandDriven!=='boolean'||demandDriven&&initialSlots!==null)throw TypeError('Invalid biome demand profile');
  if(biomePack!==null&&biomePack?.biomeId!==BIOME_IDS[state.biome])throw TypeError('Invalid shared biome manifest');
  const fluidClock=confirmedClock?.node??lavaClock(state.elapsed??0),slotCount=20;
@@ -36,6 +37,7 @@ export function createWebGpuBiomeProps({scene,state,pipelineAdmission=null,onErr
  const ensure=()=>{if(closed)throw new DOMException('Biome props disposed','AbortError');};
  const own=resource=>{if(closed){resource.dispose();throw new DOMException('Biome props disposed','AbortError');}resources.add(resource);return resource;};
  const load=async url=>{const response=await fetch(assetUrl(url),{signal:controller.signal});if(!response.ok)throw Error(`Biome asset ${response.status}: ${url}`);return response;};
+ const bytes=async url=>{const buffer=byteLoader?await byteLoader(assetUrl(url),{signal:controller.signal}):await (await load(url)).arrayBuffer();if(!(buffer instanceof ArrayBuffer))throw TypeError('Invalid biome binary');return buffer;};
  async function image(url,color){const bitmap=imageLoader?await imageLoader(assetUrl(url),{signal:controller.signal}):await createImageBitmap(await (await load(url)).blob());if(closed){bitmap.close();ensure();}bitmaps.add(bitmap);const texture=own(new THREE.Texture(bitmap));texture.flipY=false;texture.colorSpace=color?THREE.SRGBColorSpace:THREE.NoColorSpace;texture.needsUpdate=true;return texture;}
  const positionNode=instanceContract==='attributes'?Fn(()=>{const offset=attribute('wgOffset','vec3'),scale=attribute('wgScale','vec3'),rotation=attribute('wgRotation','vec2'),rotate=p=>vec3(rotation.x.mul(p.x).add(rotation.y.mul(p.z)),p.y,rotation.x.mul(p.z).sub(rotation.y.mul(p.x)));normalLocal.assign(rotate(normalLocal.div(scale)));return rotate(positionLocal.mul(scale)).add(offset);})():null;
  function disposeMesh(mesh){scene.remove(mesh);mesh.removeFromParent();if(mesh.isInstancedMesh){mesh.dispose();if(mesh.geometry.userData.ownsChunkClip)mesh.geometry.dispose();}else{mesh.userData.disposePickProxy?.();mesh.geometry.dispose();}}
@@ -60,7 +62,7 @@ export function createWebGpuBiomeProps({scene,state,pipelineAdmission=null,onErr
  function slotDemanded(slot){const removed=suppressed();for(const entry of chunks.values())if(entry.instances[slot].some(item=>!removed.has(item.id)))return true;return false;}
  function sync(sequence=confirmedSequence){if(closed)return;if(!Number.isSafeInteger(sequence)||sequence<confirmedSequence)throw Error('Invalid biome sequence');confirmedSequence=sequence;if(!confirmedClock&&Number.isFinite(state.elapsed)&&state.elapsed>=0)fluidClock.value=state.elapsed;const key=JSON.stringify(state.suppressed??[]);if(key===suppressionKey)return;suppressionKey=key;if(prototypes){const removed=suppressed();for(const entry of chunks.values())rebuild(entry,removed);}if(demandDriven)scheduleDemand();}
  const ready=(async()=>{
-  const pack=biomePack??await (await load(`/content/biome-${BIOME_IDS[state.biome]}.json`)).json();ensure();const buffer=await (await load(pack.binary.url)).arrayBuffer();ensure();
+  const pack=biomePack??await (await load(`/content/biome-${BIOME_IDS[state.biome]}.json`)).json();ensure();const buffer=await bytes(pack.binary.url);ensure();
   const cache=new Map(),loadTexture=(url,color)=>{const key=url+':'+color;if(!cache.has(key))cache.set(key,image(url,color));return cache.get(key);};
   async function textureSet(entries){return Object.fromEntries(await Promise.all(entries.map(async t=>[t.role,await loadTexture(t.base64.url,t.role==='baseColor')])));}
   const sets=new Map(),getSet=index=>{const key=index===undefined?'base':index;if(!sets.has(key))sets.set(key,textureSet(index===undefined?pack.textures:pack.textureSets[index]));return sets.get(key);};const types={'<f4':Float32Array,'<u2':Uint16Array,'<u4':Uint32Array},attribute=desc=>new types[desc.type](buffer,desc.offset,desc.count);
@@ -69,7 +71,7 @@ export function createWebGpuBiomeProps({scene,state,pipelineAdmission=null,onErr
   loadAdditional=async slots=>{const pending=slots.filter(slot=>!prototypes[slot]),next=[];for(const slot of pending){
    const asset=pack.assets[slot],lod=asset.lods[0],geometry=own(new THREE.BufferGeometry());geometry.setAttribute('position',new THREE.BufferAttribute(attribute(lod.position),3));geometry.setAttribute('normal',new THREE.BufferAttribute(attribute(lod.normal),3));geometry.setAttribute('uv',new THREE.BufferAttribute(attribute(lod.uv),2));geometry.setIndex(new THREE.BufferAttribute(attribute(lod.index),1));geometry.computeBoundingBox();geometry.computeBoundingSphere();
    const maps={...await getSet(asset.textureSet)},factor=pack.material.baseColorFactor??[1,1,1,1];let selected=geometry;
-   if(asset.nearTextures){const [uv,entries]=await Promise.all([(await load(asset.nearTextures.cornerUV)).arrayBuffer(),Promise.all(Object.entries(asset.nearTextures.textures).map(async([role,url])=>[role,await loadTexture(url,role==='baseColor')]))]);ensure();selected=own(nearTreeGeometry(geometry,new Float32Array(uv)));for(const [role,near] of entries){const copy=own(near.clone());copy.channel=1;copy.needsUpdate=true;maps[role]=copy;}}
+   if(asset.nearTextures){const [uv,entries]=await Promise.all([bytes(asset.nearTextures.cornerUV),Promise.all(Object.entries(asset.nearTextures.textures).map(async([role,url])=>[role,await loadTexture(url,role==='baseColor')]))]);ensure();selected=own(nearTreeGeometry(geometry,new Float32Array(uv)));for(const [role,near] of entries){const copy=own(near.clone());copy.channel=1;copy.needsUpdate=true;maps[role]=copy;}}
    removeReviewedTreeTriangles(selected,asset.geometryCleanup?.removedTriangles?.[0]);
    const surface=describeSurface({...asset,name:asset.name??'',group:pack.profile?.assetGroups?.[slot]??SLOTS[slot].g},0,pack.biomeId??BIOME_IDS[state.biome]);
    // The whole material is shared only when bindings and every configured
