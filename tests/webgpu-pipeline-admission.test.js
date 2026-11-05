@@ -13,15 +13,20 @@ test('preparation remains hidden while compilation is pending and serializes req
  resolve();await first;await Promise.resolve();assert.equal(calls.length,2);resolve();await second;admission.dispose();
 });
 
-test('failure permits retry and disposal invalidates a pending result',async()=>{
+test('failed compilation retires the renderer instead of retrying its poisoned cache',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group();object.visible=false;
- let resolve,count=0;const renderer={backend:{isWebGPUBackend:true},compileAsync(){if(!count++)return Promise.reject(Error('compile failed'));return new Promise(r=>{resolve=r;});}};
- const admission=createWebGpuPipelineAdmission({renderer,scene,camera});
+ const failures=[],renderer={backend:{isWebGPUBackend:true},compileAsync:()=>Promise.reject(Error('compile failed'))};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera,onFatal:error=>failures.push(error.message)});
  await assert.rejects(admission.prepare(object),/compile failed/);
+ assert.deepEqual(failures,['compile failed']);await assert.rejects(admission.prepare(object),/closed/);assert.equal(object.visible,false);
+});
+
+test('disposal invalidates a pending result without reporting a fatal error',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),failures=[];let resolve;
+ const renderer={backend:{isWebGPUBackend:true},compileAsync:()=>new Promise(r=>{resolve=r;})};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera,onFatal:error=>failures.push(error)});
  const pending=admission.prepare(object);await Promise.resolve();admission.dispose();
- await assert.rejects(pending,/cancelled/);assert.equal(object.visible,false);
- resolve();
- await assert.rejects(admission.prepare(object),/closed/);
+ await assert.rejects(pending,/cancelled/);resolve();assert.deepEqual(failures,[]);
 });
 
 test('prepares with the actual framebuffer target and restores it before awaiting',async()=>{

@@ -1,8 +1,8 @@
 // Serializes renderer compilation setup while allowing the draw loop to run
 // during asynchronous pipeline creation. The owner must keep objects hidden
 // until the returned promise resolves.
-export function createWebGpuPipelineAdmission({renderer,scene,camera}){
- if(!renderer?.backend?.isWebGPUBackend||typeof renderer.compileAsync!=='function'||!scene?.isScene||!camera?.isCamera)throw TypeError('Invalid pipeline admission');
+export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=>{}}){
+ if(!renderer?.backend?.isWebGPUBackend||typeof renderer.compileAsync!=='function'||!scene?.isScene||!camera?.isCamera||typeof onFatal!=='function')throw TypeError('Invalid pipeline admission');
  let closed=false,generation=0,tail=Promise.resolve(),cancel;
  const cancelled=new Promise(resolve=>{cancel=()=>resolve(Error('Pipeline admission cancelled'));});
  const lost=renderer.backend.device?.lost?.then(info=>Error('WebGPU device lost: '+(info?.message||info?.reason||'unknown')));
@@ -31,6 +31,12 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera}){
     const error=await Promise.race([Promise.resolve(pending).then(()=>null),cancelled,...(lost?[lost]:[])]);
     if(error)throw error;
     if(closed||version!==generation)throw Error('Pipeline admission cancelled');
+   }).catch(error=>{
+    // Three r180 can retain an unsuccessful pipeline in its internal cache.
+    // Never let this renderer publish or retry with that cache: its owner must
+    // retire the presentation and rebuild it using a fresh renderer.
+    if(!closed){closed=true;generation++;cancel();try{onFatal(error);}catch{}}
+    throw error;
    });
    tail=task.catch(()=>{});
    return task;
