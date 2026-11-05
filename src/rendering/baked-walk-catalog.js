@@ -11,7 +11,7 @@ export async function loadBakedWalkAsset(species,{signal,fetcher=globalThis.fetc
  if(!metadataResponse.ok||!dataResponse.ok)throw Error('Baked walking asset unavailable: '+species);
  const [meta,buffer]=await Promise.all([metadataResponse.json(),dataResponse.arrayBuffer()]);if(signal?.aborted)throw new DOMException('Baked walking request cancelled','AbortError');
  const sourceHash=/^\/assets\/([a-f0-9]{64})\.glb$/.exec(ANIMAL_ACTIONS.animals[species].url)?.[1];
- if(!sourceHash||meta?.species!==species||meta.sourceSha256!==sourceHash||!/^[a-f0-9]{64}$/.test(meta.sha256??'')||meta.validation?.exactMismatches!==0||meta.validation?.packedMismatches!==0)throw Error('Baked walking source mismatch: '+species);
+ if(!sourceHash||meta?.species!==species||meta.sourceSha256!==sourceHash||!/^[a-f0-9]{64}$/.test(meta.sha256??'')||!Array.isArray(meta.boneInverses)||meta.validation?.exactMismatches!==0||meta.validation?.packedMismatches!==0)throw Error('Baked walking source mismatch: '+species);
  const digest=Array.from(new Uint8Array(await subtle.digest('SHA-256',buffer)),value=>value.toString(16).padStart(2,'0')).join('');if(signal?.aborted)throw new DOMException('Baked walking request cancelled','AbortError');
  if(digest!==meta.sha256)throw Error('Baked walking checksum mismatch: '+species);
  return createBakedWalkTexture(meta,buffer);

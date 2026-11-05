@@ -25,6 +25,8 @@ test('catalogue rejects altered data and metadata without creating a texture',as
  await assert.rejects(loadBakedWalkAsset('hyena',{fetcher:tampered,subtle:webcrypto.subtle}),/checksum mismatch/);
  const mismatched=async url=>{const response=await fetchFile(url);if(url.endsWith('.json'))return {...response,json:async()=>({...await response.json(),sourceSha256:'0'.repeat(64)})};return response;};
  await assert.rejects(loadBakedWalkAsset('hyena',{fetcher:mismatched,subtle:webcrypto.subtle}),/source mismatch/);
+ const missingInverses=async url=>{const response=await fetchFile(url);if(url.endsWith('.json'))return {...response,json:async()=>{const meta=await response.json();delete meta.boneInverses;return meta;}};return response;};
+ await assert.rejects(loadBakedWalkAsset('hyena',{fetcher:missingInverses,subtle:webcrypto.subtle}),/source mismatch/);
 });
 
 test('cancellation during asynchronous verification cannot publish an asset',async()=>{
