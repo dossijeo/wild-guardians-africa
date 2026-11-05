@@ -11,7 +11,7 @@ import {dueCinematicAct,finishCinematicAct,initializeCinematicProgress} from './
 import {installLoadingGameplayGpuQa} from './loading-gameplay-gpu-qa.js';
 import {renderWithOptionalWebGpuPresentation} from './webgpu-legacy-draw.js';
 import {createWebGpuDiscretePick} from './webgpu-discrete-pick.js';
-import {installWebGpuCameraInput} from './webgpu-camera-input.js';
+import {createWebGpuCameraPresentation,webGpuCameraPose} from './webgpu-camera-presentation.js';
 import {LibraryViewer} from '../ui/library-viewer.js';
 import {EventCards} from '../ui/event-cards.js';
 import {LoadingDiorama} from '../rendering/loading-diorama.js';
@@ -253,10 +253,9 @@ async function installWorkerGame(owner,ownerState,navigation){
   const onError=failure=>{if(owner===world&&ownerState===state)error(failure.message);};
   const onConfirmedEvents=events=>{if(owner!==world||ownerState!==state||screen!=='game'||campaignCinema?.active){owner.confirmedEventsSeeded=false;return;}try{juice?.process(ownerState,events);}catch(failure){owner.confirmedEventsSeeded=false;onError(failure);}try{audio.process(events,{state:ownerState,listener:owner.controls.target});}catch(failure){owner.confirmedEventsSeeded=false;onError(failure);}};let gpuClient=null,gpuCanvas=null,autoRecovery=null;
   const handleGpuError=(client,canvas,failure)=>{if(owner.webGpuWorld&&owner.webGpuWorld.client!==client){canvas?.remove();return;}if(owner.webGpuWorld?.client===client){owner.webGpuWorld.dispose();owner.webGpuWorld=null;}else canvas?.remove();if(!autoRecovery?.trigger(failure))onError(failure);};
-  const camera=()=>({x:owner.camera.position.x,y:owner.camera.position.y,z:owner.camera.position.z,targetX:owner.controls.target.x,targetY:owner.controls.target.y,targetZ:owner.controls.target.z,fov:owner.camera.fov,near:owner.camera.near,far:owner.camera.far});
+  const camera=()=>webGpuCameraPose(owner.camera,owner.controls);
   function bindWebGpuWorld(client,canvas){
-    let binding;const release=installWebGpuCameraInput({controls:owner.controls,context:()=>owner===world&&ownerState===state&&!owner.disposed&&owner.webGpuWorld===binding&&client.status().phase==='running'&&client.status().backend==='WebGPU'?binding:null});
-    binding={client,canvas,sync(){client.setCamera(camera());client.resize(owner.canvas.width,owner.canvas.height);},dispose(){release();client.dispose();canvas.remove();}};return binding;
+    return createWebGpuCameraPresentation({camera:owner.camera,controls:owner.controls,canvas,viewport:owner.canvas,client,isCurrent:binding=>owner===world&&ownerState===state&&!owner.disposed&&owner.webGpuWorld===binding});
   }
   if(import.meta.env.DEV&&params.has('qa-webgpu-world')){
     if(!hosted)throw Error('WebGPU world requires hosted simulation');gpuCanvas=document.createElement('canvas');gpuCanvas.className='qa-webgpu-world';gpuCanvas.style.cssText='position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1';owner.canvas.parentElement.append(gpuCanvas);
