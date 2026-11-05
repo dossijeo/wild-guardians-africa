@@ -31,6 +31,13 @@ test('tangent layout differences keep incompatible material instances separate',
  const stable=await makeStableVertexMaterials(x.renderer,x.preview,x.asset(x.material),x.mapping,{shareCompatibleMaterials:true});assert.notEqual(x.mesh.material,second.material);assert.equal(x.mesh.material.normalScale.y,-second.material.normalScale.y);stable.dispose();
 });
 
+test('sharing preserves separate object-dependent shader variants',async()=>{
+ const x=setup(),fur=x.mesh.clone(),other=x.mesh.clone();fur.geometry=x.mesh.geometry.clone();other.geometry=x.mesh.geometry.clone();fur.geometry.setAttribute('_fur_light',new THREE.Float32BufferAttribute([.5],1));
+ x.preview.scene.add(fur,other);x.preview.parser.associations.set(fur,{meshes:1,primitives:0});x.preview.parser.associations.set(other,{meshes:2,primitives:0});x.mapping.primitives.push({mesh:1,primitive:0,material:0,colorAccessor:null},{mesh:2,primitive:0,material:0,colorAccessor:null});
+ const stable=await makeStableVertexMaterials(x.renderer,x.preview,x.asset(x.material),x.mapping,{shareCompatibleMaterials:true,materialVariant:object=>object.geometry.getAttribute('_fur_light')?'fur':'base'});
+ assert.equal(x.mesh.material,other.material);assert.notEqual(x.mesh.material,fur.material);await stable.resolveFinal(x.asset(x.material));stable.apply();assert.equal(fur.material.map,x.material.map);stable.dispose();
+});
+
 test('stable material refuses premature or mismatched texture application', async () => {
   const x = setup(), stable = await makeStableVertexMaterials(x.renderer, x.preview, x.asset(x.material), x.mapping);
   const placeholder = x.mesh.material.map;

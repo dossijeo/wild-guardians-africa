@@ -53,5 +53,5 @@ export function createWebGpuBeastStyle({renderer,light,visibility=null}={}){
   catch(error){for(const change of changes)change.object.material=change.previous;for(const material of created)material.dispose();throw error;}
   return {originals:[...originals],materials:[...created]};
  }
- return {configure,convert,update(state){if(closed)throw Error('Beast style disposed');night.value=skyNight(state);sun.value.copy(light.position).sub(light.target.position).normalize();},status(){return {closed,night:night.value};},dispose(){closed=true;}};
+ return {configure,convert,prepareObject:prepareWebGpuFurAttribute,materialVariant:object=>object.geometry.getAttribute('_fur_light')?'fur':'base',update(state){if(closed)throw Error('Beast style disposed');night.value=skyNight(state);sun.value.copy(light.position).sub(light.target.position).normalize();},status(){return {closed,night:night.value};},dispose(){closed=true;}};
 }

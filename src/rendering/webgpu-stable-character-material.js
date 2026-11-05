@@ -21,8 +21,8 @@ function acquireNeutralTexture(renderer,source,normal){
 
 // Structural experiment only. Source identifiers must agree before any
 // original texture can replace the provisional appearance.
-export async function makeStableVertexMaterials(renderer, preview, originalMaterials, mapping, { nativeColor = false, toonOutput = null, shareCompatibleMaterials = false } = {}) {
-  if (typeof shareCompatibleMaterials !== 'boolean') throw TypeError('Invalid material sharing policy');
+export async function makeStableVertexMaterials(renderer, preview, originalMaterials, mapping, { nativeColor = false, toonOutput = null, shareCompatibleMaterials = false, materialVariant = null } = {}) {
+  if (typeof shareCompatibleMaterials !== 'boolean' || materialVariant !== null && typeof materialVariant !== 'function') throw TypeError('Invalid material sharing policy');
   const sourceHash = mapping?.sourceSha256;
   if (!/^[a-f0-9]{64}$/.test(sourceHash ?? '')) throw Error('Missing or invalid source hash');
   const assertSource = asset => { if (asset?.parser?.json?.asset?.extras?.wgVertexPreviewSourceSha256 !== sourceHash) throw Error('Material or preview source mismatch'); };
@@ -56,7 +56,9 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
     }
     // A callback may produce a different graph for each object. Share only
     // when the caller opted in and the geometry-dependent material state agrees.
-    const key = shareCompatibleMaterials && typeof toonOutput !== 'function' ? JSON.stringify([item.record.material,!!geometry.getAttribute('tangent'),!!geometry.getAttribute('normal'),nativeColor&&!!original]) : null;
+    const variant = materialVariant?.(item.object) ?? '';
+    if (typeof variant !== 'string') throw TypeError('Invalid material variant');
+    const key = shareCompatibleMaterials && typeof toonOutput !== 'function' ? JSON.stringify([item.record.material,!!geometry.getAttribute('tangent'),!!geometry.getAttribute('normal'),nativeColor&&!!original,variant]) : null;
     const shared = key === null ? null : compatibleMaterials.get(key);
     if (shared) {
       if (!source.map) changes.push({object:item.object,material:shared});
