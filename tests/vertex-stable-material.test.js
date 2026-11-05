@@ -79,6 +79,15 @@ test('incompatible final texture layout leaves the provisional material intact',
   await stable.resolveFinal(x.asset(x.material));stable.apply();assert.equal(x.mesh.material.map,x.material.map);stable.dispose();
 });
 
+test('texture replacement rejects incompatible WebGPU binding dimensions and sample types',async()=>{
+ const candidates=[new THREE.DataArrayTexture(new Uint8Array(4),1,1,1),new THREE.Data3DTexture(new Uint8Array(4),1,1,1),new THREE.DepthTexture(1,1),new THREE.DataTexture(new Uint32Array(4),1,1,THREE.RGBAIntegerFormat,THREE.UnsignedIntType),new THREE.DataTexture(new Float32Array(4),1,1,THREE.RGBAFormat,THREE.FloatType)];
+ for(const candidate of candidates){const x=setup(),stable=await makeStableVertexMaterials(x.renderer,x.preview,x.asset(x.material),x.mapping),placeholder=x.mesh.material.map,final=x.material.clone();for(const key of ['colorSpace','mapping','channel','wrapS','wrapT','wrapR','magFilter','minFilter','anisotropy'])candidate[key]=x.material.map[key];final.map=candidate;await assert.rejects(stable.resolveFinal(x.asset(final)),/layout mismatch: map/);assert.equal(x.mesh.material.map,placeholder);stable.dispose();candidate.dispose();}
+});
+
+test('compatible compressed 2D color data keeps the same sampled binding',async()=>{
+ const x=setup(),stable=await makeStableVertexMaterials(x.renderer,x.preview,x.asset(x.material),x.mapping),final=x.material.clone(),compressed=new THREE.CompressedTexture([],1,1,THREE.RGBA_BPTC_Format);for(const key of ['colorSpace','mapping','channel','wrapS','wrapT','wrapR','magFilter','minFilter','anisotropy'])compressed[key]=x.material.map[key];final.map=compressed;await stable.resolveFinal(x.asset(final));stable.apply();assert.equal(x.mesh.material.map,compressed);stable.dispose();compressed.dispose();
+});
+
 test('compatible neutral textures are shared only within a renderer and released after the last owner',async()=>{
  const a=setup(),b=setup(),c=setup();b.renderer=a.renderer;
  const first=await makeStableVertexMaterials(a.renderer,a.preview,a.asset(a.material),a.mapping),second=await makeStableVertexMaterials(b.renderer,b.preview,b.asset(b.material),b.mapping),third=await makeStableVertexMaterials(c.renderer,c.preview,c.asset(c.material),c.mapping);

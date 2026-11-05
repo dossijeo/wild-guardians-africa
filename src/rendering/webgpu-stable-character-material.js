@@ -2,7 +2,15 @@ import * as THREE from 'three';
 import { attribute, mix, texture, uniform, vec4 } from 'three/tsl';
 
 const textureLayoutProperties=['colorSpace','mapping','channel','wrapS','wrapT','wrapR','magFilter','minFilter','anisotropy'];
-const textureLayout=texture=>JSON.stringify(textureLayoutProperties.map(key=>texture[key]));
+// Match the structural binding distinctions used by Three's WebGPU backend.
+// Compressed BC7 and ordinary RGBA textures can share a float 2D binding;
+// arrays, depth and integer/unfilterable float textures cannot use that slot.
+function textureBinding(texture){
+ const dimension=texture.isCubeTexture?'cube':texture.isArrayTexture||texture.isDataArrayTexture||texture.isCompressedArrayTexture?'2d-array':texture.is3DTexture||texture.isData3DTexture?'3d':'2d';
+ let sample='float';if(texture.isDepthTexture)sample='depth';else if(texture.isDataTexture||texture.isDataArrayTexture||texture.isData3DTexture){if(texture.type===THREE.IntType)sample='sint';else if(texture.type===THREE.UnsignedIntType)sample='uint';else if(texture.type===THREE.FloatType)sample='float32';}
+ return [dimension,sample,texture.isDepthTexture?texture.compareFunction:null,texture.renderTarget?.samples??0];
+}
+const textureLayout=texture=>JSON.stringify([...textureBinding(texture),...textureLayoutProperties.map(key=>texture[key])]);
 const neutralTextures=new WeakMap();
 
 // Each renderer owns its neutral textures. Materials borrow them and release
