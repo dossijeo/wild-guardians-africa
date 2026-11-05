@@ -78,10 +78,10 @@ test('journal overflow blocks dispatch and cannot be accepted as a recovery boun
 });
 
 test('checkpoint renewal preserves ordered admission beyond 128 publications',async()=>{
- const {createPresentationRecoveryJournal,shouldRenewPresentationCheckpoint}=await import('../src/simulation/presentation-recovery-journal.js');
+ const {createPresentationRecoveryJournal,shouldCapturePresentationCheckpoint}=await import('../src/simulation/presentation-recovery-journal.js');
  const journal=createPresentationRecoveryJournal(),bases=[],sent=[],port={postMessage(m){sent.push(m)},start(){},close(){}},stream=openVisualStream(port,'s',()=>{},{recoveryJournal:journal,onCheckpointAcknowledged:base=>bases.push(base)});
  for(let n=1;n<=400;n++){
-  const renew=n===1||shouldRenewPresentationCheckpoint(journal.status()),packet={sequence:n,events:n%13===0?[{id:`event-${n}`}]:[],physicsPose:null,snapshot:`state-${n}`,...(renew?{terrainCheckpoint:{sequence:n,chunks:[]}}:{})};
+  const renew=shouldCapturePresentationCheckpoint(journal.status()),packet={sequence:n,events:n%13===0?[{id:`event-${n}`}]:[],physicsPose:null,snapshot:`state-${n}`,...(renew?{terrainCheckpoint:{sequence:n,chunks:[]}}:{})};
   assert.equal(stream.blocked(),false,`blocked before ${n}`);stream.publish(packet,true);assert.equal(sent.at(-1).publication.sequence,n);port.onmessage({data:{kind:'publicationAck',session:'s',sequence:n}});
  }
  assert.ok(bases.length>=5);assert.ok(journal.status().base>128);assert.equal(journal.status().through,400);assert.equal(stream.blocked(),false);

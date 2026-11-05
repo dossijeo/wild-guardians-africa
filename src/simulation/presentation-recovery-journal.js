@@ -69,9 +69,16 @@ export function assertPresentationRecoveryBoundary(journal,stream,checkpoint,aut
  return status.through;
 }
 
-// Request a replacement before the admission watermark, and only once until
-// the ordered checkpoint ACK has promoted the candidate.
-export function shouldRenewPresentationCheckpoint(status){
- if(!status||status.closed||status.base===null||status.candidate!==null)return false;
+// Capture the initial base on the first ordered command, then renew it before
+// the admission watermark. Never request another while an ACK is pending.
+export function shouldCapturePresentationCheckpoint(status){
+ if(!status||status.closed||status.candidate!==null)return false;
+ if(status.base===null)return status.through===null;
  return status.entries>=Math.max(1,Math.floor(status.highWatermark/2))||status.bytes>=Math.max(1,Math.floor(status.highWatermarkBytes/2));
+}
+
+// Enrich the existing command; never create or reorder an authority command.
+export function withPresentationRecoveryCheckpoint(command,status,{frozen=false,detached=false}={}){
+ if(frozen||detached||command.visualTerrain===true||!shouldCapturePresentationCheckpoint(status))return command;
+ return {...command,visualTerrain:true,visualRecoveryOnly:true};
 }

@@ -1,6 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createPresentationRecoveryJournal,assertPresentationRecoveryBoundary,shouldRenewPresentationCheckpoint} from '../src/simulation/presentation-recovery-journal.js';
+import {createPresentationRecoveryJournal,assertPresentationRecoveryBoundary,shouldCapturePresentationCheckpoint,withPresentationRecoveryCheckpoint} from '../src/simulation/presentation-recovery-journal.js';
+
+test('initial recovery checkpoint enriches the ordered command without injecting another',()=>{
+ const journal=createPresentationRecoveryJournal(),command={kind:'pause',reason:'hidden'},initial=withPresentationRecoveryCheckpoint(command,journal.status());
+ assert.deepEqual(initial,{...command,visualTerrain:true,visualRecoveryOnly:true});assert.deepEqual(command,{kind:'pause',reason:'hidden'});
+ assert.equal(withPresentationRecoveryCheckpoint(command,journal.status(),{frozen:true}),command);
+ assert.equal(withPresentationRecoveryCheckpoint(command,journal.status(),{detached:true}),command);
+ const explicit={kind:'snapshot',visualTerrain:true};assert.equal(withPresentationRecoveryCheckpoint(explicit,journal.status()),explicit);
+ journal.begin(1);assert.equal(withPresentationRecoveryCheckpoint(command,journal.status()),command);journal.confirm(1);assert.equal(withPresentationRecoveryCheckpoint(command,journal.status()),command);journal.dispose();
+});
 const publication=(sequence,events=[])=>({sequence,events,snapshot:'snapshot-'+sequence,physicsPose:{actorId:'a',active:true,bones:[sequence]},presentationJournal:events.map(e=>({kind:'event',eventId:e.id}))});
 test('checkpoint promotion retains every later publication, pose and event in order',()=>{
  const j=createPresentationRecoveryJournal({capacity:8,highWatermark:5});
@@ -44,12 +53,12 @@ test('recovery boundary fails closed on channel error, missing publication, pend
 
 test('checkpoint renewal starts early and waits for exact candidate acknowledgement',()=>{
  const j=createPresentationRecoveryJournal({capacity:8,highWatermark:4,maxBytes:100000,highWatermarkBytes:90000});
- assert.equal(shouldRenewPresentationCheckpoint(j.status()),false);j.begin(1);j.confirm(1);
+ assert.equal(shouldCapturePresentationCheckpoint(j.status()),true);j.begin(1);assert.equal(shouldCapturePresentationCheckpoint(j.status()),false);j.confirm(1);
  const p=n=>({sequence:n,snapshot:'x',events:[],physicsPose:null});
- j.append(p(2),true);assert.equal(shouldRenewPresentationCheckpoint(j.status()),false);
- j.append(p(3),true);assert.equal(shouldRenewPresentationCheckpoint(j.status()),true);
- j.begin(3);assert.equal(shouldRenewPresentationCheckpoint(j.status()),false);j.append(p(4),true);j.confirm(3);
- assert.equal(shouldRenewPresentationCheckpoint(j.status()),false);assert.equal(j.status().through,4);
+ j.append(p(2),true);assert.equal(shouldCapturePresentationCheckpoint(j.status()),false);
+ j.append(p(3),true);assert.equal(shouldCapturePresentationCheckpoint(j.status()),true);
+ j.begin(3);assert.equal(shouldCapturePresentationCheckpoint(j.status()),false);j.append(p(4),true);j.confirm(3);
+ assert.equal(shouldCapturePresentationCheckpoint(j.status()),false);assert.equal(j.status().through,4);
 });
 
 
