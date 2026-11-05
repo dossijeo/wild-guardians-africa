@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createConfirmedCameraTerrain,cameraTerrainHeights,CameraTerrainUnavailable} from '../src/app/confirmed-camera-terrain.js';
+import {PerspectiveCamera,Vector3} from 'three';
+import {protectTerrainCamera} from '../src/rendering/terrain-camera.js';
 
 const chunk=(sequence,revision,height,cx=0)=>({sequence,revision,cx,cz:0,epoch:'epoch-a',heights:new Float32Array(49*49).fill(height)});
 test('camera terrain exposes only main-confirmed heights and rejects absent chunks',()=>{
@@ -13,3 +15,4 @@ test('height-only extraction preserves the confirmed terrain grid',()=>{const po
 test('different chunks may arrive out of sequence without exposing future terrain',()=>{const view=createConfirmedCameraTerrain();view.ingest(chunk(3,1,7,0));view.ingest(chunk(2,1,4,1));assert.throws(()=>view.ingest(chunk(2,2,9,0)),/revision/);view.confirm(2);assert.equal(view.surface(48,0),4);assert.throws(()=>view.surface(0,0),CameraTerrainUnavailable);view.confirm(3);assert.equal(view.surface(0,0),7);view.dispose();});
 test('multiple future revisions do not expose an obsolete intermediate chunk',()=>{const view=createConfirmedCameraTerrain();view.ingest(chunk(0,1,1));view.ingest(chunk(2,2,2));view.ingest(chunk(3,3,3));view.confirm(2);assert.throws(()=>view.surface(0,0),CameraTerrainUnavailable);view.confirm(3);assert.equal(view.surface(0,0),3);view.dispose();});
 test('resident chunk budget rejects additional distinct chunks',()=>{const view=createConfirmedCameraTerrain({maxChunks:1});view.ingest(chunk(0,1,1));assert.throws(()=>view.ingest(chunk(0,1,2,1)),/chunk capacity/);view.dispose();});
+test('stationary camera cannot reuse a pose after its terrain revision changes',()=>{const view=createConfirmedCameraTerrain(),camera=new PerspectiveCamera(),controls={target:new Vector3()};view.ingest(chunk(0,1,0));camera.position.set(0,10,10);protectTerrainCamera(camera,controls,view);view.ingest(chunk(2,2,20));assert.throws(()=>protectTerrainCamera(camera,controls,view),CameraTerrainUnavailable);view.confirm(2);protectTerrainCamera(camera,controls,view);assert.ok(camera.position.y>=22);view.dispose();});

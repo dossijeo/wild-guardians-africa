@@ -13,7 +13,7 @@ export function installCameraPoseResolver(camera,resolver){
 const matches=(vector,array)=>array.every((v,i)=>Math.abs(vector.getComponent(i)-v)<1e-8);
 function restoreOrbitIntent(camera,controls,field){
   const previous=lastPose.get(camera);
-  if(previous&&previous.field===field&&matches(camera.position,previous.pose.eye)&&matches(controls.target,previous.pose.target))camera.position.fromArray(previous.rawEye);
+  if(previous&&previous.field===field&&previous.version===(field?.cameraTerrainVersion??null)&&matches(camera.position,previous.pose.eye)&&matches(controls.target,previous.pose.target))camera.position.fromArray(previous.rawEye);
 }
 // Pointer and wheel handlers also call OrbitControls.update synchronously.
 // Restore intent there as well as in the render loop, before spherical
@@ -30,7 +30,7 @@ export function installTerrainCameraIntent(camera,controls,fieldSource){
 function applyPose(camera,controls,field,desiredPose,rawEye,context='move'){
   const pose=poseResolvers.get(camera)?.(desiredPose,lastPose.get(camera)?.pose,context)??desiredPose;
   controls.target.fromArray(pose.target);camera.position.fromArray(pose.eye);camera.lookAt(controls.target);camera.updateMatrixWorld();
-  lastPose.set(camera,{field,pose,desiredPose,rawEye});return pose;
+  lastPose.set(camera,{field,version:field?.cameraTerrainVersion??null,pose,desiredPose,rawEye});return pose;
 }
 
 function cameraPose(field,target,theta,phi,distance,maxClearance=20,minDistance=4){
@@ -57,7 +57,7 @@ export function protectTerrainCamera(camera,controls,field){
   const previous=lastPose.get(camera);
   // OrbitControls reconstructs spherical coordinates from the corrected eye.
   // A static frame must not reinterpret the height correction as another orbit.
-  if(previous?.field===field&&matches(camera.position,previous.pose.eye)&&matches(controls.target,previous.pose.target))return applyPose(camera,controls,field,previous.desiredPose,previous.rawEye);
+  if(previous?.field===field&&previous.version===(field?.cameraTerrainVersion??null)&&matches(camera.position,previous.pose.eye)&&matches(controls.target,previous.pose.target))return applyPose(camera,controls,field,previous.desiredPose,previous.rawEye);
   const offset=camera.position.clone().sub(controls.target),spherical=new THREE.Spherical().setFromVector3(offset);
   const {pose,rawEye}=contextualPose(camera,field,controls.target.toArray(),spherical.theta,spherical.phi,spherical.radius);
   return applyPose(camera,controls,field,pose,rawEye);

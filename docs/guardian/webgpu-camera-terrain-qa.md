@@ -34,3 +34,10 @@ la trayectoria ni el damping de dos movimientos recibidos mientras faltaba
 terreno. El segundo guard también se descartó. Un reintento seguro necesita
 preservar y reproducir el orden de las intenciones, además de validar foco,
 selección y exclusiones; la fuente sigue sin inyectarse.
+
+Se probó una cola acotada de actualizaciones de OrbitControls r180. Superó
+pruebas de giro, pan y rueda con damping, pero se retiró porque carecía de
+consumidor seguro: faltan exclusiones transaccionales, foco, selección,
+gestos que mutan la cámara directamente y recuperación.
+La revisión de la vista también invalida la caché de pose cuando cambia el
+terreno, incluso con la cámara inmóvil, para no reutilizar una altura antigua.

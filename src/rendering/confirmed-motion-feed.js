@@ -29,5 +29,5 @@ export function createConfirmedMotionFeed({onChange=()=>{},maxActors=256,maxSegm
   }
   lastSequence=event.sequence;return value;
  }
- return {accept,get(actorId){return actors.get(actorId)??null;},getWorld(){return world;},status(){return {closed,lastSequence,actors:actors.size,...(worldBatches?{worldBatches,worldActors:world?.trace.actors.length??0,worldRepresentable:world?.representable??false}:{})};},dispose(){if(closed)return;closed=true;world=null;actors.clear();}};
+ return {accept,invalidateTerrain(){if(closed)return false;let changed=false;if(world){world.representable=false;world.invalidated='terrain-revision';world.trace=null;world=null;changed=true;}for(const [actorId,previous] of actors){if(!previous.trace)continue;previous.trace=null;previous.representable=false;previous.invalidation={actorId,at:previous.elapsed,reason:'terrain-revision'};onChange(previous);changed=true;}return changed;},get(actorId){return actors.get(actorId)??null;},getWorld(){return world;},status(){return {closed,lastSequence,actors:actors.size,...(worldBatches?{worldBatches,worldActors:world?.trace.actors.length??0,worldRepresentable:world?.representable??false}:{})};},dispose(){if(closed)return;closed=true;world=null;actors.clear();}};
 }
