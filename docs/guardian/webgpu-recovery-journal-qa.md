@@ -80,3 +80,24 @@ Se ensayó un protocolo QA para enviar las mutaciones de `tasks` y serializar el
 En una pasada exploratoria con la misma captura diurna y consumidor inmediato, los 40 resultados ocuparon 49.329.785 bytes JSON completos y 48.638.125 bytes con el delta, una reducción del 1,4 %. El tiempo medio de la autoridad fue 22,15 frente a 20,81 ms y el del receptor 22,57 frente a 22,53 ms; son mediciones secuenciales únicas, no evidencia de mejora reproducible. El espejo QA aislado de 115 tareas tardó una media de 0,167 ms y p95 de 0,216 ms en 1.000 comprobaciones sin mutaciones.
 
 Con idéntico consumidor detenido y 40 ticks pendientes, la cola existente absorbió 38 ticks y envió 3 publicaciones, 3.699.770 bytes JSON; la alternativa con dependencias de deltas conservó los 40 ticks y envió 41 publicaciones, 49.875.510 bytes, aproximadamente 13,5 veces más. Son bytes JSON estimados, no transferencias ni memoria GPU medidas. El experimento se descartó: no queda un flag activo ni se cambia el protocolo. Una alternativa futura tendría que acumular deltas y mantener sus fronteras causales sin impedir la compactación existente, antes de alegar ahorro.
+
+## Replay concurrente experimental
+
+Con `qa-webgpu-recovery` y `qa-webgpu-recovery-concurrent`, ambos solo en desarrollo, el host mantiene avanzando la autoridad mientras un nuevo consumidor reproduce el checkpoint y el journal. La base queda fijada durante la operación y el replay se despierta al recibir nuevas publicaciones o bloques de terreno. Cuando alcanza la secuencia actual, el host verifica la frontera y cambia de puerto en el mismo turno síncrono. La transferencia del puerto de terreno sí requiere una barrera asíncrona breve: se deja terminar el comando de autoridad en curso, se cambia el puerto y se reanuda el despacho antes de esperar al replay. Los comandos y eventos conservan su orden. La opción está desactivada por defecto.
+
+La cancelación antes de transferir el puerto restaura el despacho. Una cancelación posterior se rechaza explícitamente, porque no es seguro volver al puerto antiguo sin reconstruir el canal de terreno. Un ACK inválido, un error de transferencia o un timeout de 10 segundos rechaza la promesa de recuperación; tras iniciar la transferencia, la admisión se detiene y conserva el journal, a la espera de una recuperación explícita. Los comandos en espera y los posteriores se rechazan; los pasos de simulación pendientes no se descartan. Esto evita fingir que el renderer antiguo sigue sincronizado. Los límites de cola y journal siguen aplicándose; si el replay no alcanza a un productor más rápido, puede saturarse y frenar la autoridad. La operación aún no es un desacoplamiento completo ni una recuperación automática de pérdida de dispositivo.
+
+Una fixture ligera de Edge headless ejecutó host y autoridad reales en Workers anidados con puertos simulados, sin WebGPU: el estado avanzó durante la preparación y el replay, que alcanzó la secuencia 17 desde la base 2; se probaron cancelación anterior y rechazo posterior a la transferencia, error de ACK y timeout sin promesas pendientes. En el timeout el journal llegó a 100 entradas y aproximadamente 201 MB estimados, superando su umbral; no es una medición de GPU. Las pruebas unitarias cubren productor más rápido y lento, entrada de terreno pendiente, fallo y cancelación del replay. No se validaron aún en el host real los cambios de terreno en vuelo ni la equivalencia visual y física con un renderer WebGPU real. La batería dirigida de replay, journal, runtime y cliente pasó 47 pruebas.
+
+Reproducción de la fixture sin renderer, desde PowerShell (dos terminales):
+
+```powershell
+.\.cache\tooling\node20.exe .\node_modules\vite\bin\vite.js --host 127.0.0.1 --port 5187 --strictPort
+```
+
+```powershell
+$env:NODE_PATH='C:\Users\Gabriel\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules'
+.\.cache\tooling\node20.exe .\tools\experiments\audit_worker_concurrent_recovery.mjs
+```
+
+El script ejecuta éxito, cancelación y errores, incluido un timeout intencionado de 10 segundos; se le pueden pasar modos individuales (`success`, `cancel`, `preFailure`, `cancelAfter`, `failure`, `timeout`). `QA_BASE_URL` y `PLAYWRIGHT_MODULE` permiten usar otra URL o instalación de Playwright. Hay que detener Vite al terminar.

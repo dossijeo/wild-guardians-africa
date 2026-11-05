@@ -83,3 +83,7 @@ test('paused advance acknowledgements pass through the runtime without relaxing 
  const world={createConfirmedReceiver(){return {accept(message){seen.push(['full',message.sequence]);return {accepted:true};},acceptUnchanged(message){seen.push(['unchanged',message.sequence]);return {accepted:true};},status(){return {sequence:seq,lastElapsed:0};}};}};
  const runtime=createWorkerGameRuntime({client,world,session:'s',now:()=>time,schedule:fn=>(wake=fn,1),cancel:()=>{}});await runtime.start();time=50;wake();await flush();assert.deepEqual(seen,[['full',1],['unchanged',2]]);assert.equal(runtime.status().fault,null);runtime.dispose();
 });
+
+test('rejecting queued commands retains pending simulation steps and the authority',async()=>{
+ let time=0,wake,allowed=true,seq=0;const client={ready:Promise.resolve(),submit(){return {accepted:true,result:Promise.resolve({sequence:++seq,residency:{missing:[]},events:[]})}},dispose(){}},world={createConfirmedReceiver(){return {accept:()=>({accepted:true}),status:()=>({sequence:seq,lastElapsed:0})}}};const runtime=createWorkerGameRuntime({client,world,session:'s',now:()=>time,schedule:fn=>(wake=fn,1),cancel:()=>{},canDispatch:()=>allowed});await runtime.start();allowed=false;time=100;wake();const pending=runtime.submit({kind:'pause',reason:'test'}),check=assert.rejects(pending,/recovery failed/);assert.equal(runtime.status().pendingSteps,2);runtime.rejectQueuedCommands(Error('recovery failed'));await check;assert.equal(runtime.status().pendingSteps,2);assert.equal(runtime.status().closed,false);runtime.dispose();
+});

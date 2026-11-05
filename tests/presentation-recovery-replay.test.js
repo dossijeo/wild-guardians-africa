@@ -34,3 +34,13 @@ test('compacted quiet range replays with the original first sequence and endpoin
  const ack=()=>{const m=sent.at(-1);port.onmessage({data:{kind:'recoveryAck',session:'s',id:m.id,phase:m.kind.slice(8).toLowerCase(),sequence:m.sequence}})};
  ack();assert.equal(sent.at(-1).firstSequence,2);assert.equal(sent.at(-1).sequence,3);assert.equal(sent.at(-1).publication.snapshot,'s3');ack();assert.equal(sent.at(-1).firstSequence,4);assert.equal(sent.at(-1).publication.events[0].id,'event-4');ack();assert.equal(caught.at(-1).sequence,4);assert.deepEqual(errors,[]);replay.dispose();
 });
+
+test('concurrent replay waits for a faster producer, preserves terrain and catches up when it slows',()=>{
+ const f=fixture();f.ack();assert.equal(f.caught.at(-1).sequence,1);f.journal.appendTerrain(2,[{cx:1}]);f.replay.wake();assert.equal(f.sent.at(-1).kind,'recoveryTerrain');f.journal.append(publication(2,[{id:'e2'}]),true);f.journal.append(publication(3,[{id:'e3'}]),true);f.ack();assert.equal(f.sent.at(-1).publication.sequence,2);f.ack();assert.equal(f.sent.at(-1).publication.sequence,3);assert.equal(f.caught.length,1);f.ack();assert.equal(f.caught.at(-1).sequence,3);assert.deepEqual(f.errors,[]);
+});
+test('cancelled concurrent replay does not consume or acknowledge further entries',()=>{
+ const f=fixture();f.journal.append(publication(2),true);f.ack();assert.equal(f.sent.at(-1).sequence,2);const pending=f.sent.at(-1);f.replay.dispose();assert.equal(f.port.onmessage,null);f.journal.append(publication(3),true);f.replay.wake();assert.equal(f.sent.at(-1),pending);assert.equal(f.journal.status().through,3);assert.equal(f.replay.status().closed,true);
+});
+test('replay failure preserves journal and stops without hiding later events',()=>{
+ const f=fixture();f.journal.append(publication(2,[{id:'e2'}]),true);const m=f.sent[0];f.port.onmessage({data:{kind:'recoveryAck',session:'bad',id:m.id,phase:'checkpoint',sequence:1}});f.journal.append(publication(3,[{id:'e3'}]),true);f.replay.wake();assert.equal(f.replay.status().failed,true);assert.deepEqual(f.journal.snapshot().entries.map(e=>e.publication.events[0].id),['e2','e3']);assert.match(f.errors[0],/acknowledgement/);
+});
