@@ -45,6 +45,22 @@ test('walking texture contract accepts known species and rejects unknown species
  for(const species of Object.keys(ANIMAL_ACTIONS.animals)){const bake=createBakedWalkTexture({...meta,species},input);assert.equal(bake.meta.species,species);bake.dispose();}assert.throws(()=>createBakedWalkTexture({...meta,species:'unknown'},input),/Invalid/);
 });
 
+test('baked walking rejects altered bind matrices without replacing the live rig',async()=>{
+ const meta=JSON.parse(await readFile(new URL('../public/content/gpu-walk/hyena/walking.json',import.meta.url))),bytes=await readFile(new URL('../public/content/gpu-walk/hyena/walking.bin',import.meta.url)),input=bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength);
+ const invalid=structuredClone(meta);invalid.channels[0].bindMatrix[0]=null;assert.throws(()=>createBakedWalkTexture(invalid,input),/Unsupported/);
+ const bake=createBakedWalkTexture(meta,input),asset=await actorAsset('public'+ANIMAL_ACTIONS.animals.hyena.url),root=new Group(),meshes=[];root.add(asset.scene);asset.scene.traverse(mesh=>{if(mesh.isSkinnedMesh)meshes.push(mesh);});
+ const renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:()=>new MeshStandardNodeMaterial()}},originals=meshes.map(mesh=>({visible:mesh.visible,material:mesh.material}));meshes.at(-1).bindMatrix.elements[12]+=.1;
+ assert.throws(()=>createBakedWalkPresentation({model:asset.scene,root,renderer,bake}),/Unsupported baked walking rig/);for(const [i,mesh] of meshes.entries()){assert.equal(mesh.visible,originals[i].visible);assert.equal(mesh.material,originals[i].material);}let extra=0;asset.scene.traverse(mesh=>{if(mesh.isMesh&&!mesh.isSkinnedMesh)extra++;});assert.equal(extra,0);assert.ok(Object.isFrozen(bake.meta.channels[0].bindMatrix));bake.dispose();
+});
+
+test('packaged animal preview rigs match the walking bind contract',async()=>{
+ const renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:()=>new MeshStandardNodeMaterial()}};
+ for(const species of Object.keys(ANIMAL_ACTIONS.animals)){
+  const base=new URL(`../public/content/gpu-walk/${species}/walking`,import.meta.url),meta=JSON.parse(await readFile(new URL(base.href+'.json'))),bytes=await readFile(new URL(base.href+'.bin')),bake=createBakedWalkTexture(meta,bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength)),asset=await actorAsset(`public/content/character-preview/${species}/preview.glb`),root=new Group();root.add(asset.scene);
+  try{const presentation=createBakedWalkPresentation({model:asset.scene,root,renderer,bake});presentation.dispose();}finally{bake.dispose();}
+ }
+});
+
 test('real hyena rig retains original meshes for physical fallback',async()=>{
  const meta=JSON.parse(await readFile(new URL('../public/qa/gpu-bake/walking.json',import.meta.url))),bytes=await readFile(new URL('../public/qa/gpu-bake/walking.bin',import.meta.url));
  const bake=createBakedWalkTexture(meta,bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength)),asset=await actorAsset('public'+ANIMAL_ACTIONS.animals.hyena.url),root=new Group();root.add(asset.scene);
