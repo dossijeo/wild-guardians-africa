@@ -11,11 +11,8 @@ import * as THREE from 'three';
 import {CharacterLod} from './character-lod.js';
 import {clone} from 'three/addons/utils/SkeletonUtils.js';
 import {GuardianFace} from '../ui/guardian-face.js';
-import {guardianPropBounds} from './guardian-prop-bounds.js';
-import {guardianPlacement} from './guardian-placement.js';
+import {planGuardianSummon} from './guardian-summon-planner.js';
 import {vfxEnvironment} from './vfx-native.js';
-import {CameraBuildingRegistry} from './camera-building-registry.js';
-import {wallCollisionBounds} from '../world/wall-collision-frame.js';
 import {GuardianVortex} from './guardian-vortex.js';
 import {guardianMaterial} from './guardian-material.js';
 const COLORS={awakening:0x68ffda,growth:0xa8ed8b,multiply:0xe5b4ff,shield:0x8be8ec,attack:0xffcf79};
@@ -48,19 +45,7 @@ export class GuardianSummons{
  }
  beforeLods(){for(const s of this.slots)s.lod?.beforePose();}
  updateLods(){for(const s of this.slots)s.lod?.update(this.world.camera,this.world.renderer.domElement.height,this.guide?false:this.world.characterLodForce??null);}
- plan(entityId,point,{bodyScale=1,hoverAbove=false}={}){const w=this.world,target=w.state.raid?.animals.find(a=>a.id===entityId)??w.state.plants.find(p=>p.id===entityId&&p.alive)??w.state.structures.find(s=>s.id===entityId)??point;if(!target)return null;
-  // Reuse native building volumes: never raycast every skinned triangle for
-  // each of the placement candidates. This work runs only on an accepted cast.
-  this.occluders??=new CameraBuildingRegistry({centerMargin:0,villageMargin:0});
-  this.occluders.sync(w.objects,[...w.state.villages,...w.state.structures.filter(s=>s.kind==='center')]);
-  const index=this.occluders.index;
-  for(const id of this.extraOccluders??[])index.delete(id);this.extraOccluders=[];
-  const add=(id,min,max)=>{index.set(id,{min,max});this.extraOccluders.push(id);};
-  for(const wall of w.state.structures)if(wall.kind==='wall'&&wall.status==='intact'&&Math.hypot(wall.x-target.x,wall.z-target.z)<15){const b=wallCollisionBounds(wall,0),y=w.nav.field.surface(wall.x,wall.z);add('wall:'+wall.id,[b[0],y,b[1]],[b[2],y+2.5,b[3]]);}
-  for(const p of w.nav.propsAt?.(target.x,target.z,12)??[]){const bounds=guardianPropBounds(p,w.pack?.assets[p.slot],w.nav.field.surface(p.x,p.z));if(bounds)add('prop:'+p.id+':'+p.x+':'+p.z,bounds.min,bounds.max);}
-  const eye=w.camera.position.toArray();
-  return guardianPlacement({target,bodyScale,hoverAbove,screenExclusions:w.guardianScreenExclusions?.()??[],camera:w.camera,nav:w.nav,state:w.state,occluded:(x,y,z)=>!!index.sweep(eye,[x,y,z]),occupied:(x,y,z)=>!!index.sweep([x,y-bodyScale,z],[x,y+1.2*bodyScale,z],1.2*bodyScale),cropHeight:p=>w.cropBatch.sample(p.species,p.growth).height});
- }
+ plan(entityId,point,options){return planGuardianSummon(this,entityId,point,options);}
  guideScreenPosition(){
   if(!this.guiding)return null;const s=this.slots[0];if(!s)return null;
   const p=this.vector.copy(s.group.position).project(this.world.camera),r=this.world.renderer.domElement.getBoundingClientRect();
