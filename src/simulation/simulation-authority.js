@@ -38,7 +38,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
  if(!(module instanceof WebAssembly.Module)||typeof snapshot!=='string'||!Array.isArray(chunkKeys)||new Set(chunkKeys).size!==chunkKeys.length||onTerrainChunk!==null&&typeof onTerrainChunk!=='function')throw TypeError('Invalid simulation authority initialization');
  for(const key of chunkKeys)parseSimulationChunkKey(key);
  const game=(restoringPhysics?deserializeConfirmedState:deserialize)(snapshot),loaded=new Map(),savedWaitBindings=game.workerRaidWaitBindings??null,presentationHeadings=presentationWorkerHeadingSeed===null?null:createPresentationWorkerHeadings(presentationWorkerHeadingSeed,{initialWorkerIds:game.workers.map(worker=>worker.id)});delete game.workerRaidWaitBindings;delete game.workerPhysicsCheckpoint;delete game.workerNativeAuthorityCheckpoint;let session,stopTasks,stopWorld,stopEvents,physics=null,physicsInitializing=false,tutorial=null,closed=false,sequence=0,events=[],trackMicroIncome=false,trackedActor=null,trackMotionPeers=false,trackWorldMotion=false,stopMotion=null,motionSegments=null,terrainGeneration=0,reportedTerrainGeneration=0;
- let qaGuardianMetadata=null,qaGuardianTerrainEpoch=null;
+ let guardianMetadata=null,guardianTerrainEpoch=null;
  try{
   const acceptChunk=data=>{loaded.set(`${data.cx},${data.cz}`,data);terrainGeneration++;onTerrainChunk?.(data);};
   session=createSpatialGameSession(module,game,{loaded:()=>loaded,onData:acceptChunk});
@@ -93,9 +93,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   // commands, belong to the next successful authority publication.
   reportedTerrainGeneration=terrainGeneration;let hasPublishedSnapshot=false;
   function takeTerrainChanged(){const changed=terrainGeneration!==reportedTerrainGeneration;reportedTerrainGeneration=terrainGeneration;return changed;}
+  function setGuardianMetadata(metadata){if(closed||!metadata||!Array.isArray(metadata.assets)||!metadata.cropHeights)throw TypeError('Invalid guardian metadata');guardianMetadata=metadata;}
+  function setGuardianTerrainEpoch(epoch){if(closed||epoch!==null&&(typeof epoch!=='string'||!epoch))throw TypeError('Invalid guardian terrain epoch');guardianTerrainEpoch=epoch;}
   return {
-   setGuardianMetadataForQa(metadata){if(closed||!metadata||!Array.isArray(metadata.assets)||!metadata.cropHeights)throw TypeError('Invalid guardian metadata');qaGuardianMetadata=metadata;},
-   setGuardianTerrainEpochForQa(epoch){if(closed||epoch!==null&&(typeof epoch!=='string'||!epoch))throw TypeError('Invalid guardian terrain epoch');qaGuardianTerrainEpoch=epoch;},
+   setGuardianMetadata,setGuardianTerrainEpoch,setGuardianMetadataForQa:setGuardianMetadata,setGuardianTerrainEpochForQa:setGuardianTerrainEpoch,
    verifyNativeBootstrapForQa(expected){
     if(closed||!expected||expected.version!==1||!Array.isArray(expected.chunkKeys)||!expected.spatialState)throw TypeError('Invalid native bootstrap verification');
     const actual=session.core.captureResidentChunks(),keys=[...expected.chunkKeys].sort();
@@ -140,7 +141,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      if(!['center','plant','spell'].includes(command.toolKind)||command.toolSpell!==null&&command.toolSpell!==undefined&&!['growth','multiply'].includes(command.toolSpell))throw TypeError('Invalid tutorial guide request');
      try{value=withResidentChunks(()=>tutorialHandTarget(game,nav,command.toolKind,command.toolSpell??null),commandLoadedChunks);}catch(error){if(!(error instanceof SpatialChunkUnavailable))throw error;value=null;}
     }else if(command.kind==='qaGuardianOrigin'){
-     try{if(!qaGuardianMetadata)throw Error('Guardian metadata unavailable');if(!qaGuardianTerrainEpoch||command.epoch!==qaGuardianTerrainEpoch)throw Error('Guardian terrain epoch unavailable or stale');value=withResidentChunks(()=>queryGuardianOrigin({state:game,nav,sequence,epoch:command.epoch,publication:command.publication,camera:command.camera,exclusions:command.exclusions,assets:qaGuardianMetadata.assets,cropHeights:qaGuardianMetadata.cropHeights,targetId:command.targetId}),commandLoadedChunks);}catch(error){rejection=String(error?.message??error);value=false;}
+     try{if(!guardianMetadata)throw Error('Guardian metadata unavailable');if(!guardianTerrainEpoch||command.epoch!==guardianTerrainEpoch)throw Error('Guardian terrain epoch unavailable or stale');value=withResidentChunks(()=>queryGuardianOrigin({state:game,nav,sequence,epoch:command.epoch,publication:command.publication,camera:command.camera,exclusions:command.exclusions,assets:guardianMetadata.assets,cropHeights:guardianMetadata.cropHeights,targetId:command.targetId}),commandLoadedChunks);}catch(error){rejection=String(error?.message??error);value=false;}
     }else if(command.kind==='tutorialActionPause'){
      if(typeof command.hudTarget!=='boolean'||typeof command.worldTarget!=='boolean'||typeof command.selectionOpen!=='boolean')throw TypeError('Invalid tutorial guidance');
      value=syncTutorialActionPause(game,command);
@@ -149,7 +150,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      rejection=spellRejection(command,'attack');
      let selection=command.selection??{};
      if(!rejection&&command.guardianContext!==undefined&&!game.commandIds.includes(command.id)&&!Object.hasOwn(game.ledger.entries,command.id)){
-      try{if(!qaGuardianMetadata)throw Error('Guardian metadata unavailable');const context=command.guardianContext;if(!context||typeof context!=='object'||Array.isArray(context))throw Error('Invalid guardian context');if(!qaGuardianTerrainEpoch||context.epoch!==qaGuardianTerrainEpoch)throw Error('Guardian terrain epoch unavailable or stale');const origin=withResidentChunks(()=>queryGuardianOrigin({state:game,nav,sequence,epoch:context.epoch,publication:context.publication,camera:context.camera,exclusions:context.exclusions,assets:qaGuardianMetadata.assets,cropHeights:qaGuardianMetadata.cropHeights,targetId:command.targetId}),commandLoadedChunks);selection={...selection,origin};}catch(error){rejection=String(error?.message??error);}
+      try{if(!guardianMetadata)throw Error('Guardian metadata unavailable');const context=command.guardianContext;if(!context||typeof context!=='object'||Array.isArray(context))throw Error('Invalid guardian context');if(!guardianTerrainEpoch||context.epoch!==guardianTerrainEpoch)throw Error('Guardian terrain epoch unavailable or stale');const origin=withResidentChunks(()=>queryGuardianOrigin({state:game,nav,sequence,epoch:context.epoch,publication:context.publication,camera:context.camera,exclusions:context.exclusions,assets:guardianMetadata.assets,cropHeights:guardianMetadata.cropHeights,targetId:command.targetId}),commandLoadedChunks);selection={...selection,origin};}catch(error){rejection=String(error?.message??error);}
      }
      if(rejection||game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id))value=false;
      else{if(!physics||!physics.supports(command.targetId))throw Error('Target is not supported by worker physics');if(!game.commandIds.includes(command.id))physics.assertEnvironment(command.targetId);value=cast(game,command.id,'attack',command.x,command.z,nav,{...selection,targetId:command.targetId});}
