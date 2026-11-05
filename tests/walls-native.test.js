@@ -43,6 +43,19 @@ test('Every original regional bridge keeps triangle pivots and exact native traj
 function prototypes(){return Object.fromEntries(Object.entries(pieces).map(([key,p])=>{
   const mesh=new THREE.Mesh(new THREE.BufferGeometry(),new THREE.MeshStandardMaterial());mesh.userData.nativePiece=p;return [key,mesh];
 }));}
+test('confirmed next stage predicts the actual topology without mutating the visible wall',()=>{
+ const proto=prototypes();
+ for(const material of ['zarzas','empalizada','adobe','piedra','reforzado'])for(const gate of [false,true]){
+  const entity={id:'wall',material,gate,hp:100,maxHp:100,status:'intact',gateOpen:0},wall=new NativeWall(proto,entity,0);
+  for(const change of [{hp:75,status:'intact'},{hp:10,status:'collapsing',collapseRemaining:1},{hp:0,status:'ruined'},{hp:100,status:'intact'}]){
+   Object.assign(entity,change);const before=wall.stageKey,parts=[...wall.parts],expected=wall.nextConfirmedStageKey(entity,3);
+   assert.equal(wall.stageKey,before);assert.deepEqual(wall.parts,parts);
+   const replacement=new NativeWall(proto,entity,3,{previous:wall});assert.equal(replacement.stageKey,expected);
+   wall.update(entity,undefined,3);assert.equal(wall.stageKey,expected);replacement.dispose();
+  }
+  wall.dispose();
+ }
+});
 test('Production wall renders opaque native rubble, preserves gate scale and disposes private geometry',()=>{
   const proto=prototypes(),entity={id:'wall',material:'reforzado',gate:true,hp:240,maxHp:240,status:'intact'};
   const wall=new NativeWall(proto,entity),before=JSON.stringify(entity),first=wall.parts[0].mesh;let disposed=false;first.geometry.addEventListener('dispose',()=>disposed=true);

@@ -19,11 +19,24 @@ export function wallBridge(source,destination=null){
 }
 
 export class NativeWall extends THREE.Group {
-  constructor(prototypes,entity,elapsed){
+  constructor(prototypes,entity,elapsed,{previous=null}={}){
     super();this.prototypes=prototypes;this.entityId=entity.id;this.parts=[];this.blessingUniform={value:new THREE.Vector4()};
+    if(previous){this.lastStatus=previous.lastStatus;this.visual=previous.visual;this.collapseFromVisual=previous.collapseFromVisual;}
     this.userData.entityId=entity.id;this.userData.nativeWall=true;
     const scale=entity.gate?({adobe:1.4,piedra:1.4,reforzado:1.6}[entity.material]??1):1;this.scale.setScalar(scale);
     this.update(entity,undefined,elapsed);
+  }
+  // Settlement updates use undefined seconds. Predict the topology without
+  // mutating this wall, so the visible phase remains available during setup.
+  nextConfirmedStageKey(entity,elapsed){
+    const target=entity.hp/entity.maxHp;let visual=target;
+    if(entity.wallPresentation&&(Number.isFinite(elapsed)||entity.status==='collapsing'))visual=wallVisualAt(entity,elapsed??entity.wallPresentation.at);
+    else if(entity.status==='ruined')visual=0;
+    else if(entity.status==='collapsing'){
+      const from=this.lastStatus!=='collapsing'?(this.visual??target):this.collapseFromVisual;
+      const t=Math.max(0,Math.min(1,1-entity.collapseRemaining/1.4));visual=from*(1-t*t*(3-2*t));
+    }
+    return wallStages({material:entity.material,kind:entity.gate?'gate':'wall',visual}).map(stage=>stage.key+'>'+stage.dest).join('|');
   }
   update(entity,seconds,elapsed){
     this.blessingUniform.value.set(awakeningVisible(entity,elapsed)?1:0,awakeningVisibleAt(entity),entity.blessing?(this.blessingDamageAt??-1000):0,this.awakeningSelecting&&!entity.blessing&&entity.status==='intact'?(this.awakeningSelected?2:1):0);
