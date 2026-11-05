@@ -4,6 +4,8 @@ import {MessageChannel} from 'node:worker_threads';
 import {once} from 'node:events';
 import {createWorkerHostedRuntime} from '../src/simulation/worker-hosted-runtime.js';
 import {resolvePresentationRecoveryOptions} from '../src/simulation/presentation-recovery-options.js';
+import {openVisualStream} from '../src/simulation/visual-publication-stream.js';
+import {createPresentationRecoveryJournal} from '../src/simulation/presentation-recovery-journal.js';
 
 test('generic recovery options are explicit, compatible and fail closed',()=>{
  assert.deepEqual(resolvePresentationRecoveryOptions({}),{enabled:false,concurrent:false,work:false,backpressure:false,compactTicks:false});
@@ -26,12 +28,19 @@ test('backpressure notification is delivered separately from command results',as
  const notifications=[],worker={postMessage(){},terminate(){}},receiver={accept(p){this.sequence=p.sequence;return {accepted:true};},acceptUnchanged(){return {accepted:true};},status(){return {sequence:this.sequence??0,lastElapsed:0};}},options={qaVisualRecovery:true,qaVisualRecoveryConcurrent:true,qaVisualWorkRecovery:true,qaVisualBackpressureRecovery:true};
  const runtime=createWorkerHostedRuntime({confirmedReceiver:receiver,session:'s',clientOptions:{},runtimeOptions:options,onVisualBackpressure:info=>notifications.push(info),workerFactory:()=>worker}),start=runtime.start();
  worker.onmessage({data:{kind:'publication',session:'s',publication:{sequence:1,elapsed:0,events:[]}}});worker.onmessage({data:{kind:'started',session:'s',sequence:1,status:{}}});await start;
- worker.onmessage({data:{kind:'visualBackpressureDetached',session:'s',base:1,through:65,queued:64}});assert.deepEqual(notifications,[{base:1,through:65,queued:64}]);assert.equal(runtime.status().running,true);runtime.dispose();
+ worker.onmessage({data:{kind:'visualBackpressureDetached',session:'s',base:1,through:65,queued:64}});worker.onmessage({data:{kind:'visualBackpressureDetached',session:'s',base:65,through:67,queued:1}});assert.deepEqual(notifications,[{base:1,through:65,queued:64},{base:65,through:67,queued:1}]);assert.equal(runtime.status().running,true);runtime.dispose();
 });
 test('backpressure recovery requires concurrent work recovery and a notification handler',()=>{
  const receiver={accept(){},acceptUnchanged(){},status(){return {sequence:0,lastElapsed:0};}},base={confirmedReceiver:receiver,session:'s',clientOptions:{},workerFactory:()=>({postMessage(){},terminate(){}})};
  assert.throws(()=>createWorkerHostedRuntime({...base,runtimeOptions:{qaVisualBackpressureRecovery:true},onVisualBackpressure(){}}),/Invalid visual backpressure/);
  assert.throws(()=>createWorkerHostedRuntime({...base,runtimeOptions:{qaVisualBackpressureRecovery:true,qaVisualRecovery:true,qaVisualRecoveryConcurrent:true,qaVisualWorkRecovery:true}}),/Invalid visual backpressure/);
+});
+test('memory pressure from the real visual queue reaches the host with one queued publication',async()=>{
+ const notifications=[],worker={postMessage(){},terminate(){}},receiver={accept(p){this.sequence=p.sequence;return {accepted:true};},acceptUnchanged(){return {accepted:true};},status(){return {sequence:this.sequence??0,lastElapsed:0};}},runtime=createWorkerHostedRuntime({confirmedReceiver:receiver,session:'s',clientOptions:{},runtimeOptions:{visualRecovery:{enabled:true,concurrent:true,work:true,backpressure:true}},onVisualBackpressure:info=>notifications.push(info),workerFactory:()=>worker}),start=runtime.start({terrainPort:{},presentationPort:{}});
+ worker.onmessage({data:{kind:'publication',session:'s',publication:{sequence:1,elapsed:0,events:[]}}});worker.onmessage({data:{kind:'started',session:'s',sequence:1,status:{}}});await start;
+ const journal=createPresentationRecoveryJournal(),port={postMessage(){},start(){},close(){}},stream=openVisualStream(port,'s',()=>{},{recoveryJournal:journal,onCheckpointAcknowledged:()=>{},maxRetainedBytes:4096,highWatermarkBytes:1024,onBackpressureDetach:info=>worker.onmessage({data:{kind:'visualBackpressureDetached',...info}})}),packet=sequence=>({sequence,snapshot:'s'+sequence,events:[{id:'event-'+sequence}],physicsPose:null});
+ stream.publish({...packet(1),terrainCheckpoint:{sequence:1,chunks:[]}},true);port.onmessage({data:{kind:'publicationAck',session:'s',sequence:1}});stream.publish(packet(2),true);stream.publish({...packet(3),extra:new Uint8Array(1400)},true);
+ assert.deepEqual(notifications,[{base:1,through:3,queued:1}]);assert.equal(runtime.status().running,true);assert.equal(stream.status().detached,true);stream.close();journal.dispose();runtime.dispose();
 });
 test('confirmed state callback runs after reconciliation for every publication',async()=>{const order=[],worker={postMessage(){},terminate(){}},receiver={accept(p){order.push(`state-${p.sequence}`);this.sequence=p.sequence;return {accepted:true};},acceptUnchanged(p){order.push(`state-${p.sequence}`);this.sequence=p.sequence;return {accepted:true};},status(){return {sequence:this.sequence??0,lastElapsed:0};}},runtime=createWorkerHostedRuntime({confirmedReceiver:receiver,session:'s',clientOptions:{},workerFactory:()=>worker,onConfirmedState:sequence=>order.push(`confirmed-${sequence}`)}),ready=runtime.start();worker.onmessage({data:{kind:'publication',session:'s',publication:{sequence:1,elapsed:0,events:[]}}});worker.onmessage({data:{kind:'started',session:'s',sequence:1,status:{}}});await ready;worker.onmessage({data:{kind:'publication',session:'s',publication:{sequence:2,elapsed:0,events:[],unchanged:true}}});assert.deepEqual(order,['state-1','confirmed-1','state-2','confirmed-2']);runtime.dispose();});
 test('prepared authority attaches presentation ports only at start and preserves supplied receiver',async()=>{
