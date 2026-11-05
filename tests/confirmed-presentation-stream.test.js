@@ -11,6 +11,9 @@ import {acceptLiveTerrainCheckpoint} from '../src/rendering/live-terrain-checkpo
 import {createConfirmedMotionFeed} from '../src/rendering/confirmed-motion-feed.js';
 import {serializeConfirmedState} from '../src/simulation/confirmed-live-state.js';
 const fixture=()=>deserialize(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString());
+test('work checkpoint acknowledgement waits for asynchronous preparation after state and terrain',async()=>{
+ const state=fixture(),order=[],port={postMessage:m=>order.push(['ack',m]),close(){},start(){}},stream=createConfirmedPresentationStream({port,session:'s',state,terrain:{confirm:()=>order.push(['terrain'])},onConfirmed:()=>order.push(['confirmed']),prepareWorkCheckpoint:async message=>{order.push(['work']);return {version:1,sequence:message.sequence,effects:[]};}});port.onmessage({data:{kind:'publication',session:'s',publication:{session:'s',sequence:1,snapshot:serialize(state),events:[],physicsPose:null,terrainCheckpoint:{sequence:1,chunks:[]}}}});assert.deepEqual(order,[['terrain'],['confirmed']]);await new Promise(resolve=>setTimeout(resolve,0));assert.deepEqual(order.map(x=>x[0]),['terrain','confirmed','work','ack']);assert.equal(order[3][1].workCheckpoint.sequence,1);stream.dispose();
+});
 test('QA hold retains one confirmed publication without exposing events, terrain or its ACK',()=>{
  const state=fixture(),next=deserialize(serialize(state)),actor=state.raid.animals[0],before=serialize(state),order=[],port={postMessage:m=>order.push(['ack',m.sequence]),close(){},start(){}},stop=observePresentationGameEvents(state,event=>order.push(['event',event.id]));
  const stream=createConfirmedPresentationStream({port,session:'s',state,allowPresentationHold:true,terrain:{confirm:n=>order.push(['terrain',n])},onConfirmed:m=>order.push(['confirmed',m.sequence])});

@@ -54,3 +54,13 @@ incompatibles sin reemplazar los efectos activos. No es recuperación automátic
 ni conserva los cambios posteriores al checkpoint; no debe usarse como
 fallback de una caída. El consumidor y transporte siguen pendientes de prueba
 integrada con un Worker gráfico WebGPU real.
+
+Con `qa-webgpu-recovery` y `qa-webgpu-work-recovery` se ensaya además un
+checkpoint de efectos asociado al ACK exacto del checkpoint de terreno. El host
+conserva ambos y el Worker gráfico de reemplazo carga los recursos y restaura
+los efectos antes de aceptar el replay de publicaciones. Para preservar el
+historial de entradas, esta opción desactiva la coalescencia de la cola visual
+y la compactación del journal. Sus límites y backpressure siguen activos, por
+lo que puede saturarse; no es una optimización de producción. Se mantiene la
+ruta heredada, y aún falta comprobar una caída real del dispositivo y la
+reconexión automática; no se considera resuelta la recuperación arbitraria.
