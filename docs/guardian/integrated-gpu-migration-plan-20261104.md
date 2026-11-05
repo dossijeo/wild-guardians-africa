@@ -108,6 +108,8 @@ Usar tiempo de simulación en trayectorias, animaciones confirmadas, pausas, ace
 
 Toda superficie WebGPU con estado confirmado crea ahora el reloj compartido, sin requerir la opción experimental de locomoción precocinada. Los consumidores existentes reciben la misma referencia y el reloj solo avanza al aplicar una publicación confirmada; el feedback provisional mantiene su reloj propio. Las pruebas de contrato cubren esos consumidores y las pausas, pero el reloj todavía no interpola por sí mismo entre publicaciones ni acredita trayectorias autónomas en GPU.
 
+El viento y las transiciones de crecimiento de cultivos usan ahora ese mismo nodo de tiempo confirmado cuando se ejecutan en la superficie WebGPU, sin mantener otro reloj por reconciliación. La ruta aislada sin reloj compartido conserva su comportamiento anterior. Una prueba comprueba la identidad del nodo en el grafo y que el roster no modifica el reloj. Esta conexión no interpola tiempo entre publicaciones ni migra la hierba continua, que sigue pendiente.
+
 **Entrega:** protocolo normal incremental y sincronizadores por cambios. **Cierre interno:** pruebas de orden, acumulación, consumidores lentos, duplicados, restauración y barreras; ausencia de recorrido obligatorio de todos los subsistemas por una modificación local.
 
 ### A3. Material lógico universal y catálogo de pipelines
