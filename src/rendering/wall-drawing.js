@@ -1,7 +1,7 @@
 // Native Bastion gesture thresholds; screen input never mutates game state.
 export class WallDrawing {
-  constructor(canvas,{point,stroke,tap,screenSpace=false,preview=()=>{},gesture=()=>{},activity=()=>{},requestFrame=globalThis.requestAnimationFrame?.bind(globalThis),cancelFrame=globalThis.cancelAnimationFrame?.bind(globalThis)}){
-    this.canvas=canvas;Object.assign(this,{point,stroke,tap,preview,gesture,activity,screenSpace});this.enabled=false;this.pointers=new Map();this.samples=[];
+  constructor(canvas,{point,stroke,tap,screenSpace=false,preview=()=>{},gesture=()=>{},activity=()=>{},resolveStroke=null,onResolveError=()=>{},requestFrame=globalThis.requestAnimationFrame?.bind(globalThis),cancelFrame=globalThis.cancelAnimationFrame?.bind(globalThis)}){
+    if(resolveStroke!==null&&typeof resolveStroke!=='function'||typeof onResolveError!=='function')throw TypeError('Invalid stroke resolver');this.canvas=canvas;Object.assign(this,{point,stroke,tap,preview,gesture,activity,screenSpace,resolveStroke,onResolveError});this.resolveGeneration=0;this.resolveTail=Promise.resolve();this.enabled=false;this.pointers=new Map();this.samples=[];
     this.requestFrame=requestFrame;this.cancelFrame=cancelFrame;this.previewFrame=null;
     this.handlers={pointerdown:e=>this.down(e),pointermove:e=>this.move(e),pointerup:e=>this.up(e),pointercancel:e=>this.up(e,true)};
     for(const [name,handler] of Object.entries(this.handlers))canvas.addEventListener(name,handler,{capture:true});
@@ -53,6 +53,7 @@ export class WallDrawing {
       this.activity('release');
       // Resolve terrain only after release. A missed ray ends the contiguous
       // stroke, so an off-terrain interval cannot become an unintended bridge.
+      if(this.resolveStroke){const generation=this.resolveGeneration,result=Promise.resolve().then(()=>this.resolveStroke(samples));result.catch(()=>{});this.resolveTail=this.resolveTail.then(async()=>{try{const points=await result;if(this.enabled&&generation===this.resolveGeneration)this.stroke(Array.isArray(points)&&points.length>=2?points:[]);}catch(error){if(this.enabled&&generation===this.resolveGeneration)this.onResolveError(error);}});return;}
       const resolved=[];
       for(const sample of samples){
         const q=this.screenSpace?this.point({clientX:sample[0],clientY:sample[1]}):{x:sample[0],z:sample[1]};
@@ -62,6 +63,6 @@ export class WallDrawing {
       this.stroke(resolved.length>=2?resolved:[]);
     }
   }
-  cancel(){this.activity('cancel');for(const id of this.pointers.keys())try{this.canvas.releasePointerCapture(id);}catch{}this.pointers.clear();this.samples=[];this.pointer=null;this.multi=null;this.clearPreview();}
+  cancel(){this.resolveGeneration++;this.activity('cancel');for(const id of this.pointers.keys())try{this.canvas.releasePointerCapture(id);}catch{}this.pointers.clear();this.samples=[];this.pointer=null;this.multi=null;this.clearPreview();}
   dispose(){this.cancel();for(const [name,handler] of Object.entries(this.handlers))this.canvas.removeEventListener(name,handler,{capture:true});}
 }

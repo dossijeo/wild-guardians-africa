@@ -53,3 +53,9 @@ consumidor seguro: faltan exclusiones transaccionales, foco, selección,
 gestos que mutan la cámara directamente y recuperación.
 La revisión de la vista también invalida la caché de pose cuando cambia el
 terreno, incluso con la cámara inmóvil, para no reutilizar una altura antigua.
+
+### Estructuras confirmadas (QA, cobertura parcial)
+
+El productor de settlements publica las cajas locales y matrices de los edificios de poblado y piezas de muralla que ya están disponibles. Las altas, cambios de puerta/etapa, bajas y la llegada de terreno reconstruyen la publicación; esta se agrupa tras reconciliar el estado para etiquetarla con la secuencia confirmada. El cliente invalida la versión anterior antes de aceptar otra, espera la confirmación correspondiente y desactiva solo este índice ante datos inválidos o cambio de época. El presupuesto de volúmenes se comparte con árboles. El control de cámara no utiliza el índice.
+
+Los centros declaran cobertura incompleta: el paquete de autoría actual no incluye los envelopes nativos de destrucción y calcular nuevos templates únicamente para la cámara supondría trabajo adicional. Tampoco se ha completado cobertura de rocas, fuentes de terreno y selección. La prueba compara registries reales con geometría sintética, y comprueba transporte y orden de microtarea; aún faltan comparación con assets reales, cambios reales de puertas/daños y reinicio del Worker. La recuperación no se considera validada y no debe habilitar controles alternativos.
