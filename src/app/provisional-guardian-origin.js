@@ -5,3 +5,7 @@ export function provisionalGuardianOrigin(camera,contact){
  const dx=camera[0]-contact.x,dz=camera[2]-contact.z,length=Math.hypot(dx,dz),x=length>1e-6?dx/length:1,z=length>1e-6?dz/length:0;
  return {x:contact.x+x*3,y:contact.y+1.7,z:contact.z+z*3};
 }
+
+export function provisionalAwakeningSelection(camera,contact){
+ const origin=provisionalGuardianOrigin(camera,contact);return origin?{origin,contact:{x:contact.x,y:contact.y,z:contact.z}}:null;
+}

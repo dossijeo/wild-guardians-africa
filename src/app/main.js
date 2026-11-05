@@ -39,7 +39,7 @@ import {TutorialHudGuide,tutorialHudHandTarget} from '../ui/tutorial-hud-hand.js
 import {GameScreenWakeLock} from '../ui/screen-wake-lock.js';
 import {spellCardsMarkup,refreshSpellCards} from '../ui/spell-cards.js';
 import {dispatchPickedSpell} from './spell-placement.js';
-import {provisionalGuardianOrigin} from './provisional-guardian-origin.js';
+import {provisionalGuardianOrigin,provisionalAwakeningSelection} from './provisional-guardian-origin.js';
 import {closeAuthorityFailurePresentation} from './authority-failure-presentation.js';
 import {createEarlyGpuAttackGesture} from './early-gpu-attack-gesture.js';
 import {plantNearTouch} from './plant-placement.js';
@@ -470,7 +470,7 @@ function onPick({entityId,point,hitPoint,guardianContext=null,gestureSeconds=nul
     if(tool?.kind==='awakening'){
       const draft=Game.previewBlessing(state,entityId);
       if(!draft.valid)throw Error(draft.reason);
-      tool.targetId=entityId;commandFeedback=awakeningSelectionCopy(draft.kind);return;
+      tool.targetId=entityId;tool.hitPoint=hitPoint&&[hitPoint.x,hitPoint.y,hitPoint.z].every(Number.isFinite)?{x:hitPoint.x,y:hitPoint.y,z:hitPoint.z}:null;commandFeedback=awakeningSelectionCopy(draft.kind);return;
     }
     const pickedPlant=state.plants.find(p=>p.id===entityId&&p.alive);
     if(tool?.kind==='spell'){
@@ -576,12 +576,12 @@ function cancelTool(){world?.cancelTutorialFocus?.();if(world?.qaEarlyGpuOnly)wo
 function toggleAwakening(){
   if(tool?.kind==='awakening'){cancelTool();return;}
   if(!permission(state,'awakening')||(state.awakenings?.progress??0)<100)return;
-  closeSurface();cancelTool();selection=null;armTool({kind:'awakening'});
+  closeSurface();cancelTool();selection=null;if(world?.qaEarlyGpuOnly){const owner=world;owner.webGpuWorld?.client.prepareGuardian().catch(failure=>{if(owner===world)error(failure.message);});}armTool({kind:'awakening'});
   commandFeedback='Toca una planta o muralla. Cancelar conserva la carga.';
 }
 function confirmAwakening(){
   if(tool?.kind!=='awakening'||!tool.targetId)return;
-  if(world?.workerRuntime){const owner=world,ownerState=state,ownerTool=tool,id=commandId();owner.guardianSummons?.beginProvisionalAwakening(id,ownerTool.targetId);const slot=owner.guardianSummons?.slots.find(s=>s.event?.commandId===id&&s.event?.provisional);if(slot)owner.webGpuWorld?.client.beginGuardianAwakening({kind:'bless',id,targetId:ownerTool.targetId,selection:{origin:{x:slot.origin.x,y:slot.origin.y,z:slot.origin.z},contact:{x:slot.target.x,y:slot.target.y,z:slot.target.z}}});return owner.workerRuntime.submit({kind:'bless',id,targetId:ownerTool.targetId}).then(async result=>{if(owner!==world||ownerState!==state)return;if(result.rejection)throw Error(result.rejection);if(result.value){owner.webGpuWorld?.client.resolveGuardianAttack(id,true);if(tool===ownerTool)cancelTool();await save();}else {owner.webGpuWorld?.client.resolveGuardianAttack(id,false);owner.guardianSummons?.rejectProvisional(id);}}).catch(error=>{owner.webGpuWorld?.client.resolveGuardianAttack(id,false);owner.guardianSummons?.rejectProvisional(id);throw error;});}
+  if(world?.workerRuntime){const owner=world,ownerState=state,ownerTool=tool,draft=Game.previewBlessing(ownerState,ownerTool.targetId);if(owner.pendingAwakening)return;if(!draft.valid||!permission(ownerState,'awakening')||(ownerState.awakenings?.progress??0)<100)return;const id=commandId();owner.guardianSummons?.beginProvisionalAwakening(id,ownerTool.targetId);const slot=owner.guardianSummons?.slots.find(s=>s.event?.commandId===id&&s.event?.provisional),selection=slot?{origin:{x:slot.origin.x,y:slot.origin.y,z:slot.origin.z},contact:{x:slot.target.x,y:slot.target.y,z:slot.target.z}}:owner.qaEarlyGpuOnly?provisionalAwakeningSelection(owner.camera.position.toArray(),ownerTool.hitPoint):null;if(owner.qaEarlyGpuOnly&&!selection)throw Error('La posición visual del objetivo no está disponible.');if(selection){const begun=owner.webGpuWorld?.client.beginGuardianAwakening({kind:'bless',id,targetId:ownerTool.targetId,selection});if(owner.qaEarlyGpuOnly&&!begun)throw Error('La presentación del Despertar no está disponible.');}const pending=owner.pendingAwakening={id,targetId:ownerTool.targetId};return owner.workerRuntime.submit({kind:'bless',id,targetId:ownerTool.targetId}).then(async result=>{if(owner!==world||ownerState!==state)return;if(result.rejection)throw Error(result.rejection);if(result.value){owner.webGpuWorld?.client.resolveGuardianAttack(id,true);if(tool===ownerTool)cancelTool();await save();}else {owner.webGpuWorld?.client.resolveGuardianAttack(id,false);owner.guardianSummons?.rejectProvisional(id);}}).catch(error=>{owner.webGpuWorld?.client.resolveGuardianAttack(id,false);owner.guardianSummons?.rejectProvisional(id);throw error;}).finally(()=>{if(owner.pendingAwakening===pending)owner.pendingAwakening=null;});}
   if(Game.bless(state,commandId(),tool.targetId)){cancelTool();save();}
 }
 function startDueCinematic(){
@@ -608,7 +608,7 @@ function openInitialHiringWhenReady(){
 }
 function updateUI(force=false) {
   if(screen!=='game'||!state)return;
-  if(world?.qaEarlyGpuOnly){const now=performance.now();openInitialHiringWhenReady();if(!state.pauses.includes('hiring'))surfaces.deferred.delete('hiring');if(state.pauses.includes('hiring')&&surfaces.shouldOpen('hiring',{mandatory:true}))hiringDialog();world.wallDrawing.setEnabled(tool?.kind==='wall'&&!tool.gate&&permission(state,'wall'));if(!force&&now-lastUI<200)return;lastUI=now;if(tool&&(['plant','center','wall'].includes(tool.kind)||tool.kind==='spell'&&tool.spell!=='shield')&&toolSession.expired(now/1000,tool.kind==='wall'&&world.wallDrawing.active))cancelTool();refreshSpellCards(document,state);document.querySelector('#clockValue').textContent=Game.clockLabel(state);document.querySelector('#moneyValue').textContent=localMoney(state.ledger.balance);document.querySelector('#dayValue').textContent='Día '+state.day;if(world.qaEarlyTutorial){refreshBuildPermissions(document,state);narrator();}return;}
+  if(world?.qaEarlyGpuOnly){const now=performance.now();openInitialHiringWhenReady();if(!state.pauses.includes('hiring'))surfaces.deferred.delete('hiring');if(state.pauses.includes('hiring')&&surfaces.shouldOpen('hiring',{mandatory:true}))hiringDialog();world.wallDrawing.setEnabled(tool?.kind==='wall'&&!tool.gate&&permission(state,'wall'));if(!force&&now-lastUI<200)return;lastUI=now;if(tool?.kind==='awakening'&&(state.awakenings?.progress??0)<100)cancelTool();if(tool&&(['plant','center','wall'].includes(tool.kind)||tool.kind==='spell'&&tool.spell!=='shield')&&toolSession.expired(now/1000,tool.kind==='wall'&&world.wallDrawing.active))cancelTool();awakeningHud?.render(state,{selecting:tool?.kind==='awakening',blocked:!!surfaces.active||!world.authoritativeGuardianPlacement});refreshSpellCards(document,state);refreshCommandFeedback();document.querySelector('#clockValue').textContent=Game.clockLabel(state);document.querySelector('#moneyValue').textContent=localMoney(state.ledger.balance);document.querySelector('#dayValue').textContent='Día '+state.day;if(world.qaEarlyTutorial){refreshBuildPermissions(document,state);narrator();}return;}
   if(campaignCinema||startDueCinematic())return;
   const now=performance.now();if(!force&&now-lastUI<200)return;lastUI=now;
   if(tool?.kind==='awakening'&&(state.awakenings?.progress??0)<100)cancelTool();
@@ -662,7 +662,7 @@ function refreshCommandFeedback(){
   const label=selecting?(draft?.valid?(draft.kind==='plant'?'Bendecir planta · fuente permanente':'Bendecir muralla · protección permanente'):'Selecciona una planta o muralla'):null;
   const message=draft&&!draft.valid?draft.reason:commandFeedback||(draft?.valid?awakeningSelectionCopy(draft.kind):selecting?'Toca una planta o muralla. Cancelar conserva la carga.':'');
   renderCommandFeedback(document,{label,message,
-    confirmation:draft?{label:'Bendecir',disabled:!draft.valid||!permission(state,'awakening'),onConfirm:()=>safe(confirmAwakening)}:null,
+    confirmation:draft?{label:'Bendecir',disabled:!draft.valid||!permission(state,'awakening')||!!world?.pendingAwakening,onConfirm:()=>safe(confirmAwakening)}:null,
     onCancel:()=>{cancelTool();updateUI(true);},onDismiss:()=>{commandFeedback='';updateUI(true);}});
 }
 function awakeningSelectionCopy(kind){return kind==='plant'?
