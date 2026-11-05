@@ -27,3 +27,9 @@ test('early presentation does not claim ownership of legacy prop meshes',()=>{
  world.prototypes=[];
  assert.throws(()=>world.syncResidentProps(),/cannot own legacy resident props/);
 });
+
+test('village preparation and preview belong to the graphical worker',async()=>{
+ const calls=[],preview={culture:'mapungubwe',buildings:[]},world={webGpuWorld:{client:{prepareStructure:(...args)=>{calls.push(['prepare',...args]);return Promise.resolve();},showVillagePreview:value=>{calls.push(['show',value]);return true;},clearVillagePreview:()=>calls.push(['clear'])}}};
+ installEarlyWorkerWorldServices(world);await world.ensureVillage('mapungubwe');world.showVillagePreview(preview);world.clearVillagePreview();
+ assert.deepEqual(calls,[['prepare','village','mapungubwe'],['show',preview],['clear']]);assert.equal(world.scene,undefined);
+});

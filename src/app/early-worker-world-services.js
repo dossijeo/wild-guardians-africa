@@ -17,4 +17,7 @@ export function installEarlyWorkerWorldServices(world,{visualSearch='',dev=false
   if(world.prototypes)throw Error('Early worker world cannot own legacy resident props');
   return {chunks:0,slots:0};
  };
+ world.ensureVillage=culture=>{const client=world.webGpuWorld?.client;if(!client)return Promise.reject(Error('Village presentation unavailable'));return client.prepareStructure('village',culture);};
+ world.showVillagePreview=preview=>{if(!world.webGpuWorld?.client.showVillagePreview(preview))throw Error('Village preview unavailable');};
+ world.clearVillagePreview=()=>world.webGpuWorld?.client.clearVillagePreview();
 }

@@ -39,6 +39,9 @@ self.onmessage=async({data})=>{try{
  if(data.kind==='guardianAwakeningBegin'){surface?.guardianAttack?.beginAwakening(data.command);return;}
  if(data.kind==='prepareGuardian'){try{if(!surface?.guardianAttack)throw Error('Guardian presentation unavailable');await surface.guardianAttack.prepare();postMessage({kind:'guardianPrepareResult',id:data.id});}catch(error){postMessage({kind:'guardianPrepareError',id:data.id,message:String(error?.message??error)});}return;}
  if(data.kind==='prepareStructure'){if(!surface?.settlements)throw Error('Structure presentation unavailable');await surface.settlements.preparePreview(data.structureKind,data.key);postMessage({kind:'structurePrepareResult',id:data.id});return;}
+ if(data.kind==='villagePreviewShow'){if(!surface?.settlements)throw Error('Village preview unavailable');surface.settlements.showVillagePreview(data.preview);return;}
+ if(data.kind==='villagePreviewClear'){surface?.settlements?.clearVillagePreview();return;}
+ if(data.kind==='villagePreviewConfirm'){surface?.settlements?.confirmVillagePreview(data.targetId);return;}
  if(data.kind==='structureBegin'){if(!surface?.settlements?.beginPreview(data.command))throw Error('Structure preview unavailable');return;}
  if(data.kind==='structureConfirm'){surface?.settlements?.confirmPreview(data.id,data.targetId);return;}
  if(data.kind==='structureReject'){surface?.settlements?.rejectPreview(data.id);return;}
