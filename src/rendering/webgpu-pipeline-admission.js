@@ -66,7 +66,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
   // Abort cancels publication, not Three's pending compilation. Keep the
   // renderer queue locked until that work settles; otherwise a cancelled
   // compile can overlap a new request or poison its cache afterwards.
-  if(serial){inflightCompiles++;const deferred=[];compilingObjects.set(object,deferred);const finish=error=>{if(error&&signal?.aborted)retire(error);trackUploads(object);compilingObjects.delete(object);for(const release of deferred){try{release();}catch(error){retire(error);}}inflightCompiles--;pump();};compilation.then(()=>finish(null),finish);}
+  if(serial){inflightCompiles++;const deferred=[];compilingObjects.set(object,deferred);const finish=error=>{if(error&&signal?.aborted)retire(error);if(deferred.length)trackUploads(object);compilingObjects.delete(object);for(const release of deferred){try{release();}catch(error){retire(error);}}inflightCompiles--;pump();};compilation.then(()=>finish(null),finish);}
   else compilation.catch(error=>{if(signal?.aborted)retire(error);});
   let error;try{error=await Promise.race([compilation.then(()=>null),cancelled,...(lost?[lost]:[]),...(aborted?[aborted]:[])]);}finally{if(onAbort)signal.removeEventListener('abort',onAbort);}
   if(error)throw error;
@@ -98,14 +98,13 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
      object.traverse(node=>{if(node.isMesh||node.isLine||node.isPoints){culling.push([node,node.frustumCulled]);node.frustumCulled=false;}});
      for(const [node] of included)node.visible=true;object.visible=true;pending=renderer.compileAsync(object,camera,scene);
     }finally{
-     trackUploads(object);
      object.visible=visible;
      for(const [node,value] of included)node.visible=value;
      for(const [node,value] of culling)node.frustumCulled=value;
      for(const [shadow,autoUpdate,needsUpdate] of shadows){shadow.autoUpdate=autoUpdate;shadow.needsUpdate=needsUpdate;}
      if(previousTarget!==undefined)renderer.setRenderTarget(previousTarget,face,level);
     }
-    await waitForCompilation(pending,signal,{serial:true,object});trackUploads(object);
+    await waitForCompilation(pending,signal,{serial:true,object});
     if(signal?.aborted)throw new DOMException('Pipeline admission cancelled','AbortError');
     if(renderer._isDeviceLost===true)throw Error('WebGPU device lost during pipeline admission');
     if(closed||version!==generation)throw Error('Pipeline admission cancelled');
@@ -127,11 +126,10 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
         object.traverse(node=>{if(node.isMesh||node.isLine||node.isPoints){culling.push([node,node.frustumCulled]);node.frustumCulled=false;}});
         for(const [node] of included)node.visible=true;object.visible=true;shadowPending=renderer.compileShadowAsync(object,scene,camera,light);
        }finally{
-        trackUploads(object);
         object.visible=visible;for(const [node,value] of included)node.visible=value;for(const [node,value] of culling)node.frustumCulled=value;
         for(const [shadow,autoUpdate,needsUpdate] of shadows){shadow.autoUpdate=autoUpdate;shadow.needsUpdate=needsUpdate;}
        }
-       await waitForCompilation(shadowPending,signal,{serial:true,object});trackUploads(object);
+       await waitForCompilation(shadowPending,signal,{serial:true,object});
        if(signal?.aborted)throw new DOMException('Pipeline admission cancelled','AbortError');
        if(renderer._isDeviceLost===true)throw Error('WebGPU device lost during shadow admission');
        if(closed||version!==generation)throw Error('Pipeline admission cancelled');
