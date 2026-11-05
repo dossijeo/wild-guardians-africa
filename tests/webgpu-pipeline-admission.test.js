@@ -100,24 +100,58 @@ test('removing a shadow light during compilation invalidates that admission',asy
 });
 
 test('shadow-enabled admission waits for both passes and keeps the object hidden',async()=>{
- const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),mesh=new THREE.Mesh(),sun=new THREE.DirectionalLight();object.add(mesh);object.visible=false;mesh.castShadow=true;sun.castShadow=true;
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),mesh=new THREE.Mesh(),sun=new THREE.DirectionalLight();object.add(mesh);object.visible=false;mesh.castShadow=true;sun.castShadow=true;sun.shadow.map={};
  let colorFinish,shadowFinish;const renderer={backend:{isWebGPUBackend:true},compileAsync(){return new Promise(resolve=>{colorFinish=resolve;});},compileShadowAsync(root,actualScene,actualCamera,light){assert.equal(root,object);assert.equal(actualScene,scene);assert.equal(actualCamera,camera);assert.equal(light,sun);assert.equal(root.visible,true);assert.equal(mesh.frustumCulled,false);return new Promise(resolve=>{shadowFinish=resolve;});}};
  const admission=createWebGpuPipelineAdmission({renderer,scene,camera,shadowLights:[sun],includeShadowPass:true});let admitted=false;const ready=admission.prepare(object).then(()=>{admitted=true;});await Promise.resolve();
  colorFinish();await new Promise(resolve=>setImmediate(resolve));assert.equal(object.visible,false);assert.equal(mesh.frustumCulled,true);assert.equal(admitted,false);assert.equal(typeof shadowFinish,'function');shadowFinish();await ready;assert.equal(admitted,true);admission.dispose();
 });
 
 test('shadow-enabled admission fails closed when shadow preparation fails',async()=>{
- const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Mesh(),sun=new THREE.DirectionalLight(),failures=[];object.castShadow=true;sun.castShadow=true;
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Mesh(),sun=new THREE.DirectionalLight(),failures=[];object.castShadow=true;sun.castShadow=true;sun.shadow.map={};
  const renderer={backend:{isWebGPUBackend:true},compileAsync:()=>Promise.resolve(),compileShadowAsync(){throw Error('shadow target missing');}};
  const admission=createWebGpuPipelineAdmission({renderer,scene,camera,shadowLights:[sun],includeShadowPass:true,onFatal:error=>failures.push(error.message)});
  await assert.rejects(admission.prepare(object),/shadow target missing/);assert.deepEqual(failures,['shadow target missing']);
 });
 
 test('cancelling while the shadow pipeline is pending never publishes the object',async()=>{
- const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Mesh(),sun=new THREE.DirectionalLight(),controller=new AbortController();object.castShadow=true;object.visible=false;sun.castShadow=true;let finish;
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Mesh(),sun=new THREE.DirectionalLight(),controller=new AbortController();object.castShadow=true;object.visible=false;sun.castShadow=true;sun.shadow.map={};let finish;
  const renderer={backend:{isWebGPUBackend:true},compileAsync:()=>Promise.resolve(),compileShadowAsync:()=>new Promise(resolve=>{finish=resolve;})};
  const admission=createWebGpuPipelineAdmission({renderer,scene,camera,shadowLights:[sun],includeShadowPass:true});const ready=admission.prepare(object,{signal:controller.signal});await new Promise(resolve=>setImmediate(resolve));
  controller.abort();await assert.rejects(ready,{name:'AbortError'});assert.equal(object.visible,false);finish();admission.dispose();
+});
+
+test('shadow admission waits for the target created by the ordinary world render',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Mesh(),sun=new THREE.DirectionalLight();object.castShadow=true;object.visible=false;sun.castShadow=true;let shadowCalls=0;
+ const renderer={backend:{isWebGPUBackend:true},compileAsync:()=>Promise.resolve(),compileShadowAsync(){shadowCalls++;return Promise.resolve();}};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera,shadowLights:[sun],includeShadowPass:true});let admitted=false;const ready=admission.prepare(object).then(()=>{admitted=true;});await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(admitted,false);assert.equal(shadowCalls,0);assert.equal(object.visible,false);admission.notifyShadowTargets();await Promise.resolve();assert.equal(shadowCalls,0);
+ sun.shadow.map={};admission.notifyShadowTargets();await ready;assert.equal(shadowCalls,1);assert.equal(admitted,true);admission.dispose();
+});
+
+test('cancelling a target wait does not strand the admission queue',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Mesh(),next=new THREE.Mesh(),sun=new THREE.DirectionalLight(),controller=new AbortController();object.castShadow=true;sun.castShadow=true;let calls=0;
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(){calls++;return Promise.resolve();},compileShadowAsync(){throw Error('unexpected shadow compile');}};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera,shadowLights:[sun],includeShadowPass:true});const first=admission.prepare(object,{signal:controller.signal});await new Promise(resolve=>setImmediate(resolve));const second=admission.prepare(next);
+ controller.abort();await assert.rejects(first,{name:'AbortError'});await second;assert.equal(calls,2);admission.dispose();
+});
+
+test('removing a light releases its target wait and recompiles with the new light set',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Mesh(),sun=new THREE.DirectionalLight();object.castShadow=true;sun.castShadow=true;let calls=0;
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(){calls++;return Promise.resolve();},compileShadowAsync(){throw Error('unexpected shadow compile');}};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera,shadowLights:[],includeShadowPass:true}),release=admission.registerShadowLight(sun),ready=admission.prepare(object);await new Promise(resolve=>setImmediate(resolve));release();await ready;assert.equal(calls,2);admission.dispose();
+});
+
+test('replacing a shadow map while it compiles requires admission of the replacement',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Mesh(),sun=new THREE.DirectionalLight(),pending=[];object.castShadow=true;sun.castShadow=true;sun.shadow.map={};let colors=0;
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(){colors++;return Promise.resolve();},compileShadowAsync(){return new Promise(resolve=>pending.push(resolve));}};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera,shadowLights:[sun],includeShadowPass:true});let admitted=false;const ready=admission.prepare(object).then(()=>{admitted=true;});await new Promise(resolve=>setImmediate(resolve));
+ sun.shadow.map={};pending[0]();await new Promise(resolve=>setImmediate(resolve));assert.equal(admitted,false);assert.equal(colors,2);assert.equal(pending.length,2);pending[1]();await ready;admission.dispose();
+});
+
+test('enabling shadows on a registered light during compilation revisits its passes',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Mesh(),sun=new THREE.DirectionalLight(),pending=[];object.castShadow=true;sun.shadow.map={};let shadowCalls=0;
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(){return new Promise(resolve=>pending.push(resolve));},compileShadowAsync(){shadowCalls++;return Promise.resolve();}};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera,shadowLights:[sun],includeShadowPass:true}),ready=admission.prepare(object);await Promise.resolve();sun.castShadow=true;pending[0]();await new Promise(resolve=>setImmediate(resolve));assert.equal(pending.length,2);pending[1]();await ready;assert.equal(shadowCalls,1);admission.dispose();
 });
 
 test('aborting an actor does not retire the shared renderer or publish a late result',async()=>{
