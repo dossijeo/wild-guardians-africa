@@ -1,0 +1,5 @@
+# Camera coverage and tutorial guide QA findings
+
+An experimental opt-in snapshot joined the authoritative terrain manifest to the renderer's structure and tree data and was exercised with real WebGPU Workers, including device loss and reattachment. It expired on the next authoritative publication and had no production consumer, so the fence was removed. It cannot provide persistent coverage for automatic camera focus.
+
+A temporary tutorial-guide presentation was tested in the real early QA game. The guardian appeared after a mouse drag, but the dialogue obscured it. Conservative HUD and world occlusion exclusions prevented that false positive; twelve subsequent drags found no accepted view, while the simulation continued without a tutorial-action pause. The guide consumer and its flag were removed because unobstructed visibility was not demonstrated. Camera focusing, HUD occlusion, moving actors and complete tutorial progression remain unresolved; no conclusion about visual parity or production readiness follows from this experiment.

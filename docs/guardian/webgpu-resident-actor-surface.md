@@ -151,6 +151,9 @@ Una comparación WebGPU de siluetas a 800×600 en NVIDIA Turing observó cero p�
 
 # Canal causal experimental de interacciones
 
+Se evaluó y retiró un consumidor QA de picking histórico que retenía hasta ocho referencias a publicaciones y reconstruía rigs auxiliares en el Worker gráfico. Una prueba rechazó el clic por divergencia de objetivo u oclusión tras 651,91 ms de latencia total del pick. Ese trabajo síncrono podía bloquear la presentación, por lo que no se conserva como solución. Una prueba anterior confirmó un Attack desde clic en una incursión de 13 bestias, pero no registró si usó el histórico ni la latencia; no demuestra una mejora de fluidez. Llevar la reconstrucción a un Worker auxiliar requeriría gestionar geometría, alpha, poses y versiones sin duplicar indebidamente los recursos; no se ha demostrado su viabilidad ni se ha integrado.
+
+
 En otra reproducción con diagnóstico QA, el descarte fue específicamente por cambio de versión de cámara, a los 69,25 ms; no fue un pick supersedido ni una secuencia insuficiente. La simulación estaba en 83,65 s y la presentación en 77,80 s al inspeccionar la cola llena. En las últimas 512 publicaciones, el Worker gráfico midió 4,71 ms de media y 8,11 ms p95 para decodificar, reconciliar y ejecutar hooks; el hook de animales midió 1,55 ms de media y 4,38 ms p95. Son métricas CPU parciales y no explican por sí solas los ACK ni incluyen el coste completo del render. No se relajó el rechazo por cámara obsoleta.
 
 Una reproducción instrumentada posterior identificó el descarte del clic: se solicitó el pick WebGPU y se rechazó por obsoleto tras 110,85 ms, por lo que nunca se emitió el input causal. El error agrupa cambios de cámara, picks supersedidos y secuencia insuficiente; no se ha distinguido cuál ocurrió. En el muestreo anterior al clic la cola visual estaba vacía; alcanzó 128 posteriormente. No hay evidencia de que la saturación causara este descarte.
