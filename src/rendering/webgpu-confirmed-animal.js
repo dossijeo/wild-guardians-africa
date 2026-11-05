@@ -16,7 +16,7 @@ import {createActorTerrainSampler} from './webgpu-actor-terrain.js';
 // Experimental single confirmed animal, owned entirely by the render Worker.
 // This does not implement combat physics, expressions, or production grounding.
 export async function createWebGpuConfirmedAnimal({scene,residency,state,actorId,signal,renderer=null,packageUrl=null,assetBank=null,bakedWalk=null,confirmedClock=null,anatomicSupportBank=null,experimentalPoseReconciliation=false,clock=()=>performance.now(),getPose=()=>null,getProvisional=()=>null,getFalls=()=>null,onPhysical=()=>{},onTextured=()=>{},onTextureError=()=>{},configureMaterial=()=>{}}={}){
- if(!scene?.isScene||!residency||!state||typeof actorId!=='string'||!actorId||signal&&typeof signal.addEventListener!=='function')throw TypeError('Invalid confirmed animal');
+ if(!scene?.isScene||!residency||!state||typeof actorId!=='string'||!actorId||signal&&typeof signal.addEventListener!=='function'||confirmedClock!==null&&(!confirmedClock.node?.isNode||!Number.isFinite(confirmedClock.elapsed)))throw TypeError('Invalid confirmed animal');
  const animal=state.raid?.animals.find(item=>item.id===actorId),species=animal?.species,spec=animal&&ANIMAL_ACTIONS.animals[species];if(!spec)throw Error('Confirmed animal unavailable');
  if(signal?.aborted)throw new DOMException('Character load cancelled','AbortError');const manager=new THREE.LoadingManager(),abort=()=>manager.abort();signal?.addEventListener('abort',abort,{once:true});let gltf,progressive,shared;
  try{if(assetBank)shared=await assetBank.acquire(species);else if(packageUrl){progressive=await openProgressiveWebGpuCharacter({renderer,packageUrl,species,signal,onTextured,onError:onTextureError,configureMaterial});gltf=progressive.preview;}else gltf=await new GLTFLoader(manager).setMeshoptDecoder(MeshoptDecoder).loadAsync(spec.url);}finally{signal?.removeEventListener('abort',abort);}
@@ -42,7 +42,7 @@ export async function createWebGpuConfirmedAnimal({scene,residency,state,actorId
   if(wasPhysical){action?.stop();key=null;root.quaternion.identity();root.scale.set(1,1,1);for(const item of rest){item.node.position.copy(item.position);item.node.quaternion.copy(item.quaternion);item.node.scale.copy(item.scale);}wasPhysical=false;}
   const height=sampleTerrain(entity.x,entity.z);
   root.position.set(entity.x,height,entity.z);root.rotation.y=entity.downHeading!==undefined&&(entity.fallRemaining>0||entity.recovery)?entity.downHeading:entity.path?.length?Math.atan2(entity.path[0].x-entity.x,entity.path[0].z-entity.z):entity.heading??0;
-  const pose=animalPose(entity,state.elapsed),clip=clips.find(item=>item.name===pose.name);if(!clip)throw Error('Missing confirmed animal clip '+pose.name);
+  const pose=animalPose(entity,confirmedClock?.elapsed??state.elapsed),clip=clips.find(item=>item.name===pose.name);if(!clip)throw Error('Missing confirmed animal clip '+pose.name);
   const provisional=getProvisional(entity,state.elapsed);if(!provisional){provisionalFall=null;fallToken=null;}restoreAnimalImpact(impactData);
   if(!provisional&&baked&&pose.name==='Walking'&&entity.status==='walking'&&!entity.recovery&&!entity.fallRemaining){baked.set(pose.time);return;}baked?.disable();
   if(key!==pose.key){action?.stop();action=mixer.clipAction(clip);action.reset().setLoop(pose.loop?THREE.LoopRepeat:THREE.LoopOnce,pose.loop?Infinity:1).play();action.paused=true;action.clampWhenFinished=true;key=pose.key;}
