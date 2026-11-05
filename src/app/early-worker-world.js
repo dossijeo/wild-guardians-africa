@@ -9,6 +9,7 @@ import {ProvisionalCrops} from '../rendering/provisional-crops.js';
 import {PreciseTap} from '../ui/precise-tap.js';
 import {guardConfirmedCamera,clearBlockedOrbitMomentum} from './confirmed-camera-control.js';
 import {createPresentationCameraController} from './presentation-camera-controller.js';
+import {installEarlyWorkerWorldServices} from './early-worker-world-services.js';
 
 // QA-only input/camera owner for the already existing graphical Worker. It
 // deliberately creates no renderer or graphics context on the main thread.
@@ -21,6 +22,7 @@ export function createEarlyWorkerWorld(canvas,onPick,{visualSearch=globalThis.lo
  world.renderer={setSize(width,height){canvas.width=width;canvas.height=height;}};
  const cameraController=createPresentationCameraController({camera:world.camera,controls:world.controls,viewport:canvas,field:()=>world.cameraField(),quality:()=>world.quality,pixelRatioLimit:()=>world.pixelRatioLimit,guard:world.confirmedCameraGuard??null,raidCamera:()=>world.raidCamera??null,state:()=>world.state,onResolution:resolution=>{world.renderResolution=resolution;if(canvas.width!==resolution.width||canvas.height!==resolution.height)world.renderer.setSize(resolution.width,resolution.height);}});
  world.resize=()=>cameraController.resize();world.updateCamera=()=>cameraController.update();world.focus=point=>cameraController.focus(point);
+ installEarlyWorkerWorldServices(world,{visualSearch,dev:import.meta.env?.DEV===true});
  world.qualitySetting=quality=>{world.quality=quality;world.resize();};world.configureVisualBiome=biome=>{if(world.state&&world.state.biome!==biome)throw Error('A loaded scene cannot change biome');world.visualSearch=approvedVisualSearch(biome,visualSearch);};
  world.strokePreview=new WallStrokePreview(canvas);world.wallDrawing=new WallDrawing(canvas,{screenSpace:true,point:()=>null,stroke:points=>world.onWallStroke?.(points),tap:event=>world.onDiscretePick?.(event,{}),preview:points=>world.strokePreview.showScreen(points),gesture:(old,next)=>world.wallCameraGesture(old,next),activity:phase=>world.onWallGesture?.(phase)});
  const tap=new PreciseTap(),options={signal:world.canvasEvents.signal};canvas.addEventListener('pointerdown',event=>tap.down(event),options);canvas.addEventListener('pointermove',event=>tap.move(event),options);canvas.addEventListener('pointerup',event=>{const gesture=tap.up(event);if(world.controls.enabled&&world.state&&gesture)world.onDiscretePick?.(event,gesture);},options);canvas.addEventListener('pointercancel',event=>tap.up(event,true),options);
