@@ -25,6 +25,7 @@ import {observePathMotion} from './locomotion.js';
 import {captureMotionPeers} from './worker-motion-peers.js';
 import {createPresentationWorkerHeadings} from './presentation-worker-headings.js';
 import {captureWorldMotion} from './worker-world-motion.js';
+import {queryGuardianOrigin} from './guardian-origin-query.js';
 
 export function parseSimulationChunkKey(key){
  if(typeof key!=='string'||!/^(-?\d+),(-?\d+)$/.test(key))throw TypeError('Invalid chunk key');
@@ -37,6 +38,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
  if(!(module instanceof WebAssembly.Module)||typeof snapshot!=='string'||!Array.isArray(chunkKeys)||new Set(chunkKeys).size!==chunkKeys.length||onTerrainChunk!==null&&typeof onTerrainChunk!=='function')throw TypeError('Invalid simulation authority initialization');
  for(const key of chunkKeys)parseSimulationChunkKey(key);
  const game=(restoringPhysics?deserializeConfirmedState:deserialize)(snapshot),loaded=new Map(),savedWaitBindings=game.workerRaidWaitBindings??null,presentationHeadings=presentationWorkerHeadingSeed===null?null:createPresentationWorkerHeadings(presentationWorkerHeadingSeed,{initialWorkerIds:game.workers.map(worker=>worker.id)});delete game.workerRaidWaitBindings;delete game.workerPhysicsCheckpoint;delete game.workerNativeAuthorityCheckpoint;let session,stopTasks,stopWorld,stopEvents,physics=null,physicsInitializing=false,tutorial=null,closed=false,sequence=0,events=[],trackMicroIncome=false,trackedActor=null,trackMotionPeers=false,trackWorldMotion=false,stopMotion=null,motionSegments=null,terrainGeneration=0,reportedTerrainGeneration=0;
+ let qaGuardianMetadata=null;
  try{
   const acceptChunk=data=>{loaded.set(`${data.cx},${data.cz}`,data);terrainGeneration++;onTerrainChunk?.(data);};
   session=createSpatialGameSession(module,game,{loaded:()=>loaded,onData:acceptChunk});
@@ -92,6 +94,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   reportedTerrainGeneration=terrainGeneration;let hasPublishedSnapshot=false;
   function takeTerrainChanged(){const changed=terrainGeneration!==reportedTerrainGeneration;reportedTerrainGeneration=terrainGeneration;return changed;}
   return {
+   setGuardianMetadataForQa(metadata){if(closed||!metadata||!Array.isArray(metadata.assets)||!metadata.cropHeights)throw TypeError('Invalid guardian metadata');qaGuardianMetadata=metadata;},
    verifyNativeBootstrapForQa(expected){
     if(closed||!expected||expected.version!==1||!Array.isArray(expected.chunkKeys)||!expected.spatialState)throw TypeError('Invalid native bootstrap verification');
     const actual=session.core.captureResidentChunks(),keys=[...expected.chunkKeys].sort();
@@ -135,6 +138,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     }else if(command.kind==='tutorialGuideTarget'){
      if(!['center','plant','spell'].includes(command.toolKind)||command.toolSpell!==null&&command.toolSpell!==undefined&&!['growth','multiply'].includes(command.toolSpell))throw TypeError('Invalid tutorial guide request');
      try{value=withResidentChunks(()=>tutorialHandTarget(game,nav,command.toolKind,command.toolSpell??null),commandLoadedChunks);}catch(error){if(!(error instanceof SpatialChunkUnavailable))throw error;value=null;}
+    }else if(command.kind==='qaGuardianOrigin'){
+     try{if(!qaGuardianMetadata)throw Error('Guardian metadata unavailable');value=withResidentChunks(()=>queryGuardianOrigin({state:game,nav,sequence,epoch:command.epoch,publication:command.publication,camera:command.camera,exclusions:command.exclusions,assets:qaGuardianMetadata.assets,cropHeights:qaGuardianMetadata.cropHeights,targetId:command.targetId}),commandLoadedChunks);}catch(error){rejection=String(error?.message??error);value=false;}
     }else if(command.kind==='tutorialActionPause'){
      if(typeof command.hudTarget!=='boolean'||typeof command.worldTarget!=='boolean'||typeof command.selectionOpen!=='boolean')throw TypeError('Invalid tutorial guidance');
      value=syncTutorialActionPause(game,command);

@@ -42,6 +42,6 @@ export function dispatchPickedSpell(state,id,kind,pick,nav,runtime=null,presenta
   const command=pickedSpellCommand(state,id,kind,pick);if(!command)return false;
   if(kind==='attack'){let pending=pendingAttacks.get(runtime);if(!pending){pending=new Map();pendingAttacks.set(runtime,pending);}pending.set(command.targetId,id);}
   const release=()=>{if(kind!=='attack')return;const pending=pendingAttacks.get(runtime);if(pending?.get(command.targetId)===id)pending.delete(command.targetId);if(!pending?.size)pendingAttacks.delete(runtime);};
-  let request;try{presentation?.begin?.(command);request=runtime.submit(command);}catch(error){release();presentation?.reject?.(id);throw error;}
+  let request;try{presentation?.begin?.(command);request=typeof presentation?.submit==='function'?presentation.submit(command):runtime.submit(command);}catch(error){release();presentation?.reject?.(id);throw error;}
   return Promise.resolve(request).then(result=>{if(result.rejection)throw Error(result.rejection);if(result.value)presentation?.confirm?.(id);else presentation?.reject?.(id);return result.value;}).catch(error=>{presentation?.reject?.(id);throw error;}).finally(release);
 }

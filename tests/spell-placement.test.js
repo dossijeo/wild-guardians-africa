@@ -76,3 +76,7 @@ test('a completed provisional gesture permits another target while its first rep
  assert.equal(dispatchPickedSpell(s,'duplicate','attack',{entityId:a.id},nav,runtime,presentation),false);const second=dispatchPickedSpell(s,'second','attack',{entityId:b.id},nav,runtime,presentation);
  assert.deepEqual(begun,['first','second']);replies.get('first')({value:false,rejection:'No disponible'});await assert.rejects(first,/No disponible/);assert.deepEqual(rejected,['first']);assert.equal(dispatchPickedSpell(s,'duplicate-second','attack',{entityId:b.id},nav,runtime,presentation),false);replies.get('second')({value:true});assert.equal(await second,true);assert.deepEqual(confirmed,['second']);
 });
+test('presentation-routed attack preserves provisional order and authority rejection',async()=>{
+ const s=ready();s.day=5;s.time=400;s.elapsed=10;const animal={id:'beast',x:1,z:2,status:'walking'};s.raid={animals:[animal]};const calls=[],runtime={submit(){throw Error('Unexpected direct dispatch');}},presentation={begin:c=>calls.push(['begin',c.id]),submit:c=>{calls.push(['submit',c.id]);return Promise.resolve({value:false,rejection:'Denied'});},reject:id=>calls.push(['reject',id])};
+ await assert.rejects(dispatchPickedSpell(s,'routed','attack',{entityId:animal.id},nav,runtime,presentation),/Denied/);assert.deepEqual(calls,[['begin','routed'],['submit','routed'],['reject','routed']]);
+});
