@@ -12,3 +12,8 @@ test('closing during upload rejects installation without publishing a texture',a
 test('closing waits for submitted rendering before releasing installed environment textures',async()=>{
  let defer=false,finish;const renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone:()=>defer?new Promise(resolve=>finish=resolve):Promise.resolve()},lost:new Promise(()=>{})}},initTexture(){}},environment=createWebGpuWaterEnvironment({renderer});await environment.install([pixels(5),pixels(6)]);let releases=0;environment.day.value.addEventListener('dispose',()=>releases++);defer=true;environment.dispose();assert.equal(releases,0);finish();await new Promise(resolve=>setImmediate(resolve));assert.equal(releases,1);
 });
+
+test('slope and reflections remain placeholders until all compatible WebGPU textures are uploaded',async()=>{
+ const waits=[],uploaded=[],renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone:()=>new Promise(resolve=>waits.push(resolve))},lost:new Promise(()=>{})}},initTexture:texture=>uploaded.push(texture)},environment=createWebGpuWaterEnvironment({renderer,slopeRequired:true}),old=[environment.day.value,environment.dark.value,environment.slope.value],slope={width:1,height:1,pixels:new Uint8Array([128,129])},pending=environment.install([pixels(5),pixels(6)],slope);
+ for(let i=0;i<3;i++){assert.equal(uploaded[i].internalFormat,null);assert.equal(uploaded[i].format,i===2?THREE.RGFormat:THREE.RGBAFormat);assert.deepEqual([environment.day.value,environment.dark.value,environment.slope.value],old);waits[i]();await new Promise(resolve=>setImmediate(resolve));}await pending;assert.deepEqual([environment.day.value,environment.dark.value,environment.slope.value],uploaded);environment.dispose();
+});
