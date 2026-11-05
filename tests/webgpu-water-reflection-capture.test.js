@@ -23,3 +23,14 @@ test('capture excludes water and transparent objects and restores all state',()=
 test('capture restores visibility and renderer state on scene or reduction failure',()=>{
  for(const failAt of [1,2]){const f=fixture({failAt}),capture=createWebGpuWaterReflectionCapture(2,2);try{assert.throws(()=>capture.render(f.renderer,f.scene,f.camera),/draw failed/);assert.deepEqual([f.ground.visible,f.water.visible,f.mist.visible,f.mixed.visible,f.hidden.visible],[true,true,true,true,false]);assert.equal(f.target,f.previous);assert.equal(f.currentMrt,f.mrt);assert.deepEqual(f.renderer.shadowMap,{autoUpdate:true,needsUpdate:true});}finally{capture.dispose();f.dispose();}}
 });
+
+test('capture admits reduction quads using their actual render contexts and defers resource release',async()=>{
+ const capture=createWebGpuWaterReflectionCapture(5,3),object=new THREE.Mesh(),calls=[],deferred=[];
+ const admission={prepare(item,options){calls.push({item,options});return Promise.resolve();},deferRelease(item,release){deferred.push({item,release});},deferCompilations(release){deferred.push({release});}};
+ try{await capture.prepareHierarchy(admission);await capture.prepareObject(admission,object);assert.equal(calls.length,4);for(const call of calls.slice(0,3)){assert.equal(call.options.target.texture.isTexture,true);assert.equal(call.options.passCamera,call.item.camera);assert.equal(call.options.targetScene,call.item);assert.equal(call.options.shadowPass,false);}assert.equal(calls[3].item,object);assert.equal(calls[3].options.target.depthTexture,capture.depth);assert.equal(calls[3].options.shadowPass,false);assert.throws(()=>capture.prepareObject({prepare(){}},object),/admission/);}finally{capture.dispose();assert.equal(deferred.length,4);for(const item of deferred)item.release();object.geometry.dispose();object.material.dispose();}
+});
+
+test('disposing while a reduction compiles prevents admission of later levels',async()=>{
+ const capture=createWebGpuWaterReflectionCapture(8,8),deferred=[];let finish,calls=0;const admission={prepare(){calls++;return new Promise(resolve=>{finish=resolve;});},deferRelease(item,release){deferred.push(release);},deferCompilations(release){deferred.push(release);}};
+ const ready=capture.prepareHierarchy(admission);capture.dispose();assert.equal(calls,1);finish();await assert.rejects(ready,/disposed/);assert.equal(calls,1);for(const release of deferred)release();
+});

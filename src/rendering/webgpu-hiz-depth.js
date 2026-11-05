@@ -27,7 +27,7 @@ export function hiZLevelSizes(width,height,{maxLevels=16}={}){
 // until the renderer has finished using its targets and materials.
 export function createWebGpuHiZHierarchy(depth,width,height,{maxLevels=8}={}){
  if(!depth?.isDepthTexture||depth.image?.width!==width||depth.image?.height!==height||depth.renderTarget?.samples>1)throw TypeError('Hi-Z requires a matching non-MSAA depth texture');
- const sizes=hiZLevelSizes(width,height,{maxLevels}),levels=[];let source=depth,sourceWidth=width,sourceHeight=height,closed=false;
+ const sizes=hiZLevelSizes(width,height,{maxLevels}),levels=[];let source=depth,sourceWidth=width,sourceHeight=height,closed=false,admissionOwner=null,preparing=false,prepared=false;
  try{for(const [index,size] of sizes.entries()){
   const target=new RenderTarget(size.width,size.height,{format:RedFormat,type:FloatType,minFilter:NearestFilter,magFilter:NearestFilter,depthBuffer:false,stencilBuffer:false,generateMipmaps:false});
   const material=new MeshBasicNodeMaterial({toneMapped:false,depthTest:false,depthWrite:false});
@@ -36,9 +36,16 @@ export function createWebGpuHiZHierarchy(depth,width,height,{maxLevels=8}={}){
  }}catch(error){for(const level of levels){level.material.dispose();level.target.dispose();}throw error;}
  return {
   get levels(){return levels.map(({target})=>target.texture);},
+  async prepare(admission,{signal}={}){
+   if(closed)throw Error('Hi-Z hierarchy disposed');
+   if(!admission||typeof admission.prepare!=='function'||typeof admission.deferRelease!=='function'||admissionOwner&&admissionOwner!==admission)throw TypeError('Invalid Hi-Z admission');
+   if(preparing)throw Error('Hi-Z preparation already pending');if(prepared)return;
+   admissionOwner=admission;preparing=true;
+   try{for(const {target,quad} of levels){if(closed)throw Error('Hi-Z hierarchy disposed');await admission.prepare(quad,{signal,target,passCamera:quad.camera,targetScene:quad,shadowPass:false});}if(closed)throw Error('Hi-Z hierarchy disposed');prepared=true;}finally{preparing=false;}
+  },
   // Compilation/admission is the caller's responsibility. This method only
   // submits reduction draws and never waits synchronously for the GPU.
   render(renderer){if(closed)throw Error('Hi-Z hierarchy disposed');if(!renderer?.backend?.isWebGPUBackend||typeof renderer.getRenderTarget!=='function'||typeof renderer.setRenderTarget!=='function'||typeof renderer.render!=='function')throw TypeError('Invalid Hi-Z renderer');const previous=renderer.getRenderTarget(),face=renderer.getActiveCubeFace?.(),mip=renderer.getActiveMipmapLevel?.(),mrt=renderer.getMRT?.();try{renderer.setMRT?.(null);for(const {target,quad} of levels){renderer.setRenderTarget(target);quad.render(renderer);}}finally{renderer.setRenderTarget(previous,face,mip);if(mrt!==undefined)renderer.setMRT(mrt);}},
-  dispose(){if(closed)return;closed=true;for(const {target,material} of levels){material.dispose();target.dispose();}},
+  dispose(){if(closed)return;closed=true;for(const {target,material,quad} of levels){const release=()=>{material.dispose();target.dispose();};if(admissionOwner)admissionOwner.deferRelease(quad,release);else release();}},
  };
 }

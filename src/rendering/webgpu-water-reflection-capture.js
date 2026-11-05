@@ -21,11 +21,14 @@ export function createWebGpuWaterReflectionCapture(width,height,{maxLevels=8}={}
  const target=new RenderTarget(width,height,{type:HalfFloatType,depthTexture:depth,depthBuffer:true,stencilBuffer:false,samples:0,generateMipmaps:false});
  let hierarchy;
  try{hierarchy=createWebGpuHiZHierarchy(depth,width,height,{maxLevels});}catch(error){target.dispose();depth.dispose();throw error;}
- let closed=false;
+ let closed=false,admissionOwner=null;
+ function ownAdmission(admission){if(!admission||typeof admission.prepare!=='function'||typeof admission.deferRelease!=='function'||typeof admission.deferCompilations!=='function'||admissionOwner&&admissionOwner!==admission)throw TypeError('Invalid reflection admission');admissionOwner=admission;}
  return {
   get color(){return target.texture;},
   get depth(){return depth;},
   get levels(){return hierarchy.levels;},
+  prepareHierarchy(admission,{signal}={}){if(closed)throw Error('Reflection capture disposed');ownAdmission(admission);return hierarchy.prepare(admission,{signal});},
+  prepareObject(admission,object,{signal}={}){if(closed)throw Error('Reflection capture disposed');ownAdmission(admission);return admission.prepare(object,{signal,target,shadowPass:false});},
   render(renderer,scene,camera){
    if(closed)throw Error('Reflection capture disposed');
    if(!renderer?.backend?.isWebGPUBackend||!scene?.isScene||!camera?.isCamera||typeof renderer.render!=='function'||typeof renderer.getRenderTarget!=='function'||typeof renderer.setRenderTarget!=='function')throw TypeError('Invalid reflection capture inputs');
@@ -40,6 +43,6 @@ export function createWebGpuWaterReflectionCapture(width,height,{maxLevels=8}={}
     renderer.setRenderTarget(previous,face,mip);if(mrt!==undefined)renderer.setMRT(mrt);
    }
   },
-  dispose(){if(closed)return;closed=true;hierarchy.dispose();target.dispose();depth.dispose();},
+  dispose(){if(closed)return;closed=true;hierarchy.dispose();const release=()=>{target.dispose();depth.dispose();};if(admissionOwner)admissionOwner.deferCompilations(release);else release();},
  };
 }
