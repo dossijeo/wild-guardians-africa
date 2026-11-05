@@ -99,3 +99,17 @@ aceptó una consulta posterior. Es un escenario de un chunk y un edificio, sin
 personajes ni efectos de trabajo activos; no combina la pérdida con el ACK de
 terreno retenido ni mide rendimiento. Con Vite y Playwright como arriba se
 reproduce con `node tools/experiments/audit_worker_webgpu_device_loss.mjs`.
+
+La recuperación automática tiene un selector exclusivamente DEV/QA:
+`qa-webgpu-recovery`, `qa-webgpu-work-recovery` y
+`qa-webgpu-work-auto-recovery`. Ante `device.lost`, intenta marcar la pérdida y
+reattach una sola vez; la ruta normal y la actualización legacy permanecen
+activas. Una fixture ligera destruyó el dispositivo real y obtuvo un Worker
+WebGPU de reemplazo con host y autoridad reales, partiendo de la secuencia 2 y
+reenganchando en la 13. Usa un chunk y un edificio, sin personajes ni efectos
+de trabajo activos: no valida una partida ni mide rendimiento. Con Vite en
+`http://127.0.0.1:5187` y Playwright accesible mediante `NODE_PATH`, se ejecuta
+con `node tools/experiments/audit_worker_webgpu_auto_loss.mjs`. Un journal
+saturado o un error posterior a transferir puertos puede impedir continuar la
+simulación: esos casos aún requieren recuperación explícita y excluyen esta
+ruta de producción.

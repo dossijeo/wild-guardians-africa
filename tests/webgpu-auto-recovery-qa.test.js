@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createWebGpuAutoRecoveryQa} from '../src/app/webgpu-auto-recovery-qa.js';
+
+test('only a device loss starts one ordered recovery and suppresses overlapping attempts',async()=>{
+ const calls=[];let release;const gate=new Promise(resolve=>release=resolve),auto=createWebGpuAutoRecoveryQa({isCurrent:()=>true,markLost:async()=>{calls.push('lost');await gate;},recover:async()=>calls.push('recover'),onError:e=>calls.push(e.message)});assert.equal(auto.trigger(Error('other failure')),false);assert.equal(auto.trigger(Error('WebGPU device lost: destroyed')),true);assert.equal(auto.trigger(Error('WebGPU device lost: again')),false);await Promise.resolve();assert.deepEqual(calls,['lost']);release();await new Promise(resolve=>setTimeout(resolve,0));assert.deepEqual(calls,['lost','recover']);assert.equal(auto.status().recovering,false);auto.dispose();assert.equal(auto.trigger(Error('WebGPU device lost: disposed')),false);
+});
+test('failure or changed world never starts replacement and is reported only for current world',async()=>{
+ const calls=[];let current=true;const auto=createWebGpuAutoRecoveryQa({isCurrent:()=>current,markLost:async()=>{throw Error('journal saturated');},recover:async()=>calls.push('recover'),onError:e=>calls.push(e.message)});auto.trigger(Error('WebGPU device lost: x'));await new Promise(resolve=>setTimeout(resolve,0));assert.deepEqual(calls,['journal saturated']);const other=createWebGpuAutoRecoveryQa({isCurrent:()=>current,markLost:async()=>{current=false;},recover:async()=>calls.push('unexpected'),onError:e=>calls.push(e.message)});assert.equal(other.trigger(Error('WebGPU device lost: x')),true);await new Promise(resolve=>setTimeout(resolve,0));assert.deepEqual(calls,['journal saturated']);
+});
+test('a synchronous loss error does not leave a permanently pending attempt',async()=>{const errors=[],auto=createWebGpuAutoRecoveryQa({isCurrent:()=>true,markLost(){throw Error('no base');},recover(){throw Error('unexpected');},onError:error=>errors.push(error.message)});assert.equal(auto.trigger(Error('WebGPU device lost: x')),true);await new Promise(resolve=>setTimeout(resolve,0));assert.deepEqual(errors,['no base']);assert.equal(auto.status().recovering,false);});
