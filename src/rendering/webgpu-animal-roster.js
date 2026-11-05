@@ -1,3 +1,4 @@
+import {admitRosterActor,disposePendingRosterActor} from './webgpu-roster-admission.js';
 import {bindWebGpuActorMotion} from './webgpu-actor-motion-binding.js';
 import {createWebGpuConfirmedAnimal} from './webgpu-confirmed-animal.js';
 import {ProvisionalBeastImpact} from './provisional-beast-impact.js';
@@ -13,12 +14,12 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
  function requestFalls(){if(!loadingFalls)loadingFalls=import('./baked-beast-fallbacks.js').then(m=>m.loadBakedFalls()).then(value=>{if(!closed)falls=value;}).catch(error=>{fallLoadError=String(error?.message??error);});}
  function ground(x,z){const mesh=residency.get(Math.floor((x+24)/48),Math.floor((z+24)/48));if(!mesh)return 0;mesh.updateWorldMatrix(true,false);ray.set(origin.set(x,1000,z),down);return ray.intersectObject(mesh,false)[0]?.point.y??0;}
  function finishTarget(id){const item=provisional.byTarget.get(id);if(item){provisional.end(item.id);onSelectableChange();}}
- function remove(id,entry){finishTarget(id);onSelectableChange();entries.delete(id);entry.controller.abort();entry.motionBinding?.dispose();entry.actor?.dispose();entry.pendingActor?.dispose();entry.pendingActor=null;}
+ function remove(id,entry){finishTarget(id);onSelectableChange();entries.delete(id);entry.controller.abort();entry.motionBinding?.dispose();entry.actor?.dispose();disposePendingRosterActor(entry);}
  function sync(){
   if(closed)return;const desired=new Map();for(const entity of state.raid?.animals??[]){if(entity.status==='gone'||onlyActorId!==null&&entity.id!==onlyActorId)continue;if(typeof entity.id!=='string'||!entity.id||desired.has(entity.id))throw Error('Invalid confirmed animal roster');desired.set(entity.id,entity);}
   for(const [id,entry] of entries){const entity=desired.get(id);if(!entity||entity.species!==entry.species)remove(id,entry);}
   for(const [id,entity] of desired){let entry=entries.get(id);if(entry){entry.actor?.update();continue;}entry={species:entity.species,controller:new AbortController(),actor:null};entries.set(id,entry);
-   Promise.resolve().then(()=>createAnimal({scene,residency,state,renderer,actorId:id,assetBank,bakedWalk,confirmedClock,experimentalPoseReconciliation:experimentalProvisionalFall,getPose:()=>poses.get(id)??null,getProvisional:(animal,elapsed)=>provisional.sample(animal,elapsed,{holdUntilPhysical:true}),getFalls:()=>falls,onPhysical:()=>finishTarget(id),signal:entry.controller.signal})).then(async actor=>{if(closed||entries.get(id)!==entry){actor.dispose();return;}entry.pendingActor=actor;try{if(pipelineAdmission){if(!actor.root?.isObject3D)throw Error('Animal admission requires a root');actor.root.visible=false;await pipelineAdmission.prepare(actor.root,{signal:entry.controller.signal});}if(closed||entries.get(id)!==entry)return;actor.update();entry.pendingActor=null;entry.actor=actor;onSelectableChange();onReady(id);}finally{if(entry.pendingActor===actor){entry.pendingActor=null;actor.dispose();}}}).catch(error=>{if(closed||entries.get(id)!==entry||entry.controller.signal.aborted)return;entries.delete(id);onError(error);});
+   Promise.resolve().then(()=>createAnimal({scene,residency,state,renderer,actorId:id,assetBank,bakedWalk,confirmedClock,experimentalPoseReconciliation:experimentalProvisionalFall,getPose:()=>poses.get(id)??null,getProvisional:(animal,elapsed)=>provisional.sample(animal,elapsed,{holdUntilPhysical:true}),getFalls:()=>falls,onPhysical:()=>finishTarget(id),signal:entry.controller.signal})).then(actor=>admitRosterActor({actor,entry,isCurrent:()=>!closed&&entries.get(id)===entry,pipelineAdmission,onReady:()=>{onSelectableChange();onReady(id);}})).catch(error=>{if(closed||entries.get(id)!==entry||entry.controller.signal.aborted)return;entries.delete(id);onError(error);});
   }
  }
  if(experimentalProvisionalFall)requestFalls();

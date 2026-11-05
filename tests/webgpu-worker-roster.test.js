@@ -8,6 +8,12 @@ import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {createWebGpuWorkerBank} from '../src/rendering/webgpu-worker-bank.js';
 import {createWebGpuWorkerRoster} from '../src/rendering/webgpu-worker-roster.js';
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
+test('worker admission hides pending actors and cancels those returning home',async()=>{
+ const state={workers:[{id:'a',profile:'youngMale',status:'walking'}]},bank={dispose(){}},pending=[],disposed=[],ready=[];
+ const roster=createWebGpuWorkerRoster({scene:{},residency:{},state,assetBank:bank,onReady:id=>ready.push(id),pipelineAdmission:{prepare(root,{signal}){assert.equal(root.visible,false);return new Promise((resolve,reject)=>{pending.push({resolve,signal});signal.addEventListener('abort',()=>reject(new DOMException('cancelled','AbortError')),{once:true});});}},createWorker:({actorId})=>({root:new Group(),update(){this.root.visible=true;},dispose(){disposed.push(actorId);}})});
+ roster.sync();await flush();assert.equal(roster.status().ready,0);state.workers[0].status='home';roster.sync();await flush();assert.equal(pending[0].signal.aborted,true);assert.deepEqual(disposed,['a']);
+ state.workers=[{id:'b',profile:'youngMale',status:'walking'}];roster.sync();await flush();pending[1].resolve();await flush();assert.equal(roster.status().ready,1);assert.equal(roster.get('b').root.visible,true);assert.deepEqual(ready,['b']);roster.dispose();assert.deepEqual(disposed,['a','b']);
+});
 test('selectable generation changes when a worker rig appears or leaves',async()=>{
  const state={workers:[{id:'a',profile:'youngMale',status:'walking'}]},bank={dispose(){}},changes=[],roster=createWebGpuWorkerRoster({scene:{},residency:{},state,assetBank:bank,onSelectableChange:()=>changes.push('change'),createWorker:async()=>({update(){},dispose(){}})});
  roster.sync();await flush();assert.equal(changes.length,1);state.workers[0].status='home';roster.sync();assert.equal(changes.length,2);roster.dispose();
