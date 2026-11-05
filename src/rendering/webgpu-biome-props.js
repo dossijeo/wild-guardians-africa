@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import {MeshBasicNodeMaterial,MeshStandardNodeMaterial} from 'three/webgpu';
 import {nativeAssetWater} from './water-geometry.js';
-import {createWebGpuLavaMaterial,lavaClock} from './webgpu-lava-material.js';
+import {createWebGpuLavaMaterial,lavaClock,lavaWorldSeed} from './webgpu-lava-material.js';
 import {chunkClipOpacity,cloneChunkAttribute,cloneChunkGeometry,installChunkClipBounds} from './webgpu-chunk-clip.js';
 import {nativeAssetClipRequired} from './asset-clip.js';
 import {Fn,attribute,normalLocal,positionLocal,vec3} from 'three/tsl';
@@ -12,13 +12,21 @@ import {nearTreeGeometry,removeReviewedTreeTriangles} from './near-tree-textures
 import {describeSurface} from './surface-source.js';
 import {SLOTS} from '../world/terrain.js';
 
+// The graphical owner can share one manifest between terrain and biome props.
+export async function loadWebGpuBiomePack(biome,{signal,fetchImpl=globalThis.fetch}={}){
+ if(!BIOME_IDS[biome]||typeof fetchImpl!=='function')throw TypeError('Invalid biome manifest request');
+ const response=await fetchImpl(assetUrl(`/content/biome-${BIOME_IDS[biome]}.json`),{signal});if(!response.ok)throw Error(`Biome asset ${response.status}`);
+ const pack=await response.json();if(pack?.biomeId!==BIOME_IDS[biome])throw Error('Biome manifest identity mismatch');return pack;
+}
+
 // Worker-owned visual instances from the same confirmed Wild Engine chunk
 // payload used by the game. Navigation and suppression remain authoritative.
 // Slot 19 includes its authored fluid. World-space chunk bounds prevent
 // duplicate edges, and lava consumes the confirmed presentation clock.
-export function createWebGpuBiomeProps({scene,state,pipelineAdmission=null,onError=()=>{},instanceContract='native',shareCompatibleMaterials=instanceContract==='attributes',experimentalShadowCutout=false,onCameraTreeChunk=null,onSelectableChange=null,initialSlots=null,confirmedClock=null}={}){
+export function createWebGpuBiomeProps({scene,state,pipelineAdmission=null,onError=()=>{},instanceContract='native',shareCompatibleMaterials=instanceContract==='attributes',experimentalShadowCutout=false,onCameraTreeChunk=null,onSelectableChange=null,initialSlots=null,confirmedClock=null,biomePack=null}={}){
  if(!scene?.isScene||!state||!BIOME_IDS[state.biome]||pipelineAdmission!==null&&typeof pipelineAdmission.prepare!=='function'||typeof onError!=='function'||typeof shareCompatibleMaterials!=='boolean'||typeof experimentalShadowCutout!=='boolean'||onCameraTreeChunk!==null&&typeof onCameraTreeChunk!=='function'||onSelectableChange!==null&&typeof onSelectableChange!=='function'||!['native','attributes'].includes(instanceContract))throw TypeError('Invalid biome props');
  if(confirmedClock!==null&&!confirmedClock.node?.isNode)throw TypeError('Invalid biome clock');
+ if(biomePack!==null&&biomePack?.biomeId!==BIOME_IDS[state.biome])throw TypeError('Invalid shared biome manifest');
  const fluidClock=confirmedClock?.node??lavaClock(state.elapsed??0),slotCount=20;
  if(initialSlots!==null&&(!Array.isArray(initialSlots)||initialSlots.some(slot=>!Number.isInteger(slot)||slot<0||slot>=slotCount)||new Set(initialSlots).size!==initialSlots.length))throw TypeError('Invalid initial biome slots');
  const controller=new AbortController(),chunks=new Map(),versions=new Map(),resources=new Set(),bitmaps=new Set(),materials=new Map();let closed=false,prototypes=null,suppressionKey='',failure=null,confirmedSequence=0,treeGroups=null,loadAdditional=null,initialized=false;const treeVersions=new Map();
@@ -47,7 +55,7 @@ export function createWebGpuBiomeProps({scene,state,pipelineAdmission=null,onErr
  function suppressed(){return new Set(state.suppressed??[]);}
  function sync(sequence=confirmedSequence){if(closed)return;if(!Number.isSafeInteger(sequence)||sequence<confirmedSequence)throw Error('Invalid biome sequence');confirmedSequence=sequence;if(!confirmedClock&&Number.isFinite(state.elapsed)&&state.elapsed>=0)fluidClock.value=state.elapsed;const key=JSON.stringify(state.suppressed??[]);if(key===suppressionKey)return;suppressionKey=key;if(prototypes){const removed=suppressed();for(const entry of chunks.values())rebuild(entry,removed);}}
  const ready=(async()=>{
-  const pack=await (await load(`/content/biome-${BIOME_IDS[state.biome]}.json`)).json();ensure();const buffer=await (await load(pack.binary.url)).arrayBuffer();ensure();
+  const pack=biomePack??await (await load(`/content/biome-${BIOME_IDS[state.biome]}.json`)).json();ensure();const buffer=await (await load(pack.binary.url)).arrayBuffer();ensure();
   const cache=new Map(),loadTexture=(url,color)=>{const key=url+':'+color;if(!cache.has(key))cache.set(key,image(url,color));return cache.get(key);};
   async function textureSet(entries){return Object.fromEntries(await Promise.all(entries.map(async t=>[t.role,await loadTexture(t.base64.url,t.role==='baseColor')])));}
   const sets=new Map(),getSet=index=>{const key=index===undefined?'base':index;if(!sets.has(key))sets.set(key,textureSet(index===undefined?pack.textures:pack.textureSets[index]));return sets.get(key);};const types={'<f4':Float32Array,'<u2':Uint16Array,'<u4':Uint32Array},attribute=desc=>new types[desc.type](buffer,desc.offset,desc.count);
@@ -63,7 +71,7 @@ export function createWebGpuBiomeProps({scene,state,pipelineAdmission=null,onErr
    // surface value are identical; each chunk still owns its instance buffer.
    // Near-tree texture clones keep their distinct channel and bindings.
    const key=JSON.stringify([maps.baseColor?.id??null,maps.normal?.id??null,maps.metallicRoughness?.id??null,surface.params[0],surface.params[1],factor,asset.doubleSidedFoliage?THREE.DoubleSide:THREE.FrontSide,pack.material.normalScale??.6,nativeAssetClipRequired(slot,state.biome)]);let material=shareCompatibleMaterials?materials.get(key):null;
-   if(!material){const Material=instanceContract==='attributes'||nativeAssetClipRequired(slot,state.biome)?MeshStandardNodeMaterial:THREE.MeshStandardMaterial;material=own(new Material({map:maps.baseColor,normalMap:maps.normal,roughnessMap:maps.metallicRoughness,metalnessMap:maps.metallicRoughness,roughness:surface.params[0],metalness:surface.params[1],alphaTest:.35,opacity:factor[3],side:asset.doubleSidedFoliage?THREE.DoubleSide:THREE.FrontSide}));if(positionNode)material.positionNode=positionNode;if(nativeAssetClipRequired(slot,state.biome))material.opacityNode=chunkClipOpacity;if(experimentalShadowCutout&&maps.baseColor)material.castShadowNode=biomeShadowCutout(maps.baseColor).node;material.color.fromArray(factor);material.normalScale.setScalar(pack.material.normalScale??.6);if(shareCompatibleMaterials)materials.set(key,material);}let water=null;if(slot===19&&asset.water){const waterGeometry=own(nativeAssetWater(asset));const color=pack.profile?.colors?.water??'#366f75',waterMaterial=own(state.biome==='volcanes'?createWebGpuLavaMaterial({color,seed:state.seed,clockNode:fluidClock}):new MeshBasicNodeMaterial({color,side:THREE.DoubleSide,alphaTest:.35,toneMapped:false}));waterMaterial.opacityNode=chunkClipOpacity;water={geometry:waterGeometry,material:waterMaterial};}next.push([slot,{geometry:selected,material,water}]);
+   if(!material){const Material=instanceContract==='attributes'||nativeAssetClipRequired(slot,state.biome)?MeshStandardNodeMaterial:THREE.MeshStandardMaterial;material=own(new Material({map:maps.baseColor,normalMap:maps.normal,roughnessMap:maps.metallicRoughness,metalnessMap:maps.metallicRoughness,roughness:surface.params[0],metalness:surface.params[1],alphaTest:.35,opacity:factor[3],side:asset.doubleSidedFoliage?THREE.DoubleSide:THREE.FrontSide}));if(positionNode)material.positionNode=positionNode;if(nativeAssetClipRequired(slot,state.biome))material.opacityNode=chunkClipOpacity;if(experimentalShadowCutout&&maps.baseColor)material.castShadowNode=biomeShadowCutout(maps.baseColor).node;material.color.fromArray(factor);material.normalScale.setScalar(pack.material.normalScale??.6);if(shareCompatibleMaterials)materials.set(key,material);}let water=null;if(slot===19&&asset.water){const waterGeometry=own(nativeAssetWater(asset));const color=pack.profile?.colors?.water??'#366f75',waterMaterial=own(state.biome==='volcanes'?createWebGpuLavaMaterial({color,seed:lavaWorldSeed(state.seed),clockNode:fluidClock}):new MeshBasicNodeMaterial({color,side:THREE.DoubleSide,alphaTest:.35,toneMapped:false}));waterMaterial.opacityNode=chunkClipOpacity;water={geometry:waterGeometry,material:waterMaterial};}next.push([slot,{geometry:selected,material,water}]);
   }
   ensure();for(const [slot,prototype] of next)prototypes[slot]=prototype;if(next.length){const removed=suppressed(),added=new Set(next.map(([slot])=>slot));for(const entry of chunks.values())rebuild(entry,removed,added);}return true;};
   await loadAdditional(initialSlots??Array.from({length:slotCount},(_,slot)=>slot));initialized=true;return true;

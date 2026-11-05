@@ -3,12 +3,17 @@ import {MeshBasicNodeMaterial} from 'three/webgpu';
 import {Fn,clamp,dot,float,floor,fract,fwidth,max,min,mix,pow,positionWorld,sin,smoothstep,sqrt,sRGBTransferEOTF,uniform,vec2,vec3,vec4} from 'three/tsl';
 import {waterPalette,waterSeed,WATER_DEFAULTS} from './world-atmosphere.js';
 import {chunkClipOpacity} from './webgpu-chunk-clip.js';
+// Wild Engine's spatial terrain view exposes its unsigned WASM world seed.
+export const lavaWorldSeed=seed=>Number(seed)>>>0;
 
 // TSL translation of paintedLava and the lava branch of nativeFluid4. The
 // clock is confirmed simulation time shared by all visible lava instances.
-export function createWebGpuLavaMaterial({color,seed,clockNode}={}){
- if(typeof color!=='string'||!/^#[0-9a-f]{6}$/i.test(color)||!clockNode?.isNode)throw TypeError('Invalid lava material');
+const graphs=new WeakMap();
+export function createWebGpuLavaMaterial({color,seed,clockNode,clip=true}={}){
+ if(typeof color!=='string'||!/^#[0-9a-f]{6}$/i.test(color)||!clockNode?.isNode||typeof clip!=='boolean')throw TypeError('Invalid lava material');
  const offset=waterSeed(seed),palette=waterPalette(color,true);
+ let byParameters=graphs.get(clockNode);if(!byParameters){byParameters=new Map();graphs.set(clockNode,byParameters);}const key=JSON.stringify([palette,offset]);let colorNode=byParameters.get(key);
+ if(!colorNode){
  const lava=Fn(()=>{
   const t=clockNode.mul(WATER_DEFAULTS.speed).toVar(),p=positionWorld.zx.mul(vec2(.22,.45)).mul(WATER_DEFAULTS.scale*4).toVar();
   const flow0=p.mul(.64).add(vec2(...offset)).add(vec2(t.mul(-.018),t.mul(.008))).toVar();
@@ -22,6 +27,8 @@ export function createWebGpuLavaMaterial({color,seed,clockNode}={}){
   const lit=pow(max(paint,vec3(0)),vec3(2.2)).mul(2.15).toVar(),filmic=pow(clamp(lit.mul(lit.mul(2.51).add(.03)).div(lit.mul(lit.mul(2.43).add(.59)).add(.14)),0,1),vec3(1/2.2)),graded=filmic.mul(vec3(.99,1.03,1.07)).toVar(),luminance=dot(graded,vec3(.299,.587,.114)),result=mix(vec3(luminance),graded,1.02);
   return sRGBTransferEOTF(vec4(result,1)).rgb;
  });
- const material=new MeshBasicNodeMaterial({side:THREE.DoubleSide,alphaTest:.35,toneMapped:false});material.colorNode=lava();material.opacityNode=chunkClipOpacity;return material;
+ colorNode=lava();byParameters.set(key,colorNode);
+ }
+ const material=new MeshBasicNodeMaterial({side:THREE.DoubleSide,alphaTest:clip ? .35 : 0,toneMapped:false});material.colorNode=colorNode;if(clip)material.opacityNode=chunkClipOpacity;return material;
 }
 export function lavaClock(initial=0){if(!Number.isFinite(initial)||initial<0)throw TypeError('Invalid lava clock');return uniform(initial);}
