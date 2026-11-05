@@ -25,3 +25,7 @@ test('journal observes each committed terrain batch before publication',()=>{
  const order=[],port={postMessage:m=>order.push(['send',m.sequence]),start(){},close(){}},publisher=createTerrainPublication({port,session:'s',onCommitted:(sequence,chunks)=>{order.push(['journal',sequence,chunks[0].terrain.positions[0]]);}});
  publisher.stage(chunk(0,7));publisher.commit(2);assert.deepEqual(order,[['journal',2,7],['send',2]]);publisher.dispose();
 });
+
+test('manifest tracks committed coalesced revisions including payloads in transit',()=>{
+ const sent=[],port={postMessage:m=>sent.push(m),close(){},start(){}},publisher=createTerrainPublication({port,session:'s',epoch:'epoch-a'});assert.equal(publisher.manifest(),null);publisher.stage(chunk(0,1));publisher.commit(1);assert.deepEqual(publisher.manifest(),{epoch:'epoch-a',chunks:[{cx:0,cz:0,revision:1}]});assert.equal(sent[0].epoch,'epoch-a');publisher.stage(chunk(0,2));publisher.commit(2);publisher.stage(chunk(0,3));publisher.commit(3);assert.equal(publisher.manifest().chunks[0].revision,3);publisher.dispose();assert.equal(publisher.manifest(),null);
+});

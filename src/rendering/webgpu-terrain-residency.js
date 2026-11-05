@@ -10,29 +10,30 @@ import {SpatialSurfaceView} from '../world/wild-engine/spatial-surface-view.js';
 export function createWebGpuTerrainResidency({scene,material,waterMaterial=null,materialFactory=null}={}){
  if(typeof document!=='undefined')throw Error('WebGPU terrain residency requires a Worker');
  if(!scene?.isScene||!material?.isMaterial||waterMaterial!==null&&!waterMaterial.isMaterial||materialFactory!==null&&typeof materialFactory!=='function')throw TypeError('Terrain residency requires a scene and material');
- const entries=new Map(),waters=new Map(),versions=new Map(),surfaceView=new SpatialSurfaceView();let closed=false;
+ const entries=new Map(),waters=new Map(),versions=new Map(),epochs=new Map(),surfaceView=new SpatialSurfaceView();let closed=false;
  function releaseWater(key){const water=waters.get(key);if(water){scene.remove(water);water.geometry.dispose();waters.delete(key);}}
  const check=(cx,cz,revision)=>{
   if(closed)throw Error('Terrain residency disposed');
   if(!Number.isSafeInteger(cx)||!Number.isSafeInteger(cz)||!Number.isSafeInteger(revision)||revision<0)throw TypeError('Invalid terrain identity');
   return `${cx},${cz}`;
  };
- function replace(payload,revision){
+ function replace(payload,revision,epoch=null){
   const key=check(payload?.cx,payload?.cz,revision),previous=versions.get(key);
   if(previous!==undefined&&revision<=previous)return false;
+  if(epoch!==null&&(typeof epoch!=='string'||!epoch))throw TypeError('Invalid terrain epoch');
   const terrain=payload?.terrain;
   if(payload.authority!=='spatial-wasm'||!(terrain?.positions instanceof Float32Array)||!(terrain.colors instanceof Float32Array)||!(terrain.indices instanceof Uint16Array)||terrain.positions.length!==49*49*3||terrain.colors.length!==terrain.positions.length||terrain.indices.length!==48*48*6)throw TypeError('Invalid Wild Engine terrain payload');
   if(payload.water!==undefined&&(!(payload.water instanceof Float32Array)||payload.water.length%9!==0||payload.water.length&&!waterMaterial))throw TypeError('Invalid Wild Engine water payload');
   let geometry,mesh,waterGeometry,water,chunkMaterial;
   try{geometry=nativeTerrainBuffer(terrain);chunkMaterial=materialFactory?.(payload)??material;if(!chunkMaterial?.isMaterial)throw TypeError('Invalid chunk material');mesh=new THREE.Mesh(geometry,chunkMaterial);mesh.position.set(payload.cx*48,0,payload.cz*48);mesh.receiveShadow=true;mesh.userData.ground=true;mesh.userData.spatialAuthority=payload.authority;mesh.userData.spatialTerrainRevision=revision;if(payload.water?.length){waterGeometry=nativeWaterBuffer(payload.water);water=new THREE.Mesh(waterGeometry,waterMaterial);water.position.copy(mesh.position);water.userData.nativeFluid='chunk';water.userData.spatialTerrainRevision=revision;}scene.add(mesh);if(water)scene.add(water);}
   catch(error){if(mesh?.parent===scene)scene.remove(mesh);if(water?.parent===scene)scene.remove(water);geometry?.dispose();if(chunkMaterial&&chunkMaterial!==material)chunkMaterial.dispose();waterGeometry?.dispose();throw error;}
-  const old=entries.get(key);entries.set(key,mesh);versions.set(key,revision);surfaceView.install(payload);
+  const old=entries.get(key);entries.set(key,mesh);versions.set(key,revision);epochs.set(key,epoch);surfaceView.install(payload);
   if(old){scene.remove(old);old.geometry.dispose();if(old.material!==material)old.material.dispose();}releaseWater(key);if(water)waters.set(key,water);return true;
  }
  function remove(cx,cz,revision){
   const key=check(cx,cz,revision),previous=versions.get(key);if(previous!==undefined&&revision<=previous)return false;
-  versions.set(key,revision);const old=entries.get(key);if(old){entries.delete(key);surfaceView.remove(cx,cz);scene.remove(old);old.geometry.dispose();if(old.material!==material)old.material.dispose();}releaseWater(key);return true;
+  versions.set(key,revision);epochs.delete(key);const old=entries.get(key);if(old){entries.delete(key);surfaceView.remove(cx,cz);scene.remove(old);old.geometry.dispose();if(old.material!==material)old.material.dispose();}releaseWater(key);return true;
  }
- function dispose(){if(closed)return;closed=true;for(const mesh of entries.values()){scene.remove(mesh);mesh.geometry.dispose();if(mesh.material!==material)mesh.material.dispose();}for(const key of waters.keys())releaseWater(key);entries.clear();versions.clear();surfaceView.clear();}
- return {replace,restoreCheckpoint(payload){const key=check(payload?.cx,payload?.cz,0),old=versions.get(key)??0;const changed=replace(payload,old+1);versions.set(key,old);return changed;},remove,dispose,surface(x,z){if(!Number.isFinite(x)||!Number.isFinite(z)||!entries.has(`${Math.floor((x+24)/48)},${Math.floor((z+24)/48)}`))return null;return surfaceView.surface(x,z)??null;},get groundMaterialCount(){let count=0;for(const mesh of entries.values())if(mesh.material!==material)count++;return count;},get size(){return entries.size;},get waterSize(){return waters.size;},get(cx,cz){return entries.get(`${cx},${cz}`)??null;},getWater(cx,cz){return waters.get(`${cx},${cz}`)??null;}};
+ function dispose(){if(closed)return;closed=true;for(const mesh of entries.values()){scene.remove(mesh);mesh.geometry.dispose();if(mesh.material!==material)mesh.material.dispose();}for(const key of waters.keys())releaseWater(key);entries.clear();versions.clear();epochs.clear();surfaceView.clear();}
+ return {replace,matchesManifest(manifest){if(closed||!manifest||typeof manifest.epoch!=='string'||!manifest.epoch||!Array.isArray(manifest.chunks)||!manifest.chunks.length)return false;const seen=new Set();for(const chunk of manifest.chunks){if(!Number.isSafeInteger(chunk?.cx)||!Number.isSafeInteger(chunk.cz)||!Number.isSafeInteger(chunk.revision)||chunk.revision<1)return false;const key=`${chunk.cx},${chunk.cz}`;if(seen.has(key)||!entries.has(key)||epochs.get(key)!==manifest.epoch||versions.get(key)!==chunk.revision)return false;seen.add(key);}return true;},restoreCheckpoint(payload){const key=check(payload?.cx,payload?.cz,0),old=versions.get(key)??0;const changed=replace(payload,old+1);versions.set(key,old);epochs.delete(key);return changed;},remove,dispose,surface(x,z){if(!Number.isFinite(x)||!Number.isFinite(z)||!entries.has(`${Math.floor((x+24)/48)},${Math.floor((z+24)/48)}`))return null;return surfaceView.surface(x,z)??null;},get groundMaterialCount(){let count=0;for(const mesh of entries.values())if(mesh.material!==material)count++;return count;},get size(){return entries.size;},get waterSize(){return waters.size;},get(cx,cz){return entries.get(`${cx},${cz}`)??null;},getWater(cx,cz){return waters.get(`${cx},${cz}`)??null;}};
 }

@@ -1,14 +1,14 @@
 // Confirmed terrain changes for a presentation Worker. The authority retains
 // its own chunk arrays; only the copied rendering buffers are transferred.
 // One publication may be in flight. Pending updates are coalesced per chunk.
-export function createTerrainPublication({port,session,maxPending=512,onCommitted=null}={}){
- if(!port||typeof port.postMessage!=='function'||typeof session!=='string'||!session||!Number.isSafeInteger(maxPending)||maxPending<1||onCommitted!==null&&typeof onCommitted!=='function')throw TypeError('Invalid terrain publication');
- const pending=new Map(),staged=new Map(),revisions=new Map();let inflight=null,serial=0,closed=false,failure=null,lastSequence=-1;
+export function createTerrainPublication({port,session,epoch=null,maxPending=512,onCommitted=null}={}){
+ if(!port||typeof port.postMessage!=='function'||typeof session!=='string'||!session||epoch!==null&&(typeof epoch!=='string'||!epoch)||!Number.isSafeInteger(maxPending)||maxPending<1||onCommitted!==null&&typeof onCommitted!=='function')throw TypeError('Invalid terrain publication');
+ const pending=new Map(),staged=new Map(),revisions=new Map();let inflight=null,serial=0,closed=false,failure=null,lastSequence=-1,manifestCache=null;
  function fail(error){if(closed)return;failure=error instanceof Error?error:Error(String(error));closed=true;pending.clear();staged.clear();try{port.postMessage({kind:'terrainFailure',session,message:failure.message});}catch{}try{port.close();}catch{}}
  function pump(){
   if(closed||inflight||!pending.size)return;
   const [key,entry]=pending.entries().next().value;pending.delete(key);inflight={id:++serial,key};
-  try{const {payload,sequence,revision}=entry;const transfer=[payload.terrain.positions.buffer,payload.terrain.colors.buffer,payload.terrain.indices.buffer];if(payload.water)transfer.push(payload.water.buffer);if(payload.groundMask)transfer.push(payload.groundMask.buffer);port.postMessage({kind:'terrain',session,id:inflight.id,sequence,revision,payload},transfer);}catch(error){fail(error);}
+  try{const {payload,sequence,revision}=entry;const transfer=[payload.terrain.positions.buffer,payload.terrain.colors.buffer,payload.terrain.indices.buffer];if(payload.water)transfer.push(payload.water.buffer);if(payload.groundMask)transfer.push(payload.groundMask.buffer);port.postMessage({kind:'terrain',session,...(epoch===null?{}:{epoch}),id:inflight.id,sequence,revision,payload},transfer);}catch(error){fail(error);}
  }
  function stage(data){
   if(closed)return false;
@@ -22,10 +22,11 @@ export function createTerrainPublication({port,session,maxPending=512,onCommitte
  function commit(sequence){
   if(closed)return false;if(!Number.isSafeInteger(sequence)||sequence<=lastSequence)throw TypeError('Invalid confirmed terrain sequence');lastSequence=sequence;
   if(onCommitted&&staged.size)onCommitted(sequence,[...staged.values()]);
+  if(staged.size)manifestCache=null;
   for(const [key,payload] of staged){const revision=(revisions.get(key)??0)+1;revisions.set(key,revision);pending.set(key,{payload,sequence,revision});}staged.clear();pump();return !closed;
  }
  function discard(){staged.clear();}
  port.onmessage=({data})=>{if(closed)return;if(data?.kind!=='terrainAck'||data.session!==session||!inflight||data.id!==inflight.id){fail(Error('Invalid terrain acknowledgement'));return;}inflight=null;pump();};
  port.onmessageerror=()=>fail(Error('Terrain acknowledgement failed'));port.start?.();
- return {stage,commit,discard,fail,dispose(){if(closed)return;closed=true;pending.clear();staged.clear();port.close();},status(){return {closed,failure:failure?.message??null,inflight:!!inflight,pending:pending.size,staged:staged.size};}};
+ return {stage,commit,discard,fail,manifest(){if(closed||epoch===null||!revisions.size)return null;return manifestCache??(manifestCache={epoch,chunks:[...revisions].map(([key,revision])=>{const [cx,cz]=key.split(',').map(Number);return {cx,cz,revision};})});},dispose(){if(closed)return;closed=true;pending.clear();staged.clear();port.close();},status(){return {closed,failure:failure?.message??null,inflight:!!inflight,pending:pending.size,staged:staged.size};}};
 }

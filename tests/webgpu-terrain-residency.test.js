@@ -39,3 +39,7 @@ test('checkpoint replaces terrain without consuming the next authoritative revis
  assert.equal(residency.replace(old,4),false);assert.equal(residency.replace(future,5),true);
  assert.equal(residency.get(0,0).geometry.attributes.position.array[1],23);residency.dispose();
 });
+
+test('terrain manifest fails closed across transit, epoch changes and checkpoint restoration',()=>{
+ const residency=createWebGpuTerrainResidency({scene:new THREE.Scene(),material:new THREE.MeshBasicMaterial()}),manifest={epoch:'a',chunks:[{cx:0,cz:0,revision:1},{cx:1,cz:0,revision:1}]};assert.equal(residency.matchesManifest(manifest),false);residency.replace(chunk(),1,'a');assert.equal(residency.matchesManifest(manifest),false);residency.replace(chunk(1,0),1,'a');assert.equal(residency.matchesManifest(manifest),true);assert.equal(residency.matchesManifest({...manifest,epoch:'b'}),false);assert.equal(residency.matchesManifest({...manifest,chunks:[...manifest.chunks,manifest.chunks[0]]}),false);residency.replace(chunk(),2,'a');assert.equal(residency.matchesManifest(manifest),false);const current={...manifest,chunks:[{cx:0,cz:0,revision:2},manifest.chunks[1]]};assert.equal(residency.matchesManifest(current),true);residency.restoreCheckpoint(chunk());assert.equal(residency.matchesManifest(current),false);residency.dispose();
+});

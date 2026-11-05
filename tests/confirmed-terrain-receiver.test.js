@@ -20,3 +20,9 @@ test('checkpoint discards late terrain through its boundary and preserves later 
  port.onmessage({data:{kind:'terrain',session:'s',id:1,sequence:5,revision:2,payload:{id:'old'}}});
  port.onmessage({data:{kind:'terrain',session:'s',id:2,sequence:6,revision:3,payload:{id:'new'}}});assert.deepEqual(acks,[1]);assert.deepEqual(applied,[]);r.confirm(6);assert.deepEqual(acks,[1,2]);assert.deepEqual(applied,[['new',3]]);r.dispose();
 });
+
+test('manifest cannot match future revisions until state confirmation applies them',()=>{
+ const chunks=new Map(),port={postMessage(){},close(){},start(){}},residency={replace(payload,revision,epoch){chunks.set(payload.cx,{revision,epoch});},matchesManifest(manifest){return manifest.chunks.every(c=>chunks.get(c.cx)?.revision===c.revision&&chunks.get(c.cx)?.epoch===manifest.epoch);}},receiver=createConfirmedTerrainReceiver({port,session:'s',residency});const manifest={epoch:'a',chunks:[{cx:0,revision:1}]};port.onmessage({data:{kind:'terrain',session:'s',epoch:'a',id:1,sequence:2,revision:1,payload:{cx:0}}});assert.equal(receiver.matchesManifest(manifest),false);receiver.confirm(2);assert.equal(receiver.matchesManifest(manifest),true);assert.equal(receiver.matchesManifest({...manifest,epoch:'b'}),false);receiver.dispose();assert.equal(receiver.matchesManifest(manifest),false);
+});
+
+test('one channel cannot mix terrain epochs',()=>{let error;const port={postMessage(){},close(){},start(){}},receiver=createConfirmedTerrainReceiver({port,session:'s',residency:{replace(){}},onError:e=>error=e});port.onmessage({data:{kind:'terrain',session:'s',epoch:'a',id:1,sequence:0,revision:1,payload:{}}});port.onmessage({data:{kind:'terrain',session:'s',epoch:'b',id:2,sequence:0,revision:1,payload:{}}});assert.match(error.message,/epoch/);assert.equal(receiver.status().closed,true);});
