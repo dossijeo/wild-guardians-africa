@@ -257,6 +257,8 @@ Avance parcial A1: la ruta experimental `qa-webgpu-world` omite por defecto el s
 
 El cliente distingue la inicialización del backend del primer dibujo solicitado por el Worker: la retirada del dibujo anterior espera a la señal `firstFrame`. Esa señal no acredita presentación física en pantalla ni contenido completo, pero evita tratar un renderer recién inicializado como si ya hubiera dibujado.
 
+La ruta de arranque temprano dispone de un controlador independiente para tamaño de viewport, cámara sobre terreno, foco y gestos de muralla. Esa ruta todavía hereda otros servicios de `WorldScene`; falta conectar el controlador al arranque normal y retirar las etapas heredadas del fotograma.
+
 Avance parcial A2: el diario de recuperación agrupa acuses consecutivos de vistas de fondo idénticas y conserva los rangos de secuencia. Tanto el diario como la cola activa conservan las confirmaciones de entrada, rechazos y campos nuevos como barreras, además de eventos y entradas selladas. Las comprobaciones de contrato cubren acumulación y replay. La política conservadora puede reducir la compactación de tipos de publicación aún no registrados. El diario y la recuperación siguen siendo experimentales; la autoridad aún se detiene ante saturación y no se ha demostrado el desacoplamiento completo.
 
 La fusión de una vista con el estado previo también comprueba la publicación entrante: una revisión de terreno, confirmación de entrada, rechazo o campo desconocido impide la fusión. Sin esta comprobación la barrera podía perderse aunque la publicación previa fuese compactable.
