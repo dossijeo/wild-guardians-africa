@@ -1,3 +1,4 @@
+import {createConfirmedPresentationClock} from '../src/rendering/confirmed-presentation-clock.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {Group,Mesh,BoxGeometry,MeshBasicMaterial,Box3,Vector3} from 'three';
@@ -34,3 +35,5 @@ test('the real olderMale preview supplies a normalized loose crate',async()=>{
  const gltf=await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).parseAsync(buffer,''),bank=createWebGpuWorkerBank({renderer:{backend:{isWebGPUBackend:true}},loadAsset:async()=>({scene:gltf.scene,clips:[],library:{},dispose(){}})}),lease=await bank.acquireCrate('olderMale');
  const box=new Box3().setFromObject(lease.model),size=box.getSize(new Vector3());assert.ok(Math.abs(box.min.y)<1e-5);assert.ok(size.x>.4&&size.x<.6&&size.y>.2&&size.y<.4&&size.z>.2&&size.z<.4);lease.release();bank.dispose();
 });
+
+test('passes the shared confirmed clock through to a real roster actor',async()=>{const clock=createConfirmedPresentationClock(.25),state={workers:[{id:'w',profile:'youngMale',status:'walking'}]},bank={dispose(){}},calls=[],roster=createWebGpuWorkerRoster({scene:{},residency:{},state,assetBank:bank,confirmedClock:clock,createWorker:async options=>{calls.push(options);return {update(){},dispose(){}};}});roster.sync();await flush();assert.equal(calls.length,1);assert.equal(calls[0].confirmedClock,clock);roster.dispose();clock.dispose();});
