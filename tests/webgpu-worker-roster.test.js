@@ -23,6 +23,11 @@ test('advances shared worker texture transitions once per frame',()=>{
  const roster=createWebGpuWorkerRoster({scene:{},residency:{},state:{workers:[]},assetBank:bank});
  roster.tick(123);roster.tick(456);assert.deepEqual(ticks,[123,456]);roster.dispose();
 });
+test('a borrowed asset bank remains available to crates after the worker roster closes',async()=>{
+ let disposed=0,released=0;const bank={dispose(){disposed++;},async acquireCrate(){if(disposed)throw Error('bank closed');return {release(){released++;}};}};
+ const roster=createWebGpuWorkerRoster({scene:{},residency:{},state:{workers:[]},assetBank:bank,ownsAssetBank:false});
+ const crate=await bank.acquireCrate();roster.dispose();assert.equal(disposed,0);const other=await bank.acquireCrate();crate.release();other.release();bank.dispose();assert.equal(released,2);assert.equal(disposed,1);
+});
 test('shares original meshes and materials by profile and releases after last actor',async()=>{
  let loads=0,disposed=0;const source=new Group(),geometry=new BoxGeometry(),material=new MeshBasicMaterial();source.add(new Mesh(geometry,material));const bank=createWebGpuWorkerBank({renderer:{backend:{isWebGPUBackend:true}},loadAsset:async()=>{loads++;return {scene:source,clips:[],library:{},dispose(){disposed++;geometry.dispose();material.dispose();}};}});
  const [a,b]=await Promise.all([bank.acquire('youngMale'),bank.acquire('youngMale')]);assert.equal(loads,1);assert.notEqual(a.model,b.model);assert.equal(a.model.children[0].geometry,b.model.children[0].geometry);assert.equal(a.model.children[0].material,b.model.children[0].material);a.release();assert.equal(disposed,0);b.release();assert.equal(disposed,1);bank.dispose();
