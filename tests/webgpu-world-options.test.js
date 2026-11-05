@@ -8,6 +8,7 @@ test('initial and recovered worlds share the complete early presentation profile
  const first=webGpuWorldOptions({params,state,field,recovery,dev:true}),replacement=webGpuWorldOptions({params,state,field,recovery,dev:true});
  assert.deepEqual(replacement,first);assert.equal(replacement.experimentalMinimalWorld,true);assert.equal(replacement.experimentalEarlyBiome,true);
  assert.equal(replacement.experimentalMotionFeed,true);assert.equal(replacement.experimentalCameraTerrain,true);assert.equal(replacement.experimentalPicking,true);
+ assert.deepEqual(replacement.presentationCapabilities,{cameraTerrain:true,provisionalStructures:true,provisionalCrops:true});assert.ok(Object.isFrozen(replacement));assert.ok(Object.isFrozen(replacement.presentationCapabilities));
  assert.equal(replacement.experimentalActorId,'buffalo');assert.match(replacement.experimentalActorPackageUrl,/buffalo/);
  assert.equal(replacement.presentationWorkRecovery,true);assert.equal(replacement.cameraTerrainCanyon,true);
 });
@@ -18,6 +19,7 @@ test('profile selection ignores removed animals and does not enable development-
  const value=webGpuWorldOptions({params,state,field:{canyon:false},dev:false});
  assert.equal(value.experimentalActorId,'new');assert.equal(value.experimentalMinimalWorld,false);assert.equal(value.experimentalEarlyBiome,false);
  assert.equal(value.experimentalPresentationInputs,false);assert.equal(value.presentationInputs,false);assert.equal(value.presentationRecovery,false);assert.equal(value.presentationWorkRecovery,false);
+ assert.deepEqual(value.presentationCapabilities,{cameraTerrain:false,provisionalStructures:false,provisionalCrops:false});
 });
 
 test('the causal QA profile exercises the general presentation input channel',()=>{

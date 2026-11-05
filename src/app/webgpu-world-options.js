@@ -1,12 +1,17 @@
 import {resolvePresentationRecoveryOptions} from '../simulation/presentation-recovery-options.js';
 import {webGpuPresentationCapabilities} from '../rendering/webgpu-presentation-capabilities.js';
+export function diagnosticPresentationCapabilities(params,dev){
+ if(!(params instanceof URLSearchParams)||typeof dev!=='boolean')throw TypeError('Invalid diagnostic presentation profile');
+ const early=dev&&params.has('qa-worker-early-gpu-view');
+ return {cameraTerrain:dev&&params.has('qa-webgpu-camera-terrain'),provisionalStructures:early,provisionalCrops:early};
+}
 // One structural profile for both the initial renderer and its replacement.
 // A recovery must not silently switch world features or actor presentation.
 export function webGpuWorldOptions({params,state,field,recovery={},capabilities={},dev=false}={}){
  if(!(params instanceof URLSearchParams)||!state||!field||typeof dev!=='boolean')throw TypeError('Invalid WebGPU world profile');
- const presentationCapabilities=webGpuPresentationCapabilities(capabilities);
+ const requested=webGpuPresentationCapabilities(capabilities),diagnostic=diagnosticPresentationCapabilities(params,dev),presentationCapabilities=Object.freeze(Object.fromEntries(Object.keys(requested).map(key=>[key,requested[key]||diagnostic[key]])));
  const species=params.get('qa-webgpu-actor'),actor=state.raid?.animals.find(item=>item.status!=='gone'&&(!species||item.species===species)),recoveryProfile=resolvePresentationRecoveryOptions(recovery,{allowQa:dev});
- return {
+ return Object.freeze({
   experimentalActorId:actor?.id??null,
   experimentalActorPackageUrl:params.get('qa-webgpu-character-package')??(actor?.species==='buffalo'?'/content/character-preview/buffalo/package.json':null),
   experimentalMinimalWorld:dev&&params.has('qa-worker-early-gpu-view'),
@@ -27,5 +32,5 @@ export function webGpuWorldOptions({params,state,field,recovery={},capabilities=
   presentationCapabilities,
   experimentalCameraTerrain:dev&&params.has('qa-webgpu-camera-terrain'),
   cameraTerrainCanyon:!!field.canyon,
- };
+ });
 }
