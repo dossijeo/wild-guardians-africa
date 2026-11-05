@@ -159,6 +159,8 @@ Ante pérdida del dispositivo o reinicio gráfico: invalidar su generación, des
 
 Las solicitudes de preparación de guardián, construcción y cultivos devuelven éxito o error correlacionado sin cerrar el Worker por un fallo ordinario de carga. Las respuestas que terminan después del cierre se descartan; un fallo fatal del renderer sigue retirando su propietario por el canal independiente de recuperación. La prueba cubre los contratos con recursos simulados, no demuestra recuperación visual ni reintento efectivo de todos los bancos de recursos.
 
+Los bancos de construcciones y cultivos notifican los errores de sus recursos al controlador de interfaz por un canal separado del fallo fatal del renderer. Un activo confirmado que falle puede quedar sin representación y se notifica al jugador; no se presume que todos los bancos puedan reintentar una carga parcial. La admisión conserva su propio canal fatal para una caché de pipelines inválida o la pérdida del dispositivo.
+
 **Entrega:** input, provisionales, lifecycle y recuperación comunes. **Cierre interno:** errores y reinicios no crean una segunda autoridad, duplican efectos ni reutilizan recursos de un dispositivo perdido.
 
 ### Cierre del bloque A
