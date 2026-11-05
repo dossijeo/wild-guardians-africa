@@ -37,6 +37,10 @@ test('different assets share the progressive graph while their texture and blend
  first.dispose();second.dispose();
 });
 
+test('the shared color graph carries preview, original vertex and texture alpha through the blend',async()=>{
+ const x=setup(),stable=await makeStableVertexMaterials(x.renderer,x.preview,x.asset(x.material),x.mapping),alpha=[];x.mesh.material.colorNode.traverse(node=>{if(node.isSplitNode&&node.components==='w')alpha.push(node.node);});assert.equal(alpha.filter(node=>node.type==='AttributeNode').length,2);assert.equal(alpha.filter(node=>node.isMaterialReferenceNode&&node.property==='map').length,1);const graph=x.mesh.material.colorNode,version=x.mesh.material.version;await stable.resolveFinal(x.asset(x.material));stable.apply({blend:.25});stable.setBlend(1);assert.equal(x.mesh.material.colorNode,graph);assert.equal(x.mesh.material.version,version);stable.dispose();
+});
+
 test('different UV channels retain separate progressive graphs',async()=>{
  const a=setup(),b=setup();b.material.map.channel=1;const first=await makeStableVertexMaterials(a.renderer,a.preview,a.asset(a.material),a.mapping),second=await makeStableVertexMaterials(b.renderer,b.preview,b.asset(b.material),b.mapping);assert.notEqual(a.mesh.material.colorNode,b.mesh.material.colorNode);assert.notEqual(a.mesh.material.colorNode.getCacheKey(),b.mesh.material.colorNode.getCacheKey());first.dispose();second.dispose();
 });

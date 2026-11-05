@@ -17,7 +17,7 @@ const neutralTextures=new WeakMap();
 // though colors, textures and blend values are per-material data.
 const progressiveColorNodes=new Map();
 function progressiveColorNodeFor(map){
- const key=textureLayout(map);let node=progressiveColorNodes.get(key);if(!node){node=vec4(mix(attribute('color','vec4').rgb,materialReference('map','texture').rgb.mul(materialReference('color','color')).mul(attribute('wgOriginalColor','vec4').rgb),materialReference('_wgTextureBlend','float')),1);progressiveColorNodes.set(key,node);}return node;
+ const key=textureLayout(map);let node=progressiveColorNodes.get(key);if(!node){const preview=attribute('color','vec4'),original=attribute('wgOriginalColor','vec4'),sample=materialReference('map','texture'),blend=materialReference('_wgTextureBlend','float');node=vec4(mix(preview.rgb,sample.rgb.mul(materialReference('color','color')).mul(original.rgb),blend),mix(preview.a,sample.a.mul(original.a),blend));progressiveColorNodes.set(key,node);}return node;
 }
 
 // Each renderer owns its neutral textures. Materials borrow them and release

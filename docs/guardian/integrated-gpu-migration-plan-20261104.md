@@ -97,6 +97,8 @@ Un único material lógico no implica un único objeto JavaScript ni un pipeline
 
 Los slots de textura existen desde el comienzo. Placeholder y recurso final deben respetar tipo de binding, dimensión, espacio de color, UV y política de muestreo compatibles. Normal plana y mapas neutros se definen por función. Una textura inicial transparente no anula el alfa del modelo presentado con Vertex Colors. No se fuerza un atlas gigantesco ni se incrementa geometría para homogeneizar casos incompatibles.
 
+El grafo progresivo de personajes mezcla ahora también el alfa provisional con el alfa de la textura y del color original por vértice, usando el mismo parámetro que el color. El cambio conserva la identidad del grafo durante la transición en las pruebas de contrato. Los paquetes de autoría existentes solo admiten materiales opacos; la paridad visual y de sombras de materiales con recorte o transparencia sigue pendiente de una ruta de autoría y validación apropiada.
+
 Color, sombra y profundidad comparten la misma deformación, cobertura y reloj. Los pases auxiliares forman parte de la receta; no se descubren al dibujar por primera vez.
 
 El catálogo distingue claves del motor, shaders generados y descriptores finales. No se falsean las claves internas de Three.js para hacer coincidir objetos incompatibles. Un incremento de variantes requiere una modificación explícita del catálogo y una justificación estructural.
