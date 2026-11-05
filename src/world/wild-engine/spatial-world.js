@@ -154,6 +154,14 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     }
     return removed;
   }
+  // This is the already-maintained native publication list, not the set of
+  // meshes installed by a renderer. Pending/cancelled preparation has not
+  // been published and therefore must not appear in the transfer.
+  function captureResidentChunks(){
+    if(!generated)throw Error('Generate the world before capturing residency');
+    if(wasm.spatial_chunk_count()!==chunks.length||new Set(chunks.map(([x,z])=>`${x},${z}`)).size!==chunks.length)throw Error('Native chunk residency mirror mismatch');
+    return {revision:chunkRevision,keys:chunks.map(([x,z])=>`${x},${z}`),selected:chunk?{cx:chunk.cx,cz:chunk.cz}:null};
+  }
   function props(){
     return spatialProps(wasm);
   }
@@ -328,7 +336,7 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     }
     wasm.lazy_commit_portals();
   }
-  return {wasm,preparation,generate,addChunk,selectChunk,removeChunk,removeChunks,currentChunk:()=>chunk,
+  return {wasm,preparation,generate,addChunk,selectChunk,removeChunk,removeChunks,currentChunk:()=>chunk,captureResidentChunks,
     enableConnectivityDiagnostics:()=>{diagnoseConnectivity=true;},
     connectivityDiagnostics:()=>structuredClone(connectivityReasons),
     enclosureAt:point=>navigationBuilt?wasm.lazy_enclosure(point.x,point.z):-1,

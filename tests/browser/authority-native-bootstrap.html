@@ -1,0 +1,13 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {newGame} from '../../src/simulation/game.js';import {villageLayout} from '../../src/world/villages.js';
+import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
+import {captureNativeAuthorityBootstrap} from '../../src/simulation/native-authority-bootstrap.js';import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+window.audit=async()=>{
+ const payload=(await(await fetch('/content/villages.json')).json()).find(item=>item.id==='mapungubwe'),state=newGame({seed:712,biome:'sabana',culture:'mapungubwe',slotId:'bootstrap-worker'});state.villages[0].buildings=villageLayout(payload,0,0).filter(item=>item.kind!=='Zona común'&&item.footprint?.length).slice(0,1);
+ const module=await WebAssembly.compile(await (await fetch('/src/world/wild-engine/spatial-savanna.wasm')).arrayBuffer()),loaded=new Map(),session=createSpatialGameSession(module,state,{loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});let client,bad;
+ try{for(const [x,z] of [[0,0],[1,0]]){if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);loaded.set(`${x},${z}`,session.core.chunkPayload());}const nav=createSpatialNavigationMovement(session,state);nav.setActiveBounds([-24,-24,72,24]);nav.setRaidView({x:20,z:20},{x:0,z:0});const capture=captureNativeAuthorityBootstrap(state,nav,session),nativeBootstrap={version:1,chunkKeys:capture.chunkKeys,spatialState:capture.spatialState};
+  const options={snapshot:capture.snapshot,chunkKeys:capture.chunkKeys,raidWaitBindings:capture.raidWaitBindings,navigationView:capture.navigationView};client=createSimulationAuthorityClient({...options,nativeBootstrap,session:'native-transfer'});await client.ready;const result=await client.submit({kind:'snapshot'}).result;if(result.snapshot!==capture.snapshot)throw Error('Worker snapshot differs');
+  const invalid=structuredClone(nativeBootstrap);invalid.spatialState.seed++;bad=createSimulationAuthorityClient({...options,nativeBootstrap:invalid,session:'native-bad'});let rejected=false;try{await bad.ready;}catch(error){rejected=/reconstruction mismatch/.test(error.message);}if(!rejected)throw Error('Mismatched native topology was accepted');return {chunks:capture.chunkKeys,revision:capture.chunkRevision,topology:capture.topologyRevision,terrain:capture.terrainRevision,rejected,scope:'Real authority Worker; tiny real native world and negative verification, no WorldScene or renderer.'};
+ }finally{client?.dispose();bad?.dispose();session.dispose();}
+};window.ready=true;
+</script>

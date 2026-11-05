@@ -91,6 +91,12 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   reportedTerrainGeneration=terrainGeneration;let hasPublishedSnapshot=false;
   function takeTerrainChanged(){const changed=terrainGeneration!==reportedTerrainGeneration;reportedTerrainGeneration=terrainGeneration;return changed;}
   return {
+   verifyNativeBootstrapForQa(expected){
+    if(closed||!expected||expected.version!==1||!Array.isArray(expected.chunkKeys)||!expected.spatialState)throw TypeError('Invalid native bootstrap verification');
+    const actual=session.core.captureResidentChunks(),keys=[...expected.chunkKeys].sort();
+    if(new Set(keys).size!==keys.length||JSON.stringify([...actual.keys].sort())!==JSON.stringify(keys)||JSON.stringify(session.core.snapshot())!==JSON.stringify(expected.spatialState))throw Error('Native bootstrap reconstruction mismatch');
+    return true;
+   },
    async enableBeastPhysics(actorId,{actorIds=undefined,structureTemplates=null,allowEmpty=false,checkpoint=null,shareSpeciesClips=false,shareSpeciesRigs=false}={}){if(closed||physics||physicsInitializing)throw Error('Worker physics unavailable');physicsInitializing=true;try{const {createWorkerBeastPhysics}=await import('./worker-beast-physics.js');const driver=await createWorkerBeastPhysics(game,nav,{actorId,actorIds,structureTemplates,allowEmpty,checkpoint,shareSpeciesClips,shareSpeciesRigs});if(closed){driver.dispose();throw Error('Simulation authority closed during physics initialization');}physics=driver;}finally{physicsInitializing=false;}},
    async prepareBeastAttack(command){if(closed||physicsInitializing||!physics)throw Error('Worker physics unavailable');if(!command||command.kind!=='castAttack'||command.sequence!==sequence+1||typeof command.id!=='string'||!command.id||typeof command.targetId!=='string'||!command.targetId||!Number.isFinite(command.x)||!Number.isFinite(command.z))throw TypeError('Invalid attack command');if(game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id)||spellRejection(command,'attack'))return false;if(!physics.supports(command.targetId)){physicsInitializing=true;try{return await physics.admit(command.targetId);}finally{physicsInitializing=false;}}return false;},
    execute(command){
