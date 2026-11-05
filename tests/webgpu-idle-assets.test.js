@@ -1,13 +1,20 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {BoxGeometry,Group,Mesh,MeshBasicMaterial,Texture} from 'three';
-import {estimateIdleAssetBytes,createIdleAssetBudget} from '../src/rendering/webgpu-idle-assets.js';
+import {estimateIdleAssetBytes,createIdleAssetBudget,createSharedIdleAssetBudget} from '../src/rendering/webgpu-idle-assets.js';
 import {createWebGpuAnimalBank} from '../src/rendering/webgpu-animal-bank.js';
 import {createWebGpuWorkerBank} from '../src/rendering/webgpu-worker-bank.js';
 
 test('idle budget evicts least recently used entries and never retains unknown sizes',()=>{
  const evicted=[],budget=createIdleAssetBudget(10,key=>evicted.push(key));budget.retain('a',4);budget.retain('b',4);budget.take('a');budget.retain('a',4);budget.retain('c',4);
  assert.deepEqual(evicted,['b']);assert.deepEqual(budget.status(),{idle:2,estimatedBytes:8,maxBytes:10});budget.retain('unknown',Infinity);assert.deepEqual(evicted,['b','unknown']);budget.clear();assert.deepEqual(evicted,['b','unknown','a','c']);
+});
+
+test('shared budget evicts across owners without confusing equal resource keys',()=>{
+ const evicted=[],budget=createSharedIdleAssetBudget(10),animals=budget.createOwner(key=>evicted.push(['animal',key])),workers=budget.createOwner(key=>evicted.push(['worker',key]));
+ animals.retain('same',4);workers.retain('same',4);animals.take('same');animals.retain('same',4);workers.retain('other',4);
+ assert.deepEqual(evicted,[['worker','same']]);assert.deepEqual(budget.status(),{idle:2,estimatedBytes:8,maxBytes:10});
+ workers.clear();assert.deepEqual(evicted,[['worker','same'],['worker','other']]);assert.equal(animals.status().idle,1);animals.clear();assert.equal(budget.status().estimatedBytes,0);
 });
 
 test('retention estimate includes geometry, clips and rejects unknown textures',()=>{

@@ -1,4 +1,4 @@
-import {createIdleAssetBudget,estimateIdleAssetBytes} from './webgpu-idle-assets.js';
+import {createSharedIdleAssetBudget,estimateIdleAssetBytes} from './webgpu-idle-assets.js';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
@@ -9,9 +9,9 @@ import {openProgressiveWebGpuCharacter} from './webgpu-progressive-character.js'
 
 // The Worker owns one source, geometry, materials and textures per species.
 // Each actor gets its own skeleton and mixer; the source stays until disposal.
-export function createWebGpuAnimalBank({renderer,packages={},onTextured=()=>{},onTextureError=()=>{},loadAsset=null,materialStyle=null,onSelectableChange=()=>{},maxIdleBytes=0}={}){
+export function createWebGpuAnimalBank({renderer,packages={},onTextured=()=>{},onTextureError=()=>{},loadAsset=null,materialStyle=null,onSelectableChange=()=>{},maxIdleBytes=0,idleBudget=null}={}){
  if(!renderer?.backend?.isWebGPUBackend||!packages||typeof packages!=='object'||typeof onTextured!=='function'||typeof onTextureError!=='function'||typeof onSelectableChange!=='function'||materialStyle!==null&&(typeof materialStyle.configure!=='function'||typeof materialStyle.convert!=='function'))throw TypeError('Invalid animal bank');
- const entries=new Map(),controller=new AbortController(),idle=createIdleAssetBudget(maxIdleBytes,key=>{const entry=entries.get(key);if(entry&&entry.refs===0&&entry.pending===0){entries.delete(key);entry.asset?.dispose();entry.asset=null;}});let closed=false;
+ const entries=new Map(),controller=new AbortController(),idle=(idleBudget??createSharedIdleAssetBudget(maxIdleBytes)).createOwner(key=>{const entry=entries.get(key);if(entry&&entry.refs===0&&entry.pending===0){entries.delete(key);entry.asset?.dispose();entry.asset=null;}});let closed=false;
  function disposeOriginal(gltf){const resources=new Set(),images=new Set();gltf.scene.traverse(object=>{if(!object.isMesh)return;resources.add(object.geometry);for(const material of Array.isArray(object.material)?object.material:[object.material]){resources.add(material);for(const value of Object.values(material))if(value?.isTexture){resources.add(value);if(typeof value.source?.data?.close==='function')images.add(value.source.data);}}});for(const resource of resources)resource.dispose();for(const image of images)image.close();}
  async function load(species){
   const spec=ANIMAL_ACTIONS.animals[species];if(!spec)throw Error('Unknown species '+species);

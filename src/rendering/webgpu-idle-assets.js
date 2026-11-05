@@ -10,9 +10,29 @@ export function estimateIdleAssetBytes(asset){
  return unknown||!Number.isSafeInteger(bytes)||bytes<=0?Infinity:bytes;
 }
 
-export function createIdleAssetBudget(maxBytes,onEvict){
- if(!Number.isSafeInteger(maxBytes)||maxBytes<0||typeof onEvict!=='function')throw TypeError('Invalid idle asset budget');
+export function createSharedIdleAssetBudget(maxBytes){
+ if(!Number.isSafeInteger(maxBytes)||maxBytes<0)throw TypeError('Invalid idle asset budget');
  const idle=new Map();let bytes=0;
- function take(key){const size=idle.get(key);if(size===undefined)return false;idle.delete(key);bytes-=size;return true;}
- return {take,retain(key,size){take(key);if(!Number.isSafeInteger(size)||size<=0||size>maxBytes){onEvict(key);return false;}idle.set(key,size);bytes+=size;while(bytes>maxBytes){const oldest=idle.keys().next().value;take(oldest);onEvict(oldest);}return idle.has(key);},clear(){for(const key of [...idle.keys()]){take(key);onEvict(key);}},status(){return {idle:idle.size,estimatedBytes:bytes,maxBytes};}};
+ function take(record){if(!record||!idle.delete(record))return false;record.owner.records.delete(record.key);record.owner.bytes-=record.size;bytes-=record.size;return true;}
+ return {
+  createOwner(onEvict){
+   if(typeof onEvict!=='function')throw TypeError('Invalid idle asset owner');
+   const owner={records:new Map(),bytes:0,onEvict};
+   return {
+    take(key){return take(owner.records.get(key));},
+    retain(key,size){
+     take(owner.records.get(key));
+     if(!Number.isSafeInteger(size)||size<=0||size>maxBytes){onEvict(key);return false;}
+     const record={owner,key,size};owner.records.set(key,record);owner.bytes+=size;idle.set(record,true);bytes+=size;
+     while(bytes>maxBytes){const oldest=idle.keys().next().value;take(oldest);oldest.owner.onEvict(oldest.key);}
+     return idle.has(record);
+    },
+    clear(){for(const record of [...owner.records.values()]){take(record);onEvict(record.key);}},
+    status(){return {idle:owner.records.size,estimatedBytes:owner.bytes,maxBytes};},
+   };
+  },
+  status(){return {idle:idle.size,estimatedBytes:bytes,maxBytes};},
+ };
 }
+
+export function createIdleAssetBudget(maxBytes,onEvict){return createSharedIdleAssetBudget(maxBytes).createOwner(onEvict);}
