@@ -871,15 +871,14 @@ export class WorldScene {
     if(this.toon?.blessingClock)this.toon.blessingClock.value=s.elapsed;
     if(this.blessingVfx){this.blessingVfx.selecting=!!this.awakeningSelecting;this.blessingVfx.selectedTargetId=this.awakeningTargetId;this.blessingVfx.update(s,this.renderOrigin);}
     this.prepareUpcomingAnimalRigs(s);
-    const desired=new Set();
-    for(const v of s.villages){desired.add(v.id);if(!this.objects.has(v.id)){const mesh=this.villageMesh(v);this.objects.set(v.id,mesh);this.scene.add(mesh);this.cameraVolumesDirty=true;this.cameraDirtyEntities?.set(v.id,v);}}
+    const desired=new Set(),workerFrame=legacyWorkersForFrame(this,s.workers,this.legacyActorRootsDeferred);
+    for(const v of s.villages){desired.add(v.id);if(!this.objects.has(v.id)){const mesh=this.villageMesh(v);this.objects.set(v.id,mesh);workerFrame.cleanup.set(v.id,mesh);this.scene.add(mesh);this.cameraVolumesDirty=true;this.cameraDirtyEntities?.set(v.id,v);}}
     const actualPlants=activeCrops(s.plants).filter(p=>Math.hypot(p.x-this.controls.target.x,p.z-this.controls.target.z)<140);
     this.microeventVisiblePlants=actualPlants;const visiblePlants=this.provisionalCrops.visible(actualPlants);
     if(visiblePlants.length>this.cropBatch.capacity)loadingSyncWitness(this.onLoadingSpan,'sync-crop-resize',()=>{this.cropBatch.dispose();this.cropBatch=createCropBatch(this.scene,this.renderer,this.cropGltf,this.cropBridgeData,2**Math.ceil(Math.log2(visiblePlants.length)));});
     if(this.onLoadingSpan)loadingSyncWitness(this.onLoadingSpan,'sync-crop-update',()=>this.cropBatch.update(visiblePlants,s.elapsed,(x,z)=>this.nav.field.surface(x,z),this.renderOrigin,this.nav.field,this.blessingVfx));
     else this.cropBatch.update(visiblePlants,s.elapsed,(x,z)=>this.nav.field.surface(x,z),this.renderOrigin,this.nav.field,this.blessingVfx);
     this.microeventVisibleWood=[];
-    const workerFrame=legacyWorkersForFrame(this,s.workers,this.legacyActorRootsDeferred);
     for(const e of [...s.structures,...activeCrates(s.crates),...workerFrame.update,...(s.raid?.animals.filter(a=>a.status!=='gone')??[]),...s.spells]) {
       if(e.kind==='wall'&&e.material==='empalizada'&&e.status==='intact'&&Math.hypot(e.x-this.controls.target.x,e.z-this.controls.target.z)<140)this.microeventVisibleWood.push(e);
       desired.add(e.id);let mesh=this.objects.get(e.id);
@@ -891,7 +890,7 @@ export class WorldScene {
         else if('profile' in e||'hitsRemaining' in e) {mesh=new THREE.Group();}
         else if(e.kind==='shield')mesh=new THREE.Group();
         else mesh=new THREE.Group();
-      mesh.userData.entityId=e.id;this.objects.set(e.id,mesh);this.scene.add(mesh);if(e.kind==='center'||e.kind==='wall'){this.cameraVolumesDirty=true;this.cameraDirtyEntities?.set(e.id,e);}
+      mesh.userData.entityId=e.id;this.objects.set(e.id,mesh);workerFrame.cleanup.set(e.id,mesh);this.scene.add(mesh);if(e.kind==='center'||e.kind==='wall'){this.cameraVolumesDirty=true;this.cameraDirtyEntities?.set(e.id,e);}
       }
       // Animals already apply their sole clearance in applyAnimalPose. Adding
       // the generic object offset here made otherwise flat feet visibly float.
@@ -912,7 +911,7 @@ export class WorldScene {
       }
       if(!('value' in e)&&('profile' in e||'hitsRemaining' in e)){const type='profile' in e?'worker':'animal';if(!deferActorPoses&&workerYaw!==undefined&&(authorityRunning||restoreTrackedHeadings))mesh.rotation.y=workerYaw;if(deferActorPoses){if(!deferRoot)this.updateDeferredActorRoot(e,mesh,type);}else this.updateActor(e,dt,type);}
     }
-    for(const [id,mesh] of this.objects)if(!desired.has(id)&&!workerFrame.retained?.has(id)){this.scene.remove(mesh);if(mesh.userData.nativeWall||mesh.userData.nativeBuilding)mesh.dispose();releaseActorRig(this.mixers.get(id));this.objects.delete(id);this.mixers.delete(id);if(mesh.userData.nativeWall||mesh.userData.nativeBuilding||mesh.userData.units||this.cameraExclusion?.registry.roots.has(id)){this.cameraVolumesDirty=true;this.cameraDirtyEntities?.set(id,null);}}
+    for(const [id,mesh] of workerFrame.cleanup)if(!desired.has(id)){this.scene.remove(mesh);if(mesh.userData.nativeWall||mesh.userData.nativeBuilding)mesh.dispose();releaseActorRig(this.mixers.get(id));this.objects.delete(id);workerFrame.cleanup.delete(id);this.mixers.delete(id);if(mesh.userData.nativeWall||mesh.userData.nativeBuilding||mesh.userData.units||this.cameraExclusion?.registry.roots.has(id)){this.cameraVolumesDirty=true;this.cameraDirtyEntities?.set(id,null);}}
     const night=s.time>=300,tint=night?'#263747':this.pack.profile.bg;
     this.renderer.setClearColor(tint);this.scene.fog=null;this.destructionPass.night=skyNight(s);this.destructionPass.cinemaGroundUniform.value.fromArray(cinematicGroundBounce(s.biome));this.destructionPass.nightLight=1.12;this.sun.intensity=3-2.6*this.destructionPass.night;this.ambient.intensity=2-.9*this.destructionPass.night;
     updateShadowCamera(this.sun,this.controls.target);

@@ -4,7 +4,7 @@ import {legacyWorkersForFrame} from '../src/rendering/legacy-worker-publication-
 
 test('tracked workers are visited on publication, not on each graphics frame',()=>{
  let checks=0;const workers=Array.from({length:100},(_,i)=>({id:String(i),status:'walking'})),objects=new Map(workers.map(w=>[w.id,{}])),world={objects,trackedWorkerVisualYaw(){checks++;return 0;}};
- const first=legacyWorkersForFrame(world,workers,true);assert.equal(checks,100);assert.equal(first.update.length,0);assert.equal(first.retained.size,100);for(let i=0;i<120;i++)assert.equal(legacyWorkersForFrame(world,workers,true),first);assert.equal(checks,100);
+ const first=legacyWorkersForFrame(world,workers,true);assert.equal(checks,100);assert.equal(first.update.length,0);assert.equal(first.retained.size,100);assert.equal(first.cleanup.size,0);for(let i=0;i<120;i++)assert.equal(legacyWorkersForFrame(world,workers,true),first);assert.equal(checks,100);
  workers[0].status='home';world.legacyActorRevision=1;const next=legacyWorkersForFrame(world,workers,true);assert.equal(next.retained.size,99);assert.equal(checks,199);assert.equal(legacyWorkersForFrame(world,workers,false).update.length,99);
 });
 
