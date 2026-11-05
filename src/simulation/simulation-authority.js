@@ -39,7 +39,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
  try{
   const acceptChunk=data=>{loaded.set(`${data.cx},${data.cz}`,data);terrainGeneration++;onTerrainChunk?.(data);};
   session=createSpatialGameSession(module,game,{loaded:()=>loaded,onData:acceptChunk});
-  for(const key of chunkKeys){const [x,z]=parseSimulationChunkKey(key);if(session.core.selectChunk(x,z)<0&&session.core.addChunk(x,z)<0)throw Error('Could not add simulation chunk '+key);acceptChunk({...session.core.chunkPayload(),terrainRevision:0});}
+  for(const key of chunkKeys){const [x,z]=parseSimulationChunkKey(key);if(session.core.selectChunk(x,z)<0&&session.core.addChunk(x,z)<0)throw Error('Could not add simulation chunk '+key);session.stream.onData(session.core.chunkPayload());}
   const planner=createEventDrivenTaskPlanner(session);planner.resetFromState(game);
   const nav=createSpatialNavigationMovement(session,game);stopTasks=planner.observeTasks(game);stopWorld=planner.observeWorld(game);nav.intentTaskPlanner=planner;nav.raidEntryResident=(entry,radii)=>[...raidEntryChunks(entry,radii)].every(key=>loaded.has(key));if(raidWaitBindings!==null||savedWaitBindings!==null)restoreRaidWaitBindings(game,nav,raidWaitBindings??savedWaitBindings);
   function setNavigationView(view){if(!view||!Array.isArray(view.bounds)||![view.eye?.x,view.eye?.z,view.target?.x,view.target?.z].every(Number.isFinite))throw TypeError('Invalid navigation view');nav.setActiveBounds(view.bounds);nav.setRaidView(view.eye,view.target);}
