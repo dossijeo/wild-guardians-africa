@@ -1,6 +1,9 @@
 import * as THREE from 'three';
 import { attribute, mix, texture, uniform, vec4 } from 'three/tsl';
 
+const textureLayoutProperties=['colorSpace','mapping','channel','wrapS','wrapT','wrapR','magFilter','minFilter','anisotropy'];
+const textureLayout=texture=>JSON.stringify(textureLayoutProperties.map(key=>texture[key]));
+
 // Structural experiment only. Source identifiers must agree before any
 // original texture can replace the provisional appearance.
 export async function makeStableVertexMaterials(renderer, preview, originalMaterials, mapping, { nativeColor = false, toonOutput = null } = {}) {
@@ -22,11 +25,11 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
   const ready = uniform(0);
   let generation = 0, cancelled = false, resolved = false, applied = false, disposed = false;
   function placeholder(source, normal) {
-    const key = JSON.stringify([source.colorSpace, normal, source.mapping, source.channel, source.wrapS, source.wrapT, source.wrapR, source.magFilter, source.minFilter, source.anisotropy]);
+    const key = JSON.stringify([normal,textureLayout(source)]);
     if (!placeholders.has(key)) {
       const pixel = new Uint8Array(normal ? [128, 128, 255, 255] : [255, 255, 255, 255]);
       const result = new THREE.DataTexture(pixel, 1, 1, THREE.RGBAFormat);
-      for (const property of ['colorSpace', 'mapping', 'channel', 'wrapS', 'wrapT', 'wrapR', 'magFilter', 'minFilter', 'anisotropy']) result[property] = source[property];
+      for (const property of textureLayoutProperties) result[property] = source[property];
       result.flipY = false; result.needsUpdate = true; placeholders.set(key, result);
     }
     return placeholders.get(key);
@@ -50,7 +53,7 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
     for (const [key, value] of Object.entries(source)) {
       if (!value?.isTexture) continue;
       const temporary = placeholder(value, key === 'normalMap');
-      nodeMaterial[key] = temporary; mapBindings.push({ index, material: nodeMaterial, key, final: value });
+      nodeMaterial[key] = temporary; mapBindings.push({ index, material: nodeMaterial, key, layout: textureLayout(temporary), final: value });
     }
     if (source.map) {
       const geometry = item.object.geometry;
@@ -95,6 +98,7 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
       for (const binding of mapBindings) {
         const value = finalSources[binding.index][binding.key];
         if (!value?.isTexture) throw Error(`Final texture missing: ${binding.key}`);
+        if (textureLayout(value) !== binding.layout) throw Error(`Final texture layout mismatch: ${binding.key}`);
         resolvedBindings.push({ binding, value }); textures.add(value);
       }
       for (const item of textureNodes) { const value = finalSources[item.index].map; if (!value?.isTexture) throw Error('Final base texture missing'); resolvedNodes.push({ item, value }); }

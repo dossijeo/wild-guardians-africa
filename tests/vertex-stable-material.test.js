@@ -52,6 +52,14 @@ test('placeholder textures preserve each source sampler and UV channel', async (
   stable.dispose();
 });
 
+test('incompatible final texture layout leaves the provisional material intact', async () => {
+  const x = setup(), stable = await makeStableVertexMaterials(x.renderer, x.preview, x.asset(x.material), x.mapping);
+  const placeholder=x.mesh.material.map,final=x.material.clone();final.map=x.material.map.clone();final.map.wrapS=THREE.RepeatWrapping;
+  await assert.rejects(stable.resolveFinal(x.asset(final)),/layout mismatch: map/);
+  assert.throws(()=>stable.apply(),/not ready/);assert.equal(x.mesh.material.map,placeholder);
+  await stable.resolveFinal(x.asset(x.material));stable.apply();assert.equal(x.mesh.material.map,x.material.map);stable.dispose();
+});
+
 test('texture blending requires a resolved material and accepts only finite proportions', async () => {
   const x = setup(), stable = await makeStableVertexMaterials(x.renderer, x.preview, x.asset(x.material), x.mapping);
   assert.throws(() => stable.setBlend(.5), /not ready/);
