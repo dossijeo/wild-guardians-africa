@@ -1,5 +1,6 @@
 import {createWebGpuWorldSurface} from './webgpu-world-surface.js';
 import {assertPickFrame,verifyCameraPick} from './verified-camera-pick.js';
+import {respondToWebGpuPreparation} from './webgpu-preparation-request.js';
 
 // Experimental presentation worker; it cannot advance the simulation.
 let phase='new',surface=null,frame=null,latestCamera=null,latestSize=null,firstFrame=false,actorTextured=false,actorTextureError=null,guardianError=null,inspectWorkerState=false,workRecovery=false,recoveryEnabled=false,recoveryPort=null,recoverySession=null,recoveryId=0,recoveryStaged=[],recoveryEvents=[],qaFrameTracking=false,presentationInputsEnabled=false,qaFrameSequence=-1,qaFrameTerrain=-1,qaFrameSelectable=-1,latestCameraVersion=0,qaFrameCameraVersion=-1;
@@ -37,15 +38,15 @@ self.onmessage=async({data})=>{try{
  if(import.meta.env.DEV&&data.kind==='qaGuardianContext'){try{if(data.camera)surface?.setCamera(data.camera);postMessage({kind:'qaGuardianContextResult',id:data.id,result:surface?.guardianContext()??null});}catch(error){postMessage({kind:'qaGuardianContextError',id:data.id,message:String(error?.message??error)});}return;}
  if(data.kind==='guardianAgricultureBegin'){surface?.guardianAttack?.beginAgriculture(data.command);return;}
  if(data.kind==='guardianAwakeningBegin'){surface?.guardianAttack?.beginAwakening(data.command);return;}
- if(data.kind==='prepareGuardian'){try{if(!surface?.guardianAttack)throw Error('Guardian presentation unavailable');await surface.guardianAttack.prepare();postMessage({kind:'guardianPrepareResult',id:data.id});}catch(error){postMessage({kind:'guardianPrepareError',id:data.id,message:String(error?.message??error)});}return;}
- if(data.kind==='prepareStructure'){if(!surface?.settlements)throw Error('Structure presentation unavailable');await surface.settlements.preparePreview(data.structureKind,data.key);postMessage({kind:'structurePrepareResult',id:data.id});return;}
+ if(data.kind==='prepareGuardian'){await respondToWebGpuPreparation({id:data.id,kind:'guardian',prepare:()=>{if(!surface?.guardianAttack)throw Error('Guardian presentation unavailable');return surface.guardianAttack.prepare();},send:message=>postMessage(message),isOpen:()=>phase==='running'||phase==='recovering'});return;}
+ if(data.kind==='prepareStructure'){await respondToWebGpuPreparation({id:data.id,kind:'structure',prepare:()=>{if(!surface?.settlements)throw Error('Structure presentation unavailable');return surface.settlements.preparePreview(data.structureKind,data.key);},send:message=>postMessage(message),isOpen:()=>phase==='running'||phase==='recovering'});return;}
  if(data.kind==='villagePreviewShow'){if(!surface?.settlements)throw Error('Village preview unavailable');surface.settlements.showVillagePreview(data.preview);return;}
  if(data.kind==='villagePreviewClear'){surface?.settlements?.clearVillagePreview();return;}
  if(data.kind==='villagePreviewConfirm'){surface?.settlements?.confirmVillagePreview(data.targetId);return;}
  if(data.kind==='structureBegin'){if(!surface?.settlements?.beginPreview(data.command))throw Error('Structure preview unavailable');return;}
  if(data.kind==='structureConfirm'){surface?.settlements?.confirmPreview(data.id,data.targetId);return;}
  if(data.kind==='structureReject'){surface?.settlements?.rejectPreview(data.id);return;}
- if(data.kind==='prepareCrops'){if(!surface?.crops)throw Error('Crop presentation unavailable');await surface.crops.prepare();postMessage({kind:'cropPrepareResult',id:data.id});return;}
+ if(data.kind==='prepareCrops'){await respondToWebGpuPreparation({id:data.id,kind:'crop',prepare:()=>{if(!surface?.crops)throw Error('Crop presentation unavailable');return surface.crops.prepare();},send:message=>postMessage(message),isOpen:()=>phase==='running'||phase==='recovering'});return;}
  if(data.kind==='preferCropSpecies'){if(!surface?.crops)throw Error('Crop presentation unavailable');surface.crops.preferSpecies(data.species);return;}
  if(data.kind==='cropBegin'){if(!surface?.crops?.beginProvisional(data.id,data.species,data.x,data.z))throw Error('Crop preview unavailable');return;}
  if(data.kind==='cropConfirm'){surface?.crops?.confirmProvisional(data.id,data.targetId);return;}

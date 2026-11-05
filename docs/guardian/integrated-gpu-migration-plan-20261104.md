@@ -157,6 +157,8 @@ El trazado de murallas proyecta sus muestras con una copia de la cámara solicit
 
 Ante pérdida del dispositivo o reinicio gráfico: invalidar su generación, descartar resultados antiguos, reconstruir recursos del catálogo y restaurar desde checkpoint más eventos. Mantener un estado visual seguro y señalizar la recuperación. El fallback no se consigue manteniendo el mundo WebGL vivo detrás del nuevo.
 
+Las solicitudes de preparación de guardián, construcción y cultivos devuelven éxito o error correlacionado sin cerrar el Worker por un fallo ordinario de carga. Las respuestas que terminan después del cierre se descartan; un fallo fatal del renderer sigue retirando su propietario por el canal independiente de recuperación. La prueba cubre los contratos con recursos simulados, no demuestra recuperación visual ni reintento efectivo de todos los bancos de recursos.
+
 **Entrega:** input, provisionales, lifecycle y recuperación comunes. **Cierre interno:** errores y reinicios no crean una segunda autoridad, duplican efectos ni reutilizan recursos de un dispositivo perdido.
 
 ### Cierre del bloque A
