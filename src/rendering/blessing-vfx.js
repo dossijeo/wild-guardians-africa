@@ -1,6 +1,6 @@
 import {beginAwakening,awakeningVisible} from './awakening-presentation.js';
 import * as THREE from 'three';
-import {observePresentationGameEvents} from '../simulation/game.js';
+import {observePresentationGameEvents} from '../simulation/game-event-observers.js';
 import {vfxEnvironment} from './vfx-native.js';
 
 // All resting sources share one culled Points draw. Only event/origin changes upload data.

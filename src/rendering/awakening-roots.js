@@ -1,7 +1,7 @@
 import {beginAwakening,awakeningVisible} from './awakening-presentation.js';
 import * as THREE from 'three';
 import {AWAKENINGS as A} from '../simulation/awakening-config.js';
-import {observePresentationGameEvents} from '../simulation/game.js';
+import {observePresentationGameEvents} from '../simulation/game-event-observers.js';
 import {chunkBounds} from './water-source.js';
 import {awakeningRootPaths,rasterizeAwakeningRoots,ROOT_VISUAL_RADIUS as R} from './awakening-roots-data.js';
 

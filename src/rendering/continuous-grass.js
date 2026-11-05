@@ -9,7 +9,7 @@ import {markGroundDetailEvent} from './blender-ground-details.js';
 import * as THREE from 'three';
 import {hashCell,noise} from '../world/terrain.js';
 import {footprintDistance} from '../world/footprints.js';
-import {observePresentationGameEvents} from '../simulation/game.js';
+import {observePresentationGameEvents} from '../simulation/game-event-observers.js';
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 const vertex=`
 in vec4 coverageAnchor,coverageData;in vec2 coverageSlope;in vec3 flatPosition,bladeRoot,flatNormal;

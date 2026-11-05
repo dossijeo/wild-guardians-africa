@@ -1,4 +1,6 @@
 import {advanceWorkerRecovery} from './worker-recovery.js';
+import {dispatchLocalGameEvent} from './game-event-observers.js';
+export {observeGameEvents,observePresentationGameEvents,notifyConfirmedPresentationEvent} from './game-event-observers.js';
 import {firstCenterWithinVillage} from '../tutorial/center-placement.js';
 import {GUARDIAN_ATTACK_TIMING} from './guardian-timing.js';
 import {attackTarget,attackTargetAvailable,attackGestureActive,applyGuardianAttack} from './guardian-combat.js';
@@ -66,8 +68,6 @@ const routeEpoch=(nav,actor,destination,worker)=>{
 };
 const taskPlanWaits=new WeakMap();
 const preparedWallQuotes=new WeakMap();
-const eventObservers=new WeakMap();
-const presentationEventObservers=new WeakMap();
 
 export const BIOMES=['sabana','gran-rio','manglares','volcanes','gran-canon','desierto'];
 export const CULTURES=['mapungubwe','saheliana','suajili','musgum','etiope'];
@@ -80,28 +80,6 @@ export function newGame({biome='sabana',culture='mapungubwe',seed=Date.now(),slo
 }
 export const pause=(s,reason)=>{if(!s.pauses.includes(reason))s.pauses.push(reason);};
 export const resume=(s,reason)=>{s.pauses=s.pauses.filter(r=>r!==reason);};
-export function observeGameEvents(s,callback){
-  if(typeof callback!=='function')throw TypeError('Expected a game event observer');
-  let listeners=eventObservers.get(s);
-  if(!listeners){listeners=new Set();eventObservers.set(s,listeners);}
-  listeners.add(callback);
-  return ()=>listeners.delete(callback);
-}
-// Presentation subscriptions also receive ordinary local simulation events.
-// Confirmed external events can be delivered to this group without invoking
-// simulation observers or repeating the gameplay mutations performed by emit.
-export function observePresentationGameEvents(s,callback){
-  if(typeof callback!=='function')throw TypeError('Expected a presentation event observer');
-  let listeners=presentationEventObservers.get(s);
-  if(!listeners){listeners=new Set();presentationEventObservers.set(s,listeners);}
-  const listener=event=>callback(event),stop=observeGameEvents(s,listener);
-  listeners.add(listener);
-  return ()=>{listeners.delete(listener);stop();};
-}
-export function notifyConfirmedPresentationEvent(s,event){
-  if(!event||typeof event!=='object'||typeof event.id!=='string'||typeof event.type!=='string')throw TypeError('Expected a confirmed game event');
-  for(const callback of presentationEventObservers.get(s)??[])callback(event);
-}
 export function emit(s,type,detail={}) {
   const wallLoss=type==='StructureRuined'?loseBlessing(s,s.structures.find(p=>p.id===detail.targetId)??{}):null;
   // Occupancy consumers need the committed crop location even if a later state has removed it.
@@ -110,7 +88,7 @@ export function emit(s,type,detail={}) {
   const event={id:`event-${s.sequence++}`,type,...detail,...(presentation?{presentation}:{})};
   if(s.awakenings?.enabled!==false)recordAwakeningEvent(s,event);
   s.events.push(event);if(s.events.length>200)s.events.shift();
-  for(const callback of eventObservers.get(s)??[])callback(event);
+  dispatchLocalGameEvent(s,event);
   if(wallLoss){
     emit(s,'BlessingDestroyed',wallLoss);
     notice(s,'Una muralla mágica ha caído. Su protección se ha perdido.',wallLoss.targetId,{category:'awakening-lost',location:wallLoss.presentation});

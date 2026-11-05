@@ -1,5 +1,5 @@
 import {deserializeConfirmedState} from './confirmed-live-state.js';
-import {notifyConfirmedPresentationEvent} from '../simulation/game.js';
+import {notifyConfirmedPresentationEvent} from './game-event-observers.js';
 import {physicsOwners} from './host-publication-queue.js';
 
 function isRecord(value){return value!==null&&typeof value==='object'&&!Array.isArray(value);}
