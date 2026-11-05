@@ -1,3 +1,4 @@
+import {createConfirmedPresentationClock} from '../src/rendering/confirmed-presentation-clock.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
@@ -24,3 +25,5 @@ test('a confirmed blessing event does not recreate a target absent from the fina
  state.plants[0].alive=false;effect.sync(false,[{id:'event-3',type:'BlessingApplied',targetId:'p1',presentation:{elapsed:1}}]);assert.equal(effect.status().pending,0);assert.equal(effect.status().sources,0);
  effect.dispose();floor.geometry.dispose();floor.material.dispose();
 });
+
+test('shared confirmed clock drives blessing timing without advancing on unconfirmed state',()=>{const scene=new THREE.Scene(),floor=new THREE.Mesh(new THREE.PlaneGeometry(20,20),new THREE.MeshBasicMaterial({side:THREE.DoubleSide}));floor.rotation.x=-Math.PI/2;floor.updateMatrixWorld(true);const state={elapsed:1,plants:[],structures:[],events:[]},confirmedClock=createConfirmedPresentationClock(1),effect=createWebGpuBlessingVfx({scene,state,residency:{get:()=>floor},confirmedClock});state.plants.push({id:'p1',species:'maiz',alive:true,x:0,z:0,blessing:{at:1}});state.elapsed=100;effect.sync();assert.equal(effect.status().pending,1);assert.equal(effect.status().sources,0);assert.equal(confirmedClock.node.value,1);effect.prepare(new THREE.PerspectiveCamera());assert.equal(confirmedClock.node.value,1);confirmedClock.commit(3.1);state.elapsed=3.1;effect.sync();assert.equal(effect.status().sources,1);const camera=new THREE.PerspectiveCamera();effect.prepare(camera);assert.equal(confirmedClock.node.value,3.1);effect.dispose();confirmedClock.dispose();floor.geometry.dispose();floor.material.dispose();});
