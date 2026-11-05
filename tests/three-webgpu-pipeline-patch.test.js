@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {patchPipelineSource,patchPipelineCacheSource} from '../tools/patch-three-webgpu-pipeline.mjs';
+import {patchPipelineSource,patchPipelineCacheSource,patchShadowCompileSource} from '../tools/patch-three-webgpu-pipeline.mjs';
 import Pipelines from '../node_modules/three/src/renderers/common/Pipelines.js';
 
 test('installed Three source is patched idempotently and unknown code fails closed',async()=>{
@@ -13,6 +13,8 @@ test('installed Three source is patched idempotently and unknown code fails clos
  for(const path of ['src/renderers/common/Pipelines.js','build/three.webgpu.js','build/three.webgpu.nodes.js']){
   const source=await readFile(`node_modules/three/${path}`,'utf8');assert.equal(patchPipelineCacheSource(source),source,path);
  }
+ for(const path of ['build/three.webgpu.js','build/three.webgpu.nodes.js']){const source=await readFile(`node_modules/three/${path}`,'utf8');assert.equal(patchShadowCompileSource(source),source,path);}
+ assert.throws(()=>patchShadowCompileSource('unsupported implementation'),/Unexpected/);
 });
 
 test('pipeline creation forwards failure to the compilation promise',async()=>{

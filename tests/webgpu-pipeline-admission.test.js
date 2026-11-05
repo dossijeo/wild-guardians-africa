@@ -99,6 +99,27 @@ test('removing a shadow light during compilation invalidates that admission',asy
  release();pending[0]();await new Promise(resolve=>setImmediate(resolve));assert.equal(pending.length,2);pending[1]();await ready;admission.dispose();
 });
 
+test('shadow-enabled admission waits for both passes and keeps the object hidden',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),mesh=new THREE.Mesh(),sun=new THREE.DirectionalLight();object.add(mesh);object.visible=false;mesh.castShadow=true;sun.castShadow=true;
+ let colorFinish,shadowFinish;const renderer={backend:{isWebGPUBackend:true},compileAsync(){return new Promise(resolve=>{colorFinish=resolve;});},compileShadowAsync(root,actualScene,actualCamera,light){assert.equal(root,object);assert.equal(actualScene,scene);assert.equal(actualCamera,camera);assert.equal(light,sun);assert.equal(root.visible,true);assert.equal(mesh.frustumCulled,false);return new Promise(resolve=>{shadowFinish=resolve;});}};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera,shadowLights:[sun],includeShadowPass:true});let admitted=false;const ready=admission.prepare(object).then(()=>{admitted=true;});await Promise.resolve();
+ colorFinish();await new Promise(resolve=>setImmediate(resolve));assert.equal(object.visible,false);assert.equal(mesh.frustumCulled,true);assert.equal(admitted,false);assert.equal(typeof shadowFinish,'function');shadowFinish();await ready;assert.equal(admitted,true);admission.dispose();
+});
+
+test('shadow-enabled admission fails closed when shadow preparation fails',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Mesh(),sun=new THREE.DirectionalLight(),failures=[];object.castShadow=true;sun.castShadow=true;
+ const renderer={backend:{isWebGPUBackend:true},compileAsync:()=>Promise.resolve(),compileShadowAsync(){throw Error('shadow target missing');}};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera,shadowLights:[sun],includeShadowPass:true,onFatal:error=>failures.push(error.message)});
+ await assert.rejects(admission.prepare(object),/shadow target missing/);assert.deepEqual(failures,['shadow target missing']);
+});
+
+test('cancelling while the shadow pipeline is pending never publishes the object',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Mesh(),sun=new THREE.DirectionalLight(),controller=new AbortController();object.castShadow=true;object.visible=false;sun.castShadow=true;let finish;
+ const renderer={backend:{isWebGPUBackend:true},compileAsync:()=>Promise.resolve(),compileShadowAsync:()=>new Promise(resolve=>{finish=resolve;})};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera,shadowLights:[sun],includeShadowPass:true});const ready=admission.prepare(object,{signal:controller.signal});await new Promise(resolve=>setImmediate(resolve));
+ controller.abort();await assert.rejects(ready,{name:'AbortError'});assert.equal(object.visible,false);finish();admission.dispose();
+});
+
 test('aborting an actor does not retire the shared renderer or publish a late result',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),controller=new AbortController(),failures=[];let finish;
  const renderer={backend:{isWebGPUBackend:true},compileAsync:()=>new Promise(resolve=>{finish=resolve;})};
