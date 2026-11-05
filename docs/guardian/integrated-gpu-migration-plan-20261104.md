@@ -157,6 +157,8 @@ El mismo contrato incluye selección y comandos de presentación causales: habil
 
 La instalación del Worker gráfico acepta ahora ese perfil explícitamente y la ruta integrada experimental ya lo suministra. Los controladores de la interfaz identifican la propiedad de la presentación por el Worker, en lugar de utilizar un identificador reservado a QA. Esto prepara la conexión del arranque normal, pero no la activa: siguen pendientes las dependencias funcionales y la migración completa del mundo y la presentación.
 
+La autoridad admite explícitamente checkpoints nativos fuera de QA, verifica siempre las reconstrucciones recibidas y puede cargar las envolventes físicas originales de centros sin depender del modo de desarrollo. La ruta temprana solicita esa capacidad al preparar la autoridad y la conserva en sus siguientes guardados, incluso después de restaurar una partida. Las pruebas cubren el contrato de guardado, la geometría física y el cliente; la restauración completa con física activa todavía requiere la validación integrada.
+
 Todas las acciones provisionales usan ID y estado de confirmación/rechazo. La presentación no concede recursos ni inventa resultados. Attack conserva gesto encadenable, exclusión de bestias pendientes/derribadas y daño actual. Preparar los recursos físicos de una bestia oportunamente en el Worker autoritativo; no supeditar su carga a la textura ni a la escena gráfica.
 
 Definir explícitamente la política temporal del comando. No reordenar hechos ya confirmados mediante una corrección cosmética. Si una mecánica requiere retroceso causal, necesita checkpoint y replay determinista de todas las dependencias antes de declararse soportada.

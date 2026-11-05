@@ -97,7 +97,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   function setGuardianTerrainEpoch(epoch){if(closed||epoch!==null&&(typeof epoch!=='string'||!epoch))throw TypeError('Invalid guardian terrain epoch');guardianTerrainEpoch=epoch;}
   return {
    setGuardianMetadata,setGuardianTerrainEpoch,setGuardianMetadataForQa:setGuardianMetadata,setGuardianTerrainEpochForQa:setGuardianTerrainEpoch,
-   verifyNativeBootstrapForQa(expected){
+   verifyNativeBootstrap(expected){
     if(closed||!expected||expected.version!==1||!Array.isArray(expected.chunkKeys)||!expected.spatialState)throw TypeError('Invalid native bootstrap verification');
     const actual=session.core.captureResidentChunks(),keys=[...expected.chunkKeys].sort();
     if(new Set(keys).size!==keys.length||JSON.stringify([...actual.keys].sort())!==JSON.stringify(keys)||JSON.stringify(session.core.snapshot())!==JSON.stringify(expected.spatialState))throw Error('Native bootstrap reconstruction mismatch');

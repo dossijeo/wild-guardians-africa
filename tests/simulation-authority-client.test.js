@@ -42,3 +42,9 @@ test('authored center templates are forwarded only when explicitly enabled',()=>
  const defaults=fixture();assert.equal(defaults.sent[0].authoredCenterTemplates,undefined);defaults.client.ready.catch(()=>{});defaults.client.dispose();
  const sent=[],worker={postMessage:message=>sent.push(message),terminate(){}},client=createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session:'authored',authoredCenterTemplates:true,workerFactory:()=>worker});assert.equal(sent[0].authoredCenterTemplates,true);client.ready.catch(()=>{});client.dispose();
 });
+
+test('native checkpoint permission is explicit and independent of diagnostic mode',()=>{
+ const defaults=fixture();assert.equal(defaults.sent[0].nativeAuthorityCheckpoints,undefined);defaults.client.ready.catch(()=>{});defaults.client.dispose();
+ const sent=[],worker={postMessage:message=>sent.push(message),terminate(){}},client=createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session:'native',nativeAuthorityCheckpoints:true,workerFactory:()=>worker});assert.equal(sent[0].nativeAuthorityCheckpoints,true);client.ready.catch(()=>{});client.dispose();
+ assert.throws(()=>createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session:'native',nativeAuthorityCheckpoints:'yes',workerFactory:()=>worker}),/Invalid authority client/);
+});
