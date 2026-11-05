@@ -11,6 +11,12 @@ import {acceptLiveTerrainCheckpoint} from '../src/rendering/live-terrain-checkpo
 import {createConfirmedMotionFeed} from '../src/rendering/confirmed-motion-feed.js';
 import {serializeConfirmedState} from '../src/simulation/confirmed-live-state.js';
 const fixture=()=>deserialize(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString());
+test('certified unchanged publications skip scene reconciliation while still confirming terrain and sequence',()=>{
+ const state=fixture(),order=[],port={postMessage:m=>order.push(['ack',m.sequence]),close(){},start(){}},stream=createConfirmedPresentationStream({port,session:'s',state,terrain:{confirm:n=>order.push(['terrain',n])},onConfirmed:m=>order.push(['changed',m.sequence]),onUnchanged:m=>order.push(['unchanged',m.sequence])});
+ port.onmessage({data:{kind:'publication',session:'s',publication:{session:'s',sequence:1,snapshot:serialize(state),events:[],physicsPose:null}}});
+ port.onmessage({data:{kind:'publication',session:'s',publication:{session:'s',sequence:2,unchanged:true,slotId:state.slotId,stateSequence:state.sequence,elapsed:state.elapsed,pauses:[...state.pauses],saveAvailable:true,events:[]}}});
+ assert.deepEqual(order,[['terrain',1],['changed',1],['ack',1],['terrain',2],['unchanged',2],['ack',2]]);assert.equal(stream.status().sequence,2);stream.dispose();
+});
 test('explicit recovery accepts ordered publications without emitting live acknowledgements',()=>{
  const state=fixture(),next=deserialize(serialize(state)),sent=[],confirmed=[],port={postMessage:value=>sent.push(value),close(){},start(){}};
  const stream=createConfirmedPresentationStream({port,session:'s',state,allowRecovery:true,terrain:{confirm:value=>confirmed.push(value)}});
