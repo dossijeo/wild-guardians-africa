@@ -127,7 +127,7 @@ if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-visibility'
   actors:world?(state?.raid?.animals??[]).map(a=>({id:a.id,ready:world.mixers.has(a.id),lod:world.mixers.get(a.id)?.lod?{pending:!!world.mixers.get(a.id).lod.pendingPreparation,visible:world.mixers.get(a.id).lod.root.visible}:null,position:world.objects.get(a.id)?.position.toArray()??null,visible:world.objects.get(a.id)?.visible??false})):[],
   camera:world?{eye:world.camera.position.toArray(),target:world.controls.target.toArray(),projection:world.camera.projectionMatrix.toArray(),inverse:world.camera.matrixWorldInverse.toArray(),canvas:world.canvas.getBoundingClientRect().toJSON()}:null
 });
-if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-worker-game'))globalThis.wildGuardiansWorkerQa=()=>({screen,starting,slotId:state?.slotId??null,status:world?.workerRuntime?.status()??null,hostedClock:world?.workerRuntime?.hostedClock??null,backgroundViews:world?.workerRuntime?.backgroundViews??false,elapsed:state?.elapsed??null,time:state?.time??null,night:state?.nightPlan?{at:state.nightPlan.at,done:state.nightPlan.done,count:state.nightPlan.group?.length}:null,pauses:state?.pauses??[],tutorial:state?.tutorial??null,guide:screen==='game'?world?.tutorialGuideTarget?.()??null:null,centers:state?.structures?.filter(s=>s.kind==='center').length??0,plants:state?.plants?.filter(p=>p.alive).length??0,workers:state?.workers?.length??0,animals:state?.raid?.animals?.length??0,events:state?.events?.slice(-20).map(e=>e.type)??[]});
+if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-worker-game'))globalThis.wildGuardiansWorkerQa=()=>({screen,starting,slotId:state?.slotId??null,status:world?.workerRuntime?.status()??null,hostedClock:world?.workerRuntime?.hostedClock??null,backgroundViews:world?.workerRuntime?.backgroundViews??false,elapsed:state?.elapsed??null,time:state?.time??null,night:state?.nightPlan?{at:state.nightPlan.at,done:state.nightPlan.done,count:state.nightPlan.group?.length}:null,pauses:state?.pauses??[],tutorial:state?.tutorial??null,guide:screen==='game'?(world?.qaEarlyTutorial?world.qaTutorialGuide?.config??null:world?.tutorialGuideTarget?.()??null):null,centers:state?.structures?.filter(s=>s.kind==='center').length??0,plants:state?.plants?.filter(p=>p.alive).length??0,workers:state?.workers?.length??0,animals:state?.raid?.animals?.length??0,events:state?.events?.slice(-20).map(e=>e.type)??[]});
 if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-webgpu-benchmark-barrier'))globalThis.wildGuardiansWorkerStableQa=()=>{if(!world?.workerRuntime||!state?.pauses.includes('qa-stable-start'))throw Error('QA barrier unavailable');return changeSimulationPause(false,'qa-stable-start');};
 if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-webgpu-world'))globalThis.wildGuardiansWebGpuWorldQa=()=>world?.webGpuWorld?.client.inspect()??Promise.reject(Error('WebGPU world unavailable'));
 if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-webgpu-work-checkpoint'))globalThis.wildGuardiansRecoverWorkVfxQa=()=>{const owner=world,game=state,client=owner?.webGpuWorld?.client,runtime=owner?.workerRuntime;return recoverWorkVfxForQa({client,runtime,manager:owner?.workVfx,state:game,isCurrent:()=>world===owner&&state===game&&owner?.webGpuWorld?.client===client&&owner?.workerRuntime===runtime});};
@@ -416,7 +416,7 @@ async function startGame(loaded=null,{slotId,preview}={}) {
       world.controls.enabled=true;loadingOverlay?.dispose();loadingOverlay=null;loadingDiorama?.dispose();loadingDiorama=null;loadingAudio?.dispose();loadingAudio=null;clearInterval(loadingDiagnostic);loadingDiagnostic=null;loadingTransfers?.dispose();loadingTransfers=null;document.querySelector('#stage').classList.remove('world-loading');document.querySelector('#stage').setAttribute('aria-busy','false');
       for(const button of document.querySelectorAll('#actions button'))if(button.dataset.menu!=='grow'&&button.dataset.menu!=='home'&&button.dataset.menu!=='build')button.disabled=true;
       const grow=document.querySelector('[data-menu="grow"]');grow.onclick=()=>{grow.disabled=true;world.webGpuWorld.client.prepareCrops().then(()=>{if(world?.qaEarlyGpuOnly){grow.disabled=false;toolPanel('plant');}},failure=>{grow.disabled=false;error(failure.message);});};
-      screen='game';lastFrame=performance.now();if(world.qaEarlyTutorial){ensureWorkerTutorial();globalThis.wildGuardiansEarlyGpuSaveTutorialQa=()=>save();}globalThis.wildGuardiansEarlyGpuQa=async()=>({backend:world?.webGpuWorld?.client.status().backend??null,renderer:await world.webGpuWorld.client.inspect(),plants:state.plants.length,centers:state.structures.filter(s=>s.kind==='center').length,walls:state.structures.filter(s=>s.kind==='wall').length,elapsed:state.elapsed,events:state.events.slice(-5),tool:tool?.kind??null,pending:world.provisionalCrops.entries.size});updateUI(true);return;
+      screen='game';lastFrame=performance.now();if(world.qaEarlyTutorial){ensureWorkerTutorial();globalThis.wildGuardiansEarlyGpuSaveTutorialQa=()=>save();}globalThis.wildGuardiansEarlyGpuQa=async()=>({backend:world?.webGpuWorld?.client.status().backend??null,renderer:await world.webGpuWorld.client.inspect(),plants:state.plants.length,workers:state.workers.length,pauses:[...state.pauses],centers:state.structures.filter(s=>s.kind==='center').length,walls:state.structures.filter(s=>s.kind==='wall').length,elapsed:state.elapsed,events:state.events.slice(-5),tool:tool?.kind??null,pending:world.provisionalCrops.entries.size});updateUI(true);return;
     }
     await world.load(state,nav,payload,{spatialSession,farVegetation:(spatialSession&&new URLSearchParams(world.visualSearch).get('spatialFar')!=='1')||settings.farVegetation===false?false:farVegetationProfile({quality:settings.quality,biome:nav.config.biome},farGroundReviewOverrides(nav.config.biome,world.visualSearch)),loadingProgress});assertLoading();
     const planner=createEventDrivenTaskPlanner(spatialSession);
@@ -557,7 +557,7 @@ function closeSurface(){
   if(kind==='modal')changeSimulationPause(false,'menu',{sound:true});
   if(pendingVillage)cancelVillagePreview();
 }
-function armTool(value){tool=toolSession.select(value,performance.now()/1000);world?.focusTutorialPlacement(value.kind);}
+function armTool(value){tool=toolSession.select(value,performance.now()/1000);if(!world?.qaEarlyTutorial)world?.focusTutorialPlacement(value.kind);}
 function cancelTool(){if(pendingVillage)cancelVillagePreview();if(world?.qaEarlyGpuOnly)world.wallDrawing.setEnabled(false);tool=null;toolSession.clear();commandFeedback='';}
 function toggleAwakening(){
   if(tool?.kind==='awakening'){cancelTool();return;}
@@ -586,9 +586,15 @@ function startDueCinematic(){
   else owner.play(act);
   return true;
 }
+function openInitialHiringWhenReady(){
+  if(state.day===1&&state.initialPreparation&&!tool&&!surfaces.active&&!state.pauses.includes('hiring')&&state.plants.some(p=>p.alive)&&state.structures.some(operational)){
+    if(!world.workerRuntime)Game.openInitialHiring(state);
+    else if(initialHiringPending!==world){const owner=world,ownerState=state;initialHiringPending=owner;owner.workerRuntime.submit({kind:'openInitialHiring'}).then(()=>{if(owner===world&&ownerState===state)updateUI(true);},failure=>{if(owner===world&&ownerState===state)error(failure.message);}).finally(()=>{if(initialHiringPending===owner)initialHiringPending=null;});}
+  }
+}
 function updateUI(force=false) {
   if(screen!=='game'||!state)return;
-  if(world?.qaEarlyGpuOnly){world.wallDrawing.setEnabled(tool?.kind==='wall'&&!tool.gate&&permission(state,'wall'));const now=performance.now();if(!force&&now-lastUI<200)return;lastUI=now;document.querySelector('#clockValue').textContent=Game.clockLabel(state);document.querySelector('#moneyValue').textContent=localMoney(state.ledger.balance);document.querySelector('#dayValue').textContent='Día '+state.day;if(world.qaEarlyTutorial){refreshBuildPermissions(document,state);narrator();}return;}
+  if(world?.qaEarlyGpuOnly){openInitialHiringWhenReady();if(!state.pauses.includes('hiring'))surfaces.deferred.delete('hiring');if(state.pauses.includes('hiring')&&surfaces.shouldOpen('hiring',{mandatory:true}))hiringDialog();world.wallDrawing.setEnabled(tool?.kind==='wall'&&!tool.gate&&permission(state,'wall'));const now=performance.now();if(!force&&now-lastUI<200)return;lastUI=now;document.querySelector('#clockValue').textContent=Game.clockLabel(state);document.querySelector('#moneyValue').textContent=localMoney(state.ledger.balance);document.querySelector('#dayValue').textContent='Día '+state.day;if(world.qaEarlyTutorial){refreshBuildPermissions(document,state);narrator();}return;}
   if(campaignCinema||startDueCinematic())return;
   const now=performance.now();if(!force&&now-lastUI<200)return;lastUI=now;
   if(tool?.kind==='awakening'&&(state.awakenings?.progress??0)<100)cancelTool();
@@ -596,10 +602,7 @@ function updateUI(force=false) {
   awakeningHud?.render(state,{selecting:world.awakeningSelecting,blocked:!!surfaces.active});
   manualMagicActivity.update(state);
   if(tool&&(['plant','center','wall'].includes(tool.kind)||tool.kind==='spell'&&tool.spell!=='shield')&&toolSession.expired(now/1000,tool.kind==='wall'&&world.wallDrawing.active))cancelTool();
-  if(state.day===1&&state.initialPreparation&&!tool&&!surfaces.active&&!state.pauses.includes('hiring')&&state.plants.some(p=>p.alive)&&state.structures.some(operational)){
-    if(!world.workerRuntime)Game.openInitialHiring(state);
-    else if(initialHiringPending!==world){const owner=world,ownerState=state;initialHiringPending=owner;owner.workerRuntime.submit({kind:'openInitialHiring'}).then(()=>{if(owner===world&&ownerState===state)updateUI(true);},failure=>{if(owner===world&&ownerState===state)error(failure.message);}).finally(()=>{if(initialHiringPending===owner)initialHiringPending=null;});}
-  }
+  openInitialHiringWhenReady();
   const balance=numberOf(state.ledger.balance);if(balance>lastBudgetBalance&&balance>BUDGET_WARNING_THRESHOLD)reserveWarningShown=false;if(balance<=BUDGET_WARNING_THRESHOLD&&lastBudgetBalance>BUDGET_WARNING_THRESHOLD&&!reserveWarningShown){reserveWarningShown=true;budgetWarningUntil=now+18000;}lastBudgetBalance=balance;
   world.wallDrawing.setEnabled(tool?.kind==='wall'&&!tool.gate&&permission(state,'wall'));
   refreshBuildPermissions(document,state);refreshSpellCards(document,state);
@@ -705,7 +708,14 @@ function refreshTutorialGuidance(){
   const guidedStep=['magic.growth','magic.multiply'].includes(message?.id)||message?.id==='basic.'+state.tutorial.step||state.tutorial.guideAfterAuto?.includes('basic.'+state.tutorial.step);
   world.tutorialToolKind=tool?.kind??null;world.tutorialSpellKind=tool?.spell??null;world.tutorialHandsEnabled=guideAllowed&&guidedStep;
   guardian?.setGuide(hudHand.rect);
-  const targets={hudTarget:!!hudHand.visible,worldTarget:!!(guideAllowed&&!world.qaEarlyGpuOnly&&world.tutorialGuideTarget()),selectionOpen:surfaces.active==='panel'&&guidedStep};
+  let worldTarget=false;
+  if(world.qaEarlyTutorial){const owner=world,ownerState=state,kind=tool?.kind,spell=tool?.spell??null,eligible=guideAllowed&&guidedStep&&['center','plant','spell'].includes(kind),keyOf=()=>JSON.stringify([tool?.kind,tool?.spell??null,state.tutorial.step,state.tutorial.reading,state.tutorial.guideAfterAuto,state.tutorial.dismissed,state.day,state.result,!!state.raid,state.villages,state.structures,state.plants,state.events.at(-1)?.id??null]),key=eligible?keyOf():null;
+    if(owner.qaTutorialGuide?.key!==key){const request=owner.qaTutorialGuide={key,config:null,sequence:owner.workerRuntime.status().confirmedSequence};if(key)owner.workerRuntime.submit({kind:'tutorialGuideTarget',toolKind:kind,toolSpell:spell}).then(result=>{if(owner!==world||ownerState!==state||owner.qaTutorialGuide!==request)return;if(keyOf()!==request.key||owner.workerRuntime.status().confirmedSequence!==result.sequence){owner.qaTutorialGuide=null;updateUI(true);return;}request.config=result.value??null;request.sequence=result.sequence;updateUI(true);},failure=>{if(owner===world&&owner.qaTutorialGuide===request){owner.qaTutorialGuide=null;error(failure.message);}});}
+    // The visual guide stays disabled until camera exclusion is complete.
+  }
+
+  else worldTarget=!!(guideAllowed&&!world.qaEarlyGpuOnly&&world.tutorialGuideTarget());
+  const targets={hudTarget:!!hudHand.visible,worldTarget,selectionOpen:surfaces.active==='panel'&&guidedStep};
   if(!world.workerRuntime)syncTutorialActionPause(state,targets);
   else{
     const owner=world,ownerState=state,key=JSON.stringify([targets,state.day,state.pauses,state.result,state.tutorial.basicSkipped,state.tutorial.step,state.tutorial.reading]);

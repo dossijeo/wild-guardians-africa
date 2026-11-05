@@ -16,6 +16,7 @@ import {raidEntryChunks,raidResidentDemand} from '../world/raid-entry-residency.
 import {workerChunkDemand} from '../rendering/worker-chunk-residency.js';
 import {plantTouchTarget} from './plant-touch-target.js';
 import {syncTutorialActionPause} from '../tutorial/action-pause.js';
+import {tutorialHandTarget} from '../rendering/tutorial-hand-target.js';
 import {createWorkerTutorial} from './worker-tutorial.js';
 import {dueCinematicAct,finishCinematicAct} from '../app/campaign-cinematics.js';
 import {reserveEvent,settleEvent,disableMicroEconomy,trackIncome,microState,validateMicroState} from '../microevents/economy.js';
@@ -131,6 +132,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      if(tutorial)throw Error('Tutorial already started');tutorial=createWorkerTutorial(game,command.seen);value=tutorial.execute({action:'update',narrating:null});
     }else if(command.kind==='tutorialCommand'){
      if(!tutorial)throw Error('Tutorial not started');value=tutorial.execute(command);
+    }else if(command.kind==='tutorialGuideTarget'){
+     if(!['center','plant','spell'].includes(command.toolKind)||command.toolSpell!==null&&command.toolSpell!==undefined&&!['growth','multiply'].includes(command.toolSpell))throw TypeError('Invalid tutorial guide request');
+     try{value=withResidentChunks(()=>tutorialHandTarget(game,nav,command.toolKind,command.toolSpell??null),commandLoadedChunks);}catch(error){if(!(error instanceof SpatialChunkUnavailable))throw error;value=null;}
     }else if(command.kind==='tutorialActionPause'){
      if(typeof command.hudTarget!=='boolean'||typeof command.worldTarget!=='boolean'||typeof command.selectionOpen!=='boolean')throw TypeError('Invalid tutorial guidance');
      value=syncTutorialActionPause(game,command);
@@ -219,7 +223,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      else if(!duplicate&&!game.structures.some(s=>s.id===command.targetId&&s.kind==='wall'))rejection='No existe esa defensa';
      value=rejection?false:removeWall(game,command.id,command.targetId,nav);
     }else if(command.kind!=='snapshot')throw TypeError('Unknown simulation command');
-    const tutorialOnly=['tutorialStart','tutorialCommand','tutorialActionPause'].includes(command.kind),suspensionChanged=wasSuspended!==(game.pauses.length>0||!!game.result);
+    const tutorialOnly=['tutorialStart','tutorialCommand','tutorialActionPause','tutorialGuideTarget'].includes(command.kind),suspensionChanged=wasSuspended!==(game.pauses.length>0||!!game.result);
     const invalidated=previousTrackedActor&&command.kind!=='advance'&&!['snapshot','setNavigationView','previewVillage'].includes(command.kind)&&(command.kind!=='trackPathMotion'||value===true)&&(!tutorialOnly||suspensionChanged);
     // Until event-level dependencies and continuous contacts are certified,
     // stop at the beginning of an affected batch rather than extrapolating
