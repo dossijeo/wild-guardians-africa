@@ -1,0 +1,16 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createCharacterPreviewDataClient} from '../src/rendering/character-preview-worker-client.js';
+
+function fixture(){const messages=[],worker={postMessage:value=>messages.push(value),terminate(){this.terminated=true;}},client=createCharacterPreviewDataClient({workerFactory:()=>worker}),reply=(message,result)=>worker.onmessage({data:{id:message.id,session:message.session,result}});return {messages,worker,client,reply};}
+test('one auxiliary worker serves independent packages and returns transferable bytes',async()=>{
+ const f=fixture(),a=f.client.open('/a',{features:['texture-compression-bc']}),b=f.client.open('/b');assert.equal(f.messages.length,2);const [openA,openB]=f.messages;f.reply(openB,{id:'b',variant:'webp'});f.reply(openA,{id:'a',variant:'bc7'});const [left,right]=await Promise.all([a,b]);assert.equal(left.id,'a');assert.equal(right.id,'b');
+ const metadataPromise=left.loadMetadata(),metadataRequest=f.messages.at(-1),metadata={materials:{},mapping:{},texturePaths:['bc7/color.ktx2']};f.reply(metadataRequest,{metadataId:7,metadata});const received=await metadataPromise;await assert.rejects(left.loadTextures({}),/Invalid character texture/);const textures=left.loadTextures(received),textureRequest=f.messages.at(-1);assert.equal(textureRequest.metadataId,7);f.reply(textureRequest,[['bc7/color.ktx2',new Uint8Array([1,2]).buffer]]);assert.deepEqual([...(await textures).get('bc7/color.ktx2')],[1,2]);
+ const preview=right.loadPreview(),previewRequest=f.messages.at(-1);f.reply(previewRequest,new Uint8Array([3,4]).buffer);assert.deepEqual([...(await preview)],[3,4]);left.close();assert.equal(f.client.status().sessions,1);right.close();assert.equal(f.client.status().sessions,0);f.client.dispose();assert.equal(f.worker.terminated,true);
+});
+test('closing one session cancels its pending requests without affecting another',async()=>{
+ const f=fixture(),a=f.client.open('/a'),b=f.client.open('/b');f.reply(f.messages[0],{id:'a',variant:'webp'});f.reply(f.messages[1],{id:'b',variant:'webp'});const [left,right]=await Promise.all([a,b]),pending=left.loadPreview(),rejected=assert.rejects(pending,{name:'AbortError'});left.close();await rejected;const next=right.loadPreview();f.reply(f.messages.at(-1),new Uint8Array([9]).buffer);assert.deepEqual([...(await next)],[9]);right.close();f.client.dispose();
+});
+test('aborting or losing the auxiliary worker rejects pending opens and releases ownership',async()=>{
+ const f=fixture(),controller=new AbortController(),a=f.client.open('/a',{signal:controller.signal}),rejected=assert.rejects(a,{name:'AbortError'});controller.abort();await rejected;assert.equal(f.client.status().sessions,0);const b=f.client.open('/b'),failure=assert.rejects(b,/lost/);f.worker.onerror({message:'lost'});await failure;assert.equal(f.worker.terminated,true);assert.equal(f.client.status().closed,true);
+});

@@ -11,8 +11,8 @@ const aborted=()=>new DOMException('Character preparation cancelled','AbortError
 
 // Reuses the validated package and stable material implementation from the
 // WebGPU lab. Only the Worker can own this loader, its textures and renderer.
-export async function openProgressiveWebGpuCharacter({renderer,packageUrl,species,signal,onTextured=()=>{},onError=()=>{},configureMaterial=()=>{},prepareObject=()=>{},materialVariant=null,shareCompatibleMaterials=false,onSelectableChange=()=>{},blendMs=350}={}){
- if(typeof document!=='undefined'||!renderer?.backend?.isWebGPUBackend||!packageUrl||typeof species!=='string'||typeof onTextured!=='function'||typeof onError!=='function'||typeof configureMaterial!=='function'||typeof prepareObject!=='function'||materialVariant!==null&&typeof materialVariant!=='function'||typeof shareCompatibleMaterials!=='boolean'||typeof onSelectableChange!=='function'||!Number.isFinite(blendMs)||blendMs<=0)throw TypeError('Invalid progressive character');
+export async function openProgressiveWebGpuCharacter({renderer,packageUrl,species,signal,onTextured=()=>{},onError=()=>{},configureMaterial=()=>{},prepareObject=()=>{},materialVariant=null,shareCompatibleMaterials=false,onSelectableChange=()=>{},openStream=openCharacterPreviewStream,blendMs=350}={}){
+ if(typeof document!=='undefined'||!renderer?.backend?.isWebGPUBackend||!packageUrl||typeof species!=='string'||typeof onTextured!=='function'||typeof onError!=='function'||typeof configureMaterial!=='function'||typeof prepareObject!=='function'||materialVariant!==null&&typeof materialVariant!=='function'||typeof shareCompatibleMaterials!=='boolean'||typeof onSelectableChange!=='function'||typeof openStream!=='function'||!Number.isFinite(blendMs)||blendMs<=0)throw TypeError('Invalid progressive character');
  const manager=new (await import('three')).LoadingManager(),cancel=()=>manager.abort(),owned=new Set();let stream,stable,preview,ktx,closed=false,transition=null,finalTextures=[],uploadPending=false;
  const check=()=>{if(closed||signal?.aborted)throw aborted();};
  const own=resource=>{if(!resource)return;if(closed){if(resource.isTexture&&typeof resource.source?.data?.close==='function')resource.source.data.close();resource.dispose();}else owned.add(resource);};
@@ -20,7 +20,7 @@ export async function openProgressiveWebGpuCharacter({renderer,packageUrl,specie
  const dispose=()=>{if(closed)return;closed=true;stable?.dispose();stream?.close();manager.abort();ktx?.dispose();const resources=[...owned];owned.clear();const release=()=>{const images=new Set();for(const resource of resources){if(resource.isTexture&&typeof resource.source?.data?.close==='function')images.add(resource.source.data);resource.dispose();}for(const image of images)image.close();};if(uploadPending)void releaseAfterWebGpuUploads(renderer,release).catch(onError);else release();signal?.removeEventListener('abort',cancel);};
  signal?.addEventListener('abort',cancel,{once:true});
  try{
-  check();const features=renderer.hasFeature('texture-compression-bc')?['texture-compression-bc']:[];stream=await openCharacterPreviewStream(packageUrl,{features,signal});if(stream.id!==species)throw Error('Character package species mismatch');
+  check();const features=renderer.hasFeature('texture-compression-bc')?['texture-compression-bc']:[];stream=await openStream(packageUrl,{features,signal});if(stream.id!==species)throw Error('Character package species mismatch');
   const loader=new GLTFLoader(manager).setMeshoptDecoder(MeshoptDecoder),metadata=await stream.loadMetadata();
   // The package contains native BC7 KTX2, not Basis payloads, so no runtime
   // transcoder or development-only /node_modules URL is needed.
