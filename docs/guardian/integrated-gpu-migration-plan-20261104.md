@@ -153,6 +153,8 @@ Todas las acciones provisionales usan ID y estado de confirmación/rechazo. La p
 
 Definir explícitamente la política temporal del comando. No reordenar hechos ya confirmados mediante una corrección cosmética. Si una mecánica requiere retroceso causal, necesita checkpoint y replay determinista de todas las dependencias antes de declararse soportada.
 
+El trazado de murallas proyecta sus muestras con una copia de la cámara solicitada. Esa copia conserva la instantánea durante los lotes asíncronos sin modificar la cámara de presentación ni deshacer cambios posteriores del jugador; las respuestas obsoletas siguen rechazándose en el cliente. Las pruebas de contrato cubren la cesión y una cámara inválida. La interacción completa sigue pendiente de validación integrada.
+
 Ante pérdida del dispositivo o reinicio gráfico: invalidar su generación, descartar resultados antiguos, reconstruir recursos del catálogo y restaurar desde checkpoint más eventos. Mantener un estado visual seguro y señalizar la recuperación. El fallback no se consigue manteniendo el mundo WebGL vivo detrás del nuevo.
 
 **Entrega:** input, provisionales, lifecycle y recuperación comunes. **Cierre interno:** errores y reinicios no crean una segunda autoridad, duplican efectos ni reutilizan recursos de un dispositivo perdido.
