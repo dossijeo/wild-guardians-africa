@@ -9,10 +9,10 @@ import {vfxDefinitions} from './vfx-native.js';
 
 // Applies a single ordered authority publication to the existing scene state.
 // It does not advance simulation or install a second physics owner.
-export function createConfirmedSceneReceiver(state,session,world,{repeatDecode=false}={}){
+export function createConfirmedSceneReceiver(state,session,world,{repeatDecode=false,initialSequence=0}={}){
  if(!world||world.state!==state||!(world.mixers instanceof Map))throw TypeError('Invalid confirmed scene');
  const vfxEvents=createConfirmedVfxEventWindow({lifetime:Math.max(.9,...vfxDefinitions.map(definition=>definition.duration))});vfxEvents.sync(state.elapsed??0,[],state.events??[]);world.confirmedVfxEventWindow=vfxEvents;
- let pending=null,pendingHeadings=null,decoded=null;const receiver=createConfirmedStateReceiver(state,session,{decodeSnapshot:text=>{if(!decoded||decoded.text!==text)throw Error('Missing validated scene snapshot');return repeatDecode?deserializeConfirmedState(text):decoded.value;},onReconciled:message=>{
+ let pending=null,pendingHeadings=null,decoded=null;const receiver=createConfirmedStateReceiver(state,session,{initialSequence,decodeSnapshot:text=>{if(!decoded||decoded.text!==text)throw Error('Missing validated scene snapshot');return repeatDecode?deserializeConfirmedState(text):decoded.value;},onReconciled:message=>{
   if(!pending)throw Error('Missing confirmed scene poses');const previous=world.confirmedAnimalPoses??new Map();for(const id of previous.keys())if(!pending.has(id)){const rig=world.mixers.get(id);if(rig)rig.key=null;}world.confirmedAnimalPoses=pending;if(pendingHeadings){applyPresentationWorkerHeadingDeltas(world.confirmedWorkerVisualHeadings,pendingHeadings);for(const item of pendingHeadings)if(item.yaw===null)world.confirmedWorkerVisualIdentities?.delete(item.id);else if(item.add)world.confirmedWorkerVisualIdentities?.set(item.id,{pending:true,revoked:world.mixers.has(item.id)||world.objects?.has(item.id)});}world.legacyActorRevision=(world.legacyActorRevision??0)+1;vfxEvents.sync(state.elapsed??0,message.events,state.events??[]);
  }});
  return {
