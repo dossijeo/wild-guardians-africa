@@ -4,7 +4,7 @@ export function createWebGpuDiscretePick({context,deliver,fallback=null,onError=
  if(typeof context!=='function'||typeof deliver!=='function'||fallback!==null&&typeof fallback!=='function'||typeof onError!=='function'||onTrace!==null&&typeof onTrace!=='function')throw TypeError('Invalid WebGPU pick adapter');
  return (event,gesture)=>{
   const initial=context();
-  const terrainTool=allowTerrainTools&&['plant','center','wall'].includes(initial?.tool?.kind),supported=terrainTool||!initial?.tool||initial.tool.kind==='awakening'||initial.tool.kind==='spell'&&['attack','growth','multiply'].includes(initial.tool.spell);
+  const terrainTool=allowTerrainTools&&['plant','center','wall','village'].includes(initial?.tool?.kind),supported=terrainTool||!initial?.tool||initial.tool.kind==='awakening'||initial.tool.kind==='spell'&&['attack','growth','multiply'].includes(initial.tool.spell);
   if(!initial?.client||!supported||(!initial.tool||initial.tool.kind==='awakening')&&!fallback)return false;
   const rect=initial.canvas.getBoundingClientRect();
   if(!rect.width||!rect.height)return false;
