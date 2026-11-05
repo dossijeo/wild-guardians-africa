@@ -17,5 +17,10 @@ test('profile selection ignores removed animals and does not enable development-
  const state={raid:{animals:[{id:'old',species:'hyena',status:'gone'},{id:'new',species:'hyena',status:'active'}]}};
  const value=webGpuWorldOptions({params,state,field:{canyon:false},dev:false});
  assert.equal(value.experimentalActorId,'new');assert.equal(value.experimentalMinimalWorld,false);assert.equal(value.experimentalEarlyBiome,false);
- assert.equal(value.experimentalPresentationInputs,false);assert.equal(value.presentationRecovery,false);assert.equal(value.presentationWorkRecovery,false);
+ assert.equal(value.experimentalPresentationInputs,false);assert.equal(value.presentationInputs,false);assert.equal(value.presentationRecovery,false);assert.equal(value.presentationWorkRecovery,false);
+});
+
+test('the causal QA profile exercises the general presentation input channel',()=>{
+ const params=new URLSearchParams('qa-webgpu-causal-input'),state={raid:null};const value=webGpuWorldOptions({params,state,field:{},dev:true});
+ assert.equal(value.experimentalPresentationInputs,true);assert.equal(value.presentationInputs,true);
 });

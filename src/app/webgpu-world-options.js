@@ -11,6 +11,7 @@ export function webGpuWorldOptions({params,state,field,recovery={},dev=false}={}
   experimentalAllActors:!params.has('qa-webgpu-single-actor'),
   experimentalMotionFeed:params.has('qa-webgpu-motion')||params.has('qa-webgpu-world-motion'),
   experimentalPresentationInputs:dev&&params.has('qa-webgpu-causal-input'),
+  presentationInputs:dev&&params.has('qa-webgpu-causal-input'),
   experimentalBakedHyena:params.has('qa-webgpu-baked-hyena'),
   experimentalConfirmedClock:params.has('qa-webgpu-baked-hyena')&&!params.has('qa-webgpu-baked-clock-legacy'),
   experimentalMangroveGround:params.has('qa-webgpu-mangrove-ground'),
