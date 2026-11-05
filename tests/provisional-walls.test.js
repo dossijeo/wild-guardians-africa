@@ -18,3 +18,7 @@ test('individual gate preview uses the gate prototype and scale',()=>{
  const walls=new ProvisionalWalls(scene,{piedra_puerta:prototype},()=>0);assert.equal(walls.begin('gate','piedra',[{x:0,z:0}],{gate:true}),true);
  const matrix=new THREE.Matrix4();walls.entries.get('gate').mesh.getMatrixAt(0,matrix);const scale=new THREE.Vector3();matrix.decompose(new THREE.Vector3(),new THREE.Quaternion(),scale);assert.ok(Math.abs(scale.x-1.4)<1e-6);walls.dispose();geometry.dispose();prototype.material.dispose();
 });
+test('borrowed provisional material survives individual wall removal',()=>{
+ const scene=new THREE.Scene(),geometry=new THREE.BoxGeometry(),original=new THREE.MeshBasicMaterial(),paint=new THREE.MeshBasicMaterial(),prototype=new THREE.Mesh(geometry,original);let disposed=0;paint.addEventListener('dispose',()=>disposed++);
+ const walls=new ProvisionalWalls(scene,{piedra_intacto:prototype},()=>0,{materialFor:()=>paint});assert.equal(walls.begin('wall','piedra',[{x:0,z:0}]),true);assert.equal(walls.entries.get('wall').mesh.material,paint);walls.dispose();assert.equal(disposed,0);paint.dispose();assert.equal(disposed,1);geometry.dispose();original.dispose();
+});
