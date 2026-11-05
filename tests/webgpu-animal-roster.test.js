@@ -33,3 +33,8 @@ test('provisional attack is visual only, rejects cleanly and yields to confirmed
  assert.equal(roster.beginImpact({...command,id:'two'}),true);roster.resolveImpact('two',true);assert.equal(roster.status().provisionalImpacts,1);roster.setPoses(new Map([['a',{actorId:'a',active:true}]]));roster.sync();assert.equal(roster.status().provisionalImpacts,0);assert.equal(JSON.stringify(state),before);
  roster.setPoses(new Map());animal.magicDown={phase:'falling'};assert.equal(roster.beginImpact({...command,id:'three'}),false);roster.dispose();
 });
+test('delayed impacts remain pending until rejection, physics, actor removal or disposal',async()=>{
+ const animal={id:'a',species:'hyena',status:'walking',x:2,z:3,radius:.7},state={elapsed:10,raid:{animals:[animal]}},bank={tick(){},dispose(){}},roster=createWebGpuAnimalRoster({scene:{},residency:{get:()=>null},state,assetBank:bank,createAnimal:()=>({update(){},dispose(){}})});
+ roster.sync();await flush();const command={kind:'castAttack',id:'delayed',targetId:'a',selection:{origin:{x:0,y:1,z:0},contact:{x:2,y:1,z:3}}};assert.equal(roster.beginImpact(command),true);roster.tick(performance.now()+20000);assert.equal(roster.status().provisionalImpacts,1);assert.equal(roster.beginImpact({...command,id:'duplicate'}),false);roster.resolveImpact('delayed',false);assert.equal(roster.status().provisionalImpacts,0);
+ assert.equal(roster.beginImpact({...command,id:'removed'}),true);state.raid.animals=[];roster.sync();assert.equal(roster.status().provisionalImpacts,0);roster.dispose();
+});

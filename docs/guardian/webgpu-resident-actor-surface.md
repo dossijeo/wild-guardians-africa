@@ -151,6 +151,8 @@ Una comparación WebGPU de siluetas a 800×600 en NVIDIA Turing observó cero p�
 
 # Canal causal experimental de interacciones
 
+Se probó un reintento QA limitado a un primer ID confirmado, con caducidad y revalidación de cámaras y oclusión. En la incursión medida no se obtuvo ese primer ID: el frame era secuencia 512/generación 879 y al procesar el clic la escena era 516/generación 883; el rechazo llegó a los 127,86 ms. Por ello no se llegó a medir la segunda ronda ni su efecto sobre el Worker gráfico y se retiró esa rama experimental. La traza se conserva en `gpu-animation/camera-pick-causal-qa.json`.
+
 Se evaluó y retiró un consumidor QA de picking histórico que retenía hasta ocho referencias a publicaciones y reconstruía rigs auxiliares en el Worker gráfico. Una prueba rechazó el clic por divergencia de objetivo u oclusión tras 651,91 ms de latencia total del pick. Ese trabajo síncrono podía bloquear la presentación, por lo que no se conserva como solución. Una prueba anterior confirmó un Attack desde clic en una incursión de 13 bestias, pero no registró si usó el histórico ni la latencia; no demuestra una mejora de fluidez. Llevar la reconstrucción a un Worker auxiliar requeriría gestionar geometría, alpha, poses y versiones sin duplicar indebidamente los recursos; no se ha demostrado su viabilidad ni se ha integrado.
 
 

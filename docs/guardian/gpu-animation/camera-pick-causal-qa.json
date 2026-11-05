@@ -3,98 +3,80 @@
   "picks": [
     {
       "stage": "requested",
-      "elapsed": 0.04999998211860657,
+      "elapsed": 0.05500000715255737,
       "coordinate": {
-        "x": 0.2229414939880372,
-        "y": 0.3094063652886285
+        "x": 0.24648618698120117,
+        "y": 0.32539435492621527
       }
     },
     {
       "stage": "stale",
-      "elapsed": 651.9099999964237,
+      "elapsed": 127.86000001430511,
       "coordinate": {
-        "x": 0.2229414939880372,
-        "y": 0.3094063652886285
+        "x": 0.24648618698120117,
+        "y": 0.32539435492621527
       },
       "reason": "frame",
-      "details": null
+      "details": {
+        "expected": {
+          "sequence": 512,
+          "terrainGeneration": 25,
+          "selectableGeneration": 879
+        },
+        "actual": {
+          "sequence": 516,
+          "terrainGeneration": 25,
+          "selectableGeneration": 883,
+          "pending": false
+        },
+        "condition": "sequence"
+      }
     }
   ],
-  "elapsed": 87.94974499999658,
-  "confirmedSequence": 3683,
+  "elapsed": 86.29974499999668,
+  "confirmedSequence": 3618,
   "visualPublication": {
     "active": true,
     "detached": false,
-    "inFlight": 3384,
-    "queued": 127,
-    "coalesced": 2149,
-    "acknowledged": 3379,
-    "foldedViewCount": 825,
-    "queuedPublications": 127,
-    "eventfulPublications": 3,
-    "tickPublications": 62,
-    "unchangedPublications": 1,
-    "snapshotChars": 23544727,
-    "peakSnapshotChars": 23907784,
-    "peakEventfulPublications": 12,
+    "inFlight": 3286,
+    "queued": 128,
+    "coalesced": 2120,
+    "acknowledged": 3285,
+    "foldedViewCount": 806,
+    "queuedPublications": 128,
+    "eventfulPublications": 2,
+    "tickPublications": 60,
+    "unchangedPublications": 4,
+    "snapshotChars": 23286140,
+    "peakSnapshotChars": 23846437,
+    "peakEventfulPublications": 11,
     "peakQueuedPublications": 128,
     "peakQueuedMessages": 128
   },
   "gpu": {
-    "sequence": 3385,
-    "elapsed": 82.2497449999969,
+    "sequence": 3303,
+    "elapsed": 80.499744999997,
     "timing": {
       "samples": 512,
       "decode": {
-        "mean": 1.4031738286139444,
-        "p95": 1.9950000047683716,
-        "max": 2.469999998807907
+        "mean": 1.4384667976992205,
+        "p95": 2.080000013113022,
+        "max": 2.4149999916553497
       },
       "reconcile": {
-        "mean": 1.430878906568978,
-        "p95": 2.270000010728836,
-        "max": 5.855000019073486
+        "mean": 1.4630566405248828,
+        "p95": 2.3299999833106995,
+        "max": 7.764999985694885
       },
       "hooks": {
-        "mean": 2.114414061768912,
-        "p95": 5.179999977350235,
-        "max": 13.620000004768372
+        "mean": 1.843544922361616,
+        "p95": 4.830000013113022,
+        "max": 8.020000010728836
       },
       "total": {
-        "mean": 4.948466796951834,
-        "p95": 8.939999997615814,
-        "max": 21.72000002861023
-      }
-    },
-    "history": {
-      "status": {
-        "closed": false,
-        "entries": 8,
-        "chars": 1503480,
-        "lastSequence": 3385,
-        "firstSequence": 3366,
-        "pinned": false
-      },
-      "lastAttempt": {
-        "reason": "target-or-occlusion",
-        "frame": {
-          "sequence": 554,
-          "terrainGeneration": 25,
-          "selectableGeneration": 276
-        },
-        "current": {
-          "sequence": 559,
-          "terrainGeneration": 25,
-          "selectableGeneration": 276
-        },
-        "history": {
-          "closed": false,
-          "entries": 8,
-          "chars": 1347249,
-          "lastSequence": 559,
-          "firstSequence": 550,
-          "pinned": true
-        }
+        "mean": 4.745068360585719,
+        "p95": 8.615000009536743,
+        "max": 13.444999992847443
       }
     },
     "actors": {
@@ -122,10 +104,9 @@
       "ritualPreview": false,
       "cropBeams": 0,
       "modelReady": false,
-      "guideVisible": false,
       "beamVisible": false,
       "coreVisible": false
     }
   },
-  "text": "02:11\n99,34K\nDía 31\nVolver\nConstruir\nCultivar\nMagia\nDespertar\n0 / 100"
+  "text": "02:07\n99,34K\nDía 31\nVolver\nConstruir\nCultivar\nMagia\nDespertar\n0 / 100"
 }
