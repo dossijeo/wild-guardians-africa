@@ -161,3 +161,5 @@ Una incursión QA real WebGPU con Rapier confirmó Attack por este canal, mostr�
 
 La validación de clic en UI no pasó: el primer escaneo obtuvo `Stale WebGPU pick` al cambiar la cámara; en el segundo se pulsó un animal localizado con el selector de referencia pero no llegó ningún Attack (`causalInputs=0`). Al finalizar, el flujo visual mostraba 128 publicaciones pendientes y 23.712.996 caracteres de snapshots; no se ha determinado si esa cola explica el clic no entregado. No se deshabilitó la protección de cámara obsoleta ni se acredita interacción UI funcional mediante este canal.
 
+
+El corte QA mantiene una generación común de contenido seleccionable para las publicaciones de frame; terreno, props, altas y bajas de actores/cajas, estructuras, cultivos y transiciones de textura notifican cambios. Algunas invalidaciones son conservadoras en cada reconciliación. La generación aún no cubre exhaustivamente poses, destrucción y recortes alpha, por lo que no autoriza reconstrucción histórica ni reproducción autónoma. El origen provisional del guardián se limita a presentación; la orden autoritativa conserva su propio origen y la caída/gesto se retiran al rechazar.

@@ -4,6 +4,10 @@ import {Group,Mesh,BoxGeometry,MeshBasicMaterial} from 'three';
 import {createWebGpuAnimalBank} from '../src/rendering/webgpu-animal-bank.js';
 import {createWebGpuAnimalRoster} from '../src/rendering/webgpu-animal-roster.js';
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
+test('selectable generation observes rig admission, removal and provisional impact',async()=>{
+ const animal={id:'a',species:'hyena',status:'walking',x:0,z:0},state={elapsed:1,raid:{animals:[animal]}},bank={tick(){},dispose(){}},changes=[],roster=createWebGpuAnimalRoster({scene:{},residency:{get:()=>null},state,renderer:{},assetBank:bank,onSelectableChange:()=>changes.push('change'),createAnimal:async()=>({update(){},dispose(){}})});
+ roster.sync();await flush();assert.equal(changes.length,1);assert.equal(roster.beginImpact({kind:'castAttack',id:'attack',targetId:'a',x:0,z:0}),true);assert.equal(changes.length,2);roster.resolveImpact('attack',false);assert.equal(changes.length,3);state.raid.animals=[];roster.sync();assert.equal(changes.length,4);roster.dispose();
+});
 test('shares geometry and material per species while actor roots are independent',async()=>{
  let loads=0,disposed=0;const geometry=new BoxGeometry(),material=new MeshBasicMaterial(),source=new Group();source.add(new Mesh(geometry,material));const bank=createWebGpuAnimalBank({renderer:{backend:{isWebGPUBackend:true}},loadAsset:async()=>{loads++;return {scene:source,clips:[],dispose(){disposed++;geometry.dispose();material.dispose();}};}});
  const [a,b]=await Promise.all([bank.acquire('hyena'),bank.acquire('hyena')]);assert.equal(loads,1);assert.notEqual(a.model,b.model);assert.equal(a.model.children[0].geometry,b.model.children[0].geometry);assert.equal(a.model.children[0].material,b.model.children[0].material);assert.equal(bank.status().species[0].refs,2);a.release();a.release();assert.equal(bank.status().species[0].refs,1);b.release();assert.equal(disposed,1);assert.equal(bank.status().species.length,0);bank.dispose();assert.equal(disposed,1);

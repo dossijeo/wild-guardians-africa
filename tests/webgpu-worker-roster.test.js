@@ -8,6 +8,10 @@ import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {createWebGpuWorkerBank} from '../src/rendering/webgpu-worker-bank.js';
 import {createWebGpuWorkerRoster} from '../src/rendering/webgpu-worker-roster.js';
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
+test('selectable generation changes when a worker rig appears or leaves',async()=>{
+ const state={workers:[{id:'a',profile:'youngMale',status:'walking'}]},bank={dispose(){}},changes=[],roster=createWebGpuWorkerRoster({scene:{},residency:{},state,assetBank:bank,onSelectableChange:()=>changes.push('change'),createWorker:async()=>({update(){},dispose(){}})});
+ roster.sync();await flush();assert.equal(changes.length,1);state.workers[0].status='home';roster.sync();assert.equal(changes.length,2);roster.dispose();
+});
 test('advances shared worker texture transitions once per frame',()=>{
  const ticks=[],bank={tick:now=>ticks.push(now),dispose(){}};
  const roster=createWebGpuWorkerRoster({scene:{},residency:{},state:{workers:[]},assetBank:bank});

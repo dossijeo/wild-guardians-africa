@@ -10,8 +10,8 @@ const aborted=()=>new DOMException('Character preparation cancelled','AbortError
 
 // Reuses the validated package and stable material implementation from the
 // WebGPU lab. Only the Worker can own this loader, its textures and renderer.
-export async function openProgressiveWebGpuCharacter({renderer,packageUrl,species,signal,onTextured=()=>{},onError=()=>{},configureMaterial=()=>{},blendMs=350}={}){
- if(typeof document!=='undefined'||!renderer?.backend?.isWebGPUBackend||!packageUrl||typeof species!=='string'||typeof onTextured!=='function'||typeof onError!=='function'||typeof configureMaterial!=='function'||!Number.isFinite(blendMs)||blendMs<=0)throw TypeError('Invalid progressive character');
+export async function openProgressiveWebGpuCharacter({renderer,packageUrl,species,signal,onTextured=()=>{},onError=()=>{},configureMaterial=()=>{},onSelectableChange=()=>{},blendMs=350}={}){
+ if(typeof document!=='undefined'||!renderer?.backend?.isWebGPUBackend||!packageUrl||typeof species!=='string'||typeof onTextured!=='function'||typeof onError!=='function'||typeof configureMaterial!=='function'||typeof onSelectableChange!=='function'||!Number.isFinite(blendMs)||blendMs<=0)throw TypeError('Invalid progressive character');
  const manager=new (await import('three')).LoadingManager(),cancel=()=>manager.abort(),owned=new Set();let stream,stable,preview,ktx,closed=false,transition=null,finalTextures=[];
  const check=()=>{if(closed||signal?.aborted)throw aborted();};
  const own=resource=>{if(!resource)return;if(closed){if(resource.isTexture&&typeof resource.source?.data?.close==='function')resource.source.data.close();resource.dispose();}else owned.add(resource);};
@@ -39,9 +39,9 @@ export async function openProgressiveWebGpuCharacter({renderer,packageUrl,specie
     for(let i=0;i<(full.materials?.length??0);i++)ownMaterial(await materials.parser.getDependency('material',i));check();
     finalTextures=await stable.resolveFinal(materials);for(const texture of finalTextures)own(texture);check();
     for(const texture of finalTextures){renderer.initTexture(texture);await new Promise(resolve=>setTimeout(resolve,0));check();}
-    await renderer.backend.device.queue.onSubmittedWorkDone();check();stable.apply({blend:0});transition={start:null};
+    await renderer.backend.device.queue.onSubmittedWorkDone();check();stable.apply({blend:0});onSelectableChange();transition={start:null};
    }catch(error){if(!closed&&!signal?.aborted)onError(error);}finally{urls.forEach(url=>URL.revokeObjectURL(url));}
   }
-  return {preview,variant:stream.variant,start(){check();if(transition!==null)throw Error('Character hydration already started');transition={pending:true};void hydrate();},tick(now){if(!transition||transition.pending)return;if(!Number.isFinite(now))throw TypeError('Invalid presentation clock');if(transition.start===null)transition.start=now;const blend=Math.min(1,Math.max(0,(now-transition.start)/blendMs));stable.setBlend(blend);if(blend===1){transition={pending:true};onTextured();}},dispose};
+  return {preview,variant:stream.variant,start(){check();if(transition!==null)throw Error('Character hydration already started');transition={pending:true};void hydrate();},tick(now){if(!transition||transition.pending)return;if(!Number.isFinite(now))throw TypeError('Invalid presentation clock');if(transition.start===null)transition.start=now;const blend=Math.min(1,Math.max(0,(now-transition.start)/blendMs));stable.setBlend(blend);onSelectableChange();if(blend===1){transition={pending:true};onTextured();}},dispose};
  }catch(error){dispose();throw error;}
 }

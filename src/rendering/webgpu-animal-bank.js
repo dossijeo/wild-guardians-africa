@@ -8,14 +8,14 @@ import {openProgressiveWebGpuCharacter} from './webgpu-progressive-character.js'
 
 // The Worker owns one source, geometry, materials and textures per species.
 // Each actor gets its own skeleton and mixer; the source stays until disposal.
-export function createWebGpuAnimalBank({renderer,packages={},onTextured=()=>{},onTextureError=()=>{},loadAsset=null,materialStyle=null}={}){
- if(!renderer?.backend?.isWebGPUBackend||!packages||typeof packages!=='object'||typeof onTextured!=='function'||typeof onTextureError!=='function'||materialStyle!==null&&(typeof materialStyle.configure!=='function'||typeof materialStyle.convert!=='function'))throw TypeError('Invalid animal bank');
+export function createWebGpuAnimalBank({renderer,packages={},onTextured=()=>{},onTextureError=()=>{},loadAsset=null,materialStyle=null,onSelectableChange=()=>{}}={}){
+ if(!renderer?.backend?.isWebGPUBackend||!packages||typeof packages!=='object'||typeof onTextured!=='function'||typeof onTextureError!=='function'||typeof onSelectableChange!=='function'||materialStyle!==null&&(typeof materialStyle.configure!=='function'||typeof materialStyle.convert!=='function'))throw TypeError('Invalid animal bank');
  const entries=new Map(),controller=new AbortController();let closed=false;
  function disposeOriginal(gltf){const resources=new Set(),images=new Set();gltf.scene.traverse(object=>{if(!object.isMesh)return;resources.add(object.geometry);for(const material of Array.isArray(object.material)?object.material:[object.material]){resources.add(material);for(const value of Object.values(material))if(value?.isTexture){resources.add(value);if(typeof value.source?.data?.close==='function')images.add(value.source.data);}}});for(const resource of resources)resource.dispose();for(const image of images)image.close();}
  async function load(species){
   const spec=ANIMAL_ACTIONS.animals[species];if(!spec)throw Error('Unknown species '+species);
   if(loadAsset)return loadAsset(species,controller.signal);
-  if(packages[species]){const progressive=await openProgressiveWebGpuCharacter({renderer,packageUrl:packages[species],species,signal:controller.signal,onTextured:()=>onTextured(species),onError:error=>onTextureError(species,error),...(materialStyle?{configureMaterial:(material,object)=>materialStyle.configure(material,object)}:{})});progressive.start();return {scene:progressive.preview.scene,clips:prepareAnimalClips(progressive.preview.animations),tick:now=>progressive.tick(now),dispose:()=>progressive.dispose()};}
+  if(packages[species]){const progressive=await openProgressiveWebGpuCharacter({renderer,packageUrl:packages[species],species,signal:controller.signal,onSelectableChange,onTextured:()=>onTextured(species),onError:error=>onTextureError(species,error),...(materialStyle?{configureMaterial:(material,object)=>materialStyle.configure(material,object)}:{})});progressive.start();return {scene:progressive.preview.scene,clips:prepareAnimalClips(progressive.preview.animations),tick:now=>progressive.tick(now),dispose:()=>progressive.dispose()};}
   const manager=new THREE.LoadingManager(),abort=()=>manager.abort();controller.signal.addEventListener('abort',abort,{once:true});let gltf;
   try{gltf=await new GLTFLoader(manager).setMeshoptDecoder(MeshoptDecoder).loadAsync(spec.url);}finally{controller.signal.removeEventListener('abort',abort);}
   let converted;try{converted=materialStyle?.convert(gltf.scene);}catch(error){disposeOriginal(gltf);throw error;}
