@@ -59,6 +59,12 @@ test('diagnostics count queued snapshots and eventful barriers without counting 
  const sent=[],q=createHostPublicationQueue({session:'s',diagnostics:true,send:value=>sent.push(value)});q.publication(packet(1),true);q.publication({...packet(2),snapshot:'abcdef'},true);q.publication({...packet(3,[{id:'e'}]),snapshot:'xyz'},true);q.message({kind:'commandResult',id:1,sequence:3});q.publication({...packet(4,[{id:'f'}]),snapshot:'12345'},true);
  let s=q.status();assert.equal(s.queuedPublications,2);assert.equal(s.eventfulPublications,2);assert.equal(s.tickPublications,2);assert.equal(s.unchangedPublications,0);assert.equal(s.snapshotChars,8);assert.equal(s.peakEventfulPublications,2);assert.equal(s.peakQueuedPublications,2);assert.equal(s.peakQueuedMessages,3);q.ack(1);s=q.status();assert.equal(s.queuedPublications,1);assert.equal(s.snapshotChars,5);q.ack(3);assert.equal(q.status().snapshotChars,0);assert.equal(q.status().peakQueuedMessages,3);assert.equal(sent.at(-1).publication.sequence,4);
 });
+test('diagnostics attribute only retained publications to their source without changing the wire',()=>{
+ const sent=[],q=createHostPublicationQueue({session:'s',diagnostics:true,send:value=>sent.push(value)});
+ q.publication(packet(1),true,{sourceKind:'advance'});q.publication(packet(2),true,{sourceKind:'advance'});q.publication(packet(3),true,{sourceKind:'advance'});q.publication(packet(4,[{id:'e'}]),false,{sourceKind:'castAttack'});
+ assert.deepEqual(q.status().queuedBySource,{advance:1,castAttack:1});assert.deepEqual(q.status().peakQueuedBySource,{advance:1,castAttack:1});assert.equal(Object.hasOwn(sent[0],'sourceKind'),false);
+ q.ack(1);assert.equal(Object.hasOwn(sent[1],'sourceKind'),false);assert.deepEqual(q.status().queuedBySource,{castAttack:1});q.ack(3);q.ack(4);assert.deepEqual(q.status().queuedBySource,{});
+});
 test('an unchanged camera confirmation can share the preceding quiet state without changing its receipt',()=>{
  const sent=[],q=createHostPublicationQueue({session:'s',foldViews:true,send:value=>sent.push(value)}),full=sequence=>({sequence,events:[],physicsPose:null,elapsed:1,pauses:[],saveAvailable:true,snapshot:JSON.stringify({slotId:'slot',sequence:7,elapsed:1})});
  q.publication(full(1),true);q.publication(full(2),true);const receipt={session:'s',sequence:3,unchanged:true,slotId:'slot',stateSequence:7,elapsed:1,pauses:[],events:[],saveAvailable:true};
