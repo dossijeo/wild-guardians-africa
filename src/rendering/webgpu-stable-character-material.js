@@ -52,7 +52,7 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
     entries.push({ object, record });
   });
   const sources = await Promise.all(entries.map(item => originalMaterials.parser.getDependency('material', item.record.material)));
-  const placeholders = new Map(), mapBindings = [], changes = [], createdMaterials = [], progressiveMaterials = [], normalScales = [], compatibleMaterials = new Map();
+  const placeholders = new Map(), mapBindings = [], changes = [], createdMaterials = [], progressiveMaterials = [], normalScales = [], compatibleMaterials = new Map(),replicas=new Map();
   let generation = 0, cancelled = false, resolved = false, applied = false, disposed = false;
   function placeholder(source, normal) {
     const key = JSON.stringify([normal,textureLayout(source)]);
@@ -83,6 +83,7 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
     const nodeMaterial = renderer.library.fromMaterial(source);
     if (!nodeMaterial) throw Error(`Unsupported material type ${source.type}`);
     createdMaterials.push(nodeMaterial);
+    nodeMaterial._wgRegisterReplica=replica=>{if(disposed||!replica?.isMaterial)throw TypeError('Invalid progressive material replica');let set=replicas.get(nodeMaterial);if(!set){set=new Set();replicas.set(nodeMaterial,set);}set.add(replica);for(const binding of mapBindings)if(binding.material===nodeMaterial)replica[binding.key]=nodeMaterial[binding.key];if(nodeMaterial.normalScale&&replica.normalScale)replica.normalScale.copy(nodeMaterial.normalScale);if(Object.hasOwn(nodeMaterial,'_wgTextureBlend'))replica._wgTextureBlend=nodeMaterial._wgTextureBlend;return ()=>{set.delete(replica);if(!set.size)replicas.delete(nodeMaterial);};};
     if (key !== null) compatibleMaterials.set(key,nodeMaterial);
     // GLTFLoader.assignFinalMaterial flips these scales for meshes without
     // tangents. fromMaterial copies by reference, so clone before adjusting.
@@ -92,7 +93,7 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
       if (nodeMaterial.normalScale) nodeMaterial.normalScale.y *= -1;
       if (nodeMaterial.clearcoatNormalScale) nodeMaterial.clearcoatNormalScale.y *= -1;
     }
-    if (source.normalMap && nodeMaterial.normalScale) normalScales.push({ scale: nodeMaterial.normalScale, original: nodeMaterial.normalScale.clone() });
+    if (source.normalMap && nodeMaterial.normalScale) normalScales.push({ material:nodeMaterial,scale: nodeMaterial.normalScale, original: nodeMaterial.normalScale.clone() });
     if (!item.object.geometry.getAttribute('normal')) nodeMaterial.flatShading = true;
     if (toonOutput && !source.transparent) nodeMaterial.outputNode = typeof toonOutput === 'function' ? toonOutput(item.object) : toonOutput;
     // Keep the existence of every map stable; use neutral textures until ready.
@@ -150,9 +151,9 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
       if (cancelled) throw Error('Material preparation cancelled');
       if (!resolved) throw Error('Final textures not ready');
       if (!Number.isFinite(blend) || blend < 0 || blend > 1) throw Error('Invalid texture blend');
-      for (const binding of mapBindings) binding.material[binding.key] = binding.final;
-      for (const item of normalScales) item.scale.copy(item.original).multiplyScalar(blend);
-      for (const material of progressiveMaterials) material._wgTextureBlend=blend;
+      for (const binding of mapBindings) {binding.material[binding.key] = binding.final;for(const replica of replicas.get(binding.material)??[])replica[binding.key]=binding.final;}
+      for (const item of normalScales) {item.scale.copy(item.original).multiplyScalar(blend);for(const replica of replicas.get(item.material)??[])replica.normalScale?.copy(item.scale);}
+      for (const material of progressiveMaterials) {material._wgTextureBlend=blend;for(const replica of replicas.get(material)??[])replica._wgTextureBlend=blend;}
       applied = true;
     },
     setBlend(value) {
@@ -160,10 +161,10 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
       if (!resolved) throw Error('Final textures not ready');
       if (!applied) throw Error('Final textures not applied');
       if (!Number.isFinite(value) || value < 0 || value > 1) throw Error('Invalid texture blend');
-      for (const item of normalScales) item.scale.copy(item.original).multiplyScalar(value);
-      for (const material of progressiveMaterials) material._wgTextureBlend=value;
+      for (const item of normalScales) {item.scale.copy(item.original).multiplyScalar(value);for(const replica of replicas.get(item.material)??[])replica.normalScale?.copy(item.scale);}
+      for (const material of progressiveMaterials) {material._wgTextureBlend=value;for(const replica of replicas.get(material)??[])replica._wgTextureBlend=value;}
     },
     cancel() { cancelled = true; resolved = false; generation++; },
-    dispose() { if (disposed) return; disposed = true; cancelled = true; resolved = false; generation++; for (const material of createdMaterials) material.dispose(); for (const lease of placeholders.values()) lease.release(); },
+    dispose() { if (disposed) return; disposed = true; cancelled = true; resolved = false; generation++; replicas.clear();for (const material of createdMaterials) material.dispose(); for (const lease of placeholders.values()) lease.release(); },
   };
 }

@@ -40,11 +40,11 @@ test('walking texture contract accepts known species and rejects unknown species
 test('real hyena rig retains original meshes for physical fallback',async()=>{
  const meta=JSON.parse(await readFile(new URL('../public/qa/gpu-bake/walking.json',import.meta.url))),bytes=await readFile(new URL('../public/qa/gpu-bake/walking.bin',import.meta.url));
  const bake=createBakedWalkTexture(meta,bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength)),asset=await actorAsset('public'+ANIMAL_ACTIONS.animals.hyena.url),root=new Group();root.add(asset.scene);
- const originals=[];asset.scene.traverse(o=>{if(o.isSkinnedMesh)originals.push(o);});
+ const originals=[];let registered=0,released=0;asset.scene.traverse(o=>{if(o.isSkinnedMesh){originals.push(o);for(const material of Array.isArray(o.material)?o.material:[o.material])material._wgRegisterReplica=()=>{registered++;return ()=>released++;};}});
  const renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:()=>new MeshStandardNodeMaterial()}},presentation=createBakedWalkPresentation({model:asset.scene,root,renderer,bake});
- presentation.set(.25);assert.ok(originals.every(o=>!o.visible));let mirrors=0;asset.scene.traverse(o=>{if(o.isMesh&&!o.isSkinnedMesh&&o.visible)mirrors++;});assert.equal(mirrors,4);
+ presentation.set(.25);assert.ok(originals.every(o=>!o.visible));const admissionObjects=presentation.admissionObjects();assert.equal(admissionObjects.length,8);assert.ok(originals.every(mesh=>admissionObjects.includes(mesh)));let mirrors=0;asset.scene.traverse(o=>{if(o.isMesh&&!o.isSkinnedMesh&&o.visible)mirrors++;});assert.equal(mirrors,4);
  const restore=presentation.preparePick();let proxies=0;const pickMeshes=[];asset.scene.traverse(o=>{if(o.isMesh&&!o.isSkinnedMesh&&o.visible){proxies++;pickMeshes.push(o);assert.ok(o.geometry.boundingSphere);assert.ok(o.geometry.attributes.position.array.every(Number.isFinite));}});assert.equal(proxies,4);root.updateMatrixWorld(true);const bounds=new Box3();for(const mesh of pickMeshes)bounds.expandByObject(mesh);const center=bounds.getCenter(new Vector3()),ray=new Raycaster(center.clone().add(new Vector3(0,0,10)),new Vector3(0,0,-1));assert.ok(ray.intersectObjects(pickMeshes).length>0);restore();assert.ok(presentation.isEnabled());assert.ok(pickMeshes.every(mesh=>!mesh.visible));
- presentation.disable();assert.ok(originals.every(o=>o.visible));presentation.dispose();bake.dispose();
+ presentation.disable();assert.ok(originals.every(o=>o.visible));presentation.dispose();assert.ok(registered>0);assert.equal(released,registered);bake.dispose();
 });
 
 test('two real hyena rigs share a confirmed clock while preserving phase and fallback',async()=>{

@@ -149,6 +149,8 @@ El flujo confirmado comunica la relación actual de trabajadores y animales al o
 
 El reproductor de marcha acepta las cinco especies y puede seleccionar su bake por especie; conserva el rig original para física y clips no soportados. Valida la separación uniforme de muestras que exige el shader, la identidad de canales y la inmutabilidad de los metadatos. Los cinco archivos generados en la auditoría previa se distribuyen en `public/content/gpu-walk` y se regeneran o comprueban con `node tools/guardian/build_baked_walk_catalog.mjs [--check]`. El cargador verifica la identidad del modelo y el hash de los datos antes de crear la textura. La superficie del juego usa este catálogo solo para la hiena experimental; faltan la carga bajo demanda de las demás especies, la admisión de todos los pases y su validación visual antes de habilitarlas.
 
+La admisión de un animal incluye ahora sus mallas normales y de marcha precocinada en los pases de color y sombra sin hacerlas visibles entre fotogramas. Las réplicas de material de marcha reciben las texturas y la transición progresiva del material de origen y se desvinculan al destruirse. Las pruebas comprueban el contrato con compiladores simulados; quedan pendientes otros pases, la primera utilización WebGPU y la paridad visual.
+
 **Entrega:** contratos temporales, buffers y reproductores comunes. **Cierre interno:** versiones, horizontes, invalidaciones y cambios de propietario cubiertos. La migración de todos los clips y personajes corresponde a B.
 
 ### A7. Interacción y recuperación sin dependencias antiguas

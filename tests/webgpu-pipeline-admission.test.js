@@ -49,6 +49,13 @@ test('preparation includes objects outside the camera and restores their culling
  const admission=createWebGpuPipelineAdmission({renderer,scene,camera});await admission.prepare(object);assert.equal(mesh.frustumCulled,true);admission.dispose();
 });
 
+test('hidden alternate meshes are included in both passes without becoming visible between frames',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),root=new THREE.Group(),original=new THREE.Mesh(),alternate=new THREE.Mesh(),sun=new THREE.DirectionalLight();root.visible=false;original.visible=true;alternate.visible=false;original.castShadow=alternate.castShadow=sun.castShadow=true;sun.shadow.map={};root.add(original,alternate);let colorFinish,shadowFinish;
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(){assert.equal(root.visible,true);assert.equal(original.visible,true);assert.equal(alternate.visible,true);return new Promise(resolve=>{colorFinish=resolve;});},compileShadowAsync(){assert.equal(root.visible,true);assert.equal(original.visible,true);assert.equal(alternate.visible,true);return new Promise(resolve=>{shadowFinish=resolve;});}};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera,shadowLights:[sun],includeShadowPass:true}),pending=admission.prepare(root,{include:[original,alternate]});await Promise.resolve();assert.equal(root.visible,false);assert.equal(original.visible,true);assert.equal(alternate.visible,false);colorFinish();await new Promise(resolve=>setImmediate(resolve));assert.equal(root.visible,false);assert.equal(original.visible,true);assert.equal(alternate.visible,false);shadowFinish();await pending;admission.dispose();
+});
+test('admission cannot temporarily reveal objects owned by another root',async()=>{const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),root=new THREE.Group(),other=new THREE.Mesh(),admission=createWebGpuPipelineAdmission({renderer:{backend:{isWebGPUBackend:true},compileAsync:()=>Promise.resolve()},scene,camera});await assert.rejects(admission.prepare(root,{include:[other]}),/Invalid admission visibility/);admission.dispose();});
+
 test('compilation suppresses implicit shadow updates only during synchronous setup',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),sun=new THREE.DirectionalLight();scene.add(sun);sun.castShadow=true;sun.shadow.autoUpdate=true;sun.shadow.needsUpdate=true;let finish;
  const renderer={backend:{isWebGPUBackend:true},compileAsync(){assert.equal(sun.castShadow,true);assert.equal(sun.shadow.autoUpdate,false);assert.equal(sun.shadow.needsUpdate,false);return new Promise(resolve=>{finish=resolve;});}};

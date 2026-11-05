@@ -12,7 +12,7 @@ export async function admitRosterActor({actor,entry,isCurrent,pipelineAdmission,
   if(pipelineAdmission){
    if(!actor.root?.isObject3D)throw Error('Actor admission requires a root');
    actor.root.visible=false;
-   await pipelineAdmission.prepare(actor.root,{signal:entry.controller.signal});
+   await pipelineAdmission.prepare(actor.root,{signal:entry.controller.signal,include:actor.admissionObjects?.()??[]});
   }
   if(!isCurrent())return;
   actor.update();entry.pendingActor=null;entry.actor=actor;

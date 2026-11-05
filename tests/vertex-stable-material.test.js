@@ -41,6 +41,12 @@ test('different UV channels retain separate progressive graphs',async()=>{
  const a=setup(),b=setup();b.material.map.channel=1;const first=await makeStableVertexMaterials(a.renderer,a.preview,a.asset(a.material),a.mapping),second=await makeStableVertexMaterials(b.renderer,b.preview,b.asset(b.material),b.mapping);assert.notEqual(a.mesh.material.colorNode,b.mesh.material.colorNode);assert.notEqual(a.mesh.material.colorNode.getCacheKey(),b.mesh.material.colorNode.getCacheKey());first.dispose();second.dispose();
 });
 
+test('a registered baked material follows progressive maps and blend and can be released',async()=>{
+ const x=setup(),stable=await makeStableVertexMaterials(x.renderer,x.preview,x.asset(x.material),x.mapping),source=x.mesh.material,replica=source.clone(),release=source._wgRegisterReplica(replica),placeholder=replica.map;
+ await stable.resolveFinal(x.asset(x.material));stable.apply({blend:.25});assert.notEqual(replica.map,placeholder);assert.equal(replica.map,x.material.map);assert.equal(replica.normalMap,x.material.normalMap);assert.equal(replica._wgTextureBlend,.25);assert.ok(replica.normalScale.equals(source.normalScale));
+ stable.setBlend(.75);assert.equal(replica._wgTextureBlend,.75);assert.ok(replica.normalScale.equals(source.normalScale));release();stable.setBlend(1);assert.equal(replica._wgTextureBlend,.75);stable.dispose();replica.dispose();
+});
+
 test('tangent layout differences keep incompatible material instances separate',async()=>{
  const x=setup(),second=x.mesh.clone();second.geometry=x.mesh.geometry.clone();second.geometry.setAttribute('tangent',new THREE.Float32BufferAttribute([1,0,0,1],4));x.preview.scene.add(second);x.preview.parser.associations.set(second,{meshes:1,primitives:0});x.mapping.primitives.push({mesh:1,primitive:0,material:0,colorAccessor:null});
  const stable=await makeStableVertexMaterials(x.renderer,x.preview,x.asset(x.material),x.mapping,{shareCompatibleMaterials:true});assert.notEqual(x.mesh.material,second.material);assert.equal(x.mesh.material.normalScale.y,-second.material.normalScale.y);stable.dispose();
