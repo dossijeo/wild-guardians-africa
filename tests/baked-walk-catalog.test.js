@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {createHash,webcrypto} from 'node:crypto';
 import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
-import {loadBakedWalkAsset} from '../src/rendering/baked-walk-catalog.js';
+import {loadBakedWalkAsset,createBakedWalkBank} from '../src/rendering/baked-walk-catalog.js';
 
 const sha=data=>createHash('sha256').update(data).digest('hex');
 async function fetchFile(url){const data=await readFile('public'+url);return {ok:true,json:async()=>JSON.parse(data.toString()),arrayBuffer:async()=>data.buffer.slice(data.byteOffset,data.byteOffset+data.byteLength)};}
@@ -24,4 +24,12 @@ test('catalogue rejects altered data and metadata without creating a texture',as
 
 test('cancellation during asynchronous verification cannot publish an asset',async()=>{
  const controller=new AbortController();let finish,started;const verifying=new Promise(resolve=>{started=resolve;}),pending=loadBakedWalkAsset('hyena',{signal:controller.signal,fetcher:fetchFile,subtle:{digest(){started();return new Promise(resolve=>{finish=resolve;});}}});await verifying;controller.abort();finish(new Uint8Array(32).buffer);await assert.rejects(pending,{name:'AbortError'});
+});
+
+test('the Worker bank shares one species load and releases it once at shutdown',async()=>{
+ let loads=0,disposed=0;const bank=createBakedWalkBank({load:async species=>{loads++;return {meta:{species},texture:{isDataTexture:true},dispose(){disposed++;}};}}),[a,b]=await Promise.all([bank.get('hyena'),bank.get('hyena')]);assert.equal(a,b);assert.equal(loads,1);assert.equal(bank.status().species[0].ready,true);bank.dispose();bank.dispose();assert.equal(disposed,1);await assert.rejects(bank.get('hyena'),/disposed/);
+});
+
+test('bank disposal rejects a late asset and frees it without publication',async()=>{
+ let finish,started,disposed=0;const loading=new Promise(resolve=>{started=resolve;}),bank=createBakedWalkBank({load:species=>{started();return new Promise(resolve=>{finish=()=>resolve({meta:{species},texture:{isDataTexture:true},dispose(){disposed++;}});});}}),pending=bank.get('lion');await loading;bank.dispose();finish();await assert.rejects(pending,{name:'AbortError'});assert.equal(disposed,1);assert.deepEqual(bank.status().species,[]);
 });

@@ -4,6 +4,15 @@ import {Group,Mesh,BoxGeometry,MeshBasicMaterial} from 'three';
 import {createWebGpuAnimalBank} from '../src/rendering/webgpu-animal-bank.js';
 import {createWebGpuAnimalRoster} from '../src/rendering/webgpu-animal-roster.js';
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
+test('on-demand walking keeps the original actor visible until its replacement is admitted',async()=>{
+ const state={raid:{animals:[{id:'a',species:'hyena',status:'walking'}]}},assetBank={tick(){},dispose(){}},ready=[],changes=[];let finishLoad,finishAdmission;
+ const bakedWalkBank={get:()=>new Promise(resolve=>{finishLoad=resolve;})},roster=createWebGpuAnimalRoster({scene:{},residency:{},state,assetBank,bakedWalkBank,pipelineAdmission:{prepare:()=>Promise.resolve()},onReady:id=>ready.push(id),onSelectableChange:()=>changes.push('change'),createAnimal:()=>({root:new Group(),update(){this.root.visible=true;},installBakedWalk(bake,{signal}){assert.equal(bake.meta.species,'hyena');return new Promise((resolve,reject)=>{finishAdmission=resolve;signal.addEventListener('abort',()=>reject(new DOMException('cancelled','AbortError')),{once:true});});},dispose(){}})});
+ roster.sync();await flush();assert.deepEqual(ready,['a']);assert.equal(roster.get('a').root.visible,true);finishLoad({meta:{species:'hyena'}});await flush();assert.equal(roster.get('a').root.visible,true);assert.equal(changes.length,1);finishAdmission(true);await flush();assert.equal(changes.length,2);roster.dispose();
+});
+test('a removed actor cannot receive a late on-demand walking asset',async()=>{
+ const state={raid:{animals:[{id:'a',species:'hyena',status:'walking'}]}},assetBank={tick(){},dispose(){}},calls=[];let finishLoad;const roster=createWebGpuAnimalRoster({scene:{},residency:{},state,assetBank,bakedWalkBank:{get:()=>new Promise(resolve=>{finishLoad=resolve;})},pipelineAdmission:{prepare:()=>Promise.resolve()},createAnimal:()=>({root:new Group(),update(){},installBakedWalk(){calls.push('install');},dispose(){calls.push('dispose');}})});
+ roster.sync();await flush();state.raid.animals=[];roster.sync();finishLoad({meta:{species:'hyena'}});await flush();assert.deepEqual(calls,['dispose']);roster.dispose();
+});
 test('animal remains hidden until admission and cancelled actors never return',async()=>{
  const state={raid:{animals:[{id:'a',species:'hyena',status:'walking'}]}},bank={tick(){},dispose(){}},pending=[],disposed=[],ready=[];
  const roster=createWebGpuAnimalRoster({scene:{},residency:{},state,renderer:{},assetBank:bank,onReady:id=>ready.push(id),pipelineAdmission:{prepare(root,{signal}){assert.equal(root.visible,false);return new Promise((resolve,reject)=>{pending.push({resolve,signal});signal.addEventListener('abort',()=>reject(new DOMException('cancelled','AbortError')),{once:true});});}},createAnimal:({actorId})=>({root:new Group(),update(){this.root.visible=true;},dispose(){disposed.push(actorId);}})});

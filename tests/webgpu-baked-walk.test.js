@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {AnimationMixer,Box3,Group,Matrix4,Raycaster,Vector3,Vector4} from 'three';
+import {AnimationMixer,Box3,Group,Matrix4,Raycaster,Scene,Vector3,Vector4} from 'three';
 import {MeshStandardNodeMaterial} from 'three/webgpu';
 import {actorAsset} from './helpers/actor-geometry.js';
 import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
@@ -9,6 +9,13 @@ import {createBakedWalkNodes,createBakedWalkPresentation,createBakedWalkTexture}
 import {createConfirmedPresentationClock} from '../src/rendering/confirmed-presentation-clock.js';
 import {clone} from 'three/addons/utils/SkeletonUtils.js';
 import {prepareAnimalClips} from '../src/rendering/animal-actions.js';
+import {createWebGpuConfirmedAnimal} from '../src/rendering/webgpu-confirmed-animal.js';
+
+test('a live real rig remains unchanged until its walking alternative is admitted',async()=>{
+ const meta=JSON.parse(await readFile(new URL('../public/content/gpu-walk/hyena/walking.json',import.meta.url))),bytes=await readFile(new URL('../public/content/gpu-walk/hyena/walking.bin',import.meta.url)),bake=createBakedWalkTexture(meta,bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength)),asset=await actorAsset('public'+ANIMAL_ACTIONS.animals.hyena.url),scene=new Scene(),model=asset.scene,originals=[];
+ model.traverse(node=>{if(node.isSkinnedMesh)originals.push(node);});const game={elapsed:.3,raid:{animals:[{id:'a',species:'hyena',status:'walking',x:.2,z:.2}]}},renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:()=>new MeshStandardNodeMaterial()}},assetBank={async acquire(){return {model,clips:prepareAnimalClips(asset.animations),release(){}};}},actor=await createWebGpuConfirmedAnimal({scene,residency:{get:()=>null},state:game,actorId:'a',renderer,assetBank});
+ const before=originals.map(mesh=>mesh.visible);let finish;const pending=actor.installBakedWalk(bake,{pipelineAdmission:{prepare(_root,{include}){assert.equal(include.length,originals.length*2);return new Promise(resolve=>{finish=resolve;});}}});assert.deepEqual(originals.map(mesh=>mesh.visible),before);assert.equal(actor.isBakedWalking(),false);finish();assert.equal(await pending,true);assert.equal(actor.isBakedWalking(),true);assert.ok(originals.every(mesh=>!mesh.visible));actor.dispose();bake.dispose();
+});
 
 test('real hyena picking pose stays close to the baked shader at samples and midpoints',async()=>{
  const meta=JSON.parse(await readFile(new URL('../public/qa/gpu-bake/walking.json',import.meta.url))),bytes=await readFile(new URL('../public/qa/gpu-bake/walking.bin',import.meta.url)),bake=createBakedWalkTexture(meta,bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength)),asset=await actorAsset('public'+ANIMAL_ACTIONS.animals.hyena.url),root=new Group();root.add(asset.scene);root.updateMatrixWorld(true);const mixer=new AnimationMixer(asset.scene),clip=prepareAnimalClips(asset.animations).find(c=>c.name==='Walking');assert.ok(clip);const action=mixer.clipAction(clip).play();action.paused=true;const meshes=[];asset.scene.traverse(o=>{if(o.isSkinnedMesh)meshes.push(o);});let max=0;

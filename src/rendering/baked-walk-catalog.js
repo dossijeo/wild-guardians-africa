@@ -16,3 +16,19 @@ export async function loadBakedWalkAsset(species,{signal,fetcher=globalThis.fetc
  if(digest!==meta.sha256)throw Error('Baked walking checksum mismatch: '+species);
  return createBakedWalkTexture(meta,buffer);
 }
+
+// The graphical Worker owns one texture per species for its lifetime. Actors
+// borrow it; their removal never disposes a texture used by another actor.
+export function createBakedWalkBank({load=loadBakedWalkAsset}={}){
+ if(typeof load!=='function')throw TypeError('Invalid baked walking bank');
+ const entries=new Map(),controller=new AbortController();let closed=false;
+ return {
+  get(species){
+   if(closed)return Promise.reject(Error('Baked walking bank disposed'));
+   if(!Object.hasOwn(ANIMAL_ACTIONS.animals,species))return Promise.reject(TypeError('Unknown baked walking species'));
+   let entry=entries.get(species);if(!entry){entry={asset:null,promise:null};entries.set(species,entry);entry.promise=Promise.resolve().then(()=>load(species,{signal:controller.signal})).then(asset=>{if(!asset?.texture?.isDataTexture||asset.meta?.species!==species||typeof asset.dispose!=='function'){asset?.dispose?.();throw TypeError('Invalid baked walking asset');}if(closed){asset.dispose();throw new DOMException('Baked walking bank disposed','AbortError');}entry.asset=asset;return asset;}).catch(error=>{if(entries.get(species)===entry)entries.delete(species);throw error;});}return entry.promise;
+  },
+  status(){return {closed,species:[...entries].map(([species,entry])=>({species,ready:!!entry.asset}))};},
+  dispose(){if(closed)return;closed=true;controller.abort();for(const entry of entries.values())entry.asset?.dispose();entries.clear();},
+ };
+}
