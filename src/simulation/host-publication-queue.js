@@ -4,6 +4,11 @@ import {estimateRetainedBytes} from './retained-size.js';
 // Quiet ticks may be absorbed into the next tick, including an eventful one,
 // if their active pose owners match. Existing events remain at their state.
 export function physicsOwners(p){
+ if(Object.hasOwn(p,'physicsOwnerSummary')){
+  if(Object.hasOwn(p,'physicsPose')||Object.hasOwn(p,'physicsPoses')||typeof p.physicsOwnerSummary!=='string')return null;
+  if(p.physicsOwnerSummary==='')return '';
+  try{const ids=JSON.parse(p.physicsOwnerSummary);return Array.isArray(ids)&&ids.every((id,index)=>typeof id==='string'&&id.length>0&&(!index||ids[index-1]<id))&&JSON.stringify(ids)===p.physicsOwnerSummary?p.physicsOwnerSummary:null;}catch{return null;}
+ }
  if(p.physicsPose===null&&!p.physicsPoses)return '';
  const poses=p.physicsPoses??[p.physicsPose];if(!Array.isArray(poses)||!poses.length||!p.physicsPose||poses[0]?.actorId!==p.physicsPose.actorId||poses[0]?.active!==p.physicsPose.active)return null;
  const seen=new Set(),active=[];for(const pose of poses){if(!pose||typeof pose.actorId!=='string'||!pose.actorId||typeof pose.active!=='boolean'||seen.has(pose.actorId))return null;seen.add(pose.actorId);if(pose.active)active.push(pose.actorId);}return JSON.stringify(active.sort());
@@ -28,7 +33,7 @@ export function createHostPublicationQueue({session,send,diagnostics=false,foldV
  const eligible=item=>item.kind==='publication'&&item.tick&&!item.publication.terrainCheckpoint&&item.publication.worldMotionTrace===undefined&&headingStable(item.publication)&&terrainStable(item.publication)&&item.publication.unchanged!==true&&Array.isArray(item.publication.events)&&physicsOwners(item.publication)!==null;
  // An invalidation is an ordered boundary even when no gameplay event was
  // emitted. Absorbing it would let a consumer retain an obsolete trajectory.
- const quietKeys=new Set(['session','sequence','value','stepsExecuted','residency','physicsPose','physicsPoses','elapsed','pauses','events','presentationJournal','presentationWorkerHeadings','raidWaitBindings','saveAvailable','snapshot','terrainChanged','motionTrace','motionInvalidation']);
+ const quietKeys=new Set(['session','sequence','value','stepsExecuted','residency','physicsPose','physicsPoses','physicsOwnerSummary','elapsed','pauses','events','presentationJournal','presentationWorkerHeadings','raidWaitBindings','saveAvailable','snapshot','terrainChanged','motionTrace','motionInvalidation']);
  const backgroundKeys=new Set(['session','sequence','value','unchanged','slotId','stateSequence','elapsed','pauses','events','residency','saveAvailable','terrainChanged']);
  const foldViewKeys=new Set([...backgroundKeys,'pausedAdvance','stepsExecuted']);
  const replaceable=item=>eligible(item)&&item.publication.events.length===0&&!(item.publication.presentationJournal?.length)&&!item.publication.motionInvalidation&&Object.keys(item.publication).every(key=>quietKeys.has(key));
