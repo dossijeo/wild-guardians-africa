@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {submitWorkerInput} from '../src/app/submit-worker-input.js';
+import {submitWorkerInput,waitForWorkerInputs} from '../src/app/submit-worker-input.js';
 import {isPresentationInputCommand} from '../src/simulation/presentation-input-command.js';
 
 test('causal placement retains input order and waits for the main projection',async()=>{
@@ -16,4 +16,9 @@ test('presentation input permits identified player actions and contextual attack
 test('different actions share one sequence without waiting for earlier confirmation',async()=>{
  const sent=[],resolve=[],owner={workerGpuOnly:true,presentationInputs:true,workerRuntime:{submit(){throw Error('wrong channel');},waitForConfirmed:()=>Promise.resolve()},webGpuWorld:{client:{submitPresentationInput(id,command){sent.push([id,command.kind]);return new Promise(done=>resolve.push(done));}}}};
  const first=submitWorkerInput(owner,{kind:'plant',id:'a'}),second=submitWorkerInput(owner,{kind:'removeWall',id:'b'});assert.deepEqual(sent,[[1,'plant'],[2,'removeWall']]);resolve[0]({sequence:4,value:true});resolve[1]({sequence:5,value:true});assert.equal((await first).sequence,4);assert.equal((await second).sequence,5);
+});
+test('a save fence waits for prior actions but not later actions',async()=>{
+ const resolve=[],owner={workerGpuOnly:true,presentationInputs:true,workerRuntime:{submit(){throw Error('wrong channel');},waitForConfirmed:()=>Promise.resolve()},webGpuWorld:{client:{submitPresentationInput(){return new Promise((accept,reject)=>resolve.push({accept,reject}));}}}};
+ const first=submitWorkerInput(owner,{kind:'plant',id:'a'}),fence=waitForWorkerInputs(owner);let done=false;fence.then(()=>{done=true;});const second=submitWorkerInput(owner,{kind:'removeWall',id:'b'});await Promise.resolve();assert.equal(done,false);resolve[0].accept({sequence:3,value:true});await first;await fence;assert.equal(done,true);resolve[1].accept({sequence:4,value:true});await second;
+ const failed=submitWorkerInput(owner,{kind:'plant',id:'c'}),rejected=assert.rejects(failed,/lost/),afterFailure=waitForWorkerInputs(owner);resolve[2].reject(Error('lost'));await rejected;await afterFailure;
 });

@@ -78,7 +78,7 @@ import {createSimulationAuthorityClient} from '../simulation/simulation-authorit
 import {createWorkerHostedRuntime} from '../simulation/worker-hosted-runtime.js';
 import {createEarlyWorkerAuthority} from './early-worker-authority.js';
 import {earlyWorkerOptions} from './early-worker-options.js';
-import {submitWorkerInput} from './submit-worker-input.js';
+import {submitWorkerInput,waitForWorkerInputs} from './submit-worker-input.js';
 import {createWebGpuWorldClient} from '../rendering/webgpu-world-client.js';
 import {captureRaidWaitBindings} from '../simulation/raid-wait-handoff.js';
 import {captureStructureTemplate} from '../simulation/worker-structure-geometry.js';
@@ -249,7 +249,7 @@ function ensureWorkerSave(owner,ownerState){
   const runtime=owner.workerRuntime;if(!runtime||!ownerState)throw Error('Worker save integration is unavailable');
   let entry=workerSaveCoordinators.get(runtime);if(!entry){entry={slotId:ownerState.slotId,coordinator:createWorkerSaveCoordinator({runtime,repository:saves,slotId:ownerState.slotId,checkpointPolicy:{physics:owner.workerCheckpointPolicy?.physics===true||experimentalWorkerPhysicsSave(),nativeAuthority:owner.workerCheckpointPolicy?.nativeAuthority===true||owner.workerNativeAuthorityCheckpoints===true||import.meta.env.DEV&&['qa-worker-native-save','qa-worker-early-new'].some(key=>new URLSearchParams(location.search).has(key))}})};workerSaveCoordinators.set(runtime,entry);}
   if(entry.slotId!==ownerState.slotId)throw Error('Worker save slot changed');
-  owner.workerSave=({confirm=false}={})=>saveWorkerGame(entry.coordinator,{confirm,onError:error,onConfirm:()=>juice?.savedSuccessfully()});return owner.workerSave;
+  owner.workerSave=async({confirm=false}={})=>{await waitForWorkerInputs(owner);return saveWorkerGame(entry.coordinator,{confirm,onError:error,onConfirm:()=>juice?.savedSuccessfully()});};return owner.workerSave;
 }
 function save({confirm=false}={}){const owner=juice;if(state&&world?.workerRuntime)return ensureWorkerSave(world,state)({confirm});return saveGame(state,saves,{confirm,onError:error,onConfirm:()=>owner?.savedSuccessfully()});}
 function ensureWorkerTutorial(){
