@@ -24,3 +24,9 @@ test('the causal QA profile exercises the general presentation input channel',()
  const params=new URLSearchParams('qa-webgpu-causal-input'),state={raid:null};const value=webGpuWorldOptions({params,state,field:{},dev:true});
  assert.equal(value.experimentalPresentationInputs,true);assert.equal(value.presentationInputs,true);
 });
+
+test('explicit recovery config is shared by the renderer outside QA',()=>{
+ const params=new URLSearchParams(),state={raid:null},recovery={visualRecovery:{enabled:true,concurrent:true,work:true,backpressure:true}};
+ const first=webGpuWorldOptions({params,state,field:{},recovery,dev:false}),replacement=webGpuWorldOptions({params,state,field:{},recovery,dev:false});
+ assert.equal(first.presentationRecovery,true);assert.equal(first.presentationWorkRecovery,true);assert.deepEqual(replacement,first);
+});
