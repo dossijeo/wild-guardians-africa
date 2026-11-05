@@ -43,6 +43,7 @@ self.onmessage=async({data})=>{try{
  if(data.kind==='structureConfirm'){surface?.settlements?.confirmPreview(data.id,data.targetId);return;}
  if(data.kind==='structureReject'){surface?.settlements?.rejectPreview(data.id);return;}
  if(data.kind==='prepareCrops'){if(!surface?.crops)throw Error('Crop presentation unavailable');await surface.crops.prepare();postMessage({kind:'cropPrepareResult',id:data.id});return;}
+ if(data.kind==='preferCropSpecies'){if(!surface?.crops)throw Error('Crop presentation unavailable');surface.crops.preferSpecies(data.species);return;}
  if(data.kind==='cropBegin'){if(!surface?.crops?.beginProvisional(data.id,data.species,data.x,data.z))throw Error('Crop preview unavailable');return;}
  if(data.kind==='cropConfirm'){surface?.crops?.confirmProvisional(data.id,data.targetId);return;}
  if(data.kind==='cropReject'){surface?.crops?.rejectProvisional(data.id);return;}

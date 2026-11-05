@@ -565,8 +565,8 @@ function closeSurface(){
   if(kind==='modal')changeSimulationPause(false,'menu',{sound:true});
   if(pendingVillage)cancelVillagePreview();
 }
-function armTool(value){tool=toolSession.select(value,performance.now()/1000);if(!world?.qaEarlyTutorial)world?.focusTutorialPlacement(value.kind);}
-function cancelTool(){if(pendingVillage)cancelVillagePreview();if(world?.qaEarlyGpuOnly)world.wallDrawing.setEnabled(false);tool=null;toolSession.clear();commandFeedback='';}
+function armTool(value){if(world?.qaEarlyGpuOnly)world.webGpuWorld?.client.preferCropSpecies(value.kind==='plant'?value.species:null);tool=toolSession.select(value,performance.now()/1000);if(!world?.qaEarlyTutorial)world?.focusTutorialPlacement(value.kind);}
+function cancelTool(){if(world?.qaEarlyGpuOnly)world.webGpuWorld?.client.preferCropSpecies(null);if(pendingVillage)cancelVillagePreview();if(world?.qaEarlyGpuOnly)world.wallDrawing.setEnabled(false);tool=null;toolSession.clear();commandFeedback='';}
 function toggleAwakening(){
   if(tool?.kind==='awakening'){cancelTool();return;}
   if(!permission(state,'awakening')||(state.awakenings?.progress??0)<100)return;
