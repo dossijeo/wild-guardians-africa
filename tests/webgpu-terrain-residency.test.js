@@ -32,6 +32,13 @@ test('owns per-chunk materials and preserves the fallback',()=>{
  const scene=new THREE.Scene(),fallback=new THREE.MeshBasicMaterial(),owned=[],residency=createWebGpuTerrainResidency({scene,material:fallback,materialFactory:data=>{if(!data.groundMask)return null;const material=new THREE.MeshBasicMaterial();material.addEventListener('dispose',()=>owned.push(data.cx));return material;}}),first=chunk();first.groundMask=new Uint8Array(35*35*4);residency.replace(first,1);assert.notEqual(residency.get(0,0).material,fallback);residency.replace(chunk(),2);assert.deepEqual(owned,[0]);assert.equal(residency.get(0,0).material,fallback);residency.dispose();
 });
 
+test('shared terrain materials remain owned by their provider across replacement and removal',async()=>{
+ const scene=new THREE.Scene(),fallback=new THREE.MeshBasicMaterial(),shared=new THREE.MeshBasicMaterial(),requests=[];let disposed=0;shared.addEventListener('dispose',()=>disposed++);
+ const admission={prepare:()=>new Promise(resolve=>requests.push(resolve)),deferRelease:(_object,release)=>release()},residency=createWebGpuTerrainResidency({scene,material:fallback,sharedMaterials:[shared],materialFactory:()=>shared,pipelineAdmission:admission});
+ residency.replace(chunk(),1);residency.replace(chunk(1,0),1);await Promise.resolve();requests.forEach(resolve=>resolve());await new Promise(resolve=>setImmediate(resolve));assert.equal(residency.get(0,0).material,shared);assert.equal(residency.get(1,0).material,shared);
+ residency.replace(chunk(),2);await Promise.resolve();residency.remove(0,0,3);residency.remove(1,0,2);residency.dispose();assert.equal(disposed,0);shared.dispose();fallback.dispose();assert.equal(disposed,1);
+});
+
 test('checkpoint replaces terrain without consuming the next authoritative revision',()=>{
  const residency=createWebGpuTerrainResidency({scene:new THREE.Scene(),material:new THREE.MeshBasicMaterial()}),old=chunk(),checkpoint=chunk(),future=chunk();
  checkpoint.terrain.positions[1]=17;future.terrain.positions[1]=23;residency.replace(old,4);residency.restoreCheckpoint(checkpoint);
