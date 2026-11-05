@@ -101,3 +101,18 @@ $env:NODE_PATH='C:\Users\Gabriel\.cache\codex-runtimes\codex-primary-runtime\dep
 ```
 
 El script ejecuta éxito, cancelación y errores, incluido un timeout intencionado de 10 segundos; se le pueden pasar modos individuales (`success`, `terrain`, `cancel`, `preFailure`, `cancelAfter`, `failure`, `timeout`, `gpu`, `gpuTerrain`). `QA_BASE_URL` y `PLAYWRIGHT_MODULE` permiten usar otra URL o instalación de Playwright. Los modos `gpu` y `gpuTerrain` son opcionales y usa un adaptador WebGPU disponible en el navegador; los modos por defecto no requieren WebGPU. Hay que detener Vite al terminar.
+
+### Renderer Three.js WebGPU mínimo
+
+Se añadió una fixture separada con `createWebGpuWorldClient` y su Worker Three.js reales, dos canvas de 32×32 y un estado de prueba con un único edificio de un layout existente, inicialmente un chunk nativo y ningún trabajador o animal. El reloj se coloca inmediatamente antes de la noche y se pausa después del evento para mantener el escenario acotado. El renderer todavía descarga el binario completo del poblado (4.706.020 bytes) y su textura WebP (1.279.936 bytes); no es una escena sin recursos.
+
+Dos ejecuciones headless sobre Edge confirmaron backend WebGPU. En la última, el replay partió del checkpoint 2 y alcanzó la publicación 58; conservó exactamente un evento `NightStarted` y restauró tres chunks, incluidos `1,0` y `2,0` cargados por `previewVillage`. La superficie real comprueba que las posiciones del terreno restaurado coincidan con el payload recibido. El evento y la carga de terreno ocurrieron después de preparar la recuperación y antes de iniciar el replay; la simulación estaba pausada durante la recuperación gráfica. No es prueba de una incursión, animaciones, rendimiento, equivalencia visual ni fallos de dispositivo; los casos de fallo y timeout se probaron solo con puertos simulados en la fixture anterior. El adaptador y su hardware no se identificaron.
+
+Con Vite iniciado como en el comando anterior, se reproduce con:
+
+```powershell
+$env:NODE_PATH='C:\Users\Gabriel\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules'
+.\.cache\tooling\node20.exe .\tools\experiments\audit_worker_concurrent_webgpu_minimal.mjs
+```
+
+La prueba cierra normalmente navegador y Workers; detén Vite al terminar.

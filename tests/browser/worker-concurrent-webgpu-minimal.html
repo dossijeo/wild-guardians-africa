@@ -1,0 +1,23 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {newGame} from '../../src/simulation/game.js';
+import {villageLayout} from '../../src/world/villages.js';
+import {serialize,deserialize} from '../../src/persistence/snapshots.js';
+import {createConfirmedStateReceiver} from '../../src/simulation/confirmed-state-receiver.js';
+import {createWorkerHostedRuntime} from '../../src/simulation/worker-hosted-runtime.js';
+import {createWebGpuWorldClient} from '../../src/rendering/webgpu-world-client.js';
+const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+window.audit=async()=>{
+ const payload=(await (await fetch('/content/villages.json')).json()).find(item=>item.id==='mapungubwe'),initial=newGame({seed:712,biome:'sabana',culture:'mapungubwe',slotId:'minimal-webgpu-recovery'});initial.villages[0].buildings=villageLayout(payload,0,0).filter(building=>building.kind!=='Zona común'&&building.footprint?.length).slice(0,1);initial.time=299.95;initial.elapsed=299.95;initial.pauses=['fixture'];const source=serialize(initial),state=deserialize(source),session='minimal-webgpu-recovery',camera={x:20,y:30,z:30,targetX:0,targetY:0,targetZ:0},errors=[],canvas=()=>{const c=document.createElement('canvas');c.width=c.height=32;document.body.append(c);return c;},report=e=>errors.push(String(e?.message??e));
+ const firstCanvas=canvas(),first=createWebGpuWorldClient({canvas:firstCanvas,session,snapshot:source,camera,width:32,height:32,onError:report});let second=null,secondCanvas=null,runtime=null;
+ try{
+  await first.ready;if(first.status().backend!=='WebGPU')throw Error('Expected actual WebGPU');
+  runtime=createWorkerHostedRuntime({world:{createConfirmedReceiver:id=>createConfirmedStateReceiver(state,id)},session,clientOptions:{snapshot:source,chunkKeys:['0,0']},terrainPort:first.terrainPort,presentationPort:first.presentationPort,runtimeOptions:{stepSeconds:.05,maxBatchSteps:2,diagnostics:true,coalescePublications:true,qaVisualRecovery:true,qaVisualRecoveryConcurrent:true},onError:report});await runtime.start();
+  await runtime.submit({kind:'snapshot',visualTerrain:true});for(let i=0;i<100&&!runtime.status().recoveryBaseSequence;i++)await sleep(100);if(!runtime.status().recoveryBaseSequence)throw Error('Checkpoint not acknowledged');const prepared=await runtime.prepareVisualRecoveryForQa(),checkpoint=prepared.checkpoint;
+  await runtime.submit({kind:'resume',reason:'fixture'});await sleep(120);await runtime.submit({kind:'pause',reason:'fixture'});
+  const preview=await runtime.submit({kind:'previewVillage',culture:'mapungubwe',x:60,z:0,payload});if(!preview.terrainChanged||!preview.commandLoadedChunks?.length)throw Error('Preview did not load additional terrain');
+  const channel=new MessageChannel();secondCanvas=canvas();second=createWebGpuWorldClient({canvas:secondCanvas,session,snapshot:checkpoint.snapshot,camera,width:32,height:32,initialSequence:checkpoint.sequence,recoveryPort:channel.port1,onError:report});await second.ready;
+  const attached=await runtime.attachVisualRecoveryForQa({terrainPort:second.terrainPort,presentationPort:second.presentationPort,recoveryPort:channel.port2});const inspection=await second.inspect();if(inspection.backend!=='WebGPU'||inspection.state.sequence!==attached.sequence)throw Error('Recovery backend or sequence mismatch');if(inspection.recoveryEvents.filter(event=>event.type==='NightStarted').length!==1)throw Error('NightStarted was lost or duplicated in replay');if(inspection.resident<3)throw Error('Recovered terrain missing');if(errors.length)throw Error('WebGPU fixture errors: '+errors.join('; '));
+  second.finishRecoveryForQa();runtime.finishVisualRecoveryForQa();return {backend:inspection.backend,base:checkpoint.sequence,attached:attached.sequence,recoveryEvents:inspection.recoveryEvents,loadedChunks:preview.commandLoadedChunks,resident:inspection.resident,errors,scope:'Real Three.js WebGPU presentation Workers, 32x32 canvases, initially one native chunk, no animal/worker models; test clock starts immediately before night, then pauses. Not full game or performance.'};
+ }finally{second?.dispose();runtime?.dispose();first.dispose();secondCanvas?.remove();firstCanvas.remove();}
+};window.ready=true;
+</script>
