@@ -237,6 +237,8 @@ Unificar los bancos existentes de animales, trabajadores, estructuras y vegetaci
 
 Separar referencias de instancias de la residencia de recursos reutilizables. La última bestia de una especie puede desaparecer sin destruir inmediatamente todo lo necesario para su regreso. Definir límites de memoria, prioridades, retención de esenciales y expulsión segura; liberar lo que queda sin uso sin invalidar otro consumidor.
 
+El banco de trabajadores descarta ahora la promesa de bibliotecas compartidas si su descarga o decodificación falla, de modo que una solicitud posterior puede reintentarlas. Las solicitudes concurrentes siguen compartiendo una sola carga y los datos obtenidos con éxito se reutilizan. La prueba cubre dos perfiles, fallo y reintento; la recuperación automática de recursos y la validación en partida siguen pendientes.
+
 Reutilizar Vertex Colors, paquetes progresivos y KTX2/BC7. Seleccionar el formato compatible antes de descargar; evitar recursos alternativos que no se usarán. Las transiciones afectan parámetros y bindings admitidos, sin reconstruir objetos. No añadir una fence global por instancia ni esperar a GPU desde el bucle de render; coordinar la finalización de los lotes de preparación fuera de ese bucle.
 
 **Entrega:** registro de recursos compartidos con métricas de bytes, generaciones y trabajos pendientes. **Cierre interno:** liberación, cancelación, deduplicación y reaparición no dejan propietarios ambiguos ni recursos destruidos aún referenciados.
