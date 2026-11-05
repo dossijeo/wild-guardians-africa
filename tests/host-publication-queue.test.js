@@ -2,6 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHostPublicationQueue} from '../src/simulation/host-publication-queue.js';
 const packet=(sequence,events=[],physicsPose=null)=>({sequence,events,physicsPose,snapshot:String(sequence)});
+test('a directly transmitted publication is not scanned as retained queue data',()=>{
+ const sent=[],q=createHostPublicationQueue({session:'s',send:value=>sent.push(value),maxRetainedBytes:128}),payload={};Object.defineProperty(payload,'expensive',{enumerable:true,get(){throw Error('retained payload scanned');}});q.publication({...packet(1),payload},true);assert.equal(sent[0].publication.payload,payload);assert.equal(q.status().retained.bytes,0);q.ack(1);
+});
 test('byte admission bounds typed payloads and queued messages without dropping accepted events',()=>{
  const sent=[],q=createHostPublicationQueue({session:'s',send:value=>sent.push(value),maxRetainedBytes:2048});q.publication(packet(1,[{id:'first'}]),true);q.publication(packet(2,[{id:'second'}]),true);const before=q.status().retained.bytes;assert.ok(before>0);assert.throws(()=>q.message({kind:'large',buffer:new Uint8Array(4096)}),/capacity exceeded/);assert.throws(()=>q.publication({...packet(3,[{id:'third'}]),terrainCheckpoint:{payload:new Uint8Array(4096)}},true),/capacity exceeded/);assert.equal(q.status().retained.bytes,before);q.ack(1);assert.equal(sent[1].publication.events[0].id,'second');assert.equal(q.status().retained.bytes,0);q.ack(2);
 });
