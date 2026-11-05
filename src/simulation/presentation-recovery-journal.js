@@ -25,12 +25,19 @@ export function createPresentationRecoveryJournal({capacity=256,highWatermark=12
  // Never fold terrain, checkpoints, poses, events or a sealed replay entry.
  function paused(item){const p=item?.publication;return item?.kind==='publication'&&item.tick===true&&p?.unchanged===true&&p.pausedAdvance===true&&typeof p.slotId==='string'&&Number.isSafeInteger(p.stateSequence)&&Number.isFinite(p.elapsed)&&typeof p.saveAvailable==='boolean'&&Array.isArray(p.pauses)&&p.pauses.length>0&&p.pauses.every(reason=>typeof reason==='string')&&Array.isArray(p.events)&&p.events.length===0&&(p.presentationJournal===undefined||Array.isArray(p.presentationJournal)&&p.presentationJournal.length===0)&&p.terrainChanged===false&&p.terrainCheckpoint===undefined&&p.physicsPose===undefined&&p.physicsPoses===undefined&&p.motionTrace===undefined&&p.worldMotionTrace===undefined&&p.motionInvalidation===undefined&&p.presentationWorkerHeadings===undefined&&p.snapshot===undefined;}
  function samePaused(a,b){return a.slotId===b.slotId&&a.stateSequence===b.stateSequence&&a.elapsed===b.elapsed&&a.saveAvailable===b.saveAvailable&&JSON.stringify(a.pauses)===JSON.stringify(b.pauses);}
+ // A background view acknowledgement can be folded only if every field
+ // except its transport sequence is identical. Unknown fields remain a
+ // boundary, so future protocol additions cannot silently lose information.
+ const viewKeys=new Set(['session','sequence','value','unchanged','slotId','stateSequence','elapsed','pauses','events','residency','saveAvailable','terrainChanged']);
+ function backgroundView(item){const p=item?.publication;return item?.kind==='publication'&&item.options?.backgroundView===true&&p?.unchanged===true&&p.terrainChanged===false&&Array.isArray(p.events)&&p.events.length===0&&Object.keys(p).every(key=>viewKeys.has(key));}
+ function sameView(a,b){const left={...a},right={...b};delete left.sequence;delete right.sequence;return JSON.stringify(left)===JSON.stringify(right);}
  return {
   append(message,tick,options={}){
    ensure();const n=sequence(message?.sequence);if(typeof tick!=='boolean'||!options||typeof options!=='object')throw TypeError('Invalid journal publication');
    if(last===null)return false;
    if(n!==last+1)throw Error('Presentation journal sequence gap');
-   const item={kind:'publication',sequence:n,publication:structuredClone(message),tick,options:structuredClone(options)},previous=entries.at(-1),fold=previous&&!previous.sealed&&candidate!==previous.item.sequence&&(paused(previous.item)&&paused(item)&&samePaused(previous.item.publication,item.publication)||compactTicks&&quiet(previous.item)&&quiet(item)&&JSON.stringify(previous.item.publication.pauses)===JSON.stringify(item.publication.pauses));
+   const item={kind:'publication',sequence:n,publication:structuredClone(message),tick,options:structuredClone(options)},previous=entries.at(-1),foldViews=previous&&backgroundView(previous.item)&&backgroundView(item)&&JSON.stringify(previous.item.options)===JSON.stringify(item.options)&&sameView(previous.item.publication,item.publication),fold=previous&&!previous.sealed&&candidate!==previous.item.sequence&&(foldViews||paused(previous.item)&&paused(item)&&samePaused(previous.item.publication,item.publication)||compactTicks&&quiet(previous.item)&&quiet(item)&&JSON.stringify(previous.item.publication.pauses)===JSON.stringify(item.publication.pauses));
+   if(fold&&foldViews)item.tick=true; // Recovery protocol accepts a merged sequence range only for tick envelopes.
    if(fold){item.firstSequence=previous.item.firstSequence??previous.item.sequence;const before=previous.item.publication.presentationWorkerHeadings,after=item.publication.presentationWorkerHeadings;if(before!==undefined||after!==undefined)item.publication.presentationWorkerHeadings=mergePresentationWorkerHeadings(before===undefined?[]:before,after===undefined?[]:after);}
    if(!fold&&entries.length>=capacity)throw Error('Presentation recovery journal capacity exceeded');
    const size=estimateBytes(item),retained=bytes-(fold?previous.size:0);if(size>maxBytes-retained)throw Error('Presentation recovery journal byte capacity exceeded');

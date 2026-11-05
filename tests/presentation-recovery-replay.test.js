@@ -2,6 +2,17 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createPresentationRecoveryJournal} from '../src/simulation/presentation-recovery-journal.js';
 import {createPresentationRecoveryReplay} from '../src/simulation/presentation-recovery-replay.js';
+
+test('replay transmits a compacted background view range before later events',()=>{
+ const sent=[],errors=[],port={postMessage:m=>sent.push(m),start(){}};
+ const journal=createPresentationRecoveryJournal();journal.begin(1);journal.confirm(1);
+ const view=n=>({sequence:n,unchanged:true,slotId:'slot',stateSequence:7,elapsed:1,pauses:[],events:[],saveAvailable:true,terrainChanged:false});
+ journal.append(view(2),false,{backgroundView:true});journal.append(view(3),false,{backgroundView:true});journal.append({sequence:4,events:[{id:'event-4'}],snapshot:'s4',physicsPose:null},true);
+ const replay=createPresentationRecoveryReplay({port,session:'s',checkpoint:{sequence:1},journal,onError:e=>errors.push(e)});
+ const ack=()=>{const m=sent.at(-1);port.onmessage({data:{kind:'recoveryAck',session:'s',id:m.id,phase:m.kind.slice(8).toLowerCase(),sequence:m.sequence}});};
+ ack();assert.equal(sent.at(-1).firstSequence,2);assert.equal(sent.at(-1).sequence,3);assert.equal(sent.at(-1).tick,true);assert.equal(sent.at(-1).options.backgroundView,true);
+ ack();assert.equal(sent.at(-1).sequence,4);assert.equal(sent.at(-1).publication.events[0].id,'event-4');assert.deepEqual(errors,[]);replay.dispose();
+});
 const publication=(sequence,events=[])=>({sequence,events,snapshot:'s'+sequence,physicsPose:{actorId:'a',active:true},presentationJournal:events.map(e=>({kind:'event',eventId:e.id}))});
 function fixture(){const sent=[],errors=[],caught=[],port={postMessage:m=>sent.push(structuredClone(m)),start(){}},journal=createPresentationRecoveryJournal({capacity:20,highWatermark:10}),checkpoint=publication(1,[{id:'old'}]);journal.begin(1);journal.confirm(1);const replay=createPresentationRecoveryReplay({port,session:'s',checkpoint,journal,onCaughtUp:x=>caught.push(x),onError:e=>errors.push(e.message)});const ack=()=>{const m=sent.at(-1);port.onmessage({data:{kind:'recoveryAck',session:'s',id:m.id,phase:m.kind.slice(8).toLowerCase(),sequence:m.sequence}})};return {sent,errors,caught,port,journal,replay,ack};}
 test('recovery sends checkpoint once then terrain, events and poses in order with strict ACKs',()=>{

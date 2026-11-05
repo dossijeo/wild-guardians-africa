@@ -99,3 +99,12 @@ test('paused acknowledgements do not fold across identity, time, terrain, poses 
  const overrides=[{}, {slotId:'other'}, {elapsed:2}, {pauses:['other']}, {terrainChanged:true}, {physicsPose:{actorId:'a'}}, {events:[{id:'e'}]}, {terrainCheckpoint:{}}, {presentationWorkerHeadings:[]}];for(let i=0;i<overrides.length;i++)j.append({...ack(i+2),...overrides[i]},true,{backgroundView:true});
  assert.deepEqual(j.snapshot().entries.map(e=>e.sequence),[2,3,4,5,6,7,8,9,10]);
 });
+
+test('identical background views coalesce without losing barriers or crossing a replay seal',()=>{
+ const j=createPresentationRecoveryJournal({capacity:12,highWatermark:10});j.begin(1);j.confirm(1);
+ const view=n=>({sequence:n,unchanged:true,slotId:'slot',stateSequence:7,elapsed:1,pauses:[],events:[],residency:{count:1},saveAvailable:true,terrainChanged:false});
+ for(let n=2;n<=100;n++)j.append(view(n),false,{backgroundView:true});
+ assert.equal(j.status().entries,1);assert.equal(j.snapshot().entries[0].tick,true);assert.equal(j.snapshot().entries[0].firstSequence,2);
+ j.entry(0);j.append(view(101),false,{backgroundView:true});j.append({...view(102),presentationInput:3},false,{backgroundView:true});j.append({...view(103),events:[{id:'e'}]},false,{backgroundView:true});j.append({...view(104),residency:{count:2}},false,{backgroundView:true});
+ assert.deepEqual(j.snapshot().entries.map(e=>e.sequence),[100,101,102,103,104]);
+});
