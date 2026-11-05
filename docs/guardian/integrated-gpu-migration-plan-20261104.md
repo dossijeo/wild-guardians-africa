@@ -90,6 +90,8 @@ En el arranque sin escena antigua, el host entrega al Worker gráfico la publica
 
 Usar tiempo de simulación en trayectorias, animaciones confirmadas, pausas, aceleración y restauración. El reloj de feedback provisional se mantiene identificado y se reconcilia con el confirmado.
 
+Toda superficie WebGPU con estado confirmado crea ahora el reloj compartido, sin requerir la opción experimental de locomoción precocinada. Los consumidores existentes reciben la misma referencia y el reloj solo avanza al aplicar una publicación confirmada; el feedback provisional mantiene su reloj propio. Las pruebas de contrato cubren esos consumidores y las pausas, pero el reloj todavía no interpola por sí mismo entre publicaciones ni acredita trayectorias autónomas en GPU.
+
 **Entrega:** protocolo normal incremental y sincronizadores por cambios. **Cierre interno:** pruebas de orden, acumulación, consumidores lentos, duplicados, restauración y barreras; ausencia de recorrido obligatorio de todos los subsistemas por una modificación local.
 
 ### A3. Material lógico universal y catálogo de pipelines
