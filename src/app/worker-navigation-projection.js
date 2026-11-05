@@ -10,6 +10,6 @@ export function createWorkerNavigationProjection(view){
 
 // Older saves requiring spatial repair keep the original initialization until
 // that repair can itself be performed in the authority.
-export function canRestoreWorkerOnly(state,{loaded,earlyNative,earlyGpu,noWebgl,cameraTerrain}={}){
- return !!(loaded&&earlyNative&&earlyGpu&&noWebgl&&cameraTerrain&&state?.wildEngineWorldVersion===WILD_ENGINE_WORLD_VERSION&&state.workerNativeAuthorityCheckpoint?.navigationView&&Array.isArray(state.villages)&&state.villages.length&&state.villages.every(v=>v.entry&&Array.isArray(v.buildings)&&v.buildings.every(b=>b.kind==='Zona común'||Array.isArray(b.footprint)&&b.footprint.length>=3)));
+export function canRestoreWorkerOnly(state,{loaded,earlyNative,earlyGpu,noWebgl,cameraTerrain,allowFootprintRepair=false}={}){
+ return !!(loaded&&earlyNative&&earlyGpu&&noWebgl&&cameraTerrain&&state?.wildEngineWorldVersion===WILD_ENGINE_WORLD_VERSION&&state.workerNativeAuthorityCheckpoint?.navigationView&&Array.isArray(state.villages)&&state.villages.length&&state.villages.every(v=>v.entry&&Array.isArray(v.buildings)&&v.buildings.every(b=>b.kind==='Zona común'||Array.isArray(b.footprint)&&b.footprint.length>=3||allowFootprintRepair===true&&b.footprint==null)));
 }

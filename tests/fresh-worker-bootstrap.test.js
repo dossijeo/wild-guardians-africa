@@ -4,7 +4,9 @@ import {readFileSync} from 'node:fs';
 import {newGame} from '../src/simulation/game.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {prepareFreshWorkerBootstrap} from '../src/simulation/fresh-worker-bootstrap.js';
-import {prepareFreshWorkerBootstrapInWorker} from '../src/simulation/fresh-worker-bootstrap-client.js';
+import {prepareFreshWorkerBootstrapInWorker,repairSavedVillageFootprintsInWorker} from '../src/simulation/fresh-worker-bootstrap-client.js';
+import {repairSavedVillageFootprints} from '../src/simulation/repair-saved-village-footprints.js';
+import {savedNativeAuthorityOptions} from '../src/simulation/native-authority-checkpoint.js';
 import {createSimulationAuthority} from '../src/simulation/simulation-authority.js';
 import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
 import {nativeCameraPose} from '../src/rendering/terrain-camera.js';
@@ -29,4 +31,16 @@ test('fresh bootstrap worker is cancelled and cannot adopt a late result',async(
 test('fresh bootstrap worker rejects invalid output and terminates after success',async()=>{
  let worker={postMessage(){},terminate(){this.terminated=true;}},pending=prepareFreshWorkerBootstrapInWorker('{}',{units:[]},{workerFactory:()=>worker});worker.onmessage({data:{kind:'result',result:{initial:{snapshot:'{}',chunkKeys:[],navigationView:{}},pose:{eye:[0,0,NaN],target:[0,0,0]}}}});await assert.rejects(pending,/Invalid fresh worker response/);assert.equal(worker.terminated,true);
  worker={postMessage(){},terminate(){this.terminated=true;}};pending=prepareFreshWorkerBootstrapInWorker('{}',{units:[]},{workerFactory:()=>worker});const result={initial:{snapshot:'{}',chunkKeys:[],navigationView:{}},pose:{eye:[0,0,0],target:[0,0,0]}};worker.onmessage({data:{kind:'result',result}});assert.equal(await pending,result);assert.equal(worker.terminated,true);
+});
+test('saved footprint repair preserves checkpoint and reconstructs the same native authority',async()=>{
+ const module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm')),catalog=JSON.parse(readFileSync('public/content/villages.json','utf8')),payload=catalog.find(item=>item.id==='suajili'),state=newGame({seed:712,biome:'sabana',culture:'suajili',slotId:'repair-worker'}),fresh=await prepareFreshWorkerBootstrap(module,serialize(state),payload),authority=createSimulationAuthority(module,fresh.initial.snapshot,fresh.initial.chunkKeys,fresh.initial);let restored;
+ try{const saved=authority.execute({kind:'snapshot',sequence:1,nativeAuthorityCheckpoint:true}),snapshot=deserialize(saved.snapshot);snapshot.workerNativeAuthorityCheckpoint=saved.nativeAuthorityCheckpoint;snapshot.workerRaidWaitBindings=saved.raidWaitBindings;const reference=structuredClone(snapshot),building=snapshot.villages[0].buildings.find(item=>item.kind!=='Zona común');assert.ok(building?.footprint);delete building.footprint;
+  const repaired=repairSavedVillageFootprints(serialize(snapshot),catalog),result=deserialize(repaired);assert.deepEqual(result.villages,reference.villages);assert.deepEqual(result.workerNativeAuthorityCheckpoint,reference.workerNativeAuthorityCheckpoint);assert.deepEqual(result.workerRaidWaitBindings,reference.workerRaidWaitBindings);
+  const options=savedNativeAuthorityOptions(repaired);restored=createSimulationAuthority(module,options.snapshot,options.chunkKeys,options);assert.equal(restored.verifyNativeBootstrap(options.nativeBootstrap),true);assert.equal(restored.execute({kind:'snapshot',sequence:1}).snapshot,fresh.initial.snapshot);
+  const missingEntry=structuredClone(snapshot);delete missingEntry.villages[0].entry;assert.throws(()=>repairSavedVillageFootprints(serialize(missingEntry),catalog),/entry/);assert.throws(()=>repairSavedVillageFootprints(serialize(snapshot),[]),/culture/);
+ }finally{authority.dispose();restored?.dispose();}
+});
+test('saved repair worker is cancellable and rejects malformed replies',async()=>{
+ const controller=new AbortController(),worker={postMessage(message){this.message=message;},terminate(){this.terminated=true;}},pending=repairSavedVillageFootprintsInWorker('{}',[],{signal:controller.signal,workerFactory:()=>worker});assert.equal(worker.message.kind,'repair-footprints');controller.abort();await assert.rejects(pending,{name:'AbortError'});assert.equal(worker.terminated,true);worker.onmessage({data:{kind:'result',result:{snapshot:'late'}}});
+ const next={postMessage(){},terminate(){}},bad=repairSavedVillageFootprintsInWorker('{}',[],{workerFactory:()=>next});next.onmessage({data:{kind:'result',result:{snapshot:5}}});await assert.rejects(bad,/Invalid fresh worker response/);
 });

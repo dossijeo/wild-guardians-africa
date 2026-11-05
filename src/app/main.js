@@ -72,7 +72,7 @@ import {isMature} from '../simulation/crops.js';
 import {cropSpec,permission,operational,attraction} from '../simulation/rules.js';
 import {BrowserSaveRepository} from '../persistence/browser-saves.js';
 import {serialize,deserialize} from '../persistence/snapshots.js';
-import {prepareFreshWorkerBootstrapInWorker} from '../simulation/fresh-worker-bootstrap-client.js';
+import {prepareFreshWorkerBootstrapInWorker,repairSavedVillageFootprintsInWorker} from '../simulation/fresh-worker-bootstrap-client.js';
 import {createSimulationAuthorityClient} from '../simulation/simulation-authority-client.js';
 import {createWorkerHostedRuntime} from '../simulation/worker-hosted-runtime.js';
 import {createEarlyWorkerAuthority} from './early-worker-authority.js';
@@ -379,7 +379,8 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     const villages=await json('/content/villages.json');assertLoading();
     villageCatalog=villages;
     const payload=villages.find(v=>v.id===(next.culture==='saheliana'?'saheliano':next.culture));
-    const restoreParams=new URLSearchParams(location.search),workerFresh=import.meta.env.DEV&&!loaded&&restoreParams.has('qa-worker-early-new')&&restoreParams.has('qa-worker-early-native')&&restoreParams.has('qa-worker-early-gpu-view')&&restoreParams.has('qa-worker-no-webgl')&&restoreParams.has('qa-webgpu-camera-terrain'),workerOnly=import.meta.env.DEV&&canRestoreWorkerOnly(next,{loaded:!!loaded,earlyNative:restoreParams.has('qa-worker-early-native'),earlyGpu:restoreParams.has('qa-worker-early-gpu-view'),noWebgl:restoreParams.has('qa-worker-no-webgl'),cameraTerrain:restoreParams.has('qa-webgpu-camera-terrain')});
+    const restoreParams=new URLSearchParams(location.search),workerFresh=import.meta.env.DEV&&!loaded&&restoreParams.has('qa-worker-early-new')&&restoreParams.has('qa-worker-early-native')&&restoreParams.has('qa-worker-early-gpu-view')&&restoreParams.has('qa-worker-no-webgl')&&restoreParams.has('qa-webgpu-camera-terrain'),workerOnly=import.meta.env.DEV&&canRestoreWorkerOnly(next,{loaded:!!loaded,earlyNative:restoreParams.has('qa-worker-early-native'),earlyGpu:restoreParams.has('qa-worker-early-gpu-view'),noWebgl:restoreParams.has('qa-worker-no-webgl'),cameraTerrain:restoreParams.has('qa-webgpu-camera-terrain'),allowFootprintRepair:true});
+    if(workerOnly&&next.villages.some(village=>village.buildings.some(building=>building.kind!=='Zona común'&&building.footprint==null))){const repaired=await repairSavedVillageFootprintsInWorker(serialize(next),villages,{signal:world.loading.signal});assertLoading();next=deserialize(repaired.snapshot);}
     const freshBootstrap=workerFresh?await prepareFreshWorkerBootstrapInWorker(serialize(next),payload,{quality:settings.quality,signal:world.loading.signal}):null;if(freshBootstrap)next=deserialize(freshBootstrap.initial.snapshot);
     const workerRestore=workerOnly?savedNativeAuthorityOptions(serialize(next)):null,projection=freshBootstrap?.initial??workerRestore;
     const spatial=projection?{session:null,navigation:createWorkerNavigationProjection(projection.navigationView)}:await prepareWildEngineWorld(world,next,payload,{signal:world.loading.signal,loaded:!!loaded});
