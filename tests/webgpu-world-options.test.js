@@ -27,6 +27,10 @@ test('the causal QA profile exercises the general presentation input channel',()
  assert.equal(value.experimentalPresentationInputs,true);assert.equal(value.presentationInputs,true);
 });
 
+test('the actual game profile can exercise all baked walking species and retains the setting across recovery',()=>{
+ const params=new URLSearchParams('qa-worker-early-gpu-view&qa-webgpu-baked-walking'),state={raid:null},field={};const first=webGpuWorldOptions({params,state,field,dev:true}),replacement=webGpuWorldOptions({params,state,field,dev:true}),production=webGpuWorldOptions({params,state,field,dev:false});assert.equal(first.presentationCapabilities.bakedWalking,true);assert.deepEqual(replacement,first);assert.equal(production.presentationCapabilities.bakedWalking,false);
+});
+
 test('explicit recovery config is shared by the renderer outside QA',()=>{
  const params=new URLSearchParams(),state={raid:null},recovery={visualRecovery:{enabled:true,concurrent:true,work:true,backpressure:true}};
  const first=webGpuWorldOptions({params,state,field:{},recovery,dev:false}),replacement=webGpuWorldOptions({params,state,field:{},recovery,dev:false});
