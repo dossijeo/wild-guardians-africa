@@ -21,12 +21,13 @@ export function createWebGpuWaterReflectionCapture(width,height,{maxLevels=8}={}
  const target=new RenderTarget(width,height,{type:HalfFloatType,depthTexture:depth,depthBuffer:true,stencilBuffer:false,samples:0,generateMipmaps:false});
  let hierarchy;
  try{hierarchy=createWebGpuHiZHierarchy(depth,width,height,{maxLevels});}catch(error){target.dispose();depth.dispose();throw error;}
- let closed=false,admissionOwner=null;
+ let closed=false,admissionOwner=null,unregisterTarget=null;
  function ownAdmission(admission){if(!admission||typeof admission.prepare!=='function'||typeof admission.deferRelease!=='function'||typeof admission.deferCompilations!=='function'||admissionOwner&&admissionOwner!==admission)throw TypeError('Invalid reflection admission');admissionOwner=admission;}
  return {
   get color(){return target.texture;},
   get depth(){return depth;},
   get levels(){return hierarchy.levels;},
+  registerObjects(admission){if(closed)throw Error('Reflection capture disposed');ownAdmission(admission);if(typeof admission.registerAuxiliaryTarget!=='function')throw TypeError('Invalid reflection admission');if(!unregisterTarget)unregisterTarget=admission.registerAuxiliaryTarget(target);},
   prepareHierarchy(admission,{signal}={}){if(closed)throw Error('Reflection capture disposed');ownAdmission(admission);return hierarchy.prepare(admission,{signal});},
   prepareObject(admission,object,{signal}={}){if(closed)throw Error('Reflection capture disposed');ownAdmission(admission);return admission.prepare(object,{signal,target,shadowPass:false});},
   render(renderer,scene,camera){
@@ -43,6 +44,6 @@ export function createWebGpuWaterReflectionCapture(width,height,{maxLevels=8}={}
     renderer.setRenderTarget(previous,face,mip);if(mrt!==undefined)renderer.setMRT(mrt);
    }
   },
-  dispose(){if(closed)return;closed=true;hierarchy.dispose();const release=()=>{target.dispose();depth.dispose();};if(admissionOwner)admissionOwner.deferCompilations(release);else release();},
+  dispose(){if(closed)return;closed=true;unregisterTarget?.();hierarchy.dispose();const release=()=>{target.dispose();depth.dispose();};if(admissionOwner)admissionOwner.deferCompilations(release);else release();},
  };
 }
