@@ -537,7 +537,7 @@ function toolPanel(type) {
   if(type==='wall')content=`<div class="card-grid">${B.walls.map(w=>`<button class="choice-card" data-wall="${w.id}" ${!permission(state,'wall')||numberOf(state.ledger.balance)<w.cost+HIRING_RESERVE?'disabled':''}><img class="card-image" src="${ASSETS.event8.src}" alt=""><strong>${w.name}</strong><span class="detail">${w.hp} PV</span>${price(w.cost)}</button>`).join('')}</div><label class="panel-note"><input id="gate" type="checkbox"> Colocar una puerta individual</label><p class="panel-note">Arrastra sobre el suelo para trazar una muralla. Se construye al soltar, reservando 30 monedas para contratar. Un recinto cerrado incluye su puerta sin recargo.</p>`;
   if(type==='spell')content=spellCardsMarkup(state,spellSVG);
   showHudPanel({plant:'Cultivar',wall:'Defensas',spell:'Magias del Espíritu'}[type],content);
-  document.querySelectorAll('[data-crop]').forEach(el=>el.onclick=()=>{armTool({kind:'plant',species:el.dataset.crop});hideHudPanel();updateUI(true);});
+  document.querySelectorAll('[data-crop]').forEach(el=>el.onclick=()=>{const owner=world,choice={kind:'plant',species:el.dataset.crop},version=++cropSelectionGeneration,select=()=>{if(owner!==world||version!==cropSelectionGeneration||!el.isConnected)return;armTool(choice);hideHudPanel();updateUI(true);};if(owner?.workerGpuOnly){el.disabled=true;owner.webGpuWorld.client.prepareCropSpecies(choice.species).then(select,failure=>{if(el.isConnected)el.disabled=false;if(owner===world&&version===cropSelectionGeneration&&el.isConnected)error(failure.message);});}else select();});
   document.querySelectorAll('[data-wall]').forEach(el=>el.onclick=()=>{const owner=world,choice={kind:'wall',material:el.dataset.wall,gate:document.querySelector('#gate').checked},select=()=>{if(owner!==world)return;armTool(choice);hideHudPanel();updateUI(true);};if(owner?.workerGpuOnly)owner.webGpuWorld.client.prepareStructure('wall',choice.material).then(select,failure=>error(failure.message));else select();});
   document.querySelectorAll('[data-spell]').forEach(el=>{const contact=bindMagicSelectionContact(el);el.onclick=e=>{if(el.disabled)return;const seconds=contact();manualMagicActivity.selected(state.day,el.dataset.spell,e.isTrusted&&e.detail>0?seconds:null);armTool({kind:'spell',spell:el.dataset.spell});hideHudPanel({silent:true});uiAudio.selectSpell(el.dataset.spell);updateUI(true);};});
 }
@@ -575,8 +575,9 @@ function closeSurface(){
   if(kind==='modal')changeSimulationPause(false,'menu',{sound:true});
   if(pendingVillage)cancelVillagePreview();
 }
-function armTool(value){if(world?.workerGpuOnly)world.webGpuWorld?.client.preferCropSpecies(value.kind==='plant'?value.species:null);tool=toolSession.select(value,performance.now()/1000);if(!world?.qaEarlyTutorial)world?.focusTutorialPlacement(value.kind);}
-function cancelTool(){world?.cancelTutorialFocus?.();if(world?.workerGpuOnly)world.webGpuWorld?.client.preferCropSpecies(null);if(pendingVillage)cancelVillagePreview();if(world?.workerGpuOnly)world.wallDrawing.setEnabled(false);tool=null;toolSession.clear();commandFeedback='';}
+let cropSelectionGeneration=0;
+function armTool(value){cropSelectionGeneration++;if(world?.workerGpuOnly)world.webGpuWorld?.client.preferCropSpecies(value.kind==='plant'?value.species:null);tool=toolSession.select(value,performance.now()/1000);if(!world?.qaEarlyTutorial)world?.focusTutorialPlacement(value.kind);}
+function cancelTool(){cropSelectionGeneration++;world?.cancelTutorialFocus?.();if(world?.workerGpuOnly)world.webGpuWorld?.client.preferCropSpecies(null);if(pendingVillage)cancelVillagePreview();if(world?.workerGpuOnly)world.wallDrawing.setEnabled(false);tool=null;toolSession.clear();commandFeedback='';}
 function toggleAwakening(){
   if(tool?.kind==='awakening'){cancelTool();return;}
   if(!permission(state,'awakening')||(state.awakenings?.progress??0)<100)return;
