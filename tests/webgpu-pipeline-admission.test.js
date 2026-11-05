@@ -48,3 +48,18 @@ test('preparation includes objects outside the camera and restores their culling
  const renderer={backend:{isWebGPUBackend:true},compileAsync(){assert.equal(mesh.frustumCulled,false);return Promise.resolve();}};
  const admission=createWebGpuPipelineAdmission({renderer,scene,camera});await admission.prepare(object);assert.equal(mesh.frustumCulled,true);admission.dispose();
 });
+
+test('aborting an actor does not retire the shared renderer or publish a late result',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),controller=new AbortController(),failures=[];let finish;
+ const renderer={backend:{isWebGPUBackend:true},compileAsync:()=>new Promise(resolve=>{finish=resolve;})};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera,onFatal:e=>failures.push(e)}),pending=admission.prepare(object,{signal:controller.signal});
+ await Promise.resolve();controller.abort();await assert.rejects(pending,{name:'AbortError'});finish();assert.deepEqual(failures,[]);admission.dispose();
+});
+
+test('a cancelled compilation that later fails still retires its renderer',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),controller=new AbortController(),failures=[];let reject;
+ const renderer={backend:{isWebGPUBackend:true},compileAsync:()=>new Promise((_,r)=>{reject=r;})};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera,onFatal:e=>failures.push(e.message)}),pending=admission.prepare(object,{signal:controller.signal});
+ await Promise.resolve();controller.abort();await assert.rejects(pending,{name:'AbortError'});reject(Error('late failure'));await new Promise(resolve=>setImmediate(resolve));
+ assert.deepEqual(failures,['late failure']);await assert.rejects(admission.prepare(object),/closed/);
+});

@@ -4,6 +4,13 @@ import {Group,Mesh,BoxGeometry,MeshBasicMaterial} from 'three';
 import {createWebGpuAnimalBank} from '../src/rendering/webgpu-animal-bank.js';
 import {createWebGpuAnimalRoster} from '../src/rendering/webgpu-animal-roster.js';
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
+test('animal remains hidden until admission and cancelled actors never return',async()=>{
+ const state={raid:{animals:[{id:'a',species:'hyena',status:'walking'}]}},bank={tick(){},dispose(){}},pending=[],disposed=[],ready=[];
+ const roster=createWebGpuAnimalRoster({scene:{},residency:{},state,renderer:{},assetBank:bank,onReady:id=>ready.push(id),pipelineAdmission:{prepare(root,{signal}){assert.equal(root.visible,false);return new Promise((resolve,reject)=>{pending.push({resolve,signal});signal.addEventListener('abort',()=>reject(new DOMException('cancelled','AbortError')),{once:true});});}},createAnimal:({actorId})=>({root:new Group(),update(){this.root.visible=true;},dispose(){disposed.push(actorId);}})});
+ roster.sync();await flush();assert.equal(roster.status().ready,0);assert.deepEqual(ready,[]);
+ state.raid.animals=[];roster.sync();await flush();assert.equal(pending[0].signal.aborted,true);assert.deepEqual(disposed,['a']);
+ state.raid.animals=[{id:'b',species:'hyena',status:'walking'}];roster.sync();await flush();assert.equal(roster.status().ready,0);pending[1].resolve();await flush();assert.equal(roster.status().ready,1);assert.equal(roster.get('b').root.visible,true);assert.deepEqual(ready,['b']);roster.dispose();assert.deepEqual(disposed,['a','b']);
+});
 test('selectable generation observes rig admission, removal and provisional impact',async()=>{
  const animal={id:'a',species:'hyena',status:'walking',x:0,z:0},state={elapsed:1,raid:{animals:[animal]}},bank={tick(){},dispose(){}},changes=[],roster=createWebGpuAnimalRoster({scene:{},residency:{get:()=>null},state,renderer:{},assetBank:bank,onSelectableChange:()=>changes.push('change'),createAnimal:async()=>({update(){},dispose(){}})});
  roster.sync();await flush();assert.equal(changes.length,1);assert.equal(roster.beginImpact({kind:'castAttack',id:'attack',targetId:'a',x:0,z:0}),true);assert.equal(changes.length,2);roster.resolveImpact('attack',false);assert.equal(changes.length,3);state.raid.animals=[];roster.sync();assert.equal(changes.length,4);roster.dispose();
