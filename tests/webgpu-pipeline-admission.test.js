@@ -62,6 +62,16 @@ test('prepares with the actual framebuffer target and restores it before awaitin
  await Promise.resolve();assert.equal(current,screen);finish();await pending;admission.dispose();
 });
 
+test('explicit offscreen admission restores target and MRT while compiling and retries changed depth format',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),mesh=new THREE.Mesh(),screen={},framebuffer={},target=new THREE.RenderTarget(4,4,{depthTexture:new THREE.DepthTexture(4,4)}),mrt={},pending=[];let current=screen,currentMrt=mrt,shadowCalls=0;
+ const renderer={backend:{isWebGPUBackend:true},getRenderTarget:()=>current,getMRT:()=>currentMrt,setMRT:value=>{currentMrt=value;},_getFrameBufferTarget:()=>framebuffer,setRenderTarget:value=>{current=value;},compileAsync(){assert.equal(current,target);assert.equal(currentMrt,null);return new Promise(resolve=>pending.push(resolve));},compileShadowAsync(){shadowCalls++;return Promise.resolve();}};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera,includeShadowPass:true}),ready=admission.prepare(mesh,{target,shadowPass:false});try{await Promise.resolve();assert.equal(current,screen);assert.equal(currentMrt,mrt);target.depthTexture.type=THREE.FloatType;pending[0]();await new Promise(resolve=>setImmediate(resolve));assert.equal(pending.length,2);pending[1]();await ready;assert.equal(shadowCalls,0);assert.equal(current,screen);assert.equal(currentMrt,mrt);await assert.rejects(admission.prepare(mesh,{target:{}}),/Invalid admission target/);}finally{admission.dispose();target.dispose();mesh.geometry.dispose();mesh.material.dispose();}
+});
+
+test('failed offscreen compilation restores the destination and MRT',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),mesh=new THREE.Mesh(),screen={},mrt={},target=new THREE.RenderTarget(2,2);let current=screen,currentMrt=mrt;const renderer={backend:{isWebGPUBackend:true},getRenderTarget:()=>current,getMRT:()=>currentMrt,setMRT:value=>{currentMrt=value;},setRenderTarget:value=>{current=value;},compileAsync(){assert.equal(current,target);assert.equal(currentMrt,null);throw Error('offscreen failed');}};const admission=createWebGpuPipelineAdmission({renderer,scene,camera});try{await assert.rejects(admission.prepare(mesh,{target,shadowPass:false}),/offscreen failed/);assert.equal(current,screen);assert.equal(currentMrt,mrt);}finally{admission.dispose();target.dispose();mesh.geometry.dispose();mesh.material.dispose();}
+});
+
 test('a framebuffer replaced during compilation must be prepared before admission',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),firstTarget={},nextTarget={};let framebuffer=firstTarget,current=null;const pending=[],targets=[];
  const renderer={backend:{isWebGPUBackend:true},getRenderTarget:()=>current,_getFrameBufferTarget:()=>framebuffer,setRenderTarget(target){current=target;},compileAsync(){targets.push(current);return new Promise(resolve=>pending.push(resolve));}};
