@@ -13,4 +13,5 @@ test('worker-only restore requires a native checkpoint, confirmed camera terrain
  assert.equal(canRestoreWorkerOnly(state,flags),true);for(const key of Object.keys(flags))assert.equal(canRestoreWorkerOnly(state,{...flags,[key]:false}),false,key);
  assert.equal(canRestoreWorkerOnly({...state,wildEngineWorldVersion:-1},flags),false);assert.equal(canRestoreWorkerOnly({...state,villages:[{buildings:[]}]},flags),false);assert.equal(canRestoreWorkerOnly({...state,villages:[{entry:{},buildings:[{kind:'Casa'}]}]},flags),false);
  const incomplete={...state,villages:[{entry:{},buildings:[{kind:'Casa'}]}]};assert.equal(canRestoreWorkerOnly(incomplete,{...flags,allowFootprintRepair:true}),true);assert.equal(canRestoreWorkerOnly({...state,villages:[{entry:{},buildings:[{kind:'Casa',footprint:[]}]}]},{...flags,allowFootprintRepair:true}),false);
+ const noEntry={...state,villages:[{buildings:[{kind:'Casa',footprint:[{},{},{}]}]}]};assert.equal(canRestoreWorkerOnly(noEntry,{...flags,allowEntryRepair:true}),true);
 });

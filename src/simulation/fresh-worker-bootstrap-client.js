@@ -13,7 +13,7 @@ export function prepareFreshWorkerBootstrapInWorker(snapshot,payload,{quality='m
  const validPose=point=>Array.isArray(point)&&point.length===3&&point.every(Number.isFinite);
  return requestBootstrap({snapshot,payload,quality},{signal,workerFactory},result=>typeof result?.initial?.snapshot==='string'&&Array.isArray(result.initial.chunkKeys)&&result.initial.navigationView&&validPose(result.pose?.eye)&&validPose(result.pose?.target));
 }
-export function repairSavedVillageFootprintsInWorker(snapshot,catalog,{signal,workerFactory=createWorker}={}){
+export function repairSavedVillageInWorker(snapshot,catalog,{signal,workerFactory=createWorker}={}){
  if(typeof snapshot!=='string'||!Array.isArray(catalog))return Promise.reject(TypeError('Invalid saved village request'));
- return requestBootstrap({kind:'repair-footprints',snapshot,catalog},{signal,workerFactory},result=>typeof result?.snapshot==='string');
+ return requestBootstrap({kind:'repair-village',snapshot,catalog},{signal,workerFactory},result=>typeof result?.snapshot==='string');
 }
