@@ -20,3 +20,10 @@ pasando por Workers reales y backend WebGPU, sin inyección de cámara. Con Vite
 en `http://127.0.0.1:5187` y Playwright en `NODE_PATH`, se reproduce mediante
 `node tools/experiments/audit_worker_camera_terrain.mjs`. No es una prueba de
 interacción, recuperación, biomas completos ni rendimiento.
+
+Un guard experimental se descartó: con OrbitControls real y damping, una
+actualización fallida redujo el delta angular de 0,5 a 0,475 y el offset de
+pan de 2 a 1,9 aun restaurando la pose. Por tanto restaurar solo la cámara y
+el objetivo no preserva la entrada. Antes de inyectar esta vista deben
+resolverse también los acumuladores internos del control, el primer cambio de
+fuente con pose segura, focus/pick diferidos y la equivalencia de exclusiones.
