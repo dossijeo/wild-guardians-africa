@@ -26,9 +26,10 @@ export function createBakedWalkNodes(bake,{bindMatrix,canonicalMeshInverse,phase
  if(!bake?.texture?.isDataTexture||!bindMatrix?.isMatrix4||!canonicalMeshInverse?.isMatrix4||!phase?.isNode)throw TypeError('Invalid baked walking binding');
  return bakedWalkNodes(bake,{bind:uniform(bindMatrix),inverse:uniform(canonicalMeshInverse),phase});
 }
-function bakedWalkNodes(bake,{bind,inverse,phase}){
+function bakedWalkNodes(bake,{bind,inverse,phase,timing=null}){
  const {texture,meta}=bake,index=attribute('skinIndex','uvec4'),weight=attribute('skinWeight','vec4');
- const t=phase.mod(meta.duration),a=t.mul(meta.sampleRate).floor().min(meta.frames-2),b=a.add(1),start=a.div(meta.sampleRate),end=b.equal(meta.frames-1).select(float(meta.sampleTimes.at(-1)),b.div(meta.sampleRate)),fraction=t.sub(start).div(end.sub(start).max(.0000001)).clamp(0,1);
+ const duration=timing?.duration??float(meta.duration),sampleRate=timing?.sampleRate??float(meta.sampleRate),frames=timing?.frames??float(meta.frames),lastSample=timing?.lastSample??float(meta.sampleTimes.at(-1));
+ const t=phase.mod(duration),a=t.mul(sampleRate).floor().min(frames.sub(2)),b=a.add(1),start=a.div(sampleRate),end=b.equal(frames.sub(1)).select(lastSample,b.div(sampleRate)),fraction=t.sub(start).div(end.sub(start).max(.0000001)).clamp(0,1);
  function frame(bone,row){const x=bone.mul(4);return mat4(textureLoad(texture,ivec2(x,row)),textureLoad(texture,ivec2(x.add(1),row)),textureLoad(texture,ivec2(x.add(2),row)),textureLoad(texture,ivec2(x.add(3),row)));}
  function bone(i){return frame(i,a).mul(float(1).sub(fraction)).add(frame(i,b).mul(fraction));}
  const matrix=bone(index.x).mul(weight.x).add(bone(index.y).mul(weight.y)).add(bone(index.z).mul(weight.z)).add(bone(index.w).mul(weight.w));
@@ -39,10 +40,11 @@ function bakedWalkNodes(bake,{bind,inverse,phase}){
 // Texture and clip layout are shared per baked library; pose-specific values
 // live on each material so identical animals reuse one node graph.
 const bakedWalkGraphs=new WeakMap(),noClock={};
-function sharedBakedWalkGraph(bake,clock){
+export function sharedBakedWalkGraph(bake,clock=null){
+ if(!bake?.texture?.isDataTexture||clock!==null&&(!clock.node?.isNode||!Number.isFinite(clock.elapsed)))throw TypeError('Invalid shared baked walking graph');
  let clocks=bakedWalkGraphs.get(bake);if(!clocks){clocks=new WeakMap();bakedWalkGraphs.set(bake,clocks);}const key=clock??noClock;let graph=clocks.get(key);if(graph)return graph;
- const offset=materialReference('_wgWalkPhaseOffset','float'),weight=materialReference('_wgWalkClockWeight','float'),phase=clock?clock.node.mul(weight).add(offset).max(0):offset,nodes=bakedWalkNodes(bake,{bind:materialReference('_wgWalkBindMatrix','mat4'),inverse:materialReference('_wgWalkInverse','mat4'),phase});
- graph=Fn(()=>{normalLocal.assign(nodes.normal);return nodes.position;})();clocks.set(key,graph);return graph;
+ const references={phaseOffset:materialReference('_wgWalkPhaseOffset','float'),clockWeight:materialReference('_wgWalkClockWeight','float'),bind:materialReference('_wgWalkBindMatrix','mat4'),inverse:materialReference('_wgWalkInverse','mat4'),duration:materialReference('_wgWalkDuration','float'),sampleRate:materialReference('_wgWalkSampleRate','float'),frames:materialReference('_wgWalkFrames','float'),lastSample:materialReference('_wgWalkLastSample','float')},phase=clock?clock.node.mul(references.clockWeight).add(references.phaseOffset).max(0):references.phaseOffset,nodes=bakedWalkNodes(bake,{bind:references.bind,inverse:references.inverse,phase,timing:references});
+ graph=Object.freeze({position:Fn(()=>{normalLocal.assign(nodes.normal);return nodes.position;})(),references:Object.freeze(references)});clocks.set(key,graph);return graph;
 }
 
 // Opt-in only: separate meshes retain the live rig for attacks and physical
@@ -54,7 +56,7 @@ export function createBakedWalkPresentation({model,root,renderer,bake,confirmedC
   model.traverse(source=>{if(!source.isSkinnedMesh)return;
    const channel=bake.meta.channels.find(c=>c.name===source.name);if(!channel||source.skeleton.bones.map(b=>b.name).join('\0')!==bake.bones.join('\0'))throw Error('Unsupported baked walking rig');
    const inverse=new Matrix4().multiplyMatrices(rootInverse,source.matrixWorld).invert(),graph=sharedBakedWalkGraph(bake,confirmedClock);
-   const convert=original=>{const material=original.isNodeMaterial?original.clone():renderer.library.fromMaterial(original);if(!material?.isNodeMaterial||material.positionNode||material.normalNode){if(material&&material!==original)material.dispose?.();throw Error('Unsupported baked walking material');}materials.push(material);material._wgWalkBindMatrix=source.bindMatrix;material._wgWalkInverse=inverse;material._wgWalkPhaseOffset=phaseOffset.value;material._wgWalkClockWeight=clockEnabled.value;material.positionNode=graph;if(typeof original._wgRegisterReplica==='function')replicaReleases.push(original._wgRegisterReplica(material));return material;};
+   const convert=original=>{const material=original.isNodeMaterial?original.clone():renderer.library.fromMaterial(original);if(!material?.isNodeMaterial||material.positionNode||material.normalNode){if(material&&material!==original)material.dispose?.();throw Error('Unsupported baked walking material');}materials.push(material);material._wgWalkBindMatrix=source.bindMatrix;material._wgWalkInverse=inverse;material._wgWalkPhaseOffset=phaseOffset.value;material._wgWalkClockWeight=clockEnabled.value;material._wgWalkDuration=bake.meta.duration;material._wgWalkSampleRate=bake.meta.sampleRate;material._wgWalkFrames=bake.meta.frames;material._wgWalkLastSample=bake.meta.sampleTimes.at(-1);material.positionNode=graph.position;if(typeof original._wgRegisterReplica==='function')replicaReleases.push(original._wgRegisterReplica(material));return material;};
    const material=Array.isArray(source.material)?source.material.map(convert):convert(source.material),mesh=new Mesh(source.geometry,material);
    mesh.position.copy(source.position);mesh.quaternion.copy(source.quaternion);mesh.scale.copy(source.scale);mesh.matrixAutoUpdate=source.matrixAutoUpdate;if(!source.matrixAutoUpdate)mesh.matrix.copy(source.matrix);mesh.morphTargetInfluences=source.morphTargetInfluences;mesh.morphTargetDictionary=source.morphTargetDictionary;mesh.castShadow=source.castShadow;mesh.receiveShadow=source.receiveShadow;mesh.frustumCulled=false;mesh.visible=false;meshes.push({source,mesh,inverse,proxy:null,visible:source.visible});
   });
