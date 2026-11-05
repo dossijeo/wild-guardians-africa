@@ -3,14 +3,21 @@
 // while the same pipeline is compiling. Material changes must use needsUpdate.
 function pipelineInputs(object,target){
  const values=[target,target?.samples,target?.depthBuffer,target?.stencilBuffer,target?.texture?.format,target?.texture?.type,target?.texture?.colorSpace];
+ function attributeLayout(attribute){
+  // BufferAttribute identity alone is insufficient: its array or instancing
+  // layout can change while compileAsync is pending. Content changes remain
+  // deliberately excluded so ordinary updates do not cause recompilation.
+  values.push(attribute,attribute?.array?.constructor,attribute?.itemSize,attribute?.normalized,attribute?.gpuType,attribute?.offset,attribute?.data?.stride,attribute?.isInstancedBufferAttribute,attribute?.data?.isInstancedInterleavedBuffer,attribute?.meshPerAttribute,attribute?.data?.meshPerAttribute);
+ }
  object.traverse(node=>{
   values.push(node,node.parent,node.visible,node.castShadow,node.receiveShadow);
   if(!(node.isMesh||node.isLine||node.isPoints))return;
   const geometry=node.geometry,materials=Array.isArray(node.material)?node.material:[node.material];
-  values.push(geometry,node.isInstancedMesh,node.isSkinnedMesh,node.skeleton?.bones?.length,geometry?.index,materials.length);
+  values.push(geometry,node.isInstancedMesh,node.isSkinnedMesh,node.skeleton?.bones?.length,materials.length);
+  attributeLayout(geometry?.index);
   for(const material of materials)values.push(material,material?.version);
-  for(const [name,attribute] of Object.entries(geometry?.attributes??{}).sort(([a],[b])=>a.localeCompare(b)))values.push(name,attribute,attribute.itemSize,attribute.normalized,attribute.gpuType,attribute.offset,attribute.data?.stride);
-  for(const [name,attributes] of Object.entries(geometry?.morphAttributes??{}).sort(([a],[b])=>a.localeCompare(b)))values.push(name,...attributes);
+  for(const [name,attribute] of Object.entries(geometry?.attributes??{}).sort(([a],[b])=>a.localeCompare(b))){values.push(name);attributeLayout(attribute);}
+  for(const [name,attributes] of Object.entries(geometry?.morphAttributes??{}).sort(([a],[b])=>a.localeCompare(b))){values.push(name,attributes.length);for(const attribute of attributes)attributeLayout(attribute);}
   values.push(geometry?.morphTargetsRelative);
  });
  return values;

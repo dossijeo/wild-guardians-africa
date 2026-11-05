@@ -57,6 +57,18 @@ test('structural changes during compilation require a fresh admission',async()=>
  mesh.position.x=3;mesh.geometry.attributes.position.needsUpdate=true;pending[3]();await ready;assert.equal(pending.length,4);admission.dispose();
 });
 
+test('buffer and morph format changes invalidate an in-flight admission',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),geometry=new THREE.BufferGeometry(),position=new THREE.BufferAttribute(new Float32Array(9),3),index=new THREE.BufferAttribute(new Uint16Array([0,1,2]),1),morph=new THREE.BufferAttribute(new Float32Array(9),3),mesh=new THREE.Mesh(geometry,new THREE.MeshBasicMaterial()),pending=[];
+ geometry.setAttribute('position',position);geometry.setIndex(index);geometry.morphAttributes.position=[morph];
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(){return new Promise(resolve=>pending.push(resolve));}},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),ready=admission.prepare(mesh),turn=()=>new Promise(resolve=>setImmediate(resolve));
+ try{
+  await turn();position.array=new Uint16Array(9);pending[0]();await turn();assert.equal(pending.length,2);
+  index.array=new Uint32Array([0,1,2]);pending[1]();await turn();assert.equal(pending.length,3);
+  morph.normalized=true;pending[2]();await turn();assert.equal(pending.length,4);
+  position.array[0]=5;position.needsUpdate=true;pending[3]();await ready;assert.equal(pending.length,4);
+ }finally{admission.dispose();geometry.dispose();mesh.material.dispose();}
+});
+
 test('device loss rejects active admission without waiting for the compiler',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group();let lose;
  const renderer={backend:{isWebGPUBackend:true,device:{lost:new Promise(resolve=>{lose=resolve;})}},compileAsync:()=>new Promise(()=>{})};
