@@ -45,13 +45,13 @@ self.onmessage=async({data})=>{try{
  if(data.kind==='villagePreviewShow'){if(!surface?.settlements)throw Error('Village preview unavailable');surface.settlements.showVillagePreview(data.preview);return;}
  if(data.kind==='villagePreviewClear'){surface?.settlements?.clearVillagePreview();return;}
  if(data.kind==='villagePreviewConfirm'){surface?.settlements?.confirmVillagePreview(data.targetId);return;}
- if(data.kind==='structureBegin'){runWebGpuPreview({resource:'structure-preview',begin:()=>surface?.settlements?.beginPreview(data.command),report:notice=>postMessage({kind:'resourceError',...notice})});return;}
+ if(data.kind==='structureBegin'){const begun=runWebGpuPreview({resource:'structure-preview',begin:()=>surface?.settlements?.beginPreview(data.command),report:notice=>postMessage({kind:'resourceError',...notice})});if(!begun)surface?.settlements?.abandonPreview(data.command?.id);return;}
  if(data.kind==='structureConfirm'){surface?.settlements?.confirmPreview(data.id,data.targetId);return;}
  if(data.kind==='structureReject'){surface?.settlements?.rejectPreview(data.id);return;}
  if(data.kind==='prepareCrops'){await respondToWebGpuPreparation({id:data.id,kind:'crop',prepare:()=>{if(!surface?.crops)throw Error('Crop presentation unavailable');return surface.crops.prepare();},send:message=>postMessage(message),isOpen:()=>phase==='running'||phase==='recovering'});return;}
  if(data.kind==='prepareCropSpecies'){await respondToWebGpuPreparation({id:data.id,kind:'crop',prepare:()=>{if(!surface?.crops)throw Error('Crop presentation unavailable');return surface.crops.prepareSpecies(data.species);},send:message=>postMessage(message),isOpen:()=>phase==='running'||phase==='recovering'});return;}
  if(data.kind==='preferCropSpecies'){if(!surface?.crops)throw Error('Crop presentation unavailable');surface.crops.preferSpecies(data.species);return;}
- if(data.kind==='cropBegin'){runWebGpuPreview({resource:'crop-preview',begin:()=>surface?.crops?.beginProvisional(data.id,data.species,data.x,data.z),report:notice=>postMessage({kind:'resourceError',...notice})});return;}
+ if(data.kind==='cropBegin'){const begun=runWebGpuPreview({resource:'crop-preview',begin:()=>surface?.crops?.beginProvisional(data.id,data.species,data.x,data.z),report:notice=>postMessage({kind:'resourceError',...notice})});if(!begun)surface?.crops?.abandonProvisional(data.id);return;}
  if(data.kind==='cropConfirm'){surface?.crops?.confirmProvisional(data.id,data.targetId);return;}
  if(data.kind==='cropReject'){surface?.crops?.rejectProvisional(data.id);return;}
  if(data.kind==='guardianBegin'){if(surface?.guardianAttack?.begin(data.command))surface.animalRoster?.beginImpact(data.command);return;}
