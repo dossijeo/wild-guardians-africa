@@ -9,7 +9,7 @@ import {GameJuice} from '../ui/game-juice.js';
 import {CampaignCinematics} from '../ui/campaign-cinematics.js';
 import {dueCinematicAct,finishCinematicAct,initializeCinematicProgress} from './campaign-cinematics.js';
 import {installLoadingGameplayGpuQa} from './loading-gameplay-gpu-qa.js';
-import {renderWithOptionalWebGpuPresentation} from './webgpu-legacy-draw.js';
+import {exclusiveWebGpuDrawEnabled,renderWithOptionalWebGpuPresentation} from './webgpu-legacy-draw.js';
 import {createWebGpuDiscretePick} from './webgpu-discrete-pick.js';
 import {createWebGpuCameraPresentation,webGpuCameraPose} from './webgpu-camera-presentation.js';
 import {LibraryViewer} from '../ui/library-viewer.js';
@@ -109,7 +109,7 @@ import '../ui/tutorial.css';
 const app=document.querySelector('#app'),saves=new BrowserSaveRepository(localStorage);
 const guidanceQa=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-guidance');
 const cropSpellFrameQa=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-crop-spell-frame');
-const skipLegacyDrawQa=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-webgpu-skip-legacy-draw');
+const skipLegacyDrawQa=exclusiveWebGpuDrawEnabled(new URLSearchParams(location.search),import.meta.env.DEV);
 const gameplayGpuQa=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading-gpu-gameplay')?installLoadingGameplayGpuQa(document):null;
 const progressQa=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')?installLoadingProgressQa(document,{throttleReady:!new URLSearchParams(location.search).has('qa-loading-unthrottled'),gpu:new URLSearchParams(location.search).has('qa-loading-gpu')}):null;
 // Hints come only from already-validated slot listings. The decoded save remains

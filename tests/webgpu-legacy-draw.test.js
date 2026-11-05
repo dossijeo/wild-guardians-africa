@@ -1,8 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {renderWithOptionalWebGpuPresentation} from '../src/app/webgpu-legacy-draw.js';
+import {exclusiveWebGpuDrawEnabled,renderWithOptionalWebGpuPresentation} from '../src/app/webgpu-legacy-draw.js';
 import {WorldScene} from '../src/rendering/scene.js';
 import {PerspectiveCamera,Vector3} from 'three';
+
+test('WebGPU development world uses exclusive draw unless comparison is explicit',()=>{
+ assert.equal(exclusiveWebGpuDrawEnabled(new URLSearchParams('qa-webgpu-world'),true),true);
+ assert.equal(exclusiveWebGpuDrawEnabled(new URLSearchParams('qa-webgpu-world&qa-webgpu-allow-legacy-draw'),true),false);
+ assert.equal(exclusiveWebGpuDrawEnabled(new URLSearchParams(''),true),false);
+ assert.equal(exclusiveWebGpuDrawEnabled(new URLSearchParams('qa-webgpu-world'),false),false);
+});
 
 test('only suppresses duplicate draws while the WebGPU worker is running',()=>{
  let renders=0,updates=0,status={phase:'running',backend:'WebGPU'};

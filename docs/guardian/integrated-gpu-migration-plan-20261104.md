@@ -252,3 +252,5 @@ Cada entrega actualiza el registro siguiente con archivos, commit y comprobacion
 | D Optimización | No iniciar antes de C | Mejora reproducible del conjunto |
 
 El estado «pendiente de cierre» no descarta las implementaciones existentes: exige conectarlas y retirar los caminos que contradicen sus contratos. El primer trabajo es A1, no otra traza del guardián. El siguiente hito que habilita pruebas extensas será el cierre de B.
+
+Avance parcial A1: la ruta experimental `qa-webgpu-world` omite por defecto el segundo dibujo cuando el Worker WebGPU está activo. `qa-webgpu-allow-legacy-draw` conserva la comparación explícita. Las comprobaciones unitarias cubren selección y fallback. Siguen activos `WorldScene.renderFrameUpdates()`, el arranque de QA y la recuperación mediante escena antigua; A1 no está cerrado ni se ha validado la fluidez.
