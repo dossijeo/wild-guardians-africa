@@ -32,10 +32,15 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
  const lights=new Map();let lightsRevision=0;
  function addLight(light){if(!light?.isLight||!light.shadow)throw TypeError('Invalid admission shadow light');const count=lights.get(light)??0;lights.set(light,count+1);if(count===0)lightsRevision++;}
  if(shadowLights===null)scene.traverse(node=>{if(node.isLight&&node.shadow)addLight(node);});else for(const light of shadowLights)addLight(light);
- let closed=false,generation=0,active=false,inflightCompiles=0,cancel;const queue=[],targetWaiters=new Set(),compilingObjects=new Map();
+ let closed=false,generation=0,active=false,inflightCompiles=0,cancel;const queue=[],targetWaiters=new Set(),compilingObjects=new Map(),uploadingObjects=new Map(),uploadBatch=new Set(),lifecycleSentinel={};let uploadScheduled=false,uploadActive=false;
  function frameTarget(){return renderer._getFrameBufferTarget?.()??renderer.getRenderTarget?.()??renderer.getOutputRenderTarget?.()??null;}
  const cancelled=new Promise(resolve=>{cancel=()=>resolve(Error('Pipeline admission cancelled'));});
  const lost=renderer.backend.device?.lost?.then(info=>Error('WebGPU device lost: '+(info?.message||info?.reason||'unknown')));
+ // Queue completion protects resource lifetime, not admission. Several
+ // objects share a fence, and later compilations continue while it is pending.
+ function scheduleUploads(){if(uploadScheduled||uploadActive||!uploadBatch.size)return;uploadScheduled=true;setTimeout(flushUploads,0);}
+ function trackUploads(object){if(typeof renderer.backend.device?.queue?.onSubmittedWorkDone!=='function'||uploadBatch.has(object))return;let record=uploadingObjects.get(object);if(!record){record={count:0,releases:[]};uploadingObjects.set(object,record);}record.count++;uploadBatch.add(object);scheduleUploads();}
+ function flushUploads(){uploadScheduled=false;if(uploadActive||!uploadBatch.size)return;uploadActive=true;const batch=[...uploadBatch];uploadBatch.clear();let submitted;try{submitted=Promise.resolve(renderer.backend.device.queue.onSubmittedWorkDone());}catch(error){submitted=Promise.reject(error);}const loss=renderer.backend.device.lost?.then(()=>null,()=>null);Promise.race([submitted,...(loss?[loss]:[])]).catch(error=>{if(!closed)retire(error);}).finally(()=>{for(const object of batch){const record=uploadingObjects.get(object);if(!record||--record.count)continue;uploadingObjects.delete(object);for(const release of record.releases){try{release();}catch(error){retire(error);}}}uploadActive=false;scheduleUploads();});}
  function rejectWaiting(error){for(const item of queue.splice(0)){if(item.onAbort)item.signal.removeEventListener('abort',item.onAbort);item.reject(error);}}
  function retire(error){if(!closed){closed=true;generation++;cancel();lights.clear();rejectWaiting(Error('Pipeline admission closed'));try{onFatal(error);}catch{}}}
  function notifyShadowTargets(){for(const waiter of targetWaiters)if(waiter.ready())waiter.resolve();}
@@ -61,7 +66,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
   // Abort cancels publication, not Three's pending compilation. Keep the
   // renderer queue locked until that work settles; otherwise a cancelled
   // compile can overlap a new request or poison its cache afterwards.
-  if(serial){inflightCompiles++;const deferred=[];compilingObjects.set(object,deferred);const finish=error=>{if(error&&signal?.aborted)retire(error);compilingObjects.delete(object);for(const release of deferred){try{release();}catch(error){retire(error);}}inflightCompiles--;pump();};compilation.then(()=>finish(null),finish);}
+  if(serial){inflightCompiles++;const deferred=[];compilingObjects.set(object,deferred);const finish=error=>{if(error&&signal?.aborted)retire(error);trackUploads(object);compilingObjects.delete(object);for(const release of deferred){try{release();}catch(error){retire(error);}}inflightCompiles--;pump();};compilation.then(()=>finish(null),finish);}
   else compilation.catch(error=>{if(signal?.aborted)retire(error);});
   let error;try{error=await Promise.race([compilation.then(()=>null),cancelled,...(lost?[lost]:[]),...(aborted?[aborted]:[])]);}finally{if(onAbort)signal.removeEventListener('abort',onAbort);}
   if(error)throw error;
@@ -93,20 +98,20 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
      object.traverse(node=>{if(node.isMesh||node.isLine||node.isPoints){culling.push([node,node.frustumCulled]);node.frustumCulled=false;}});
      for(const [node] of included)node.visible=true;object.visible=true;pending=renderer.compileAsync(object,camera,scene);
     }finally{
+     trackUploads(object);
      object.visible=visible;
      for(const [node,value] of included)node.visible=value;
      for(const [node,value] of culling)node.frustumCulled=value;
      for(const [shadow,autoUpdate,needsUpdate] of shadows){shadow.autoUpdate=autoUpdate;shadow.needsUpdate=needsUpdate;}
      if(previousTarget!==undefined)renderer.setRenderTarget(previousTarget,face,level);
     }
-    await waitForCompilation(pending,signal,{serial:true,object});
+    await waitForCompilation(pending,signal,{serial:true,object});trackUploads(object);
     if(signal?.aborted)throw new DOMException('Pipeline admission cancelled','AbortError');
     if(renderer._isDeviceLost===true)throw Error('WebGPU device lost during pipeline admission');
     if(closed||version!==generation)throw Error('Pipeline admission cancelled');
     // A light may have been added or removed while the driver compiled. The
     // completed pipeline describes the old scene and cannot admit the object.
     if(lightsChanged()||!sameInputs(inputs,pipelineInputs(object,frameTarget())))return execute(object,signal,version,include);
-    const preparedShadowTargets=[];
     if(includeShadowPass){
      let castsShadow=false;object.traverse(node=>{if((node.isMesh||node.isLine||node.isPoints)&&node.castShadow)castsShadow=true;});
      if(castsShadow){
@@ -122,32 +127,17 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
         object.traverse(node=>{if(node.isMesh||node.isLine||node.isPoints){culling.push([node,node.frustumCulled]);node.frustumCulled=false;}});
         for(const [node] of included)node.visible=true;object.visible=true;shadowPending=renderer.compileShadowAsync(object,scene,camera,light);
        }finally{
+        trackUploads(object);
         object.visible=visible;for(const [node,value] of included)node.visible=value;for(const [node,value] of culling)node.frustumCulled=value;
         for(const [shadow,autoUpdate,needsUpdate] of shadows){shadow.autoUpdate=autoUpdate;shadow.needsUpdate=needsUpdate;}
        }
-       await waitForCompilation(shadowPending,signal,{serial:true,object});
+       await waitForCompilation(shadowPending,signal,{serial:true,object});trackUploads(object);
        if(signal?.aborted)throw new DOMException('Pipeline admission cancelled','AbortError');
        if(renderer._isDeviceLost===true)throw Error('WebGPU device lost during shadow admission');
        if(closed||version!==generation)throw Error('Pipeline admission cancelled');
        if(lightsChanged()||target!==light.shadow.map||!sameInputs(inputs,pipelineInputs(object,frameTarget())))return execute(object,signal,version,include);
-       preparedShadowTargets.push([light,target]);
       }
      }
-    }
-    // Three's compileAsync updates the render object's geometry and bindings,
-    // submitting initial uploads, but does not wait for GPU queue completion.
-    // Fence only work already submitted; the render loop continues normally.
-    // Keep resource ownership until the fence settles even if publication is
-    // cancelled, exactly as for an in-flight pipeline compilation.
-    const queue=renderer.backend.device?.queue;
-    if(typeof queue?.onSubmittedWorkDone==='function'){
-     const submitted=Promise.resolve(queue.onSubmittedWorkDone()),deviceLost=renderer.backend.device.lost;
-     const fence=deviceLost?Promise.race([submitted,deviceLost.then(info=>{throw Error('WebGPU device lost: '+(info?.message||info?.reason||'unknown'));})]):submitted;
-     await waitForCompilation(fence,signal,{serial:true,object});
-     if(signal?.aborted)throw new DOMException('Pipeline admission cancelled','AbortError');
-     if(renderer._isDeviceLost===true)throw Error('WebGPU device lost during resource admission');
-     if(closed||version!==generation)throw Error('Pipeline admission cancelled');
-     if(lightsChanged()||preparedShadowTargets.some(([light,target])=>light.shadow.map!==target)||!sameInputs(inputs,pipelineInputs(object,frameTarget())))return execute(object,signal,version,include);
     }
   }catch(error){
    // Three r180 may retain an unsuccessful pipeline in its internal cache.
@@ -155,14 +145,16 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
    throw error;
   }
  }
+ function deferObjectRelease(object,release){const pending=compilingObjects.get(object)??uploadingObjects.get(object)?.releases;if(pending)pending.push(()=>deferObjectRelease(object,release));else release();}
+ function deferAll(release){const pending=[...compilingObjects.values(),...[...uploadingObjects.values()].map(record=>record.releases)];if(!pending.length){release();return;}let remaining=pending.length;for(const list of pending)list.push(()=>{if(--remaining===0)deferAll(release);});}
  return {
   // Removal is immediate; release of the resources used by an active
   // compilation waits until Three's compilation promise actually settles.
-  deferRelease(object,release){if(!object?.isObject3D||typeof release!=='function')throw TypeError('Invalid deferred release');const deferred=compilingObjects.get(object);if(deferred)deferred.push(release);else release();},
+  deferRelease(object,release){if(!object?.isObject3D||typeof release!=='function')throw TypeError('Invalid deferred release');trackUploads(object);deferObjectRelease(object,release);},
   // Used at shutdown for shared resources that may belong to any active
   // object. This captures current compilations; callers must first stop new
   // admissions and resource creation.
-  deferCompilations(release){if(typeof release!=='function')throw TypeError('Invalid deferred release');const pending=[...compilingObjects.values()];if(!pending.length){release();return;}let remaining=pending.length;for(const list of pending)list.push(()=>{if(--remaining===0)release();});},
+  deferCompilations(release){if(typeof release!=='function')throw TypeError('Invalid deferred release');trackUploads(lifecycleSentinel);deferAll(release);},
   registerShadowLight(light){if(closed)throw Error('Pipeline admission closed');addLight(light);notifyShadowTargets();let released=false;return ()=>{if(released)return;released=true;const count=lights.get(light)??0;if(count===1){lights.delete(light);lightsRevision++;notifyShadowTargets();}else if(count>1)lights.set(light,count-1);};},
   notifyShadowTargets,
   prepare(object,{signal,include=[]}={}){
