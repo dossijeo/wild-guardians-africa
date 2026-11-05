@@ -108,3 +108,12 @@ test('identical background views coalesce without losing barriers or crossing a 
  j.entry(0);j.append(view(101),false,{backgroundView:true});j.append({...view(102),presentationInput:3},false,{backgroundView:true});j.append({...view(103),events:[{id:'e'}]},false,{backgroundView:true});j.append({...view(104),residency:{count:2}},false,{backgroundView:true});
  assert.deepEqual(j.snapshot().entries.map(e=>e.sequence),[100,101,102,103,104]);
 });
+
+test('quiet and paused compaction preserve input receipts, rejections and unknown fields',()=>{
+ for(const variant of ['quiet','paused']){
+  const j=createPresentationRecoveryJournal({capacity:20,highWatermark:18,compactTicks:true});j.begin(1);j.confirm(1);
+  const make=n=>variant==='quiet'?{sequence:n,snapshot:'s'+n,events:[],physicsPose:null,pauses:[]}:{sequence:n,unchanged:true,pausedAdvance:true,slotId:'slot',stateSequence:7,elapsed:1,pauses:['menu'],events:[],saveAvailable:true,terrainChanged:false};
+  j.append(make(2),true);j.append({...make(3),presentationInput:42},true);j.append({...make(4),rejection:'denied'},true);j.append({...make(5),newProtocolField:'important'},true);j.append(make(6),true);
+  const entries=j.snapshot().entries;assert.deepEqual(entries.map(e=>e.sequence),[2,3,4,5,6],variant);assert.equal(entries[1].publication.presentationInput,42);assert.equal(entries[2].publication.rejection,'denied');
+ }
+});

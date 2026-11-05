@@ -2,6 +2,16 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHostPublicationQueue} from '../src/simulation/host-publication-queue.js';
 const packet=(sequence,events=[],physicsPose=null)=>({sequence,events,physicsPose,snapshot:String(sequence)});
+test('coalescing retains input receipts and rejections as publication boundaries',()=>{
+ const sent=[],q=createHostPublicationQueue({session:'s',send:v=>sent.push(v)});
+ q.publication(packet(1),true);q.publication({...packet(2),presentationInput:42},true);q.publication({...packet(3),rejection:'denied'},true);q.publication(packet(4),true);
+ q.ack(1);assert.equal(sent[1].publication.presentationInput,42);q.ack(2);assert.equal(sent[2].publication.rejection,'denied');q.ack(3);assert.equal(sent[3].publication.sequence,4);
+});
+test('coalescing preserves fields introduced by future protocols',()=>{
+ const sent=[],q=createHostPublicationQueue({session:'s',send:v=>sent.push(v)});
+ q.publication(packet(1),true);q.publication({...packet(2),newProtocolField:'important'},true);q.publication(packet(3),true);
+ q.ack(1);assert.equal(sent[1].publication.newProtocolField,'important');q.ack(2);assert.equal(sent[2].publication.sequence,3);
+});
 test('confirmed terrain changes remain barriers for quiet ticks and folded views',()=>{
  const sent=[],q=createHostPublicationQueue({session:'s',foldViews:true,send:value=>sent.push(value)});
  q.publication(packet(1),true);q.publication({...packet(2),terrainChanged:true},true);q.publication({...packet(3),terrainChanged:false},true);q.publication({...packet(4),terrainChanged:false},true);
