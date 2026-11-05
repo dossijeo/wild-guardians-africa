@@ -32,7 +32,7 @@ export function parseSimulationChunkKey(key){
 
 // Owns the game state and a native world inside the simulation worker. Chunk
 // residency is explicit: callers must provide the confirmed simulation demand.
-export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBindings=null,navigationView=null,compactViewAcks=false,compactPhysicsPoses=false,presentationWorkerHeadingSeed=null,restoringPhysics=false,onTerrainChunk=null}={}){
+export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBindings=null,navigationView=null,compactViewAcks=false,compactPausedAcks=false,compactPhysicsPoses=false,presentationWorkerHeadingSeed=null,restoringPhysics=false,onTerrainChunk=null}={}){
  if(!(module instanceof WebAssembly.Module)||typeof snapshot!=='string'||!Array.isArray(chunkKeys)||new Set(chunkKeys).size!==chunkKeys.length||onTerrainChunk!==null&&typeof onTerrainChunk!=='function')throw TypeError('Invalid simulation authority initialization');
  for(const key of chunkKeys)parseSimulationChunkKey(key);
  const game=(restoringPhysics?deserializeConfirmedState:deserialize)(snapshot),loaded=new Map(),savedWaitBindings=game.workerRaidWaitBindings??null,presentationHeadings=presentationWorkerHeadingSeed===null?null:createPresentationWorkerHeadings(presentationWorkerHeadingSeed,{initialWorkerIds:game.workers.map(worker=>worker.id)});delete game.workerRaidWaitBindings;delete game.workerPhysicsCheckpoint;let session,stopTasks,stopWorld,stopEvents,physics=null,physicsInitializing=false,tutorial=null,closed=false,sequence=0,events=[],trackMicroIncome=false,trackedActor=null,trackMotionPeers=false,trackWorldMotion=false,stopMotion=null,motionSegments=null,terrainGeneration=0,reportedTerrainGeneration=0;
@@ -88,7 +88,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   // Initial chunks are published separately at sequence zero. Later callback
   // deliveries, including those during asynchronous preparation or failed
   // commands, belong to the next successful authority publication.
-  reportedTerrainGeneration=terrainGeneration;
+  reportedTerrainGeneration=terrainGeneration;let hasPublishedSnapshot=false;
   function takeTerrainChanged(){const changed=terrainGeneration!==reportedTerrainGeneration;reportedTerrainGeneration=terrainGeneration;return changed;}
   return {
    async enableBeastPhysics(actorId,{actorIds=undefined,structureTemplates=null,allowEmpty=false,checkpoint=null,shareSpeciesClips=false,shareSpeciesRigs=false}={}){if(closed||physics||physicsInitializing)throw Error('Worker physics unavailable');physicsInitializing=true;try{const {createWorkerBeastPhysics}=await import('./worker-beast-physics.js');const driver=await createWorkerBeastPhysics(game,nav,{actorId,actorIds,structureTemplates,allowEmpty,checkpoint,shareSpeciesClips,shareSpeciesRigs});if(closed){driver.dispose();throw Error('Simulation authority closed during physics initialization');}physics=driver;}finally{physicsInitializing=false;}},
@@ -97,6 +97,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     if(closed)throw Error('Simulation authority is closed');if(physicsInitializing)throw Error('Worker physics is initializing');
     if(!command||command.sequence!==sequence+1)throw Error('Simulation command out of order');
     let value=null,rejection=null,stepsExecuted=null,motionTrace=null,worldMotionTrace=null,motionTopologyBefore=null;const commandLoadedChunks=[],previousTrackedActor=trackedActor,wasSuspended=game.pauses.length>0||!!game.result;
+    // trackIncome([]) can repair a stale day even when the game is paused.
+    const pausedUnchangedCandidate=compactPausedAcks&&hasPublishedSnapshot&&command.kind==='advance'&&command.visualTerrain!==true&&game.pauses.length>0&&!trackedActor&&!trackWorldMotion&&(!physics||physics.actorIds.length===0)&&(!trackMicroIncome||game.microevents?.day===game.day)&&typeof nav.serviceRaidConnectivityDemand!=='function';
     if(command.kind==='advance'){
      if(!Number.isFinite(command.seconds)||command.seconds<=0||command.seconds>1||typeof command.nightFastForward!=='boolean'||command.steps!==undefined&&(!Number.isSafeInteger(command.steps)||command.steps<1||command.steps>256))throw TypeError('Invalid real-time interval');
      const start=trackedActor?{at:game.elapsed,x:trackedActor.x,z:trackedActor.z}:null;if(start){motionSegments=[];motionTopologyBefore=nav.version;}const peerCapture=start&&trackMotionPeers?captureMotionPeers(game,trackedActor):null,worldCapture=trackWorldMotion?captureWorldMotion(game,()=>({topology:nav.version,chunks:session.core.chunkRevision(),terrain:session.horizonSource.revision(),payloads:terrainGeneration})):null;
@@ -221,7 +223,13 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     const motionInvalidation=batchInvalidation?{actorId:motionTrace.actorId,...motionTrace.start,reason:events.length?'simulation-event':!motionTrace.continuous?'unobserved-motion':!motionTrace.timed?'untimed-motion':peerGap?'peer-motion-unknown':'topology-changed',eventTypes:events.map(e=>e.type),actorRelated:events.some(e=>[e.actorId,e.targetId,e.workerId,e.animalId].includes(motionTrace.actorId)),topologyChanged:!!topologyChanged}:invalidated?{actorId:previousTrackedActor.id,at:game.elapsed,x:previousTrackedActor.x,z:previousTrackedActor.z,reason:command.kind}:null;
     if(worldMotionTrace&&terrainGeneration!==reportedTerrainGeneration)worldMotionTrace.terrainChanged=true;
     sequence=command.sequence;const emitted=events;events=[];const lifecycle=presentationJournal.drain();
-    const resident=residency(),presentationWorkerHeadings=presentationHeadings?.capture(game);
+    const resident=residency(),presentationWorkerHeadings=presentationHeadings?.capture(game);let pausedPoses;
+    if(pausedUnchangedCandidate&&game.pauses.length>0&&!emitted.length&&!lifecycle.length&&!presentationWorkerHeadings?.length&&terrainGeneration===reportedTerrainGeneration){
+     // Preserve the physics driver's normal publication-side work even for an
+     // empty registry; a nonempty result fails closed to the full snapshot.
+     pausedPoses=physics?.poses({activeOnly:compactPhysicsPoses})??null;
+     if(!pausedPoses?.length)return {sequence,value,unchanged:true,pausedAdvance:true,slotId:game.slotId,stateSequence:game.sequence,elapsed:game.elapsed,pauses:[...game.pauses],events:[],residency:resident,saveAvailable:saveAvailable(),terrainChanged:takeTerrainChanged(),...(command.steps!==undefined?{stepsExecuted}:{})};
+    }
     if(compactViewAcks&&command.kind==='setNavigationView'&&command.visualTerrain!==true&&!emitted.length&&!lifecycle.length&&!presentationWorkerHeadings?.length)return {sequence,value,unchanged:true,slotId:game.slotId,stateSequence:game.sequence,elapsed:game.elapsed,pauses:[...game.pauses],events:[],residency:resident,saveAvailable:saveAvailable(),terrainChanged:takeTerrainChanged()};
     let terrainCheckpoint;
     if(command.visualTerrain===true){
@@ -230,9 +238,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      finally{if(selected&&session.core.selectChunk(selected.cx,selected.cz)<0)throw Error('Could not restore selected native chunk');}
      terrainCheckpoint={sequence,chunks,...(presentationHeadings?{workerHeadings:presentationHeadings.snapshot()}:{}),...(command.visualRecoveryOnly===true?{recoveryOnly:true}:{})};
     }
-    const physicsPoses=physics?.poses({activeOnly:command.visualTerrain===true?false:compactPhysicsPoses})??null;
+    const physicsPoses=pausedPoses===undefined?(physics?.poses({activeOnly:command.visualTerrain===true?false:compactPhysicsPoses})??null):pausedPoses;
     const physical=command.kind==='snapshot'&&(command.physicsCheckpoint===true||command.physicsCheckpoint==='encoded')?physics?.checkpointFall()??null:undefined;
-    return {sequence,value,...(presentationWorkerHeadings?.length?{presentationWorkerHeadings}:{}),...(terrainCheckpoint?{terrainCheckpoint}:{}),...(command.steps!==undefined?{stepsExecuted}:{}),...(motionTrace?{motionTrace}:{}),...(worldMotionTrace?{worldMotionTrace}:{}),...(motionInvalidation?{motionInvalidation}:{}),...(rejection?{rejection}:{}),...(commandLoadedChunks.length?{commandLoadedChunks}:{}),...(physical===undefined?{}:{physicsCheckpoint:physical&&command.physicsCheckpoint==='encoded'?encodePhysicsCheckpoint(physical):physical}),residency:resident,physicsPose:physicsPoses?.[0]??null,...(physicsPoses?.length>1?{physicsPoses}:{}),elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,presentationJournal:lifecycle,raidWaitBindings:captureRaidWaitBindings(game,nav),saveAvailable:saveAvailable(),snapshot:serializeConfirmedState(game),terrainChanged:takeTerrainChanged()};
+    const result={sequence,value,...(presentationWorkerHeadings?.length?{presentationWorkerHeadings}:{}),...(terrainCheckpoint?{terrainCheckpoint}:{}),...(command.steps!==undefined?{stepsExecuted}:{}),...(motionTrace?{motionTrace}:{}),...(worldMotionTrace?{worldMotionTrace}:{}),...(motionInvalidation?{motionInvalidation}:{}),...(rejection?{rejection}:{}),...(commandLoadedChunks.length?{commandLoadedChunks}:{}),...(physical===undefined?{}:{physicsCheckpoint:physical&&command.physicsCheckpoint==='encoded'?encodePhysicsCheckpoint(physical):physical}),residency:resident,physicsPose:physicsPoses?.[0]??null,...(physicsPoses?.length>1?{physicsPoses}:{}),elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,presentationJournal:lifecycle,raidWaitBindings:captureRaidWaitBindings(game,nav),saveAvailable:saveAvailable(),snapshot:serializeConfirmedState(game),terrainChanged:takeTerrainChanged()};hasPublishedSnapshot=true;return result;
    },
    dispose(){if(closed)return;closed=true;presentationJournal.dispose();stopMotion?.();stopEvents?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{session.dispose();}},
   };

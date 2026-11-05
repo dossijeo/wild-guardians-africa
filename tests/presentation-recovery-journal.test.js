@@ -84,3 +84,15 @@ test('compaction never hides malformed or explicitly present motion and lifecycl
   const j=createPresentationRecoveryJournal({compactTicks:true});j.begin(1);j.confirm(1);const p=n=>({sequence:n,snapshot:'s'+n,events:[],physicsPose:null,pauses:[]});j.append(p(2),true);j.append({...p(3),...malformed},true);assert.equal(j.status().entries,2,JSON.stringify(malformed));
  }
 });
+
+test('paused acknowledgements compact across long pauses but preserve replay seals and resume',()=>{
+ const j=createPresentationRecoveryJournal({capacity:8,highWatermark:6}),ack=n=>({sequence:n,unchanged:true,pausedAdvance:true,slotId:'slot',stateSequence:7,elapsed:1,pauses:['menu'],events:[],saveAvailable:true,terrainChanged:false});j.begin(1);j.confirm(1);
+ for(let n=2;n<=600;n++)j.append(ack(n),true,{backgroundView:true});assert.equal(j.status().entries,1);assert.equal(j.status().saturated,false);let [first]=j.snapshot().entries;assert.equal(first.firstSequence,2);assert.equal(first.sequence,600);
+ j.entry(0);j.append(ack(601),true,{backgroundView:true});j.append(ack(602),true,{backgroundView:true});j.append(publication(603,[{id:'resume-event'}]),false);j.append(ack(604),true,{backgroundView:true});
+ const entries=j.snapshot().entries;assert.deepEqual(entries.map(e=>e.sequence),[600,602,603,604]);assert.equal(entries[1].firstSequence,601);assert.deepEqual(entries[2].publication.events,[{id:'resume-event'}]);
+});
+test('paused acknowledgements do not fold across identity, time, terrain, poses or events',()=>{
+ const j=createPresentationRecoveryJournal({capacity:20,highWatermark:18}),ack=n=>({sequence:n,unchanged:true,pausedAdvance:true,slotId:'slot',stateSequence:7,elapsed:1,pauses:['menu'],events:[],saveAvailable:true,terrainChanged:false});j.begin(1);j.confirm(1);
+ const overrides=[{}, {slotId:'other'}, {elapsed:2}, {pauses:['other']}, {terrainChanged:true}, {physicsPose:{actorId:'a'}}, {events:[{id:'e'}]}, {terrainCheckpoint:{}}, {presentationWorkerHeadings:[]}];for(let i=0;i<overrides.length;i++)j.append({...ack(i+2),...overrides[i]},true,{backgroundView:true});
+ assert.deepEqual(j.snapshot().entries.map(e=>e.sequence),[2,3,4,5,6,7,8,9,10]);
+});

@@ -99,3 +99,9 @@ test('checkpoint on a tick keeps its exact sequence across queued quiet ticks an
  q.publication(packet(1),true);q.publication(packet(2),true);q.publication({...packet(3),terrainCheckpoint:{sequence:3,chunks:[]}},true);q.publication(packet(4),true);q.publication(packet(5),true);
  q.ack(1);assert.equal(sent[1].publication.sequence,2);q.ack(2);assert.equal(sent[2].publication.sequence,3);assert.equal(sent[2].publication.terrainCheckpoint.sequence,3);q.ack(3);assert.equal(sent[3].publication.sequence,5);
 });
+
+test('paused compact acknowledgements remain ordered through a stalled host queue',()=>{
+ const sent=[],q=createHostPublicationQueue({session:'s',foldViews:true,send:value=>sent.push(value)}),full=n=>({sequence:n,events:[],physicsPose:null,elapsed:1,pauses:['menu'],saveAvailable:true,snapshot:JSON.stringify({slotId:'slot',sequence:7,elapsed:1})}),ack=n=>({sequence:n,unchanged:true,pausedAdvance:true,slotId:'slot',stateSequence:7,elapsed:1,pauses:['menu'],events:[],saveAvailable:true,terrainChanged:false});
+ q.publication(full(1),true);q.publication(full(2),true);q.publication(ack(3),true,{backgroundView:true});q.publication(ack(4),true,{backgroundView:true});q.publication({...full(5),events:[{id:'event'}]},true);q.ack(1);
+ assert.equal(sent[1].firstSequence,2);assert.equal(sent[1].publication.sequence,5);assert.deepEqual(sent[1].publication.events,[{id:'event'}]);q.ack(5);
+});
