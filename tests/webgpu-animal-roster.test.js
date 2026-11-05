@@ -1,9 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {Group,Mesh,BoxGeometry,MeshBasicMaterial} from 'three';
+import {Group,Mesh,BoxGeometry,MeshBasicMaterial,Scene,PerspectiveCamera} from 'three';
 import {createWebGpuAnimalBank} from '../src/rendering/webgpu-animal-bank.js';
 import {createWebGpuAnimalRoster} from '../src/rendering/webgpu-animal-roster.js';
+import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
+test('a cancelled actor retains its bank lease until its real admission settles',async()=>{
+ const scene=new Scene(),state={raid:{animals:[{id:'a',species:'hyena',status:'walking'}]}},source=new Group();source.add(new Mesh(new BoxGeometry(),new MeshBasicMaterial()));let finish,assetDisposed=0,actorDisposed=0;
+ const bank=createWebGpuAnimalBank({renderer:{backend:{isWebGPUBackend:true}},loadAsset:async()=>({scene:source,clips:[],dispose(){assetDisposed++;}})}),admission=createWebGpuPipelineAdmission({scene,camera:new PerspectiveCamera(),renderer:{backend:{isWebGPUBackend:true},compileAsync:()=>new Promise(resolve=>{finish=resolve;})}}),roster=createWebGpuAnimalRoster({scene,residency:{},state,assetBank:bank,pipelineAdmission:admission,createAnimal:async()=>{const lease=await bank.acquire('hyena'),root=new Group();root.add(lease.model);scene.add(root);return {root,update(){},dispose(){actorDisposed++;lease.release();}};}});
+ roster.sync();await flush();assert.equal(typeof finish,'function');roster.dispose();assert.equal(scene.children.length,0);assert.equal(actorDisposed,0);assert.equal(assetDisposed,0);finish();await flush();assert.equal(actorDisposed,1);assert.equal(assetDisposed,1);admission.dispose();
+});
 test('on-demand walking keeps the original actor visible until its replacement is admitted',async()=>{
  const state={raid:{animals:[{id:'a',species:'hyena',status:'walking'}]}},assetBank={tick(){},dispose(){}},ready=[],changes=[];let finishLoad,finishAdmission;
  const bakedWalkBank={get:()=>new Promise(resolve=>{finishLoad=resolve;})},roster=createWebGpuAnimalRoster({scene:{},residency:{},state,assetBank,bakedWalkBank,pipelineAdmission:{prepare:()=>Promise.resolve()},onReady:id=>ready.push(id),onSelectableChange:()=>changes.push('change'),createAnimal:()=>({root:new Group(),update(){this.root.visible=true;},installBakedWalk(bake,{signal}){assert.equal(bake.meta.species,'hyena');return new Promise((resolve,reject)=>{finishAdmission=resolve;signal.addEventListener('abort',()=>reject(new DOMException('cancelled','AbortError')),{once:true});});},dispose(){}})});

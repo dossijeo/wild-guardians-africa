@@ -8,6 +8,10 @@ import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {createWebGpuWorkerBank} from '../src/rendering/webgpu-worker-bank.js';
 import {createWebGpuWorkerRoster} from '../src/rendering/webgpu-worker-roster.js';
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
+test('closing the worker bank waits for every outstanding worker lease',async()=>{
+ let disposed=0;const source=new Group();source.add(new Mesh(new BoxGeometry(),new MeshBasicMaterial()));const bank=createWebGpuWorkerBank({renderer:{backend:{isWebGPUBackend:true}},loadAsset:async()=>({scene:source,clips:[],library:{},dispose(){disposed++;}})}),a=await bank.acquire('youngMale'),b=await bank.acquire('youngMale');
+ bank.dispose();assert.equal(disposed,0);a.release();assert.equal(disposed,0);b.release();assert.equal(disposed,1);b.release();assert.equal(disposed,1);
+});
 test('worker admission hides pending actors and cancels those returning home',async()=>{
  const state={workers:[{id:'a',profile:'youngMale',status:'walking'}]},bank={dispose(){}},pending=[],disposed=[],ready=[];
  const roster=createWebGpuWorkerRoster({scene:{},residency:{},state,assetBank:bank,onReady:id=>ready.push(id),pipelineAdmission:{prepare(root,{signal}){assert.equal(root.visible,false);return new Promise((resolve,reject)=>{pending.push({resolve,signal});signal.addEventListener('abort',()=>reject(new DOMException('cancelled','AbortError')),{once:true});});}},createWorker:({actorId})=>({root:new Group(),update(){this.root.visible=true;},dispose(){disposed.push(actorId);}})});

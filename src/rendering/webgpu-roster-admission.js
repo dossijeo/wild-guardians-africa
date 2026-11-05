@@ -1,8 +1,11 @@
-// A roster retains ownership of an actor while its shared pipeline is being
-// prepared. Aborting the entry disposes it immediately and prevents late work
-// from publishing an entity that no longer exists.
-export function disposePendingRosterActor(entry){
- const actor=entry.pendingActor;entry.pendingActor=null;actor?.dispose();
+// Removing a cancelled actor is immediate; its rig and shared-asset lease
+// stay alive while a compilation still uses its root.
+export function releaseRosterActor(actor,pipelineAdmission){
+ if(!actor)return;actor.root?.removeFromParent?.();
+ if(actor.root?.isObject3D&&typeof pipelineAdmission?.deferRelease==='function')pipelineAdmission.deferRelease(actor.root,()=>actor.dispose());else actor.dispose();
+}
+export function disposePendingRosterActor(entry,pipelineAdmission){
+ const actor=entry.pendingActor;entry.pendingActor=null;releaseRosterActor(actor,pipelineAdmission);
 }
 
 export async function admitRosterActor({actor,entry,isCurrent,pipelineAdmission,onReady}){
@@ -17,5 +20,5 @@ export async function admitRosterActor({actor,entry,isCurrent,pipelineAdmission,
   if(!isCurrent())return;
   actor.update();entry.pendingActor=null;entry.actor=actor;
   try{onReady();}catch(error){entry.actor=null;actor.dispose();throw error;}
- }finally{if(entry.pendingActor===actor)disposePendingRosterActor(entry);}
+ }finally{if(entry.pendingActor===actor)disposePendingRosterActor(entry,pipelineAdmission);}
 }

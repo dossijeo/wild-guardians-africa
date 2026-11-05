@@ -1,4 +1,4 @@
-import {admitRosterActor,disposePendingRosterActor} from './webgpu-roster-admission.js';
+import {admitRosterActor,disposePendingRosterActor,releaseRosterActor} from './webgpu-roster-admission.js';
 import {bindWebGpuActorMotion} from './webgpu-actor-motion-binding.js';
 import {createWebGpuConfirmedAnimal} from './webgpu-confirmed-animal.js';
 import {ProvisionalBeastImpact} from './provisional-beast-impact.js';
@@ -15,7 +15,7 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
  function ground(x,z){const mesh=residency.get(Math.floor((x+24)/48),Math.floor((z+24)/48));if(!mesh)return 0;mesh.updateWorldMatrix(true,false);ray.set(origin.set(x,1000,z),down);return ray.intersectObject(mesh,false)[0]?.point.y??0;}
  function finishTarget(id){const item=provisional.byTarget.get(id);if(item){provisional.end(item.id);onSelectableChange();}}
  function requestBakedWalk(id,entry){if(!bakedWalkBank)return;const current=()=>!closed&&entries.get(id)===entry&&!entry.controller.signal.aborted&&!!entry.actor;Promise.resolve().then(()=>bakedWalkBank.get(entry.species)).then(async bake=>{if(!current())return;if(typeof entry.actor.installBakedWalk!=='function')throw Error('Animal cannot install baked walking');if(await entry.actor.installBakedWalk(bake,{pipelineAdmission,signal:entry.controller.signal})&&current())onSelectableChange();}).catch(error=>{if(current())onBakedWalkError(entry.species,error);});}
- function remove(id,entry){finishTarget(id);onSelectableChange();entries.delete(id);entry.controller.abort();entry.motionBinding?.dispose();entry.actor?.dispose();disposePendingRosterActor(entry);}
+ function remove(id,entry){finishTarget(id);onSelectableChange();entries.delete(id);entry.controller.abort();entry.motionBinding?.dispose();releaseRosterActor(entry.actor,pipelineAdmission);disposePendingRosterActor(entry,pipelineAdmission);}
  function sync(){
   if(closed)return;const desired=new Map();for(const entity of state.raid?.animals??[]){if(entity.status==='gone'||onlyActorId!==null&&entity.id!==onlyActorId)continue;if(typeof entity.id!=='string'||!entity.id||desired.has(entity.id))throw Error('Invalid confirmed animal roster');desired.set(entity.id,entity);}
   for(const [id,entry] of entries){const entity=desired.get(id);if(!entity||entity.species!==entry.species)remove(id,entry);}

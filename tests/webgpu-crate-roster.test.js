@@ -1,7 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {Scene,Mesh,PlaneGeometry,MeshBasicMaterial,DoubleSide,Group} from 'three';
+import {Scene,Mesh,PlaneGeometry,MeshBasicMaterial,DoubleSide,Group,PerspectiveCamera} from 'three';
 import {createWebGpuCrateRoster} from '../src/rendering/webgpu-crate-roster.js';
+import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
+test('a cancelled pending crate retains its asset through compilation',async()=>{
+ const scene=new Scene(),state={crates:[{id:'a',x:0,z:0}]};let finish,released=0;
+ const admission=createWebGpuPipelineAdmission({scene,camera:new PerspectiveCamera(),renderer:{backend:{isWebGPUBackend:true},compileAsync:()=>new Promise(resolve=>{finish=resolve;})}}),roster=createWebGpuCrateRoster({scene,state,residency:{get:()=>null},pipelineAdmission:admission,assetBank:{async acquireCrate(){return {model:new Group(),release(){released++;}};}}});
+ roster.sync();await flush();state.crates=[];roster.sync();assert.equal(released,0);finish();await flush();assert.equal(released,1);roster.dispose();admission.dispose();
+});
 test('crate remains unpublished until admission and is released on cancellation',async()=>{
  const scene=new Scene(),state={crates:[{id:'a',x:0,z:0}]},pending=[],released=[],bank={async acquireCrate(){return {model:new Group(),release(){released.push('crate');}};}};
  const roster=createWebGpuCrateRoster({scene,residency:{get:()=>null},state,assetBank:bank,pipelineAdmission:{prepare(root,{signal}){assert.equal(root.visible,false);assert.equal(root.parent,null);return new Promise((resolve,reject)=>{pending.push({resolve,signal});signal.addEventListener('abort',()=>reject(new DOMException('cancelled','AbortError')),{once:true});});}}});
