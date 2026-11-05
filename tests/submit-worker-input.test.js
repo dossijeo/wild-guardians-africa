@@ -10,6 +10,10 @@ test('causal placement retains input order and waits for the main projection',as
 });
 test('legacy placement continues through the hosted runtime',async()=>{const command={kind:'plant',id:'p'},owner={workerRuntime:{submit:value=>Promise.resolve(value)}};assert.equal(await submitWorkerInput(owner,command),command);});
 test('presentation input permits identified player actions and contextual attacks',()=>{
- for(const kind of ['plant','placeStructure','buildWallChain','castAgricultural','bless'])assert.equal(isPresentationInputCommand({kind,id:'x'}),true);
+ for(const kind of ['plant','placeStructure','buildWallChain','castAgricultural','castShield','bless','foundVillage','requestRepair','removeWall','hire','hireAdditional'])assert.equal(isPresentationInputCommand({kind,id:'x'}),true);
  assert.equal(isPresentationInputCommand({kind:'castAttack',id:'x',guardianContext:{}}),true);assert.equal(isPresentationInputCommand({kind:'castAttack',id:'x'}),false);assert.equal(isPresentationInputCommand({kind:'snapshot',id:'x'}),false);assert.equal(isPresentationInputCommand({kind:'plant'}),false);
+});
+test('different actions share one sequence without waiting for earlier confirmation',async()=>{
+ const sent=[],resolve=[],owner={workerGpuOnly:true,presentationInputs:true,workerRuntime:{submit(){throw Error('wrong channel');},waitForConfirmed:()=>Promise.resolve()},webGpuWorld:{client:{submitPresentationInput(id,command){sent.push([id,command.kind]);return new Promise(done=>resolve.push(done));}}}};
+ const first=submitWorkerInput(owner,{kind:'plant',id:'a'}),second=submitWorkerInput(owner,{kind:'removeWall',id:'b'});assert.deepEqual(sent,[[1,'plant'],[2,'removeWall']]);resolve[0]({sequence:4,value:true});resolve[1]({sequence:5,value:true});assert.equal((await first).sequence,4);assert.equal((await second).sequence,5);
 });
