@@ -60,6 +60,6 @@ test('failed or removed terrain admissions never replace or resurrect visible te
  const admission={prepare(group,{signal}){return new Promise((resolve,reject)=>requests.push({group,signal,resolve,reject}));},deferRelease(group,release){releases.push(release);}};
  const residency=createWebGpuTerrainResidency({scene,material,pipelineAdmission:admission,onAdmissionError:error=>errors.push(error.message)});
  residency.replace(chunk(),1);await Promise.resolve();requests[0].resolve();await new Promise(resolve=>setImmediate(resolve));const first=scene.children[0];
- residency.replace(chunk(),2);await Promise.resolve();requests[1].reject(Error('prepare failed'));await new Promise(resolve=>setImmediate(resolve));assert.equal(scene.children[0],first);assert.deepEqual(errors,['prepare failed']);
+ residency.replace(chunk(),2);await Promise.resolve();requests[1].reject(Error('prepare failed'));await new Promise(resolve=>setImmediate(resolve));assert.equal(scene.children[0],first);assert.equal(residency.visualReady(),false);assert.deepEqual(errors,['prepare failed']);
  residency.replace(chunk(),3);await Promise.resolve();residency.remove(0,0,4);requests[2].resolve();await new Promise(resolve=>setImmediate(resolve));for(const release of releases)release();assert.equal(scene.children.length,0);assert.equal(residency.size,0);residency.dispose();material.dispose();
 });
