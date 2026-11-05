@@ -43,3 +43,14 @@ El checkpoint no contiene esos callbacks ni el historial de las entradas: el
 receptor debe proporcionar superficies y emisores equivalentes. Tampoco se ha
 conectado al transporte o a la recuperación del gestor, ni garantiza todavía
 la continuidad ante una caída del Worker gráfico. Legacy sigue activo.
+
+Existe una transferencia QA explícita desde el Worker gráfico al gestor
+heredado real: con `qa-webgpu-work-checkpoint`,
+`wildGuardiansRecoverWorkVfxQa()` solicita un checkpoint de la secuencia
+confirmada. El receptor comprueba que la secuencia y el tiempo no hayan
+cambiado, valida planes y altura, prepara todos los efectos y solo después
+sustituye la colección anterior. Rechaza recursos, planes o datos
+incompatibles sin reemplazar los efectos activos. No es recuperación automática
+ni conserva los cambios posteriores al checkpoint; no debe usarse como
+fallback de una caída. El consumidor y transporte siguen pendientes de prueba
+integrada con un Worker gráfico WebGPU real.
