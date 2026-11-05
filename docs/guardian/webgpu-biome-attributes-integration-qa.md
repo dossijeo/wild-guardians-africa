@@ -20,16 +20,27 @@ La comparación del primer dibujo de 768×512 píxeles mostró diferencia máxim
 de un nivel por canal en sabana, manglares y desierto, y cero en gran río;
 un píxel superó tres niveles en volcanes (máximo 43) y otro en gran cañón
 (máximo 8). Los promedios absolutos fueron inferiores a 0,00007 por canal.
-La segunda incorporación se comprobó con contadores, no con comparación de
-píxeles. Cada variante se ejecutó una vez con cámara fija; faltan capturas en
-partida real, cámaras y zooms diversos, pruebas de interacción y mediciones
-de frametime repetidas. El recorte alfa experimental de sombras sigue siendo
-una opción independiente y no se considera validado aquí.
+En esa primera comprobación la segunda incorporación solo se midió con
+contadores. Cada variante se ejecutó una vez con cámara fija. Faltan capturas
+en partida real, pruebas de interacción y mediciones de frametime repetidas.
+El recorte alfa experimental de sombras sigue siendo una opción independiente
+y no se considera validado aquí.
+
+Una comprobación ampliada posterior utilizó escalas no uniformes, conservó el
+segundo chunk y comparó tres cámaras después de añadirlo. En cada imagen de
+768×512, los píxeles con más de tres niveles de diferencia fueron como máximo
+0 en sabana y gran río, 3 en manglares, 4 en volcanes, 5 en gran cañón y 1 en
+desierto. El máximo por canal fue respectivamente 1, 1, 45, 70, 80 y 4. Son
+diferencias puntuales en este escenario, no una prueba de paridad artística en
+movimiento ni un análisis de todos los ángulos. En gran cañón la ruta anterior
+creó 79 pipelines en esta ejecución; el recuento depende de lo visible y no
+debe considerarse constante.
 
 Con Vite en `http://127.0.0.1:5193` y Playwright disponible en `NODE_PATH`:
 
 ```powershell
 $env:QA_BASE_URL='http://127.0.0.1:5193'
 $env:QA_BIOME='sabana' # gran-rio, manglares, volcanes, gran-canon, desierto
+$env:QA_EXTENDED='1' # opcional: escalas no uniformes y tres cámaras con dos chunks
 .\.cache\tooling\node20.exe .\tools\experiments\audit_webgpu_biome_material_sharing.mjs
 ```
