@@ -9,6 +9,7 @@ import {waitGpuPreparation} from '../../tools/experiments/wait-gpu-preparation.j
 // Keep its confirmed-state and camera services independent of WorldScene.
 export function installEarlyWorkerWorldServices(world,{visualSearch='',dev=false}={}){
  const params=new URLSearchParams(visualSearch),legacyDiagnostics=dev&&(params.has('qa-worker-double-decode')||params.has('qa-worker-path-trace'));
+ let focusGeneration=0;
  world.createConfirmedReceiver=session=>legacyDiagnostics?createConfirmedSceneReceiver(world.state,session,world,{repeatDecode:params.has('qa-worker-double-decode')}):createConfirmedStateReceiver(world.state,session);
  world.loadReady=async(pending,releaseLate)=>{
   const signal=world.loading?.signal;let value;const check=()=>{if(world.disposed||signal?.aborted)throw Error('Carga de mundo cancelada');};
@@ -21,10 +22,15 @@ export function installEarlyWorkerWorldServices(world,{visualSearch='',dev=false
  };
  world.focusFarm=()=>world.focus(farmHomeFocus(world.state));
  world.focusTutorialPlacement=kind=>{
+  if(world.nav?.workerProjection){
+   const runtime=world.workerRuntime,state=world.state,generation=++focusGeneration;if(!runtime||!['center','plant','spell'].includes(kind))return null;
+   runtime.submit({kind:'tutorialGuideTarget',toolKind:kind,toolSpell:null}).then(result=>{if(world.disposed||world.state!==state||world.workerRuntime!==runtime||generation!==focusGeneration)return;if(result.rejection)throw Error(result.rejection);focusNewTutorialPlacement(world,result.value,true);}).catch(error=>{if(!world.disposed&&world.state===state&&generation===focusGeneration)world.onError?.(error);});return null;
+  }
   const target=tutorialHandTarget(world.state,world.nav,kind);
   focusNewTutorialPlacement(world,target,true);
   return target;
  };
+ world.cancelTutorialFocus=()=>{focusGeneration++;};
  world.syncResidentProps=()=>{
   if(world.prototypes)throw Error('Early worker world cannot own legacy resident props');
   return {chunks:0,slots:0};

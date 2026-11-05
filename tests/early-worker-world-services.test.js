@@ -43,3 +43,9 @@ test('early spatial residency stores collision metadata without constructing mes
 test('early loading cancels promptly and releases late resources',async()=>{
  const world={loading:new AbortController(),disposed:false},released=[];installEarlyWorkerWorldServices(world);let finish;const pending=world.loadReady(new Promise(resolve=>{finish=resolve;}),value=>released.push(value));world.loading.abort();await assert.rejects(pending,/cancelada/);finish('late');await new Promise(resolve=>setImmediate(resolve));assert.deepEqual(released,['late']);
 });
+
+test('tutorial focus comes from the authority when no local navigation exists',async()=>{
+ const focused=[],pending=[],world={state:{},nav:{workerProjection:true},focus:point=>focused.push(point),workerRuntime:{submit:command=>new Promise(resolve=>pending.push({command,resolve}))}};installEarlyWorkerWorldServices(world);
+ world.focusTutorialPlacement('plant');assert.deepEqual(pending[0].command,{kind:'tutorialGuideTarget',toolKind:'plant',toolSpell:null});world.cancelTutorialFocus();pending[0].resolve({value:{target:'old',position:[1,2,3]}});await new Promise(resolve=>setImmediate(resolve));assert.deepEqual(focused,[]);
+ world.focusTutorialPlacement('center');pending[1].resolve({value:{target:'new',position:[4,5,6]}});await new Promise(resolve=>setImmediate(resolve));assert.deepEqual(focused,[{x:4,z:6}]);
+});

@@ -86,6 +86,7 @@ import {createConfirmedPresentationAdapter} from '../simulation/confirmed-presen
 import {BIOME_IDS} from '../world/biome-ids.js';
 import {villageLayout,findVillageEntry} from '../world/villages.js';
 import {prepareWildEngineWorld} from './wild-engine-world.js';
+import {canRestoreWorkerOnly,createWorkerNavigationProjection} from './worker-navigation-projection.js';
 import {createEventDrivenTaskPlanner} from '../world/wild-engine/spatial-intent-bridge.js';
 import {WorldScene} from '../rendering/scene.js';
 import {farVegetationProfile,farGroundReviewOverrides} from '../rendering/far-vegetation-profile.js';
@@ -273,7 +274,7 @@ async function installWorkerGame(owner,ownerState,navigation){
   const handleGpuError=(client,canvas,failure)=>{if(owner.webGpuWorld&&owner.webGpuWorld.client!==client){canvas?.remove();return;}if(owner.webGpuWorld?.client===client){owner.webGpuWorld.dispose();owner.webGpuWorld=null;}else canvas?.remove();if(!autoRecovery?.trigger(failure))onError(failure);};
   const onConfirmedState=sequence=>owner.webGpuWorld?.client.confirmCameraTerrain(sequence);
   const camera=()=>webGpuCameraPose(owner.camera,owner.controls);
-  const worldOptions=()=>webGpuWorldOptions({params,state:ownerState,field:owner.nav.field,recovery:recoveryQa,dev:import.meta.env.DEV});
+  const worldOptions=()=>webGpuWorldOptions({params,state:ownerState,field:owner.nav.field??{canyon:ownerState.biome==='gran-canon'},recovery:recoveryQa,dev:import.meta.env.DEV});
   owner.authoritativeGuardianPlacement=!!(early?.guardianPlacement&&early?.presentationInputs&&worldOptions().presentationInputs);
   function bindWebGpuWorld(client,canvas){
     if(owner.workerRuntime)client.confirmCameraTerrain(owner.workerRuntime.status().confirmedSequence);return createWebGpuCameraPresentation({camera:owner.camera,controls:owner.controls,canvas,viewport:owner.canvas,client,isCurrent:binding=>owner===world&&ownerState===state&&!owner.disposed&&owner.webGpuWorld===binding});
@@ -368,11 +369,12 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     const villages=await json('/content/villages.json');assertLoading();
     villageCatalog=villages;
     const payload=villages.find(v=>v.id===(next.culture==='saheliana'?'saheliano':next.culture));
-    const spatial=await prepareWildEngineWorld(world,next,payload,
-      {signal:world.loading.signal,loaded:!!loaded});
+    const restoreParams=new URLSearchParams(location.search),workerOnly=import.meta.env.DEV&&canRestoreWorkerOnly(next,{loaded:!!loaded,earlyNative:restoreParams.has('qa-worker-early-native'),earlyGpu:restoreParams.has('qa-worker-early-gpu-view'),noWebgl:restoreParams.has('qa-worker-no-webgl'),cameraTerrain:restoreParams.has('qa-webgpu-camera-terrain')});
+    const workerRestore=workerOnly?savedNativeAuthorityOptions(serialize(next)):null;
+    const spatial=workerOnly?{session:null,navigation:createWorkerNavigationProjection(workerRestore.navigationView)}:await prepareWildEngineWorld(world,next,payload,{signal:world.loading.signal,loaded:!!loaded});
     assertLoading();nav=spatial.navigation;
     const spatialSession=spatial.session;
-    wildEngineSession=spatialSession;
+    wildEngineSession=spatialSession;if(workerOnly){world.configureVisualBiome(next.biome);world.state=next;world.nav=nav;world.camera.position.x=workerRestore.navigationView.eye.x;world.camera.position.z=workerRestore.navigationView.eye.z;world.controls.target.x=workerRestore.navigationView.target.x;world.controls.target.z=workerRestore.navigationView.target.z;}
     // Earlier saves predate native collision footprints. Preserve their units
     // and positions while restoring the geometric metadata from the catalog.
     for(const village of next.villages){
@@ -568,7 +570,7 @@ function closeSurface(){
   if(pendingVillage)cancelVillagePreview();
 }
 function armTool(value){if(world?.qaEarlyGpuOnly)world.webGpuWorld?.client.preferCropSpecies(value.kind==='plant'?value.species:null);tool=toolSession.select(value,performance.now()/1000);if(!world?.qaEarlyTutorial)world?.focusTutorialPlacement(value.kind);}
-function cancelTool(){if(world?.qaEarlyGpuOnly)world.webGpuWorld?.client.preferCropSpecies(null);if(pendingVillage)cancelVillagePreview();if(world?.qaEarlyGpuOnly)world.wallDrawing.setEnabled(false);tool=null;toolSession.clear();commandFeedback='';}
+function cancelTool(){world?.cancelTutorialFocus?.();if(world?.qaEarlyGpuOnly)world.webGpuWorld?.client.preferCropSpecies(null);if(pendingVillage)cancelVillagePreview();if(world?.qaEarlyGpuOnly)world.wallDrawing.setEnabled(false);tool=null;toolSession.clear();commandFeedback='';}
 function toggleAwakening(){
   if(tool?.kind==='awakening'){cancelTool();return;}
   if(!permission(state,'awakening')||(state.awakenings?.progress??0)<100)return;
@@ -816,7 +818,7 @@ function libraryScreen() {
 }
 document.addEventListener('visibilitychange',()=>{if(state){if(document.hidden){changeSimulationPause(true,'hidden');guardian?.hide({immediate:true});dialogVoice.stop();campaignCinema?.voice.pause();audio.suspend();}else {changeSimulationPause(false,'hidden');lastFrame=performance.now();audio.resume();if(campaignCinema?.active)campaignCinema.voice.play().catch(()=>{});else narrateResultDialog();}}});
 document.addEventListener('keydown',e=>hudShortcut(e,document,{enabled:screen==='game'&&!!state&&!starting&&!campaignCinema?.active&&!tutorial?.presentation({record:false})?.blocking&&!document.querySelector('#modal')?.children.length}));
-document.addEventListener('keydown',e=>{if(leaving)return;if(e.key==='Escape'&&campaignCinema?.active){e.preventDefault();campaignCinema.finish();return;}if(e.key==='Escape'&&state&&screen==='game'&&!starting){if(tutorial?.presentation({record:false})?.blocking){tutorial.dismiss({automatic:true});save();}else if(surfaces.active){closeSurface();}else if(tool){tool=null;commandFeedback='';hideHudPanel();}else if(state.pauses.includes('menu')){changeSimulationPause(false,'menu');document.querySelector('#modal').innerHTML='';}else pauseDialog();updateUI(true);}});
+document.addEventListener('keydown',e=>{if(leaving)return;if(e.key==='Escape'&&campaignCinema?.active){e.preventDefault();campaignCinema.finish();return;}if(e.key==='Escape'&&state&&screen==='game'&&!starting){if(tutorial?.presentation({record:false})?.blocking){tutorial.dismiss({automatic:true});save();}else if(surfaces.active){closeSurface();}else if(tool){world?.cancelTutorialFocus?.();tool=null;commandFeedback='';hideHudPanel();}else if(state.pauses.includes('menu')){changeSimulationPause(false,'menu');document.querySelector('#modal').innerHTML='';}else pauseDialog();updateUI(true);}});
 document.addEventListener('pointerdown',()=>{if(campaignCinema?.active)return;audio.unlock().then(()=>screen==='loading'?loadingAudio?.start():screen==='menu'?audio.menu():state?audio.gameplay(state.day):null).catch(()=>{});});
 window.addEventListener('pagehide',()=>{guardian?.voice?.dispose();dialogVoice.dispose();});
 window.addEventListener('wild-guardians:language-change',()=>{if(state){dialogVoice.stop();if(guardian){guardian.voice?.stop();guardian.key=null;}updateUI(true);narrateResultDialog();}const draft=document.querySelector('#hireConfirm');if(draft){document.querySelector('#crewCount0').dispatchEvent(new Event('input'));for(const [i,profile] of NPC_TYPES.entries()){const pace=document.querySelector(`[data-crew-card="${i}"] .hire-stats b`);if(pace)pace.textContent='×'+profile.speed.toLocaleString(moneyLocale(),{minimumFractionDigits:2,maximumFractionDigits:2});}}});
