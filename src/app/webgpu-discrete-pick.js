@@ -1,6 +1,6 @@
 // Placement and wall strokes retain the legacy picker; discrete selection can
 // fall back when the confirmed visual scene is not yet complete.
-export function createWebGpuDiscretePick({context,deliver,fallback=null,onError=()=>{},allowTerrainTools=false,allowStableCameraPick=false,onTrace=null}){
+export function createWebGpuDiscretePick({context,deliver,fallback=null,onError=()=>{},allowTerrainTools=false,allowStableCameraPick=false,allowGuardianContext=false,onTrace=null}){
  if(typeof context!=='function'||typeof deliver!=='function'||fallback!==null&&typeof fallback!=='function'||typeof onError!=='function'||onTrace!==null&&typeof onTrace!=='function')throw TypeError('Invalid WebGPU pick adapter');
  return (event,gesture)=>{
   const initial=context();
@@ -13,7 +13,8 @@ export function createWebGpuDiscretePick({context,deliver,fallback=null,onError=
   const started=onTrace?performance.now():0,trace=onTrace?(stage,details={})=>{try{onTrace({stage,elapsed:performance.now()-started,coordinate,...details});}catch{}}:null;trace?.('requested');
   // Synchronize camera before taking the version captured by the pick client.
   initial.sync();
-  Promise.resolve().then(()=>initial.client.pick(terrainTool?{...coordinate,terrainOnly:true}:coordinate,allowStableCameraPick&&initial.tool?.kind==='spell'&&initial.tool.spell==='attack'?{allowStableCamera:true}:undefined)).then(result=>{
+  const attack=initial.tool?.kind==='spell'&&initial.tool.spell==='attack',options=attack&&(allowStableCameraPick||allowGuardianContext)?{...(allowStableCameraPick?{allowStableCamera:true}:{}),...(allowGuardianContext?{includeGuardianContext:true}:{})}:undefined;
+  Promise.resolve().then(()=>initial.client.pick(terrainTool?{...coordinate,terrainOnly:true}:coordinate,options)).then(result=>{
    const current=context();
    if(current?.owner!==initial.owner||current?.state!==initial.state||current?.tool!==initial.tool||current?.client!==initial.client){trace?.('context-changed');return;}
    if(terrainTool&&!result.point){trace?.('no-terrain',{sequence:result.sequence});return;}
