@@ -41,6 +41,12 @@ test('prepares with the actual framebuffer target and restores it before awaitin
  await Promise.resolve();assert.equal(current,screen);finish();await pending;admission.dispose();
 });
 
+test('a framebuffer replaced during compilation must be prepared before admission',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),firstTarget={},nextTarget={};let framebuffer=firstTarget,current=null;const pending=[],targets=[];
+ const renderer={backend:{isWebGPUBackend:true},getRenderTarget:()=>current,_getFrameBufferTarget:()=>framebuffer,setRenderTarget(target){current=target;},compileAsync(){targets.push(current);return new Promise(resolve=>pending.push(resolve));}};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera}),ready=admission.prepare(object);await Promise.resolve();assert.deepEqual(targets,[firstTarget]);framebuffer=nextTarget;pending[0]();await new Promise(resolve=>setImmediate(resolve));assert.deepEqual(targets,[firstTarget,nextTarget]);pending[1]();await ready;assert.equal(current,null);admission.dispose();
+});
+
 test('device loss rejects active admission without waiting for the compiler',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group();let lose;
  const renderer={backend:{isWebGPUBackend:true,device:{lost:new Promise(resolve=>{lose=resolve;})}},compileAsync:()=>new Promise(()=>{})};
