@@ -2,6 +2,7 @@ import {createWebGpuWorldSurface} from './webgpu-world-surface.js';
 import {assertPickFrame,verifyCameraPick} from './verified-camera-pick.js';
 import {respondToWebGpuPreparation} from './webgpu-preparation-request.js';
 import {createWebGpuSurfaceOwner} from './webgpu-surface-owner.js';
+import {runWebGpuPreview} from './webgpu-preview-request.js';
 
 // Experimental presentation worker; it cannot advance the simulation.
 const owner=createWebGpuSurfaceOwner();let phase='new',surface=null,frame=null,latestCamera=null,latestSize=null,firstFrame=false,actorTextured=false,actorTextureError=null,guardianError=null,inspectWorkerState=false,workRecovery=false,recoveryEnabled=false,recoveryPort=null,recoverySession=null,recoveryId=0,recoveryStaged=[],recoveryEvents=[],qaFrameTracking=false,presentationInputsEnabled=false,qaFrameSequence=-1,qaFrameTerrain=-1,qaFrameSelectable=-1,latestCameraVersion=0,qaFrameCameraVersion=-1;
@@ -44,13 +45,13 @@ self.onmessage=async({data})=>{try{
  if(data.kind==='villagePreviewShow'){if(!surface?.settlements)throw Error('Village preview unavailable');surface.settlements.showVillagePreview(data.preview);return;}
  if(data.kind==='villagePreviewClear'){surface?.settlements?.clearVillagePreview();return;}
  if(data.kind==='villagePreviewConfirm'){surface?.settlements?.confirmVillagePreview(data.targetId);return;}
- if(data.kind==='structureBegin'){if(!surface?.settlements?.beginPreview(data.command))throw Error('Structure preview unavailable');return;}
+ if(data.kind==='structureBegin'){runWebGpuPreview({resource:'structure-preview',begin:()=>surface?.settlements?.beginPreview(data.command),report:notice=>postMessage({kind:'resourceError',...notice})});return;}
  if(data.kind==='structureConfirm'){surface?.settlements?.confirmPreview(data.id,data.targetId);return;}
  if(data.kind==='structureReject'){surface?.settlements?.rejectPreview(data.id);return;}
  if(data.kind==='prepareCrops'){await respondToWebGpuPreparation({id:data.id,kind:'crop',prepare:()=>{if(!surface?.crops)throw Error('Crop presentation unavailable');return surface.crops.prepare();},send:message=>postMessage(message),isOpen:()=>phase==='running'||phase==='recovering'});return;}
  if(data.kind==='prepareCropSpecies'){await respondToWebGpuPreparation({id:data.id,kind:'crop',prepare:()=>{if(!surface?.crops)throw Error('Crop presentation unavailable');return surface.crops.prepareSpecies(data.species);},send:message=>postMessage(message),isOpen:()=>phase==='running'||phase==='recovering'});return;}
  if(data.kind==='preferCropSpecies'){if(!surface?.crops)throw Error('Crop presentation unavailable');surface.crops.preferSpecies(data.species);return;}
- if(data.kind==='cropBegin'){if(!surface?.crops?.beginProvisional(data.id,data.species,data.x,data.z))throw Error('Crop preview unavailable');return;}
+ if(data.kind==='cropBegin'){runWebGpuPreview({resource:'crop-preview',begin:()=>surface?.crops?.beginProvisional(data.id,data.species,data.x,data.z),report:notice=>postMessage({kind:'resourceError',...notice})});return;}
  if(data.kind==='cropConfirm'){surface?.crops?.confirmProvisional(data.id,data.targetId);return;}
  if(data.kind==='cropReject'){surface?.crops?.rejectProvisional(data.id);return;}
  if(data.kind==='guardianBegin'){if(surface?.guardianAttack?.begin(data.command))surface.animalRoster?.beginImpact(data.command);return;}
