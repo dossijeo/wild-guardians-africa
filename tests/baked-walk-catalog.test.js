@@ -5,7 +5,7 @@ import {createHash,webcrypto} from 'node:crypto';
 import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
 import {loadBakedWalkAsset,createBakedWalkBank,closeBakedWalkResources} from '../src/rendering/baked-walk-catalog.js';
 import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
-import {Scene,PerspectiveCamera,Group} from 'three';
+import {Scene,PerspectiveCamera,Group,DataTexture} from 'three';
 
 const sha=data=>createHash('sha256').update(data).digest('hex');
 test('closing the graphical owner cancels new loads but keeps shared walking textures until compilation ends',async()=>{
@@ -39,4 +39,14 @@ test('the Worker bank shares one species load and releases it once at shutdown',
 
 test('bank disposal rejects a late asset and frees it without publication',async()=>{
  let finish,started,disposed=0;const loading=new Promise(resolve=>{started=resolve;}),bank=createBakedWalkBank({load:species=>{started();return new Promise(resolve=>{finish=()=>resolve({meta:{species},texture:{isDataTexture:true},dispose(){disposed++;}});});}}),pending=bank.get('lion');await loading;bank.dispose();finish();await assert.rejects(pending,{name:'AbortError'});assert.equal(disposed,1);assert.deepEqual(bank.status().species,[]);
+});
+
+test('the shared walking texture is published only after its WebGPU upload completes',async()=>{
+ let finish,uploads=0,disposed=0;const submitted=new Promise(resolve=>{finish=resolve;}),renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone:()=>submitted}}},initTexture(){uploads++;}},bank=createBakedWalkBank({renderer,load:async species=>({meta:{species},texture:new DataTexture(),dispose(){disposed++;}})}),a=bank.get('hyena'),b=bank.get('hyena');
+ for(let n=0;n<10&&!uploads;n++)await new Promise(resolve=>setImmediate(resolve));assert.equal(uploads,1);assert.equal(bank.status().species[0].ready,false);finish();assert.equal(await a,await b);assert.equal(bank.status().species[0].ready,true);bank.dispose();assert.equal(disposed,1);
+});
+
+test('bank closure cancels publication and retains an uploading walking texture',async()=>{
+ let finish,uploads=0,disposed=0;const submitted=new Promise(resolve=>{finish=resolve;}),renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone:()=>submitted}}},initTexture(){uploads++;}},bank=createBakedWalkBank({renderer,load:async species=>({meta:{species},texture:new DataTexture(),dispose(){disposed++;}})}),pending=bank.get('lion');
+ for(let n=0;n<10&&!uploads;n++)await new Promise(resolve=>setImmediate(resolve));assert.equal(uploads,1);const rejected=assert.rejects(pending,{name:'AbortError'});bank.dispose();await rejected;assert.equal(disposed,0);finish();await new Promise(resolve=>setImmediate(resolve));assert.equal(disposed,1);
 });

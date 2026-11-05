@@ -1,6 +1,7 @@
 import {ANIMAL_ACTIONS} from '../simulation/animal-actions-data.js';
 import {assetUrl} from './asset-url.js';
 import {createBakedWalkTexture} from './webgpu-baked-walk.js';
+import {prepareWebGpuTexture} from './webgpu-texture-upload.js';
 
 // Only called by the graphical owner. A bake is accepted for the exact source
 // asset and bytes for which it was authored; no model download is needed here.
@@ -19,15 +20,15 @@ export async function loadBakedWalkAsset(species,{signal,fetcher=globalThis.fetc
 
 // The graphical Worker owns one texture per species for its lifetime. Actors
 // borrow it; their removal never disposes a texture used by another actor.
-export function createBakedWalkBank({load=loadBakedWalkAsset}={}){
- if(typeof load!=='function')throw TypeError('Invalid baked walking bank');
+export function createBakedWalkBank({load=loadBakedWalkAsset,renderer=null}={}){
+ if(typeof load!=='function'||renderer!==null&&(!renderer?.backend?.isWebGPUBackend||typeof renderer.initTexture!=='function'||typeof renderer.backend.device?.queue?.onSubmittedWorkDone!=='function'))throw TypeError('Invalid baked walking bank');
  const entries=new Map(),controller=new AbortController();let closed=false,disposed=false;
  function close(){if(closed)return;closed=true;controller.abort();}
  return {
   get(species){
    if(closed)return Promise.reject(Error('Baked walking bank disposed'));
    if(!Object.hasOwn(ANIMAL_ACTIONS.animals,species))return Promise.reject(TypeError('Unknown baked walking species'));
-   let entry=entries.get(species);if(!entry){entry={asset:null,promise:null};entries.set(species,entry);entry.promise=Promise.resolve().then(()=>load(species,{signal:controller.signal})).then(asset=>{if(!asset?.texture?.isDataTexture||asset.meta?.species!==species||typeof asset.dispose!=='function'){asset?.dispose?.();throw TypeError('Invalid baked walking asset');}if(closed){asset.dispose();throw new DOMException('Baked walking bank disposed','AbortError');}entry.asset=asset;return asset;}).catch(error=>{if(entries.get(species)===entry)entries.delete(species);throw error;});}return entry.promise;
+   let entry=entries.get(species);if(!entry){entry={asset:null,promise:null};entries.set(species,entry);entry.promise=Promise.resolve().then(()=>load(species,{signal:controller.signal})).then(async asset=>{if(!asset?.texture?.isDataTexture||renderer&&!asset.texture.isTexture||asset.meta?.species!==species||typeof asset.dispose!=='function'){asset?.dispose?.();throw TypeError('Invalid baked walking asset');}if(closed){asset.dispose();throw new DOMException('Baked walking bank disposed','AbortError');}if(renderer)await prepareWebGpuTexture({renderer,texture:asset.texture,signal:controller.signal,release:()=>asset.dispose()});if(closed){asset.dispose();throw new DOMException('Baked walking bank disposed','AbortError');}entry.asset=asset;return asset;}).catch(error=>{if(entries.get(species)===entry)entries.delete(species);throw error;});}return entry.promise;
   },
   status(){return {closed,species:[...entries].map(([species,entry])=>({species,ready:!!entry.asset}))};},
   close,
