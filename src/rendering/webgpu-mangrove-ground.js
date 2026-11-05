@@ -7,11 +7,12 @@ import {skyNight} from './sky.js';
 // Default mangrove pure-moss branch of groundMaterial417 and its direct/ambient
 // biome-ground light. Environment reflections, contact AO and authored seed are still
 // pending; keep this provider experimental until in-game visual comparison.
-export async function createWebGpuMangroveGround({signal,fetchImpl=globalThis.fetch,light=null,shadows=false}={}){
+export async function createWebGpuMangroveGround({signal,fetchImpl=globalThis.fetch,imageLoader=null,light=null,shadows=false}={}){
+ if(imageLoader!==null&&typeof imageLoader!=='function')throw TypeError('Invalid ground image loader');
  const response=await fetchImpl(assetUrl('/content/ground-materials.json'),{signal});if(!response.ok)throw Error('Ground material catalogue unavailable');const tile=(await response.json()).mangrove;
  if(!tile?.base||!tile.normal||!tile.arh||!Number.isFinite(tile.scale))throw Error('Invalid mangrove ground material');
  const bitmaps=[],atlases=[];let closed=false;
- try{for(const url of [tile.base,tile.normal,tile.arh]){const image=await fetchImpl(assetUrl(url),{signal});if(!image.ok)throw Error('Mangrove ground texture unavailable');const bitmap=await createImageBitmap(await image.blob());if(signal?.aborted){bitmap.close();throw new DOMException('Ground load cancelled','AbortError');}bitmaps.push(bitmap);const atlas=new THREE.Texture(bitmap);atlas.wrapS=atlas.wrapT=THREE.RepeatWrapping;atlas.minFilter=THREE.LinearMipmapLinearFilter;atlas.magFilter=THREE.LinearFilter;atlas.generateMipmaps=true;atlas.flipY=false;atlas.needsUpdate=true;atlases.push(atlas);}}
+ try{for(const url of [tile.base,tile.normal,tile.arh]){let bitmap;if(imageLoader)bitmap=await imageLoader(assetUrl(url),{signal});else{const image=await fetchImpl(assetUrl(url),{signal});if(!image.ok)throw Error('Mangrove ground texture unavailable');bitmap=await createImageBitmap(await image.blob());}if(signal?.aborted){bitmap.close();throw new DOMException('Ground load cancelled','AbortError');}bitmaps.push(bitmap);const atlas=new THREE.Texture(bitmap);atlas.wrapS=atlas.wrapT=THREE.RepeatWrapping;atlas.minFilter=THREE.LinearMipmapLinearFilter;atlas.magFilter=THREE.LinearFilter;atlas.generateMipmaps=true;atlas.flipY=false;atlas.needsUpdate=true;atlases.push(atlas);}}
  catch(error){for(const atlas of atlases)atlas.dispose();for(const bitmap of bitmaps)bitmap.close();throw error;}
  const night=uniform(0),sunDirection=uniform(new THREE.Vector3(-.82,.52,.31).normalize()),visibility=shadows&&light?shadow(light).r:float(1);
  const world=positionWorld,uv=vec2(world.x.mul(.8).add(world.z.mul(.6)),world.x.mul(-.6).add(world.z.mul(.8))).mul(tile.scale),tex=texture(atlases[0],uv).rgb.mul(vec3(1,1.03,.96)),mapN=texture(atlases[1],uv).rgb.mul(2).sub(1),arh=texture(atlases[2],uv).rgb;
