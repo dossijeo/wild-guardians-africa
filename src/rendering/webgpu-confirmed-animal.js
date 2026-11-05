@@ -11,7 +11,7 @@ import {BakedBeastFall} from './baked-beast-fall.js';
 import {RAGDOLL_LINKS} from '../simulation/beast-ragdoll.js';
 import {guardianImpactTime} from '../simulation/guardian-timing.js';
 import {createAnatomicSupport} from './webgpu-anatomic-support.js';
-import {createActorTerrainSampler} from './webgpu-actor-terrain.js';
+import {createActorTerrainSampler,hasResidentActorTerrain} from './webgpu-actor-terrain.js';
 
 // Experimental single confirmed animal, owned entirely by the render Worker.
 // This does not implement combat physics, expressions, or production grounding.
@@ -40,8 +40,8 @@ export async function createWebGpuConfirmedAnimal({scene,residency,state,actorId
   root.visible=true;if(physical){provisionalFall=null;fallToken=null;baked?.disable();restoreAnimalImpact(impactData);onPhysical();if(physical.actorId!==actorId)throw Error('Confirmed animal pose belongs to another actor');applyConfirmedAnimalPose(root,model,visualPose(physical));if(reconcile){if(!reconcile.anchored){const item=reconcile.values[0],inverseRoot=root.getWorldQuaternion(new THREE.Quaternion()).invert();item.position.copy(root.worldToLocal(reconcile.worldPosition));item.quaternion.copy(inverseRoot.multiply(reconcile.worldQuaternion));reconcile.anchored=true;}const t=THREE.MathUtils.clamp((clock()-reconcile.at)/150,0,1),blend=t*t*(3-2*t);for(const item of reconcile.values){item.node.position.lerpVectors(item.position,item.node.position,blend);item.node.quaternion.slerp(item.quaternion,1-blend);}root.updateMatrixWorld(true);if(t>=1)reconcile=null;}if(experimentalPoseReconciliation){if(anatomic)anatomic.apply();else supportPhysical();}wasPhysical=true;return;}
   reconcile=null;
   if(wasPhysical){action?.stop();key=null;root.quaternion.identity();root.scale.set(1,1,1);for(const item of rest){item.node.position.copy(item.position);item.node.quaternion.copy(item.quaternion);item.node.scale.copy(item.scale);}wasPhysical=false;}
-  const height=sampleTerrain(entity.x,entity.z);
-  root.position.set(entity.x,height,entity.z);root.rotation.y=entity.downHeading!==undefined&&(entity.fallRemaining>0||entity.recovery)?entity.downHeading:entity.path?.length?Math.atan2(entity.path[0].x-entity.x,entity.path[0].z-entity.z):entity.heading??0;
+  const hasTerrain=hasResidentActorTerrain(residency,entity.x,entity.z);root.visible=hasTerrain;
+  if(hasTerrain)root.position.set(entity.x,sampleTerrain(entity.x,entity.z),entity.z);else root.position.set(entity.x,root.position.y,entity.z);root.rotation.y=entity.downHeading!==undefined&&(entity.fallRemaining>0||entity.recovery)?entity.downHeading:entity.path?.length?Math.atan2(entity.path[0].x-entity.x,entity.path[0].z-entity.z):entity.heading??0;
   const pose=animalPose(entity,confirmedClock?.elapsed??state.elapsed),clip=clips.find(item=>item.name===pose.name);if(!clip)throw Error('Missing confirmed animal clip '+pose.name);
   const provisional=getProvisional(entity,state.elapsed);if(!provisional){provisionalFall=null;fallToken=null;}restoreAnimalImpact(impactData);
   if(!provisional&&baked&&pose.name==='Walking'&&entity.status==='walking'&&!entity.recovery&&!entity.fallRemaining){baked.set(pose.time);return;}baked?.disable();
@@ -51,5 +51,5 @@ export async function createWebGpuConfirmedAnimal({scene,residency,state,actorId
    if(!played){captureAnimalImpact(impactData,provisional.animal,provisional.elapsed);applyAnimalImpact(impactData,provisional.animal,provisional.elapsed);}}
  }
  try{update();progressive?.start();}catch(error){baked?.dispose();scene.remove(root);shared?.release();progressive?.dispose();for(const resource of resources)resource.dispose();throw error;}
- return {root,update,validatePose(pose){validateConfirmedAnimalPose(model,visualPose(pose));},isPhysical(){return wasPhysical;},isBakedWalking(){return baked?.isEnabled()??false;},isProvisionalFalling(){return !!provisionalFall;},isReconciling(){return !!reconcile;},tick(now){progressive?.tick(now);},dispose(){if(closed)return;closed=true;provisionalFall?.restore();baked?.dispose();scene.remove(root);mixer.stopAllAction();mixer.uncacheRoot(model);shared?.release();progressive?.dispose();for(const resource of resources)resource.dispose();}};
+ return {root,update,...(import.meta.env?.DEV?{auditPoseForQa(){const pose=getPose();if(!pose||!wasPhysical)return null;const normalized=visualPose(pose),bones=validateConfirmedAnimalPose(model,normalized),diff=(node,v)=>{const actual=[...node.position.toArray(),...node.quaternion.toArray(),...node.scale.toArray()];return Math.max(...actual.map((x,i)=>Math.abs(x-v[i])));};return {actorId,expectedBones:normalized.bones.length,visualBones:bones.length,maxError:Math.max(diff(root,normalized.root),diff(model,normalized.model),...bones.map((bone,i)=>diff(bone,normalized.bones[i].transform)))};}}:{}),validatePose(pose){validateConfirmedAnimalPose(model,visualPose(pose));},isPhysical(){return wasPhysical;},isBakedWalking(){return baked?.isEnabled()??false;},isProvisionalFalling(){return !!provisionalFall;},isReconciling(){return !!reconcile;},tick(now){progressive?.tick(now);},dispose(){if(closed)return;closed=true;provisionalFall?.restore();baked?.dispose();scene.remove(root);mixer.stopAllAction();mixer.uncacheRoot(model);shared?.release();progressive?.dispose();for(const resource of resources)resource.dispose();}};
 }

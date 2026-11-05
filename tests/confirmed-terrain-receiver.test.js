@@ -13,6 +13,7 @@ test('notifies presentation after applying a revision and before acknowledgement
  const order=[],port={postMessage:()=>order.push('ack'),close(){},start(){}},r=createConfirmedTerrainReceiver({port,session:'s',residency:{replace:()=>{order.push('replace');return true;}},onApplied:()=>order.push('applied')});
  port.onmessage({data:{kind:'terrain',session:'s',id:1,sequence:0,revision:1,payload:{}}});assert.deepEqual(order,['replace','applied','ack']);r.dispose();
 });
+test('applied callback carries source epoch and confirmed sequence',()=>{let received;const port={postMessage(){},close(){},start(){}},receiver=createConfirmedTerrainReceiver({port,session:'s',confirmedSequence:2,residency:{replace:()=>true},onApplied:(payload,revision,metadata)=>received={payload,revision,metadata}}),payload={cx:0};port.onmessage({data:{kind:'terrain',session:'s',id:1,sequence:2,revision:3,epoch:'epoch-a',payload}});assert.deepEqual(received,{payload,revision:3,metadata:{sequence:2,epoch:'epoch-a'}});receiver.dispose();});
 
 test('checkpoint discards late terrain through its boundary and preserves later updates',()=>{
  const applied=[],acks=[],port={postMessage:m=>acks.push(m.id),close(){},start(){}},r=createConfirmedTerrainReceiver({port,session:'s',confirmedSequence:5,residency:{replace:(payload,revision)=>applied.push([payload.id,revision])}});
