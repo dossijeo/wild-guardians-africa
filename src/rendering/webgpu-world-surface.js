@@ -43,7 +43,7 @@ export async function createWebGpuWorldSurface({canvas,session,terrainPort,prese
   if(state)biomeProps=createWebGpuBiomeProps({scene,state,onError,instanceContract:experimentalBiomeAttributes?'attributes':'native',experimentalShadowCutout:experimentalBiomeShadowCutout});
   if(state){settlements=createWebGpuSettlements({scene,state,residency,renderer,onError,onTextureError:onSettlementTextureError});settlements.sync();}
   if(state){crops=createWebGpuCropRoster({scene,state,residency,renderer,onError});crops.sync();}
-  if(state){agricultureVfx=createWebGpuAgricultureVfx({scene,state,residency,includeCombat:true,includeShield:true,includeWallImpact:true,includeWallFragments:experimentalWallFragments,onError});agricultureVfx.sync();}
+  if(state){agricultureVfx=createWebGpuAgricultureVfx({scene,state,residency,includeCombat:true,includeShield:true,includeWallImpact:true,includeWallFragments:experimentalWallFragments,includeWork:true,presentationWorkerHeadings,onError});agricultureVfx.sync();}
   if(state)blessingVfx=createWebGpuBlessingVfx({scene,state,residency});
   if(state)guardianAttack=createWebGpuGuardianAttack({scene,state,renderer,onError:onGuardianError,aura:plan=>agricultureVfx?.setGuardianAura(plan)});
   if(experimentalBakedHyena){try{const responses=await Promise.all([fetch('/qa/gpu-bake/walking.json'),fetch('/qa/gpu-bake/walking.bin')]);if(responses.some(r=>!r.ok))throw Error('Baked walking assets unavailable');bakedWalk=createBakedWalkTexture(await responses[0].json(),await responses[1].arrayBuffer());}catch(error){onActorTextureError(error);}}
