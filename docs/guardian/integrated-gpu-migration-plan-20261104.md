@@ -115,6 +115,8 @@ Los slots de textura existen desde el comienzo. Placeholder y recurso final debe
 
 El grafo progresivo de personajes mezcla ahora también el alfa provisional con el alfa de la textura y del color original por vértice, usando el mismo parámetro que el color. El cambio conserva la identidad del grafo durante la transición en las pruebas de contrato. Los paquetes de autoría existentes solo admiten materiales opacos; la paridad visual y de sombras de materiales con recorte o transparencia sigue pendiente de una ruta de autoría y validación apropiada.
 
+La locomoción precocinada comparte ahora una réplica de material por material de origen y grafo dentro del mismo renderer. La fase y las matrices de cada canal pertenecen a su malla, de modo que varios animales pueden compartir la réplica sin compartir su pose; la transición progresiva de texturas actualiza esa réplica una vez. Las referencias se liberan al retirar el último usuario. Se han comprobado dos rigs reales y el fallback mediante pruebas de nodos, pero todavía no la paridad de sombras, la reutilización efectiva del pipeline ni el coste en WebGPU real.
+
 Color, sombra y profundidad comparten la misma deformación, cobertura y reloj. Los pases auxiliares forman parte de la receta; no se descubren al dibujar por primera vez.
 
 El catálogo distingue claves del motor, shaders generados y descriptores finales. No se falsean las claves internas de Three.js para hacer coincidir objetos incompatibles. Un incremento de variantes requiere una modificación explícita del catálogo y una justificación estructural.
