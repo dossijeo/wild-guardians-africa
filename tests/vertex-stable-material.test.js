@@ -26,6 +26,21 @@ test('compatible primitives can share their final and provisional material',asyn
  await stable.resolveFinal(x.asset(x.material));stable.apply({blend:.5});assert.equal(second.material.map,x.material.map);stable.dispose();
 });
 
+test('different assets share the progressive graph while their texture and blend remain independent',async()=>{
+ const a=setup(),b=setup();a.material.color.setHex(0x804020);b.material.color.setHex(0x206080);
+ const first=await makeStableVertexMaterials(a.renderer,a.preview,a.asset(a.material),a.mapping),second=await makeStableVertexMaterials(b.renderer,b.preview,b.asset(b.material),b.mapping);
+ assert.equal(a.mesh.material.colorNode,b.mesh.material.colorNode);assert.equal(a.mesh.material.colorNode.getCacheKey(),b.mesh.material.colorNode.getCacheKey());
+ const references=new Map();a.mesh.material.colorNode.traverse(node=>{if(node.isMaterialReferenceNode)references.set(node.property,node);});
+ assert.ok(references.has('map'));assert.ok(references.has('color'));assert.ok(references.has('_wgTextureBlend'));
+ await first.resolveFinal(a.asset(a.material));first.apply({blend:.3});await second.resolveFinal(b.asset(b.material));second.apply({blend:.8});
+ for(const [item,map,blend] of [[a,a.material.map,.3],[b,b.material.map,.8]]){for(const ref of references.values())ref.updateReference({material:item.mesh.material});assert.equal(references.get('map').getValueFromReference(),map);assert.equal(references.get('_wgTextureBlend').getValueFromReference(),blend);assert.ok(references.get('color').getValueFromReference().equals(item.material.color));}
+ first.dispose();second.dispose();
+});
+
+test('different UV channels retain separate progressive graphs',async()=>{
+ const a=setup(),b=setup();b.material.map.channel=1;const first=await makeStableVertexMaterials(a.renderer,a.preview,a.asset(a.material),a.mapping),second=await makeStableVertexMaterials(b.renderer,b.preview,b.asset(b.material),b.mapping);assert.notEqual(a.mesh.material.colorNode,b.mesh.material.colorNode);assert.notEqual(a.mesh.material.colorNode.getCacheKey(),b.mesh.material.colorNode.getCacheKey());first.dispose();second.dispose();
+});
+
 test('tangent layout differences keep incompatible material instances separate',async()=>{
  const x=setup(),second=x.mesh.clone();second.geometry=x.mesh.geometry.clone();second.geometry.setAttribute('tangent',new THREE.Float32BufferAttribute([1,0,0,1],4));x.preview.scene.add(second);x.preview.parser.associations.set(second,{meshes:1,primitives:0});x.mapping.primitives.push({mesh:1,primitive:0,material:0,colorAccessor:null});
  const stable=await makeStableVertexMaterials(x.renderer,x.preview,x.asset(x.material),x.mapping,{shareCompatibleMaterials:true});assert.notEqual(x.mesh.material,second.material);assert.equal(x.mesh.material.normalScale.y,-second.material.normalScale.y);stable.dispose();

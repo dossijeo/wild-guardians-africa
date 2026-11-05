@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { attribute, mix, texture, uniform, vec4 } from 'three/tsl';
+import { attribute, materialReference, mix, vec4 } from 'three/tsl';
 
 const textureLayoutProperties=['colorSpace','mapping','channel','wrapS','wrapT','wrapR','magFilter','minFilter','anisotropy'];
 // Match the structural binding distinctions used by Three's WebGPU backend.
@@ -12,6 +12,13 @@ function textureBinding(texture){
 }
 const textureLayout=texture=>JSON.stringify([...textureBinding(texture),...textureLayoutProperties.map(key=>texture[key])]);
 const neutralTextures=new WeakMap();
+// Three's node cache includes node identities. Reuse a graph per structural
+// texture layout: UV channels and binding types affect generated code even
+// though colors, textures and blend values are per-material data.
+const progressiveColorNodes=new Map();
+function progressiveColorNodeFor(map){
+ const key=textureLayout(map);let node=progressiveColorNodes.get(key);if(!node){node=vec4(mix(attribute('color','vec4').rgb,materialReference('map','texture').rgb.mul(materialReference('color','color')).mul(attribute('wgOriginalColor','vec4').rgb),materialReference('_wgTextureBlend','float')),1);progressiveColorNodes.set(key,node);}return node;
+}
 
 // Each renderer owns its neutral textures. Materials borrow them and release
 // their lease without invalidating another asset that is still using one.
@@ -45,8 +52,7 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
     entries.push({ object, record });
   });
   const sources = await Promise.all(entries.map(item => originalMaterials.parser.getDependency('material', item.record.material)));
-  const placeholders = new Map(), textureNodes = [], mapBindings = [], changes = [], createdMaterials = [], normalScales = [], compatibleMaterials = new Map();
-  const ready = uniform(0);
+  const placeholders = new Map(), mapBindings = [], changes = [], createdMaterials = [], progressiveMaterials = [], normalScales = [], compatibleMaterials = new Map();
   let generation = 0, cancelled = false, resolved = false, applied = false, disposed = false;
   function placeholder(source, normal) {
     const key = JSON.stringify([normal,textureLayout(source)]);
@@ -102,10 +108,8 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
         continue;
       }
       if (!original) original = new THREE.BufferAttribute(new Uint8Array(geometry.attributes.position.count * 4).fill(255), 4, true);
-      const sampled = texture(placeholder(source.map, false));
-      textureNodes.push({ index, node: sampled, final: source.map });
       nodeMaterial.vertexColors = false;
-      nodeMaterial.colorNode = vec4(mix(attribute('color', 'vec4').rgb, sampled.rgb.mul(uniform(source.color.clone())).mul(attribute('wgOriginalColor', 'vec4').rgb), ready), 1);
+      nodeMaterial._wgTextureBlend=0;nodeMaterial.colorNode=progressiveColorNodeFor(nodeMaterial.map);progressiveMaterials.push(nodeMaterial);
       changes.push({ object: item.object, material: nodeMaterial, originalColor: original });
     } else {
       changes.push({ object: item.object, material: nodeMaterial });
@@ -131,16 +135,14 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
       const finalSources = await Promise.all(entries.map(item => asset.parser.getDependency('material', item.record.material)));
       if (cancelled || generation !== current) throw Error('Material preparation cancelled or superseded');
       const textures = new Set();
-      const resolvedBindings = [], resolvedNodes = [];
+      const resolvedBindings = [];
       for (const binding of mapBindings) {
         const value = finalSources[binding.index][binding.key];
         if (!value?.isTexture) throw Error(`Final texture missing: ${binding.key}`);
         if (textureLayout(value) !== binding.layout) throw Error(`Final texture layout mismatch: ${binding.key}`);
         resolvedBindings.push({ binding, value }); textures.add(value);
       }
-      for (const item of textureNodes) { const value = finalSources[item.index].map; if (!value?.isTexture) throw Error('Final base texture missing'); resolvedNodes.push({ item, value }); }
       for (const { binding, value } of resolvedBindings) binding.final = value;
-      for (const { item, value } of resolvedNodes) item.final = value;
       resolved = true;
       return [...textures];
     },
@@ -149,9 +151,9 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
       if (!resolved) throw Error('Final textures not ready');
       if (!Number.isFinite(blend) || blend < 0 || blend > 1) throw Error('Invalid texture blend');
       for (const binding of mapBindings) binding.material[binding.key] = binding.final;
-      for (const item of textureNodes) item.node.value = item.final;
       for (const item of normalScales) item.scale.copy(item.original).multiplyScalar(blend);
-      ready.value = blend; applied = true;
+      for (const material of progressiveMaterials) material._wgTextureBlend=blend;
+      applied = true;
     },
     setBlend(value) {
       if (cancelled) throw Error('Material preparation cancelled');
@@ -159,7 +161,7 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
       if (!applied) throw Error('Final textures not applied');
       if (!Number.isFinite(value) || value < 0 || value > 1) throw Error('Invalid texture blend');
       for (const item of normalScales) item.scale.copy(item.original).multiplyScalar(value);
-      ready.value = value;
+      for (const material of progressiveMaterials) material._wgTextureBlend=value;
     },
     cancel() { cancelled = true; resolved = false; generation++; },
     dispose() { if (disposed) return; disposed = true; cancelled = true; resolved = false; generation++; for (const material of createdMaterials) material.dispose(); for (const lease of placeholders.values()) lease.release(); },
