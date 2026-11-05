@@ -17,3 +17,8 @@ export function repairSavedVillageInWorker(snapshot,catalog,{signal,workerFactor
  if(typeof snapshot!=='string'||!Array.isArray(catalog))return Promise.reject(TypeError('Invalid saved village request'));
  return requestBootstrap({kind:'repair-village',snapshot,catalog},{signal,workerFactory},result=>typeof result?.snapshot==='string');
 }
+export function prepareSavedWorkerBootstrapInWorker(snapshot,catalog,{quality='media',signal,workerFactory=createWorker}={}){
+ if(typeof snapshot!=='string'||!Array.isArray(catalog)||typeof quality!=='string')return Promise.reject(TypeError('Invalid saved worker request'));
+ const validPose=point=>Array.isArray(point)&&point.length===3&&point.every(Number.isFinite);
+ return requestBootstrap({kind:'saved-bootstrap',snapshot,catalog,quality},{signal,workerFactory},result=>typeof result?.initial?.snapshot==='string'&&Array.isArray(result.initial.chunkKeys)&&result.initial.navigationView&&result.initial.nativeBootstrap&&validPose(result.pose?.eye)&&validPose(result.pose?.target));
+}

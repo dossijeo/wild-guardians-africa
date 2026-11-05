@@ -7,15 +7,18 @@ import {createSpatialNavigationMovement} from '../world/wild-engine/spatial-navi
 
 // Rebuild missing authored footprints and entries with the same native search
 // used by the legacy bootstrap. The authority verifies the saved topology.
-export function repairSavedVillage(snapshot,catalog,{module=null}={}){
- if(typeof snapshot!=='string'||!Array.isArray(catalog))throw TypeError('Invalid saved village repair');
- const options=savedNativeAuthorityOptions(snapshot),raw=JSON.parse(snapshot),physical=!!raw.workerPhysicsCheckpoint,state=physical?deserializeConfirmedState(snapshot):deserialize(snapshot);
+export function repairVillageFootprints(state,catalog){
+ if(!state||!Array.isArray(catalog))throw TypeError('Invalid saved village repair');
  for(const village of state.villages){
   if(!Array.isArray(village.buildings))throw Error('Saved village buildings unavailable');
   const missing=village.buildings.filter(building=>building.kind!=='Zona común'&&building.footprint==null);if(!missing.length)continue;
   const source=catalog.find(item=>item.id===(village.culture==='saheliana'?'saheliano':village.culture));if(!source)throw Error('Saved village culture unavailable');
   const shapes=new Map(villageLayout(source,village.x,village.z).map(building=>[building.key,building.footprint]));for(const building of missing){const footprint=shapes.get(building.key);if(!Array.isArray(footprint)||footprint.length<3)throw Error('Saved village footprint unavailable');building.footprint=footprint;}
  }
+}
+export function repairSavedVillage(snapshot,catalog,{module=null}={}){
+ if(typeof snapshot!=='string'||!Array.isArray(catalog))throw TypeError('Invalid saved village repair');
+ const options=savedNativeAuthorityOptions(snapshot),raw=JSON.parse(snapshot),physical=!!raw.workerPhysicsCheckpoint,state=physical?deserializeConfirmedState(snapshot):deserialize(snapshot);repairVillageFootprints(state,catalog);
  if(state.villages.some(village=>!village.entry)){
   if(!(module instanceof WebAssembly.Module))throw Error('Saved village entry requires Wild Engine');
   const loaded=new Map(),session=createSpatialGameSession(module,state,{loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
