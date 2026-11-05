@@ -10,8 +10,8 @@ const aborted=()=>new DOMException('Character preparation cancelled','AbortError
 
 // Reuses the validated package and stable material implementation from the
 // WebGPU lab. Only the Worker can own this loader, its textures and renderer.
-export async function openProgressiveWebGpuCharacter({renderer,packageUrl,species,signal,onTextured=()=>{},onError=()=>{},configureMaterial=()=>{},onSelectableChange=()=>{},blendMs=350}={}){
- if(typeof document!=='undefined'||!renderer?.backend?.isWebGPUBackend||!packageUrl||typeof species!=='string'||typeof onTextured!=='function'||typeof onError!=='function'||typeof configureMaterial!=='function'||typeof onSelectableChange!=='function'||!Number.isFinite(blendMs)||blendMs<=0)throw TypeError('Invalid progressive character');
+export async function openProgressiveWebGpuCharacter({renderer,packageUrl,species,signal,onTextured=()=>{},onError=()=>{},configureMaterial=()=>{},shareCompatibleMaterials=false,onSelectableChange=()=>{},blendMs=350}={}){
+ if(typeof document!=='undefined'||!renderer?.backend?.isWebGPUBackend||!packageUrl||typeof species!=='string'||typeof onTextured!=='function'||typeof onError!=='function'||typeof configureMaterial!=='function'||typeof shareCompatibleMaterials!=='boolean'||typeof onSelectableChange!=='function'||!Number.isFinite(blendMs)||blendMs<=0)throw TypeError('Invalid progressive character');
  const manager=new (await import('three')).LoadingManager(),cancel=()=>manager.abort(),owned=new Set();let stream,stable,preview,ktx,closed=false,transition=null,finalTextures=[];
  const check=()=>{if(closed||signal?.aborted)throw aborted();};
  const own=resource=>{if(!resource)return;if(closed){if(resource.isTexture&&typeof resource.source?.data?.close==='function')resource.source.data.close();resource.dispose();}else owned.add(resource);};
@@ -30,7 +30,7 @@ export async function openProgressiveWebGpuCharacter({renderer,packageUrl,specie
   if(stream.variant==='bc7'){for(const entry of placeholder.textures){const ext=entry.extensions?.WG_native_ktx2;if(ext){entry.source=ext.source;delete entry.extensions.WG_native_ktx2;}}placeholder.extensionsUsed=(placeholder.extensionsUsed??[]).filter(name=>name!=='WG_native_ktx2');placeholder.extensionsRequired=(placeholder.extensionsRequired??[]).filter(name=>name!=='WG_native_ktx2');}
   const temp=await loader.parseAsync(JSON.stringify(placeholder),new URL('.',new URL(packageUrl,globalThis.location.href)).href);
   for(let i=0;i<(placeholder.materials?.length??0);i++)ownMaterial(await temp.parser.getDependency('material',i));check();
-  stable=await makeStableVertexMaterials(renderer,preview,temp,metadata.mapping);if(closed||signal?.aborted)stable.dispose();check();const configured=new Set();preview.scene.traverse(object=>{if(!object.isMesh)return;for(const material of Array.isArray(object.material)?object.material:[object.material])if(!configured.has(material)){configureMaterial(material,object);configured.add(material);}});
+  stable=await makeStableVertexMaterials(renderer,preview,temp,metadata.mapping,{shareCompatibleMaterials});if(closed||signal?.aborted)stable.dispose();check();const configured=new Set();preview.scene.traverse(object=>{if(!object.isMesh)return;for(const material of Array.isArray(object.material)?object.material:[object.material])if(!configured.has(material)){configureMaterial(material,object);configured.add(material);}});
   async function hydrate(){
    const urls=[];try{
     const bytes=await stream.loadTextures(metadata);check();const full=structuredClone(metadata.materials);

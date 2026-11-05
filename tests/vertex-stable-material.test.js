@@ -19,6 +19,18 @@ function setup() {
   return { preview, mapping, material, asset, renderer, mesh };
 }
 
+test('compatible primitives can share their final and provisional material',async()=>{
+ const x=setup(),second=x.mesh.clone();second.geometry=x.mesh.geometry.clone();x.preview.scene.add(second);x.preview.parser.associations.set(second,{meshes:1,primitives:0});x.mapping.primitives.push({mesh:1,primitive:0,material:0,colorAccessor:null});
+ const stable=await makeStableVertexMaterials(x.renderer,x.preview,x.asset(x.material),x.mapping,{shareCompatibleMaterials:true});
+ assert.equal(x.mesh.material,second.material);assert.ok(second.geometry.getAttribute('wgOriginalColor'));
+ await stable.resolveFinal(x.asset(x.material));stable.apply({blend:.5});assert.equal(second.material.map,x.material.map);stable.dispose();
+});
+
+test('tangent layout differences keep incompatible material instances separate',async()=>{
+ const x=setup(),second=x.mesh.clone();second.geometry=x.mesh.geometry.clone();second.geometry.setAttribute('tangent',new THREE.Float32BufferAttribute([1,0,0,1],4));x.preview.scene.add(second);x.preview.parser.associations.set(second,{meshes:1,primitives:0});x.mapping.primitives.push({mesh:1,primitive:0,material:0,colorAccessor:null});
+ const stable=await makeStableVertexMaterials(x.renderer,x.preview,x.asset(x.material),x.mapping,{shareCompatibleMaterials:true});assert.notEqual(x.mesh.material,second.material);assert.equal(x.mesh.material.normalScale.y,-second.material.normalScale.y);stable.dispose();
+});
+
 test('stable material refuses premature or mismatched texture application', async () => {
   const x = setup(), stable = await makeStableVertexMaterials(x.renderer, x.preview, x.asset(x.material), x.mapping);
   const placeholder = x.mesh.material.map;

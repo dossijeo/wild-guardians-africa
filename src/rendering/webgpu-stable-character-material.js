@@ -21,7 +21,8 @@ function acquireNeutralTexture(renderer,source,normal){
 
 // Structural experiment only. Source identifiers must agree before any
 // original texture can replace the provisional appearance.
-export async function makeStableVertexMaterials(renderer, preview, originalMaterials, mapping, { nativeColor = false, toonOutput = null } = {}) {
+export async function makeStableVertexMaterials(renderer, preview, originalMaterials, mapping, { nativeColor = false, toonOutput = null, shareCompatibleMaterials = false } = {}) {
+  if (typeof shareCompatibleMaterials !== 'boolean') throw TypeError('Invalid material sharing policy');
   const sourceHash = mapping?.sourceSha256;
   if (!/^[a-f0-9]{64}$/.test(sourceHash ?? '')) throw Error('Missing or invalid source hash');
   const assertSource = asset => { if (asset?.parser?.json?.asset?.extras?.wgVertexPreviewSourceSha256 !== sourceHash) throw Error('Material or preview source mismatch'); };
@@ -36,7 +37,7 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
     entries.push({ object, record });
   });
   const sources = await Promise.all(entries.map(item => originalMaterials.parser.getDependency('material', item.record.material)));
-  const placeholders = new Map(), textureNodes = [], mapBindings = [], changes = [], createdMaterials = [], normalScales = [];
+  const placeholders = new Map(), textureNodes = [], mapBindings = [], changes = [], createdMaterials = [], normalScales = [], compatibleMaterials = new Map();
   const ready = uniform(0);
   let generation = 0, cancelled = false, resolved = false, applied = false, disposed = false;
   function placeholder(source, normal) {
@@ -47,9 +48,26 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
     return placeholders.get(key).texture;
   }
   try { for (const [index, item] of entries.entries()) {
-    const source = sources[index], nodeMaterial = renderer.library.fromMaterial(source);
+    const source = sources[index], geometry = item.object.geometry;
+    let original = null;
+    if (source.map) {
+      if (!geometry.getAttribute('color')) throw Error('Missing baked vertex color');
+      original = item.record.colorAccessor == null ? null : await preview.parser.getDependency('accessor', item.record.colorAccessor);
+    }
+    // A callback may produce a different graph for each object. Share only
+    // when the caller opted in and the geometry-dependent material state agrees.
+    const key = shareCompatibleMaterials && typeof toonOutput !== 'function' ? JSON.stringify([item.record.material,!!geometry.getAttribute('tangent'),!!geometry.getAttribute('normal'),nativeColor&&!!original]) : null;
+    const shared = key === null ? null : compatibleMaterials.get(key);
+    if (shared) {
+      if (!source.map) changes.push({object:item.object,material:shared});
+      else if (nativeColor) changes.push({object:item.object,material:shared,color:original,replaceColor:true});
+      else changes.push({object:item.object,material:shared,originalColor:original??new THREE.BufferAttribute(new Uint8Array(geometry.attributes.position.count*4).fill(255),4,true)});
+      continue;
+    }
+    const nodeMaterial = renderer.library.fromMaterial(source);
     if (!nodeMaterial) throw Error(`Unsupported material type ${source.type}`);
     createdMaterials.push(nodeMaterial);
+    if (key !== null) compatibleMaterials.set(key,nodeMaterial);
     // GLTFLoader.assignFinalMaterial flips these scales for meshes without
     // tangents. fromMaterial copies by reference, so clone before adjusting.
     if (nodeMaterial.normalScale) nodeMaterial.normalScale = nodeMaterial.normalScale.clone();
@@ -68,9 +86,6 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
       nodeMaterial[key] = temporary; mapBindings.push({ index, material: nodeMaterial, key, layout: textureLayout(temporary), final: value });
     }
     if (source.map) {
-      const geometry = item.object.geometry;
-      if (!geometry.getAttribute('color')) throw Error('Missing baked vertex color');
-      let original = item.record.colorAccessor == null ? null : await preview.parser.getDependency('accessor', item.record.colorAccessor);
       if (nativeColor) {
         nodeMaterial.vertexColors = !!original;
         changes.push({ object: item.object, material: nodeMaterial, color: original, replaceColor: true });
