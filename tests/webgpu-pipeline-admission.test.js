@@ -90,3 +90,27 @@ test('a cancelled compilation that later fails still retires its renderer',async
  await Promise.resolve();controller.abort();await assert.rejects(pending,{name:'AbortError'});reject(Error('late failure'));await new Promise(resolve=>setImmediate(resolve));
  assert.deepEqual(failures,['late failure']);await assert.rejects(admission.prepare(object),/closed/);
 });
+
+test('an aborted queued object is removed without waiting for the active compilation',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),first=new THREE.Group(),second=new THREE.Group(),controller=new AbortController();let finish,calls=0;
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(){calls++;return new Promise(resolve=>{finish=resolve;});}};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera}),active=admission.prepare(first);await Promise.resolve();
+ const queued=admission.prepare(second,{signal:controller.signal}),rejected=assert.rejects(queued,{name:'AbortError'});controller.abort();await rejected;
+ assert.equal(calls,1);finish();await active;await new Promise(resolve=>setImmediate(resolve));assert.equal(calls,1);admission.dispose();
+});
+
+test('disposing rejects queued admissions even if the active compiler never finishes',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group();let calls=0;
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(){calls++;return new Promise(()=>{});}};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera}),active=admission.prepare(object);await Promise.resolve();
+ const queued=admission.prepare(object),results=Promise.allSettled([active,queued]);admission.dispose();
+ assert.deepEqual((await results).map(result=>result.status),['rejected','rejected']);assert.equal(calls,1);
+});
+
+test('a failed active pipeline rejects queued work without compiling it',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),failures=[];let reject,calls=0;
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(){calls++;return new Promise((_,fail)=>{reject=fail;});}};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera,onFatal:error=>failures.push(error.message)}),active=admission.prepare(object);await Promise.resolve();
+ const waiting=admission.prepare(object),results=Promise.allSettled([active,waiting]);reject(Error('pipeline failed'));
+ const [a,b]=await results;assert.equal(a.reason.message,'pipeline failed');assert.match(b.reason.message,/closed/);assert.deepEqual(failures,['pipeline failed']);assert.equal(calls,1);
+});

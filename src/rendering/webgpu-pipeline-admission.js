@@ -6,18 +6,18 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
  const lights=new Map();
  function addLight(light){if(!light?.isLight||!light.shadow)throw TypeError('Invalid admission shadow light');lights.set(light,(lights.get(light)??0)+1);}
  if(shadowLights===null)scene.traverse(node=>{if(node.isLight&&node.shadow)addLight(node);});else for(const light of shadowLights)addLight(light);
- let closed=false,generation=0,tail=Promise.resolve(),cancel;
+ let closed=false,generation=0,active=false,cancel;const queue=[];
  const cancelled=new Promise(resolve=>{cancel=()=>resolve(Error('Pipeline admission cancelled'));});
  const lost=renderer.backend.device?.lost?.then(info=>Error('WebGPU device lost: '+(info?.message||info?.reason||'unknown')));
- function retire(error){if(!closed){closed=true;generation++;cancel();lights.clear();try{onFatal(error);}catch{}}}
- return {
-  registerShadowLight(light){if(closed)throw Error('Pipeline admission closed');addLight(light);let released=false;return ()=>{if(released)return;released=true;const count=lights.get(light)??0;if(count<=1)lights.delete(light);else lights.set(light,count-1);};},
-  prepare(object,{signal}={}){
-   if(closed)return Promise.reject(Error('Pipeline admission closed'));
-   if(!object?.isObject3D)return Promise.reject(TypeError('Invalid admission object'));
-   if(signal!==undefined&&typeof signal?.addEventListener!=='function')return Promise.reject(TypeError('Invalid admission signal'));
-   const version=generation;
-   const task=tail.then(async()=>{
+ function rejectWaiting(error){for(const item of queue.splice(0)){if(item.onAbort)item.signal.removeEventListener('abort',item.onAbort);item.reject(error);}}
+ function retire(error){if(!closed){closed=true;generation++;cancel();lights.clear();rejectWaiting(Error('Pipeline admission closed'));try{onFatal(error);}catch{}}}
+ function pump(){
+  if(closed||active||!queue.length)return;
+  const item=queue.shift();if(item.onAbort)item.signal.removeEventListener('abort',item.onAbort);active=true;
+  execute(item.object,item.signal,item.version).then(item.resolve,item.reject).finally(()=>{active=false;pump();});
+ }
+ async function execute(object,signal,version){
+  try{
     if(closed||version!==generation)throw Error('Pipeline admission cancelled');
     if(signal?.aborted)throw new DOMException('Pipeline admission cancelled','AbortError');
     if(renderer._initialized===false||renderer._isDeviceLost===true)throw Error('WebGPU renderer unavailable for pipeline admission');
@@ -47,16 +47,25 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
     if(error)throw error;
     if(renderer._isDeviceLost===true)throw Error('WebGPU device lost during pipeline admission');
     if(closed||version!==generation)throw Error('Pipeline admission cancelled');
-   }).catch(error=>{
-    // Three r180 can retain an unsuccessful pipeline in its internal cache.
-    // Never let this renderer publish or retry with that cache: its owner must
-    // retire the presentation and rebuild it using a fresh renderer.
-    if(!closed&&!signal?.aborted)retire(error);
-    throw error;
+  }catch(error){
+   // Three r180 may retain an unsuccessful pipeline in its internal cache.
+   if(!closed&&!signal?.aborted)retire(error);
+   throw error;
+  }
+ }
+ return {
+  registerShadowLight(light){if(closed)throw Error('Pipeline admission closed');addLight(light);let released=false;return ()=>{if(released)return;released=true;const count=lights.get(light)??0;if(count<=1)lights.delete(light);else lights.set(light,count-1);};},
+  prepare(object,{signal}={}){
+   if(closed)return Promise.reject(Error('Pipeline admission closed'));
+   if(!object?.isObject3D)return Promise.reject(TypeError('Invalid admission object'));
+   if(signal!==undefined&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))return Promise.reject(TypeError('Invalid admission signal'));
+   if(signal?.aborted)return Promise.reject(new DOMException('Pipeline admission cancelled','AbortError'));
+   return new Promise((resolve,reject)=>{
+    const item={object,signal,version:generation,resolve,reject,onAbort:null};
+    if(signal){item.onAbort=()=>{const index=queue.indexOf(item);if(index<0)return;queue.splice(index,1);signal.removeEventListener('abort',item.onAbort);reject(new DOMException('Pipeline admission cancelled','AbortError'));};signal.addEventListener('abort',item.onAbort,{once:true});}
+    queue.push(item);if(signal?.aborted)item.onAbort();else queueMicrotask(pump);
    });
-   tail=task.catch(()=>{});
-   return task;
   },
-  dispose(){if(closed)return;closed=true;generation++;cancel();lights.clear();},
+  dispose(){if(closed)return;closed=true;generation++;cancel();lights.clear();rejectWaiting(Error('Pipeline admission cancelled'));},
  };
 }
