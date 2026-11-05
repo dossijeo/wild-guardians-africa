@@ -3,7 +3,7 @@ import {updateGameAudio} from './game-audio-update.js';
 import {recoverWorkVfxForQa} from '../rendering/work-vfx-recovery-qa.js';
 import {createWebGpuAutoRecovery} from './webgpu-auto-recovery.js';
 import {resolvePresentationRecoveryOptions} from '../simulation/presentation-recovery-options.js';
-import {webGpuWorldOptions,diagnosticPresentationCapabilities} from './webgpu-world-options.js';
+import {webGpuWorldOptions,diagnosticPresentationCapabilities,guardianPlacementForWorld} from './webgpu-world-options.js';
 import {createNativeLoadingTrace} from './native-loading-trace.js';
 import {globalFrameScheduler,globalFrameSchedulerEnabled} from './global-frame-scheduler.js';
 import {createDesktopExit} from './desktop-exit.js';
@@ -281,7 +281,8 @@ async function installWorkerGame(owner,ownerState,navigation,{visualRecovery=nul
   const camera=()=>webGpuCameraPose(owner.camera,owner.controls);
   const worldOptions=webGpuWorldOptions({params,state:ownerState,field:owner.nav.field??{canyon:ownerState.biome==='gran-canon'},recovery:recoveryQa,capabilities:presentationCapabilities??{},dev:import.meta.env.DEV});
   if(early&&!!early.presentationInputs!==worldOptions.presentationInputs)throw Error('Prepared authority input capabilities changed');
-  owner.authoritativeGuardianPlacement=!!(early?.guardianPlacement&&early?.presentationInputs&&worldOptions.presentationInputs);
+  owner.authoritativeGuardianPlacement=guardianPlacementForWorld({early,hosted,presentationConfigured:presentationCapabilities!==null,options:worldOptions});
+  if(!early&&owner.authoritativeGuardianPlacement)clientOptions.guardianPlacement=true;
   function bindWebGpuWorld(client,canvas){
     if(owner.workerRuntime)client.confirmCameraTerrain(owner.workerRuntime.status().confirmedSequence);return createWebGpuCameraPresentation({camera:owner.camera,controls:owner.controls,canvas,viewport:owner.canvas,client,isCurrent:binding=>owner===world&&ownerState===state&&!owner.disposed&&owner.webGpuWorld===binding});
   }

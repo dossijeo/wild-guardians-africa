@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {webGpuWorldOptions} from '../src/app/webgpu-world-options.js';
+import {webGpuWorldOptions,guardianPlacementForWorld} from '../src/app/webgpu-world-options.js';
 
 test('initial and recovered worlds share the complete early presentation profile',()=>{
  const params=new URLSearchParams('qa-worker-early-gpu-view&qa-worker-early-biome&qa-webgpu-world-motion&qa-webgpu-camera-terrain&qa-webgpu-picking');
@@ -43,4 +43,16 @@ test('explicit presentation capabilities are independent of diagnostic flags and
  assert.deepEqual(first.presentationCapabilities,capabilities);assert.deepEqual(replacement,first);assert.equal(first.experimentalCameraTerrain,false);assert.equal(first.presentationInputs,true);assert.equal(first.experimentalPicking,false);
  assert.throws(()=>webGpuWorldOptions({params,state,field,capabilities:{cameraTerrain:'true'}}),/capabilities/);
  assert.throws(()=>webGpuWorldOptions({params,state,field,capabilities:{unknown:true}}),/capabilities/);
+});
+
+test('explicit graphical input enables authoritative guardian placement for a new hosted authority',()=>{
+ const state={raid:null},field={},params=new URLSearchParams(),options=webGpuWorldOptions({params,state,field,capabilities:{picking:true,causalInputs:true}}),base={hosted:true,presentationConfigured:true,options};
+ assert.equal(guardianPlacementForWorld(base),true);
+ assert.equal(guardianPlacementForWorld({...base,hosted:false}),false);
+ assert.equal(guardianPlacementForWorld({...base,presentationConfigured:false}),false);
+ assert.equal(guardianPlacementForWorld({...base,early:{guardianPlacement:true,presentationInputs:false}}),false);
+ assert.equal(guardianPlacementForWorld({...base,early:{guardianPlacement:false,presentationInputs:true}}),false);
+ assert.equal(guardianPlacementForWorld({...base,early:{guardianPlacement:true,presentationInputs:true}}),true);
+ const withoutPicking=webGpuWorldOptions({params,state,field,capabilities:{causalInputs:true}});
+ assert.equal(guardianPlacementForWorld({...base,options:withoutPicking}),false);
 });
