@@ -26,7 +26,15 @@ test('hyena walking bake packs the canonical shared matrices for TSL',async()=>{
  const nodes=createBakedWalkNodes(bake,{bindMatrix:new Matrix4(),canonicalMeshInverse:new Matrix4()});assert.ok(nodes.position.isNode&&nodes.normal.isNode&&nodes.phase.isNode);
  assert.throws(()=>createBakedWalkTexture({...meta,byteLength:0},input));
  assert.throws(()=>createBakedWalkTexture({...meta,channels:[meta.channels[0],{...meta.channels[0],matrixOffset:0}]},input));
+ const shifted=structuredClone(meta);shifted.sampleTimes[1]+=.001;assert.throws(()=>createBakedWalkTexture(shifted,input),/Unsupported/);
+ const duplicate=structuredClone(meta);duplicate.channels[1].name=duplicate.channels[0].name;assert.throws(()=>createBakedWalkTexture(duplicate,input),/Unsupported/);
+ const originalTime=bake.meta.sampleTimes[1],originalBone=bake.bones[0];meta.sampleTimes[1]+=.001;meta.channels[0].bones[0]='changed';assert.equal(bake.meta.sampleTimes[1],originalTime);assert.equal(bake.bones[0],originalBone);assert.ok(Object.isFrozen(bake.meta.sampleTimes));
  bake.dispose();
+});
+
+test('walking texture contract accepts known species and rejects unknown species',async()=>{
+ const meta=JSON.parse(await readFile(new URL('../public/qa/gpu-bake/walking.json',import.meta.url))),bytes=await readFile(new URL('../public/qa/gpu-bake/walking.bin',import.meta.url)),input=bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength);
+ for(const species of Object.keys(ANIMAL_ACTIONS.animals)){const bake=createBakedWalkTexture({...meta,species},input);assert.equal(bake.meta.species,species);bake.dispose();}assert.throws(()=>createBakedWalkTexture({...meta,species:'unknown'},input),/Invalid/);
 });
 
 test('real hyena rig retains original meshes for physical fallback',async()=>{

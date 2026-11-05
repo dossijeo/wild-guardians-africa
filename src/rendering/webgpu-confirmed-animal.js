@@ -24,7 +24,7 @@ export async function createWebGpuConfirmedAnimal({scene,residency,state,actorId
  if(!progressive&&!shared)model.traverse(object=>{if(!object.isMesh)return;resources.add(object.geometry);for(const material of Array.isArray(object.material)?object.material:[object.material]){resources.add(material);for(const value of Object.values(material))if(value?.isTexture)resources.add(value);}});
  if(signal?.aborted){shared?.release();progressive?.dispose();for(const resource of resources)resource.dispose();throw new DOMException('Character load cancelled','AbortError');}
  model.scale.setScalar(spec.presentation.scale);root.add(model);scene.add(root);const rest=[];model.traverse(node=>{if(node===model||node.isBone)rest.push({node,position:node.position.clone(),quaternion:node.quaternion.clone(),scale:node.scale.clone()});});
- let baked=null;if(species==='hyena'&&bakedWalk){try{baked=createBakedWalkPresentation({model,root,renderer,bake:bakedWalk,confirmedClock});}catch(error){onTextureError(error);}}
+ let baked=null;const walkBake=bakedWalk instanceof Map?bakedWalk.get(species):bakedWalk;if(walkBake?.meta?.species===species){try{baked=createBakedWalkPresentation({model,root,renderer,bake:walkBake,confirmedClock});}catch(error){onTextureError(error);}}
  let anatomic=null;if(experimentalPoseReconciliation&&anatomicSupportBank){try{anatomic=createAnatomicSupport({model,root,residency,bank:anatomicSupportBank,radius:spec.presentation.footprint.radius});}catch(error){onTextureError(error);}}
  // QA-only conservative terrain support for a physical presentation. It does
  // not change the authoritative root or collider. Sampling cannot certify

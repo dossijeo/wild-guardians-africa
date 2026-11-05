@@ -1,19 +1,21 @@
 import {BufferAttribute,BufferGeometry,DataTexture,FloatType,Matrix4,Mesh,NearestFilter,RGBAFormat,Vector3,Vector4} from 'three';
 import {Fn,attribute,float,ivec2,mat4,normalLocal,positionLocal,textureLoad,uniform,vec4} from 'three/tsl';
+import {ANIMAL_ACTIONS} from '../simulation/animal-actions-data.js';
 
 // Experimental building block for a non-skinned presentation mesh. The source
 // SkinnedMesh must remain available for physical poses and unsupported clips.
 // It is deliberately not installed on SkinnedMesh: Three's WebGPU renderer
 // would otherwise run its own skinning before this position node.
 export function createBakedWalkTexture(meta,buffer){
- if(meta?.species!=='hyena'||meta.clip!=='Walking'||meta.sharedMatrixChannels!==1||!Number.isInteger(meta.frames)||meta.frames<2||!Number.isInteger(meta.strideFloats)||!Number.isFinite(meta.duration)||meta.duration<=0||!Number.isFinite(meta.sampleRate)||meta.sampleRate<=0||!Array.isArray(meta.channels)||!meta.channels.length||!Array.isArray(meta.sampleTimes)||meta.sampleTimes.length!==meta.frames||!(buffer instanceof ArrayBuffer)||meta.byteLength!==buffer.byteLength||buffer.byteLength!==meta.frames*meta.strideFloats*4)throw TypeError('Invalid baked walking data');
+ if(!Object.hasOwn(ANIMAL_ACTIONS.animals,meta?.species)||meta.clip!=='Walking'||meta.sharedMatrixChannels!==1||!Number.isInteger(meta.frames)||meta.frames<2||!Number.isInteger(meta.strideFloats)||!Number.isFinite(meta.duration)||meta.duration<=0||!Number.isFinite(meta.sampleRate)||meta.sampleRate<=0||!Array.isArray(meta.channels)||!meta.channels.length||!Array.isArray(meta.sampleTimes)||meta.sampleTimes.length!==meta.frames||!(buffer instanceof ArrayBuffer)||meta.byteLength!==buffer.byteLength||buffer.byteLength!==meta.frames*meta.strideFloats*4)throw TypeError('Invalid baked walking data');
  const channel=meta.channels[0],bones=channel?.bones?.length,offset=channel?.matrixOffset;
- if(!Number.isInteger(bones)||bones<1||!Number.isInteger(offset)||offset<0||offset+bones*16>meta.strideFloats||meta.channels.some(c=>c.matrixOffset!==offset||c.bones?.join('\0')!==channel.bones.join('\0'))||meta.sampleTimes.some((t,i)=>!Number.isFinite(t)||t<0||t>=meta.duration||i>0&&t<=meta.sampleTimes[i-1]))throw TypeError('Unsupported baked walking channels');
+ if(!Array.isArray(channel?.bones)||!Number.isInteger(bones)||bones<1||channel.bones.some(name=>typeof name!=='string'||!name)||!Number.isInteger(offset)||offset<0||offset+bones*16>meta.strideFloats||meta.channels.some(c=>typeof c?.name!=='string'||!c.name||!Array.isArray(c.bones)||c.matrixOffset!==offset||c.bones.join('\0')!==channel.bones.join('\0'))||new Set(meta.channels.map(c=>c.name)).size!==meta.channels.length||meta.frames!==Math.ceil(meta.duration*meta.sampleRate)+1||meta.sampleTimes.some((t,i)=>!Number.isFinite(t)||t<0||t>=meta.duration||i>0&&t<=meta.sampleTimes[i-1]||i<meta.frames-1&&Math.abs(t-i/meta.sampleRate)>1e-9))throw TypeError('Unsupported baked walking channels');
  const source=new Float32Array(buffer),width=bones*4,data=new Float32Array(width*meta.frames*4);
  for(let frame=0;frame<meta.frames;frame++)data.set(source.subarray(frame*meta.strideFloats+offset,frame*meta.strideFloats+offset+bones*16),frame*bones*16);
  if(!data.every(Number.isFinite))throw TypeError('Non-finite baked walking matrix');
+ const safeMeta=structuredClone(meta);Object.freeze(safeMeta.sampleTimes);for(const item of safeMeta.channels){Object.freeze(item.bones);Object.freeze(item);}Object.freeze(safeMeta.channels);Object.freeze(safeMeta);
  const texture=new DataTexture(data,width,meta.frames,RGBAFormat,FloatType);texture.minFilter=texture.magFilter=NearestFilter;texture.generateMipmaps=false;texture.needsUpdate=true;
- return {texture,meta,bones:channel.bones.slice(),dispose(){texture.dispose();}};
+ return {texture,meta:safeMeta,bones:Object.freeze(channel.bones.slice()),dispose(){texture.dispose();}};
 }
 
 // Matrices are the canonical Skeleton.update output (bone world * inverse
