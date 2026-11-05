@@ -30,9 +30,9 @@ export function createWebGpuPicker({scene,camera,state,animals,workers={get:()=>
 
 // Do not route a gameplay click to an incomplete visual scene: missing
 // actors or structures could otherwise expose a target behind them.
-export function webGpuPickerReady(state,{animals,workers,settlements,crops,crates,terrain}={}){
+export function webGpuPickerReady(state,{animals,workers,settlements,crops,crates,biome,terrain}={}){
  const expectedAnimals=(state.raid?.animals??[]).filter(a=>a.status!=='gone').length,expectedWorkers=(state.workers??[]).filter(w=>w.status!=='home').length;
  const structures=state.structures??[],expectedWalls=structures.filter(s=>s.kind==='wall').length,expectedCenters=structures.filter(s=>s.kind==='center').length,expectedVillages=(state.villages??[]).length,expectedPlants=(state.plants??[]).filter(p=>p.alive).length;
  const expectedCrates=(state.crates??[]).filter(c=>!c.delivered&&!c.carrierId).length;
- return !structures.some(s=>s.kind!=='wall'&&s.kind!=='center')&&!terrain?.closed&&!terrain?.pending&&!terrain?.presentationPending&&(animals?.ready??0)>=expectedAnimals&&(workers?.ready??0)>=expectedWorkers&&(settlements?.walls??0)>=expectedWalls&&(settlements?.centers??0)>=expectedCenters&&(settlements?.villages??0)>=expectedVillages&&(crops?.plants??0)>=expectedPlants&&(crates?.ready??0)>=expectedCrates;
+ return !structures.some(s=>s.kind!=='wall'&&s.kind!=='center')&&(!biome||biome.selectableReady===true)&&!terrain?.closed&&!terrain?.pending&&!terrain?.presentationPending&&(animals?.ready??0)>=expectedAnimals&&(workers?.ready??0)>=expectedWorkers&&(settlements?.walls??0)>=expectedWalls&&(settlements?.centers??0)>=expectedCenters&&(settlements?.villages??0)>=expectedVillages&&(crops?.plants??0)>=expectedPlants&&(crates?.ready??0)>=expectedCrates;
 }

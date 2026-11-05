@@ -40,6 +40,7 @@ test('reports an incomplete visual scene until all confirmed selectable objects 
  const state={raid:{animals:[{id:'a',status:'walking'},{id:'gone',status:'gone'}]},workers:[{id:'w',status:'working'},{id:'home',status:'home'}],structures:[{kind:'wall'},{kind:'center'}],villages:[{}],plants:[{alive:true},{alive:false}]};
  const ready={animals:{ready:1},workers:{ready:1},settlements:{walls:1,centers:1,villages:1},crops:{plants:1},terrain:{closed:false,pending:false}};
  assert.equal(webGpuPickerReady(state,ready),true);
+ assert.equal(webGpuPickerReady(state,{...ready,biome:{selectableReady:false}}),false);assert.equal(webGpuPickerReady(state,{...ready,biome:{selectableReady:true}}),true);
  for(const [key,empty] of Object.entries({animals:{ready:0},workers:{ready:0},settlements:{walls:0,centers:1,villages:1},crops:{plants:0},terrain:{pending:true}}))assert.equal(webGpuPickerReady(state,{...ready,[key]:empty}),false,key);
  const crates=[{id:'crate'},{id:'delivered',delivered:true},{id:'carried',carrierId:'worker'}];assert.equal(webGpuPickerReady({...state,crates},ready),false);assert.equal(webGpuPickerReady({...state,crates},{...ready,crates:{ready:1}}),true);assert.equal(webGpuPickerReady({...state,structures:[...state.structures,{kind:'unknown'}]},ready),false);
 });
