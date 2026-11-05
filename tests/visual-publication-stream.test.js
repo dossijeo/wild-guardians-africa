@@ -2,6 +2,33 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {openVisualStream} from '../src/simulation/visual-publication-stream.js';
 test('authority failure sends a session-scoped terminal signal before closing',()=>{const sent=[],port={postMessage:m=>sent.push(m),start(){},close(){sent.push('closed');}},stream=openVisualStream(port,'session',()=>{});stream.fail(Error('authority lost'));assert.deepEqual(sent,[{kind:'presentationFailure',session:'session',message:'authority lost'},'closed']);assert.equal(stream.status().active,false);});
+test('backpressure can detach a slow consumer only after its events are journaled',async()=>{
+ const {createPresentationRecoveryJournal}=await import('../src/simulation/presentation-recovery-journal.js'),journal=createPresentationRecoveryJournal({capacity:12,highWatermark:9}),sent=[],notifications=[],order=[],port={postMessage:m=>sent.push(m),start(){},close(){this.closed=true;order.push('close');}},stream=openVisualStream(port,'s',()=>order.push('ready'),{recoveryJournal:journal,onCheckpointAcknowledged:()=>{},highWatermark:2,onBackpressureDetach:info=>{notifications.push(info);order.push('detached');}}),packet=n=>({sequence:n,snapshot:'s'+n,events:[{id:'event-'+n}],physicsPose:null});
+ stream.publish({...packet(1),terrainCheckpoint:{sequence:1,chunks:[]}},true);port.onmessage({data:{kind:'publicationAck',session:'s',sequence:1}});order.length=0;
+ stream.publish(packet(2),true);stream.publish(packet(3),true);assert.equal(stream.blocked(),false);stream.publish(packet(4),true);
+ assert.deepEqual(notifications,[{session:'s',base:1,through:4,queued:2}]);assert.deepEqual(order,['close','detached','ready']);assert.equal(stream.status().detached,true);assert.equal(stream.blocked(),false);
+ stream.publish(packet(5),true);assert.deepEqual(journal.snapshot().entries.map(e=>e.publication.events[0].id),['event-2','event-3','event-4','event-5']);assert.equal(stream.blocked(),false);stream.close();journal.dispose();
+});
+test('backpressure never detaches without a complete unsaturated checkpoint',async()=>{
+ const {createPresentationRecoveryJournal}=await import('../src/simulation/presentation-recovery-journal.js');
+ for(const mode of ['no-base','saturated']){
+  const journal=createPresentationRecoveryJournal({capacity:5,highWatermark:2}),notifications=[],port={postMessage(){},start(){},close(){this.closed=true;}},stream=openVisualStream(port,'s',()=>{},{recoveryJournal:journal,onCheckpointAcknowledged:()=>{},highWatermark:2,onBackpressureDetach:info=>notifications.push(info)}),packet=n=>({sequence:n,snapshot:'s'+n,events:[{id:'event-'+n}],physicsPose:null});
+  if(mode==='saturated'){stream.publish({...packet(1),terrainCheckpoint:{sequence:1,chunks:[]}},true);port.onmessage({data:{kind:'publicationAck',session:'s',sequence:1}});}else stream.publish(packet(1),true);
+  stream.publish(packet(2),true);stream.publish(packet(3),true);stream.publish(packet(4),true);
+  assert.equal(stream.blocked(),true);assert.equal(stream.status().detached,false);assert.deepEqual(notifications,[]);assert.notEqual(port.closed,true);stream.close();journal.dispose();
+ }
+});
+test('backpressure abandons an unacknowledged checkpoint without losing its events',async()=>{
+ const {createPresentationRecoveryJournal,assertPresentationRecoveryBoundary}=await import('../src/simulation/presentation-recovery-journal.js'),journal=createPresentationRecoveryJournal({capacity:12,highWatermark:9}),bases=[],notifications=[],port={postMessage(){},start(){},close(){}},stream=openVisualStream(port,'s',()=>{},{workRecovery:true,recoveryJournal:journal,onCheckpointAcknowledged:c=>bases.push(c),highWatermark:2,onBackpressureDetach:x=>notifications.push(x)}),packet=n=>({sequence:n,snapshot:'s'+n,events:[{id:'event-'+n}],physicsPose:null});
+ stream.publish({...packet(1),terrainCheckpoint:{sequence:1,chunks:[]}},true);port.onmessage({data:{kind:'publicationAck',session:'s',sequence:1,workCheckpoint:{version:1,sequence:1,effects:[]}}});
+ stream.publish({...packet(2),terrainCheckpoint:{sequence:2,chunks:[]}},true);stream.publish(packet(3),true);stream.publish(packet(4),true);
+ assert.equal(journal.status().candidate,null);assert.equal(assertPresentationRecoveryBoundary(journal,stream,bases[0],4),4);assert.equal(notifications.length,1);assert.deepEqual(journal.snapshot().entries.map(e=>e.publication.events[0].id),['event-2','event-3','event-4']);stream.close();journal.dispose();
+});
+test('backpressure detachment waits while a recovery handoff is in progress',async()=>{
+ const {createPresentationRecoveryJournal}=await import('../src/simulation/presentation-recovery-journal.js'),journal=createPresentationRecoveryJournal({capacity:12,highWatermark:9}),notifications=[],port={postMessage(){},start(){},close(){}},state={allow:false},stream=openVisualStream(port,'s',()=>{},{recoveryJournal:journal,onCheckpointAcknowledged:()=>{},highWatermark:1,canBackpressureDetach:()=>state.allow,onBackpressureDetach:info=>notifications.push(info)}),packet=n=>({sequence:n,snapshot:'s'+n,events:[{id:'event-'+n}],physicsPose:null});
+ stream.publish({...packet(1),terrainCheckpoint:{sequence:1,chunks:[]}},true);port.onmessage({data:{kind:'publicationAck',session:'s',sequence:1}});stream.publish(packet(2),true);stream.publish(packet(3),true);assert.equal(stream.blocked(),true);assert.equal(stream.status().detached,false);
+ state.allow=true;stream.publish(packet(4),true);assert.equal(stream.status().detached,true);assert.equal(stream.blocked(),false);assert.equal(notifications.length,1);assert.deepEqual(journal.snapshot().entries.map(e=>e.sequence),[2,3,4]);stream.close();journal.dispose();
+});
 test('source attribution reaches diagnostics without entering recovery entries or wire messages',async()=>{
  const {createPresentationRecoveryJournal}=await import('../src/simulation/presentation-recovery-journal.js'),journal=createPresentationRecoveryJournal(),sent=[],port={postMessage:m=>sent.push(m),start(){},close(){}},stream=openVisualStream(port,'s',()=>{},{diagnostics:true,recoveryJournal:journal,onCheckpointAcknowledged:()=>{}}),packet=n=>({sequence:n,snapshot:'s'+n,events:[],physicsPose:null});
  stream.publish({...packet(1),terrainCheckpoint:{sequence:1,chunks:[]}},false,{sourceKind:'snapshot'});port.onmessage({data:{kind:'publicationAck',session:'s',sequence:1}});stream.publish(packet(2),true,{sourceKind:'advance'});stream.publish(packet(3,[{id:'e'}]),false,{sourceKind:'castAttack'});
