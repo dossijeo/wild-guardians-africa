@@ -1,3 +1,4 @@
+import {createConfirmedPresentationClock} from '../src/rendering/confirmed-presentation-clock.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
@@ -28,3 +29,5 @@ test('guardian consumes confirmed publication events even when snapshot history 
  const {state,visual,command}=setup();state.raid=null;const event={id:'event-1',type:'SpellActivated',kind:'attack',commandId:'c',targetId:'a',presentation:{elapsed:0,...command.selection}};
  visual.sync([{kind:'event',eventId:event.id}],[event]);assert.equal(visual.status().active?.id,'c');visual.dispose();
 });
+
+test('confirmed guardian uses shared time while provisional feedback uses real time',()=>{let now=0;const scene=new THREE.Scene(),state={elapsed:0,events:[],raid:{animals:[{id:'a',status:'walking'}]}},renderer={backend:{isWebGPUBackend:true}},confirmedClock=createConfirmedPresentationClock(0),aura=[],visual=createWebGpuGuardianAttack({scene,state,renderer,confirmedClock,clock:()=>now,loadModel:()=>new Promise(()=>{}),aura:plan=>aura.push(plan)}),command={kind:'castAttack',id:'c',targetId:'a',selection:{origin:{x:0,y:2,z:0},contact:{x:1,y:1,z:0}}};assert.equal(visual.begin(command),true);now=100;visual.tick();assert.ok(Math.abs(aura.at(-1).age-.1)<1e-8);state.elapsed=.1;confirmedClock.commit(.1);state.events.push({id:'e',type:'SpellActivated',kind:'attack',commandId:'c',targetId:'a',presentation:{elapsed:.1,...command.selection}});visual.sync();visual.tick();const confirmedAge=aura.at(-1).age;assert.equal(visual.status().active.provisional,false);state.elapsed=3;now=5000;visual.tick();assert.ok(visual.status().active);assert.equal(aura.at(-1).age,confirmedAge);confirmedClock.commit(.2);visual.tick();assert.ok(aura.at(-1).age>confirmedAge);assert.equal(visual.status().beamVisible,true);confirmedClock.commit(3);visual.tick();assert.equal(visual.status().active,null);visual.dispose();confirmedClock.dispose();});
