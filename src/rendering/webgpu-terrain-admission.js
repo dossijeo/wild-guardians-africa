@@ -19,5 +19,16 @@ export function createTerrainAdmission({scene,admission,onError=()=>{},onPublish
   }).catch(error=>{if(closed||pending.get(key)!==record||controller.signal.aborted)return;pending.delete(key);release(record);onError(error);});
  }
  function remove(key){const item=pending.get(key);pending.delete(key);release(item);const old=visible.get(key);visible.delete(key);release(old);unavailable.delete(key);}
- return {publish,remove,isReady(){return !closed&&unavailable.size===0;},isVisible(key,mesh){return visible.get(key)?.meshes[0]===mesh;},dispose(){if(closed)return;closed=true;for(const key of new Set([...pending.keys(),...visible.keys(),...unavailable]))remove(key);}};
+ function isRayReady(ray,limit=Infinity){
+  if(closed||!ray?.origin||!ray?.direction||![ray.origin.x,ray.origin.z,ray.direction.x,ray.direction.z].every(Number.isFinite)||typeof limit!=='number'||Number.isNaN(limit)||limit<0)return false;
+  for(const key of unavailable){const [cx,cz]=key.split(',').map(Number);let low=0,high=limit;
+   for(const [origin,direction,min,max] of [[ray.origin.x,ray.direction.x,cx*48-24,cx*48+24],[ray.origin.z,ray.direction.z,cz*48-24,cz*48+24]]){
+    if(direction===0){if(origin<min||origin>max){high=-1;break;}continue;}
+    const a=(min-origin)/direction,b=(max-origin)/direction;low=Math.max(low,Math.min(a,b));high=Math.min(high,Math.max(a,b));if(low>high)break;
+   }
+   if(low<=high)return false;
+  }
+  return true;
+ }
+ return {publish,remove,isReady(){return !closed&&unavailable.size===0;},isRayReady,isVisible(key,mesh){return visible.get(key)?.meshes[0]===mesh;},dispose(){if(closed)return;closed=true;for(const key of new Set([...pending.keys(),...visible.keys(),...unavailable]))remove(key);}};
 }
