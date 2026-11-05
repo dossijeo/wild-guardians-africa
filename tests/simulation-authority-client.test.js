@@ -48,3 +48,7 @@ test('native checkpoint permission is explicit and independent of diagnostic mod
  const sent=[],worker={postMessage:message=>sent.push(message),terminate(){}},client=createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session:'native',nativeAuthorityCheckpoints:true,workerFactory:()=>worker});assert.equal(sent[0].nativeAuthorityCheckpoints,true);client.ready.catch(()=>{});client.dispose();
  assert.throws(()=>createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session:'native',nativeAuthorityCheckpoints:'yes',workerFactory:()=>worker}),/Invalid authority client/);
 });
+test('checkpoint-only raid wait capture is sent explicitly to the authority',async()=>{
+ const sent=[],worker={postMessage:message=>sent.push(message),terminate(){}},client=createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session:'s',checkpointRaidWaitsOnly:true,workerFactory:()=>worker});
+ assert.equal(sent[0].checkpointRaidWaitsOnly,true);worker.onmessage({data:{kind:'ready',session:'s'}});await client.ready;client.dispose();
+});
