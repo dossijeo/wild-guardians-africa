@@ -3,7 +3,7 @@ import {createConfirmedStateReceiver} from '../simulation/confirmed-state-receiv
 import {farmHomeFocus} from '../rendering/farm-focus.js';
 import {focusNewTutorialPlacement} from '../rendering/tutorial-placement-focus.js';
 import {tutorialHandTarget} from '../rendering/tutorial-hand-target.js';
-import {waitGpuPreparation} from '../../tools/experiments/wait-gpu-preparation.js';
+import {waitGpuPreparation} from '../rendering/wait-gpu-preparation.js';
 
 // The early presentation owns no legacy renderer or resident prop meshes.
 // Keep its confirmed-state and camera services independent of WorldScene.

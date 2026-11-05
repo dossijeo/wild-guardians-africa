@@ -1,6 +1,6 @@
 import {SaveRepository,serialize,deserialize} from './snapshots.js';
 import {decodeSnapshotAsync} from './snapshot-decoder.js';
-import {waitGpuPreparation} from '../../tools/experiments/wait-gpu-preparation.js';
+import {waitGpuPreparation} from '../rendering/wait-gpu-preparation.js';
 
 const interrupted=error=>['AbortError','TimeoutError','SnapshotWorkerError'].includes(error?.name);
 

@@ -1,5 +1,9 @@
 import {resolvePresentationRecoveryOptions} from '../simulation/presentation-recovery-options.js';
 import {webGpuPresentationCapabilities} from '../rendering/webgpu-presentation-capabilities.js';
+export function confirmedCameraTerrainEnabled({requested=false,search='',dev=false}={}){
+ if(typeof requested!=='boolean'||typeof search!=='string'||typeof dev!=='boolean')throw TypeError('Invalid camera terrain profile');
+ return requested||dev&&new URLSearchParams(search).has('qa-webgpu-camera-terrain');
+}
 // Guardian placement is authoritative only when the entire input path exists.
 // An already-prepared authority cannot be granted capabilities after startup.
 export function guardianPlacementForWorld({early=null,hosted,presentationConfigured,options}){

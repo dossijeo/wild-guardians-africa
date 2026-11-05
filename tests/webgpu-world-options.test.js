@@ -1,6 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {webGpuWorldOptions,guardianPlacementForWorld} from '../src/app/webgpu-world-options.js';
+import {webGpuWorldOptions,guardianPlacementForWorld,confirmedCameraTerrainEnabled} from '../src/app/webgpu-world-options.js';
+
+test('camera terrain follows product capabilities and ignores diagnostic URLs in production',()=>{
+ const search='?qa-webgpu-camera-terrain';assert.equal(confirmedCameraTerrainEnabled({search}),false);assert.equal(confirmedCameraTerrainEnabled({search,dev:true}),true);assert.equal(confirmedCameraTerrainEnabled({requested:true}),true);assert.throws(()=>confirmedCameraTerrainEnabled({requested:'true'}),/profile/);
+});
 
 test('initial and recovered worlds share the complete early presentation profile',()=>{
  const params=new URLSearchParams('qa-worker-early-gpu-view&qa-worker-early-biome&qa-webgpu-world-motion&qa-webgpu-camera-terrain&qa-webgpu-picking');
