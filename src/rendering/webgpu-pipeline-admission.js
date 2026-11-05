@@ -114,6 +114,10 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
   // Removal is immediate; release of the resources used by an active
   // compilation waits until Three's compilation promise actually settles.
   deferRelease(object,release){if(!object?.isObject3D||typeof release!=='function')throw TypeError('Invalid deferred release');const deferred=compilingObjects.get(object);if(deferred)deferred.push(release);else release();},
+  // Used at shutdown for shared resources that may belong to any active
+  // object. This captures current compilations; callers must first stop new
+  // admissions and resource creation.
+  deferCompilations(release){if(typeof release!=='function')throw TypeError('Invalid deferred release');const pending=[...compilingObjects.values()];if(!pending.length){release();return;}let remaining=pending.length;for(const list of pending)list.push(()=>{if(--remaining===0)release();});},
   registerShadowLight(light){if(closed)throw Error('Pipeline admission closed');addLight(light);notifyShadowTargets();let released=false;return ()=>{if(released)return;released=true;const count=lights.get(light)??0;if(count===1){lights.delete(light);lightsRevision++;notifyShadowTargets();}else if(count>1)lights.set(light,count-1);};},
   notifyShadowTargets,
   prepare(object,{signal,include=[]}={}){
