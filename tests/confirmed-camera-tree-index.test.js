@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import * as THREE from 'three';
+import {createConfirmedCameraTreeIndex} from '../src/app/confirmed-camera-tree-index.js';
+import {CameraVolumeIndex} from '../src/rendering/camera-volume-index.js';
+import {CameraTreeRegistry} from '../src/rendering/camera-tree-registry.js';
+
+test('confirmed tree bounds match the existing registry including scaling, rotation and suppression',()=>{
+ const bounds=new THREE.Box3(new THREE.Vector3(-1,0,-2),new THREE.Vector3(1,6,2)),geometry=new THREE.BufferGeometry();geometry.boundingBox=bounds;const items=[{id:'a',x:49,y:2,z:2,yaw:.7,sx:1,sy:1,sz:1},{id:'small',x:52,y:2,z:1,yaw:0,sx:.2,sy:.2,sz:.2},{id:'b',x:53,y:2,z:-1,yaw:-.3,sx:-2,sy:.8,sz:1}],group=new THREE.Group();group.position.set(48,0,0);group.userData.lodBatches=[{group:0,chunkOrigin:[48,0],levels:[{geometry}],instances:items}];const reference=new CameraVolumeIndex(),registry=new CameraTreeRegistry(reference),actual=createConfirmedCameraTreeIndex(),message={epoch:'e',sequence:1,revision:1,sourceRevision:1,cx:1,cz:0,slots:[{slot:0,min:bounds.min.toArray(),max:bounds.max.toArray(),instances:items}]};registry.sync(new Map([['1,0',group]]),1);actual.ingest(message);assert.equal(actual.status().volumes,0);actual.confirm(1);const normalized=index=>[...index.records.values()].map(({id,min,max,yaw})=>({id,min,max,yaw})).sort((a,b)=>a.id.localeCompare(b.id));assert.deepEqual(normalized(actual.index),normalized(reference));assert.equal(actual.status().complete,false);
+ const kept=items.filter(item=>item.id!=='a');group.userData.lodBatches=[{group:0,chunkOrigin:[48,0],levels:[{geometry}],instances:kept}];registry.sync(new Map([['1,0',group]]),2);actual.ingest({...message,sequence:2,revision:2,slots:[{...message.slots[0],instances:kept}]});assert.equal(actual.status().volumes,0);actual.confirm(2);assert.deepEqual(normalized(actual.index),normalized(reference));actual.dispose();registry.clear();geometry.dispose();
+});
+test('tree index rejects stale revisions, missing data and capacity overflow',()=>{const view=createConfirmedCameraTreeIndex({maxChunks:1}),base={epoch:'e',sequence:0,revision:1,sourceRevision:1,cx:0,cz:0,slots:[]};view.ingest(base);assert.throws(()=>view.ingest(base),/revision/);assert.throws(()=>view.ingest({...base,cx:1}),/capacity/);assert.throws(()=>view.ingest({...base,revision:2,epoch:'other'}),/epoch/);assert.throws(()=>view.ingest({...base,revision:2,slots:[{slot:0,min:[0,0,0],max:[1,2,3],instances:[{id:'x'}]}]}),/instance/);view.dispose();});

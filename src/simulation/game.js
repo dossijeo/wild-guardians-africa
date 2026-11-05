@@ -225,7 +225,7 @@ export function placeStructure(s,id,options,nav) {
     s.suppressed.push(...suppression);nav.setState(s);
     for(const ruin of replaced)emit(s,'WallRemoved',{
       targetId:ruin.id,refund:0,replacedBy:entity.id,presentation:{x:ruin.x,z:ruin.z}});
-    emit(s,'PlacementCommitted',{kind,targetId:s.structures.at(-1).id,presentation:{x,z}});
+    emit(s,'PlacementCommitted',{commandId:id,kind,targetId:s.structures.at(-1).id,presentation:{x,z}});
     if(kind==='center'){recoverDisplacedWorkers(s);enqueueLooseCrates(s);}
     if(kind==='center'&&s.tutorial.step==='center')s.tutorial.step='plant';
   });
@@ -587,7 +587,7 @@ export function buildWallChain(s,id,material,points,nav,options={}) {
     for(const ruin of replaced)emit(s,'WallRemoved',{
       targetId:ruin.id,refund:0,replacedBy:newPieces.find(piece=>
         Math.hypot(ruin.x-piece.x,ruin.z-piece.z)<.35)?.id,presentation:{x:ruin.x,z:ruin.z}});
-    emit(s,'WallChainBuilt',{material,count:newPieces.length,gates:plan.gates,targetId:newPieces[0].id,presentation:{x:newPieces[0].x,z:newPieces[0].z,points:newPieces.map(({x,z})=>({x,z}))}});
+    emit(s,'WallChainBuilt',{commandId:id,material,count:newPieces.length,gates:plan.gates,targetId:newPieces[0].id,presentation:{x:newPieces[0].x,z:newPieces[0].z,points:newPieces.map(({x,z})=>({x,z}))}});
   });
 }
 export function removeWall(s,id,targetId,nav) {

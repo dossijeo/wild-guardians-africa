@@ -7,7 +7,7 @@ function draw(){if(phase!=='running')return;try{surface.render();if(!firstFrame)
 self.onmessage=async({data})=>{try{
  if(data?.kind==='initialize'){
   if(phase!=='new')throw Error('World worker already initialized');phase='initializing';inspectWorkerState=data.experimentalInspectWorkerState===true;workRecovery=import.meta.env.DEV&&data.experimentalWorkRecovery===true;
-  const created=await createWebGpuWorldSurface({...data,onError:fail,onCameraTerrain:payload=>postMessage({kind:'cameraTerrain',payload},[payload.heights.buffer]),onGuardianError:error=>{guardianError=String(error?.message??error);postMessage({kind:'guardianError',message:guardianError});},onActorReady:actorId=>postMessage({kind:'actorReady',actorId}),onActorTextured:()=>{actorTextured=true;postMessage({kind:'actorTextured'});},onActorTextureError:error=>{actorTextureError=String(error?.message??error);postMessage({kind:'actorTextureError',message:actorTextureError});},onSettlementTextureError:error=>postMessage({kind:'settlementTextureError',message:String(error?.message??error)})});if(phase!=='initializing'){created.dispose();return;}surface=created;
+  const created=await createWebGpuWorldSurface({...data,onError:fail,onCameraTerrain:payload=>postMessage({kind:'cameraTerrain',payload},[payload.heights.buffer]),onCameraTreeChunk:payload=>postMessage({kind:'cameraTreeChunk',payload}),onGuardianError:error=>{guardianError=String(error?.message??error);postMessage({kind:'guardianError',message:guardianError});},onActorReady:actorId=>postMessage({kind:'actorReady',actorId}),onActorTextured:()=>{actorTextured=true;postMessage({kind:'actorTextured'});},onActorTextureError:error=>{actorTextureError=String(error?.message??error);postMessage({kind:'actorTextureError',message:actorTextureError});},onSettlementTextureError:error=>postMessage({kind:'settlementTextureError',message:String(error?.message??error)})});if(phase!=='initializing'){created.dispose();return;}surface=created;
   if(latestSize)surface.resize(latestSize.width,latestSize.height);if(latestCamera)surface.setCamera(latestCamera);else if(data.camera)surface.setCamera(data.camera);
   recoveryPort=data.recoveryPort??null;recoverySession=data.session;
   if(recoveryPort){if(!import.meta.env.DEV)throw Error('Recovery port requires QA');phase='recovering';recoveryPort.onmessage=async({data:entry})=>{try{
@@ -32,6 +32,10 @@ self.onmessage=async({data})=>{try{
  if(data.kind==='resize'){latestSize={width:data.width,height:data.height};if(surface)surface.resize(data.width,data.height);return;}
  if(data.kind==='guardianAgricultureBegin'){surface?.guardianAttack?.beginAgriculture(data.command);return;}
  if(data.kind==='guardianAwakeningBegin'){surface?.guardianAttack?.beginAwakening(data.command);return;}
+ if(data.kind==='prepareStructure'){if(!surface?.settlements)throw Error('Structure presentation unavailable');await surface.settlements.preparePreview(data.structureKind,data.key);postMessage({kind:'structurePrepareResult',id:data.id});return;}
+ if(data.kind==='structureBegin'){if(!surface?.settlements?.beginPreview(data.command))throw Error('Structure preview unavailable');return;}
+ if(data.kind==='structureConfirm'){surface?.settlements?.confirmPreview(data.id,data.targetId);return;}
+ if(data.kind==='structureReject'){surface?.settlements?.rejectPreview(data.id);return;}
  if(data.kind==='prepareCrops'){if(!surface?.crops)throw Error('Crop presentation unavailable');await surface.crops.prepare();postMessage({kind:'cropPrepareResult',id:data.id});return;}
  if(data.kind==='cropBegin'){if(!surface?.crops?.beginProvisional(data.id,data.species,data.x,data.z))throw Error('Crop preview unavailable');return;}
  if(data.kind==='cropConfirm'){surface?.crops?.confirmProvisional(data.id,data.targetId);return;}

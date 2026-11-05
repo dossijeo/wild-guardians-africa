@@ -15,6 +15,18 @@ checkpoint. No se ha inyectado en los controles de cámara; faltan un manejo
 transaccional de pose segura para chunks ausentes, cobertura de exclusiones y
 paridad frente al campo nativo, que puede diferir de la malla triangulada.
 
+El mismo flag QA recibe un subíndice de árboles del Worker: cada chunk incluye
+bounds locales de LOD0 efectivo por slot y transformaciones de instancias, con
+época, secuencia, revisión de origen y revisión de presentación. Los cambios
+de supresión regeneran la entrada; una revisión futura invalida la anterior
+hasta que main confirme su secuencia. Hay límites de 512 chunks, 256 entradas
+pendientes y 50.000 volúmenes; un error desactiva solo este subíndice. Las
+pruebas comparan CameraTreeRegistry con rotaciones, escalas y supresión, y con
+la geometría real de un árbol de sabana. No se ha probado la equivalencia en
+los demás biomas ni con `noNearTreeTextures`; los checkpoints restaurados aún
+no repueblan el índice. Faltan edificios y murallas: el subíndice declara
+`complete:false` y no se conecta a la cámara.
+
 `tests/browser/worker-camera-terrain.html` valida un chunk de autoridad real
 pasando por Workers reales y backend WebGPU, sin inyección de cámara. Con Vite
 en `http://127.0.0.1:5187` y Playwright en `NODE_PATH`, se reproduce mediante
