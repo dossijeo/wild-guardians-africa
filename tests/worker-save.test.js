@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {newGame} from '../src/simulation/game.js';
 import {serialize} from '../src/persistence/snapshots.js';
-import {createWorkerSaveCoordinator} from '../src/persistence/worker-save.js';
+import {createWorkerSaveCoordinator,workerCheckpointPolicy} from '../src/persistence/worker-save.js';
 import {encodePhysicsCheckpoint} from '../src/simulation/physics-checkpoint-codec.js';
 import {serializeConfirmedState} from '../src/simulation/confirmed-live-state.js';
 
@@ -53,4 +53,11 @@ test('native checkpoint is saved only when requested and validates before persis
  native={version:1,chunkKeys:['0,0'],spatialState:{version:5,seed:712,biome:'savanna',settlements:[],barriers:[],polygons:[],removedProps:[],nextBarrierId:1,nextPolygonId:1},navigationView:null};
  assert.equal((await saves.request()).saved,true);assert.deepEqual(writes[0].workerNativeAuthorityCheckpoint,native);assert.deepEqual(sent,[{kind:'snapshot',nativeAuthorityCheckpoint:true},{kind:'snapshot',nativeAuthorityCheckpoint:true}]);
  native.chunkKeys.push('0,0');await assert.rejects(saves.request(),/native authority checkpoint/);assert.equal(writes.length,1);
+});
+
+test('explicit checkpoint policy requests native and physical state without QA options',async()=>{
+ const state=newGame({seed:712,slotId:'a'}),physical=encodePhysicsCheckpoint({version:1,fall:{solver:{world:new Uint8Array([1,2,3])}}}),native={version:1,chunkKeys:['0,0'],spatialState:{version:5,seed:712,biome:'savanna',settlements:[],barriers:[],polygons:[],removedProps:[],nextBarrierId:1,nextPolygonId:1},navigationView:null},commands=[],saved=[];
+ const requested={physics:true,nativeAuthority:true},policy=workerCheckpointPolicy(requested),saves=createWorkerSaveCoordinator({runtime:{submit:async command=>{commands.push(command);return {...packet(state,1,false),snapshot:serializeConfirmedState(state),physicsCheckpoint:physical,nativeAuthorityCheckpoint:native};}},repository:{save:state=>saved.push(state)},slotId:'a',checkpointPolicy:policy});requested.physics=false;
+ assert.equal((await saves.request()).saved,true);assert.deepEqual(commands,[{kind:'snapshot',physicsCheckpoint:'encoded',nativeAuthorityCheckpoint:true}]);assert.equal(saved[0].workerPhysicsCheckpoint,physical);assert.deepEqual(saved[0].workerNativeAuthorityCheckpoint,native);assert.ok(Object.isFrozen(policy));
+ assert.throws(()=>workerCheckpointPolicy({physics:'yes'}),/checkpoint policy/);assert.throws(()=>workerCheckpointPolicy({other:true}),/checkpoint policy/);assert.throws(()=>createWorkerSaveCoordinator({runtime:{submit(){}},repository:{save(){}},slotId:'a',checkpointPolicy:{},experimentalPhysics:true}),/Conflicting/);
 });

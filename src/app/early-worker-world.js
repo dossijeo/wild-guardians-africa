@@ -9,12 +9,13 @@ import {PreciseTap} from '../ui/precise-tap.js';
 import {guardConfirmedCamera,clearBlockedOrbitMomentum} from './confirmed-camera-control.js';
 import {createPresentationCameraController} from './presentation-camera-controller.js';
 import {installEarlyWorkerWorldServices} from './early-worker-world-services.js';
+import {workerCheckpointPolicy} from '../persistence/worker-save.js';
 
 // QA-only input/camera owner for the already existing graphical Worker. It
 // deliberately creates no renderer or graphics context on the main thread.
-export function createEarlyWorkerWorld(canvas,onPick,{visualSearch=globalThis.location?.search??'',confirmedCameraTerrain=false}={}){
+export function createEarlyWorkerWorld(canvas,onPick,{visualSearch=globalThis.location?.search??'',confirmedCameraTerrain=false,checkpointPolicy={}}={}){
  if(!canvas||typeof onPick!=='function'||typeof confirmedCameraTerrain!=='boolean')throw TypeError('Invalid worker world');
- const world={canvas,requestedVisualSearch:visualSearch,visualSearch:approvedVisualSearch(null,visualSearch),approvedVisuals:true,metadataOnlySpatial:true,loading:new AbortController(),canvasEvents:new AbortController(),objects:new Map(),mixers:new Map(),chunks:new Map(),buildingTemplates:new Map(),quality:'media',pixelRatioLimit:Infinity,destructionPass:{},provisionalCrops:new ProvisionalCrops(),disposed:false};
+ const world={canvas,requestedVisualSearch:visualSearch,visualSearch:approvedVisualSearch(null,visualSearch),approvedVisuals:true,metadataOnlySpatial:true,workerCheckpointPolicy:workerCheckpointPolicy(checkpointPolicy),loading:new AbortController(),canvasEvents:new AbortController(),objects:new Map(),mixers:new Map(),chunks:new Map(),buildingTemplates:new Map(),quality:'media',pixelRatioLimit:Infinity,destructionPass:{},provisionalCrops:new ProvisionalCrops(),disposed:false};
  world.camera=new THREE.PerspectiveCamera(42,1,.1,500);world.camera.position.set(40,35,50);world.controls=new OrbitControls(world.camera,canvas);world.controls.enableDamping=true;configureTerrainControls(world.controls);world.releaseCameraIntent=installTerrainCameraIntent(world.camera,world.controls,()=>world.cameraField());world.controls.enableRotate=true;world.controls.mouseButtons={LEFT:THREE.MOUSE.PAN,MIDDLE:THREE.MOUSE.DOLLY,RIGHT:THREE.MOUSE.ROTATE};
  world.cameraField=()=>world.cameraTerrainField??world.nav?.field;
  if(confirmedCameraTerrain||new URLSearchParams(visualSearch).has('qa-webgpu-camera-terrain')){let attached=false;const active=()=>{if(world.webGpuWorld)attached=true;return attached;},field=()=>world.webGpuWorld?.client.cameraTerrain??null;world.cameraField=()=>active()?field():world.nav?.field;const guard=guardConfirmedCamera({camera:world.camera,controls:world.controls,active,field,onBlocked:()=>clearBlockedOrbitMomentum(world.controls)});world.confirmedCameraGuard=guard;if(import.meta.env?.DEV)globalThis.wildGuardiansConfirmedCameraQa=()=>({attached,confirmed:attached&&!!field()&&world.cameraField()===field(),status:field()?.status()??null,eye:world.camera.position.toArray(),target:world.controls.target.toArray()});}

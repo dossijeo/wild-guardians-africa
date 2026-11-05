@@ -159,6 +159,8 @@ La instalación del Worker gráfico acepta ahora ese perfil explícitamente y la
 
 La autoridad admite explícitamente checkpoints nativos fuera de QA, verifica siempre las reconstrucciones recibidas y puede cargar las envolventes físicas originales de centros sin depender del modo de desarrollo. La ruta temprana solicita esa capacidad al preparar la autoridad y la conserva en sus siguientes guardados, incluso después de restaurar una partida. Las pruebas cubren el contrato de guardado, la geometría física y el cliente; la restauración completa con física activa todavía requiere la validación integrada.
 
+El propietario de la presentación temprana puede recibir una política inmutable de checkpoints físicos y nativos; el guardado y la comprobación de restauración consultan esa política sin exigir opciones QA. La ruta experimental mantiene su configuración anterior, por lo que no se activa automáticamente el guardado durante física en producción. Se han comprobado el transporte de ambos checkpoints y la reconexión de poses y entorno con pruebas de contrato; sigue pendiente la partida real y su restauración integral.
+
 Todas las acciones provisionales usan ID y estado de confirmación/rechazo. La presentación no concede recursos ni inventa resultados. Attack conserva gesto encadenable, exclusión de bestias pendientes/derribadas y daño actual. Preparar los recursos físicos de una bestia oportunamente en el Worker autoritativo; no supeditar su carga a la textura ni a la escena gráfica.
 
 Definir explícitamente la política temporal del comando. No reordenar hechos ya confirmados mediante una corrección cosmética. Si una mecánica requiere retroceso causal, necesita checkpoint y replay determinista de todas las dependencias antes de declararse soportada.
