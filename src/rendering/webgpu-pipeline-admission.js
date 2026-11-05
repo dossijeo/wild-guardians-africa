@@ -12,10 +12,21 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
  function rejectWaiting(error){for(const item of queue.splice(0)){if(item.onAbort)item.signal.removeEventListener('abort',item.onAbort);item.reject(error);}}
  function retire(error){if(!closed){closed=true;generation++;cancel();lights.clear();rejectWaiting(Error('Pipeline admission closed'));try{onFatal(error);}catch{}}}
  function notifyShadowTargets(){for(const waiter of targetWaiters)if(waiter.ready())waiter.resolve();}
+ function enqueue(item){
+  if(closed||item.version!==generation){item.reject(Error('Pipeline admission cancelled'));return;}
+  if(item.signal?.aborted){item.reject(new DOMException('Pipeline admission cancelled','AbortError'));return;}
+  if(item.signal){item.onAbort=()=>{const index=queue.indexOf(item);if(index<0)return;queue.splice(index,1);item.signal.removeEventListener('abort',item.onAbort);item.reject(new DOMException('Pipeline admission cancelled','AbortError'));};item.signal.addEventListener('abort',item.onAbort,{once:true});}
+  queue.push(item);if(item.signal?.aborted)item.onAbort();else queueMicrotask(pump);
+ }
  function pump(){
   if(closed||active||!queue.length)return;
   const item=queue.shift();if(item.onAbort)item.signal.removeEventListener('abort',item.onAbort);active=true;
-  execute(item.object,item.signal,item.version).then(item.resolve,item.reject).finally(()=>{active=false;pump();});
+  execute(item.object,item.signal,item.version).then(result=>{
+   if(!result?.shadowTarget){item.resolve();return;}
+   // Waiting for the ordinary world frame must not hold the renderer queue:
+   // a later receiver may itself be needed to create that shadow target.
+   result.shadowTarget.then(()=>enqueue(item),error=>{if(!closed&&!item.signal?.aborted)retire(error);item.reject(error);});
+  },item.reject).finally(()=>{active=false;pump();});
  }
  async function waitForCompilation(pending,signal){
   let onAbort;const aborted=signal?new Promise(resolve=>{onAbort=()=>resolve(new DOMException('Pipeline admission cancelled','AbortError'));signal.addEventListener('abort',onAbort,{once:true});if(signal.aborted)onAbort();}):null;
@@ -65,7 +76,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
      if(castsShadow){
       for(const light of lights.keys()){
        if(!light.castShadow||!light.visible)continue;
-       await waitForShadowTarget(light,signal,lightVersion);
+       if(!light.shadow.map)return {shadowTarget:waitForShadowTarget(light,signal,lightVersion)};
        if(closed||version!==generation)throw Error('Pipeline admission cancelled');
        if(lightsChanged())return execute(object,signal,version);
        if(!light.castShadow||!light.visible)continue;
@@ -99,11 +110,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
    if(!object?.isObject3D)return Promise.reject(TypeError('Invalid admission object'));
    if(signal!==undefined&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))return Promise.reject(TypeError('Invalid admission signal'));
    if(signal?.aborted)return Promise.reject(new DOMException('Pipeline admission cancelled','AbortError'));
-   return new Promise((resolve,reject)=>{
-    const item={object,signal,version:generation,resolve,reject,onAbort:null};
-    if(signal){item.onAbort=()=>{const index=queue.indexOf(item);if(index<0)return;queue.splice(index,1);signal.removeEventListener('abort',item.onAbort);reject(new DOMException('Pipeline admission cancelled','AbortError'));};signal.addEventListener('abort',item.onAbort,{once:true});}
-    queue.push(item);if(signal?.aborted)item.onAbort();else queueMicrotask(pump);
-   });
+   return new Promise((resolve,reject)=>enqueue({object,signal,version:generation,resolve,reject,onAbort:null}));
   },
   dispose(){if(closed)return;closed=true;generation++;cancel();lights.clear();rejectWaiting(Error('Pipeline admission cancelled'));},
  };

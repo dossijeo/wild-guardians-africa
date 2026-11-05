@@ -128,6 +128,20 @@ test('shadow admission waits for the target created by the ordinary world render
  sun.shadow.map={};admission.notifyShadowTargets();await ready;assert.equal(shadowCalls,1);assert.equal(admitted,true);admission.dispose();
 });
 
+test('a missing shadow target does not block later non-casting objects from admission',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),caster=new THREE.Mesh(),receiver=new THREE.Mesh(),sun=new THREE.DirectionalLight(),calls=[];caster.castShadow=true;caster.visible=false;receiver.visible=false;sun.castShadow=true;
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(object){calls.push(object===caster?'caster':'receiver');return Promise.resolve();},compileShadowAsync(object){assert.equal(object,caster);calls.push('shadow');return Promise.resolve();}};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera,shadowLights:[sun],includeShadowPass:true});let casterReady=false;const first=admission.prepare(caster).then(()=>{casterReady=true;});await new Promise(resolve=>setImmediate(resolve));
+ await admission.prepare(receiver);assert.deepEqual(calls,['caster','receiver']);assert.equal(casterReady,false);assert.equal(caster.visible,false);
+ sun.shadow.map={};admission.notifyShadowTargets();await first;assert.deepEqual(calls,['caster','receiver','caster','shadow']);assert.equal(casterReady,true);admission.dispose();
+});
+
+test('cancelling a parked shadow request does not affect following admissions',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),caster=new THREE.Mesh(),sun=new THREE.DirectionalLight(),controller=new AbortController(),failures=[];caster.castShadow=true;sun.castShadow=true;
+ const renderer={backend:{isWebGPUBackend:true},compileAsync:()=>Promise.resolve(),compileShadowAsync:()=>Promise.resolve()},admission=createWebGpuPipelineAdmission({renderer,scene,camera,shadowLights:[sun],includeShadowPass:true,onFatal:error=>failures.push(error)});
+ const pending=admission.prepare(caster,{signal:controller.signal});await new Promise(resolve=>setImmediate(resolve));controller.abort();await assert.rejects(pending,{name:'AbortError'});await admission.prepare(new THREE.Mesh());assert.deepEqual(failures,[]);admission.dispose();
+});
+
 test('cancelling a target wait does not strand the admission queue',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Mesh(),next=new THREE.Mesh(),sun=new THREE.DirectionalLight(),controller=new AbortController();object.castShadow=true;sun.castShadow=true;let calls=0;
  const renderer={backend:{isWebGPUBackend:true},compileAsync(){calls++;return Promise.resolve();},compileShadowAsync(){throw Error('unexpected shadow compile');}};
