@@ -118,3 +118,15 @@ $env:NODE_PATH='C:\Users\Gabriel\.cache\codex-runtimes\codex-primary-runtime\dep
 La prueba cierra normalmente navegador y Workers; detén Vite al terminar.
 
 La misma fixture se amplió para mantener activa la simulación durante el replay. Parte pausada inmediatamente antes de la noche, registra 16 snapshots pequeños y reanuda la autoridad después de iniciar el reenganche. Un relé de prueba retrasa cada ACK del replay 15 ms para mantener abierta la ventana; no simula el renderer ni modifica los datos. Mientras se reproduce se emiten `NightStarted` y la consulta `previewVillage` carga terreno nativo. En una ejecución con Three.js WebGPU real, la autoridad avanzó de 299,95 a 306,75 segundos de simulación, el replay pasó de la base 2 a la secuencia 79, conservó el evento exactamente una vez y restauró los chunks `1,0` y `2,0` antes de su publicación; hubo tres chunks residentes y ningún error. El mismo comando de la fixture anterior reproduce este caso. No mide FPS ni prueba una sobrecarga real de GPU, personajes, incursiones, fallos de dispositivo o equivalencia visual completa.
+
+## Autoridad de incursión con presentación retenida
+
+La fixture `tests/browser/authority-raid-visual-delay.html` ejecuta dos Workers de autoridad reales desde la misma captura de desierto, con dos runtimes controlados por el mismo reloj manual y sin renderer. Uno de los consumidores visuales confirma normalmente y el otro retiene su primer ACK durante 60 ticks de 0,05 s. Se comparan el estado completo y los eventos tras cada tick, además del snapshot final. Después se libera el ACK y se comprueba la entrega visual completa y ordenada de eventos.
+
+En la ejecución observada, ambas incursiones empezaron en el tick 1 con cinco bestias; los estados, decisiones representadas y eventos fueron idénticos en los 60 ticks y también coincidió el snapshot final. El consumidor retenido recibió los 11 eventos una sola vez y en orden al liberarse. Mientras retenía el ACK, la cola tenía siete publicaciones pendientes y había fusionado 57. No alcanzó el límite de 128: esta prueba no demuestra progreso bajo saturación, no incluye GPU ni pérdida de dispositivo y no cubre la incursión hasta su final.
+
+Con Vite en `http://127.0.0.1:5187`, reproduce desde PowerShell con el mismo `NODE_PATH` indicado arriba:
+
+```powershell
+.\.cache\tooling\node20.exe .\tools\experiments\audit_authority_raid_visual_delay.mjs
+```
