@@ -2,8 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {createWebGpuSettlements} from '../src/rendering/webgpu-settlements.js';
+import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
 
 const turn=()=>new Promise(resolve=>setImmediate(resolve));
+test('a cancelled center retains its shared progressive package while compiling',async()=>{
+ const previousFetch=globalThis.fetch;globalThis.fetch=async url=>({ok:true,json:async()=>String(url).includes('destruction')?{buildings:[{culture:'mapungubwe',url:'/center.glb'}]}:[]});let finish,disposed=0;const scene=new THREE.Scene(),root=new THREE.Group();root.add(new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshBasicMaterial()));const terrain=new THREE.Mesh(new THREE.PlaneGeometry(20,20),new THREE.MeshBasicMaterial({side:THREE.DoubleSide}));terrain.rotation.x=-Math.PI/2;terrain.updateMatrixWorld(true);
+ const state={culture:'mapungubwe',elapsed:0,villages:[],structures:[{id:'c',kind:'center',culture:'mapungubwe',status:'intact',x:0,z:0,yaw:0,hp:10,maxHp:10}]},renderer={backend:{isWebGPUBackend:true},compileAsync:()=>new Promise(resolve=>{finish=resolve;})},admission=createWebGpuPipelineAdmission({renderer,scene,camera:new THREE.PerspectiveCamera()}),view=createWebGpuSettlements({scene,state,residency:{get:()=>terrain},renderer,pipelineAdmission:admission,loadProgressiveCenter:async()=>({preview:{scene:root},start(){},tick(){},dispose(){disposed++;}})});
+ try{view.sync();for(let i=0;i<10&&!finish;i++)await turn();assert.equal(typeof finish,'function');view.dispose();assert.equal(disposed,0);finish();await turn();assert.equal(disposed,1);assert.equal(scene.children.length,0);}finally{view.dispose();admission.dispose();root.children[0].geometry.dispose();root.children[0].material.dispose();terrain.geometry.dispose();terrain.material.dispose();globalThis.fetch=previousFetch;}
+});
 
 async function fixture(){
  const previousFetch=globalThis.fetch;

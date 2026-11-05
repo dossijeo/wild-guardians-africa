@@ -131,6 +131,8 @@ Los lotes de cultivos también aplazan la destrucción de geometrías canceladas
 
 Los lotes de bioma aplazan la liberación del grupo cuya admisión se cancela y, al cerrar, de sus geometrías, materiales y bitmaps compartidos. La destrucción del centro también retrasa la liberación de su instancia hasta que termine la compilación activa. Son garantías locales probadas con compilación simulada; todavía hay que coordinar los propietarios compartidos de construcciones y el cierre completo del dispositivo.
 
+Al cerrar construcciones, sus plantillas y paquetes progresivos compartidos también esperan a las compilaciones activas antes de liberarse. El modelo del guardián usa la misma garantía para sus recursos propios. Las rutas están cubiertas con el servicio de admisión y un compilador simulado; falta verificar el cierre del renderizador, otros recursos auxiliares y la pérdida real del dispositivo.
+
 La fase JavaScript de `compileAsync()` y la preparación de bindings siguen compartiendo el Worker gráfico. Limitar concurrencia y tamaño de los trabajos gráficos, conservar oportunidades de dibujo y enviar procesamiento de datos transferibles a auxiliares. Esto no reintroduce presupuestos de FPS en navegación o simulación.
 
 **Entrega:** admisión obligatoria, estados, cancelación y publicación atómica. **Cierre interno:** ninguna ruta de incorporación visible evita el servicio; casos de rechazo y obsolescencia cubiertos. La ausencia de picos del controlador se comprobará en C, no se presupone por usar promesas.

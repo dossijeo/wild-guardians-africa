@@ -2,7 +2,14 @@ import {createConfirmedPresentationClock} from '../src/rendering/confirmed-prese
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
+import {MeshStandardNodeMaterial} from 'three/webgpu';
 import {createWebGpuGuardianAttack} from '../src/rendering/webgpu-guardian-attack.js';
+import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
+test('guardian resources survive closure until its pipeline compilation settles',async()=>{
+ const scene=new THREE.Scene(),model=new THREE.Group(),geometry=new THREE.BoxGeometry(),original=new THREE.MeshStandardMaterial();model.add(new THREE.Mesh(geometry,original));let finish,released=0;geometry.addEventListener('dispose',()=>released++);
+ const renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:()=>new MeshStandardNodeMaterial()},compileAsync:()=>new Promise(resolve=>{finish=resolve;})},admission=createWebGpuPipelineAdmission({scene,camera:new THREE.PerspectiveCamera(),renderer}),visual=createWebGpuGuardianAttack({scene,state:{events:[]},renderer,pipelineAdmission:admission,loadModel:async()=>({scene:model,animations:[]})});
+ const pending=visual.prepare();await new Promise(resolve=>setImmediate(resolve));assert.equal(typeof finish,'function');visual.dispose();assert.equal(released,0);finish();await assert.rejects(pending,/unavailable|closed/);await new Promise(resolve=>setImmediate(resolve));assert.equal(released,1);admission.dispose();
+});
 function setup(){let now=0;const scene=new THREE.Scene(),state={elapsed:0,events:[],raid:{animals:[{id:'a',status:'walking'}]}},renderer={backend:{isWebGPUBackend:true}},visual=createWebGpuGuardianAttack({scene,state,renderer,clock:()=>now,loadModel:()=>new Promise(()=>{})}),command={kind:'castAttack',id:'c',targetId:'a',selection:{origin:{x:0,y:2,z:0},contact:{x:1,y:1,z:0}}};return {scene,state,visual,command,setNow:value=>{now=value;}};}
 test('guardian model stays hidden until pipeline admission completes',async()=>{
  let release,group;const scene=new THREE.Scene(),state={elapsed:0,events:[],raid:{animals:[{id:'a',status:'walking'}]}};
