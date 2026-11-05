@@ -2,6 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
+import {closeWebGpuRenderer} from '../src/rendering/webgpu-world-surface.js';
+
+test('renderer shutdown does not destroy the device while a cancelled compilation remains active',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera();let finish,disposed=0;const renderer={backend:{isWebGPUBackend:true},compileAsync:()=>new Promise(resolve=>{finish=resolve;}),dispose(){disposed++;}},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),pending=admission.prepare(new THREE.Group());await Promise.resolve();const rejected=assert.rejects(pending,/cancelled/);admission.dispose();const shutdown=closeWebGpuRenderer(renderer,admission);await rejected;assert.equal(disposed,0);finish();await shutdown;assert.equal(disposed,1);
+});
 
 test('preparation remains hidden while compilation is pending and serializes requests',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group();object.visible=false;

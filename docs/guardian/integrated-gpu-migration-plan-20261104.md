@@ -133,6 +133,8 @@ Los lotes de bioma aplazan la liberación del grupo cuya admisión se cancela y,
 
 Al cerrar construcciones, sus plantillas y paquetes progresivos compartidos también esperan a las compilaciones activas antes de liberarse. El modelo del guardián usa la misma garantía para sus recursos propios. Las rutas están cubiertas con el servicio de admisión y un compilador simulado; falta verificar el cierre del renderizador, otros recursos auxiliares y la pérdida real del dispositivo.
 
+El cierre normal de la superficie aplaza `renderer.dispose()` hasta que finalice la compilación activa. El Worker acusa recibo al completar ese cierre; el cliente deja de aceptar acciones inmediatamente y lo termina al recibir la respuesta o después de cinco segundos, sin bloquear la interfaz. Una prueba de contrato cubre el cierre y otra el límite de espera. Quedan pendientes la validación en navegador, el cierre durante la inicialización y la pérdida real del dispositivo; el límite puede interrumpir una compilación que no termine a tiempo.
+
 La fase JavaScript de `compileAsync()` y la preparación de bindings siguen compartiendo el Worker gráfico. Limitar concurrencia y tamaño de los trabajos gráficos, conservar oportunidades de dibujo y enviar procesamiento de datos transferibles a auxiliares. Esto no reintroduce presupuestos de FPS en navegación o simulación.
 
 **Entrega:** admisión obligatoria, estados, cancelación y publicación atómica. **Cierre interno:** ninguna ruta de incorporación visible evita el servicio; casos de rechazo y obsolescencia cubiertos. La ausencia de picos del controlador se comprobará en C, no se presupone por usar promesas.
