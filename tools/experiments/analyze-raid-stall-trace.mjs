@@ -26,6 +26,25 @@ report.stalls=report.frames.filter(f=>f.delta>100&&f.at-f.delta>=anchor).map(f=>
 });
 report.requests=events.filter(e=>e.name==='WG_GPU_REQUEST').map(e=>({atMs:(e.ts-start.ts)/1000,...parsedDetail(e)}));
 report.phaseMarks=events.filter(e=>e.name.startsWith('WG_RAID')).map(e=>({name:e.name,atMs:(e.ts-start.ts)/1000}));
+const workerDraws=slices.filter(e=>e.name==='FunctionCall'&&e.args?.data?.functionName==='draw'&&e.args?.data?.url?.includes('/webgpu-world-worker.js')).sort((a,b)=>a.ts-b.ts);
+report.workerDraws={count:workerDraws.length,longestGaps:workerDraws.slice(1).map((e,i)=>({pid:e.pid,tid:e.tid,startMs:(workerDraws[i].ts-start.ts)/1000,intervalMs:(e.ts-workerDraws[i].ts)/1000,previousDrawMs:workerDraws[i].dur/1000})).sort((a,b)=>b.intervalMs-a.intervalMs).slice(0,20)};
+report.apiRequests=Object.fromEntries(['createShaderModule','createRenderPipeline','createRenderPipelineAsync'].map(method=>[method,report.requests.filter(e=>e.method===method).length]));
+report.legacyProgramQueries=slices.filter(e=>e.name==='GLES2Implementation::GetProgramiv').map(describe);
+// Keep sampled stacks beside each observed frame gap, rather than attributing
+// whole-capture hotspots to every stall. Sample deltas are not CPU timers.
+for(const stall of report.stalls){
+ const from=start.ts+stall.startMs*1000,to=start.ts+stall.endMs*1000;
+ stall.sampledStacks=[...profiles.values()].map(p=>{
+  const parents=new Map();for(const n of p.nodes.values()){if(n.parent)parents.set(n.id,n.parent);for(const child of n.children??[])parents.set(child,n.id);}
+  const groups=new Map();for(const s of p.samples){
+   if(s.ts<from||s.ts>=to)continue;
+   const key=s.id,g=groups.get(key)??{id:key,samples:0,estimatedWallMs:0};g.samples++;g.estimatedWallMs+=Math.max(0,s.ts-Math.max(from,s.ts-s.delta))/1000;groups.set(key,g);
+  }
+  return {pid:p.pid,tid:p.tid,thread:names.get(`${p.pid}:${p.tid}`),top:[...groups.values()].sort((a,b)=>b.estimatedWallMs-a.estimatedWallMs).slice(0,5).map(g=>{
+   const chain=[],seen=new Set();let id=g.id;while(id&&!seen.has(id)){seen.add(id);chain.push(p.nodes.get(id)?.callFrame);id=parents.get(id);}return {...g,chain};
+  })};
+ }).filter(p=>p.top.length);
+}
 report.limits.push('Window wallMs is clipped to the frame interval; cpuMsUnclipped and maxMs describe complete overlapping scopes, including time outside the interval. The initial partial frame can start at the trace anchor rather than at a prior rAF.');
 await writeFile(compressed?path.replace(/\.json\.gz$/,'-summary.json'):path+'.summary.json',JSON.stringify(report,null,2));
 console.log(JSON.stringify({durationMs:report.durationMs,dataLossOccurred:report.dataLossOccurred,threads:report.threads,longest:longest.slice(0,18),cpu:cpu.map(p=>({...p,top:p.top.slice(0,7)})),frames:report.frames.slice(0,5)},null,2));
