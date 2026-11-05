@@ -1,3 +1,4 @@
+import {actorTickState} from '../src/simulation/worker-actor-tick-states.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -20,3 +21,5 @@ test('world observations are revoked after later changes and never claim autonom
 test('validates observed hyena samples against the confirmed end state',()=>{
  const {state,packet}=sample(),hyenas=(state.raid?.animals??[]).filter(actor=>actor.species==='hyena');const observed={complete:true,actors:hyenas.map(actor=>({actorId:actor.id,samples:[{at:state.elapsed,status:actor.status,motionPhase:actor.motionPhase??null,hasPath:!!actor.path?.length,recovery:!!actor.recovery,fallRemaining:actor.fallRemaining??null,magicImpact:!!actor.magicImpact}]}))};packet.worldMotionTrace.hyenaTickSamples=observed;assert.doesNotThrow(()=>validateConfirmedMotion(packet,state,state.elapsed));if(observed.actors.length){observed.actors[0].samples[0].status='forged';assert.throws(()=>validateConfirmedMotion(packet,state,state.elapsed),/hyena ticks/);}
 });
+
+test('world starts and tick states must match the previously displayed roster',()=>{const {state,packet}=sample(),world=packet.worldMotionTrace,roster=[...(state.raid?.animals??[]),...state.workers];world.actorTickStates={complete:true,actors:roster.map(actor=>({actorId:actor.id,samples:[actorTickState(actor,state.elapsed)]}))};assert.doesNotThrow(()=>validateConfirmedMotion(packet,state,state.elapsed,state));const forged=structuredClone(packet);forged.worldMotionTrace.actors[0].startStatus='forged';assert.throws(()=>validateConfirmedMotion(forged,state,state.elapsed,state),/world actor start/);const wrongTick=structuredClone(packet);wrongTick.worldMotionTrace.actorTickStates.actors[0].samples[0].yaw=123;assert.throws(()=>validateConfirmedMotion(wrongTick,state,state.elapsed,state),/actor tick/);const wrongRoster=structuredClone(state);wrongRoster.workers.pop();assert.throws(()=>validateConfirmedMotion(packet,state,state.elapsed,wrongRoster),/start roster/);});
