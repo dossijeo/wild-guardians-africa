@@ -6,7 +6,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
  const lights=new Map();let lightsRevision=0;
  function addLight(light){if(!light?.isLight||!light.shadow)throw TypeError('Invalid admission shadow light');const count=lights.get(light)??0;lights.set(light,count+1);if(count===0)lightsRevision++;}
  if(shadowLights===null)scene.traverse(node=>{if(node.isLight&&node.shadow)addLight(node);});else for(const light of shadowLights)addLight(light);
- let closed=false,generation=0,active=false,inflightCompiles=0,cancel;const queue=[],targetWaiters=new Set();
+ let closed=false,generation=0,active=false,inflightCompiles=0,cancel;const queue=[],targetWaiters=new Set(),compilingObjects=new Map();
  const cancelled=new Promise(resolve=>{cancel=()=>resolve(Error('Pipeline admission cancelled'));});
  const lost=renderer.backend.device?.lost?.then(info=>Error('WebGPU device lost: '+(info?.message||info?.reason||'unknown')));
  function rejectWaiting(error){for(const item of queue.splice(0)){if(item.onAbort)item.signal.removeEventListener('abort',item.onAbort);item.reject(error);}}
@@ -28,13 +28,13 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
    result.shadowTarget.then(()=>enqueue(item),error=>{if(!closed&&!item.signal?.aborted)retire(error);item.reject(error);});
   },item.reject).finally(()=>{active=false;pump();});
  }
- async function waitForCompilation(pending,signal,{serial=false}={}){
+ async function waitForCompilation(pending,signal,{serial=false,object=null}={}){
   let onAbort;const aborted=signal?new Promise(resolve=>{onAbort=()=>resolve(new DOMException('Pipeline admission cancelled','AbortError'));signal.addEventListener('abort',onAbort,{once:true});if(signal.aborted)onAbort();}):null;
   const compilation=Promise.resolve(pending);
   // Abort cancels publication, not Three's pending compilation. Keep the
   // renderer queue locked until that work settles; otherwise a cancelled
   // compile can overlap a new request or poison its cache afterwards.
-  if(serial){inflightCompiles++;compilation.then(()=>{inflightCompiles--;pump();},error=>{if(signal?.aborted)retire(error);inflightCompiles--;pump();});}
+  if(serial){inflightCompiles++;const deferred=[];compilingObjects.set(object,deferred);const finish=error=>{if(error&&signal?.aborted)retire(error);compilingObjects.delete(object);for(const release of deferred){try{release();}catch(error){retire(error);}}inflightCompiles--;pump();};compilation.then(()=>finish(null),finish);}
   else compilation.catch(error=>{if(signal?.aborted)retire(error);});
   let error;try{error=await Promise.race([compilation.then(()=>null),cancelled,...(lost?[lost]:[]),...(aborted?[aborted]:[])]);}finally{if(onAbort)signal.removeEventListener('abort',onAbort);}
   if(error)throw error;
@@ -71,7 +71,8 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
      for(const [shadow,autoUpdate,needsUpdate] of shadows){shadow.autoUpdate=autoUpdate;shadow.needsUpdate=needsUpdate;}
      if(previousTarget!==undefined)renderer.setRenderTarget(previousTarget,face,level);
     }
-    await waitForCompilation(pending,signal,{serial:true});
+    await waitForCompilation(pending,signal,{serial:true,object});
+    if(signal?.aborted)throw new DOMException('Pipeline admission cancelled','AbortError');
     if(renderer._isDeviceLost===true)throw Error('WebGPU device lost during pipeline admission');
     if(closed||version!==generation)throw Error('Pipeline admission cancelled');
     // A light may have been added or removed while the driver compiled. The
@@ -95,7 +96,8 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
         object.visible=visible;for(const [node,value] of included)node.visible=value;for(const [node,value] of culling)node.frustumCulled=value;
         for(const [shadow,autoUpdate,needsUpdate] of shadows){shadow.autoUpdate=autoUpdate;shadow.needsUpdate=needsUpdate;}
        }
-       await waitForCompilation(shadowPending,signal,{serial:true});
+       await waitForCompilation(shadowPending,signal,{serial:true,object});
+       if(signal?.aborted)throw new DOMException('Pipeline admission cancelled','AbortError');
        if(renderer._isDeviceLost===true)throw Error('WebGPU device lost during shadow admission');
        if(closed||version!==generation)throw Error('Pipeline admission cancelled');
        if(lightsChanged()||target!==light.shadow.map)return execute(object,signal,version,include);
@@ -109,6 +111,9 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
   }
  }
  return {
+  // Removal is immediate; release of the resources used by an active
+  // compilation waits until Three's compilation promise actually settles.
+  deferRelease(object,release){if(!object?.isObject3D||typeof release!=='function')throw TypeError('Invalid deferred release');const deferred=compilingObjects.get(object);if(deferred)deferred.push(release);else release();},
   registerShadowLight(light){if(closed)throw Error('Pipeline admission closed');addLight(light);notifyShadowTargets();let released=false;return ()=>{if(released)return;released=true;const count=lights.get(light)??0;if(count===1){lights.delete(light);lightsRevision++;notifyShadowTargets();}else if(count>1)lights.set(light,count-1);};},
   notifyShadowTargets,
   prepare(object,{signal,include=[]}={}){
