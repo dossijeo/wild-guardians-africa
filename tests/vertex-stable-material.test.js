@@ -37,6 +37,21 @@ test('stable material refuses premature or mismatched texture application', asyn
   assert.equal(x.mesh.material.normalMap, x.material.normalMap);
 });
 
+test('placeholder textures preserve each source sampler and UV channel', async () => {
+  const x = setup();
+  x.material.map.wrapS = THREE.RepeatWrapping;
+  x.material.map.minFilter = THREE.LinearMipmapLinearFilter;
+  x.material.map.channel = 1;
+  x.material.normalMap.wrapS = THREE.ClampToEdgeWrapping;
+  const stable = await makeStableVertexMaterials(x.renderer, x.preview, x.asset(x.material), x.mapping);
+  for (const key of ['mapping', 'channel', 'wrapS', 'wrapT', 'wrapR', 'magFilter', 'minFilter', 'anisotropy', 'colorSpace']) {
+    assert.equal(x.mesh.material.map[key], x.material.map[key], key);
+    assert.equal(x.mesh.material.normalMap[key], x.material.normalMap[key], key);
+  }
+  assert.notEqual(x.mesh.material.map, x.mesh.material.normalMap);
+  stable.dispose();
+});
+
 test('texture blending requires a resolved material and accepts only finite proportions', async () => {
   const x = setup(), stable = await makeStableVertexMaterials(x.renderer, x.preview, x.asset(x.material), x.mapping);
   assert.throws(() => stable.setBlend(.5), /not ready/);

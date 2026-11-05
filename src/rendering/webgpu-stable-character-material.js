@@ -22,10 +22,12 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
   const ready = uniform(0);
   let generation = 0, cancelled = false, resolved = false, applied = false, disposed = false;
   function placeholder(source, normal) {
-    const key = `${source.colorSpace}:${normal}`;
+    const key = JSON.stringify([source.colorSpace, normal, source.mapping, source.channel, source.wrapS, source.wrapT, source.wrapR, source.magFilter, source.minFilter, source.anisotropy]);
     if (!placeholders.has(key)) {
       const pixel = new Uint8Array(normal ? [128, 128, 255, 255] : [255, 255, 255, 255]);
-      const result = new THREE.DataTexture(pixel, 1, 1, THREE.RGBAFormat); result.colorSpace = source.colorSpace; result.flipY = false; result.needsUpdate = true; placeholders.set(key, result);
+      const result = new THREE.DataTexture(pixel, 1, 1, THREE.RGBAFormat);
+      for (const property of ['colorSpace', 'mapping', 'channel', 'wrapS', 'wrapT', 'wrapR', 'magFilter', 'minFilter', 'anisotropy']) result[property] = source[property];
+      result.flipY = false; result.needsUpdate = true; placeholders.set(key, result);
     }
     return placeholders.get(key);
   }
