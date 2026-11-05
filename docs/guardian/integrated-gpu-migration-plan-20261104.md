@@ -153,6 +153,8 @@ La cámara sobre terreno confirmado y las vistas provisionales de construcciones
 
 El arranque experimental traduce ahora sus opciones a ese contrato y conserva un único perfil inmutable para la creación y recuperación del Worker; una incursión que cambie el estado entre ambas no recalcula silenciosamente las opciones de presentación. El arranque normal permanece pendiente.
 
+El mismo contrato incluye selección y comandos de presentación causales: habilitarlos configura el selector, el cliente gráfico y el canal ordenado con la autoridad. Si una autoridad preparada dispone de un perfil distinto, el arranque se rechaza en lugar de conectar extremos incompatibles. La ruta experimental traduce sus opciones existentes; aún falta seleccionar este perfil desde el arranque normal y validar la interacción completa.
+
 Todas las acciones provisionales usan ID y estado de confirmación/rechazo. La presentación no concede recursos ni inventa resultados. Attack conserva gesto encadenable, exclusión de bestias pendientes/derribadas y daño actual. Preparar los recursos físicos de una bestia oportunamente en el Worker autoritativo; no supeditar su carga a la textura ni a la escena gráfica.
 
 Definir explícitamente la política temporal del comando. No reordenar hechos ya confirmados mediante una corrección cosmética. Si una mecánica requiere retroceso causal, necesita checkpoint y replay determinista de todas las dependencias antes de declararse soportada.

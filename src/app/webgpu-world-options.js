@@ -3,7 +3,7 @@ import {webGpuPresentationCapabilities} from '../rendering/webgpu-presentation-c
 export function diagnosticPresentationCapabilities(params,dev){
  if(!(params instanceof URLSearchParams)||typeof dev!=='boolean')throw TypeError('Invalid diagnostic presentation profile');
  const early=dev&&params.has('qa-worker-early-gpu-view');
- return {cameraTerrain:dev&&params.has('qa-webgpu-camera-terrain'),provisionalStructures:early,provisionalCrops:early};
+ return {cameraTerrain:dev&&params.has('qa-webgpu-camera-terrain'),provisionalStructures:early,provisionalCrops:early,picking:dev&&params.has('qa-webgpu-picking'),causalInputs:dev&&params.has('qa-webgpu-causal-input')};
 }
 // One structural profile for both the initial renderer and its replacement.
 // A recovery must not silently switch world features or actor presentation.
@@ -19,7 +19,7 @@ export function webGpuWorldOptions({params,state,field,recovery={},capabilities=
   experimentalAllActors:!params.has('qa-webgpu-single-actor'),
   experimentalMotionFeed:params.has('qa-webgpu-motion')||params.has('qa-webgpu-world-motion'),
   experimentalPresentationInputs:dev&&params.has('qa-webgpu-causal-input'),
-  presentationInputs:dev&&params.has('qa-webgpu-causal-input'),
+  presentationInputs:presentationCapabilities.causalInputs,
   experimentalBakedHyena:params.has('qa-webgpu-baked-hyena'),
   experimentalConfirmedClock:params.has('qa-webgpu-baked-hyena')&&!params.has('qa-webgpu-baked-clock-legacy'),
   experimentalMangroveGround:params.has('qa-webgpu-mangrove-ground'),
