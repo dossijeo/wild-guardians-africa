@@ -42,3 +42,40 @@ implemented. The terrain channel can arrive independently of state; old
 residency versions are currently discarded. A causal chunk-revision manifest,
 retention until a window finishes, water coverage and edge validation remain
 necessary before this data can support an autonomous global timeline.
+
+## Water triangle index: not integrated
+
+A diagnostic index reused the positions already present in the rendered water
+mesh, with per-cell lists of triangle offsets. It evaluated the visible water
+height without calling Wild Engine for each actor. A 5 cm ambiguity margin
+fell back to the existing ground-only placement when water could not be
+confirmed. This is **not** an authoritative fluid query: the mangrove mesh
+clips a nonlinear `wetlandMask` using vertex and centroid samples, and canyon
+water geometry also approximates its continuous shoreline.
+
+In two identical seeded canyon fixtures, 200,000 deterministic points were
+compared with native ground and `fluidLevelAnywhere`. With only the central
+chunk available, seeds 28 and 712 had respectively 181 and 105 points with
+over 5 cm error, up to **0.82 m**, where the ambiguity margin reached a
+missing neighbouring chunk. With all 3×3 neighbours available, neither seed
+had an error over 5 cm in these samples. This is finite evidence, not a proof
+of shoreline equality or a guarantee that a neighbour is resident. The
+candidate was therefore **not connected or enabled**, even behind QA.
+
+Across two runs, building the nine indexes took 2.38/3.48 ms for seed 28 and
+0.29/0.44 ms for seed 712. For 10,000 points, ground-only sampling took
+3.14/3.34 ms and 2.64/1.43 ms respectively; adding the diagnostic water index
+took 6.88/6.03 ms and 12.80/11.27 ms. These are Node CPU observations, not
+frame, GPU, memory-residency or gameplay measurements. Inputs and results are
+in `gpu-animation/resident-water-index-20261105.json`; reproduce with
+`node tools/experiments/audit_resident_water_index.mjs`.
+
+Wild Engine already builds 48×48 water flags and levels at **cell centres**,
+but the current chunk payload transfers neither array. Centre samples alone
+cannot certify the continuous water boundary. A possible next native
+contract is a conservative per-cell classification (water, ground, ambiguous)
+generated alongside existing chunk data, with the chunk's authoritative
+revision and explicit fallback for ambiguous or missing cells. It requires a
+proof against the native continuous predicates, versioned transport and tests
+at shoreline/settlement boundaries before use. It has not been implemented,
+and neither the rendered water nor game physics has been changed.
