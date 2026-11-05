@@ -1764,7 +1764,7 @@ export function tick(s,seconds,nav) {
     if(s.time>=600 && !s.raid && !s.result && (!s.nightPlan?.group?.length||s.nightPlan.done))closeNight(s);
   }
 }
-export function advanceReal(s,seconds,nav,{nightFastForward=true}={}) {
+export function advanceReal(s,seconds,nav,{nightFastForward=true,onTick=null}={}) {
   let left=seconds;
   while(left>1e-9 && !s.pauses.length&&!s.result) {
       prepareClockEvents(s,nav);
@@ -1772,6 +1772,7 @@ export function advanceReal(s,seconds,nav,{nightFastForward=true}={}) {
     const untilBoundary=Math.min(...clockBoundaries(s).filter(t=>t>s.time+1e-9).map(t=>(t-s.time)/speed));
     const real=Math.min(left,.02,untilBoundary);left-=real;
     tick(s,real*speed,nav);
+    if(onTick)onTick();
   }
 }
 export function clockLabel(s) {

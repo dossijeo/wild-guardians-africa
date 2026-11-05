@@ -16,3 +16,7 @@ test('world observations are revoked after later changes and never claim autonom
  const {state,packet}=sample(),feed=createConfirmedMotionFeed(),event={sequence:1,elapsed:state.elapsed,pauses:[],physicsPose:null,worldTrace:packet.worldMotionTrace,terrainChanged:false,eventful:false,terrainReady:true};
  feed.accept({...event,terrainReady:false});assert.equal(feed.getWorld().representable,false);feed.accept({...event,sequence:2});assert.equal(feed.getWorld().representable,true);assert.equal(feed.getWorld().safeForAutonomousPlayback,false);feed.accept({...event,sequence:3,eventful:true});assert.equal(feed.getWorld().representable,false);feed.accept({...event,sequence:4,worldTrace:null});assert.equal(feed.getWorld(),null);feed.dispose();
 });
+
+test('validates observed hyena samples against the confirmed end state',()=>{
+ const {state,packet}=sample(),hyenas=(state.raid?.animals??[]).filter(actor=>actor.species==='hyena');const observed={complete:true,actors:hyenas.map(actor=>({actorId:actor.id,samples:[{at:state.elapsed,status:actor.status,motionPhase:actor.motionPhase??null,hasPath:!!actor.path?.length,recovery:!!actor.recovery,fallRemaining:actor.fallRemaining??null,magicImpact:!!actor.magicImpact}]}))};packet.worldMotionTrace.hyenaTickSamples=observed;assert.doesNotThrow(()=>validateConfirmedMotion(packet,state,state.elapsed));if(observed.actors.length){observed.actors[0].samples[0].status='forged';assert.throws(()=>validateConfirmedMotion(packet,state,state.elapsed),/hyena ticks/);}
+});
