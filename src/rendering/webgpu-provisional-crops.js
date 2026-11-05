@@ -25,6 +25,6 @@ export function createWebGpuProvisionalCrops({now=()=>performance.now(),capacity
    for(const [id,targetId] of pending){const plant=plants.find(p=>p.id===targetId);if(destroyed.has(targetId)||plant&&!plant.alive){pending.delete(id);crops.reject(id);}else if(plant){crops.confirm(id,targetId);pending.delete(id);}}
    return crops.visible(plants);
   },
-  get size(){return crops.entries.size;},get saturated(){return saturated;},clear(){pending.clear();unmatched.clear();abandoned.clear();crops.clear();saturated=false;}
+  get size(){return crops.entries.size;},get needsFrameUpdate(){return crops.needsFrameUpdate;},get saturated(){return saturated;},clear(){pending.clear();unmatched.clear();abandoned.clear();crops.clear();saturated=false;}
  };
 }

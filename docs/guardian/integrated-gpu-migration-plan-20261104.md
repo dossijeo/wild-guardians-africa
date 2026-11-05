@@ -110,6 +110,8 @@ Toda superficie WebGPU con estado confirmado crea ahora el reloj compartido, sin
 
 El viento y las transiciones de crecimiento de cultivos usan ahora ese mismo nodo de tiempo confirmado cuando se ejecutan en la superficie WebGPU, sin mantener otro reloj por reconciliación. La ruta aislada sin reloj compartido conserva su comportamiento anterior. Una prueba comprueba la identidad del nodo en el grafo y que el roster no modifica el reloj. Esta conexión no interpola tiempo entre publicaciones ni migra la hierba continua, que sigue pendiente.
 
+Un cultivo provisional sin confirmar ya no fuerza por sí solo la reconstrucción de los lotes de cultivos en cada fotograma: su posición no cambia hasta recibir datos de confirmación. Las publicaciones y las acciones siguen actualizando los lotes por eventos; durante los 200 ms de reconciliación de posición se conserva la actualización por fotograma. Las pruebas cubren espera indefinida, confirmación, interpolación y rechazo. No se ha medido el ahorro en partida ni se ha trasladado aún la reconciliación a GPU.
+
 **Entrega:** protocolo normal incremental y sincronizadores por cambios. **Cierre interno:** pruebas de orden, acumulación, consumidores lentos, duplicados, restauración y barreras; ausencia de recorrido obligatorio de todos los subsistemas por una modificación local.
 
 ### A3. Material lógico universal y catálogo de pipelines

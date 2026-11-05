@@ -4,6 +4,7 @@ export class ProvisionalCrops {
  begin(id,species,x,z){this.entries.set(id,{plant:{id:`provisional-${id}`,species,x,z,alive:true,growth:0},targetId:null});}
  reject(id){this.entries.delete(id);}
  confirm(id,targetId){const entry=this.entries.get(id);if(entry){entry.targetId=targetId;entry.confirmedAt=this.now();}}
+ get needsFrameUpdate(){for(const entry of this.entries.values())if(entry.targetId)return true;return false;}
  visible(plants){
   if(!this.entries.size)return plants;
   const output=plants.slice(),at=this.now();
