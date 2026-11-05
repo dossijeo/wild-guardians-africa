@@ -62,16 +62,16 @@ los efectos antes de aceptar el replay de publicaciones. Para preservar el
 historial de entradas, esta opción desactiva la coalescencia de la cola visual
 y la compactación del journal. Sus límites y backpressure siguen activos, por
 lo que puede saturarse; no es una optimización de producción. Se mantiene la
-ruta heredada, y aún falta comprobar una caída real del dispositivo y la
-reconexión automática; no se considera resuelta la recuperación arbitraria.
+ruta heredada, y aún falta comprobar la reconexión automática y los efectos de
+trabajo activos ante una caída; no se considera resuelta la recuperación arbitraria.
 
 El host dispone de una operación QA explícita `markVisualLostForQa()`: tras
 comprobar que existe una base reconocida y que el journal es íntegro, separa
 el canal gráfico perdido, abandona solo un candidato aún sin ACK y conserva
 sus publicaciones y eventos. Las publicaciones posteriores siguen entrando
 en el journal acotado; al saturarse se aplica backpressure. La operación no se
-invoca automáticamente y aún necesita una prueba de extremo a extremo con
-pérdida real de dispositivo antes de conectar esa activación.
+invoca automáticamente; la validación de abajo no cubre todas las condiciones
+necesarias para conectar esa activación.
 
 La fixture `tests/browser/worker-visual-loss-recovery.html` prueba el host y la
 autoridad reales con consumidores gráficos y de terreno simulados. En una
@@ -82,7 +82,20 @@ tras el reenganche. No ejecuta WebGPU ni reconstruye partículas reales. Con
 Vite en `http://127.0.0.1:5187` y Playwright accesible mediante `NODE_PATH`, se
 reproduce con `node tools/experiments/audit_worker_visual_loss_recovery.mjs`.
 
-Si se pierde el canal de terreno con un ACK pendiente, la autoridad
-puede seguir ocupada; `markVisualLostForQa()` espera un límite y rechaza la
-operación si este no se alcanza. Ese caso no dispone todavía de recuperación
-demostrada y no debe activar el protocolo automáticamente.
+La fixture retiene también un ACK de terreno. En una ejecución, el comando de
+terreno terminó con el ACK pendiente y el replay entregó los chunks `6,0` y
+`7,0` una vez, antes de la publicación correspondiente. La autoridad guarda
+una copia en el journal antes de transferir los buffers; el ACK de terreno no
+bloquea por sí solo el resultado del comando. Una operación ocupada por otro
+motivo puede agotar el plazo de `markVisualLostForQa()`. Esta prueba usa
+consumidores simulados y no justifica activación automática.
+
+La fixture `tests/browser/worker-webgpu-device-loss.html` destruye el dispositivo
+WebGPU de un Worker Three.js real, recibe la notificación de pérdida y usa el
+protocolo QA manual para crear un nuevo Worker WebGPU y reproducir el journal.
+En dos ejecuciones el checkpoint de base fue 2 y el evento `NightStarted` se
+reprodujo una sola vez; el renderer reemplazado confirmó WebGPU y la autoridad
+aceptó una consulta posterior. Es un escenario de un chunk y un edificio, sin
+personajes ni efectos de trabajo activos; no combina la pérdida con el ACK de
+terreno retenido ni mide rendimiento. Con Vite y Playwright como arriba se
+reproduce con `node tools/experiments/audit_worker_webgpu_device_loss.mjs`.
