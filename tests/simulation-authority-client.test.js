@@ -1,5 +1,12 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {createSimulationAuthorityClient} from '../src/simulation/simulation-authority-client.js';
 function fixture(capacity=2){const sent=[],worker={postMessage:m=>sent.push(m),terminate(){this.terminated=true;}},client=createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session:'s',capacity,workerFactory:()=>worker});return {client,worker,sent,receive:data=>worker.onmessage({data})};}
+test('prepared authority permits one initial terrain bootstrap without enabling recovery',async()=>{
+ const sent=[],worker={postMessage:message=>sent.push(message),terminate(){}},client=createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session:'s',allowTerrainBootstrap:true,workerFactory:()=>worker});
+ assert.equal(sent[0].allowTerrainBootstrap,true);assert.equal(sent[0].qaTerrainJournal,undefined);worker.onmessage({data:{kind:'ready',session:'s'}});await client.ready;
+ await assert.rejects(client.reattachTerrain({}),/Only initial terrain bootstrap/);
+ const pending=client.reattachTerrain({},{bootstrap:true});assert.equal(sent.at(-1).bootstrap,true);worker.onmessage({data:{kind:'terrainReattached',session:'s'}});await pending;
+ await assert.rejects(client.reattachTerrain({},{bootstrap:true}),/Only initial terrain bootstrap/);client.dispose();
+});
 test('journalled authority permits ordered terrain reattachment without QA mode',async()=>{
  const sent=[],worker={postMessage:(message,transfer)=>sent.push({message,transfer}),terminate(){}},client=createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session:'s',onTerrainJournal:()=>{},workerFactory:()=>worker});
  worker.onmessage({data:{kind:'ready',session:'s'}});await client.ready;
