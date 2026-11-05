@@ -14,3 +14,8 @@ test('closing one session cancels its pending requests without affecting another
 test('aborting or losing the auxiliary worker rejects pending opens and releases ownership',async()=>{
  const f=fixture(),controller=new AbortController(),a=f.client.open('/a',{signal:controller.signal}),rejected=assert.rejects(a,{name:'AbortError'});controller.abort();await rejected;assert.equal(f.client.status().sessions,0);const b=f.client.open('/b'),failure=assert.rejects(b,/lost/);f.worker.onerror({message:'lost'});await failure;assert.equal(f.worker.terminated,true);assert.equal(f.client.status().closed,true);
 });
+test('WebP bitmap requests preserve session ownership and close late transfers',async()=>{
+ const f=fixture(),pending=f.client.open('/a');f.reply(f.messages[0],{id:'a',variant:'webp',supportsBitmaps:true});const stream=await pending,metadataPromise=stream.loadMetadata(),metadata={texturePaths:['webp/a.webp']};f.reply(f.messages.at(-1),{metadataId:3,metadata});await metadataPromise;
+ const images=stream.loadBitmaps(metadata),request=f.messages.at(-1),bitmap={close(){this.closed=true;}};f.worker.onmessage({data:{id:request.id,session:request.session,kind:'bitmaps',result:[['webp/a.webp',bitmap]]}});assert.equal((await images).get('webp/a.webp'),bitmap);
+ const late=stream.loadBitmaps(metadata),lateRequest=f.messages.at(-1),rejected=assert.rejects(late,{name:'AbortError'});stream.close();await rejected;const orphan={close(){this.closed=true;}};f.worker.onmessage({data:{id:lateRequest.id,session:lateRequest.session,kind:'bitmaps',result:[['webp/a.webp',orphan]]}});assert.equal(orphan.closed,true);assert.equal(bitmap.closed,undefined);f.client.dispose();
+});

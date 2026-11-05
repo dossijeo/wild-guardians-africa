@@ -12,7 +12,7 @@ self.onmessage=async({data})=>{
    if(sessions.has(session))throw Error('Duplicate character data session');
    const item={controller:new AbortController(),stream:null,metadata:new Map(),nextMetadata:1};sessions.set(session,item);
    const stream=await openCharacterPreviewStream(data.url,{features:data.features,signal:item.controller.signal});
-   if(sessions.get(session)!==item){stream.close();return;}item.stream=stream;self.postMessage({id,session,result:{id:stream.id,variant:stream.variant}});return;
+   if(sessions.get(session)!==item){stream.close();return;}item.stream=stream;self.postMessage({id,session,result:{id:stream.id,variant:stream.variant,supportsBitmaps:typeof createImageBitmap==='function'}});return;
   }
   const item=sessions.get(session);if(!item)throw Error('Character data session closed');
   if(kind==='close'){sessions.delete(session);item.controller.abort();item.stream?.close();return;}
@@ -20,6 +20,12 @@ self.onmessage=async({data})=>{
   if(kind==='preview'){const source=await item.stream.loadPreview(),bytes=await decodeCharacterPreview(source,{signal:item.controller.signal});if(sessions.get(session)!==item)return;self.postMessage({id,session,result:bytes.buffer},[bytes.buffer]);return;}
   if(kind==='metadata'){const metadata=await item.stream.loadMetadata();if(sessions.get(session)!==item)return;const metadataId=item.nextMetadata++;item.metadata.set(metadataId,metadata);self.postMessage({id,session,result:{metadataId,metadata}});return;}
   if(kind==='textures'){const metadata=item.metadata.get(data.metadataId);if(!metadata)throw Error('Invalid character metadata');const files=await item.stream.loadTextures(metadata);if(sessions.get(session)!==item)return;const entries=[...files].map(([path,bytes])=>[path,bytes.buffer]);self.postMessage({id,session,result:entries},entries.map(([,buffer])=>buffer));return;}
+  if(kind==='bitmaps'){
+   if(item.stream.variant!=='webp'||typeof createImageBitmap!=='function')throw Error('Character bitmap decoding unavailable');const metadata=item.metadata.get(data.metadataId);if(!metadata)throw Error('Invalid character metadata');const files=await item.stream.loadTextures(metadata),created=[];
+   const results=await Promise.allSettled([...files].map(async([path,bytes])=>{const bitmap=await createImageBitmap(new Blob([bytes],{type:'image/webp'}),{premultiplyAlpha:'none',colorSpaceConversion:'none'});created.push(bitmap);return [path,bitmap];}));
+   const failure=results.find(result=>result.status==='rejected');if(failure||sessions.get(session)!==item){for(const bitmap of created)bitmap.close();if(failure)throw failure.reason;return;}
+   try{const entries=results.map(result=>result.value);self.postMessage({id,session,kind:'bitmaps',result:entries},entries.map(([,bitmap])=>bitmap));}catch(error){for(const bitmap of created)bitmap.close();throw error;}return;
+  }
   throw Error('Unknown character data request');
  }catch(error){if(sessions.has(session)||kind==='open')self.postMessage({id,session,error:{name:error?.name??'Error',message:String(error?.message??error)}});}
 };
