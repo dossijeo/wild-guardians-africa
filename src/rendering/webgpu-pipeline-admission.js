@@ -3,8 +3,8 @@
 // until the returned promise resolves.
 export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=>{},shadowLights=null}){
  if(!renderer?.backend?.isWebGPUBackend||typeof renderer.compileAsync!=='function'||!scene?.isScene||!camera?.isCamera||typeof onFatal!=='function'||shadowLights!==null&&!Array.isArray(shadowLights))throw TypeError('Invalid pipeline admission');
- const lights=new Map();
- function addLight(light){if(!light?.isLight||!light.shadow)throw TypeError('Invalid admission shadow light');lights.set(light,(lights.get(light)??0)+1);}
+ const lights=new Map();let lightsRevision=0;
+ function addLight(light){if(!light?.isLight||!light.shadow)throw TypeError('Invalid admission shadow light');const count=lights.get(light)??0;lights.set(light,count+1);if(count===0)lightsRevision++;}
  if(shadowLights===null)scene.traverse(node=>{if(node.isLight&&node.shadow)addLight(node);});else for(const light of shadowLights)addLight(light);
  let closed=false,generation=0,active=false,cancel;const queue=[];
  const cancelled=new Promise(resolve=>{cancel=()=>resolve(Error('Pipeline admission cancelled'));});
@@ -23,7 +23,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
     if(renderer._initialized===false||renderer._isDeviceLost===true)throw Error('WebGPU renderer unavailable for pipeline admission');
     // compileAsync builds its render list before its first await. Restore the
     // visibility immediately, before any subsequent frame can render it.
-    const visible=object.visible,previousTarget=renderer.getRenderTarget?.(),face=renderer.getActiveCubeFace?.(),level=renderer.getActiveMipmapLevel?.(),culling=[],shadows=[];let pending;
+    const lightVersion=lightsRevision,visible=object.visible,previousTarget=renderer.getRenderTarget?.(),face=renderer.getActiveCubeFace?.(),level=renderer.getActiveMipmapLevel?.(),culling=[],shadows=[];let pending;
     try{
      // Three's ordinary render may use an intermediate output target; compile
      // for that same target, and restore state before the draw loop resumes.
@@ -47,6 +47,9 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
     if(error)throw error;
     if(renderer._isDeviceLost===true)throw Error('WebGPU device lost during pipeline admission');
     if(closed||version!==generation)throw Error('Pipeline admission cancelled');
+    // A light may have been added or removed while the driver compiled. The
+    // completed pipeline describes the old scene and cannot admit the object.
+    if(lightVersion!==lightsRevision)return execute(object,signal,version);
   }catch(error){
    // Three r180 may retain an unsuccessful pipeline in its internal cache.
    if(!closed&&!signal?.aborted)retire(error);
@@ -54,7 +57,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
   }
  }
  return {
-  registerShadowLight(light){if(closed)throw Error('Pipeline admission closed');addLight(light);let released=false;return ()=>{if(released)return;released=true;const count=lights.get(light)??0;if(count<=1)lights.delete(light);else lights.set(light,count-1);};},
+  registerShadowLight(light){if(closed)throw Error('Pipeline admission closed');addLight(light);let released=false;return ()=>{if(released)return;released=true;const count=lights.get(light)??0;if(count===1){lights.delete(light);lightsRevision++;}else if(count>1)lights.set(light,count-1);};},
   prepare(object,{signal}={}){
    if(closed)return Promise.reject(Error('Pipeline admission closed'));
    if(!object?.isObject3D)return Promise.reject(TypeError('Invalid admission object'));

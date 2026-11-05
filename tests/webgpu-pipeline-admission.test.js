@@ -76,6 +76,29 @@ test('a shared shadow light stays registered until every owner releases it',asyn
  a();a();await admission.prepare(object);b();expected=true;await admission.prepare(object);admission.dispose();
 });
 
+test('a light added during compilation requires preparation against the updated scene',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),sun=new THREE.DirectionalLight(),pending=[];
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(){return new Promise(resolve=>pending.push(resolve));}};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera,shadowLights:[]});let admitted=false;
+ const ready=admission.prepare(object).then(()=>{admitted=true;});await Promise.resolve();assert.equal(pending.length,1);
+ scene.add(sun);admission.registerShadowLight(sun);pending[0]();await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(admitted,false);assert.equal(pending.length,2);pending[1]();await ready;assert.equal(admitted,true);admission.dispose();
+});
+
+test('changing shadow light ownership without changing membership does not restart compilation',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),sun=new THREE.DirectionalLight(),pending=[];
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(){return new Promise(resolve=>pending.push(resolve));}};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera,shadowLights:[sun]}),ready=admission.prepare(object);await Promise.resolve();
+ const release=admission.registerShadowLight(sun);release();pending[0]();await ready;assert.equal(pending.length,1);admission.dispose();
+});
+
+test('removing a shadow light during compilation invalidates that admission',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),sun=new THREE.DirectionalLight(),pending=[];
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(){return new Promise(resolve=>pending.push(resolve));}};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera,shadowLights:[]}),release=admission.registerShadowLight(sun),ready=admission.prepare(object);await Promise.resolve();
+ release();pending[0]();await new Promise(resolve=>setImmediate(resolve));assert.equal(pending.length,2);pending[1]();await ready;admission.dispose();
+});
+
 test('aborting an actor does not retire the shared renderer or publish a late result',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),controller=new AbortController(),failures=[];let finish;
  const renderer={backend:{isWebGPUBackend:true},compileAsync:()=>new Promise(resolve=>{finish=resolve;})};
