@@ -236,6 +236,20 @@ function rigidInstances(){const counts=Object.fromEntries(Object.keys(rigidGeo).
  current=definitions.find(d=>d.id===id);if(!current)throw new Error('Composición VFX desconocida');restartEffect(false);
  return {
   get definition(){return current;},get time(){return clock;},get parts(){return parts;},get rigids(){return rigids;},get wetness(){return wetness;},contacts,
+  // Work-only checkpoint: callbacks and terrain belong to the destination, not
+  // to the serialized state. Callers must provide matching historical inputs.
+  exportWorkCheckpoint(){
+   if(!['dig','water','harvest','dust'].includes(current.id))throw Error('Unsupported work VFX checkpoint');
+   return structuredClone({version:1,id:current.id,config:{density,wind,layers:settings.layers,stepMode,hasSurface:!!surface,hasWaterSource:!!waterSource},clock,seed,eventIndex,parts,rigids,wetness,hitTime,paused});
+  },
+  importWorkCheckpoint(input){
+   const checkpoint=structuredClone(input),config={density,wind,layers:settings.layers,stepMode,hasSurface:!!surface,hasWaterSource:!!waterSource};
+   const validTree=value=>typeof value==='number'?Number.isFinite(value):value===null||typeof value==='string'||typeof value==='boolean'||Array.isArray(value)?Array.isArray(value)?value.every(validTree):true:value&&typeof value==='object'&&Object.values(value).every(validTree);
+   const vector=value=>Array.isArray(value)&&value.length===3&&value.every(Number.isFinite);
+   const numbers=(value,keys)=>keys.every(key=>Number.isFinite(value[key]));
+   if(!checkpoint||checkpoint.version!==1||checkpoint.id!==current.id||!['dig','water','harvest','dust'].includes(current.id)||JSON.stringify(checkpoint.config)!==JSON.stringify(config)||!Number.isFinite(checkpoint.clock)||checkpoint.clock<0||checkpoint.clock>current.duration+1e-7||!Number.isSafeInteger(checkpoint.seed)||checkpoint.seed< -2147483648||checkpoint.seed>2147483647||!Number.isSafeInteger(checkpoint.eventIndex)||checkpoint.eventIndex<0||checkpoint.eventIndex>events.length||events.slice(0,checkpoint.eventIndex).some(event=>event.t>checkpoint.clock+1e-7)||checkpoint.clock>0&&events.slice(checkpoint.eventIndex).some(event=>event.t<=checkpoint.clock+1e-7)||!Number.isFinite(checkpoint.wetness)||!Number.isFinite(checkpoint.hitTime)||typeof checkpoint.paused!=='boolean'||!Array.isArray(checkpoint.parts)||checkpoint.parts.length>MAX_SPRITES||!Array.isArray(checkpoint.rigids)||checkpoint.rigids.length>MAX_RIGIDS||!validTree(checkpoint.parts)||!validTree(checkpoint.rigids)||!checkpoint.parts.every(p=>p&&vector(p.p)&&vector(p.v)&&vector(p.col)&&numbers(p,['age','life','size0','size1','ratio','alpha','orient','emit','angle','spin','soft','drag','gravity','ground','phase'])&&typeof p.tex==='string')||!checkpoint.rigids.every(r=>r&&vector(r.p)&&vector(r.v)&&vector(r.size)&&vector(r.col)&&vector(r.rot)&&vector(r.spin)&&numbers(r,['age','life','gravity','bounce','drag'])&&typeof r.settled==='boolean'&&typeof r.landed==='boolean'&&Object.hasOwn(style,r.kind)&&(!r.flight||vector(r.flight.start)&&vector(r.flight.end)&&numbers(r.flight,['duration','arc'])&&r.flight.duration>0)))throw TypeError('Invalid work VFX checkpoint');
+   restartEffect(false);clock=checkpoint.clock;seed=checkpoint.seed;eventIndex=checkpoint.eventIndex;parts=checkpoint.parts;rigids=checkpoint.rigids;wetness=checkpoint.wetness;hitTime=checkpoint.hitTime;paused=checkpoint.paused;toolPose();
+  },
   get lights(){return {positions:[lightPos0.slice(),lightPos1.slice()],colors:[lightCol0.slice(),lightCol1.slice()]};},
   get tool(){return {visible:toolVisible,matrix:new Float32Array(toolModel)};},
   step(dt){if(!Number.isFinite(dt)||dt<0)throw new Error('Paso VFX inválido');if(dt)simulate(dt);},

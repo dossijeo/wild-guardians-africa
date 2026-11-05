@@ -33,3 +33,13 @@ temporal del emisor y de la superficie, o transferir un checkpoint completo de
 la simulación visual, incluido el estado aleatorio y de eventos. El fallback
 tendría que recibir una versión coherente y seguir funcionando también cuando
 el Worker gráfico falle antes de publicar un checkpoint actualizado.
+
+El simulador nativo ofrece ahora exportación e importación bajo demanda de un
+checkpoint v1 para `dig`, `water`, `harvest` y `dust`. Incluye reloj, RNG,
+cursor de eventos, partículas, sólidos y configuración; recrea localmente los
+callbacks y rechaza datos incompatibles antes de modificar el efecto. Las
+pruebas verifican una continuación determinista con el mismo emisor y suelo.
+El checkpoint no contiene esos callbacks ni el historial de las entradas: el
+receptor debe proporcionar superficies y emisores equivalentes. Tampoco se ha
+conectado al transporte o a la recuperación del gestor, ni garantiza todavía
+la continuidad ante una caída del Worker gráfico. Legacy sigue activo.
