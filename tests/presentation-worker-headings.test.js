@@ -7,7 +7,7 @@ test('tracks legacy worker heading changes without mutating confirmed state',()=
  const tracker=createPresentationWorkerHeadings([{id:'w',yaw:1.2}]),worker={id:'w',status:'walking',x:0,z:0,heading:-.5,path:[{x:1,z:0}]},state={workers:[worker],tasks:[]},before=structuredClone(state);
  assert.deepEqual(tracker.capture(state),[{id:'w',yaw:Math.PI/2}]);assert.deepEqual(state,before);worker.path=[];worker.heading=-2;assert.deepEqual(tracker.capture(state),[]);
  worker.status='acting';worker.taskId='t';state.tasks.push({id:'t',kind:'water'});assert.deepEqual(tracker.capture(state),[{id:'w',yaw:-2}]);worker.downHeading=.7;worker.fallRemaining=1;worker.path=[{x:1,z:1}];assert.deepEqual(tracker.capture(state),[{id:'w',yaw:.7}]);
- worker.status='home';assert.deepEqual(tracker.capture(state),[{id:'w',yaw:null}]);worker.status='walking';assert.deepEqual(tracker.capture(state),[]);
+ worker.status='home';assert.deepEqual(tracker.capture(state),[{id:'w',yaw:null}]);assert.deepEqual(tracker.snapshot(),[]);worker.status='walking';assert.deepEqual(tracker.capture(state),[]);
 });
 test('collapsed visual heading deltas retain the latest per identity and removals',()=>{
  assert.deepEqual(mergePresentationWorkerHeadings([{id:'a',yaw:1},{id:'b',yaw:2}],[{id:'a',yaw:3},{id:'b',yaw:null}]),[{id:'a',yaw:3},{id:'b',yaw:null}]);

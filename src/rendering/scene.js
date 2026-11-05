@@ -776,7 +776,7 @@ export class WorldScene {
   wateringSource(id,time,effect){
     const data=this.mixers.get(id),root=this.objects.get(id),sample=this.wateringEmitters.get(data?.profile);
     if(!data||!sample||!root||!effect)return null;
-    let source=root;const yaw=this.legacyActorRootsDeferred?this.confirmedWorkerVisualHeadings?.get(id):undefined;
+    let source=root;const yaw=this.legacyActorRootsDeferred?this.trackedWorkerVisualYaw(id,root):undefined;
     if(yaw!==undefined){const worker=this.state.workers.find(item=>item.id===id);if(!worker)return null;source=this.deferredWaterRoot??=new THREE.Object3D();source.position.set(worker.x,this.nav.actorSurface(worker.x,worker.z)+.025,worker.z);source.rotation.set(0,yaw,0);source.scale.copy(root.scale);source.updateMatrix();if(root.parent){root.parent.updateWorldMatrix(true,false);source.matrixWorld.multiplyMatrices(root.parent.matrixWorld,source.matrix);}else source.matrixWorld.copy(source.matrix);}
     else root.updateWorldMatrix(true,false);
     sample(time/4.3,this.waterMouth,this.waterDirection);effect.updateWorldMatrix(true,false);
@@ -828,12 +828,19 @@ export class WorldScene {
     if(entity.downHeading!==undefined&&(entity.fallRemaining>0||entity.recovery))mesh.rotation.y=entity.downHeading;
     else if(entity.path?.length){const next=entity.path[0];mesh.rotation.y=Math.atan2(next.x-entity.x,next.z-entity.z);}
   }
+  // A baseline belongs to one particular rig/root pair. If either is lost or
+  // replaced, keep that identity on the legacy path for the rest of session.
+  trackedWorkerVisualYaw(id,root) {
+    const entry=this.confirmedWorkerVisualIdentities?.get(id);if(!entry||entry.revoked||!this.confirmedWorkerVisualHeadings?.has(id))return undefined;
+    if(entry.root!==root||entry.rig!==this.mixers.get(id)){entry.revoked=true;return undefined;}
+    return this.confirmedWorkerVisualHeadings.get(id);
+  }
   // Legacy picking can still be required during resource loading or for a
   // tool not yet migrated. Recreate the confirmed pose only for that request.
   prepareDeferredActorPoses() {
     if(!this.legacyActorPosesDeferred||!this.state)return;
     const actors=[...this.state.workers.filter(w=>w.status!=='home'),...(this.state.raid?.animals.filter(a=>a.status!=='gone')??[])];
-    for(const actor of actors){const root=this.objects.get(actor.id);if(!root||!this.mixers.has(actor.id))continue;const worker='profile' in actor;root.position.set(actor.x,this.nav.actorSurface(actor.x,actor.z)+(worker ? .025 : 0),actor.z);if(worker&&this.confirmedWorkerVisualHeadings?.has(actor.id))root.rotation.y=this.confirmedWorkerVisualHeadings.get(actor.id);this.updateActor(actor,0,worker?'worker':'animal');}
+    for(const actor of actors){const root=this.objects.get(actor.id);if(!root||!this.mixers.has(actor.id))continue;const worker='profile' in actor;root.position.set(actor.x,this.nav.actorSurface(actor.x,actor.z)+(worker ? .025 : 0),actor.z);const yaw=worker?this.trackedWorkerVisualYaw(actor.id,root):undefined;if(yaw!==undefined)root.rotation.y=yaw;this.updateActor(actor,0,worker?'worker':'animal');}
     this.scene.updateMatrixWorld(true);
   }
   prepareUpcomingAnimalRigs(s=this.state,now=performance.now()) {
@@ -855,7 +862,7 @@ export class WorldScene {
   }
   sync(dt,{legacyDraw=true}={}) {
     const s=this.state;if(!s||!this.cropModels)return;
-    const deferActorPoses=!legacyDraw&&this.workerRuntime?.status?.()?.running===true;this.legacyActorPosesDeferred=deferActorPoses;this.legacyActorRootsDeferred=deferActorPoses&&this.confirmedWorkerVisualHeadings instanceof Map;
+    const authorityRunning=this.workerRuntime?.status?.()?.running===true,deferActorPoses=!legacyDraw&&authorityRunning,restoreTrackedHeadings=this.legacyActorRootsDeferred===true&&!deferActorPoses;this.legacyActorPosesDeferred=deferActorPoses;this.legacyActorRootsDeferred=deferActorPoses&&this.confirmedWorkerVisualHeadings instanceof Map;
     this.provisionalWalls?.update();this.provisionalBuildings?.update();
     this.groundDetails?.flush(this.nav.field,s);
     this.awakeningRoots?.flush();
@@ -885,7 +892,7 @@ export class WorldScene {
       }
       // Animals already apply their sole clearance in applyAnimalPose. Adding
       // the generic object offset here made otherwise flat feet visibly float.
-      const deferRoot=this.legacyActorRootsDeferred&&'profile' in e&&this.mixers.has(e.id)&&this.confirmedWorkerVisualHeadings.has(e.id);
+      const workerYaw='profile' in e?this.trackedWorkerVisualYaw(e.id,mesh):undefined,deferRoot=this.legacyActorRootsDeferred&&workerYaw!==undefined;
       if(!deferRoot)mesh.position.set(e.x,('profile' in e||'hitsRemaining' in e?this.nav.actorSurface(e.x,e.z):this.nav.field.surface(e.x,e.z))+('hitsRemaining' in e?0:.025),e.z);
       if(!('value' in e)&&('profile' in e||'hitsRemaining' in e)&&!this.mixers.has(e.id))this.requestActor(e,'profile' in e?'worker':'animal',mesh);
       if('value' in e)mesh.visible=!e.carrierId;
@@ -900,7 +907,7 @@ export class WorldScene {
         if(mesh.userData.stageKey!==key){mesh.clear();mesh.add(this.cropModels[cropIds.indexOf(e.species)*5+stage].clone());mesh.userData.stageKey=key;}
         if(growth<.065){const amount=Math.max(.06,growth/.065);mesh.scale.set(.4+.6*amount,amount,.4+.6*amount);}else mesh.scale.set(1,1,1);
       }
-      if(!('value' in e)&&('profile' in e||'hitsRemaining' in e)){const type='profile' in e?'worker':'animal';if(!deferActorPoses&&type==='worker'&&this.confirmedWorkerVisualHeadings?.has(e.id))mesh.rotation.y=this.confirmedWorkerVisualHeadings.get(e.id);if(deferActorPoses){if(!deferRoot)this.updateDeferredActorRoot(e,mesh,type);}else this.updateActor(e,dt,type);}
+      if(!('value' in e)&&('profile' in e||'hitsRemaining' in e)){const type='profile' in e?'worker':'animal';if(!deferActorPoses&&workerYaw!==undefined&&(authorityRunning||restoreTrackedHeadings))mesh.rotation.y=workerYaw;if(deferActorPoses){if(!deferRoot)this.updateDeferredActorRoot(e,mesh,type);}else this.updateActor(e,dt,type);}
     }
     for(const [id,mesh] of this.objects)if(!desired.has(id)){this.scene.remove(mesh);if(mesh.userData.nativeWall||mesh.userData.nativeBuilding)mesh.dispose();releaseActorRig(this.mixers.get(id));this.objects.delete(id);this.mixers.delete(id);if(mesh.userData.nativeWall||mesh.userData.nativeBuilding||mesh.userData.units||this.cameraExclusion?.registry.roots.has(id)){this.cameraVolumesDirty=true;this.cameraDirtyEntities?.set(id,null);}}
     const night=s.time>=300,tint=night?'#263747':this.pack.profile.bg;
@@ -973,7 +980,7 @@ export class WorldScene {
     if(legacyDraw)this.obstructionStats=updateObstructions(this.chunks,this.camera,this.controls.target,dt,{enabled:this.obstructionEnabled!==false});yield;
     this.farVegetation?.update(farVisualDt);yield;
     if(legacyDraw)this.groupStats=this.assetGroups.update(this.chunks,this.camera,this.renderOrigin,this.sun);yield;
-    if(!this.cinematic)this.updateHands(dt);this.workVfx?.update(this.state);this.attackVfx?.update(this.state);this.shieldVfx?.update(this.state);this.agricultureVfx?.update(this.state);this.guardianSummons?.beforeLods();this.guardianSummons?.update();this.guardianSummons?.updateLods();this.materialVfx?.update(this.state);this.deferredLocomotionYaw??=actor=>this.confirmedWorkerVisualHeadings?.get(actor.id);this.locomotionVfx?.update(this.state,this.objects,this.legacyActorRootsDeferred?this.deferredLocomotionYaw:null);yield;
+    if(!this.cinematic)this.updateHands(dt);const vfxState=this.workerRuntime&&this.confirmedVfxEventWindow?{...this.state,events:this.confirmedVfxEventWindow.sync(this.state.elapsed??0)}:this.state;this.workVfx?.update(this.state);this.attackVfx?.update(vfxState);this.shieldVfx?.update(vfxState);this.agricultureVfx?.update(this.state);this.guardianSummons?.beforeLods();this.guardianSummons?.update();this.guardianSummons?.updateLods();this.materialVfx?.update(vfxState);this.deferredLocomotionYaw??=actor=>this.trackedWorkerVisualYaw(actor.id,this.objects.get(actor.id));this.locomotionVfx?.update(this.state,this.objects,this.legacyActorRootsDeferred?this.deferredLocomotionYaw:null);yield;
     if(legacyDraw)this.toon.uniforms.uWorldOrigin.value.set(this.renderOrigin.x,this.renderOrigin.z);yield;
     if(legacyDraw)this.prepareFrameResources();yield;
   }

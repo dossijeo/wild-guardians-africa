@@ -1,3 +1,5 @@
+import {mergePresentationWorkerHeadings} from './presentation-worker-headings.js';
+
 // Approximate retained-size budget, including snapshots and typed buffers; JS heap overhead varies.
 function estimateBytes(value,seen=new WeakSet()){
  if(typeof value==='string')return value.length*2;
@@ -25,7 +27,7 @@ export function createPresentationRecoveryJournal({capacity=256,highWatermark=12
    if(last===null)return false;
    if(n!==last+1)throw Error('Presentation journal sequence gap');
    const item={kind:'publication',sequence:n,publication:structuredClone(message),tick,options:structuredClone(options)},previous=entries.at(-1),fold=compactTicks&&previous&&!previous.sealed&&candidate!==previous.item.sequence&&quiet(previous.item)&&quiet(item)&&JSON.stringify(previous.item.publication.pauses)===JSON.stringify(item.publication.pauses);
-   if(fold)item.firstSequence=previous.item.firstSequence??previous.item.sequence;
+   if(fold){item.firstSequence=previous.item.firstSequence??previous.item.sequence;const before=previous.item.publication.presentationWorkerHeadings,after=item.publication.presentationWorkerHeadings;if(before!==undefined||after!==undefined)item.publication.presentationWorkerHeadings=mergePresentationWorkerHeadings(before===undefined?[]:before,after===undefined?[]:after);}
    if(!fold&&entries.length>=capacity)throw Error('Presentation recovery journal capacity exceeded');
    const size=estimateBytes(item),retained=bytes-(fold?previous.size:0);if(size>maxBytes-retained)throw Error('Presentation recovery journal byte capacity exceeded');
    if(fold)entries[entries.length-1]={item,size};else entries.push({item,size});bytes=retained+size;last=n;return true;

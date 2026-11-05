@@ -1,13 +1,17 @@
 // Presentation-only compatibility state. The simulation's own heading and
 // navigation are never changed. Only actors supplied by the initial legacy
 // scene are tracked; a removed actor cannot silently inherit an old yaw.
-export function createPresentationWorkerHeadings(seed){
+export function createPresentationWorkerHeadingMap(seed){
  if(!Array.isArray(seed))throw TypeError('Invalid presentation heading baseline');
  const tracked=new Map();for(const item of seed){if(!item||typeof item.id!=='string'||!item.id||!Number.isFinite(item.yaw)||tracked.has(item.id))throw TypeError('Invalid presentation heading baseline');tracked.set(item.id,item.yaw);}
+ return tracked;
+}
+export function createPresentationWorkerHeadings(seed){
+ const tracked=createPresentationWorkerHeadingMap(seed);
  return {
   capture(state){
    if(!Array.isArray(state?.workers)||!Array.isArray(state?.tasks))throw TypeError('Invalid presentation heading state');
-   const workers=new Map();for(const worker of state.workers){if(typeof worker?.id!=='string'||!worker.id||workers.has(worker.id))throw TypeError('Invalid presentation worker');workers.set(worker.id,worker);}
+   if(!tracked.size)return [];const workers=new Map();for(const worker of state.workers){if(typeof worker?.id!=='string'||!worker.id||workers.has(worker.id))throw TypeError('Invalid presentation worker');workers.set(worker.id,worker);}
    let tasks;const changes=[];
    for(const [id,previous] of tracked){const worker=workers.get(id);if(!worker||worker.status==='home'){tracked.delete(id);changes.push({id,yaw:null});continue;}
     let yaw=previous;
@@ -18,6 +22,7 @@ export function createPresentationWorkerHeadings(seed){
    }
    return changes;
   },
+  snapshot(){return [...tracked].map(([id,yaw])=>({id,yaw}));},
   status(){return {tracked:tracked.size};}
  };
 }
@@ -36,3 +41,6 @@ export function preparePresentationWorkerHeadingDeltas(current,changes){
  const seen=new Set(),prepared=[];for(const item of changes){if(!item||typeof item.id!=='string'||!current.has(item.id)||seen.has(item.id)||item.yaw!==null&&!Number.isFinite(item.yaw))throw TypeError('Invalid presentation heading delta');seen.add(item.id);prepared.push({id:item.id,yaw:item.yaw});}return prepared;
 }
 export function applyPresentationWorkerHeadingDeltas(current,prepared){for(const item of prepared)if(item.yaw===null)current.delete(item.id);else current.set(item.id,item.yaw);}
+export function assertPresentationWorkerHeadingCheckpoint(current,seed){
+ if(!(current instanceof Map))throw TypeError('Missing presentation heading baseline');const expected=createPresentationWorkerHeadingMap(seed);if(current.size!==expected.size)throw Error('Presentation heading checkpoint mismatch');for(const [id,yaw] of expected)if(!current.has(id)||!Object.is(current.get(id),yaw))throw Error('Presentation heading checkpoint mismatch');
+}
