@@ -832,6 +832,7 @@ export class WorldScene {
   // replaced, keep that identity on the legacy path for the rest of session.
   trackedWorkerVisualYaw(id,root) {
     const entry=this.confirmedWorkerVisualIdentities?.get(id);if(!entry||entry.revoked||!this.confirmedWorkerVisualHeadings?.has(id))return undefined;
+    if(entry.pending){if(entry.root&&entry.root!==root){entry.revoked=true;return undefined;}entry.root=root;const rig=this.mixers.get(id);if(!rig)return undefined;entry.rig=rig;entry.pending=false;}
     if(entry.root!==root||entry.rig!==this.mixers.get(id)){entry.revoked=true;return undefined;}
     return this.confirmedWorkerVisualHeadings.get(id);
   }

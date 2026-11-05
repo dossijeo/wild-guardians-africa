@@ -23,3 +23,7 @@ test('heading baseline is optional and sent with the authority initialization',(
  const create=seed=>{const sent=[],worker={postMessage:value=>sent.push(value),terminate(){}},client=createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session:'s',...(seed?{presentationWorkerHeadingSeed:seed}:{}),workerFactory:()=>worker});client.ready.catch(()=>{});client.dispose();return sent[0];};
  const seed=[{id:'w',yaw:.7}];assert.deepEqual(create(seed).presentationWorkerHeadingSeed,seed);assert.equal(create(null).presentationWorkerHeadingSeed,undefined);
 });
+test('only new identities are adopted, and removal prevents reuse',()=>{
+ const tracker=createPresentationWorkerHeadings([],{initialWorkerIds:['old']}),state={workers:[{id:'old',status:'walking'},{id:'new',status:'walking',x:0,z:0,path:[{x:1,z:0}]}],tasks:[]};
+ assert.deepEqual(tracker.capture(state),[{id:'new',yaw:Math.PI/2,add:true}]);state.workers[1].status='home';assert.deepEqual(tracker.capture(state),[{id:'new',yaw:null}]);state.workers[1].status='walking';assert.deepEqual(tracker.capture(state),[]);
+});

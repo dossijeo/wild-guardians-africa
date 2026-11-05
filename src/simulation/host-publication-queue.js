@@ -21,7 +21,8 @@ export function createHostPublicationQueue({session,send,diagnostics=false,foldV
  function drain(){if(inFlight)return;while(queue.length){const item=queue.shift();account(item,-1);if(item.kind==='publication'){inFlight=item.publication.sequence;lastSent=inFlight;send({...item,session});return;}send({...item,session});}}
  // A recovery checkpoint needs its exact sequence ACK; never fold it away.
  const terrainStable=publication=>publication.terrainChanged===undefined||publication.terrainChanged===false;
- const eligible=item=>item.kind==='publication'&&item.tick&&!item.publication.terrainCheckpoint&&item.publication.worldMotionTrace===undefined&&terrainStable(item.publication)&&item.publication.unchanged!==true&&Array.isArray(item.publication.events)&&physicsOwners(item.publication)!==null;
+ const headingStable=publication=>publication.presentationWorkerHeadings===undefined||Array.isArray(publication.presentationWorkerHeadings)&&publication.presentationWorkerHeadings.every(item=>item?.add===undefined&&item?.yaw!==null);
+ const eligible=item=>item.kind==='publication'&&item.tick&&!item.publication.terrainCheckpoint&&item.publication.worldMotionTrace===undefined&&headingStable(item.publication)&&terrainStable(item.publication)&&item.publication.unchanged!==true&&Array.isArray(item.publication.events)&&physicsOwners(item.publication)!==null;
  // An invalidation is an ordered boundary even when no gameplay event was
  // emitted. Absorbing it would let a consumer retain an obsolete trajectory.
  const replaceable=item=>eligible(item)&&item.publication.events.length===0&&!(item.publication.presentationJournal?.length)&&!item.publication.motionInvalidation;
