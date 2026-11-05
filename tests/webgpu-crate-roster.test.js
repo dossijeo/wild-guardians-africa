@@ -2,6 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {Scene,Mesh,PlaneGeometry,MeshBasicMaterial,DoubleSide,Group} from 'three';
 import {createWebGpuCrateRoster} from '../src/rendering/webgpu-crate-roster.js';
+test('crate remains unpublished until admission and is released on cancellation',async()=>{
+ const scene=new Scene(),state={crates:[{id:'a',x:0,z:0}]},pending=[],released=[],bank={async acquireCrate(){return {model:new Group(),release(){released.push('crate');}};}};
+ const roster=createWebGpuCrateRoster({scene,residency:{get:()=>null},state,assetBank:bank,pipelineAdmission:{prepare(root,{signal}){assert.equal(root.visible,false);assert.equal(root.parent,null);return new Promise((resolve,reject)=>{pending.push({resolve,signal});signal.addEventListener('abort',()=>reject(new DOMException('cancelled','AbortError')),{once:true});});}}});
+ roster.sync();await flush();assert.equal(scene.children.length,0);assert.equal(roster.status().ready,0);state.crates=[];roster.sync();await flush();assert.equal(pending[0].signal.aborted,true);assert.deepEqual(released,['crate']);
+ state.crates=[{id:'b',x:0,z:0}];roster.sync();await flush();pending[1].resolve();await flush();assert.equal(scene.children.length,1);assert.equal(scene.children[0].visible,false);roster.dispose();assert.deepEqual(released,['crate','crate']);
+});
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
 function fixture(onSelectableChange=()=>{}){const scene=new Scene(),floor=new Mesh(new PlaneGeometry(48,48),new MeshBasicMaterial({side:DoubleSide}));floor.rotation.x=-Math.PI/2;floor.updateMatrixWorld(true);let resident=true,released=0;const pending=[];const bank={acquireCrate:profile=>new Promise(resolve=>pending.push({profile,resolve}))},state={crates:[]},roster=createWebGpuCrateRoster({scene,residency:{get:()=>resident?floor:null},state,assetBank:bank,onSelectableChange});return {scene,state,roster,pending,set resident(value){resident=value;},resolve(index){pending[index].resolve({model:new Group(),release(){released++;}});},get released(){return released;}};}
 test('selectable generation observes crate admission, motion and removal',async()=>{let changes=0;const f=fixture(()=>changes++);f.state.crates=[{id:'a',x:0,z:0}];f.roster.sync();await flush();f.resolve(0);await flush();const admitted=changes;assert.ok(admitted>0);f.state.crates[0].x=1;f.roster.sync();assert.ok(changes>admitted);const moved=changes;f.state.crates[0].delivered=true;f.roster.sync();assert.ok(changes>moved);f.roster.dispose();});
