@@ -1,13 +1,13 @@
 import * as THREE from 'three';
 import {MeshBasicNodeMaterial} from 'three/webgpu';
-import {attribute,cameraProjectionMatrix,cameraViewMatrix,clamp,cos,cross,distance,float,materialReference,min,mix,modelWorldMatrix,normalize,select,sin,smoothstep,texture,varying,vec2,vec3,vec4} from 'three/tsl';
+import {attribute,cameraProjectionMatrix,cameraViewMatrix,clamp,cos,cross,distance,float,reference,min,mix,modelWorldMatrix,normalize,select,sin,smoothstep,texture,varying,vec2,vec3,vec4} from 'three/tsl';
 
 // One graph per atlas; changing an effect's camera or light data never
 // changes the graph. The physical pipeline still depends on render state,
 // geometry layout, target and backend, which Three validates separately.
 export function createWebGpuVfxSpriteGraph(atlas){
  if(!atlas?.isTexture)throw TypeError('Invalid VFX atlas');
- const references={eye:materialReference('_wgVfxEye','vec3'),right:materialReference('_wgVfxRight','vec3'),up:materialReference('_wgVfxUp','vec3'),particle:materialReference('_wgVfxParticle','vec3'),lightPos0:materialReference('_wgVfxLightPos0','vec3'),lightPos1:materialReference('_wgVfxLightPos1','vec3'),lightCol0:materialReference('_wgVfxLightCol0','vec3'),lightCol1:materialReference('_wgVfxLightCol1','vec3')};
+ const references={eye:reference('_wgVfxEye','vec3'),right:reference('_wgVfxRight','vec3'),up:reference('_wgVfxUp','vec3'),particle:reference('_wgVfxParticle','vec3'),lightPos0:reference('_wgVfxLightPos0','vec3'),lightPos1:reference('_wgVfxLightPos1','vec3'),lightCol0:reference('_wgVfxLightCol0','vec3'),lightCol1:reference('_wgVfxLightCol1','vec3')};
  const {eye:uEye,right:uRight,up:uUp,particle:uParticle}=references,lightPos=[references.lightPos0,references.lightPos1],lightCol=[references.lightCol0,references.lightCol1];
  const corner=attribute('aCorner','vec2'),pos=attribute('iPos','vec3'),size=attribute('iSize','vec2'),angle=attribute('iAngle','float'),rect=attribute('iRect','vec4'),next=attribute('iNext','vec4'),color=attribute('iColor','vec4'),params=attribute('iParams','vec4'),direction=attribute('iDirection','vec3');
  const flat=params.y.greaterThan(.5).and(params.y.lessThan(1.5)),vertical=params.y.greaterThan(1.5).and(params.y.lessThan(2.5)),oriented=params.y.greaterThan(3.5),axial=params.y.greaterThan(2.5).and(params.y.lessThanEqual(3.5)),normal=normalize(direction),axis=select(normal.y.abs().greaterThan(.95),vec3(0,0,1),vec3(0,1,0)),orientedRight=normalize(cross(axis,normal)),uprightRight=normalize(cross(vec3(0,1,0),uEye.sub(pos))),axialRight=normalize(cross(normal,uEye.sub(pos)));
@@ -20,7 +20,13 @@ export function createWebGpuVfxSpriteGraph(atlas){
 
 export function createWebGpuVfxSpriteMaterial(graph){
  if(!graph?.vertexNode?.isNode||!graph?.outputNode?.isNode)throw TypeError('Invalid VFX sprite graph');
- const material=new MeshBasicNodeMaterial({transparent:true,depthWrite:false,side:THREE.DoubleSide,toneMapped:false});material.vertexNode=graph.vertexNode;material.outputNode=graph.outputNode;
- material._wgVfxEye=new THREE.Vector3();material._wgVfxRight=new THREE.Vector3(1,0,0);material._wgVfxUp=new THREE.Vector3(0,1,0);material._wgVfxParticle=new THREE.Vector3(1,1,1);for(const suffix of ['LightPos0','LightPos1','LightCol0','LightCol1'])material['_wgVfx'+suffix]=new THREE.Vector3();
- return {material,uEye:{value:material._wgVfxEye},uRight:{value:material._wgVfxRight},uUp:{value:material._wgVfxUp},uParticle:{value:material._wgVfxParticle},lightPos:[{value:material._wgVfxLightPos0},{value:material._wgVfxLightPos1}],lightCol:[{value:material._wgVfxLightCol0},{value:material._wgVfxLightCol1}]};
+ const material=new MeshBasicNodeMaterial({transparent:true,depthWrite:false,side:THREE.DoubleSide,toneMapped:false});material.vertexNode=graph.vertexNode;material.outputNode=graph.outputNode;return material;
+}
+
+// The material and its graph are shared; the references read the current
+// render object, so overlapping effects cannot overwrite each other's data.
+export function bindWebGpuVfxSpriteObject(object){
+ if(!object?.isMesh)throw TypeError('Invalid VFX sprite object');
+ object._wgVfxEye=new THREE.Vector3();object._wgVfxRight=new THREE.Vector3(1,0,0);object._wgVfxUp=new THREE.Vector3(0,1,0);object._wgVfxParticle=new THREE.Vector3(1,1,1);for(const suffix of ['LightPos0','LightPos1','LightCol0','LightCol1'])object['_wgVfx'+suffix]=new THREE.Vector3();
+ return {uEye:{value:object._wgVfxEye},uRight:{value:object._wgVfxRight},uUp:{value:object._wgVfxUp},uParticle:{value:object._wgVfxParticle},lightPos:[{value:object._wgVfxLightPos0},{value:object._wgVfxLightPos1}],lightCol:[{value:object._wgVfxLightCol0},{value:object._wgVfxLightCol1}]};
 }
