@@ -84,6 +84,8 @@ Cuando la recuperación automática está habilitada y el consumidor tiene una c
 
 Los eventos nuevos de impacto en murallas incluyen el material en el hecho confirmado. Audio utiliza ese dato aunque la estructura haya cambiado o desaparecido; los eventos antiguos conservan la consulta de compatibilidad al estado. Esto elimina una dependencia causal concreta para el transporte acumulado, pero otros eventos y consumidores todavía necesitan información del estado posterior, por lo que no se fusionan sus publicaciones indiscriminadamente.
 
+El arranque alojado solicita ahora publicaciones compactas para avances pausados, también al preparar anticipadamente la autoridad. Wild Engine solo las emite cuando certifica ausencia de cambios, eventos, física activa y revisiones que requieran un snapshot; los checkpoints y el seguimiento de movimiento conservan su ruta completa. La opción de publicaciones heredadas mantiene el comportamiento anterior. Las pruebas de contrato comparan estados y secuencias con Wild Engine real; la partida completa y el impacto sobre tiempos de fotograma siguen pendientes.
+
 Usar tiempo de simulación en trayectorias, animaciones confirmadas, pausas, aceleración y restauración. El reloj de feedback provisional se mantiene identificado y se reconcilia con el confirmado.
 
 **Entrega:** protocolo normal incremental y sincronizadores por cambios. **Cierre interno:** pruebas de orden, acumulación, consumidores lentos, duplicados, restauración y barreras; ausencia de recorrido obligatorio de todos los subsistemas por una modificación local.
