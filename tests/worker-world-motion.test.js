@@ -11,3 +11,9 @@ test('observes all animals and workers over one existing movement batch',()=>{
 test('reports roster, chunk and terrain changes without claiming a safe interval',()=>{
  const actor={id:'a',x:0,z:0,status:'idle'},game={elapsed:2,raid:{animals:[actor]},workers:[]},revision={topology:0,chunks:0,terrain:0,payloads:0},capture=captureWorldMotion(game,()=>revision);game.raid.animals.pop();capture.checkpoint();revision.chunks++;revision.payloads++;game.elapsed=3;const result=capture.finish();assert.equal(result.rosterChanged,true);assert.equal(result.actors[0].continuous,false);assert.equal(result.chunkChanged,true);assert.equal(result.terrainChanged,true);assert.equal(result.topologyChanged,false);
 });
+test('captures physics activity across ticks and fails closed on invalid samples',()=>{
+ const game={elapsed:0,raid:{animals:[]},workers:[]},revision={topology:0,chunks:0,terrain:0,payloads:0};let active=false;
+ const capture=captureWorldMotion(game,()=>revision,()=>active);active=true;game.elapsed=1;capture.sampleTick();active=false;game.elapsed=2;capture.sampleTick();assert.deepEqual(capture.finish().physicsActivity,{samplesComplete:true,observed:true});
+ const failed=captureWorldMotion(game,()=>revision,()=>{throw Error('unavailable');});assert.deepEqual(failed.finish().physicsActivity,{samplesComplete:false,observed:false});
+ const missing=captureWorldMotion(game,()=>revision);assert.deepEqual(missing.finish().physicsActivity,{samplesComplete:false,observed:false});
+});

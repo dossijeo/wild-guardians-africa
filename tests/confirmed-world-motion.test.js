@@ -14,8 +14,14 @@ test('validates full observed roster and rejects incomplete, forged or terrain-i
  assert.throws(()=>validateConfirmedMotion({...packet,terrainChanged:true},state,state.elapsed),/observed world/);
 });
 test('world observations are revoked after later changes and never claim autonomous playback',()=>{
- const {state,packet}=sample(),feed=createConfirmedMotionFeed(),event={sequence:1,elapsed:state.elapsed,pauses:[],physicsPose:null,worldTrace:packet.worldMotionTrace,terrainChanged:false,eventful:false,terrainReady:true};
+ const {state,packet}=sample(),feed=createConfirmedMotionFeed(),event={sequence:1,elapsed:state.elapsed,pauses:[],physicsPose:null,worldTrace:{...packet.worldMotionTrace,actorTickStates:{complete:true},physicsActivity:{samplesComplete:true,observed:false}},terrainChanged:false,eventful:false,terrainReady:true};
  feed.accept({...event,terrainReady:false});assert.equal(feed.getWorld().representable,false);feed.accept({...event,sequence:2});assert.equal(feed.getWorld().representable,true);assert.equal(feed.getWorld().safeForAutonomousPlayback,false);feed.accept({...event,sequence:3,eventful:true});assert.equal(feed.getWorld().representable,false);feed.accept({...event,sequence:4,worldTrace:null});assert.equal(feed.getWorld(),null);feed.dispose();
+});
+
+test('rejects incomplete actor samples and physics active anywhere in observed batch',()=>{
+ const {state,packet}=sample(),feed=createConfirmedMotionFeed(),base={sequence:1,elapsed:state.elapsed,pauses:[],physicsPose:null,terrainChanged:false,eventful:false,terrainReady:true},trace={...packet.worldMotionTrace,actorTickStates:{complete:true},physicsActivity:{samplesComplete:true,observed:false}};
+ for(const [i,invalid] of [{...trace,physicsActivity:{samplesComplete:true,observed:true}},{...trace,physicsActivity:{samplesComplete:false,observed:false}},{...trace,physicsActivity:undefined},{...trace,actorTickStates:{complete:false}}].entries()){feed.accept({...base,sequence:i+1,worldTrace:invalid});assert.equal(feed.getWorld().representable,false);}
+ feed.accept({...base,sequence:5,worldTrace:trace});assert.equal(feed.getWorld().representable,true);assert.equal(feed.getWorld().safeForAutonomousPlayback,false);feed.dispose();
 });
 
 test('validates observed hyena samples against the confirmed end state',()=>{
