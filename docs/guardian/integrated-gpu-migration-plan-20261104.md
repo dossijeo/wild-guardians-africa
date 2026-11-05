@@ -60,6 +60,8 @@ Extraer de `WorldScene` los servicios todavía utilizados por cámara, entrada, 
 
 La ruta de producto debe funcionar sin `import.meta.env.DEV` ni parámetros `qa-*`. Los flags se reservan para diagnósticos y reversión temporal, no para habilitar capacidades esenciales. El fallback WebGL se inicializa como alternativa, sin mantener dos mundos vivos. La cobertura de sus contenidos se conserva sin invertir en nuevas optimizaciones WebGL.
 
+El perfil común del Worker gráfico ignora en producción las opciones `qa-*` que antes podían cambiar selección de actores, modelos, trazas, materiales o pases. Las capacidades explícitas siguen aplicándose y el mismo perfil se reutiliza al recuperar la presentación. Una prueba compara el perfil de producción con y sin todos esos parámetros y conserva sus efectos en desarrollo. Esto no activa por sí mismo la ruta WebGPU de producto: el bootstrap, otros usos de opciones de diagnóstico y los subsistemas pendientes siguen por migrar.
+
 **Entrega:** contratos, interfaz única y bootstrap desacoplado. **Cierre interno:** revisión de dependencias y comprobaciones que impiden construir, actualizar o dibujar el mundo antiguo en la ruta WebGPU.
 
 ### A2. Comunicación incremental y reloj común

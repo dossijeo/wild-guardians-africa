@@ -17,22 +17,22 @@ export function diagnosticPresentationCapabilities(params,dev){
 export function webGpuWorldOptions({params,state,field,recovery={},capabilities={},dev=false}={}){
  if(!(params instanceof URLSearchParams)||!state||!field||typeof dev!=='boolean')throw TypeError('Invalid WebGPU world profile');
  const requested=webGpuPresentationCapabilities(capabilities),diagnostic=diagnosticPresentationCapabilities(params,dev),presentationCapabilities=Object.freeze(Object.fromEntries(Object.keys(requested).map(key=>[key,requested[key]||diagnostic[key]])));
- const species=params.get('qa-webgpu-actor'),actor=state.raid?.animals.find(item=>item.status!=='gone'&&(!species||item.species===species)),recoveryProfile=resolvePresentationRecoveryOptions(recovery,{allowQa:dev});
+ const has=key=>dev&&params.has(key),species=dev?params.get('qa-webgpu-actor'):null,actor=state.raid?.animals.find(item=>item.status!=='gone'&&(!species||item.species===species)),recoveryProfile=resolvePresentationRecoveryOptions(recovery,{allowQa:dev});
  return Object.freeze({
   experimentalActorId:actor?.id??null,
-  experimentalActorPackageUrl:params.get('qa-webgpu-character-package')??(actor?.species==='buffalo'?'/content/character-preview/buffalo/package.json':null),
+  experimentalActorPackageUrl:(dev?params.get('qa-webgpu-character-package'):null)??(actor?.species==='buffalo'?'/content/character-preview/buffalo/package.json':null),
   experimentalMinimalWorld:dev&&params.has('qa-worker-early-gpu-view'),
   experimentalEarlyBiome:dev&&params.has('qa-worker-early-biome'),
-  experimentalAllActors:!params.has('qa-webgpu-single-actor'),
-  experimentalMotionFeed:params.has('qa-webgpu-motion')||params.has('qa-webgpu-world-motion'),
+  experimentalAllActors:!has('qa-webgpu-single-actor'),
+  experimentalMotionFeed:has('qa-webgpu-motion')||has('qa-webgpu-world-motion'),
   experimentalPresentationInputs:dev&&params.has('qa-webgpu-causal-input'),
   presentationInputs:presentationCapabilities.causalInputs,
-  experimentalBakedHyena:params.has('qa-webgpu-baked-hyena'),
-  experimentalConfirmedClock:params.has('qa-webgpu-baked-hyena')&&!params.has('qa-webgpu-baked-clock-legacy'),
-  experimentalMangroveGround:params.has('qa-webgpu-mangrove-ground'),
-  experimentalPicking:params.has('qa-webgpu-picking'),
-  experimentalWallFragments:params.has('qa-webgpu-wall-fragments'),
-  experimentalBiomeAttributes:!params.has('qa-webgpu-biome-native'),
+  experimentalBakedHyena:has('qa-webgpu-baked-hyena'),
+  experimentalConfirmedClock:has('qa-webgpu-baked-hyena')&&!has('qa-webgpu-baked-clock-legacy'),
+  experimentalMangroveGround:has('qa-webgpu-mangrove-ground'),
+  experimentalPicking:has('qa-webgpu-picking'),
+  experimentalWallFragments:has('qa-webgpu-wall-fragments'),
+  experimentalBiomeAttributes:!has('qa-webgpu-biome-native'),
   experimentalBiomeShadowCutout:dev&&params.has('qa-webgpu-biome-shadow-cutout'),
   presentationRecovery:recoveryProfile.enabled,
   presentationWorkRecovery:recoveryProfile.enabled&&recoveryProfile.work,

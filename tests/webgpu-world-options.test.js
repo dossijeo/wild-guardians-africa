@@ -22,6 +22,13 @@ test('profile selection ignores removed animals and does not enable development-
  assert.deepEqual(value.presentationCapabilities,{cameraTerrain:false,provisionalStructures:false,provisionalCrops:false,picking:false,causalInputs:false,bakedWalking:false});
 });
 
+test('diagnostic URLs cannot alter the production graphical profile',()=>{
+ const state={raid:{animals:[{id:'lion',species:'lion',status:'active'},{id:'hyena',species:'hyena',status:'active'}]}},field={canyon:false},capabilities={cameraTerrain:true,picking:true,causalInputs:true};
+ const params=new URLSearchParams('qa-webgpu-actor=hyena&qa-webgpu-character-package=%2Funtrusted.json&qa-worker-early-gpu-view&qa-worker-early-biome&qa-webgpu-single-actor&qa-webgpu-motion&qa-webgpu-world-motion&qa-webgpu-causal-input&qa-webgpu-baked-hyena&qa-webgpu-baked-clock-legacy&qa-webgpu-mangrove-ground&qa-webgpu-picking&qa-webgpu-wall-fragments&qa-webgpu-biome-native&qa-webgpu-biome-shadow-cutout&qa-webgpu-camera-terrain');
+ const baseline=webGpuWorldOptions({params:new URLSearchParams(),state,field,capabilities,dev:false}),production=webGpuWorldOptions({params,state,field,capabilities,dev:false}),diagnostic=webGpuWorldOptions({params,state,field,capabilities,dev:true});
+ assert.deepEqual(production,baseline);assert.equal(production.experimentalAllActors,true);assert.equal(production.experimentalActorId,'lion');assert.equal(diagnostic.experimentalActorId,'hyena');assert.equal(diagnostic.experimentalAllActors,false);assert.equal(diagnostic.experimentalMangroveGround,true);
+});
+
 test('the causal QA profile exercises the general presentation input channel',()=>{
  const params=new URLSearchParams('qa-webgpu-causal-input'),state={raid:null};const value=webGpuWorldOptions({params,state,field:{},dev:true});
  assert.equal(value.experimentalPresentationInputs,true);assert.equal(value.presentationInputs,true);
