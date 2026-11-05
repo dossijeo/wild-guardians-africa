@@ -1101,6 +1101,10 @@ simulation ordering and rejection semantics, and compare readiness, memory,
 latency and real frame times; simply running this preparation on the render
 thread would introduce a new source of stutter.
 
+An opt-in `qa-worker-shared-glb` admission reads and parses the species GLB once for both the rig and clips, without sharing the actor rig or mixer. It is disabled by default; `QA_SHARED_GLB=1` selects it in `audit_worker_ui_causal_attack.mjs`. The `?shared-glb` variant of `tests/browser/simulation-authority-dynamic-physics.html` compared this Worker against the original separate-read controller for 277 ordered commands, including 181 steps with both hyena and warthog physics active; state, events and poses matched. Resource-failure tests also check both modes and count one GLB request in shared mode versus two in the reference.
+
+In two successive direct-input GTX 1660 raid runs before the option was gated, shared admission took 441 and 578 ms, compared with 1001 and 870 ms in two earlier separate-read runs. Confirmation times were 1998 and 772 ms versus 1150 and 1091 ms; frame maxima were 1733 and 300 ms versus approximately 200 ms in each earlier run, with only 2–18 sampled intervals. Runs were not alternated and do not establish a reproducible overall improvement or explain the worst frame. This remains an experiment rather than a production default; validate controlled alternating runs, visual input, other species, memory and frame pacing before promotion.
+
 An isolated experiment reused prepared clips by species across independent
 animal mixers; rigs remained per animal. In an alternating isolated
 main-thread comparison, repeat hyena admission took 126/125 ms with prepared
