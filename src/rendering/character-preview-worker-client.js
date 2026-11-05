@@ -5,10 +5,16 @@ export function createCharacterPreviewDataClient({workerFactory=()=>new Worker(n
  const worker=workerFactory(),sessions=new Map(),pending=new Map();let nextSession=1,nextRequest=1,closed=false;
  function fail(error){if(closed)return;closed=true;for(const item of pending.values())item.reject(error);pending.clear();for(const item of sessions.values())item.signal?.removeEventListener('abort',item.onAbort);sessions.clear();worker.terminate();}
  worker.onerror=event=>fail(Error(event.message||'Character data worker failed'));worker.onmessageerror=()=>fail(Error('Character data transfer failed'));
- worker.onmessage=({data})=>{const item=pending.get(data?.id);if(!item||item.session!==data.session){if(data?.kind==='bitmaps'&&Array.isArray(data.result))for(const entry of data.result)entry?.[1]?.close?.();if(data?.kind==='embedded-glb'&&Array.isArray(data.result?.images))for(const image of data.result.images)image?.close?.();return;}pending.delete(data.id);if(data.error){const error=Error(String(data.error.message??'Character data request failed'));error.name=String(data.error.name??'Error');item.reject(error);}else item.resolve(data.result);};
+ worker.onmessage=({data})=>{const item=pending.get(data?.id);if(!item||item.session!==data.session){if(data?.kind==='bitmap')data.result?.close?.();if(data?.kind==='bitmaps'&&Array.isArray(data.result))for(const entry of data.result)entry?.[1]?.close?.();if(data?.kind==='embedded-glb'&&Array.isArray(data.result?.images))for(const image of data.result.images)image?.close?.();return;}pending.delete(data.id);if(data.error){const error=Error(String(data.error.message??'Character data request failed'));error.name=String(data.error.name??'Error');item.reject(error);}else item.resolve(data.result);};
  function request(session,kind,extra={}){if(closed||!sessions.has(session))return Promise.reject(cancelled());const id=nextRequest++;return new Promise((resolve,reject)=>{pending.set(id,{session,resolve,reject});try{worker.postMessage({id,session,kind,...extra});}catch(error){pending.delete(id);reject(error);}});}
  function closeSession(session){const item=sessions.get(session);if(!item)return;sessions.delete(session);item.signal?.removeEventListener('abort',item.onAbort);for(const [id,request] of pending)if(request.session===session){pending.delete(id);request.reject(cancelled());}if(!closed)try{worker.postMessage({id:nextRequest++,session,kind:'close'});}catch(error){fail(error);}}
  return {
+  async loadBitmap(url,{signal}={}){
+   const target=typeof url==='string'?url:url instanceof URL?url.href:'';
+   if(closed||!target||signal!==undefined&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Invalid bitmap request');
+   if(signal?.aborted)throw cancelled();const session=nextSession++,item={signal,onAbort:()=>closeSession(session)};sessions.set(session,item);signal?.addEventListener('abort',item.onAbort,{once:true});if(signal?.aborted){closeSession(session);throw cancelled();}
+   try{return await request(session,'bitmap',{url:target});}finally{closeSession(session);}
+  },
   async prepareEmbeddedGlb(url,{signal}={}){
    const target=typeof url==='string'?url:url instanceof URL?url.href:'';
    if(closed||!target||signal!==undefined&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Invalid embedded GLB request');

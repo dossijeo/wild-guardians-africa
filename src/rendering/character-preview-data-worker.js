@@ -21,6 +21,10 @@ self.onmessage=async({data})=>{
    const item={controller:new AbortController()};sessions.set(session,item);const response=await fetch(data.url,{signal:item.controller.signal});if(!response.ok)throw Error(`GLB HTTP ${response.status}`);const declared=Number(response.headers.get('content-length'));if(Number.isFinite(declared)&&declared>256*1024*1024)throw Error('GLB exceeds limit');const buffer=await response.arrayBuffer();if(buffer.byteLength>256*1024*1024)throw Error('GLB exceeds limit');
    const result=await prepareEmbeddedGlb(new Uint8Array(buffer),{signal:item.controller.signal});if(sessions.get(session)!==item){for(const image of result.images)image.close();return;}try{self.postMessage({id,session,kind:'embedded-glb',result},[result.buffer,...result.images]);}catch(error){for(const image of result.images)image.close();throw error;}return;
   }
+  if(kind==='bitmap'){
+   if(sessions.has(session)||typeof data.url!=='string'||!data.url||typeof createImageBitmap!=='function')throw Error('Bitmap preparation unavailable');
+   const item={controller:new AbortController()};sessions.set(session,item);const response=await fetch(data.url,{signal:item.controller.signal});if(!response.ok)throw Error(`Bitmap HTTP ${response.status}`);const bitmap=await createImageBitmap(await response.blob());if(sessions.get(session)!==item){bitmap.close();return;}try{self.postMessage({id,session,kind:'bitmap',result:bitmap},[bitmap]);}catch(error){bitmap.close();throw error;}return;
+  }
   const item=sessions.get(session);if(!item)throw Error('Character data session closed');
   if(kind==='close'){sessions.delete(session);item.controller.abort();item.stream?.close();return;}
   if(!item.stream)throw Error('Character data session not ready');
@@ -35,5 +39,5 @@ self.onmessage=async({data})=>{
    try{const entries=results.map(result=>result.value);self.postMessage({id,session,kind:'bitmaps',result:entries},entries.map(([,bitmap])=>bitmap));}catch(error){for(const bitmap of created)bitmap.close();throw error;}return;
   }
   throw Error('Unknown character data request');
- }catch(error){if(sessions.has(session)||kind==='open')self.postMessage({id,session,error:{name:error?.name??'Error',message:String(error?.message??error)}});}
+ }catch(error){if(sessions.has(session)||kind==='open'||kind==='bitmap')self.postMessage({id,session,error:{name:error?.name??'Error',message:String(error?.message??error)}});}
 };
