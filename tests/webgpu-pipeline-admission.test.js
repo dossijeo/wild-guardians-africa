@@ -18,7 +18,28 @@ test('failure permits retry and disposal invalidates a pending result',async()=>
  let resolve,count=0;const renderer={backend:{isWebGPUBackend:true},compileAsync(){if(!count++)return Promise.reject(Error('compile failed'));return new Promise(r=>{resolve=r;});}};
  const admission=createWebGpuPipelineAdmission({renderer,scene,camera});
  await assert.rejects(admission.prepare(object),/compile failed/);
- const pending=admission.prepare(object);await Promise.resolve();admission.dispose();resolve();
+ const pending=admission.prepare(object);await Promise.resolve();admission.dispose();
  await assert.rejects(pending,/cancelled/);assert.equal(object.visible,false);
+ resolve();
  await assert.rejects(admission.prepare(object),/closed/);
+});
+
+test('prepares with the actual framebuffer target and restores it before awaiting',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),screen={},framebuffer={};let current=screen,finish;
+ const renderer={backend:{isWebGPUBackend:true},getRenderTarget:()=>current,getActiveCubeFace:()=>2,getActiveMipmapLevel:()=>3,_getFrameBufferTarget:()=>framebuffer,setRenderTarget(target,face,level){current=target;if(target===screen)assert.deepEqual([face,level],[2,3]);},compileAsync(){assert.equal(current,framebuffer);return new Promise(resolve=>{finish=resolve;});}};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera}),pending=admission.prepare(object);
+ await Promise.resolve();assert.equal(current,screen);finish();await pending;admission.dispose();
+});
+
+test('device loss rejects active admission without waiting for the compiler',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group();let lose;
+ const renderer={backend:{isWebGPUBackend:true,device:{lost:new Promise(resolve=>{lose=resolve;})}},compileAsync:()=>new Promise(()=>{})};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera}),pending=admission.prepare(object);
+ await Promise.resolve();lose({reason:'destroyed'});await assert.rejects(pending,/device lost: destroyed/);admission.dispose();
+});
+
+test('preparation includes objects outside the camera and restores their culling',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),mesh=new THREE.Mesh();object.add(mesh);
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(){assert.equal(mesh.frustumCulled,false);return Promise.resolve();}};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera});await admission.prepare(object);assert.equal(mesh.frustumCulled,true);admission.dispose();
 });
