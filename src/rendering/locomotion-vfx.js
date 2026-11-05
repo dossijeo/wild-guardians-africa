@@ -6,13 +6,13 @@ import {movingPose,crossedFootsteps} from './locomotion-contact.js';
 export {movingPose,crossedFootsteps} from './locomotion-contact.js';
 export class LocomotionVfx {
  constructor(library,pipeline,scene,surface,waterAt=()=>null){this.waterAt=waterAt;this.library=library;this.pipeline=pipeline;this.scene=scene;this.surface=surface;this.effects=new Map();this.observations=new Map();this.elapsed=null;}
- update(state,objects=new Map()){
+ update(state,objects=new Map(),headingFor=null){
   if(this.stateRef&&this.stateRef!==state)this.dispose();
   if(this.elapsed!==null&&state.elapsed<this.elapsed)this.dispose();
   if(this.elapsed===state.elapsed)return;
   const dt=this.elapsed===null?0:state.elapsed-this.elapsed,environment=vfxEnvironment(state.time>=300?1:0),observed=new Set();
   for(const actor of [...state.workers,...(state.raid?.animals??[])]){
-   observed.add(actor.id);const pose=movingPose(actor),previous=this.observations.get(actor.id),yaw=objects.get(actor.id)?.rotation.y??actor.heading??0;
+   observed.add(actor.id);const pose=movingPose(actor),previous=this.observations.get(actor.id),yaw=headingFor?.(actor)??objects.get(actor.id)?.rotation.y??actor.heading??0;
    const clip=pose&&FOOTSTEPS.sources[actor.profile??actor.species]?.clips[pose.name];
    // Long observation gaps cannot establish the traversed route. Omit historical
    // dust rather than drawing a straight trail through obstacles after a jump.

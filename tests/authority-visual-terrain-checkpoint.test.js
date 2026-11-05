@@ -15,3 +15,26 @@ test('visual checkpoint captures native resident chunks at the ordered state bou
   const renewal=authority.execute({kind:'snapshot',sequence:3,visualTerrain:true,visualRecoveryOnly:true});assert.equal(renewal.terrainCheckpoint.recoveryOnly,true);assert.deepEqual(renewal.terrainCheckpoint.chunks.map(c=>`${c.cx},${c.cz}`),keys);assert.equal(renewal.snapshot,first.snapshot);assert.equal(first.terrainCheckpoint.recoveryOnly,undefined);
  }finally{authority.dispose();opening.session.dispose();}
 });
+test('terrain change metadata follows native chunk callbacks and survives failed commands',async()=>{
+ const opening=await createSpatialCampaignOpening({seed:712,biome:'sabana',culture:'suajili',slotId:'terrain-boundary'}),keys=[...opening.loaded.keys()],received=[];
+ const authority=createSimulationAuthority(module,serialize(opening.state),keys,{compactViewAcks:true,onTerrainChunk:chunk=>received.push(`${chunk.cx},${chunk.cz}`)});
+ try{
+  const initial=received.length;assert.equal(authority.execute({kind:'snapshot',sequence:1}).terrainChanged,false);assert.equal(received.length,initial);
+  const key=Array.from({length:31},(_,i)=>`${i-15},0`).find(candidate=>!keys.includes(candidate));assert.ok(key);
+  const added=authority.execute({kind:'addChunk',sequence:2,key});assert.equal(added.terrainChanged,true);assert.ok(received.includes(key));
+  assert.equal(authority.execute({kind:'addChunk',sequence:3,key}).terrainChanged,false);
+  const view=authority.execute({kind:'setNavigationView',sequence:4,view:{bounds:[-100,-100,100,100],eye:{x:0,z:0},target:{x:0,z:0}}});assert.equal(view.unchanged,true);assert.equal(view.terrainChanged,false);
+  assert.throws(()=>authority.execute({kind:'not-a-command',sequence:5}),/Unknown simulation command/);
+  assert.equal(authority.execute({kind:'snapshot',sequence:5}).terrainChanged,false);
+ }finally{authority.dispose();opening.session.dispose();}
+});
+test('a chunk callback before a failed command remains a barrier until a successful publication',async()=>{
+ const opening=await createSpatialCampaignOpening({seed:712,biome:'sabana',culture:'suajili',slotId:'terrain-failure-boundary'}),keys=[...opening.loaded.keys()];let fail=false;
+ const authority=createSimulationAuthority(module,serialize(opening.state),keys,{onTerrainChunk:()=>{if(fail)throw Error('chunk callback failed');}});
+ try{
+  assert.equal(authority.execute({kind:'snapshot',sequence:1}).terrainChanged,false);
+  const key=Array.from({length:31},(_,i)=>`${i-15},0`).find(candidate=>!keys.includes(candidate));assert.ok(key);fail=true;
+  assert.throws(()=>authority.execute({kind:'addChunk',sequence:2,key}),/chunk callback failed/);fail=false;
+  assert.equal(authority.execute({kind:'snapshot',sequence:2}).terrainChanged,true);assert.equal(authority.execute({kind:'snapshot',sequence:3}).terrainChanged,false);
+ }finally{authority.dispose();opening.session.dispose();}
+});

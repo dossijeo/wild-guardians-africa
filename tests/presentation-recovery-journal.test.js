@@ -58,6 +58,16 @@ test('compact journal keeps event, pose, terrain, pause and checkpoint boundarie
  assert.equal(entries[0].publication.snapshot,'s3');assert.equal(entries[1].publication.events[0].id,'event-4');j.confirm(10);assert.deepEqual(j.snapshot().entries.map(e=>e.sequence),[11]);
 });
 
+test('compact journal never absorbs a publication carrying a terrain change',()=>{
+ const j=createPresentationRecoveryJournal({compactTicks:true});j.begin(1);j.confirm(1);
+ const quiet=n=>({sequence:n,snapshot:'s'+n,events:[],physicsPose:null,pauses:[],terrainChanged:false});
+ j.append(quiet(2),true);j.append({...quiet(3),terrainChanged:true},true);j.append(quiet(4),true);j.append(quiet(5),true);
+ const entries=j.snapshot().entries;assert.deepEqual(entries.map(entry=>[entry.firstSequence??entry.sequence,entry.sequence]),[[2,2],[3,3],[4,5]]);assert.equal(entries[1].publication.terrainChanged,true);
+});
+test('compact journal treats malformed terrain metadata as a boundary',()=>{
+ for(const terrainChanged of [null,'false',0]){const j=createPresentationRecoveryJournal({compactTicks:true});j.begin(1);j.confirm(1);const quiet=n=>({sequence:n,snapshot:'s'+n,events:[],physicsPose:null,pauses:[]});j.append(quiet(2),true);j.append({...quiet(3),terrainChanged},true);j.append(quiet(4),true);assert.deepEqual(j.snapshot().entries.map(entry=>entry.sequence),[2,3,4]);}
+});
+
 test('reading a replay entry seals it against later folding',()=>{
  const j=createPresentationRecoveryJournal({compactTicks:true});j.begin(1);j.confirm(1);const q=n=>({sequence:n,snapshot:'s'+n,events:[],physicsPose:null,pauses:[]});j.append(q(2),true);assert.equal(j.entry(0).sequence,2);j.append(q(3),true);assert.deepEqual(j.snapshot().entries.map(e=>e.sequence),[2,3]);
 });
@@ -70,7 +80,7 @@ test('compact journal retains one snapshot for a run of 100 eligible ticks',()=>
 });
 
 test('compaction never hides malformed or explicitly present motion and lifecycle data',()=>{
- for(const malformed of [{motionTrace:null},{motionInvalidation:false},{presentationJournal:{}},{physicsPoses:null},{terrainCheckpoint:null},{pauses:null}]){
+ for(const malformed of [{motionTrace:null},{worldMotionTrace:null},{motionInvalidation:false},{presentationJournal:{}},{physicsPoses:null},{terrainCheckpoint:null},{pauses:null}]){
   const j=createPresentationRecoveryJournal({compactTicks:true});j.begin(1);j.confirm(1);const p=n=>({sequence:n,snapshot:'s'+n,events:[],physicsPose:null,pauses:[]});j.append(p(2),true);j.append({...p(3),...malformed},true);assert.equal(j.status().entries,2,JSON.stringify(malformed));
  }
 });

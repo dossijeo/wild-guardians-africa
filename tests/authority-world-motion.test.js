@@ -1,0 +1,26 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {gunzipSync} from 'node:zlib';
+import {deserialize,serialize} from '../src/persistence/snapshots.js';
+import {createSimulationAuthority} from '../src/simulation/simulation-authority.js';
+import {validateConfirmedMotion} from '../src/rendering/confirmed-motion-validation.js';
+import {createConfirmedMotionFeed} from '../src/rendering/confirmed-motion-feed.js';
+import {createConfirmedPresentationStream} from '../src/rendering/confirmed-presentation-stream.js';
+
+test('real Wild Engine observes every moving body without altering simulation or event order',()=>{
+ const module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm')),initial=deserialize(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString()),snapshot=serialize(initial),keys=[];
+ for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)keys.push(`${x},${z}`);
+ const baseline=createSimulationAuthority(module,snapshot,keys),observed=createSimulationAuthority(module,snapshot,keys),feed=createConfirmedMotionFeed({maxActors:512}),visible=deserialize(snapshot),acks=[],errors=[],port={postMessage:message=>acks.push(message.sequence),start(){},close(){}},stream=createConfirmedPresentationStream({port,session:'s',state:visible,terrain:{confirm(){}},onMotion:event=>feed.accept(event),onError:error=>errors.push(error)});
+ try{const left=baseline.execute({kind:'snapshot',sequence:1}),right=observed.execute({kind:'trackPathMotion',sequence:1,actorId:null,world:true});assert.equal(right.value,true);assert.equal(left.snapshot,right.snapshot);port.onmessage({data:{kind:'publication',session:'s',publication:{...right,session:'s'}}});
+  let lastElapsed=right.elapsed,segments=0,actors=0;for(let sequence=2;sequence<=9;sequence++){
+   const command={kind:'advance',sequence,seconds:.05,steps:2,nightFastForward:true},a=baseline.execute(command),b=observed.execute(command);assert.equal(a.snapshot,b.snapshot);assert.deepEqual(a.events,b.events);const next=JSON.parse(b.snapshot);validateConfirmedMotion(b,next,lastElapsed);lastElapsed=b.elapsed;
+   const trace=b.worldMotionTrace;actors=trace.actors.length;segments+=trace.actors.reduce((n,actor)=>n+actor.segments.length,0);assert.equal(actors,next.workers.length+(next.raid?.animals.length??0));
+   port.onmessage({data:{kind:'publication',session:'s',publication:{...b,session:'s'}}});assert.deepEqual(errors,[]);assert.equal(acks.at(-1),sequence);assert.equal(feed.getWorld().safeForAutonomousPlayback,false);
+  }assert.ok(actors>1);assert.ok(segments>0);
+  const pause={kind:'pause',reason:'menu',sequence:10},pa=baseline.execute(pause),pb=observed.execute(pause);assert.equal(pa.snapshot,pb.snapshot);port.onmessage({data:{kind:'publication',session:'s',publication:{...pb,session:'s'}}});assert.equal(feed.getWorld(),null);
+  const advance={kind:'advance',sequence:11,seconds:.05,nightFastForward:true},a=baseline.execute(advance),b=observed.execute(advance);assert.equal(a.snapshot,b.snapshot);assert.equal(b.worldMotionTrace.start,b.worldMotionTrace.end);port.onmessage({data:{kind:'publication',session:'s',publication:{...b,session:'s'}}});assert.equal(feed.getWorld().representable,false);assert.equal(feed.getWorld().safeForAutonomousPlayback,false);assert.deepEqual(errors,[]);
+  const resume={kind:'resume',reason:'menu',sequence:12};assert.equal(baseline.execute(resume).snapshot,observed.execute(resume).snapshot);const stop=observed.execute({kind:'trackPathMotion',sequence:13,actorId:null});assert.equal(stop.value,true);const after=observed.execute({kind:'advance',sequence:14,seconds:.05,nightFastForward:true});assert.equal(after.worldMotionTrace,undefined);
+  const actor=JSON.parse(after.snapshot).raid.animals[0];assert.equal(observed.execute({kind:'trackPathMotion',sequence:15,actorId:actor.id,includePeers:true}).value,true);const single=observed.execute({kind:'advance',sequence:16,seconds:.05,nightFastForward:true});assert.equal(single.motionTrace.actorId,actor.id);assert.equal(single.worldMotionTrace,undefined);assert.equal(observed.execute({kind:'trackPathMotion',sequence:17,actorId:null,world:true}).value,true);const world=observed.execute({kind:'advance',sequence:18,seconds:.05,nightFastForward:true});assert.ok(world.worldMotionTrace);assert.equal(world.motionTrace,undefined);
+ }finally{stream.dispose();feed.dispose();observed.dispose();baseline.dispose();}
+});

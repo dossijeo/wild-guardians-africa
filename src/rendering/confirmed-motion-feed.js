@@ -4,7 +4,7 @@
 // invalidations before using a trace to drive a mesh.
 export function createConfirmedMotionFeed({onChange=()=>{},maxActors=256,maxSegments=64}={}){
  if(typeof onChange!=='function'||!Number.isSafeInteger(maxActors)||maxActors<1||!Number.isSafeInteger(maxSegments)||maxSegments<1)throw TypeError('Invalid confirmed motion feed');
- const actors=new Map();let lastSequence=0,closed=false;
+ const actors=new Map();let lastSequence=0,closed=false,world=null,worldBatches=0;
  function accept(event){
   if(closed)throw Error('Motion feed disposed');if(!Number.isSafeInteger(event?.sequence)||event.sequence<=lastSequence||!Number.isFinite(event.elapsed)||!Array.isArray(event.pauses))throw TypeError('Invalid ordered motion event');
   const trace=event.trace,invalidation=event.invalidation,id=invalidation?.actorId??trace?.actorId,paused=event.pauses.length>0;
@@ -13,6 +13,9 @@ export function createConfirmedMotionFeed({onChange=()=>{},maxActors=256,maxSegm
   const poses=event.physicsPoses??(event.physicsPose?[event.physicsPose]:[]);if(!Array.isArray(poses))throw TypeError('Invalid physical pose list');
   const available=event.physicsAvailable??Object.hasOwn(event,'physicsPose');
   const physicalIds=new Set(poses.filter(p=>p?.active===true&&typeof p.actorId==='string').map(p=>p.actorId));if(event.physicsPose?.active===true&&typeof event.physicsPose.actorId==='string')physicalIds.add(event.physicsPose.actorId);
+  // This remains a historical observation; even a complete X/Z batch is not
+  // a physical-pose, terrain-history or future-movement certificate.
+  if(event.worldTrace){const trace=event.worldTrace,changed=trace.rosterChanged||trace.topologyChanged||trace.chunkChanged||trace.terrainChanged||event.terrainChanged===true||event.eventful===true,representable=!changed&&!paused&&available&&!physicalIds.size&&trace.actors.every(actor=>actor.continuous&&actor.timed&&actor.segments.length<=maxSegments&&actor.segments.every(segment=>segment.t1>segment.t0));world={sequence:event.sequence,trace,representable,safeForAutonomousPlayback:false};worldBatches++;}else if(world)world=null;
   // On every confirmed publication, physical ownership or pause immediately
   // revokes an earlier trace, even if the publication contains no new trace.
   for(const [actorId,previous] of actors){if(actorId===id)continue;const physical=available?physicalIds.has(actorId):previous.physical,expired=previous.trace!==null&&event.elapsed>previous.trace.end.at+1e-8,revoked=physical||paused||!available||expired,needsRevocation=revoked&&previous.trace!==null;if(!needsRevocation&&previous.physical===physical&&previous.paused===paused)continue;
@@ -26,5 +29,5 @@ export function createConfirmedMotionFeed({onChange=()=>{},maxActors=256,maxSegm
   }
   lastSequence=event.sequence;return value;
  }
- return {accept,get(actorId){return actors.get(actorId)??null;},status(){return {closed,lastSequence,actors:actors.size};},dispose(){if(closed)return;closed=true;actors.clear();}};
+ return {accept,get(actorId){return actors.get(actorId)??null;},getWorld(){return world;},status(){return {closed,lastSequence,actors:actors.size,...(worldBatches?{worldBatches,worldActors:world?.trace.actors.length??0,worldRepresentable:world?.representable??false}:{})};},dispose(){if(closed)return;closed=true;world=null;actors.clear();}};
 }

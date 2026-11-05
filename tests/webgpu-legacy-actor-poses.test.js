@@ -7,7 +7,7 @@ import {renderWithOptionalWebGpuPresentation} from '../src/app/webgpu-legacy-dra
 
 function fixture(){
  const calls=[],scene=new Scene(),worker={id:'worker',profile:'youngMale',status:'acting',taskId:'water',x:1,z:2,heading:.6},animal={id:'beast',species:'hyena',hitsRemaining:1,status:'walking',x:3,z:4,heading:.4,path:[{x:4,z:4}]},state={workers:[worker],raid:{animals:[animal]},tasks:[{id:'water',kind:'water'}],structures:[],villages:[],plants:[],crates:[],spells:[],elapsed:1,time:20,day:1,biome:'sabana'},workerRoot=new Group(),animalRoot=new Group();scene.add(workerRoot,animalRoot);
- const owner={state,scene,workerRuntime:{},cropModels:[],objects:new Map([['worker',workerRoot],['beast',animalRoot]]),mixers:new Map([['worker',{}],['beast',{}]]),nav:{actorSurface:()=>5,field:{surface:()=>5}},controls:{target:new Vector3()},renderOrigin:{},cropBatch:{capacity:1,update(){}},provisionalCrops:{visible:values=>values},prepareUpcomingAnimalRigs(){},renderer:{setClearColor(){}},pack:{profile:{bg:'#ffffff'}},destructionPass:{cinemaGroundUniform:{value:{fromArray(){}}}},sun:new DirectionalLight(),ambient:{},updateActor(entity,dt,type){calls.push(['pose',entity.id,dt,type]);},updateDeferredActorRoot:WorldScene.prototype.updateDeferredActorRoot,prepareDeferredActorPoses:WorldScene.prototype.prepareDeferredActorPoses};
+ const owner={state,scene,workerRuntime:{status:()=>({running:true})},cropModels:[],objects:new Map([['worker',workerRoot],['beast',animalRoot]]),mixers:new Map([['worker',{}],['beast',{}]]),nav:{actorSurface:()=>5,field:{surface:()=>5}},controls:{target:new Vector3()},renderOrigin:{},cropBatch:{capacity:1,update(){}},provisionalCrops:{visible:values=>values},prepareUpcomingAnimalRigs(){},renderer:{setClearColor(){}},pack:{profile:{bg:'#ffffff'}},destructionPass:{cinemaGroundUniform:{value:{fromArray(){}}}},sun:new DirectionalLight(),ambient:{},updateActor(entity,dt,type){calls.push(['pose',entity.id,dt,type]);},updateDeferredActorRoot:WorldScene.prototype.updateDeferredActorRoot,prepareDeferredActorPoses:WorldScene.prototype.prepareDeferredActorPoses};
  return {owner,state,worker,animal,workerRoot,animalRoot,calls};
 }
 
@@ -28,6 +28,18 @@ test('a recovering actor keeps down heading before any path heading',()=>{
 test('watering retains its authored emitter and corrected root orientation while poses are deferred',()=>{
  const f=fixture(),effect=new Group();effect.surfaceInverse=new Matrix4();f.owner.scene.add(effect);f.owner.mixers.set('worker',{profile:'youngMale'});f.owner.wateringEmitters=new Map([['youngMale',(_time,position,direction)=>{position.set(0,1,0);direction.set(0,0,1);}]]);f.owner.waterMouth=new Vector3();f.owner.waterDirection=new Vector3();
  WorldScene.prototype.sync.call(f.owner,0,{legacyDraw:false});const result=WorldScene.prototype.wateringSource.call(f.owner,'worker',0,effect);assert.deepEqual(result.position,[1,6.025,2]);assert.ok(Math.abs(result.direction[0]-Math.sin(.6))<1e-10);assert.ok(Math.abs(result.direction[2]-Math.cos(.6))<1e-10);assert.deepEqual(f.calls,[]);
+});
+
+test('tracked Worker roots stay untouched while watering uses confirmed position and visual yaw',()=>{
+ const f=fixture(),effect=new Group();effect.surfaceInverse=new Matrix4();f.owner.scene.add(effect);f.owner.workerRuntime={status:()=>({running:true})};f.owner.confirmedWorkerVisualHeadings=new Map([['worker',1.1]]);f.owner.mixers.set('worker',{profile:'youngMale'});f.owner.wateringEmitters=new Map([['youngMale',(_time,position,direction)=>{position.set(0,1,0);direction.set(0,0,1);}]]);f.owner.waterMouth=new Vector3();f.owner.waterDirection=new Vector3();
+ WorldScene.prototype.sync.call(f.owner,0,{legacyDraw:false});assert.deepEqual(f.workerRoot.position.toArray(),[0,0,0]);assert.equal(f.workerRoot.rotation.y,0);const result=WorldScene.prototype.wateringSource.call(f.owner,'worker',0,effect);assert.deepEqual(result.position,[1,6.025,2]);assert.ok(Math.abs(result.direction[0]-Math.sin(1.1))<1e-10);assert.ok(Math.abs(result.direction[2]-Math.cos(1.1))<1e-10);assert.deepEqual(f.workerRoot.position.toArray(),[0,0,0]);f.owner.prepareDeferredActorPoses();assert.deepEqual(f.workerRoot.position.toArray(),[1,5.025,2]);assert.equal(f.workerRoot.rotation.y,1.1);
+});
+
+test('untracked workers and failed authority retain the legacy root update',()=>{
+ const f=fixture();f.owner.workerRuntime={status:()=>({running:true})};f.owner.confirmedWorkerVisualHeadings=new Map();WorldScene.prototype.sync.call(f.owner,0,{legacyDraw:false});assert.deepEqual(f.workerRoot.position.toArray(),[1,5.025,2]);f.workerRoot.position.set(0,0,0);f.owner.confirmedWorkerVisualHeadings.set('worker',.6);f.owner.workerRuntime={status:()=>({running:false})};WorldScene.prototype.sync.call(f.owner,0,{legacyDraw:false});assert.deepEqual(f.workerRoot.position.toArray(),[1,5.025,2]);assert.equal(f.owner.legacyActorPosesDeferred,false);assert.deepEqual(f.calls.map(call=>call[1]),['worker','beast']);
+});
+test('a missing rig keeps its root current while it is requested again',()=>{
+ const f=fixture();f.owner.workerRuntime={status:()=>({running:true})};f.owner.confirmedWorkerVisualHeadings=new Map([['worker',.6]]);f.owner.mixers.delete('worker');f.owner.requestActor=(entity,type)=>f.calls.push(['request',entity.id,type]);WorldScene.prototype.sync.call(f.owner,0,{legacyDraw:false});assert.deepEqual(f.workerRoot.position.toArray(),[1,5.025,2]);assert.deepEqual(f.calls,[['request','worker','worker']]);
 });
 
 test('legacy raycast refreshes current actor poses and matrices, terrain-only picking does not',()=>{

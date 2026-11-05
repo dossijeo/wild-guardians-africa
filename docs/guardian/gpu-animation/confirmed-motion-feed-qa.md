@@ -198,3 +198,39 @@ visual effects are not yet governed by this clock. Node tests cover two real
 hyena rigs, phases and fallback, and holding/committing a publication. They do
 not prove WGSL rendering, visual parity, shadow behavior or a performance
 gain; those need a bounded real WebGPU session.
+
+## Whole-world motion observation (QA)
+
+`qa-webgpu-world-motion` activates a mutually exclusive alternative to the
+single-actor observer. For each existing authority `advance` batch it reuses
+the movement observer to capture every animal and worker's timed X/Z segments,
+endpoint statuses and radii. It reports roster, topology, chunk and terrain
+changes. The main and WebGPU presentation receivers validate the sequence,
+times, IDs and endpoints; the WebGPU feed records the observation but always
+sets `safeForAutonomousPlayback: false`. A batch with missing or inconsistent
+data is rejected; movement, physics, game rules and displayed actors are not
+controlled by this feed. No world-motion batch is folded into another queued
+publication, because doing so would discard segments. The QA flag is off by
+default and can add work and backpressure.
+
+Two isolated Edge runs used two real browser simulation Workers and the same
+Wild Engine mangrove raid fixture. In each, 42 actors produced 3,652 segments
+over 20 batches; snapshots and ordered events matched the unobserved authority.
+Three batches were not representable by the feed's conservative conditions.
+After four warm-up batches, 16 paired measurements per run included Worker
+round-trip, snapshot parsing and validation; the observed path also updated
+its feed. Baseline mean/p95/p99 were **21.92/33.12/33.12 ms** and
+**22.38/28.58/28.58 ms**; observation mean/p95/p99 were
+**23.31/28.90/28.90 ms** and **22.97/28.76/28.76 ms**. Each trace averaged
+36,412 bytes. With only 16 samples, p95 and p99 equal the maximum and are not
+reliable tail estimates. Dynamic Rapier physics was not enabled in this
+fixture. These are not full-game, GPU, render or FPS results,
+and do not demonstrate an overall improvement. Results and scope are in
+`world-motion-worker-ab-20261105.json`; the reproducible entry point is
+`tools/experiments/audit_world_motion_worker.mjs` with a local Vite server.
+
+The observations still lack intermediate vertical support, physical poses,
+full actor animation and a global presentation clock. Change flags alone do
+not retain prior terrain or structural revisions. A complete, ordered global
+timeline and a validated, bounded display horizon remain necessary before a
+real actor can use these paths for autonomous GPU playback.

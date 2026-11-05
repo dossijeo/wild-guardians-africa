@@ -2,6 +2,17 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHostPublicationQueue} from '../src/simulation/host-publication-queue.js';
 const packet=(sequence,events=[],physicsPose=null)=>({sequence,events,physicsPose,snapshot:String(sequence)});
+test('confirmed terrain changes remain barriers for quiet ticks and folded views',()=>{
+ const sent=[],q=createHostPublicationQueue({session:'s',foldViews:true,send:value=>sent.push(value)});
+ q.publication(packet(1),true);q.publication({...packet(2),terrainChanged:true},true);q.publication({...packet(3),terrainChanged:false},true);q.publication({...packet(4),terrainChanged:false},true);
+ q.ack(1);assert.equal(sent[1].publication.sequence,2);assert.equal(sent[1].publication.terrainChanged,true);q.ack(2);assert.equal(sent[2].firstSequence,3);assert.equal(sent[2].publication.sequence,4);q.ack(4);
+ const view=n=>({sequence:n,unchanged:true,slotId:'s',stateSequence:1,elapsed:0,pauses:[],saveAvailable:true,events:[]});
+ q.publication(packet(5),true);q.publication({...view(6),terrainChanged:true},false,{backgroundView:true});q.publication({...view(7),terrainChanged:false},false,{backgroundView:true});q.publication({...view(8),terrainChanged:false},false,{backgroundView:true});
+ q.ack(5);assert.equal(sent[4].publication.sequence,6);assert.equal(sent[4].publication.terrainChanged,true);q.ack(6);assert.equal(sent[5].firstSequence,7);assert.equal(sent[5].publication.sequence,8);
+});
+test('malformed terrain metadata cannot be folded across a publication',()=>{
+ for(const terrainChanged of [null,'false',0]){const sent=[],q=createHostPublicationQueue({session:'s',send:value=>sent.push(value)});q.publication(packet(1),true);q.publication({...packet(2),terrainChanged},true);q.publication(packet(3),true);q.ack(1);assert.equal(sent[1].publication.sequence,2);q.ack(2);assert.equal(sent[2].publication.sequence,3);}
+});
 test('folding preserves observed path segments and refuses discontinuous boundaries',()=>{
  const sent=[],q=createHostPublicationQueue({session:'s',send:value=>sent.push(value)}),trace=(start,end)=>({actorId:'a',start:{at:start,x:start,z:0},end:{at:end,x:end,z:0},segments:[{at:end,x0:start,z0:0,x1:end,z1:0,t0:start,t1:end}],continuous:true,timed:true});
  q.publication(packet(1),true);q.publication({...packet(2),motionTrace:trace(0,1)},true);q.publication({...packet(3),motionTrace:trace(1,2)},true);q.publication({...packet(4),motionTrace:trace(3,4)},true);q.ack(1);
