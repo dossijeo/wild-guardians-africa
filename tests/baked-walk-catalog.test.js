@@ -1,0 +1,27 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {createHash,webcrypto} from 'node:crypto';
+import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
+import {loadBakedWalkAsset} from '../src/rendering/baked-walk-catalog.js';
+
+const sha=data=>createHash('sha256').update(data).digest('hex');
+async function fetchFile(url){const data=await readFile('public'+url);return {ok:true,json:async()=>JSON.parse(data.toString()),arrayBuffer:async()=>data.buffer.slice(data.byteOffset,data.byteOffset+data.byteLength)};}
+
+test('catalogue assets match their original model and load for every species',async()=>{
+ for(const [species,config] of Object.entries(ANIMAL_ACTIONS.animals)){
+  const meta=JSON.parse(await readFile(`public/content/gpu-walk/${species}/walking.json`,'utf8')),source=await readFile('public'+config.url);assert.equal(sha(source),meta.sourceSha256);
+  const asset=await loadBakedWalkAsset(species,{fetcher:fetchFile,subtle:webcrypto.subtle});assert.equal(asset.meta.species,species);assert.ok(asset.texture.isDataTexture);asset.dispose();
+ }
+});
+
+test('catalogue rejects altered data and metadata without creating a texture',async()=>{
+ const tampered=async url=>{const response=await fetchFile(url);if(url.endsWith('.bin'))return {...response,arrayBuffer:async()=>{const data=await response.arrayBuffer();new Uint8Array(data)[0]^=1;return data;}};return response;};
+ await assert.rejects(loadBakedWalkAsset('hyena',{fetcher:tampered,subtle:webcrypto.subtle}),/checksum mismatch/);
+ const mismatched=async url=>{const response=await fetchFile(url);if(url.endsWith('.json'))return {...response,json:async()=>({...await response.json(),sourceSha256:'0'.repeat(64)})};return response;};
+ await assert.rejects(loadBakedWalkAsset('hyena',{fetcher:mismatched,subtle:webcrypto.subtle}),/source mismatch/);
+});
+
+test('cancellation during asynchronous verification cannot publish an asset',async()=>{
+ const controller=new AbortController();let finish,started;const verifying=new Promise(resolve=>{started=resolve;}),pending=loadBakedWalkAsset('hyena',{signal:controller.signal,fetcher:fetchFile,subtle:{digest(){started();return new Promise(resolve=>{finish=resolve;});}}});await verifying;controller.abort();finish(new Uint8Array(32).buffer);await assert.rejects(pending,{name:'AbortError'});
+});
