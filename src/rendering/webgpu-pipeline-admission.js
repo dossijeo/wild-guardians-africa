@@ -106,6 +106,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
     // A light may have been added or removed while the driver compiled. The
     // completed pipeline describes the old scene and cannot admit the object.
     if(lightsChanged()||!sameInputs(inputs,pipelineInputs(object,frameTarget())))return execute(object,signal,version,include);
+    const preparedShadowTargets=[];
     if(includeShadowPass){
      let castsShadow=false;object.traverse(node=>{if((node.isMesh||node.isLine||node.isPoints)&&node.castShadow)castsShadow=true;});
      if(castsShadow){
@@ -129,8 +130,24 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
        if(renderer._isDeviceLost===true)throw Error('WebGPU device lost during shadow admission');
        if(closed||version!==generation)throw Error('Pipeline admission cancelled');
        if(lightsChanged()||target!==light.shadow.map||!sameInputs(inputs,pipelineInputs(object,frameTarget())))return execute(object,signal,version,include);
+       preparedShadowTargets.push([light,target]);
       }
      }
+    }
+    // Three's compileAsync updates the render object's geometry and bindings,
+    // submitting initial uploads, but does not wait for GPU queue completion.
+    // Fence only work already submitted; the render loop continues normally.
+    // Keep resource ownership until the fence settles even if publication is
+    // cancelled, exactly as for an in-flight pipeline compilation.
+    const queue=renderer.backend.device?.queue;
+    if(typeof queue?.onSubmittedWorkDone==='function'){
+     const submitted=Promise.resolve(queue.onSubmittedWorkDone()),deviceLost=renderer.backend.device.lost;
+     const fence=deviceLost?Promise.race([submitted,deviceLost.then(info=>{throw Error('WebGPU device lost: '+(info?.message||info?.reason||'unknown'));})]):submitted;
+     await waitForCompilation(fence,signal,{serial:true,object});
+     if(signal?.aborted)throw new DOMException('Pipeline admission cancelled','AbortError');
+     if(renderer._isDeviceLost===true)throw Error('WebGPU device lost during resource admission');
+     if(closed||version!==generation)throw Error('Pipeline admission cancelled');
+     if(lightsChanged()||preparedShadowTargets.some(([light,target])=>light.shadow.map!==target)||!sameInputs(inputs,pipelineInputs(object,frameTarget())))return execute(object,signal,version,include);
     }
   }catch(error){
    // Three r180 may retain an unsuccessful pipeline in its internal cache.

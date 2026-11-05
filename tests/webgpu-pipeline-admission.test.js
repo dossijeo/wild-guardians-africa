@@ -18,6 +18,31 @@ test('preparation remains hidden while compilation is pending and serializes req
  resolve();await first;await Promise.resolve();assert.equal(calls.length,2);resolve();await second;admission.dispose();
 });
 
+test('admission waits for submitted GPU work without exposing the object',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group();object.visible=false;let finishFence,admitted=false;const renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone:()=>new Promise(resolve=>{finishFence=resolve;})}}},compileAsync:()=>Promise.resolve()},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),ready=admission.prepare(object).then(()=>{admitted=true;});
+ await new Promise(resolve=>setImmediate(resolve));assert.equal(admitted,false);assert.equal(object.visible,false);finishFence();await ready;assert.equal(admitted,true);admission.dispose();
+});
+
+test('cancelled admission retains resources until its GPU fence settles',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),controller=new AbortController();let finishFence,released=0;const renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone:()=>new Promise(resolve=>{finishFence=resolve;})}}},compileAsync:()=>Promise.resolve()},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),ready=admission.prepare(object,{signal:controller.signal});
+ await new Promise(resolve=>setImmediate(resolve));controller.abort();await assert.rejects(ready,/cancelled/);admission.deferRelease(object,()=>released++);assert.equal(released,0);finishFence();await new Promise(resolve=>setImmediate(resolve));assert.equal(released,1);admission.dispose();
+});
+
+test('device loss releases a cancelled admission even if its GPU fence never settles',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),controller=new AbortController();let lose,released=0;const renderer={backend:{isWebGPUBackend:true,device:{lost:new Promise(resolve=>{lose=resolve;}),queue:{onSubmittedWorkDone:()=>new Promise(()=>{})}}},compileAsync:()=>Promise.resolve()},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),ready=admission.prepare(object,{signal:controller.signal});
+ await new Promise(resolve=>setImmediate(resolve));controller.abort();await assert.rejects(ready,/cancelled/);admission.deferRelease(object,()=>released++);assert.equal(released,0);lose({reason:'destroyed'});await new Promise(resolve=>setImmediate(resolve));assert.equal(released,1);admission.dispose();
+});
+
+test('structural changes while uploads are pending trigger a new compilation',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Mesh(new THREE.BufferGeometry(),new THREE.MeshBasicMaterial()),fences=[];let compiles=0;const renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone:()=>new Promise(resolve=>fences.push(resolve))}}},compileAsync:()=>{compiles++;return Promise.resolve();}},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),ready=admission.prepare(object),turn=()=>new Promise(resolve=>setImmediate(resolve));
+ await turn();object.material.needsUpdate=true;fences[0]();await turn();assert.equal(compiles,2);assert.equal(fences.length,2);fences[1]();await ready;admission.dispose();object.geometry.dispose();object.material.dispose();
+});
+
+test('a shadow target replaced during the GPU fence is prepared again',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Mesh(new THREE.BufferGeometry(),new THREE.MeshBasicMaterial()),sun=new THREE.DirectionalLight(),fences=[];sun.castShadow=true;object.castShadow=true;sun.shadow.map={};let colors=0,shadows=0;const renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone:()=>new Promise(resolve=>fences.push(resolve))}}},compileAsync:()=>{colors++;return Promise.resolve();},compileShadowAsync:()=>{shadows++;return Promise.resolve();}},admission=createWebGpuPipelineAdmission({renderer,scene,camera,shadowLights:[sun],includeShadowPass:true}),ready=admission.prepare(object),turn=()=>new Promise(resolve=>setImmediate(resolve));
+ await turn();sun.shadow.map={};fences[0]();await turn();assert.equal(colors,2);assert.equal(shadows,2);fences[1]();await ready;admission.dispose();object.geometry.dispose();object.material.dispose();
+});
+
 test('failed compilation retires the renderer instead of retrying its poisoned cache',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group();object.visible=false;
  const failures=[],renderer={backend:{isWebGPUBackend:true},compileAsync:()=>Promise.reject(Error('compile failed'))};
