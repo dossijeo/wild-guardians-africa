@@ -49,6 +49,19 @@ test('preparation includes objects outside the camera and restores their culling
  const admission=createWebGpuPipelineAdmission({renderer,scene,camera});await admission.prepare(object);assert.equal(mesh.frustumCulled,true);admission.dispose();
 });
 
+test('compilation suppresses implicit shadow updates only during synchronous setup',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),sun=new THREE.DirectionalLight();scene.add(sun);sun.castShadow=true;sun.shadow.autoUpdate=true;sun.shadow.needsUpdate=true;let finish;
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(){assert.equal(sun.castShadow,true);assert.equal(sun.shadow.autoUpdate,false);assert.equal(sun.shadow.needsUpdate,false);return new Promise(resolve=>{finish=resolve;});}};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera}),pending=admission.prepare(object);await Promise.resolve();
+ assert.equal(sun.shadow.autoUpdate,true);assert.equal(sun.shadow.needsUpdate,true);finish();await pending;admission.dispose();
+});
+
+test('synchronous preparation failure restores the original shadow flags',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),sun=new THREE.DirectionalLight();scene.add(sun);sun.shadow.autoUpdate=true;sun.shadow.needsUpdate=true;
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(){throw Error('setup failed');}},admission=createWebGpuPipelineAdmission({renderer,scene,camera});
+ await assert.rejects(admission.prepare(object),/setup failed/);assert.equal(sun.shadow.autoUpdate,true);assert.equal(sun.shadow.needsUpdate,true);
+});
+
 test('aborting an actor does not retire the shared renderer or publish a late result',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),controller=new AbortController(),failures=[];let finish;
  const renderer={backend:{isWebGPUBackend:true},compileAsync:()=>new Promise(resolve=>{finish=resolve;})};
