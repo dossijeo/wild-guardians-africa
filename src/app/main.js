@@ -581,7 +581,7 @@ function cancelTool(){cropSelectionGeneration++;world?.cancelTutorialFocus?.();i
 function toggleAwakening(){
   if(tool?.kind==='awakening'){cancelTool();return;}
   if(!permission(state,'awakening')||(state.awakenings?.progress??0)<100)return;
-  closeSurface();cancelTool();selection=null;if(world?.workerGpuOnly){const owner=world;owner.webGpuWorld?.client.prepareGuardian().catch(failure=>{if(owner===world)error(failure.message);});}armTool({kind:'awakening'});
+  closeSurface();cancelTool();selection=null;if(world?.workerGpuOnly){const owner=world;owner.webGpuWorld?.client.prepareGuardian({awakening:true}).catch(failure=>{if(owner===world)error(failure.message);});}armTool({kind:'awakening'});
   commandFeedback='Toca una planta o muralla. Cancelar conserva la carga.';
 }
 function confirmAwakening(){
