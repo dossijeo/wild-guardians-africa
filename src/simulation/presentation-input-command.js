@@ -3,5 +3,5 @@
 export function isPresentationInputCommand(command){
  if(!command||typeof command.id!=='string'||!command.id)return false;
  if(command.kind==='castAttack')return !!command.guardianContext;
- return ['plant','placeStructure','buildWallChain'].includes(command.kind);
+ return ['plant','placeStructure','buildWallChain','castAgricultural','bless'].includes(command.kind);
 }

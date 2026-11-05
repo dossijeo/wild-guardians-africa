@@ -28,8 +28,7 @@ export async function prepareWildEngineWorld(world,state,payload,{signal,loaded=
       // margin. Loaded worlds retain the recipe stored in their snapshot.
       state.mangroveSettlementVersion=2;
     }
-    const params=new URLSearchParams(globalThis.location?.search??'');
-    const start=await (import.meta.env.DEV&&params.has('qa-worker-early-gpu-view')&&params.has('qa-worker-no-webgl')?findSpatialStartInWorker(module,state,payload,{signal}):findSpatialStart(module,state,payload,{signal}));
+    const start=await (world.metadataOnlySpatial===true?findSpatialStartInWorker(module,state,payload,{signal}):findSpatialStart(module,state,payload,{signal}));
     Object.assign(state.villages[0],start.site);
     state.suppressed.push(...start.site.suppress);
     state.wildEngineWorldVersion=WILD_ENGINE_WORLD_VERSION;
