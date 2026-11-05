@@ -20,10 +20,10 @@ export function createConfirmedGpuMotion({actorId,clock,maxSegments=64}={}){
  function install(trace,publicationSequence){
   if(disposed)throw Error('GPU motion disposed');if(!Number.isSafeInteger(publicationSequence)||publicationSequence<=sequence)throw Error('Stale motion publication');
   if(!trace||trace.actorId!==actorId||trace.continuous!==true||trace.timed!==true||!Array.isArray(trace.segments)||trace.segments.length>maxSegments)throw TypeError('Unusable confirmed motion trace');
-  const {start,end}=trace,valid=p=>p&&[p.at,p.x,p.z].every(Number.isFinite);if(!valid(start)||!valid(end)||start.at<0||end.at<start.at||![start.at,end.at-start.at,start.x,start.z].every(value=>Number.isFinite(Math.fround(value))))throw TypeError('Invalid motion boundaries');
+  const {start,end}=trace,valid=p=>p&&[p.at,p.x,p.z].every(Number.isFinite);if(!valid(start)||!valid(end)||start.at<0||end.at<start.at||![start.at,end.at,end.at-start.at,start.x,start.z].every(value=>Number.isFinite(Math.fround(value)))||end.at>start.at&&Math.fround(end.at)<=Math.fround(start.at))throw TypeError('Invalid motion boundaries');
   const next=new Float32Array(data.length);let x=start.x,z=start.z,last=start.at;
   for(const [i,s] of trace.segments.entries()){
-   if(!s||![s.x0,s.z0,s.x1,s.z1,s.t0,s.t1].every(Number.isFinite)||s.x0!==x||s.z0!==z||s.t0<last-1e-8||s.t1<=s.t0||s.t1>end.at+1e-8)throw TypeError('Invalid confirmed motion segment');
+   if(!s||![s.x0,s.z0,s.x1,s.z1,s.t0,s.t1].every(Number.isFinite)||s.x0!==x||s.z0!==z||s.t0<last-1e-8||s.t1<=s.t0||s.t1>end.at+1e-8||!Number.isFinite(Math.fround(s.t0))||!Number.isFinite(Math.fround(s.t1))||Math.fround(s.t1)<=Math.fround(s.t0))throw TypeError('Invalid confirmed motion segment');
    const j=i*8;next[j]=s.t0-start.at;next[j+1]=s.t1-start.at;next[j+2]=s.x0;next[j+3]=s.z0;next[j+4]=s.x1;next[j+5]=s.z1;if(next[j+1]<=next[j]||!next.slice(j,j+6).every(Number.isFinite))throw TypeError('Motion cannot be represented on GPU');x=s.x1;z=s.z1;last=s.t1;
   }
   if(x!==end.x||z!==end.z)throw TypeError('Motion endpoint differs from confirmed state');

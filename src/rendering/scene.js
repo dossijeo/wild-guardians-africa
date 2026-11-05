@@ -151,7 +151,7 @@ export class WorldScene {
     const ktxParams=import.meta.env.DEV?new URLSearchParams(this.requestedVisualSearch):null,ktxVariant=ktxParams?.get('qa-ktx2-atlas'),ktxAsset=ktxParams?.get('qa-ktx2-asset')??'savanna';if((['etc1s','uastc','bc7'].includes(ktxVariant))&&(['savanna','tree01','savanna-normal'].includes(ktxAsset)))this.assets.experimentalKtx={renderer:this.renderer,variant:ktxVariant,asset:ktxAsset};
     if(ktxParams?.has('qa-ktx2-hyena-lod'))this.assets.experimentalNativeModel={renderer:this.renderer};
     this.renderer.setClearColor('#cbd5be');this.renderer.toneMapping=THREE.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1;
-    this.controls=new OrbitControls(this.camera,canvas);this.controls.enableDamping=true;configureTerrainControls(this.controls);this.releaseCameraIntent=installTerrainCameraIntent(this.camera,this.controls,()=>this.nav?.field);this.controls.enableRotate=true;this.controls.mouseButtons={LEFT:THREE.MOUSE.PAN,MIDDLE:THREE.MOUSE.DOLLY,RIGHT:THREE.MOUSE.ROTATE};
+    this.controls=new OrbitControls(this.camera,canvas);this.controls.enableDamping=true;configureTerrainControls(this.controls);this.releaseCameraIntent=installTerrainCameraIntent(this.camera,this.controls,()=>this.cameraField());this.controls.enableRotate=true;this.controls.mouseButtons={LEFT:THREE.MOUSE.PAN,MIDDLE:THREE.MOUSE.DOLLY,RIGHT:THREE.MOUSE.ROTATE};
     this.sun=new THREE.DirectionalLight('#ffe2a8',3);this.sun.position.set(-30,55,25);this.sun.castShadow=true;this.sun.shadow.mapSize.set(1024,1024);configureShadowCamera(this.sun);updateShadowCamera(this.sun,this.controls.target);this.sun.shadow.bias=0;this.releaseNativeShadow=installNativeShadow(this.renderer,this.sun,this.toon.shadowUniforms);this.releaseAssetShadows=installAssetShadows(this.renderer,()=>this.assetGroups.enabled?this.assetGroups.shadowChunks:this.chunks,this.scene);
     this.scene.add(this.sun,this.sun.target);this.ambient=new THREE.HemisphereLight('#ebf1d9','#765b3b',2);this.scene.add(this.ambient);
     this.destructionPass=new BuildingDestructionPass(this.renderer,this.sun,this.ambient);this.destructionPass.visualSearch=this.visualSearch;this.destructionPass.cinemaGroundUniform={value:new THREE.Vector3()};this.destructionPass.worldOriginUniform=this.toon.uniforms.uWorldOrigin;this.destructionPass.fineNoiseUniform=this.toon.uniforms.uFineNoise;this.buildingTemplates=new Map();
@@ -283,7 +283,7 @@ export class WorldScene {
     this.locomotionVfx=new LocomotionVfx(this.vfxLibrary,this.destructionPass,this.scene,(x,z)=>renderedTerrainSurface(this.nav.field,x,z),(x,z)=>this.nav.field.canyon?this.nav.field.waterInfo(x,z):null);await milestone('vfx');
     this.guardianSummons=new GuardianSummons(this);await this.loadReady(this.guardianSummons.ready);
     this.beastPhysics=await this.loadReady(BeastCombatPhysics.create(this),late=>late.dispose());
-    this.raidCamera=new RaidCameraDirector(this.camera,this.controls,nav.field);this.focusFarm();
+    this.raidCamera=new RaidCameraDirector(this.camera,this.controls,this.cameraField());this.focusFarm();
     const initialFarRegion=this.loadingCpuBudget&&loadingProgress&&farVegetation?startInitialFarRegion(this,farVegetation===true?{}:farVegetation):null;
     this.chunkStream=spatialSession?.stream??new NativeChunkStream(this.nav.config,this.pack.profile,{loaded:()=>this.chunks,onData:data=>this.installChunk(data),onError:error=>this.onError?.(error),onFallback:error=>console.warn('GeneraciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n local de chunks:',error.message??error)});
     this.syncChunks();await phase('load-chunks-horizon-ready',()=>this.loadReady(Promise.all([this.chunkStream.whenReady(),this.horizon.whenReady()])));if(this.disposed)throw new Error('Carga de mundo cancelada');this.syncChunks();await milestone('chunks');
@@ -360,18 +360,18 @@ export class WorldScene {
       let eye=motion.resolve(pose.eye,previous?.eye,seconds,{reset:context==='focus'});
       // A focus/first pose must recover from the requested destination, rather
       // than an intermediate nearest-face exit that terrain would undo.
-      const terrain=constrainCameraToTerrain(context==='focus'||!previous?pose.eye:eye,motion,this.nav.field,clearance);
+      const field=this.cameraField(),terrain=constrainCameraToTerrain(context==='focus'||!previous?pose.eye:eye,motion,field,clearance);
       if(terrain.point.some((value,i)=>Math.abs(value-eye[i])>motion.skin))motion.corrected=motion.stats.corrected=true;
       eye=terrain.point;
       motion.stats.unresolved||=!terrain.resolved;motion.stats.terrainRecoveryIterations=terrain.iterations;
-      const ground=this.nav.field.surface(eye[0],eye[2]);motion.stats.terrainConflict=eye[1]<ground+2||eye[1]>ground+clearance;motion.stats.maxClearance=clearance;
+      const ground=field.surface(eye[0],eye[2]);motion.stats.terrainConflict=eye[1]<ground+2||eye[1]>ground+clearance;motion.stats.maxClearance=clearance;
       return {...pose,eye,altitude:eye[1]-ground};
     };
     resolve.clearance=(target,distance,previous)=>{
       refresh();trees?.sync(this.chunks,this.chunkRevision);
-      const field=this.nav.field,r=Math.min(100,distance)+3,ground=field.surface(target[0],target[2]);
+      const field=this.cameraField(),r=Math.min(100,distance)+3,ground=field.surface(target[0],target[2]);
       const key=[target[0],target[2],r,registry.index.revision].join('|');
-      if(roofCache?.key!==key){let roof=20;for(const box of registry.index.queryXZ(target[0]-r,target[2]-r,target[0]+r,target[2]+r))roof=Math.max(roof,box.worldMax[1]-ground+3);roofCache={key,roof};}
+      if(roofCache?.key!==key||roofCache.field!==field){let roof=20;for(const box of registry.index.queryXZ(target[0]-r,target[2]-r,target[0]+r,target[2]+r))roof=Math.max(roof,box.worldMax[1]-ground+3);roofCache={key,roof,field};}
       // Keep the previous safe altitude while leaving a tall roof's neighborhood.
       // Descending remains a player action; crossing its edge cannot slam the
       // camera down onto the roof merely because the ordinary ceiling resumes.
@@ -380,7 +380,7 @@ export class WorldScene {
     resolve.minimumDistance=target=>{
       // Only a large building at the point of interest restricts close zoom.
       // Nearby crops/NPCs retain the ordinary four-metre orbital distance.
-      let minimum=4;const ground=this.nav.field.surface(target[0],target[2]);
+      let minimum=4;const ground=this.cameraField().surface(target[0],target[2]);
       for(const box of registry.index.queryXZ(target[0]-3,target[2]-3,target[0]+3,target[2]+3)){
         if(String(box.id).startsWith('camera-tree:')||String(box.id).startsWith('camera-wall:'))continue;
         const cx=(box.min[0]+box.max[0])/2,cz=(box.min[2]+box.max[2])/2,c=Math.cos(box.yaw??0),s=Math.sin(box.yaw??0),dx=target[0]-cx,dz=target[2]-cz;
@@ -396,8 +396,10 @@ export class WorldScene {
     const release=installCameraPoseResolver(this.camera,resolve);
     this.releaseCameraExclusion=()=>{release();trees?.clear();walls.clear();registry.clear();};
   }
-  updateCamera(){return updateTerrainCamera(this.camera,this.controls,this.nav?.field);}
-  focus(point) {this.raidCamera?.cancel();if(this.nav)focusTerrainCamera(this.camera,this.controls,this.nav.field,point);}
+  cameraField(){return this.cameraTerrainField??this.nav?.field;}
+  setCameraTerrainField(field){if(field!==null&&(!field||typeof field.surface!=='function'||typeof field.canyon!=='boolean'))throw TypeError('Invalid camera terrain field');this.cameraTerrainField=field;if(this.raidCamera)this.raidCamera.field=this.cameraField();}
+  updateCamera(){return updateTerrainCamera(this.camera,this.controls,this.cameraField());}
+  focus(point) {this.raidCamera?.cancel();if(this.nav)focusTerrainCamera(this.camera,this.controls,this.cameraField(),point);}
   focusFarm(){this.focus(farmHomeFocus(this.state));}
   focusTutorialPlacement(kind){
     const target=tutorialHandTarget(this.state,this.nav,kind);
@@ -917,7 +919,7 @@ export class WorldScene {
     updateShadowCamera(this.sun,this.controls.target);
   }
   pick(event,{terrainOnly=false}={}) {
-    protectTerrainCamera(this.camera,this.controls,this.nav?.field);
+    protectTerrainCamera(this.camera,this.controls,this.cameraField());
     const rect=this.canvas.getBoundingClientRect();this.cursor.set((event.clientX-rect.left)/rect.width*2-1,-(event.clientY-rect.top)/rect.height*2+1);this.raycaster.setFromCamera(this.cursor,this.camera);
     if(terrainOnly){const ground=this.raycaster.intersectObjects(this.terrainMeshes,false)[0];return {entityId:null,point:ground?{x:ground.point.x,z:ground.point.z}:null};}
     this.prepareDeferredActorPoses();

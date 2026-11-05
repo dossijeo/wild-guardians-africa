@@ -39,3 +39,9 @@ Con `qa-worker-early-native` y un guardado que contenga el checkpoint, Continue 
 
 
 La fixture de host real prepara la autoridad sin ticks, adjunta dos puertos con ACK, recibe los dos chunks originales, comprueba el primer snapshot y prueba el adaptador receptor y cancelación durante prepare. No ejecuta WorldScene ni WebGPU y no prueba pausas, progreso de campaña o Rapier; recuperación gráfica QA no es compatible con este bootstrap.
+
+### Host preparado + WebGPU + Rapier (fixture acotada)
+
+`tests/browser/worker-early-webgpu-rapier.html` crea un guardado desde una captura real de incursión de sabana, cierra esa primera autoridad y prepara un host con otra autoridad desde el guardado, sin ticks antes del handoff. Conecta una presentación Three.js WebGPU real en OffscreenCanvas de 32×32; comprueba el primer estado confirmado, el terreno, otro guardado desde el host y una pose Rapier activa tras impactar una hiena. La segunda ejecución observó 3 chunks residentes tras demanda (2 iniciales), guardado con 3 chunks, pose de 23 huesos y secuencia física 16 alcanzada por presentación 16, sin errores. Esto verifica la recepción de la publicación, no la paridad visual del rig ni una partida completa con WorldScene. El estado inicial es una captura real de incursión y se añade una pausa de fixture antes de la preparación.
+
+Con Vite en 5194: `$env:NODE_PATH='C:\Users\Gabriel\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules'; .\.cache\tooling\node20.exe tools/experiments/audit_worker_early_webgpu_rapier.mjs`. No se realizó prueba de rendimiento ni del flujo visual completo de Continue.

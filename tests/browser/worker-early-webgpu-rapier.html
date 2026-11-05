@@ -1,0 +1,27 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {captureNativeAuthorityBootstrap} from '../../src/simulation/native-authority-bootstrap.js';
+import {savedNativeAuthorityOptions} from '../../src/simulation/native-authority-checkpoint.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+import {createWorkerSaveCoordinator} from '../../src/persistence/worker-save.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {createConfirmedPresentationAdapter} from '../../src/simulation/confirmed-presentation-adapter.js';
+import {createConfirmedStateReceiver} from '../../src/simulation/confirmed-state-receiver.js';
+import {createWorkerHostedRuntime} from '../../src/simulation/worker-hosted-runtime.js';
+import {createWebGpuWorldClient} from '../../src/rendering/webgpu-world-client.js';
+const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+async function until(predicate,label){for(let i=0;i<250;i++){const value=await predicate();if(value)return value;await sleep(40);}throw Error('Timeout: '+label);}
+window.audit=async()=>{
+ const chunks=['2,0','2,1'],fixture=await createSimulation({chunkKeys:chunks}),{game,nav,session:native}=fixture.diagnosticWorld(),animal=game.raid?.animals.find(a=>a.species==='hyena'&&a.status!=='gone');if(!animal)throw Error('No hyena in raid');
+ game.pauses.push('bootstrap-fixture');nav.setActiveBounds([72,-24,120,72]);nav.setRaidView({x:110,z:30},{x:90,z:15});const capture=captureNativeAuthorityBootstrap(game,nav,native),target={id:animal.id,x:animal.x,z:animal.z};fixture.dispose();
+ const source=createSimulationAuthorityClient({snapshot:capture.snapshot,chunkKeys:capture.chunkKeys,raidWaitBindings:capture.raidWaitBindings,navigationView:capture.navigationView,nativeBootstrap:{version:1,chunkKeys:capture.chunkKeys,spatialState:capture.spatialState},session:'early-source'});let saved=null,runtime=null,render=null,canvas=null;
+ try{await source.ready;const save=createWorkerSaveCoordinator({runtime:{submit(c){const r=source.submit(c);if(!r.accepted)throw Error(r.reason);return r.result;}},repository:{save(s){saved=structuredClone(s);}},slotId:game.slotId,experimentalNativeAuthority:true,now:()=>123});if(!(await save.request()).saved)throw Error('Initial save failed');source.dispose();
+  const snapshot=serialize(saved),options=savedNativeAuthorityOptions(snapshot),state=structuredClone(saved),id='early-webgpu-rapier',adapter=createConfirmedPresentationAdapter(state,id),errors=[];runtime=createWorkerHostedRuntime({confirmedReceiver:adapter,session:id,clientOptions:{...options,dynamicPhysics:true,authoredCenterTemplates:true},runtimeOptions:{coalescePublications:true},onError:e=>errors.push(String(e?.message??e))});await runtime.prepare();if(runtime.status().running||adapter.status().sequence!==0||state.elapsed!==saved.elapsed)throw Error('Prepared simulation advanced');
+  canvas=document.createElement('canvas');canvas.width=canvas.height=32;document.body.append(canvas);render=createWebGpuWorldClient({canvas,session:id,snapshot,camera:{x:110,y:30,z:55,targetX:95,targetY:0,targetZ:25},width:32,height:32,onError:e=>errors.push(String(e?.message??e))});await render.ready;if(render.status().backend!=='WebGPU')throw Error('Not WebGPU');adapter.attach(createConfirmedStateReceiver(state,id));const first=await runtime.start({terrainPort:render.terrainPort,presentationPort:render.presentationPort});if(first.elapsed!==saved.elapsed)throw Error('First snapshot advanced');
+  const terrain=await until(async()=>{const result=await render.inspect();return result.resident>=2&&result.state.sequence>=first.sequence?result:null;},'resident terrain');
+  let savedAgain;const coordinator=createWorkerSaveCoordinator({runtime,repository:{save(s){savedAgain=structuredClone(s);}},slotId:state.slotId,experimentalNativeAuthority:true,now:()=>124});if(!(await coordinator.request()).saved||savedAgain.workerNativeAuthorityCheckpoint?.chunkKeys.length<2)throw Error('Hosted save failed');
+  await runtime.submit({kind:'resume',reason:'bootstrap-fixture'});const hit=await runtime.submit({kind:'castAttack',id:'early-webgpu-hit',targetId:target.id,x:target.x,z:target.z});if(!hit.value)throw Error('Attack rejected: '+hit.rejection);
+  const active=await until(async()=>{const result=await runtime.submit({kind:'snapshot'});return result.physicsPose?.active?result:null;},'Rapier impact');const inspection=await until(async()=>{const value=await render.inspect();return value.state.sequence>=active.sequence?value:null;},'active pose presentation sequence');if(inspection.backend!=='WebGPU'||errors.length)throw Error('Render failure: '+errors.join('; '));return {backend:inspection.backend,firstElapsed:first.elapsed,terrainResident:terrain.resident,savedChunks:savedAgain.workerNativeAuthorityCheckpoint.chunkKeys.length,actorId:target.id,activePose:active.physicsPose.active,physicsSequence:active.sequence,presentationSequence:inspection.state.sequence,bones:active.physicsPose.bones.length,errors,scope:'Prepared host + real simulation Worker + Rapier + Three WebGPU OffscreenCanvas 32x32; original raid fixture, two initial chunks; no WorldScene or visual rig parity.'};
+ }finally{source.dispose();runtime?.dispose();render?.dispose();canvas?.remove();}
+};window.ready=true;
+</script>
