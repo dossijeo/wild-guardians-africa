@@ -27,3 +27,10 @@ pan de 2 a 1,9 aun restaurando la pose. Por tanto restaurar solo la cámara y
 el objetivo no preserva la entrada. Antes de inyectar esta vista deben
 resolverse también los acumuladores internos del control, el primer cambio de
 fuente con pose segura, focus/pick diferidos y la equivalencia de exclusiones.
+
+Se probó después un snapshot explícito de los acumuladores de OrbitControls
+r180 con eventos reales: restauró un único giro, pan o rueda, pero no reprodujo
+la trayectoria ni el damping de dos movimientos recibidos mientras faltaba
+terreno. El segundo guard también se descartó. Un reintento seguro necesita
+preservar y reproducir el orden de las intenciones, además de validar foco,
+selección y exclusiones; la fuente sigue sin inyectarse.
