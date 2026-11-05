@@ -141,6 +141,8 @@ La primera implementación usa intervalos confirmados y coherentes de movimiento
 
 Proporcionar una interfaz común de clips precocinados, mezclas, expresiones y LOD. Pausa y aceleración modifican el reloj común. Los casos de física/IK necesarios para la autoridad continúan en CPU. Las excepciones visuales justificadas se ejecutan en el Worker gráfico, con transferencia explícita de propiedad de pose y sin evaluar a la vez otra presentación GPU.
 
+El flujo confirmado comunica la relación actual de trabajadores y animales al observador de movimiento. Al desaparecer una entidad, este emite una invalidación antes de liberar su entrada; una invalidación tardía no la vuelve a crear. Esto evita que las incursiones sucesivas agoten el registro acotado. Es una garantía del ciclo de vida, no una autorización de reproducción: las trazas observadas siguen sin horizonte futuro seguro y la reproducción autónoma continúa pendiente.
+
 **Entrega:** contratos temporales, buffers y reproductores comunes. **Cierre interno:** versiones, horizontes, invalidaciones y cambios de propietario cubiertos. La migración de todos los clips y personajes corresponde a B.
 
 ### A7. Interacción y recuperación sin dependencias antiguas
