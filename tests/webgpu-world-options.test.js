@@ -30,3 +30,11 @@ test('explicit recovery config is shared by the renderer outside QA',()=>{
  const first=webGpuWorldOptions({params,state,field:{},recovery,dev:false}),replacement=webGpuWorldOptions({params,state,field:{},recovery,dev:false});
  assert.equal(first.presentationRecovery,true);assert.equal(first.presentationWorkRecovery,true);assert.deepEqual(replacement,first);
 });
+
+test('explicit presentation capabilities are independent of diagnostic flags and stable across recovery',()=>{
+ const params=new URLSearchParams(),state={raid:null},field={},capabilities={cameraTerrain:true,provisionalStructures:true,provisionalCrops:true};
+ const first=webGpuWorldOptions({params,state,field,capabilities}),replacement=webGpuWorldOptions({params,state,field,capabilities});
+ assert.deepEqual(first.presentationCapabilities,capabilities);assert.deepEqual(replacement,first);assert.equal(first.experimentalCameraTerrain,false);
+ assert.throws(()=>webGpuWorldOptions({params,state,field,capabilities:{cameraTerrain:'true'}}),/capabilities/);
+ assert.throws(()=>webGpuWorldOptions({params,state,field,capabilities:{unknown:true}}),/capabilities/);
+});

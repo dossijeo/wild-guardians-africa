@@ -1,8 +1,10 @@
 import {resolvePresentationRecoveryOptions} from '../simulation/presentation-recovery-options.js';
+import {webGpuPresentationCapabilities} from '../rendering/webgpu-presentation-capabilities.js';
 // One structural profile for both the initial renderer and its replacement.
 // A recovery must not silently switch world features or actor presentation.
-export function webGpuWorldOptions({params,state,field,recovery={},dev=false}={}){
+export function webGpuWorldOptions({params,state,field,recovery={},capabilities={},dev=false}={}){
  if(!(params instanceof URLSearchParams)||!state||!field||typeof dev!=='boolean')throw TypeError('Invalid WebGPU world profile');
+ const presentationCapabilities=webGpuPresentationCapabilities(capabilities);
  const species=params.get('qa-webgpu-actor'),actor=state.raid?.animals.find(item=>item.status!=='gone'&&(!species||item.species===species)),recoveryProfile=resolvePresentationRecoveryOptions(recovery,{allowQa:dev});
  return {
   experimentalActorId:actor?.id??null,
@@ -22,6 +24,7 @@ export function webGpuWorldOptions({params,state,field,recovery={},dev=false}={}
   experimentalBiomeShadowCutout:dev&&params.has('qa-webgpu-biome-shadow-cutout'),
   presentationRecovery:recoveryProfile.enabled,
   presentationWorkRecovery:recoveryProfile.enabled&&recoveryProfile.work,
+  presentationCapabilities,
   experimentalCameraTerrain:dev&&params.has('qa-webgpu-camera-terrain'),
   cameraTerrainCanyon:!!field.canyon,
  };
