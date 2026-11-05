@@ -23,5 +23,5 @@ export function createWebGpuAdmittedCenterDamage({damage,pipelineAdmission,onRea
   }).catch(error=>{if(closed||pending!==controller||controller.signal.aborted)return;pending=null;onError(error);});
  }
  function hide(){if(closed)return;enabled=false;cancel();group.visible=false;}
- return {group,update,hide,get ready(){return activeStage!==null&&enabled;},get upToDate(){return enabled&&activeStage!==null&&pending===null&&activeStage===key(stage(latest.entity));},prepare(camera){if(enabled&&activeStage!==null)damage.prepare(camera);},status(){return damage.status();},dispose(){if(closed)return;closed=true;cancel();damage.dispose();}};
+ return {group,update,hide,get ready(){return activeStage!==null&&enabled;},get upToDate(){return enabled&&activeStage!==null&&pending===null&&activeStage===key(stage(latest.entity));},prepare(camera){if(enabled&&activeStage!==null)damage.prepare(camera);},status(){return damage.status();},dispose(){if(closed)return;closed=true;cancel();group.removeFromParent();if(typeof pipelineAdmission.deferCompilations==='function')pipelineAdmission.deferCompilations(()=>damage.dispose());else damage.dispose();}};
 }

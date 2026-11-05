@@ -1,9 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {Group,Mesh,BoxGeometry,MeshBasicMaterial} from 'three';
+import {Group,Mesh,BoxGeometry,MeshBasicMaterial,Scene,PerspectiveCamera} from 'three';
 import {createWebGpuAdmittedCenterDamage} from '../src/rendering/webgpu-center-damage-admission.js';
+import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
 
 const turn=()=>new Promise(resolve=>setImmediate(resolve));
+test('disposing damage detaches it but retains resources during compilation',async()=>{
+ const scene=new Scene(),group=new Group();group.add(new Mesh(),new Mesh());scene.add(group);let finish,disposed=0;const admission=createWebGpuPipelineAdmission({scene,camera:new PerspectiveCamera(),renderer:{backend:{isWebGPUBackend:true},compileAsync:()=>new Promise(resolve=>{finish=resolve;})}}),damage={group,update(){},prepare(){},status(){return {};},dispose(){disposed++;}},view=createWebGpuAdmittedCenterDamage({damage,pipelineAdmission:admission});
+ view.update({status:'intact',hp:90,maxHp:100},1);await turn();view.dispose();assert.equal(group.parent,null);assert.equal(disposed,0);finish();await turn();assert.equal(disposed,1);admission.dispose();
+});
 function fixture(){
  const group=new Group(),body=new Mesh(new BoxGeometry(),new MeshBasicMaterial()),ash=new Mesh(new BoxGeometry(),new MeshBasicMaterial()),requests=[],updates=[],errors=[];group.add(body,ash);let disposed=0,ready=0;
  const damage={group,update(entity,time){updates.push({hp:entity.hp,time});body.visible=entity.status!=='ruined';ash.visible=entity.status==='ruined'||entity.hp/entity.maxHp<.77;},prepare(){},status(){return {};},dispose(){disposed++;}};

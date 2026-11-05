@@ -129,6 +129,8 @@ Los rosters de animales, trabajadores y cajas también retiran inmediatamente la
 
 Los lotes de cultivos también aplazan la destrucción de geometrías canceladas y, al cerrar su roster, de materiales y recursos compartidos hasta el fin de la compilación activa. La colocación provisional todavía puede publicar una geometría no admitida para conservar la respuesta inmediata; esta protección de propiedad no resuelve esa excepción ni acredita ausencia de tirones.
 
+Los lotes de bioma aplazan la liberación del grupo cuya admisión se cancela y, al cerrar, de sus geometrías, materiales y bitmaps compartidos. La destrucción del centro también retrasa la liberación de su instancia hasta que termine la compilación activa. Son garantías locales probadas con compilación simulada; todavía hay que coordinar los propietarios compartidos de construcciones y el cierre completo del dispositivo.
+
 La fase JavaScript de `compileAsync()` y la preparación de bindings siguen compartiendo el Worker gráfico. Limitar concurrencia y tamaño de los trabajos gráficos, conservar oportunidades de dibujo y enviar procesamiento de datos transferibles a auxiliares. Esto no reintroduce presupuestos de FPS en navegación o simulación.
 
 **Entrega:** admisión obligatoria, estados, cancelación y publicación atómica. **Cierre interno:** ninguna ruta de incorporación visible evita el servicio; casos de rechazo y obsolescencia cubiertos. La ausencia de picos del controlador se comprobará en C, no se presupone por usar promesas.
