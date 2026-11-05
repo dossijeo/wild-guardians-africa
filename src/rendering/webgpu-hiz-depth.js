@@ -9,7 +9,7 @@ export function hiZReductionNode(source,sourceSize,{depthSource=false}={}){
  if(!source?.isNode||!sourceSize?.isNode||typeof depthSource!=='boolean')throw TypeError('Invalid Hi-Z reduction input');
  return Fn(()=>{
   const base=ivec2(screenCoordinate.xy).mul(2),limit=ivec2(sourceSize).sub(ivec2(1));
-  const read=offset=>{const sample=textureLoad(source,clamp(base.add(offset),ivec2(0),limit));return depthSource?sample:sample.r;};
+  const read=offset=>{const sample=textureLoad(source,clamp(base.add(offset),ivec2(0),limit)).setUpdateMatrix(false);return depthSource?sample:sample.r;};
   const depth=min(min(read(ivec2(0,0)),read(ivec2(1,0))),min(read(ivec2(0,1)),read(ivec2(1,1))));
   return vec4(depth,depth,depth,1);
  })();
