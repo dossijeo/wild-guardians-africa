@@ -69,6 +69,9 @@ export function createWebGpuBiomeProps({scene,state,pipelineAdmission=null,onErr
   const sets=new Map(),getSet=index=>{const key=index===undefined?'base':index;if(!sets.has(key))sets.set(key,textureSet(index===undefined?pack.textures:pack.textureSets[index]));return sets.get(key);};const types={'<f4':Float32Array,'<u2':Uint16Array,'<u4':Uint32Array},attribute=desc=>new types[desc.type](buffer,desc.offset,desc.count);
   if(initialSlots===null&&!demandDriven)await Promise.all([getSet(undefined),...(pack.textureSets??[]).map((_,index)=>getSet(index))]);ensure();
   treeGroups=pack.assets.map((asset,slot)=>pack.profile?.assetGroups?.[slot]??SLOTS[slot].g);prototypes=Array(slotCount).fill(null);
+  // Chunks can arrive before the catalogue. Publish their empty or incomplete
+  // tree metadata now, even if no visible slot ever needs to be loaded.
+  if(onCameraTreeChunk){const removed=suppressed();for(const entry of chunks.values())publishTrees(entry,removed);}
   loadAdditional=async slots=>{const pending=slots.filter(slot=>!prototypes[slot]),next=[];for(const slot of pending){
    const asset=pack.assets[slot],lod=asset.lods[0],geometry=own(new THREE.BufferGeometry());geometry.setAttribute('position',new THREE.BufferAttribute(attribute(lod.position),3));geometry.setAttribute('normal',new THREE.BufferAttribute(attribute(lod.normal),3));geometry.setAttribute('uv',new THREE.BufferAttribute(attribute(lod.uv),2));geometry.setIndex(new THREE.BufferAttribute(attribute(lod.index),1));geometry.computeBoundingBox();geometry.computeBoundingSphere();
    const maps={...await getSet(asset.textureSet)},factor=pack.material.baseColorFactor??[1,1,1,1];let selected=geometry;
