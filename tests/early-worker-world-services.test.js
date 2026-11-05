@@ -49,3 +49,14 @@ test('tutorial focus comes from the authority when no local navigation exists',a
  world.focusTutorialPlacement('plant');assert.deepEqual(pending[0].command,{kind:'tutorialGuideTarget',toolKind:'plant',toolSpell:null});world.cancelTutorialFocus();pending[0].resolve({value:{target:'old',position:[1,2,3]}});await new Promise(resolve=>setImmediate(resolve));assert.deepEqual(focused,[]);
  world.focusTutorialPlacement('center');pending[1].resolve({value:{target:'new',position:[4,5,6]}});await new Promise(resolve=>setImmediate(resolve));assert.deepEqual(focused,[{x:4,z:6}]);
 });
+
+test('legacy tutorial targeting loads only on demand and ignores stale focus requests',async()=>{
+ const focused=[],loads=[],state={},nav={},world={state,nav,focus:point=>focused.push(point)};
+ installEarlyWorkerWorldServices(world,{loadLegacyTutorialTarget:()=>new Promise(resolve=>loads.push(resolve))});
+ assert.equal(loads.length,0);world.focusTutorialPlacement('plant');world.cancelTutorialFocus();await Promise.resolve();assert.equal(loads.length,0);world.focusTutorialPlacement('plant');await Promise.resolve();assert.equal(loads.length,1);world.cancelTutorialFocus();loads[0]({tutorialHandTarget:()=>{throw Error('stale query executed');}});await new Promise(resolve=>setImmediate(resolve));assert.deepEqual(focused,[]);
+ world.focusTutorialPlacement('center');await Promise.resolve();assert.equal(loads.length,2);loads[1]({tutorialHandTarget:(s,n,kind)=>{assert.equal(s,state);assert.equal(n,nav);assert.equal(kind,'center');return {target:'center',position:[4,5,6]};}});await new Promise(resolve=>setImmediate(resolve));assert.deepEqual(focused,[{x:4,z:6}]);
+});
+
+test('authority tutorial focus never loads local navigation',async()=>{
+ let loads=0;const world={state:{},nav:{workerProjection:true},focus(){},workerRuntime:{submit:()=>Promise.resolve({value:null})}};installEarlyWorkerWorldServices(world,{loadLegacyTutorialTarget:()=>{loads++;throw Error('unexpected local query');}});world.focusTutorialPlacement('plant');await new Promise(resolve=>setImmediate(resolve));assert.equal(loads,0);
+});
