@@ -1,3 +1,22 @@
+// Capture the structural inputs owned by the requesting object. Attribute
+// contents, transforms and uniforms are deliberately excluded: they can vary
+// while the same pipeline is compiling. Material changes must use needsUpdate.
+function pipelineInputs(object,target){
+ const values=[target,target?.samples,target?.depthBuffer,target?.stencilBuffer,target?.texture?.format,target?.texture?.type,target?.texture?.colorSpace];
+ object.traverse(node=>{
+  values.push(node,node.parent,node.visible,node.castShadow,node.receiveShadow);
+  if(!(node.isMesh||node.isLine||node.isPoints))return;
+  const geometry=node.geometry,materials=Array.isArray(node.material)?node.material:[node.material];
+  values.push(geometry,node.isInstancedMesh,node.isSkinnedMesh,node.skeleton?.bones?.length,geometry?.index,materials.length);
+  for(const material of materials)values.push(material,material?.version);
+  for(const [name,attribute] of Object.entries(geometry?.attributes??{}).sort(([a],[b])=>a.localeCompare(b)))values.push(name,attribute,attribute.itemSize,attribute.normalized,attribute.gpuType,attribute.offset,attribute.data?.stride);
+  for(const [name,attributes] of Object.entries(geometry?.morphAttributes??{}).sort(([a],[b])=>a.localeCompare(b)))values.push(name,...attributes);
+  values.push(geometry?.morphTargetsRelative);
+ });
+ return values;
+}
+function sameInputs(a,b){return a.length===b.length&&a.every((value,index)=>Object.is(value,b[index]));}
+
 // Serializes renderer compilation setup while allowing the draw loop to run
 // during asynchronous pipeline creation. The owner must keep objects hidden
 // until the returned promise resolves.
@@ -53,11 +72,12 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
     if(renderer._initialized===false||renderer._isDeviceLost===true)throw Error('WebGPU renderer unavailable for pipeline admission');
     // compileAsync builds its render list before its first await. Restore the
     // visibility immediately, before any subsequent frame can render it.
-    const lightVersion=lightsRevision,lightState=[...lights.keys()].map(light=>[light,light.castShadow,light.visible]),lightsChanged=()=>lightVersion!==lightsRevision||lightState.some(([light,castShadow,visible])=>light.castShadow!==castShadow||light.visible!==visible),visible=object.visible,previousTarget=renderer.getRenderTarget?.(),face=renderer.getActiveCubeFace?.(),level=renderer.getActiveMipmapLevel?.(),culling=[],shadows=[],included=include.map(node=>[node,node.visible]);let pending,target;
+    const lightVersion=lightsRevision,lightState=[...lights.keys()].map(light=>[light,light.castShadow,light.visible]),lightsChanged=()=>lightVersion!==lightsRevision||lightState.some(([light,castShadow,visible])=>light.castShadow!==castShadow||light.visible!==visible),visible=object.visible,previousTarget=renderer.getRenderTarget?.(),face=renderer.getActiveCubeFace?.(),level=renderer.getActiveMipmapLevel?.(),culling=[],shadows=[],included=include.map(node=>[node,node.visible]);let pending,target,inputs;
     try{
      // Three's ordinary render may use an intermediate output target; compile
      // for that same target, and restore state before the draw loop resumes.
      target=frameTarget();
+     inputs=pipelineInputs(object,target);
      if(target)renderer.setRenderTarget(target);
      // Three r180 updates shadow nodes during compileAsync. Prevent that
      // setup from issuing a real shadow draw while keeping shadow features in
@@ -78,9 +98,8 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
     if(closed||version!==generation)throw Error('Pipeline admission cancelled');
     // A light may have been added or removed while the driver compiled. The
     // completed pipeline describes the old scene and cannot admit the object.
-    if(lightsChanged()||target!==frameTarget())return execute(object,signal,version,include);
+    if(lightsChanged()||!sameInputs(inputs,pipelineInputs(object,frameTarget())))return execute(object,signal,version,include);
     if(includeShadowPass){
-     const colorTarget=target;
      let castsShadow=false;object.traverse(node=>{if((node.isMesh||node.isLine||node.isPoints)&&node.castShadow)castsShadow=true;});
      if(castsShadow){
       for(const light of lights.keys()){
@@ -102,7 +121,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
        if(signal?.aborted)throw new DOMException('Pipeline admission cancelled','AbortError');
        if(renderer._isDeviceLost===true)throw Error('WebGPU device lost during shadow admission');
        if(closed||version!==generation)throw Error('Pipeline admission cancelled');
-       if(lightsChanged()||target!==light.shadow.map||frameTarget()!==colorTarget)return execute(object,signal,version,include);
+       if(lightsChanged()||target!==light.shadow.map||!sameInputs(inputs,pipelineInputs(object,frameTarget())))return execute(object,signal,version,include);
       }
      }
     }

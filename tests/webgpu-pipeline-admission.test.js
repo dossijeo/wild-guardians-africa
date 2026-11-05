@@ -47,6 +47,16 @@ test('a framebuffer replaced during compilation must be prepared before admissio
  const admission=createWebGpuPipelineAdmission({renderer,scene,camera}),ready=admission.prepare(object);await Promise.resolve();assert.deepEqual(targets,[firstTarget]);framebuffer=nextTarget;pending[0]();await new Promise(resolve=>setImmediate(resolve));assert.deepEqual(targets,[firstTarget,nextTarget]);pending[1]();await ready;assert.equal(current,null);admission.dispose();
 });
 
+test('structural changes during compilation require a fresh admission',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),mesh=new THREE.Mesh(new THREE.BufferGeometry(),new THREE.MeshBasicMaterial()),target={samples:1,texture:{format:1,type:1,colorSpace:''}},pending=[];
+ mesh.geometry.setAttribute('position',new THREE.Float32BufferAttribute([0,0,0],3));
+ const renderer={backend:{isWebGPUBackend:true},_getFrameBufferTarget:()=>target,setRenderTarget(){},compileAsync(){return new Promise(resolve=>pending.push(resolve));}},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),ready=admission.prepare(mesh);
+ await Promise.resolve();mesh.material.needsUpdate=true;pending[0]();await new Promise(resolve=>setImmediate(resolve));assert.equal(pending.length,2);
+ mesh.geometry.setAttribute('normal',new THREE.Float32BufferAttribute([0,1,0],3));pending[1]();await new Promise(resolve=>setImmediate(resolve));assert.equal(pending.length,3);
+ target.samples=4;pending[2]();await new Promise(resolve=>setImmediate(resolve));assert.equal(pending.length,4);
+ mesh.position.x=3;mesh.geometry.attributes.position.needsUpdate=true;pending[3]();await ready;assert.equal(pending.length,4);admission.dispose();
+});
+
 test('device loss rejects active admission without waiting for the compiler',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group();let lose;
  const renderer={backend:{isWebGPUBackend:true,device:{lost:new Promise(resolve=>{lose=resolve;})}},compileAsync:()=>new Promise(()=>{})};
