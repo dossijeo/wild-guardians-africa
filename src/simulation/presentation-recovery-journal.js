@@ -1,16 +1,5 @@
 import {mergePresentationWorkerHeadings} from './presentation-worker-headings.js';
-
-// Approximate retained-size budget, including snapshots and typed buffers; JS heap overhead varies.
-function estimateBytes(value,seen=new WeakSet()){
- if(typeof value==='string')return value.length*2;
- if(value===null||typeof value!=='object')return 8;
- if(seen.has(value))return 0;seen.add(value);
- if(value instanceof ArrayBuffer)return value.byteLength;
- if(ArrayBuffer.isView(value))return value.byteLength;
- let size=Array.isArray(value)?value.length*8:32;
- for(const [key,item] of Object.entries(value))size+=key.length*2+estimateBytes(item,seen);
- return size;
-}
+import {estimateRetainedBytes as estimateBytes} from './retained-size.js';
 // Retains publication boundaries for a replacement presentation worker.
 // A candidate is not a replay base until its exact publication is acknowledged.
 export function createPresentationRecoveryJournal({capacity=256,highWatermark=128,maxBytes=268435456,highWatermarkBytes=201326592,compactTicks=false}={}){

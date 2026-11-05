@@ -2,6 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHostPublicationQueue} from '../src/simulation/host-publication-queue.js';
 const packet=(sequence,events=[],physicsPose=null)=>({sequence,events,physicsPose,snapshot:String(sequence)});
+test('byte admission bounds typed payloads and queued messages without dropping accepted events',()=>{
+ const sent=[],q=createHostPublicationQueue({session:'s',send:value=>sent.push(value),maxRetainedBytes:2048});q.publication(packet(1,[{id:'first'}]),true);q.publication(packet(2,[{id:'second'}]),true);const before=q.status().retained.bytes;assert.ok(before>0);assert.throws(()=>q.message({kind:'large',buffer:new Uint8Array(4096)}),/capacity exceeded/);assert.throws(()=>q.publication({...packet(3,[{id:'third'}]),terrainCheckpoint:{payload:new Uint8Array(4096)}},true),/capacity exceeded/);assert.equal(q.status().retained.bytes,before);q.ack(1);assert.equal(sent[1].publication.events[0].id,'second');assert.equal(q.status().retained.bytes,0);q.ack(2);
+});
+test('replacing a coalesced publication accounts for its full payload transactionally',()=>{
+ const sent=[],q=createHostPublicationQueue({session:'s',send:value=>sent.push(value),maxRetainedBytes:2048});q.publication(packet(1),true);q.publication(packet(2),true);const before=q.status().retained.bytes;assert.throws(()=>q.publication({...packet(3),residency:{chunk:new Uint8Array(4096)}},true),/capacity exceeded/);assert.equal(q.status().retained.bytes,before);q.ack(1);assert.equal(sent[1].publication.sequence,2);q.ack(2);
+});
 test('coalescing retains input receipts and rejections as publication boundaries',()=>{
  const sent=[],q=createHostPublicationQueue({session:'s',send:v=>sent.push(v)});
  q.publication(packet(1),true);q.publication({...packet(2),presentationInput:42},true);q.publication({...packet(3),rejection:'denied'},true);q.publication(packet(4),true);
@@ -66,7 +72,7 @@ test('a stalled receiver has a bounded queue and preserves every accepted event 
 });
 test('snapshot and event limits are enforced before replacing a pending publication',()=>{
  const sent=[],q=createHostPublicationQueue({session:'s',maxQueued:5,maxSnapshotChars:5,maxEventFacts:2,send:value=>sent.push(value)});q.publication(packet(1),true);q.publication({...packet(2),snapshot:'small'},true);
- assert.throws(()=>q.publication({...packet(3),snapshot:'longer'},true),/capacity exceeded/);assert.deepEqual(q.status().retained,{snapshotChars:5,eventFacts:0});q.ack(1);assert.equal(sent[1].publication.sequence,2);q.ack(2);
+ assert.throws(()=>q.publication({...packet(3),snapshot:'longer'},true),/capacity exceeded/);assert.equal(q.status().retained.snapshotChars,5);assert.equal(q.status().retained.eventFacts,0);assert.ok(q.status().retained.bytes>0);q.ack(1);assert.equal(sent[1].publication.sequence,2);q.ack(2);
  q.publication(packet(3),true);q.publication({...packet(4,[{id:'a'}]),presentationJournal:[{kind:'event',eventId:'a'}]},true);assert.throws(()=>q.publication(packet(5,[{id:'b'}]),true),/capacity exceeded/);q.ack(3);assert.equal(sent[3].publication.events[0].id,'a');q.ack(4);
 });
 test('queued control messages share the same finite admission limit',()=>{const q=createHostPublicationQueue({session:'s',maxQueued:1,send:()=>{}});q.publication(packet(1),true);q.message({kind:'commandResult',id:1});assert.throws(()=>q.message({kind:'commandResult',id:2}),/capacity exceeded/);q.ack(1);assert.equal(q.status().queued,0);});
