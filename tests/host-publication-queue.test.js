@@ -60,6 +60,16 @@ test('a stalled receiver keeps one quiet pending state even across many ticks',(
  for(let sequence=2;sequence<=1001;sequence++)q.publication(packet(sequence,[],{actorId:'a',active:false}),true);
  assert.equal(q.status().queued,1);assert.equal(q.status().coalesced,999);q.ack(1);assert.equal(sent[1].firstSequence,2);assert.equal(sent[1].publication.sequence,1001);q.ack(1001);
 });
+test('a stalled receiver has a bounded queue and preserves every accepted event on saturation',()=>{
+ const sent=[],q=createHostPublicationQueue({session:'s',maxQueued:2,maxSnapshotChars:100,maxEventFacts:10,send:value=>sent.push(value)});q.publication(packet(1),true);q.publication(packet(2,[{id:'a'}]),true);q.publication(packet(3,[{id:'b'}]),true);
+ assert.throws(()=>q.publication(packet(4,[{id:'c'}]),true),/capacity exceeded/);assert.equal(q.status().queued,2);q.ack(1);assert.deepEqual(sent[1].publication.events,[{id:'a'}]);q.ack(2);assert.deepEqual(sent[2].publication.events,[{id:'b'}]);q.ack(3);assert.equal(q.status().queued,0);
+});
+test('snapshot and event limits are enforced before replacing a pending publication',()=>{
+ const sent=[],q=createHostPublicationQueue({session:'s',maxQueued:5,maxSnapshotChars:5,maxEventFacts:2,send:value=>sent.push(value)});q.publication(packet(1),true);q.publication({...packet(2),snapshot:'small'},true);
+ assert.throws(()=>q.publication({...packet(3),snapshot:'longer'},true),/capacity exceeded/);assert.deepEqual(q.status().retained,{snapshotChars:5,eventFacts:0});q.ack(1);assert.equal(sent[1].publication.sequence,2);q.ack(2);
+ q.publication(packet(3),true);q.publication({...packet(4,[{id:'a'}]),presentationJournal:[{kind:'event',eventId:'a'}]},true);assert.throws(()=>q.publication(packet(5,[{id:'b'}]),true),/capacity exceeded/);q.ack(3);assert.equal(sent[3].publication.events[0].id,'a');q.ack(4);
+});
+test('queued control messages share the same finite admission limit',()=>{const q=createHostPublicationQueue({session:'s',maxQueued:1,send:()=>{}});q.publication(packet(1),true);q.message({kind:'commandResult',id:1});assert.throws(()=>q.message({kind:'commandResult',id:2}),/capacity exceeded/);q.ack(1);assert.equal(q.status().queued,0);});
 test('active pose snapshots coalesce only while their owners remain the same',()=>{
  const sent=[],q=createHostPublicationQueue({session:'s',send:value=>sent.push(value)});q.publication(packet(1),true);
  q.publication(packet(2,[],{actorId:'a',active:true}),true);q.publication(packet(3,[],{actorId:'a',active:true}),true);q.publication(packet(4,[],{actorId:'b',active:true}),true);q.publication(packet(5,[],{actorId:'b',active:false}),true);

@@ -76,6 +76,8 @@ Completar el transporte existente en lugar de añadir otra cola:
 
 Definir la política de saturación antes de retirar cualquier bloqueo actual: retención acotada, diario de eventos y barreras recuperables, desacoplamiento de un consumidor gráfico averiado y recuperación desde checkpoint. No es posible conservar eventos ilimitados para un consumidor ausente con memoria finita. Si se agota también la retención recuperable, emitir un fallo controlado o una pausa de seguridad explícita; nunca perder eventos silenciosamente ni convertir el ACK gráfico en presupuesto normal de simulación.
 
+La cola común limita ahora las publicaciones pendientes, los caracteres de snapshots retenidos y el número de eventos y hechos del diario. Una incorporación o sustitución que exceda el límite falla antes de alterar la cola; los mensajes aceptados conservan su orden. Son límites de admisión, no una medida completa de memoria: todavía falta un protocolo incremental que acote el tamaño de todos los campos y evite la terminación controlada cuando se agota la retención.
+
 Usar tiempo de simulación en trayectorias, animaciones confirmadas, pausas, aceleración y restauración. El reloj de feedback provisional se mantiene identificado y se reconcilia con el confirmado.
 
 **Entrega:** protocolo normal incremental y sincronizadores por cambios. **Cierre interno:** pruebas de orden, acumulación, consumidores lentos, duplicados, restauración y barreras; ausencia de recorrido obligatorio de todos los subsistemas por una modificación local.
