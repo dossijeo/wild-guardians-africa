@@ -3,6 +3,21 @@ import { attribute, mix, texture, uniform, vec4 } from 'three/tsl';
 
 const textureLayoutProperties=['colorSpace','mapping','channel','wrapS','wrapT','wrapR','magFilter','minFilter','anisotropy'];
 const textureLayout=texture=>JSON.stringify(textureLayoutProperties.map(key=>texture[key]));
+const neutralTextures=new WeakMap();
+
+// Each renderer owns its neutral textures. Materials borrow them and release
+// their lease without invalidating another asset that is still using one.
+function acquireNeutralTexture(renderer,source,normal){
+ let records=neutralTextures.get(renderer);if(!records){records=new Map();neutralTextures.set(renderer,records);}
+ const key=JSON.stringify([normal,textureLayout(source)]);let record=records.get(key);
+ if(!record){
+  const pixel=new Uint8Array(normal?[128,128,255,255]:[255,255,255,255]),texture=new THREE.DataTexture(pixel,1,1,THREE.RGBAFormat);
+  for(const property of textureLayoutProperties)texture[property]=source[property];
+  texture.flipY=false;texture.needsUpdate=true;record={texture,refs:0};records.set(key,record);
+ }
+ record.refs++;let released=false;
+ return {texture:record.texture,release(){if(released)return;released=true;if(--record.refs===0){records.delete(key);record.texture.dispose();}}};
+}
 
 // Structural experiment only. Source identifiers must agree before any
 // original texture can replace the provisional appearance.
@@ -27,12 +42,9 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
   function placeholder(source, normal) {
     const key = JSON.stringify([normal,textureLayout(source)]);
     if (!placeholders.has(key)) {
-      const pixel = new Uint8Array(normal ? [128, 128, 255, 255] : [255, 255, 255, 255]);
-      const result = new THREE.DataTexture(pixel, 1, 1, THREE.RGBAFormat);
-      for (const property of textureLayoutProperties) result[property] = source[property];
-      result.flipY = false; result.needsUpdate = true; placeholders.set(key, result);
+      placeholders.set(key,acquireNeutralTexture(renderer,source,normal));
     }
-    return placeholders.get(key);
+    return placeholders.get(key).texture;
   }
   try { for (const [index, item] of entries.entries()) {
     const source = sources[index], nodeMaterial = renderer.library.fromMaterial(source);
@@ -75,7 +87,7 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
     }
   } } catch (error) {
     for (const material of createdMaterials) material.dispose();
-    for (const texture of placeholders.values()) texture.dispose();
+    for (const lease of placeholders.values()) lease.release();
     throw error;
   }
   for (const change of changes) {
@@ -85,7 +97,7 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
     change.object.material = change.material;
   }
   return {
-    placeholders: [...placeholders.values()],
+    placeholders: [...placeholders.values()].map(lease=>lease.texture),
     async resolveFinal(asset) {
       if (cancelled) throw Error('Material preparation cancelled');
       const current = ++generation;
@@ -125,6 +137,6 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
       ready.value = value;
     },
     cancel() { cancelled = true; resolved = false; generation++; },
-    dispose() { if (disposed) return; disposed = true; cancelled = true; resolved = false; generation++; for (const material of createdMaterials) material.dispose(); for (const texture of placeholders.values()) texture.dispose(); },
+    dispose() { if (disposed) return; disposed = true; cancelled = true; resolved = false; generation++; for (const material of createdMaterials) material.dispose(); for (const lease of placeholders.values()) lease.release(); },
   };
 }

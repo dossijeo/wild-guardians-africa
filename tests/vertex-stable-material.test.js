@@ -60,6 +60,19 @@ test('incompatible final texture layout leaves the provisional material intact',
   await stable.resolveFinal(x.asset(x.material));stable.apply();assert.equal(x.mesh.material.map,x.material.map);stable.dispose();
 });
 
+test('compatible neutral textures are shared only within a renderer and released after the last owner',async()=>{
+ const a=setup(),b=setup(),c=setup();b.renderer=a.renderer;
+ const first=await makeStableVertexMaterials(a.renderer,a.preview,a.asset(a.material),a.mapping),second=await makeStableVertexMaterials(b.renderer,b.preview,b.asset(b.material),b.mapping),third=await makeStableVertexMaterials(c.renderer,c.preview,c.asset(c.material),c.mapping);
+ const shared=a.mesh.material.map;assert.equal(b.mesh.material.map,shared);assert.notEqual(c.mesh.material.map,shared);let disposals=0;shared.addEventListener('dispose',()=>disposals++);
+ first.dispose();assert.equal(disposals,0);second.dispose();assert.equal(disposals,1);second.dispose();assert.equal(disposals,1);third.dispose();
+});
+
+test('failed setup releases its neutral texture leases without affecting another asset',async()=>{
+ const a=setup(),b=setup();b.renderer=a.renderer;const stable=await makeStableVertexMaterials(a.renderer,a.preview,a.asset(a.material),a.mapping),shared=a.mesh.material.map;let disposals=0;shared.addEventListener('dispose',()=>disposals++);
+ const bad=new THREE.Mesh(b.mesh.geometry.clone(),new THREE.MeshStandardMaterial());bad.geometry.deleteAttribute('color');b.preview.scene.add(bad);b.preview.parser.associations.set(bad,{meshes:1,primitives:0});b.mapping.primitives.push({mesh:1,primitive:0,material:0,colorAccessor:null});
+ await assert.rejects(makeStableVertexMaterials(b.renderer,b.preview,b.asset(b.material),b.mapping),/Missing baked/);assert.equal(disposals,0);stable.dispose();assert.equal(disposals,1);
+});
+
 test('texture blending requires a resolved material and accepts only finite proportions', async () => {
   const x = setup(), stable = await makeStableVertexMaterials(x.renderer, x.preview, x.asset(x.material), x.mapping);
   assert.throws(() => stable.setBlend(.5), /not ready/);
