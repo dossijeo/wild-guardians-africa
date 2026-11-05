@@ -1,4 +1,5 @@
 import {applyConfirmedAnimalPose} from './confirmed-animal-pose.js';
+import {legacyWorkersForFrame} from './legacy-worker-publication-cache.js';
 import {createConfirmedSceneReceiver} from './confirmed-scene-receiver.js';
 import {createWorkerGameRuntime} from '../simulation/worker-game-runtime.js';
 import {prepareWorkerMaterials} from './worker-materials.js';
@@ -748,7 +749,7 @@ export class WorldScene {
     const gltf=prepared?null:await this.assets.model(descriptor.url);if(this.disposed||this.state!==state||this.objects.get(entity.id)!==root){releaseActorRig(prepared);return;}
     let rig=null,model=null,preparedReleased=false,adopted=false,rigReleased=false;
     const releasePrepared=()=>{if(prepared&&!preparedReleased){releaseActorRig(prepared);preparedReleased=true;}};
-    const cleanup=()=>{if(rig&&!rigReleased){const current=this.mixers.get(entity.id)===rig;if(current){this.mixers.delete(entity.id);root.remove(model);}if(current||!adopted)releaseActorRig(rig);rigReleased=true;if(rig===prepared)preparedReleased=true;}else if(!rig)releasePrepared();};
+    const cleanup=()=>{if(rig&&!rigReleased){const current=this.mixers.get(entity.id)===rig;if(current){this.mixers.delete(entity.id);this.legacyActorRevision=(this.legacyActorRevision??0)+1;root.remove(model);}if(current||!adopted)releaseActorRig(rig);rigReleased=true;if(rig===prepared)preparedReleased=true;}else if(!rig)releasePrepared();};
     const adopt=()=>{
       if(this.disposed||this.state!==state||this.objects.get(entity.id)!==root){releasePrepared();return;}
       return loadingSyncWitness(this.onLoadingSpan,'actor-prepare:'+type+':'+(entity.profile??entity.species),()=>{
@@ -761,7 +762,7 @@ export class WorldScene {
           if(type==='animal')prepareAnimalModel(model,entity.species);
           if(type==='worker')prepareWorkerMaterials(model,entity.profile);
           if(!prepared){rig.clips=type==='animal'?prepareAnimalClips(gltf.animations):[...prepareWorkerClips(gltf.animations),this.workerRecoveries.get(entity.profile)];rig.groundSamples=type==='animal'?animalGroundSamples(model):null;}
-          installSkinPicking(model);root.add(model);this.mixers.set(entity.id,rig);adopted=true;
+          installSkinPicking(model);root.add(model);this.mixers.set(entity.id,rig);this.legacyActorRevision=(this.legacyActorRevision??0)+1;adopted=true;
           this.updateActor(entity,0,type);root.updateMatrixWorld(true);
           model.traverse(mesh=>{if(mesh.isSkinnedMesh&&!updateSkinEnvelopeSphere(mesh,prepared?.skinEnvelopes?.get(mesh)))mesh.computeBoundingSphere();});
           const prepareLod=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-character-lod-warm')?lod=>this.prepareCharacterLodCandidate(lod):null;
@@ -878,7 +879,8 @@ export class WorldScene {
     if(this.onLoadingSpan)loadingSyncWitness(this.onLoadingSpan,'sync-crop-update',()=>this.cropBatch.update(visiblePlants,s.elapsed,(x,z)=>this.nav.field.surface(x,z),this.renderOrigin,this.nav.field,this.blessingVfx));
     else this.cropBatch.update(visiblePlants,s.elapsed,(x,z)=>this.nav.field.surface(x,z),this.renderOrigin,this.nav.field,this.blessingVfx);
     this.microeventVisibleWood=[];
-    for(const e of [...s.structures,...activeCrates(s.crates),...s.workers.filter(w=>w.status!=='home'),...(s.raid?.animals.filter(a=>a.status!=='gone')??[]),...s.spells]) {
+    const workerFrame=legacyWorkersForFrame(this,s.workers,this.legacyActorRootsDeferred);
+    for(const e of [...s.structures,...activeCrates(s.crates),...workerFrame.update,...(s.raid?.animals.filter(a=>a.status!=='gone')??[]),...s.spells]) {
       if(e.kind==='wall'&&e.material==='empalizada'&&e.status==='intact'&&Math.hypot(e.x-this.controls.target.x,e.z-this.controls.target.z)<140)this.microeventVisibleWood.push(e);
       desired.add(e.id);let mesh=this.objects.get(e.id);
       if(!mesh) {
@@ -910,7 +912,7 @@ export class WorldScene {
       }
       if(!('value' in e)&&('profile' in e||'hitsRemaining' in e)){const type='profile' in e?'worker':'animal';if(!deferActorPoses&&workerYaw!==undefined&&(authorityRunning||restoreTrackedHeadings))mesh.rotation.y=workerYaw;if(deferActorPoses){if(!deferRoot)this.updateDeferredActorRoot(e,mesh,type);}else this.updateActor(e,dt,type);}
     }
-    for(const [id,mesh] of this.objects)if(!desired.has(id)){this.scene.remove(mesh);if(mesh.userData.nativeWall||mesh.userData.nativeBuilding)mesh.dispose();releaseActorRig(this.mixers.get(id));this.objects.delete(id);this.mixers.delete(id);if(mesh.userData.nativeWall||mesh.userData.nativeBuilding||mesh.userData.units||this.cameraExclusion?.registry.roots.has(id)){this.cameraVolumesDirty=true;this.cameraDirtyEntities?.set(id,null);}}
+    for(const [id,mesh] of this.objects)if(!desired.has(id)&&!workerFrame.retained?.has(id)){this.scene.remove(mesh);if(mesh.userData.nativeWall||mesh.userData.nativeBuilding)mesh.dispose();releaseActorRig(this.mixers.get(id));this.objects.delete(id);this.mixers.delete(id);if(mesh.userData.nativeWall||mesh.userData.nativeBuilding||mesh.userData.units||this.cameraExclusion?.registry.roots.has(id)){this.cameraVolumesDirty=true;this.cameraDirtyEntities?.set(id,null);}}
     const night=s.time>=300,tint=night?'#263747':this.pack.profile.bg;
     this.renderer.setClearColor(tint);this.scene.fog=null;this.destructionPass.night=skyNight(s);this.destructionPass.cinemaGroundUniform.value.fromArray(cinematicGroundBounce(s.biome));this.destructionPass.nightLight=1.12;this.sun.intensity=3-2.6*this.destructionPass.night;this.ambient.intensity=2-.9*this.destructionPass.night;
     updateShadowCamera(this.sun,this.controls.target);
