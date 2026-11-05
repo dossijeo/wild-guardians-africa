@@ -1,5 +1,6 @@
 import {openCharacterPreviewStream} from './character-preview-stream.js';
 import {decodeCharacterPreview} from './decode-character-preview.js';
+import {prepareNativeBc7Data} from './prepare-native-bc7-data.js';
 
 // One auxiliary Worker serves multiple packages. GPU objects never cross this
 // boundary; only verified metadata and transferable bytes leave the worker.
@@ -20,6 +21,7 @@ self.onmessage=async({data})=>{
   if(kind==='preview'){const source=await item.stream.loadPreview(),bytes=await decodeCharacterPreview(source,{signal:item.controller.signal});if(sessions.get(session)!==item)return;self.postMessage({id,session,result:bytes.buffer},[bytes.buffer]);return;}
   if(kind==='metadata'){const metadata=await item.stream.loadMetadata();if(sessions.get(session)!==item)return;const metadataId=item.nextMetadata++;item.metadata.set(metadataId,metadata);self.postMessage({id,session,result:{metadataId,metadata}});return;}
   if(kind==='textures'){const metadata=item.metadata.get(data.metadataId);if(!metadata)throw Error('Invalid character metadata');const files=await item.stream.loadTextures(metadata);if(sessions.get(session)!==item)return;const entries=[...files].map(([path,bytes])=>[path,bytes.buffer]);self.postMessage({id,session,result:entries},entries.map(([,buffer])=>buffer));return;}
+  if(kind==='compressed'){if(item.stream.variant!=='bc7')throw Error('Native BC7 unavailable');const metadata=item.metadata.get(data.metadataId);if(!metadata)throw Error('Invalid character metadata');const files=await item.stream.loadTextures(metadata),entries=await Promise.all([...files].map(async([path,bytes])=>[path,await prepareNativeBc7Data(bytes)]));if(sessions.get(session)!==item)return;self.postMessage({id,session,result:entries},entries.map(([,texture])=>texture.buffer));return;}
   if(kind==='bitmaps'){
    if(item.stream.variant!=='webp'||typeof createImageBitmap!=='function')throw Error('Character bitmap decoding unavailable');const metadata=item.metadata.get(data.metadataId);if(!metadata)throw Error('Invalid character metadata');const files=await item.stream.loadTextures(metadata),created=[];
    const results=await Promise.allSettled([...files].map(async([path,bytes])=>{const bitmap=await createImageBitmap(new Blob([bytes],{type:'image/webp'}),{premultiplyAlpha:'none',colorSpaceConversion:'none'});created.push(bitmap);return [path,bitmap];}));
