@@ -1,6 +1,7 @@
 import {openCharacterPreviewStream} from './character-preview-stream.js';
 import {decodeCharacterPreview} from './decode-character-preview.js';
 import {prepareNativeBc7Data} from './prepare-native-bc7-data.js';
+import {prepareEmbeddedGlb} from './prepare-embedded-glb.js';
 
 // One auxiliary Worker serves multiple packages. GPU objects never cross this
 // boundary; only verified metadata and transferable bytes leave the worker.
@@ -14,6 +15,11 @@ self.onmessage=async({data})=>{
    const item={controller:new AbortController(),stream:null,metadata:new Map(),nextMetadata:1};sessions.set(session,item);
    const stream=await openCharacterPreviewStream(data.url,{features:data.features,signal:item.controller.signal});
    if(sessions.get(session)!==item){stream.close();return;}item.stream=stream;self.postMessage({id,session,result:{id:stream.id,variant:stream.variant,supportsBitmaps:typeof createImageBitmap==='function'}});return;
+  }
+  if(kind==='embedded-glb'){
+   if(sessions.has(session)||typeof data.url!=='string'||!data.url||typeof createImageBitmap!=='function')throw Error('Embedded GLB preparation unavailable');
+   const item={controller:new AbortController()};sessions.set(session,item);const response=await fetch(data.url,{signal:item.controller.signal});if(!response.ok)throw Error(`GLB HTTP ${response.status}`);const declared=Number(response.headers.get('content-length'));if(Number.isFinite(declared)&&declared>256*1024*1024)throw Error('GLB exceeds limit');const buffer=await response.arrayBuffer();if(buffer.byteLength>256*1024*1024)throw Error('GLB exceeds limit');
+   const result=await prepareEmbeddedGlb(new Uint8Array(buffer),{signal:item.controller.signal});if(sessions.get(session)!==item){for(const image of result.images)image.close();return;}try{self.postMessage({id,session,kind:'embedded-glb',result},[result.buffer,...result.images]);}catch(error){for(const image of result.images)image.close();throw error;}return;
   }
   const item=sessions.get(session);if(!item)throw Error('Character data session closed');
   if(kind==='close'){sessions.delete(session);item.controller.abort();item.stream?.close();return;}

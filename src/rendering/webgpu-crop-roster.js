@@ -6,6 +6,7 @@ import {cropSpec} from '../simulation/rules.js';
 import {assetUrl} from './asset-url.js';
 import {createWebGpuProvisionalCrops} from './webgpu-provisional-crops.js';
 import {loadCropBridges} from './crop-library.js';
+import {createPredecodedImageLoader} from './predecoded-image-loader.js';
 
 const IDS=['maiz','algodon','girasol','platano','sorgo','mijo','yuca','batata'],MARKS=[.065,.27,.53,.78,1],clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),mixNumber=(a,b,t)=>a+(b-a)*t,smooth=t=>{t=clamp(t,0,1);return t*t*(3-2*t);};
 // Exact authored two-second simulation-time bridge window.
@@ -13,7 +14,7 @@ export function confirmedCropSample(models,species,growth,{bridgeReady=true}={})
 
 // Consumes state reconciled by Wild Engine's presentation stream, never ticks
 // the simulation. Original crop meshes/textures are shared by stage batches.
-export function createWebGpuCropRoster({scene,state,residency,renderer,pipelineAdmission=null,loadCropModel=null,loadBridgeData=null,onError=()=>{},enableProvisional=false,orderedPreviews=false,onSelectableChange=null}={}){
+export function createWebGpuCropRoster({scene,state,residency,renderer,pipelineAdmission=null,loadCropModel=null,loadBridgeData=null,characterData=null,onError=()=>{},enableProvisional=false,orderedPreviews=false,onSelectableChange=null}={}){
  if(!scene?.isScene||!state||!residency||!renderer?.backend?.isWebGPUBackend||pipelineAdmission!==null&&typeof pipelineAdmission.prepare!=='function'||loadCropModel!==null&&typeof loadCropModel!=='function'||loadBridgeData!==null&&typeof loadBridgeData!=='function'||typeof onError!=='function'||onSelectableChange!==null&&typeof onSelectableChange!=='function')throw TypeError('Invalid crop roster');
  const provisional=createWebGpuProvisionalCrops({ordered:orderedPreviews}),abort=new AbortController(),manager=new THREE.LoadingManager(),resources=new Set(),images=new Set(),models=[],bridges=[],groups=new Map(),cropMaterials=new Map(),bridgeMaterials=new Map(),heights=new Map(),clock=uniform(0),ray=new THREE.Raycaster(),matrix=new THREE.Object3D();let closed=false,ready=false,bridgeReady=false,bridgeLoading=null,failure=null,loading=null,preferredIndex=null;
  const cancel=()=>manager.abort();abort.signal.addEventListener('abort',cancel,{once:true});
@@ -48,12 +49,16 @@ export function createWebGpuCropRoster({scene,state,residency,renderer,pipelineA
  function writeBatch(index,entries,item){const growth=item.geometry.getAttribute(typeof index==='string'?'iBridge':'iGrowth');for(let i=0;i<entries.length;i++){const {plant,y,sample}=entries[i];matrix.position.set(plant.x,y,plant.z);matrix.rotation.set(0,plant.rotation??0,0);matrix.scale.setScalar(1);matrix.updateMatrix();item.mesh.setMatrixAt(i,matrix.matrix);const seed=Number(String(plant.id).replace(/\D/g,''))||0;if(sample.bridge===undefined)growth.setXYZW(i,sample.sy,sample.sr,sample.open,seed);else growth.setXYZW(i,sample.t,sample.e,seed,0);}item.entries=entries.map(({plant,sample})=>({id:plant.id,sample}));item.mesh.count=entries.length;item.mesh.visible=entries.length>0;item.mesh.instanceMatrix.needsUpdate=true;growth.needsUpdate=true;}
  async function load(){
   const response=await fetch(assetUrl('/content/models.json'),{signal:abort.signal});if(!response.ok)throw Error('Crop catalogue unavailable');const catalogue=await response.json(),descriptor=catalogue.find(item=>item.source?.includes('Cultivos'));if(!descriptor)throw Error('Original crop model unavailable');
-  const gltf=loadCropModel?await loadCropModel(descriptor,abort.signal):await new GLTFLoader(manager).setMeshoptDecoder(MeshoptDecoder).loadAsync(assetUrl(descriptor.url));
+  let gltf,prepared=null;
+  if(!loadCropModel&&characterData?.prepareEmbeddedGlb){try{prepared=await characterData.prepareEmbeddedGlb(assetUrl(descriptor.url),{signal:abort.signal});}catch(error){if(abort.signal.aborted||error?.name==='AbortError')throw error;}}
+  if(prepared){const decoded=createPredecodedImageLoader(manager);let adopted=false;try{for(let i=0;i<prepared.images.length;i++)if(decoded.add(prepared.images[i])!==`data:application/x-wg-bitmap,${i}`)throw Error('Invalid prepared GLB image order');gltf=await new GLTFLoader(manager).setMeshoptDecoder(MeshoptDecoder).parseAsync(prepared.buffer,'');adopted=true;}finally{decoded.dispose();if(!adopted)for(const image of prepared.images)image.close();}}
+  else gltf=loadCropModel?await loadCropModel(descriptor,abort.signal):await new GLTFLoader(manager).setMeshoptDecoder(MeshoptDecoder).loadAsync(assetUrl(descriptor.url));
   // A malformed or cancelled package must never publish a partial set of
   // stages. Keep its resources private until all 40 stages are verified.
   const staged=[],owned=new Set(),ownedImages=new Set(),meshes=[];
   try{
    gltf.scene.traverse(o=>{if(!o.isMesh)return;meshes.push(o);owned.add(o.geometry);for(const material of Array.isArray(o.material)?o.material:[o.material]){if(!material)continue;owned.add(material);for(const value of Object.values(material))if(value?.isTexture){owned.add(value);if(typeof value.source?.data?.close==='function')ownedImages.add(value.source.data);}}});
+   if(prepared)for(const image of prepared.images)if(!ownedImages.has(image))image.close();
    for(const o of meshes){const meta=o.userData,index=meta.cropIndex*5+meta.stage-1;if(!Number.isInteger(index)||index<0||index>=40||staged[index])throw Error('Invalid crop stage');staged[index]={geometry:o.geometry,material:o.material,meta};}
    if(staged.filter(Boolean).length!==40)throw Error('Missing original crop stages');if(closed||abort.signal.aborted)throw new DOMException('Crop roster disposed','AbortError');
   }catch(error){for(const item of owned)item?.dispose();for(const image of ownedImages)image.close();throw error;}
