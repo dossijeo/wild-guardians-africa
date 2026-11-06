@@ -173,3 +173,13 @@ test('shared recovery retention contributes to watermarks without an incremental
  let shared=60;const journal=createPresentationRecoveryJournal({capacity:5,highWatermark:3,maxBytes:200,highWatermarkBytes:100,sharedRetainedBytes:()=>shared});
  try{assert.equal(journal.status().overheadBytes,60);assert.equal(journal.status().saturated,false);shared=100;assert.equal(journal.status().saturated,true);shared=201;assert.throws(()=>journal.begin(1,{sequence:1,snapshot:'s'}),/capacity exceeded/);shared=-1;assert.throws(()=>journal.status(),/Invalid shared snapshot retention/);}finally{journal.dispose();}
 });
+
+test('checkpoint admission projects retained entries and replacement base before confirmation',()=>{
+ let shared=100;const journal=createPresentationRecoveryJournal({capacity:8,highWatermark:4,maxBytes:2000,highWatermarkBytes:1000,sharedRetainedBytes:()=>shared});
+ try{journal.begin(1,{sequence:1,snapshot:'s'});assert.equal(journal.canConfirm(1,{nextSharedBytes:899}),true);assert.equal(journal.canConfirm(1,{nextSharedBytes:900}),false);assert.equal(journal.status().base,null);journal.confirm(1);journal.append({sequence:2,snapshot:'s',events:[]},true);journal.begin(2,{sequence:2,snapshot:'s'});assert.equal(journal.canConfirm(2,{previousSharedBytes:100,nextSharedBytes:999}),true);assert.equal(journal.canConfirm(2,{previousSharedBytes:100,nextSharedBytes:1000}),false);assert.throws(()=>journal.canConfirm(2,{previousSharedBytes:101}),/Invalid shared snapshot retention/);assert.equal(journal.status().base,1);}finally{journal.dispose();}
+});
+
+test('incremental checkpoint admission includes encoder and candidate retention',()=>{
+ let shared=0;const journal=createPresentationRecoveryJournal({incrementalSnapshots:true,sharedRetainedBytes:()=>shared}),packet=sequence=>({sequence,snapshot:JSON.stringify({value:sequence,padding:'x'.repeat(300)}),events:[],physicsPose:null});
+ try{journal.begin(1,packet(1));assert.equal(journal.canConfirm(1,{nextSharedBytes:100}),true);assert.equal(journal.canConfirm(1,{nextSharedBytes:journal.status().highWatermarkBytes}),false);journal.confirm(1);shared=100;journal.append(packet(2),true);journal.begin(2,packet(2));journal.append(packet(3),true);assert.equal(journal.canConfirm(2,{previousSharedBytes:100,nextSharedBytes:100}),true);assert.equal(journal.status().base,1);assert.equal(journal.snapshot().entries.length,2);}finally{journal.dispose();}
+});
