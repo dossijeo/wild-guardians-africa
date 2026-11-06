@@ -1,6 +1,7 @@
 import {admitRosterActor,disposePendingRosterActor,releaseRosterActor} from './webgpu-roster-admission.js';
 import {bindWebGpuActorMotion} from './webgpu-actor-motion-binding.js';
 import {createConfirmedGpuMotion} from './confirmed-gpu-motion.js';
+import {confirmedMotionYaw} from './confirmed-motion-yaw.js';
 import {createWebGpuConfirmedAnimal} from './webgpu-confirmed-animal.js';
 import {ProvisionalBeastImpact} from './provisional-beast-impact.js';
 import {attackTargetAvailable} from '../simulation/guardian-combat.js';
@@ -34,7 +35,8 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
   for(const id of selectedIds){const entry=entries.get(id),matches=paths.filter(value=>value.actorId===id),heights=grounds.filter(value=>value.actorId===id),path=matches[0],ground=heights[0];
    if(matches.length!==1||heights.length!==1||!entry?.actor||entry.actor.root?.visible!==true||!entry.motion||!entry.actor.isBakedWalking?.()||entry.actor.isPhysical?.()||provisional.byTarget.has(id)||!Array.isArray(ground.segments)||!ground.segments.length)return false;
    const root=entry.actor.root.getWorldPosition(new Vector3());if(root.x!==path.start.x||root.z!==path.start.z||Math.abs(root.y-ground.startHeight)>1e-6)return false;
-   prepared.push({id,entry,trace:{actorId:id,continuous:true,timed:true,start:{...path.start,y:ground.startHeight},end:{...path.end,y:ground.endHeight},segments:ground.segments}});
+   const yawSamples=confirmedMotionYaw(preview,id,entry.actor.root);if(!yawSamples)return false;
+   prepared.push({id,entry,trace:{actorId:id,continuous:true,timed:true,start:{...path.start,y:ground.startHeight},end:{...path.end,y:ground.endHeight},segments:ground.segments,yawSamples}});
   }
   const installed=[];try{for(const value of prepared){value.entry.motion.install(value.trace,preview.sequence);installed.push(value);}}catch{for(const value of installed)value.entry.motion.reset();return false;}
   historyRun={sequence:preview.sequence,entries:new Map(prepared.map(value=>[value.id,value.entry])),support,invalid:false};return true;

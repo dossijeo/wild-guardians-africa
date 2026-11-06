@@ -1,6 +1,7 @@
 import {admitRosterActor,disposePendingRosterActor,releaseRosterActor} from './webgpu-roster-admission.js';
 import {bindWebGpuActorMotion} from './webgpu-actor-motion-binding.js';
 import {createConfirmedGpuMotion} from './confirmed-gpu-motion.js';
+import {confirmedMotionYaw} from './confirmed-motion-yaw.js';
 import {Group,Vector3} from 'three';
 import {createWebGpuConfirmedWorker} from './webgpu-confirmed-worker.js';
 import {hasBakedWorkerWalk} from './baked-worker-walk-profiles.js';
@@ -34,7 +35,8 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
   const prepared=[];for(const id of ids){const entry=entries.get(id),matches=paths.filter(p=>p.actorId===id),heights=grounds.filter(g=>g.actorId===id),path=matches[0],ground=heights[0];
    if(matches.length!==1||heights.length!==1||!entry?.actor||entry.actor.root?.visible!==true||!entry.motion||entry.actor.isBakedWalking?.()!==true||!Array.isArray(ground.segments)||!ground.segments.length)return false;
    const root=entry.actor.root.getWorldPosition(new Vector3());if(root.x!==path.start.x||root.z!==path.start.z||Math.abs(root.y-ground.startHeight-.025)>1e-6)return false;
-   prepared.push({id,entry,trace:{actorId:id,continuous:true,timed:true,start:{...path.start,y:ground.startHeight+.025},end:{...path.end,y:ground.endHeight+.025},segments:ground.segments.map(segment=>({...segment,y0:segment.y0+.025,y1:segment.y1+.025}))}});
+   const yawSamples=confirmedMotionYaw(preview,id,entry.actor.root);if(!yawSamples)return false;
+   prepared.push({id,entry,trace:{actorId:id,continuous:true,timed:true,start:{...path.start,y:ground.startHeight+.025},end:{...path.end,y:ground.endHeight+.025},segments:ground.segments.map(segment=>({...segment,y0:segment.y0+.025,y1:segment.y1+.025})),yawSamples}});
   }
   const installed=[];try{for(const value of prepared){value.entry.motion.install(value.trace,preview.sequence);installed.push(value);}}catch{for(const value of installed)value.entry.motion.reset();return false;}
   historyRun={sequence:preview.sequence,entries:new Map(prepared.map(value=>[value.id,value.entry])),support,invalid:false};return true;
