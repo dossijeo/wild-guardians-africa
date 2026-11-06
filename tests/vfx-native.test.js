@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import {createHash} from 'node:crypto';
 import {createNativeVfx,createVfxAtlasRects,createVfxGeometries,packVfxSprites,vfxDefinitions,vfxSpriteVertex,vfxSpriteFragment,vfxGeometryVertex,vfxGeometryFragment,vfxRigidVertex,vfxRigidFragment,vfxShadowVertex,vfxShadowFragment,vfxEnvironment,MAX_SPRITES,MAX_FX_VERTS} from '../src/rendering/vfx-native.js';
+import {vfxDefinitions as standaloneDefinitions} from '../src/rendering/vfx-definitions.js';
 const read=p=>fs.readFileSync(new URL('../'+p,import.meta.url));
 const manifest=JSON.parse(read('content/manifests/vfx-native.json'));
 const source=read(manifest.source).toString().replace(/\r\n/g,'\n');
@@ -44,9 +45,9 @@ function oracle(id){
 }
 
 test('VFX extraction traces the original atlas, 19 resources, 18 definitions and eight shaders',()=>{
-  assert.equal(hash(read(manifest.source)),manifest.sourceSha256);assert.equal(hash(read('src/rendering/vfx-native.js')),manifest.moduleSha256);
+  assert.equal(hash(read(manifest.source)),manifest.sourceSha256);assert.equal(hash(read('src/rendering/vfx-native.js')),manifest.moduleSha256);assert.equal(hash(read('src/rendering/vfx-definitions.js')),manifest.definitionsSha256);
   assert.equal(hash(read('public'+manifest.atlas)),manifest.atlasSha256);assert.deepEqual(manifest.atlasDimensions,[4096,2048]);
-  assert.equal(assets.resources.length,19);assert.equal(vfxDefinitions.length,18);assert.equal(MAX_SPRITES,760);assert.equal(MAX_FX_VERTS,48000);
+  assert.equal(assets.resources.length,19);assert.equal(vfxDefinitions.length,18);assert.equal(vfxDefinitions,standaloneDefinitions);assert.equal(MAX_SPRITES,760);assert.equal(MAX_FX_VERTS,48000);
   assert.equal(manifest.structuralDamage,'external');assert.equal(manifest.previewContactsOnly,true);
   const worldVertex=source.match(/const worldVertex=`([\s\S]*?)`;/)[1];
   for(const [name,v,f] of [['spriteP',vfxSpriteVertex,vfxSpriteFragment],['fxP',vfxGeometryVertex,vfxGeometryFragment],['meshP',vfxRigidVertex,vfxRigidFragment],['shadowP',vfxShadowVertex,vfxShadowFragment]]){

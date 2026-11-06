@@ -1,4 +1,6 @@
 // Generated from original VFX Atelier V4 by tools/prepare_vfx_renderer.py.
+import {vfxDefinitions} from './vfx-definitions.js';
+export {vfxDefinitions} from './vfx-definitions.js';
 const TAU=Math.PI*2;
 const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)), mix=(a,b,t)=>a+(b-a)*t;
 const smooth=(a,b,x)=>{const t=clamp((x-a)/(b-a));return t*t*(3-2*t);};
@@ -58,26 +60,6 @@ export function vfxEnvironment(v,nightFill=.14){const settings={nightFill};
  const shadowVP=M.mul(M.ortho(-6.3,6.3,-6.3,6.3,.1,26),M.look(V.scale(dir,12),[0,0,0]));
  return {night:n,sun,sky,ground,dir,top,bottom,shadowVP,particle:V.add(V.scale(sky,.95),V.scale(sun,.4))};}
 
-export const vfxDefinitions=[
-{id:'rhino',name:'Rinoceronte',title:'Embestida del rinoceronte',group:'Bestias',duration:4.5,icon:'rhino',species:'Rinoceronte',phases:[.88,1.7,2.4],desc:'Carril de aviso → arranque pesado → choque puntual. Polvo de carrera, líneas de velocidad, impacto animado y ondas tridimensionales. No rompe el objetivo.',chips:['Aviso + carga + contacto','Big hit · CodeManu','Polvo y suelo 3D']},
-{id:'lion',name:'León',title:'Combo de tres zarpazos',group:'Bestias',duration:4.1,icon:'claw',species:'León',phases:[.77,1.05,2.35],desc:'Tres golpes encadenados con barridos inclinados, marcas de garra, estelas afiladas y destellos breves. Cada contacto emite su propio evento.',chips:['Garras · Kenney','Cintas 3D afiladas','3 contactos separados']},
-{id:'buffalo',name:'Búfalo',title:'Pisotón de la sabana',group:'Bestias',duration:4.5,icon:'buffalo',species:'Búfalo',phases:[1.25,1.43,2.7],desc:'Círculo de aviso, elevación del cuerpo y golpe pesado. Corona de polvo, ondas rasantes y tierra con gravedad; ningún edificio se fragmenta.',chips:['Corona de polvo','Onda de suelo','Terrones, no escombros']},
-{id:'warthog',name:'Facóquero',title:'Barrido de colmillos',group:'Bestias',duration:4.1,icon:'horn',species:'Facóquero',phases:[.83,1.27,2.2],desc:'Carga corta que termina en dos barridos ascendentes. Los filos siguen los colmillos en el espacio y el polvo permanece junto al suelo.',chips:['Slash curvo · Kenney','Doble estela 3D','Impulso ascendente']},
-{id:'hyena',name:'Hiena',title:'Mordida y retirada',group:'Bestias',duration:3.9,icon:'bite',species:'Hiena',phases:[.89,1.25,2.1],desc:'Un salto corto, dos arcos que se cierran sobre el punto de contacto y retirada. Golpe seco sin sangre ni explosión.',chips:['Arcos de mordida','Impacto blanco · CodeManu','Contacto localizado']},
-{id:'roar',name:'Rugido',title:'Rugido intimidatorio',group:'Bestias',duration:4.6,icon:'roar',species:'León',phases:[.78,.95,2.9],desc:'El cono indica el área de amenaza. Cuatro frentes de presión se alejan de la boca, orientados en tres dimensiones, y remueven el polvo.',chips:['Aviso en cono','Frentes de presión 3D','Sin daño programado']},
-{id:'shield',name:'Protección',title:'Cúpula del guardián',group:'Espíritu',duration:5.1,icon:'shield',phases:[.4,.9,3.7],desc:'Una cúpula tridimensional envuelve el tótem. Bordes Fresnel, patrón de celdas y una ondulación localizada cuando recibe un impacto de prueba.',chips:['Superficie 3D','Colisión visual localizada','Luz verde controlada']},
-{id:'repel',name:'Repulsión',title:'Pulso de repulsión',group:'Espíritu',duration:4.6,icon:'repel',phases:[.3,1.27,2.9],desc:'La energía converge, se enrolla sobre el suelo y sale en tres ondas. El efecto comunica expulsión, no una explosión de fuego.',chips:['Charge + vortex · CodeManu','Tres frentes expansivos','Motivo circular']},
-{id:'heal',name:'Bendición',title:'Bendición de la tierra',group:'Espíritu',duration:5,icon:'heart',phases:[.3,.8,3.9],desc:'Aura animada en verde, corrientes ascendentes, hojas y pequeños corazones. Una señal de recuperación que puede acompañar al espíritu.',chips:['Aura · CodeManu','Corazones · Kenney','Espirales tridimensionales']},
-{id:'stun',name:'Aturdimiento',title:'Aturdimiento legible',group:'Espíritu',duration:4.6,icon:'stun',phases:[.25,.6,3.5],desc:'Estrellas orbitan la cabeza de la maqueta y dejan estelas discretas. Feedback de estado separado del ataque, sin cambiar la IA.',chips:['Estrellas · Kenney','Órbita sobre la cabeza','Estado visual independiente']},
-{id:'dust',name:'Pisadas',title:'Pisadas en tierra',group:'Movimiento',duration:3.6,icon:'dust',desc:'Tres apoyos cortos: polvo bajo, motas pequeñas y dispersión lateral. Sin humo blanco ni emisión de luz.',chips:['Kenney · humo','Tamaño: 15–55 cm','Alpha normal']},
-{id:'dig',name:'Cavar',title:'Tierra con peso',group:'Cultivo',duration:3.5,icon:'dig',desc:'El golpe de la azada levanta terrones sólidos y una nube animada. Los fragmentos caen, rebotan y se asientan.',chips:['Brackeys · 64 frames','Terrones 3D','Kenney · tierra']},
-{id:'water',name:'Regar',title:'Agua sobre la tierra',group:'Cultivo',duration:4.3,icon:'water',desc:'Gotas 3D desde una regadera, gravedad hacia abajo, salpicaduras al contacto y un pequeño rastro húmedo.',chips:['Gotas 3D','Kenney · ondas','Agua sin glow']},
-{id:'harvest',name:'Cosechar',title:'Una buena cosecha',group:'Cultivo',duration:3.9,icon:'harvest',desc:'Hojas que giran, pequeñas mazorcas que llegan a la cesta y un destello breve para confirmar la recogida.',chips:['Hojas y cosecha 3D','Kenney · destello','Brillo acotado']},
-{id:'wood',name:'Madera',title:'Impacto en madera',group:'Defensa',duration:3.1,icon:'wood',desc:'Astillas alargadas salen de la cara golpeada. Un toque de serrín acompaña el impacto, sin chispas de metal.',chips:['Astillas 3D','Kenney · tierra','Material mate']},
-{id:'adobe',name:'Adobe',title:'Impacto en adobe',group:'Defensa',duration:3.3,icon:'adobe',desc:'Fragmentos rojizos y polvo cálido. La nube queda pegada al punto de impacto y se disipa sin tapar el muro.',chips:['Brackeys · polvo','Fragmentos 3D','Color del material']},
-{id:'stone',name:'Piedra',title:'Impacto en piedra',group:'Defensa',duration:3.3,icon:'stone',desc:'Esquirlas cortas y pesadas, rebote más seco y una cantidad pequeña de polvo mineral. Nada de explosiones.',chips:['Piedras 3D','Polvo mineral','Rebote controlado']},
-{id:'spirit',name:'Espíritu',title:'La presencia del guardián',group:'Espíritu',duration:5.5,icon:'spirit',desc:'Motas diminutas trazan espirales en el espacio. Dos luces locales colorean la madera; la escena conserva su oscuridad.',chips:['Kenney · halo y estela','Trayectorias 3D','Dos luces locales']},
-];
 
 export function createNativeVfx(id,spriteRects,{density=1,wind=.3,layers={},surface=null,waterSource=null,shieldMode=null,shieldDuration=20,agricultureMode=null,agricultureDuration=30,stepMode=false}={}){
  const definitions=vfxDefinitions,contacts=[],style=vfxRigidStyles;

@@ -5,7 +5,7 @@ import {validateConfirmedMotion} from './confirmed-motion-validation.js';
 import {confirmedAnimalPoses} from './confirmed-animal-poses.js';
 import {preparePresentationWorkerHeadingDeltas,applyPresentationWorkerHeadingDeltas} from '../simulation/presentation-worker-headings.js';
 import {createConfirmedVfxEventWindow} from './confirmed-vfx-event-window.js';
-import {vfxDefinitions} from './vfx-native.js';
+import {vfxDefinitions} from './vfx-definitions.js';
 
 // Applies a single ordered authority publication to the existing scene state.
 // It does not advance simulation or install a second physics owner.
