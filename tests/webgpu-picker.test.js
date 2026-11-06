@@ -3,6 +3,14 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {createWebGpuPicker,createCutoutHitTest,webGpuPickerReady} from '../src/rendering/webgpu-picker.js';
 
+test('grouped terrain remains selectable and occludes entities behind it',()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(45,1,.1,100),group=new THREE.Group(),floor=new THREE.Mesh(new THREE.PlaneGeometry(20,20),new THREE.MeshBasicMaterial({side:THREE.DoubleSide}));
+ camera.position.set(0,5,10);camera.lookAt(0,0,0);camera.updateProjectionMatrix();floor.rotation.x=-Math.PI/2;floor.userData.ground=true;group.add(floor);scene.add(group);
+ const structure=new THREE.Group();structure.userData.entityId='under';structure.position.set(0,-2,-4);structure.add(new THREE.Mesh(new THREE.BoxGeometry(1,1,1),new THREE.MeshBasicMaterial()));scene.add(structure);
+ const picker=createWebGpuPicker({scene,camera,state:{},animals:{get:()=>null},cropBounds:()=>[]});assert.ok(picker.pick({x:0,y:0,terrainOnly:true}).point);assert.equal(picker.pick({x:0,y:0}).entityId,null);
+ group.visible=false;assert.equal(picker.pick({x:0,y:0,terrainOnly:true}).point,null);assert.equal(picker.pick({x:0,y:0}).entityId,'under');
+});
+
 test('prepares a confirmed animal pose only for the pick and restores it even on raycast failure',()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(45,1,.1,100),root=new THREE.Group(),mesh=new THREE.Mesh(new THREE.BoxGeometry(1,1,1),new THREE.MeshBasicMaterial());camera.position.set(0,0,5);camera.lookAt(0,0,0);camera.updateProjectionMatrix();root.add(mesh);scene.add(root);let prepared=0,restored=0;const actor={root,preparePick(){prepared++;return ()=>restored++;}},picker=createWebGpuPicker({scene,camera,state:{raid:{animals:[{id:'a',status:'walking'}]}},animals:{get:()=>actor},cropBounds:()=>[]});
  assert.equal(picker.pick({x:0,y:0}).entityId,'a');assert.equal(prepared,1);assert.equal(restored,1);picker.pick({x:0,y:0,terrainOnly:true});assert.equal(prepared,1);

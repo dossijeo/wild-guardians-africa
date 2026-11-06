@@ -5,17 +5,17 @@ export function createTerrainAdmission({scene,admission,coordinator=null,onError
  const pending=new Map(),visible=new Map(),unavailable=new Set();let closed=false;
  function release(record){
   if(!record||record.released)return;record.released=true;record.controller.abort();try{record.withdraw?.();}catch(error){onError(error);}record.withdraw=null;
-  // Part of a failed publication may already have reached the scene. Keep
-  // meshes still inside the compilation group intact until deferred release.
-  for(const mesh of record.meshes)if(record.published||mesh.parent===scene)mesh.removeFromParent();
+  // Keep the compiled subtree intact until outstanding GPU work completes,
+  // even after the visible revision has been retired.
+  record.group.removeFromParent();
   const dispose=()=>{for(const mesh of record.meshes)mesh.removeFromParent();record.dispose();};
   if(typeof admission.deferRelease==='function')admission.deferRelease(record.group,dispose);else dispose();
  }
  // Keep scene attachment separate from replacing ownership. A joint chunk
  // publication can later attach all participants before retiring either old
  // revision; a failed attachment leaves the old visible owner untouched.
- function rollback(record){for(const mesh of record.meshes)if(mesh.parent===scene)mesh.removeFromParent();}
- function attach(record){try{for(const mesh of record.meshes)scene.add(mesh);}catch(error){rollback(record);throw error;}}
+ function rollback(record){if(record.group.parent===scene)record.group.removeFromParent();}
+ function attach(record){try{scene.add(record.group);}catch(error){rollback(record);throw error;}}
  function finalize(key,record){const old=visible.get(key);record.published=true;record.withdraw=null;visible.set(key,record);pending.delete(key);unavailable.delete(key);let notified=false;return ()=>{if(notified)return;notified=true;try{release(old);}catch(error){try{onError(error);}catch{}}try{onPublished(key);}catch(error){try{onError(error);}catch{}}};}
  function publish(key,group,meshes,dispose,{revision=null,epoch=null,publicationOrder=undefined}={}){
   if(closed)throw Error('Terrain admission closed');
