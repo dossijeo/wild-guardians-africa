@@ -75,9 +75,11 @@ Se usa `.cache/tooling/node20.exe`; el registro local de la batería está en
 `.cache/a6-integration-tests.tap`. La compilación del perfil `webgpu-worker` se
 verifica por separado, sin arrancar una campaña gráfica.
 
-El mecanismo permanece conectado al perfil temporal existente del juego. No se
-activa silenciosamente en perfiles sin ese contrato, ni se declara terminada la
-migración de producción, la recuperación completa o la paridad visual. Los
+El mecanismo está conectado al perfil temporal explícito del juego, disponible
+sin DEV mediante `VITE_PRESENTATION_BACKEND=webgpu-worker` y
+`VITE_HISTORICAL_PRESENTATION_RECOVERY=true`. No se activa silenciosamente en
+perfiles sin ese contrato ni acredita por sí mismo recuperación completa o
+paridad visual. Los
 intervalos no certificados mantienen el fallback; por ejemplo, la captura de
 manglares con puertas y discos solapados no recibe autorización falsa.
 

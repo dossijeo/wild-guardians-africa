@@ -1,5 +1,23 @@
 # Recuperación temporal opt-in
 
+## Decisión de contrato A7
+
+El contrato interno de interacción y recuperación está conectado en el perfil
+explícito: IDs y orden de comandos, confirmación/rechazo de provisionales,
+propiedad del Worker de reemplazo, generación de recursos, negociación del
+checkpoint y replay, descarte de resultados obsoletos y fallo explícito si no
+existe una base recuperable. No crea otra autoridad ni habilita rebobinado de
+consecuencias confirmadas. El control de saturación y la retirada del snapshot
+completo siguen siendo requisitos pendientes de **A2**, no se reclasifican como C.
+
+Las pruebas dirigidas de cliente, coordinador, impactos, canal de entrada y
+recuperación histórica pasan juntas (85 casos). Incluyen autoridad WASM real y
+receptor en Worker con las limitaciones descritas abajo. La cobertura de todas
+las magias y contenidos es B5/B6; pérdida real de dispositivo, sesión completa,
+restauración con física activa y continuidad gráfica son C. Esta decisión no
+declara cerrado A globalmente ni garantiza que cualquier fallo permita continuar:
+un diario incompleto termina la recuperación de forma visible y segura.
+
 El perfil de integración `VITE_PRESENTATION_BACKEND=webgpu-worker` puede solicitar
 `VITE_HISTORICAL_PRESENTATION_RECOVERY=true` durante la compilación. La opción está
 apagada por defecto y no convierte el backend en la ruta predeterminada del juego.
