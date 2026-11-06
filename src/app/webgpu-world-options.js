@@ -14,7 +14,7 @@ export function guardianPlacementForWorld({early=null,hosted,presentationConfigu
 export function diagnosticPresentationCapabilities(params,dev){
  if(!(params instanceof URLSearchParams)||typeof dev!=='boolean')throw TypeError('Invalid diagnostic presentation profile');
  const early=dev&&params.has('qa-worker-early-gpu-view');
- return {cameraTerrain:dev&&params.has('qa-webgpu-camera-terrain'),provisionalStructures:early,provisionalCrops:early,picking:dev&&params.has('qa-webgpu-picking'),causalInputs:dev&&params.has('qa-webgpu-causal-input'),bakedWalking:dev&&params.has('qa-webgpu-baked-walking'),bakedWorkerWalking:false,coordinatedChunks:false};
+ return {cameraTerrain:dev&&params.has('qa-webgpu-camera-terrain'),provisionalStructures:early,provisionalCrops:early,picking:dev&&params.has('qa-webgpu-picking'),causalInputs:dev&&params.has('qa-webgpu-causal-input'),bakedWalking:dev&&params.has('qa-webgpu-baked-walking'),bakedHyenaWalking:false,bakedWorkerWalking:false,wallImpactFragments:false,coordinatedChunks:false};
 }
 // One structural profile for both the initial renderer and its replacement.
 // A recovery must not silently switch world features or actor presentation.

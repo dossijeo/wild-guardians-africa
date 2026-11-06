@@ -5,6 +5,10 @@ import {createWebGpuAnimalBank} from '../src/rendering/webgpu-animal-bank.js';
 import {createWebGpuAnimalRoster} from '../src/rendering/webgpu-animal-roster.js';
 import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
+test('single-species walking requests only hyena and keeps CPU actors after a failed bake',async()=>{
+ const state={raid:{animals:[{id:'h',species:'hyena',status:'walking'},{id:'l',species:'lion',status:'walking'}]}},calls=[],errors=[],bank={tick(){},dispose(){}},roster=createWebGpuAnimalRoster({scene:{},residency:{},state,assetBank:bank,bakedWalkSpecies:'hyena',bakedWalkBank:{get(species){calls.push(species);return Promise.reject(Error('unavailable'));}},pipelineAdmission:{prepare:async()=>{}},onBakedWalkError:(species,error)=>errors.push([species,error.message]),createAnimal:()=>({root:new Group(),update(){this.root.visible=true;},dispose(){}})});
+ try{roster.sync();await flush();await flush();assert.deepEqual(calls,['hyena']);assert.deepEqual(errors,[['hyena','unavailable']]);assert.equal(roster.status().ready,2);assert.equal(roster.get('h').root.visible,true);assert.equal(roster.get('l').root.visible,true);}finally{roster.dispose();}
+});
 test('the roster publishes its actor inside the admission callback',async()=>{
  const state={raid:{animals:[{id:'a',species:'hyena',status:'walking'}]}},bank={tick(){},dispose(){}},root=new Group();let commit,ready=0;
  const admission={prepare(){throw Error('non-atomic admission used');},prepareAndPublish(object,options,publish){assert.equal(object,root);return new Promise(resolve=>{commit=()=>{publish();resolve();};});}},roster=createWebGpuAnimalRoster({scene:{},residency:{},state,assetBank:bank,pipelineAdmission:admission,onReady(){ready++;},createAnimal:()=>({root,update(){root.visible=true;},dispose(){}})});
