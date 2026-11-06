@@ -639,7 +639,7 @@ export function bless(s,id,targetId){
       }
       replaceTasks(s,s.tasks.filter(t=>t.targetId!==targetId));
       for(const spell of s.spells.filter(a=>a.targetPlantId===targetId))emit(s,'AgriculturalSpellEnded',{
-        spellId:spell.id,kind:spell.kind,targetPlantId:targetId,growthSecondsAdded:spell.growthSecondsAdded??0});
+        spellId:spell.id,kind:spell.kind,targetPlantId:targetId,growthSecondsAdded:spell.growthSecondsAdded??0,remainingSeconds:Math.max(0,spell.remaining)});
       s.spells=s.spells.filter(a=>a.targetPlantId!==targetId);
     }
     a.total++;a.progress=0;invalidateBlessingInfluence(s);
@@ -1721,7 +1721,7 @@ export function tick(s,seconds,nav) {
     }
     const shieldsBefore=s.spells.filter(a=>a.kind==='shield').length;
     for(const spell of s.spells)spell.remaining=Math.max(0,spell.remaining-step);
-    for(const a of s.spells)if(a.remaining<=1e-9&&a.targetPlantId!==undefined)emit(s,'AgriculturalSpellEnded',{spellId:a.id,kind:a.kind,targetPlantId:a.targetPlantId,growthSecondsAdded:a.growthSecondsAdded??0});
+    for(const a of s.spells)if(a.remaining<=1e-9&&a.targetPlantId!==undefined)emit(s,'AgriculturalSpellEnded',{spellId:a.id,kind:a.kind,targetPlantId:a.targetPlantId,growthSecondsAdded:a.growthSecondsAdded??0,remainingSeconds:0});
     s.spells=s.spells.filter(a=>a.remaining>1e-9);
     if(s.spells.filter(a=>a.kind==='shield').length!==shieldsBefore)nav.setState(s);
     advanceGateLeaves(s,step);
