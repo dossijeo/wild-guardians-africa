@@ -85,6 +85,7 @@ import {captureNativeAuthorityBootstrap} from '../simulation/native-authority-bo
 import {savedNativeAuthorityOptions} from '../simulation/native-authority-checkpoint.js';
 import {earlyNativeStartupCommand} from '../simulation/early-native-startup.js';
 import {createEarlyWorkerWorld} from './early-worker-world.js';
+import {loadLegacyWorldScene} from './load-legacy-world-scene.js';
 import {freshNativeAuthorityOptions} from '../simulation/fresh-native-authority.js';
 import {confirmedCropId} from './confirmed-crop-event.js';
 import {createConfirmedPresentationAdapter} from '../simulation/confirmed-presentation-adapter.js';
@@ -93,7 +94,6 @@ import {villageLayout,findVillageEntry} from '../world/villages.js';
 import {prepareWildEngineWorld} from './wild-engine-world.js';
 import {canRestoreWorkerOnly,createWorkerNavigationProjection} from './worker-navigation-projection.js';
 import {createEventDrivenTaskPlanner} from '../world/wild-engine/spatial-intent-bridge.js';
-import {WorldScene} from '../rendering/scene.js';
 import {farVegetationProfile,farGroundReviewOverrides} from '../rendering/far-vegetation-profile.js';
 import {prepareInitialFarWorld} from './far-world-loading.js';
 import {frameDelta} from './frame-delta.js';
@@ -172,14 +172,18 @@ if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-worker-game
 if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-worker-game'))globalThis.wildGuardiansWorkerStructureStatusQa=()=>({count:state.structures.length,walls:world.provisionalWalls.entries.size,buildings:world.provisionalBuildings.entries.size});
 if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-worker-game'))globalThis.wildGuardiansWorkerAwakeningQa=(duplicate=false)=>{const target=state?.plants.find(p=>p.alive&&!p.blessing);if(!target)throw Error('QA awakening target unavailable');toggleAwakening();onPick({entityId:target.id});if(tool?.targetId!==target.id)throw Error('QA awakening selection failed');safe(confirmAwakening);if(duplicate)safe(confirmAwakening);const event=world.guardianSummons?.slots[0]?.event;return {targetId:target.id,blessed:!!target.blessing,progress:state.awakenings?.progress,queued:world.guardianSummons?.pending.length,event:event?{commandId:event.commandId,kind:event.kind,provisional:!!event.provisional}:null};};
 if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-worker-game'))globalThis.wildGuardiansWorkerAwakeningStatusQa=id=>({blessed:!!state?.plants.find(p=>p.id===id)?.blessing,progress:state?.awakenings?.progress,queued:world?.guardianSummons?.pending.length,event:world?.guardianSummons?.slots[0]?.event?{commandId:world.guardianSummons.slots[0].event.commandId,kind:world.guardianSummons.slots[0].event.kind,provisional:!!world.guardianSummons.slots[0].event.provisional}:null});
-let preparedLoading=null,loadingDiorama=null,loadingProgress=null,loadingCinema=null,loadingMature=null,loadingDiagnostic=null,loadingGeneration=0,loadingAudio=null,loadingOverlay=null,loadingTransfers=null;
-function prepareLoadingScene(){
+let preparedLoading=null,loadingPreparationGeneration=0,loadingDiorama=null,loadingProgress=null,loadingCinema=null,loadingMature=null,loadingDiagnostic=null,loadingGeneration=0,loadingAudio=null,loadingOverlay=null,loadingTransfers=null;
+async function prepareLoadingScene(){
   preloadScreenOverlays();
  clearLoadingFailure(document);
  if(preparedLoading)return preparedLoading;progressQa?.lifecycle('app-preloading-created');
+ const generation=loadingPreparationGeneration,earlyGpuNoWebgl=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-worker-early-gpu-view')&&new URLSearchParams(location.search).has('qa-worker-no-webgl');
+ // The graphical Worker route must not load the legacy scene or construct a
+ // WebGL context. A cancelled dynamic import cannot create a late world.
+ let WorldScene;if(!earlyGpuNoWebgl){WorldScene=await loadLegacyWorldScene({isCurrent:()=>generation===loadingPreparationGeneration});if(preparedLoading)return preparedLoading;}
  const canvas=document.createElement('canvas');canvas.className='loading-prepared-canvas';canvas.style.cssText='position:fixed;inset:0;width:100%;height:100%;opacity:0;pointer-events:none';document.body.append(canvas);
  let owner,diorama;const transfers=new LoadingTransferOwner();
- try{const earlyGpuNoWebgl=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-worker-early-gpu-view')&&new URLSearchParams(location.search).has('qa-worker-no-webgl');owner=earlyGpuNoWebgl?createEarlyWorkerWorld(canvas,onPick,{confirmedCameraTerrain:diagnosticPresentationCapabilities(new URLSearchParams(location.search),import.meta.env.DEV).cameraTerrain,checkpointPolicy:{physics:experimentalWorkerPhysicsSave(),nativeAuthority:true}}):new WorldScene(canvas,onPick,{approvedVisuals:true});owner.guardianScreenExclusions=()=>{const canvasRect=canvas.getBoundingClientRect();if(!canvasRect.width||!canvasRect.height)return [];return [...document.querySelectorAll("#clock,#money,#days,#menuButton,#actions button,#awakeningHud")].filter(el=>el.getClientRects().length).map(el=>{const r=el.getBoundingClientRect(),pad=8;return {minX:2*(r.left-pad-canvasRect.left)/canvasRect.width-1,maxX:2*(r.right+pad-canvasRect.left)/canvasRect.width-1,minY:1-2*(r.bottom+pad-canvasRect.top)/canvasRect.height,maxY:1-2*(r.top-pad-canvasRect.top)/canvasRect.height};});};owner.guardianNarration=()=>guardian?.key?{audio:guardian.narrationAudio(),record:guardian.voiceRecord}:null;owner.onGuardianPresence=(id,p)=>{playGuardianScenePresence(audio,owner,id,p,()=>owner===world).catch(()=>{});};owner.frameScheduler=globalFrameSchedulerEnabled()?globalFrameScheduler:null;if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-far-full-scene'))owner.farIsolatedPreparation=false;if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-zero-vertices'))owner.farZeroVertexPreparation=true;owner.loadingCpuBudget=!(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading-legacy-pacing'));owner.controls.enabled=false;owner.qualitySetting(settings.quality);applyWorldResolution(owner,settings.resolution);if(progressQa)owner.onLoadingSpan=span=>{if(!owner.disposed)progressQa.loadingSpan(span);};
+ try{owner=earlyGpuNoWebgl?createEarlyWorkerWorld(canvas,onPick,{confirmedCameraTerrain:diagnosticPresentationCapabilities(new URLSearchParams(location.search),import.meta.env.DEV).cameraTerrain,checkpointPolicy:{physics:experimentalWorkerPhysicsSave(),nativeAuthority:true}}):new WorldScene(canvas,onPick,{approvedVisuals:true});owner.guardianScreenExclusions=()=>{const canvasRect=canvas.getBoundingClientRect();if(!canvasRect.width||!canvasRect.height)return [];return [...document.querySelectorAll("#clock,#money,#days,#menuButton,#actions button,#awakeningHud")].filter(el=>el.getClientRects().length).map(el=>{const r=el.getBoundingClientRect(),pad=8;return {minX:2*(r.left-pad-canvasRect.left)/canvasRect.width-1,maxX:2*(r.right+pad-canvasRect.left)/canvasRect.width-1,minY:1-2*(r.bottom+pad-canvasRect.top)/canvasRect.height,maxY:1-2*(r.top-pad-canvasRect.top)/canvasRect.height};});};owner.guardianNarration=()=>guardian?.key?{audio:guardian.narrationAudio(),record:guardian.voiceRecord}:null;owner.onGuardianPresence=(id,p)=>{playGuardianScenePresence(audio,owner,id,p,()=>owner===world).catch(()=>{});};owner.frameScheduler=globalFrameSchedulerEnabled()?globalFrameScheduler:null;if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-far-full-scene'))owner.farIsolatedPreparation=false;if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-zero-vertices'))owner.farZeroVertexPreparation=true;owner.loadingCpuBudget=!(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading-legacy-pacing'));owner.controls.enabled=false;owner.qualitySetting(settings.quality);applyWorldResolution(owner,settings.resolution);if(progressQa)owner.onLoadingSpan=span=>{if(!owner.disposed)progressQa.loadingSpan(span);};
  if(globalThis.__desktopSmokeStarted){
   const trace=createNativeLoadingTrace({enabled:true}),previous=owner.onLoadingSpan;
   owner.onLoadingSpan=span=>{previous?.(span);trace.witness(span);};
@@ -191,7 +195,7 @@ function prepareLoadingScene(){
  preparation.pending=lightProbe?Promise.resolve():Promise.all([diorama.prepare(),prepareLoadingFrames(loadLoadingFrameImages,{signal:owner.loading.signal})]).then(([,images])=>{preparation.frameImages=images;if(!owner.disposed)progressQa?.lifecycle('app-preloading-ready');});preparation.pending.catch(()=>{});return preparation;
  }catch(failure){transfers.dispose();diorama?.dispose();owner?.dispose();canvas.remove();throw failure;}
 }
-function releasePreparedLoading(){const pending=preparedLoading;preparedLoading=null;if(pending){progressQa?.close(null,pending.transfers,{cancelled:true});pending.transfers.dispose();pending.diorama.dispose();pending.world.dispose();pending.canvas.remove();}}
+function releasePreparedLoading(){loadingPreparationGeneration++;const pending=preparedLoading;preparedLoading=null;if(pending){progressQa?.close(null,pending.transfers,{cancelled:true});pending.transfers.dispose();pending.diorama.dispose();pending.world.dispose();pending.canvas.remove();}}
 function clearLoadingPresentation(){const qaProgress=loadingProgress,qaTransfers=loadingTransfers;loadingTransfers?.dispose();loadingTransfers=null;loadingOverlay?.dispose();loadingOverlay=null;loadingAudio?.dispose();loadingAudio=null;clearInterval(loadingDiagnostic);loadingDiagnostic=null;if(loadingCinema)progressQa?.cameraPose('cancel-current',world);loadingCinema?.cancel();if(loadingCinema)progressQa?.cameraPose('cancel-restored',world);progressQa?.close(qaProgress,qaTransfers,{cancelled:!!loadingCinema||!qaProgress?.ready});loadingCinema=null;loadingMature?.reject(new Error('Loading cancelled'));loadingMature=null;loadingDiorama?.dispose();loadingDiorama=null;loadingProgress=null;}
 function refreshLoadingOverlay(){progressQa?.update(loadingProgress);if(loadingOverlay&&loadingProgress&&loadingDiorama)loadingOverlay.render(loadingProgress.snapshot(),loadingDiorama.plants.progress,{night:loadingDiorama.night??0,accepting:loadingDiorama.interactive,plantingBlocked:loadingDiorama.plantingBlocked??false,pointer:loadingDiorama.pointerType??loadingOverlay.pointer});}
 function cancelLoading(failure=null){if(!starting){releasePreparedLoading();return;}loadingGeneration++;starting=false;state=null;clearWorld();releasePreparedLoading();menu();if(failure)error(failure.message,{loadingFailure:true});}
@@ -327,7 +331,7 @@ window.addEventListener('message',event=>{
   safe(async()=>{
    const data=event.data,respond=detail=>event.source.postMessage({type:'wild-guardians:menu-data',...detail},location.origin);
    if(data.action==='exit')return exitDesktop();
-   if(data.action==='prepare-loading'){progressQa?.lifecycle('app-menu-preparation-received');try{prepareLoadingScene();}catch(failure){error(failure.message,{loadingFailure:true});}return;}
+   if(data.action==='prepare-loading'){progressQa?.lifecycle('app-menu-preparation-received');try{await prepareLoadingScene();}catch(failure){if(failure.name!=='AbortError')error(failure.message,{loadingFailure:true});}return;}
    if(data.action==='cancel-loading'){cancelLoading();return;}
    if(data.action==='request-saves')respond({slots:(await listedSaves()).map(slot=>({...slot,cultureName:selector.cultures.find(c=>c.id===slot.culture)?.name??slot.culture,biomeName:selector.biomes.find(b=>b.id===slot.biome)?.name??slot.biome,money:localMoney(slot.money)}))});
    if(data.action==='delete-slot'){await saves.delete(data.slotId);respond({slots:(await listedSaves()).map(slot=>({...slot,cultureName:selector.cultures.find(c=>c.id===slot.culture)?.name??slot.culture,biomeName:selector.biomes.find(b=>b.id===slot.biome)?.name??slot.biome,money:localMoney(slot.money)}))});return;}
@@ -358,7 +362,7 @@ async function startGame(loaded=null,{slotId,preview}={}) {
   if(!document.querySelector('#native-menu'))app.innerHTML='<div class="loading" role="status">Preparing your land…</div>';
   try {
     const audioUnlocked=audio.unlock().then(()=>true,()=>false);
-    prepared=prepareLoadingScene();
+    prepared=await prepareLoadingScene();assertLoading();
     const qaSeed=import.meta.env.DEV?
       new URLSearchParams(location.search).get('qa-seed')??
       new URLSearchParams(location.search).get('qa-spatial-seed'):null;
