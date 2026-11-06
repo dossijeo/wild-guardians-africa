@@ -40,6 +40,13 @@ test('a detached child cannot be released while its former group is compiling or
  await new Promise(resolve=>setTimeout(resolve,10));assert.equal(fences.length,1);fences[0]();await new Promise(resolve=>setImmediate(resolve));assert.equal(released,0);
  finish();await new Promise(resolve=>setTimeout(resolve,10));assert.equal(fences.length,2);assert.equal(released,0);fences[1]();await new Promise(resolve=>setImmediate(resolve));assert.equal(released,1);admission.dispose();child.geometry.dispose();child.material.dispose();
 });
+test('a retired parent cannot be released while its detached child is compiling',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),group=new THREE.Group(),child=new THREE.Mesh(),controller=new AbortController(),fences=[];group.add(child);scene.add(group);let finish,released=0;
+ const renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone:()=>new Promise(resolve=>fences.push(resolve))}}},compileAsync:()=>new Promise(resolve=>{finish=resolve;})},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),ready=admission.prepare(child,{signal:controller.signal});
+ await Promise.resolve();controller.abort();await assert.rejects(ready,/cancelled/);child.removeFromParent();group.removeFromParent();admission.deferRelease(group,()=>released++);
+ await new Promise(resolve=>setTimeout(resolve,10));assert.equal(fences.length,1);fences[0]();await new Promise(resolve=>setImmediate(resolve));assert.equal(released,0);
+ finish();await new Promise(resolve=>setTimeout(resolve,10));assert.equal(fences.length,2);assert.equal(released,0);fences[1]();await new Promise(resolve=>setImmediate(resolve));assert.equal(released,1);admission.dispose();child.geometry.dispose();child.material.dispose();
+});
 test('retiring a group also protects a child detached while its GPU fence is pending',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),group=new THREE.Group(),child=new THREE.Mesh(),fences=[];group.add(child);let groupReleased=0,childReleased=0;
  const renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone:()=>new Promise(resolve=>fences.push(resolve))}}},compileAsync:()=>Promise.resolve()},admission=createWebGpuPipelineAdmission({renderer,scene,camera});
