@@ -57,7 +57,7 @@ self.onmessage=async({data})=>{
    recoveryAttachStarted=true;
    recoverySwitching=true;
    const failRecovery=error=>{if(recoveryFault)return;recoveryFault=String(error?.message??error);runtime.rejectQueuedCommands(Error(recoveryFault));if(recoveryTimer!==null)clearTimeout(recoveryTimer);recoveryTimer=null;recoveryReplay?.dispose();recoveryReplay=null;postMessage({kind:'visualRecoveryFailed',session,id:data.id,message:recoveryFault});};
-   if(concurrentRecovery)recoveryTimer=setTimeout(()=>failRecovery(Error('Concurrent visual recovery timed out; explicit recovery is required')),10000);
+   recoveryTimer=setTimeout(()=>failRecovery(Error('Visual recovery timed out; explicit recovery is required')),10000);
    const deadline=performance.now()+10000;while(runtime.status().busy&&!recoveryFault&&performance.now()<deadline)await new Promise(resolve=>setTimeout(resolve,5));if(recoveryFault)return;if(runtime.status().busy)throw Error('Visual recovery terrain switch unavailable');
    await authorityClient.reattachTerrain(data.terrainPort);
    if(recoveryFault)return;

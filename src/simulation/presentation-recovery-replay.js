@@ -18,7 +18,7 @@ export function createPresentationRecoveryReplay({port,session,checkpoint,journa
   else throw Error('Invalid recovery journal entry');
  }catch(error){fail(error);}}
  port.onmessage=({data})=>{if(closed||failed)return;try{
-  if(!waiting||data?.kind!=='recoveryAck'||data.session!==session||data.id!==waiting.id||data.sequence!==waiting.sequence||data.phase!==waiting.phase)throw Error('Invalid recovery acknowledgement');
+  if(data?.kind==='recoveryFailure'&&data.session===session&&typeof data.message==='string'&&data.message)throw Error(data.message);if(!waiting||data?.kind!=='recoveryAck'||data.session!==session||data.id!==waiting.id||data.sequence!==waiting.sequence||data.phase!==waiting.phase)throw Error('Invalid recovery acknowledgement');
   const completed=waiting;waiting=null;if(completed.phase==='publication'){cursor=completed.sequence;terrainPending=false;}else if(completed.phase==='terrain')terrainPending=true;if(completed.phase!=='checkpoint')index++;pump();
  }catch(error){fail(error);}};
  port.onmessageerror=()=>fail(Error('Recovery acknowledgement transfer failed'));port.start?.();pump();
