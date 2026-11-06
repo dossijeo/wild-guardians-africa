@@ -4,6 +4,29 @@ import {createWebGpuWorldClient} from '../src/rendering/webgpu-world-client.js';
 import {webGpuWorldOptions} from '../src/app/webgpu-world-options.js';
 import {MAX_PENDING_PRESENTATION_INPUTS} from '../src/rendering/presentation-input-limits.js';
 function setup(options={}){const worker={messages:[],postMessage(message,transfer){this.messages.push({message,transfer});},terminate(){this.terminated=true;}},ports=[],client=createWebGpuWorldClient({canvas:{transferControlToOffscreen:()=>({canvas:true})},session:'s',snapshot:'{}',...options,workerFactory:()=>worker,channelFactory:()=>{const a={close(){this.closed=true;}},b={close(){this.closed=true;}};ports.push(a,b);return {port1:a,port2:b};}});return {worker,ports,client};}
+test('guardian narration sends compact ordered media samples only while the client is running',async()=>{
+ const {client,worker}=setup(),record={id:'guide',path:'audio/guide.ogg',text:'unused'},audio={currentTime:1,paused:false,ended:false,playbackRate:1};
+ assert.equal(client.setGuardianNarration(record,audio),false);worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await client.ready;
+ assert.equal(client.setGuardianNarration(record,audio),true);const first=worker.messages.at(-1).message;assert.equal(first.kind,'guardian-narration');assert.deepEqual(first.narration.record,{id:'guide',path:'audio/guide.ogg'});
+ audio.paused=true;assert.equal(client.setGuardianNarration(record,audio),true);assert.equal(worker.messages.at(-1).message.sequence,first.sequence+1);
+ client.dispose();assert.equal(client.setGuardianNarration(record,audio),false);
+});
+test('viewport changes invalidate in-flight input and wait for a frame at the new size',async()=>{
+ const {client,worker}=setup({presentationInputs:true});worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await client.ready;
+ const old={sequence:4,terrainGeneration:2,selectableGeneration:5,cameraVersion:0};worker.onmessage({data:{kind:'rendered-frame',...old}});
+ const context=client.guardianContext(),contextId=worker.messages.at(-1).message.id;
+ const pick=client.pick({x:0,y:0},{includeGuardianContext:true}),pickId=worker.messages.at(-1).message.id;
+ client.resize(900,700);assert.deepEqual(worker.messages.at(-1).message,{kind:'resize',width:900,height:700,viewportVersion:1});
+ assert.equal(client.guardianFrame(),null);await assert.rejects(client.guardianContext(),/stale/);
+ worker.onmessage({data:{kind:'rendered-frame',...old}});assert.equal(client.guardianFrame(),null);
+ worker.onmessage({data:{kind:'guardianContextResult',id:contextId,result:{epoch:'e'}}});
+ worker.onmessage({data:{kind:'pickResult',id:pickId,result:{sequence:4,entityId:'animal',guardianContext:{epoch:'e'}}}});
+ await assert.rejects(context,/Stale/);await assert.rejects(pick,/Stale/);
+ const next={...old,viewportVersion:1};worker.onmessage({data:{kind:'rendered-frame',...next}});assert.deepEqual(client.guardianFrame(),next);
+ const current=client.guardianContext(),id=worker.messages.at(-1).message.id;worker.onmessage({data:{kind:'guardianContextResult',id,result:{epoch:'e'}}});assert.deepEqual(await current,{context:{epoch:'e'},frame:next});
+ const before=worker.messages.length;client.resize(900,700);assert.equal(worker.messages.length,before);client.resize(901,700);assert.equal(worker.messages.at(-1).message.viewportVersion,2);
+ worker.onmessage({data:{kind:'rendered-frame',...next}});assert.equal(client.guardianFrame(),null);client.dispose();
+});
 test('guardian context and frame confirmation reject stale camera and scene versions',async()=>{
  const {client,worker}=setup({presentationInputs:true});worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await client.ready;
  await assert.rejects(client.guardianContext(),/unavailable or stale/);

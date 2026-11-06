@@ -28,6 +28,20 @@ test('tutorial guide reuses the admitted guardian and yields to a cast',async()=
   assert.throws(()=>visual.setGuide({...guide,target:[1,2,NaN]}),/Invalid guardian guide/);
  }finally{visual.dispose();}
 });
+test('tutorial guide follows the latest narration clock and rejects stale voice packets',async()=>{
+ let now=0;const originalFetch=globalThis.fetch,scene=new THREE.Scene(),model=new THREE.Group(),mesh=new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshStandardMaterial());
+ mesh.morphTargetDictionary={viseme_A:0,viseme_B:1,viseme_X:2,blink_L:3,blink_R:4};mesh.morphTargetInfluences=[0,0,0,0,0];model.add(mesh);
+ const renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:()=>new MeshStandardNodeMaterial()}},visual=createWebGpuGuardianAttack({scene,state:{events:[],elapsed:0},renderer,clock:()=>now,loadModel:async()=>({scene:model,animations:[]})});
+ globalThis.fetch=async url=>({ok:true,json:async()=>({id:'guide',audio:'audio/guide.ogg',duration:2,mouthCues:[{start:0,end:1,value:'A'},{start:1,end:2,value:'B'}],pauses:[]})});
+ try{
+  await visual.prepare();visual.setGuide({origin:{x:0,y:1,z:0},target:[1,0,0],camera:{x:0,y:3,z:4}});
+  assert.equal(visual.setNarration({sequence:2,narration:{record:{id:'guide',path:'audio/guide.ogg'},audio:{currentTime:.5,paused:true,ended:false,playbackRate:1}}}),true);
+  visual.tick();await new Promise(resolve=>setImmediate(resolve));visual.tick();assert.equal(mesh.morphTargetInfluences[0],1);
+  assert.equal(visual.setNarration({sequence:1,narration:null}),false);
+  assert.equal(visual.setNarration({sequence:3,narration:{record:{id:'guide',path:'audio/guide.ogg'},audio:{currentTime:1.5,paused:true,ended:false,playbackRate:1}}}),true);visual.tick();assert.equal(mesh.morphTargetInfluences[1],1);
+  visual.setNarration({sequence:4,narration:null});visual.tick();assert.equal(mesh.morphTargetInfluences[2],1);
+ }finally{globalThis.fetch=originalFetch;visual.dispose();}
+});
 test('guardian presence follows admitted visual and is not replayed on confirmation or recovery',async()=>{
  let now=0;const sounds=[],state={elapsed:0,time:0,events:[],raid:{animals:[{id:'a',status:'walking'}]}},renderer={backend:{isWebGPUBackend:true}},origin={x:0,y:2,z:0},contact={x:1,y:1,z:0};
  const create=()=>createWebGpuGuardianAttack({scene:new THREE.Scene(),state,renderer,clock:()=>now,loadModel:async()=>({scene:new THREE.Group(),animations:[]}),onPresence:(id,p)=>sounds.push({id,p})});

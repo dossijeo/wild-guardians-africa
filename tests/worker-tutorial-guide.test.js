@@ -5,7 +5,7 @@ import {createWorkerTutorialGuide} from '../src/app/worker-tutorial-guide.js';
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
 function fixture(){let now=0,key='guide',sequence=7;const frame={sequence:7,terrainGeneration:2,selectableGeneration:3,cameraVersion:1},calls=[],configs=[];
  const client={guardianFrame:()=>({...frame}),guardianContext:async()=>({context:{epoch:'e',camera:{position:[1,2,3]}},frame:{...frame}}),verifyGuardianFrame:async()=>true,setGuardianGuide:async guide=>{calls.push(guide);return {accepted:true,visibility:'unknown'};},clearGuardianGuide:()=>{calls.push('clear');return true;}};
- const runtime={status:()=>({confirmedSequence:sequence}),submit:async()=>{sequence=8;return {sequence:8,value:{origin:{x:2,y:3,z:4},position:[4,5,6]}};}};
+ const runtime={status:()=>({confirmedSequence:sequence}),submit:async()=>{sequence=8;return {sequence:8,value:{origin:{x:2,y:3,z:4},position:[4,5,6],cropHeightInputs:[]}};}};
  const guide=createWorkerTutorialGuide({client,runtime,keyNow:()=>key,clock:()=>now,onConfig:value=>configs.push(value)});
  return {client,runtime,guide,calls,configs,frame,setKey:value=>key=value,setTime:value=>now=value};}
 test('guide uses authoritative origin once and never declares visibility',async()=>{
@@ -16,10 +16,31 @@ test('guide uses authoritative origin once and never declares visibility',async(
 });
 test('guide discards late authoritative answers after a camera or target change',async()=>{
  const f=fixture();let resolve;f.runtime.submit=()=>new Promise(done=>{resolve=done;});f.guide.update({key:'guide',toolKind:'center'});f.setTime(300);f.guide.update({key:'guide',toolKind:'center'});await flush();
- f.setKey('other');f.guide.update({key:'other',toolKind:'plant'});resolve({sequence:8,value:{origin:{x:2,y:3,z:4},position:[4,5,6]}});await flush();assert.ok(!f.calls.some(item=>item!=='clear'));f.guide.dispose();
+ f.setKey('other');f.guide.update({key:'other',toolKind:'plant'});resolve({sequence:8,value:{origin:{x:2,y:3,z:4},position:[4,5,6],cropHeightInputs:[]}});await flush();assert.ok(!f.calls.some(item=>item!=='clear'));f.guide.dispose();
 });
 test('guide bounds retries when the authoritative context keeps changing',async()=>{
  const f=fixture();let count=0;f.client.guardianContext=async()=>{count++;throw Error('stale');};f.guide.update({key:'guide',toolKind:'center'});
  for(const at of [300,1400,2500,3600,4700]){f.setTime(at);f.guide.update({key:'guide',toolKind:'center'});await flush();}
  assert.equal(count,3);f.guide.dispose();
+});
+test('guide hides when an authority-sampled crop height changes',async()=>{
+ let now=0,growth=0,sequence=7;const calls=[],frame={sequence:7,terrainGeneration:2,selectableGeneration:3,cameraVersion:1};
+ const client={guardianFrame:()=>({...frame}),guardianContext:async()=>({context:{camera:{position:[1,2,3]}},frame:{...frame}}),verifyGuardianFrame:async()=>true,setGuardianGuide:async()=>{calls.push('shown');},clearGuardianGuide:()=>calls.push('clear')};
+ const runtime={status:()=>({confirmedSequence:sequence}),submit:async()=>{sequence=8;return {sequence:8,value:{origin:{x:2,y:3,z:4},position:[4,5,6],cropHeightInputs:[{id:'p',species:'platano',growth:0}]}};}};
+ const guide=createWorkerTutorialGuide({client,runtime,keyNow:()=>'guide',clock:()=>now,heightsCurrent:inputs=>inputs.every(item=>item.growth===growth)});
+ guide.update({key:'guide',toolKind:'plant'});now=300;guide.update({key:'guide',toolKind:'plant'});await flush();assert.deepEqual(calls,['shown']);
+ growth=1;guide.update({key:'guide',toolKind:'plant'});assert.deepEqual(calls,['shown','clear']);guide.dispose();
+});
+test('a crop changing while admission is pending cannot publish a stale guide',async()=>{
+ let now=0,growth=0,sequence=7,finish;const calls=[],frame={sequence:7,terrainGeneration:2,selectableGeneration:3,cameraVersion:1};
+ const client={guardianFrame:()=>({...frame}),guardianContext:async()=>({context:{camera:{position:[1,2,3]}},frame:{...frame}}),verifyGuardianFrame:async()=>true,setGuardianGuide:()=>new Promise(resolve=>{calls.push('admitting');finish=resolve;}),clearGuardianGuide:()=>calls.push('clear')};
+ const runtime={status:()=>({confirmedSequence:sequence}),submit:async()=>{sequence=8;return {sequence:8,value:{origin:{x:2,y:3,z:4},position:[4,5,6],cropHeightInputs:[{id:'p',species:'platano',growth:0}]}};}};
+ const guide=createWorkerTutorialGuide({client,runtime,keyNow:()=>'guide',clock:()=>now,heightsCurrent:inputs=>inputs.every(item=>item.growth===growth)});
+ guide.update({key:'guide',toolKind:'plant'});now=300;guide.update({key:'guide',toolKind:'plant'});await flush();assert.deepEqual(calls,['admitting']);
+ growth=1;finish({accepted:true,visibility:'unknown'});await flush();assert.deepEqual(calls,['admitting','clear']);guide.dispose();
+});
+test('viewport revision clears a previously admitted guide',async()=>{
+ const f=fixture();f.guide.update({key:'guide',toolKind:'center'});f.setTime(300);f.guide.update({key:'guide',toolKind:'center'});await flush();
+ assert.equal(f.calls.length,1);f.frame.viewportVersion=1;f.setTime(500);f.guide.update({key:'guide',toolKind:'center'});
+ assert.equal(f.calls.at(-1),'clear');assert.equal(f.configs.at(-1),null);f.guide.dispose();
 });
