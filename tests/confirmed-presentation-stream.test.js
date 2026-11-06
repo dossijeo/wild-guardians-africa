@@ -16,6 +16,10 @@ test('tracked state changes reach consumers after reconciliation and before ackn
  const stream=createConfirmedPresentationStream({port,session:'s',state,trackChangedKeys:true,terrain:{confirm:n=>order.push(['terrain',n])},onConfirmed:(message,keys)=>order.push(['confirmed',message.sequence,[...keys],state.suppressed.length])});
  next.suppressed.push('new-prop');port.onmessage({data:{kind:'publication',session:'s',publication:{session:'s',sequence:1,snapshot:serialize(next),events:[],physicsPose:null}}});assert.deepEqual(order,[['terrain',1],['confirmed',1,['suppressed'],next.suppressed.length],['ack',1]]);stream.dispose();
 });
+test('selective crate change tracking distinguishes unrelated state and real crate changes',()=>{
+ const state=fixture(),next=deserialize(serialize(state)),seen=[],port={postMessage(){},close(){},start(){}},stream=createConfirmedPresentationStream({port,session:'s',state,trackChangedKeys:['suppressed','crates'],terrain:{confirm(){}},onConfirmed:(_message,keys)=>seen.push([...keys])});
+ const send=sequence=>port.onmessage({data:{kind:'publication',session:'s',publication:{session:'s',sequence,snapshot:serialize(next),events:[],physicsPose:null}}});try{next.elapsed+=.05;send(1);next.suppressed.push('new-prop');send(2);next.crates[0].x+=1;send(3);assert.deepEqual(seen,[[],['suppressed'],['crates']]);assert.equal(state.crates[0].x,next.crates[0].x);}finally{stream.dispose();}
+});
 test('certified unchanged publications skip scene reconciliation while still confirming terrain and sequence',()=>{
  const state=fixture(),order=[],port={postMessage:m=>order.push(['ack',m.sequence]),close(){},start(){}},stream=createConfirmedPresentationStream({port,session:'s',state,terrain:{confirm:n=>order.push(['terrain',n])},onConfirmed:m=>order.push(['changed',m.sequence]),onUnchanged:m=>order.push(['unchanged',m.sequence])});
  port.onmessage({data:{kind:'publication',session:'s',publication:{session:'s',sequence:1,snapshot:serialize(state),events:[],physicsPose:null}}});
