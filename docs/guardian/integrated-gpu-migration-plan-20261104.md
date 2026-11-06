@@ -223,6 +223,8 @@ El catálogo distingue claves del motor, shaders generados y descriptores finale
 
 ### A4. Admisión gráfica y preparación bajo demanda
 
+Los centros confirmados admiten ahora la instancia concreta que se incorporará a la escena, en lugar de preparar únicamente una plantilla y mostrar después una copia. La instancia permanece oculta hasta completar la preparación y se cancela si la entidad desaparece o se sustituye. La vista provisional sigue preparando su propio material. Las pruebas ejercitan la publicación y el reemplazo con un compilador simulado; falta verificar la primera utilización de buffers y pipelines en WebGPU real.
+
 La preparación pendiente también detecta cambios de capas de la cámara, los objetos y las luces registradas: Three.js utiliza esas máscaras para seleccionar qué entra en el pase. Si cambian durante la compilación, se repite antes de publicar. La prueba usa un compilador simulado; esto no controla todavía cambios estructurales posteriores a la publicación ni demuestra la preparación efectiva en el dispositivo.
 
 La comprobación contempla también propiedades públicas del material, estado fijo y configuración del sampler que Three.js r180 incluye en sus claves, incluso si no cambia `material.version`; también registra la configuración global de salida, sombras y recorte del renderer. Las pruebas alteran cara, mapa, repetición, sombras y mapeo de tono durante la preparación y comprueban que se repite, mientras que cambios de parámetros numéricos compatibles no la reinician. Esta cobertura depende de la versión fijada de Three.js, añade trabajo durante la admisión y no sustituye una auditoría completa de descriptores, la invalidación posterior de objetos visibles ni la medición de su coste.
