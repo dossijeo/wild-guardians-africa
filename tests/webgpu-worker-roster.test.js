@@ -23,6 +23,11 @@ test('worker admission hides pending actors and cancels those returning home',as
  roster.sync();await flush();assert.equal(roster.status().ready,0);state.workers[0].status='home';roster.sync();await flush();assert.equal(pending[0].signal.aborted,true);assert.deepEqual(disposed,['a']);
  state.workers=[{id:'b',profile:'youngMale',status:'walking'}];roster.sync();await flush();pending[1].resolve();await flush();assert.equal(roster.status().ready,1);assert.equal(roster.get('b').root.visible,true);assert.deepEqual(ready,['b']);roster.dispose();assert.deepEqual(disposed,['a','b']);
 });
+test('a failed ready callback removes the actor and defers its GPU resource release',async()=>{
+ const state={workers:[{id:'a',profile:'youngMale',status:'walking'}]},root=new Group(),parent=new Group(),releases=[],errors=[];let disposed=0;parent.add(root);
+ const roster=createWebGpuWorkerRoster({scene:{},residency:{},state,assetBank:{dispose(){}},pipelineAdmission:{prepare:async()=>{},deferRelease(object,release){assert.equal(object,root);releases.push(release);}},onReady(){throw Error('ready failed');},onError:error=>errors.push(error),createWorker:async()=>({root,update(){root.visible=true;},dispose(){disposed++;}})});
+ roster.sync();await flush();assert.equal(roster.status().count,0);assert.equal(parent.children.length,0);assert.equal(errors[0]?.message,'ready failed');assert.equal(disposed,0);assert.equal(releases.length,1);releases[0]();assert.equal(disposed,1);roster.dispose();
+});
 test('selectable generation changes when a worker rig appears or leaves',async()=>{
  const state={workers:[{id:'a',profile:'youngMale',status:'walking'}]},bank={dispose(){}},changes=[],roster=createWebGpuWorkerRoster({scene:{},residency:{},state,assetBank:bank,onSelectableChange:()=>changes.push('change'),createWorker:async()=>({update(){},dispose(){}})});
  roster.sync();await flush();assert.equal(changes.length,1);state.workers[0].status='home';roster.sync();assert.equal(changes.length,2);roster.dispose();

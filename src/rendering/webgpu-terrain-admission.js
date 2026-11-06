@@ -5,7 +5,9 @@ export function createTerrainAdmission({scene,admission,onError=()=>{},onPublish
  const pending=new Map(),visible=new Map(),unavailable=new Set();let closed=false;
  function release(record){
   if(!record||record.released)return;record.released=true;record.controller.abort();
-  if(record.published)for(const mesh of record.meshes)mesh.removeFromParent();
+  // Part of a failed publication may already have reached the scene. Keep
+  // meshes still inside the compilation group intact until deferred release.
+  for(const mesh of record.meshes)if(record.published||mesh.parent===scene)mesh.removeFromParent();
   const dispose=()=>{for(const mesh of record.meshes)mesh.removeFromParent();record.dispose();};
   if(typeof admission.deferRelease==='function')admission.deferRelease(record.group,dispose);else dispose();
  }
@@ -15,7 +17,11 @@ export function createTerrainAdmission({scene,admission,onError=()=>{},onPublish
   const controller=new AbortController(),record={group,meshes,dispose,controller,released:false};pending.set(key,record);unavailable.add(key);
   Promise.resolve().then(()=>admission.prepare(group,{signal:controller.signal})).then(()=>{
    if(closed||pending.get(key)!==record||controller.signal.aborted)return;
-   pending.delete(key);const old=visible.get(key);for(const mesh of meshes)scene.add(mesh);record.published=true;visible.set(key,record);unavailable.delete(key);release(old);onPublished(key);
+   // Keep the pending owner until every mesh is attached. If attachment
+   // fails, the rejection path removes any partial additions and preserves
+   // the previous visible revision.
+   const old=visible.get(key);for(const mesh of meshes)scene.add(mesh);record.published=true;visible.set(key,record);pending.delete(key);unavailable.delete(key);
+   try{release(old);onPublished(key);}catch(error){onError(error);}
   }).catch(error=>{if(closed||pending.get(key)!==record||controller.signal.aborted)return;pending.delete(key);release(record);onError(error);});
  }
  function remove(key){const item=pending.get(key);pending.delete(key);release(item);const old=visible.get(key);visible.delete(key);release(old);unavailable.delete(key);}

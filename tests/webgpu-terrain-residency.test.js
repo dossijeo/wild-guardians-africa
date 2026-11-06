@@ -2,6 +2,17 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {createWebGpuTerrainResidency} from '../src/rendering/webgpu-terrain-residency.js';
+import {createTerrainAdmission} from '../src/rendering/webgpu-terrain-admission.js';
+
+test('failed terrain attachment retains the old revision and removes partial publication before deferred disposal',async()=>{
+ const scene=new THREE.Scene(),releases=[],errors=[],admission=createTerrainAdmission({scene,admission:{prepare:async()=>{},deferRelease(_group,release){releases.push(release);}},onError:error=>errors.push(error)}),flush=()=>new Promise(resolve=>setImmediate(resolve));
+ const old=new THREE.Group(),oldMesh=new THREE.Mesh();old.add(oldMesh);admission.publish('0,0',old,[oldMesh],()=>{});await flush();assert.equal(oldMesh.parent,scene);
+ const group=new THREE.Group(),first=new THREE.Mesh(),second=new THREE.Mesh();group.add(first,second);let disposed=0;const add=scene.add.bind(scene);scene.add=object=>{if(object===second)throw Error('attachment failed');return add(object);};admission.publish('0,0',group,[first,second],()=>disposed++);await flush();
+ assert.equal(errors[0]?.message,'attachment failed');assert.equal(oldMesh.parent,scene);assert.equal(first.parent,null);assert.equal(second.parent,group);assert.equal(disposed,0);assert.equal(admission.isReady(),false);releases.shift()();assert.equal(disposed,1);admission.dispose();for(const release of releases)release();
+});
+test('a terrain publication callback failure is reported without losing the admitted revision',async()=>{
+ const scene=new THREE.Scene(),errors=[],group=new THREE.Group(),mesh=new THREE.Mesh();group.add(mesh);const admission=createTerrainAdmission({scene,admission:{prepare:async()=>{}},onPublished(){throw Error('notification failed');},onError:error=>errors.push(error)});admission.publish('0,0',group,[mesh],()=>{});await new Promise(resolve=>setImmediate(resolve));assert.equal(errors[0]?.message,'notification failed');assert.equal(mesh.parent,scene);assert.equal(admission.isVisible('0,0',mesh),true);admission.dispose();
+});
 
 function chunk(cx=0,cz=0){const positions=new Float32Array(49*49*3),colors=new Float32Array(49*49*3),indices=new Uint16Array(48*48*6);for(let z=0;z<49;z++)for(let x=0;x<49;x++){const i=(z*49+x)*3;positions.set([x-24,(x+z)/10,z-24],i);colors.set([.2,.4,.6],i);}for(let z=0;z<48;z++)for(let x=0;x<48;x++){const a=z*49+x,k=(z*48+x)*6;indices.set([a,a+49,a+1,a+1,a+49,a+50],k);}return {authority:'spatial-wasm',cx,cz,terrain:{positions,colors,indices}};}
 test('samples the confirmed terrain triangles exactly, including replacement and chunk boundaries',()=>{

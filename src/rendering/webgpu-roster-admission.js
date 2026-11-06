@@ -19,6 +19,6 @@ export async function admitRosterActor({actor,entry,isCurrent,pipelineAdmission,
   }
   if(!isCurrent())return;
   actor.update();entry.pendingActor=null;entry.actor=actor;
-  try{onReady();}catch(error){entry.actor=null;actor.dispose();throw error;}
+  try{onReady();}catch(error){entry.actor=null;releaseRosterActor(actor,pipelineAdmission);throw error;}
  }finally{if(entry.pendingActor===actor)disposePendingRosterActor(entry,pipelineAdmission);}
 }
