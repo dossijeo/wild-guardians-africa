@@ -843,7 +843,7 @@ export function cast(s,id,kind,x,z,nav,selection) {
     if(target){area.power=commitAgriculturalPower(s,target,kind,cropSpec(target.species).base_harvest_value);if(kind==='multiply'){target.multiplyHarvest=true;area.exposureApplied=true;}}
     s.spells.push(area);s.cooldowns[kind]=kind==='shield'?spec.cooldown_seconds:0;
     if(kind==='shield')nav.setState(s);
-    emit(s,'SpellActivated',{commandId:id,kind,x,z,targetPlantId:target?.id,benefited:area.power?.benefited??false,power:area.power??null,duration:spec.duration_seconds,targetId:target?.id??null,presentation:{elapsed:s.elapsed,origin,contact:contact??{x,y:nav.field?.surface?.(x,z)??0,z}}});
+    emit(s,'SpellActivated',{commandId:id,spellId:area.id,simulationDay:s.day,kind,x,z,targetPlantId:target?.id,benefited:area.power?.benefited??false,power:area.power??null,duration:spec.duration_seconds,targetId:target?.id??null,presentation:{elapsed:s.elapsed,origin,contact:contact??{x,y:nav.field?.surface?.(x,z)??0,z}}});
   });
 }
 function retainRouteAfterWallChange(w,destination,nav){

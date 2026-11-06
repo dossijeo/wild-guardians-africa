@@ -1,6 +1,15 @@
 const agricultural=kind=>kind==='growth'||kind==='multiply';
 const measured=value=>Number.isFinite(value)&&value>=0?value:null;
 
+// Command results contain confirmed events even when the effect has already
+// ended and no spell remains in the newest projected state.
+export function confirmedManualMagicApplication(events,commandId){
+ if(!Array.isArray(events)||typeof commandId!=='string'||!commandId)throw TypeError('Invalid confirmed magic application');
+ const event=events.find(item=>item?.type==='SpellActivated'&&item.commandId===commandId&&agricultural(item.kind));if(!event)return null;
+ if(typeof event.spellId!=='string'||!event.spellId||!Number.isSafeInteger(event.simulationDay)||event.simulationDay<1||typeof event.targetPlantId!=='string'||!event.targetPlantId||measured(event.duration)===null||typeof event.benefited!=='boolean')throw TypeError('Invalid confirmed magic activation');
+ return {day:event.simulationDay,spell:{id:event.spellId,kind:event.kind,targetPlantId:event.targetPlantId,remaining:event.duration},benefited:event.benefited};
+}
+
 // Read-only UI telemetry. Contact duration is measured input, not thinking time
 // or a claim of total human engagement. Selection timeout never earns credit.
 export class ManualMagicActivity {
