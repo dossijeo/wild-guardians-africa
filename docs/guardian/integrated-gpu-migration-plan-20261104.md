@@ -588,7 +588,7 @@ Cada entrega actualiza el registro siguiente con archivos, commit y comprobacion
 | Entrega | Estado | Alcance y trabajo pendiente |
 | --- | --- | --- |
 | A1 Propiedad y bootstrap | Pendiente de cierre | Contratos, dependencias y selección exclusiva |
-| A2 Transporte y tiempo | Pendiente de cierre | Acumulación, eventos, recuperación y consumidores |
+| A2 Transporte y tiempo | Cerrado internamente | Baseline/deltas, hechos y barreras, presión y checkpoints; límites y evidencia en [contrato A2](a2-contract-closure.md). Validación integrada y GPU en C. |
 | A3 Materiales y pipelines | Pendiente de cierre | Interfaces, catálogo y pases |
 | A4 Admisión gráfica | Cerrado internamente para rutas actuales | Admisión y publicación de instancias reales, cancelación y pases; indicador provisional inmediato pendiente B3 y validación GPU real C; los cambios globales estructurales futuros exigen transacción explícita |
 | A5 Recursos | Cerrado internamente | Generación, leases, residencia y presión heurística para propietarios explícitos y compuestos; contenidos nuevos B y medición/validación C pendientes |
