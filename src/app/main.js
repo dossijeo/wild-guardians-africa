@@ -1,3 +1,4 @@
+import {projectConfirmedConstruction,provisionalCenterCulture,pendingVillagePreview} from '../simulation/confirmed-construction-projection.js';
 import {applyConfirmedMicroeventView} from '../microevents/confirmed-view.js';
 import {projectConfirmedHud} from '../simulation/confirmed-hud-projection.js';
 import {confirmedNoticeFocus} from '../simulation/confirmed-notice-projection.js';
@@ -73,7 +74,6 @@ import {agriculturalDawnMessage} from '../ui/agricultural-notice.js';
 import {WORLD_RESOLUTIONS,worldResolution,applyWorldResolution} from './world-resolution.js';
 import {renderCommandFeedback} from '../ui/command-feedback.js';
 import {BALANCE as B} from '../simulation/balance.js';
-import {villageCost} from '../simulation/rules.js';
 import * as Game from '../simulation/game.js';
 import {PROFILES} from '../simulation/workforce.js';
 import {formatMoney,formatWholeCoins,numberOf} from '../simulation/money.js';
@@ -502,14 +502,15 @@ function guidedHudAction(action,open){
 function onPick({entityId,point,hitPoint,guardianContext=null,gestureSeconds=null}) {
   if(!state||screen!=='game')return;
   safe(()=>{
-    if(state.pauses.includes('hiring')){if(surfaces.active!=='hiring')hiringDialog();return;}
+    const confirmed=world?.workerGpuOnly?world.actorAudio??state:state;
+    if(confirmed.pauses.includes('hiring')){if(surfaces.active!=='hiring')hiringDialog();return;}
     if(tool?.kind==='awakening'){
       const owner=world,ownerState=state,selectedTool=tool,contact=hitPoint&&[hitPoint.x,hitPoint.y,hitPoint.z].every(Number.isFinite)?{x:hitPoint.x,y:hitPoint.y,z:hitPoint.z}:null;
       const apply=draft=>{if(owner!==world||ownerState!==state||tool!==selectedTool)return;if(!draft?.valid)throw Error(draft?.reason??'Selecciona una planta o muralla.');selectedTool.targetId=entityId;selectedTool.hitPoint=contact;selectedTool.confirmedDraft=draft;commandFeedback=awakeningSelectionCopy(draft.kind);updateUI(true);};
       if(owner?.workerGpuOnly&&owner.workerRuntime){if(typeof entityId!=='string'||!entityId)throw Error('Selecciona una planta o muralla.');selectedTool.targetId=null;selectedTool.hitPoint=null;selectedTool.confirmedDraft=null;return requestWorkerBlessingPreview({runtime:owner.workerRuntime,tool:selectedTool,targetId:entityId,isCurrent:()=>owner===world&&ownerState===state&&tool===selectedTool,onAccepted:apply});}
       return apply(Game.previewBlessing(state,entityId));
     }
-    const pickedPlant=state.plants.find(p=>p.id===entityId&&p.alive);
+    const pickedPlant=confirmed.plants.find(p=>p.id===entityId&&p.alive);
     if(tool?.kind==='spell'){
       const applicationStarted=performance.now(),owner=world,ownerState=state,ownerTool=tool,spell=tool.spell,runtime=owner.workerRuntime??null;
       if(runtime)ensureWorkerSave(owner,ownerState);
@@ -521,19 +522,19 @@ function onPick({entityId,point,hitPoint,guardianContext=null,gestureSeconds=nul
       finish(result);return;
     }
     if(pickedPlant&&tool?.kind!=='spell'&&tool?.kind!=='plant'){cancelTool();closeSurface();selection=null;return;}
-    const pickedCenter=state.structures.find(s=>s.id===entityId&&s.kind==='center'&&operational(s));
-    if(pickedCenter&&!state.raid&&state.time<300&&state.hiringPaidDay===state.day){cancelTool();hiringDialog(pickedCenter.id);return;}
+    const pickedCenter=confirmed.structures.find(s=>s.id===entityId&&s.kind==='center'&&operational(s));
+    if(pickedCenter&&!confirmed.raid&&confirmed.time<300&&(world.workerGpuOnly&&world.confirmedHud?.construction?world.confirmedHud.construction.hiringPaidDay:state.hiringPaidDay)===confirmed.day){cancelTool();hiringDialog(pickedCenter.id);return;}
     if(tool&&point) {
       if(tool.kind==='wall'&&entityId){selection=entityId;tool=null;return;}
       if(tool.kind==='village') {const payload=villageCatalog.find(v=>v.id===(tool.culture==='saheliana'?'saheliano':tool.culture)),owner=world,ownerState=state,ownerTool=tool;
-        if(owner.workerRuntime&&!(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-worker-local-village-preview'))){const pending={culture:ownerTool.culture,x:point.x,z:point.z,buildings:villageLayout(payload,point.x,point.z),cost:villageCost(ownerState.villages.length+1),valid:false,pending:true};pendingVillage=pending;owner.showVillagePreview(pending);villageConfirmPanel();return owner.workerRuntime.submit({kind:'previewVillage',culture:pending.culture,x:pending.x,z:pending.z,payload}).then(result=>{if(owner!==world||ownerState!==state||pendingVillage!==pending||tool!==ownerTool)return;if(result.rejection)throw Error(result.rejection);pendingVillage=result.value;owner.showVillagePreview(pendingVillage);villageConfirmPanel();}).catch(failure=>{if(owner===world&&ownerState===state&&pendingVillage===pending){cancelVillagePreview();throw failure;}});}
+        if(owner.workerRuntime&&!(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-worker-local-village-preview'))){const pending=pendingVillagePreview(owner.workerGpuOnly?owner.confirmedHud?.construction??projectConfirmedConstruction(ownerState):projectConfirmedConstruction(ownerState),ownerTool.culture,point.x,point.z,payload);pendingVillage=pending;owner.showVillagePreview(pending);villageConfirmPanel();return owner.workerRuntime.submit({kind:'previewVillage',culture:pending.culture,x:pending.x,z:pending.z,payload}).then(result=>{if(owner!==world||ownerState!==state||pendingVillage!==pending||tool!==ownerTool)return;if(result.rejection)throw Error(result.rejection);pendingVillage=result.value;owner.showVillagePreview(pendingVillage);villageConfirmPanel();}).catch(failure=>{if(owner===world&&ownerState===state&&pendingVillage===pending){cancelVillagePreview();throw failure;}});}
         pendingVillage=Game.previewVillage(state,tool.culture,point.x,point.z,payload,nav);world.showVillagePreview(pendingVillage);villageConfirmPanel();return;}
       const guided=guidedPlacementKind(tool,world.hands,world.guardianSummons?.guiding?world.guardianSummons.guide:null);let committed=false;
       if(world.workerRuntime&&(tool.kind==='center'||tool.kind==='wall'||tool.kind==='plant')){
         const owner=world,ownerState=state,ownerTool=tool,runtime=owner.workerRuntime;ensureWorkerSave(owner,ownerState);
         const id=commandId(),command=ownerTool.kind==='plant'?{kind:'plant',id,species:ownerTool.species,x:point.x,z:point.z,nearTouch:true}:{kind:'placeStructure',id,structure:{...ownerTool,x:point.x,z:point.z}};
         if(command.kind==='plant'){if(owner.workerGpuOnly){if(!owner.webGpuWorld?.client.beginProvisionalCrop(id,command.species,command.x,command.z))throw Error('Crop preview unavailable');}else owner.provisionalCrops.begin(id,command.species,command.x,command.z);}
-        if(command.kind==='placeStructure'&&owner.workerGpuOnly){const nearest=ownerState.villages.reduce((best,v)=>!best||Math.hypot(v.x-point.x,v.z-point.z)<Math.hypot(best.x-point.x,best.z-point.z)?v:best,null);if(!owner.webGpuWorld?.client.beginProvisionalStructure({id,kind:ownerTool.kind,culture:nearest?.culture??ownerState.culture,material:ownerTool.material,gate:!!ownerTool.gate,x:point.x,z:point.z,yaw:ownerTool.yaw??0}))throw Error('Structure preview unavailable');}
+        if(command.kind==='placeStructure'&&owner.workerGpuOnly){const culture=provisionalCenterCulture(owner.confirmedHud?.construction??projectConfirmedConstruction(ownerState),point.x,point.z);if(!owner.webGpuWorld?.client.beginProvisionalStructure({id,kind:ownerTool.kind,culture,material:ownerTool.material,gate:!!ownerTool.gate,x:point.x,z:point.z,yaw:ownerTool.yaw??0}))throw Error('Structure preview unavailable');}
         if(command.kind==='placeStructure'&&!owner.workerGpuOnly&&ownerTool.kind==='wall')owner.provisionalWalls?.begin(id,ownerTool.material,[{x:point.x,z:point.z,yaw:ownerTool.yaw??0}],{gate:!!ownerTool.gate});
         if(command.kind==='placeStructure'&&!owner.workerGpuOnly&&ownerTool.kind==='center'){const village=ownerState.villages.reduce((best,v)=>!best||Math.hypot(v.x-point.x,v.z-point.z)<Math.hypot(best.x-point.x,best.z-point.z)?v:best,null);owner.provisionalBuildings?.begin(id,village?.culture??ownerState.culture,point.x,point.z,ownerTool.yaw??0);}
         const removePreview=()=>{owner.provisionalWalls?.remove(id);owner.provisionalBuildings?.remove(id);};const rejectStructure=()=>{if(owner.workerGpuOnly&&command.kind==='placeStructure')owner.webGpuWorld?.client.rejectProvisionalStructure(id);};
@@ -712,7 +713,7 @@ function buildPanel(){
   if(state.pauses.includes('hiring'))return;
  cancelTool();
  showHudPanel('Construir',`<div class="card-grid two"><button class="choice-card" id="native-center"><img class="card-image" src="${ASSETS.home_icon.src}" alt=""><strong>Centro de trabajo</strong><span class="price">800 monedas</span></button><button class="choice-card" id="native-wall"><img class="card-image" src="${ASSETS.event8.src}" alt=""><strong>Murallas</strong></button></div><div class="menu-list">${state.postgame?button('native-village','Fundar poblado','wood-button'):''}</div>`);
- bind('native-center',()=>{const owner=world,button=document.querySelector('#native-center'),version=++cropSelectionGeneration,current=()=>owner===world&&version===cropSelectionGeneration&&button?.isConnected;if(owner?.workerGpuOnly){owner.webGpuWorld.client.prepareStructure('center',state.culture).then(()=>{if(current()){armTool({kind:'center'});hideHudPanel();}},failure=>{if(current())error(failure.message);});}else{armTool({kind:'center'});hideHudPanel();}});bind('native-wall',()=>toolPanel('wall'));bind('native-village',villageCulturePanel);bind('native-close',()=>document.querySelector('#panel').innerHTML='');
+ bind('native-center',()=>{const owner=world,button=document.querySelector('#native-center'),version=++cropSelectionGeneration,current=()=>owner===world&&version===cropSelectionGeneration&&button?.isConnected;if(owner?.workerGpuOnly){owner.webGpuWorld.client.prepareStructure('center',owner.confirmedHud?.construction?.culture??state.culture).then(()=>{if(current()){armTool({kind:'center'});hideHudPanel();}},failure=>{if(current())error(failure.message);});}else{armTool({kind:'center'});hideHudPanel();}});bind('native-wall',()=>toolPanel('wall'));bind('native-village',villageCulturePanel);bind('native-close',()=>document.querySelector('#panel').innerHTML='');
  document.querySelector('#native-center').disabled=!permission(state,'center');document.querySelector('#native-wall').disabled=!permission(state,'wall');
 }
 function cancelVillagePreview(){world?.clearVillagePreview();pendingVillage=null;if(tool?.kind==='village')tool=null;hideHudPanel();}
@@ -722,7 +723,7 @@ async function villageCulturePanel() {
 }
 function villageConfirmPanel() {
   if(state.pauses.includes('hiring'))return;
-  const p=pendingVillage,unavailable=!!world.workerRuntime&&!(world.workerGpuOnly||import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-worker-village'));showHudPanel('Fundar poblado',`<div><p>${p.pending?'Comprobando ubicación…':p.valid?'Ubicación válida':'Ubicación inválida: '+esc(p.reason)}</p><p>${formatWholeCoins(p.cost,moneyLocale())} monedas. Toca otra posición para recolocar.</p>${unavailable?'<p>La fundación aún no está disponible en esta partida experimental.</p>':''}${button('found-village','Confirmar poblado')}${button('cancel-village','Cancelar')}</div>`);document.querySelector('#found-village').disabled=unavailable||!p.valid||!permission(state,'village');
+  const p=pendingVillage,unavailable=!!world.workerRuntime&&!(world.workerGpuOnly||import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-worker-village'));showHudPanel('Fundar poblado',`<div><p>${p.pending?'Comprobando ubicación…':p.valid?'Ubicación válida':'Ubicación inválida: '+esc(p.reason)}</p><p>${formatWholeCoins(p.cost,moneyLocale())} monedas. Toca otra posición para recolocar.</p>${unavailable?'<p>La fundación aún no está disponible en esta partida experimental.</p>':''}${button('found-village','Confirmar poblado')}${button('cancel-village','Cancelar')}</div>`);document.querySelector('#found-village').disabled=unavailable||!p.valid||!permission(world?.workerGpuOnly?world.confirmedHud?.rules??state:state,'village');
   let submitting=false;bind('found-village',async()=>{if(submitting)return;submitting=true;const button=document.querySelector('#found-village');if(button)button.disabled=true;try{const owner=world,ownerState=state,payload=villageCatalog.find(v=>v.id===(p.culture==='saheliana'?'saheliano':p.culture));if(owner.workerRuntime){if(!owner.workerGpuOnly&&(!import.meta.env.DEV||!new URLSearchParams(location.search).has('qa-worker-village')))throw Error('La fundación de poblados aún no está disponible en el modo experimental Worker.');ensureWorkerSave(owner,ownerState);const result=await owner.workerRuntime.submit({kind:'foundVillage',id:commandId(),culture:p.culture,x:p.x,z:p.z,payload});if(owner!==world||ownerState!==state)return;if(result.rejection)throw Error(result.rejection);if(!result.value)return;if(pendingVillage===p){const founded=result.events?.find(event=>event.type==='VillageFounded');if(owner.workerGpuOnly&&founded?.targetId)owner.webGpuWorld?.client.confirmVillagePreview(founded.targetId);else owner.clearVillagePreview();pendingVillage=null;tool=null;hideHudPanel();}owner.syncResidentProps();await owner.workerSave();if(owner===world&&ownerState===state)updateUI(true);return;}Game.foundVillage(ownerState,commandId(),p.culture,p.x,p.z,payload,nav);owner.clearVillagePreview();pendingVillage=null;tool=null;hideHudPanel();await save();owner.syncResidentProps();}finally{submitting=false;if(button?.isConnected)button.disabled=unavailable||!p.valid||!permission(state,'village');}});bind('cancel-village',cancelVillagePreview);
 }
 function repairStructure(targetId,{persist=false}={}){
