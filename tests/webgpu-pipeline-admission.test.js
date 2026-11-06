@@ -380,3 +380,8 @@ test('a failed active pipeline rejects queued work without compiling it',async()
  const waiting=admission.prepare(object),results=Promise.allSettled([active,waiting]);reject(Error('pipeline failed'));
  const [a,b]=await results;assert.equal(a.reason.message,'pipeline failed');assert.match(b.reason.message,/closed/);assert.deepEqual(failures,['pipeline failed']);assert.equal(calls,1);
 });
+
+test('structural revision changes only when registered pass or light membership changes',()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),renderer={backend:{isWebGPUBackend:true},compileAsync:()=>Promise.resolve(),getRenderTarget:()=>null,setRenderTarget(){}},admission=createWebGpuPipelineAdmission({renderer,scene,camera,shadowLights:[]}),light=new THREE.DirectionalLight(),target=new THREE.RenderTarget(2,2);
+ try{const start=admission.structuralRevision,a=admission.registerShadowLight(light);assert.equal(admission.structuralRevision,start+1);const b=admission.registerShadowLight(light);assert.equal(admission.structuralRevision,start+1);a();assert.equal(admission.structuralRevision,start+1);b();assert.equal(admission.structuralRevision,start+2);const c=admission.registerAuxiliaryTarget(target),d=admission.registerAuxiliaryTarget(target);assert.equal(admission.structuralRevision,start+3);c();assert.equal(admission.structuralRevision,start+3);d();assert.equal(admission.structuralRevision,start+4);}finally{admission.dispose();target.dispose();}
+});

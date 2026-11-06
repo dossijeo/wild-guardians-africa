@@ -43,8 +43,8 @@ function sameInputs(a,b){return a.length===b.length&&a.every((value,index)=>Obje
 // until the returned promise resolves.
 export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=>{},shadowLights=null,includeShadowPass=false}){
  if(!renderer?.backend?.isWebGPUBackend||typeof renderer.compileAsync!=='function'||!scene?.isScene||!camera?.isCamera||typeof onFatal!=='function'||shadowLights!==null&&!Array.isArray(shadowLights)||typeof includeShadowPass!=='boolean'||includeShadowPass&&typeof renderer.compileShadowAsync!=='function')throw TypeError('Invalid pipeline admission');
- const lights=new Map();let lightsRevision=0;
- function addLight(light){if(!light?.isLight||!light.shadow)throw TypeError('Invalid admission shadow light');const count=lights.get(light)??0;lights.set(light,count+1);if(count===0)lightsRevision++;}
+ const lights=new Map();let lightsRevision=0,structuralRevision=0;
+ function addLight(light){if(!light?.isLight||!light.shadow)throw TypeError('Invalid admission shadow light');const count=lights.get(light)??0;lights.set(light,count+1);if(count===0){lightsRevision++;structuralRevision++;}}
  if(shadowLights===null)scene.traverse(node=>{if(node.isLight&&node.shadow)addLight(node);});else for(const light of shadowLights)addLight(light);
  let closed=false,generation=0,active=false,inflightCompiles=0,cancel,auxiliaryRevision=0;const queue=[],targetWaiters=new Set(),compilingObjects=new Map(),uploadingObjects=new Map(),uploadBatch=new Set(),lifecycleSentinel={},auxiliaryTargets=new Map();let uploadScheduled=false,uploadActive=false;
  function frameTarget(){return renderer._getFrameBufferTarget?.()??renderer.getRenderTarget?.()??renderer.getOutputRenderTarget?.()??null;}
@@ -200,11 +200,12 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
   // object. This captures current compilations; callers must first stop new
   // admissions and resource creation.
   deferCompilations(release){if(typeof release!=='function')throw TypeError('Invalid deferred release');trackUploads(lifecycleSentinel);deferAll(release);},
-  registerShadowLight(light){if(closed)throw Error('Pipeline admission closed');addLight(light);notifyShadowTargets();let released=false;return ()=>{if(released)return;released=true;const count=lights.get(light)??0;if(count===1){lights.delete(light);lightsRevision++;notifyShadowTargets();}else if(count>1)lights.set(light,count-1);};},
+  registerShadowLight(light){if(closed)throw Error('Pipeline admission closed');addLight(light);notifyShadowTargets();let released=false;return ()=>{if(released)return;released=true;const count=lights.get(light)??0;if(count===1){lights.delete(light);lightsRevision++;structuralRevision++;notifyShadowTargets();}else if(count>1)lights.set(light,count-1);};},
   // Register before publishing objects for a new pass. Existing visible
   // objects must be admitted separately before the pass is first rendered.
-  registerAuxiliaryTarget(target){if(closed)throw Error('Pipeline admission closed');if(!target?.isRenderTarget||typeof renderer.getRenderTarget!=='function'||typeof renderer.setRenderTarget!=='function')throw TypeError('Invalid auxiliary target');const count=auxiliaryTargets.get(target)??0;auxiliaryTargets.set(target,count+1);if(!count)auxiliaryRevision++;let released=false;return ()=>{if(released)return;released=true;const current=auxiliaryTargets.get(target)??0;if(current<=1){if(current){auxiliaryTargets.delete(target);auxiliaryRevision++;}}else auxiliaryTargets.set(target,current-1);};},
+  registerAuxiliaryTarget(target){if(closed)throw Error('Pipeline admission closed');if(!target?.isRenderTarget||typeof renderer.getRenderTarget!=='function'||typeof renderer.setRenderTarget!=='function')throw TypeError('Invalid auxiliary target');const count=auxiliaryTargets.get(target)??0;auxiliaryTargets.set(target,count+1);if(!count){auxiliaryRevision++;structuralRevision++;}let released=false;return ()=>{if(released)return;released=true;const current=auxiliaryTargets.get(target)??0;if(current<=1){if(current){auxiliaryTargets.delete(target);auxiliaryRevision++;structuralRevision++;}}else auxiliaryTargets.set(target,current-1);};},
   notifyShadowTargets,
+  get structuralRevision(){return structuralRevision;},
   prepare(object,{signal,include=[],target=undefined,shadowPass=includeShadowPass,passCamera=camera,targetScene=scene,publish=null,returnTicket=false}={}){
    if(closed)return Promise.reject(Error('Pipeline admission closed'));
    if(!object?.isObject3D)return Promise.reject(TypeError('Invalid admission object'));
