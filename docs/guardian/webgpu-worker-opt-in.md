@@ -27,6 +27,8 @@ Al elegir las herramientas de centro o cultivo, el perfil Worker también solici
 
 El perfil Worker optativo usa el coordinador existente para publicar conjuntamente las revisiones de terreno y vegetación. Las pruebas con los propietarios reales cubren el arranque y la sustitución o recuperación de revisiones, con admisión GPU simulada. La autoridad todavía no publica retiradas de chunks; la activación no implementa esa parte del streaming ni demuestra paridad visual o recuperación ante pérdida real del dispositivo.
 
+Al cerrar o sustituir el canal de terreno, el productor libera el manifiesto y sus referencias una vez copiado el handoff; los ACK tardíos se descartan. Las pruebas cubren el ciclo con puertos simulados, sin cuantificar ahorro de memoria.
+
 La capacidad `bakedWalking` está activada en el perfil Worker optativo para las cinco especies, reutilizando las bibliotecas de caminata precocinadas. Acciones, recuperación, impactos y poses físicas conservan la ruta CPU; si falla una carga o admisión, el rig anterior permanece disponible. Las pruebas ejercitan los rigs reales, los cambios de estado y la validación de assets con un renderer simulado. Aún faltan la validación visual, sombras y medición en WebGPU real; la posición visual sigue actualizándose desde el estado confirmado y esto no constituye movimiento autónomo GPU.
 
 Los impactos confirmados contra murallas incluyen los fragmentos rígidos WebGPU existentes en este perfil, mediante una capacidad explícita que también se conserva en recuperación. Si falla su admisión, el impacto de sprites sigue disponible; las pruebas cubren esa separación con renderer simulado. La destrucción lógica continúa en la autoridad. Quedan pendientes la comprobación visual y la medición en una incursión real.
