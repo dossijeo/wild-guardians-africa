@@ -42,8 +42,23 @@ test('guide admission is versioned and never asserts unverified visibility',asyn
  const frame={sequence:4,terrainGeneration:2,selectableGeneration:5,cameraVersion:0};worker.onmessage({data:{kind:'rendered-frame',...frame}});
  const guide={origin:{x:1,y:2,z:3},camera:{x:0,y:5,z:6},target:[1,0,2]};let pending=client.setGuardianGuide(guide,frame),sent=worker.messages.at(-1).message;
  assert.equal(sent.kind,'guardian-guide-set');worker.onmessage({data:{kind:'guardianGuideResult',id:sent.id}});assert.deepEqual(await pending,{accepted:true,visibility:'unknown'});
- pending=client.setGuardianGuide(guide,frame);sent=worker.messages.at(-1).message;client.setCamera({x:1});worker.onmessage({data:{kind:'guardianGuideResult',id:sent.id}});await assert.rejects(pending,/Stale/);assert.equal(worker.messages.at(-1).message.kind,'guardian-guide-clear');
+ pending=client.setGuardianGuide(guide,frame);sent=worker.messages.at(-1).message;client.setCamera({x:1});assert.deepEqual(worker.messages.slice(-2).map(entry=>entry.message.kind),['guardian-guide-clear','camera']);worker.onmessage({data:{kind:'guardianGuideResult',id:sent.id}});await assert.rejects(pending,/Stale/);assert.equal(worker.messages.at(-1).message.kind,'camera');
  assert.equal(client.clearGuardianGuide(),true);client.dispose();
+});
+test('camera and viewport changes immediately clear an admitted guide without disrupting picking',async()=>{
+ const {client,worker}=setup({presentationInputs:true});worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await client.ready;
+ const frame={sequence:4,terrainGeneration:2,selectableGeneration:5,cameraVersion:0},guide={origin:{x:1,y:2,z:3},camera:{x:0,y:5,z:6},target:[1,0,2]};
+ worker.onmessage({data:{kind:'rendered-frame',...frame}});
+ const installed=client.setGuardianGuide(guide,frame),installId=worker.messages.at(-1).message.id;worker.onmessage({data:{kind:'guardianGuideResult',id:installId}});await installed;
+ const pick=client.pick({x:0,y:0},{minSequence:4,allowStableCamera:true}),pickId=worker.messages.at(-1).message.id;
+ client.setCamera({x:1});assert.deepEqual(worker.messages.slice(-2).map(entry=>entry.message.kind),['guardian-guide-clear','camera']);
+ worker.onmessage({data:{kind:'pickResult',id:pickId,result:{sequence:4,entityId:'beast'}}});assert.equal(worker.messages.at(-1).message.kind,'verify-pick');
+ worker.onmessage({data:{kind:'pickResult',id:pickId,result:{sequence:4,entityId:'beast',cameraVerified:true}}});assert.equal((await pick).entityId,'beast');
+ const count=worker.messages.filter(entry=>entry.message.kind==='guardian-guide-clear').length;client.setCamera({x:2});assert.equal(worker.messages.filter(entry=>entry.message.kind==='guardian-guide-clear').length,count);
+ worker.onmessage({data:{kind:'cameraAck'}});worker.onmessage({data:{kind:'rendered-frame',...frame,cameraVersion:2}});
+ const next=client.guardianFrame(),pending=client.setGuardianGuide(guide,next),id=worker.messages.at(-1).message.id;client.resize(900,700);
+ assert.deepEqual(worker.messages.slice(-2).map(entry=>entry.message.kind),['guardian-guide-clear','resize']);worker.onmessage({data:{kind:'guardianGuideResult',id}});await assert.rejects(pending,/Stale/);
+ assert.equal(worker.messages.at(-1).message.kind,'resize');client.dispose();
 });
 test('guardian presence is delivered only for a live graphical Worker and valid coordinates',async()=>{
  const sounds=[],{client,worker}=setup({onGuardianPresence:(id,origin)=>sounds.push({id,origin})});
