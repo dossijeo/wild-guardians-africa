@@ -136,6 +136,29 @@ test('shield rejection and delayed responses cannot affect a newer provisional g
   now=1000;state.elapsed=3;const event={id:'event-1',type:'SpellActivated',kind:'shield',commandId:'third',presentation:{elapsed:1,...selection}};visual.sync([{kind:'event',eventId:event.id,at:1}],[event]);assert.equal(visual.status().active.id,'third');assert.equal(visual.status().active.provisional,false);
  }finally{visual.dispose();}
 });
+test('late attack and agricultural confirmations release the matching provisional gesture',()=>{
+ for(const kind of ['attack','growth','multiply']){
+  let now=0;const scene=new THREE.Scene(),state={elapsed:1,events:[],plants:[{id:'p',alive:true}],raid:{animals:[{id:'a',status:'walking'}]}},confirmedClock=createConfirmedPresentationClock(1),visual=createWebGpuGuardianAttack({scene,state,renderer:{backend:{isWebGPUBackend:true}},confirmedClock,clock:()=>now,loadModel:()=>new Promise(()=>{})});
+  const selection={origin:{x:0,y:2,z:0},contact:{x:1,y:1,z:0}},targetId=kind==='attack'?'a':'p',command=kind==='attack'?{kind:'castAttack',id:'c',targetId,selection}:{kind:'castAgricultural',spell:kind,id:'c',selection:{...selection,targetId}};
+  try{
+   assert.equal(kind==='attack'?visual.begin(command):visual.beginAgriculture(command),true);
+   now=2000;state.elapsed=3;confirmedClock.commit(3);
+   const event={id:'event-1',type:'SpellActivated',kind,commandId:'c',targetId,presentation:{elapsed:1,...selection}};
+   visual.sync([{kind:'event',eventId:event.id,at:1}],[event]);
+   assert.equal(visual.status().active?.provisional,false,kind);
+   state.elapsed=6;confirmedClock.commit(6);visual.tick();assert.equal(visual.status().active,null,kind);
+  }finally{visual.dispose();confirmedClock.dispose();}
+ }
+});
+test('an accepted provisional gesture ends when its target disappears in the same publication',()=>{
+ const scene=new THREE.Scene(),state={elapsed:1,events:[],plants:[{id:'p',alive:true}],raid:null},visual=createWebGpuGuardianAttack({scene,state,renderer:{backend:{isWebGPUBackend:true}},clock:()=>0,loadModel:()=>new Promise(()=>{})}),selection={origin:{x:0,y:2,z:0},contact:{x:1,y:1,z:0}};
+ try{
+  assert.equal(visual.beginAgriculture({kind:'castAgricultural',spell:'growth',id:'c',selection:{...selection,targetId:'p'}}),true);
+  const cast={id:'event-1',type:'SpellActivated',kind:'growth',commandId:'c',targetId:'p',presentation:{elapsed:1,...selection}},destroy={id:'event-2',type:'CropDestroyed',targetId:'p'};
+  visual.sync([{kind:'event',eventId:cast.id,at:1},{kind:'event',eventId:destroy.id,at:1}],[cast,destroy]);
+  assert.equal(visual.status().active,null);
+ }finally{visual.dispose();}
+});
 test('confirmed shield selects the authored shield clip on the admitted rig',async()=>{
  const scene=new THREE.Scene(),model=new THREE.Group(),bone=new THREE.Bone();bone.name='TestBone';model.add(bone);
  const clip=(name,end)=>new THREE.AnimationClip(name,1,[new THREE.VectorKeyframeTrack('TestBone.position',[0,1],[0,0,0,end,0,0])]);

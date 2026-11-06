@@ -19,6 +19,8 @@ El HUD reutiliza `GameJuice` para recibir eventos confirmados, importes, confirm
 
 El guardián WebGPU inicia el gesto provisional de Shield cuando hay origen y contacto válidos; los haces esperan el evento confirmado y el rechazo retira el gesto. Para toques sobre terreno se usa su altura confirmada, sin inventar una si aún no está disponible. La validación audiovisual en partida sigue pendiente.
 
+Las confirmaciones tardías de Attack, Grow y Multiply reconcilian el gesto provisional con el mismo ID aunque el evento tenga más de medio segundo; si el objetivo ha desaparecido en esa publicación, se retira el gesto. Las pruebas son de presentación simulada, no una validación audiovisual en partida.
+
 La cámara automática de incursiones reutiliza el director existente con terreno confirmado; el foco se confirma mediante un comando ordenado y lo conserva la autoridad. La interacción manual cancela el desplazamiento. Hay pruebas de contrato y de persistencia del foco, pero queda pendiente comprobar la cámara en una partida real.
 
 Al elegir las herramientas de centro o cultivo, el perfil Worker también solicita a la autoridad el destino de enfoque del tutorial. La entrada manual, el cambio de herramienta y un enfoque explícito invalidan la solicitud pendiente para que una respuesta tardía no mueva la cámara. Las pruebas usan servicios y cámara simulados; queda pendiente comprobar el comportamiento en una partida real.
