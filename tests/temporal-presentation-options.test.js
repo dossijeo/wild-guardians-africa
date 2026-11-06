@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {temporalPresentationOptions} from '../src/app/temporal-presentation-options.js';
 import {createWorkerHostedRuntime} from '../src/simulation/worker-hosted-runtime.js';
+import {earlyWorkerOptions} from '../src/app/early-worker-options.js';
+import {createEarlyWorkerAuthority} from '../src/app/early-worker-authority.js';
 import {build} from 'esbuild';
 import {resolve} from 'node:path';
 const base={params:new URLSearchParams('qa-webgpu-temporal'),dev:true,hosted:true,early:false,recoveryEnabled:false,hasWebGpu:true};
@@ -12,6 +14,14 @@ test('temporal mode is opt-in and fails closed for incomplete configurations',()
 test('coordinated temporal options reach the hosted runtime with distinct ports',async()=>{
  const profile=temporalPresentationOptions(base),messages=[],worker={postMessage(message){messages.push(message);},terminate(){}},receiver={sequence:0,accept(p){this.sequence=p.sequence;return {accepted:true};},acceptUnchanged(){},status(){return {sequence:this.sequence};}},runtime=createWorkerHostedRuntime({confirmedReceiver:receiver,session:'s',clientOptions:{snapshot:'{}',terrainHistory:profile.terrainHistory},runtimeOptions:{presentationTimeline:true},workerFactory:()=>worker}),terrainPort={},presentationPort={};
  try{const ready=runtime.start({terrainPort,presentationPort});assert.equal(messages[0].runtimeOptions.presentationTimeline,true);assert.deepEqual(messages[0].clientOptions.terrainHistory,profile.terrainHistory);worker.onmessage({data:{kind:'publication',session:'s',publication:{sequence:1,events:[]}}});worker.onmessage({data:{kind:'started',session:'s',sequence:1,status:{}}});await ready;}finally{runtime.dispose();}
+});
+test('an early authority negotiates the same temporal profile at preparation and graphical attachment',async()=>{
+ const profile=temporalPresentationOptions(base),prepared=temporalPresentationOptions({...base,early:true,earlyPrepared:structuredClone(profile)}),messages=[],worker={postMessage(message){messages.push(message);},terminate(){}},initial={snapshot:'{}',navigationView:{}},receiver={sequence:0,accept(p){this.sequence=p.sequence;return {accepted:true};},acceptUnchanged(){},status(){return {sequence:this.sequence};}},options=earlyWorkerOptions({initial,temporal:prepared});
+ const early=createEarlyWorkerAuthority({session:'s',initial,adapter:receiver,...options,temporalOptions:prepared,onError:()=>{},runtimeFactory:args=>createWorkerHostedRuntime({...args,workerFactory:()=>worker})});
+ try{const ready=early.runtime.prepare();assert.equal(messages[0].presentationTimeline,true);assert.deepEqual(messages[0].clientOptions.terrainHistory,profile.terrainHistory);worker.onmessage({data:{kind:'authorityPrepared',session:'s'}});await ready;
+  const started=early.runtime.start({terrainPort:{},presentationPort:{}});assert.equal(messages[1].runtimeOptions.presentationTimeline,true);assert.deepEqual(messages[1].clientOptions.terrainHistory,profile.terrainHistory);worker.onmessage({data:{kind:'publication',session:'s',publication:{sequence:1,events:[]}}});worker.onmessage({data:{kind:'started',session:'s',sequence:1,status:{}}});await started;
+  assert.throws(()=>temporalPresentationOptions({...base,early:true,earlyPrepared:{...profile,terrainHistory:{...profile.terrainHistory,maxPending:1}}}),/prepared authority/);assert.throws(()=>temporalPresentationOptions({...base,params:new URLSearchParams(),early:true,earlyPrepared:profile}),/changed after authority preparation/);
+ }finally{early.runtime.dispose();}
 });
 test('harness-only complete recovery negotiates checkpoints while normal builds reject it',async()=>{
  const built=await build({entryPoints:[resolve('src/app/temporal-presentation-options.js')],bundle:true,write:false,platform:'node',format:'esm',plugins:[{name:'historical-switch',setup(plugin){plugin.onResolve({filter:/historical-recovery-harness\.js$/},()=>({path:'switch',namespace:'mock'}));plugin.onLoad({filter:/.*/,namespace:'mock'},()=>({contents:'export const historicalRecoveryHarnessEnabled=true',loader:'js'}));}}]}),module=await import('data:text/javascript;base64,'+Buffer.from(built.outputFiles[0].text).toString('base64')),options={...base,params:new URLSearchParams('qa-webgpu-temporal&qa-webgpu-temporal-recovery'),recoveryEnabled:true,recovery:{work:true,concurrent:false,backpressure:false,compactTicks:false}};
