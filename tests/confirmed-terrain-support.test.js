@@ -1,0 +1,33 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import * as THREE from 'three';
+import {readFileSync} from 'node:fs';
+import {gunzipSync} from 'node:zlib';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
+import {createWebGpuTerrainResidency} from '../src/rendering/webgpu-terrain-residency.js';
+import {createActorTerrainSampler} from '../src/rendering/webgpu-actor-terrain.js';
+import {createConfirmedTerrainSupport} from '../src/rendering/confirmed-terrain-support.js';
+import {createConfirmedMotionFeed} from '../src/rendering/confirmed-motion-feed.js';
+
+function chunk(cx=0,cz=0){const positions=new Float32Array(49*49*3),colors=new Float32Array(positions.length),indices=new Uint16Array(48*48*6);for(let z=0;z<49;z++)for(let x=0;x<49;x++){const i=(z*49+x)*3;positions.set([x-24,Math.sin(x*.4)*Math.cos(z*.3)*2,z-24],i);}for(let z=0;z<48;z++)for(let x=0;x<48;x++){const a=z*49+x,k=(z*48+x)*6;indices.set([a,a+49,a+1,a+1,a+49,a+50],k);}return {authority:'spatial-wasm',cx,cz,terrain:{positions,colors,indices}};}
+function preview(x0=.2,z0=.1,x1=2.7,z1=1.7){return {sequence:1,start:0,end:2,safeForAutonomousPlayback:false,reasons:['visual-time-and-support-unverified'],trace:{start:0,end:2,terrainManifest:{epoch:'e',chunks:[{cx:0,cz:0,revision:1}]},actors:[{actorId:'a',continuous:true,timed:true,start:{at:0,x:x0,z:z0},end:{at:2,x:x1,z:z1},segments:[{t0:.25,t1:1.75,x0,z0,x1,z1}]}]}};}
+function setup(options={}){const scene=new THREE.Scene(),material=new THREE.MeshBasicMaterial({side:THREE.DoubleSide}),residency=createWebGpuTerrainResidency({scene,material});residency.replace(chunk(),1,'e');const support=createConfirmedTerrainSupport({residency,...options});return {scene,material,residency,support,close(){support.dispose();residency.dispose();material.dispose();}};}
+
+test('confirmed support follows the real piecewise triangular terrain including stationary intervals',()=>{
+ const f=setup();try{const result=f.support.prepare(preview());assert.ok(result);assert.equal(result.valid(),true);const actor=result.actors[0],sample=createActorTerrainSampler(f.residency);assert.ok(actor.segments.length>3);assert.equal(actor.segments[0].t0,0);assert.equal(actor.segments.at(-1).t1,2);for(const part of actor.segments){assert.ok(part.t1>part.t0);for(const fraction of [.15,.5,.85]){const x=part.x0+(part.x1-part.x0)*fraction,z=part.z0+(part.z1-part.z0)*fraction,y=part.y0+(part.y1-part.y0)*fraction;assert.ok(Math.abs(y-sample(x,z))<.0001);}}}finally{f.close();}
+});
+test('support rejects missing geometry, noncanonical topology, chunk crossings and unrelated safety failures',()=>{
+ const f=setup({maxPieces:1});try{assert.equal(f.support.prepare(preview()),null);const large=createConfirmedTerrainSupport({residency:f.residency});try{assert.equal(large.prepare(preview(23.5,0,24.5,0)),null);const unsafe=preview();unsafe.reasons.push('physics');assert.equal(large.prepare(unsafe),null);const mismatched=preview();mismatched.trace.terrainManifest.epoch='old';assert.equal(large.prepare(mismatched),null);f.residency.get(0,0).geometry.index.array[0]=9;f.residency.get(0,0).geometry.index.needsUpdate=true;assert.equal(large.prepare(preview()),null);}finally{large.dispose();}}finally{f.close();}
+});
+test('support validity expires on revisions, changed buffers and disposal',()=>{
+ const f=setup();try{const first=f.support.prepare(preview());assert.ok(first);f.residency.get(0,0).geometry.attributes.position.needsUpdate=true;assert.equal(first.valid(),false);const second=f.support.prepare(preview());assert.ok(second);f.residency.replace(chunk(),2,'e');assert.equal(second.valid(),false);}finally{f.close();}
+});
+test('motion preview exposes support only while the confirmed terrain is unchanged',()=>{
+ const f=setup(),feed=createConfirmedMotionFeed({prepareTerrainSupport:value=>f.support.prepare(value)});try{feed.offerPreview(preview(),{sequence:0,lastElapsed:0});assert.equal(feed.getPreview().safeForAutonomousPlayback,false);assert.ok(feed.getPreviewSupport()?.valid());f.residency.replace(chunk(),2,'e');assert.equal(feed.getPreviewSupport(),null);feed.offerPreview(null,{sequence:0,lastElapsed:0});assert.equal(feed.getPreview(),null);}finally{feed.dispose();f.close();}
+});
+test('support can prepare one selected actor without scanning unsupported distant actors',()=>{
+ const f=setup();try{const value=preview(),distant=structuredClone(value.trace.actors[0]);distant.actorId='far';distant.start.x=50;distant.end.x=51;distant.segments[0].x0=50;distant.segments[0].x1=51;value.trace.actors.push(distant);assert.equal(f.support.prepare(value),null);const result=f.support.prepare(value,{actorIds:['a']});assert.ok(result);assert.deepEqual(result.actors.map(actor=>actor.actorId),['a']);assert.equal(f.support.prepare(value,{actorIds:['missing']}),null);}finally{f.close();}
+});
+test('support accepts and follows an actual Wild Engine terrain chunk',()=>{
+ const wasm=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm')),state=JSON.parse(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString()),session=createSpatialGameSession(wasm,state,{loaded:()=>new Map(),onData(){}}),scene=new THREE.Scene(),material=new THREE.MeshBasicMaterial({side:THREE.DoubleSide}),residency=createWebGpuTerrainResidency({scene,material,waterMaterial:material});try{if(session.core.selectChunk(0,0)<0)session.core.addChunk(0,0);residency.replace(session.core.chunkPayload(),1,'e');const support=createConfirmedTerrainSupport({residency});try{const sampler=createActorTerrainSampler(residency);let seed=11;const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};for(let i=0;i<24;i++){const args=i?[...Array(4)].map(()=>random()*20-10):[.2,.1,2.7,1.7],result=support.prepare(preview(...args));assert.ok(result,'native terrain must have supported topology');for(const segment of result.actors[0].segments){const x=(segment.x0+segment.x1)*.5,z=(segment.z0+segment.z1)*.5;assert.ok(Math.abs((segment.y0+segment.y1)*.5-sampler(x,z))<.0001);}}}finally{support.dispose();}}finally{residency.dispose();material.dispose();session.dispose();}
+});
