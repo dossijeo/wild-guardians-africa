@@ -16,7 +16,7 @@ test('initial and recovered worlds share the complete early presentation profile
  const first=webGpuWorldOptions({params,state,field,recovery,dev:true}),replacement=webGpuWorldOptions({params,state,field,recovery,dev:true});
  assert.deepEqual(replacement,first);assert.equal(replacement.experimentalMinimalWorld,true);assert.equal(replacement.experimentalEarlyBiome,true);
  assert.equal(replacement.experimentalMotionFeed,true);assert.equal(replacement.experimentalCameraTerrain,true);assert.equal(replacement.experimentalPicking,true);
- assert.deepEqual(replacement.presentationCapabilities,{cameraTerrain:true,provisionalStructures:true,provisionalCrops:true,picking:true,causalInputs:false,bakedWalking:false});assert.ok(Object.isFrozen(replacement));assert.ok(Object.isFrozen(replacement.presentationCapabilities));
+ assert.deepEqual(replacement.presentationCapabilities,{cameraTerrain:true,provisionalStructures:true,provisionalCrops:true,picking:true,causalInputs:false,bakedWalking:false,coordinatedChunks:false});assert.ok(Object.isFrozen(replacement));assert.ok(Object.isFrozen(replacement.presentationCapabilities));
  assert.equal(replacement.experimentalActorId,'buffalo');assert.match(replacement.experimentalActorPackageUrl,/buffalo/);
  assert.equal(replacement.presentationWorkRecovery,true);assert.equal(replacement.cameraTerrainCanyon,true);
 });
@@ -27,7 +27,7 @@ test('profile selection ignores removed animals and does not enable development-
  const value=webGpuWorldOptions({params,state,field:{canyon:false},dev:false});
  assert.equal(value.experimentalActorId,'new');assert.equal(value.experimentalMinimalWorld,false);assert.equal(value.experimentalEarlyBiome,false);
  assert.equal(value.experimentalPresentationInputs,false);assert.equal(value.presentationInputs,false);assert.equal(value.presentationRecovery,false);assert.equal(value.presentationWorkRecovery,false);
- assert.deepEqual(value.presentationCapabilities,{cameraTerrain:false,provisionalStructures:false,provisionalCrops:false,picking:false,causalInputs:false,bakedWalking:false});
+ assert.deepEqual(value.presentationCapabilities,{cameraTerrain:false,provisionalStructures:false,provisionalCrops:false,picking:false,causalInputs:false,bakedWalking:false,coordinatedChunks:false});
 });
 
 test('diagnostic URLs cannot alter the production graphical profile',()=>{
@@ -53,7 +53,7 @@ test('explicit recovery config is shared by the renderer outside QA',()=>{
 });
 
 test('explicit presentation capabilities are independent of diagnostic flags and stable across recovery',()=>{
- const params=new URLSearchParams(),state={raid:null},field={},capabilities={cameraTerrain:true,provisionalStructures:true,provisionalCrops:true,picking:true,causalInputs:true,bakedWalking:true};
+ const params=new URLSearchParams(),state={raid:null},field={},capabilities={cameraTerrain:true,provisionalStructures:true,provisionalCrops:true,picking:true,causalInputs:true,bakedWalking:true,coordinatedChunks:true};
  const first=webGpuWorldOptions({params,state,field,capabilities}),replacement=webGpuWorldOptions({params,state,field,capabilities});
  assert.deepEqual(first.presentationCapabilities,capabilities);assert.deepEqual(replacement,first);assert.equal(first.experimentalCameraTerrain,false);assert.equal(first.presentationInputs,true);assert.equal(first.experimentalPicking,false);
  assert.throws(()=>webGpuWorldOptions({params,state,field,capabilities:{cameraTerrain:'true'}}),/capabilities/);

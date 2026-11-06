@@ -19,10 +19,11 @@ export function createWebGpuTerrainResidency({scene,material,waterMaterial=null,
   if(!Number.isSafeInteger(cx)||!Number.isSafeInteger(cz)||!Number.isSafeInteger(revision)||revision<0)throw TypeError('Invalid terrain identity');
   return `${cx},${cz}`;
  };
- function replace(payload,revision,epoch=null,{publicationEpoch=epoch}={}){
+ function replace(payload,revision,epoch=null,{publicationEpoch=epoch,publicationRevision=revision}={}){
   const key=check(payload?.cx,payload?.cz,revision),previous=versions.get(key);
   if(previous!==undefined&&revision<=previous)return false;
   if(epoch!==null&&(typeof epoch!=='string'||!epoch)||publicationEpoch!==null&&(typeof publicationEpoch!=='string'||!publicationEpoch))throw TypeError('Invalid terrain epoch');
+  if(!Number.isSafeInteger(publicationRevision)||publicationRevision<(coordinator?1:0))throw TypeError('Invalid terrain publication revision');
   const terrain=payload?.terrain;
   if(payload.authority!=='spatial-wasm'||!(terrain?.positions instanceof Float32Array)||!(terrain.colors instanceof Float32Array)||!(terrain.indices instanceof Uint16Array)||terrain.positions.length!==49*49*3||terrain.colors.length!==terrain.positions.length||terrain.indices.length!==48*48*6)throw TypeError('Invalid Wild Engine terrain payload');
   if(payload.water!==undefined&&(!(payload.water instanceof Float32Array)||payload.water.length%9!==0||payload.water.length&&!waterMaterial))throw TypeError('Invalid Wild Engine water payload');
@@ -30,7 +31,7 @@ export function createWebGpuTerrainResidency({scene,material,waterMaterial=null,
   try{geometry=nativeTerrainBuffer(terrain);chunkMaterial=materialFactory?.(payload)??material;if(!chunkMaterial?.isMaterial)throw TypeError('Invalid chunk material');mesh=new THREE.Mesh(geometry,chunkMaterial);mesh.position.set(payload.cx*48,0,payload.cz*48);mesh.receiveShadow=true;mesh.userData.ground=true;mesh.userData.spatialAuthority=payload.authority;mesh.userData.spatialTerrainRevision=revision;mesh.userData.checkpointGroundMask=payload.groundMask?.slice()??null;if(payload.water?.length){waterGeometry=nativeWaterBuffer(payload.water);water=new THREE.Mesh(waterGeometry,waterMaterial);water.position.copy(mesh.position);water.receiveShadow=true;water.userData.nativeFluid='chunk';water.userData.spatialTerrainRevision=revision;}if(!publisher){scene.add(mesh);if(water)scene.add(water);}}
   catch(error){if(mesh?.parent===scene)scene.remove(mesh);if(water?.parent===scene)scene.remove(water);geometry?.dispose();if(chunkMaterial&&!borrowedMaterials.has(chunkMaterial))chunkMaterial.dispose();waterGeometry?.dispose();throw error;}
   const old=entries.get(key);entries.set(key,mesh);versions.set(key,revision);epochs.set(key,epoch);surfaceView.install(payload);
-  if(publisher){const group=new THREE.Group();group.add(mesh);if(water)group.add(water);publisher.publish(key,group,water?[mesh,water]:[mesh],()=>{geometry.dispose();if(!borrowedMaterials.has(chunkMaterial))chunkMaterial.dispose();waterGeometry?.dispose();},{revision,epoch:publicationEpoch});waters.delete(key);}else{if(old){scene.remove(old);old.geometry.dispose();if(!borrowedMaterials.has(old.material))old.material.dispose();}releaseWater(key);}if(water)waters.set(key,water);onRevision?.({cx:payload.cx,cz:payload.cz,revision,epoch,kind:'replace'});return true;
+  if(publisher){const group=new THREE.Group();group.add(mesh);if(water)group.add(water);publisher.publish(key,group,water?[mesh,water]:[mesh],()=>{geometry.dispose();if(!borrowedMaterials.has(chunkMaterial))chunkMaterial.dispose();waterGeometry?.dispose();},{revision:publicationRevision,epoch:publicationEpoch});waters.delete(key);}else{if(old){scene.remove(old);old.geometry.dispose();if(!borrowedMaterials.has(old.material))old.material.dispose();}releaseWater(key);}if(water)waters.set(key,water);onRevision?.({cx:payload.cx,cz:payload.cz,revision,epoch,kind:'replace'});return true;
  }
  function remove(cx,cz,revision){
   const key=check(cx,cz,revision),previous=versions.get(key);if(previous!==undefined&&revision<=previous)return false;
