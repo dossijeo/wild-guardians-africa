@@ -41,6 +41,10 @@ El panel contextual del perfil Worker utiliza las propiedades confirmadas mínim
 de la estructura seleccionada, incluidas salud, puerta y coste para mostrar el
 reembolso. Las acciones siguen enviando su identidad a la autoridad para su
 validación; esta vista no cambia las reglas ni confirma una operación.
+La selección de Despertar del perfil Worker solicita la validación del objetivo
+una vez a la autoridad y descarta respuestas de selecciones o herramientas ya
+sustituidas. La confirmación vuelve a comprobar el objetivo en el Worker; la
+vista provisional no concede beneficios ni autoriza la operación.
 
 Esto no elimina todavía el snapshot completo: se sigue transfiriendo y usando
 para tutorial, selección, comandos,

@@ -1,4 +1,5 @@
 import {projectConfirmedHud} from '../simulation/confirmed-hud-projection.js';
+import {requestWorkerBlessingPreview} from './worker-blessing-preview.js';
 import {createConfirmedActorAudio,applyConfirmedActorAudio} from '../simulation/confirmed-actor-audio.js';
 import {playGuardianScenePresence} from '../audio/guardian-presence.js';
 import {updateGameAudio} from './game-audio-update.js';
@@ -502,9 +503,10 @@ function onPick({entityId,point,hitPoint,guardianContext=null,gestureSeconds=nul
   safe(()=>{
     if(state.pauses.includes('hiring')){if(surfaces.active!=='hiring')hiringDialog();return;}
     if(tool?.kind==='awakening'){
-      const draft=Game.previewBlessing(state,entityId);
-      if(!draft.valid)throw Error(draft.reason);
-      tool.targetId=entityId;tool.hitPoint=hitPoint&&[hitPoint.x,hitPoint.y,hitPoint.z].every(Number.isFinite)?{x:hitPoint.x,y:hitPoint.y,z:hitPoint.z}:null;commandFeedback=awakeningSelectionCopy(draft.kind);return;
+      const owner=world,ownerState=state,selectedTool=tool,contact=hitPoint&&[hitPoint.x,hitPoint.y,hitPoint.z].every(Number.isFinite)?{x:hitPoint.x,y:hitPoint.y,z:hitPoint.z}:null;
+      const apply=draft=>{if(owner!==world||ownerState!==state||tool!==selectedTool)return;if(!draft?.valid)throw Error(draft?.reason??'Selecciona una planta o muralla.');selectedTool.targetId=entityId;selectedTool.hitPoint=contact;selectedTool.confirmedDraft=draft;commandFeedback=awakeningSelectionCopy(draft.kind);updateUI(true);};
+      if(owner?.workerGpuOnly&&owner.workerRuntime){if(typeof entityId!=='string'||!entityId)throw Error('Selecciona una planta o muralla.');selectedTool.targetId=null;selectedTool.hitPoint=null;selectedTool.confirmedDraft=null;return requestWorkerBlessingPreview({runtime:owner.workerRuntime,tool:selectedTool,targetId:entityId,isCurrent:()=>owner===world&&ownerState===state&&tool===selectedTool,onAccepted:apply});}
+      return apply(Game.previewBlessing(state,entityId));
     }
     const pickedPlant=state.plants.find(p=>p.id===entityId&&p.alive);
     if(tool?.kind==='spell'){
@@ -616,7 +618,7 @@ function toggleAwakening(){
 }
 function confirmAwakening(){
   if(tool?.kind!=='awakening'||!tool.targetId)return;
-  if(world?.workerRuntime){const owner=world,ownerState=state,ownerTool=tool,draft=Game.previewBlessing(ownerState,ownerTool.targetId);if(owner.pendingAwakening)return;if(!draft.valid||!permission(ownerState,'awakening')||(ownerState.awakenings?.progress??0)<100)return;const id=commandId();owner.guardianSummons?.beginProvisionalAwakening(id,ownerTool.targetId);const slot=owner.guardianSummons?.slots.find(s=>s.event?.commandId===id&&s.event?.provisional),selection=slot?{origin:{x:slot.origin.x,y:slot.origin.y,z:slot.origin.z},contact:{x:slot.target.x,y:slot.target.y,z:slot.target.z}}:owner.workerGpuOnly?provisionalAwakeningSelection(owner.camera.position.toArray(),ownerTool.hitPoint):null;if(owner.workerGpuOnly&&!selection)throw Error('La posición visual del objetivo no está disponible.');if(selection){const begun=owner.webGpuWorld?.client.beginGuardianAwakening({kind:'bless',id,targetId:ownerTool.targetId,selection});if(owner.workerGpuOnly&&!begun)throw Error('La presentación del Despertar no está disponible.');}const pending=owner.pendingAwakening={id,targetId:ownerTool.targetId};return owner.workerRuntime.submit({kind:'bless',id,targetId:ownerTool.targetId}).then(async result=>{if(owner!==world||ownerState!==state)return;if(result.rejection)throw Error(result.rejection);if(result.value){owner.webGpuWorld?.client.resolveGuardianAttack(id,true);if(tool===ownerTool)cancelTool();await save();}else {owner.webGpuWorld?.client.resolveGuardianAttack(id,false);owner.guardianSummons?.rejectProvisional(id);}}).catch(error=>{owner.webGpuWorld?.client.resolveGuardianAttack(id,false);owner.guardianSummons?.rejectProvisional(id);throw error;}).finally(()=>{if(owner.pendingAwakening===pending)owner.pendingAwakening=null;});}
+  if(world?.workerRuntime){const owner=world,ownerState=state,ownerTool=tool,draft=owner.workerGpuOnly?ownerTool.confirmedDraft:Game.previewBlessing(ownerState,ownerTool.targetId),rules=owner.workerGpuOnly?owner.confirmedHud?.rules??ownerState:ownerState;if(owner.pendingAwakening)return;if(!draft?.valid||!permission(rules,'awakening')||(rules.awakenings?.progress??0)<100)return;const id=commandId();owner.guardianSummons?.beginProvisionalAwakening(id,ownerTool.targetId);const slot=owner.guardianSummons?.slots.find(s=>s.event?.commandId===id&&s.event?.provisional),selection=slot?{origin:{x:slot.origin.x,y:slot.origin.y,z:slot.origin.z},contact:{x:slot.target.x,y:slot.target.y,z:slot.target.z}}:owner.workerGpuOnly?provisionalAwakeningSelection(owner.camera.position.toArray(),ownerTool.hitPoint):null;if(owner.workerGpuOnly&&!selection)throw Error('La posición visual del objetivo no está disponible.');if(selection){const begun=owner.webGpuWorld?.client.beginGuardianAwakening({kind:'bless',id,targetId:ownerTool.targetId,selection});if(owner.workerGpuOnly&&!begun)throw Error('La presentación del Despertar no está disponible.');}const pending=owner.pendingAwakening={id,targetId:ownerTool.targetId};return owner.workerRuntime.submit({kind:'bless',id,targetId:ownerTool.targetId}).then(async result=>{if(owner!==world||ownerState!==state)return;if(result.rejection)throw Error(result.rejection);if(result.value){owner.webGpuWorld?.client.resolveGuardianAttack(id,true);if(tool===ownerTool)cancelTool();await save();}else {owner.webGpuWorld?.client.resolveGuardianAttack(id,false);owner.guardianSummons?.rejectProvisional(id);}}).catch(error=>{owner.webGpuWorld?.client.resolveGuardianAttack(id,false);owner.guardianSummons?.rejectProvisional(id);throw error;}).finally(()=>{if(owner.pendingAwakening===pending)owner.pendingAwakening=null;});}
   if(Game.bless(state,commandId(),tool.targetId)){cancelTool();save();}
 }
 function startDueCinematic(){
@@ -693,11 +695,11 @@ function updateUI(force=false) {
   refreshCommandFeedback();
 }
 function refreshCommandFeedback(){
-  const selecting=tool?.kind==='awakening',draft=selecting&&tool.targetId?Game.previewBlessing(state,tool.targetId):null;
+  const selecting=tool?.kind==='awakening',draft=selecting&&tool.targetId?(world?.workerGpuOnly?tool.confirmedDraft??null:Game.previewBlessing(state,tool.targetId)):null;
   const label=selecting?(draft?.valid?(draft.kind==='plant'?'Bendecir planta · fuente permanente':'Bendecir muralla · protección permanente'):'Selecciona una planta o muralla'):null;
   const message=draft&&!draft.valid?draft.reason:commandFeedback||(draft?.valid?awakeningSelectionCopy(draft.kind):selecting?'Toca una planta o muralla. Cancelar conserva la carga.':'');
   renderCommandFeedback(document,{label,message,
-    confirmation:draft?{label:'Bendecir',disabled:!draft.valid||!permission(state,'awakening')||!!world?.pendingAwakening,onConfirm:()=>safe(confirmAwakening)}:null,
+    confirmation:draft?{label:'Bendecir',disabled:!draft.valid||!permission(world?.workerGpuOnly?world.confirmedHud?.rules??state:state,'awakening')||!!world?.pendingAwakening,onConfirm:()=>safe(confirmAwakening)}:null,
     onCancel:()=>{cancelTool();updateUI(true);},onDismiss:()=>{commandFeedback='';updateUI(true);}});
 }
 function awakeningSelectionCopy(kind){return kind==='plant'?

@@ -190,6 +190,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      value=settleEvent(game,command.ticket,command.outcome,{enabled:command.enabled,losses:command.losses});
     }else if(command.kind==='microDisable'){
      disableMicroEconomy(game);
+    }else if(command.kind==='previewBlessing'){
+     if(typeof command.targetId!=='string'||!command.targetId)throw TypeError('Invalid blessing preview target');value=previewBlessing(game,command.targetId);
     }else if(command.kind==='bless'){
      if(typeof command.id!=='string'||!command.id||typeof command.targetId!=='string'||!command.targetId)throw TypeError('Invalid blessing command');
      const duplicate=game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id);
