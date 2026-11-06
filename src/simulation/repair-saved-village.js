@@ -12,9 +12,9 @@ export function repairVillageFootprints(state,catalog){
  if(!state||!Array.isArray(catalog))throw TypeError('Invalid saved village repair');
  for(const village of state.villages){
   if(!Array.isArray(village.buildings))throw Error('Saved village buildings unavailable');
-  const missing=village.buildings.filter(building=>building.kind!=='Zona común'&&building.footprint==null);if(!missing.length)continue;
+  const missing=village.buildings.filter(building=>building.footprint==null);if(!missing.length)continue;
   const source=catalog.find(item=>item.id===(village.culture==='saheliana'?'saheliano':village.culture));if(!source)throw Error('Saved village culture unavailable');
-  const shapes=new Map(villageLayout(source,village.x,village.z).map(building=>[building.key,building.footprint]));for(const building of missing){const footprint=shapes.get(building.key);if(!Array.isArray(footprint)||footprint.length<3)throw Error('Saved village footprint unavailable');building.footprint=footprint;}
+  const shapes=new Map(villageLayout(source,village.x,village.z).map(building=>[building.key,building.footprint]));for(const building of missing){const footprint=shapes.get(building.key);if(building.kind==='Zona común'&&footprint===undefined)continue;if(!Array.isArray(footprint)||footprint.length<3)throw Error('Saved village footprint unavailable');building.footprint=footprint;}
  }
 }
 export function repairSavedVillage(snapshot,catalog,{module=null}={}){
@@ -35,7 +35,7 @@ export function repairSavedVillage(snapshot,catalog,{module=null}={}){
 // Worker. The returned native description is still verified by the authority.
 export function prepareSavedWorkerCheckpoint(snapshot,catalog,{module=null,normalizeForStart=false}={}){
  if(typeof snapshot!=='string'||!Array.isArray(catalog)||typeof normalizeForStart!=='boolean')throw TypeError('Invalid saved worker checkpoint');
- const original=savedNativeAuthorityOptions(snapshot),state=JSON.parse(snapshot),needsRepair=state.villages.some(village=>!village.entry||village.buildings.some(building=>building.kind!=='Zona común'&&building.footprint==null));
+ const original=savedNativeAuthorityOptions(snapshot),state=JSON.parse(snapshot),needsRepair=state.villages.some(village=>!village.entry||village.buildings.some(building=>building.footprint==null));
  if(!needsRepair&&!normalizeForStart)return {initial:original,repaired:false};
  let source=needsRepair?repairSavedVillage(snapshot,catalog,{module}):snapshot;
  if(normalizeForStart){const physical=!!JSON.parse(source).workerPhysicsCheckpoint,current=physical?deserializeConfirmedState(source):deserialize(source);normalizeWorkerStartupState(current);source=physical?serializeConfirmedState(current):serialize(current);}

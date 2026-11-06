@@ -396,13 +396,13 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     wildEngineSession=spatialSession;if(projection){world.configureVisualBiome(next.biome);world.state=next;world.nav=nav;if(freshBootstrap||savedBootstrap){const pose=(freshBootstrap??savedBootstrap).pose;world.camera.position.fromArray(pose.eye);world.controls.target.fromArray(pose.target);}else{world.camera.position.x=projection.navigationView.eye.x;world.camera.position.z=projection.navigationView.eye.z;world.controls.target.x=projection.navigationView.target.x;world.controls.target.z=projection.navigationView.target.z;}}
     // Earlier saves predate native collision footprints. Preserve their units
     // and positions while restoring the geometric metadata from the catalog.
-    for(const village of next.villages){
+    if(!projection)for(const village of next.villages){
       const source=villages.find(v=>v.id===(village.culture==='saheliana'?'saheliano':village.culture));
       const shapes=new Map(villageLayout(source,village.x,village.z).map(b=>[b.key,b.footprint]));
       for(const building of village.buildings??[])building.footprint??=shapes.get(building.key);
     }
     nav.setState(next);
-    for(const village of next.villages)if(!village.entry)village.entry=findVillageEntry(nav,[],village.x,village.z);
+    for(const village of next.villages)if(!village.entry){if(projection)throw Error('Worker bootstrap did not prepare a village entry');village.entry=findVillageEntry(nav,[],village.x,village.z);}
     state=next;initializeCinematicProgress(state);audio.remember(state.events);loadingProgress.update('configuration');
     resumeLoadedWorld(state,{hidden:document.hidden});
     const earlyParams=new URLSearchParams(location.search),freshEarly=import.meta.env.DEV&&!loaded&&earlyParams.has('qa-worker-early-new');
