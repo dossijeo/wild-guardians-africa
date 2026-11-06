@@ -29,6 +29,11 @@ self.onmessage=async({data})=>{
    if(sessions.has(session)||typeof data.url!=='string'||!data.url)throw Error('Binary preparation unavailable');
    const item={controller:new AbortController()};sessions.set(session,item);const response=await fetch(data.url,{signal:item.controller.signal});if(!response.ok)throw Error(`Binary HTTP ${response.status}`);const buffer=await response.arrayBuffer();if(sessions.get(session)!==item)return;self.postMessage({id,session,kind:'array-buffer',result:buffer},[buffer]);return;
   }
+  if(kind==='native-bc7'){
+   if(sessions.has(session)||typeof data.url!=='string'||!data.url||typeof data.sha256!=='string'||!/^[a-f0-9]{64}$/.test(data.sha256))throw TypeError('Invalid native BC7 request');
+   const item={controller:new AbortController()};sessions.set(session,item);const response=await fetch(data.url,{signal:item.controller.signal});if(!response.ok)throw Error(`Native BC7 HTTP ${response.status}`);const declared=Number(response.headers.get('content-length'));if(Number.isFinite(declared)&&declared>64*1024*1024)throw Error('Native BC7 exceeds limit');const buffer=await response.arrayBuffer();if(buffer.byteLength>64*1024*1024)throw Error('Native BC7 exceeds limit');
+   if(sessions.get(session)!==item)return;const digest=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',buffer))).map(value=>value.toString(16).padStart(2,'0')).join('');if(sessions.get(session)!==item)return;if(digest!==data.sha256)throw Error('Native BC7 checksum mismatch');const result=await prepareNativeBc7Data(new Uint8Array(buffer));if(sessions.get(session)!==item)return;self.postMessage({id,session,kind:'native-bc7',result},[result.buffer]);return;
+  }
   const item=sessions.get(session);if(!item)throw Error('Character data session closed');
   if(kind==='close'){sessions.delete(session);item.controller.abort();item.stream?.close();return;}
   if(!item.stream)throw Error('Character data session not ready');
@@ -43,5 +48,5 @@ self.onmessage=async({data})=>{
    try{const entries=results.map(result=>result.value);self.postMessage({id,session,kind:'bitmaps',result:entries},entries.map(([,bitmap])=>bitmap));}catch(error){for(const bitmap of created)bitmap.close();throw error;}return;
   }
   throw Error('Unknown character data request');
- }catch(error){if(sessions.has(session)||kind==='open'||kind==='bitmap'||kind==='array-buffer')self.postMessage({id,session,error:{name:error?.name??'Error',message:String(error?.message??error)}});}
+ }catch(error){if(sessions.has(session)||kind==='open'||kind==='bitmap'||kind==='array-buffer'||kind==='native-bc7')self.postMessage({id,session,error:{name:error?.name??'Error',message:String(error?.message??error)}});}
 };

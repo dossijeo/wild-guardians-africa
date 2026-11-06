@@ -31,3 +31,7 @@ test('shared data worker transfers binary data with independent cancellation',as
  const f=fixture(),controller=new AbortController(),pending=f.client.loadArrayBuffer('/assets/tree.bin',{signal:controller.signal}),request=f.messages.at(-1),buffer=new Uint8Array([1,2,3]).buffer;assert.equal(request.kind,'array-buffer');f.worker.onmessage({data:{id:request.id,session:request.session,kind:'array-buffer',result:buffer}});assert.equal(await pending,buffer);assert.equal(f.client.status().sessions,0);
  const late=f.client.loadArrayBuffer('/assets/late.bin',{signal:controller.signal}),rejected=assert.rejects(late,{name:'AbortError'});controller.abort();await rejected;assert.equal(f.client.status().sessions,0);f.client.dispose();
 });
+test('native BC7 requests use an independent cancellable worker session',async()=>{
+ const f=fixture(),controller=new AbortController(),sha256='a'.repeat(64),pending=f.client.loadNativeBc7('/tree.ktx2',{signal:controller.signal,sha256}),request=f.messages.at(-1),result={buffer:new ArrayBuffer(16),width:4,height:4,mipmaps:[]};assert.equal(request.kind,'native-bc7');assert.equal(request.sha256,sha256);f.reply(request,result);assert.equal(await pending,result);assert.equal(f.client.status().sessions,0);
+ const late=f.client.loadNativeBc7('/late.ktx2',{signal:controller.signal,sha256}),rejected=assert.rejects(late,{name:'AbortError'});controller.abort();await rejected;assert.equal(f.client.status().sessions,0);await assert.rejects(f.client.loadNativeBc7('/bad.ktx2',{sha256:'bad'}),/Invalid native BC7/);f.client.dispose();
+});

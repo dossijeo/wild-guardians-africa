@@ -9,6 +9,12 @@ export function createCharacterPreviewDataClient({workerFactory=()=>new Worker(n
  function request(session,kind,extra={}){if(closed||!sessions.has(session))return Promise.reject(cancelled());const id=nextRequest++;return new Promise((resolve,reject)=>{pending.set(id,{session,resolve,reject});try{worker.postMessage({id,session,kind,...extra});}catch(error){pending.delete(id);reject(error);}});}
  function closeSession(session){const item=sessions.get(session);if(!item)return;sessions.delete(session);item.signal?.removeEventListener('abort',item.onAbort);for(const [id,request] of pending)if(request.session===session){pending.delete(id);request.reject(cancelled());}if(!closed)try{worker.postMessage({id:nextRequest++,session,kind:'close'});}catch(error){fail(error);}}
  return {
+  async loadNativeBc7(url,{signal,sha256}={}){
+   const target=typeof url==='string'?url:url instanceof URL?url.href:'';
+   if(closed||!target||typeof sha256!=='string'||!/^[a-f0-9]{64}$/.test(sha256)||signal!==undefined&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Invalid native BC7 request');
+   if(signal?.aborted)throw cancelled();const session=nextSession++,item={signal,onAbort:()=>closeSession(session)};sessions.set(session,item);signal?.addEventListener('abort',item.onAbort,{once:true});if(signal?.aborted){closeSession(session);throw cancelled();}
+   try{return await request(session,'native-bc7',{url:target,sha256});}finally{closeSession(session);}
+  },
   async loadArrayBuffer(url,{signal}={}){
    const target=typeof url==='string'?url:url instanceof URL?url.href:'';
    if(closed||!target||signal!==undefined&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Invalid binary request');

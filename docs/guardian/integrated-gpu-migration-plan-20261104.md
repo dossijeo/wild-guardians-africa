@@ -411,6 +411,8 @@ La fase JavaScript de `compileAsync()` y la preparación de bindings siguen comp
 
 ### A5. Propiedad y residencia de recursos
 
+El árbol cercano `tree_01` de sabana selecciona el BC7 nativo existente si el dispositivo lo admite; el Worker auxiliar verifica su SHA-256 y transfiere los bloques y mipmaps. Si falta soporte o falla la preparación se conserva WebP. Las pruebas usan recursos y Worker reales, pero no acreditan paridad visual ni rendimiento en WebGPU: el archivo BC7 piloto descarga aproximadamente 1,40 MB frente a 0,71 MB del WebP, aunque evite subir la imagen descomprimida.
+
 Unificar los bancos existentes de animales, trabajadores, estructuras y vegetación bajo reglas comunes de identidad, adquisición, residencia y liberación. No duplicar fuentes, geometrías ni bibliotecas cuando ya se comparten.
 
 Separar referencias de instancias de la residencia de recursos reutilizables. La última bestia de una especie puede desaparecer sin destruir inmediatamente todo lo necesario para su regreso. Definir límites de memoria, prioridades, retención de esenciales y expulsión segura; liberar lo que queda sin uso sin invalidar otro consumidor.

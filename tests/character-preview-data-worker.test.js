@@ -5,6 +5,13 @@ import {readFile} from 'node:fs/promises';
 import {once} from 'node:events';
 import {Worker} from 'node:worker_threads';
 import {createCharacterPreviewDataClient} from '../src/rendering/character-preview-worker-client.js';
+import {createHash} from 'node:crypto';
+
+test('auxiliary worker verifies and transfers the native savanna tree BC7 mip chain',async()=>{
+ const bytes=await readFile('public/content/ktx2-native/pilot/tree01-color-bc7.ktx2'),sha256=createHash('sha256').update(bytes).digest('hex'),server=createServer((req,res)=>{res.writeHead(200,{'content-length':bytes.length});res.end(bytes);});server.listen(0,'127.0.0.1');await once(server,'listening');
+ const moduleUrl=new URL('../src/rendering/character-preview-data-worker.js',import.meta.url).href,code=`import {parentPort} from 'node:worker_threads';import {webcrypto} from 'node:crypto';if(!globalThis.crypto)globalThis.crypto=webcrypto;globalThis.self={postMessage:(value,transfer)=>parentPort.postMessage(value,transfer)};await import(${JSON.stringify(moduleUrl)});parentPort.on('message',data=>self.onmessage({data}));`,nodeWorker=new Worker(new URL('data:text/javascript,'+encodeURIComponent(code)),{type:'module'}),adapter={postMessage:value=>nodeWorker.postMessage(value),terminate:()=>nodeWorker.terminate()};nodeWorker.on('message',data=>adapter.onmessage?.({data}));nodeWorker.on('error',error=>adapter.onerror?.({message:error.message}));const client=createCharacterPreviewDataClient({workerFactory:()=>adapter});
+ try{const url=`http://127.0.0.1:${server.address().port}/tree.ktx2`,result=await client.loadNativeBc7(url,{sha256});assert.equal(result.width,1024);assert.equal(result.height,1024);assert.equal(result.colorSpace,'srgb');assert.equal(result.mipmaps.length,11);assert.equal(result.mipmaps[0].length,1024*1024);assert.equal(result.mipmaps.at(-1).length,16);await assert.rejects(client.loadNativeBc7(url,{sha256:'0'.repeat(64)}),/checksum mismatch/);assert.equal(client.status().sessions,0);}finally{client.dispose();await new Promise(resolve=>server.close(resolve));}
+});
 
 test('auxiliary worker fetches and transfers a biome bitmap',async()=>{
  const server=createServer((req,res)=>{if(req.url==='/tree.bin'){res.end(Buffer.from([3,1,4]));return;}if(req.url!=='/tree.png'){res.writeHead(404);res.end();return;}res.writeHead(200,{'content-type':'image/png'});res.end('image');});server.listen(0,'127.0.0.1');await once(server,'listening');
