@@ -5,8 +5,9 @@ mundo del Worker gráfico. El guard de `installMicroevents()` es necesario:
 `MicroeventBillboards` crea un `ShaderMaterial` GLSL y lo incorpora a
 `world.scene`; `MicroeventSpace` consulta `world.objects` y
 `world.terrainMeshes`, mientras que el mundo Worker no posee esas geometrías
-en el hilo principal. Sin ellas, `occluded()` devuelve `false`, de modo que un
-adaptador que solo satisfaga la interfaz permitiría interacciones ocultas.
+en el hilo principal. Sin ellas, `occluded()` rechaza de forma conservadora el
+objetivo. No basta con suministrar geometría incompleta: un adaptador que asuma
+ausencia de obstáculos permitiría interacciones ocultas.
 
 La reserva, la liquidación y el calendario ya tienen comandos serializados
 en la autoridad (`src/microevents/worker-economy.js`). La presentación no debe
