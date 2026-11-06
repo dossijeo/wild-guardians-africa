@@ -33,6 +33,20 @@ test('cancelled compilation keeps its resources through a later upload batch',as
  await Promise.resolve();controller.abort();await assert.rejects(ready,/cancelled/);admission.deferRelease(object,()=>released++);await new Promise(resolve=>setTimeout(resolve,10));assert.equal(fences.length,1);fences[0]();await new Promise(resolve=>setImmediate(resolve));finish();await new Promise(resolve=>setTimeout(resolve,10));assert.equal(fences.length,2);assert.equal(released,0);fences[1]();await new Promise(resolve=>setImmediate(resolve));assert.equal(released,1);admission.dispose();
 });
 
+test('a detached child cannot be released while its former group is compiling or uploading',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),group=new THREE.Group(),child=new THREE.Mesh(),controller=new AbortController(),fences=[];group.add(child);let finish,released=0;
+ const renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone:()=>new Promise(resolve=>fences.push(resolve))}}},compileAsync:()=>new Promise(resolve=>{finish=resolve;})},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),ready=admission.prepare(group,{signal:controller.signal});
+ await Promise.resolve();controller.abort();await assert.rejects(ready,/cancelled/);child.removeFromParent();admission.deferRelease(child,()=>released++);
+ await new Promise(resolve=>setTimeout(resolve,10));assert.equal(fences.length,1);fences[0]();await new Promise(resolve=>setImmediate(resolve));assert.equal(released,0);
+ finish();await new Promise(resolve=>setTimeout(resolve,10));assert.equal(fences.length,2);assert.equal(released,0);fences[1]();await new Promise(resolve=>setImmediate(resolve));assert.equal(released,1);admission.dispose();child.geometry.dispose();child.material.dispose();
+});
+test('retiring a group also protects a child detached while its GPU fence is pending',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),group=new THREE.Group(),child=new THREE.Mesh(),fences=[];group.add(child);let groupReleased=0,childReleased=0;
+ const renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone:()=>new Promise(resolve=>fences.push(resolve))}}},compileAsync:()=>Promise.resolve()},admission=createWebGpuPipelineAdmission({renderer,scene,camera});
+ await admission.prepare(group);admission.deferRelease(group,()=>groupReleased++);await new Promise(resolve=>setTimeout(resolve,10));child.removeFromParent();admission.deferRelease(child,()=>childReleased++);
+ assert.equal(fences.length,1);fences[0]();await new Promise(resolve=>setTimeout(resolve,10));assert.equal(groupReleased,1);assert.equal(childReleased,0);assert.equal(fences.length,2);fences[1]();await new Promise(resolve=>setImmediate(resolve));assert.equal(childReleased,1);admission.dispose();child.geometry.dispose();child.material.dispose();
+});
+
 test('device loss releases a pending shared upload fence',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group();let lose,released=0;const renderer={backend:{isWebGPUBackend:true,device:{lost:new Promise(resolve=>{lose=resolve;}),queue:{onSubmittedWorkDone:()=>new Promise(()=>{})}}},compileAsync:()=>Promise.resolve()},admission=createWebGpuPipelineAdmission({renderer,scene,camera});await admission.prepare(object);admission.deferRelease(object,()=>released++);await new Promise(resolve=>setTimeout(resolve,10));assert.equal(released,0);lose({reason:'destroyed'});await new Promise(resolve=>setImmediate(resolve));assert.equal(released,1);admission.dispose();
 });

@@ -46,7 +46,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
  const lights=new Map();let lightsRevision=0,structuralRevision=0;
  function addLight(light){if(!light?.isLight||!light.shadow)throw TypeError('Invalid admission shadow light');const count=lights.get(light)??0;lights.set(light,count+1);if(count===0){lightsRevision++;structuralRevision++;}}
  if(shadowLights===null)scene.traverse(node=>{if(node.isLight&&node.shadow)addLight(node);});else for(const light of shadowLights)addLight(light);
- let closed=false,generation=0,active=false,inflightCompiles=0,cancel,auxiliaryRevision=0;const queue=[],targetWaiters=new Set(),compilingObjects=new Map(),uploadingObjects=new Map(),uploadBatch=new Set(),lifecycleSentinel={},auxiliaryTargets=new Map();let uploadScheduled=false,uploadActive=false;
+ let closed=false,generation=0,active=false,inflightCompiles=0,cancel,auxiliaryRevision=0;const queue=[],targetWaiters=new Set(),compilingObjects=new Map(),compilationMembers=new Map(),uploadingObjects=new Map(),uploadBatch=new Set(),lifecycleSentinel={},auxiliaryTargets=new Map();let uploadScheduled=false,uploadActive=false;
  function frameTarget(){return renderer._getFrameBufferTarget?.()??renderer.getRenderTarget?.()??renderer.getOutputRenderTarget?.()??null;}
  const cancelled=new Promise(resolve=>{cancel=()=>resolve(Error('Pipeline admission cancelled'));});
  let lostError=null;
@@ -54,7 +54,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
  // Queue completion protects resource lifetime, not admission. Several
  // objects share a fence, and later compilations continue while it is pending.
  function scheduleUploads(){if(uploadScheduled||uploadActive||!uploadBatch.size)return;uploadScheduled=true;setTimeout(flushUploads,0);}
- function trackUploads(object){if(typeof renderer.backend.device?.queue?.onSubmittedWorkDone!=='function'||uploadBatch.has(object))return;let record=uploadingObjects.get(object);if(!record){record={count:0,releases:[]};uploadingObjects.set(object,record);}record.count++;uploadBatch.add(object);scheduleUploads();}
+ function trackUploads(object,members=null){if(typeof renderer.backend.device?.queue?.onSubmittedWorkDone!=='function')return;let record=uploadingObjects.get(object);if(!record){record={count:0,releases:[],members:new Set()};uploadingObjects.set(object,record);}if(members)for(const member of members)record.members.add(member);else if(object?.isObject3D)object.traverse(member=>record.members.add(member));else record.members.add(object);if(uploadBatch.has(object))return;record.count++;uploadBatch.add(object);scheduleUploads();}
  function flushUploads(){uploadScheduled=false;if(uploadActive||!uploadBatch.size)return;uploadActive=true;const batch=[...uploadBatch];uploadBatch.clear();let submitted;try{submitted=Promise.resolve(renderer.backend.device.queue.onSubmittedWorkDone());}catch(error){submitted=Promise.reject(error);}const loss=renderer.backend.device.lost?.then(()=>null,()=>null);Promise.race([submitted,...(loss?[loss]:[])]).catch(error=>{if(!closed)retire(error);}).finally(()=>{for(const object of batch){const record=uploadingObjects.get(object);if(!record||--record.count)continue;uploadingObjects.delete(object);for(const release of record.releases){try{release();}catch(error){retire(error);}}}uploadActive=false;scheduleUploads();});}
  function rejectWaiting(error){for(const item of queue.splice(0)){if(item.onAbort)item.signal.removeEventListener('abort',item.onAbort);item.reject(error);}}
  function retire(error){if(!closed){closed=true;generation++;cancel();lights.clear();auxiliaryTargets.clear();rejectWaiting(Error('Pipeline admission closed'));try{onFatal(error);}catch{}}}
@@ -105,7 +105,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
   // Abort cancels publication, not Three's pending compilation. Keep the
   // renderer queue locked until that work settles; otherwise a cancelled
   // compile can overlap a new request or poison its cache afterwards.
-  if(serial){inflightCompiles++;const deferred=[];compilingObjects.set(object,deferred);const finish=error=>{if(error&&signal?.aborted)retire(error);if(deferred.length)trackUploads(object);compilingObjects.delete(object);for(const release of deferred){try{release();}catch(error){retire(error);}}inflightCompiles--;pump();};compilation.then(()=>finish(null),finish);}
+  if(serial){inflightCompiles++;const deferred=[],members=new Set();object.traverse(node=>members.add(node));compilingObjects.set(object,deferred);compilationMembers.set(object,members);const finish=error=>{if(error&&signal?.aborted)retire(error);if(deferred.length)trackUploads(object,members);compilingObjects.delete(object);compilationMembers.delete(object);for(const release of deferred){try{release();}catch(error){retire(error);}}inflightCompiles--;pump();};compilation.then(()=>finish(null),finish);}
   else compilation.catch(error=>{if(signal?.aborted)retire(error);});
   let error;try{error=await Promise.race([compilation.then(()=>null),cancelled,...(lost?[lost]:[]),...(aborted?[aborted]:[])]);}finally{if(onAbort)signal.removeEventListener('abort',onAbort);}
   if(error)throw error;
@@ -190,7 +190,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
    throw error;
   }
  }
- function deferObjectRelease(object,release){const pending=compilingObjects.get(object)??uploadingObjects.get(object)?.releases;if(pending)pending.push(()=>deferObjectRelease(object,release));else release();}
+ function deferObjectRelease(object,release){let pending=compilingObjects.get(object)??uploadingObjects.get(object)?.releases;if(!pending)for(const [root,members] of compilationMembers)if(members.has(object)){pending=compilingObjects.get(root);break;}if(!pending)for(const record of uploadingObjects.values())if(record.members.has(object)){pending=record.releases;break;}if(pending)pending.push(()=>deferObjectRelease(object,release));else release();}
  function deferAll(release){const pending=[...compilingObjects.values(),...[...uploadingObjects.values()].map(record=>record.releases)];if(!pending.length){release();return;}let remaining=pending.length;for(const list of pending)list.push(()=>{if(--remaining===0)deferAll(release);});}
  return {
   // Removal is immediate; release of the resources used by an active
