@@ -21,7 +21,9 @@ cliente conserva identidades de actores, tareas y objetivos entre publicaciones
 y retira las desaparecidas; así las comprobaciones asíncronas de vigencia no se
 cancelan por recibir un clon. La música y el procesamiento de eventos aún
 consumen el estado anterior. Las pruebas comparan señales y cambios de
-identidad, no la reproducción sonora en navegador.
+identidad. Una prueba ejecuta además el flujo completo `updateGameAudio` con
+`AudioSystem` real durante incursión, llegada, trabajo y pausa y compara ambas
+rutas; los recursos de audio están simulados y no prueba sonido en navegador.
 
 Esto no elimina todavía el snapshot completo: se sigue transfiriendo y usando
 para verificar la proyección y para tutorial, selección, comandos, audio,
