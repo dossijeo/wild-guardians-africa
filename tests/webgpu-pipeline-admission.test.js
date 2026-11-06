@@ -100,6 +100,17 @@ test('structural changes during compilation require a fresh admission',async()=>
  mesh.position.x=3;mesh.geometry.attributes.position.needsUpdate=true;pending[3]();await ready;assert.equal(pending.length,4);admission.dispose();
 });
 
+test('camera, object and light layer changes invalidate an in-flight admission',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),mesh=new THREE.Mesh(),sun=new THREE.DirectionalLight(),pending=[];
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(){return new Promise(resolve=>pending.push(resolve));}},admission=createWebGpuPipelineAdmission({renderer,scene,camera,shadowLights:[sun]}),ready=admission.prepare(mesh),turn=()=>new Promise(resolve=>setImmediate(resolve));
+ try{
+  await turn();camera.layers.enable(1);pending[0]();await turn();assert.equal(pending.length,2);
+  mesh.layers.enable(1);pending[1]();await turn();assert.equal(pending.length,3);
+  sun.layers.enable(1);pending[2]();await turn();assert.equal(pending.length,4);
+  pending[3]();await ready;
+ }finally{admission.dispose();mesh.geometry.dispose();mesh.material.dispose();}
+});
+
 test('buffer and morph format changes invalidate an in-flight admission',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),geometry=new THREE.BufferGeometry(),position=new THREE.BufferAttribute(new Float32Array(9),3),index=new THREE.BufferAttribute(new Uint16Array([0,1,2]),1),morph=new THREE.BufferAttribute(new Float32Array(9),3),mesh=new THREE.Mesh(geometry,new THREE.MeshBasicMaterial()),pending=[];
  geometry.setAttribute('position',position);geometry.setIndex(index);geometry.morphAttributes.position=[morph];

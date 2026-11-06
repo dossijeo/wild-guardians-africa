@@ -205,6 +205,8 @@ El catálogo distingue claves del motor, shaders generados y descriptores finale
 
 ### A4. Admisión gráfica y preparación bajo demanda
 
+La preparación pendiente también detecta cambios de capas de la cámara, los objetos y las luces registradas: Three.js utiliza esas máscaras para seleccionar qué entra en el pase. Si cambian durante la compilación, se repite antes de publicar. La prueba usa un compilador simulado; esto no controla todavía cambios estructurales posteriores a la publicación ni demuestra la preparación efectiva en el dispositivo.
+
 Crear un único servicio de preparación en el Worker gráfico, conectado a los cargadores y bancos existentes. Su máquina de estados debe distinguir al menos: solicitado, datos disponibles, preparando, listo, publicado, retirado y fallido/cancelado. Pipelines y recursos mantienen requisitos independientes; una descarga terminada no marca todo como listo.
 
 Las rutas de error de admisión conservan la propiedad de los recursos: si falla la notificación de un personaje ya preparado, se retira su raíz y se difiere la liberación; si falla la incorporación parcial de un chunk, se retiran sus mallas incorporadas, se conserva la revisión visual anterior y se notifica el error. Un fallo del callback posterior a la publicación también se comunica. Las pruebas usan admisión simulada; no constituyen una validación en dispositivo ni demuestran una mejora de tiempos.
