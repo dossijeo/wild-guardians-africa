@@ -1,3 +1,4 @@
+import {createRecoveryCheckpointEstimator,estimateRetainedBytes} from '../src/simulation/retained-size.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createPresentationRecoveryJournal,assertPresentationRecoveryBoundary,shouldCapturePresentationCheckpoint,withPresentationRecoveryCheckpoint} from '../src/simulation/presentation-recovery-journal.js';
@@ -182,4 +183,8 @@ test('checkpoint admission projects retained entries and replacement base before
 test('incremental checkpoint admission includes encoder and candidate retention',()=>{
  let shared=0;const journal=createPresentationRecoveryJournal({incrementalSnapshots:true,sharedRetainedBytes:()=>shared}),packet=sequence=>({sequence,snapshot:JSON.stringify({value:sequence,padding:'x'.repeat(300)}),events:[],physicsPose:null});
  try{journal.begin(1,packet(1));assert.equal(journal.canConfirm(1,{nextSharedBytes:100}),true);assert.equal(journal.canConfirm(1,{nextSharedBytes:journal.status().highWatermarkBytes}),false);journal.confirm(1);shared=100;journal.append(packet(2),true);journal.begin(2,packet(2));journal.append(packet(3),true);assert.equal(journal.canConfirm(2,{previousSharedBytes:100,nextSharedBytes:100}),true);assert.equal(journal.status().base,1);assert.equal(journal.snapshot().entries.length,2);}finally{journal.dispose();}
+});
+
+test('recovery checkpoint estimate reuses the immutable preliminary payload and accounts for work',()=>{
+ let visits=0;const terrain={};Object.defineProperty(terrain,'buffer',{enumerable:true,get(){visits++;return new Uint8Array(512);}});const base={sequence:1,snapshot:'state',terrain},work={effects:[{id:'w'}]},estimator=createRecoveryCheckpointEstimator(),first=estimator.estimate(base,{preflight:true});assert.equal(visits,1);const full={...base,workCheckpoint:work},estimated=estimator.estimate(full);assert.equal(visits,1);assert.equal(estimated,first+'workCheckpoint'.length*2+estimateRetainedBytes(work));const replacement={...base,terrain:{buffer:new Uint8Array(1024)},workCheckpoint:work};assert.equal(estimator.estimate(replacement),estimateRetainedBytes(replacement));
 });

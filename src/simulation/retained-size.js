@@ -12,3 +12,19 @@ export function estimateRetainedBytes(value,seen=new WeakSet()){
  for(const [key,item] of Object.entries(value))size+=key.length*2+estimateRetainedBytes(item,seen);
  return size;
 }
+
+// Reuse the preliminary traversal when the confirmed checkpoint only adds the
+// work payload. Values shared between the two payloads may be counted twice.
+export function createRecoveryCheckpointEstimator(){
+ let base=null,sequence=null,bytes=0;
+ return {estimate(checkpoint,{preflight=false}={}){
+  if(!checkpoint||typeof checkpoint!=='object'||!Number.isSafeInteger(checkpoint.sequence))throw TypeError('Invalid recovery checkpoint');
+  if(preflight){base=typeof WeakRef==='function'?new WeakRef(checkpoint):null;sequence=checkpoint.sequence;bytes=estimateRetainedBytes(checkpoint);return bytes;}
+  const previous=base?.deref();
+  if(previous&&sequence===checkpoint.sequence&&!Object.hasOwn(previous,'workCheckpoint')){
+   const keys=Object.keys(previous),actual=Object.keys(checkpoint),added=Object.hasOwn(checkpoint,'workCheckpoint');
+   if(actual.length===keys.length+(added?1:0)&&keys.every(key=>Object.hasOwn(checkpoint,key)&&Object.is(checkpoint[key],previous[key])))return bytes+(added?'workCheckpoint'.length*2+estimateRetainedBytes(checkpoint.workCheckpoint):0);
+  }
+  return estimateRetainedBytes(checkpoint);
+ }};
+}
