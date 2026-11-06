@@ -34,6 +34,9 @@ rutas; los recursos de audio están simulados y no prueba sonido en navegador.
 liquidaciones autoritativas explícitas y conserva saldo, eventos, enfriamientos
 y objetivos mínimos para sus efectos. Una comparación comprueba liquidación,
 fin de enfriamiento y amanecer frente al estado completo.
+La selección del indicador de mano del tutorial utiliza esa misma vista con
+campos de cultivo, magias y progreso limitados; las decisiones de colocación
+del guardián siguen consultando el estado anterior y al Worker autoritativo.
 
 Esto no elimina todavía el snapshot completo: se sigue transfiriendo y usando
 para tutorial, selección, comandos,

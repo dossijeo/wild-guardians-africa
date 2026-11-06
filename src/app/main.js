@@ -753,7 +753,7 @@ function refreshTutorialGuidance(){
   const warning=budgetWarningVisible(),message=tutorial?.presentation({record:false});
   const guidePanel=surfaces.active==='panel'&&['basic.center','basic.plant'].includes(state.tutorial.reading);
   const guideAllowed=(!surfaces.active||guidePanel)&&!warning&&!state.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p));
-  hudHand??=new TutorialHudGuide(document.querySelector('#stage'));hudHand.show(guideAllowed?(guidePanel?(state.tutorial.reading==='basic.center'?'#native-center':'[data-crop]'):tutorialHudHandTarget(state,message,tool?.kind,tool?.spell)):null);
+  hudHand??=new TutorialHudGuide(document.querySelector('#stage'));hudHand.show(guideAllowed?(guidePanel?(state.tutorial.reading==='basic.center'?'#native-center':'[data-crop]'):tutorialHudHandTarget(world?.workerGpuOnly?world.actorAudio??state:state,message,tool?.kind,tool?.spell)):null);
   const guidedStep=['magic.growth','magic.multiply'].includes(message?.id)||message?.id==='basic.'+state.tutorial.step||state.tutorial.guideAfterAuto?.includes('basic.'+state.tutorial.step);
   world.tutorialToolKind=tool?.kind??null;world.tutorialSpellKind=tool?.spell??null;world.tutorialHandsEnabled=guideAllowed&&guidedStep;
   guardian?.setGuide(hudHand.rect);
