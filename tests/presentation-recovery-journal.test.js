@@ -1,6 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createPresentationRecoveryJournal,assertPresentationRecoveryBoundary,shouldCapturePresentationCheckpoint,withPresentationRecoveryCheckpoint} from '../src/simulation/presentation-recovery-journal.js';
+test('recovery folds known authority envelopes but keeps unknown kinds as boundaries',()=>{
+ const journal=createPresentationRecoveryJournal({compactTicks:true});journal.begin(1);journal.confirm(1);const quiet=n=>({kind:'result',sequence:n,snapshot:'s'+n,events:[],physicsPose:null,pauses:[]});
+ journal.append(quiet(2),true);journal.append(quiet(3),true);journal.append({...quiet(4),kind:'future'},true);journal.append(quiet(5),true);assert.deepEqual(journal.snapshot().entries.map(entry=>[entry.firstSequence??entry.sequence,entry.sequence]),[[2,3],[4,4],[5,5]]);journal.dispose();
+});
+test('recovery folds authority paused and background view envelopes',()=>{
+ const journal=createPresentationRecoveryJournal();journal.begin(1);journal.confirm(1);const view=n=>({kind:'result',sequence:n,unchanged:true,slotId:'slot',stateSequence:1,elapsed:1,pauses:['menu'],events:[],saveAvailable:true,terrainChanged:false});
+ journal.append({...view(2),pausedAdvance:true,stepsExecuted:1},true);journal.append({...view(3),pausedAdvance:true,stepsExecuted:1},true);journal.append(view(4),false,{backgroundView:true});journal.append(view(5),false,{backgroundView:true});assert.deepEqual(journal.snapshot().entries.map(entry=>[entry.firstSequence??entry.sequence,entry.sequence]),[[2,3],[4,5]]);journal.dispose();
+});
 test('incremental recovery retains event and terrain boundaries through checkpoint renewal',()=>{
  const j=createPresentationRecoveryJournal({capacity:12,highWatermark:10,incrementalSnapshots:true}),make=(sequence,x,events=[])=>({session:'s',sequence,snapshot:JSON.stringify({workers:Array.from({length:25},(_,i)=>({id:`w${i}`,x:i?i:x,data:'x'.repeat(120)})),elapsed:sequence}),events,physicsPose:null}),first=make(1,0);
  j.begin(1,first);j.confirm(1);const second=make(2,2,[{id:'event-2'}]),third=make(3,3,[{id:'event-3'}]);j.appendTerrain(2,[{cx:0,cz:0}]);j.append(second,true);j.append(third,true);

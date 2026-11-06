@@ -1,7 +1,22 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHostPublicationQueue} from '../src/simulation/host-publication-queue.js';
+import {readFileSync} from 'node:fs';
+import {gunzipSync} from 'node:zlib';
+import {deserialize,serialize} from '../src/persistence/snapshots.js';
+import {createSimulationAuthority} from '../src/simulation/simulation-authority.js';
 const packet=(sequence,events=[],physicsPose=null)=>({sequence,events,physicsPose,snapshot:String(sequence)});
+test('actual authority result envelopes permit quiet advances to coalesce',()=>{
+ const module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm')),state=deserialize(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString());state.pauses.push('menu');const keys=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)keys.push(`${x},${z}`);const authority=createSimulationAuthority(module,serialize(state),keys),sent=[],queue=createHostPublicationQueue({session:'s',send:value=>sent.push(value)});
+ try{for(let sequence=1;sequence<=3;sequence++){const result=authority.execute({kind:'advance',sequence,seconds:.05,nightFastForward:false});assert.deepEqual(result.events,[]);queue.publication({kind:'result',session:'s',...result},true);}assert.equal(queue.status().queued,1);queue.ack(1);assert.equal(sent[1].firstSequence,2);assert.equal(sent[1].publication.sequence,3);assert.equal(sent[1].publication.kind,'result');}finally{authority.dispose();}
+});
+test('unknown transport markers remain publication boundaries',()=>{
+ const sent=[],q=createHostPublicationQueue({session:'s',send:value=>sent.push(value)});q.publication({...packet(1),kind:'result'},true);q.publication({...packet(2),kind:'future'},true);q.publication({...packet(3),kind:'result'},true);q.ack(1);assert.equal(sent[1].publication.sequence,2);q.ack(2);assert.equal(sent[2].publication.sequence,3);
+});
+test('authority envelopes preserve eventful and invalidation boundaries',()=>{
+ const sent=[],q=createHostPublicationQueue({session:'s',send:value=>sent.push(value)}),make=(n,events=[])=>({...packet(n,events),kind:'result'});q.publication(make(1),true);q.publication(make(2,[{id:'e2'}]),true);q.publication(make(3,[{id:'e3'}]),true);q.publication({...make(4),motionInvalidation:{reason:'wall'}},true);q.publication(make(5),true);
+ q.ack(1);assert.deepEqual(sent[1].publication.events,[{id:'e2'}]);q.ack(2);assert.deepEqual(sent[2].publication.events,[{id:'e3'}]);q.ack(3);assert.equal(sent[3].publication.motionInvalidation.reason,'wall');q.ack(4);assert.equal(sent[4].publication.sequence,5);
+});
 test('coalesces projected path publications without dropping their metadata or events',()=>{
  const sent=[],q=createHostPublicationQueue({session:'s',send:value=>sent.push(value)});q.publication(packet(1),true);q.publication({...packet(2),presentationPaths:'head-v1'},true);q.publication({...packet(3,[{id:'event-3'}]),presentationPaths:'head-v1'},true);q.ack(1);assert.equal(sent[1].firstSequence,2);assert.equal(sent[1].publication.sequence,3);assert.equal(sent[1].publication.presentationPaths,'head-v1');assert.deepEqual(sent[1].publication.events,[{id:'event-3'}]);q.ack(3);
 });
