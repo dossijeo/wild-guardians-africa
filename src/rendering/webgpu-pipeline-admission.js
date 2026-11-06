@@ -38,7 +38,8 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
  let closed=false,generation=0,active=false,inflightCompiles=0,cancel,auxiliaryRevision=0;const queue=[],targetWaiters=new Set(),compilingObjects=new Map(),uploadingObjects=new Map(),uploadBatch=new Set(),lifecycleSentinel={},auxiliaryTargets=new Map();let uploadScheduled=false,uploadActive=false;
  function frameTarget(){return renderer._getFrameBufferTarget?.()??renderer.getRenderTarget?.()??renderer.getOutputRenderTarget?.()??null;}
  const cancelled=new Promise(resolve=>{cancel=()=>resolve(Error('Pipeline admission cancelled'));});
- const lost=renderer.backend.device?.lost?.then(info=>Error('WebGPU device lost: '+(info?.message||info?.reason||'unknown')));
+ let lostError=null;
+ const lost=renderer.backend.device?.lost?.then(info=>{lostError=Error('WebGPU device lost: '+(info?.message||info?.reason||'unknown'));return lostError;});
  // Queue completion protects resource lifetime, not admission. Several
  // objects share a fence, and later compilations continue while it is pending.
  function scheduleUploads(){if(uploadScheduled||uploadActive||!uploadBatch.size)return;uploadScheduled=true;setTimeout(flushUploads,0);}
@@ -109,6 +110,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
     if(isCurrent&&!isCurrent())return;
     if(closed||version!==generation)throw Error('Pipeline admission cancelled');
     if(signal?.aborted)throw new DOMException('Pipeline admission cancelled','AbortError');
+    if(lostError)throw lostError;
     if(renderer._initialized===false||renderer._isDeviceLost===true)throw Error('WebGPU renderer unavailable for pipeline admission');
     // compileAsync builds its render list before its first await. Restore the
     // visibility immediately, before any subsequent frame can render it.
@@ -170,7 +172,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
       }
      }
     }
-    return {valid:()=>!closed&&version===generation&&!signal?.aborted&&(!isCurrent||isCurrent())&&!lightsChanged()&&shadowTargets.every(([light,map])=>light.shadow.map===map)&&sameInputs(inputs,pipelineInputs(object,currentTarget(),passCamera))};
+    return {valid:()=>!closed&&!lostError&&renderer._initialized!==false&&renderer._isDeviceLost!==true&&version===generation&&!signal?.aborted&&(!isCurrent||isCurrent())&&!lightsChanged()&&shadowTargets.every(([light,map])=>light.shadow.map===map)&&sameInputs(inputs,pipelineInputs(object,currentTarget(),passCamera))};
   }catch(error){
    // Three r180 may retain an unsuccessful pipeline in its internal cache.
    if(!closed&&!signal?.aborted)retire(error);
@@ -211,6 +213,8 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
    for(;;){
     for(let i=0;i<requests.length;i++)if(!tickets[i]?.valid())tickets[i]=await this.prepareTicket(requests[i].object,requests[i].options);
     if(closed)throw Error('Pipeline admission cancelled');
+    if(lostError)throw lostError;
+    if(renderer._initialized===false||renderer._isDeviceLost===true)throw Error('WebGPU renderer unavailable for pipeline admission');
     if(requests.some(request=>request.options?.signal?.aborted))throw new DOMException('Pipeline admission cancelled','AbortError');
     if(tickets.every(ticket=>ticket.valid())){publish();return;}
    }

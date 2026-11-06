@@ -101,6 +101,12 @@ test('a preparation ticket tracks compiled inputs and auxiliary pass ownership',
  try{const ticket=await admission.prepareTicket(mesh,{});assert.equal(ticket.valid(),true);mesh.material.needsUpdate=true;assert.equal(ticket.valid(),false);const fresh=await admission.prepareTicket(mesh,{});const remove=admission.registerAuxiliaryTarget(target);assert.equal(fresh.valid(),false);remove();}finally{admission.dispose();target.dispose();mesh.geometry.dispose();mesh.material.dispose();}
 });
 
+test('device loss invalidates previously prepared tickets and prevents publication',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),mesh=new THREE.Mesh(),failures=[];let lose,published=0;
+ const renderer={backend:{isWebGPUBackend:true,device:{lost:new Promise(resolve=>{lose=resolve;})}},compileAsync:()=>Promise.resolve()},admission=createWebGpuPipelineAdmission({renderer,scene,camera,onFatal:error=>failures.push(error.message)});
+ try{const ticket=await admission.prepareTicket(mesh,{});assert.equal(ticket.valid(),true);lose({reason:'destroyed'});await new Promise(resolve=>setImmediate(resolve));assert.equal(ticket.valid(),false);await assert.rejects(admission.prepareManyAndPublish([],()=>published++),/device lost: destroyed/);await assert.rejects(admission.prepareAndPublish(mesh,{},()=>published++),/device lost: destroyed/);assert.equal(published,0);assert.deepEqual(failures,['WebGPU device lost: destroyed']);}finally{admission.dispose();mesh.geometry.dispose();mesh.material.dispose();}
+});
+
 test('a group publishes only after every prepared object is still current',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),a=new THREE.Mesh(),b=new THREE.Mesh(),pending=[];let published=0;
  const renderer={backend:{isWebGPUBackend:true},compileAsync(object){return new Promise(resolve=>pending.push({object,resolve}));}},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),turn=()=>new Promise(resolve=>setImmediate(resolve));
