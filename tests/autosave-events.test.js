@@ -4,7 +4,7 @@ import * as Game from '../src/simulation/game.js';
 import {spawnRaid} from '../src/simulation/raids.js';
 import {rational} from '../src/simulation/money.js';
 import {SaveRepository,serialize} from '../src/persistence/snapshots.js';
-import {autosaveEventAfter,autosaveConfirmedEvents} from '../src/app/autosave-events.js';
+import {autosaveEventAfter,autosaveConfirmedEvents,createConfirmedAutosaveController} from '../src/app/autosave-events.js';
 import {saveGame} from '../src/app/save-game.js';
 
 import {clearNavigation} from './clear-navigation.js';
@@ -33,6 +33,16 @@ test('fresh boundaries work with repeated IDs in separate slots and a rolled-ove
 test('confirmed batches request one autosave for any boundary and none for unrelated events',()=>{
  let saves=0;const save=()=>++saves;assert.equal(autosaveConfirmedEvents([{type:'WaterSatisfied'}],save),false);for(const type of ['Dawn','RaidEnded','CampaignWon','GameOver'])assert.equal(autosaveConfirmedEvents([{type},{type}],save),saves);assert.equal(saves,4);assert.throws(()=>autosaveConfirmedEvents(null,save),/confirmed autosave/);
 });
+test('unavailable Worker autosave waits for confirmed availability before retrying',async()=>{
+ const requests=[],errors=[],flush=()=>new Promise(resolve=>setImmediate(resolve)),controller=createConfirmedAutosaveController({request:()=>new Promise(resolve=>requests.push(resolve)),onError:error=>errors.push(error)});controller.observe(true);controller.events([{type:'Dawn'}]);assert.equal(requests.length,1);controller.observe(false);requests[0]({saved:false,reason:'physics-active'});await flush();assert.equal(controller.status().waiting,true);controller.observe(false);assert.equal(requests.length,1);controller.observe(true);assert.equal(requests.length,2);requests[1]({saved:true});await flush();assert.deepEqual(controller.status(),{pending:false,running:false,waiting:false,closed:false});assert.deepEqual(errors,[]);controller.dispose();
+});
+test('new confirmed boundaries during a save produce one later checkpoint and disposal stops retries',async()=>{
+ const requests=[],flush=()=>new Promise(resolve=>setImmediate(resolve)),controller=createConfirmedAutosaveController({request:()=>new Promise(resolve=>requests.push(resolve))});controller.events([{type:'RaidEnded'}]);controller.events([{type:'Dawn'},{type:'GameOver'}]);assert.equal(requests.length,1);requests[0]({saved:true});await flush();assert.equal(requests.length,2);controller.dispose();requests[1]({saved:false,reason:'physics-active'});await flush();controller.observe(true);assert.equal(requests.length,2);assert.equal(controller.status().closed,true);
+});
+test('a checkpoint failure after availability recovered retries only once',async()=>{
+ const requests=[],flush=()=>new Promise(resolve=>setImmediate(resolve)),controller=createConfirmedAutosaveController({request:()=>new Promise(resolve=>requests.push(resolve))});controller.observe(true);controller.events([{type:'Dawn'}]);controller.observe(false);controller.observe(true);requests[0]({saved:false,reason:'physics-active'});await flush();assert.equal(requests.length,2);requests[1]({saved:true});await flush();assert.equal(requests.length,2);controller.dispose();
+});
+test('storage errors are reported without an automatic retry loop',async()=>{const errors=[],flush=()=>new Promise(resolve=>setImmediate(resolve));let calls=0;const controller=createConfirmedAutosaveController({request:()=>{calls++;return Promise.reject(Error('storage failed'));},onError:error=>errors.push(error.message)});controller.events([{type:'Dawn'}]);await flush();controller.observe(false);controller.observe(true);await flush();assert.equal(calls,1);assert.deepEqual(errors,['storage failed']);controller.dispose();});
 test('actual dawn saves after agriculture and queue rebuild, once, without changing another slot',()=>{
  const s=farm(),other=farm('autosave-b'),store=storage(),repo=new SaveRepository(store);repo.save(other);const untouched=store.data.get(repo.key(other.slotId));
  s.time=599.9;s.nightPlan={done:true,group:[]};s.eventPlan={id:'season',kind:'season',magnitude:.2,negative:false};
