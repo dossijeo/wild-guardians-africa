@@ -15,14 +15,15 @@ export function createTerrainAdmission({scene,admission,onError=()=>{},onPublish
   if(closed)throw Error('Terrain admission closed');
   const previous=pending.get(key);if(previous){pending.delete(key);release(previous);}
   const controller=new AbortController(),record={group,meshes,dispose,controller,released:false};pending.set(key,record);unavailable.add(key);
-  Promise.resolve().then(()=>admission.prepare(group,{signal:controller.signal})).then(()=>{
+  const commit=()=>{
    if(closed||pending.get(key)!==record||controller.signal.aborted)return;
    // Keep the pending owner until every mesh is attached. If attachment
    // fails, the rejection path removes any partial additions and preserves
    // the previous visible revision.
    const old=visible.get(key);for(const mesh of meshes)scene.add(mesh);record.published=true;visible.set(key,record);pending.delete(key);unavailable.delete(key);
    try{release(old);onPublished(key);}catch(error){onError(error);}
-  }).catch(error=>{if(closed||pending.get(key)!==record||controller.signal.aborted)return;pending.delete(key);release(record);onError(error);});
+  };
+  Promise.resolve().then(()=>typeof admission.prepareAndPublish==='function'?admission.prepareAndPublish(group,{signal:controller.signal},commit):Promise.resolve(admission.prepare(group,{signal:controller.signal})).then(commit)).catch(error=>{if(closed||pending.get(key)!==record||controller.signal.aborted)return;pending.delete(key);release(record);onError(error);});
  }
  function remove(key){const item=pending.get(key);pending.delete(key);release(item);const old=visible.get(key);visible.delete(key);release(old);unavailable.delete(key);}
  function isRayReady(ray,limit=Infinity){

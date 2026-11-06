@@ -80,6 +80,21 @@ test('world admission prepares registered auxiliary targets before publishing',a
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),mesh=new THREE.Mesh(),framebuffer={},target=new THREE.RenderTarget(2,2),calls=[];let current=null,finish;const renderer={backend:{isWebGPUBackend:true},getRenderTarget:()=>current,_getFrameBufferTarget:()=>framebuffer,setRenderTarget:value=>{current=value;},compileAsync(){calls.push(current);return calls.length===2?new Promise(resolve=>{finish=resolve;}):Promise.resolve();}},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),remove=admission.registerAuxiliaryTarget(target);let published=false;try{const ready=admission.prepare(mesh).then(()=>{published=true;});await new Promise(resolve=>setImmediate(resolve));assert.deepEqual(calls,[framebuffer,target]);assert.equal(published,false);finish();await ready;assert.equal(published,true);remove();await admission.prepare(mesh);assert.deepEqual(calls,[framebuffer,target,framebuffer]);}finally{admission.dispose();target.dispose();mesh.geometry.dispose();mesh.material.dispose();}
 });
 
+test('publication is synchronous with the final pass validation',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),mesh=new THREE.Mesh(),target=new THREE.RenderTarget(2,2),pending=[];let current=null,published=0;
+ const renderer={backend:{isWebGPUBackend:true},getRenderTarget:()=>current,setRenderTarget:value=>{current=value;},compileAsync(){return new Promise(resolve=>pending.push(resolve));}},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),remove=admission.registerAuxiliaryTarget(target),turn=()=>new Promise(resolve=>setImmediate(resolve));
+ try{
+  const ready=admission.prepareAndPublish(mesh,{},()=>{assert.equal(mesh.material.version,1);published++;});
+  await turn();pending[0]();await turn();assert.equal(pending.length,2);mesh.material.needsUpdate=true;pending[1]();await turn();
+  assert.equal(published,0);assert.equal(pending.length,3);pending[2]();await turn();assert.equal(pending.length,4);pending[3]();await turn();assert.equal(pending.length,5);pending[4]();await ready;assert.equal(published,1);
+ }finally{remove();admission.dispose();target.dispose();mesh.geometry.dispose();mesh.material.dispose();}
+});
+
+test('publication errors reject only the request and do not poison later admissions',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),mesh=new THREE.Mesh(),renderer={backend:{isWebGPUBackend:true},compileAsync:()=>Promise.resolve()},admission=createWebGpuPipelineAdmission({renderer,scene,camera});
+ try{await assert.rejects(admission.prepareAndPublish(mesh,{},()=>{throw Error('publication failed');}),/publication failed/);await admission.prepare(mesh);}finally{admission.dispose();mesh.geometry.dispose();mesh.material.dispose();}
+});
+
 test('removing an auxiliary target while it compiles avoids retries using retired resources',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),mesh=new THREE.Mesh(),framebuffer={},target=new THREE.RenderTarget(2,2),calls=[];let current=null,finish;const renderer={backend:{isWebGPUBackend:true},getRenderTarget:()=>current,_getFrameBufferTarget:()=>framebuffer,setRenderTarget:value=>{current=value;},compileAsync(){calls.push(current);return calls.length===2?new Promise(resolve=>{finish=resolve;}):Promise.resolve();}},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),remove=admission.registerAuxiliaryTarget(target);try{const ready=admission.prepare(mesh);await new Promise(resolve=>setImmediate(resolve));mesh.material.needsUpdate=true;remove();finish();await ready;assert.deepEqual(calls,[framebuffer,target,framebuffer]);}finally{admission.dispose();target.dispose();mesh.geometry.dispose();mesh.material.dispose();}
 });
