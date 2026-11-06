@@ -1,3 +1,4 @@
+import {microeventCommandCount} from './confirmed-view.js';
 import {Vector3} from 'three';
 import {AttentionDirector} from './director.js';
 import {InteractiveParticles} from './particles.js';
@@ -14,7 +15,7 @@ export class Microevents {
   constructor({state,world,stage,save,sound,context,settings,workerEconomy=null,debug=false,clock=()=>performance.now()}){
     Object.assign(this,{state,world,stage,save,sound,context,settings,workerEconomy,debug,clock});this.abort=new AbortController();this.records=[];this.learned=new Set();this.frameSamples=[];this.frameIntervals=[];this.metrics={spawns:0,completed:0,ignored:0,rescued:0,misses:0,frameMs:0};
     this.motionQuery=matchMedia('(prefers-reduced-motion: reduce)');this.reducedMotion=this.motionQuery.matches;this.motionQuery.addEventListener('change',e=>{this.reducedMotion=e.matches;},{signal:this.abort.signal});
-    const directorMemory=workerEconomy?structuredClone(state.microevents??microState({seed:state.seed,day:state.day})):microState(state);this.director=new AttentionDirector(directorMemory,{telemetry:(type,detail)=>this.log(type,detail)});this.particles=new InteractiveParticles(MICROEVENT_CONFIG.maxParticles);this.space=new MicroeventSpace();this.billboards=world.workerGpuOnly?createRemoteMicroeventBillboards(world,world.webGpuWorld?.client?.microevents):new MicroeventBillboards(world);if(!world.workerGpuOnly)this.billboards.ready.catch(e=>{this.failed=true;this.log('asset-error',{message:e.message});});this.pointer={present:false,owned:false,x:0,y:0,vx:0,vy:0,hold:0};this.owned=new Set();this.cameraPointers=new Set();this.last=clock();this.commandCount=state.commandIds.length;this.eventTail=state.events.at(-1)?.id;this.anchorTimer=0;this.anchors=[];this.point=new Vector3();this.cameraPose=[];this.disposed=false;
+    const directorMemory=workerEconomy?structuredClone(state.microevents??microState({seed:state.seed,day:state.day})):microState(state);this.director=new AttentionDirector(directorMemory,{telemetry:(type,detail)=>this.log(type,detail)});this.particles=new InteractiveParticles(MICROEVENT_CONFIG.maxParticles);this.space=new MicroeventSpace();this.billboards=world.workerGpuOnly?createRemoteMicroeventBillboards(world,world.webGpuWorld?.client?.microevents):new MicroeventBillboards(world);if(!world.workerGpuOnly)this.billboards.ready.catch(e=>{this.failed=true;this.log('asset-error',{message:e.message});});this.pointer={present:false,owned:false,x:0,y:0,vx:0,vy:0,hold:0};this.owned=new Set();this.cameraPointers=new Set();this.last=clock();this.commandCount=microeventCommandCount(state);this.eventTail=state.events.at(-1)?.id;this.anchorTimer=0;this.anchors=[];this.point=new Vector3();this.cameraPose=[];this.disposed=false;
     this.trace=new PointerTrace();this.beforeSimulation();const signal=this.abort.signal;for(const name of ['pointerdown','pointermove','pointerup','pointercancel','lostpointercapture'])stage.addEventListener(name,e=>this.input(name,e),{capture:true,signal});
     stage.addEventListener('wheel',()=>{this.wheelUntil=this.clock()+250;this.director.cameraStable=0;},{capture:true,passive:true,signal});
     document.addEventListener('visibilitychange',()=>{if(document.hidden)this.cancel('hidden');this.last=this.clock();},{signal});
@@ -40,19 +41,19 @@ export class Microevents {
   validAnchor(def,anchor){if(this.world.workerGpuOnly){const source=def.anchor==='wood'?this.state.structures:this.state.plants,current=source?.find(entity=>entity.id===anchor?.entity?.id);if(!current)return false;anchor.entity=current;}return eligibleAnchor(def,anchor?.entity);}
   async spawn(def,anchor,{force=false,economy=true}={}){
     if(this.active||this.pending||this.disposed||!this.validAnchor(def,anchor)||!this.project(anchor)||this.blocked().length||!compatible(def,this.state)||!force&&def.category==='nuisance'&&this.director.m.negativeTimes.length>=2||!force&&this.director.m.eventCooldowns[def.id]>0)return false;
-    this.pending=true;let ticket=null;const commandCount=this.state.commandIds.length,pose=cameraPose(this.world.camera);
+    this.pending=true;let ticket=null;const commandCount=microeventCommandCount(this.state),pose=cameraPose(this.world.camera);
     try{
       if(this.space){this.space.begin(def,anchor,this.world.camera);this.point.set(anchor.entity.x+(anchor.offsetX??0),anchor.y,anchor.entity.z+(anchor.offsetZ??0));const check=this.occluded(this.point);if((this.world.workerGpuOnly?await check:check)||this.disposed||poseChanged(cameraPose(this.world.camera),pose))return false;}
       // A Worker visibility reply can arrive after a game action or UI change.
       // Recheck before reserving so a stale candidate cannot consume director
       // history/cooldown or request an authoritative ticket.
-      if(this.disposed||this.blocked().length||this.state.commandIds.length!==commandCount||this.settings.microevents==='off'||!compatible(def,this.state)||!this.validAnchor(def,anchor)||!this.project(anchor))return false;
+      if(this.disposed||this.blocked().length||microeventCommandCount(this.state)!==commandCount||this.settings.microevents==='off'||!compatible(def,this.state)||!this.validAnchor(def,anchor)||!this.project(anchor))return false;
       ticket=this.workerEconomy?await this.workerEconomy.reserve(def.id,anchor.entity.id):reserveEvent(this.state,def.id,anchor.entity.id);if(!ticket)return false;
       this.director.m.cooldown=MICROEVENT_CONFIG.cooldown;this.director.reserve(def);
       if(this.workerEconomy)await this.workerEconomy.schedule(this.director.m);
       await this.billboards.ready;const saved=await this.save();
       const check=this.space&&this.occluded(this.point.set(anchor.entity.x+(anchor.offsetX??0),anchor.y,anchor.entity.z+(anchor.offsetZ??0))),obstructed=this.world.workerGpuOnly?await check:check,cameraUnsafe=this.cameraPointers.size>0||this.owned.size>0||this.clock()<(this.wheelUntil??0)||poseChanged(cameraPose(this.world.camera),pose)||!force&&this.director.cameraStable<MICROEVENT_CONFIG.stable;
-      if(!saved||this.disposed||this.blocked().length||cameraUnsafe||this.state.commandIds.length!==commandCount||this.settings.microevents==='off'||!compatible(def,this.state)||!this.validAnchor(def,anchor)||!this.project(anchor)||obstructed){if(this.workerEconomy)await this.workerEconomy.settle(ticket,'cancelled',{enabled:false});else settleEvent(this.state,ticket,'cancelled',{enabled:false});return false;}
+      if(!saved||this.disposed||this.blocked().length||cameraUnsafe||microeventCommandCount(this.state)!==commandCount||this.settings.microevents==='off'||!compatible(def,this.state)||!this.validAnchor(def,anchor)||!this.project(anchor)||obstructed){if(this.workerEconomy)await this.workerEconomy.settle(ticket,'cancelled',{enabled:false});else settleEvent(this.state,ticket,'cancelled',{enabled:false});return false;}
       this.active={def,anchor,ticket,economy,ending:0,outcome:null};this.director.begin(def,{reserved:true});this.particles.start(def,()=>this.director.random());this.particles.learned=this.learned?.has(def.primary.mode)??false;this.space?.begin(def,anchor,this.world.camera);return true;
     }catch(e){if(ticket)try{if(this.workerEconomy)await this.workerEconomy.settle(ticket,'cancelled',{enabled:false});else settleEvent(this.state,ticket,'cancelled',{enabled:false});}catch{}this.failed=true;this.log('error',{message:e.message});return false;}
     finally{this.pending=false;}
@@ -105,7 +106,7 @@ export class Microevents {
     const events=this.state.events,index=events.findIndex(e=>e.id===this.eventTail),fresh=events.slice(index+1);
     if(fresh.some(e=>e.type==='Dawn'))this.log('economy-day',{economicDay:this.director.m.day,credit:this.director.m.rewards,reservedLoss:this.director.m.losses,settledLoss:this.director.m.settledDay===this.director.m.day?this.director.m.settledLoss:0});
     if(!this.workerEconomy)trackIncome(this.state,fresh);for(const e of fresh)if(e.type==='MicroeventHarvestLossApplied')this.log('harvest-loss',{targetId:e.targetId,delta:e.delta,economicDay:this.director.m.settledDay,dailySettledLoss:this.director.m.settledLoss});this.eventTail=events.at(-1)?.id;
-    if(this.commandCount!==this.state.commandIds.length){this.commandCount=this.state.commandIds.length;this.director.coreAction();this.cancel('core-action');}
+    if(this.commandCount!==microeventCommandCount(this.state)){this.commandCount=microeventCommandCount(this.state);this.director.coreAction();this.cancel('core-action');}
     this.beforeSimulation();
     const pose=cameraPose(this.world.camera),moving=this.cameraPointers.size>0||this.owned.size>0||poseChanged(pose,this.cameraPose)||start<(this.wheelUntil??0);this.cameraPose=pose;
     const blocked=this.blocked();if(this.pending)blocked.push('saving');if(dt>1)blocked.push('frame-gap');
