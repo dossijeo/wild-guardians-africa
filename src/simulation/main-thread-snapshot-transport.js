@@ -69,11 +69,11 @@ export function createMainSnapshotEncoder({prepareSnapshot=fields,prepareState=n
 
 export function createMainSnapshotDecoder({trackRetained=false}={}){
  if(typeof trackRetained!=='boolean')throw TypeError('Invalid snapshot decoder');let base=null,sequence=0,retained=0;
- return {decode(envelope){
+ function decode(envelope,preview=false){
   if(envelope?.kind!=='publication')return envelope;
   const publication=envelope.publication,n=publication?.sequence;
   if(!Number.isSafeInteger(n)||n<=sequence)throw Error('Invalid snapshot transport sequence');
-  if(publication.unchanged===true){if(publication.snapshotDelta!==undefined)throw TypeError('Unexpected snapshot delta');sequence=n;return envelope;}
+  if(publication.unchanged===true){if(publication.snapshotDelta!==undefined)throw TypeError('Unexpected snapshot delta');if(!preview)sequence=n;return envelope;}
   let next,wire=envelope;
   if(typeof publication.snapshot==='string'&&publication.snapshotDelta===undefined){next=JSON.parse(publication.snapshot);if(!next||typeof next!=='object'||Array.isArray(next))throw TypeError('Invalid snapshot transport state');}
   else{
@@ -95,7 +95,9 @@ export function createMainSnapshotDecoder({trackRetained=false}={}){
    for(const key of delta.removed){if(typeof key!=='string'||seen.has(key)||!Object.hasOwn(next,key))throw TypeError('Invalid snapshot delta removal');seen.add(key);delete next[key];}
    const {snapshotDelta,...rest}=publication;let snapshot;const rebuilt={...rest};Object.defineProperty(rebuilt,'snapshot',{enumerable:true,get(){return snapshot??=JSON.stringify(next);}});wire={...envelope,publication:rebuilt};
   }
+  if(preview){const copy=structuredClone(next),publicationCopy={...wire.publication,snapshot:JSON.stringify(copy)};handoffConfirmedSnapshot(publicationCopy,copy);return {...wire,publication:publicationCopy};}
   handoffConfirmedSnapshot(wire.publication,next);
   base=next;sequence=n;if(trackRetained)retained=estimateRetainedBytes(next);return wire;
- },retainedBytes(){return retained;},dispose(){base=null;sequence=0;retained=0;}};
+ }
+ return {decode(envelope){return decode(envelope);},preview(envelope){return decode(envelope,true);},retainedBytes(){return retained;},dispose(){base=null;sequence=0;retained=0;}};
 }
