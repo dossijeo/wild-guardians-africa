@@ -8,7 +8,8 @@ export function confirmedAnimalPoses(message,snapshot){
  const actors=new Map((snapshot.raid?.animals??[]).map(animal=>[animal.id,animal])),result=new Map(),seen=new Set();
  for(const pose of poses){
   if(!pose||typeof pose.actorId!=='string'||!pose.actorId||seen.has(pose.actorId)||typeof pose.active!=='boolean'||!validTransform(pose.root)||!validTransform(pose.model)||!Array.isArray(pose.bones)||pose.bones.some(b=>typeof b?.name!=='string'||!validTransform(b.transform)))throw TypeError('Invalid confirmed animal pose');
-  seen.add(pose.actorId);if(!pose.active)continue;if(!actors.get(pose.actorId)?.magicDown)throw Error('Confirmed pose lacks active animal');result.set(pose.actorId,pose);
+  const actor=actors.get(pose.actorId),transition=pose.visualTransition;if(transition!==undefined&&(transition!=='recovery-exit'||!pose.active||!actor||actor.status==='gone'||actor.magicDown))throw TypeError('Invalid confirmed visual transition');
+  seen.add(pose.actorId);if(!pose.active)continue;if(!actor||!actor.magicDown&&transition!=='recovery-exit')throw Error('Confirmed pose lacks active animal');result.set(pose.actorId,pose);
  }
  return result;
 }

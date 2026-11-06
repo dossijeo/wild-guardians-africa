@@ -24,6 +24,15 @@ test('applies confirmed physics and restores normal pose when authority releases
  assert.throws(()=>actor.validatePose({...physical,bones:[...physical.bones,{name:'LeftToeBase',transform:transform(0)}]}),/Duplicate auxiliary/);
  physical=null;actor.update();assert.equal(actor.root.visible,false);assert.equal(actor.root.position.x,8);assert.equal(actor.root.position.z,9);assert.equal(model.position.y,0);assert.equal(bone.position.x,0);actor.dispose();assert.equal(released,1);
 });
+test('confirmed recovery exit yields to a new provisional impact and then real physics',async()=>{
+ const scene=new Scene(),model=new Group(),bone=new Bone();bone.name='Hips';model.add(bone);const animal={id:'a',species:'hyena',status:'walking',x:0,z:0,heading:0,radius:.7},game={raid:{animals:[animal]},elapsed:1},assetBank={async acquire(){return {model,clips:[new AnimationClip('Walking',1,[])],release(){}};}};let physical=null,provisional=null,confirmed=0;
+ const actor=await createWebGpuConfirmedAnimal({scene,residency:{get:()=>null},state:game,actorId:'a',assetBank,getPose:()=>physical,getProvisional:()=>provisional,onPhysical:()=>confirmed++}),transform=x=>[x,0,0,0,0,0,1,1,1,1];
+ try{
+  physical={actorId:'a',active:true,visualTransition:'recovery-exit',root:transform(7),model:transform(0),bones:[{name:'Hips',transform:transform(3)}]};actor.update();assert.equal(actor.root.position.x,7);assert.equal(bone.position.x,3);assert.equal(actor.isPhysical(),false);assert.equal(confirmed,0);
+  const hit={at:0,impactAt:0,point:{x:0,y:1,z:0},direction:{x:1,y:0,z:0},intensity:1,ground:0};provisional={animal:{...animal,magicImpact:hit},elapsed:.1};actor.update();assert.equal(actor.root.position.x,0);assert.notEqual(model.quaternion.z,0);assert.equal(confirmed,0);
+  physical={...physical,visualTransition:undefined,root:transform(9),bones:[{name:'Hips',transform:transform(4)}]};actor.update();assert.equal(actor.root.position.x,9);assert.equal(bone.position.x,4);assert.equal(actor.isPhysical(),true);assert.equal(confirmed,1);
+ }finally{actor.dispose();}
+});
 test('QA bone reconciliation ends on the authoritative pose while root remains authoritative',async()=>{
  const scene=new Scene(),model=new Group(),bone=new Bone();bone.name='Spine';model.add(bone);const animal={id:'a',species:'hyena',status:'walking',x:0,z:0,heading:0,radius:.7},game={raid:{animals:[animal]},elapsed:1},bank={async acquire(){return {model,clips:[new AnimationClip('Walking',1,[])],release(){}};}};let now=0,physical=null;
  const hit={at:0,impactAt:0,point:{x:0,y:1,z:0},direction:{x:1,y:0,z:0},intensity:1,ground:0},sample={animal:{...animal,magicImpact:hit},elapsed:.1};

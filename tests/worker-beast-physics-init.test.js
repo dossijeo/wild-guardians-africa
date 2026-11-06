@@ -4,6 +4,7 @@ import {readFile} from 'node:fs/promises';
 import {BufferGeometry,Material,Skeleton} from 'three';
 import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
 import {createWorkerBeastPhysics} from '../src/simulation/worker-beast-physics.js';
+import {BeastRecoveryExit} from '../src/rendering/beast-recovery-exit.js';
 
 test('failed worker physics initialization releases each rig resource once',async()=>{
  const originalFetch=globalThis.fetch,types=[BufferGeometry,Material,Skeleton],originalDispose=types.map(type=>type.prototype.dispose),disposals=new Map();
@@ -40,4 +41,17 @@ test('disposal during admission releases the late rig once',async()=>{
    await assert.rejects(admission,/disposed/);assert.ok(disposals.size>0,`no resources released: shared=${shareSpeciesRigs}`);assert.ok([...disposals.values()].every(count=>count===1),`a resource was disposed more than once: shared=${shareSpeciesRigs}`);
   }
  }finally{globalThis.fetch=originalFetch;for(const [i,type] of types.entries())type.prototype.dispose=originalDispose[i];}
+});
+
+test('a recovery exit is published as visual pose until its existing blend ends',async()=>{
+ const originalFetch=globalThis.fetch,animal={id:'hyena-test',species:'hyena',status:'walking',x:2,z:3,heading:0},game={raid:{animals:[animal]},elapsed:10,structures:[]};
+ globalThis.fetch=async path=>new Response(await readFile(new URL('../public'+path,import.meta.url)));
+ let physics;
+ try{
+  physics=await createWorkerBeastPhysics(game,{actorSurface:()=>0},{actorIds:[animal.id]});
+  const rig=physics.manager.world.mixers.get(animal.id),root=physics.manager.world.objects.get(animal.id);root.position.set(animal.x,0,animal.z);root.updateMatrixWorld(true);
+  rig.recoveryExit=new BeastRecoveryExit(rig.model,game.elapsed);
+  const initial=physics.poses({activeOnly:true});assert.equal(initial.length,1);assert.equal(initial[0].actorId,animal.id);assert.equal(initial[0].active,true);assert.equal(initial[0].visualTransition,'recovery-exit');assert.equal(initial[0].root[0],animal.x);assert.equal(initial[0].root[2],animal.z);
+  game.elapsed+=.31;assert.deepEqual(physics.poses({activeOnly:true}),[]);assert.equal(rig.recoveryExit,undefined);
+ }finally{physics?.dispose();globalThis.fetch=originalFetch;}
 });

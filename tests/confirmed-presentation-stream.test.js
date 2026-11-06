@@ -228,3 +228,15 @@ test('early recovery-only rejection keeps incremental presentation synchronized'
  const sender=openVisualStream(senderPort,'s',()=>{},{workRecovery:true,incrementalTransport:true,recoveryJournal:journal,onCheckpointMinimum:c=>c.sequence!==1,onCheckpointAcknowledged:c=>bases.push(c.sequence)}),receiver=createConfirmedPresentationStream({port:receiverPort,session:'s',state,terrain:{confirm(){}},onConfirmed:message=>events.push(...message.events.map(event=>event.type)),onError:error=>errors.push(error),prepareWorkCheckpoint:message=>{captures++;return {version:1,sequence:message.sequence,effects:[]};}}),flush=()=>new Promise(resolve=>setTimeout(resolve,0)),packet=(sequence,checkpoint=false)=>({session:'s',sequence,snapshot:serializeConfirmedState(authority),events:sequence===2?[authority.events.at(-1)]:[],physicsPose:null,...(checkpoint?{terrainCheckpoint:{sequence,recoveryOnly:true,chunks:[]}}:{})});
  try{sender.publish(packet(1,true),true);await flush();assert.equal(captures,0);assert.equal(journal.status().base,null);emit(authority,'NightStarted');sender.publish(packet(2),true);await flush();assert.deepEqual(events,['NightStarted']);assert.equal(journal.status().checkpointRetry,true);sender.publish(packet(3,true),true);await flush();assert.deepEqual(bases,[3]);assert.equal(captures,1);assert.deepEqual(errors,[]);}finally{receiver.dispose();sender.close();journal.dispose();}
 });
+
+test('confirmed recovery exit is superseded by a new physical pose in order',()=>{
+ const state=fixture(),next=deserialize(serialize(state)),actor=next.raid.animals[0],events=[],errors=[],port={postMessage(){},close(){},start(){}};
+ delete actor.magicDown;actor.status='walking';const transform=[0,0,0,0,0,0,1,1,1,1],pose={actorId:actor.id,active:true,visualTransition:'recovery-exit',root:transform,model:transform,bones:[]};
+ const stream=createConfirmedPresentationStream({port,session:'s',state,terrain:{confirm(){}},onPhysics:poses=>events.push(poses.get(actor.id)?.visualTransition??'physical'),onError:error=>errors.push(error.message)});
+ try{
+  port.onmessage({data:{kind:'publication',session:'s',publication:{session:'s',sequence:1,snapshot:serializeConfirmedState(next),events:[],physicsPose:pose}}});
+  actor.magicDown={phase:'falling',since:next.elapsed,until:next.elapsed+2};const physical={...pose};delete physical.visualTransition;
+  port.onmessage({data:{kind:'publication',session:'s',publication:{session:'s',sequence:2,snapshot:serializeConfirmedState(next),events:[],physicsPose:physical}}});
+  assert.deepEqual(events,['recovery-exit','physical']);assert.deepEqual(errors,[]);assert.equal(stream.status().sequence,2);
+ }finally{stream.dispose();}
+});
