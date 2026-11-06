@@ -17,14 +17,14 @@ export class GameJuiceModel {
   const income=this.income,expense=this.expense;this.income=0n;this.expense=0n;let entities;
   for(const e of fresh){
    if(['RaidSpawned','NightStarted','CampaignWon','GameOver'].includes(e.type))out.push({kind:'overlay',effect:{RaidSpawned:'raid',NightStarted:'nightfall',CampaignWon:'victory',GameOver:'defeat'}[e.type]});
-   if(e.type==='Dawn'&&!state.result&&state.completedNights>0)out.push({kind:'dawn',night:state.completedNights});
+   if(e.type==='Dawn'){const night=Number.isSafeInteger(e.completedNights)?e.completedNights:state.completedNights,result=Object.hasOwn(e,'result')?e.result:state.result;if(!result&&night>0)out.push({kind:'dawn',night});}
    if(['CropPlaced','PlacementCommitted','WallChainBuilt','VillageFounded'].includes(e.type)){
     let point=e.presentation;
     if(!point){const latest=state.plants.at(-1);if(latest?.id===e.targetId)point=latest;else{entities??=new Map([...state.plants,...state.structures].map(p=>[p.id,p]));point=entities.get(e.targetId);}}
     if(point)out.push({kind:'placement',crop:e.type==='CropPlaced',x:point.x,z:point.z});
    }
    if(e.type==='SpellActivated')out.push({kind:'magic',spell:e.kind,x:e.x,z:e.z});
-   if(e.type==='StructureRuined')out.push({kind:'collapse',targetId:e.targetId});
+   if(e.type==='StructureRuined')out.push({kind:'collapse',targetId:e.targetId,...(typeof e.structureKind==='string'?{structureKind:e.structureKind}:{})});
    if(e.type==='StructureHit'&&e.structureHit&&e.structureHit.hp<=(e.structureHit.criticalThreshold??e.structureHit.maxHp*.3)&&!this.critical.has(e.targetId)){
     this.critical.add(e.targetId);out.push({kind:'critical',targetId:e.targetId});
    }

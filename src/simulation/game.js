@@ -85,7 +85,7 @@ export function emit(s,type,detail={}) {
   // Occupancy consumers need the committed crop location even if a later state has removed it.
   const crop=['CropPlaced','CropPicked','CropDestroyed'].includes(type)?s.plants.find(p=>p.id===(detail.targetId??detail.cropId)):null;
   const presentation=crop&&Number.isFinite(crop.x)&&Number.isFinite(crop.z)?{...detail.presentation,x:crop.x,z:crop.z}:detail.presentation;
-  const event={id:`event-${s.sequence++}`,type,...detail,...(presentation?{presentation}:{})};
+  const event={id:`event-${s.sequence++}`,type,...detail,...(Number.isFinite(s.elapsed)?{simulationTime:s.elapsed}:{}),...(presentation?{presentation}:{})};
   if(s.awakenings?.enabled!==false)recordAwakeningEvent(s,event);
   s.events.push(event);if(s.events.length>200)s.events.shift();
   dispatchLocalGameEvent(s,event);
@@ -1641,7 +1641,7 @@ function closeNight(s) {
   if(compare(s.ledger.balance,rational(dawnMinimum(s)))<0){s.result='defeat';notice(s,'El sol vuelve, pero el poblado no puede costear otra jornada.');emit(s,'GameOver');return;}
   if(s.completedNights>=100&&!s.postgame){s.result='victory';emit(s,'CampaignWon');return;}
   for(const plant of activeCrops(s.plants))if(plant.alive)plant.centerId=nearest(s.structures.filter(operational),plant)?.id??null;
-  s.hiringPaidDay=null;rebuildTasks(s);pause(s,'hiring');emit(s,'Dawn');
+  s.hiringPaidDay=null;rebuildTasks(s);pause(s,'hiring');emit(s,'Dawn',{completedNights:s.completedNights,result:s.result??null});
 }
 export function continuePostgame(s) {if(s.result!=='victory')return;s.result=null;s.postgame=true;s.nightPlan=null;s.dayPlan=null;pause(s,'hiring');emit(s,'PostgameStarted');}
 export function previewVillage(s,culture,x,z,payload,nav) {
@@ -1703,7 +1703,7 @@ export function tick(s,seconds,nav) {
       s.cooldowns[kind]=remaining>1e-9?remaining:0;
     }
     for(const structure of s.structures)if(structure.status==='collapsing') {
-      structure.collapseRemaining-=step;if(structure.collapseRemaining<=1e-9){structure.status='ruined';structure.hp=0;nav.setState(s);emit(s,'StructureRuined',{targetId:structure.id,presentation:{x:structure.x,z:structure.z}});}
+      structure.collapseRemaining-=step;if(structure.collapseRemaining<=1e-9){structure.status='ruined';structure.hp=0;nav.setState(s);emit(s,'StructureRuined',{targetId:structure.id,structureKind:structure.kind,presentation:{x:structure.x,z:structure.z}});}
     }
     if(previousTime<300) {
       const growthStep=s.spells.some(spell=>spell.kind==='growth'&&spell.remaining>0)?growthPowerStep(s):null;

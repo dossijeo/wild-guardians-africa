@@ -36,7 +36,7 @@ export class GameJuice {
     if(!this.priority())this.add('juice-ring magic','',{x:event.x,z:event.z},420);
    }else if(event.kind==='ready'&&spellUnlocked(state,event.spell))this.pulse(this.stage.querySelector(`[data-spell="${event.spell}"]`)??this.stage.querySelector('[data-menu="magic"]'));
    else if(event.kind==='critical'){this.overlays.request('critical');this.pulse(this.stage.querySelector('.notice-card.urgent'));}
-   else if(event.kind==='collapse'&&!this.motion.matches&&this.now()-this.lastShake>300&&!this.world.raidCamera?.travel&&!this.world.raidCamera?.manual){this.lastShake=this.now();this.shakeUntil=this.now()+130;this.shakeAmount=state.structures.find(s=>s.id===event.targetId)?.kind==='center'?.05:.025;}
+   else if(event.kind==='collapse'&&!this.motion.matches&&this.now()-this.lastShake>300&&!this.world.raidCamera?.travel&&!this.world.raidCamera?.manual){this.lastShake=this.now();this.shakeUntil=this.now()+130;this.shakeAmount=(event.structureKind??state.structures.find(s=>s.id===event.targetId)?.kind)==='center'?.05:.025;}
   }
  }
  update(state){

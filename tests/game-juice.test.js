@@ -8,6 +8,8 @@ import {GameJuiceModel} from '../src/ui/game-juice-model.js';
 import {saveGame} from '../src/app/save-game.js';
 import {observeSettlements} from '../src/simulation/settlement-observers.js';
 
+test('confirmed dawn and collapse retain their own facts after the world changes',()=>{const state=Game.newGame({seed:712}),model=new GameJuiceModel(state);state.elapsed=12.5;state.completedNights=3;Game.emit(state,'Dawn',{completedNights:state.completedNights,result:null});Game.emit(state,'StructureRuined',{targetId:'center-gone',structureKind:'center',presentation:{x:5,z:8}});const events=state.events.slice(-2);assert.ok(events.every(event=>event.simulationTime===12.5));state.completedNights=9;state.result='defeat';state.structures=[];assert.deepEqual(model.consume(state,events),[{kind:'dawn',night:3},{kind:'collapse',targetId:'center-gone',structureKind:'center'}]);model.dispose();});
+
 test('confirmed publication events survive ring overflow and are not repeated on frames',()=>{
  const state=Game.newGame({seed:712}),model=new GameJuiceModel(state);
  const events=Array.from({length:205},(_,i)=>({id:`event-${i+1}`,type:i===0?'NightStarted':'Unused'}));

@@ -819,7 +819,7 @@ export function updateRaid(s,dt,nav) {
               const previousHp=target.hp;hitStructure(target,validDamageProfile(a.damageProfile)?a.damageProfile.structureDamage:animalSpec(a.species).structure_hit_damage,s.elapsed,s);
               const hitIds=s.raid.attackedStructureIds??=[],firstHitThisRaid=target.hp<previousHp&&!hitIds.includes(target.id);
               if(firstHitThisRaid){hitIds.push(target.id);s.raid.attackedStructureIds=hitIds;}
-              emit(s,'StructureHit',{animalId:a.id,targetId:target.id,presentation:{elapsed:s.elapsed},structureHit:{kind:target.kind,...(target.kind==='wall'?{material:target.material}:{}),x:target.x,z:target.z,previousHp,hp:target.hp,maxHp:target.maxHp,
+              emit(s,'StructureHit',{animalId:a.id,targetId:target.id,presentation:{elapsed:s.elapsed,x:a.x,z:a.z},structureHit:{kind:target.kind,...(target.kind==='wall'?{material:target.material}:{}),x:target.x,z:target.z,previousHp,hp:target.hp,maxHp:target.maxHp,
                 criticalThreshold:collapseThreshold(target)*2,firstHitThisRaid}});
             }
           }
