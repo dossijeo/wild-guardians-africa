@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createVisibleCameraTerrain} from '../src/rendering/visible-camera-terrain.js';
 
+test('camera terrain preserves the capture time of the visible revision',()=>{const sent=[],bridge=createVisibleCameraTerrain({residency:{getVisible:()=>({userData:{spatialTerrainRevision:1}})},send:value=>sent.push(value)}),payload={cx:0,cz:0,capturedAt:5.25,terrain:{positions:new Float32Array(49*49*3)}};bridge.stage(payload,1,{epoch:'e',sequence:2});bridge.published('0,0');assert.equal(sent[0].capturedAt,5.25);bridge.dispose();});
+
 test('camera receives only the most recent revision after it becomes visible',()=>{
  const sent=[];let visible=null;const bridge=createVisibleCameraTerrain({residency:{getVisible:()=>visible},send:value=>sent.push(value)}),payload=y=>{const positions=new Float32Array(49*49*3);for(let i=1;i<positions.length;i+=3)positions[i]=y;return {cx:1,cz:-1,terrain:{positions}};};
  bridge.stage(payload(2),1,{epoch:'e',sequence:1});bridge.published('1,-1');assert.equal(sent.length,0);visible={userData:{spatialTerrainRevision:1}};bridge.published('1,-1');assert.equal(sent.length,1);assert.equal(sent[0].heights[0],2);

@@ -79,6 +79,19 @@ test('timed lifecycle facts must be complete, ordered and inside the confirmed i
  assert.equal(receiver.accept({...packet,presentationJournal:valid}).accepted,true);
 });
 
+test('v2 lifecycle requires a timed reference for every confirmed event and accepts old subset journals',()=>{
+ const state=fixture(),authority=deserialize(serialize(state)),start=state.elapsed;
+ authority.elapsed=start+.1;emit(authority,'Test',{value:1});const first=authority.events.at(-1);
+ authority.elapsed=start+.2;emit(authority,'SpellActivated',{kind:'attack'});const second=authority.events.at(-1);
+ const packet={session:'s',sequence:1,snapshot:serialize(authority),events:[first,second]},receiver=createConfirmedStateReceiver(state,'s');
+ const complete=[{kind:'event',eventId:first.id,at:start+.1},{kind:'event',eventId:second.id,at:start+.2}];
+ assert.throws(()=>receiver.accept({...packet,presentationJournalVersion:2,presentationJournal:[complete[1]]}),/Incomplete/);
+ assert.throws(()=>receiver.accept({...packet,presentationJournalVersion:2,presentationJournal:[complete[0],{kind:'event',eventId:second.id}]}),/lifecycle time/);
+ assert.throws(()=>receiver.accept({...packet,presentationJournalVersion:3,presentationJournal:complete}),/lifecycle version/);
+ assert.equal(receiver.status().sequence,0);assert.equal(receiver.accept({...packet,presentationJournalVersion:2,presentationJournal:complete}).accepted,true);
+ const old=createConfirmedStateReceiver(fixture(),'legacy');assert.equal(old.accept({...packet,session:'legacy',presentationJournal:[{kind:'event',eventId:second.id}]}).accepted,true);
+});
+
 test('lifecycle journal rejects missing relevant events, duplicate exits and exits contradicted by snapshot',()=>{
  const state=fixture(),authority=deserialize(serialize(state)),animal=authority.raid.animals.find(a=>a.status!=='gone');assert.ok(animal);emit(authority,'SpellActivated',{kind:'attack',targetId:animal.id});const event=authority.events.at(-1),receiver=createConfirmedStateReceiver(state,'s'),packet={session:'s',sequence:1,snapshot:serialize(authority),events:[event]};
  for(const presentationJournal of [[],[{kind:'event',eventId:event.id},{kind:'event',eventId:event.id}],[{kind:'event',eventId:event.id},{kind:'animalGone',actorId:animal.id},{kind:'animalGone',actorId:animal.id}],[{kind:'event',eventId:event.id},{kind:'animalGone',actorId:animal.id}]])assert.throws(()=>receiver.accept({...packet,presentationJournal}),/lifecycle/);

@@ -4,6 +4,13 @@ import {createTerrainPublication} from '../src/simulation/terrain-publication.js
 
 function fixture(){const sent=[],port={postMessage(message,transfer){sent.push({message,transfer});},close(){this.closed=true;},start(){}},publisher=createTerrainPublication({port,session:'session',maxPending:3});return {sent,port,publisher,ack:id=>port.onmessage({data:{kind:'terrainAck',session:'session',id}})};}
 function chunk(cx,height){return {authority:'spatial-wasm',cx,cz:0,terrain:{positions:new Float32Array([height,0,0]),colors:new Float32Array([1,1,1]),indices:new Uint16Array([0])}};}
+test('terrain capture time follows the latest coalesced payload and recovery journal',()=>{
+ const sent=[],journal=[],port={postMessage:message=>sent.push(message),close(){},start(){}},publisher=createTerrainPublication({port,session:'s',epoch:'e',onCommitted:(sequence,chunks)=>journal.push({sequence,chunks:structuredClone(chunks)})});
+ publisher.stage(chunk(0,1),2);publisher.commit(1);publisher.stage(chunk(0,2),2.1);publisher.commit(2);publisher.stage(chunk(0,3),2.2);publisher.commit(3);
+ assert.equal(sent[0].payload.capturedAt,2);assert.equal(journal[1].chunks[0].capturedAt,2.1);assert.equal(journal[2].chunks[0].capturedAt,2.2);
+ const handoff=publisher.handoff();assert.deepEqual(handoff.chunks,[{cx:0,cz:0,revision:3,capturedAt:2.2}]);const nextPort={postMessage(){},close(){},start(){}},replacement=createTerrainPublication({port:nextPort,session:'s',epoch:'e',initialState:handoff});assert.deepEqual(replacement.handoff(),handoff);replacement.dispose();port.onmessage({data:{kind:'terrainAck',session:'s',id:1}});assert.equal(sent[1].payload.capturedAt,2.2);assert.equal(sent[1].revision,3);
+ assert.throws(()=>publisher.stage(chunk(1,0),Infinity),/capture time/);publisher.dispose();
+});
 test('publishes only committed data and bounds in-flight work while coalescing',()=>{
  const {sent,publisher,ack}=fixture(),first=chunk(1,2);publisher.stage(first);first.terrain.positions[0]=99;assert.equal(sent.length,0);publisher.commit(4);assert.equal(sent[0].message.payload.terrain.positions[0],2);assert.equal(sent[0].message.sequence,4);assert.equal(sent[0].transfer.length,3);
  publisher.stage(chunk(1,3));publisher.commit(5);publisher.stage(chunk(1,4));publisher.commit(6);publisher.stage(chunk(2,5));publisher.commit(7);assert.equal(sent.length,1);assert.equal(publisher.status().pending,2);

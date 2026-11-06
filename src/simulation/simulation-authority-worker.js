@@ -8,7 +8,7 @@ import {loadGuardianAuthoredMetadata} from './guardian-authored-metadata.js';
 import {createMainSnapshotEncoder} from './main-thread-snapshot-transport.js';
 import wasmUrl from '../world/wild-engine/spatial-savanna.wasm?url';
 let authority=null,initializing=false,session=null,dynamicPhysics=false,diagnostics=false,qaAttackDelayMs=0,qaPlantDelayMs=0,qaStructureDelayMs=0,terrainPublication=null,terrainJournalEnabled=false,terrainBootstrapEnabled=false,guardianBiome=null,guardianMetadata=null,guardianPlacementEnabled=false,nativeCheckpointsEnabled=false,guardianMetadataReady=null,resultEncoder=null;
-function stageTerrain(chunk){if(terrainPublication)try{terrainPublication.stage(chunk);}catch(error){terrainPublication.fail(error);}}
+function stageTerrain(chunk,capturedAt){if(terrainPublication)try{terrainPublication.stage(chunk,capturedAt);}catch(error){terrainPublication.fail(error);}}
 function commitTerrain(sequence){if(terrainPublication)try{if(!terrainPublication.commit(sequence)&&terrainJournalEnabled)throw Error('Terrain journal publication unavailable');}catch(error){terrainPublication.fail(error);if(terrainJournalEnabled)throw error;}}
 self.onmessage=async ({data})=>{
  try{

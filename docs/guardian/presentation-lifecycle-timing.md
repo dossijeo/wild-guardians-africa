@@ -12,13 +12,20 @@ anterior y el estado confirmado. Para compatibilidad sigue aceptando diarios
 antiguos sin ningún `at`; una mezcla incompleta se rechaza. El agrupador y el
 diario de recuperación conservan los hechos con sus tiempos.
 
-El campo se añade únicamente a los hechos que ya contiene el diario: referencias
-a ciertos eventos y retiradas de animales. No cambia los eventos de juego ni
-los guardados, no temporiza todos los eventos, las poses o las revisiones de
-terreno y no autoriza reproducir trayectorias ni adelantar la presentación.
+El diario v2 incluye una referencia temporal para cada evento confirmado,
+además de las retiradas de animales. El receptor comprueba la cobertura completa
+y acepta también diarios antiguos que solo incluían determinados eventos. Los
+tiempos permanecen en el diario de presentación: no cambian los eventos de juego
+ni los guardados. Todavía no temporizan las poses o las revisiones de terreno,
+y no autorizan reproducir trayectorias ni adelantar la presentación.
 Falta una línea temporal global y un horizonte seguro que coordinen todas esas
 dependencias. Las pruebas son de contrato y de autoridad local, no demuestran
 una mejora de rendimiento ni equivalencia visual en WebGPU.
+
+Una prueba con la autoridad Wild Engine real verifica la cobertura y el orden
+de eventos de una incursión durante 30 lotes; no constituye una prueba de
+partida completa ni de temporización visual en navegador. El volumen de datos
+añadido al diario no se ha medido.
 
 El guardián WebGPU utiliza el tiempo confirmado del diario para iniciar sus
 gestos `SpellActivated`; en publicaciones antiguas sin dicho tiempo conserva

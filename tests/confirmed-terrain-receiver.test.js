@@ -1,6 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createConfirmedTerrainReceiver} from '../src/rendering/confirmed-terrain-receiver.js';
+test('terrain capture time follows the confirmed simulation boundary',()=>{
+ let applied,failed;const port={postMessage(){},close(){},start(){}},receiver=createConfirmedTerrainReceiver({port,session:'s',confirmedSequence:1,confirmedElapsed:3,residency:{replace:()=>true},onApplied:(payload,revision,metadata)=>applied={payload,metadata},onError:error=>failed=error});
+ port.onmessage({data:{kind:'terrain',session:'s',id:1,sequence:2,revision:1,payload:{capturedAt:3.1}}});assert.equal(applied,undefined);receiver.confirm(2,3.2);assert.equal(applied.metadata.capturedAt,3.1);assert.equal(failed,undefined);
+ port.onmessage({data:{kind:'terrain',session:'s',id:2,sequence:3,revision:2,payload:{capturedAt:4}}});receiver.confirm(3,3.5);assert.match(failed.message,/ahead of confirmed time/);assert.equal(receiver.status().closed,true);
+});
 test('holds future terrain until its state sequence is confirmed',()=>{
  const acks=[],applied=[],port={postMessage:m=>acks.push(m),close(){},start(){}},residency={replace:(payload,revision)=>applied.push({payload,revision})},r=createConfirmedTerrainReceiver({port,session:'s',residency});
  port.onmessage({data:{kind:'terrain',session:'s',id:1,sequence:5,revision:1,payload:{cx:0}}});assert.equal(applied.length,0);assert.equal(acks.length,0);r.confirm(4);assert.equal(applied.length,0);r.confirm(5);assert.equal(applied.length,1);assert.deepEqual(acks,[{kind:'terrainAck',session:'s',id:1}]);assert.throws(()=>r.confirm(4),/out of order/);r.dispose();
