@@ -3,6 +3,7 @@
 // The receiver owns a private immutable baseline, separate from the mutable UI
 // state. This is a transport step, not a save format.
 import {handoffConfirmedSnapshot} from './confirmed-snapshot-handoff.js';
+import {estimateRetainedBytes} from './retained-size.js';
 function fields(snapshot){
  const value=JSON.parse(snapshot);
  if(!value||typeof value!=='object'||Array.isArray(value))throw TypeError('Invalid snapshot transport state');
@@ -12,8 +13,8 @@ function fields(snapshot){
 // publication in the host. Share only this immutable parsing result; never
 // share or advance their sequence cursors.
 export function createSnapshotPreparationCache(){
- let source=null,prepared=null;
- return {prepare(snapshot){if(typeof snapshot!=='string')throw TypeError('Invalid snapshot transport state');if(snapshot!==source){prepared=fields(snapshot);source=snapshot;}return prepared;},clear(){source=prepared=null;}};
+ let source=null,prepared=null,bytes=0;
+ return {prepare(snapshot){if(typeof snapshot!=='string')throw TypeError('Invalid snapshot transport state');if(snapshot!==source){prepared=fields(snapshot);source=snapshot;bytes=estimateRetainedBytes({source,prepared});}return prepared;},retainedBytes(){return bytes;},clear(){source=prepared=null;bytes=0;}};
 }
 const ENTITY_FIELDS=new Set(['workers','plants','structures','crates','villages','spells','tasks','people']);
 function entityMap(value){
@@ -44,9 +45,9 @@ function applyEntityChanges(before,order,updates){
  for(const pair of updates){if(!Array.isArray(pair)||pair.length!==2||typeof pair[0]!=='string'||typeof pair[1]!=='string'||!ordered.has(pair[0])||changedIds.has(pair[0]))throw TypeError('Invalid entity delta update');const item=JSON.parse(pair[1]);if(!item||typeof item!=='object'||Array.isArray(item)||item.id!==pair[0])throw TypeError('Invalid entity delta identity');changedIds.add(pair[0]);previous.set(pair[0],item);}
  if(order.some(id=>!previous.has(id)))throw TypeError('Missing entity delta update');return order.map(id=>previous.get(id));
 }
-export function createMainSnapshotEncoder({prepareSnapshot=fields}={}){
- if(typeof prepareSnapshot!=='function')throw TypeError('Invalid snapshot preparation');
- let base=null,sequence=0;
+export function createMainSnapshotEncoder({prepareSnapshot=fields,trackRetained=false}={}){
+ if(typeof prepareSnapshot!=='function'||typeof trackRetained!=='boolean')throw TypeError('Invalid snapshot preparation');
+ let base=null,sequence=0,retained=0;
  return {encode(envelope,{forceFull=false,preparedFields=null}={}){
   if(typeof forceFull!=='boolean'||preparedFields!==null&&!(preparedFields instanceof Map))throw TypeError('Invalid snapshot transport option');
   if(envelope?.kind!=='publication')return envelope;
@@ -61,12 +62,12 @@ export function createMainSnapshotEncoder({prepareSnapshot=fields}={}){
    let snapshotLength;if(preparedFields){snapshotLength=2+Math.max(0,next.size-1);for(const [key,value] of next){if(typeof key!=='string'||typeof value!=='string')throw TypeError('Invalid prepared snapshot');snapshotLength+=JSON.stringify(key).length+1+value.length;}}else snapshotLength=publication.snapshot.length;
    if(JSON.stringify(delta).length<snapshotLength){const rest={};for(const key of Object.keys(publication))if(key!=='snapshot')rest[key]=publication[key];wire={...envelope,publication:{...rest,snapshotDelta:delta}};}
   }
-  base=next;sequence=n;return wire;
- }};
+  base=next;sequence=n;if(trackRetained)retained=estimateRetainedBytes(next);return wire;
+ },retainedBytes(){return retained;},dispose(){base=null;sequence=0;retained=0;}};
 }
 
-export function createMainSnapshotDecoder(){
- let base=null,sequence=0;
+export function createMainSnapshotDecoder({trackRetained=false}={}){
+ if(typeof trackRetained!=='boolean')throw TypeError('Invalid snapshot decoder');let base=null,sequence=0,retained=0;
  return {decode(envelope){
   if(envelope?.kind!=='publication')return envelope;
   const publication=envelope.publication,n=publication?.sequence;
@@ -94,6 +95,6 @@ export function createMainSnapshotDecoder(){
    const {snapshotDelta,...rest}=publication;let snapshot;const rebuilt={...rest};Object.defineProperty(rebuilt,'snapshot',{enumerable:true,get(){return snapshot??=JSON.stringify(next);}});wire={...envelope,publication:rebuilt};
   }
   handoffConfirmedSnapshot(wire.publication,next);
-  base=next;sequence=n;return wire;
- }};
+  base=next;sequence=n;if(trackRetained)retained=estimateRetainedBytes(next);return wire;
+ },retainedBytes(){return retained;},dispose(){base=null;sequence=0;retained=0;}};
 }

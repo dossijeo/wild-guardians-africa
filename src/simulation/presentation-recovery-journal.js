@@ -3,9 +3,9 @@ import {estimateRetainedBytes as estimateBytes} from './retained-size.js';
 import {createMainSnapshotEncoder,createMainSnapshotDecoder} from './main-thread-snapshot-transport.js';
 // Retains publication boundaries for a replacement presentation worker.
 // A candidate is not a replay base until its exact publication is acknowledged.
-export function createPresentationRecoveryJournal({capacity=256,highWatermark=128,maxBytes=268435456,highWatermarkBytes=201326592,compactTicks=false,incrementalSnapshots=false,prepareSnapshot=null}={}){
- if(!Number.isSafeInteger(capacity)||capacity<2||!Number.isSafeInteger(highWatermark)||highWatermark<1||highWatermark>=capacity||!Number.isSafeInteger(maxBytes)||maxBytes<1||!Number.isSafeInteger(highWatermarkBytes)||highWatermarkBytes<1||highWatermarkBytes>=maxBytes||typeof compactTicks!=='boolean'||typeof incrementalSnapshots!=='boolean'||incrementalSnapshots&&compactTicks||prepareSnapshot!==null&&typeof prepareSnapshot!=='function')throw TypeError('Invalid presentation journal capacity');
- const encoder=incrementalSnapshots?createMainSnapshotEncoder(prepareSnapshot?{prepareSnapshot}:{}):null;let base=null,candidate=null,last=null,entries=[],bytes=0,closed=false,basePublication=null,candidatePublication=null,replayDecoder=null,replayIndex=0,replayLast=null;
+export function createPresentationRecoveryJournal({capacity=256,highWatermark=128,maxBytes=268435456,highWatermarkBytes=201326592,compactTicks=false,incrementalSnapshots=false,prepareSnapshot=null,sharedRetainedBytes=null}={}){
+ if(!Number.isSafeInteger(capacity)||capacity<2||!Number.isSafeInteger(highWatermark)||highWatermark<1||highWatermark>=capacity||!Number.isSafeInteger(maxBytes)||maxBytes<1||!Number.isSafeInteger(highWatermarkBytes)||highWatermarkBytes<1||highWatermarkBytes>=maxBytes||typeof compactTicks!=='boolean'||typeof incrementalSnapshots!=='boolean'||incrementalSnapshots&&compactTicks||prepareSnapshot!==null&&typeof prepareSnapshot!=='function'||sharedRetainedBytes!==null&&typeof sharedRetainedBytes!=='function')throw TypeError('Invalid presentation journal capacity');
+ const encoder=incrementalSnapshots?createMainSnapshotEncoder({...(prepareSnapshot?{prepareSnapshot}:{}),trackRetained:true}):null;let base=null,candidate=null,last=null,entries=[],bytes=0,closed=false,basePublication=null,candidatePublication=null,replayDecoder=null,replayIndex=0,replayLast=null,replayLastBytes=0,encoderFault=false;
  function ensure(){if(closed)throw Error('Presentation recovery journal closed');}
  function sequence(value){if(!Number.isSafeInteger(value)||value<1)throw TypeError('Invalid presentation journal sequence');return value;}
  // Replay may skip intermediate states only when no observer-facing boundary,
@@ -24,19 +24,22 @@ export function createPresentationRecoveryJournal({capacity=256,highWatermark=12
  const viewKeys=new Set(['kind','session','sequence','value','unchanged','slotId','stateSequence','elapsed','pauses','events','residency','saveAvailable','terrainChanged']);
  function backgroundView(item){const p=item?.publication;return item?.kind==='publication'&&item.options?.backgroundView===true&&knownEnvelope(p)&&p?.unchanged===true&&p.terrainChanged===false&&Array.isArray(p.events)&&p.events.length===0&&Object.keys(p).every(key=>viewKeys.has(key));}
  function sameView(a,b){const left={...a},right={...b};delete left.sequence;delete right.sequence;return JSON.stringify(left)===JSON.stringify(right);}
- function makeDecoder(){const decoder=createMainSnapshotDecoder();decoder.decode({kind:'publication',publication:basePublication});return decoder;}
+ function overhead(){if(!encoder||closed)return 0;const shared=sharedRetainedBytes?.()??0;if(!Number.isSafeInteger(shared)||shared<0)throw TypeError('Invalid shared snapshot retention');return encoder.retainedBytes()+shared+(basePublication?estimateBytes(basePublication):0)+(candidatePublication?estimateBytes(candidatePublication):0)+(replayDecoder?.retainedBytes()??0)+replayLastBytes;}
+ function makeDecoder(trackRetained=false){const decoder=createMainSnapshotDecoder({trackRetained});decoder.decode({kind:'publication',publication:basePublication});return decoder;}
  function decodedEntry(item,decoder){if(!incrementalSnapshots||item.kind!=='publication')return structuredClone(item);const wire=decoder.decode({kind:'publication',publication:item.publication});return structuredClone({...item,publication:wire.publication});}
  return {
   append(message,tick,options={}){
-   ensure();const n=sequence(message?.sequence);if(typeof tick!=='boolean'||!options||typeof options!=='object')throw TypeError('Invalid journal publication');
+   ensure();if(encoderFault)throw Error('Presentation recovery encoder failed');const n=sequence(message?.sequence);if(typeof tick!=='boolean'||!options||typeof options!=='object')throw TypeError('Invalid journal publication');
    if(last===null)return false;
    if(n!==last+1)throw Error('Presentation journal sequence gap');
+   try{
    const publication=encoder?encoder.encode({kind:'publication',publication:message}).publication:message,item={kind:'publication',sequence:n,publication:structuredClone(publication),tick,options:structuredClone(options)},previous=entries.at(-1),foldViews=previous&&backgroundView(previous.item)&&backgroundView(item)&&JSON.stringify(previous.item.options)===JSON.stringify(item.options)&&sameView(previous.item.publication,item.publication),fold=previous&&!previous.sealed&&candidate!==previous.item.sequence&&(foldViews||paused(previous.item)&&paused(item)&&samePaused(previous.item.publication,item.publication)||compactTicks&&quiet(previous.item)&&quiet(item)&&JSON.stringify(previous.item.publication.pauses)===JSON.stringify(item.publication.pauses));
    if(fold&&foldViews)item.tick=true; // Recovery protocol accepts a merged sequence range only for tick envelopes.
    if(fold){item.firstSequence=previous.item.firstSequence??previous.item.sequence;const before=previous.item.publication.presentationWorkerHeadings,after=item.publication.presentationWorkerHeadings;if(before!==undefined||after!==undefined)item.publication.presentationWorkerHeadings=mergePresentationWorkerHeadings(before===undefined?[]:before,after===undefined?[]:after);}
-   if(!fold&&entries.length>=capacity)throw Error('Presentation recovery journal capacity exceeded');
-   const size=estimateBytes(item),retained=bytes-(fold?previous.size:0);if(size>maxBytes-retained)throw Error('Presentation recovery journal byte capacity exceeded');
+   if(!fold&&entries.length>=capacity){if(encoder)encoderFault=true;throw Error('Presentation recovery journal capacity exceeded');}
+   const size=estimateBytes(item),retained=bytes-(fold?previous.size:0);if(size>maxBytes-retained-overhead()){if(encoder)encoderFault=true;throw Error('Presentation recovery journal byte capacity exceeded');}
    if(fold)entries[entries.length-1]={item,size};else entries.push({item,size});bytes=retained+size;last=n;return true;
+   }catch(error){if(encoder)encoderFault=true;throw error;}
   },
   // The terrain worker delivers batches before the corresponding result.
   appendTerrain(value,chunks,terrainManifest=null){
@@ -44,23 +47,23 @@ export function createPresentationRecoveryJournal({capacity=256,highWatermark=12
    if(last===null)return false;
    if(n!==last+1)throw Error('Presentation terrain journal sequence gap');
    if(entries.length>=capacity)throw Error('Presentation recovery journal capacity exceeded');
-   const item={kind:'terrain',sequence:n,chunks:structuredClone(chunks),...(terrainManifest===null?{}:{terrainManifest:structuredClone(terrainManifest)})},size=estimateBytes(item);if(size>maxBytes-bytes)throw Error('Presentation recovery journal byte capacity exceeded');
+   const item={kind:'terrain',sequence:n,chunks:structuredClone(chunks),...(terrainManifest===null?{}:{terrainManifest:structuredClone(terrainManifest)})},size=estimateBytes(item);if(size>maxBytes-bytes-overhead())throw Error('Presentation recovery journal byte capacity exceeded');
    entries.push({item,size});bytes+=size;return true;
   },
   begin(value,publication=null){
    ensure();const n=sequence(value);if(candidate!==null)throw Error('Presentation checkpoint already pending');
-   if(last===null)last=n;else if(n!==last||base!==null&&n<=base)throw Error('Presentation checkpoint boundary mismatch');
-   if(encoder){if(publication?.sequence!==n||typeof publication.snapshot!=='string')throw TypeError('Missing recovery checkpoint snapshot');if(base===null)encoder.encode({kind:'publication',publication});candidatePublication={sequence:n,snapshot:publication.snapshot};}candidate=n;
+   if(last!==null&&(n!==last||base!==null&&n<=base))throw Error('Presentation checkpoint boundary mismatch');
+   if(encoder){if(encoderFault)throw Error('Presentation recovery encoder failed');if(publication?.sequence!==n||typeof publication.snapshot!=='string')throw TypeError('Missing recovery checkpoint snapshot');try{if(base===null)encoder.encode({kind:'publication',publication});candidatePublication={sequence:n,snapshot:publication.snapshot};if(bytes+overhead()>maxBytes){candidatePublication=null;throw Error('Presentation recovery journal byte capacity exceeded');}}catch(error){encoderFault=true;throw error;}}if(last===null)last=n;candidate=n;
   },
   confirm(value){
    ensure();const n=sequence(value);if(n!==candidate)throw Error('Presentation checkpoint acknowledgement mismatch');
-   base=n;candidate=null;if(encoder){basePublication=candidatePublication;candidatePublication=null;replayDecoder=null;replayIndex=0;replayLast=null;}entries=entries.filter(entry=>entry.item.sequence>n);bytes=entries.reduce((total,entry)=>total+entry.size,0);return base;
+   base=n;candidate=null;if(encoder){basePublication=candidatePublication;candidatePublication=null;replayDecoder?.dispose();replayDecoder=null;replayIndex=0;replayLast=null;replayLastBytes=0;}entries=entries.filter(entry=>entry.item.sequence>n);bytes=entries.reduce((total,entry)=>total+entry.size,0);return base;
   },
   abandonCandidate(value){ensure();const n=sequence(value);if(base===null||candidate!==n)throw Error('Presentation checkpoint candidate mismatch');candidate=null;candidatePublication=null;return base;},
   snapshot(){ensure();if(base===null)throw Error('Presentation checkpoint is not acknowledged');const decoder=encoder?makeDecoder():null;return {base,through:last,entries:entries.map(entry=>decodedEntry(entry.item,decoder))};},
-  entry(index){ensure();if(base===null)throw Error('Presentation checkpoint is not acknowledged');if(!Number.isSafeInteger(index)||index<0)throw TypeError('Invalid presentation journal index');if(index>=entries.length)return null;entries[index].sealed=true;if(!encoder)return structuredClone(entries[index].item);if(index===replayIndex-1&&replayLast)return structuredClone(replayLast);if(!replayDecoder||index<replayIndex){replayDecoder=makeDecoder();replayIndex=0;replayLast=null;}while(replayIndex<=index){entries[replayIndex].sealed=true;replayLast=decodedEntry(entries[replayIndex].item,replayDecoder);replayIndex++;}return structuredClone(replayLast);},
-  status(){return {base,candidate,through:last,entries:entries.length,bytes,capacity,highWatermark,maxBytes,highWatermarkBytes,pendingTerrain:entries.at(-1)?.item.kind==='terrain',saturated:entries.length>=highWatermark||bytes>=highWatermarkBytes,closed};},
-  dispose(){closed=true;entries=[];bytes=0;base=candidate=last=null;basePublication=candidatePublication=replayDecoder=replayLast=null;}
+  entry(index){ensure();if(base===null)throw Error('Presentation checkpoint is not acknowledged');if(!Number.isSafeInteger(index)||index<0)throw TypeError('Invalid presentation journal index');if(index>=entries.length)return null;entries[index].sealed=true;if(!encoder)return structuredClone(entries[index].item);try{if(index===replayIndex-1&&replayLast)return structuredClone(replayLast);if(!replayDecoder||index<replayIndex){replayDecoder?.dispose();replayDecoder=makeDecoder(true);replayIndex=0;replayLast=null;replayLastBytes=0;}while(replayIndex<=index){entries[replayIndex].sealed=true;replayLast=decodedEntry(entries[replayIndex].item,replayDecoder);replayLastBytes=estimateBytes(replayLast);replayIndex++;if(bytes+overhead()>maxBytes)throw Error('Presentation recovery journal byte capacity exceeded');}return structuredClone(replayLast);}catch(error){encoderFault=true;throw error;}},
+  status(){const overheadBytes=overhead(),totalBytes=bytes+overheadBytes;return {base,candidate,through:last,entries:entries.length,bytes:totalBytes,entryBytes:bytes,overheadBytes,capacity,highWatermark,maxBytes,highWatermarkBytes,pendingTerrain:entries.at(-1)?.item.kind==='terrain',saturated:encoderFault||entries.length>=highWatermark||totalBytes>=highWatermarkBytes,encoderFault,closed};},
+  dispose(){closed=true;entries=[];bytes=0;base=candidate=last=null;encoder?.dispose();replayDecoder?.dispose();basePublication=candidatePublication=replayDecoder=replayLast=null;replayLastBytes=0;}
  };
 }
 
@@ -78,7 +81,7 @@ export function assertPresentationRecoveryBoundary(journal,stream,checkpoint,aut
 export function shouldCapturePresentationCheckpoint(status){
  if(!status||status.closed||status.candidate!==null)return false;
  if(status.base===null)return status.through===null;
- return status.entries>=Math.max(1,Math.floor(status.highWatermark/2))||status.bytes>=Math.max(1,Math.floor(status.highWatermarkBytes/2));
+ return status.entries>=Math.max(1,Math.floor(status.highWatermark/2))||(status.entryBytes??status.bytes)>=Math.max(1,Math.floor(status.highWatermarkBytes/2));
 }
 
 // Enrich the existing command; never create or reorder an authority command.
