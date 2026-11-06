@@ -14,13 +14,15 @@ export function createWebGpuDiscretePick({context,deliver,fallback=null,onError=
   // Synchronize camera before taking the version captured by the pick client.
   initial.sync();
   const attack=initial.tool?.kind==='spell'&&initial.tool.spell==='attack',options=attack&&(allowStableCameraPick||allowGuardianContext)?{...(allowStableCameraPick?{allowStableCamera:true}:{}),...(allowGuardianContext?{includeGuardianContext:true}:{})}:undefined;
-  Promise.resolve().then(()=>initial.client.pick(terrainTool?{...coordinate,terrainOnly:true}:coordinate,options)).then(result=>{
+  const cancelled=Symbol('cancelled pick');
+  Promise.resolve().then(()=>{const current=context();if(current?.owner!==initial.owner||current?.state!==initial.state||current?.tool!==initial.tool||current?.client!==initial.client){trace?.('context-changed');return cancelled;}return initial.client.pick(terrainTool?{...coordinate,terrainOnly:true}:coordinate,options);}).then(result=>{
+   if(result===cancelled)return;
    const current=context();
    if(current?.owner!==initial.owner||current?.state!==initial.state||current?.tool!==initial.tool||current?.client!==initial.client){trace?.('context-changed');return;}
    if(terrainTool&&!result.point){trace?.('no-terrain',{sequence:result.sequence});return;}
    if(result.incomplete===true&&fallback){trace?.('fallback',{sequence:result.sequence,entityId:result.entityId});fallback(initial,input,gesture);return;}
    trace?.('delivered',{sequence:result.sequence,entityId:result.entityId,incomplete:result.incomplete===true});deliver({...result,...gesture});
-  }).catch(error=>{if(error?.message==='Stale WebGPU pick'){trace?.('stale',{reason:error.reason??null,details:error.details??null});return;}trace?.('error',{message:String(error?.message??error)});const current=context();if(current?.owner===initial.owner&&current?.state===initial.state&&current?.client===initial.client)onError(error);});
+  }).catch(error=>{if(error?.message==='Stale WebGPU pick'){trace?.('stale',{reason:error.reason??null,details:error.details??null});return;}trace?.('error',{message:String(error?.message??error)});const current=context();if(current?.owner===initial.owner&&current?.state===initial.state&&current?.tool===initial.tool&&current?.client===initial.client)onError(error);});
   return true;
  };
 }
