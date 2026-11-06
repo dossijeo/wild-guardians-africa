@@ -752,17 +752,17 @@ function setTutorialInteraction(blocking){
     if(tutorialFocus?.isConnected&&!tutorialFocus.closest('#narrator'))tutorialFocus.focus({preventScroll:true});tutorialFocus=null;
   }
 }
-const budgetWarningVisible=()=>performance.now()<budgetWarningUntil&&(!tutorialMessageShownToday(state,'budget.reserve')||guardian?.key?.startsWith('budget.reserve:'))||guardian?.key?.startsWith('budget.reserve:')&&guardian.voice?.active;
+const budgetWarningVisible=()=>performance.now()<budgetWarningUntil&&(!tutorialMessageShownToday(world?.workerGpuOnly?world.actorAudio??state:state,'budget.reserve')||guardian?.key?.startsWith('budget.reserve:'))||guardian?.key?.startsWith('budget.reserve:')&&guardian.voice?.active;
 function refreshTutorialGuidance(){
-  const warning=budgetWarningVisible(),message=tutorial?.presentation({record:false});
-  const guidePanel=surfaces.active==='panel'&&['basic.center','basic.plant'].includes(state.tutorial.reading);
-  const guideAllowed=(!surfaces.active||guidePanel)&&!warning&&!state.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p));
-  hudHand??=new TutorialHudGuide(document.querySelector('#stage'));hudHand.show(guideAllowed?(guidePanel?(state.tutorial.reading==='basic.center'?'#native-center':'[data-crop]'):tutorialHudHandTarget(world?.workerGpuOnly?world.actorAudio??state:state,message,tool?.kind,tool?.spell)):null);
-  const guidedStep=['magic.growth','magic.multiply'].includes(message?.id)||message?.id==='basic.'+state.tutorial.step||state.tutorial.guideAfterAuto?.includes('basic.'+state.tutorial.step);
+  const view=world?.workerGpuOnly?world.actorAudio??state:state,warning=budgetWarningVisible(),message=tutorial?.presentation({record:false});
+  const guidePanel=surfaces.active==='panel'&&['basic.center','basic.plant'].includes(view.tutorial.reading);
+  const guideAllowed=(!surfaces.active||guidePanel)&&!warning&&!view.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p));
+  hudHand??=new TutorialHudGuide(document.querySelector('#stage'));hudHand.show(guideAllowed?(guidePanel?(view.tutorial.reading==='basic.center'?'#native-center':'[data-crop]'):tutorialHudHandTarget(world?.workerGpuOnly?world.actorAudio??state:state,message,tool?.kind,tool?.spell)):null);
+  const guidedStep=['magic.growth','magic.multiply'].includes(message?.id)||message?.id==='basic.'+view.tutorial.step||view.tutorial.guideAfterAuto?.includes('basic.'+view.tutorial.step);
   world.tutorialToolKind=tool?.kind??null;world.tutorialSpellKind=tool?.spell??null;world.tutorialHandsEnabled=guideAllowed&&guidedStep;
   guardian?.setGuide(hudHand.rect);
   let worldTarget=false;
-  if(world.qaEarlyTutorial){const owner=world,ownerState=state,kind=tool?.kind,spell=tool?.spell??null,eligible=guideAllowed&&guidedStep&&['center','plant','spell'].includes(kind),targetNeeded=workerTutorialTargetNeeded({experimental:owner.experimentalTutorialGuide===true,dev:import.meta.env.DEV,qa:import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-worker-game')}),keyOf=()=>JSON.stringify([tool?.kind,tool?.spell??null,state.tutorial.step,state.tutorial.reading,state.tutorial.guideAfterAuto,state.tutorial.dismissed,state.day,state.result,!!state.raid,state.villages,state.structures,state.plants,state.events.at(-1)?.id??null]),key=eligible&&targetNeeded&&!(owner.experimentalTutorialGuide===true&&owner.authoritativeGuardianPlacement&&owner.webGpuWorld?.client)?keyOf():null;
+  if(world.qaEarlyTutorial){const owner=world,ownerState=state,kind=tool?.kind,spell=tool?.spell??null,eligible=guideAllowed&&guidedStep&&['center','plant','spell'].includes(kind),targetNeeded=workerTutorialTargetNeeded({experimental:owner.experimentalTutorialGuide===true,dev:import.meta.env.DEV,qa:import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-worker-game')}),keyOf=()=>JSON.stringify([tool?.kind,tool?.spell??null,view.tutorial.step,view.tutorial.reading,view.tutorial.guideAfterAuto,view.tutorial.dismissed,view.day,view.result,!!view.raid,state.villages,state.structures,state.plants,state.events.at(-1)?.id??null]),key=eligible&&targetNeeded&&!(owner.experimentalTutorialGuide===true&&owner.authoritativeGuardianPlacement&&owner.webGpuWorld?.client)?keyOf():null;
     const client=owner.webGpuWorld?.client;
     if(owner.experimentalTutorialGuide===true&&owner.authoritativeGuardianPlacement&&client){
       const guideKey=()=>JSON.stringify([tool?.kind??null,tool?.spell??null,owner.guardianScreenExclusions?.()??[]]);
@@ -776,7 +776,7 @@ function refreshTutorialGuidance(){
   const targets={hudTarget:!!hudHand.visible,worldTarget,selectionOpen:surfaces.active==='panel'&&guidedStep};
   if(!world.workerRuntime)syncTutorialActionPause(state,targets);
   else{
-    const owner=world,ownerState=state,key=JSON.stringify([targets,state.day,state.pauses,state.result,state.tutorial.basicSkipped,state.tutorial.step,state.tutorial.reading]);
+    const owner=world,ownerState=state,key=JSON.stringify([targets,view.day,view.pauses,view.result,view.tutorial.basicSkipped,view.tutorial.step,view.tutorial.reading]);
     if(workerTutorialGuidance.get(owner)!==key){workerTutorialGuidance.set(owner,key);owner.workerRuntime.submit({kind:'tutorialActionPause',...targets}).catch(failure=>{if(workerTutorialGuidance.get(owner)===key)workerTutorialGuidance.delete(owner);if(owner===world&&ownerState===state)error(failure.message);});}
   }
 }
@@ -786,9 +786,9 @@ function ensureGuardianView() {
 }
 function narrator() {
   ensureGuardianView();
-  tutorial?.update();const warning=budgetWarningVisible();const message=surfaces.active&&!(surfaces.active==='panel'&&['basic.center','basic.plant','magic.growth','magic.multiply'].includes(state.tutorial.reading))?null:warning?{id:'budget.reserve',gesture:'warning',text:RESERVE_MESSAGE,blocking:false}:tutorial?.presentation();setTutorialInteraction(false);
+  tutorial?.update();const view=world?.workerGpuOnly?world.actorAudio??state:state,warning=budgetWarningVisible();const message=surfaces.active&&!(surfaces.active==='panel'&&['basic.center','basic.plant','magic.growth','magic.multiply'].includes(view.tutorial.reading))?null:warning?{id:'budget.reserve',gesture:'warning',text:RESERVE_MESSAGE,blocking:false}:tutorial?.presentation();setTutorialInteraction(false);
   refreshTutorialGuidance();
-  if(!message){guardian.hide({immediate:state.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p))});return null;}
+  if(!message){guardian.hide({immediate:view.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p))});return null;}
   if(!world.workerRuntime)recordTutorialMessageToday(state,message.id);
   const advance=message.reading?()=>safe(()=>{tutorial.dismiss({automatic:true,message});save();}):null;
   guardian.show({key:message.id+':'+(message.reading?'reading':'action')+':'+(message.variant??''),text:message.text,gesture:message.gesture,blocking:message.blocking,result:message.result,advance,onVoiceEnded:()=>safe(()=>{if(warning)budgetWarningUntil=0;else tutorial.dismiss({automatic:true,message});save();}),dismiss:()=>safe(()=>{if(warning)budgetWarningUntil=0;else tutorial.dismiss({message});save();}),
