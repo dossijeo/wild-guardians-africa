@@ -7,7 +7,20 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {createWebGpuWorkerBank} from '../src/rendering/webgpu-worker-bank.js';
 import {createWebGpuWorkerRoster} from '../src/rendering/webgpu-worker-roster.js';
+import {createConfirmedHistoricalClock} from '../src/rendering/confirmed-historical-clock.js';
+import {MeshBasicNodeMaterial} from 'three/webgpu';
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
+test('historical worker shares the clock and uses terrain offset with rollback',async()=>{
+ const scene=new Group(),clock=createConfirmedHistoricalClock({initialElapsed:5}),source=new MeshBasicNodeMaterial(),geometry=new BoxGeometry(),root=new Group();root.position.set(0,2.025,0);root.add(new Mesh(geometry,source));scene.add(root);
+ const state={workers:[{id:'w',profile:'youngMale',status:'walking'}]},renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:m=>m.clone()}},bank={dispose(){}},worker={root,update(){root.visible=true;},isBakedWalking:()=>true,async installBakedWalk(){return true;},dispose(){root.removeFromParent();}},roster=createWebGpuWorkerRoster({scene,residency:{},state,renderer,assetBank:bank,pipelineAdmission:{prepare:async()=>{}},bakedWalkBank:{get:async()=>({})},experimentalHistoricalMotion:{actorIds:['w'],clock},createWorker:async options=>{assert.equal(options.confirmedClock,clock);return worker;}});
+ try{roster.sync();await flush();await flush();assert.equal(roster.status().ready,1);assert.equal(source.positionNode,null);assert.notEqual(root.children[0].material,source);const path={actorId:'w',start:{at:5,x:0,z:0},end:{at:6,x:1,z:0},segments:[{t0:5,t1:6,x0:0,z0:0,x1:1,z1:0}]},support={sequence:1,valid:()=>true,actors:[{actorId:'w',startHeight:2,endHeight:2,segments:[{...path.segments[0],y0:2,y1:2}]}]},preview={sequence:1,safeForAutonomousPlayback:true,trace:{actors:[path]},certificates:{actorIds:['w'],sequence:1,animationSynchronized:true,otherActorsSynchronized:true,effectsSynchronized:true,continuousCollision:true,inputSynchronized:true}};assert.equal(roster.startHistoricalMotion(preview,support),true);assert.equal(roster.historicalMotionCurrent(preview),true);roster.cancelHistoricalMotion();assert.equal(roster.historicalMotionCurrent(preview),false);assert.deepEqual(root.position.toArray(),[0,2.025,0]);}
+ finally{roster.dispose();clock.dispose();geometry.dispose();source.dispose();}
+});
+test('pending historical worker preparation stays outside the live scene and is released after cancellation',async()=>{
+ const scene=new Group(),clock=createConfirmedHistoricalClock({initialElapsed:5}),root=new Group(),state={workers:[{id:'w',profile:'youngMale',status:'walking'}]},renderer={backend:{isWebGPUBackend:true}},bank={dispose(){}},pending={};let disposed=0;
+ const roster=createWebGpuWorkerRoster({scene,residency:{},state,renderer,assetBank:bank,pipelineAdmission:{prepare:async()=>{}},bakedWalkBank:{get:()=>new Promise(resolve=>pending.resolve=resolve)},experimentalHistoricalMotion:{actorIds:['w'],clock},createWorker:async()=>{scene.add(root);return {root,update(){},dispose(){disposed++;root.removeFromParent();}};}});
+ try{roster.sync();await flush();assert.equal(scene.children.includes(root),false);state.workers=[];roster.sync();pending.resolve({});await flush();await flush();assert.equal(disposed,1);assert.equal(scene.children.includes(root),false);}finally{roster.dispose();clock.dispose();}
+});
 test('worker presentation sees the latest entity and first matching task during delayed admission',async()=>{
  const first={id:'w',profile:'youngMale',status:'walking',taskId:'t'},state={workers:[first],tasks:[{id:'t',kind:'first'},{id:'t',kind:'second'}]},bank={dispose(){}},seen=[];let finish,read,task;
  const roster=createWebGpuWorkerRoster({scene:{},residency:{},state,assetBank:bank,createWorker:options=>{read=options.getEntity;task=options.getTask;return new Promise(resolve=>{finish=resolve;});}});
