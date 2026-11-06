@@ -15,7 +15,10 @@ function pipelineInputs(object,target){
   const geometry=node.geometry,materials=Array.isArray(node.material)?node.material:[node.material];
   values.push(geometry,node.isInstancedMesh,node.isSkinnedMesh,node.skeleton?.bones?.length,materials.length);
   attributeLayout(geometry?.index);
-  for(const material of materials)values.push(material,material?.version);
+  // Three builds separate render-list entries for visible materials selected
+  // by geometry groups. These can change without bumping material.version.
+  for(const material of materials)values.push(material,material?.version,material?.visible);
+  if(Array.isArray(node.material)){values.push(geometry?.groups?.length);for(const group of geometry?.groups??[])values.push(group.start,group.count,group.materialIndex);}
   for(const [name,attribute] of Object.entries(geometry?.attributes??{}).sort(([a],[b])=>a.localeCompare(b))){values.push(name);attributeLayout(attribute);}
   for(const [name,attributes] of Object.entries(geometry?.morphAttributes??{}).sort(([a],[b])=>a.localeCompare(b))){values.push(name,attributes.length);for(const attribute of attributes)attributeLayout(attribute);}
   values.push(geometry?.morphTargetsRelative);

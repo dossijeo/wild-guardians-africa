@@ -59,7 +59,7 @@ export async function createWebGpuConfirmedAnimal({scene,residency,state,actorId
   try{for(const item of rest){item.node.position.copy(item.position);item.node.quaternion.copy(item.quaternion);item.node.scale.copy(item.scale);}for(const item of meshRest)item.node.visible=item.visible;root.updateWorldMatrix(true,true);candidate=createBakedWalkPresentation({model,root,renderer,bake,confirmedClock});}
   finally{for(const item of live){item.node.position.copy(item.position);item.node.quaternion.copy(item.quaternion);item.node.scale.copy(item.scale);}for(const item of liveVisibility)item.node.visible=item.visible;root.updateWorldMatrix(true,true);}
   pendingBaked=candidate;
-  try{await pipelineAdmission.prepare(root,{signal:admissionSignal,include:candidate.admissionObjects()});if(closed||admissionSignal?.aborted)throw new DOMException('Baked walking cancelled','AbortError');baked=candidate;pendingBaked=null;try{update();}catch(error){baked=null;candidate.dispose();throw error;}return true;}
+  try{await pipelineAdmission.prepare(root,{signal:admissionSignal,include:candidate.admissionObjects()});if(closed||admissionSignal?.aborted)throw new DOMException('Baked walking cancelled','AbortError');baked=candidate;try{update();}catch(error){baked=null;candidate.disable();throw error;}pendingBaked=null;return true;}
   finally{if(pendingBaked===candidate){pendingBaked=null;if(typeof pipelineAdmission.deferRelease==='function')pipelineAdmission.deferRelease(root,()=>candidate.dispose());else candidate.dispose();}}
  }
  function preparePick(){return baked?.isEnabled()?baked.preparePick():()=>{};}

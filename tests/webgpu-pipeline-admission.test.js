@@ -112,6 +112,12 @@ test('buffer and morph format changes invalidate an in-flight admission',async()
  }finally{admission.dispose();geometry.dispose();mesh.material.dispose();}
 });
 
+test('material visibility and geometry groups invalidate an in-flight admission',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),geometry=new THREE.BufferGeometry(),materials=[new THREE.MeshBasicMaterial(),new THREE.MeshBasicMaterial()],mesh=new THREE.Mesh(geometry,materials),pending=[];geometry.setAttribute('position',new THREE.Float32BufferAttribute([0,0,0,1,0,0,0,1,0],3));geometry.addGroup(0,3,0);materials[1].visible=false;
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(){return new Promise(resolve=>pending.push(resolve));}},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),ready=admission.prepare(mesh),turn=()=>new Promise(resolve=>setImmediate(resolve));
+ try{await turn();geometry.addGroup(0,3,1);pending[0]();await turn();assert.equal(pending.length,2);materials[1].visible=true;pending[1]();await turn();assert.equal(pending.length,3);geometry.groups[1].materialIndex=0;pending[2]();await turn();assert.equal(pending.length,4);pending[3]();await ready;}finally{admission.dispose();geometry.dispose();for(const material of materials)material.dispose();}
+});
+
 test('device loss rejects active admission without waiting for the compiler',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group();let lose;
  const renderer={backend:{isWebGPUBackend:true,device:{lost:new Promise(resolve=>{lose=resolve;})}},compileAsync:()=>new Promise(()=>{})};
