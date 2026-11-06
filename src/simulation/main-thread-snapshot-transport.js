@@ -47,14 +47,15 @@ function applyEntityChanges(before,order,updates){
 export function createMainSnapshotEncoder({prepareSnapshot=fields}={}){
  if(typeof prepareSnapshot!=='function')throw TypeError('Invalid snapshot preparation');
  let base=null,sequence=0;
- return {encode(envelope){
+ return {encode(envelope,{forceFull=false}={}){
+  if(typeof forceFull!=='boolean')throw TypeError('Invalid snapshot transport option');
   if(envelope?.kind!=='publication')return envelope;
   const publication=envelope.publication,n=publication?.sequence;
   if(!Number.isSafeInteger(n)||n<=sequence)throw Error('Invalid snapshot transport sequence');
   if(publication.unchanged===true){sequence=n;return envelope;}
   if(typeof publication.snapshot!=='string')throw TypeError('Missing snapshot transport state');
   const next=prepareSnapshot(publication.snapshot);if(!(next instanceof Map))throw TypeError('Invalid prepared snapshot');let wire=envelope;
-  if(base){
+  if(base&&!forceFull){
    const changed=[],removed=[],entities=[];let raid=null;for(const [key,value] of next)if(base.get(key)!==value){const patch=entityDelta(key,base.get(key),value),raidPatch=key==='raid'?raidDelta(base.get(key),value):null;if(patch)entities.push(patch);else if(raidPatch)raid=raidPatch;else changed.push([key,value]);}for(const key of base.keys())if(!next.has(key))removed.push(key);
    const delta={version:raid?3:entities.length?2:1,baseSequence:sequence,changed,removed,...(entities.length?{entities}:{}),...(raid?{raid}:{})};
    if(JSON.stringify(delta).length<publication.snapshot.length){const {snapshot,...rest}=publication;wire={...envelope,publication:{...rest,snapshotDelta:delta}};}
