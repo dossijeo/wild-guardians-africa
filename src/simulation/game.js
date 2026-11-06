@@ -565,7 +565,7 @@ export function buildWallChain(s,id,material,points,nav,options={}) {
     for(const ruin of replaced)emit(s,'WallRemoved',{
       targetId:ruin.id,refund:0,replacedBy:newPieces.find(piece=>
         Math.hypot(ruin.x-piece.x,ruin.z-piece.z)<.35)?.id,presentation:{x:ruin.x,z:ruin.z}});
-    emit(s,'WallChainBuilt',{commandId:id,material,count:newPieces.length,gates:plan.gates,targetId:newPieces[0].id,presentation:{x:newPieces[0].x,z:newPieces[0].z,points:newPieces.map(({x,z})=>({x,z}))}});
+    emit(s,'WallChainBuilt',{commandId:id,material,count:newPieces.length,gates:plan.gates,targetId:newPieces[0].id,presentation:{x:newPieces[0].x,z:newPieces[0].z,points:newPieces.map(({x,z})=>({x,z})),targetIds:newPieces.map(piece=>piece.id)}});
   });
 }
 export function removeWall(s,id,targetId,nav) {
