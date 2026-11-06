@@ -2,6 +2,7 @@ import {BufferAttribute,BufferGeometry,DataTexture,FloatType,Matrix4,Mesh,Neares
 import {Fn,attribute,float,ivec2,mat4,reference,normalLocal,positionLocal,textureLoad,uniform,vec4} from 'three/tsl';
 import {ANIMAL_ACTIONS} from '../simulation/animal-actions-data.js';
 import {hasBakedWorkerWalk} from './baked-worker-walk-profiles.js';
+import {bakedWalkRecipe} from './webgpu-material-graph-catalog.js';
 
 // Experimental building block for a non-skinned presentation mesh. The source
 // SkinnedMesh must remain available for physical poses and unsupported clips.
@@ -51,9 +52,9 @@ function bakedWalkNodes(bake,{bind,inverse,phase,timing=null}){
 const bakedWalkGraphs=new WeakMap(),noClock={};
 export function sharedBakedWalkGraph(bake,clock=null,phaseSource=null){
  if(!bake?.texture?.isDataTexture||clock!==null&&(!clock.node?.isNode||!Number.isFinite(clock.elapsed)))throw TypeError('Invalid shared baked walking graph');
- let clocks=bakedWalkGraphs.get(bake);if(!clocks){clocks=new WeakMap();bakedWalkGraphs.set(bake,clocks);}const key=phaseSource??clock??noClock;let graph=clocks.get(key);if(graph)return graph;
+ const recipe=bakedWalkRecipe({texture:bake.texture,clock:clock!==null,phaseSource:phaseSource!==null});let clocks=bakedWalkGraphs.get(bake);if(!clocks){clocks=new WeakMap();bakedWalkGraphs.set(bake,clocks);}const key=phaseSource??clock??noClock;let variants=clocks.get(key);if(!variants){variants=new Map();clocks.set(key,variants);}let graph=variants.get(recipe.key);if(graph)return graph;
  const references={phaseOffset:reference('_wgWalkPhaseOffset','float'),clockWeight:reference('_wgWalkClockWeight','float'),bind:reference('_wgWalkBindMatrix','mat4'),inverse:reference('_wgWalkInverse','mat4'),duration:reference('_wgWalkDuration','float'),sampleRate:reference('_wgWalkSampleRate','float'),frames:reference('_wgWalkFrames','float'),lastSample:reference('_wgWalkLastSample','float')},fallback=clock?(clock.motionNode??clock.node).mul(references.clockWeight).add(references.phaseOffset).max(0):references.phaseOffset,phase=phaseSource?phaseSource.resolve(fallback):fallback,nodes=bakedWalkNodes(bake,{bind:references.bind,inverse:references.inverse,phase,timing:references});
- graph=Object.freeze({position:Fn(()=>{normalLocal.assign(nodes.normal);return nodes.position;})(),references:Object.freeze(references)});clocks.set(key,graph);return graph;
+ graph=Object.freeze({position:Fn(()=>{normalLocal.assign(nodes.normal);return nodes.position;})(),references:Object.freeze(references),recipe});variants.set(recipe.key,graph);return graph;
 }
 
 // One replica per source material and graph, scoped to the owning renderer.

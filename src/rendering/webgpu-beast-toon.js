@@ -1,6 +1,7 @@
 import { attribute, cameraPosition, clamp, diffuseColor, dot, fwidth, length, max, mix, normalize, normalWorld, positionWorld, pow, shadow, smoothstep, uniform, vec3, vec4 } from 'three/tsl';
 import * as THREE from 'three';
 import {skyNight} from './sky.js';
+import {beastToonRecipe} from './webgpu-material-graph-catalog.js';
 
 // Limited experiment for the default opaque beast style, with optional fur;
 // it omits shadows and environment reflection. Not a general AfricanToon port.
@@ -46,12 +47,13 @@ export function createBeastToonOutput({ fur = false, night = uniform(0), sun = u
 // reflection is not yet ported, and native shadows require caller visibility.
 export function createWebGpuBeastStyle({renderer,light,visibility=null}={}){
  if(!renderer?.backend?.isWebGPUBackend||!renderer.library||!light?.isDirectionalLight)throw TypeError('Invalid WebGPU beast style');
- const night=uniform(0),sun=uniform(new THREE.Vector3()),shadowVisibility=visibility??(renderer.shadowMap?.enabled&&light.castShadow?shadow(light).r:null),base=createBeastToonOutput({night,sun,visibility:shadowVisibility}),fur=createBeastToonOutput({night,sun,visibility:shadowVisibility,fur:true});let closed=false;
- function configure(material,object){if(closed)throw Error('Beast style disposed');if(!material?.isNodeMaterial||!object?.isMesh||material.transparent)return false;material.outputNode=(prepareWebGpuFurAttribute(object)?fur:base).output;material.needsUpdate=true;return true;}
+ const night=uniform(0),sun=uniform(new THREE.Vector3()),shadowVisibility=visibility??(renderer.shadowMap?.enabled&&light.castShadow?shadow(light).r:null),graphs=new Map();let closed=false;
+ function graph(fur){const recipe=beastToonRecipe({fur,shadow:shadowVisibility!==null});let value=graphs.get(recipe.key);if(!value){value=createBeastToonOutput({night,sun,visibility:shadowVisibility,fur});graphs.set(recipe.key,value);}return value;}
+ function configure(material,object){if(closed)throw Error('Beast style disposed');if(!material?.isNodeMaterial||!object?.isMesh||material.transparent)return false;material.outputNode=graph(prepareWebGpuFurAttribute(object)).output;material.needsUpdate=true;return true;}
  function convert(model){if(closed||!model?.isObject3D)throw TypeError('Invalid beast model');const variants=new Map(),originals=new Set(),created=new Set(),changes=[];
   try{model.traverse(object=>{if(!object.isMesh)return;const previous=object.material,values=Array.isArray(previous)?previous:[previous],converted=values.map(source=>{if(!source?.isMeshStandardMaterial||source.transparent)return source;const masked=!!object.geometry.getAttribute('_fur_light');let pair=variants.get(source);if(!pair){pair={};variants.set(source,pair);}const key=masked?'fur':'base';if(!pair[key]){const node=renderer.library.fromMaterial(source);if(!node?.isNodeMaterial)throw Error('Unsupported beast material');created.add(node);configure(node,object);pair[key]=node;originals.add(source);}else if(masked)prepareWebGpuFurAttribute(object);return pair[key];});changes.push({object,previous});object.material=Array.isArray(previous)?converted:converted[0];});}
   catch(error){for(const change of changes)change.object.material=change.previous;for(const material of created)material.dispose();throw error;}
   return {originals:[...originals],materials:[...created]};
  }
- return {configure,convert,prepareObject:prepareWebGpuFurAttribute,materialVariant:object=>object.geometry.getAttribute('_fur_light')?'fur':'base',update(state){if(closed)throw Error('Beast style disposed');night.value=skyNight(state);sun.value.copy(light.position).sub(light.target.position).normalize();},status(){return {closed,night:night.value};},dispose(){closed=true;}};
+ return {configure,convert,prepareObject:prepareWebGpuFurAttribute,materialVariant:object=>object.geometry.getAttribute('_fur_light')?'fur':'base',update(state){if(closed)throw Error('Beast style disposed');night.value=skyNight(state);sun.value.copy(light.position).sub(light.target.position).normalize();},status(){return {closed,night:night.value,graphs:graphs.size};},dispose(){closed=true;graphs.clear();}};
 }

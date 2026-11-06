@@ -4,7 +4,8 @@ import {attribute,materialReference,positionWorld,step} from 'three/tsl';
 // One graph for every clipped chunk. The bounds are instance data, so moving
 // between chunks changes neither the material graph nor its pipeline key.
 const bounds=attribute('wgChunkClip','vec4'),x=positionWorld.x,z=positionWorld.z;
-export const chunkClipOpacity=materialReference('opacity','float').mul(step(bounds.x,x)).mul(step(bounds.y,z)).mul(step(bounds.z,x).oneMinus()).mul(step(bounds.w,z).oneMinus());
+export const chunkClipMask=step(bounds.x,x).mul(step(bounds.y,z)).mul(step(bounds.z,x).oneMinus()).mul(step(bounds.w,z).oneMinus());
+export const chunkClipOpacity=materialReference('opacity','float').mul(chunkClipMask);
 export function insideChunkClip(point,attribute){
  if(!attribute)return true;
  if(!point||attribute.itemSize!==4||attribute.count<1)return false;

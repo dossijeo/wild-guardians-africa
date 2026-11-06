@@ -1,5 +1,6 @@
 import {attribute,materialReference,mix,vec4} from 'three/tsl';
 import {webGpuTextureBinding} from './webgpu-texture-binding.js';
+import {DoubleSide,FrontSide} from 'three';
 
 // Recipes define graph identity only. Three still chooses its own render
 // pipeline from material state, vertex layout, target and device bindings.
@@ -9,6 +10,8 @@ const characters=new Map(),structures=new Map();
 const characterDynamic=Object.freeze(['map','color','_wgTextureBlend']);
 const structureDynamic=Object.freeze(['map','_wgTextureBlend']);
 const waterDynamic=Object.freeze(['clock','environment.day','environment.dark','environment.night','environment.light','environment.blend']);
+const beastDynamic=Object.freeze(['diffuseColor','night','sun']);
+const guardianDynamic=Object.freeze(['diffuseColor','opacity','night','sun','tint','glow','reveal','dissolve','bottom','height']);
 const inheritedPasses=Object.freeze({color:'node',depth:'inherited-unverified',shadow:'inherited-unverified'});
 function textureStructure(texture){return Object.freeze({binding:Object.freeze(webGpuTextureBinding(texture)),colorSpace:texture.colorSpace,mapping:texture.mapping,uvChannel:texture.channel,wrapS:texture.wrapS,wrapT:texture.wrapT,wrapR:texture.wrapR,magFilter:texture.magFilter,minFilter:texture.minFilter});}
 function textureKey(value){return [...value.binding,value.colorSpace,value.mapping,value.uvChannel,value.wrapS,value.wrapT,value.wrapR,value.magFilter,value.minFilter];}
@@ -51,4 +54,37 @@ export function waterColorRecipe({offset,palette,sun=null,shadowNode=null,global
 export function lavaColorRecipe({offset,palette,clip=false}={}){
  if(!Array.isArray(offset)||offset.length!==2||!offset.every(Number.isFinite)||!Array.isArray(palette)||palette.some(rgb=>!Array.isArray(rgb)||rgb.length!==3||!rgb.every(Number.isFinite))||typeof clip!=='boolean')throw TypeError('Invalid lava color recipe');
  const structural=Object.freeze({family:'lava-color',clip,embeddedOffset:Object.freeze([...offset]),embeddedPalette:Object.freeze(palette.map(rgb=>Object.freeze([...rgb])))}),graphKey=JSON.stringify([structural.family,offset,palette]);return Object.freeze({structural,dynamic:Object.freeze(['clock']),passes:inheritedPasses,graphKey,key:JSON.stringify([graphKey,clip])});
+}
+
+export function beastToonRecipe({fur=false,shadow=false}={}){
+ if(typeof fur!=='boolean'||typeof shadow!=='boolean')throw TypeError('Invalid beast toon recipe');const structural=Object.freeze({family:'beast-toon',fur,shadow,attributes:Object.freeze(fur?['wgFurLight:float']:[])});return Object.freeze({structural,dynamic:beastDynamic,passes:inheritedPasses,key:JSON.stringify([structural.family,fur,shadow])});
+}
+
+const guardianState=Object.freeze({transparent:true,depthWrite:true,forceSinglePass:true,toneMapped:false});
+const guardianRecipe=Object.freeze({structural:Object.freeze({family:'guardian-surface',state:guardianState}),dynamic:guardianDynamic,passes:inheritedPasses,key:JSON.stringify(['guardian-surface',guardianState])});
+export function guardianSurfaceRecipe(){return guardianRecipe;}
+
+const spriteState=Object.freeze({transparent:true,depthWrite:false,side:DoubleSide,toneMapped:false});
+const spriteDynamic=Object.freeze(['instanceData','atlasContents','eye','right','up','particle','lightPositions','lightColors']);
+const spriteAttributes=Object.freeze(['aCorner:vec2','iPos:vec3','iSize:vec2','iAngle:float','iRect:vec4','iNext:vec4','iColor:vec4','iParams:vec4','iDirection:vec3']);
+const spriteGraphs=new WeakMap();
+export function vfxSpriteRecipe(atlas){if(!atlas?.isTexture)throw TypeError('Invalid VFX atlas');const shape=textureStructure(atlas),structural=Object.freeze({family:'vfx-sprites',atlasId:atlas.uuid,texture:shape,state:spriteState,attributes:spriteAttributes}),key=JSON.stringify([structural.family,atlas.uuid,...textureKey(shape),spriteState]);return Object.freeze({structural,sampler:Object.freeze({anisotropy:atlas.anisotropy}),dynamic:spriteDynamic,passes:inheritedPasses,key});}
+export function catalogVfxSpriteGraph(atlas,build){if(typeof build!=='function')throw TypeError('Invalid VFX graph builder');const recipe=vfxSpriteRecipe(atlas);let byRecipe=spriteGraphs.get(atlas);if(!byRecipe){byRecipe=new Map();spriteGraphs.set(atlas,byRecipe);}let graph=byRecipe.get(recipe.key);if(!graph){graph=build(recipe);if(!graph?.vertexNode?.isNode||!graph?.outputNode?.isNode)throw TypeError('Invalid VFX sprite graph');byRecipe.set(recipe.key,graph);}return graph;}
+
+const terrainState=Object.freeze({vertexColors:true,side:DoubleSide,toneMapped:false});
+const terrainDynamic=Object.freeze(['vertexColor','shadowVisibility']);
+export function vertexTerrainRecipe({shadows=false}={}){if(typeof shadows!=='boolean')throw TypeError('Invalid terrain recipe');const structural=Object.freeze({family:'vertex-terrain',shadows,state:terrainState,attributes:Object.freeze(['position','color'])});return Object.freeze({structural,dynamic:terrainDynamic,passes:inheritedPasses,key:JSON.stringify([structural.family,shadows,terrainState])});}
+
+const bakedDynamic=Object.freeze(['phaseOffset','clockWeight','bind','inverse','duration','sampleRate','frames','lastSample']);
+export function bakedWalkRecipe({texture,clock=false,phaseSource=false}={}){if(!texture?.isDataTexture||typeof clock!=='boolean'||typeof phaseSource!=='boolean')throw TypeError('Invalid baked walk recipe');const shape=textureStructure(texture),structural=Object.freeze({family:'baked-walk',textureId:texture.uuid,texture:shape,clock,phaseSource,attributes:Object.freeze(['skinIndex:uvec4','skinWeight:vec4'])});return Object.freeze({structural,dynamic:bakedDynamic,passes:inheritedPasses,key:JSON.stringify([structural.family,texture.uuid,...textureKey(shape),clock,phaseSource])});}
+
+const biomeShadowGraphs=new Map(),biomeShadowDynamic=Object.freeze(['material.map','material.opacity','chunkBounds']);
+export function biomeShadowRecipe({map=null,clip=false}={}){if(map!==null&&(!map?.isTexture||!Number.isInteger(map.channel)||map.channel<0||map.channel>1)||typeof clip!=='boolean'||!map&&!clip)throw TypeError('Invalid biome shadow recipe');const shape=map?textureStructure(map):null,structural=Object.freeze({family:'biome-shadow-coverage',texture:shape,clip,attributes:Object.freeze(clip?['wgChunkClip:vec4']:[])});return Object.freeze({structural,dynamic:biomeShadowDynamic,passes:Object.freeze({color:'source-material',depth:'three-override-position',shadow:'castShadowNode-coverage'}),key:JSON.stringify([structural.family,shape?textureKey(shape):null,clip])});}
+export function catalogBiomeShadowGraph(options,build){if(typeof build!=='function')throw TypeError('Invalid biome shadow graph builder');const recipe=biomeShadowRecipe(options);let graph=biomeShadowGraphs.get(recipe.key);if(!graph){graph=build(recipe);if(!graph?.node?.isNode)throw TypeError('Invalid biome shadow graph');biomeShadowGraphs.set(recipe.key,graph);}return graph;}
+
+const biomeDynamic=Object.freeze(['color','opacity','roughness','metalness','normalScale','map','normalMap','roughnessMap','metalnessMap']);
+export function biomeSurfaceRecipe({instanceContract='native',clip=false,shadowCutout=false,side=FrontSide,map=null,normalMap=null,roughnessMap=null}={}){
+ if(!['native','attributes'].includes(instanceContract)||typeof clip!=='boolean'||typeof shadowCutout!=='boolean'||![FrontSide,DoubleSide].includes(side)||[map,normalMap,roughnessMap].some(value=>value!==null&&!value?.isTexture))throw TypeError('Invalid biome surface recipe');
+ const textures=Object.freeze([map,normalMap,roughnessMap].map(value=>value?textureStructure(value):null)),state=Object.freeze({side,alphaTest:.35}),structural=Object.freeze({family:'biome-surface',instanceContract,clip,shadowCutout,nodeMaterial:instanceContract==='attributes'||clip||shadowCutout,textures,state}),passes=Object.freeze({color:'mesh-standard',depth:'inherited-unverified',shadow:shadowCutout?'catalog-cutout':'inherited-unverified'}),key=JSON.stringify([structural.family,instanceContract,clip,shadowCutout,side,textures.map(shape=>shape?textureKey(shape):null)]);
+ return Object.freeze({structural,dynamic:biomeDynamic,passes,key});
 }
