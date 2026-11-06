@@ -762,7 +762,7 @@ export function dropCarriedCrate(s,worker){
   const crate=activeCrates(s.crates).find(c=>c.id===worker.crateId);
   worker.crateId=null;
   if(!crate)return;
-  crate.carrierId=null;crate.x=worker.x;crate.z=worker.z;emit(s,'CrateDropped',{targetId:crate.id});
+  crate.carrierId=null;crate.x=worker.x;crate.z=worker.z;emit(s,'CrateDropped',{targetId:crate.id,presentation:{x:crate.x,z:crate.z}});
   if(!s.raid){const center=nearest(s.structures.filter(operational),crate);if(center)enqueue(s,center.id,'crate',crate.id);}
 }
 export function validateRepair(s,targetId) {

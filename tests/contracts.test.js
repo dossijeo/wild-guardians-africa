@@ -5,6 +5,7 @@ import * as Game from '../src/simulation/game.js';
 import {contractExpired} from '../src/simulation/workforce.js';
 import {numberOf,rational,multiply,transact} from '../src/simulation/money.js';
 import {serialize,deserialize,SaveRepository} from '../src/persistence/snapshots.js';
+import {eventAudioOptions} from '../src/audio/audio.js';
 const nav={placement:()=>({valid:true}),setState:()=>{},path:(_a,b)=>[{x:b.x,z:b.z}],walkable:()=>true};
 // Isolated late-postgame snapshot fixture with a delivery crossing midnight.
 // Earlier proceeds are fixture history, not an end-to-end profitability claim.
@@ -67,6 +68,9 @@ test('Losing the carrier center drops the box at its physical position without p
   Game.tick(s,.1,nav);assert.equal(worker.crateId,null);assert.equal(crate.carrierId,null);assert.equal(crate.x,worker.x);assert.equal(crate.z,worker.z);
   assert.equal(crate.delivered,false);assert.equal(numberOf(s.ledger.balance),1070);assert.equal(worker.status,'returning');
   assert.equal(s.events.filter(e=>e.type==='CrateDropped').length,1);
+});
+test('a dropped crate event keeps its original audio location after later world changes',()=>{
+  const {s,worker,crate}=carrying();worker.x=13;worker.z=-4;Game.dropCarriedCrate(s,worker);const event=s.events.findLast(e=>e.type==='CrateDropped');assert.deepEqual(event.presentation,{x:13,z:-4});crate.x=200;crate.z=200;s.crates=[];const options=eventAudioOptions(event,'farm_crate_move',s,{x:37,z:-4});assert.equal(options.gain,.5);assert.equal(options.emitter,crate.id);
 });
 test('Snapshot validation rejects orphaned, duplicated or inconsistent carrier links',()=>{
   const {s}=carrying(),text=serialize(s);
