@@ -37,5 +37,5 @@ export function createTerrainAdmission({scene,admission,onError=()=>{},onPublish
   }
   return true;
  }
- return {publish,remove,isReady(){return !closed&&unavailable.size===0;},isRayReady,isVisible(key,mesh){return visible.get(key)?.meshes[0]===mesh;},dispose(){if(closed)return;closed=true;for(const key of new Set([...pending.keys(),...visible.keys(),...unavailable]))remove(key);}};
+ return {publish,remove,isReady(){return !closed&&unavailable.size===0;},isRayReady,visibleMesh(key){return visible.get(key)?.meshes[0]??null;},isVisible(key,mesh){return visible.get(key)?.meshes[0]===mesh;},dispose(){if(closed)return;closed=true;for(const key of new Set([...pending.keys(),...visible.keys(),...unavailable]))remove(key);}};
 }

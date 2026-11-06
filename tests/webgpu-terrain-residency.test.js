@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {createWebGpuTerrainResidency} from '../src/rendering/webgpu-terrain-residency.js';
 import {createTerrainAdmission} from '../src/rendering/webgpu-terrain-admission.js';
+import {createActorTerrainSampler,hasResidentActorTerrain} from '../src/rendering/webgpu-actor-terrain.js';
 
 test('failed terrain attachment retains the old revision and removes partial publication before deferred disposal',async()=>{
  const scene=new THREE.Scene(),releases=[],errors=[],admission=createTerrainAdmission({scene,admission:{prepare:async()=>{},deferRelease(_group,release){releases.push(release);}},onError:error=>errors.push(error)}),flush=()=>new Promise(resolve=>setImmediate(resolve));
@@ -15,6 +16,11 @@ test('a terrain publication callback failure is reported without losing the admi
 });
 
 function chunk(cx=0,cz=0){const positions=new Float32Array(49*49*3),colors=new Float32Array(49*49*3),indices=new Uint16Array(48*48*6);for(let z=0;z<49;z++)for(let x=0;x<49;x++){const i=(z*49+x)*3;positions.set([x-24,(x+z)/10,z-24],i);colors.set([.2,.4,.6],i);}for(let z=0;z<48;z++)for(let x=0;x<48;x++){const a=z*49+x,k=(z*48+x)*6;indices.set([a,a+49,a+1,a+1,a+49,a+50],k);}return {authority:'spatial-wasm',cx,cz,terrain:{positions,colors,indices}};}
+test('actor presentation follows the visible terrain until its replacement is admitted',async()=>{
+ const requests=[],published=[],scene=new THREE.Scene(),material=new THREE.MeshBasicMaterial({side:THREE.DoubleSide}),admission={prepare:()=>new Promise(resolve=>requests.push(resolve)),deferRelease:(_group,release)=>release()},residency=createWebGpuTerrainResidency({scene,material,pipelineAdmission:admission,onPublished:key=>published.push(key)}),sample=createActorTerrainSampler(residency),make=y=>{const payload=chunk();for(let i=1;i<payload.terrain.positions.length;i+=3)payload.terrain.positions[i]=y;return payload;};
+ residency.replace(make(2),1);await Promise.resolve();assert.equal(hasResidentActorTerrain(residency,.2,.3),false);requests[0]();await new Promise(resolve=>setImmediate(resolve));assert.equal(hasResidentActorTerrain(residency,.2,.3),true);assert.ok(Math.abs(sample(.2,.3)-2)<1e-6);
+ residency.replace(make(9),2);await Promise.resolve();assert.equal(residency.surface(.2,.3),9);assert.ok(Math.abs(sample(.2,.3)-2)<1e-6);requests[1]();await new Promise(resolve=>setImmediate(resolve));assert.ok(Math.abs(sample(.2,.3)-9)<1e-6);assert.deepEqual(published,['0,0','0,0']);residency.remove(0,0,3);assert.equal(hasResidentActorTerrain(residency,.2,.3),false);residency.dispose();material.dispose();
+});
 test('samples the confirmed terrain triangles exactly, including replacement and chunk boundaries',()=>{
  const scene=new THREE.Scene(),residency=createWebGpuTerrainResidency({scene,material:new THREE.MeshBasicMaterial({side:THREE.DoubleSide})}),data=chunk(-1,1);
  for(let i=0;i<data.terrain.positions.length/3;i++)data.terrain.positions[i*3+1]=Math.fround(Math.sin(i*.3)*3);
