@@ -5,6 +5,8 @@ import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {createSimulationAuthority} from '../src/simulation/simulation-authority.js';
+import {emit,observePresentationGameEvents} from '../src/simulation/game.js';
+import {createConfirmedStateReceiver} from '../src/simulation/confirmed-state-receiver.js';
 import {handoffConfirmedSnapshot,confirmedSnapshotFor} from '../src/simulation/confirmed-snapshot-handoff.js';
 import {createSnapshotPreparationCache} from '../src/simulation/main-thread-snapshot-transport.js';
 const packet=(sequence,events=[],physicsPose=null)=>({sequence,events,physicsPose,snapshot:String(sequence)});
@@ -128,6 +130,31 @@ test('an unchanged camera confirmation can share the preceding quiet state witho
  q.publication(full(1),true);q.publication(full(2),true);const receipt={session:'s',sequence:3,unchanged:true,slotId:'slot',stateSequence:7,elapsed:1,pauses:[],events:[],saveAvailable:true};
  assert.equal(q.publication(receipt,false),true);q.message({kind:'commandResult',id:5,sequence:3,receipt});q.publication(full(4),true);q.ack(1);
  assert.equal(sent[1].firstSequence,2);assert.equal(sent[1].publication.sequence,3);assert.equal(sent[1].publication.snapshot,full(2).snapshot);q.ack(3);assert.equal(sent[2].receipt,receipt);assert.equal(sent[3].publication.sequence,4);
+});
+test('an unchanged receipt folds into an eventful tick without losing facts or the invalidation boundary',()=>{
+ const sent=[],q=createHostPublicationQueue({session:'s',foldViews:true,send:value=>sent.push(value)}),snapshot=JSON.stringify({slotId:'slot',sequence:12,elapsed:4}),events=[{id:'event-9',type:'SpellActivated'},{id:'event-10',type:'RaidEnded'}],presentationJournal=[{kind:'event',eventId:'event-9'},{kind:'animalGone',actorId:'a'},{kind:'event',eventId:'event-10'}],motionInvalidation={actorId:'a',at:4,reason:'simulation-event'},pose={actorId:'a',active:true};
+ const full=sequence=>({sequence,events:[],physicsPose:pose,elapsed:4,pauses:['menu'],saveAvailable:true,snapshot});
+ q.publication(full(1),true);q.publication({...full(2),events,presentationJournal,motionInvalidation},true);
+ const view={sequence:3,unchanged:true,slotId:'slot',stateSequence:12,elapsed:4,pauses:['menu'],events:[],saveAvailable:true};
+ assert.equal(q.publication(view,false),true);q.message({kind:'commandResult',sequence:3,receipt:view});q.ack(1);
+ assert.equal(sent[1].firstSequence,2);assert.equal(sent[1].publication.sequence,3);assert.equal(sent[1].publication.snapshot,snapshot);
+ assert.deepEqual(sent[1].publication.events,events);assert.deepEqual(sent[1].publication.presentationJournal,presentationJournal);assert.deepEqual(sent[1].publication.motionInvalidation,motionInvalidation);assert.deepEqual(sent[1].publication.physicsPose,pose);
+ q.ack(3);assert.deepEqual(sent[2].receipt,view);assert.equal(q.status().queued,0);
+});
+test('the real receiver delivers a folded event once at its original confirmed state',()=>{
+ const state=deserialize(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString()),authority=deserialize(serialize(state)),seen=[],stop=observePresentationGameEvents(state,event=>seen.push({id:event.id,elapsed:state.elapsed})),receiver=createConfirmedStateReceiver(state,'s'),sent=[],queue=createHostPublicationQueue({session:'s',foldViews:true,send:message=>sent.push(message)});
+ try{
+  const base={session:'s',sequence:1,events:[],physicsPose:null,snapshot:serialize(authority),elapsed:authority.elapsed,pauses:[...authority.pauses],saveAvailable:true};queue.publication(base,true);receiver.accept(sent[0].publication);
+  authority.elapsed+=.1;emit(authority,'Test');const event=authority.events.at(-1),eventful={...base,sequence:2,snapshot:serialize(authority),events:[event],elapsed:authority.elapsed};queue.publication(eventful,true);
+  const view={sequence:3,unchanged:true,slotId:authority.slotId,stateSequence:authority.sequence,elapsed:authority.elapsed,pauses:[...authority.pauses],events:[],saveAvailable:true};assert.equal(queue.publication(view,false),true);queue.ack(1);
+  const message=sent[1];assert.equal(receiver.accept(message.publication,{firstSequence:message.firstSequence}).sequence,3);assert.deepEqual(seen,[{id:event.id,elapsed:authority.elapsed}]);queue.ack(3);
+ }finally{stop();}
+});
+test('an eventful state is not folded across a checkpoint, an unknown field or a changed receipt',()=>{
+ for(const previousExtra of [{terrainCheckpoint:{sequence:2}},{futureProtocolField:1}]){
+  const sent=[],q=createHostPublicationQueue({session:'s',foldViews:true,send:value=>sent.push(value)}),full=n=>({sequence:n,events:[{id:'event-1'}],physicsPose:null,elapsed:4,pauses:[],saveAvailable:true,snapshot:JSON.stringify({slotId:'slot',sequence:12,elapsed:4})});
+  q.publication(full(1),true);q.publication({...full(2),...previousExtra},true);assert.equal(q.publication({sequence:3,unchanged:true,slotId:'slot',stateSequence:12,elapsed:4,pauses:[],events:[],saveAvailable:true},false),false);q.ack(1);assert.equal(sent[1].publication.sequence,2);q.ack(2);assert.equal(sent[2].publication.sequence,3);
+ }
 });
 test('view folding rejects mismatched confirmed state',()=>{
  const sent=[],q=createHostPublicationQueue({session:'s',foldViews:true,send:value=>sent.push(value)}),full=sequence=>({sequence,events:[],physicsPose:null,elapsed:1,pauses:[],saveAvailable:true,snapshot:JSON.stringify({slotId:'slot',sequence:7,elapsed:1})});
