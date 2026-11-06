@@ -95,6 +95,12 @@ test('publication errors reject only the request and do not poison later admissi
  try{await assert.rejects(admission.prepareAndPublish(mesh,{},()=>{throw Error('publication failed');}),/publication failed/);await admission.prepare(mesh);}finally{admission.dispose();mesh.geometry.dispose();mesh.material.dispose();}
 });
 
+test('a preparation ticket tracks compiled inputs and auxiliary pass ownership',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),mesh=new THREE.Mesh(),target=new THREE.RenderTarget(2,2);let current=null;
+ const renderer={backend:{isWebGPUBackend:true},getRenderTarget:()=>current,setRenderTarget:value=>{current=value;},compileAsync:()=>Promise.resolve()},admission=createWebGpuPipelineAdmission({renderer,scene,camera});
+ try{const ticket=await admission.prepareTicket(mesh,{});assert.equal(ticket.valid(),true);mesh.material.needsUpdate=true;assert.equal(ticket.valid(),false);const fresh=await admission.prepareTicket(mesh,{});const remove=admission.registerAuxiliaryTarget(target);assert.equal(fresh.valid(),false);remove();}finally{admission.dispose();target.dispose();mesh.geometry.dispose();mesh.material.dispose();}
+});
+
 test('removing an auxiliary target while it compiles avoids retries using retired resources',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),mesh=new THREE.Mesh(),framebuffer={},target=new THREE.RenderTarget(2,2),calls=[];let current=null,finish;const renderer={backend:{isWebGPUBackend:true},getRenderTarget:()=>current,_getFrameBufferTarget:()=>framebuffer,setRenderTarget:value=>{current=value;},compileAsync(){calls.push(current);return calls.length===2?new Promise(resolve=>{finish=resolve;}):Promise.resolve();}},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),remove=admission.registerAuxiliaryTarget(target);try{const ready=admission.prepare(mesh);await new Promise(resolve=>setImmediate(resolve));mesh.material.needsUpdate=true;remove();finish();await ready;assert.deepEqual(calls,[framebuffer,target,framebuffer]);}finally{admission.dispose();target.dispose();mesh.geometry.dispose();mesh.material.dispose();}
 });

@@ -64,7 +64,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
      if(!result?.valid?.()){enqueue(item);return;}
      // The validity check and publication share one synchronous turn. No
      // frame or other task can change the compiled inputs between them.
-     item.publish?.();item.resolve();
+     item.publish?.();item.resolve(item.returnTicket?{valid:result.valid}:undefined);
     }catch(error){item.reject(error);}
     return;
    }
@@ -192,18 +192,19 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
   // objects must be admitted separately before the pass is first rendered.
   registerAuxiliaryTarget(target){if(closed)throw Error('Pipeline admission closed');if(!target?.isRenderTarget||typeof renderer.getRenderTarget!=='function'||typeof renderer.setRenderTarget!=='function')throw TypeError('Invalid auxiliary target');const count=auxiliaryTargets.get(target)??0;auxiliaryTargets.set(target,count+1);if(!count)auxiliaryRevision++;let released=false;return ()=>{if(released)return;released=true;const current=auxiliaryTargets.get(target)??0;if(current<=1){if(current){auxiliaryTargets.delete(target);auxiliaryRevision++;}}else auxiliaryTargets.set(target,current-1);};},
   notifyShadowTargets,
-  prepare(object,{signal,include=[],target=undefined,shadowPass=includeShadowPass,passCamera=camera,targetScene=scene,publish=null}={}){
+  prepare(object,{signal,include=[],target=undefined,shadowPass=includeShadowPass,passCamera=camera,targetScene=scene,publish=null,returnTicket=false}={}){
    if(closed)return Promise.reject(Error('Pipeline admission closed'));
    if(!object?.isObject3D)return Promise.reject(TypeError('Invalid admission object'));
    if(!passCamera?.isCamera||!targetScene?.isObject3D)return Promise.reject(TypeError('Invalid admission pass context'));
    if(target!==undefined&&(!target?.isRenderTarget||typeof renderer.setRenderTarget!=='function'||typeof renderer.getRenderTarget!=='function')||typeof shadowPass!=='boolean'||shadowPass&&typeof renderer.compileShadowAsync!=='function')return Promise.reject(TypeError('Invalid admission target or shadow pass'));
    if(!Array.isArray(include)||include.some(node=>{if(!node?.isObject3D||node===object)return true;for(let parent=node.parent;parent;parent=parent.parent)if(parent===object)return false;return true;}))return Promise.reject(TypeError('Invalid admission visibility'));
    if(signal!==undefined&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))return Promise.reject(TypeError('Invalid admission signal'));
-   if(publish!==null&&typeof publish!=='function')return Promise.reject(TypeError('Invalid admission publication'));
+   if(publish!==null&&typeof publish!=='function'||typeof returnTicket!=='boolean'||publish!==null&&returnTicket)return Promise.reject(TypeError('Invalid admission publication'));
    if(signal?.aborted)return Promise.reject(new DOMException('Pipeline admission cancelled','AbortError'));
-   return new Promise((resolve,reject)=>enqueue({object,signal,include:[...new Set(include)],target,shadowPass,passCamera,targetScene,publish,version:generation,resolve,reject,onAbort:null}));
+   return new Promise((resolve,reject)=>enqueue({object,signal,include:[...new Set(include)],target,shadowPass,passCamera,targetScene,publish,returnTicket,version:generation,resolve,reject,onAbort:null}));
   },
   prepareAndPublish(object,options,publish){return this.prepare(object,{...options,publish});},
+  prepareTicket(object,options){return this.prepare(object,{...options,returnTicket:true});},
   dispose(){if(closed)return;closed=true;generation++;cancel();lights.clear();auxiliaryTargets.clear();rejectWaiting(Error('Pipeline admission cancelled'));},
  };
 }
