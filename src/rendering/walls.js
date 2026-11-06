@@ -4,6 +4,7 @@ import {wallVisualAt} from '../simulation/structure-presentation.js';
 import {wallStages,morphedWallPositions} from './walls-native.js';
 import {nativeGateLeaves} from '../world/gate-frames-native.js';
 import {splitGateBridge,articulateGate} from './gate-articulation.js';
+import {structureMaterialReplica} from './structure-material-replica.js';
 
 // Original getVAO expands indexed faces so each triangle keeps ONE region.
 export function wallBridge(source,destination=null){
@@ -70,9 +71,9 @@ export class NativeWall extends THREE.Group {
         geometry.setAttribute('position',new THREE.BufferAttribute(bridge.pos.slice(),3));geometry.setAttribute('normal',new THREE.BufferAttribute(bridge.normal.slice(),3));geometry.setAttribute('uv',new THREE.BufferAttribute(bridge.uv,2));
         if(bridge.color)geometry.setAttribute('color',new THREE.BufferAttribute(bridge.color,3));
         if(bridge.visibility)geometry.setAttribute('ambientVisibility',new THREE.BufferAttribute(bridge.visibility.slice(),1));
-        const material=prototype.material.clone();material.polygonOffset=stage.role===1;material.polygonOffsetFactor=-1;material.polygonOffsetUnits=-1;material.userData.blessingObject=this.blessingUniform;
+        const material=prototype.material.clone(),releaseMaterialReplica=prototype.material[structureMaterialReplica]?.(material);material.polygonOffset=stage.role===1;material.polygonOffsetFactor=-1;material.polygonOffsetUnits=-1;material.userData.blessingObject=this.blessingUniform;
         geometry.computeBoundingBox();const bounds=geometry.boundingBox;material.userData.blessingWallBounds={value:new THREE.Vector4(bounds.min.x,bounds.min.y,Math.max(.01,bounds.max.x-bounds.min.x),Math.max(.01,bounds.max.y-bounds.min.y))};
-        const mesh=new THREE.Mesh(geometry,material);mesh.castShadow=mesh.receiveShadow=true;this.add(mesh);this.parts.push({mesh,bridge});
+        const mesh=new THREE.Mesh(geometry,material);mesh.castShadow=mesh.receiveShadow=true;this.add(mesh);this.parts.push({mesh,bridge,releaseMaterialReplica});
       }
     }
     stages.forEach((stage,i)=>{
@@ -86,6 +87,6 @@ export class NativeWall extends THREE.Group {
       mesh.geometry.computeBoundingBox();mesh.geometry.computeBoundingSphere();
     });
   }
-  disposeParts(){for(const {mesh} of this.parts){mesh.geometry.dispose();mesh.material.dispose();this.remove(mesh);}this.parts=[];}
+  disposeParts(){for(const {mesh,releaseMaterialReplica} of this.parts){releaseMaterialReplica?.();mesh.geometry.dispose();mesh.material.dispose();this.remove(mesh);}this.parts=[];}
   dispose(){this.disposeParts();}
 }
