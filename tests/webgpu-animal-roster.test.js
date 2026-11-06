@@ -5,6 +5,11 @@ import {createWebGpuAnimalBank} from '../src/rendering/webgpu-animal-bank.js';
 import {createWebGpuAnimalRoster} from '../src/rendering/webgpu-animal-roster.js';
 import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
+test('the roster publishes its actor inside the admission callback',async()=>{
+ const state={raid:{animals:[{id:'a',species:'hyena',status:'walking'}]}},bank={tick(){},dispose(){}},root=new Group();let commit,ready=0;
+ const admission={prepare(){throw Error('non-atomic admission used');},prepareAndPublish(object,options,publish){assert.equal(object,root);return new Promise(resolve=>{commit=()=>{publish();resolve();};});}},roster=createWebGpuAnimalRoster({scene:{},residency:{},state,assetBank:bank,pipelineAdmission:admission,onReady(){ready++;},createAnimal:()=>({root,update(){root.visible=true;},dispose(){}})});
+ try{roster.sync();await flush();assert.equal(roster.status().ready,0);commit();assert.equal(roster.status().ready,1);assert.equal(root.visible,true);assert.equal(ready,1);await flush();}finally{roster.dispose();}
+});
 test('animal presentation receives the latest confirmed entity during delayed admission',async()=>{
  const first={id:'a',species:'hyena',status:'walking',x:1},state={raid:{animals:[first]}},seen=[],bank={tick(){},dispose(){}};let finish,read;
  const roster=createWebGpuAnimalRoster({scene:{},residency:{},state,assetBank:bank,createAnimal:options=>{read=options.getEntity;return new Promise(resolve=>{finish=resolve;});}});
