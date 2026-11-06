@@ -71,7 +71,8 @@ import {formatMoney,formatWholeCoins,numberOf} from '../simulation/money.js';
 import {isMature} from '../simulation/crops.js';
 import {cropSpec,permission,operational,attraction} from '../simulation/rules.js';
 import {BrowserSaveRepository} from '../persistence/browser-saves.js';
-import {serialize,deserialize} from '../persistence/snapshots.js';
+import {serialize} from '../persistence/snapshots.js';
+import {decodeSnapshotAsync} from '../persistence/snapshot-decoder.js';
 import {prepareFreshWorkerBootstrapInWorker,prepareSavedWorkerCheckpointInWorker,prepareSavedWorkerBootstrapInWorker} from '../simulation/fresh-worker-bootstrap-client.js';
 import {createSimulationAuthorityClient} from '../simulation/simulation-authority-client.js';
 import {createWorkerHostedRuntime} from '../simulation/worker-hosted-runtime.js';
@@ -368,6 +369,7 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     const restoreParams=new URLSearchParams(location.search),workerSaveSource=import.meta.env.DEV&&slotId!==undefined&&restoreParams.has('qa-worker-early-native')&&restoreParams.has('qa-worker-early-gpu-view')&&restoreParams.has('qa-worker-no-webgl')&&restoreParams.has('qa-webgpu-camera-terrain'),workerFresh=import.meta.env.DEV&&!loaded&&slotId===undefined&&restoreParams.has('qa-worker-early-new')&&restoreParams.has('qa-worker-early-native')&&restoreParams.has('qa-worker-early-gpu-view')&&restoreParams.has('qa-worker-no-webgl')&&restoreParams.has('qa-webgpu-camera-terrain'),freshOptions={biome:selectedBiome,culture:selectedCulture,...(qaSeed!==null&&Number.isSafeInteger(Number(qaSeed))?{seed:Number(qaSeed)}:{})};let savedSource=null;
     let next=loaded??(slotId!==undefined?(preview??{day:1,time:0,biome:selectedBiome,culture:selectedCulture}):workerFresh?{day:1,time:0,biome:selectedBiome,culture:selectedCulture}:Game.newGame(freshOptions));
     await prepared.pending;assertLoading();preparedLoading=null;loadingTransfers=prepared.transfers;world=prepared.world;world.onContextLost=()=>{if(screen==='loading')cancelLoading(new Error(moneyLocale().startsWith('es')?'Se ha perdido el contexto gráfico durante la carga.':'Graphics context lost during loading.'));};loadingDiorama=prepared.diorama;loadingDiorama.show(next);
+    const decodeBootstrap=async text=>{const decoded=await world.loadReady(decodeSnapshotAsync(text,{signal:world.loading.signal,requireWorker:true,onDiagnostic:diagnostic=>progressQa?.snapshotDecode(diagnostic)}));assertLoading();return decoded;};
     const audioOwner=new LoadingAudio(audio,next);loadingAudio=audioOwner;loadingDiorama.onPlant=()=>audioOwner.plant();audioUnlocked.then(unlocked=>{if(unlocked&&loadingAudio===audioOwner&&screen==='loading')audioOwner.start();}).catch(()=>{});
     const overlay=new LoadingOverlay({frameImages:prepared.frameImages,locale:moneyLocale(),pointer:matchMedia('(pointer:coarse)').matches?'touch':'mouse',onCancel:()=>cancelLoading()});loadingOverlay=overlay;
     loadingProgress=new LoadingProgress(LOADING_STAGES,{downloads:loadingTransfers.downloads,onChange:snapshot=>overlay.render(snapshot,loadingDiorama?.plants.progress??0,{night:loadingDiorama?.night??0,accepting:loadingDiorama?.interactive??false,plantingBlocked:loadingDiorama?.plantingBlocked??false,pointer:loadingDiorama?.pointerType??overlay.pointer})});
@@ -378,7 +380,7 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     // Show the fully prepared diorama before parsing a Continue snapshot. Worker
     // validation is unchanged; cancelled/late results cannot adopt into this game.
     if(slotId!==undefined){
-      const saved=await world.loadReady(saves.loadPrepared(slotId,{signal:world.loading.signal,withSource:workerSaveSource,onDiagnostic:diagnostic=>{progressQa?.snapshotDecode(diagnostic);if(diagnostic.mode==='synchronous-fallback')console.warn('Snapshot compatibility fallback: '+diagnostic.reason);}}));assertLoading();next=workerSaveSource?saved.state:saved;savedSource=workerSaveSource?saved.source:null;loaded=next;
+      const saved=await world.loadReady(saves.loadPrepared(slotId,{signal:world.loading.signal,withSource:workerSaveSource,...(workerSaveSource?{decode:(text,options)=>decodeSnapshotAsync(text,{...options,requireWorker:true})}:{}),onDiagnostic:diagnostic=>{progressQa?.snapshotDecode(diagnostic);if(diagnostic.mode==='synchronous-fallback')console.warn('Snapshot compatibility fallback: '+diagnostic.reason);}}));assertLoading();next=workerSaveSource?saved.state:saved;savedSource=workerSaveSource?saved.source:null;loaded=next;
       loadingDiorama.show(next);audioOwner.setState(next);audioOwner.start();loadingDiorama.render(0,loadingProgress.value);refreshLoadingOverlay();
     }
     if(next.workerPhysicsCheckpoint&&world.workerCheckpointPolicy?.physics!==true&&!experimentalWorkerPhysicsSave())throw Error('Esta partida experimental necesita el modo Worker con restauración de física.');
@@ -386,9 +388,9 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     villageCatalog=villages;
     const payload=villages.find(v=>v.id===(next.culture==='saheliana'?'saheliano':next.culture));
     const workerOnly=import.meta.env.DEV&&canRestoreWorkerOnly(next,{loaded:!!loaded,earlyNative:restoreParams.has('qa-worker-early-native'),earlyGpu:restoreParams.has('qa-worker-early-gpu-view'),noWebgl:restoreParams.has('qa-worker-no-webgl'),cameraTerrain:restoreParams.has('qa-webgpu-camera-terrain'),allowFootprintRepair:true,allowEntryRepair:true,allowMissingCheckpoint:true});
-    const savedBootstrap=workerOnly&&!next.workerNativeAuthorityCheckpoint?await prepareSavedWorkerBootstrapInWorker(savedSource??serialize(next),villages,{quality:settings.quality,signal:world.loading.signal,normalizeForStart:true}):null;if(savedBootstrap){assertLoading();savedSource=savedBootstrap.initial.snapshot;next=deserialize(savedSource);}
-    const checkpointBootstrap=workerOnly&&!savedBootstrap?await prepareSavedWorkerCheckpointInWorker(savedSource??serialize(next),villages,{signal:world.loading.signal,normalizeForStart:true}):null;if(checkpointBootstrap){assertLoading();savedSource=checkpointBootstrap.initial.snapshot;if(checkpointBootstrap.repaired)next=deserialize(savedSource);}
-    const freshBootstrap=workerFresh?await prepareFreshWorkerBootstrapInWorker(freshOptions,payload,{quality:settings.quality,signal:world.loading.signal}):null;if(freshBootstrap){assertLoading();next=deserialize(freshBootstrap.initial.snapshot);}
+    const savedBootstrap=workerOnly&&!next.workerNativeAuthorityCheckpoint?await prepareSavedWorkerBootstrapInWorker(savedSource??serialize(next),villages,{quality:settings.quality,signal:world.loading.signal,normalizeForStart:true}):null;if(savedBootstrap){assertLoading();savedSource=savedBootstrap.initial.snapshot;next=await decodeBootstrap(savedSource);}
+    const checkpointBootstrap=workerOnly&&!savedBootstrap?await prepareSavedWorkerCheckpointInWorker(savedSource??serialize(next),villages,{signal:world.loading.signal,normalizeForStart:true}):null;if(checkpointBootstrap){assertLoading();savedSource=checkpointBootstrap.initial.snapshot;if(checkpointBootstrap.repaired)next=await decodeBootstrap(savedSource);}
+    const freshBootstrap=workerFresh?await prepareFreshWorkerBootstrapInWorker(freshOptions,payload,{quality:settings.quality,signal:world.loading.signal}):null;if(freshBootstrap){assertLoading();next=await decodeBootstrap(freshBootstrap.initial.snapshot);}
     const workerRestore=savedBootstrap?.initial??checkpointBootstrap?.initial??null,projection=freshBootstrap?.initial??workerRestore;
     const spatial=projection?{session:null,navigation:createWorkerNavigationProjection(projection.navigationView)}:await prepareWildEngineWorld(world,next,payload,{signal:world.loading.signal,loaded:!!loaded});
     assertLoading();nav=spatial.navigation;

@@ -8,10 +8,12 @@ const transportError=message=>{const error=new Error(message);error.name='Snapsh
 // One request owns one Worker. Parsing and complete validation remain identical
 // to synchronous saves; only their execution location changes. Structured-clone
 // delivery can still consume main-thread time and must be measured separately.
-export function decodeSnapshotAsync(text,{signal,timeout=30000,workerAvailable=typeof Worker!=='undefined',createWorker=()=>new Worker(new URL('./snapshot-decode-worker.js',import.meta.url),{type:'module'}),onDiagnostic=()=>{},nextFrame}={}) {
+export function decodeSnapshotAsync(text,{signal,timeout=30000,workerAvailable=typeof Worker!=='undefined',requireWorker=false,createWorker=()=>new Worker(new URL('./snapshot-decode-worker.js',import.meta.url),{type:'module'}),onDiagnostic=()=>{},nextFrame}={}) {
  if(signal?.aborted)return Promise.reject(signalError(signal));
  if(!Number.isFinite(timeout)||timeout<=0)return Promise.reject(new RangeError('Invalid snapshot loading timeout'));
+ if(typeof requireWorker!=='boolean')return Promise.reject(TypeError('Invalid snapshot worker requirement'));
  const fallback=reason=>{
+  if(requireWorker)return Promise.reject(transportError('Snapshot Worker required: '+reason));
   // This is a blocking compatibility fallback, not fake asynchronous parsing.
   try{onDiagnostic({mode:'synchronous-fallback',reason});if(signal?.aborted)throw signalError(signal);return Promise.resolve(deserialize(text));}catch(error){return Promise.reject(error);}
  };
