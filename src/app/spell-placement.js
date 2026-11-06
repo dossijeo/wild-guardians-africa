@@ -51,5 +51,5 @@ export function dispatchPickedSpell(state,id,kind,pick,nav,runtime=null,presenta
   if(kind==='attack'){let pending=pendingAttacks.get(runtime);if(!pending){pending=new Map();pendingAttacks.set(runtime,pending);}pending.set(command.targetId,id);}
   const release=()=>{if(kind!=='attack')return;const pending=pendingAttacks.get(runtime);if(pending?.get(command.targetId)===id)pending.delete(command.targetId);if(!pending?.size)pendingAttacks.delete(runtime);};
   let request;try{presentation?.begin?.(command);request=typeof presentation?.submit==='function'?presentation.submit(command):runtime.submit(command);}catch(error){release();presentation?.reject?.(id);throw error;}
-  let rejected=false;return Promise.resolve(request).then(result=>{if(result.rejection){rejected=true;presentation?.reject?.(id,result);throw Error(result.rejection);}if(result.value)presentation?.confirm?.(id,result);else presentation?.reject?.(id,result);return result.value;}).catch(error=>{if(!rejected)presentation?.reject?.(id);throw error;}).finally(release);
+  return Promise.resolve(request).then(result=>{if(result.rejection){presentation?.reject?.(id,result);throw Error(result.rejection);}if(result.value)presentation?.confirm?.(id,result);else presentation?.reject?.(id,result);return result.value;},error=>{presentation?.reject?.(id);throw error;}).finally(release);
 }

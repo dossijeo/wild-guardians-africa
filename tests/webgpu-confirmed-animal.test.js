@@ -33,6 +33,12 @@ test('confirmed recovery exit yields to a new provisional impact and then real p
   physical={...physical,visualTransition:undefined,root:transform(9),bones:[{name:'Hips',transform:transform(4)}]};actor.update();assert.equal(actor.root.position.x,9);assert.equal(bone.position.x,4);assert.equal(actor.isPhysical(),true);assert.equal(confirmed,1);
  }finally{actor.dispose();}
 });
+test('historical impact selects its fall direction in the visible anchored orientation',async()=>{
+ const scene=new Scene(),model=new Group(),bone=new Bone();bone.name='Hips';model.add(bone);const animal={id:'a',species:'hyena',status:'walking',x:0,z:0,heading:0,radius:.7},game={raid:{animals:[animal]},elapsed:1},bank={async acquire(){return {model,clips:[new AnimationClip('Walking',1,[])],release(){}};}};let anchor=null,selected=null;
+ const hit={at:0,impactAt:0,point:{x:0,y:1,z:0},direction:{x:1,y:0,z:0},intensity:1,ground:0},sample={animal:{...animal,magicImpact:hit},elapsed:.1};
+ const actor=await createWebGpuConfirmedAnimal({scene,residency:{get:()=>null},state:game,actorId:'a',assetBank:bank,getProvisional:()=>sample,getProvisionalAnchor:()=>anchor,getFalls:()=>({get(key){selected=key;return null;}})});
+ try{assert.equal(selected,'hyena:side');anchor={x:0,y:0,z:0,yaw:Math.PI/2};actor.update();assert.equal(selected,'hyena:front');assert.equal(actor.root.rotation.y,Math.PI/2);}finally{actor.dispose();}
+});
 test('QA bone reconciliation ends on the authoritative pose while root remains authoritative',async()=>{
  const scene=new Scene(),model=new Group(),bone=new Bone();bone.name='Spine';model.add(bone);const animal={id:'a',species:'hyena',status:'walking',x:0,z:0,heading:0,radius:.7},game={raid:{animals:[animal]},elapsed:1},bank={async acquire(){return {model,clips:[new AnimationClip('Walking',1,[])],release(){}};}};let now=0,physical=null;
  const hit={at:0,impactAt:0,point:{x:0,y:1,z:0},direction:{x:1,y:0,z:0},intensity:1,ground:0},sample={animal:{...animal,magicImpact:hit},elapsed:.1};

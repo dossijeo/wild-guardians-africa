@@ -88,3 +88,9 @@ test('presentation-routed attack preserves provisional order and authority rejec
  await assert.rejects(dispatchPickedSpell(s,'routed','attack',{entityId:animal.id},nav,runtime,presentation),/Denied/);assert.deepEqual(calls,[['begin','routed'],['submit','routed'],['reject','routed']]);
 });
 test('authoritative spell rejection forwards its sequence exactly once',async()=>{const state=ready(),plant=state.plants[0],seen=[],runtime={submit:()=>Promise.resolve({sequence:17,value:false,rejection:'No disponible'})},presentation={begin(){},reject:(id,result)=>seen.push([id,result?.sequence])};await assert.rejects(dispatchPickedSpell(state,'versioned','growth',{entityId:plant.id},nav,runtime,presentation),/No disponible/);assert.deepEqual(seen,[['versioned',17]]);});
+test('presentation failures never turn an accepted spell into a rejection or send duplicate rejections',async()=>{
+ const state=ready(),plant=state.plants[0],calls=[],runtime={submit:()=>Promise.resolve({sequence:18,value:true})};
+ const presentation={confirm(){calls.push('confirm');throw Error('visual confirmation failed');},reject(){calls.push('reject');throw Error('visual rejection failed');}};
+ await assert.rejects(dispatchPickedSpell(state,'accepted','growth',{entityId:plant.id},nav,runtime,presentation),/visual confirmation failed/);assert.deepEqual(calls,['confirm']);
+ runtime.submit=()=>Promise.resolve({sequence:19,value:false});await assert.rejects(dispatchPickedSpell(state,'rejected','growth',{entityId:plant.id},nav,runtime,presentation),/visual rejection failed/);assert.deepEqual(calls,['confirm','reject']);
+});
