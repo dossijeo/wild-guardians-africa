@@ -11,6 +11,12 @@ test('grouped terrain remains selectable and occludes entities behind it',()=>{
  group.visible=false;assert.equal(picker.pick({x:0,y:0,terrainOnly:true}).point,null);assert.equal(picker.pick({x:0,y:0}).entityId,'under');
 });
 
+test('grouped biome props still occlude selectable objects',()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(45,1,.1,100),group=new THREE.Group(),blocker=new THREE.Mesh(new THREE.BoxGeometry(2,2,1),new THREE.MeshBasicMaterial()),target=new THREE.Group();
+ camera.position.set(0,0,10);camera.lookAt(0,0,0);camera.updateProjectionMatrix();blocker.position.z=5;blocker.userData.nativePropSlot=0;group.add(blocker);scene.add(group);target.userData.entityId='target';target.add(new THREE.Mesh(new THREE.BoxGeometry(1,1,1),new THREE.MeshBasicMaterial()));scene.add(target);
+ const picker=createWebGpuPicker({scene,camera,state:{},animals:{get:()=>null},cropBounds:()=>[]});assert.equal(picker.pick({x:0,y:0}).entityId,null);group.visible=false;assert.equal(picker.pick({x:0,y:0}).entityId,'target');
+});
+
 test('prepares a confirmed animal pose only for the pick and restores it even on raycast failure',()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(45,1,.1,100),root=new THREE.Group(),mesh=new THREE.Mesh(new THREE.BoxGeometry(1,1,1),new THREE.MeshBasicMaterial());camera.position.set(0,0,5);camera.lookAt(0,0,0);camera.updateProjectionMatrix();root.add(mesh);scene.add(root);let prepared=0,restored=0;const actor={root,preparePick(){prepared++;return ()=>restored++;}},picker=createWebGpuPicker({scene,camera,state:{raid:{animals:[{id:'a',status:'walking'}]}},animals:{get:()=>actor},cropBounds:()=>[]});
  assert.equal(picker.pick({x:0,y:0}).entityId,'a');assert.equal(prepared,1);assert.equal(restored,1);picker.pick({x:0,y:0,terrainOnly:true});assert.equal(prepared,1);
