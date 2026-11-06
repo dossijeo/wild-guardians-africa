@@ -1,6 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {webGpuWorldOptions,guardianPlacementForWorld,confirmedCameraTerrainEnabled} from '../src/app/webgpu-world-options.js';
+import {temporalPresentationOptions} from '../src/app/temporal-presentation-options.js';
+
+test('the temporal attachment is composed into the immutable profile before worker startup',()=>{
+ const params=new URLSearchParams('qa-webgpu-temporal'),temporal=temporalPresentationOptions({params,dev:true,hosted:true,early:false,recoveryEnabled:false,hasWebGpu:true});
+ const args={params,state:{raid:null},field:{},temporal,dev:true},initial=webGpuWorldOptions(args),replacement=webGpuWorldOptions(args);
+ assert.deepEqual(initial.experimentalTemporalPresentation,temporal.presentation);assert.equal(initial.presentationCapabilities.coordinatedChunks,true);assert.ok(Object.isFrozen(initial));assert.ok(Object.isFrozen(initial.presentationCapabilities));assert.deepEqual(replacement,initial);
+ assert.throws(()=>webGpuWorldOptions({...args,dev:false}),/Invalid WebGPU world profile/);
+});
 
 test('water Hi-SSR is opt-in for development and cannot be enabled in production by URL',()=>{
  const params=new URLSearchParams('qa-webgpu-water-hissr'),state={raid:null},field={};assert.equal(webGpuWorldOptions({params,state,field,dev:true}).experimentalWaterHiSsr,true);assert.equal(webGpuWorldOptions({params,state,field,dev:false}).experimentalWaterHiSsr,false);assert.equal(webGpuWorldOptions({params:new URLSearchParams(),state,field,dev:true}).experimentalWaterHiSsr,false);

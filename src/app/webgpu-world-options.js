@@ -18,9 +18,9 @@ export function diagnosticPresentationCapabilities(params,dev){
 }
 // One structural profile for both the initial renderer and its replacement.
 // A recovery must not silently switch world features or actor presentation.
-export function webGpuWorldOptions({params,state,field,recovery={},capabilities={},dev=false}={}){
- if(!(params instanceof URLSearchParams)||!state||!field||typeof dev!=='boolean')throw TypeError('Invalid WebGPU world profile');
- const requested=webGpuPresentationCapabilities(capabilities),diagnostic=diagnosticPresentationCapabilities(params,dev),presentationCapabilities=Object.freeze(Object.fromEntries(Object.keys(requested).map(key=>[key,requested[key]||diagnostic[key]])));
+export function webGpuWorldOptions({params,state,field,recovery={},capabilities={},temporal=null,dev=false}={}){
+ if(!(params instanceof URLSearchParams)||!state||!field||typeof dev!=='boolean'||temporal!==null&&(!dev||!temporal||typeof temporal.presentation!=='object'||!temporal.presentation))throw TypeError('Invalid WebGPU world profile');
+ const requested=webGpuPresentationCapabilities(capabilities),diagnostic=diagnosticPresentationCapabilities(params,dev),presentationCapabilities=Object.freeze(Object.fromEntries(Object.keys(requested).map(key=>[key,requested[key]||diagnostic[key]||key==='coordinatedChunks'&&temporal!==null])));
  const has=key=>dev&&params.has(key),species=dev?params.get('qa-webgpu-actor'):null,actor=state.raid?.animals.find(item=>item.status!=='gone'&&(!species||item.species===species)),recoveryProfile=resolvePresentationRecoveryOptions(recovery,{allowQa:dev});
  return Object.freeze({
   experimentalActorId:actor?.id??null,
@@ -41,6 +41,7 @@ export function webGpuWorldOptions({params,state,field,recovery={},capabilities=
   experimentalBiomeShadowCutout:dev&&params.has('qa-webgpu-biome-shadow-cutout'),
   presentationRecovery:recoveryProfile.enabled,
   presentationWorkRecovery:recoveryProfile.enabled&&recoveryProfile.work,
+  ...(temporal?{experimentalTemporalPresentation:temporal.presentation}:{}),
   presentationCapabilities,
   experimentalCameraTerrain:dev&&params.has('qa-webgpu-camera-terrain'),
   cameraTerrainCanyon:!!field.canyon,
