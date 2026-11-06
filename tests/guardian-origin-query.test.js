@@ -9,6 +9,16 @@ import {queryGuardianOrigin,queryGuardianTutorialOrigin} from '../src/simulation
 import {tutorialHandTarget} from '../src/tutorial/tutorial-hand-target.js';
 const wasm=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm'));
 
+test('tutorial dependency revision follows authoritative publications and can be stopped',async()=>{
+ const opening=await createSpatialCampaignOpening({seed:712,biome:'sabana',culture:'suajili',slotId:'tutorial-revision'});let authority;
+ try{const {state,nav,session}=opening,center=state.structures.find(item=>item.kind==='center'),opts=freshNativeAuthorityOptions(state,nav,session,{eye:{x:center.x,z:center.z+38},target:center});authority=createSimulationAuthority(wasm,opts.snapshot,opts.chunkKeys,{navigationView:opts.navigationView,compactViewAcks:true});
+ const observed=authority.execute({kind:'tutorialGuideTarget',sequence:1,toolKind:'plant',trackGuideRevision:true}),version=observed.tutorialGuideRevision;assert.ok(Number.isSafeInteger(version));
+ const unchanged=authority.execute({kind:'snapshot',sequence:2});assert.equal(unchanged.tutorialGuideRevision,version);
+ const paused=authority.execute({kind:'pause',sequence:3,reason:'menu'});assert.ok(paused.tutorialGuideRevision>version);
+ const stopped=authority.execute({kind:'tutorialGuideTarget',sequence:4,trackGuideRevision:false});assert.equal(stopped.tutorialGuideRevision,undefined);assert.equal(authority.execute({kind:'snapshot',sequence:5}).tutorialGuideRevision,undefined);
+ }finally{authority?.dispose();opening.dispose();}
+});
+
 test('QA origin query uses native authority without changing state and rejects an older boundary',async()=>{
  const opening=await createSpatialCampaignOpening({seed:712,biome:'sabana',culture:'suajili',slotId:'guardian-origin'});let authority;
  try{const {state,nav,session}=opening,center=state.structures.find(item=>item.kind==='center'),opts=freshNativeAuthorityOptions({...state,elapsed:0,raid:null},nav,session,{eye:{x:center.x,z:center.z+38},target:center}),assets=JSON.parse(readFileSync('public/content/biome-savanna.json','utf8')).assets,cropHeights=JSON.parse(readFileSync('public/content/crop-stage-heights.json','utf8')).heights;authority=createSimulationAuthority(wasm,opts.snapshot,opts.chunkKeys,{navigationView:opts.navigationView});authority.setGuardianMetadata({assets,cropHeights});authority.setGuardianTerrainEpoch('s');const before=authority.execute({kind:'snapshot',sequence:1});
