@@ -9,6 +9,8 @@ import {createRemoteMicroeventBillboards} from '../src/microevents/webgpu-remote
 import {InteractiveParticles} from '../src/microevents/particles.js';
 import {EVENTS} from '../src/microevents/definitions.js';
 
+test('remote billboards follow confirmed projected time instead of stale bootstrap state',async()=>{const frames=[],world={state:{time:100},actorAudio:{time:100}},sender={prepare:async()=>{},frame:frame=>frames.push(frame)},billboards=createRemoteMicroeventBillboards(world,sender),particles=new InteractiveParticles(),space={unit:.045,origin:v=>v.set(2,3,4),offset:(x,y,phase,v)=>v.set(x*.045,y*.045,0)};try{await billboards.ready;particles.start(EVENTS.seeds,()=>.5);particles.time=1;billboards.draw(particles,space,{});assert.equal(frames.at(-1).light,1);world.actorAudio={time:310};billboards.draw(particles,space,{});assert.equal(frames.at(-1).light,.68);assert.equal(world.state.time,100);delete world.state;world.actorAudio={time:100};billboards.draw(particles,space,{});assert.equal(frames.at(-1).light,1);}finally{billboards.dispose();}});
+
 test('WebGPU microevent layer consumes the existing instance layout in order',async()=>{
  const scene=new Scene(),atlas=new Texture(),layer=createWebGpuMicroeventLayer({scene,state:{time:80},atlas,capacity:2});
  try{
