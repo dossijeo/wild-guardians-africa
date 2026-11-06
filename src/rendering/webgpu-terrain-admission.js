@@ -1,10 +1,10 @@
 // Keep confirmed terrain state independent from its graphical admission. The
 // previous visible revision remains until the replacement has been prepared.
-export function createTerrainAdmission({scene,admission,onError=()=>{},onPublished=()=>{}}){
- if(!scene?.isScene||typeof admission?.prepare!=='function'||typeof onError!=='function'||typeof onPublished!=='function')throw TypeError('Invalid terrain admission');
+export function createTerrainAdmission({scene,admission,coordinator=null,onError=()=>{},onPublished=()=>{}}){
+ if(!scene?.isScene||typeof admission?.prepare!=='function'||coordinator!==null&&typeof coordinator?.offer!=='function'||typeof onError!=='function'||typeof onPublished!=='function')throw TypeError('Invalid terrain admission');
  const pending=new Map(),visible=new Map(),unavailable=new Set();let closed=false;
  function release(record){
-  if(!record||record.released)return;record.released=true;record.controller.abort();
+  if(!record||record.released)return;record.released=true;record.controller.abort();try{record.withdraw?.();}catch(error){onError(error);}record.withdraw=null;
   // Part of a failed publication may already have reached the scene. Keep
   // meshes still inside the compilation group intact until deferred release.
   for(const mesh of record.meshes)if(record.published||mesh.parent===scene)mesh.removeFromParent();
@@ -16,9 +16,10 @@ export function createTerrainAdmission({scene,admission,onError=()=>{},onPublish
  // revision; a failed attachment leaves the old visible owner untouched.
  function rollback(record){for(const mesh of record.meshes)if(mesh.parent===scene)mesh.removeFromParent();}
  function attach(record){try{for(const mesh of record.meshes)scene.add(mesh);}catch(error){rollback(record);throw error;}}
- function finalize(key,record){const old=visible.get(key);record.published=true;visible.set(key,record);pending.delete(key);unavailable.delete(key);try{release(old);onPublished(key);}catch(error){onError(error);}}
- function publish(key,group,meshes,dispose){
+ function finalize(key,record){const old=visible.get(key);record.published=true;record.withdraw=null;visible.set(key,record);pending.delete(key);unavailable.delete(key);try{release(old);}catch(error){try{onError(error);}catch{}}let notified=false;return ()=>{if(notified)return;notified=true;try{onPublished(key);}catch(error){try{onError(error);}catch{}}};}
+ function publish(key,group,meshes,dispose,{revision=null,epoch=null}={}){
   if(closed)throw Error('Terrain admission closed');
+  if(coordinator&&(!Number.isSafeInteger(revision)||revision<0||epoch!==null&&(typeof epoch!=='string'||!epoch)))throw TypeError('Invalid coordinated terrain identity');
   const previous=pending.get(key);if(previous){pending.delete(key);release(previous);}
   const controller=new AbortController(),record={group,meshes,dispose,controller,released:false};pending.set(key,record);unavailable.add(key);
   const commit=()=>{
@@ -26,9 +27,13 @@ export function createTerrainAdmission({scene,admission,onError=()=>{},onPublish
    // Keep the pending owner until every mesh is attached. If attachment
    // fails, the rejection path removes any partial additions and preserves
    // the previous visible revision.
-   attach(record);finalize(key,record);
+   attach(record);finalize(key,record)();
   };
-  Promise.resolve().then(()=>typeof admission.prepareAndPublish==='function'?admission.prepareAndPublish(group,{signal:controller.signal},commit):Promise.resolve(admission.prepare(group,{signal:controller.signal})).then(commit)).catch(error=>{if(closed||pending.get(key)!==record||controller.signal.aborted)return;pending.delete(key);release(record);onError(error);});
+  const fail=error=>{if(closed||pending.get(key)!==record||controller.signal.aborted)return;pending.delete(key);release(record);onError(error);};
+  const current=()=>!closed&&pending.get(key)===record&&!controller.signal.aborted;
+  const assertCurrent=()=>{if(!current())throw new DOMException('Terrain admission cancelled','AbortError');};
+  if(coordinator){let attached=false;const participant={key,revision,epoch,side:'terrain',object:group,signal:controller.signal,attach(){assertCurrent();if(attached)throw Error('Terrain already attached');attach(record);attached=true;},rollback(){if(current()&&attached){rollback(record);attached=false;}},finalize(){assertCurrent();if(!attached)throw Error('Terrain not attached');return finalize(key,record);},onError:fail};try{const withdraw=coordinator.offer(participant);if(typeof withdraw!=='function')throw TypeError('Invalid terrain withdrawal');if(record.released)withdraw();else if(!record.published)record.withdraw=withdraw;}catch(error){fail(error);}}
+  else Promise.resolve().then(()=>typeof admission.prepareAndPublish==='function'?admission.prepareAndPublish(group,{signal:controller.signal},commit):Promise.resolve(admission.prepare(group,{signal:controller.signal})).then(commit)).catch(fail);
  }
  function remove(key){const item=pending.get(key);pending.delete(key);release(item);const old=visible.get(key);visible.delete(key);release(old);unavailable.delete(key);}
  function isRayReady(ray,limit=Infinity){
