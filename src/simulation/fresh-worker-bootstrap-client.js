@@ -18,12 +18,12 @@ export function repairSavedVillageInWorker(snapshot,catalog,{signal,workerFactor
  if(typeof snapshot!=='string'||!Array.isArray(catalog))return Promise.reject(TypeError('Invalid saved village request'));
  return requestBootstrap({kind:'repair-village',snapshot,catalog},{signal,workerFactory},result=>typeof result?.snapshot==='string');
 }
-export function prepareSavedWorkerCheckpointInWorker(snapshot,catalog,{signal,workerFactory=createWorker}={}){
- if(typeof snapshot!=='string'||!Array.isArray(catalog))return Promise.reject(TypeError('Invalid saved checkpoint request'));
- return requestBootstrap({kind:'saved-checkpoint',snapshot,catalog},{signal,workerFactory},result=>typeof result?.repaired==='boolean'&&typeof result.initial?.snapshot==='string'&&Array.isArray(result.initial.chunkKeys)&&!!result.initial.navigationView&&!!result.initial.nativeBootstrap);
+export function prepareSavedWorkerCheckpointInWorker(snapshot,catalog,{signal,workerFactory=createWorker,normalizeForStart=false}={}){
+ if(typeof snapshot!=='string'||!Array.isArray(catalog)||typeof normalizeForStart!=='boolean')return Promise.reject(TypeError('Invalid saved checkpoint request'));
+ return requestBootstrap({kind:'saved-checkpoint',snapshot,catalog,normalizeForStart},{signal,workerFactory},result=>typeof result?.repaired==='boolean'&&typeof result.initial?.snapshot==='string'&&Array.isArray(result.initial.chunkKeys)&&!!result.initial.navigationView&&!!result.initial.nativeBootstrap);
 }
-export function prepareSavedWorkerBootstrapInWorker(snapshot,catalog,{quality='media',signal,workerFactory=createWorker}={}){
- if(typeof snapshot!=='string'||!Array.isArray(catalog)||typeof quality!=='string')return Promise.reject(TypeError('Invalid saved worker request'));
+export function prepareSavedWorkerBootstrapInWorker(snapshot,catalog,{quality='media',signal,workerFactory=createWorker,normalizeForStart=false}={}){
+ if(typeof snapshot!=='string'||!Array.isArray(catalog)||typeof quality!=='string'||typeof normalizeForStart!=='boolean')return Promise.reject(TypeError('Invalid saved worker request'));
  const validPose=point=>Array.isArray(point)&&point.length===3&&point.every(Number.isFinite);
- return requestBootstrap({kind:'saved-bootstrap',snapshot,catalog,quality},{signal,workerFactory},result=>typeof result?.initial?.snapshot==='string'&&Array.isArray(result.initial.chunkKeys)&&result.initial.navigationView&&result.initial.nativeBootstrap&&validPose(result.pose?.eye)&&validPose(result.pose?.target));
+ return requestBootstrap({kind:'saved-bootstrap',snapshot,catalog,quality,normalizeForStart},{signal,workerFactory},result=>typeof result?.initial?.snapshot==='string'&&Array.isArray(result.initial.chunkKeys)&&result.initial.navigationView&&result.initial.nativeBootstrap&&validPose(result.pose?.eye)&&validPose(result.pose?.target));
 }

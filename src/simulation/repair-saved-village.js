@@ -4,6 +4,7 @@ import {savedNativeAuthorityOptions} from './native-authority-checkpoint.js';
 import {villageLayout,findVillageEntry} from '../world/villages.js';
 import {createSpatialGameSession} from '../world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../world/wild-engine/spatial-navigation-movement.js';
+import {normalizeWorkerStartupState} from './worker-startup-state.js';
 
 // Rebuild missing authored footprints and entries with the same native search
 // used by the legacy bootstrap. The authority verifies the saved topology.
@@ -32,9 +33,11 @@ export function repairSavedVillage(snapshot,catalog,{module=null}={}){
 
 // Run checkpoint validation and any spatial repair together in the bootstrap
 // Worker. The returned native description is still verified by the authority.
-export function prepareSavedWorkerCheckpoint(snapshot,catalog,{module=null}={}){
- if(typeof snapshot!=='string'||!Array.isArray(catalog))throw TypeError('Invalid saved worker checkpoint');
+export function prepareSavedWorkerCheckpoint(snapshot,catalog,{module=null,normalizeForStart=false}={}){
+ if(typeof snapshot!=='string'||!Array.isArray(catalog)||typeof normalizeForStart!=='boolean')throw TypeError('Invalid saved worker checkpoint');
  const original=savedNativeAuthorityOptions(snapshot),state=JSON.parse(snapshot),needsRepair=state.villages.some(village=>!village.entry||village.buildings.some(building=>building.kind!=='Zona común'&&building.footprint==null));
- if(!needsRepair)return {initial:original,repaired:false};
- const repaired=repairSavedVillage(snapshot,catalog,{module});return {initial:savedNativeAuthorityOptions(repaired),repaired:true};
+ if(!needsRepair&&!normalizeForStart)return {initial:original,repaired:false};
+ let source=needsRepair?repairSavedVillage(snapshot,catalog,{module}):snapshot;
+ if(normalizeForStart){const physical=!!JSON.parse(source).workerPhysicsCheckpoint,current=physical?deserializeConfirmedState(source):deserialize(source);normalizeWorkerStartupState(current);source=physical?serializeConfirmedState(current):serialize(current);}
+ return {initial:savedNativeAuthorityOptions(source),repaired:needsRepair};
 }
