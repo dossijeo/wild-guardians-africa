@@ -15,3 +15,5 @@ test('Worker presentation holds a bounded provisional pose until physical reconc
  assert.equal(manager.begin({kind:'castAttack',id:'a1',targetId:'a',selection:{}},state,()=>0),true);animal.magicDown={phase:'falling'};animal.magicImpact={at:2,impactAt:2.2};now=3000;
  const sample=manager.sample(animal,3,{holdUntilPhysical:true});assert.ok(sample);assert.equal(sample.elapsed,1.34);manager.end('a1');assert.equal(manager.sample(animal,3,{holdUntilPhysical:true}),null);
 });
+
+test('historical visual anchor is copied, validated and leaves simulation untouched',()=>{const manager=new ProvisionalBeastImpact({now:()=>0}),animal={id:'a',species:'hyena',x:0,z:0,status:'walking'},state={raid:{animals:[animal]}},original=structuredClone(state),command={kind:'castAttack',id:'a1',targetId:'a',selection:{}},anchor={x:4,y:2,z:3,yaw:1,at:5,horizon:6};assert.equal(manager.begin(command,state,()=>2,anchor),true);anchor.x=99;assert.equal(manager.byTarget.get('a').anchor.x,4);assert.deepEqual(state,original);manager.end('a1');assert.equal(manager.begin({...command,id:'bad'},state,()=>2,{...anchor,at:7}),false);assert.equal(manager.byTarget.size,0);});

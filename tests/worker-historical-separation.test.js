@@ -10,3 +10,6 @@ test('continuous body separation rejects crossing trajectories and stationary bo
 test('rejects discontinuous, untimed and over-budget traces',()=>{
  const a=actor('a',0,0,1,0),b=actor('b',0,2,1,2);a.segments[0].x0=2;assert.equal(certify([a,b],0,1),false);a.segments[0].x0=0;a.timed=false;assert.equal(certify([a,b],0,1),false);a.timed=true;assert.equal(certify([a,b],0,1,{maxComparisons:0}),false);
 });
+test('visual paths must match the authority at every recorded tick',()=>{
+ const a=actor('a',0,0,1,0),tickStates={complete:true,actors:[{actorId:'a',samples:[{at:0,x:0,z:0},{at:.5,x:.5,z:0},{at:1,x:1,z:0}]}]};assert.equal(certify([a],0,1,{tickStates}),true);tickStates.actors[0].samples[1].z=.1;assert.equal(certify([a],0,1,{tickStates}),false);tickStates.actors[0].samples[1].z=0;tickStates.complete=false;assert.equal(certify([a],0,1,{tickStates}),false);
+});

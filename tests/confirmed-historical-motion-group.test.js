@@ -6,3 +6,6 @@ test('a worker rejection or exception cancels the already installed animals befo
  assert.equal(group.start(preview),false);assert.deepEqual(events,['animal start','worker start','animal rollback']);events.length=0;
  workers.startHistoricalMotion=()=>{events.push('worker start');throw Error('failed');};assert.throws(()=>group.start(preview),/failed/);assert.deepEqual(events,['animal start','worker start','animal rollback','worker rollback']);
 });
+test('missing worker animation is rejected before mutating the animal roster',()=>{
+ let starts=0;const animals={startHistoricalMotion(){starts++;return true;}},workers={prepareHistoricalMotion(){return {ok:false,reason:'worker-animation',actorId:'w'};},startHistoricalMotion(){throw Error('must not start');}},group=createConfirmedHistoricalMotionGroup({animals,workers,getSupport:()=>({})});assert.equal(group.start({}),false);assert.equal(starts,0);
+});

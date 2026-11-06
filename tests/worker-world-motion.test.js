@@ -25,7 +25,7 @@ test('spatial evidence is bounded, revision-bound and fails closed on blocked se
 });
 test('separation evidence fails closed for a live gate or unknown physics',()=>{
  const revision={topology:0,chunks:0,terrain:0,payloads:0},worker={id:'w',x:0,z:0,status:'walking',radius:.28,path:[{x:1,z:0}]},game={elapsed:0,raid:{animals:[]},workers:[worker],structures:[]},options={spatialNavigation:{segmentClear:()=>true}};
- const capture=captureWorldMotion(game,()=>revision,()=>false,options);game.elapsed=1;movePath(worker,1,null,pathMotionClock(worker,0,1,1));assert.deepEqual(capture.finish().separationEvidence,{version:1,start:0,end:1,actors:1,gates:'none'});
+ const capture=captureWorldMotion(game,()=>revision,()=>false,options);game.elapsed=1;movePath(worker,1,null,pathMotionClock(worker,0,1,1));capture.sampleTick();assert.deepEqual(capture.finish().separationEvidence,{version:1,start:0,end:1,actors:1,gates:'none'});
  worker.path=[{x:2,z:0}];game.structures.push({gate:true,status:'intact'});const gated=captureWorldMotion(game,()=>revision,()=>false,options);game.elapsed=2;movePath(worker,1,null,pathMotionClock(worker,1,2,1));assert.equal(gated.finish().separationEvidence,undefined);
  game.structures=[];worker.path=[{x:3,z:0}];const unknown=captureWorldMotion(game,()=>revision,null,options);game.elapsed=3;movePath(worker,1,null,pathMotionClock(worker,2,3,1));assert.equal(unknown.finish().separationEvidence,undefined);
 });
