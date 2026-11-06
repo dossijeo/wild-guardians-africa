@@ -101,3 +101,12 @@ test('guardian consumes confirmed publication events even when snapshot history 
 });
 
 test('confirmed guardian uses shared time while provisional feedback uses real time',()=>{let now=0;const scene=new THREE.Scene(),state={elapsed:0,events:[],raid:{animals:[{id:'a',status:'walking'}]}},renderer={backend:{isWebGPUBackend:true}},confirmedClock=createConfirmedPresentationClock(0),aura=[],visual=createWebGpuGuardianAttack({scene,state,renderer,confirmedClock,clock:()=>now,loadModel:()=>new Promise(()=>{}),aura:plan=>aura.push(plan)}),command={kind:'castAttack',id:'c',targetId:'a',selection:{origin:{x:0,y:2,z:0},contact:{x:1,y:1,z:0}}};assert.equal(visual.begin(command),true);now=100;visual.tick();assert.ok(Math.abs(aura.at(-1).age-.1)<1e-8);state.elapsed=.1;confirmedClock.commit(.1);state.events.push({id:'e',type:'SpellActivated',kind:'attack',commandId:'c',targetId:'a',presentation:{elapsed:.1,...command.selection}});visual.sync();visual.tick();const confirmedAge=aura.at(-1).age;assert.equal(visual.status().active.provisional,false);state.elapsed=3;now=5000;visual.tick();assert.ok(visual.status().active);assert.equal(aura.at(-1).age,confirmedAge);confirmedClock.commit(.2);visual.tick();assert.ok(aura.at(-1).age>confirmedAge);assert.equal(visual.status().beamVisible,true);confirmedClock.commit(3);visual.tick();assert.equal(visual.status().active,null);visual.dispose();confirmedClock.dispose();});
+test('guardian uses confirmed lifecycle time and accepts legacy event timestamps',()=>{
+ for(const mode of ['timed','legacy','future']){
+  const scene=new THREE.Scene(),state={elapsed:10,events:[],raid:{animals:[{id:'a',status:'walking'}]}},confirmedClock=createConfirmedPresentationClock(10),aura=[],visual=createWebGpuGuardianAttack({scene,state,renderer:{backend:{isWebGPUBackend:true}},confirmedClock,clock:()=>0,loadModel:()=>new Promise(()=>{}),aura:plan=>{if(plan)aura.push(plan);}});
+  const event={id:'event-1',type:'SpellActivated',kind:'attack',commandId:'c',targetId:'a',presentation:{origin:{x:0,y:2,z:0},contact:{x:1,y:1,z:0},...(mode==='legacy'?{elapsed:9.8}:mode==='timed'?{elapsed:1}:{elapsed:9.8})}};
+  const facts=mode==='legacy'?[{kind:'event',eventId:event.id}]:[{kind:'event',eventId:event.id,at:mode==='future'?10.1:9.8}];visual.sync(facts,[event]);visual.tick();
+  if(mode==='future')assert.equal(visual.status().active,null);else{assert.equal(visual.status().active.id,'c');assert.ok(Math.abs(aura.at(-1).age-.2)<1e-8);}
+  visual.dispose();confirmedClock.dispose();
+ }
+});

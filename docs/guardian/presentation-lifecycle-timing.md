@@ -19,3 +19,9 @@ terreno y no autoriza reproducir trayectorias ni adelantar la presentación.
 Falta una línea temporal global y un horizonte seguro que coordinen todas esas
 dependencias. Las pruebas son de contrato y de autoridad local, no demuestran
 una mejora de rendimiento ni equivalencia visual en WebGPU.
+
+El guardián WebGPU utiliza el tiempo confirmado del diario para iniciar sus
+gestos `SpellActivated`; en publicaciones antiguas sin dicho tiempo conserva
+el del evento. Un hecho futuro no inicia una animación. La animación continúa
+limitada por el reloj confirmado, sin adelantar la simulación. La prueba cubre
+la selección del reloj y compatibilidad, no una partida visual integrada.
