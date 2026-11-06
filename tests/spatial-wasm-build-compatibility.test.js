@@ -7,6 +7,18 @@ import {serialize} from '../src/persistence/snapshots.js';
 import {createSimulationAuthority} from '../src/simulation/simulation-authority.js';
 
 const candidate=process.env.WILD_ENGINE_SPATIAL_SERVICES_WASM;
+test('rebuilt standalone engine preserves the existing export kinds and function arity',
+ {skip:!candidate&&'Select a rebuilt spatial WASM'},()=>{
+ const binaries=[new URL('../src/world/wild-engine/spatial-savanna.wasm',import.meta.url),candidate];
+ const modules=binaries.map(path=>new WebAssembly.Module(readFileSync(path)));
+ const imports={env:{emscripten_notify_memory_growth(){}}};
+ const instances=modules.map(module=>new WebAssembly.Instance(module,imports).exports);
+ const actualExports=new Map(WebAssembly.Module.exports(modules[1]).map(entry=>[entry.name,entry.kind]));
+ for(const {name,kind} of WebAssembly.Module.exports(modules[0])){
+  assert.equal(actualExports.get(name),kind,`export ${name}`);
+  if(kind==='function')assert.equal(instances[1][name].length,instances[0][name].length,`arity of ${name}`);
+ }
+});
 test('rebuilt standalone world preserves terrain and wall-route decisions',
  {skip:!candidate&&'Select a rebuilt spatial WASM'},()=>{
  const binaries=[new URL('../src/world/wild-engine/spatial-savanna.wasm',import.meta.url),candidate];
@@ -50,4 +62,44 @@ test('rebuilt engine preserves confirmed state and events during a real raid',
   }
   assert(sawRaid,'comparison reached a real raid');
  }finally{a.dispose();b.dispose();opening.session.dispose();}
+});
+
+test('a raid checkpoint can be restored across the versioned and rebuilt engines',
+ {skip:!candidate&&'Select a rebuilt spatial WASM'},async()=>{
+ const baseline=new WebAssembly.Module(readFileSync(new URL('../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
+ const rebuilt=new WebAssembly.Module(readFileSync(candidate));
+ const opening=await createSpatialCampaignOpening({seed:716,biome:'sabana',culture:'suajili',slotId:'wasm-build-checkpoint'});
+ opening.state.time=400;opening.state.elapsed=400;opening.state.initialPreparation=false;
+ opening.state.nightPlan={at:400,done:false,group:['warthog']};
+ const snapshot=serialize(opening.state),keys=[...opening.loaded.keys()];
+ const original=createSimulationAuthority(baseline,snapshot,keys),candidateRun=createSimulationAuthority(rebuilt,snapshot,keys);
+ const restored=[];
+ try{
+  for(let sequence=1;sequence<=40;sequence++){
+   const command={kind:'advance',sequence,seconds:.05,nightFastForward:true},expected=original.execute(command),actual=candidateRun.execute(command);
+   assert.equal(actual.snapshot,expected.snapshot,`before save at command ${sequence}`);
+   assert.deepEqual(actual.events,expected.events,`events before save at command ${sequence}`);
+  }
+  const saveCommand={kind:'snapshot',sequence:41,nativeAuthorityCheckpoint:true};
+  const expectedSave=original.execute(saveCommand),actualSave=candidateRun.execute(saveCommand);
+  assert.ok(JSON.parse(expectedSave.snapshot).raid?.animals?.length,'checkpoint includes an active raid');
+  assert.equal(actualSave.snapshot,expectedSave.snapshot);
+  assert.deepEqual(actualSave.raidWaitBindings,expectedSave.raidWaitBindings);
+  assert.deepEqual(actualSave.nativeAuthorityCheckpoint,expectedSave.nativeAuthorityCheckpoint);
+  // Restore the baseline checkpoint into both implementations and check the
+  // reconstructed native world before allowing either to advance.
+  for(const module of [baseline,rebuilt]){
+   const checkpoint=expectedSave.nativeAuthorityCheckpoint;
+   const authority=createSimulationAuthority(module,expectedSave.snapshot,checkpoint.chunkKeys,{raidWaitBindings:expectedSave.raidWaitBindings,navigationView:checkpoint.navigationView});
+   restored.push(authority);assert.equal(authority.verifyNativeBootstrap(checkpoint),true);
+  }
+  for(let sequence=1;sequence<=40;sequence++){
+   const command={kind:'advance',sequence,seconds:.05,nightFastForward:true},expected=restored[0].execute(command),actual=restored[1].execute(command);
+   assert.equal(actual.snapshot,expected.snapshot,`after restore at command ${sequence}`);
+   assert.deepEqual(actual.events,expected.events,`events after restore at command ${sequence}`);
+   const uninterrupted=original.execute({...command,sequence:41+sequence});
+   assert.equal(actual.snapshot,uninterrupted.snapshot,`restored state versus uninterrupted run at command ${sequence}`);
+   assert.deepEqual(actual.events,uninterrupted.events,`restored events versus uninterrupted run at command ${sequence}`);
+  }
+ }finally{for(const authority of restored)authority.dispose();original.dispose();candidateRun.dispose();opening.session.dispose();}
 });

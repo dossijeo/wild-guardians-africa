@@ -28,10 +28,36 @@ authority comparison matched snapshots and ordered events for 30 advance
 commands through a real single-animal raid. These are bounded tests, not full
 campaign or save compatibility validation.
 
-Do not replace the versioned WASM based on these tests alone. The local
-candidate adds the dynamic-body exports and `_initialize`, but lacks the
-versioned module's `setThrew` export. The repository has no direct reference
-to that export, but its external ABI compatibility has not been established.
-Toolchain parity, repeatable build output, complete ABI compatibility and
-deterministic campaign/save comparisons remain to be resolved. No performance
-benefit or production migration is claimed by this build correction.
+The build now explicitly retains `setThrew`, using Emscripten's own runtime
+implementation rather than a stub. It is part of Emscripten's exception and
+setjmp support; no direct use was found in this repository. A local 3.1.64
+candidate includes every versioned export with the same WebAssembly kind and
+JavaScript-observable function arity, as well as the new dynamic-body exports
+and `_initialize`. The compatibility test checks these properties, but does
+not establish full Wasm function signatures or external consumer compatibility.
+
+The corrected script run in Git Bash with local Emscripten 3.1.64 produced
+the same SHA-256 (`079e6a4057e61ff54636d0b5ab8b43ed1e6ef2f67867442f3f94bebd9b60f821`)
+as a separate invocation of the same compiler and flags. This does not
+establish reproducibility across toolchains or hosts. A further differential
+test saves during a real single-animal raid,
+restores the native checkpoint in both modules, and compares 40 subsequent
+advances with each other and with an uninterrupted baseline. No physics
+checkpoint, full campaign or broad save compatibility is established by that
+case.
+
+The existing scripted native campaign audit was run separately against the
+versioned module and the candidate with `QA_DAYS=3`, `QA_BIOME=manglares`
+and `tools/trees/audit_profile_campaign.mjs`. Both completed three nights;
+daily serialized-state, cumulative decision and selected per-tick hashes,
+and the final state hash matched for all 1,212 steps. This is the connected
+island recipe and the same legal player policy in each run. It does not
+exercise Rapier, graphics, full internal native state, other biomes, or a
+100-night campaign. The runs overlapped, so their timings are not used as a
+performance comparison. To reproduce, set `WILD_ENGINE_SPATIAL_SERVICES_WASM`
+to each module in turn and use a separate fresh `QA_OUTPUT` for each.
+
+Do not replace the versioned WASM based on these bounded tests alone. Complete
+ABI, deterministic campaign and save comparisons and full toolchain parity
+remain to be resolved. No performance benefit or production migration is
+claimed by this build correction.
