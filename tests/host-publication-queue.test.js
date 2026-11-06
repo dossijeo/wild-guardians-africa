@@ -5,7 +5,18 @@ import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {createSimulationAuthority} from '../src/simulation/simulation-authority.js';
+import {handoffConfirmedSnapshot,confirmedSnapshotFor} from '../src/simulation/confirmed-snapshot-handoff.js';
+import {createSnapshotPreparationCache} from '../src/simulation/main-thread-snapshot-transport.js';
 const packet=(sequence,events=[],physicsPose=null)=>({sequence,events,physicsPose,snapshot:String(sequence)});
+test('queued incremental publications retain their decoded base without materializing discarded snapshots',()=>{
+ const sent=[],cache=createSnapshotPreparationCache(),q=createHostPublicationQueue({session:'s',prepareState:cache.prepareState,send:value=>sent.push(value)});let materialized=0;const make=n=>{const state={slotId:'s',sequence:n,elapsed:n,padding:'x'.repeat(300)},publication={sequence:n,events:[],physicsPose:null,presentationWorkerHeadings:[]};Object.defineProperty(publication,'snapshot',{enumerable:true,get(){materialized++;return JSON.stringify(state);}});handoffConfirmedSnapshot(publication,state);return publication;};
+ q.publication(packet(1),true);q.publication(make(2),true);const chars=q.status().retained.snapshotChars;assert.equal(chars,JSON.stringify({slotId:'s',sequence:2,elapsed:2,padding:'x'.repeat(300)}).length);q.publication(make(3),true);assert.equal(materialized,0);q.ack(1);assert.equal(sent[1].publication.sequence,3);assert.equal(confirmedSnapshotFor(sent[1].publication).sequence,3);assert.equal(materialized,0);q.ack(3);
+});
+test('a folded background view preserves the decoded snapshot and ordered boundary',()=>{
+ const sent=[],cache=createSnapshotPreparationCache(),q=createHostPublicationQueue({session:'s',foldViews:true,prepareState:cache.prepareState,send:value=>sent.push(value)}),state={slotId:'s',sequence:9,elapsed:4,padding:'x'.repeat(200)};let materialized=0;
+ const tick={sequence:2,events:[],physicsPose:null,elapsed:4,pauses:[],saveAvailable:true};Object.defineProperty(tick,'snapshot',{enumerable:true,get(){materialized++;return JSON.stringify(state);}});handoffConfirmedSnapshot(tick,state);
+ q.publication(packet(1),true);q.publication(tick,true);q.publication({sequence:3,unchanged:true,slotId:'s',stateSequence:9,elapsed:4,pauses:[],saveAvailable:true,events:[]},false);assert.equal(materialized,0);q.ack(1);assert.equal(sent[1].firstSequence,2);assert.equal(sent[1].publication.sequence,3);assert.equal(confirmedSnapshotFor(sent[1].publication),state);assert.equal(materialized,0);q.ack(3);
+});
 test('actual authority result envelopes permit quiet advances to coalesce',()=>{
  const module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm')),state=deserialize(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString());state.pauses.push('menu');const keys=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)keys.push(`${x},${z}`);const authority=createSimulationAuthority(module,serialize(state),keys),sent=[],queue=createHostPublicationQueue({session:'s',send:value=>sent.push(value)});
  try{for(let sequence=1;sequence<=3;sequence++){const result=authority.execute({kind:'advance',sequence,seconds:.05,nightFastForward:false});assert.deepEqual(result.events,[]);queue.publication({kind:'result',session:'s',...result},true);}assert.equal(queue.status().queued,1);queue.ack(1);assert.equal(sent[1].firstSequence,2);assert.equal(sent[1].publication.sequence,3);assert.equal(sent[1].publication.kind,'result');}finally{authority.dispose();}
