@@ -12,7 +12,8 @@ export function estimateIdleAssetBytes(asset){
 
 export function createSharedIdleAssetBudget(maxBytes){
  if(!Number.isSafeInteger(maxBytes)||maxBytes<0)throw TypeError('Invalid idle asset budget');
- const idle=new Map();let bytes=0;
+ const idle=new Map();let bytes=0,limitBytes=maxBytes;
+ function trim(){while(bytes>limitBytes){const oldest=idle.keys().next().value;take(oldest);oldest.owner.onEvict(oldest.key);}}
  function take(record){if(!record||!idle.delete(record))return false;record.owner.records.delete(record.key);record.owner.bytes-=record.size;bytes-=record.size;return true;}
  return {
   createOwner(onEvict){
@@ -22,15 +23,17 @@ export function createSharedIdleAssetBudget(maxBytes){
     take(key){return take(owner.records.get(key));},
     retain(key,size){
      take(owner.records.get(key));
-     if(!Number.isSafeInteger(size)||size<=0||size>maxBytes){onEvict(key);return false;}
+     if(!Number.isSafeInteger(size)||size<=0||size>limitBytes){onEvict(key);return false;}
      const record={owner,key,size};owner.records.set(key,record);owner.bytes+=size;idle.set(record,true);bytes+=size;
-     while(bytes>maxBytes){const oldest=idle.keys().next().value;take(oldest);oldest.owner.onEvict(oldest.key);}
+     trim();
      return idle.has(record);
     },
     clear(){for(const record of [...owner.records.values()]){take(record);onEvict(record.key);}},
     status(){return {idle:owner.records.size,estimatedBytes:owner.bytes,maxBytes};},
    };
   },
+  setLimit(value){if(!Number.isSafeInteger(value)||value<0||value>maxBytes)throw TypeError('Invalid idle budget limit');limitBytes=value;trim();},
+  get limitBytes(){return limitBytes;},
   status(){return {idle:idle.size,estimatedBytes:bytes,maxBytes};},
  };
 }
