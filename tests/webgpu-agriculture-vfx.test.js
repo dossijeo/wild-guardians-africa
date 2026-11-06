@@ -9,6 +9,20 @@ import {VfxLibrary} from '../src/rendering/vfx.js';
 import {BuildingDestructionPass} from '../src/rendering/buildings.js';
 import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
 const catalogue=JSON.parse(readFileSync('public/content/vfx.json'));
+test('confirmed repair event drives worker dust even when absent from the state ring',async()=>{
+ const oldFetch=globalThis.fetch,oldBitmap=globalThis.createImageBitmap;
+ globalThis.fetch=async()=>({ok:true,json:async()=>catalogue,blob:async()=>new Blob(['x'])});
+ globalThis.createImageBitmap=async()=>({width:4096,height:2048,close(){}});
+ const state={time:30,elapsed:10.2,spells:[],events:[],structures:[],plants:[],tasks:[],workers:[]};
+ const effect=createWebGpuAgricultureVfx({scene:new THREE.Scene(),state,residency:{get:()=>null,surface:()=>0},includeWork:true});
+ try{
+  await effect.prepareAssets();
+  const repair={id:'event-1',type:'RepairApplied',presentation:{elapsed:10,x:2,z:3,yaw:.5}};
+  effect.sync([repair]);let dust=effect.status().active.find(item=>item.id==='repair/event-1');assert.ok(dust);assert.ok(Math.abs(dust.time-.2)<1e-8);
+  state.elapsed=10.4;effect.sync();dust=effect.status().active.find(item=>item.id==='repair/event-1');assert.ok(dust);assert.ok(Math.abs(dust.time-.4)<1e-8);
+  state.elapsed=20;effect.sync();assert.equal(effect.status().active.some(item=>item.id==='repair/event-1'),false);
+ }finally{effect.dispose();globalThis.fetch=oldFetch;globalThis.createImageBitmap=oldBitmap;}
+});
 test('work checkpoint restores and advances on confirmed terrain while visual terrain is pending',async()=>{
  const oldFetch=globalThis.fetch,oldBitmap=globalThis.createImageBitmap;globalThis.fetch=async()=>({ok:true,json:async()=>catalogue,blob:async()=>new Blob(['x'])});globalThis.createImageBitmap=async()=>({width:4096,height:2048,close(){}});
  const state={time:30,elapsed:1,spells:[],events:[],structures:[],plants:[{id:'p',x:0,z:0}],tasks:[{id:'t',targetId:'p',kind:'harvest'}],workers:[{id:'w',profile:'youngMale',status:'acting',taskId:'t',x:0,z:0,heading:0,actionRemaining:1}]},make=y=>{const mesh=new THREE.Mesh(new THREE.PlaneGeometry(48,48),new THREE.MeshBasicMaterial({side:THREE.DoubleSide}));mesh.rotation.x=-Math.PI/2;mesh.position.y=y;return mesh;},current=make(0),older=make(5);let visible=null;

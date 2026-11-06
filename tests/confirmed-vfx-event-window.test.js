@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createConfirmedVfxEventWindow} from '../src/rendering/confirmed-vfx-event-window.js';
+import {workVfxPlans} from '../src/rendering/work-vfx.js';
 
 const hit=(n,at=10)=>({id:`event-${n}`,type:'AnimalLogicalHit',attackId:`attack-${n}`,presentation:{elapsed:at,animal:{x:1,z:2},target:{x:0,z:0}}});
 test('retains an ordered complete batch beyond the 200-event ring and deduplicates',()=>{
@@ -18,4 +19,13 @@ test('the window follows simulation time across pauses and expires without reviv
 test('legacy unnumbered events remain scoped to the existing state ring',()=>{
  const window=createConfirmedVfxEventWindow({lifetime:4}),old={type:'AnimalLogicalHit',presentation:{elapsed:1}};
  assert.deepEqual(window.sync(1,[],[old]),[old]);assert.deepEqual(window.sync(1,[],[]),[]);
+});
+test('confirmed repair events retain simulation-time dust after the state ring trims them',()=>{
+ const window=createConfirmedVfxEventWindow({lifetime:4});
+ const repair={id:'event-2',type:'RepairApplied',presentation:{elapsed:10,x:2,z:3,yaw:.5}};
+ const events=window.sync(10.2,[hit(1,10),repair],[]),state={elapsed:10.2,workers:[],tasks:[],plants:[],structures:[],events};
+ assert.deepEqual(events.map(e=>e.id),['event-1','event-2']);
+ let plans=workVfxPlans(state);assert.equal(plans.length,1);assert.equal(plans[0].key,'repair/event-2');assert.ok(Math.abs(plans[0].time-.2)<1e-8);
+ state.elapsed=10.4;state.events=window.sync(10.4,[],[]);plans=workVfxPlans(state);assert.equal(plans.length,1);assert.ok(Math.abs(plans[0].time-.4)<1e-8);
+ assert.equal(window.sync(14,[],[repair]).length,0);
 });

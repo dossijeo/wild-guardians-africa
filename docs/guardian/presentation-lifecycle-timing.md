@@ -25,3 +25,5 @@ gestos `SpellActivated`; en publicaciones antiguas sin dicho tiempo conserva
 el del evento. Un hecho futuro no inicia una animación. La animación continúa
 limitada por el reloj confirmado, sin adelantar la simulación. La prueba cubre
 la selección del reloj y compatibilidad, no una partida visual integrada.
+
+La ventana WebGPU de efectos confirmados conserva también los hechos de reparación mientras su polvo sigue visible, incluso si el evento sale del historial corto del estado. Las pruebas usan el tiempo de simulación y el renderer simulado; falta comprobarlo en partida real y no se ha medido su coste.
