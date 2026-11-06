@@ -3,6 +3,43 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {openVisualStream} from '../src/simulation/visual-publication-stream.js';
 import {createPresentationRecoveryJournal} from '../src/simulation/presentation-recovery-journal.js';
+test('detached graphics stream releases its incremental base while the recovery journal remains intact',()=>{
+ const journal=createPresentationRecoveryJournal(),port={postMessage(){},start(){},close(){}},stream=openVisualStream(port,'s',()=>{},{diagnostics:true,incrementalTransport:true,recoveryJournal:journal,onCheckpointAcknowledged(){}});
+ const packet=(sequence,events=[])=>({sequence,snapshot:JSON.stringify({slotId:'s',sequence,actors:[{id:'a',value:'x'.repeat(4096)}]}),events,physicsPose:null});
+ try{
+  stream.publish({...packet(1),terrainCheckpoint:{sequence:1,chunks:[]}},true);
+  port.onmessage({data:{kind:'publicationAck',session:'s',sequence:1}});
+  assert.ok(stream.status().encoderRetainedBytes>0);
+  stream.publish(packet(2,[{id:'e2'}]),true);stream.detachForRecovery();
+  assert.equal(stream.status().encoderRetainedBytes,0);
+  stream.publish(packet(3,[{id:'e3'}]),true);
+  assert.equal(stream.status().encoderRetainedBytes,0);
+  assert.deepEqual(journal.snapshot().entries.map(item=>item.publication.events[0].id),['e2','e3']);
+ }finally{stream.close();journal.dispose();}
+});
+test('a failed recoverable stream releases its encoder without changing the journal',()=>{
+ const journal=createPresentationRecoveryJournal(),port={postMessage(){},start(){},close(){}},stream=openVisualStream(port,'s',()=>{},{diagnostics:true,incrementalTransport:true,recoveryJournal:journal,onCheckpointAcknowledged(){}});
+ const packet=(sequence,events=[])=>({sequence,snapshot:JSON.stringify({slotId:'s',sequence,actors:[{id:'a',value:'x'.repeat(4096)}]}),events,physicsPose:null});
+ try{
+  stream.publish({...packet(1),terrainCheckpoint:{sequence:1,chunks:[]}},true);
+  port.onmessage({data:{kind:'publicationAck',session:'s',sequence:1}});
+  stream.publish(packet(2,[{id:'e2'}]),true);
+  assert.ok(stream.status().encoderRetainedBytes>0);
+  stream.fail(Error('lost'));
+  assert.equal(stream.status().encoderRetainedBytes,0);
+  assert.equal(stream.status().recoveryFailure,'lost');
+  assert.deepEqual(journal.snapshot().entries.map(item=>item.publication.events[0].id),['e2']);
+ }finally{stream.close();journal.dispose();}
+});
+test('closing or failing a graphics stream releases its incremental base',()=>{
+ for(const terminal of ['close','fail']){
+  const port={postMessage(){},start(){},close(){}},stream=openVisualStream(port,'s',()=>{},{diagnostics:true,incrementalTransport:true});
+  stream.publish({sequence:1,snapshot:JSON.stringify({actors:[{id:'a',value:'x'.repeat(4096)}]}),events:[],physicsPose:null},true);
+  assert.ok(stream.status().encoderRetainedBytes>0);
+  if(terminal==='close')stream.close();else stream.fail(Error('lost'));
+  assert.equal(stream.status().encoderRetainedBytes,0);
+ }
+});
 test('byte pressure blocks dispatch before the queue limit and resumes on acknowledgement',()=>{
  const sent=[],port={postMessage:value=>sent.push(value),start(){},close(){}},stream=openVisualStream(port,'s',()=>{},{maxRetainedBytes:4096,highWatermarkBytes:1024});stream.publish({sequence:1,snapshot:'a',events:[],physicsPose:null},true);stream.publish({sequence:2,snapshot:'b',events:[{id:'e'}],physicsPose:null,extra:new Uint8Array(1300)},true);assert.equal(stream.blocked(),true);assert.equal(stream.status().queued,1);port.onmessage({data:{kind:'publicationAck',session:'s',sequence:1}});assert.equal(stream.blocked(),false);assert.equal(sent[1].publication.events[0].id,'e');port.onmessage({data:{kind:'publicationAck',session:'s',sequence:2}});stream.close();
 });

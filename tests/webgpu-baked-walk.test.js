@@ -18,6 +18,19 @@ test('a live real rig remains unchanged until its walking alternative is admitte
  const before=originals.map(mesh=>mesh.visible);let finish;const pending=actor.installBakedWalk(bake,{pipelineAdmission:{prepare(){throw Error('non-atomic admission used');},prepareAndPublish(_root,{include},publish){assert.equal(include.length,originals.length*2);return new Promise(resolve=>{finish=()=>{publish();resolve();};});}}});assert.deepEqual(originals.map(mesh=>mesh.visible),before);assert.equal(actor.isBakedWalking(),false);finish();assert.equal(actor.isBakedWalking(),true);assert.ok(originals.every(mesh=>!mesh.visible));assert.equal(await pending,true);actor.dispose();bake.dispose();
 });
 
+test('waiting animals retain the zero-phase baked pose while confirmed time advances',async()=>{
+ const base=new URL('../public/content/gpu-walk/hyena/walking',import.meta.url),meta=JSON.parse(await readFile(new URL(base.href+'.json'))),bytes=await readFile(new URL(base.href+'.bin')),bake=createBakedWalkTexture(meta,bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength));
+ const asset=await actorAsset('public'+ANIMAL_ACTIONS.animals.hyena.url),model=asset.scene,scene=new Scene(),animal={id:'a',species:'hyena',status:'waiting',path:null,x:0,z:0},state={elapsed:.3,raid:{animals:[animal]}},clock=createConfirmedPresentationClock(.3),renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:()=>new MeshStandardNodeMaterial()}},assetBank={async acquire(){return {model,clips:prepareAnimalClips(asset.animations),release(){}};}};
+ const actor=await createWebGpuConfirmedAnimal({scene,residency:{get:()=>null},state,actorId:'a',renderer,assetBank,confirmedClock:clock});
+ try{
+  await actor.installBakedWalk(bake,{pipelineAdmission:{prepare:async()=>{}}});assert.equal(actor.isBakedWalking(),true);
+  const snapshot=()=>{const restore=actor.preparePick(),positions=[];actor.root.traverse(node=>{if(node.isMesh&&node.visible&&!node.isSkinnedMesh&&node.geometry.attributes.position)positions.push(Array.from(node.geometry.attributes.position.array));});restore();return positions;};
+  const before=snapshot();assert.ok(before.length);clock.commit(.8);state.elapsed=.8;actor.update();assert.equal(actor.isBakedWalking(),true);assert.deepEqual(snapshot(),before);
+  animal.status='walking';animal.motionPhase=.25;actor.update();assert.equal(actor.isBakedWalking(),true);assert.notDeepEqual(snapshot(),before);
+  animal.status='attacking';animal.animation='Weapon_Combo';animal.attackId='hit';animal.attackDuration=1;animal.attackRemaining=.7;actor.update();assert.equal(actor.isBakedWalking(),false);
+ }finally{actor.dispose();clock.dispose();bake.dispose();}
+});
+
 test('walking replacement keeps the real rig until its updated state has a valid ticket',async()=>{
  const meta=JSON.parse(await readFile(new URL('../public/content/gpu-walk/hyena/walking.json',import.meta.url))),bytes=await readFile(new URL('../public/content/gpu-walk/hyena/walking.bin',import.meta.url)),bake=createBakedWalkTexture(meta,bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength)),asset=await actorAsset('public'+ANIMAL_ACTIONS.animals.hyena.url),scene=new Scene(),model=asset.scene,originals=[];model.traverse(node=>{if(node.isSkinnedMesh)originals.push(node);});
  const game={elapsed:.3,raid:{animals:[{id:'a',species:'hyena',status:'walking',x:.2,z:.2}]}},renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:()=>new MeshStandardNodeMaterial()}},assetBank={async acquire(){return {model,clips:prepareAnimalClips(asset.animations),release(){}};}},actor=await createWebGpuConfirmedAnimal({scene,residency:{get:()=>null},state:game,actorId:'a',renderer,assetBank}),requests=[],turn=()=>new Promise(resolve=>setImmediate(resolve));
