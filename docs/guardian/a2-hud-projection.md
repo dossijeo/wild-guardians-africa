@@ -19,14 +19,16 @@ La proyección incluye también los campos usados por las voces de bestias y
 trabajadores, los contactos de locomoción y los sonidos de agricultura. El
 cliente conserva identidades de actores, tareas y objetivos entre publicaciones
 y retira las desaparecidas; así las comprobaciones asíncronas de vigencia no se
-cancelan por recibir un clon. La música y el procesamiento de eventos aún
-consumen el estado anterior. Las pruebas comparan señales y cambios de
-identidad. Una prueba ejecuta además el flujo completo `updateGameAudio` con
+cancelan por recibir un clon. La música, el ambiente, los desbloqueos y el
+procesamiento de eventos también usan esa vista en el perfil Worker; conserva
+el historial de eventos para la deduplicación y los objetivos para invalidar
+magias pendientes. Las pruebas comparan señales y cambios de identidad. Una
+prueba ejecuta además el flujo completo `updateGameAudio` con
 `AudioSystem` real durante incursión, llegada, trabajo y pausa y compara ambas
 rutas; los recursos de audio están simulados y no prueba sonido en navegador.
 
 Esto no elimina todavía el snapshot completo: se sigue transfiriendo y usando
-para verificar la proyección y para tutorial, selección, comandos, audio,
+para verificar la proyección y para tutorial, selección, comandos,
 notificaciones y guardado. El host y el cliente aún recorren datos; no se ha
 medido un ahorro de CPU o tráfico ni una partida integrada. La migración de
 esos consumidores y el protocolo incremental en origen siguen pendientes.
