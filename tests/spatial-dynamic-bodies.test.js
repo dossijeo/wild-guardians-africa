@@ -1,5 +1,20 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';
 const binary=process.env.WILD_ENGINE_SPATIAL_SERVICES_WASM;
+test('standalone spatial services initialize C++ globals before body registry use',
+ {skip:!binary&&'Build and select a candidate WASM'},()=>{
+ const module=new WebAssembly.Module(readFileSync(binary));
+ const w=new WebAssembly.Instance(module,{env:{emscripten_notify_memory_growth(){}}}).exports;
+ assert.equal(typeof w._initialize,'function',
+  'a standalone reactor must export its C++ initializer');
+ w._initialize();w.spatial_bodies_reset();
+ // Crossing the index threshold causes unordered maps and sets to rehash.
+ // Without global constructors their load factors are zero and this traps.
+ for(let id=1;id<=128;id++)
+  assert.equal(w.spatial_body_upsert(id,id*3,0,.5,0,1),1);
+ assert.equal(w.spatial_body_count(),128);
+ assert.equal(w.spatial_body_segment_clear(1,3,0,6,0,1),0);
+ w.spatial_bodies_reset();assert.equal(w.spatial_body_count(),0);
+});
 test('native dynamic body registry retains ordered updates and clears', {skip:!binary&&'Build and select a candidate WASM'},()=>{
  const mod=new WebAssembly.Module(readFileSync(binary));const instance=new WebAssembly.Instance(mod,{env:{emscripten_notify_memory_growth(){}}});const w=instance.exports;w._initialize?.();
  const query=(x,z,r)=>{const n=w.spatial_bodies_near(x,z,r);assert.ok(n>=0);return Array.from(new Float64Array(w.memory.buffer,w.spatial_bodies_result_ptr(),n*6));};
