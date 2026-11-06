@@ -1,3 +1,4 @@
+import {auxiliaryPassRecipe} from './webgpu-material-graph-catalog.js';
 import {FloatType,NearestFilter,RedFormat,RenderTarget,Vector2} from 'three';
 import {MeshBasicNodeMaterial,QuadMesh} from 'three/webgpu';
 import {Fn,clamp,ivec2,min,screenCoordinate,texture,textureLoad,uniform,vec4} from 'three/tsl';
@@ -30,7 +31,7 @@ export function createWebGpuHiZHierarchy(depth,width,height,{maxLevels=8}={}){
  const sizes=hiZLevelSizes(width,height,{maxLevels}),levels=[];let source=depth,sourceWidth=width,sourceHeight=height,closed=false,admissionOwner=null,preparing=false,prepared=false;
  try{for(const [index,size] of sizes.entries()){
   const target=new RenderTarget(size.width,size.height,{format:RedFormat,type:FloatType,minFilter:NearestFilter,magFilter:NearestFilter,depthBuffer:false,stencilBuffer:false,generateMipmaps:false});
-  const material=new MeshBasicNodeMaterial({toneMapped:false,depthTest:false,depthWrite:false});
+  const material=new MeshBasicNodeMaterial(auxiliaryPassRecipe('hiz').structural.state);
   material.outputNode=hiZReductionNode(texture(source),uniform(new Vector2(sourceWidth,sourceHeight)),{depthSource:index===0});
   levels.push({target,material,quad:new QuadMesh(material)});source=target.texture;sourceWidth=size.width;sourceHeight=size.height;
  }}catch(error){for(const level of levels){level.material.dispose();level.target.dispose();}throw error;}
