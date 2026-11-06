@@ -4,6 +4,16 @@ import {createWebGpuWorldClient} from '../src/rendering/webgpu-world-client.js';
 import {webGpuWorldOptions} from '../src/app/webgpu-world-options.js';
 import {MAX_PENDING_PRESENTATION_INPUTS} from '../src/rendering/presentation-input-limits.js';
 function setup(options={}){const worker={messages:[],postMessage(message,transfer){this.messages.push({message,transfer});},terminate(){this.terminated=true;}},ports=[],client=createWebGpuWorldClient({canvas:{transferControlToOffscreen:()=>({canvas:true})},session:'s',snapshot:'{}',...options,workerFactory:()=>worker,channelFactory:()=>{const a={close(){this.closed=true;}},b={close(){this.closed=true;}};ports.push(a,b);return {port1:a,port2:b};}});return {worker,ports,client};}
+test('guardian presence is delivered only for a live graphical Worker and valid coordinates',async()=>{
+ const sounds=[],{client,worker}=setup({onGuardianPresence:(id,origin)=>sounds.push({id,origin})});
+ const send=(id,origin)=>worker.onmessage({data:{kind:'guardianPresence',id,origin}});
+ send('spirit_appear',{x:1,y:2,z:3});assert.equal(sounds.length,0);
+ worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await client.ready;
+ send('spirit_appear',{x:1,y:2,z:3});send('spirit_disappear',{x:1,y:2,z:3});
+ send('invalid',{x:1,y:2,z:3});send('spirit_appear',{x:NaN,y:2,z:3});
+ assert.deepEqual(sounds.map(sound=>sound.id),['spirit_appear','spirit_disappear']);
+ client.dispose();send('spirit_appear',{x:1,y:2,z:3});assert.equal(sounds.length,2);
+});
 test('the in-game diagnostic profile reaches the graphical worker for every baked species',()=>{const profile=webGpuWorldOptions({params:new URLSearchParams('qa-webgpu-baked-walking'),state:{raid:null},field:{},dev:true}),{client,worker}=setup({presentationCapabilities:profile.presentationCapabilities});assert.equal(worker.messages[0].message.presentationCapabilities.bakedWalking,true);client.ready.catch(()=>{});client.dispose();});
 test('shutdown terminates an unresponsive worker without waiting on the caller',()=>{const original=globalThis.setTimeout;let expire;globalThis.setTimeout=(callback,delay)=>{assert.equal(delay,5000);expire=callback;return 1;};try{const {client,worker}=setup();client.ready.catch(()=>{});client.dispose();assert.equal(client.status().phase,'closed');assert.equal(worker.terminated,undefined);expire();assert.equal(worker.terminated,true);}finally{globalThis.setTimeout=original;}});
 test('ordered presentation input is available through an explicit non-QA capability',async()=>{const disabled=setup();disabled.worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await disabled.client.ready;await assert.rejects(disabled.client.submitPresentationInput(1,{kind:'castAttack'}),/Invalid/);disabled.client.dispose();const {client,worker}=setup({presentationInputs:true});assert.equal(worker.messages[0].message.presentationInputs,true);worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await client.ready;const command={kind:'castAttack',id:'attack',guardianContext:{epoch:'e'}},pending=client.submitPresentationInput(3,command),sent=worker.messages.at(-1).message;assert.equal(sent.kind,'presentation-input');assert.equal(sent.inputId,3);worker.onmessage({data:{kind:'presentation-result',id:sent.id,result:{sequence:7,value:true}}});assert.deepEqual(await pending,{sequence:7,value:true});client.dispose();});
