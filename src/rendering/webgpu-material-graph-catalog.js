@@ -47,13 +47,13 @@ export function structureColorGraph(components,texture=null){
 // material/pass state while its underlying color graph may be shared.
 export function waterColorRecipe({offset,palette,sun=null,shadowNode=null,globalSurface=false,biome=null,clip=false,reflection=false}={}){
  if(!Array.isArray(offset)||offset.length!==2||!offset.every(Number.isFinite)||!Array.isArray(palette)||palette.some(rgb=>!Array.isArray(rgb)||rgb.length!==3||!rgb.every(Number.isFinite))||sun!==null&&!sun?.isDirectionalLight||shadowNode!==null&&!shadowNode?.isShadowNode||typeof globalSurface!=='boolean'||typeof clip!=='boolean'||typeof reflection!=='boolean')throw TypeError('Invalid water color recipe');
- const structural=Object.freeze({family:'water-color',sunId:sun?.uuid??null,shadowId:shadowNode?.uuid??null,globalSurface,biome,reflection,clip,embeddedOffset:Object.freeze([...offset]),embeddedPalette:Object.freeze(palette.map(rgb=>Object.freeze([...rgb])))});
- const graphKey=JSON.stringify([structural.family,offset,palette,structural.sunId,structural.shadowId,globalSurface,biome,reflection]);return Object.freeze({structural,dynamic:waterDynamic,passes:inheritedPasses,graphKey,key:JSON.stringify([graphKey,clip])});
+ const structural=Object.freeze({family:'water-color',sunId:sun?.uuid??null,shadowId:shadowNode?.uuid??null,globalSurface,biome,reflection,clip,state:Object.freeze({side:DoubleSide,alphaTest:clip ? .35 : 0,toneMapped:false}),embeddedOffset:Object.freeze([...offset]),embeddedPalette:Object.freeze(palette.map(rgb=>Object.freeze([...rgb])))});
+ const graphKey=JSON.stringify([structural.family,offset,palette,structural.sunId,structural.shadowId,globalSurface,biome,reflection]);return Object.freeze({structural,dynamic:waterDynamic,passes:Object.freeze({color:clip?'chunk-clip':'water-color',depth:clip?'color-pass-chunk-clip':'color-pass',shadow:'fluid-mesh-does-not-cast',reflection:'fluid-excluded'}),graphKey,key:JSON.stringify([graphKey,clip])});
 }
 
 export function lavaColorRecipe({offset,palette,clip=false}={}){
  if(!Array.isArray(offset)||offset.length!==2||!offset.every(Number.isFinite)||!Array.isArray(palette)||palette.some(rgb=>!Array.isArray(rgb)||rgb.length!==3||!rgb.every(Number.isFinite))||typeof clip!=='boolean')throw TypeError('Invalid lava color recipe');
- const structural=Object.freeze({family:'lava-color',clip,embeddedOffset:Object.freeze([...offset]),embeddedPalette:Object.freeze(palette.map(rgb=>Object.freeze([...rgb])))}),graphKey=JSON.stringify([structural.family,offset,palette]);return Object.freeze({structural,dynamic:Object.freeze(['clock']),passes:inheritedPasses,graphKey,key:JSON.stringify([graphKey,clip])});
+ const structural=Object.freeze({family:'lava-color',clip,state:Object.freeze({side:DoubleSide,alphaTest:clip ? .35 : 0,toneMapped:false}),embeddedOffset:Object.freeze([...offset]),embeddedPalette:Object.freeze(palette.map(rgb=>Object.freeze([...rgb])))}),graphKey=JSON.stringify([structural.family,offset,palette]);return Object.freeze({structural,dynamic:Object.freeze(['clock']),passes:Object.freeze({color:clip?'chunk-clip':'lava-color',depth:clip?'color-pass-chunk-clip':'color-pass',shadow:'fluid-mesh-does-not-cast',reflection:'fluid-excluded'}),graphKey,key:JSON.stringify([graphKey,clip])});
 }
 
 export function beastToonRecipe({fur=false,shadow=false}={}){

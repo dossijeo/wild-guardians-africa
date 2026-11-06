@@ -13,7 +13,7 @@ const graphs=new WeakMap();
 export function createWebGpuLavaMaterial({color,seed,clockNode,clip=true}={}){
  if(typeof color!=='string'||!/^#[0-9a-f]{6}$/i.test(color)||!clockNode?.isNode||typeof clip!=='boolean')throw TypeError('Invalid lava material');
  const offset=waterSeed(seed),palette=waterPalette(color,true);
- let byParameters=graphs.get(clockNode);if(!byParameters){byParameters=new Map();graphs.set(clockNode,byParameters);}const key=lavaColorRecipe({offset,palette,clip}).graphKey;let colorNode=byParameters.get(key);
+ let byParameters=graphs.get(clockNode);if(!byParameters){byParameters=new Map();graphs.set(clockNode,byParameters);}const recipe=lavaColorRecipe({offset,palette,clip}),key=recipe.graphKey;let colorNode=byParameters.get(key);
  if(!colorNode){
  const lava=Fn(()=>{
   const t=clockNode.mul(WATER_DEFAULTS.speed).toVar(),p=positionWorld.zx.mul(vec2(.22,.45)).mul(WATER_DEFAULTS.scale*4).toVar();
@@ -30,6 +30,6 @@ export function createWebGpuLavaMaterial({color,seed,clockNode,clip=true}={}){
  });
  colorNode=lava();byParameters.set(key,colorNode);
  }
- const material=new MeshBasicNodeMaterial({side:THREE.DoubleSide,alphaTest:clip ? .35 : 0,toneMapped:false});material.colorNode=colorNode;if(clip)material.opacityNode=chunkClipOpacity;return material;
+ const material=new MeshBasicNodeMaterial(recipe.structural.state);material.colorNode=colorNode;if(clip)material.opacityNode=chunkClipOpacity;return material;
 }
 export function lavaClock(initial=0){if(!Number.isFinite(initial)||initial<0)throw TypeError('Invalid lava clock');return uniform(initial);}
