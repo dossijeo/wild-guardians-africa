@@ -6,7 +6,20 @@ import {createWebGpuAnimalRoster} from '../src/rendering/webgpu-animal-roster.js
 import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
 import {MeshBasicNodeMaterial} from 'three/webgpu';
 import {createConfirmedHistoricalClock} from '../src/rendering/confirmed-historical-clock.js';
+import {beginWebGpuGuardianImpact} from '../src/rendering/webgpu-guardian-impact.js';
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
+test('a failed impact start rolls back the provisional guardian gesture',()=>{
+ const calls=[],guardian={begin:()=>{calls.push('begin');return true;},resolve:(id,accepted)=>calls.push([id,accepted])},roster={canBeginImpact:()=>true,beginImpact:()=>false};
+ assert.equal(beginWebGpuGuardianImpact(guardian,roster,{id:'attack'}),false);assert.deepEqual(calls,['begin',['attack',false]]);
+});
+test('guardian gesture is not started for a physically down or pending visual target',async()=>{
+ const animal={id:'a',species:'hyena',status:'walking',x:2,z:3,radius:.7},state={elapsed:10,raid:{animals:[animal]}},calls=[],roster=createWebGpuAnimalRoster({scene:{},residency:{get:()=>null},state,assetBank:{tick(){},dispose(){}},createAnimal:()=>({update(){},dispose(){}})}),guardian={begin(command){calls.push(['begin',command.id]);return true;},resolve(id,accepted){calls.push(['resolve',id,accepted]);}};
+ const command={kind:'castAttack',id:'one',targetId:'a',selection:{origin:{x:0,y:1,z:0},contact:{x:2,y:1,z:3}}};
+ try{roster.sync();await flush();roster.setPoses(new Map([['a',{actorId:'a',active:true}]]));assert.equal(beginWebGpuGuardianImpact(guardian,roster,command),false);assert.deepEqual(calls,[]);
+  roster.setPoses(new Map());assert.equal(beginWebGpuGuardianImpact(guardian,roster,command),true);assert.equal(beginWebGpuGuardianImpact(guardian,roster,{...command,id:'two'}),false);assert.deepEqual(calls,[['begin','one']]);
+  roster.resolveImpact('one',false);roster.setPoses(new Map([['a',{actorId:'a',active:true,visualTransition:'recovery-exit'}]]));assert.equal(beginWebGpuGuardianImpact(guardian,roster,{...command,id:'three'}),true);assert.deepEqual(calls,[['begin','one'],['begin','three']]);
+ }finally{roster.dispose();}
+});
 test('multiple historical rigs start and invalidate together without modifying shared material',async()=>{
  const scene=new Scene(),state={elapsed:5,raid:{animals:['a','b'].map((id,i)=>({id,species:'hyena',status:'walking',motionPhase:0,x:i*3,z:0}))}},clock=createConfirmedHistoricalClock({initialElapsed:5}),source=new MeshBasicNodeMaterial(),geometry=new BoxGeometry(),roots=new Map(),renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:material=>material.clone()}},bank={tick(){},dispose(){}};
  const roster=createWebGpuAnimalRoster({scene,residency:{},state,renderer,assetBank:bank,pipelineAdmission:{prepare:async()=>{}},bakedWalkBank:{get:async()=>({meta:{species:'hyena'}})},experimentalHistoricalMotion:{actorIds:['a','b'],clock},createAnimal:({actorId})=>{const root=new Group();root.position.set(actorId==='a'?0:3,2,0);root.add(new Mesh(geometry,source));scene.add(root);roots.set(actorId,root);return {root,update(){root.visible=true;},isBakedWalking:()=>true,isPhysical:()=>false,installBakedWalk:async()=>false,dispose(){root.removeFromParent();}};}});

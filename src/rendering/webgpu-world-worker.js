@@ -4,6 +4,7 @@ import {respondToWebGpuPreparation} from './webgpu-preparation-request.js';
 import {createWebGpuSurfaceOwner} from './webgpu-surface-owner.js';
 import {runWebGpuPreview} from './webgpu-preview-request.js';
 import {createTemporalRecoveryReceiver} from './temporal-recovery-receiver.js';
+import {beginWebGpuGuardianImpact} from './webgpu-guardian-impact.js';
 
 // Experimental presentation worker; it cannot advance the simulation.
 const owner=createWebGpuSurfaceOwner();let phase='new',surface=null,frame=null,latestCamera=null,latestSize=null,firstFrame=false,actorTextured=false,actorTextureError=null,guardianError=null,inspectWorkerState=false,workRecovery=false,recoveryEnabled=false,recoveryPort=null,recoverySession=null,recoveryId=0,recoveryStaged=[],recoveryEvents=[],temporalRecovery=null,qaFrameTracking=false,presentationInputsEnabled=false,qaFrameSequence=-1,qaFrameTerrain=-1,qaFrameSelectable=-1,latestCameraVersion=0,qaFrameCameraVersion=-1,latestViewportVersion=0,qaFrameViewportVersion=-1,guardianGuideGeneration=0,presentationHidden=false;
@@ -61,7 +62,7 @@ self.onmessage=async({data})=>{try{
  if(data.kind==='cropBegin'){surface?.timelinePump?.suspendHistorical('input');const begun=runWebGpuPreview({resource:'crop-preview',begin:()=>surface?.crops?.beginProvisional(data.id,data.species,data.x,data.z),report:notice=>postMessage({kind:'resourceError',...notice})});if(!begun)surface?.crops?.abandonProvisional(data.id);return;}
  if(data.kind==='cropConfirm'){surface?.crops?.confirmProvisional(data.id,data.targetId);return;}
  if(data.kind==='cropReject'){surface?.crops?.rejectProvisional(data.id);return;}
- if(data.kind==='guardianBegin'){surface?.timelinePump?.suspendHistorical('input');if(surface?.guardianAttack?.begin(data.command))surface.animalRoster?.beginImpact(data.command);return;}
+ if(data.kind==='guardianBegin'){surface?.timelinePump?.suspendHistorical('input');beginWebGpuGuardianImpact(surface?.guardianAttack,surface?.animalRoster,data.command);return;}
  if(data.kind==='guardianResolve'){surface?.guardianAttack?.resolve(data.id,data.accepted);surface?.animalRoster?.resolveImpact(data.id,data.accepted,data.sequence);return;}
  throw Error('Unknown world worker message');
  }catch(error){fail(error);}};
