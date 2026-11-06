@@ -8,6 +8,7 @@ test('wire and legacy checkpoint publication identities use disjoint namespaces'
  for(const epoch of [null,'checkpoint:1','wire:null','session:1',''])assert.notEqual(epochs.live(epoch),first);
  assert.equal(epochs.live('session:1'),epochs.live('session:1'));
  assert.notEqual(epochs.live(null),epochs.live('null'));
+ assert.equal(epochs.order(),1);assert.equal(epochs.order(),2);
 });
 test('coordinated chunk rejects missing or malformed biome data before terrain publication',()=>{
  assert.throws(()=>assertCoordinatedChunkInstances({}),/biome instances/);assert.throws(()=>assertCoordinatedChunkInstances({instances:[[]]}),/biome instances/);

@@ -17,9 +17,9 @@ export function createTerrainAdmission({scene,admission,coordinator=null,onError
  function rollback(record){for(const mesh of record.meshes)if(mesh.parent===scene)mesh.removeFromParent();}
  function attach(record){try{for(const mesh of record.meshes)scene.add(mesh);}catch(error){rollback(record);throw error;}}
  function finalize(key,record){const old=visible.get(key);record.published=true;record.withdraw=null;visible.set(key,record);pending.delete(key);unavailable.delete(key);let notified=false;return ()=>{if(notified)return;notified=true;try{release(old);}catch(error){try{onError(error);}catch{}}try{onPublished(key);}catch(error){try{onError(error);}catch{}}};}
- function publish(key,group,meshes,dispose,{revision=null,epoch=null}={}){
+ function publish(key,group,meshes,dispose,{revision=null,epoch=null,publicationOrder=undefined}={}){
   if(closed)throw Error('Terrain admission closed');
-  if(coordinator&&(!Number.isSafeInteger(revision)||revision<0||epoch!==null&&(typeof epoch!=='string'||!epoch)))throw TypeError('Invalid coordinated terrain identity');
+  if(coordinator&&(!Number.isSafeInteger(revision)||revision<0||epoch!==null&&(typeof epoch!=='string'||!epoch)||publicationOrder!==undefined&&(!Number.isSafeInteger(publicationOrder)||publicationOrder<1)))throw TypeError('Invalid coordinated terrain identity');
   const previous=pending.get(key);if(previous){pending.delete(key);release(previous);}
   const controller=new AbortController(),record={group,meshes,dispose,controller,released:false};pending.set(key,record);unavailable.add(key);
   const commit=()=>{
@@ -32,7 +32,7 @@ export function createTerrainAdmission({scene,admission,coordinator=null,onError
   const fail=error=>{if(closed||pending.get(key)!==record||controller.signal.aborted)return;pending.delete(key);release(record);onError(error);};
   const current=()=>!closed&&pending.get(key)===record&&!controller.signal.aborted;
   const assertCurrent=()=>{if(!current())throw new DOMException('Terrain admission cancelled','AbortError');};
-  if(coordinator){let attached=false;const participant={key,revision,epoch,side:'terrain',object:group,signal:controller.signal,attach(){assertCurrent();if(attached)throw Error('Terrain already attached');try{attach(record);attached=true;assertCurrent();}catch(error){rollback(record);attached=false;throw error;}},rollback(){if(attached&&!record.published){rollback(record);attached=false;}},finalize(){assertCurrent();if(!attached)throw Error('Terrain not attached');return finalize(key,record);},onError:fail};try{const withdraw=coordinator.offer(participant);if(typeof withdraw!=='function')throw TypeError('Invalid terrain withdrawal');if(record.released)withdraw();else if(!record.published)record.withdraw=withdraw;}catch(error){fail(error);}}
+  if(coordinator){let attached=false;const participant={key,revision,epoch,publicationOrder,side:'terrain',object:group,signal:controller.signal,attach(){assertCurrent();if(attached)throw Error('Terrain already attached');try{attach(record);attached=true;assertCurrent();}catch(error){rollback(record);attached=false;throw error;}},rollback(){if(attached&&!record.published){rollback(record);attached=false;}},finalize(){assertCurrent();if(!attached)throw Error('Terrain not attached');return finalize(key,record);},onError:fail};try{const withdraw=coordinator.offer(participant);if(typeof withdraw!=='function')throw TypeError('Invalid terrain withdrawal');if(record.released)withdraw();else if(!record.published)record.withdraw=withdraw;}catch(error){fail(error);}}
   else Promise.resolve().then(()=>typeof admission.prepareAndPublish==='function'?admission.prepareAndPublish(group,{signal:controller.signal},commit):Promise.resolve(admission.prepare(group,{signal:controller.signal})).then(commit)).catch(fail);
  }
  function remove(key){const item=pending.get(key);pending.delete(key);release(item);const old=visible.get(key);visible.delete(key);release(old);unavailable.delete(key);}
