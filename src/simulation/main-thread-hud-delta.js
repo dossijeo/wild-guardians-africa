@@ -7,9 +7,10 @@ import {copyPublication} from './confirmed-snapshot-handoff.js';
 // than on an intermediate publication discarded by coalescing.
 export function createMainThreadHudDeltaEncoder(){
  const encoder=createConfirmedHudDeltaEncoder({validate:validateConfirmedHudSchema});
- return {encode(message){
+ return {encode(message,{omitSnapshot=false}={}){
+  if(typeof omitSnapshot!=='boolean')throw TypeError('Invalid HUD transport option');
   if(message?.kind!=='publication'||message.publication?.hudProjection===undefined)return message;
   const publication=message.publication;if(publication.sequence!==publication.hudProjection?.sequence)throw Error('HUD publication sequence mismatch');const delta=encoder.encode(publication.hudProjection);
-  return {...message,publication:copyPublication(publication,{omit:['hudProjection'],add:{hudDelta:delta}})};
+  return {...message,publication:copyPublication(publication,{omit:['hudProjection',...(omitSnapshot?['snapshot','snapshotDelta']:[])],add:{hudDelta:delta}})};
  },reset(){encoder.reset();}};
 }

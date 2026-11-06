@@ -5,6 +5,7 @@ import {projectConfirmedHud,validateConfirmedHudSchema} from '../src/simulation/
 import {createConfirmedHudDeltaEncoder,createConfirmedHudDeltaDecoder} from '../src/simulation/confirmed-hud-delta.js';
 import {createHostPublicationQueue} from '../src/simulation/host-publication-queue.js';
 import {createConfirmedHudReceiver} from '../src/simulation/confirmed-hud-receiver.js';
+import {createMainThreadHudDeltaEncoder} from '../src/simulation/main-thread-hud-delta.js';
 
 test('HUD deltas are encoded only after coalescing and ACK keeps the last applied base',()=>{
  const state=newGame({seed:803}),encoder=createConfirmedHudDeltaEncoder({validate:validateConfirmedHudSchema}),decoder=createConfirmedHudDeltaDecoder({validate:validateConfirmedHudSchema}),sent=[];
@@ -48,4 +49,12 @@ test('saturation does not advance the HUD codec or discard queued ordered events
  const queue=createHostPublicationQueue({session:'s',coalesce:false,maxQueued:1,send:envelope=>{sent.push({...envelope,packet:encoder.encode(envelope.publication.hudProjection)});}});
  const packet=(sequence,id)=>({sequence,events:[{id,type:'example'}],physicsPose:null,snapshot:'unused',hudProjection:projectConfirmedHud(state,sequence)});
  queue.publication(packet(1,'event-1'),true);queue.publication(packet(2,'event-2'),true);assert.throws(()=>queue.publication(packet(3,'event-3'),true),/capacity/);assert.equal(sent.length,1);assert.equal(decoder.decode(sent[0].packet).sequence,1);queue.ack(1);assert.equal(sent[1].packet.base,1);assert.deepEqual(sent[1].publication.events,[{id:'event-2',type:'example'}]);assert.equal(decoder.decode(sent[1].packet).sequence,2);queue.ack(2);queue.publication(packet(3,'event-3'),true);assert.equal(sent[2].packet.base,2);assert.equal(decoder.decode(sent[2].packet).sequence,3);queue.ack(3);
+});
+
+test('real host HUD encoder and lightweight receiver carry ordered facts without snapshots',()=>{
+ const state=newGame({seed:809}),wire=createMainThreadHudDeltaEncoder(),sent=[],seen=[],queue=createHostPublicationQueue({session:'s',send:item=>sent.push(wire.encode(item))}),receiver=createConfirmedHudReceiver({session:'s',onPublication:(view,envelope)=>seen.push({view,envelope})});
+ const packet=(sequence,events=[],extra={})=>({sequence,events,physicsPose:null,hudProjection:projectConfirmedHud(state,sequence),...extra});
+ queue.publication(packet(1),true);queue.publication(packet(2),true);queue.publication(packet(3,[{id:'event-1',type:'example'}],{tutorialGuideRevision:1}),true);
+ assert.equal('snapshot' in sent[0].publication,false);receiver.accept(sent[0]);queue.ack(1);receiver.accept(sent[1]);queue.ack(2);receiver.accept(sent[2]);queue.ack(3);
+ assert.deepEqual(seen.map(item=>item.view.sequence),[1,2,3]);assert.deepEqual(seen[2].envelope.publication.events,[{id:'event-1',type:'example'}]);assert.equal(seen[2].envelope.publication.tutorialGuideRevision,1);assert.ok(sent.every(item=>!Object.hasOwn(item.publication,'snapshot')));receiver.dispose();wire.reset();
 });
