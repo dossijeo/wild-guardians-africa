@@ -1,14 +1,13 @@
 // Incremental wire representation for the UI consumer. The authority and
 // graphical consumer retain their original snapshots and publication order.
-// Values are JSON fragments, so the receiver never borrows mutable UI state as
-// its authoritative base. This is a transport step, not a save format.
+// The receiver owns a private immutable baseline, separate from the mutable UI
+// state. This is a transport step, not a save format.
+import {handoffConfirmedSnapshot} from './confirmed-snapshot-handoff.js';
 function fields(snapshot){
  const value=JSON.parse(snapshot);
  if(!value||typeof value!=='object'||Array.isArray(value))throw TypeError('Invalid snapshot transport state');
  return new Map(Object.keys(value).map(key=>[key,JSON.stringify(value[key])]));
 }
-function textOf(map){return '{'+[...map].map(([key,value])=>JSON.stringify(key)+':'+value).join(',')+'}';}
-
 export function createMainSnapshotEncoder(){
  let base=null,sequence=0;
  return {encode(envelope){
@@ -35,15 +34,16 @@ export function createMainSnapshotDecoder(){
   if(!Number.isSafeInteger(n)||n<=sequence)throw Error('Invalid snapshot transport sequence');
   if(publication.unchanged===true){if(publication.snapshotDelta!==undefined)throw TypeError('Unexpected snapshot delta');sequence=n;return envelope;}
   let next,wire=envelope;
-  if(typeof publication.snapshot==='string'&&publication.snapshotDelta===undefined)next=fields(publication.snapshot);
+  if(typeof publication.snapshot==='string'&&publication.snapshotDelta===undefined){next=JSON.parse(publication.snapshot);if(!next||typeof next!=='object'||Array.isArray(next))throw TypeError('Invalid snapshot transport state');}
   else{
    const delta=publication.snapshotDelta;
    if(publication.snapshot!==undefined||!base||!delta||delta.version!==1||delta.baseSequence!==sequence||!Array.isArray(delta.changed)||!Array.isArray(delta.removed))throw TypeError('Invalid snapshot delta');
-   next=new Map(base);const seen=new Set();
-   for(const pair of delta.changed){if(!Array.isArray(pair)||pair.length!==2||typeof pair[0]!=='string'||typeof pair[1]!=='string'||seen.has(pair[0]))throw TypeError('Invalid snapshot delta field');JSON.parse(pair[1]);seen.add(pair[0]);next.set(pair[0],pair[1]);}
-   for(const key of delta.removed){if(typeof key!=='string'||seen.has(key)||!next.has(key))throw TypeError('Invalid snapshot delta removal');seen.add(key);next.delete(key);}
-   const {snapshotDelta,...rest}=publication;wire={...envelope,publication:{...rest,snapshot:textOf(next)}};
+   next={...base};const seen=new Set();
+   for(const pair of delta.changed){if(!Array.isArray(pair)||pair.length!==2||typeof pair[0]!=='string'||typeof pair[1]!=='string'||seen.has(pair[0]))throw TypeError('Invalid snapshot delta field');const value=JSON.parse(pair[1]);seen.add(pair[0]);Object.defineProperty(next,pair[0],{value,writable:true,enumerable:true,configurable:true});}
+   for(const key of delta.removed){if(typeof key!=='string'||seen.has(key)||!Object.hasOwn(next,key))throw TypeError('Invalid snapshot delta removal');seen.add(key);delete next[key];}
+   const {snapshotDelta,...rest}=publication;let snapshot;const rebuilt={...rest};Object.defineProperty(rebuilt,'snapshot',{enumerable:true,get(){return snapshot??=JSON.stringify(next);}});wire={...envelope,publication:rebuilt};
   }
+  handoffConfirmedSnapshot(wire.publication,next);
   base=next;sequence=n;return wire;
  }};
 }

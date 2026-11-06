@@ -4,6 +4,7 @@ import {createMainSnapshotEncoder,createMainSnapshotDecoder} from '../src/simula
 import {createConfirmedStateReceiver} from '../src/simulation/confirmed-state-receiver.js';
 import {serializeConfirmedState,deserializeConfirmedState} from '../src/simulation/confirmed-live-state.js';
 import * as Game from '../src/simulation/game.js';
+import {rational,transact} from '../src/simulation/money.js';
 import {createWorkerHostedRuntime} from '../src/simulation/worker-hosted-runtime.js';
 
 const packet=(sequence,snapshot,events=[])=>({kind:'publication',session:'s',publication:{session:'s',sequence,snapshot,events,physicsPose:null}});
@@ -22,6 +23,25 @@ test('delta rejects stale bases, duplicate fields and invalid removals without a
  const next=encoder.encode(packet(2,JSON.stringify({a:2,b:'x'.repeat(200)}))),delta=next.publication.snapshotDelta;assert.ok(delta);
  for(const bad of [{...delta,baseSequence:0},{...delta,changed:[['a','2'],['a','3']]},{...delta,removed:['missing']},{...delta,changed:[['a','{']]}])assert.throws(()=>decoder.decode({...next,publication:{...next.publication,snapshotDelta:bad}}));
  assert.deepEqual(JSON.parse(decoder.decode(next).publication.snapshot),{a:2,b:'x'.repeat(200)});
+});
+test('mutable UI state cannot change the private incremental baseline',()=>{
+ const authority=Game.newGame({seed:712,slotId:'independent'}),view=deserializeConfirmedState(serializeConfirmedState(authority)),receiver=createConfirmedStateReceiver(view,'s'),encoder=createMainSnapshotEncoder(),decoder=createMainSnapshotDecoder();
+ const apply=n=>{const wire=encoder.encode(packet(n,serializeConfirmedState(authority)));const decoded=decoder.decode(wire);assert.equal(receiver.accept(decoded.publication).accepted,true);return {wire,decoded};};
+ apply(1);transact(authority.ledger,'new-entry',rational(9));apply(2);view.ledger.entries['new-entry'].n='999';view.ledger.entries['invented']=rational(12);
+ authority.time+=1;const {wire,decoded}=apply(3);assert.ok(wire.publication.snapshotDelta);assert.ok(!wire.publication.snapshotDelta.changed.some(([key])=>key==='ledger'));assert.deepEqual(view,authority);
+ view.ledger.entries['new-entry'].n='1000';assert.deepEqual(JSON.parse(decoded.publication.snapshot),authority);
+});
+test('incremental reconciliation validates without serializing the full state',()=>{
+ const authority=Game.newGame({seed:712,slotId:'lazy'}),view=deserializeConfirmedState(serializeConfirmedState(authority)),receiver=createConfirmedStateReceiver(view,'s'),encoder=createMainSnapshotEncoder(),decoder=createMainSnapshotDecoder();
+ assert.equal(receiver.accept(decoder.decode(encoder.encode(packet(1,serializeConfirmedState(authority)))).publication).accepted,true);
+ authority.time+=1;const decoded=decoder.decode(encoder.encode(packet(2,serializeConfirmedState(authority)))),original=JSON.stringify;let full=0;
+ JSON.stringify=(value,...args)=>{if(value?.slotId==='lazy')full++;return original(value,...args);};
+ try{assert.equal(receiver.accept(decoded.publication).accepted,true);assert.equal(full,0);assert.deepEqual(JSON.parse(decoded.publication.snapshot),authority);assert.equal(full,1);assert.equal(typeof decoded.publication.snapshot,'string');assert.equal(full,1);}finally{JSON.stringify=original;}
+});
+test('tracked reconciliation keeps identities while isolating newly added data',()=>{
+ const authority=Game.newGame({seed:712,slotId:'tracked'}),view=deserializeConfirmedState(serializeConfirmedState(authority)),receiver=createConfirmedStateReceiver(view,'s',{trackChangedKeys:true}),encoder=createMainSnapshotEncoder(),decoder=createMainSnapshotDecoder(),ledger=view.ledger;
+ const apply=n=>receiver.accept(decoder.decode(encoder.encode(packet(n,serializeConfirmedState(authority)))).publication);
+ apply(1);transact(authority.ledger,'entry',rational(4));assert.ok(apply(2).changedKeys.has('ledger'));assert.equal(view.ledger,ledger);view.ledger.entries.entry.n='999';authority.time+=1;assert.ok(apply(3).changedKeys.has('ledger'));assert.deepEqual(view,authority);
 });
 test('small snapshots fall back to full transport and property removal is preserved',()=>{
  const encoder=createMainSnapshotEncoder(),decoder=createMainSnapshotDecoder();decoder.decode(encoder.encode(packet(1,'{"a":1}')));
