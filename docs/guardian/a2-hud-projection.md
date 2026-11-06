@@ -15,6 +15,13 @@ pruebas comprueban equivalencia de reglas para pausa, incursión, ausencia de
 centro y enfriamientos; validan también orden, aislamiento, rechazo anterior al
 commit y agrupación de publicaciones.
 
+La proyección incluye también los campos usados por las voces de bestias y los
+contactos de locomoción. El cliente conserva identidades de actores entre
+publicaciones y retira las desaparecidas; así las comprobaciones asíncronas de
+vigencia no se cancelan por recibir un clon. Las voces de agricultura, música y
+eventos aún consumen el estado anterior. Las pruebas comparan señales y cambios
+de identidad, no la reproducción sonora en navegador.
+
 Esto no elimina todavía el snapshot completo: se sigue transfiriendo y usando
 para verificar la proyección y para tutorial, selección, comandos, audio,
 notificaciones y guardado. El host y el cliente aún recorren datos; no se ha
