@@ -3,6 +3,16 @@ import assert from 'node:assert/strict';
 import {Group,Bone} from 'three';
 import {ProvisionalBeastImpact} from '../src/rendering/provisional-beast-impact.js';
 import {captureAnimalImpact,applyAnimalImpact,restoreAnimalImpact} from '../src/rendering/animal-impact.js';
+test('duplicate command identities cannot orphan a provisional animal',()=>{
+ const manager=new ProvisionalBeastImpact({now:()=>0}),a={id:'a',x:0,z:0},b={id:'b',x:2,z:0},state={raid:{animals:[a,b]}},command={kind:'castAttack',id:'hit',targetId:'a'};
+ assert.equal(manager.begin(command,state,()=>0),true);
+ assert.equal(manager.begin({...command,targetId:'b'},state,()=>0),false);
+ assert.equal(manager.byTarget.size,1);assert.equal(manager.byCommand.get('hit').targetId,'a');
+ assert.equal(manager.end('hit'),true);assert.equal(manager.byTarget.size,0);
+ assert.equal(manager.begin({...command,id:'',targetId:'b'},state,()=>0),false);
+ assert.equal(manager.begin({...command,id:'second',targetId:'b'},state,()=>0),true);
+ assert.equal(manager.end('second'),true);assert.equal(manager.byTarget.size,0);
+});
 test('provisional recoil affects only the rendered rig and ends by command ID',()=>{
  let now=1000;const manager=new ProvisionalBeastImpact({now:()=>now}),animal={id:'a',species:'hyena',x:2,z:3,radius:.7,heading:0,status:'walking'},state={raid:{animals:[animal]}},original=structuredClone(state),command={kind:'castAttack',id:'c1',targetId:'a',selection:{origin:{x:0,y:2,z:3},contact:{x:2,y:1,z:3}}};
  assert.equal(manager.begin(command,state,()=>0),true);assert.equal(manager.sample(animal,10),null);now+=320;const sample=manager.sample(animal,10);assert.ok(sample);const model=new Group(),bone=new Bone();bone.name='Spine';model.add(bone);const data={model};captureAnimalImpact(data,sample.animal,sample.elapsed);applyAnimalImpact(data,sample.animal,sample.elapsed);assert.notEqual(bone.quaternion.z,0);assert.deepEqual(state,original);assert.equal(manager.end('other'),false);assert.equal(manager.end('c1'),true);assert.equal(manager.lastResolution.lastSample.age,sample.elapsed);assert.ok(Number.isFinite(manager.lastResolution.lastSample.response.roll));restoreAnimalImpact(data);assert.equal(bone.quaternion.z,0);assert.equal(manager.sample(animal,10),null);

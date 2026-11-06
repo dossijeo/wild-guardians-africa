@@ -6,7 +6,7 @@ import {impactResponse} from './animal-impact.js';
 export class ProvisionalBeastImpact {
  constructor({now=()=>performance.now()}={}){this.now=now;this.byTarget=new Map();this.byCommand=new Map();}
  begin(command,state,surface,anchor=null){
-  if(command?.kind!=='castAttack'||typeof command.id!=='string'||typeof command.targetId!=='string')return false;
+  if(command?.kind!=='castAttack'||typeof command.id!=='string'||!command.id||typeof command.targetId!=='string'||!command.targetId||this.byCommand.has(command.id))return false;
   const animal=state.raid?.animals.find(a=>a.id===command.targetId);if(!animal||this.byTarget.has(animal.id))return false;
   if(anchor!==null&&(!anchor||![anchor.x,anchor.y,anchor.z,anchor.yaw,anchor.at,anchor.horizon].every(Number.isFinite)||anchor.at>anchor.horizon))return false;const x=anchor?.x??animal.x,z=anchor?.z??animal.z;const ground=surface(x,z),contact=command.selection?.contact??{x,y:ground+(animal.radius??.7),z},origin=command.selection?.origin??{x:x-2,y:contact.y+1,z:z+2};
   const dx=contact.x-origin.x,dy=contact.y-origin.y,dz=contact.z-origin.z,length=Math.hypot(dx,dy,dz)||1;
