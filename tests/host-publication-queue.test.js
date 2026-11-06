@@ -2,6 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHostPublicationQueue} from '../src/simulation/host-publication-queue.js';
 const packet=(sequence,events=[],physicsPose=null)=>({sequence,events,physicsPose,snapshot:String(sequence)});
+test('coalesces projected path publications without dropping their metadata or events',()=>{
+ const sent=[],q=createHostPublicationQueue({session:'s',send:value=>sent.push(value)});q.publication(packet(1),true);q.publication({...packet(2),presentationPaths:'head-v1'},true);q.publication({...packet(3,[{id:'event-3'}]),presentationPaths:'head-v1'},true);q.ack(1);assert.equal(sent[1].firstSequence,2);assert.equal(sent[1].publication.sequence,3);assert.equal(sent[1].publication.presentationPaths,'head-v1');assert.deepEqual(sent[1].publication.events,[{id:'event-3'}]);q.ack(3);
+});
 test('a directly transmitted publication is not scanned as retained queue data',()=>{
  const sent=[],q=createHostPublicationQueue({session:'s',send:value=>sent.push(value),maxRetainedBytes:128}),payload={};Object.defineProperty(payload,'expensive',{enumerable:true,get(){throw Error('retained payload scanned');}});q.publication({...packet(1),payload},true);assert.equal(sent[0].publication.payload,payload);assert.equal(q.status().retained.bytes,0);q.ack(1);
 });

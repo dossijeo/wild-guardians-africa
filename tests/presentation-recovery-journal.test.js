@@ -1,6 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createPresentationRecoveryJournal,assertPresentationRecoveryBoundary,shouldCapturePresentationCheckpoint,withPresentationRecoveryCheckpoint} from '../src/simulation/presentation-recovery-journal.js';
+test('recovery compacts known path projections while retaining unknown versions as boundaries',()=>{
+ const journal=createPresentationRecoveryJournal({compactTicks:true});journal.begin(1);journal.confirm(1);const packet=sequence=>({sequence,snapshot:'s'+sequence,events:[],physicsPose:null,pauses:[],presentationPaths:'head-v1'});journal.append(packet(2),true);journal.append(packet(3),true);journal.append({...packet(4),presentationPaths:'future'},true);const entries=journal.snapshot().entries;assert.deepEqual(entries.map(entry=>entry.sequence),[3,4]);assert.equal(entries[0].firstSequence,2);assert.equal(entries[0].publication.presentationPaths,'head-v1');assert.equal(entries[1].publication.presentationPaths,'future');journal.dispose();
+});
 
 test('initial recovery checkpoint enriches the ordered command without injecting another',()=>{
  const journal=createPresentationRecoveryJournal(),command={kind:'pause',reason:'hidden'},initial=withPresentationRecoveryCheckpoint(command,journal.status());

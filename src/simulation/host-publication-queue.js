@@ -30,10 +30,10 @@ export function createHostPublicationQueue({session,send,diagnostics=false,foldV
  // A recovery checkpoint needs its exact sequence ACK; never fold it away.
  const terrainStable=publication=>publication.terrainChanged===undefined||publication.terrainChanged===false;
  const headingStable=publication=>publication.presentationWorkerHeadings===undefined||Array.isArray(publication.presentationWorkerHeadings)&&publication.presentationWorkerHeadings.every(item=>item?.add===undefined&&item?.yaw!==null);
- const eligible=item=>item.kind==='publication'&&item.tick&&!item.publication.terrainCheckpoint&&item.publication.worldMotionTrace===undefined&&headingStable(item.publication)&&terrainStable(item.publication)&&item.publication.unchanged!==true&&Array.isArray(item.publication.events)&&physicsOwners(item.publication)!==null;
+ const eligible=item=>item.kind==='publication'&&item.tick&&!item.publication.terrainCheckpoint&&item.publication.worldMotionTrace===undefined&&(item.publication.presentationPaths===undefined||item.publication.presentationPaths==='head-v1')&&headingStable(item.publication)&&terrainStable(item.publication)&&item.publication.unchanged!==true&&Array.isArray(item.publication.events)&&physicsOwners(item.publication)!==null;
  // An invalidation is an ordered boundary even when no gameplay event was
  // emitted. Absorbing it would let a consumer retain an obsolete trajectory.
- const quietKeys=new Set(['session','sequence','value','stepsExecuted','residency','physicsPose','physicsPoses','physicsOwnerSummary','elapsed','pauses','events','presentationJournal','presentationWorkerHeadings','raidWaitBindings','saveAvailable','snapshot','terrainChanged','motionTrace','motionInvalidation']);
+ const quietKeys=new Set(['session','sequence','value','stepsExecuted','residency','physicsPose','physicsPoses','physicsOwnerSummary','elapsed','pauses','events','presentationJournal','presentationWorkerHeadings','raidWaitBindings','saveAvailable','snapshot','terrainChanged','motionTrace','motionInvalidation','presentationPaths']);
  const backgroundKeys=new Set(['session','sequence','value','unchanged','slotId','stateSequence','elapsed','pauses','events','residency','saveAvailable','terrainChanged']);
  const foldViewKeys=new Set([...backgroundKeys,'pausedAdvance','stepsExecuted']);
  const replaceable=item=>eligible(item)&&item.publication.events.length===0&&!(item.publication.presentationJournal?.length)&&!item.publication.motionInvalidation&&Object.keys(item.publication).every(key=>quietKeys.has(key));

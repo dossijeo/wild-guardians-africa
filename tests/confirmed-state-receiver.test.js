@@ -1,6 +1,9 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';import {gunzipSync} from 'node:zlib';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';import {emit,observeGameEvents,observePresentationGameEvents} from '../src/simulation/game.js';import {createConfirmedStateReceiver} from '../src/simulation/confirmed-state-receiver.js';
 const fixture=()=>deserialize(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString());
+test('projected path markers cannot disguise full paths or checkpoints',()=>{
+ const state=fixture(),receiver=createConfirmedStateReceiver(state,'s'),packet={session:'s',sequence:1,snapshot:serialize(state),events:[],presentationPaths:'head-v1'};assert.throws(()=>receiver.accept({...packet,presentationPaths:'unknown'}),/projection/);assert.throws(()=>receiver.accept({...packet,terrainCheckpoint:{}}),/projection/);assert.throws(()=>receiver.accept(packet),/projected presentation path/);assert.equal(receiver.status().sequence,0);
+});
 test('optional changed keys capture nested edits and reordered entities without false changes',()=>{
  const display=fixture(),authority=deserialize(serialize(display)),receiver=createConfirmedStateReceiver(display,'s',{trackChangedKeys:true}),packet=sequence=>({session:'s',sequence,snapshot:serialize(authority),events:[]});
  assert.deepEqual([...receiver.accept(packet(1)).changedKeys],[]);authority.raid.animals[0].x+=1;authority.suppressed.push('tracked-prop');const changes=receiver.accept(packet(2)).changedKeys;assert.ok(changes.has('raid'));assert.ok(changes.has('suppressed'));assert.equal(changes.has('workers'),false);assert.deepEqual(display.suppressed,authority.suppressed);assert.deepEqual([...receiver.accept(packet(3)).changedKeys],[]);

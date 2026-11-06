@@ -52,3 +52,6 @@ test('checkpoint-only raid wait capture is sent explicitly to the authority',asy
  const sent=[],worker={postMessage:message=>sent.push(message),terminate(){}},client=createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session:'s',checkpointRaidWaitsOnly:true,workerFactory:()=>worker});
  assert.equal(sent[0].checkpointRaidWaitsOnly,true);worker.onmessage({data:{kind:'ready',session:'s'}});await client.ready;client.dispose();
 });
+test('compact presentation paths are explicitly negotiated with the authority',async()=>{
+ const sent=[],worker={postMessage:message=>sent.push(message),terminate(){}},client=createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session:'s',compactPresentationPaths:true,workerFactory:()=>worker});assert.equal(sent[0].compactPresentationPaths,true);worker.onmessage({data:{kind:'ready',session:'s'}});await client.ready;client.dispose();assert.throws(()=>createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session:'s',compactPresentationPaths:'yes',workerFactory:()=>worker}),/Invalid authority client/);
+});
