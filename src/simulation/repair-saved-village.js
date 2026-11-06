@@ -29,3 +29,12 @@ export function repairSavedVillage(snapshot,catalog,{module=null}={}){
  }
  const repaired=physical?serializeConfirmedState(state):serialize(state);savedNativeAuthorityOptions(repaired);return repaired;
 }
+
+// Run checkpoint validation and any spatial repair together in the bootstrap
+// Worker. The returned native description is still verified by the authority.
+export function prepareSavedWorkerCheckpoint(snapshot,catalog,{module=null}={}){
+ if(typeof snapshot!=='string'||!Array.isArray(catalog))throw TypeError('Invalid saved worker checkpoint');
+ const original=savedNativeAuthorityOptions(snapshot),state=JSON.parse(snapshot),needsRepair=state.villages.some(village=>!village.entry||village.buildings.some(building=>building.kind!=='Zona común'&&building.footprint==null));
+ if(!needsRepair)return {initial:original,repaired:false};
+ const repaired=repairSavedVillage(snapshot,catalog,{module});return {initial:savedNativeAuthorityOptions(repaired),repaired:true};
+}

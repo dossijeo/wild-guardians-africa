@@ -72,7 +72,7 @@ import {isMature} from '../simulation/crops.js';
 import {cropSpec,permission,operational,attraction} from '../simulation/rules.js';
 import {BrowserSaveRepository} from '../persistence/browser-saves.js';
 import {serialize,deserialize} from '../persistence/snapshots.js';
-import {prepareFreshWorkerBootstrapInWorker,repairSavedVillageInWorker,prepareSavedWorkerBootstrapInWorker} from '../simulation/fresh-worker-bootstrap-client.js';
+import {prepareFreshWorkerBootstrapInWorker,prepareSavedWorkerCheckpointInWorker,prepareSavedWorkerBootstrapInWorker} from '../simulation/fresh-worker-bootstrap-client.js';
 import {createSimulationAuthorityClient} from '../simulation/simulation-authority-client.js';
 import {createWorkerHostedRuntime} from '../simulation/worker-hosted-runtime.js';
 import {createEarlyWorkerAuthority} from './early-worker-authority.js';
@@ -387,9 +387,9 @@ async function startGame(loaded=null,{slotId,preview}={}) {
     const payload=villages.find(v=>v.id===(next.culture==='saheliana'?'saheliano':next.culture));
     const workerOnly=import.meta.env.DEV&&canRestoreWorkerOnly(next,{loaded:!!loaded,earlyNative:restoreParams.has('qa-worker-early-native'),earlyGpu:restoreParams.has('qa-worker-early-gpu-view'),noWebgl:restoreParams.has('qa-worker-no-webgl'),cameraTerrain:restoreParams.has('qa-webgpu-camera-terrain'),allowFootprintRepair:true,allowEntryRepair:true,allowMissingCheckpoint:true});
     const savedBootstrap=workerOnly&&!next.workerNativeAuthorityCheckpoint?await prepareSavedWorkerBootstrapInWorker(savedSource??serialize(next),villages,{quality:settings.quality,signal:world.loading.signal}):null;if(savedBootstrap){assertLoading();savedSource=savedBootstrap.initial.snapshot;next=deserialize(savedSource);}
-    if(workerOnly&&!savedBootstrap&&next.villages.some(village=>!village.entry||village.buildings.some(building=>building.kind!=='Zona común'&&building.footprint==null))){const repaired=await repairSavedVillageInWorker(savedSource??serialize(next),villages,{signal:world.loading.signal});assertLoading();savedSource=repaired.snapshot;next=deserialize(savedSource);}
+    const checkpointBootstrap=workerOnly&&!savedBootstrap?await prepareSavedWorkerCheckpointInWorker(savedSource??serialize(next),villages,{signal:world.loading.signal}):null;if(checkpointBootstrap){assertLoading();savedSource=checkpointBootstrap.initial.snapshot;if(checkpointBootstrap.repaired)next=deserialize(savedSource);}
     const freshBootstrap=workerFresh?await prepareFreshWorkerBootstrapInWorker(freshOptions,payload,{quality:settings.quality,signal:world.loading.signal}):null;if(freshBootstrap){assertLoading();next=deserialize(freshBootstrap.initial.snapshot);}
-    const workerRestore=savedBootstrap?.initial??(workerOnly?savedNativeAuthorityOptions(savedSource??serialize(next)):null),projection=freshBootstrap?.initial??workerRestore;
+    const workerRestore=savedBootstrap?.initial??checkpointBootstrap?.initial??null,projection=freshBootstrap?.initial??workerRestore;
     const spatial=projection?{session:null,navigation:createWorkerNavigationProjection(projection.navigationView)}:await prepareWildEngineWorld(world,next,payload,{signal:world.loading.signal,loaded:!!loaded});
     assertLoading();nav=spatial.navigation;
     const spatialSession=spatial.session;
