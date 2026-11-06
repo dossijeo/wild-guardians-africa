@@ -8,10 +8,11 @@ function requestBootstrap(message,{signal,workerFactory},validate){
  });
 }
 const createWorker=()=>new Worker(new URL('./fresh-worker-bootstrap-worker.js',import.meta.url),{type:'module'});
-export function prepareFreshWorkerBootstrapInWorker(snapshot,payload,{quality='media',signal,workerFactory=createWorker}={}){
- if(typeof snapshot!=='string'||!payload||typeof quality!=='string')return Promise.reject(TypeError('Invalid fresh worker request'));
+export function prepareFreshWorkerBootstrapInWorker(snapshotOrOptions,payload,{quality='media',signal,workerFactory=createWorker}={}){
+ const options=snapshotOrOptions&&typeof snapshotOrOptions==='object'&&!Array.isArray(snapshotOrOptions);
+ if(typeof snapshotOrOptions!=='string'&&!options||!payload||typeof quality!=='string')return Promise.reject(TypeError('Invalid fresh worker request'));
  const validPose=point=>Array.isArray(point)&&point.length===3&&point.every(Number.isFinite);
- return requestBootstrap({snapshot,payload,quality},{signal,workerFactory},result=>typeof result?.initial?.snapshot==='string'&&Array.isArray(result.initial.chunkKeys)&&result.initial.navigationView&&validPose(result.pose?.eye)&&validPose(result.pose?.target));
+ return requestBootstrap(options?{kind:'fresh-options',options:snapshotOrOptions,payload,quality}:{snapshot:snapshotOrOptions,payload,quality},{signal,workerFactory},result=>typeof result?.initial?.snapshot==='string'&&Array.isArray(result.initial.chunkKeys)&&result.initial.navigationView&&validPose(result.pose?.eye)&&validPose(result.pose?.target));
 }
 export function repairSavedVillageInWorker(snapshot,catalog,{signal,workerFactory=createWorker}={}){
  if(typeof snapshot!=='string'||!Array.isArray(catalog))return Promise.reject(TypeError('Invalid saved village request'));

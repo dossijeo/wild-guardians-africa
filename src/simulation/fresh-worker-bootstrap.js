@@ -7,6 +7,14 @@ import {findVillageEntry} from '../world/villages.js';
 import {farmHomeFocus} from '../rendering/farm-focus.js';
 import {nativeCameraPose} from '../rendering/terrain-camera.js';
 import {freshNativeAuthorityOptions} from './fresh-native-authority.js';
+import {newGame} from './game.js';
+
+// Create the authoritative initial state in the bootstrap Worker. The caller
+// may display a lightweight loading preview, but never initializes gameplay.
+export async function prepareFreshWorkerBootstrapFromOptions(module,options,payload,settings={}){
+ if(!options||typeof options!=='object'||Array.isArray(options)||Object.keys(options).some(key=>!['biome','culture','seed','slotId'].includes(key))||options.seed!==undefined&&!Number.isSafeInteger(options.seed)||options.slotId!==undefined&&(typeof options.slotId!=='string'||!options.slotId))throw TypeError('Invalid fresh game options');
+ return prepareFreshWorkerBootstrap(module,serialize(newGame(options)),payload,settings);
+}
 
 // This bootstrap runs before the authoritative Worker is started. Its native
 // session is disposed before the result is published and never advances time.

@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {newGame} from '../src/simulation/game.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
-import {prepareFreshWorkerBootstrap} from '../src/simulation/fresh-worker-bootstrap.js';
+import {prepareFreshWorkerBootstrap,prepareFreshWorkerBootstrapFromOptions} from '../src/simulation/fresh-worker-bootstrap.js';
 import {prepareFreshWorkerBootstrapInWorker,repairSavedVillageInWorker,prepareSavedWorkerBootstrapInWorker} from '../src/simulation/fresh-worker-bootstrap-client.js';
 import {repairSavedVillage} from '../src/simulation/repair-saved-village.js';
 import {prepareSavedWorkerBootstrap} from '../src/simulation/saved-worker-bootstrap.js';
@@ -20,6 +20,13 @@ test('fresh worker bootstrap creates a restorable native world without advancing
  const result=await prepareFreshWorkerBootstrap(module,serialize(state),payload),prepared=deserialize(result.initial.snapshot);assert.equal(prepared.elapsed,0);assert.ok(prepared.villages[0].entry);assert.ok(result.initial.chunkKeys.length>0);assert.equal(result.pose.eye.length,3);assert.ok(result.pose.eye.every(Number.isFinite));
  const reference=createSpatialGameSession(module,prepared,{loaded:()=>new Map(),onData(){}});try{const focus=farmHomeFocus(prepared),pose=nativeCameraPose(reference.field,[focus.x,0,focus.z],focus.theta??.5,1.16,focus.distance??38);assert.deepEqual(result.pose,{eye:pose.eye,target:pose.target});}finally{reference.dispose();}
  const authority=createSimulationAuthority(module,result.initial.snapshot,result.initial.chunkKeys,result.initial);try{const snapshot=authority.execute({kind:'snapshot',sequence:1});assert.equal(snapshot.snapshot,result.initial.snapshot);assert.deepEqual(snapshot.events,[]);}finally{authority.dispose();}
+});
+
+test('Worker-created initial state matches the original seeded bootstrap and native authority',async()=>{
+ const module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm')),payload=JSON.parse(readFileSync('public/content/villages.json','utf8')).find(item=>item.id==='suajili'),options={seed:712,biome:'manglares',culture:'suajili',slotId:'worker-created'},reference=await prepareFreshWorkerBootstrap(module,serialize(newGame(options)),payload),actual=await prepareFreshWorkerBootstrapFromOptions(module,options,payload);assert.deepEqual(actual,reference);const authority=createSimulationAuthority(module,actual.initial.snapshot,actual.initial.chunkKeys,actual.initial);try{assert.equal(authority.execute({kind:'snapshot',sequence:1}).snapshot,actual.initial.snapshot);}finally{authority.dispose();}await assert.rejects(prepareFreshWorkerBootstrapFromOptions(module,{...options,unknown:true},payload),/Invalid fresh game options/);
+});
+test('fresh options are sent to the bootstrap Worker without a main-thread snapshot',async()=>{
+ const worker={postMessage(message){this.message=message;},terminate(){this.terminated=true;}},options={seed:712,biome:'sabana',culture:'suajili'},pending=prepareFreshWorkerBootstrapInWorker(options,{units:[]},{workerFactory:()=>worker});assert.equal(worker.message.kind,'fresh-options');assert.deepEqual(worker.message.options,options);assert.equal(Object.hasOwn(worker.message,'snapshot'),false);const result={initial:{snapshot:'{}',chunkKeys:[],navigationView:{}},pose:{eye:[0,0,0],target:[0,0,0]}};worker.onmessage({data:{kind:'result',result}});assert.equal(await pending,result);assert.equal(worker.terminated,true);
 });
 
 test('fresh mangrove bootstrap keeps the connected islet recipe',async()=>{
