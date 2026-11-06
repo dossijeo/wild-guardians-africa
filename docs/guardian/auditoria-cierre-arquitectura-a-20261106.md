@@ -1,6 +1,26 @@
 # Auditoría de cierre de la arquitectura A — 6 de noviembre de 2026
 
-## Decisión
+## Decisión actual tras la implementación
+
+**A sigue abierto únicamente por A2 y A4.** El cierre indicado aquí es interno
+de contratos, no aprobación de contenido, paridad ni rendimiento. El perfil
+de integración se puede ejecutar sin DEV con backend `webgpu-worker` y
+recuperación temporal explícita; no se activa silenciosamente como predeterminado.
+
+| Contrato | Estado actual | Evidencia y límite |
+| --- | --- | --- |
+| A1 Propiedad, identidad, fachada y arranque | **Implementado internamente** | Fachada existente, perfil noDEV, comprobación WebGPU, generaciones y rechazo de resultados obsoletos. [Matriz A1/A3](a1-a3-contract-audit.md), 194 pruebas de contratos. Poblados y otras mecánicas concretas sin migrar son B; sesiones/dispositivos reales, C. |
+| A2 Comunicación, proyección y saturación | **Pendiente de implementación A** | Proyecciones Worker de HUD/audio/paneles y liquidaciones ordenadas conectadas; todavía se transmite y reconcilia snapshot completo para consumidores pendientes. No se acepta cerrar con otra copia del mundo renombrada ni reclasificar saturación como C. |
+| A3 Catálogo, datos y pases | **Implementado internamente para las familias actuales** | Recetas de estados/bindings/deformaciones y cobertura de pases; paleta/offset de fluidos por material, recorte de sombras y clonación NodeMaterial corregidos. [Matriz A1/A3](a1-a3-contract-audit.md), pruebas lógicas y compilación. Nuevas máscaras/contenidos requieren receta B; paridad y pipelines físicos, C. |
+| A4 Admisión y mutaciones estructurales | **Pendiente de auditoría/corrección A** | Admisión transaccional del objeto real, tickets, sombras, targets, cancelación y liberación diferida implementados. Falta completar la revisión finita de mutaciones estructurales de consumidores publicados y corregir los huecos que aparezcan. No se sustituye por sondeo indiscriminado por fotograma. |
+| A5 Recursos y residencia | **Implementado internamente** | Registro por generación, versiones, cargas/leases, propietarios explícitos o compuestos, liberación diferida y presión configurable sobre inactivos. [Inventario A5](a5-resource-registry.md); 458 pruebas de contratos. Bytes desconocidos explícitos y límites heurísticos, no VRAM medida; calibración/dispositivo, C. |
+| A6 Trayectorias, reloj y pose | **Implementado internamente** | Intervalos ejecutados y confirmados, secuencia/actor/identidad, horizonte certificado y entrega de pose; selección tardía baked sin sustituir rig. [Contrato A6](a6-autonomous-motion-handoff.md), [admisión tardía](historical-late-actor-selection.md). Otros clips B4; continuidad visual y hardware C. |
+| A7 Entrada, provisionales y recuperación | **Implementado internamente en perfil explícito** | Entrada autoritativa, IDs, confirmación/rechazo, checkpoint/replay, generaciones y recuperación o fallo seguro. [Contrato de recuperación](temporal-recovery-contract.md), 85 pruebas dirigidas. Saturación queda A2; contenidos B5/B6 y recuperación real con GPU/física C. |
+
+## Auditoría inicial conservada como historial
+
+La tabla siguiente describe el estado anterior a las integraciones enumeradas
+arriba; **no es la lista actual de pendientes**.
 
 **A no está cerrado.** Hay mecanismos implementados y ensayados, pero faltan contratos comunes y conexiones de producto que el propio criterio de cierre exige. Una implementación parcial no se clasifica como terminada ni se desplaza a B o C. «Pendiente A» identifica trabajo de implementación pendiente; no implica que exista una incompatibilidad técnica insalvable. La revisión es estática y se apoya en las pruebas identificadas, sin afirmar ejecución gráfica ni rendimiento.
 
