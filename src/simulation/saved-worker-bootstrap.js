@@ -6,7 +6,7 @@ import {createSpatialNavigationMovement} from '../world/wild-engine/spatial-navi
 import {WILD_ENGINE_WORLD_VERSION} from '../world/wild-engine/world-version.js';
 import {findVillageEntry} from '../world/villages.js';
 import {farmHomeFocus} from '../rendering/farm-focus.js';
-import {nativeCameraPose} from '../rendering/terrain-camera.js';
+import {nativeCameraPose} from '../world/terrain-camera-pose.js';
 import {activeChunkRegion} from '../world/active-region.js';
 import {raidResidentDemand,includeRaidBounds} from '../world/raid-entry-residency.js';
 import {workerChunkDemand} from '../world/worker-chunk-residency.js';
