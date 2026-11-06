@@ -6,7 +6,7 @@ import {waitGpuPreparation} from '../rendering/wait-gpu-preparation.js';
 
 // The early presentation owns no legacy renderer or resident prop meshes.
 // Keep its confirmed-state and camera services independent of WorldScene.
-export function installEarlyWorkerWorldServices(world,{visualSearch='',dev=false,loadLegacyTutorialTarget=()=>import('../rendering/tutorial-hand-target.js')}={}){
+export function installEarlyWorkerWorldServices(world,{visualSearch='',dev=false,loadLegacyTutorialTarget=()=>import('../tutorial/tutorial-hand-target.js')}={}){
  if(typeof loadLegacyTutorialTarget!=='function')throw TypeError('Invalid tutorial target loader');
  const params=new URLSearchParams(visualSearch),legacyDiagnostics=dev&&(params.has('qa-worker-double-decode')||params.has('qa-worker-path-trace'));
  let focusGeneration=0;

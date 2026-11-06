@@ -9,7 +9,7 @@ import {farmHomeFocus} from '../rendering/farm-focus.js';
 import {nativeCameraPose} from '../rendering/terrain-camera.js';
 import {activeChunkRegion} from '../world/active-region.js';
 import {raidResidentDemand,includeRaidBounds} from '../world/raid-entry-residency.js';
-import {workerChunkDemand} from '../rendering/worker-chunk-residency.js';
+import {workerChunkDemand} from '../world/worker-chunk-residency.js';
 import {restoreRaidWaitBindings} from './raid-wait-handoff.js';
 import {captureNativeAuthorityBootstrap} from './native-authority-bootstrap.js';
 

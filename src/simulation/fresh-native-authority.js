@@ -1,7 +1,7 @@
 import {serialize} from '../persistence/snapshots.js';
 import {activeChunkRegion} from '../world/active-region.js';
 import {raidResidentDemand,includeRaidBounds} from '../world/raid-entry-residency.js';
-import {workerChunkDemand} from '../rendering/worker-chunk-residency.js';
+import {workerChunkDemand} from '../world/worker-chunk-residency.js';
 import {captureRaidWaitBindings} from './raid-wait-handoff.js';
 
 // A new world has no derived residency to restore. Describe the normal camera

@@ -13,10 +13,10 @@ import {createSpatialNavigationMovement,SpatialChunkUnavailable} from '../world/
 import {createEventDrivenTaskPlanner} from '../world/wild-engine/spatial-intent-bridge.js';
 import {captureRaidWaitBindings,restoreRaidWaitBindings} from './raid-wait-handoff.js';
 import {raidEntryChunks,raidResidentDemand} from '../world/raid-entry-residency.js';
-import {workerChunkDemand} from '../rendering/worker-chunk-residency.js';
+import {workerChunkDemand} from '../world/worker-chunk-residency.js';
 import {plantTouchTarget} from './plant-touch-target.js';
 import {syncTutorialActionPause} from '../tutorial/action-pause.js';
-import {tutorialHandTarget} from '../rendering/tutorial-hand-target.js';
+import {tutorialHandTarget} from '../tutorial/tutorial-hand-target.js';
 import {createWorkerTutorial} from './worker-tutorial.js';
 import {dueCinematicAct,finishCinematicAct} from '../app/campaign-cinematics.js';
 import {reserveEvent,settleEvent,disableMicroEconomy,trackIncome,microState,validateMicroState} from '../microevents/economy.js';
