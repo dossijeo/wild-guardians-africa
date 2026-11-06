@@ -1,6 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {workerPresentationProfile} from '../src/app/worker-presentation-profile.js';
+import {workerPresentationProfile,workerTutorialTargetNeeded} from '../src/app/worker-presentation-profile.js';
+
+test('tutorial target searches require a presentation consumer or an explicit development audit',()=>{
+ assert.equal(workerTutorialTargetNeeded(),false);
+ assert.equal(workerTutorialTargetNeeded({qa:true,dev:false}),false);
+ assert.equal(workerTutorialTargetNeeded({qa:true,dev:true}),true);
+ assert.equal(workerTutorialTargetNeeded({experimental:true}),true);
+});
 
 test('the ordinary product keeps its existing backend and ignores QA URL parameters',()=>{
  const params=new URLSearchParams('qa-worker-early-gpu-view&qa-worker-no-webgl&qa-worker-early-native&qa-webgpu-camera-terrain&qa-webgpu-picking&qa-webgpu-causal-input');

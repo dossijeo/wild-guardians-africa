@@ -1,5 +1,11 @@
 import {diagnosticPresentationCapabilities} from './webgpu-world-options.js';
 
+// A target search has no presentation consumer while the world guide is off.
+// The explicit diagnostic still observes the authoritative target in DEV.
+export function workerTutorialTargetNeeded({experimental=false,dev=false,qa=false}={}){
+ return experimental===true||dev===true&&qa===true;
+}
+
 // A build may explicitly opt into the incomplete Worker renderer for
 // integration. The default remains the existing renderer until it is ready.
 // URL diagnostics never enable this profile in production.
