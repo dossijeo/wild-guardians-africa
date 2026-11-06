@@ -225,6 +225,8 @@ El catálogo distingue claves del motor, shaders generados y descriptores finale
 
 ### A4. Admisión gráfica y preparación bajo demanda
 
+El cielo prepara ahora el fondo de la escena y el framebuffer reales mediante la cola común antes de sustituir el color anterior. Durante la construcción síncrona del pase se excluyen los objetos dibujables y se restauran sus capas antes de esperar; las luces se conservan. Una prueba ejercita la caché de fondo de Three r180 y otras cubren cancelación y cambio de propietario. No se admite aún sustituir un fondo de nodo o textura existente, ni se han validado el pipeline físico y su primera utilización. La fase síncrona de `compileAsync()` y el recorrido de la escena siguen en el Worker gráfico y pueden afectar a su dibujo.
+
 Los centros confirmados admiten ahora la instancia concreta que se incorporará a la escena, en lugar de preparar únicamente una plantilla y mostrar después una copia. La instancia permanece oculta hasta completar la preparación y se cancela si la entidad desaparece o se sustituye. La vista provisional sigue preparando su propio material. Las pruebas ejercitan la publicación y el reemplazo con un compilador simulado; falta verificar la primera utilización de buffers y pipelines en WebGPU real.
 
 La presentación del guardián permite reintentar una descarga fallida antes de adoptar el modelo y una preparación fallida de sus efectos, manteniendo una única solicitud compartida entre llamadas concurrentes. Un fallo después de adoptar parcialmente el modelo sigue requiriendo recuperación de la presentación; tampoco se reutiliza un renderer retirado por fallo de compilación. Las pruebas simulan ambas interrupciones y no verifican la recuperación del dispositivo ni la primera aparición en partida.

@@ -12,9 +12,12 @@ function materialInputs(material,values){
 }
 // Capture structural inputs. Attribute contents, transforms and ordinary
 // uniforms can vary while the same pipeline is compiling.
+function renderPassInputs(target,camera,renderer){
+ return [camera,camera?.layers?.mask,renderer.toneMapping,renderer.outputColorSpace,renderer.samples,renderer.depth,renderer.stencil,renderer.shadowMap?.enabled,renderer.shadowMap?.type,renderer.localClippingEnabled,renderer.clippingPlanes?.length,target,target?.samples,target?.depthBuffer,target?.stencilBuffer,target?.texture?.format,target?.texture?.type,target?.texture?.colorSpace,target?.depthTexture,target?.depthTexture?.format,target?.depthTexture?.type];
+}
 function pipelineInputs(object,target,camera,renderer,include=[]){
  const included=new Set(include);
- const values=[camera,camera?.layers?.mask,renderer.toneMapping,renderer.outputColorSpace,renderer.samples,renderer.depth,renderer.stencil,renderer.shadowMap?.enabled,renderer.shadowMap?.type,renderer.localClippingEnabled,renderer.clippingPlanes?.length,target,target?.samples,target?.depthBuffer,target?.stencilBuffer,target?.texture?.format,target?.texture?.type,target?.texture?.colorSpace,target?.depthTexture,target?.depthTexture?.format,target?.depthTexture?.type];
+ const values=renderPassInputs(target,camera,renderer);
  function attributeLayout(attribute){
   // BufferAttribute identity alone is insufficient: its array or instancing
   // layout can change while compileAsync is pending. Content changes remain
@@ -90,6 +93,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
   },item.reject).finally(()=>{active=false;pump();});
  }
  async function executePlan(item){
+  if(item.backgroundNode)return executeBackground(item);
   // Explicit passes (e.g. Hi-Z reduction) do not recursively prepare world
   // capture passes. World objects become publishable only after every active
   // auxiliary target has been compiled against the same structural inputs.
@@ -101,6 +105,47 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
    const passes=[result],targets=[...auxiliaryTargets.keys()];
    for(const target of targets){if(revision!==auxiliaryRevision)break;passes.push(await execute(item.object,item.signal,item.version,item.include,target,false,camera,scene,()=>revision===auxiliaryRevision));}
    if(revision===auxiliaryRevision&&passes.length===targets.length+1&&passes.every(pass=>pass?.valid?.()))return {valid:()=>revision===auxiliaryRevision&&passes.every(pass=>pass.valid())};
+  }
+ }
+ function backgroundInputs(node){
+  const values=renderPassInputs(frameTarget(),camera,renderer);values.push(node,node.getCacheKey(),scene.backgroundBlurriness);
+  scene.traverseVisible(object=>{if(object.isLight)values.push(object,object.layers.mask,object.castShadow,object.shadow?.map??null);});
+  return values;
+ }
+ async function executeBackground(item){
+  const {signal,version,backgroundNode,expectedNode,expectedBackground}=item;
+  const conflict=()=>Object.assign(Error('Background changed during preparation'),{code:'background-ownership-changed'});
+  if(signal?.aborted)throw new DOMException('Pipeline admission cancelled','AbortError');
+  if(scene.backgroundNode!==expectedNode||scene.background!==expectedBackground)throw conflict();
+  try{
+   if(closed||version!==generation)throw Error('Pipeline admission cancelled');
+   if(lostError)throw lostError;
+   if(renderer._initialized===false||renderer._isDeviceLost===true)throw Error('WebGPU renderer unavailable for pipeline admission');
+   const inputs=backgroundInputs(backgroundNode),target=frameTarget(),previousTarget=renderer.getRenderTarget?.(),face=renderer.getActiveCubeFace?.(),level=renderer.getActiveMipmapLevel?.(),masks=[],shadows=[];let pending;
+   try{
+    // The scene and its background mesh must be the ones actually rendered.
+    // Layer masks exclude scene geometry while preserving the light list and
+    // the hierarchy; the following frame observes the original masks.
+    scene.traverse(object=>{if(object.isMesh||object.isLine||object.isPoints||object.isSprite){masks.push([object,object.layers.mask]);object.layers.mask=0;}});
+    for(const light of lights.keys()){const shadow=light.shadow;shadows.push([shadow,shadow.autoUpdate,shadow.needsUpdate]);shadow.autoUpdate=false;shadow.needsUpdate=false;}
+    scene.backgroundNode=backgroundNode;if(target)renderer.setRenderTarget(target);pending=renderer.compileAsync(scene,camera,scene);
+   }finally{
+    if(scene.backgroundNode===backgroundNode)scene.backgroundNode=expectedNode;for(const [object,mask] of masks)if(object.layers.mask===0)object.layers.mask=mask;
+    for(const [shadow,autoUpdate,needsUpdate] of shadows){shadow.autoUpdate=autoUpdate;shadow.needsUpdate=needsUpdate;}
+    if(previousTarget!==undefined)renderer.setRenderTarget(previousTarget,face,level);
+   }
+   // This sentinel tracks compilation lifetime without retaining unrelated
+   // scene descendants as resources of the sky.
+   await waitForCompilation(pending,signal,{serial:true,object:item});
+   if(signal?.aborted)throw new DOMException('Pipeline admission cancelled','AbortError');
+   if(scene.backgroundNode!==expectedNode||scene.background!==expectedBackground)throw conflict();
+   if(closed||version!==generation)throw Error('Pipeline admission cancelled');
+   if(renderer._isDeviceLost===true||lostError)throw lostError??Error('WebGPU device lost during pipeline admission');
+   if(!sameInputs(inputs,backgroundInputs(backgroundNode)))return executeBackground(item);
+   return {valid:()=>!closed&&!lostError&&renderer._initialized!==false&&renderer._isDeviceLost!==true&&version===generation&&!signal?.aborted&&scene.backgroundNode===expectedNode&&scene.background===expectedBackground&&sameInputs(inputs,backgroundInputs(backgroundNode))};
+  }catch(error){
+   if(!closed&&!signal?.aborted&&error?.code!=='background-ownership-changed')retire(error);
+   throw error;
   }
  }
  async function waitForCompilation(pending,signal,{serial=false,object=null}={}){
@@ -215,6 +260,16 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
   registerAuxiliaryTarget(target){if(closed)throw Error('Pipeline admission closed');if(!target?.isRenderTarget||typeof renderer.getRenderTarget!=='function'||typeof renderer.setRenderTarget!=='function')throw TypeError('Invalid auxiliary target');const count=auxiliaryTargets.get(target)??0;auxiliaryTargets.set(target,count+1);if(!count){auxiliaryRevision++;structuralRevision++;}let released=false;return ()=>{if(released)return;released=true;const current=auxiliaryTargets.get(target)??0;if(current<=1){if(current){auxiliaryTargets.delete(target);auxiliaryRevision++;structuralRevision++;}}else auxiliaryTargets.set(target,current-1);};},
   notifyShadowTargets,
   get structuralRevision(){return structuralRevision;},
+  // A color/clear fallback can keep rendering while the real scene's
+  // background pipeline compiles. Replacing an existing node is not yet
+  // supported: Three mutates one cached background material per scene.
+  prepareBackgroundAndPublish(backgroundNode,{signal}={},publish){
+   if(closed)return Promise.reject(Error('Pipeline admission closed'));
+   if(!backgroundNode?.isNode||typeof backgroundNode.getCacheKey!=='function'||typeof publish!=='function'||signal!==undefined&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))return Promise.reject(TypeError('Invalid background admission'));
+   if(scene.backgroundNode!=null||scene.background!=null&&!scene.background.isColor)return Promise.reject(Error('Existing node or textured background requires a replacement transaction'));
+   if(signal?.aborted)return Promise.reject(new DOMException('Pipeline admission cancelled','AbortError'));
+   return new Promise((resolve,reject)=>enqueue({backgroundNode,expectedNode:scene.backgroundNode,expectedBackground:scene.background,signal,version:generation,publish,resolve,reject,onAbort:null}));
+  },
   prepare(object,{signal,include=[],target=undefined,shadowPass=includeShadowPass,passCamera=camera,targetScene=scene,publish=null,returnTicket=false}={}){
    if(closed)return Promise.reject(Error('Pipeline admission closed'));
    if(!object?.isObject3D)return Promise.reject(TypeError('Invalid admission object'));
