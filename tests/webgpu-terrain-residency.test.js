@@ -34,6 +34,14 @@ test('terrain publication exposes the complete replacement before notifying cons
 });
 
 function chunk(cx=0,cz=0){const positions=new Float32Array(49*49*3),colors=new Float32Array(49*49*3),indices=new Uint16Array(48*48*6);for(let z=0;z<49;z++)for(let x=0;x<49;x++){const i=(z*49+x)*3;positions.set([x-24,(x+z)/10,z-24],i);colors.set([.2,.4,.6],i);}for(let z=0;z<48;z++)for(let x=0;x<48;x++){const a=z*49+x,k=(z*48+x)*6;indices.set([a,a+49,a+1,a+1,a+49,a+50],k);}return {authority:'spatial-wasm',cx,cz,terrain:{positions,colors,indices}};}
+test('terrain logical preparation rolls back without publishing or notifying',()=>{
+ const scene=new THREE.Scene(),material=new THREE.MeshBasicMaterial(),events=[],view=createWebGpuTerrainResidency({scene,material,onRevision:event=>events.push(event)});
+ try{view.replace(chunk(),1,'e');const old=view.get(0,0),height=view.surface(-24,-24),next=chunk();next.terrain.positions[1]=42;const token=view.prepareRevision(next,2,'e');assert.equal(token.applyLogical(),true);assert.equal(view.surface(-24,-24),42);assert.equal(view.get(0,0),token.object);assert.equal(scene.children[0],old);assert.equal(events.length,1);assert.equal(token.rollbackLogical(),true);assert.equal(view.get(0,0),old);assert.equal(view.surface(-24,-24),height);assert.equal(scene.children[0],old);assert.equal(events.length,1);assert.equal(token.rollbackLogical(),false);assert.equal(token.applyLogical(),true);assert.equal(token.publish(),true);assert.equal(view.surface(-24,-24),42);assert.equal(scene.children[0],token.object);assert.equal(events.length,2);
+ }finally{view.dispose();material.dispose();}
+});
+test('aborting an applied terrain preparation restores the previous surface and disposes the candidate',()=>{
+ const scene=new THREE.Scene(),material=new THREE.MeshBasicMaterial(),view=createWebGpuTerrainResidency({scene,material}),next=chunk();view.replace(chunk(),1,'e');const old=view.get(0,0),token=view.prepareRevision(next,2,'e');let disposed=0;token.object.geometry.addEventListener('dispose',()=>disposed++);token.applyLogical();assert.equal(token.abort(),true);assert.equal(view.get(0,0),old);assert.equal(scene.children[0],old);assert.equal(disposed,1);assert.throws(()=>token.publish(),/not applied/);view.dispose();material.dispose();
+});
 test('preparing terrain leaves the resident surface unchanged until commit and abort releases its geometry',()=>{
  const scene=new THREE.Scene(),material=new THREE.MeshBasicMaterial(),view=createWebGpuTerrainResidency({scene,material}),events=[];
  try{view.replace(chunk(),1,'e');const old=view.get(0,0),next=chunk();next.terrain.positions[1]=42;const staged=view.prepareRevision(next,2,'e');staged.object.geometry.addEventListener('dispose',()=>events.push('disposed'));
