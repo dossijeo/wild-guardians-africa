@@ -1,6 +1,18 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';import {gunzipSync} from 'node:zlib';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';import {emit,observeGameEvents,observePresentationGameEvents} from '../src/simulation/game.js';import {createConfirmedStateReceiver} from '../src/simulation/confirmed-state-receiver.js';
 const fixture=()=>deserialize(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString());
+test('optional changed keys capture nested edits and reordered entities without false changes',()=>{
+ const display=fixture(),authority=deserialize(serialize(display)),receiver=createConfirmedStateReceiver(display,'s',{trackChangedKeys:true}),packet=sequence=>({session:'s',sequence,snapshot:serialize(authority),events:[]});
+ assert.deepEqual([...receiver.accept(packet(1)).changedKeys],[]);authority.raid.animals[0].x+=1;authority.suppressed.push('tracked-prop');const changes=receiver.accept(packet(2)).changedKeys;assert.ok(changes.has('raid'));assert.ok(changes.has('suppressed'));assert.equal(changes.has('workers'),false);assert.deepEqual(display.suppressed,authority.suppressed);assert.deepEqual([...receiver.accept(packet(3)).changedKeys],[]);
+ if(authority.workers.length>1){authority.workers.reverse();assert.equal(receiver.accept(packet(4)).changedKeys.has('workers'),true);}
+});
+test('selective change tracking reports only subscribed top-level fields',()=>{
+ const display=fixture(),authority=deserialize(serialize(display)),receiver=createConfirmedStateReceiver(display,'s',{trackChangedKeys:['suppressed']}),packet=sequence=>({session:'s',sequence,snapshot:serialize(authority),events:[]});receiver.accept(packet(1));authority.raid.animals[0].x+=1;assert.deepEqual([...receiver.accept(packet(2)).changedKeys],[]);authority.suppressed.push('new-prop');assert.deepEqual([...receiver.accept(packet(3)).changedKeys],['suppressed']);assert.throws(()=>createConfirmedStateReceiver(display,'s',{trackChangedKeys:['x','x']}),/Invalid/);
+});
+test('tracked reconciliation preserves the same state and entity identities as ordinary reconciliation',()=>{
+ const original=fixture(),plain=deserialize(serialize(original)),tracked=deserialize(serialize(original)),authority=deserialize(serialize(original)),plainReceiver=createConfirmedStateReceiver(plain,'s'),trackedReceiver=createConfirmedStateReceiver(tracked,'s',{trackChangedKeys:true}),plainAnimal=plain.raid.animals[0],trackedAnimal=tracked.raid.animals[0];
+ for(let sequence=1;sequence<=4;sequence++){authority.raid.animals[0].x+=sequence*.25;if(sequence===2)authority.suppressed.push('prop-a');if(sequence===3)authority.workers.reverse();if(sequence===4)authority.suppressed=[];const packet={session:'s',sequence,snapshot:serialize(authority),events:[]};plainReceiver.accept(packet);trackedReceiver.accept(packet);assert.equal(serialize(tracked),serialize(plain));assert.equal(plain.raid.animals[0],plainAnimal);assert.equal(tracked.raid.animals[0],trackedAnimal);}
+});
 test('prepared publication holds the displayed state and observers until ordered commit',()=>{
  const display=fixture(),authority=deserialize(serialize(display)),animal=display.raid.animals[0],workers=display.workers,before=serialize(display),events=[],stop=observePresentationGameEvents(display,event=>events.push(event.id));
  try{authority.raid.animals[0].x+=1;authority.elapsed+=.05;emit(authority,'Test');const event=authority.events.at(-1),receiver=createConfirmedStateReceiver(display,'s'),packet={session:'s',sequence:1,snapshot:serialize(authority),events:[event]};

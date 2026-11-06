@@ -11,6 +11,11 @@ import {acceptLiveTerrainCheckpoint} from '../src/rendering/live-terrain-checkpo
 import {createConfirmedMotionFeed} from '../src/rendering/confirmed-motion-feed.js';
 import {serializeConfirmedState} from '../src/simulation/confirmed-live-state.js';
 const fixture=()=>deserialize(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString());
+test('tracked state changes reach consumers after reconciliation and before acknowledgement',()=>{
+ const state=fixture(),next=deserialize(serialize(state)),order=[],port={postMessage:m=>order.push(['ack',m.sequence]),close(){},start(){}};
+ const stream=createConfirmedPresentationStream({port,session:'s',state,trackChangedKeys:true,terrain:{confirm:n=>order.push(['terrain',n])},onConfirmed:(message,keys)=>order.push(['confirmed',message.sequence,[...keys],state.suppressed.length])});
+ next.suppressed.push('new-prop');port.onmessage({data:{kind:'publication',session:'s',publication:{session:'s',sequence:1,snapshot:serialize(next),events:[],physicsPose:null}}});assert.deepEqual(order,[['terrain',1],['confirmed',1,['suppressed'],next.suppressed.length],['ack',1]]);stream.dispose();
+});
 test('certified unchanged publications skip scene reconciliation while still confirming terrain and sequence',()=>{
  const state=fixture(),order=[],port={postMessage:m=>order.push(['ack',m.sequence]),close(){},start(){}},stream=createConfirmedPresentationStream({port,session:'s',state,terrain:{confirm:n=>order.push(['terrain',n])},onConfirmed:m=>order.push(['changed',m.sequence]),onUnchanged:m=>order.push(['unchanged',m.sequence])});
  port.onmessage({data:{kind:'publication',session:'s',publication:{session:'s',sequence:1,snapshot:serialize(state),events:[],physicsPose:null}}});
