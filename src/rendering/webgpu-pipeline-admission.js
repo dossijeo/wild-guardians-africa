@@ -1,10 +1,12 @@
+import {webGpuTextureBinding} from './webgpu-texture-binding.js';
+
 // Three r180 includes public material properties and texture sampler layouts
 // in its render-object key, even when material.version has not changed.
 function materialInputs(material,values){
  if(!material)return;
  const keys=Object.keys(material);for(let proto=Object.getPrototypeOf(material);proto;proto=Object.getPrototypeOf(proto))for(const [key,descriptor] of Object.entries(Object.getOwnPropertyDescriptors(proto)))if(typeof descriptor.get==='function')keys.push(key);
  values.push(material.customProgramCacheKey?.());
- for(const key of keys){if(/^(is[A-Z]|_)|^(visible|version|uuid|name|opacity|userData)$/.test(key))continue;const value=material[key];values.push(key);if(value===null)values.push(null);else if(typeof value==='number')values.push(value!==0);else if(typeof value==='object'){values.push('object');if(value?.isTexture)values.push('texture',value.mapping,value.magFilter,value.minFilter,value.wrapS,value.wrapT,value.wrapR,value.format,value.type,value.colorSpace,value.channel,value.compareFunction,value.isCubeTexture,value.isDataArrayTexture,value.isData3DTexture);}else values.push(String(value));}
+ for(const key of keys){if(/^(is[A-Z]|_)|^(visible|version|uuid|name|opacity|userData)$/.test(key))continue;const value=material[key];values.push(key);if(value===null)values.push(null);else if(typeof value==='number')values.push(value!==0);else if(typeof value==='object'){values.push('object');if(value?.isTexture)values.push('texture',...webGpuTextureBinding(value),value.mapping,value.magFilter,value.minFilter,value.wrapS,value.wrapT,value.wrapR,value.colorSpace,value.channel,value.anisotropy);}else values.push(String(value));}
  // Fixed-function state can distinguish different nonzero numeric values.
  for(const key of ['side','shadowSide','blending','blendSrc','blendDst','blendEquation','blendSrcAlpha','blendDstAlpha','blendEquationAlpha','depthFunc','stencilFunc','stencilFail','stencilZFail','stencilZPass'])values.push(material[key]);
 }

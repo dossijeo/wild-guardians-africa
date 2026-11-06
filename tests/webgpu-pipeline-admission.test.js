@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
+import {MeshStandardNodeMaterial} from 'three/webgpu';
 import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
 import {closeWebGpuRenderer} from '../src/rendering/webgpu-world-surface.js';
 
@@ -170,6 +171,17 @@ test('material pipeline state and sampler changes invalidate without needsUpdate
 test('renderer output and shadow configuration invalidate pending pipelines',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),mesh=new THREE.Mesh(),pending=[],renderer={backend:{isWebGPUBackend:true},toneMapping:THREE.NoToneMapping,shadowMap:{enabled:true,type:THREE.PCFShadowMap},compileAsync:()=>new Promise(resolve=>pending.push(resolve))},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),ready=admission.prepare(mesh),turn=()=>new Promise(resolve=>setImmediate(resolve));
  try{await turn();renderer.shadowMap.type=THREE.BasicShadowMap;pending[0]();await turn();assert.equal(pending.length,2);renderer.toneMapping=THREE.ACESFilmicToneMapping;pending[1]();await turn();assert.equal(pending.length,3);pending[2]();await ready;}finally{admission.dispose();mesh.geometry.dispose();mesh.material.dispose();}
+});
+test('compatible RGBA and BC7 texture bindings do not invalidate a pending material',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),placeholder=new THREE.DataTexture(new Uint8Array([255,255,255,255]),1,1),compressed=new THREE.CompressedTexture([],1,1,THREE.RGBA_BPTC_Format),material=new MeshStandardNodeMaterial({map:placeholder}),mesh=new THREE.Mesh(new THREE.BoxGeometry(),material);let finish,calls=0;
+ for(const key of ['mapping','magFilter','minFilter','wrapS','wrapT','wrapR','colorSpace','channel','anisotropy'])compressed[key]=placeholder[key];
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(){calls++;return new Promise(resolve=>{finish=resolve;});}},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),ready=admission.prepare(mesh);
+ try{await new Promise(resolve=>setImmediate(resolve));material.map=compressed;finish();await ready;assert.equal(calls,1);}finally{admission.dispose();placeholder.dispose();compressed.dispose();mesh.geometry.dispose();material.dispose();}
+});
+test('different WebGPU texture sample types still invalidate pending material admission',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),rgba=new THREE.DataTexture(new Uint8Array(4),1,1),integer=new THREE.DataTexture(new Uint32Array(4),1,1,THREE.RGBAIntegerFormat,THREE.UnsignedIntType),material=new THREE.MeshStandardMaterial({map:rgba}),mesh=new THREE.Mesh(new THREE.BoxGeometry(),material),pending=[];
+ const renderer={backend:{isWebGPUBackend:true},compileAsync:()=>new Promise(resolve=>pending.push(resolve))},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),ready=admission.prepare(mesh),turn=()=>new Promise(resolve=>setImmediate(resolve));
+ try{await turn();material.map=integer;pending[0]();await turn();assert.equal(pending.length,2);pending[1]();await ready;}finally{admission.dispose();rgba.dispose();integer.dispose();mesh.geometry.dispose();material.dispose();}
 });
 
 test('device loss rejects active admission without waiting for the compiler',async()=>{
