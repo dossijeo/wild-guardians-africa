@@ -29,3 +29,13 @@ test('manual input cancels travel and a saved focus never replays',async()=>{
  const {state,controls,calls,director}=fixture();state.raid.cameraFocusedAnimalId='a';director.update(state,.2);assert.equal(controls.target.x,100);assert.equal(calls.length,0);
  delete state.raid.cameraFocusedAnimalId;director.beginManual();director.update(state,.2);assert.equal(controls.target.x,100);director.endManual();director.update(state,.2);await Promise.resolve();assert.equal(calls.length,1);director.beginManual();const x=controls.target.x;director.endManual();director.update(state,2);assert.equal(controls.target.x,x);director.dispose();
 });
+test('rejected stale focus retries only after the confirmed raid candidates change',async()=>{
+ const camera=new PerspectiveCamera(42,1,.1,500);camera.position.set(100,35,100);
+ const controls={target:new Vector3(100,0,100),enableDamping:true,update(){}},calls=[];
+ const state={pauses:[],structures:[],plants:[],raid:{id:'r',animals:[{id:'a',x:50,z:50,status:'entering',species:'warthog',radius:1},{id:'b',x:60,z:60,status:'entering',species:'warthog',radius:1}]}};
+ const director=createWorkerRaidCamera({camera,controls,field:()=>({surface:()=>0}),guard:{run:fn=>fn()},runtime:()=>({submit(command){calls.push(command);return Promise.resolve({value:command.animalId==='b'});}})});
+ director.update(state,.1);await new Promise(resolve=>setImmediate(resolve));
+ for(let i=0;i<5;i++)director.update(state,.1);await new Promise(resolve=>setImmediate(resolve));assert.equal(calls.length,1);
+ state.raid.animals[0].status='gone';director.update(state,.1);await new Promise(resolve=>setImmediate(resolve));
+ assert.deepEqual(calls.map(command=>command.animalId),['a','b']);director.dispose();
+});
