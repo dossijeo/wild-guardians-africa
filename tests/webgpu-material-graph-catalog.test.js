@@ -2,8 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {MeshBasicNodeMaterial,WebGPURenderer} from 'three/webgpu';
-import {characterColorRecipe,progressiveCharacterColorGraph,structureColorRecipe,structureColorGraph,waterColorRecipe,lavaColorRecipe,beastToonRecipe,guardianSurfaceRecipe,vertexTerrainRecipe,bakedWalkRecipe,biomeSurfaceRecipe} from '../src/rendering/webgpu-material-graph-catalog.js';
+import {characterColorRecipe,progressiveCharacterColorGraph,structureColorRecipe,structureColorGraph,waterColorRecipe,lavaColorRecipe,beastToonRecipe,guardianSurfaceRecipe,vertexTerrainRecipe,bakedWalkRecipe,biomeSurfaceRecipe,mangroveGroundRecipe} from '../src/rendering/webgpu-material-graph-catalog.js';
 import {createWebGpuGuardianStyle} from '../src/rendering/webgpu-guardian-material.js';
+
+test('mangrove ground recipes retain bound atlas identity and embedded tile parameters',()=>{
+ const textures=[new THREE.Texture(),new THREE.Texture(),new THREE.Texture()],args={textures,scale:.1,normalBoost:.6},first=mangroveGroundRecipe(args);
+ assert.equal(first.key,mangroveGroundRecipe(args).key);assert.notEqual(first.key,mangroveGroundRecipe({...args,scale:.2}).key);assert.notEqual(first.key,mangroveGroundRecipe({...args,textures:[new THREE.Texture(),...textures.slice(1)]}).key);assert.equal(first.structural.state.side,THREE.DoubleSide);assert.equal(first.passes.depth,'inherited-unverified');
+});
 
 test('color recipes separate graph structure from dynamic material data',()=>{
  const a=new THREE.Texture(),b=new THREE.Texture();b.wrapS=THREE.RepeatWrapping;b.magFilter=THREE.NearestFilter;b.minFilter=THREE.NearestFilter;b.anisotropy=4;

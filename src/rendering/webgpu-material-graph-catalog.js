@@ -75,6 +75,14 @@ const terrainState=Object.freeze({vertexColors:true,side:DoubleSide,toneMapped:f
 const terrainDynamic=Object.freeze(['vertexColor','shadowVisibility']);
 export function vertexTerrainRecipe({shadows=false}={}){if(typeof shadows!=='boolean')throw TypeError('Invalid terrain recipe');const structural=Object.freeze({family:'vertex-terrain',shadows,state:terrainState,attributes:Object.freeze(['position','color'])});return Object.freeze({structural,dynamic:terrainDynamic,passes:inheritedPasses,key:JSON.stringify([structural.family,shadows,terrainState])});}
 
+// This provider embeds texture identities and tile constants into its graph;
+// declaring them prevents treating a different atlas or light as equivalent.
+export function mangroveGroundRecipe({textures,scale,normalBoost,light=null,shadowNode=null,shadows=false}={}){
+ if(!Array.isArray(textures)||textures.length!==3||textures.some(t=>!t?.isTexture)||!Number.isFinite(scale)||!Number.isFinite(normalBoost)||typeof shadows!=='boolean'||light!==null&&!light?.isDirectionalLight||shadowNode!==null&&!shadowNode?.isShadowNode)throw TypeError('Invalid mangrove ground recipe');
+ const structural=Object.freeze({family:'mangrove-ground',textureIds:Object.freeze(textures.map(t=>t.uuid)),textures:Object.freeze(textures.map(textureStructure)),scale,normalBoost,lightId:light?.uuid??null,shadowId:shadowNode?.uuid??null,shadows,state:Object.freeze({side:DoubleSide,toneMapped:false})});
+ return Object.freeze({structural,dynamic:Object.freeze(['night','sunDirection','atlasContents']),passes:Object.freeze({color:'mangrove-ground-output',depth:'inherited-unverified',shadow:'inherited-unverified'}),key:JSON.stringify(structural)});
+}
+
 const bakedDynamic=Object.freeze(['phaseOffset','clockWeight','bind','inverse','duration','sampleRate','frames','lastSample']);
 export function bakedWalkRecipe({texture,clock=false,phaseSource=false}={}){if(!texture?.isDataTexture||typeof clock!=='boolean'||typeof phaseSource!=='boolean')throw TypeError('Invalid baked walk recipe');const shape=textureStructure(texture),structural=Object.freeze({family:'baked-walk',textureId:texture.uuid,texture:shape,clock,phaseSource,attributes:Object.freeze(['skinIndex:uvec4','skinWeight:vec4'])});return Object.freeze({structural,dynamic:bakedDynamic,passes:inheritedPasses,key:JSON.stringify([structural.family,texture.uuid,...textureKey(shape),clock,phaseSource])});}
 
