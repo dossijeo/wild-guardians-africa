@@ -587,13 +587,13 @@ Cada entrega actualiza el registro siguiente con archivos, commit y comprobacion
 
 | Entrega | Estado | Alcance y trabajo pendiente |
 | --- | --- | --- |
-| A1 Propiedad y bootstrap | Pendiente de cierre | Contratos, dependencias y selección exclusiva |
+| A1 Propiedad y bootstrap | Cerrado internamente | Fachada, perfil noDEV, backend explícito, identidades y generaciones; evidencia en [matriz A1/A3](a1-a3-contract-audit.md). Contenido B y validación de dispositivo C pendientes. |
 | A2 Transporte y tiempo | Cerrado internamente | Baseline/deltas, hechos y barreras, presión y checkpoints; límites y evidencia en [contrato A2](a2-contract-closure.md). Validación integrada y GPU en C. |
-| A3 Materiales y pipelines | Pendiente de cierre | Interfaces, catálogo y pases |
+| A3 Materiales y pipelines | Cerrado internamente para familias actuales | Catálogo, parámetros, claves estructurales y cobertura de pases; evidencia en [matriz A1/A3](a1-a3-contract-audit.md). Nuevos contenidos B y paridad/pipelines físicos C pendientes. |
 | A4 Admisión gráfica | Cerrado internamente para rutas actuales | Admisión y publicación de instancias reales, cancelación y pases; indicador provisional inmediato pendiente B3 y validación GPU real C; los cambios globales estructurales futuros exigen transacción explícita |
 | A5 Recursos | Cerrado internamente | Generación, leases, residencia y presión heurística para propietarios explícitos y compuestos; contenidos nuevos B y medición/validación C pendientes |
 | A6 Movilidad y reproducción | Cerrado internamente en el perfil temporal explícito | Intervalos confirmados, horizonte, secuencia, actor e identidad de estado con entrega ordenada y fallbacks; clips B4 y validación C pendientes |
-| A7 Interacción y recuperación | Pendiente de cierre | Provisionales, orden temporal y reinicios |
+| A7 Interacción y recuperación | Cerrado internamente en perfil explícito | IDs, orden autoritativo, checkpoint/replay, generaciones y fallo seguro; evidencia en [contrato de recuperación](temporal-recovery-contract.md). Contenido B y recuperación real con GPU/física C pendientes. |
 | B Migración completa | Pendiente tras A | Inventario B1–B7 sin elementos esenciales omitidos |
 | C Validación integrada | No iniciar antes de B | Resultados funcionales, visuales y mediciones |
 | D Optimización | No iniciar antes de C | Mejora reproducible del conjunto |
