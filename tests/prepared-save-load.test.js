@@ -37,6 +37,21 @@ test('failed or unavailable Worker checkpoints retain legacy recovery copies',as
 test('Worker checkpoint writes remain serialized by the repository queue',async()=>{
  const f=fixture(),workers=[],factory=()=>{const worker={postMessage(message){this.message=message;},terminate(){}};workers.push(worker);return worker;},options={slotId:'a',policy:{},savedAt:5,workerFactory:factory},first=f.repo.saveWorkerCheckpoint({sequence:1},options),second=f.repo.saveWorkerCheckpoint({sequence:2},options),flush=()=>new Promise(resolve=>setImmediate(resolve));await flush();assert.equal(workers.length,1);workers[0].onmessage({data:{kind:'result',result:{saved:true,sequence:1,elapsed:0}}});await first;await flush();assert.equal(workers.length,2);workers[1].onmessage({data:{kind:'result',result:{saved:true,sequence:2,elapsed:1}}});assert.equal((await second).sequence,2);
 });
+test('unresponsive checkpoint Worker is terminated, retains recovery copies, and releases later saves',async()=>{
+ const f=fixture(),key=f.repo.legacy.key('a'),workers=[];f.data.set(key,f.text);
+ const factory=()=>{const worker={postMessage(){},terminate(){this.terminated=true;}};workers.push(worker);return worker;};
+ const options={slotId:'a',policy:{},savedAt:5,timeout:15,workerFactory:factory};
+ const first=f.repo.saveWorkerCheckpoint({sequence:1},options),second=f.repo.saveWorkerCheckpoint({sequence:2},{...options,timeout:1000});
+ await assert.rejects(first,{name:'TimeoutError'});assert.equal(workers[0].terminated,true);assert.equal(f.data.get(key),f.text);
+ await new Promise(resolve=>setImmediate(resolve));assert.equal(workers.length,2);
+ workers[1].onmessage({data:{kind:'result',result:{saved:true,sequence:2,elapsed:1}}});
+ assert.equal((await second).sequence,2);assert.equal(workers[1].terminated,true);assert.equal(f.data.has(key),false);
+});
+test('checkpoint Worker rejects invalid timeouts before starting storage work',async()=>{
+ const f=fixture();let started=false;
+ for(const timeout of [0,-1,NaN,Infinity])await assert.rejects(f.repo.saveWorkerCheckpoint({sequence:1},{slotId:'a',policy:{},timeout,workerFactory:()=>{started=true;}}),/Invalid worker checkpoint persistence/);
+ assert.equal(started,false);
+});
 test('legacy copies receive asynchronous full validation after IndexedDB recovery fails',async()=>{
  const f=fixture(),calls=[];f.repo.records=async()=>({primary:'invalid'});f.data.set(f.repo.legacy.key('a'),f.text);
  const state=await f.repo.loadPrepared('a',{decode:async text=>{calls.push(text);return deserialize(text);}});

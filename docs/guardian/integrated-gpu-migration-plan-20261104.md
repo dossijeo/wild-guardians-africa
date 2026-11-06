@@ -4,6 +4,8 @@ Revisión del 5 de noviembre de 2026. Rama de trabajo: `codex/guardian-3d-animat
 
 La prioridad es implementar una arquitectura común correcta, completar sobre ella los elementos pendientes y después validar la partida completa. Se suspenden las rondas de benchmarks, trazas comparativas y pruebas de incursiones sobre versiones parcialmente migradas. No se acepta como avance arquitectónico otra solución aislada que el juego principal no utilice.
 
+La persistencia de checkpoints en Worker tiene ahora un plazo de respuesta de 30 segundos: si se agota, termina el Worker, comunica el error y permite que la cola procese guardados posteriores; las copias heredadas no se borran sin confirmación. La transacción IndexedDB podría haberse confirmado antes de perderse su respuesta, por lo que el error no certifica que el almacenamiento siga intacto. Las pruebas ejercitan el fallo y la cola con Workers simulados; falta verificar esa situación en navegador y no supone una mejora medida de rendimiento.
+
 El orden obligatorio es **A: cierre estructural → B: migración completa → C: validación integrada → D: optimización medida**. Durante A y B se mantienen compilación, análisis estático, comprobaciones de contratos y pruebas unitarias de los cambios de estado, propiedad y determinismo que se modifiquen. Esos controles de ingeniería impiden acumular errores; no son otra campaña de rendimiento ni permiten declarar validada la experiencia de juego. La corrección del diseño no sustituye a la validación final.
 
 ## 1. Problemas que debe cerrar la arquitectura
