@@ -1,8 +1,17 @@
-// Capture the structural inputs owned by the requesting object. Attribute
-// contents, transforms and uniforms are deliberately excluded: they can vary
-// while the same pipeline is compiling. Material changes must use needsUpdate.
-function pipelineInputs(object,target,camera){
- const values=[camera,camera?.layers?.mask,target,target?.samples,target?.depthBuffer,target?.stencilBuffer,target?.texture?.format,target?.texture?.type,target?.texture?.colorSpace,target?.depthTexture,target?.depthTexture?.format,target?.depthTexture?.type];
+// Three r180 includes public material properties and texture sampler layouts
+// in its render-object key, even when material.version has not changed.
+function materialInputs(material,values){
+ if(!material)return;
+ const keys=Object.keys(material);for(let proto=Object.getPrototypeOf(material);proto;proto=Object.getPrototypeOf(proto))for(const [key,descriptor] of Object.entries(Object.getOwnPropertyDescriptors(proto)))if(typeof descriptor.get==='function')keys.push(key);
+ values.push(material.customProgramCacheKey?.());
+ for(const key of keys){if(/^(is[A-Z]|_)|^(visible|version|uuid|name|opacity|userData)$/.test(key))continue;const value=material[key];values.push(key);if(value===null)values.push(null);else if(typeof value==='number')values.push(value!==0);else if(typeof value==='object'){values.push('object');if(value?.isTexture)values.push('texture',value.mapping,value.magFilter,value.minFilter,value.wrapS,value.wrapT,value.wrapR,value.format,value.type,value.colorSpace,value.channel,value.compareFunction,value.isCubeTexture,value.isDataArrayTexture,value.isData3DTexture);}else values.push(String(value));}
+ // Fixed-function state can distinguish different nonzero numeric values.
+ for(const key of ['side','shadowSide','blending','blendSrc','blendDst','blendEquation','blendSrcAlpha','blendDstAlpha','blendEquationAlpha','depthFunc','stencilFunc','stencilFail','stencilZFail','stencilZPass'])values.push(material[key]);
+}
+// Capture structural inputs. Attribute contents, transforms and ordinary
+// uniforms can vary while the same pipeline is compiling.
+function pipelineInputs(object,target,camera,renderer){
+ const values=[camera,camera?.layers?.mask,renderer.toneMapping,renderer.outputColorSpace,renderer.samples,renderer.depth,renderer.stencil,renderer.shadowMap?.enabled,renderer.shadowMap?.type,renderer.localClippingEnabled,renderer.clippingPlanes?.length,target,target?.samples,target?.depthBuffer,target?.stencilBuffer,target?.texture?.format,target?.texture?.type,target?.texture?.colorSpace,target?.depthTexture,target?.depthTexture?.format,target?.depthTexture?.type];
  function attributeLayout(attribute){
   // BufferAttribute identity alone is insufficient: its array or instancing
   // layout can change while compileAsync is pending. Content changes remain
@@ -17,7 +26,7 @@ function pipelineInputs(object,target,camera){
   attributeLayout(geometry?.index);
   // Three builds separate render-list entries for visible materials selected
   // by geometry groups. These can change without bumping material.version.
-  for(const material of materials)values.push(material,material?.version,material?.visible);
+  for(const material of materials){values.push(material,material?.version,material?.visible);materialInputs(material,values);}
   if(Array.isArray(node.material)){values.push(geometry?.groups?.length);for(const group of geometry?.groups??[])values.push(group.start,group.count,group.materialIndex);}
   for(const [name,attribute] of Object.entries(geometry?.attributes??{}).sort(([a],[b])=>a.localeCompare(b))){values.push(name);attributeLayout(attribute);}
   for(const [name,attributes] of Object.entries(geometry?.morphAttributes??{}).sort(([a],[b])=>a.localeCompare(b))){values.push(name,attributes.length);for(const attribute of attributes)attributeLayout(attribute);}
@@ -119,7 +128,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
      // Three's ordinary render may use an intermediate output target; compile
      // for that same target, and restore state before the draw loop resumes.
      target=currentTarget();
-     inputs=pipelineInputs(object,target,passCamera);
+     inputs=pipelineInputs(object,target,passCamera,renderer);
      if(requestedTarget!==undefined)renderer.setMRT?.(null);
      if(target)renderer.setRenderTarget(target);
      // Three r180 updates shadow nodes during compileAsync. Prevent that
@@ -143,7 +152,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
     if(closed||version!==generation)throw Error('Pipeline admission cancelled');
     // A light may have been added or removed while the driver compiled. The
     // completed pipeline describes the old scene and cannot admit the object.
-    if(lightsChanged()||!sameInputs(inputs,pipelineInputs(object,currentTarget(),passCamera)))return execute(object,signal,version,include,requestedTarget,shadowPass,passCamera,targetScene,isCurrent);
+    if(lightsChanged()||!sameInputs(inputs,pipelineInputs(object,currentTarget(),passCamera,renderer)))return execute(object,signal,version,include,requestedTarget,shadowPass,passCamera,targetScene,isCurrent);
     const shadowTargets=[];
     if(shadowPass){
      let castsShadow=false;object.traverse(node=>{if((node.isMesh||node.isLine||node.isPoints)&&node.castShadow)castsShadow=true;});
@@ -168,11 +177,11 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
        if(signal?.aborted)throw new DOMException('Pipeline admission cancelled','AbortError');
        if(renderer._isDeviceLost===true)throw Error('WebGPU device lost during shadow admission');
        if(closed||version!==generation)throw Error('Pipeline admission cancelled');
-       if(lightsChanged()||target!==light.shadow.map||!sameInputs(inputs,pipelineInputs(object,currentTarget(),passCamera)))return execute(object,signal,version,include,requestedTarget,shadowPass,passCamera,targetScene,isCurrent);
+       if(lightsChanged()||target!==light.shadow.map||!sameInputs(inputs,pipelineInputs(object,currentTarget(),passCamera,renderer)))return execute(object,signal,version,include,requestedTarget,shadowPass,passCamera,targetScene,isCurrent);
       }
      }
     }
-    return {valid:()=>!closed&&!lostError&&renderer._initialized!==false&&renderer._isDeviceLost!==true&&version===generation&&!signal?.aborted&&(!isCurrent||isCurrent())&&!lightsChanged()&&shadowTargets.every(([light,map])=>light.shadow.map===map)&&sameInputs(inputs,pipelineInputs(object,currentTarget(),passCamera))};
+    return {valid:()=>!closed&&!lostError&&renderer._initialized!==false&&renderer._isDeviceLost!==true&&version===generation&&!signal?.aborted&&(!isCurrent||isCurrent())&&!lightsChanged()&&shadowTargets.every(([light,map])=>light.shadow.map===map)&&sameInputs(inputs,pipelineInputs(object,currentTarget(),passCamera,renderer))};
   }catch(error){
    // Three r180 may retain an unsuccessful pipeline in its internal cache.
    if(!closed&&!signal?.aborted)retire(error);

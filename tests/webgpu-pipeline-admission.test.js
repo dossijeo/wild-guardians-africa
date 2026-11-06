@@ -162,6 +162,16 @@ test('material visibility and geometry groups invalidate an in-flight admission'
  try{await turn();geometry.addGroup(0,3,1);pending[0]();await turn();assert.equal(pending.length,2);materials[1].visible=true;pending[1]();await turn();assert.equal(pending.length,3);geometry.groups[1].materialIndex=0;pending[2]();await turn();assert.equal(pending.length,4);pending[3]();await ready;}finally{admission.dispose();geometry.dispose();for(const material of materials)material.dispose();}
 });
 
+test('material pipeline state and sampler changes invalidate without needsUpdate',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),material=new THREE.MeshStandardMaterial(),mesh=new THREE.Mesh(new THREE.BoxGeometry(),material),texture=new THREE.Texture(),pending=[];
+ const renderer={backend:{isWebGPUBackend:true},compileAsync:()=>new Promise(resolve=>pending.push(resolve))},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),ready=admission.prepare(mesh),turn=()=>new Promise(resolve=>setImmediate(resolve));
+ try{await turn();material.side=THREE.BackSide;pending[0]();await turn();assert.equal(pending.length,2);material.map=texture;pending[1]();await turn();assert.equal(pending.length,3);texture.wrapS=THREE.RepeatWrapping;pending[2]();await turn();assert.equal(pending.length,4);material.opacity=.5;material.roughness=.7;pending[3]();await ready;assert.equal(pending.length,4);}finally{admission.dispose();texture.dispose();mesh.geometry.dispose();material.dispose();}
+});
+test('renderer output and shadow configuration invalidate pending pipelines',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),mesh=new THREE.Mesh(),pending=[],renderer={backend:{isWebGPUBackend:true},toneMapping:THREE.NoToneMapping,shadowMap:{enabled:true,type:THREE.PCFShadowMap},compileAsync:()=>new Promise(resolve=>pending.push(resolve))},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),ready=admission.prepare(mesh),turn=()=>new Promise(resolve=>setImmediate(resolve));
+ try{await turn();renderer.shadowMap.type=THREE.BasicShadowMap;pending[0]();await turn();assert.equal(pending.length,2);renderer.toneMapping=THREE.ACESFilmicToneMapping;pending[1]();await turn();assert.equal(pending.length,3);pending[2]();await ready;}finally{admission.dispose();mesh.geometry.dispose();mesh.material.dispose();}
+});
+
 test('device loss rejects active admission without waiting for the compiler',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group();let lose;
  const renderer={backend:{isWebGPUBackend:true,device:{lost:new Promise(resolve=>{lose=resolve;})}},compileAsync:()=>new Promise(()=>{})};
