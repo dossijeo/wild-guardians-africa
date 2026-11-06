@@ -24,7 +24,7 @@ export function createPresentationRecoveryJournal({capacity=256,highWatermark=12
  const viewKeys=new Set(['kind','session','sequence','value','unchanged','slotId','stateSequence','elapsed','pauses','events','residency','saveAvailable','terrainChanged']);
  function backgroundView(item){const p=item?.publication;return item?.kind==='publication'&&item.options?.backgroundView===true&&knownEnvelope(p)&&p?.unchanged===true&&p.terrainChanged===false&&Array.isArray(p.events)&&p.events.length===0&&Object.keys(p).every(key=>viewKeys.has(key));}
  function sameView(a,b){const left={...a},right={...b};delete left.sequence;delete right.sequence;return JSON.stringify(left)===JSON.stringify(right);}
- function overhead(){if(!encoder||closed)return 0;const shared=sharedRetainedBytes?.()??0;if(!Number.isSafeInteger(shared)||shared<0)throw TypeError('Invalid shared snapshot retention');return encoder.retainedBytes()+shared+(basePublication?estimateBytes(basePublication):0)+(candidatePublication?estimateBytes(candidatePublication):0)+(replayDecoder?.retainedBytes()??0)+replayLastBytes;}
+ function overhead(){if(closed)return 0;const shared=sharedRetainedBytes?.()??0;if(!Number.isSafeInteger(shared)||shared<0)throw TypeError('Invalid shared snapshot retention');return shared+(encoder?.retainedBytes()??0)+(basePublication?estimateBytes(basePublication):0)+(candidatePublication?estimateBytes(candidatePublication):0)+(replayDecoder?.retainedBytes()??0)+replayLastBytes;}
  function makeDecoder(trackRetained=false){const decoder=createMainSnapshotDecoder({trackRetained});decoder.decode({kind:'publication',publication:basePublication});return decoder;}
  function decodedEntry(item,decoder){if(!incrementalSnapshots||item.kind!=='publication')return structuredClone(item);const wire=decoder.decode({kind:'publication',publication:item.publication});return structuredClone({...item,publication:wire.publication});}
  return {
@@ -52,7 +52,7 @@ export function createPresentationRecoveryJournal({capacity=256,highWatermark=12
   },
   begin(value,publication=null){
    ensure();const n=sequence(value);if(candidate!==null)throw Error('Presentation checkpoint already pending');
-   if(last!==null&&(n!==last||base!==null&&n<=base))throw Error('Presentation checkpoint boundary mismatch');
+   if(last!==null&&(n!==last||base!==null&&n<=base))throw Error('Presentation checkpoint boundary mismatch');if(!encoder&&bytes+overhead()>maxBytes)throw Error('Presentation recovery journal byte capacity exceeded');
    if(encoder){if(encoderFault)throw Error('Presentation recovery encoder failed');if(publication?.sequence!==n||typeof publication.snapshot!=='string')throw TypeError('Missing recovery checkpoint snapshot');try{if(base===null&&last===null)encoder.encode({kind:'publication',publication});candidatePublication={sequence:n,snapshot:publication.snapshot};if(bytes+overhead()>maxBytes){candidatePublication=null;throw Error('Presentation recovery journal byte capacity exceeded');}}catch(error){encoderFault=true;throw error;}}if(last===null)last=n;candidate=n;checkpointDeferred=false;checkpointRetry=false;
   },
   confirm(value){

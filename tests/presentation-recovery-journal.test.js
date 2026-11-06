@@ -168,3 +168,8 @@ for(const incrementalSnapshots of [false,true])test(`unavailable first base does
  const journal=createPresentationRecoveryJournal({capacity:4,highWatermark:2,incrementalSnapshots}),packet=sequence=>({sequence,snapshot:JSON.stringify({value:sequence,padding:'x'.repeat(300)}),events:[{id:'e'+sequence}],physicsPose:null});
  try{journal.begin(1,packet(1));journal.append(packet(2),true);journal.deferCandidate(1);for(let sequence=3;sequence<=300;sequence++)assert.equal(journal.append(packet(sequence),true),false);assert.equal(journal.status().entries,0);assert.equal(journal.status().saturated,false);assert.throws(()=>journal.snapshot(),/not acknowledged/);assert.equal(journal.retryDeferred(),true);journal.begin(301,packet(301));journal.confirm(301);journal.append(packet(302),true);assert.deepEqual(journal.snapshot().entries.map(item=>item.publication.events[0].id),['e302']);}finally{journal.dispose();}
 });
+
+test('shared recovery retention contributes to watermarks without an incremental encoder',()=>{
+ let shared=60;const journal=createPresentationRecoveryJournal({capacity:5,highWatermark:3,maxBytes:200,highWatermarkBytes:100,sharedRetainedBytes:()=>shared});
+ try{assert.equal(journal.status().overheadBytes,60);assert.equal(journal.status().saturated,false);shared=100;assert.equal(journal.status().saturated,true);shared=201;assert.throws(()=>journal.begin(1,{sequence:1,snapshot:'s'}),/capacity exceeded/);shared=-1;assert.throws(()=>journal.status(),/Invalid shared snapshot retention/);}finally{journal.dispose();}
+});
