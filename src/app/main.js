@@ -18,7 +18,6 @@ import {createWebGpuDiscretePick} from './webgpu-discrete-pick.js';
 import {createWebGpuCameraPresentation,webGpuCameraPose} from './webgpu-camera-presentation.js';
 import {LibraryViewer} from '../ui/library-viewer.js';
 import {EventCards} from '../ui/event-cards.js';
-import {LoadingDiorama} from '../rendering/loading-diorama.js';
 import {LoadingAudio} from '../audio/loading-audio.js';
 import {prepareLoadingFrames} from '../ui/loading-frame-preparation.js';
 import {LoadingOverlay} from '../ui/loading-overlay.js';
@@ -85,7 +84,7 @@ import {captureNativeAuthorityBootstrap} from '../simulation/native-authority-bo
 import {savedNativeAuthorityOptions} from '../simulation/native-authority-checkpoint.js';
 import {earlyNativeStartupCommand} from '../simulation/early-native-startup.js';
 import {createEarlyWorkerWorld} from './early-worker-world.js';
-import {loadLegacyWorldScene} from './load-legacy-world-scene.js';
+import {loadLegacyWorldScene,loadLegacyLoadingDiorama} from './load-legacy-world-scene.js';
 import {freshNativeAuthorityOptions} from '../simulation/fresh-native-authority.js';
 import {confirmedCropId} from './confirmed-crop-event.js';
 import {createConfirmedPresentationAdapter} from '../simulation/confirmed-presentation-adapter.js';
@@ -177,10 +176,10 @@ async function prepareLoadingScene(){
   preloadScreenOverlays();
  clearLoadingFailure(document);
  if(preparedLoading)return preparedLoading;progressQa?.lifecycle('app-preloading-created');
- const generation=loadingPreparationGeneration,earlyGpuNoWebgl=import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-worker-early-gpu-view')&&new URLSearchParams(location.search).has('qa-worker-no-webgl');
+ const generation=loadingPreparationGeneration,params=new URLSearchParams(location.search),earlyGpuNoWebgl=import.meta.env.DEV&&params.has('qa-worker-early-gpu-view')&&params.has('qa-worker-no-webgl'),lightProbe=import.meta.env.DEV&&['qa-worker-early-probe','qa-worker-early-gpu-view'].some(key=>params.has(key));
  // The graphical Worker route must not load the legacy scene or construct a
  // WebGL context. A cancelled dynamic import cannot create a late world.
- let WorldScene;if(!earlyGpuNoWebgl){WorldScene=await loadLegacyWorldScene({isCurrent:()=>generation===loadingPreparationGeneration});if(preparedLoading)return preparedLoading;}
+ let WorldScene,LoadingDiorama;if(!earlyGpuNoWebgl||!lightProbe){const isCurrent=()=>generation===loadingPreparationGeneration;[WorldScene,LoadingDiorama]=await Promise.all([earlyGpuNoWebgl?null:loadLegacyWorldScene({isCurrent}),lightProbe?null:loadLegacyLoadingDiorama({isCurrent})]);if(preparedLoading)return preparedLoading;}
  const canvas=document.createElement('canvas');canvas.className='loading-prepared-canvas';canvas.style.cssText='position:fixed;inset:0;width:100%;height:100%;opacity:0;pointer-events:none';document.body.append(canvas);
  let owner,diorama;const transfers=new LoadingTransferOwner();
  try{owner=earlyGpuNoWebgl?createEarlyWorkerWorld(canvas,onPick,{confirmedCameraTerrain:diagnosticPresentationCapabilities(new URLSearchParams(location.search),import.meta.env.DEV).cameraTerrain,checkpointPolicy:{physics:experimentalWorkerPhysicsSave(),nativeAuthority:true}}):new WorldScene(canvas,onPick,{approvedVisuals:true});owner.guardianScreenExclusions=()=>{const canvasRect=canvas.getBoundingClientRect();if(!canvasRect.width||!canvasRect.height)return [];return [...document.querySelectorAll("#clock,#money,#days,#menuButton,#actions button,#awakeningHud")].filter(el=>el.getClientRects().length).map(el=>{const r=el.getBoundingClientRect(),pad=8;return {minX:2*(r.left-pad-canvasRect.left)/canvasRect.width-1,maxX:2*(r.right+pad-canvasRect.left)/canvasRect.width-1,minY:1-2*(r.bottom+pad-canvasRect.top)/canvasRect.height,maxY:1-2*(r.top-pad-canvasRect.top)/canvasRect.height};});};owner.guardianNarration=()=>guardian?.key?{audio:guardian.narrationAudio(),record:guardian.voiceRecord}:null;owner.onGuardianPresence=(id,p)=>{playGuardianScenePresence(audio,owner,id,p,()=>owner===world).catch(()=>{});};owner.frameScheduler=globalFrameSchedulerEnabled()?globalFrameScheduler:null;if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-far-full-scene'))owner.farIsolatedPreparation=false;if(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-zero-vertices'))owner.farZeroVertexPreparation=true;owner.loadingCpuBudget=!(import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading-legacy-pacing'));owner.controls.enabled=false;owner.qualitySetting(settings.quality);applyWorldResolution(owner,settings.resolution);if(progressQa)owner.onLoadingSpan=span=>{if(!owner.disposed)progressQa.loadingSpan(span);};
@@ -191,7 +190,7 @@ async function prepareLoadingScene(){
   owner.onLoadingSpan.onAwaitEnd=trace.witness.onAwaitEnd;
   globalThis.__wildGuardiansNativeLoadingSnapshot=()=>({phases:trace.snapshot({at:performance.now()}),scheduler:globalFrameScheduler.snapshot()});
  }
- const lightProbe=import.meta.env.DEV&&['qa-worker-early-probe','qa-worker-early-gpu-view'].some(key=>new URLSearchParams(location.search).has(key));diorama=lightProbe?{prepared:false,plants:{progress:0},show(){},render(){},dispose(){}}:new LoadingDiorama(owner,{batchedUpload:import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-diorama-batches')});const preparation={world:owner,diorama,canvas,transfers};preparedLoading=preparation;
+ diorama=lightProbe?{prepared:false,plants:{progress:0},show(){},render(){},dispose(){}}:new LoadingDiorama(owner,{batchedUpload:import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-loading')&&new URLSearchParams(location.search).has('qa-loading-diorama-batches')});const preparation={world:owner,diorama,canvas,transfers};preparedLoading=preparation;
  preparation.pending=lightProbe?Promise.resolve():Promise.all([diorama.prepare(),prepareLoadingFrames(loadLoadingFrameImages,{signal:owner.loading.signal})]).then(([,images])=>{preparation.frameImages=images;if(!owner.disposed)progressQa?.lifecycle('app-preloading-ready');});preparation.pending.catch(()=>{});return preparation;
  }catch(failure){transfers.dispose();diorama?.dispose();owner?.dispose();canvas.remove();throw failure;}
 }
