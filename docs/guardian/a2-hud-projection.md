@@ -45,6 +45,9 @@ La selección de Despertar del perfil Worker solicita la validación del objetiv
 una vez a la autoridad y descarta respuestas de selecciones o herramientas ya
 sustituidas. La confirmación vuelve a comprobar el objetivo en el Worker; la
 vista provisional no concede beneficios ni autoriza la operación.
+La selección de magias utiliza posiciones y fases confirmadas mínimas de la
+misma vista. Las comprobaciones visuales de un ataque se conservan para no iniciar
+el gesto sobre una bestia caída; el Worker vuelve a validar daño y disponibilidad.
 
 Esto no elimina todavía el snapshot completo: se sigue transfiriendo y usando
 para tutorial, selección, comandos,
