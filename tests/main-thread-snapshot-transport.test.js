@@ -39,3 +39,13 @@ test('hosted UI consumes incremental publications before acknowledging and resol
  assert.equal(sent.at(-1).kind,'publicationAck');assert.equal(sent.at(-1).sequence,2);worker.onmessage({data:{kind:'commandResult',session:'s',id,sequence:2}});
  const result=await command;assert.equal(typeof result.snapshot,'string');assert.deepEqual(JSON.parse(result.snapshot),authority);assert.deepEqual(events,collected);assert.deepEqual(view,authority);runtime.dispose();
 });
+test('reception diagnostics include transport decoding, observers and acknowledgement',async()=>{
+ const originalPerformance=globalThis.performance,originalParse=JSON.parse;let clock=0,current=0;
+ globalThis.performance={now:()=>clock};JSON.parse=(...args)=>{clock+=7;return originalParse(...args);};
+ try{
+  const worker={postMessage:message=>{if(message.kind==='publicationAck')clock+=13;},terminate(){}},receiver={accept:publication=>{clock+=5;current=publication.sequence;return {accepted:true};},acceptUnchanged:()=>({accepted:true}),status:()=>({sequence:current,lastElapsed:0})};
+  const runtime=createWorkerHostedRuntime({confirmedReceiver:receiver,session:'s',clientOptions:{},runtimeOptions:{mainThreadProjection:true,coalescePublications:true,diagnostics:true},workerFactory:()=>worker,onConfirmedState:()=>{clock+=11;},onConfirmedEvents:()=>{clock+=17;}});
+  const start=runtime.start();worker.onmessage({data:packet(1,'{}',[{id:'event-1',type:'NightStarted'}])});worker.onmessage({data:{kind:'started',session:'s',sequence:1,status:{}}});await start;
+  assert.equal(runtime.status().reception.mean,53);runtime.dispose();
+ }finally{globalThis.performance=originalPerformance;JSON.parse=originalParse;}
+});
