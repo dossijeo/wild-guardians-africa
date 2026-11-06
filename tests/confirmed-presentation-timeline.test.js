@@ -8,6 +8,17 @@ import {emit,observePresentationGameEvents} from '../src/simulation/game.js';
 import {createConfirmedPresentationStream} from '../src/rendering/confirmed-presentation-stream.js';
 import {createConfirmedPresentationClock} from '../src/rendering/confirmed-presentation-clock.js';
 const fixture=()=>deserialize(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString());
+test('timeline exposes matching reconciled state and terrain before pose and event observers',()=>{
+ const state=fixture(),authority=deserialize(serialize(state)),start=state.elapsed,clock=createConfirmedPresentationClock(start),sent=[],order=[],port={postMessage:m=>sent.push(m),start(){},close(){}};let terrainRevision=0;
+ const stream=createConfirmedPresentationStream({port,session:'s',state,presentationClock:clock,timeline:{maxPublications:2,maxBytes:50000000},terrain:{ready:()=>true,confirm:(sequence,elapsed)=>{assert.equal(elapsed,state.elapsed);assert.equal(clock.elapsed,state.elapsed);assert.equal(state.raid.animals[0].x,authority.raid.animals[0].x);terrainRevision=sequence;order.push('terrain');}},onPhysics:()=>{assert.equal(terrainRevision,1);order.push('pose');}});
+ const stop=observePresentationGameEvents(state,()=>{assert.equal(terrainRevision,1);order.push('event');});
+ try{authority.elapsed=start+1;authority.raid.animals[0].x+=1;emit(authority,'Test');port.onmessage({data:{kind:'publication',session:'s',publication:{session:'s',sequence:1,elapsed:authority.elapsed,snapshot:serializeConfirmedState(authority),events:[authority.events.at(-1)],physicsPose:null}}});stream.advancePresentationTo(start+1);assert.deepEqual(order,['terrain','pose','event']);assert.equal(sent.at(-1).kind,'publicationAck');}finally{stop();stream.dispose();clock.dispose();}
+});
+test('failed terrain barrier emits neither pose nor event nor application acknowledgement',()=>{
+ const state=fixture(),authority=deserialize(serialize(state)),start=state.elapsed,clock=createConfirmedPresentationClock(start),sent=[],seen=[],errors=[],port={postMessage:m=>sent.push(m),start(){},close(){}};
+ const stream=createConfirmedPresentationStream({port,session:'s',state,presentationClock:clock,timeline:{maxPublications:2,maxBytes:50000000},terrain:{ready:()=>true,confirm:()=>{throw Error('terrain failed');}},onPhysics:()=>seen.push('pose'),onError:error=>errors.push(error.message)}),stop=observePresentationGameEvents(state,()=>seen.push('event'));
+ try{authority.elapsed=start+1;emit(authority,'Test');port.onmessage({data:{kind:'publication',session:'s',publication:{session:'s',sequence:1,elapsed:authority.elapsed,snapshot:serializeConfirmedState(authority),events:[authority.events.at(-1)],physicsPose:null}}});stream.advancePresentationTo(start+1);assert.deepEqual(seen,[]);assert.deepEqual(errors,['terrain failed']);assert.deepEqual(sent.map(m=>m.kind),['publicationReceipt']);assert.equal(stream.status().fault,true);assert.equal(stream.status().closed,true);}finally{stop();stream.dispose();clock.dispose();}
+});
 test('timeline retains ordered publications until both simulation time and terrain are ready',()=>{
  const state=fixture(),authority=deserialize(serialize(state)),start=state.elapsed,clock=createConfirmedPresentationClock(start),sent=[],applied=[],events=[],errors=[];let ready=0;
  const port={postMessage:m=>sent.push(m),start(){},close(){}};

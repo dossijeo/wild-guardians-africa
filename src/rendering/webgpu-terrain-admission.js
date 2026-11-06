@@ -4,12 +4,12 @@ export function createTerrainAdmission({scene,admission,coordinator=null,onError
  if(!scene?.isScene||typeof admission?.prepare!=='function'||coordinator!==null&&typeof coordinator?.offer!=='function'||typeof onError!=='function'||typeof onPublished!=='function')throw TypeError('Invalid terrain admission');
  const pending=new Map(),visible=new Map(),unavailable=new Set();let closed=false;
  function release(record){
-  if(!record||record.released)return;record.released=true;record.controller.abort();try{record.withdraw?.();}catch(error){onError(error);}record.withdraw=null;
+  if(!record||record.released)return;record.released=true;record.controller.abort();let notificationFailure=null;try{record.withdraw?.();}catch(error){try{onError(error);}catch(failure){notificationFailure=failure;}}record.withdraw=null;
   // Keep the compiled subtree intact until outstanding GPU work completes,
   // even after the visible revision has been retired.
   record.group.removeFromParent();
   const dispose=()=>{for(const mesh of record.meshes)mesh.removeFromParent();record.dispose();};
-  if(typeof admission.deferRelease==='function')admission.deferRelease(record.group,dispose);else dispose();
+  if(typeof admission.deferRelease==='function')admission.deferRelease(record.group,dispose);else dispose();if(notificationFailure)throw notificationFailure;
  }
  // Keep scene attachment separate from replacing ownership. A joint chunk
  // publication can later attach all participants before retiring either old
@@ -34,6 +34,9 @@ export function createTerrainAdmission({scene,admission,coordinator=null,onError
   const assertCurrent=()=>{if(!current())throw new DOMException('Terrain admission cancelled','AbortError');};
   if(coordinator){let attached=false;const participant={key,revision,epoch,publicationOrder,side:'terrain',object:group,signal:controller.signal,attach(){assertCurrent();if(attached)throw Error('Terrain already attached');try{attach(record);attached=true;assertCurrent();}catch(error){rollback(record);attached=false;throw error;}},rollback(){if(attached&&!record.published){rollback(record);attached=false;}},finalize(){assertCurrent();if(!attached)throw Error('Terrain not attached');return finalize(key,record);},onError:fail};try{const withdraw=coordinator.offer(participant);if(typeof withdraw!=='function')throw TypeError('Invalid terrain withdrawal');if(record.released)withdraw();else if(!record.published)record.withdraw=withdraw;}catch(error){fail(error);}}
   else Promise.resolve().then(()=>typeof admission.prepareAndPublish==='function'?admission.prepareAndPublish(group,{signal:controller.signal},commit):Promise.resolve(admission.prepare(group,{signal:controller.signal})).then(commit)).catch(fail);
+  // A coordinator can reject synchronously. Tell the owner not to install a
+  // logical revision for an object that was already discarded.
+  return !record.released;
  }
  function remove(key){const item=pending.get(key);pending.delete(key);release(item);const old=visible.get(key);visible.delete(key);release(old);unavailable.delete(key);}
  function isRayReady(ray,limit=Infinity){

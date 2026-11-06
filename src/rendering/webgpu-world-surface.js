@@ -49,7 +49,7 @@ export function closeWebGpuRenderer(renderer,admission){if(!renderer)return Prom
 // Keep legacy checkpoint identities distinct from every wire epoch. These
 // identifiers are visual-only and never replace authority metadata.
 export function createChunkPublicationEpochs(){let next=0,order=0;return {live:epoch=>'wire:'+JSON.stringify(epoch),checkpoint(){if(next===Number.MAX_SAFE_INTEGER)throw Error('Checkpoint publication identity exhausted');return 'checkpoint:'+ ++next;},order(){if(order===Number.MAX_SAFE_INTEGER)throw Error('Chunk publication order exhausted');return ++order;}};}
-export function assertCoordinatedChunkInstances(payload){if(!Array.isArray(payload?.instances)||payload.instances.length!==20||payload.instances.some(list=>!Array.isArray(list)||list.some(item=>typeof item?.id!=='string')))throw TypeError('Coordinated chunk requires valid biome instances');}
+export function assertCoordinatedChunkInstances(payload){if(!Array.isArray(payload?.instances)||payload.instances.length!==20||payload.instances.some((list,slot)=>!Array.isArray(list)||list.some(item=>item?.slot!==slot||typeof item.id!=='string'||![item.x,item.y,item.z,item.yaw,item.sx,item.sy,item.sz].every(Number.isFinite))))throw TypeError('Coordinated chunk requires valid biome instances');}
 
 // Worker-owned foundation for the WebGPU world. The simulation supplies state
 // and terrain; this surface owns GPU resources, never the authoritative state.

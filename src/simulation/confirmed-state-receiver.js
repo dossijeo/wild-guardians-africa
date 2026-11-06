@@ -79,11 +79,12 @@ export function createConfirmedStateReceiver(state,session,{onReconciled=null,de
    // commit or discard. Its decoded snapshot is private to this receiver.
    const token=Object.freeze({});pending={token,sequence:message.sequence,next,nextEvent,message,copy:handed!==undefined};return {accepted:true,token,elapsed:next.elapsed};
  }
- function commit(token){
+ function commit(token,{beforeObservers=null}={}){
   if(!pending||pending.token!==token)throw Error('Invalid prepared publication token');
+  if(beforeObservers!==null&&typeof beforeObservers!=='function')throw TypeError('Invalid confirmed publication barrier');
   const item=pending;pending=null;
-  if(item.unchanged){sequence=item.sequence;return {accepted:true,sequence,...(trackChangedKeys?{changedKeys:new Set()}: {})};}
-  let changedKeys;try{if(trackChangedKeys)changedKeys=reconcileChangedKeys(state,item.next,tracked,item.copy);else reconcile(state,item.next,item.copy);onReconciled?.(item.message);for(const event of item.message.events)notifyConfirmedPresentationEvent(state,event);}
+  if(item.unchanged){try{beforeObservers?.();}catch(error){fault=true;throw error;}sequence=item.sequence;return {accepted:true,sequence,...(trackChangedKeys?{changedKeys:new Set()}: {})};}
+  let changedKeys;try{if(trackChangedKeys)changedKeys=reconcileChangedKeys(state,item.next,tracked,item.copy);else reconcile(state,item.next,item.copy);beforeObservers?.();onReconciled?.(item.message);for(const event of item.message.events)notifyConfirmedPresentationEvent(state,event);}
   catch(error){fault=true;throw error;}
   sequence=item.sequence;lastElapsed=item.next.elapsed;lastEvent=item.nextEvent;return {accepted:true,sequence,...(trackChangedKeys?{changedKeys}: {})};
  }

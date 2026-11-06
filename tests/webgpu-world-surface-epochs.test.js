@@ -12,5 +12,6 @@ test('wire and legacy checkpoint publication identities use disjoint namespaces'
 });
 test('coordinated chunk rejects missing or malformed biome data before terrain publication',()=>{
  assert.throws(()=>assertCoordinatedChunkInstances({}),/biome instances/);assert.throws(()=>assertCoordinatedChunkInstances({instances:[[]]}),/biome instances/);
- const instances=Array.from({length:20},()=>[]);instances[0].push({id:'tree'});assert.doesNotThrow(()=>assertCoordinatedChunkInstances({instances}));instances[0].push({});assert.throws(()=>assertCoordinatedChunkInstances({instances}),/biome instances/);
+ const instances=Array.from({length:20},()=>[]),tree={slot:0,id:'tree',x:1,y:2,z:3,yaw:0,sx:1,sy:1,sz:1};instances[0].push(tree);assert.doesNotThrow(()=>assertCoordinatedChunkInstances({instances}));
+ for(const bad of [{...tree,slot:1},{...tree,y:NaN},{...tree,sx:Infinity},{...tree,id:null},{}]){instances[0][0]=bad;assert.throws(()=>assertCoordinatedChunkInstances({instances}),/biome instances/);}
 });
