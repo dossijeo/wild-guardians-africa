@@ -2,7 +2,7 @@
 
 ## Decisión actual tras la implementación
 
-**A sigue abierto únicamente por A2 y A4.** El cierre indicado aquí es interno
+**A1–A7 cerrados internamente a 7 de noviembre de 2026.** El cierre indicado aquí es interno
 de contratos, no aprobación de contenido, paridad ni rendimiento. El perfil
 de integración se puede ejecutar sin DEV con backend `webgpu-worker` y
 recuperación temporal explícita; no se activa silenciosamente como predeterminado.
@@ -10,12 +10,34 @@ recuperación temporal explícita; no se activa silenciosamente como predetermin
 | Contrato | Estado actual | Evidencia y límite |
 | --- | --- | --- |
 | A1 Propiedad, identidad, fachada y arranque | **Implementado internamente** | Fachada existente, perfil noDEV, comprobación WebGPU, generaciones y rechazo de resultados obsoletos. [Matriz A1/A3](a1-a3-contract-audit.md), 194 pruebas de contratos. Poblados y otras mecánicas concretas sin migrar son B; sesiones/dispositivos reales, C. |
-| A2 Comunicación, proyección y saturación | **Pendiente de implementación A** | Proyecciones Worker de HUD/audio/paneles y liquidaciones ordenadas conectadas; todavía se transmite y reconcilia snapshot completo para consumidores pendientes. No se acepta cerrar con otra copia del mundo renombrada ni reclasificar saturación como C. |
+| A2 Comunicación, proyección y saturación | **Implementado internamente** | Perfil Worker con baseline y deltas HUD por identidad, sin snapshot ordinario ni receptor de copia gráfica en interfaz. Eventos y liquidaciones ordenados, barreras, cursores/ACK y presión acotada; checkpoints para arranque/guardado/recuperación. Transporte autoridad–host incremental existente comprobado en Worker/WASM reales; contadores e identidades importadas validados. [Matriz A2](a2-contract-closure.md). La preparación y comparación amplia dentro de Workers persiste: no se afirma invalidación nativa integral ni ahorro medido. |
 | A3 Catálogo, datos y pases | **Implementado internamente para las familias actuales** | Recetas de estados/bindings/deformaciones y cobertura de pases; paleta/offset de fluidos por material, recorte de sombras y clonación NodeMaterial corregidos. [Matriz A1/A3](a1-a3-contract-audit.md), pruebas lógicas y compilación. Nuevas máscaras/contenidos requieren receta B; paridad y pipelines físicos, C. |
-| A4 Admisión y mutaciones estructurales | **Pendiente de auditoría/corrección A** | Admisión transaccional del objeto real, tickets, sombras, targets, cancelación y liberación diferida implementados. Falta completar la revisión finita de mutaciones estructurales de consumidores publicados y corregir los huecos que aparezcan. No se sustituye por sondeo indiscriminado por fotograma. |
+| A4 Admisión y mutaciones estructurales | **Implementado internamente para rutas soportadas** | Inventario de consumidores corregido: instancias reales de previews, ondas, Hi-Z y reasignación de buffers del escudo pasan por publicación atómica. Las luces/formatos globales son fijos en el perfil; un cambio estructural exige transacción o nueva generación. No hay sondeo indiscriminado por fotograma. Commits `594af3095` y `bc02200ac`, 155 pruebas locales. Indicador inmediato durante admisión B3; primera utilización y paridad GPU C. |
 | A5 Recursos y residencia | **Implementado internamente** | Registro por generación, versiones, cargas/leases, propietarios explícitos o compuestos, liberación diferida y presión configurable sobre inactivos. [Inventario A5](a5-resource-registry.md); 458 pruebas de contratos. Bytes desconocidos explícitos y límites heurísticos, no VRAM medida; calibración/dispositivo, C. |
 | A6 Trayectorias, reloj y pose | **Implementado internamente** | Intervalos ejecutados y confirmados, secuencia/actor/identidad, horizonte certificado y entrega de pose; selección tardía baked sin sustituir rig. [Contrato A6](a6-autonomous-motion-handoff.md), [admisión tardía](historical-late-actor-selection.md). Otros clips B4; continuidad visual y hardware C. |
 | A7 Entrada, provisionales y recuperación | **Implementado internamente en perfil explícito** | Entrada autoritativa, IDs, confirmación/rechazo, checkpoint/replay, generaciones y recuperación o fallo seguro. [Contrato de recuperación](temporal-recovery-contract.md), 85 pruebas dirigidas. Saturación queda A2; contenidos B5/B6 y recuperación real con GPU/física C. |
+
+### Verificación final y entrega
+
+Sobre el código integrado se ejecutaron 271 pruebas dirigidas juntas, sin fallos
+ni omisiones (`.cache/a-final-contract-tests.tap`). Incluyen identidad/persistencia,
+wire de autoridad en Worker/WASM real, host HUD sin snapshot, proyección y cola,
+perfil, cliente, registro de recursos, admisión, catálogo, rosters, trayectorias y
+recuperación. La compilación de producción pasó con
+`VITE_PRESENTATION_BACKEND=webgpu-worker` y
+`VITE_HISTORICAL_PRESENTATION_RECOVERY=true`, usando
+`.cache/tooling/node20.exe node_modules/vite/bin/vite.js build`;
+registro local `.cache/a-final-build.log`. Los tests con GPU simulada no se
+presentan como ejecución gráfica real.
+
+El siguiente agente puede continuar **B**, respetando estos contratos. Debe
+completar contenido y paridad, incluido el indicador visual provisional mientras
+se admite una construcción (B3), clips y rigs (B4), magias/efectos y flujo completo.
+Después corresponde **C**: partida, dispositivo real, restauración con física,
+sesiones largas, paridad y mediciones reproducibles. No se han declarado FPS,
+ausencia de tirones, memoria de driver ni compatibilidad universal comprobados.
+Guardados importados con identidades/contadores o planes de incursión incoherentes
+se rechazan de forma explícita; no se normalizan ni se alteran sus mecánicas.
 
 ## Auditoría inicial conservada como historial
 
