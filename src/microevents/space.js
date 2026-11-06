@@ -27,7 +27,8 @@ export class MicroeventSpace {
     return best;
   }
   occluded(point,camera,world){
-    if(!world?.objects||!world?.terrainMeshes)return false;
+    // Missing geometry cannot establish that an interactive target is visible.
+    if(!world?.objects||!world?.terrainMeshes)return true;
     this.hitPoint.copy(point).sub(camera.position);const length=this.hitPoint.length();this.raycaster.ray.set(camera.position,this.hitPoint.normalize());this.raycaster.near=.01;this.raycaster.far=Math.max(.01,length-.08);this.hits.length=0;
     this.raycaster.intersectObjects([...world.terrainMeshes,...world.objects.values()].filter(o=>o.visible),true,this.hits);this.raycaster.far=Infinity;return this.hits.length>0;
   }
