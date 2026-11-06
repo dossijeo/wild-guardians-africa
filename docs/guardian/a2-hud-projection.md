@@ -1,7 +1,7 @@
 # Proyección confirmada del HUD
 
 El host Worker añade a las publicaciones proyectadas una vista `hudProjection`
-versión 1 con secuencia, reloj, día, noches, saldo y los datos mínimos que usan
+versión 2 con secuencia, identidad de partida, reloj, día, noches, saldo y los datos mínimos que usan
 los permisos, tarjetas de magia y medidor de Despertar. El consumidor valida
 su esquema, secuencia y coherencia interna antes de aceptarla, sin necesitar
 compararla con el snapshot; la autoridad del Worker sigue siendo el productor
@@ -12,6 +12,8 @@ proyección desde el estado confirmado como fallback.
 
 El HUD del perfil Worker consume esta vista para indicadores, aviso de saldo,
 permisos de muralla, tarjetas de magia, permisos de construcción y Despertar.
+El guardado alojado usa la identidad confirmada de la partida y solicita el
+checkpoint íntegro a la autoridad, sin construirlo desde la vista del HUD.
 No es un estado autoritativo, una fuente de comandos ni un checkpoint. Las
 pruebas comprueban equivalencia de reglas para pausa, incursión, ausencia de
 centro y enfriamientos; validan también orden, aislamiento, rechazo anterior al
