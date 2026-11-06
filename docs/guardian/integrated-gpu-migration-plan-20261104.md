@@ -110,6 +110,8 @@ La instalación del host de simulación también separa sus parámetros de diagn
 
 ### A2. Comunicación incremental y reloj común
 
+El reloj de presentación se confirma ahora después de reconciliar el snapshot validado y antes de entregar poses y eventos, confirmar terreno o notificar movimiento. Una publicación retenida, rechazada antes de reconciliarse o marcada como sin cambios no adelanta el reloj; la recuperación usa el mismo recorrido. Si un consumidor falla después de reconciliar, el stream se cierra sin ACK y el reloj permanece alineado con el estado ya aplicado: no existe rollback de esa reconciliación. Las pruebas son de contrato; los eventos aún preceden a la confirmación de terreno y falta una transacción temporal completa y una trayectoria GPU autorizada.
+
 Completar el transporte existente en lugar de añadir otra cola:
 
 1. Acumular últimos valores por entidad y campos modificados entre publicaciones. Conservar altas, bajas y generaciones.
