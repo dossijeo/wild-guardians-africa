@@ -5,6 +5,15 @@ export function workerDiagnosticParams(params,dev){
  return dev?new URLSearchParams(params):new URLSearchParams();
 }
 
+// A prepared authority already owns its snapshot and navigation state. Do not
+// rebuild them in the presentation thread merely to attach a renderer.
+export function selectPreparedAuthorityOptions(early,createOptions){
+ if(typeof createOptions!=='function')throw TypeError('Invalid authority options factory');
+ if(early==null)return createOptions();
+ if(typeof early.snapshot!=='string')throw TypeError('Invalid prepared authority snapshot');
+ return {snapshot:early.snapshot};
+}
+
 export function earlyWorkerOptions({initial,metadataOnlySpatial=false,guardianPlacement=false,presentationInputs=false,recoveryOptions={},diagnostics={}}={}){
  if(!initial||typeof metadataOnlySpatial!=='boolean'||typeof guardianPlacement!=='boolean'||typeof presentationInputs!=='boolean'||!recoveryOptions||!diagnostics)throw TypeError('Invalid early worker options');
  const d=diagnostics,legacy=d.legacyPublications===true,compactViewAcks=d.viewAck===true||!legacy,maxBatchSteps=d.batchSteps??16,batchWindowSteps=d.batchWindow??(maxBatchSteps>1?2:1);

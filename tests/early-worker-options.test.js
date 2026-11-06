@@ -1,6 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {earlyWorkerOptions,workerDiagnosticParams} from '../src/app/early-worker-options.js';
+import {earlyWorkerOptions,workerDiagnosticParams,selectPreparedAuthorityOptions} from '../src/app/early-worker-options.js';
+
+test('prepared authority attaches from its own snapshot without rebuilding state or navigation',()=>{
+ const snapshot='{"slotId":"prepared","pauses":[]}',early={snapshot},options=selectPreparedAuthorityOptions(early,()=>{throw Error('unexpected state serialization');});assert.deepEqual(options,{snapshot});const fallback={snapshot:'legacy',chunkKeys:['0,0']};assert.equal(selectPreparedAuthorityOptions(null,()=>fallback),fallback);assert.throws(()=>selectPreparedAuthorityOptions({},()=>fallback),/prepared authority/);
+});
 
 test('worker bootstrap ignores diagnostic URL switches in production',()=>{
  const input=new URLSearchParams('qa-worker-main-clock&qa-worker-legacy-publications&qa-worker-batch=1&qa-worker-window=1&qa-worker-ordered-views&qa-worker-shared-clips&qa-webgpu-causal-input');
