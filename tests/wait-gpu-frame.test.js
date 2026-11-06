@@ -1,6 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {waitGpuFrame} from '../tools/experiments/wait-gpu-frame.js';
+import {waitGpuFrame as runtimeWaitGpuFrame} from '../src/rendering/wait-gpu-frame.js';
+
+test('experimental compatibility shares the runtime frame helper',()=>{assert.equal(waitGpuFrame,runtimeWaitGpuFrame);});
 
 test('one injected frame per wait, with no double RAF scheduling',async()=>{
  let frames=0,checks=0;

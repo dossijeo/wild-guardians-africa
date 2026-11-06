@@ -1,6 +1,6 @@
 import {deserialize} from './snapshots.js';
 import {SnapshotAssembly} from './snapshot-stream.js';
-import {waitGpuFrame} from '../../tools/experiments/wait-gpu-frame.js';
+import {waitGpuFrame} from '../rendering/wait-gpu-frame.js';
 
 const abortError=()=>new DOMException('Snapshot loading cancelled','AbortError');
 const signalError=signal=>signal?.reason?.name==='TimeoutError'?signal.reason:abortError();
