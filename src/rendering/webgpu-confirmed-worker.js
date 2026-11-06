@@ -6,7 +6,7 @@ import {createActorTerrainSampler,hasResidentActorTerrain} from './webgpu-actor-
 
 // Consumes confirmed state only. Actor motion, interactions and collision
 // authority remain in Wild Engine; this is a Worker-owned visual rig.
-export async function createWebGpuConfirmedWorker({scene,residency,state,actorId,assetBank,signal,renderer=null,presentationWorkerHeadings=null,confirmedClock=null,phaseSource=null,getEntity=()=>state.workers.find(item=>item.id===actorId),getTask=id=>state.tasks.find(item=>item.id===id)}={}){
+export async function createWebGpuConfirmedWorker({scene,residency,state,actorId,assetBank,signal,renderer=null,presentationWorkerHeadings=null,confirmedClock=null,phaseSource=null,resourceRegistry=null,getEntity=()=>state.workers.find(item=>item.id===actorId),getTask=id=>state.tasks.find(item=>item.id===id)}={}){
  if(!scene?.isScene||!residency||!state||!assetBank||typeof actorId!=='string'||!actorId||typeof getEntity!=='function'||typeof getTask!=='function'||presentationWorkerHeadings!==null&&!(presentationWorkerHeadings instanceof Map)||confirmedClock!==null&&(!confirmedClock.node?.isNode||!Number.isFinite(confirmedClock.elapsed)))throw TypeError('Invalid confirmed worker');
  const worker=getEntity(),profile=worker?.id===actorId?worker.profile:null;if(!profile)throw Error('Confirmed worker unavailable');
  if(signal?.aborted)throw new DOMException('Worker presentation cancelled','AbortError');
@@ -29,7 +29,7 @@ export async function createWebGpuConfirmedWorker({scene,residency,state,actorId
   if(closed||baked||pendingBaked)return false;
   if(bake?.meta?.species!==profile||typeof pipelineAdmission?.prepare!=='function')throw TypeError('Invalid baked worker admission');
   if(admissionSignal?.aborted)throw new DOMException('Baked walking cancelled','AbortError');
-  const candidate=createBakedWalkPresentation({model,root,renderer,bake,confirmedClock,phaseSource});pendingBaked=candidate;
+  const candidate=createBakedWalkPresentation({model,root,renderer,bake,confirmedClock,phaseSource,resourceRegistry});pendingBaked=candidate;
   try{
    const publish=()=>{if(closed||admissionSignal?.aborted)throw new DOMException('Baked walking cancelled','AbortError');baked=candidate;try{update();}catch(error){baked=null;candidate.disable();throw error;}pendingBaked=null;};
    const options={signal:admissionSignal,include:candidate.admissionObjects()};

@@ -1,3 +1,4 @@
+import {createWebGpuResourceRegistry} from '../src/rendering/webgpu-resource-registry.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
@@ -14,6 +15,6 @@ test('construction tool admits shared provisional variants before publication',a
 });
 
 test('cancelled preparation retains shared materials until the driver settles',async()=>{
- const scene=new THREE.Scene(),source=new THREE.Group(),geometry=new THREE.BoxGeometry(),original=new THREE.MeshBasicMaterial();source.add(new THREE.Mesh(geometry,original));let finish,released=0;const renderer={backend:{isWebGPUBackend:true},compileAsync:()=>new Promise(resolve=>{finish=resolve;})},admission=createWebGpuPipelineAdmission({renderer,scene,camera:new THREE.PerspectiveCamera()}),controller=new AbortController(),library=createWebGpuStructurePreviewMaterials({pipelineAdmission:admission,signal:controller.signal}),paint=library.center();paint.addEventListener('dispose',()=>released++);
- try{const pending=library.prepare('center','mapungubwe',{group:source});await turn();assert.equal(typeof finish,'function');const rejected=assert.rejects(pending,{name:'AbortError'});controller.abort();library.dispose();await rejected;assert.equal(released,0);finish();await turn();assert.equal(released,1);}finally{library.dispose();admission.dispose();geometry.dispose();original.dispose();}
+ const registry=createWebGpuResourceRegistry(),scene=new THREE.Scene(),source=new THREE.Group(),geometry=new THREE.BoxGeometry(),original=new THREE.MeshBasicMaterial();source.add(new THREE.Mesh(geometry,original));let finish,released=0;const renderer={backend:{isWebGPUBackend:true},compileAsync:()=>new Promise(resolve=>{finish=resolve;})},admission=createWebGpuPipelineAdmission({renderer,scene,camera:new THREE.PerspectiveCamera()}),controller=new AbortController(),library=createWebGpuStructurePreviewMaterials({pipelineAdmission:admission,resourceRegistry:registry,signal:controller.signal}),paint=library.center();paint.addEventListener('dispose',()=>released++);
+ try{const pending=library.prepare('center','mapungubwe',{group:source});await turn();assert.equal(typeof finish,'function');const rejected=assert.rejects(pending,{name:'AbortError'});controller.abort();registry.dispose();library.dispose();assert.equal(registry.status().owned.length,1);await rejected;assert.equal(released,0);finish();await turn();assert.equal(released,1);assert.equal(registry.status().owned.length,0);}finally{library.dispose();admission.dispose();registry.dispose();geometry.dispose();original.dispose();}
 });

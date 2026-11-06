@@ -1,6 +1,8 @@
 import {DepthTexture,HalfFloatType,RenderTarget,UnsignedIntType} from 'three';
 import {createWebGpuHiZHierarchy} from './webgpu-hiz-depth.js';
 
+let nextReflectionResourceOwner=0;
+
 // The capture is a real scene pass: water is excluded to avoid feedback and
 // transparent objects are omitted because their depth is not authoritative.
 // Alpha-tested opaque foliage remains eligible. Mixed material arrays are
@@ -15,12 +17,12 @@ function excludedFromReflection(object){
 // Resources are fixed-size. The owner must admit all capture/reduction
 // pipelines before rendering and defer disposal until submitted GPU work has
 // completed; this object does not synchronously wait for the device.
-export function createWebGpuWaterReflectionCapture(width,height,{maxLevels=8}={}){
- if(!Number.isSafeInteger(width)||width<1||!Number.isSafeInteger(height)||height<1)throw TypeError('Invalid reflection capture dimensions');
+export function createWebGpuWaterReflectionCapture(width,height,{maxLevels=8,resourceRegistry=null}={}){
+ if(resourceRegistry!==null&&typeof resourceRegistry?.adopt!=='function'||!Number.isSafeInteger(width)||width<1||!Number.isSafeInteger(height)||height<1)throw TypeError('Invalid reflection capture dimensions');
  const depth=new DepthTexture(width,height,UnsignedIntType);
  const target=new RenderTarget(width,height,{type:HalfFloatType,depthTexture:depth,depthBuffer:true,stencilBuffer:false,samples:0,generateMipmaps:false});
- let hierarchy;
- try{hierarchy=createWebGpuHiZHierarchy(depth,width,height,{maxLevels});}catch(error){target.dispose();depth.dispose();throw error;}
+ let hierarchy,resourceLease;
+ try{if(resourceRegistry){resourceLease=resourceRegistry.adopt({namespace:'water-reflection-target',key:String(++nextReflectionResourceOwner),dispose:()=>{target.dispose();depth.dispose();}});resourceLease.commit();}hierarchy=createWebGpuHiZHierarchy(depth,width,height,{maxLevels,resourceRegistry});}catch(error){if(resourceLease)resourceLease.release();else{target.dispose();depth.dispose();}throw error;}
  let closed=false,admissionOwner=null,unregisterTarget=null;
  function ownAdmission(admission){if(!admission||typeof admission.prepare!=='function'||typeof admission.deferRelease!=='function'||typeof admission.deferCompilations!=='function'||admissionOwner&&admissionOwner!==admission)throw TypeError('Invalid reflection admission');admissionOwner=admission;}
  return {
@@ -49,6 +51,6 @@ export function createWebGpuWaterReflectionCapture(width,height,{maxLevels=8}={}
     renderer.setRenderTarget(previous,face,mip);if(mrt!==undefined)renderer.setMRT(mrt);
    }
   },
-  dispose(){if(closed)return;closed=true;unregisterTarget?.();hierarchy.dispose();const release=()=>{target.dispose();depth.dispose();};if(admissionOwner)admissionOwner.deferCompilations(release);else release();},
+  dispose(){if(closed)return;closed=true;unregisterTarget?.();hierarchy.dispose();const release=()=>{if(resourceLease)resourceLease.release();else{target.dispose();depth.dispose();}};if(admissionOwner)admissionOwner.deferCompilations(release);else release();},
  };
 }

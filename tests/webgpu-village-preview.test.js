@@ -32,3 +32,9 @@ test('confirmed village replaces the preview only after its complete layout is v
  const confirmed={buildings:[{},{}]},entry={group:{visible:false,children:[]},village:{meshes:[{},{}],upToDate:true}};
  assert.equal(villagePreviewReconciled(entry,confirmed),false);entry.group.visible=true;entry.village.upToDate=false;assert.equal(villagePreviewReconciled(entry,confirmed),false);entry.village.upToDate=true;entry.village.meshes.pop();assert.equal(villagePreviewReconciled(entry,confirmed),false);entry.village.meshes.push({});assert.equal(villagePreviewReconciled(entry,confirmed),true);
 });
+import {createWebGpuResourceRegistry} from '../src/rendering/webgpu-resource-registry.js';
+import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
+test('village preview material and candidate survive their in-flight compilation',async()=>{
+ const registry=createWebGpuResourceRegistry(),scene=new THREE.Scene(),geometry=new THREE.BoxGeometry(),material=new THREE.MeshBasicMaterial(),assets=new Map([['house',{geometry,material,unit:{min:[-1,0,-1],max:[1,2,1]}}]]);let finish;const renderer={backend:{isWebGPUBackend:true},compileAsync:()=>new Promise(resolve=>{finish=resolve;})},admission=createWebGpuPipelineAdmission({renderer,scene,camera:new THREE.PerspectiveCamera()}),view=createWebGpuVillagePreview({scene,surface:()=>0,assetsFor:()=>assets,pipelineAdmission:admission,resourceRegistry:registry});
+ try{view.show({culture:'mapungubwe',valid:true,buildings:[{key:'house',x:0,z:0}]});await turn();assert.equal(registry.status().owned.length,2);registry.dispose();view.dispose();assert.equal(registry.status().owned.length,2);finish();await turn();assert.equal(registry.status().owned.length,0);}finally{view.dispose();admission.dispose();registry.dispose();geometry.dispose();material.dispose();}
+});

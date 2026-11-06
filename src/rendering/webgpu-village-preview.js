@@ -17,16 +17,17 @@ export function buildWebGpuVillage(assets,buildings,surface,{material=null,castS
  return group;
 }
 
-export function createWebGpuVillagePreview({scene,surface,assetsFor,pipelineAdmission,onError=()=>{},onChange=()=>{}}={}){
- if(!scene?.isScene||typeof surface!=='function'||typeof assetsFor!=='function'||typeof pipelineAdmission?.prepare!=='function'||typeof onError!=='function'||typeof onChange!=='function')throw TypeError('Invalid village preview');
- const material=new THREE.MeshBasicMaterial({color:0xf0e5b9,transparent:true,opacity:.45,depthWrite:false,side:THREE.DoubleSide});let slot=null,current=null,epoch=0,closed=false;
+let nextVillagePreview=0;
+export function createWebGpuVillagePreview({scene,surface,assetsFor,pipelineAdmission,resourceRegistry=null,onError=()=>{},onChange=()=>{}}={}){
+ if(resourceRegistry!==null&&typeof resourceRegistry?.adopt!=='function'||!scene?.isScene||typeof surface!=='function'||typeof assetsFor!=='function'||typeof pipelineAdmission?.prepare!=='function'||typeof onError!=='function'||typeof onChange!=='function')throw TypeError('Invalid village preview');
+ const material=new THREE.MeshBasicMaterial({color:0xf0e5b9,transparent:true,opacity:.45,depthWrite:false,side:THREE.DoubleSide});let lease;try{if(resourceRegistry){lease=resourceRegistry.adopt({namespace:'village-preview-material',key:String(++nextVillagePreview),dispose:()=>material.dispose()});lease.commit();}}catch(error){if(lease)lease.release();else material.dispose();throw error;}let slot=null,current=null,epoch=0,closed=false;
  function refresh(){
   if(closed||!current)return;const assets=assetsFor(current.culture);if(!assets)return;
   material.color.set(current.pending?'#f0e5b9':current.valid?'#d4f3c2':'#f4a198');
-  if(!slot){slot=createWebGpuAdmittedVillage({pipelineAdmission,onReady:()=>{if(slot){slot.group.visible=slot.upToDate;onChange();}},onError});slot.group.visible=false;scene.add(slot.group);}
+  if(!slot){slot=createWebGpuAdmittedVillage({pipelineAdmission,resourceRegistry,onReady:()=>{if(slot){slot.group.visible=slot.upToDate;onChange();}},onError});slot.group.visible=false;scene.add(slot.group);}
   const key=JSON.stringify([epoch,current.culture,current.buildings.map(item=>[item.key,item.x,item.z,item.yaw??0])]);
   slot.update(key,()=>buildWebGpuVillage(assets,current.buildings,surface,{material,castShadow:false}));slot.group.visible=slot.upToDate;onChange();
  }
  function clear(){current=null;if(slot){scene.remove(slot.group);slot.dispose();slot=null;onChange();}}
- return {show(preview){if(closed)throw Error('Village preview closed');if(!preview||typeof preview.culture!=='string'||!Array.isArray(preview.buildings)||preview.buildings.length>1024||preview.buildings.some(item=>typeof item?.key!=='string'||![item.x,item.z,item.yaw??0].every(Number.isFinite)))throw TypeError('Invalid village preview');current=preview;refresh();},clear,terrainChanged(){if(closed)return;epoch++;refresh();},get visible(){return slot?.group.visible??false;},dispose(){if(closed)return;closed=true;clear();material.dispose();}};
+ return {show(preview){if(closed)throw Error('Village preview closed');if(!preview||typeof preview.culture!=='string'||!Array.isArray(preview.buildings)||preview.buildings.length>1024||preview.buildings.some(item=>typeof item?.key!=='string'||![item.x,item.z,item.yaw??0].every(Number.isFinite)))throw TypeError('Invalid village preview');current=preview;refresh();},clear,terrainChanged(){if(closed)return;epoch++;refresh();},get visible(){return slot?.group.visible??false;},dispose(){if(closed)return;closed=true;clear();const release=()=>{if(lease)lease.release();else material.dispose();};if(typeof pipelineAdmission.deferCompilations==='function')pipelineAdmission.deferCompilations(release);else release();}};
 }

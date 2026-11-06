@@ -15,4 +15,4 @@ export async function loadBakedWorkerWalkAsset(profile,{signal,fetcher=globalThi
  if(meta?.species!==profile||packageInfo?.id!==profile||meta.sourceSha256!==packageInfo.preview?.sha256||!/^[a-f0-9]{64}$/.test(meta.sha256??'')||meta.validation?.exactMismatches!==0||meta.validation?.packedMismatches!==0||meta.validation?.visibleAttachments!==0)throw Error('Baked worker walking source mismatch');
  const digest=Array.from(new Uint8Array(await subtle.digest('SHA-256',buffer)),value=>value.toString(16).padStart(2,'0')).join('');if(signal?.aborted)throw new DOMException('Worker walking request cancelled','AbortError');if(digest!==meta.sha256)throw Error('Baked worker walking checksum mismatch');return createBakedWorkerWalkTexture(meta,buffer);
 }
-export function createBakedWorkerWalkBank({load=loadBakedWorkerWalkAsset,renderer=null}={}){return createBakedWalkBank({load,renderer,acceptSpecies:hasBakedWorkerWalk});}
+export function createBakedWorkerWalkBank({load=loadBakedWorkerWalkAsset,renderer=null,resourceRegistry=null}={}){return createBakedWalkBank({load,renderer,resourceRegistry,acceptSpecies:hasBakedWorkerWalk});}

@@ -1,9 +1,10 @@
+import {createWebGpuResourceRegistry} from '../src/rendering/webgpu-resource-registry.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {createHash,webcrypto} from 'node:crypto';
 import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
-import {loadBakedWalkAsset,createBakedWalkBank,closeBakedWalkResources} from '../src/rendering/baked-walk-catalog.js';
+import {loadBakedWalkAsset,ownDirectBakedWalkAsset,createBakedWalkBank,closeBakedWalkResources} from '../src/rendering/baked-walk-catalog.js';
 import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
 import {Scene,PerspectiveCamera,Group,DataTexture} from 'three';
 
@@ -47,6 +48,8 @@ test('the shared walking texture is published only after its WebGPU upload compl
 });
 
 test('bank closure cancels publication and retains an uploading walking texture',async()=>{
- let finish,uploads=0,disposed=0;const submitted=new Promise(resolve=>{finish=resolve;}),renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone:()=>submitted}}},initTexture(){uploads++;}},bank=createBakedWalkBank({renderer,load:async species=>({meta:{species},texture:new DataTexture(),dispose(){disposed++;}})}),pending=bank.get('lion');
- for(let n=0;n<10&&!uploads;n++)await new Promise(resolve=>setImmediate(resolve));assert.equal(uploads,1);const rejected=assert.rejects(pending,{name:'AbortError'});bank.dispose();await rejected;assert.equal(disposed,0);finish();await new Promise(resolve=>setImmediate(resolve));assert.equal(disposed,1);
+ let finish,uploads=0,disposed=0;const registry=createWebGpuResourceRegistry(),submitted=new Promise(resolve=>{finish=resolve;}),renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone:()=>submitted}}},initTexture(){uploads++;}},bank=createBakedWalkBank({renderer,resourceRegistry:registry,load:async species=>({meta:{species},texture:new DataTexture(),dispose(){disposed++;}})}),pending=bank.get('lion');
+ for(let n=0;n<10&&!uploads;n++)await new Promise(resolve=>setImmediate(resolve));assert.equal(uploads,1);assert.equal(registry.status().owned.length,1);registry.dispose();const rejected=assert.rejects(pending,{name:'AbortError'});bank.dispose();await rejected;assert.equal(disposed,0);finish();await new Promise(resolve=>setImmediate(resolve));assert.equal(disposed,1);assert.equal(registry.status().owned.length,0);
 });
+
+test('direct bake lease retains the same texture and releases exactly once after closure',()=>{const registry=createWebGpuResourceRegistry(),texture=new DataTexture(),source={texture,meta:{species:'hyena'},dispose(){texture.dispose();}},owned=ownDirectBakedWalkAsset(source,registry);let disposed=0;texture.addEventListener('dispose',()=>disposed++);assert.equal(owned.texture,texture);registry.dispose();assert.equal(registry.status().owned.length,1);owned.dispose();owned.dispose();assert.equal(disposed,1);assert.equal(registry.status().owned.length,0);});

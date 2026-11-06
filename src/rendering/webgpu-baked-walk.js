@@ -59,23 +59,23 @@ export function sharedBakedWalkGraph(bake,clock=null,phaseSource=null){
 
 // One replica per source material and graph, scoped to the owning renderer.
 // Progressive texture transitions update the single replica through its lease.
-const sharedWalkMaterials=new WeakMap();
-function acquireWalkMaterial(renderer,original,graph){
+const sharedWalkMaterials=new WeakMap();let nextBakedMaterial=0;
+function acquireWalkMaterial(renderer,original,graph,resourceRegistry){
  let graphs=sharedWalkMaterials.get(renderer);if(!graphs){graphs=new WeakMap();sharedWalkMaterials.set(renderer,graphs);}let sources=graphs.get(graph);if(!sources){sources=new WeakMap();graphs.set(graph,sources);}let record=sources.get(original);
- if(!record){const material=original.isNodeMaterial?original.clone():renderer.library.fromMaterial(original);if(!material?.isNodeMaterial||material===original||material.positionNode||material.normalNode){if(material&&material!==original)material.dispose?.();throw Error('Unsupported baked walking material');}material.positionNode=graph.position;let unregister;try{unregister=typeof original._wgRegisterReplica==='function'?original._wgRegisterReplica(material):null;}catch(error){material.dispose();throw error;}record={material,unregister,refs:0};sources.set(original,record);}
- record.refs++;let released=false;return {material:record.material,release(){if(released)return;released=true;if(--record.refs===0){sources.delete(original);record.unregister?.();record.material.dispose();}}};
+ if(!record){const material=original.isNodeMaterial?original.clone():renderer.library.fromMaterial(original);if(!material?.isNodeMaterial||material===original||material.positionNode||material.normalNode){if(material&&material!==original)material.dispose?.();throw Error('Unsupported baked walking material');}material.positionNode=graph.position;let unregister;try{unregister=typeof original._wgRegisterReplica==='function'?original._wgRegisterReplica(material):null;}catch(error){material.dispose();throw error;}let lease;try{if(resourceRegistry){lease=resourceRegistry.adopt({namespace:'baked-walk-material',key:String(++nextBakedMaterial),dispose:()=>material.dispose()});lease.commit();}}catch(error){unregister?.();if(lease)lease.release();else material.dispose();throw error;}record={material,unregister,lease,resourceRegistry,refs:0};sources.set(original,record);}
+ if(record.resourceRegistry!==resourceRegistry)throw Error('Baked material resource owner changed');record.refs++;let released=false;return {material:record.material,release(){if(released)return;released=true;if(--record.refs===0){sources.delete(original);record.unregister?.();if(record.lease)record.lease.release();else record.material.dispose();}}};
 }
 
 // Opt-in only: separate meshes retain the live rig for attacks and physical
 // poses. Materials and geometry are never modified on the source rig.
-export function createBakedWalkPresentation({model,root,renderer,bake,confirmedClock=null,phaseSource=null}={}){
- if(!model?.isObject3D||!root?.isObject3D||!renderer?.backend?.isWebGPUBackend||!bake?.texture||confirmedClock!==null&&(!confirmedClock.node?.isNode||!Number.isFinite(confirmedClock.elapsed)))throw TypeError('Invalid baked presentation');
+export function createBakedWalkPresentation({model,root,renderer,bake,confirmedClock=null,phaseSource=null,resourceRegistry=null}={}){
+ if(resourceRegistry!==null&&typeof resourceRegistry?.adopt!=='function'||!model?.isObject3D||!root?.isObject3D||!renderer?.backend?.isWebGPUBackend||!bake?.texture||confirmedClock!==null&&(!confirmedClock.node?.isNode||!Number.isFinite(confirmedClock.elapsed)))throw TypeError('Invalid baked presentation');
  root.updateWorldMatrix(true,true);const rootInverse=new Matrix4().copy(root.matrixWorld).invert(),meshes=[],leases=[],phaseOffset=uniform(0),clockEnabled=uniform(0);let enabled=false,disposed=false;
  try{
   model.traverse(source=>{if(!source.isSkinnedMesh)return;
    const channel=bake.meta.channels.find(c=>c.name===source.name);if(!channel||source.skeleton.bones.map(b=>b.name).join('\0')!==bake.bones.join('\0')||source.bindMatrix.elements.some((value,i)=>!Number.isFinite(value)||Math.abs(value-channel.bindMatrix[i])>1e-6)||bake.meta.boneInverses&&(source.skeleton.boneInverses.length!==bake.bones.length||source.skeleton.boneInverses.some((matrix,bone)=>matrix.elements.some((value,i)=>!Number.isFinite(value)||Math.abs(value-bake.meta.boneInverses[bone*16+i])>1e-6))))throw Error('Unsupported baked walking rig');
    const inverse=new Matrix4().multiplyMatrices(rootInverse,source.matrixWorld).invert(),graph=sharedBakedWalkGraph(bake,confirmedClock,phaseSource);
-   const convert=original=>{const lease=acquireWalkMaterial(renderer,original,graph);leases.push(lease);return lease.material;};
+   const convert=original=>{const lease=acquireWalkMaterial(renderer,original,graph,resourceRegistry);leases.push(lease);return lease.material;};
    const material=Array.isArray(source.material)?source.material.map(convert):convert(source.material),mesh=new Mesh(source.geometry,material);mesh._wgWalkBindMatrix=source.bindMatrix;mesh._wgWalkInverse=inverse;mesh._wgWalkPhaseOffset=phaseOffset.value;mesh._wgWalkClockWeight=clockEnabled.value;mesh._wgWalkDuration=bake.meta.duration;mesh._wgWalkSampleRate=bake.meta.sampleRate;mesh._wgWalkFrames=bake.meta.frames;mesh._wgWalkLastSample=bake.meta.sampleTimes.at(-1);
    mesh.position.copy(source.position);mesh.quaternion.copy(source.quaternion);mesh.scale.copy(source.scale);mesh.matrixAutoUpdate=source.matrixAutoUpdate;if(!source.matrixAutoUpdate)mesh.matrix.copy(source.matrix);mesh.morphTargetInfluences=source.morphTargetInfluences;mesh.morphTargetDictionary=source.morphTargetDictionary;mesh.castShadow=source.castShadow;mesh.receiveShadow=source.receiveShadow;mesh.frustumCulled=false;mesh.visible=false;meshes.push({source,mesh,inverse,proxy:null,visible:source.visible});
   });

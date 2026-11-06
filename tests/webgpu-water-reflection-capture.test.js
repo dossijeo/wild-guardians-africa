@@ -1,3 +1,4 @@
+import {createWebGpuResourceRegistry} from '../src/rendering/webgpu-resource-registry.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
@@ -25,9 +26,9 @@ test('capture restores visibility and renderer state on scene or reduction failu
 });
 
 test('capture admits reduction quads using their actual render contexts and defers resource release',async()=>{
- const capture=createWebGpuWaterReflectionCapture(5,3),object=new THREE.Mesh(),calls=[],deferred=[];
+ const registry=createWebGpuResourceRegistry(),capture=createWebGpuWaterReflectionCapture(5,3,{resourceRegistry:registry}),object=new THREE.Mesh(),calls=[],deferred=[];
  const admission={prepare(item,options){calls.push({item,options});return Promise.resolve();},deferRelease(item,release){deferred.push({item,release});},deferCompilations(release){deferred.push({release});}};
- try{await capture.prepareHierarchy(admission);await capture.prepareObject(admission,object);assert.equal(calls.length,4);for(const call of calls.slice(0,3)){assert.equal(call.options.target.texture.isTexture,true);assert.equal(call.options.passCamera,call.item.camera);assert.equal(call.options.targetScene,call.item);assert.equal(call.options.shadowPass,false);}assert.equal(calls[3].item,object);assert.equal(calls[3].options.target.depthTexture,capture.depth);assert.equal(calls[3].options.shadowPass,false);assert.throws(()=>capture.prepareObject({prepare(){}},object),/admission/);}finally{capture.dispose();assert.equal(deferred.length,4);for(const item of deferred)item.release();object.geometry.dispose();object.material.dispose();}
+ try{assert.equal(registry.status().owned.length,4);await capture.prepareHierarchy(admission);await capture.prepareObject(admission,object);assert.equal(calls.length,4);for(const call of calls.slice(0,3)){assert.equal(call.options.target.texture.isTexture,true);assert.equal(call.options.passCamera,call.item.camera);assert.equal(call.options.targetScene,call.item);assert.equal(call.options.shadowPass,false);}assert.equal(calls[3].item,object);assert.equal(calls[3].options.target.depthTexture,capture.depth);assert.equal(calls[3].options.shadowPass,false);assert.throws(()=>capture.prepareObject({prepare(){}},object),/admission/);}finally{registry.dispose();capture.dispose();assert.equal(registry.status().owned.length,4);assert.equal(deferred.length,4);for(const item of deferred)item.release();assert.equal(registry.status().owned.length,0);object.geometry.dispose();object.material.dispose();}
 });
 
 test('disposing while a reduction compiles prevents admission of later levels',async()=>{
