@@ -42,7 +42,7 @@ export function createHostPublicationQueue({session,send,diagnostics=false,foldV
  const background=item=>item?.kind==='publication'&&item.backgroundView===true&&knownEnvelope(item.publication)&&item.publication.unchanged===true&&Object.keys(item.publication).every(key=>backgroundKeys.has(key))&&terrainStable(item.publication)&&Array.isArray(item.publication.events)&&item.publication.events.length===0;
  const sameState=(a,b)=>a.slotId===b.slotId&&a.stateSequence===b.stateSequence&&a.elapsed===b.elapsed&&a.saveAvailable===b.saveAvailable&&JSON.stringify(a.pauses)===JSON.stringify(b.pauses);
  return {
-  publication(publication,tick,{backgroundView=false,sourceKind}={}){let item={kind:'publication',publication,tick,backgroundView,firstSequence:publication.sequence,...(diagnostics&&typeof sourceKind==='string'?{sourceKind}:{})};
+  publication(publication,tick,{backgroundView=false,sourceKind,skipWorkCheckpoint=false}={}){if(typeof skipWorkCheckpoint!=='boolean'||skipWorkCheckpoint&&!publication.terrainCheckpoint)throw TypeError('Invalid checkpoint preparation option');let item={kind:'publication',publication,tick,backgroundView,firstSequence:publication.sequence,...(skipWorkCheckpoint?{skipWorkCheckpoint:true}:{}),...(diagnostics&&typeof sourceKind==='string'?{sourceKind}:{})};
    // A directly sent publication is no longer retained in this queue, so it
    // needs neither a retained-size traversal nor queue capacity admission.
    if(!inFlight&&!queue.length){inFlight=publication.sequence;lastSent=inFlight;const {sourceKind,...wire}=item;send({...wire,session});return false;}
