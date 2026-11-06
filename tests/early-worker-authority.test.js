@@ -14,3 +14,5 @@ test('early authority attaches ordered callbacks after construction without a gr
 test('early authority rejects malformed setup before creating a runtime',()=>{
  let called=false;assert.throws(()=>createEarlyWorkerAuthority({session:'',runtimeFactory:()=>{called=true;}}),/Invalid early worker authority/);assert.equal(called,false);
 });
+
+test('prepared authority exposes snapshot-free presentation profile to its owner',()=>{const early=createEarlyWorkerAuthority({session:'s',initial:{snapshot:'{}',navigationView:{}},adapter:{},clientOptions:{},runtimeOptions:{presentationInputs:false,startupSuspended:true,mainThreadHudOnly:true},onError:()=>{},runtimeFactory:()=>({})});assert.equal(early.hudOnly,true);});
