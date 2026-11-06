@@ -29,6 +29,13 @@ test('early presentation does not claim ownership of legacy prop meshes',()=>{
  assert.throws(()=>world.syncResidentProps(),/cannot own legacy resident props/);
 });
 
+test('legacy receiver is required only for explicit development diagnostics',()=>{
+ const world={state:{}},calls=[],legacy=(...args)=>{calls.push(args);return {legacy:true};};
+ assert.throws(()=>installEarlyWorkerWorldServices({}, {dev:true,visualSearch:'?qa-worker-path-trace'}),/receiver unavailable/);
+ installEarlyWorkerWorldServices(world,{dev:true,visualSearch:'?qa-worker-double-decode',legacyReceiver:legacy});assert.deepEqual(world.createConfirmedReceiver('s'),{legacy:true});assert.deepEqual(calls[0],[world.state,'s',world,{repeatDecode:true}]);
+ const production={state:fixture()};installEarlyWorkerWorldServices(production,{dev:false,visualSearch:'?qa-worker-double-decode',legacyReceiver:()=>{throw Error('unexpected legacy receiver');}});assert.ok(production.createConfirmedReceiver('s').status());
+});
+
 test('village preparation and preview belong to the graphical worker',async()=>{
  const calls=[],preview={culture:'mapungubwe',buildings:[]},world={webGpuWorld:{client:{prepareStructure:(...args)=>{calls.push(['prepare',...args]);return Promise.resolve();},showVillagePreview:value=>{calls.push(['show',value]);return true;},clearVillagePreview:()=>calls.push(['clear'])}}};
  installEarlyWorkerWorldServices(world);await world.ensureVillage('mapungubwe');world.showVillagePreview(preview);world.clearVillagePreview();

@@ -1,4 +1,3 @@
-import {createConfirmedSceneReceiver} from '../rendering/confirmed-scene-receiver.js';
 import {createConfirmedStateReceiver} from '../simulation/confirmed-state-receiver.js';
 import {farmHomeFocus} from '../rendering/farm-focus.js';
 import {focusNewTutorialPlacement} from '../rendering/tutorial-placement-focus.js';
@@ -6,11 +5,12 @@ import {waitGpuPreparation} from '../rendering/wait-gpu-preparation.js';
 
 // The early presentation owns no legacy renderer or resident prop meshes.
 // Keep its confirmed-state and camera services independent of WorldScene.
-export function installEarlyWorkerWorldServices(world,{visualSearch='',dev=false,loadLegacyTutorialTarget=()=>import('../tutorial/tutorial-hand-target.js')}={}){
+export function installEarlyWorkerWorldServices(world,{visualSearch='',dev=false,legacyReceiver=null,loadLegacyTutorialTarget=()=>import('../tutorial/tutorial-hand-target.js')}={}){
  if(typeof loadLegacyTutorialTarget!=='function')throw TypeError('Invalid tutorial target loader');
  const params=new URLSearchParams(visualSearch),legacyDiagnostics=dev&&(params.has('qa-worker-double-decode')||params.has('qa-worker-path-trace'));
+ if(legacyDiagnostics&&typeof legacyReceiver!=='function')throw TypeError('Legacy diagnostic receiver unavailable');
  let focusGeneration=0;
- world.createConfirmedReceiver=session=>legacyDiagnostics?createConfirmedSceneReceiver(world.state,session,world,{repeatDecode:params.has('qa-worker-double-decode')}):createConfirmedStateReceiver(world.state,session);
+ world.createConfirmedReceiver=session=>legacyDiagnostics?legacyReceiver(world.state,session,world,{repeatDecode:params.has('qa-worker-double-decode')}):createConfirmedStateReceiver(world.state,session);
  world.loadReady=async(pending,releaseLate)=>{
   const signal=world.loading?.signal;let value;const check=()=>{if(world.disposed||signal?.aborted)throw Error('Carga de mundo cancelada');};
   const observed=Promise.resolve(pending).then(result=>{if(world.disposed||signal?.aborted)releaseLate?.(result);value=result;});
