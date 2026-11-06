@@ -6,6 +6,8 @@ import {serializeConfirmedState,deserializeConfirmedState} from '../src/simulati
 import * as Game from '../src/simulation/game.js';
 import {rational,transact} from '../src/simulation/money.js';
 import {createWorkerHostedRuntime} from '../src/simulation/worker-hosted-runtime.js';
+import {readFileSync} from 'node:fs';
+import {gunzipSync} from 'node:zlib';
 
 const packet=(sequence,snapshot,events=[])=>({kind:'publication',session:'s',publication:{session:'s',sequence,snapshot,events,physicsPose:null}});
 test('incremental UI transport retains validated states and ordered event boundaries',()=>{
@@ -48,6 +50,27 @@ test('small snapshots fall back to full transport and property removal is preser
  const full=encoder.encode(packet(2,'{"a":2}'));assert.equal(full.publication.snapshot,'{"a":2}');decoder.decode(full);
  const large=JSON.stringify({a:2,remove:1,keep:'x'.repeat(300)});decoder.decode(encoder.encode(packet(3,large)));
  const removed=encoder.encode(packet(4,JSON.stringify({a:2,keep:'x'.repeat(300)})));assert.deepEqual(removed.publication.snapshotDelta.removed,['remove']);assert.deepEqual(JSON.parse(decoder.decode(removed).publication.snapshot),{a:2,keep:'x'.repeat(300)});
+});
+test('entity deltas preserve additions, removals, order and immutable earlier snapshots',()=>{
+ const encoder=createMainSnapshotEncoder(),decoder=createMainSnapshotDecoder(),workers=Array.from({length:30},(_,i)=>({id:`w-${i}`,x:i,description:'worker'.repeat(12)})),base={workers,other:'a'.repeat(300)};
+ const first=decoder.decode(encoder.encode(packet(1,JSON.stringify(base))));const next=structuredClone(base);next.workers[4].x=99;next.workers.splice(2,1);next.workers.reverse();next.workers.push({id:'new',x:4,description:'new'});
+ const wire=encoder.encode(packet(2,JSON.stringify(next)));assert.equal(wire.publication.snapshotDelta.version,2);assert.deepEqual(wire.publication.snapshotDelta.entities[0][1],next.workers.map(w=>w.id));assert.deepEqual(wire.publication.snapshotDelta.entities[0][2].map(([id])=>id).sort(),['new','w-4']);
+ const decoded=decoder.decode(wire);assert.deepEqual(JSON.parse(decoded.publication.snapshot),next);assert.deepEqual(JSON.parse(first.publication.snapshot),base);
+});
+test('real saved raid transfers a changed worker without resending its roster',()=>{
+ const authority=deserializeConfirmedState(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString()),view=deserializeConfirmedState(serializeConfirmedState(authority)),receiver=createConfirmedStateReceiver(view,'s'),encoder=createMainSnapshotEncoder(),decoder=createMainSnapshotDecoder(),actor=view.workers[0];
+ receiver.accept(decoder.decode(encoder.encode(packet(1,serializeConfirmedState(authority)))).publication);authority.workers[0].x+=.125;
+ const wire=encoder.encode(packet(2,serializeConfirmedState(authority))),patch=wire.publication.snapshotDelta.entities.find(([key])=>key==='workers');assert.equal(patch[2].length,1);assert.equal(patch[2][0][0],actor.id);assert.equal(receiver.accept(decoder.decode(wire).publication).accepted,true);assert.equal(view.workers[0],actor);assert.deepEqual(view,authority);
+});
+test('malformed entity deltas fail before advancing the baseline',()=>{
+ const encoder=createMainSnapshotEncoder(),decoder=createMainSnapshotDecoder(),workers=Array.from({length:10},(_,i)=>({id:`w${i}`,data:'x'.repeat(100)})),first={workers,other:'x'.repeat(400)};
+ decoder.decode(encoder.encode(packet(1,JSON.stringify(first))));const next=structuredClone(first);next.workers[0].data='changed';const good=encoder.encode(packet(2,JSON.stringify(next))),delta=good.publication.snapshotDelta,[key,order,updates]=delta.entities[0];
+ for(const entities of [[[key,[...order,order[0]],updates]],[[key,order,[['missing','{}']]]],[[key,order,[['w0','{"id":"wrong"}']]]],[[key,[...order,'new'],updates]],[[key,order,updates],[key,order,updates]]])assert.throws(()=>decoder.decode({...good,publication:{...good.publication,snapshotDelta:{...delta,entities}}}));
+ assert.deepEqual(JSON.parse(decoder.decode(good).publication.snapshot),next);
+});
+test('arrays without unique stable identities use a complete field replacement',()=>{
+ const encoder=createMainSnapshotEncoder(),decoder=createMainSnapshotDecoder(),workers=[{id:'duplicate',x:1},{id:'duplicate',x:2}],base={workers,other:'x'.repeat(400)};
+ decoder.decode(encoder.encode(packet(1,JSON.stringify(base))));const next=structuredClone(base);next.workers[0].x=3;const wire=encoder.encode(packet(2,JSON.stringify(next)));assert.equal(wire.publication.snapshotDelta.version,1);assert.ok(wire.publication.snapshotDelta.changed.some(([key])=>key==='workers'));assert.deepEqual(JSON.parse(decoder.decode(wire).publication.snapshot),next);
 });
 test('hosted UI consumes incremental publications before acknowledging and resolving commands',async()=>{
  const authority=Game.newGame({seed:712,slotId:'host-delta'}),view=deserializeConfirmedState(serializeConfirmedState(authority)),encoder=createMainSnapshotEncoder(),sent=[],events=[];
