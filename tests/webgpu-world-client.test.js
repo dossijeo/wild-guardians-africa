@@ -2,8 +2,18 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createWebGpuWorldClient} from '../src/rendering/webgpu-world-client.js';
 import {webGpuWorldOptions} from '../src/app/webgpu-world-options.js';
+import {workerPresentationProfile} from '../src/app/worker-presentation-profile.js';
+import {webGpuWorkerBakedWalking} from '../src/rendering/webgpu-presentation-capabilities.js';
 import {MAX_PENDING_PRESENTATION_INPUTS} from '../src/rendering/presentation-input-limits.js';
 function setup(options={}){const worker={messages:[],postMessage(message,transfer){this.messages.push({message,transfer});},terminate(){this.terminated=true;}},ports=[],client=createWebGpuWorldClient({canvas:{transferControlToOffscreen:()=>({canvas:true})},session:'s',snapshot:'{}',...options,workerFactory:()=>worker,channelFactory:()=>{const a={close(){this.closed=true;}},b={close(){this.closed=true;}};ports.push(a,b);return {port1:a,port2:b};}});return {worker,ports,client};}
+test('explicit baked walking reaches the Worker and enables its worker bank while the product default stays off',async()=>{
+ const profile=workerPresentationProfile({backend:'webgpu-worker'}),make=capabilities=>webGpuWorldOptions({params:new URLSearchParams(),state:{raid:null},field:{},capabilities});
+ const ordinary=make(profile.capabilities);assert.equal(webGpuWorkerBakedWalking(ordinary.presentationCapabilities),false);
+ const selected=make({...profile.capabilities,bakedWalking:true}),{worker,client}=setup(selected),message=worker.messages[0].message;
+ assert.equal(message.experimentalAllActors,true);assert.equal(message.presentationCapabilities.bakedWalking,true);
+ assert.equal(webGpuWorkerBakedWalking(message.presentationCapabilities),true);
+ worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await client.ready;client.dispose();
+});
 test('guardian narration sends compact ordered media samples only while the client is running',async()=>{
  const {client,worker}=setup(),record={id:'guide',path:'audio/guide.ogg',text:'unused'},audio={currentTime:1,paused:false,ended:false,playbackRate:1};
  assert.equal(client.setGuardianNarration(record,audio),false);worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await client.ready;
