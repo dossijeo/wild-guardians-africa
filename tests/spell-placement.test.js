@@ -2,7 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import * as Game from '../src/simulation/game.js';
-import {castPickedSpell,pickedSpellCommand,dispatchPickedSpell} from '../src/app/spell-placement.js';
+import {castPickedSpell,pickedSpellCommand,dispatchPickedSpell,confirmedSpellContact} from '../src/app/spell-placement.js';
+
+test('ground spell contact uses only a confirmed finite terrain sample',()=>{
+ const hit={x:1,y:4,z:2};assert.deepEqual(confirmedSpellContact(hit,{x:8,z:9},()=>7),hit);
+ assert.deepEqual(confirmedSpellContact(null,{x:8,z:9},()=>7),{x:8,y:7,z:9});
+ assert.equal(confirmedSpellContact(null,{x:8,z:9},()=>null),null);
+ assert.equal(confirmedSpellContact(null,{x:NaN,z:9},()=>7),null);
+});
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 
 const nav={placement:()=>({valid:true}),setState(){},path:(_a,b)=>[{x:b.x,z:b.z}]};

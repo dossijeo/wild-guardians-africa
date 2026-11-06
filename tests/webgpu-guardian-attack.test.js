@@ -116,6 +116,26 @@ test('confirmed shield uses the guardian gesture and non-attack beams once',()=>
  const event={id:'event-1',type:'SpellActivated',kind:'shield',commandId:'shield-1',presentation:{elapsed:9.8,origin:{x:0,y:2,z:0},contact:{x:1,y:1,z:0}}},journal=[{kind:'event',eventId:event.id,at:9.8}];
  try{visual.sync(journal,[event]);visual.tick();assert.equal(visual.status().active.kind,'shield');assert.equal(visual.status().active.provisional,false);assert.equal(visual.status().cropBeams,2);assert.equal(visual.status().beamVisible,false);assert.equal(visual.status().confirmed,1);visual.sync(journal,[event]);assert.equal(visual.status().confirmed,1);state.elapsed=13;confirmedClock.commit(13);visual.tick();assert.equal(visual.status().active,null);}finally{visual.dispose();confirmedClock.dispose();}
 });
+test('shield feedback starts provisionally without creating confirmed effects and reconciles by id',()=>{
+ let now=0;const scene=new THREE.Scene(),state={elapsed:10,events:[],plants:[],raid:null},before=JSON.stringify(state),visual=createWebGpuGuardianAttack({scene,state,renderer:{backend:{isWebGPUBackend:true}},clock:()=>now,loadModel:()=>new Promise(()=>{})});
+ const selection={origin:{x:0,y:2,z:0},contact:{x:1,y:1,z:0}},command={kind:'castShield',id:'shield-1',selection};
+ try{
+  assert.equal(visual.beginShield({...command,selection:{origin:null,contact:null}}),false);
+  assert.equal(visual.beginShield(command),true);now=250;visual.tick();
+  assert.equal(visual.status().active.provisional,true);assert.equal(visual.status().cropBeams,0);assert.equal(visual.status().coreVisible,false);assert.equal(JSON.stringify(state),before);
+  visual.resolve('other',false);assert.equal(visual.status().active.id,command.id);
+  state.elapsed=10.3;const event={id:'event-1',type:'SpellActivated',kind:'shield',commandId:command.id,presentation:{elapsed:10.3,origin:{x:.2,y:2,z:0},contact:selection.contact}};
+  visual.sync([{kind:'event',eventId:event.id,at:10.3}],[event]);visual.tick();assert.equal(visual.status().active.provisional,false);assert.equal(visual.status().cropBeams,2);assert.equal(visual.status().confirmed,1);
+  visual.sync([{kind:'event',eventId:event.id,at:10.3}],[event]);visual.resolve(command.id,true);assert.equal(visual.status().confirmed,1);assert.equal(visual.beginShield(command),false);
+ }finally{visual.dispose();}
+});
+test('shield rejection and delayed responses cannot affect a newer provisional gesture',()=>{
+ let now=0;const state={elapsed:1,events:[],plants:[],raid:null},visual=createWebGpuGuardianAttack({scene:new THREE.Scene(),state,renderer:{backend:{isWebGPUBackend:true}},clock:()=>now,loadModel:()=>new Promise(()=>{})});
+ const selection={origin:{x:0,y:2,z:0},contact:{x:1,y:1,z:0}},command={kind:'castShield',id:'first',selection};
+ try{assert.equal(visual.beginShield(command),true);assert.equal(visual.beginShield({...command,id:'second'}),true);visual.resolve('first',false);assert.equal(visual.status().active.id,'second');visual.resolve('second',false);assert.equal(visual.status().active,null);assert.equal(visual.beginShield({...command,id:'third'}),true);
+  now=1000;state.elapsed=3;const event={id:'event-1',type:'SpellActivated',kind:'shield',commandId:'third',presentation:{elapsed:1,...selection}};visual.sync([{kind:'event',eventId:event.id,at:1}],[event]);assert.equal(visual.status().active.id,'third');assert.equal(visual.status().active.provisional,false);
+ }finally{visual.dispose();}
+});
 test('confirmed shield selects the authored shield clip on the admitted rig',async()=>{
  const scene=new THREE.Scene(),model=new THREE.Group(),bone=new THREE.Bone();bone.name='TestBone';model.add(bone);
  const clip=(name,end)=>new THREE.AnimationClip(name,1,[new THREE.VectorKeyframeTrack('TestBone.position',[0,1],[0,0,0,end,0,0])]);

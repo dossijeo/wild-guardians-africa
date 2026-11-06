@@ -2,6 +2,14 @@ import {cast} from '../simulation/game.js';
 import {attackGestureActive,attackTargetAvailable} from '../simulation/guardian-combat.js';
 const pendingAttacks=new WeakMap();
 
+// Ground picks carry x/z separately from mesh hits. Do not invent a height
+// when the confirmed camera terrain has not reached the presentation yet.
+export function confirmedSpellContact(hitPoint,point,surface){
+ if(hitPoint&&[hitPoint.x,hitPoint.y,hitPoint.z].every(Number.isFinite))return {x:hitPoint.x,y:hitPoint.y,z:hitPoint.z};
+ if(!point||![point.x,point.z].every(Number.isFinite)||typeof surface!=='function')return null;
+ const y=surface(point.x,point.z);return Number.isFinite(y)?{x:point.x,y,z:point.z}:null;
+}
+
 // A tall crop can occlude terrain several metres behind it. Entity selection
 // takes precedence so a power aimed at that crop actually covers the crop.
 export function resolvePickedSpell(state,kind,{entityId,point,hitPoint,origin}){
