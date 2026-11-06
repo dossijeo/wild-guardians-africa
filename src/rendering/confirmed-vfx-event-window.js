@@ -22,5 +22,7 @@ export function createConfirmedVfxEventWindow({lifetime}){
   // ring fallback for those rather than inventing identities for them.
   return [...values,...legacy.filter(event=>supported(event)&&(typeof event.id!=='string'||!event.id))];
  }
- return {sync,clear(){retained.clear();}};
+ function exportCheckpoint(elapsed){sync(elapsed);return {version:1,elapsed,events:structuredClone([...retained.values()])};}
+ function restoreCheckpoint(checkpoint,elapsed){if(!checkpoint||checkpoint.version!==1||checkpoint.elapsed!==elapsed||!Number.isFinite(elapsed)||!Array.isArray(checkpoint.events))throw TypeError('Invalid VFX event checkpoint');const next=new Map();for(const event of checkpoint.events){if(!supported(event)||typeof event.id!=='string'||!event.id||!Number.isFinite(event.presentation?.elapsed)||elapsed-event.presentation.elapsed<0||elapsed-event.presentation.elapsed>=lifetime||next.has(event.id))throw TypeError('Invalid VFX event checkpoint');next.set(event.id,structuredClone(event));}retained.clear();for(const [id,event] of next)retained.set(id,event);return true;}
+ return {sync,exportCheckpoint,restoreCheckpoint,clear(){retained.clear();}};
 }

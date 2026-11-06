@@ -349,6 +349,15 @@ test('shadow admission waits for the target created by the ordinary world render
  sun.shadow.map={};admission.notifyShadowTargets();await ready;assert.equal(shadowCalls,1);assert.equal(admitted,true);admission.dispose();
 });
 
+test('recovery admission rejects a missing shadow target without parking or poisoning normal admission',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Mesh(),sun=new THREE.DirectionalLight(),errors=[];object.castShadow=true;sun.castShadow=true;const renderer={backend:{isWebGPUBackend:true},compileAsync:()=>Promise.resolve(),compileShadowAsync:()=>Promise.resolve()},admission=createWebGpuPipelineAdmission({renderer,scene,camera,shadowLights:[sun],includeShadowPass:true,onFatal:error=>errors.push(error)});
+ try{await assert.rejects(admission.prepareTicket(object,{requireShadowTarget:true}),{code:'shadow-target-unavailable'});assert.deepEqual(errors,[]);const controller=new AbortController(),normal=admission.prepare(object,{signal:controller.signal});await new Promise(resolve=>setImmediate(resolve));controller.abort();await assert.rejects(normal,{name:'AbortError'});assert.deepEqual(errors,[]);}finally{admission.dispose();}
+});
+test('recovery admission accepts the target created while compiling an actual receiver',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),receiver=new THREE.Mesh(),caster=new THREE.Mesh(),sun=new THREE.DirectionalLight(),calls=[];caster.castShadow=true;sun.castShadow=true;const renderer={backend:{isWebGPUBackend:true},compileAsync(object){calls.push(object===receiver?'receiver':'caster');if(object===receiver)sun.shadow.map={};return Promise.resolve();},compileShadowAsync(){calls.push('shadow');return Promise.resolve();}},admission=createWebGpuPipelineAdmission({renderer,scene,camera,shadowLights:[sun],includeShadowPass:true});
+ try{await admission.prepareTicket(receiver,{requireShadowTarget:true});await admission.prepareTicket(caster,{requireShadowTarget:true});assert.deepEqual(calls,['receiver','caster','shadow']);}finally{admission.dispose();}
+});
+
 test('a missing shadow target does not block later non-casting objects from admission',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),caster=new THREE.Mesh(),receiver=new THREE.Mesh(),sun=new THREE.DirectionalLight(),calls=[];caster.castShadow=true;caster.visible=false;receiver.visible=false;sun.castShadow=true;
  const renderer={backend:{isWebGPUBackend:true},compileAsync(object){calls.push(object===caster?'caster':'receiver');return Promise.resolve();},compileShadowAsync(object){assert.equal(object,caster);calls.push('shadow');return Promise.resolve();}};

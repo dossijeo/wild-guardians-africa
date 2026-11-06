@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createConfirmedVfxEventWindow} from '../src/rendering/confirmed-vfx-event-window.js';
+
+test('VFX checkpoint restores retained hits absent from the current game event ring',()=>{const first=createConfirmedVfxEventWindow({lifetime:4}),second=createConfirmedVfxEventWindow({lifetime:4}),event={id:'event-2',type:'AnimalLogicalHit',presentation:{elapsed:2}};first.sync(3,[event]);const checkpoint=first.exportCheckpoint(3);assert.equal(second.restoreCheckpoint(checkpoint,3),true);assert.deepEqual(second.sync(3,[],[]),[event]);assert.throws(()=>second.restoreCheckpoint({...checkpoint,elapsed:2},3),/checkpoint/);assert.deepEqual(second.sync(3,[],[]),[event]);first.clear();second.clear();});
 import {workVfxPlans} from '../src/rendering/work-vfx.js';
 
 const hit=(n,at=10)=>({id:`event-${n}`,type:'AnimalLogicalHit',attackId:`attack-${n}`,presentation:{elapsed:at,animal:{x:1,z:2},target:{x:0,z:0}}});

@@ -100,7 +100,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
   const worldPass=item.target===undefined&&item.passCamera===camera&&item.targetScene===scene;
   for(;;){
    const revision=auxiliaryRevision;
-   const result=await execute(item.object,item.signal,item.version,item.include,item.target,item.shadowPass,item.passCamera,item.targetScene);
+   const result=await execute(item.object,item.signal,item.version,item.include,item.target,item.shadowPass,item.passCamera,item.targetScene,null,item.requireShadowTarget);
    if(result?.shadowTarget||!worldPass)return result;
    const passes=[result],targets=[...auxiliaryTargets.keys()];
    for(const target of targets){if(revision!==auxiliaryRevision)break;passes.push(await execute(item.object,item.signal,item.version,item.include,target,false,camera,scene,()=>revision===auxiliaryRevision));}
@@ -165,7 +165,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
   targetWaiters.add(waiter);notifyShadowTargets();
   try{await waitForCompilation(pending,signal);}finally{targetWaiters.delete(waiter);}
  }
- async function execute(object,signal,version,include,requestedTarget,shadowPass,passCamera,targetScene,isCurrent=null){
+ async function execute(object,signal,version,include,requestedTarget,shadowPass,passCamera,targetScene,isCurrent=null,requireShadowTarget=false){
   // Included alternatives may be nested below hidden groups. The render
   // list needs the complete path, not just the requested leaf, to be visible
   // during synchronous compilation setup. Never touch a reparented object.
@@ -208,16 +208,16 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
     if(closed||version!==generation)throw Error('Pipeline admission cancelled');
     // A light may have been added or removed while the driver compiled. The
     // completed pipeline describes the old scene and cannot admit the object.
-    if(lightsChanged()||!sameInputs(inputs,pipelineInputs(object,currentTarget(),passCamera,renderer,include)))return execute(object,signal,version,include,requestedTarget,shadowPass,passCamera,targetScene,isCurrent);
+    if(lightsChanged()||!sameInputs(inputs,pipelineInputs(object,currentTarget(),passCamera,renderer,include)))return execute(object,signal,version,include,requestedTarget,shadowPass,passCamera,targetScene,isCurrent,requireShadowTarget);
     const shadowTargets=[];
     if(shadowPass){
      let castsShadow=false;object.traverse(node=>{if((node.isMesh||node.isLine||node.isPoints)&&node.castShadow)castsShadow=true;});
      if(castsShadow){
       for(const light of lights.keys()){
        if(!light.castShadow||!light.visible)continue;
-       if(!light.shadow.map)return {shadowTarget:waitForShadowTarget(light,signal,lightVersion)};
+       if(!light.shadow.map){if(requireShadowTarget)throw Object.assign(Error('Required shadow target is not available after preparation'),{code:'shadow-target-unavailable'});return {shadowTarget:waitForShadowTarget(light,signal,lightVersion)};}
        if(closed||version!==generation)throw Error('Pipeline admission cancelled');
-       if(lightsChanged())return execute(object,signal,version,include,requestedTarget,shadowPass,passCamera,targetScene,isCurrent);
+       if(lightsChanged())return execute(object,signal,version,include,requestedTarget,shadowPass,passCamera,targetScene,isCurrent,requireShadowTarget);
        if(!light.castShadow||!light.visible)continue;
        const target=light.shadow.map,visible=object.visible,culling=[],shadows=[];let shadowPending;
        shadowTargets.push([light,target]);
@@ -233,14 +233,14 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
        if(signal?.aborted)throw new DOMException('Pipeline admission cancelled','AbortError');
        if(renderer._isDeviceLost===true)throw Error('WebGPU device lost during shadow admission');
        if(closed||version!==generation)throw Error('Pipeline admission cancelled');
-       if(lightsChanged()||target!==light.shadow.map||!sameInputs(inputs,pipelineInputs(object,currentTarget(),passCamera,renderer,include)))return execute(object,signal,version,include,requestedTarget,shadowPass,passCamera,targetScene,isCurrent);
+       if(lightsChanged()||target!==light.shadow.map||!sameInputs(inputs,pipelineInputs(object,currentTarget(),passCamera,renderer,include)))return execute(object,signal,version,include,requestedTarget,shadowPass,passCamera,targetScene,isCurrent,requireShadowTarget);
       }
      }
     }
     return {valid:()=>!closed&&!lostError&&renderer._initialized!==false&&renderer._isDeviceLost!==true&&version===generation&&!signal?.aborted&&(!isCurrent||isCurrent())&&!lightsChanged()&&shadowTargets.every(([light,map])=>light.shadow.map===map)&&sameInputs(inputs,pipelineInputs(object,currentTarget(),passCamera,renderer,include))};
   }catch(error){
    // Three r180 may retain an unsuccessful pipeline in its internal cache.
-   if(!closed&&!signal?.aborted)retire(error);
+   if(!closed&&!signal?.aborted&&error?.code!=='shadow-target-unavailable')retire(error);
    throw error;
   }
  }
@@ -270,16 +270,16 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
    if(signal?.aborted)return Promise.reject(new DOMException('Pipeline admission cancelled','AbortError'));
    return new Promise((resolve,reject)=>enqueue({backgroundNode,expectedNode:scene.backgroundNode,expectedBackground:scene.background,signal,version:generation,publish,resolve,reject,onAbort:null}));
   },
-  prepare(object,{signal,include=[],target=undefined,shadowPass=includeShadowPass,passCamera=camera,targetScene=scene,publish=null,returnTicket=false}={}){
+  prepare(object,{signal,include=[],target=undefined,shadowPass=includeShadowPass,passCamera=camera,targetScene=scene,publish=null,returnTicket=false,requireShadowTarget=false}={}){
    if(closed)return Promise.reject(Error('Pipeline admission closed'));
    if(!object?.isObject3D)return Promise.reject(TypeError('Invalid admission object'));
    if(!passCamera?.isCamera||!targetScene?.isObject3D)return Promise.reject(TypeError('Invalid admission pass context'));
    if(target!==undefined&&(!target?.isRenderTarget||typeof renderer.setRenderTarget!=='function'||typeof renderer.getRenderTarget!=='function')||typeof shadowPass!=='boolean'||shadowPass&&typeof renderer.compileShadowAsync!=='function')return Promise.reject(TypeError('Invalid admission target or shadow pass'));
    if(!Array.isArray(include)||include.some(node=>{if(!node?.isObject3D||node===object)return true;for(let parent=node.parent;parent;parent=parent.parent)if(parent===object)return false;return true;}))return Promise.reject(TypeError('Invalid admission visibility'));
    if(signal!==undefined&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))return Promise.reject(TypeError('Invalid admission signal'));
-   if(publish!==null&&typeof publish!=='function'||typeof returnTicket!=='boolean'||publish!==null&&returnTicket)return Promise.reject(TypeError('Invalid admission publication'));
+   if(publish!==null&&typeof publish!=='function'||typeof returnTicket!=='boolean'||typeof requireShadowTarget!=='boolean'||publish!==null&&returnTicket)return Promise.reject(TypeError('Invalid admission publication'));
    if(signal?.aborted)return Promise.reject(new DOMException('Pipeline admission cancelled','AbortError'));
-   return new Promise((resolve,reject)=>enqueue({object,signal,include:[...new Set(include)],target,shadowPass,passCamera,targetScene,publish,returnTicket,version:generation,resolve,reject,onAbort:null}));
+   return new Promise((resolve,reject)=>enqueue({object,signal,include:[...new Set(include)],target,shadowPass,passCamera,targetScene,publish,returnTicket,requireShadowTarget,version:generation,resolve,reject,onAbort:null}));
   },
   prepareAndPublish(object,options,publish){return this.prepare(object,{...options,publish});},
   prepareTicket(object,options){return this.prepare(object,{...options,returnTicket:true});},

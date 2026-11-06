@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {openVisualStream} from '../src/simulation/visual-publication-stream.js';
+import {createPresentationRecoveryJournal} from '../src/simulation/presentation-recovery-journal.js';
 
 function setup(options={}) {
  const sent=[], port={postMessage(value){sent.push(value)},start(){},close(){this.closed=true}};
@@ -38,6 +39,7 @@ test('checkpoint becomes recovery base only after application acknowledgement',(
  assert.deepEqual(checkpoints,[1]);
  stream.close();
 });
+test('historical acknowledgement retains versioned presentation data in checkpoint candidate',()=>{const port={postMessage(){},start(){},close(){}},journal=createPresentationRecoveryJournal({strictBoundaries:true}),accepted=[],stream=openVisualStream(port,'s',()=>{},{receiptAcknowledgements:true,workRecovery:true,recoveryJournal:journal,onCheckpointAcknowledged:value=>accepted.push(value)});try{stream.publish({sequence:1,snapshot:'{}',events:[],physicsPose:null,terrainCheckpoint:{sequence:1,chunks:[]}},true);port.onmessage({data:{kind:'publicationReceipt',session:'s',sequence:1}});assert.equal(journal.status().base,null);const workCheckpoint={version:1,sequence:1,effects:[],presentation:{version:1,sequence:1,guardian:{active:null}}};port.onmessage({data:{kind:'publicationAck',session:'s',sequence:1,workCheckpoint}});assert.equal(journal.status().base,1);assert.deepEqual(accepted[0].workCheckpoint,workCheckpoint);}finally{stream.close();journal.dispose();}});
 test('application must be FIFO and follow receipt',()=>{
  for(const action of [
   x=>x.send('publicationAck',1),
