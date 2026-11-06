@@ -13,6 +13,7 @@ import {serializeConfirmedState} from '../src/simulation/confirmed-live-state.js
 import {openVisualStream} from '../src/simulation/visual-publication-stream.js';
 import {createPresentationRecoveryJournal} from '../src/simulation/presentation-recovery-journal.js';
 import {createMainSnapshotEncoder} from '../src/simulation/main-thread-snapshot-transport.js';
+import {MAX_PENDING_PRESENTATION_INPUTS} from '../src/rendering/presentation-input-limits.js';
 const fixture=()=>deserialize(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString());
 test('incremental graphical channel preserves checkpoints, poses and event order',()=>{
  const state=fixture(),authority=deserialize(serialize(state)),journal=createPresentationRecoveryJournal(),sent=[],acks=[],observed=[],errors=[],bases=[];
@@ -50,6 +51,15 @@ test('explicit recovery accepts ordered publications without emitting live ackno
  assert.equal(state.elapsed,next.elapsed);assert.deepEqual(confirmed,[1]);assert.deepEqual(sent,[]);stream.dispose();
 });
 test('authority failure rejects pending visual input without manufacturing a result',async()=>{const state=fixture(),before=serialize(state),errors=[],port={postMessage(){},close(){},start(){}},stream=createConfirmedPresentationStream({port,session:'s',state,terrain:{confirm(){}},allowPresentationInputs:true,onError:error=>errors.push(error.message)}),pending=stream.submitInputForQa(1,{kind:'castAttack'});port.onmessage({data:{kind:'presentationFailure',session:'s',message:'authority lost'}});await assert.rejects(pending,/authority lost/);assert.deepEqual(errors,['authority lost']);assert.equal(serialize(state),before);assert.equal(stream.status().closed,true);});
+test('presentation input backpressure rejects before posting and releases slots on authority failure',async()=>{
+ const sent=[],port={postMessage:m=>sent.push(m),close(){},start(){}},stream=createConfirmedPresentationStream({port,session:'s',state:fixture(),terrain:{confirm(){}},allowPresentationInputs:true});
+ const pending=[];for(let i=1;i<=MAX_PENDING_PRESENTATION_INPUTS;i++)pending.push(stream.submitInput(i,{}));
+ await assert.rejects(stream.submitInput(MAX_PENDING_PRESENTATION_INPUTS+1,{}),/capacity/);assert.equal(sent.length,MAX_PENDING_PRESENTATION_INPUTS);
+ port.onmessage({data:{kind:'presentationInputFailure',session:'s',id:1,message:'rejected'}});await assert.rejects(pending[0],/rejected/);
+ const resumed=stream.submitInput(MAX_PENDING_PRESENTATION_INPUTS+1,{});assert.equal(sent.at(-1).id,MAX_PENDING_PRESENTATION_INPUTS+1);
+ for(let i=2;i<=MAX_PENDING_PRESENTATION_INPUTS+1;i++)port.onmessage({data:{kind:'presentationInputFailure',session:'s',id:i,message:'rejected'}});
+ const results=await Promise.allSettled([...pending.slice(1),resumed]);assert.ok(results.every(result=>result.status==='rejected'));stream.dispose();
+});
 test('work checkpoint acknowledgement waits for asynchronous preparation after state and terrain',async()=>{
  const state=fixture(),order=[],port={postMessage:m=>order.push(['ack',m]),close(){},start(){}},stream=createConfirmedPresentationStream({port,session:'s',state,terrain:{confirm:()=>order.push(['terrain'])},onConfirmed:()=>order.push(['confirmed']),prepareWorkCheckpoint:async message=>{order.push(['work']);return {version:1,sequence:message.sequence,effects:[]};}});port.onmessage({data:{kind:'publication',session:'s',publication:{session:'s',sequence:1,snapshot:serialize(state),events:[],physicsPose:null,terrainCheckpoint:{sequence:1,chunks:[]}}}});assert.deepEqual(order,[['terrain'],['confirmed']]);await new Promise(resolve=>setTimeout(resolve,0));assert.deepEqual(order.map(x=>x[0]),['terrain','confirmed','work','ack']);assert.equal(order[3][1].workCheckpoint.sequence,1);stream.dispose();
 });
