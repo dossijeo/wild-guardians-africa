@@ -2,6 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {webGpuWorldOptions,guardianPlacementForWorld,confirmedCameraTerrainEnabled} from '../src/app/webgpu-world-options.js';
 import {temporalPresentationOptions} from '../src/app/temporal-presentation-options.js';
+import {earlyWorkerOptions} from '../src/app/early-worker-options.js';
+
+test('product temporal profile enables confirmed movement observation before early authority preparation',()=>{const params=new URLSearchParams(),recovery={visualRecovery:{enabled:true,work:true}},temporal=temporalPresentationOptions({params,dev:false,hosted:true,early:false,recoveryEnabled:true,hasWebGpu:true,historicalRecovery:true,recovery:{work:true,concurrent:false,backpressure:false,compactTicks:false}}),options=webGpuWorldOptions({params,state:{raid:null},field:{},temporal,recovery,dev:false}),early=earlyWorkerOptions({initial:{snapshot:'{}',navigationView:{}},temporal,recoveryOptions:recovery});assert.equal(options.experimentalMotionFeed,true);assert.equal(early.clientOptions.observeWorldMotion,true);assert.equal(early.runtimeOptions.historicalRecovery,true);assert.equal(options.presentationCapabilities.coordinatedChunks,true);});
 
 test('the temporal attachment is composed into the immutable profile before worker startup',()=>{
  const params=new URLSearchParams('qa-webgpu-temporal'),temporal=temporalPresentationOptions({params,dev:true,hosted:true,early:false,recoveryEnabled:false,hasWebGpu:true});

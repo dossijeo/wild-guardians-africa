@@ -9,6 +9,7 @@ function setup(options={}){const worker={messages:[],postMessage(message,transfe
 test('temporal recovery options cannot bypass the development profile guard',()=>{
  assert.throws(()=>setup({experimentalTimelineRecovery:true,experimentalTemporalPresentation:{checkpoints:true},presentationRecovery:true,presentationWorkRecovery:true,recoveryPort:{}}),/Invalid WebGPU world client/);
 });
+test('explicit product temporal profile reaches a replacement Worker without DEV',async()=>{const temporal={product:true,checkpoints:true,maxPublications:2,maxBytes:4096,maxHistory:4,maxHistoryBytes:8192},{client,worker}=setup({experimentalTimelineRecovery:true,experimentalTemporalPresentation:temporal,presentationRecovery:true,presentationWorkRecovery:true,recoveryPort:{}});assert.deepEqual(worker.messages[0].message.experimentalTemporalPresentation,temporal);assert.equal(worker.messages[0].message.experimentalTimelineRecovery,true);worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await client.ready;client.dispose();});
 test('worker and hyena walking capabilities reach the game Worker independently',async()=>{
  const profile=workerPresentationProfile({backend:'webgpu-worker'}),make=capabilities=>webGpuWorldOptions({params:new URLSearchParams(),state:{raid:null},field:{},capabilities});
  const ordinary=make(profile.capabilities);assert.equal(webGpuWorkerBakedWalking(ordinary.presentationCapabilities),true);assert.equal(ordinary.presentationCapabilities.bakedWalking,true);

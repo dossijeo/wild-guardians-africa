@@ -7,6 +7,7 @@ import {createEarlyWorkerAuthority} from '../src/app/early-worker-authority.js';
 import {build} from 'esbuild';
 import {resolve} from 'node:path';
 const base={params:new URLSearchParams('qa-webgpu-temporal'),dev:true,hosted:true,early:false,recoveryEnabled:false,hasWebGpu:true};
+test('product temporal recovery requires an explicit complete profile and survives early preparation',()=>{const args={...base,params:new URLSearchParams(),dev:false,historicalRecovery:true,recoveryEnabled:true,recovery:{work:true,concurrent:false,backpressure:false,compactTicks:false}},profile=temporalPresentationOptions(args);assert.equal(profile.recovery,true);assert.equal(profile.presentation.product,true);assert.deepEqual(temporalPresentationOptions({...args,early:true,earlyPrepared:structuredClone(profile)}),profile);assert.throws(()=>temporalPresentationOptions({...args,recovery:{...args.recovery,work:false}}),/not available/);assert.equal(temporalPresentationOptions({...args,historicalRecovery:false}),null);});
 test('temporal mode is opt-in and fails closed for incomplete configurations',()=>{
  assert.equal(temporalPresentationOptions({...base,dev:false}),null);assert.equal(temporalPresentationOptions({...base,params:new URLSearchParams()}),null);
  for(const override of [{hosted:false},{early:true},{recoveryEnabled:true},{hasWebGpu:false},{params:new URLSearchParams('qa-webgpu-temporal&qa-webgpu-temporal-recovery')}])assert.throws(()=>temporalPresentationOptions({...base,...override}),/not available/);

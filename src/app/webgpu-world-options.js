@@ -19,7 +19,7 @@ export function diagnosticPresentationCapabilities(params,dev){
 // One structural profile for both the initial renderer and its replacement.
 // A recovery must not silently switch world features or actor presentation.
 export function webGpuWorldOptions({params,state,field,recovery={},capabilities={},temporal=null,dev=false}={}){
- if(!(params instanceof URLSearchParams)||!state||!field||typeof dev!=='boolean'||temporal!==null&&(!dev||!temporal||typeof temporal.presentation!=='object'||!temporal.presentation))throw TypeError('Invalid WebGPU world profile');
+ if(!(params instanceof URLSearchParams)||!state||!field||typeof dev!=='boolean'||temporal!==null&&(!temporal||typeof temporal.presentation!=='object'||!temporal.presentation||!dev&&temporal.presentation.product!==true))throw TypeError('Invalid WebGPU world profile');
  const requested=webGpuPresentationCapabilities(capabilities),diagnostic=diagnosticPresentationCapabilities(params,dev),presentationCapabilities=Object.freeze(Object.fromEntries(Object.keys(requested).map(key=>[key,requested[key]||diagnostic[key]||key==='coordinatedChunks'&&temporal!==null])));
  const has=key=>dev&&params.has(key),species=dev?params.get('qa-webgpu-actor'):null,actor=state.raid?.animals.find(item=>item.status!=='gone'&&(!species||item.species===species)),recoveryProfile=resolvePresentationRecoveryOptions(recovery,{allowQa:dev});
  return Object.freeze({
@@ -28,7 +28,7 @@ export function webGpuWorldOptions({params,state,field,recovery={},capabilities=
   experimentalMinimalWorld:dev&&params.has('qa-worker-early-gpu-view'),
   experimentalEarlyBiome:dev&&params.has('qa-worker-early-biome'),
   experimentalAllActors:!has('qa-webgpu-single-actor'),
-  experimentalMotionFeed:has('qa-webgpu-motion')||has('qa-webgpu-world-motion'),
+  experimentalMotionFeed:temporal?.presentation?.product===true||has('qa-webgpu-motion')||has('qa-webgpu-world-motion'),
   experimentalPresentationInputs:dev&&params.has('qa-webgpu-causal-input'),
   presentationInputs:presentationCapabilities.causalInputs,
   experimentalBakedHyena:has('qa-webgpu-baked-hyena'),
