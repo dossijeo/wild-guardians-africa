@@ -56,7 +56,7 @@ export function createWebGpuBiomeProps({scene,state,pipelineAdmission=null,onErr
   if(!pipelineAdmission||!next.length){commit();return;}
   const group=new THREE.Group(),request=new AbortController(),pending={controller:request,meshes:next,group};for(const mesh of next)group.add(mesh);record.pending=pending;
   const publish=()=>{if(closed||record.pending!==pending||request.signal.aborted)return;commit();record.pending=null;};
-  Promise.resolve().then(()=>typeof pipelineAdmission.prepareAndPublish==='function'?pipelineAdmission.prepareAndPublish(group,{signal:request.signal},publish):Promise.resolve(pipelineAdmission.prepare(group,{signal:request.signal})).then(publish)).catch(error=>{if(closed||record.pending!==pending||request.signal.aborted)return;record.pending=null;for(const mesh of next)disposeMesh(mesh);failure=String(error?.message??error);onError(error);});
+  Promise.resolve().then(()=>typeof pipelineAdmission.prepareAndPublish==='function'?pipelineAdmission.prepareAndPublish(group,{signal:request.signal},publish):Promise.resolve(pipelineAdmission.prepare(group,{signal:request.signal})).then(publish)).catch(error=>{if(closed||record.pending!==pending||request.signal.aborted)return;cancelPending(record);failure=String(error?.message??error);onError(error);});
  }
  function suppressed(){return new Set(state.suppressed??[]);}
  function indexProps(key,instances,add){for(const list of instances)for(const item of list){let owners=propChunks.get(item.id);if(add){if(!owners)propChunks.set(item.id,owners=new Set());owners.add(key);}else if(owners){owners.delete(key);if(!owners.size)propChunks.delete(item.id);}}}
