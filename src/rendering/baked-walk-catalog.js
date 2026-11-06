@@ -20,14 +20,14 @@ export async function loadBakedWalkAsset(species,{signal,fetcher=globalThis.fetc
 
 // The graphical Worker owns one texture per species for its lifetime. Actors
 // borrow it; their removal never disposes a texture used by another actor.
-export function createBakedWalkBank({load=loadBakedWalkAsset,renderer=null}={}){
- if(typeof load!=='function'||renderer!==null&&(!renderer?.backend?.isWebGPUBackend||typeof renderer.initTexture!=='function'||typeof renderer.backend.device?.queue?.onSubmittedWorkDone!=='function'))throw TypeError('Invalid baked walking bank');
+export function createBakedWalkBank({load=loadBakedWalkAsset,renderer=null,acceptSpecies=species=>Object.hasOwn(ANIMAL_ACTIONS.animals,species)}={}){
+ if(typeof load!=='function'||typeof acceptSpecies!=='function'||renderer!==null&&(!renderer?.backend?.isWebGPUBackend||typeof renderer.initTexture!=='function'||typeof renderer.backend.device?.queue?.onSubmittedWorkDone!=='function'))throw TypeError('Invalid baked walking bank');
  const entries=new Map(),controller=new AbortController();let closed=false,disposed=false;
  function close(){if(closed)return;closed=true;controller.abort();}
  return {
   get(species){
    if(closed)return Promise.reject(Error('Baked walking bank disposed'));
-   if(!Object.hasOwn(ANIMAL_ACTIONS.animals,species))return Promise.reject(TypeError('Unknown baked walking species'));
+   if(!acceptSpecies(species))return Promise.reject(TypeError('Unknown baked walking species'));
    let entry=entries.get(species);if(!entry){entry={asset:null,promise:null};entries.set(species,entry);entry.promise=Promise.resolve().then(()=>load(species,{signal:controller.signal})).then(async asset=>{if(!asset?.texture?.isDataTexture||renderer&&!asset.texture.isTexture||asset.meta?.species!==species||typeof asset.dispose!=='function'){asset?.dispose?.();throw TypeError('Invalid baked walking asset');}if(closed){asset.dispose();throw new DOMException('Baked walking bank disposed','AbortError');}if(renderer)await prepareWebGpuTexture({renderer,texture:asset.texture,signal:controller.signal,release:()=>asset.dispose()});if(closed){asset.dispose();throw new DOMException('Baked walking bank disposed','AbortError');}entry.asset=asset;return asset;}).catch(error=>{if(entries.get(species)===entry)entries.delete(species);throw error;});}return entry.promise;
   },
   status(){return {closed,species:[...entries].map(([species,entry])=>({species,ready:!!entry.asset}))};},
@@ -38,7 +38,7 @@ export function createBakedWalkBank({load=loadBakedWalkAsset,renderer=null}={}){
 
 // Close producers before capturing active compilations, so no new user can
 // start using these textures after their deferred release has been scheduled.
-export function closeBakedWalkResources({bank=null,bake=null,admission=null}={}){
- bank?.close();admission?.dispose();const release=()=>{bake?.dispose();bank?.dispose();};
+export function closeBakedWalkResources({bank=null,workerBank=null,bake=null,admission=null}={}){
+ bank?.close();workerBank?.close();admission?.dispose();const release=()=>{bake?.dispose();bank?.dispose();workerBank?.dispose();};
  if(typeof admission?.deferCompilations==='function')admission.deferCompilations(release);else release();
 }

@@ -7,7 +7,15 @@ import {ANIMAL_ACTIONS} from '../simulation/animal-actions-data.js';
 // It is deliberately not installed on SkinnedMesh: Three's WebGPU renderer
 // would otherwise run its own skinning before this position node.
 export function createBakedWalkTexture(meta,buffer){
- if(!Object.hasOwn(ANIMAL_ACTIONS.animals,meta?.species)||meta.clip!=='Walking'||meta.sharedMatrixChannels!==1||!Number.isInteger(meta.frames)||meta.frames<2||!Number.isInteger(meta.strideFloats)||!Number.isFinite(meta.duration)||meta.duration<=0||!Number.isFinite(meta.sampleRate)||meta.sampleRate<=0||!Array.isArray(meta.channels)||!meta.channels.length||!Array.isArray(meta.sampleTimes)||meta.sampleTimes.length!==meta.frames||!(buffer instanceof ArrayBuffer)||meta.byteLength!==buffer.byteLength||buffer.byteLength!==meta.frames*meta.strideFloats*4)throw TypeError('Invalid baked walking data');
+ if(!Object.hasOwn(ANIMAL_ACTIONS.animals,meta?.species)||meta.clip!=='Walking')throw TypeError('Invalid baked walking data');
+ return createPackedBakedWalkTexture(meta,buffer);
+}
+export function createBakedWorkerWalkTexture(meta,buffer){
+ if(meta?.schema!=='wg-worker-gpu-walk/1'||meta.species!=='youngMale'||meta.clip!=='Walk_Skip'||meta.validation?.visibleAttachments!==0)throw TypeError('Invalid baked worker walking data');
+ return createPackedBakedWalkTexture(meta,buffer);
+}
+function createPackedBakedWalkTexture(meta,buffer){
+ if(meta.sharedMatrixChannels!==1||!Number.isInteger(meta.frames)||meta.frames<2||!Number.isInteger(meta.strideFloats)||!Number.isFinite(meta.duration)||meta.duration<=0||!Number.isFinite(meta.sampleRate)||meta.sampleRate<=0||!Array.isArray(meta.channels)||!meta.channels.length||!Array.isArray(meta.sampleTimes)||meta.sampleTimes.length!==meta.frames||!(buffer instanceof ArrayBuffer)||meta.byteLength!==buffer.byteLength||buffer.byteLength!==meta.frames*meta.strideFloats*4)throw TypeError('Invalid baked walking data');
  const channel=meta.channels[0],bones=channel?.bones?.length,offset=channel?.matrixOffset;
  if(!Array.isArray(channel?.bones)||!Number.isInteger(bones)||bones<1||channel.bones.some(name=>typeof name!=='string'||!name)||!Number.isInteger(offset)||offset<0||offset+bones*16>meta.strideFloats||meta.boneInverses!==undefined&&(!Array.isArray(meta.boneInverses)||meta.boneInverses.length!==bones*16||!meta.boneInverses.every(Number.isFinite))||meta.channels.some(c=>typeof c?.name!=='string'||!c.name||!Array.isArray(c.bones)||!Array.isArray(c.bindMatrix)||c.bindMatrix.length!==16||!c.bindMatrix.every(Number.isFinite)||c.matrixOffset!==offset||c.bones.join('\0')!==channel.bones.join('\0'))||new Set(meta.channels.map(c=>c.name)).size!==meta.channels.length||meta.frames!==Math.ceil(meta.duration*meta.sampleRate)+1||meta.sampleTimes.some((t,i)=>!Number.isFinite(t)||t<0||t>=meta.duration||i>0&&t<=meta.sampleTimes[i-1]||i<meta.frames-1&&Math.abs(t-i/meta.sampleRate)>1e-9))throw TypeError('Unsupported baked walking channels');
  const source=new Float32Array(buffer),width=bones*4,data=new Float32Array(width*meta.frames*4);

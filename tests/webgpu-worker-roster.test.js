@@ -66,3 +66,8 @@ test('the real olderMale preview supplies a normalized loose crate',async()=>{
 });
 
 test('passes the shared confirmed clock through to a real roster actor',async()=>{const clock=createConfirmedPresentationClock(.25),state={workers:[{id:'w',profile:'youngMale',status:'walking'}]},bank={dispose(){}},calls=[],roster=createWebGpuWorkerRoster({scene:{},residency:{},state,assetBank:bank,confirmedClock:clock,createWorker:async options=>{calls.push(options);return {update(){},dispose(){}};}});roster.sync();await flush();assert.equal(calls.length,1);assert.equal(calls[0].confirmedClock,clock);roster.dispose();clock.dispose();});
+
+test('optional worker bake is requested only for supported live actors and cancelled on removal',async()=>{
+ const state={workers:[{id:'a',profile:'youngMale',status:'walking'},{id:'b',profile:'olderMale',status:'walking'}]},requests=[],installed=[],pending=[],admission={prepare:async()=>{}},renderer={backend:{isWebGPUBackend:true}},bank={get(profile){requests.push(profile);return new Promise(resolve=>pending.push(resolve));}},roster=createWebGpuWorkerRoster({scene:{},residency:{},state,renderer,bakedWalkBank:bank,assetBank:{dispose(){}},pipelineAdmission:admission,createWorker:async({actorId})=>({root:new Group(),update(){},dispose(){},async installBakedWalk(){installed.push(actorId);return true;}})});
+ roster.sync();await flush();await flush();assert.deepEqual(requests,['youngMale']);state.workers=state.workers.filter(x=>x.id!=='a');roster.sync();pending[0]({});await flush();assert.deepEqual(installed,[]);roster.dispose();
+});
