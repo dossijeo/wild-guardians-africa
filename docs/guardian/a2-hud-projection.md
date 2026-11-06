@@ -2,8 +2,10 @@
 
 El host Worker añade a las publicaciones proyectadas una vista `hudProjection`
 versión 1 con secuencia, reloj, día, noches, saldo y los datos mínimos que usan
-los permisos, tarjetas de magia y medidor de Despertar. El consumidor verifica
-la proyección contra el estado confirmado antes de aceptarlo. Los pliegues de
+los permisos, tarjetas de magia y medidor de Despertar. El consumidor valida
+su esquema, secuencia y coherencia interna antes de aceptarla, sin necesitar
+compararla con el snapshot; la autoridad del Worker sigue siendo el productor
+de los datos. Los pliegues de
 vistas conservan la secuencia del último mensaje y el cliente temprano entrega
 la misma vista a los consumidores del HUD. Las rutas antiguas reconstruyen la
 proyección desde el estado confirmado como fallback.
@@ -28,7 +30,7 @@ prueba ejecuta además el flujo completo `updateGameAudio` con
 rutas; los recursos de audio están simulados y no prueba sonido en navegador.
 
 Esto no elimina todavía el snapshot completo: se sigue transfiriendo y usando
-para verificar la proyección y para tutorial, selección, comandos,
+para tutorial, selección, comandos,
 notificaciones y guardado. El host y el cliente aún recorren datos; no se ha
 medido un ahorro de CPU o tráfico ni una partida integrada. La migración de
 esos consumidores y el protocolo incremental en origen siguen pendientes.
