@@ -1,7 +1,17 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {projectMainThreadPublication} from '../src/simulation/main-thread-publication.js';
+import {projectMainThreadPublication,copyPublication} from '../src/simulation/main-thread-publication.js';
 import {createHostPublicationQueue,physicsOwners} from '../src/simulation/host-publication-queue.js';
+import {handoffConfirmedSnapshot,confirmedSnapshotFor} from '../src/simulation/confirmed-snapshot-handoff.js';
+import {createMainSnapshotEncoder,createMainSnapshotDecoder,createSnapshotPreparationCache} from '../src/simulation/main-thread-snapshot-transport.js';
+
+test('projection and delta encoding reuse a decoded state without materializing its snapshot',()=>{
+ const cache=createSnapshotPreparationCache(),encoders=Array.from({length:3},()=>createMainSnapshotEncoder({prepareSnapshot:cache.prepare,prepareState:cache.prepareState})),decoders=encoders.map(()=>createMainSnapshotDecoder()),initial={slotId:'s',value:1,padding:'x'.repeat(1000)},next={...initial,value:2};let materialized=0;
+ const first={kind:'publication',publication:{sequence:1,snapshot:JSON.stringify(initial)}};for(let i=0;i<encoders.length;i++)decoders[i].decode(encoders[i].encode(first));
+ const source={sequence:2,physicsPose:null,events:[]};Object.defineProperty(source,'snapshot',{enumerable:true,get(){materialized++;return JSON.stringify(next);}});handoffConfirmedSnapshot(source,next);
+ source.terrainCheckpoint={sequence:2};const projected=projectMainThreadPublication(copyPublication(source,{omit:['terrainCheckpoint'],add:{presentationInput:7}}));assert.equal(materialized,0);assert.equal(confirmedSnapshotFor(projected),next);assert.equal(Object.hasOwn(projected,'terrainCheckpoint'),false);assert.equal(projected.presentationInput,7);
+ for(let i=0;i<encoders.length;i++){const encoded=encoders[i].encode({kind:'publication',publication:projected});assert.equal(materialized,0);assert.ok(encoded.publication.snapshotDelta);const decoded=decoders[i].decode(encoded);assert.deepEqual(confirmedSnapshotFor(decoded.publication),next);}assert.equal(materialized,0);
+});
 
 test('interface projection removes graphical payloads without mutating the graphical publication',()=>{
  const pose={actorId:'a',active:true,bones:new Float32Array(128)},event={id:'e'},publication={sequence:2,physicsPose:pose,physicsPoses:[pose],motionTrace:{segments:[1]},worldMotionTrace:{segments:[2]},presentationWorkerHeadings:[{id:'w',yaw:2}],events:[event],snapshot:'state',motionInvalidation:{reason:'obstacle'}};

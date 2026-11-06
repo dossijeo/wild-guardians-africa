@@ -2,7 +2,7 @@
 // graphical consumer retain their original snapshots and publication order.
 // The receiver owns a private immutable baseline, separate from the mutable UI
 // state. This is a transport step, not a save format.
-import {handoffConfirmedSnapshot} from './confirmed-snapshot-handoff.js';
+import {handoffConfirmedSnapshot,confirmedSnapshotFor} from './confirmed-snapshot-handoff.js';
 import {estimateRetainedBytes} from './retained-size.js';
 function fields(snapshot){
  const value=JSON.parse(snapshot);
@@ -14,7 +14,7 @@ function fields(snapshot){
 // share or advance their sequence cursors.
 export function createSnapshotPreparationCache(){
  let source=null,prepared=null,bytes=0;
- return {prepare(snapshot){if(typeof snapshot!=='string')throw TypeError('Invalid snapshot transport state');if(snapshot!==source){prepared=fields(snapshot);source=snapshot;bytes=estimateRetainedBytes({source,prepared});}return prepared;},retainedBytes(){return bytes;},clear(){source=prepared=null;bytes=0;}};
+ return {prepare(snapshot){if(typeof snapshot!=='string')throw TypeError('Invalid snapshot transport state');if(snapshot!==source){prepared=fields(snapshot);source=snapshot;bytes=estimateRetainedBytes({source,prepared});}return prepared;},prepareState(state){if(!state||typeof state!=='object'||Array.isArray(state))throw TypeError('Invalid snapshot transport state');if(state!==source){prepared=new Map(Object.keys(state).map(key=>[key,JSON.stringify(state[key])]));source=state;bytes=estimateRetainedBytes({source,prepared});}return prepared;},retainedBytes(){return bytes;},clear(){source=prepared=null;bytes=0;}};
 }
 const ENTITY_FIELDS=new Set(['workers','plants','structures','crates','villages','spells','tasks','people']);
 function entityMap(value){
@@ -45,8 +45,8 @@ function applyEntityChanges(before,order,updates){
  for(const pair of updates){if(!Array.isArray(pair)||pair.length!==2||typeof pair[0]!=='string'||typeof pair[1]!=='string'||!ordered.has(pair[0])||changedIds.has(pair[0]))throw TypeError('Invalid entity delta update');const item=JSON.parse(pair[1]);if(!item||typeof item!=='object'||Array.isArray(item)||item.id!==pair[0])throw TypeError('Invalid entity delta identity');changedIds.add(pair[0]);previous.set(pair[0],item);}
  if(order.some(id=>!previous.has(id)))throw TypeError('Missing entity delta update');return order.map(id=>previous.get(id));
 }
-export function createMainSnapshotEncoder({prepareSnapshot=fields,trackRetained=false}={}){
- if(typeof prepareSnapshot!=='function'||typeof trackRetained!=='boolean')throw TypeError('Invalid snapshot preparation');
+export function createMainSnapshotEncoder({prepareSnapshot=fields,prepareState=null,trackRetained=false}={}){
+ if(typeof prepareSnapshot!=='function'||prepareState!==null&&typeof prepareState!=='function'||typeof trackRetained!=='boolean')throw TypeError('Invalid snapshot preparation');
  let base=null,sequence=0,retained=0;
  return {encode(envelope,{forceFull=false,preparedFields=null}={}){
   if(typeof forceFull!=='boolean'||preparedFields!==null&&!(preparedFields instanceof Map))throw TypeError('Invalid snapshot transport option');
@@ -54,12 +54,13 @@ export function createMainSnapshotEncoder({prepareSnapshot=fields,trackRetained=
   const publication=envelope.publication,n=publication?.sequence;
   if(!Number.isSafeInteger(n)||n<=sequence)throw Error('Invalid snapshot transport sequence');
   if(publication.unchanged===true){sequence=n;return envelope;}
-  if(preparedFields===null?typeof publication.snapshot!=='string':!Object.hasOwn(publication,'snapshot'))throw TypeError('Missing snapshot transport state');
-  const next=preparedFields??prepareSnapshot(publication.snapshot);if(!(next instanceof Map))throw TypeError('Invalid prepared snapshot');let wire=envelope;
+  const handed=prepareState?confirmedSnapshotFor(publication):undefined;
+  if(!Object.hasOwn(publication,'snapshot')||preparedFields===null&&handed===undefined&&typeof publication.snapshot!=='string')throw TypeError('Missing snapshot transport state');
+  const next=preparedFields??(handed===undefined?prepareSnapshot(publication.snapshot):prepareState(handed));if(!(next instanceof Map))throw TypeError('Invalid prepared snapshot');let wire=envelope;
   if(base&&!forceFull){
    const changed=[],removed=[],entities=[];let raid=null;for(const [key,value] of next)if(base.get(key)!==value){const patch=entityDelta(key,base.get(key),value),raidPatch=key==='raid'?raidDelta(base.get(key),value):null;if(patch)entities.push(patch);else if(raidPatch)raid=raidPatch;else changed.push([key,value]);}for(const key of base.keys())if(!next.has(key))removed.push(key);
    const delta={version:raid?3:entities.length?2:1,baseSequence:sequence,changed,removed,...(entities.length?{entities}:{}),...(raid?{raid}:{})};
-   let snapshotLength;if(preparedFields){snapshotLength=2+Math.max(0,next.size-1);for(const [key,value] of next){if(typeof key!=='string'||typeof value!=='string')throw TypeError('Invalid prepared snapshot');snapshotLength+=JSON.stringify(key).length+1+value.length;}}else snapshotLength=publication.snapshot.length;
+   let snapshotLength;if(preparedFields||handed!==undefined){snapshotLength=2+Math.max(0,next.size-1);for(const [key,value] of next){if(typeof key!=='string'||typeof value!=='string')throw TypeError('Invalid prepared snapshot');snapshotLength+=JSON.stringify(key).length+1+value.length;}}else snapshotLength=publication.snapshot.length;
    if(JSON.stringify(delta).length<snapshotLength){const rest={};for(const key of Object.keys(publication))if(key!=='snapshot')rest[key]=publication[key];wire={...envelope,publication:{...rest,snapshotDelta:delta}};}
   }
   base=next;sequence=n;if(trackRetained)retained=estimateRetainedBytes(next);return wire;
