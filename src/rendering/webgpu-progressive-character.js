@@ -4,7 +4,7 @@ import {KTX2Loader} from 'three/addons/loaders/KTX2Loader.js';
 import {openCharacterPreviewStream} from './character-preview-stream.js';
 import {makeStableVertexMaterials} from './webgpu-stable-character-material.js';
 import {registerNativeBc7Glb} from './native-bc7-glb.js';
-import {releaseAfterWebGpuUploads} from './webgpu-texture-upload.js';
+import {releaseAfterWebGpuUploads,waitForWebGpuUploads} from './webgpu-texture-upload.js';
 import {createPredecodedImageLoader} from './predecoded-image-loader.js';
 import {createPreparsedBc7Loader} from './preparsed-bc7-loader.js';
 
@@ -23,11 +23,11 @@ export async function loadCharacterTextureData(stream,metadata,{signal}={}){
 // WebGPU lab. Only the Worker can own this loader, its textures and renderer.
 export async function openProgressiveWebGpuCharacter({renderer,packageUrl,species,signal,onTextured=()=>{},onError=()=>{},configureMaterial=()=>{},prepareObject=()=>{},materialVariant=null,shareCompatibleMaterials=false,onSelectableChange=()=>{},openStream=openCharacterPreviewStream,blendMs=350}={}){
  if(typeof document!=='undefined'||!renderer?.backend?.isWebGPUBackend||!packageUrl||typeof species!=='string'||typeof onTextured!=='function'||typeof onError!=='function'||typeof configureMaterial!=='function'||typeof prepareObject!=='function'||materialVariant!==null&&typeof materialVariant!=='function'||typeof shareCompatibleMaterials!=='boolean'||typeof onSelectableChange!=='function'||typeof openStream!=='function'||!Number.isFinite(blendMs)||blendMs<=0)throw TypeError('Invalid progressive character');
- const manager=new (await import('three')).LoadingManager(),cancel=()=>manager.abort(),owned=new Set(),ownedBitmaps=new Set();let stream,stable,preview,ktx,bitmapLoader,bc7Loader,closed=false,transition=null,finalTextures=[],uploadPending=false;
+ const manager=new (await import('three')).LoadingManager(),lifetime=new AbortController(),cancel=()=>{manager.abort();lifetime.abort();},owned=new Set(),ownedBitmaps=new Set();let stream,stable,preview,ktx,bitmapLoader,bc7Loader,closed=false,transition=null,finalTextures=[],uploadPending=false;
  const check=()=>{if(closed||signal?.aborted)throw aborted();};
  const own=resource=>{if(!resource)return;if(closed){if(resource.isTexture&&typeof resource.source?.data?.close==='function')resource.source.data.close();resource.dispose();}else owned.add(resource);};
  const ownMaterial=material=>{if(!material)return;own(material);for(const value of Object.values(material))if(value?.isTexture)own(value);};
- const dispose=()=>{if(closed)return;closed=true;stable?.dispose();stream?.close();manager.abort();ktx?.dispose();bitmapLoader?.dispose();bc7Loader?.dispose();const resources=[...owned],images=new Set(ownedBitmaps);owned.clear();ownedBitmaps.clear();const release=()=>{for(const resource of resources){if(resource.isTexture&&typeof resource.source?.data?.close==='function')images.add(resource.source.data);resource.dispose();}for(const image of images)image.close();};if(uploadPending)void releaseAfterWebGpuUploads(renderer,release).catch(onError);else release();signal?.removeEventListener('abort',cancel);};
+ const dispose=()=>{if(closed)return;closed=true;lifetime.abort();stable?.dispose();stream?.close();manager.abort();ktx?.dispose();bitmapLoader?.dispose();bc7Loader?.dispose();const resources=[...owned],images=new Set(ownedBitmaps);owned.clear();ownedBitmaps.clear();const release=()=>{for(const resource of resources){if(resource.isTexture&&typeof resource.source?.data?.close==='function')images.add(resource.source.data);resource.dispose();}for(const image of images)image.close();};if(uploadPending)void releaseAfterWebGpuUploads(renderer,release).catch(onError);else release();signal?.removeEventListener('abort',cancel);};
  signal?.addEventListener('abort',cancel,{once:true});
  try{
   check();const features=renderer.hasFeature('texture-compression-bc')?['texture-compression-bc']:[];stream=await openStream(packageUrl,{features,signal});if(stream.id!==species)throw Error('Character package species mismatch');
@@ -50,7 +50,7 @@ export async function openProgressiveWebGpuCharacter({renderer,packageUrl,specie
     for(let i=0;i<(full.materials?.length??0);i++)ownMaterial(await materials.parser.getDependency('material',i));check();
     finalTextures=await stable.resolveFinal(materials);for(const texture of finalTextures)own(texture);check();
     for(const texture of finalTextures){uploadPending=true;renderer.initTexture(texture);await new Promise(resolve=>setTimeout(resolve,0));check();}
-    await renderer.backend.device.queue.onSubmittedWorkDone();uploadPending=false;check();stable.apply({blend:0});onSelectableChange();transition={start:null};
+    await waitForWebGpuUploads(renderer,{signal:lifetime.signal});uploadPending=false;check();stable.apply({blend:0});onSelectableChange();transition={start:null};
    }catch(error){if(!closed&&!signal?.aborted)onError(error);}finally{urls.forEach(url=>URL.revokeObjectURL(url));}
   }
   return {preview,variant:stream.variant,start(){check();if(transition!==null)throw Error('Character hydration already started');transition={pending:true};void hydrate();},tick(now){if(!transition||transition.pending)return;if(!Number.isFinite(now))throw TypeError('Invalid presentation clock');if(transition.start===null)transition.start=now;const blend=Math.min(1,Math.max(0,(now-transition.start)/blendMs));stable.setBlend(blend);onSelectableChange();if(blend===1){transition={pending:true};onTextured();}},dispose};

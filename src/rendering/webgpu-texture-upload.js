@@ -1,6 +1,13 @@
 // A single resource upload, never awaited by the render loop. Three's
 // initTexture submits work synchronously; completion is a queue-wide WebGPU
 // signal and does not by itself prove a hitch-free first draw.
+export async function waitForWebGpuUploads(renderer,{signal}={}){
+ const device=renderer?.backend?.device,queue=device?.queue;
+ if(!renderer?.backend?.isWebGPUBackend||typeof queue?.onSubmittedWorkDone!=='function'||signal!==undefined&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Invalid WebGPU upload wait');
+ if(signal?.aborted)throw new DOMException('Texture preparation cancelled','AbortError');
+ let onAbort;const aborted=signal?new Promise((_,reject)=>{onAbort=()=>reject(new DOMException('Texture preparation cancelled','AbortError'));signal.addEventListener('abort',onAbort,{once:true});if(signal.aborted)onAbort();}):null;aborted?.catch(()=>{});
+ try{const submitted=Promise.resolve(queue.onSubmittedWorkDone()),lost=device.lost?.then(info=>{throw Error('WebGPU device lost: '+(info?.message||info?.reason||'unknown'));});await Promise.race([submitted,...(lost?[lost]:[]),...(aborted?[aborted]:[])]);if(signal?.aborted)throw new DOMException('Texture preparation cancelled','AbortError');}finally{if(onAbort)signal.removeEventListener('abort',onAbort);}
+}
 export function releaseAfterWebGpuUploads(renderer,release){
  const device=renderer?.backend?.device;if(!renderer?.backend?.isWebGPUBackend||typeof device?.queue?.onSubmittedWorkDone!=='function'||typeof release!=='function')throw TypeError('Invalid WebGPU upload release');
  let submitted;try{submitted=Promise.resolve(device.queue.onSubmittedWorkDone());}catch(error){submitted=Promise.reject(error);}
