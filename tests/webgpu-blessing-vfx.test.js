@@ -1,3 +1,4 @@
+import {createWebGpuResourceRegistry} from '../src/rendering/webgpu-resource-registry.js';
 import {createConfirmedPresentationClock} from '../src/rendering/confirmed-presentation-clock.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -14,8 +15,8 @@ test('blessing is admitted before display and a removed target cannot reappear',
 });
 
 test('closing a blessing retains geometry until its active compilation settles',async()=>{
- const scene=new THREE.Scene(),floor=new THREE.Mesh(new THREE.PlaneGeometry(20,20),new THREE.MeshBasicMaterial({side:THREE.DoubleSide}));floor.rotation.x=-Math.PI/2;floor.updateMatrixWorld(true);let finish,mesh,released=0;const renderer={backend:{isWebGPUBackend:true},compileAsync:object=>{mesh=object;return new Promise(resolve=>{finish=resolve;});}},admission=createWebGpuPipelineAdmission({renderer,scene,camera:new THREE.PerspectiveCamera()}),state={elapsed:5,plants:[{id:'p',species:'maiz',alive:true,x:0,z:0,blessing:{at:0}}],structures:[],events:[]},effect=createWebGpuBlessingVfx({scene,state,residency:{get:()=>floor},pipelineAdmission:admission});
- try{await new Promise(resolve=>setImmediate(resolve));mesh.geometry.addEventListener('dispose',()=>released++);effect.dispose();assert.equal(scene.children.length,0);assert.equal(released,0);finish();await new Promise(resolve=>setImmediate(resolve));assert.equal(released,1);}finally{effect.dispose();admission.dispose();floor.geometry.dispose();floor.material.dispose();}
+ const registry=createWebGpuResourceRegistry(),scene=new THREE.Scene(),floor=new THREE.Mesh(new THREE.PlaneGeometry(20,20),new THREE.MeshBasicMaterial({side:THREE.DoubleSide}));floor.rotation.x=-Math.PI/2;floor.updateMatrixWorld(true);let finish,mesh,released=0;const renderer={backend:{isWebGPUBackend:true},compileAsync:object=>{mesh=object;return new Promise(resolve=>{finish=resolve;});}},admission=createWebGpuPipelineAdmission({renderer,scene,camera:new THREE.PerspectiveCamera()}),state={elapsed:5,plants:[{id:'p',species:'maiz',alive:true,x:0,z:0,blessing:{at:0}}],structures:[],events:[]},effect=createWebGpuBlessingVfx({scene,state,residency:{get:()=>floor},pipelineAdmission:admission,resourceRegistry:registry});
+ try{await new Promise(resolve=>setImmediate(resolve));mesh.geometry.addEventListener('dispose',()=>released++);assert.equal(registry.status().owned.length,1);registry.dispose();effect.dispose();assert.equal(registry.status().owned.length,1);assert.equal(scene.children.length,0);assert.equal(released,0);finish();await new Promise(resolve=>setImmediate(resolve));assert.equal(released,1);assert.equal(registry.status().owned.length,0);}finally{effect.dispose();admission.dispose();registry.dispose();floor.geometry.dispose();floor.material.dispose();}
 });
 
 test('confirmed blessings appear after ritual, loaded blessings immediately, and disappear on removal',()=>{
