@@ -1,4 +1,5 @@
 import {projectConfirmedHud} from '../simulation/confirmed-hud-projection.js';
+import {confirmedNoticeFocus} from '../simulation/confirmed-notice-projection.js';
 import {requestWorkerBlessingPreview} from './worker-blessing-preview.js';
 import {createConfirmedActorAudio,applyConfirmedActorAudio} from '../simulation/confirmed-actor-audio.js';
 import {playGuardianScenePresence} from '../audio/guardian-presence.js';
@@ -622,7 +623,7 @@ function confirmAwakening(){
 }
 function startDueCinematic(){
   if(campaignCinema||document.hidden)return false;
-  const act=dueCinematicAct(state);if(!act)return false;
+  const act=dueCinematicAct(world?.workerGpuOnly?world.confirmedHud?.cinematic??state:state);if(!act)return false;
   const ownerWorld=world,ownerState=state,runtime=ownerWorld?.workerRuntime??null;
   microevents?.cancel('cinematic');guardian?.hide({immediate:true,interrupt:true});dialogVoice.stop();
   if(audio.musicGain)audio.musicGain.gain.value=0;
@@ -643,16 +644,16 @@ function openInitialHiringWhenReady(){
   }
 }
 function renderConfirmedNotices(activeTutorial,now){
-  const stage=document.querySelector('#stage');
-  if(commandFeedback&&tutorialCoversNotice(state,{text:commandFeedback},activeTutorial))commandFeedback='';
+  const noticeState=world?.workerGpuOnly?world.confirmedHud?.notices??state:state,stage=document.querySelector('#stage');
+  if(commandFeedback&&tutorialCoversNotice(noticeState,{text:commandFeedback},activeTutorial))commandFeedback='';
   eventCards??=new EventCards(document.querySelector('#notices'),ASSETS);
   const tutorialBubble=stage.querySelector('#guardian-root[aria-hidden="false"] .bubble');
   const allowAwakeningUrgent=stage.classList.contains('portrait')&&!!tutorialBubble&&!surfaces.active&&!document.hidden&&tool?.kind!=='awakening'&&
     tutorialBubble.getBoundingClientRect().top-document.querySelector('#notices').getBoundingClientRect().top>=150;
   stage.classList.toggle('awakening-urgent-over-tutorial',allowAwakeningUrgent);
-  eventCards.render(noticeLifetime.visible(state,now/1000,activeTutorial,{tutorialVisible:(guardian?.lifecycle?.phase??'closed')!=='closed'||!!surfaces.active||document.hidden||tool?.kind==='awakening',maxVisible:stage.classList.contains('short')?2:3,allowAwakeningUrgent}),noticeLifetime,now/1000,{compactUrgent:allowAwakeningUrgent});
+  eventCards.render(noticeLifetime.visible(noticeState,now/1000,activeTutorial,{tutorialVisible:(guardian?.lifecycle?.phase??'closed')!=='closed'||!!surfaces.active||document.hidden||tool?.kind==='awakening',maxVisible:stage.classList.contains('short')?2:3,allowAwakeningUrgent}),noticeLifetime,now/1000,{compactUrgent:allowAwakeningUrgent});
   document.querySelectorAll('[data-dismiss-notice]').forEach(el=>el.onclick=()=>{noticeLifetime.dismiss(el.dataset.dismissNotice);updateUI(true);});
-  document.querySelectorAll('[data-notice]').forEach(el=>el.onclick=()=>{const message=state.messages.find(m=>m.id===el.dataset.notice);if(!message)return;const target=[...state.plants,...state.structures,...state.workers,...(state.raid?.animals??[])].find(e=>e.id===message.target);if(target??message.location)world.focus(target??message.location);});
+  document.querySelectorAll('[data-notice]').forEach(el=>el.onclick=()=>{if(noticeState!==state){const target=confirmedNoticeFocus(noticeState,el.dataset.notice);if(target)world.focus(target);return;}const message=state.messages.find(m=>m.id===el.dataset.notice);if(!message)return;const target=[...state.plants,...state.structures,...state.workers,...(state.raid?.animals??[])].find(e=>e.id===message.target);if(target??message.location)world.focus(target??message.location);});
 }
 function renderResultAvailability(){
   renderSharedResultAvailability({state,surfaces,stage:document.querySelector('#stage'),document,openResult:resultDialog,runSafe:safe});

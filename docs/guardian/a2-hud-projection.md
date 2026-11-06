@@ -51,9 +51,14 @@ vista provisional no concede beneficios ni autoriza la operación.
 La selección de magias utiliza posiciones y fases confirmadas mínimas de la
 misma vista. Las comprobaciones visuales de un ataque se conservan para no iniciar
 el gesto sobre una bestia caída; el Worker vuelve a validar daño y disponibilidad.
+Avisos y foco reciben únicamente mensajes confirmados y coordenadas de objetivos
+referenciados; la decisión de cinemática usa noches, resultado, pausas y marcador
+de capítulo proyectados. Las órdenes que comienzan o terminan la cinemática siguen
+en la autoridad. Las pruebas comparan estas decisiones con el estado completo.
 
 Esto no elimina todavía el snapshot completo: se sigue transfiriendo y usando
-para tutorial, selección, comandos,
-notificaciones y guardado. El host y el cliente aún recorren datos; no se ha
-medido un ahorro de CPU o tráfico ni una partida integrada. La migración de
-esos consumidores y el protocolo incremental en origen siguen pendientes.
+para partes del tutorial, selección, comandos y otros consumidores. El host y el
+cliente aún recorren datos; no se ha medido un ahorro de CPU o tráfico ni una
+partida integrada. La migración y el protocolo incremental en origen siguen
+pendientes. Esta vista compacta aún se envía completa por publicación: antes
+de retirar el snapshot debe disponer de baseline y deltas por identidad y campo.
