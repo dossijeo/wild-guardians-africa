@@ -121,6 +121,11 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
   try{await waitForCompilation(pending,signal);}finally{targetWaiters.delete(waiter);}
  }
  async function execute(object,signal,version,include,requestedTarget,shadowPass,passCamera,targetScene,isCurrent=null){
+  // Included alternatives may be nested below hidden groups. The render
+  // list needs the complete path, not just the requested leaf, to be visible
+  // during synchronous compilation setup. Never touch a reparented object.
+  if(signal?.aborted)throw new DOMException('Pipeline admission cancelled','AbortError');
+  const paths=new Set();for(const node of include){let parent=node;while(parent&&parent!==object){paths.add(parent);parent=parent.parent;}if(parent!==object)throw TypeError('Admission visibility changed ownership');}
   try{
     if(isCurrent&&!isCurrent())return;
     if(closed||version!==generation)throw Error('Pipeline admission cancelled');
@@ -129,7 +134,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
     if(renderer._initialized===false||renderer._isDeviceLost===true)throw Error('WebGPU renderer unavailable for pipeline admission');
     // compileAsync builds its render list before its first await. Restore the
     // visibility immediately, before any subsequent frame can render it.
-    const lightVersion=lightsRevision,lightState=[...lights.keys()].map(light=>[light,light.castShadow,light.visible,light.layers.mask]),lightsChanged=()=>lightVersion!==lightsRevision||lightState.some(([light,castShadow,visible,layers])=>light.castShadow!==castShadow||light.visible!==visible||light.layers.mask!==layers),visible=object.visible,previousTarget=renderer.getRenderTarget?.(),face=renderer.getActiveCubeFace?.(),level=renderer.getActiveMipmapLevel?.(),previousMrt=renderer.getMRT?.(),culling=[],shadows=[],included=include.map(node=>[node,node.visible]),currentTarget=()=>requestedTarget===undefined?frameTarget():requestedTarget;let pending,target,inputs;
+    const lightVersion=lightsRevision,lightState=[...lights.keys()].map(light=>[light,light.castShadow,light.visible,light.layers.mask]),lightsChanged=()=>lightVersion!==lightsRevision||lightState.some(([light,castShadow,visible,layers])=>light.castShadow!==castShadow||light.visible!==visible||light.layers.mask!==layers),visible=object.visible,previousTarget=renderer.getRenderTarget?.(),face=renderer.getActiveCubeFace?.(),level=renderer.getActiveMipmapLevel?.(),previousMrt=renderer.getMRT?.(),culling=[],shadows=[],included=[...paths].map(node=>[node,node.visible]),currentTarget=()=>requestedTarget===undefined?frameTarget():requestedTarget;let pending,target,inputs;
     try{
      // Three's ordinary render may use an intermediate output target; compile
      // for that same target, and restore state before the draw loop resumes.
