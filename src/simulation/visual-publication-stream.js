@@ -16,7 +16,7 @@ export function openVisualStream(port,session,onReady,{diagnostics=false,onCheck
  // ordinary checkpoint renewal must not detach a healthy consumer.
  function journalNearLimit(status){return status.entries>=Math.max(1,Math.floor(status.highWatermark*.75))||status.bytes>=Math.max(1,Math.floor(status.highWatermarkBytes*.75));}
  function fail(error){if(!active||recoveryFailure)return;const message=String(error?.message??error);if(recoveryJournal){recoveryFailure=message;try{port.postMessage({kind:'presentationFailure',session,message});}catch{}try{port.close();}catch{}onReady();return;}active=false;queue=null;candidate=null;try{port.postMessage({kind:'presentationFailure',session,message});}catch{}try{port.close();}catch{}onReady();}
- function detachForRecovery(notify=null){if(!active||detached||recoveryFailure||!recoveryJournal||recoveryJournal.status().base===null)throw Error('Visual loss recovery unavailable');if(candidate)recoveryJournal.abandonCandidate(candidate.sequence);candidate=null;detached=true;queue=null;port.close();notify?.();onReady();}
+ function detachForRecovery(notify=null){if(!active||detached||recoveryFailure||!recoveryJournal||recoveryJournal.status().base===null)throw Error('Visual loss recovery unavailable');if(candidate)recoveryJournal.abandonCandidate(candidate.sequence);candidate=null;detached=true;queue=null;try{port.postMessage({kind:'presentationDetached',session});}catch{}port.close();notify?.();onReady();}
  function reconsiderBackpressure(){
   if(!active||detached||recoveryFailure||!onBackpressureDetach||!canBackpressureDetach())return;
   const queueStatus=queue.status(),queued=queueStatus.queued,status=recoveryJournal.status();

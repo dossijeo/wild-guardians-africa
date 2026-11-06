@@ -51,6 +51,14 @@ test('explicit recovery accepts ordered publications without emitting live ackno
  assert.equal(state.elapsed,next.elapsed);assert.deepEqual(confirmed,[1]);assert.deepEqual(sent,[]);stream.dispose();
 });
 test('authority failure rejects pending visual input without manufacturing a result',async()=>{const state=fixture(),before=serialize(state),errors=[],port={postMessage(){},close(){},start(){}},stream=createConfirmedPresentationStream({port,session:'s',state,terrain:{confirm(){}},allowPresentationInputs:true,onError:error=>errors.push(error.message)}),pending=stream.submitInputForQa(1,{kind:'castAttack'});port.onmessage({data:{kind:'presentationFailure',session:'s',message:'authority lost'}});await assert.rejects(pending,/authority lost/);assert.deepEqual(errors,['authority lost']);assert.equal(serialize(state),before);assert.equal(stream.status().closed,true);});
+test('recoverable visual detachment terminates pending inputs as unknown without reporting an authority failure',async()=>{
+ const state=fixture(),errors=[],journal=createPresentationRecoveryJournal(),post=(target,message)=>queueMicrotask(()=>target.onmessage?.({data:structuredClone(message)}));
+ const senderPort={postMessage:m=>post(receiverPort,m),start(){},close(){}},receiverPort={postMessage:m=>post(senderPort,m),start(){},close(){}};
+ const sender=openVisualStream(senderPort,'s',()=>{},{recoveryJournal:journal,onCheckpointAcknowledged(){},onPresentationInput(){}}),receiver=createConfirmedPresentationStream({port:receiverPort,session:'s',state,terrain:{confirm(){}},allowPresentationInputs:true,onError:error=>errors.push(error)});
+ sender.publish({session:'s',sequence:1,snapshot:serializeConfirmedState(state),events:[],physicsPose:null,terrainCheckpoint:{sequence:1,chunks:[]}},true);await new Promise(resolve=>setTimeout(resolve,0));assert.equal(journal.status().base,1);
+ const pending=receiver.submitInput(1,{kind:'castAttack'}),rejected=assert.rejects(pending,/outcomes are unknown/);await new Promise(resolve=>setTimeout(resolve,0));sender.detachForRecovery();await rejected;assert.equal(receiver.status().closed,true);assert.deepEqual(errors,[]);assert.equal(sender.status().detached,true);
+ sender.publish({session:'s',sequence:2,snapshot:serializeConfirmedState(state),events:[{id:'confirmed'}],physicsPose:null},true);assert.equal(journal.snapshot().entries[0].publication.events[0].id,'confirmed');receiver.dispose();sender.close();journal.dispose();
+});
 test('presentation input backpressure rejects before posting and releases slots on authority failure',async()=>{
  const sent=[],port={postMessage:m=>sent.push(m),close(){},start(){}},stream=createConfirmedPresentationStream({port,session:'s',state:fixture(),terrain:{confirm(){}},allowPresentationInputs:true});
  const pending=[];for(let i=1;i<=MAX_PENDING_PRESENTATION_INPUTS;i++)pending.push(stream.submitInput(i,{}));
