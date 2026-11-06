@@ -1,3 +1,4 @@
+import {preparePresentationRecoveryRetry} from '../src/simulation/presentation-recovery-journal.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {openVisualStream} from '../src/simulation/visual-publication-stream.js';
@@ -117,4 +118,13 @@ test('an oversized first base leaves live delivery running and can retry after a
 test('oversized recovery-only terrain is excluded from the journal before it is copied',()=>{
  let shared=0;const journal=createPresentationRecoveryJournal({incrementalSnapshots:true,capacity:8,highWatermark:6,maxBytes:4000,highWatermarkBytes:2000,sharedRetainedBytes:()=>shared}),sent=[],port={postMessage:m=>sent.push(m),start(){},close(){}},stream=openVisualStream(port,'s',()=>{},{workRecovery:true,incrementalTransport:true,recoveryJournal:journal,onCheckpointMinimum:()=>journal.canFitBase({previousSharedBytes:shared,nextSharedBytes:3000}),onCheckpointAcknowledged:()=>{shared=100;}}),packet=(sequence,events=[])=>({sequence,snapshot:JSON.stringify({sequence,padding:'x'.repeat(300)}),events,physicsPose:null}),ack=(sequence,extra={})=>port.onmessage({data:{kind:'publicationAck',session:'s',sequence,...extra}});
  try{stream.publish({...packet(1),terrainCheckpoint:{sequence:1,chunks:[]}},true);ack(1,{workCheckpoint:{version:1,sequence:1,effects:[]}});stream.publish({...packet(2,[{id:'e2'}]),terrainCheckpoint:{sequence:2,recoveryOnly:true,chunks:[{data:new Uint8Array(6000)}]}},true);assert.equal(sent.at(-1).skipWorkCheckpoint,true);ack(2);assert.equal(stream.status().active,true);assert.equal(stream.status().checkpointCapacityDeferred,true);const entry=journal.snapshot().entries[0].publication;assert.equal(entry.terrainCheckpoint,undefined);assert.deepEqual(entry.events,[{id:'e2'}]);assert.equal(journal.status().base,1);}finally{stream.close();journal.dispose();}
+});
+
+test('failed attachment retries from the intact base while abandoning only its pending candidate',()=>{
+ const journal=createPresentationRecoveryJournal(),bases=[],port={postMessage(){},start(){},close(){this.closed=true;}},stream=openVisualStream(port,'s',()=>{},{recoveryJournal:journal,onCheckpointAcknowledged:base=>bases.push(base)}),packet=(sequence,events=[])=>({sequence,snapshot:'s'+sequence,events,physicsPose:null}),ack=sequence=>port.onmessage({data:{kind:'publicationAck',session:'s',sequence}});
+ try{stream.publish({...packet(1),terrainCheckpoint:{sequence:1,chunks:[]}},true);ack(1);stream.publish({...packet(2,[{id:'retained'}]),terrainCheckpoint:{sequence:2,chunks:[]}},true);assert.equal(journal.status().candidate,2);assert.equal(preparePresentationRecoveryRetry(journal,stream,bases[0],2),2);assert.equal(stream.status().detached,true);assert.equal(journal.status().candidate,null);assert.equal(journal.status().base,1);assert.deepEqual(journal.snapshot().entries.map(entry=>entry.publication.events[0].id),['retained']);}finally{stream.close();journal.dispose();}
+});
+test('retry does not detach a channel when its journal boundary is incomplete',()=>{
+ const journal=createPresentationRecoveryJournal(),port={postMessage(){},start(){},close(){}},stream=openVisualStream(port,'s',()=>{},{recoveryJournal:journal,onCheckpointAcknowledged(){}}),base={sequence:1};
+ try{journal.begin(1);journal.confirm(1);assert.throws(()=>preparePresentationRecoveryRetry(journal,stream,base,2),{code:'recovery-incomplete'});assert.equal(stream.status().detached,false);}finally{stream.close();journal.dispose();}
 });

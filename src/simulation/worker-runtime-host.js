@@ -6,14 +6,14 @@ import {createHostPublicationQueue} from './host-publication-queue.js';
 import {projectMainThreadPublication,copyPublication} from './main-thread-publication.js';
 import {createMainSnapshotEncoder,createSnapshotPreparationCache} from './main-thread-snapshot-transport.js';
 import {openVisualStream} from './visual-publication-stream.js';
-import {createPresentationRecoveryJournal,assertPresentationRecoveryBoundary,withPresentationRecoveryCheckpoint} from './presentation-recovery-journal.js';
+import {createPresentationRecoveryJournal,assertPresentationRecoveryBoundary,preparePresentationRecoveryRetry,withPresentationRecoveryCheckpoint} from './presentation-recovery-journal.js';
 import {createPresentationRecoveryReplay} from './presentation-recovery-replay.js';
 import {isPresentationInputCommand} from './presentation-input-command.js';
 
 // Experimental host: scheduling and admission live away from presentation.
 // The simulation Worker remains the sole authority; this Worker never waits
 // for the renderer to consume a publication.
-let runtime=null,session=null,initializing=false,monitor=null,sequence=0,acknowledged=0,peakBacklog=0,measureBacklog=false,outbox=null,visualStream=null,recoveryBase=null,recoveryBaseBytes=0,recoveryJournal=null,authorityClient=null,recoveryFrozen=false,recoveryReplay=null,concurrentRecovery=false,workRecovery=false,backpressureRecovery=false,recoveryEnabled=false,recoveryAttachStarted=false,recoverySwitching=false,recoveryFault=null,recoveryTimer=null,snapshotPreparation=null;const foldedViews=new Map();let preparedAuthority=null,preparedRecovery=null,qaPresentationInputs=false,presentationInputs=false,visualIncremental=false,lastPresentationInput=0;
+let runtime=null,session=null,initializing=false,monitor=null,sequence=0,acknowledged=0,peakBacklog=0,measureBacklog=false,outbox=null,visualStream=null,recoveryBase=null,recoveryBaseBytes=0,recoveryJournal=null,authorityClient=null,recoveryFrozen=false,recoveryReplay=null,concurrentRecovery=false,workRecovery=false,backpressureRecovery=false,recoveryEnabled=false,recoveryAttachStarted=false,recoverySwitching=false,recoveryFault=null,recoveryTimer=null,recoveryAttempt=0,snapshotPreparation=null;const foldedViews=new Map();let preparedAuthority=null,preparedRecovery=null,qaPresentationInputs=false,presentationInputs=false,visualIncremental=false,lastPresentationInput=0;
 function recordTerrainJournal(sequence,chunks,terrainManifest){if(!recoveryJournal)throw Error('Terrain journal before recovery initialization');recoveryJournal.appendTerrain(sequence,chunks,terrainManifest);recoveryReplay?.wake();}
 function presentationInput(data){if(!Number.isSafeInteger(data.id)||data.id<=lastPresentationInput){visualStream?.sendInputFailure(data.id,Error('Stale presentation input'));return;}lastPresentationInput=data.id;if(!qaPresentationInputs&&!isPresentationInputCommand(data.command)){visualStream?.sendInputFailure(data.id,Error('Invalid presentation input command'));return;}runtime.submit(data.command,{presentationInput:data.id}).catch(error=>visualStream?.sendInputFailure(data.id,error));}
 function resumeHostedDispatch(){visualStream?.reconsiderBackpressure();runtime?.resumeDispatch();}
@@ -45,28 +45,29 @@ self.onmessage=async({data})=>{
   if(data.kind==='activateClock'){if(!Number.isSafeInteger(data.id))throw TypeError('Invalid clock activation');runtime.activateClock();postMessage({kind:'clockActivated',session,id:data.id});return;}
   if(data.kind==='publicationAck'){if(outbox){outbox.ack(data.sequence);acknowledged=data.sequence;return;}if(!measureBacklog||!Number.isSafeInteger(data.sequence)||data.sequence<=acknowledged||data.sequence>sequence)throw Error('Invalid publication acknowledgement');acknowledged=data.sequence;return;}
   if(recoveryEnabled&&data.kind==='markVisualLost'){try{if(!workRecovery||!recoveryJournal||!recoveryBase||recoveryFrozen||recoverySwitching||recoveryFault||!Number.isSafeInteger(data.id))throw Error('Visual loss recovery unavailable');recoverySwitching=true;const deadline=performance.now()+10000;while(runtime.status().busy&&performance.now()<deadline)await new Promise(resolve=>setTimeout(resolve,5));if(runtime.status().busy)throw Error('Visual loss boundary unavailable');const status=recoveryJournal.status();if(status.base!==recoveryBase.sequence||status.through!==sequence||status.pendingTerrain||status.saturated||status.closed)throw Error('Visual loss journal incomplete');visualStream.detachForRecovery();assertPresentationRecoveryBoundary(recoveryJournal,visualStream,recoveryBase,sequence);recoverySwitching=false;resumeHostedDispatch();postMessage({kind:'visualRecoveryLost',session,id:data.id,sequence});}catch(error){recoverySwitching=false;resumeHostedDispatch();postMessage({kind:'visualRecoveryFailed',session,id:data.id,message:String(error?.message??error)});}return;}
-  if(recoveryEnabled&&data.kind==='prepareVisualRecovery'){try{
+  if(recoveryEnabled&&data.kind==='prepareVisualRecovery'){const retry=!!(recoveryFault&&recoveryFrozen&&recoveryAttachStarted&&!recoveryReplay);try{
+   if(retry){if(!Number.isSafeInteger(data.id)||runtime.status().busy)throw Error('Visual recovery retry unavailable');preparePresentationRecoveryRetry(recoveryJournal,visualStream,recoveryBase,sequence);postMessage({kind:'visualRecoveryPrepared',session,id:data.id,checkpoint:recoveryBase});recoveryFault=null;recoveryAttachStarted=false;recoverySwitching=false;return;}
    if(!recoveryJournal||!recoveryBase||recoveryFrozen||!Number.isSafeInteger(data.id))throw Error('Visual recovery unavailable');recoveryFrozen=true;
    const deadline=performance.now()+10000;while(runtime.status().busy&&performance.now()<deadline)await new Promise(resolve=>setTimeout(resolve,5));
    if(runtime.status().busy)throw Error('Visual recovery boundary unavailable');
    assertPresentationRecoveryBoundary(recoveryJournal,visualStream,recoveryBase,sequence);
-   postMessage({kind:'visualRecoveryPrepared',session,id:data.id,checkpoint:recoveryBase});}catch(error){if(error?.code!=='recovery-incomplete'){recoveryFrozen=false;resumeHostedDispatch();}postMessage({kind:'visualRecoveryFailed',session,id:data.id,message:String(error?.message??error)});}return;
+   postMessage({kind:'visualRecoveryPrepared',session,id:data.id,checkpoint:recoveryBase});}catch(error){if(!retry&&error?.code!=='recovery-incomplete'){recoveryFrozen=false;resumeHostedDispatch();}postMessage({kind:'visualRecoveryFailed',session,id:data.id,message:String(error?.message??error)});}return;
   }
-  if(recoveryEnabled&&data.kind==='attachVisualRecovery'){try{
+  if(recoveryEnabled&&data.kind==='attachVisualRecovery'){let attempt=null;try{
    if(!recoveryFrozen||recoveryReplay||!data.presentationPort||!data.terrainPort||!data.recoveryPort||!Number.isSafeInteger(data.id))throw Error('Invalid visual recovery attachment');
-   recoveryAttachStarted=true;
+   recoveryAttachStarted=true;attempt=++recoveryAttempt;
    recoverySwitching=true;
-   const failRecovery=error=>{if(recoveryFault)return;recoveryFault=String(error?.message??error);runtime.rejectQueuedCommands(Error(recoveryFault));if(recoveryTimer!==null)clearTimeout(recoveryTimer);recoveryTimer=null;recoveryReplay?.dispose();recoveryReplay=null;postMessage({kind:'visualRecoveryFailed',session,id:data.id,message:recoveryFault});};
+   const failRecovery=error=>{if(attempt!==recoveryAttempt||recoveryFault)return;recoveryAttempt++;recoverySwitching=false;recoveryFault=String(error?.message??error);runtime.rejectQueuedCommands(Error(recoveryFault));if(recoveryTimer!==null)clearTimeout(recoveryTimer);recoveryTimer=null;recoveryReplay?.dispose();recoveryReplay=null;postMessage({kind:'visualRecoveryFailed',session,id:data.id,message:recoveryFault});};
    recoveryTimer=setTimeout(()=>failRecovery(Error('Visual recovery timed out; explicit recovery is required')),10000);
-   const deadline=performance.now()+10000;while(runtime.status().busy&&!recoveryFault&&performance.now()<deadline)await new Promise(resolve=>setTimeout(resolve,5));if(recoveryFault)return;if(runtime.status().busy)throw Error('Visual recovery terrain switch unavailable');
+   const deadline=performance.now()+10000;while(runtime.status().busy&&!recoveryFault&&attempt===recoveryAttempt&&performance.now()<deadline)await new Promise(resolve=>setTimeout(resolve,5));if(recoveryFault||attempt!==recoveryAttempt)return;if(runtime.status().busy)throw Error('Visual recovery terrain switch unavailable');
    await authorityClient.reattachTerrain(data.terrainPort);
-   if(recoveryFault)return;
+   if(recoveryFault||attempt!==recoveryAttempt)return;
    recoveryReplay=createPresentationRecoveryReplay({port:data.recoveryPort,session,checkpoint:recoveryBase,journal:recoveryJournal,onCaughtUp:result=>{
     if(assertPresentationRecoveryBoundary(recoveryJournal,visualStream,recoveryBase,sequence)!==result.sequence)throw Error('Recovery replay did not reach authority boundary');
     if(recoveryTimer!==null)clearTimeout(recoveryTimer);recoveryTimer=null;
     recoveryReplay.dispose();recoveryReplay=null;visualStream?.close();visualStream=openHostedVisualStream(data.presentationPort);
     postMessage({kind:'visualRecoveryAttached',session,id:data.id,sequence:result.sequence});
-   },onError:failRecovery});recoverySwitching=false;resumeHostedDispatch();}catch(error){if(recoveryAttachStarted){recoveryFault=String(error?.message??error);runtime.rejectQueuedCommands(Error(recoveryFault));if(recoveryTimer!==null)clearTimeout(recoveryTimer);recoveryTimer=null;}postMessage({kind:'visualRecoveryFailed',session,id:data.id,message:String(error?.message??error)});}return;
+   },onError:failRecovery});recoverySwitching=false;resumeHostedDispatch();}catch(error){if(attempt!==null&&attempt!==recoveryAttempt)return;if(recoveryAttachStarted){recoveryAttempt++;recoverySwitching=false;recoveryFault=String(error?.message??error);runtime.rejectQueuedCommands(Error(recoveryFault));if(recoveryTimer!==null)clearTimeout(recoveryTimer);recoveryTimer=null;}postMessage({kind:'visualRecoveryFailed',session,id:data.id,message:String(error?.message??error)});}return;
   }
   if(recoveryEnabled&&data.kind==='cancelVisualRecovery'){try{if(!Number.isSafeInteger(data.id)||!recoveryFrozen||recoveryAttachStarted||recoveryReplay||recoveryFault)throw Error('Visual recovery cannot be safely cancelled');recoveryFrozen=false;resumeHostedDispatch();postMessage({kind:'visualRecoveryCancelled',session,id:data.id});}catch(error){postMessage({kind:'visualRecoveryFailed',session,id:data.id,message:String(error?.message??error)});}return;}
   if(recoveryEnabled&&data.kind==='finishVisualRecovery'){if(!recoveryFrozen||recoveryReplay||recoveryFault)throw Error('Visual recovery not caught up');assertPresentationRecoveryBoundary(recoveryJournal,visualStream,recoveryBase,sequence);recoveryFrozen=false;recoveryAttachStarted=false;resumeHostedDispatch();return;}
