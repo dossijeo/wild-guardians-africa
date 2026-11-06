@@ -30,6 +30,13 @@ test('discarded and failed prepared publications do not retain a pending token',
  const first=receiver.prepare(packet);receiver.discard(first.token);assert.throws(()=>receiver.commit(first.token),/Invalid prepared/);const second=receiver.prepare(packet);assert.deepEqual(receiver.commit(second.token),{accepted:true,sequence:1});
  const unchanged={session:'s',sequence:2,unchanged:true,slotId:display.slotId,stateSequence:display.sequence,elapsed:display.elapsed,pauses:[...display.pauses],events:[],saveAvailable:true},third=receiver.prepareUnchanged(unchanged);assert.equal(receiver.status().sequence,1);assert.deepEqual(receiver.commit(third.token),{accepted:true,sequence:2});
 });
+test('publication time must match its snapshot before state or events are applied',()=>{
+ const display=fixture(),authority=deserialize(serialize(display)),before=serialize(display),events=[],stop=observePresentationGameEvents(display,event=>events.push(event.id));
+ try{authority.elapsed+=.1;emit(authority,'Test');const event=authority.events.at(-1),receiver=createConfirmedStateReceiver(display,'s'),packet={session:'s',sequence:1,snapshot:serialize(authority),events:[event]};
+  for(const elapsed of [authority.elapsed+1,NaN,undefined]){assert.throws(()=>receiver.prepare({...packet,elapsed}),/publication time/);assert.equal(serialize(display),before);assert.equal(receiver.status().sequence,0);assert.deepEqual(events,[]);}
+  assert.deepEqual(receiver.accept({...packet,elapsed:authority.elapsed}),{accepted:true,sequence:1});assert.deepEqual(events,[event.id]);
+ }finally{stop();}
+});
 test('observer failure while committing faults the receiver and clears the token',()=>{
  const display=fixture(),authority=deserialize(serialize(display)),receiver=createConfirmedStateReceiver(display,'s',{onReconciled:()=>{throw Error('commit failed');}}),prepared=receiver.prepare({session:'s',sequence:1,snapshot:serialize(authority),events:[]});
  assert.throws(()=>receiver.commit(prepared.token),/commit failed/);assert.equal(receiver.status().fault,true);assert.throws(()=>receiver.commit(prepared.token),/Invalid prepared/);assert.equal(receiver.prepare({session:'s',sequence:1,snapshot:serialize(authority),events:[]}).reason,'fault');

@@ -12,6 +12,10 @@ anterior y el estado confirmado. Para compatibilidad sigue aceptando diarios
 antiguos sin ningún `at`; una mezcla incompleta se rechaza. El agrupador y el
 diario de recuperación conservan los hechos con sus tiempos.
 
+Si una publicación incluye `elapsed`, el receptor exige que coincida con el
+snapshot antes de aplicar el estado o sus eventos. Esto no proporciona un
+buffer histórico ni separa todavía los ACK de recepción y aplicación visual.
+
 El diario v2 incluye una referencia temporal para cada evento confirmado,
 además de las retiradas de animales. El receptor comprueba la cobertura completa
 y acepta también diarios antiguos que solo incluían determinados eventos. Los
