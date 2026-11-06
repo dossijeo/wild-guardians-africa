@@ -4,7 +4,7 @@ import * as Game from '../src/simulation/game.js';
 import {spawnRaid} from '../src/simulation/raids.js';
 import {rational} from '../src/simulation/money.js';
 import {SaveRepository,serialize} from '../src/persistence/snapshots.js';
-import {autosaveEventAfter} from '../src/app/autosave-events.js';
+import {autosaveEventAfter,autosaveConfirmedEvents} from '../src/app/autosave-events.js';
 import {saveGame} from '../src/app/save-game.js';
 
 import {clearNavigation} from './clear-navigation.js';
@@ -29,6 +29,9 @@ test('fresh boundaries work with repeated IDs in separate slots and a rolled-ove
  assert.equal(autosaveEventAfter(events,'event-200').id,'event-400');
  assert.equal(autosaveEventAfter(events,'event-400'),null);
  assert.equal(autosaveEventAfter([{id:'event-1',type:'Dawn'}],undefined).id,'event-1');
+});
+test('confirmed batches request one autosave for any boundary and none for unrelated events',()=>{
+ let saves=0;const save=()=>++saves;assert.equal(autosaveConfirmedEvents([{type:'WaterSatisfied'}],save),false);for(const type of ['Dawn','RaidEnded','CampaignWon','GameOver'])assert.equal(autosaveConfirmedEvents([{type},{type}],save),saves);assert.equal(saves,4);assert.throws(()=>autosaveConfirmedEvents(null,save),/confirmed autosave/);
 });
 test('actual dawn saves after agriculture and queue rebuild, once, without changing another slot',()=>{
  const s=farm(),other=farm('autosave-b'),store=storage(),repo=new SaveRepository(store);repo.save(other);const untouched=store.data.get(repo.key(other.slotId));

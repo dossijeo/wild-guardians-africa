@@ -333,6 +333,8 @@ La admisión de un animal incluye sus mallas normales y de marcha precocinada en
 
 ### A7. Interacción y recuperación sin dependencias antiguas
 
+Los eventos confirmados de amanecer, fin de incursión y final de campaña solicitan ahora el autoguardado desde su lote de publicaciones Worker, después de reconciliar el estado y sin esperar al siguiente fotograma. Un lote con varias de esas señales solicita un único checkpoint; la ruta local mantiene su detección por fotograma. Las pruebas verifican el orden tanto del controlador directo como del host y que no se solicita un checkpoint para eventos ajenos. La solicitud conserva las restricciones existentes de disponibilidad física y errores de almacenamiento; no se ha validado todavía una campaña completa ni se ha añadido un reintento automático cuando el checkpoint no está disponible.
+
 Conectar cámara y entrada al propietario gráfico sin esperar a un tick de simulación. Solo los estados de cámara reemplazables se fusionan; los comandos discretos conservan orden. La selección identifica entidad, cámara, tiempo presentado y revisiones; la autoridad revalida el objetivo al ejecutar.
 
 La cámara sobre terreno confirmado y las vistas provisionales de construcciones y cultivos tienen un contrato explícito de capacidades, independiente de las opciones QA, que viaja al Worker gráfico y puede reproducirse en un reemplazo. El propietario temprano de cámara también acepta esa capacidad sin depender de la URL. El arranque normal aún no la selecciona: faltan la integración del perfil completo y su validación, por lo que esto no convierte la ruta experimental en producto.

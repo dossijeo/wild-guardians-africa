@@ -1,10 +1,15 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import {createWorkerGameRuntime} from '../src/simulation/worker-game-runtime.js';
+import {autosaveConfirmedEvents} from '../src/app/autosave-events.js';
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
 test('direct Worker publications dispatch confirmed events after state reconciliation',async()=>{
  let seq=0,confirmed=0;const seen=[],client={ready:Promise.resolve(),submit(command){const events=command.kind==='snapshot'?[]:[{id:`event-${seq+1}`,type:'unused'}];return {accepted:true,result:Promise.resolve({sequence:++seq,residency:{missing:[]},events})};},dispose(){}},world={createConfirmedReceiver(){return {accept(message){confirmed=message.sequence;return {accepted:true};},status(){return {sequence:confirmed,lastElapsed:0};}};}};
  const runtime=createWorkerGameRuntime({client,world,session:'s',now:()=>0,schedule:()=>1,cancel:()=>{},onConfirmedEvents:events=>seen.push([confirmed,...events.map(event=>event.id)])});await runtime.start();await runtime.submit({kind:'pause'});await runtime.submit({kind:'resume'});
  assert.equal(runtime.confirmedEventDelivery,true);assert.deepEqual(seen,[[2,'event-2'],[3,'event-3']]);runtime.dispose();
+});
+test('confirmed Worker boundary requests one ordered checkpoint without a render frame',async()=>{
+ let seq=0,confirmed=0,savedAt=null;const commands=[],client={ready:Promise.resolve(),submit(command){commands.push(command.kind);const events=command.kind==='pause'?[{id:'event-1',type:'RaidEnded'},{id:'event-2',type:'Dawn'}]:[];return {accepted:true,result:Promise.resolve({sequence:++seq,residency:{missing:[]},events})};},dispose(){}},world={createConfirmedReceiver(){return {accept(message){confirmed=message.sequence;return {accepted:true};},status(){return {sequence:confirmed,lastElapsed:0};}};}};
+ let runtime;runtime=createWorkerGameRuntime({client,world,session:'s',now:()=>0,schedule:()=>1,cancel:()=>{},onConfirmedEvents:events=>autosaveConfirmedEvents(events,()=>{savedAt=confirmed;return runtime.submit({kind:'snapshot'});})});await runtime.start();await runtime.submit({kind:'pause'});await flush();assert.equal(savedAt,2);assert.deepEqual(commands,['snapshot','pause','snapshot']);assert.equal(confirmed,3);runtime.dispose();
 });
 test('diagnostic command counts distinguish tutorial actions without changing execution',async()=>{
  let seq=0;const client={ready:Promise.resolve(),submit(){return {accepted:true,result:Promise.resolve({sequence:++seq,residency:{missing:[]},saveAvailable:true})};},dispose(){}},world={createConfirmedReceiver(){let sequence=0;return {accept(message){sequence=message.sequence;return {accepted:true};},status(){return {sequence,lastElapsed:0};}};}};

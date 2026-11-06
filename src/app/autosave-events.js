@@ -5,3 +5,10 @@ export function autosaveEventAfter(events,previousId){
  const index=previousId===undefined?-1:events.findIndex(e=>e.id===previousId);
  return events.slice(index+1).findLast(e=>boundaries.has(e.type))??null;
 }
+
+// Worker publications already contain only newly confirmed events. Save once
+// per batch, after reconciliation; never rescan the bounded event history.
+export function autosaveConfirmedEvents(events,save){
+ if(!Array.isArray(events)||typeof save!=='function')throw TypeError('Invalid confirmed autosave');
+ return events.some(event=>boundaries.has(event?.type))?save():false;
+}
