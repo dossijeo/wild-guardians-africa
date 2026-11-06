@@ -2,8 +2,8 @@ import {createWebGpuReplacementSlot} from './webgpu-replacement-slot.js';
 
 // Candidate groups contain the actual confirmed layout and share their banks'
 // geometry and materials. Only the container is owned here.
-export function createWebGpuAdmittedVillage({pipelineAdmission,onReady=()=>{},onError=()=>{}}={}){
- const slot=createWebGpuReplacementSlot({pipelineAdmission,onReady,onError,release:object=>object.clear()});let closed=false;
+export function createWebGpuAdmittedVillage({pipelineAdmission,resourceRegistry=null,onReady=()=>{},onError=()=>{}}={}){
+ const slot=createWebGpuReplacementSlot({pipelineAdmission,resourceRegistry,onReady,onError,release:object=>object.clear()});let closed=false;
  function update(key,build){
   if(closed)return;if(typeof key!=='string'||typeof build!=='function')throw TypeError('Invalid village layout');
   slot.request(key,()=>{const object=build();if(!object?.isGroup)throw TypeError('Village layout must be a group');return object;});

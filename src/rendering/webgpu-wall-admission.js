@@ -3,9 +3,9 @@ import {createWebGpuReplacementSlot} from './webgpu-replacement-slot.js';
 
 // Keep the current confirmed visual until the actual next topology is ready.
 // This owns presentation only; the simulation never waits for admission.
-export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmission,onReady=()=>{},onError=()=>{},createWall=(assets,value,time,options)=>new NativeWall(assets,value,time,options)}={}){
+export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmission,resourceRegistry=null,onReady=()=>{},onError=()=>{},createWall=(assets,value,time,options)=>new NativeWall(assets,value,time,options)}={}){
  if(!prototypes||!entity||typeof createWall!=='function')throw TypeError('Invalid admitted wall');
- const slot=createWebGpuReplacementSlot({pipelineAdmission,onReady,onError,release:wall=>wall.dispose()});let closed=false;
+ const slot=createWebGpuReplacementSlot({pipelineAdmission,resourceRegistry,onReady,onError,release:wall=>wall.dispose()});let closed=false;
  function update(value,time){
   if(closed)return;
   const base=slot.active??slot.pending;let key=base?.nextConfirmedStageKey(value,time)??null,first=null;

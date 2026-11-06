@@ -20,3 +20,9 @@ test('disposing a replacement during compilation retains its resources until com
  const admission=createWebGpuPipelineAdmission({renderer:{backend:{isWebGPUBackend:true},compileAsync:()=>new Promise(resolve=>{finish=resolve;})},scene,camera}),slot=createWebGpuReplacementSlot({pipelineAdmission:admission,release:value=>released.push(value)});
  slot.request('first',()=>object);await new Promise(resolve=>setImmediate(resolve));slot.dispose();admission.dispose();assert.equal(object.parent,null);assert.deepEqual(released,[]);finish();await new Promise(resolve=>setImmediate(resolve));assert.deepEqual(released,[object]);
 });
+import {createWebGpuResourceRegistry} from '../src/rendering/webgpu-resource-registry.js';
+
+test('structure candidates retain resource ownership until cancellation or deferred replacement completes',async()=>{
+ const scene=new Scene(),camera=new PerspectiveCamera(),first=new Group(),second=new Group(),released=[],registry=createWebGpuResourceRegistry();let finish;const admission=createWebGpuPipelineAdmission({renderer:{backend:{isWebGPUBackend:true},compileAsync(object){return object===first?new Promise(resolve=>{finish=resolve;}):Promise.resolve();}},scene,camera}),slot=createWebGpuReplacementSlot({pipelineAdmission:admission,resourceRegistry:registry,release:object=>released.push(object)}),turn=()=>new Promise(resolve=>setImmediate(resolve));
+ try{slot.request('first',()=>first);await turn();assert.equal(registry.status().owned[0].state,'prepared');slot.request('second',()=>second);assert.equal(registry.status().owned.length,2);finish();await turn();await turn();assert.equal(slot.active,second);assert.deepEqual(released,[first]);assert.equal(registry.status().owned.length,1);assert.equal(registry.status().owned[0].state,'committed');registry.dispose();slot.dispose();assert.deepEqual(released,[first,second]);assert.equal(registry.status().owned.length,0);}finally{slot.dispose();admission.dispose();registry.dispose();}
+});
