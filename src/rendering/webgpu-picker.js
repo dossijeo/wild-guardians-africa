@@ -26,7 +26,12 @@ export function createWebGpuPicker({scene,camera,state,animals,workers={get:()=>
   let entityId=null,hitPoint=null,closest=Infinity;const occluders=[...groundMeshes];scene.traverseVisible(o=>{if(o.userData.entityId||Number.isInteger(o.userData.nativePropSlot))occluders.push(o);});const blocked=ray.intersectObjects(occluders,true).find(visibleHit);if(blocked){closest=blocked.distance;for(let object=blocked.object;object;object=object.parent)if(object.userData.entityId){entityId=object.userData.entityId;hitPoint={x:blocked.point.x,y:blocked.point.y,z:blocked.point.z};break;}}
   for(const [entities,roster,skip] of [[state.raid?.animals??[],animals,'gone'],[state.workers??[],workers,'home']])for(const entity of entities){if(entity.status===skip)continue;const actor=roster.get(entity.id),root=actor?.root;if(!root?.visible)continue;const restore=actor.preparePick?.();let hit;try{hit=ray.intersectObject(root,true).find(visibleHit);}finally{restore?.();}if(hit&&hit.distance<closest){closest=hit.distance;entityId=entity.id;hitPoint={x:hit.point.x,y:hit.point.y,z:hit.point.z};}}
   for(const candidate of cropBounds()){if(!candidate?.id||![candidate.x,candidate.y,candidate.z,candidate.radius,candidate.height].every(Number.isFinite)||candidate.radius<=0||candidate.height<=0)throw TypeError('Invalid confirmed crop bounds');box.min.set(candidate.x-candidate.radius,candidate.y,candidate.z-candidate.radius);box.max.set(candidate.x+candidate.radius,candidate.y+candidate.height,candidate.z+candidate.radius);if(ray.ray.intersectBox(box,point)){const distance=point.distanceTo(ray.ray.origin);if(distance<closest){closest=distance;entityId=candidate.id;hitPoint={x:point.x,y:point.y,z:point.z};}}}
-  return {entityId,hitPoint,point:ground,sequence:sequence(),...(isReady(ray.ray,closest)?{}:{incomplete:true})};}finally{motionInteraction?.end();}}};
+  // A terrain hit already has the visible, confirmed height. Keep it for
+  // presentation-only contacts such as a Shield cast on empty ground; the
+  // authoritative placement still uses the existing x/z point.
+  const ready=isReady(ray.ray,closest);
+  if(!entityId&&terrain&&ready&&isTerrainReady(ray.ray,terrain.distance))hitPoint={x:terrain.point.x,y:terrain.point.y,z:terrain.point.z};
+  return {entityId,hitPoint,point:ground,sequence:sequence(),...(ready?{}:{incomplete:true})};}finally{motionInteraction?.end();}}};
 }
 
 // Do not route a gameplay click to an incomplete visual scene: missing

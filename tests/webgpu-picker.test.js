@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {createWebGpuPicker,createCutoutHitTest,webGpuPickerReady} from '../src/rendering/webgpu-picker.js';
+import {confirmedSpellContact,pickedSpellCommand} from '../src/app/spell-placement.js';
 
 test('grouped terrain remains selectable and occludes entities behind it',()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(45,1,.1,100),group=new THREE.Group(),floor=new THREE.Mesh(new THREE.PlaneGeometry(20,20),new THREE.MeshBasicMaterial({side:THREE.DoubleSide}));
@@ -9,6 +10,18 @@ test('grouped terrain remains selectable and occludes entities behind it',()=>{
  const structure=new THREE.Group();structure.userData.entityId='under';structure.position.set(0,-2,-4);structure.add(new THREE.Mesh(new THREE.BoxGeometry(1,1,1),new THREE.MeshBasicMaterial()));scene.add(structure);
  const picker=createWebGpuPicker({scene,camera,state:{},animals:{get:()=>null},cropBounds:()=>[]});assert.ok(picker.pick({x:0,y:0,terrainOnly:true}).point);assert.equal(picker.pick({x:0,y:0}).entityId,null);
  group.visible=false;assert.equal(picker.pick({x:0,y:0,terrainOnly:true}).point,null);assert.equal(picker.pick({x:0,y:0}).entityId,'under');
+});
+
+test('empty-ground spell selection carries the visible terrain height without changing placement coordinates',()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(45,1,.1,100),floor=new THREE.Mesh(new THREE.PlaneGeometry(20,20),new THREE.MeshBasicMaterial({side:THREE.DoubleSide}));
+ camera.position.set(0,9,10);camera.lookAt(0,3,0);camera.updateProjectionMatrix();floor.rotation.x=-Math.PI/2;floor.position.y=3;floor.userData.ground=true;scene.add(floor);
+ const picker=createWebGpuPicker({scene,camera,state:{},animals:{get:()=>null},cropBounds:()=>[],sequence:()=>8});
+ const result=picker.pick({x:0,y:0});assert.equal(result.entityId,null);assert.ok(result.hitPoint);assert.ok(Math.abs(result.hitPoint.y-3)<1e-9);assert.equal(result.hitPoint.x,result.point.x);assert.equal(result.hitPoint.z,result.point.z);assert.equal(result.sequence,8);
+ const contact=confirmedSpellContact(result.hitPoint,result.point,()=>null),command=pickedSpellCommand({plants:[]},'shield-1','shield',{...result,hitPoint:contact,origin:{x:1,y:4,z:2}});assert.deepEqual(command.selection.contact,result.hitPoint);assert.equal(command.x,result.point.x);assert.equal(command.z,result.point.z);
+ const placement=picker.pick({x:0,y:0,terrainOnly:true});assert.equal(placement.hitPoint,null);assert.deepEqual(placement.point,result.point);
+ const incomplete=createWebGpuPicker({scene,camera,state:{},animals:{get:()=>null},cropBounds:()=>[],isReady:()=>false});assert.equal(incomplete.pick({x:0,y:0}).hitPoint,null);assert.equal(incomplete.pick({x:0,y:0}).incomplete,true);
+ const missingTerrain=createWebGpuPicker({scene,camera,state:{},animals:{get:()=>null},cropBounds:()=>[],isTerrainReady:()=>false});assert.equal(missingTerrain.pick({x:0,y:0}).hitPoint,null);
+ floor.visible=false;assert.equal(picker.pick({x:0,y:0}).hitPoint,null);floor.geometry.dispose();floor.material.dispose();
 });
 
 test('grouped biome props still occlude selectable objects',()=>{
