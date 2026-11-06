@@ -3,6 +3,14 @@ import assert from 'node:assert/strict';
 import {captureWorldMotion} from '../src/simulation/worker-world-motion.js';
 import {movePath,pathMotionClock} from '../src/simulation/locomotion.js';
 
+test('inactive home/gone bodies retain identity but do not block visual certification inside buildings',()=>{
+ const home={id:'home',x:0,z:0,status:'home',radius:.28},gone={id:'gone',x:0,z:0,status:'gone',species:'hyena',radius:.28},walking={id:'a',x:0,z:0,status:'walking',radius:.28,path:[{x:1,z:0}]},game={elapsed:0,workers:[home,walking],raid:{animals:[gone]},structures:[]},revisions={topology:0,chunks:0,terrain:0,payloads:0};let queries=0;
+ const capture=captureWorldMotion(game,()=>revisions,()=>false,{spatialNavigation:{segmentClear(){queries++;return true;}}});game.elapsed=.05;movePath(walking,.05,null,pathMotionClock(walking,0,.05,1));capture.sampleTick();const result=capture.finish();
+ assert.equal(queries,1);assert.equal(result.actors.length,3);assert.equal(result.spatialEvidence.segments,3);assert.equal(result.separationEvidence.actors,3);
+ // A body that emerges during the interval must participate again.
+ const next=captureWorldMotion(game,()=>revisions,()=>false,{spatialNavigation:{segmentClear:()=>true}});game.elapsed=.1;home.status='idle';next.sampleTick();assert.equal(next.finish().separationEvidence,undefined);
+});
+
 test('observes all animals and workers over one existing movement batch',()=>{
  const animal={id:'a',x:0,z:0,status:'walking',radius:.6,path:[{x:1,z:0}]},worker={id:'w',x:2,z:0,status:'idle',radius:.3},game={elapsed:1,raid:{animals:[animal]},workers:[worker]},revision={topology:1,chunks:1,terrain:1,payloads:1},capture=captureWorldMotion(game,()=>revision);
  game.elapsed=1.5;movePath(animal,.5,null,pathMotionClock(animal,1,1.5,1));capture.checkpoint();const result=capture.finish();

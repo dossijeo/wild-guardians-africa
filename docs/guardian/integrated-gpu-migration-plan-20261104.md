@@ -425,6 +425,9 @@ Reutilizar Vertex Colors, paquetes progresivos y KTX2/BC7. Seleccionar el format
 
 ### A6. Contrato de movilidad y animación autónomas
 
+Actualización 2026-11-06: resuelto el bloqueo circular entre input, trayectoria histórica y entrega de pose. El certificador real está conectado al perfil temporal; un reloj común, callbacks por ID en fronteras y rollback de versiones permiten continuar B sin exigir primero todos los clips GPU. Véase [contrato, pruebas y límites de A6](a6-autonomous-motion-handoff.md). Este cierre del contrato interno no equivale a activar el perfil en producción ni a superar la validación visual de C.
+
+
 Completar el contrato genérico que consumirá todo personaje: entidad/generación, versión, tiempo inicial, tramos o poses, duración, horizonte seguro, modo y estado de animación. Separar desplazamiento lógico, pose local y adaptación visual.
 
 Wild Engine conserva intenciones, reservas, vigencia de rutas y seguridad física. El hilo principal no reconstruye navegación. La GPU reproduce intervalos autorizados con buffers persistentes; no necesita actualizaciones individuales de posición por fotograma.
@@ -581,7 +584,7 @@ Cada entrega actualiza el registro siguiente con archivos, commit y comprobacion
 | A3 Materiales y pipelines | Pendiente de cierre | Interfaces, catálogo y pases |
 | A4 Admisión gráfica | Pendiente de cierre | Estados, publicación, errores y cancelación |
 | A5 Recursos | Pendiente de cierre | Identidad, residencia, memoria y liberación |
-| A6 Movilidad y reproducción | Pendiente de cierre | Horizonte, versiones, buffers y propiedad de pose |
+| A6 Movilidad y reproducción | Contrato interno desbloqueado en el perfil temporal | Horizonte, versiones y entrega de pose cubiertos; migración B y validación C pendientes |
 | A7 Interacción y recuperación | Pendiente de cierre | Provisionales, orden temporal y reinicios |
 | B Migración completa | Pendiente tras A | Inventario B1–B7 sin elementos esenciales omitidos |
 | C Validación integrada | No iniciar antes de B | Resultados funcionales, visuales y mediciones |

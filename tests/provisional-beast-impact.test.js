@@ -3,6 +3,12 @@ import assert from 'node:assert/strict';
 import {Group,Bone} from 'three';
 import {ProvisionalBeastImpact} from '../src/rendering/provisional-beast-impact.js';
 import {captureAnimalImpact,applyAnimalImpact,restoreAnimalImpact} from '../src/rendering/animal-impact.js';
+test('deferred impact retains gesture time and rejects an invalid future start',()=>{
+ let now=1000;const manager=new ProvisionalBeastImpact({now:()=>now}),animal={id:'a',species:'hyena',x:0,z:0,status:'walking'},state={raid:{animals:[animal]}},command={kind:'castAttack',id:'hit',targetId:'a'};
+ assert.equal(manager.begin(command,state,()=>0,null,{startedAt:1001}),false);assert.equal(manager.byTarget.size,0);
+ now=1100;assert.equal(manager.begin(command,state,()=>0,null,{startedAt:1000}),true);assert.equal(manager.sample(animal,0,{holdUntilPhysical:true}),null);
+ now=1240;const sample=manager.sample(animal,0,{holdUntilPhysical:true});assert.ok(sample);assert.equal(sample.elapsed,.24);manager.end('hit');
+});
 test('duplicate command identities cannot orphan a provisional animal',()=>{
  const manager=new ProvisionalBeastImpact({now:()=>0}),a={id:'a',x:0,z:0},b={id:'b',x:2,z:0},state={raid:{animals:[a,b]}},command={kind:'castAttack',id:'hit',targetId:'a'};
  assert.equal(manager.begin(command,state,()=>0),true);
