@@ -585,14 +585,14 @@ Puntos de integración que se deben modificar o reutilizar, sin crear otro camin
 
 Cada entrega actualiza el registro siguiente con archivos, commit y comprobaciones realizadas. Las actualizaciones de progreso responden qué contrato quedó implementado, qué dependencia antigua persiste y cuál es el siguiente bloqueo imprescindible. No se sustituyen entregas por nuevas mediciones intermedias.
 
-| Entrega | Estado inicial | Evidencia necesaria para cerrar |
+| Entrega | Estado | Alcance y trabajo pendiente |
 | --- | --- | --- |
 | A1 Propiedad y bootstrap | Pendiente de cierre | Contratos, dependencias y selección exclusiva |
 | A2 Transporte y tiempo | Pendiente de cierre | Acumulación, eventos, recuperación y consumidores |
 | A3 Materiales y pipelines | Pendiente de cierre | Interfaces, catálogo y pases |
 | A4 Admisión gráfica | Pendiente de cierre | Estados, publicación, errores y cancelación |
-| A5 Recursos | Pendiente de cierre | Identidad, residencia, memoria y liberación |
-| A6 Movilidad y reproducción | Contrato interno desbloqueado en el perfil temporal | Horizonte, versiones y entrega de pose cubiertos; migración B y validación C pendientes |
+| A5 Recursos | Cerrado internamente | Generación, leases, residencia y presión heurística para propietarios explícitos y compuestos; contenidos nuevos B y medición/validación C pendientes |
+| A6 Movilidad y reproducción | Cerrado internamente en el perfil temporal explícito | Intervalos confirmados, horizonte, secuencia, actor e identidad de estado con entrega ordenada y fallbacks; clips B4 y validación C pendientes |
 | A7 Interacción y recuperación | Pendiente de cierre | Provisionales, orden temporal y reinicios |
 | B Migración completa | Pendiente tras A | Inventario B1–B7 sin elementos esenciales omitidos |
 | C Validación integrada | No iniciar antes de B | Resultados funcionales, visuales y mediciones |

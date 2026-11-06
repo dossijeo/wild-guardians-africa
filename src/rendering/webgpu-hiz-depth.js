@@ -44,7 +44,7 @@ export function createWebGpuHiZHierarchy(depth,width,height,{maxLevels=8,resourc
    if(!admission||typeof admission.prepare!=='function'||typeof admission.deferRelease!=='function'||admissionOwner&&admissionOwner!==admission)throw TypeError('Invalid Hi-Z admission');
    if(preparing)throw Error('Hi-Z preparation already pending');if(prepared)return;
    admissionOwner=admission;preparing=true;
-   try{for(const {target,quad} of levels){if(closed)throw Error('Hi-Z hierarchy disposed');await admission.prepare(quad,{signal,target,passCamera:quad.camera,targetScene:quad,shadowPass:false});}if(closed)throw Error('Hi-Z hierarchy disposed');prepared=true;}finally{preparing=false;}
+   try{if(typeof admission.prepareManyAndPublish==='function'){const requests=levels.map(({target,quad})=>({object:quad,options:{signal,target,passCamera:quad.camera,targetScene:quad,shadowPass:false}}));await admission.prepareManyAndPublish(requests,()=>{if(closed)throw Error('Hi-Z hierarchy disposed');prepared=true;});}else{for(const {target,quad} of levels){if(closed)throw Error('Hi-Z hierarchy disposed');await admission.prepare(quad,{signal,target,passCamera:quad.camera,targetScene:quad,shadowPass:false});}if(closed)throw Error('Hi-Z hierarchy disposed');prepared=true;}}finally{preparing=false;}
   },
   // Compilation/admission is the caller's responsibility. This method only
   // submits reduction draws and never waits synchronously for the GPU.
