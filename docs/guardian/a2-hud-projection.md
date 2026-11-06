@@ -37,6 +37,10 @@ fin de enfriamiento y amanecer frente al estado completo.
 La selección del indicador de mano del tutorial utiliza esa misma vista con
 campos de cultivo, magias y progreso limitados; las decisiones de colocación
 del guardián siguen consultando el estado anterior y al Worker autoritativo.
+El panel contextual del perfil Worker utiliza las propiedades confirmadas mínimas
+de la estructura seleccionada, incluidas salud, puerta y coste para mostrar el
+reembolso. Las acciones siguen enviando su identidad a la autoridad para su
+validación; esta vista no cambia las reglas ni confirma una operación.
 
 Esto no elimina todavía el snapshot completo: se sigue transfiriendo y usando
 para tutorial, selección, comandos,
