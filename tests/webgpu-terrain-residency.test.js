@@ -157,3 +157,13 @@ test('failed or removed terrain admissions never replace or resurrect visible te
  residency.replace(chunk(),2);await Promise.resolve();requests[1].reject(Error('prepare failed'));await new Promise(resolve=>setImmediate(resolve));assert.equal(scene.children[0],first);assert.equal(residency.visualReady(),false);assert.deepEqual(errors,['prepare failed']);
  residency.replace(chunk(),3);await Promise.resolve();residency.remove(0,0,4);requests[2].resolve();await new Promise(resolve=>setImmediate(resolve));for(const release of releases)release();assert.equal(scene.children.length,0);assert.equal(residency.size,0);residency.dispose();material.dispose();
 });
+import {createWebGpuResourceRegistry} from '../src/rendering/webgpu-resource-registry.js';
+
+test('terrain revision leases follow preparation, replacement and logical removal',()=>{
+ const scene=new THREE.Scene(),material=new THREE.MeshBasicMaterial(),registry=createWebGpuResourceRegistry(),view=createWebGpuTerrainResidency({scene,material,resourceRegistry:registry});
+ try{const abandoned=view.prepareRevision(chunk(),1,'epoch');assert.equal(registry.status().owned.length,1);assert.equal(registry.status().owned[0].state,'prepared');abandoned.abort();assert.equal(registry.status().owned.length,0);view.replace(chunk(),1,'epoch');const first=registry.status().owned[0];assert.equal(first.state,'committed');assert.ok(first.bytes>0);view.replace(chunk(),2,'epoch');assert.equal(registry.status().owned.length,1);assert.ok(registry.status().owned[0].version>first.version);view.remove(0,0,3);assert.equal(registry.status().owned.length,0);}finally{view.dispose();registry.dispose();material.dispose();}
+});
+test('terrain lease survives owner shutdown until deferred graphical retirement',async()=>{
+ const scene=new THREE.Scene(),material=new THREE.MeshBasicMaterial(),registry=createWebGpuResourceRegistry(),deferred=[],admission={prepare:async()=>{},deferRelease(_object,release){deferred.push(release);}},view=createWebGpuTerrainResidency({scene,material,resourceRegistry:registry,pipelineAdmission:admission});
+ try{view.replace(chunk(),1,'epoch');await new Promise(resolve=>setImmediate(resolve));assert.equal(registry.status().owned.length,1);registry.dispose();view.remove(0,0,2);assert.equal(registry.status().owned.length,1);assert.equal(deferred.length,1);deferred.shift()();assert.equal(registry.status().owned.length,0);}finally{view.dispose();for(const release of deferred)release();registry.dispose();material.dispose();}
+});

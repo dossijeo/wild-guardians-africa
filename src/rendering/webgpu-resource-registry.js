@@ -5,7 +5,7 @@ import {createSharedIdleAssetBudget,estimateIdleAssetBytes} from './webgpu-idle-
 // until its last lease is released and the common idle budget evicts it.
 let nextGeneration=0;
 export function createWebGpuResourceRegistry({maxIdleBytes=0,idleBudget=null}={}){
- const budget=idleBudget??createSharedIdleAssetBudget(maxIdleBytes),generation=++nextGeneration,banks=new Set(),namespaces=new Map();let closed=false,nextResourceVersion=0;
+ const budget=idleBudget??createSharedIdleAssetBudget(maxIdleBytes),generation=++nextGeneration,banks=new Set(),namespaces=new Map(),owned=new Map();let closed=false,nextResourceVersion=0;
  if(typeof budget?.createOwner!=='function'||typeof budget?.status!=='function')throw TypeError('Invalid resource budget');
  function createBank({namespace,load,validate}={}){
   if(closed)throw Error('Resource registry closed');if(typeof namespace!=='string'||!namespace||typeof load!=='function'||typeof validate!=='function')throw TypeError('Invalid resource bank');if(namespaces.has(namespace))throw Error('Resource namespace already owned');
@@ -18,5 +18,6 @@ export function createWebGpuResourceRegistry({maxIdleBytes=0,idleBudget=null}={}
   function dispose(){if(bankClosed)return;bankClosed=true;controller.abort();idle.clear();for(const [key,entry] of entries)releaseUnused(key,entry);retireIfEmpty();}
   const bank={acquire,dispose,forEachReady(fn){if(typeof fn!=='function')throw TypeError('Invalid resource visitor');for(const entry of entries.values())if(entry.asset)fn(entry.asset);},status(){return {namespace,generation,closed:bankClosed,idle:idle.status(),entries:[...entries.entries()].map(([key,entry])=>({key,version:entry.version,ready:!!entry.asset,textured:entry.asset?.textured,refs:entry.refs,pending:entry.pending}))};}};banks.add(bank);namespaces.set(namespace,bank);return bank;
  }
- return {generation,createBank,status(){return {generation,closed,idle:budget.status(),banks:[...banks].map(bank=>bank.status())};},dispose(){if(closed)return;closed=true;for(const bank of [...banks])bank.dispose();}};
+ function adopt({namespace,key,bytes=null,dispose}={}){if(closed)throw Error('Resource registry closed');if(typeof namespace!=='string'||!namespace||typeof key!=='string'||!key||bytes!==null&&(!Number.isSafeInteger(bytes)||bytes<0)||typeof dispose!=='function')throw TypeError('Invalid owned resource');const identity=namespace+'\0'+key;if(owned.has(identity))throw Error('Resource identity already owned');const record={namespace,key,bytes,version:++nextResourceVersion,state:'prepared'};owned.set(identity,record);let released=false;return {generation,version:record.version,commit(){if(released)throw Error('Resource lease released');record.state='committed';},release(){if(released)return;released=true;owned.delete(identity);dispose();}};}
+ return {generation,createBank,adopt,status(){return {generation,closed,idle:budget.status(),banks:[...banks].map(bank=>bank.status()),owned:[...owned.values()].map(record=>({...record}))};},dispose(){if(closed)return;closed=true;for(const bank of [...banks])bank.dispose();}};
 }
