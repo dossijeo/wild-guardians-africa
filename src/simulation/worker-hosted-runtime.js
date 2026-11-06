@@ -1,5 +1,6 @@
 import {resolvePresentationRecoveryOptions} from './presentation-recovery-options.js';
 import {createMainSnapshotDecoder} from './main-thread-snapshot-transport.js';
+import {historicalRecoveryHarnessEnabled} from './historical-recovery-harness.js';
 // Presentation receives confirmed publications asynchronously. It does not
 // own the simulation clock, queue, or nested simulation Worker.
 export function createWorkerHostedRuntime({world,confirmedReceiver=null,session,clientOptions,runtimeOptions={},maxPending=256,controlReserve=8,onError=()=>{},onViewError=onError,onConfirmedEvents=null,onConfirmedState=null,onVisualBackpressure=null,terrainPort=null,presentationPort=null,workerFactory=()=>new Worker(new URL('./worker-runtime-host.js',import.meta.url),{type:'module'})}){
@@ -8,7 +9,7 @@ export function createWorkerHostedRuntime({world,confirmedReceiver=null,session,
  if(onConfirmedEvents!==null&&typeof onConfirmedEvents!=='function'||onConfirmedState!==null&&typeof onConfirmedState!=='function')throw TypeError('Invalid confirmed event handler');
  if(onVisualBackpressure!==null&&typeof onVisualBackpressure!=='function'||runtimeOptions.qaVisualBackpressureRecovery===true&&(runtimeOptions.qaVisualRecovery!==true||runtimeOptions.qaVisualRecoveryConcurrent!==true||runtimeOptions.qaVisualWorkRecovery!==true||onVisualBackpressure===null))throw TypeError('Invalid visual backpressure recovery');
  const recovery=resolvePresentationRecoveryOptions(runtimeOptions);
- const timeline=runtimeOptions.presentationTimeline;if(timeline!==undefined&&typeof timeline!=='boolean'||(timeline===true)!==(clientOptions.terrainHistory!=null)||timeline===true&&recovery.enabled)throw TypeError('Incomplete historical presentation configuration');
+ const timeline=runtimeOptions.presentationTimeline,historicalRecovery=runtimeOptions.testHistoricalRecovery===true;if(timeline!==undefined&&typeof timeline!=='boolean'||runtimeOptions.testHistoricalRecovery!==undefined&&(!historicalRecovery||!historicalRecoveryHarnessEnabled||timeline!==true||!recovery.enabled||!recovery.work||recovery.concurrent||recovery.backpressure||recovery.compactTicks)||(timeline===true)!==(clientOptions.terrainHistory!=null)||timeline===true&&recovery.enabled&&!historicalRecovery)throw TypeError('Incomplete historical presentation configuration');
  if(timeline===true){const history=clientOptions.terrainHistory,keys=['maxPending','maxRetainedBytes','maxBatchBytes','maxBatchRevisions'];if(!history||typeof history!=='object'||Array.isArray(history)||Object.keys(history).length!==keys.length||keys.some(key=>!Number.isSafeInteger(history[key])||history[key]<1))throw TypeError('Invalid terrain history negotiation');}
  if(recovery.backpressure&&onVisualBackpressure===null)throw TypeError('Invalid visual backpressure recovery');
  if(terrainPort&&terrainPort===presentationPort)throw TypeError('Terrain and state need distinct ports');

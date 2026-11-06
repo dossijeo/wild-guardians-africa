@@ -11,7 +11,7 @@ export function createTemporalRecoveryReceiver({port,session,signal=null,restore
   let phase;if(data.kind==='recoveryCheckpoint'){if(cursor!==null||data.checkpoint?.sequence!==data.sequence)throw Error('Invalid temporal recovery checkpoint');phase='checkpoint';}
   else if(data.kind==='recoveryBoundary'){if(cursor===null||data.sequence!==cursor+1||data.publication?.sequence!==data.sequence||!Array.isArray(data.publication.events)||!Array.isArray(data.terrain)||data.terrain.some(batch=>!batch||!Array.isArray(batch.chunks))||typeof data.tick!=='boolean')throw Error('Invalid temporal recovery boundary');phase='boundary';}
   else throw Error('Invalid temporal recovery message');
-  busy=true;const committed=phase==='checkpoint'?await restoreCheckpoint(data.checkpoint,{signal}):await applyBoundary(data,{signal});if(committed!==true)throw Error('Temporal recovery transaction not committed');
+  busy=true;const options=signal===null?{}:{signal},committed=phase==='checkpoint'?await restoreCheckpoint(data.checkpoint,options):await applyBoundary(data,options);if(committed!==true)throw Error('Temporal recovery transaction not committed');
   if(closed||failed||signal?.aborted)return;
   if(phase==='boundary')onBoundary(data.publication.events,data.sequence);cursor=data.sequence;lastId=data.id;busy=false;port.postMessage({kind:'recoveryAck',session,id:data.id,sequence:data.sequence,phase});
  }catch(error){busy=false;fail(error);}};
