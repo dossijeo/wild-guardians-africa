@@ -223,6 +223,8 @@ La pérdida del dispositivo invalida también las referencias de preparación ya
 
 Las cajas sueltas confirmadas también se incorporan dentro de la publicación validada, manteniendo la liberación diferida al cancelarse. La revisión de la recuperación confirma que la superficie comunica la pérdida al cliente y que el coordinador puede separar y reconstruir la presentación conservando la autoridad; la prueba en navegador existente cubre un mundo reducido, no una partida completa con personajes y efectos activos.
 
+Si falla o se cancela el arranque de la superficie, la limpieza incluye ahora también las bendiciones ya creadas. La reproducción autónoma de trayectorias sigue pendiente: las trazas disponibles describen movimiento pasado y carecen de un horizonte futuro certificado frente a terreno, cuerpos y eventos; los rosters todavía actualizan posiciones y poses al recibir estado confirmado.
+
 Crear un único servicio de preparación en el Worker gráfico, conectado a los cargadores y bancos existentes. Su máquina de estados debe distinguir al menos: solicitado, datos disponibles, preparando, listo, publicado, retirado y fallido/cancelado. Pipelines y recursos mantienen requisitos independientes; una descarga terminada no marca todo como listo.
 
 Las rutas de error de admisión conservan la propiedad de los recursos: si falla la notificación de un personaje ya preparado, se retira su raíz y se difiere la liberación; si falla la incorporación parcial de un chunk, se retiran sus mallas incorporadas, se conserva la revisión visual anterior y se notifica el error. Un fallo del callback posterior a la publicación también se comunica. Las pruebas usan admisión simulada; no constituyen una validación en dispositivo ni demuestran una mejora de tiempos.
