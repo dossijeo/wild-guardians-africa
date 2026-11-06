@@ -62,6 +62,6 @@ self.onmessage=async({data})=>{try{
  if(data.kind==='cropConfirm'){surface?.crops?.confirmProvisional(data.id,data.targetId);return;}
  if(data.kind==='cropReject'){surface?.crops?.rejectProvisional(data.id);return;}
  if(data.kind==='guardianBegin'){surface?.timelinePump?.suspendHistorical('input');if(surface?.guardianAttack?.begin(data.command))surface.animalRoster?.beginImpact(data.command);return;}
- if(data.kind==='guardianResolve'){surface?.guardianAttack?.resolve(data.id,data.accepted);surface?.animalRoster?.resolveImpact(data.id,data.accepted);return;}
+ if(data.kind==='guardianResolve'){surface?.guardianAttack?.resolve(data.id,data.accepted);surface?.animalRoster?.resolveImpact(data.id,data.accepted,data.sequence);return;}
  throw Error('Unknown world worker message');
  }catch(error){fail(error);}};
