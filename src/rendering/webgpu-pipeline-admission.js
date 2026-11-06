@@ -12,7 +12,8 @@ function materialInputs(material,values){
 }
 // Capture structural inputs. Attribute contents, transforms and ordinary
 // uniforms can vary while the same pipeline is compiling.
-function pipelineInputs(object,target,camera,renderer){
+function pipelineInputs(object,target,camera,renderer,include=[]){
+ const included=new Set(include);
  const values=[camera,camera?.layers?.mask,renderer.toneMapping,renderer.outputColorSpace,renderer.samples,renderer.depth,renderer.stencil,renderer.shadowMap?.enabled,renderer.shadowMap?.type,renderer.localClippingEnabled,renderer.clippingPlanes?.length,target,target?.samples,target?.depthBuffer,target?.stencilBuffer,target?.texture?.format,target?.texture?.type,target?.texture?.colorSpace,target?.depthTexture,target?.depthTexture?.format,target?.depthTexture?.type];
  function attributeLayout(attribute){
   // BufferAttribute identity alone is insufficient: its array or instancing
@@ -21,7 +22,7 @@ function pipelineInputs(object,target,camera,renderer){
   values.push(attribute,attribute?.array?.constructor,attribute?.itemSize,attribute?.normalized,attribute?.gpuType,attribute?.offset,attribute?.data?.stride,attribute?.isInstancedBufferAttribute,attribute?.data?.isInstancedInterleavedBuffer,attribute?.meshPerAttribute,attribute?.data?.meshPerAttribute);
  }
  object.traverse(node=>{
-  values.push(node,node.parent,node.visible,node.layers.mask,node.castShadow,node.receiveShadow);
+  values.push(node,node.parent,included.has(node)?true:node.visible,node.layers.mask,node.castShadow,node.receiveShadow);
   if(!(node.isMesh||node.isLine||node.isPoints))return;
   const geometry=node.geometry,materials=Array.isArray(node.material)?node.material:[node.material];
   values.push(geometry,node.isInstancedMesh,node.isSkinnedMesh,node.skeleton?.bones?.length,materials.length);
@@ -133,7 +134,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
      // Three's ordinary render may use an intermediate output target; compile
      // for that same target, and restore state before the draw loop resumes.
      target=currentTarget();
-     inputs=pipelineInputs(object,target,passCamera,renderer);
+     inputs=pipelineInputs(object,target,passCamera,renderer,include);
      if(requestedTarget!==undefined)renderer.setMRT?.(null);
      if(target)renderer.setRenderTarget(target);
      // Three r180 updates shadow nodes during compileAsync. Prevent that
@@ -157,7 +158,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
     if(closed||version!==generation)throw Error('Pipeline admission cancelled');
     // A light may have been added or removed while the driver compiled. The
     // completed pipeline describes the old scene and cannot admit the object.
-    if(lightsChanged()||!sameInputs(inputs,pipelineInputs(object,currentTarget(),passCamera,renderer)))return execute(object,signal,version,include,requestedTarget,shadowPass,passCamera,targetScene,isCurrent);
+    if(lightsChanged()||!sameInputs(inputs,pipelineInputs(object,currentTarget(),passCamera,renderer,include)))return execute(object,signal,version,include,requestedTarget,shadowPass,passCamera,targetScene,isCurrent);
     const shadowTargets=[];
     if(shadowPass){
      let castsShadow=false;object.traverse(node=>{if((node.isMesh||node.isLine||node.isPoints)&&node.castShadow)castsShadow=true;});
@@ -182,11 +183,11 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
        if(signal?.aborted)throw new DOMException('Pipeline admission cancelled','AbortError');
        if(renderer._isDeviceLost===true)throw Error('WebGPU device lost during shadow admission');
        if(closed||version!==generation)throw Error('Pipeline admission cancelled');
-       if(lightsChanged()||target!==light.shadow.map||!sameInputs(inputs,pipelineInputs(object,currentTarget(),passCamera,renderer)))return execute(object,signal,version,include,requestedTarget,shadowPass,passCamera,targetScene,isCurrent);
+       if(lightsChanged()||target!==light.shadow.map||!sameInputs(inputs,pipelineInputs(object,currentTarget(),passCamera,renderer,include)))return execute(object,signal,version,include,requestedTarget,shadowPass,passCamera,targetScene,isCurrent);
       }
      }
     }
-    return {valid:()=>!closed&&!lostError&&renderer._initialized!==false&&renderer._isDeviceLost!==true&&version===generation&&!signal?.aborted&&(!isCurrent||isCurrent())&&!lightsChanged()&&shadowTargets.every(([light,map])=>light.shadow.map===map)&&sameInputs(inputs,pipelineInputs(object,currentTarget(),passCamera,renderer))};
+    return {valid:()=>!closed&&!lostError&&renderer._initialized!==false&&renderer._isDeviceLost!==true&&version===generation&&!signal?.aborted&&(!isCurrent||isCurrent())&&!lightsChanged()&&shadowTargets.every(([light,map])=>light.shadow.map===map)&&sameInputs(inputs,pipelineInputs(object,currentTarget(),passCamera,renderer,include))};
   }catch(error){
    // Three r180 may retain an unsuccessful pipeline in its internal cache.
    if(!closed&&!signal?.aborted)retire(error);
