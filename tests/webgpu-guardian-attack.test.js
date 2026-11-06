@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import {MeshStandardNodeMaterial} from 'three/webgpu';
 import {createWebGpuGuardianAttack} from '../src/rendering/webgpu-guardian-attack.js';
 import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
+import {createWebGpuGuardianStyle} from '../src/rendering/webgpu-guardian-material.js';
 test('guardian resources survive closure until its pipeline compilation settles',async()=>{
  const scene=new THREE.Scene(),model=new THREE.Group(),geometry=new THREE.BoxGeometry(),original=new THREE.MeshStandardMaterial();model.add(new THREE.Mesh(geometry,original));let finish,released=0;geometry.addEventListener('dispose',()=>released++);
  const renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:()=>new MeshStandardNodeMaterial()},compileAsync:()=>new Promise(resolve=>{finish=resolve;})},admission=createWebGpuPipelineAdmission({scene,camera:new THREE.PerspectiveCamera(),renderer}),visual=createWebGpuGuardianAttack({scene,state:{events:[]},renderer,pipelineAdmission:admission,loadModel:async()=>({scene:model,animations:[]})});
@@ -109,4 +110,19 @@ test('guardian uses confirmed lifecycle time and accepts legacy event timestamps
   if(mode==='future')assert.equal(visual.status().active,null);else{assert.equal(visual.status().active.id,'c');assert.ok(Math.abs(aura.at(-1).age-.2)<1e-8);}
   visual.dispose();confirmedClock.dispose();
  }
+});
+test('confirmed shield uses the guardian gesture and non-attack beams once',()=>{
+ let now=0;const scene=new THREE.Scene(),state={elapsed:10,events:[],plants:[],raid:null},confirmedClock=createConfirmedPresentationClock(10),visual=createWebGpuGuardianAttack({scene,state,renderer:{backend:{isWebGPUBackend:true}},confirmedClock,clock:()=>now,loadModel:()=>new Promise(()=>{})});
+ const event={id:'event-1',type:'SpellActivated',kind:'shield',commandId:'shield-1',presentation:{elapsed:9.8,origin:{x:0,y:2,z:0},contact:{x:1,y:1,z:0}}},journal=[{kind:'event',eventId:event.id,at:9.8}];
+ try{visual.sync(journal,[event]);visual.tick();assert.equal(visual.status().active.kind,'shield');assert.equal(visual.status().active.provisional,false);assert.equal(visual.status().cropBeams,2);assert.equal(visual.status().beamVisible,false);assert.equal(visual.status().confirmed,1);visual.sync(journal,[event]);assert.equal(visual.status().confirmed,1);state.elapsed=13;confirmedClock.commit(13);visual.tick();assert.equal(visual.status().active,null);}finally{visual.dispose();confirmedClock.dispose();}
+});
+test('confirmed shield selects the authored shield clip on the admitted rig',async()=>{
+ const scene=new THREE.Scene(),model=new THREE.Group(),bone=new THREE.Bone();bone.name='TestBone';model.add(bone);
+ const clip=(name,end)=>new THREE.AnimationClip(name,1,[new THREE.VectorKeyframeTrack('TestBone.position',[0,1],[0,0,0,end,0,0])]);
+ const state={time:0,elapsed:10,events:[],plants:[],raid:null},visual=createWebGpuGuardianAttack({scene,state,renderer:{backend:{isWebGPUBackend:true}},clock:()=>0,loadModel:async()=>({scene:model,animations:[clip('Spell_Shield',2),clip('Invoke',-2),clip('Spell_Attack',-4)]})});
+ const event={id:'event-1',type:'SpellActivated',kind:'shield',commandId:'shield-1',presentation:{elapsed:9.8,origin:{x:0,y:2,z:0},contact:{x:1,y:1,z:0}}};
+ try{await visual.prepare();visual.sync([{kind:'event',eventId:event.id,at:9.8}],[event]);visual.tick();assert.ok(bone.position.x>0,'authored shield action must be sampled');}finally{visual.dispose();}
+});
+test('shield uses the established cyan guardian tint',()=>{
+ const style=createWebGpuGuardianStyle();style.update({state:{time:0},age:.3,originY:0,modelBottom:0,modelHeight:3,impact:.48,kind:'shield'});assert.equal(style.uniforms.uSpiritTint.value.getHex(),0x8be8ec);
 });

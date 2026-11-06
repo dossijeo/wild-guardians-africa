@@ -17,6 +17,8 @@ Al iniciar una partida Worker se solicita también un guardado inicial, como en 
 
 El HUD reutiliza `GameJuice` para recibir eventos confirmados, importes, confirmaciones de guardado y overlays, y vuelve a solicitar la música de partida. Los indicadores situados sobre el mundo usan la copia de terreno confirmada de la cámara y se ocultan temporalmente si falta esa muestra. El temblor de cámara que `GameJuice` aplica alrededor del dibujo WebGL todavía no está conectado al Worker gráfico; el resto de efectos de HUD siguen siendo elementos 2D. Falta validar el audio, los overlays y la sincronización en una partida real.
 
+El guardián WebGPU reproduce el gesto de Shield al recibir su evento confirmado con origen y contacto válidos. Esta ruta aún espera la confirmación de la autoridad; el feedback provisional y la comparación visual en partida siguen pendientes.
+
 La cámara automática de incursiones reutiliza el director existente con terreno confirmado; el foco se confirma mediante un comando ordenado y lo conserva la autoridad. La interacción manual cancela el desplazamiento. Hay pruebas de contrato y de persistencia del foco, pero queda pendiente comprobar la cámara en una partida real.
 
 Al elegir las herramientas de centro o cultivo, el perfil Worker también solicita a la autoridad el destino de enfoque del tutorial. La entrada manual, el cambio de herramienta y un enfoque explícito invalidan la solicitud pendiente para que una respuesta tardía no mueva la cámara. Las pruebas usan servicios y cámara simulados; queda pendiente comprobar el comportamiento en una partida real.
