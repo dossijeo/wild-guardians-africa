@@ -1,6 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createPresentationRecoveryJournal,assertPresentationRecoveryBoundary,shouldCapturePresentationCheckpoint,withPresentationRecoveryCheckpoint} from '../src/simulation/presentation-recovery-journal.js';
+test('incremental recovery retains event and terrain boundaries through checkpoint renewal',()=>{
+ const j=createPresentationRecoveryJournal({capacity:12,highWatermark:10,incrementalSnapshots:true}),make=(sequence,x,events=[])=>({session:'s',sequence,snapshot:JSON.stringify({workers:Array.from({length:25},(_,i)=>({id:`w${i}`,x:i?i:x,data:'x'.repeat(120)})),elapsed:sequence}),events,physicsPose:null}),first=make(1,0);
+ j.begin(1,first);j.confirm(1);const second=make(2,2,[{id:'event-2'}]),third=make(3,3,[{id:'event-3'}]);j.appendTerrain(2,[{cx:0,cz:0}]);j.append(second,true);j.append(third,true);
+ const saved=j.snapshot();assert.deepEqual(saved.entries.map(entry=>entry.kind),['terrain','publication','publication']);assert.equal(saved.entries[1].publication.snapshot,second.snapshot);assert.equal(saved.entries[2].publication.snapshot,third.snapshot);assert.equal(saved.entries[2].publication.events[0].id,'event-3');assert.ok(j.status().bytes<second.snapshot.length*2);
+ assert.deepEqual(j.entry(2),saved.entries[2]);assert.deepEqual(j.entry(0),saved.entries[0]);assert.deepEqual(j.entry(1),saved.entries[1]);assert.deepEqual(j.entry(1),saved.entries[1]);
+ j.begin(3,third);const fourth=make(4,4,[{id:'event-4'}]);j.append(fourth,true);j.confirm(3);assert.equal(j.snapshot().entries[0].publication.snapshot,fourth.snapshot);assert.equal(j.entry(0).publication.events[0].id,'event-4');j.dispose();
+});
+test('incremental recovery cannot start without a full checkpoint or with incompatible compaction',()=>{
+ assert.throws(()=>createPresentationRecoveryJournal({incrementalSnapshots:true,compactTicks:true}),/capacity/);const journal=createPresentationRecoveryJournal({incrementalSnapshots:true});assert.throws(()=>journal.begin(1),/checkpoint snapshot/);journal.dispose();
+});
 test('recovery compacts known path projections while retaining unknown versions as boundaries',()=>{
  const journal=createPresentationRecoveryJournal({compactTicks:true});journal.begin(1);journal.confirm(1);const packet=sequence=>({sequence,snapshot:'s'+sequence,events:[],physicsPose:null,pauses:[],presentationPaths:'head-v1'});journal.append(packet(2),true);journal.append(packet(3),true);journal.append({...packet(4),presentationPaths:'future'},true);const entries=journal.snapshot().entries;assert.deepEqual(entries.map(entry=>entry.sequence),[3,4]);assert.equal(entries[0].firstSequence,2);assert.equal(entries[0].publication.presentationPaths,'head-v1');assert.equal(entries[1].publication.presentationPaths,'future');journal.dispose();
 });

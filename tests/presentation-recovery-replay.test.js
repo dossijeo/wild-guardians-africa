@@ -3,6 +3,13 @@ import assert from 'node:assert/strict';
 import {createPresentationRecoveryJournal} from '../src/simulation/presentation-recovery-journal.js';
 import {createPresentationRecoveryReplay} from '../src/simulation/presentation-recovery-replay.js';
 
+test('incremental journal replay reconstructs snapshots across folded views and terrain',()=>{
+ const sent=[],errors=[],caught=[],port={postMessage:m=>sent.push(structuredClone(m)),start(){}},journal=createPresentationRecoveryJournal({incrementalSnapshots:true}),snapshot=n=>JSON.stringify({elapsed:n,workers:Array.from({length:15},(_,i)=>({id:`w${i}`,x:i===0?n:i,data:'x'.repeat(100)}))}),checkpoint={sequence:1,snapshot:snapshot(1)};
+ journal.begin(1,checkpoint);journal.confirm(1);const view=n=>({sequence:n,unchanged:true,slotId:'slot',stateSequence:7,elapsed:1,pauses:[],events:[],saveAvailable:true,terrainChanged:false});journal.append(view(2),false,{backgroundView:true});journal.append(view(3),false,{backgroundView:true});journal.appendTerrain(4,[{cx:1}]);journal.append({sequence:4,snapshot:snapshot(4),events:[{id:'e4'}],physicsPose:null},true);
+ const replay=createPresentationRecoveryReplay({port,session:'s',checkpoint,journal,onCaughtUp:value=>caught.push(value),onError:error=>errors.push(error)}),ack=()=>{const m=sent.at(-1);port.onmessage({data:{kind:'recoveryAck',session:'s',id:m.id,phase:m.kind.slice(8).toLowerCase(),sequence:m.sequence}});};
+ ack();assert.equal(sent.at(-1).firstSequence,2);assert.equal(sent.at(-1).sequence,3);ack();assert.equal(sent.at(-1).kind,'recoveryTerrain');ack();assert.equal(sent.at(-1).publication.snapshot,snapshot(4));assert.deepEqual(sent.at(-1).publication.events,[{id:'e4'}]);ack();assert.equal(caught.at(-1).sequence,4);assert.deepEqual(errors,[]);replay.dispose();journal.dispose();
+});
+
 test('replay transmits a compacted background view range before later events',()=>{
  const sent=[],errors=[],port={postMessage:m=>sent.push(m),start(){}};
  const journal=createPresentationRecoveryJournal();journal.begin(1);journal.confirm(1);
