@@ -11,6 +11,7 @@ import {createPresentationCameraController} from './presentation-camera-controll
 import {installEarlyWorkerWorldServices} from './early-worker-world-services.js';
 import {workerCheckpointPolicy} from '../persistence/worker-save.js';
 import {confirmedCameraTerrainEnabled} from './webgpu-world-options.js';
+import {createWorkerRaidCamera} from './worker-raid-camera.js';
 
 // QA-only input/camera owner for the already existing graphical Worker. It
 // deliberately creates no renderer or graphics context on the main thread.
@@ -23,12 +24,18 @@ export function createEarlyWorkerWorld(canvas,onPick,{visualSearch=globalThis.lo
  world.renderer={setSize(width,height){canvas.width=width;canvas.height=height;}};
  const cameraController=createPresentationCameraController({camera:world.camera,controls:world.controls,viewport:canvas,field:()=>world.cameraField(),quality:()=>world.quality,pixelRatioLimit:()=>world.pixelRatioLimit,guard:world.confirmedCameraGuard??null,raidCamera:()=>world.raidCamera??null,state:()=>world.state,onResolution:resolution=>{world.renderResolution=resolution;if(canvas.width!==resolution.width||canvas.height!==resolution.height)world.renderer.setSize(resolution.width,resolution.height);}});
  world.resize=()=>cameraController.resize();world.updateCamera=()=>cameraController.update();world.focus=point=>cameraController.focus(point);
+ if(world.confirmedCameraGuard){
+  world.raidCamera=createWorkerRaidCamera({camera:world.camera,controls:world.controls,field:()=>world.cameraField(),guard:world.confirmedCameraGuard,runtime:()=>world.workerRuntime,onError:error=>world.onError?.(error),isCurrent:()=>!world.disposed});
+  world.controls.addEventListener('start',()=>world.raidCamera.beginManual());world.controls.addEventListener('end',()=>world.raidCamera.endManual());
+  const options={signal:world.canvasEvents.signal};canvas.addEventListener('pointerdown',()=>world.raidCamera.beginManual(),options);canvas.addEventListener('pointerup',()=>world.raidCamera.endManual(),options);canvas.addEventListener('pointercancel',()=>world.raidCamera.endManual(),options);canvas.addEventListener('wheel',()=>world.raidCamera.cancel(),options);
+  world.stepRaidCamera=dt=>world.raidCamera.update(world.state,dt);
+ }
  installEarlyWorkerWorldServices(world,{visualSearch,dev:import.meta.env?.DEV===true,legacyReceiver});
  world.qualitySetting=quality=>{world.quality=quality;world.resize();};world.configureVisualBiome=biome=>{if(world.state&&world.state.biome!==biome)throw Error('A loaded scene cannot change biome');world.visualSearch=approvedVisualSearch(biome,visualSearch);};
  world.strokePreview=new WallStrokePreview(canvas);world.wallDrawing=new WallDrawing(canvas,{screenSpace:true,point:()=>null,stroke:points=>world.onWallStroke?.(points),tap:event=>world.onDiscretePick?.(event,{}),preview:points=>world.strokePreview.showScreen(points),gesture:(old,next)=>world.wallCameraGesture(old,next),activity:phase=>world.onWallGesture?.(phase)});
  const tap=new PreciseTap(),options={signal:world.canvasEvents.signal};canvas.addEventListener('pointerdown',event=>tap.down(event),options);canvas.addEventListener('pointermove',event=>tap.move(event),options);canvas.addEventListener('pointerup',event=>{const gesture=tap.up(event);if(world.controls.enabled&&world.state&&gesture)world.onDiscretePick?.(event,gesture);},options);canvas.addEventListener('pointercancel',event=>tap.up(event,true),options);
  world.wallCameraGesture=(old,next)=>cameraController.wallGesture(old,next);
  world.clearSpellPreview=()=>{};world.clearWallPreview=()=>{};world.resizeObserver=new ResizeObserver(()=>world.resize());world.resizeObserver.observe(canvas);world.resize();
- world.dispose=()=>{if(world.disposed)return;world.disposed=true;if(import.meta.env?.DEV&&world.confirmedCameraGuard)delete globalThis.wildGuardiansConfirmedCameraQa;world.loading.abort();world.canvasEvents.abort();world.wallDrawing.dispose();world.strokePreview.dispose();world.resizeObserver.disconnect();cameraController.dispose();world.confirmedCameraGuard?.dispose();world.releaseCameraIntent?.();world.controls.dispose();world.provisionalCrops.entries.clear();world.state=null;};
+ world.dispose=()=>{if(world.disposed)return;world.disposed=true;if(import.meta.env?.DEV&&world.confirmedCameraGuard)delete globalThis.wildGuardiansConfirmedCameraQa;world.loading.abort();world.canvasEvents.abort();world.wallDrawing.dispose();world.strokePreview.dispose();world.resizeObserver.disconnect();cameraController.dispose();world.raidCamera?.dispose();world.confirmedCameraGuard?.dispose();world.releaseCameraIntent?.();world.controls.dispose();world.provisionalCrops.entries.clear();world.state=null;};
  return world;
 }

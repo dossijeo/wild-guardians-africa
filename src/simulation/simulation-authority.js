@@ -134,6 +134,11 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      else{finishCinematicAct(game,command.act);resume(game,'campaign-cinematic');value=true;}
     }else if(command.kind==='setNavigationView'){
      setNavigationView(command.view);
+    }else if(command.kind==='raidCameraFocus'){
+     if(typeof command.raidId!=='string'||!command.raidId||typeof command.animalId!=='string'||!command.animalId)throw TypeError('Invalid raid camera focus');
+     const raid=game.raid,animal=raid?.animals.find(item=>item.id===command.animalId);
+     if(!raid||raid.id!==command.raidId||!animal||['gone','retreating'].includes(animal.status)||raid.cameraFocusedAnimalId&&raid.cameraFocusedAnimalId!==animal.id)value=false;
+     else{raid.cameraFocusedAnimalId=animal.id;value=true;}
     }else if(command.kind==='tutorialStart'){
      if(tutorial)throw Error('Tutorial already started');tutorial=createWorkerTutorial(game,command.seen);value=tutorial.execute({action:'update',narrating:null});
     }else if(command.kind==='tutorialCommand'){
@@ -236,7 +241,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      value=rejection?false:removeWall(game,command.id,command.targetId,nav);
     }else if(command.kind!=='snapshot')throw TypeError('Unknown simulation command');
     const tutorialOnly=['tutorialStart','tutorialCommand','tutorialActionPause','tutorialGuideTarget'].includes(command.kind),suspensionChanged=wasSuspended!==(game.pauses.length>0||!!game.result);
-    const invalidated=previousTrackedActor&&command.kind!=='advance'&&!['snapshot','setNavigationView','previewVillage'].includes(command.kind)&&(command.kind!=='trackPathMotion'||value===true)&&(!tutorialOnly||suspensionChanged);
+    const invalidated=previousTrackedActor&&command.kind!=='advance'&&!['snapshot','setNavigationView','raidCameraFocus','previewVillage'].includes(command.kind)&&(command.kind!=='trackPathMotion'||value===true)&&(!tutorialOnly||suspensionChanged);
     // Until event-level dependencies and continuous contacts are certified,
     // stop at the beginning of an affected batch rather than extrapolating
     // through an event, an untimed segment or an unobserved displacement.
