@@ -6,8 +6,14 @@ import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {serializeConfirmedState} from '../src/simulation/confirmed-live-state.js';
 import {installEarlyWorkerWorldServices,installTutorialFocusInterruption} from '../src/app/early-worker-world-services.js';
 import {EventDispatcher} from 'three';
+import {createWorkerNavigationProjection} from '../src/app/worker-navigation-projection.js';
 
 const fixture=()=>deserialize(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString());
+
+test('Worker camera reports its current navigation view without waiting for a frame acknowledgement',()=>{
+ const calls=[],nav=createWorkerNavigationProjection({bounds:[-24,-24,24,24],eye:{x:0,z:0},target:{x:0,z:0}}),owner={backgroundViews:true,setNavigationView:view=>calls.push(structuredClone(view))},world={nav,state:{raid:null},camera:{position:{x:0,z:0}},controls:{target:{x:1,z:2}},quality:'media',workerRuntime:owner};installEarlyWorkerWorldServices(world);
+ world.syncNavigationView();assert.deepEqual(calls[0],{bounds:[-120,-120,120,120],eye:{x:0,z:0},target:{x:1,z:2}});world.syncNavigationView();assert.equal(calls.length,1);world.camera.position.x=49;world.syncNavigationView();assert.equal(calls.length,2);assert.equal(calls[1].bounds[0],-72);assert.equal(calls[1].eye.x,49);
+});
 
 test('early world services focus the same farm and apply ordered confirmed state',()=>{
  const state=fixture(),authority=deserialize(serialize(state));
@@ -79,3 +85,5 @@ test('legacy tutorial targeting loads only on demand and ignores stale focus req
 test('authority tutorial focus never loads local navigation',async()=>{
  let loads=0;const world={state:{},nav:{workerProjection:true},focus(){},workerRuntime:{submit:()=>Promise.resolve({value:null})}};installEarlyWorkerWorldServices(world,{loadLegacyTutorialTarget:()=>{loads++;throw Error('unexpected local query');}});world.focusTutorialPlacement('plant');await new Promise(resolve=>setImmediate(resolve));assert.equal(loads,0);
 });
+
+test('camera residency and farm focus use confirmed compact state after snapshot removal',()=>{const nav=createWorkerNavigationProjection({bounds:[-24,-24,24,24],eye:{x:0,z:0},target:{x:0,z:0}}),calls=[],focused=[],world={nav,actorAudio:{structures:[{id:'center',kind:'center',status:'intact',x:3,z:4}],raid:{animals:[{id:'a',status:'active',x:100,z:0,radius:1,spawn:{x:100,z:0},exit:{x:190,z:0},path:[{x:110,z:0}]}]}},confirmedHud:{construction:{villages:[{x:0,z:0}]}},camera:{position:{x:0,z:0}},controls:{target:{x:0,z:0}},quality:'media',workerRuntime:{backgroundViews:true,setNavigationView:view=>calls.push(view)},focus:value=>focused.push(value)};installEarlyWorkerWorldServices(world);world.syncNavigationView();world.focusFarm();assert.equal(focused[0].id,'center');assert.ok(calls[0].bounds[2]>=190);});
