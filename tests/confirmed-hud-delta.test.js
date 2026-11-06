@@ -4,6 +4,8 @@ import {newGame} from '../src/simulation/game.js';
 import {createPlant} from '../src/simulation/crops.js';
 import {projectConfirmedHud,validateConfirmedHudSchema} from '../src/simulation/confirmed-hud-projection.js';
 import {createConfirmedHudDeltaEncoder,createConfirmedHudDeltaDecoder} from '../src/simulation/confirmed-hud-delta.js';
+import {createConfirmedActorAudio,applyConfirmedActorAudio} from '../src/simulation/confirmed-actor-audio.js';
+import {createConfirmedHudReceiver} from '../src/simulation/confirmed-hud-receiver.js';
 
 test('real HUD baseline and per-entity deltas preserve order, removals, events and raids',()=>{
  const state=newGame({seed:712}),encoder=createConfirmedHudDeltaEncoder({validate:validateConfirmedHudSchema}),decoder=createConfirmedHudDeltaDecoder({validate:validateConfirmedHudSchema}),view=sequence=>projectConfirmedHud(state,sequence);
@@ -19,3 +21,10 @@ test('missing, invalid or out-of-order deltas leave the previous baseline intact
 });
 
 test('prepared deltas only commit once after the consumer accepts them',()=>{const state=newGame({seed:714}),encoder=createConfirmedHudDeltaEncoder(),decoder=createConfirmedHudDeltaDecoder(),base=encoder.encode(projectConfirmedHud(state,1)),initial=decoder.prepare(base);assert.equal(decoder.status().sequence,null);initial.commit();state.time=4;const delta=encoder.encode(projectConfirmedHud(state,2)),first=decoder.prepare(delta),second=decoder.prepare(delta);first.view.time=999;assert.equal(decoder.status().sequence,1);assert.equal(first.commit().time,4);assert.throws(()=>first.commit(),/Stale/);assert.throws(()=>second.commit(),/Stale/);assert.equal(decoder.status().sequence,2);});
+
+test('observed removal and readdition of the same id produce separate presentation identities',()=>{
+ const state=newGame({seed:715}),encoder=createConfirmedHudDeltaEncoder({validate:validateConfirmedHudSchema}),decoder=createConfirmedHudDeltaDecoder({validate:validateConfirmedHudSchema});state.workers=[{id:'imported',profile:'farmer',status:'idle',x:1,z:2}];const first=decoder.decode(encoder.encode(projectConfirmedHud(state,1))),audio=createConfirmedActorAudio(first.audio),original=audio.workers[0];
+ state.workers=[];const removed=encoder.encode(projectConfirmedHud(state,2));assert.deepEqual(removed.collections.workers.remove,['imported']);applyConfirmedActorAudio(audio,decoder.decode(removed).audio);assert.equal(audio.workers.length,0);
+ state.workers=[{id:'imported',profile:'farmer',status:'walking',x:8,z:9}];const restored=encoder.encode(projectConfirmedHud(state,3));assert.deepEqual(restored.collections.workers.upsert.map(item=>item.id),['imported']);applyConfirmedActorAudio(audio,decoder.decode(restored).audio);assert.equal(audio.workers[0].x,8);assert.notEqual(audio.workers[0],original);
+});
+test('a restored session treats the same imported id as a new presentation identity',()=>{const state=newGame({seed:716});state.workers=[{id:'legacy-worker',profile:'farmer',status:'idle',x:1,z:2}];const baseline=createConfirmedHudDeltaEncoder().encode(projectConfirmedHud(state,1));let first,second;const a=createConfirmedHudReceiver({session:'first',onPublication:view=>{first=createConfirmedActorAudio(view.audio);}}),b=createConfirmedHudReceiver({session:'second',onPublication:view=>{second=createConfirmedActorAudio(view.audio);}}),envelope={kind:'publication',session:'first',publication:{sequence:1,events:[],hudDelta:baseline}};a.accept(envelope);assert.throws(()=>b.accept(envelope),/Invalid/);state.workers[0].x=9;const newer=createConfirmedHudDeltaEncoder().encode(projectConfirmedHud(state,1));b.accept({kind:'publication',session:'second',publication:{sequence:1,events:[],hudDelta:newer}});assert.equal(first.workers[0].x,1);assert.equal(second.workers[0].x,9);assert.notEqual(first.workers[0],second.workers[0]);a.dispose();b.dispose();});

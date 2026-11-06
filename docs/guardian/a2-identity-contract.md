@@ -1,0 +1,11 @@
+# Identidad de entidades en el transporte A2
+
+La identidad de presentación es **sesión + ID**. Una sesión nueva crea receptores y bases nuevos; no conserva objetos de la sesión anterior. En la misma sesión las entidades que crea el juego usan un único contador `nextId` creciente (`plant`, `structure`, `person`, `worker`, `crate`, `spell`, `task`, `village`, `animal`). Eventos y avisos generados usan el contador `sequence`.
+
+Al importar se rechazan contadores inválidos o que no superen los sufijos generados presentes, identidades simultáneas duplicadas entre personas, bestias y las demás colecciones, y eventos o avisos duplicados o con contador atrasado. Los IDs arbitrarios heredados se aceptan y quedan acotados a la nueva sesión; no se renumeran silenciosamente. El historial anterior que no está presente en el guardado no se puede reconstruir, pero tampoco comparte la identidad de presentación de la sesión restaurada.
+
+Un raid generado `raid-<día>-day/night` exige día y fase coherentes y su plan correspondiente terminado. Un plan nocturno ausente se volvería a crear durante el tick; un plan diurno ausente puede volver a crearse al contratar. Por ello se rechazan estos estados incompletos, sin modificar el guardado. Los IDs de raid arbitrarios heredados se conservan; no se afirma que una historia de raid ya borrada pueda verificarse retrospectivamente.
+
+El codec HUD rechaza bases ausentes o atrasadas y aplica deltas por ID en orden. Si una eliminación y una recreación se publican como dos fronteras, el consumidor recibe objetos distintos; una sesión restaurada también obtiene una identidad de presentación distinta. La cola debe conservar eventos y fronteras causales: un delta no permite inferir una eliminación y recreación ocultas dentro de una única publicación. La garantía en la ruta normal depende de que la autoridad mantenga sus contadores monotónicos y el transporte respete la sesión y las fronteras.
+
+Las pruebas cubren un guardado real, rollback de contadores, duplicados, raid/plan, compatibilidad con IDs arbitrarios, round-trip, borrado/recreación y separación entre sesiones. No se han validado todos los guardados históricos existentes; un guardado con raid generado activo y plan ausente o incompleto se rechaza explícitamente.
