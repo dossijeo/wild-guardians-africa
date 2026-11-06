@@ -4,10 +4,22 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
-import {Scene,Group,Bone,AnimationClip} from 'three';
+import {Scene,Group,Bone,Mesh,AnimationClip} from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {createWebGpuConfirmedAnimal} from '../src/rendering/webgpu-confirmed-animal.js';
 const state=()=>JSON.parse(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString());
+test('confirmed animal expressions follow simulation time during animation and physical poses',async()=>{
+ const scene=new Scene(),model=new Group(),bone=new Bone(),face=new Mesh();bone.name='Hips';model.add(bone,face);
+ face.morphTargetDictionary={blinkL:0,blinkR:1,mouthOpen:2};face.morphTargetInfluences=[0,0,0];
+ const animal={id:'a',species:'hyena',status:'walking',x:0,z:0},game={raid:{animals:[animal]},elapsed:0};
+ const bank={async acquire(){return {model,clips:[new AnimationClip('Walking',1,[]),new AnimationClip('Weapon_Combo',1,[])],release(){}};}},clock=createConfirmedPresentationClock(0);let physical=null;
+ const actor=await createWebGpuConfirmedAnimal({scene,residency:{get:()=>null},state:game,actorId:'a',assetBank:bank,confirmedClock:clock,getPose:()=>physical});
+ try{
+  animal.status='attacking';animal.animation='Weapon_Combo';animal.attackDuration=1;animal.attackRemaining=.5;animal.attackId='hit';clock.commit(.5);actor.update();assert.ok(face.morphTargetInfluences[2]>.5,'attack opens the mouth');
+  game.elapsed=5;actor.update();assert.ok(face.morphTargetInfluences[2]>.5,'unconfirmed elapsed time does not advance expression');
+  const transform=x=>[x,0,0,0,0,0,1,1,1,1];physical={actorId:'a',active:true,root:transform(7),model:transform(0),bones:[{name:'Hips',transform:transform(0)}]};animal.magicDown={phase:'falling'};clock.commit(.6);actor.update();assert.ok(face.morphTargetInfluences[0]>=.72);assert.ok(face.morphTargetInfluences[1]>=.72);assert.equal(actor.root.position.x,7,'physical pose remains authoritative');
+ }finally{actor.dispose();clock.dispose();}
+});
 test('cancels a pending animal download on disposal signal',async()=>{
  const original=GLTFLoader.prototype.loadAsync,controller=new AbortController();let loaderSignal;
  GLTFLoader.prototype.loadAsync=function(){loaderSignal=this.manager.abortController.signal;return new Promise((resolve,reject)=>loaderSignal.addEventListener('abort',()=>reject(new DOMException('aborted','AbortError')),{once:true}));};
