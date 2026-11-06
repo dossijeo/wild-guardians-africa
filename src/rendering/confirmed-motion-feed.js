@@ -11,6 +11,10 @@ export function createConfirmedMotionFeed({onChange=()=>{},maxActors=256,maxSegm
   if((trace||invalidation)&&(typeof candidateId!=='string'||!candidateId||trace&&invalidation&&trace.actorId!==candidateId))throw TypeError('Invalid motion actor');
   let liveIds=null;if(event.actorIds!==undefined){if(!Array.isArray(event.actorIds)||event.actorIds.some(id=>typeof id!=='string'||!id)||new Set(event.actorIds).size!==event.actorIds.length)throw TypeError('Invalid motion roster');liveIds=new Set(event.actorIds);}
   const id=liveIds&&!liveIds.has(candidateId)?null:candidateId;
+  // Until dependencies are certified, any intervening event or terrain
+  // change is a boundary for every retained historical trace, not just the
+  // actor explicitly named in an invalidation.
+  const boundary=event.terrainChanged===true?'terrain-changed':event.eventful===true?'simulation-event':null;
   const poses=event.physicsPoses??(event.physicsPose?[event.physicsPose]:[]);if(!Array.isArray(poses))throw TypeError('Invalid physical pose list');
   const available=event.physicsAvailable??Object.hasOwn(event,'physicsPose');
   const physicalIds=new Set(poses.filter(p=>p?.active===true&&typeof p.actorId==='string').map(p=>p.actorId));if(event.physicsPose?.active===true&&typeof event.physicsPose.actorId==='string')physicalIds.add(event.physicsPose.actorId);
@@ -22,14 +26,14 @@ export function createConfirmedMotionFeed({onChange=()=>{},maxActors=256,maxSegm
   if(event.worldTrace){const trace=event.worldTrace,changed=trace.rosterChanged||trace.topologyChanged||trace.chunkChanged||trace.terrainChanged||event.terrainChanged===true||event.eventful===true,representable=event.terrainReady===true&&!changed&&!paused&&available&&!physicalIds.size&&trace.physicsActivity?.samplesComplete===true&&trace.physicsActivity.observed===false&&trace.actorTickStates?.complete===true&&trace.actors.every(actor=>actor.continuous&&actor.timed&&actor.segments.length<=maxSegments&&actor.segments.every(segment=>segment.t1>segment.t0));world={sequence:event.sequence,trace,representable,safeForAutonomousPlayback:false};worldBatches++;}else if(world)world=null;
   // On every confirmed publication, physical ownership or pause immediately
   // revokes an earlier trace, even if the publication contains no new trace.
-  for(const [actorId,previous] of actors){if(actorId===id)continue;const physical=available?physicalIds.has(actorId):previous.physical,expired=previous.trace!==null&&event.elapsed>previous.trace.end.at+1e-8,revoked=physical||paused||!available||expired,needsRevocation=revoked&&previous.trace!==null;if(!needsRevocation&&previous.physical===physical&&previous.paused===paused)continue;
-   const value={...previous,sequence:event.sequence,elapsed:event.elapsed,paused,physical,...(needsRevocation?{trace:null,representable:false,invalidation:{actorId,at:event.elapsed,reason:physical?'physical-pose':paused?'paused':!available?'physics-unavailable':'horizon-expired'}}:{})};actors.set(actorId,value);onChange(value);
+  for(const [actorId,previous] of actors){if(actorId===id)continue;const physical=available?physicalIds.has(actorId):previous.physical,expired=previous.trace!==null&&event.elapsed>previous.trace.end.at+1e-8,revoked=physical||paused||!available||expired||boundary,needsRevocation=revoked&&previous.trace!==null;if(!needsRevocation&&previous.physical===physical&&previous.paused===paused)continue;
+   const value={...previous,sequence:event.sequence,elapsed:event.elapsed,paused,physical,...(needsRevocation?{trace:null,representable:false,invalidation:{actorId,at:event.elapsed,reason:physical?'physical-pose':paused?'paused':!available?'physics-unavailable':boundary??'horizon-expired'}}:{})};actors.set(actorId,value);onChange(value);
   }
-  let value=null;if(id){const physical=physicalIds.has(id),revoked=!!invalidation||physical||paused||!available;
+  let value=null;if(id){const physical=physicalIds.has(id),revoked=!!invalidation||physical||paused||!available||!!boundary;
    const representable=!!trace&&!revoked&&trace.continuous===true&&trace.timed===true&&Array.isArray(trace.segments)&&trace.segments.length<=maxSegments&&trace.segments.every(segment=>segment.t1>segment.t0);
    // A structurally representable trace is historical observation, not an
    // authority to replay it after the rest of the world has advanced.
-   value={sequence:event.sequence,elapsed:event.elapsed,paused,actorId:id,trace:revoked?null:trace,invalidation:invalidation??(physical?{actorId:id,at:event.elapsed,reason:'physical-pose'}:paused?{actorId:id,at:event.elapsed,reason:'paused'}:!available?{actorId:id,at:event.elapsed,reason:'physics-unavailable'}:null),physical,representable,safeForAutonomousPlayback:false};actors.set(id,value);onChange(value);
+   value={sequence:event.sequence,elapsed:event.elapsed,paused,actorId:id,trace:revoked?null:trace,invalidation:invalidation??(physical?{actorId:id,at:event.elapsed,reason:'physical-pose'}:paused?{actorId:id,at:event.elapsed,reason:'paused'}:!available?{actorId:id,at:event.elapsed,reason:'physics-unavailable'}:boundary?{actorId:id,at:event.elapsed,reason:boundary}:null),physical,representable,safeForAutonomousPlayback:false};actors.set(id,value);onChange(value);
   }
   lastSequence=event.sequence;return value;
  }
