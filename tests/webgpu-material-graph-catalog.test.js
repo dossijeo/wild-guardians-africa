@@ -2,8 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {MeshBasicNodeMaterial,WebGPURenderer} from 'three/webgpu';
-import {characterColorRecipe,progressiveCharacterColorGraph,structureColorRecipe,structureColorGraph,waterColorRecipe,lavaColorRecipe,beastToonRecipe,guardianSurfaceRecipe,vertexTerrainRecipe,bakedWalkRecipe,biomeSurfaceRecipe,mangroveGroundRecipe} from '../src/rendering/webgpu-material-graph-catalog.js';
+import {characterColorRecipe,progressiveCharacterColorGraph,structureColorRecipe,structureColorGraph,waterColorRecipe,lavaColorRecipe,beastToonRecipe,guardianSurfaceRecipe,vertexTerrainRecipe,bakedWalkRecipe,biomeSurfaceRecipe,mangroveGroundRecipe,vfxPassRecipe} from '../src/rendering/webgpu-material-graph-catalog.js';
 import {createWebGpuGuardianStyle} from '../src/rendering/webgpu-guardian-material.js';
+
+test('VFX recipes describe their real depth and non-casting contracts',()=>{for(const name of ['geometry','blessing','smoke']){const recipe=vfxPassRecipe(name);assert.equal(recipe.structural.state.depthWrite,false);assert.equal(recipe.passes.shadow,'mesh-does-not-cast');}assert.equal(vfxPassRecipe('debris').passes.depth,'color-depth-write');assert.equal(vfxPassRecipe('blessing').structural.state.blending,THREE.AdditiveBlending);assert.throws(()=>vfxPassRecipe('unknown'),/Invalid/);});
 
 test('mangrove ground recipes retain bound atlas identity and embedded tile parameters',()=>{
  const textures=[new THREE.Texture(),new THREE.Texture(),new THREE.Texture()],args={textures,scale:.1,normalBoost:.6},first=mangroveGroundRecipe(args);

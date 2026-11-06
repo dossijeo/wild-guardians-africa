@@ -1,6 +1,6 @@
 import {attribute,materialReference,mix,vec4} from 'three/tsl';
 import {webGpuTextureBinding} from './webgpu-texture-binding.js';
-import {DoubleSide,FrontSide} from 'three';
+import {AdditiveBlending,DoubleSide,FrontSide} from 'three';
 
 // Recipes define graph identity only. Three still chooses its own render
 // pipeline from material state, vertex layout, target and device bindings.
@@ -70,6 +70,14 @@ const spriteAttributes=Object.freeze(['aCorner:vec2','iPos:vec3','iSize:vec2','i
 const spriteGraphs=new WeakMap();
 export function vfxSpriteRecipe(atlas){if(!atlas?.isTexture)throw TypeError('Invalid VFX atlas');const shape=textureStructure(atlas),structural=Object.freeze({family:'vfx-sprites',atlasId:atlas.uuid,texture:shape,state:spriteState,attributes:spriteAttributes}),key=JSON.stringify([structural.family,atlas.uuid,...textureKey(shape),spriteState]);return Object.freeze({structural,sampler:Object.freeze({anisotropy:atlas.anisotropy}),dynamic:spriteDynamic,passes:inheritedPasses,key});}
 export function catalogVfxSpriteGraph(atlas,build){if(typeof build!=='function')throw TypeError('Invalid VFX graph builder');const recipe=vfxSpriteRecipe(atlas);let byRecipe=spriteGraphs.get(atlas);if(!byRecipe){byRecipe=new Map();spriteGraphs.set(atlas,byRecipe);}let graph=byRecipe.get(recipe.key);if(!graph){graph=build(recipe);if(!graph?.vertexNode?.isNode||!graph?.outputNode?.isNode)throw TypeError('Invalid VFX sprite graph');byRecipe.set(recipe.key,graph);}return graph;}
+
+const vfxPassDefinitions=Object.freeze({
+ geometry:Object.freeze({state:Object.freeze({transparent:true,depthWrite:false,side:DoubleSide,toneMapped:false}),vertex:'geometry',attributes:Object.freeze(['position','normal','color','vfxKind'])}),
+ blessing:Object.freeze({state:Object.freeze({transparent:true,depthWrite:false,blending:AdditiveBlending,toneMapped:false,side:DoubleSide}),vertex:'billboard',attributes:Object.freeze(['aCorner','aBase','aSource'])}),
+ debris:Object.freeze({state:Object.freeze({side:DoubleSide,toneMapped:false}),vertex:'debris',attributes:Object.freeze(['position','normal','aOffset','aRotation','aScale','aColor'])}),
+ smoke:Object.freeze({state:Object.freeze({transparent:true,depthWrite:false,side:DoubleSide,toneMapped:false}),vertex:'billboard',attributes:Object.freeze(['aCorner','aPosSize','aInfo','aColor'])})
+});
+export function vfxPassRecipe(kind){const definition=vfxPassDefinitions[kind];if(!definition)throw TypeError('Invalid VFX pass recipe');const structural=Object.freeze({family:'vfx-'+kind,...definition});return Object.freeze({structural,dynamic:Object.freeze(['instanceData','clock','camera']),passes:Object.freeze({color:'vfx-node',depth:definition.state.depthWrite===false?'no-depth-write':'color-depth-write',shadow:'mesh-does-not-cast'}),key:JSON.stringify(structural)});}
 
 const terrainState=Object.freeze({vertexColors:true,side:DoubleSide,toneMapped:false});
 const terrainDynamic=Object.freeze(['vertexColor','shadowVisibility']);
