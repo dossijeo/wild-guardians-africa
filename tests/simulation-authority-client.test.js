@@ -28,6 +28,15 @@ test('journalled authority permits ordered terrain reattachment without QA mode'
  worker.onmessage({data:{kind:'terrainReattached',session:'s'}});await pending;assert.equal(sent.at(-1).message.kind,'command');
  worker.onmessage({data:{kind:'result',session:'s',sequence:1}});await command.result;client.dispose();
 });
+test('disposing during terrain reattachment rejects both the switch and queued commands',async()=>{
+ const sent=[],worker={postMessage:message=>sent.push(message),terminate(){this.terminated=true;}},client=createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session:'s',onTerrainJournal:()=>{},workerFactory:()=>worker});
+ worker.onmessage({data:{kind:'ready',session:'s'}});await client.ready;
+ const switching=client.reattachTerrain({}),command=client.submit({kind:'snapshot'});
+ const results=Promise.allSettled([switching,command.result]);client.dispose();
+ const settled=await results;assert.deepEqual(settled.map(result=>result.status),['rejected','rejected']);
+ assert.match(settled[0].reason.message,/disposed/);assert.match(settled[1].reason.message,/disposed/);
+ assert.equal(sent.filter(message=>message.kind==='command').length,0);assert.equal(worker.terminated,true);
+});
 test('shared rigs remain opt in to the authority worker',()=>{const sent=[],worker={postMessage:m=>sent.push(m),terminate(){}},client=createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session:'s',shareSpeciesRigs:true,workerFactory:()=>worker});assert.equal(sent[0].shareSpeciesRigs,true);client.ready.catch(()=>{});client.dispose();const usual=fixture();assert.equal(usual.sent[0].shareSpeciesRigs,undefined);usual.client.ready.catch(()=>{});usual.client.dispose();});
 test('authoritative guardian placement can be enabled without QA mode',async()=>{
  const sent=[],worker={postMessage:message=>sent.push(message),terminate(){}},client=createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session:'s',guardianPlacement:true,workerFactory:()=>worker});
