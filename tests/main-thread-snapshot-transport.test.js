@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createMainSnapshotEncoder,createMainSnapshotDecoder} from '../src/simulation/main-thread-snapshot-transport.js';
+import {createMainSnapshotEncoder,createMainSnapshotDecoder,createSnapshotPreparationCache} from '../src/simulation/main-thread-snapshot-transport.js';
 import {createConfirmedStateReceiver} from '../src/simulation/confirmed-state-receiver.js';
 import {serializeConfirmedState,deserializeConfirmedState} from '../src/simulation/confirmed-live-state.js';
 import * as Game from '../src/simulation/game.js';
@@ -8,8 +8,22 @@ import {rational,transact} from '../src/simulation/money.js';
 import {createWorkerHostedRuntime} from '../src/simulation/worker-hosted-runtime.js';
 import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
+import {createPresentationRecoveryJournal} from '../src/simulation/presentation-recovery-journal.js';
+import {openVisualStream} from '../src/simulation/visual-publication-stream.js';
 
 const packet=(sequence,snapshot,events=[])=>({kind:'publication',session:'s',publication:{session:'s',sequence,snapshot,events,physicsPose:null}});
+test('independent consumers share one preparation without sharing sequence bases',()=>{
+ const cache=createSnapshotPreparationCache(),encoders=Array.from({length:3},()=>createMainSnapshotEncoder({prepareSnapshot:cache.prepare})),decoders=encoders.map(()=>createMainSnapshotDecoder()),first=JSON.stringify({tag:'shared',value:1,padding:'x'.repeat(500)}),second=JSON.stringify({tag:'shared',value:2,padding:'x'.repeat(500)}),original=JSON.parse;let parsed=0;
+ JSON.parse=(text,...args)=>{if(text===first||text===second)parsed++;return original(text,...args);};
+ let firstWire,secondWire;try{firstWire=encoders.map(encoder=>encoder.encode(packet(1,first)));secondWire=encoders.map(encoder=>encoder.encode(packet(2,second)));assert.equal(parsed,2);}finally{JSON.parse=original;}
+ for(let i=0;i<encoders.length;i++){decoders[i].decode(firstWire[i]);assert.deepEqual(JSON.parse(decoders[i].decode(secondWire[i]).publication.snapshot),JSON.parse(second));}
+ const ahead=encoders[0].encode(packet(3,first));assert.equal(ahead.publication.snapshotDelta.baseSequence,2);const delayed=encoders[1].encode(packet(4,first));assert.equal(delayed.publication.snapshotDelta.baseSequence,2);cache.clear();
+});
+test('host, graphical stream and recovery journal share preparation while retaining separate sequences',()=>{
+ const cache=createSnapshotPreparationCache(),main=createMainSnapshotEncoder({prepareSnapshot:cache.prepare}),journal=createPresentationRecoveryJournal({incrementalSnapshots:true,prepareSnapshot:cache.prepare}),sent=[],port={postMessage:value=>sent.push(value),start(){},close(){}},stream=openVisualStream(port,'s',()=>{},{workRecovery:true,incrementalTransport:true,prepareSnapshot:cache.prepare,recoveryJournal:journal,onCheckpointAcknowledged(){}}),snapshot=n=>JSON.stringify({tag:'shared-source',value:n,padding:'x'.repeat(500)}),one=snapshot(1),two=snapshot(2),original=JSON.parse;let parsed=0;
+ JSON.parse=(text,...args)=>{if(text===one||text===two)parsed++;return original(text,...args);};
+ try{main.encode(packet(1,one));stream.publish({...packet(1,one).publication,terrainCheckpoint:{sequence:1,chunks:[]}},true);port.onmessage({data:{kind:'publicationAck',session:'s',sequence:1,workCheckpoint:{version:1,sequence:1,effects:[]}}});main.encode(packet(2,two));stream.publish(packet(2,two).publication,true);assert.equal(parsed,2);assert.equal(sent[1].publication.snapshotDelta.baseSequence,1);assert.equal(journal.status().through,2);}finally{JSON.parse=original;stream.close();journal.dispose();cache.clear();}
+});
 test('incremental UI transport retains validated states and ordered event boundaries',()=>{
  const authority=Game.newGame({seed:712,slotId:'delta'}),view=deserializeConfirmedState(serializeConfirmedState(authority)),receiver=createConfirmedStateReceiver(view,'s'),encoder=createMainSnapshotEncoder(),decoder=createMainSnapshotDecoder();
  const first=packet(1,serializeConfirmedState(authority)),firstWire=encoder.encode(first);assert.equal(typeof firstWire.publication.snapshot,'string');assert.equal(receiver.accept(decoder.decode(firstWire).publication).accepted,true);

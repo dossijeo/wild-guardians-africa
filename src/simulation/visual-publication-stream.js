@@ -3,13 +3,13 @@ import {createMainSnapshotEncoder} from './main-thread-snapshot-transport.js';
 // Stop admission halfway to the existing fail-safe. One authority result may
 // be in flight; every event/pose remains ordered while presentation catches up.
 const VISUAL_HIGH_WATERMARK=128;
-export function openVisualStream(port,session,onReady,{diagnostics=false,onCheckpointAcknowledged=null,recoveryJournal=null,workRecovery=false,incrementalTransport=false,onPresentationInput=null,onBackpressureDetach=null,canBackpressureDetach=()=>true,highWatermark=VISUAL_HIGH_WATERMARK,maxRetainedBytes=536870912,highWatermarkBytes=Math.floor(maxRetainedBytes*.75)}={}){
- if(typeof incrementalTransport!=='boolean')throw TypeError('Invalid visual transport');
+export function openVisualStream(port,session,onReady,{diagnostics=false,onCheckpointAcknowledged=null,recoveryJournal=null,workRecovery=false,incrementalTransport=false,prepareSnapshot=null,onPresentationInput=null,onBackpressureDetach=null,canBackpressureDetach=()=>true,highWatermark=VISUAL_HIGH_WATERMARK,maxRetainedBytes=536870912,highWatermarkBytes=Math.floor(maxRetainedBytes*.75)}={}){
+ if(typeof incrementalTransport!=='boolean'||prepareSnapshot!==null&&typeof prepareSnapshot!=='function')throw TypeError('Invalid visual transport');
  if(recoveryJournal!==null&&(!['append','begin','confirm','status'].every(name=>typeof recoveryJournal[name]==='function')||onCheckpointAcknowledged===null))throw TypeError('Invalid recovery journal');
  if(onCheckpointAcknowledged!==null&&typeof onCheckpointAcknowledged!=='function')throw TypeError('Invalid checkpoint handler');
  if(onPresentationInput!==null&&typeof onPresentationInput!=='function')throw TypeError('Invalid presentation input handler');
  if(onBackpressureDetach!==null&&(typeof onBackpressureDetach!=='function'||!recoveryJournal)||typeof canBackpressureDetach!=='function'||!Number.isSafeInteger(highWatermark)||highWatermark<1||highWatermark>256||!Number.isSafeInteger(maxRetainedBytes)||maxRetainedBytes<2||!Number.isSafeInteger(highWatermarkBytes)||highWatermarkBytes<1||highWatermarkBytes>=maxRetainedBytes)throw TypeError('Invalid visual backpressure recovery');
- const encoder=incrementalTransport?createMainSnapshotEncoder():null;let candidate=null,recoveryFailure=null,detached=false;let active=true,queue=createHostPublicationQueue({session,diagnostics,foldViews:true,coalesce:!workRecovery,maxRetainedBytes,send:message=>port.postMessage(encoder?encoder.encode(message):message)});
+ const encoder=incrementalTransport?createMainSnapshotEncoder(prepareSnapshot?{prepareSnapshot}:{}):null;let candidate=null,recoveryFailure=null,detached=false;let active=true,queue=createHostPublicationQueue({session,diagnostics,foldViews:true,coalesce:!workRecovery,maxRetainedBytes,send:message=>port.postMessage(encoder?encoder.encode(message):message)});
  function saturated(status){return status.queued>=highWatermark||status.retained.bytes>=highWatermarkBytes||status.retained.snapshotChars>=Math.floor(status.capacity.snapshotChars*.75)||status.retained.eventFacts>=Math.floor(status.capacity.eventFacts*.75);}
  // The recovery journal can reach its own limit before the visual queue does.
  // Start recovery with headroom only when the consumer already has backlog;

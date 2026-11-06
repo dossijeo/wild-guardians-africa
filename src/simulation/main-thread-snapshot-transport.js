@@ -8,6 +8,13 @@ function fields(snapshot){
  if(!value||typeof value!=='object'||Array.isArray(value))throw TypeError('Invalid snapshot transport state');
  return new Map(Object.keys(value).map(key=>[key,JSON.stringify(value[key])]));
 }
+// Consumers have independent acknowledged bases, but may prepare the same
+// publication in the host. Share only this immutable parsing result; never
+// share or advance their sequence cursors.
+export function createSnapshotPreparationCache(){
+ let source=null,prepared=null;
+ return {prepare(snapshot){if(typeof snapshot!=='string')throw TypeError('Invalid snapshot transport state');if(snapshot!==source){prepared=fields(snapshot);source=snapshot;}return prepared;},clear(){source=prepared=null;}};
+}
 const ENTITY_FIELDS=new Set(['workers','plants','structures','crates','villages','spells','tasks','people']);
 function entityMap(value){
  if(!Array.isArray(value))return null;const result=new Map();
@@ -37,7 +44,8 @@ function applyEntityChanges(before,order,updates){
  for(const pair of updates){if(!Array.isArray(pair)||pair.length!==2||typeof pair[0]!=='string'||typeof pair[1]!=='string'||!ordered.has(pair[0])||changedIds.has(pair[0]))throw TypeError('Invalid entity delta update');const item=JSON.parse(pair[1]);if(!item||typeof item!=='object'||Array.isArray(item)||item.id!==pair[0])throw TypeError('Invalid entity delta identity');changedIds.add(pair[0]);previous.set(pair[0],item);}
  if(order.some(id=>!previous.has(id)))throw TypeError('Missing entity delta update');return order.map(id=>previous.get(id));
 }
-export function createMainSnapshotEncoder(){
+export function createMainSnapshotEncoder({prepareSnapshot=fields}={}){
+ if(typeof prepareSnapshot!=='function')throw TypeError('Invalid snapshot preparation');
  let base=null,sequence=0;
  return {encode(envelope){
   if(envelope?.kind!=='publication')return envelope;
@@ -45,7 +53,7 @@ export function createMainSnapshotEncoder(){
   if(!Number.isSafeInteger(n)||n<=sequence)throw Error('Invalid snapshot transport sequence');
   if(publication.unchanged===true){sequence=n;return envelope;}
   if(typeof publication.snapshot!=='string')throw TypeError('Missing snapshot transport state');
-  const next=fields(publication.snapshot);let wire=envelope;
+  const next=prepareSnapshot(publication.snapshot);if(!(next instanceof Map))throw TypeError('Invalid prepared snapshot');let wire=envelope;
   if(base){
    const changed=[],removed=[],entities=[];let raid=null;for(const [key,value] of next)if(base.get(key)!==value){const patch=entityDelta(key,base.get(key),value),raidPatch=key==='raid'?raidDelta(base.get(key),value):null;if(patch)entities.push(patch);else if(raidPatch)raid=raidPatch;else changed.push([key,value]);}for(const key of base.keys())if(!next.has(key))removed.push(key);
    const delta={version:raid?3:entities.length?2:1,baseSequence:sequence,changed,removed,...(entities.length?{entities}:{}),...(raid?{raid}:{})};

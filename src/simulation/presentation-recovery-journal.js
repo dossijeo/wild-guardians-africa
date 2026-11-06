@@ -3,9 +3,9 @@ import {estimateRetainedBytes as estimateBytes} from './retained-size.js';
 import {createMainSnapshotEncoder,createMainSnapshotDecoder} from './main-thread-snapshot-transport.js';
 // Retains publication boundaries for a replacement presentation worker.
 // A candidate is not a replay base until its exact publication is acknowledged.
-export function createPresentationRecoveryJournal({capacity=256,highWatermark=128,maxBytes=268435456,highWatermarkBytes=201326592,compactTicks=false,incrementalSnapshots=false}={}){
- if(!Number.isSafeInteger(capacity)||capacity<2||!Number.isSafeInteger(highWatermark)||highWatermark<1||highWatermark>=capacity||!Number.isSafeInteger(maxBytes)||maxBytes<1||!Number.isSafeInteger(highWatermarkBytes)||highWatermarkBytes<1||highWatermarkBytes>=maxBytes||typeof compactTicks!=='boolean'||typeof incrementalSnapshots!=='boolean'||incrementalSnapshots&&compactTicks)throw TypeError('Invalid presentation journal capacity');
- const encoder=incrementalSnapshots?createMainSnapshotEncoder():null;let base=null,candidate=null,last=null,entries=[],bytes=0,closed=false,basePublication=null,candidatePublication=null,replayDecoder=null,replayIndex=0,replayLast=null;
+export function createPresentationRecoveryJournal({capacity=256,highWatermark=128,maxBytes=268435456,highWatermarkBytes=201326592,compactTicks=false,incrementalSnapshots=false,prepareSnapshot=null}={}){
+ if(!Number.isSafeInteger(capacity)||capacity<2||!Number.isSafeInteger(highWatermark)||highWatermark<1||highWatermark>=capacity||!Number.isSafeInteger(maxBytes)||maxBytes<1||!Number.isSafeInteger(highWatermarkBytes)||highWatermarkBytes<1||highWatermarkBytes>=maxBytes||typeof compactTicks!=='boolean'||typeof incrementalSnapshots!=='boolean'||incrementalSnapshots&&compactTicks||prepareSnapshot!==null&&typeof prepareSnapshot!=='function')throw TypeError('Invalid presentation journal capacity');
+ const encoder=incrementalSnapshots?createMainSnapshotEncoder(prepareSnapshot?{prepareSnapshot}:{}):null;let base=null,candidate=null,last=null,entries=[],bytes=0,closed=false,basePublication=null,candidatePublication=null,replayDecoder=null,replayIndex=0,replayLast=null;
  function ensure(){if(closed)throw Error('Presentation recovery journal closed');}
  function sequence(value){if(!Number.isSafeInteger(value)||value<1)throw TypeError('Invalid presentation journal sequence');return value;}
  // Replay may skip intermediate states only when no observer-facing boundary,
