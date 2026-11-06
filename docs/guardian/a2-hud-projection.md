@@ -30,6 +30,10 @@ magias pendientes. Las pruebas comparan señales y cambios de identidad. Una
 prueba ejecuta además el flujo completo `updateGameAudio` con
 `AudioSystem` real durante incursión, llegada, trabajo y pausa y compara ambas
 rutas; los recursos de audio están simulados y no prueba sonido en navegador.
+`GameJuice` usa también la vista estable en el perfil Worker: recibe las
+liquidaciones autoritativas explícitas y conserva saldo, eventos, enfriamientos
+y objetivos mínimos para sus efectos. Una comparación comprueba liquidación,
+fin de enfriamiento y amanecer frente al estado completo.
 
 Esto no elimina todavía el snapshot completo: se sigue transfiriendo y usando
 para tutorial, selección, comandos,
