@@ -4,7 +4,8 @@ import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {serializeConfirmedState} from '../src/simulation/confirmed-live-state.js';
-import {installEarlyWorkerWorldServices} from '../src/app/early-worker-world-services.js';
+import {installEarlyWorkerWorldServices,installTutorialFocusInterruption} from '../src/app/early-worker-world-services.js';
+import {EventDispatcher} from 'three';
 
 const fixture=()=>deserialize(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString());
 
@@ -55,6 +56,17 @@ test('tutorial focus comes from the authority when no local navigation exists',a
  const focused=[],pending=[],world={state:{},nav:{workerProjection:true},focus:point=>focused.push(point),workerRuntime:{submit:command=>new Promise(resolve=>pending.push({command,resolve}))}};installEarlyWorkerWorldServices(world);
  world.focusTutorialPlacement('plant');assert.deepEqual(pending[0].command,{kind:'tutorialGuideTarget',toolKind:'plant',toolSpell:null});world.cancelTutorialFocus();pending[0].resolve({value:{target:'old',position:[1,2,3]}});await new Promise(resolve=>setImmediate(resolve));assert.deepEqual(focused,[]);
  world.focusTutorialPlacement('center');pending[1].resolve({value:{target:'new',position:[4,5,6]}});await new Promise(resolve=>setImmediate(resolve));assert.deepEqual(focused,[{x:4,z:6}]);
+});
+
+test('manual camera input cancels pending authoritative tutorial focus',async()=>{
+ const focused=[],pending=[],world={state:{},nav:{workerProjection:true},canvas:new EventTarget(),controls:new EventDispatcher(),canvasEvents:new AbortController(),focus:point=>focused.push(point),workerRuntime:{submit:command=>new Promise(resolve=>pending.push({command,resolve}))}};
+ installEarlyWorkerWorldServices(world);const release=installTutorialFocusInterruption(world);
+ for(const type of ['pointerdown','wheel','start']){
+  world.focusTutorialPlacement('center');const request=pending.at(-1);
+  if(type==='start')world.controls.dispatchEvent({type});else world.canvas.dispatchEvent(new Event(type));
+  request.resolve({value:{target:'center-site',position:[1,0,2]}});await new Promise(resolve=>setImmediate(resolve));
+ }
+ assert.deepEqual(focused,[]);release();world.canvasEvents.abort();
 });
 
 test('legacy tutorial targeting loads only on demand and ignores stale focus requests',async()=>{

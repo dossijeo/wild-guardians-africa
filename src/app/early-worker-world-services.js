@@ -3,6 +3,15 @@ import {farmHomeFocus} from '../rendering/farm-focus.js';
 import {focusNewTutorialPlacement} from '../rendering/tutorial-placement-focus.js';
 import {waitGpuPreparation} from '../rendering/wait-gpu-preparation.js';
 
+// A camera request must not complete after the player has taken control.
+export function installTutorialFocusInterruption(world){
+ if(!world?.controls?.addEventListener||!world?.controls?.removeEventListener||!world?.canvas?.addEventListener||typeof world.cancelTutorialFocus!=='function')throw TypeError('Invalid tutorial focus input');
+ const cancel=()=>world.cancelTutorialFocus(),options={signal:world.canvasEvents.signal};
+ world.controls.addEventListener('start',cancel);
+ for(const type of ['pointerdown','wheel'])world.canvas.addEventListener(type,cancel,options);
+ return ()=>world.controls.removeEventListener('start',cancel);
+}
+
 // The early presentation owns no legacy renderer or resident prop meshes.
 // Keep its confirmed-state and camera services independent of WorldScene.
 export function installEarlyWorkerWorldServices(world,{visualSearch='',dev=false,legacyReceiver=null,loadLegacyTutorialTarget=()=>import('../tutorial/tutorial-hand-target.js')}={}){
