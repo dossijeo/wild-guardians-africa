@@ -53,12 +53,13 @@ export function createMainSnapshotEncoder({prepareSnapshot=fields}={}){
   const publication=envelope.publication,n=publication?.sequence;
   if(!Number.isSafeInteger(n)||n<=sequence)throw Error('Invalid snapshot transport sequence');
   if(publication.unchanged===true){sequence=n;return envelope;}
-  if(typeof publication.snapshot!=='string')throw TypeError('Missing snapshot transport state');
+  if(preparedFields===null?typeof publication.snapshot!=='string':!Object.hasOwn(publication,'snapshot'))throw TypeError('Missing snapshot transport state');
   const next=preparedFields??prepareSnapshot(publication.snapshot);if(!(next instanceof Map))throw TypeError('Invalid prepared snapshot');let wire=envelope;
   if(base&&!forceFull){
    const changed=[],removed=[],entities=[];let raid=null;for(const [key,value] of next)if(base.get(key)!==value){const patch=entityDelta(key,base.get(key),value),raidPatch=key==='raid'?raidDelta(base.get(key),value):null;if(patch)entities.push(patch);else if(raidPatch)raid=raidPatch;else changed.push([key,value]);}for(const key of base.keys())if(!next.has(key))removed.push(key);
    const delta={version:raid?3:entities.length?2:1,baseSequence:sequence,changed,removed,...(entities.length?{entities}:{}),...(raid?{raid}:{})};
-   if(JSON.stringify(delta).length<publication.snapshot.length){const {snapshot,...rest}=publication;wire={...envelope,publication:{...rest,snapshotDelta:delta}};}
+   let snapshotLength;if(preparedFields){snapshotLength=2+Math.max(0,next.size-1);for(const [key,value] of next){if(typeof key!=='string'||typeof value!=='string')throw TypeError('Invalid prepared snapshot');snapshotLength+=JSON.stringify(key).length+1+value.length;}}else snapshotLength=publication.snapshot.length;
+   if(JSON.stringify(delta).length<snapshotLength){const rest={};for(const key of Object.keys(publication))if(key!=='snapshot')rest[key]=publication[key];wire={...envelope,publication:{...rest,snapshotDelta:delta}};}
   }
   base=next;sequence=n;return wire;
  }};

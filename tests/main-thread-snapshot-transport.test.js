@@ -12,6 +12,12 @@ import {createPresentationRecoveryJournal} from '../src/simulation/presentation-
 import {openVisualStream} from '../src/simulation/visual-publication-stream.js';
 
 const packet=(sequence,snapshot,events=[])=>({kind:'publication',session:'s',publication:{session:'s',sequence,snapshot,events,physicsPose:null}});
+test('prepared incremental encoding does not materialize a full snapshot unless required',()=>{
+ const encoder=createMainSnapshotEncoder(),decoder=createMainSnapshotDecoder(),fields=n=>new Map([['value',String(n)],['padding',JSON.stringify('x'.repeat(500))]]);let reads=0;const publication=n=>{const value={kind:'result',sequence:n,events:[],physicsPose:null};Object.defineProperty(value,'snapshot',{enumerable:true,get(){reads++;return JSON.stringify({value:n,padding:'x'.repeat(500)});}});return value;};
+ const first=encoder.encode({kind:'publication',publication:publication(1)},{preparedFields:fields(1),forceFull:true});assert.equal(reads,0);decoder.decode(structuredClone(first));assert.equal(reads,1);
+ const second=encoder.encode({kind:'publication',publication:publication(2)},{preparedFields:fields(2)});assert.equal(reads,1);assert.ok(second.publication.snapshotDelta);assert.equal(JSON.parse(decoder.decode(second).publication.snapshot).value,2);assert.equal(reads,1);
+ const third=encoder.encode({kind:'publication',publication:publication(3)},{preparedFields:fields(3),forceFull:true});assert.equal(reads,1);assert.equal(JSON.parse(third.publication.snapshot).value,3);assert.equal(reads,2);
+});
 test('independent consumers share one preparation without sharing sequence bases',()=>{
  const cache=createSnapshotPreparationCache(),encoders=Array.from({length:3},()=>createMainSnapshotEncoder({prepareSnapshot:cache.prepare})),decoders=encoders.map(()=>createMainSnapshotDecoder()),first=JSON.stringify({tag:'shared',value:1,padding:'x'.repeat(500)}),second=JSON.stringify({tag:'shared',value:2,padding:'x'.repeat(500)}),original=JSON.parse;let parsed=0;
  JSON.parse=(text,...args)=>{if(text===first||text===second)parsed++;return original(text,...args);};
