@@ -75,6 +75,25 @@ test('packaged animal preview rigs match the walking bind contract',async()=>{
  }
 });
 
+test('all real animal rigs restore CPU presentation for actions, recovery and physical poses',async()=>{
+ const renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:()=>new MeshStandardNodeMaterial()}};
+ for(const species of Object.keys(ANIMAL_ACTIONS.animals)){
+  const base=new URL(`../public/content/gpu-walk/${species}/walking`,import.meta.url),meta=JSON.parse(await readFile(new URL(base.href+'.json'))),bytes=await readFile(new URL(base.href+'.bin')),bake=createBakedWalkTexture(meta,bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength));
+  const asset=await actorAsset('public'+ANIMAL_ACTIONS.animals[species].url),model=asset.scene,scene=new Scene(),animal={id:'a',species,status:'walking',x:0,z:0},state={elapsed:.3,raid:{animals:[animal]}},assetBank={async acquire(){return {model,clips:prepareAnimalClips(asset.animations),release(){}};}};let physical=null;
+  const actor=await createWebGpuConfirmedAnimal({scene,residency:{get:()=>null},state,actorId:'a',renderer,assetBank,getPose:()=>physical});
+  try{
+   await actor.installBakedWalk(bake,{pipelineAdmission:{prepare:async()=>{}}});assert.equal(actor.isBakedWalking(),true,`${species} walking`);
+   animal.status='attacking';animal.animation='Weapon_Combo';animal.attackId='hit';animal.attackDuration=1;animal.attackRemaining=.7;actor.update();assert.equal(actor.isBakedWalking(),false,`${species} attacking`);
+   animal.status='walking';animal.recovery={};actor.update();assert.equal(actor.isBakedWalking(),false,`${species} recovery`);
+   animal.recovery=null;animal.fallRemaining=.2;actor.update();assert.equal(actor.isBakedWalking(),false,`${species} falling`);
+   animal.fallRemaining=0;actor.update();assert.equal(actor.isBakedWalking(),true,`${species} resumed walking`);
+   const transform=node=>[...node.position.toArray(),...node.quaternion.toArray(),...node.scale.toArray()],bones=[];model.traverse(node=>{if(node.isBone)bones.push({name:node.name,transform:transform(node)});});
+   physical={actorId:'a',active:true,root:transform(actor.root),model:transform(model),bones};actor.update();assert.equal(actor.isBakedWalking(),false,`${species} physical`);assert.equal(actor.isPhysical(),true,`${species} confirmed physical pose`);
+   physical=null;actor.update();assert.equal(actor.isBakedWalking(),true,`${species} after physical pose`);
+  }finally{actor.dispose();bake.dispose();}
+ }
+});
+
 test('real hyena rig retains original meshes for physical fallback',async()=>{
  const meta=JSON.parse(await readFile(new URL('../public/qa/gpu-bake/walking.json',import.meta.url))),bytes=await readFile(new URL('../public/qa/gpu-bake/walking.bin',import.meta.url));
  const bake=createBakedWalkTexture(meta,bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength)),asset=await actorAsset('public'+ANIMAL_ACTIONS.animals.hyena.url),root=new Group();root.add(asset.scene);

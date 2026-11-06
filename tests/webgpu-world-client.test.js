@@ -8,9 +8,9 @@ import {MAX_PENDING_PRESENTATION_INPUTS} from '../src/rendering/presentation-inp
 function setup(options={}){const worker={messages:[],postMessage(message,transfer){this.messages.push({message,transfer});},terminate(){this.terminated=true;}},ports=[],client=createWebGpuWorldClient({canvas:{transferControlToOffscreen:()=>({canvas:true})},session:'s',snapshot:'{}',...options,workerFactory:()=>worker,channelFactory:()=>{const a={close(){this.closed=true;}},b={close(){this.closed=true;}};ports.push(a,b);return {port1:a,port2:b};}});return {worker,ports,client};}
 test('worker and hyena walking capabilities reach the game Worker independently',async()=>{
  const profile=workerPresentationProfile({backend:'webgpu-worker'}),make=capabilities=>webGpuWorldOptions({params:new URLSearchParams(),state:{raid:null},field:{},capabilities});
- const ordinary=make(profile.capabilities);assert.equal(webGpuWorkerBakedWalking(ordinary.presentationCapabilities),true);assert.equal(ordinary.presentationCapabilities.bakedWalking,false);
+ const ordinary=make(profile.capabilities);assert.equal(webGpuWorkerBakedWalking(ordinary.presentationCapabilities),true);assert.equal(ordinary.presentationCapabilities.bakedWalking,true);
  const {worker,client}=setup(ordinary),message=worker.messages[0].message;
- assert.equal(message.experimentalAllActors,true);assert.equal(message.presentationCapabilities.bakedWalking,false);assert.equal(message.presentationCapabilities.bakedHyenaWalking,true);assert.equal(message.presentationCapabilities.bakedWorkerWalking,true);assert.equal(message.presentationCapabilities.wallImpactFragments,true);assert.equal(message.experimentalWallFragments,false);
+ assert.equal(message.experimentalAllActors,true);assert.equal(message.presentationCapabilities.bakedWalking,true);assert.equal(message.presentationCapabilities.bakedHyenaWalking,true);assert.equal(message.presentationCapabilities.bakedWorkerWalking,true);assert.equal(message.presentationCapabilities.wallImpactFragments,true);assert.equal(message.experimentalWallFragments,false);
  assert.equal(webGpuWorkerBakedWalking(message.presentationCapabilities),true);
  worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await client.ready;client.dispose();
 });
