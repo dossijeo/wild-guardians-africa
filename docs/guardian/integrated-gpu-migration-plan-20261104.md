@@ -590,7 +590,7 @@ Cada entrega actualiza el registro siguiente con archivos, commit y comprobacion
 | A1 Propiedad y bootstrap | Pendiente de cierre | Contratos, dependencias y selección exclusiva |
 | A2 Transporte y tiempo | Pendiente de cierre | Acumulación, eventos, recuperación y consumidores |
 | A3 Materiales y pipelines | Pendiente de cierre | Interfaces, catálogo y pases |
-| A4 Admisión gráfica | Pendiente de cierre | Estados, publicación, errores y cancelación |
+| A4 Admisión gráfica | Cerrado internamente para rutas actuales | Admisión y publicación de instancias reales, cancelación y pases; indicador provisional inmediato pendiente B3 y validación GPU real C; los cambios globales estructurales futuros exigen transacción explícita |
 | A5 Recursos | Cerrado internamente | Generación, leases, residencia y presión heurística para propietarios explícitos y compuestos; contenidos nuevos B y medición/validación C pendientes |
 | A6 Movilidad y reproducción | Cerrado internamente en el perfil temporal explícito | Intervalos confirmados, horizonte, secuencia, actor e identidad de estado con entrega ordenada y fallbacks; clips B4 y validación C pendientes |
 | A7 Interacción y recuperación | Pendiente de cierre | Provisionales, orden temporal y reinicios |
