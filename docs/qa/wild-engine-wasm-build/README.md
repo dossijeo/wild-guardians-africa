@@ -61,3 +61,20 @@ Do not replace the versioned WASM based on these bounded tests alone. Complete
 ABI, deterministic campaign and save comparisons and full toolchain parity
 remain to be resolved. No performance benefit or production migration is
 claimed by this build correction.
+
+## AttackCrop native sweep evaluation
+
+An AttackCrop-only integration of the existing native swept-body predicate
+was compared with the JavaScript predicate on the same initialized candidate
+WASM and a real mangrove raid. Forty authority publications, each advancing
+two steps, produced identical snapshots and ordered events; a separate test
+checked moving blockers, actor sizes and fallback for other intentions. The
+integration still collected blockers and coordinated detours in JavaScript.
+
+One exploratory ABBA run of 40 publications per block measured mean authority
+times of 38.7/31.2 ms for JavaScript and 35.4/34.2 ms for the native sweep;
+p95 was 40.6/29.4 ms and 35.4/33.3 ms respectively. These sequential samples
+include initialization and snapshot work; their order-dependent variation does
+not demonstrate a reproducible improvement. The integration was removed and
+the production WASM was not replaced. Its ABI lacks the dynamic-body service;
+the candidate still lacks the versioned module's `setThrew` export.
