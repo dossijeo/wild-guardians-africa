@@ -14,6 +14,10 @@ test('failed terrain attachment retains the old revision and removes partial pub
 test('a terrain publication callback failure is reported without losing the admitted revision',async()=>{
  const scene=new THREE.Scene(),errors=[],group=new THREE.Group(),mesh=new THREE.Mesh();group.add(mesh);const admission=createTerrainAdmission({scene,admission:{prepare:async()=>{}},onPublished(){throw Error('notification failed');},onError:error=>errors.push(error)});admission.publish('0,0',group,[mesh],()=>{});await new Promise(resolve=>setImmediate(resolve));assert.equal(errors[0]?.message,'notification failed');assert.equal(mesh.parent,scene);assert.equal(admission.isVisible('0,0',mesh),true);admission.dispose();
 });
+test('terrain publication exposes the complete replacement before notifying consumers',async()=>{
+ const scene=new THREE.Scene(),notifications=[],old=new THREE.Group(),oldMesh=new THREE.Mesh();old.add(oldMesh);const admission=createTerrainAdmission({scene,admission:{prepare:async()=>{}},onPublished:key=>notifications.push({key,children:[...scene.children]})}),flush=()=>new Promise(resolve=>setImmediate(resolve));
+ admission.publish('0,0',old,[oldMesh],()=>{});await flush();const group=new THREE.Group(),ground=new THREE.Mesh(),water=new THREE.Mesh();group.add(ground,water);admission.publish('0,0',group,[ground,water],()=>{});await flush();assert.deepEqual(notifications.at(-1),{key:'0,0',children:[ground,water]});assert.equal(admission.isVisible('0,0',ground),true);admission.dispose();
+});
 
 function chunk(cx=0,cz=0){const positions=new Float32Array(49*49*3),colors=new Float32Array(49*49*3),indices=new Uint16Array(48*48*6);for(let z=0;z<49;z++)for(let x=0;x<49;x++){const i=(z*49+x)*3;positions.set([x-24,(x+z)/10,z-24],i);colors.set([.2,.4,.6],i);}for(let z=0;z<48;z++)for(let x=0;x<48;x++){const a=z*49+x,k=(z*48+x)*6;indices.set([a,a+49,a+1,a+1,a+49,a+50],k);}return {authority:'spatial-wasm',cx,cz,terrain:{positions,colors,indices}};}
 test('actor presentation follows the visible terrain until its replacement is admitted',async()=>{

@@ -11,6 +11,12 @@ export function createTerrainAdmission({scene,admission,onError=()=>{},onPublish
   const dispose=()=>{for(const mesh of record.meshes)mesh.removeFromParent();record.dispose();};
   if(typeof admission.deferRelease==='function')admission.deferRelease(record.group,dispose);else dispose();
  }
+ // Keep scene attachment separate from replacing ownership. A joint chunk
+ // publication can later attach all participants before retiring either old
+ // revision; a failed attachment leaves the old visible owner untouched.
+ function rollback(record){for(const mesh of record.meshes)if(mesh.parent===scene)mesh.removeFromParent();}
+ function attach(record){try{for(const mesh of record.meshes)scene.add(mesh);}catch(error){rollback(record);throw error;}}
+ function finalize(key,record){const old=visible.get(key);record.published=true;visible.set(key,record);pending.delete(key);unavailable.delete(key);try{release(old);onPublished(key);}catch(error){onError(error);}}
  function publish(key,group,meshes,dispose){
   if(closed)throw Error('Terrain admission closed');
   const previous=pending.get(key);if(previous){pending.delete(key);release(previous);}
@@ -20,8 +26,7 @@ export function createTerrainAdmission({scene,admission,onError=()=>{},onPublish
    // Keep the pending owner until every mesh is attached. If attachment
    // fails, the rejection path removes any partial additions and preserves
    // the previous visible revision.
-   const old=visible.get(key);for(const mesh of meshes)scene.add(mesh);record.published=true;visible.set(key,record);pending.delete(key);unavailable.delete(key);
-   try{release(old);onPublished(key);}catch(error){onError(error);}
+   attach(record);finalize(key,record);
   };
   Promise.resolve().then(()=>typeof admission.prepareAndPublish==='function'?admission.prepareAndPublish(group,{signal:controller.signal},commit):Promise.resolve(admission.prepare(group,{signal:controller.signal})).then(commit)).catch(error=>{if(closed||pending.get(key)!==record||controller.signal.aborted)return;pending.delete(key);release(record);onError(error);});
  }
