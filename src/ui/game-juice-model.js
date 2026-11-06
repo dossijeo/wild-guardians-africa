@@ -3,6 +3,7 @@
 import {observeSettlements} from '../simulation/settlement-observers.js';
 export class GameJuiceModel {
  constructor(state){this.cursor=state.events.at(-1)?.id;this.cooldowns={...state.cooldowns};this.day=state.day;this.critical=new Set();this.income=0n;this.expense=0n;this.release=observeSettlements(state.ledger,(_id,n)=>{const value=BigInt(n);if(value>0n)this.income+=value;else this.expense+=value;});}
+ acceptConfirmedSettlements(facts){if(!Array.isArray(facts)||facts.some(fact=>!fact||typeof fact.n!=='string'||!/^(-?[1-9]\d*|0)$/.test(fact.n)||fact.d!=='1'))throw TypeError('Invalid confirmed settlements');for(const fact of facts){const value=BigInt(fact.n);if(value>0n)this.income+=value;else this.expense+=value;}}
  consume(state,confirmedEvents=null){
   let fresh;
   if(confirmedEvents===null){const events=state.events,index=events.at(-1)?.id===this.cursor?events.length-1:events.findIndex(e=>e.id===this.cursor);fresh=index<0?events:events.slice(index+1);this.cursor=events.at(-1)?.id;}

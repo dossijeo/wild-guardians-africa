@@ -21,8 +21,11 @@ Inventario de los consumidores directos actuales:
   Los eventos antiguos conservan sus consultas de compatibilidad al estado.
   Los eventos de inicio/fin de incursión y campaña no requieren coordenadas.
 - Indicadores de enfriamiento, ingresos y gastos y audio continuo de trabajadores
-  y animales observan estado o transacciones; todavía no son un protocolo de
-  eventos autocontenidos. La interfaz conserva un snapshot y las publicaciones
+  y animales observan estado o transacciones. Las liquidaciones nuevas del
+  Worker llevan identidad, cantidad exacta, tiempo y cursor causal; el HUD las
+  recibe una vez tras confirmar la publicación. Forman barreras de agrupación y
+  cuentan en el límite de hechos. Otros indicadores todavía no forman un
+  protocolo de eventos autocontenidos. La interfaz conserva un snapshot y las publicaciones
   con eventos siguen siendo barreras: no se habilita su fusión por estos cambios.
 
 Las pruebas de interfaz consumen los hechos después de modificar o retirar las

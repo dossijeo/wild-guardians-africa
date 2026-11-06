@@ -31,8 +31,9 @@ test('fresh and restored authority retain revised settlement chunks for center p
   const actual=resident.execute(command),expected=empty.execute({...command,sequence:1}),replay=restored.execute({...command,sequence:1});
   assert.equal(actual.value,true);assert.equal(actual.snapshot,expected.snapshot);assert.deepEqual(actual.events,expected.events);
   assert.equal(replay.value,true);assert.equal(replay.snapshot,actual.snapshot);assert.deepEqual(replay.events,actual.events);
+  assert.equal(actual.settlements?.length,1);assert.equal(actual.settlements[0].id,'fresh-center');assert.equal(actual.settlements[0].n,'-800');assert.equal(actual.settlements[0].d,'1');assert.equal(actual.settlements[0].simulationTime,actual.elapsed);assert.deepEqual(replay.settlements,actual.settlements);
   assert.equal(actual.events.filter(event=>event.type==='PlacementCommitted').length,1);
   const duplicate=restored.execute({...command,sequence:2});
-  assert.equal(duplicate.value,false);assert.deepEqual(duplicate.events,[]);assert.equal(duplicate.snapshot,actual.snapshot);
+  assert.equal(duplicate.value,false);assert.deepEqual(duplicate.events,[]);assert.equal(duplicate.settlements,undefined);assert.equal(duplicate.snapshot,actual.snapshot);
  }finally{resident?.dispose();empty?.dispose();restored?.dispose();opening.dispose();}
 });
