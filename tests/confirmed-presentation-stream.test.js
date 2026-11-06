@@ -10,7 +10,24 @@ import {createConfirmedPresentationStream} from '../src/rendering/confirmed-pres
 import {acceptLiveTerrainCheckpoint} from '../src/rendering/live-terrain-checkpoint.js';
 import {createConfirmedMotionFeed} from '../src/rendering/confirmed-motion-feed.js';
 import {serializeConfirmedState} from '../src/simulation/confirmed-live-state.js';
+import {openVisualStream} from '../src/simulation/visual-publication-stream.js';
+import {createPresentationRecoveryJournal} from '../src/simulation/presentation-recovery-journal.js';
+import {createMainSnapshotEncoder} from '../src/simulation/main-thread-snapshot-transport.js';
 const fixture=()=>deserialize(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString());
+test('incremental graphical channel preserves checkpoints, poses and event order',()=>{
+ const state=fixture(),authority=deserialize(serialize(state)),journal=createPresentationRecoveryJournal(),sent=[],acks=[],observed=[],errors=[],bases=[];
+ const senderPort={postMessage:value=>sent.push(structuredClone(value)),start(){},close(){}},receiverPort={postMessage:value=>acks.push(structuredClone(value)),start(){},close(){}};
+ const sender=openVisualStream(senderPort,'s',()=>{},{incrementalTransport:true,recoveryJournal:journal,onCheckpointAcknowledged:value=>bases.push(value)}),receiver=createConfirmedPresentationStream({port:receiverPort,session:'s',state,terrain:{confirm:n=>observed.push(['terrain',n])},onPhysics:poses=>observed.push(['poses',poses.size]),onConfirmed:message=>observed.push(['events',message.events.map(event=>event.type)]),onError:error=>errors.push(error)});
+ const first={session:'s',sequence:1,snapshot:serializeConfirmedState(authority),events:[],physicsPose:null,terrainCheckpoint:{sequence:1,chunks:[]}};sender.publish(first,true);receiverPort.onmessage({data:sent.shift()});senderPort.onmessage({data:acks.shift()});assert.equal(bases[0].sequence,1);
+ authority.raid.animals[0].x+=.25;emit(authority,'NightStarted');const event=authority.events.at(-1),second={session:'s',sequence:2,snapshot:serializeConfirmedState(authority),events:[event],physicsPose:null};sender.publish(second,true);const wire=sent.shift();assert.equal(wire.publication.snapshotDelta.version,3);receiverPort.onmessage({data:wire});senderPort.onmessage({data:acks.shift()});
+ assert.deepEqual(state,authority);assert.deepEqual(observed,[['poses',0],['terrain',1],['events',[]],['poses',0],['terrain',2],['events',['NightStarted']]]);assert.equal(journal.snapshot().entries[0].publication.snapshot,second.snapshot);assert.deepEqual(errors,[]);receiver.dispose();sender.close();journal.dispose();
+});
+test('replayed recovery is followed by a fresh live baseline and incremental updates',()=>{
+ const state=fixture(),authority=deserialize(serialize(state)),acks=[],errors=[],port={postMessage:value=>acks.push(value.sequence),start(){},close(){}},receiver=createConfirmedPresentationStream({port,session:'s',state,initialSequence:1,allowRecovery:true,terrain:{confirm(){}},onPhysics(){},onError:error=>errors.push(error)}),encoder=createMainSnapshotEncoder();
+ const publication=n=>({kind:'publication',session:'s',publication:{session:'s',sequence:n,snapshot:serializeConfirmedState(authority),events:[],physicsPose:null}});
+ authority.raid.animals[0].x+=.1;receiver.acceptRecovery(publication(2));authority.raid.animals[0].x+=.1;const first=encoder.encode(publication(3));assert.equal(typeof first.publication.snapshot,'string');port.onmessage({data:first});
+ authority.raid.animals[0].x+=.1;const second=encoder.encode(publication(4));assert.equal(second.publication.snapshotDelta.version,3);port.onmessage({data:second});assert.deepEqual(state,authority);assert.deepEqual(acks,[3,4]);assert.deepEqual(errors,[]);receiver.dispose();
+});
 test('tracked state changes reach consumers after reconciliation and before acknowledgement',()=>{
  const state=fixture(),next=deserialize(serialize(state)),order=[],port={postMessage:m=>order.push(['ack',m.sequence]),close(){},start(){}};
  const stream=createConfirmedPresentationStream({port,session:'s',state,trackChangedKeys:true,terrain:{confirm:n=>order.push(['terrain',n])},onConfirmed:(message,keys)=>order.push(['confirmed',message.sequence,[...keys],state.suppressed.length])});
