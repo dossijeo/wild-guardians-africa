@@ -3,6 +3,11 @@ import assert from 'node:assert/strict';
 import {Scene,Mesh,PlaneGeometry,MeshBasicMaterial,DoubleSide,Group,PerspectiveCamera} from 'three';
 import {createWebGpuCrateRoster} from '../src/rendering/webgpu-crate-roster.js';
 import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
+test('a crate is attached inside its verified admission callback',async()=>{
+ const scene=new Scene(),state={crates:[{id:'a',x:0,z:0}]};let commit,released=0;
+ const admission={prepare(){throw Error('non-atomic admission used');},prepareAndPublish(root,_options,publish){return new Promise(resolve=>{commit=()=>{assert.equal(root.parent,null);publish();resolve();};});}},roster=createWebGpuCrateRoster({scene,state,residency:{get:()=>null},pipelineAdmission:admission,assetBank:{async acquireCrate(){return {model:new Group(),release(){released++;}};}}});
+ try{roster.sync();await flush();assert.equal(scene.children.length,0);commit();assert.equal(scene.children.length,1);await flush();}finally{roster.dispose();assert.equal(released,1);}
+});
 test('a cancelled pending crate retains its asset through compilation',async()=>{
  const scene=new Scene(),state={crates:[{id:'a',x:0,z:0}]};let finish,released=0;
  const admission=createWebGpuPipelineAdmission({scene,camera:new PerspectiveCamera(),renderer:{backend:{isWebGPUBackend:true},compileAsync:()=>new Promise(resolve=>{finish=resolve;})}}),roster=createWebGpuCrateRoster({scene,state,residency:{get:()=>null},pipelineAdmission:admission,assetBank:{async acquireCrate(){return {model:new Group(),release(){released++;}};}}});
