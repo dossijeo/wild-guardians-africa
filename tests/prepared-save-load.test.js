@@ -21,6 +21,10 @@ test('prepared load recovers corrupted or wrong-slot primary using the same vali
   assert.deepEqual(state,f.state);assert.deepEqual(calls,[primary,f.text]);assert.equal(f.data.size,0);
  }
 });
+test('source handoff preserves exactly the validated backup or legacy copy',async()=>{
+ for(const legacy of [false,true]){const f=fixture({database:legacy?null:{}}),source=' \n'+f.text+'\n';if(legacy){const key=f.repo.legacy.key('a');f.data.set(key,'invalid');f.data.set(key+':backup',source);}else f.repo.records=async()=>({primary:'invalid',backup:source});const result=await f.repo.loadPrepared('a',{withSource:true,decode:async text=>deserialize(text)});assert.equal(result.source,source);assert.deepEqual(result.state,f.state);}
+});
+test('source handoff rejects invalid options without changing the default result',async()=>{const f=fixture();f.repo.records=async()=>({primary:f.text});await assert.rejects(f.repo.loadPrepared('a',{withSource:'yes'}),/source option/);assert.deepEqual(await f.repo.loadPrepared('a',{decode:async text=>deserialize(text)}),f.state);});
 test('legacy copies receive asynchronous full validation after IndexedDB recovery fails',async()=>{
  const f=fixture(),calls=[];f.repo.records=async()=>({primary:'invalid'});f.data.set(f.repo.legacy.key('a'),f.text);
  const state=await f.repo.loadPrepared('a',{decode:async text=>{calls.push(text);return deserialize(text);}});

@@ -101,8 +101,9 @@ export class BrowserSaveRepository {
   }
   // Loading-screen path. Ordinary save/list/load contracts stay synchronous at
   // their validation points; this explicitly moves loading validation off-thread.
-  async loadPrepared(slotId,{signal,decode=decodeSnapshotAsync,timeout=30000,onDiagnostic=()=>{}}={}) {
+  async loadPrepared(slotId,{signal,decode=decodeSnapshotAsync,timeout=30000,onDiagnostic=()=>{},withSource=false}={}) {
     if(!Number.isFinite(timeout)||timeout<=0)throw new RangeError('Invalid snapshot loading timeout');
+    if(typeof withSource!=='boolean')throw TypeError('Invalid snapshot source option');
     const owner=new AbortController(),abort=()=>owner.abort(signal?.reason?.name==='TimeoutError'?signal.reason:new DOMException('Snapshot loading cancelled','AbortError'));
     signal?.addEventListener('abort',abort,{once:true});if(signal?.aborted)abort();
     const started=performance.now(),check=()=>{
@@ -121,7 +122,9 @@ export class BrowserSaveRepository {
         try{
           const state=await awaitOwned(decode(text,{signal:owner.signal,timeout:Math.max(1,timeout-(performance.now()-started)),onDiagnostic}));check();
           if(state.slotId!==slotId)throw Error('La partida guardada pertenece a otra ranura.');
-          return state;
+          // Keep the exact copy that passed validation, including a recovered
+          // backup. The Worker can consume it without reserializing in the UI.
+          return withSource?{state,source:text}:state;
         }catch(error){if(interrupted(error))throw error;failure=error;}
       }
       throw failure;
