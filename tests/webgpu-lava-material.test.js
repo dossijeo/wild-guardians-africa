@@ -2,9 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {WebGPURenderer} from 'three/webgpu';
+import {uniform} from 'three/tsl';
 import {createWebGpuLavaMaterial,lavaClock,lavaWorldSeed} from '../src/rendering/webgpu-lava-material.js';
 import {readFileSync} from 'node:fs';
 import {createSpatialWorld} from '../src/world/wild-engine/spatial-world.js';
+
+test('lava instances share graph and retain independent palette and seed',()=>{const clockNode=uniform(0),a=createWebGpuLavaMaterial({color:'#ff6130',seed:28,clockNode}),b=createWebGpuLavaMaterial({color:'#995522',seed:3,clockNode});try{assert.equal(a.colorNode,b.colorNode);assert.notDeepEqual(a._wgFluidOffset.toArray(),b._wgFluidOffset.toArray());assert.notEqual(a._wgFluidInk0,b._wgFluidInk0);const before=b._wgFluidInk0.toArray();a._wgFluidInk0.set(0,0,0);assert.deepEqual(b._wgFluidInk0.toArray(),before);}finally{a.dispose();b.dispose();}});
 
 test('fluid phase uses the same terrain seed as the original renderer',()=>{
  const module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm'));

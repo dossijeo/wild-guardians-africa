@@ -9,10 +9,10 @@ import {AdditiveBlending,DoubleSide,FrontSide} from 'three';
 const characters=new Map(),structures=new Map();
 const characterDynamic=Object.freeze(['map','color','_wgTextureBlend']);
 const structureDynamic=Object.freeze(['map','_wgTextureBlend']);
-const waterDynamic=Object.freeze(['clock','environment.day','environment.dark','environment.night','environment.light','environment.blend']);
+const waterDynamic=Object.freeze(['clock','palette','offset','environment.day','environment.dark','environment.night','environment.light','environment.blend']);
 const beastDynamic=Object.freeze(['diffuseColor','night','sun']);
 const guardianDynamic=Object.freeze(['diffuseColor','opacity','night','sun','tint','glow','reveal','dissolve','bottom','height']);
-const inheritedPasses=Object.freeze({color:'node',depth:'inherited-unverified',shadow:'inherited-unverified'});
+const inheritedPasses=Object.freeze({color:'composed-node',depth:'host-must-preserve-position-and-coverage',shadow:'host-must-preserve-position-and-coverage'});
 function textureStructure(texture){return Object.freeze({binding:Object.freeze(webGpuTextureBinding(texture)),colorSpace:texture.colorSpace,mapping:texture.mapping,uvChannel:texture.channel,wrapS:texture.wrapS,wrapT:texture.wrapT,wrapR:texture.wrapR,magFilter:texture.magFilter,minFilter:texture.minFilter});}
 function textureKey(value){return [...value.binding,value.colorSpace,value.mapping,value.uvChannel,value.wrapS,value.wrapT,value.wrapR,value.magFilter,value.minFilter];}
 
@@ -42,18 +42,17 @@ export function structureColorGraph(components,texture=null){
  return graph;
 }
 
-// Palette and seed offset are still embedded constants in the existing water
-// formula. Binding owners are scoped by its caller; clip selects a separate
-// material/pass state while its underlying color graph may be shared.
+// Palette and offset are per-material references; binding owners remain scoped
+// by the caller and clip selects a separate state, not a separate color graph.
 export function waterColorRecipe({offset,palette,sun=null,shadowNode=null,globalSurface=false,biome=null,clip=false,reflection=false}={}){
  if(!Array.isArray(offset)||offset.length!==2||!offset.every(Number.isFinite)||!Array.isArray(palette)||palette.some(rgb=>!Array.isArray(rgb)||rgb.length!==3||!rgb.every(Number.isFinite))||sun!==null&&!sun?.isDirectionalLight||shadowNode!==null&&!shadowNode?.isShadowNode||typeof globalSurface!=='boolean'||typeof clip!=='boolean'||typeof reflection!=='boolean')throw TypeError('Invalid water color recipe');
- const structural=Object.freeze({family:'water-color',sunId:sun?.uuid??null,shadowId:shadowNode?.uuid??null,globalSurface,biome,reflection,clip,state:Object.freeze({side:DoubleSide,alphaTest:clip ? .35 : 0,toneMapped:false}),embeddedOffset:Object.freeze([...offset]),embeddedPalette:Object.freeze(palette.map(rgb=>Object.freeze([...rgb])))});
- const graphKey=JSON.stringify([structural.family,offset,palette,structural.sunId,structural.shadowId,globalSurface,biome,reflection]);return Object.freeze({structural,dynamic:waterDynamic,passes:Object.freeze({color:clip?'chunk-clip':'water-color',depth:clip?'color-pass-chunk-clip':'color-pass',shadow:'fluid-mesh-does-not-cast',reflection:'fluid-excluded'}),graphKey,key:JSON.stringify([graphKey,clip])});
+ const structural=Object.freeze({family:'water-color',sunId:sun?.uuid??null,shadowId:shadowNode?.uuid??null,globalSurface,biome,reflection,clip,state:Object.freeze({side:DoubleSide,alphaTest:clip ? .35 : 0,toneMapped:false})});
+ const graphKey=JSON.stringify([structural.family,structural.sunId,structural.shadowId,globalSurface,biome,reflection]);return Object.freeze({structural,dynamic:waterDynamic,passes:Object.freeze({color:clip?'chunk-clip':'water-color',depth:clip?'color-pass-chunk-clip':'color-pass',shadow:'fluid-mesh-does-not-cast',reflection:'fluid-excluded'}),graphKey,key:JSON.stringify([graphKey,clip])});
 }
 
 export function lavaColorRecipe({offset,palette,clip=false}={}){
  if(!Array.isArray(offset)||offset.length!==2||!offset.every(Number.isFinite)||!Array.isArray(palette)||palette.some(rgb=>!Array.isArray(rgb)||rgb.length!==3||!rgb.every(Number.isFinite))||typeof clip!=='boolean')throw TypeError('Invalid lava color recipe');
- const structural=Object.freeze({family:'lava-color',clip,state:Object.freeze({side:DoubleSide,alphaTest:clip ? .35 : 0,toneMapped:false}),embeddedOffset:Object.freeze([...offset]),embeddedPalette:Object.freeze(palette.map(rgb=>Object.freeze([...rgb])))}),graphKey=JSON.stringify([structural.family,offset,palette]);return Object.freeze({structural,dynamic:Object.freeze(['clock']),passes:Object.freeze({color:clip?'chunk-clip':'lava-color',depth:clip?'color-pass-chunk-clip':'color-pass',shadow:'fluid-mesh-does-not-cast',reflection:'fluid-excluded'}),graphKey,key:JSON.stringify([graphKey,clip])});
+ const structural=Object.freeze({family:'lava-color',clip,state:Object.freeze({side:DoubleSide,alphaTest:clip ? .35 : 0,toneMapped:false})}),graphKey=JSON.stringify([structural.family]);return Object.freeze({structural,dynamic:Object.freeze(['clock','palette','offset']),passes:Object.freeze({color:clip?'chunk-clip':'lava-color',depth:clip?'color-pass-chunk-clip':'color-pass',shadow:'fluid-mesh-does-not-cast',reflection:'fluid-excluded'}),graphKey,key:JSON.stringify([graphKey,clip])});
 }
 
 export function beastToonRecipe({fur=false,shadow=false}={}){
@@ -61,7 +60,7 @@ export function beastToonRecipe({fur=false,shadow=false}={}){
 }
 
 const guardianState=Object.freeze({transparent:true,depthWrite:true,forceSinglePass:true,toneMapped:false});
-const guardianRecipe=Object.freeze({structural:Object.freeze({family:'guardian-surface',state:guardianState}),dynamic:guardianDynamic,passes:inheritedPasses,key:JSON.stringify(['guardian-surface',guardianState])});
+const guardianRecipe=Object.freeze({structural:Object.freeze({family:'guardian-surface',state:guardianState}),dynamic:guardianDynamic,passes:Object.freeze({color:'guardian-alpha-test',depth:'color-pass-alpha-test',shadow:'guardian-mesh-does-not-cast'}),key:JSON.stringify(['guardian-surface',guardianState])});
 export function guardianSurfaceRecipe(){return guardianRecipe;}
 
 const spriteState=Object.freeze({transparent:true,depthWrite:false,side:DoubleSide,toneMapped:false});
@@ -101,14 +100,14 @@ export function authoredDeformationRecipe(kind,source){
 
 const terrainState=Object.freeze({vertexColors:true,side:DoubleSide,toneMapped:false});
 const terrainDynamic=Object.freeze(['vertexColor','shadowVisibility']);
-export function vertexTerrainRecipe({shadows=false}={}){if(typeof shadows!=='boolean')throw TypeError('Invalid terrain recipe');const structural=Object.freeze({family:'vertex-terrain',shadows,state:terrainState,attributes:Object.freeze(['position','color'])});return Object.freeze({structural,dynamic:terrainDynamic,passes:inheritedPasses,key:JSON.stringify([structural.family,shadows,terrainState])});}
+export function vertexTerrainRecipe({shadows=false}={}){if(typeof shadows!=='boolean')throw TypeError('Invalid terrain recipe');const structural=Object.freeze({family:'vertex-terrain',shadows,state:terrainState,attributes:Object.freeze(['position','color'])});return Object.freeze({structural,dynamic:terrainDynamic,passes:Object.freeze({color:'terrain-color',depth:'color-pass',shadow:'terrain-mesh-does-not-cast'}),key:JSON.stringify([structural.family,shadows,terrainState])});}
 
 // This provider embeds texture identities and tile constants into its graph;
 // declaring them prevents treating a different atlas or light as equivalent.
 export function mangroveGroundRecipe({textures,scale,normalBoost,light=null,shadowNode=null,shadows=false}={}){
  if(!Array.isArray(textures)||textures.length!==3||textures.some(t=>!t?.isTexture)||!Number.isFinite(scale)||!Number.isFinite(normalBoost)||typeof shadows!=='boolean'||light!==null&&!light?.isDirectionalLight||shadowNode!==null&&!shadowNode?.isShadowNode)throw TypeError('Invalid mangrove ground recipe');
  const structural=Object.freeze({family:'mangrove-ground',textureIds:Object.freeze(textures.map(t=>t.uuid)),textures:Object.freeze(textures.map(textureStructure)),scale,normalBoost,lightId:light?.uuid??null,shadowId:shadowNode?.uuid??null,shadows,state:Object.freeze({side:DoubleSide,toneMapped:false})});
- return Object.freeze({structural,dynamic:Object.freeze(['night','sunDirection','atlasContents']),passes:Object.freeze({color:'mangrove-ground-output',depth:'inherited-unverified',shadow:'inherited-unverified'}),key:JSON.stringify(structural)});
+ return Object.freeze({structural,dynamic:Object.freeze(['night','sunDirection','atlasContents']),passes:Object.freeze({color:'mangrove-ground-output',depth:'color-pass',shadow:'terrain-mesh-does-not-cast'}),key:JSON.stringify(structural)});
 }
 
 const bakedDynamic=Object.freeze(['phaseOffset','clockWeight','bind','inverse','duration','sampleRate','frames','lastSample']);
@@ -121,6 +120,6 @@ export function catalogBiomeShadowGraph(options,build){if(typeof build!=='functi
 const biomeDynamic=Object.freeze(['color','opacity','roughness','metalness','normalScale','map','normalMap','roughnessMap','metalnessMap']);
 export function biomeSurfaceRecipe({instanceContract='native',clip=false,shadowCutout=false,side=FrontSide,map=null,normalMap=null,roughnessMap=null}={}){
  if(!['native','attributes'].includes(instanceContract)||typeof clip!=='boolean'||typeof shadowCutout!=='boolean'||![FrontSide,DoubleSide].includes(side)||[map,normalMap,roughnessMap].some(value=>value!==null&&!value?.isTexture))throw TypeError('Invalid biome surface recipe');
- const textures=Object.freeze([map,normalMap,roughnessMap].map(value=>value?textureStructure(value):null)),state=Object.freeze({side,alphaTest:.35}),structural=Object.freeze({family:'biome-surface',instanceContract,clip,shadowCutout,nodeMaterial:instanceContract==='attributes'||clip||shadowCutout,textures,state}),passes=Object.freeze({color:'mesh-standard',depth:'inherited-unverified',shadow:shadowCutout?'catalog-cutout':'inherited-unverified'}),key=JSON.stringify([structural.family,instanceContract,clip,shadowCutout,side,textures.map(shape=>shape?textureKey(shape):null)]);
+ const textures=Object.freeze([map,normalMap,roughnessMap].map(value=>value?textureStructure(value):null)),state=Object.freeze({side,alphaTest:.35}),structural=Object.freeze({family:'biome-surface',instanceContract,clip,shadowCutout,nodeMaterial:instanceContract==='attributes'||clip||shadowCutout,textures,state}),passes=Object.freeze({color:'mesh-standard',depth:'color-pass',shadow:shadowCutout?'catalog-cutout':map?'unsupported-alpha-map-without-cutout':'three-override-opaque'}),key=JSON.stringify([structural.family,instanceContract,clip,shadowCutout,side,textures.map(shape=>shape?textureKey(shape):null)]);
  return Object.freeze({structural,dynamic:biomeDynamic,passes,key});
 }
