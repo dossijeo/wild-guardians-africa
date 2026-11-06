@@ -3,6 +3,7 @@ import {MeshBasicNodeMaterial} from 'three/webgpu';
 import {Fn,clamp,dot,float,floor,fract,fwidth,max,min,mix,pow,positionWorld,sin,smoothstep,sqrt,sRGBTransferEOTF,uniform,vec2,vec3,vec4} from 'three/tsl';
 import {waterPalette,waterSeed,WATER_DEFAULTS} from './world-atmosphere.js';
 import {chunkClipOpacity} from './webgpu-chunk-clip.js';
+import {lavaColorRecipe} from './webgpu-material-graph-catalog.js';
 // Wild Engine's spatial terrain view exposes its unsigned WASM world seed.
 export const lavaWorldSeed=seed=>Number(seed)>>>0;
 
@@ -12,7 +13,7 @@ const graphs=new WeakMap();
 export function createWebGpuLavaMaterial({color,seed,clockNode,clip=true}={}){
  if(typeof color!=='string'||!/^#[0-9a-f]{6}$/i.test(color)||!clockNode?.isNode||typeof clip!=='boolean')throw TypeError('Invalid lava material');
  const offset=waterSeed(seed),palette=waterPalette(color,true);
- let byParameters=graphs.get(clockNode);if(!byParameters){byParameters=new Map();graphs.set(clockNode,byParameters);}const key=JSON.stringify([palette,offset]);let colorNode=byParameters.get(key);
+ let byParameters=graphs.get(clockNode);if(!byParameters){byParameters=new Map();graphs.set(clockNode,byParameters);}const key=lavaColorRecipe({offset,palette,clip}).graphKey;let colorNode=byParameters.get(key);
  if(!colorNode){
  const lava=Fn(()=>{
   const t=clockNode.mul(WATER_DEFAULTS.speed).toVar(),p=positionWorld.zx.mul(vec2(.22,.45)).mul(WATER_DEFAULTS.scale*4).toVar();

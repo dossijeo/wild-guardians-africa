@@ -37,6 +37,17 @@ test('different assets share the progressive graph while their texture and blend
  first.dispose();second.dispose();
 });
 
+test('sampler differences retain separate color graphs and compatible placeholder and final samplers',async()=>{
+ const a=setup(),b=setup();b.renderer=a.renderer;b.material.map.wrapS=THREE.RepeatWrapping;b.material.map.minFilter=THREE.NearestFilter;b.material.map.magFilter=THREE.NearestFilter;b.material.map.anisotropy=4;
+ const first=await makeStableVertexMaterials(a.renderer,a.preview,a.asset(a.material),a.mapping),second=await makeStableVertexMaterials(b.renderer,b.preview,b.asset(b.material),b.mapping);
+ try{assert.notEqual(a.mesh.material.colorNode,b.mesh.material.colorNode);assert.notEqual(a.mesh.material.map,b.mesh.material.map);assert.equal(b.mesh.material.map.wrapS,THREE.RepeatWrapping);assert.equal(b.mesh.material.map.minFilter,THREE.NearestFilter);await first.resolveFinal(a.asset(a.material));await second.resolveFinal(b.asset(b.material));first.apply({blend:.2});second.apply({blend:.8});assert.equal(a.mesh.material.map,a.material.map);assert.equal(b.mesh.material.map,b.material.map);assert.equal(a.mesh.material._wgTextureBlend,.2);assert.equal(b.mesh.material._wgTextureBlend,.8);}finally{first.dispose();second.dispose();}
+});
+
+test('anisotropy variants share the graph without sharing sampler resources',async()=>{
+ const a=setup(),b=setup();b.renderer=a.renderer;b.material.map.anisotropy=4;const first=await makeStableVertexMaterials(a.renderer,a.preview,a.asset(a.material),a.mapping),second=await makeStableVertexMaterials(b.renderer,b.preview,b.asset(b.material),b.mapping);
+ try{assert.equal(a.mesh.material.colorNode,b.mesh.material.colorNode);assert.notEqual(a.mesh.material.map,b.mesh.material.map);assert.equal(a.mesh.material.map.anisotropy,1);assert.equal(b.mesh.material.map.anisotropy,4);await first.resolveFinal(a.asset(a.material));await second.resolveFinal(b.asset(b.material));first.apply({blend:.3});second.apply({blend:.7});assert.equal(a.mesh.material.map.anisotropy,1);assert.equal(b.mesh.material.map.anisotropy,4);assert.equal(a.mesh.material._wgTextureBlend,.3);assert.equal(b.mesh.material._wgTextureBlend,.7);}finally{first.dispose();second.dispose();}
+});
+
 test('the shared color graph carries preview, original vertex and texture alpha through the blend',async()=>{
  const x=setup(),stable=await makeStableVertexMaterials(x.renderer,x.preview,x.asset(x.material),x.mapping),alpha=[];x.mesh.material.colorNode.traverse(node=>{if(node.isSplitNode&&node.components==='w')alpha.push(node.node);});assert.equal(alpha.filter(node=>node.type==='AttributeNode').length,2);assert.equal(alpha.filter(node=>node.isMaterialReferenceNode&&node.property==='map').length,1);const graph=x.mesh.material.colorNode,version=x.mesh.material.version;await stable.resolveFinal(x.asset(x.material));stable.apply({blend:.25});stable.setBlend(1);assert.equal(x.mesh.material.colorNode,graph);assert.equal(x.mesh.material.version,version);stable.dispose();
 });

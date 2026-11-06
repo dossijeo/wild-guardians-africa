@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { attribute, materialReference, mix, vec4 } from 'three/tsl';
 import {webGpuTextureBinding} from './webgpu-texture-binding.js';
+import {progressiveCharacterColorGraph} from './webgpu-material-graph-catalog.js';
 
 const textureLayoutProperties=['colorSpace','mapping','channel','wrapS','wrapT','wrapR','magFilter','minFilter','anisotropy'];
 // Match the structural binding distinctions used by Three's WebGPU backend.
@@ -8,13 +8,6 @@ const textureLayoutProperties=['colorSpace','mapping','channel','wrapS','wrapT',
 // arrays, depth and integer/unfilterable float textures cannot use that slot.
 const textureLayout=texture=>JSON.stringify([...webGpuTextureBinding(texture),...textureLayoutProperties.map(key=>texture[key])]);
 const neutralTextures=new WeakMap();
-// Three's node cache includes node identities. Reuse a graph per structural
-// texture layout: UV channels and binding types affect generated code even
-// though colors, textures and blend values are per-material data.
-const progressiveColorNodes=new Map();
-function progressiveColorNodeFor(map){
- const key=textureLayout(map);let node=progressiveColorNodes.get(key);if(!node){const preview=attribute('color','vec4'),original=attribute('wgOriginalColor','vec4'),sample=materialReference('map','texture'),blend=materialReference('_wgTextureBlend','float');node=vec4(mix(preview.rgb,sample.rgb.mul(materialReference('color','color')).mul(original.rgb),blend),mix(preview.a,sample.a.mul(original.a),blend));progressiveColorNodes.set(key,node);}return node;
-}
 
 // Each renderer owns its neutral textures. Materials borrow them and release
 // their lease without invalidating another asset that is still using one.
@@ -106,7 +99,7 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
       }
       if (!original) original = new THREE.BufferAttribute(new Uint8Array(geometry.attributes.position.count * 4).fill(255), 4, true);
       nodeMaterial.vertexColors = false;
-      nodeMaterial._wgTextureBlend=0;nodeMaterial.colorNode=progressiveColorNodeFor(nodeMaterial.map);progressiveMaterials.push(nodeMaterial);
+      nodeMaterial._wgTextureBlend=0;nodeMaterial.colorNode=progressiveCharacterColorGraph(nodeMaterial.map);progressiveMaterials.push(nodeMaterial);
       changes.push({ object: item.object, material: nodeMaterial, originalColor: original });
     } else {
       changes.push({ object: item.object, material: nodeMaterial });

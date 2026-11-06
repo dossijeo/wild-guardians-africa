@@ -4,6 +4,7 @@ import {Fn,abs,acos,atan,cameraPosition,clamp,cos,dFdx,dFdy,dot,float,floor,frac
 import {waterPalette,waterSeed,WATER_DEFAULTS} from './world-atmosphere.js';
 import {chunkClipOpacity} from './webgpu-chunk-clip.js';
 import {waterHiSsrReflectionNode} from './webgpu-water-hissr.js';
+import {waterColorRecipe} from './webgpu-material-graph-catalog.js';
 const graphs=new WeakMap();
 
 // Painted bands and the default native water-lighting recipe. The environment
@@ -11,7 +12,7 @@ const graphs=new WeakMap();
 export function createWebGpuWaterMaterial({color,seed,clockNode,environment,sun=null,shadowNode=null,clip=false,biome=null,globalSurface=false,reflectionBindings=null}={}){
  if(typeof color!=='string'||!/^#[0-9a-f]{6}$/i.test(color)||!clockNode?.isNode||!environment?.day?.isNode||!environment?.dark?.isNode||!environment?.night?.isNode||!environment?.light?.isNode||!environment?.blend?.isNode||sun!==null&&!sun.isDirectionalLight||shadowNode!==null&&(!sun||!shadowNode.isShadowNode||shadowNode.light!==sun)||typeof clip!=='boolean'||typeof globalSurface!=='boolean'||globalSurface&&!environment?.slope?.isNode)throw TypeError('Invalid water material');
  if(reflectionBindings!==null&&(!reflectionBindings.depth?.isNode||!reflectionBindings.color?.isNode||!Array.isArray(reflectionBindings.levels)||!['resolution','maxDistance','thickness','strength'].every(key=>reflectionBindings[key]?.isNode)))throw TypeError('Invalid water reflection bindings');
- let caches=graphs.get(environment);if(!caches){caches={standard:new Map(),reflected:new WeakMap()};graphs.set(environment,caches);}let cache=caches.standard;if(reflectionBindings){cache=caches.reflected.get(reflectionBindings);if(!cache){cache=new Map();caches.reflected.set(reflectionBindings,cache);}}const offset=waterSeed(seed),palette=waterPalette(color,false,biome),key=JSON.stringify([offset,palette,!!sun,shadowNode?.uuid??null,globalSurface,biome]);let item=cache.get(key);if(item&&item.clock!==clockNode)throw Error('Water environment clock changed');
+ let caches=graphs.get(environment);if(!caches){caches={standard:new Map(),reflected:new WeakMap()};graphs.set(environment,caches);}let cache=caches.standard;if(reflectionBindings){cache=caches.reflected.get(reflectionBindings);if(!cache){cache=new Map();caches.reflected.set(reflectionBindings,cache);}}const offset=waterSeed(seed),palette=waterPalette(color,false,biome),recipe=waterColorRecipe({offset,palette,sun,shadowNode,globalSurface,biome,clip,reflection:!!reflectionBindings}),key=recipe.graphKey;let item=cache.get(key);if(item&&item.clock!==clockNode)throw Error('Water environment clock changed');
  if(!item){const graph=Fn(()=>{
   const t=clockNode.mul(WATER_DEFAULTS.speed).toVar(),world=positionWorld,ink=palette.map(rgb=>vec3(...rgb));let paint=null;
   if(!globalSurface){const wp=world.zx.mul(vec2(.22,.45)).mul(WATER_DEFAULTS.scale).toVar(),px=max(length(dFdx(wp)),length(dFdy(wp))).toVar(),p=wp.add(vec2(...offset)).toVar(),x=p.x.sub(t.mul(.19)).toVar();
