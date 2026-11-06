@@ -52,7 +52,11 @@ export async function createWebGpuConfirmedAnimal({scene,residency,state,actorId
   action.time=motion.time;mixer.update(0);if(provisional){const hit=provisional.animal.magicImpact,d=hit.direction,h=visualAnchor?.yaw??entity.heading??0,dx=d.x*Math.cos(h)-d.z*Math.sin(h),dz=d.x*Math.sin(h)+d.z*Math.cos(h),axis=Math.abs(dx)>Math.abs(dz)?(dx<0?'left':'side'):(dz<0?'back':'front'),direction=d.y<-.5?({front:'down',back:'downBack',side:'downSide',left:'downLeft'}[axis]):axis,clip=getFalls()?.get(species+':'+direction);let played=false;
    if(clip){if(!provisionalFall||fallToken!==hit.at){const bones=new Map();model.traverse(o=>{if(o.isBone)bones.set(o.name.replace(/^mixamorig[:_]?/,''),o);});const entries=RAGDOLL_LINKS.map(([name])=>({bone:bones.get(name)}));if(entries.every(e=>e.bone)){root.updateMatrixWorld(true);provisionalFall=new BakedBeastFall({model,entries},clip,{clipPosition:(point,initial)=>{point.x=initial.x;point.z=initial.z;}});fallToken=hit.at;}}if(provisionalFall){const age=Math.max(0,provisional.elapsed-guardianImpactTime(hit));provisionalFall.apply(age);const t=THREE.MathUtils.clamp(age/.8,0,1),blend=t*t*(3-2*t);for(const entry of provisionalFall.entries)if(/(?:Left|Right)(?:Fore)?Arm$/.test(entry.bone.name))entry.bone.quaternion.slerp(entry.rotation,1-blend);model.updateMatrixWorld(true);played=true;}}
    if(!played){captureAnimalImpact(impactData,provisional.animal,provisional.elapsed);applyAnimalImpact(impactData,provisional.animal,provisional.elapsed);}}
-  applyActorExpression(expressionData,entity,'animal',elapsed);
+  // Provisional impacts have their own presentation clock and do not mutate
+  // the confirmed animal. Sample its expression from the same visual impact
+  // as the recoil, then return to confirmed state when that impact ends.
+  applyActorExpression(expressionData,provisional?.animal??entity,'animal',
+    provisional?.elapsed??elapsed);
  }
  try{update();progressive?.start();}catch(error){baked?.dispose();scene.remove(root);shared?.release();progressive?.dispose();for(const resource of resources)resource.dispose();throw error;}
  async function installBakedWalk(bake,{pipelineAdmission,signal:admissionSignal}={}){

@@ -20,6 +20,13 @@ test('confirmed animal expressions follow simulation time during animation and p
   const transform=x=>[x,0,0,0,0,0,1,1,1,1];physical={actorId:'a',active:true,root:transform(7),model:transform(0),bones:[{name:'Hips',transform:transform(0)}]};animal.magicDown={phase:'falling'};clock.commit(.6);actor.update();assert.ok(face.morphTargetInfluences[0]>=.72);assert.ok(face.morphTargetInfluences[1]>=.72);assert.equal(actor.root.position.x,7,'physical pose remains authoritative');
  }finally{actor.dispose();clock.dispose();}
 });
+test('provisional impact drives expression before authority confirms and restores confirmed time',async()=>{
+ const scene=new Scene(),model=new Group(),bone=new Bone(),face=new Mesh();bone.name='Hips';model.add(bone,face);face.morphTargetDictionary={blinkL:0,blinkR:1,mouthOpen:2};face.morphTargetInfluences=[0,0,0];
+ const animal={id:'a',species:'hyena',status:'walking',x:0,z:0,heading:0,radius:.7},game={raid:{animals:[animal]},elapsed:10},before=structuredClone(game),bank={async acquire(){return {model,clips:[new AnimationClip('Walking',1,[])],release(){}};}},clock=createConfirmedPresentationClock(10);
+ const hit={at:-1,impactAt:.24,point:{x:0,y:1,z:0},direction:{x:1,y:0,z:0},intensity:1,ground:0};let provisional=null;
+ const actor=await createWebGpuConfirmedAnimal({scene,residency:{get:()=>null},state:game,actorId:'a',assetBank:bank,confirmedClock:clock,getProvisional:()=>provisional});
+ try{provisional={animal:{...animal,magicImpact:hit},elapsed:.3};actor.update();assert.ok(face.morphTargetInfluences[0]>.9);assert.ok(face.morphTargetInfluences[2]>.7);assert.deepEqual(game,before,'preview does not mutate authority');provisional=null;clock.commit(11);actor.update();assert.ok(face.morphTargetInfluences[2]<.001,'confirmed visual state resumes after rejection');}finally{actor.dispose();clock.dispose();}
+});
 test('cancels a pending animal download on disposal signal',async()=>{
  const original=GLTFLoader.prototype.loadAsync,controller=new AbortController();let loaderSignal;
  GLTFLoader.prototype.loadAsync=function(){loaderSignal=this.manager.abortController.signal;return new Promise((resolve,reject)=>loaderSignal.addEventListener('abort',()=>reject(new DOMException('aborted','AbortError')),{once:true}));};
