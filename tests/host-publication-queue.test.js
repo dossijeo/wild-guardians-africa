@@ -132,7 +132,7 @@ test('an unchanged camera confirmation can share the preceding quiet state witho
  assert.equal(sent[1].firstSequence,2);assert.equal(sent[1].publication.sequence,3);assert.equal(sent[1].publication.snapshot,full(2).snapshot);q.ack(3);assert.equal(sent[2].receipt,receipt);assert.equal(sent[3].publication.sequence,4);
 });
 test('an unchanged receipt folds into an eventful tick without losing facts or the invalidation boundary',()=>{
- const sent=[],q=createHostPublicationQueue({session:'s',foldViews:true,send:value=>sent.push(value)}),snapshot=JSON.stringify({slotId:'slot',sequence:12,elapsed:4}),events=[{id:'event-9',type:'SpellActivated'},{id:'event-10',type:'RaidEnded'}],presentationJournal=[{kind:'event',eventId:'event-9'},{kind:'animalGone',actorId:'a'},{kind:'event',eventId:'event-10'}],motionInvalidation={actorId:'a',at:4,reason:'simulation-event'},pose={actorId:'a',active:true};
+ const sent=[],q=createHostPublicationQueue({session:'s',foldViews:true,send:value=>sent.push(value)}),snapshot=JSON.stringify({slotId:'slot',sequence:12,elapsed:4}),events=[{id:'event-9',type:'SpellActivated'},{id:'event-10',type:'RaidEnded'}],presentationJournal=[{kind:'event',eventId:'event-9',at:3.8},{kind:'animalGone',actorId:'a',at:3.9},{kind:'event',eventId:'event-10',at:4}],motionInvalidation={actorId:'a',at:4,reason:'simulation-event'},pose={actorId:'a',active:true};
  const full=sequence=>({sequence,events:[],physicsPose:pose,elapsed:4,pauses:['menu'],saveAvailable:true,snapshot});
  q.publication(full(1),true);q.publication({...full(2),events,presentationJournal,motionInvalidation},true);
  const view={sequence:3,unchanged:true,slotId:'slot',stateSequence:12,elapsed:4,pauses:['menu'],events:[],saveAvailable:true};
