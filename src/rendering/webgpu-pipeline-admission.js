@@ -205,6 +205,16 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
   },
   prepareAndPublish(object,options,publish){return this.prepare(object,{...options,publish});},
   prepareTicket(object,options){return this.prepare(object,{...options,returnTicket:true});},
+  async prepareManyAndPublish(requests,publish){
+   if(!Array.isArray(requests)||typeof publish!=='function'||requests.some(request=>!request?.object?.isObject3D))throw TypeError('Invalid admission group');
+   const tickets=Array(requests.length).fill(null);
+   for(;;){
+    for(let i=0;i<requests.length;i++)if(!tickets[i]?.valid())tickets[i]=await this.prepareTicket(requests[i].object,requests[i].options);
+    if(closed)throw Error('Pipeline admission cancelled');
+    if(requests.some(request=>request.options?.signal?.aborted))throw new DOMException('Pipeline admission cancelled','AbortError');
+    if(tickets.every(ticket=>ticket.valid())){publish();return;}
+   }
+  },
   dispose(){if(closed)return;closed=true;generation++;cancel();lights.clear();auxiliaryTargets.clear();rejectWaiting(Error('Pipeline admission cancelled'));},
  };
 }

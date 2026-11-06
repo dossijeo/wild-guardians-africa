@@ -101,6 +101,12 @@ test('a preparation ticket tracks compiled inputs and auxiliary pass ownership',
  try{const ticket=await admission.prepareTicket(mesh,{});assert.equal(ticket.valid(),true);mesh.material.needsUpdate=true;assert.equal(ticket.valid(),false);const fresh=await admission.prepareTicket(mesh,{});const remove=admission.registerAuxiliaryTarget(target);assert.equal(fresh.valid(),false);remove();}finally{admission.dispose();target.dispose();mesh.geometry.dispose();mesh.material.dispose();}
 });
 
+test('a group publishes only after every prepared object is still current',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),a=new THREE.Mesh(),b=new THREE.Mesh(),pending=[];let published=0;
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(object){return new Promise(resolve=>pending.push({object,resolve}));}},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),turn=()=>new Promise(resolve=>setImmediate(resolve));
+ try{const ready=admission.prepareManyAndPublish([{object:a},{object:b}],()=>published++);await turn();pending[0].resolve();await turn();assert.equal(pending[1].object,b);a.material.needsUpdate=true;pending[1].resolve();await turn();assert.equal(published,0);assert.equal(pending[2].object,a);pending[2].resolve();await ready;assert.equal(published,1);}finally{admission.dispose();a.geometry.dispose();a.material.dispose();b.geometry.dispose();b.material.dispose();}
+});
+
 test('removing an auxiliary target while it compiles avoids retries using retired resources',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),mesh=new THREE.Mesh(),framebuffer={},target=new THREE.RenderTarget(2,2),calls=[];let current=null,finish;const renderer={backend:{isWebGPUBackend:true},getRenderTarget:()=>current,_getFrameBufferTarget:()=>framebuffer,setRenderTarget:value=>{current=value;},compileAsync(){calls.push(current);return calls.length===2?new Promise(resolve=>{finish=resolve;}):Promise.resolve();}},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),remove=admission.registerAuxiliaryTarget(target);try{const ready=admission.prepare(mesh);await new Promise(resolve=>setImmediate(resolve));mesh.material.needsUpdate=true;remove();finish();await ready;assert.deepEqual(calls,[framebuffer,target,framebuffer]);}finally{admission.dispose();target.dispose();mesh.geometry.dispose();mesh.material.dispose();}
 });

@@ -17,10 +17,11 @@ export function createWebGpuAdmittedCenterDamage({damage,pipelineAdmission,onRea
   let objects;
   if(activeStage===null){damage.update(entity,time);group.visible=false;objects=[group];}
   else{objects=[];if(target.body&&!body.visible)objects.push(body);if(target.ash&&!ash.visible)objects.push(ash);}
-  Promise.resolve().then(async()=>{for(const object of objects)await pipelineAdmission.prepare(object,{signal:controller.signal});}).then(()=>{
+  const publish=()=>{
    if(closed||pending!==controller||controller.signal.aborted||!enabled)return;
    damage.update(latest.entity,latest.time);pending=null;activeStage=targetKey;group.visible=true;try{onReady();}catch(error){onError(error);}
-  }).catch(error=>{if(closed||pending!==controller||controller.signal.aborted)return;pending=null;onError(error);});
+  };
+  Promise.resolve().then(async()=>{if(typeof pipelineAdmission.prepareManyAndPublish==='function')await pipelineAdmission.prepareManyAndPublish(objects.map(object=>({object,options:{signal:controller.signal}})),publish);else{for(const object of objects)await pipelineAdmission.prepare(object,{signal:controller.signal});publish();}}).catch(error=>{if(closed||pending!==controller||controller.signal.aborted)return;pending=null;onError(error);});
  }
  function hide(){if(closed)return;enabled=false;cancel();group.visible=false;}
  return {group,update,hide,get ready(){return activeStage!==null&&enabled;},get upToDate(){return enabled&&activeStage!==null&&pending===null&&activeStage===key(stage(latest.entity));},prepare(camera){if(enabled&&activeStage!==null)damage.prepare(camera);},status(){return damage.status();},dispose(){if(closed)return;closed=true;cancel();group.removeFromParent();if(typeof pipelineAdmission.deferCompilations==='function')pipelineAdmission.deferCompilations(()=>damage.dispose());else damage.dispose();}};
