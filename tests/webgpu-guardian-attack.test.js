@@ -16,6 +16,18 @@ test('guardian effect resources survive cancellation of their own compilation',a
  try{const pending=visual.prepare();await turn();calls[0].resolve();await turn();calls[1].resolve();await turn();assert.equal(calls.length,3);const effects=calls[2].object;assert.equal(effects.children.length,4);effects.children[0].geometry.addEventListener('dispose',()=>released++);const rejection=assert.rejects(pending,/cancelled|closed/);visual.dispose();await rejection;assert.equal(released,0);calls[2].resolve();await turn();assert.equal(released,1);assert.equal(scene.children.length,0);}finally{visual.dispose();admission.dispose();}
 });
 function setup(){let now=0;const scene=new THREE.Scene(),state={elapsed:0,events:[],raid:{animals:[{id:'a',status:'walking'}]}},renderer={backend:{isWebGPUBackend:true}},visual=createWebGpuGuardianAttack({scene,state,renderer,clock:()=>now,loadModel:()=>new Promise(()=>{})}),command={kind:'castAttack',id:'c',targetId:'a',selection:{origin:{x:0,y:2,z:0},contact:{x:1,y:1,z:0}}};return {scene,state,visual,command,setNow:value=>{now=value;}};}
+test('tutorial guide reuses the admitted guardian and yields to a cast',async()=>{
+ let now=0,loads=0;const scene=new THREE.Scene(),model=new THREE.Group(),sounds=[],state={time:0,elapsed:0,events:[],raid:{animals:[{id:'a',status:'walking'}]}},renderer={backend:{isWebGPUBackend:true}},visual=createWebGpuGuardianAttack({scene,state,renderer,clock:()=>now,loadModel:async()=>{loads++;return {scene:model,animations:[]};},onPresence:id=>sounds.push(id)});
+ const guide={origin:{x:2,y:1,z:3},target:[5,0,2],camera:{x:4,y:8,z:9}},command={kind:'castAttack',id:'c',targetId:'a',selection:{origin:{x:0,y:2,z:0},contact:{x:1,y:1,z:0}}};
+ try{
+  assert.equal(visual.setGuide(guide),true);assert.equal(visual.guideVisible(),false);await visual.prepare();visual.tick();
+  assert.equal(visual.guideVisible(),true);assert.deepEqual(visual.guideObject().position.toArray(),[2,1,3]);assert.ok(Math.abs(model.scale.x-4.08)<1e-9);assert.deepEqual(sounds,[]);assert.equal(loads,1);
+  assert.equal(visual.begin(command),true);assert.equal(visual.guideVisible(),false);visual.tick();assert.equal(model.scale.x,2.4);
+  visual.resolve('c',false);now=200;visual.tick();assert.equal(visual.guideVisible(),true);assert.deepEqual(sounds,['spirit_appear']);
+  visual.setGuide(null);assert.equal(visual.guideVisible(),false);assert.equal(visual.guideObject().visible,false);
+  assert.throws(()=>visual.setGuide({...guide,target:[1,2,NaN]}),/Invalid guardian guide/);
+ }finally{visual.dispose();}
+});
 test('guardian presence follows admitted visual and is not replayed on confirmation or recovery',async()=>{
  let now=0;const sounds=[],state={elapsed:0,time:0,events:[],raid:{animals:[{id:'a',status:'walking'}]}},renderer={backend:{isWebGPUBackend:true}},origin={x:0,y:2,z:0},contact={x:1,y:1,z:0};
  const create=()=>createWebGpuGuardianAttack({scene:new THREE.Scene(),state,renderer,clock:()=>now,loadModel:async()=>({scene:new THREE.Group(),animations:[]}),onPresence:(id,p)=>sounds.push({id,p})});

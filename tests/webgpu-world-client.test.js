@@ -4,6 +4,24 @@ import {createWebGpuWorldClient} from '../src/rendering/webgpu-world-client.js';
 import {webGpuWorldOptions} from '../src/app/webgpu-world-options.js';
 import {MAX_PENDING_PRESENTATION_INPUTS} from '../src/rendering/presentation-input-limits.js';
 function setup(options={}){const worker={messages:[],postMessage(message,transfer){this.messages.push({message,transfer});},terminate(){this.terminated=true;}},ports=[],client=createWebGpuWorldClient({canvas:{transferControlToOffscreen:()=>({canvas:true})},session:'s',snapshot:'{}',...options,workerFactory:()=>worker,channelFactory:()=>{const a={close(){this.closed=true;}},b={close(){this.closed=true;}};ports.push(a,b);return {port1:a,port2:b};}});return {worker,ports,client};}
+test('guardian context and frame confirmation reject stale camera and scene versions',async()=>{
+ const {client,worker}=setup({presentationInputs:true});worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await client.ready;
+ await assert.rejects(client.guardianContext(),/unavailable or stale/);
+ const frame={sequence:4,terrainGeneration:2,selectableGeneration:5,cameraVersion:0};worker.onmessage({data:{kind:'rendered-frame',...frame}});
+ let pending=client.guardianContext(),sent=worker.messages.at(-1).message;assert.equal(sent.kind,'guardian-context');assert.deepEqual(sent.frame,frame);
+ worker.onmessage({data:{kind:'guardianContextResult',id:sent.id,result:{epoch:'e'}}});assert.deepEqual(await pending,{context:{epoch:'e'},frame});
+ pending=client.verifyGuardianFrame(frame);sent=worker.messages.at(-1).message;assert.equal(sent.kind,'verify-guardian-frame');worker.onmessage({data:{kind:'guardianFrameResult',id:sent.id}});assert.equal(await pending,true);
+ pending=client.guardianContext();sent=worker.messages.at(-1).message;client.setCamera({x:1});worker.onmessage({data:{kind:'guardianContextResult',id:sent.id,result:{epoch:'e'}}});await assert.rejects(pending,/Stale/);await assert.rejects(client.verifyGuardianFrame(frame),/Stale/);
+ worker.onmessage({data:{kind:'rendered-frame',...frame,cameraVersion:1}});const next=client.guardianFrame();pending=client.verifyGuardianFrame(next);sent=worker.messages.at(-1).message;worker.onmessage({data:{kind:'rendered-frame',...next,terrainGeneration:3}});worker.onmessage({data:{kind:'guardianFrameResult',id:sent.id}});await assert.rejects(pending,/Stale/);client.dispose();
+});
+test('guide admission is versioned and never asserts unverified visibility',async()=>{
+ const {client,worker}=setup({presentationInputs:true});worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await client.ready;
+ const frame={sequence:4,terrainGeneration:2,selectableGeneration:5,cameraVersion:0};worker.onmessage({data:{kind:'rendered-frame',...frame}});
+ const guide={origin:{x:1,y:2,z:3},camera:{x:0,y:5,z:6},target:[1,0,2]};let pending=client.setGuardianGuide(guide,frame),sent=worker.messages.at(-1).message;
+ assert.equal(sent.kind,'guardian-guide-set');worker.onmessage({data:{kind:'guardianGuideResult',id:sent.id}});assert.deepEqual(await pending,{accepted:true,visibility:'unknown'});
+ pending=client.setGuardianGuide(guide,frame);sent=worker.messages.at(-1).message;client.setCamera({x:1});worker.onmessage({data:{kind:'guardianGuideResult',id:sent.id}});await assert.rejects(pending,/Stale/);assert.equal(worker.messages.at(-1).message.kind,'guardian-guide-clear');
+ assert.equal(client.clearGuardianGuide(),true);client.dispose();
+});
 test('guardian presence is delivered only for a live graphical Worker and valid coordinates',async()=>{
  const sounds=[],{client,worker}=setup({onGuardianPresence:(id,origin)=>sounds.push({id,origin})});
  const send=(id,origin)=>worker.onmessage({data:{kind:'guardianPresence',id,origin}});
