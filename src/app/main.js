@@ -638,7 +638,8 @@ function startDueCinematic(){
   return true;
 }
 function openInitialHiringWhenReady(){
-  if(state.day===1&&state.initialPreparation&&!tool&&!surfaces.active&&!state.pauses.includes('hiring')&&state.plants.some(p=>p.alive)&&state.structures.some(operational)){
+  const view=world?.workerGpuOnly?world.actorAudio??state:state,initial=world?.workerGpuOnly?world.confirmedHud?.hiring?.initialPreparation??state.initialPreparation:state.initialPreparation;
+  if(view.day===1&&initial&&!tool&&!surfaces.active&&!view.pauses.includes('hiring')&&view.plants.some(p=>p.alive)&&view.structures.some(operational)){
     if(!world.workerRuntime)Game.openInitialHiring(state);
     else if(initialHiringPending!==world){const owner=world,ownerState=state;initialHiringPending=owner;owner.workerRuntime.submit({kind:'openInitialHiring'}).then(()=>{if(owner===world&&ownerState===state)updateUI(true);},failure=>{if(owner===world&&ownerState===state)error(failure.message);}).finally(()=>{if(initialHiringPending===owner)initialHiringPending=null;});}
   }
@@ -661,7 +662,7 @@ function renderResultAvailability(){
 function updateUI(force=false) {
   if(screen!=='game'||!state)return;
   if(campaignCinema||startDueCinematic())return;
-  if(world?.workerGpuOnly){const now=performance.now(),hud=world.confirmedHud??{time:state.time,day:state.day,completedNights:state.completedNights,balance:state.ledger.balance},hudState=hud.rules??state;openInitialHiringWhenReady();if(!state.pauses.includes('hiring'))surfaces.deferred.delete('hiring');if(state.pauses.includes('hiring')&&surfaces.shouldOpen('hiring',{mandatory:true}))hiringDialog();world.wallDrawing.setEnabled(tool?.kind==='wall'&&!tool.gate&&permission(hudState,'wall'));if(!force&&now-lastUI<200)return;lastUI=now;if(tool?.kind==='awakening'&&(state.awakenings?.progress??0)<100)cancelTool();if(tool&&(['plant','center','wall'].includes(tool.kind)||tool.kind==='spell'&&tool.spell!=='shield')&&toolSession.expired(now/1000,tool.kind==='wall'&&world.wallDrawing.active))cancelTool();awakeningHud?.render(hudState,{selecting:tool?.kind==='awakening',blocked:!!surfaces.active||!world.authoritativeGuardianPlacement});refreshSpellCards(document,hudState);refreshCommandFeedback();document.querySelector('#clockValue').textContent=Game.clockLabel(hud);document.querySelector('#moneyValue').textContent=localMoney(hud.balance);document.querySelector('#dayValue').textContent='Día '+hud.day;document.querySelector('#days').title=`${hud.completedNights}/100 noches superadas`;manualMagicActivity.update(state);const balance=numberOf(hud.balance);if(balance>lastBudgetBalance&&balance>BUDGET_WARNING_THRESHOLD)reserveWarningShown=false;if(balance<=BUDGET_WARNING_THRESHOLD&&lastBudgetBalance>BUDGET_WARNING_THRESHOLD&&!reserveWarningShown){reserveWarningShown=true;budgetWarningUntil=now+18000;}lastBudgetBalance=balance;refreshBuildPermissions(document,hudState);contextPanel();const activeTutorial=world.qaEarlyTutorial?narrator():null;renderConfirmedNotices(activeTutorial,now);renderResultAvailability();refreshCommandFeedback();return;}
+  if(world?.workerGpuOnly){const now=performance.now(),hud=world.confirmedHud??{time:state.time,day:state.day,completedNights:state.completedNights,balance:state.ledger.balance},hudState=hud.rules??state;openInitialHiringWhenReady();if(!hudState.pauses.includes('hiring'))surfaces.deferred.delete('hiring');if(hudState.pauses.includes('hiring')&&surfaces.shouldOpen('hiring',{mandatory:true}))hiringDialog();world.wallDrawing.setEnabled(tool?.kind==='wall'&&!tool.gate&&permission(hudState,'wall'));if(!force&&now-lastUI<200)return;lastUI=now;if(tool?.kind==='awakening'&&(hudState.awakenings?.progress??0)<100)cancelTool();if(tool&&(['plant','center','wall'].includes(tool.kind)||tool.kind==='spell'&&tool.spell!=='shield')&&toolSession.expired(now/1000,tool.kind==='wall'&&world.wallDrawing.active))cancelTool();awakeningHud?.render(hudState,{selecting:tool?.kind==='awakening',blocked:!!surfaces.active||!world.authoritativeGuardianPlacement});refreshSpellCards(document,hudState);refreshCommandFeedback();document.querySelector('#clockValue').textContent=Game.clockLabel(hud);document.querySelector('#moneyValue').textContent=localMoney(hud.balance);document.querySelector('#dayValue').textContent='Día '+hud.day;document.querySelector('#days').title=`${hud.completedNights}/100 noches superadas`;manualMagicActivity.update(state);const balance=numberOf(hud.balance);if(balance>lastBudgetBalance&&balance>BUDGET_WARNING_THRESHOLD)reserveWarningShown=false;if(balance<=BUDGET_WARNING_THRESHOLD&&lastBudgetBalance>BUDGET_WARNING_THRESHOLD&&!reserveWarningShown){reserveWarningShown=true;budgetWarningUntil=now+18000;}lastBudgetBalance=balance;refreshBuildPermissions(document,hudState);contextPanel();const activeTutorial=world.qaEarlyTutorial?narrator():null;renderConfirmedNotices(activeTutorial,now);renderResultAvailability();refreshCommandFeedback();return;}
   const now=performance.now();if(!force&&now-lastUI<200)return;lastUI=now;
   if(tool?.kind==='awakening'&&(state.awakenings?.progress??0)<100)cancelTool();
   world.awakeningSelecting=tool?.kind==='awakening';world.awakeningTargetId=world.awakeningSelecting?tool.targetId:null;
@@ -794,12 +795,12 @@ function narrator() {
   return message;
 }
 function hiringDialog(centerId=null) {
-  const additional=centerId!==null;
+  const additional=centerId!==null,view=()=>world?.workerGpuOnly?world.actorAudio??state:state,hiring=world?.workerGpuOnly?world.confirmedHud?.hiring:null;
   if(!openSurface(additional?'modal':'hiring',additional?'additional-hiring':undefined))return;
   if(additional)changeSimulationPause(true,'menu');
-  const selection=additional?{}:{...state.hiringSelection},modal=document.querySelector('#modal');
-  modal.innerHTML=`<div class="overlay native-hiring" id="hiring-dialog">${hiringMarkup({day:state.day,clock:Game.clockLabel(state),hiring:{hasPrevious:state.day>1,draft:NPC_TYPES.map(p=>selection[p.id]??0)}})}</div>`;
-  const agricultural=agriculturalDawnMessage(state);
+  const selection=additional?{}:{...(hiring?.selection??state.hiringSelection)},modal=document.querySelector('#modal');
+  modal.innerHTML=`<div class="overlay native-hiring" id="hiring-dialog">${hiringMarkup({day:view().day,clock:Game.clockLabel(view()),hiring:{hasPrevious:view().day>1,draft:NPC_TYPES.map(p=>selection[p.id]??0)}})}</div>`;
+  const agricultural=hiring?hiring.agriculturalNotice:agriculturalDawnMessage(state);
   if(agricultural&&!additional){const announcement=document.createElement('p');announcement.className='hiring-intro';announcement.id='hiringAgriculturalNotice';announcement.role='status';announcement.textContent=agricultural;document.querySelector('#hiringIntro').before(announcement);}
   const stage=document.querySelector('#stage');stage.classList.add('hiring-open');
   if(additional){
@@ -807,25 +808,25 @@ function hiringDialog(centerId=null) {
     document.querySelector('.panel-subtitle').textContent='Jornada en curso';
     document.querySelector('#hiringIntro').textContent='Contrata más personas para este centro. Pagas solo la parte de su jornada que queda, redondeada hacia arriba.';
     const close=document.createElement('button');close.id='close-additional-hiring';close.textContent='Cerrar';document.querySelector('.hiring-footer').append(close);close.onclick=closeSurface;
-    const center=state.structures.find(s=>s.id===centerId);if(center.hp<center.maxHp){const repair=document.createElement('button');repair.textContent='Solicitar reparación';document.querySelector('.hiring-footer').append(repair);repair.onclick=()=>safe(()=>{closeSurface();return repairStructure(centerId,{persist:true});});}
+    const center=view().structures.find(s=>s.id===centerId);if(center.hp<center.maxHp){const repair=document.createElement('button');repair.textContent='Solicitar reparación';document.querySelector('.hiring-footer').append(repair);repair.onclick=()=>safe(()=>{closeSurface();return repairStructure(centerId,{persist:true});});}
     for(const [i,p] of NPC_TYPES.entries()){
-      const card=document.querySelector(`[data-crew-card="${i}"]`),shift=card.querySelector('.hire-shift span');shift.textContent=Game.clockLabel(state)+'–'+shift.textContent.split('–')[1];
-      if(state.time>=PROFILES.find(profile=>profile.id===p.id).end){const input=document.querySelector(`#crewCount${i}`);input.disabled=true;document.querySelectorAll(`[data-crew-step="${i}"]`).forEach(button=>button.disabled=true);}
+      const card=document.querySelector(`[data-crew-card="${i}"]`),shift=card.querySelector('.hire-shift span');shift.textContent=Game.clockLabel(view())+'–'+shift.textContent.split('–')[1];
+      if(view().time>=PROFILES.find(profile=>profile.id===p.id).end){const input=document.querySelector(`#crewCount${i}`);input.disabled=true;document.querySelectorAll(`[data-crew-step="${i}"]`).forEach(button=>button.disabled=true);}
     }
   }
   const refresh=()=>{
     for(const [i,p] of NPC_TYPES.entries())selection[p.id]=Number(document.querySelector(`#crewCount${i}`).value);
     if(!additional&&!world.workerRuntime)state.hiringSelection={...selection};
-    try {const available=numberOf(state.ledger.balance),{cost,canConfirm,message}=hiringConfirmation(selection,available,additional?{time:state.time}:{});document.querySelector('#hireAvailable').textContent=localMoney(state.ledger.balance);document.querySelector('#hireCost').textContent=cost.toLocaleString(window.WildGuardiansLanguage?.locale()??'en-US');document.querySelector('#hireBalance').textContent=(available-cost).toLocaleString(window.WildGuardiansLanguage?.locale()??'en-US');document.querySelector('#hireConfirm').disabled=!canConfirm;document.querySelector('#hireBudgetMessage').textContent=message;}
+    try {const available=numberOf(view().ledger.balance),{cost,canConfirm,message}=hiringConfirmation(selection,available,additional?{time:view().time}:{});document.querySelector('#hireAvailable').textContent=localMoney(view().ledger.balance);document.querySelector('#hireCost').textContent=cost.toLocaleString(window.WildGuardiansLanguage?.locale()??'en-US');document.querySelector('#hireBalance').textContent=(available-cost).toLocaleString(window.WildGuardiansLanguage?.locale()??'en-US');document.querySelector('#hireConfirm').disabled=!canConfirm;document.querySelector('#hireBudgetMessage').textContent=message;}
     catch(e){document.querySelector('#hireConfirm').disabled=true;document.querySelector('#hireBudgetMessage').textContent=e.message;}
   };
   document.querySelectorAll('[data-crew-step]').forEach(el=>el.onclick=()=>{const input=document.querySelector(`#crewCount${el.dataset.crewStep}`);input.value=Math.max(0,Number(input.value)+Number(el.dataset.delta));refresh();});document.querySelectorAll('[data-crew-count]').forEach(el=>el.oninput=refresh);
   document.querySelector('[data-hire="clear"]').onclick=()=>{document.querySelectorAll('[data-crew-count]').forEach(el=>el.value=0);refresh();};
-  bind('hireConfirm',()=>{if(!hiringConfirmation(selection,numberOf(state.ledger.balance),additional?{time:state.time}:{}).canConfirm)return;
-    const owner=world,ownerState=state,runtime=owner.workerRuntime;if(!runtime){additional?Game.hireAdditional(state,commandId(),selection,centerId):Game.hire(state,commandId(),selection);closeSurface();save();audio.gameplay(state.day).catch(()=>{});return;}
+  bind('hireConfirm',()=>{if(!hiringConfirmation(selection,numberOf(view().ledger.balance),additional?{time:view().time}:{}).canConfirm)return;
+    const owner=world,ownerState=state,runtime=owner.workerRuntime;if(!runtime){additional?Game.hireAdditional(state,commandId(),selection,centerId):Game.hire(state,commandId(),selection);closeSurface();save();audio.gameplay(view().day).catch(()=>{});return;}
     ensureWorkerSave(owner,ownerState);
     const button=document.querySelector('#hireConfirm');button.disabled=true;const command={kind:additional?'hireAdditional':'hire',id:commandId(),selection:{...selection},...(additional?{centerId}:{})};
-    return owner.workerRuntime.submit(command).then(async result=>{if(owner!==world||ownerState!==state)return;if(result.rejection)throw Error(result.rejection);if(result.value===false){refresh();return;}closeSurface();await owner.workerSave();if(owner===world&&ownerState===state){audio.gameplay(state.day).catch(()=>{});updateUI(true);}}).catch(failure=>{if(owner===world&&ownerState===state&&button.isConnected)refresh();throw failure;});
+    return owner.workerRuntime.submit(command).then(async result=>{if(owner!==world||ownerState!==state)return;if(result.rejection)throw Error(result.rejection);if(result.value===false){refresh();return;}closeSurface();await owner.workerSave();if(owner===world&&ownerState===state){audio.gameplay(view().day).catch(()=>{});updateUI(true);}}).catch(failure=>{if(owner===world&&ownerState===state&&button.isConnected)refresh();throw failure;});
   });refresh();
   paintPanelFrame(modal,stage,'No se ha podido cargar el marco de contratación.');
 }
