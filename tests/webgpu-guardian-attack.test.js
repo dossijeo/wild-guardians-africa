@@ -1,3 +1,4 @@
+import {createWebGpuResourceRegistry} from '../src/rendering/webgpu-resource-registry.js';
 import {createConfirmedPresentationClock} from '../src/rendering/confirmed-presentation-clock.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -7,9 +8,9 @@ import {createWebGpuGuardianAttack} from '../src/rendering/webgpu-guardian-attac
 import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
 import {createWebGpuGuardianStyle} from '../src/rendering/webgpu-guardian-material.js';
 test('guardian resources survive closure until its pipeline compilation settles',async()=>{
- const scene=new THREE.Scene(),model=new THREE.Group(),geometry=new THREE.BoxGeometry(),original=new THREE.MeshStandardMaterial();model.add(new THREE.Mesh(geometry,original));let finish,released=0;geometry.addEventListener('dispose',()=>released++);
- const renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:()=>new MeshStandardNodeMaterial()},compileAsync:()=>new Promise(resolve=>{finish=resolve;})},admission=createWebGpuPipelineAdmission({scene,camera:new THREE.PerspectiveCamera(),renderer}),visual=createWebGpuGuardianAttack({scene,state:{events:[]},renderer,pipelineAdmission:admission,loadModel:async()=>({scene:model,animations:[]})});
- const pending=visual.prepare();await new Promise(resolve=>setImmediate(resolve));assert.equal(typeof finish,'function');visual.dispose();assert.equal(released,0);finish();await assert.rejects(pending,/unavailable|closed/);await new Promise(resolve=>setImmediate(resolve));assert.equal(released,1);admission.dispose();
+ const registry=createWebGpuResourceRegistry(),scene=new THREE.Scene(),model=new THREE.Group(),geometry=new THREE.BoxGeometry(),original=new THREE.MeshStandardMaterial();model.add(new THREE.Mesh(geometry,original));let finish,released=0;geometry.addEventListener('dispose',()=>released++);
+ const renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:()=>new MeshStandardNodeMaterial()},compileAsync:()=>new Promise(resolve=>{finish=resolve;})},admission=createWebGpuPipelineAdmission({scene,camera:new THREE.PerspectiveCamera(),renderer}),visual=createWebGpuGuardianAttack({scene,state:{events:[]},renderer,pipelineAdmission:admission,resourceRegistry:registry,loadModel:async()=>({scene:model,animations:[]})});
+ const pending=visual.prepare();await new Promise(resolve=>setImmediate(resolve));assert.equal(typeof finish,'function');assert.ok(registry.status().owned.some(item=>item.namespace==='guardian'));registry.dispose();visual.dispose();assert.ok(registry.status().owned.length>0);assert.equal(released,0);finish();await assert.rejects(pending,/unavailable|closed/);await new Promise(resolve=>setImmediate(resolve));assert.equal(released,1);assert.equal(registry.status().owned.length,0);admission.dispose();registry.dispose();
 });
 test('guardian effect resources survive cancellation of their own compilation',async()=>{
  const scene=new THREE.Scene(),model=new THREE.Group(),geometry=new THREE.BoxGeometry(),original=new THREE.MeshStandardMaterial();model.add(new THREE.Mesh(geometry,original));const calls=[],turn=()=>new Promise(resolve=>setImmediate(resolve));let released=0;
@@ -169,4 +170,9 @@ test('confirmed shield selects the authored shield clip on the admitted rig',asy
 });
 test('shield uses the established cyan guardian tint',()=>{
  const style=createWebGpuGuardianStyle();style.update({state:{time:0},age:.3,originY:0,modelBottom:0,modelHeight:3,impact:.48,kind:'shield'});assert.equal(style.uniforms.uSpiritTint.value.getHex(),0x8be8ec);
+});
+
+test('late guardian model cannot register in a closed generation and releases once',async()=>{
+ const registry=createWebGpuResourceRegistry(),scene=new THREE.Scene(),model=new THREE.Group(),geometry=new THREE.BoxGeometry(),material=new THREE.MeshStandardMaterial();model.add(new THREE.Mesh(geometry,material));let finish,released=0;geometry.addEventListener('dispose',()=>released++);const renderer={backend:{isWebGPUBackend:true}},visual=createWebGpuGuardianAttack({scene,state:{events:[]},renderer,resourceRegistry:registry,loadModel:()=>new Promise(resolve=>{finish=resolve;})});
+ try{const pending=visual.prepare();await new Promise(resolve=>setImmediate(resolve));registry.dispose();visual.dispose();finish({scene:model,animations:[]});await assert.rejects(pending,/closed|unavailable/);assert.equal(released,1);assert.equal(registry.status().owned.length,0);}finally{visual.dispose();registry.dispose();}
 });
