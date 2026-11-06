@@ -6,6 +6,8 @@ import {createWorkerHostedRuntime} from '../src/simulation/worker-hosted-runtime
 import {resolvePresentationRecoveryOptions} from '../src/simulation/presentation-recovery-options.js';
 import {openVisualStream} from '../src/simulation/visual-publication-stream.js';
 import {createPresentationRecoveryJournal} from '../src/simulation/presentation-recovery-journal.js';
+
+test('historical presentation rejects partial setup before creating its worker',()=>{let created=0;const receiver={accept(){},acceptUnchanged(){},status(){}},base={confirmedReceiver:receiver,session:'s',clientOptions:{snapshot:'{}',chunkKeys:[]},workerFactory:()=>{created++;return {postMessage(){},terminate(){}};}};assert.throws(()=>createWorkerHostedRuntime({...base,runtimeOptions:{presentationTimeline:true}}),/Incomplete historical/);assert.throws(()=>createWorkerHostedRuntime({...base,clientOptions:{...base.clientOptions,terrainHistory:{maxPending:1}}}),/Incomplete historical/);assert.throws(()=>createWorkerHostedRuntime({...base,clientOptions:{...base.clientOptions,terrainHistory:{maxPending:1}},runtimeOptions:{presentationTimeline:true}}),/Invalid terrain history/);assert.equal(created,0);});
 import {autosaveConfirmedEvents} from '../src/app/autosave-events.js';
 
 test('generic recovery options are explicit, compatible and fail closed',()=>{

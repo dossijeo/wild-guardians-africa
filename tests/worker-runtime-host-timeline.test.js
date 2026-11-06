@@ -1,0 +1,16 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {build} from 'esbuild';
+import {resolve} from 'node:path';
+
+test('host rejects partial history configuration and waits for visual negotiation before executing',async()=>{
+ const saved={self:globalThis.self,postMessage:globalThis.postMessage,close:globalThis.close,harness:globalThis.__timelineHostHarness},messages=[],commands=[],visual=[];let created=0;
+ globalThis.self={};globalThis.postMessage=message=>messages.push(message);globalThis.close=()=>{};globalThis.__timelineHostHarness={client(){created++;return {ready:Promise.resolve(),terrainBlocked:()=>false,submit(command){commands.push(command.kind);const sequence=commands.length;return {accepted:true,sequence,result:Promise.resolve({kind:'result',session:'s',sequence,elapsed:0,pauses:[],events:[],physicsPose:null,snapshot:'{}',residency:{missing:[]},saveAvailable:true})};},dispose(){}};}};
+ const plugin={name:'mock-authority',setup(build){build.onResolve({filter:/simulation-authority-client\.js$/},()=>({path:'authority',namespace:'mock'}));build.onLoad({filter:/.*/,namespace:'mock'},()=>({contents:'export const createSimulationAuthorityClient=options=>globalThis.__timelineHostHarness.client(options);',loader:'js'}));}};
+ try{const bundle=await build({entryPoints:[resolve('src/simulation/worker-runtime-host.js')],bundle:true,write:false,platform:'node',format:'esm',define:{'import.meta.env':'{"DEV":false}'},plugins:[plugin]});await import('data:text/javascript;base64,'+Buffer.from(bundle.outputFiles[0].text).toString('base64'));
+  const send=data=>self.onmessage({data}),flush=()=>new Promise(resolve=>setImmediate(resolve)),history={maxPending:16,maxRetainedBytes:4096,maxBatchBytes:4096,maxBatchRevisions:8},terrainPort={},presentationPort={postMessage:m=>visual.push(m),start(){},close(){}};
+  await send({kind:'initialize',session:'s',clientOptions:{snapshot:'{}',chunkKeys:[],terrainHistory:history},runtimeOptions:{startupSuspended:true},terrainPort,presentationPort});assert.equal(created,0);assert.match(messages.at(-1).message,/Incomplete historical presentation/);
+  const starting=send({kind:'initialize',session:'s',clientOptions:{snapshot:'{}',chunkKeys:[],terrainHistory:history},runtimeOptions:{startupSuspended:true,presentationTimeline:true},terrainPort,presentationPort});await flush();assert.equal(created,1);assert.deepEqual(commands,[]);assert.deepEqual(visual,[]);
+  presentationPort.onmessage({data:{kind:'presentationTimelineHello',session:'s',version:1,maxPublications:2,maxBytes:4096}});await starting;assert.equal(visual[0].kind,'presentationTimelineReady');assert.deepEqual(commands,['snapshot']);assert.equal(visual[1].kind,'publication');assert.ok(messages.some(message=>message.kind==='started'));presentationPort.onmessage({data:{kind:'publicationReceipt',session:'s',sequence:1}});presentationPort.onmessage({data:{kind:'publicationAck',session:'s',sequence:1}});await send({kind:'dispose',session:'s'});
+ }finally{globalThis.self=saved.self;globalThis.postMessage=saved.postMessage;globalThis.close=saved.close;globalThis.__timelineHostHarness=saved.harness;}
+});
