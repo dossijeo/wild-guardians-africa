@@ -30,3 +30,5 @@ test('invalid batches fail before starting an authority',()=>{
  assert.throws(()=>earlyWorkerOptions({initial:{},diagnostics:{batchSteps:0}}),/batch/);
  assert.throws(()=>earlyWorkerOptions({initial:{},diagnostics:{batchWindow:NaN}}),/batch/);
 });
+
+test('incremental HUD is enabled for the compatible product worker profile only',()=>{const initial={snapshot:'{}',navigationView:{}};assert.equal(earlyWorkerOptions({initial,metadataOnlySpatial:true}).runtimeOptions.hudEntityDeltas,true);for(const diagnostics of [{pathTrace:true},{doubleDecode:true},{legacyPublications:true},{legacyPublications:true,coalesce:true}])assert.equal(earlyWorkerOptions({initial,metadataOnlySpatial:true,diagnostics}).runtimeOptions.hudEntityDeltas,false);assert.equal(earlyWorkerOptions({initial}).runtimeOptions.hudEntityDeltas,false);});
