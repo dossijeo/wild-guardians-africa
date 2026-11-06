@@ -2,17 +2,18 @@ import {floorFloat32,ceilFloat32} from './float32-time.js';
 import {DataTexture, FloatType, NearestFilter, RGBAFormat, Vector3} from 'three';
 import {Fn, If, Loop, clamp, cos, float, ivec2, mix, modelWorldMatrix, modelWorldMatrixInverse, normalLocal, positionLocal, sin, textureLoad, uniform, vec3, vec4} from 'three/tsl';
 
-const materialOwners=new WeakMap();
+const materialOwners=new WeakMap();let nextMotionResource=0;
 
 // Replays only already-confirmed, timed path segments; it never predicts a
 // safe route or owns an actor. A caller must supply a presentation clock and
 // freeze it for pauses, invalidations and unavailable state. Coordinates are
 // absolute world X/Z; the material's model matrix anchors the initial point.
-export function createConfirmedGpuMotion({actorId,clock,maxSegments=64}={}){
+export function createConfirmedGpuMotion({actorId,clock,maxSegments=64,resourceRegistry=null}={}){
  const relative=clock?.motionNode?.isNode===true,clockNode=relative?clock.motionNode:clock,epoch=relative?clock.epoch:0;
- if(typeof actorId!=='string'||!actorId||!clockNode?.isNode||!Number.isFinite(epoch)||epoch<0||!Number.isInteger(maxSegments)||maxSegments<1||maxSegments>256)throw TypeError('Invalid GPU motion configuration');
+ if(resourceRegistry!==null&&typeof resourceRegistry?.adopt!=='function'||typeof actorId!=='string'||!actorId||!clockNode?.isNode||!Number.isFinite(epoch)||epoch<0||!Number.isInteger(maxSegments)||maxSegments<1||maxSegments>256)throw TypeError('Invalid GPU motion configuration');
  const data=new Float32Array(maxSegments*8),path=new DataTexture(data,2,maxSegments,RGBAFormat,FloatType);path.minFilter=NearestFilter;path.magFilter=NearestFilter;path.generateMipmaps=false;path.needsUpdate=true;
  const yawData=new Float32Array(maxSegments*4),yawTexture=new DataTexture(yawData,1,maxSegments,RGBAFormat,FloatType);yawTexture.minFilter=yawTexture.magFilter=NearestFilter;yawTexture.generateMipmaps=false;yawTexture.needsUpdate=true;
+ let pathLease=null,yawLease=null;try{if(resourceRegistry){const id=++nextMotionResource;pathLease=resourceRegistry.adopt({namespace:'gpu-motion',key:`${id}:path`,bytes:data.byteLength,dispose:()=>path.dispose()});yawLease=resourceRegistry.adopt({namespace:'gpu-motion',key:`${id}:yaw`,bytes:yawData.byteLength,dispose:()=>yawTexture.dispose()});pathLease.commit();yawLease.commit();}}catch(error){if(pathLease)pathLease.release();else path.dispose();if(yawLease)yawLease.release();else yawTexture.dispose();throw error;}
  const count=uniform(0,'int'),yawCount=uniform(0,'int'),startTime=uniform(0),endTime=uniform(0),horizon=uniform(0),anchor=uniform(new Vector3()),initialPosition=uniform(new Vector3()),initialYaw=uniform(0),bindings=new Map();
  let sequence=0,previousSequence=0,cancellable=false,disposed=false,installed=null,allowedUntil=null,vertical=false,oriented=false;
  const transform=base=>Fn(()=>{
@@ -49,5 +50,5 @@ export function createConfirmedGpuMotion({actorId,clock,maxSegments=64}={}){
  // Installation is transactional across rosters. A failed admission may undo
  // its version only before any presentation time has elapsed.
  function cancelAtStart(){if(disposed)throw Error('GPU motion disposed');if(!installed)return false;if(!cancellable)throw Error('Live motion replacement cannot be rolled back');const at=relative?clock.elapsed:clockNode.value;if(at!==installed.start.at)throw Error('GPU motion already advanced');sequence=previousSequence;reset();return true;}
- return {actorId,install,bootstrap,reset,cancelAtStart,hold,sample,bind,unbind,get texture(){return path;},status(){return {sequence,disposed,installed,horizon:installed?installed.start.at+horizon.value:null};},dispose(){if(disposed)return;disposed=true;for(const material of [...bindings.keys()])unbind(material);path.dispose();yawTexture.dispose();}};
+ return {actorId,install,bootstrap,reset,cancelAtStart,hold,sample,bind,unbind,get texture(){return path;},status(){return {sequence,disposed,installed,horizon:installed?installed.start.at+horizon.value:null};},dispose(){if(disposed)return;disposed=true;for(const material of [...bindings.keys()])unbind(material);if(pathLease)pathLease.release();else path.dispose();if(yawLease)yawLease.release();else yawTexture.dispose();}};
 }

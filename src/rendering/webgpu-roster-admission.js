@@ -38,3 +38,13 @@ export async function admitRosterActor({actor,entry,isCurrent,pipelineAdmission,
   }else publish();
  }finally{if(entry.pendingActor===actor)disposePendingRosterActor(entry,pipelineAdmission);}
 }
+
+// Motion and phase textures may be referenced by a compilation using the rig.
+// Detach ownership immediately but retain those resources until admission has
+// stopped using the same object, just like the actor asset lease itself.
+export function releaseRosterMotion(entry,pipelineAdmission){
+ const binding=entry.motionBinding,motion=entry.motion,phase=entry.phase,root=entry.actor?.root??entry.pendingActor?.root;entry.motionBinding=null;entry.motion=null;entry.phase=null;
+ if(!binding&&!motion&&!phase)return;
+ const release=()=>{binding?.dispose();motion?.dispose();phase?.dispose();};
+ if(root?.isObject3D&&typeof pipelineAdmission?.deferRelease==='function')pipelineAdmission.deferRelease(root,release);else release();
+}
