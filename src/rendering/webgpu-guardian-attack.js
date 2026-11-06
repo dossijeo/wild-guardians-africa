@@ -1,3 +1,4 @@
+import {vfxPassRecipe} from './webgpu-material-graph-catalog.js';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
@@ -27,7 +28,7 @@ export function createWebGpuGuardianAttack({scene,state,renderer,onError=()=>{},
  let guide=null,guideStarted=0,faceRecordKey=null;
  function track(value,dispose,kind){if(!resourceRegistry||closed||resourceLeases.has(value))return;let lease;try{lease=resourceRegistry.adopt({namespace:'guardian',key:`${resourceOwner}:${kind}:${++nextResource}`,dispose});lease.commit();resourceLeases.set(value,lease);}catch(error){if(lease)lease.release();else dispose();throw error;}}
  function rememberImage(image){if(!images.has(image)){track(image,()=>image.close(),'bitmap');images.add(image);}} const narration=createGuardianNarrationReceiver({clock});
- group.visible=false;scene.add(group);const style=createWebGpuGuardianStyle();const material=new THREE.MeshBasicMaterial({color:0xffcf79,transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending,toneMapped:false}),beamGeometry=new THREE.CylinderGeometry(1,1,1,8,1,true),ringGeometry=new THREE.TorusGeometry(1,.045,5,32),coreGeometry=new THREE.IcosahedronGeometry(1,1),beam=new THREE.Mesh(beamGeometry,material),impact=new THREE.Mesh(ringGeometry,material),core=new THREE.Mesh(coreGeometry,material);
+ group.visible=false;scene.add(group);const style=createWebGpuGuardianStyle();const material=new THREE.MeshBasicMaterial(vfxPassRecipe('guardianBeam').structural.state),beamGeometry=new THREE.CylinderGeometry(1,1,1,8,1,true),ringGeometry=new THREE.TorusGeometry(1,.045,5,32),coreGeometry=new THREE.IcosahedronGeometry(1,1),beam=new THREE.Mesh(beamGeometry,material),impact=new THREE.Mesh(ringGeometry,material),core=new THREE.Mesh(coreGeometry,material);
  const cropBeams=new THREE.InstancedMesh(beamGeometry,material,8),beamMatrix=new THREE.Matrix4(),beamScale=new THREE.Vector3(),cropHands=[];for(const resource of [material,beamGeometry,ringGeometry,coreGeometry,cropBeams])track(resource,()=>resource.dispose(),'effect');cropBeams.instanceMatrix.setUsage(THREE.DynamicDrawUsage);cropBeams.visible=false;cropBeams.frustumCulled=false;effectsRoot.add(cropBeams);
  for(const object of [beam,impact,core]){object.visible=false;object.frustumCulled=false;effectsRoot.add(object);}effectsRoot.visible=effectsPrepared;scene.add(effectsRoot);
  for(const event of state.events??[]){if(typeof event?.id==='string')handled.add(event.id);if((event?.type==='SpellActivated'&&['attack','growth','multiply','shield'].includes(event.kind)||event?.type==='BlessingApplied')&&typeof event.commandId==='string')confirmedCommands.add(event.commandId);}

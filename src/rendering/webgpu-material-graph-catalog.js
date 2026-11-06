@@ -74,6 +74,9 @@ export function catalogVfxSpriteGraph(atlas,build){if(typeof build!=='function')
 const vfxPassDefinitions=Object.freeze({
  geometry:Object.freeze({state:Object.freeze({transparent:true,depthWrite:false,side:DoubleSide,toneMapped:false}),vertex:'geometry',attributes:Object.freeze(['position','normal','color','vfxKind'])}),
  blessing:Object.freeze({state:Object.freeze({transparent:true,depthWrite:false,blending:AdditiveBlending,toneMapped:false,side:DoubleSide}),vertex:'billboard',attributes:Object.freeze(['aCorner','aBase','aSource'])}),
+ guardianRibbon:Object.freeze({state:Object.freeze({transparent:true,depthWrite:false,side:DoubleSide,forceSinglePass:true,blending:AdditiveBlending,toneMapped:false}),vertex:'ribbon-position',attributes:Object.freeze(['position','uv'])}),
+ guardianMote:Object.freeze({state:Object.freeze({transparent:true,depthWrite:false,blending:AdditiveBlending,toneMapped:false}),vertex:'mote-billboard',attributes:Object.freeze(['position','uv','wgSeed'])}),
+ guardianBeam:Object.freeze({state:Object.freeze({color:0xffcf79,transparent:true,opacity:0,depthWrite:false,blending:AdditiveBlending,toneMapped:false}),vertex:'geometry',attributes:Object.freeze(['position'])}),
  debris:Object.freeze({state:Object.freeze({side:DoubleSide,toneMapped:false}),vertex:'debris',attributes:Object.freeze(['position','normal','aOffset','aRotation','aScale','aColor'])}),
  smoke:Object.freeze({state:Object.freeze({transparent:true,depthWrite:false,side:DoubleSide,toneMapped:false}),vertex:'billboard',attributes:Object.freeze(['aCorner','aPosSize','aInfo','aColor'])})
 });
@@ -85,6 +88,16 @@ const auxiliaryPassDefinitions=Object.freeze({
  wallFragments:Object.freeze({state:Object.freeze({roughness:.92,metalness:0,side:DoubleSide}),passes:Object.freeze({color:'mesh-standard-instanced',depth:'standard-instanced',shadow:'standard-instanced'})})
 });
 export function auxiliaryPassRecipe(kind){const definition=auxiliaryPassDefinitions[kind];if(!definition)throw TypeError('Invalid auxiliary pass recipe');const structural=Object.freeze({family:'auxiliary-'+kind,state:definition.state});return Object.freeze({structural,dynamic:Object.freeze(['geometry','instanceData']),passes:definition.passes,key:JSON.stringify(structural)});}
+
+// Source materials retain their own graph and bindings. Source identity is
+// deliberately part of the recipe: treating different authored graphs as
+// compatible would allow an incorrect material or pipeline to be reused.
+export function authoredDeformationRecipe(kind,source){
+ if(!['crop','crop-bridge','center-destruction'].includes(kind)||!source?.isMaterial)throw TypeError('Invalid authored deformation recipe');
+ const bridge=kind==='crop-bridge',crop=kind==='crop',state=Object.freeze(kind==='center-destruction'?{}:{metalness:0,roughness:.91,roughnessMap:null,metalnessMap:null,side:FrontSide,...(bridge?{transparent:false,opacity:1,depthWrite:true,alphaTest:0}:{})}),structural=Object.freeze({family:kind,sourceId:source.uuid,sourceVersion:source.version,nodeMaterial:!!source.isNodeMaterial,state});
+ const passes=Object.freeze({color:kind==='center-destruction'?'source-position-and-hole-mask':bridge?'source-bridge-position':'source-growth-position',depth:kind==='center-destruction'?'color-pass-hole-mask':'color-pass',shadow:kind==='center-destruction'?'mesh-does-not-cast':bridge?'three-override-position':'three-override-position-and-conventional-cutout'});
+ return Object.freeze({structural,dynamic:Object.freeze(crop?['growth','clock']:bridge?['bridge','clock']:['damage','holes','noise']),passes,key:JSON.stringify(structural)});
+}
 
 const terrainState=Object.freeze({vertexColors:true,side:DoubleSide,toneMapped:false});
 const terrainDynamic=Object.freeze(['vertexColor','shadowVisibility']);
