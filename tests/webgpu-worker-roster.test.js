@@ -8,6 +8,11 @@ import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {createWebGpuWorkerBank} from '../src/rendering/webgpu-worker-bank.js';
 import {createWebGpuWorkerRoster} from '../src/rendering/webgpu-worker-roster.js';
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
+test('worker presentation sees the latest entity and first matching task during delayed admission',async()=>{
+ const first={id:'w',profile:'youngMale',status:'walking',taskId:'t'},state={workers:[first],tasks:[{id:'t',kind:'first'},{id:'t',kind:'second'}]},bank={dispose(){}},seen=[];let finish,read,task;
+ const roster=createWebGpuWorkerRoster({scene:{},residency:{},state,assetBank:bank,createWorker:options=>{read=options.getEntity;task=options.getTask;return new Promise(resolve=>{finish=resolve;});}});
+ roster.sync();await flush();assert.equal(task('t').kind,'first');const next={...first,status:'acting'};state.workers=[next];state.tasks=[{id:'t',kind:'new'}];roster.sync();assert.equal(read(),next);assert.equal(task('t').kind,'new');finish({root:new Group(),update(){seen.push([read(),task('t')]);},dispose(){}});await flush();assert.equal(seen[0][0],next);assert.equal(seen[0][1],state.tasks[0]);state.workers=[];roster.sync();assert.equal(read(),null);roster.dispose();
+});
 test('closing the worker bank waits for every outstanding worker lease',async()=>{
  let disposed=0;const source=new Group();source.add(new Mesh(new BoxGeometry(),new MeshBasicMaterial()));const bank=createWebGpuWorkerBank({renderer:{backend:{isWebGPUBackend:true}},loadAsset:async()=>({scene:source,clips:[],library:{},dispose(){disposed++;}})}),a=await bank.acquire('youngMale'),b=await bank.acquire('youngMale');
  bank.dispose();assert.equal(disposed,0);a.release();assert.equal(disposed,0);b.release();assert.equal(disposed,1);b.release();assert.equal(disposed,1);

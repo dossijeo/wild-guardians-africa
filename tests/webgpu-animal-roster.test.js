@@ -5,6 +5,11 @@ import {createWebGpuAnimalBank} from '../src/rendering/webgpu-animal-bank.js';
 import {createWebGpuAnimalRoster} from '../src/rendering/webgpu-animal-roster.js';
 import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
+test('animal presentation receives the latest confirmed entity during delayed admission',async()=>{
+ const first={id:'a',species:'hyena',status:'walking',x:1},state={raid:{animals:[first]}},seen=[],bank={tick(){},dispose(){}};let finish,read;
+ const roster=createWebGpuAnimalRoster({scene:{},residency:{},state,assetBank:bank,createAnimal:options=>{read=options.getEntity;return new Promise(resolve=>{finish=resolve;});}});
+ roster.sync();await flush();const next={...first,x:7};state.raid.animals=[next];roster.sync();assert.equal(read(),next);finish({root:new Group(),update(){seen.push(read());},dispose(){}});await flush();assert.deepEqual(seen,[next]);state.raid.animals=[];roster.sync();assert.equal(read(),null);roster.dispose();
+});
 test('a cancelled actor retains its bank lease until its real admission settles',async()=>{
  const scene=new Scene(),state={raid:{animals:[{id:'a',species:'hyena',status:'walking'}]}},source=new Group();source.add(new Mesh(new BoxGeometry(),new MeshBasicMaterial()));let finish,assetDisposed=0,actorDisposed=0;
  const bank=createWebGpuAnimalBank({renderer:{backend:{isWebGPUBackend:true}},loadAsset:async()=>({scene:source,clips:[],dispose(){assetDisposed++;}})}),admission=createWebGpuPipelineAdmission({scene,camera:new PerspectiveCamera(),renderer:{backend:{isWebGPUBackend:true},compileAsync:()=>new Promise(resolve=>{finish=resolve;})}}),roster=createWebGpuAnimalRoster({scene,residency:{},state,assetBank:bank,pipelineAdmission:admission,createAnimal:async()=>{const lease=await bank.acquire('hyena'),root=new Group();root.add(lease.model);scene.add(root);return {root,update(){},dispose(){actorDisposed++;lease.release();}};}});
