@@ -1,0 +1,9 @@
+# A5: registro compartido de recursos WebGPU
+
+La superficie crea una generación de `createWebGpuResourceRegistry` para su propietario gráfico. Los bancos de animales y trabajadores utilizan ese registro para gestionar de forma efectiva cargas compartidas, trabajos pendientes, leases y liberación; las cajas conservan su acceso al mismo banco de trabajadores. Las fuentes se identifican por espacio de nombres, clave, generación de la superficie y versión de la carga. Una carga fallida se puede reintentar; tras una expulsión la nueva carga recibe otra versión.
+
+El registro reutiliza el LRU y el límite de recursos inactivos existentes. Cerrar un banco o la generación cancela las cargas pendientes, pero no destruye una fuente mientras un consumidor conserve un lease; su última liberación completa la retirada. El cierre de una generación no convierte sus leases en recursos de la siguiente. La superficie también mantiene mediante un lease el propietario de props del bioma y cede a ese propietario la gestión interna ya existente de geometrías y chunks.
+
+La estimación del LRU no es una medida de memoria GPU. El lease del bioma representa la propiedad del subsistema completo: no registra por separado sus geometrías, texturas, revisiones ni trabajos internos. Tampoco se han unificado todavía los recursos individuales de terreno, construcciones, cultivos, efectos o animaciones. La conectividad de este registro no cierra A5 globalmente.
+
+Las pruebas locales cubren deduplicación concurrente, referencias, reaparición tras expulsión, reintento, cierre durante carga y liberación tras cierre. Las pruebas de bancos y rosters cubren además el préstamo de activos entre cajas y trabajadores. No se ha probado consumo de memoria GPU, pérdida de dispositivo ni fluidez en una partida.
