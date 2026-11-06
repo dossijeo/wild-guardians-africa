@@ -7,5 +7,5 @@ export function updateGameAudio({audio,state,world,nav,emptyEvents,actorState=st
  audio.updateMusic(state);audio.updateUnlocks(state);
  const field=nav?.field,waterAt=typeof field?.waterInfo==='function'?(x,z)=>({...field.waterInfo(x,z),active:!!(field.wetland||field.riverActive)}):undefined;
  audio.updateAmbient(state,{listener,waterRevision:nav?.version??0,waterAt});
- audio.updateFarmActors(state,{listener});audio.updateAnimals(actorState,{listener});audio.updateMovement(actorState,{listener,surfaceAt:world.movementSurfaceAt});
+ audio.updateFarmActors(actorState,{listener});audio.updateAnimals(actorState,{listener});audio.updateMovement(actorState,{listener,surfaceAt:world.movementSurfaceAt});
 }
