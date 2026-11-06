@@ -35,8 +35,11 @@ liquidaciones autoritativas explícitas y conserva saldo, eventos, enfriamientos
 y objetivos mínimos para sus efectos. Una comparación comprueba liquidación,
 fin de enfriamiento y amanecer frente al estado completo.
 La selección del indicador de mano del tutorial utiliza esa misma vista con
-campos de cultivo, magias y progreso limitados; las decisiones de colocación
-del guardián siguen consultando el estado anterior y al Worker autoritativo.
+campos de cultivo, magias y progreso limitados. La guía espacial consulta su
+objetivo al Worker y, mientras está activa, utiliza su revisión de dependencias
+en vez de serializar el mundo en el hilo principal; cámara y exclusiones siguen
+siendo invalidadas localmente. El Worker compara las dependencias por publicación
+mientras hay una suscripción: esto no es todavía invalidación nativa por eventos.
 El panel contextual del perfil Worker utiliza las propiedades confirmadas mínimas
 de la estructura seleccionada, incluidas salud, puerta y coste para mostrar el
 reembolso. Las acciones siguen enviando su identidad a la autoridad para su
