@@ -43,6 +43,10 @@ export class Microevents {
     this.pending=true;let ticket=null;const commandCount=this.state.commandIds.length,pose=cameraPose(this.world.camera);
     try{
       if(this.space){this.space.begin(def,anchor,this.world.camera);this.point.set(anchor.entity.x+(anchor.offsetX??0),anchor.y,anchor.entity.z+(anchor.offsetZ??0));const check=this.occluded(this.point);if((this.world.workerGpuOnly?await check:check)||this.disposed||poseChanged(cameraPose(this.world.camera),pose))return false;}
+      // A Worker visibility reply can arrive after a game action or UI change.
+      // Recheck before reserving so a stale candidate cannot consume director
+      // history/cooldown or request an authoritative ticket.
+      if(this.disposed||this.blocked().length||this.state.commandIds.length!==commandCount||this.settings.microevents==='off'||!compatible(def,this.state)||!this.validAnchor(def,anchor)||!this.project(anchor))return false;
       ticket=this.workerEconomy?await this.workerEconomy.reserve(def.id,anchor.entity.id):reserveEvent(this.state,def.id,anchor.entity.id);if(!ticket)return false;
       this.director.m.cooldown=MICROEVENT_CONFIG.cooldown;this.director.reserve(def);
       if(this.workerEconomy)await this.workerEconomy.schedule(this.director.m);

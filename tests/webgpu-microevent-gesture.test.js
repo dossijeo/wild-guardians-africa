@@ -17,6 +17,11 @@ test('worker spawn cancels the authority reservation if the anchor becomes occlu
  assert.equal(await c.spawn(EVENTS.seeds,{entity:plant,groundY:0,y:1},{force:true}),false);assert.deepEqual(calls,['reserve','cancelled']);assert.equal(c.active,undefined);assert.equal(c.pending,false);
 });
 
+test('a game action during worker visibility does not reserve a stale microevent',async()=>{
+ const camera=new PerspectiveCamera(),plant={id:'p',alive:true,x:1,z:2},state={time:100,biome:'sabana',plants:[plant],commandIds:[]},c=Object.create(Microevents.prototype);let resolve,reserved=0;Object.assign(c,{state,world:{workerGpuOnly:true,camera,webGpuWorld:{client:{microeventVisible:()=>new Promise(r=>resolve=r)}}},settings:{microevents:'adaptive'},space:{begin(){}},point:new Vector3(),director:{m:{negativeTimes:[],eventCooldowns:{}},reserve(){throw Error('stale director reservation');}},workerEconomy:{async reserve(){reserved++;}},owned:new Set(),cameraPointers:new Set(),clock:()=>0,project:()=>({x:200,y:200}),blocked:()=>[],log(){}});
+ const pending=c.spawn(EVENTS.seeds,{entity:plant,groundY:0,y:1},{force:true});state.commandIds.push('new-action');resolve(true);assert.equal(await pending,false);assert.equal(reserved,0);assert.equal(c.pending,false);
+});
+
 test('failed visibility releases the pointer and does not claim a microevent',async()=>{
  const canvas={setPointerCapture(){},releasePointerCapture(){this.released=true;}},particle={x:1,y:2,progress:0,reveal:1},active={def:{}},c=Object.create(Microevents.prototype);let claimed=0;Object.assign(c,{world:{camera:new PerspectiveCamera(),canvas,webGpuWorld:{client:{microeventVisible:()=>Promise.reject(Error('timed out'))}}},space:{worldPosition:()=>new Vector3(1,2,3)},particles:{pool:[particle],claim(){claimed++;}},active,pointer:{},owned:new Set(),trace:new PointerTrace(),director:{interaction(){}},metrics:{},blocked:()=>[]});c.beginWorkerGesture({pointerId:1,clientX:10,clientY:10,preventDefault(){},stopImmediatePropagation(){}},active,0,1,2,0);await Promise.resolve();await Promise.resolve();assert.equal(claimed,0);assert.equal(c.owned.size,0);assert.equal(canvas.released,true);
 });
