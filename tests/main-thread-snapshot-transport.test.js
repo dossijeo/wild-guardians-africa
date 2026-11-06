@@ -62,6 +62,23 @@ test('real saved raid transfers a changed worker without resending its roster',(
  receiver.accept(decoder.decode(encoder.encode(packet(1,serializeConfirmedState(authority)))).publication);authority.workers[0].x+=.125;
  const wire=encoder.encode(packet(2,serializeConfirmedState(authority))),patch=wire.publication.snapshotDelta.entities.find(([key])=>key==='workers');assert.equal(patch[2].length,1);assert.equal(patch[2][0][0],actor.id);assert.equal(receiver.accept(decoder.decode(wire).publication).accepted,true);assert.equal(view.workers[0],actor);assert.deepEqual(view,authority);
 });
+test('real raid updates one animal without resending the raid or changing actor identity',()=>{
+ const authority=deserializeConfirmedState(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString()),view=deserializeConfirmedState(serializeConfirmedState(authority)),receiver=createConfirmedStateReceiver(view,'s'),encoder=createMainSnapshotEncoder(),decoder=createMainSnapshotDecoder(),actor=view.raid.animals[0];
+ receiver.accept(decoder.decode(encoder.encode(packet(1,serializeConfirmedState(authority)))).publication);authority.raid.animals[0].x+=.125;
+ const wire=encoder.encode(packet(2,serializeConfirmedState(authority))),delta=wire.publication.snapshotDelta;assert.equal(delta.version,3);assert.equal(delta.raid.animals[1].length,1);assert.equal(delta.raid.animals[1][0][0],actor.id);assert.equal(receiver.accept(decoder.decode(wire).publication).accepted,true);assert.equal(view.raid.animals[0],actor);assert.deepEqual(view,authority);
+});
+test('raid deltas preserve metadata changes and reject invalid animal identities',()=>{
+ const encoder=createMainSnapshotEncoder(),decoder=createMainSnapshotDecoder(),animals=Array.from({length:20},(_,i)=>({id:`a${i}`,data:'z'.repeat(80)})),initial={raid:{animals,version:1,old:true},padding:'x'.repeat(400)};
+ decoder.decode(encoder.encode(packet(1,JSON.stringify(initial))));const next=structuredClone(initial);next.raid.version=2;delete next.raid.old;next.raid.newFlag=true;next.raid.animals[0].data='changed';next.raid.animals.reverse();
+ const good=encoder.encode(packet(2,JSON.stringify(next))),raid=good.publication.snapshotDelta.raid;assert.equal(good.publication.snapshotDelta.version,3);assert.deepEqual(raid.removed,['old']);
+ for(const bad of [{...raid,changed:[['animals','[]']]},{...raid,removed:['animals']},{...raid,animals:[raid.animals[0],[['a0','{"id":"wrong"}']]]},{...raid,animals:[...raid.animals,[]]}])assert.throws(()=>decoder.decode({...good,publication:{...good.publication,snapshotDelta:{...good.publication.snapshotDelta,raid:bad}}}));
+ assert.deepEqual(JSON.parse(decoder.decode(good).publication.snapshot),next);
+});
+test('raid appearance and disappearance use complete state boundaries',()=>{
+ const encoder=createMainSnapshotEncoder(),decoder=createMainSnapshotDecoder(),state={raid:null,padding:'x'.repeat(400)},animals=Array.from({length:5},(_,i)=>({id:`a${i}`,x:i}));decoder.decode(encoder.encode(packet(1,JSON.stringify(state))));
+ const active={...state,raid:{animals}},born=encoder.encode(packet(2,JSON.stringify(active)));assert.equal(born.publication.snapshotDelta.version,1);assert.deepEqual(JSON.parse(decoder.decode(born).publication.snapshot),active);
+ const ended=encoder.encode(packet(3,JSON.stringify(state)));assert.equal(ended.publication.snapshotDelta.version,1);assert.deepEqual(JSON.parse(decoder.decode(ended).publication.snapshot),state);
+});
 test('malformed entity deltas fail before advancing the baseline',()=>{
  const encoder=createMainSnapshotEncoder(),decoder=createMainSnapshotDecoder(),workers=Array.from({length:10},(_,i)=>({id:`w${i}`,data:'x'.repeat(100)})),first={workers,other:'x'.repeat(400)};
  decoder.decode(encoder.encode(packet(1,JSON.stringify(first))));const next=structuredClone(first);next.workers[0].data='changed';const good=encoder.encode(packet(2,JSON.stringify(next))),delta=good.publication.snapshotDelta,[key,order,updates]=delta.entities[0];
