@@ -1742,14 +1742,16 @@ export function tick(s,seconds,nav) {
     if(s.time>=600 && !s.raid && !s.result && (!s.nightPlan?.group?.length||s.nightPlan.done))closeNight(s);
   }
 }
-export function advanceReal(s,seconds,nav,{nightFastForward=true,onTick=null}={}) {
+export function advanceReal(s,seconds,nav,{nightFastForward=true,onTick=null,onClockSegment=null}={}) {
+  if(onClockSegment!==null&&typeof onClockSegment!=='function')throw TypeError('Invalid simulation clock observer');
   let left=seconds;
   while(left>1e-9 && !s.pauses.length&&!s.result) {
       prepareClockEvents(s,nav);
     const speed=nightFastForward&&s.time>=300&&!s.raid?5:1;
     const untilBoundary=Math.min(...clockBoundaries(s).filter(t=>t>s.time+1e-9).map(t=>(t-s.time)/speed));
     const real=Math.min(left,.02,untilBoundary);left-=real;
-    tick(s,real*speed,nav);
+    const start=onClockSegment?s.elapsed:0;tick(s,real*speed,nav);
+    if(onClockSegment&&s.elapsed>start)onClockSegment({start,end:s.elapsed,realDuration:(s.elapsed-start)/speed,rate:speed});
     if(onTick)onTick();
   }
 }

@@ -37,6 +37,11 @@ test('publication time must match its snapshot before state or events are applie
   assert.deepEqual(receiver.accept({...packet,elapsed:authority.elapsed}),{accepted:true,sequence:1});assert.deepEqual(events,[event.id]);
  }finally{stop();}
 });
+test('malformed confirmed clock segments are rejected before mutating presentation',()=>{
+ const state=fixture(),authority=deserialize(serialize(state)),start=state.elapsed,before=serialize(state),receiver=createConfirmedStateReceiver(state,'s');authority.elapsed=start+.1;const clock={version:1,start,end:authority.elapsed,startPauses:[...state.pauses],endPauses:[...authority.pauses],complete:true,segments:[{start,end:authority.elapsed,realDuration:.1,rate:1}]},packet={session:'s',sequence:1,elapsed:authority.elapsed,snapshot:serialize(authority),events:[],clockSegments:clock};
+ for(const invalid of [{...clock,end:authority.elapsed+1},{...clock,segments:[{...clock.segments[0],rate:5}]},{...clock,segments:[]},{...clock,complete:false}]){assert.throws(()=>receiver.accept({...packet,clockSegments:invalid}),/clock segment/);assert.equal(serialize(state),before);assert.equal(receiver.status().sequence,0);}
+ assert.equal(receiver.accept(packet).accepted,true);
+});
 test('observer failure while committing faults the receiver and clears the token',()=>{
  const display=fixture(),authority=deserialize(serialize(display)),receiver=createConfirmedStateReceiver(display,'s',{onReconciled:()=>{throw Error('commit failed');}}),prepared=receiver.prepare({session:'s',sequence:1,snapshot:serialize(authority),events:[]});
  assert.throws(()=>receiver.commit(prepared.token),/commit failed/);assert.equal(receiver.status().fault,true);assert.throws(()=>receiver.commit(prepared.token),/Invalid prepared/);assert.equal(receiver.prepare({session:'s',sequence:1,snapshot:serialize(authority),events:[]}).reason,'fault');

@@ -8,6 +8,7 @@ import {emit,observePresentationGameEvents} from '../src/simulation/game.js';
 import {createConfirmedPresentationStream} from '../src/rendering/confirmed-presentation-stream.js';
 import {createConfirmedPresentationClock} from '../src/rendering/confirmed-presentation-clock.js';
 import {MessageChannel} from 'node:worker_threads';
+import {createMainSnapshotEncoder} from '../src/simulation/main-thread-snapshot-transport.js';
 const fixture=()=>deserialize(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString());
 test('timeline exposes matching reconciled state and terrain before pose and event observers',()=>{
  const state=fixture(),authority=deserialize(serialize(state)),start=state.elapsed,clock=createConfirmedPresentationClock(start),sent=[],order=[],port={postMessage:m=>sent.push(m),start(){},close(){}};let terrainRevision=0;
@@ -66,4 +67,19 @@ test('timeline hides recovery bypass and reports producer failure without acknow
  const state=fixture(),clock=createConfirmedPresentationClock(state.elapsed),sent=[],errors=[],port={postMessage:m=>sent.push(m),start(){},close(){}};
  const stream=createConfirmedPresentationStream({port,session:'s',state,presentationClock:clock,timeline:{maxPublications:1,maxBytes:100000},terrain:{ready:()=>false,confirm(){}},onError:e=>errors.push(e.message)});
  try{assert.equal(stream.acceptRecovery,undefined);port.onmessage({data:{kind:'presentationFailure',session:'s',message:'authority stopped'}});assert.deepEqual(errors,['authority stopped']);assert.deepEqual(sent,[]);assert.equal(stream.status().closed,true);}finally{stream.dispose();clock.dispose();}
+});
+
+test('terrain waits for the exact admitted snapshot or incremental delta without advancing simulation',async()=>{
+ const state=fixture(),authority=deserialize(serialize(state)),start=state.elapsed,clock=createConfirmedPresentationClock(start),sent=[],port={postMessage:m=>sent.push(m),start(){},close(){}},encoder=createMainSnapshotEncoder();let ready=false;
+ const stream=createConfirmedPresentationStream({port,session:'s',state,presentationClock:clock,timeline:{maxPublications:3,maxBytes:50000000},terrain:{ready:()=>ready,confirm(){}}});
+ try{assert.deepEqual(await stream.waitForTerrainSuppression(0),state.suppressed);let resolved=false;const first=stream.waitForTerrainSuppression(1).then(value=>{resolved=true;return value;});await Promise.resolve();assert.equal(resolved,false);authority.elapsed=start+1;authority.suppressed=['tree-a'];const a=encoder.encode({kind:'publication',session:'s',publication:{session:'s',sequence:1,elapsed:authority.elapsed,snapshot:serializeConfirmedState(authority),events:[]}});port.onmessage({data:a});assert.deepEqual(await first,['tree-a']);assert.notDeepEqual(state.suppressed,['tree-a']);assert.equal(sent.at(-1).kind,'publicationReceipt');
+  const next=stream.waitForTerrainSuppression(2);authority.elapsed=start+2;authority.suppressed=['tree-b'];const b=encoder.encode({kind:'publication',session:'s',publication:{session:'s',sequence:2,elapsed:authority.elapsed,snapshot:serializeConfirmedState(authority),events:[]}});assert.ok(b.publication.snapshotDelta);port.onmessage({data:b});assert.deepEqual(await next,['tree-b']);assert.equal(stream.timelineStatus().receivedElapsed,start+2);ready=true;assert.deepEqual(stream.nextTimelineBoundary(),{sequence:1,elapsed:start+1});assert.equal(stream.advanceNextTimelineBoundary(),true);assert.deepEqual(state.suppressed,['tree-a']);assert.equal(stream.advanceNextTimelineBoundary(),true);assert.deepEqual(state.suppressed,['tree-b']);
+ }finally{stream.dispose();clock.dispose();encoder.dispose();}
+});
+test('terrain suppression waiter is cancellable and receives no premature publication receipt',async()=>{
+ const state=fixture(),clock=createConfirmedPresentationClock(state.elapsed),sent=[],port={postMessage:m=>sent.push(m),start(){},close(){}},stream=createConfirmedPresentationStream({port,session:'s',state,presentationClock:clock,timeline:{maxPublications:1,maxBytes:50000000},terrain:{ready:()=>false,confirm(){}}}),controller=new AbortController();try{const pending=stream.waitForTerrainSuppression(1,{signal:controller.signal});controller.abort();await assert.rejects(pending,{name:'AbortError'});assert.deepEqual(sent,[]);}finally{stream.dispose();clock.dispose();}
+});
+test('manual timeline advances one same-time boundary at a time even when terrain is ready',()=>{
+ const state=fixture(),authority=deserialize(serialize(state)),clock=createConfirmedPresentationClock(state.elapsed),port={postMessage(){},start(){},close(){}},applied=[],encoder=createMainSnapshotEncoder(),stream=createConfirmedPresentationStream({port,session:'s',state,presentationClock:clock,timeline:{maxPublications:3,maxBytes:50000000,manualBoundaries:true},terrain:{ready:()=>true,confirm:sequence=>applied.push(sequence)}});
+ try{for(let sequence=1;sequence<=2;sequence++){authority.suppressed=['tree-'+sequence];port.onmessage({data:encoder.encode({kind:'publication',session:'s',publication:{session:'s',sequence,elapsed:state.elapsed,snapshot:serializeConfirmedState(authority),events:[]}})});}stream.terrainReady();assert.deepEqual(applied,[]);assert.equal(stream.advanceNextTimelineBoundary(),true);assert.deepEqual(applied,[1]);assert.deepEqual(state.suppressed,['tree-1']);assert.equal(stream.advanceNextTimelineBoundary(),true);assert.deepEqual(applied,[1,2]);assert.deepEqual(state.suppressed,['tree-2']);}finally{stream.dispose();clock.dispose();encoder.dispose();}
 });
