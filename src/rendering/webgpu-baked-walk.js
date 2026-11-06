@@ -1,6 +1,7 @@
 import {BufferAttribute,BufferGeometry,DataTexture,FloatType,Matrix4,Mesh,NearestFilter,RGBAFormat,Vector3,Vector4} from 'three';
 import {Fn,attribute,float,ivec2,mat4,reference,normalLocal,positionLocal,textureLoad,uniform,vec4} from 'three/tsl';
 import {ANIMAL_ACTIONS} from '../simulation/animal-actions-data.js';
+import {hasBakedWorkerWalk} from './baked-worker-walk-profiles.js';
 
 // Experimental building block for a non-skinned presentation mesh. The source
 // SkinnedMesh must remain available for physical poses and unsupported clips.
@@ -11,7 +12,7 @@ export function createBakedWalkTexture(meta,buffer){
  return createPackedBakedWalkTexture(meta,buffer);
 }
 export function createBakedWorkerWalkTexture(meta,buffer){
- if(meta?.schema!=='wg-worker-gpu-walk/1'||meta.species!=='youngMale'||meta.clip!=='Walk_Skip'||meta.validation?.visibleAttachments!==0)throw TypeError('Invalid baked worker walking data');
+ if(meta?.schema!=='wg-worker-gpu-walk/1'||!hasBakedWorkerWalk(meta.species)||meta.clip!=='Walk_Skip'||meta.validation?.visibleAttachments!==0)throw TypeError('Invalid baked worker walking data');
  return createPackedBakedWalkTexture(meta,buffer);
 }
 function createPackedBakedWalkTexture(meta,buffer){

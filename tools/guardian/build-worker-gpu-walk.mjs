@@ -7,9 +7,12 @@ import {actorAsset} from '../../tests/helpers/actor-geometry.js';
 import {prepareWorkerClips} from '../../src/rendering/worker-clips.js';
 import {applyWorkerPose} from '../../src/rendering/worker-actions.js';
 
-// Reproducible authoring of the exact production preview rig, one profile.
+// Reproducible authoring of the exact production preview rigs.
 // The original CPU pose path remains the reference and the runtime fallback.
-const profile='youngMale',fps=30,source=`public/content/character-preview/${profile}/preview.glb`,check=process.argv.includes('--check'),output=check?await mkdtemp(join(tmpdir(),'wg-worker-walk-')):`public/content/gpu-worker-walk/${profile}`,sha=data=>createHash('sha256').update(data).digest('hex');
+const allProfiles=['youngMale','olderMale','olderFemale','youngFemale'],fps=30,check=process.argv.includes('--check'),requested=process.argv.find(arg=>arg.startsWith('--profile='))?.slice('--profile='.length),sha=data=>createHash('sha256').update(data).digest('hex');
+if(requested&&!allProfiles.includes(requested))throw Error('Unsupported worker profile');
+for(const profile of requested?[requested]:allProfiles){
+const source=`public/content/character-preview/${profile}/preview.glb`,output=check?await mkdtemp(join(tmpdir(),'wg-worker-walk-')):`public/content/gpu-worker-walk/${profile}`;
 try{
  const bytes=await readFile(source),packageInfo=JSON.parse(await readFile(`public/content/character-preview/${profile}/package.json`,'utf8')),libraries=JSON.parse(await readFile('public/content/worker-actions.json','utf8')),library=libraries[profile];if(packageInfo.preview.sha256!==sha(bytes))throw Error('Worker preview checksum mismatch');
  const asset=await actorAsset(source),model=asset.scene,root=new Group();root.add(model);root.updateMatrixWorld(true);const data={model,mixer:new AnimationMixer(model),clips:prepareWorkerClips(asset.animations),action:null,name:null},worker={id:'bake',profile,status:'walking',walkPhase:0};
@@ -21,3 +24,4 @@ try{
  const payload=Buffer.from(samples.buffer,samples.byteOffset,samples.byteLength),manifest={schema:'wg-worker-gpu-walk/1',species:profile,source,sourceSha256:sha(bytes),clip:'Walk_Skip',duration,sampleRate:fps,frames:sampleTimes.length,sampleTimes,loopPolicy:'hold-final-until-wrap',strideFloats,sharedMatrixChannels:1,boneInverses,channels,byteLength:payload.length,sha256:sha(payload),validation:{exactMismatches,packedMismatches,visibleAttachments}};await mkdir(output,{recursive:true});
  const text=JSON.stringify(manifest,null,2)+'\n';if(check){if((await readFile(`public/content/gpu-worker-walk/${profile}/walking.json`,'utf8')).replace(/\r\n/g,'\n')!==text||!(await readFile(`public/content/gpu-worker-walk/${profile}/walking.bin`)).equals(payload))throw Error('Worker walking bake differs');}else{await writeFile(join(output,'walking.json'),text);await writeFile(join(output,'walking.bin'),payload);}console.log(JSON.stringify({profile,frames:manifest.frames,channels:channels.length,bones:bones.length,bytes:payload.length,validation:manifest.validation}));
 }finally{if(check)await rm(output,{recursive:true,force:true});}
+}

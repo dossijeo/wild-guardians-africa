@@ -69,7 +69,7 @@ test('passes the shared confirmed clock through to a real roster actor',async()=
 
 test('optional worker bake is requested only for supported live actors and cancelled on removal',async()=>{
  const state={workers:[{id:'a',profile:'youngMale',status:'walking'},{id:'b',profile:'olderMale',status:'walking'}]},requests=[],installed=[],pending=[],admission={prepare:async()=>{}},renderer={backend:{isWebGPUBackend:true}},bank={get(profile){requests.push(profile);return new Promise(resolve=>pending.push(resolve));}},roster=createWebGpuWorkerRoster({scene:{},residency:{},state,renderer,bakedWalkBank:bank,assetBank:{dispose(){}},pipelineAdmission:admission,createWorker:async({actorId})=>({root:new Group(),update(){},dispose(){},async installBakedWalk(){installed.push(actorId);return true;}})});
- roster.sync();await flush();await flush();assert.deepEqual(requests,['youngMale']);state.workers=state.workers.filter(x=>x.id!=='a');roster.sync();pending[0]({});await flush();assert.deepEqual(installed,[]);roster.dispose();
+ roster.sync();await flush();await flush();assert.deepEqual(requests,['youngMale','olderMale']);state.workers=state.workers.filter(x=>x.id!=='a');roster.sync();pending[0]({});pending[1]({});await flush();assert.deepEqual(installed,['b']);roster.dispose();
 });
 
 test('failed baked-walk loading or admission keeps the live worker rig',async()=>{

@@ -2,7 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {webcrypto} from 'node:crypto';
-import {loadBakedWorkerWalkAsset,createBakedWorkerWalkBank} from '../src/rendering/baked-worker-walk-catalog.js';
+import {BAKED_WORKER_WALK_PROFILES,loadBakedWorkerWalkAsset,createBakedWorkerWalkBank} from '../src/rendering/baked-worker-walk-catalog.js';
+
+test('all worker walking assets are bound to their source and pass checksum validation',async()=>{
+ const fetcher=async url=>{const data=await readFile('public'+url);return {ok:true,json:async()=>JSON.parse(data),arrayBuffer:async()=>data.buffer.slice(data.byteOffset,data.byteOffset+data.byteLength)}};
+ for(const profile of BAKED_WORKER_WALK_PROFILES){const bake=await loadBakedWorkerWalkAsset(profile,{fetcher,subtle:webcrypto.subtle});assert.equal(bake.meta.species,profile);assert.equal(bake.meta.validation.visibleAttachments,0);bake.dispose();}
+});
 
 test('worker bank verifies authoring and shares the texture until closed',async()=>{
  let requests=0;const fetcher=async url=>{requests++;const data=await readFile('public'+url);return {ok:true,json:async()=>JSON.parse(data),arrayBuffer:async()=>data.buffer.slice(data.byteOffset,data.byteOffset+data.byteLength)}};
