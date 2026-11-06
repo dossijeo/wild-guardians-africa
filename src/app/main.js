@@ -251,7 +251,7 @@ const workerSaveCoordinators=new WeakMap();
 const experimentalWorkerPhysicsSave=()=>import.meta.env.DEV&&new URLSearchParams(location.search).has('qa-worker-game')&&new URLSearchParams(location.search).has('qa-worker-physics-save');
 function workerSaveCoordinator(owner,ownerState){
   const runtime=owner.workerRuntime;if(!runtime||!ownerState)throw Error('Worker save integration is unavailable');
-  let entry=workerSaveCoordinators.get(runtime);if(!entry){entry={slotId:ownerState.slotId,coordinator:createWorkerSaveCoordinator({runtime,repository:saves,slotId:ownerState.slotId,checkpointPolicy:{physics:owner.workerCheckpointPolicy?.physics===true||experimentalWorkerPhysicsSave(),nativeAuthority:owner.workerCheckpointPolicy?.nativeAuthority===true||owner.workerNativeAuthorityCheckpoints===true||import.meta.env.DEV&&['qa-worker-native-save','qa-worker-early-new'].some(key=>new URLSearchParams(location.search).has(key))}})};workerSaveCoordinators.set(runtime,entry);}
+  let entry=workerSaveCoordinators.get(runtime);if(!entry){entry={slotId:ownerState.slotId,coordinator:createWorkerSaveCoordinator({runtime,repository:saves,slotId:ownerState.slotId,workerPersistence:owner.metadataOnlySpatial===true&&!!saves.database,checkpointPolicy:{physics:owner.workerCheckpointPolicy?.physics===true||experimentalWorkerPhysicsSave(),nativeAuthority:owner.workerCheckpointPolicy?.nativeAuthority===true||owner.workerNativeAuthorityCheckpoints===true||import.meta.env.DEV&&['qa-worker-native-save','qa-worker-early-new'].some(key=>new URLSearchParams(location.search).has(key))}})};workerSaveCoordinators.set(runtime,entry);}
   if(entry.slotId!==ownerState.slotId)throw Error('Worker save slot changed');
   return entry.coordinator;
 }

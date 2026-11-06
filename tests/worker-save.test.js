@@ -20,6 +20,9 @@ test('worker checkpoints are captured immediately and written in request order',
  firstWrite.resolve();assert.deepEqual(await a,{saved:true,sequence:1,elapsed:0});assert.equal((await b).sequence,2);
  assert.equal(writes[1].day,2);assert.equal(writes[1].savedAt,123);
 });
+test('worker persistence forwards the confirmed checkpoint without parsing it on the UI thread',async()=>{
+ const state=newGame({seed:712,slotId:'a'}),checkpoint=packet(state,1),calls=[],runtime={submit:async()=>checkpoint},repository={save(){throw Error('unexpected main-thread save');},async saveWorkerCheckpoint(result,options){calls.push({result,options});return {saved:true,sequence:result.sequence,elapsed:0};}},saves=createWorkerSaveCoordinator({runtime,repository,slotId:'a',now:()=>123,workerPersistence:true});assert.deepEqual(await saves.request(),{saved:true,sequence:1,elapsed:0});assert.equal(calls[0].result,checkpoint);assert.equal(calls[0].options.savedAt,123);assert.deepEqual(calls[0].options.policy,{physics:false,nativeAuthority:false});
+});
 
 test('unsafe physics checkpoint does not write or wait for the simulation to resume',async()=>{
  const state=newGame({seed:712,slotId:'a'});let writes=0;
