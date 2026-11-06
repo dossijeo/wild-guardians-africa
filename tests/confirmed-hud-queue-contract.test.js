@@ -35,6 +35,14 @@ test('callback failure cannot be acknowledged or replayed as a committed HUD vie
  assert.throws(()=>receiver.accept(message),/observer failed/);assert.equal(receiver.status().sequence,0);assert.equal(receiver.status().fault,true);assert.throws(()=>receiver.accept(message),/unavailable/);receiver.dispose();
 });
 
+test('unchanged publication advances envelope order without advancing the HUD delta base',()=>{
+ const state=newGame({seed:808}),encoder=createConfirmedHudDeltaEncoder({validate:validateConfirmedHudSchema}),seen=[],receiver=createConfirmedHudReceiver({session:'s',onPublication:(view,envelope)=>seen.push([view.sequence,envelope.publication.sequence])}),baseline=encoder.encode(projectConfirmedHud(state,1));
+ receiver.accept({kind:'publication',session:'s',publication:{sequence:1,events:[],hudDelta:baseline}});
+ const unchanged={kind:'publication',session:'s',publication:{sequence:2,unchanged:true,events:[],slotId:state.slotId,elapsed:state.elapsed,pauses:[...state.pauses]}};
+ assert.throws(()=>receiver.accept({...unchanged,publication:{...unchanged.publication,events:[{id:'event-1'}]}}),/Invalid unchanged/);assert.equal(receiver.accept(unchanged).sequence,2);
+ state.time=3;const delta=encoder.encode(projectConfirmedHud(state,3));assert.equal(delta.base,1);assert.equal(receiver.accept({kind:'publication',session:'s',publication:{sequence:3,events:[],hudDelta:delta}}).sequence,3);assert.deepEqual(seen,[[1,1],[1,2],[3,3]]);receiver.dispose();
+});
+
 test('saturation does not advance the HUD codec or discard queued ordered events',()=>{
  const state=newGame({seed:804}),encoder=createConfirmedHudDeltaEncoder({validate:validateConfirmedHudSchema}),decoder=createConfirmedHudDeltaDecoder({validate:validateConfirmedHudSchema}),sent=[];
  const queue=createHostPublicationQueue({session:'s',coalesce:false,maxQueued:1,send:envelope=>{sent.push({...envelope,packet:encoder.encode(envelope.publication.hudProjection)});}});
