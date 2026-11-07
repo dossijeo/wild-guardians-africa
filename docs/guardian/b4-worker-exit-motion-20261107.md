@@ -1,0 +1,7 @@
+# Salida de recuperación hacia movimiento en GPU
+
+Las animaciones de marcha y carrera contienen cinco capas compartidas por perfil, precalculadas con el `AnimationMixer` original para distintos pesos de la mezcla de salida. La presentación interpola fase y peso en GPU y conserva el rig CPU para acciones sin una tabla admitida, herramientas no cubiertas y cambios físicos. La fase durante la transición procede de la publicación confirmada; el intervalo todavía no está certificado para reproducción histórica autónoma.
+
+La generación reutiliza `node tools/guardian/build-worker-gpu-walk.mjs --clip=Walk_Skip` o `--clip=Run`; `--check` verifica la reproducción de los cuatro perfiles. Una comparación de vértices dispersos en los cuatro rigs, con fases y pesos intermedios, exige un error inferior a 0,05 unidades de modelo frente a `AnimationMixer`. Las pruebas también cubren selección y generación WGSL de color/sombra junto a una trayectoria. No sustituyen una comparación perceptiva real.
+
+Las capas amplían los dos paquetes a aproximadamente 3,9 MB para los cuatro perfiles, frente a aproximadamente 0,78 MB con una sola capa. El shader conserva la ruta de una sola capa cuando no hay mezcla y ejecuta lecturas adicionales durante ella. La memoria y el coste del branch, las sombras y la equivalencia visual en WebGPU real siguen pendientes de medición; no se atribuye una mejora global de rendimiento a esta integración.
