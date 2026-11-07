@@ -29,3 +29,15 @@ test('an attack superseded during GPU admission cannot publish the old action',a
  const roster=createWebGpuAnimalRoster({scene:{},residency:{},state,assetBank:{tick(){},dispose(){}},pipelineAdmission:{prepare:async()=>{}},bakedAttackBank:{async get(_species,name){return {name};}},createAnimal:()=>({root:new Group(),update(){this.root.visible=true;},installBakedAttack(bake,{isCurrent}){calls.push('prepare:'+bake.name);return new Promise((resolve,reject)=>{finish=()=>isCurrent()?resolve(true):reject(new DOMException('cancelled','AbortError'));});},dispose(){}})});
  try{roster.sync();await turn();await turn();assert.deepEqual(calls,['prepare:Bite']);animal.attackId='attack-2';animal.animation='Swipe';roster.sync();finish();await turn();await turn();assert.deepEqual(calls,['prepare:Bite','prepare:Swipe']);finish();await turn();assert.deepEqual(calls,['prepare:Bite','prepare:Swipe']);}finally{roster.dispose();}
 });
+
+test('an attack retries when physical reconciliation ends before its cancelled admission settles',async()=>{
+ const animal={id:'a',species:'hyena',status:'attacking',animation:'Attack',attackId:'attack-1'},state={raid:{animals:[animal]}},calls=[];let physical=false,rejectFirst;
+ const roster=createWebGpuAnimalRoster({scene:{},residency:{},state,assetBank:{tick(){},dispose(){}},pipelineAdmission:{prepare:async()=>{}},bakedAttackBank:{async get(){return {};}},createAnimal:()=>({root:new Group(),update(){this.root.visible=true;},isPhysical:()=>physical,installBakedAttack(_bake,{isCurrent}){calls.push('prepare');if(calls.length===1)return new Promise((_resolve,reject)=>{rejectFirst=reject;});assert.equal(isCurrent(),true);return Promise.resolve(true);},dispose(){}})});
+ try{roster.sync();await turn();await turn();assert.deepEqual(calls,['prepare']);physical=true;roster.sync();physical=false;roster.sync();rejectFirst(new DOMException('cancelled','AbortError'));await turn();await turn();assert.deepEqual(calls,['prepare','prepare']);}finally{roster.dispose();}
+});
+
+test('an abort without a new availability transition does not cause an automatic retry loop',async()=>{
+ const animal={id:'a',species:'hyena',status:'attacking',animation:'Attack',attackId:'attack-1'},state={raid:{animals:[animal]}};let calls=0;
+ const roster=createWebGpuAnimalRoster({scene:{},residency:{},state,assetBank:{tick(){},dispose(){}},pipelineAdmission:{prepare:async()=>{}},bakedAttackBank:{async get(){return {};}},createAnimal:()=>({root:new Group(),update(){this.root.visible=true;},installBakedAttack(){calls++;return Promise.reject(new DOMException('cancelled','AbortError'));},dispose(){}})});
+ try{roster.sync();for(let i=0;i<4;i++)await turn();assert.equal(calls,1);}finally{roster.dispose();}
+});

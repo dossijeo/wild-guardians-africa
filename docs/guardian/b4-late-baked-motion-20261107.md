@@ -35,3 +35,9 @@ errors remain reported instead of being retried continuously.
 Contract tests cover the physical/reconciliation wait and action replacement,
 using simulated admission. This does not establish visual parity, real GPU
 timing, or that every exceptional action uses a baked animation.
+
+Si una pose física empieza y termina mientras la admisión anterior todavía se
+está cancelando, el roster conserva esa transición y vuelve a solicitar la
+acción vigente al finalizar la cancelación. Sin una nueva transición no realiza
+reintentos automáticos en bucle. Las pruebas simulan ambas carreras; quedan
+pendientes la ejecución en dispositivo y la continuidad visual.
