@@ -1,3 +1,4 @@
+import {RECOVERY_REQUEST_MS} from './recovery-progress-watchdog.js';
 import {validateTutorialUpdateStatus} from '../tutorial/update-status.js';
 import {validateConfirmedSettlements} from './confirmed-settlements.js';
 import {validateConfirmedHudSchema} from './confirmed-hud-projection.js';
@@ -55,7 +56,7 @@ export function createWorkerHostedRuntime({world,confirmedReceiver=null,session,
    finishVisualRecovery(){if(phase!=='running')throw Error('Hosted runtime not running');worker.postMessage({kind:'finishVisualRecovery',session});},
    finishVisualRecoveryConfirmed(options={timeoutMs:10000}){return recoveryRequest('finishVisualRecoveryConfirmed',{},[],options);},
    stageRecoveryVisibility(hidden,options={timeoutMs:10000}){if(typeof hidden!=='boolean')return Promise.reject(TypeError('Invalid recovery visibility'));return recoveryRequest('stageRecoveryVisibility',{hidden},[],options);},
-   activateVisualRecovery(options={timeoutMs:10000}){return recoveryRequest('activateVisualRecovery',{},[],options);},
+   activateVisualRecovery(options={timeoutMs:RECOVERY_REQUEST_MS}){return recoveryRequest('activateVisualRecovery',{},[],options);},
    blockVisualRecoveryDispatch(){visualDispatchEpoch++;visualDispatchFault=Error('Visual recovery has not published a confirmed surface; commands are blocked');visualDispatchFault.code='visual-recovery-indeterminate';return visualDispatchEpoch;},
    visualRecoveryDispatchToken(){return visualDispatchEpoch;},
    canPublishVisualRecovery(token){return Number.isSafeInteger(token)&&token===visualDispatchEpoch&&phase==='running';},
