@@ -17,7 +17,7 @@ export async function createWebGpuConfirmedWorker({scene,residency,state,actorId
   const hasTerrain=hasResidentActorTerrain(residency,entity.x,entity.z);root.visible=hasTerrain;
   if(hasTerrain)root.position.set(entity.x,sampleTerrain(entity.x,entity.z)+.025,entity.z);else root.position.set(entity.x,root.position.y,entity.z);root.rotation.y=presentationWorkerHeadings?.get(actorId)??(entity.downHeading!==undefined&&(entity.fallRemaining>0||entity.recovery)?entity.downHeading:entity.path?.length?Math.atan2(entity.path[0].x-entity.x,entity.path[0].z-entity.z):entity.heading??0);
   const elapsed=confirmedClock?.elapsed??state.elapsed,task=getTask(entity.taskId),pose=workerPose(entity,task,elapsed,shared.library);
-  const eligible=baked&&pose.name==='Walk_Skip'&&['walking','arriving','returning'].includes(entity.status)&&!entity.recovery&&!entity.fallRemaining&&!entity.recoveryExitRemaining&&!entity.incapacitated&&!entity.gateWaiting;
+  const eligible=baked&&pose.name==='Walk_Skip'&&(['walking','arriving','returning'].includes(entity.status)||['idle','waiting'].includes(entity.status)&&entity.idleState?.mode==='walk')&&!entity.running&&!entity.recovery&&!entity.fallRemaining&&!entity.recoveryExitRemaining&&!entity.incapacitated&&!entity.gateWaiting;
   if(eligible){
    if(!baked.isEnabled())applyWorkerPose(data,entity,task,elapsed,shared.library);
    baked.set(pose.time);
