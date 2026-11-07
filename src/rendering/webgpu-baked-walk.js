@@ -41,6 +41,10 @@ export function createBakedWorkerWaterTexture(meta,buffer){
  if(meta?.schema!=='wg-worker-gpu-walk/1'||!hasBakedWorkerWalk(meta.species)||meta.clip!=='Water'||meta.validation?.visibleAttachments!==0||!Array.isArray(meta.attachments)||meta.attachments.length!==6)throw TypeError('Invalid baked worker water data');
  return createPackedBakedWalkTexture(meta,buffer);
 }
+export function createBakedWorkerGetUpTexture(meta,buffer){
+ if(meta?.schema!=='wg-worker-gpu-walk/1'||!hasBakedWorkerWalk(meta.species)||meta.clip!=='Worker_GetUp'||meta.playback!=='once'||meta.validation?.visibleAttachments!==0||meta.attachments?.length)throw TypeError('Invalid baked worker recovery data');
+ return createPackedBakedWalkTexture(meta,buffer);
+}
 export function createBakedWorkerFallTexture(meta,buffer){
  if(meta?.schema!=='wg-worker-gpu-walk/1'||!hasBakedWorkerWalk(meta.species)||meta.clip!=='Fall'||meta.validation?.visibleAttachments!==0||meta.attachments?.length)throw TypeError('Invalid baked worker fall data');
  return createPackedBakedWalkTexture(meta,buffer);
