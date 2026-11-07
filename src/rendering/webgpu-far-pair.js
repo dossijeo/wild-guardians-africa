@@ -1,5 +1,8 @@
 import * as THREE from 'three';
 import {configureWebGpuFarModelCoverage,createWebGpuFarImpostor} from './webgpu-far-impostor.js';
+import {ceilFloat32} from './float32-time.js';
+
+function hasCpuPositions(position){const array=position?.isInterleavedBufferAttribute?position.data?.array:position?.array;return ArrayBuffer.isView(array)&&position.itemSize>=3&&Number.isInteger(position.count)&&position.count>0;}
 
 // Owns one candidate pair. The original mesh and its resources remain owned
 // by the caller until both candidate draws have been admitted and published.
@@ -10,12 +13,21 @@ export function createWebGpuFarPair({source,items,metadata,day,night,camera,star
  if(source.parent){source.parent.updateWorldMatrix(true,false);if(!source.parent.matrixWorld.equals(new THREE.Matrix4()))throw Error('Transformed far pair parent unsupported');}
  const count=source.isInstancedMesh?source.count:source.geometry.instanceCount;
  if(count!==items.length||items.some(item=>typeof item?.id!=='string'||!item.id||![item.x,item.y,item.z,item.yaw,item.sx??item.scale,item.sy??item.scale,item.sz??item.scale].every(Number.isFinite))||new Set(items.map(item=>item.id)).size!==items.length)throw TypeError('Invalid far pair instances');
+ if(!hasCpuPositions(source.geometry.getAttribute('position')))throw Error('Far pair bounds unavailable');
  const model=source.clone(false),geometry=source.geometry.clone(),material=source.material.clone();model.geometry=geometry;model.material=material;model.visible=true;model.userData.wgFarShadow=true;
- const farBase=new Float32Array(items.length*3),ready=new Float32Array(items.length).fill(1);
- for(let i=0;i<items.length;i++){const item=items[i];farBase.set([item.x-source.position.x,item.y-source.position.y,item.z-source.position.z],3*i);}
- geometry.setAttribute('wgFarBase',new THREE.InstancedBufferAttribute(farBase,3));geometry.setAttribute('wgFarReady',new THREE.InstancedBufferAttribute(ready,1));
+ const farBase=new Float32Array(items.length*3),radii=new Float32Array(items.length),ready=new Float32Array(items.length).fill(1);
  let far;
- try{configureWebGpuFarModelCoverage(material,{start,end});far=createWebGpuFarImpostor({metadata,day,night,trees:items,start,end});}catch(error){geometry.dispose();material.dispose();throw error;}
+ try{
+  // An atlas is not a bound for the source mesh. Recompute missing or invalid
+  // bounds on the clone; an unbounded candidate must never replace the 3D source.
+  const position=geometry.getAttribute('position'),validBox=box=>box?.isBox3&&!box.isEmpty()&&[box.min.x,box.min.y,box.min.z,box.max.x,box.max.y,box.max.z].every(Number.isFinite);
+  if(!hasCpuPositions(position))throw Error('Far pair bounds unavailable');
+  if(!validBox(geometry.boundingBox)){geometry.boundingBox=null;geometry.computeBoundingBox();}
+  const box=geometry.boundingBox;if(!validBox(box))throw Error('Far pair bounds unavailable');
+  for(let i=0;i<items.length;i++){const item=items[i],sx=Math.abs(item.sx??item.scale),sz=Math.abs(item.sz??item.scale),atlasRadius=metadata.impostorWidth*.5*Math.max(sx,sz),boundsRadius=Math.hypot(Math.max(Math.abs(box.min.x),Math.abs(box.max.x))*sx,Math.max(Math.abs(box.min.z),Math.abs(box.max.z))*sz);farBase.set([item.x-source.position.x,item.y-source.position.y,item.z-source.position.z],3*i);radii[i]=ceilFloat32(Math.max(atlasRadius,boundsRadius)+.001);}
+  geometry.setAttribute('wgFarBase',new THREE.InstancedBufferAttribute(farBase,3));geometry.setAttribute('wgFarRadius',new THREE.InstancedBufferAttribute(radii,1));geometry.setAttribute('wgFarReady',new THREE.InstancedBufferAttribute(ready,1));
+  configureWebGpuFarModelCoverage(material,{start,end});far=createWebGpuFarImpostor({metadata,day,night,trees:items,radii:Array.from(radii),start,end});
+ }catch(error){geometry.dispose();material.dispose();throw error;}
  const group=new THREE.Group();group.visible=false;group.add(model,far.mesh);far.mesh.userData.nativePropSlot=source.userData.nativePropSlot;
  const hidden=new Set(),originalMatrix=model.isInstancedMesh?model.instanceMatrix.array.slice():null,scale=geometry.getAttribute('wgScale'),offset=geometry.getAttribute('wgOffset'),originalOffset=offset?.array.slice()??null;
  if(!model.isInstancedMesh&&(!scale?.isInstancedBufferAttribute||scale.itemSize!==3||scale.count<items.length||!offset?.isInstancedBufferAttribute||offset.itemSize!==3||offset.count<items.length)){far.dispose();geometry.dispose();material.dispose();throw Error('Unsupported far pair instancing');}
@@ -25,8 +37,12 @@ export function createWebGpuFarPair({source,items,metadata,day,night,camera,star
  const proxy={visible:true,parent:group,geometry,material,userData:source.userData};let pickMesh=null;
  far.mesh.raycast=(raycaster,intersections)=>{const hits=[];if(model.isInstancedMesh)model.raycast(raycaster,hits);else{if(!pickMesh){pickMesh=new THREE.InstancedMesh(geometry,material,items.length);const transform=new THREE.Object3D();for(let i=0;i<items.length;i++){const item=items[i];transform.position.set(item.x-source.position.x,item.y-source.position.y,item.z-source.position.z);transform.rotation.y=item.yaw;transform.scale.set(item.sx??item.scale,item.sy??item.scale,item.sz??item.scale);transform.updateMatrix();pickMesh.setMatrixAt(i,transform.matrix);}}pickMesh.matrixWorld.copy(model.matrixWorld);pickMesh.raycast(raycaster,hits);}for(const hit of hits){if(hidden.has(items[hit.instanceId]?.id))continue;hit.object=proxy;intersections.push(hit);}};
  const modelLayers=source.layers.mask,shadowBit=shadowLayer===null?0:1<<shadowLayer;let closed=false,mode='pending',latestCamera=camera;
- function allFar(value){return items.every(item=>hidden.has(item.id)||Math.hypot(value.position.x-item.x,value.position.z-item.z)>=end);}
- function allNear(value){return items.every(item=>hidden.has(item.id)||Math.hypot(value.position.x-item.x,value.position.z-item.z)<=start);}
+ function edgeDistance(value,item,index){return Math.max(0,Math.hypot(value.position.x-item.x,value.position.z-item.z)-radii[index]);}
+ // The GPU stores world positions and radii as float32. Leave both draws
+ // active near thresholds where rounding could otherwise create a gap.
+ function margin(value,item){return .001+(Math.abs(value.position.x)+Math.abs(value.position.z)+Math.abs(item.x)+Math.abs(item.z))*2**-21;}
+ function allFar(value){return items.every((item,index)=>hidden.has(item.id)||edgeDistance(value,item,index)>=end+margin(value,item));}
+ function allNear(value){return items.every((item,index)=>hidden.has(item.id)||edgeDistance(value,item,index)<=start-margin(value,item));}
  // Layer reservation belongs to the caller and its shadow pass. This module
  // never changes camera masks or assumes that auxiliary passes share them.
  function shadowSafe(value){return !!shadowBit&&!(value.layers.mask&shadowBit)&&auxiliaryCameras.every(item=>!(item.layers.mask&shadowBit))&&(!model.castShadow||!!unregisterCaster&&!!material.castShadowNode&&shadowCameras.length>0&&shadowCameras.every(item=>!!(item.layers.mask&shadowBit)));}
