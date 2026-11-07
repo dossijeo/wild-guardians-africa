@@ -1,8 +1,9 @@
 import {validateConfirmedClockSegments} from '../simulation/confirmed-clock-segments.js';
 import {certifyHistoricalPhysicsIsolation} from '../simulation/worker-historical-physics-isolation.js';
+import {HISTORICAL_MAX_REAL_DURATION} from '../simulation/historical-publication-limits.js';
 // These synchronous operations must run in one turn, before the clock advances.
 // A failed second roster must not leave the first roster installed.
-export function createConfirmedHistoricalMotionGroup({animals,workers=null,effects=null,otherEffectsQuiet=null,getSupport,inputPolicy=null,maxRealDuration=.1,diagnostics=false}={}){
+export function createConfirmedHistoricalMotionGroup({animals,workers=null,effects=null,otherEffectsQuiet=null,getSupport,inputPolicy=null,maxRealDuration=HISTORICAL_MAX_REAL_DURATION,diagnostics=false}={}){
  if(!animals||typeof getSupport!=='function'||effects!==null&&['prepareHistoricalMotion','startHistoricalMotion','historicalMotionCurrent','finishHistoricalMotion','abortHistoricalMotion','cancelHistoricalMotion'].some(key=>typeof effects[key]!=='function')||otherEffectsQuiet!==null&&typeof otherEffectsQuiet!=='function')throw TypeError('Invalid historical motion group');
  if(inputPolicy!==null&&inputPolicy!=='ordered-boundary'||!Number.isFinite(maxRealDuration)||maxRealDuration<=0||typeof diagnostics!=='boolean')throw TypeError('Invalid historical input policy');
  const prepared=new WeakMap();let lastRejection=null;const reject=(reason,actorId=null)=>{if(diagnostics)lastRejection={reason:typeof reason==='string'?reason.slice(0,100):'unknown',actorId:typeof actorId==='string'?actorId.slice(0,100):null};return null;};
