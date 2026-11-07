@@ -1,0 +1,5 @@
+# Caída de trabajadores en GPU
+
+Durante una caída confirmada por la simulación, la presentación WebGPU solicita el clip `Fall` precocinado compartido por perfil. Los cuatro modelos usan los mismos clips originales y no muestran herramientas rígidas durante la caída. La fase procede de `fallRemaining` confirmado y se mantiene congelada entre publicaciones o durante una pausa; la ruta CPU permanece disponible durante la carga, al fallar la admisión y en la recuperación `Worker_GetUp`. Una caída cuya admisión termina después de cambiar el estado no reaparece. No se modifica la posición autoritativa, el tiempo de recuperación ni las colisiones.
+
+Los cuatro paquetes se verifican con `node tools/guardian/build-worker-gpu-walk.mjs --clip=Fall --check`. Las pruebas usan el rig y el clip de recuperación reales, comprueban tiempo detenido, cambio de fase, transición a recuperación y rechazo de una admisión tardía. La vía histórica autónoma sigue excluyendo caídas; aún no hay comparación perceptiva de contactos y sombras ni medición de rendimiento con GPU real.
