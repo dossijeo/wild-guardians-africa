@@ -22,8 +22,8 @@ its ACK is emitted once, after the final state. The final presentation hook
 does not replay events already delivered inside the interval.
 
 The receiver refuses the experimental path when evidence is incomplete,
-ordering is ambiguous, an intermediate state is invalid, or the actor state at
-an event differs from the observed tick. Changes to `suppressed`, `structures`
+ordering is ambiguous, an intermediate state is invalid, or recorded causal
+states and post-tick endpoints cannot be validated. Changes to `suppressed`, `structures`
 or `villages` remain on the ordinary boundary path because their spatial and
 visibility consumers do not yet have an interior revision contract. Physical
 activity, unrepresented lifecycle facts, changed world or terrain and missing
@@ -50,7 +50,19 @@ surface-hook tests cover timing and dependency contracts separately.
 node --test tests/historical-event-boundaries.test.js tests/historical-event-auto-recovery-integration.test.js tests/confirmed-historical-event-playback.test.js tests/confirmed-historical-clock.test.js tests/slice-historical-preview.test.js tests/webgpu-historical-boundary-sync.test.js
 ```
 
-Full browser/Worker/WebGPU validation, including actual GPU rigs, VFX and
-physical impacts, is still required. Unsupported events take the normal
-endpoint path; this implementation does not claim general completion of
-interior-event or physical playback.
+The real WebGPU/Worker native-islet raid now completes an admitted publication:
+four events at two subboundaries, one completed external publication and no
+automatic recovery. It uses real rigs and canonical terrain, on an NVIDIA
+Turing hardware adapter with no fallback. The final run and a preceding run
+both pass. See [hardware evidence](b-close-20261107/historical-events.json).
+
+The necessary fix was an explicit, transactional continuation of GPU motion
+inside the same publication, including a certified stationary interval between
+moving intervals. Ordinary reset still rejects reused versions. See the
+[continuation contract](historical-event-motion-continuation.md).
+
+This closes the implemented event contract in the integration profile, not
+every possible event or visual effect. Unsupported intervals keep the normal
+endpoint path. Combined interior events with active physical impacts, device
+loss during that combination, prolonged campaigns and artistic parity remain
+outside this hardware test. The feature remains opt-in.
