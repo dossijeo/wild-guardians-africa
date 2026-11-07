@@ -36,6 +36,10 @@ export function createBakedWorkerWaterTexture(meta,buffer){
  if(meta?.schema!=='wg-worker-gpu-walk/1'||!hasBakedWorkerWalk(meta.species)||meta.clip!=='Water'||meta.validation?.visibleAttachments!==0||!Array.isArray(meta.attachments)||meta.attachments.length!==6)throw TypeError('Invalid baked worker water data');
  return createPackedBakedWalkTexture(meta,buffer);
 }
+export function createBakedWorkerCarryTexture(meta,buffer){
+ if(meta?.schema!=='wg-worker-gpu-walk/1'||!hasBakedWorkerWalk(meta.species)||meta.clip!=='Carry_Crate'||meta.validation?.visibleAttachments!==0||!Array.isArray(meta.attachments)||meta.attachments.length!==9)throw TypeError('Invalid baked worker carry data');
+ return createPackedBakedWalkTexture(meta,buffer);
+}
 function createPackedBakedWalkTexture(meta,buffer){
  if(meta.sharedMatrixChannels!==1||!Number.isInteger(meta.frames)||meta.frames<2||!Number.isInteger(meta.strideFloats)||!Number.isFinite(meta.duration)||meta.duration<=0||!Number.isFinite(meta.sampleRate)||meta.sampleRate<=0||!Array.isArray(meta.channels)||!meta.channels.length||!Array.isArray(meta.sampleTimes)||meta.sampleTimes.length!==meta.frames||!(buffer instanceof ArrayBuffer)||meta.byteLength!==buffer.byteLength||buffer.byteLength!==meta.frames*meta.strideFloats*4)throw TypeError('Invalid baked walking data');
  const channel=meta.channels[0],bones=channel?.bones?.length,offset=channel?.matrixOffset;

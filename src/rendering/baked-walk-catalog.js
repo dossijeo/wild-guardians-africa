@@ -44,7 +44,7 @@ export function createBakedWalkBank({load=loadBakedWalkAsset,renderer=null,resou
 
 // Close producers before capturing active compilations, so no new user can
 // start using these textures after their deferred release has been scheduled.
-export function closeBakedWalkResources({bank=null,workerBank=null,workerRunBank=null,workerHarvestBank=null,workerIdleBank=null,workerWaterBank=null,workerPlantBank=null,bake=null,admission=null}={}){
- bank?.close();workerBank?.close();workerRunBank?.close();workerHarvestBank?.close();workerIdleBank?.close();workerWaterBank?.close();workerPlantBank?.close();admission?.dispose();const release=()=>{bake?.dispose();bank?.dispose();workerBank?.dispose();workerRunBank?.dispose();workerHarvestBank?.dispose();workerIdleBank?.dispose();workerWaterBank?.dispose();workerPlantBank?.dispose();};
+export function closeBakedWalkResources({bank=null,workerBank=null,workerRunBank=null,workerHarvestBank=null,workerIdleBank=null,workerWaterBank=null,workerPlantBank=null,workerCarryBank=null,bake=null,admission=null}={}){
+ bank?.close();workerBank?.close();workerRunBank?.close();workerHarvestBank?.close();workerIdleBank?.close();workerWaterBank?.close();workerPlantBank?.close();workerCarryBank?.close();admission?.dispose();const release=()=>{bake?.dispose();bank?.dispose();workerBank?.dispose();workerRunBank?.dispose();workerHarvestBank?.dispose();workerIdleBank?.dispose();workerWaterBank?.dispose();workerPlantBank?.dispose();workerCarryBank?.dispose();};
  if(typeof admission?.deferCompilations==='function')admission.deferCompilations(release);else release();
 }

@@ -17,3 +17,11 @@ export function confirmedWorkerRunningSamples(preview,actorId,entity){
  if(samples.some((s,i)=>!Number.isFinite(s.at)||!Number.isFinite(s.runPhase)||s.runPhase<0||i&&(s.at<=samples[i-1].at||s.runPhase<samples[i-1].runPhase)||s.status!==first.status||!s.running||s.gateWaiting||s.incapacitated||s.recovery||s.falling||s.taskId!==first.taskId||s.animation!==first.animation))return null;
  return samples.map(s=>({at:s.at,phase:s.runPhase}));
 }
+
+export function confirmedWorkerCarrySamples(preview,actorId,entity){
+ const ticks=preview?.trace?.actorTickStates;if(!ticks?.complete||!Array.isArray(ticks.actors))return null;
+ const matches=ticks.actors.filter(value=>value.actorId===actorId);if(matches.length!==1||!Array.isArray(matches[0].samples))return null;
+ const samples=matches[0].samples,first=samples[0];if(samples.length<2||first?.at!==preview.start||samples.at(-1)?.at!==preview.end||first.status!=='carrying'||entity?.status!=='carrying'||typeof entity.crateId!=='string'||!entity.crateId||first.crateId!==entity.crateId||first.carryPhase!==entity.carryPhase)return null;
+ if(samples.some((s,i)=>!Number.isFinite(s.at)||!Number.isFinite(s.carryPhase)||s.carryPhase<0||i&&(s.at<=samples[i-1].at||s.carryPhase<samples[i-1].carryPhase)||s.status!=='carrying'||s.crateId!==first.crateId||s.gateWaiting||s.incapacitated||s.recovery||s.recoveryExiting||s.falling||s.taskId!==first.taskId||s.animation!==first.animation))return null;
+ return samples.map(s=>({at:s.at,phase:s.carryPhase}));
+}
