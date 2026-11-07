@@ -27,7 +27,7 @@ test('cancellation and revision changes discard results without accumulating wor
  const next=h.client.query({...request,expectedRevision:2,expectedSequence:1}),nextId=h.sent.at(-1).id;h.client.confirm({sequence:2,revision:3,elapsed:2});assert.equal(await next,null);h.receive({kind:'result',id:nextId,result:result(2,1)});assert.equal(await h.client.query(request),null);h.client.dispose();
 });
 
-test('a failed replica resolves pending consumers and does not restart itself',async()=>{
+test('a failed replica resolves pending consumers before its delayed retry',async()=>{
  const h=harness();h.client.updateSnapshot(snapshot());const first=h.client.query(request);h.worker.onerror({message:'GPU-independent spatial worker failure'});assert.equal(await first,null);assert.equal(h.client.status().state,'failed');h.client.updateSnapshot(snapshot(2,1));assert.equal(h.sent.length,1);assert.equal(await h.client.query(request),null);h.client.dispose();
 });
 
@@ -63,4 +63,9 @@ test('actual replica bypasses a busy authority lane while commands remain determ
 test('a stalled spatial worker times out without blocking authority or consumers',async()=>{
  const worker={postMessage(){},terminate(){this.terminated=true;}},client=createFarVisualReplicaClient({session:'s',timeoutMs:15,workerFactory:()=>worker});
  client.updateSnapshot(snapshot());const pending=client.query(request);assert.equal(await pending,null);assert.equal(client.status().state,'failed');assert.match(client.status().failure,/timed out/);assert.equal(worker.terminated,true);assert.equal(await client.query(request),null);client.dispose();
+});
+
+test('replica retries once using the latest revision and ignores its retired worker',async()=>{
+ const workers=[],client=createFarVisualReplicaClient({session:'s',workerFactory:()=>{const worker={sent:[],postMessage(message){this.sent.push(message);},terminate(){this.terminated=true;}};workers.push(worker);return worker;}});
+ try{client.updateSnapshot(snapshot());const old=workers[0],waiting=client.query(request);old.onerror({message:'interrupted'});assert.equal(await waiting,null);client.updateSnapshot(snapshot(2,1));await new Promise(resolve=>setTimeout(resolve,1050));assert.equal(workers.length,2);const fresh=workers[1];assert.equal(fresh.sent[0].revision,2);old.onmessage({data:{session:'s',kind:'snapshotReady',revision:1}});fresh.onmessage({data:{session:'s',kind:'snapshotReady',revision:2}});const query=client.query({...request,expectedRevision:2,expectedSequence:1}),id=fresh.sent.at(-1).id;fresh.onmessage({data:{session:'s',kind:'result',id,result:result(2,1)}});assert.deepEqual(await query,result(2,1));fresh.onerror({message:'second failure'});client.updateSnapshot(snapshot(3,2));await new Promise(resolve=>setTimeout(resolve,25));assert.equal(workers.length,2);assert.equal(client.status().state,'failed');}finally{client.dispose();}
 });
