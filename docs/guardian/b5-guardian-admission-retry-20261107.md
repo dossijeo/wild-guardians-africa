@@ -1,0 +1,3 @@
+# Reintento de admisión gráfica del guardián
+
+Si el modelo y sus componentes ya se construyeron pero falla su admisión gráfica, una solicitud posterior vuelve a admitir el mismo grupo y el vórtice. La descarga, la instancia y sus recursos se comparten entre solicitudes concurrentes; el modelo no se publica hasta superar la admisión. La comprobación cubre un fallo transitorio y el reintento con admisión simulada. Un error durante la construcción parcial del modelo sigue sin ser recuperable mediante esta vía; tampoco se ha probado la recuperación del dispositivo ni el primer dibujo en WebGPU real.
