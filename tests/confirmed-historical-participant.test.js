@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {confirmedHistoricalParticipant} from '../src/rendering/confirmed-historical-participant.js';
 import {actorTickState} from '../src/simulation/worker-actor-tick-states.js';
-import {confirmedWalkingSamples,confirmedAnimalAttackSamples} from '../src/rendering/confirmed-animation-samples.js';
+import {confirmedWalkingSamples,confirmedAnimalAttackSamples,confirmedWorkerFleeIdleSamples} from '../src/rendering/confirmed-animation-samples.js';
 
 test('worker fall requires a stationary continuous and uninterrupted confirmed fall',()=>{
  const worker={id:'w',profile:'youngMale',status:'incapacitated',incapacitated:true,fallRemaining:1,downHeading:.5,x:2,z:3},first=actorTickState(worker,5),last={...first,at:5.1,fallRemaining:.9},path={actorId:'w',continuous:true,timed:true,startStatus:worker.status,endStatus:worker.status,start:{at:5,x:2,z:3},end:{at:5.1,x:2,z:3},segments:[]},preview={start:5,end:5.1,clockSegments:{start:5,end:5.1,complete:true,segments:[{realDuration:.1,rate:1}]},trace:{actors:[path],actorTickStates:{complete:true,actors:[{actorId:'w',samples:[first,last]}]}}};
@@ -47,4 +47,8 @@ test('gate idle requires a stationary and uninterrupted confirmed wait',()=>{
 
 test('gate carrying is admitted only for an unchanged stationary crate and phase',()=>{
  const worker={id:'w',profile:'youngMale',status:'carrying',crateId:'c',carryPhase:.5,gateWaiting:true,running:false,x:2,z:3,path:[{x:4,z:3}]},first=actorTickState(worker,5),last={...first,at:5.1},path={actorId:'w',continuous:true,timed:true,startStatus:'carrying',endStatus:'carrying',start:{at:5,x:2,z:3},end:{at:5.1,x:2,z:3},segments:[]},preview={start:5,end:5.1,clockSegments:{start:5,end:5.1,complete:true,segments:[{realDuration:.1,rate:1}]},trace:{actors:[path],actorTickStates:{complete:true,actors:[{actorId:'w',samples:[first,last]}]}}};assert.equal(confirmedHistoricalParticipant(preview,'w',worker,'worker'),'stationary');for(const [key,bad] of [['gateWaiting',false],['running',true],['falling',true],['crateId','other'],['carryPhase',.6],['x',2.1]]){const old=last[key];last[key]=bad;assert.equal(confirmedHistoricalParticipant(preview,'w',worker,'worker'),null,key);last[key]=old;}worker.recoveryExitRemaining=.1;assert.equal(confirmedHistoricalParticipant(preview,'w',worker,'worker'),null);
+});
+
+test('fleeing idle is certified only while the explicit non-running state persists',()=>{
+ const worker={id:'w',profile:'youngMale',status:'fleeing',running:false,x:2,z:3,walkPhase:1,path:[{x:4,z:3}]},first=actorTickState(worker,5),last={...first,at:5.1,x:2.1,walkPhase:1.1},path={actorId:'w',continuous:true,timed:true,startStatus:'fleeing',endStatus:'fleeing',start:{at:5,x:2,z:3},end:{at:5.1,x:2.1,z:3},segments:[{x0:2,z0:3,x1:2.1,z1:3}]},preview={start:5,end:5.1,trace:{actors:[path],actorTickStates:{complete:true,actors:[{actorId:'w',samples:[first,last]}]}}};assert.equal(confirmedHistoricalParticipant(preview,'w',worker,'worker'),'moving');assert.deepEqual(confirmedWorkerFleeIdleSamples(preview,'w',worker),[{at:5,phase:5},{at:5.1,phase:5.1}]);for(const [key,bad] of [['running',true],['gateWaiting',true],['falling',true],['status','returning']]){const old=last[key];last[key]=bad;assert.equal(confirmedWorkerFleeIdleSamples(preview,'w',worker),null,key);last[key]=old;}worker.running=undefined;assert.equal(confirmedWorkerFleeIdleSamples(preview,'w',worker),null,'undefined selects Run in the original');
 });

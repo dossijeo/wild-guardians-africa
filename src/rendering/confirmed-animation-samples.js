@@ -1,4 +1,5 @@
 import {ANIMAL_ACTIONS} from '../simulation/animal-actions-data.js';
+import {isWorkerFleeIdle} from './worker-flee-idle.js';
 
 // Each animation has its own eligibility checks; intervals crossing a state
 // transition retain the ordinary confirmed presentation.
@@ -44,4 +45,8 @@ export function confirmedWorkerCarrySamples(preview,actorId,entity){
  const samples=matches[0].samples,first=samples[0];if(samples.length<2||first?.at!==preview.start||samples.at(-1)?.at!==preview.end||first.status!=='carrying'||entity?.status!=='carrying'||typeof entity.crateId!=='string'||!entity.crateId||first.crateId!==entity.crateId||first.carryPhase!==entity.carryPhase)return null;
  if(samples.some((s,i)=>!Number.isFinite(s.at)||!Number.isFinite(s.carryPhase)||s.carryPhase<0||i&&(s.at<=samples[i-1].at||s.carryPhase<samples[i-1].carryPhase)||s.status!=='carrying'||s.crateId!==first.crateId||s.gateWaiting||s.incapacitated||s.recovery||s.recoveryExiting||s.falling||s.taskId!==first.taskId||s.animation!==first.animation))return null;
  return samples.map(s=>({at:s.at,phase:s.carryPhase}));
+}
+
+export function confirmedWorkerFleeIdleSamples(preview,actorId,entity){
+ if(!isWorkerFleeIdle(entity)||entity.id!==actorId)return null;const ticks=preview?.trace?.actorTickStates;if(ticks?.complete!==true||!Array.isArray(ticks.actors))return null;const matches=ticks.actors.filter(item=>item.actorId===actorId);if(matches.length!==1||!Array.isArray(matches[0].samples))return null;const samples=matches[0].samples,first=samples[0];if(samples.length<2||first?.at!==preview.start||samples.at(-1)?.at!==preview.end||first.status!==entity.status)return null;if(samples.some((sample,index)=>!Number.isFinite(sample.at)||index&&sample.at<=samples[index-1].at||sample.status!=='fleeing'||sample.running||sample.gateWaiting||sample.incapacitated||sample.recovery||sample.recoveryExiting||sample.falling||sample.taskId!==first.taskId||sample.animation!==first.animation))return null;return samples.map(sample=>({at:sample.at,phase:sample.at}));
 }
