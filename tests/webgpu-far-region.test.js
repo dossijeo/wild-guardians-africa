@@ -25,6 +25,10 @@ test('coverage is confirmed only after admission, with cancellation on camera re
  let finish,signal;const removed=[];const owner=createWebGpuFarRegion({start:0,end:1,retryMs:0,currentSequence:()=>1,onChunk:(_,options)=>{signal=options.signal;return new Promise(resolve=>{finish=resolve;});},onRemove:value=>removed.push(value),onInvalidate:()=>{},query:async request=>({cx:request.cx,cz:request.cz,sequence:1,revision:1,instances:trees()})});
  owner.updateCamera({x:0,z:0});owner.pump();await turn();assert.equal(owner.status().offered,0);assert.equal(owner.status().pending,'0,0');owner.updateCamera({x:48,z:0});assert.equal(signal.aborted,true);finish(true);await turn();assert.equal(owner.status().offered,0);assert.deepEqual(removed,[]);owner.dispose();
 });
+test('unchanged world revision keeps an admission valid across ticks but a changed revision rejects it',async()=>{
+ let seq=1,rev=7,finish;const owner=createWebGpuFarRegion({start:0,end:1,retryMs:0,currentSequence:()=>seq,currentRevision:()=>rev,onChunk:()=>new Promise(resolve=>{finish=resolve;}),onRemove:()=>{},onInvalidate:()=>{},query:async request=>({cx:request.cx,cz:request.cz,sequence:seq,revision:7,instances:trees()})});
+ try{owner.updateCamera({x:0,z:0});owner.pump();await turn();seq=2;finish(true);await turn();assert.equal(owner.status().offered,1);owner.invalidate({reason:'retry'});owner.pump();await turn();seq=3;rev=8;finish(true);await turn();assert.equal(owner.status().offered,0);}finally{owner.dispose();}
+});
 test('rejected asynchronous admission retries without falsely recording coverage',async()=>{
  let attempts=0;const owner=createWebGpuFarRegion({start:0,end:1,retryMs:0,currentSequence:()=>1,onChunk:async()=>++attempts>1,onRemove:()=>{},onInvalidate:()=>{},query:async request=>({cx:request.cx,cz:request.cz,sequence:1,revision:1,instances:trees()})});owner.updateCamera({x:0,z:0});owner.pump();await turn();assert.equal(owner.status().offered,0);owner.pump();await turn();assert.equal(owner.status().offered,1);assert.equal(attempts,2);owner.dispose();
 });

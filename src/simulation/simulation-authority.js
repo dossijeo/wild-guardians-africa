@@ -102,13 +102,13 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   function setGuardianMetadata(metadata){if(closed||!metadata||!Array.isArray(metadata.assets)||!metadata.cropHeights)throw TypeError('Invalid guardian metadata');guardianMetadata=metadata;}
   function setGuardianTerrainEpoch(epoch){if(closed||epoch!==null&&(typeof epoch!=='string'||!epoch))throw TypeError('Invalid guardian terrain epoch');guardianTerrainEpoch=epoch;}
   return {
-   setGuardianMetadata,setGuardianTerrainEpoch,setGuardianMetadataForQa:setGuardianMetadata,setGuardianTerrainEpochForQa:setGuardianTerrainEpoch,
+   setGuardianMetadata,setGuardianTerrainEpoch,setGuardianMetadataForQa:setGuardianMetadata,setGuardianTerrainEpochForQa:setGuardianTerrainEpoch,farVisualRevision:()=>session.core.farVisualRevision(),
    // This is a read-only visual query at an exact committed authority
    // boundary. The caller must discard it if a later world revision arrives.
    queryFarVisualChunk({cx,cz,slots=[0,1,2,3],expectedSequence,expectedRevision=null}={}){
     if(closed)throw Error('Simulation authority is closed');
     if(!Number.isSafeInteger(expectedSequence)||expectedSequence<0)throw TypeError('Invalid far visual sequence');
-    if(expectedSequence!==sequence||physicsInitializing)return null;
+    if(physicsInitializing||expectedSequence>sequence||expectedRevision===null&&expectedSequence!==sequence)return null;
     const result=session.core.queryFarVisualChunk(cx,cz,{slots,expectedRevision});
     return result?{sequence,elapsed:game.elapsed,...result}:null;
    },

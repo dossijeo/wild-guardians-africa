@@ -61,6 +61,8 @@ test('authority exposes far props only at the requested confirmed sequence', {sk
   assert.equal(authority.queryFarVisualChunk({cx:4,cz:-2,expectedSequence:1}),null);
   const actual=authority.execute({kind:'snapshot',sequence:1}),expected=reference.execute({kind:'snapshot',sequence:1});assert.equal(actual.snapshot,expected.snapshot);assert.deepEqual(actual.events,expected.events);assert.deepEqual(actual.residency,expected.residency);
   assert.equal(authority.queryFarVisualChunk({cx:4,cz:-2,expectedSequence:0}),null);
+  const stable=authority.queryFarVisualChunk({cx:4,cz:-2,expectedSequence:0,expectedRevision:first.revision});assert.equal(stable.sequence,1);assert.deepEqual(stable.instances,first.instances);
+  assert.equal(authority.queryFarVisualChunk({cx:4,cz:-2,expectedSequence:0,expectedRevision:first.revision+1}),null);
   const next=authority.queryFarVisualChunk({cx:4,cz:-2,expectedSequence:1,expectedRevision:first.revision});assert.equal(next.sequence,1);assert.deepEqual(next.instances,first.instances);
  }finally{authority.dispose();reference.dispose();}
 });

@@ -35,8 +35,8 @@ export function createHostPublicationQueue({session,send,diagnostics=false,foldV
  const eligible=item=>item.kind==='publication'&&item.tick&&knownEnvelope(item.publication)&&!item.publication.terrainCheckpoint&&item.publication.worldMotionTrace===undefined&&(item.publication.presentationPaths===undefined||item.publication.presentationPaths==='head-v1')&&headingStable(item.publication)&&terrainStable(item.publication)&&item.publication.unchanged!==true&&Array.isArray(item.publication.events)&&physicsOwners(item.publication)!==null;
  // An invalidation is an ordered boundary even when no gameplay event was
  // emitted. Absorbing it would let a consumer retain an obsolete trajectory.
- const quietKeys=new Set(['kind','session','sequence','value','stepsExecuted','residency','physicsPose','physicsPoses','physicsOwnerSummary','elapsed','pauses','events','presentationJournal','presentationJournalVersion','presentationWorkerHeadings','raidWaitBindings','saveAvailable','snapshot','terrainChanged','motionTrace','motionInvalidation','presentationPaths','hudProjection','tutorialGuideRevision']);
- const backgroundKeys=new Set(['kind','session','sequence','value','unchanged','slotId','stateSequence','elapsed','pauses','events','residency','saveAvailable','terrainChanged','tutorialGuideRevision']);
+ const quietKeys=new Set(['kind','session','sequence','value','stepsExecuted','residency','physicsPose','physicsPoses','physicsOwnerSummary','elapsed','pauses','events','presentationJournal','presentationJournalVersion','presentationWorkerHeadings','raidWaitBindings','saveAvailable','snapshot','terrainChanged','motionTrace','motionInvalidation','presentationPaths','hudProjection','tutorialGuideRevision','farVisualRevision']);
+ const backgroundKeys=new Set(['kind','session','sequence','value','unchanged','slotId','stateSequence','elapsed','pauses','events','residency','saveAvailable','terrainChanged','tutorialGuideRevision','farVisualRevision']);
  const foldViewKeys=new Set([...backgroundKeys,'pausedAdvance','stepsExecuted']);
  const replaceable=item=>eligible(item)&&item.publication.events.length===0&&!(item.publication.presentationJournal?.length)&&!item.publication.motionInvalidation&&Object.keys(item.publication).every(key=>quietKeys.has(key));
  // Folding a subsequent unchanged receipt retains this entire publication,
@@ -44,7 +44,7 @@ export function createHostPublicationQueue({session,send,diagnostics=false,foldV
  // a later state, it does not move those facts to a different simulation time.
  const foldableState=item=>eligible(item)&&(item.publication.presentationJournal===undefined||Array.isArray(item.publication.presentationJournal))&&Object.keys(item.publication).every(key=>quietKeys.has(key));
  const background=item=>item?.kind==='publication'&&item.backgroundView===true&&knownEnvelope(item.publication)&&item.publication.unchanged===true&&Object.keys(item.publication).every(key=>backgroundKeys.has(key))&&terrainStable(item.publication)&&Array.isArray(item.publication.events)&&item.publication.events.length===0;
- const sameGuide=(a,b)=>a?.tutorialGuideRevision===b?.tutorialGuideRevision;
+ const sameGuide=(a,b)=>a?.tutorialGuideRevision===b?.tutorialGuideRevision&&a?.farVisualRevision===b?.farVisualRevision;
  const sameState=(a,b)=>a.slotId===b.slotId&&a.stateSequence===b.stateSequence&&a.elapsed===b.elapsed&&a.saveAvailable===b.saveAvailable&&JSON.stringify(a.pauses)===JSON.stringify(b.pauses)&&sameGuide(a,b);
  return {
   publication(publication,tick,{backgroundView=false,sourceKind,skipWorkCheckpoint=false}={}){if(typeof skipWorkCheckpoint!=='boolean'||skipWorkCheckpoint&&!publication.terrainCheckpoint)throw TypeError('Invalid checkpoint preparation option');let item={kind:'publication',publication,tick,backgroundView,firstSequence:publication.sequence,...(skipWorkCheckpoint?{skipWorkCheckpoint:true}:{}),...(diagnostics&&typeof sourceKind==='string'?{sourceKind}:{})};

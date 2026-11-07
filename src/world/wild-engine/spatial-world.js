@@ -349,7 +349,7 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     }
     wasm.lazy_commit_portals();
   }
-  return {wasm,preparation,generate,addChunk,selectChunk,removeChunk,removeChunks,currentChunk:()=>chunk,captureResidentChunks,queryFarVisualChunk,
+  return {wasm,preparation,generate,addChunk,selectChunk,removeChunk,removeChunks,currentChunk:()=>chunk,captureResidentChunks,queryFarVisualChunk,farVisualRevision:()=>{const revision=wasm.spatial_far_world_revision?.();if(!Number.isSafeInteger(revision)||revision<1)throw Error('Far visual revision unavailable');return revision;},
     enableConnectivityDiagnostics:()=>{diagnoseConnectivity=true;},
     connectivityDiagnostics:()=>structuredClone(connectivityReasons),
     enclosureAt:point=>navigationBuilt?wasm.lazy_enclosure(point.x,point.z):-1,

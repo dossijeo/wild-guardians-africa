@@ -21,3 +21,14 @@ test('cancellation and port replacement discard late native answers without queu
  channel.port2.onmessage=({data})=>client.receive(data);channel.port2.start();
  try{const abort=new AbortController(),first=client.query(request,{signal:abort.signal});await invoked;abort.abort();assert.equal(await first,null);assert.equal(await client.query(request),null);await turn();assert.equal(seenSignal.aborted,true);server.close();release(result());await turn();assert.equal(calls,1);}finally{client.dispose();server.close();channel.port2.close();}
 });
+
+test('an unchanged confirmed world revision permits a later authority sequence, but a changed revision rejects it',async()=>{
+ const channel=new MessageChannel();let sequence=4,revision=8,release,started;let invoked=new Promise(resolve=>{started=resolve;});
+ const server=openVisualStream(channel.port1,'s',()=>{},{onFarVisualQuery:()=>{started();return new Promise(resolve=>{release=resolve;});}}),client=createFarVisualPortClient({session:'s',port:channel.port2,sequence:()=>sequence,revision:()=>revision});
+ channel.port2.onmessage=({data})=>client.receive(data);channel.port2.start();
+ try{const first=client.query(request);await invoked;sequence=5;release({...result(),sequence:6});assert.equal((await first).sequence,6);invoked=new Promise(resolve=>{started=resolve;});const second=client.query({...request,expectedSequence:5});await invoked;sequence=6;revision=9;release({...result(),sequence:6});assert.equal(await second,null);}finally{client.dispose();server.close();channel.port2.close();}
+});
+test('an expected revision without a confirmed revision cannot authorize future authority state',async()=>{
+ const channel=new MessageChannel();let release,start;const invoked=new Promise(resolve=>{start=resolve;}),server=openVisualStream(channel.port1,'s',()=>{},{onFarVisualQuery:()=>{start();return new Promise(resolve=>{release=resolve;});}}),client=createFarVisualPortClient({session:'s',port:channel.port2,sequence:()=>4});let rejected;channel.port2.onmessage=({data})=>{try{client.receive(data);}catch(error){rejected=error;client.dispose();}};channel.port2.start();
+ try{const pending=client.query(request);await invoked;release({...result(),sequence:5});assert.equal(await pending,null);assert.match(rejected.message,/Invalid far visual response/);}finally{client.dispose();server.close();channel.port2.close();}
+});
