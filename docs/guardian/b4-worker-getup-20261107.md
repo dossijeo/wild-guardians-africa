@@ -7,3 +7,10 @@ La presentación WebGPU admite el clip precocinado `Worker_GetUp` para los cuatr
 La fase histórica puede reproducir recuperaciones estacionarias con fracción, límite espacial, rumbo y duración constantes en todas las muestras confirmadas. Una variación de esos valores, de posición o un evento fuerza la vía ordinaria. Las pruebas comprueban un caso restringido real con Wild Engine/WASM frente a la referencia, cambios de fracción durante la admisión, cuatro rigs con fracciones 0, 0,35, 0,75 y 1, picking y tiempos intermedios. La mayor diferencia de vértices muestreados es inferior a 0,03 unidades de mundo. Una prueba usa el mismo material en dos trabajadores y verifica sus valores independientes. La generación WGSL para el pase de color y sombra se comprueba con una trayectoria GPU enlazada.
 
 Estas pruebas no sustituyen la validación visual de sombras, selección, transiciones o rendimiento en una partida WebGPU real. Cuando la fracción cambia dentro de un intervalo histórico se conserva la presentación ordinaria hasta el siguiente límite confirmado. Los cuatro paquetes siguen verificándose con `node tools/guardian/build-worker-gpu-walk.mjs --clip=Worker_GetUp --check`.
+Cuando una corrección espacial confirmada cambia la fracción, duración o
+rumbo durante la admisión de `Worker_GetUp`, el roster rechaza la candidatura
+anterior y vuelve a solicitar el clip para la nueva versión de recuperación.
+La solicitud no se repite continuamente si falla sin un cambio confirmado.
+Las pruebas cubren admisión retenida, sustitución y fallo persistente, además
+del rig y los contratos históricos existentes; queda pendiente comprobar la
+continuidad visual y el coste en WebGPU real.
