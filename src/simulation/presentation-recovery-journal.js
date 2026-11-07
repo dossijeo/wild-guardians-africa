@@ -102,7 +102,7 @@ export function withPresentationRecoveryCheckpoint(command,status,{frozen=false,
 // Retire the old presentation channel before issuing replacement ports.
 export function preparePresentationRecoveryRetry(journal,stream,checkpoint,authoritySequence){
  const status=journal?.status?.(),channel=stream?.status?.();
- if(!status||status.closed||!checkpoint||status.base!==checkpoint.sequence||status.through!==authoritySequence||status.pendingTerrain||status.saturated||!channel?.active||channel.recoveryFailure){const error=Error('Presentation recovery journal is incomplete or saturated');error.code='recovery-incomplete';throw error;}
+ if(!status||status.closed||!checkpoint||status.base!==checkpoint.sequence||status.through!==authoritySequence||status.pendingTerrain||status.encoderFault||status.entries>status.capacity||status.bytes>status.maxBytes||!channel?.active||channel.recoveryFailure){const error=Error('Presentation recovery journal is incomplete or saturated');error.code='recovery-incomplete';throw error;}
  if(!channel.detached)stream.detachForRecovery();
  return assertPresentationRecoveryBoundary(journal,stream,checkpoint,authoritySequence);
 }

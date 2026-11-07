@@ -1,7 +1,7 @@
 import {createRecoveryCheckpointEstimator,estimateRetainedBytes} from '../src/simulation/retained-size.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createPresentationRecoveryJournal,assertPresentationRecoveryBoundary,shouldCapturePresentationCheckpoint,withPresentationRecoveryCheckpoint} from '../src/simulation/presentation-recovery-journal.js';
+import {createPresentationRecoveryJournal,assertPresentationRecoveryBoundary,preparePresentationRecoveryRetry,shouldCapturePresentationCheckpoint,withPresentationRecoveryCheckpoint} from '../src/simulation/presentation-recovery-journal.js';
 test('recovery journal retains terrain capture times independently of source payloads',()=>{const journal=createPresentationRecoveryJournal();journal.begin(1);journal.confirm(1);const chunks=[{cx:0,cz:0,capturedAt:8.5}],manifest={epoch:'e',chunks:[{cx:0,cz:0,revision:2}]};journal.appendTerrain(2,chunks,manifest);journal.append({sequence:2,snapshot:'{}',events:[],physicsPose:null,pauses:[]},true);chunks[0].capturedAt=99;assert.equal(journal.entry(0).chunks[0].capturedAt,8.5);assert.equal(journal.entry(0).terrainManifest.chunks[0].revision,2);journal.dispose();});
 for(const incrementalSnapshots of [false,true])test(`deferred checkpoint preserves journal and rearms once with${incrementalSnapshots?'':'out'} a base`,()=>{
  const packet=n=>({sequence:n,snapshot:JSON.stringify({value:n,padding:'x'.repeat(300)}),events:[{id:'event-'+n}],physicsPose:null}),journal=createPresentationRecoveryJournal({incrementalSnapshots});
@@ -89,6 +89,8 @@ test('recovery boundary rejects incomplete state but accepts an intact journal a
  j.appendTerrain(2,[{cx:0}]);assert.throws(()=>assertPresentationRecoveryBoundary(j,stream,checkpoint,1),/incomplete/);j.append(publication(2),true);assert.equal(assertPresentationRecoveryBoundary(j,stream,checkpoint,2),2);
  j.begin(2);assert.throws(()=>assertPresentationRecoveryBoundary(j,stream,checkpoint,2),/incomplete/);j.confirm(2);j.append(publication(3),true);j.append(publication(4),true);j.append(publication(5),true);j.append(publication(6),true);assert.equal(j.status().saturated,true);assert.equal(assertPresentationRecoveryBoundary(j,stream,{sequence:2},6),6);assert.equal(j.retryAfterRecovery(),true);assert.equal(j.status().checkpointRetry,true);assert.equal(withPresentationRecoveryCheckpoint({kind:'advance'},j.status()).visualTerrain,true);
 });
+
+test('a recovery retry accepts an intact journal at the admission watermark',()=>{const journal=createPresentationRecoveryJournal({capacity:6,highWatermark:4}),stream={status:()=>({active:true,detached:true})};try{journal.begin(1);journal.confirm(1);for(let n=2;n<=5;n++)journal.append(publication(n),true);assert.equal(journal.status().saturated,true);assert.equal(preparePresentationRecoveryRetry(journal,stream,{sequence:1},5),5);}finally{journal.dispose();}});
 
 test('checkpoint renewal starts early and waits for exact candidate acknowledgement',()=>{
  const j=createPresentationRecoveryJournal({capacity:8,highWatermark:4,maxBytes:100000,highWatermarkBytes:90000});
