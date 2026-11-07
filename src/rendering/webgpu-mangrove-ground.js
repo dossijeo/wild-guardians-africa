@@ -4,6 +4,7 @@ import {acos,atan,cameraPosition,clamp,cross,dFdx,dFdy,dot,float,length,max,mix,
 import {assetUrl} from './asset-url.js';
 import {skyNight} from './sky.js';
 import {mangroveGroundRecipe} from './webgpu-material-graph-catalog.js';
+import {prepareWebGpuTexture} from './webgpu-texture-upload.js';
 import {hashCell} from '../world/terrain.js';
 
 // BiomeGround uses the native terrain view's low 32-bit seed, not TerrainField's string hash.
@@ -12,12 +13,12 @@ export function mangroveGroundSeed(seed){const value=Number(seed)>>>0;return new
 // Default mangrove pure-moss branch of groundMaterial417 and its direct/ambient
 // biome-ground light. Contact AO and the independently authored mud are still
 // pending; keep this provider experimental until in-game visual comparison.
-export async function createWebGpuMangroveGround({signal,fetchImpl=globalThis.fetch,imageLoader=null,light=null,shadows=false,shadowNode=null,environment=null}={}){
- if(imageLoader!==null&&typeof imageLoader!=='function'||shadowNode!==null&&(!shadows||!light||!shadowNode.isShadowNode||shadowNode.light!==light)||environment!==null&&(!environment.day?.isTextureNode||!environment.dark?.isTextureNode||!environment.blend?.isNode||!environment.night?.isNode))throw TypeError('Invalid ground image loader, shadow node or environment');
+export async function createWebGpuMangroveGround({signal,fetchImpl=globalThis.fetch,imageLoader=null,renderer=null,light=null,shadows=false,shadowNode=null,environment=null}={}){
+ if(renderer!==null&&(!renderer?.backend?.isWebGPUBackend||typeof renderer.initTexture!=='function'||typeof renderer.backend.device?.queue?.onSubmittedWorkDone!=='function')||imageLoader!==null&&typeof imageLoader!=='function'||shadowNode!==null&&(!shadows||!light||!shadowNode.isShadowNode||shadowNode.light!==light)||environment!==null&&(!environment.day?.isTextureNode||!environment.dark?.isTextureNode||!environment.blend?.isNode||!environment.night?.isNode))throw TypeError('Invalid ground image loader, renderer, shadow node or environment');
  const response=await fetchImpl(assetUrl('/content/ground-materials.json'),{signal});if(!response.ok)throw Error('Ground material catalogue unavailable');const tile=(await response.json()).mangrove;
  if(!tile?.base||!tile.normal||!tile.arh||!Number.isFinite(tile.scale))throw Error('Invalid mangrove ground material');
  const bitmaps=[],atlases=[];let closed=false,lastSeed;
- try{for(const url of [tile.base,tile.normal,tile.arh]){let bitmap;if(imageLoader)bitmap=await imageLoader(assetUrl(url),{signal});else{const image=await fetchImpl(assetUrl(url),{signal});if(!image.ok)throw Error('Mangrove ground texture unavailable');bitmap=await createImageBitmap(await image.blob());}if(signal?.aborted){bitmap.close();throw new DOMException('Ground load cancelled','AbortError');}bitmaps.push(bitmap);const atlas=new THREE.Texture(bitmap);atlas.wrapS=atlas.wrapT=THREE.RepeatWrapping;atlas.minFilter=THREE.LinearMipmapLinearFilter;atlas.magFilter=THREE.LinearFilter;atlas.generateMipmaps=true;atlas.flipY=false;atlas.needsUpdate=true;atlases.push(atlas);}}
+ try{for(const url of [tile.base,tile.normal,tile.arh]){let bitmap;if(imageLoader)bitmap=await imageLoader(assetUrl(url),{signal});else{const image=await fetchImpl(assetUrl(url),{signal});if(!image.ok)throw Error('Mangrove ground texture unavailable');bitmap=await createImageBitmap(await image.blob());}if(signal?.aborted){bitmap.close();throw new DOMException('Ground load cancelled','AbortError');}const atlas=new THREE.Texture(bitmap);atlas.wrapS=atlas.wrapT=THREE.RepeatWrapping;atlas.minFilter=THREE.LinearMipmapLinearFilter;atlas.magFilter=THREE.LinearFilter;atlas.generateMipmaps=true;atlas.flipY=false;atlas.needsUpdate=true;if(renderer)await prepareWebGpuTexture({renderer,texture:atlas,signal,release(){atlas.dispose();bitmap.close();}});bitmaps.push(bitmap);atlases.push(atlas);}}
  catch(error){for(const atlas of atlases)atlas.dispose();for(const bitmap of bitmaps)bitmap.close();throw error;}
  const night=uniform(0),seed=uniform(new THREE.Vector2()),sunDirection=uniform(new THREE.Vector3(-.82,.52,.31).normalize()),visibility=shadows&&light?(shadowNode??shadow(light)).r:float(1);
  const world=positionWorld,uv=vec2(world.x.mul(.8).add(world.z.mul(.6)),world.x.mul(-.6).add(world.z.mul(.8))).mul(tile.scale).add(seed),tex=texture(atlases[0],uv).rgb.mul(vec3(1,1.03,.96)),mapN=texture(atlases[1],uv).rgb.mul(2).sub(1),arh=texture(atlases[2],uv).rgb;

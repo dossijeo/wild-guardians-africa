@@ -33,6 +33,16 @@ test('ground loads images through the auxiliary loader and closes them on dispos
  assert.deepEqual(requests.map(request=>request.url),['base','normal','arh']);assert.ok(requests.every(request=>request.signal===controller.signal));provider.dispose();assert.ok(images.every(image=>image.closed));
 });
 
+test('ground atlas upload completes before the shared material is returned',async()=>{
+ const tile={base:'base',normal:'normal',arh:'arh',scale:1,normalBoost:1},images=[],uploads=[],waiters=[],renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone:()=>new Promise(resolve=>waiters.push(resolve))}}},initTexture(texture){uploads.push(texture);}},fetchImpl=async()=>({ok:true,json:async()=>({mangrove:tile})}),imageLoader=async()=>{const bitmap={closed:false,close(){this.closed=true;}};images.push(bitmap);return bitmap;};
+ let ready=false;const pending=createWebGpuMangroveGround({renderer,fetchImpl,imageLoader}).then(value=>{ready=true;return value;});for(let i=0;i<3;i++){for(let tries=0;tries<10&&waiters.length<=i;tries++)await new Promise(resolve=>setImmediate(resolve));assert.equal(uploads.length,i+1);assert.equal(ready,false);waiters[i]();}const provider=await pending;assert.equal(uploads.length,3);assert.equal(ready,true);provider.dispose();assert.ok(images.every(image=>image.closed));
+});
+
+test('cancelled ground upload defers release until submitted GPU work settles',async()=>{
+ const tile={base:'base',normal:'normal',arh:'arh',scale:1,normalBoost:1},controller=new AbortController(),bitmap={closed:false,close(){this.closed=true;}},fetchImpl=async()=>({ok:true,json:async()=>({mangrove:tile})});let finish,disposed=0;const renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone:()=>new Promise(resolve=>{finish=resolve;})}}},initTexture(texture){texture.addEventListener('dispose',()=>disposed++);}};
+ const pending=createWebGpuMangroveGround({renderer,signal:controller.signal,fetchImpl,imageLoader:async()=>bitmap});for(let tries=0;tries<10&&!finish;tries++)await new Promise(resolve=>setImmediate(resolve));assert.equal(typeof finish,'function');const rejected=assert.rejects(pending,{name:'AbortError'});controller.abort();await rejected;assert.equal(bitmap.closed,false);assert.equal(disposed,0);finish();await new Promise(resolve=>setImmediate(resolve));assert.equal(bitmap.closed,true);assert.equal(disposed,1);
+});
+
 test('cancelled ground decoding releases all images including a late result',async()=>{
  const tile={base:'base',normal:'normal',arh:'arh',scale:1,normalBoost:1},images=[],controller=new AbortController();let finish;const fetchImpl=async()=>({ok:true,json:async()=>({mangrove:tile})}),imageLoader=async()=>{const image={close(){this.closed=true;}};images.push(image);if(images.length===2)await new Promise(resolve=>{finish=resolve;});return image;},pending=createWebGpuMangroveGround({signal:controller.signal,fetchImpl,imageLoader});
  await new Promise(resolve=>setImmediate(resolve));const rejected=assert.rejects(pending,{name:'AbortError'});controller.abort();finish();await rejected;assert.equal(images.length,2);assert.ok(images.every(image=>image.closed));
