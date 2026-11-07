@@ -17,7 +17,8 @@ avance ilimitado sin un consumidor o almacenamiento disponibles.
 
 Las pruebas retienen el acuse, envían eventos y terreno posteriores y comprueban
 confirmación, rechazo y presión del diario. Otra prueba usa el host y Wild
-Engine reales con un canal gráfico simulado y verifica que un comando de pausa
-termina antes del acuse. Pasan también los contratos de recuperación y runtime.
+Engine reales con un canal gráfico simulado y verifica que transcurre tiempo de
+simulación y que un comando de pausa termina antes del acuse. Pasan también los
+contratos de recuperación y runtime.
 Falta validar el ciclo con Workers gráficos y WebGPU reales y medir latencias,
 uso de memoria y tiempos de fotograma; no se afirma una mejora global.
