@@ -1,3 +1,4 @@
+import {normalizeGltfDataTextures,placeholderImageUri} from './webgpu-gltf-texture-semantics.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {KTX2Loader} from 'three/addons/loaders/KTX2Loader.js';
@@ -37,17 +38,17 @@ export async function openProgressiveWebGpuCharacter({renderer,packageUrl,specie
   if(stream.variant==='bc7'){ktx=new KTX2Loader(manager).detectSupport(renderer);bc7Loader=createPreparsedBc7Loader(manager,ktx);registerNativeBc7Glb(loader,bc7Loader.loader);}
   preview=await loader.parseAsync((await stream.loadPreview()).buffer,new URL('.',new URL(packageUrl,globalThis.location.href)).href);
   preview.scene.traverse(o=>{if(o.isMesh){own(o.geometry);for(const material of Array.isArray(o.material)?o.material:[o.material])ownMaterial(material);}});check();
-  const placeholder=structuredClone(metadata.materials);placeholder.images=placeholder.images.map(image=>({...image,uri:PIXEL}));
+  const placeholder=structuredClone(metadata.materials);placeholder.images=placeholder.images.map((image,index)=>({...image,uri:placeholderImageUri(PIXEL,index)}));
   if(stream.variant==='bc7'){for(const entry of placeholder.textures){const ext=entry.extensions?.WG_native_ktx2;if(ext){entry.source=ext.source;delete entry.extensions.WG_native_ktx2;}}placeholder.extensionsUsed=(placeholder.extensionsUsed??[]).filter(name=>name!=='WG_native_ktx2');placeholder.extensionsRequired=(placeholder.extensionsRequired??[]).filter(name=>name!=='WG_native_ktx2');}
   const temp=await loader.parseAsync(JSON.stringify(placeholder),new URL('.',new URL(packageUrl,globalThis.location.href)).href);
-  for(let i=0;i<(placeholder.materials?.length??0);i++)ownMaterial(await temp.parser.getDependency('material',i));check();
+  const temporaryMaterials=await Promise.all((placeholder.materials??[]).map((_,i)=>temp.parser.getDependency('material',i)));normalizeGltfDataTextures(temporaryMaterials,own);temporaryMaterials.forEach(ownMaterial);check();
   stable=await makeStableVertexMaterials(renderer,preview,temp,metadata.mapping,{shareCompatibleMaterials,materialVariant});if(closed||signal?.aborted)stable.dispose();check();const configured=new Set();preview.scene.traverse(object=>{if(!object.isMesh)return;prepareObject(object);for(const material of Array.isArray(object.material)?object.material:[object.material])if(!configured.has(material)){configureMaterial(material,object);configured.add(material);}});
   async function hydrate(){
    const urls=[];try{
     const {useBitmaps,useCompressed,data}=await loadCharacterTextureData(stream,metadata,{signal});if(useBitmaps){if(closed||signal?.aborted){for(const bitmap of data.values())bitmap.close();throw aborted();}for(const bitmap of data.values())ownedBitmaps.add(bitmap);bitmapLoader??=createPredecodedImageLoader(manager);}check();const full=structuredClone(metadata.materials);
     full.images.forEach((image,index)=>{const resource=data.get(metadata.texturePaths[index]);if(useBitmaps)image.uri=bitmapLoader.add(resource);else if(useCompressed)image.uri=bc7Loader.add(resource);else{const url=URL.createObjectURL(new Blob([resource],{type:stream.variant==='bc7'?'image/ktx2':'image/webp'}));urls.push(url);image.uri=url;}});
     const materials=await loader.parseAsync(JSON.stringify(full),new URL('.',new URL(packageUrl,globalThis.location.href)).href);
-    for(let i=0;i<(full.materials?.length??0);i++)ownMaterial(await materials.parser.getDependency('material',i));check();
+    const finalMaterials=await Promise.all((full.materials??[]).map((_,i)=>materials.parser.getDependency('material',i)));normalizeGltfDataTextures(finalMaterials,own);finalMaterials.forEach(ownMaterial);check();
     finalTextures=await stable.resolveFinal(materials);for(const texture of finalTextures)own(texture);check();
     for(const texture of finalTextures){uploadPending=true;renderer.initTexture(texture);await new Promise(resolve=>setTimeout(resolve,0));check();}
     await waitForWebGpuUploads(renderer,{signal:lifetime.signal});uploadPending=false;check();stable.apply({blend:0});onSelectableChange();transition={start:null};

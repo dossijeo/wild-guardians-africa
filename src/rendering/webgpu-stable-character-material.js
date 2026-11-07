@@ -129,7 +129,7 @@ export async function makeStableVertexMaterials(renderer, preview, originalMater
       for (const binding of mapBindings) {
         const value = finalSources[binding.index][binding.key];
         if (!value?.isTexture) throw Error(`Final texture missing: ${binding.key}`);
-        if (textureLayout(value) !== binding.layout) throw Error(`Final texture layout mismatch: ${binding.key}`);
+        if (textureLayout(value) !== binding.layout) throw Error(`Final texture layout mismatch: ${binding.key} (${binding.layout} -> ${textureLayout(value)})`);
         resolvedBindings.push({ binding, value }); textures.add(value);
       }
       for (const { binding, value } of resolvedBindings) binding.final = value;

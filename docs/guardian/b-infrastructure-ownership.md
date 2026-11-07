@@ -52,3 +52,16 @@ Validación: 51 pruebas de stream, reloj, grupo histórico y eventos de autorida
 4. Admisiones del resto de subsistemas: revisar sus ciclos con el mismo criterio de propietario, generación y transición, sin trasladar esos arreglos a las recetas de contenido.
 
 El cierre técnico requiere que cada mecánica tenga pruebas de carga retenida, sustitución durante admisión, cancelación, fallo persistente, retirada del actor, pausa y recuperación, además de su conexión en producto. Los pendientes anteriores permanecen a cargo de infraestructura; no se convierten en requisitos de implementación del agente de contenido.
+
+## Prerrequisitos descubiertos en WebGPU real
+
+La prueba de cierre se ejecuta con Edge y WebGPU, sin forzar SwiftShader. Detectó límites y carreras que las pruebas con renderer simulado no exponían:
+
+- Los canales estáticos del puente de cultivos excedían los ocho buffers de vértices admitidos por el dispositivo. Se intercalan los canales Float32 antes de la admisión, conservando sus valores y dejando separados los atributos dinámicos y de instancia.
+- Los actores ocultos por falta de terreno intentaban instalar movimiento GPU. Ahora esperan a que el soporte permita hacer visible el rig y reintentan sobre el mismo actor.
+- Los certificados de admisión quedaban obsoletos al efectuar la propia inserción prevista en la escena. El ticket distingue esa inserción concreta de un cambio de dueño, jerarquía interna, material o geometría; las comprobaciones ordinarias siguen siendo estrictas.
+- Una única URI para todas las imágenes provisionales aliasaba color y normales dentro de GLTFLoader. Cada imagen provisional tiene identidad propia. Las texturas de datos KTX2 lineales se normalizan antes de la admisión, sin modificar mapas de color ni relajar el contrato de sustitución.
+
+La instrumentación expone cola, compilación activa, esperas de sombras y estado de terreno/timeline. La ejecución real ya publica el primer terreno y consume estados confirmados; ha descubierto otro exceso de buffers todavía en investigación. Esto no certifica recuperación gráfica ni cierra los eventos interiores o la física histórica.
+
+Pruebas dirigidas: 102 de admisión/publicación, geometría y actores ocultos; 107 de texturas y rosters. Los recuentos se solapan y no se presentan como una suma de pruebas únicas.

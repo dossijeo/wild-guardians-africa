@@ -15,7 +15,7 @@ function materialInputs(material,values){
 function renderPassInputs(target,camera,renderer){
  return [camera,camera?.layers?.mask,renderer.toneMapping,renderer.outputColorSpace,renderer.samples,renderer.depth,renderer.stencil,renderer.shadowMap?.enabled,renderer.shadowMap?.type,renderer.localClippingEnabled,renderer.clippingPlanes?.length,target,target?.samples,target?.depthBuffer,target?.stencilBuffer,target?.texture?.format,target?.texture?.type,target?.texture?.colorSpace,target?.depthTexture,target?.depthTexture?.format,target?.depthTexture?.type];
 }
-function pipelineInputs(object,target,camera,renderer,include=[]){
+function pipelineInputs(object,target,camera,renderer,include=[],attachedRootParent=undefined){
  const included=new Set(include);
  const values=renderPassInputs(target,camera,renderer);
  function attributeLayout(attribute){
@@ -25,7 +25,7 @@ function pipelineInputs(object,target,camera,renderer,include=[]){
   values.push(attribute,attribute?.array?.constructor,attribute?.itemSize,attribute?.normalized,attribute?.gpuType,attribute?.offset,attribute?.data?.stride,attribute?.isInstancedBufferAttribute,attribute?.data?.isInstancedInterleavedBuffer,attribute?.meshPerAttribute,attribute?.data?.meshPerAttribute);
  }
  object.traverse(node=>{
-  values.push(node,node.parent,included.has(node)?true:node.visible,node.layers.mask,node.castShadow,node.receiveShadow);
+  values.push(node,node===object&&attachedRootParent!==undefined?attachedRootParent:node.parent,included.has(node)?true:node.visible,node.layers.mask,node.castShadow,node.receiveShadow);
   if(!(node.isMesh||node.isLine||node.isPoints))return;
   const geometry=node.geometry,materials=Array.isArray(node.material)?node.material:[node.material];
   values.push(geometry,node.isInstancedMesh,node.isSkinnedMesh,node.skeleton?.bones?.length,materials.length);
@@ -61,6 +61,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
  if(shadowLights===null)scene.traverse(node=>{if(node.isLight&&node.shadow)addLight(node);});else for(const light of shadowLights)addLight(light);
  let closed=false,generation=0,active=false,inflightCompiles=0,cancel,auxiliaryRevision=0;const queue=[],targetWaiters=new Set(),compilingObjects=new Map(),compilationMembers=new Map(),uploadingObjects=new Map(),uploadBatch=new Set(),lifecycleSentinel={},auxiliaryTargets=new Map();let uploadScheduled=false,uploadActive=false;
  function frameTarget(){return renderer._getFrameBufferTarget?.()??renderer.getRenderTarget?.()??renderer.getOutputRenderTarget?.()??null;}
+ let compilesStarted=0,compilesSettled=0;const compileStarts=new Map();
  const cancelled=new Promise(resolve=>{cancel=()=>resolve(Error('Pipeline admission cancelled'));});
  let lostError=null;
  const lost=renderer.backend.device?.lost?.then(info=>{lostError=Error('WebGPU device lost: '+(info?.message||info?.reason||'unknown'));return lostError;});
@@ -92,7 +93,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
      if(!result?.valid?.()){enqueue(item);return;}
      // The validity check and publication share one synchronous turn. No
      // frame or other task can change the compiled inputs between them.
-     item.publish?.();item.resolve(item.returnTicket?{valid:result.valid}:undefined);
+     item.publish?.();item.resolve(item.returnTicket?{valid:result.valid,validAfterAttach:result.validAfterAttach}:undefined);
     }catch(error){item.reject(error);}
     return;
    }
@@ -113,7 +114,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
    if(result?.shadowTarget||!worldPass)return result;
    const passes=[result],targets=[...auxiliaryTargets.keys()];
    for(const target of targets){if(revision!==auxiliaryRevision)break;passes.push(await execute(item.object,item.signal,item.version,item.include,target,false,camera,scene,()=>revision===auxiliaryRevision,false,item.materialAlternatives));}
-   if(revision===auxiliaryRevision&&passes.length===targets.length+1&&passes.every(pass=>pass?.valid?.()))return {valid:()=>revision===auxiliaryRevision&&passes.every(pass=>pass.valid())};
+   if(revision===auxiliaryRevision&&passes.length===targets.length+1&&passes.every(pass=>pass?.valid?.()))return {valid:()=>revision===auxiliaryRevision&&passes.every(pass=>pass.valid()),validAfterAttach:()=>revision===auxiliaryRevision&&passes.every(pass=>pass.validAfterAttach?.())};
   }
  }
  function backgroundInputs(node){
@@ -163,7 +164,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
   // Abort cancels publication, not Three's pending compilation. Keep the
   // renderer queue locked until that work settles; otherwise a cancelled
   // compile can overlap a new request or poison its cache afterwards.
-  if(serial){inflightCompiles++;const deferred=[],members=relatedNodes(object);compilingObjects.set(object,deferred);compilationMembers.set(object,members);const finish=error=>{if(error&&signal?.aborted)retire(error);if(deferred.length)trackUploads(object,members);compilingObjects.delete(object);compilationMembers.delete(object);for(const release of deferred){try{release();}catch(error){retire(error);}}inflightCompiles--;pump();};compilation.then(()=>finish(null),finish);}
+  if(serial){inflightCompiles++;compilesStarted++;compileStarts.set(object,performance.now());const deferred=[],members=relatedNodes(object);compilingObjects.set(object,deferred);compilationMembers.set(object,members);const finish=error=>{if(error&&signal?.aborted)retire(error);if(deferred.length)trackUploads(object,members);compilingObjects.delete(object);compilationMembers.delete(object);for(const release of deferred){try{release();}catch(error){retire(error);}}inflightCompiles--;compilesSettled++;compileStarts.delete(object);pump();};compilation.then(()=>finish(null),finish);}
   else compilation.catch(error=>{if(signal?.aborted)retire(error);});
   let error;try{error=await Promise.race([compilation.then(()=>null),cancelled,...(lost?[lost]:[]),...(aborted?[aborted]:[])]);}finally{if(onAbort)signal.removeEventListener('abort',onAbort);}
   if(error)throw error;
@@ -247,8 +248,13 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
       }
      }
     }
-    return {valid:()=>!closed&&!lostError&&renderer._initialized!==false&&renderer._isDeviceLost!==true&&version===generation&&!signal?.aborted&&(!isCurrent||isCurrent())&&!lightsChanged()&&shadowTargets.every(([light,map])=>light.shadow.map===map)&&sameInputs(baseInputs,pipelineInputs(object,currentTarget(),passCamera,renderer,include))&&withMaterialAlternatives(alternatives,()=>sameInputs(inputs,pipelineInputs(object,currentTarget(),passCamera,renderer,include)))};
+    // Only the expected scene attachment may change after preparation.
+    // Descendant ownership, geometry, materials and pass state remain strict.
+    const originalParent=baseInputs[renderPassInputs(target,passCamera,renderer).length+1];
+    const valid=(attachedRootParent=undefined)=>!closed&&!lostError&&renderer._initialized!==false&&renderer._isDeviceLost!==true&&version===generation&&!signal?.aborted&&(!isCurrent||isCurrent())&&!lightsChanged()&&shadowTargets.every(([light,map])=>light.shadow.map===map)&&sameInputs(baseInputs,pipelineInputs(object,currentTarget(),passCamera,renderer,include,attachedRootParent))&&withMaterialAlternatives(alternatives,()=>sameInputs(inputs,pipelineInputs(object,currentTarget(),passCamera,renderer,include,attachedRootParent)));
+    return {valid:()=>valid(),validAfterAttach:()=>originalParent===null&&object.parent===targetScene&&valid(null)};
   }catch(error){
+   if(error?.name==='GPUPipelineError'){const layouts=[];object.traverse(node=>{if(node.geometry)layouts.push({name:node.name||node.type,attributes:Object.keys(node.geometry.attributes),material:node.material?.name||node.material?.type});});try{error.message+=' '+JSON.stringify(layouts);}catch{}}
    // Three r180 may retain an unsuccessful pipeline in its internal cache.
    if(!closed&&!signal?.aborted&&error?.code!=='shadow-target-unavailable'&&error?.code!=='admission-stale')retire(error);
    throw error;
@@ -269,6 +275,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
   // objects must be admitted separately before the pass is first rendered.
   registerAuxiliaryTarget(target){if(closed)throw Error('Pipeline admission closed');if(!target?.isRenderTarget||typeof renderer.getRenderTarget!=='function'||typeof renderer.setRenderTarget!=='function')throw TypeError('Invalid auxiliary target');const count=auxiliaryTargets.get(target)??0;auxiliaryTargets.set(target,count+1);if(!count){auxiliaryRevision++;structuralRevision++;}let released=false;return ()=>{if(released)return;released=true;const current=auxiliaryTargets.get(target)??0;if(current<=1){if(current){auxiliaryTargets.delete(target);auxiliaryRevision++;structuralRevision++;}}else auxiliaryTargets.set(target,current-1);};},
   notifyShadowTargets,
+  status(){return {closed,queued:queue.length,active,inflightCompiles,shadowWaiters:targetWaiters.size,uploads:uploadingObjects.size,structuralRevision,compilesStarted,compilesSettled,compiling:[...compileStarts].map(([object,at])=>({name:object.name??object.type??'background',ageMs:performance.now()-at,children:object.children?.map(child=>child.name||child.type)}))};},
   get structuralRevision(){return structuralRevision;},
   // A color/clear fallback can keep rendering while the real scene's
   // background pipeline compiles. Replacing an existing node is not yet

@@ -483,3 +483,15 @@ import {createWebGpuResourceRegistry} from '../src/rendering/webgpu-resource-reg
 test('renderer generation lease survives shutdown until in-flight compilation settles',async()=>{
  const registry=createWebGpuResourceRegistry(),scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera();let finish,disposed=0;const renderer={backend:{isWebGPUBackend:true},compileAsync:()=>new Promise(resolve=>{finish=resolve;}),dispose(){disposed++;}},lease=registry.adopt({namespace:'renderer',key:'main',dispose:()=>renderer.dispose()}),admission=createWebGpuPipelineAdmission({renderer,scene,camera});lease.commit();const pending=admission.prepare(new THREE.Group());await Promise.resolve();const rejected=assert.rejects(pending,/cancelled/);registry.dispose();admission.dispose();const shutdown=closeWebGpuRenderer({dispose:()=>lease.release()},admission);await rejected;assert.equal(registry.status().owned.length,1);assert.equal(disposed,0);finish();await shutdown;assert.equal(disposed,1);assert.equal(registry.status().owned.length,0);
 });
+
+test('batch tickets distinguish expected scene attachment from ownership or material changes',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),renderer={backend:{isWebGPUBackend:true},compileAsync:async()=>{}},admission=createWebGpuPipelineAdmission({renderer,scene,camera});
+ const root=new THREE.Group(),child=new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshBasicMaterial());root.add(child);
+ try{
+  const ticket=await admission.prepareTicket(root);assert.equal(ticket.valid(),true);assert.equal(ticket.validAfterAttach(),false);
+  scene.add(root);assert.equal(ticket.valid(),false);assert.equal(ticket.validAfterAttach(),true);
+  child.material.side=THREE.DoubleSide;assert.equal(ticket.validAfterAttach(),false);child.material.side=THREE.FrontSide;
+  const other=new THREE.Group();scene.add(other);other.add(root);assert.equal(ticket.validAfterAttach(),false);
+  scene.add(root);child.removeFromParent();assert.equal(ticket.validAfterAttach(),false);
+ }finally{admission.dispose();child.geometry.dispose();child.material.dispose();}
+});
