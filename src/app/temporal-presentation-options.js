@@ -1,6 +1,11 @@
 import {historicalRecoveryHarnessEnabled} from '../simulation/historical-recovery-harness.js';
-// A product build can opt in for the native mangrove world only. The same
-// decision must be made before authority bootstrap and on renderer attach.
+// The temporal product profile has the terrain history needed for mud. Keep an
+// explicit build-time opt-out and preserve opt-in for diagnostic profiles.
+export function productMudEnabled(setting,historicalRecovery){
+ if(setting!==undefined&&typeof setting!=='string'||typeof historicalRecovery!=='boolean')throw TypeError('Invalid mud presentation setting');
+ return setting==='true'||historicalRecovery&&setting!=='false';
+}
+// The same selection must be made before authority bootstrap and on attach.
 export function productMudPresentation({backend,biome,enabled}={}){
  if(!['legacy','webgpu-worker'].includes(backend)||typeof biome!=='string'||typeof enabled!=='boolean')throw TypeError('Invalid mud presentation profile');
  return enabled&&backend==='webgpu-worker'&&biome==='manglares';
