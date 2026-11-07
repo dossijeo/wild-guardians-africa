@@ -81,6 +81,11 @@ const vfxPassDefinitions=Object.freeze({
 });
 export function vfxPassRecipe(kind){const definition=vfxPassDefinitions[kind];if(!definition)throw TypeError('Invalid VFX pass recipe');const structural=Object.freeze({family:'vfx-'+kind,...definition});return Object.freeze({structural,dynamic:Object.freeze(['instanceData','clock','camera']),passes:Object.freeze({color:'vfx-node',depth:definition.state.depthWrite===false?'no-depth-write':'color-depth-write',shadow:'mesh-does-not-cast'}),key:JSON.stringify(structural)});}
 
+const structureWaitState=Object.freeze({transparent:true,depthWrite:false,side:DoubleSide,toneMapped:false});
+const structureWaitStructural=Object.freeze({family:'structure-wait-indicator',state:structureWaitState,attributes:Object.freeze(['position','normal','uv','instanceMatrix'])});
+const structureWaitRecipe=Object.freeze({structural:structureWaitStructural,dynamic:Object.freeze(['color','opacity','instanceMatrix']),passes:Object.freeze({color:'mesh-basic-instanced',depth:'no-depth-write',shadow:'mesh-does-not-cast'}),key:JSON.stringify(structureWaitStructural)});
+export function structureWaitIndicatorRecipe(){return structureWaitRecipe;}
+
 const auxiliaryPassDefinitions=Object.freeze({
  hiz:Object.freeze({state:Object.freeze({toneMapped:false,depthTest:false,depthWrite:false}),passes:Object.freeze({color:'depth-min-reduction',depth:'no-depth-test-or-write',shadow:'quad-does-not-cast'})}),
  ripple:Object.freeze({state:Object.freeze({transparent:true,depthWrite:false,side:DoubleSide}),passes:Object.freeze({color:'alpha-attribute',depth:'no-depth-write',shadow:'mesh-does-not-cast'})}),
