@@ -28,12 +28,12 @@ export async function prepareWebGpuTemporalTerrain(messages,{signal,scene,reside
   // observer was requested.
   if(!onDiscardIdentity)return batch;
   if(!batch||typeof batch.commit!=='function'||typeof batch.abort!=='function')throw TypeError('Invalid prepared temporal batch');
-  let active=true,committing=false;
+  let active=true,committing=false,committedIdentities=null;
   const detach=()=>signal?.removeEventListener('abort',onAbort);
   const abort=()=>{if(!active)return false;if(committing)return batch.abort();active=false;detach();let result,error;try{result=batch.abort();}catch(failure){error=failure;}const failure=discard();if(error||failure)throw error??failure;return result;};
   const onAbort=()=>{try{abort();}catch{}};
   signal?.addEventListener('abort',onAbort,{once:true});if(signal?.aborted){abort();throw new DOMException('Temporal terrain preparation cancelled','AbortError');}
-  return {commit(){if(!active)throw Error('Temporal terrain batch is no longer active');let result;committing=true;try{result=batch.commit();}catch(error){committing=false;try{abort();}catch{}throw error;}committing=false;active=false;detach();if(result!==true){const error=discard();if(error)throw error;}else identities.length=0;return result;},abort};
+  return {commit(){if(!active)throw Error('Temporal terrain batch is no longer active');let result;committing=true;try{result=batch.commit();}catch(error){committing=false;try{abort();}catch{}throw error;}committing=false;active=false;detach();if(result!==true){const error=discard();if(error)throw error;}else{committedIdentities=new WeakMap(identities.map(({payload,identity})=>[payload,identity]));identities.length=0;}return result;},abort,identityFor(payload){return committedIdentities?.get(payload)??null;}};
  }catch(error){for(const token of tokens.reverse())try{token.abort();}catch{}discard();throw error;}
 }
 
