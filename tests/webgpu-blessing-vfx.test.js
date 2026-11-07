@@ -6,6 +6,12 @@ import * as THREE from 'three';
 import {createWebGpuBlessingVfx} from '../src/rendering/webgpu-blessing-vfx.js';
 import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
 
+test('reduced motion retains the blessing shader while disabling particle displacement',async()=>{
+ const {WebGPURenderer}=await import('three/webgpu'),floor=new THREE.Mesh(new THREE.PlaneGeometry(20,20),new THREE.MeshBasicMaterial({side:THREE.DoubleSide}));floor.rotation.x=-Math.PI/2;floor.updateMatrixWorld(true);
+ const state={elapsed:5,plants:[{id:'p',species:'maiz',alive:true,x:0,z:0,blessing:{at:0}}],structures:[],events:[]},canvas={width:1,height:1,style:{},addEventListener(){},removeEventListener(){},getContext(){return null;}},renderer=new WebGPURenderer({canvas});renderer.hasFeature=()=>true;const shaders=[];
+ try{for(const motion of [true,false]){const scene=new THREE.Scene(),effect=createWebGpuBlessingVfx({scene,state,residency:{get:()=>floor},motion});try{assert.equal(effect.status().motion,motion);const mesh=scene.children.find(item=>item.isMesh),builder=renderer.backend.createNodeBuilder(mesh,renderer);builder.scene=scene;builder.camera=new THREE.PerspectiveCamera();builder.build();shaders.push(builder.vertexShader);}finally{effect.dispose();}}assert.equal(shaders[0],shaders[1]);}finally{floor.geometry.dispose();floor.material.dispose();}
+});
+
 test('blessing checkpoint retains the ritual delay after graphics recovery',()=>{const floor=new THREE.Mesh(new THREE.PlaneGeometry(20,20),new THREE.MeshBasicMaterial({side:THREE.DoubleSide}));floor.rotation.x=-Math.PI/2;floor.updateMatrixWorld(true);const state={elapsed:1,plants:[],structures:[],events:[]},make=()=>createWebGpuBlessingVfx({scene:new THREE.Scene(),state,residency:{get:()=>floor}}),first=make();state.plants.push({id:'p',species:'maiz',alive:true,x:0,z:0,blessing:{at:1}});first.sync(false,[{id:'e',type:'BlessingApplied',targetId:'p',presentation:{elapsed:1}}]);const checkpoint=first.exportRecoveryCheckpoint(4),second=make();try{assert.equal(second.status().sources,1);assert.equal(second.restoreRecoveryCheckpoint(checkpoint,4),true);assert.equal(second.status().sources,0);assert.equal(second.status().pending,1);state.elapsed=4;second.syncConfirmed(new Set(),[]);assert.equal(second.status().sources,1);}finally{first.dispose();second.dispose();floor.geometry.dispose();floor.material.dispose();}});
 
 test('blessing is admitted before display and a removed target cannot reappear',async()=>{
