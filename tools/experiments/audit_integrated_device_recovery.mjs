@@ -1,5 +1,5 @@
 // Run against the normal game with VITE_PRESENTATION_BACKEND=webgpu-worker and
-// VITE_HISTORICAL_PRESENTATION_RECOVERY=true. No GPU fallback flags or warmups.
+// the default infrastructure profile. No GPU fallback flags or warmups.
 import {mkdir,writeFile} from 'node:fs/promises';
 import {resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
@@ -22,6 +22,6 @@ try{
  report.atLoss=await inspect();await page.evaluate(()=>window.wildGuardiansWebGpuLoseDeviceQa());
  report.after=await until(s=>s.surface?.backend==='WebGPU'&&s.surface.phase==='running'&&s.surface.inspectionGeneration!==report.atLoss.surface.inspectionGeneration&&s.surface.state.sequence>report.atLoss.surface.state.sequence&&s.surface.resident>0&&s.surface.actors?.ready===s.surface.actors?.count,'automatic recovery');
  const events=report.after.surface.recoveryEvents.map(e=>e.id);if(new Set(events).size!==events.length)throw Error('Repeated recovered event IDs');
- const oldTime=report.after.qa.elapsed;report.resumed=await until(s=>s.qa.elapsed>oldTime&&s.surface.state.lastElapsed>report.atLoss.surface.state.lastElapsed,'resumed simulation',120000);
+ const oldTime=report.after.qa.elapsed,oldSequence=report.after.surface.state.sequence;report.resumed=await until(s=>s.qa?.elapsed>oldTime&&s.surface?.state?.sequence>oldSequence&&s.surface.state.lastElapsed>report.after.surface.state.lastElapsed&&s.cameraTerrain?.autoRecovery?.recovering===false&&s.cameraTerrain.autoRecovery.blocked===false&&s.qa.status?.visualDispatchBlocked!==true&&s.qa.status?.clockCaptureSuspended!==true,'resumed simulation and input',600000);
  await page.screenshot({path:resolve(out,'after.png')});report.passed=true;
 }catch(error){report.failure=String(error.stack??error);process.exitCode=1;}finally{report.finished=new Date().toISOString();await writeFile(resolve(out,'report.json'),JSON.stringify(report,null,2));await browser.close();console.log(JSON.stringify({passed:report.passed??false,failure:report.failure,out}));}
