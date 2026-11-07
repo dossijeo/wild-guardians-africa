@@ -1,3 +1,4 @@
+import {sampleGrassTerrain} from './grass-terrain-sampling.js';
 import {cinematicLightingEnabled,patchCinematicVegetation} from './cinematic-lighting.js';
 import {DAYLIGHT_BIOMES,patchDaylightGrass} from './final-daylight.js';
 import {assetUrl} from './asset-url.js';
@@ -115,10 +116,7 @@ export async function createContinuousGrass(world){
  const xs=[c.cx],zs=[c.cz];if(x<c.cx*48-24+q.edgePadding)xs.push(c.cx-1);if(x>c.cx*48+24-q.edgePadding)xs.push(c.cx+1);if(z<c.cz*48-24+q.edgePadding)zs.push(c.cz-1);if(z>c.cz*48+24-q.edgePadding)zs.push(c.cz+1);
  for(const cx of xs)for(const cz of zs){const neighbor=q.chunks.get(cx+','+cz);if(neighbor&&nearWaterChunk(neighbor,x,z))return true;}return false;
  }
- function sample(c,x,z){const lx=clamp(x-(c.cx*48-24),0,47.99999),lz=clamp(z-(c.cz*48-24),0,47.99999),ix=Math.floor(lx),iz=Math.floor(lz),fx=lx-ix,fz=lz-iz;
- const a=c.h[iz*49+ix],b=c.h[iz*49+ix+1],d=c.h[(iz+1)*49+ix],e=c.h[(iz+1)*49+ix+1];let y,sx,sz;if(fx+fz<=1){sx=b-a;sz=d-a;y=a+fx*sx+fz*sz}else{sx=e-d;sz=e-b;y=e-(1-fx)*sx-(1-fz)*sz}
- const mx=clamp(lx/1.5+1,0,33.9999),mz=clamp(lz/1.5+1,0,33.9999),gx=Math.floor(mx),gz=Math.floor(mz),tx=mx-gx,tz=mz-gz,ctx=[];
- for(let k=0;k<4;k++){const at=(xx,zz)=>c.mask.data[(zz*35+xx)*4+k]/255;ctx.push((at(gx,gz)*(1-tx)+at(gx+1,gz)*tx)*(1-tz)+(at(gx,gz+1)*(1-tx)+at(gx+1,gz+1)*tx)*tz)}return {y,sx,sz,ctx};}
+ const sample=sampleGrassTerrain;
  function tile(c,tx,tz){const key=tx+','+tz;if(q.tiles.has(key))return q.tiles.get(key);const start=performance.now(),items=[],step=q.spacing,seed=world.nav.field.seed;
  for(let ix=Math.ceil(tx*8/step);ix<(tx+1)*8/step-1e-6;ix++)for(let iz=Math.ceil(tz*8/step);iz<(tz+1)*8/step-1e-6;iz++){
  const bits=hashCell(seed,ix,iz,8371),x=(ix+.5)*step+((bits&255)/255-.5)*step*(varied?.65:.25),z=(iz+.5)*step+(((bits>>>8)&255)/255-.5)*step*(varied?.65:.25);
