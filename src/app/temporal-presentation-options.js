@@ -10,8 +10,8 @@ export function productMudPresentation({backend,biome,enabled}={}){
  if(!['legacy','webgpu-worker'].includes(backend)||typeof biome!=='string'||typeof enabled!=='boolean')throw TypeError('Invalid mud presentation profile');
  return enabled&&backend==='webgpu-worker'&&biome==='manglares';
 }
-// The ordinary build keeps temporal presentation disabled. A product caller may
-// explicitly request historical recovery; URL diagnostics remain DEV-only.
+// Product selection is resolved by webGpuInfrastructureProfile. This lower
+// level validator also supports explicit reversions and DEV-only diagnostics.
 export function temporalPresentationOptions({params,dev,hosted,early,recoveryEnabled,hasWebGpu,recovery=null,earlyPrepared=null,historicalRecovery=false,mudPresentation=false,historicalEvents=false}={}){
  if(!(params instanceof URLSearchParams)||[dev,hosted,early,recoveryEnabled,hasWebGpu,historicalRecovery,mudPresentation,historicalEvents].some(value=>typeof value!=='boolean'))throw TypeError('Invalid temporal presentation request');
  if(historicalEvents&&!historicalRecovery)throw Error('Historical events require temporal recovery');
