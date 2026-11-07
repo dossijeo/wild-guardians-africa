@@ -9,10 +9,12 @@ export function createWorkerTutorial(state,seen){
  const profileSeen=new Set(seen),records=[];let narrated=null;
  const profile={read:()=>new Set(profileSeen),record(id){if(!allowed.has(id))throw Error('Unknown tutorial message');profileSeen.add(id);records.push(id);},get basicCompleted(){return profileSeen.has('basic.complete');}};
  const controller=new TutorialController(state,profile,{isNarrating:id=>narrated===id});
+ let lastUpdate=null,generation=0;
+ const internal=()=>JSON.stringify({generation,narrated,profileSeen:[...profileSeen],controller:Object.fromEntries(Object.entries(controller).filter(([key,value])=>key!=='state'&&key!=='profile'&&typeof value!=='function'))});
  function execute(command){
   if(command.narrating!==null&&command.narrating!==undefined&&(!allowed.has(command.narrating)))throw TypeError('Invalid narrated tutorial message');
   narrated=command.narrating??null;let value;
-  if(command.action==='update'){controller.update();value=null;}
+  if(command.action==='update'){lastUpdate={state:JSON.stringify(state),internal:internal(),narrated};controller.update();value=null;}
   else if(command.action==='resume-menu'){controller.update();resume(state,'menu');value=true;}
   else if(command.action==='dismiss'){
    if(typeof command.automatic!=='boolean'||typeof command.messageId!=='string')throw TypeError('Invalid tutorial dismissal');
@@ -24,7 +26,8 @@ export function createWorkerTutorial(state,seen){
   }else if(command.action==='skip')value=controller.skipBasic();
   else if(command.action==='present')value=controller.presentation();
   else throw TypeError('Unknown tutorial action');
+  if(command.action!=='update')generation++;
   return {value,presentation:controller.presentation({record:false}),profileRecords:records.splice(0)};
  }
- return {execute};
+ return {execute,updateStatus(snapshot){return {needed:!lastUpdate||snapshot!==lastUpdate.state||internal()!==lastUpdate.internal,narrated:lastUpdate?.narrated??null};}};
 }
