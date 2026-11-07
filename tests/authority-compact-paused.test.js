@@ -28,6 +28,8 @@ test('motion tracking keeps paused advances on the full snapshot path',async()=>
  finally{a.dispose();opening.session.dispose();}
 });
 
+test('authority certifies a paused world with motion tracking without changing the snapshot',async()=>{const opening=await createSpatialCampaignOpening({seed:715,biome:'sabana',culture:'suajili',slotId:'paused-certificate'}),snapshot=serialize(opening.state),keys=[...opening.loaded.keys()],a=createSimulationAuthority(module,snapshot,keys,{compactPausedAcks:true,observeWorldMotion:true}),b=createSimulationAuthority(module,snapshot,keys,{observeWorldMotion:true});try{for(const command of [{kind:'snapshot',sequence:1},{kind:'pause',reason:'menu',sequence:2},{kind:'advance',seconds:.05,nightFastForward:true,captureClockSegments:true,sequence:3}]){const x=a.execute(command),y=b.execute(command);assert.equal(x.snapshot,y.snapshot);assert.deepEqual(x.events,y.events);assert.equal(x.pausedQuiescent,command.sequence>1?true:undefined);assert.equal(y.pausedQuiescent,undefined);}}finally{a.dispose();b.dispose();opening.session.dispose();}});
+
 test('paused advances preserve explicit visual checkpoints and recovery renewal',async()=>{
  const opening=await createSpatialCampaignOpening({seed:714,biome:'sabana',culture:'suajili',slotId:'paused-checkpoint'}),keys=[...opening.loaded.keys()],a=createSimulationAuthority(module,serialize(opening.state),keys,{compactPausedAcks:true});
  try{
