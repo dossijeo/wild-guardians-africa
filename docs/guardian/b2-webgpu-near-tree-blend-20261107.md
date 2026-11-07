@@ -1,0 +1,5 @@
+# Texturas cercanas de bioma en WebGPU
+
+Los modelos que aportan atlas revisado de primer plano conservan también el atlas original. Su material TSL mezcla el color y, cuando existe un atlas distinto, rugosidad y metalicidad entre ambos usando los límites `blendStart` y `blendEnd` de autoría. Se mantienen la geometría 3D, sus dos conjuntos de UV, las normales originales y la cobertura del atlas cercano usada por el pase de sombra. No se alteran las instancias confirmadas ni la selección de colisiones.
+
+La distancia actual se calcula por fragmento hasta la cámara, mientras la ruta anterior la calculaba por instancia a partir de una esfera aproximada. Por tanto, la transición puede no coincidir en copas grandes; falta una comparación visual para ajustar o sustituir esa aproximación. Esta integración tampoco implementa selección de LOD geométrico ni impostores 2D y ambos atlas siguen residentes y muestreados: no se atribuye una mejora de GPU ni de memoria. La generación WGSL y la carga de manifiestos y geometrías reales de sabana y volcanes se prueban sin dispositivo; quedan pendientes la apariencia y el coste en partida.
