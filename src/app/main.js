@@ -306,7 +306,7 @@ async function installWorkerGame(owner,ownerState,navigation,{visualRecovery=nul
   const camera=()=>webGpuCameraPose(owner.camera,owner.controls);
   const temporalOptions=temporalPresentationOptions({params,dev:import.meta.env.DEV,hosted,early:!!early,earlyPrepared:early?.temporalOptions??null,recoveryEnabled:recoveryProfile.enabled,recovery:recoveryProfile,hasWebGpu:presentationCapabilities!==null||import.meta.env.DEV&&params.has('qa-webgpu-world'),historicalRecovery});
   const worldOptions=webGpuWorldOptions({params,state:ownerState,field:owner.nav.field??{canyon:ownerState.biome==='gran-canon'},recovery:recoveryQa,capabilities:presentationCapabilities??{},temporal:temporalOptions,dev:import.meta.env.DEV});
-  if(temporalOptions){clientOptions.terrainHistory=temporalOptions.terrainHistory;if(historicalRecovery&&!early)clientOptions.observeWorldMotion=true;}
+  if(temporalOptions){clientOptions.terrainHistory=temporalOptions.terrainHistory;if(historicalRecovery&&!early)clientOptions.observeWorldMotion=true;if(temporalOptions.presentation.mudPresentation===true)clientOptions.mudPresentation=true;}
   if(early&&!!early.presentationInputs!==worldOptions.presentationInputs)throw Error('Prepared authority input capabilities changed');
   owner.authoritativeGuardianPlacement=guardianPlacementForWorld({early,hosted,presentationConfigured:presentationCapabilities!==null,options:worldOptions});
   if(!early&&owner.authoritativeGuardianPlacement)clientOptions.guardianPlacement=true;

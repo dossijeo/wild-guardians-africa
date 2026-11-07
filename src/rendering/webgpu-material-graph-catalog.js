@@ -106,6 +106,7 @@ export function authoredDeformationRecipe(kind,source){
 const terrainState=Object.freeze({vertexColors:true,side:DoubleSide,toneMapped:false});
 const terrainDynamic=Object.freeze(['vertexColor','shadowVisibility']);
 export function vertexTerrainRecipe({shadows=false}={}){if(typeof shadows!=='boolean')throw TypeError('Invalid terrain recipe');const structural=Object.freeze({family:'vertex-terrain',shadows,state:terrainState,attributes:Object.freeze(['position','color'])});return Object.freeze({structural,dynamic:terrainDynamic,passes:Object.freeze({color:'terrain-color',depth:'color-pass',shadow:'terrain-mesh-does-not-cast'}),key:JSON.stringify([structural.family,shadows,terrainState])});}
+export function mudSurfaceRecipe(){const structural=Object.freeze({family:'mangrove-mud',state:Object.freeze({side:FrontSide,roughness:.52,metalness:0}),attributes:Object.freeze(['position','normal','uv'])});return Object.freeze({structural,dynamic:Object.freeze(['map','normalMap','roughnessMap','aoMap','color']),passes:Object.freeze({color:'standard-lit',depth:'color-pass',shadow:'mesh-receives-only'}),key:JSON.stringify(structural)});}
 
 // This provider embeds texture identities and tile constants into its graph;
 // declaring them prevents treating a different atlas or light as equivalent.
