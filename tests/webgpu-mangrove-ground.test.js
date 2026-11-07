@@ -1,6 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createWebGpuMangroveGround} from '../src/rendering/webgpu-mangrove-ground.js';
+import {createWebGpuMangroveGround,mangroveGroundSeed} from '../src/rendering/webgpu-mangrove-ground.js';
+import {hashCell} from '../src/world/terrain.js';
+import {newGame} from '../src/simulation/game.js';
+import {serialize,deserialize} from '../src/persistence/snapshots.js';
+import {serializeConfirmedPresentationState,deserializeConfirmedState} from '../src/simulation/confirmed-live-state.js';
+import {createSpatialTerrainView} from '../src/world/wild-engine/spatial-terrain-view.js';
+
+test('mangrove atlas offset matches the authored seed and stays a dynamic uniform',async()=>{
+ const tile={base:'base',normal:'normal',arh:'arh',scale:1,normalBoost:1},fetchImpl=async()=>({ok:true,json:async()=>({mangrove:tile})}),provider=await createWebGpuMangroveGround({fetchImpl,imageLoader:async()=>({close(){}})});
+ try{const initial=newGame({biome:'manglares',seed:'1730000000712',slotId:'seed-test'}),saved=deserialize(serialize(initial)),presented=deserializeConfirmedState(serializeConfirmedPresentationState(saved)),field=createSpatialTerrainView({terrainState:()=>({seed:Number(saved.seed)>>>0,biome:'mangrove'}),fluidSurfaceLevel:()=>0}),vector=mangroveGroundSeed(presented.seed),fieldSeed=field.seed;assert.deepEqual(vector.toArray(),[hashCell(fieldSeed,0,1,417)/4294967296,hashCell(fieldSeed,1,0,417)/4294967296]);const material=provider.sharedMaterial,graph=material.outputNode,offset=material.userData.groundSeed;provider.update(presented);assert.deepEqual(offset.value.toArray(),vector.toArray());provider.update({...presented,seed:'1730000000713'});assert.notDeepEqual(offset.value.toArray(),vector.toArray());assert.equal(material.outputNode,graph);}finally{provider.dispose();}
+});
 
 test('shared mangrove material uses the same shader graph without a per-chunk mask',async()=>{
  const old=globalThis.createImageBitmap,closed=[];globalThis.createImageBitmap=async()=>({close(){closed.push(true);}});
