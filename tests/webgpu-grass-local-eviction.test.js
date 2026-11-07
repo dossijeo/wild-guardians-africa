@@ -8,6 +8,14 @@ function setup(){
  return {timeline,removed,errors};
 }
 function publish(t,order=1,sequence=0){const payload={cx:0,cz:0},identity={key:'0,0',epoch:'e',revision:1,sequence,publicationOrder:order};t.prepared(payload,identity);t.published('0,0',identity);t.applied(payload,1,{epoch:'e',sequence,publicationOrder:order});return {payload,identity};}
+test('unchanged ticks retain coverage while relevant changes resume only after mutation ends',()=>{
+ let suspended=0,resumed=0;const owner={suspend(){suspended++;},resume(){resumed++;},syncChunk(){},removeChunk(){}},t=createGrassSurfaceTimeline({owner,residency:{revisionAt:()=>null}});
+ try{t.confirmed(0,new Set());const baseline=[suspended,resumed];
+  for(let sequence=1;sequence<=100;sequence++){t.mutationPhase({phase:'start',sequence,kind:'commit'});t.confirmed(sequence,new Set(['elapsed']));t.mutationPhase({phase:'end',sequence,kind:'commit'});}
+  assert.deepEqual([suspended,resumed],baseline);
+  t.mutationPhase({phase:'start',sequence:101,kind:'commit'});t.confirmed(101,new Set(['structures']));assert.equal(suspended,baseline[0]+1);assert.equal(resumed,baseline[1]);t.mutationPhase({phase:'end',sequence:101,kind:'commit'});assert.equal(resumed,baseline[1]+1);
+ }finally{t.dispose();}
+});
 test('local eviction is allowed only at a settled boundary and removes the exact visual identity',()=>{
  const {timeline:t,removed,errors}=setup();try{
   assert.equal(t.canEvictVisualLocal(),false);t.confirmed(0,new Set());publish(t);assert.equal(t.canEvictVisualLocal(),true);assert.equal(t.canEvictVisualLocal({cx:0,cz:0,epoch:'wrong',revision:1}),false);assert.equal(t.canEvictVisualLocal({cx:0,cz:0,epoch:'e',revision:1}),true);

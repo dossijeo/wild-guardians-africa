@@ -210,6 +210,13 @@ test('visual eviction is unavailable without an explicit synchronous guard',()=>
  const material=new THREE.MeshBasicMaterial(),view=createWebGpuTerrainResidency({scene:new THREE.Scene(),material});try{view.replace(chunk(),1,'world');assert.equal(view.evictVisualLocal(0,0),false);assert.notEqual(view.get(0,0),null);}finally{view.dispose();material.dispose();}
 });
 
+test('visual eviction rejects terrain whose mud inputs were not recorded',()=>{
+ const material=new THREE.MeshBasicMaterial(),view=createWebGpuTerrainResidency({scene:new THREE.Scene(),material,canEvictVisualLocal:()=>true}),payload=chunk();payload.mudInputs={heights:new Float32Array([1,2,3])};
+ try{view.replace(payload,1,'world');const original=view.get(0,0);assert.equal(view.evictVisualLocal(0,0),false);assert.equal(view.get(0,0),original);assert.deepEqual(view.revisionAt(0,0),{cx:0,cz:0,epoch:'world',revision:1});
+  assert.equal(view.replace(payload,2,'world',{mudPrepared:true}),true);assert.equal(view.evictVisualLocal(0,0),true);assert.equal(view.replace(payload,2,'world',{mudPrepared:true}),true);
+ }finally{view.dispose();material.dispose();}
+});
+
 test('reentrant eviction guard cannot evict a superseded resident',()=>{
  const material=new THREE.MeshBasicMaterial();let view;view=createWebGpuTerrainResidency({scene:new THREE.Scene(),material,canEvictVisualLocal(){assert.equal(view.evictVisualLocal(0,0),false);view.replace(chunk(),2,'world');return true;}});try{view.replace(chunk(),1,'world');assert.equal(view.evictVisualLocal(0,0),false);assert.equal(view.revisionAt(0,0).revision,2);}finally{view.dispose();material.dispose();}
 });

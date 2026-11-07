@@ -57,9 +57,9 @@ test('unknown eviction fails closed even after later state confirmations',()=>{
 });
 test('mutation phases hold grass through observers and until historical confirmation',()=>{
  const f=bridgeFixture();try{
-  f.bridge.confirmed(1,new Set());f.bridge.mutationPhase({phase:'start',sequence:2,kind:'commit'});f.bridge.confirmed(2,new Set());assert.equal(f.isSuspended(),true);
+  f.bridge.confirmed(1,new Set());f.bridge.mutationPhase({phase:'start',sequence:2,kind:'commit'});f.bridge.confirmed(2,new Set(['structures']));assert.equal(f.isSuspended(),true);
   f.bridge.mutationPhase({phase:'end',sequence:2,kind:'commit'});assert.equal(f.isSuspended(),false);
-  f.bridge.mutationPhase({phase:'start',sequence:3,kind:'historical'});f.bridge.mutationPhase({phase:'end',sequence:3,kind:'historical'});assert.equal(f.isSuspended(),true);
+  f.bridge.mutationPhase({phase:'start',sequence:3,kind:'historical'});f.bridge.historicalChanged(3,new Set(['plants']));f.bridge.mutationPhase({phase:'end',sequence:3,kind:'historical'});assert.equal(f.isSuspended(),true);
   f.bridge.confirmed(3,new Set());assert.equal(f.isSuspended(),false);assert.deepEqual(f.errors,[]);
  }finally{f.bridge.dispose();}
 });
