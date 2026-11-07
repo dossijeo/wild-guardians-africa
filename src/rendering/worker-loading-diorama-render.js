@@ -6,8 +6,9 @@ import {createWebGpuNativeSky} from './webgpu-native-sky.js';
 import {createWebGpuPipelineAdmission} from './webgpu-pipeline-admission.js';
 import {createWebGpuLoadingBackdrop} from './webgpu-loading-backdrop.js';
 import {createWebGpuLoadingMist} from './webgpu-loading-mist.js';
+import {createWebGpuLoadingSparkles} from './webgpu-loading-sparkles.js';
 
-let renderer,scene,camera,ground,roster,sky,backdrop,mist,admission,soil,bitmap,closed=false,lastSize='',visibleReady=false;
+let renderer,scene,camera,ground,roster,sky,backdrop,mist,sparkles,admission,soil,bitmap,closed=false,lastSize='',visibleReady=false;
 const state={plants:[],elapsed:0,day:1,time:0,biome:'sabana'};
 function error(error){if(!closed)postMessage({kind:'error',message:String(error?.message??error)});}
 async function initialize(canvas){
@@ -17,6 +18,7 @@ async function initialize(canvas){
  ground=new THREE.Mesh(new THREE.PlaneGeometry(15,15,32,32),new THREE.MeshStandardMaterial({color:'#a59b8d',roughness:1,map:soil}));ground.rotation.x=-Math.PI/2;ground.position.y=.09;ground.visible=false;ground.updateMatrixWorld(true);scene.add(ground);
  admission=createWebGpuPipelineAdmission({renderer,scene,camera,onFatal:error,includeShadowPass:false});sky=createWebGpuNativeSky({scene,pipelineAdmission:admission,onError:error});
  mist=createWebGpuLoadingMist({scene,camera,admission,onError:error});
+ sparkles=createWebGpuLoadingSparkles({scene,admission,onError:error});
  backdrop=createWebGpuLoadingBackdrop({scene,camera,renderer,admission,onError:error});
  void admission.prepareAndPublish(ground,{shadowPass:false},()=>{if(!closed)ground.visible=true;}).catch(error);
  roster=createWebGpuCropRoster({scene,state,residency:{get:()=>ground},renderer,pipelineAdmission:admission,onError:error});
@@ -24,5 +26,5 @@ async function initialize(canvas){
  void (async()=>{const response=await fetch(assetUrl('/content/ground-materials.json'));if(!response.ok)throw Error('Loading soil catalogue unavailable');const catalogue=await response.json(),image=await fetch(assetUrl(catalogue.canyons.base));if(!image.ok)throw Error('Loading soil unavailable');const loaded=await createImageBitmap(await image.blob());if(closed){loaded.close();return;}bitmap=loaded;soil.image=bitmap;soil.needsUpdate=true;})().catch(error);
  postMessage({kind:'ready'});
 }
-async function draw(data){if(!renderer||closed)return;const size=data.width+':'+data.height;if(size!==lastSize){renderer.setSize(data.width,data.height,false);lastSize=size;}camera.aspect=data.width/data.height;camera.fov=data.camera.fov;camera.position.fromArray(data.camera.position);camera.quaternion.fromArray(data.camera.quaternion);camera.updateProjectionMatrix();camera.updateMatrixWorld();state.elapsed=data.elapsed;state.biome=data.biome;state.day=data.day;state.time=data.time;state.plants=data.plants.map(plant=>({...plant,alive:true}));sky.update(camera,state);backdrop.update(state);mist.update(state);roster.sync();renderer.render(scene,camera);if(!visibleReady&&ground.visible&&sky.status().ready&&backdrop.status().ready&&mist.status().ready&&roster.status().plants>=state.plants.length&&state.plants.length>0){visibleReady=true;postMessage({kind:'visible-ready'});}postMessage({kind:'frame'});}
-self.onmessage=({data})=>{if(data?.kind==='initialize'){initialize(data.canvas).catch(error);return;}if(data?.kind==='frame')Promise.resolve().then(()=>draw(data)).catch(error);else if(data?.kind==='dispose'){closed=true;roster?.dispose();sky?.dispose();backdrop?.dispose();mist?.dispose();admission?.dispose();soil?.dispose();bitmap?.close();ground?.geometry.dispose();ground?.material.dispose();renderer?.dispose();close();}};
+async function draw(data){if(!renderer||closed)return;const size=data.width+':'+data.height;if(size!==lastSize){renderer.setSize(data.width,data.height,false);lastSize=size;}camera.aspect=data.width/data.height;camera.fov=data.camera.fov;camera.position.fromArray(data.camera.position);camera.quaternion.fromArray(data.camera.quaternion);camera.updateProjectionMatrix();camera.updateMatrixWorld();state.elapsed=data.elapsed;state.biome=data.biome;state.day=data.day;state.time=data.time;state.plants=data.plants.map(plant=>({...plant,alive:true}));sky.update(camera,state);backdrop.update(state);mist.update(state);sparkles.update(state,data.elapsed,data.reducedMotion===true);roster.sync();renderer.render(scene,camera);if(!visibleReady&&ground.visible&&sky.status().ready&&backdrop.status().ready&&mist.status().ready&&sparkles.status().ready&&roster.status().plants>=state.plants.length&&state.plants.length>0){visibleReady=true;postMessage({kind:'visible-ready'});}postMessage({kind:'frame'});}
+self.onmessage=({data})=>{if(data?.kind==='initialize'){initialize(data.canvas).catch(error);return;}if(data?.kind==='frame')Promise.resolve().then(()=>draw(data)).catch(error);else if(data?.kind==='dispose'){closed=true;roster?.dispose();sky?.dispose();backdrop?.dispose();mist?.dispose();sparkles?.dispose();admission?.dispose();soil?.dispose();bitmap?.close();ground?.geometry.dispose();ground?.material.dispose();renderer?.dispose();close();}};
