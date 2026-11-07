@@ -82,12 +82,12 @@ test('byte pressure is bounded and releases memory only on checkpoint promotion'
  assert.throws(()=>j.appendTerrain(2,[{pixels:new Uint8Array(4096)}]),/byte capacity/);assert.equal(j.status().bytes,before);j.append(publication(2),true);j.begin(2);j.confirm(2);assert.equal(j.status().bytes,0);assert.equal(j.status().saturated,false);
 });
 
-test('recovery boundary fails closed on channel error, missing publication, pending terrain, candidate or saturation',()=>{
+test('recovery boundary rejects incomplete state but accepts an intact journal at the admission watermark',()=>{
  const j=createPresentationRecoveryJournal({capacity:6,highWatermark:4}),stream={status:()=>({active:true})},checkpoint={sequence:1};j.begin(1);j.confirm(1);assert.equal(assertPresentationRecoveryBoundary(j,stream,checkpoint,1),1);
  assert.throws(()=>assertPresentationRecoveryBoundary(j,{status:()=>({active:true,recoveryFailure:'overflow'})},checkpoint,1),/incomplete/);
  assert.throws(()=>assertPresentationRecoveryBoundary(j,stream,checkpoint,2),/incomplete/);
  j.appendTerrain(2,[{cx:0}]);assert.throws(()=>assertPresentationRecoveryBoundary(j,stream,checkpoint,1),/incomplete/);j.append(publication(2),true);assert.equal(assertPresentationRecoveryBoundary(j,stream,checkpoint,2),2);
- j.begin(2);assert.throws(()=>assertPresentationRecoveryBoundary(j,stream,checkpoint,2),/incomplete/);j.confirm(2);j.append(publication(3),true);j.append(publication(4),true);j.append(publication(5),true);j.append(publication(6),true);assert.throws(()=>assertPresentationRecoveryBoundary(j,stream,{sequence:2},6),/saturated/);
+ j.begin(2);assert.throws(()=>assertPresentationRecoveryBoundary(j,stream,checkpoint,2),/incomplete/);j.confirm(2);j.append(publication(3),true);j.append(publication(4),true);j.append(publication(5),true);j.append(publication(6),true);assert.equal(j.status().saturated,true);assert.equal(assertPresentationRecoveryBoundary(j,stream,{sequence:2},6),6);assert.equal(j.retryAfterRecovery(),true);assert.equal(j.status().checkpointRetry,true);assert.equal(withPresentationRecoveryCheckpoint({kind:'advance'},j.status()).visualTerrain,true);
 });
 
 test('checkpoint renewal starts early and waits for exact candidate acknowledgement',()=>{

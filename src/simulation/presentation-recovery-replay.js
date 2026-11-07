@@ -2,8 +2,8 @@ import {estimateRetainedBytes} from './retained-size.js';
 // Replays one acknowledged checkpoint and its ordered post-checkpoint journal.
 // The caller owns the handoff to live publication and must prevent gaps while
 // switching ports. The checkpoint is restored as state, not re-emitted as events.
-export function createPresentationRecoveryReplay({port,session,checkpoint,journal,atomicBoundaries=false,maxGroupBytes=null,onCaughtUp=()=>{},onError=()=>{}}={}){
- if(!port||typeof port.postMessage!=='function'||typeof session!=='string'||!session||!Number.isSafeInteger(checkpoint?.sequence)||checkpoint.sequence<1||typeof journal?.entry!=='function'||typeof journal?.status!=='function'||typeof atomicBoundaries!=='boolean'||maxGroupBytes!==null&&(!Number.isSafeInteger(maxGroupBytes)||maxGroupBytes<1)||typeof onCaughtUp!=='function'||typeof onError!=='function')throw TypeError('Invalid presentation recovery replay');
+export function createPresentationRecoveryReplay({port,session,checkpoint,journal,atomicBoundaries=false,maxGroupBytes=null,onCaughtUp=()=>{},onProgress=()=>{},onError=()=>{}}={}){
+ if(!port||typeof port.postMessage!=='function'||typeof session!=='string'||!session||!Number.isSafeInteger(checkpoint?.sequence)||checkpoint.sequence<1||typeof journal?.entry!=='function'||typeof journal?.status!=='function'||typeof atomicBoundaries!=='boolean'||maxGroupBytes!==null&&(!Number.isSafeInteger(maxGroupBytes)||maxGroupBytes<1)||typeof onCaughtUp!=='function'||typeof onProgress!=='function'||typeof onError!=='function')throw TypeError('Invalid presentation recovery replay');
  const base=checkpoint.sequence,initial=journal.status();if(initial.closed||initial.base!==base)throw Error('Recovery checkpoint and journal mismatch');const groupLimit=maxGroupBytes??initial.maxBytes;if(atomicBoundaries&&(!Number.isSafeInteger(groupLimit)||groupLimit<1))throw TypeError('Invalid recovery boundary capacity');
  let closed=false,failed=false,waiting=null,id=0,index=0,cursor=base,started=false,caught=false,terrainPending=false,group=[],groupBytes=0;
  function fail(error){if(closed||failed)return;failed=true;group=[];groupBytes=0;try{onError(error instanceof Error?error:Error(String(error)));}catch{}}
@@ -28,7 +28,7 @@ export function createPresentationRecoveryReplay({port,session,checkpoint,journa
  }catch(error){fail(error);}}
  port.onmessage=({data})=>{if(closed||failed)return;try{
   if(data?.kind==='recoveryFailure'&&data.session===session&&typeof data.message==='string'&&data.message)throw Error(data.message);if(!waiting||data?.kind!=='recoveryAck'||data.session!==session||data.id!==waiting.id||data.sequence!==waiting.sequence||data.phase!==waiting.phase)throw Error('Invalid recovery acknowledgement');
-  const completed=waiting;waiting=null;if(completed.phase==='publication'){cursor=completed.sequence;terrainPending=false;}else if(completed.phase==='terrain')terrainPending=true;else if(completed.phase==='boundary')cursor=completed.sequence;if(completed.phase==='boundary')index+=completed.entries;else if(completed.phase!=='checkpoint')index++;pump();
+  const completed=waiting;waiting=null;if(completed.phase==='publication'){cursor=completed.sequence;terrainPending=false;}else if(completed.phase==='terrain')terrainPending=true;else if(completed.phase==='boundary')cursor=completed.sequence;if(completed.phase==='boundary')index+=completed.entries;else if(completed.phase!=='checkpoint')index++;onProgress({phase:completed.phase,sequence:completed.sequence});pump();
  }catch(error){fail(error);}};
  port.onmessageerror=()=>fail(Error('Recovery acknowledgement transfer failed'));port.start?.();pump();
  return {wake:pump,status(){return {closed,failed,base,cursor,index,waiting:waiting?{...waiting}:null,caughtUp:caught,...(atomicBoundaries?{groupBytes,groupLimit}:{})};},dispose(){if(closed)return;closed=true;group=[];groupBytes=0;port.onmessage=null;port.onmessageerror=null;}};

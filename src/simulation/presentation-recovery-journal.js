@@ -67,6 +67,7 @@ export function createPresentationRecoveryJournal({capacity=256,highWatermark=12
   // The live channel still delivers them; reset the encoder for the next base.
   deferCandidate(value){ensure();const n=sequence(value);if(candidate!==n)throw Error('Presentation checkpoint candidate mismatch');candidate=null;candidatePublication=null;if(base===null){entries=[];bytes=0;last=null;encoder?.dispose();encoder=makeEncoder();}checkpointDeferred=true;checkpointRetry=false;return base;},
   retryDeferred(){ensure();if(!checkpointDeferred)return false;checkpointDeferred=false;checkpointRetry=true;return true;},
+  retryAfterRecovery(){ensure();if(base===null||candidate!==null||encoderFault)return false;checkpointDeferred=false;checkpointRetry=true;return true;},
   snapshot(){ensure();if(base===null)throw Error('Presentation checkpoint is not acknowledged');const decoder=encoder?makeDecoder():null;return {base,through:last,entries:entries.map(entry=>decodedEntry(entry.item,decoder))};},
   entry(index){ensure();if(base===null)throw Error('Presentation checkpoint is not acknowledged');if(!Number.isSafeInteger(index)||index<0)throw TypeError('Invalid presentation journal index');if(index>=entries.length)return null;entries[index].sealed=true;if(!encoder)return structuredClone(entries[index].item);try{if(index===replayIndex-1&&replayLast)return structuredClone(replayLast);if(!replayDecoder||index<replayIndex){replayDecoder?.dispose();replayDecoder=makeDecoder(true);replayIndex=0;replayLast=null;replayLastBytes=0;}while(replayIndex<=index){entries[replayIndex].sealed=true;replayLast=decodedEntry(entries[replayIndex].item,replayDecoder);replayLastBytes=estimateBytes(replayLast);replayIndex++;if(bytes+overhead()>maxBytes)throw Error('Presentation recovery journal byte capacity exceeded');}return structuredClone(replayLast);}catch(error){encoderFault=true;throw error;}},
   status(){const overheadBytes=overhead(),totalBytes=bytes+overheadBytes;return {base,candidate,through:last,entries:entries.length,bytes:totalBytes,entryBytes:bytes,overheadBytes,capacity,highWatermark,maxBytes,highWatermarkBytes,pendingTerrain:entries.at(-1)?.item.kind==='terrain',saturated:encoderFault||entries.length>=highWatermark||totalBytes>=highWatermarkBytes,encoderFault,checkpointDeferred,checkpointRetry,closed};},
@@ -77,7 +78,7 @@ export function createPresentationRecoveryJournal({capacity=256,highWatermark=12
 // A checkpoint alone cannot repair a gap or a partially recorded command.
 export function assertPresentationRecoveryBoundary(journal,stream,checkpoint,authoritySequence){
  const status=journal?.status?.(),channel=stream?.status?.();
- if(!status||status.closed||!checkpoint||status.base!==checkpoint.sequence||status.candidate!==null||status.pendingTerrain||status.through!==authoritySequence||status.saturated||!channel?.active||channel.recoveryFailure){
+ if(!status||status.closed||!checkpoint||status.base!==checkpoint.sequence||status.candidate!==null||status.pendingTerrain||status.through!==authoritySequence||status.encoderFault||status.entries>status.capacity||status.bytes>status.maxBytes||!channel?.active||channel.recoveryFailure){
   const error=Error('Presentation recovery journal is incomplete or saturated');error.code='recovery-incomplete';throw error;
  }
  return status.through;
