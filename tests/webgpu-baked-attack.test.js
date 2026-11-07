@@ -1,0 +1,27 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import {Scene} from 'three';
+import {MeshStandardNodeMaterial} from 'three/webgpu';
+import {actorAsset} from './helpers/actor-geometry.js';
+import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
+import {prepareAnimalClips} from '../src/rendering/animal-actions.js';
+import {createBakedWalkTexture} from '../src/rendering/webgpu-baked-walk.js';
+import {createWebGpuConfirmedAnimal} from '../src/rendering/webgpu-confirmed-animal.js';
+import {createConfirmedPresentationClock} from '../src/rendering/confirmed-presentation-clock.js';
+
+test('all species and attack clips have verified one-shot bake assets',async()=>{
+ for(const [species,description] of Object.entries(ANIMAL_ACTIONS.animals))for(const clip of ['Charged_Upward_Slash','Right_Hand_Sword_Slash','Weapon_Combo','Weapon_Combo_2']){const base=new URL(`../public/content/gpu-animal-attack/${species}/${clip}/walking`,import.meta.url),meta=JSON.parse(await readFile(new URL(base.href+'.json'))),bytes=await readFile(new URL(base.href+'.bin'));assert.equal(meta.species,species);assert.equal(meta.clip,clip);assert.equal(meta.duration,description.clips[clip].duration);assert.equal(meta.playback,'once');assert.equal(createHash('sha256').update(bytes).digest('hex'),meta.sha256);assert.equal(meta.validation.exactMismatches,0);assert.equal(meta.validation.packedMismatches,0);assert.ok(meta.validation.maxWorldVertexError<.06,`${species}/${clip} midpoint error`);const bake=createBakedWalkTexture(meta,bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength));bake.dispose();}
+});
+
+test('confirmed attack uses one-shot GPU pose, pauses with its clock and yields immediately to an impact',async()=>{
+ const base=new URL('../public/content/gpu-animal-attack/hyena/Weapon_Combo/walking',import.meta.url),meta=JSON.parse(await readFile(new URL(base.href+'.json'))),bytes=await readFile(new URL(base.href+'.bin')),bake=createBakedWalkTexture(meta,bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength)),asset=await actorAsset('public'+ANIMAL_ACTIONS.animals.hyena.url),model=asset.scene,scene=new Scene(),duration=meta.duration,animal={id:'a',species:'hyena',status:'attacking',animation:'Weapon_Combo',attackId:'hit',attackDuration:duration,attackRemaining:duration-.3,x:0,z:0,heading:0,radius:.7},state={elapsed:1,raid:{animals:[animal]}},clock=createConfirmedPresentationClock(1),renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:()=>new MeshStandardNodeMaterial()}},bank={async acquire(){return {model,clips:prepareAnimalClips(asset.animations),release(){}};}};let provisional=null;
+ const actor=await createWebGpuConfirmedAnimal({scene,residency:{get:()=>null},state,actorId:'a',renderer,assetBank:bank,confirmedClock:clock,getProvisional:()=>provisional});
+ try{await actor.installBakedAttack(bake,{pipelineAdmission:{prepare:async()=>{}}});assert.equal(actor.isBakedAttacking(),true);const snapshot=()=>{const restore=actor.preparePick(),positions=[];actor.root.traverse(node=>{if(node.isMesh&&node.visible&&!node.isSkinnedMesh&&node.geometry.attributes.position)positions.push(Array.from(node.geometry.attributes.position.array));});restore();return positions;};const before=snapshot();assert.ok(before.length);assert.deepEqual(snapshot(),before,'clock does not move while paused');clock.commit(1.1);assert.notDeepEqual(snapshot(),before);clock.commit(1+duration);const end=snapshot();clock.commit(2+duration);assert.deepEqual(snapshot(),end,'one-shot attack holds its last frame');const hit={at:1,impactAt:0,point:{x:0,y:1,z:0},direction:{x:1,y:0,z:0},intensity:1,ground:0};provisional={animal:{...animal,magicImpact:hit},elapsed:.1};actor.update();assert.equal(actor.isBakedAttacking(),false);provisional=null;animal.status='walking';actor.update();assert.equal(actor.isBakedAttacking(),false);}finally{actor.dispose();clock.dispose();bake.dispose();}
+});
+
+test('an attack invalidated during pipeline admission never replaces the live rig',async()=>{
+ const base=new URL('../public/content/gpu-animal-attack/hyena/Weapon_Combo/walking',import.meta.url),meta=JSON.parse(await readFile(new URL(base.href+'.json'))),bytes=await readFile(new URL(base.href+'.bin')),bake=createBakedWalkTexture(meta,bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength)),asset=await actorAsset('public'+ANIMAL_ACTIONS.animals.hyena.url),model=asset.scene,animal={id:'a',species:'hyena',status:'attacking',animation:'Weapon_Combo',attackId:'hit',attackDuration:meta.duration,attackRemaining:meta.duration,x:0,z:0},state={elapsed:0,raid:{animals:[animal]}},renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:()=>new MeshStandardNodeMaterial()}},bank={async acquire(){return {model,clips:prepareAnimalClips(asset.animations),release(){}};}},actor=await createWebGpuConfirmedAnimal({scene:new Scene(),residency:{get:()=>null},state,actorId:'a',renderer,assetBank:bank});let finish,current=true;
+ try{const pending=actor.installBakedAttack(bake,{isCurrent:()=>current,pipelineAdmission:{prepare:()=>new Promise(resolve=>{finish=resolve;})}});current=false;finish();await assert.rejects(pending,{name:'AbortError'});assert.equal(actor.isBakedAttacking(),false);let visible=0;model.traverse(node=>{if(node.isSkinnedMesh&&node.visible)visible++;});assert.ok(visible);}finally{actor.dispose();bake.dispose();}
+});

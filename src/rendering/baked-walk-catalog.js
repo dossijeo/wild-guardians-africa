@@ -8,17 +8,22 @@ import {prepareWebGpuTexture} from './webgpu-texture-upload.js';
 async function loadBakedAnimalAsset(species,clip,{signal,fetcher=globalThis.fetch,subtle=globalThis.crypto?.subtle}={}){
  if(!Object.hasOwn(ANIMAL_ACTIONS.animals,species)||typeof fetcher!=='function'||typeof subtle?.digest!=='function')throw TypeError('Invalid baked walking request');
  if(signal?.aborted)throw new DOMException('Baked walking request cancelled','AbortError');
- const root=assetUrl(`/content/${clip==='Running'?'gpu-animal-run':'gpu-walk'}/${species}/walking`),[metadataResponse,dataResponse]=await Promise.all([fetcher(root+'.json',{signal}),fetcher(root+'.bin',{signal})]);
+ const root=assetUrl(clip==='Walking'?`/content/gpu-walk/${species}/walking`:clip==='Running'?`/content/gpu-animal-run/${species}/walking`:`/content/gpu-animal-attack/${species}/${clip}/walking`),[metadataResponse,dataResponse]=await Promise.all([fetcher(root+'.json',{signal}),fetcher(root+'.bin',{signal})]);
  if(!metadataResponse.ok||!dataResponse.ok)throw Error('Baked walking asset unavailable: '+species);
  const [meta,buffer]=await Promise.all([metadataResponse.json(),dataResponse.arrayBuffer()]);if(signal?.aborted)throw new DOMException('Baked walking request cancelled','AbortError');
  const sourceHash=/^\/assets\/([a-f0-9]{64})\.glb$/.exec(ANIMAL_ACTIONS.animals[species].url)?.[1];
- if(!sourceHash||meta?.species!==species||meta.clip!==clip||meta.sourceSha256!==sourceHash||!/^[a-f0-9]{64}$/.test(meta.sha256??'')||!Array.isArray(meta.boneInverses)||meta.validation?.exactMismatches!==0||meta.validation?.packedMismatches!==0)throw Error('Baked walking source mismatch: '+species);
+ if(!sourceHash||meta?.species!==species||meta.clip!==clip||meta.duration!==ANIMAL_ACTIONS.animals[species].clips[clip]?.duration||meta.sourceSha256!==sourceHash||!/^[a-f0-9]{64}$/.test(meta.sha256??'')||!Array.isArray(meta.boneInverses)||meta.validation?.exactMismatches!==0||meta.validation?.packedMismatches!==0)throw Error('Baked walking source mismatch: '+species);
  const digest=Array.from(new Uint8Array(await subtle.digest('SHA-256',buffer)),value=>value.toString(16).padStart(2,'0')).join('');if(signal?.aborted)throw new DOMException('Baked walking request cancelled','AbortError');
  if(digest!==meta.sha256)throw Error('Baked walking checksum mismatch: '+species);
  return createBakedWalkTexture(meta,buffer);
 }
 export function loadBakedWalkAsset(species,options){return loadBakedAnimalAsset(species,'Walking',options);}
 export function loadBakedAnimalRunAsset(species,options){return loadBakedAnimalAsset(species,'Running',options);}
+const animalAttacks=['Charged_Upward_Slash','Right_Hand_Sword_Slash','Weapon_Combo','Weapon_Combo_2'];
+export function createBakedAnimalAttackBank(options={}){
+ const banks=new Map(animalAttacks.map(clip=>[clip,createBakedWalkBank({...options,load:(species,loadOptions)=>loadBakedAnimalAsset(species,clip,loadOptions)})]));
+ return {get(species,clip){const bank=banks.get(clip);return bank?bank.get(species):Promise.reject(TypeError('Unknown animal attack'));},close(){for(const bank of banks.values())bank.close();},dispose(){for(const bank of banks.values())bank.dispose();}};
+}
 
 let nextBakedWalkBank=0,nextDirectBake=0;
 // Direct-load profile keeps its existing deferred-disposal owner.
@@ -46,7 +51,7 @@ export function createBakedWalkBank({load=loadBakedWalkAsset,renderer=null,resou
 
 // Close producers before capturing active compilations, so no new user can
 // start using these textures after their deferred release has been scheduled.
-export function closeBakedWalkResources({bank=null,animalRunBank=null,workerBank=null,workerRunBank=null,workerHarvestBank=null,workerIdleBank=null,workerAlertBank=null,workerWaterBank=null,workerPlantBank=null,workerCarryBank=null,bake=null,admission=null}={}){
- bank?.close();animalRunBank?.close();workerBank?.close();workerRunBank?.close();workerHarvestBank?.close();workerIdleBank?.close();workerAlertBank?.close();workerWaterBank?.close();workerPlantBank?.close();workerCarryBank?.close();admission?.dispose();const release=()=>{bake?.dispose();bank?.dispose();animalRunBank?.dispose();workerBank?.dispose();workerRunBank?.dispose();workerHarvestBank?.dispose();workerIdleBank?.dispose();workerAlertBank?.dispose();workerWaterBank?.dispose();workerPlantBank?.dispose();workerCarryBank?.dispose();};
+export function closeBakedWalkResources({bank=null,animalRunBank=null,animalAttackBank=null,workerBank=null,workerRunBank=null,workerHarvestBank=null,workerIdleBank=null,workerAlertBank=null,workerWaterBank=null,workerPlantBank=null,workerCarryBank=null,bake=null,admission=null}={}){
+ bank?.close();animalRunBank?.close();animalAttackBank?.close();workerBank?.close();workerRunBank?.close();workerHarvestBank?.close();workerIdleBank?.close();workerAlertBank?.close();workerWaterBank?.close();workerPlantBank?.close();workerCarryBank?.close();admission?.dispose();const release=()=>{bake?.dispose();bank?.dispose();animalRunBank?.dispose();animalAttackBank?.dispose();workerBank?.dispose();workerRunBank?.dispose();workerHarvestBank?.dispose();workerIdleBank?.dispose();workerAlertBank?.dispose();workerWaterBank?.dispose();workerPlantBank?.dispose();workerCarryBank?.dispose();};
  if(typeof admission?.deferCompilations==='function')admission.deferCompilations(release);else release();
 }

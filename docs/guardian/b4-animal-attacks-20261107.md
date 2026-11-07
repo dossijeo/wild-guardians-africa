@@ -1,0 +1,11 @@
+# Ataques de bestias con skinning GPU
+
+Los cuatro ataques de cada una de las cinco especies pueden reproducirse con matrices precocinadas compartidas por especie y clip. El banco se solicita durante el ataque confirmado; mientras carga o se prepara el rig anterior continúa visible. La admisión comprueba identidad de ataque, estado, impactos y poses físicas otra vez antes de publicar. El clip se limita a su última muestra en vez de repetirse; la selección usa la misma interpolación. Impactos provisionales, física y recuperación desactivan el bake. La simulación y los daños no cambian.
+
+Este paso migra la deformación esquelética; **no** proporciona todavía reproducción autónoma entre publicaciones para un ataque. El certificado histórico sigue excluyéndolos hasta incorporar muestras autoritativas de identidad, fase e interrupciones. La pose visible se calcula a partir del tiempo confirmado y el reloj se detiene cuando no avanza la simulación. Las expresiones permanecen en CPU.
+
+La generación offline usa el `AnimationMixer` y los clips originales de la presentación confirmada. Para preservar movimientos rápidos se usan 60 muestras por segundo normalmente, 120 en dos casos concretos y 240 en el tajo derecho del rinoceronte; la selección está en `tools/guardian/build_baked_walk_catalog.mjs`. Las veinte bibliotecas validan hashes y reconstrucción exacta de las matrices empaquetadas. La mayor desviación de vértices dispersos en puntos intermedios es inferior a 0,06 unidades de mundo. Esta medida no certifica equivalencia perceptiva ni reemplaza una comparación visual.
+
+Las pruebas de contrato usan el rig real de hiena y cubren pausa, interrupción por impacto, final no cíclico y cancelación durante admisión. Permanecen pendientes pruebas de dibujo real WebGPU, sombras, incursión completa, apariencia y rendimiento. El total de datos y las texturas GPU deben medirse bajo carga antes de afirmar una mejora global; no se ha medido ahorro de CPU ni de GPU.
+
+Regeneración y comprobación, por cada clip listado arriba: `node tools/guardian/build_baked_walk_catalog.mjs --clip=Weapon_Combo` y el mismo comando con `--check`. La ruta anterior sigue disponible si la carga o admisión falla.

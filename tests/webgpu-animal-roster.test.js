@@ -10,6 +10,11 @@ import {beginWebGpuGuardianImpact} from '../src/rendering/webgpu-guardian-impact
 import {actorTickState} from '../src/simulation/worker-actor-tick-states.js';
 import {confirmedAnimalRunningSamples} from '../src/rendering/confirmed-animation-samples.js';
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
+test('attack baking is admitted only for the same confirmed strike',async()=>{
+ const animal={id:'a',species:'hyena',status:'attacking',animation:'Weapon_Combo',attackId:'first'},state={raid:{animals:[animal]}},loads=[],installs=[];let finish;
+ const roster=createWebGpuAnimalRoster({scene:{},residency:{},state,assetBank:{tick(){},dispose(){}},pipelineAdmission:{prepare:async()=>{}},bakedAttackBank:{get(species,clip){loads.push([species,clip]);return new Promise(resolve=>{finish=resolve;});}},createAnimal:()=>({root:new Group(),update(){},installBakedAttack:async(_bake,{isCurrent})=>{installs.push(isCurrent());return true;},dispose(){}})});
+ try{roster.sync();await flush();await flush();assert.deepEqual(loads,[['hyena','Weapon_Combo']]);animal.status='walking';roster.sync();finish({});await flush();assert.deepEqual(installs,[]);animal.status='attacking';animal.attackId='second';roster.sync();await flush();finish({});await flush();assert.deepEqual(installs,[true]);roster.sync();await flush();assert.equal(loads.length,2);}finally{roster.dispose();}
+});
 test('production provisional fall bank is shared and does not enable geometric support',async()=>{
  const animals=['a','b'].map(id=>({id,species:'hyena',status:'walking',x:0,z:0,radius:.7})),state={elapsed:1,raid:{animals}},before=structuredClone(state),created=[],bank=new Map([['hyena:front',{}]]);let loads=0,finish;
  const roster=createWebGpuAnimalRoster({scene:{},residency:{get:()=>null},state,assetBank:{tick(){},dispose(){}},provisionalBakedFall:true,loadProvisionalFalls:()=>{loads++;return new Promise(resolve=>{finish=resolve;});},createAnimal:options=>{created.push(options);return {update(){},dispose(){}};}});
