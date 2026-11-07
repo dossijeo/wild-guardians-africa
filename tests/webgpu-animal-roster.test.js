@@ -276,3 +276,20 @@ test('committing a removed or replaced animal never resets its successor phase',
   }finally{roster.dispose();clock.dispose();geometry.dispose();source.dispose();}
  }
 });
+
+test('animal run download retries without a publication and keeps the confirmed rig',async()=>{
+ const entity={id:'a',species:'hyena',status:'entering'},state={raid:{animals:[entity]}},bank={tick(){},dispose(){}};let requests=0,installs=0,created=0;
+ const roster=createWebGpuAnimalRoster({scene:{},residency:{},state,assetBank:bank,walkRetryDelay:5,pipelineAdmission:{prepare:async()=>{}},bakedRunBank:{get(){if(++requests===1)return Promise.reject(Error('temporary'));return Promise.resolve({meta:{species:'hyena'}});}},createAnimal:()=>{created++;return {root:new Group(),update(){this.root.visible=true;},async installBakedRun(){installs++;return true;},dispose(){}};}});
+ try{roster.sync();await flush();await flush();assert.equal(requests,1);assert.equal(roster.get('a').root.visible,true);await new Promise(resolve=>setTimeout(resolve,35));await flush();assert.equal(requests,2);assert.equal(installs,1);assert.equal(created,1);}finally{roster.dispose();}
+});
+test('run retries are bounded, stop on removal, and do not retry admission errors',async()=>{
+ const animals=[{id:'a',species:'hyena',status:'entering'},{id:'b',species:'lion',status:'entering'},{id:'c',species:'rhino',status:'entering'}],state={raid:{animals}},calls=[],bank={tick(){},dispose(){}};
+ const roster=createWebGpuAnimalRoster({scene:{},residency:{},state,assetBank:bank,walkRetryDelay:5,pipelineAdmission:{prepare:async()=>{}},bakedRunBank:{get(species){calls.push(species);return species==='rhino'?Promise.resolve({}):Promise.reject(Error('unavailable'));}},createAnimal:()=>({root:new Group(),update(){this.root.visible=true;},async installBakedRun(){throw Error('admission failed');},dispose(){}})});
+ try{roster.sync();await flush();await flush();animals.splice(1,1);roster.sync();await new Promise(resolve=>setTimeout(resolve,100));assert.equal(calls.filter(x=>x==='hyena').length,4);assert.equal(calls.filter(x=>x==='lion').length,1);assert.equal(calls.filter(x=>x==='rhino').length,1);assert.equal(roster.get('a').root.visible,true);}finally{roster.dispose();}
+});
+
+test('leaving a running state cancels a pending run download retry',async()=>{
+ const entity={id:'a',species:'hyena',status:'entering'},state={raid:{animals:[entity]}},bank={tick(){},dispose(){}};let attempts=0;
+ const roster=createWebGpuAnimalRoster({scene:{},residency:{},state,assetBank:bank,walkRetryDelay:30,pipelineAdmission:{prepare:async()=>{}},bakedRunBank:{get(){attempts++;return Promise.reject(Error('temporary'));}},createAnimal:()=>({root:new Group(),update(){this.root.visible=true;},dispose(){}})});
+ try{roster.sync();await flush();await flush();entity.status='attacking';roster.sync();await new Promise(resolve=>setTimeout(resolve,100));assert.equal(attempts,1);assert.equal(roster.get('a').root.visible,true);}finally{roster.dispose();}
+});
