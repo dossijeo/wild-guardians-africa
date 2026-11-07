@@ -36,9 +36,17 @@ La llegada de terreno ya no llama al roster de trabajadores fuera de la barrera 
 
 Validación: 159 pruebas de admisión, rosters, reloj, grupo histórico, épocas de superficie y autoridad WASM, incluidas caída y recuperación de trabajadores. Los nuevos casos prueban cancelación, fallo, candidato no publicado, solicitudes concurrentes, conservación del clip y retirada durante carga. Esta evidencia no certifica rendimiento, recuperación de dispositivo ni paridad de imagen en WebGPU real.
 
+## Eventos en el extremo de un intervalo
+
+Se consideran tres alternativas: transportar estados intermedios y dividir el intervalo; reproducir el intervalo completo y adelantar eventos contra su estado final; o distinguir primero los eventos que ya coinciden exactamente con el extremo confirmado. La segunda rompe causalidad y se descarta. La primera sigue siendo necesaria para eventos interiores y requiere un contrato de transporte propio. Se integra la tercera, que reutiliza la publicación acumulada existente y no añade snapshots ni mensajes por tick.
+
+El stream permite que continúe la certificación visual cuando todos los eventos tienen `simulationTime` exactamente igual al extremo, y el diario v2 contiene únicamente sus referencias, en el mismo orden y con ese tiempo. Cualquier evento interior, settlement, invalidación o hecho adicional mantiene la barrera. Esto no autoriza movimiento por sí solo: física, separación, cambios de mundo, poses, efectos y terreno conservan sus certificados. La entrega se realiza una sola vez mediante el commit original, con el estado final y el reloj ya aplicados.
+
+Validación: 51 pruebas de stream, reloj, grupo histórico y eventos de autoridad. La captura real de manglares distingue el evento final de un avance de 0,02 s frente al evento interior de uno de 0,1 s, sin adelantar estado ni notificaciones. El primer caso todavía carece de separación completa entre cuerpos y permanece rechazado por esa barrera. Una prueba del pump con reloj controlado verifica la espera hasta el extremo antes de entregar el evento. No se han cambiado el tamaño de las publicaciones ni los ticks del juego para producir ese caso de prueba.
+
 ## Bloqueos que todavía no están resueltos
 
-1. Eventos dentro de trayectorias: los receptores aplican el estado final antes de notificar; hacen falta límites intermedios autoritativos o una representación equivalente que conserve todas las dependencias. No basta con quitar la barrera `events` ni entregar antes un daño con estado posterior.
+1. Eventos **interiores** de trayectorias: los receptores aplican el estado final antes de notificar; hacen falta límites intermedios autoritativos o una representación equivalente que conserve todas las dependencias. El caso de eventos exactamente finales está implementado arriba. No basta con quitar la barrera `events` general ni entregar antes un daño con estado posterior.
 2. Física activa y mezcla de participantes: el reloj histórico es global. Excluir cuerpos problemáticos congelándolos hasta el final provocaría saltos. Hay que conservar pose, trayectoria, tiempo y contactos de todos los participantes; siguen vigentes los fallbacks actuales.
 3. Recuperación gráfica: todavía requiere validación completa con dispositivo, física y terreno reales. La saturación o pérdida de una base no puede resolverse descartando eventos.
 4. Admisiones del resto de subsistemas: revisar sus ciclos con el mismo criterio de propietario, generación y transición, sin trasladar esos arreglos a las recetas de contenido.
