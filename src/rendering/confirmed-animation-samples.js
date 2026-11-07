@@ -9,3 +9,11 @@ export function confirmedWalkingSamples(preview,actorId,kind,entity){
  if(samples.some((s,i)=>!Number.isFinite(s.at)||!Number.isFinite(s[phaseKey])||s[phaseKey]<0||i&&(s.at<=samples[i-1].at||s[phaseKey]<samples[i-1][phaseKey])||s.status!==first.status||idleWalk&&s.idleMode!=='walk'||s.running||s.gateWaiting||s.incapacitated||s.recovery||s.falling||s.taskId!==first.taskId||s.animation!==first.animation))return null;
  return samples.map(s=>({at:s.at,phase:s[phaseKey]}));
 }
+
+export function confirmedWorkerRunningSamples(preview,actorId,entity){
+ const ticks=preview?.trace?.actorTickStates;if(!ticks?.complete||!Array.isArray(ticks.actors))return null;
+ const matches=ticks.actors.filter(value=>value.actorId===actorId);if(matches.length!==1||!Array.isArray(matches[0].samples))return null;
+ const samples=matches[0].samples,first=samples[0];if(samples.length<2||first?.at!==preview.start||samples.at(-1)?.at!==preview.end||!['walking','arriving','returning','fleeing'].includes(first.status)||first.status!==entity?.status||!first.running||first.runPhase!==entity?.runPhase)return null;
+ if(samples.some((s,i)=>!Number.isFinite(s.at)||!Number.isFinite(s.runPhase)||s.runPhase<0||i&&(s.at<=samples[i-1].at||s.runPhase<samples[i-1].runPhase)||s.status!==first.status||!s.running||s.gateWaiting||s.incapacitated||s.recovery||s.falling||s.taskId!==first.taskId||s.animation!==first.animation))return null;
+ return samples.map(s=>({at:s.at,phase:s.runPhase}));
+}
