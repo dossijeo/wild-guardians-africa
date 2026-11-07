@@ -1,0 +1,7 @@
+# Lotes emparejados de vegetación lejana
+
+El propietario de bioma puede exponer los lotes 3D residentes de un chunk solo cuando su secuencia, identidades y transformaciones coinciden con la consulta regional. Notifica de forma síncrona antes de reconstruir o retirar esos lotes y antes de aplicar supresiones. Una consulta sin lote residente completo devuelve `deferred`; no certifica cobertura fuera de la residencia.
+
+La transacción experimental construye copias 3D e impostores para todos los lotes del chunk y los admite juntos antes de sustituir las fuentes. Una petición obsoleta o cancelada conserva las fuentes; una invalidación restaura la presentación 3D. El picking del impostor utiliza la geometría 3D retenida y las supresiones afectan a ambos. La cámara que se acerca recupera inmediatamente el 3D. La compilación o retirada conserva los atlas hasta que termina su uso GPU.
+
+Para excluir el 3D del pase de color cuando el lote completo está lejos, el llamante debe reservar una capa explícita, excluirla de todas las cámaras normales y auxiliares, e incluirla en todas las cámaras de sombra correspondientes. El módulo no modifica las máscaras y rechaza la activación lejana si no puede comprobar ese contrato o falta el nodo de sombra. En la franja de transición ambos dibujos usan coberturas complementarias. La superficie experimental ya proporciona una reserva supervisada; la ruta no se activa por defecto y aún falta validación en dispositivo de sombras, dither, picking, cobertura regional y rendimiento. No se declara ahorro de GPU.
