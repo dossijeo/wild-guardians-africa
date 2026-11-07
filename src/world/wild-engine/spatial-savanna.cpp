@@ -1174,6 +1174,15 @@ void selectPreparedChunkData(PreparedChunkData data){
   props=std::move(data.props);solidProps=std::move(data.solidProps);
   propBuckets=std::move(data.propBuckets);nearbySettlements=std::move(data.nearbySettlements);
 }
+// A visual query must never publish its scratch chunk or replace the currently
+// selected simulation buffers. The old selection is moved back on every exit.
+struct ScopedVisualQueryChunk {
+  PreparedChunkData previous;
+  ScopedVisualQueryChunk():previous(takePreparedChunkData()){}
+  ~ScopedVisualQueryChunk(){selectPreparedChunkData(std::move(previous));}
+  ScopedVisualQueryChunk(const ScopedVisualQueryChunk&)=delete;
+  ScopedVisualQueryChunk& operator=(const ScopedVisualQueryChunk&)=delete;
+};
 void publishSelectedChunk(){
   const auto key=chunkKey(chunkX,chunkZ);
   // Settlement changes invalidate relief explicitly; ordinary selection keeps it.
@@ -1546,6 +1555,8 @@ static std::vector<int32_t> chunkRemovalInput;
 static std::vector<float> surfaceGridOutput;
 static std::vector<double> surfaceGridCorners;
 static std::vector<uint8_t> surfaceGridValid;
+static std::vector<Prop> farVisualProps;
+static uint64_t farVisualRevision=0;
 extern "C" {
 int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){
   if(biome<0||biome>8)return -1;
@@ -2094,6 +2105,27 @@ int spatial_water_vertex_count(){ensureSelectedVisual();return int(waterTriangle
 Prop* spatial_props_ptr(){return props.data();}
 int spatial_prop_count(){return int(props.size());}
 int spatial_halo_prop_count(){return haloPropCount;}
+// One bounded request reads the authoritative world without changing live
+// residency, navigation or selection. A caller can combine chunks only if
+// their revisions match and discard results after a later structural change.
+int spatial_far_query_chunk(int cx,int cz,uint32_t slotMask){
+  if(!chunkRasters||cx<-1000000||cx>1000000||cz<-1000000||cz>1000000||!slotMask||(slotMask&~((1u<<20)-1)))return -1;
+  farVisualProps.clear();
+  const auto key=chunkKey(cx,cz);
+  const auto resident=residentVisibleProps().find(key);
+  if(resident!=residentVisibleProps().end()){
+    for(const auto& prop:resident->second)if(prop.slot>=0&&prop.slot<20&&(slotMask&(1u<<prop.slot)))farVisualProps.push_back(prop);
+  }else{
+    ScopedVisualQueryChunk previous;
+    prepareSelectedChunk(cx,cz,false);
+    for(const auto& prop:props)if(prop.slot>=0&&prop.slot<20&&(slotMask&(1u<<prop.slot)))farVisualProps.push_back(prop);
+  }
+  farVisualRevision=terrainInputRevision;
+  return int(farVisualProps.size());
+}
+Prop* spatial_far_query_ptr(){return farVisualProps.data();}
+double spatial_far_query_revision(){return double(farVisualRevision);}
+double spatial_far_world_revision(){return double(terrainInputRevision);}
 int spatial_build_nav_profile(int index,float radius,int worker){
   if(index<0||index>=navigationProfiles||(index==1)!=(worker!=0))return 0;
   if(loadedChunks.empty()||!chunkRasters||radius<=0||radius>maxIndexedRadius)return 0;

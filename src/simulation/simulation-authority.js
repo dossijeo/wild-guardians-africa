@@ -103,6 +103,15 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   function setGuardianTerrainEpoch(epoch){if(closed||epoch!==null&&(typeof epoch!=='string'||!epoch))throw TypeError('Invalid guardian terrain epoch');guardianTerrainEpoch=epoch;}
   return {
    setGuardianMetadata,setGuardianTerrainEpoch,setGuardianMetadataForQa:setGuardianMetadata,setGuardianTerrainEpochForQa:setGuardianTerrainEpoch,
+   // This is a read-only visual query at an exact committed authority
+   // boundary. The caller must discard it if a later world revision arrives.
+   queryFarVisualChunk({cx,cz,slots=[0,1,2,3],expectedSequence,expectedRevision=null}={}){
+    if(closed)throw Error('Simulation authority is closed');
+    if(!Number.isSafeInteger(expectedSequence)||expectedSequence<0)throw TypeError('Invalid far visual sequence');
+    if(expectedSequence!==sequence||physicsInitializing)return null;
+    const result=session.core.queryFarVisualChunk(cx,cz,{slots,expectedRevision});
+    return result?{sequence,elapsed:game.elapsed,...result}:null;
+   },
    verifyNativeBootstrap(expected){
     if(closed||!expected||expected.version!==1||!Array.isArray(expected.chunkKeys)||!expected.spatialState)throw TypeError('Invalid native bootstrap verification');
     const actual=session.core.captureResidentChunks(),keys=[...expected.chunkKeys].sort();
