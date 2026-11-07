@@ -3,8 +3,8 @@ import {skyNight} from './sky.js';
 
 // Loading-only diffuse light: screen-space bands from the authored garden,
 // shared by crops and soil. Shadows still belong to the lighting subsystem.
-export function createWebGpuLoadingDiffuse({camera}={}){
- if(!camera?.isPerspectiveCamera)throw TypeError('Invalid loading diffuse camera');
+export function createWebGpuLoadingDiffuse({camera,visibility=null}={}){
+ if(!camera?.isPerspectiveCamera||visibility!==null&&!visibility?.isNode)throw TypeError('Invalid loading diffuse camera');
  const aspect=uniform(1),night=uniform(0),inner=uniform(2.9);
  const screen=vec2(screenUV.x.mul(2).sub(1),float(1).sub(screenUV.y.mul(2))),across=screen.x.mul(aspect).sub(float(-.12).add(screen.y.mul(.48)));
  const lobe=(center,width,strength)=>exp(pow(across.sub(center).div(width),2).negate()).mul(strength);
@@ -13,7 +13,7 @@ export function createWebGpuLoadingDiffuse({camera}={}){
  function configure(material,{ground=false}={}){
   if(!material?.isNodeMaterial||!material.outputNode?.isNode||typeof ground!=='boolean')throw TypeError('Unsupported loading diffuse material');
   const output=material.outputNode,footprint=ground?max(bands,exp(pow(screen.x.mul(aspect).add(.08).div(.55),2).negate().sub(pow(screen.y.add(.37).div(.32),2))).mul(.85)):bands;
-  let color=output.rgb.mul(ground?mix(.46,.18,night):mix(.72,.30,night)).add(diffuseColor.rgb.mul(tint).mul(footprint).mul(lambert.mul(.76).add(.24)).mul(ground?mix(1.2,3,night):mix(2.1,3.5,night)));
+  let color=output.rgb.mul(ground?mix(.46,.18,night):mix(.72,.30,night)).add(diffuseColor.rgb.mul(tint).mul(footprint).mul(lambert.mul(.76).add(.24)).mul(visibility?mix(.16,1,visibility.clamp(0,1)):1).mul(ground?mix(1.2,3,night):mix(2.1,3.5,night)));
   let alpha=output.a;
   if(ground){const radius=length(positionLocal.xy),rim=smoothstep(2.5,6.2,radius);color=color.mul(mix(vec3(1.12,.91,.72),vec3(1),night)).add(diffuseColor.rgb.mul(vec3(.018,.042,.085)).mul(night).mul(float(1).sub(footprint.clamp(0,1))));color=mix(color,mix(vec3(.44,.32,.20),vec3(.012,.028,.065),night),rim.mul(.6));alpha=alpha.mul(float(1).sub(smoothstep(inner,inner.add(2.3),radius)));}
   material.outputNode=vec4(color,alpha);return material;
