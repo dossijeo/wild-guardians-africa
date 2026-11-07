@@ -86,6 +86,11 @@ test('a failed catalogue request can be retried for a structure preview',async()
  try{await assert.rejects(view.preparePreview('center','mapungubwe'),/catalogue offline/);unavailable=false;await view.preparePreview('center','mapungubwe');assert.equal(requests,2);assert.deepEqual(errors,['catalogue offline']);}finally{view.dispose();geometry.dispose();material.dispose();globalThis.fetch=previousFetch;}
 });
 
+test('a new village preview retries an earlier failed catalogue without waiting for terrain',async()=>{
+ const previousFetch=globalThis.fetch;let requests=0;globalThis.fetch=async url=>{if(String(url).includes('villages')){requests++;throw Error('catalogue offline');}return {ok:true,json:async()=>[]};};const errors=[],view=createWebGpuSettlements({scene:new THREE.Scene(),state:{culture:'mapungubwe',elapsed:0,villages:[],structures:[]},residency:{get:()=>null},renderer:{backend:{isWebGPUBackend:true}},pipelineAdmission:{async prepare(){}},enableStructurePreviews:true,onError:error=>errors.push(error.message)}),preview={culture:'mapungubwe',x:0,z:0,valid:false,pending:true,buildings:[]};
+ try{view.showVillagePreview(preview);view.showVillagePreview(preview);await turn();await turn();assert.equal(requests,1);assert.deepEqual(errors,['catalogue offline']);view.showVillagePreview({...preview,x:2});await turn();await turn();assert.equal(requests,2);assert.deepEqual(errors,['catalogue offline','catalogue offline']);view.clearVillagePreview();}finally{view.dispose();globalThis.fetch=previousFetch;}
+});
+
 test('center preview admits the actual instance and cancels stale preparation',async()=>{
  const previousFetch=globalThis.fetch;globalThis.fetch=async url=>({ok:true,json:async()=>String(url).includes('destruction')?{buildings:[{culture:'mapungubwe',url:'/center.glb'}]}:[]});
  const root=new THREE.Group(),geometry=new THREE.BoxGeometry(),material=new THREE.MeshBasicMaterial();root.add(new THREE.Mesh(geometry,material));const terrain=new THREE.Mesh(new THREE.PlaneGeometry(20,20),new THREE.MeshBasicMaterial({side:THREE.DoubleSide}));terrain.rotation.x=-Math.PI/2;terrain.updateMatrixWorld(true);const replacement=terrain.clone();replacement.position.y=2;replacement.updateMatrixWorld(true);let current=terrain;const scene=new THREE.Scene(),requests=[];
