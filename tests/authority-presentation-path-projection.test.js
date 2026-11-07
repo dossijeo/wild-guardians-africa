@@ -7,6 +7,13 @@ import {serializeConfirmedPresentationState} from '../src/simulation/confirmed-l
 import {createSimulationAuthority,authoritySnapshotFields} from '../src/simulation/simulation-authority.js';
 import {createMainSnapshotEncoder,createMainSnapshotDecoder} from '../src/simulation/main-thread-snapshot-transport.js';
 import {createConfirmedStateReceiver} from '../src/simulation/confirmed-state-receiver.js';
+import {validateConfirmedMotion} from '../src/rendering/confirmed-motion-validation.js';
+
+test('real temporal publications project path tails while preserving exact motion evidence and checkpoints',()=>{
+ const module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm')),initial=deserialize(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString()),snapshot=serialize(initial),keys=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)keys.push(`${x},${z}`);
+ const baseline=createSimulationAuthority(module,snapshot,keys,{observeWorldMotion:true}),projected=createSimulationAuthority(module,snapshot,keys,{observeWorldMotion:true,compactPresentationPaths:true}),display=deserialize(snapshot),receiver=createConfirmedStateReceiver(display,'s');let reduced=false;
+ try{for(let sequence=1;sequence<=3;sequence++){const command={kind:'advance',sequence,seconds:.05,steps:2,nightFastForward:true,captureClockSegments:true},a=baseline.execute(command),b=projected.execute(command);assert.deepEqual(b.events,a.events);assert.deepEqual(b.worldMotionTrace,a.worldMotionTrace);assert.deepEqual(b.clockSegments,a.clockSegments);assert.equal(b.presentationPaths,'head-v1');assert.equal(b.snapshot,serializeConfirmedPresentationState(JSON.parse(a.snapshot)));assert.ok(b.snapshot.length<a.snapshot.length);const next=JSON.parse(b.snapshot);assert.doesNotThrow(()=>validateConfirmedMotion(b,next,display.elapsed,display));assert.equal(receiver.accept({...b,session:'s'}).accepted,true);reduced=true;}assert.equal(reduced,true);const a=baseline.execute({kind:'snapshot',sequence:4}),b=projected.execute({kind:'snapshot',sequence:4});assert.equal(b.presentationPaths,undefined);assert.equal(b.snapshot,a.snapshot);assert.deepEqual(b.events,a.events);}finally{baseline.dispose();projected.dispose();}
+});
 
 test('real authority prepares transport fields without changing snapshots or simulation',()=>{
  const module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm')),initial=deserialize(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString()),snapshot=serialize(initial),keys=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)keys.push(`${x},${z}`);

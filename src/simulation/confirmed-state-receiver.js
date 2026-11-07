@@ -62,7 +62,7 @@ export function createConfirmedStateReceiver(state,session,{onReconciled=null,de
    if(!Number.isSafeInteger(firstSequence)||firstSequence!==sequence+1||firstSequence>message.sequence)return {accepted:false,reason:'gap'};
    if(firstSequence!==message.sequence&&(!Array.isArray(message.events)||physicsOwners(message)===null))throw TypeError('Invalid coalesced publication');
    const handed=confirmedSnapshotFor(message);if(handed===undefined&&typeof message.snapshot!=='string'||!Array.isArray(message.events))throw TypeError('Invalid confirmed state');
-   if(message.presentationPaths!==undefined&&(message.presentationPaths!=='head-v1'||message.terrainCheckpoint||message.motionTrace||message.worldMotionTrace||message.motionInvalidation))throw TypeError('Invalid presentation path projection');
+   if(message.presentationPaths!==undefined&&(message.presentationPaths!=='head-v1'||message.terrainCheckpoint||message.motionTrace||message.motionInvalidation))throw TypeError('Invalid presentation path projection');
    if(message.presentationJournalVersion!==undefined&&message.presentationJournalVersion!==2)throw TypeError('Invalid presentation lifecycle version');
    if(message.presentationJournalVersion===2&&!Array.isArray(message.presentationJournal))throw TypeError('Missing presentation lifecycle journal');
    if(message.presentationJournal!==undefined){
