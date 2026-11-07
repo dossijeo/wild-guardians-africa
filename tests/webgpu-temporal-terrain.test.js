@@ -37,3 +37,49 @@ test('cancellation after identity observation aborts prepared owners and prevent
  const options={scene:new Scene(),signal:controller.signal,suppressed:[],validateInstances(){},publicationEpoch:epoch=>epoch,publicationOrder:()=>++order,onPreparedIdentity(payload){seen.push(payload.cx);},residency:{prepareRevision(payload){return token('terrain'+payload.cx);}},biome:{ready:Promise.resolve(true),async requestSlots(){},prepareRevision(payload){controller.abort();return token('biome'+payload.cx);}},coordinator:{prepareBatch(){throw Error('must not submit');}}};
  await assert.rejects(prepareWebGpuTemporalTerrain([message(0,0),message(1,0)],options),{name:'AbortError'});assert.deepEqual(seen,[0]);assert.deepEqual(aborted,['biome0','terrain0']);
 });
+
+function identityOptions({onPreparedIdentity,onDiscardIdentity,prepareBatch,signal}={}){
+ let next=0;const token={participant(){return {};},abort(){}};
+ return {scene:new Scene(),suppressed:[],signal,validateInstances(){},publicationEpoch:epoch=>epoch,publicationOrder:()=>++next,onPreparedIdentity,onDiscardIdentity,residency:{prepareRevision(){return token;}},biome:{ready:Promise.resolve(true),async requestSlots(){},prepareRevision(){return token;}},coordinator:{prepareBatch}};
+}
+
+test('discard identifies only the aborted generation when the same payload is prepared twice',async()=>{
+ const input=message(0,0),prepared=[],discarded=[],batches=[],options=identityOptions({onPreparedIdentity:(payload,id)=>prepared.push({payload,id}),onDiscardIdentity:(payload,id)=>discarded.push({payload,id}),prepareBatch:async()=>{const batch={aborts:0,abort(){this.aborts++;return true;},commit(){return true;}};batches.push(batch);return batch;}});
+ const a=await prepareWebGpuTemporalTerrain([input],options),b=await prepareWebGpuTemporalTerrain([input],options);assert.notEqual(prepared[0].id,prepared[1].id);assert.equal(a.abort(),true);assert.equal(a.abort(),false);assert.deepEqual(discarded,[prepared[0]]);assert.equal(discarded[0].id,prepared[0].id);assert.equal(b.commit(),true);assert.equal(b.abort(),false);assert.deepEqual(discarded,[prepared[0]]);assert.equal(batches[0].aborts,1);assert.equal(batches[1].aborts,0);
+});
+
+test('a preparation failure discards identities in reverse order, including a partially failing observer',async()=>{
+ const prepared=[],discarded=[],errors=[],options=identityOptions({onPreparedIdentity:(payload,id)=>{prepared.push({payload,id});if(payload.cx===1)throw Error('partial registration');},onDiscardIdentity:(payload,id)=>{discarded.push({payload,id});if(payload.cx===1)throw Error('cleanup failed');},prepareBatch:async()=>{throw Error('must not submit');}});
+ await assert.rejects(prepareWebGpuTemporalTerrain([message(0,0),message(1,0)],options),/partial registration/);assert.deepEqual(discarded,[prepared[1],prepared[0]]);assert.equal(discarded[0].id,prepared[1].id);
+});
+
+test('aborting after preparation notifies discard once and does not discard committed identities',async()=>{
+ const controller=new AbortController(),prepared=[],discarded=[];let aborts=0;const options=identityOptions({signal:controller.signal,onPreparedIdentity:(payload,id)=>prepared.push({payload,id}),onDiscardIdentity:(payload,id)=>discarded.push({payload,id}),prepareBatch:async()=>({abort(){aborts++;return true;},commit(){return true;}})}),handle=await prepareWebGpuTemporalTerrain([message(0,0)],options);controller.abort();assert.equal(aborts,1);assert.deepEqual(discarded,prepared);assert.equal(handle.abort(),false);assert.throws(()=>handle.commit(),/no longer active/);
+ const nextController=new AbortController(),next=await prepareWebGpuTemporalTerrain([message(1,0)],{...options,signal:nextController.signal});assert.equal(next.commit(),true);nextController.abort();assert.equal(aborts,1);assert.equal(discarded.length,1);
+});
+
+test('commit failure and rejected preparation release identity reservations',async()=>{
+ const prepared=[],discarded=[];let aborts=0;const options=identityOptions({onPreparedIdentity:(payload,id)=>prepared.push({payload,id}),onDiscardIdentity:(payload,id)=>discarded.push({payload,id}),prepareBatch:async()=>({abort(){aborts++;return true;},commit(){throw Error('rollback');}})}),handle=await prepareWebGpuTemporalTerrain([message(0,0)],options);assert.throws(()=>handle.commit(),/rollback/);assert.equal(aborts,1);assert.deepEqual(discarded,prepared);assert.equal(handle.abort(),false);
+ const refused={...options,prepareBatch:null,coordinator:{async prepareBatch(){throw Error('reservation refused');}}};await assert.rejects(prepareWebGpuTemporalTerrain([message(1,0)],refused),/reservation refused/);assert.equal(discarded.length,2);assert.equal(discarded[1].id,prepared[1].id);
+});
+
+test('reentrant abort during a committed notification preserves the reservation',async()=>{
+ const controller=new AbortController(),prepared=[],discarded=[];let aborts=0;const options=identityOptions({signal:controller.signal,onPreparedIdentity:(payload,id)=>prepared.push({payload,id}),onDiscardIdentity:(payload,id)=>discarded.push({payload,id}),prepareBatch:async()=>({abort(){aborts++;return false;},commit(){controller.abort();return true;}})}),handle=await prepareWebGpuTemporalTerrain([message(0,0)],options);
+ assert.equal(handle.commit(),true);assert.equal(aborts,1);assert.equal(discarded.length,0);assert.equal(handle.abort(),false);assert.equal(prepared.length,1);
+});
+
+test('reentrant abort before a failed commit discards once after rollback',async()=>{
+ const controller=new AbortController(),prepared=[],discarded=[];let aborts=0;const options=identityOptions({signal:controller.signal,onPreparedIdentity:(payload,id)=>prepared.push({payload,id}),onDiscardIdentity:(payload,id)=>discarded.push({payload,id}),prepareBatch:async()=>({abort(){aborts++;return true;},commit(){controller.abort();throw Error('rolled back');}})}),handle=await prepareWebGpuTemporalTerrain([message(0,0)],options);
+ assert.throws(()=>handle.commit(),/rolled back/);assert.deepEqual(discarded,prepared);assert.equal(aborts,2);assert.equal(handle.abort(),false);
+});
+
+test('a commit returning false discards its identity exactly once',async()=>{
+ const prepared=[],discarded=[],options=identityOptions({onPreparedIdentity:(payload,id)=>prepared.push({payload,id}),onDiscardIdentity:(payload,id)=>discarded.push({payload,id}),prepareBatch:async()=>({abort(){return true;},commit(){return false;}})}),handle=await prepareWebGpuTemporalTerrain([message(0,0)],options);assert.equal(handle.commit(),false);assert.deepEqual(discarded,prepared);assert.equal(handle.abort(),false);
+});
+
+test('real terrain and biome commit keeps identity when cancellation arrives from a committed publication',async()=>{
+ const THREE=await import('three'),{readFile}=await import('node:fs/promises'),{readFileSync}=await import('node:fs'),{createSpatialWorld}=await import('../src/world/wild-engine/spatial-world.js'),{createChunkPublicationCoordinator}=await import('../src/rendering/webgpu-chunk-publication.js'),{createWebGpuTerrainResidency}=await import('../src/rendering/webgpu-terrain-residency.js'),{createWebGpuBiomeProps}=await import('../src/rendering/webgpu-biome-props.js');
+ const wasm=new WebAssembly.Module(readFileSync(new URL('../src/world/wild-engine/spatial-savanna.wasm',import.meta.url))),native=createSpatialWorld(wasm);native.generate(712,0,0,'savanna');const payload=native.chunkPayload();payload.instances=Array.from({length:20},()=>[]);
+ const scene=new THREE.Scene(),material=new THREE.MeshBasicMaterial(),controller=new AbortController(),prepared=[],discarded=[],published=[],admission={async prepareManyAndPublish(){throw Error('unexpected one-sided publication');},async prepareTicket(){return {valid:()=>true,validAfterAttach:()=>true};},prepare(){},deferRelease(_object,release){release();}},coordinator=createChunkPublicationCoordinator({admission}),terrain=createWebGpuTerrainResidency({scene,material,waterMaterial:material,pipelineAdmission:admission,coordinator,onPublished(key,identity){published.push({key,identity});controller.abort();}}),pack=JSON.parse(await readFile(new URL('../public/content/biome-savanna.json',import.meta.url),'utf8')),biome=createWebGpuBiomeProps({scene,state:{biome:'sabana',suppressed:[]},biomePack:pack,initialSlots:[],pipelineAdmission:admission,coordinator,byteLoader:async url=>{const bytes=await readFile(new URL('../public'+url,import.meta.url));return bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength);},imageLoader:async()=>({close(){}})});
+ try{const batch=await prepareWebGpuTemporalTerrain([{payload,sequence:2,revision:1,epoch:'e'}],{signal:controller.signal,scene,residency:terrain,biome,coordinator,publicationEpoch:epoch=>'visual:'+epoch,publicationOrder:()=>1,validateInstances(){},suppressed:[],onPreparedIdentity:(value,id)=>prepared.push({value,id}),onDiscardIdentity:(value,id)=>discarded.push({value,id})});assert.equal(batch.commit(),true);assert.equal(controller.signal.aborted,true);assert.equal(terrain.revisionAt(0,0).revision,1);assert.equal(published.length,1);assert.equal(published[0].identity.publicationOrder,prepared[0].id.publicationOrder);assert.deepEqual(discarded,[]);assert.equal(batch.abort(),false);}finally{biome.dispose();terrain.dispose();coordinator.dispose();material.dispose();}
+});
