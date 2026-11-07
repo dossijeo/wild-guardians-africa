@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createWebGpuMangroveGround,mangroveGroundSeed} from '../src/rendering/webgpu-mangrove-ground.js';
+import {createWebGpuMangroveGround,initializeMangroveGround,mangroveGroundSeed} from '../src/rendering/webgpu-mangrove-ground.js';
 import {hashCell} from '../src/world/terrain.js';
 import {newGame} from '../src/simulation/game.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
@@ -10,6 +10,13 @@ import * as THREE from 'three';
 import {WebGPURenderer} from 'three/webgpu';
 import {texture,uniform} from 'three/tsl';
 import {mangroveGroundRecipe} from '../src/rendering/webgpu-material-graph-catalog.js';
+
+test('failed mangrove initialization reports and releases the provider; cancellation propagates',async()=>{
+ const errors=[],failure=Error('ground unavailable');let disposed=0;
+ const value=await initializeMangroveGround({create:async()=>({update(){throw failure;},dispose(){disposed++;}}),state:{},onError:error=>errors.push(error)});
+ assert.equal(value.ground,null);assert.equal(value.error,'ground unavailable');assert.equal(disposed,1);assert.deepEqual(errors,[failure]);
+ const controller=new AbortController();controller.abort();await assert.rejects(initializeMangroveGround({create:async()=>{throw failure;},signal:controller.signal,onError:()=>assert.fail('cancel must not produce fallback')}),failure);
+});
 
 test('mangrove reflection reuses live environment bindings without owning them',async()=>{
  const day=new THREE.DataTexture(new Uint8Array([64,64,64,255]),1,1);day.magFilter=THREE.LinearFilter;day.minFilter=THREE.LinearMipmapLinearFilter;day.wrapS=THREE.RepeatWrapping;const dark=day.clone(),environment={day:texture(day),dark:texture(dark),night:uniform(0),blend:uniform(0)},tile={base:'base',normal:'normal',arh:'arh',scale:.115,normalBoost:1.3},fetchImpl=async()=>({ok:true,json:async()=>({mangrove:tile})}),provider=await createWebGpuMangroveGround({fetchImpl,environment,imageLoader:async()=>({close(){}})}),canvas={width:1,height:1,style:{},addEventListener(){},removeEventListener(){},getContext(){return null;}},renderer=new WebGPURenderer({canvas}),geometry=new THREE.PlaneGeometry(),version=provider.sharedMaterial.version,graph=provider.sharedMaterial.outputNode;renderer.hasFeature=()=>true;

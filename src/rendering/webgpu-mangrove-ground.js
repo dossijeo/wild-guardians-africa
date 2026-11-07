@@ -10,6 +10,15 @@ import {hashCell} from '../world/terrain.js';
 // BiomeGround uses the native terrain view's low 32-bit seed, not TerrainField's string hash.
 export function mangroveGroundSeed(seed){const value=Number(seed)>>>0;return new THREE.Vector2(hashCell(value,0,1,417)/4294967296,hashCell(value,1,0,417)/4294967296);}
 
+// Preserve the terrain fallback if a texture or provider cannot be prepared.
+// Aborted world startup must still terminate instead of reporting a fallback.
+export async function initializeMangroveGround({create,state,signal,onError=()=>{}}={}){
+ if(typeof create!=='function'||typeof onError!=='function')throw TypeError('Invalid mangrove ground initialization');
+ let ground=null;
+ try{ground=await create();ground.update(state);return {ground,error:null};}
+ catch(error){ground?.dispose();if(signal?.aborted)throw error;onError(error);return {ground:null,error:String(error?.message??error)};}
+}
+
 // Default mangrove pure-moss branch of groundMaterial417 and its direct/ambient
 // biome-ground light. Contact AO and the independently authored mud are still
 // pending; keep this provider experimental until in-game visual comparison.

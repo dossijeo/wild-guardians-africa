@@ -17,6 +17,15 @@ test('water Hi-SSR is opt-in for development and cannot be enabled in production
  const params=new URLSearchParams('qa-webgpu-water-hissr'),state={raid:null},field={};assert.equal(webGpuWorldOptions({params,state,field,dev:true}).experimentalWaterHiSsr,true);assert.equal(webGpuWorldOptions({params,state,field,dev:false}).experimentalWaterHiSsr,false);assert.equal(webGpuWorldOptions({params:new URLSearchParams(),state,field,dev:true}).experimentalWaterHiSsr,false);
 });
 
+test('the product Worker selects the textured mangrove ground consistently on recovery',()=>{
+ const params=new URLSearchParams(),capabilities={cameraTerrain:true,picking:true,causalInputs:true},field={},state={biome:'manglares',raid:null};
+ const initial=webGpuWorldOptions({params,state,field,capabilities,dev:false});
+ const recovered=webGpuWorldOptions({params,state,field,capabilities,dev:false});
+ assert.equal(initial.experimentalMangroveGround,true);assert.deepEqual(recovered,initial);
+ assert.equal(webGpuWorldOptions({params,state:{...state,biome:'sabana'},field,capabilities,dev:false}).experimentalMangroveGround,false);
+ assert.equal(webGpuWorldOptions({params,state,field,dev:false}).experimentalMangroveGround,false);
+});
+
 test('camera terrain follows product capabilities and ignores diagnostic URLs in production',()=>{
  const search='?qa-webgpu-camera-terrain';assert.equal(confirmedCameraTerrainEnabled({search}),false);assert.equal(confirmedCameraTerrainEnabled({search,dev:true}),true);assert.equal(confirmedCameraTerrainEnabled({requested:true}),true);assert.throws(()=>confirmedCameraTerrainEnabled({requested:'true'}),/profile/);
 });

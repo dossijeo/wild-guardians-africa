@@ -34,7 +34,7 @@ export function webGpuWorldOptions({params,state,field,recovery={},capabilities=
   experimentalBakedHyena:has('qa-webgpu-baked-hyena'),
   experimentalConfirmedClock:has('qa-webgpu-baked-hyena')&&!has('qa-webgpu-baked-clock-legacy'),
   experimentalWaterHiSsr:has('qa-webgpu-water-hissr'),
-  experimentalMangroveGround:has('qa-webgpu-mangrove-ground'),
+  experimentalMangroveGround:presentationCapabilities.causalInputs&&state.biome==='manglares'||has('qa-webgpu-mangrove-ground'),
   experimentalPicking:has('qa-webgpu-picking'),
   experimentalWallFragments:has('qa-webgpu-wall-fragments'),
   experimentalBiomeAttributes:!has('qa-webgpu-biome-native'),
