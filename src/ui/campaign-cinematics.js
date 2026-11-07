@@ -30,10 +30,11 @@ export class CampaignCinematics{
     this.element.querySelector('button').textContent=language()==='ES'?'Saltar cinemática':'Skip cinematic';
     this.element.querySelector('button').onclick=()=>this.finish(token);
     this.host.append(this.element);
-    requestAnimationFrame(()=>this.element?.classList.add('is-open'));
+    const root=this.element;
+    requestAnimationFrame(()=>{if(token===this.token&&this.element===root)root.classList.add('is-open');});
     try{
-      const response=await fetch(new URL('manifest.json',BASE));if(!response.ok)throw new Error(`Cinematics manifest HTTP ${response.status}`);
-      const manifest=await response.json();const act=manifest.acts.find(item=>item.number===actNumber);
+      const response=await fetch(new URL('manifest.json',BASE));if(token!==this.token)return;if(!response.ok)throw new Error(`Cinematics manifest HTTP ${response.status}`);
+      const manifest=await response.json();if(token!==this.token)return;const act=manifest.acts.find(item=>item.number===actNumber);
       if(!act||act.scenes.length!==5)throw new Error(`Cinematic act ${actNumber} unavailable`);
       if(!matchMedia('(prefers-reduced-motion: reduce)').matches)this.pencil=this.pencilBackend==='webgpu-worker'?new WebGpuPencilBackground():new PencilBackground();
       const scenes=act.scenes;let next=this.prepare(scenes[0]);
