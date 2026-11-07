@@ -1,3 +1,4 @@
+import {nearGrassWater} from './grass-water.js';
 import {generateGrassTile} from './grass-tile-generation.js';
 import {sampleGrassTerrain} from './grass-terrain-sampling.js';
 import {cinematicLightingEnabled,patchCinematicVegetation} from './cinematic-lighting.js';
@@ -104,17 +105,7 @@ export async function createContinuousGrass(world){
  }continue;}
  mesh.geometry.computeBoundingBox();if(mesh.isInstancedMesh){for(let i=0;i<mesh.count;i++){mesh.getMatrixAt(i,mat);box.copy(mesh.geometry.boundingBox).applyMatrix4(mat);water.push([box.min.x+cx*48,box.min.z+cz*48,box.max.x+cx*48,box.max.z+cz*48])}}else{box.copy(mesh.geometry.boundingBox);water.push([box.min.x+cx*48,box.min.z+cz*48,box.max.x+cx*48,box.max.z+cz*48])}}
  q.chunks.set(key,{cx,cz,h,mask,cropSoilTexture,water,waterTriangles,waterTriangleCount});invalidateWaterNeighbors(cx,cz);q.stats.buildMs+=performance.now()-start;}
- function nearWaterChunk(c,x,z){
- if(c.water.some(b=>x>b[0]-q.edgePadding&&x<b[2]+q.edgePadding&&z>b[1]-q.edgePadding&&z<b[3]+q.edgePadding))return true;
- for(const t of c.waterTriangles.get(Math.floor(x/8)+','+Math.floor(z/8))??[]){
- const a=(t[2]-t[0])*(z-t[1])-(t[3]-t[1])*(x-t[0]),b=(t[4]-t[2])*(z-t[3])-(t[5]-t[3])*(x-t[2]),d=(t[0]-t[4])*(z-t[5])-(t[1]-t[5])*(x-t[4]);
- if((a>=0&&b>=0&&d>=0)||(a<=0&&b<=0&&d<=0))return true;
- for(let i=0;i<3;i++){const j=(i+1)%3,ax=t[i*2],az=t[i*2+1],dx=t[j*2]-ax,dz=t[j*2+1]-az,u=clamp(((x-ax)*dx+(z-az)*dz)/(dx*dx+dz*dz||1),0,1);if((x-ax-u*dx)**2+(z-az-u*dz)**2<q.edgePadding*q.edgePadding)return true;}
- }return false;}
- function nearWater(c,x,z){
- const xs=[c.cx],zs=[c.cz];if(x<c.cx*48-24+q.edgePadding)xs.push(c.cx-1);if(x>c.cx*48+24-q.edgePadding)xs.push(c.cx+1);if(z<c.cz*48-24+q.edgePadding)zs.push(c.cz-1);if(z>c.cz*48+24-q.edgePadding)zs.push(c.cz+1);
- for(const cx of xs)for(const cz of zs){const neighbor=q.chunks.get(cx+','+cz);if(neighbor&&nearWaterChunk(neighbor,x,z))return true;}return false;
- }
+ const nearWater=(c,x,z)=>nearGrassWater(q.chunks,c,x,z,q.edgePadding);
  const sample=sampleGrassTerrain;
  function tile(c,tx,tz){const key=tx+','+tz;if(q.tiles.has(key))return q.tiles.get(key);const start=performance.now();const result=generateGrassTile(c,tx,tz,{spacing:q.spacing,seed:world.nav.field.seed,varied,river,mangrove,fern,edgePadding:q.edgePadding,blockers:q.blockers,nearWater,stats:q.stats});q.tiles.set(key,result);q.stats.buildMs+=performance.now()-start;return result;}
  const screenLodHistory=new WeakMap();
