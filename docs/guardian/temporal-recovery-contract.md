@@ -45,9 +45,40 @@ rebobinado causal de simulación o física y no habilita suposiciones sobre ruta
 futuras. La prueba de host usa Wild Engine y WASM reales y transporta replay por
 MessageChannel a un receptor en un Worker de Node, pero usa un adaptador para el
 cliente de autoridad, revisiones de terreno sintéticas y preparación gráfica
-simulada. Los tests de contratos no prueban WebGPU real, pérdida de dispositivo,
-continuidad gráfica, paridad de materiales, física activa o partidas largas.
-Esas validaciones siguen pendientes en C; tampoco se ha medido rendimiento.
+simulada. Esas pruebas de contratos no prueban por sí mismas WebGPU real,
+pérdida de dispositivo, continuidad gráfica, paridad de materiales, física
+activa o partidas largas. La prueba de dispositivo siguiente cubre una pérdida
+real concreta; no cierra las demás validaciones ni mide rendimiento.
+
+## Pérdida real de dispositivo WebGPU
+
+El 7 de noviembre de 2026 se ejecutó una prueba funcional en la partida normal
+con destrucción deliberada del dispositivo WebGPU y reemplazo automático del
+Worker gráfico. El informe terminó con `passed: true`, sin errores registrados
+por el script ni alertas de interfaz. El adaptador WebGPU registrado fue NVIDIA
+Turing con `isFallbackAdapter: false`; el inventario del navegador identificó
+una GeForce GTX 1660. La lista de GPU también incluía Microsoft Basic Render
+Driver, pero no fue el adaptador seleccionado por WebGPU.
+
+Antes de la pérdida, la autoridad estaba en la secuencia 193 y la presentación
+en la 92; al solicitar la pérdida, esta última había llegado a la 95. El
+reemplazo restauró el checkpoint confirmado de secuencia 66 y reprodujo el
+diario hasta la secuencia 193. La presentación recuperada informó los eventos
+`event-323` y `event-324`, ambos `AnimalTargetUnavailable`. En la muestra
+posterior, la presentación alcanzó la secuencia 194 y la autoridad la 196;
+ambas seguían activas y el reemplazo había dibujado su primer fotograma.
+
+La prueba observó 13 animales preparados y visibles, sin física de impacto
+activa. No valida recuperación durante un ragdoll o un ataque provisional,
+continuidad visual completa, sesiones prolongadas ni rendimiento. El diario
+seguía en el umbral alto en la última muestra, por lo que el resultado tampoco
+demuestra que se hubiera drenado toda la cola posterior. La consola registró dos
+errores de recursos HTTP 404 y el aviso esperado de destrucción del dispositivo;
+el informe no identifica los recursos correspondientes a esos 404.
+
+Evidencia: [informe](b-close-20261107/device-recovery.json),
+[antes](b-close-20261107/device-recovery-before.png) y
+[después](b-close-20261107/device-recovery-after.png).
 
 Componentes principales: `src/app/temporal-presentation-options.js`,
 `src/app/early-worker-options.js`, `src/app/main.js`,

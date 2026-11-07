@@ -1,6 +1,7 @@
 # Bloqueo del checkpoint con Attack provisional
 
-Estado: **pendiente de corrección y validación integrada**. La evidencia procede
+Estado: **corregido y comprobado para aceptación de Attack**, con límites de
+validación indicados abajo. La evidencia del bloqueo anterior procede
 de `.cache/historical-islet-certified.json`, una prueba QA con WebGPU real en
 la que se envió el objetivo por ID. Esa entrada no valida la selección por
 píxel.
@@ -30,8 +31,19 @@ anuncia que el checkpoint vuelve a estar disponible.
 confirme un intervalo histórico, pero en esta captura no había intervalo
 pendiente cuando se observó el bloqueo. No es la causa demostrada aquí.
 
-La corrección debe conservar el orden de los comandos y eventos y no registrar
-el efecto provisional como estado confirmado. La validación debe incluir tanto
-aceptación como rechazo del ataque, renovación del checkpoint bajo saturación,
-reproducción o recuperación sin VFX duplicados y entrada durante un intervalo
-histórico. Hasta completar esas pruebas no se considera resuelto el problema.
+La corrección conserva el orden de comandos y eventos y mantiene el gesto
+provisional fuera del checkpoint. Con una base válida y checkpoint aplazado,
+permite consumir una reserva acotada del diario para que puedan llegar los
+resultados de órdenes ya aceptadas. Al agotarse la reserva detiene la admisión
+y la captura de tiempo y comunica el problema; no garantiza drenar una cola
+arbitraria. Los detalles están en [la reserva del checkpoint](deferred-checkpoint-reserve.md).
+
+En una captura posterior con WebGPU real, el mismo escenario de manglares y
+objetivo seleccionado por ID inició y confirmó un Attack, y el diario renovó
+la base hasta la secuencia 854. La muestra final registra 27 entradas, hasta
+la secuencia 881, sin saturación. La física histórica Rapier aislada pasó su
+auditoría de pose. La [evidencia compacta](b-close-20261107/historical-physical.json)
+registra asimismo que la prueba combinada falló por no observar sublímites
+históricos de eventos. No demuestra selección por píxel, rechazo de Attack en
+hardware ni recuperación completa sin duplicación de VFX. Las pruebas CPU de
+la reserva modelan aceptación y rechazo, pero no sustituyen esas validaciones.
