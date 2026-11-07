@@ -325,3 +325,18 @@ test('biome contact order follows the committed readmission of the same logical 
  const props=createWebGpuBiomeProps({scene,state:{biome:'sabana',suppressed:[]},initialSlots:[0],imageLoader:async()=>({close(){}}),onGroundContactChange:event=>events.push(event),pipelineAdmission:{prepare(){},deferRelease(_object,release){release();}},coordinator:{offer(){return ()=>{};}}}),payload={cx:0,cz:0,instances},meta={epoch:'source',sequence:10};
  try{assert.equal(await props.ready,true);const abandoned=props.prepareRevision(payload,1,meta,{publicationOrder:11}),first=abandoned.participant();first.activate();first.attach();const stale=first.finalize();first.rollbackFinalized();first.rollback();first.cancel();const retried=props.prepareRevision(payload,1,meta,{publicationOrder:12}),second=retried.participant();second.activate();second.attach();const effects=second.finalize();effects.retire();effects.notify();stale.notify();assert.equal(events.length,1);assert.deepEqual({sequence:events[0].sequence,epoch:events[0].epoch,revision:events[0].revision,publicationOrder:events[0].publicationOrder},{sequence:10,epoch:'source',revision:1,publicationOrder:12});props.remove(0,0,2,{epoch:'source',sequence:11});assert.equal(events.at(-1).publicationOrder,12);assert.equal(events.at(-1).revision,2);}finally{props.dispose();globalThis.fetch=previous;}
 });
+
+test('prepared terrain batch survives a near-texture prototype upgrade',async()=>{
+ const previous=globalThis.fetch,{buffer,manifest}=pack(),asset=manifest.assets[0],uv=new Float32Array([0,0,1,0,0,1]).buffer,scene=new Scene(),turn=()=>new Promise(resolve=>setImmediate(resolve));let finishNear;
+ manifest.assets[0]={...asset,nearTextures:{cornerUV:'/near-uv.bin',textures:{baseColor:'/near-color.webp'},blendStart:1,blendEnd:2,distance:3}};
+ globalThis.fetch=async url=>({ok:true,json:async()=>manifest,arrayBuffer:async()=>String(url).includes('near-uv')?uv:buffer});
+ const props=createWebGpuBiomeProps({scene,state:{biome:'sabana',suppressed:[]},initialSlots:[0],imageLoader:url=>String(url).includes('near-color')?new Promise(resolve=>{finishNear=resolve;}):Promise.resolve({close(){}}),pipelineAdmission:{prepare(){},deferRelease(_object,release){release();}},coordinator:{offer(){return ()=>{};}}});
+ const payload=cx=>({cx,cz:0,instances:Array.from({length:20},(_,slot)=>slot===0?[{id:'tree-'+cx,slot,x:cx*48,y:0,z:0,yaw:0,sx:1,sy:1,sz:1}]:[])});
+ try{
+  await props.ready;const first=props.prepareRevision(payload(0),1,{epoch:'e',sequence:0},{publicationOrder:1}).participant();first.activate();first.attach();const effects=first.finalize();effects.retire();effects.notify();
+  for(let i=0;i<30&&!finishNear;i++)await turn();assert.equal(typeof finishNear,'function');
+  const second=props.prepareRevision(payload(1),1,{epoch:'e',sequence:0},{publicationOrder:2}).participant(),material=second.object.children[0].material;
+  finishNear({close(){}});for(let i=0;i<20;i++)await turn();
+  assert.equal(second.activate(),true);second.attach();const committed=second.finalize();committed.retire();committed.notify();assert.equal(second.object.children[0].material,material);assert.equal(props.matchesCheckpoint(payload(1),{epoch:'e',revision:1}),true);
+ }finally{props.dispose();globalThis.fetch=previous;}
+});
