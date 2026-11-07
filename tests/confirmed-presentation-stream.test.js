@@ -17,6 +17,17 @@ import {createMainSnapshotEncoder} from '../src/simulation/main-thread-snapshot-
 import {MAX_PENDING_PRESENTATION_INPUTS} from '../src/rendering/presentation-input-limits.js';
 import {createConfirmedPresentationClock} from '../src/rendering/confirmed-presentation-clock.js';
 const fixture=()=>deserialize(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString());
+test('mutation phase brackets confirmed state and closes on callback errors or reentrancy',()=>{
+ for(const mode of ['ok','throw','end-throw','reentrant']){
+  const state=fixture(),next=deserialize(serialize(state)),phases=[],errors=[],port={postMessage(){},start(){},close(){}},publication={kind:'publication',session:'s',publication:{session:'s',sequence:1,snapshot:serializeConfirmedState(next),events:[]},tick:true};let stream;
+  stream=createConfirmedPresentationStream({port,session:'s',state,allowRecovery:true,terrain:{confirm(){phases.push('terrain');}},onError:error=>errors.push(error.message),onMutationPhase:event=>{phases.push(`${event.kind}:${event.phase}:${event.sequence}`);if(event.phase==='start'&&mode==='throw'||event.phase==='end'&&mode==='end-throw')throw Error('phase failed');if(event.phase==='start'&&mode==='reentrant')stream.acceptRecovery(publication);}});
+  try{if(mode==='ok'){stream.acceptRecovery(publication);assert.deepEqual(phases,['commit:start:1','terrain','commit:end:1']);assert.equal(stream.status().closed,false);}else{assert.throws(()=>stream.acceptRecovery(publication));assert.equal(stream.status().closed,true);assert.equal(phases[0],'commit:start:1');assert.equal(phases.at(-1),'commit:abort:1');assert.equal(errors.length,1);}}finally{stream.dispose();}
+ }
+});
+test('a failing end phase closes the stream before acknowledging a publication',()=>{
+ const state=fixture(),next=deserialize(serialize(state)),sent=[],errors=[],phases=[],port={postMessage:value=>sent.push(value),start(){},close(){}},stream=createConfirmedPresentationStream({port,session:'s',state,terrain:{confirm(){}},onError:error=>errors.push(error.message),onMutationPhase:({phase})=>{phases.push(phase);if(phase==='end')throw Error('end rejected');}});
+ try{port.onmessage({data:{kind:'publication',session:'s',publication:{session:'s',sequence:1,snapshot:serializeConfirmedState(next),events:[]}}});assert.equal(stream.status().closed,true);assert.deepEqual(phases,['start','end','abort']);assert.deepEqual(errors,['end rejected']);assert.equal(sent.some(message=>message.kind==='publicationAck'),false);}finally{stream.dispose();}
+});
 test('live journal resumes after a transient watering profile failure without dropping events',async()=>{
  const oldFetch=globalThis.fetch,oldBitmap=globalThis.createImageBitmap,paths=JSON.parse(readFileSync('public/content/watering-emitters.json')),libraries=JSON.parse(readFileSync('public/content/worker-actions.json')),catalogue=JSON.parse(readFileSync('public/content/vfx.json'));let attempts=0,now=0;
  globalThis.fetch=async url=>{if(String(url).includes('watering-emitters')&&++attempts===1)throw Error('offline');return {ok:true,json:async()=>String(url).includes('watering-emitters')?paths:String(url).includes('worker-actions')?libraries:catalogue,blob:async()=>new Blob(['x'])};};globalThis.createImageBitmap=async()=>({width:4096,height:2048,close(){}});
