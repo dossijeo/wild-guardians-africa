@@ -14,7 +14,7 @@ export function captureHistoricalGates(game,{maxChecks=100000}={}){
  const sample=()=>{try{const current=read();if(current.length!==initial.length||current.some((value,index)=>value.gate!==initial[index].gate||value.key!==initial[index].key))valid=false;}catch{valid=false;}};
  return {sample,certifyPhysicalBounds(physical,start,end){
   sample();if(!valid||physical?.complete!==true||!Array.isArray(physical.samples)||physical.samples[0]?.at!==start||physical.samples.at(-1)?.at!==end)return false;let checks=0;
-  for(const frame of physical.samples){if(!Array.isArray(frame.bounds)||frame.bounds.length!==1)return false;const box=frame.bounds[0];if(![box?.minX,box?.maxX,box?.minZ,box?.maxZ].every(Number.isFinite)||box.minX>box.maxX||box.minZ>box.maxZ)return false;const center={x:(box.minX+box.maxX)/2,z:(box.minZ+box.maxZ)/2},radius=Math.hypot((box.maxX-box.minX)/2,(box.maxZ-box.minZ)/2);for(const {polygon} of initial){if(++checks>maxChecks||sweptFootprintDistance(center,center,polygon)<=radius+1e-6)return false;}}
+  for(const frame of physical.samples){if(!Array.isArray(frame.bounds)||!frame.bounds.length||frame.bounds.length>128)return false;for(const box of frame.bounds){if(![box?.minX,box?.maxX,box?.minZ,box?.maxZ].every(Number.isFinite)||box.minX>box.maxX||box.minZ>box.maxZ)return false;const center={x:(box.minX+box.maxX)/2,z:(box.minZ+box.maxZ)/2},radius=Math.hypot((box.maxX-box.minX)/2,(box.maxZ-box.minZ)/2);for(const {polygon} of initial){if(++checks>maxChecks||sweptFootprintDistance(center,center,polygon)<=radius+1e-6)return false;}}}
   return true;
  },certify(peers,ticks,start,end){
   sample();if(!valid)return null;if(!initial.length)return 'none';let checks=0;

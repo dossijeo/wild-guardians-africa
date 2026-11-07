@@ -4,6 +4,13 @@ import {captureWorldMotion} from '../src/simulation/worker-world-motion.js';
 import {movePath,pathMotionClock} from '../src/simulation/locomotion.js';
 import {gateSwingPolygon} from '../src/world/gate-passages.js';
 
+test('capture emits multi-body evidence without changing state and revokes it across lifecycle changes',()=>{
+ const transform=x=>[x,0,0,0,0,0,1,1,1,1],actors=[{id:'a',species:'hyena',status:'entering',x:0,z:0,radius:.5},{id:'b',species:'hyena',status:'entering',x:10,z:0,radius:.5}],game={elapsed:0,workers:[],raid:{animals:actors},structures:[]},revision={topology:0,chunks:0,terrain:0,payloads:0};let active=true,step=1;
+ const options={includeHyenaSamples:false,spatialNavigation:{segmentClear:()=>true},readPhysicsPoses:()=>({at:game.elapsed,step,complete:true,poses:actors.map(a=>({actorId:a.id,active:true,root:transform(a.x),model:transform(0),bones:[]})),bounds:actors.map(a=>({actorId:a.id,minX:a.x-1,maxX:a.x+1,minZ:-1,maxZ:1}))})};
+ let capture=captureWorldMotion(game,()=>revision,()=>active,options);game.elapsed=.05;step++;capture.sampleTick();const before=JSON.stringify(game),trace=capture.finish();assert.equal(JSON.stringify(game),before);assert.deepEqual(trace.physicalIsolationEvidence,{version:2,actorIds:['a','b'],start:0,end:.05,actors:2});assert.equal(trace.separationEvidence.physicalGateBoundsChecked,true);assert.equal(trace.spatialEvidence.actors,2);
+ capture=captureWorldMotion(game,()=>revision,()=>active,options);game.elapsed=.1;step++;active=false;capture.sampleTick();const ended=capture.finish();assert.equal(ended.physicalIsolationEvidence,undefined);assert.equal(ended.physicsPoseSamples.complete,false);
+});
+
 test('inactive home/gone bodies retain identity but do not block visual certification inside buildings',()=>{
  const home={id:'home',x:0,z:0,status:'home',radius:.28},gone={id:'gone',x:0,z:0,status:'gone',species:'hyena',radius:.28},walking={id:'a',x:0,z:0,status:'walking',radius:.28,path:[{x:1,z:0}]},game={elapsed:0,workers:[home,walking],raid:{animals:[gone]},structures:[]},revisions={topology:0,chunks:0,terrain:0,payloads:0};let queries=0;
  const capture=captureWorldMotion(game,()=>revisions,()=>false,{spatialNavigation:{segmentClear(){queries++;return true;}}});game.elapsed=.05;movePath(walking,.05,null,pathMotionClock(walking,0,.05,1));capture.sampleTick();const result=capture.finish();

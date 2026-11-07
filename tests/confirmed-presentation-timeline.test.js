@@ -11,6 +11,24 @@ import {MessageChannel} from 'node:worker_threads';
 import {createMainSnapshotEncoder} from '../src/simulation/main-thread-snapshot-transport.js';
 import {createSimulationAuthority} from '../src/simulation/simulation-authority.js';
 const fixture=()=>deserialize(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString());
+test('uncertified multi-body contacts and recovery exit drain through confirmed boundaries without holding the timeline',()=>{
+ const state=fixture(),authority=deserialize(serialize(state)),start=state.elapsed,clock=createConfirmedPresentationClock(start),sent=[],seen=[],errors=[],events=[];
+ const animals=authority.raid.animals.slice(0,2);assert.equal(animals.length,2);
+ const transform=[0,0,0,0,0,0,1,1,1,1],pose=(actor,exit=false)=>({actorId:actor.id,active:true,root:transform,model:transform,bones:[],...(exit?{visualTransition:'recovery-exit'}:{})});
+ const port={postMessage:m=>sent.push(m),start(){},close(){}};
+ const stream=createConfirmedPresentationStream({port,session:'s',state,presentationClock:clock,timeline:{maxPublications:2,maxBytes:50000000,manualBoundaries:true},terrain:{ready:()=>true,confirm(){}},onError:error=>errors.push(error),onPhysics:poses=>seen.push([...poses.values()].map(p=>[p.actorId,p.visualTransition??'physical']))});
+ const stop=observePresentationGameEvents(state,event=>events.push(event.id));
+ try{
+  for(let sequence=1;sequence<=3;sequence++){
+   authority.elapsed=start+sequence;for(const animal of animals){if(sequence===1)animal.magicDown={phase:'falling',since:authority.elapsed,until:authority.elapsed+2};else delete animal.magicDown;}
+   emit(authority,'Test');const poses=sequence===3?[]:animals.map(a=>pose(a,sequence===2));
+   port.onmessage({data:{kind:'publication',session:'s',publication:{session:'s',sequence,elapsed:authority.elapsed,snapshot:serializeConfirmedState(authority),events:[authority.events.at(-1)],physicsPose:poses[0]??null,...(poses.length?{physicsPoses:poses}:{})}}});
+   assert.equal(stream.advanceNextTimelineBoundary(),true);assert.equal(clock.elapsed,authority.elapsed);assert.equal(stream.timelineStatus().pending,0);
+  }
+  assert.deepEqual(seen,[animals.map(a=>[a.id,'physical']),animals.map(a=>[a.id,'recovery-exit']),[]]);
+  assert.deepEqual(sent.filter(m=>m.kind==='publicationAck').map(m=>m.sequence),[1,2,3]);assert.equal(new Set(events).size,3);assert.deepEqual(errors,[]);assert.equal(stream.status().closed,false);
+ }finally{stop();stream.dispose();clock.dispose();}
+});
 test('recovery replays a projected real temporal publication and keeps the authority checkpoint complete',()=>{
  const state=fixture(),snapshot=serialize(state),wasm=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm')),keys=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)keys.push(`${x},${z}`);const authority=createSimulationAuthority(wasm,snapshot,keys,{observeWorldMotion:true,compactPresentationPaths:true}),clock=createConfirmedPresentationClock(state.elapsed),events=[],sent=[],errors=[],motion=[],port={postMessage:message=>sent.push(message),start(){},close(){}};
  const stream=createConfirmedPresentationStream({port,session:'s',state,presentationClock:clock,timeline:{maxPublications:2,maxBytes:50000000,manualBoundaries:true,replay:true},terrain:{ready:()=>true,confirm(){}},onError:error=>errors.push(error),onMotion:value=>motion.push(value)}),stop=observePresentationGameEvents(state,event=>events.push(event.id));
