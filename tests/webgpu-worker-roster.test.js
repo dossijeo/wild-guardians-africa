@@ -107,6 +107,24 @@ test('failed baked-walk loading or admission keeps the live worker rig',async()=
  }
 });
 
+test('a failed worker bake retries only after a confirmed status change and keeps the same rig',async()=>{
+ const worker={id:'a',profile:'youngMale',status:'walking'},state={workers:[worker]},errors=[],installs=[],actor={root:new Group(),update(){},dispose(){},async installBakedWalk(){installs.push('installed');return true;}},pending=[];let requests=0;
+ const roster=createWebGpuWorkerRoster({scene:{},residency:{},state,renderer:{backend:{isWebGPUBackend:true}},bakedWalkBank:{get(){requests++;if(requests===1)return Promise.reject(Error('offline'));return new Promise(resolve=>pending.push(resolve));}},assetBank:{dispose(){}},pipelineAdmission:{prepare:async()=>{}},createWorker:async()=>actor,onBakedWalkError:(_,error)=>errors.push(error.message)});
+ try{roster.sync();await flush();await flush();assert.equal(requests,1);assert.deepEqual(errors,['offline']);for(let i=0;i<5;i++)roster.sync();await flush();assert.equal(requests,1);worker.status='working';roster.sync();await flush();assert.equal(requests,2);worker.status='walking';roster.sync();await flush();assert.equal(requests,2);pending[0]({});await flush();await flush();assert.deepEqual(installs,['installed']);assert.equal(roster.get('a'),actor);worker.status='working';roster.sync();await flush();assert.equal(requests,2);}finally{roster.dispose();}
+});
+
+test('a removed worker cannot install a baked walk returned by a retry',async()=>{
+ const worker={id:'a',profile:'youngMale',status:'walking'},state={workers:[worker]},installed=[];let requests=0,finish;
+ const roster=createWebGpuWorkerRoster({scene:{},residency:{},state,renderer:{backend:{isWebGPUBackend:true}},bakedWalkBank:{get(){if(++requests===1)return Promise.reject(Error('offline'));return new Promise(resolve=>{finish=resolve;});}},assetBank:{dispose(){}},pipelineAdmission:{prepare:async()=>{}},createWorker:async()=>({root:new Group(),update(){},dispose(){},async installBakedWalk(){installed.push(true);return true;}})});
+ try{roster.sync();await flush();await flush();worker.status='working';roster.sync();await flush();assert.equal(requests,2);state.workers=[];roster.sync();finish({});await flush();assert.deepEqual(installed,[]);}finally{roster.dispose();}
+});
+
+test('a selected historical worker can retry an initially unavailable bake without replacing its rig',async()=>{
+ const scene=new Group(),clock=createConfirmedHistoricalClock({initialElapsed:1}),worker={id:'a',profile:'youngMale',status:'walking',x:0,z:0},state={workers:[worker]},root=new Group(),errors=[],installs=[];scene.add(root);let requests=0;
+ const roster=createWebGpuWorkerRoster({scene,residency:{},state,renderer:{backend:{isWebGPUBackend:true}},bakedWalkBank:{async get(){if(++requests===1)throw Error('offline');return {};}},assetBank:{dispose(){}},pipelineAdmission:{prepare:async()=>{}},experimentalHistoricalMotion:{actorIds:['a'],clock},createWorker:async()=>({root,update(){root.visible=true;},dispose(){root.removeFromParent();},async installBakedWalk(){installs.push(true);return true;}}),onBakedWalkError:(_,error)=>errors.push(error.message)});
+ try{roster.sync();for(let i=0;i<6;i++)await flush();assert.ok(errors.includes('offline'));assert.equal(requests,1);const actor=roster.get('a');assert.ok(actor);roster.sync();await flush();assert.equal(requests,1);worker.status='working';roster.sync();for(let i=0;i<3;i++)await flush();assert.equal(requests,2);assert.deepEqual(installs,[true]);assert.equal(roster.get('a'),actor);}finally{roster.dispose();clock.dispose();}
+});
+
 test('late selection prepares GPU motion on the published worker without replacing the rig',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),clock=createConfirmedHistoricalClock({initialElapsed:5}),geometry=new THREE.BoxGeometry(),material=new MeshBasicNodeMaterial(),state={workers:[{id:'late',profile:'unsupported',status:'walking',x:0,z:0,walkPhase:0}]},root=new THREE.Group(),bone=new THREE.Bone(),mesh=new THREE.Mesh(geometry,material);root.position.set(0,2.025,0);root.add(mesh,bone);scene.add(root);let finish,calls=0,updates=0,disposed=0;
  const renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:m=>m.clone()},compileAsync(object){assert.equal(object,root);if(++calls===1)return Promise.resolve();assert.notEqual(mesh.material,material);return new Promise(resolve=>{finish=resolve;});}},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),roster=createWebGpuWorkerRoster({scene,residency:{},state,renderer,assetBank:{dispose(){}},pipelineAdmission:admission,bakedWalkBank:{get:async()=>({})},experimentalHistoricalMotion:{actorIds:[],clock},createWorker:async()=>({root,update(){updates++;root.visible=true;},isBakedWalking:()=>false,dispose(){disposed++;root.removeFromParent();}})});
