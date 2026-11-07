@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {confirmedHistoricalParticipant} from '../src/rendering/confirmed-historical-participant.js';
 import {actorTickState} from '../src/simulation/worker-actor-tick-states.js';
-import {confirmedWalkingSamples} from '../src/rendering/confirmed-animation-samples.js';
+import {confirmedWalkingSamples,confirmedAnimalAttackSamples} from '../src/rendering/confirmed-animation-samples.js';
 
 test('ambient worker walking is accepted only while its mode and phase remain confirmed',()=>{
  for(const status of ['idle','waiting']){const worker={id:'w',profile:'youngMale',status,x:2,z:3,walkPhase:1,idleState:{mode:'walk'},path:[{x:4,z:3}]},start=actorTickState(worker,5),end={...start,at:5.1,x:2.1,walkPhase:1.1},path={actorId:'w',continuous:true,timed:true,startStatus:status,endStatus:status,start:{at:5,x:2,z:3},end:{at:5.1,x:2.1,z:3},segments:[{x0:2,z0:3,x1:2.1,z1:3}]},preview={start:5,end:5.1,trace:{actors:[path],actorTickStates:{complete:true,actors:[{actorId:'w',samples:[start,end]}]}}};
@@ -17,6 +17,12 @@ test('stationary fallback is bounded in real time rather than accelerated simula
 test('stationary running pose is held only while its confirmed phase is unchanged',()=>{
  const worker={id:'w',profile:'youngMale',status:'walking',running:true,runPhase:.4,x:2,z:3},path={actorId:'w',continuous:true,timed:true,startStatus:'walking',endStatus:'walking',start:{at:5,x:2,z:3},end:{at:5.1,x:2,z:3},segments:[]},samples=[actorTickState(worker,5),actorTickState(worker,5.1)],preview={start:5,end:5.1,clockSegments:{start:5,end:5.1,complete:true,segments:[{realDuration:.1,rate:1}]},trace:{actors:[path],actorTickStates:{complete:true,actors:[{actorId:'w',samples}]}}};
  assert.equal(confirmedHistoricalParticipant(preview,'w',worker,'worker'),'stationary');samples[1].runPhase=.5;assert.equal(confirmedHistoricalParticipant(preview,'w',worker,'worker'),null);
+});
+
+test('a stationary animal attack requires the same confirmed attack and uninterrupted phase',()=>{
+ const animal={id:'a',species:'hyena',status:'attacking',animation:'Weapon_Combo',attackId:'attack-1',attackDuration:2,attackRemaining:1.5,x:2,z:3,heading:0},path={actorId:'a',continuous:true,timed:true,startStatus:'attacking',endStatus:'attacking',start:{at:5,x:2,z:3},end:{at:5.1,x:2,z:3},segments:[]},first=actorTickState(animal,5),last={...first,at:5.1,attackRemaining:1.4},preview={start:5,end:5.1,clockSegments:{start:5,end:5.1,complete:true,segments:[{realDuration:.1,rate:1}]},trace:{actors:[path],actorTickStates:{complete:true,actors:[{actorId:'a',samples:[first,last]}]}}};
+ assert.equal(confirmedHistoricalParticipant(preview,'a',animal,'animal'),'stationary');assert.deepEqual(confirmedAnimalAttackSamples(preview,'a',animal),[{at:5,phase:.5},{at:5.1,phase:2-1.4}]);
+ for(const [key,bad] of [['attackId','another'],['animation','Weapon_Combo_2'],['attackRemaining',0],['attackRemaining',1.6],['falling',true],['heading',1],['x',4]]){const before=last[key];last[key]=bad;assert.equal(confirmedHistoricalParticipant(preview,'a',animal,'animal'),null,key);assert.equal(confirmedAnimalAttackSamples(preview,'a',animal),null,key);last[key]=before;}
 });
 
 
