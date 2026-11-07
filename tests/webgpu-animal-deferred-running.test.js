@@ -41,3 +41,15 @@ test('an abort without a new availability transition does not cause an automatic
  const roster=createWebGpuAnimalRoster({scene:{},residency:{},state,assetBank:{tick(){},dispose(){}},pipelineAdmission:{prepare:async()=>{}},bakedAttackBank:{async get(){return {};}},createAnimal:()=>({root:new Group(),update(){this.root.visible=true;},installBakedAttack(){calls++;return Promise.reject(new DOMException('cancelled','AbortError'));},dispose(){}})});
  try{roster.sync();for(let i=0;i<4;i++)await turn();assert.equal(calls,1);}finally{roster.dispose();}
 });
+
+for(const mode of ['walk','run'])test(`${mode} admission retries when a physical pose ends before cancellation settles`,async()=>{
+ const animal={id:'a',species:'hyena',status:mode==='run'?'retreating':'walking'},state={raid:{animals:[animal]}},calls=[];let physical=false,rejectFirst,attempts=0;
+ const install=(_bake,{isCurrent})=>{calls.push('prepare');if(++attempts===1)return new Promise((_resolve,reject)=>{rejectFirst=reject;});assert.equal(isCurrent(),true);return Promise.resolve(true);},bank={async get(){calls.push('load');return {};}},roster=createWebGpuAnimalRoster({scene:{},residency:{},state,assetBank:{tick(){},dispose(){}},pipelineAdmission:{prepare:async()=>{}},...(mode==='walk'?{bakedWalkBank:bank}:{bakedRunBank:bank}),createAnimal:()=>({root:new Group(),update(){this.root.visible=true;},isPhysical:()=>physical,...(mode==='walk'?{installBakedWalk:install}:{installBakedRun:install}),dispose(){}})});
+ try{roster.sync();await turn();await turn();assert.deepEqual(calls,['load','prepare']);physical=true;roster.sync();physical=false;roster.sync();rejectFirst(new DOMException('cancelled','AbortError'));await turn();await turn();assert.deepEqual(calls,['load','prepare','prepare']);}finally{roster.dispose();}
+});
+
+for(const mode of ['walk','run'])test(`${mode} admission does not loop after an abort without a new availability transition`,async()=>{
+ const animal={id:'a',species:'hyena',status:mode==='run'?'retreating':'walking'},state={raid:{animals:[animal]}};let attempts=0;
+ const install=()=>{attempts++;return Promise.reject(new DOMException('cancelled','AbortError'));},bank={async get(){return {};}},roster=createWebGpuAnimalRoster({scene:{},residency:{},state,assetBank:{tick(){},dispose(){}},pipelineAdmission:{prepare:async()=>{}},...(mode==='walk'?{bakedWalkBank:bank}:{bakedRunBank:bank}),createAnimal:()=>({root:new Group(),update(){this.root.visible=true;},...(mode==='walk'?{installBakedWalk:install}:{installBakedRun:install}),dispose(){}})});
+ try{roster.sync();for(let i=0;i<4;i++)await turn();assert.equal(attempts,1);}finally{roster.dispose();}
+});

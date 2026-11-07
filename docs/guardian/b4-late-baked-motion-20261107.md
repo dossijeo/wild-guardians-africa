@@ -41,3 +41,10 @@ está cancelando, el roster conserva esa transición y vuelve a solicitar la
 acción vigente al finalizar la cancelación. Sin una nueva transición no realiza
 reintentos automáticos en bucle. Las pruebas simulan ambas carreras; quedan
 pendientes la ejecución en dispositivo y la continuidad visual.
+
+La misma barrera de disponibilidad protege ahora la admisión tardía de marcha
+y carrera: si una caída terminó antes de finalizar la cancelación anterior, se
+reutiliza el recurso descargado y se vuelve a solicitar la instalación. Las
+pruebas cubren las dos acciones y verifican que un aborto sin otra transición
+no genere un bucle. No se ha validado la continuidad en GPU real ni medido un
+ahorro de tiempo de fotograma.
