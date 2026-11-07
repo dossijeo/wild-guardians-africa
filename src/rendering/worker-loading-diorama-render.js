@@ -7,6 +7,7 @@ import {createWebGpuPipelineAdmission} from './webgpu-pipeline-admission.js';
 import {createWebGpuLoadingBackdrop} from './webgpu-loading-backdrop.js';
 import {createWebGpuLoadingMist} from './webgpu-loading-mist.js';
 import {createWebGpuLoadingSparkles} from './webgpu-loading-sparkles.js';
+import {createWebGpuLoadingSoil} from './webgpu-loading-soil.js';
 
 let renderer,scene,camera,ground,roster,sky,backdrop,mist,sparkles,admission,soil,bitmap,closed=false,lastSize='',visibleReady=false;
 const state={plants:[],elapsed:0,day:1,time:0,biome:'sabana'};
@@ -14,8 +15,8 @@ function error(error){if(!closed)postMessage({kind:'error',message:String(error?
 async function initialize(canvas){
  renderer=new WebGPURenderer({canvas,antialias:false});await renderer.init();if(closed)return;if(!renderer.backend?.isWebGPUBackend)throw Error('WebGPU loading renderer unavailable');
  scene=new THREE.Scene();scene.background=new THREE.Color('#b8c4bf');camera=new THREE.PerspectiveCamera(40,1,.1,80);const sun=new THREE.DirectionalLight('#ffe2a8',3);sun.position.set(-30,55,25);scene.add(sun,new THREE.HemisphereLight('#ebf1d9','#765b3b',2));
- const placeholder=new OffscreenCanvas(1,1);placeholder.getContext('2d').fillStyle='#fff';placeholder.getContext('2d').fillRect(0,0,1,1);soil=new THREE.Texture(placeholder);soil.wrapS=soil.wrapT=THREE.RepeatWrapping;soil.repeat.set(3,3);soil.colorSpace=THREE.SRGBColorSpace;soil.flipY=false;soil.needsUpdate=true;
- ground=new THREE.Mesh(new THREE.PlaneGeometry(15,15,32,32),new THREE.MeshStandardMaterial({color:'#a59b8d',roughness:1,map:soil}));ground.rotation.x=-Math.PI/2;ground.position.y=.09;ground.visible=false;ground.updateMatrixWorld(true);scene.add(ground);
+ const placeholder=new OffscreenCanvas(1,1);placeholder.getContext('2d').fillStyle='#fff';placeholder.getContext('2d').fillRect(0,0,1,1);soil=new THREE.Texture(placeholder);soil.wrapS=soil.wrapT=THREE.RepeatWrapping;soil.flipY=false;soil.needsUpdate=true;
+ ground=new THREE.Mesh(new THREE.PlaneGeometry(15,15,32,32),createWebGpuLoadingSoil(soil));ground.rotation.x=-Math.PI/2;ground.position.y=.09;ground.visible=false;ground.updateMatrixWorld(true);scene.add(ground);
  admission=createWebGpuPipelineAdmission({renderer,scene,camera,onFatal:error,includeShadowPass:false});sky=createWebGpuNativeSky({scene,pipelineAdmission:admission,onError:error});
  mist=createWebGpuLoadingMist({scene,camera,admission,onError:error});
  sparkles=createWebGpuLoadingSparkles({scene,admission,onError:error});
