@@ -18,3 +18,8 @@ test('only a current standing actor may own a confirmed recovery exit',()=>{
  ])assert.throws(()=>confirmedAnimalPoses({physicsPose:pose},state));
  assert.throws(()=>confirmedAnimalPoses({physicsPose:{...transition,visualTransition:undefined}},snapshot),/lacks active animal/);
 });
+
+test('omitting inactive animals preserves all active physical and recovery poses',()=>{
+ const inactive={actorId:'b',active:false,root:transform(0),model:transform(0),bones:[]},fall={actorId:'c',active:true,root:transform(2),model:transform(0),bones:[]},state={raid:{animals:[{id:'a',status:'walking'},{id:'b',status:'walking'},{id:'c',status:'walking',magicDown:{phase:'falling'}}]}},all=[inactive,transition,fall],active=[transition,fall];
+ assert.deepEqual([...confirmedAnimalPoses({physicsPose:all[0],physicsPoses:all},state)],[...confirmedAnimalPoses({physicsPose:active[0],physicsPoses:active},state)]);
+});

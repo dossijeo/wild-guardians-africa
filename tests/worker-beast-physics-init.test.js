@@ -5,6 +5,7 @@ import {BufferGeometry,Material,Skeleton} from 'three';
 import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
 import {createWorkerBeastPhysics} from '../src/simulation/worker-beast-physics.js';
 import {BeastRecoveryExit} from '../src/rendering/beast-recovery-exit.js';
+import {confirmedAnimalPoses} from '../src/rendering/confirmed-animal-poses.js';
 
 test('failed worker physics initialization releases each rig resource once',async()=>{
  const originalFetch=globalThis.fetch,types=[BufferGeometry,Material,Skeleton],originalDispose=types.map(type=>type.prototype.dispose),disposals=new Map();
@@ -50,9 +51,11 @@ test('a recovery exit is published as visual pose until its existing blend ends'
  try{
   physics=await createWorkerBeastPhysics(game,{actorSurface:()=>0},{actorIds:[animal.id]});
   const rig=physics.manager.world.mixers.get(animal.id),root=physics.manager.world.objects.get(animal.id);root.position.set(animal.x,0,animal.z);root.updateMatrixWorld(true);
+  const inactive=physics.poses();assert.equal(inactive.length,1);assert.equal(inactive[0].active,false);assert.deepEqual(physics.poses({activeOnly:true}),[]);assert.deepEqual([...confirmedAnimalPoses({physicsPose:inactive[0]},game)],[...confirmedAnimalPoses({physicsPose:null},game)]);
   rig.recoveryExit=new BeastRecoveryExit(rig.model,game.elapsed);
   assert.equal(physics.hasVisualTransition(),true);
   const initial=physics.poses({activeOnly:true});assert.equal(initial.length,1);assert.equal(initial[0].actorId,animal.id);assert.equal(initial[0].active,true);assert.equal(initial[0].visualTransition,'recovery-exit');assert.equal(initial[0].root[0],animal.x);assert.equal(initial[0].root[2],animal.z);
+  const full=physics.poses();assert.deepEqual([...confirmedAnimalPoses({physicsPose:initial[0]},game)],[...confirmedAnimalPoses({physicsPose:full[0]},game)]);
   game.elapsed+=.31;assert.deepEqual(physics.poses({activeOnly:true}),[]);assert.equal(rig.recoveryExit,undefined);assert.equal(physics.hasVisualTransition(),false);
  }finally{physics?.dispose();globalThis.fetch=originalFetch;}
 });
