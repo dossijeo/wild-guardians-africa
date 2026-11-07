@@ -40,3 +40,7 @@ for(const kind of ['harvest','crate'])test(`${kind} requires unchanged confirmed
  last.taskId='other';assert.equal(check(),null);last.taskId='t';last.recoveryExiting=true;assert.equal(check(),null);last.recoveryExiting=false;
  tasks[0].kind='water';assert.equal(check(),null);tasks[0].kind=kind;worker.actionRemaining=1.9;assert.equal(check(),null);
 });
+
+test('gate idle requires a stationary and uninterrupted confirmed wait',()=>{
+ for(const status of ['walking','returning','fleeing']){const worker={id:'w',profile:'youngMale',status,gateWaiting:true,running:false,x:2,z:3,walkPhase:1,path:[{x:4,z:3}]},first=actorTickState(worker,5),last={...first,at:5.1},path={actorId:'w',continuous:true,timed:true,startStatus:status,endStatus:status,start:{at:5,x:2,z:3},end:{at:5.1,x:2,z:3},segments:[]},preview={start:5,end:5.1,clockSegments:{start:5,end:5.1,complete:true,segments:[{realDuration:.1,rate:1}]},trace:{actors:[path],actorTickStates:{complete:true,actors:[{actorId:'w',samples:[first,last]}]}}};assert.equal(confirmedHistoricalParticipant(preview,'w',worker,'worker'),'stationary');for(const [key,bad] of [['gateWaiting',false],['running',true],['falling',true],['x',2.1]]){const old=last[key];last[key]=bad;assert.equal(confirmedHistoricalParticipant(preview,'w',worker,'worker'),null,key);last[key]=old;}worker.recoveryExitRemaining=.1;assert.equal(confirmedHistoricalParticipant(preview,'w',worker,'worker'),null);}
+});
