@@ -12,6 +12,8 @@ El reloj de presentación puede avanzar dentro de un intervalo ya confirmado, mi
 - Cuando el propietario global usa `deferHandoff`, `finishHistoricalMotion` conserva la fase animal hasta `afterCommit`. El pump invoca el callback tras confirmar y verificar la frontera; la reproducción de eventos lo invoca tras cada commit intermedio o final. Un fallo de commit no libera la fase. La liberación global de recursos y la reconciliación de un abort parcial todavía no están cubiertas por este contrato.
 - `cancelHistoricalEvents` solo descarta la transacción antes de su primera frontera. Tras una frontera aplicada, falla y cierra el flujo; no ofrece un commit arbitrario intermedio. La invalidación y recuperación son responsabilidad del propietario global, no de una sola roster.
 
+Si una continuación recién instalada deja de ser válida antes de que avance su reloj, la reproducción cancela únicamente esa instalación, conserva el límite de la frontera ya confirmada y vuelve a preparar el subtramo. Las pruebas cubren reintentos sin repetir eventos y la cancelación y reinstalación en una roster real con componentes gráficos simulados. Esto no resuelve una interrupción después de haber avanzado ni demuestra continuidad visual en WebGPU.
+
 ## Interfaz necesaria para una integración segura
 
 El propietario de la transacción debe mantener vivos reloj, fase, trayectoria, rig y recursos del bake mientras exista una presentación retenida. El handoff debe estar coordinado entre todas las rosters y efectos:
