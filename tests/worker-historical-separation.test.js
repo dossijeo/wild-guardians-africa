@@ -7,6 +7,15 @@ test('continuous body separation rejects crossing trajectories and stationary bo
  assert.equal(certify([actor('a',-1,0,1,0),actor('b',0,0,0,0)],0,1),false);
  assert.equal(certify([actor('a',-1,0,1,0),actor('b',0,1,0,1)],0,1),true);
 });
+test('existing overlaps may escape only by continuous separation and without re-entry',()=>{
+ const options={allowExistingSeparation:true};
+ assert.equal(certify([actor('a',0,0,-.3,0),actor('b',.2,0,.5,0)],0,1),false);
+ assert.equal(certify([actor('a',0,0,-.3,0),actor('b',.2,0,.5,0)],0,1,options),true);
+ assert.equal(certify([actor('a',0,0,0,0),actor('b',.2,0,.2,0)],0,1,options),false);
+ assert.equal(certify([actor('a',0,0,.3,0),actor('b',.2,0,-.3,0)],0,1,options),false);
+ assert.equal(certify([actor('a',-1,0,1,0),actor('b',0,0,0,0)],0,1,options),false);
+ const a=actor('a',0,0,0,0),b=actor('b',.2,0,.3,0);b.segments=[{t0:0,t1:.5,x0:.2,z0:0,x1:.6,z1:0},{t0:.5,t1:1,x0:.6,z0:0,x1:.3,z1:0}];assert.equal(certify([a,b],0,1,options),false);
+});
 test('rejects discontinuous, untimed and over-budget traces',()=>{
  const a=actor('a',0,0,1,0),b=actor('b',0,2,1,2);a.segments[0].x0=2;assert.equal(certify([a,b],0,1),false);a.segments[0].x0=0;a.timed=false;assert.equal(certify([a,b],0,1),false);a.timed=true;assert.equal(certify([a,b],0,1,{maxComparisons:0}),false);
 });
