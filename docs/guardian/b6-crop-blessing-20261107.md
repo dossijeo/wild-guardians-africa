@@ -5,3 +5,5 @@ Los lotes de cultivos y sus puentes de crecimiento utilizan parámetros por inst
 Las pruebas cubren instancias, recuperación, generación WGSL y composición con la textura y nodos de color previos. No demuestran paridad perceptiva ni coste en una GPU real. El adorno de murallas bendecidas y la comparación visual integrada siguen pendientes.
 
 Actualización: el material compartido de murallas ya incluye el adorno de vid y el resaltado de selección descritos en [la integración de selección](b6-wall-awakening-selection-20261107.md). La comparación visual integrada y la medición del coste siguen pendientes.
+
+Actualización: la selección de Despertar también llega a los lotes y puentes de cultivos en WebGPU. Se resalta cada cultivo confirmado, vivo y no bendecido; el objetivo provisional recibe un realce mayor, sin modificar el estado autoritativo. Los cultivos provisionales aún no confirmados quedan excluidos. El estado de selección se aplica también durante la inicialización y tras cambiar de fase de crecimiento, modificando únicamente el atributo por instancia. La paridad visual en partida sigue pendiente de la validación integrada de la fase C.
