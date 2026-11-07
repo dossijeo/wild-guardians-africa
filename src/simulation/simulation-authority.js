@@ -1,6 +1,7 @@
 import {createHistoricalEventBoundaryCapture} from './historical-event-boundaries.js';
 import {createTutorialGuideRevision} from './tutorial-guide-revision.js';
 import {captureMudInputs} from './mud-terrain-input.js';
+import {captureSpatialFarState} from '../world/wild-engine/spatial-far-state.js';
 import {observeSettlements} from './settlement-observers.js';
 import {createPresentationLifecycleJournal} from './presentation-lifecycle.js';
 import {deserialize} from '../persistence/snapshots.js';
@@ -108,6 +109,11 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   function setGuardianTerrainEpoch(epoch,manifest=null){if(closed||epoch!==null&&(typeof epoch!=='string'||!epoch)||manifest!==null&&(manifest?.epoch!==epoch||!Array.isArray(manifest.chunks)))throw TypeError('Invalid guardian terrain epoch');guardianTerrainEpoch=epoch;guardianTerrainManifest=manifest===null?null:structuredClone(manifest);}
   return {
    setGuardianMetadata,setGuardianMetadataFailure,setGuardianTerrainEpoch,setGuardianMetadataForQa:setGuardianMetadata,setGuardianTerrainEpochForQa:setGuardianTerrainEpoch,farVisualRevision:()=>session.core.farVisualRevision(),
+   captureFarVisualState(){
+    if(closed||physicsInitializing)throw Error('Far visual snapshot unavailable');
+    const snapshot=captureSpatialFarState(session.core);
+    return {sequence,elapsed:game.elapsed,revision:snapshot.revision,snapshot};
+   },
    // This is a read-only visual query at an exact committed authority
    // boundary. The caller must discard it if a later world revision arrives.
    queryFarVisualChunk({cx,cz,slots=[0,1,2,3],expectedSequence,expectedRevision=null}={}){
