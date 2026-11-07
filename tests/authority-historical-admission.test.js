@@ -40,7 +40,9 @@ test('native raid publications reach the autonomous consumer without changing si
   for(let sequence=2;sequence<=9;sequence++){
    const command={kind:'advance',sequence,seconds:.025,steps:2,nightFastForward:false,captureClockSegments:true},a=baseline.execute(command),b=observed.execute(command);
    assert.equal(b.snapshot,a.snapshot);assert.deepEqual(b.events,a.events);assert.ok(b.worldMotionTrace.separationEvidence);
-   b.worldMotionTrace.terrainManifest={epoch,chunks:[...chunks.values()]};port.onmessage({data:{kind:'publication',session:'a6',publication:{...b,session:'a6'}}});assert.deepEqual(errors,[]);
+   // Real publications arrive as separate Worker tasks, allowing pending
+   // resource admissions to settle between consecutive boundaries.
+   await new Promise(r=>setImmediate(r));b.worldMotionTrace.terrainManifest={epoch,chunks:[...chunks.values()]};port.onmessage({data:{kind:'publication',session:'a6',publication:{...b,session:'a6'}}});assert.deepEqual(errors,[]);
    const preview=stream.previewNextMotionBoundary();assert.deepEqual(preview.reasons,['visual-time-and-support-unverified']);feed.offerPreview(preview,stream.status());const support=feed.getPreviewSupport();assert.ok(support,'native terrain support');const aReady=animals.prepareHistoricalMotion(preview,support),wReady=workers.prepareHistoricalMotion(preview,support);assert.equal(aReady.ok,true,JSON.stringify(aReady));assert.equal(wReady.ok,true,JSON.stringify(wReady));
    assert.ok(group.certify(structuredClone(preview),stream.status()),'group certificate');
    const before=[...roots.values()].map(root=>root.position.toArray()),count=updates;
