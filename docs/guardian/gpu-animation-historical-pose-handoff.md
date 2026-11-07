@@ -1,6 +1,6 @@
 # Handoff de animación al confirmar una frontera
 
-Estado: pendiente. La ampliación de `Walking` a animales `waiting` con ruta no se activa; la ruta existente conserva su presentación CPU. La existencia de `path` no prueba que haya desplazamiento.
+Estado: cierre de fase animal conectado al commit de frontera; retención global ante abort y la activación nueva siguen pendientes. La ampliación de `Walking` a animales `waiting` con ruta no se activa; la ruta existente conserva su presentación CPU. La existencia de `path` no prueba que haya desplazamiento.
 
 El reloj de presentación puede avanzar dentro de un intervalo ya confirmado, mientras el estado aplicado en el receptor sigue en su frontera inicial. La evidencia de ticks y trayectoria permite reproducir ese intervalo, pero no proporciona un estado completo de simulación aplicable en cualquier instante intermedio.
 
@@ -9,7 +9,7 @@ El reloj de presentación puede avanzar dentro de un intervalo ya confirmado, mi
 - `createConfirmedHistoricalMotionGroup.start` instala de forma síncrona animales, trabajadores y efectos; si falla otro participante, llama a `cancelHistoricalMotion` de los ya instalados. Este rollback solo es seguro antes de avanzar el reloj.
 - `confirmed-historical-clock.cancelAtStart` y `confirmed-gpu-motion.cancelAtStart` rechazan la cancelación después del inicio. `invalidate` detiene el reloj en el instante alcanzado. `abandonForBoundary` exige que el flujo confirme el extremo antes del siguiente dibujo.
 - `webgpu-animal-roster.abortHistoricalMotion` marca el tramo inválido y limita la trayectoria GPU con `motion.hold(clock.elapsed)`. La fase sigue dependiendo del reloj detenido. Esto no transfiere su propiedad a un nuevo ciclo ni garantiza su supervivencia a la liberación de la roster, el reloj, la fase o los recursos del bake.
-- `finishHistoricalMotion` restablece la fase antes de `advanceNextTimelineBoundary` o `advanceHistoricalEvent`. No existe un callback de commit de frontera para transferir atómicamente la propiedad de la pose; el estado del receptor aún puede ser el inicial durante `finish`.
+- Cuando el propietario global usa `deferHandoff`, `finishHistoricalMotion` conserva la fase animal hasta `afterCommit`. El pump invoca el callback tras confirmar y verificar la frontera; la reproducción de eventos lo invoca tras cada commit intermedio o final. Un fallo de commit no libera la fase. La liberación global de recursos y la reconciliación de un abort parcial todavía no están cubiertas por este contrato.
 - `cancelHistoricalEvents` solo descarta la transacción antes de su primera frontera. Tras una frontera aplicada, falla y cierra el flujo; no ofrece un commit arbitrario intermedio. La invalidación y recuperación son responsabilidad del propietario global, no de una sola roster.
 
 ## Interfaz necesaria para una integración segura
