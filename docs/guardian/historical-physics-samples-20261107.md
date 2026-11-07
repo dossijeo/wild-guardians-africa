@@ -1,5 +1,13 @@
 # Muestras históricas de física autoritativa
 
+El harness admite `QA_INPUT_MODE=id` para introducir un objetivo por ID a través
+del `onPick` habitual, obtener el contexto del guardián del Worker gráfico y
+someter la acción a la validación de la autoridad. No modifica el snapshot, la
+política Rapier ni las condiciones de admisión histórica. Este modo aísla la
+validación física de la selección por píxel: **no acredita que el clic funcione**.
+El modo predeterminado sigue siendo `pointer`. Los informes identifican el modo
+y, al terminar, incluyen el último diagnóstico de soporte de terreno disponible.
+
 La autoridad puede adjuntar a `worldMotionTrace.physicsPoseSamples` poses de ragdoll Rapier tomadas después de pasos completos de simulación. Cada muestra indica tiempo y contador de paso; una transición, un subpaso omitido, más de 128 muestras o una pose que no pueda extraerse con seguridad produce un resultado incompleto. La lectura restaura el binding y el rig. La física baked, las recuperaciones y las transiciones de salida siguen explícitamente fuera de este contrato.
 
 Se registran envolventes horizontales conservadoras de los colliders: una esfera independiente de la rotación por cada casco convexo o cápsula, ampliada por el contact skin. `physicalIsolationEvidence` solo se emite para un ragdoll cuando la unión de estas envolventes en las muestras queda separada de todos los trayectos de los demás actores, ampliados por sus radios de navegación. La prueba es para mantener cada pose discreta hasta el siguiente paso; no acredita interpolación articular ni que los radios de navegación cubran toda la malla visual.
