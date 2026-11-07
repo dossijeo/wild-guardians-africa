@@ -14,6 +14,11 @@ import {createConfirmedHistoricalClock} from '../src/rendering/confirmed-histori
 import {MeshBasicNodeMaterial} from 'three/webgpu';
 import {actorTickState} from '../src/simulation/worker-actor-tick-states.js';
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
+test('incapacitated worker requests the matching existing bake after physical recovery',async()=>{
+ const worker={id:'w',profile:'youngMale',status:'incapacitated',incapacitated:true,running:false},state={workers:[worker],tasks:[]},loads=[],installs=[];
+ const roster=createWebGpuWorkerRoster({scene:new Group(),residency:{},state,renderer:{backend:{isWebGPUBackend:true}},assetBank:{dispose(){}},pipelineAdmission:{prepare:async()=>{}},bakedIdleBank:{get:async()=>{loads.push('Idle');return {};}},bakedRunBank:{get:async()=>{loads.push('Run');return {};}},createWorker:async()=>({root:new Group(),update(){},installBakedIdle:async()=>{installs.push('Idle');return true;},installBakedRun:async()=>{installs.push('Run');return true;},dispose(){}})});
+ try{roster.sync();for(let i=0;i<5;i++)await flush();assert.deepEqual(loads,['Idle']);assert.deepEqual(installs,['Idle']);worker.running=true;roster.sync();for(let i=0;i<5;i++)await flush();assert.deepEqual(loads,['Idle','Run']);assert.deepEqual(installs,['Idle','Run']);}finally{roster.dispose();}
+});
 test('worker walking download recovers without a state change and retains its rig',async()=>{
  const state={workers:[{id:'w',profile:'youngMale',status:'walking'}],tasks:[]},root=new Group();let requests=0,installed=0,created=0;
  const roster=createWebGpuWorkerRoster({scene:new Group(),residency:{},state,renderer:{backend:{isWebGPUBackend:true}},assetBank:{dispose(){}},walkRetryDelay:30,pipelineAdmission:{prepare:async()=>{}},bakedWalkBank:{get(){return ++requests===1?Promise.reject(Error('temporary')):Promise.resolve({});}},createWorker:async()=>{created++;return {root,update(){root.visible=true;},installBakedWalk:async()=>{installed++;return true;},dispose(){}};}});
