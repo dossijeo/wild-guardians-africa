@@ -18,5 +18,5 @@ test('disposing a pending mist prevents a late publication',async()=>{
 });
 test('analytic mist produces WGSL for its screen quad and night variation',async()=>{
  const f=fixture();await tick();const mesh=f.jobs[0].mesh,canvas={width:1,height:1,style:{},addEventListener(){},removeEventListener(){},getContext(){return null;}},renderer=new WebGPURenderer({canvas});renderer.hasFeature=()=>true;
- try{const builder=renderer.backend.createNodeBuilder(mesh,renderer);builder.scene=f.scene;builder.camera=f.camera;builder.build();assert.match(builder.vertexShader,/fn main/);assert.match(builder.fragmentShader,/smoothstep/);}finally{f.mist.dispose();f.releases[0].release();}
+ try{const builder=renderer.backend.createNodeBuilder(mesh,renderer);builder.scene=f.scene;builder.camera=f.camera;builder.build();assert.match(builder.vertexShader,/fn main/);assert.match(builder.fragmentShader,/smoothstep/);assert.match(builder.fragmentShader,/exp\(/);assert.match(builder.fragmentShader,/fract\(/);assert.match(builder.fragmentShader,/floor\(/);}finally{f.mist.dispose();f.releases[0].release();}
 });
