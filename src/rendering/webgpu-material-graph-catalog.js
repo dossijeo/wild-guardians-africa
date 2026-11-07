@@ -116,6 +116,12 @@ export function mangroveGroundRecipe({textures,scale,normalBoost,light=null,shad
  return Object.freeze({structural,dynamic:Object.freeze(['night','sunDirection','atlasContents','environmentContents','environmentBlend']),passes:Object.freeze({color:'mangrove-ground-output',depth:'color-pass',shadow:'terrain-mesh-does-not-cast'}),key:JSON.stringify(structural)});
 }
 
+export function volcanicGroundRecipe({relief,...options}={}){
+ if(!Number.isFinite(relief))throw TypeError('Invalid volcanic ground relief');
+ const base=mangroveGroundRecipe(options),structural=Object.freeze({...base.structural,family:'volcanic-ground',relief,attributes:Object.freeze(['position','normal'])});
+ return Object.freeze({structural,dynamic:Object.freeze([...base.dynamic,'chunkMask','chunkOrigin']),passes:Object.freeze({color:'volcanic-ground-output',depth:'color-pass',shadow:'terrain-mesh-does-not-cast'}),key:JSON.stringify(structural)});
+}
+
 const bakedDynamic=Object.freeze(['phaseOffset','clockWeight','bind','inverse','duration','sampleRate','frames','lastSample']);
 export function bakedWalkRecipe({texture,clock=false,phaseSource=false}={}){if(!texture?.isDataTexture||typeof clock!=='boolean'||typeof phaseSource!=='boolean')throw TypeError('Invalid baked walk recipe');const shape=textureStructure(texture),structural=Object.freeze({family:'baked-walk',textureId:texture.uuid,texture:shape,clock,phaseSource,attributes:Object.freeze(['skinIndex:uvec4','skinWeight:vec4'])});return Object.freeze({structural,dynamic:bakedDynamic,passes:inheritedPasses,key:JSON.stringify([structural.family,texture.uuid,...textureKey(shape),clock,phaseSource])});}
 
