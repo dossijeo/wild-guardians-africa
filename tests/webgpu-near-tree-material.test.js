@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {MeshStandardNodeMaterial,WebGPURenderer} from 'three/webgpu';
-import {configureWebGpuNearTree} from '../src/rendering/webgpu-near-tree-material.js';
+import {configureWebGpuNearTree,setNearTreeInstanceBounds} from '../src/rendering/webgpu-near-tree-material.js';
 import {biomeSurfaceRecipe} from '../src/rendering/webgpu-material-graph-catalog.js';
 import {createWebGpuBiomeProps} from '../src/rendering/webgpu-biome-props.js';
 import {readFile} from 'node:fs/promises';
@@ -11,6 +11,21 @@ test('near tree graph keeps alpha map and blends original and detailed color and
  const original=new THREE.Texture(),near=new THREE.Texture(),originalPacked=new THREE.Texture(),nearPacked=new THREE.Texture(),material=new MeshStandardNodeMaterial({map:near,roughnessMap:nearPacked,metalnessMap:nearPacked}),geometry=new THREE.PlaneGeometry(),canvas={width:1,height:1,style:{},addEventListener(){},removeEventListener(){},getContext(){return null;}},renderer=new WebGPURenderer({canvas});renderer.hasFeature=()=>true;near.channel=nearPacked.channel=1;
  try{geometry.setAttribute('uv1',geometry.attributes.uv.clone());configureWebGpuNearTree(material,{originalColor:original,originalPacked,nearPacked,blendStart:18,blendEnd:26});const builder=renderer.backend.createNodeBuilder(new THREE.Mesh(geometry,material),renderer);builder.scene=new THREE.Scene();builder.camera=new THREE.PerspectiveCamera();builder.build();assert.equal(material.map,near);assert.ok(material.colorNode&&material.roughnessNode&&material.metalnessNode);assert.match(builder.fragmentShader,/smoothstep/);assert.match(builder.fragmentShader,/textureSample/);assert.match(builder.fragmentShader,/18\.0/);assert.match(builder.fragmentShader,/26\.0/);assert.match(builder.vertexShader,/uv1/);}
  finally{geometry.dispose();material.dispose();for(const item of [original,near,originalPacked,nearPacked])item.dispose();}
+});
+
+test('instance centre and radius agree with authored bounds after chunk and parent transforms',()=>{
+ const bounds=new THREE.Box3(new THREE.Vector3(-4,-2,-3),new THREE.Vector3(4,10,3)),item={x:105,y:2,z:-57,yaw:.7,sx:2,sy:1.5,sz:.5},attribute=new THREE.InstancedBufferAttribute(new Float32Array(4),4);setNearTreeInstanceBounds(attribute,0,item,bounds,2,-1);
+ const parent=new THREE.Matrix4().makeTranslation(-300,4,200),chunk=new THREE.Matrix4().makeTranslation(96,0,-48),instance=new THREE.Object3D();instance.position.set(item.x-96,item.y,item.z+48);instance.rotation.y=item.yaw;instance.scale.set(item.sx,item.sy,item.sz);instance.updateMatrix();const reference=new THREE.Vector3(0,4,0).applyMatrix4(instance.matrix).applyMatrix4(chunk).applyMatrix4(parent),actual=new THREE.Vector3(attribute.getX(0),attribute.getY(0),attribute.getZ(0)).applyMatrix4(chunk).applyMatrix4(parent);assert.ok(reference.distanceTo(actual)<1e-6);assert.equal(attribute.getW(0),4);
+});
+
+for(const instanceContract of ['native','attributes'])test(`real biome near transition uses persistent instance bounds for ${instanceContract}`,async()=>{
+ const pack=JSON.parse(await readFile(new URL('../public/content/biome-savanna.json',import.meta.url),'utf8')),scene=new THREE.Scene(),props=createWebGpuBiomeProps({scene,state:{biome:'sabana',suppressed:[]},biomePack:pack,initialSlots:[0],instanceContract,byteLoader:async url=>{const bytes=await readFile(new URL('../public'+url,import.meta.url));return bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength);},imageLoader:async()=>({close(){}})});
+ try{assert.equal(await props.ready,true);const instances=Array.from({length:20},()=>[]);instances[0].push({id:'tree',x:105,y:2,z:-57,yaw:.7,sx:2,sy:1.5,sz:.5});props.replace({cx:2,cz:-1,instances},1);const mesh=scene.children[0],near=mesh.geometry.getAttribute('wgNearBounds'),box=mesh.geometry.boundingBox;assert.ok(near?.isInstancedBufferAttribute);assert.equal(near.count,1);assert.equal(near.getX(0),9);assert.equal(near.getZ(0),-9);assert.ok(near.getW(0)>0);const canvas={width:1,height:1,style:{},addEventListener(){},removeEventListener(){},getContext(){return null;}},renderer=new WebGPURenderer({canvas});renderer.hasFeature=()=>true;const builder=renderer.backend.createNodeBuilder(mesh,renderer);builder.scene=scene;builder.camera=new THREE.PerspectiveCamera();builder.build();assert.match(builder.vertexShader,/wgNearBounds/);assert.match(builder.fragmentShader,/smoothstep/);assert.ok(box);}finally{props.dispose();}
+});
+
+for(const instanceContract of ['native','attributes'])test(`visible near bounds follow suppression compaction for ${instanceContract}`,async()=>{
+ const pack=JSON.parse(await readFile(new URL('../public/content/biome-savanna.json',import.meta.url),'utf8')),scene=new THREE.Scene(),offers=[],state={biome:'sabana',suppressed:[]},props=createWebGpuBiomeProps({scene,state,biomePack:pack,initialSlots:[0],instanceContract,pipelineAdmission:{prepare(){}},coordinator:{offer(value){offers.push(value);return ()=>{};}},byteLoader:async url=>{const bytes=await readFile(new URL('../public'+url,import.meta.url));return bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength);},imageLoader:async()=>({close(){}})});
+ try{assert.equal(await props.ready,true);const instances=Array.from({length:20},()=>[]);instances[0].push({id:'a',x:1,y:0,z:0,yaw:0,sx:1,sy:1,sz:1},{id:'b',x:8,y:0,z:0,yaw:0,sx:2,sy:1,sz:1});props.replace({cx:0,cz:0,instances},1,{epoch:'e',sequence:1});offers[0].attach();offers[0].finalize()();const mesh=scene.children[0].children[0],near=mesh.geometry.getAttribute('wgNearBounds');assert.equal(near.getX(0),1);assert.equal(near.getX(1),8);state.suppressed=['a'];props.sync(2);assert.equal(near.getX(0),8);assert.equal(mesh.isInstancedMesh?mesh.count:mesh.geometry.instanceCount,1);}finally{props.dispose();}
 });
 
 test('near blend is an explicit recipe variant and validates its inputs',()=>{
