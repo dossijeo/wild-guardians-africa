@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {WebGPURenderer} from 'three/webgpu';
+import {texture,uniform} from 'three/tsl';
 import {createWebGpuDesertGround} from '../src/rendering/webgpu-desert-ground.js';
 import {desertGroundRecipe} from '../src/rendering/webgpu-material-graph-catalog.js';
 import {readFile,access} from 'node:fs/promises';
@@ -18,6 +19,11 @@ test('desert loads its two original atlases, shares its graph and keeps chunk ma
 test('desert graph builds WGSL from position, normal, vertex color and both sand textures',async()=>{
  const provider=await createWebGpuDesertGround({fetchImpl,imageLoader:async()=>({close(){}})}),material=provider.create({cx:0,cz:0}),geometry=new THREE.PlaneGeometry(),canvas={width:1,height:1,style:{},addEventListener(){},removeEventListener(){},getContext(){return null;}},renderer=new WebGPURenderer({canvas});renderer.hasFeature=()=>true;
  try{geometry.setAttribute('color',new THREE.Float32BufferAttribute(new Float32Array(geometry.attributes.position.count*3).fill(.5),3));const builder=renderer.backend.createNodeBuilder(new THREE.Mesh(geometry,material),renderer);builder.scene=new THREE.Scene();builder.camera=new THREE.PerspectiveCamera();builder.build();assert.equal(material.vertexColors,true);assert.match(builder.vertexShader,/color/i);assert.match(builder.fragmentShader,/textureSampleGrad/);assert.match(builder.fragmentShader,/0\.58/);}finally{material.dispose();geometry.dispose();provider.dispose();}
+});
+
+test('desert reflection shares stable environment bindings and builds the mipmapped WGSL graph',async()=>{
+ const placeholder=new THREE.DataTexture(new Uint8Array([64,64,64,255]),1,1);placeholder.minFilter=THREE.LinearMipmapLinearFilter;placeholder.magFilter=THREE.LinearFilter;const environment={day:texture(placeholder),dark:texture(placeholder),night:uniform(0),blend:uniform(0)},provider=await createWebGpuDesertGround({fetchImpl,environment,imageLoader:async()=>({close(){}})}),material=provider.create({cx:0,cz:0}),geometry=new THREE.PlaneGeometry(),canvas={width:1,height:1,style:{},addEventListener(){},removeEventListener(){},getContext(){return null;}},renderer=new WebGPURenderer({canvas});renderer.hasFeature=()=>true;
+ try{geometry.setAttribute('color',new THREE.Float32BufferAttribute(new Float32Array(geometry.attributes.position.count*3).fill(.5),3));const builder=renderer.backend.createNodeBuilder(new THREE.Mesh(geometry,material),renderer);builder.scene=new THREE.Scene();builder.camera=new THREE.PerspectiveCamera();builder.build();assert.match(builder.fragmentShader,/textureSampleLevel/);assert.match(builder.fragmentShader,/atan2/);environment.blend.value=1;assert.equal(environment.day.value,placeholder);const options={textures:[new THREE.Texture(),new THREE.Texture()],scale:.1,blend:.58,normalBoost:1,jitter:.16};try{assert.notEqual(desertGroundRecipe(options).key,desertGroundRecipe({...options,environment:true}).key);}finally{options.textures.forEach(t=>t.dispose());}}finally{material.dispose();geometry.dispose();provider.dispose();placeholder.dispose();}
 });
 
 test('invalid options fail before loading and pipeline recipe captures texture identities',async()=>{

@@ -131,10 +131,10 @@ export function savannaGroundRecipe(options={}){
  return Object.freeze({structural,dynamic:Object.freeze([...base.dynamic,'vertexColor','grassTint','coverageFloor','scale','normalBoost','relief']),passes:Object.freeze({...base.passes,color:'savanna-ground-output'}),key:JSON.stringify(structural)});
 }
 
-export function desertGroundRecipe({textures,scale,blend,normalBoost,jitter,light=null,shadowNode=null,shadows=false}={}){
- if(!Array.isArray(textures)||textures.length!==2||textures.some(t=>!t?.isTexture)||![scale,blend,normalBoost,jitter].every(Number.isFinite)||typeof shadows!=='boolean'||light!==null&&!light?.isDirectionalLight||shadowNode!==null&&(!shadows||!light||!shadowNode?.isShadowNode||shadowNode.light!==light))throw TypeError('Invalid desert ground recipe');
- const structural=Object.freeze({family:'desert-ground',textureIds:Object.freeze(textures.map(t=>t.uuid)),textures:Object.freeze(textures.map(textureStructure)),scale,blend,normalBoost,jitter,lightId:light?.uuid??null,shadowId:shadowNode?.uuid??null,shadows,state:Object.freeze({side:DoubleSide,toneMapped:false,vertexColors:true}),attributes:Object.freeze(['position','normal','color'])});
- return Object.freeze({structural,dynamic:Object.freeze(['night','sunDirection','atlasContents','chunkMask','chunkOrigin','seed']),passes:Object.freeze({color:'desert-ground-output',depth:'color-pass',shadow:'terrain-mesh-does-not-cast'}),key:JSON.stringify(structural)});
+export function desertGroundRecipe({textures,scale,blend,normalBoost,jitter,light=null,shadowNode=null,shadows=false,environment=false}={}){
+ if(!Array.isArray(textures)||textures.length!==2||textures.some(t=>!t?.isTexture)||![scale,blend,normalBoost,jitter].every(Number.isFinite)||typeof shadows!=='boolean'||typeof environment!=='boolean'||light!==null&&!light?.isDirectionalLight||shadowNode!==null&&(!shadows||!light||!shadowNode?.isShadowNode||shadowNode.light!==light))throw TypeError('Invalid desert ground recipe');
+ const structural=Object.freeze({family:'desert-ground',textureIds:Object.freeze(textures.map(t=>t.uuid)),textures:Object.freeze(textures.map(textureStructure)),scale,blend,normalBoost,jitter,lightId:light?.uuid??null,shadowId:shadowNode?.uuid??null,shadows,environment,state:Object.freeze({side:DoubleSide,toneMapped:false,vertexColors:true}),attributes:Object.freeze(['position','normal','color'])});
+ return Object.freeze({structural,dynamic:Object.freeze(['night','sunDirection','atlasContents','chunkMask','chunkOrigin','seed','environmentContents','environmentBlend']),passes:Object.freeze({color:'desert-ground-output',depth:'color-pass',shadow:'terrain-mesh-does-not-cast'}),key:JSON.stringify(structural)});
 }
 
 const bakedDynamic=Object.freeze(['phaseOffset','clockWeight','bind','inverse','duration','sampleRate','frames','lastSample']);
