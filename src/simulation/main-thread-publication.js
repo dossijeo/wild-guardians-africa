@@ -11,5 +11,5 @@ export function projectMainThreadPublication(publication,{hud=false}={}){
  const owners=physicsOwners(publication);
  if(owners===null)return publication;
  const hudProjection=hud?projectConfirmedHud(confirmedSnapshotFor(publication)??JSON.parse(publication.snapshot),publication.sequence):null;
- return copyPublication(publication,{omit:['physicsPose','physicsPoses','motionTrace','worldMotionTrace','presentationWorkerHeadings'],add:{physicsOwnerSummary:owners,...(hudProjection?{hudProjection}:{})}});
+ return copyPublication(publication,{omit:['physicsPose','physicsPoses','motionTrace','worldMotionTrace','presentationWorkerHeadings','historicalEventBoundaries'],add:{physicsOwnerSummary:owners,...(hudProjection?{hudProjection}:{})}});
 }

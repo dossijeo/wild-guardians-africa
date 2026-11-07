@@ -4,6 +4,7 @@ import {physicsOwners} from './host-publication-queue.js';
 import {validateSnapshot} from '../persistence/snapshots.js';
 import {confirmedSnapshotFor} from './confirmed-snapshot-handoff.js';
 import {validateConfirmedClockSegments} from './confirmed-clock-segments.js';
+import {decodeHistoricalEventBoundaries,groupHistoricalEventBoundaries} from './historical-event-boundaries.js';
 
 function isRecord(value){return value!==null&&typeof value==='object'&&!Array.isArray(value);}
 function keyed(array){return array.length>0&&array.every(item=>isRecord(item)&&typeof item.id==='string')&&new Set(array.map(item=>item.id)).size===array.length;}
@@ -81,18 +82,25 @@ export function createConfirmedStateReceiver(state,session,{onReconciled=null,de
    const token=Object.freeze({});pending={token,sequence:message.sequence,next,nextEvent,message,copy:handed!==undefined};return {accepted:true,token,elapsed:next.elapsed};
  }
  function commit(token,{beforeObservers=null}={}){
-  if(!pending||pending.token!==token)throw Error('Invalid prepared publication token');
+  if(fault||!pending||pending.token!==token)throw Error('Invalid prepared publication token');
   if(beforeObservers!==null&&typeof beforeObservers!=='function')throw TypeError('Invalid confirmed publication barrier');
+  if(pending.intermediate&&pending.intermediateIndex!==pending.intermediate.length)throw Error('Historical boundaries not consumed');
   const item=pending;pending=null;
   if(item.unchanged){try{beforeObservers?.();}catch(error){fault=true;throw error;}sequence=item.sequence;return {accepted:true,sequence,...(trackChangedKeys?{changedKeys:new Set()}: {})};}
-  let changedKeys;try{if(trackChangedKeys)changedKeys=reconcileChangedKeys(state,item.next,tracked,item.copy);else reconcile(state,item.next,item.copy);beforeObservers?.();onReconciled?.(item.message);for(const event of item.message.events)notifyConfirmedPresentationEvent(state,event);}
+  let changedKeys;try{if(trackChangedKeys)changedKeys=reconcileChangedKeys(state,item.next,tracked,item.copy);else reconcile(state,item.next,item.copy);beforeObservers?.();onReconciled?.(item.message);for(const event of item.message.events.slice(item.deliveredEvents??0))notifyConfirmedPresentationEvent(state,event);}
   catch(error){fault=true;throw error;}
   sequence=item.sequence;lastElapsed=item.next.elapsed;lastEvent=item.nextEvent;return {accepted:true,sequence,...(trackChangedKeys?{changedKeys}: {})};
  }
  function acceptPrepared(result){return result.accepted?commit(result.token):result;}
+ function prepareHistorical(message,{requireActorTicks=false,...options}={}){if(typeof requireActorTicks!=='boolean')throw TypeError('Invalid historical actor validation');const prepared=prepare(message,options);if(!prepared.accepted)return prepared;try{const boundaries=decodeHistoricalEventBoundaries(message.historicalEventBoundaries,state,message,{requireActorTicks}),groups=groupHistoricalEventBoundaries(boundaries);pending.intermediate=boundaries;pending.intermediateIndex=0;pending.deliveredEvents=0;return {...prepared,boundaries:groups};}catch(error){pending=null;throw error;}}
+ function commitIntermediate(token,{beforeObservers=null}={}){
+  if(fault||!pending||pending.token!==token||!pending.intermediate||pending.intermediateIndex>=pending.intermediate.length)throw Error('Invalid historical boundary token');if(beforeObservers!==null&&typeof beforeObservers!=='function')throw TypeError('Invalid historical boundary barrier');
+  const item=pending,boundary=item.intermediate[item.intermediateIndex];let changedKeys;try{if(trackChangedKeys)changedKeys=reconcileChangedKeys(state,boundary.state,tracked,true);else reconcile(state,boundary.state,true);beforeObservers?.({at:boundary.at,events:boundary.events},changedKeys);for(const event of boundary.events)notifyConfirmedPresentationEvent(state,event);}catch(error){fault=true;throw error;}
+  item.intermediateIndex++;item.deliveredEvents+=boundary.events.length;lastElapsed=boundary.at;return {accepted:true,sequence,at:boundary.at,eventIds:boundary.events.map(event=>event.id),...(trackChangedKeys?{changedKeys}:{})};
+ }
  return {
-  prepare,prepareUnchanged,commit,
-  discard(token){if(!pending||pending.token!==token)throw Error('Invalid prepared publication token');pending=null;},
+  prepare,prepareUnchanged,prepareHistorical,commitIntermediate,commit,
+  discard(token){if(fault||!pending||pending.token!==token||pending.intermediateIndex>0)throw Error('Invalid prepared publication token');pending=null;},
   accept(message,options){return acceptPrepared(prepare(message,options));},
   acceptUnchanged(message,options){return acceptPrepared(prepareUnchanged(message,options));},
   status(){return {sequence,lastElapsed,fault};}

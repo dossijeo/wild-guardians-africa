@@ -11,6 +11,7 @@ import {loadWorkerPhysicsClips} from './worker-physics-clips.js';
 import {guardianImpactTime} from './guardian-timing.js';
 import {createWorkerStructureObjects} from './worker-structure-geometry.js';
 import {BakedBeastFallbacks,loadBakedFalls} from '../rendering/baked-beast-fallbacks.js';
+import {snapshotWorkerRapierPoses} from './worker-physics-pose-snapshot.js';
 
 // Experimental registry; the shared Rapier world retains its existing capacity.
 // Unknown bodies and missing obstacle data fail closed.
@@ -53,17 +54,18 @@ export async function createWorkerBeastPhysics(game,nav,{actorId,actorIds=actorI
   if(structures)for(const [id,object] of structures.objects)world.objects.set(id,object);
   if((game.raid?.animals??[]).some(a=>!ids.has(a.id)&&(a.magicDown||a.magicImpact&&game.elapsed-guardianImpactTime(a.magicImpact)<.5)))throw Error('Worker physics lacks another active ragdoll');
  }
- const rawStep=manager.step.bind(manager);manager.step=(state,dt)=>{
+ let lastCompletedStep=null,completedSteps=0;const rawStep=manager.step.bind(manager);manager.step=(state,dt)=>{
+  lastCompletedStep=null;
   if((state.raid?.animals??[]).some(a=>!ids.has(a.id)&&(a.magicDown||a.magicImpact&&state.elapsed-guardianImpactTime(a.magicImpact)<.5)))throw Error('Worker physics lacks another active ragdoll');
   if(loaded.some(({animal})=>{const hit=animal.magicImpact;return manager.entries.has(animal.id)||manager.baked.has(animal.id)||hit&&state.elapsed>=guardianImpactTime(hit)&&state.elapsed-guardianImpactTime(hit)<.5;}))assertEnvironment();
   for(const {animal,root,rig} of loaded)if(state.raid?.animals.includes(animal)){
    manager.before(animal.id);restoreAnimalImpact(rig);captureAnimalImpact(rig,animal,state.elapsed);root.position.set(animal.x,nav.actorSurface(animal.x,animal.z),animal.z);applyAnimalPose(rig,animal,state.elapsed);if(!animal.magicDown)applyAnimalImpact(rig,animal,state.elapsed);root.rotation.y=animal.heading??0;if(animal.downHeading!==undefined&&(animal.fallRemaining>0||animal.recovery))root.rotation.y=animal.downHeading;else if(animal.path?.length){const next=animal.path[0];root.rotation.y=Math.atan2(next.x-animal.x,next.z-animal.z);}root.updateMatrixWorld(true);manager.render(animal.id);if(!animal.magicDown)supportAnimalOnTerrain(rig,(x,z)=>nav.actorSurface(x,z));
   }
-  return rawStep(state,dt);
+  const result=rawStep(state,dt);lastCompletedStep=state.elapsed;completedSteps++;return result;
  };
  function poses({activeOnly=false}={}){const result=[];for(const {animal,root,rig} of loaded){
   const actorId=animal.id,model=rig.model,physical=manager.entries.has(actorId)||manager.baked.has(actorId);let transition=!physical&&!!rig.recoveryExit;if(activeOnly&&!physical&&!transition)continue;if(physical||transition){manager.before(actorId);root.position.set(animal.x,nav.actorSurface(animal.x,animal.z),animal.z);root.updateMatrixWorld(true);manager.render(actorId);root.updateMatrixWorld(true);transition=!physical&&!!rig.recoveryExit;if(activeOnly&&!physical&&!transition)continue;}const transform=node=>[...node.position.toArray(),...node.quaternion.toArray(),...node.scale.toArray()],bones=[];model.traverse(node=>{if(node.isBone)bones.push({name:node.name,transform:transform(node)});});result.push({actorId,root:transform(root),model:transform(model),bones,active:physical||transition,...(transition?{visualTransition:'recovery-exit'}:{})});
  }return result;}
- return {get actorId(){return loaded[0]?.animal.id;},get actorIds(){return [...ids];},supports:id=>ids.has(id),admit,manager,hasVisualTransition:()=>loaded.some(({animal,rig})=>game.raid?.animals?.includes(animal)&&!!rig.recoveryExit),assertEnvironment,checkpointFall(){if(!manager.canCheckpointFall())return null;return {version:1,actorIds:[...ids],fall:manager.checkpointFall()};},pose:()=>poses()[0],poses,dispose(){if(disposed)return;disposed=true;try{manager.dispose();}finally{try{structures?.dispose();}finally{releaseLoaded();}}}};
+ return {get actorId(){return loaded[0]?.animal.id;},get actorIds(){return [...ids];},supports:id=>ids.has(id),admit,manager,hasVisualTransition:()=>loaded.some(({animal,rig})=>game.raid?.animals?.includes(animal)&&!!rig.recoveryExit),assertEnvironment,checkpointFall(){if(!manager.canCheckpointFall())return null;return {version:1,actorIds:[...ids],fall:manager.checkpointFall()};},pose:()=>poses()[0],poses,postStepPoses(){if(disposed)throw Error('Worker physics disposed');if(lastCompletedStep!==game.elapsed)return {version:1,at:game.elapsed,step:completedSteps,complete:false,reason:'no-completed-physics-step',poses:[]};return {...snapshotWorkerRapierPoses({game,nav,manager,loaded,at:lastCompletedStep}),step:completedSteps};},dispose(){if(disposed)return;disposed=true;try{manager.dispose();}finally{try{structures?.dispose();}finally{releaseLoaded();}}}};
  }catch(error){try{manager?.dispose();}catch{}try{structures?.dispose();}catch{}try{releaseLoaded();}catch{}throw error;}
 }

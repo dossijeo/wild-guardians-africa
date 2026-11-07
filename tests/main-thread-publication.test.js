@@ -14,8 +14,8 @@ test('projection and delta encoding reuse a decoded state without materializing 
 });
 
 test('interface projection removes graphical payloads without mutating the graphical publication',()=>{
- const pose={actorId:'a',active:true,bones:new Float32Array(128)},event={id:'e'},publication={sequence:2,physicsPose:pose,physicsPoses:[pose],motionTrace:{segments:[1]},worldMotionTrace:{segments:[2]},presentationWorkerHeadings:[{id:'w',yaw:2}],events:[event],snapshot:'state',motionInvalidation:{reason:'obstacle'}};
- const projected=projectMainThreadPublication(publication);assert.equal(projected.physicsOwnerSummary,'["a"]');assert.equal(projected.events,publication.events);assert.equal(projected.motionInvalidation,publication.motionInvalidation);for(const field of ['physicsPose','physicsPoses','motionTrace','worldMotionTrace','presentationWorkerHeadings'])assert.equal(Object.hasOwn(projected,field),false);assert.equal(publication.physicsPose,pose);assert.equal(publication.worldMotionTrace.segments[0],2);
+ const pose={actorId:'a',active:true,bones:new Float32Array(128)},event={id:'e'},publication={sequence:2,physicsPose:pose,physicsPoses:[pose],motionTrace:{segments:[1]},worldMotionTrace:{segments:[2]},historicalEventBoundaries:{version:1,boundaries:[]},presentationWorkerHeadings:[{id:'w',yaw:2}],events:[event],snapshot:'state',motionInvalidation:{reason:'obstacle'}};
+ const projected=projectMainThreadPublication(publication);assert.equal(projected.physicsOwnerSummary,'["a"]');assert.equal(projected.events,publication.events);assert.equal(projected.motionInvalidation,publication.motionInvalidation);for(const field of ['physicsPose','physicsPoses','motionTrace','worldMotionTrace','presentationWorkerHeadings','historicalEventBoundaries'])assert.equal(Object.hasOwn(projected,field),false);assert.equal(publication.physicsPose,pose);assert.equal(publication.worldMotionTrace.segments[0],2);
 });
 
 test('projection retains pose-owner boundaries and every event when ticks are folded',()=>{
