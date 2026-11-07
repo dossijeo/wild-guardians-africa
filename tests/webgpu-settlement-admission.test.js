@@ -2,6 +2,7 @@ import {createWebGpuResourceRegistry} from '../src/rendering/webgpu-resource-reg
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
+import {createWebGpuPicker,webGpuPickerReady} from '../src/rendering/webgpu-picker.js';
 import {createWebGpuSettlements} from '../src/rendering/webgpu-settlements.js';
 import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
 import {readFile} from 'node:fs/promises';
@@ -55,6 +56,15 @@ async function fixture(){
 
 test('a center is published only after its loaded model is admitted',async()=>{
  const f=await fixture();try{assert.equal(f.view.status().centers,1);assert.equal(f.started,1);assert.equal(f.scene.children[0],f.preparedGroup);assert.equal(f.preparedGroup.visible,false);assert.equal(f.view.status().selectableReady,false);f.finish();await turn();assert.equal(f.view.status().selectableReady,true);assert.equal(f.view.status().centers,1);assert.equal(f.started,1);assert.equal(f.scene.children.length,1);assert.equal(f.preparedGroup.visible,true);}finally{f.cleanup();}
+});
+
+test('pending center only blocks rays that reach its envelope before the selected hit',async()=>{
+ const f=await fixture();try{const forward=new THREE.Ray(new THREE.Vector3(0,.1,5),new THREE.Vector3(0,0,-1)),away=new THREE.Ray(new THREE.Vector3(5,.1,5),new THREE.Vector3(0,0,-1));assert.equal(f.view.pendingRayReady(forward,Infinity),false);assert.equal(f.view.pendingRayReady(forward,2),true);assert.equal(f.view.pendingRayReady(away,Infinity),true);assert.equal(f.view.pendingRayReady(new THREE.Ray(new THREE.Vector3(0,.1,0),new THREE.Vector3(1,0,0)),.01),false);assert.equal(f.view.pendingRayReady(new THREE.Ray(new THREE.Vector3(0,.1,5),new THREE.Vector3()),Infinity),false);f.finish();await turn();assert.equal(f.view.pendingRayReady(forward,Infinity),true);}finally{f.cleanup();}
+});
+
+test('the real picker rejects a target behind a pending center but accepts a disjoint ray',async()=>{
+ const f=await fixture(),camera=new THREE.PerspectiveCamera(45,1,.1,100),target=new THREE.Mesh(new THREE.BoxGeometry(1,1,1),new THREE.MeshBasicMaterial());target.userData.entityId='target';target.position.set(0,.1,-3);f.scene.add(target);camera.position.set(0,.1,5);camera.lookAt(0,.1,-3);camera.updateProjectionMatrix();const picker=createWebGpuPicker({scene:f.scene,camera,state:f.state,animals:{get:()=>null},cropBounds:()=>[],isReady:(ray,limit)=>webGpuPickerReady(f.state,{settlements:f.view.status(),settlementsRayReady:f.view.pendingRayReady(ray,limit)})});
+ try{const hidden=picker.pick({x:0,y:0});assert.equal(hidden.entityId,'target');assert.equal(hidden.incomplete,true);camera.position.x=4;camera.lookAt(4,.1,-3);target.position.x=4;const clear=picker.pick({x:0,y:0});assert.equal(clear.entityId,'target');assert.equal(clear.incomplete,undefined);f.finish();await turn();}finally{f.scene.remove(target);target.geometry.dispose();target.material.dispose();f.cleanup();}
 });
 
 test('closing the scene cancels a pending center without publishing it',async()=>{

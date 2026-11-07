@@ -69,6 +69,8 @@ test('reports an incomplete visual scene until all confirmed selectable objects 
  assert.equal(webGpuPickerReady(state,ready),true);
  assert.equal(webGpuPickerReady(state,{...ready,crops:{plants:1,confirmedPlants:0}}),false,'a provisional crop cannot stand in for an unadmitted confirmed crop');
  assert.equal(webGpuPickerReady(state,{...ready,settlements:{...ready.settlements,selectableReady:false}}),false,'a pending confirmed structure blocks picking');
+ assert.equal(webGpuPickerReady(state,{...ready,settlements:{...ready.settlements,selectableReady:false},settlementsRayReady:true}),true,'a ray outside admitted and pending geometry is not blocked');
+ assert.equal(webGpuPickerReady(state,{...ready,settlements:{...ready.settlements,walls:0,selectableReady:false},settlementsRayReady:true}),false,'missing structure banks remain a global barrier');
  assert.equal(webGpuPickerReady(state,{...ready,biome:{selectableReady:false}}),false);assert.equal(webGpuPickerReady(state,{...ready,biome:{selectableReady:true}}),true);
  for(const [key,empty] of Object.entries({animals:{ready:0},workers:{ready:0},settlements:{walls:0,centers:1,villages:1},crops:{plants:0},terrain:{pending:true}}))assert.equal(webGpuPickerReady(state,{...ready,[key]:empty}),false,key);
  const crates=[{id:'crate'},{id:'delivered',delivered:true},{id:'carried',carrierId:'worker'}];assert.equal(webGpuPickerReady({...state,crates},ready),false);assert.equal(webGpuPickerReady({...state,crates},{...ready,crates:{ready:1}}),true);assert.equal(webGpuPickerReady({...state,structures:[...state.structures,{kind:'unknown'}]},ready),false);
