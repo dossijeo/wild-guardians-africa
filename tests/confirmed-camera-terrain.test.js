@@ -5,6 +5,11 @@ import {PerspectiveCamera,Vector3} from 'three';
 import {protectTerrainCamera} from '../src/rendering/terrain-camera.js';
 
 const chunk=(sequence,revision,height,cx=0)=>({sequence,revision,cx,cz:0,epoch:'epoch-a',heights:new Float32Array(49*49).fill(height)});
+test('mud foot contacts follow confirmed visible terrain revisions and own their contours',()=>{
+ const view=createConfirmedCameraTerrain(),outline=Array.from({length:12},(_,i)=>[Math.cos(i*Math.PI/6)*2,Math.sin(i*Math.PI/6)*2]),mud={mudCenters:[{x:0,z:0,radius:2.5}],mudOutlines:[outline]};
+ view.ingest({...chunk(2,1,0),mud});mud.mudCenters[0].x=100;assert.equal(view.movementSurfaceAt(0,0),null);view.confirm(2);assert.equal(view.movementSurfaceAt(0,0),'mud');assert.equal(view.movementSurfaceAt(3,0),null);
+ view.ingest(chunk(3,2,0));assert.equal(view.movementSurfaceAt(0,0),null);view.confirm(3);assert.equal(view.movementSurfaceAt(0,0),null);view.dispose();
+});
 test('camera terrain exposes only main-confirmed heights and rejects absent chunks',()=>{
  const view=createConfirmedCameraTerrain();view.ingest(chunk(2,1,3));assert.throws(()=>view.surface(0,0),CameraTerrainUnavailable);view.confirm(1);assert.throws(()=>view.surface(0,0),CameraTerrainUnavailable);view.confirm(2);assert.equal(view.surface(0,0),3);view.ingest(chunk(3,2,7));assert.throws(()=>view.surface(0,0),CameraTerrainUnavailable);view.confirm(3);assert.equal(view.surface(0,0),7);assert.throws(()=>view.surface(500,0),CameraTerrainUnavailable);view.dispose();
 });
