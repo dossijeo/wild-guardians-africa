@@ -74,13 +74,13 @@ export function vfxSpriteRecipe(atlas){if(!atlas?.isTexture)throw TypeError('Inv
 export function catalogVfxSpriteGraph(atlas,build){if(typeof build!=='function')throw TypeError('Invalid VFX graph builder');const recipe=vfxSpriteRecipe(atlas);let byRecipe=spriteGraphs.get(atlas);if(!byRecipe){byRecipe=new Map();spriteGraphs.set(atlas,byRecipe);}let graph=byRecipe.get(recipe.key);if(!graph){graph=build(recipe);if(!graph?.vertexNode?.isNode||!graph?.outputNode?.isNode)throw TypeError('Invalid VFX sprite graph');byRecipe.set(recipe.key,graph);}return graph;}
 
 const vfxPassDefinitions=Object.freeze({
- geometry:Object.freeze({state:Object.freeze({transparent:true,depthWrite:false,side:DoubleSide,toneMapped:false}),vertex:'geometry',attributes:Object.freeze(['position','normal','color','vfxKind'])}),
- blessing:Object.freeze({state:Object.freeze({transparent:true,depthWrite:false,blending:AdditiveBlending,toneMapped:false,side:DoubleSide}),vertex:'billboard',attributes:Object.freeze(['aCorner','aBase','aSource'])}),
- guardianRibbon:Object.freeze({state:Object.freeze({transparent:true,depthWrite:false,side:DoubleSide,forceSinglePass:true,blending:AdditiveBlending,toneMapped:false}),vertex:'ribbon-position',attributes:Object.freeze(['position','uv'])}),
- guardianMote:Object.freeze({state:Object.freeze({transparent:true,depthWrite:false,blending:AdditiveBlending,toneMapped:false}),vertex:'mote-billboard',attributes:Object.freeze(['position','uv','wgSeed'])}),
+ geometry:Object.freeze({state:Object.freeze({transparent:true,depthWrite:false,side:DoubleSide,toneMapped:false,lights:false}),vertex:'geometry',attributes:Object.freeze(['position','normal','color','vfxKind'])}),
+ blessing:Object.freeze({state:Object.freeze({transparent:true,depthWrite:false,blending:AdditiveBlending,toneMapped:false,lights:false,side:DoubleSide}),vertex:'billboard',attributes:Object.freeze(['aCorner','aBase','aSource'])}),
+ guardianRibbon:Object.freeze({state:Object.freeze({transparent:true,depthWrite:false,side:DoubleSide,forceSinglePass:true,blending:AdditiveBlending,toneMapped:false,lights:false}),vertex:'ribbon-position',attributes:Object.freeze(['position','uv'])}),
+ guardianMote:Object.freeze({state:Object.freeze({transparent:true,depthWrite:false,blending:AdditiveBlending,toneMapped:false,lights:false}),vertex:'mote-billboard',attributes:Object.freeze(['position','uv','wgSeed'])}),
  guardianBeam:Object.freeze({state:Object.freeze({color:0xffcf79,transparent:true,opacity:0,depthWrite:false,blending:AdditiveBlending,toneMapped:false}),vertex:'geometry',attributes:Object.freeze(['position'])}),
- debris:Object.freeze({state:Object.freeze({side:DoubleSide,toneMapped:false}),vertex:'debris',attributes:Object.freeze(['position','normal','aOffset','aRotation','aScale','aColor'])}),
- smoke:Object.freeze({state:Object.freeze({transparent:true,depthWrite:false,side:DoubleSide,toneMapped:false}),vertex:'billboard',attributes:Object.freeze(['aCorner','aPosSize','aInfo','aColor'])})
+ debris:Object.freeze({state:Object.freeze({side:DoubleSide,toneMapped:false,lights:false}),vertex:'debris',attributes:Object.freeze(['position','normal','aOffset','aRotation','aScale','aColor'])}),
+ smoke:Object.freeze({state:Object.freeze({transparent:true,depthWrite:false,side:DoubleSide,toneMapped:false,lights:false}),vertex:'billboard',attributes:Object.freeze(['aCorner','aPosSize','aInfo','aColor'])})
 });
 export function vfxPassRecipe(kind){const definition=vfxPassDefinitions[kind];if(!definition)throw TypeError('Invalid VFX pass recipe');const structural=Object.freeze({family:'vfx-'+kind,...definition});return Object.freeze({structural,dynamic:Object.freeze(['instanceData','clock','camera']),passes:Object.freeze({color:'vfx-node',depth:definition.state.depthWrite===false?'no-depth-write':'color-depth-write',shadow:'mesh-does-not-cast'}),key:JSON.stringify(structural)});}
 

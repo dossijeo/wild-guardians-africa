@@ -22,6 +22,12 @@ test('lit world does not request normals or duplicate lighting for authored bill
  try{const builder=renderer.backend.createNodeBuilder(object,renderer);builder.scene=new THREE.Scene();builder.camera=new THREE.PerspectiveCamera();builder.lightsNode=renderer.lighting.createNode([new THREE.DirectionalLight(),new THREE.PointLight()]);builder.build();assert.equal(material.lights,false);assert.equal(material.outputNode,graph.outputNode);assert.deepEqual(warnings,[]);assert.equal(geometry.hasAttribute('normal'),false);assert.doesNotMatch(builder.vertexShader,/normalLocal|normalView/);assert.match(builder.fragmentShader,/textureSample/);}finally{console.warn=warn;material.dispose();geometry.dispose();atlas.dispose();}
 });
 
+test('guardian vortex ribbons preserve authored output without a normal attribute in a lit scene',()=>{
+ const vortex=new GuardianVortexWebGPU(),renderer=new WebGPURenderer({canvas:{width:1,height:1,style:{},addEventListener(){},removeEventListener(){},getContext(){return null;}}});renderer.hasFeature=()=>true;
+ const warn=console.warn,warnings=[];console.warn=(...args)=>warnings.push(args.join(' '));
+ try{assert.equal(vortex.ribbonGeometry.hasAttribute('normal'),false);for(const object of [vortex.ribbons,vortex.motes]){const builder=renderer.backend.createNodeBuilder(object,renderer);builder.scene=new THREE.Scene();builder.camera=new THREE.PerspectiveCamera();builder.lightsNode=renderer.lighting.createNode([new THREE.DirectionalLight(),new THREE.PointLight()]);builder.build();assert.equal(object.material.lights,false);assert.ok(object.material.outputNode);assert.doesNotMatch(builder.vertexShader,/normalLocal|normalView/);}assert.deepEqual(warnings,[]);}finally{console.warn=warn;vortex.dispose();}
+});
+
 test('optional terrain depth graph shares bindings, supports resizing and builds WGSL without a GPU',()=>{
  const atlas=new THREE.Texture(),depth=new THREE.DepthTexture(8,8),replacement=new THREE.DepthTexture(16,16),binding=createWebGpuVfxSoftDepth(depth);
  const graph=createWebGpuVfxSpriteGraph(atlas,binding),fallback=createWebGpuVfxSpriteGraph(atlas),material=createWebGpuVfxSpriteMaterial(graph),geometry=new THREE.BufferGeometry(),mesh=new THREE.Mesh(geometry,material),other=new THREE.Mesh(geometry,material),values=bindWebGpuVfxSpriteObject(mesh),otherValues=bindWebGpuVfxSpriteObject(other);
@@ -37,3 +43,4 @@ test('optional terrain depth graph shares bindings, supports resizing and builds
   const key=material.customProgramCacheKey();binding.setDepthTexture(replacement);assert.equal(binding.depthNode.value,replacement);assert.equal(createWebGpuVfxSpriteGraph(atlas,binding),graph);assert.equal(material.customProgramCacheKey(),key);assert.throws(()=>binding.setDepthTexture(atlas),/Invalid/);
  }finally{material.dispose();geometry.dispose();atlas.dispose();depth.dispose();replacement.dispose();}
 });
+import {GuardianVortexWebGPU} from '../src/rendering/guardian-vortex-webgpu.js';
