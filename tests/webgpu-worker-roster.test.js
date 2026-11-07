@@ -14,6 +14,16 @@ import {createConfirmedHistoricalClock} from '../src/rendering/confirmed-histori
 import {MeshBasicNodeMaterial} from 'three/webgpu';
 import {actorTickState} from '../src/simulation/worker-actor-tick-states.js';
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
+test('worker walking download recovers without a state change and retains its rig',async()=>{
+ const state={workers:[{id:'w',profile:'youngMale',status:'walking'}],tasks:[]},root=new Group();let requests=0,installed=0,created=0;
+ const roster=createWebGpuWorkerRoster({scene:new Group(),residency:{},state,renderer:{backend:{isWebGPUBackend:true}},assetBank:{dispose(){}},walkRetryDelay:30,pipelineAdmission:{prepare:async()=>{}},bakedWalkBank:{get(){return ++requests===1?Promise.reject(Error('temporary')):Promise.resolve({});}},createWorker:async()=>{created++;return {root,update(){root.visible=true;},installBakedWalk:async()=>{installed++;return true;},dispose(){}};}});
+ try{roster.sync();await flush();await flush();await new Promise(resolve=>setTimeout(resolve,80));await flush();assert.equal(requests,2);assert.equal(installed,1);assert.equal(created,1);}finally{roster.dispose();}
+});
+test('worker walking retries stop when the worker is removed',async()=>{
+ const state={workers:[{id:'w',profile:'youngMale',status:'walking'}],tasks:[]};let requests=0;
+ const roster=createWebGpuWorkerRoster({scene:new Group(),residency:{},state,renderer:{backend:{isWebGPUBackend:true}},assetBank:{dispose(){}},walkRetryDelay:30,pipelineAdmission:{prepare:async()=>{}},bakedWalkBank:{get(){requests++;return Promise.reject(Error('unavailable'));}},createWorker:async()=>({root:new Group(),update(){},dispose(){}})});
+ try{roster.sync();await flush();await flush();assert.equal(requests,1);state.workers=[];roster.sync();await new Promise(resolve=>setTimeout(resolve,80));assert.equal(requests,1);}finally{roster.dispose();}
+});
 test('watch bank is requested on demand and ignores a late result after pose changes',async()=>{
  const worker={id:'w',profile:'youngMale',status:'idle',idleState:{mode:'rest',elapsed:0}},state={workers:[worker],tasks:[]},root=new Group();let resolve,requests=0,installed=0;const roster=createWebGpuWorkerRoster({scene:new Group(),residency:{},state,renderer:{backend:{isWebGPUBackend:true}},assetBank:{dispose(){}},pipelineAdmission:{prepare:async()=>{}},bakedAlertBank:{get(){requests++;return new Promise(r=>{resolve=r;});}},createWorker:async()=>({root,update(){},installBakedAlert:async()=>{installed++;return true;},dispose(){}})});
  try{roster.sync();await flush();assert.equal(requests,0);worker.idleState.mode='watch';roster.sync();await flush();assert.equal(requests,1);worker.idleState.mode='rest';roster.sync();resolve({clip:'Alert'});await flush();await flush();assert.equal(installed,0);worker.idleState.mode='watch';roster.sync();await flush();assert.equal(requests,2);resolve({clip:'Alert'});await flush();await flush();assert.equal(installed,1);}finally{roster.dispose();}
