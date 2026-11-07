@@ -107,6 +107,7 @@ const terrainState=Object.freeze({vertexColors:true,side:DoubleSide,toneMapped:f
 const terrainDynamic=Object.freeze(['vertexColor','shadowVisibility']);
 export function vertexTerrainRecipe({shadows=false}={}){if(typeof shadows!=='boolean')throw TypeError('Invalid terrain recipe');const structural=Object.freeze({family:'vertex-terrain',shadows,state:terrainState,attributes:Object.freeze(['position','color'])});return Object.freeze({structural,dynamic:terrainDynamic,passes:Object.freeze({color:'terrain-color',depth:'color-pass',shadow:'terrain-mesh-does-not-cast'}),key:JSON.stringify([structural.family,shadows,terrainState])});}
 export function loadingBackdropRecipe(){const structural=Object.freeze({family:'loading-backdrop',state:Object.freeze({transparent:true,depthWrite:false,side:BackSide,toneMapped:false,alphaTest:.01}),attributes:Object.freeze(['position','uv','backdropHeight'])});return Object.freeze({structural,dynamic:Object.freeze(['texture','tint']),passes:Object.freeze({color:'loading-backdrop',depth:'no-depth-write',shadow:'mesh-does-not-cast'}),key:JSON.stringify(structural)});}
+export function loadingMistRecipe(){const structural=Object.freeze({family:'loading-mist',state:Object.freeze({transparent:true,depthWrite:false,depthTest:true,toneMapped:false}),attributes:Object.freeze(['position'])});return Object.freeze({structural,dynamic:Object.freeze(['clock','night','camera']),passes:Object.freeze({color:'loading-mist',depth:'no-depth-write',shadow:'mesh-does-not-cast'}),key:JSON.stringify(structural)});}
 export function mudSurfaceRecipe(){const structural=Object.freeze({family:'mangrove-mud',state:Object.freeze({side:FrontSide,roughness:.52,metalness:0}),attributes:Object.freeze(['position','normal','uv'])});return Object.freeze({structural,dynamic:Object.freeze(['map','normalMap','roughnessMap','aoMap','color']),passes:Object.freeze({color:'standard-lit',depth:'color-pass',shadow:'mesh-receives-only'}),key:JSON.stringify(structural)});}
 
 // This provider embeds texture identities and tile constants into its graph;
@@ -124,8 +125,8 @@ export function volcanicGroundRecipe({relief,...options}={}){
 }
 
 export function savannaGroundRecipe(options={}){
- const base=volcanicGroundRecipe(options),structural=Object.freeze({...base.structural,family:'savanna-ground',state:Object.freeze({...base.structural.state,vertexColors:true}),attributes:Object.freeze(['position','normal','color'])});
- return Object.freeze({structural,dynamic:Object.freeze([...base.dynamic,'vertexColor']),passes:Object.freeze({...base.passes,color:'savanna-ground-output'}),key:JSON.stringify(structural)});
+ const base=volcanicGroundRecipe(options),{scale,normalBoost,relief,...shared}=base.structural,structural=Object.freeze({...shared,family:'savanna-ground',state:Object.freeze({...base.structural.state,vertexColors:true}),attributes:Object.freeze(['position','normal','color'])});
+ return Object.freeze({structural,dynamic:Object.freeze([...base.dynamic,'vertexColor','grassTint','coverageFloor','scale','normalBoost','relief']),passes:Object.freeze({...base.passes,color:'savanna-ground-output'}),key:JSON.stringify(structural)});
 }
 
 const bakedDynamic=Object.freeze(['phaseOffset','clockWeight','bind','inverse','duration','sampleRate','frames','lastSample']);

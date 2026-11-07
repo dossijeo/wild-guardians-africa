@@ -2,7 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {WebGPURenderer} from 'three/webgpu';
-import {createWebGpuSavannaGround} from '../src/rendering/webgpu-savanna-ground.js';
+import {createWebGpuSavannaGround,grassGroundParameters,grassGroundBiome} from '../src/rendering/webgpu-savanna-ground.js';
+import {savannaGroundRecipe} from '../src/rendering/webgpu-material-graph-catalog.js';
 
 const tile={base:'base',normal:'normal',arh:'arh',scale:.12,normalBoost:1.05,relief:.22};
 const fetchImpl=async()=>({ok:true,json:async()=>({savanna:tile})});
@@ -12,6 +13,22 @@ test('invalid light or incomplete environment fails before downloading assets',a
  await assert.rejects(createWebGpuSavannaGround({fetchImpl:fetchSpy,light:{}}),/options/);
  await assert.rejects(createWebGpuSavannaGround({fetchImpl:fetchSpy,environment:{day,dark,blend}}),/options/);
  assert.equal(calls,0);
+});
+
+test('grand river uses its authored atlas and river coverage and tint uniforms',async()=>{
+ assert.equal(grassGroundBiome('gran-rio'),'grand_river');assert.equal(grassGroundBiome('sabana'),'savanna');assert.equal(grassGroundBiome('manglares'),null);
+ const requests=[],river={...tile,base:'river-base',normal:'river-normal',arh:'river-arh'},provider=await createWebGpuSavannaGround({biome:'grand_river',fetchImpl:async()=>({ok:true,json:async()=>({savanna:tile,grand_river:river})}),imageLoader:async url=>{requests.push(url);return {close(){}};}}),material=provider.create({cx:0,cz:0});
+ const geometry=new THREE.PlaneGeometry(),canvas={width:1,height:1,style:{},addEventListener(){},removeEventListener(){},getContext(){return null;}},renderer=new WebGPURenderer({canvas});renderer.hasFeature=()=>true;
+ try{assert.deepEqual(requests,['river-base','river-normal','river-arh']);assert.deepEqual(grassGroundParameters('grand_river'),{tint:[1.14,1.18,1.05],coverageFloor:.70});assert.equal(material._wgGroundMask.image.width,1);assert.deepEqual(Array.from(material._wgGroundMask.image.data),[128,128,166,0]);geometry.setAttribute('color',new THREE.Float32BufferAttribute(new Float32Array(geometry.attributes.position.count*3).fill(.5),3));const builder=renderer.backend.createNodeBuilder(new THREE.Mesh(geometry,material),renderer);builder.scene=new THREE.Scene();builder.camera=new THREE.PerspectiveCamera();builder.build();assert.match(builder.fragmentShader,/textureSampleGrad/);}finally{geometry.dispose();material.dispose();provider.dispose();}
+ await assert.rejects(createWebGpuSavannaGround({biome:'unknown',fetchImpl}),/options/);
+});
+
+test('compatible grass tile parameters preserve the material recipe and generated WGSL',async()=>{
+ const textures=[new THREE.Texture(),new THREE.Texture(),new THREE.Texture()],args={textures,scale:.155,normalBoost:1.2,relief:.075};
+ assert.equal(savannaGroundRecipe(args).key,savannaGroundRecipe({...args,normalBoost:1.15,scale:.12,relief:.2}).key);
+ assert.notEqual(savannaGroundRecipe(args).key,savannaGroundRecipe({...args,textures:[new THREE.Texture(),textures[1],textures[2]]}).key);
+ const providerOptions={fetchImpl:async()=>({ok:true,json:async()=>({savanna:{...tile,normalBoost:1.2},grand_river:{...tile,base:'river-base',normalBoost:1.15}})}),imageLoader:async()=>({close(){}})},providers=await Promise.all([createWebGpuSavannaGround(providerOptions),createWebGpuSavannaGround({...providerOptions,biome:'grand_river'})]),materials=providers.map(p=>p.create({cx:0,cz:0})),geometry=new THREE.PlaneGeometry(),canvas={width:1,height:1,style:{},addEventListener(){},removeEventListener(){},getContext(){return null;}},renderer=new WebGPURenderer({canvas});renderer.hasFeature=()=>true;geometry.setAttribute('color',new THREE.Float32BufferAttribute(new Float32Array(geometry.attributes.position.count*3).fill(.5),3));
+ try{const shaders=materials.map(material=>{const builder=renderer.backend.createNodeBuilder(new THREE.Mesh(geometry,material),renderer);builder.scene=new THREE.Scene();builder.camera=new THREE.PerspectiveCamera();builder.build();return {vertex:builder.vertexShader,fragment:builder.fragmentShader};});assert.deepEqual(shaders[0],shaders[1]);}finally{geometry.dispose();for(const material of materials)material.dispose();for(const provider of providers)provider.dispose();for(const texture of textures)texture.dispose();}
 });
 
 test('savanna chunks share their shader graph and own independent confirmed masks',async()=>{
