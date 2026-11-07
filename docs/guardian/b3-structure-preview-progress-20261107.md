@@ -7,3 +7,5 @@ La interfaz muestra ahora una señal en el punto de pulsación antes de esperar 
 Verificación local: 140 pruebas dirigidas de entrada, indicador, admisión, conciliación, tutorial, material y suelo; compilación de producción del perfil `webgpu-worker` con recuperación temporal. No se ha hecho una comparación visual ni de rendimiento en hardware real.
 
 En paralelo, el material experimental del manglar recibe la variación de atlas basada en la semilla de la vista nativa. Sigue desactivado como alternativa de producto: faltan máscara, otros efectos y paridad visual.
+
+La reconciliación de cultivos conserva ahora la geometría provisional admitida si el cultivo confirmado ya necesita otra etapa cuyo lote GPU sigue preparándose. La instancia existente adopta la identidad y posición confirmadas hasta que se publica la etapa correspondiente; no se duplica el cultivo ni se anticipan efectos de juego. Una prueba con admisión aplazada cubre la transición y la publicación de la etapa nueva. La apariencia real, los tiempos y el feedback cuando todavía no hay ninguna geometría admitida siguen pendientes de validación integrada.

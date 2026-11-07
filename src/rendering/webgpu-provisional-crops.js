@@ -14,6 +14,10 @@ export function createWebGpuProvisionalCrops({now=()=>performance.now(),capacity
   begin(id,species,x,z){if(saturated)throw Error('Provisional crop event history saturated');if(typeof id!=='string'||!id||crops.entries.has(id)||abandoned.has(id)||crops.entries.size>=capacity||![x,z].every(Number.isFinite))throw TypeError('Invalid provisional crop');const prior=unmatched.get(id);if(prior){unmatched.delete(id);if(prior.destroyed)return;crops.begin(id,species,x,z);confirm(id,prior.targetId);return;}crops.begin(id,species,x,z);},
   abandon(id){if(typeof id!=='string'||!id||abandoned.has(id))return;const seen=pending.has(id),unpaired=unmatched.delete(id);pending.delete(id);crops.reject(id);if(abandoned.size>=capacity){saturated=true;return;}abandoned.set(id,{seen:seen||unpaired,settled:false});},
   confirm,
+  // A published provisional batch may still be the only admitted geometry
+  // when the authoritative plant first appears. Its old visual identity must
+  // remain associated with the target until the replacement is published.
+  targetFor(visualId){for(const entry of crops.entries.values())if(entry.plant.id===visualId)return entry.targetId;return null;},
   reject(id){pending.delete(id);crops.reject(id);unmatched.delete(id);abandoned.delete(id);},
   visible(plants,events=[],{ignoreUnmatched=false}={}){
    const destroyed=new Set();for(const event of events){
