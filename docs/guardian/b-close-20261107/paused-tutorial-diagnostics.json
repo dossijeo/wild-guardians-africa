@@ -1,0 +1,216 @@
+{
+  "scope": "Manual diagnostic stopped after identifying the paused publication producer; this is not a successful physics validation.",
+  "source": ".cache/historical-islet-paused-diag.json",
+  "started": "2026-11-07T12:41:00.122Z",
+  "at": "2026-11-07T12:42:39.895Z",
+  "fixture": "docs/qa/mangrove-magic-20261026/hydraulic-v2-raid/fixture.json",
+  "backend": "WebGPU",
+  "device": {
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "isFallbackAdapter": false
+    },
+    "maxVertexBuffers": 8
+  },
+  "pauses": [
+    "menu"
+  ],
+  "authority": {
+    "running": true,
+    "closed": false,
+    "fault": null,
+    "busy": true,
+    "queued": 3,
+    "pendingSteps": 22,
+    "pendingChunks": 0,
+    "confirmedSequence": 791,
+    "confirmedElapsed": 1.6500000000000012,
+    "saveAvailable": true,
+    "lastAttackDiagnostic": null,
+    "completedKinds": {
+      "snapshot": 4,
+      "trackPathMotion": 1,
+      "advance": 101,
+      "pause": 2,
+      "resume": 1,
+      "tutorialStart": 1,
+      "microIncome": 1,
+      "tutorialCommand:update": 316,
+      "tutorialActionPause": 4,
+      "tutorialCommand:advance": 325,
+      "setNavigationView": 22,
+      "raidCameraFocus": 1,
+      "tutorialCommand:present": 1,
+      "tutorialCommand:dismiss": 2
+    },
+    "queuedKinds": {
+      "tutorialCommand": 2,
+      "steps": 1
+    },
+    "outbox": {
+      "inFlight": 782,
+      "queued": 0,
+      "coalesced": 0,
+      "acknowledged": 781,
+      "foldedViewCount": 0,
+      "capacity": {
+        "queued": 256,
+        "snapshotChars": 134217728,
+        "eventFacts": 65536,
+        "bytes": 536870912
+      },
+      "retained": {
+        "snapshotChars": 0,
+        "eventFacts": 0,
+        "bytes": 0
+      },
+      "queuedPublications": 0,
+      "eventfulPublications": 0,
+      "tickPublications": 0,
+      "unchangedPublications": 0,
+      "queuedBySource": {},
+      "peakQueuedBySource": {
+        "advance": 3,
+        "tutorialCommand": 3,
+        "tutorialActionPause": 2,
+        "setNavigationView": 3,
+        "raidCameraFocus": 1
+      },
+      "snapshotChars": 0,
+      "peakSnapshotChars": 232697,
+      "peakEventfulPublications": 1,
+      "peakQueuedPublications": 12,
+      "peakQueuedMessages": 18
+    },
+    "visualPublication": {
+      "active": true,
+      "detached": false,
+      "negotiated": true,
+      "encoderRetainedBytes": 52522,
+      "inFlight": 760,
+      "queued": 53,
+      "received": 31,
+      "lastReceived": 759,
+      "coalesced": 0,
+      "acknowledged": 728,
+      "foldedViewCount": 0,
+      "capacity": {
+        "queued": 256,
+        "snapshotChars": 134217728,
+        "eventFacts": 65536,
+        "bytes": 536870912
+      },
+      "retained": {
+        "snapshotChars": 1407780,
+        "eventFacts": 0,
+        "bytes": 10641416
+      },
+      "queuedPublications": 54,
+      "eventfulPublications": 0,
+      "tickPublications": 2,
+      "unchangedPublications": 0,
+      "queuedBySource": {
+        "tutorialCommand": 52,
+        "advance": 2
+      },
+      "peakQueuedBySource": {
+        "advance": 30,
+        "tutorialCommand": 77,
+        "setNavigationView": 8,
+        "snapshot": 1,
+        "pause": 1,
+        "tutorialActionPause": 2
+      },
+      "snapshotChars": 1407780,
+      "peakSnapshotChars": 2893752,
+      "peakEventfulPublications": 1,
+      "peakQueuedPublications": 119,
+      "peakQueuedMessages": 86
+    },
+    "publicationBacklog": 1,
+    "peakPublicationBacklog": 13,
+    "recoveryBaseSequence": 716,
+    "recoveryBaseBytes": 5645562,
+    "recoveryJournal": {
+      "base": 716,
+      "candidate": 781,
+      "through": 782,
+      "entries": 66,
+      "bytes": 11615322,
+      "entryBytes": 5719378,
+      "overheadBytes": 5895944,
+      "capacity": 256,
+      "highWatermark": 128,
+      "maxBytes": 268435456,
+      "highWatermarkBytes": 201326592,
+      "pendingTerrain": false,
+      "saturated": false,
+      "encoderFault": false,
+      "checkpointDeferred": false,
+      "checkpointRetry": false,
+      "closed": false
+    },
+    "recoveryFault": null,
+    "tutorialGuideRevision": null,
+    "reception": {
+      "count": 512,
+      "mean": 2.335107423248701,
+      "p95": 3.3299999833106995,
+      "p99": 3.474999964237213,
+      "max": 4.504999995231628
+    }
+  },
+  "presentation": {
+    "closed": false,
+    "sequence": 730,
+    "lastElapsed": 1.6500000000000012,
+    "fault": false,
+    "historicalEventMetrics": {
+      "starts": 0,
+      "boundaries": 0,
+      "events": 0,
+      "completed": 0
+    },
+    "historicalEventRejection": {
+      "sequence": 3,
+      "start": 0,
+      "end": 0.1,
+      "stage": "preflight",
+      "reason": "separation",
+      "actorId": null
+    },
+    "timing": {
+      "samples": 512,
+      "decode": {
+        "mean": 0.15323242254089564,
+        "p95": 0.23499995470046997,
+        "max": 0.45499998331069946
+      },
+      "reconcile": {
+        "mean": 0.3488183587323874,
+        "p95": 0.5,
+        "max": 0.6450000405311584
+      },
+      "hooks": {
+        "mean": 0.5374902333132923,
+        "p95": 0.7149999737739563,
+        "max": 0.9249999523162842
+      },
+      "total": {
+        "mean": 1.0395410145865753,
+        "p95": 1.3649999499320984,
+        "max": 1.7399999499320984
+      }
+    }
+  },
+  "eventMetrics": {
+    "starts": 0,
+    "boundaries": 0,
+    "events": 0,
+    "completed": 0
+  },
+  "completed": false
+}

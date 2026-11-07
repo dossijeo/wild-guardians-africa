@@ -1,0 +1,5 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {newGame,pause,resume} from '../src/simulation/game.js';
+import {serialize,deserialize} from '../src/persistence/snapshots.js';
+import {createWorkerTutorial} from '../src/simulation/worker-tutorial.js';
+test('atomic menu resume applies tutorial update first and preserves other pause reasons and records',()=>{const initial=newGame({seed:712,slotId:'atomic-tutorial'});pause(initial,'menu');pause(initial,'hidden');const reference=deserialize(serialize(initial)),actual=deserialize(serialize(initial)),a=createWorkerTutorial(actual,[]),b=createWorkerTutorial(reference,[]);const normal=b.execute({action:'update',narrating:null});resume(reference,'menu');const atomic=a.execute({action:'resume-menu',narrating:null});assert.equal(serialize(actual),serialize(reference));assert.deepEqual(atomic.profileRecords,normal.profileRecords);assert.deepEqual(atomic.presentation,normal.presentation);assert.equal(atomic.value,true);assert.ok(actual.pauses.includes('hidden'));assert.ok(!actual.pauses.includes('menu'));});

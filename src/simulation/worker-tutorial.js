@@ -1,5 +1,6 @@
 import {TutorialController} from '../tutorial/controller.js';
 import {TUTORIAL_IDS} from '../tutorial/messages.js';
+import {resume} from './game.js';
 
 // Profile storage and voice playback belong to presentation. The controller
 // owns game mutations here and reports profile writes to the caller.
@@ -12,6 +13,7 @@ export function createWorkerTutorial(state,seen){
   if(command.narrating!==null&&command.narrating!==undefined&&(!allowed.has(command.narrating)))throw TypeError('Invalid narrated tutorial message');
   narrated=command.narrating??null;let value;
   if(command.action==='update'){controller.update();value=null;}
+  else if(command.action==='resume-menu'){controller.update();resume(state,'menu');value=true;}
   else if(command.action==='dismiss'){
    if(typeof command.automatic!=='boolean'||typeof command.messageId!=='string')throw TypeError('Invalid tutorial dismissal');
    const message=controller.presentation({record:false});
