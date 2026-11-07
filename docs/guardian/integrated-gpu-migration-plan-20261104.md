@@ -535,6 +535,8 @@ La lista de animación incluye marcha, carrera, reposo, trabajo, ataques, impact
 
 **Cierre de B:** inventario completo de elementos y pases, arranque de producto independiente, cero funcionalidades esenciales habilitadas solo con QA y cero rutas de contenido por fuera del núcleo común. Se completan controles de construcción, imports, contratos y referencias a recursos. La paridad perceptiva y funcional queda pendiente de C; no se declara comprobada por inspección.
 
+**Movilidad B4, evidencia para la partición:** en el primer intervalo de la captura determinista `manglares-123-d10-raid-state`, Wild Engine observa 42 actores y tres pares activos de trabajadores que comienzan dentro de la suma de sus radios. Los seis están huyendo y se desplazan durante el intervalo; no son cuerpos estáticos que puedan ignorarse. La prueba `authority-world-motion.test.js` comprueba estos hechos, que el portón inmóvil está fuera de sus barridos y que la observación no modifica estado ni eventos. La certificación global sigue rechazando ese intervalo. Una integración por participantes necesitará preservar la trayectoria autoritativa y demostrar que sus fronteras y contactos con los demás actores no introducen nuevas interpenetraciones; esta evidencia no acredita una solución ni rendimiento en partida.
+
 ## C. Validar el sistema integrado
 
 Solo tras cerrar A y B se inicia la batería de partidas, campañas, capturas, vídeos, trazas y comparativas. Se reutilizan los harnesses existentes y una configuración reproducible, sin crear otra colección de laboratorios.
