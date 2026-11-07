@@ -23,6 +23,10 @@ test('guide bounds retries when the authoritative context keeps changing',async(
  for(const at of [300,1400,2500,3600,4700]){f.setTime(at);f.guide.update({key:'guide',toolKind:'center'});await flush();}
  assert.equal(count,3);f.guide.dispose();
 });
+test('guide recovers from transient failures after its initial retry window',async()=>{
+ const f=fixture(),context=f.client.guardianContext;let count=0;f.client.guardianContext=async()=>{if(++count<=3)throw Error('temporarily unavailable');return context();};
+ try{f.guide.update({key:'guide',toolKind:'center'});for(const at of [300,1400,2500,4700,6499]){f.setTime(at);f.guide.update({key:'guide',toolKind:'center'});await flush();}assert.equal(count,3);f.setTime(6500);f.guide.update({key:'guide',toolKind:'center'});await flush();assert.equal(count,4);assert.equal(f.configs.at(-1).position[0],4);}finally{f.guide.dispose();}
+});
 test('guide hides when an authority-sampled crop height changes',async()=>{
  let now=0,growth=0,sequence=7;const calls=[],frame={sequence:7,terrainGeneration:2,selectableGeneration:3,cameraVersion:1};
  const client={guardianFrame:()=>({...frame}),guardianContext:async()=>({context:{camera:{position:[1,2,3]}},frame:{...frame}}),verifyGuardianFrame:async()=>true,setGuardianGuide:async()=>{calls.push('shown');},clearGuardianGuide:()=>calls.push('clear')};

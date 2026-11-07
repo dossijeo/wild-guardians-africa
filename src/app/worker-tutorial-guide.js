@@ -12,7 +12,10 @@ export function createWorkerTutorialGuide({client,runtime,isCurrent=()=>true,key
   update({key:next,toolKind,toolSpell=null}={}){
    if(closed)return;const frame=client.guardianFrame(),nextScene=frame?JSON.stringify([frame.terrainGeneration,frame.selectableGeneration,frame.cameraVersion,frame.viewportVersion??0]):null;
    if(next!==key||nextScene!==sceneKey||active&&(trackRevision?runtime.status().tutorialGuideRevision!==activeRevision:!heightsCurrent(heightInputs))){if(key!==null||sceneKey!==null)clear();key=next;sceneKey=nextScene;attempts=0;stableSince=clock();}
-   if(!key||!frame||pending||active||attempts>=3||clock()-stableSince<250||clock()-lastAttempt<1000)return;
+   // A transient rejection must not permanently suppress the tutorial. Slow
+   // retries after repeated failures keep the authority free of a query storm.
+   const retryDelay=attempts<3?1000:Math.min(30000,4000*2**Math.min(attempts-3,3));
+   if(!key||!frame||pending||active||clock()-stableSince<250||clock()-lastAttempt<retryDelay)return;
    pending=true;attempts++;lastAttempt=clock();const token=generation,expected=key;
    Promise.resolve().then(()=>client.guardianContext()).then(async({context,frame:captured})=>{
     if(!valid(token,expected)||runtime.status().confirmedSequence!==captured.sequence)throw Error('Stale tutorial guide');
