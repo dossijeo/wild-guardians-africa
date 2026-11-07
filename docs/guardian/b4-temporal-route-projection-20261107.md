@@ -20,3 +20,17 @@ completo ocupó 1.012.149 bytes y el proyectado 910.868; la traza fue idéntica
 y ocupó 273.379 bytes. Son tamaños serializados de una sola muestra, no bytes
 efectivamente transferidos con la codificación incremental ni tiempos de CPU,
 GPU o fotograma. No se atribuye una mejora global de fluidez sin medirla en C.
+
+Una comprobación posterior reprodujo cuatro publicaciones del mismo fixture con
+el codificador incremental real: el tamaño JSON del sobre completo, con rutas
+originales y proyectadas respectivamente, fue 1.468.983/1.343.272 bytes en la
+primera y 440.407/314.995, 438.869/313.518 y 439.010/314.065 bytes en las tres
+siguientes. Las tres últimas eran deltas y los eventos coincidieron. Estas
+cifras describen la representación JSON del sobre, no el tamaño real de la
+clonación estructurada entre Workers ni su latencia.
+
+La prueba `confirmed-presentation-timeline.test.js` reproduce además una
+publicación temporal proyectada de la autoridad real en el receptor de
+recuperación y verifica la traza, los eventos y un checkpoint posterior con
+rutas completas. La recuperación completa con el Worker gráfico y WebGPU en
+navegador sigue sin estar validada.
