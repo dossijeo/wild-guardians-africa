@@ -1,6 +1,6 @@
 import {attribute,materialReference,mix,vec4} from 'three/tsl';
 import {webGpuTextureBinding} from './webgpu-texture-binding.js';
-import {AdditiveBlending,DoubleSide,FrontSide} from 'three';
+import {AdditiveBlending,BackSide,DoubleSide,FrontSide} from 'three';
 
 // Recipes define graph identity only. Three still chooses its own render
 // pipeline from material state, vertex layout, target and device bindings.
@@ -106,6 +106,7 @@ export function authoredDeformationRecipe(kind,source){
 const terrainState=Object.freeze({vertexColors:true,side:DoubleSide,toneMapped:false});
 const terrainDynamic=Object.freeze(['vertexColor','shadowVisibility']);
 export function vertexTerrainRecipe({shadows=false}={}){if(typeof shadows!=='boolean')throw TypeError('Invalid terrain recipe');const structural=Object.freeze({family:'vertex-terrain',shadows,state:terrainState,attributes:Object.freeze(['position','color'])});return Object.freeze({structural,dynamic:terrainDynamic,passes:Object.freeze({color:'terrain-color',depth:'color-pass',shadow:'terrain-mesh-does-not-cast'}),key:JSON.stringify([structural.family,shadows,terrainState])});}
+export function loadingBackdropRecipe(){const structural=Object.freeze({family:'loading-backdrop',state:Object.freeze({transparent:true,depthWrite:false,side:BackSide,toneMapped:false,alphaTest:.01}),attributes:Object.freeze(['position','uv','backdropHeight'])});return Object.freeze({structural,dynamic:Object.freeze(['texture','tint']),passes:Object.freeze({color:'loading-backdrop',depth:'no-depth-write',shadow:'mesh-does-not-cast'}),key:JSON.stringify(structural)});}
 export function mudSurfaceRecipe(){const structural=Object.freeze({family:'mangrove-mud',state:Object.freeze({side:FrontSide,roughness:.52,metalness:0}),attributes:Object.freeze(['position','normal','uv'])});return Object.freeze({structural,dynamic:Object.freeze(['map','normalMap','roughnessMap','aoMap','color']),passes:Object.freeze({color:'standard-lit',depth:'color-pass',shadow:'mesh-receives-only'}),key:JSON.stringify(structural)});}
 
 // This provider embeds texture identities and tile constants into its graph;
@@ -120,6 +121,11 @@ export function volcanicGroundRecipe({relief,...options}={}){
  if(!Number.isFinite(relief))throw TypeError('Invalid volcanic ground relief');
  const base=mangroveGroundRecipe(options),structural=Object.freeze({...base.structural,family:'volcanic-ground',relief,attributes:Object.freeze(['position','normal'])});
  return Object.freeze({structural,dynamic:Object.freeze([...base.dynamic,'chunkMask','chunkOrigin']),passes:Object.freeze({color:'volcanic-ground-output',depth:'color-pass',shadow:'terrain-mesh-does-not-cast'}),key:JSON.stringify(structural)});
+}
+
+export function savannaGroundRecipe(options={}){
+ const base=volcanicGroundRecipe(options),structural=Object.freeze({...base.structural,family:'savanna-ground',state:Object.freeze({...base.structural.state,vertexColors:true}),attributes:Object.freeze(['position','normal','color'])});
+ return Object.freeze({structural,dynamic:Object.freeze([...base.dynamic,'vertexColor']),passes:Object.freeze({...base.passes,color:'savanna-ground-output'}),key:JSON.stringify(structural)});
 }
 
 const bakedDynamic=Object.freeze(['phaseOffset','clockWeight','bind','inverse','duration','sampleRate','frames','lastSample']);
