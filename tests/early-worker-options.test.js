@@ -1,6 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {earlyWorkerOptions,workerDiagnosticParams,selectPreparedAuthorityOptions} from '../src/app/early-worker-options.js';
+import {earlyWorkerOptions,workerDiagnosticParams,selectPreparedAuthorityOptions,farVisualForPreparedAuthority} from '../src/app/early-worker-options.js';
+
+test('far visual capability is fixed at early authority startup',()=>{
+ const initial={snapshot:'{}',navigationView:{}},enabled=earlyWorkerOptions({initial,farVisualQueries:true}),disabled=earlyWorkerOptions({initial});
+ assert.equal(enabled.clientOptions.farVisualQueries,true);assert.equal(disabled.clientOptions.farVisualQueries,false);
+ assert.equal(farVisualForPreparedAuthority({early:{farVisualQueries:true},requested:true}),true);
+ assert.equal(farVisualForPreparedAuthority({early:{farVisualQueries:false},requested:false}),false);
+ assert.throws(()=>farVisualForPreparedAuthority({early:{farVisualQueries:false},requested:true}),/configuration changed/);
+ assert.throws(()=>farVisualForPreparedAuthority({early:{farVisualQueries:true},requested:false}),/configuration changed/);
+ assert.throws(()=>earlyWorkerOptions({initial,farVisualQueries:'true'}),/Invalid/);
+});
 
 test('prepared authority attaches from its own snapshot without rebuilding state or navigation',()=>{
  const snapshot='{"slotId":"prepared","pauses":[]}',early={snapshot},options=selectPreparedAuthorityOptions(early,()=>{throw Error('unexpected state serialization');});assert.deepEqual(options,{snapshot});const fallback={snapshot:'legacy',chunkKeys:['0,0']};assert.equal(selectPreparedAuthorityOptions(null,()=>fallback),fallback);assert.throws(()=>selectPreparedAuthorityOptions({},()=>fallback),/prepared authority/);

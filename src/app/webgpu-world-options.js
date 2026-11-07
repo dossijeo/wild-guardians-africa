@@ -18,8 +18,8 @@ export function diagnosticPresentationCapabilities(params,dev){
 }
 // One structural profile for both the initial renderer and its replacement.
 // A recovery must not silently switch world features or actor presentation.
-export function webGpuWorldOptions({params,state,field,recovery={},capabilities={},temporal=null,dev=false}={}){
- if(!(params instanceof URLSearchParams)||!state||!field||typeof dev!=='boolean'||temporal!==null&&(!temporal||typeof temporal.presentation!=='object'||!temporal.presentation||!dev&&temporal.presentation.product!==true))throw TypeError('Invalid WebGPU world profile');
+export function webGpuWorldOptions({params,state,field,recovery={},capabilities={},temporal=null,farVisualQueries=false,dev=false}={}){
+ if(!(params instanceof URLSearchParams)||!state||!field||typeof dev!=='boolean'||typeof farVisualQueries!=='boolean'||temporal!==null&&(!temporal||typeof temporal.presentation!=='object'||!temporal.presentation||!dev&&temporal.presentation.product!==true))throw TypeError('Invalid WebGPU world profile');
  const requested=webGpuPresentationCapabilities(capabilities),diagnostic=diagnosticPresentationCapabilities(params,dev),presentationCapabilities=Object.freeze(Object.fromEntries(Object.keys(requested).map(key=>[key,requested[key]||diagnostic[key]||key==='coordinatedChunks'&&temporal!==null])));
  const has=key=>dev&&params.has(key),species=dev?params.get('qa-webgpu-actor'):null,actor=state.raid?.animals.find(item=>item.status!=='gone'&&(!species||item.species===species)),recoveryProfile=resolvePresentationRecoveryOptions(recovery,{allowQa:dev});
  return Object.freeze({
@@ -31,6 +31,7 @@ export function webGpuWorldOptions({params,state,field,recovery={},capabilities=
   experimentalMotionFeed:temporal?.presentation?.product===true||has('qa-webgpu-motion')||has('qa-webgpu-world-motion'),
   experimentalPresentationInputs:dev&&params.has('qa-webgpu-causal-input'),
   presentationInputs:presentationCapabilities.causalInputs,
+  farVisualQueries,
   experimentalBakedHyena:has('qa-webgpu-baked-hyena'),
   experimentalConfirmedClock:has('qa-webgpu-baked-hyena')&&!has('qa-webgpu-baked-clock-legacy'),
   experimentalWaterHiSsr:has('qa-webgpu-water-hissr'),

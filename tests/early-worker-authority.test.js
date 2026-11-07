@@ -16,3 +16,5 @@ test('early authority rejects malformed setup before creating a runtime',()=>{
 });
 
 test('prepared authority exposes snapshot-free presentation profile to its owner',()=>{const early=createEarlyWorkerAuthority({session:'s',initial:{snapshot:'{}',navigationView:{}},adapter:{},clientOptions:{},runtimeOptions:{presentationInputs:false,startupSuspended:true,mainThreadHudOnly:true},onError:()=>{},runtimeFactory:()=>({})});assert.equal(early.hudOnly,true);});
+
+test('prepared authority retains the far visual capability without recreating its client',()=>{const clientOptions={farVisualQueries:true};let passed;const early=createEarlyWorkerAuthority({session:'s',initial:{snapshot:'{}',navigationView:{}},adapter:{},clientOptions,runtimeOptions:{presentationInputs:false,startupSuspended:true},onError:()=>{},runtimeFactory:options=>(passed=options,{})});assert.equal(early.farVisualQueries,true);assert.equal(passed.clientOptions,clientOptions);});

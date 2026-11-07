@@ -14,12 +14,20 @@ export function selectPreparedAuthorityOptions(early,createOptions){
  return {snapshot:early.snapshot};
 }
 
-export function earlyWorkerOptions({initial,metadataOnlySpatial=false,guardianPlacement=false,presentationInputs=false,hudOnly=false,recoveryOptions={},diagnostics={},temporal=null}={}){
- if(!initial||typeof metadataOnlySpatial!=='boolean'||typeof guardianPlacement!=='boolean'||typeof presentationInputs!=='boolean'||typeof hudOnly!=='boolean'||!recoveryOptions||!diagnostics)throw TypeError('Invalid early worker options');
+// The authority capability cannot be added when a replacement renderer is
+// attached. Check it before either side is started with a different profile.
+export function farVisualForPreparedAuthority({early=null,requested=false}={}){
+ if(typeof requested!=='boolean')throw TypeError('Invalid far visual profile');
+ if(early&&(early.farVisualQueries===true)!==requested)throw Error('Prepared authority far visual configuration changed');
+ return requested;
+}
+
+export function earlyWorkerOptions({initial,metadataOnlySpatial=false,guardianPlacement=false,presentationInputs=false,farVisualQueries=false,hudOnly=false,recoveryOptions={},diagnostics={},temporal=null}={}){
+ if(!initial||typeof metadataOnlySpatial!=='boolean'||typeof guardianPlacement!=='boolean'||typeof presentationInputs!=='boolean'||typeof farVisualQueries!=='boolean'||typeof hudOnly!=='boolean'||!recoveryOptions||!diagnostics)throw TypeError('Invalid early worker options');
  if(temporal!==null&&(!temporal||typeof temporal.recovery!=='boolean'||!temporal.terrainHistory||!temporal.presentation))throw TypeError('Invalid early temporal profile');
  const d=diagnostics,legacy=d.legacyPublications===true,compactViewAcks=d.viewAck===true||!legacy,maxBatchSteps=d.batchSteps??16,batchWindowSteps=d.batchWindow??(maxBatchSteps>1?2:1);
  if(!Number.isSafeInteger(maxBatchSteps)||maxBatchSteps<1||!Number.isSafeInteger(batchWindowSteps)||batchWindowSteps<1)throw TypeError('Invalid early worker batch options');
- const clientOptions={...initial,dynamicPhysics:true,authoredCenterTemplates:true,nativeAuthorityCheckpoints:true,checkpointRaidWaitsOnly:metadataOnlySpatial&&!d.pathTrace&&!d.doubleDecode,compactPresentationPaths:metadataOnlySpatial&&!d.pathTrace&&!d.doubleDecode,incrementalPublications:metadataOnlySpatial&&!legacy&&!d.pathTrace&&!d.doubleDecode,qaGuardianOrigin:!!d.guardianOrigin,guardianPlacement,qaPlantDelayMs:d.plantDelay?500:0,qaStructureDelayMs:d.structureDelay?500:0,shareSpeciesClips:!!d.sharedClips,shareSpeciesRigs:!!d.sharedRigs,shareAdmissionSource:!!d.sharedGlb,compactPhysicsPoses:!!d.activePoses,diagnostics:!!d.enabled,compactViewAcks,compactPausedAcks:!legacy||!!d.compactPaused};
+ const clientOptions={...initial,dynamicPhysics:true,authoredCenterTemplates:true,nativeAuthorityCheckpoints:true,farVisualQueries,checkpointRaidWaitsOnly:metadataOnlySpatial&&!d.pathTrace&&!d.doubleDecode,compactPresentationPaths:metadataOnlySpatial&&!d.pathTrace&&!d.doubleDecode,incrementalPublications:metadataOnlySpatial&&!legacy&&!d.pathTrace&&!d.doubleDecode,qaGuardianOrigin:!!d.guardianOrigin,guardianPlacement,qaPlantDelayMs:d.plantDelay?500:0,qaStructureDelayMs:d.structureDelay?500:0,shareSpeciesClips:!!d.sharedClips,shareSpeciesRigs:!!d.sharedRigs,shareAdmissionSource:!!d.sharedGlb,compactPhysicsPoses:!!d.activePoses,diagnostics:!!d.enabled,compactViewAcks,compactPausedAcks:!legacy||!!d.compactPaused};
  const runtimeOptions={maxBatchSteps,batchWindowSteps,...recoveryOptions,qaPresentationInputs:!!d.causalInput,presentationInputs,startupSuspended:true,mainThreadProjection:metadataOnlySpatial&&!d.doubleDecode&&!d.pathTrace,diagnostics:!!d.enabled,coalescePublications:!!d.coalesce||!legacy,hudEntityDeltas:metadataOnlySpatial&&!d.doubleDecode&&!d.pathTrace&&!legacy,mainThreadHudOnly:hudOnly&&metadataOnlySpatial&&!d.doubleDecode&&!d.pathTrace&&!legacy,foldViews:compactViewAcks&&(!!d.foldView||!legacy),backgroundViews:compactViewAcks&&!legacy&&!d.orderedViews};
  if(temporal){clientOptions.terrainHistory=structuredClone(temporal.terrainHistory);if(temporal.presentation.product===true)clientOptions.observeWorldMotion=true;if(temporal.presentation.mudPresentation===true)clientOptions.mudPresentation=true;runtimeOptions.presentationTimeline=true;if(temporal.recovery)runtimeOptions.historicalRecovery=true;}
  return {clientOptions,runtimeOptions};
