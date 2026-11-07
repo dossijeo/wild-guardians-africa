@@ -22,6 +22,26 @@ test('a game action during worker visibility does not reserve a stale microevent
  const pending=c.spawn(EVENTS.seeds,{entity:plant,groundY:0,y:1},{force:true});state.commandIds.push('new-action');resolve(true);assert.equal(await pending,false);assert.equal(reserved,0);assert.equal(c.pending,false);
 });
 
+test('graphics replacement cannot reserve an event after an old visibility reply',async()=>{
+ const camera=new PerspectiveCamera(),plant={id:'p',alive:true,x:1,z:2},state={time:100,biome:'sabana',plants:[plant],commandIds:[]},c=Object.create(Microevents.prototype);let resolve,reserved=0,disposed=0;Object.assign(c,{state,world:{workerGpuOnly:true,camera,webGpuWorld:{client:{microeventVisible:()=>new Promise(r=>resolve=r)}}},settings:{microevents:'adaptive'},space:{begin(){}},point:new Vector3(),director:{m:{negativeTimes:[],eventCooldowns:{}}},workerEconomy:{async reserve(){reserved++;}},owned:new Set(),cameraPointers:new Set(),clock:()=>0,project:()=>({x:200,y:200}),blocked:()=>[],log(){},presentationGeneration:0,presentationUnavailable:false,pointer:{},billboards:{clear(){},dispose(){disposed++;}}});
+ const pending=c.spawn(EVENTS.seeds,{entity:plant,groundY:0,y:1},{force:true});c.presentationLost();resolve(true);assert.equal(await pending,false);assert.equal(reserved,0);assert.equal(disposed,1);assert.equal(c.presentationUnavailable,true);assert.equal(c.failed,undefined);
+});
+
+test('graphics loss cancels a live event exactly once',()=>{
+ const c=Object.create(Microevents.prototype);let cancelled=0,disposed=0;Object.assign(c,{world:{workerGpuOnly:true,canvas:{}},active:{outcome:null},presentationGeneration:0,presentationUnavailable:false,pointer:{},owned:new Set(),billboards:{clear(){},dispose(){disposed++;}},log(){},finish(outcome){assert.equal(outcome,'cancelled');cancelled++;this.active.outcome=outcome;}});
+ c.presentationLost();c.presentationLost();assert.equal(cancelled,1);assert.equal(disposed,1);assert.equal(c.active,null);
+});
+
+test('a reservation resolving after graphics recovery is cancelled by its original ticket',async()=>{
+ const plant={id:'p',alive:true,x:1,z:2},state={time:100,biome:'sabana',plants:[plant],commandIds:[]},c=Object.create(Microevents.prototype),ticket={id:'micro:old'},settled=[];let resolveReserve;
+ Object.assign(c,{state,world:{workerGpuOnly:true,camera:new PerspectiveCamera(),canvas:{}},settings:{microevents:'adaptive'},space:null,director:{m:{negativeTimes:[],eventCooldowns:{}},reserve(){}},workerEconomy:{reserve:()=>new Promise(resolve=>{resolveReserve=resolve;}),schedule:async()=>{},settle:async(value,outcome)=>{settled.push([value,outcome]);}},owned:new Set(),cameraPointers:new Set(),clock:()=>0,project:()=>({x:200,y:200}),blocked:()=>[],log(){},presentationGeneration:0,presentationUnavailable:false,pointer:{},billboards:{ready:Promise.resolve(),clear(){},dispose(){}},save:async()=>true});
+ const pending=c.spawn(EVENTS.seeds,{entity:plant,groundY:0,y:1},{force:true});c.presentationLost();c.presentationUnavailable=false;c.billboards={ready:Promise.resolve(),clear(){},dispose(){}};resolveReserve(ticket);assert.equal(await pending,false);assert.deepEqual(settled,[[ticket,'cancelled']]);assert.equal(c.failed,undefined);
+});
+
+test('graphics recovery binds a new sender and prepares it only on demand',async()=>{
+ let prepared=0;const c=Object.create(Microevents.prototype),client={microevents:{prepare:async()=>{prepared++;},frame(){}}};Object.assign(c,{world:{workerGpuOnly:true,state:{time:100}},presentationUnavailable:true});c.presentationReady(client);assert.equal(c.presentationUnavailable,false);assert.equal(prepared,0);await c.billboards.ready;assert.equal(prepared,1);c.billboards.dispose();
+});
+
 test('failed visibility releases the pointer and does not claim a microevent',async()=>{
  const canvas={setPointerCapture(){},releasePointerCapture(){this.released=true;}},particle={x:1,y:2,progress:0,reveal:1},active={def:{}},c=Object.create(Microevents.prototype);let claimed=0;Object.assign(c,{world:{camera:new PerspectiveCamera(),canvas,webGpuWorld:{client:{microeventVisible:()=>Promise.reject(Error('timed out'))}}},space:{worldPosition:()=>new Vector3(1,2,3)},particles:{pool:[particle],claim(){claimed++;}},active,pointer:{},owned:new Set(),trace:new PointerTrace(),director:{interaction(){}},metrics:{},blocked:()=>[]});c.beginWorkerGesture({pointerId:1,clientX:10,clientY:10,preventDefault(){},stopImmediatePropagation(){}},active,0,1,2,0);await Promise.resolve();await Promise.resolve();assert.equal(claimed,0);assert.equal(c.owned.size,0);assert.equal(canvas.released,true);
 });

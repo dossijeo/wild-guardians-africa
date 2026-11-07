@@ -1,4 +1,10 @@
 import {historicalRecoveryHarnessEnabled} from '../simulation/historical-recovery-harness.js';
+// A product build can opt in for the native mangrove world only. The same
+// decision must be made before authority bootstrap and on renderer attach.
+export function productMudPresentation({backend,biome,enabled}={}){
+ if(!['legacy','webgpu-worker'].includes(backend)||typeof biome!=='string'||typeof enabled!=='boolean')throw TypeError('Invalid mud presentation profile');
+ return enabled&&backend==='webgpu-worker'&&biome==='manglares';
+}
 // The ordinary build keeps temporal presentation disabled. A product caller may
 // explicitly request historical recovery; URL diagnostics remain DEV-only.
 export function temporalPresentationOptions({params,dev,hosted,early,recoveryEnabled,hasWebGpu,recovery=null,earlyPrepared=null,historicalRecovery=false,mudPresentation=false}={}){
