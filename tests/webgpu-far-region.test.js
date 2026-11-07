@@ -59,3 +59,17 @@ test('regional owner consumes real Wild Engine instances without changing reside
  const owner=createWebGpuFarRegion({start:0,end:1,currentSequence:()=>9,onChunk:item=>received.push(item),onRemove:()=>{},onInvalidate:()=>{},query:async request=>({...core.queryFarVisualChunk(request.cx,request.cz,{slots:request.slots}),sequence:request.expectedSequence})});
  owner.updateCamera({x:96,z:0});owner.pump();await turn();assert.equal(received.length,1);assert.deepEqual(received[0].instances,expected.instances);assert.deepEqual(core.captureResidentChunks(),before);owner.dispose();
 });
+
+test('revision change cancels the first pending query before any sector is published',async()=>{
+ let revision=7,seq=1,finish,signal;const requests=[],invalid=[],accepted=[];
+ const owner=createWebGpuFarRegion({start:0,end:1,retryMs:0,currentSequence:()=>seq,currentRevision:()=>revision,onChunk:value=>accepted.push(value),onRemove:()=>{},onInvalidate:value=>invalid.push(value),query:(request,options)=>{requests.push(request);signal=options.signal;return new Promise(resolve=>{finish=resolve;});}});
+ try{owner.updateCamera({x:0,z:0});assert.equal(owner.pump(),true);await turn();assert.equal(requests[0].expectedRevision,7);assert.equal(owner.status().revision,null);owner.confirmRevision(7);assert.equal(signal.aborted,false);revision=8;seq=2;owner.confirmRevision(8);assert.equal(signal.aborted,true);assert.equal(owner.status().pending,null);assert.equal(invalid.length,1);const previousFinish=finish;assert.equal(owner.pump(),true);await turn();assert.equal(requests[1].expectedRevision,8);previousFinish({cx:0,cz:0,sequence:1,revision:7,instances:trees()});await turn();assert.equal(accepted.length,0);finish({cx:0,cz:0,sequence:2,revision:8,instances:trees()});await turn();assert.equal(accepted.length,1);assert.equal(owner.status().revision,8);}finally{owner.dispose();}
+});
+test('revision change cancels an in-progress first graphical admission',async()=>{
+ let revision=1,finish,signal;const owner=createWebGpuFarRegion({start:0,end:1,currentSequence:()=>2,currentRevision:()=>revision,onChunk:(_,options)=>{signal=options.signal;return new Promise(resolve=>{finish=resolve;});},onRemove:()=>{},onInvalidate:()=>{},query:async request=>({cx:request.cx,cz:request.cz,sequence:2,revision:1,instances:trees()})});
+ try{owner.updateCamera({x:0,z:0});owner.pump();await turn();assert.equal(owner.status().pendingPhase,'admission');revision=2;owner.confirmRevision(2);assert.equal(signal.aborted,true);assert.equal(owner.status().pending,null);finish(true);await turn();assert.equal(owner.status().offered,0);}finally{owner.dispose();}
+});
+test('without native revision a new confirmed sequence cancels a pending query',async()=>{
+ let seq=1,signal,finish;const owner=createWebGpuFarRegion({start:0,end:1,currentSequence:()=>seq,onChunk:()=>true,onRemove:()=>{},onInvalidate:()=>{},query:(_,options)=>{signal=options.signal;return new Promise(resolve=>{finish=resolve;});}});
+ try{owner.updateCamera({x:0,z:0});owner.pump();await turn();owner.confirmRevision(null);assert.equal(signal.aborted,false);seq=2;owner.confirmRevision(null);assert.equal(signal.aborted,true);assert.equal(owner.status().pending,null);finish(null);}finally{owner.dispose();}
+});
