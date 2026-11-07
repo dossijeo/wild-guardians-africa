@@ -136,3 +136,23 @@ test('crop source registration failure releases all staged source assets',async(
  const previous=globalThis.fetch;globalThis.fetch=async()=>({ok:true,json:async()=>[{source:'Cultivos',url:'/crop.glb'}]});const model=new THREE.Group(),geometry=new THREE.BoxGeometry(),material=new THREE.MeshStandardMaterial();let geometryDisposed=0,materialDisposed=0,calls=0;geometry.addEventListener('dispose',()=>geometryDisposed++);material.addEventListener('dispose',()=>materialDisposed++);for(let crop=0;crop<8;crop++)for(let stage=1;stage<=5;stage++){const mesh=new THREE.Mesh(geometry,material);mesh.userData={cropIndex:crop,stage,height:1,foliageRadius:1};model.add(mesh);}const registry={adopt({dispose}){if(++calls===2)throw Error('generation unavailable');return {commit(){},release:dispose};}},renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:source=>new MeshStandardNodeMaterial().copy(source)}},roster=createWebGpuCropRoster({scene:new Scene(),state:{elapsed:0,plants:[]},residency:{},renderer,resourceRegistry:registry,loadCropModel:async()=>({scene:model})});
  try{await assert.rejects(roster.prepare(),/generation unavailable/);assert.equal(geometryDisposed,1);assert.equal(materialDisposed,1);}finally{roster.dispose();globalThis.fetch=previous;}
 });
+
+test('confirmed crops retry a transient catalogue failure without another publication',async()=>{
+ const previous=globalThis.fetch;let attempts=0;const errors=[],scene=new Scene(),model=new THREE.Group(),geometry=new THREE.BoxGeometry(),material=new THREE.MeshStandardMaterial();
+ for(let i=0;i<40;i++){const mesh=new THREE.Mesh(geometry,material);mesh.userData={cropIndex:Math.floor(i/5),stage:i%5+1,height:1,foliageRadius:1};model.add(mesh);}
+ globalThis.fetch=async url=>{if(String(url).includes('models.json'))return ++attempts===1?{ok:false,status:503}:{ok:true,json:async()=>[{source:'Cultivos',url:'/crop.glb'}]};throw Error('unexpected fetch');};
+ const floor=new THREE.Mesh(new THREE.PlaneGeometry(10,10),new THREE.MeshBasicMaterial({side:THREE.DoubleSide}));floor.rotation.x=-Math.PI/2;floor.updateMatrixWorld(true);
+ const state={elapsed:0,plants:[{id:'confirmed',species:'maiz',x:0,z:0,alive:true,growth:cropSpec('maiz').growth_seconds}]},roster=createWebGpuCropRoster({scene,state,residency:{get:()=>floor},renderer:{backend:{isWebGPUBackend:true},library:{fromMaterial:source=>new MeshStandardNodeMaterial().copy(source)}},loadCropModel:async()=>({scene:model}),onError:error=>errors.push(error.message)});
+ try{await roster.ready;assert.equal(attempts,1);assert.equal(roster.status().ready,false);await new Promise(resolve=>setTimeout(resolve,1200));assert.equal(attempts,2);assert.equal(roster.status().ready,true);assert.equal(roster.status().confirmedPlants,1);assert.deepEqual(errors,['Crop catalogue unavailable']);}finally{roster.dispose();floor.geometry.dispose();floor.material.dispose();globalThis.fetch=previous;}
+});
+
+test('a transient crop retry is cancelled when the roster is disposed',async()=>{
+ const previous=globalThis.fetch;let attempts=0;globalThis.fetch=async()=>{attempts++;throw new TypeError('network unavailable');};const roster=createWebGpuCropRoster({scene:new Scene(),state:{plants:[{id:'p',alive:true}]},residency:{},renderer:{backend:{isWebGPUBackend:true}}});
+ try{await roster.ready;assert.equal(attempts,1);roster.dispose();await new Promise(resolve=>setTimeout(resolve,1100));assert.equal(attempts,1);}finally{roster.dispose();globalThis.fetch=previous;}
+});
+
+test('a new planting does not duplicate an already running crop retry',async()=>{
+ const previous=globalThis.fetch;let attempts=0,finish;globalThis.fetch=async()=>{if(++attempts===1)throw new TypeError('network unavailable');return new Promise(resolve=>{finish=resolve;});};
+ const roster=createWebGpuCropRoster({scene:new Scene(),state:{plants:[{id:'p',alive:true}]},residency:{get:()=>null},renderer:{backend:{isWebGPUBackend:true}},enableProvisional:true});
+ try{await roster.ready;assert.equal(attempts,1);roster.beginProvisional('pending','maiz',0,0);await new Promise(resolve=>setImmediate(resolve));assert.equal(attempts,2);await new Promise(resolve=>setTimeout(resolve,1100));assert.equal(attempts,2);}finally{roster.dispose();finish?.({ok:false,status:404});await new Promise(resolve=>setImmediate(resolve));globalThis.fetch=previous;}
+});
