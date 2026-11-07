@@ -1,5 +1,7 @@
 # Diagnóstico de la admisión gráfica durante el arranque B2
 
+**Seguimiento resuelto:** el [cierre técnico de la vía regional](b2-read-lane-20261107.md) sustituye el bloqueo de cola descrito aquí por una lectura espacial independiente y registra el primer relevo admitido en WebGPU real. El resto de este documento conserva el historial de diagnóstico, incluidos ensayos retirados y conclusiones corregidas.
+
 La incursión de manglares del comprobador de integración se quedó esperando terreno aun con `VITE_WEBGPU_FAR_VISUAL=false`. La inspección de la cola muestra grupos de animales y trabajadores antes de una solicitud que contiene terreno; el lote temporal de terreno se publica atómicamente después de preparar sus participantes. El contador `compilesStarted` cuenta llamadas de preparación, no pipelines distintos ni tiempo de GPU. La instrumentación consulta la cola solamente al solicitar su estado.
 
 Se consideraron tres alternativas: aplazar la preparación de actores hasta que sea necesaria (elimina trabajo temprano, pero requiere una política de visibilidad segura); priorizar el primer lote de terreno (solo cambia el orden); y reutilizar preparaciones realmente equivalentes entre personajes (requiere demostrar igualdad de variantes, pases y recursos). Se ensayó temporalmente la segunda con una prioridad limitada que no interrumpe compilaciones activas y permite progresar a la cola normal. El prototipo se ha retirado: por sí solo no elimina trabajo y no demuestra que la escena completa esté preparada antes.

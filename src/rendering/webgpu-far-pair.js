@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import {configureWebGpuFarModelCoverage,createWebGpuFarImpostor} from './webgpu-far-impostor.js';
 import {ceilFloat32} from './float32-time.js';
+import {cloneWebGpuNodeMaterial} from './webgpu-clone-node-material.js';
 
 function hasCpuPositions(position){const array=position?.isInterleavedBufferAttribute?position.data?.array:position?.array;return ArrayBuffer.isView(array)&&position.itemSize>=3&&Number.isInteger(position.count)&&position.count>0;}
 
@@ -14,8 +15,8 @@ export function createWebGpuFarPair({source,items,metadata,day,night,camera,star
  const count=source.isInstancedMesh?source.count:source.geometry.instanceCount;
  if(count!==items.length||items.some(item=>typeof item?.id!=='string'||!item.id||![item.x,item.y,item.z,item.yaw,item.sx??item.scale,item.sy??item.scale,item.sz??item.scale].every(Number.isFinite))||new Set(items.map(item=>item.id)).size!==items.length)throw TypeError('Invalid far pair instances');
  if(!hasCpuPositions(source.geometry.getAttribute('position')))throw Error('Far pair bounds unavailable');
- const model=source.clone(false),geometry=source.geometry.clone(),material=source.material.clone();model.geometry=geometry;model.material=material;model.visible=true;model.userData.wgFarShadow=true;
- const farBase=new Float32Array(items.length*3),radii=new Float32Array(items.length),ready=new Float32Array(items.length).fill(1);
+ const model=source.clone(false),geometry=source.geometry.clone(),material=cloneWebGpuNodeMaterial(source.material);model.geometry=geometry;model.material=material;model.visible=true;model.userData.wgFarShadow=true;
+ const farBounds=new Float32Array(items.length*4),radii=new Float32Array(items.length),ready=new Float32Array(items.length).fill(1);
  let far;
  try{
   // An atlas is not a bound for the source mesh. Recompute missing or invalid
@@ -23,9 +24,15 @@ export function createWebGpuFarPair({source,items,metadata,day,night,camera,star
   const position=geometry.getAttribute('position'),validBox=box=>box?.isBox3&&!box.isEmpty()&&[box.min.x,box.min.y,box.min.z,box.max.x,box.max.y,box.max.z].every(Number.isFinite);
   if(!hasCpuPositions(position))throw Error('Far pair bounds unavailable');
   if(!validBox(geometry.boundingBox)){geometry.boundingBox=null;geometry.computeBoundingBox();}
-  const box=geometry.boundingBox;if(!validBox(box))throw Error('Far pair bounds unavailable');
-  for(let i=0;i<items.length;i++){const item=items[i],sx=Math.abs(item.sx??item.scale),sz=Math.abs(item.sz??item.scale),atlasRadius=metadata.impostorWidth*.5*Math.max(sx,sz),boundsRadius=Math.hypot(Math.max(Math.abs(box.min.x),Math.abs(box.max.x))*sx,Math.max(Math.abs(box.min.z),Math.abs(box.max.z))*sz);farBase.set([item.x-source.position.x,item.y-source.position.y,item.z-source.position.z],3*i);radii[i]=ceilFloat32(Math.max(atlasRadius,boundsRadius)+.001);}
-  geometry.setAttribute('wgFarBase',new THREE.InstancedBufferAttribute(farBase,3));geometry.setAttribute('wgFarRadius',new THREE.InstancedBufferAttribute(radii,1));geometry.setAttribute('wgFarReady',new THREE.InstancedBufferAttribute(ready,1));
+  // Attribute-instanced source boxes cover the transformed batch. The raw
+  // vertex positions still describe one model; don't scale the batch twice.
+  // Keep that aggregate box on the geometry for its existing culling owner.
+  const box=source.isInstancedMesh?geometry.boundingBox:new THREE.Box3().setFromBufferAttribute(position);if(!validBox(box))throw Error('Far pair bounds unavailable');
+  for(let i=0;i<items.length;i++){const item=items[i],sx=Math.abs(item.sx??item.scale),sz=Math.abs(item.sz??item.scale),atlasRadius=metadata.impostorWidth*.5*Math.max(sx,sz),boundsRadius=Math.hypot(Math.max(Math.abs(box.min.x),Math.abs(box.max.x))*sx,Math.max(Math.abs(box.min.z),Math.abs(box.max.z))*sz);radii[i]=ceilFloat32(Math.max(atlasRadius,boundsRadius)+.001);farBounds.set([item.x-source.position.x,item.y-source.position.y,item.z-source.position.z,radii[i]],4*i);}
+  // The near-tree attribute layout already consumes six vertex buffers.
+  // These immutable fields share one; readiness retains its mutable buffer.
+  const boundsBuffer=new THREE.InstancedInterleavedBuffer(farBounds,4);
+  geometry.setAttribute('wgFarBase',new THREE.InterleavedBufferAttribute(boundsBuffer,3,0));geometry.setAttribute('wgFarRadius',new THREE.InterleavedBufferAttribute(boundsBuffer,1,3));geometry.setAttribute('wgFarReady',new THREE.InstancedBufferAttribute(ready,1));
   configureWebGpuFarModelCoverage(material,{start,end});far=createWebGpuFarImpostor({metadata,day,night,trees:items,radii:Array.from(radii),start,end});
  }catch(error){geometry.dispose();material.dispose();throw error;}
  const group=new THREE.Group();group.visible=false;group.add(model,far.mesh);far.mesh.userData.nativePropSlot=source.userData.nativePropSlot;

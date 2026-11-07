@@ -7,7 +7,9 @@ import {biomeSurfaceRecipe} from '../src/rendering/webgpu-material-graph-catalog
 import {createWebGpuBiomeProps} from '../src/rendering/webgpu-biome-props.js';
 import {uniform} from 'three/tsl';
 import {readFile} from 'node:fs/promises';
-const waitFor=async predicate=>{for(let i=0;i<100&&!predicate();i++)await new Promise(resolve=>setImmediate(resolve));assert.ok(predicate(),'Timed out waiting for near tree admission');};
+// Asset-backed cases perform filesystem reads; event-loop turns are not a
+// deadline and can expire before I/O completes on a busy machine.
+const waitFor=async predicate=>{const deadline=performance.now()+5000;while(!predicate()&&performance.now()<deadline)await new Promise(resolve=>setTimeout(resolve,5));assert.ok(predicate(),'Timed out waiting for near tree admission');};
 
 test('near texture fades from its admitted frame and keeps its time across revisions',async()=>{
  const pack=JSON.parse(await readFile(new URL('../public/content/biome-savanna.json',import.meta.url),'utf8')),scene=new THREE.Scene(),clock=uniform(8),state={biome:'sabana',elapsed:8,suppressed:[]};let finishNear;
