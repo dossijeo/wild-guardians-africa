@@ -22,7 +22,7 @@ export class Guardian3DWorkerClient {
  setRecord(record) { if (!this.closed) try { this.worker.postMessage({ type: 'record', record: record ?? null }); } catch (error) { this.fail(error); } }
  draw(frame) {
   if (this.closed) return;
-  const audio = frame.audio ? { currentTime: frame.audio.currentTime, ended: frame.audio.ended } : null;
+  const audio = frame.audio ? { currentTime: frame.audio.currentTime, ended: frame.audio.ended, paused: frame.audio.paused === true } : null;
   this.pending = { frame: { ...frame, audio }, manual: { ...this.manual }, pointTarget: this.pointTarget?.toArray() ?? null }; this.pump();
  }
  pump() {
