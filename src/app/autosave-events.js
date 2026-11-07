@@ -33,6 +33,7 @@ export function createConfirmedAutosaveController({request,isCurrent=()=>true,on
   }).catch(error=>{if(!closed&&isCurrent()){pending=false;waiting=false;try{onError(error);}catch{}}}).finally(()=>{running=false;if(!closed&&isCurrent()&&pending&&!waiting)run();});
  }
  return {
+  request(){if(closed)return false;pending=true;run();return true;},
   setSuspended(value){if(typeof value!=='boolean')throw TypeError('Invalid autosave suspension');if(closed)return;suspended=value;if(!suspended)run();},
   events(events){if(closed)return false;return autosaveConfirmedEvents(events,()=>{pending=true;run();return true;});},
   observe(value,sequence=null){if(closed)return;if(typeof value!=='boolean'||sequence!==null&&(!Number.isSafeInteger(sequence)||sequence<0))throw TypeError('Invalid checkpoint availability');if(sequence!==null&&availabilitySequence!==null&&sequence<availabilitySequence)return;if(available===false&&value)availabilityEpoch++;available=value;if(sequence!==null)availabilitySequence=sequence;if(waiting){if(!value)sawUnavailable=true;else if(blockedSequence!==null?sequence!==null&&sequence>blockedSequence:sawUnavailable){waiting=false;sawUnavailable=false;blockedSequence=null;run();}}},

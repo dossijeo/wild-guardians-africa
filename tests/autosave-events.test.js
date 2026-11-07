@@ -88,3 +88,8 @@ test('recovery suspension keeps confirmed autosave boundaries pending until surf
  let calls=0;const errors=[],controller=createConfirmedAutosaveController({request:()=>{calls++;return Promise.resolve({saved:true});},onError:error=>errors.push(error)});
  try{controller.observe(true,1);controller.setSuspended(true);controller.events([{type:'RaidEnded'}]);controller.events([{type:'Dawn'}]);controller.observe(true,2);await new Promise(resolve=>setImmediate(resolve));assert.equal(calls,0);assert.equal(controller.status().pending,true);controller.setSuspended(false);await new Promise(resolve=>setImmediate(resolve));assert.equal(calls,1);assert.equal(controller.status().pending,false);controller.setSuspended(false);assert.equal(calls,1);assert.deepEqual(errors,[]);}finally{controller.dispose();}
 });
+
+test('confirmed tutorial changes use the same recovery fence as boundary autosaves',async()=>{
+ let calls=0;const controller=createConfirmedAutosaveController({request:()=>{calls++;return Promise.resolve({saved:true});}});
+ controller.setSuspended(true);controller.request();controller.events([{type:'Dawn'}]);controller.request();assert.equal(calls,0);assert.equal(controller.status().pending,true);controller.setSuspended(false);await new Promise(resolve=>setImmediate(resolve));assert.equal(calls,1);controller.dispose();assert.equal(controller.request(),false);assert.equal(calls,1);
+});

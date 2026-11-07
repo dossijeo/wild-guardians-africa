@@ -2,7 +2,7 @@
 // in the simulation. Every action enters the same ordered runtime command log.
 export function createWorkerTutorialBridge({runtime,profile,narrating=()=>null,onError=()=>{},onChange=()=>{},clock=()=>performance.now()}){
  if(typeof runtime?.submit!=='function'||typeof profile?.read!=='function'||typeof profile?.record!=='function'||typeof clock!=='function')throw TypeError('Invalid worker tutorial bridge');
- let current=null,started=false,closed=false,updatePending=false,presentedKey=null,presentTicket=0,presentRetryAt=0,advancePending=false,hiddenKey=null,hiddenVersion=0;const advanceQueue=[];
+ let current=null,started=false,closed=false,updatePending=false,presentedKey=null,presentTicket=0,presentRetryAt=0,advancePending=false,hiddenKey=null,hiddenVersion=0;const advanceQueue=[],automaticDismissals=new Map();
  function apply(result){
   if(closed)return null;const data=result?.value;if(!data||!Array.isArray(data.profileRecords))throw Error('Invalid worker tutorial response');
   for(const id of data.profileRecords)try{profile.record(id);}catch(error){onError(error);}
@@ -13,9 +13,14 @@ export function createWorkerTutorialBridge({runtime,profile,narrating=()=>null,o
   const result=runtime.submit({kind:'tutorialCommand',action,narrating:narrating(),...fields}).then(apply);result.catch(onError);return result;
  }
  const presentationBlocked=()=>runtime.status?.().visualDispatchBlocked===true;
+ function dismissNow(fields){return command('dismiss',fields).then(value=>{if(value&&!closed)onChange({dismissed:true});return value;});}
+ function flushDismissals(){
+  if(closed||presentationBlocked()||advancePending||advanceQueue.length)return;
+  for(const [key,entry] of automaticDismissals){automaticDismissals.delete(key);dismissNow(entry.fields).then(entry.resolve,entry.reject);}
+ }
  function flushAdvance(){
   if(closed||presentationBlocked()||advancePending||!advanceQueue.length)return;const next=advanceQueue.shift();advancePending=true;
-  const {hiddenTicket,...fields}=next;command('advance',fields).then(value=>{if(value)onChange({dismissed:true});},()=>{if(hiddenTicket!==undefined&&hiddenTicket===hiddenVersion)hiddenKey=null;}).finally(()=>{advancePending=false;flushAdvance();}).catch(()=>{});
+  const {hiddenTicket,...fields}=next;command('advance',fields).then(value=>{if(value)onChange({dismissed:true});},()=>{if(hiddenTicket!==undefined&&hiddenTicket===hiddenVersion)hiddenKey=null;}).finally(()=>{advancePending=false;flushAdvance();flushDismissals();}).catch(()=>{});
  }
  return {
   worker:true,
@@ -23,11 +28,17 @@ export function createWorkerTutorialBridge({runtime,profile,narrating=()=>null,o
   resumeMenu(){if(!started||closed)return Promise.reject(Error('Tutorial bridge not started'));return command('resume-menu');},
   async start(){if(started||closed)throw Error('Tutorial bridge cannot start');started=true;return apply(await runtime.submit({kind:'tutorialStart',seen:[...profile.read()]}));},
   presentation({record=true}={}){if(record&&current&&!presentationBlocked()){const key=JSON.stringify([current.id,current.variant,current.reading]);if(key!==presentedKey&&clock()>=presentRetryAt){presentedKey=key;const ticket=++presentTicket;command('present').catch(()=>{if(!closed&&ticket===presentTicket&&presentedKey===key){presentedKey=null;presentRetryAt=clock()+1000;}});}}return current;},
-  update(){if(!started||closed||presentationBlocked()||updatePending)return;flushAdvance();const status=runtime.status?.().tutorialUpdate,voice=narrating();if(status?.needed===false&&status.narrated===voice)return;updatePending=true;command('update').finally(()=>{updatePending=false;}).catch(()=>{});},
+  update(){if(!started||closed||presentationBlocked()||updatePending)return;flushAdvance();flushDismissals();const status=runtime.status?.().tutorialUpdate,voice=narrating();if(status?.needed===false&&status.narrated===voice)return;updatePending=true;command('update').finally(()=>{updatePending=false;}).catch(()=>{});},
   present(){return command('present');},
-  dismiss({automatic=false,message=current}={}){if(!message)return Promise.resolve(false);return command('dismiss',{automatic,messageId:message.id,variant:message.variant??null});},
+  dismiss({automatic=false,message=current}={}){
+   if(closed||!message)return Promise.resolve(false);const fields={automatic,messageId:message.id,variant:message.variant??null};
+   // Voice completion can arrive while the replacement surface is fenced.
+   // Preserve its identity; the authority still rejects a now-stale message.
+   if(automatic&&presentationBlocked()){const key=JSON.stringify([fields.messageId,fields.variant]);let entry=automaticDismissals.get(key);if(!entry){entry={fields};entry.promise=new Promise((resolve,reject)=>{entry.resolve=resolve;entry.reject=reject;});automaticDismissals.set(key,entry);}return entry.promise;}
+   return dismissNow(fields);
+  },
   skipBasic(){return command('skip');},
   advance(seconds,{visible=true}={}){if(!started||closed||presentationBlocked()||!seconds)return false;const voice=narrating(),resetOnly=!visible||!current||voice===current.id,key=JSON.stringify([visible,current?.id??null,current?.variant??null,current?.reading??null,voice]);let hiddenTicket;if(!resetOnly){hiddenKey=null;hiddenVersion++;}else{if(hiddenKey===key)return false;hiddenKey=key;hiddenTicket=++hiddenVersion;}const submittedVisible=resetOnly?false:visible,last=advanceQueue.at(-1);if(last&&!resetOnly&&last.hiddenTicket===undefined&&last.visible===submittedVisible&&last.narrating===voice)last.seconds+=seconds;else advanceQueue.push({seconds,visible:submittedVisible,narrating:voice,...(hiddenTicket===undefined?{}:{hiddenTicket})});flushAdvance();return false;},
-  dispose(){closed=true;current=null;},
+  dispose(){closed=true;current=null;for(const entry of automaticDismissals.values())entry.resolve(false);automaticDismissals.clear();},
  };
 }
