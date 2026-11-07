@@ -1,0 +1,7 @@
+# Preparación del guardián y apertura del panel de magia
+
+El panel Worker espera a `prepareGuardian` antes de abrirse. La preparación actual espera primero el modelo y su admisión, después los efectos; el gesto provisional puede registrarse sin modelo, pero no se muestra el guardián hasta que la admisión finaliza. Retirar la espera sin otra presentación inmediata podría aceptar una acción sin mostrar el gesto solicitado.
+
+Se probó iniciar la preparación del modelo y de los efectos con `Promise.all`. La batería existente tuvo cinco fallos: variaron el orden de admisión observado y la primera excepción al cancelar o fallar una admisión. Las pruebas también señalan actividad asíncrona al finalizar un caso fallido. Esto no demuestra por sí solo un fallo funcional en GPU: varias pruebas incluyen expectativas explícitas de orden. Sí impide afirmar que el cambio preserve el contrato de cancelación y recursos sin revisarlo. Se descartó la modificación; la batería original restaurada pasa 41/41.
+
+Las opciones son conservar la espera actual; abrir el panel y preparar recursos en segundo plano con una presentación inmediata válida; o preparar en paralelo manteniendo propiedad, publicación, cancelación y errores explícitos para ambas ramas. Cualquier opción que admita una invocación antes de completar la carga debe evitar gestos invisibles, VFX duplicados y acciones autoritativas inventadas. La captura WebGPU y la latencia siguen pendientes de validación integrada; no se declara mejora de rendimiento.
