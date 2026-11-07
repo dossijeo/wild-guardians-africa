@@ -4,6 +4,8 @@ El perfil Worker mantiene la simulación pausada mediante una razón propia dura
 
 La señal de fotograma acredita un dibujo enviado, no la presentación física por el compositor. Una prueba con Worker de autoridad y WASM reales verifica que se genera y confirma un chunk mientras la razón de pausa está activa; la publicación gráfica se simula. Faltan validación visual y de dispositivo, tiempos de carga y comprobación en partida. La integración parcial del diorama descrita abajo no cierra B7 ni afirma paridad visual con el original.
 
+El Worker del jardín observa ahora la pérdida de su dispositivo WebGPU y la comunica por el canal de error de carga existente, que rechaza la espera de primera imagen y cancela el inicio en lugar de quedar pendiente. La destrucción intencionada durante el cierre no se comunica como fallo y un error detiene posteriores dibujos del jardín. Las pruebas dirigidas cubren la señal y su propagación con dobles; no se ha forzado una pérdida real del dispositivo en el flujo completo de partida.
+
 # Diorama de carga Worker WebGPU
 
 El perfil Worker crea un canvas independiente para el jardín durante la carga. Su Worker usa el cielo WebGPU y el roster real de maíz, mientras `LoadingPlants` y la órbita existentes controlan crecimiento e interacción. La interfaz acumula como máximo un frame pendiente y la transición espera una primera escena dibujada y la maduración de las plantas; la cancelación termina el Worker y rechaza la espera. El progreso Worker utiliza hitos de configuración, preparación gráfica, terreno y vista, sin fingir las precargas de la ruta histórica.
