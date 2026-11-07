@@ -14,6 +14,14 @@ test('sprite effects share shader graphs while material references remain indepe
 });
 test('sprite graph distinguishes incompatible atlas layouts and resource identities',()=>{const a=new THREE.Texture(),b=new THREE.Texture();try{const first=createWebGpuVfxSpriteGraph(a);assert.notEqual(createWebGpuVfxSpriteGraph(b),first);a.channel=1;assert.notEqual(createWebGpuVfxSpriteGraph(a),first);}finally{a.dispose();b.dispose();}});
 
+test('lit world does not request normals or duplicate lighting for authored billboard output',()=>{
+ const atlas=new THREE.Texture(),graph=createWebGpuVfxSpriteGraph(atlas),material=createWebGpuVfxSpriteMaterial(graph),geometry=new THREE.InstancedBufferGeometry();
+ for(const [name,size] of Object.entries({position:3,aCorner:2,iPos:3,iSize:2,iAngle:1,iRect:4,iNext:4,iColor:4,iParams:4,iDirection:3}))geometry.setAttribute(name,new THREE.Float32BufferAttribute(new Float32Array(size*3),size));
+ const object=new THREE.Mesh(geometry,material);bindWebGpuVfxSpriteObject(object);const renderer=new WebGPURenderer({canvas:{width:1,height:1,style:{},addEventListener(){},removeEventListener(){},getContext(){return null;}}});renderer.hasFeature=()=>true;
+ const warn=console.warn,warnings=[];console.warn=(...args)=>warnings.push(args.join(' '));
+ try{const builder=renderer.backend.createNodeBuilder(object,renderer);builder.scene=new THREE.Scene();builder.camera=new THREE.PerspectiveCamera();builder.lightsNode=renderer.lighting.createNode([new THREE.DirectionalLight(),new THREE.PointLight()]);builder.build();assert.equal(material.lights,false);assert.equal(material.outputNode,graph.outputNode);assert.deepEqual(warnings,[]);assert.equal(geometry.hasAttribute('normal'),false);assert.doesNotMatch(builder.vertexShader,/normalLocal|normalView/);assert.match(builder.fragmentShader,/textureSample/);}finally{console.warn=warn;material.dispose();geometry.dispose();atlas.dispose();}
+});
+
 test('optional terrain depth graph shares bindings, supports resizing and builds WGSL without a GPU',()=>{
  const atlas=new THREE.Texture(),depth=new THREE.DepthTexture(8,8),replacement=new THREE.DepthTexture(16,16),binding=createWebGpuVfxSoftDepth(depth);
  const graph=createWebGpuVfxSpriteGraph(atlas,binding),fallback=createWebGpuVfxSpriteGraph(atlas),material=createWebGpuVfxSpriteMaterial(graph),geometry=new THREE.BufferGeometry(),mesh=new THREE.Mesh(geometry,material),other=new THREE.Mesh(geometry,material),values=bindWebGpuVfxSpriteObject(mesh),otherValues=bindWebGpuVfxSpriteObject(other);

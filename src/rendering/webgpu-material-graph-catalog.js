@@ -63,7 +63,10 @@ const guardianState=Object.freeze({transparent:true,depthWrite:true,forceSingleP
 const guardianRecipe=Object.freeze({structural:Object.freeze({family:'guardian-surface',state:guardianState}),dynamic:guardianDynamic,passes:Object.freeze({color:'guardian-alpha-test',depth:'color-pass-alpha-test',shadow:'guardian-mesh-does-not-cast'}),key:JSON.stringify(['guardian-surface',guardianState])});
 export function guardianSurfaceRecipe(){return guardianRecipe;}
 
-const spriteState=Object.freeze({transparent:true,depthWrite:false,side:DoubleSide,toneMapped:false});
+// Sprite output already includes its authored illumination and local lights.
+// BasicNodeMaterial otherwise evaluates an unused scene-lighting branch, which
+// requests geometry normals on billboard buffers that deliberately have none.
+const spriteState=Object.freeze({transparent:true,depthWrite:false,side:DoubleSide,toneMapped:false,lights:false});
 const spriteDynamic=Object.freeze(['instanceData','atlasContents','eye','right','up','particle','lightPositions','lightColors']);
 const spriteAttributes=Object.freeze(['aCorner:vec2','iPos:vec3','iSize:vec2','iAngle:float','iRect:vec4','iNext:vec4','iColor:vec4','iParams:vec4','iDirection:vec3']);
 const spriteGraphs=new WeakMap();
