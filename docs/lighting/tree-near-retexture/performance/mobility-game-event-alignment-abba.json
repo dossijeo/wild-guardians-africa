@@ -1,0 +1,801 @@
+{
+  "scope": "300 ordered Worker ticks with a scripted structure hit and per-step event delivery and visual-version arrival tracking, bounded by wall-time simulation deadlines versus one request per render frame. One in flight; clock mode coalesces pending visual poses while recording all samples and events. Textured hyena in reduced WebGL scene. Not a production clock, pause, real input, event delivery, safe horizon or gameplay integration; initialization excluded.",
+  "runs": [
+    {
+      "mode": "frame",
+      "eventAlignment": [
+        {
+          "type": "AnimalRetreating",
+          "eventStep": 1,
+          "previousVisualStep": 0,
+          "visualStep": 1,
+          "initialLagSteps": 1,
+          "visualWaitMs": 29.519999995827675
+        },
+        {
+          "type": "AnimalRetreating",
+          "eventStep": 1,
+          "previousVisualStep": 0,
+          "visualStep": 1,
+          "initialLagSteps": 1,
+          "visualWaitMs": 29.519999995827675
+        },
+        {
+          "type": "AnimalRetreating",
+          "eventStep": 1,
+          "previousVisualStep": 0,
+          "visualStep": 1,
+          "initialLagSteps": 1,
+          "visualWaitMs": 29.519999995827675
+        },
+        {
+          "type": "AnimalRetreating",
+          "eventStep": 1,
+          "previousVisualStep": 0,
+          "visualStep": 1,
+          "initialLagSteps": 1,
+          "visualWaitMs": 29.519999995827675
+        },
+        {
+          "type": "AnimalRetreating",
+          "eventStep": 1,
+          "previousVisualStep": 0,
+          "visualStep": 1,
+          "initialLagSteps": 1,
+          "visualWaitMs": 29.519999995827675
+        },
+        {
+          "type": "AnimalRetreatExitAbandoned",
+          "eventStep": 45,
+          "previousVisualStep": 44,
+          "visualStep": 45,
+          "initialLagSteps": 1,
+          "visualWaitMs": 29.024999991059303
+        },
+        {
+          "type": "AnimalRetreatExitAbandoned",
+          "eventStep": 45,
+          "previousVisualStep": 44,
+          "visualStep": 45,
+          "initialLagSteps": 1,
+          "visualWaitMs": 29.024999991059303
+        },
+        {
+          "type": "AnimalRetreatExitAbandoned",
+          "eventStep": 45,
+          "previousVisualStep": 44,
+          "visualStep": 45,
+          "initialLagSteps": 1,
+          "visualWaitMs": 29.024999991059303
+        },
+        {
+          "type": "AnimalRetreatExitAbandoned",
+          "eventStep": 45,
+          "previousVisualStep": 44,
+          "visualStep": 45,
+          "initialLagSteps": 1,
+          "visualWaitMs": 29.024999991059303
+        },
+        {
+          "type": "AnimalRetreatExitAbandoned",
+          "eventStep": 45,
+          "previousVisualStep": 44,
+          "visualStep": 45,
+          "initialLagSteps": 1,
+          "visualWaitMs": 29.024999991059303
+        },
+        {
+          "type": "StructureRuined",
+          "eventStep": 221,
+          "previousVisualStep": 220,
+          "visualStep": 221,
+          "initialLagSteps": 1,
+          "visualWaitMs": 25.525000005960464
+        }
+      ],
+      "eventTypes": [
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "StructureRuined"
+      ],
+      "eventSequences": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        45,
+        45,
+        45,
+        45,
+        45,
+        221
+      ],
+      "eventDeliveryMs": {
+        "count": 11,
+        "p95": 304.6449999958277,
+        "p99": 304.6449999958277,
+        "max": 304.6449999958277
+      },
+      "phases": [
+        "falling"
+      ],
+      "network": true,
+      "steps": 300,
+      "applied": 300,
+      "coalesced": 0,
+      "maxAheadMs": 0,
+      "computeElapsedMs": 10411.664999991655,
+      "displayElapsedMs": 10432.95000000298,
+      "deliveryMs": {
+        "count": 300,
+        "p95": 5.429999992251396,
+        "p99": 10.844999998807907,
+        "max": 304.6449999958277
+      },
+      "presentationDelayMs": {
+        "count": 300,
+        "p95": 30.819999992847443,
+        "p99": 30.890000000596046,
+        "max": 30.930000007152557
+      },
+      "tickMs": {
+        "count": 300,
+        "p95": 4.600000008940697,
+        "p99": 6.91499999165535,
+        "max": 303.1650000065565
+      },
+      "workerComputeMs": {
+        "count": 300,
+        "p95": 5.0899999886751175,
+        "p99": 10.604999989271164,
+        "max": 303.84999999403954
+      },
+      "poseApplyMs": {
+        "count": 300,
+        "p95": 0.10999999940395355,
+        "p99": 0.14500001072883606,
+        "max": 0.1900000125169754
+      },
+      "visualGapSteps": {
+        "count": 300,
+        "p95": 1,
+        "p99": 1,
+        "max": 1
+      },
+      "rootShift": {
+        "count": 300,
+        "p95": 0.04084554431565211,
+        "p99": 0.08333414753504743,
+        "max": 0.0978675106338216
+      },
+      "frames": {
+        "count": 327,
+        "p95": 33.39000000000124,
+        "p99": 33.43000000000029,
+        "max": 33.524999999999636
+      },
+      "renderMs": {
+        "count": 328,
+        "p95": 0.6450000107288361,
+        "p99": 0.8100000023841858,
+        "max": 2.5
+      },
+      "gpu": {
+        "reason": null,
+        "count": 328,
+        "p95": 32.90848,
+        "p99": 33.094336,
+        "disjoint": 0,
+        "discarded": 0
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "stateHash": "c8ff6d002bb77de2b59f7b8798a94ac6e9f82429be23f3b1dddc9218796eac2f"
+    },
+    {
+      "mode": "clock",
+      "eventAlignment": [
+        {
+          "type": "AnimalRetreating",
+          "eventStep": 1,
+          "previousVisualStep": 0,
+          "visualStep": 1,
+          "initialLagSteps": 1,
+          "visualWaitMs": 8.734999999403954
+        },
+        {
+          "type": "AnimalRetreating",
+          "eventStep": 1,
+          "previousVisualStep": 0,
+          "visualStep": 1,
+          "initialLagSteps": 1,
+          "visualWaitMs": 8.734999999403954
+        },
+        {
+          "type": "AnimalRetreating",
+          "eventStep": 1,
+          "previousVisualStep": 0,
+          "visualStep": 1,
+          "initialLagSteps": 1,
+          "visualWaitMs": 8.734999999403954
+        },
+        {
+          "type": "AnimalRetreating",
+          "eventStep": 1,
+          "previousVisualStep": 0,
+          "visualStep": 1,
+          "initialLagSteps": 1,
+          "visualWaitMs": 8.734999999403954
+        },
+        {
+          "type": "AnimalRetreating",
+          "eventStep": 1,
+          "previousVisualStep": 0,
+          "visualStep": 1,
+          "initialLagSteps": 1,
+          "visualWaitMs": 8.734999999403954
+        },
+        {
+          "type": "AnimalRetreatExitAbandoned",
+          "eventStep": 45,
+          "previousVisualStep": 43,
+          "visualStep": 45,
+          "initialLagSteps": 2,
+          "visualWaitMs": 8.75
+        },
+        {
+          "type": "AnimalRetreatExitAbandoned",
+          "eventStep": 45,
+          "previousVisualStep": 43,
+          "visualStep": 45,
+          "initialLagSteps": 2,
+          "visualWaitMs": 8.75
+        },
+        {
+          "type": "AnimalRetreatExitAbandoned",
+          "eventStep": 45,
+          "previousVisualStep": 43,
+          "visualStep": 45,
+          "initialLagSteps": 2,
+          "visualWaitMs": 8.75
+        },
+        {
+          "type": "AnimalRetreatExitAbandoned",
+          "eventStep": 45,
+          "previousVisualStep": 43,
+          "visualStep": 45,
+          "initialLagSteps": 2,
+          "visualWaitMs": 8.75
+        },
+        {
+          "type": "AnimalRetreatExitAbandoned",
+          "eventStep": 45,
+          "previousVisualStep": 43,
+          "visualStep": 45,
+          "initialLagSteps": 2,
+          "visualWaitMs": 8.75
+        },
+        {
+          "type": "StructureRuined",
+          "eventStep": 221,
+          "previousVisualStep": 220,
+          "visualStep": 224,
+          "initialLagSteps": 1,
+          "visualWaitMs": 7.820000007748604
+        }
+      ],
+      "eventTypes": [
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "StructureRuined"
+      ],
+      "eventSequences": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        45,
+        45,
+        45,
+        45,
+        45,
+        221
+      ],
+      "eventDeliveryMs": {
+        "count": 11,
+        "p95": 308.02500000596046,
+        "p99": 308.02500000596046,
+        "max": 308.02500000596046
+      },
+      "phases": [
+        "falling"
+      ],
+      "network": true,
+      "steps": 300,
+      "applied": 140,
+      "coalesced": 160,
+      "maxAheadMs": 0,
+      "computeElapsedMs": 5011.4150000065565,
+      "displayElapsedMs": 5032.965000003576,
+      "deliveryMs": {
+        "count": 300,
+        "p95": 6.569999992847443,
+        "p99": 11.120000004768372,
+        "max": 308.02500000596046
+      },
+      "presentationDelayMs": {
+        "count": 140,
+        "p95": 14.180000007152557,
+        "p99": 21.489999994635582,
+        "max": 30.484999999403954
+      },
+      "tickMs": {
+        "count": 300,
+        "p95": 5.659999996423721,
+        "p99": 10.149999991059303,
+        "max": 306.65000000596046
+      },
+      "workerComputeMs": {
+        "count": 300,
+        "p95": 6.105000004172325,
+        "p99": 10.774999991059303,
+        "max": 307.31999999284744
+      },
+      "poseApplyMs": {
+        "count": 140,
+        "p95": 0.10499998927116394,
+        "p99": 0.12999999523162842,
+        "max": 0.1900000125169754
+      },
+      "visualGapSteps": {
+        "count": 140,
+        "p95": 3,
+        "p99": 5,
+        "max": 7
+      },
+      "rootShift": {
+        "count": 140,
+        "p95": 0.05405042729016454,
+        "p99": 0.09211135445095978,
+        "max": 0.3005764503880372
+      },
+      "frames": {
+        "count": 165,
+        "p95": 33.399999999999636,
+        "p99": 33.4350000000004,
+        "max": 33.465000000000146
+      },
+      "renderMs": {
+        "count": 166,
+        "p95": 0.625,
+        "p99": 0.7900000065565109,
+        "max": 3.9000000059604645
+      },
+      "gpu": {
+        "reason": null,
+        "count": 166,
+        "p95": 3.450976,
+        "p99": 4.20496,
+        "disjoint": 0,
+        "discarded": 0
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "stateHash": "c8ff6d002bb77de2b59f7b8798a94ac6e9f82429be23f3b1dddc9218796eac2f"
+    },
+    {
+      "mode": "clock",
+      "eventAlignment": [
+        {
+          "type": "AnimalRetreating",
+          "eventStep": 1,
+          "previousVisualStep": 0,
+          "visualStep": 1,
+          "initialLagSteps": 1,
+          "visualWaitMs": 10.980000004172325
+        },
+        {
+          "type": "AnimalRetreating",
+          "eventStep": 1,
+          "previousVisualStep": 0,
+          "visualStep": 1,
+          "initialLagSteps": 1,
+          "visualWaitMs": 10.980000004172325
+        },
+        {
+          "type": "AnimalRetreating",
+          "eventStep": 1,
+          "previousVisualStep": 0,
+          "visualStep": 1,
+          "initialLagSteps": 1,
+          "visualWaitMs": 10.980000004172325
+        },
+        {
+          "type": "AnimalRetreating",
+          "eventStep": 1,
+          "previousVisualStep": 0,
+          "visualStep": 1,
+          "initialLagSteps": 1,
+          "visualWaitMs": 10.980000004172325
+        },
+        {
+          "type": "AnimalRetreating",
+          "eventStep": 1,
+          "previousVisualStep": 0,
+          "visualStep": 1,
+          "initialLagSteps": 1,
+          "visualWaitMs": 10.980000004172325
+        },
+        {
+          "type": "AnimalRetreatExitAbandoned",
+          "eventStep": 45,
+          "previousVisualStep": 43,
+          "visualStep": 45,
+          "initialLagSteps": 2,
+          "visualWaitMs": 7.2650000005960464
+        },
+        {
+          "type": "AnimalRetreatExitAbandoned",
+          "eventStep": 45,
+          "previousVisualStep": 43,
+          "visualStep": 45,
+          "initialLagSteps": 2,
+          "visualWaitMs": 7.2650000005960464
+        },
+        {
+          "type": "AnimalRetreatExitAbandoned",
+          "eventStep": 45,
+          "previousVisualStep": 43,
+          "visualStep": 45,
+          "initialLagSteps": 2,
+          "visualWaitMs": 7.2650000005960464
+        },
+        {
+          "type": "AnimalRetreatExitAbandoned",
+          "eventStep": 45,
+          "previousVisualStep": 43,
+          "visualStep": 45,
+          "initialLagSteps": 2,
+          "visualWaitMs": 7.2650000005960464
+        },
+        {
+          "type": "AnimalRetreatExitAbandoned",
+          "eventStep": 45,
+          "previousVisualStep": 43,
+          "visualStep": 45,
+          "initialLagSteps": 2,
+          "visualWaitMs": 7.2650000005960464
+        },
+        {
+          "type": "StructureRuined",
+          "eventStep": 221,
+          "previousVisualStep": 220,
+          "visualStep": 222,
+          "initialLagSteps": 1,
+          "visualWaitMs": 3.729999989271164
+        }
+      ],
+      "eventTypes": [
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "StructureRuined"
+      ],
+      "eventSequences": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        45,
+        45,
+        45,
+        45,
+        45,
+        221
+      ],
+      "eventDeliveryMs": {
+        "count": 11,
+        "p95": 305.9350000023842,
+        "p99": 305.9350000023842,
+        "max": 305.9350000023842
+      },
+      "phases": [
+        "falling"
+      ],
+      "network": true,
+      "steps": 300,
+      "applied": 140,
+      "coalesced": 160,
+      "maxAheadMs": 0,
+      "computeElapsedMs": 5011.114999994636,
+      "displayElapsedMs": 5032.989999994636,
+      "deliveryMs": {
+        "count": 300,
+        "p95": 5.560000002384186,
+        "p99": 10.78999999165535,
+        "max": 305.9350000023842
+      },
+      "presentationDelayMs": {
+        "count": 140,
+        "p95": 14.180000007152557,
+        "p99": 14.344999998807907,
+        "max": 30.389999985694885
+      },
+      "tickMs": {
+        "count": 300,
+        "p95": 4.840000003576279,
+        "p99": 6.75,
+        "max": 304.3649999946356
+      },
+      "workerComputeMs": {
+        "count": 300,
+        "p95": 5.3399999886751175,
+        "p99": 10.069999992847443,
+        "max": 305.2749999910593
+      },
+      "poseApplyMs": {
+        "count": 140,
+        "p95": 0.10999999940395355,
+        "p99": 0.125,
+        "max": 0.16500000655651093
+      },
+      "visualGapSteps": {
+        "count": 140,
+        "p95": 2,
+        "p99": 7,
+        "max": 8
+      },
+      "rootShift": {
+        "count": 140,
+        "p95": 0.06096412476191566,
+        "p99": 0.09211135445095978,
+        "max": 0.3005764503880372
+      },
+      "frames": {
+        "count": 165,
+        "p95": 33.38999999999942,
+        "p99": 33.410000000000764,
+        "max": 33.45499999999993
+      },
+      "renderMs": {
+        "count": 166,
+        "p95": 0.6550000011920929,
+        "p99": 0.8400000035762787,
+        "max": 1.0450000017881393
+      },
+      "gpu": {
+        "reason": null,
+        "count": 166,
+        "p95": 4.653952,
+        "p99": 5.467136,
+        "disjoint": 0,
+        "discarded": 0
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "stateHash": "c8ff6d002bb77de2b59f7b8798a94ac6e9f82429be23f3b1dddc9218796eac2f"
+    },
+    {
+      "mode": "frame",
+      "eventAlignment": [
+        {
+          "type": "AnimalRetreating",
+          "eventStep": 1,
+          "previousVisualStep": 0,
+          "visualStep": 1,
+          "initialLagSteps": 1,
+          "visualWaitMs": 9.984999999403954
+        },
+        {
+          "type": "AnimalRetreating",
+          "eventStep": 1,
+          "previousVisualStep": 0,
+          "visualStep": 1,
+          "initialLagSteps": 1,
+          "visualWaitMs": 9.984999999403954
+        },
+        {
+          "type": "AnimalRetreating",
+          "eventStep": 1,
+          "previousVisualStep": 0,
+          "visualStep": 1,
+          "initialLagSteps": 1,
+          "visualWaitMs": 9.984999999403954
+        },
+        {
+          "type": "AnimalRetreating",
+          "eventStep": 1,
+          "previousVisualStep": 0,
+          "visualStep": 1,
+          "initialLagSteps": 1,
+          "visualWaitMs": 9.984999999403954
+        },
+        {
+          "type": "AnimalRetreating",
+          "eventStep": 1,
+          "previousVisualStep": 0,
+          "visualStep": 1,
+          "initialLagSteps": 1,
+          "visualWaitMs": 9.984999999403954
+        },
+        {
+          "type": "AnimalRetreatExitAbandoned",
+          "eventStep": 45,
+          "previousVisualStep": 44,
+          "visualStep": 45,
+          "initialLagSteps": 1,
+          "visualWaitMs": 29.399999991059303
+        },
+        {
+          "type": "AnimalRetreatExitAbandoned",
+          "eventStep": 45,
+          "previousVisualStep": 44,
+          "visualStep": 45,
+          "initialLagSteps": 1,
+          "visualWaitMs": 29.399999991059303
+        },
+        {
+          "type": "AnimalRetreatExitAbandoned",
+          "eventStep": 45,
+          "previousVisualStep": 44,
+          "visualStep": 45,
+          "initialLagSteps": 1,
+          "visualWaitMs": 29.399999991059303
+        },
+        {
+          "type": "AnimalRetreatExitAbandoned",
+          "eventStep": 45,
+          "previousVisualStep": 44,
+          "visualStep": 45,
+          "initialLagSteps": 1,
+          "visualWaitMs": 29.399999991059303
+        },
+        {
+          "type": "AnimalRetreatExitAbandoned",
+          "eventStep": 45,
+          "previousVisualStep": 44,
+          "visualStep": 45,
+          "initialLagSteps": 1,
+          "visualWaitMs": 29.399999991059303
+        },
+        {
+          "type": "StructureRuined",
+          "eventStep": 221,
+          "previousVisualStep": 220,
+          "visualStep": 221,
+          "initialLagSteps": 1,
+          "visualWaitMs": 24.875
+        }
+      ],
+      "eventTypes": [
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "AnimalRetreatExitAbandoned",
+        "StructureRuined"
+      ],
+      "eventSequences": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        45,
+        45,
+        45,
+        45,
+        45,
+        221
+      ],
+      "eventDeliveryMs": {
+        "count": 11,
+        "p95": 323.9699999988079,
+        "p99": 323.9699999988079,
+        "max": 323.9699999988079
+      },
+      "phases": [
+        "falling"
+      ],
+      "network": true,
+      "steps": 300,
+      "applied": 300,
+      "coalesced": 0,
+      "maxAheadMs": 0,
+      "computeElapsedMs": 10411.52499999106,
+      "displayElapsedMs": 10433.044999986887,
+      "deliveryMs": {
+        "count": 300,
+        "p95": 5.704999998211861,
+        "p99": 15.854999989271164,
+        "max": 323.9699999988079
+      },
+      "presentationDelayMs": {
+        "count": 300,
+        "p95": 30.700000002980232,
+        "p99": 30.810000002384186,
+        "max": 30.91499999165535
+      },
+      "tickMs": {
+        "count": 300,
+        "p95": 5.004999995231628,
+        "p99": 14.144999995827675,
+        "max": 321.79999999701977
+      },
+      "workerComputeMs": {
+        "count": 300,
+        "p95": 5.299999997019768,
+        "p99": 14.680000007152557,
+        "max": 322.9650000035763
+      },
+      "poseApplyMs": {
+        "count": 300,
+        "p95": 0.11499999463558197,
+        "p99": 0.20499999821186066,
+        "max": 1.5899999886751175
+      },
+      "visualGapSteps": {
+        "count": 300,
+        "p95": 1,
+        "p99": 1,
+        "max": 1
+      },
+      "rootShift": {
+        "count": 300,
+        "p95": 0.04084554431565211,
+        "p99": 0.08333414753504743,
+        "max": 0.0978675106338216
+      },
+      "frames": {
+        "count": 327,
+        "p95": 33.375,
+        "p99": 33.41500000000087,
+        "max": 33.49000000000069
+      },
+      "renderMs": {
+        "count": 328,
+        "p95": 0.7199999988079071,
+        "p99": 0.875,
+        "max": 2.5249999910593033
+      },
+      "gpu": {
+        "reason": null,
+        "count": 328,
+        "p95": 4.086528,
+        "p99": 4.870272,
+        "disjoint": 0,
+        "discarded": 0
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "stateHash": "c8ff6d002bb77de2b59f7b8798a94ac6e9f82429be23f3b1dddc9218796eac2f"
+    }
+  ]
+}

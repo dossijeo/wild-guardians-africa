@@ -4,6 +4,8 @@ import * as THREE from 'three';
 import {TerrainField} from '../src/world/terrain.js';
 import {BlenderGroundDetails,markGroundDetailEvent} from '../src/rendering/blender-ground-details.js';
 import {groundSample417} from '../src/rendering/ground-mask.js';
+import * as Game from '../src/simulation/game.js';
+import {clearNavigation} from './clear-navigation.js';
 
 const biomes=['savanna','grand_river','mangrove','volcanoes','canyons','desert'];
 const state={plants:[{x:7,z:8,alive:true}],structures:[{x:12,z:12,kind:'wall',status:'active'}],villages:[]};
@@ -140,4 +142,32 @@ test('multiple changes in one frame coalesce, while non-topological damage is ig
   d.flush(field,game);
   assert.equal(d.refreshStats.chunks,2);
   d.dispose();d.geometry.dispose();d.material.dispose();
+});
+
+test('crop occupancy events retain committed location after snapshot changes, with legacy fallback',()=>{
+ const state=Game.newGame({slotId:'ground-events',seed:712}),nav=clearNavigation();Game.resume(state,'intro');
+ Game.placeStructure(state,'center',{x:0,z:0},nav);Game.plant(state,'crop','mijo',8,0,nav);
+ const plant=state.plants.at(-1);assert.ok(plant);const placed=state.events.find(e=>e.type==='CropPlaced');
+ assert.deepEqual(placed.presentation,{x:plant.x,z:plant.z});
+ for(const type of ['CropPlaced','CropPicked','CropDestroyed']) {
+  if(type!=='CropPlaced')Game.emit(state,type,{targetId:plant.id});
+  const event=type==='CropPlaced'?placed:state.events.at(-1);assert.deepEqual(event.presentation,{x:plant.x,z:plant.z});
+  const hits=[],details={enabled:true,markDirtyAt:(x,z)=>hits.push([x,z])};
+  markGroundDetailEvent(details,state,{type,targetId:plant.id});const expected=hits.splice(0);
+  markGroundDetailEvent(details,{plants:[],structures:[]},structuredClone(event));assert.deepEqual(hits,expected);
+  hits.length=0;markGroundDetailEvent(details,{plants:[{...plant,x:99,z:99}],structures:[]},event);assert.deepEqual(hits,expected);
+  hits.length=0;markGroundDetailEvent(details,state,{type,targetId:plant.id,presentation:{x:NaN,z:0}});assert.deepEqual(hits,expected);
+ }
+});
+
+test('structural occupancy facts survive later state changes and preserve legacy lookup',()=>{
+ const state=Game.newGame({slotId:'ground-structural-events',seed:712}),nav=clearNavigation();Game.resume(state,'intro');
+ Game.placeStructure(state,'center',{x:0,z:0},nav);const placed=state.events.find(e=>e.type==='PlacementCommitted');assert.ok(placed);
+ Game.buildWallChain(state,'wall-chain','adobe',[[15,0],[20,0]],nav,{smooth:false,snap:false});
+ const chain=state.events.find(e=>e.type==='WallChainBuilt');assert.ok(chain);const pieces=state.structures.filter(p=>p.kind==='wall');assert.equal(chain.presentation.points.length,chain.count);
+ const wall=pieces[0];Game.removeWall(state,'remove',wall.id,nav);const removed=state.events.find(e=>e.type==='WallRemoved'&&e.targetId===wall.id);assert.deepEqual(removed.presentation,{x:wall.x,z:wall.z});
+ const chosen=pieces.at(-1);chosen.status='collapsing';chosen.collapseRemaining=0;state.initialPreparation=false;Game.tick(state,.01,nav);const ruined=state.events.find(e=>e.type==='StructureRuined'&&e.targetId===chosen.id);assert.ok(ruined);
+ const cases=[[placed,[placed.presentation]],[chain,chain.presentation.points],[removed,[removed.presentation]],[ruined,[ruined.presentation]], [{type:'RepairApplied',targetId:chosen.id,repair:{previousStatus:'ruined'},presentation:{x:99,z:99,structure:{x:chosen.x,z:chosen.z}}},[{x:chosen.x,z:chosen.z}]]];
+ for(const [event,points] of cases){const actual=[],d={enabled:true,markDirtyAt:(x,z)=>actual.push({x,z})};markGroundDetailEvent(d,{plants:[],structures:[]},structuredClone(event));assert.deepEqual(actual,points.map(({x,z})=>({x,z})));}
+ const legacy=[],d={enabled:true,markDirtyAt:(x,z)=>legacy.push({x,z})};markGroundDetailEvent(d,{structures:[chosen]}, {type:'StructureRuined',targetId:chosen.id});assert.deepEqual(legacy,[{x:chosen.x,z:chosen.z}]);
 });

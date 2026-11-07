@@ -1,0 +1,15 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import * as THREE from 'three';
+import {readGeometry} from '../tools/experiments/bake_center_camera_bounds.mjs';
+import {prepareNativeBuilding} from '../src/rendering/buildings.js';
+import {cameraCenterBounds} from '../src/rendering/webgpu-settlements.js';
+import {CameraBuildingRegistry} from '../src/rendering/camera-building-registry.js';
+import {createConfirmedCameraTreeIndex} from '../src/app/confirmed-camera-tree-index.js';
+
+test('authored center camera envelopes match native templates and registry for every culture',async()=>{
+ const catalogue=JSON.parse(await readFile('public/content/destruction.json','utf8')),data=JSON.parse(await readFile('public/content/structure-preview/center-camera-bounds.json','utf8'));
+ for(const building of catalogue.buildings){const input=readGeometry(await readFile('public'+building.url)),geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.BufferAttribute(input.positions,3));geometry.setAttribute('normal',new THREE.BufferAttribute(input.normals,3));geometry.setAttribute('uv',new THREE.BufferAttribute(input.uv,2));geometry.setIndex(new THREE.BufferAttribute(input.indices,1));const mesh=new THREE.Mesh(geometry,new THREE.MeshStandardMaterial()),scene=new THREE.Group();scene.add(mesh);const metadata=data.records[building.culture],boxes=await cameraCenterBounds(metadata,building,geometry);assert.ok(boxes,building.culture);const template=prepareNativeBuilding({scene},building);for(const key of ['still','fall','ash']){assert.deepEqual(boxes[key].min.toArray(),template.culling.boxes[key].min.toArray());assert.deepEqual(boxes[key].max.toArray(),template.culling.boxes[key].max.toArray());}
+ const root=new THREE.Group();root.userData.nativeBuilding=true;root.template=template;root.position.set(10,2,-5);root.rotation.y=.4;const reference=new CameraBuildingRegistry(),view=createConfirmedCameraTreeIndex();for(const [i,damage] of [0,.5,.9,1].entries()){root.damage=damage;reference.sync(new Map([['center',root]]),[{id:'center'}]);root.updateWorldMatrix(true,false);const name=damage>=.9998?'ash':damage>.79?'fall':'still',bounds=boxes[name].clone();if(damage>.23&&name!=='ash')bounds.union(boxes.ash);view.ingestStructures({epoch:'e',sequence:i,revision:i+1,complete:true,records:[{id:'center',kind:'center',min:bounds.min.toArray(),max:bounds.max.toArray(),matrix:root.matrixWorld.toArray()}]});view.confirm(i);const actual=view.index.records.get('camera-structure:center'),expected=[...reference.index.records.values()][0];assert.deepEqual(actual.min,expected.min);assert.deepEqual(actual.max,expected.max);assert.equal(actual.yaw,expected.yaw);}assert.equal(await cameraCenterBounds({...metadata,source:'/wrong'},building,geometry),null);assert.equal(await cameraCenterBounds(metadata,{...building,repairPlaster:!building.repairPlaster},geometry),null);geometry.getAttribute('position').setX(0,geometry.getAttribute('position').getX(0)+1);assert.equal(await cameraCenterBounds(metadata,building,geometry),null);view.dispose();template.dispose();}
+});

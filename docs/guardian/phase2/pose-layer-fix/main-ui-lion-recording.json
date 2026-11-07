@@ -1,0 +1,90 @@
+{
+  "status": "finished",
+  "syntheticPointer": true,
+  "target": {
+    "id": "animal-22",
+    "species": "lion",
+    "status": "entering",
+    "phase": null,
+    "x": 79,
+    "z": 54.3291756683222,
+    "health": null
+  },
+  "beforeCooldown": 0,
+  "clientX": 659.4197647368478,
+  "clientY": 542.2260708554563,
+  "transitions": [
+    {
+      "elapsed": 0.09999999999990905,
+      "id": "animal-22",
+      "species": "lion",
+      "status": "entering",
+      "phase": "entering/normal",
+      "x": 79,
+      "z": 54.3291756683222,
+      "health": 84
+    },
+    {
+      "elapsed": 0.2498449999998229,
+      "id": "animal-22",
+      "species": "lion",
+      "status": "entering",
+      "phase": "entering/falling",
+      "x": 78.99999742989198,
+      "z": 54.32917564909145,
+      "health": 84
+    },
+    {
+      "elapsed": 3.294334999997318,
+      "id": "animal-22",
+      "species": "lion",
+      "status": "entering",
+      "phase": "entering/rolling",
+      "x": 79.92204157517412,
+      "z": 53.17779475363004,
+      "health": 84
+    },
+    {
+      "elapsed": 4.807464999996228,
+      "id": "animal-22",
+      "species": "lion",
+      "status": "entering",
+      "phase": "entering/recovering",
+      "x": 79.97619086531127,
+      "z": 53.534506924080254,
+      "health": 84
+    },
+    {
+      "elapsed": 8.914859999993041,
+      "id": "animal-22",
+      "species": "lion",
+      "status": "entering",
+      "phase": "entering/normal",
+      "x": 79.14005692521542,
+      "z": 53.75432009527012,
+      "health": 84
+    }
+  ],
+  "maxGuardian": 1,
+  "afterCooldown": 12,
+  "accepted": true,
+  "observationComplete": true,
+  "final": {
+    "id": "animal-22",
+    "species": "lion",
+    "status": "entering",
+    "phase": null,
+    "x": 72,
+    "z": 38.03014173317541,
+    "health": 84
+  },
+  "finalCooldown": 0,
+  "video": {
+    "saved": true,
+    "bytes": 4828558,
+    "audio": true,
+    "audioError": null,
+    "wallSeconds": 15.362384999990462,
+    "scope": "Real canvas, synthetic UI input, no simulation clock override"
+  }
+}

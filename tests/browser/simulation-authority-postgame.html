@@ -1,0 +1,19 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {serializeConfirmedState} from '../../src/simulation/confirmed-live-state.js';
+import {resume,continuePostgame,observeGameEvents} from '../../src/simulation/game.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+window.audit=async()=>{
+ const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
+ const fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),{game}=fixture.diagnosticWorld();
+ game.raid=null;game.day=101;game.completedNights=100;game.result='victory';game.postgame=false;game.pauses=['result'];game.dayPlan=null;game.nightPlan=null;
+ const source=serialize(game),client=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,session:'postgame'}),events=[],stop=observeGameEvents(game,e=>events.push(structuredClone(e)));
+ try{
+  await client.ready;resume(game,'result');continuePostgame(game);
+  const request=client.submit({kind:'continuePostgame'});if(!request.accepted)throw Error('Postgame command rejected');const result=await request.result;
+  if(result.snapshot!==serializeConfirmedState(game)||JSON.stringify(result.events)!==JSON.stringify(events)||!game.postgame||game.result!==null||!game.pauses.includes('hiring')||game.pauses.includes('result')||!result.events.some(e=>e.type==='PostgameStarted'))throw Error('Postgame transition mismatch');
+  return {sequence:result.sequence,events:result.events.map(e=>e.type),pauses:game.pauses,scope:'One restored mangrove game with a synthetic victory compared to the original transition; no rendered UI, campaign, physics or founding.'};
+ }finally{stop();client.dispose();fixture.dispose();}
+};window.ready=true;
+</script>

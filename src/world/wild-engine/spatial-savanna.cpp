@@ -22,9 +22,9 @@
 #endif
 #ifdef WILD_SPATIAL_PROFILE
 #include <emscripten/emscripten.h>
-namespace { WILD_SAMPLING_LOCAL double spatialProfileTimes[14]{}; }
-extern "C" EMSCRIPTEN_KEEPALIVE void spatial_profile_reset(){std::fill_n(spatialProfileTimes,14,0.0);}
-extern "C" EMSCRIPTEN_KEEPALIVE double spatial_profile_ms(int index){return index>=0&&index<14?spatialProfileTimes[index]:-1;}
+namespace { WILD_SAMPLING_LOCAL double spatialProfileTimes[19]{}; }
+extern "C" EMSCRIPTEN_KEEPALIVE void spatial_profile_reset(){std::fill_n(spatialProfileTimes,19,0.0);}
+extern "C" EMSCRIPTEN_KEEPALIVE double spatial_profile_ms(int index){return index>=0&&index<19?spatialProfileTimes[index]:-1;}
 #define SPATIAL_TICK(name) const double name=emscripten_get_now()
 #define SPATIAL_TOCK(index,name) spatialProfileTimes[index]+=emscripten_get_now()-name
 #else
@@ -43,6 +43,9 @@ uint8_t* lazy_steps_ptr();
 uint8_t* lazy_inbound_ptr();
 int lazy_stage_sector(int sx,int sz);
 int lazy_commit_sector(int sx,int sz);
+#ifdef WILD_PROFILE_TWO_PASS_COMPAT_REVISION
+void lazy_profile_compat_revisions(uint32_t count);
+#endif
 int lazy_remove_sector(int sx,int sz);
 int lazy_route(int fromX,int fromZ,int toX,int toZ);
 int lazy_component(int worldX,int worldZ);
@@ -693,8 +696,17 @@ bool terrainValid(double x,double z,float radius,bool worker){
   for(int i=0;i<5;i++){
     const double px=x+(i==1?radius:i==2?-radius:0),pz=z+(i==3?radius:i==4?-radius:0);
     if(worldBiome!=4&&!(worldBiome==5&&worker)&&fluid(px,pz))return false;
+#ifdef WILD_EXPERIMENT_SLOPE_BOUND
+    const double slopeX=travelSurface(px+.8,pz)-travelSurface(px-.8,pz);
+    const double slopeZ=travelSurface(px,pz+.8)-travelSurface(px,pz-.8);
+    // If both components are at most 0.5, hypot is below 0.8 by a wide
+    // margin. Ambiguous and non-finite values keep the original predicate.
+    if(!(std::abs(slopeX)<=.5&&std::abs(slopeZ)<=.5)&&
+       std::hypot(slopeX,slopeZ)/1.6>.5)return false;
+#else
     if(std::hypot(travelSurface(px+.8,pz)-travelSurface(px-.8,pz),
       travelSurface(px,pz+.8)-travelSurface(px,pz-.8))/1.6>.5)return false;
+#endif
   }
   return true;
 }
@@ -1162,6 +1174,15 @@ void selectPreparedChunkData(PreparedChunkData data){
   props=std::move(data.props);solidProps=std::move(data.solidProps);
   propBuckets=std::move(data.propBuckets);nearbySettlements=std::move(data.nearbySettlements);
 }
+// A visual query must never publish its scratch chunk or replace the currently
+// selected simulation buffers. The old selection is moved back on every exit.
+struct ScopedVisualQueryChunk {
+  PreparedChunkData previous;
+  ScopedVisualQueryChunk():previous(takePreparedChunkData()){}
+  ~ScopedVisualQueryChunk(){selectPreparedChunkData(std::move(previous));}
+  ScopedVisualQueryChunk(const ScopedVisualQueryChunk&)=delete;
+  ScopedVisualQueryChunk& operator=(const ScopedVisualQueryChunk&)=delete;
+};
 void publishSelectedChunk(){
   const auto key=chunkKey(chunkX,chunkZ);
   // Settlement changes invalidate relief explicitly; ordinary selection keeps it.
@@ -1251,10 +1272,11 @@ void patchActiveRaster(const Prop& changed){
     }
   }
 }
-void commitActiveSectors(){
-  const int firstX=chunkX*side-24,firstZ=chunkZ*side-24;
+void commitChunkSectors(int cx,int cz){
+  const int firstX=cx*side-24,firstZ=cz*side-24;
   for(int sz=0;sz<4;sz++)for(int sx=0;sx<4;sx++)refreshSector(firstX/sector+sx,firstZ/sector+sz);
 }
+void commitActiveSectors(){commitChunkSectors(chunkX,chunkZ);}
 void refreshNeighborBorders(int cx,int cz){
   constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1};
   for(int direction=0;direction<4;direction++){
@@ -1533,6 +1555,8 @@ static std::vector<int32_t> chunkRemovalInput;
 static std::vector<float> surfaceGridOutput;
 static std::vector<double> surfaceGridCorners;
 static std::vector<uint8_t> surfaceGridValid;
+static std::vector<Prop> farVisualProps;
+static uint64_t farVisualRevision=0;
 extern "C" {
 int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){
   if(biome<0||biome>8)return -1;
@@ -2081,6 +2105,27 @@ int spatial_water_vertex_count(){ensureSelectedVisual();return int(waterTriangle
 Prop* spatial_props_ptr(){return props.data();}
 int spatial_prop_count(){return int(props.size());}
 int spatial_halo_prop_count(){return haloPropCount;}
+// One bounded request reads the authoritative world without changing live
+// residency, navigation or selection. A caller can combine chunks only if
+// their revisions match and discard results after a later structural change.
+int spatial_far_query_chunk(int cx,int cz,uint32_t slotMask){
+  if(!chunkRasters||cx<-1000000||cx>1000000||cz<-1000000||cz>1000000||!slotMask||(slotMask&~((1u<<20)-1)))return -1;
+  farVisualProps.clear();
+  const auto key=chunkKey(cx,cz);
+  const auto resident=residentVisibleProps().find(key);
+  if(resident!=residentVisibleProps().end()){
+    for(const auto& prop:resident->second)if(prop.slot>=0&&prop.slot<20&&(slotMask&(1u<<prop.slot)))farVisualProps.push_back(prop);
+  }else{
+    ScopedVisualQueryChunk previous;
+    prepareSelectedChunk(cx,cz,false);
+    for(const auto& prop:props)if(prop.slot>=0&&prop.slot<20&&(slotMask&(1u<<prop.slot)))farVisualProps.push_back(prop);
+  }
+  farVisualRevision=terrainInputRevision;
+  return int(farVisualProps.size());
+}
+Prop* spatial_far_query_ptr(){return farVisualProps.data();}
+double spatial_far_query_revision(){return double(farVisualRevision);}
+double spatial_far_world_revision(){return double(terrainInputRevision);}
 int spatial_build_nav_profile(int index,float radius,int worker){
   if(index<0||index>=navigationProfiles||(index==1)!=(worker!=0))return 0;
   if(loadedChunks.empty()||!chunkRasters||radius<=0||radius>maxIndexedRadius)return 0;
@@ -2090,10 +2135,40 @@ int spatial_build_nav_profile(int index,float radius,int worker){
   if(!lazy_init(sector))return 0;
   const int selectedX=chunkX,selectedZ=chunkZ;
   chunkRasters->clear();
+#ifdef WILD_PROFILE_TWO_PASS
   for(const auto& [cx,cz]:loadedChunks){
-    populateChunk(cx,cz,false);buildActiveRaster();commitActiveSectors();refreshNeighborBorders(cx,cz);
+    SPATIAL_TICK(profilePopulate);populateChunk(cx,cz,false);SPATIAL_TOCK(14,profilePopulate);
+    SPATIAL_TICK(profileRaster);buildActiveRaster();SPATIAL_TOCK(15,profileRaster);
   }
-  if(chunkX!=selectedX||chunkZ!=selectedZ)populateChunk(selectedX,selectedZ);
+  for(const auto& [cx,cz]:loadedChunks){
+#ifndef WILD_PROFILE_TWO_PASS_DIRECT_COMMIT
+    SPATIAL_TICK(profilePopulate);populateChunk(cx,cz,false);SPATIAL_TOCK(14,profilePopulate);
+    SPATIAL_TICK(profileCommit);commitActiveSectors();SPATIAL_TOCK(16,profileCommit);
+#else
+    // Experimental: sector overlay reads resident rasters and obstacle
+    // indexes by coordinates; it does not require selecting this chunk again.
+    SPATIAL_TICK(profileCommit);commitChunkSectors(cx,cz);SPATIAL_TOCK(16,profileCommit);
+#endif
+  }
+#ifdef WILD_PROFILE_TWO_PASS_COMPAT_REVISION
+  // The old one-pass builder recommits four sectors for each shared border.
+  // Preserve its externally visible revision tokens without rebuilding them.
+  uint32_t omittedCommits=0;
+  for(const auto& [cx,cz]:loadedChunks){
+    if(chunkRasters->count(chunkKey(cx+1,cz)))omittedCommits+=4;
+    if(chunkRasters->count(chunkKey(cx,cz+1)))omittedCommits+=4;
+  }
+  lazy_profile_compat_revisions(omittedCommits);
+#endif
+#else
+  for(const auto& [cx,cz]:loadedChunks){
+    SPATIAL_TICK(profilePopulate);populateChunk(cx,cz,false);SPATIAL_TOCK(14,profilePopulate);
+    SPATIAL_TICK(profileRaster);buildActiveRaster();SPATIAL_TOCK(15,profileRaster);
+    SPATIAL_TICK(profileCommit);commitActiveSectors();SPATIAL_TOCK(16,profileCommit);
+    SPATIAL_TICK(profileBorder);refreshNeighborBorders(cx,cz);SPATIAL_TOCK(17,profileBorder);
+  }
+#endif
+  SPATIAL_TICK(profileRestore);if(chunkX!=selectedX||chunkZ!=selectedZ)populateChunk(selectedX,selectedZ);SPATIAL_TOCK(18,profileRestore);
   navReady=true;
   saveProfile();
   return lazy_loaded_sectors();

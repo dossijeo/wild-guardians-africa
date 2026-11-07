@@ -1,0 +1,75 @@
+{
+  "initial": {
+    "x": 20,
+    "z": 30,
+    "status": "attacking",
+    "attackRemaining": 1,
+    "path": [
+      {
+        "x": 21,
+        "z": 30
+      }
+    ],
+    "magicDown": null
+  },
+  "samples": [
+    {
+      "step": 1,
+      "time": 10.016666666666667,
+      "x": 20.03340175686029,
+      "z": 29.98881158577623,
+      "status": "walking",
+      "attackRemaining": 0,
+      "path": null,
+      "magicDown": {
+        "phase": "falling",
+        "since": 10.016666666666667,
+        "until": 19.016666666666666
+      }
+    },
+    {
+      "step": 30,
+      "time": 10.500000000000025,
+      "x": 20.96204529600704,
+      "z": 30.15885761650984,
+      "status": "walking",
+      "attackRemaining": 0,
+      "path": null,
+      "magicDown": {
+        "phase": "falling",
+        "since": 10.016666666666667,
+        "until": 19.016666666666666
+      }
+    },
+    {
+      "step": 60,
+      "time": 11.00000000000005,
+      "x": 21.328032483549986,
+      "z": 30.601978888869805,
+      "status": "walking",
+      "attackRemaining": 0,
+      "path": null,
+      "magicDown": {
+        "phase": "falling",
+        "since": 10.016666666666667,
+        "until": 19.016666666666666
+      }
+    },
+    {
+      "step": 120,
+      "time": 12.0000000000001,
+      "x": 21.42648516257892,
+      "z": 30.778464590790062,
+      "status": "walking",
+      "attackRemaining": 0,
+      "path": null,
+      "magicDown": {
+        "phase": "falling",
+        "since": 10.016666666666667,
+        "until": 19.016666666666666
+      }
+    }
+  ],
+  "displacement": 1.6250744715771481,
+  "scope": "Controlled hyena fixture with actual Rapier manager and test rig. The control is the unchanged initial state, not a second running simulation. Terrain is flat; no Game.tick, WebGL, crowd or performance comparison."
+}

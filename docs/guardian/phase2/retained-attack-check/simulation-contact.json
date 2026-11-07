@@ -1,0 +1,205 @@
+{
+  "ready": true,
+  "campaign": false,
+  "paused": true,
+  "workerGround": null,
+  "workers": [
+    {
+      "id": "worker-28",
+      "profile": "olderMale",
+      "x": 60,
+      "z": 0,
+      "status": "home",
+      "hits": 0
+    }
+  ],
+  "faceCandidate": false,
+  "faceCandidateSpecies": null,
+  "expressions": [
+    {
+      "id": "qa-beast-0",
+      "weights": [
+        1,
+        1,
+        0.8022854515908613
+      ],
+      "bindings": 11
+    }
+  ],
+  "entityCounts": {
+    "workers": 1,
+    "structures": 1,
+    "crops": 12,
+    "animals": 1
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 1,
+  "maxVisibleGuardians": 1,
+  "elapsed": 3019.973659999976,
+  "simulate": true,
+  "clockMode": "Game.tick",
+  "shields": [
+    {
+      "id": "spell-41",
+      "remaining": 19.759999999999998,
+      "visualAge": 0.240000000000002
+    }
+  ],
+  "active": 1,
+  "origins": [
+    {
+      "origin": {
+        "x": 86.51992649842238,
+        "y": 14.235480448781068,
+        "z": -5.193655813388862
+      },
+      "opacity": 1
+    }
+  ],
+  "retainedAttacks": [
+    {
+      "age": 0.25999999999976353,
+      "source": [
+        89.9392277032083,
+        14.527699315676319,
+        -3.162071932749717
+      ],
+      "target": [
+        90,
+        13.327137001683544,
+        -6
+      ]
+    }
+  ],
+  "retainedDraws": 3,
+  "attackVisual": [],
+  "reused": 1,
+  "health": 28,
+  "animalState": "walking",
+  "animalPosition": [
+    90.00588723555347,
+    -6.0365481182518215
+  ],
+  "draws": 66,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "spirit_appear",
+      "at": 3019.7136599999762,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3019.733659999976,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3019.733659999976,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3019.853659999976,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3019.973659999976,
+      "emitter": "qa-beast-0",
+      "phase": "falling",
+      "played": true
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3019.973659999976,
+      "emitter": "impact:qa-beast-0",
+      "played": true
+    }
+  ],
+  "combatPhysics": {
+    "active": 1,
+    "physicsMs": 4.544999957084656,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 9.129999995231628,
+    "maxStepMs": 10.134999990463257,
+    "solverMs": 4.180000066757202,
+    "solverSteps": 1,
+    "bindingMs": 0.25999999046325684,
+    "recoverySetupMs": 0,
+    "creationMs": 0,
+    "lastCreation": {
+      "species": "hyena",
+      "captureMs": 0.4599999189376831,
+      "colliderFitMs": 2.8300000429153442,
+      "environmentMs": 3.8200000524520874,
+      "bodiesMs": 1.9249999523162842
+    },
+    "recoveryFollowMs": 0.004999995231628418,
+    "bakedActive": 0,
+    "kinematic": 0
+  },
+  "physicsWorlds": 1,
+  "physicalBodies": 14,
+  "down": {
+    "phase": "falling",
+    "since": 3019.953659999976,
+    "until": 3028.953659999976
+  },
+  "allDown": [
+    {
+      "id": "qa-beast-0",
+      "phase": "falling",
+      "x": 90.00588723555347,
+      "z": -6.0365481182518215
+    }
+  ],
+  "errors": [],
+  "report": null,
+  "commandCosts": [
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 90.26028459775668,
+        "y": 14.459729656735506,
+        "z": -3.0113126747398544
+      },
+      "plan": 2.1899999380111694,
+      "logic": 0.30000007152557373,
+      "render": 11.319999933242798,
+      "total": 13.81499993801117
+    },
+    {
+      "kind": "shield",
+      "targetId": null,
+      "position": {
+        "x": 82.5,
+        "z": -6
+      },
+      "origin": {
+        "x": 86.51992649842238,
+        "y": 14.235480448781068,
+        "z": -5.193655813388862
+      },
+      "plan": 1.6349999904632568,
+      "logic": 0.7049999237060547,
+      "render": 11.625,
+      "total": 13.964999914169312
+    }
+  ]
+}

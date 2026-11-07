@@ -1,0 +1,441 @@
+{
+  "ready": true,
+  "worldAuthority": "spatial-wasm",
+  "mangroveNetwork": false,
+  "campaign": false,
+  "paused": true,
+  "lastPick": null,
+  "workerCandidate": null,
+  "workerGround": null,
+  "workers": [
+    {
+      "id": "worker-28",
+      "profile": "olderMale",
+      "x": 60,
+      "z": 0,
+      "status": "home",
+      "hits": 0
+    }
+  ],
+  "faceCandidate": false,
+  "faceCandidateSpecies": null,
+  "expressions": [
+    {
+      "id": "qa-beast-0",
+      "weights": [
+        0,
+        0,
+        1.2774211608124094e-24
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-1",
+      "weights": [
+        0,
+        0,
+        0.6499999998364323
+      ],
+      "bindings": 10
+    },
+    {
+      "id": "qa-beast-2",
+      "weights": [
+        0,
+        0,
+        1.1831588118566389e-161
+      ],
+      "bindings": 10
+    },
+    {
+      "id": "qa-beast-3",
+      "weights": [
+        0,
+        0,
+        1.0247271736763623e-43
+      ],
+      "bindings": 10
+    }
+  ],
+  "entityCounts": {
+    "workers": 1,
+    "structures": 1,
+    "crops": 12,
+    "animals": 4
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 0,
+  "maxVisibleGuardians": 1,
+  "slopeSite": null,
+  "guideTrial": false,
+  "guideOrigin": null,
+  "guidePosition": null,
+  "elapsed": 3038.848625000005,
+  "simulate": true,
+  "clockMode": "Game.tick",
+  "shields": [],
+  "active": 0,
+  "origins": [],
+  "retainedAttacks": [],
+  "retainedDraws": 0,
+  "attackVisual": [],
+  "reused": 3,
+  "health": 28,
+  "animalState": "walking",
+  "animalPosition": [
+    87.93283735095817,
+    -8.605691315810684
+  ],
+  "draws": 121,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "spirit_appear",
+      "at": 3022.781489999992,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3022.781489999992,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3022.781489999992,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3022.781489999992,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3022.8812649999923,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3022.8812649999923,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3022.8812649999923,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3022.8812649999923,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3023.0144049999926,
+      "emitter": "qa-beast-0",
+      "phase": "falling",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3023.0144049999926,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "rhino_hurt",
+      "at": 3023.0144049999926,
+      "emitter": "qa-beast-1",
+      "phase": "falling",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3023.0144049999926,
+      "emitter": "impact:qa-beast-1",
+      "played": false
+    },
+    {
+      "id": "rhino_hurt",
+      "at": 3023.0144049999926,
+      "emitter": "qa-beast-2",
+      "phase": "falling",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3023.0144049999926,
+      "emitter": "impact:qa-beast-2",
+      "played": false
+    },
+    {
+      "id": "rhino_hurt",
+      "at": 3023.0144049999926,
+      "emitter": "qa-beast-3",
+      "phase": "falling",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3023.0144049999926,
+      "emitter": "impact:qa-beast-3",
+      "played": false
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3024.2446099999925,
+      "emitter": "guardian-world",
+      "played": false
+    }
+  ],
+  "combatPhysics": {
+    "active": 0,
+    "physicsMs": 0.014999985694885254,
+    "recoveryMs": 0,
+    "rejected": 1,
+    "startMs": 4.704999923706055,
+    "maxStepMs": 54.824999928474426,
+    "solverMs": 0,
+    "solverSteps": 0,
+    "bindingMs": 0,
+    "recoverySetupMs": 0,
+    "creationMs": 0,
+    "lastCreation": {
+      "species": "rhino",
+      "captureMs": 0.5549999475479126,
+      "colliderFitMs": 1.9200000762939453,
+      "environmentMs": 0.2099999189376831,
+      "bodiesMs": 1.9800000190734863
+    },
+    "recoveryFollowMs": 0,
+    "bakedActive": 0,
+    "kinematic": 0,
+    "rollFailures": 0,
+    "lastRoll": {
+      "seconds": 2.8499999999999948,
+      "contactDelay": 0,
+      "error": 0.11954418923854439,
+      "speed": 0.47779762145599775,
+      "timedOut": false
+    }
+  },
+  "physicsWorlds": 0,
+  "physicalBodies": 0,
+  "allDown": [
+    {
+      "id": "qa-beast-0",
+      "x": 87.93283735095817,
+      "z": -8.605691315810684
+    },
+    {
+      "id": "qa-beast-1",
+      "x": 91.67218185823413,
+      "z": -8.697643295230714
+    },
+    {
+      "id": "qa-beast-2",
+      "x": 83.42768017236145,
+      "z": -6.314047190538493
+    },
+    {
+      "id": "qa-beast-3",
+      "x": 87.50237656435266,
+      "z": -11.922274958040722
+    }
+  ],
+  "errors": [],
+  "report": {
+    "scope": "Real Attack cycles, continuous Game.tick and WorldScene. Diagnostic, not a paired before/after benchmark.",
+    "requestedImpacts": 4,
+    "headOn": false,
+    "wallTrial": false,
+    "actorSpecies": [
+      "hyena",
+      "rhino",
+      "rhino",
+      "rhino"
+    ],
+    "rejectedPhysics": 1,
+    "completedSimulation": true,
+    "species": "hyena",
+    "direction": "auto",
+    "wallMs": 17108.054999947548,
+    "simulationSeconds": 16.11713500001315,
+    "frames": 409,
+    "hiddenFrames": 0,
+    "metrics": {
+      "dt": {
+        "mean": 41.998202933985326,
+        "p95": 66.52999999999884,
+        "p99": 83.25499999999738,
+        "max": 166.4499999999971
+      },
+      "renderMs": {
+        "mean": 25.375806851317073,
+        "p95": 36.22000002861023,
+        "p99": 49.920000076293945,
+        "max": 160.6050000190735
+      },
+      "physicsTotal": {
+        "mean": 6.157836187439618,
+        "p95": 16.96999990940094,
+        "p99": 27.43499994277954,
+        "max": 54.824999928474426
+      },
+      "solverMs": {
+        "mean": 1.1875916853510664,
+        "p95": 3.759999990463257,
+        "p99": 5.295000076293945,
+        "max": 6.555000066757202
+      },
+      "solverSteps": {
+        "mean": 1.4816625916870416,
+        "p95": 3,
+        "p99": 3,
+        "max": 3
+      },
+      "creationMs": {
+        "mean": 0.07393643004970038,
+        "p95": 0,
+        "p99": 0,
+        "max": 30.239999890327454
+      },
+      "bindingMs": {
+        "mean": 0.1686674831548938,
+        "p95": 0.6299999952316284,
+        "p99": 0.7599999904632568,
+        "max": 1.1100000143051147
+      },
+      "recoverySetupMs": {
+        "mean": 0.06167481668420992,
+        "p95": 0,
+        "p99": 0,
+        "max": 9.56000006198883
+      },
+      "recoveryFollowMs": {
+        "mean": 2.778826407232028,
+        "p95": 13.43999993801117,
+        "p99": 16.649999976158142,
+        "max": 32.730000138282776
+      },
+      "recoveryMs": {
+        "mean": 2.4857335020685545,
+        "p95": 12.770000100135803,
+        "p99": 15.87500011920929,
+        "max": 17.385000109672546
+      },
+      "animationMs": {
+        "mean": 0.033325184819750796,
+        "p95": 0.25,
+        "p99": 0.31499993801116943,
+        "max": 0.48000001907348633
+      },
+      "vfxMs": {
+        "mean": 0.10089241962852571,
+        "p95": 0.6599999666213989,
+        "p99": 1.1750000715255737,
+        "max": 5.294999957084656
+      },
+      "draws": {
+        "mean": 106.40586797066015,
+        "p95": 124,
+        "p99": 126,
+        "max": 128
+      }
+    },
+    "peakActive": 3,
+    "peakBaked": 1,
+    "finalDownCount": 0,
+    "finalDown": null,
+    "memory": {
+      "geometries": 301,
+      "textures": 146
+    },
+    "heap": 521809409,
+    "errors": [],
+    "recoveryTraceSamples": 130
+  },
+  "commandCosts": [
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 89.87529749999999,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.77108154439081,
+        "y": 8.285232257843017,
+        "z": -1.8441959714902225
+      },
+      "plan": 4.514999985694885,
+      "logic": 0.7750000953674316,
+      "render": 0.009999990463256836,
+      "total": 5.300000071525574
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-1",
+      "position": {
+        "x": 93.87529749999999,
+        "z": -6
+      },
+      "origin": {
+        "x": 98.5035003195344,
+        "y": 9.855655860900878,
+        "z": -7.755630559444043
+      },
+      "plan": 1.684999942779541,
+      "logic": 0.08500003814697266,
+      "render": 0,
+      "total": 1.7699999809265137
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-2",
+      "position": {
+        "x": 92,
+        "z": -2.660600884862249
+      },
+      "origin": {
+        "x": 91.13776574470917,
+        "y": 8.637026500701904,
+        "z": 0.886095054882666
+      },
+      "plan": 0.8700000047683716,
+      "logic": 0.04499995708465576,
+      "render": 0.004999995231628418,
+      "total": 0.9199999570846558
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-3",
+      "position": {
+        "x": 85.87529749999999,
+        "z": -5.999999999999999
+      },
+      "origin": {
+        "x": 88.59986737301172,
+        "y": 8.283811283111572,
+        "z": -8.428830790128625
+      },
+      "plan": 1.3700000047683716,
+      "logic": 0.05000007152557373,
+      "render": 0,
+      "total": 1.4250000715255737
+    }
+  ]
+}

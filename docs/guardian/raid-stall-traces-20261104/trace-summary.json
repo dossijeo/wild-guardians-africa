@@ -1,0 +1,4143 @@
+{
+  "dataLossOccurred": false,
+  "durationMs": 30323.914,
+  "eventCount": 724470,
+  "start": {
+    "args": {
+      "data": {
+        "callTime": 171821267020,
+        "navigationId": "FDBA7879DC4AFFE8D527A12A67CDBB04",
+        "sampleTraceId": 7892450915507249,
+        "startTime": 66844.53499999642
+      }
+    },
+    "cat": "blink.user_timing",
+    "name": "WG_RAID_TRACE_START",
+    "ph": "I",
+    "pid": 11484,
+    "s": "t",
+    "tid": 27192,
+    "ts": 171821267005,
+    "tts": 15445836
+  },
+  "end": {
+    "args": {
+      "data": {
+        "callTime": 171851590922,
+        "navigationId": "FDBA7879DC4AFFE8D527A12A67CDBB04",
+        "sampleTraceId": 7892450915409483,
+        "startTime": 97168.44499999285
+      }
+    },
+    "cat": "blink.user_timing",
+    "name": "WG_RAID_TRACE_END",
+    "ph": "I",
+    "pid": 11484,
+    "s": "t",
+    "tid": 27192,
+    "ts": 171851590919,
+    "tts": 21940694
+  },
+  "threads": [
+    [
+      "0:0",
+      "swapper"
+    ],
+    [
+      "11484:23568",
+      "Compositor"
+    ],
+    [
+      "11484:27192",
+      "CrRendererMain"
+    ],
+    [
+      "9920:28144",
+      "PerfettoTrace"
+    ],
+    [
+      "9920:26484",
+      "Chrome_ChildIOThread"
+    ],
+    [
+      "11484:5340",
+      "DedicatedWorker thread"
+    ],
+    [
+      "11484:10000",
+      "PerfettoTrace"
+    ],
+    [
+      "11484:23612",
+      "DedicatedWorker thread"
+    ],
+    [
+      "11484:20224",
+      "Chrome_ChildIOThread"
+    ],
+    [
+      "14100:24108",
+      "PerfettoTrace"
+    ],
+    [
+      "14100:26756",
+      "CrBrowserMain"
+    ],
+    [
+      "11484:26752",
+      "DedicatedWorker thread"
+    ],
+    [
+      "14100:27912",
+      "Chrome_IOThread"
+    ],
+    [
+      "11484:15292",
+      "DedicatedWorker thread"
+    ],
+    [
+      "28432:28648",
+      "PerfettoTrace"
+    ],
+    [
+      "28432:23792",
+      "Chrome_ChildIOThread"
+    ],
+    [
+      "28432:25548",
+      "tracing.CrUtilityMain"
+    ],
+    [
+      "27204:24468",
+      "PerfettoTrace"
+    ],
+    [
+      "27204:11860",
+      "Chrome_ChildIOThread"
+    ],
+    [
+      "14100:26608",
+      "ThreadPoolBackgroundWorker"
+    ],
+    [
+      "20688:27436",
+      "PerfettoTrace"
+    ],
+    [
+      "20688:27528",
+      "Chrome_ChildIOThread"
+    ],
+    [
+      "21628:28060",
+      "CrRendererMain"
+    ],
+    [
+      "21628:21268",
+      "PerfettoTrace"
+    ],
+    [
+      "21628:8732",
+      "Chrome_ChildIOThread"
+    ],
+    [
+      "11484:17352",
+      "Media"
+    ],
+    [
+      "11484:8176",
+      "ThreadPoolForegroundWorker"
+    ],
+    [
+      "27204:25404",
+      "audio.CrUtilityMain"
+    ],
+    [
+      "27500:21048",
+      "PerfettoTrace"
+    ],
+    [
+      "27500:20520",
+      "Chrome_ChildIOThread"
+    ],
+    [
+      "14100:21196",
+      "DevToolsPipeHandlerWriteThread"
+    ],
+    [
+      "27500:27360",
+      "CrGpuMain"
+    ],
+    [
+      "27500:24760",
+      "GpuChannelManager Trace"
+    ],
+    [
+      "27500:27624",
+      "GpuVSyncThread"
+    ],
+    [
+      "27500:11728",
+      "VizCompositorThread"
+    ],
+    [
+      "11484:24144",
+      "ThreadPoolForegroundWorker"
+    ],
+    [
+      "11484:27596",
+      "ThreadPoolForegroundWorker"
+    ],
+    [
+      "11484:20576",
+      "ThreadPoolForegroundWorker"
+    ],
+    [
+      "9920:22460",
+      "network.CrUtilityMain"
+    ],
+    [
+      "11484:28444",
+      "ThreadPoolForegroundWorker"
+    ],
+    [
+      "11484:14192",
+      "ThreadPoolForegroundWorker"
+    ],
+    [
+      "11484:5392",
+      "ThreadPoolForegroundWorker"
+    ],
+    [
+      "14100:15136",
+      "MemoryInfra"
+    ],
+    [
+      "11484:21912",
+      "VideoFrameCompositor"
+    ],
+    [
+      "11484:21084",
+      "Font thread"
+    ],
+    [
+      "11484:25284",
+      "MemoryInfra"
+    ],
+    [
+      "14100:5664",
+      "ThreadPoolServiceThread"
+    ],
+    [
+      "14100:24920",
+      "ThreadPoolForegroundWorker"
+    ],
+    [
+      "9920:26268",
+      "ThreadPoolBackgroundWorker"
+    ],
+    [
+      "11484:27636",
+      "ThreadPoolServiceThread"
+    ],
+    [
+      "14100:19024",
+      "ThreadPoolForegroundWorker"
+    ],
+    [
+      "20688:25456",
+      "storage.CrUtilityMain"
+    ],
+    [
+      "27500:26696",
+      "ThreadPoolForegroundWorker"
+    ],
+    [
+      "27500:15440",
+      "ThreadPoolForegroundWorker"
+    ],
+    [
+      "27500:12196",
+      "ThreadPoolForegroundWorker"
+    ],
+    [
+      "11484:25536",
+      "ThreadPoolForegroundWorker"
+    ],
+    [
+      "20688:25596",
+      "ThreadPoolForegroundWorker"
+    ],
+    [
+      "14100:24892",
+      "CacheThread_BlockFile"
+    ],
+    [
+      "9920:22896",
+      "CacheThread_BlockFile"
+    ]
+  ],
+  "longest": [
+    {
+      "name": "RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 598.588,
+      "durationMs": 1170.606,
+      "args": {}
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 598.589,
+      "durationMs": 1170.603,
+      "args": {
+        "src_file": "gpu/command_buffer/service/scheduler.cc",
+        "src_func": "RunNextTask",
+        "src_line": 654
+      }
+    },
+    {
+      "name": "Edge_RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 598.59,
+      "durationMs": 1170.601,
+      "args": {
+        "Callback Location": "RunNextTask@gpu\\command_buffer\\service\\scheduler.cc:654",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      }
+    },
+    {
+      "name": "Scheduler::RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 598.593,
+      "durationMs": 1170.595,
+      "args": {}
+    },
+    {
+      "name": "GpuChannel::ExecuteDeferredRequest",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 598.594,
+      "durationMs": 1170.593,
+      "args": {}
+    },
+    {
+      "name": "GPUTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 598.599,
+      "durationMs": 1170.583,
+      "args": {
+        "data": {
+          "renderer_pid": 11484,
+          "used_bytes": 75894544
+        }
+      }
+    },
+    {
+      "name": "WebGPU",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 598.609,
+      "durationMs": 1170.57,
+      "args": {}
+    },
+    {
+      "name": "CommandBuffer::Flush",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 598.61,
+      "durationMs": 1170.569,
+      "args": {}
+    },
+    {
+      "name": "CommandBufferStub::OnAsyncFlush",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 598.611,
+      "durationMs": 1170.567,
+      "args": {
+        "put_offset": 3154
+      }
+    },
+    {
+      "name": "CommandBufferService:PutChanged",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 598.613,
+      "durationMs": 1170.563,
+      "args": {
+        "handler": "WebGPUDecoderImpl",
+        "put_offset": 3154
+      }
+    },
+    {
+      "name": "RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 3159.027,
+      "durationMs": 1147.815,
+      "args": {}
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 3159.028,
+      "durationMs": 1147.812,
+      "args": {
+        "src_file": "gpu/command_buffer/service/scheduler.cc",
+        "src_func": "RunNextTask",
+        "src_line": 654
+      }
+    },
+    {
+      "name": "Edge_RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 3159.03,
+      "durationMs": 1147.81,
+      "args": {
+        "Callback Location": "RunNextTask@gpu\\command_buffer\\service\\scheduler.cc:654",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      }
+    },
+    {
+      "name": "Scheduler::RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 3159.034,
+      "durationMs": 1147.803,
+      "args": {}
+    },
+    {
+      "name": "GpuChannel::ExecuteDeferredRequest",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 3159.035,
+      "durationMs": 1147.796,
+      "args": {}
+    },
+    {
+      "name": "GPUTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 3159.042,
+      "durationMs": 1147.788,
+      "args": {
+        "data": {
+          "renderer_pid": 11484,
+          "used_bytes": 75894544
+        }
+      }
+    },
+    {
+      "name": "WebGPU",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 3159.05,
+      "durationMs": 1147.77,
+      "args": {}
+    },
+    {
+      "name": "CommandBuffer::Flush",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 3159.051,
+      "durationMs": 1147.769,
+      "args": {}
+    },
+    {
+      "name": "CommandBufferStub::OnAsyncFlush",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 3159.053,
+      "durationMs": 1147.766,
+      "args": {
+        "put_offset": 3358
+      }
+    },
+    {
+      "name": "CommandBufferService:PutChanged",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 3159.055,
+      "durationMs": 1147.759,
+      "args": {
+        "handler": "WebGPUDecoderImpl",
+        "put_offset": 3358
+      }
+    },
+    {
+      "name": "RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 4938.551,
+      "durationMs": 822.524,
+      "args": {}
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 4938.551,
+      "durationMs": 822.522,
+      "args": {
+        "src_file": "gpu/command_buffer/service/scheduler.cc",
+        "src_func": "RunNextTask",
+        "src_line": 654
+      }
+    },
+    {
+      "name": "Edge_RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 4938.552,
+      "durationMs": 822.52,
+      "args": {
+        "Callback Location": "RunNextTask@gpu\\command_buffer\\service\\scheduler.cc:654",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      }
+    },
+    {
+      "name": "Scheduler::RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 4938.554,
+      "durationMs": 822.516,
+      "args": {}
+    },
+    {
+      "name": "GpuChannel::ExecuteDeferredRequest",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 4938.555,
+      "durationMs": 822.513,
+      "args": {}
+    },
+    {
+      "name": "GPUTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 4938.561,
+      "durationMs": 822.502,
+      "args": {
+        "data": {
+          "renderer_pid": 11484,
+          "used_bytes": 75894544
+        }
+      }
+    },
+    {
+      "name": "WebGPU",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 4938.568,
+      "durationMs": 822.486,
+      "args": {}
+    },
+    {
+      "name": "CommandBuffer::Flush",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 4938.569,
+      "durationMs": 822.485,
+      "args": {}
+    },
+    {
+      "name": "CommandBufferStub::OnAsyncFlush",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 4938.571,
+      "durationMs": 822.482,
+      "args": {
+        "put_offset": 3518
+      }
+    },
+    {
+      "name": "CommandBufferService:PutChanged",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 4938.573,
+      "durationMs": 822.478,
+      "args": {
+        "handler": "WebGPUDecoderImpl",
+        "put_offset": 3518
+      }
+    },
+    {
+      "name": "RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 2525.347,
+      "durationMs": 633.661,
+      "args": {}
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 2525.348,
+      "durationMs": 633.659,
+      "args": {
+        "src_file": "gpu/command_buffer/service/scheduler.cc",
+        "src_func": "RunNextTask",
+        "src_line": 654
+      }
+    },
+    {
+      "name": "Edge_RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 2525.349,
+      "durationMs": 633.657,
+      "args": {
+        "Callback Location": "RunNextTask@gpu\\command_buffer\\service\\scheduler.cc:654",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      }
+    },
+    {
+      "name": "Scheduler::RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 2525.352,
+      "durationMs": 633.651,
+      "args": {}
+    },
+    {
+      "name": "GpuChannel::ExecuteDeferredRequest",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 2525.353,
+      "durationMs": 633.637,
+      "args": {}
+    },
+    {
+      "name": "GPUTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 2525.359,
+      "durationMs": 633.63,
+      "args": {
+        "data": {
+          "renderer_pid": 11484,
+          "used_bytes": 75894544
+        }
+      }
+    },
+    {
+      "name": "WebGPU",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 2525.367,
+      "durationMs": 633.615,
+      "args": {}
+    },
+    {
+      "name": "CommandBuffer::Flush",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 2525.368,
+      "durationMs": 633.614,
+      "args": {}
+    },
+    {
+      "name": "CommandBufferStub::OnAsyncFlush",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 2525.369,
+      "durationMs": 633.612,
+      "args": {
+        "put_offset": 3320
+      }
+    },
+    {
+      "name": "CommandBufferService:PutChanged",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 2525.372,
+      "durationMs": 633.605,
+      "args": {
+        "handler": "WebGPUDecoderImpl",
+        "put_offset": 3320
+      }
+    },
+    {
+      "name": "RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 4307.057,
+      "durationMs": 623.496,
+      "args": {}
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 4307.058,
+      "durationMs": 623.493,
+      "args": {
+        "src_file": "gpu/command_buffer/service/scheduler.cc",
+        "src_func": "RunNextTask",
+        "src_line": 654
+      }
+    },
+    {
+      "name": "Edge_RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 4307.061,
+      "durationMs": 623.49,
+      "args": {
+        "Callback Location": "RunNextTask@gpu\\command_buffer\\service\\scheduler.cc:654",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      }
+    },
+    {
+      "name": "Scheduler::RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 4307.065,
+      "durationMs": 623.483,
+      "args": {}
+    },
+    {
+      "name": "GpuChannel::ExecuteDeferredRequest",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 4307.066,
+      "durationMs": 623.477,
+      "args": {}
+    },
+    {
+      "name": "GPUTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 4307.072,
+      "durationMs": 623.47,
+      "args": {
+        "data": {
+          "renderer_pid": 11484,
+          "used_bytes": 75894544
+        }
+      }
+    },
+    {
+      "name": "WebGPU",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 4307.08,
+      "durationMs": 623.454,
+      "args": {}
+    },
+    {
+      "name": "CommandBuffer::Flush",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 4307.081,
+      "durationMs": 623.452,
+      "args": {}
+    },
+    {
+      "name": "CommandBufferStub::OnAsyncFlush",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 4307.083,
+      "durationMs": 623.45,
+      "args": {
+        "put_offset": 3376
+      }
+    },
+    {
+      "name": "CommandBufferService:PutChanged",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 4307.086,
+      "durationMs": 623.441,
+      "args": {
+        "handler": "WebGPUDecoderImpl",
+        "put_offset": 3376
+      }
+    },
+    {
+      "name": "RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 11.124,
+      "durationMs": 574.174,
+      "args": {}
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 11.124,
+      "durationMs": 574.172,
+      "args": {
+        "src_file": "gpu/command_buffer/service/scheduler.cc",
+        "src_func": "RunNextTask",
+        "src_line": 654
+      }
+    },
+    {
+      "name": "Edge_RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 11.125,
+      "durationMs": 574.17,
+      "args": {
+        "Callback Location": "RunNextTask@gpu\\command_buffer\\service\\scheduler.cc:654",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      }
+    },
+    {
+      "name": "Scheduler::RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 11.138,
+      "durationMs": 574.154,
+      "args": {}
+    },
+    {
+      "name": "GpuChannel::ExecuteDeferredRequest",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 11.14,
+      "durationMs": 574.147,
+      "args": {}
+    },
+    {
+      "name": "GPUTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 11.145,
+      "durationMs": 574.141,
+      "args": {
+        "data": {
+          "renderer_pid": 11484,
+          "used_bytes": 75894544
+        }
+      }
+    },
+    {
+      "name": "WebGPU",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 11.153,
+      "durationMs": 574.131,
+      "args": {}
+    },
+    {
+      "name": "CommandBuffer::Flush",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 11.154,
+      "durationMs": 574.129,
+      "args": {}
+    },
+    {
+      "name": "CommandBufferStub::OnAsyncFlush",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 11.155,
+      "durationMs": 574.127,
+      "args": {
+        "put_offset": 2954
+      }
+    },
+    {
+      "name": "CommandBufferService:PutChanged",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 11.158,
+      "durationMs": 574.119,
+      "args": {
+        "handler": "WebGPUDecoderImpl",
+        "put_offset": 2954
+      }
+    },
+    {
+      "name": "RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 2012.424,
+      "durationMs": 505.494,
+      "args": {}
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 2012.425,
+      "durationMs": 505.491,
+      "args": {
+        "src_file": "gpu/command_buffer/service/scheduler.cc",
+        "src_func": "RunNextTask",
+        "src_line": 654
+      }
+    },
+    {
+      "name": "Edge_RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 2012.426,
+      "durationMs": 505.489,
+      "args": {
+        "Callback Location": "RunNextTask@gpu\\command_buffer\\service\\scheduler.cc:654",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      }
+    },
+    {
+      "name": "Scheduler::RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 2012.428,
+      "durationMs": 505.485,
+      "args": {}
+    },
+    {
+      "name": "GpuChannel::ExecuteDeferredRequest",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 2012.429,
+      "durationMs": 505.479,
+      "args": {}
+    },
+    {
+      "name": "GPUTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 2012.431,
+      "durationMs": 505.476,
+      "args": {
+        "data": {
+          "renderer_pid": 11484,
+          "used_bytes": 75894544
+        }
+      }
+    },
+    {
+      "name": "WebGPU",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 2012.436,
+      "durationMs": 505.465,
+      "args": {}
+    },
+    {
+      "name": "CommandBuffer::Flush",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 2012.437,
+      "durationMs": 505.463,
+      "args": {}
+    },
+    {
+      "name": "CommandBufferStub::OnAsyncFlush",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 2012.438,
+      "durationMs": 505.462,
+      "args": {
+        "put_offset": 3256
+      }
+    },
+    {
+      "name": "CommandBufferService:PutChanged",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 2012.44,
+      "durationMs": 505.455,
+      "args": {
+        "handler": "WebGPUDecoderImpl",
+        "put_offset": 3256
+      }
+    },
+    {
+      "name": "RunTask",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 4861.892,
+      "durationMs": 502.335,
+      "args": {}
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 4861.895,
+      "durationMs": 502.326,
+      "args": {
+        "src_file": "mojo/public/cpp/system/simple_watcher.cc",
+        "src_func": "Notify",
+        "src_line": 103
+      }
+    },
+    {
+      "name": "Edge_RunTask",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 4861.899,
+      "durationMs": 502.321,
+      "args": {
+        "Callback Location": "Notify@mojo\\public\\cpp\\system\\simple_watcher.cc:103",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      }
+    },
+    {
+      "name": "SimpleWatcher::OnHandleReady",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 4861.902,
+      "durationMs": 502.317,
+      "args": {
+        "chrome_mojo_event_info": {
+          "watcher_notify_interface_tag": "unknown interface"
+        }
+      }
+    },
+    {
+      "name": "v8.callFunction",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 4861.915,
+      "durationMs": 502.298,
+      "args": {}
+    },
+    {
+      "name": "FunctionCall",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 4861.918,
+      "durationMs": 502.25,
+      "args": {
+        "data": {
+          "columnNumber": 17,
+          "functionName": "port.onmessage",
+          "isolate": "16883682070303553613",
+          "lineNumber": 12,
+          "sampleTraceId": 7892450915504329,
+          "scriptId": "13",
+          "url": "http://127.0.0.1:5175/src/rendering/confirmed-presentation-stream.js?t=1793822864357"
+        }
+      }
+    },
+    {
+      "name": "RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 6073.036,
+      "durationMs": 390.079,
+      "args": {}
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 6073.037,
+      "durationMs": 390.076,
+      "args": {
+        "src_file": "gpu/command_buffer/service/scheduler.cc",
+        "src_func": "RunNextTask",
+        "src_line": 654
+      }
+    },
+    {
+      "name": "Edge_RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 6073.039,
+      "durationMs": 390.074,
+      "args": {
+        "Callback Location": "RunNextTask@gpu\\command_buffer\\service\\scheduler.cc:654",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      }
+    },
+    {
+      "name": "Scheduler::RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 6073.042,
+      "durationMs": 390.068,
+      "args": {}
+    },
+    {
+      "name": "GpuChannel::ExecuteDeferredRequest",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 6073.043,
+      "durationMs": 390.063,
+      "args": {}
+    },
+    {
+      "name": "GPUTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 6073.046,
+      "durationMs": 390.059,
+      "args": {
+        "data": {
+          "renderer_pid": 11484,
+          "used_bytes": 75894544
+        }
+      }
+    },
+    {
+      "name": "WebGPU",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 6073.051,
+      "durationMs": 390.045,
+      "args": {}
+    },
+    {
+      "name": "CommandBuffer::Flush",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 6073.052,
+      "durationMs": 390.043,
+      "args": {}
+    },
+    {
+      "name": "CommandBufferStub::OnAsyncFlush",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 6073.053,
+      "durationMs": 390.042,
+      "args": {
+        "put_offset": 3760
+      }
+    },
+    {
+      "name": "CommandBufferService:PutChanged",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 6073.055,
+      "durationMs": 390.034,
+      "args": {
+        "handler": "WebGPUDecoderImpl",
+        "put_offset": 3760
+      }
+    },
+    {
+      "name": "RunTask",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 4486.069,
+      "durationMs": 375.711,
+      "args": {}
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 4486.083,
+      "durationMs": 375.691,
+      "args": {
+        "src_file": "mojo/public/cpp/system/simple_watcher.cc",
+        "src_func": "Notify",
+        "src_line": 103
+      }
+    },
+    {
+      "name": "Edge_RunTask",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 4486.087,
+      "durationMs": 375.687,
+      "args": {
+        "Callback Location": "Notify@mojo\\public\\cpp\\system\\simple_watcher.cc:103",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      }
+    },
+    {
+      "name": "SimpleWatcher::OnHandleReady",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 4486.09,
+      "durationMs": 375.682,
+      "args": {
+        "chrome_mojo_event_info": {
+          "watcher_notify_interface_tag": "unknown interface"
+        }
+      }
+    },
+    {
+      "name": "v8.callFunction",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 4486.102,
+      "durationMs": 375.662,
+      "args": {}
+    },
+    {
+      "name": "FunctionCall",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 4486.105,
+      "durationMs": 375.59,
+      "args": {
+        "data": {
+          "columnNumber": 17,
+          "functionName": "port.onmessage",
+          "isolate": "16883682070303553613",
+          "lineNumber": 12,
+          "sampleTraceId": 7892450915504390,
+          "scriptId": "13",
+          "url": "http://127.0.0.1:5175/src/rendering/confirmed-presentation-stream.js?t=1793822864357"
+        }
+      }
+    },
+    {
+      "name": "RunTask",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 5483.279,
+      "durationMs": 375.146,
+      "args": {}
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 5483.281,
+      "durationMs": 375.137,
+      "args": {
+        "src_file": "mojo/public/cpp/system/simple_watcher.cc",
+        "src_func": "Notify",
+        "src_line": 103
+      }
+    },
+    {
+      "name": "Edge_RunTask",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 5483.284,
+      "durationMs": 375.134,
+      "args": {
+        "Callback Location": "Notify@mojo\\public\\cpp\\system\\simple_watcher.cc:103",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      }
+    },
+    {
+      "name": "SimpleWatcher::OnHandleReady",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 5483.287,
+      "durationMs": 375.13,
+      "args": {
+        "chrome_mojo_event_info": {
+          "watcher_notify_interface_tag": "unknown interface"
+        }
+      }
+    },
+    {
+      "name": "v8.callFunction",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 5483.304,
+      "durationMs": 375.103,
+      "args": {}
+    },
+    {
+      "name": "FunctionCall",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 5483.306,
+      "durationMs": 375.071,
+      "args": {
+        "data": {
+          "columnNumber": 17,
+          "functionName": "port.onmessage",
+          "isolate": "16883682070303553613",
+          "lineNumber": 12,
+          "sampleTraceId": 7892450915506076,
+          "scriptId": "13",
+          "url": "http://127.0.0.1:5175/src/rendering/confirmed-presentation-stream.js?t=1793822864357"
+        }
+      }
+    },
+    {
+      "name": "RunTask",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 4165.98,
+      "durationMs": 319.983,
+      "args": {}
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 4165.983,
+      "durationMs": 319.974,
+      "args": {
+        "src_file": "mojo/public/cpp/system/simple_watcher.cc",
+        "src_func": "Notify",
+        "src_line": 103
+      }
+    },
+    {
+      "name": "Edge_RunTask",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 4165.987,
+      "durationMs": 319.969,
+      "args": {
+        "Callback Location": "Notify@mojo\\public\\cpp\\system\\simple_watcher.cc:103",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      }
+    },
+    {
+      "name": "SimpleWatcher::OnHandleReady",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 4165.989,
+      "durationMs": 319.966,
+      "args": {
+        "chrome_mojo_event_info": {
+          "watcher_notify_interface_tag": "unknown interface"
+        }
+      }
+    },
+    {
+      "name": "v8.callFunction",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 4166.014,
+      "durationMs": 319.934,
+      "args": {}
+    },
+    {
+      "name": "FunctionCall",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 4166.017,
+      "durationMs": 319.89,
+      "args": {
+        "data": {
+          "columnNumber": 17,
+          "functionName": "port.onmessage",
+          "isolate": "16883682070303553613",
+          "lineNumber": 12,
+          "sampleTraceId": 7892450915504494,
+          "scriptId": "13",
+          "url": "http://127.0.0.1:5175/src/rendering/confirmed-presentation-stream.js?t=1793822864357"
+        }
+      }
+    },
+    {
+      "name": "RunTask",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 5858.641,
+      "durationMs": 261.834,
+      "args": {}
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 5858.644,
+      "durationMs": 261.825,
+      "args": {
+        "src_file": "mojo/public/cpp/system/simple_watcher.cc",
+        "src_func": "Notify",
+        "src_line": 103
+      }
+    },
+    {
+      "name": "Edge_RunTask",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 5858.647,
+      "durationMs": 261.822,
+      "args": {
+        "Callback Location": "Notify@mojo\\public\\cpp\\system\\simple_watcher.cc:103",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      }
+    },
+    {
+      "name": "SimpleWatcher::OnHandleReady",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 5858.649,
+      "durationMs": 261.818,
+      "args": {
+        "chrome_mojo_event_info": {
+          "watcher_notify_interface_tag": "unknown interface"
+        }
+      }
+    },
+    {
+      "name": "v8.callFunction",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 5858.674,
+      "durationMs": 261.786,
+      "args": {}
+    },
+    {
+      "name": "FunctionCall",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 5858.677,
+      "durationMs": 261.768,
+      "args": {
+        "data": {
+          "columnNumber": 17,
+          "functionName": "port.onmessage",
+          "isolate": "16883682070303553613",
+          "lineNumber": 12,
+          "sampleTraceId": 7892450915506087,
+          "scriptId": "13",
+          "url": "http://127.0.0.1:5175/src/rendering/confirmed-presentation-stream.js?t=1793822864357"
+        }
+      }
+    },
+    {
+      "name": "RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 5761.45,
+      "durationMs": 244.899,
+      "args": {}
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 5761.451,
+      "durationMs": 244.896,
+      "args": {
+        "src_file": "gpu/command_buffer/service/scheduler.cc",
+        "src_func": "RunNextTask",
+        "src_line": 654
+      }
+    },
+    {
+      "name": "Edge_RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 5761.453,
+      "durationMs": 244.893,
+      "args": {
+        "Callback Location": "RunNextTask@gpu\\command_buffer\\service\\scheduler.cc:654",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      }
+    },
+    {
+      "name": "Scheduler::RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 5761.456,
+      "durationMs": 244.887,
+      "args": {}
+    },
+    {
+      "name": "GpuChannel::ExecuteDeferredRequest",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 5761.457,
+      "durationMs": 244.881,
+      "args": {}
+    },
+    {
+      "name": "GPUTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 5761.463,
+      "durationMs": 244.874,
+      "args": {
+        "data": {
+          "renderer_pid": 11484,
+          "used_bytes": 75894544
+        }
+      }
+    },
+    {
+      "name": "WebGPU",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 5761.472,
+      "durationMs": 244.854,
+      "args": {}
+    },
+    {
+      "name": "CommandBuffer::Flush",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 5761.473,
+      "durationMs": 244.853,
+      "args": {}
+    },
+    {
+      "name": "CommandBufferStub::OnAsyncFlush",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 5761.475,
+      "durationMs": 244.85,
+      "args": {
+        "put_offset": 3518
+      }
+    },
+    {
+      "name": "CommandBufferService:PutChanged",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 5761.482,
+      "durationMs": 244.837,
+      "args": {
+        "handler": "WebGPUDecoderImpl",
+        "put_offset": 3518
+      }
+    },
+    {
+      "name": "RunTask",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 29606.389,
+      "durationMs": 238.021,
+      "args": {}
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 29606.389,
+      "durationMs": 238.017,
+      "args": {
+        "src_file": "mojo/public/cpp/system/simple_watcher.cc",
+        "src_func": "Notify",
+        "src_line": 103
+      }
+    },
+    {
+      "name": "Edge_RunTask",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 29606.391,
+      "durationMs": 238.014,
+      "args": {
+        "Callback Location": "Notify@mojo\\public\\cpp\\system\\simple_watcher.cc:103",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      }
+    },
+    {
+      "name": "SimpleWatcher::OnHandleReady",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 29606.392,
+      "durationMs": 238.012,
+      "args": {
+        "chrome_mojo_event_info": {
+          "watcher_notify_interface_tag": "unknown interface"
+        }
+      }
+    },
+    {
+      "name": "v8.callFunction",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 29606.413,
+      "durationMs": 237.986,
+      "args": {}
+    },
+    {
+      "name": "FunctionCall",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 29606.415,
+      "durationMs": 237.971,
+      "args": {
+        "data": {
+          "columnNumber": 17,
+          "functionName": "port.onmessage",
+          "isolate": "16883682070303553613",
+          "lineNumber": 12,
+          "sampleTraceId": 7892450915408074,
+          "scriptId": "13",
+          "url": "http://127.0.0.1:5175/src/rendering/confirmed-presentation-stream.js?t=1793822864357"
+        }
+      }
+    },
+    {
+      "name": "RunTask",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 6120.543,
+      "durationMs": 218.741,
+      "args": {}
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 6120.545,
+      "durationMs": 218.733,
+      "args": {
+        "src_file": "mojo/public/cpp/system/simple_watcher.cc",
+        "src_func": "Notify",
+        "src_line": 103
+      }
+    },
+    {
+      "name": "Edge_RunTask",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 6120.547,
+      "durationMs": 218.73,
+      "args": {
+        "Callback Location": "Notify@mojo\\public\\cpp\\system\\simple_watcher.cc:103",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      }
+    },
+    {
+      "name": "SimpleWatcher::OnHandleReady",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 6120.551,
+      "durationMs": 218.725,
+      "args": {
+        "chrome_mojo_event_info": {
+          "watcher_notify_interface_tag": "unknown interface"
+        }
+      }
+    },
+    {
+      "name": "v8.callFunction",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 6120.567,
+      "durationMs": 218.701,
+      "args": {}
+    },
+    {
+      "name": "FunctionCall",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 6120.569,
+      "durationMs": 218.649,
+      "args": {
+        "data": {
+          "columnNumber": 17,
+          "functionName": "port.onmessage",
+          "isolate": "16883682070303553613",
+          "lineNumber": 12,
+          "sampleTraceId": 7892450915506040,
+          "scriptId": "13",
+          "url": "http://127.0.0.1:5175/src/rendering/confirmed-presentation-stream.js?t=1793822864357"
+        }
+      }
+    },
+    {
+      "name": "RunTask",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 30094.837,
+      "durationMs": 188.647,
+      "args": {}
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 30094.838,
+      "durationMs": 188.638,
+      "args": {
+        "src_file": "mojo/public/cpp/system/simple_watcher.cc",
+        "src_func": "Notify",
+        "src_line": 103
+      }
+    },
+    {
+      "name": "Edge_RunTask",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 30094.84,
+      "durationMs": 188.635,
+      "args": {
+        "Callback Location": "Notify@mojo\\public\\cpp\\system\\simple_watcher.cc:103",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      }
+    },
+    {
+      "name": "SimpleWatcher::OnHandleReady",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 30094.841,
+      "durationMs": 188.632,
+      "args": {
+        "chrome_mojo_event_info": {
+          "watcher_notify_interface_tag": "unknown interface"
+        }
+      }
+    },
+    {
+      "name": "v8.callFunction",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 30094.869,
+      "durationMs": 188.595,
+      "args": {}
+    },
+    {
+      "name": "FunctionCall",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 30094.871,
+      "durationMs": 188.549,
+      "args": {
+        "data": {
+          "columnNumber": 17,
+          "functionName": "port.onmessage",
+          "isolate": "16883682070303553613",
+          "lineNumber": 12,
+          "sampleTraceId": 7892450915409692,
+          "scriptId": "13",
+          "url": "http://127.0.0.1:5175/src/rendering/confirmed-presentation-stream.js?t=1793822864357"
+        }
+      }
+    },
+    {
+      "name": "RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 1769.22,
+      "durationMs": 188.326,
+      "args": {}
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 1769.221,
+      "durationMs": 188.323,
+      "args": {
+        "src_file": "gpu/command_buffer/service/scheduler.cc",
+        "src_func": "RunNextTask",
+        "src_line": 654
+      }
+    },
+    {
+      "name": "Edge_RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 1769.223,
+      "durationMs": 188.321,
+      "args": {
+        "Callback Location": "RunNextTask@gpu\\command_buffer\\service\\scheduler.cc:654",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      }
+    },
+    {
+      "name": "Scheduler::RunTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 1769.226,
+      "durationMs": 188.315,
+      "args": {}
+    },
+    {
+      "name": "GpuChannel::ExecuteDeferredRequest",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 1769.227,
+      "durationMs": 188.309,
+      "args": {}
+    },
+    {
+      "name": "GPUTask",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 1769.235,
+      "durationMs": 188.3,
+      "args": {
+        "data": {
+          "renderer_pid": 11484,
+          "used_bytes": 75894544
+        }
+      }
+    },
+    {
+      "name": "WebGPU",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 1769.243,
+      "durationMs": 188.286,
+      "args": {}
+    },
+    {
+      "name": "CommandBuffer::Flush",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 1769.244,
+      "durationMs": 188.284,
+      "args": {}
+    },
+    {
+      "name": "CommandBufferStub::OnAsyncFlush",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 1769.245,
+      "durationMs": 188.283,
+      "args": {
+        "put_offset": 3154
+      }
+    },
+    {
+      "name": "CommandBufferService:PutChanged",
+      "thread": "CrGpuMain",
+      "process": "GPU Process",
+      "pid": 27500,
+      "tid": 27360,
+      "startMs": 1769.248,
+      "durationMs": 188.274,
+      "args": {
+        "handler": "WebGPUDecoderImpl",
+        "put_offset": 3154
+      }
+    },
+    {
+      "name": "RunTask",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 3804.479,
+      "durationMs": 187.126,
+      "args": {}
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "thread": "DedicatedWorker thread",
+      "process": "Renderer",
+      "pid": 11484,
+      "tid": 5340,
+      "startMs": 3804.501,
+      "durationMs": 187.098,
+      "args": {
+        "src_file": "mojo/public/cpp/system/simple_watcher.cc",
+        "src_func": "Notify",
+        "src_line": 103
+      }
+    }
+  ],
+  "cpu": [
+    {
+      "pid": 11484,
+      "tid": 26752,
+      "thread": "DedicatedWorker thread",
+      "samples": 57300,
+      "top": [
+        {
+          "frame": {
+            "codeType": "other",
+            "functionName": "(idle)",
+            "scriptId": 0
+          },
+          "samples": 55271,
+          "estimatedMs": 30244.92500000058
+        },
+        {
+          "frame": {
+            "codeType": "other",
+            "functionName": "(garbage collector)",
+            "scriptId": 0
+          },
+          "samples": 72,
+          "estimatedMs": 36.553000000000004
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "functionName": "postMessage",
+            "scriptId": 0
+          },
+          "samples": 55,
+          "estimatedMs": 10.908999999999997
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 272,
+            "functionName": "send",
+            "lineNumber": 15,
+            "scriptId": 3,
+            "url": "http://127.0.0.1:5175/src/simulation/worker-runtime-host.js?worker_file&type=module"
+          },
+          "samples": 53,
+          "estimatedMs": 8.788
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 91,
+            "functionName": "send",
+            "lineNumber": 5,
+            "scriptId": 8,
+            "url": "http://127.0.0.1:5175/src/simulation/visual-publication-stream.js?t=1793822864056"
+          },
+          "samples": 44,
+          "estimatedMs": 6.0409999999999995
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 18,
+            "functionName": "worker.onmessage",
+            "lineNumber": 8,
+            "scriptId": 5,
+            "url": "http://127.0.0.1:5175/src/simulation/simulation-authority-client.js"
+          },
+          "samples": 43,
+          "estimatedMs": 3.4340000000000006
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 13,
+            "functionName": "publication",
+            "lineNumber": 26,
+            "scriptId": 7,
+            "url": "http://127.0.0.1:5175/src/simulation/host-publication-queue.js?t=1793822864044"
+          },
+          "samples": 10,
+          "estimatedMs": 2.5769999999999995
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 14,
+            "functionName": "pump",
+            "lineNumber": 7,
+            "scriptId": 5,
+            "url": "http://127.0.0.1:5175/src/simulation/simulation-authority-client.js"
+          },
+          "samples": 11,
+          "estimatedMs": 1.343
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "functionName": "structuredClone",
+            "scriptId": 0
+          },
+          "samples": 12,
+          "estimatedMs": 1.249
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "submit",
+            "lineNumber": 11,
+            "scriptId": 5,
+            "url": "http://127.0.0.1:5175/src/simulation/simulation-authority-client.js"
+          },
+          "samples": 9,
+          "estimatedMs": 1.246
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 15,
+            "functionName": "self.onmessage",
+            "lineNumber": 11,
+            "scriptId": 3,
+            "url": "http://127.0.0.1:5175/src/simulation/worker-runtime-host.js?worker_file&type=module"
+          },
+          "samples": 29,
+          "estimatedMs": 1.1180000000000003
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 16,
+            "functionName": "submit",
+            "lineNumber": 36,
+            "scriptId": 6,
+            "url": "http://127.0.0.1:5175/src/simulation/worker-game-runtime.js?t=1793819591536"
+          },
+          "samples": 14,
+          "estimatedMs": 0.9579999999999999
+        },
+        {
+          "frame": {
+            "codeType": "other",
+            "functionName": "(program)",
+            "scriptId": 0
+          },
+          "samples": 13,
+          "estimatedMs": 0.7760000000000001
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 16,
+            "functionName": "port.onmessage",
+            "lineNumber": 7,
+            "scriptId": 8,
+            "url": "http://127.0.0.1:5175/src/simulation/visual-publication-stream.js?t=1793822864056"
+          },
+          "samples": 13,
+          "estimatedMs": 0.6040000000000001
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 14,
+            "functionName": "pump",
+            "lineNumber": 16,
+            "scriptId": 6,
+            "url": "http://127.0.0.1:5175/src/simulation/worker-game-runtime.js?t=1793819591536"
+          },
+          "samples": 6,
+          "estimatedMs": 0.5700000000000001
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 16,
+            "functionName": "eligible",
+            "lineNumber": 19,
+            "scriptId": 7,
+            "url": "http://127.0.0.1:5175/src/simulation/host-publication-queue.js?t=1793822864044"
+          },
+          "samples": 1,
+          "estimatedMs": 0.542
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 149,
+            "functionName": "publish",
+            "lineNumber": 9,
+            "scriptId": 8,
+            "url": "http://127.0.0.1:5175/src/simulation/visual-publication-stream.js?t=1793822864056"
+          },
+          "samples": 2,
+          "estimatedMs": 0.536
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 20,
+            "functionName": "addDemands",
+            "lineNumber": 11,
+            "scriptId": 6,
+            "url": "http://127.0.0.1:5175/src/simulation/worker-game-runtime.js?t=1793819591536"
+          },
+          "samples": 2,
+          "estimatedMs": 0.46900000000000003
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 15,
+            "functionName": "drain",
+            "lineNumber": 18,
+            "scriptId": 7,
+            "url": "http://127.0.0.1:5175/src/simulation/host-publication-queue.js?t=1793822864044"
+          },
+          "samples": 6,
+          "estimatedMs": 0.44
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 56,
+            "functionName": "forward",
+            "lineNumber": 16,
+            "scriptId": 3,
+            "url": "http://127.0.0.1:5175/src/simulation/worker-runtime-host.js?worker_file&type=module"
+          },
+          "samples": 3,
+          "estimatedMs": 0.346
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 190,
+            "functionName": "now",
+            "lineNumber": 2,
+            "scriptId": 6,
+            "url": "http://127.0.0.1:5175/src/simulation/worker-game-runtime.js?t=1793819591536"
+          },
+          "samples": 4,
+          "estimatedMs": 0.166
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 5,
+            "functionName": "ack",
+            "lineNumber": 32,
+            "scriptId": 7,
+            "url": "http://127.0.0.1:5175/src/simulation/host-publication-queue.js?t=1793822864044"
+          },
+          "samples": 3,
+          "estimatedMs": 0.14900000000000002
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 9,
+            "functionName": "message",
+            "lineNumber": 31,
+            "scriptId": 7,
+            "url": "http://127.0.0.1:5175/src/simulation/host-publication-queue.js?t=1793822864044"
+          },
+          "samples": 1,
+          "estimatedMs": 0.126
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 22,
+            "functionName": "",
+            "lineNumber": 22,
+            "scriptId": 6,
+            "url": "http://127.0.0.1:5175/src/simulation/worker-game-runtime.js?t=1793819591536"
+          },
+          "samples": 1,
+          "estimatedMs": 0.075
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 24,
+            "functionName": "enqueueElapsed",
+            "lineNumber": 6,
+            "scriptId": 6,
+            "url": "http://127.0.0.1:5175/src/simulation/worker-game-runtime.js?t=1793819591536"
+          },
+          "samples": 1,
+          "estimatedMs": 0.046
+        }
+      ]
+    },
+    {
+      "pid": 11484,
+      "tid": 15292,
+      "thread": "DedicatedWorker thread",
+      "samples": 55260,
+      "top": [
+        {
+          "frame": {
+            "codeType": "other",
+            "functionName": "(idle)",
+            "scriptId": 0
+          },
+          "samples": 50333,
+          "estimatedMs": 28420.775000001126
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 39,
+            "functionName": "serializeConfirmedState",
+            "lineNumber": 5,
+            "scriptId": 11,
+            "url": "http://127.0.0.1:5175/src/simulation/confirmed-live-state.js"
+          },
+          "samples": 767,
+          "estimatedMs": 425.7049999999996
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 19,
+            "functionName": "coordinate",
+            "lineNumber": 3,
+            "scriptId": 37,
+            "url": "http://127.0.0.1:5175/src/persistence/exit-connector-snapshot.js"
+          },
+          "samples": 396,
+          "estimatedMs": 220.8540000000001
+        },
+        {
+          "frame": {
+            "codeType": "wasm",
+            "columnNumber": 124510,
+            "functionName": "wasm-function[113]",
+            "lineNumber": 0,
+            "scriptId": 149,
+            "url": "wasm://wasm/00206f66"
+          },
+          "samples": 365,
+          "estimatedMs": 202.67400000000015
+        },
+        {
+          "frame": {
+            "codeType": "wasm",
+            "columnNumber": 46426,
+            "functionName": "wasm-function[48]",
+            "lineNumber": 0,
+            "scriptId": 149,
+            "url": "wasm://wasm/00206f66"
+          },
+          "samples": 225,
+          "estimatedMs": 126.52300000000001
+        },
+        {
+          "frame": {
+            "codeType": "wasm",
+            "columnNumber": 491492,
+            "functionName": "wasm-function[575]",
+            "lineNumber": 0,
+            "scriptId": 149,
+            "url": "wasm://wasm/00206f66"
+          },
+          "samples": 190,
+          "estimatedMs": 110.6510000000001
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 33,
+            "functionName": "validExitFrontier",
+            "lineNumber": 12,
+            "scriptId": 37,
+            "url": "http://127.0.0.1:5175/src/persistence/exit-connector-snapshot.js"
+          },
+          "samples": 168,
+          "estimatedMs": 91.44600000000004
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 32,
+            "functionName": "validateSnapshot",
+            "lineNumber": 13,
+            "scriptId": 10,
+            "url": "http://127.0.0.1:5175/src/persistence/snapshots.js"
+          },
+          "samples": 146,
+          "estimatedMs": 69.12400000000002
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 15,
+            "functionName": "self.onmessage",
+            "lineNumber": 9,
+            "scriptId": 3,
+            "url": "http://127.0.0.1:5175/src/simulation/simulation-authority-worker.js?worker_file&type=module"
+          },
+          "samples": 100,
+          "estimatedMs": 46.76699999999997
+        },
+        {
+          "frame": {
+            "codeType": "wasm",
+            "columnNumber": 513929,
+            "functionName": "wasm-function[624]",
+            "lineNumber": 0,
+            "scriptId": 149,
+            "url": "wasm://wasm/00206f66"
+          },
+          "samples": 80,
+          "estimatedMs": 44.213
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 19,
+            "functionName": "wholeMoney",
+            "lineNumber": 10,
+            "scriptId": 10,
+            "url": "http://127.0.0.1:5175/src/persistence/snapshots.js"
+          },
+          "samples": 78,
+          "estimatedMs": 35.004000000000005
+        },
+        {
+          "frame": {
+            "codeType": "wasm",
+            "columnNumber": 60728,
+            "functionName": "wasm-function[62]",
+            "lineNumber": 0,
+            "scriptId": 149,
+            "url": "wasm://wasm/00206f66"
+          },
+          "samples": 55,
+          "estimatedMs": 30.468999999999998
+        },
+        {
+          "frame": {
+            "codeType": "wasm",
+            "columnNumber": 193987,
+            "functionName": "wasm-function[208]",
+            "lineNumber": 0,
+            "scriptId": 149,
+            "url": "wasm://wasm/00206f66"
+          },
+          "samples": 47,
+          "estimatedMs": 26.318999999999996
+        },
+        {
+          "frame": {
+            "codeType": "wasm",
+            "columnNumber": 193771,
+            "functionName": "wasm-function[207]",
+            "lineNumber": 0,
+            "scriptId": 149,
+            "url": "wasm://wasm/00206f66"
+          },
+          "samples": 42,
+          "estimatedMs": 22.366000000000003
+        },
+        {
+          "frame": {
+            "codeType": "wasm",
+            "columnNumber": 40327,
+            "functionName": "wasm-function[46]",
+            "lineNumber": 0,
+            "scriptId": 149,
+            "url": "wasm://wasm/00206f66"
+          },
+          "samples": 41,
+          "estimatedMs": 21.882
+        },
+        {
+          "frame": {
+            "codeType": "other",
+            "functionName": "(garbage collector)",
+            "scriptId": 0
+          },
+          "samples": 37,
+          "estimatedMs": 20.361
+        },
+        {
+          "frame": {
+            "codeType": "wasm",
+            "columnNumber": 486732,
+            "functionName": "wasm-function[566]",
+            "lineNumber": 0,
+            "scriptId": 149,
+            "url": "wasm://wasm/00206f66"
+          },
+          "samples": 34,
+          "estimatedMs": 19.803
+        },
+        {
+          "frame": {
+            "codeType": "wasm",
+            "columnNumber": 67965,
+            "functionName": "wasm-function[70]",
+            "lineNumber": 0,
+            "scriptId": 149,
+            "url": "wasm://wasm/00206f66"
+          },
+          "samples": 35,
+          "estimatedMs": 19.143999999999995
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 23,
+            "functionName": "fractionalExit",
+            "lineNumber": 67,
+            "scriptId": 44,
+            "url": "http://127.0.0.1:5175/src/simulation/animal-exit-connectors.js"
+          },
+          "samples": 30,
+          "estimatedMs": 17.163
+        },
+        {
+          "frame": {
+            "codeType": "wasm",
+            "columnNumber": 494172,
+            "functionName": "wasm-function[584]",
+            "lineNumber": 0,
+            "scriptId": 149,
+            "url": "wasm://wasm/00206f66"
+          },
+          "samples": 28,
+          "estimatedMs": 15.767
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "functionName": "postMessage",
+            "scriptId": 0
+          },
+          "samples": 28,
+          "estimatedMs": 15.271999999999995
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 38,
+            "functionName": "updateWorkerEncounters",
+            "lineNumber": 32,
+            "scriptId": 118,
+            "url": "http://127.0.0.1:5175/src/simulation/encounters.js"
+          },
+          "samples": 38,
+          "estimatedMs": 12.949
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 20,
+            "functionName": "tick",
+            "lineNumber": 1702,
+            "scriptId": 12,
+            "url": "http://127.0.0.1:5175/src/simulation/game.js"
+          },
+          "samples": 29,
+          "estimatedMs": 11.320000000000002
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 26,
+            "functionName": "updateRaid",
+            "lineNumber": 772,
+            "scriptId": 68,
+            "url": "http://127.0.0.1:5175/src/simulation/raids.js"
+          },
+          "samples": 24,
+          "estimatedMs": 10.915000000000001
+        },
+        {
+          "frame": {
+            "codeType": "wasm",
+            "columnNumber": 77061,
+            "functionName": "wasm-function[77]",
+            "lineNumber": 0,
+            "scriptId": 149,
+            "url": "wasm://wasm/00206f66"
+          },
+          "samples": 20,
+          "estimatedMs": 10.655000000000001
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 14,
+            "functionName": "point",
+            "lineNumber": 6,
+            "scriptId": 24,
+            "url": "http://127.0.0.1:5175/src/rendering/worker-chunk-residency.js"
+          },
+          "samples": 32,
+          "estimatedMs": 10.585
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 22,
+            "functionName": "walkTo",
+            "lineNumber": 883,
+            "scriptId": 12,
+            "url": "http://127.0.0.1:5175/src/simulation/game.js"
+          },
+          "samples": 26,
+          "estimatedMs": 10.387000000000002
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 41,
+            "functionName": "queryResidentSpatialProps",
+            "lineNumber": 2,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/src/world/wild-engine/spatial-prop-query.js"
+          },
+          "samples": 22,
+          "estimatedMs": 10.148
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "segmentClear",
+            "lineNumber": 49,
+            "scriptId": 19,
+            "url": "http://127.0.0.1:5175/src/world/wild-engine/spatial-navigation-movement.js"
+          },
+          "samples": 19,
+          "estimatedMs": 9.987999999999998
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 12,
+            "functionName": "index",
+            "lineNumber": 2,
+            "scriptId": 37,
+            "url": "http://127.0.0.1:5175/src/persistence/exit-connector-snapshot.js"
+          },
+          "samples": 18,
+          "estimatedMs": 9.981000000000002
+        },
+        {
+          "frame": {
+            "codeType": "wasm",
+            "columnNumber": 193261,
+            "functionName": "wasm-function[206]",
+            "lineNumber": 0,
+            "scriptId": 149,
+            "url": "wasm://wasm/00206f66"
+          },
+          "samples": 17,
+          "estimatedMs": 9.734000000000002
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 35,
+            "functionName": "animalExitConnector",
+            "lineNumber": 9,
+            "scriptId": 44,
+            "url": "http://127.0.0.1:5175/src/simulation/animal-exit-connectors.js"
+          },
+          "samples": 17,
+          "estimatedMs": 9.577000000000002
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 12,
+            "functionName": "equal",
+            "lineNumber": 3,
+            "scriptId": 34,
+            "url": "http://127.0.0.1:5175/src/persistence/raid-pressure-snapshot.js"
+          },
+          "samples": 22,
+          "estimatedMs": 7.441
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 33,
+            "functionName": "workerChunkDemand",
+            "lineNumber": 2,
+            "scriptId": 24,
+            "url": "http://127.0.0.1:5175/src/rendering/worker-chunk-residency.js"
+          },
+          "samples": 26,
+          "estimatedMs": 7.436
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 25,
+            "functionName": "actorStepClear",
+            "lineNumber": 248,
+            "scriptId": 18,
+            "url": "http://127.0.0.1:5175/src/world/wild-engine/spatial-game-session.js"
+          },
+          "samples": 13,
+          "estimatedMs": 7.03
+        }
+      ]
+    },
+    {
+      "pid": 11484,
+      "tid": 27192,
+      "thread": "CrRendererMain",
+      "samples": 59292,
+      "top": [
+        {
+          "frame": {
+            "codeType": "other",
+            "functionName": "(idle)",
+            "scriptId": 0
+          },
+          "samples": 42013,
+          "estimatedMs": 23611.4660000006
+        },
+        {
+          "frame": {
+            "codeType": "other",
+            "functionName": "(program)",
+            "scriptId": 0
+          },
+          "samples": 7052,
+          "estimatedMs": 1505.6769999999926
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 18,
+            "functionName": "reconcile",
+            "lineNumber": 8,
+            "scriptId": 442,
+            "url": "http://127.0.0.1:5175/src/simulation/confirmed-state-receiver.js?t=1793822864044"
+          },
+          "samples": 1424,
+          "estimatedMs": 793.9759999999987
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 41,
+            "functionName": "deserializeConfirmedState",
+            "lineNumber": 6,
+            "scriptId": 143,
+            "url": "http://127.0.0.1:5175/src/simulation/confirmed-live-state.js"
+          },
+          "samples": 1096,
+          "estimatedMs": 473.1499999999994
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 31,
+            "functionName": "updateAssetLods",
+            "lineNumber": 36,
+            "scriptId": 307,
+            "url": "http://127.0.0.1:5175/src/rendering/asset-lod.js"
+          },
+          "samples": 571,
+          "estimatedMs": 301.136
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 19,
+            "functionName": "updateMatrixWorld",
+            "lineNumber": 8324,
+            "scriptId": 361,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=109122cc"
+          },
+          "samples": 444,
+          "estimatedMs": 242.3410000000002
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 19,
+            "functionName": "coordinate",
+            "lineNumber": 3,
+            "scriptId": 201,
+            "url": "http://127.0.0.1:5175/src/persistence/exit-connector-snapshot.js"
+          },
+          "samples": 391,
+          "estimatedMs": 218.82400000000007
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 135,
+            "functionName": "",
+            "lineNumber": 106,
+            "scriptId": 309,
+            "url": "http://127.0.0.1:5175/src/rendering/asset-groups.js"
+          },
+          "samples": 294,
+          "estimatedMs": 163.64900000000006
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 8,
+            "functionName": "update",
+            "lineNumber": 172,
+            "scriptId": 309,
+            "url": "http://127.0.0.1:5175/src/rendering/asset-groups.js"
+          },
+          "samples": 222,
+          "estimatedMs": 123.78800000000007
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 34,
+            "functionName": "updateObstructions",
+            "lineNumber": 43,
+            "scriptId": 306,
+            "url": "http://127.0.0.1:5175/src/rendering/obstruction.js"
+          },
+          "samples": 196,
+          "estimatedMs": 109.66800000000005
+        },
+        {
+          "frame": {
+            "codeType": "other",
+            "functionName": "(garbage collector)",
+            "scriptId": 0
+          },
+          "samples": 132,
+          "estimatedMs": 102.03000000000014
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 32,
+            "functionName": "validateSnapshot",
+            "lineNumber": 13,
+            "scriptId": 69,
+            "url": "http://127.0.0.1:5175/src/persistence/snapshots.js"
+          },
+          "samples": 187,
+          "estimatedMs": 101.64800000000004
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 9,
+            "functionName": "prepare",
+            "lineNumber": 88,
+            "scriptId": 309,
+            "url": "http://127.0.0.1:5175/src/rendering/asset-groups.js"
+          },
+          "samples": 173,
+          "estimatedMs": 98.09100000000011
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 7,
+            "functionName": "height",
+            "lineNumber": 21,
+            "scriptId": 489,
+            "url": "http://127.0.0.1:5175/src/rendering/ground-skin-sampler.js"
+          },
+          "samples": 176,
+          "estimatedMs": 97.34799999999996
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 7,
+            "functionName": "update",
+            "lineNumber": 7,
+            "scriptId": 601,
+            "url": "http://127.0.0.1:5175/tools/experiments/native-far-coverage.js"
+          },
+          "samples": 156,
+          "estimatedMs": 92.94300000000003
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 33,
+            "functionName": "validExitFrontier",
+            "lineNumber": 12,
+            "scriptId": 201,
+            "url": "http://127.0.0.1:5175/src/persistence/exit-connector-snapshot.js"
+          },
+          "samples": 167,
+          "estimatedMs": 91.40400000000004
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "renderFrameUpdates",
+            "lineNumber": 946,
+            "scriptId": 79,
+            "url": "http://127.0.0.1:5175/src/rendering/scene.js?t=1793822864044"
+          },
+          "samples": 152,
+          "estimatedMs": 80.366
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 18,
+            "functionName": "multiplyMatrices",
+            "lineNumber": 6651,
+            "scriptId": 361,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=109122cc"
+          },
+          "samples": 135,
+          "estimatedMs": 76.02300000000004
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 14,
+            "functionName": "merge",
+            "lineNumber": 17,
+            "scriptId": 442,
+            "url": "http://127.0.0.1:5175/src/simulation/confirmed-state-receiver.js?t=1793822864044"
+          },
+          "samples": 132,
+          "estimatedMs": 72.54100000000005
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 7,
+            "functionName": "update",
+            "lineNumber": 5,
+            "scriptId": 594,
+            "url": "http://127.0.0.1:5175/tools/experiments/native-tree-coverage.js"
+          },
+          "samples": 115,
+          "estimatedMs": 63.237999999999985
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 3018,
+            "functionName": "update",
+            "lineNumber": 100,
+            "scriptId": 582,
+            "url": "http://127.0.0.1:5175/tools/experiments/attach-native-far-world.js?t=1793817868189"
+          },
+          "samples": 90,
+          "estimatedMs": 52.12
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 6,
+            "functionName": "sync",
+            "lineNumber": 836,
+            "scriptId": 79,
+            "url": "http://127.0.0.1:5175/src/rendering/scene.js?t=1793822864044"
+          },
+          "samples": 91,
+          "estimatedMs": 50.283
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "functionName": "getBoundingClientRect",
+            "scriptId": 0
+          },
+          "samples": 222,
+          "estimatedMs": 47.18199999999999
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 17,
+            "functionName": "updateUI",
+            "lineNumber": 522,
+            "scriptId": 7,
+            "url": "http://127.0.0.1:5175/src/app/main.js?t=1793822864044"
+          },
+          "samples": 84,
+          "estimatedMs": 45.75200000000002
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 14,
+            "functionName": "keyed",
+            "lineNumber": 5,
+            "scriptId": 442,
+            "url": "http://127.0.0.1:5175/src/simulation/confirmed-state-receiver.js?t=1793822864044"
+          },
+          "samples": 76,
+          "estimatedMs": 42.011
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 67,
+            "functionName": "",
+            "lineNumber": 49,
+            "scriptId": 306,
+            "url": "http://127.0.0.1:5175/src/rendering/obstruction.js"
+          },
+          "samples": 70,
+          "estimatedMs": 40.63100000000001
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 11,
+            "functionName": "moveGuide",
+            "lineNumber": 81,
+            "scriptId": 92,
+            "url": "http://127.0.0.1:5175/src/ui/guardian.js"
+          },
+          "samples": 73,
+          "estimatedMs": 39.644
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 19,
+            "functionName": "wholeMoney",
+            "lineNumber": 10,
+            "scriptId": 69,
+            "url": "http://127.0.0.1:5175/src/persistence/snapshots.js"
+          },
+          "samples": 67,
+          "estimatedMs": 37.953
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 7,
+            "functionName": "update",
+            "lineNumber": 99,
+            "scriptId": 590,
+            "url": "http://127.0.0.1:5175/tools/experiments/native-tree-standby.js"
+          },
+          "samples": 62,
+          "estimatedMs": 36.118000000000016
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "functionName": "postMessage",
+            "scriptId": 0
+          },
+          "samples": 68,
+          "estimatedMs": 34.646000000000015
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 40,
+            "functionName": "nativeFarRenderSignature",
+            "lineNumber": 2,
+            "scriptId": 589,
+            "url": "http://127.0.0.1:5175/tools/experiments/native-far-render-signature.js"
+          },
+          "samples": 55,
+          "estimatedMs": 30.04300000000001
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 26,
+            "functionName": "wallBridge",
+            "lineNumber": 8,
+            "scriptId": 290,
+            "url": "http://127.0.0.1:5175/src/rendering/walls.js"
+          },
+          "samples": 55,
+          "estimatedMs": 29.682000000000006
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 8,
+            "functionName": "update",
+            "lineNumber": 298,
+            "scriptId": 122,
+            "url": "http://127.0.0.1:5175/src/rendering/crop-batch.js"
+          },
+          "samples": 51,
+          "estimatedMs": 27.813
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "groundAnimal",
+            "lineNumber": 73,
+            "scriptId": 287,
+            "url": "http://127.0.0.1:5175/src/rendering/animal-actions.js"
+          },
+          "samples": 51,
+          "estimatedMs": 27.645000000000003
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "fromBufferAttribute",
+            "lineNumber": 2785,
+            "scriptId": 361,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=109122cc"
+          },
+          "samples": 41,
+          "estimatedMs": 22.591000000000008
+        }
+      ]
+    },
+    {
+      "pid": 11484,
+      "tid": 5340,
+      "thread": "DedicatedWorker thread",
+      "samples": 54992,
+      "top": [
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "getMaterialCacheKey",
+            "lineNumber": 12819,
+            "scriptId": 48,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 12332,
+          "estimatedMs": 6852.012999999945
+        },
+        {
+          "frame": {
+            "codeType": "other",
+            "functionName": "(idle)",
+            "scriptId": 0
+          },
+          "samples": 6892,
+          "estimatedMs": 3901.97499999999
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 25,
+            "functionName": "getNodeChildren",
+            "lineNumber": 626,
+            "scriptId": 48,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 5029,
+          "estimatedMs": 2783.1600000000017
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "functionName": "writeBuffer",
+            "scriptId": 0
+          },
+          "samples": 2487,
+          "estimatedMs": 1376.5909999999997
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 34,
+            "functionName": "checkGeometryIntersection",
+            "lineNumber": 11887,
+            "scriptId": 32,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=109122cc"
+          },
+          "samples": 1408,
+          "estimatedMs": 895.0889999999994
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "_renderObjectDirect",
+            "lineNumber": 27667,
+            "scriptId": 48,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 1351,
+          "estimatedMs": 751.3009999999991
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 19,
+            "functionName": "getRenderCacheKey",
+            "lineNumber": 39086,
+            "scriptId": 48,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 1183,
+          "estimatedMs": 656.2660000000002
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 19,
+            "functionName": "intersectTriangle",
+            "lineNumber": 6153,
+            "scriptId": 32,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=109122cc"
+          },
+          "samples": 947,
+          "estimatedMs": 609.778
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 13,
+            "functionName": "getCacheKey",
+            "lineNumber": 12936,
+            "scriptId": 48,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 1054,
+          "estimatedMs": 588.0819999999998
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 19,
+            "functionName": "getVertexPosition",
+            "lineNumber": 11739,
+            "scriptId": 32,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=109122cc"
+          },
+          "samples": 903,
+          "estimatedMs": 583.5089999999994
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "getGeometryCacheKey",
+            "lineNumber": 12788,
+            "scriptId": 48,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 873,
+          "estimatedMs": 484.6139999999998
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 8,
+            "functionName": "update",
+            "lineNumber": 27923,
+            "scriptId": 48,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 855,
+          "estimatedMs": 474.9109999999997
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 23,
+            "functionName": "_computeIntersections",
+            "lineNumber": 11789,
+            "scriptId": 32,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=109122cc"
+          },
+          "samples": 712,
+          "estimatedMs": 454.43499999999966
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "fromBufferAttribute",
+            "lineNumber": 2785,
+            "scriptId": 32,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=109122cc"
+          },
+          "samples": 669,
+          "estimatedMs": 435.86799999999994
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 22,
+            "functionName": "getCacheKey$1",
+            "lineNumber": 616,
+            "scriptId": 48,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 720,
+          "estimatedMs": 396.51699999999954
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 15,
+            "functionName": "getAttributes",
+            "lineNumber": 12698,
+            "scriptId": 48,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 671,
+          "estimatedMs": 372.2549999999997
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 14,
+            "functionName": "getForRender",
+            "lineNumber": 13541,
+            "scriptId": 48,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 588,
+          "estimatedMs": 323.4189999999999
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 12,
+            "functionName": "updateNode",
+            "lineNumber": 23858,
+            "scriptId": 48,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 568,
+          "estimatedMs": 315.70099999999985
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 9,
+            "functionName": "_update",
+            "lineNumber": 13838,
+            "scriptId": 48,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 518,
+          "estimatedMs": 290.6760000000001
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 18,
+            "functionName": "reconcile",
+            "lineNumber": 8,
+            "scriptId": 37,
+            "url": "http://127.0.0.1:5175/src/simulation/confirmed-state-receiver.js?t=1793822864044"
+          },
+          "samples": 497,
+          "estimatedMs": 277.72699999999975
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "functionName": "setBindGroup",
+            "scriptId": 0
+          },
+          "samples": 489,
+          "estimatedMs": 273.30199999999974
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 20,
+            "functionName": "_needsRenderUpdate",
+            "lineNumber": 13728,
+            "scriptId": 48,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 484,
+          "estimatedMs": 265.316
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "functionName": "setIndexBuffer",
+            "scriptId": 0
+          },
+          "samples": 444,
+          "estimatedMs": 245.60399999999993
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 35,
+            "functionName": "setPipelineAndBindings",
+            "lineNumber": 38887,
+            "scriptId": 48,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 429,
+          "estimatedMs": 240.49599999999973
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 5,
+            "functionName": "get",
+            "lineNumber": 12982,
+            "scriptId": 48,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 427,
+          "estimatedMs": 236.2639999999998
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 17,
+            "functionName": "updateForRender",
+            "lineNumber": 13622,
+            "scriptId": 48,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 411,
+          "estimatedMs": 227.81199999999998
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "functionName": "setPipeline",
+            "scriptId": 0
+          },
+          "samples": 410,
+          "estimatedMs": 227.31000000000006
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 27,
+            "functionName": "renderObjectFunction",
+            "lineNumber": 18670,
+            "scriptId": 48,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 397,
+          "estimatedMs": 219.75199999999987
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 41,
+            "functionName": "deserializeConfirmedState",
+            "lineNumber": 6,
+            "scriptId": 14,
+            "url": "http://127.0.0.1:5175/src/simulation/confirmed-live-state.js"
+          },
+          "samples": 551,
+          "estimatedMs": 217.88299999999992
+        },
+        {
+          "frame": {
+            "codeType": "other",
+            "functionName": "(program)",
+            "scriptId": 0
+          },
+          "samples": 819,
+          "estimatedMs": 214.96099999999987
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 8,
+            "functionName": "update",
+            "lineNumber": 6398,
+            "scriptId": 48,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 375,
+          "estimatedMs": 204.08399999999983
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 19,
+            "functionName": "needsRenderUpdate",
+            "lineNumber": 39035,
+            "scriptId": 48,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 353,
+          "estimatedMs": 197.98199999999994
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 15,
+            "functionName": "updateBinding",
+            "lineNumber": 37272,
+            "scriptId": 48,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 356,
+          "estimatedMs": 195.902
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "functionName": "setVertexBuffer",
+            "scriptId": 0
+          },
+          "samples": 337,
+          "estimatedMs": 187.0610000000002
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 6,
+            "functionName": "draw",
+            "lineNumber": 38878,
+            "scriptId": 48,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 303,
+          "estimatedMs": 165.2040000000001
+        }
+      ]
+    },
+    {
+      "pid": 11484,
+      "tid": 23612,
+      "thread": "DedicatedWorker thread",
+      "samples": 46584,
+      "top": [
+        {
+          "frame": {
+            "codeType": "other",
+            "functionName": "(idle)",
+            "scriptId": 0
+          },
+          "samples": 44197,
+          "estimatedMs": 24513.251000000637
+        },
+        {
+          "frame": {
+            "codeType": "other",
+            "functionName": "(program)",
+            "scriptId": 0
+          },
+          "samples": 1085,
+          "estimatedMs": 279.91200000000003
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 19,
+            "functionName": "update",
+            "lineNumber": 12411,
+            "scriptId": 19,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 48,
+          "estimatedMs": 154.27499999999992
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "functionName": "writeBuffer",
+            "scriptId": 0
+          },
+          "samples": 63,
+          "estimatedMs": 33.589999999999996
+        },
+        {
+          "frame": {
+            "codeType": "other",
+            "functionName": "(garbage collector)",
+            "scriptId": 0
+          },
+          "samples": 49,
+          "estimatedMs": 30.985000000000007
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "functionName": "submit",
+            "scriptId": 0
+          },
+          "samples": 40,
+          "estimatedMs": 21.745999999999995
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "functionName": "getCurrentTexture",
+            "scriptId": 0
+          },
+          "samples": 60,
+          "estimatedMs": 17.511000000000003
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 12,
+            "functionName": "updateNode",
+            "lineNumber": 23858,
+            "scriptId": 19,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 33,
+          "estimatedMs": 17.019
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 17,
+            "functionName": "updateForRender",
+            "lineNumber": 24811,
+            "scriptId": 19,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 26,
+          "estimatedMs": 13.632
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 25,
+            "functionName": "getNodeChildren",
+            "lineNumber": 626,
+            "scriptId": 19,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 25,
+          "estimatedMs": 10.274000000000001
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "functionName": "postMessage",
+            "scriptId": 0
+          },
+          "samples": 19,
+          "estimatedMs": 10.182
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 15,
+            "functionName": "getAttributes",
+            "lineNumber": 12698,
+            "scriptId": 19,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 19,
+          "estimatedMs": 9.426
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 26,
+            "functionName": "getPreferredCanvasFormat",
+            "lineNumber": 36824,
+            "scriptId": 19,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 17,
+          "estimatedMs": 9.044999999999998
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 35,
+            "functionName": "setPipelineAndBindings",
+            "lineNumber": 38887,
+            "scriptId": 19,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 17,
+          "estimatedMs": 9.018
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "_renderObjectDirect",
+            "lineNumber": 27667,
+            "scriptId": 19,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 19,
+          "estimatedMs": 8.958
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "functionName": "beginRenderPass",
+            "scriptId": 0
+          },
+          "samples": 23,
+          "estimatedMs": 8.415
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 8,
+            "functionName": "update",
+            "lineNumber": 27923,
+            "scriptId": 19,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 16,
+          "estimatedMs": 8.408
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 13,
+            "functionName": "beginRender",
+            "lineNumber": 38367,
+            "scriptId": 19,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 20,
+          "estimatedMs": 7.391
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "functionName": "setBindGroup",
+            "scriptId": 0
+          },
+          "samples": 14,
+          "estimatedMs": 7.335000000000001
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 17,
+            "functionName": "self.onmessage",
+            "lineNumber": 5,
+            "scriptId": 3,
+            "url": "http://127.0.0.1:5175/src/ui/guardian-3d-worker.js?worker_file&type=module"
+          },
+          "samples": 48,
+          "estimatedMs": 7.179999999999998
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 15,
+            "functionName": "updateBinding",
+            "lineNumber": 37272,
+            "scriptId": 19,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 12,
+          "estimatedMs": 6.682
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 19,
+            "functionName": "updateMatrixWorld",
+            "lineNumber": 8324,
+            "scriptId": 7,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=109122cc"
+          },
+          "samples": 30,
+          "estimatedMs": 6.136
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 13,
+            "functionName": "updateValue",
+            "lineNumber": 6405,
+            "scriptId": 19,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 11,
+          "estimatedMs": 5.805000000000001
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 9,
+            "functionName": "_update",
+            "lineNumber": 13838,
+            "scriptId": 19,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 10,
+          "estimatedMs": 5.0840000000000005
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 19,
+            "functionName": "needsRenderUpdate",
+            "lineNumber": 39035,
+            "scriptId": 19,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 9,
+          "estimatedMs": 4.722
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 14,
+            "functionName": "updateByType",
+            "lineNumber": 27939,
+            "scriptId": 19,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 9,
+          "estimatedMs": 4.661
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 16,
+            "functionName": "_projectObject",
+            "lineNumber": 27469,
+            "scriptId": 19,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 19,
+          "estimatedMs": 4.604
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "functionName": "setVertexBuffer",
+            "scriptId": 0
+          },
+          "samples": 8,
+          "estimatedMs": 4.582000000000001
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 18,
+            "functionName": "multiplyMatrices",
+            "lineNumber": 6651,
+            "scriptId": 7,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=109122cc"
+          },
+          "samples": 14,
+          "estimatedMs": 4.413
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "functionName": "setIndexBuffer",
+            "scriptId": 0
+          },
+          "samples": 8,
+          "estimatedMs": 4.292999999999999
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 11,
+            "functionName": "get value",
+            "lineNumber": 21541,
+            "scriptId": 19,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 7,
+          "estimatedMs": 4.096
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "functionName": "createView",
+            "scriptId": 0
+          },
+          "samples": 12,
+          "estimatedMs": 4.032
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 20,
+            "functionName": "getDynamicCacheKey",
+            "lineNumber": 12918,
+            "scriptId": 19,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 8,
+          "estimatedMs": 3.6080000000000005
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 14,
+            "functionName": "_renderScene",
+            "lineNumber": 26562,
+            "scriptId": 19,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 13,
+          "estimatedMs": 3.564
+        },
+        {
+          "frame": {
+            "codeType": "JS",
+            "columnNumber": 15,
+            "functionName": "getUpdateType",
+            "lineNumber": 1039,
+            "scriptId": 19,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=109122cc"
+          },
+          "samples": 7,
+          "estimatedMs": 3.5470000000000006
+        }
+      ]
+    }
+  ],
+  "longTasks": [
+    {
+      "start": 71780.92500001192,
+      "duration": 97,
+      "name": "self"
+    }
+  ],
+  "frames": [
+    {
+      "at": 71757.985,
+      "delta": 4913.274999991656
+    },
+    {
+      "at": 73291.25,
+      "delta": 1533.2649999999994
+    },
+    {
+      "at": 96991.295,
+      "delta": 133.33000000000175
+    },
+    {
+      "at": 75124.64,
+      "delta": 33.429999999993015
+    },
+    {
+      "at": 92191.32,
+      "delta": 33.41500000000815
+    },
+    {
+      "at": 89057.985,
+      "delta": 33.41000000000349
+    },
+    {
+      "at": 78824.625,
+      "delta": 33.404999999998836
+    },
+    {
+      "at": 84591.3,
+      "delta": 33.404999999998836
+    },
+    {
+      "at": 87524.655,
+      "delta": 33.404999999998836
+    },
+    {
+      "at": 81791.27,
+      "delta": 33.40000000000873
+    },
+    {
+      "at": 81391.29,
+      "delta": 33.39999999999418
+    },
+    {
+      "at": 94058.015,
+      "delta": 33.39999999999418
+    },
+    {
+      "at": 75491.28,
+      "delta": 33.395000000004075
+    },
+    {
+      "at": 80891.28,
+      "delta": 33.395000000004075
+    },
+    {
+      "at": 81124.595,
+      "delta": 33.395000000004075
+    },
+    {
+      "at": 83991.285,
+      "delta": 33.395000000004075
+    },
+    {
+      "at": 89757.95,
+      "delta": 33.395000000004075
+    },
+    {
+      "at": 92091.325,
+      "delta": 33.395000000004075
+    },
+    {
+      "at": 92758,
+      "delta": 33.395000000004075
+    },
+    {
+      "at": 77691.275,
+      "delta": 33.39499999998952
+    }
+  ],
+  "limits": [
+    "Nested trace slices overlap: durations must not be added.",
+    "CPU sample deltas estimate wall-clock attribution, not exclusive measured CPU time; sparse samples may span waits.",
+    "GPU service trace durations are host-side work/waits, not hardware GPU timer queries."
+  ]
+}

@@ -82,7 +82,7 @@ test('QA-137: actually found villages through ordinal 100 with all five native c
  const {s,nav}=fixture('mapungubwe',initialBalance),milestones=new Set([2,3,4,10,20,50,100]);let spent=0n;
  let routeQueries=0;const path=nav.path.bind(nav);nav.path=(...args)=>{routeQueries++;return path(...args);};
  for(let ordinal=2;ordinal<=100;ordinal++){
-  const i=ordinal-2,culture=Game.CULTURES[i%5],x=150+(i%10)*80,z=Math.floor(i/10)*80,native=payload(culture),before=BigInt(s.ledger.balance.n);
+  const i=ordinal-2,culture=s.culture,x=150+(i%10)*80,z=Math.floor(i/10)*80,native=payload(culture),before=BigInt(s.ledger.balance.n);
   const preview=Game.previewVillage(s,culture,x,z,native,nav);assert.equal(preview.valid,true,`ordinal ${ordinal}`);
   if(milestones.has(ordinal))assert.equal(BigInt(preview.cost),expectedVillageCost(ordinal));
   assert.equal(Game.foundVillage(s,'qa-ordinal-'+ordinal,culture,x,z,native,nav),true);spent+=BigInt(preview.cost);
@@ -97,9 +97,10 @@ test('QA-137: actually found villages through ordinal 100 with all five native c
 });
 
 
-test('QA-139: switching all native cultures and repositioning previews never pays or suppresses props',()=>{
+test('QA-139: other cultures are rejected and repositioning previews never pays or suppresses props',()=>{
  const {s}=fixture(),props=[{id:'qa-draft-bush',slot:5,radius:.1,x:150,z:0}],nav=navigation(s,props),before=serialize(s),suppressed=[...nav.suppressed];
  for(const culture of Game.CULTURES)for(const [x,z] of [[150,0],[230,80],[0,0],[150,0]]){
+  if(culture!==s.culture){assert.throws(()=>Game.previewVillage(s,culture,x,z,payload(culture),nav),/cultura de la partida/);assert.equal(serialize(s),before);continue;}
   const preview=Game.previewVillage(s,culture,x,z,payload(culture),nav);
   assert.equal(preview.culture,culture);assert.equal(preview.x,x);assert.equal(preview.z,z);assert.equal(preview.buildings.length,payload(culture).units.length);
   assert.equal(serialize(s),before);assert.deepEqual([...nav.suppressed],suppressed);assert.equal(nav.propsAt(150,0,1).length,1);

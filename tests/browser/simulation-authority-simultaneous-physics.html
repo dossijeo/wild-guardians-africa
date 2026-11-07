@@ -1,0 +1,12 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {runMultiplePhysics} from './multiple-physics-harness.js';
+window.audit=async()=>{
+ const worker=new Worker('./multiple-physics-harness.js',{type:'module'});
+ try{
+  const remote=new Promise((resolve,reject)=>{worker.onmessage=({data})=>data.error?reject(Error(data.error)):resolve(data.result);worker.onerror=e=>reject(Error(e.message));});worker.postMessage({});
+  const local=await runMultiplePhysics(),result=await remote;
+  if(JSON.stringify(local)!==JSON.stringify(result))throw Error('Simultaneous worker and local simulations diverged');
+  const {frames,...summary}=result;return {...summary,steps:frames.length,scope:'Two simultaneous laboratory-injected impacts from an island-mangrove capture. Worker and main thread run the same shared Rapier driver; actual body contacts and full pose sequences match. These simultaneous impacts bypass gameplay cooldown only in the test and do not demonstrate production input, WorldScene equivalence, or save/restore.'};
+ }finally{worker.terminate();}
+};window.ready=true;
+</script>

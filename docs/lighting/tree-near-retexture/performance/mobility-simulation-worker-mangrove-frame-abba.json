@@ -1,0 +1,58 @@
+{
+  "runs": [
+    {
+      "mode": "main",
+      "elapsed": 6079.00000000387,
+      "frames": {
+        "count": 119,
+        "p95": 33.38000000000011,
+        "p99": 33.409999999999854,
+        "max": 266.635
+      },
+      "responseMs": 283.79999999701977,
+      "firstTickMs": 110.46500000357628,
+      "totalMs": 4201.414999999106
+    },
+    {
+      "mode": "worker",
+      "elapsed": 6079.00000000387,
+      "frames": {
+        "count": 119,
+        "p95": 33.39000000000033,
+        "p99": 33.445000000000164,
+        "max": 33.475000000000136
+      },
+      "responseMs": 285.7550000026822,
+      "firstTickMs": 109.63000000268221,
+      "totalMs": 3937.115000002086
+    },
+    {
+      "mode": "worker",
+      "elapsed": 6079.00000000387,
+      "frames": {
+        "count": 119,
+        "p95": 33.35500000000002,
+        "p99": 33.36999999999989,
+        "max": 33.404999999999745
+      },
+      "responseMs": 288.10999999940395,
+      "firstTickMs": 111.36500000208616,
+      "totalMs": 3954.009999997914
+    },
+    {
+      "mode": "main",
+      "elapsed": 6079.00000000387,
+      "frames": {
+        "count": 119,
+        "p95": 33.3599999999999,
+        "p99": 33.414999999999964,
+        "max": 266.645
+      },
+      "responseMs": 286.8949999958277,
+      "firstTickMs": 110.10000000149012,
+      "totalMs": 4181.729999996722
+    }
+  ],
+  "selectedProjectionEqual": true,
+  "scope": "Edge headless, restored saved raid and real simulation ticks; simple WebGL clear only, no WorldScene, physics manager, user input, audio or gameplay publication. One artificially batched 100-step request per session, not a single slow navigation operation. Mangrove snapshot synthetically converted to islands and nine resident chunks. Frame percentiles have 119 samples and cannot represent full production."
+}

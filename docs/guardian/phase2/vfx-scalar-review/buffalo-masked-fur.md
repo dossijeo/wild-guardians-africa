@@ -1,0 +1,23 @@
+# Local dorsal fur candidate
+
+The registered buffalo remains unchanged. The opt-in `furTrial=1&face=buffalo&recoveryDay=1` WorldScene fixture loads the candidate with an authored `_FUR_LIGHT` scalar attribute. The shader applies a small diffuse fill only to masked dark dorsal fur, in default beast style. Face, eyes and decorations are excluded by the spatial mask. No lights or textures are added.
+
+Reproduce from the arm-normal source at commit 62d53c8dc with tools/guardian/author_buffalo_fur_mask.py in Blender, then transfer_fur_mask.py using original asset cbe635e87c120401a013b10b2d5fc76a9d1babb83bfbed79dd9957b722b1dd6b.glb. The authoring tool pins the source SHA. Transfer preserves all original BIN bytes and checks exact triangle-corner positions, UV, skin and morph positions before appending the normalized U8 scalar in a four-byte vertex stride. Compress and verify using the existing candidate commands.
+
+Compressed size 6,117,900 bytes versus registered 6,112,176: +5,724 bytes. Decoded mask storage 191,544 bytes. Compression validation: 4,671,134 exact geometry/animation bytes, texture PSNR minimum 40.13, zero validator errors. These are asset measurements, not frame-time performance acceptance.
+
+Actual Intel UHD WorldScene views inspected: rear daylight, front three-quarter daylight and rear nighttime. Rear strands are more legible; the front retains dark crest and facial appearance. Screenshots and status accompany this document. These static views do not prove all-angle continuity or animation acceptance. Candidate is not yet registered; moving-pose review remains required.
+
+## Real Attack cycle
+
+Recorded candidate on the real Game.tick/WorldScene path: 12.006385 simulated seconds, 12.668235 measured wall seconds; one physical ragdoll, no baked fallback, completedSimulation true, finalDownCount zero, errors empty, maximum one visible Guardian. The accompanying contact sheet was inspected across descent, roll, rise and return to walking. The strategic camera is too distant for continuous fine-shading acceptance; retain the candidate status. Recording was made without activating audio. Frame measurements include recording overhead and are not a paired performance comparison.
+
+The focused african-toon and animal-actions suites passed all 36 tests at the preceding shader revision.
+
+## Enlarged recovery diagnostic
+
+Added opt-in recoveryClose camera view to the combat fixture; gameplay camera is unchanged. Recorded and inspected the enlarged one-second contact sheet: dorsal mask follows the body through roll and rise without an obvious detached patch in those samples. The 2x orthographic view crops the upper body in standing frames, so this is a local shading diagnostic, not full-body framing acceptance. The full strategic recording remains the uncropped sequence. Candidate remains unregistered. Added a shader isolation regression test covering masked buffalo, unmasked buffalo and another species; all seven AfricanToon tests pass.
+
+## Registered revision
+
+Registered raw SHA d9a945fd2c707943741b110aa6a8c30fe02d85c1a14dca0c673edfe32bb9fe6e after the above diagnostic reviews. Prior candidate-only statements are historical. The original raw asset remains available; expressive-pre-fur.blend preserves the exact input for the hash-pinned authoring script. Updated only buffalo catalog and kinematic source references, retaining their sampled data. Compressed geometry/animation verification passes with zero conformance errors. Twelve shader and inclined-recovery tests pass. Actual WorldScene catalog load without face/furTrial overrides inspected and saved in installed.png/json. Broader visual and performance acceptance remains open.

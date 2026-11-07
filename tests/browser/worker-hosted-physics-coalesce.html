@@ -1,0 +1,18 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {serialize,deserialize} from '../../src/persistence/snapshots.js';
+import {captureRaidWaitBindings} from '../../src/simulation/raid-wait-handoff.js';
+import {createConfirmedSceneReceiver} from '../../src/rendering/confirmed-scene-receiver.js';
+import {createWorkerHostedRuntime} from '../../src/simulation/worker-hosted-runtime.js';
+window.audit=async()=>{
+ const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
+ const fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),{game,nav}=fixture.diagnosticWorld(),animal=game.raid.animals.find(a=>a.species==='hyena'),source=serialize(game),bindings=captureRaidWaitBindings(game,nav),state=deserialize(source);fixture.dispose();
+ const world={state,mixers:new Map(),createConfirmedReceiver(id){return createConfirmedSceneReceiver(state,id,this);}},runtime=createWorkerHostedRuntime({world,session:'physics-coalesce',clientOptions:{snapshot:source,chunkKeys:chunks,raidWaitBindings:bindings,physicsActorId:animal.id},runtimeOptions:{stepSeconds:.05,maxBatchSteps:8,diagnostics:true,coalescePublications:true}});
+ try{await runtime.start();const hit=await runtime.submit({kind:'castAttack',id:'coalesce-hit',targetId:animal.id,x:animal.x,z:animal.z});if(!hit.value)throw Error('Attack rejected');
+  await new Promise(resolve=>setTimeout(resolve,200));const start=performance.now();while(performance.now()-start<500){}
+  await runtime.submit({kind:'pause',reason:'test'});await new Promise(resolve=>setTimeout(resolve,350));const status=runtime.status();
+  if(status.fault||!state.pauses.includes('test')||!status.outbox?.coalesced)throw Error('Physical coalescing failed: '+JSON.stringify(status));
+  return {coalesced:status.outbox.coalesced,queued:status.outbox.queued,confirmed:status.confirmedSequence,poseCount:world.confirmedAnimalPoses?.size??0,scope:'Real nested Workers, mangrove hyena physics and scene receiver, 500 ms presentation stall and pause; no rendered frames, player UI or visual comparison.'};
+ }finally{runtime.dispose();}
+};window.ready=true;
+</script>

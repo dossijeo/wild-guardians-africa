@@ -1,0 +1,109 @@
+{
+  "group": "Wood",
+  "sha256": "48ec4840a95ed2397dadd22e308ab6ef4c166dcc046e75218fadc37365251bc3",
+  "scope": "CPU skinning, two seconds, sampled summon action rule; no GPU or production gust/aim overlay",
+  "boneSweep": [
+    {
+      "name": "Wood04",
+      "degrees": 30.3469977667749
+    },
+    {
+      "name": "Wood05",
+      "degrees": 52.13338925076664
+    },
+    {
+      "name": "Wood06",
+      "degrees": 35.4132097391425
+    },
+    {
+      "name": "Wood07",
+      "degrees": 44.96051902676622
+    }
+  ],
+  "vertices": 112,
+  "displacementFromFirst": {
+    "median": 0.0547915460196911,
+    "p95": 0.07213129816172664,
+    "max": 0.07475052666693635
+  },
+  "actionStates": [
+    {
+      "name": "Explain",
+      "enabled": false,
+      "weight": 0,
+      "time": 2.000178813934326
+    },
+    {
+      "name": "Warning",
+      "enabled": false,
+      "weight": 0,
+      "time": 2.000178813934326
+    },
+    {
+      "name": "Enthusiasm",
+      "enabled": false,
+      "weight": 0,
+      "time": 2.000178813934326
+    },
+    {
+      "name": "Invoke",
+      "enabled": false,
+      "weight": 0,
+      "time": 2.000178813934326
+    },
+    {
+      "name": "Cast",
+      "enabled": false,
+      "weight": 0,
+      "time": 2.000178813934326
+    },
+    {
+      "name": "Float",
+      "enabled": true,
+      "weight": 1,
+      "time": 2
+    },
+    {
+      "name": "Idle",
+      "enabled": false,
+      "weight": 0,
+      "time": 2
+    },
+    {
+      "name": "Spell_Grow",
+      "enabled": true,
+      "weight": 1,
+      "time": 2
+    },
+    {
+      "name": "Spell_Multiply",
+      "enabled": false,
+      "weight": 0,
+      "time": 0
+    },
+    {
+      "name": "Spell_Shield",
+      "enabled": false,
+      "weight": 0,
+      "time": 0
+    },
+    {
+      "name": "Spell_Attack",
+      "enabled": false,
+      "weight": 0,
+      "time": 0
+    },
+    {
+      "name": "Mantle_Breeze",
+      "enabled": false,
+      "weight": 0,
+      "time": 2
+    },
+    {
+      "name": "Mantle_Spell",
+      "enabled": true,
+      "weight": 1,
+      "time": 2
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+# Actual application tutorial walkthrough, 2026-10-28
+
+Branch codex/guardian-3d-animation, code revision 2b0f66361. Opened the real application at http://127.0.0.1:5194/ through the in-app browser (1280x720). Used New game, Sabana, Suajili, Start, introduction Continue, Construir, Centro de trabajo. No synthetic fixture or scripted tutorial advancement.
+
+Reviewed and captured introduction.png (Guardian at left of bubble with vortex), point-build.png (Guardian pointing toward Construir, vortex retained), and point-world.png (Guardian in world beside indicated construction area). One Guardian visible in these reviewed frames. Final console error query returned none (errors.json); shader compilation warnings about potentially uninitialized environment/toon variables were present. No claim of all-frame visual coverage, continuous blink/lip-sync or performance acceptance.
+
+The browser profile was not reset. Its existing tutorial history can suppress previously read explanations. This run therefore does not prove every introductory voice line, and does not replace the requested full audio/video walkthrough. No center was placed in this run; arbitrary nearby valid placement is not validated by these images.
+
+Video capture attempt: getDisplayMedia remained pending with no accessible capture selector; recorder never started. Navigated away to cancel the request, then performed the walkthrough above. No video/audio artifact is claimed. The uncommitted recording harness requires a supported browser capture picker and an audio track. Full tutorial recording remains outstanding.
+
+## Alternate first-center placement, follow-up
+
+From the saved point-world view, clicked free ground at screen (550,395), clearly separate from the Guardian at approximately (700,285). The actual game accepted the center, reduced money from 1500 to 700 and advanced to the Cultivar explanation. Reviewed the resulting building and Guardian pointing toward Cultivar. See alternate-center-built.png (saved after the spoken panel had closed). Selected Cultivar > Maíz and planted at (600,388) in the subsequent camera view; balance became 692 and the hiring explanation appeared. See alternate-center-plant.png and alternate-center-state.txt. This confirms one nearby alternative placement and continued tutorial progression in the actual application, not every valid/invalid position or biome. It supersedes the earlier note that no center was placed during this walkthrough.
+
+## Persistent world-guide placement invalidation
+
+The guide previously cached its origin only by target identity/position. Camera orbit, zoom and navigation obstacle changes could therefore retain a formerly appropriate placement. GuardianSummons now records camera position, orientation, projection and nav.version with the plan. Translation beyond .75 m, rotation beyond approximately 5 degrees or projection changes trigger a new plan, bounded to five per second for camera motion. Navigation changes and new targets invalidate immediately. Existing floating interpolation and singleton are retained; stationary frames do not rerun placement. Regression tests cover unchanged view, movement, debounce, rotation, zoom, obstacle version and new target. All 16 guardian-placement/guardian-singleton tests passed. Visual orbit/zoom transition acceptance and measurement of replanning under a large populated scene remain pending; no performance claim from these unit tests.

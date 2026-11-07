@@ -1,0 +1,32 @@
+{
+  "biome": "manglares",
+  "network": true,
+  "centers": 0,
+  "overlay": false,
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "frames": {
+    "count": 1692,
+    "p95": 35.76000000536442,
+    "p99": 115.23000000417233,
+    "max": 1257.094999998808
+  },
+  "reuse": {
+    "sameProgram": true,
+    "probeMs": 1.739999994635582,
+    "before": {
+      "centers": 0,
+      "buildings": 0,
+      "opening": 0,
+      "smoke": 0
+    },
+    "after": {
+      "centers": 0,
+      "buildings": 0,
+      "opening": 0,
+      "smoke": 0
+    },
+    "prepareMs": 184.88500000536442
+  },
+  "elapsedMs": 60495,
+  "scope": "Actual new-game loading with an injected QA-only temporary building; post-load synthetic probe, no real center placement or destruction. RAF samples include the menu and probe. No GPU timer or production integration."
+}

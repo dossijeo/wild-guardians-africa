@@ -1,0 +1,26 @@
+{
+  "backend": "WebGL2 vs WebGPU",
+  "id": "hyena",
+  "cases": [
+    {
+      "style": "standard-control",
+      "foreground": 14924,
+      "meanAbsoluteRgb": 0.11911462521218619,
+      "fractionOver20": 0.0013401232913428035
+    },
+    {
+      "style": "toon-day",
+      "foreground": 14924,
+      "meanAbsoluteRgb": 21.989390690610204,
+      "fractionOver20": 0.7775395336370946
+    },
+    {
+      "style": "toon-night",
+      "foreground": 14924,
+      "meanAbsoluteRgb": 17.47143303850621,
+      "fractionOver20": 0.6700616456714018
+    }
+  ],
+  "failures": [],
+  "glError": 0
+}

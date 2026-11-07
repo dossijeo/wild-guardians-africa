@@ -13,3 +13,7 @@ test('sky decode cancellation terminates and ignores late worker results',async(
 test('sky decode reports worker errors and releases worker ownership',async()=>{
  let worker,terminated=0;const pending=prepareSkyPixelsAsync(new ArrayBuffer(8),0,{workerAvailable:true,createWorker:()=>worker={terminate(){terminated++;},postMessage(){queueMicrotask(()=>worker.onmessage({data:{error:'Malformed HDR'}}));}}});await assert.rejects(pending,/Malformed HDR/);assert.equal(terminated,1);
 });
+
+test('water slope demand is sent to the auxiliary sky worker',async()=>{
+ let message,transfer;const result={image:{},environment:{},waterSlope:{pixels:new Uint8Array([1,2])}},buffer=new ArrayBuffer(8),worker={terminate(){},postMessage(value,list){message=value;transfer=list;queueMicrotask(()=>worker.onmessage({data:result}));}};assert.equal(await prepareSkyPixelsAsync(buffer,0,{workerAvailable:true,waterSlope:true,createWorker:()=>worker}),result);assert.equal(message.waterSlope,true);assert.equal(transfer[0],buffer);
+});

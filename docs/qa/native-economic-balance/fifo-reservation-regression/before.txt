@@ -1,0 +1,128 @@
+TAP version 13
+# (node:29396) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: QA-096: mapungubwe one defensive set has one owner and a free companion retreats with hits
+not ok 1 - QA-096: mapungubwe one defensive set has one owner and a free companion retreats with hits
+  ---
+  duration_ms: 34.6549
+  location: 'file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/acceptance-defensive-reservations.test.js:15:36'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'hitsRemaining')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/acceptance-defensive-reservations.test.js:18:76)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.start (node:internal/test_runner/test:542:17)
+    startSubtest (node:internal/test_runner/harness:216:17)
+  ...
+# Subtest: QA-096: saheliana one defensive set has one owner and a free companion retreats with hits
+not ok 2 - QA-096: saheliana one defensive set has one owner and a free companion retreats with hits
+  ---
+  duration_ms: 75.8817
+  location: 'file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/acceptance-defensive-reservations.test.js:15:36'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'hitsRemaining')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/acceptance-defensive-reservations.test.js:18:76)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async startSubtest (node:internal/test_runner/harness:216:3)
+  ...
+# Subtest: QA-096: suajili one defensive set has one owner and a free companion retreats with hits
+not ok 3 - QA-096: suajili one defensive set has one owner and a free companion retreats with hits
+  ---
+  duration_ms: 71.9417
+  location: 'file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/acceptance-defensive-reservations.test.js:15:36'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'hitsRemaining')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/acceptance-defensive-reservations.test.js:18:76)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: QA-096: musgum one defensive set has one owner and a free companion retreats with hits
+not ok 4 - QA-096: musgum one defensive set has one owner and a free companion retreats with hits
+  ---
+  duration_ms: 55.0356
+  location: 'file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/acceptance-defensive-reservations.test.js:15:36'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'hitsRemaining')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/acceptance-defensive-reservations.test.js:18:76)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: QA-096: etiope one defensive set has one owner and a free companion retreats with hits
+not ok 5 - QA-096: etiope one defensive set has one owner and a free companion retreats with hits
+  ---
+  duration_ms: 55.4972
+  location: 'file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/acceptance-defensive-reservations.test.js:15:36'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'hitsRemaining')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/acceptance-defensive-reservations.test.js:18:76)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: QA-096: aggregate defensive value outranks the 800-coin centre even though every piece costs less
+ok 6 - QA-096: aggregate defensive value outranks the 800-coin centre even though every piece costs less
+  ---
+  duration_ms: 20.7127
+  ...
+# Subtest: QA-096: topology loss rekeys surviving reservations and a legacy competing claim cannot delete the owner
+not ok 7 - QA-096: topology loss rekeys surviving reservations and a legacy competing claim cannot delete the owner
+  ---
+  duration_ms: 11.4982
+  location: 'file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/acceptance-defensive-reservations.test.js:25:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot set properties of undefined (setting 'status')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/source/repos/wild-guardians-africa/tests/acceptance-defensive-reservations.test.js:28:19)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: QA-096: actual paid contiguous crop groups remain exclusive through destruction and reload
+ok 8 - QA-096: actual paid contiguous crop groups remain exclusive through destruction and reload
+  ---
+  duration_ms: 768.2898
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 2
+# fail 6
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1307.5208

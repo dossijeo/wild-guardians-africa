@@ -1,0 +1,85 @@
+Browser tab: 106, Title: "Wild Guardians · Africa", URL: "http://127.0.0.1:5194/".
+0 AXWebArea Wild Guardians · Africa, URL: 127.0.0.1:5194/
+	1 container stage
+		2 image world
+		3 container hud
+			4 container clock
+				5 image Reloj solar
+				19 text 08:11
+			7 container money
+				8 image Dinero
+				20 text 692
+			10 container Help: 0/100 noches superadas, ID: days
+				11 image Supervivencia
+				21 text Día 1
+			13 button Description: Abrir menú de pausa, Help: Menú · Escape, ID: menuButton
+			14 container Description: Acciones de la granja, ID: actions
+				15 button Volver, Help: Volver al centro de trabajo · 1
+				16 button Construir, Help: Construir · 2
+				17 button Cultivar, Help: Cultivar · 3
+				18 button Magia, Help: Magia · 4
+		22 container Contrata tu equipo
+			23 container
+				24 heading Contrata tu equipo, Value: 2, ID: hiringTitle
+					25 text Contrata tu equipo
+				26 text DÍA 1 · 08:11 · TU EQUIPO Tiempo en pausa
+			27 container
+				28 text Elige cuántas personas trabajarán hoy. Ajusta la selección a tu presupuesto.
+				29 image Hombre joven
+				30 heading Hombre joven, Value: 3
+					31 text Hombre joven
+				32 text 40
+				33 text / día
+				34 text Ritmo  ×1,50 Cosecha  +20 %
+				35 text 10 h
+				36 text 07:05–17:05
+				37 button Contratar un hombre joven menos
+				38 stepper (settable, integer) Description: Cantidad: Hombre joven, Value: 0, ID: crewCount0
+				39 button Contratar un hombre joven más
+				40 image Mujer joven
+				41 heading Mujer joven, Value: 3
+					42 text Mujer joven
+				43 text 40
+				44 text / día
+				45 text Ritmo  ×1,50 Cosecha  base
+				46 text 12 h · +20 %
+				47 text 07:05–19:05
+				48 button Contratar una mujer joven menos
+				49 stepper (settable, integer) Description: Cantidad: Mujer joven, Value: 0, ID: crewCount1
+				50 button Contratar una mujer joven más
+				51 image Hombre mayor
+				52 heading Hombre mayor, Value: 3
+					53 text Hombre mayor
+				54 text 30
+				55 text / día
+				56 text Ritmo  ×1,00 Cosecha  +20 %
+				57 text 10 h
+				58 text 07:05–17:05
+				59 button Contratar un hombre mayor menos
+				60 stepper (settable, integer) Description: Cantidad: Hombre mayor, Value: 0, ID: crewCount2
+				61 button Contratar un hombre mayor más
+				62 image Mujer mayor
+				63 heading Mujer mayor, Value: 3
+					64 text Mujer mayor
+				65 text 30
+				66 text / día
+				67 text Ritmo  ×1,00 Cosecha  base
+				68 text 12 h · +20 %
+				69 text 07:05–19:05
+				70 button Contratar una mujer mayor menos
+				71 stepper (settable, integer) Description: Cantidad: Mujer mayor, Value: 0, ID: crewCount3
+				72 button Contratar una mujer mayor más
+				73 button (collapsed) Cómo trabajan y qué se paga, Secondary Actions: Expand
+					74 text Cómo trabajan y qué se paga
+			75 container
+				76 text Disponible
+				77 text 692
+				78 text Coste de hoy
+				79 text 0
+				80 text Saldo restante
+				81 text 692
+				82 text Selecciona al menos un trabajador.
+				83 button Poner a cero
+				84 button (disabled) Contratar y empezar, ID: hireConfirm
+
+The focused UI element is 0 AXWebArea Wild Guardians · Africa, URL: 127.0.0.1:5194/

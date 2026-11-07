@@ -39,6 +39,7 @@ function ordered(){
 }
 function settledRepair(s,target,previousHp,paidCoins,previousStatus='intact'){
  const event=s.events.find(e=>e.type==='RepairApplied'&&e.targetId===target.id);
+ assert.deepEqual(event.presentation.structure,{x:target.x,z:target.z});
  assert.ok(event,'only physical completion provides a repair receipt');
  assert.deepEqual(event.repair,{taskId:event.repair.taskId,paymentId:`repair:${event.repair.taskId}`,paidCoins,previousHp,previousStatus,restoredHp:target.maxHp,maxHp:target.maxHp});
  assert.deepEqual(s.ledger.entries[event.repair.paymentId],rational(-paidCoins));

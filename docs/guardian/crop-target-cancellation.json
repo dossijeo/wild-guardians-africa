@@ -1,0 +1,78 @@
+[
+  {
+    "authority": "spatial-wasm",
+    "report": {
+      "kind": "growth",
+      "targetId": "plant-3",
+      "scope": "QA presentation clock; remove live target between frames, next observation crosses the impact marker. Not a physics or gameplay cadence test.",
+      "before": {
+        "elapsed": 3044.0951750000627,
+        "age": 0.11999999999989086,
+        "objects": {
+          "group": true,
+          "aura": true,
+          "beam": true,
+          "impact": true,
+          "core": true,
+          "vortex": true
+        },
+        "active": 1,
+        "pending": 0
+      },
+      "after": {
+        "elapsed": 3044.3251750000627,
+        "age": null,
+        "objects": {
+          "group": false,
+          "aura": false,
+          "beam": false,
+          "impact": false,
+          "core": false,
+          "vortex": false
+        },
+        "active": 0,
+        "pending": 0
+      },
+      "cancelled": true
+    },
+    "errors": []
+  },
+  {
+    "authority": "spatial-wasm",
+    "report": {
+      "kind": "multiply",
+      "targetId": "plant-5",
+      "scope": "QA presentation clock; remove live target between frames, next observation crosses the impact marker. Not a physics or gameplay cadence test.",
+      "before": {
+        "elapsed": 3044.4451750000626,
+        "age": 0.11999999999989086,
+        "objects": {
+          "group": true,
+          "aura": true,
+          "beam": true,
+          "impact": true,
+          "core": true,
+          "vortex": true
+        },
+        "active": 1,
+        "pending": 0
+      },
+      "after": {
+        "elapsed": 3044.6751750000626,
+        "age": null,
+        "objects": {
+          "group": false,
+          "aura": false,
+          "beam": false,
+          "impact": false,
+          "core": false,
+          "vortex": false
+        },
+        "active": 0,
+        "pending": 0
+      },
+      "cancelled": true
+    },
+    "errors": []
+  }
+]

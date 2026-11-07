@@ -1,0 +1,1562 @@
+{
+  "agriculturalBurst": {
+    "ready": true,
+    "modelAO": [],
+    "nativeAO": [
+      {
+        "slot": "tree_01",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "tree_02",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "tree_03",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "tree_04",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "shrub_01",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "shrub_02",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "shrub_03",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "plant_01",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "plant_02",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "plant_03",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "rock_01",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "rock_02",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "rock_03",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "debris_01",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "debris_02",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "debris_03",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "debris_04",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "special_01",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "special_02",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "special_03",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "worldAuthority": "spatial-wasm",
+    "mangroveNetwork": false,
+    "campaign": false,
+    "paused": true,
+    "lastPick": null,
+    "workerCandidate": null,
+    "workerGround": null,
+    "workers": [
+      {
+        "id": "worker-28",
+        "profile": "olderMale",
+        "x": 60,
+        "z": 0,
+        "status": "arriving",
+        "hits": 0
+      }
+    ],
+    "faceCandidate": false,
+    "faceCandidateSpecies": null,
+    "expressions": [
+      {
+        "id": "worker-28",
+        "weights": [
+          0,
+          0,
+          0
+        ],
+        "bindings": 10
+      }
+    ],
+    "entityCounts": {
+      "workers": 1,
+      "structures": 1,
+      "crops": 12,
+      "animals": 0
+    },
+    "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "pixelRatio": 1,
+    "renderSize": [
+      1600,
+      900
+    ],
+    "visibleGuardians": 1,
+    "maxVisibleGuardians": 1,
+    "slopeSite": null,
+    "guideTrial": true,
+    "guideOrigin": {
+      "x": 90.25925924396769,
+      "y": 11.256835689544678,
+      "z": -5.524091999879325
+    },
+    "guidePosition": [
+      90.25925924396769,
+      11.256835689585383,
+      -5.524091999879325
+    ],
+    "guidePlanAt": 21.81081500005722,
+    "elapsed": 3014.511979999968,
+    "simulate": false,
+    "clockMode": "presentation-only",
+    "shields": [],
+    "active": 1,
+    "origins": [],
+    "pendingSummons": 0,
+    "attackVisual": [],
+    "reused": 5,
+    "draws": 94,
+    "audioVoices": 0,
+    "audioTrace": [
+      {
+        "id": "spirit_appear",
+        "at": 3006.080234999961,
+        "emitter": "guardian-world",
+        "played": false
+      },
+      {
+        "id": "spirit_power_activate",
+        "at": 3006.096879999961,
+        "emitter": "guardian-world",
+        "played": false
+      },
+      {
+        "id": "spirit_appear",
+        "at": 3006.096879999961,
+        "emitter": "guardian-world",
+        "played": false
+      },
+      {
+        "id": "spirit_power_activate",
+        "at": 3006.146879999961,
+        "emitter": "guardian-world",
+        "played": false
+      },
+      {
+        "id": "spirit_appear",
+        "at": 3006.246699999961,
+        "emitter": "guardian-world",
+        "played": false
+      },
+      {
+        "id": "spirit_power_activate",
+        "at": 3006.296699999961,
+        "emitter": "guardian-world",
+        "played": false
+      },
+      {
+        "id": "spirit_appear",
+        "at": 3006.4465049999617,
+        "emitter": "guardian-world",
+        "played": false
+      },
+      {
+        "id": "spirit_power_activate",
+        "at": 3006.4798099999616,
+        "emitter": "guardian-world",
+        "played": false
+      },
+      {
+        "id": "spirit_appear",
+        "at": 3006.629444999962,
+        "emitter": "guardian-world",
+        "played": false
+      },
+      {
+        "id": "spirit_power_activate",
+        "at": 3006.679444999962,
+        "emitter": "guardian-world",
+        "played": false
+      },
+      {
+        "id": "spirit_appear",
+        "at": 3006.8123699999624,
+        "emitter": "guardian-world",
+        "played": false
+      },
+      {
+        "id": "spirit_power_activate",
+        "at": 3006.8623699999625,
+        "emitter": "guardian-world",
+        "played": false
+      },
+      {
+        "id": "spirit_disappear",
+        "at": 3008.359459999964,
+        "emitter": "guardian-world",
+        "played": false
+      }
+    ],
+    "combatPhysics": {
+      "active": 0,
+      "physicsMs": 0,
+      "recoveryMs": 0,
+      "rejected": 0,
+      "startMs": 0,
+      "maxStepMs": 0,
+      "solverMs": 0,
+      "solverSteps": 0,
+      "bindingMs": 0,
+      "recoverySetupMs": 0,
+      "creationMs": 0,
+      "lastCreation": null
+    },
+    "physicsWorlds": 0,
+    "physicalBodies": 0,
+    "errors": [],
+    "report": null,
+    "commandCosts": [
+      {
+        "kind": "growth",
+        "targetId": "plant-3",
+        "position": {
+          "x": 87.5,
+          "z": -6
+        },
+        "origin": {
+          "x": 89.17572200349107,
+          "y": 9.924108314514159,
+          "z": -8.243202123531415
+        },
+        "planningCamera": {
+          "matrixWorld": [
+            0.8775825618903728,
+            0,
+            -0.47942553860420295,
+            0,
+            -0.19145356897155147,
+            0.916803108771767,
+            -0.3504534072804531,
+            0,
+            0.439538824216912,
+            0.3993395294062732,
+            0.8045704209449853,
+            0,
+            104.20247532024266,
+            21.949076502509183,
+            24.57367599590944,
+            1
+          ],
+          "projection": [
+            1.4653625988902634,
+            0,
+            0,
+            0,
+            0,
+            2.6050890646938014,
+            0,
+            0,
+            0,
+            0,
+            -1.0004000800160033,
+            -1,
+            0,
+            0,
+            -0.20004000800160032,
+            0
+          ]
+        },
+        "camera": {
+          "position": [
+            104.20247532024266,
+            21.949076502509183,
+            24.57367599590944
+          ],
+          "matrixWorld": [
+            0.8775825618903728,
+            0,
+            -0.47942553860420295,
+            0,
+            -0.19145356897155147,
+            0.916803108771767,
+            -0.3504534072804531,
+            0,
+            0.439538824216912,
+            0.3993395294062732,
+            0.8045704209449853,
+            0,
+            104.20247532024266,
+            21.949076502509183,
+            24.57367599590944,
+            1
+          ],
+          "projection": [
+            1.4653625988902634,
+            0,
+            0,
+            0,
+            0,
+            2.6050890646938014,
+            0,
+            0,
+            0,
+            0,
+            -1.0004000800160033,
+            -1,
+            0,
+            0,
+            -0.20004000800160032,
+            0
+          ],
+          "near": 0.1,
+          "far": 500
+        },
+        "plan": 15.180000066757202,
+        "logic": 1.1799999475479126,
+        "render": 14.620000004768372,
+        "total": 30.985000014305115
+      },
+      {
+        "kind": "multiply",
+        "targetId": "plant-5",
+        "position": {
+          "x": 83,
+          "z": -10.5
+        },
+        "origin": {
+          "x": 85.30779327493808,
+          "y": 8.2941743850708,
+          "z": -13.88881840766816
+        },
+        "planningCamera": {
+          "matrixWorld": [
+            0.8775825618903728,
+            0,
+            -0.47942553860420295,
+            0,
+            -0.19145356897155147,
+            0.916803108771767,
+            -0.3504534072804531,
+            0,
+            0.439538824216912,
+            0.3993395294062732,
+            0.8045704209449853,
+            0,
+            104.20247532024266,
+            21.949076502509183,
+            24.57367599590944,
+            1
+          ],
+          "projection": [
+            1.4653625988902634,
+            0,
+            0,
+            0,
+            0,
+            2.6050890646938014,
+            0,
+            0,
+            0,
+            0,
+            -1.0004000800160033,
+            -1,
+            0,
+            0,
+            -0.20004000800160032,
+            0
+          ]
+        },
+        "camera": {
+          "position": [
+            104.20247532024266,
+            21.949076502509183,
+            24.57367599590944
+          ],
+          "matrixWorld": [
+            0.8775825618903728,
+            0,
+            -0.47942553860420295,
+            0,
+            -0.19145356897155147,
+            0.916803108771767,
+            -0.3504534072804531,
+            0,
+            0.439538824216912,
+            0.3993395294062732,
+            0.8045704209449853,
+            0,
+            104.20247532024266,
+            21.949076502509183,
+            24.57367599590944,
+            1
+          ],
+          "projection": [
+            1.4653625988902634,
+            0,
+            0,
+            0,
+            0,
+            2.6050890646938014,
+            0,
+            0,
+            0,
+            0,
+            -1.0004000800160033,
+            -1,
+            0,
+            0,
+            -0.20004000800160032,
+            0
+          ],
+          "near": 0.1,
+          "far": 500
+        },
+        "plan": 4.819999933242798,
+        "logic": 0.36000001430511475,
+        "render": 11.420000076293945,
+        "total": 16.605000019073486
+      },
+      {
+        "kind": "growth",
+        "targetId": "plant-7",
+        "position": {
+          "x": 84.5,
+          "z": -10.5
+        },
+        "origin": {
+          "x": 86.91475342020834,
+          "y": 8.2941743850708,
+          "z": -13.813452266080217
+        },
+        "planningCamera": {
+          "matrixWorld": [
+            0.8775825618903728,
+            0,
+            -0.47942553860420295,
+            0,
+            -0.19145356897155147,
+            0.916803108771767,
+            -0.3504534072804531,
+            0,
+            0.439538824216912,
+            0.3993395294062732,
+            0.8045704209449853,
+            0,
+            104.20247532024266,
+            21.949076502509183,
+            24.57367599590944,
+            1
+          ],
+          "projection": [
+            1.4653625988902634,
+            0,
+            0,
+            0,
+            0,
+            2.6050890646938014,
+            0,
+            0,
+            0,
+            0,
+            -1.0004000800160033,
+            -1,
+            0,
+            0,
+            -0.20004000800160032,
+            0
+          ]
+        },
+        "camera": {
+          "position": [
+            104.20247532024266,
+            21.949076502509183,
+            24.57367599590944
+          ],
+          "matrixWorld": [
+            0.8775825618903728,
+            0,
+            -0.47942553860420295,
+            0,
+            -0.19145356897155147,
+            0.916803108771767,
+            -0.3504534072804531,
+            0,
+            0.439538824216912,
+            0.3993395294062732,
+            0.8045704209449853,
+            0,
+            104.20247532024266,
+            21.949076502509183,
+            24.57367599590944,
+            1
+          ],
+          "projection": [
+            1.4653625988902634,
+            0,
+            0,
+            0,
+            0,
+            2.6050890646938014,
+            0,
+            0,
+            0,
+            0,
+            -1.0004000800160033,
+            -1,
+            0,
+            0,
+            -0.20004000800160032,
+            0
+          ],
+          "near": 0.1,
+          "far": 500
+        },
+        "plan": 2.790000081062317,
+        "logic": 0.31999993324279785,
+        "render": 9.899999976158142,
+        "total": 13.009999990463257
+      },
+      {
+        "kind": "multiply",
+        "targetId": "plant-9",
+        "position": {
+          "x": 86,
+          "z": -10.5
+        },
+        "origin": {
+          "x": 88.52309030595379,
+          "y": 8.300084781646728,
+          "z": -13.731720177862252
+        },
+        "planningCamera": {
+          "matrixWorld": [
+            0.8775825618903728,
+            0,
+            -0.47942553860420295,
+            0,
+            -0.19145356897155147,
+            0.916803108771767,
+            -0.3504534072804531,
+            0,
+            0.439538824216912,
+            0.3993395294062732,
+            0.8045704209449853,
+            0,
+            104.20247532024266,
+            21.949076502509183,
+            24.57367599590944,
+            1
+          ],
+          "projection": [
+            1.4653625988902634,
+            0,
+            0,
+            0,
+            0,
+            2.6050890646938014,
+            0,
+            0,
+            0,
+            0,
+            -1.0004000800160033,
+            -1,
+            0,
+            0,
+            -0.20004000800160032,
+            0
+          ]
+        },
+        "camera": {
+          "position": [
+            104.20247532024266,
+            21.949076502509183,
+            24.57367599590944
+          ],
+          "matrixWorld": [
+            0.8775825618903728,
+            0,
+            -0.47942553860420295,
+            0,
+            -0.19145356897155147,
+            0.916803108771767,
+            -0.3504534072804531,
+            0,
+            0.439538824216912,
+            0.3993395294062732,
+            0.8045704209449853,
+            0,
+            104.20247532024266,
+            21.949076502509183,
+            24.57367599590944,
+            1
+          ],
+          "projection": [
+            1.4653625988902634,
+            0,
+            0,
+            0,
+            0,
+            2.6050890646938014,
+            0,
+            0,
+            0,
+            0,
+            -1.0004000800160033,
+            -1,
+            0,
+            0,
+            -0.20004000800160032,
+            0
+          ],
+          "near": 0.1,
+          "far": 500
+        },
+        "plan": 2.4600000381469727,
+        "logic": 0.17500007152557373,
+        "render": 10.31499993801117,
+        "total": 12.955000042915344
+      },
+      {
+        "kind": "growth",
+        "targetId": "plant-11",
+        "position": {
+          "x": 87.5,
+          "z": -10.5
+        },
+        "origin": {
+          "x": 86.26808732440749,
+          "y": 8.2941743850708,
+          "z": -7.98556345084739
+        },
+        "planningCamera": {
+          "matrixWorld": [
+            0.8775825618903728,
+            0,
+            -0.47942553860420295,
+            0,
+            -0.19145356897155147,
+            0.916803108771767,
+            -0.3504534072804531,
+            0,
+            0.439538824216912,
+            0.3993395294062732,
+            0.8045704209449853,
+            0,
+            104.20247532024266,
+            21.949076502509183,
+            24.57367599590944,
+            1
+          ],
+          "projection": [
+            1.4653625988902634,
+            0,
+            0,
+            0,
+            0,
+            2.6050890646938014,
+            0,
+            0,
+            0,
+            0,
+            -1.0004000800160033,
+            -1,
+            0,
+            0,
+            -0.20004000800160032,
+            0
+          ]
+        },
+        "camera": {
+          "position": [
+            104.20247532024266,
+            21.949076502509183,
+            24.57367599590944
+          ],
+          "matrixWorld": [
+            0.8775825618903728,
+            0,
+            -0.47942553860420295,
+            0,
+            -0.19145356897155147,
+            0.916803108771767,
+            -0.3504534072804531,
+            0,
+            0.439538824216912,
+            0.3993395294062732,
+            0.8045704209449853,
+            0,
+            104.20247532024266,
+            21.949076502509183,
+            24.57367599590944,
+            1
+          ],
+          "projection": [
+            1.4653625988902634,
+            0,
+            0,
+            0,
+            0,
+            2.6050890646938014,
+            0,
+            0,
+            0,
+            0,
+            -1.0004000800160033,
+            -1,
+            0,
+            0,
+            -0.20004000800160032,
+            0
+          ],
+          "near": 0.1,
+          "far": 500
+        },
+        "plan": 2.6850000619888306,
+        "logic": 0.35500001907348633,
+        "render": 10.799999952316284,
+        "total": 13.840000033378601
+      },
+      {
+        "kind": "multiply",
+        "targetId": "plant-13",
+        "position": {
+          "x": 89,
+          "z": -10.5
+        },
+        "origin": {
+          "x": 84.90083667345881,
+          "y": 9.8941743850708,
+          "z": -10.58282525182449
+        },
+        "planningCamera": {
+          "matrixWorld": [
+            0.8775825618903728,
+            0,
+            -0.47942553860420295,
+            0,
+            -0.19145356897155147,
+            0.916803108771767,
+            -0.3504534072804531,
+            0,
+            0.439538824216912,
+            0.3993395294062732,
+            0.8045704209449853,
+            0,
+            104.20247532024266,
+            21.949076502509183,
+            24.57367599590944,
+            1
+          ],
+          "projection": [
+            1.4653625988902634,
+            0,
+            0,
+            0,
+            0,
+            2.6050890646938014,
+            0,
+            0,
+            0,
+            0,
+            -1.0004000800160033,
+            -1,
+            0,
+            0,
+            -0.20004000800160032,
+            0
+          ]
+        },
+        "camera": {
+          "position": [
+            104.20247532024266,
+            21.949076502509183,
+            24.57367599590944
+          ],
+          "matrixWorld": [
+            0.8775825618903728,
+            0,
+            -0.47942553860420295,
+            0,
+            -0.19145356897155147,
+            0.916803108771767,
+            -0.3504534072804531,
+            0,
+            0.439538824216912,
+            0.3993395294062732,
+            0.8045704209449853,
+            0,
+            104.20247532024266,
+            21.949076502509183,
+            24.57367599590944,
+            1
+          ],
+          "projection": [
+            1.4653625988902634,
+            0,
+            0,
+            0,
+            0,
+            2.6050890646938014,
+            0,
+            0,
+            0,
+            0,
+            -1.0004000800160033,
+            -1,
+            0,
+            0,
+            -0.20004000800160032,
+            0
+          ],
+          "near": 0.1,
+          "far": 500
+        },
+        "plan": 11.304999947547913,
+        "logic": 0.23000001907348633,
+        "render": 15.070000052452087,
+        "total": 26.610000014305115
+      }
+    ]
+  },
+  "attackCycle": {
+    "ready": true,
+    "modelAO": [],
+    "nativeAO": [
+      {
+        "slot": "tree_01",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "tree_02",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "tree_03",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "tree_04",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "shrub_01",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "shrub_02",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "shrub_03",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "plant_01",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "plant_02",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "plant_03",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "rock_01",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "rock_02",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "rock_03",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "debris_01",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "debris_02",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "debris_03",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "debris_04",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "special_01",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "special_02",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "slot": "special_03",
+        "enabled": 0,
+        "vertices": [
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "worldAuthority": "spatial-wasm",
+    "mangroveNetwork": false,
+    "campaign": false,
+    "paused": true,
+    "lastPick": null,
+    "workerCandidate": null,
+    "workerGround": null,
+    "workers": [
+      {
+        "id": "worker-28",
+        "profile": "olderMale",
+        "x": 60,
+        "z": 0,
+        "status": "home",
+        "hits": 0
+      }
+    ],
+    "faceCandidate": false,
+    "faceCandidateSpecies": null,
+    "expressions": [
+      {
+        "id": "qa-beast-6",
+        "weights": [
+          0,
+          0,
+          1.5329600164606927e-119
+        ],
+        "bindings": 11
+      }
+    ],
+    "entityCounts": {
+      "workers": 1,
+      "structures": 1,
+      "crops": 12,
+      "animals": 1
+    },
+    "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "pixelRatio": 1,
+    "renderSize": [
+      1600,
+      900
+    ],
+    "visibleGuardians": 1,
+    "maxVisibleGuardians": 1,
+    "slopeSite": null,
+    "guideTrial": true,
+    "guideOrigin": {
+      "x": 89.99538060817201,
+      "y": 9.604707374572754,
+      "z": -4.729930860008376
+    },
+    "guidePosition": [
+      89.99538060817201,
+      9.604707374572758,
+      -4.729930860008376
+    ],
+    "guidePlanAt": 49.34361000001431,
+    "elapsed": 3026.918309999977,
+    "simulate": true,
+    "clockMode": "Game.tick",
+    "shields": [],
+    "active": 1,
+    "origins": [],
+    "pendingSummons": 0,
+    "attackVisual": [],
+    "reused": 5,
+    "health": 28,
+    "animalState": "walking",
+    "animalPosition": [
+      84.06225208352237,
+      -8
+    ],
+    "draws": 77,
+    "audioVoices": 0,
+    "audioTrace": [
+      {
+        "id": "spirit_appear",
+        "at": 3014.8947449999687,
+        "emitter": "guardian-world",
+        "played": false
+      },
+      {
+        "id": "spirit_power_activate",
+        "at": 3014.994744999969,
+        "emitter": "guardian-world",
+        "played": false
+      },
+      {
+        "id": "hyena_hurt",
+        "at": 3015.127859999969,
+        "emitter": "qa-beast-6",
+        "phase": "falling",
+        "played": false
+      },
+      {
+        "id": "beast_take_damage",
+        "at": 3015.127859999969,
+        "emitter": "impact:qa-beast-6",
+        "played": false
+      },
+      {
+        "id": "spirit_disappear",
+        "at": 3016.3582849999693,
+        "emitter": "guardian-world",
+        "played": false
+      }
+    ],
+    "combatPhysics": {
+      "active": 0,
+      "physicsMs": 0.029999971389770508,
+      "recoveryMs": 0,
+      "rejected": 0,
+      "startMs": 13.009999990463257,
+      "maxStepMs": 21.78500008583069,
+      "solverMs": 0,
+      "solverSteps": 0,
+      "bindingMs": 0,
+      "recoverySetupMs": 0,
+      "creationMs": 0,
+      "lastCreation": {
+        "species": "hyena",
+        "captureMs": 0.6100000143051147,
+        "colliderFitMs": 3.5799999237060547,
+        "environmentMs": 6.120000004768372,
+        "bodiesMs": 2.5600000619888306
+      },
+      "recoveryFollowMs": 0,
+      "bakedActive": 0,
+      "kinematic": 0,
+      "rollFailures": 0,
+      "lastRoll": {
+        "seconds": 1.3166666666666669,
+        "contactDelay": 0,
+        "error": 0.23286771975592271,
+        "speed": 0.08906869216457756,
+        "timedOut": false
+      },
+      "recoveryPoseMisses": 1,
+      "recoveryPoseHits": 99
+    },
+    "physicsWorlds": 0,
+    "physicalBodies": 0,
+    "allDown": [
+      {
+        "id": "qa-beast-6",
+        "x": 84.06225208352237,
+        "z": -8
+      }
+    ],
+    "errors": [],
+    "report": {
+      "reuseRecoveryPose": true,
+      "scope": "Full sequential Attack cycles: sampling starts before the first command, includes all launches and recovery. Continuous Game.tick and native WorldScene when lightingReview=1. Diagnostic, not a paired before/after benchmark.",
+      "retreatTrial": false,
+      "initialResilience": 56,
+      "finalActors": [
+        {
+          "id": "qa-beast-6",
+          "status": "walking",
+          "health": 28,
+          "x": 84.06225208352237,
+          "z": -8,
+          "down": false
+        }
+      ],
+      "requestedImpacts": 1,
+      "issuedImpacts": 1,
+      "attackSchedule": [
+        {
+          "index": 0,
+          "targetId": "qa-beast-6",
+          "time": 0
+        }
+      ],
+      "audioContext": null,
+      "audioTrace": [
+        {
+          "id": "spirit_appear",
+          "at": 3014.8947449999687,
+          "emitter": "guardian-world",
+          "played": false,
+          "time": 0.04977000000008047
+        },
+        {
+          "id": "spirit_power_activate",
+          "at": 3014.994744999969,
+          "emitter": "guardian-world",
+          "played": false,
+          "time": 0.14977000000044427
+        },
+        {
+          "id": "hyena_hurt",
+          "at": 3015.127859999969,
+          "emitter": "qa-beast-6",
+          "phase": "falling",
+          "played": false,
+          "time": 0.2828850000005332
+        },
+        {
+          "id": "beast_take_damage",
+          "at": 3015.127859999969,
+          "emitter": "impact:qa-beast-6",
+          "played": false,
+          "time": 0.2828850000005332
+        },
+        {
+          "id": "spirit_disappear",
+          "at": 3016.3582849999693,
+          "emitter": "guardian-world",
+          "played": false,
+          "time": 1.513310000000729
+        }
+      ],
+      "headOn": false,
+      "wallTrial": false,
+      "actorSpecies": [
+        "hyena"
+      ],
+      "rejectedPhysics": 0,
+      "completedSimulation": true,
+      "species": "hyena",
+      "direction": "auto",
+      "wallMs": 12948.049999952316,
+      "simulationSeconds": 12.073335000008228,
+      "frames": 286,
+      "hiddenFrames": 0,
+      "metrics": {
+        "dt": {
+          "mean": 45.40805944055945,
+          "p95": 66.63999999999942,
+          "p99": 83.26499999999942,
+          "max": 316.06499999999505
+        },
+        "renderMs": {
+          "mean": 14.659650347449563,
+          "p95": 20.44000005722046,
+          "p99": 27.75499999523163,
+          "max": 313
+        },
+        "physicsTotal": {
+          "mean": 2.7222552437048693,
+          "p95": 5.460000038146973,
+          "p99": 19.240000009536743,
+          "max": 21.78500008583069
+        },
+        "solverMs": {
+          "mean": 1.0338636328290391,
+          "p95": 3.2450000047683716,
+          "p99": 4.230000019073486,
+          "max": 4.460000038146973
+        },
+        "solverSteps": {
+          "mean": 1.7552447552447552,
+          "p95": 3,
+          "p99": 3,
+          "max": 3
+        },
+        "creationMs": {
+          "mean": 0.047639860139860137,
+          "p95": 0,
+          "p99": 0,
+          "max": 13.625
+        },
+        "bindingMs": {
+          "mean": 0.09339160977543651,
+          "p95": 0.33500003814697266,
+          "p99": 0.5049999952316284,
+          "max": 0.6150000095367432
+        },
+        "recoverySetupMs": {
+          "mean": 0.06545454513776552,
+          "p95": 0,
+          "p99": 0,
+          "max": 18.71999990940094
+        },
+        "recoveryFollowMs": {
+          "mean": 1.3465384615884795,
+          "p95": 4.350000023841858,
+          "p99": 6.914999961853027,
+          "max": 20.954999804496765
+        },
+        "recoveryMs": {
+          "mean": 0.016206294089764147,
+          "p95": 0.0549999475479126,
+          "p99": 0.1499999761581421,
+          "max": 0.3700000047683716
+        },
+        "animationMs": {
+          "mean": 0.3600699297198049,
+          "p95": 0.5800000429153442,
+          "p99": 0.8050000667572021,
+          "max": 3.75
+        },
+        "vfxMs": {
+          "mean": 0.12620629338951378,
+          "p95": 0.9449999332427979,
+          "p99": 1.5500000715255737,
+          "max": 1.7350000143051147
+        },
+        "draws": {
+          "mean": 69.63636363636364,
+          "p95": 78,
+          "p99": 78,
+          "max": 79
+        }
+      },
+      "peakActive": 1,
+      "peakBaked": 0,
+      "finalDownCount": 0,
+      "finalDown": null,
+      "memory": {
+        "geometries": 278,
+        "textures": 134
+      },
+      "heap": 484221962,
+      "errors": [],
+      "recoveryTraceSamples": 112
+    },
+    "commandCosts": [
+      {
+        "kind": "attack",
+        "targetId": "qa-beast-6",
+        "position": {
+          "x": 89.87499,
+          "z": -6
+        },
+        "origin": {
+          "x": 90.05806973714152,
+          "y": 8.428932857513427,
+          "z": -3.005591575978957
+        },
+        "planningCamera": {
+          "matrixWorld": [
+            0.7903326665471436,
+            2.7755575615628914e-17,
+            -0.6126779547106959,
+            0,
+            -0.3018248750382755,
+            0.8702376327912589,
+            -0.38934330260323685,
+            0,
+            0.533175412970826,
+            0.4926321776679496,
+            0.6877772288535896,
+            0,
+            94.11229956394862,
+            12.883667535609414,
+            2.529630136360482,
+            1
+          ],
+          "projection": [
+            1.4653625988902634,
+            0,
+            0,
+            0,
+            0,
+            2.6050890646938014,
+            0,
+            0,
+            0,
+            0,
+            -1.0004000800160033,
+            -1,
+            0,
+            0,
+            -0.20004000800160032,
+            0
+          ]
+        },
+        "camera": {
+          "position": [
+            94.11229956394862,
+            12.883667535609414,
+            2.529630136360482
+          ],
+          "matrixWorld": [
+            0.7903326665471436,
+            2.7755575615628914e-17,
+            -0.6126779547106959,
+            0,
+            -0.3018248750382755,
+            0.8702376327912589,
+            -0.38934330260323685,
+            0,
+            0.533175412970826,
+            0.4926321776679496,
+            0.6877772288535896,
+            0,
+            94.11229956394862,
+            12.883667535609414,
+            2.529630136360482,
+            1
+          ],
+          "projection": [
+            1.4653625988902634,
+            0,
+            0,
+            0,
+            0,
+            2.6050890646938014,
+            0,
+            0,
+            0,
+            0,
+            -1.0004000800160033,
+            -1,
+            0,
+            0,
+            -0.20004000800160032,
+            0
+          ],
+          "near": 0.1,
+          "far": 500
+        },
+        "plan": 2.875,
+        "logic": 1.25,
+        "render": 0.04999995231628418,
+        "total": 4.174999952316284
+      }
+    ]
+  }
+}

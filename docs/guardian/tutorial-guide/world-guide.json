@@ -1,0 +1,402 @@
+{
+  "hiringRoutes": null,
+  "loading": [
+    {
+      "stamp": 866.7200000286102,
+      "cover": false,
+      "hudVisibility": null
+    },
+    {
+      "stamp": 72334.41499996185,
+      "cover": true,
+      "hudVisibility": null
+    },
+    {
+      "stamp": 72684.3600000143,
+      "cover": true,
+      "busy": "true",
+      "hudVisibility": "hidden"
+    },
+    {
+      "stamp": 91020.27499997616,
+      "cover": false,
+      "busy": "false",
+      "hudVisibility": "visible"
+    }
+  ],
+  "campaignEvents": [
+    {
+      "day": 1,
+      "time": 14.384269999999967,
+      "elapsed": 14.384269999999967,
+      "id": "event-1",
+      "type": "TutorialMessageStarted",
+      "messageId": "basic.introduction"
+    },
+    {
+      "day": 1,
+      "time": 14.384269999999967,
+      "elapsed": 14.384269999999967,
+      "id": "event-2",
+      "type": "TutorialMessageStarted",
+      "messageId": "basic.center"
+    },
+    {
+      "day": 1,
+      "time": 14.384269999999967,
+      "elapsed": 14.384269999999967,
+      "id": "event-4",
+      "type": "PlacementCommitted",
+      "kind": "center",
+      "targetId": "structure-2",
+      "presentation": {
+        "x": 84.82228728996277,
+        "z": -0.8885311213434797
+      }
+    },
+    {
+      "day": 1,
+      "time": 14.384269999999967,
+      "elapsed": 14.384269999999967,
+      "id": "event-5",
+      "type": "TutorialMessageStarted",
+      "messageId": "basic.plant"
+    }
+  ],
+  "campaignPhases": [
+    {
+      "day": 1,
+      "time": 14.384269999999967,
+      "elapsed": 14.384269999999967,
+      "completedNights": 0,
+      "result": null,
+      "raid": null,
+      "pauses": [
+        "tutorial-action"
+      ],
+      "structures": [
+        {
+          "id": "structure-2",
+          "status": "intact",
+          "hp": 600,
+          "maxHp": 600
+        }
+      ],
+      "notices": []
+    }
+  ],
+  "raid": null,
+  "raidView": {
+    "eye": {
+      "x": 109.70247532024266,
+      "z": 29.07367599590944
+    },
+    "target": {
+      "x": 93,
+      "z": -1.5
+    }
+  },
+  "completedNights": 0,
+  "result": null,
+  "nightPlan": null,
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "day": 1,
+  "time": 14.384269999999967,
+  "elapsed": 14.384269999999967,
+  "balance": {
+    "n": "700",
+    "d": "1"
+  },
+  "pauses": [
+    "tutorial-action"
+  ],
+  "tutorial": {
+    "step": "plant",
+    "seen": [
+      "basic.introduction",
+      "basic.center",
+      "basic.plant"
+    ],
+    "pending": [],
+    "guideAfterAuto": [
+      "basic.center",
+      "basic.plant"
+    ],
+    "reading": null,
+    "basicSkipped": false,
+    "shownToday": {
+      "day": 1,
+      "ids": [
+        "basic.introduction",
+        "basic.center",
+        "basic.plant"
+      ]
+    },
+    "dismissed": [
+      "basic.introduction:",
+      "basic.center:",
+      "basic.plant:"
+    ]
+  },
+  "guardianGuide": {
+    "worldVisible": true,
+    "worldBodies": 1,
+    "legacyWorldHand": false,
+    "legacyHudHands": 0,
+    "overlayVisible": false
+  },
+  "hands": {
+    "hudVisible": false,
+    "worldVisible": false,
+    "toolKind": "plant",
+    "worldTarget": {
+      "kind": "tap",
+      "target": "plant-site",
+      "minimumScreenHeight": 40,
+      "position": [
+        93,
+        8.488430404663086,
+        -1.5
+      ]
+    },
+    "worldScreen": {
+      "x": 640,
+      "y": 364,
+      "depth": 0.99514443012798,
+      "inFrustum": true
+    }
+  },
+  "structures": [
+    {
+      "id": "structure-2",
+      "x": 84.82228728996277,
+      "z": -0.8885311213434797,
+      "screen": {
+        "x": 469,
+        "y": 325,
+        "depth": 0.9955240211209885,
+        "inFrustum": true
+      }
+    }
+  ],
+  "proposedCenter": {
+    "kind": "center",
+    "x": 83,
+    "z": 0,
+    "culture": "suajili",
+    "screen": {
+      "x": 423,
+      "y": 324,
+      "depth": 0.9955342308393096,
+      "inFrustum": true
+    }
+  },
+  "plantSpots": [
+    {
+      "x": 90,
+      "z": -4.5,
+      "screen": {
+        "x": 613,
+        "y": 319,
+        "depth": 0.9955977535135911,
+        "inFrustum": true
+      }
+    },
+    {
+      "x": 91.5,
+      "z": -4.5,
+      "screen": {
+        "x": 643,
+        "y": 327,
+        "depth": 0.9955233713743729,
+        "inFrustum": true
+      }
+    },
+    {
+      "x": 93,
+      "z": -4.5,
+      "screen": {
+        "x": 673,
+        "y": 338,
+        "depth": 0.9954556416163873,
+        "inFrustum": true
+      }
+    },
+    {
+      "x": 94.5,
+      "z": -4.5,
+      "screen": {
+        "x": 705,
+        "y": 353,
+        "depth": 0.9953938652497323,
+        "inFrustum": true
+      }
+    },
+    {
+      "x": 90,
+      "z": -3,
+      "screen": {
+        "x": 596,
+        "y": 330,
+        "depth": 0.9954544653158103,
+        "inFrustum": true
+      }
+    },
+    {
+      "x": 91.5,
+      "z": -3,
+      "screen": {
+        "x": 626,
+        "y": 338,
+        "depth": 0.9953758866487004,
+        "inFrustum": true
+      }
+    },
+    {
+      "x": 93,
+      "z": -3,
+      "screen": {
+        "x": 657,
+        "y": 350,
+        "depth": 0.9953050738743044,
+        "inFrustum": true
+      }
+    },
+    {
+      "x": 94.5,
+      "z": -3,
+      "screen": {
+        "x": 689,
+        "y": 367,
+        "depth": 0.9952419800344876,
+        "inFrustum": true
+      }
+    },
+    {
+      "x": 90,
+      "z": -1.5,
+      "screen": {
+        "x": 577,
+        "y": 342,
+        "depth": 0.9953023634932936,
+        "inFrustum": true
+      }
+    },
+    {
+      "x": 91.5,
+      "z": -1.5,
+      "screen": {
+        "x": 608,
+        "y": 350,
+        "depth": 0.9952189703840801,
+        "inFrustum": true
+      }
+    },
+    {
+      "x": 93,
+      "z": -1.5,
+      "screen": {
+        "x": 640,
+        "y": 364,
+        "depth": 0.99514443012798,
+        "inFrustum": true
+      }
+    },
+    {
+      "x": 94.5,
+      "z": -1.5,
+      "screen": {
+        "x": 673,
+        "y": 381,
+        "depth": 0.9950785893153772,
+        "inFrustum": true
+      }
+    },
+    {
+      "x": 90,
+      "z": 0,
+      "screen": {
+        "x": 557,
+        "y": 354,
+        "depth": 0.9951406090569203,
+        "inFrustum": true
+      }
+    },
+    {
+      "x": 91.5,
+      "z": 0,
+      "screen": {
+        "x": 589,
+        "y": 363,
+        "depth": 0.9950518990001606,
+        "inFrustum": true
+      }
+    },
+    {
+      "x": 93,
+      "z": 0,
+      "screen": {
+        "x": 622,
+        "y": 377,
+        "depth": 0.9949727288223327,
+        "inFrustum": true
+      }
+    },
+    {
+      "x": 94.5,
+      "z": 0,
+      "screen": {
+        "x": 655,
+        "y": 396,
+        "depth": 0.9949032404685911,
+        "inFrustum": true
+      }
+    },
+    {
+      "x": 90,
+      "z": 1.5,
+      "screen": {
+        "x": 536,
+        "y": 368,
+        "depth": 0.9949682530408633,
+        "inFrustum": true
+      }
+    },
+    {
+      "x": 91.5,
+      "z": 1.5,
+      "screen": {
+        "x": 569,
+        "y": 377,
+        "depth": 0.9948735657585221,
+        "inFrustum": true
+      }
+    },
+    {
+      "x": 93,
+      "z": 1.5,
+      "screen": {
+        "x": 602,
+        "y": 392,
+        "depth": 0.994788890453773,
+        "inFrustum": true
+      }
+    },
+    {
+      "x": 94.5,
+      "z": 1.5,
+      "screen": {
+        "x": 637,
+        "y": 411,
+        "depth": 0.9947145095667599,
+        "inFrustum": true
+      }
+    }
+  ],
+  "plants": [],
+  "workers": [],
+  "delivered": 0
+}

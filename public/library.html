@@ -3,10 +3,11 @@ await import('./i18n/runtime.js');
 const {integrateLibraryLab}=await import('./library/integration.js');
 const get=async(url,type='json')=>{const response=await fetch(url);if(!response.ok)throw new Error('No se pudo cargar '+url);return response[type]();};
 const base64=bytes=>{let text='';for(let i=0;i<bytes.length;i+=16384)text+=String.fromCharCode(...bytes.subarray(i,i+16384));return btoa(text);};
-async function restore(value){
-  if(value&&typeof value==='object'&&value.encoding==='external-binary')return base64(new Uint8Array(await get(value.url,'arrayBuffer')));
-  if(Array.isArray(value))return Promise.all(value.map(restore));
-  if(value&&typeof value==='object'){const entries=await Promise.all(Object.entries(value).map(async([k,v])=>[k,await restore(v)]));return Object.fromEntries(entries);}
+async function restore(value,bank=null){
+  if(value?.bufferBank){bank=await get(value.bufferBank.url,'arrayBuffer');if(bank.byteLength!==value.bufferBank.byteLength)throw Error('Invalid wall bank size');}
+  if(value&&typeof value==='object'&&value.encoding==='external-binary'){if(value.bankOffset!==undefined){const o=value.bankOffset,n=value.bankLength;if(!bank||!Number.isSafeInteger(o)||!Number.isSafeInteger(n)||o<0||n<=0||o%4||o+n>bank.byteLength)throw Error('Invalid wall bank range');return base64(new Uint8Array(bank,o,n));}return base64(new Uint8Array(await get(value.url,'arrayBuffer')));}
+  if(Array.isArray(value))return Promise.all(value.map(v=>restore(v,bank)));
+  if(value&&typeof value==='object'){const entries=await Promise.all(Object.entries(value).map(async([k,v])=>[k,await restore(v,bank)]));return Object.fromEntries(entries);}
   return value;
 }
 try {

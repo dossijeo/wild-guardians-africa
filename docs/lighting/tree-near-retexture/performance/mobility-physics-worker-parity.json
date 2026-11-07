@@ -1,0 +1,86 @@
+{
+  "runs": [
+    {
+      "equal": true,
+      "steps": 480,
+      "phases": [
+        "falling",
+        "recovering",
+        "released"
+      ],
+      "firstDifference": -1,
+      "main": {
+        "initializationMs": 152.23440000000002,
+        "timing": {
+          "p95": 2.4518000000000484,
+          "p99": 4.52940000000001,
+          "max": 240.88410000000005
+        }
+      },
+      "worker": {
+        "initializationMs": 153.73490000000015,
+        "timing": {
+          "p95": 1.3266000000000986,
+          "p99": 4.245499999999993,
+          "max": 111.41869999999994
+        },
+        "wallMs": 957.8242
+      }
+    },
+    {
+      "equal": true,
+      "steps": 480,
+      "phases": [
+        "falling",
+        "recovering",
+        "released"
+      ],
+      "firstDifference": -1,
+      "main": {
+        "initializationMs": 22.678200000000288,
+        "timing": {
+          "p95": 0.9486000000001695,
+          "p99": 1.5498999999999796,
+          "max": 63.975299999999606
+        }
+      },
+      "worker": {
+        "initializationMs": 145.44259999999986,
+        "timing": {
+          "p95": 1.3447999999998501,
+          "p99": 2.692800000000261,
+          "max": 101.59940000000006
+        },
+        "wallMs": 891.3110000000001
+      }
+    },
+    {
+      "equal": true,
+      "steps": 480,
+      "phases": [
+        "falling",
+        "recovering",
+        "released"
+      ],
+      "firstDifference": -1,
+      "main": {
+        "initializationMs": 16.1904999999997,
+        "timing": {
+          "p95": 0.604399999999714,
+          "p99": 1.1844999999998436,
+          "max": 43.80289999999968
+        }
+      },
+      "worker": {
+        "initializationMs": 145.2260000000001,
+        "timing": {
+          "p95": 1.143500000000131,
+          "p99": 3.3474999999998545,
+          "max": 95.96880000000056
+        },
+        "wallMs": 866.3868999999995
+      }
+    }
+  ],
+  "scope": "Node worker_threads, one test rig and real Rapier, flat ground, repeated hit, physical pose and selected logical state compared each step; no Game.tick, browser Worker, WebGL, obstacles, animation clips or performance parity claim."
+}

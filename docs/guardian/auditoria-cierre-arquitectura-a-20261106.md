@@ -1,0 +1,77 @@
+# Auditoría de cierre de la arquitectura A — 6 de noviembre de 2026
+
+## Decisión actual tras la implementación
+
+**A1–A7 cerrados internamente a 7 de noviembre de 2026.** El cierre indicado aquí es interno
+de contratos, no aprobación de contenido, paridad ni rendimiento. El perfil
+de integración se puede ejecutar sin DEV con backend `webgpu-worker` y
+recuperación temporal explícita; no se activa silenciosamente como predeterminado.
+
+| Contrato | Estado actual | Evidencia y límite |
+| --- | --- | --- |
+| A1 Propiedad, identidad, fachada y arranque | **Implementado internamente** | Fachada existente, perfil noDEV, comprobación WebGPU, generaciones y rechazo de resultados obsoletos. [Matriz A1/A3](a1-a3-contract-audit.md), 194 pruebas de contratos. Poblados y otras mecánicas concretas sin migrar son B; sesiones/dispositivos reales, C. |
+| A2 Comunicación, proyección y saturación | **Implementado internamente** | Perfil Worker con baseline y deltas HUD por identidad, sin snapshot ordinario ni receptor de copia gráfica en interfaz. Eventos y liquidaciones ordenados, barreras, cursores/ACK y presión acotada; checkpoints para arranque/guardado/recuperación. Transporte autoridad–host incremental existente comprobado en Worker/WASM reales; contadores e identidades importadas validados. [Matriz A2](a2-contract-closure.md). La preparación y comparación amplia dentro de Workers persiste: no se afirma invalidación nativa integral ni ahorro medido. |
+| A3 Catálogo, datos y pases | **Implementado internamente para las familias actuales** | Recetas de estados/bindings/deformaciones y cobertura de pases; paleta/offset de fluidos por material, recorte de sombras y clonación NodeMaterial corregidos. [Matriz A1/A3](a1-a3-contract-audit.md), pruebas lógicas y compilación. Nuevas máscaras/contenidos requieren receta B; paridad y pipelines físicos, C. |
+| A4 Admisión y mutaciones estructurales | **Implementado internamente para rutas soportadas** | Inventario de consumidores corregido: instancias reales de previews, ondas, Hi-Z y reasignación de buffers del escudo pasan por publicación atómica. Las luces/formatos globales son fijos en el perfil; un cambio estructural exige transacción o nueva generación. No hay sondeo indiscriminado por fotograma. Commits `594af3095` y `bc02200ac`, 155 pruebas locales. Indicador inmediato durante admisión B3; primera utilización y paridad GPU C. |
+| A5 Recursos y residencia | **Implementado internamente** | Registro por generación, versiones, cargas/leases, propietarios explícitos o compuestos, liberación diferida y presión configurable sobre inactivos. [Inventario A5](a5-resource-registry.md); 458 pruebas de contratos. Bytes desconocidos explícitos y límites heurísticos, no VRAM medida; calibración/dispositivo, C. |
+| A6 Trayectorias, reloj y pose | **Implementado internamente** | Intervalos ejecutados y confirmados, secuencia/actor/identidad, horizonte certificado y entrega de pose; selección tardía baked sin sustituir rig. [Contrato A6](a6-autonomous-motion-handoff.md), [admisión tardía](historical-late-actor-selection.md). Otros clips B4; continuidad visual y hardware C. |
+| A7 Entrada, provisionales y recuperación | **Implementado internamente en perfil explícito** | Entrada autoritativa, IDs, confirmación/rechazo, checkpoint/replay, generaciones y recuperación o fallo seguro. [Contrato de recuperación](temporal-recovery-contract.md), 85 pruebas dirigidas. Saturación queda A2; contenidos B5/B6 y recuperación real con GPU/física C. |
+
+### Verificación final y entrega
+
+Sobre el código integrado se ejecutaron 271 pruebas dirigidas juntas, sin fallos
+ni omisiones (`.cache/a-final-contract-tests.tap`). Incluyen identidad/persistencia,
+wire de autoridad en Worker/WASM real, host HUD sin snapshot, proyección y cola,
+perfil, cliente, registro de recursos, admisión, catálogo, rosters, trayectorias y
+recuperación. La compilación de producción pasó con
+`VITE_PRESENTATION_BACKEND=webgpu-worker` y
+`VITE_HISTORICAL_PRESENTATION_RECOVERY=true`, usando
+`.cache/tooling/node20.exe node_modules/vite/bin/vite.js build`;
+registro local `.cache/a-final-build.log`. Los tests con GPU simulada no se
+presentan como ejecución gráfica real.
+
+El siguiente agente puede continuar **B**, respetando estos contratos. Debe
+completar contenido y paridad, incluido el indicador visual provisional mientras
+se admite una construcción (B3), clips y rigs (B4), magias/efectos y flujo completo.
+Después corresponde **C**: partida, dispositivo real, restauración con física,
+sesiones largas, paridad y mediciones reproducibles. No se han declarado FPS,
+ausencia de tirones, memoria de driver ni compatibilidad universal comprobados.
+Guardados importados con identidades/contadores o planes de incursión incoherentes
+se rechazan de forma explícita; no se normalizan ni se alteran sus mecánicas.
+
+## Auditoría inicial conservada como historial
+
+La tabla siguiente describe el estado anterior a las integraciones enumeradas
+arriba; **no es la lista actual de pendientes**.
+
+**A no está cerrado.** Hay mecanismos implementados y ensayados, pero faltan contratos comunes y conexiones de producto que el propio criterio de cierre exige. Una implementación parcial no se clasifica como terminada ni se desplaza a B o C. «Pendiente A» identifica trabajo de implementación pendiente; no implica que exista una incompatibilidad técnica insalvable. La revisión es estática y se apoya en las pruebas identificadas, sin afirmar ejecución gráfica ni rendimiento.
+
+| Contrato | Decisión | Evidencia y trabajo restante |
+| --- | --- | --- |
+| A1: backend y propietario únicos | **Pendiente A** | Existe selección de backend y ruta alternativa sin escena antigua (`src/app/select-presentation-backend.js`, `src/app/main.js`), pero el valor por defecto sigue siendo legacy y el arranque WebGPU completo no está conectado como producto. La selección preliminar no garantiza adquirir dispositivo y OffscreenCanvas. |
+| A1: identidades, generaciones y fachada de presentación | **Pendiente A** | Hay perfiles y secuencias (`src/app/worker-presentation-profile.js`), pero no un contrato común completo de generación de dispositivo, recurso, entidad y trayectoria ni una fachada única para todo su ciclo de vida. |
+| A1: contenido y experiencia de producto | **Pendiente B/C** | Completar contenido, tutorial y otras capacidades en B; validar arranque, fallos y exclusividad de backend en navegador en C. No sustituye la conexión del bootstrap de A. |
+| A2: publicaciones incrementales y orden | **Pendiente A** | Existen deltas, acumulación y barreras (`src/simulation/main-thread-snapshot-transport.js`, `host-publication-queue.js`), pero se siguen preparando y comparando snapshots completos y no hay generaciones completas de entidad ni captura integral de cambios en origen. |
+| A2: eventos causales, barreras y consumidores | **Pendiente A** | El orden está cubierto en partes del transporte; no todos los eventos son autocontenidos, audio aún consulta estado posterior (`src/audio/audio.js`) y no está probado un contrato común de aplicación y ACK para todos los consumidores. |
+| A2: cola acotada y presión | **Pendiente A** | Hay límites de retención y una ventana de envíos, pero sigue existiendo terminación o contrapresión cuando no se puede recuperar; no está resuelta la saturación sin dependencia gráfica ni un protocolo incremental completo. |
+| A2: proyección de interfaz y reloj | **Pendiente A** | El reloj histórico existe en el perfil experimental; la interfaz todavía recibe estado amplio (`src/simulation/worker-hosted-runtime.js`) y hay consumidores que recorren el mundo. No está cerrada la proyección pequeña ni su ciclo independiente. |
+| A2: checkpoint y recuperación | **Pendiente A** | Hay diario y replay de prueba, pero la recuperación temporal no está habilitada en producto (`src/app/temporal-presentation-options.js`). Falta completar la conexión y tratar saturación; transporte real, GPU y sesiones completas se validan en C. |
+| A3: catálogo común y parámetros | **Pendiente A** | Personajes y estructuras tienen grafos compartidos (`webgpu-stable-character-material.js`, `webgpu-structure-preview-materials.js`), pero falta un catálogo común de recetas, claves y datos para todos los subsistemas. Agua, efectos y props aún crean materiales por sus propias rutas. |
+| A3: un único pipeline físico | **Incompatibilidad real** | Blending, profundidad, topología, layouts y bindings pueden exigir pipelines distintos (`src/rendering/webgpu-texture-binding.js`). Un material lógico común necesita familias estructurales explícitas; esto no justifica omitir el catálogo. |
+| A3: paridad de materiales y pases | **Pendiente B/C** | Migrar fórmulas y consumidores restantes en B; comprobar visualmente y en WebGPU real los pases y la reutilización física de pipelines en C. |
+| A4: admisión, tickets y cancelación | **Implementado parcialmente; pendiente A** | `src/rendering/webgpu-pipeline-admission.js` implementa cola, preparación, tickets, pases y liberación diferida; faltan cobertura común completa e invalidación tras publicar. Las pruebas con compiladores simulados no demuestran primer uso en GPU. |
+| A4: materiales alternativos de objetos vivos | **Bloqueado por incompatibilidad de contratos actuales** | El binding cambia el rig visible inmediatamente; admitir un clon no certifica el objeto real y sustituir el rig pierde estado del mixer. Debe ampliarse la admisión para preparar y publicar transaccionalmente sobre el objeto real. Véase `docs/guardian/historical-late-actor-selection.md`. Es un bloqueo resoluble de diseño, no una limitación de WebGPU demostrada. |
+| A4: verificación de pipelines y primer uso | **Pendiente C** | Validar compilación y primera utilización, sombras, pases y pérdida de dispositivo en GPU real. El trabajo síncrono de preparar listas sigue pudiendo bloquear el Worker gráfico. |
+| A5: bancos y residencia de personajes | **Implementado parcialmente** | Animales y trabajadores comparten recursos y presupuesto de inactivos (`webgpu-animal-bank.js`, `webgpu-worker-bank.js`, `webgpu-idle-assets.js`); la contabilidad es estimada, no memoria GPU medida. |
+| A5: identidad, generaciones y presupuesto global | **Pendiente A** | Falta una política común verificable para construcciones, vegetación y demás bancos: referencias, liberación, generaciones, prioridades, esenciales y trabajos pendientes. |
+| A5: formatos y cobertura de recursos | **Pendiente B/C** | Ampliar recursos y variantes compatibles en B; verificar memoria, calidad y soporte real en C. BC7 es piloto, no conversión general acreditada. |
+| A6: intervalos históricos y entrega de pose | **Implementado en perfil experimental** | Certificación de separación y terreno, reloj, secuencias y entrega de impactos (`confirmed-historical-motion-group.js`, `confirmed-timeline-pump.js`, `webgpu-guardian-impact.js`). `tests/authority-historical-admission.test.js` usa WASM real y admisión gráfica simulada. |
+| A6: contrato genérico y conexión de producto | **Pendiente A** | El perfil histórico está limitado a DEV/QA y no constituye aún el contrato general de trayectorias y generaciones por entidad; la selección tardía de rig también queda en fallback. Resolver el contrato y su conexión segura antes de considerarlo cerrado. |
+| A6: clips, especies y paridad | **Pendiente B/C** | Completar animaciones, expresiones, LOD y excepciones en B; validar movimiento, impactos y presentación real en C. El fallback CPU de pose sigue existiendo. |
+| A7: entrada causal y provisionales | **Implementado parcialmente; pendiente A** | Existen IDs, revalidación, cámara y entrega de Attack (`webgpu-world-client.js`, `webgpu-guardian-impact.js`). Falta cerrar todas las reglas de reconciliación y efectos, sin inventar ni deshacer consecuencias confirmadas cosméticamente. |
+| A7: reinicio y recuperación | **Pendiente A** | La invalidación histórica tiene código transportado al propietario, pero no dispara replay automático; el harness de checkpoint y replay no habilita producto. Faltan propiedad por generación, reconstrucción y estado visual seguro ante reinicio o pérdida del dispositivo. |
+| A7: contenido y pruebas integradas | **Pendiente B/C** | Completar magias y efectos en B; comprobar acciones, guardado con física activa, reinicios y ausencia de duplicados en C. El harness con WASM usa adaptadores y un manifiesto sintético: no acredita el ciclo completo entre Workers y WebGPU. |
+
+## Salida del bloqueo
+
+Priorizar contratos aún pendientes de A: bootstrap y propiedad, transporte/recuperación sin saturación, catálogo y residencia comunes, admisión transaccional sobre rig vivo y reproducción temporal de producto. Después completar consumidores y contenido en B; reservar a C las pruebas de partida, paridad, dispositivo real y rendimiento. No se han medido FPS ni se afirma que el trabajo actual elimine tirones.

@@ -1,0 +1,3 @@
+# Reintento de admisión gráfica del guardián
+
+Si el modelo y sus componentes ya se construyeron pero falla su admisión gráfica, una solicitud posterior vuelve a admitir el mismo grupo y el vórtice. La descarga, la instancia y sus recursos se comparten entre solicitudes concurrentes; el modelo no se publica hasta superar la admisión. Si la conversión del modelo falla antes de terminar, la instancia parcial y sus recursos se liberan y una solicitud posterior puede volver a cargarla. Las pruebas cubren tanto el fallo transitorio de admisión como una conversión parcial con recursos registrados. No se han probado la recuperación del dispositivo ni el primer dibujo en WebGPU real.

@@ -1,0 +1,239 @@
+{
+  "ready": true,
+  "campaign": false,
+  "faceCandidate": true,
+  "faceCandidateSpecies": "lion",
+  "expressions": [
+    {
+      "id": "qa-beast-1",
+      "weights": [
+        0,
+        0,
+        0.6499999999539632
+      ],
+      "bindings": 11
+    }
+  ],
+  "entityCounts": {
+    "workers": 1,
+    "structures": 1,
+    "crops": 1,
+    "animals": 1
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 0,
+  "maxVisibleGuardians": 1,
+  "elapsed": 3068.5409159999203,
+  "simulate": true,
+  "active": 0,
+  "origins": [],
+  "retainedAttacks": [],
+  "retainedDraws": 0,
+  "attackVisual": [],
+  "reused": 0,
+  "health": 84,
+  "animalState": "attacking",
+  "animalPosition": [
+    87.59613427137492,
+    -7.446809663316918
+  ],
+  "draws": 60,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "lion_aggressive",
+      "at": 3059.9790159999216,
+      "emitter": "qa-beast-1",
+      "phase": "walking",
+      "played": true
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3060.4950159999216,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3060.6115159999217,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "lion_hurt",
+      "at": 3060.7111159999217,
+      "emitter": "qa-beast-1",
+      "phase": "falling",
+      "played": true
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3060.7111159999217,
+      "emitter": "impact:qa-beast-1",
+      "played": true
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3062.6561159999214,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "lion_attack",
+      "at": 3067.4100159999207,
+      "emitter": "qa-beast-1",
+      "phase": "attacking",
+      "played": true
+    }
+  ],
+  "combatPhysics": {
+    "active": 0,
+    "physicsMs": 0,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 12,
+    "maxStepMs": 17.299999952316284,
+    "solverMs": 0,
+    "solverSteps": 0,
+    "bindingMs": 0,
+    "recoverySetupMs": 0,
+    "creationMs": 0,
+    "lastCreation": {
+      "species": "lion",
+      "captureMs": 1.2999999523162842,
+      "colliderFitMs": 4.899999976158142,
+      "environmentMs": 3.4000000953674316,
+      "bodiesMs": 2.299999952316284
+    },
+    "recoveryFollowMs": 0,
+    "bakedActive": 0,
+    "kinematic": 0
+  },
+  "physicsWorlds": 0,
+  "physicalBodies": 0,
+  "allDown": [
+    {
+      "id": "qa-beast-1",
+      "x": 87.59613427137492,
+      "z": -7.446809663316918
+    }
+  ],
+  "errors": [],
+  "report": {
+    "scope": "Real Attack cycles, continuous Game.tick and WorldScene. Diagnostic, not a paired before/after benchmark.",
+    "requestedImpacts": 1,
+    "headOn": false,
+    "rejectedPhysics": 0,
+    "completedSimulation": true,
+    "species": "lion",
+    "direction": "auto",
+    "wallMs": 8185.699999928474,
+    "simulationSeconds": 8.09579999999869,
+    "frames": 196,
+    "hiddenFrames": 0,
+    "metrics": {
+      "dt": {
+        "mean": 41.657142857142794,
+        "p95": 50.19999999998254,
+        "p99": 66.60000000000582,
+        "max": 66.70000000001164
+      },
+      "renderMs": {
+        "mean": 10.37806122582786,
+        "p95": 16.300000071525574,
+        "p99": 20,
+        "max": 20.899999976158142
+      },
+      "physicsTotal": {
+        "mean": 2.330102042276032,
+        "p95": 4.700000047683716,
+        "p99": 6.300000071525574,
+        "max": 17.299999952316284
+      },
+      "solverMs": {
+        "mean": 1.1117346888902235,
+        "p95": 2.5,
+        "p99": 3.5,
+        "max": 3.6999999284744263
+      },
+      "solverSteps": {
+        "mean": 1.846938775510204,
+        "p95": 3,
+        "p99": 3,
+        "max": 3
+      },
+      "creationMs": {
+        "mean": 0.06683673481551969,
+        "p95": 0,
+        "p99": 0,
+        "max": 13.100000023841858
+      },
+      "bindingMs": {
+        "mean": 0.14234693743744675,
+        "p95": 0.3999999761581421,
+        "p99": 0.5,
+        "max": 0.6000000238418579
+      },
+      "recoverySetupMs": {
+        "mean": 0.020918367468580907,
+        "p95": 0,
+        "p99": 0,
+        "max": 4.100000023841858
+      },
+      "recoveryFollowMs": {
+        "mean": 0.9127551049602275,
+        "p95": 4.099999904632568,
+        "p99": 5,
+        "max": 5.099999904632568
+      },
+      "recoveryMs": {
+        "mean": 0.5015306120016136,
+        "p95": 2.5999999046325684,
+        "p99": 3.100000023841858,
+        "max": 3.1999999284744263
+      },
+      "animationMs": {
+        "mean": 0.08520408430877997,
+        "p95": 0.3999999761581421,
+        "p99": 0.6000000238418579,
+        "max": 1.1999999284744263
+      },
+      "vfxMs": {
+        "mean": 0.3821428576294257,
+        "p95": 2.3000000715255737,
+        "p99": 2.6999999284744263,
+        "max": 3.6999999284744263
+      },
+      "draws": {
+        "mean": 61.05612244897959,
+        "p95": 72,
+        "p99": 75,
+        "max": 75
+      }
+    },
+    "peakActive": 1,
+    "peakBaked": 0,
+    "finalDownCount": 0,
+    "finalDown": null,
+    "memory": {
+      "geometries": 193,
+      "textures": 90
+    },
+    "heap": 399672129,
+    "errors": []
+  },
+  "commandCosts": [
+    {
+      "kind": "attack",
+      "plan": 1.399999976158142,
+      "logic": 0.7000000476837158,
+      "render": 0,
+      "total": 2.100000023841858
+    }
+  ]
+}

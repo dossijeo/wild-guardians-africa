@@ -1,0 +1,7 @@
+# Mangrove loading reveal: partial-tree audit
+
+On the GTX 1660 with the native island mangrove layout and seed 712, the real loading cinematic was instrumented after handoff. The audit includes physical trees whose bounding boxes intersect the camera frustum, including partial trees, plus logical trees lacking a physical record within 80 world units. Across 38 post-handoff samples with at least one candidate (maximum 13), no sampled candidate had readiness below 1. The first three post-handoff samples had no candidates while the camera was pointing at the sky, so they establish nothing about trees. Sampling was throttled to roughly 250 ms and cannot rule out a missed transient or invisible standby-only trees beyond the candidate set.
+
+This contrasts with the separate combat fixture teleport to the buffalo, which bypasses the loading cinematic and exposes the one-second transition. The existing loading cinematic already prepares its panorama and gameplay poses and advances transitions only for prepared representations before handoff. Extending that behavior to arbitrary camera changes needs separate design and validation; an instantaneous snap after the scene is visible could itself pop.
+
+The single instrumented session recorded 1908 RAF intervals across loading and gameplay (p95 33.43 ms, p99 99.975 ms, max 1065.79 ms); it is not an A/B performance test or a measurement of the isolated tree effect. The script performs additional per-tree diagnostic work, which can itself affect timing. No production behavior was changed.

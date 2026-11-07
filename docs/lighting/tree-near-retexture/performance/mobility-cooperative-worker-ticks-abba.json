@@ -1,0 +1,93 @@
+{
+  "runs": [
+    {
+      "mode": "sync",
+      "interrupt": false,
+      "performed": 40,
+      "interrupted": false,
+      "workerMs": 149.89499999582767,
+      "responseMs": 159.39499999582767,
+      "firstTickMs": 107.52500000596046,
+      "pauseLatencyMs": null,
+      "snapshotEqual": true
+    },
+    {
+      "mode": "cooperative",
+      "interrupt": false,
+      "performed": 40,
+      "interrupted": false,
+      "workerMs": 167.29500000178814,
+      "responseMs": 176.32999999821186,
+      "firstTickMs": 121.21499998867512,
+      "pauseLatencyMs": null,
+      "snapshotEqual": true
+    },
+    {
+      "mode": "cooperative",
+      "interrupt": false,
+      "performed": 40,
+      "interrupted": false,
+      "workerMs": 158,
+      "responseMs": 167.89500001072884,
+      "firstTickMs": 114.40999999642372,
+      "pauseLatencyMs": null,
+      "snapshotEqual": true
+    },
+    {
+      "mode": "sync",
+      "interrupt": false,
+      "performed": 40,
+      "interrupted": false,
+      "workerMs": 157.12000000476837,
+      "responseMs": 167,
+      "firstTickMs": 113.5300000011921,
+      "pauseLatencyMs": null,
+      "snapshotEqual": true
+    },
+    {
+      "mode": "sync",
+      "interrupt": true,
+      "performed": 40,
+      "interrupted": false,
+      "workerMs": 162.31500001251698,
+      "responseMs": 172.5300000011921,
+      "firstTickMs": 115.94999998807907,
+      "pauseLatencyMs": 179.40999999642372,
+      "snapshotEqual": true
+    },
+    {
+      "mode": "cooperative",
+      "interrupt": true,
+      "performed": 1,
+      "interrupted": true,
+      "workerMs": 115.91499999165535,
+      "responseMs": 125.73499999940395,
+      "firstTickMs": 115.5300000011921,
+      "pauseLatencyMs": 132.73999999463558,
+      "snapshotEqual": true
+    },
+    {
+      "mode": "cooperative",
+      "interrupt": true,
+      "performed": 1,
+      "interrupted": true,
+      "workerMs": 112.73499999940395,
+      "responseMs": 123.01999999582767,
+      "firstTickMs": 112.4699999988079,
+      "pauseLatencyMs": 131.3100000023842,
+      "snapshotEqual": true
+    },
+    {
+      "mode": "sync",
+      "interrupt": true,
+      "performed": 40,
+      "interrupted": false,
+      "workerMs": 155.3500000089407,
+      "responseMs": 165.17499999701977,
+      "firstTickMs": 113.5700000077486,
+      "pauseLatencyMs": 173.25,
+      "snapshotEqual": true
+    }
+  ],
+  "scope": "Edge headless; 40 real ticks of converted mangrove-islands fixture, nine synthetic resident chunks. Cooperative Worker yields through MessageChannel between complete ticks, never at an FPS boundary. Sequential reference checks final snapshot for actual performed ticks. No scene render, GPU, physics manager, full command queue, bounded starvation or production integration."
+}

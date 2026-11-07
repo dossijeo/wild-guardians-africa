@@ -1,0 +1,763 @@
+{
+  "scope": "Manual diagnostic ticks and real WorldScene rendering, with synthetic independent navigation load. Not an integrated worker simulation or a gameplay equivalence proof.",
+  "results": [
+    {
+      "mode": "idle",
+      "authority": "spatial-wasm",
+      "mangroveNetwork": true,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "animalCount": 20,
+      "simulationTime": 3008.0831600000283,
+      "frames": {
+        "count": 149,
+        "p95": 66.74499999999534,
+        "p99": 233.4300000000003,
+        "max": 1000.0699999999997
+      },
+      "overlapFrames": {
+        "count": 0,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "simulationMs": {
+        "count": 149,
+        "p95": 5.7650000005960464,
+        "p99": 10.669999994337559,
+        "max": 12.439999997615814
+      },
+      "renderMs": {
+        "count": 149,
+        "p95": 55.685000002384186,
+        "p99": 72.01999999582767,
+        "max": 226.54499999433756
+      },
+      "gpu": {
+        "reason": null,
+        "samples": 150,
+        "p95": 35.392,
+        "p99": 46.057472
+      },
+      "jobs": [],
+      "actors": [
+        {
+          "id": "qa-beast-0",
+          "x": 95.46054529837984,
+          "z": -4.533146747871586,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-1",
+          "x": 96,
+          "z": -7.8994654528100865,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-2",
+          "x": 100.42552966286385,
+          "z": -7.524202703340917,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-3",
+          "x": 103.09619942294205,
+          "z": -8.600278867737632,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-4",
+          "x": 114.03934606486646,
+          "z": -2.9542976565553474,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-5",
+          "x": 96.77812491699993,
+          "z": -0.08658154213391533,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-6",
+          "x": 98.76229389873652,
+          "z": -5.401510589019259,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-7",
+          "x": 101.24836165611585,
+          "z": -5,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-8",
+          "x": 103.40500396004542,
+          "z": -1.8517160099427243,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-9",
+          "x": 110.48684045702248,
+          "z": -2.4882527221321453,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-10",
+          "x": 100.06451851478313,
+          "z": 1.1606328446630787,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-11",
+          "x": 101.88962954339624,
+          "z": 3,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-12",
+          "x": 100.20962544388225,
+          "z": -0.8700777321274276,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-13",
+          "x": 108.66044007163286,
+          "z": 4.51127560294667,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-14",
+          "x": 105.1287811510268,
+          "z": 0,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-15",
+          "x": 100,
+          "z": 3,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-16",
+          "x": 98.39347138220431,
+          "z": 5.9543060127883765,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-17",
+          "x": 101.39956042799218,
+          "z": 6,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-18",
+          "x": 105.22522030410695,
+          "z": 3,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-19",
+          "x": 113.73500785396493,
+          "z": 0.17899985406877328,
+          "status": "waiting"
+        }
+      ],
+      "fixtureErrors": []
+    },
+    {
+      "mode": "worker",
+      "authority": "spatial-wasm",
+      "mangroveNetwork": true,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "animalCount": 20,
+      "simulationTime": 3008.150015000029,
+      "frames": {
+        "count": 149,
+        "p95": 66.70500000000175,
+        "p99": 66.80500000000029,
+        "max": 966.7450000000026
+      },
+      "overlapFrames": {
+        "count": 12,
+        "p95": 66.66999999999825,
+        "p99": 66.66999999999825,
+        "max": 66.66999999999825
+      },
+      "simulationMs": {
+        "count": 149,
+        "p95": 5.8599999994039536,
+        "p99": 9.5,
+        "max": 17.03999999910593
+      },
+      "renderMs": {
+        "count": 149,
+        "p95": 51.63500000536442,
+        "p99": 56.57000000029802,
+        "max": 87.72500000149012
+      },
+      "gpu": {
+        "reason": null,
+        "samples": 150,
+        "p95": 31.261664,
+        "p99": 42.700576
+      },
+      "jobs": [
+        {
+          "requestedAt": 34729.20499999821,
+          "receivedAt": 34868.77000000328,
+          "startedAt": 34775.880126953125,
+          "finishedAt": 34832.405029296875,
+          "workerMs": 56.524999998509884,
+          "queries": 700,
+          "hash": 1269783446
+        },
+        {
+          "requestedAt": 35887.8049999997,
+          "receivedAt": 36038.789999999106,
+          "startedAt": 35943.469970703125,
+          "finishedAt": 35994.594970703125,
+          "workerMs": 51.125,
+          "queries": 700,
+          "hash": 1269783446
+        },
+        {
+          "requestedAt": 37059.04500000179,
+          "receivedAt": 37159.615000002086,
+          "startedAt": 37102.360107421875,
+          "finishedAt": 37156.150146484375,
+          "workerMs": 53.78999999910593,
+          "queries": 700,
+          "hash": 1269783446
+        },
+        {
+          "requestedAt": 38206.685000002384,
+          "receivedAt": 38345.835000000894,
+          "startedAt": 38257.8349609375,
+          "finishedAt": 38307.85009765625,
+          "workerMs": 50.01500000059605,
+          "queries": 700,
+          "hash": 1269783446
+        },
+        {
+          "requestedAt": 39404.39999999851,
+          "receivedAt": 39498.359999999404,
+          "startedAt": 39448.175048828125,
+          "finishedAt": 39497.97998046875,
+          "workerMs": 49.80499999970198,
+          "queries": 700,
+          "hash": 1269783446
+        },
+        {
+          "requestedAt": 40576.59499999881,
+          "receivedAt": 40674.85000000149,
+          "startedAt": 40620.820068359375,
+          "finishedAt": 40672.735107421875,
+          "workerMs": 51.91499999910593,
+          "queries": 700,
+          "hash": 1269783446
+        }
+      ],
+      "actors": [
+        {
+          "id": "qa-beast-0",
+          "x": 95.46054529837984,
+          "z": -4.533146747871586,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-1",
+          "x": 96,
+          "z": -7.8994654528100865,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-2",
+          "x": 100.42552966286385,
+          "z": -7.524202703340917,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-3",
+          "x": 103.09619942294205,
+          "z": -8.600278867737632,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-4",
+          "x": 114.03934606486646,
+          "z": -2.9542976565553474,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-5",
+          "x": 96.77812491699993,
+          "z": -0.08658154213391533,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-6",
+          "x": 98.76229389873652,
+          "z": -5.401510589019259,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-7",
+          "x": 101.24836165611585,
+          "z": -5,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-8",
+          "x": 103.40500396004542,
+          "z": -1.8517160099427243,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-9",
+          "x": 110.48684045702248,
+          "z": -2.4882527221321453,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-10",
+          "x": 100.06451851478313,
+          "z": 1.1606328446630787,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-11",
+          "x": 101.88962954339624,
+          "z": 3,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-12",
+          "x": 100.20962544388225,
+          "z": -0.8700777321274276,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-13",
+          "x": 108.66044007163286,
+          "z": 4.51127560294667,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-14",
+          "x": 105.1287811510268,
+          "z": 0,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-15",
+          "x": 100,
+          "z": 3,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-16",
+          "x": 98.39347138220431,
+          "z": 5.9543060127883765,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-17",
+          "x": 101.39956042799218,
+          "z": 6,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-18",
+          "x": 105.22522030410695,
+          "z": 3,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-19",
+          "x": 113.73500785396493,
+          "z": 0.17899985406877328,
+          "status": "waiting"
+        }
+      ],
+      "fixtureErrors": []
+    },
+    {
+      "mode": "worker",
+      "authority": "spatial-wasm",
+      "mangroveNetwork": true,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "animalCount": 20,
+      "simulationTime": 3008.1499200000294,
+      "frames": {
+        "count": 149,
+        "p95": 66.70000000000437,
+        "p99": 66.83000000000175,
+        "max": 966.6650000000009
+      },
+      "overlapFrames": {
+        "count": 12,
+        "p95": 66.69999999999709,
+        "p99": 66.69999999999709,
+        "max": 66.69999999999709
+      },
+      "simulationMs": {
+        "count": 149,
+        "p95": 7.0150000005960464,
+        "p99": 10.91499999910593,
+        "max": 12.405000001192093
+      },
+      "renderMs": {
+        "count": 149,
+        "p95": 56.55499999970198,
+        "p99": 61.09499999880791,
+        "max": 63.44500000029802
+      },
+      "gpu": {
+        "reason": null,
+        "samples": 150,
+        "p95": 34.140416,
+        "p99": 63.10272
+      },
+      "jobs": [
+        {
+          "requestedAt": 33471.72499999404,
+          "receivedAt": 33595.27999999374,
+          "startedAt": 33528.93994140625,
+          "finishedAt": 33589.414794921875,
+          "workerMs": 60.475000001490116,
+          "queries": 700,
+          "hash": 1269783446
+        },
+        {
+          "requestedAt": 34743.1799999997,
+          "receivedAt": 34900.25499999523,
+          "startedAt": 34794.905029296875,
+          "finishedAt": 34854.574951171875,
+          "workerMs": 59.67000000178814,
+          "queries": 700,
+          "hash": 1269783446
+        },
+        {
+          "requestedAt": 35945.97999999672,
+          "receivedAt": 36091.564999997616,
+          "startedAt": 35991.724853515625,
+          "finishedAt": 36051.054931640625,
+          "workerMs": 59.32999999821186,
+          "queries": 700,
+          "hash": 1269783446
+        },
+        {
+          "requestedAt": 37124.14499999583,
+          "receivedAt": 37274.939999997616,
+          "startedAt": 37181.059814453125,
+          "finishedAt": 37231.43994140625,
+          "workerMs": 50.37999999523163,
+          "queries": 700,
+          "hash": 1269783446
+        },
+        {
+          "requestedAt": 38457.62999999523,
+          "receivedAt": 38557.889999993145,
+          "startedAt": 38503.94482421875,
+          "finishedAt": 38555.14990234375,
+          "workerMs": 51.20499999821186,
+          "queries": 700,
+          "hash": 1269783446
+        },
+        {
+          "requestedAt": 39667.11999999732,
+          "receivedAt": 39817.22999999672,
+          "startedAt": 39715.260009765625,
+          "finishedAt": 39768.81982421875,
+          "workerMs": 53.560000002384186,
+          "queries": 700,
+          "hash": 1269783446
+        }
+      ],
+      "actors": [
+        {
+          "id": "qa-beast-0",
+          "x": 95.46054529837984,
+          "z": -4.533146747871586,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-1",
+          "x": 96,
+          "z": -7.8994654528100865,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-2",
+          "x": 100.42552966286385,
+          "z": -7.524202703340917,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-3",
+          "x": 103.09619942294205,
+          "z": -8.600278867737632,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-4",
+          "x": 114.03934606486646,
+          "z": -2.9542976565553474,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-5",
+          "x": 96.77812491699993,
+          "z": -0.08658154213391533,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-6",
+          "x": 98.76229389873652,
+          "z": -5.401510589019259,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-7",
+          "x": 101.24836165611585,
+          "z": -5,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-8",
+          "x": 103.40500396004542,
+          "z": -1.8517160099427243,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-9",
+          "x": 110.48684045702248,
+          "z": -2.4882527221321453,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-10",
+          "x": 100.06451851478313,
+          "z": 1.1606328446630787,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-11",
+          "x": 101.88962954339624,
+          "z": 3,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-12",
+          "x": 100.20962544388225,
+          "z": -0.8700777321274276,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-13",
+          "x": 108.66044007163286,
+          "z": 4.51127560294667,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-14",
+          "x": 105.1287811510268,
+          "z": 0,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-15",
+          "x": 100,
+          "z": 3,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-16",
+          "x": 98.39347138220431,
+          "z": 5.9543060127883765,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-17",
+          "x": 101.39956042799218,
+          "z": 6,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-18",
+          "x": 105.22522030410695,
+          "z": 3,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-19",
+          "x": 113.73500785396493,
+          "z": 0.17899985406877328,
+          "status": "waiting"
+        }
+      ],
+      "fixtureErrors": []
+    },
+    {
+      "mode": "idle",
+      "authority": "spatial-wasm",
+      "mangroveNetwork": true,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "animalCount": 20,
+      "simulationTime": 3008.150000000029,
+      "frames": {
+        "count": 149,
+        "p95": 66.70500000000175,
+        "p99": 66.80500000000029,
+        "max": 999.9700000000048
+      },
+      "overlapFrames": {
+        "count": 0,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "simulationMs": {
+        "count": 149,
+        "p95": 5.3900000005960464,
+        "p99": 9.765000000596046,
+        "max": 12.969999998807907
+      },
+      "renderMs": {
+        "count": 149,
+        "p95": 54.059999994933605,
+        "p99": 61.24500000476837,
+        "max": 76.97999999672174
+      },
+      "gpu": {
+        "reason": null,
+        "samples": 150,
+        "p95": 32.520192,
+        "p99": 43.104256
+      },
+      "jobs": [],
+      "actors": [
+        {
+          "id": "qa-beast-0",
+          "x": 95.46054529837984,
+          "z": -4.533146747871586,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-1",
+          "x": 96,
+          "z": -7.8994654528100865,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-2",
+          "x": 100.42552966286385,
+          "z": -7.524202703340917,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-3",
+          "x": 103.09619942294205,
+          "z": -8.600278867737632,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-4",
+          "x": 114.03934606486646,
+          "z": -2.9542976565553474,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-5",
+          "x": 96.77812491699993,
+          "z": -0.08658154213391533,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-6",
+          "x": 98.76229389873652,
+          "z": -5.401510589019259,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-7",
+          "x": 101.24836165611585,
+          "z": -5,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-8",
+          "x": 103.40500396004542,
+          "z": -1.8517160099427243,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-9",
+          "x": 110.48684045702248,
+          "z": -2.4882527221321453,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-10",
+          "x": 100.06451851478313,
+          "z": 1.1606328446630787,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-11",
+          "x": 101.88962954339624,
+          "z": 3,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-12",
+          "x": 100.20962544388225,
+          "z": -0.8700777321274276,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-13",
+          "x": 108.66044007163286,
+          "z": 4.51127560294667,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-14",
+          "x": 105.1287811510268,
+          "z": 0,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-15",
+          "x": 100,
+          "z": 3,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-16",
+          "x": 98.39347138220431,
+          "z": 5.9543060127883765,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-17",
+          "x": 101.39956042799218,
+          "z": 6,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-18",
+          "x": 105.22522030410695,
+          "z": 3,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-19",
+          "x": 113.73500785396493,
+          "z": 0.17899985406877328,
+          "status": "waiting"
+        }
+      ],
+      "fixtureErrors": []
+    }
+  ]
+}

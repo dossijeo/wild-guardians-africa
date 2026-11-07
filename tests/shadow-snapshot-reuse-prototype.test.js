@@ -1,0 +1,11 @@
+import test from 'node:test';import assert from 'node:assert/strict';import * as THREE from 'three';import {ShadowCache,shadowSnapshot} from '../src/rendering/shadow-cache.js';import {shadowSnapshotReuse} from './browser/shadow-snapshot-reuse-prototype.js';
+test('alternating buffers preserve snapshots across cache hits, changes, unsupported inputs and resize',()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),light=new THREE.DirectionalLight(),mesh=new THREE.InstancedMesh(new THREE.BoxGeometry(),new THREE.MeshStandardMaterial(),3),renderer={shadowMap:{type:THREE.PCFSoftShadowMap},localClippingEnabled:false};light.castShadow=true;scene.add(light,light.target);mesh.castShadow=true;mesh.count=2;mesh.setMatrixAt(0,new THREE.Matrix4());mesh.setMatrixAt(1,new THREE.Matrix4().makeTranslation(2,0,0));scene.add(mesh);scene.updateMatrixWorld(true);camera.updateMatrixWorld(true);
+ const buffers=[[],[]],cache=new ShadowCache(),capture=()=>shadowSnapshotReuse(renderer,light,scene,camera,cache.snapshot===buffers[0]?buffers[1]:buffers[0]),match=actual=>{const reference=shadowSnapshot(renderer,light,scene,camera);assert.ok(actual&&reference);assert.equal(actual.length,reference.length);assert.ok(actual.every((v,i)=>Object.is(v,reference[i])));};
+ try{const first=capture();match(first);cache.commit(first);const saved=first.slice();const hit=capture();match(hit);assert.ok(cache.matches(hit));assert.deepEqual(first,saved);
+ mesh.instanceMatrix.array[12]=-0;let changed=capture();match(changed);assert.equal(cache.matches(changed),false);assert.deepEqual(first,saved);cache.commit(changed);
+ mesh.count=1;changed=capture();match(changed);assert.equal(cache.matches(changed),false);cache.commit(changed);mesh.count=2;changed=capture();match(changed);assert.equal(cache.matches(changed),false);cache.commit(changed);
+ const depth=new THREE.MeshDepthMaterial();mesh.customDepthMaterial=depth;assert.equal(capture(),null);assert.ok(cache.snapshot);delete mesh.customDepthMaterial;changed=capture();match(changed);assert.ok(cache.matches(changed));depth.dispose();
+ mesh.instanceMatrix.array[12]=NaN;changed=capture();match(changed);cache.commit(changed);changed=capture();match(changed);assert.ok(cache.matches(changed));
+ }finally{mesh.geometry.dispose();mesh.material.dispose();}
+});

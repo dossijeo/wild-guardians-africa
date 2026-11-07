@@ -33,6 +33,12 @@ export function* bindMangroveMudEdgesSteps(world,group,{executor=null}={}){
 export function configureMangroveMudMaterial(world,material){
  const textures=material.userData.mangroveMudTextures;
  if(!textures)return;
+ // The substrate and patches borrow the same normal/packed images. Reuse
+ // their samplers (with independent UVs), keeping the sRGB base map separate.
+ const ground=material.userData.biomeGround;
+ const sameSampler=(a,b)=>a&&b&&a.source===b.source&&['colorSpace','wrapS','wrapT','minFilter','magFilter','anisotropy','flipY','generateMipmaps','type','format'].every(k=>a[k]===b[k]);
+ const sharedNormal=material.userData.mangroveSubstrate&&sameSampler(textures.normal,ground?.uLayerSandNormal?.value);
+ const sharedPacked=material.userData.mangroveSubstrate&&sameSampler(textures.packed,ground?.uLayerSandARH?.value);
  world.toon.material(material);
   const compile=material.onBeforeCompile,key=material.customProgramCacheKey;
   material.onBeforeCompile=function(shader,renderer){compile.call(this,shader,renderer);Object.assign(shader.uniforms,{uQAMudBase:{value:textures.base},uQAMudNormal:{value:textures.normal},uQAMudPacked:{value:textures.packed}});
@@ -63,5 +69,9 @@ export function configureMangroveMudMaterial(world,material){
     outgoingLight=mix(outgoingLight,qaMudToon,mudWeight);
    `+anchor);
   };}
-  material.customProgramCacheKey=()=>key.call(material)+'|global-mud-moss-full-v1';material.needsUpdate=true;
+  {const previous=material.onBeforeCompile;material.onBeforeCompile=function(shader,renderer){previous.call(this,shader,renderer);
+   shader.fragmentShader=shader.fragmentShader.replace('uniform sampler2D uQAMudBase,uQAMudNormal,uQAMudPacked;',`uniform sampler2D uQAMudBase;${sharedNormal?'':'uniform sampler2D uQAMudNormal;'}${sharedPacked?'':'uniform sampler2D uQAMudPacked;'}`);
+   for(const [shared,from,to]of [[sharedNormal,'uQAMudNormal','uLayerSandNormal'],[sharedPacked,'uQAMudPacked','uLayerSandARH']])if(shared){shader.fragmentShader=shader.fragmentShader.replaceAll(from,to);delete shader.uniforms[from];}
+  };}
+  material.customProgramCacheKey=()=>key.call(material)+`|global-mud-moss-full-v2:${!!sharedNormal}:${!!sharedPacked}`;material.needsUpdate=true;
 }

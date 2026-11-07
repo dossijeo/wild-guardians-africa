@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import {hashCell} from '../world/terrain.js';
 import {renderedTerrainSurface} from './terrain-surface.js';
+import {mudContainsPoint} from './mud-containment.js';
+export {mudContainsPoint} from './mud-containment.js';
 
 // Static surface decoration: no collider, terrain regeneration or shadow caster.
 // Clip each mud outline triangle against the actual one-metre ground triangles,
@@ -22,6 +24,7 @@ export function clipMudTriangle(subject,clip){
 export function mudPatchGeometry(field,cx,cz,scale=.115){
   if(field.c.biome!=='mangrove')return null;
   const origin=[cx*48,cz*48],positions=[],uvs=[],centers=[],outlines=[],heights=new Map();let patches=0;
+  const inside=field.fluidInside?(x,z)=>field.fluidInside(x,z):(x,z)=>field.waterInfo(x,z).inside;
   const sampled={surface:(x,z)=>{const key=x+","+z;if(!heights.has(key))heights.set(key,field.surface(x,z));return heights.get(key);}};
   const random=(i,salt)=>hashCell(field.seed,cx*13+i,cz*17-i,salt)/4294967296;
   for(let i=0;i<10;i++){
@@ -30,9 +33,9 @@ export function mudPatchGeometry(field,cx,cz,scale=.115){
     if(centers.some(p=>Math.hypot(x-p.x,z-p.z)<Math.max(rx,rz)+p.radius+.2))continue;
     const site=field.c.settlementSite;
     if(site&&Math.hypot(x-site.x,z-site.z)<site.clearRadius+Math.max(rx,rz)+2)continue;
-    if(field.slope(x,z)>.23||field.waterInfo(x,z).inside)continue;
+    if(field.slope(x,z)>.23||inside(x,z))continue;
     const contour=Array.from({length:12},(_,j)=>{const a=j*Math.PI/6,r=1+.13*Math.sin(a*3+phase)+.08*Math.cos(a*5-phase);return new THREE.Vector2(x+Math.cos(a)*rx*r,z+Math.sin(a)*rz*r);});
-    if(contour.some(p=>Math.abs(p.x-origin[0])>=24||Math.abs(p.y-origin[1])>=24||field.waterInfo(p.x,p.y).inside))continue;
+    if(contour.some(p=>Math.abs(p.x-origin[0])>=24||Math.abs(p.y-origin[1])>=24||inside(p.x,p.y)))continue;
     const triangles=THREE.ShapeUtils.triangulateShape(contour,[]),offset=[random(i,84331),random(i,84337)];
     for(const ids of triangles){
       const subject=ids.map(j=>[contour[j].x,contour[j].y]),minX=Math.floor(Math.min(...subject.map(p=>p[0]))),maxX=Math.ceil(Math.max(...subject.map(p=>p[0]))),minZ=Math.floor(Math.min(...subject.map(p=>p[1]))),maxZ=Math.ceil(Math.max(...subject.map(p=>p[1])));
@@ -49,21 +52,6 @@ export function mudPatchGeometry(field,cx,cz,scale=.115){
   }
   if(!positions.length)return null;
   const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));geometry.computeVertexNormals();geometry.computeBoundingBox();geometry.computeBoundingSphere();geometry.userData.mudPatches=patches;geometry.userData.mudCenters=centers;geometry.userData.mudOutlines=outlines;return geometry;
-}
-// Query only on an authored foot contact, using the exact already-rendered
-// outlines. No raycasting, regeneration or per-frame scene traversal.
-export function mudContainsPoint(surface,x,z){
-  for(let k=0;k<(surface?.mudCenters?.length??0);k++){
-    const center=surface.mudCenters[k],dx=x-center.x,dz=z-center.z;if(dx*dx+dz*dz>center.radius*center.radius)continue;
-    const contour=surface.mudOutlines[k];let inside=false;
-    for(let i=0,j=contour.length-1;i<contour.length;j=i++){
-      const a=contour[j],b=contour[i],ex=b[0]-a[0],ez=b[1]-a[1],px=x-a[0],pz=z-a[1],dot=px*ex+pz*ez;
-      if(Math.abs(ex*pz-ez*px)<=1e-9&&dot>=0&&dot<=ex*ex+ez*ez)return true;
-      if((a[1]>z)!==(b[1]>z)&&x<(b[0]-a[0])*(z-a[1])/(b[1]-a[1])+a[0])inside=!inside;
-    }
-    if(inside)return true;
-  }
-  return false;
 }
 export function residentMudSurface(chunks,x,z){
   const group=chunks.get(Math.floor((x+24)/48)+','+Math.floor((z+24)/48));

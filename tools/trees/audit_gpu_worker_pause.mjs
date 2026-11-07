@@ -1,0 +1,5 @@
+import {createRequire} from 'node:module';import {writeFile} from 'node:fs/promises';
+const require=createRequire(import.meta.url),{chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright'),browser=await chromium.launch({channel:'msedge',headless:true});
+try{const runs=[];for(let i=0;i<3;i++){const page=await browser.newPage({viewport:{width:800,height:600}}),errors=[];page.on('pageerror',e=>errors.push(String(e)));try{await page.goto('http://127.0.0.1:5175/tests/browser/mobility-worker-latency.html');await page.waitForFunction(()=>window.mobilityWorkerReady||window.mobilityWorkerError,null,{timeout:120000});const error=await page.evaluate(()=>window.mobilityWorkerError);if(error)throw Error(error);runs.push(await page.evaluate(()=>window.runGpuPauseAudit()));if(errors.length)throw Error(errors.join('\n'));}finally{await page.close();}}
+ await writeFile('docs/lighting/tree-near-retexture/performance/mobility-gpu-worker-pause.json',JSON.stringify({runs},null,2)+'\n');console.log(JSON.stringify(runs,null,2));
+}finally{await browser.close();}

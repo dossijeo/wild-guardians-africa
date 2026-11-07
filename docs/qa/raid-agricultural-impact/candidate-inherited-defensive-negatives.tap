@@ -1,0 +1,1148 @@
+TAP version 13
+# Subtest: QA-096: mapungubwe one defensive set has one owner and a free companion retreats with hits
+not ok 1 - QA-096: mapungubwe one defensive set has one owner and a free companion retreats with hits
+  ---
+  duration_ms: 49.0633
+  location: 'file:///C:/Users/PC/.codex/worktrees/raid-fractional-exit/wild-guardians-africa/tests/acceptance-defensive-reservations.test.js:15:36'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'hitsRemaining')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/raid-fractional-exit/wild-guardians-africa/tests/acceptance-defensive-reservations.test.js:18:76)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.start (node:internal/test_runner/test:542:17)
+    startSubtest (node:internal/test_runner/harness:216:17)
+  ...
+# Subtest: QA-096: saheliana one defensive set has one owner and a free companion retreats with hits
+not ok 2 - QA-096: saheliana one defensive set has one owner and a free companion retreats with hits
+  ---
+  duration_ms: 113.0034
+  location: 'file:///C:/Users/PC/.codex/worktrees/raid-fractional-exit/wild-guardians-africa/tests/acceptance-defensive-reservations.test.js:15:36'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'hitsRemaining')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/raid-fractional-exit/wild-guardians-africa/tests/acceptance-defensive-reservations.test.js:18:76)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async startSubtest (node:internal/test_runner/harness:216:3)
+  ...
+# Subtest: QA-096: suajili one defensive set has one owner and a free companion retreats with hits
+not ok 3 - QA-096: suajili one defensive set has one owner and a free companion retreats with hits
+  ---
+  duration_ms: 107.4444
+  location: 'file:///C:/Users/PC/.codex/worktrees/raid-fractional-exit/wild-guardians-africa/tests/acceptance-defensive-reservations.test.js:15:36'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'hitsRemaining')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/raid-fractional-exit/wild-guardians-africa/tests/acceptance-defensive-reservations.test.js:18:76)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: QA-096: musgum one defensive set has one owner and a free companion retreats with hits
+not ok 4 - QA-096: musgum one defensive set has one owner and a free companion retreats with hits
+  ---
+  duration_ms: 125.9144
+  location: 'file:///C:/Users/PC/.codex/worktrees/raid-fractional-exit/wild-guardians-africa/tests/acceptance-defensive-reservations.test.js:15:36'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'hitsRemaining')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/raid-fractional-exit/wild-guardians-africa/tests/acceptance-defensive-reservations.test.js:18:76)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: QA-096: etiope one defensive set has one owner and a free companion retreats with hits
+not ok 5 - QA-096: etiope one defensive set has one owner and a free companion retreats with hits
+  ---
+  duration_ms: 75.9013
+  location: 'file:///C:/Users/PC/.codex/worktrees/raid-fractional-exit/wild-guardians-africa/tests/acceptance-defensive-reservations.test.js:15:36'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'hitsRemaining')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/raid-fractional-exit/wild-guardians-africa/tests/acceptance-defensive-reservations.test.js:18:76)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: QA-096: aggregate defensive value outranks the 800-coin centre even though every piece costs less
+ok 6 - QA-096: aggregate defensive value outranks the 800-coin centre even though every piece costs less
+  ---
+  duration_ms: 24.496
+  ...
+# Subtest: QA-096: topology loss rekeys surviving reservations and a legacy competing claim cannot delete the owner
+not ok 7 - QA-096: topology loss rekeys surviving reservations and a legacy competing claim cannot delete the owner
+  ---
+  duration_ms: 8.9215
+  location: 'file:///C:/Users/PC/.codex/worktrees/raid-fractional-exit/wild-guardians-africa/tests/acceptance-defensive-reservations.test.js:25:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot set properties of undefined (setting 'status')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/PC/.codex/worktrees/raid-fractional-exit/wild-guardians-africa/tests/acceptance-defensive-reservations.test.js:28:19)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:631:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:374:18)
+    Test.postRun (node:internal/test_runner/test:715:19)
+    Test.run (node:internal/test_runner/test:673:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:374:7)
+  ...
+# Subtest: QA-096: actual paid contiguous crop groups remain exclusive through destruction and reload
+ok 8 - QA-096: actual paid contiguous crop groups remain exclusive through destruction and reload
+  ---
+  duration_ms: 1269.5367
+  ...
+# Subtest: QA-105: mapungubwe real non-collision frontal hit rolls once and retains contact on reload
+ok 9 - QA-105: mapungubwe real non-collision frontal hit rolls once and retains contact on reload
+  ---
+  duration_ms: 125.1311
+  ...
+# Subtest: QA-105: mapungubwe real non-collision frontal rejection rolls once and retains contact on reload
+ok 10 - QA-105: mapungubwe real non-collision frontal rejection rolls once and retains contact on reload
+  ---
+  duration_ms: 86.611
+  ...
+# Subtest: QA-105: saheliana real non-collision frontal hit rolls once and retains contact on reload
+ok 11 - QA-105: saheliana real non-collision frontal hit rolls once and retains contact on reload
+  ---
+  duration_ms: 58.8371
+  ...
+# Subtest: QA-105: saheliana real non-collision frontal rejection rolls once and retains contact on reload
+ok 12 - QA-105: saheliana real non-collision frontal rejection rolls once and retains contact on reload
+  ---
+  duration_ms: 76.6204
+  ...
+# Subtest: QA-105: suajili real non-collision frontal hit rolls once and retains contact on reload
+ok 13 - QA-105: suajili real non-collision frontal hit rolls once and retains contact on reload
+  ---
+  duration_ms: 77.5552
+  ...
+# Subtest: QA-105: suajili real non-collision frontal rejection rolls once and retains contact on reload
+ok 14 - QA-105: suajili real non-collision frontal rejection rolls once and retains contact on reload
+  ---
+  duration_ms: 89.1829
+  ...
+# Subtest: QA-105: musgum real non-collision frontal hit rolls once and retains contact on reload
+ok 15 - QA-105: musgum real non-collision frontal hit rolls once and retains contact on reload
+  ---
+  duration_ms: 82.1309
+  ...
+# Subtest: QA-105: musgum real non-collision frontal rejection rolls once and retains contact on reload
+ok 16 - QA-105: musgum real non-collision frontal rejection rolls once and retains contact on reload
+  ---
+  duration_ms: 122.7113
+  ...
+# Subtest: QA-105: etiope real non-collision frontal hit rolls once and retains contact on reload
+ok 17 - QA-105: etiope real non-collision frontal hit rolls once and retains contact on reload
+  ---
+  duration_ms: 69.2994
+  ...
+# Subtest: QA-105: etiope real non-collision frontal rejection rolls once and retains contact on reload
+ok 18 - QA-105: etiope real non-collision frontal rejection rolls once and retains contact on reload
+  ---
+  duration_ms: 91.4752
+  ...
+# Subtest: QA-098: mapungubwe/warthog actual approach and exit use calibrated speed and native gaits
+ok 19 - QA-098: mapungubwe/warthog actual approach and exit use calibrated speed and native gaits
+  ---
+  duration_ms: 133.4487
+  ...
+# Subtest: QA-098: mapungubwe/hyena actual approach and exit use calibrated speed and native gaits
+ok 20 - QA-098: mapungubwe/hyena actual approach and exit use calibrated speed and native gaits
+  ---
+  duration_ms: 90.153
+  ...
+# Subtest: QA-098: mapungubwe/buffalo actual approach and exit use calibrated speed and native gaits
+ok 21 - QA-098: mapungubwe/buffalo actual approach and exit use calibrated speed and native gaits
+  ---
+  duration_ms: 96.5713
+  ...
+# Subtest: QA-098: mapungubwe/lion actual approach and exit use calibrated speed and native gaits
+ok 22 - QA-098: mapungubwe/lion actual approach and exit use calibrated speed and native gaits
+  ---
+  duration_ms: 92.7789
+  ...
+# Subtest: QA-098: mapungubwe/rhino actual approach and exit use calibrated speed and native gaits
+ok 23 - QA-098: mapungubwe/rhino actual approach and exit use calibrated speed and native gaits
+  ---
+  duration_ms: 49.3244
+  ...
+# Subtest: QA-098: saheliana/warthog actual approach and exit use calibrated speed and native gaits
+ok 24 - QA-098: saheliana/warthog actual approach and exit use calibrated speed and native gaits
+  ---
+  duration_ms: 85.7371
+  ...
+# Subtest: QA-098: saheliana/hyena actual approach and exit use calibrated speed and native gaits
+ok 25 - QA-098: saheliana/hyena actual approach and exit use calibrated speed and native gaits
+  ---
+  duration_ms: 73.1686
+  ...
+# Subtest: QA-098: saheliana/buffalo actual approach and exit use calibrated speed and native gaits
+ok 26 - QA-098: saheliana/buffalo actual approach and exit use calibrated speed and native gaits
+  ---
+  duration_ms: 69.3204
+  ...
+# Subtest: QA-098: saheliana/lion actual approach and exit use calibrated speed and native gaits
+ok 27 - QA-098: saheliana/lion actual approach and exit use calibrated speed and native gaits
+  ---
+  duration_ms: 102.0868
+  ...
+# Subtest: QA-098: saheliana/rhino actual approach and exit use calibrated speed and native gaits
+ok 28 - QA-098: saheliana/rhino actual approach and exit use calibrated speed and native gaits
+  ---
+  duration_ms: 66.9556
+  ...
+# Subtest: QA-098: suajili/warthog actual approach and exit use calibrated speed and native gaits
+ok 29 - QA-098: suajili/warthog actual approach and exit use calibrated speed and native gaits
+  ---
+  duration_ms: 56.4875
+  ...
+# Subtest: QA-098: suajili/hyena actual approach and exit use calibrated speed and native gaits
+ok 30 - QA-098: suajili/hyena actual approach and exit use calibrated speed and native gaits
+  ---
+  duration_ms: 42.6949
+  ...
+# Subtest: QA-098: suajili/buffalo actual approach and exit use calibrated speed and native gaits
+ok 31 - QA-098: suajili/buffalo actual approach and exit use calibrated speed and native gaits
+  ---
+  duration_ms: 56.8279
+  ...
+# Subtest: QA-098: suajili/lion actual approach and exit use calibrated speed and native gaits
+ok 32 - QA-098: suajili/lion actual approach and exit use calibrated speed and native gaits
+  ---
+  duration_ms: 37.4585
+  ...
+# Subtest: QA-098: suajili/rhino actual approach and exit use calibrated speed and native gaits
+ok 33 - QA-098: suajili/rhino actual approach and exit use calibrated speed and native gaits
+  ---
+  duration_ms: 51.8555
+  ...
+# Subtest: QA-098: musgum/warthog actual approach and exit use calibrated speed and native gaits
+ok 34 - QA-098: musgum/warthog actual approach and exit use calibrated speed and native gaits
+  ---
+  duration_ms: 34.8585
+  ...
+# Subtest: QA-098: musgum/hyena actual approach and exit use calibrated speed and native gaits
+ok 35 - QA-098: musgum/hyena actual approach and exit use calibrated speed and native gaits
+  ---
+  duration_ms: 59.7198
+  ...
+# Subtest: QA-098: musgum/buffalo actual approach and exit use calibrated speed and native gaits
+ok 36 - QA-098: musgum/buffalo actual approach and exit use calibrated speed and native gaits
+  ---
+  duration_ms: 28.9511
+  ...
+# Subtest: QA-098: musgum/lion actual approach and exit use calibrated speed and native gaits
+ok 37 - QA-098: musgum/lion actual approach and exit use calibrated speed and native gaits
+  ---
+  duration_ms: 33.6749
+  ...
+# Subtest: QA-098: musgum/rhino actual approach and exit use calibrated speed and native gaits
+ok 38 - QA-098: musgum/rhino actual approach and exit use calibrated speed and native gaits
+  ---
+  duration_ms: 35.9344
+  ...
+# Subtest: QA-098: etiope/warthog actual approach and exit use calibrated speed and native gaits
+ok 39 - QA-098: etiope/warthog actual approach and exit use calibrated speed and native gaits
+  ---
+  duration_ms: 29.2981
+  ...
+# Subtest: QA-098: etiope/hyena actual approach and exit use calibrated speed and native gaits
+ok 40 - QA-098: etiope/hyena actual approach and exit use calibrated speed and native gaits
+  ---
+  duration_ms: 35.3105
+  ...
+# Subtest: QA-098: etiope/buffalo actual approach and exit use calibrated speed and native gaits
+ok 41 - QA-098: etiope/buffalo actual approach and exit use calibrated speed and native gaits
+  ---
+  duration_ms: 33.3697
+  ...
+# Subtest: QA-098: etiope/lion actual approach and exit use calibrated speed and native gaits
+ok 42 - QA-098: etiope/lion actual approach and exit use calibrated speed and native gaits
+  ---
+  duration_ms: 42.099
+  ...
+# Subtest: QA-098: etiope/rhino actual approach and exit use calibrated speed and native gaits
+ok 43 - QA-098: etiope/rhino actual approach and exit use calibrated speed and native gaits
+  ---
+  duration_ms: 36.8512
+  ...
+# Subtest: QA-100: mapungubwe actual last worker hit exhausts the budget and the saved exit keeps physical separation
+ok 44 - QA-100: mapungubwe actual last worker hit exhausts the budget and the saved exit keeps physical separation
+  ---
+  duration_ms: 69.7261
+  ...
+# Subtest: QA-100: saheliana actual last worker hit exhausts the budget and the saved exit keeps physical separation
+ok 45 - QA-100: saheliana actual last worker hit exhausts the budget and the saved exit keeps physical separation
+  ---
+  duration_ms: 37.4395
+  ...
+# Subtest: QA-100: suajili actual last worker hit exhausts the budget and the saved exit keeps physical separation
+ok 46 - QA-100: suajili actual last worker hit exhausts the budget and the saved exit keeps physical separation
+  ---
+  duration_ms: 33.5735
+  ...
+# Subtest: QA-100: musgum actual last worker hit exhausts the budget and the saved exit keeps physical separation
+ok 47 - QA-100: musgum actual last worker hit exhausts the budget and the saved exit keeps physical separation
+  ---
+  duration_ms: 39.4908
+  ...
+# Subtest: QA-100: etiope actual last worker hit exhausts the budget and the saved exit keeps physical separation
+ok 48 - QA-100: etiope actual last worker hit exhausts the budget and the saved exit keeps physical separation
+  ---
+  duration_ms: 51.4345
+  ...
+# Subtest: QA-101: mapungubwe/warthog legal Shield stops the native body at its border and consumes one protected hit after reload
+ok 49 - QA-101: mapungubwe/warthog legal Shield stops the native body at its border and consumes one protected hit after reload
+  ---
+  duration_ms: 39.35
+  ...
+# Subtest: QA-101: mapungubwe/hyena legal Shield stops the native body at its border and consumes one protected hit after reload
+ok 50 - QA-101: mapungubwe/hyena legal Shield stops the native body at its border and consumes one protected hit after reload
+  ---
+  duration_ms: 34.3413
+  ...
+# Subtest: QA-101: mapungubwe/buffalo legal Shield stops the native body at its border and consumes one protected hit after reload
+ok 51 - QA-101: mapungubwe/buffalo legal Shield stops the native body at its border and consumes one protected hit after reload
+  ---
+  duration_ms: 31.9305
+  ...
+# Subtest: QA-101: mapungubwe/lion legal Shield stops the native body at its border and consumes one protected hit after reload
+ok 52 - QA-101: mapungubwe/lion legal Shield stops the native body at its border and consumes one protected hit after reload
+  ---
+  duration_ms: 30.4937
+  ...
+# Subtest: QA-101: mapungubwe/rhino legal Shield stops the native body at its border and consumes one protected hit after reload
+ok 53 - QA-101: mapungubwe/rhino legal Shield stops the native body at its border and consumes one protected hit after reload
+  ---
+  duration_ms: 33.0476
+  ...
+# Subtest: QA-101: saheliana/warthog legal Shield stops the native body at its border and consumes one protected hit after reload
+ok 54 - QA-101: saheliana/warthog legal Shield stops the native body at its border and consumes one protected hit after reload
+  ---
+  duration_ms: 38.4737
+  ...
+# Subtest: QA-101: saheliana/hyena legal Shield stops the native body at its border and consumes one protected hit after reload
+ok 55 - QA-101: saheliana/hyena legal Shield stops the native body at its border and consumes one protected hit after reload
+  ---
+  duration_ms: 45.0596
+  ...
+# Subtest: QA-101: saheliana/buffalo legal Shield stops the native body at its border and consumes one protected hit after reload
+ok 56 - QA-101: saheliana/buffalo legal Shield stops the native body at its border and consumes one protected hit after reload
+  ---
+  duration_ms: 42.138
+  ...
+# Subtest: QA-101: saheliana/lion legal Shield stops the native body at its border and consumes one protected hit after reload
+ok 57 - QA-101: saheliana/lion legal Shield stops the native body at its border and consumes one protected hit after reload
+  ---
+  duration_ms: 36.3806
+  ...
+# Subtest: QA-101: saheliana/rhino legal Shield stops the native body at its border and consumes one protected hit after reload
+ok 58 - QA-101: saheliana/rhino legal Shield stops the native body at its border and consumes one protected hit after reload
+  ---
+  duration_ms: 43.7638
+  ...
+# Subtest: QA-101: suajili/warthog legal Shield stops the native body at its border and consumes one protected hit after reload
+ok 59 - QA-101: suajili/warthog legal Shield stops the native body at its border and consumes one protected hit after reload
+  ---
+  duration_ms: 36.6858
+  ...
+# Subtest: QA-101: suajili/hyena legal Shield stops the native body at its border and consumes one protected hit after reload
+ok 60 - QA-101: suajili/hyena legal Shield stops the native body at its border and consumes one protected hit after reload
+  ---
+  duration_ms: 26.1173
+  ...
+# Subtest: QA-101: suajili/buffalo legal Shield stops the native body at its border and consumes one protected hit after reload
+ok 61 - QA-101: suajili/buffalo legal Shield stops the native body at its border and consumes one protected hit after reload
+  ---
+  duration_ms: 24.5331
+  ...
+# Subtest: QA-101: suajili/lion legal Shield stops the native body at its border and consumes one protected hit after reload
+ok 62 - QA-101: suajili/lion legal Shield stops the native body at its border and consumes one protected hit after reload
+  ---
+  duration_ms: 27.1528
+  ...
+# Subtest: QA-101: suajili/rhino legal Shield stops the native body at its border and consumes one protected hit after reload
+ok 63 - QA-101: suajili/rhino legal Shield stops the native body at its border and consumes one protected hit after reload
+  ---
+  duration_ms: 20.5767
+  ...
+# Subtest: QA-101: musgum/warthog legal Shield stops the native body at its border and consumes one protected hit after reload
+ok 64 - QA-101: musgum/warthog legal Shield stops the native body at its border and consumes one protected hit after reload
+  ---
+  duration_ms: 22.3891
+  ...
+# Subtest: QA-101: musgum/hyena legal Shield stops the native body at its border and consumes one protected hit after reload
+ok 65 - QA-101: musgum/hyena legal Shield stops the native body at its border and consumes one protected hit after reload
+  ---
+  duration_ms: 16.3126
+  ...
+# Subtest: QA-101: musgum/buffalo legal Shield stops the native body at its border and consumes one protected hit after reload
+ok 66 - QA-101: musgum/buffalo legal Shield stops the native body at its border and consumes one protected hit after reload
+  ---
+  duration_ms: 16.7737
+  ...
+# Subtest: QA-101: musgum/lion legal Shield stops the native body at its border and consumes one protected hit after reload
+ok 67 - QA-101: musgum/lion legal Shield stops the native body at its border and consumes one protected hit after reload
+  ---
+  duration_ms: 20.0768
+  ...
+# Subtest: QA-101: musgum/rhino legal Shield stops the native body at its border and consumes one protected hit after reload
+ok 68 - QA-101: musgum/rhino legal Shield stops the native body at its border and consumes one protected hit after reload
+  ---
+  duration_ms: 18.2446
+  ...
+# Subtest: QA-101: etiope/warthog legal Shield stops the native body at its border and consumes one protected hit after reload
+ok 69 - QA-101: etiope/warthog legal Shield stops the native body at its border and consumes one protected hit after reload
+  ---
+  duration_ms: 16.7527
+  ...
+# Subtest: QA-101: etiope/hyena legal Shield stops the native body at its border and consumes one protected hit after reload
+ok 70 - QA-101: etiope/hyena legal Shield stops the native body at its border and consumes one protected hit after reload
+  ---
+  duration_ms: 18.1931
+  ...
+# Subtest: QA-101: etiope/buffalo legal Shield stops the native body at its border and consumes one protected hit after reload
+ok 71 - QA-101: etiope/buffalo legal Shield stops the native body at its border and consumes one protected hit after reload
+  ---
+  duration_ms: 17.0951
+  ...
+# Subtest: QA-101: etiope/lion legal Shield stops the native body at its border and consumes one protected hit after reload
+ok 72 - QA-101: etiope/lion legal Shield stops the native body at its border and consumes one protected hit after reload
+  ---
+  duration_ms: 15.3619
+  ...
+# Subtest: QA-101: etiope/rhino legal Shield stops the native body at its border and consumes one protected hit after reload
+ok 73 - QA-101: etiope/rhino legal Shield stops the native body at its border and consumes one protected hit after reload
+  ---
+  duration_ms: 22.904
+  ...
+# (node:52048) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: QA-145: warthog six live checkpoints reload identically across all five native center cultures
+ok 74 - QA-145: warthog six live checkpoints reload identically across all five native center cultures
+  ---
+  duration_ms: 1041.1433
+  ...
+# Subtest: QA-145: hyena six live checkpoints reload identically across all five native center cultures
+ok 75 - QA-145: hyena six live checkpoints reload identically across all five native center cultures
+  ---
+  duration_ms: 992.4841
+  ...
+# Subtest: QA-145: buffalo six live checkpoints reload identically across all five native center cultures
+ok 76 - QA-145: buffalo six live checkpoints reload identically across all five native center cultures
+  ---
+  duration_ms: 632.4905
+  ...
+# Subtest: QA-145: lion six live checkpoints reload identically across all five native center cultures
+ok 77 - QA-145: lion six live checkpoints reload identically across all five native center cultures
+  ---
+  duration_ms: 566.7385
+  ...
+# Subtest: QA-145: rhino six live checkpoints reload identically across all five native center cultures
+ok 78 - QA-145: rhino six live checkpoints reload identically across all five native center cultures
+  ---
+  duration_ms: 732.4291
+  ...
+# Subtest: QA-099: warthog both naturally selected native combos consume exactly one hit after the complete clip, including reload
+ok 79 - QA-099: warthog both naturally selected native combos consume exactly one hit after the complete clip, including reload
+  ---
+  duration_ms: 43.0798
+  ...
+# Subtest: QA-099: hyena both naturally selected native combos consume exactly one hit after the complete clip, including reload
+ok 80 - QA-099: hyena both naturally selected native combos consume exactly one hit after the complete clip, including reload
+  ---
+  duration_ms: 36.3339
+  ...
+# Subtest: QA-099: buffalo both naturally selected native combos consume exactly one hit after the complete clip, including reload
+ok 81 - QA-099: buffalo both naturally selected native combos consume exactly one hit after the complete clip, including reload
+  ---
+  duration_ms: 38.4167
+  ...
+# Subtest: QA-099: lion both naturally selected native combos consume exactly one hit after the complete clip, including reload
+ok 82 - QA-099: lion both naturally selected native combos consume exactly one hit after the complete clip, including reload
+  ---
+  duration_ms: 41.0602
+  ...
+# Subtest: QA-099: rhino both naturally selected native combos consume exactly one hit after the complete clip, including reload
+ok 83 - QA-099: rhino both naturally selected native combos consume exactly one hit after the complete clip, including reload
+  ---
+  duration_ms: 39.7922
+  ...
+# Subtest: QA-097: warthog a destroyed crop releases its reservation and retargets with the same remaining budget
+ok 84 - QA-097: warthog a destroyed crop releases its reservation and retargets with the same remaining budget
+  ---
+  duration_ms: 78.4185
+  ...
+# Subtest: QA-097: hyena a destroyed crop releases its reservation and retargets with the same remaining budget
+ok 85 - QA-097: hyena a destroyed crop releases its reservation and retargets with the same remaining budget
+  ---
+  duration_ms: 63.5173
+  ...
+# Subtest: QA-097: buffalo a destroyed crop releases its reservation and retargets with the same remaining budget
+ok 86 - QA-097: buffalo a destroyed crop releases its reservation and retargets with the same remaining budget
+  ---
+  duration_ms: 31.8758
+  ...
+# Subtest: QA-097: lion a destroyed crop releases its reservation and retargets with the same remaining budget
+ok 87 - QA-097: lion a destroyed crop releases its reservation and retargets with the same remaining budget
+  ---
+  duration_ms: 30.0078
+  ...
+# Subtest: QA-097: rhino a destroyed crop releases its reservation and retargets with the same remaining budget
+ok 88 - QA-097: rhino a destroyed crop releases its reservation and retargets with the same remaining budget
+  ---
+  duration_ms: 33.1876
+  ...
+# Subtest: active crop history scans once, appends in FIFO order and never removes saved records
+ok 89 - active crop history scans once, appends in FIFO order and never removes saved records
+  ---
+  duration_ms: 56.7353
+  ...
+# Subtest: retirement before initialization, simultaneous deaths and restored arrays preserve live references
+ok 90 - retirement before initialization, simultaneous deaths and restored arrays preserve live references
+  ---
+  duration_ms: 0.4605
+  ...
+# Subtest: truncation resets membership; explicit editor invalidation handles same-length edits and revival
+ok 91 - truncation resets membership; explicit editor invalidation handles same-length edits and revival
+  ---
+  duration_ms: 0.3202
+  ...
+# Subtest: physical harvest retires an indexed crop while its crate is still carried and later delivered
+ok 92 - physical harvest retires an indexed crop while its crate is still carried and later delivered
+  ---
+  duration_ms: 18.3726
+  ...
+# Subtest: a real second animal strike retires the cached crop without removing its damage history
+ok 93 - a real second animal strike retires the cached crop without removing its damage history
+  ---
+  duration_ms: 114.3925
+  ...
+# Subtest: warthog/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 94 - warthog/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 14.0606
+  ...
+# Subtest: warthog/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 95 - warthog/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 2.7006
+  ...
+# Subtest: warthog/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+ok 96 - warthog/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 3.9295
+  ...
+# Subtest: warthog/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+ok 97 - warthog/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 2.165
+  ...
+# Subtest: hyena/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 98 - hyena/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 1.6326
+  ...
+# Subtest: hyena/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 99 - hyena/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 1.4499
+  ...
+# Subtest: hyena/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+ok 100 - hyena/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 1.2705
+  ...
+# Subtest: hyena/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+ok 101 - hyena/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 0.8802
+  ...
+# Subtest: buffalo/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 102 - buffalo/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 1.1095
+  ...
+# Subtest: buffalo/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 103 - buffalo/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 1.2342
+  ...
+# Subtest: buffalo/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+ok 104 - buffalo/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 1.0065
+  ...
+# Subtest: buffalo/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+ok 105 - buffalo/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 0.969
+  ...
+# Subtest: lion/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 106 - lion/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 0.8393
+  ...
+# Subtest: lion/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 107 - lion/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 1.1461
+  ...
+# Subtest: lion/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+ok 108 - lion/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 1.5237
+  ...
+# Subtest: lion/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+ok 109 - lion/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 0.9821
+  ...
+# Subtest: rhino/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 110 - rhino/Right_Hand_Sword_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 1.3929
+  ...
+# Subtest: rhino/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+ok 111 - rhino/Charged_Upward_Slash: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 0.9867
+  ...
+# Subtest: rhino/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+ok 112 - rhino/Weapon_Combo: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 0.6998
+  ...
+# Subtest: rhino/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+ok 113 - rhino/Weapon_Combo_2: complete native duration, one hit, saved progress and physical retreat
+  ---
+  duration_ms: 0.7665
+  ...
+# Subtest: An invalidated target cannot be replaced underneath a committed attack or receive phantom damage
+ok 114 - An invalidated target cannot be replaced underneath a committed attack or receive phantom damage
+  ---
+  duration_ms: 0.675
+  ...
+# Subtest: Exhausting a budget during an attack finishes its presentation without granting another hit
+ok 115 - Exhausting a budget during an attack finishes its presentation without granting another hit
+  ---
+  duration_ms: 0.7929
+  ...
+# Subtest: Shield contact consumes one completed attack without damage, and blocking pause freezes the clip phase
+ok 116 - Shield contact consumes one completed attack without damage, and blocking pause freezes the clip phase
+  ---
+  duration_ms: 1.7883
+  ...
+# Subtest: warthog: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+ok 117 - warthog: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+  ---
+  duration_ms: 3922.2616
+  ...
+# {"species":"warthog","groundingComparisonPoses":72,"maximumGroundError":2.2737367544323206e-13}
+# Subtest: hyena: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+ok 118 - hyena: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+  ---
+  duration_ms: 2336.938
+  ...
+# {"species":"hyena","groundingComparisonPoses":72,"maximumGroundError":2.2736673654932815e-13}
+# Subtest: buffalo: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+ok 119 - buffalo: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+  ---
+  duration_ms: 1465.4913
+  ...
+# {"species":"buffalo","groundingComparisonPoses":72,"maximumGroundError":2.2734591986761643e-13}
+# Subtest: lion: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+ok 120 - lion: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+  ---
+  duration_ms: 1225.7621
+  ...
+# {"species":"lion","groundingComparisonPoses":72,"maximumGroundError":2.2738755323103987e-13}
+# Subtest: rhino: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+ok 121 - rhino: original GLB hash, in-place tracks, nonlooping poses and animated foot grounding
+  ---
+  duration_ms: 1448.8176
+  ...
+# {"species":"rhino","groundingComparisonPoses":72,"maximumGroundError":2.274153088066555e-13}
+# Subtest: all 100 campaign nights have animals even with no crops, for 30 seeds
+ok 122 - all 100 campaign nights have animals even with no crops, for 30 seeds
+  ---
+  duration_ms: 30.8478
+  ...
+# Subtest: five introductory nights spawn their planned new species with a progressive real strike budget, including saved plans
+ok 123 - five introductory nights spawn their planned new species with a progressive real strike budget, including saved plans
+  ---
+  duration_ms: 36.7441
+  ...
+# Subtest: warthog: first physical crop hit survives reload; second hit destroys exactly once
+ok 124 - warthog: first physical crop hit survives reload; second hit destroys exactly once
+  ---
+  duration_ms: 92.9525
+  ...
+# Subtest: hyena: first physical crop hit survives reload; second hit destroys exactly once
+ok 125 - hyena: first physical crop hit survives reload; second hit destroys exactly once
+  ---
+  duration_ms: 41.1226
+  ...
+# Subtest: buffalo: first physical crop hit survives reload; second hit destroys exactly once
+ok 126 - buffalo: first physical crop hit survives reload; second hit destroys exactly once
+  ---
+  duration_ms: 51.0437
+  ...
+# Subtest: lion: first physical crop hit survives reload; second hit destroys exactly once
+ok 127 - lion: first physical crop hit survives reload; second hit destroys exactly once
+  ---
+  duration_ms: 57.4709
+  ...
+# Subtest: rhino: first physical crop hit survives reload; second hit destroys exactly once
+ok 128 - rhino: first physical crop hit survives reload; second hit destroys exactly once
+  ---
+  duration_ms: 48.9501
+  ...
+# Subtest: saved damage supports exact half points but rejects invalid HP and living crops at two points
+ok 129 - saved damage supports exact half points but rejects invalid HP and living crops at two points
+  ---
+  duration_ms: 2.8281
+  ...
+# Subtest: introductory warthog threatens crops and buildings but cannot destroy all 1 starting plants
+ok 130 - introductory warthog threatens crops and buildings but cannot destroy all 1 starting plants
+  ---
+  duration_ms: 83.6416
+  ...
+# Subtest: introductory warthog threatens crops and buildings but cannot destroy all 2 starting plants
+ok 131 - introductory warthog threatens crops and buildings but cannot destroy all 2 starting plants
+  ---
+  duration_ms: 88.231
+  ...
+# Subtest: introductory warthog threatens crops and buildings but cannot destroy all 5 starting plants
+ok 132 - introductory warthog threatens crops and buildings but cannot destroy all 5 starting plants
+  ---
+  duration_ms: 25.8069
+  ...
+# Subtest: introductory warthog threatens crops and buildings but cannot destroy all 10 starting plants
+ok 133 - introductory warthog threatens crops and buildings but cannot destroy all 10 starting plants
+  ---
+  duration_ms: 43.5717
+  ...
+# Subtest: introductory warthog threatens crops and buildings but cannot destroy all 20 starting plants
+ok 134 - introductory warthog threatens crops and buildings but cannot destroy all 20 starting plants
+  ---
+  duration_ms: 31.8093
+  ...
+# Subtest: introductory warthog threatens crops and buildings but cannot destroy all 50 starting plants
+ok 135 - introductory warthog threatens crops and buildings but cannot destroy all 50 starting plants
+  ---
+  duration_ms: 38.7147
+  ...
+# Subtest: introductory hyena threatens crops and buildings but cannot destroy all 1 starting plants
+ok 136 - introductory hyena threatens crops and buildings but cannot destroy all 1 starting plants
+  ---
+  duration_ms: 45.7937
+  ...
+# Subtest: introductory hyena threatens crops and buildings but cannot destroy all 2 starting plants
+ok 137 - introductory hyena threatens crops and buildings but cannot destroy all 2 starting plants
+  ---
+  duration_ms: 94.7119
+  ...
+# Subtest: introductory hyena threatens crops and buildings but cannot destroy all 5 starting plants
+ok 138 - introductory hyena threatens crops and buildings but cannot destroy all 5 starting plants
+  ---
+  duration_ms: 68.0149
+  ...
+# Subtest: introductory hyena threatens crops and buildings but cannot destroy all 10 starting plants
+ok 139 - introductory hyena threatens crops and buildings but cannot destroy all 10 starting plants
+  ---
+  duration_ms: 22.9066
+  ...
+# Subtest: introductory hyena threatens crops and buildings but cannot destroy all 20 starting plants
+ok 140 - introductory hyena threatens crops and buildings but cannot destroy all 20 starting plants
+  ---
+  duration_ms: 75.5659
+  ...
+# Subtest: introductory hyena threatens crops and buildings but cannot destroy all 50 starting plants
+ok 141 - introductory hyena threatens crops and buildings but cannot destroy all 50 starting plants
+  ---
+  duration_ms: 25.4505
+  ...
+# Subtest: introductory buffalo threatens crops and buildings but cannot destroy all 1 starting plants
+ok 142 - introductory buffalo threatens crops and buildings but cannot destroy all 1 starting plants
+  ---
+  duration_ms: 40.3061
+  ...
+# Subtest: introductory buffalo threatens crops and buildings but cannot destroy all 2 starting plants
+ok 143 - introductory buffalo threatens crops and buildings but cannot destroy all 2 starting plants
+  ---
+  duration_ms: 34.885
+  ...
+# Subtest: introductory buffalo threatens crops and buildings but cannot destroy all 5 starting plants
+ok 144 - introductory buffalo threatens crops and buildings but cannot destroy all 5 starting plants
+  ---
+  duration_ms: 39.7001
+  ...
+# Subtest: introductory buffalo threatens crops and buildings but cannot destroy all 10 starting plants
+ok 145 - introductory buffalo threatens crops and buildings but cannot destroy all 10 starting plants
+  ---
+  duration_ms: 37.0795
+  ...
+# Subtest: introductory buffalo threatens crops and buildings but cannot destroy all 20 starting plants
+ok 146 - introductory buffalo threatens crops and buildings but cannot destroy all 20 starting plants
+  ---
+  duration_ms: 75.4472
+  ...
+# Subtest: introductory buffalo threatens crops and buildings but cannot destroy all 50 starting plants
+ok 147 - introductory buffalo threatens crops and buildings but cannot destroy all 50 starting plants
+  ---
+  duration_ms: 31.7577
+  ...
+# Subtest: introductory lion threatens crops and buildings but cannot destroy all 1 starting plants
+ok 148 - introductory lion threatens crops and buildings but cannot destroy all 1 starting plants
+  ---
+  duration_ms: 28.9111
+  ...
+# Subtest: introductory lion threatens crops and buildings but cannot destroy all 2 starting plants
+ok 149 - introductory lion threatens crops and buildings but cannot destroy all 2 starting plants
+  ---
+  duration_ms: 62.8361
+  ...
+# Subtest: introductory lion threatens crops and buildings but cannot destroy all 5 starting plants
+ok 150 - introductory lion threatens crops and buildings but cannot destroy all 5 starting plants
+  ---
+  duration_ms: 74.2265
+  ...
+# Subtest: introductory lion threatens crops and buildings but cannot destroy all 10 starting plants
+ok 151 - introductory lion threatens crops and buildings but cannot destroy all 10 starting plants
+  ---
+  duration_ms: 22.4771
+  ...
+# Subtest: introductory lion threatens crops and buildings but cannot destroy all 20 starting plants
+ok 152 - introductory lion threatens crops and buildings but cannot destroy all 20 starting plants
+  ---
+  duration_ms: 25.8067
+  ...
+# Subtest: introductory lion threatens crops and buildings but cannot destroy all 50 starting plants
+ok 153 - introductory lion threatens crops and buildings but cannot destroy all 50 starting plants
+  ---
+  duration_ms: 85.866
+  ...
+# Subtest: introductory rhino threatens crops and buildings but cannot destroy all 1 starting plants
+ok 154 - introductory rhino threatens crops and buildings but cannot destroy all 1 starting plants
+  ---
+  duration_ms: 29.2849
+  ...
+# Subtest: introductory rhino threatens crops and buildings but cannot destroy all 2 starting plants
+ok 155 - introductory rhino threatens crops and buildings but cannot destroy all 2 starting plants
+  ---
+  duration_ms: 73.7812
+  ...
+# Subtest: introductory rhino threatens crops and buildings but cannot destroy all 5 starting plants
+ok 156 - introductory rhino threatens crops and buildings but cannot destroy all 5 starting plants
+  ---
+  duration_ms: 22.3593
+  ...
+# Subtest: introductory rhino threatens crops and buildings but cannot destroy all 10 starting plants
+ok 157 - introductory rhino threatens crops and buildings but cannot destroy all 10 starting plants
+  ---
+  duration_ms: 44.0975
+  ...
+# Subtest: introductory rhino threatens crops and buildings but cannot destroy all 20 starting plants
+ok 158 - introductory rhino threatens crops and buildings but cannot destroy all 20 starting plants
+  ---
+  duration_ms: 25.8738
+  ...
+# Subtest: introductory rhino threatens crops and buildings but cannot destroy all 50 starting plants
+ok 159 - introductory rhino threatens crops and buildings but cannot destroy all 50 starting plants
+  ---
+  duration_ms: 32.4818
+  ...
+# Subtest: introductory warthog: damaged crops respect the destruction quota after a mid-attack save
+ok 160 - introductory warthog: damaged crops respect the destruction quota after a mid-attack save
+  ---
+  duration_ms: 17.724
+  ...
+# Subtest: introductory hyena: damaged crops respect the destruction quota after a mid-attack save
+ok 161 - introductory hyena: damaged crops respect the destruction quota after a mid-attack save
+  ---
+  duration_ms: 22.0511
+  ...
+# Subtest: introductory buffalo: damaged crops respect the destruction quota after a mid-attack save
+ok 162 - introductory buffalo: damaged crops respect the destruction quota after a mid-attack save
+  ---
+  duration_ms: 23.5981
+  ...
+# Subtest: introductory lion: damaged crops respect the destruction quota after a mid-attack save
+ok 163 - introductory lion: damaged crops respect the destruction quota after a mid-attack save
+  ---
+  duration_ms: 37.2615
+  ...
+# Subtest: introductory rhino: damaged crops respect the destruction quota after a mid-attack save
+ok 164 - introductory rhino: damaged crops respect the destruction quota after a mid-attack save
+  ---
+  duration_ms: 24.758
+  ...
+# Subtest: central full damage, frontal90-degree periphery half damage and maximum radius are physical
+ok 165 - central full damage, frontal90-degree periphery half damage and maximum radius are physical
+  ---
+  duration_ms: 13.3335
+  ...
+# Subtest: sector follows current contact heading and rejects a backward or remote contact
+ok 166 - sector follows current contact heading and rejects a backward or remote contact
+  ---
+  duration_ms: 5.166
+  ...
+# Subtest: a radius-zero or damage-zero profile never manufactures peripheral hits or mandatory deaths
+ok 167 - a radius-zero or damage-zero profile never manufactures peripheral hits or mandatory deaths
+  ---
+  duration_ms: 2.0955
+  ...
+# Subtest: area cap prioritizes the central plant then nearest legal physical candidates
+ok 168 - area cap prioritizes the central plant then nearest legal physical candidates
+  ---
+  duration_ms: 3.9477
+  ...
+# Subtest: native wall footprint occludes peripheral impacts, including animal-blocking gate=false
+ok 169 - native wall footprint occludes peripheral impacts, including animal-blocking gate=false
+  ---
+  duration_ms: 3.343
+  ...
+# Subtest: native wall footprint occludes peripheral impacts, including animal-blocking gate=true
+ok 170 - native wall footprint occludes peripheral impacts, including animal-blocking gate=true
+  ---
+  duration_ms: 2.8173
+  ...
+# Subtest: a wall between actor and impact prevents a central hit rather than producing splash behind it
+ok 171 - a wall between actor and impact prevents a central hit rather than producing splash behind it
+  ---
+  duration_ms: 2.1474
+  ...
+# Subtest: a native centre footprint blocks rays and is re-evaluated after removal
+ok 172 - a native centre footprint blocks rays and is re-evaluated after removal
+  ---
+  duration_ms: 2.7749
+  ...
+# Subtest: Shield protects each peripheral plant and blocks a crossing ray outside its endpoint
+ok 173 - Shield protects each peripheral plant and blocks a crossing ray outside its endpoint
+  ---
+  duration_ms: 2.9908
+  ...
+# Subtest: a shielded central target consumes no crop HP
+ok 174 - a shielded central target consumes no crop HP
+  ---
+  duration_ms: 2.7969
+  ...
+# Subtest: one attack is deduplicated across replay/save and fractional damage persists exactly
+ok 175 - one attack is deduplicated across replay/save and fractional damage persists exactly
+  ---
+  duration_ms: 3.6682
+  ...
+# Subtest: intro destruction cap survives central4 and peripheral2 damage, retaining a living farm
+ok 176 - intro destruction cap survives central4 and peripheral2 damage, retaining a living farm
+  ---
+  duration_ms: 1.7747
+  ...
+# Subtest: grid handles append, death, native position epoch and replacement without scanning all crops per hit
+ok 177 - grid handles append, death, native position epoch and replacement without scanning all crops per hit
+  ---
+  duration_ms: 21.9014
+  ...
+# Subtest: profile and crop fractional bounds reject corrupt saves while supporting legacy integer HP
+ok 178 - profile and crop fractional bounds reject corrupt saves while supporting legacy integer HP
+  ---
+  duration_ms: 2.9104
+  ...
+# Subtest: native warthog profile completes real melee, one impact per attack, dt0.1
+ok 179 - native warthog profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 44.772
+  ...
+# Subtest: native warthog profile completes real melee, one impact per attack, dt1
+ok 180 - native warthog profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 10.9126
+  ...
+# Subtest: native hyena profile completes real melee, one impact per attack, dt0.1
+ok 181 - native hyena profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 34.9796
+  ...
+# Subtest: native hyena profile completes real melee, one impact per attack, dt1
+ok 182 - native hyena profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 7.6139
+  ...
+# Subtest: native buffalo profile completes real melee, one impact per attack, dt0.1
+ok 183 - native buffalo profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 12.051
+  ...
+# Subtest: native buffalo profile completes real melee, one impact per attack, dt1
+ok 184 - native buffalo profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 7.9873
+  ...
+# Subtest: native lion profile completes real melee, one impact per attack, dt0.1
+ok 185 - native lion profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 14.2699
+  ...
+# Subtest: native lion profile completes real melee, one impact per attack, dt1
+ok 186 - native lion profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 9.3029
+  ...
+# Subtest: native rhino profile completes real melee, one impact per attack, dt0.1
+ok 187 - native rhino profile completes real melee, one impact per attack, dt0.1
+  ---
+  duration_ms: 10.8609
+  ...
+# Subtest: native rhino profile completes real melee, one impact per attack, dt1
+ok 188 - native rhino profile completes real melee, one impact per attack, dt1
+  ---
+  duration_ms: 17.5555
+  ...
+# Subtest: a native wall strike uses structural profile damage but never applies agricultural splash
+ok 189 - a native wall strike uses structural profile damage but never applies agricultural splash
+  ---
+  duration_ms: 1595.6208
+  ...
+# Subtest: native saved attack resumes once and does not duplicate event facts
+ok 190 - native saved attack resumes once and does not duplicate event facts
+  ---
+  duration_ms: 13.7313
+  ...
+# Subtest: native committed contact writes half-point HP, reload preserves it and applied attacks cannot hit twice
+ok 191 - native committed contact writes half-point HP, reload preserves it and applied attacks cannot hit twice
+  ---
+  duration_ms: 3.095
+  ...
+# Subtest: live wall collapse remains occluding until ruined, and new topology invalidates cached geometry
+ok 192 - live wall collapse remains occluding until ruined, and new topology invalidates cached geometry
+  ---
+  duration_ms: 2.8421
+  ...
+# Subtest: maximal canonical profile and its bounded living queries are valid; malformed and replay IDs are not
+ok 193 - maximal canonical profile and its bounded living queries are valid; malformed and replay IDs are not
+  ---
+  duration_ms: 2.7823
+  ...
+# Subtest: a full connected crop cohort consumes real native budget at dt0.1
+ok 194 - a full connected crop cohort consumes real native budget at dt0.1
+  ---
+  duration_ms: 695.4238
+  ...
+# Subtest: a full connected crop cohort consumes real native budget at dt1
+ok 195 - a full connected crop cohort consumes real native budget at dt1
+  ---
+  duration_ms: 263.5045
+  ...
+# Subtest: waiters stage at their certified separated births without stealing existing reservations
+ok 196 - waiters stage at their certified separated births without stealing existing reservations
+  ---
+  duration_ms: 13.5913
+  ...
+# Subtest: FIFO save/reload preserves turns and complete native final consumption
+ok 197 - FIFO save/reload preserves turns and complete native final consumption
+  ---
+  duration_ms: 422.6341
+  ...
+# Subtest: absence of all remaining native targets retires instead of waiting forever
+ok 198 - absence of all remaining native targets retires instead of waiting forever
+  ---
+  duration_ms: 23.1119
+  ...
+# Subtest: a physically unreachable owner expires its queue after bounded no-hit time without spending budget
+ok 199 - a physically unreachable owner expires its queue after bounded no-hit time without spending budget
+  ---
+  duration_ms: 27.4944
+  ...
+# Subtest: corrupt optional queue state is rejected while legacy saves remain compatible
+ok 200 - corrupt optional queue state is rejected while legacy saves remain compatible
+  ---
+  duration_ms: 22.5276
+  ...
+# Subtest: mixed models/radii and native budgets preserve exclusive leases: hyena,buffalo,lion,rhino,warthog
+ok 201 - mixed models/radii and native budgets preserve exclusive leases: hyena,buffalo,lion,rhino,warthog
+  ---
+  duration_ms: 215.4415
+  ...
+# Subtest: mixed models/radii and native budgets preserve exclusive leases: buffalo,buffalo,buffalo,buffalo,buffalo,buffalo,buffalo,buffalo
+ok 202 - mixed models/radii and native budgets preserve exclusive leases: buffalo,buffalo,buffalo,buffalo,buffalo,buffalo,buffalo,buffalo
+  ---
+  duration_ms: 302.1159
+  ...
+# Subtest: Shield still consumes actual native hits while protecting crops and releasing turns
+ok 203 - Shield still consumes actual native hits while protecting crops and releasing turns
+  ---
+  duration_ms: 40.0102
+  ...
+# Subtest: connected walls retain a single lease and collapse releases eligible queued turns
+ok 204 - connected walls retain a single lease and collapse releases eligible queued turns
+  ---
+  duration_ms: 455.7089
+  ...
+# Subtest: a just-exhausted owner still holds a temporary lease until native release on the next tick
+ok 205 - a just-exhausted owner still holds a temporary lease until native release on the next tick
+  ---
+  duration_ms: 5.888
+  ...
+# Subtest: waiting poses do not keep walking in place at an exterior staging birth
+ok 206 - waiting poses do not keep walking in place at an exterior staging birth
+  ---
+  duration_ms: 7.344
+  ...
+# Subtest: two contiguous crop species retain independent exclusive groups through the native turns
+ok 207 - two contiguous crop species retain independent exclusive groups through the native turns
+  ---
+  duration_ms: 162.6112
+  ...
+# Subtest: native first-five introduction protection survives a queued cohort without destroying all crops
+ok 208 - native first-five introduction protection survives a queued cohort without destroying all crops
+  ---
+  duration_ms: 45.9452
+  ...
+# Subtest: wall collapse and an existing open gate release claims without inventing an extra lease
+ok 209 - wall collapse and an existing open gate release claims without inventing an extra lease
+  ---
+  duration_ms: 267.3014
+  ...
+# Subtest: an isolated FIFO head cannot indefinitely starve a later animal with native access
+ok 210 - an isolated FIFO head cannot indefinitely starve a later animal with native access
+  ---
+  duration_ms: 1435.8958
+  ...
+# Subtest: head retry epochs never enumerate a dense farm and observe lease/topology/progress revisions
+ok 211 - head retry epochs never enumerate a dense farm and observe lease/topology/progress revisions
+  ---
+  duration_ms: 10.8919
+  ...
+1..211
+# tests 211
+# suites 0
+# pass 205
+# fail 6
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10919.2762

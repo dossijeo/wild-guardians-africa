@@ -1,0 +1,29 @@
+Browser tab: 130, Title: "Grabar Attack en el juego real", URL: "http://127.0.0.1:5194/tests/browser/guardian-gameplay-recording.html".
+0 AXWebArea Grabar Attack en el juego real, URL: 127.0.0.1:5194/tests/browser/guardian-gameplay-recording.html
+	1 container
+		2 button Grabar 20 s desde el siguiente clic en el mundo, ID: arm
+		3 button (disabled) Detener, ID: stop
+		25 link Description: Descargar vídeo, Value: blob:http://127.0.0.1:5194/12969156-8e97-4f62-a5d7-6317d9354ed8, ID: download
+		26 text Vídeo listo: 12014023 bytes. Canvas con audio del juego; revisar antes de aceptar.
+	5 container Description: Wild Guardians QA, ID: game
+		6 AXWebArea Wild Guardians · Africa, URL: 127.0.0.1:5194/?qa-game-audio=1
+			7 container stage
+				8 image world
+				9 container hud
+					10 container clock
+						11 image Sun clock
+						27 text 03:00
+					13 container money
+						14 image Money
+						28 text 865
+					16 container Help: 0/100 nights survived, ID: days
+						17 image Survival
+						29 text Day 5
+					19 button Description: Open pause menu, Help: Menu · Escape, ID: menuButton
+					20 container Description: Farm actions, ID: actions
+						21 button Back, Help: Return to the work centre · 1
+						22 button Build, Help: Build · 2
+						23 button Grow crops, Help: Grow crops · 3
+						24 button Power, Help: Power · 4
+
+The focused UI element is 6 AXWebArea Wild Guardians · Africa, URL: 127.0.0.1:5194/?qa-game-audio=1

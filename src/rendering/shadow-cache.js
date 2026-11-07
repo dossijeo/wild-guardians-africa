@@ -4,7 +4,7 @@ import * as THREE from 'three';
 // Unknown depth shaders/callbacks deliberately fall back to drawing every frame.
 export function shadowSnapshot(renderer, light, scene, camera) {
   if (!scene || !camera || renderer.shadowMap.type === THREE.VSMShadowMap) return null;
-  const values = [], put = value => values.push(value);
+  const values = [], skeletons = new Set(), put = value => values.push(value);
   const numbers = array => { put(array.length); for (const value of array) put(value); };
   function input(value) {
     if (value == null || typeof value !== 'object') { put(value); return; }
@@ -74,10 +74,14 @@ export function shadowSnapshot(renderer, light, scene, camera) {
       if (object.morphTexture) input(object.morphTexture);
       if (object.isSkinnedMesh) {
         input(object.bindMatrix); input(object.bindMatrixInverse);
-        for (let i = 0; i < object.skeleton.bones.length; i++) {
-          // boneMatrices/texture are uploaded later by WebGLObjects; world
-          // matrices already contain this frame's pose at shadow traversal.
-          input(object.skeleton.bones[i].matrixWorld); input(object.skeleton.boneInverses[i]);
+        put(object.skeleton);
+        if (!skeletons.has(object.skeleton)) {
+          skeletons.add(object.skeleton);
+          for (let i = 0; i < object.skeleton.bones.length; i++) {
+            // boneMatrices/texture are uploaded later by WebGLObjects; world
+            // matrices already contain this frame's pose at shadow traversal.
+            input(object.skeleton.bones[i].matrixWorld); input(object.skeleton.boneInverses[i]);
+          }
         }
       }
       for (const source of Array.isArray(object.material) ? object.material : [object.material]) material(source);
@@ -101,7 +105,10 @@ export class ShadowCache {
   invalidate() { this.snapshot = null; }
   matches(next, forced = false) {
     if (!next) { this.stats.untracked++; return false; }
-    return this.enabled && !forced && this.snapshot && next.length === this.snapshot.length && next.every((value, i) => Object.is(value, this.snapshot[i]));
+    const previous = this.snapshot;
+    if (!this.enabled || forced || !previous || next.length !== previous.length) return false;
+    for (let i = 0; i < next.length; i++) if (!Object.is(next[i], previous[i])) return false;
+    return true;
   }
   commit(snapshot) { this.snapshot = snapshot; this.stats.draws++; }
 }

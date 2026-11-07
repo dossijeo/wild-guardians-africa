@@ -1,0 +1,1240 @@
+{
+  "scope": "Failed real WebGPU event continuation before explicit same-publication segment handoff. Ordinary recovery is not successful event playback.",
+  "passed": false,
+  "sourceSha256": "9a1c2f86998efbb8b72637d841ad6a59e43bf7b753e3858820d9a3cd7280145d",
+  "error": "Error: Global timeout after 360000 ms\n    at Timeout._onTimeout (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tools/experiments/audit_webgpu_historical_rapier.mjs:62:81)\n    at listOnTimeout (node:internal/timers:581:17)\n    at process.processTimers (node:internal/timers:519:7)",
+  "first": {
+    "at": 1794059832638,
+    "game": {
+      "screen": "game",
+      "starting": false,
+      "causalInputs": 0,
+      "discretePicks": [],
+      "slotId": "estuary-raid-render-qa",
+      "status": {
+        "running": true,
+        "closed": false,
+        "fault": null,
+        "busy": false,
+        "queued": 8,
+        "pendingSteps": 580,
+        "pendingChunks": 0,
+        "confirmedSequence": 518,
+        "confirmedElapsed": 34.05000000000014,
+        "tutorialUpdate": {
+          "needed": true,
+          "narrated": "mechanic.first-raid"
+        },
+        "saveAvailable": true,
+        "lastAttackDiagnostic": null,
+        "completedKinds": {
+          "snapshot": 5,
+          "trackPathMotion": 1,
+          "advance": 405,
+          "pause": 2,
+          "resume": 1,
+          "tutorialStart": 1,
+          "microIncome": 1,
+          "tutorialCommand:update": 60,
+          "tutorialActionPause": 5,
+          "tutorialCommand:present": 2,
+          "tutorialCommand:advance": 8,
+          "setNavigationView": 22,
+          "raidCameraFocus": 1,
+          "tutorialCommand:dismiss": 3,
+          "tutorialCommand:resume-menu": 1
+        },
+        "queuedKinds": {
+          "steps": 4,
+          "tutorialCommand": 3,
+          "tutorialActionPause": 1
+        },
+        "outbox": {
+          "inFlight": 0,
+          "queued": 0,
+          "coalesced": 0,
+          "acknowledged": 518,
+          "foldedViewCount": 0,
+          "capacity": {
+            "queued": 256,
+            "snapshotChars": 134217728,
+            "eventFacts": 65536,
+            "bytes": 536870912
+          },
+          "retained": {
+            "snapshotChars": 0,
+            "eventFacts": 0,
+            "bytes": 0
+          },
+          "queuedPublications": 0,
+          "eventfulPublications": 0,
+          "tickPublications": 0,
+          "unchangedPublications": 0,
+          "queuedBySource": {},
+          "peakQueuedBySource": {
+            "advance": 8,
+            "setNavigationView": 7
+          },
+          "snapshotChars": 0,
+          "peakSnapshotChars": 313944,
+          "peakEventfulPublications": 1,
+          "peakQueuedPublications": 15,
+          "peakQueuedMessages": 16
+        },
+        "visualPublication": {
+          "active": true,
+          "detached": false,
+          "negotiated": true,
+          "encoderRetainedBytes": 60028,
+          "inFlight": 429,
+          "queued": 121,
+          "received": 32,
+          "lastReceived": 428,
+          "coalesced": 0,
+          "acknowledged": 396,
+          "foldedViewCount": 0,
+          "capacity": {
+            "queued": 256,
+            "snapshotChars": 134217728,
+            "eventFacts": 65536,
+            "bytes": 536870912
+          },
+          "retained": {
+            "snapshotChars": 3656985,
+            "eventFacts": 18,
+            "bytes": 25506290
+          },
+          "queuedPublications": 122,
+          "eventfulPublications": 3,
+          "tickPublications": 119,
+          "unchangedPublications": 0,
+          "queuedBySource": {
+            "advance": 119,
+            "tutorialCommand": 2,
+            "snapshot": 1
+          },
+          "peakQueuedBySource": {
+            "tutorialCommand": 21,
+            "advance": 102
+          },
+          "snapshotChars": 3656985,
+          "peakSnapshotChars": 3656985,
+          "peakEventfulPublications": 4,
+          "peakQueuedPublications": 123,
+          "peakQueuedMessages": 90
+        },
+        "publicationBacklog": 0,
+        "peakPublicationBacklog": 16,
+        "recoveryBaseSequence": 391,
+        "recoveryBaseBytes": 5698764,
+        "recoveryJournal": {
+          "base": 391,
+          "candidate": 456,
+          "through": 518,
+          "entries": 127,
+          "bytes": 19995188,
+          "entryBytes": 14009298,
+          "overheadBytes": 5985890,
+          "capacity": 256,
+          "highWatermark": 128,
+          "maxBytes": 268435456,
+          "highWatermarkBytes": 201326592,
+          "pendingTerrain": false,
+          "saturated": false,
+          "encoderFault": false,
+          "checkpointDeferred": false,
+          "checkpointRetry": false,
+          "closed": false
+        },
+        "recoveryFault": null,
+        "tutorialGuideRevision": null,
+        "reception": {
+          "count": 496,
+          "mean": 4.096804434734006,
+          "p95": 5.25,
+          "p99": 9,
+          "max": 13.889999985694885
+        }
+      },
+      "hostedClock": true,
+      "backgroundViews": true,
+      "elapsed": 34.05000000000014,
+      "time": 134.04999999999978,
+      "night": {
+        "done": true
+      },
+      "pauses": [],
+      "tutorial": {
+        "step": "done",
+        "seen": [
+          "magic.shield",
+          "mechanic.first-raid"
+        ],
+        "pending": [],
+        "guideAfterAuto": [],
+        "reading": "mechanic.defenses",
+        "basicSkipped": false,
+        "shownToday": {
+          "day": 5,
+          "ids": [
+            "magic.shield",
+            "mechanic.first-raid"
+          ]
+        },
+        "magicReminders": {
+          "shieldRaid": "raid-5-night"
+        },
+        "dismissed": [
+          "magic.shield:",
+          "mechanic.first-raid:"
+        ]
+      },
+      "guide": null,
+      "centers": 1,
+      "plants": 1,
+      "workers": 1,
+      "animals": 5,
+      "events": [
+        "AnimalLogicalHit",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "CropHit",
+        "CropDestroyed",
+        "AnimalLogicalHit",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "TutorialMessageStarted",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable"
+      ]
+    },
+    "render": {
+      "kind": "inspection",
+      "inspectionGeneration": "7809cd84-0bae-4b59-b8b3-b98ee3e1a0f0",
+      "bootstrapStage": "ground-depth",
+      "preparation": {
+        "admission": {
+          "closed": false,
+          "queued": 0,
+          "active": true,
+          "inflightCompiles": 1,
+          "shadowWaiters": 0,
+          "uploads": 1,
+          "structuralRevision": 1,
+          "compilesStarted": 677,
+          "compilesSettled": 676,
+          "compiling": [
+            {
+              "name": "",
+              "ageMs": 197.87999999523163,
+              "children": []
+            }
+          ]
+        },
+        "timeline": {
+          "pending": 32,
+          "bytes": 2331354,
+          "waiting": true,
+          "waitingBytes": 67076,
+          "receivedSequence": 429,
+          "receivedElapsed": 25.499999999999876,
+          "target": 22.29999999999983,
+          "negotiated": true
+        },
+        "pump": {
+          "closed": false,
+          "lastClock": {
+            "sequence": 397,
+            "version": 1,
+            "start": 22.19999999999983,
+            "end": 22.29999999999983,
+            "startPauses": [],
+            "endPauses": [],
+            "complete": true,
+            "segments": [
+              {
+                "start": 22.19999999999983,
+                "end": 22.29999999999983,
+                "realDuration": 0.10000000000000142,
+                "rate": 1
+              }
+            ]
+          },
+          "historicalPending": 398,
+          "historicalHold": null,
+          "historicalFallback": null
+        }
+      },
+      "device": {
+        "adapter": {
+          "vendor": "nvidia",
+          "architecture": "turing",
+          "device": "",
+          "description": "",
+          "isFallbackAdapter": false
+        },
+        "maxVertexBuffers": 8
+      },
+      "confirmedPauses": [],
+      "poseAudit": null,
+      "workerState": null,
+      "id": 339,
+      "phase": "running",
+      "backend": "WebGPU",
+      "state": {
+        "closed": false,
+        "sequence": 397,
+        "lastElapsed": 22.29999999999983,
+        "fault": false,
+        "historicalEventMetrics": {
+          "starts": 1,
+          "boundaries": 0,
+          "events": 0,
+          "completed": 0
+        },
+        "historicalEventRejection": {
+          "sequence": 317,
+          "start": 14.349999999999774,
+          "end": 14.389999999999773,
+          "stage": "certificate",
+          "reason": "animal-participant",
+          "actorId": "animal-20"
+        },
+        "timing": {
+          "samples": 397,
+          "decode": {
+            "mean": 0.39017632175753036,
+            "p95": 0.6150000095367432,
+            "max": 2.005000054836273
+          },
+          "reconcile": {
+            "mean": 0.4386020151133501,
+            "p95": 0.6200000047683716,
+            "max": 4.884999990463257
+          },
+          "hooks": {
+            "mean": 3.60598236892926,
+            "p95": 9.675000011920929,
+            "max": 20.555000007152557
+          },
+          "total": {
+            "mean": 4.434760705800141,
+            "p95": 10.620000004768372,
+            "max": 26.790000081062317
+          }
+        }
+      },
+      "recoveryEvents": [],
+      "lastTerrainCheckpoint": null,
+      "presentationClock": {
+        "elapsed": 22.301950000047515
+      },
+      "terrain": {
+        "closed": false,
+        "confirmedSequence": 397,
+        "pending": false,
+        "presentationPending": false,
+        "lastId": 966,
+        "retainedRevisions": 0,
+        "retainedBytes": 18688,
+        "waitingForCapacity": false,
+        "completeSequence": 469
+      },
+      "resident": 25,
+      "actor": true,
+      "actors": {
+        "closed": false,
+        "count": 5,
+        "ready": 5,
+        "visible": 5,
+        "pending": 0,
+        "physical": 0,
+        "physicalApplied": 0,
+        "bakedWalking": 2,
+        "provisionalFalling": 0,
+        "fallsReady": false,
+        "fallLoadError": null,
+        "provisionalImpacts": 0,
+        "historicalPhysical": {
+          "starts": 0,
+          "samples": 0,
+          "finishes": 0,
+          "active": 0
+        }
+      },
+      "workers": {
+        "closed": false,
+        "count": 0,
+        "ready": 0,
+        "pending": 0,
+        "assets": {
+          "closed": false,
+          "idle": {
+            "idle": 0,
+            "estimatedBytes": 0,
+            "maxBytes": 100663296
+          },
+          "textureFailure": null,
+          "profiles": []
+        }
+      },
+      "crates": {
+        "closed": false,
+        "count": 0,
+        "ready": 0,
+        "pending": 0
+      },
+      "settlements": {
+        "closed": false,
+        "villages": 1,
+        "units": 10,
+        "centers": 1,
+        "walls": 0,
+        "damagedCenters": 0,
+        "selectableReady": true,
+        "provisional": 0,
+        "previewHistorySaturated": false,
+        "destruction": [],
+        "banks": 2,
+        "failure": null,
+        "textureFailure": null,
+        "villagePreviews": 1,
+        "villageTextured": 1,
+        "centerPreviews": 1,
+        "centerTextured": 1,
+        "wallPreviews": 0,
+        "wallTextured": 0
+      },
+      "crops": {
+        "closed": false,
+        "ready": true,
+        "bridgeReady": true,
+        "confirmedPlants": 1,
+        "provisional": 0,
+        "provisionalHistorySaturated": false,
+        "plants": 1,
+        "batches": 1,
+        "activeStages": [
+          25
+        ],
+        "activeBridges": [],
+        "failure": null
+      },
+      "agricultureVfx": {
+        "closed": false,
+        "ready": true,
+        "effects": 3,
+        "locomotion": {
+          "steps": 3,
+          "ripples": 0,
+          "ripplesReady": false
+        },
+        "aura": null,
+        "active": [
+          {
+            "id": "animal-19/Walking/20/0",
+            "family": "footstep",
+            "time": 1.1841003005045672,
+            "visible": true,
+            "sprites": 2,
+            "fragments": 4,
+            "geometryVertices": 0
+          },
+          {
+            "id": "animal-19/Walking/20/1",
+            "family": "footstep",
+            "time": 0.6783177650568416,
+            "visible": true,
+            "sprites": 4,
+            "fragments": 4,
+            "geometryVertices": 0
+          },
+          {
+            "id": "animal-19/Walking/21/0",
+            "family": "footstep",
+            "time": 0.14243355436505423,
+            "visible": true,
+            "sprites": 4,
+            "fragments": 4,
+            "geometryVertices": 0
+          }
+        ],
+        "failure": null,
+        "workFailure": null,
+        "workReady": false
+      },
+      "blessingVfx": {
+        "closed": false,
+        "sources": 0,
+        "sourceIds": [],
+        "particles": 0,
+        "pending": 0,
+        "admitted": false,
+        "admissionError": null
+      },
+      "guardianAttack": {
+        "closed": false,
+        "began": 0,
+        "confirmed": 0,
+        "rejected": 0,
+        "provisionalFrames": 0,
+        "lastCommand": null,
+        "active": null,
+        "ritualPreview": false,
+        "ritualReady": false,
+        "cropBeams": 0,
+        "modelReady": false,
+        "effectsReady": false,
+        "beamVisible": false,
+        "coreVisible": false
+      },
+      "guardianError": null,
+      "sky": {
+        "closed": false,
+        "ready": true,
+        "night": 0,
+        "failure": null
+      },
+      "ground": {
+        "experimental": true,
+        "error": null,
+        "chunks": 25
+      },
+      "waterReflection": {
+        "active": false,
+        "frames": 0,
+        "waterChunks": 24,
+        "sample": {
+          "x": 59.93240865071615,
+          "y": 3.3399999141693115,
+          "z": -23.964684168497723
+        },
+        "width": 0,
+        "height": 0
+      },
+      "syncTiming": {
+        "lighting": {
+          "samples": 375,
+          "mean": 0.011186667124430338,
+          "p95": 0.019999980926513672,
+          "max": 0.04999995231628418
+        },
+        "biomeProps": {
+          "samples": 375,
+          "mean": 0.003279999574025472,
+          "p95": 0.005000054836273193,
+          "max": 0.21500003337860107
+        },
+        "animals": {
+          "samples": 375,
+          "mean": 1.85010666735967,
+          "p95": 4.89000004529953,
+          "max": 15.324999988079071
+        },
+        "workers": {
+          "samples": 375,
+          "mean": 0.021933332761128743,
+          "p95": 0.014999985694885254,
+          "max": 2.990000009536743
+        },
+        "crates": {
+          "samples": 375,
+          "mean": 0.0016533330281575521,
+          "p95": 0.004999995231628418,
+          "max": 0.05500000715255737
+        },
+        "settlements": {
+          "samples": 375,
+          "mean": 0.12377333307266235,
+          "p95": 0.1549999713897705,
+          "max": 0.6050000190734863
+        },
+        "crops": {
+          "samples": 375,
+          "mean": 0.07618666712443034,
+          "p95": 0.09500002861022949,
+          "max": 3.7600000500679016
+        },
+        "agricultureVfx": {
+          "samples": 375,
+          "mean": 1.632520000775655,
+          "p95": 6.639999985694885,
+          "max": 10.925000011920929
+        },
+        "blessingVfx": {
+          "samples": 375,
+          "mean": 0.004053333441416423,
+          "p95": 0.009999990463256836,
+          "max": 0.10000002384185791
+        },
+        "guardian": {
+          "samples": 375,
+          "mean": 0.005839999834696452,
+          "p95": 0.009999990463256836,
+          "max": 0.38999998569488525
+        }
+      },
+      "lighting": {
+        "night": 0,
+        "sun": 3,
+        "ambient": 2
+      },
+      "assetBudget": {
+        "idle": 0,
+        "estimatedBytes": 0,
+        "maxBytes": 100663296
+      },
+      "props": {
+        "ready": true,
+        "selectableReady": true,
+        "loadedSlots": 19,
+        "chunks": 25,
+        "meshes": 398,
+        "materials": 9,
+        "sharedMaterials": true,
+        "instanceContract": "attributes",
+        "failure": null
+      },
+      "motion": {
+        "closed": false,
+        "lastSequence": 397,
+        "actors": 0,
+        "previewSequence": 398,
+        "worldBatches": 287,
+        "worldActors": 6,
+        "worldRepresentable": true
+      },
+      "actorTextured": true,
+      "actorTextureError": null
+    }
+  },
+  "last": {
+    "at": 1794059837818,
+    "game": {
+      "screen": "game",
+      "starting": false,
+      "causalInputs": 0,
+      "discretePicks": [],
+      "slotId": "estuary-raid-render-qa",
+      "status": {
+        "running": true,
+        "closed": false,
+        "fault": null,
+        "busy": false,
+        "queued": 11,
+        "pendingSteps": 685,
+        "pendingChunks": 0,
+        "confirmedSequence": 518,
+        "confirmedElapsed": 34.05000000000014,
+        "tutorialUpdate": {
+          "needed": true,
+          "narrated": "mechanic.first-raid"
+        },
+        "saveAvailable": true,
+        "lastAttackDiagnostic": null,
+        "completedKinds": {
+          "snapshot": 5,
+          "trackPathMotion": 1,
+          "advance": 405,
+          "pause": 2,
+          "resume": 1,
+          "tutorialStart": 1,
+          "microIncome": 1,
+          "tutorialCommand:update": 60,
+          "tutorialActionPause": 5,
+          "tutorialCommand:present": 2,
+          "tutorialCommand:advance": 8,
+          "setNavigationView": 22,
+          "raidCameraFocus": 1,
+          "tutorialCommand:dismiss": 3,
+          "tutorialCommand:resume-menu": 1
+        },
+        "queuedKinds": {
+          "steps": 5,
+          "tutorialCommand": 4,
+          "tutorialActionPause": 1,
+          "snapshot": 1
+        },
+        "outbox": {
+          "inFlight": 0,
+          "queued": 0,
+          "coalesced": 0,
+          "acknowledged": 518,
+          "foldedViewCount": 0,
+          "capacity": {
+            "queued": 256,
+            "snapshotChars": 134217728,
+            "eventFacts": 65536,
+            "bytes": 536870912
+          },
+          "retained": {
+            "snapshotChars": 0,
+            "eventFacts": 0,
+            "bytes": 0
+          },
+          "queuedPublications": 0,
+          "eventfulPublications": 0,
+          "tickPublications": 0,
+          "unchangedPublications": 0,
+          "queuedBySource": {},
+          "peakQueuedBySource": {
+            "advance": 8,
+            "setNavigationView": 7
+          },
+          "snapshotChars": 0,
+          "peakSnapshotChars": 313944,
+          "peakEventfulPublications": 1,
+          "peakQueuedPublications": 15,
+          "peakQueuedMessages": 16
+        },
+        "visualPublication": {
+          "active": true,
+          "detached": false,
+          "negotiated": true,
+          "encoderRetainedBytes": 59998,
+          "inFlight": 430,
+          "queued": 120,
+          "received": 32,
+          "lastReceived": 429,
+          "coalesced": 0,
+          "acknowledged": 397,
+          "foldedViewCount": 0,
+          "capacity": {
+            "queued": 256,
+            "snapshotChars": 134217728,
+            "eventFacts": 65536,
+            "bytes": 536870912
+          },
+          "retained": {
+            "snapshotChars": 3627331,
+            "eventFacts": 18,
+            "bytes": 25341814
+          },
+          "queuedPublications": 121,
+          "eventfulPublications": 3,
+          "tickPublications": 118,
+          "unchangedPublications": 0,
+          "queuedBySource": {
+            "advance": 118,
+            "tutorialCommand": 2,
+            "snapshot": 1
+          },
+          "peakQueuedBySource": {
+            "tutorialCommand": 21,
+            "advance": 102
+          },
+          "snapshotChars": 3627331,
+          "peakSnapshotChars": 3656985,
+          "peakEventfulPublications": 4,
+          "peakQueuedPublications": 123,
+          "peakQueuedMessages": 90
+        },
+        "publicationBacklog": 0,
+        "peakPublicationBacklog": 16,
+        "recoveryBaseSequence": 391,
+        "recoveryBaseBytes": 5698764,
+        "recoveryJournal": {
+          "base": 391,
+          "candidate": 456,
+          "through": 518,
+          "entries": 127,
+          "bytes": 19994788,
+          "entryBytes": 14009298,
+          "overheadBytes": 5985490,
+          "capacity": 256,
+          "highWatermark": 128,
+          "maxBytes": 268435456,
+          "highWatermarkBytes": 201326592,
+          "pendingTerrain": false,
+          "saturated": false,
+          "encoderFault": false,
+          "checkpointDeferred": false,
+          "checkpointRetry": false,
+          "closed": false
+        },
+        "recoveryFault": null,
+        "tutorialGuideRevision": null,
+        "reception": {
+          "count": 496,
+          "mean": 4.096804434734006,
+          "p95": 5.25,
+          "p99": 9,
+          "max": 13.889999985694885
+        }
+      },
+      "hostedClock": true,
+      "backgroundViews": true,
+      "elapsed": 34.05000000000014,
+      "time": 134.04999999999978,
+      "night": {
+        "done": true
+      },
+      "pauses": [],
+      "tutorial": {
+        "step": "done",
+        "seen": [
+          "magic.shield",
+          "mechanic.first-raid"
+        ],
+        "pending": [],
+        "guideAfterAuto": [],
+        "reading": "mechanic.defenses",
+        "basicSkipped": false,
+        "shownToday": {
+          "day": 5,
+          "ids": [
+            "magic.shield",
+            "mechanic.first-raid"
+          ]
+        },
+        "magicReminders": {
+          "shieldRaid": "raid-5-night"
+        },
+        "dismissed": [
+          "magic.shield:",
+          "mechanic.first-raid:"
+        ]
+      },
+      "guide": null,
+      "centers": 1,
+      "plants": 1,
+      "workers": 1,
+      "animals": 5,
+      "events": [
+        "AnimalLogicalHit",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "CropHit",
+        "CropDestroyed",
+        "AnimalLogicalHit",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "TutorialMessageStarted",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable"
+      ]
+    },
+    "render": {
+      "kind": "inspection",
+      "inspectionGeneration": "7809cd84-0bae-4b59-b8b3-b98ee3e1a0f0",
+      "bootstrapStage": "ground-depth",
+      "preparation": {
+        "admission": {
+          "closed": false,
+          "queued": 0,
+          "active": false,
+          "inflightCompiles": 0,
+          "shadowWaiters": 0,
+          "uploads": 0,
+          "structuralRevision": 1,
+          "compilesStarted": 677,
+          "compilesSettled": 677,
+          "compiling": []
+        },
+        "timeline": {
+          "pending": 32,
+          "bytes": 2331354,
+          "waiting": true,
+          "waitingBytes": 67076,
+          "receivedSequence": 429,
+          "receivedElapsed": 25.499999999999876,
+          "target": 22.29999999999983,
+          "negotiated": true
+        },
+        "pump": {
+          "closed": false,
+          "lastClock": {
+            "sequence": 397,
+            "version": 1,
+            "start": 22.19999999999983,
+            "end": 22.29999999999983,
+            "startPauses": [],
+            "endPauses": [],
+            "complete": true,
+            "segments": [
+              {
+                "start": 22.19999999999983,
+                "end": 22.29999999999983,
+                "realDuration": 0.10000000000000142,
+                "rate": 1
+              }
+            ]
+          },
+          "historicalPending": 398,
+          "historicalHold": "reconciliation",
+          "historicalFallback": null
+        }
+      },
+      "device": {
+        "adapter": {
+          "vendor": "nvidia",
+          "architecture": "turing",
+          "device": "",
+          "description": "",
+          "isFallbackAdapter": false
+        },
+        "maxVertexBuffers": 8
+      },
+      "confirmedPauses": [],
+      "poseAudit": null,
+      "workerState": null,
+      "id": 365,
+      "phase": "running",
+      "backend": "WebGPU",
+      "state": {
+        "closed": false,
+        "sequence": 397,
+        "lastElapsed": 22.38999999999983,
+        "fault": false,
+        "historicalEventMetrics": {
+          "starts": 1,
+          "boundaries": 1,
+          "events": 1,
+          "completed": 0
+        },
+        "historicalEventRejection": {
+          "sequence": 317,
+          "start": 14.349999999999774,
+          "end": 14.389999999999773,
+          "stage": "certificate",
+          "reason": "animal-participant",
+          "actorId": "animal-20"
+        },
+        "timing": {
+          "samples": 397,
+          "decode": {
+            "mean": 0.39017632175753036,
+            "p95": 0.6150000095367432,
+            "max": 2.005000054836273
+          },
+          "reconcile": {
+            "mean": 0.4386020151133501,
+            "p95": 0.6200000047683716,
+            "max": 4.884999990463257
+          },
+          "hooks": {
+            "mean": 3.60598236892926,
+            "p95": 9.675000011920929,
+            "max": 20.555000007152557
+          },
+          "total": {
+            "mean": 4.434760705800141,
+            "p95": 10.620000004768372,
+            "max": 26.790000081062317
+          }
+        }
+      },
+      "recoveryEvents": [],
+      "lastTerrainCheckpoint": null,
+      "presentationClock": {
+        "elapsed": 22.38999999999983
+      },
+      "terrain": {
+        "closed": false,
+        "confirmedSequence": 397,
+        "pending": false,
+        "presentationPending": false,
+        "lastId": 1063,
+        "retainedRevisions": 0,
+        "retainedBytes": 30976,
+        "waitingForCapacity": false,
+        "completeSequence": 518
+      },
+      "resident": 25,
+      "actor": true,
+      "actors": {
+        "closed": false,
+        "count": 5,
+        "ready": 5,
+        "visible": 5,
+        "pending": 0,
+        "physical": 0,
+        "physicalApplied": 0,
+        "bakedWalking": 2,
+        "provisionalFalling": 0,
+        "fallsReady": false,
+        "fallLoadError": null,
+        "provisionalImpacts": 0,
+        "historicalPhysical": {
+          "starts": 0,
+          "samples": 0,
+          "finishes": 0,
+          "active": 0
+        }
+      },
+      "workers": {
+        "closed": false,
+        "count": 0,
+        "ready": 0,
+        "pending": 0,
+        "assets": {
+          "closed": false,
+          "idle": {
+            "idle": 0,
+            "estimatedBytes": 0,
+            "maxBytes": 100663296
+          },
+          "textureFailure": null,
+          "profiles": []
+        }
+      },
+      "crates": {
+        "closed": false,
+        "count": 0,
+        "ready": 0,
+        "pending": 0
+      },
+      "settlements": {
+        "closed": false,
+        "villages": 1,
+        "units": 10,
+        "centers": 1,
+        "walls": 0,
+        "damagedCenters": 0,
+        "selectableReady": true,
+        "provisional": 0,
+        "previewHistorySaturated": false,
+        "destruction": [],
+        "banks": 2,
+        "failure": null,
+        "textureFailure": null,
+        "villagePreviews": 1,
+        "villageTextured": 1,
+        "centerPreviews": 1,
+        "centerTextured": 1,
+        "wallPreviews": 0,
+        "wallTextured": 0
+      },
+      "crops": {
+        "closed": false,
+        "ready": true,
+        "bridgeReady": true,
+        "confirmedPlants": 1,
+        "provisional": 0,
+        "provisionalHistorySaturated": false,
+        "plants": 1,
+        "batches": 1,
+        "activeStages": [
+          25
+        ],
+        "activeBridges": [],
+        "failure": null
+      },
+      "agricultureVfx": {
+        "closed": false,
+        "ready": true,
+        "effects": 3,
+        "locomotion": {
+          "steps": 3,
+          "ripples": 0,
+          "ripplesReady": false
+        },
+        "aura": null,
+        "active": [
+          {
+            "id": "animal-19/Walking/20/0",
+            "family": "footstep",
+            "time": 1.2741003005045817,
+            "visible": true,
+            "sprites": 2,
+            "fragments": 0,
+            "geometryVertices": 0
+          },
+          {
+            "id": "animal-19/Walking/20/1",
+            "family": "footstep",
+            "time": 0.7683177650568498,
+            "visible": true,
+            "sprites": 4,
+            "fragments": 4,
+            "geometryVertices": 0
+          },
+          {
+            "id": "animal-19/Walking/21/0",
+            "family": "footstep",
+            "time": 0.23243355436505553,
+            "visible": true,
+            "sprites": 4,
+            "fragments": 4,
+            "geometryVertices": 0
+          }
+        ],
+        "failure": null,
+        "workFailure": null,
+        "workReady": false
+      },
+      "blessingVfx": {
+        "closed": false,
+        "sources": 0,
+        "sourceIds": [],
+        "particles": 0,
+        "pending": 0,
+        "admitted": false,
+        "admissionError": null
+      },
+      "guardianAttack": {
+        "closed": false,
+        "began": 0,
+        "confirmed": 0,
+        "rejected": 0,
+        "provisionalFrames": 0,
+        "lastCommand": null,
+        "active": null,
+        "ritualPreview": false,
+        "ritualReady": false,
+        "cropBeams": 0,
+        "modelReady": false,
+        "effectsReady": false,
+        "beamVisible": false,
+        "coreVisible": false
+      },
+      "guardianError": null,
+      "sky": {
+        "closed": false,
+        "ready": true,
+        "night": 0,
+        "failure": null
+      },
+      "ground": {
+        "experimental": true,
+        "error": null,
+        "chunks": 25
+      },
+      "waterReflection": {
+        "active": false,
+        "frames": 0,
+        "waterChunks": 24,
+        "sample": {
+          "x": 59.93240865071615,
+          "y": 3.3399999141693115,
+          "z": -23.964684168497723
+        },
+        "width": 0,
+        "height": 0
+      },
+      "syncTiming": {
+        "lighting": {
+          "samples": 375,
+          "mean": 0.011186667124430338,
+          "p95": 0.019999980926513672,
+          "max": 0.04999995231628418
+        },
+        "biomeProps": {
+          "samples": 375,
+          "mean": 0.003279999574025472,
+          "p95": 0.005000054836273193,
+          "max": 0.21500003337860107
+        },
+        "animals": {
+          "samples": 375,
+          "mean": 1.85010666735967,
+          "p95": 4.89000004529953,
+          "max": 15.324999988079071
+        },
+        "workers": {
+          "samples": 375,
+          "mean": 0.021933332761128743,
+          "p95": 0.014999985694885254,
+          "max": 2.990000009536743
+        },
+        "crates": {
+          "samples": 375,
+          "mean": 0.0016533330281575521,
+          "p95": 0.004999995231628418,
+          "max": 0.05500000715255737
+        },
+        "settlements": {
+          "samples": 375,
+          "mean": 0.12377333307266235,
+          "p95": 0.1549999713897705,
+          "max": 0.6050000190734863
+        },
+        "crops": {
+          "samples": 375,
+          "mean": 0.07618666712443034,
+          "p95": 0.09500002861022949,
+          "max": 3.7600000500679016
+        },
+        "agricultureVfx": {
+          "samples": 375,
+          "mean": 1.632520000775655,
+          "p95": 6.639999985694885,
+          "max": 10.925000011920929
+        },
+        "blessingVfx": {
+          "samples": 375,
+          "mean": 0.004053333441416423,
+          "p95": 0.009999990463256836,
+          "max": 0.10000002384185791
+        },
+        "guardian": {
+          "samples": 375,
+          "mean": 0.005839999834696452,
+          "p95": 0.009999990463256836,
+          "max": 0.38999998569488525
+        }
+      },
+      "lighting": {
+        "night": 0,
+        "sun": 3,
+        "ambient": 2
+      },
+      "assetBudget": {
+        "idle": 0,
+        "estimatedBytes": 0,
+        "maxBytes": 100663296
+      },
+      "props": {
+        "ready": true,
+        "selectableReady": true,
+        "loadedSlots": 19,
+        "chunks": 25,
+        "meshes": 398,
+        "materials": 9,
+        "sharedMaterials": true,
+        "instanceContract": "attributes",
+        "failure": null
+      },
+      "motion": {
+        "closed": false,
+        "lastSequence": 397,
+        "actors": 0,
+        "previewSequence": 398,
+        "worldBatches": 287,
+        "worldActors": 6,
+        "worldRepresentable": true
+      },
+      "actorTextured": true,
+      "actorTextureError": null
+    }
+  },
+  "backend": "WebGPU",
+  "device": {
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "isFallbackAdapter": false
+    },
+    "maxVertexBuffers": 8
+  }
+}

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {updateWorkerEncounters,pushWorker,sweptDistance} from '../src/simulation/encounters.js';
 import * as Game from '../src/simulation/game.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
+import {observeTaskChanges} from '../src/simulation/tasks.js';
 import {LOCOMOTION as L} from '../src/simulation/locomotion-calibration.js';
 import {updateRaid} from '../src/simulation/raids.js';
 const nav={walkable:()=>true};
@@ -101,4 +102,24 @@ test('Raid survivors return walking even with urgent tasks, and resume ordinary 
   while(worker.status==='arriving')Game.tick(s,.1,world);
   assert.equal(worker.raidReturn,false);assert.equal(worker.runRemaining,50);
   Game.tick(s,.2,world);assert.equal(worker.status,'walking');assert.ok(worker.runRemaining<50);assert.equal(worker.running,true);
+});
+
+test('first impact fixes fall heading and publishes worker position to planning',()=>{
+ const {s,worker}=fixture();worker.z=.1;worker.heading=.7;
+ const events=[];const stop=observeTaskChanges(s,e=>events.push(e));
+ updateWorkerEncounters(s,nav);stop();
+ assert.equal(worker.downHeading,.7);
+ assert.ok(events.some(e=>e.type==='worker'&&e.worker.x===worker.x&&e.worker.z===worker.z));
+});
+test('Game.tick freezes a downed worker and publishes its reconciled recovery position',()=>{
+ const {s,worker}=fixture();s.raid=null;s.initialPreparation=false;s.time=100;
+ s.dayPlan={done:true};s.nightPlan={done:true};
+ Object.assign(worker,{villageId:s.villages[0].id,fallRemaining:.2,heading:.7});
+ const world={...nav,path:(_a,b)=>[b],setState:()=>{}};
+ const events=[];const stop=observeTaskChanges(s,e=>events.push(e));
+ Game.tick(s,.3,world);assert.ok(worker.recovery);assert.equal(worker.x,0);assert.equal(worker.z,1);
+ const {dx,dz}=worker.recovery;
+ while(worker.recovery)Game.tick(s,.01,world);
+ stop();assert.ok(Math.abs(worker.x-dx)<1e-9);assert.ok(Math.abs(worker.z-1-dz)<1e-9);
+ assert.ok(events.some(e=>e.type==='worker'&&e.worker.x===worker.x&&e.worker.z===worker.z));
 });

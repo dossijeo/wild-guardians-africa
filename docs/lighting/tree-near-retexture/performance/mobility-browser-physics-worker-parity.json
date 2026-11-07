@@ -1,0 +1,74 @@
+{
+  "runs": [
+    {
+      "equal": true,
+      "steps": 900,
+      "phases": [
+        "falling",
+        "rolling",
+        "recovering",
+        "released"
+      ],
+      "recoveriesUsed": [
+        "AuthoredBeastRecovery"
+      ],
+      "boneCount": 21,
+      "main": {
+        "initializationMs": 199.33500000089407,
+        "runMs": 661.765000000596
+      },
+      "worker": {
+        "initializationMs": 208.94499999284744,
+        "runMs": 453.10999999940395,
+        "wallMs": 995.4149999991059
+      }
+    },
+    {
+      "equal": true,
+      "steps": 900,
+      "phases": [
+        "falling",
+        "rolling",
+        "recovering",
+        "released"
+      ],
+      "recoveriesUsed": [
+        "AuthoredBeastRecovery"
+      ],
+      "boneCount": 21,
+      "main": {
+        "initializationMs": 192.3449999988079,
+        "runMs": 648.8149999976158
+      },
+      "worker": {
+        "initializationMs": 198.17999999970198,
+        "runMs": 456.07500000298023,
+        "wallMs": 1013.4149999991059
+      }
+    },
+    {
+      "equal": true,
+      "steps": 900,
+      "phases": [
+        "falling",
+        "rolling",
+        "recovering",
+        "released"
+      ],
+      "recoveriesUsed": [
+        "AuthoredBeastRecovery"
+      ],
+      "boneCount": 21,
+      "main": {
+        "initializationMs": 177.2800000011921,
+        "runMs": 654.9750000014901
+      },
+      "worker": {
+        "initializationMs": 213.89500000327826,
+        "runMs": 449.75,
+        "wallMs": 977.640000000596
+      }
+    }
+  ],
+  "scope": "Edge headless, real Rapier, authored recovery clip and geometry-only rig independently loaded in main thread and browser Worker, flat terrain and repeated hit. Selected logical fields, physical pose and all bone world matrices compared every step; no Game.tick, WebGL pixels, live GLTF materials, crowd, obstacles or FPS measurement. Timings not comparable as a performance benchmark."
+}

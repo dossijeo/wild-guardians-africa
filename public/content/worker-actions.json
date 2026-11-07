@@ -1,9 +1,9 @@
 {
   "youngMale": {
     "profile": "youngMale",
-    "url": "/assets/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
-    "sha256": "25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238",
-    "bytes": 27893128,
+    "url": "/assets/d12cbb815746bfc210865e5f8aca07e4f06d51271e4e75993fe749283036c3d2.glb",
+    "sha256": "d12cbb815746bfc210865e5f8aca07e4f06d51271e4e75993fe749283036c3d2",
+    "bytes": 28812068,
     "source": "Quata_Character_Lab_Kofi_Joven_Skin_Corregido_v7.html",
     "sourceSha256": "e30e53a58102844218edf689eb80b5521f9b7a28d2949a9cab29768d8cb8d3c1",
     "exporterScripts": [
@@ -108,13 +108,23 @@
         }
       }
     },
-    "bones": 28
+    "bones": 28,
+    "facialEdit": {
+      "baseLibrary": {
+        "url": "/assets/25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238.glb",
+        "sha256": "25e4ab988c87419007f185c956970b3329e7379e9fab4bcbe6851cb1e81de238",
+        "bytes": 27893128
+      },
+      "pipeline": "tools/guardian/merge_worker_facial_library.py",
+      "registration": "tools/guardian/register_worker_face.py",
+      "scope": "Authored skin, eyelids and oral meshes; original action channels and tools retained"
+    }
   },
   "olderMale": {
     "profile": "olderMale",
-    "url": "/assets/e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202.glb",
-    "sha256": "e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202",
-    "bytes": 20235172,
+    "url": "/assets/928855d54c35ce754eef5ca29cdf00223f1ca674f94d2831acb40c85dd38c222.glb",
+    "sha256": "928855d54c35ce754eef5ca29cdf00223f1ca674f94d2831acb40c85dd38c222",
+    "bytes": 18120144,
     "source": "Quata_Character_Lab_Ganadero_Mayor_ToolSafe_Suave_v5.html",
     "sourceSha256": "916b259f311cd35b48419c8669d6d4083f06288d43e768783e2d755726633815",
     "exporterScripts": [
@@ -219,13 +229,23 @@
         }
       }
     },
-    "bones": 28
+    "bones": 28,
+    "facialEdit": {
+      "baseLibrary": {
+        "url": "/assets/e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202.glb",
+        "sha256": "e870835e4fa3c1cc4fdbcd048a2ca64da97d2ea4f48ea3192da6aba692e05202",
+        "bytes": 20235172
+      },
+      "pipeline": "docs/guardian/phase2/face-authoring/olderMale/README.md",
+      "registration": "tools/guardian/register_worker_face.py",
+      "scope": "Authored skin, eyelids and oral meshes; original action channels and tools retained"
+    }
   },
   "olderFemale": {
     "profile": "olderFemale",
-    "url": "/assets/4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141.glb",
-    "sha256": "4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141",
-    "bytes": 19341308,
+    "url": "/assets/a736e7adbeb454f3cfc3e3b23bb0b493116fcfe9f64bfe36cc6554bb0ed32d0c.glb",
+    "sha256": "a736e7adbeb454f3cfc3e3b23bb0b493116fcfe9f64bfe36cc6554bb0ed32d0c",
+    "bytes": 20543048,
     "source": "Quata_Character_Lab_Amara_Mayor_ToolSafe_Suave_v5.html",
     "sourceSha256": "f23fe56e8c13205922bb0a2f54470eb161f727d306fd08aed42445f624d6292a",
     "exporterScripts": [
@@ -330,13 +350,23 @@
         }
       }
     },
-    "bones": 28
+    "bones": 28,
+    "facialEdit": {
+      "baseLibrary": {
+        "url": "/assets/4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141.glb",
+        "sha256": "4c3d590d278e3fc979257b71502ed8b151e5821972e192c19f0228004d70d141",
+        "bytes": 19341308
+      },
+      "pipeline": "tools/guardian/matte_worker_body.py",
+      "registration": "tools/guardian/register_worker_face.py",
+      "scope": "Authored skin, eyelids and oral meshes; original action channels and tools retained"
+    }
   },
   "youngFemale": {
     "profile": "youngFemale",
-    "url": "/assets/0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894.glb",
-    "sha256": "0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894",
-    "bytes": 19143664,
+    "url": "/assets/382b1b7ad226870796b5f5a7af4ad63f019c09690edeb333dabb6f1063520c0c.glb",
+    "sha256": "382b1b7ad226870796b5f5a7af4ad63f019c09690edeb333dabb6f1063520c0c",
+    "bytes": 16406252,
     "source": "Quata_Character_Lab_Amara_Joven_ToolSafe_Suave_v5.html",
     "sourceSha256": "f83317d8da9c6b41fdba2375887a4cc0920d17cea51959d8611edff17191e7ab",
     "exporterScripts": [
@@ -441,6 +471,16 @@
         }
       }
     },
-    "bones": 28
+    "bones": 28,
+    "facialEdit": {
+      "baseLibrary": {
+        "url": "/assets/0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894.glb",
+        "sha256": "0ab73565649737fc15d853aa9d52a9ecacff3fbf9f5664cc21ec4e54452ef894",
+        "bytes": 19143664
+      },
+      "pipeline": "docs/guardian/phase2/face-authoring/youngFemale/README.md",
+      "registration": "tools/guardian/register_worker_face.py",
+      "scope": "Authored skin, eyelids and oral meshes; original action channels and tools retained"
+    }
   }
 }

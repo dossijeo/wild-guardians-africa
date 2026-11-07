@@ -1,0 +1,85 @@
+{
+  "trace": [
+    {
+      "frame": 62,
+      "at": 30247.73,
+      "drawMs": 48.73499999940395,
+      "afterApply": true,
+      "spans": [
+        {
+          "label": "world-frame-stage:1",
+          "duration": 3.0850000083446503
+        },
+        {
+          "label": "renderer.render",
+          "duration": 41.820000007748604,
+          "programsBefore": 97,
+          "programsAfter": 97,
+          "caller": null
+        },
+        {
+          "label": "drawWorldFrame",
+          "duration": 43.70499999821186
+        },
+        {
+          "label": "world-frame-draw",
+          "duration": 43.71500000357628
+        }
+      ]
+    }
+  ],
+  "applicationAt": 30249.20000000298,
+  "chunks": 25,
+  "animals": 0,
+  "initMs": 989.1800000071526,
+  "tickMs": 1594.2150000035763,
+  "responseMs": 1719.9099999964237,
+  "applyDelayMs": 14.689999997615814,
+  "applyMs": 1.290000006556511,
+  "projectionBytes": 2837,
+  "snapshotBytes": 109659,
+  "actorsApplied": 32,
+  "actorsChanged": 1,
+  "eventsReceived": 1,
+  "eventTypes": [
+    "StructureRuined"
+  ],
+  "localCenter": {
+    "status": "ruined",
+    "hp": 0,
+    "collapseRemaining": 0
+  },
+  "workerCenter": {
+    "status": "ruined",
+    "hp": 0,
+    "collapseRemaining": 3.1780134079895106e-15
+  },
+  "observerCount": 1,
+  "simulationObserverCount": 0,
+  "fenceState": {
+    "received": 1,
+    "nextEvent": 1,
+    "displayed": 1,
+    "minimum": 1,
+    "pending": 0,
+    "fault": false,
+    "hide": false
+  },
+  "frames": {
+    "count": 149,
+    "p95": 33.414999999997235,
+    "p99": 33.45999999999913,
+    "max": 33.469999999997526
+  },
+  "renderMs": {
+    "count": 150,
+    "p95": 15.129999995231628,
+    "p99": 19.53499999642372,
+    "max": 48.73499999940395
+  },
+  "fullSnapshotEqual": true,
+  "sceneErrors": [],
+  "warm": false,
+  "qaReadyMs": 26260,
+  "scope": "One 70-step publication from a Worker-owned clone into a frozen saved savanna QA scene after a diagnostic center-damage action. Structure status and HP, actor x/z/heading and events are applied under a diagnostic fence; all events are classified as structural. Scene and simulation have separate native worlds. A snapshot is requested separately for validation. No full collapse transition, physics manager, input, reliable event delivery, collision validation, GPU timing, visual interpolation or production authority is demonstrated."
+}

@@ -1,0 +1,3982 @@
+{
+  "ready": true,
+  "campaign": false,
+  "paused": true,
+  "faceCandidate": false,
+  "faceCandidateSpecies": null,
+  "expressions": [
+    {
+      "id": "qa-beast-0",
+      "weights": [
+        0,
+        0,
+        8.093050563439199e-120
+      ],
+      "bindings": 11
+    }
+  ],
+  "entityCounts": {
+    "workers": 1,
+    "structures": 1,
+    "crops": 12,
+    "animals": 1
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 0,
+  "maxVisibleGuardians": 1,
+  "elapsed": 3024.487143000009,
+  "simulate": true,
+  "clockMode": "Game.tick",
+  "shields": [],
+  "active": 0,
+  "origins": [],
+  "retainedAttacks": [],
+  "retainedDraws": 0,
+  "attackVisual": [],
+  "reused": 0,
+  "health": 28,
+  "animalState": "walking",
+  "animalPosition": [
+    85.08386975172459,
+    -8.788145316633527
+  ],
+  "draws": 58,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "spirit_appear",
+      "at": 3012.4309430000094,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3012.530718000009,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3012.647073000009,
+      "emitter": "qa-beast-0",
+      "phase": "falling",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3012.647073000009,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3014.609563000008,
+      "emitter": "guardian-world",
+      "played": false
+    }
+  ],
+  "combatPhysics": {
+    "active": 0,
+    "physicsMs": 0.014999985694885254,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 14.670000076293945,
+    "maxStepMs": 20.99500000476837,
+    "solverMs": 0,
+    "solverSteps": 0,
+    "bindingMs": 0,
+    "recoverySetupMs": 0,
+    "creationMs": 0,
+    "lastCreation": {
+      "species": "hyena",
+      "captureMs": 0.6200000047683716,
+      "colliderFitMs": 6.290000081062317,
+      "environmentMs": 4.784999966621399,
+      "bodiesMs": 2.7100000381469727
+    },
+    "recoveryFollowMs": 0,
+    "bakedActive": 0,
+    "kinematic": 0,
+    "rollFailures": 0,
+    "lastRoll": {
+      "seconds": 1.4333333333333331,
+      "contactDelay": 0,
+      "error": 0.4368166437928936,
+      "speed": 0.2825327160727212,
+      "timedOut": false
+    }
+  },
+  "physicsWorlds": 0,
+  "physicalBodies": 0,
+  "allDown": [
+    {
+      "id": "qa-beast-0",
+      "x": 85.08386975172459,
+      "z": -8.788145316633527
+    }
+  ],
+  "errors": [],
+  "report": {
+    "scope": "Real Attack cycles, continuous Game.tick and WorldScene. Diagnostic, not a paired before/after benchmark.",
+    "requestedImpacts": 1,
+    "headOn": false,
+    "wallTrial": false,
+    "recoveryTrace": [
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 129.1449999809265,
+        "time": 0.14954499999976179,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 248.375,
+        "time": 0.2658999999998741,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 360.7350000143051,
+        "time": 0.38237500000013824,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 475.039999961853,
+        "time": 0.4821650000003501,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 576.2849999666214,
+        "time": 0.5819600000004357,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 676.6599999666214,
+        "time": 0.715059999999994,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 776.8949999809265,
+        "time": 0.8147949999997763,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 881.954999923706,
+        "time": 0.9144200000000637,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 986.9449999332428,
+        "time": 1.014234999999644,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 1088.0499999523163,
+        "time": 1.1140349999996033,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 1189.454999923706,
+        "time": 1.2138349999995626,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 1298.2450000047684,
+        "time": 1.3302249999992455,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 1417.1399999856949,
+        "time": 1.4467699999991055,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 1534.7949999570847,
+        "time": 1.5630749999991167,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 1635.969999909401,
+        "time": 1.6627399999988484,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 1741.554999947548,
+        "time": 1.7460449999994125,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 1849.8700000047684,
+        "time": 1.862414999999146,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 1950.7799999713898,
+        "time": 1.9621699999993325,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 2051.789999961853,
+        "time": 2.06193999999914,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 2166.789999961853,
+        "time": 2.1783899999986716,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 2275.0899999141693,
+        "time": 2.2616099999986545,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 2384.8949999809265,
+        "time": 2.3781549999985145,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 2486.054999947548,
+        "time": 2.4613449999988006,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 2593.889999985695,
+        "time": 2.5777749999988373,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 2705.7099999189377,
+        "time": 2.677569999998923,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 2805.9599999189377,
+        "time": 2.777354999999261,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 2908.7849999666214,
+        "time": 2.893634999999449,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 3020.2599999904633,
+        "time": 3.010034999999789,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 3130.389999985695,
+        "time": 3.1098799999999756,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 3234.789999961853,
+        "time": 3.1929849999996804,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 3344.75,
+        "time": 3.325959999999668,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 3446.3349999189377,
+        "time": 3.425699999999324,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 3547.6150000095367,
+        "time": 3.5255799999990813,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 3651.2249999046326,
+        "time": 3.641999999998916,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 3759.7599999904633,
+        "time": 3.741799999998875,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "falling",
+            "roll": null
+          }
+        ],
+        "wallMs": 3867.5299999713898,
+        "time": 3.8582049999990886,
+        "phase": "falling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 0,
+              "contactDelay": 0,
+              "error": null,
+              "errors": [
+                null,
+                null
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 3981.6549999713898,
+        "time": 3.9579199999989214,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 0.11666666666666665,
+              "contactDelay": 0,
+              "error": 1.18728559509159,
+              "errors": [
+                1.1307128820267476,
+                1.18728559509159
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 4086,
+        "time": 4.0743949999991855,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 0.21666666666666665,
+              "contactDelay": 0,
+              "error": 0.7020997243829823,
+              "errors": [
+                0.5649459188472781,
+                0.7020997243829823
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 4193.039999961853,
+        "time": 4.1741349999988415,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 0.3333333333333333,
+              "contactDelay": 0,
+              "error": 0.3953379388335461,
+              "errors": [
+                0.08957004982055193,
+                0.3953379388335461
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 4302.629999995232,
+        "time": 4.2904149999990295,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 0.41666666666666663,
+              "contactDelay": 0,
+              "error": 0.4203564204514866,
+              "errors": [
+                0.19273151845208855,
+                0.4203564204514866
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 4404.0199999809265,
+        "time": 4.373559999998633,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 0.5333333333333333,
+              "contactDelay": 0,
+              "error": 0.4360520708982562,
+              "errors": [
+                0.20416478183366674,
+                0.4360520708982562
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 4524.1449999809265,
+        "time": 4.5065849999982674,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 0.6500000000000004,
+              "contactDelay": 0,
+              "error": 0.46702628355123543,
+              "errors": [
+                0.3013180077660176,
+                0.46702628355123543
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 4633.194999933243,
+        "time": 4.622934999998506,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 0.7500000000000007,
+              "contactDelay": 0,
+              "error": 0.4696757085556254,
+              "errors": [
+                0.31369850162048724,
+                0.4696757085556254
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 4739.2699999809265,
+        "time": 4.722844999998415,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 0.8666666666666677,
+              "contactDelay": 0,
+              "error": 0.45019237423913333,
+              "errors": [
+                0.2726595608587643,
+                0.45019237423913333
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 4847.7699999809265,
+        "time": 4.839234999998553,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 0.966666666666668,
+              "contactDelay": 0,
+              "error": 0.43263892142789057,
+              "errors": [
+                0.2208679748210019,
+                0.43263892142789057
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 4954.169999957085,
+        "time": 4.938999999998487,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 1.0833333333333344,
+              "contactDelay": 0,
+              "error": 0.4249762500113542,
+              "errors": [
+                0.1689955937243373,
+                0.4249762500113542
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 5066.8949999809265,
+        "time": 5.055339999998523,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 1.1666666666666674,
+              "contactDelay": 0,
+              "error": 0.4267418359979129,
+              "errors": [
+                0.1421260927677086,
+                0.4267418359979129
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 5167.409999966621,
+        "time": 5.1385699999982535,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 1.3000000000000003,
+              "contactDelay": 0,
+              "error": 0.4352871611881663,
+              "errors": [
+                0.13592562296329547,
+                0.4352871611881663
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 5287.049999952316,
+        "time": 5.271559999998317,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "rolling",
+            "roll": {
+              "age": 1.4166666666666665,
+              "contactDelay": 0,
+              "error": 0.43687144802120187,
+              "errors": [
+                0.10668356081176954,
+                0.43687144802120187
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 5404.089999914169,
+        "time": 5.388014999998177,
+        "phase": "rolling",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 5515.729999899864,
+        "time": 5.504379999998491,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 0.08320999999999913,
+        "groundCorrection": 0.00010835016590637903,
+        "support": {
+          "minimum": 0.04622062070349564,
+          "footMinimum": 0.052612583977992955,
+          "limiter": "LeftHand",
+          "footPoint": {
+            "position": [
+              89.21912717624132,
+              12.621442504508343,
+              -7.835935566547139
+            ],
+            "floor": 12.56882992053035
+          },
+          "bodyPoint": {
+            "position": [
+              89.14315840203555,
+              12.605226732650294,
+              -8.094832124942378
+            ],
+            "floor": 12.559006111946799
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            88.90309388423685,
+            12.894045640714916,
+            -8.441223171676343
+          ],
+          "groundGap": 0.3510217336882633
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 5640.079999923706,
+        "time": 5.620754999998553,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 0.19958499999999912,
+        "groundCorrection": -0.003897950918735904,
+        "support": {
+          "minimum": 0.03939472821291368,
+          "footMinimum": 0.052839032550545895,
+          "limiter": "LeftHand",
+          "footPoint": {
+            "position": [
+              89.14897262933984,
+              12.613856383505894,
+              -7.854448818545956
+            ],
+            "floor": 12.561017350955348
+          },
+          "bodyPoint": {
+            "position": [
+              89.31727286484474,
+              12.615844541849299,
+              -8.241394058261319
+            ],
+            "floor": 12.576449813636385
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            88.89019986573861,
+            12.90755847139381,
+            -8.510454827183695
+          ],
+          "groundGap": 0.3647190825346147
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 5754.389999985695,
+        "time": 5.73716499999864,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 0.315994999999999,
+        "groundCorrection": -0.01187626375929408,
+        "support": {
+          "minimum": 0.029750971430171802,
+          "footMinimum": 0.04547674712799754,
+          "limiter": "Spine",
+          "footPoint": {
+            "position": [
+              89.03638029147518,
+              12.593938751531585,
+              -7.9025342313341564
+            ],
+            "floor": 12.548462004403587
+          },
+          "bodyPoint": {
+            "position": [
+              89.10610412181823,
+              12.58498256766647,
+              -8.068431021397181
+            ],
+            "floor": 12.555231596236299
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            88.8719829404124,
+            12.924331535725495,
+            -8.608266684577641
+          ],
+          "groundGap": 0.38175283779662017
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 5872.054999947548,
+        "time": 5.853519999998753,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 0.43234999999999857,
+        "groundCorrection": -0.01501360752676529,
+        "support": {
+          "minimum": 0.01990927414328958,
+          "footMinimum": 0.028915873883274656,
+          "limiter": "Head",
+          "footPoint": {
+            "position": [
+              88.91227605357217,
+              12.572469767099197,
+              -7.981143465856923
+            ],
+            "floor": 12.543553893215922
+          },
+          "bodyPoint": {
+            "position": [
+              88.63918132555759,
+              12.560313087794595,
+              -9.076438337982648
+            ],
+            "floor": 12.540403813651306
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            88.85339210766183,
+            12.94645359798378,
+            -8.708086157363098
+          ],
+          "groundGap": 0.4041409417385804
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 5977.884999990463,
+        "time": 5.9532699999990655,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 0.5320999999999986,
+        "groundCorrection": -0.004740945933224307,
+        "support": {
+          "minimum": 0.013290690042094155,
+          "footMinimum": 0.01943482377984118,
+          "limiter": "Head",
+          "footPoint": {
+            "position": [
+              89.45939366401542,
+              12.610665075491783,
+              -8.319302962776199
+            ],
+            "floor": 12.591230251711941
+          },
+          "bodyPoint": {
+            "position": [
+              88.70180920487213,
+              12.554091298779996,
+              -9.162573668976476
+            ],
+            "floor": 12.540800608737902
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            88.84088969132604,
+            12.973713320607114,
+            -8.77521518939337
+          ],
+          "groundGap": 0.43157957855777695
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 6079.879999995232,
+        "time": 6.069629999999506,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 0.6484599999999991,
+        "groundCorrection": 0.007871598269888185,
+        "support": {
+          "minimum": 0.010000637488843722,
+          "footMinimum": 0.010000637488843722,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.47473624557767,
+              12.601807929618545,
+              -8.40611728033329
+            ],
+            "floor": 12.591807292129701
+          },
+          "bodyPoint": {
+            "position": [
+              89.47473624557767,
+              12.601807929618545,
+              -8.40611728033329
+            ],
+            "floor": 12.591807292129701
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            88.83467482664892,
+            12.994770015342954,
+            -8.80858456686165
+          ],
+          "groundGap": 0.4527252103027717
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 6181.240000009537,
+        "time": 6.152869999999439,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 0.7317000000000009,
+        "groundCorrection": 0.00723176841841088,
+        "support": {
+          "minimum": 0.009999999845096141,
+          "footMinimum": 0.009999999845096141,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.4702657541898,
+              12.601255914603216,
+              -8.410321023708152
+            ],
+            "floor": 12.59125591475812
+          },
+          "bodyPoint": {
+            "position": [
+              89.4702657541898,
+              12.601255914603216,
+              -8.410321023708152
+            ],
+            "floor": 12.59125591475812
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            88.8342086011322,
+            12.994432646726239,
+            -8.808879075711545
+          ],
+          "groundGap": 0.45239226719721515
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 6290.224999904633,
+        "time": 6.2692749999991975,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 0.8481049999999998,
+        "groundCorrection": 0.007758026900477546,
+        "support": {
+          "minimum": 0.009999999833818052,
+          "footMinimum": 0.009999999833818052,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.48245362120193,
+              12.602473890248415,
+              -8.420816461716992
+            ],
+            "floor": 12.592473890414597
+          },
+          "bodyPoint": {
+            "position": [
+              89.48245362120193,
+              12.602473890248415,
+              -8.420816461716992
+            ],
+            "floor": 12.592473890414597
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            88.83249354161877,
+            12.988539484965996,
+            -8.80823873431742
+          ],
+          "groundGap": 0.44651363211009176
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 6408.4349999427795,
+        "time": 6.385674999999537,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 0.9645050000000013,
+        "groundCorrection": 0.008052900153705736,
+        "support": {
+          "minimum": 0.009999999827508432,
+          "footMinimum": 0.009999999827508432,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.48381396739886,
+              12.602690441658106,
+              -8.415783244551378
+            ],
+            "floor": 12.592690441830598
+          },
+          "bodyPoint": {
+            "position": [
+              89.48381396739886,
+              12.602690441658106,
+              -8.415783244551378
+            ],
+            "floor": 12.592690441830598
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            88.83075112196516,
+            12.981556750301438,
+            -8.807091962119538
+          ],
+          "groundGap": 0.43954515120748816
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 6514.574999928474,
+        "time": 6.485419999999522,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 1.0642500000000001,
+        "groundCorrection": 0.007754826025659014,
+        "support": {
+          "minimum": 0.009999999833890882,
+          "footMinimum": 0.009999999833890882,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.4813834455195,
+              12.602450945796884,
+              -8.413428935032606
+            ],
+            "floor": 12.592450945962993
+          },
+          "bodyPoint": {
+            "position": [
+              89.4813834455195,
+              12.602450945796884,
+              -8.413428935032606
+            ],
+            "floor": 12.592450945962993
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            88.83107486235532,
+            12.978712425353232,
+            -8.807398884170341
+          ],
+          "groundGap": 0.436698273368453
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 6638.534999966621,
+        "time": 6.618489999999383,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 1.1973199999999997,
+        "groundCorrection": 0.009111049009249186,
+        "support": {
+          "minimum": 0.009999999804838566,
+          "footMinimum": 0.009999999804838566,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.48853422444003,
+              12.60331394622148,
+              -8.408163933222474
+            ],
+            "floor": 12.593313946416641
+          },
+          "bodyPoint": {
+            "position": [
+              89.48853422444003,
+              12.60331394622148,
+              -8.408163933222474
+            ],
+            "floor": 12.593313946416641
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            88.8309637385547,
+            12.972385728834563,
+            -8.81016027941814
+          ],
+          "groundGap": 0.43037536862286174
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 6740.049999952316,
+        "time": 6.701724999999897,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 1.2805550000000003,
+        "groundCorrection": 0.002886172678256074,
+        "support": {
+          "minimum": 0.009999999938180792,
+          "footMinimum": 0.009999999938180792,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.4904224335363,
+              12.603734193832402,
+              -8.391966455087859
+            ],
+            "floor": 12.593734193894221
+          },
+          "bodyPoint": {
+            "position": [
+              89.4904224335363,
+              12.603734193832402,
+              -8.391966455087859
+            ],
+            "floor": 12.593734193894221
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            88.82841984668751,
+            12.969504315447601,
+            -8.813359308612386
+          ],
+          "groundGap": 0.4275197215523825
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 6844.199999928474,
+        "time": 6.81822000000011,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 1.3970499999999995,
+        "groundCorrection": -0.012765826011209356,
+        "support": {
+          "minimum": 0.009999999619550337,
+          "footMinimum": 0.010323681090603998,
+          "limiter": "Spine",
+          "footPoint": {
+            "position": [
+              89.48622671387471,
+              12.60376279299406,
+              -8.378792367920516
+            ],
+            "floor": 12.593439111903455
+          },
+          "bodyPoint": {
+            "position": [
+              89.08099743832415,
+              12.562021320718276,
+              -8.333841491972139
+            ],
+            "floor": 12.552021321098726
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            88.8435174207996,
+            13.061060270688037,
+            -8.77338736335654
+          ],
+          "groundGap": 0.5189014148975559
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 6952.034999966621,
+        "time": 6.917960000000221,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 1.496790000000001,
+        "groundCorrection": -0.010534158063066243,
+        "support": {
+          "minimum": 0.009999999686058914,
+          "footMinimum": 0.022368405522263046,
+          "limiter": "Spine",
+          "footPoint": {
+            "position": [
+              89.47604147177596,
+              12.614053161447803,
+              -8.426713510077052
+            ],
+            "floor": 12.59168475592554
+          },
+          "bodyPoint": {
+            "position": [
+              89.11674687553416,
+              12.565511068788265,
+              -8.38760894775877
+            ],
+            "floor": 12.555511069102206
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            88.8440449643993,
+            13.089043052527781,
+            -8.75987769379227
+          ],
+          "groundGap": 0.5468657886953814
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 7063.919999957085,
+        "time": 7.001115000000027,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 1.5799449999999997,
+        "groundCorrection": -0.005720310702073803,
+        "support": {
+          "minimum": 0.009999999999999787,
+          "footMinimum": 0.009999999999999787,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.50964640576572,
+              12.605625575763218,
+              -8.410809856219418
+            ],
+            "floor": 12.595625575763219
+          },
+          "bodyPoint": {
+            "position": [
+              89.50964640576572,
+              12.605625575763218,
+              -8.410809856219418
+            ],
+            "floor": 12.595625575763219
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            88.85320892443333,
+            13.014110802562495,
+            -8.740630445980242
+          ],
+          "groundGap": 0.4718328651398238
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 7172.074999928474,
+        "time": 7.134140000000116,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 1.7129700000000012,
+        "groundCorrection": 0.01684398939663389,
+        "support": {
+          "minimum": 0.010000000000001563,
+          "footMinimum": 0.010000000000001563,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.57098524650924,
+              12.611479004621609,
+              -8.48490462652806
+            ],
+            "floor": 12.601479004621607
+          },
+          "bodyPoint": {
+            "position": [
+              89.57098524650924,
+              12.611479004621609,
+              -8.48490462652806
+            ],
+            "floor": 12.601479004621607
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            88.87698674195308,
+            12.935320444057535,
+            -8.70824543102165
+          ],
+          "groundGap": 0.3927991424184025
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 7280.889999985695,
+        "time": 7.250515000000178,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 1.8293450000000013,
+        "groundCorrection": 0.018645362842075956,
+        "support": {
+          "minimum": 0.010000000000001563,
+          "footMinimum": 0.010000000000001563,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.53942058671171,
+              12.608030344191656,
+              -8.480376132637998
+            ],
+            "floor": 12.598030344191654
+          },
+          "bodyPoint": {
+            "position": [
+              89.53942058671171,
+              12.608030344191656,
+              -8.480376132637998
+            ],
+            "floor": 12.598030344191654
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            88.88345182137579,
+            12.900727281007768,
+            -8.694643837370329
+          ],
+          "groundGap": 0.3581349319403042
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 7404.949999928474,
+        "time": 7.36692499999981,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 1.9457550000000012,
+        "groundCorrection": 0.01679912122455484,
+        "support": {
+          "minimum": 0.009999999999999787,
+          "footMinimum": 0.009999999999999787,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.5608980779008,
+              12.610900810874387,
+              -8.443130787940179
+            ],
+            "floor": 12.600900810874387
+          },
+          "bodyPoint": {
+            "position": [
+              89.5608980779008,
+              12.610900810874387,
+              -8.443130787940179
+            ],
+            "floor": 12.600900810874387
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            88.88592786983004,
+            12.9604959998223,
+            -8.692961587972585
+          ],
+          "groundGap": 0.4178800274097956
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 7506.449999928474,
+        "time": 7.466599999999744,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 2.045430000000001,
+        "groundCorrection": 0.007859484754455295,
+        "support": {
+          "minimum": 0.009999999999999787,
+          "footMinimum": 0.009999999999999787,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.59845128420432,
+              12.615438323484302,
+              -8.41506853173373
+            ],
+            "floor": 12.605438323484302
+          },
+          "bodyPoint": {
+            "position": [
+              89.59845128420432,
+              12.615438323484302,
+              -8.41506853173373
+            ],
+            "floor": 12.605438323484302
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            88.88661613778548,
+            13.041806825645825,
+            -8.692383486513108
+          ],
+          "groundGap": 0.4991841742799412
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 7616.979999899864,
+        "time": 7.583064999999806,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 2.1618950000000012,
+        "groundCorrection": 0.006963224899513279,
+        "support": {
+          "minimum": 0.009999999999999787,
+          "footMinimum": 0.009999999999999787,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.63391098325182,
+              12.619390352501364,
+              -8.414166629474947
+            ],
+            "floor": 12.609390352501364
+          },
+          "bodyPoint": {
+            "position": [
+              89.63391098325182,
+              12.619390352501364,
+              -8.414166629474947
+            ],
+            "floor": 12.609390352501364
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            88.88714077535784,
+            13.069671147999516,
+            -8.687911574024772
+          ],
+          "groundGap": 0.5270393057498328
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 7737.159999966621,
+        "time": 7.699460000000272,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 2.278290000000002,
+        "groundCorrection": 0.011907233329539793,
+        "support": {
+          "minimum": 0.009999999999999787,
+          "footMinimum": 0.009999999999999787,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.65396368436836,
+              12.622367552148294,
+              -8.356518813853329
+            ],
+            "floor": 12.612367552148294
+          },
+          "bodyPoint": {
+            "position": [
+              89.65396368436836,
+              12.622367552148294,
+              -8.356518813853329
+            ],
+            "floor": 12.612367552148294
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            88.88861232067882,
+            13.084958588855995,
+            -8.65521061537622
+          ],
+          "groundGap": 0.5422804667256553
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 7839.504999995232,
+        "time": 7.799225000000206,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 2.3780550000000016,
+        "groundCorrection": 0.03833513727216364,
+        "support": {
+          "minimum": 0.009999999999999787,
+          "footMinimum": 0.009999999999999787,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.67200119345429,
+              12.62499292122394,
+              -8.308716020254018
+            ],
+            "floor": 12.61499292122394
+          },
+          "bodyPoint": {
+            "position": [
+              89.67200119345429,
+              12.62499292122394,
+              -8.308716020254018
+            ],
+            "floor": 12.61499292122394
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            88.92929328866128,
+            13.12892581517487,
+            -8.560016194955702
+          ],
+          "groundGap": 0.5857908621734396
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 7946.3949999809265,
+        "time": 7.915560000000369,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 2.494390000000001,
+        "groundCorrection": 0.05292115748494041,
+        "support": {
+          "minimum": 0.00999999999999801,
+          "footMinimum": 0.00999999999999801,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.66894306019424,
+              12.62494765167028,
+              -8.286043128104494
+            ],
+            "floor": 12.614947651670281
+          },
+          "bodyPoint": {
+            "position": [
+              89.66894306019424,
+              12.62494765167028,
+              -8.286043128104494
+            ],
+            "floor": 12.614947651670281
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            89.01994269549152,
+            13.186048034480512,
+            -8.441803524788254
+          ],
+          "groundGap": 0.640189872210259
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 8070.464999914169,
+        "time": 8.032000000000608,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 2.6108300000000035,
+        "groundCorrection": 0.04706081416975238,
+        "support": {
+          "minimum": 0.010000000000001563,
+          "footMinimum": 0.010000000000001563,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.61099402944122,
+              12.616523702814856,
+              -8.438805850687013
+            ],
+            "floor": 12.606523702814854
+          },
+          "bodyPoint": {
+            "position": [
+              89.61099402944122,
+              12.616523702814856,
+              -8.438805850687013
+            ],
+            "floor": 12.606523702814854
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            89.04478692956295,
+            13.190821159793254,
+            -8.414848932593992
+          ],
+          "groundGap": 0.642472366993049
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 8185.179999947548,
+        "time": 8.148430000000644,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 2.727260000000004,
+        "groundCorrection": 0.04860852790779035,
+        "support": {
+          "minimum": 0.01000000000000334,
+          "footMinimum": 0.01000000000000334,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.5958318704362,
+              12.61488395956294,
+              -8.435335187773994
+            ],
+            "floor": 12.604883959562937
+          },
+          "bodyPoint": {
+            "position": [
+              89.5958318704362,
+              12.61488395956294,
+              -8.435335187773994
+            ],
+            "floor": 12.604883959562937
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            89.05851644530112,
+            13.385678717071483,
+            -8.385251257570667
+          ],
+          "groundGap": 0.8359385905682117
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 8302.414999961853,
+        "time": 8.264770000001135,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 2.843600000000004,
+        "groundCorrection": 0.04037145816817244,
+        "support": {
+          "minimum": 0.010000000000001563,
+          "footMinimum": 0.010000000000001563,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.57149504511904,
+              12.612980378933159,
+              -8.373698443704951
+            ],
+            "floor": 12.602980378933157
+          },
+          "bodyPoint": {
+            "position": [
+              89.57149504511904,
+              12.612980378933159,
+              -8.373698443704951
+            ],
+            "floor": 12.602980378933157
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            89.07232585376036,
+            13.478802326004656,
+            -8.332462057687625
+          ],
+          "groundGap": 0.9276393588315361
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 8410.544999957085,
+        "time": 8.364550000001145,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 2.943380000000003,
+        "groundCorrection": 0.04961231222027806,
+        "support": {
+          "minimum": 0.010000000000001563,
+          "footMinimum": 0.010000000000001563,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.58422618580359,
+              12.615150623357033,
+              -8.315540843236084
+            ],
+            "floor": 12.605150623357032
+          },
+          "bodyPoint": {
+            "position": [
+              89.58422618580359,
+              12.615150623357033,
+              -8.315540843236084
+            ],
+            "floor": 12.605150623357032
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            89.08856898125975,
+            13.487961342879485,
+            -8.297092878780395
+          ],
+          "groundGap": 0.9351519566771085
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 8513.304999947548,
+        "time": 8.480940000000828,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 3.0597700000000025,
+        "groundCorrection": 0.0502149140049044,
+        "support": {
+          "minimum": 0.009999999999999787,
+          "footMinimum": 0.009999999999999787,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.59349900648598,
+              12.61647493391778,
+              -8.292917677523155
+            ],
+            "floor": 12.60647493391778
+          },
+          "bodyPoint": {
+            "position": [
+              89.59349900648598,
+              12.61647493391778,
+              -8.292917677523155
+            ],
+            "floor": 12.60647493391778
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            89.08951648863308,
+            13.486994077530017,
+            -8.279869690002213
+          ],
+          "groundGap": 0.9340732332741748
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 8617.394999980927,
+        "time": 8.580745000000661,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 3.159575000000003,
+        "groundCorrection": 0.051193538557596556,
+        "support": {
+          "minimum": 0.009999999999999787,
+          "footMinimum": 0.009999999999999787,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.59454744981831,
+              12.616671482222525,
+              -8.286756345549813
+            ],
+            "floor": 12.606671482222525
+          },
+          "bodyPoint": {
+            "position": [
+              89.59454744981831,
+              12.616671482222525,
+              -8.286756345549813
+            ],
+            "floor": 12.606671482222525
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            89.09850006860235,
+            13.489206458624915,
+            -8.280473550164057
+          ],
+          "groundGap": 0.9353955384444728
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 8724.83999991417,
+        "time": 8.697195000000647,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 3.2760250000000037,
+        "groundCorrection": 0.047603895751727736,
+        "support": {
+          "minimum": 0.010000000000001563,
+          "footMinimum": 0.010000000000001563,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.59119348054011,
+              12.616313110262642,
+              -8.285653773103354
+            ],
+            "floor": 12.60631311026264
+          },
+          "bodyPoint": {
+            "position": [
+              89.59119348054011,
+              12.616313110262642,
+              -8.285653773103354
+            ],
+            "floor": 12.60631311026264
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            89.09527629361294,
+            13.486615491642258,
+            -8.27986658121953
+          ],
+          "groundGap": 0.9331235800141506
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 8831.204999923706,
+        "time": 8.797010000000682,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 3.3758400000000024,
+        "groundCorrection": 0.0449451564410721,
+        "support": {
+          "minimum": 0.009999999999999787,
+          "footMinimum": 0.009999999999999787,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.59260394051614,
+              12.616536698418347,
+              -8.280507554050686
+            ],
+            "floor": 12.606536698418347
+          },
+          "bodyPoint": {
+            "position": [
+              89.59260394051614,
+              12.616536698418347,
+              -8.280507554050686
+            ],
+            "floor": 12.606536698418347
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            89.09612138042623,
+            13.486850021393645,
+            -8.28225547014083
+          ],
+          "groundGap": 0.9332767519199052
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 8939.75,
+        "time": 8.913355000000593,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 3.4921850000000036,
+        "groundCorrection": 0.04538786104383007,
+        "support": {
+          "minimum": 0.010000000000001563,
+          "footMinimum": 0.010000000000001563,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.59462173481371,
+              12.616877206573776,
+              -8.271556321268452
+            ],
+            "floor": 12.606877206573774
+          },
+          "bodyPoint": {
+            "position": [
+              89.59462173481371,
+              12.616877206573776,
+              -8.271556321268452
+            ],
+            "floor": 12.606877206573774
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            89.09665864438625,
+            13.487087149576572,
+            -8.279866351454839
+          ],
+          "groundGap": 0.9334581825443617
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 9050.414999961853,
+        "time": 9.013170000000628,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 3.5920000000000027,
+        "groundCorrection": 0.044280413291627456,
+        "support": {
+          "minimum": 0.01000000000000334,
+          "footMinimum": 0.01000000000000334,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.59441700884554,
+              12.616873072870268,
+              -8.270123403543382
+            ],
+            "floor": 12.606873072870265
+          },
+          "bodyPoint": {
+            "position": [
+              89.59441700884554,
+              12.616873072870268,
+              -8.270123403543382
+            ],
+            "floor": 12.606873072870265
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            89.09693565851495,
+            13.48669191772479,
+            -8.278771255083917
+          ],
+          "groundGap": 0.9330343720073682
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 9159.02999997139,
+        "time": 9.129540000000816,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 3.7083700000000017,
+        "groundCorrection": 0.04451682813377666,
+        "support": {
+          "minimum": 0.010000000000001563,
+          "footMinimum": 0.010000000000001563,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.59563459882676,
+              12.617025182025207,
+              -8.268829508785782
+            ],
+            "floor": 12.607025182025206
+          },
+          "bodyPoint": {
+            "position": [
+              89.59563459882676,
+              12.617025182025207,
+              -8.268829508785782
+            ],
+            "floor": 12.607025182025206
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            89.09670314379888,
+            13.486937273263656,
+            -8.278063929153795
+          ],
+          "groundGap": 0.933302061200953
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 9265.235000014305,
+        "time": 9.22926500000085,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 3.8080950000000033,
+        "groundCorrection": 0.04920327485122499,
+        "support": {
+          "minimum": 0.009999999999999787,
+          "footMinimum": 0.009999999999999787,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.58753310137709,
+              12.61640080172357,
+              -8.247595091268447
+            ],
+            "floor": 12.60640080172357
+          },
+          "bodyPoint": {
+            "position": [
+              89.58753310137709,
+              12.61640080172357,
+              -8.247595091268447
+            ],
+            "floor": 12.60640080172357
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            89.09696937275181,
+            13.491638859560878,
+            -8.27746862715116
+          ],
+          "groundGap": 0.9379766464180044
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 9380.039999961853,
+        "time": 9.34558000000061,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 3.9244100000000026,
+        "groundCorrection": 0.056162323170319654,
+        "support": {
+          "minimum": 0.010000000000001563,
+          "footMinimum": 0.010000000000001563,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.54189645539313,
+              12.612807714778343,
+              -8.13382020572787
+            ],
+            "floor": 12.602807714778342
+          },
+          "bodyPoint": {
+            "position": [
+              89.54189645539313,
+              12.612807714778343,
+              -8.13382020572787
+            ],
+            "floor": 12.602807714778342
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            89.09696937275181,
+            13.498597907879972,
+            -8.27746862715116
+          ],
+          "groundGap": 0.944935694737099
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "recovering",
+            "recovery": "AuthoredBeastRecovery",
+            "roll": {
+              "age": 1.4333333333333331,
+              "contactDelay": 0,
+              "error": 0.4368166437928936,
+              "errors": [
+                0.10382157174353436,
+                0.4368166437928936
+              ],
+              "timedOut": false
+            }
+          }
+        ],
+        "wallMs": 9491.93499994278,
+        "time": 9.461965000000419,
+        "phase": "recovering",
+        "wallContacts": 0,
+        "recoveryAge": 4.0407950000000055,
+        "groundCorrection": 0.041410491171369516,
+        "support": {
+          "minimum": 0.010000000000001563,
+          "footMinimum": 0.010000000000001563,
+          "limiter": "LeftFoot",
+          "footPoint": {
+            "position": [
+              89.5085052738187,
+              12.610135120103713,
+              -8.053931881304354
+            ],
+            "floor": 12.600135120103712
+          },
+          "bodyPoint": {
+            "position": [
+              89.5085052738187,
+              12.610135120103713,
+              -8.053931881304354
+            ],
+            "floor": 12.600135120103712
+          },
+          "modelY": 0.022390527864214006,
+          "hipOffset": [
+            0.001969452016055584,
+            -0.004328100231738352,
+            0.102945601567626
+          ]
+        },
+        "pelvis": {
+          "position": [
+            89.09696937275181,
+            13.483846075881022,
+            -8.27746862715116
+          ],
+          "groundGap": 0.9301838627381489
+        },
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 9599.574999928474,
+        "time": 9.578379999999925,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 9710.860000014305,
+        "time": 9.67820999999958,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 9812.259999990463,
+        "time": 9.77795499999911,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 9913.149999976158,
+        "time": 9.877729999998792,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 10030.534999966621,
+        "time": 9.994104999999308,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 10138.745000004768,
+        "time": 10.09389499999952,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 10240.05999994278,
+        "time": 10.193714999999429,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 10340.139999985695,
+        "time": 10.310039999998935,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 10440.870000004768,
+        "time": 10.40985499999897,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 10549.834999918938,
+        "time": 10.52621999999883,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 10656.394999980927,
+        "time": 10.62603499999932,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 10781.584999918938,
+        "time": 10.742369999999482,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 10883.289999961853,
+        "time": 10.842149999999947,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 10996.129999995232,
+        "time": 10.958659999999782,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 11099.909999966621,
+        "time": 11.058329999999842,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 11202.269999980927,
+        "time": 11.158069999999952,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 11309.71499991417,
+        "time": 11.257889999999861,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 11420.360000014305,
+        "time": 11.39094999999952,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 11521.299999952316,
+        "time": 11.490649999999732,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 11627.899999976158,
+        "time": 11.573884999999791,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 11736.235000014305,
+        "time": 11.706829999999627,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 11836.58999991417,
+        "time": 11.789944999999534,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 11939.079999923706,
+        "time": 11.88978999999972,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 12041.164999961853,
+        "time": 11.989529999999831,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "actors": [
+          {
+            "id": "qa-beast-0",
+            "phase": "walking",
+            "roll": null
+          }
+        ],
+        "wallMs": 12150.804999947548,
+        "time": 12.105969999999616,
+        "phase": "walking",
+        "wallContacts": 0,
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "support": null,
+        "pelvis": null,
+        "hands": []
+      }
+    ],
+    "rejectedPhysics": 0,
+    "completedSimulation": true,
+    "species": "hyena",
+    "direction": "auto",
+    "wallMs": 12152.414999961853,
+    "simulationSeconds": 12.105969999999616,
+    "frames": 410,
+    "hiddenFrames": 0,
+    "metrics": {
+      "dt": {
+        "mean": 29.72834146341464,
+        "p95": 49.81500000000233,
+        "p99": 66.44499999999971,
+        "max": 66.63999999999942
+      },
+      "renderMs": {
+        "mean": 7.811865852809534,
+        "p95": 10.850000023841858,
+        "p99": 15.570000052452087,
+        "max": 17.509999990463257
+      },
+      "physicsTotal": {
+        "mean": 1.4641951212068884,
+        "p95": 3.009999990463257,
+        "p99": 4.519999980926514,
+        "max": 20.99500000476837
+      },
+      "solverMs": {
+        "mean": 0.6653292714095698,
+        "p95": 1.8849999904632568,
+        "p99": 2.8750001192092896,
+        "max": 4.120000004768372
+      },
+      "solverSteps": {
+        "mean": 1.353658536585366,
+        "p95": 2,
+        "p99": 3,
+        "max": 3
+      },
+      "creationMs": {
+        "mean": 0.03718292684089847,
+        "p95": 0,
+        "p99": 0,
+        "max": 15.245000004768372
+      },
+      "bindingMs": {
+        "mean": 0.06447560758125491,
+        "p95": 0.18999993801116943,
+        "p99": 0.2749999761581421,
+        "max": 0.9249999523162842
+      },
+      "recoverySetupMs": {
+        "mean": 0.016829268234532055,
+        "p95": 0,
+        "p99": 0,
+        "max": 6.899999976158142
+      },
+      "recoveryFollowMs": {
+        "mean": 0.6082439027181485,
+        "p95": 2.3000000715255737,
+        "p99": 2.644999861717224,
+        "max": 3.899999976158142
+      },
+      "recoveryMs": {
+        "mean": 0.38108536586528874,
+        "p95": 1.2100000381469727,
+        "p99": 1.9299999475479126,
+        "max": 2.215000033378601
+      },
+      "animationMs": {
+        "mean": 0.0376341453412684,
+        "p95": 0.23500001430511475,
+        "p99": 0.3049999475479126,
+        "max": 1.2300000190734863
+      },
+      "vfxMs": {
+        "mean": 0.16895122004718316,
+        "p95": 1.3250001668930054,
+        "p99": 1.8050000667572021,
+        "max": 2.459999918937683
+      },
+      "draws": {
+        "mean": 54.514634146341464,
+        "p95": 61,
+        "p99": 64,
+        "max": 64
+      }
+    },
+    "peakActive": 1,
+    "peakBaked": 0,
+    "finalDownCount": 0,
+    "finalDown": null,
+    "memory": {
+      "geometries": 200,
+      "textures": 96
+    },
+    "heap": 469785904,
+    "errors": []
+  },
+  "commandCosts": [
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 89.47259228391309,
+        "z": -6.226031878322974
+      },
+      "origin": {
+        "x": 89.84614266882821,
+        "y": 14.371761422775679,
+        "z": -3.2493793776219313
+      },
+      "plan": 2.059999942779541,
+      "logic": 1.0449999570846558,
+      "render": 0.010000109672546387,
+      "total": 3.1200000047683716
+    }
+  ]
+}

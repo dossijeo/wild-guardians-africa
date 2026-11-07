@@ -1,0 +1,7 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {renderResultAvailability} from '../src/app/result-availability.js';
+
+function fixture(){let node=null,opened=0;const document={querySelector:()=>node,createElement:tag=>({tag,remove(){node=null;}})},stage={append(value){node=value;}},state={result:null,tutorial:{reading:null},pauses:[]},surfaces={active:null,deferred:new Set(),shouldOpen:()=>false},options={state,surfaces,stage,document,openResult:()=>{opened++;},runSafe:fn=>fn()};return {state,surfaces,options,get node(){return node;},get opened(){return opened;}};}
+test('result waits for tutorial reading and reopens a deferred dialog',()=>{const f=fixture();f.state.result='victory';f.state.tutorial.reading='basic.center';f.surfaces.shouldOpen=()=>true;renderResultAvailability(f.options);assert.equal(f.opened,0);f.state.tutorial.reading=null;renderResultAvailability(f.options);assert.equal(f.opened,1);f.surfaces.shouldOpen=()=>false;f.surfaces.deferred.add('result');renderResultAvailability(f.options);assert.equal(f.node.tag,'button');f.node.onclick();assert.equal(f.opened,2);f.surfaces.active='modal';renderResultAvailability(f.options);assert.equal(f.node,null);});
+test('deferred hiring takes priority and does not open result on click',()=>{const f=fixture();f.state.result='victory';f.state.pauses=['hiring'];f.surfaces.deferred.add('hiring');renderResultAvailability(f.options);assert.equal(f.node.tag,'span');assert.equal(f.node.onclick,null);assert.equal(f.opened,0);});

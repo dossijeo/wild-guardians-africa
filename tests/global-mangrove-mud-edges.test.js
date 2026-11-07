@@ -4,6 +4,26 @@ import * as THREE from 'three';
 import {AfricanToon} from '../src/rendering/african-toon.js';
 import {bindMangroveMudEdges,bindMangroveMudEdgesSteps,configureMangroveMudMaterial} from '../src/rendering/global-mangrove-mud-edges.js';
 import {updateGroundQuality} from '../src/rendering/render-quality.js';
+
+test('mud shader reuses only identical linear substrate samplers, preserving UV and sRGB base',()=>{
+ const normal=new THREE.Texture(),packed=new THREE.Texture(),base=new THREE.Texture();
+ const toon=new AfricanToon();toon.globalVisualLighting=true;
+ for(const shared of [true,false]){
+  const material=new THREE.MeshStandardMaterial();
+  Object.assign(material.userData,{toonGround:true,groundBiome:'mangrove',mangroveSubstrate:true,mangroveMudTextures:{base,normal,packed},biomeGround:{uGroundLayered:{value:0},uLayerSandNormal:{value:normal.clone()},uLayerSandARH:{value:packed.clone()}}});
+  if(!shared)material.userData.biomeGround.uLayerSandNormal.value.wrapS=THREE.RepeatWrapping;
+  configureMangroveMudMaterial({toon},material);
+  const shader={...THREE.ShaderLib.standard,uniforms:{}};material.onBeforeCompile(shader,{});
+  assert.equal(shader.uniforms.uQAMudBase.value,base);
+  assert.ok(shader.fragmentShader.includes('texture2D(uQAMudBase,vQAMudUV).rgb'));
+  assert.equal(shader.fragmentShader.includes('texture2D(uLayerSandNormal,vQAMudUV)'),shared);
+  assert.ok(shader.fragmentShader.includes('texture2D(uLayerSandARH,vQAMudUV)'));
+  assert.equal(shader.uniforms.uQAMudPacked,undefined);
+  assert.equal(!!shader.uniforms.uQAMudNormal,!shared);
+  material.dispose();
+ }
+ normal.dispose();packed.dispose();base.dispose();toon.shadowUniforms.fallback.dispose();
+});
 test('mud edge preparation preserves positions and owns replacement material across quality paths',()=>{
  for(const quality of ['media','muy_baja']){
   const group=new THREE.Group();group.userData.nativeChunkOrigin=[0,0];

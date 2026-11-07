@@ -100,10 +100,23 @@ test('growing occupied bounds preserves the previous mask in world coordinates d
   const u=layer.uniforms(0,0);layer.flush();const old=u.uAwakeningBounds.value.clone(),data=u.uAwakeningMap.value.image.data;
   let peak=0;for(let i=0;i<data.length;i+=2)if(data[i]>data[peak])peak=i;
   const x=old.x+((peak/2)%256+.5)*old.z/256,z=old.y+(Math.floor(peak/2/256)+.5)*old.w/256;
-  const other=createPlant('plant-100','maiz',15,0,'center');s.plants.push(other);awakeningState(s).progress=100;Game.bless(s,'far-source',other.id);layer.flush();
+  const other=createPlant('plant-100','maiz',15,0,'center');s.plants.push(other);awakeningState(s).progress=100;Game.bless(s,'far-source',other.id);s.elapsed+=2.05;layer.flush();
   const b=u.uAwakeningBounds.value,newData=u.uAwakeningMap.value.image.data;assert.ok(b.z>old.z);
   const ix=Math.floor((x-b.x)/b.z*256),iy=Math.floor((z-b.y)/b.w*256);
   let previous=0;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)previous=Math.max(previous,newData[((iy+dy)*256+ix+dx)*2+1]??0);
   assert.ok(previous>0,'old light stays at its world position instead of stretching to new bounds');
+ }finally{layer.dispose();}
+});
+
+test('crop change invalidates roots from confirmed event location when later state no longer contains the crop',()=>{
+ const state=fixture(),layer=new AwakeningRoots(state,{resolution:64});
+ try{
+  layer.uniforms(0,0);layer.flush();const plant=state.plants[1];
+  for(const type of ['CropPlaced','CropPicked','CropDestroyed']){
+   layer.dirty.clear();const event={id:'delayed-'+type,type,targetId:plant.id,presentation:{x:plant.x,z:plant.z}};
+   const saved=state.plants;state.plants=[saved[0]];Game.notifyConfirmedPresentationEvent(state,event);assert.deepEqual([...layer.dirty],['0,0']);
+   layer.dirty.clear();state.plants=saved;Game.notifyConfirmedPresentationEvent(state,{id:'old-'+type,type,targetId:plant.id});assert.deepEqual([...layer.dirty],['0,0']);
+   layer.dirty.clear();Game.notifyConfirmedPresentationEvent(state,{...event,presentation:{x:999,z:999}});assert.equal(layer.dirty.size,0);
+  }
  }finally{layer.dispose();}
 });

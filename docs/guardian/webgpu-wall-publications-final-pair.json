@@ -1,0 +1,156 @@
+{
+  "completed": 2,
+  "attempted": 2,
+  "results": [
+    {
+      "enabled": false,
+      "repeat": 1,
+      "adapter": {
+        "info": {
+          "vendor": "nvidia",
+          "architecture": "turing",
+          "device": "",
+          "description": ""
+        },
+        "features": [
+          "depth32float-stencil8",
+          "rg11b10ufloat-renderable",
+          "texture-formats-tier1",
+          "bgra8unorm-storage",
+          "texture-compression-bc",
+          "dual-source-blending",
+          "core-features-and-limits",
+          "float32-filterable",
+          "indirect-first-instance",
+          "float32-blendable",
+          "depth-clip-control",
+          "texture-compression-bc-sliced-3d",
+          "timestamp-query",
+          "texture-formats-tier2",
+          "shader-f16",
+          "clip-distances",
+          "primitive-index",
+          "texture-component-swizzle",
+          "subgroups"
+        ]
+      },
+      "seen": {
+        "at": 18278,
+        "effect": {
+          "id": "attack-321",
+          "family": "wall",
+          "time": 0.5800000000000025,
+          "visible": true,
+          "sprites": 6,
+          "fragments": 0,
+          "geometryVertices": 0
+        },
+        "simLag": 0.5500000000000078,
+        "sequenceLag": 46
+      },
+      "samples": 84,
+      "simulationLagSeconds": {
+        "p95": 3.5000000000000497,
+        "p99": 4.650000000000066,
+        "max": 4.650000000000066
+      },
+      "sequenceLag": {
+        "p95": 151,
+        "p99": 153,
+        "max": 153
+      },
+      "inspectionMs": {
+        "p95": 162.14569999999367,
+        "p99": 2012.3857999999964,
+        "max": 2012.3857999999964
+      },
+      "mainHeapBytes": {
+        "p95": 585337065,
+        "p99": 601730174,
+        "max": 601730174
+      },
+      "frameIntervalsMs": {
+        "samples": 188,
+        "p95": 99.98999999999796,
+        "p99": 4933.4549999999945,
+        "max": 9133.279999999999
+      },
+      "scope": "Headless Edge; prepared animal attack, 200ms status polling, recording after game screen through five seconds after observed hit; not a physical GPU timing or total memory measurement."
+    },
+    {
+      "enabled": true,
+      "repeat": 1,
+      "adapter": {
+        "info": {
+          "vendor": "nvidia",
+          "architecture": "turing",
+          "device": "",
+          "description": ""
+        },
+        "features": [
+          "depth32float-stencil8",
+          "rg11b10ufloat-renderable",
+          "bgra8unorm-storage",
+          "texture-formats-tier1",
+          "texture-compression-bc",
+          "dual-source-blending",
+          "core-features-and-limits",
+          "float32-filterable",
+          "indirect-first-instance",
+          "float32-blendable",
+          "depth-clip-control",
+          "texture-compression-bc-sliced-3d",
+          "texture-formats-tier2",
+          "clip-distances",
+          "timestamp-query",
+          "shader-f16",
+          "primitive-index",
+          "texture-component-swizzle",
+          "subgroups"
+        ]
+      },
+      "seen": {
+        "at": 18834,
+        "effect": {
+          "id": "attack-321",
+          "family": "wall",
+          "time": 0.43000000000000155,
+          "visible": true,
+          "sprites": 6,
+          "fragments": 14,
+          "geometryVertices": 0
+        },
+        "simLag": 0.9000000000000128,
+        "sequenceLag": 93
+      },
+      "samples": 87,
+      "simulationLagSeconds": {
+        "p95": 3.950000000000056,
+        "p99": 4.7500000000000675,
+        "max": 4.7500000000000675
+      },
+      "sequenceLag": {
+        "p95": 145,
+        "p99": 149,
+        "max": 149
+      },
+      "inspectionMs": {
+        "p95": 139.3139000000083,
+        "p99": 1854.3424000000086,
+        "max": 1854.3424000000086
+      },
+      "mainHeapBytes": {
+        "p95": 648708397,
+        "p99": 652409777,
+        "max": 652409777
+      },
+      "frameIntervalsMs": {
+        "samples": 213,
+        "p95": 66.66500000000087,
+        "p99": 1100.0099999999948,
+        "max": 11666.800000000003
+      },
+      "scope": "Headless Edge; prepared animal attack, 200ms status polling, recording after game screen through five seconds after observed hit; not a physical GPU timing or total memory measurement."
+    }
+  ]
+}

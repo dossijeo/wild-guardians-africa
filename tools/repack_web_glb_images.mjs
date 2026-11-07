@@ -16,7 +16,7 @@ export async function replaceWebGlbColorImages(input,replacements){
  if(json.buffers?.length!==2||json.buffers.some(b=>b.uri)||json.buffers[1].extensions?.EXT_meshopt_compression?.fallback!==true)fail('unsupported buffer layout');
  if(!integer(json.buffers[0].byteLength)||json.buffers[0].byteLength>bin.length||bin.length>Math.ceil(json.buffers[0].byteLength/4)*4)fail('invalid physical buffer length');
  if(!Array.isArray(views)||!Array.isArray(images)||(json.extensionsUsed??[]).some(name=>!allowedExtensions.has(name))||(json.extensionsRequired??[]).some(name=>!allowedExtensions.has(name)))fail('unsupported views, images or extensions');
- const imageViews=new Set();
+ const imageViews=new Set(),rawSparseViews=new Set();
  const bytesAt=range=>{
   const offset=range.byteOffset??0;
   if(range.buffer!==0||!integer(offset)||!integer(range.byteLength)||range.byteLength===0||offset%4||offset+range.byteLength>json.buffers[0].byteLength)fail('invalid physical byte range');
@@ -28,6 +28,15 @@ export async function replaceWebGlbColorImages(input,replacements){
  }
  for(const [index,view] of views.entries())if(!imageViews.has(index)){
   const ext=view.extensions?.EXT_meshopt_compression;
+  if(view.buffer===0&&!view.extensions){
+   const references=(json.accessors??[]).filter(a=>a.sparse?.indices?.bufferView===index);
+   if(!references.length||view.byteStride!==undefined||view.target!==undefined||(json.accessors??[]).some(a=>a.bufferView===index||a.sparse?.values?.bufferView===index))fail('unsupported raw geometry storage');
+   for(const a of references){
+    const sparse=a.sparse,offset=sparse.indices.byteOffset??0;
+    if(sparse.indices.componentType!==5121||!integer(sparse.count)||!sparse.count||!integer(offset)||offset+sparse.count>view.byteLength)fail('invalid raw sparse indices');
+   }
+   bytesAt(view);rawSparseViews.add(index);continue;
+  }
   if(view.buffer!==1||!ext||Object.keys(view.extensions).some(name=>name!=='EXT_meshopt_compression'))fail('non-image view is not audited Meshopt storage');
   bytesAt(ext);
  }
@@ -50,12 +59,12 @@ export async function replaceWebGlbColorImages(input,replacements){
  const append=bytes=>{const offset=length;chunks.push({offset,bytes});length+=Math.ceil(bytes.length/4)*4;return offset;};
  // Capture every source range before updating any offsets.
  const originalImages=images.map(image=>bytesAt(views[image.bufferView]));
- const originalGeometry=views.map((view,index)=>imageViews.has(index)?null:bytesAt(view.extensions.EXT_meshopt_compression));
+ const originalGeometry=views.map((view,index)=>imageViews.has(index)?null:bytesAt(rawSparseViews.has(index)?view:view.extensions.EXT_meshopt_compression));
  for(const [index,image] of images.entries()){
   const bytes=replacements.get(index)??originalImages[index],view=views[image.bufferView];
   view.byteOffset=append(bytes);view.byteLength=bytes.length;
  }
- for(const [index,view] of views.entries())if(!imageViews.has(index))view.extensions.EXT_meshopt_compression.byteOffset=append(originalGeometry[index]);
+ for(const [index,view] of views.entries())if(!imageViews.has(index))(rawSparseViews.has(index)?view:view.extensions.EXT_meshopt_compression).byteOffset=append(originalGeometry[index]);
  json.buffers[0].byteLength=length;
  const packed=new Uint8Array(length);for(const chunk of chunks)packed.set(chunk.bytes,chunk.offset);
  return writeGlb(json,packed);

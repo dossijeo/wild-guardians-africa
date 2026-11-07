@@ -1,0 +1,227 @@
+{
+  "ready": true,
+  "campaign": false,
+  "faceCandidate": false,
+  "faceCandidateSpecies": null,
+  "expressions": [],
+  "entityCounts": {
+    "workers": 1,
+    "structures": 1,
+    "crops": 12,
+    "animals": 0
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 0,
+  "maxVisibleGuardians": 1,
+  "elapsed": 3116.8143939999877,
+  "simulate": false,
+  "active": 0,
+  "origins": [],
+  "retainedAttacks": [],
+  "retainedDraws": 0,
+  "attackVisual": [],
+  "reused": 1,
+  "draws": 53,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "spirit_appear",
+      "at": 3062.0139139999724,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3062.0637089999723,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3064.222763999973,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3064.987028999973,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3065.0370289999732,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3067.2107189999747,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3067.9753539999756,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3068.024993999976,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3070.1867089999755,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3070.985008999976,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3071.018268999976,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3073.1946839999778,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3074.009498999978,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3074.042383999978,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3074.291973999979,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3074.3418089999786,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3076.5030439999814,
+      "emitter": "guardian-world",
+      "played": false
+    }
+  ],
+  "combatPhysics": {
+    "active": 0,
+    "physicsMs": 0,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 0,
+    "maxStepMs": 0,
+    "solverMs": 0,
+    "solverSteps": 0,
+    "bindingMs": 0,
+    "recoverySetupMs": 0,
+    "creationMs": 0,
+    "lastCreation": null
+  },
+  "physicsWorlds": 0,
+  "physicalBodies": 0,
+  "errors": [],
+  "report": null,
+  "commandCosts": [
+    {
+      "kind": "growth",
+      "targetId": "plant-3",
+      "position": {
+        "x": 87.5,
+        "z": -6
+      },
+      "plan": 1.3799999952316284,
+      "logic": 0.7749999761581421,
+      "render": 8.34500002861023,
+      "total": 10.5
+    },
+    {
+      "kind": "multiply",
+      "targetId": "plant-5",
+      "position": {
+        "x": 83,
+        "z": -10.5
+      },
+      "plan": 2.4550000429153442,
+      "logic": 0.18499994277954102,
+      "render": 6.659999966621399,
+      "total": 9.299999952316284
+    },
+    {
+      "kind": "growth",
+      "targetId": "plant-7",
+      "position": {
+        "x": 84.5,
+        "z": -10.5
+      },
+      "plan": 1.8499999046325684,
+      "logic": 0.30500006675720215,
+      "render": 13.995000004768372,
+      "total": 16.149999976158142
+    },
+    {
+      "kind": "multiply",
+      "targetId": "plant-9",
+      "position": {
+        "x": 86,
+        "z": -10.5
+      },
+      "plan": 1.9049999713897705,
+      "logic": 0.18000006675720215,
+      "render": 12.115000009536743,
+      "total": 14.200000047683716
+    },
+    {
+      "kind": "growth",
+      "targetId": "plant-11",
+      "position": {
+        "x": 87.5,
+        "z": -10.5
+      },
+      "plan": 0.9100000858306885,
+      "logic": 0.18999993801116943,
+      "render": 9.980000019073486,
+      "total": 11.080000042915344
+    },
+    {
+      "kind": "multiply",
+      "targetId": "plant-13",
+      "position": {
+        "x": 89,
+        "z": -10.5
+      },
+      "plan": 1.590000033378601,
+      "logic": 0.19000005722045898,
+      "render": 6.104999899864197,
+      "total": 7.884999990463257
+    }
+  ]
+}

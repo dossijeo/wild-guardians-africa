@@ -1,0 +1,23 @@
+{
+  "reference": {
+    "status": "completed",
+    "result": "defeat",
+    "completedNights": 100,
+    "steps": 44612,
+    "finalHash": "3c45bb8303cde2c9427cdfc8660b7b304463463e03b0efefa812809ea956a5e4",
+    "wasmSha256": "d5a1f67c760a938829bde8255372fa2539096d452b8866d961ca65e297d91651"
+  },
+  "candidate": {
+    "status": "completed",
+    "result": "defeat",
+    "completedNights": 100,
+    "steps": 44612,
+    "finalHash": "3c45bb8303cde2c9427cdfc8660b7b304463463e03b0efefa812809ea956a5e4",
+    "wasmSha256": "9b1c024c3b32cd26191d9b955619d74ebb1c442071347888ccccbd2881b02744"
+  },
+  "dailyCompared": 100,
+  "allDailyEqual": true,
+  "finalEqual": true,
+  "differences": [],
+  "scope": "Paired independent scripted campaigns, full serialized daily/final hashes and cumulative decision/selected animal tick hashes; not byte-for-byte per-tick full states, native internal state, graphics or GPU. A defeat before the requested horizon is retained, not a completed 100-night validation."
+}

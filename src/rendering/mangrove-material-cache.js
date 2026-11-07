@@ -37,7 +37,7 @@ export function createMangroveMaterialCache(w){
   }
   queue.step();
  };
- const controller={states,owner,queue,stats,update,invalidate(key){const s=states.get(key);if(!s)return false;s.revision++;dirty.add(key);stats.invalidations++;return true;},dispose(){if(closed)return;closed=true;owner.dispose();queue.dispose();dirty.clear();geometry.dispose();bake.dispose();}};
+ const controller={states,owner,queue,stats,update,get disposed(){return closed;},prepareProgram(compile){if(closed)throw Error('Ground cache is disposed');return compile(scene,camera,bake);},invalidate(key){const s=states.get(key);if(!s)return false;s.revision++;dirty.add(key);stats.invalidations++;return true;},dispose(){if(closed)return;closed=true;owner.dispose();queue.dispose();dirty.clear();geometry.dispose();bake.dispose();}};
  return controller;
 }
 

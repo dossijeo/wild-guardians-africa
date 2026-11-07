@@ -1,0 +1,4425 @@
+{
+  "network": true,
+  "authority": "spatial-wasm",
+  "stages": [
+    {
+      "label": "frozen",
+      "dt": 0,
+      "camera": [
+        109.59110991546882,
+        19.319999933242798,
+        23.10582854123025
+      ],
+      "target": [
+        94.59110991546882,
+        5.319999933242798,
+        3.105828541230249
+      ],
+      "candidates": 15,
+      "ready": 0,
+      "notReady": 15,
+      "selected": [
+        {
+          "id": "spatial:0:12:-3",
+          "slot": 0,
+          "distance": 44.60146343220021,
+          "screen": [
+            0.8183911219048563,
+            0.552775211812095
+          ],
+          "height": 7.930320936473305,
+          "ready": 0.5333049893379211,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:12:-3:104.0900650024414:3.319999933242798:-21.56816291809082:6.0082478523254395:0.8427795171737671:0.8427795171737671:0.8427795171737671",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": true,
+                "key": "spatial:0:12:-3:104.0900650024414:3.319999933242798:-21.56816291809082:6.0082478523254395:0.8427795171737671:0.8427795171737671:0.8427795171737671",
+                "level": 1,
+                "resource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "currentResource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3"
+              },
+              {
+                "index": 1,
+                "active": false,
+                "key": "spatial:0:12:-3:104.0900650024414:3.319999933242798:-21.56816291809082:6.0082478523254395:0.8427795171737671:0.8427795171737671:0.8427795171737671",
+                "level": 0,
+                "resource": "0:ee558b9b-8c57-4db8-b239-f7b4ed51deb3:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "currentResource": "0:ee558b9b-8c57-4db8-b239-f7b4ed51deb3:d3f7df64-ea1f-42eb-be56-3898b90209a7:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    99.62639457352842,
+                    3.319999933242798,
+                    -24.88848387381364
+                  ],
+                  [
+                    108.55373659168025,
+                    10.483625829219818,
+                    -18.24784163506202
+                  ]
+                ],
+                "nativeKey": "spatial:0:12:-3:104.0900650024414:3.319999933242798:-21.56816291809082:6.0082478523254395:0.8427795171737671:0.8427795171737671:0.8427795171737671",
+                "chunk": "2,0",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    72,
+                    3.319999933242798,
+                    -26.29920985624076
+                  ],
+                  [
+                    122.28540277934725,
+                    12.991457521915436,
+                    24.13504195300879
+                  ]
+                ],
+                "tree": [
+                  104.0900650024414,
+                  3.319999933242798,
+                  -21.56816291809082
+                ],
+                "slot": 0,
+                "orders": [
+                  false,
+                  false,
+                  true,
+                  false
+                ],
+                "counts": [
+                  0,
+                  0,
+                  1,
+                  0
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|0:0:12b575f9-3240-4a99-af45-77496e0b5389:0686f909-5587-47af-b75f-e6a3ca5b94c1:3|0:1:04c2739c-a885-42fc-bedf-6a6339085751:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:2:1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:3:17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+            "proofSignature": "0:0|0:0:12b575f9-3240-4a99-af45-77496e0b5389:0686f909-5587-47af-b75f-e6a3ca5b94c1:3|0:1:04c2739c-a885-42fc-bedf-6a6339085751:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:2:1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:3:17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+            "batches": [
+              {
+                "stamp": "true:1:true:51635bd2-3462-48bd-99d6-7592066c0984:d3f7df64-ea1f-42eb-be56-3898b90209a7:3:true:1",
+                "accepted": true,
+                "level": 2,
+                "resourceSignature": "0:0|51635bd2-3462-48bd-99d6-7592066c0984:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 1,
+                    "visible": true,
+                    "matrixVersion": 1
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spatial:0:12:-4",
+          "slot": 2,
+          "distance": 52.7262141391556,
+          "screen": [
+            0.960824153506418,
+            0.7690438097554888
+          ],
+          "height": 11.862611828336766,
+          "ready": 0.5333049893379211,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:12:-4:104.19070434570312:3.319999933242798:-29.70423698425293:1.7165824174880981:1.0776097774505615:1.0776097774505615:1.0776097774505615",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": false,
+                "key": "spatial:0:12:-4:104.19070434570312:3.319999933242798:-29.70423698425293:1.7165824174880981:1.0776097774505615:1.0776097774505615:1.0776097774505615",
+                "level": 0,
+                "resource": "0:959801ad-0a98-44d0-8864-237749d383b4:d21776f1-f3be-4477-97b6-9fafddc458ba:3",
+                "currentResource": "0:959801ad-0a98-44d0-8864-237749d383b4:d21776f1-f3be-4477-97b6-9fafddc458ba:3"
+              },
+              {
+                "index": 1,
+                "active": true,
+                "key": "spatial:0:12:-4:104.19070434570312:3.319999933242798:-29.70423698425293:1.7165824174880981:1.0776097774505615:1.0776097774505615:1.0776097774505615",
+                "level": 1,
+                "resource": "0:8856d491-d66c-4634-bfac-13ed54228d63:d21776f1-f3be-4477-97b6-9fafddc458ba:3",
+                "currentResource": "0:8856d491-d66c-4634-bfac-13ed54228d63:d21776f1-f3be-4477-97b6-9fafddc458ba:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    99.09203192623772,
+                    3.319999933242798,
+                    -35.01854207334043
+                  ],
+                  [
+                    109.28937676516853,
+                    13.557292819023132,
+                    -24.38993189516543
+                  ]
+                ],
+                "nativeKey": "spatial:0:12:-4:104.19070434570312:3.319999933242798:-29.70423698425293:1.7165824174880981:1.0776097774505615:1.0776097774505615:1.0776097774505615",
+                "chunk": "2,-1",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    69.55054475606961,
+                    3.319999933242798,
+                    -74.97106092802241
+                  ],
+                  [
+                    121.65223336428275,
+                    13.714034855365753,
+                    -22.8153730441868
+                  ]
+                ],
+                "tree": [
+                  104.19070434570312,
+                  3.319999933242798,
+                  -29.70423698425293
+                ],
+                "slot": 2,
+                "orders": [
+                  false,
+                  false,
+                  true,
+                  false
+                ],
+                "counts": [
+                  0,
+                  0,
+                  2,
+                  0
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|2:2:3882c7e8-a8c3-4676-b226-ed7238859140:d21776f1-f3be-4477-97b6-9fafddc458ba:3|2:3:3f7e10c0-8ddc-4cbf-b369-de5e3c6dc916:d21776f1-f3be-4477-97b6-9fafddc458ba:3",
+            "proofSignature": "0:0|2:2:3882c7e8-a8c3-4676-b226-ed7238859140:d21776f1-f3be-4477-97b6-9fafddc458ba:3|2:3:3f7e10c0-8ddc-4cbf-b369-de5e3c6dc916:d21776f1-f3be-4477-97b6-9fafddc458ba:3",
+            "batches": [
+              {
+                "stamp": "true:2:true:6eeb0f3f-6b14-42a6-a69d-f41e00d145be:d21776f1-f3be-4477-97b6-9fafddc458ba:3:true:2",
+                "accepted": true,
+                "level": 2,
+                "resourceSignature": "0:0|6eeb0f3f-6b14-42a6-a69d-f41e00d145be:d21776f1-f3be-4477-97b6-9fafddc458ba:3|3882c7e8-a8c3-4676-b226-ed7238859140:d21776f1-f3be-4477-97b6-9fafddc458ba:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 2,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spatial:0:11:-4",
+          "slot": 0,
+          "distance": 55.44408128522428,
+          "screen": [
+            0.6620139314163449,
+            0.7830251278492786
+          ],
+          "height": 9.489114387712634,
+          "ready": 0.5333049893379211,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:11:-4:97.07781219482422:3.319999933242798:-31.414649963378906:6.173349857330322:1.0084372758865356:1.0084372758865356:1.0084372758865356",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": true,
+                "key": "spatial:0:11:-4:97.07781219482422:3.319999933242798:-31.414649963378906:6.173349857330322:1.0084372758865356:1.0084372758865356:1.0084372758865356",
+                "level": 1,
+                "resource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "currentResource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3"
+              },
+              {
+                "index": 1,
+                "active": false,
+                "key": "spatial:0:11:-4:97.07781219482422:3.319999933242798:-31.414649963378906:6.173349857330322:1.0084372758865356:1.0084372758865356:1.0084372758865356",
+                "level": 0,
+                "resource": "0:ee558b9b-8c57-4db8-b239-f7b4ed51deb3:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "currentResource": "0:ee558b9b-8c57-4db8-b239-f7b4ed51deb3:d3f7df64-ea1f-42eb-be56-3898b90209a7:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    92.03720849347327,
+                    3.319999933242798,
+                    -34.70422734549822
+                  ],
+                  [
+                    102.11841733006348,
+                    11.89171677827835,
+                    -28.12507242313144
+                  ]
+                ],
+                "nativeKey": "spatial:0:11:-4:97.07781219482422:3.319999933242798:-31.414649963378906:6.173349857330322:1.0084372758865356:1.0084372758865356:1.0084372758865356",
+                "chunk": "2,-1",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    69.55054475606961,
+                    3.319999933242798,
+                    -74.97106092802241
+                  ],
+                  [
+                    121.65223336428275,
+                    13.714034855365753,
+                    -22.8153730441868
+                  ]
+                ],
+                "tree": [
+                  97.07781219482422,
+                  3.319999933242798,
+                  -31.414649963378906
+                ],
+                "slot": 0,
+                "orders": [
+                  false,
+                  false,
+                  true,
+                  false
+                ],
+                "counts": [
+                  0,
+                  0,
+                  5,
+                  3
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|0:0:12b575f9-3240-4a99-af45-77496e0b5389:0686f909-5587-47af-b75f-e6a3ca5b94c1:3|0:1:04c2739c-a885-42fc-bedf-6a6339085751:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:2:1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:3:17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+            "proofSignature": "0:0|0:0:12b575f9-3240-4a99-af45-77496e0b5389:0686f909-5587-47af-b75f-e6a3ca5b94c1:3|0:1:04c2739c-a885-42fc-bedf-6a6339085751:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:2:1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:3:17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+            "batches": [
+              {
+                "stamp": "true:5:true:547daa3c-2cf7-426a-8e6d-c0c653fbeaf2:d3f7df64-ea1f-42eb-be56-3898b90209a7:3:true:2",
+                "accepted": true,
+                "level": 2,
+                "resourceSignature": "0:0|547daa3c-2cf7-426a-8e6d-c0c653fbeaf2:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 5,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 3,
+                    "visible": true,
+                    "matrixVersion": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spatial:0:12:-5",
+          "slot": 0,
+          "distance": 60.399760315027684,
+          "screen": [
+            1.0106903266674951,
+            0.7194468251370357
+          ],
+          "height": 7.497888167932006,
+          "ready": 0.5333049893379211,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:12:-5:106.75421905517578:3.319999933242798:-37.554359436035156:0.37344488501548767:0.7968235611915588:0.7968235611915588:0.7968235611915588",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": true,
+                "key": "spatial:0:12:-5:106.75421905517578:3.319999933242798:-37.554359436035156:0.37344488501548767:0.7968235611915588:0.7968235611915588:0.7968235611915588",
+                "level": 1,
+                "resource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "currentResource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3"
+              },
+              {
+                "index": 1,
+                "active": false,
+                "key": "spatial:0:12:-5:106.75421905517578:3.319999933242798:-37.554359436035156:0.37344488501548767:0.7968235611915588:0.7968235611915588:0.7968235611915588",
+                "level": 1,
+                "resource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "currentResource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    102.44668781889445,
+                    3.319999933242798,
+                    -40.97598808549719
+                  ],
+                  [
+                    111.06175135275839,
+                    10.093000203371048,
+                    -34.13273120242451
+                  ]
+                ],
+                "nativeKey": "spatial:0:12:-5:106.75421905517578:3.319999933242798:-37.554359436035156:0.37344488501548767:0.7968235611915588:0.7968235611915588:0.7968235611915588",
+                "chunk": "2,-1",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    69.55054475606961,
+                    3.319999933242798,
+                    -74.97106092802241
+                  ],
+                  [
+                    121.65223336428275,
+                    13.714034855365753,
+                    -22.8153730441868
+                  ]
+                ],
+                "tree": [
+                  106.75421905517578,
+                  3.319999933242798,
+                  -37.554359436035156
+                ],
+                "slot": 0,
+                "orders": [
+                  false,
+                  false,
+                  true,
+                  false
+                ],
+                "counts": [
+                  0,
+                  0,
+                  5,
+                  3
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|0:0:12b575f9-3240-4a99-af45-77496e0b5389:0686f909-5587-47af-b75f-e6a3ca5b94c1:3|0:1:04c2739c-a885-42fc-bedf-6a6339085751:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:2:1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:3:17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+            "proofSignature": "0:0|0:0:12b575f9-3240-4a99-af45-77496e0b5389:0686f909-5587-47af-b75f-e6a3ca5b94c1:3|0:1:04c2739c-a885-42fc-bedf-6a6339085751:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:2:1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:3:17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+            "batches": [
+              {
+                "stamp": "true:5:true:547daa3c-2cf7-426a-8e6d-c0c653fbeaf2:d3f7df64-ea1f-42eb-be56-3898b90209a7:3:true:2",
+                "accepted": true,
+                "level": 2,
+                "resourceSignature": "0:0|547daa3c-2cf7-426a-8e6d-c0c653fbeaf2:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 5,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 3,
+                    "visible": true,
+                    "matrixVersion": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spatial:0:12:-6",
+          "slot": 2,
+          "distance": 67.87465891782901,
+          "screen": [
+            1.0615578972903845,
+            0.8693227401402184
+          ],
+          "height": 10.791450831773512,
+          "ready": 0.5333049893379211,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:12:-6:108.04573059082031:3.319999933242798:-46.09933853149414:6.084694862365723:0.9803045988082886:0.9803045988082886:0.9803045988082886",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": false,
+                "key": "spatial:0:12:-6:108.04573059082031:3.319999933242798:-46.09933853149414:6.084694862365723:0.9803045988082886:0.9803045988082886:0.9803045988082886",
+                "level": 1,
+                "resource": "0:8856d491-d66c-4634-bfac-13ed54228d63:d21776f1-f3be-4477-97b6-9fafddc458ba:3",
+                "currentResource": "0:8856d491-d66c-4634-bfac-13ed54228d63:d21776f1-f3be-4477-97b6-9fafddc458ba:3"
+              },
+              {
+                "index": 1,
+                "active": true,
+                "key": "spatial:0:12:-6:108.04573059082031:3.319999933242798:-46.09933853149414:6.084694862365723:0.9803045988082886:0.9803045988082886:0.9803045988082886",
+                "level": 1,
+                "resource": "0:8856d491-d66c-4634-bfac-13ed54228d63:d21776f1-f3be-4477-97b6-9fafddc458ba:3",
+                "currentResource": "0:8856d491-d66c-4634-bfac-13ed54228d63:d21776f1-f3be-4477-97b6-9fafddc458ba:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    103.03932916545098,
+                    3.319999933242798,
+                    -50.92374130034393
+                  ],
+                  [
+                    113.05213201618965,
+                    12.63289362192154,
+                    -41.274935762644354
+                  ]
+                ],
+                "nativeKey": "spatial:0:12:-6:108.04573059082031:3.319999933242798:-46.09933853149414:6.084694862365723:0.9803045988082886:0.9803045988082886:0.9803045988082886",
+                "chunk": "2,-1",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    69.55054475606961,
+                    3.319999933242798,
+                    -74.97106092802241
+                  ],
+                  [
+                    121.65223336428275,
+                    13.714034855365753,
+                    -22.8153730441868
+                  ]
+                ],
+                "tree": [
+                  108.04573059082031,
+                  3.319999933242798,
+                  -46.09933853149414
+                ],
+                "slot": 2,
+                "orders": [
+                  false,
+                  false,
+                  true,
+                  false
+                ],
+                "counts": [
+                  0,
+                  0,
+                  2,
+                  0
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|2:2:3882c7e8-a8c3-4676-b226-ed7238859140:d21776f1-f3be-4477-97b6-9fafddc458ba:3|2:3:3f7e10c0-8ddc-4cbf-b369-de5e3c6dc916:d21776f1-f3be-4477-97b6-9fafddc458ba:3",
+            "proofSignature": "0:0|2:2:3882c7e8-a8c3-4676-b226-ed7238859140:d21776f1-f3be-4477-97b6-9fafddc458ba:3|2:3:3f7e10c0-8ddc-4cbf-b369-de5e3c6dc916:d21776f1-f3be-4477-97b6-9fafddc458ba:3",
+            "batches": [
+              {
+                "stamp": "true:2:true:6eeb0f3f-6b14-42a6-a69d-f41e00d145be:d21776f1-f3be-4477-97b6-9fafddc458ba:3:true:2",
+                "accepted": true,
+                "level": 2,
+                "resourceSignature": "0:0|6eeb0f3f-6b14-42a6-a69d-f41e00d145be:d21776f1-f3be-4477-97b6-9fafddc458ba:3|3882c7e8-a8c3-4676-b226-ed7238859140:d21776f1-f3be-4477-97b6-9fafddc458ba:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 2,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spatial:0:11:-6",
+          "slot": 1,
+          "distance": 69.45622633602358,
+          "screen": [
+            0.8213915414242493,
+            0.9385057960991284
+          ],
+          "height": 11.63840785838758,
+          "ready": 0.5333049893379211,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:11:-6:99.06050109863281:3.319999933242798:-45.588096618652344:4.204277992248535:1.0941089391708374:1.0941089391708374:1.0941089391708374",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": true,
+                "key": "spatial:0:11:-6:99.06050109863281:3.319999933242798:-45.588096618652344:4.204277992248535:1.0941089391708374:1.0941089391708374:1.0941089391708374",
+                "level": 1,
+                "resource": "0:961f4665-fa68-4cec-ae73-9cd3a84da351:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+                "currentResource": "0:961f4665-fa68-4cec-ae73-9cd3a84da351:80e34f3b-2c7b-4625-b833-432af5a268ba:3"
+              },
+              {
+                "index": 1,
+                "active": false,
+                "key": "spatial:0:11:-6:99.06050109863281:3.319999933242798:-45.588096618652344:4.204277992248535:1.0941089391708374:1.0941089391708374:1.0941089391708374",
+                "level": 1,
+                "resource": "0:961f4665-fa68-4cec-ae73-9cd3a84da351:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+                "currentResource": "0:961f4665-fa68-4cec-ae73-9cd3a84da351:80e34f3b-2c7b-4625-b833-432af5a268ba:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    93.61014330271641,
+                    3.319999933242798,
+                    -51.682101846173246
+                  ],
+                  [
+                    104.51086026195343,
+                    13.714034855365753,
+                    -39.49409062964964
+                  ]
+                ],
+                "nativeKey": "spatial:0:11:-6:99.06050109863281:3.319999933242798:-45.588096618652344:4.204277992248535:1.0941089391708374:1.0941089391708374:1.0941089391708374",
+                "chunk": "2,-1",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    69.55054475606961,
+                    3.319999933242798,
+                    -74.97106092802241
+                  ],
+                  [
+                    121.65223336428275,
+                    13.714034855365753,
+                    -22.8153730441868
+                  ]
+                ],
+                "tree": [
+                  99.06050109863281,
+                  3.319999933242798,
+                  -45.588096618652344
+                ],
+                "slot": 1,
+                "orders": [
+                  false,
+                  false,
+                  true,
+                  false
+                ],
+                "counts": [
+                  0,
+                  0,
+                  2,
+                  1
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|1:1:aa9ac2b4-5bcd-4166-9a2d-9a0cdd127313:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:2:ad3ec84f-a1d3-42b6-a591-3d0ffe6cd889:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:3:ee03ece8-a1d4-4fe3-8c2f-e5026e431fd0:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+            "proofSignature": "0:0|1:1:aa9ac2b4-5bcd-4166-9a2d-9a0cdd127313:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:2:ad3ec84f-a1d3-42b6-a591-3d0ffe6cd889:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:3:ee03ece8-a1d4-4fe3-8c2f-e5026e431fd0:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+            "batches": [
+              {
+                "stamp": "true:2:true:f438ce3d-2221-476a-abc1-4cc7209c33cd:80e34f3b-2c7b-4625-b833-432af5a268ba:3:true:2",
+                "accepted": true,
+                "level": 2,
+                "resourceSignature": "0:0|f438ce3d-2221-476a-abc1-4cc7209c33cd:80e34f3b-2c7b-4625-b833-432af5a268ba:3|ad3ec84f-a1d3-42b6-a591-3d0ffe6cd889:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 2,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 1,
+                    "visible": true,
+                    "matrixVersion": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spatial:0:9:-6",
+          "slot": 3,
+          "distance": 72.88945839672463,
+          "screen": [
+            0.37732993274385584,
+            0.8939961846084221
+          ],
+          "height": 6.263351527616388,
+          "ready": 0.5333049893379211,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:9:-6:80.91417694091797:3.319999933242798:-43.95280075073242:2.1429436206817627:0.9294456243515015:0.9294456243515015:0.9294456243515015",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": false,
+                "key": "spatial:0:9:-6:80.91417694091797:3.319999933242798:-43.95280075073242:2.1429436206817627:0.9294456243515015:0.9294456243515015:0.9294456243515015",
+                "level": 1,
+                "resource": "0:0c3cc96e-69a3-42ca-b9b9-3972d87299e0:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3",
+                "currentResource": "0:0c3cc96e-69a3-42ca-b9b9-3972d87299e0:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3"
+              },
+              {
+                "index": 1,
+                "active": true,
+                "key": "spatial:0:9:-6:80.91417694091797:3.319999933242798:-43.95280075073242:2.1429436206817627:0.9294456243515015:0.9294456243515015:0.9294456243515015",
+                "level": 1,
+                "resource": "0:0c3cc96e-69a3-42ca-b9b9-3972d87299e0:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3",
+                "currentResource": "0:0c3cc96e-69a3-42ca-b9b9-3972d87299e0:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    78.18668435740179,
+                    3.319999933242798,
+                    -46.93120156530566
+                  ],
+                  [
+                    83.64166952443415,
+                    8.896673679351807,
+                    -40.97439993615918
+                  ]
+                ],
+                "nativeKey": "spatial:0:9:-6:80.91417694091797:3.319999933242798:-43.95280075073242:2.1429436206817627:0.9294456243515015:0.9294456243515015:0.9294456243515015",
+                "chunk": "2,-1",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    69.55054475606961,
+                    3.319999933242798,
+                    -74.97106092802241
+                  ],
+                  [
+                    121.65223336428275,
+                    13.714034855365753,
+                    -22.8153730441868
+                  ]
+                ],
+                "tree": [
+                  80.91417694091797,
+                  3.319999933242798,
+                  -43.95280075073242
+                ],
+                "slot": 3,
+                "orders": [
+                  false,
+                  false,
+                  true,
+                  false
+                ],
+                "counts": [
+                  0,
+                  0,
+                  2,
+                  0
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|3:1:69f656a5-6abb-4d2f-bc9c-ccb62d7fdd3d:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3|3:2:b182e7b8-9bd0-4edd-9021-047dc26df749:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3|3:3:3453af3e-5bcc-4eff-ae58-591bde6f6853:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3",
+            "proofSignature": "0:0|3:1:69f656a5-6abb-4d2f-bc9c-ccb62d7fdd3d:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3|3:2:b182e7b8-9bd0-4edd-9021-047dc26df749:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3|3:3:3453af3e-5bcc-4eff-ae58-591bde6f6853:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3",
+            "batches": [
+              {
+                "stamp": "true:2:true:62300589-4026-499b-95e5-5d6909c6aa6a:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3:true:1",
+                "accepted": true,
+                "level": 2,
+                "resourceSignature": "0:0|62300589-4026-499b-95e5-5d6909c6aa6a:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3|b182e7b8-9bd0-4edd-9021-047dc26df749:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 2,
+                    "visible": true,
+                    "matrixVersion": 1
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spatial:0:7:-5",
+          "slot": 1,
+          "distance": 75.26726118527847,
+          "screen": [
+            0.028649249995399768,
+            1.0308200597182082
+          ],
+          "height": 11.716324397624357,
+          "ready": 0.5333049893379211,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:7:-5:65.55036926269531:3.3399999141693115:-37.976722717285156:4.561556339263916:1.1014337539672852:1.1014337539672852:1.1014337539672852",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": true,
+                "key": "spatial:0:7:-5:65.55036926269531:3.3399999141693115:-37.976722717285156:4.561556339263916:1.1014337539672852:1.1014337539672852:1.1014337539672852",
+                "level": 1,
+                "resource": "0:961f4665-fa68-4cec-ae73-9cd3a84da351:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+                "currentResource": "0:961f4665-fa68-4cec-ae73-9cd3a84da351:80e34f3b-2c7b-4625-b833-432af5a268ba:3"
+              },
+              {
+                "index": 1,
+                "active": false,
+                "key": "spatial:0:7:-5:65.55036926269531:3.3399999141693115:-37.976722717285156:4.561556339263916:1.1014337539672852:1.1014337539672852:1.1014337539672852",
+                "level": 1,
+                "resource": "0:961f4665-fa68-4cec-ae73-9cd3a84da351:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+                "currentResource": "0:961f4665-fa68-4cec-ae73-9cd3a84da351:80e34f3b-2c7b-4625-b833-432af5a268ba:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    61.38649533413396,
+                    3.3399999141693115,
+                    -43.54381166879056
+                  ],
+                  [
+                    69.71424474898124,
+                    13.80362057685852,
+                    -32.40963352902589
+                  ]
+                ],
+                "nativeKey": "spatial:0:7:-5:65.55036926269531:3.3399999141693115:-37.976722717285156:4.561556339263916:1.1014337539672852:1.1014337539672852:1.1014337539672852",
+                "chunk": "1,-1",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    22.881853268575593,
+                    3.319999933242798,
+                    -75.78202250951806
+                  ],
+                  [
+                    77.78443688488905,
+                    13.850055754184723,
+                    -21.180519405668846
+                  ]
+                ],
+                "tree": [
+                  65.55036926269531,
+                  3.3399999141693115,
+                  -37.976722717285156
+                ],
+                "slot": 1,
+                "orders": [
+                  false,
+                  false,
+                  true,
+                  false
+                ],
+                "counts": [
+                  0,
+                  0,
+                  1,
+                  6
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|1:1:aa9ac2b4-5bcd-4166-9a2d-9a0cdd127313:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:2:ad3ec84f-a1d3-42b6-a591-3d0ffe6cd889:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:3:ee03ece8-a1d4-4fe3-8c2f-e5026e431fd0:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+            "proofSignature": "0:0|1:1:aa9ac2b4-5bcd-4166-9a2d-9a0cdd127313:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:2:ad3ec84f-a1d3-42b6-a591-3d0ffe6cd889:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:3:ee03ece8-a1d4-4fe3-8c2f-e5026e431fd0:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+            "batches": [
+              {
+                "stamp": "true:1:true:991ff266-0ef2-4df7-8f80-beb1fc467fa1:80e34f3b-2c7b-4625-b833-432af5a268ba:3:true:2",
+                "accepted": true,
+                "level": 2,
+                "resourceSignature": "0:0|991ff266-0ef2-4df7-8f80-beb1fc467fa1:80e34f3b-2c7b-4625-b833-432af5a268ba:3|ad3ec84f-a1d3-42b6-a591-3d0ffe6cd889:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 1,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 6,
+                    "visible": true,
+                    "matrixVersion": 2
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spatial:0:8:-6",
+          "slot": 1,
+          "distance": 76.57573636579886,
+          "screen": [
+            0.22616045096997492,
+            0.9856486466157746
+          ],
+          "height": 9.245275759716352,
+          "ready": 0.5333049893379211,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:8:-6:72.98320770263672:3.3399999141693115:-44.1881103515625:4.519664287567139:0.869134247303009:0.869134247303009:0.869134247303009",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": true,
+                "key": "spatial:0:8:-6:72.98320770263672:3.3399999141693115:-44.1881103515625:4.519664287567139:0.869134247303009:0.869134247303009:0.869134247303009",
+                "level": 1,
+                "resource": "0:961f4665-fa68-4cec-ae73-9cd3a84da351:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+                "currentResource": "0:961f4665-fa68-4cec-ae73-9cd3a84da351:80e34f3b-2c7b-4625-b833-432af5a268ba:3"
+              },
+              {
+                "index": 1,
+                "active": false,
+                "key": "spatial:0:8:-6:72.98320770263672:3.3399999141693115:-44.1881103515625:4.519664287567139:0.869134247303009:0.869134247303009:0.869134247303009",
+                "level": 1,
+                "resource": "0:961f4665-fa68-4cec-ae73-9cd3a84da351:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+                "currentResource": "0:961f4665-fa68-4cec-ae73-9cd3a84da351:80e34f3b-2c7b-4625-b833-432af5a268ba:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    69.55054475606961,
+                    3.3399999141693115,
+                    -48.66407527709001
+                  ],
+                  [
+                    76.41587186949177,
+                    11.596775263547897,
+                    -39.71214518789971
+                  ]
+                ],
+                "nativeKey": "spatial:0:8:-6:72.98320770263672:3.3399999141693115:-44.1881103515625:4.519664287567139:0.869134247303009:0.869134247303009:0.869134247303009",
+                "chunk": "2,-1",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    69.55054475606961,
+                    3.319999933242798,
+                    -74.97106092802241
+                  ],
+                  [
+                    121.65223336428275,
+                    13.714034855365753,
+                    -22.8153730441868
+                  ]
+                ],
+                "tree": [
+                  72.98320770263672,
+                  3.3399999141693115,
+                  -44.1881103515625
+                ],
+                "slot": 1,
+                "orders": [
+                  false,
+                  false,
+                  true,
+                  false
+                ],
+                "counts": [
+                  0,
+                  0,
+                  2,
+                  1
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|1:1:aa9ac2b4-5bcd-4166-9a2d-9a0cdd127313:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:2:ad3ec84f-a1d3-42b6-a591-3d0ffe6cd889:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:3:ee03ece8-a1d4-4fe3-8c2f-e5026e431fd0:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+            "proofSignature": "0:0|1:1:aa9ac2b4-5bcd-4166-9a2d-9a0cdd127313:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:2:ad3ec84f-a1d3-42b6-a591-3d0ffe6cd889:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:3:ee03ece8-a1d4-4fe3-8c2f-e5026e431fd0:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+            "batches": [
+              {
+                "stamp": "true:2:true:f438ce3d-2221-476a-abc1-4cc7209c33cd:80e34f3b-2c7b-4625-b833-432af5a268ba:3:true:2",
+                "accepted": true,
+                "level": 2,
+                "resourceSignature": "0:0|f438ce3d-2221-476a-abc1-4cc7209c33cd:80e34f3b-2c7b-4625-b833-432af5a268ba:3|ad3ec84f-a1d3-42b6-a591-3d0ffe6cd889:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 2,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 1,
+                    "visible": true,
+                    "matrixVersion": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spatial:0:11:-7",
+          "slot": 0,
+          "distance": 81.34278174844084,
+          "screen": [
+            0.8330260819825538,
+            0.9836303059815997
+          ],
+          "height": 10.425166917380748,
+          "ready": 0.5333049893379211,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:11:-7:97.9356918334961:3.319999933242798:-57.118324279785156:4.071866512298584:1.1079144477844238:1.1079144477844238:1.1079144477844238",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": true,
+                "key": "spatial:0:11:-7:97.9356918334961:3.319999933242798:-57.118324279785156:4.071866512298584:1.1079144477844238:1.1079144477844238:1.1079144477844238",
+                "level": 1,
+                "resource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "currentResource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3"
+              },
+              {
+                "index": 1,
+                "active": false,
+                "key": "spatial:0:11:-7:97.9356918334961:3.319999933242798:-57.118324279785156:4.071866512298584:1.1079144477844238:1.1079144477844238:1.1079144477844238",
+                "level": 1,
+                "resource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "currentResource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    92.35524881530513,
+                    3.319999933242798,
+                    -63.14289771644149
+                  ],
+                  [
+                    103.51613390453731,
+                    12.7372727394104,
+                    -51.09374957239451
+                  ]
+                ],
+                "nativeKey": "spatial:0:11:-7:97.9356918334961:3.319999933242798:-57.118324279785156:4.071866512298584:1.1079144477844238:1.1079144477844238:1.1079144477844238",
+                "chunk": "2,-1",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    69.55054475606961,
+                    3.319999933242798,
+                    -74.97106092802241
+                  ],
+                  [
+                    121.65223336428275,
+                    13.714034855365753,
+                    -22.8153730441868
+                  ]
+                ],
+                "tree": [
+                  97.9356918334961,
+                  3.319999933242798,
+                  -57.118324279785156
+                ],
+                "slot": 0,
+                "orders": [
+                  false,
+                  false,
+                  true,
+                  false
+                ],
+                "counts": [
+                  0,
+                  0,
+                  5,
+                  3
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|0:0:12b575f9-3240-4a99-af45-77496e0b5389:0686f909-5587-47af-b75f-e6a3ca5b94c1:3|0:1:04c2739c-a885-42fc-bedf-6a6339085751:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:2:1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:3:17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+            "proofSignature": "0:0|0:0:12b575f9-3240-4a99-af45-77496e0b5389:0686f909-5587-47af-b75f-e6a3ca5b94c1:3|0:1:04c2739c-a885-42fc-bedf-6a6339085751:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:2:1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:3:17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+            "batches": [
+              {
+                "stamp": "true:5:true:547daa3c-2cf7-426a-8e6d-c0c653fbeaf2:d3f7df64-ea1f-42eb-be56-3898b90209a7:3:true:2",
+                "accepted": true,
+                "level": 2,
+                "resourceSignature": "0:0|547daa3c-2cf7-426a-8e6d-c0c653fbeaf2:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 5,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 3,
+                    "visible": true,
+                    "matrixVersion": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spatial:0:6:-5",
+          "slot": 0,
+          "distance": 81.94724093944068,
+          "screen": [
+            -0.04341377866687134,
+            1.0205294603178452
+          ],
+          "height": 9.393821497571688,
+          "ready": 0.5333049893379211,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:6:-5:58.243934631347656:3.319999933242798:-40.7392463684082:2.0224862098693848:0.9983102083206177:0.9983102083206177:0.9983102083206177",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": true,
+                "key": "spatial:0:6:-5:58.243934631347656:3.319999933242798:-40.7392463684082:2.0224862098693848:0.9983102083206177:0.9983102083206177:0.9983102083206177",
+                "level": 1,
+                "resource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "currentResource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3"
+              },
+              {
+                "index": 1,
+                "active": false,
+                "key": "spatial:0:6:-5:58.243934631347656:3.319999933242798:-40.7392463684082:2.0224862098693848:0.9983102083206177:0.9983102083206177:0.9983102083206177",
+                "level": 1,
+                "resource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "currentResource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    53.70557702817564,
+                    3.319999933242798,
+                    -46.18557515555088
+                  ],
+                  [
+                    62.78229161117574,
+                    11.805636703968048,
+                    -35.29291886613728
+                  ]
+                ],
+                "nativeKey": "spatial:0:6:-5:58.243934631347656:3.319999933242798:-40.7392463684082:2.0224862098693848:0.9983102083206177:0.9983102083206177:0.9983102083206177",
+                "chunk": "1,-1",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    22.881853268575593,
+                    3.319999933242798,
+                    -75.78202250951806
+                  ],
+                  [
+                    77.78443688488905,
+                    13.850055754184723,
+                    -21.180519405668846
+                  ]
+                ],
+                "tree": [
+                  58.243934631347656,
+                  3.319999933242798,
+                  -40.7392463684082
+                ],
+                "slot": 0,
+                "orders": [
+                  false,
+                  false,
+                  true,
+                  false
+                ],
+                "counts": [
+                  0,
+                  0,
+                  2,
+                  5
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|0:0:12b575f9-3240-4a99-af45-77496e0b5389:0686f909-5587-47af-b75f-e6a3ca5b94c1:3|0:1:04c2739c-a885-42fc-bedf-6a6339085751:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:2:1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:3:17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+            "proofSignature": "0:0|0:0:12b575f9-3240-4a99-af45-77496e0b5389:0686f909-5587-47af-b75f-e6a3ca5b94c1:3|0:1:04c2739c-a885-42fc-bedf-6a6339085751:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:2:1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:3:17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+            "batches": [
+              {
+                "stamp": "true:2:true:0179fe1b-4a2e-4437-9c1b-579c4edb5c88:d3f7df64-ea1f-42eb-be56-3898b90209a7:3:true:2",
+                "accepted": true,
+                "level": 2,
+                "resourceSignature": "0:0|0179fe1b-4a2e-4437-9c1b-579c4edb5c88:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 2,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 5,
+                    "visible": true,
+                    "matrixVersion": 2
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spatial:0:10:-7",
+          "slot": 3,
+          "distance": 82.49560718018688,
+          "screen": [
+            0.5821958088207813,
+            0.961396266212085
+          ],
+          "height": 7.571705316138459,
+          "ready": 0.5333049893379211,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:10:-7:86.87528228759766:3.319999933242798:-56.09181213378906:4.979086875915527:1.1235978603363037:1.1235978603363037:1.1235978603363037",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": false,
+                "key": "spatial:0:10:-7:86.87528228759766:3.319999933242798:-56.09181213378906:4.979086875915527:1.1235978603363037:1.1235978603363037:1.1235978603363037",
+                "level": 1,
+                "resource": "0:0c3cc96e-69a3-42ca-b9b9-3972d87299e0:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3",
+                "currentResource": "0:0c3cc96e-69a3-42ca-b9b9-3972d87299e0:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3"
+              },
+              {
+                "index": 1,
+                "active": true,
+                "key": "spatial:0:10:-7:86.87528228759766:3.319999933242798:-56.09181213378906:4.979086875915527:1.1235978603363037:1.1235978603363037:1.1235978603363037",
+                "level": 1,
+                "resource": "0:0c3cc96e-69a3-42ca-b9b9-3972d87299e0:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3",
+                "currentResource": "0:0c3cc96e-69a3-42ca-b9b9-3972d87299e0:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    84.16587193863357,
+                    3.319999933242798,
+                    -59.51173537685217
+                  ],
+                  [
+                    89.58469263656174,
+                    10.06158709526062,
+                    -52.67188889072595
+                  ]
+                ],
+                "nativeKey": "spatial:0:10:-7:86.87528228759766:3.319999933242798:-56.09181213378906:4.979086875915527:1.1235978603363037:1.1235978603363037:1.1235978603363037",
+                "chunk": "2,-1",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    69.55054475606961,
+                    3.319999933242798,
+                    -74.97106092802241
+                  ],
+                  [
+                    121.65223336428275,
+                    13.714034855365753,
+                    -22.8153730441868
+                  ]
+                ],
+                "tree": [
+                  86.87528228759766,
+                  3.319999933242798,
+                  -56.09181213378906
+                ],
+                "slot": 3,
+                "orders": [
+                  false,
+                  false,
+                  true,
+                  false
+                ],
+                "counts": [
+                  0,
+                  0,
+                  2,
+                  0
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|3:1:69f656a5-6abb-4d2f-bc9c-ccb62d7fdd3d:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3|3:2:b182e7b8-9bd0-4edd-9021-047dc26df749:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3|3:3:3453af3e-5bcc-4eff-ae58-591bde6f6853:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3",
+            "proofSignature": "0:0|3:1:69f656a5-6abb-4d2f-bc9c-ccb62d7fdd3d:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3|3:2:b182e7b8-9bd0-4edd-9021-047dc26df749:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3|3:3:3453af3e-5bcc-4eff-ae58-591bde6f6853:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3",
+            "batches": [
+              {
+                "stamp": "true:2:true:62300589-4026-499b-95e5-5d6909c6aa6a:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3:true:1",
+                "accepted": true,
+                "level": 2,
+                "resourceSignature": "0:0|62300589-4026-499b-95e5-5d6909c6aa6a:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3|b182e7b8-9bd0-4edd-9021-047dc26df749:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 2,
+                    "visible": true,
+                    "matrixVersion": 1
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spatial:0:8:-7",
+          "slot": 1,
+          "distance": 87.69770928965133,
+          "screen": [
+            0.38262962245000653,
+            1.0625544561179634
+          ],
+          "height": 10.896682222240281,
+          "ready": 0.5333049893379211,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:8:-7:75.05827331542969:3.319999933242798:-57.468685150146484:1.2270058393478394:1.0243804454803467:1.0243804454803467:1.0243804454803467",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": true,
+                "key": "spatial:0:8:-7:75.05827331542969:3.319999933242798:-57.468685150146484:1.2270058393478394:1.0243804454803467:1.0243804454803467:1.0243804454803467",
+                "level": 2,
+                "resource": "0:96adfd85-863d-4d10-af88-7a5d1744cb10:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+                "currentResource": "0:96adfd85-863d-4d10-af88-7a5d1744cb10:80e34f3b-2c7b-4625-b833-432af5a268ba:3"
+              },
+              {
+                "index": 1,
+                "active": false,
+                "key": "spatial:0:8:-7:75.05827331542969:3.319999933242798:-57.468685150146484:1.2270058393478394:1.0243804454803467:1.0243804454803467:1.0243804454803467",
+                "level": 1,
+                "resource": "0:961f4665-fa68-4cec-ae73-9cd3a84da351:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+                "currentResource": "0:961f4665-fa68-4cec-ae73-9cd3a84da351:80e34f3b-2c7b-4625-b833-432af5a268ba:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    70.4488031792799,
+                    3.319999933242798,
+                    -63.01901770299866
+                  ],
+                  [
+                    79.6677420719404,
+                    13.051614165306091,
+                    -51.91835309121532
+                  ]
+                ],
+                "nativeKey": "spatial:0:8:-7:75.05827331542969:3.319999933242798:-57.468685150146484:1.2270058393478394:1.0243804454803467:1.0243804454803467:1.0243804454803467",
+                "chunk": "2,-1",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    69.55054475606961,
+                    3.319999933242798,
+                    -74.97106092802241
+                  ],
+                  [
+                    121.65223336428275,
+                    13.714034855365753,
+                    -22.8153730441868
+                  ]
+                ],
+                "tree": [
+                  75.05827331542969,
+                  3.319999933242798,
+                  -57.468685150146484
+                ],
+                "slot": 1,
+                "orders": [
+                  false,
+                  false,
+                  false,
+                  true
+                ],
+                "counts": [
+                  0,
+                  0,
+                  2,
+                  1
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|1:1:aa9ac2b4-5bcd-4166-9a2d-9a0cdd127313:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:2:ad3ec84f-a1d3-42b6-a591-3d0ffe6cd889:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:3:ee03ece8-a1d4-4fe3-8c2f-e5026e431fd0:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+            "proofSignature": "0:0|1:1:aa9ac2b4-5bcd-4166-9a2d-9a0cdd127313:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:2:ad3ec84f-a1d3-42b6-a591-3d0ffe6cd889:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:3:ee03ece8-a1d4-4fe3-8c2f-e5026e431fd0:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+            "batches": [
+              {
+                "stamp": "true:1:true:899e6ae9-2f3a-42e0-bce6-2b32ada6ac6c:80e34f3b-2c7b-4625-b833-432af5a268ba:3:true:1",
+                "accepted": true,
+                "level": 3,
+                "resourceSignature": "0:0|899e6ae9-2f3a-42e0-bce6-2b32ada6ac6c:80e34f3b-2c7b-4625-b833-432af5a268ba:3|ee03ece8-a1d4-4fe3-8c2f-e5026e431fd0:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 2,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 1,
+                    "visible": true,
+                    "matrixVersion": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spatial:0:10:-8",
+          "slot": 0,
+          "distance": 89.22808363014461,
+          "screen": [
+            0.7122804787862178,
+            1.0362839223008005
+          ],
+          "height": 10.457175376512634,
+          "ready": 0.5333049893379211,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:10:-8:90.81101989746094:3.319999933242798:-64.47415161132812:5.349311828613281:1.1113160848617554:1.1113160848617554:1.1113160848617554",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": true,
+                "key": "spatial:0:10:-8:90.81101989746094:3.319999933242798:-64.47415161132812:5.349311828613281:1.1113160848617554:1.1113160848617554:1.1113160848617554",
+                "level": 2,
+                "resource": "0:e53c0bd9-6531-4d5b-a08a-fa14d42c4109:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "currentResource": "0:e53c0bd9-6531-4d5b-a08a-fa14d42c4109:d3f7df64-ea1f-42eb-be56-3898b90209a7:3"
+              },
+              {
+                "index": 1,
+                "active": false,
+                "key": "spatial:0:10:-8:90.81101989746094:3.319999933242798:-64.47415161132812:5.349311828613281:1.1113160848617554:1.1113160848617554:1.1113160848617554",
+                "level": 1,
+                "resource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "currentResource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    85.22203277157973,
+                    3.319999933242798,
+                    -70.51962214856675
+                  ],
+                  [
+                    96.40000796880557,
+                    12.766186654567719,
+                    -58.42867979604205
+                  ]
+                ],
+                "nativeKey": "spatial:0:10:-8:90.81101989746094:3.319999933242798:-64.47415161132812:5.349311828613281:1.1113160848617554:1.1113160848617554:1.1113160848617554",
+                "chunk": "2,-1",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    69.55054475606961,
+                    3.319999933242798,
+                    -74.97106092802241
+                  ],
+                  [
+                    121.65223336428275,
+                    13.714034855365753,
+                    -22.8153730441868
+                  ]
+                ],
+                "tree": [
+                  90.81101989746094,
+                  3.319999933242798,
+                  -64.47415161132812
+                ],
+                "slot": 0,
+                "orders": [
+                  false,
+                  false,
+                  false,
+                  true
+                ],
+                "counts": [
+                  0,
+                  0,
+                  5,
+                  3
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|0:0:12b575f9-3240-4a99-af45-77496e0b5389:0686f909-5587-47af-b75f-e6a3ca5b94c1:3|0:1:04c2739c-a885-42fc-bedf-6a6339085751:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:2:1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:3:17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+            "proofSignature": "0:0|0:0:12b575f9-3240-4a99-af45-77496e0b5389:0686f909-5587-47af-b75f-e6a3ca5b94c1:3|0:1:04c2739c-a885-42fc-bedf-6a6339085751:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:2:1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:3:17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+            "batches": [
+              {
+                "stamp": "true:3:true:7ce8d82b-cc05-45d0-b2da-31e6b332a71f:d3f7df64-ea1f-42eb-be56-3898b90209a7:3:true:1",
+                "accepted": true,
+                "level": 3,
+                "resourceSignature": "0:0|7ce8d82b-cc05-45d0-b2da-31e6b332a71f:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 5,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 3,
+                    "visible": true,
+                    "matrixVersion": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spatial:0:12:-8",
+          "slot": 0,
+          "distance": 89.95101541039752,
+          "screen": [
+            1.0069995130286848,
+            0.969020638544928
+          ],
+          "height": 8.547408918503775,
+          "ready": 0.5333049893379211,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:12:-8:103.22710418701172:3.319999933242798:-66.65714263916016:1.3002241849899292:0.9083593487739563:0.9083593487739563:0.9083593487739563",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": true,
+                "key": "spatial:0:12:-8:103.22710418701172:3.319999933242798:-66.65714263916016:1.3002241849899292:0.9083593487739563:0.9083593487739563:0.9083593487739563",
+                "level": 2,
+                "resource": "0:e53c0bd9-6531-4d5b-a08a-fa14d42c4109:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "currentResource": "0:e53c0bd9-6531-4d5b-a08a-fa14d42c4109:d3f7df64-ea1f-42eb-be56-3898b90209a7:3"
+              },
+              {
+                "index": 1,
+                "active": false,
+                "key": "spatial:0:12:-8:103.22710418701172:3.319999933242798:-66.65714263916016:1.3002241849899292:0.9083593487739563:0.9083593487739563:0.9083593487739563",
+                "level": 1,
+                "resource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "currentResource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    99.66350801625083,
+                    3.319999933242798,
+                    -71.46265285730217
+                  ],
+                  [
+                    106.79070070508483,
+                    11.041054397821426,
+                    -61.85163367316133
+                  ]
+                ],
+                "nativeKey": "spatial:0:12:-8:103.22710418701172:3.319999933242798:-66.65714263916016:1.3002241849899292:0.9083593487739563:0.9083593487739563:0.9083593487739563",
+                "chunk": "2,-1",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    69.55054475606961,
+                    3.319999933242798,
+                    -74.97106092802241
+                  ],
+                  [
+                    121.65223336428275,
+                    13.714034855365753,
+                    -22.8153730441868
+                  ]
+                ],
+                "tree": [
+                  103.22710418701172,
+                  3.319999933242798,
+                  -66.65714263916016
+                ],
+                "slot": 0,
+                "orders": [
+                  false,
+                  false,
+                  false,
+                  true
+                ],
+                "counts": [
+                  0,
+                  0,
+                  5,
+                  3
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|0:0:12b575f9-3240-4a99-af45-77496e0b5389:0686f909-5587-47af-b75f-e6a3ca5b94c1:3|0:1:04c2739c-a885-42fc-bedf-6a6339085751:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:2:1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:3:17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+            "proofSignature": "0:0|0:0:12b575f9-3240-4a99-af45-77496e0b5389:0686f909-5587-47af-b75f-e6a3ca5b94c1:3|0:1:04c2739c-a885-42fc-bedf-6a6339085751:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:2:1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:3:17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+            "batches": [
+              {
+                "stamp": "true:3:true:7ce8d82b-cc05-45d0-b2da-31e6b332a71f:d3f7df64-ea1f-42eb-be56-3898b90209a7:3:true:1",
+                "accepted": true,
+                "level": 3,
+                "resourceSignature": "0:0|7ce8d82b-cc05-45d0-b2da-31e6b332a71f:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 5,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 3,
+                    "visible": true,
+                    "matrixVersion": 1
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "adapters": [
+        {
+          "slot": 0,
+          "active": 249,
+          "pending": {
+            "native": false,
+            "regional": 0,
+            "worker": false,
+            "standby": false,
+            "closed": false
+          },
+          "stats": {
+            "coverage": 61,
+            "prepared": 61,
+            "standby": {
+              "requests": 7,
+              "queuedReplacements": 1,
+              "addedEntries": 249,
+              "identityChanges": 0,
+              "lodChanges": 22,
+              "resourceDrops": 0,
+              "distanceDrops": 0,
+              "budgetEvictions": 0,
+              "cancelledPreparations": 0,
+              "preparations": 4,
+              "rendered": 0,
+              "submittedInstances": 0,
+              "maskedInstances": 0,
+              "submittedTriangles": 0,
+              "visibleTriangles": 0,
+              "trees": 249,
+              "estimatedOwnedGpuBytes": 1694124,
+              "estimatedPreparedMatrixCpuBytes": 98304,
+              "errors": []
+            }
+          }
+        },
+        {
+          "slot": 1,
+          "active": 225,
+          "pending": {
+            "native": false,
+            "regional": 0,
+            "worker": false,
+            "standby": false,
+            "closed": false
+          },
+          "stats": {
+            "coverage": 47,
+            "prepared": 47,
+            "standby": {
+              "requests": 7,
+              "queuedReplacements": 1,
+              "addedEntries": 225,
+              "identityChanges": 0,
+              "lodChanges": 13,
+              "resourceDrops": 0,
+              "distanceDrops": 0,
+              "budgetEvictions": 0,
+              "cancelledPreparations": 0,
+              "preparations": 4,
+              "rendered": 0,
+              "submittedInstances": 0,
+              "maskedInstances": 0,
+              "submittedTriangles": 0,
+              "visibleTriangles": 0,
+              "trees": 225,
+              "estimatedOwnedGpuBytes": 1797864,
+              "estimatedPreparedMatrixCpuBytes": 98304,
+              "errors": []
+            }
+          }
+        },
+        {
+          "slot": 2,
+          "active": 54,
+          "pending": {
+            "native": false,
+            "regional": 0,
+            "worker": false,
+            "standby": false,
+            "closed": false
+          },
+          "stats": {
+            "coverage": 21,
+            "prepared": 21,
+            "standby": {
+              "requests": 7,
+              "queuedReplacements": 0,
+              "addedEntries": 54,
+              "identityChanges": 0,
+              "lodChanges": 7,
+              "resourceDrops": 0,
+              "distanceDrops": 0,
+              "budgetEvictions": 0,
+              "cancelledPreparations": 0,
+              "preparations": 3,
+              "rendered": 0,
+              "submittedInstances": 0,
+              "maskedInstances": 0,
+              "submittedTriangles": 0,
+              "visibleTriangles": 0,
+              "trees": 54,
+              "estimatedOwnedGpuBytes": 574332,
+              "estimatedPreparedMatrixCpuBytes": 24576,
+              "errors": []
+            }
+          }
+        },
+        {
+          "slot": 3,
+          "active": 48,
+          "pending": {
+            "native": false,
+            "regional": 0,
+            "worker": false,
+            "standby": false,
+            "closed": false
+          },
+          "stats": {
+            "coverage": 14,
+            "prepared": 14,
+            "standby": {
+              "requests": 7,
+              "queuedReplacements": 0,
+              "addedEntries": 48,
+              "identityChanges": 0,
+              "lodChanges": 1,
+              "resourceDrops": 0,
+              "distanceDrops": 0,
+              "budgetEvictions": 0,
+              "cancelledPreparations": 0,
+              "preparations": 3,
+              "rendered": 0,
+              "submittedInstances": 0,
+              "maskedInstances": 0,
+              "submittedTriangles": 0,
+              "visibleTriangles": 0,
+              "trees": 48,
+              "estimatedOwnedGpuBytes": 1337520,
+              "estimatedPreparedMatrixCpuBytes": 24576,
+              "errors": []
+            }
+          }
+        }
+      ],
+      "image": {
+        "path": ".cache/foreground-tree-audit/frozen.png",
+        "sha256": "e6079b54c2160c826cfd7ccb711ca3f69df24b4b8c7068a1e773e3cce3b127cf"
+      }
+    },
+    {
+      "label": "visual-clock",
+      "dt": 0.03333333333333333,
+      "camera": [
+        109.59110991546882,
+        19.319999933242798,
+        23.10582854123025
+      ],
+      "target": [
+        94.59110991546882,
+        5.319999933242798,
+        3.105828541230249
+      ],
+      "candidates": 15,
+      "ready": 15,
+      "notReady": 0,
+      "selected": [
+        {
+          "id": "spatial:0:12:-3",
+          "slot": 0,
+          "distance": 44.60146343220021,
+          "screen": [
+            0.8183911219048563,
+            0.552775211812095
+          ],
+          "height": 7.930320936473305,
+          "ready": 1,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:12:-3:104.0900650024414:3.319999933242798:-21.56816291809082:6.0082478523254395:0.8427795171737671:0.8427795171737671:0.8427795171737671",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": true,
+                "key": "spatial:0:12:-3:104.0900650024414:3.319999933242798:-21.56816291809082:6.0082478523254395:0.8427795171737671:0.8427795171737671:0.8427795171737671",
+                "level": 1,
+                "resource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "currentResource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3"
+              },
+              {
+                "index": 1,
+                "active": false,
+                "key": "spatial:0:12:-3:104.0900650024414:3.319999933242798:-21.56816291809082:6.0082478523254395:0.8427795171737671:0.8427795171737671:0.8427795171737671",
+                "level": 0,
+                "resource": "0:ee558b9b-8c57-4db8-b239-f7b4ed51deb3:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "currentResource": "0:ee558b9b-8c57-4db8-b239-f7b4ed51deb3:d3f7df64-ea1f-42eb-be56-3898b90209a7:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    99.62639457352842,
+                    3.319999933242798,
+                    -24.88848387381364
+                  ],
+                  [
+                    108.55373659168025,
+                    10.483625829219818,
+                    -18.24784163506202
+                  ]
+                ],
+                "nativeKey": "spatial:0:12:-3:104.0900650024414:3.319999933242798:-21.56816291809082:6.0082478523254395:0.8427795171737671:0.8427795171737671:0.8427795171737671",
+                "chunk": "2,0",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    72,
+                    3.319999933242798,
+                    -26.29920985624076
+                  ],
+                  [
+                    122.28540277934725,
+                    12.991457521915436,
+                    24.13504195300879
+                  ]
+                ],
+                "tree": [
+                  104.0900650024414,
+                  3.319999933242798,
+                  -21.56816291809082
+                ],
+                "slot": 0,
+                "orders": [
+                  false,
+                  false,
+                  true,
+                  false
+                ],
+                "counts": [
+                  0,
+                  0,
+                  1,
+                  0
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|0:0:12b575f9-3240-4a99-af45-77496e0b5389:0686f909-5587-47af-b75f-e6a3ca5b94c1:3|0:1:04c2739c-a885-42fc-bedf-6a6339085751:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:2:1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:3:17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+            "proofSignature": "0:0|0:0:12b575f9-3240-4a99-af45-77496e0b5389:0686f909-5587-47af-b75f-e6a3ca5b94c1:3|0:1:04c2739c-a885-42fc-bedf-6a6339085751:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:2:1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:3:17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+            "batches": [
+              {
+                "stamp": "true:1:true:51635bd2-3462-48bd-99d6-7592066c0984:d3f7df64-ea1f-42eb-be56-3898b90209a7:3:true:1",
+                "accepted": true,
+                "level": 2,
+                "resourceSignature": "0:0|51635bd2-3462-48bd-99d6-7592066c0984:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 1,
+                    "visible": true,
+                    "matrixVersion": 1
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spatial:0:12:-4",
+          "slot": 2,
+          "distance": 52.7262141391556,
+          "screen": [
+            0.960824153506418,
+            0.7690438097554888
+          ],
+          "height": 11.862611828336766,
+          "ready": 1,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:12:-4:104.19070434570312:3.319999933242798:-29.70423698425293:1.7165824174880981:1.0776097774505615:1.0776097774505615:1.0776097774505615",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": false,
+                "key": "spatial:0:12:-4:104.19070434570312:3.319999933242798:-29.70423698425293:1.7165824174880981:1.0776097774505615:1.0776097774505615:1.0776097774505615",
+                "level": 0,
+                "resource": "0:959801ad-0a98-44d0-8864-237749d383b4:d21776f1-f3be-4477-97b6-9fafddc458ba:3",
+                "currentResource": "0:959801ad-0a98-44d0-8864-237749d383b4:d21776f1-f3be-4477-97b6-9fafddc458ba:3"
+              },
+              {
+                "index": 1,
+                "active": true,
+                "key": "spatial:0:12:-4:104.19070434570312:3.319999933242798:-29.70423698425293:1.7165824174880981:1.0776097774505615:1.0776097774505615:1.0776097774505615",
+                "level": 1,
+                "resource": "0:8856d491-d66c-4634-bfac-13ed54228d63:d21776f1-f3be-4477-97b6-9fafddc458ba:3",
+                "currentResource": "0:8856d491-d66c-4634-bfac-13ed54228d63:d21776f1-f3be-4477-97b6-9fafddc458ba:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    99.09203192623772,
+                    3.319999933242798,
+                    -35.01854207334043
+                  ],
+                  [
+                    109.28937676516853,
+                    13.557292819023132,
+                    -24.38993189516543
+                  ]
+                ],
+                "nativeKey": "spatial:0:12:-4:104.19070434570312:3.319999933242798:-29.70423698425293:1.7165824174880981:1.0776097774505615:1.0776097774505615:1.0776097774505615",
+                "chunk": "2,-1",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    69.55054475606961,
+                    3.319999933242798,
+                    -74.97106092802241
+                  ],
+                  [
+                    121.65223336428275,
+                    13.714034855365753,
+                    -22.8153730441868
+                  ]
+                ],
+                "tree": [
+                  104.19070434570312,
+                  3.319999933242798,
+                  -29.70423698425293
+                ],
+                "slot": 2,
+                "orders": [
+                  false,
+                  false,
+                  true,
+                  false
+                ],
+                "counts": [
+                  0,
+                  0,
+                  2,
+                  0
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|2:2:3882c7e8-a8c3-4676-b226-ed7238859140:d21776f1-f3be-4477-97b6-9fafddc458ba:3|2:3:3f7e10c0-8ddc-4cbf-b369-de5e3c6dc916:d21776f1-f3be-4477-97b6-9fafddc458ba:3",
+            "proofSignature": "0:0|2:2:3882c7e8-a8c3-4676-b226-ed7238859140:d21776f1-f3be-4477-97b6-9fafddc458ba:3|2:3:3f7e10c0-8ddc-4cbf-b369-de5e3c6dc916:d21776f1-f3be-4477-97b6-9fafddc458ba:3",
+            "batches": [
+              {
+                "stamp": "true:2:true:6eeb0f3f-6b14-42a6-a69d-f41e00d145be:d21776f1-f3be-4477-97b6-9fafddc458ba:3:true:2",
+                "accepted": true,
+                "level": 2,
+                "resourceSignature": "0:0|6eeb0f3f-6b14-42a6-a69d-f41e00d145be:d21776f1-f3be-4477-97b6-9fafddc458ba:3|3882c7e8-a8c3-4676-b226-ed7238859140:d21776f1-f3be-4477-97b6-9fafddc458ba:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 2,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spatial:0:11:-4",
+          "slot": 0,
+          "distance": 55.44408128522428,
+          "screen": [
+            0.6620139314163449,
+            0.7830251278492786
+          ],
+          "height": 9.489114387712634,
+          "ready": 1,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:11:-4:97.07781219482422:3.319999933242798:-31.414649963378906:6.173349857330322:1.0084372758865356:1.0084372758865356:1.0084372758865356",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": true,
+                "key": "spatial:0:11:-4:97.07781219482422:3.319999933242798:-31.414649963378906:6.173349857330322:1.0084372758865356:1.0084372758865356:1.0084372758865356",
+                "level": 1,
+                "resource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "currentResource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3"
+              },
+              {
+                "index": 1,
+                "active": false,
+                "key": "spatial:0:11:-4:97.07781219482422:3.319999933242798:-31.414649963378906:6.173349857330322:1.0084372758865356:1.0084372758865356:1.0084372758865356",
+                "level": 0,
+                "resource": "0:ee558b9b-8c57-4db8-b239-f7b4ed51deb3:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "currentResource": "0:ee558b9b-8c57-4db8-b239-f7b4ed51deb3:d3f7df64-ea1f-42eb-be56-3898b90209a7:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    92.03720849347327,
+                    3.319999933242798,
+                    -34.70422734549822
+                  ],
+                  [
+                    102.11841733006348,
+                    11.89171677827835,
+                    -28.12507242313144
+                  ]
+                ],
+                "nativeKey": "spatial:0:11:-4:97.07781219482422:3.319999933242798:-31.414649963378906:6.173349857330322:1.0084372758865356:1.0084372758865356:1.0084372758865356",
+                "chunk": "2,-1",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    69.55054475606961,
+                    3.319999933242798,
+                    -74.97106092802241
+                  ],
+                  [
+                    121.65223336428275,
+                    13.714034855365753,
+                    -22.8153730441868
+                  ]
+                ],
+                "tree": [
+                  97.07781219482422,
+                  3.319999933242798,
+                  -31.414649963378906
+                ],
+                "slot": 0,
+                "orders": [
+                  false,
+                  false,
+                  true,
+                  false
+                ],
+                "counts": [
+                  0,
+                  0,
+                  5,
+                  3
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|0:0:12b575f9-3240-4a99-af45-77496e0b5389:0686f909-5587-47af-b75f-e6a3ca5b94c1:3|0:1:04c2739c-a885-42fc-bedf-6a6339085751:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:2:1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:3:17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+            "proofSignature": "0:0|0:0:12b575f9-3240-4a99-af45-77496e0b5389:0686f909-5587-47af-b75f-e6a3ca5b94c1:3|0:1:04c2739c-a885-42fc-bedf-6a6339085751:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:2:1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:3:17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+            "batches": [
+              {
+                "stamp": "true:5:true:547daa3c-2cf7-426a-8e6d-c0c653fbeaf2:d3f7df64-ea1f-42eb-be56-3898b90209a7:3:true:2",
+                "accepted": true,
+                "level": 2,
+                "resourceSignature": "0:0|547daa3c-2cf7-426a-8e6d-c0c653fbeaf2:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 5,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 3,
+                    "visible": true,
+                    "matrixVersion": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spatial:0:12:-5",
+          "slot": 0,
+          "distance": 60.399760315027684,
+          "screen": [
+            1.0106903266674951,
+            0.7194468251370357
+          ],
+          "height": 7.497888167932006,
+          "ready": 1,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:12:-5:106.75421905517578:3.319999933242798:-37.554359436035156:0.37344488501548767:0.7968235611915588:0.7968235611915588:0.7968235611915588",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": true,
+                "key": "spatial:0:12:-5:106.75421905517578:3.319999933242798:-37.554359436035156:0.37344488501548767:0.7968235611915588:0.7968235611915588:0.7968235611915588",
+                "level": 1,
+                "resource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "currentResource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3"
+              },
+              {
+                "index": 1,
+                "active": false,
+                "key": "spatial:0:12:-5:106.75421905517578:3.319999933242798:-37.554359436035156:0.37344488501548767:0.7968235611915588:0.7968235611915588:0.7968235611915588",
+                "level": 1,
+                "resource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "currentResource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    102.44668781889445,
+                    3.319999933242798,
+                    -40.97598808549719
+                  ],
+                  [
+                    111.06175135275839,
+                    10.093000203371048,
+                    -34.13273120242451
+                  ]
+                ],
+                "nativeKey": "spatial:0:12:-5:106.75421905517578:3.319999933242798:-37.554359436035156:0.37344488501548767:0.7968235611915588:0.7968235611915588:0.7968235611915588",
+                "chunk": "2,-1",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    69.55054475606961,
+                    3.319999933242798,
+                    -74.97106092802241
+                  ],
+                  [
+                    121.65223336428275,
+                    13.714034855365753,
+                    -22.8153730441868
+                  ]
+                ],
+                "tree": [
+                  106.75421905517578,
+                  3.319999933242798,
+                  -37.554359436035156
+                ],
+                "slot": 0,
+                "orders": [
+                  false,
+                  false,
+                  true,
+                  false
+                ],
+                "counts": [
+                  0,
+                  0,
+                  5,
+                  3
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|0:0:12b575f9-3240-4a99-af45-77496e0b5389:0686f909-5587-47af-b75f-e6a3ca5b94c1:3|0:1:04c2739c-a885-42fc-bedf-6a6339085751:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:2:1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:3:17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+            "proofSignature": "0:0|0:0:12b575f9-3240-4a99-af45-77496e0b5389:0686f909-5587-47af-b75f-e6a3ca5b94c1:3|0:1:04c2739c-a885-42fc-bedf-6a6339085751:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:2:1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:3:17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+            "batches": [
+              {
+                "stamp": "true:5:true:547daa3c-2cf7-426a-8e6d-c0c653fbeaf2:d3f7df64-ea1f-42eb-be56-3898b90209a7:3:true:2",
+                "accepted": true,
+                "level": 2,
+                "resourceSignature": "0:0|547daa3c-2cf7-426a-8e6d-c0c653fbeaf2:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 5,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 3,
+                    "visible": true,
+                    "matrixVersion": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spatial:0:12:-6",
+          "slot": 2,
+          "distance": 67.87465891782901,
+          "screen": [
+            1.0615578972903845,
+            0.8693227401402184
+          ],
+          "height": 10.791450831773512,
+          "ready": 1,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:12:-6:108.04573059082031:3.319999933242798:-46.09933853149414:6.084694862365723:0.9803045988082886:0.9803045988082886:0.9803045988082886",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": false,
+                "key": "spatial:0:12:-6:108.04573059082031:3.319999933242798:-46.09933853149414:6.084694862365723:0.9803045988082886:0.9803045988082886:0.9803045988082886",
+                "level": 1,
+                "resource": "0:8856d491-d66c-4634-bfac-13ed54228d63:d21776f1-f3be-4477-97b6-9fafddc458ba:3",
+                "currentResource": "0:8856d491-d66c-4634-bfac-13ed54228d63:d21776f1-f3be-4477-97b6-9fafddc458ba:3"
+              },
+              {
+                "index": 1,
+                "active": true,
+                "key": "spatial:0:12:-6:108.04573059082031:3.319999933242798:-46.09933853149414:6.084694862365723:0.9803045988082886:0.9803045988082886:0.9803045988082886",
+                "level": 1,
+                "resource": "0:8856d491-d66c-4634-bfac-13ed54228d63:d21776f1-f3be-4477-97b6-9fafddc458ba:3",
+                "currentResource": "0:8856d491-d66c-4634-bfac-13ed54228d63:d21776f1-f3be-4477-97b6-9fafddc458ba:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    103.03932916545098,
+                    3.319999933242798,
+                    -50.92374130034393
+                  ],
+                  [
+                    113.05213201618965,
+                    12.63289362192154,
+                    -41.274935762644354
+                  ]
+                ],
+                "nativeKey": "spatial:0:12:-6:108.04573059082031:3.319999933242798:-46.09933853149414:6.084694862365723:0.9803045988082886:0.9803045988082886:0.9803045988082886",
+                "chunk": "2,-1",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    69.55054475606961,
+                    3.319999933242798,
+                    -74.97106092802241
+                  ],
+                  [
+                    121.65223336428275,
+                    13.714034855365753,
+                    -22.8153730441868
+                  ]
+                ],
+                "tree": [
+                  108.04573059082031,
+                  3.319999933242798,
+                  -46.09933853149414
+                ],
+                "slot": 2,
+                "orders": [
+                  false,
+                  false,
+                  true,
+                  false
+                ],
+                "counts": [
+                  0,
+                  0,
+                  2,
+                  0
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|2:2:3882c7e8-a8c3-4676-b226-ed7238859140:d21776f1-f3be-4477-97b6-9fafddc458ba:3|2:3:3f7e10c0-8ddc-4cbf-b369-de5e3c6dc916:d21776f1-f3be-4477-97b6-9fafddc458ba:3",
+            "proofSignature": "0:0|2:2:3882c7e8-a8c3-4676-b226-ed7238859140:d21776f1-f3be-4477-97b6-9fafddc458ba:3|2:3:3f7e10c0-8ddc-4cbf-b369-de5e3c6dc916:d21776f1-f3be-4477-97b6-9fafddc458ba:3",
+            "batches": [
+              {
+                "stamp": "true:2:true:6eeb0f3f-6b14-42a6-a69d-f41e00d145be:d21776f1-f3be-4477-97b6-9fafddc458ba:3:true:2",
+                "accepted": true,
+                "level": 2,
+                "resourceSignature": "0:0|6eeb0f3f-6b14-42a6-a69d-f41e00d145be:d21776f1-f3be-4477-97b6-9fafddc458ba:3|3882c7e8-a8c3-4676-b226-ed7238859140:d21776f1-f3be-4477-97b6-9fafddc458ba:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 2,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spatial:0:11:-6",
+          "slot": 1,
+          "distance": 69.45622633602358,
+          "screen": [
+            0.8213915414242493,
+            0.9385057960991284
+          ],
+          "height": 11.63840785838758,
+          "ready": 1,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:11:-6:99.06050109863281:3.319999933242798:-45.588096618652344:4.204277992248535:1.0941089391708374:1.0941089391708374:1.0941089391708374",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": true,
+                "key": "spatial:0:11:-6:99.06050109863281:3.319999933242798:-45.588096618652344:4.204277992248535:1.0941089391708374:1.0941089391708374:1.0941089391708374",
+                "level": 1,
+                "resource": "0:961f4665-fa68-4cec-ae73-9cd3a84da351:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+                "currentResource": "0:961f4665-fa68-4cec-ae73-9cd3a84da351:80e34f3b-2c7b-4625-b833-432af5a268ba:3"
+              },
+              {
+                "index": 1,
+                "active": false,
+                "key": "spatial:0:11:-6:99.06050109863281:3.319999933242798:-45.588096618652344:4.204277992248535:1.0941089391708374:1.0941089391708374:1.0941089391708374",
+                "level": 1,
+                "resource": "0:961f4665-fa68-4cec-ae73-9cd3a84da351:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+                "currentResource": "0:961f4665-fa68-4cec-ae73-9cd3a84da351:80e34f3b-2c7b-4625-b833-432af5a268ba:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    93.61014330271641,
+                    3.319999933242798,
+                    -51.682101846173246
+                  ],
+                  [
+                    104.51086026195343,
+                    13.714034855365753,
+                    -39.49409062964964
+                  ]
+                ],
+                "nativeKey": "spatial:0:11:-6:99.06050109863281:3.319999933242798:-45.588096618652344:4.204277992248535:1.0941089391708374:1.0941089391708374:1.0941089391708374",
+                "chunk": "2,-1",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    69.55054475606961,
+                    3.319999933242798,
+                    -74.97106092802241
+                  ],
+                  [
+                    121.65223336428275,
+                    13.714034855365753,
+                    -22.8153730441868
+                  ]
+                ],
+                "tree": [
+                  99.06050109863281,
+                  3.319999933242798,
+                  -45.588096618652344
+                ],
+                "slot": 1,
+                "orders": [
+                  false,
+                  false,
+                  true,
+                  false
+                ],
+                "counts": [
+                  0,
+                  0,
+                  2,
+                  1
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|1:1:aa9ac2b4-5bcd-4166-9a2d-9a0cdd127313:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:2:ad3ec84f-a1d3-42b6-a591-3d0ffe6cd889:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:3:ee03ece8-a1d4-4fe3-8c2f-e5026e431fd0:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+            "proofSignature": "0:0|1:1:aa9ac2b4-5bcd-4166-9a2d-9a0cdd127313:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:2:ad3ec84f-a1d3-42b6-a591-3d0ffe6cd889:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:3:ee03ece8-a1d4-4fe3-8c2f-e5026e431fd0:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+            "batches": [
+              {
+                "stamp": "true:2:true:f438ce3d-2221-476a-abc1-4cc7209c33cd:80e34f3b-2c7b-4625-b833-432af5a268ba:3:true:2",
+                "accepted": true,
+                "level": 2,
+                "resourceSignature": "0:0|f438ce3d-2221-476a-abc1-4cc7209c33cd:80e34f3b-2c7b-4625-b833-432af5a268ba:3|ad3ec84f-a1d3-42b6-a591-3d0ffe6cd889:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 2,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 1,
+                    "visible": true,
+                    "matrixVersion": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spatial:0:9:-6",
+          "slot": 3,
+          "distance": 72.88945839672463,
+          "screen": [
+            0.37732993274385584,
+            0.8939961846084221
+          ],
+          "height": 6.263351527616388,
+          "ready": 1,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:9:-6:80.91417694091797:3.319999933242798:-43.95280075073242:2.1429436206817627:0.9294456243515015:0.9294456243515015:0.9294456243515015",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": false,
+                "key": "spatial:0:9:-6:80.91417694091797:3.319999933242798:-43.95280075073242:2.1429436206817627:0.9294456243515015:0.9294456243515015:0.9294456243515015",
+                "level": 1,
+                "resource": "0:0c3cc96e-69a3-42ca-b9b9-3972d87299e0:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3",
+                "currentResource": "0:0c3cc96e-69a3-42ca-b9b9-3972d87299e0:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3"
+              },
+              {
+                "index": 1,
+                "active": true,
+                "key": "spatial:0:9:-6:80.91417694091797:3.319999933242798:-43.95280075073242:2.1429436206817627:0.9294456243515015:0.9294456243515015:0.9294456243515015",
+                "level": 1,
+                "resource": "0:0c3cc96e-69a3-42ca-b9b9-3972d87299e0:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3",
+                "currentResource": "0:0c3cc96e-69a3-42ca-b9b9-3972d87299e0:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    78.18668435740179,
+                    3.319999933242798,
+                    -46.93120156530566
+                  ],
+                  [
+                    83.64166952443415,
+                    8.896673679351807,
+                    -40.97439993615918
+                  ]
+                ],
+                "nativeKey": "spatial:0:9:-6:80.91417694091797:3.319999933242798:-43.95280075073242:2.1429436206817627:0.9294456243515015:0.9294456243515015:0.9294456243515015",
+                "chunk": "2,-1",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    69.55054475606961,
+                    3.319999933242798,
+                    -74.97106092802241
+                  ],
+                  [
+                    121.65223336428275,
+                    13.714034855365753,
+                    -22.8153730441868
+                  ]
+                ],
+                "tree": [
+                  80.91417694091797,
+                  3.319999933242798,
+                  -43.95280075073242
+                ],
+                "slot": 3,
+                "orders": [
+                  false,
+                  false,
+                  true,
+                  false
+                ],
+                "counts": [
+                  0,
+                  0,
+                  2,
+                  0
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|3:1:69f656a5-6abb-4d2f-bc9c-ccb62d7fdd3d:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3|3:2:b182e7b8-9bd0-4edd-9021-047dc26df749:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3|3:3:3453af3e-5bcc-4eff-ae58-591bde6f6853:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3",
+            "proofSignature": "0:0|3:1:69f656a5-6abb-4d2f-bc9c-ccb62d7fdd3d:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3|3:2:b182e7b8-9bd0-4edd-9021-047dc26df749:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3|3:3:3453af3e-5bcc-4eff-ae58-591bde6f6853:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3",
+            "batches": [
+              {
+                "stamp": "true:2:true:62300589-4026-499b-95e5-5d6909c6aa6a:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3:true:1",
+                "accepted": true,
+                "level": 2,
+                "resourceSignature": "0:0|62300589-4026-499b-95e5-5d6909c6aa6a:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3|b182e7b8-9bd0-4edd-9021-047dc26df749:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 2,
+                    "visible": true,
+                    "matrixVersion": 1
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spatial:0:7:-5",
+          "slot": 1,
+          "distance": 75.26726118527847,
+          "screen": [
+            0.028649249995399768,
+            1.0308200597182082
+          ],
+          "height": 11.716324397624357,
+          "ready": 1,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:7:-5:65.55036926269531:3.3399999141693115:-37.976722717285156:4.561556339263916:1.1014337539672852:1.1014337539672852:1.1014337539672852",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": true,
+                "key": "spatial:0:7:-5:65.55036926269531:3.3399999141693115:-37.976722717285156:4.561556339263916:1.1014337539672852:1.1014337539672852:1.1014337539672852",
+                "level": 1,
+                "resource": "0:961f4665-fa68-4cec-ae73-9cd3a84da351:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+                "currentResource": "0:961f4665-fa68-4cec-ae73-9cd3a84da351:80e34f3b-2c7b-4625-b833-432af5a268ba:3"
+              },
+              {
+                "index": 1,
+                "active": false,
+                "key": "spatial:0:7:-5:65.55036926269531:3.3399999141693115:-37.976722717285156:4.561556339263916:1.1014337539672852:1.1014337539672852:1.1014337539672852",
+                "level": 1,
+                "resource": "0:961f4665-fa68-4cec-ae73-9cd3a84da351:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+                "currentResource": "0:961f4665-fa68-4cec-ae73-9cd3a84da351:80e34f3b-2c7b-4625-b833-432af5a268ba:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    61.38649533413396,
+                    3.3399999141693115,
+                    -43.54381166879056
+                  ],
+                  [
+                    69.71424474898124,
+                    13.80362057685852,
+                    -32.40963352902589
+                  ]
+                ],
+                "nativeKey": "spatial:0:7:-5:65.55036926269531:3.3399999141693115:-37.976722717285156:4.561556339263916:1.1014337539672852:1.1014337539672852:1.1014337539672852",
+                "chunk": "1,-1",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    22.881853268575593,
+                    3.319999933242798,
+                    -75.78202250951806
+                  ],
+                  [
+                    77.78443688488905,
+                    13.850055754184723,
+                    -21.180519405668846
+                  ]
+                ],
+                "tree": [
+                  65.55036926269531,
+                  3.3399999141693115,
+                  -37.976722717285156
+                ],
+                "slot": 1,
+                "orders": [
+                  false,
+                  false,
+                  true,
+                  false
+                ],
+                "counts": [
+                  0,
+                  0,
+                  1,
+                  6
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|1:1:aa9ac2b4-5bcd-4166-9a2d-9a0cdd127313:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:2:ad3ec84f-a1d3-42b6-a591-3d0ffe6cd889:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:3:ee03ece8-a1d4-4fe3-8c2f-e5026e431fd0:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+            "proofSignature": "0:0|1:1:aa9ac2b4-5bcd-4166-9a2d-9a0cdd127313:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:2:ad3ec84f-a1d3-42b6-a591-3d0ffe6cd889:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:3:ee03ece8-a1d4-4fe3-8c2f-e5026e431fd0:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+            "batches": [
+              {
+                "stamp": "true:1:true:991ff266-0ef2-4df7-8f80-beb1fc467fa1:80e34f3b-2c7b-4625-b833-432af5a268ba:3:true:2",
+                "accepted": true,
+                "level": 2,
+                "resourceSignature": "0:0|991ff266-0ef2-4df7-8f80-beb1fc467fa1:80e34f3b-2c7b-4625-b833-432af5a268ba:3|ad3ec84f-a1d3-42b6-a591-3d0ffe6cd889:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 1,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 6,
+                    "visible": true,
+                    "matrixVersion": 2
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spatial:0:8:-6",
+          "slot": 1,
+          "distance": 76.57573636579886,
+          "screen": [
+            0.22616045096997492,
+            0.9856486466157746
+          ],
+          "height": 9.245275759716352,
+          "ready": 1,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:8:-6:72.98320770263672:3.3399999141693115:-44.1881103515625:4.519664287567139:0.869134247303009:0.869134247303009:0.869134247303009",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": true,
+                "key": "spatial:0:8:-6:72.98320770263672:3.3399999141693115:-44.1881103515625:4.519664287567139:0.869134247303009:0.869134247303009:0.869134247303009",
+                "level": 1,
+                "resource": "0:961f4665-fa68-4cec-ae73-9cd3a84da351:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+                "currentResource": "0:961f4665-fa68-4cec-ae73-9cd3a84da351:80e34f3b-2c7b-4625-b833-432af5a268ba:3"
+              },
+              {
+                "index": 1,
+                "active": false,
+                "key": "spatial:0:8:-6:72.98320770263672:3.3399999141693115:-44.1881103515625:4.519664287567139:0.869134247303009:0.869134247303009:0.869134247303009",
+                "level": 1,
+                "resource": "0:961f4665-fa68-4cec-ae73-9cd3a84da351:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+                "currentResource": "0:961f4665-fa68-4cec-ae73-9cd3a84da351:80e34f3b-2c7b-4625-b833-432af5a268ba:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    69.55054475606961,
+                    3.3399999141693115,
+                    -48.66407527709001
+                  ],
+                  [
+                    76.41587186949177,
+                    11.596775263547897,
+                    -39.71214518789971
+                  ]
+                ],
+                "nativeKey": "spatial:0:8:-6:72.98320770263672:3.3399999141693115:-44.1881103515625:4.519664287567139:0.869134247303009:0.869134247303009:0.869134247303009",
+                "chunk": "2,-1",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    69.55054475606961,
+                    3.319999933242798,
+                    -74.97106092802241
+                  ],
+                  [
+                    121.65223336428275,
+                    13.714034855365753,
+                    -22.8153730441868
+                  ]
+                ],
+                "tree": [
+                  72.98320770263672,
+                  3.3399999141693115,
+                  -44.1881103515625
+                ],
+                "slot": 1,
+                "orders": [
+                  false,
+                  false,
+                  true,
+                  false
+                ],
+                "counts": [
+                  0,
+                  0,
+                  2,
+                  1
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|1:1:aa9ac2b4-5bcd-4166-9a2d-9a0cdd127313:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:2:ad3ec84f-a1d3-42b6-a591-3d0ffe6cd889:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:3:ee03ece8-a1d4-4fe3-8c2f-e5026e431fd0:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+            "proofSignature": "0:0|1:1:aa9ac2b4-5bcd-4166-9a2d-9a0cdd127313:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:2:ad3ec84f-a1d3-42b6-a591-3d0ffe6cd889:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:3:ee03ece8-a1d4-4fe3-8c2f-e5026e431fd0:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+            "batches": [
+              {
+                "stamp": "true:2:true:f438ce3d-2221-476a-abc1-4cc7209c33cd:80e34f3b-2c7b-4625-b833-432af5a268ba:3:true:2",
+                "accepted": true,
+                "level": 2,
+                "resourceSignature": "0:0|f438ce3d-2221-476a-abc1-4cc7209c33cd:80e34f3b-2c7b-4625-b833-432af5a268ba:3|ad3ec84f-a1d3-42b6-a591-3d0ffe6cd889:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 2,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 1,
+                    "visible": true,
+                    "matrixVersion": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spatial:0:11:-7",
+          "slot": 0,
+          "distance": 81.34278174844084,
+          "screen": [
+            0.8330260819825538,
+            0.9836303059815997
+          ],
+          "height": 10.425166917380748,
+          "ready": 1,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:11:-7:97.9356918334961:3.319999933242798:-57.118324279785156:4.071866512298584:1.1079144477844238:1.1079144477844238:1.1079144477844238",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": true,
+                "key": "spatial:0:11:-7:97.9356918334961:3.319999933242798:-57.118324279785156:4.071866512298584:1.1079144477844238:1.1079144477844238:1.1079144477844238",
+                "level": 1,
+                "resource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "currentResource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3"
+              },
+              {
+                "index": 1,
+                "active": false,
+                "key": "spatial:0:11:-7:97.9356918334961:3.319999933242798:-57.118324279785156:4.071866512298584:1.1079144477844238:1.1079144477844238:1.1079144477844238",
+                "level": 1,
+                "resource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "currentResource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    92.35524881530513,
+                    3.319999933242798,
+                    -63.14289771644149
+                  ],
+                  [
+                    103.51613390453731,
+                    12.7372727394104,
+                    -51.09374957239451
+                  ]
+                ],
+                "nativeKey": "spatial:0:11:-7:97.9356918334961:3.319999933242798:-57.118324279785156:4.071866512298584:1.1079144477844238:1.1079144477844238:1.1079144477844238",
+                "chunk": "2,-1",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    69.55054475606961,
+                    3.319999933242798,
+                    -74.97106092802241
+                  ],
+                  [
+                    121.65223336428275,
+                    13.714034855365753,
+                    -22.8153730441868
+                  ]
+                ],
+                "tree": [
+                  97.9356918334961,
+                  3.319999933242798,
+                  -57.118324279785156
+                ],
+                "slot": 0,
+                "orders": [
+                  false,
+                  false,
+                  true,
+                  false
+                ],
+                "counts": [
+                  0,
+                  0,
+                  5,
+                  3
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|0:0:12b575f9-3240-4a99-af45-77496e0b5389:0686f909-5587-47af-b75f-e6a3ca5b94c1:3|0:1:04c2739c-a885-42fc-bedf-6a6339085751:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:2:1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:3:17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+            "proofSignature": "0:0|0:0:12b575f9-3240-4a99-af45-77496e0b5389:0686f909-5587-47af-b75f-e6a3ca5b94c1:3|0:1:04c2739c-a885-42fc-bedf-6a6339085751:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:2:1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:3:17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+            "batches": [
+              {
+                "stamp": "true:5:true:547daa3c-2cf7-426a-8e6d-c0c653fbeaf2:d3f7df64-ea1f-42eb-be56-3898b90209a7:3:true:2",
+                "accepted": true,
+                "level": 2,
+                "resourceSignature": "0:0|547daa3c-2cf7-426a-8e6d-c0c653fbeaf2:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 5,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 3,
+                    "visible": true,
+                    "matrixVersion": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spatial:0:6:-5",
+          "slot": 0,
+          "distance": 81.94724093944068,
+          "screen": [
+            -0.04341377866687134,
+            1.0205294603178452
+          ],
+          "height": 9.393821497571688,
+          "ready": 1,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:6:-5:58.243934631347656:3.319999933242798:-40.7392463684082:2.0224862098693848:0.9983102083206177:0.9983102083206177:0.9983102083206177",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": true,
+                "key": "spatial:0:6:-5:58.243934631347656:3.319999933242798:-40.7392463684082:2.0224862098693848:0.9983102083206177:0.9983102083206177:0.9983102083206177",
+                "level": 1,
+                "resource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "currentResource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3"
+              },
+              {
+                "index": 1,
+                "active": false,
+                "key": "spatial:0:6:-5:58.243934631347656:3.319999933242798:-40.7392463684082:2.0224862098693848:0.9983102083206177:0.9983102083206177:0.9983102083206177",
+                "level": 1,
+                "resource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "currentResource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    53.70557702817564,
+                    3.319999933242798,
+                    -46.18557515555088
+                  ],
+                  [
+                    62.78229161117574,
+                    11.805636703968048,
+                    -35.29291886613728
+                  ]
+                ],
+                "nativeKey": "spatial:0:6:-5:58.243934631347656:3.319999933242798:-40.7392463684082:2.0224862098693848:0.9983102083206177:0.9983102083206177:0.9983102083206177",
+                "chunk": "1,-1",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    22.881853268575593,
+                    3.319999933242798,
+                    -75.78202250951806
+                  ],
+                  [
+                    77.78443688488905,
+                    13.850055754184723,
+                    -21.180519405668846
+                  ]
+                ],
+                "tree": [
+                  58.243934631347656,
+                  3.319999933242798,
+                  -40.7392463684082
+                ],
+                "slot": 0,
+                "orders": [
+                  false,
+                  false,
+                  true,
+                  false
+                ],
+                "counts": [
+                  0,
+                  0,
+                  2,
+                  5
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|0:0:12b575f9-3240-4a99-af45-77496e0b5389:0686f909-5587-47af-b75f-e6a3ca5b94c1:3|0:1:04c2739c-a885-42fc-bedf-6a6339085751:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:2:1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:3:17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+            "proofSignature": "0:0|0:0:12b575f9-3240-4a99-af45-77496e0b5389:0686f909-5587-47af-b75f-e6a3ca5b94c1:3|0:1:04c2739c-a885-42fc-bedf-6a6339085751:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:2:1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:3:17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+            "batches": [
+              {
+                "stamp": "true:2:true:0179fe1b-4a2e-4437-9c1b-579c4edb5c88:d3f7df64-ea1f-42eb-be56-3898b90209a7:3:true:2",
+                "accepted": true,
+                "level": 2,
+                "resourceSignature": "0:0|0179fe1b-4a2e-4437-9c1b-579c4edb5c88:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 2,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 5,
+                    "visible": true,
+                    "matrixVersion": 2
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spatial:0:10:-7",
+          "slot": 3,
+          "distance": 82.49560718018688,
+          "screen": [
+            0.5821958088207813,
+            0.961396266212085
+          ],
+          "height": 7.571705316138459,
+          "ready": 1,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:10:-7:86.87528228759766:3.319999933242798:-56.09181213378906:4.979086875915527:1.1235978603363037:1.1235978603363037:1.1235978603363037",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": false,
+                "key": "spatial:0:10:-7:86.87528228759766:3.319999933242798:-56.09181213378906:4.979086875915527:1.1235978603363037:1.1235978603363037:1.1235978603363037",
+                "level": 1,
+                "resource": "0:0c3cc96e-69a3-42ca-b9b9-3972d87299e0:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3",
+                "currentResource": "0:0c3cc96e-69a3-42ca-b9b9-3972d87299e0:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3"
+              },
+              {
+                "index": 1,
+                "active": true,
+                "key": "spatial:0:10:-7:86.87528228759766:3.319999933242798:-56.09181213378906:4.979086875915527:1.1235978603363037:1.1235978603363037:1.1235978603363037",
+                "level": 1,
+                "resource": "0:0c3cc96e-69a3-42ca-b9b9-3972d87299e0:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3",
+                "currentResource": "0:0c3cc96e-69a3-42ca-b9b9-3972d87299e0:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    84.16587193863357,
+                    3.319999933242798,
+                    -59.51173537685217
+                  ],
+                  [
+                    89.58469263656174,
+                    10.06158709526062,
+                    -52.67188889072595
+                  ]
+                ],
+                "nativeKey": "spatial:0:10:-7:86.87528228759766:3.319999933242798:-56.09181213378906:4.979086875915527:1.1235978603363037:1.1235978603363037:1.1235978603363037",
+                "chunk": "2,-1",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    69.55054475606961,
+                    3.319999933242798,
+                    -74.97106092802241
+                  ],
+                  [
+                    121.65223336428275,
+                    13.714034855365753,
+                    -22.8153730441868
+                  ]
+                ],
+                "tree": [
+                  86.87528228759766,
+                  3.319999933242798,
+                  -56.09181213378906
+                ],
+                "slot": 3,
+                "orders": [
+                  false,
+                  false,
+                  true,
+                  false
+                ],
+                "counts": [
+                  0,
+                  0,
+                  2,
+                  0
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|3:1:69f656a5-6abb-4d2f-bc9c-ccb62d7fdd3d:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3|3:2:b182e7b8-9bd0-4edd-9021-047dc26df749:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3|3:3:3453af3e-5bcc-4eff-ae58-591bde6f6853:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3",
+            "proofSignature": "0:0|3:1:69f656a5-6abb-4d2f-bc9c-ccb62d7fdd3d:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3|3:2:b182e7b8-9bd0-4edd-9021-047dc26df749:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3|3:3:3453af3e-5bcc-4eff-ae58-591bde6f6853:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3",
+            "batches": [
+              {
+                "stamp": "true:2:true:62300589-4026-499b-95e5-5d6909c6aa6a:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3:true:1",
+                "accepted": true,
+                "level": 2,
+                "resourceSignature": "0:0|62300589-4026-499b-95e5-5d6909c6aa6a:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3|b182e7b8-9bd0-4edd-9021-047dc26df749:c4dedefd-89b8-43a5-92ec-cc10f741ed1f:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 2,
+                    "visible": true,
+                    "matrixVersion": 1
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spatial:0:8:-7",
+          "slot": 1,
+          "distance": 87.69770928965133,
+          "screen": [
+            0.38262962245000653,
+            1.0625544561179634
+          ],
+          "height": 10.896682222240281,
+          "ready": 1,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:8:-7:75.05827331542969:3.319999933242798:-57.468685150146484:1.2270058393478394:1.0243804454803467:1.0243804454803467:1.0243804454803467",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": true,
+                "key": "spatial:0:8:-7:75.05827331542969:3.319999933242798:-57.468685150146484:1.2270058393478394:1.0243804454803467:1.0243804454803467:1.0243804454803467",
+                "level": 2,
+                "resource": "0:96adfd85-863d-4d10-af88-7a5d1744cb10:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+                "currentResource": "0:96adfd85-863d-4d10-af88-7a5d1744cb10:80e34f3b-2c7b-4625-b833-432af5a268ba:3"
+              },
+              {
+                "index": 1,
+                "active": false,
+                "key": "spatial:0:8:-7:75.05827331542969:3.319999933242798:-57.468685150146484:1.2270058393478394:1.0243804454803467:1.0243804454803467:1.0243804454803467",
+                "level": 1,
+                "resource": "0:961f4665-fa68-4cec-ae73-9cd3a84da351:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+                "currentResource": "0:961f4665-fa68-4cec-ae73-9cd3a84da351:80e34f3b-2c7b-4625-b833-432af5a268ba:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    70.4488031792799,
+                    3.319999933242798,
+                    -63.01901770299866
+                  ],
+                  [
+                    79.6677420719404,
+                    13.051614165306091,
+                    -51.91835309121532
+                  ]
+                ],
+                "nativeKey": "spatial:0:8:-7:75.05827331542969:3.319999933242798:-57.468685150146484:1.2270058393478394:1.0243804454803467:1.0243804454803467:1.0243804454803467",
+                "chunk": "2,-1",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    69.55054475606961,
+                    3.319999933242798,
+                    -74.97106092802241
+                  ],
+                  [
+                    121.65223336428275,
+                    13.714034855365753,
+                    -22.8153730441868
+                  ]
+                ],
+                "tree": [
+                  75.05827331542969,
+                  3.319999933242798,
+                  -57.468685150146484
+                ],
+                "slot": 1,
+                "orders": [
+                  false,
+                  false,
+                  false,
+                  true
+                ],
+                "counts": [
+                  0,
+                  0,
+                  2,
+                  1
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|1:1:aa9ac2b4-5bcd-4166-9a2d-9a0cdd127313:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:2:ad3ec84f-a1d3-42b6-a591-3d0ffe6cd889:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:3:ee03ece8-a1d4-4fe3-8c2f-e5026e431fd0:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+            "proofSignature": "0:0|1:1:aa9ac2b4-5bcd-4166-9a2d-9a0cdd127313:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:2:ad3ec84f-a1d3-42b6-a591-3d0ffe6cd889:80e34f3b-2c7b-4625-b833-432af5a268ba:3|1:3:ee03ece8-a1d4-4fe3-8c2f-e5026e431fd0:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+            "batches": [
+              {
+                "stamp": "true:1:true:899e6ae9-2f3a-42e0-bce6-2b32ada6ac6c:80e34f3b-2c7b-4625-b833-432af5a268ba:3:true:1",
+                "accepted": true,
+                "level": 3,
+                "resourceSignature": "0:0|899e6ae9-2f3a-42e0-bce6-2b32ada6ac6c:80e34f3b-2c7b-4625-b833-432af5a268ba:3|ee03ece8-a1d4-4fe3-8c2f-e5026e431fd0:80e34f3b-2c7b-4625-b833-432af5a268ba:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 2,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 1,
+                    "visible": true,
+                    "matrixVersion": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spatial:0:10:-8",
+          "slot": 0,
+          "distance": 89.22808363014461,
+          "screen": [
+            0.7122804787862178,
+            1.0362839223008005
+          ],
+          "height": 10.457175376512634,
+          "ready": 1,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:10:-8:90.81101989746094:3.319999933242798:-64.47415161132812:5.349311828613281:1.1113160848617554:1.1113160848617554:1.1113160848617554",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": true,
+                "key": "spatial:0:10:-8:90.81101989746094:3.319999933242798:-64.47415161132812:5.349311828613281:1.1113160848617554:1.1113160848617554:1.1113160848617554",
+                "level": 2,
+                "resource": "0:e53c0bd9-6531-4d5b-a08a-fa14d42c4109:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "currentResource": "0:e53c0bd9-6531-4d5b-a08a-fa14d42c4109:d3f7df64-ea1f-42eb-be56-3898b90209a7:3"
+              },
+              {
+                "index": 1,
+                "active": false,
+                "key": "spatial:0:10:-8:90.81101989746094:3.319999933242798:-64.47415161132812:5.349311828613281:1.1113160848617554:1.1113160848617554:1.1113160848617554",
+                "level": 1,
+                "resource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "currentResource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    85.22203277157973,
+                    3.319999933242798,
+                    -70.51962214856675
+                  ],
+                  [
+                    96.40000796880557,
+                    12.766186654567719,
+                    -58.42867979604205
+                  ]
+                ],
+                "nativeKey": "spatial:0:10:-8:90.81101989746094:3.319999933242798:-64.47415161132812:5.349311828613281:1.1113160848617554:1.1113160848617554:1.1113160848617554",
+                "chunk": "2,-1",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    69.55054475606961,
+                    3.319999933242798,
+                    -74.97106092802241
+                  ],
+                  [
+                    121.65223336428275,
+                    13.714034855365753,
+                    -22.8153730441868
+                  ]
+                ],
+                "tree": [
+                  90.81101989746094,
+                  3.319999933242798,
+                  -64.47415161132812
+                ],
+                "slot": 0,
+                "orders": [
+                  false,
+                  false,
+                  false,
+                  true
+                ],
+                "counts": [
+                  0,
+                  0,
+                  5,
+                  3
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|0:0:12b575f9-3240-4a99-af45-77496e0b5389:0686f909-5587-47af-b75f-e6a3ca5b94c1:3|0:1:04c2739c-a885-42fc-bedf-6a6339085751:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:2:1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:3:17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+            "proofSignature": "0:0|0:0:12b575f9-3240-4a99-af45-77496e0b5389:0686f909-5587-47af-b75f-e6a3ca5b94c1:3|0:1:04c2739c-a885-42fc-bedf-6a6339085751:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:2:1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:3:17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+            "batches": [
+              {
+                "stamp": "true:3:true:7ce8d82b-cc05-45d0-b2da-31e6b332a71f:d3f7df64-ea1f-42eb-be56-3898b90209a7:3:true:1",
+                "accepted": true,
+                "level": 3,
+                "resourceSignature": "0:0|7ce8d82b-cc05-45d0-b2da-31e6b332a71f:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 5,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 3,
+                    "visible": true,
+                    "matrixVersion": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "spatial:0:12:-8",
+          "slot": 0,
+          "distance": 89.95101541039752,
+          "screen": [
+            1.0069995130286848,
+            0.969020638544928
+          ],
+          "height": 8.547408918503775,
+          "ready": 1,
+          "target": 1,
+          "diagnosis": {
+            "transitionRange": [
+              90,
+              120
+            ],
+            "draw": null,
+            "logicalKey": "spatial:0:12:-8:103.22710418701172:3.319999933242798:-66.65714263916016:1.3002241849899292:0.9083593487739563:0.9083593487739563:0.9083593487739563",
+            "bankEntries": [
+              {
+                "index": 0,
+                "active": true,
+                "key": "spatial:0:12:-8:103.22710418701172:3.319999933242798:-66.65714263916016:1.3002241849899292:0.9083593487739563:0.9083593487739563:0.9083593487739563",
+                "level": 2,
+                "resource": "0:e53c0bd9-6531-4d5b-a08a-fa14d42c4109:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "currentResource": "0:e53c0bd9-6531-4d5b-a08a-fa14d42c4109:d3f7df64-ea1f-42eb-be56-3898b90209a7:3"
+              },
+              {
+                "index": 1,
+                "active": false,
+                "key": "spatial:0:12:-8:103.22710418701172:3.319999933242798:-66.65714263916016:1.3002241849899292:0.9083593487739563:0.9083593487739563:0.9083593487739563",
+                "level": 1,
+                "resource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "currentResource": "0:44616fa5-be90-4ff0-8e09-64a8ccd0d817:d3f7df64-ea1f-42eb-be56-3898b90209a7:3"
+              }
+            ],
+            "physical": [
+              {
+                "treeFrustum": true,
+                "treeBounds": [
+                  [
+                    99.66350801625083,
+                    3.319999933242798,
+                    -71.46265285730217
+                  ],
+                  [
+                    106.79070070508483,
+                    11.041054397821426,
+                    -61.85163367316133
+                  ]
+                ],
+                "nativeKey": "spatial:0:12:-8:103.22710418701172:3.319999933242798:-66.65714263916016:1.3002241849899292:0.9083593487739563:0.9083593487739563:0.9083593487739563",
+                "chunk": "2,-1",
+                "groupVisible": true,
+                "propsVisible": true,
+                "treesVisible": true,
+                "treeSlots": [
+                  0,
+                  1,
+                  2,
+                  3
+                ],
+                "frustum": true,
+                "bounds": [
+                  [
+                    69.55054475606961,
+                    3.319999933242798,
+                    -74.97106092802241
+                  ],
+                  [
+                    121.65223336428275,
+                    13.714034855365753,
+                    -22.8153730441868
+                  ]
+                ],
+                "tree": [
+                  103.22710418701172,
+                  3.319999933242798,
+                  -66.65714263916016
+                ],
+                "slot": 0,
+                "orders": [
+                  false,
+                  false,
+                  false,
+                  true
+                ],
+                "counts": [
+                  0,
+                  0,
+                  5,
+                  3
+                ]
+              }
+            ],
+            "nativeMissing": false,
+            "retainedPrepared": true,
+            "standbyAvailable": true,
+            "coverage": true,
+            "prepared": true,
+            "nativeRevision": 2,
+            "preparedRevision": 6,
+            "renderSignature": "0:0|0:0:12b575f9-3240-4a99-af45-77496e0b5389:0686f909-5587-47af-b75f-e6a3ca5b94c1:3|0:1:04c2739c-a885-42fc-bedf-6a6339085751:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:2:1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:3:17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+            "proofSignature": "0:0|0:0:12b575f9-3240-4a99-af45-77496e0b5389:0686f909-5587-47af-b75f-e6a3ca5b94c1:3|0:1:04c2739c-a885-42fc-bedf-6a6339085751:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:2:1312a971-965f-4ae4-9006-c06831d17738:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|0:3:17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+            "batches": [
+              {
+                "stamp": "true:3:true:7ce8d82b-cc05-45d0-b2da-31e6b332a71f:d3f7df64-ea1f-42eb-be56-3898b90209a7:3:true:1",
+                "accepted": true,
+                "level": 3,
+                "resourceSignature": "0:0|7ce8d82b-cc05-45d0-b2da-31e6b332a71f:d3f7df64-ea1f-42eb-be56-3898b90209a7:3|17709425-8b97-4a57-bb15-fa26d02e589d:d3f7df64-ea1f-42eb-be56-3898b90209a7:3",
+                "levels": [
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 0
+                  },
+                  {
+                    "count": 0,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 5,
+                    "visible": true,
+                    "matrixVersion": 2
+                  },
+                  {
+                    "count": 3,
+                    "visible": true,
+                    "matrixVersion": 1
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "adapters": [
+        {
+          "slot": 0,
+          "active": 0,
+          "pending": {
+            "native": false,
+            "regional": 0,
+            "worker": false,
+            "standby": false,
+            "closed": false
+          },
+          "stats": {
+            "coverage": 61,
+            "prepared": 61,
+            "standby": {
+              "requests": 7,
+              "queuedReplacements": 1,
+              "addedEntries": 249,
+              "identityChanges": 0,
+              "lodChanges": 22,
+              "resourceDrops": 0,
+              "distanceDrops": 0,
+              "budgetEvictions": 0,
+              "cancelledPreparations": 0,
+              "preparations": 4,
+              "rendered": 0,
+              "submittedInstances": 0,
+              "maskedInstances": 0,
+              "submittedTriangles": 0,
+              "visibleTriangles": 0,
+              "trees": 249,
+              "estimatedOwnedGpuBytes": 1694124,
+              "estimatedPreparedMatrixCpuBytes": 98304,
+              "errors": []
+            }
+          }
+        },
+        {
+          "slot": 1,
+          "active": 0,
+          "pending": {
+            "native": false,
+            "regional": 0,
+            "worker": false,
+            "standby": false,
+            "closed": false
+          },
+          "stats": {
+            "coverage": 47,
+            "prepared": 47,
+            "standby": {
+              "requests": 7,
+              "queuedReplacements": 1,
+              "addedEntries": 225,
+              "identityChanges": 0,
+              "lodChanges": 13,
+              "resourceDrops": 0,
+              "distanceDrops": 0,
+              "budgetEvictions": 0,
+              "cancelledPreparations": 0,
+              "preparations": 4,
+              "rendered": 0,
+              "submittedInstances": 0,
+              "maskedInstances": 0,
+              "submittedTriangles": 0,
+              "visibleTriangles": 0,
+              "trees": 225,
+              "estimatedOwnedGpuBytes": 1797864,
+              "estimatedPreparedMatrixCpuBytes": 98304,
+              "errors": []
+            }
+          }
+        },
+        {
+          "slot": 2,
+          "active": 0,
+          "pending": {
+            "native": false,
+            "regional": 0,
+            "worker": false,
+            "standby": false,
+            "closed": false
+          },
+          "stats": {
+            "coverage": 21,
+            "prepared": 21,
+            "standby": {
+              "requests": 7,
+              "queuedReplacements": 0,
+              "addedEntries": 54,
+              "identityChanges": 0,
+              "lodChanges": 7,
+              "resourceDrops": 0,
+              "distanceDrops": 0,
+              "budgetEvictions": 0,
+              "cancelledPreparations": 0,
+              "preparations": 3,
+              "rendered": 0,
+              "submittedInstances": 0,
+              "maskedInstances": 0,
+              "submittedTriangles": 0,
+              "visibleTriangles": 0,
+              "trees": 54,
+              "estimatedOwnedGpuBytes": 574332,
+              "estimatedPreparedMatrixCpuBytes": 24576,
+              "errors": []
+            }
+          }
+        },
+        {
+          "slot": 3,
+          "active": 0,
+          "pending": {
+            "native": false,
+            "regional": 0,
+            "worker": false,
+            "standby": false,
+            "closed": false
+          },
+          "stats": {
+            "coverage": 14,
+            "prepared": 14,
+            "standby": {
+              "requests": 7,
+              "queuedReplacements": 0,
+              "addedEntries": 48,
+              "identityChanges": 0,
+              "lodChanges": 1,
+              "resourceDrops": 0,
+              "distanceDrops": 0,
+              "budgetEvictions": 0,
+              "cancelledPreparations": 0,
+              "preparations": 3,
+              "rendered": 0,
+              "submittedInstances": 0,
+              "maskedInstances": 0,
+              "submittedTriangles": 0,
+              "visibleTriangles": 0,
+              "trees": 48,
+              "estimatedOwnedGpuBytes": 1337520,
+              "estimatedPreparedMatrixCpuBytes": 24576,
+              "errors": []
+            }
+          }
+        }
+      ],
+      "image": {
+        "path": ".cache/foreground-tree-audit/visual-clock.png",
+        "sha256": "c76b09ee6ee1eab5ee08f37204980fc78af40daf83e499553da5e7f81d7f9057"
+      }
+    }
+  ],
+  "errors": []
+}

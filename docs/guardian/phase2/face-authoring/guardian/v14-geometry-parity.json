@@ -1,0 +1,16 @@
+{
+  "allPassed": true,
+  "checks": 493,
+  "changedColorAttributes": 1,
+  "sourceSHA256": "b8af4207b29957f453d2e4063b8acfae9f618f67d6ac2d503dddcca97d0c4796",
+  "candidateSHA256": "d7410c48894efe331f77f885848fa56643986ef96f07d0f68a41da2f24aa0d4a",
+  "nonExact": [
+    {
+      "label": "Mesh_0/0/TANGENT",
+      "maxDelta": 0.00010001659393310547,
+      "tolerance": 0.00011,
+      "pass": true
+    }
+  ],
+  "scope": "Nodes, mesh indices, non-color attributes, morphs, skins and animation samplers. Tangent tolerance 0.00011; all other comparisons exact. Material/image contents and visual quality are outside this check."
+}

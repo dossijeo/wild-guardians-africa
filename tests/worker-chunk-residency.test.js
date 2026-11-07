@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {workerChunkDemand} from '../src/rendering/worker-chunk-residency.js';
+import {workerChunkDemand} from '../src/world/worker-chunk-residency.js';
+import {workerChunkDemand as legacyWorkerChunkDemand} from '../src/rendering/worker-chunk-residency.js';
+test('legacy rendering uses the same authority-owned residency service',()=>assert.equal(legacyWorkerChunkDemand,workerChunkDemand));
 test('workers retain home and current data independently of camera or night status',()=>{
   const state={villages:[{id:'v',entry:{x:60,z:0}}],workers:[{villageId:'v',x:92,z:-9,status:'idle'}]};
   const before=structuredClone(state),keys=workerChunkDemand(state);

@@ -7,6 +7,8 @@ const root=resolve('dist'),manifest=JSON.parse(await readFile('content/manifests
 const inventory=new Set();
 async function collect(dir){for(const name of await readdir(dir)){const path=resolve(dir,name);if((await stat(path)).isDirectory())await collect(path);else inventory.add(relative(root,path).replaceAll('\\','/'));}}
 await collect(root);
+// GLB external buffers resolve beside the model, including nested deployment.
+for(const file of inventory){if(!file.endsWith('.glb'))continue;const data=await readFile(resolve(root,file));const json=JSON.parse(data.subarray(20,20+data.readUInt32LE(12)));for(const buffer of json.buffers??[]){if(!buffer.uri)continue;assert(!/^(?:[a-z]+:|\/)/i.test(buffer.uri),'External GLB buffer must be relative');const target=resolve(dirname(resolve(root,file)),buffer.uri);assert(inventory.has(relative(root,target).replaceAll('\\','/')),'Missing GLB buffer: '+file+' -> '+buffer.uri);assert((await stat(target)).size>=buffer.byteLength,'Truncated GLB external buffer');}}
 for(const path of inventory)if(['.js','.mjs','.json','.html','.css'].includes(extname(path))){const text=await readFile(resolve(root,path),'utf8');for(const name of QA_ONLY_VISUAL_DIRECTORIES)assert(!text.includes('assets/visual-lab/'+name+'/'),'Packaged code references excluded QA assets: '+path+' -> '+name);}
 for(const name of QA_ONLY_VISUAL_DIRECTORIES)assert(![...inventory].some(path=>path.startsWith(`assets/visual-lab/${name}/`)),'QA-only visual assets must not ship: '+name);
 for(const name of [...QA_ONLY_VILLAGE_FILES,...QA_ONLY_GROUND_FILES]){assert(!inventory.has('assets/visual-lab/'+name),'Workshop QA asset must not ship: '+name);for(const path of inventory)if(path.endsWith('.js'))assert(!(await readFile(resolve(root,path),'utf8')).includes(name),'Release code references workshop experiment: '+path+' -> '+name);}
@@ -100,6 +102,13 @@ for(const record of retiredBiomes.records){
  const pack=JSON.parse(await readFile(resolve(root,`content/biome-${record.biome}.json`),'utf8'));
  assert.equal(pack.binary.url.replace(/^(?:\.\.\/|\.\/|\/)+/,''),record.current.slice(1));
  for(const file of inventory)if(/\.(json|js|mjs|html|css)$/.test(file))assert(!(await readFile(resolve(root,file),'utf8')).includes(record.archive.split('/').at(-1)),'Packaged reference to retired geometry: '+file);
+}
+const cueBank=JSON.parse(await readFile(resolve(root,'content/guardian/lipsync/bank.json'),'utf8'));
+assert.equal(cueBank.version,1);const allSpiritRecords=[...spiritManifest.records,...JSON.parse(await readFile('content/manifests/agricultural-spirit-voices.json','utf8')).records,...JSON.parse(await readFile('content/manifests/awakening-spirit-voices.json','utf8')).records];
+assert.equal(Object.keys(cueBank.records).length,allSpiritRecords.length);
+for(const record of allSpiritRecords){
+ assert.deepEqual(cueBank.records[record.id],JSON.parse(publicText(await readFile(`public/content/guardian/lipsync/${record.id}.json`,'utf8'),`content/guardian/lipsync/${record.id}.json`,packagedAssets)),'Packed cues must preserve every authored timing and gesture');
+ assert(!inventory.has(`content/guardian/lipsync/${record.id}.json`),'Individual cues duplicated in release');
 }
 assert(files<=1000,'itch.io package exceeds 1000 files');
 assert(bytes<=500_000_000,'itch.io package exceeds 500 MB');

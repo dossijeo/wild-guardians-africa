@@ -1,7 +1,13 @@
+import {advanceWorkerRecovery} from './worker-recovery.js';
+import {dispatchLocalGameEvent} from './game-event-observers.js';
+export {observeGameEvents,observePresentationGameEvents,notifyConfirmedPresentationEvent} from './game-event-observers.js';
+import {firstCenterWithinVillage} from '../tutorial/center-placement.js';
+import {GUARDIAN_ATTACK_TIMING} from './guardian-timing.js';
+import {attackTarget,attackTargetAvailable,attackGestureActive,applyGuardianAttack} from './guardian-combat.js';
 import {commitAgriculturalPower,growthPowerStep,settleMultiplyPower} from './agricultural-power.js';
 import {awakeningState,recordAgriculturalCare,recordAwakeningEvent,evaluateAwakeningDay,startAwakeningDay} from './awakenings.js';
 import {AWAKENINGS} from './awakening-config.js';
-import {blessingTarget,previewBlessing,loseBlessing} from './blessings.js';
+import {blessingTarget,previewBlessing,loseBlessing,blessingPresentationSource} from './blessings.js';
 import {blessingInfluence,invalidateBlessingInfluence} from './blessing-influence.js';
 import {cropImpactDamage,CROP_HIT_POINTS} from './crop-impact-health.js';
 export {previewBlessing} from './blessings.js';
@@ -40,7 +46,7 @@ import {wallStroke,wallLayout,wallStrokeLine,gateScale} from '../world/wall-layo
 import {selectEvent,applyEvent} from './events.js';
 import {villageLayout,findVillageEntry,nearestVillageRoute} from '../world/villages.js';
 import {LOCOMOTION as L} from './locomotion-calibration.js';
-import {dailyRunMetres,urgentWork,moveWorker,movePath,movePathWithGates} from './locomotion.js';
+import {dailyRunMetres,urgentWork,moveWorker,movePath,movePathWithGates,pathMotionClock} from './locomotion.js';
 import {workerSlopeRecoveryPath} from '../world/worker-slope-recovery.js';
 import {animalWallOverlapRecovery,workerWallOverlapRecoveryPath} from '../world/worker-wall-overlap-recovery.js';
 import {createUrgencyPass} from './work-urgency.js';
@@ -62,7 +68,6 @@ const routeEpoch=(nav,actor,destination,worker)=>{
 };
 const taskPlanWaits=new WeakMap();
 const preparedWallQuotes=new WeakMap();
-const eventObservers=new WeakMap();
 
 export const BIOMES=['sabana','gran-rio','manglares','volcanes','gran-canon','desierto'];
 export const CULTURES=['mapungubwe','saheliana','suajili','musgum','etiope'];
@@ -71,23 +76,19 @@ export function newGame({biome='sabana',culture='mapungubwe',seed=Date.now(),slo
   return {saveVersion:1,terrainVersion:'4.1.10.3',slotId,seed:String(seed),rng:(Number(seed)>>>0)||918271,biome,culture,day:1,time:0,elapsed:0,completedNights:0,cinematicSeenAct:0,postgame:false,result:null,
     initialPreparation:true,ledger:{balance:rational(B.initial_money),entries:{}},nextId:2,sequence:1,structures:[],plants:[],workers:[],people:[],crates:[],spells:[],tasks:[],villages:[{id:'village-1',culture,x:0,z:0,buildings:[]}],suppressed:[],
     pauses:[],hiringPaidDay:null,hiringSelection:{olderMale:0,olderFemale:0,youngMale:0,youngFemale:0},raid:null,nightPlan:null,dayPlan:null,eventPlan:null,
-    cooldowns:{shield:0,growth:0,multiply:0},tutorial:{step:'intro',seen:[]},messages:[],commandIds:[],events:[]};
+    cooldowns:{shield:0,growth:0,multiply:0,attack:0},tutorial:{step:'intro',seen:[]},messages:[],commandIds:[],events:[]};
 }
 export const pause=(s,reason)=>{if(!s.pauses.includes(reason))s.pauses.push(reason);};
 export const resume=(s,reason)=>{s.pauses=s.pauses.filter(r=>r!==reason);};
-export function observeGameEvents(s,callback){
-  if(typeof callback!=='function')throw TypeError('Expected a game event observer');
-  let listeners=eventObservers.get(s);
-  if(!listeners){listeners=new Set();eventObservers.set(s,listeners);}
-  listeners.add(callback);
-  return ()=>listeners.delete(callback);
-}
 export function emit(s,type,detail={}) {
   const wallLoss=type==='StructureRuined'?loseBlessing(s,s.structures.find(p=>p.id===detail.targetId)??{}):null;
-  const event={id:`event-${s.sequence++}`,type,...detail};
+  // Occupancy consumers need the committed crop location even if a later state has removed it.
+  const crop=['CropPlaced','CropPicked','CropDestroyed'].includes(type)?s.plants.find(p=>p.id===(detail.targetId??detail.cropId)):null;
+  const presentation=crop&&Number.isFinite(crop.x)&&Number.isFinite(crop.z)?{...detail.presentation,x:crop.x,z:crop.z}:detail.presentation;
+  const event={id:`event-${s.sequence++}`,type,...detail,...(Number.isFinite(s.elapsed)?{simulationTime:s.elapsed}:{}),...(presentation?{presentation}:{})};
   if(s.awakenings?.enabled!==false)recordAwakeningEvent(s,event);
   s.events.push(event);if(s.events.length>200)s.events.shift();
-  for(const callback of eventObservers.get(s)??[])callback(event);
+  dispatchLocalGameEvent(s,event);
   if(wallLoss){
     emit(s,'BlessingDestroyed',wallLoss);
     notice(s,'Una muralla mágica ha caído. Su protección se ha perdido.',wallLoss.targetId,{category:'awakening-lost',location:wallLoss.presentation});
@@ -137,6 +138,7 @@ export function previewCenter(s,{x,z,yaw=0},nav) {
       cultures.set(culture,{candidate,footprint,check});
     }
     const {candidate,footprint,check}=cultures.get(culture);
+    if(!firstCenterWithinVillage(s,candidate)){failure='Construye el primer centro cerca del poblado';continue;}
     if(!check.valid){failure??=check.reason;continue;}buildable=true;
     const departure=centerServicePoint(candidate,s,.8),entry=village.entry??village;
     const inspect=routes=>{
@@ -169,16 +171,16 @@ export function previewCenter(s,{x,z,yaw=0},nav) {
   candidates.sort((a,b)=>a.routeLength-b.routeLength||a.villageId.localeCompare(b.villageId));
   return candidates[0]??{valid:false,cost:B.work_center.cost,reason:buildable?'El centro no tiene un camino válido al poblado':failure??'El centro no tiene un camino válido al poblado'};
 }
-export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,x,z,yaw=0},nav) {
-  if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
-  if(kind==='wall'&&!permission(s,'wall'))throw new Error('Esta acción no está disponible ahora');
+export class StructurePlacementError extends Error {}
+export function prepareStructurePlacement(s,{kind='center',material='zarzas',gate=false,x,z,yaw=0},nav) {
+  if(kind==='wall'&&!permission(s,'wall'))throw new StructurePlacementError('Esta acción no está disponible ahora');
   const draft=kind==='center'?previewCenter(s,{x,z,yaw},nav):null;
   const village=draft?s.villages.find(v=>v.id===draft.villageId):nearest(s.villages,{x,z}),culture=draft?.culture??village?.culture??s.culture;
   if(draft?.valid){x=draft.x;z=draft.z;}
   const candidate={kind,x,z,yaw,culture};
   const check=draft??(nav.wallPlacement?.({...candidate,material,gate})??nav.placement(x,z,.8));
-  if(!check.valid){if(kind==='wall')return false;throw new Error(check.reason);}
-  if(kind!=='center'&&kind!=='wall')throw new Error('Construcción desconocida');
+  if(!check.valid){if(kind==='wall')return false;throw new StructurePlacementError(check.reason);}
+  if(kind!=='center'&&kind!=='wall')throw new StructurePlacementError('Construcción desconocida');
   const cost=kind==='center'?B.work_center.cost:wallSpec(material).cost;
   const maxHp=structureHealth(kind,material,gate),entity={id:`structure-${s.nextId}`,created:s.sequence,kind,material,gate,x,z,yaw,...(kind==='center'?{culture}:{}),maxHp,hp:maxHp,status:'intact',villageId:village?.id,cost,collapseRemaining:0};
   if(kind==='wall'&&!gate){
@@ -188,14 +190,20 @@ export function placeStructure(s,id,{kind='center',material='zarzas',gate=false,
     for(const update of gatePlan)Object.assign(entity,update);
   }
   const suppression=entity.autoGate?nav.wallPlacement(entity).suppress??[]:check.suppress??[];
+  return {kind,x,z,entity,suppression,cost};
+}
+export function placeStructure(s,id,options,nav) {
+  if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
+  const plan=prepareStructurePlacement(s,options,nav);if(!plan)return false;
+  const {kind,x,z,entity,suppression,cost}=plan;
   return commit(s,id,kind==='center'?'center':'wall',()=>{
     ensurePurchaseBudget(s,cost);transact(s.ledger,id,rational(-cost));
     const replaced=kind==='wall'?replaceCoincidentRuins(s,[entity]):[];
     s.nextId++;s.sequence++;s.structures.push(entity);
     s.suppressed.push(...suppression);nav.setState(s);
     for(const ruin of replaced)emit(s,'WallRemoved',{
-      targetId:ruin.id,refund:0,replacedBy:entity.id});
-    emit(s,'PlacementCommitted',{kind,targetId:s.structures.at(-1).id,presentation:{x,z}});
+      targetId:ruin.id,refund:0,replacedBy:entity.id,presentation:{x:ruin.x,z:ruin.z}});
+    emit(s,'PlacementCommitted',{commandId:id,kind,targetId:s.structures.at(-1).id,presentation:{x,z}});
     if(kind==='center'){recoverDisplacedWorkers(s);enqueueLooseCrates(s);}
     if(kind==='center'&&s.tutorial.step==='center')s.tutorial.step='plant';
   });
@@ -556,8 +564,8 @@ export function buildWallChain(s,id,material,points,nav,options={}) {
     s.structures.push(...newPieces);s.nextId+=newPieces.length;s.sequence+=newPieces.length;s.suppressed.push(...plan.suppressed.filter(key=>!s.suppressed.includes(key)));nav.setState(s);
     for(const ruin of replaced)emit(s,'WallRemoved',{
       targetId:ruin.id,refund:0,replacedBy:newPieces.find(piece=>
-        Math.hypot(ruin.x-piece.x,ruin.z-piece.z)<.35)?.id});
-    emit(s,'WallChainBuilt',{material,count:newPieces.length,gates:plan.gates,targetId:newPieces[0].id,presentation:{x:newPieces[0].x,z:newPieces[0].z}});
+        Math.hypot(ruin.x-piece.x,ruin.z-piece.z)<.35)?.id,presentation:{x:ruin.x,z:ruin.z}});
+    emit(s,'WallChainBuilt',{commandId:id,material,count:newPieces.length,gates:plan.gates,targetId:newPieces[0].id,presentation:{x:newPieces[0].x,z:newPieces[0].z,points:newPieces.map(({x,z})=>({x,z})),targetIds:newPieces.map(piece=>piece.id)}});
   });
 }
 export function removeWall(s,id,targetId,nav) {
@@ -570,27 +578,37 @@ export function removeWall(s,id,targetId,nav) {
     const blessingLoss=loseBlessing(s,target,{removed:true});
     if(blessingLoss){emit(s,'BlessingRemoved',blessingLoss);notice(s,'Has retirado una muralla mágica. Su Despertar se ha perdido.',targetId,{category:'awakening-lost',location:blessingLoss.presentation});}
     // Removal opens the graph: never call ensureAutomaticGates here or on reload.
-    emit(s,'WallRemoved',{targetId,refund:numberOf(refund)});
+    emit(s,'WallRemoved',{targetId,refund:numberOf(refund),presentation:{x:target.x,z:target.z}});
   });
 }
-export function plant(s,id,species,x,z,nav) {
+export class PlantPlacementError extends Error {}
+export function validatePlant(s,x,z,nav) {
   const check=nav.placement(x,z,.4);
-  if(!check.valid)throw new Error(check.reason);
-  if(activeCrops(s.plants).some(p=>p.alive&&dist(p,{x,z})<1.1))throw new Error('Necesitas separar las plantas');
+  if(!check.valid)throw new PlantPlacementError(check.reason);
+  if(activeCrops(s.plants).some(p=>p.alive&&dist(p,{x,z})<1.1))throw new PlantPlacementError('Necesitas separar las plantas');
   const center=nearest(s.structures.filter(operational),{x,z});
+  return {check,center};
+}
+export function validatePlantPurchase(s,species){ensurePurchaseBudget(s,cropSpec(species).plant_cost);}
+export function plant(s,id,species,x,z,nav) {
+  const {check,center}=validatePlant(s,x,z,nav);
   return commit(s,id,'plant',()=>{
-    ensurePurchaseBudget(s,cropSpec(species).plant_cost);transact(s.ledger,id,rational(-cropSpec(species).plant_cost));
+    validatePlantPurchase(s,species);transact(s.ledger,id,rational(-cropSpec(species).plant_cost));
     const p=createPlant(`plant-${s.nextId++}`,species,x,z,center.id);
     if(spellAt(s,'multiply',p))p.multiplyHarvest=true;
     s.plants.push(p);enqueue(s,center.id,'initial',p.id);
     const removedProps=check.suppress??[];s.suppressed.push(...removedProps);
     if(nav.syncCropPlacement)nav.syncCropPlacement(s,removedProps);else nav.setState(s);
-    emit(s,'CropPlaced',{targetId:p.id});
+    emit(s,'CropPlaced',{commandId:id,targetId:p.id});
     if(s.tutorial.step==='plant')s.tutorial.step='hire';
   });
 }
-export function harvest(s,id,plantId) {
+export function validateHarvest(s,plantId) {
   const living=activeCrops(s.plants),p=living.find(p=>p.id===plantId&&isMature(p));if(!p)throw new Error('Este cultivo todavía no está maduro');
+  return {living,plant:p};
+}
+export function harvest(s,id,plantId) {
+  const {living,plant:p}=validateHarvest(s,plantId);
   return commit(s,id,'harvest',()=>{
     const group=contiguousGroup(living,p).filter(isMature);
     group.sort((a,b)=>{
@@ -621,12 +639,12 @@ export function bless(s,id,targetId){
       }
       replaceTasks(s,s.tasks.filter(t=>t.targetId!==targetId));
       for(const spell of s.spells.filter(a=>a.targetPlantId===targetId))emit(s,'AgriculturalSpellEnded',{
-        spellId:spell.id,kind:spell.kind,targetPlantId:targetId,growthSecondsAdded:spell.growthSecondsAdded??0});
+        spellId:spell.id,kind:spell.kind,targetPlantId:targetId,growthSecondsAdded:spell.growthSecondsAdded??0,remainingSeconds:Math.max(0,spell.remaining)});
       s.spells=s.spells.filter(a=>a.targetPlantId!==targetId);
     }
     a.total++;a.progress=0;invalidateBlessingInfluence(s);
-    emit(s,'BlessingApplied',{targetId,kind:target.species?'plant':target.kind,blessing,
-      presentation:{x:target.x,z:target.z,elapsed:s.elapsed}});
+    emit(s,'BlessingApplied',{commandId:id,targetId,kind:target.species?'plant':target.kind,blessing,
+      presentation:{x:target.x,z:target.z,elapsed:s.elapsed,source:blessingPresentationSource(target)}});
     notice(s,target.species?'La planta ha despertado: es una fuente permanente de fertilidad.':'La muralla ha despertado: protege esta sección y sus conexiones.',targetId,{category:'awakening-applied',location:target});
   });
 }
@@ -638,23 +656,31 @@ function addHiredWorker(s,profileId,centerId,usedPeople){
   s.workers.push({id:`worker-${s.nextId++}`,personId:person.id,profile:profileId,contractDay:s.day,centerId:centerId??null,villageId:village.id,x:entry.x,z:entry.z,status:center?'arriving':'waiting',taskId:null,crateId:null,path:null,hits:0,incapacitated:false,recovering:s.day<=person.recoveryUntil,runRemaining:dailyRunMetres(),actionRemaining:0});
   notifyWorkerPlanningChange(s,s.workers.at(-1));
 }
-export function hireAdditional(s,id,selection,centerId){
-  if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
+export function validateHireAdditional(s,id,selection,centerId){
+  if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return {skip:true};
   if(s.result||s.raid||s.hiringPaidDay!==s.day||s.time>=300||s.pauses.some(p=>!['menu','tutorial-action'].includes(p)))throw new Error('La contratación adicional no está disponible ahora');
   if(!s.structures.some(c=>c.id===centerId&&operational(c)))throw new Error('El centro de trabajo no está disponible');
   const cost=hiringCost(selection,{time:s.time}),total=Object.values(selection).reduce((n,c)=>n+c,0);
-  if(!total)return false;
+  if(!total)return {skip:true};
+  if(compare(s.ledger.balance,rational(cost))<0)throw new Error('Fondos insuficientes');
+  return {cost,total};
+}
+export function hireAdditional(s,id,selection,centerId){
+  const checked=validateHireAdditional(s,id,selection,centerId);if(checked.skip)return false;const {cost,total}=checked;
   transact(s.ledger,id,rational(-cost));
   const usedPeople=new Set(s.workers.map(w=>w.personId));
   for(const p of PROFILES)for(let i=0;i<(selection[p.id]??0);i++)addHiredWorker(s,p.id,centerId,usedPeople);
   for(const p of PROFILES)s.hiringSelection[p.id]=(s.hiringSelection[p.id]??0)+(selection[p.id]??0);
   s.commandIds.push(id);emit(s,'HiringConfirmed',{count:total,additional:true,centerId,cost});return true;
 }
-export function hire(s,id,selection) {
-  if(s.hiringPaidDay===s.day)return false;
-  if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
+export function validateHire(s,id,selection){
+  if(s.hiringPaidDay===s.day)return {skip:true};
+  if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return {skip:true};
   if(!s.pauses.includes('hiring'))throw new Error('La contratación no está abierta');
-  const cost=hiringCost(selection);transact(s.ledger,id,rational(-cost));
+  const cost=hiringCost(selection);if(compare(s.ledger.balance,rational(cost))<0)throw new Error('Fondos insuficientes');return {cost};
+}
+export function hire(s,id,selection) {
+  const checked=validateHire(s,id,selection);if(checked.skip)return false;const {cost}=checked;transact(s.ledger,id,rational(-cost));
   const living=activeCrops(s.plants);
   const centers=s.structures.filter(operational).map(c=>({...c,plants:living.filter(p=>p.alive&&!p.blessing&&p.centerId===c.id).length}));
   const total=Object.values(selection).reduce((a,b)=>a+b,0),quotas=allocateWorkers(centers,total),assigned=distributeProfiles(quotas,selection);
@@ -736,18 +762,22 @@ export function dropCarriedCrate(s,worker){
   const crate=activeCrates(s.crates).find(c=>c.id===worker.crateId);
   worker.crateId=null;
   if(!crate)return;
-  crate.carrierId=null;crate.x=worker.x;crate.z=worker.z;emit(s,'CrateDropped',{targetId:crate.id});
+  crate.carrierId=null;crate.x=worker.x;crate.z=worker.z;emit(s,'CrateDropped',{targetId:crate.id,presentation:{x:crate.x,z:crate.z}});
   if(!s.raid){const center=nearest(s.structures.filter(operational),crate);if(center)enqueue(s,center.id,'crate',crate.id);}
 }
-export function requestRepair(s,id,targetId) {
+export function validateRepair(s,targetId) {
   const target=s.structures.find(c=>c.id===targetId);if(!target||target.hp===target.maxHp)throw new Error('No necesita reparación');
   if(compare(s.ledger.balance,repairCost(target))<0)throw new Error('Fondos insuficientes');
   ensurePurchaseBudget(s,repairCost(target));
+  return target;
+}
+export function requestRepair(s,id,targetId) {
+  const target=validateRepair(s,targetId);
   return commit(s,id,'repair',()=>{
     const center=nearest(s.structures.filter(operational),target);enqueue(s,center.id,'repair',targetId);emit(s,'RepairRequested',{targetId});
   });
 }
-export const spellRadius=id=>({shield:1.95,growth:.65,multiply:.65})[id]; // Agricultural radius is visual only; gameplay uses the plant identity.
+export const spellRadius=id=>({shield:1.95,growth:.65,multiply:.65,attack:.8})[id]; // Agricultural radius is visual only; gameplay uses the plant identity.
 const agriculturalSpellIndex=new WeakMap();
 export function spellAt(s,id,p) {
   if(!s.spells.length)return undefined;
@@ -775,7 +805,7 @@ export function previewSpell(s,kind,x,z,nav,targetPlantId) {
   return draft;
 }
 function agriculturalTarget(s,kind,x,z,targetPlantId){
-  if(kind==='shield')return null;
+  if(kind==='shield'||kind==='attack')return null;
   const p=activeCrops(s.plants).find(p=>p.alive&&(targetPlantId!==undefined?p.id===targetPlantId:p.x===x&&p.z===z));
   if(!p||p.x!==x||p.z!==z)throw new Error('Selecciona una planta para aplicar esta magia');
   if(p.blessing)throw new Error('Esta planta ya es una fuente mágica permanente');
@@ -785,28 +815,35 @@ function agriculturalTarget(s,kind,x,z,targetPlantId){
 function validateSpell(s,kind,x,z,nav,targetPlantId) {
   const spec=B.spells.find(p=>p.id===kind);if(!spec)throw new Error('Magia desconocida');
   if(!spellUnlocked(s,kind))throw new Error('El Espíritu todavía no ha revelado esta magia');
-  if(kind==='shield'&&s.cooldowns[kind]>0)throw new Error('La magia está recargando');
+  if(kind==='shield'&&s.cooldowns.shield>0)throw new Error('La magia está recargando');
+  if(kind==='attack'&&attackGestureActive(s))throw new Error('El guardián está terminando el ataque');
   if(!Number.isFinite(x)||!Number.isFinite(z))throw new Error('Ubicación mágica inválida');
   const radius=spellRadius(kind);
+  if(kind==='attack'){const animal=attackTarget(s,targetPlantId)??(targetPlantId==null?s.raid?.animals.find(a=>attackTargetAvailable(s,a)&&Math.hypot(a.x-x,a.z-z)<=a.radius):null);if(!animal)throw new Error('Selecciona una bestia activa que esté de pie');if(!permission(s,kind))throw new Error('Esta acción no está disponible ahora');return {spec,plant:null,animal};}
   const target=agriculturalTarget(s,kind,x,z,targetPlantId);
   if(s.spells.some(a=>a.remaining>0&&(target?
     a.targetPlantId!==undefined?a.targetPlantId===target.id||dist(a,target)<1e-6:dist(a,target)<=a.radius:
     a.targetPlantId!==undefined?dist(a,{x,z})<=radius:dist(a,{x,z})<a.radius+radius)))throw new Error('Las áreas mágicas no pueden solaparse');
   if(kind==='shield'&&s.raid?.animals.some(a=>a.status!=='gone'&&dist(a,{x,z})<radius+a.radius))throw new Error('El Escudo solapa un animal');
   if(!permission(s,kind))throw new Error('Esta acción no está disponible ahora');
-  return spec;
+  return {spec};
 }
-export function cast(s,id,kind,x,z,nav,targetPlantId) {
+export function cast(s,id,kind,x,z,nav,selection) {
+  const {targetId:targetPlantId,origin:requestedOrigin=null,contact=null}=typeof selection==='object'&&selection!==null?selection:{targetId:selection};
+  let origin=requestedOrigin;
   if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
-  const spec=validateSpell(s,kind,x,z,nav,targetPlantId),radius=spellRadius(kind);
+  const {spec,animal}=validateSpell(s,kind,x,z,nav,targetPlantId),radius=spellRadius(kind);
   const target=agriculturalTarget(s,kind,x,z,targetPlantId);
+  if(typeof origin==='function'){try{origin=origin();}catch{origin=null;}}
+  for(const p of [origin,contact])if(p&&![p.x,p.y,p.z].every(Number.isFinite))throw new Error('Impacto mágico inválido');
   return commit(s,id,kind,()=>{
+    if(kind==='attack'){s.cooldowns.attack=0;s.guardianAttackStartedAt=s.elapsed;const impact=applyGuardianAttack(s,animal,{nav,origin,ground:nav.field?.surface?.(animal.x,animal.z)??0,contact:contact??{x:animal.x,y:(nav.field?.surface?.(animal.x,animal.z)??0)+animal.radius,z:animal.z}});emit(s,'SpellActivated',{commandId:id,kind,x:animal.x,z:animal.z,targetId:animal.id,presentation:{elapsed:s.elapsed,cueAt:s.elapsed+GUARDIAN_ATTACK_TIMING.release,origin:impact.origin,contact:impact.point}});return;}
     const area={id:`spell-${s.nextId++}`,kind,x,z,radius,remaining:spec.duration_seconds};
     if(target)area.targetPlantId=target.id;
     if(target){area.power=commitAgriculturalPower(s,target,kind,cropSpec(target.species).base_harvest_value);if(kind==='multiply'){target.multiplyHarvest=true;area.exposureApplied=true;}}
     s.spells.push(area);s.cooldowns[kind]=kind==='shield'?spec.cooldown_seconds:0;
     if(kind==='shield')nav.setState(s);
-    emit(s,'SpellActivated',{kind,x,z,targetPlantId:target?.id,benefited:area.power?.benefited??false,power:area.power??null,duration:spec.duration_seconds});
+    emit(s,'SpellActivated',{commandId:id,spellId:area.id,simulationDay:s.day,kind,x,z,targetPlantId:target?.id,benefited:area.power?.benefited??false,power:area.power??null,duration:spec.duration_seconds,targetId:target?.id??null,presentation:{elapsed:s.elapsed,origin,contact:contact??{x,y:nav.field?.surface?.(x,z)??0,z}}});
   });
 }
 function retainRouteAfterWallChange(w,destination,nav){
@@ -948,7 +985,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     const {exit,wallIds}=w.wallEscape,remaining=dist(w,exit);
     if(remaining>1e-8){
       const metres=movePath(w,Math.min(speed*dt,remaining),
-        (a,b)=>nav.wallOverlapMotionClear(a,b,w.radius??.28,wallIds,false));
+        (a,b)=>nav.wallOverlapMotionClear(a,b,w.radius??.28,wallIds,false),pathMotionClock(w,s.elapsed-dt,s.elapsed,speed));
       w.motionPhase=(w.motionPhase??0)+metres/speed;
       if(metres>1e-8){w.heading=Math.atan2(w.x-previous.x,w.z-previous.z);
         w.dynamicStallSeconds=0;}
@@ -1000,15 +1037,19 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
     }
   }
   const phased=(w.mobilePhaseRemaining??0)>0;
+  let motionMark=nav.tickProfile?performance.now():0;
   const dynamicClear=phased?
     (worker?(a,b)=>nav.workerMotionClear?.(a,b,w.radius??.28)??
       nav.segmentClear?.(a,b,w.radius??.28,ignore,true)??false:null):
     prepareActorMotion(s,w,nav,worker);
+  if(nav.tickProfile){nav.tickProfile.prepareMotion+=performance.now()-motionMark;motionMark=performance.now();}
   const routeClearance=worker?workerRiskClearance(w,nav,{radius:w.radius??.28,ignore},dynamicClear):animalRouteClearance(w,nav,{radius:w.radius??.28,ignore,escapeProps:expandRoute},dynamicClear);
   const clear=routeClearance?.clear??dynamicClear;
-  if(motion)moveWorker(w,dt,{...motion,gates:worker?s.structures:[],clear});else {
-    const metres=worker?movePathWithGates(w,speed*dt,s.structures,clear):movePath(w,speed*dt,clear);w.motionPhase=(w.motionPhase??0)+metres/speed;
+  const motionClock=pathMotionClock(w,s.elapsed-dt,s.elapsed,speed);
+  if(motion)moveWorker(w,dt,{...motion,gates:worker?s.structures:[],clear,clock:motionClock});else {
+    const metres=worker?movePathWithGates(w,speed*dt,s.structures,clear,motionClock):movePath(w,speed*dt,clear,motionClock);w.motionPhase=(w.motionPhase??0)+metres/speed;
   }
+  if(nav.tickProfile)nav.tickProfile.moveMotion+=performance.now()-motionMark;
   if(dist(previous,w)>1e-9)w.heading=Math.atan2(w.x-previous.x,w.z-previous.z);
   if(phased)w.mobilePhaseRemaining=Math.max(0,w.mobilePhaseRemaining-dt);
   if(dist(previous,w)>1e-8||!w.path?.length)w.dynamicStallSeconds=0;
@@ -1268,7 +1309,7 @@ function completeTask(s,w,t,target,nav) {
         // fractional before transact rounds the actual payment to whole coins.
         emit(s,'RepairApplied',{workerId:w.id,targetId:target.id,
           repair:{taskId:t.id,paymentId,paidCoins:-numberOf(s.ledger.entries[paymentId]),previousHp,previousStatus,restoredHp:target.hp,maxHp:target.maxHp},
-          presentation:{elapsed:s.elapsed,x:w.x,z:w.z,yaw:w.heading??0}});
+          presentation:{elapsed:s.elapsed,x:w.x,z:w.z,yaw:w.heading??0,structure:{x:target.x,z:target.z}}});
         if(target.kind==='center'){recoverDisplacedWorkers(s);enqueueLooseCrates(s);}
       }
     }
@@ -1408,6 +1449,8 @@ export function workerAtVillageEntry(worker,entry,nav){
     nav.segmentClear?.(worker,entry,radius,null,true)??false;
 }
 function updateWorkers(s,dt,nav) {
+  nav.dynamicBodies?.sync(s);
+  const reserve=()=>{if(!nav.tickProfile)return reserveAvailableTasks(s,nav);const started=performance.now();try{return reserveAvailableTasks(s,nav);}finally{nav.tickProfile.reservations+=performance.now()-started;}};
   reconcileNativeIntents(s,nav);
   // Task removals/rebuilds replace the array; enqueues change its length.
   // Unchanged queues can reuse their index while reservation fields stay live.
@@ -1428,7 +1471,7 @@ function updateWorkers(s,dt,nav) {
   const newArrivals=[];
   const nativeTasks=!!nav.intentTaskPlanner;
   if(!s.raid&&s.time<300)for(const w of s.workers){
-    if(w.status!=='arriving'||w.raidReturn||w.incapacitated||w.fallRemaining>0||contractExpired(w,s)||s.time>=profile(w).end)continue;
+    if(w.status!=='arriving'||w.raidReturn||w.incapacitated||w.fallRemaining>0||w.recovery||contractExpired(w,s)||s.time>=profile(w).end)continue;
     if(!s.structures.some(c=>c.id===w.centerId&&operational(c)))continue;
     if(!nativeTasks)w.status='idle';
     newArrivals.push(w);
@@ -1436,14 +1479,18 @@ function updateWorkers(s,dt,nav) {
   // New contracts reserve from their actual village position before any idle
   // motion. Returning raid survivors retain the existing arrival sequence.
   if(newArrivals.length){
-    reserveAvailableTasks(s,nav);
+    reserve();
     if(!nativeTasks)for(const w of newArrivals)if(!w.taskId)w.status='arriving';
   }
   // Small crews retain direct queries; amortize bookkeeping only in large farms.
   const urgency=s.workers.length>=64?createUrgencyPass(s):null;
   for(const w of s.workers) {
+    const workerProfile=nav.tickProfile,workerStatus=workerProfile?w.status:null,workerStart=workerProfile?performance.now():0;
     try {
-      if(w.fallRemaining>0&&!w.incapacitated){w.fallRemaining=Math.max(0,w.fallRemaining-dt);continue;}
+      if(advanceWorkerRecovery(w,dt,nav)){
+        if(!w.fallRemaining&&!w.recovery)notifyWorkerPlanningChange(s,w);
+        continue;
+      }
       const p=profile(w),center=s.structures.find(c=>c.id===w.centerId),village=s.villages.find(v=>v.id===w.villageId);
       if(['fleeing','returning','incapacitated'].includes(w.status)) {
         const home={...(village.entry??village),id:`home-${village.id}`};
@@ -1478,15 +1525,19 @@ function updateWorkers(s,dt,nav) {
       const ended=contractExpired(w,s)||s.time>=p.end;
       if(ended&&!['acting','carrying'].includes(w.status)) {cancelIdle(w);releaseTask(s,w);w.status='returning';w.path=null;notifyWorkerPlanningChange(s,w);continue;}
       if(w.status==='arriving') {
+        let arrivalMark=workerProfile?performance.now():0;
         const arrival={...center,...centerServicePoint(center,s,.8),id:`arrival-${center.id}`};
+        if(workerProfile){workerProfile.arrivalPoint+=performance.now()-arrivalMark;arrivalMark=performance.now();}
         const reached=walkTo(s,w,arrival,dt,nav,
           {motion:{urgent:!w.raidReturn&&(urgency?urgency.urgent(w):urgentWork(s,w))}});
+        if(workerProfile){workerProfile.arrivalWalk+=performance.now()-arrivalMark;arrivalMark=performance.now();}
         // Several paid workers share one authored center entrance. Reaching
         // its clear approach zone is sufficient; insisting on the occupied
         // exact point can strand later arrivals behind an idle coworker.
         const nearEntrance=w.path?.length>0&&w.destinationId===arrival.id&&
           w.pathVersion===nav.version&&dist(w,arrival)<=2&&
           (nav.segmentClear?.(w,arrival,w.radius??.28,null,true)??false);
+        if(workerProfile)workerProfile.arrivalEntrance+=performance.now()-arrivalMark;
         if(reached||nearEntrance){
           w.path=null;w.destinationId=null;w.status='idle';w.raidReturn=false;
           notifyWorkerPlanningChange(s,w);
@@ -1567,9 +1618,9 @@ function updateWorkers(s,dt,nav) {
         if(t.kind==='repair'){completeTask(s,w,t,target,nav);urgency?.invalidate();continue;}
         w.actionRemaining-=dt;if(w.actionRemaining<=0)completeTask(s,w,t,target,nav);
       }
-    } finally {urgency?.changed(w);idleBodies?.update(w);}
+    } finally {urgency?.changed(w);idleBodies?.update(w);nav.dynamicBodies?.update(w,0);if(workerProfile)workerProfile.byStatus[workerStatus]=(workerProfile.byStatus[workerStatus]??0)+performance.now()-workerStart;}
   }
-  reserveAvailableTasks(s,nav);
+  reserve();
 }
 function closeNight(s) {
   if(s.awakenings?.enabled!==false)evaluateAwakeningDay(s,{emit:(type,detail)=>emit(s,type,detail),notice:(text,metadata)=>notice(s,text,null,metadata)});
@@ -1590,24 +1641,28 @@ function closeNight(s) {
   if(compare(s.ledger.balance,rational(dawnMinimum(s)))<0){s.result='defeat';notice(s,'El sol vuelve, pero el poblado no puede costear otra jornada.');emit(s,'GameOver');return;}
   if(s.completedNights>=100&&!s.postgame){s.result='victory';emit(s,'CampaignWon');return;}
   for(const plant of activeCrops(s.plants))if(plant.alive)plant.centerId=nearest(s.structures.filter(operational),plant)?.id??null;
-  s.hiringPaidDay=null;rebuildTasks(s);pause(s,'hiring');emit(s,'Dawn');
+  s.hiringPaidDay=null;rebuildTasks(s);pause(s,'hiring');emit(s,'Dawn',{completedNights:s.completedNights,result:s.result??null});
 }
 export function continuePostgame(s) {if(s.result!=='victory')return;s.result=null;s.postgame=true;s.nightPlan=null;s.dayPlan=null;pause(s,'hiring');emit(s,'PostgameStarted');}
 export function previewVillage(s,culture,x,z,payload,nav) {
   if(!CULTURES.includes(culture))throw new Error('Cultura desconocida');
+  if(culture!==s.culture)throw new Error('El nuevo poblado debe conservar la cultura de la partida');
   const resolved=resolveFluidPlacement(nav,(px,pz)=>villageLayout(payload,px,pz),x,z),buildings=resolved.shapes,checks=resolved.checks;
   x=resolved.x;z=resolved.z;
   const entry=checks.every(c=>c.valid)?findVillageEntry(nav,buildings,x,z):null;
   return {culture,x,z,buildings,entry,cost:villageCost(s.villages.length+1),valid:checks.every(c=>c.valid)&&!!entry,suppress:[...new Set(checks.flatMap(c=>c.suppress??[]))],reason:checks.find(c=>!c.valid)?.reason??(!entry?'El poblado no tiene una salida transitable':undefined)};
 }
-export function foundVillage(s,id,culture,x,z,payload,nav) {
+export function foundVillage(s,id,culture,x,z,payload,nav,{preparedCenters=null}={}) {
   return commit(s,id,'village',()=>{
     // Replayed commands must stop before validating their already occupied site.
     // New confirmations still revalidate the complete layout before charging.
     const preview=previewVillage(s,culture,x,z,payload,nav);if(!preview.valid)throw new Error(preview.reason);x=preview.x;z=preview.z;
+    const centers=s.structures.filter(operational);
+    if(preparedCenters!==null&&(!Array.isArray(preparedCenters)||preparedCenters.length!==centers.length||preparedCenters.some((p,i)=>!p||p.id!==centers[i].id||typeof p.villageId!=='string'&&p.villageId!==null||typeof p.culture!=='string'&&p.culture!==null)))throw Error('Invalid prepared village centers');
     ensurePurchaseBudget(s,preview.cost);transact(s.ledger,id,rational(-preview.cost));s.villages.push({id:`village-${s.nextId++}`,culture,x,z,buildings:preview.buildings,entry:preview.entry});s.suppressed.push(...preview.suppress);
     nav.setState(s);
-    for(const center of s.structures.filter(operational)) {
+    if(preparedCenters!==null){for(let i=0;i<centers.length;i++){const center=centers[i],prepared=preparedCenters[i];if(prepared.culture!==null)center.culture=prepared.culture;if(prepared.villageId!==null)center.villageId=prepared.villageId;}}
+    else for(const center of centers) {
       const departure=centerServicePoint(center,s);
       const nearestRoute=nearestVillageRoute(nav,departure,s.villages);
       if(nearestRoute){center.culture??=centerCulture(center,s);center.villageId=nearestRoute.v.id;}
@@ -1643,12 +1698,12 @@ export function tick(s,seconds,nav) {
     const nextTime=Math.min(600,s.time+step);
     s.time=clockEdges.find(boundary=>Math.abs(nextTime-boundary)<1e-9)??nextTime;
     for(const kind of Object.keys(s.cooldowns)) {
-      if(kind!=='shield'){s.cooldowns[kind]=0;continue;}
+      if(kind!=='shield'&&kind!=='attack'){s.cooldowns[kind]=0;continue;}
       const remaining=s.cooldowns[kind]-step;
       s.cooldowns[kind]=remaining>1e-9?remaining:0;
     }
     for(const structure of s.structures)if(structure.status==='collapsing') {
-      structure.collapseRemaining-=step;if(structure.collapseRemaining<=1e-9){structure.status='ruined';structure.hp=0;nav.setState(s);emit(s,'StructureRuined',{targetId:structure.id});}
+      structure.collapseRemaining-=step;if(structure.collapseRemaining<=1e-9){structure.status='ruined';structure.hp=0;nav.setState(s);emit(s,'StructureRuined',{targetId:structure.id,structureKind:structure.kind,presentation:{x:structure.x,z:structure.z}});}
     }
     if(previousTime<300) {
       const growthStep=s.spells.some(spell=>spell.kind==='growth'&&spell.remaining>0)?growthPowerStep(s):null;
@@ -1666,28 +1721,38 @@ export function tick(s,seconds,nav) {
     }
     const shieldsBefore=s.spells.filter(a=>a.kind==='shield').length;
     for(const spell of s.spells)spell.remaining=Math.max(0,spell.remaining-step);
-    for(const a of s.spells)if(a.remaining<=1e-9&&a.targetPlantId!==undefined)emit(s,'AgriculturalSpellEnded',{spellId:a.id,kind:a.kind,targetPlantId:a.targetPlantId,growthSecondsAdded:a.growthSecondsAdded??0});
+    for(const a of s.spells)if(a.remaining<=1e-9&&a.targetPlantId!==undefined)emit(s,'AgriculturalSpellEnded',{spellId:a.id,kind:a.kind,targetPlantId:a.targetPlantId,growthSecondsAdded:a.growthSecondsAdded??0,remainingSeconds:0});
     s.spells=s.spells.filter(a=>a.remaining>1e-9);
     if(s.spells.filter(a=>a.kind==='shield').length!==shieldsBefore)nav.setState(s);
     advanceGateLeaves(s,step);
     // A restored or event-invalidated animal route must be published before
     // the raid controller attempts physical movement in this interval.
+    const tickProfile=nav.tickProfile;let tickMark=tickProfile?performance.now():0;
     reconcileNativeIntents(s,nav);
-    updateRaid(s,step,nav);updateWorkers(s,step,nav);
+    if(tickProfile){tickProfile.intents+=performance.now()-tickMark;tickMark=performance.now();}
+    nav.beastPhysics?.step(s,step);
+    if(tickProfile){tickProfile.physics+=performance.now()-tickMark;tickMark=performance.now();}
+    updateRaid(s,step,nav);
+    if(tickProfile){tickProfile.raid+=performance.now()-tickMark;tickMark=performance.now();}
+    updateWorkers(s,step,nav);
+    if(tickProfile)tickProfile.workers+=performance.now()-tickMark;
     // Arrival is an event at the end of this interval. Newly spawned animals
     // must not move for time that elapsed before they existed.
     prepareClockEvents(s,nav);
     if(s.time>=600 && !s.raid && !s.result && (!s.nightPlan?.group?.length||s.nightPlan.done))closeNight(s);
   }
 }
-export function advanceReal(s,seconds,nav,{nightFastForward=true}={}) {
+export function advanceReal(s,seconds,nav,{nightFastForward=true,onTick=null,onClockSegment=null}={}) {
+  if(onClockSegment!==null&&typeof onClockSegment!=='function')throw TypeError('Invalid simulation clock observer');
   let left=seconds;
   while(left>1e-9 && !s.pauses.length&&!s.result) {
       prepareClockEvents(s,nav);
     const speed=nightFastForward&&s.time>=300&&!s.raid?5:1;
     const untilBoundary=Math.min(...clockBoundaries(s).filter(t=>t>s.time+1e-9).map(t=>(t-s.time)/speed));
     const real=Math.min(left,.02,untilBoundary);left-=real;
-    tick(s,real*speed,nav);
+    const start=onClockSegment?s.elapsed:0;tick(s,real*speed,nav);
+    if(onClockSegment&&s.elapsed>start)onClockSegment({start,end:s.elapsed,realDuration:(s.elapsed-start)/speed,rate:speed});
+    if(onTick)onTick();
   }
 }
 export function clockLabel(s) {

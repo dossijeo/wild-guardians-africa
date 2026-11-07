@@ -1,0 +1,43 @@
+{
+  "revision": "93fe26470^",
+  "scope": "Five real animal meshes, moving root; Node CPU only, no GPU or physics.",
+  "rows": [
+    {
+      "mode": "baseline",
+      "frameMs": {
+        "mean": 2.566752999999999,
+        "p95": 2.856999999999971,
+        "p99": 3.6381999999998698
+      },
+      "checksum": 30683.400896151546
+    },
+    {
+      "mode": "current",
+      "frameMs": {
+        "mean": 2.4927329999999936,
+        "p95": 2.758299999999963,
+        "p99": 3.5620999999996457
+      },
+      "checksum": 30683.400896151546
+    },
+    {
+      "mode": "current",
+      "frameMs": {
+        "mean": 2.4664073333333225,
+        "p95": 2.714100000000144,
+        "p99": 2.9664999999999964
+      },
+      "checksum": 30683.400896151546
+    },
+    {
+      "mode": "baseline",
+      "frameMs": {
+        "mean": 2.714878333333351,
+        "p95": 3.922700000000077,
+        "p99": 5.779399999999441
+      },
+      "checksum": 30683.400896151546
+    }
+  ],
+  "maxDifference": 0
+}

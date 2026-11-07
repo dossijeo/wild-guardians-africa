@@ -1,0 +1,14 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {newGame,placeStructure} from '../../src/simulation/game.js';
+import {transact,rational} from '../../src/simulation/money.js';
+import {WILD_ENGINE_WORLD_VERSION} from '../../src/world/wild-engine/world-version.js';
+import {villageLayout} from '../../src/world/villages.js';
+import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
+import {captureNativeAuthorityBootstrap} from '../../src/simulation/native-authority-bootstrap.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+import {createWorkerSaveCoordinator} from '../../src/persistence/worker-save.js';
+import {BrowserSaveRepository} from '../../src/persistence/browser-saves.js';
+window.makeSave=async()=>{const state=await(await fetch('/tests/fixtures/microevent-world.json')).json();state.slotId='qa-early-native-build';transact(state.ledger,'qa-fixture-budget',rational(620));const module=await WebAssembly.compile(await (await fetch('/src/world/wild-engine/spatial-savanna.wasm')).arrayBuffer()),loaded=new Map(),native=createSpatialGameSession(module,state,{loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});let client;
+ try{for(const [x,z] of [[1,0],[2,0]]){if(native.core.selectChunk(x,z)<0)native.core.addChunk(x,z);loaded.set(`${x},${z}`,native.core.chunkPayload());}const nav=createSpatialNavigationMovement(native,state);nav.setActiveBounds([24,-24,120,24]);nav.setRaidView({x:105,z:35},{x:83,z:0});const capture=captureNativeAuthorityBootstrap(state,nav,native);client=createSimulationAuthorityClient({snapshot:capture.snapshot,chunkKeys:capture.chunkKeys,raidWaitBindings:capture.raidWaitBindings,navigationView:capture.navigationView,nativeBootstrap:{version:1,chunkKeys:capture.chunkKeys,spatialState:capture.spatialState},session:'qa-seed'});await client.ready;const repository=new BrowserSaveRepository(localStorage),save=createWorkerSaveCoordinator({runtime:{submit(command){const r=client.submit(command);if(!r.accepted)throw Error(r.reason);return r.result;}},repository,slotId:state.slotId,experimentalNativeAuthority:true});const result=await save.request();if(!result.saved)throw Error('Seed save failed');return {slotId:state.slotId,elapsed:state.elapsed,plants:state.plants.length};}finally{client?.dispose();native.dispose();}};window.ready=true;
+</script>

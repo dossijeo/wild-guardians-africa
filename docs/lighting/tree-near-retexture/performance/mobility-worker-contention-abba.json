@@ -1,0 +1,340 @@
+{
+  "results": [
+    {
+      "mode": "idle",
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": {
+        "count": 240,
+        "p95": 33.39499999999953,
+        "p99": 33.414999999999964,
+        "max": 33.4950000000008,
+        "over50": 0
+      },
+      "overlapping": {
+        "count": 0,
+        "p95": null,
+        "p99": null,
+        "max": null,
+        "over50": 0
+      },
+      "nonOverlapping": {
+        "count": 240,
+        "p95": 33.39499999999953,
+        "p99": 33.414999999999964,
+        "max": 33.4950000000008,
+        "over50": 0
+      },
+      "jobs": [],
+      "gpu": {
+        "reason": null,
+        "samples": 241,
+        "p95": 0.508608,
+        "p99": 0.533312,
+        "discarded": 0
+      },
+      "scope": "8-second isolated WebGL lab; 11 synthetic batches of 700 real native route queries in a Worker or idle control. Frame overlap is temporal, not proof of cause."
+    },
+    {
+      "mode": "worker",
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": {
+        "count": 240,
+        "p95": 33.400000000000546,
+        "p99": 33.44000000000051,
+        "max": 33.534999999999854,
+        "over50": 0
+      },
+      "overlapping": {
+        "count": 22,
+        "p95": 33.400000000000546,
+        "p99": 33.405000000000655,
+        "max": 33.405000000000655,
+        "over50": 0
+      },
+      "nonOverlapping": {
+        "count": 218,
+        "p95": 33.400000000000546,
+        "p99": 33.44000000000051,
+        "max": 33.534999999999854,
+        "over50": 0
+      },
+      "jobs": [
+        {
+          "requestedAt": 1941.390000000596,
+          "receivedAt": 1995.914999999106,
+          "startedAt": 1942.494873046875,
+          "finishedAt": 1995.639892578125,
+          "workerMs": 53.145000003278255,
+          "hash": 1269783446,
+          "queries": 700
+        },
+        {
+          "requestedAt": 2541.310000002384,
+          "receivedAt": 2599.929999999702,
+          "startedAt": 2542.159912109375,
+          "finishedAt": 2599.784912109375,
+          "workerMs": 57.625,
+          "hash": 1269783446,
+          "queries": 700
+        },
+        {
+          "requestedAt": 3141.3700000047684,
+          "receivedAt": 3191.640000000596,
+          "startedAt": 3142.19482421875,
+          "finishedAt": 3191.52490234375,
+          "workerMs": 49.32999999821186,
+          "hash": 1269783446,
+          "queries": 700
+        },
+        {
+          "requestedAt": 3741.359999999404,
+          "receivedAt": 3790.005000002682,
+          "startedAt": 3742.050048828125,
+          "finishedAt": 3789.81494140625,
+          "workerMs": 47.76500000059605,
+          "hash": 1269783446,
+          "queries": 700
+        },
+        {
+          "requestedAt": 4341.365000002086,
+          "receivedAt": 4390.344999998808,
+          "startedAt": 4342.4599609375,
+          "finishedAt": 4390.18994140625,
+          "workerMs": 47.729999996721745,
+          "hash": 1269783446,
+          "queries": 700
+        },
+        {
+          "requestedAt": 4941.22500000149,
+          "receivedAt": 4990.384999997914,
+          "startedAt": 4942.125,
+          "finishedAt": 4990.2548828125,
+          "workerMs": 48.13000000268221,
+          "hash": 1269783446,
+          "queries": 700
+        },
+        {
+          "requestedAt": 5541.460000000894,
+          "receivedAt": 5592.780000001192,
+          "startedAt": 5542.594970703125,
+          "finishedAt": 5592.434814453125,
+          "workerMs": 49.84000000357628,
+          "hash": 1269783446,
+          "queries": 700
+        },
+        {
+          "requestedAt": 6141.380000002682,
+          "receivedAt": 6189.920000001788,
+          "startedAt": 6142.079833984375,
+          "finishedAt": 6189.77490234375,
+          "workerMs": 47.69500000029802,
+          "hash": 1269783446,
+          "queries": 700
+        },
+        {
+          "requestedAt": 6741.359999999404,
+          "receivedAt": 6789.969999998808,
+          "startedAt": 6742.074951171875,
+          "finishedAt": 6789.85498046875,
+          "workerMs": 47.77999999374151,
+          "hash": 1269783446,
+          "queries": 700
+        },
+        {
+          "requestedAt": 7341.384999997914,
+          "receivedAt": 7390.645000003278,
+          "startedAt": 7342.050048828125,
+          "finishedAt": 7390.494873046875,
+          "workerMs": 48.44500000029802,
+          "hash": 1269783446,
+          "queries": 700
+        },
+        {
+          "requestedAt": 7941.380000002682,
+          "receivedAt": 7990.97500000149,
+          "startedAt": 7942.179931640625,
+          "finishedAt": 7990.85498046875,
+          "workerMs": 48.67499999701977,
+          "hash": 1269783446,
+          "queries": 700
+        }
+      ],
+      "gpu": {
+        "reason": null,
+        "samples": 241,
+        "p95": 0.508224,
+        "p99": 1.445888,
+        "discarded": 0
+      },
+      "scope": "8-second isolated WebGL lab; 11 synthetic batches of 700 real native route queries in a Worker or idle control. Frame overlap is temporal, not proof of cause."
+    },
+    {
+      "mode": "worker",
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": {
+        "count": 240,
+        "p95": 33.39000000000033,
+        "p99": 33.43000000000029,
+        "max": 33.44499999999971,
+        "over50": 0
+      },
+      "overlapping": {
+        "count": 22,
+        "p95": 33.375,
+        "p99": 33.44499999999971,
+        "max": 33.44499999999971,
+        "over50": 0
+      },
+      "nonOverlapping": {
+        "count": 218,
+        "p95": 33.39000000000033,
+        "p99": 33.429999999999836,
+        "max": 33.434999999999945,
+        "over50": 0
+      },
+      "jobs": [
+        {
+          "requestedAt": 1915.4150000065565,
+          "receivedAt": 1977.3500000014901,
+          "startedAt": 1916.51513671875,
+          "finishedAt": 1977.115234375,
+          "workerMs": 60.600000001490116,
+          "hash": 1269783446,
+          "queries": 700
+        },
+        {
+          "requestedAt": 2515.4150000065565,
+          "receivedAt": 2565.2200000062585,
+          "startedAt": 2516.240234375,
+          "finishedAt": 2565.06005859375,
+          "workerMs": 48.82000000029802,
+          "hash": 1269783446,
+          "queries": 700
+        },
+        {
+          "requestedAt": 3115.4300000071526,
+          "receivedAt": 3165.625,
+          "startedAt": 3116.215087890625,
+          "finishedAt": 3165.505126953125,
+          "workerMs": 49.28999999910593,
+          "hash": 1269783446,
+          "queries": 700
+        },
+        {
+          "requestedAt": 3715.4550000056624,
+          "receivedAt": 3764.3450000062585,
+          "startedAt": 3716.205078125,
+          "finishedAt": 3764.195068359375,
+          "workerMs": 47.99000000208616,
+          "hash": 1269783446,
+          "queries": 700
+        },
+        {
+          "requestedAt": 4315.45000000298,
+          "receivedAt": 4367.245000004768,
+          "startedAt": 4316.420166015625,
+          "finishedAt": 4367.09521484375,
+          "workerMs": 50.67499999701977,
+          "hash": 1269783446,
+          "queries": 700
+        },
+        {
+          "requestedAt": 4915.505000002682,
+          "receivedAt": 4964.295000001788,
+          "startedAt": 4916.360107421875,
+          "finishedAt": 4964.135009765625,
+          "workerMs": 47.774999998509884,
+          "hash": 1269783446,
+          "queries": 700
+        },
+        {
+          "requestedAt": 5515.4000000059605,
+          "receivedAt": 5565.320000000298,
+          "startedAt": 5516.545166015625,
+          "finishedAt": 5565.065185546875,
+          "workerMs": 48.519999995827675,
+          "hash": 1269783446,
+          "queries": 700
+        },
+        {
+          "requestedAt": 6115.45000000298,
+          "receivedAt": 6164.935000002384,
+          "startedAt": 6116.155029296875,
+          "finishedAt": 6164.775146484375,
+          "workerMs": 48.61999999731779,
+          "hash": 1269783446,
+          "queries": 700
+        },
+        {
+          "requestedAt": 6715.45000000298,
+          "receivedAt": 6764.3600000068545,
+          "startedAt": 6716.1650390625,
+          "finishedAt": 6764.22021484375,
+          "workerMs": 48.05499999970198,
+          "hash": 1269783446,
+          "queries": 700
+        },
+        {
+          "requestedAt": 7315.465000003576,
+          "receivedAt": 7364.190000005066,
+          "startedAt": 7316.085205078125,
+          "finishedAt": 7364.005126953125,
+          "workerMs": 47.92000000178814,
+          "hash": 1269783446,
+          "queries": 700
+        },
+        {
+          "requestedAt": 7915.430000007153,
+          "receivedAt": 7965.155000001192,
+          "startedAt": 7916.18017578125,
+          "finishedAt": 7965.025146484375,
+          "workerMs": 48.84499999880791,
+          "hash": 1269783446,
+          "queries": 700
+        }
+      ],
+      "gpu": {
+        "reason": null,
+        "samples": 241,
+        "p95": 0.48736,
+        "p99": 0.540544,
+        "discarded": 0
+      },
+      "scope": "8-second isolated WebGL lab; 11 synthetic batches of 700 real native route queries in a Worker or idle control. Frame overlap is temporal, not proof of cause."
+    },
+    {
+      "mode": "idle",
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": {
+        "count": 240,
+        "p95": 33.36500000000069,
+        "p99": 33.39499999999953,
+        "max": 33.445000000000164,
+        "over50": 0
+      },
+      "overlapping": {
+        "count": 0,
+        "p95": null,
+        "p99": null,
+        "max": null,
+        "over50": 0
+      },
+      "nonOverlapping": {
+        "count": 240,
+        "p95": 33.36500000000069,
+        "p99": 33.39499999999953,
+        "max": 33.445000000000164,
+        "over50": 0
+      },
+      "jobs": [],
+      "gpu": {
+        "reason": null,
+        "samples": 241,
+        "p95": 0.507808,
+        "p99": 0.516544,
+        "discarded": 0
+      },
+      "scope": "8-second isolated WebGL lab; 11 synthetic batches of 700 real native route queries in a Worker or idle control. Frame overlap is temporal, not proof of cause."
+    }
+  ]
+}

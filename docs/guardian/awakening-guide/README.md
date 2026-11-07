@@ -1,0 +1,7 @@
+# Awakening HUD guide validation — 2026-10-29
+
+Updated the existing native-HUD/Guardian fixture with the production AwakeningHud, tutorial target selector, SpiritVoice playback and language runtime. Language changes do not persist user preferences. No save is loaded or modified. The fixture lacked #notices, required by AwakeningHud.layout; this was a test-page setup error, not a production HUD regression. Build/Grow/Hide controls now leave the Awakening lesson mode correctly.
+
+Browser observations: Spanish and English select spirit.awakening.es/en respectively. Both reach the actual media ended state without fallback or face errors. The Guardian points at #awakeningButton while available; selecting it changes the target to null and the Guardian returns to the left of the bubble with its vortex. Zero legacy hand nodes, six Guardian draw calls, no reported errors. Saved JSON states and screenshots support these checks. The QA panel overlaps part of the idle Guardian in selected.png; the panel is fixture-only.
+
+20 focused tests pass: Awakening HUD, tutorial event/target rules and source-audio/lipsync matching. This is a component integration fixture using real production code, not a full campaign walkthrough, perceptual phoneme review or the still-pending continuous voiced opening-tutorial video. Portrait remains covered here only by the existing layout tests, not a new graphical run.

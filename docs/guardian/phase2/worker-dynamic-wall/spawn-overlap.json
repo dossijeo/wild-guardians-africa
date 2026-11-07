@@ -1,0 +1,172 @@
+{
+  "ready": true,
+  "campaign": false,
+  "paused": true,
+  "workerCandidate": "olderMale",
+  "workerGround": {
+    "profile": "olderMale",
+    "elapsed": 3006.7658599998904,
+    "phase": "recovery",
+    "minimum": 0.02480774042044409,
+    "footMinimum": 0.026406587625208644,
+    "limiter": {
+      "mesh": "Mesh0001",
+      "bone": "mixamorigHead",
+      "index": 10976
+    },
+    "count": 20548,
+    "wallProjection": [
+      {
+        "id": "structure-41",
+        "insideVertices": 5795,
+        "maxDepth": 0.21997070270098046,
+        "bones": {
+          "mixamorigLeftHand": 333,
+          "mixamorigLeftForeArm": 123,
+          "mixamorigLeftUpLeg": 3216,
+          "mixamorigRightUpLeg": 385,
+          "mixamorigLeftLeg": 510,
+          "mixamorigRightLeg": 688,
+          "mixamorigLeftToeBase": 5,
+          "mixamorigRightFoot": 412,
+          "mixamorigRightToeBase": 20,
+          "mixamorigRightToe_End": 58,
+          "mixamorigLeftFoot": 37,
+          "mixamorigLeftArm": 8
+        }
+      }
+    ],
+    "wallProjectionScope": "Horizontal navigation rectangles only; no wall height or triangle-contact test"
+  },
+  "workers": [
+    {
+      "id": "qa-worker-0",
+      "profile": "olderMale",
+      "x": 87.5,
+      "z": -4.394439399475232,
+      "status": "fleeing",
+      "hits": 1,
+      "fallRemaining": 0,
+      "recovery": {
+        "elapsed": 0.5383334922790549,
+        "duration": 3.1999999999999997,
+        "heading": 1.5707963267948966,
+        "dx": -0.5096175922080874,
+        "dz": 0.27328465362006676,
+        "fraction": 1
+      }
+    }
+  ],
+  "faceCandidate": false,
+  "faceCandidateSpecies": null,
+  "expressions": [
+    {
+      "id": "qa-worker-0",
+      "weights": [
+        0,
+        0,
+        0.4507517547655475
+      ],
+      "bindings": 10
+    },
+    {
+      "id": "qa-beast-1",
+      "weights": [
+        0,
+        0,
+        0.2896007645049124
+      ],
+      "bindings": 11
+    }
+  ],
+  "entityCounts": {
+    "workers": 1,
+    "structures": 2,
+    "crops": 12,
+    "animals": 1
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 0,
+  "maxVisibleGuardians": 0,
+  "guideTrial": false,
+  "guideOrigin": null,
+  "guidePosition": null,
+  "elapsed": 3006.7658599998904,
+  "simulate": true,
+  "clockMode": "Game.tick",
+  "shields": [],
+  "active": 0,
+  "origins": [],
+  "retainedAttacks": [],
+  "retainedDraws": 0,
+  "attackVisual": [],
+  "reused": 0,
+  "animalState": "attacking",
+  "animalPosition": [
+    84.26085655264045,
+    -8.187447999409489
+  ],
+  "draws": 56,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "npc_hit",
+      "at": 3002.685859999894,
+      "emitter": "qa-worker-0",
+      "played": false
+    },
+    {
+      "id": "beast_hit_character",
+      "at": 3002.685859999894,
+      "emitter": "qa-beast-1",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "build_place",
+      "at": 3006.7658599998904,
+      "emitter": "structure-41",
+      "played": false
+    },
+    {
+      "id": "build_complete",
+      "at": 3006.7658599998904,
+      "emitter": "structure-41",
+      "played": false
+    }
+  ],
+  "combatPhysics": {
+    "active": 0,
+    "physicsMs": 0.004999995231628418,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 0,
+    "maxStepMs": 0.08500003814697266,
+    "solverMs": 0,
+    "solverSteps": 0,
+    "bindingMs": 0,
+    "recoverySetupMs": 0,
+    "creationMs": 0,
+    "lastCreation": null,
+    "recoveryFollowMs": 0,
+    "bakedActive": 0,
+    "kinematic": 0
+  },
+  "physicsWorlds": 0,
+  "physicalBodies": 0,
+  "allDown": [
+    {
+      "id": "qa-beast-1",
+      "x": 84.26085655264045,
+      "z": -8.187447999409489
+    }
+  ],
+  "errors": [],
+  "report": null,
+  "commandCosts": []
+}

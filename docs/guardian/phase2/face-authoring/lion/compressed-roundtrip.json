@@ -1,0 +1,72 @@
+{
+  "source": "C:/tmp/guardian-faces/lion-portable.glb",
+  "edited": "content/source/actors/lion/expressive-candidate.glb",
+  "bones": 78,
+  "samples": 246,
+  "maxPosition": 0,
+  "maxAngle": 7.300048299977715e-8,
+  "clips": [
+    "Weapon_Combo_2",
+    "Weapon_Combo",
+    "Right_Hand_Sword_Slash",
+    "Charged_Upward_Slash",
+    "Walking",
+    "Running"
+  ],
+  "muzzle": {
+    "vertices": 1050,
+    "maxHeadRelativeError": 1.2072877792441454e-15,
+    "scope": "neutral core muzzle skin through all native clips",
+    "worst": {
+      "mesh": "Mesh_0_1",
+      "index": 11864,
+      "rest": [
+        -0.021850204983742995,
+        1.5497637892200347,
+        0.20415535901267426
+      ],
+      "weights": [
+        [
+          "Head",
+          1
+        ],
+        [
+          "Hips",
+          0
+        ],
+        [
+          "Hips",
+          0
+        ],
+        [
+          "Hips",
+          0
+        ]
+      ],
+      "clip": "Weapon_Combo",
+      "time": 1.875,
+      "expected": [
+        -0.34283443403781116,
+        1.4373401198590463,
+        1.1920761477396211
+      ],
+      "actual": [
+        -0.342834434037811,
+        1.4373401198590452,
+        1.1920761477396207
+      ]
+    },
+    "pass": true
+  },
+  "worstAngle": {
+    "bone": "LeftHandThumb2",
+    "clip": "Weapon_Combo_2",
+    "time": 3.895833468437195
+  },
+  "exactGeometry": {
+    "meshes": 5,
+    "attributes": 52,
+    "pass": true
+  },
+  "pass": true
+}

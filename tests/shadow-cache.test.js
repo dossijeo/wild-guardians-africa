@@ -18,6 +18,20 @@ function fixture() {
   return {scene,camera,light,mesh,renderer,uniforms,release,draw,close,get draws(){return draws;}};
 }
 
+test('shared skeleton is sampled once while bone, bind and skeleton replacement still invalidate',()=>{
+ const f=fixture(),bone=new THREE.Bone(),skeleton=new THREE.Skeleton([bone]);
+ const meshes=[0,1,2].map(()=>{const m=new THREE.SkinnedMesh(new THREE.BoxGeometry(),new THREE.MeshStandardMaterial());m.bind(skeleton);m.castShadow=true;f.scene.add(m);return m;});
+ let reads=0;const matrix=bone.matrixWorld;
+ Object.defineProperty(bone,'matrixWorld',{get(){reads++;return matrix;},configurable:true});
+ const capture=()=>shadowSnapshot(f.renderer,f.light,f.scene,f.camera);
+ const initial=capture();assert.ok(initial);assert.equal(reads,1);
+ const cache=new ShadowCache();cache.commit(initial);assert.ok(cache.matches(capture()));
+ matrix.elements[12]=2;assert.equal(cache.matches(capture()),false);matrix.elements[12]=0;
+ meshes[1].bindMatrix.elements[12]=1;assert.equal(cache.matches(capture()),false);meshes[1].bindMatrix.elements[12]=0;
+ meshes[2].skeleton=new THREE.Skeleton([bone]);assert.equal(cache.matches(capture()),false);
+ for(const m of meshes){m.geometry.dispose();m.material.dispose();}f.close();
+});
+
 test('static frames reuse both depth attachments while movement, explicit invalidation and target replacement redraw',()=>{
   const f=fixture();f.draw();f.draw();assert.equal(f.draws,1);assert.equal(f.release.cache.stats.hits,1);assert.equal(f.uniforms.uNativeShadowOn.value,1);
   f.mesh.position.x=2;f.draw();assert.equal(f.draws,2);f.draw();assert.equal(f.draws,2);
@@ -153,4 +167,10 @@ test('snapshots remain immutable and preserve exact values without version chang
   assert.ok(cache.matches(capture()),'independent snapshots compare by value');
   f.mesh.instanceMatrix.array[12]=3;assert.equal(cache.matches(capture(nan)),false);
   f.close();
+});
+
+test('shadow draw failure restores prior target, viewport and scissor without committing cache',()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),light=new THREE.DirectionalLight(),object=new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshStandardMaterial()),target={name:'prior'},shadowTarget={name:'failed'},originalViewport=new THREE.Vector4(2,3,40,50),originalScissor=new THREE.Vector4(5,6,20,30);let activeTarget=target,cube=3,mip=2,viewport=originalViewport.clone(),scissor=originalScissor.clone(),scissorTest=true;light.castShadow=true;scene.add(light,light.target);object.castShadow=true;scene.add(object);scene.updateMatrixWorld(true);camera.updateMatrixWorld(true);
+ const renderer={shadowMap:{enabled:true,autoUpdate:true,needsUpdate:false,type:THREE.PCFSoftShadowMap,render(){activeTarget=shadowTarget;cube=0;mip=0;viewport.set(0,0,1024,1024);scissor.set(0,0,1024,1024);scissorTest=false;throw Error('shadow failure');}},renderBufferDirect(){},getRenderTarget(){return activeTarget;},setRenderTarget(t,c,m){activeTarget=t;cube=c;mip=m;},getActiveCubeFace(){return cube;},getActiveMipmapLevel(){return mip;},getViewport(out){return out.copy(viewport);},setViewport(x,y,w,h){viewport.set(x,y,w,h);},getScissor(out){return out.copy(scissor);},setScissor(x,y,w,h){scissor.set(x,y,w,h);},getScissorTest(){return scissorTest;},setScissorTest(v){scissorTest=v;}};
+ const originalDraw=renderer.renderBufferDirect,release=installNativeShadow(renderer,light,createNativeShadowUniforms());try{assert.throws(()=>renderer.shadowMap.render([light],scene,camera),/shadow failure/);assert.equal(activeTarget,target);assert.equal(cube,3);assert.equal(mip,2);assert.deepEqual(viewport,originalViewport);assert.deepEqual(scissor,originalScissor);assert.equal(scissorTest,true);assert.equal(renderer.renderBufferDirect,originalDraw);assert.equal(release.cache.snapshot,null);}finally{release();light.shadow.map?.dispose();object.geometry.dispose();object.material.dispose();}
 });

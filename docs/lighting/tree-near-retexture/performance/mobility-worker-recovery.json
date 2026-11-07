@@ -1,0 +1,196 @@
+{
+  "results": [
+    {
+      "points": [
+        {
+          "x": 50,
+          "z": -10
+        },
+        {
+          "x": 70,
+          "z": -10
+        }
+      ],
+      "first": {
+        "kind": "result",
+        "id": 1,
+        "accepted": true,
+        "version": 1,
+        "value": 95
+      },
+      "fault": {
+        "kind": "error",
+        "id": 2,
+        "error": "Injected partial failure"
+      },
+      "blocked": {
+        "kind": "result",
+        "id": 3,
+        "accepted": false,
+        "reason": "poisoned",
+        "version": 1
+      },
+      "failedRecovery": {
+        "kind": "error",
+        "id": 4,
+        "error": "Injected reconstruction failure"
+      },
+      "stillBlocked": {
+        "kind": "result",
+        "id": 5,
+        "accepted": false,
+        "reason": "poisoned",
+        "version": 1
+      },
+      "recoveryMs": 415.2549999952316,
+      "oldSession": {
+        "kind": "result",
+        "id": 7,
+        "accepted": false,
+        "reason": "session",
+        "version": 0
+      },
+      "replay": {
+        "kind": "result",
+        "id": 8,
+        "accepted": true,
+        "version": 1,
+        "value": 95
+      },
+      "clear": [
+        false,
+        true
+      ],
+      "spatialSnapshotEqual": true,
+      "scope": "Fault injection after native barrier mutation; fail-closed private world, full fresh reconstruction and manual replay of one confirmed change. No production event log, simulation, visual continuity or frame timing."
+    },
+    {
+      "points": [
+        {
+          "x": 50,
+          "z": -10
+        },
+        {
+          "x": 70,
+          "z": -10
+        }
+      ],
+      "first": {
+        "kind": "result",
+        "id": 1,
+        "accepted": true,
+        "version": 1,
+        "value": 95
+      },
+      "fault": {
+        "kind": "error",
+        "id": 2,
+        "error": "Injected partial failure"
+      },
+      "blocked": {
+        "kind": "result",
+        "id": 3,
+        "accepted": false,
+        "reason": "poisoned",
+        "version": 1
+      },
+      "failedRecovery": {
+        "kind": "error",
+        "id": 4,
+        "error": "Injected reconstruction failure"
+      },
+      "stillBlocked": {
+        "kind": "result",
+        "id": 5,
+        "accepted": false,
+        "reason": "poisoned",
+        "version": 1
+      },
+      "recoveryMs": 417.3949999958277,
+      "oldSession": {
+        "kind": "result",
+        "id": 7,
+        "accepted": false,
+        "reason": "session",
+        "version": 0
+      },
+      "replay": {
+        "kind": "result",
+        "id": 8,
+        "accepted": true,
+        "version": 1,
+        "value": 95
+      },
+      "clear": [
+        false,
+        true
+      ],
+      "spatialSnapshotEqual": true,
+      "scope": "Fault injection after native barrier mutation; fail-closed private world, full fresh reconstruction and manual replay of one confirmed change. No production event log, simulation, visual continuity or frame timing."
+    },
+    {
+      "points": [
+        {
+          "x": 50,
+          "z": -10
+        },
+        {
+          "x": 70,
+          "z": -10
+        }
+      ],
+      "first": {
+        "kind": "result",
+        "id": 1,
+        "accepted": true,
+        "version": 1,
+        "value": 95
+      },
+      "fault": {
+        "kind": "error",
+        "id": 2,
+        "error": "Injected partial failure"
+      },
+      "blocked": {
+        "kind": "result",
+        "id": 3,
+        "accepted": false,
+        "reason": "poisoned",
+        "version": 1
+      },
+      "failedRecovery": {
+        "kind": "error",
+        "id": 4,
+        "error": "Injected reconstruction failure"
+      },
+      "stillBlocked": {
+        "kind": "result",
+        "id": 5,
+        "accepted": false,
+        "reason": "poisoned",
+        "version": 1
+      },
+      "recoveryMs": 417.4750000014901,
+      "oldSession": {
+        "kind": "result",
+        "id": 7,
+        "accepted": false,
+        "reason": "session",
+        "version": 0
+      },
+      "replay": {
+        "kind": "result",
+        "id": 8,
+        "accepted": true,
+        "version": 1,
+        "value": 95
+      },
+      "clear": [
+        false,
+        true
+      ],
+      "spatialSnapshotEqual": true,
+      "scope": "Fault injection after native barrier mutation; fail-closed private world, full fresh reconstruction and manual replay of one confirmed change. No production event log, simulation, visual continuity or frame timing."
+    }
+  ]
+}

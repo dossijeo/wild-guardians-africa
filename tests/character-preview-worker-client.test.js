@@ -1,0 +1,37 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createCharacterPreviewDataClient} from '../src/rendering/character-preview-worker-client.js';
+
+function fixture(){const messages=[],worker={postMessage:value=>messages.push(value),terminate(){this.terminated=true;}},client=createCharacterPreviewDataClient({workerFactory:()=>worker}),reply=(message,result)=>worker.onmessage({data:{id:message.id,session:message.session,result}});return {messages,worker,client,reply};}
+test('one auxiliary worker serves independent packages and returns transferable bytes',async()=>{
+ const f=fixture(),a=f.client.open('/a',{features:['texture-compression-bc']}),b=f.client.open('/b');assert.equal(f.messages.length,2);const [openA,openB]=f.messages;f.reply(openB,{id:'b',variant:'webp'});f.reply(openA,{id:'a',variant:'bc7'});const [left,right]=await Promise.all([a,b]);assert.equal(left.id,'a');assert.equal(right.id,'b');
+ const metadataPromise=left.loadMetadata(),metadataRequest=f.messages.at(-1),metadata={materials:{},mapping:{},texturePaths:['bc7/color.ktx2']};f.reply(metadataRequest,{metadataId:7,metadata});const received=await metadataPromise;await assert.rejects(left.loadTextures({}),/Invalid character texture/);const textures=left.loadTextures(received),textureRequest=f.messages.at(-1);assert.equal(textureRequest.metadataId,7);f.reply(textureRequest,[['bc7/color.ktx2',new Uint8Array([1,2]).buffer]]);assert.deepEqual([...(await textures).get('bc7/color.ktx2')],[1,2]);
+ const preview=right.loadPreview(),previewRequest=f.messages.at(-1);f.reply(previewRequest,new Uint8Array([3,4]).buffer);assert.deepEqual([...(await preview)],[3,4]);left.close();assert.equal(f.client.status().sessions,1);right.close();assert.equal(f.client.status().sessions,0);f.client.dispose();assert.equal(f.worker.terminated,true);
+});
+test('closing one session cancels its pending requests without affecting another',async()=>{
+ const f=fixture(),a=f.client.open('/a'),b=f.client.open('/b');f.reply(f.messages[0],{id:'a',variant:'webp'});f.reply(f.messages[1],{id:'b',variant:'webp'});const [left,right]=await Promise.all([a,b]),pending=left.loadPreview(),rejected=assert.rejects(pending,{name:'AbortError'});left.close();await rejected;const next=right.loadPreview();f.reply(f.messages.at(-1),new Uint8Array([9]).buffer);assert.deepEqual([...(await next)],[9]);right.close();f.client.dispose();
+});
+test('aborting or losing the auxiliary worker rejects pending opens and releases ownership',async()=>{
+ const f=fixture(),controller=new AbortController(),a=f.client.open('/a',{signal:controller.signal}),rejected=assert.rejects(a,{name:'AbortError'});controller.abort();await rejected;assert.equal(f.client.status().sessions,0);const b=f.client.open('/b'),failure=assert.rejects(b,/lost/);f.worker.onerror({message:'lost'});await failure;assert.equal(f.worker.terminated,true);assert.equal(f.client.status().closed,true);
+});
+test('WebP bitmap requests preserve session ownership and close late transfers',async()=>{
+ const f=fixture(),pending=f.client.open('/a');f.reply(f.messages[0],{id:'a',variant:'webp',supportsBitmaps:true});const stream=await pending,metadataPromise=stream.loadMetadata(),metadata={texturePaths:['webp/a.webp']};f.reply(f.messages.at(-1),{metadataId:3,metadata});await metadataPromise;
+ const images=stream.loadBitmaps(metadata),request=f.messages.at(-1),bitmap={close(){this.closed=true;}};f.worker.onmessage({data:{id:request.id,session:request.session,kind:'bitmaps',result:[['webp/a.webp',bitmap]]}});assert.equal((await images).get('webp/a.webp'),bitmap);
+ const late=stream.loadBitmaps(metadata),lateRequest=f.messages.at(-1),rejected=assert.rejects(late,{name:'AbortError'});stream.close();await rejected;const orphan={close(){this.closed=true;}};f.worker.onmessage({data:{id:lateRequest.id,session:lateRequest.session,kind:'bitmaps',result:[['webp/a.webp',orphan]]}});assert.equal(orphan.closed,true);assert.equal(bitmap.closed,undefined);f.client.dispose();
+});
+test('embedded GLB session transfers ownership and closes late bitmaps after cancellation',async()=>{
+ const f=fixture(),controller=new AbortController(),pending=f.client.prepareEmbeddedGlb('/crops.glb',{signal:controller.signal}),request=f.messages.at(-1);assert.equal(request.kind,'embedded-glb');const image={close(){this.closed=true;}},result={buffer:new ArrayBuffer(4),images:[image]};f.worker.onmessage({data:{id:request.id,session:request.session,kind:'embedded-glb',result}});assert.equal(await pending,result);assert.equal(f.client.status().sessions,0);assert.equal(image.closed,undefined);
+ const late=f.client.prepareEmbeddedGlb('/later.glb',{signal:controller.signal}),lateRequest=f.messages.at(-1),rejected=assert.rejects(late,{name:'AbortError'});controller.abort();await rejected;const orphan={close(){this.closed=true;}};f.worker.onmessage({data:{id:lateRequest.id,session:lateRequest.session,kind:'embedded-glb',result:{images:[orphan]}}});assert.equal(orphan.closed,true);f.client.dispose();
+});
+test('shared data worker transfers bitmap ownership and closes a cancelled late result',async()=>{
+ const f=fixture(),controller=new AbortController(),pending=f.client.loadBitmap('/assets/tree.png',{signal:controller.signal}),request=f.messages.at(-1),bitmap={close(){this.closed=true;}};assert.equal(request.kind,'bitmap');f.worker.onmessage({data:{id:request.id,session:request.session,kind:'bitmap',result:bitmap}});assert.equal(await pending,bitmap);assert.equal(bitmap.closed,undefined);assert.equal(f.client.status().sessions,0);
+ const late=f.client.loadBitmap('/assets/late.png',{signal:controller.signal}),lateRequest=f.messages.at(-1),rejected=assert.rejects(late,{name:'AbortError'});controller.abort();await rejected;const orphan={close(){this.closed=true;}};f.worker.onmessage({data:{id:lateRequest.id,session:lateRequest.session,kind:'bitmap',result:orphan}});assert.equal(orphan.closed,true);f.client.dispose();
+});
+test('shared data worker transfers binary data with independent cancellation',async()=>{
+ const f=fixture(),controller=new AbortController(),pending=f.client.loadArrayBuffer('/assets/tree.bin',{signal:controller.signal}),request=f.messages.at(-1),buffer=new Uint8Array([1,2,3]).buffer;assert.equal(request.kind,'array-buffer');f.worker.onmessage({data:{id:request.id,session:request.session,kind:'array-buffer',result:buffer}});assert.equal(await pending,buffer);assert.equal(f.client.status().sessions,0);
+ const late=f.client.loadArrayBuffer('/assets/late.bin',{signal:controller.signal}),rejected=assert.rejects(late,{name:'AbortError'});controller.abort();await rejected;assert.equal(f.client.status().sessions,0);f.client.dispose();
+});
+test('native BC7 requests use an independent cancellable worker session',async()=>{
+ const f=fixture(),controller=new AbortController(),sha256='a'.repeat(64),pending=f.client.loadNativeBc7('/tree.ktx2',{signal:controller.signal,sha256}),request=f.messages.at(-1),result={buffer:new ArrayBuffer(16),width:4,height:4,mipmaps:[]};assert.equal(request.kind,'native-bc7');assert.equal(request.sha256,sha256);f.reply(request,result);assert.equal(await pending,result);assert.equal(f.client.status().sessions,0);
+ const late=f.client.loadNativeBc7('/late.ktx2',{signal:controller.signal,sha256}),rejected=assert.rejects(late,{name:'AbortError'});controller.abort();await rejected;assert.equal(f.client.status().sessions,0);await assert.rejects(f.client.loadNativeBc7('/bad.ktx2',{sha256:'bad'}),/Invalid native BC7/);f.client.dispose();
+});

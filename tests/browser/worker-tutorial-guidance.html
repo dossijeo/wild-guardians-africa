@@ -1,0 +1,23 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {newGame} from '../../src/simulation/game.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+import {createSimulation} from './mobility-worker-simulation-core.js';
+window.audit=async()=>{
+ const fixture=await createSimulation({mangrove:true}),villages=structuredClone(fixture.diagnosticWorld().game.villages);fixture.dispose();
+ const game=newGame({seed:712,biome:'manglares',slotId:'tutorial-worker'});game.villages=villages;game.tutorial.step='center';game.pauses=[];
+ const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
+ const client=createSimulationAuthorityClient({snapshot:serialize(game),chunkKeys:chunks,session:'tutorial-guidance'});
+ const send=async command=>{const request=client.submit(command);if(!request.accepted)throw Error('Command rejected');return request.result;};
+ try{
+  await client.ready;const initial=await send({kind:'snapshot'}),guide={kind:'tutorialActionPause',hudTarget:true,worldTarget:false,selectionOpen:false};
+  const paused=await send(guide),held=await send({kind:'advance',seconds:.2,nightFastForward:false});
+  if(!paused.value||!paused.pauses.includes('tutorial-action')||held.elapsed!==initial.elapsed)throw Error('Guidance did not pause simulation');
+  const heldOpen=await send({...guide,hudTarget:false,selectionOpen:true});if(!heldOpen.value)throw Error('Selection lost guidance pause');
+  await send({kind:'pause',reason:'menu'});const menu=await send(guide);if(menu.value||menu.pauses.includes('tutorial-action')||!menu.pauses.includes('menu'))throw Error('Menu and guidance pauses conflict');
+  await send({kind:'resume',reason:'menu'});const stopped=await send({...guide,hudTarget:false});const advanced=await send({kind:'advance',seconds:.2,nightFastForward:false});
+  if(stopped.value||advanced.elapsed<=held.elapsed)throw Error('Simulation did not resume without guidance');
+  return {initial:initial.elapsed,paused:held.elapsed,resumed:advanced.elapsed,scope:'Real Worker with a new game and programmatic tutorial guidance commands. No rendered tutorial UI or saved game.'};
+ }finally{client.dispose();}
+};window.ready=true;
+</script>

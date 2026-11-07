@@ -1,0 +1,17 @@
+{
+  "authority": "spatial-wasm",
+  "network": true,
+  "animals": 20,
+  "chunks": 25,
+  "refused": {
+    "reason": "version-capacity",
+    "version": 15,
+    "elapsed": 0.7500000000000004
+  },
+  "snapshotUnchanged": true,
+  "retryVersion": 16,
+  "finalSnapshotEqual": true,
+  "eventEqual": true,
+  "receivedEvents": 12,
+  "scope": "QA Worker, 15 unconfirmed versions, forced capacity refusal then confirmation and retry. Frozen scene; no rendering, real input, Rapier, loss recovery, safe horizon or performance claim."
+}

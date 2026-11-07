@@ -1,0 +1,27 @@
+// Run against the normal game with VITE_PRESENTATION_BACKEND=webgpu-worker and
+// VITE_HISTORICAL_PRESENTATION_RECOVERY=true. No GPU fallback flags or warmups.
+import {mkdir,writeFile} from 'node:fs/promises';
+import {resolve} from 'node:path';
+import {pathToFileURL} from 'node:url';
+const modulePath=process.env.PLAYWRIGHT_MODULE;
+const {chromium}=await import(modulePath?pathToFileURL(resolve(modulePath)).href:'playwright');
+const out=resolve(process.env.QA_OUT??'.cache/integrated-device-recovery');await mkdir(out,{recursive:true});
+const browser=await chromium.launch({channel:process.env.QA_BROWSER??'msedge',headless:process.env.QA_HEADED!=='1',...(process.env.QA_DEBUG_PORT?{args:['--remote-debugging-port='+Number(process.env.QA_DEBUG_PORT)]}:{})});
+const report={scope:'Normal game, real WebGPU device destruction and automatic replacement. Functional validation, not a performance benchmark.',started:new Date().toISOString(),errors:[],console:[],samples:[]};
+try{
+ const cdp=await browser.newBrowserCDPSession();report.gpu=(await cdp.send('SystemInfo.getInfo')).gpu;
+ const page=await browser.newPage({viewport:{width:1280,height:720}});page.on('pageerror',e=>report.errors.push(String(e)));page.on('console',m=>{if(m.type()==='error')report.console.push(m.text());});
+ await page.addInitScript(()=>{window.__qaUiErrors=[];document.addEventListener('DOMContentLoaded',()=>new MutationObserver(()=>{for(const node of document.querySelectorAll('.error-banner,.command-feedback')){const text=node.textContent;if(text&&window.__qaUiErrors.at(-1)?.text!==text)window.__qaUiErrors.push({at:performance.now(),text});}}).observe(document.documentElement,{subtree:true,childList:true,characterData:true}));});
+ const url=process.env.QA_URL??'http://127.0.0.1:5187/?qa-worker-game&qa-worker-raid&qa-webgpu-world&qa-webgpu-recovery&qa-webgpu-all-actors&qa-seed=712&wildEngineThreads=0';report.url=url;
+ await page.goto(url,{waitUntil:'domcontentloaded'});
+ async function inspect(){return page.evaluate(async()=>{const qa=window.wildGuardiansWorkerQa?.(),cameraTerrain=window.wildGuardiansWebGpuCameraTerrainQa?.(),uiErrors=window.__qaUiErrors;let surface=null,inspectionError=null;try{surface=await window.wildGuardiansWebGpuWorldQa?.();}catch(e){inspectionError=String(e);}return {qa,cameraTerrain,uiErrors,surface,inspectionError};});}
+ async function until(predicate,label,limit=600000){const started=Date.now();let sample,lastLog=0;while(Date.now()-started<limit){sample=await inspect();report.samples.push({phase:label,at:Date.now()-started,screen:sample.qa?.screen,elapsed:sample.qa?.elapsed,state:sample.surface?.state,admission:sample.surface?.preparation?.admission,uiErrors:sample.uiErrors,inspectionError:sample.inspectionError});if(Date.now()-lastLog>10000){lastLog=Date.now();await writeFile(resolve(out,'latest.json'),JSON.stringify(sample,null,2));console.log(JSON.stringify({label,screen:sample.qa?.screen,sequence:sample.surface?.state?.sequence,base:sample.qa?.status?.recoveryBaseSequence,ready:sample.surface?.actors?.ready,count:sample.surface?.actors?.count,preparation:sample.surface?.preparation?.admission}));}if(sample.uiErrors?.length||report.errors.length)throw Error(`${label}: ${JSON.stringify(sample.uiErrors??report.errors)}`);if(predicate(sample))return sample;await page.waitForTimeout(1000);}throw Error(`${label} timed out: ${JSON.stringify(sample)}`);}
+ report.before=await until(s=>s.qa?.screen==='game'&&s.surface?.backend==='WebGPU'&&s.surface.phase==='running'&&s.surface.state.sequence>0&&s.surface.actors?.ready===s.surface.actors?.count&&Number.isSafeInteger(s.qa.status?.recoveryBaseSequence),'ready');
+ if(report.before.surface.device?.adapter?.isFallbackAdapter!==false)throw Error('Hardware WebGPU adapter was not verified');
+ await page.screenshot({path:resolve(out,'before.png')});
+ report.atLoss=await inspect();await page.evaluate(()=>window.wildGuardiansWebGpuLoseDeviceQa());
+ report.after=await until(s=>s.surface?.backend==='WebGPU'&&s.surface.phase==='running'&&s.surface.inspectionGeneration!==report.atLoss.surface.inspectionGeneration&&s.surface.state.sequence>report.atLoss.surface.state.sequence&&s.surface.resident>0&&s.surface.actors?.ready===s.surface.actors?.count,'automatic recovery');
+ const events=report.after.surface.recoveryEvents.map(e=>e.id);if(new Set(events).size!==events.length)throw Error('Repeated recovered event IDs');
+ const oldTime=report.after.qa.elapsed;report.resumed=await until(s=>s.qa.elapsed>oldTime&&s.surface.state.lastElapsed>report.atLoss.surface.state.lastElapsed,'resumed simulation',120000);
+ await page.screenshot({path:resolve(out,'after.png')});report.passed=true;
+}catch(error){report.failure=String(error.stack??error);process.exitCode=1;}finally{report.finished=new Date().toISOString();await writeFile(resolve(out,'report.json'),JSON.stringify(report,null,2));await browser.close();console.log(JSON.stringify({passed:report.passed??false,failure:report.failure,out}));}

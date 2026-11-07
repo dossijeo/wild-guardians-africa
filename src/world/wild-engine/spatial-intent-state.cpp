@@ -138,6 +138,18 @@ struct IntentState {
   std::vector<float> routes;
   std::vector<std::pair<uint64_t,uint64_t>> proposals;
   std::unordered_map<uint64_t,ActiveIntent> activeIntents;
+#ifdef WILD_DECLARATIVE_ATTACK
+  // Experimental high-level intent survives loss of its current route/target.
+  // Never used by the production binary.
+  struct AttackDeclaration {double radius;int profile;bool dirty;
+    bool waiting=false;double since=0,next=0;int attempts=0;
+    bool blockedApproach=false;};
+  std::unordered_map<uint64_t,AttackDeclaration> attackDeclarations;
+  std::set<std::pair<double,uint64_t>> attackDeadlines;
+#ifdef WILD_DECLARATIVE_STATS
+  uint64_t attackWakeEvents=0,attackWakeVisits=0,attackWakeIdle=0,attackWakeTransitions=0;
+#endif
+#endif
   std::unordered_map<uint64_t,std::unordered_set<uint64_t>> byTarget,byTask;
   std::unordered_map<uint64_t,std::unordered_set<uint64_t>> byBlockedCropGroup;
   std::vector<double> wallOpportunityActors;
@@ -169,11 +181,33 @@ struct IntentState {
   bool proposalOpen=false;
 };
 IntentState& state(){static IntentState* value=new IntentState();return *value;}
+#ifdef WILD_DECLARATIVE_ATTACK
+void clearAttackDeadline(IntentState& s,uint64_t actor){
+  const auto found=s.attackDeclarations.find(actor);
+  if(found==s.attackDeclarations.end()||!found->second.waiting)return;
+  s.attackDeadlines.erase({found->second.next,actor});found->second.waiting=false;
+}
+#endif
 bool integer(double value,bool allowZero=false){
   return std::isfinite(value)&&value>=double(allowZero?0:1)&&
     value<=maxId&&std::floor(value)==value;
 }
 bool coordinate(double value){return std::isfinite(value)&&std::abs(value)<2147483000.0;}
+#ifdef WILD_DECLARATIVE_ATTACK
+bool validAttackTransients(const IntentState& s,int blockers,int reserved){
+  if(blockers<0||blockers>100000||reserved<0||reserved>100000||
+     s.attackBlockers.size()!=size_t(blockers)*3||
+     s.attackReservedTargets.size()!=size_t(reserved))return false;
+  for(int i=0;i<blockers;i++){
+    const size_t at=size_t(i)*3;
+    if(!coordinate(s.attackBlockers[at])||!coordinate(s.attackBlockers[at+1])||
+       !std::isfinite(s.attackBlockers[at+2])||s.attackBlockers[at+2]<=0||
+       s.attackBlockers[at+2]>2)return false;
+  }
+  for(double id:s.attackReservedTargets)if(!integer(id))return false;
+  return true;
+}
+#endif
 bool parse(const double* row,Change& change){
   if(!integer(row[0],true)||row[0]>1||!integer(row[1])||row[1]>6||
     !integer(row[2]))return false;
@@ -298,6 +332,13 @@ void invalidateDependents(IntentState& s,const Change& change){
     const auto active=s.activeIntents.find(actor);
     if(active==s.activeIntents.end())continue;
     if(active->second.animal){
+#ifdef WILD_DECLARATIVE_ATTACK
+      const auto declaration=s.attackDeclarations.find(actor);
+      if(declaration!=s.attackDeclarations.end()){
+        clearAttackDeadline(s,actor);declaration->second.dirty=true;
+        declaration->second.blockedApproach=false;
+      }
+#endif
       if(active->second.state==PlanningState::ActionActive){
         // A committed strike resolves against its original target ID at the
         // animation's damage frame. Its lease becomes stale, but the hit is
@@ -610,6 +651,12 @@ void nav_intent_reset(){
   s.session++;
   if(!s.session)s.session=1;
   s.activeIntents.clear();s.byTarget.clear();s.byTask.clear();
+#ifdef WILD_DECLARATIVE_ATTACK
+  s.attackDeclarations.clear();s.attackDeadlines.clear();
+#ifdef WILD_DECLARATIVE_STATS
+  s.attackWakeEvents=s.attackWakeVisits=s.attackWakeIdle=s.attackWakeTransitions=0;
+#endif
+#endif
   s.byBlockedCropGroup.clear();s.wallOpportunityActors.clear();
   s.routeSlots.clear();s.intentChanges.clear();s.intentResult.fill(0);
   s.attackRouteInput.clear();s.attackBlockers.clear();
@@ -851,6 +898,24 @@ int nav_intent_apply_changes(double sequence,int count){
   for(const Change& change:parsed){
     if(change.kind==2||change.kind==5)s.cropProtection.erase(change.id);
     invalidateDependents(s,change);
+#ifdef WILD_DECLARATIVE_ATTACK
+    if(change.kind==2||change.kind==5){
+#ifdef WILD_DECLARATIVE_STATS
+      s.attackWakeEvents++;
+#endif
+      for(auto& [actor,declaration]:s.attackDeclarations){
+#ifdef WILD_DECLARATIVE_STATS
+        s.attackWakeVisits++;
+#endif
+        if(!s.activeIntents.count(actor)){
+#ifdef WILD_DECLARATIVE_STATS
+          s.attackWakeIdle++;if(!declaration.dirty)s.attackWakeTransitions++;
+#endif
+          declaration.dirty=true;
+        }
+      }
+    }
+#endif
     if(!change.op){
       if(change.kind==1)s.workers.erase(change.id);
       else if(change.kind==2){
@@ -1258,6 +1323,9 @@ double nav_intent_actor_planning_calls(double actorId){
 int nav_intent_retire_actor(double actorId){
   if(!integer(actorId))return 0;
   IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+#ifdef WILD_DECLARATIVE_ATTACK
+  clearAttackDeadline(s,actor);s.attackDeclarations.erase(actor);
+#endif
   const auto active=s.activeIntents.find(actor);
   if(active!=s.activeIntents.end()){
     // The caller has already removed this actor from the confirmed game.
@@ -1327,6 +1395,19 @@ bool activeRouteClear(const IntentState& s,const ActiveIntent& intent){
   }
   return true;
 }
+#ifdef WILD_SECTOR_CHANGE_TRACE
+// Diagnostic only: inspect the real pinned route/cursor without mutating it.
+int nav_intent_debug_route_clear(double actorId){
+  if(!integer(actorId))return -1;
+  IntentState& s=state();const auto found=s.activeIntents.find(uint64_t(actorId));
+  if(found==s.activeIntents.end()||found->second.state!=PlanningState::RouteActive)return -1;
+  const int previous=lazy_selected_context();
+  if(previous!=found->second.profile)spatial_select_nav_profile_index(found->second.profile);
+  const bool clear=activeRouteClear(s,found->second);
+  if(previous!=found->second.profile)spatial_select_nav_profile_index(previous);
+  return clear?1:0;
+}
+#endif
 // JS movement consumes a suffix of the pinned native route. At a topology
 // event, accept that progress only when every remaining point exactly matches
 // the native suffix. An unmatched JS path forces a conservative reroute at
@@ -1387,6 +1468,10 @@ int nav_intent_reconcile_topology(){
   for(const auto& [actor,revision]:affected){
     ActiveIntent& intent=s.activeIntents.at(actor);
     if(intent.animal){
+#ifdef WILD_DECLARATIVE_ATTACK
+      const auto declaration=s.attackDeclarations.find(actor);
+      if(declaration!=s.attackDeclarations.end())declaration->second.dirty=true;
+#endif
       // A wall can invalidate the travel route without invalidating the
       // target or its exclusive lease. The caller supplies the animal's live
       // position at this event boundary for a same-target native reroute.
@@ -1511,6 +1596,10 @@ int nav_intent_request_reroute(double actorId){
       found->second.state!=PlanningState::WaitingUnknown&&
       found->second.state!=PlanningState::WaitingBlocked))return 0;
   ActiveIntent& intent=found->second;
+#ifdef WILD_DECLARATIVE_ATTACK
+  const auto declaration=s.attackDeclarations.find(uint64_t(actorId));
+  if(declaration!=s.attackDeclarations.end())declaration->second.dirty=true;
+#endif
   releaseRoute(s,intent);intent.state=PlanningState::NeedsPlan;
   intent.topology=lazy_route_revision();
   emitIntentChange(s,intent);s.invalidations++;
@@ -2046,6 +2135,152 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
   s.attackResult[8]=regionQueries;s.attackResult[9]=routeQueries;
   return int(s.attackResult[0]);
 }
+#ifdef WILD_DECLARATIVE_ATTACK
+#ifdef WILD_DECLARATIVE_STATS
+void nav_declarative_attack_wake_reset(){auto& s=state();s.attackWakeEvents=s.attackWakeVisits=s.attackWakeIdle=s.attackWakeTransitions=0;}
+double nav_declarative_attack_wake_events(){return double(state().attackWakeEvents);}
+double nav_declarative_attack_wake_visits(){return double(state().attackWakeVisits);}
+double nav_declarative_attack_wake_idle(){return double(state().attackWakeIdle);}
+double nav_declarative_attack_wake_transitions(){return double(state().attackWakeTransitions);}
+#endif
+// The embedding supplies current actor position and the existing transient
+// collision/lease facts at an event boundary. No movement policy is replaced.
+int nav_declarative_attack_declare(double actorId,double x,double z,double radius,
+                                   int eligible,int blockers,int reserved){
+  IntentState& s=state();
+  if(!integer(actorId)||s.attackDeclarations.count(uint64_t(actorId)))return -2;
+  const int profile=lazy_selected_context();
+  const int result=nav_intent_plan_attack_crop(actorId,x,z,radius,eligible,blockers,reserved);
+  if(result>=0)s.attackDeclarations.emplace(uint64_t(actorId),
+    IntentState::AttackDeclaration{radius,profile,false});
+  return result;
+}
+int nav_declarative_attack_present(double actorId){
+  return integer(actorId)&&state().attackDeclarations.count(uint64_t(actorId))?1:0;
+}
+// Adopt an already restored crop route without changing its lease or route.
+int nav_declarative_attack_adopt(double actorId,double radius){
+  if(!integer(actorId)||!std::isfinite(radius)||radius<=0||radius>2)return -1;
+  IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  if(s.attackDeclarations.count(actor))return 0;
+  const auto active=s.activeIntents.find(actor);
+  if(active==s.activeIntents.end()||!active->second.animal||
+     active->second.state!=PlanningState::RouteActive)return -2;
+  const auto target=s.targets.find(active->second.target);
+  if(target==s.targets.end()||!target->second.active||
+     (target->second.kind!=1&&target->second.kind!=2))return -3;
+  s.attackDeclarations.emplace(actor,IntentState::AttackDeclaration{
+    radius,active->second.profile,false});return 1;
+}
+int nav_declarative_attack_reconcile(double actorId,double x,double z,
+                                     int eligible,int blockers,int reserved){
+  if(!integer(actorId)||!coordinate(x)||!coordinate(z)||
+     (eligible!=0&&eligible!=1)||blockers<0||blockers>100000||
+     reserved<0||reserved>100000)return -1;
+  IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  const auto declaration=s.attackDeclarations.find(actor);
+  if(declaration==s.attackDeclarations.end())return -2;
+  if(!declaration->second.dirty)return 5;
+  if(lazy_selected_context()!=declaration->second.profile)return -3;
+  if(!validAttackTransients(s,blockers,reserved))return -1;
+  const auto active=s.activeIntents.find(actor);
+  if(active!=s.activeIntents.end()){
+    if(active->second.state==PlanningState::ActionActive)return 6;
+    if(active->second.state!=PlanningState::NeedsPlan)return 7;
+    const int result=nav_intent_replan_attack_route(actorId,x,z,
+      active->second.approachX,active->second.approachZ);
+    if(result==3&&spatial_world_route_reason()==0){
+      // Preserve the existing raid ordering: release at this actor's action
+      // boundary and choose a replacement at a later selection boundary.
+      clearAttackDeadline(s,actor);
+      declaration->second.blockedApproach=true;
+      declaration->second.dirty=false;return 8;
+    }
+    if(result==1)clearAttackDeadline(s,actor);
+    if(result>=0)declaration->second.dirty=false;
+    return result;
+  }
+  const int result=nav_intent_plan_attack_crop(actorId,x,z,
+    declaration->second.radius,eligible,blockers,reserved);
+  if(result>=0)declaration->second.dirty=false;
+  return result;
+}
+// Apply the blocked-approach transition at the same ordered actor boundary as
+// the current raid policy. The high-level goal is retained for selection at
+// the next boundary; other actors may claim their own reservations in between.
+int nav_declarative_attack_release_blocked(double actorId){
+  if(!integer(actorId))return -1;
+  IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  const auto declaration=s.attackDeclarations.find(actor);
+  if(declaration==s.attackDeclarations.end()||!declaration->second.blockedApproach)return 0;
+  const auto active=s.activeIntents.find(actor);
+  if(active==s.activeIntents.end()||active->second.state==PlanningState::ActionActive)return -2;
+  clearAttackDeadline(s,actor);releaseIntent(s,actor,PlanningState::Cancelled);
+  s.activeIntents.erase(actor);declaration->second.blockedApproach=false;
+  declaration->second.dirty=true;return 1;
+}
+int nav_declarative_attack_cancel(double actorId){
+  if(!integer(actorId))return -1;
+  IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  const auto declaration=s.attackDeclarations.find(actor);
+  if(declaration==s.attackDeclarations.end())return 0;
+  const auto active=s.activeIntents.find(actor);
+  if(active!=s.activeIntents.end()&&active->second.state==PlanningState::ActionActive)return -2;
+  if(active!=s.activeIntents.end()){
+    releaseIntent(s,actor,PlanningState::Cancelled);s.activeIntents.erase(actor);
+  }
+  clearAttackDeadline(s,actor);s.attackDeclarations.erase(actor);return 1;
+}
+// A scheduler can sleep until this single world-level deadline. It must
+// service all due actors in ascending deadline/ID order at the boundary.
+double nav_declarative_attack_next_deadline(){
+  const auto& deadlines=state().attackDeadlines;
+  return deadlines.empty()?std::numeric_limits<double>::infinity():deadlines.begin()->first;
+}
+double nav_declarative_attack_next_due(double now){
+  if(!std::isfinite(now))return -1;
+  const auto& deadlines=state().attackDeadlines;
+  return deadlines.empty()||deadlines.begin()->first>now?0:double(deadlines.begin()->second);
+}
+int nav_declarative_attack_begin_wait(double actorId,double now){
+  if(!integer(actorId)||!std::isfinite(now)||now<0||!std::isfinite(now+90))return -1;
+  IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  const auto declaration=s.attackDeclarations.find(actor);
+  const auto active=s.activeIntents.find(actor);
+  if(declaration==s.attackDeclarations.end()||active==s.activeIntents.end()||
+     active->second.state!=PlanningState::WaitingUnknown)return -2;
+  if(declaration->second.waiting)return 0;
+  auto& wait=declaration->second;wait.waiting=true;wait.since=now;wait.next=now+8;wait.attempts=0;
+  s.attackDeadlines.insert({wait.next,actor});return 1;
+}
+// 8 requests an ordered blocked-approach transition. 9 means the bounded wait
+// expired; the caller retains authority for the established retreat policy.
+int nav_declarative_attack_service_wait(double actorId,double now,double x,double z,
+                                        int eligible,int blockers,int reserved){
+  if(!integer(actorId)||!std::isfinite(now)||!coordinate(x)||!coordinate(z)||
+     (eligible!=0&&eligible!=1))return -1;
+  IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  const auto found=s.attackDeclarations.find(actor);
+  if(found==s.attackDeclarations.end()||!found->second.waiting)return -2;
+  auto& wait=found->second;
+  if(now<wait.since)return -1;
+  if(now<wait.next)return 5;
+  if(s.attackDeadlines.empty()||s.attackDeadlines.begin()->second!=actor)return -5;
+  if(now-wait.since>=90){clearAttackDeadline(s,actor);return 9;}
+  if(lazy_selected_context()!=wait.profile)return -3;
+  if(!validAttackTransients(s,blockers,reserved))return -1;
+  if(nav_intent_request_reroute(actorId)!=1)return -4;
+  wait.dirty=true;
+  const int result=nav_declarative_attack_reconcile(actorId,x,z,eligible,blockers,reserved);
+  if(result==1)return 1;
+  if(result==8)return 8;
+  if(!s.activeIntents.count(actor)){clearAttackDeadline(s,actor);return result;}
+  if(result!=3)return result;
+  s.attackDeadlines.erase({wait.next,actor});wait.attempts++;
+  wait.next=std::min(wait.since+90,now+8*(1<<std::min(wait.attempts,3)));
+  s.attackDeadlines.insert({wait.next,actor});return 3;
+}
+#endif
 // Experimental complete wall proposal. Crop groups nominate only first
 // crossings of certified enclosures; the native route and attack-site lease
 // then confirm one physically reachable, unreserved wall in the same call.
@@ -2193,6 +2428,12 @@ int nav_intent_attack_finished(double actorId){
   if(found==s.activeIntents.end()||!found->second.animal||
      found->second.state!=PlanningState::ActionActive)return -1;
   const int tactical=found->second.tacticalPending?1:0;
+#ifdef WILD_DECLARATIVE_ATTACK
+  const auto declaration=s.attackDeclarations.find(actor);
+  if(declaration!=s.attackDeclarations.end()){
+    clearAttackDeadline(s,actor);declaration->second.dirty=true;
+  }
+#endif
   releaseIntent(s,actor,PlanningState::Cancelled);
   s.activeIntents.erase(actor);
   return tactical;

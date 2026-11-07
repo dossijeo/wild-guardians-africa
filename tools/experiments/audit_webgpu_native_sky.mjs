@@ -1,0 +1,13 @@
+import {createRequire} from 'node:module';
+import {mkdir} from 'node:fs/promises';
+import {join} from 'node:path';
+const require=createRequire(import.meta.url),{chromium}=require(process.env.PLAYWRIGHT_MODULE??'playwright'),browser=await chromium.launch({channel:'msedge',headless:true});
+try{
+ const page=await browser.newPage(),errors=[];page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
+ await page.route('**/webgpu-native-sky',route=>route.fulfill({status:200,contentType:'text/html',body:'<!doctype html>'}));await page.goto((process.env.QA_BASE_URL??'http://127.0.0.1:5175')+'/webgpu-native-sky');
+ const results=await page.evaluate(async()=>{async function run(mode){return await new Promise((resolve,reject)=>{const worker=new Worker('/tests/browser/webgpu-native-sky-worker.js',{type:'module'}),canvas=new OffscreenCanvas(256,256);worker.onerror=e=>reject(Error(e.message));worker.onmessage=({data})=>{worker.terminate();data.error?reject(Error(data.error)):resolve(data);};worker.postMessage({mode,canvas},[canvas]);});}const reference=await run('webgl'),candidate=await run('webgpu');return {reference:reference.frames.map(a=>Array.from(a)),candidate:candidate.frames.map(a=>Array.from(a))};});if(errors.length)throw Error(JSON.stringify(errors));
+ const flipped=frame=>{const output=new Uint8Array(frame.length);for(let y=0;y<256;y++)output.set(frame.slice(y*1024,(y+1)*1024),(255-y)*1024);return output;};
+ const stats=results.reference.map((reference,i)=>{const candidate=flipped(results.candidate[i]);let sum=0,max=0,count=0;for(let j=0;j<reference.length;j+=4)for(let c=0;c<3;c++){const d=Math.abs(reference[j+c]-candidate[j+c]);sum+=d;max=Math.max(max,d);count++;}return {meanAbs:sum/count,max};});if(stats.some(row=>row.meanAbs>1))throw Error('Sky visual difference exceeds tolerance: '+JSON.stringify(stats));
+ if(process.env.QA_CAPTURE_DIR){const sharp=require('sharp');await mkdir(process.env.QA_CAPTURE_DIR,{recursive:true});for(const i of [0,2]){const name=i===0?'day':'night';await sharp(flipped(results.reference[i]),{raw:{width:256,height:256,channels:4}}).png().toFile(join(process.env.QA_CAPTURE_DIR,`${name}-reference.png`));await sharp(Uint8Array.from(results.candidate[i]),{raw:{width:256,height:256,channels:4}}).png().toFile(join(process.env.QA_CAPTURE_DIR,`${name}-webgpu.png`));}}
+ console.log(JSON.stringify({backend:'WebGPU',comparison:'NativeSky WebGL reference; readback vertically aligned',stats,scope:'Day, transition and night; one camera, isolated sky, no gameplay or performance comparison.'}));
+}finally{await browser.close();}

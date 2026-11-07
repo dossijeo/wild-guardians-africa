@@ -1,0 +1,3015 @@
+{
+  "runs": [
+    {
+      "name": "base",
+      "fadeSeconds": 1,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "selected": {
+        "id": "spatial:0:-1:21",
+        "slot": 3,
+        "x": -2.6859482881760885,
+        "z": 185.09613374722403,
+        "ready": 0
+      },
+      "before": [
+        88.29358523571148,
+        18.67490205068118,
+        33.67950453713969
+      ],
+      "after": [
+        14.01652703206659,
+        18.674902050681204,
+        215.66980974313364
+      ],
+      "frozen": true,
+      "scope": "Per-update instrumented camera path; nearby state is not pixel visibility. Not a CPU/GPU benchmark.",
+      "samples": [
+        {
+          "ms": 0,
+          "total": 12,
+          "unready": []
+        },
+        {
+          "ms": 39.50499999895692,
+          "total": 12,
+          "unready": []
+        },
+        {
+          "ms": 94.42999999970198,
+          "total": 9,
+          "unready": []
+        },
+        {
+          "ms": 132.17999999970198,
+          "total": 8,
+          "unready": []
+        },
+        {
+          "ms": 173.73499999940395,
+          "total": 10,
+          "unready": []
+        },
+        {
+          "ms": 229.8449999988079,
+          "total": 12,
+          "unready": []
+        },
+        {
+          "ms": 274.51499999687076,
+          "total": 14,
+          "unready": []
+        },
+        {
+          "ms": 321.8449999988079,
+          "total": 13,
+          "unready": []
+        },
+        {
+          "ms": 359.5949999988079,
+          "total": 15,
+          "unready": []
+        },
+        {
+          "ms": 401.1149999983609,
+          "total": 15,
+          "unready": []
+        },
+        {
+          "ms": 445.01499999687076,
+          "total": 17,
+          "unready": []
+        },
+        {
+          "ms": 497.07999999821186,
+          "total": 18,
+          "unready": []
+        },
+        {
+          "ms": 539.5099999979138,
+          "total": 19,
+          "unready": []
+        },
+        {
+          "ms": 576.7999999970198,
+          "total": 20,
+          "unready": []
+        },
+        {
+          "ms": 625.894999999553,
+          "total": 23,
+          "unready": []
+        },
+        {
+          "ms": 684.4449999965727,
+          "total": 23,
+          "unready": []
+        },
+        {
+          "ms": 742.5299999974668,
+          "total": 24,
+          "unready": []
+        },
+        {
+          "ms": 801.2649999968708,
+          "total": 26,
+          "unready": []
+        },
+        {
+          "ms": 857.0749999992549,
+          "total": 27,
+          "unready": []
+        },
+        {
+          "ms": 939.8849999979138,
+          "total": 29,
+          "unready": []
+        },
+        {
+          "ms": 1039.684999998659,
+          "total": 34,
+          "unready": []
+        },
+        {
+          "ms": 1127.3699999973178,
+          "total": 35,
+          "unready": []
+        },
+        {
+          "ms": 1199.5799999982119,
+          "total": 38,
+          "unready": []
+        },
+        {
+          "ms": 1279.1049999967217,
+          "total": 42,
+          "unready": []
+        },
+        {
+          "ms": 1357.5349999964237,
+          "total": 50,
+          "unready": []
+        },
+        {
+          "ms": 1437.25,
+          "total": 56,
+          "unready": []
+        },
+        {
+          "ms": 1504.4549999982119,
+          "total": 56,
+          "unready": []
+        },
+        {
+          "ms": 1575.929999999702,
+          "total": 62,
+          "unready": [
+            {
+              "id": "spatial:0:6:21",
+              "slot": 1,
+              "distance": 78.6785752363421,
+              "ready": 0.6332749724388123,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            }
+          ]
+        },
+        {
+          "ms": 1641.469999998808,
+          "total": 66,
+          "unready": [
+            {
+              "id": "spatial:0:4:21",
+              "slot": 0,
+              "distance": 78.27528658770906,
+              "ready": 0.6999099850654602,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:6:21",
+              "slot": 1,
+              "distance": 75.64039439169694,
+              "ready": 0.6999099850654602,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            }
+          ]
+        },
+        {
+          "ms": 1707.4049999974668,
+          "total": 72,
+          "unready": [
+            {
+              "id": "spatial:0:4:21",
+              "slot": 0,
+              "distance": 74.98598005126529,
+              "ready": 0.7664949893951416,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:5:22",
+              "slot": 0,
+              "distance": 79.49985410937187,
+              "ready": 0.7664949893951416,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:6:21",
+              "slot": 1,
+              "distance": 72.5277550269568,
+              "ready": 0.7664949893951416,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            }
+          ]
+        },
+        {
+          "ms": 1761.8899999968708,
+          "total": 76,
+          "unready": [
+            {
+              "id": "spatial:0:4:21",
+              "slot": 0,
+              "distance": 72.1622923979982,
+              "ready": 0.8332849740982056,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:4:22",
+              "slot": 0,
+              "distance": 79.02757570347131,
+              "ready": 0.8332849740982056,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:5:22",
+              "slot": 0,
+              "distance": 76.765703722546,
+              "ready": 0.8332849740982056,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:8:22",
+              "slot": 0,
+              "distance": 77.7405199665257,
+              "ready": 0.8332849740982056,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:6:21",
+              "slot": 1,
+              "distance": 69.86891403802883,
+              "ready": 0.8332849740982056,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            }
+          ]
+        },
+        {
+          "ms": 1824.199999999255,
+          "total": 76,
+          "unready": [
+            {
+              "id": "spatial:0:4:21",
+              "slot": 0,
+              "distance": 69.32665329649112,
+              "ready": 0.8999199867248535,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:4:22",
+              "slot": 0,
+              "distance": 76.1790751680471,
+              "ready": 0.8999199867248535,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:5:22",
+              "slot": 0,
+              "distance": 74.0266595673991,
+              "ready": 0.8999199867248535,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:8:22",
+              "slot": 0,
+              "distance": 75.31984263161651,
+              "ready": 0.8999199867248535,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:2:22",
+              "slot": 1,
+              "distance": 79.60378094728951,
+              "ready": 0.8999199867248535,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:6:21",
+              "slot": 1,
+              "distance": 67.21265246120056,
+              "ready": 0.8999199867248535,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            }
+          ]
+        },
+        {
+          "ms": 1884.2799999974668,
+          "total": 84,
+          "unready": [
+            {
+              "id": "spatial:0:1:22",
+              "slot": 0,
+              "distance": 78.20518451363954,
+              "ready": 0.966509997844696,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:3:22",
+              "slot": 0,
+              "distance": 78.82306181096655,
+              "ready": 0.966509997844696,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:4:21",
+              "slot": 0,
+              "distance": 66.19544285501686,
+              "ready": 0.966509997844696,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:4:22",
+              "slot": 0,
+              "distance": 73.03209718114806,
+              "ready": 0.966509997844696,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:5:22",
+              "slot": 0,
+              "distance": 71.01080350187114,
+              "ready": 0.966509997844696,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:8:22",
+              "slot": 0,
+              "distance": 72.6820243358319,
+              "ready": 0.966509997844696,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:9:22",
+              "slot": 0,
+              "distance": 78.02269339716517,
+              "ready": 0.966509997844696,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:2:22",
+              "slot": 1,
+              "distance": 76.42557794414334,
+              "ready": 0.966509997844696,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:5:23",
+              "slot": 1,
+              "distance": 78.53505237298441,
+              "ready": 0.966509997844696,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:6:21",
+              "slot": 1,
+              "distance": 64.29773413866289,
+              "ready": 0.966509997844696,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            }
+          ]
+        },
+        {
+          "ms": 1956.379999998957,
+          "total": 85,
+          "unready": []
+        },
+        {
+          "ms": 2020.574999999255,
+          "total": 93,
+          "unready": []
+        },
+        {
+          "ms": 2069.634999997914,
+          "total": 95,
+          "unready": []
+        },
+        {
+          "ms": 2114.5,
+          "total": 101,
+          "unready": []
+        },
+        {
+          "ms": 2167.6749999970198,
+          "total": 102,
+          "unready": []
+        },
+        {
+          "ms": 2213.9249999970198,
+          "total": 102,
+          "unready": []
+        },
+        {
+          "ms": 2269.089999999851,
+          "total": 106,
+          "unready": []
+        },
+        {
+          "ms": 2311.7999999970198,
+          "total": 107,
+          "unready": []
+        },
+        {
+          "ms": 2366.439999997616,
+          "total": 114,
+          "unready": []
+        },
+        {
+          "ms": 2409.494999997318,
+          "total": 114,
+          "unready": []
+        },
+        {
+          "ms": 2460.144999999553,
+          "total": 119,
+          "unready": []
+        },
+        {
+          "ms": 2496.344999998808,
+          "total": 119,
+          "unready": []
+        },
+        {
+          "ms": 2551.39999999851,
+          "total": 120,
+          "unready": []
+        },
+        {
+          "ms": 2597.589999999851,
+          "total": 122,
+          "unready": []
+        },
+        {
+          "ms": 2648.449999999255,
+          "total": 121,
+          "unready": []
+        },
+        {
+          "ms": 2708.734999999404,
+          "total": 126,
+          "unready": [
+            {
+              "id": "spatial:0:2:27",
+              "slot": 1,
+              "distance": 78.25493453747865,
+              "ready": 0.6667150259017944,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            }
+          ]
+        },
+        {
+          "ms": 2757.6599999964237,
+          "total": 127,
+          "unready": [
+            {
+              "id": "spatial:0:2:27",
+              "slot": 1,
+              "distance": 75.8008978421051,
+              "ready": 0.7331950068473816,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            }
+          ]
+        },
+        {
+          "ms": 2808.379999998957,
+          "total": 124,
+          "unready": [
+            {
+              "id": "spatial:0:2:27",
+              "slot": 1,
+              "distance": 73.38147620007172,
+              "ready": 0.7666400074958801,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:7:27",
+              "slot": 1,
+              "distance": 79.20827699076527,
+              "ready": 0.7666400074958801,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            }
+          ]
+        },
+        {
+          "ms": 2869.559999998659,
+          "total": 127,
+          "unready": [
+            {
+              "id": "spatial:0:8:27",
+              "slot": 0,
+              "distance": 79.15010269355315,
+              "ready": 0.833204984664917,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:-1:27",
+              "slot": 1,
+              "distance": 79.91718442304722,
+              "ready": 0.833204984664917,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:2:27",
+              "slot": 1,
+              "distance": 70.65789417766887,
+              "ready": 0.833204984664917,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:7:27",
+              "slot": 1,
+              "distance": 77.17803009137124,
+              "ready": 0.833204984664917,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            }
+          ]
+        },
+        {
+          "ms": 2907.234999999404,
+          "total": 131,
+          "unready": [
+            {
+              "id": "spatial:0:1:28",
+              "slot": 0,
+              "distance": 79.89097894960965,
+              "ready": 0.8998849987983704,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:8:27",
+              "slot": 0,
+              "distance": 77.74842809617566,
+              "ready": 0.8998849987983704,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:-1:27",
+              "slot": 1,
+              "distance": 77.62188022423544,
+              "ready": 0.8998849987983704,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:2:27",
+              "slot": 1,
+              "distance": 68.394877558633,
+              "ready": 0.8998849987983704,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:2:28",
+              "slot": 1,
+              "distance": 78.56234976585174,
+              "ready": 0.8998849987983704,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:4:28",
+              "slot": 1,
+              "distance": 78.74899130172646,
+              "ready": 0.8998849987983704,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:7:27",
+              "slot": 1,
+              "distance": 75.52501827903858,
+              "ready": 0.8998849987983704,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:5:28",
+              "slot": 2,
+              "distance": 79.04881256630955,
+              "ready": 0.8998849987983704,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            }
+          ]
+        },
+        {
+          "ms": 2958.6749999970198,
+          "total": 133,
+          "unready": [
+            {
+              "id": "spatial:0:1:28",
+              "slot": 0,
+              "distance": 77.80851200551591,
+              "ready": 0.9333400130271912,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:4:29",
+              "slot": 0,
+              "distance": 79.41693181261019,
+              "ready": 0.9333400130271912,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:8:27",
+              "slot": 0,
+              "distance": 76.52267521730928,
+              "ready": 0.9333400130271912,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:-1:27",
+              "slot": 1,
+              "distance": 75.55321633216255,
+              "ready": 0.9333400130271912,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:2:27",
+              "slot": 1,
+              "distance": 66.35741230560737,
+              "ready": 0.9333400130271912,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:2:28",
+              "slot": 1,
+              "distance": 76.5095730793854,
+              "ready": 0.9333400130271912,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:4:28",
+              "slot": 1,
+              "distance": 76.88212929297858,
+              "ready": 0.9333400130271912,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:7:27",
+              "slot": 1,
+              "distance": 74.06498229828858,
+              "ready": 0.9333400130271912,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:5:28",
+              "slot": 2,
+              "distance": 77.24616195857291,
+              "ready": 0.9333400130271912,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            }
+          ]
+        },
+        {
+          "ms": 3014.8549999967217,
+          "total": 133,
+          "unready": []
+        },
+        {
+          "ms": 3059.634999997914,
+          "total": 135,
+          "unready": []
+        },
+        {
+          "ms": 3104.009999997914,
+          "total": 138,
+          "unready": []
+        },
+        {
+          "ms": 3172.7849999964237,
+          "total": 143,
+          "unready": []
+        },
+        {
+          "ms": 3233.489999998361,
+          "total": 144,
+          "unready": []
+        },
+        {
+          "ms": 3301.724999997765,
+          "total": 144,
+          "unready": []
+        },
+        {
+          "ms": 3353.449999999255,
+          "total": 144,
+          "unready": []
+        },
+        {
+          "ms": 3415.625,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 3455.1949999965727,
+          "total": 148,
+          "unready": []
+        },
+        {
+          "ms": 3500.719999998808,
+          "total": 148,
+          "unready": []
+        },
+        {
+          "ms": 3537.654999997467,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 3591.25,
+          "total": 150,
+          "unready": []
+        },
+        {
+          "ms": 3627.2849999964237,
+          "total": 153,
+          "unready": []
+        },
+        {
+          "ms": 3658.239999998361,
+          "total": 152,
+          "unready": []
+        },
+        {
+          "ms": 3686.349999997765,
+          "total": 154,
+          "unready": []
+        },
+        {
+          "ms": 3715.594999998808,
+          "total": 154,
+          "unready": []
+        },
+        {
+          "ms": 3757.594999998808,
+          "total": 155,
+          "unready": [
+            {
+              "id": "spatial:0:1:33",
+              "slot": 1,
+              "distance": 79.11412835768454,
+              "ready": 0.7333149909973145,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            }
+          ]
+        },
+        {
+          "ms": 3791.8899999968708,
+          "total": 159,
+          "unready": [
+            {
+              "id": "spatial:0:1:33",
+              "slot": 1,
+              "distance": 77.38447513222111,
+              "ready": 0.766635000705719,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:2:33",
+              "slot": 3,
+              "distance": 78.35770526599808,
+              "ready": 0.766635000705719,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            }
+          ]
+        },
+        {
+          "ms": 3820.269999999553,
+          "total": 160,
+          "unready": [
+            {
+              "id": "spatial:0:4:33",
+              "slot": 0,
+              "distance": 79.21699389233558,
+              "ready": 0.800029993057251,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:1:33",
+              "slot": 1,
+              "distance": 75.9902010238738,
+              "ready": 0.800029993057251,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:3:33",
+              "slot": 1,
+              "distance": 79.48964808963308,
+              "ready": 0.800029993057251,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:2:33",
+              "slot": 3,
+              "distance": 77.01911984405199,
+              "ready": 0.800029993057251,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            }
+          ]
+        },
+        {
+          "ms": 3843.704999998212,
+          "total": 159,
+          "unready": [
+            {
+              "id": "spatial:0:4:33",
+              "slot": 0,
+              "distance": 78.20401269620766,
+              "ready": 0.8333550095558167,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:1:33",
+              "slot": 1,
+              "distance": 74.80382641648109,
+              "ready": 0.8333550095558167,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:3:33",
+              "slot": 1,
+              "distance": 78.3884523764595,
+              "ready": 0.8333550095558167,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:2:33",
+              "slot": 3,
+              "distance": 75.88178366741221,
+              "ready": 0.8333550095558167,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            }
+          ]
+        },
+        {
+          "ms": 3871.1399999968708,
+          "total": 161,
+          "unready": [
+            {
+              "id": "spatial:0:-2:33",
+              "slot": 0,
+              "distance": 79.97993532756082,
+              "ready": 0.8667250275611877,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:4:33",
+              "slot": 0,
+              "distance": 77.4964874646078,
+              "ready": 0.8667250275611877,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:1:33",
+              "slot": 1,
+              "distance": 73.97156254162877,
+              "ready": 0.8667250275611877,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:3:33",
+              "slot": 1,
+              "distance": 77.61748360156658,
+              "ready": 0.8667250275611877,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:2:33",
+              "slot": 3,
+              "distance": 75.08487018817151,
+              "ready": 0.8667250275611877,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            }
+          ]
+        },
+        {
+          "ms": 3902.434999998659,
+          "total": 164,
+          "unready": [
+            {
+              "id": "spatial:0:-2:33",
+              "slot": 0,
+              "distance": 78.2265457229283,
+              "ready": 0.8999000191688538,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:4:33",
+              "slot": 0,
+              "distance": 76.11019580943257,
+              "ready": 0.8999000191688538,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:5:33",
+              "slot": 0,
+              "distance": 79.83319733151636,
+              "ready": 0.8999000191688538,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:1:33",
+              "slot": 1,
+              "distance": 72.33167806000418,
+              "ready": 0.8999000191688538,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:3:33",
+              "slot": 1,
+              "distance": 76.10226326915253,
+              "ready": 0.8999000191688538,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:2:33",
+              "slot": 3,
+              "distance": 73.51704510553245,
+              "ready": 0.8999000191688538,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            }
+          ]
+        },
+        {
+          "ms": 3943.714999999851,
+          "total": 164,
+          "unready": [
+            {
+              "id": "spatial:0:-2:33",
+              "slot": 0,
+              "distance": 76.73712459700802,
+              "ready": 0.9332249760627747,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:4:33",
+              "slot": 0,
+              "distance": 74.94470092227195,
+              "ready": 0.9332249760627747,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:5:33",
+              "slot": 0,
+              "distance": 78.8091299227042,
+              "ready": 0.9332249760627747,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:1:33",
+              "slot": 1,
+              "distance": 70.94294664529578,
+              "ready": 0.9332249760627747,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:3:33",
+              "slot": 1,
+              "distance": 74.82333749668466,
+              "ready": 0.9332249760627747,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:2:33",
+              "slot": 3,
+              "distance": 72.1919674710982,
+              "ready": 0.9332249760627747,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            }
+          ]
+        },
+        {
+          "ms": 3973.3899999968708,
+          "total": 166,
+          "unready": [
+            {
+              "id": "spatial:0:-2:33",
+              "slot": 0,
+              "distance": 74.48553675315766,
+              "ready": 0.9665899872779846,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:4:33",
+              "slot": 0,
+              "distance": 73.20512982981971,
+              "ready": 0.9665899872779846,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:5:33",
+              "slot": 0,
+              "distance": 77.28979171343202,
+              "ready": 0.9665899872779846,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:1:33",
+              "slot": 1,
+              "distance": 68.85157988348556,
+              "ready": 0.9665899872779846,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:1:34",
+              "slot": 1,
+              "distance": 79.23968850698678,
+              "ready": 0.9665899872779846,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:3:33",
+              "slot": 1,
+              "distance": 72.90515273387496,
+              "ready": 0.9665899872779846,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:6:33",
+              "slot": 2,
+              "distance": 79.55226605291736,
+              "ready": 0.9665899872779846,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:2:33",
+              "slot": 3,
+              "distance": 70.20134851039984,
+              "ready": 0.9665899872779846,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            },
+            {
+              "id": "spatial:0:3:34",
+              "slot": 3,
+              "distance": 79.90728889875913,
+              "ready": 0.9665899872779846,
+              "target": 1,
+              "physicalVisible": null,
+              "prepared": false,
+              "coverage": false,
+              "standbyAvailable": true
+            }
+          ]
+        },
+        {
+          "ms": 4005.119999997318,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4036.239999998361,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4068.429999999702,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4101.324999999255,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4134.494999997318,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4167.864999998361,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4201.139999996871,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4234.969999998808,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4267.784999996424,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4301.084999997169,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4334.689999997616,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4368.234999999404,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4401.17499999702,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4434.684999998659,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4467.844999998808,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4501.104999996722,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4534.724999997765,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4568.059999998659,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4600.809999998659,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4634.244999997318,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4667.519999999553,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4700.989999998361,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4734.209999997169,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4767.769999999553,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4800.869999997318,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4834.339999999851,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4867.619999997318,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4901.014999996871,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4934.634999997914,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4967.875,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5001.094999998808,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5033.625,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5066.939999997616,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5101.009999997914,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5134.139999996871,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5167.854999996722,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5201.029999997467,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5234.219999998808,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5267.42499999702,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5300.949999999255,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5334.449999999255,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5366.974999997765,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5400.769999999553,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5433.954999998212,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5467.934999998659,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5500.625,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5533.92499999702,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5567.809999998659,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5600.529999997467,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5634.044999998063,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5667.634999997914,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5700.949999999255,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5734.214999999851,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5767.704999998212,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5800.304999999702,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5834.224999997765,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5867.684999998659,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5900.939999997616,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5934.264999996871,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5967.729999996722,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6000.929999999702,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6034.449999999255,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6067.359999999404,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6100.834999997169,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6133.669999998063,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6167.614999998361,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6200.604999996722,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6234.464999999851,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6268.064999997616,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6300.314999997616,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6333.669999998063,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6367.364999998361,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6400.829999998212,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6434.034999996424,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6467.504999998957,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6500.989999998361,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6534.04999999702,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6567.559999998659,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6600.984999999404,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6634.154999997467,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6667.259999997914,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6700.404999997467,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6733.894999999553,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6767.514999996871,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6800.714999999851,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6834.414999999106,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6867.779999997467,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6901.069999996573,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6933.939999997616,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 6966.939999997616,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7000.349999997765,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7033.629999998957,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7067.619999997318,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7100.644999999553,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7133.844999998808,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7167.189999997616,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7200.844999998808,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7233.689999997616,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7267.339999999851,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7300.29999999702,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7334.434999998659,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7367.909999996424,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7400.64999999851,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7434,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7467.654999997467,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7500.929999999702,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7534.534999996424,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7567.849999997765,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7601.109999999404,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7633.879999998957,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7667.324999999255,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7700.29999999702,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7734.199999999255,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7768.094999998808,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7800.819999996573,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7834.719999998808,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7867.534999996424,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7900.809999998659,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7933.739999998361,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 7967.564999997616,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 8001.054999999702,
+          "total": 167,
+          "unready": []
+        }
+      ]
+    },
+    {
+      "name": "fade01",
+      "fadeSeconds": 0.1,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "selected": {
+        "id": "spatial:0:-1:21",
+        "slot": 3,
+        "x": -2.6859482881760885,
+        "z": 185.09613374722403,
+        "ready": 0
+      },
+      "before": [
+        88.29358523571148,
+        18.67490205068118,
+        33.67950453713969
+      ],
+      "after": [
+        14.016527032066577,
+        18.674902050681183,
+        215.66980974313353
+      ],
+      "frozen": true,
+      "scope": "Per-update instrumented camera path; nearby state is not pixel visibility. Not a CPU/GPU benchmark.",
+      "samples": [
+        {
+          "ms": 0,
+          "total": 12,
+          "unready": []
+        },
+        {
+          "ms": 38.89000000059605,
+          "total": 12,
+          "unready": []
+        },
+        {
+          "ms": 85.02000000327826,
+          "total": 10,
+          "unready": []
+        },
+        {
+          "ms": 137.70500000193715,
+          "total": 8,
+          "unready": []
+        },
+        {
+          "ms": 177.42000000178814,
+          "total": 10,
+          "unready": []
+        },
+        {
+          "ms": 227.625,
+          "total": 12,
+          "unready": []
+        },
+        {
+          "ms": 273.195000000298,
+          "total": 14,
+          "unready": []
+        },
+        {
+          "ms": 323.5600000023842,
+          "total": 12,
+          "unready": []
+        },
+        {
+          "ms": 356.86500000208616,
+          "total": 15,
+          "unready": []
+        },
+        {
+          "ms": 399.8450000025332,
+          "total": 15,
+          "unready": []
+        },
+        {
+          "ms": 429.42000000178814,
+          "total": 15,
+          "unready": []
+        },
+        {
+          "ms": 474.04500000178814,
+          "total": 17,
+          "unready": []
+        },
+        {
+          "ms": 511.26500000059605,
+          "total": 18,
+          "unready": []
+        },
+        {
+          "ms": 551.785000000149,
+          "total": 19,
+          "unready": []
+        },
+        {
+          "ms": 578.9200000017881,
+          "total": 20,
+          "unready": []
+        },
+        {
+          "ms": 632.5650000013411,
+          "total": 22,
+          "unready": []
+        },
+        {
+          "ms": 672.5750000029802,
+          "total": 22,
+          "unready": []
+        },
+        {
+          "ms": 722.5450000017881,
+          "total": 22,
+          "unready": []
+        },
+        {
+          "ms": 764.5750000029802,
+          "total": 23,
+          "unready": []
+        },
+        {
+          "ms": 818.9950000010431,
+          "total": 25,
+          "unready": []
+        },
+        {
+          "ms": 876.4150000028312,
+          "total": 26,
+          "unready": []
+        },
+        {
+          "ms": 970.2200000025332,
+          "total": 27,
+          "unready": []
+        },
+        {
+          "ms": 1056.0100000016391,
+          "total": 29,
+          "unready": []
+        },
+        {
+          "ms": 1139.3850000016391,
+          "total": 31,
+          "unready": []
+        },
+        {
+          "ms": 1212.1100000031292,
+          "total": 30,
+          "unready": []
+        },
+        {
+          "ms": 1301.3950000032783,
+          "total": 34,
+          "unready": []
+        },
+        {
+          "ms": 1371.910000000149,
+          "total": 41,
+          "unready": []
+        },
+        {
+          "ms": 1460.890000000596,
+          "total": 43,
+          "unready": []
+        },
+        {
+          "ms": 1525.7750000022352,
+          "total": 43,
+          "unready": []
+        },
+        {
+          "ms": 1593.875,
+          "total": 46,
+          "unready": []
+        },
+        {
+          "ms": 1649.210000000894,
+          "total": 49,
+          "unready": []
+        },
+        {
+          "ms": 1710.7900000028312,
+          "total": 55,
+          "unready": []
+        },
+        {
+          "ms": 1767.3600000031292,
+          "total": 55,
+          "unready": []
+        },
+        {
+          "ms": 1826.660000000149,
+          "total": 57,
+          "unready": []
+        },
+        {
+          "ms": 1884.804999999702,
+          "total": 63,
+          "unready": []
+        },
+        {
+          "ms": 1960.0250000022352,
+          "total": 63,
+          "unready": []
+        },
+        {
+          "ms": 2017.8450000025332,
+          "total": 70,
+          "unready": []
+        },
+        {
+          "ms": 2075.435000002384,
+          "total": 74,
+          "unready": []
+        },
+        {
+          "ms": 2112.875,
+          "total": 78,
+          "unready": []
+        },
+        {
+          "ms": 2162.780000001192,
+          "total": 80,
+          "unready": []
+        },
+        {
+          "ms": 2206.955000001937,
+          "total": 82,
+          "unready": []
+        },
+        {
+          "ms": 2270.370000001043,
+          "total": 85,
+          "unready": []
+        },
+        {
+          "ms": 2324.47500000149,
+          "total": 87,
+          "unready": []
+        },
+        {
+          "ms": 2390.790000002831,
+          "total": 96,
+          "unready": []
+        },
+        {
+          "ms": 2447.410000000149,
+          "total": 100,
+          "unready": []
+        },
+        {
+          "ms": 2508.875,
+          "total": 103,
+          "unready": []
+        },
+        {
+          "ms": 2562.839999999851,
+          "total": 107,
+          "unready": []
+        },
+        {
+          "ms": 2619.245000001043,
+          "total": 110,
+          "unready": []
+        },
+        {
+          "ms": 2654.245000001043,
+          "total": 109,
+          "unready": []
+        },
+        {
+          "ms": 2727.315000001341,
+          "total": 114,
+          "unready": []
+        },
+        {
+          "ms": 2774.280000001192,
+          "total": 117,
+          "unready": []
+        },
+        {
+          "ms": 2834.790000002831,
+          "total": 119,
+          "unready": []
+        },
+        {
+          "ms": 2875.1450000032783,
+          "total": 120,
+          "unready": []
+        },
+        {
+          "ms": 2936.955000001937,
+          "total": 129,
+          "unready": []
+        },
+        {
+          "ms": 2982.8250000029802,
+          "total": 132,
+          "unready": []
+        },
+        {
+          "ms": 3049.060000002384,
+          "total": 129,
+          "unready": []
+        },
+        {
+          "ms": 3100.140000000596,
+          "total": 136,
+          "unready": []
+        },
+        {
+          "ms": 3169.150000002235,
+          "total": 140,
+          "unready": []
+        },
+        {
+          "ms": 3246.839999999851,
+          "total": 143,
+          "unready": []
+        },
+        {
+          "ms": 3317.150000002235,
+          "total": 144,
+          "unready": []
+        },
+        {
+          "ms": 3387.22500000149,
+          "total": 144,
+          "unready": []
+        },
+        {
+          "ms": 3460.290000002831,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 3514.855000000447,
+          "total": 148,
+          "unready": []
+        },
+        {
+          "ms": 3565.375,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 3612.095000002533,
+          "total": 151,
+          "unready": []
+        },
+        {
+          "ms": 3651.179999999702,
+          "total": 152,
+          "unready": []
+        },
+        {
+          "ms": 3685.955000001937,
+          "total": 154,
+          "unready": []
+        },
+        {
+          "ms": 3726.875,
+          "total": 154,
+          "unready": []
+        },
+        {
+          "ms": 3762.195000000298,
+          "total": 154,
+          "unready": []
+        },
+        {
+          "ms": 3798.690000001341,
+          "total": 158,
+          "unready": []
+        },
+        {
+          "ms": 3837.405000001192,
+          "total": 160,
+          "unready": []
+        },
+        {
+          "ms": 3874.905000001192,
+          "total": 161,
+          "unready": []
+        },
+        {
+          "ms": 3909.385000001639,
+          "total": 161,
+          "unready": []
+        },
+        {
+          "ms": 3965.810000002384,
+          "total": 164,
+          "unready": []
+        },
+        {
+          "ms": 4001.240000002086,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4036.7350000031292,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4069.10000000149,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4100.955000001937,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4134.045000001788,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4167.455000001937,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4200.835000000894,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4234.050000000745,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4267.800000000745,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4300.554999999702,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4334.179999999702,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4367.110000003129,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4400.425000000745,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4433.755000002682,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4467.205000001937,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4500.70000000298,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4534.095000002533,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4567.170000001788,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4600.429999999702,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4633.690000001341,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4667.070000000298,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4700.455000001937,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4734.060000002384,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4767.235000003129,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4800.345000002533,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4834.045000001788,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4867.179999999702,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4900.445000000298,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4933.740000002086,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 4967.464999999851,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5001.025000002235,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5033.755000002682,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5067.150000002235,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5100.415000002831,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5133.780000001192,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5167.320000000298,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5200.57500000298,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5234.140000000596,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5267.480000000447,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5300.390000000596,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5333.820000000298,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5366.85000000149,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5400.210000000894,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5433.85000000149,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5467.185000002384,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5500.050000000745,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5533.945000000298,
+          "total": 167,
+          "unready": []
+        },
+        {
+          "ms": 5581.554999999702,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 5678.455000001937,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 5727.835000000894,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 5767.195000000298,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 5802.339999999851,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 5832.400000002235,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 5854.310000002384,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 5876.520000003278,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 5901.220000002533,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 5934.429999999702,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 5967.510000001639,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6000.960000000894,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6034.370000001043,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6067.990000002086,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6100.800000000745,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6133.60000000149,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6168.005000002682,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6200.605000000447,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6233.839999999851,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6267.580000001937,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6300.339999999851,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6333.540000002831,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6367.645000003278,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6401.089999999851,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6434.030000001192,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6467.550000000745,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6500.800000000745,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6534.125,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6566.860000003129,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6600.770000003278,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6633.375,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6667.045000001788,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6700.115000002086,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6734.345000002533,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6767.10000000149,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6800.980000000447,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6833.770000003278,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6867.025000002235,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6900.429999999702,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6933.785000000149,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 6968.120000001043,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7000.695000000298,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7034.089999999851,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7067.705000001937,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7100.855000000447,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7134.605000000447,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7167.710000000894,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7200.525000002235,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7234.130000002682,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7267.130000002682,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7301.085000000894,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7333.745000001043,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7367.304999999702,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7400.070000000298,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7434.455000001937,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7467.120000001043,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7500.240000002086,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7534.429999999702,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7566.900000002235,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7600.455000001937,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7633.304999999702,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7667.670000001788,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7700.375,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7734.20000000298,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7767.22500000149,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7800.550000000745,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7833.565000001341,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7867.380000002682,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7900.655000001192,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7933.885000001639,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 7967.230000000447,
+          "total": 146,
+          "unready": []
+        },
+        {
+          "ms": 8000.405000001192,
+          "total": 146,
+          "unready": []
+        }
+      ]
+    }
+  ]
+}

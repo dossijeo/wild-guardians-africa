@@ -1,0 +1,7 @@
+# Geometría de efectos en WebGPU
+
+Los efectos de agricultura, los ataques de bestias y el aura del guardián dibujan ahora las cintas y señales generadas por el compositor VFX nativo, utilizando el mismo pase de geometría compartido que Shield. La geometría se actualiza con el tiempo confirmado y pasa por la admisión gráfica antes de mostrarse; cuando el efecto desaparece se cancelan sus admisiones y se liberan sus recursos. Los efectos de pisadas y trabajo no generan estas formas y no crean el pase adicional.
+
+Las pruebas dirigidas comprueban que los tres tipos producen geometría, que cada malla espera su admisión, y que los cambios de estructura y la cancelación no publican recursos obsoletos. La generación y admisión simulada no acreditan la equivalencia visual en GPU real ni el coste adicional. Las luces proyectadas al mundo siguen pendientes de validación integral.
+
+La ruta WebGPU conecta ahora la profundidad suave de sprites a una captura limitada a terreno confirmado y visible. El destino se prepara y redimensiona sin esperar en el bucle de dibujo; hasta que esté admitido, se mantiene la presentación anterior. El grafo usa el mismo binding entre efectos y no lee la profundidad cuando el efecto no la necesita. Agricultura y riego conservan la exclusión de la ruta original. Se documentan propiedad, cancelaciones y límites en `webgpu-ground-depth-capture.md`. Las pruebas usan renderer simulado y generación WGSL: siguen pendientes comparación visual, medición de tiempo GPU/CPU y recuperación de dispositivo en una partida real.

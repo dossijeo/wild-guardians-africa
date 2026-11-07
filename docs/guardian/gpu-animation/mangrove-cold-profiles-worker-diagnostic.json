@@ -1,0 +1,120 @@
+{
+  "stages": [
+    {
+      "label": "idle",
+      "wallMs": 2072.9199999999255,
+      "value": null,
+      "intervals": {
+        "count": 48,
+        "p95": 51.68999999947846,
+        "p99": 167.98000000044703,
+        "max": 254.15000000037253
+      },
+      "draw": {
+        "count": 49,
+        "p95": 44.16000000014901,
+        "p99": 48.380000000819564,
+        "max": 53.37999999895692
+      },
+      "gpu": {
+        "count": 49,
+        "p95": 29.243328,
+        "p99": 30.897408,
+        "max": 51.036128
+      },
+      "timer": {
+        "disjoint": 0,
+        "discarded": 0,
+        "pending": 0
+      }
+    },
+    {
+      "label": "init",
+      "wallMs": 966.3000000007451,
+      "value": {
+        "kind": "ready",
+        "initMs": 906.0699999984354
+      },
+      "intervals": {
+        "count": 26,
+        "p95": 33.42500000074506,
+        "p99": 33.46000000089407,
+        "max": 35.955000000074506
+      },
+      "draw": {
+        "count": 27,
+        "p95": 30.794999999925494,
+        "p99": 32.47499999962747,
+        "max": 35.67999999970198
+      },
+      "gpu": {
+        "count": 27,
+        "p95": 13.385856,
+        "p99": 13.847168,
+        "max": 14.779936
+      },
+      "timer": {
+        "disjoint": 0,
+        "discarded": 0,
+        "pending": 0
+      }
+    },
+    {
+      "label": "profiles",
+      "wallMs": 1033.309999998659,
+      "value": {
+        "kind": "built",
+        "rows": [
+          {
+            "species": "hyena",
+            "ms": 266.52999999932945,
+            "revision": 560
+          },
+          {
+            "species": "lion",
+            "ms": 243.86999999918044,
+            "revision": 560
+          },
+          {
+            "species": "buffalo",
+            "ms": 237.43999999947846,
+            "revision": 560
+          },
+          {
+            "species": "rhino",
+            "ms": 229.6849999986589,
+            "revision": 560
+          }
+        ]
+      },
+      "intervals": {
+        "count": 28,
+        "p95": 34.19999999925494,
+        "p99": 37.14000000059605,
+        "max": 37.82500000111759
+      },
+      "draw": {
+        "count": 29,
+        "p95": 33.90500000119209,
+        "p99": 36.90499999932945,
+        "max": 37.53000000119209
+      },
+      "gpu": {
+        "count": 29,
+        "p95": 14.256096,
+        "p99": 15.191328,
+        "max": 15.947776
+      },
+      "timer": {
+        "disjoint": 0,
+        "discarded": 0,
+        "pending": 0
+      }
+    }
+  ],
+  "chunks": 25,
+  "snapshotBytes": 29455,
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "errors": [],
+  "scope": "Diagnostic cloned simulation and independent Worker WASM initialized from a serialized QA state and visible chunk keys, while a separate native mangrove combat world renders in manual mode. No updates applied to the displayed world; no authority transfer, collision-horizon, input, gameplay timing or equivalence validation."
+}

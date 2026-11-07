@@ -1,0 +1,8 @@
+import fs from 'node:fs';
+const reports=[1,2].map(i=>JSON.parse(fs.readFileSync(`docs/lighting/tree-near-retexture/performance/mangrove-ground-depth-real-loading-center-study-${i}.json`,'utf8'))),summaries=[];
+for(let i=0;i<reports.length;i++){
+ const {loading}=reports[i],frames=loading.frames.filter(x=>Number.isFinite(x.at)&&Number.isFinite(x.interval)).sort((a,b)=>b.interval-a.interval),sync=loading.loadingSpans.filter(x=>x.scope?.startsWith('Synchronous'));
+ const rows=frames.slice(0,15).map(frame=>{const start=frame.at-frame.interval,end=frame.at,overlap=sync.filter(s=>s.start<end&&s.end>start).map(s=>({label:s.label,start:s.start,duration:s.duration,overlapMs:Math.min(s.end,end)-Math.max(s.start,start),batchIndex:s.batchIndex??null})).sort((a,b)=>b.overlapMs-a.overlapMs);return {start,end,interval:frame.interval,overlap:overlap.slice(0,8)};});
+ const targets=sync.filter(s=>s.label==='loading-screen-upload-submit').sort((a,b)=>b.duration-a.duration).slice(0,3).map(s=>({label:s.label,start:s.start,end:s.end,duration:s.duration,batchIndex:s.batchIndex,frames:frames.filter(f=>f.at-f.interval<s.end&&f.at>s.start).map(f=>({at:f.at,interval:f.interval}))}));summaries.push({run:i+1,frameCount:frames.length,rows,targets});
+}
+fs.writeFileSync('docs/lighting/tree-near-retexture/performance/mangrove-real-loading-frame-correlation.json',JSON.stringify({scope:'Overlap of instrumented synchronous spans and progress-QA presentation frame intervals; nested spans overlap and must not be summed. Frame log starts after the independent full-loading frame monitor.',summaries},null,2)+'\n');console.log(JSON.stringify(summaries));

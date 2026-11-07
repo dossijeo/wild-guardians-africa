@@ -1,0 +1,57 @@
+{
+  "initial": {
+    "equal": true,
+    "total": 0,
+    "groups": {},
+    "examples": []
+  },
+  "first": {
+    "equal": false,
+    "total": 2,
+    "groups": {
+      "raid": 2
+    },
+    "examples": [
+      {
+        "path": "/raid/animals/18/raidWait/epoch",
+        "left": "2,560",
+        "right": "2,400"
+      },
+      {
+        "path": "/raid/animals/19/raidWait/epoch",
+        "left": "2,560",
+        "right": "2,400"
+      }
+    ]
+  },
+  "final": {
+    "equal": false,
+    "total": 4,
+    "groups": {
+      "raid": 4
+    },
+    "examples": [
+      {
+        "path": "/raid/animals/4/raidWait/epoch",
+        "left": "2,560,36,3004.6000000000167",
+        "right": "2,400,36,3004.6000000000167"
+      },
+      {
+        "path": "/raid/animals/9/raidWait/epoch",
+        "left": "2,560,36,3004.6000000000167",
+        "right": "2,400,36,3004.6000000000167"
+      },
+      {
+        "path": "/raid/animals/18/raidWait/epoch",
+        "left": "2,560",
+        "right": "2,400"
+      },
+      {
+        "path": "/raid/animals/19/raidWait/epoch",
+        "left": "2,560",
+        "right": "2,400"
+      }
+    ]
+  },
+  "scope": "Baseline and two-pass rebuilt WASM in two independently initialized deterministic QA mangrove-islands scenes with 20 synthetic animals; compare serialized state at start, after one tick and after 120 ticks. No native-state or pixel comparison; not a performance comparison."
+}

@@ -1,0 +1,221 @@
+{
+  "normalization": "Uniform height only; X/Y bbox centering, base Z. Distances as fraction of tree height. No production geometry mutated.",
+  "hdComponents": 4,
+  "originalComponents": 811,
+  "currentToHD": [
+    {
+      "slot": "tree_01",
+      "height": 7.5,
+      "matches": [
+        {
+          "component": 0,
+          "median": 0.017727693542838097,
+          "p95": 0.07877279072999954,
+          "max": 0.23340870440006256,
+          "fractionWithin1e_5": 0.00035925992455541585
+        },
+        {
+          "component": 1,
+          "median": 0.07229289412498474,
+          "p95": 0.20427784323692322,
+          "max": 0.2997959852218628,
+          "fractionWithin1e_5": 0.0
+        },
+        {
+          "component": 2,
+          "median": 0.08009834587574005,
+          "p95": 0.2334539294242859,
+          "max": 0.32895201444625854,
+          "fractionWithin1e_5": 0.0
+        },
+        {
+          "component": 3,
+          "median": 0.10430432856082916,
+          "p95": 0.3677069842815399,
+          "max": 0.5326951742172241,
+          "fractionWithin1e_5": 0.0
+        }
+      ]
+    },
+    {
+      "slot": "tree_02",
+      "height": 7.0,
+      "matches": [
+        {
+          "component": 1,
+          "median": 0.06180751323699951,
+          "p95": 0.14444400370121002,
+          "max": 0.3020543158054352,
+          "fractionWithin1e_5": 0.0
+        },
+        {
+          "component": 0,
+          "median": 0.05761535465717316,
+          "p95": 0.1698146015405655,
+          "max": 0.28183722496032715,
+          "fractionWithin1e_5": 0.0
+        },
+        {
+          "component": 3,
+          "median": 0.0804833248257637,
+          "p95": 0.21404050290584564,
+          "max": 0.3120630979537964,
+          "fractionWithin1e_5": 0.0
+        },
+        {
+          "component": 2,
+          "median": 0.07997779548168182,
+          "p95": 0.29074758291244507,
+          "max": 0.4153097867965698,
+          "fractionWithin1e_5": 0.0
+        }
+      ]
+    },
+    {
+      "slot": "tree_03",
+      "height": 10.0,
+      "matches": [
+        {
+          "component": 2,
+          "median": 0.018324634060263634,
+          "p95": 0.06942228972911835,
+          "max": 0.15749357640743256,
+          "fractionWithin1e_5": 0.0008348987685243164
+        },
+        {
+          "component": 1,
+          "median": 0.04445916414260864,
+          "p95": 0.12414910644292831,
+          "max": 0.23461386561393738,
+          "fractionWithin1e_5": 0.0
+        },
+        {
+          "component": 0,
+          "median": 0.03393467888236046,
+          "p95": 0.15499138832092285,
+          "max": 0.2582074999809265,
+          "fractionWithin1e_5": 0.0
+        },
+        {
+          "component": 3,
+          "median": 0.14180536568164825,
+          "p95": 0.27829867601394653,
+          "max": 0.36369046568870544,
+          "fractionWithin1e_5": 0.0
+        }
+      ]
+    },
+    {
+      "slot": "tree_04",
+      "height": 7.5,
+      "matches": [
+        {
+          "component": 3,
+          "median": 0.019055526703596115,
+          "p95": 0.07526891678571701,
+          "max": 0.14346197247505188,
+          "fractionWithin1e_5": 0.0
+        },
+        {
+          "component": 2,
+          "median": 0.06791086494922638,
+          "p95": 0.17197223007678986,
+          "max": 0.25490280985832214,
+          "fractionWithin1e_5": 0.0
+        },
+        {
+          "component": 1,
+          "median": 0.06309904158115387,
+          "p95": 0.19586630165576935,
+          "max": 0.27672532200813293,
+          "fractionWithin1e_5": 0.0
+        },
+        {
+          "component": 0,
+          "median": 0.06342453509569168,
+          "p95": 0.21413925290107727,
+          "max": 0.25977370142936707,
+          "fractionWithin1e_5": 0.0008830022075055188
+        }
+      ]
+    }
+  ],
+  "originalToHD": [
+    {
+      "hdComponent": 0,
+      "matches": [
+        {
+          "originalComponent": 69,
+          "median": 0.0,
+          "p95": 0.0,
+          "max": 0.0,
+          "fractionWithin1e_5": 1.0
+        },
+        {
+          "originalComponent": 631,
+          "median": 0.058100901544094086,
+          "p95": 0.15807925164699554,
+          "max": 0.5315834879875183,
+          "fractionWithin1e_5": 0.0
+        }
+      ]
+    },
+    {
+      "hdComponent": 1,
+      "matches": [
+        {
+          "originalComponent": 225,
+          "median": 0.0,
+          "p95": 0.0,
+          "max": 0.0,
+          "fractionWithin1e_5": 1.0
+        },
+        {
+          "originalComponent": 720,
+          "median": 0.036408498883247375,
+          "p95": 0.14528228342533112,
+          "max": 0.23345321416854858,
+          "fractionWithin1e_5": 0.0
+        }
+      ]
+    },
+    {
+      "hdComponent": 2,
+      "matches": [
+        {
+          "originalComponent": 352,
+          "median": 0.0,
+          "p95": 0.0,
+          "max": 0.0,
+          "fractionWithin1e_5": 1.0
+        },
+        {
+          "originalComponent": 225,
+          "median": 0.03336440399289131,
+          "p95": 0.08797398209571838,
+          "max": 0.25079411268234253,
+          "fractionWithin1e_5": 0.0
+        }
+      ]
+    },
+    {
+      "hdComponent": 3,
+      "matches": [
+        {
+          "originalComponent": 487,
+          "median": 0.0,
+          "p95": 0.0,
+          "max": 0.0,
+          "fractionWithin1e_5": 1.0
+        },
+        {
+          "originalComponent": 373,
+          "median": 0.042231474071741104,
+          "p95": 0.13649486005306244,
+          "max": 0.2198990136384964,
+          "fractionWithin1e_5": 0.0
+        }
+      ]
+    }
+  ]
+}

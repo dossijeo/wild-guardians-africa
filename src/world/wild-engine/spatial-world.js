@@ -15,6 +15,9 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     // game never exits the spatial module. Older binaries omit the import.
     wasi_snapshot_preview1:{proc_exit(code){throw Error(`Wild Engine exited: ${code}`);}}
   }).exports;
+  // Newer standalone Emscripten reactors expose explicit C++ constructors.
+  // Threaded runtime exports are initialized by their factory already.
+  if(!runtimeExports)wasm._initialize?.();
   let chunk=null,navigationBuilt=false,chunks=[],generated=false,chunkRevision=0;
   let workerPortalRoutes=[];
   let diagnoseConnectivity=false;
@@ -151,12 +154,33 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     }
     return removed;
   }
+  // This is the already-maintained native publication list, not the set of
+  // meshes installed by a renderer. Pending/cancelled preparation has not
+  // been published and therefore must not appear in the transfer.
+  function captureResidentChunks(){
+    if(!generated)throw Error('Generate the world before capturing residency');
+    if(wasm.spatial_chunk_count()!==chunks.length||new Set(chunks.map(([x,z])=>`${x},${z}`)).size!==chunks.length)throw Error('Native chunk residency mirror mismatch');
+    return {revision:chunkRevision,keys:chunks.map(([x,z])=>`${x},${z}`),selected:chunk?{cx:chunk.cx,cz:chunk.cz}:null};
+  }
   function props(){
     return spatialProps(wasm);
   }
   function instances(){
     if(!chunk)throw Error('Generate a chunk before reading prop instances');
     return spatialInstances(wasm,chunk.cx,chunk.cz);
+  }
+  // Regional presentation can request one bounded chunk without publishing it
+  // to navigation. Combine results only when their native revisions match.
+  function queryFarVisualChunk(cx,cz,{slots=[0,1,2,3],expectedRevision=null}={}){
+    if(!generated)throw Error('Generate the world before querying far props');
+    if(!Number.isSafeInteger(cx)||!Number.isSafeInteger(cz)||Math.abs(cx)>1000000||Math.abs(cz)>1000000||!Array.isArray(slots)||!slots.length||slots.some(slot=>!Number.isInteger(slot)||slot<0||slot>=20)||new Set(slots).size!==slots.length||expectedRevision!==null&&(!Number.isSafeInteger(expectedRevision)||expectedRevision<1))throw TypeError('Invalid far visual query');
+    if(typeof wasm.spatial_far_query_chunk!=='function'||typeof wasm.spatial_far_world_revision!=='function')throw Error('Far visual query unavailable in this Wild Engine build');
+    const before=wasm.spatial_far_world_revision();if(!Number.isSafeInteger(before)||before<1)throw Error('Invalid far visual world revision');if(expectedRevision!==null&&expectedRevision!==before)return null;
+    const mask=slots.reduce((value,slot)=>value|(1<<slot),0),count=wasm.spatial_far_query_chunk(cx,cz,mask);
+    if(!Number.isSafeInteger(count)||count<0)throw Error('Far visual native query failed');
+    const revision=wasm.spatial_far_query_revision();if(revision!==before||wasm.spatial_far_world_revision()!==before)throw Error('Far visual world changed during query');
+    const props=spatialProps(wasm,count,wasm.spatial_far_query_ptr());
+    return {cx,cz,revision,instances:spatialInstances(wasm,cx,cz,props)};
   }
   function chunkPayload(){
     if(!chunk)throw Error('Generate a chunk before reading its render payload');
@@ -325,7 +349,7 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     }
     wasm.lazy_commit_portals();
   }
-  return {wasm,preparation,generate,addChunk,selectChunk,removeChunk,removeChunks,currentChunk:()=>chunk,
+  return {wasm,preparation,generate,addChunk,selectChunk,removeChunk,removeChunks,currentChunk:()=>chunk,captureResidentChunks,queryFarVisualChunk,farVisualRevision:()=>{const revision=wasm.spatial_far_world_revision?.();if(!Number.isSafeInteger(revision)||revision<1)throw Error('Far visual revision unavailable');return revision;},
     enableConnectivityDiagnostics:()=>{diagnoseConnectivity=true;},
     connectivityDiagnostics:()=>structuredClone(connectivityReasons),
     enclosureAt:point=>navigationBuilt?wasm.lazy_enclosure(point.x,point.z):-1,

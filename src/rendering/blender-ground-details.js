@@ -24,17 +24,23 @@ export function markGroundDetailEvent(details,state,event,previousPosition=()=>n
   if(!details?.enabled)return;
   const mark=point=>{if(point)details.markDirtyAt(point.x,point.z);};
   if(['CropPlaced','CropPicked','CropDestroyed'].includes(event.type)){
-    mark(state.plants.find(plant=>plant.id===(event.targetId??event.cropId)));
+    const point=event.presentation;
+    mark(Number.isFinite(point?.x)&&Number.isFinite(point?.z)?point:state.plants.find(plant=>plant.id===(event.targetId??event.cropId)));
   }else if(event.type==='PlacementCommitted'){
-    mark(state.structures.find(structure=>structure.id===event.targetId)??event.presentation);
+    const point=event.presentation;
+    mark(Number.isFinite(point?.x)&&Number.isFinite(point?.z)?point:state.structures.find(structure=>structure.id===event.targetId));
   }else if(event.type==='WallChainBuilt'){
-    const first=state.structures.findIndex(structure=>structure.id===event.targetId);
-    if(first<0)mark(event.presentation);
-    else for(const structure of state.structures.slice(first,first+event.count))mark(structure);
+    const points=event.presentation?.points;
+    if(Array.isArray(points)&&points.length===event.count&&points.every(p=>Number.isFinite(p?.x)&&Number.isFinite(p?.z)))for(const point of points)mark(point);
+    else {const first=state.structures.findIndex(structure=>structure.id===event.targetId);
+      if(first<0)mark(event.presentation);
+      else for(const structure of state.structures.slice(first,first+event.count))mark(structure);}
   }else if(event.type==='WallRemoved'){
-    mark(previousPosition(event.targetId)??state.structures.find(structure=>structure.id===event.replacedBy));
+    const point=event.presentation;
+    mark(Number.isFinite(point?.x)&&Number.isFinite(point?.z)?point:previousPosition(event.targetId)??state.structures.find(structure=>structure.id===event.replacedBy));
   }else if(event.type==='StructureRuined'||event.type==='RepairApplied'&&event.repair?.previousStatus==='ruined'){
-    mark(state.structures.find(structure=>structure.id===event.targetId));
+    const point=event.type==='RepairApplied'?event.presentation?.structure:event.presentation;
+    mark(Number.isFinite(point?.x)&&Number.isFinite(point?.z)?point:state.structures.find(structure=>structure.id===event.targetId));
   }else if(event.type==='VillageFounded')mark(event);
 }
 

@@ -4,6 +4,9 @@ import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {emit,repairCost} from '../src/simulation/game.js';
+import * as Game from '../src/simulation/game.js';
+import {Navigation} from '../src/world/navigation.js';
+import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
 import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialIntentBridge,createEventDrivenTaskPlanner} from
  '../src/world/wild-engine/spatial-intent-bridge.js';
@@ -164,4 +167,11 @@ test('structure condition events are deduplicated and reset cleanly on restore',
   assert.equal(changes.at(-1).enclosureId,'enclosure:test');
   stopCondition();stopWorld();
  }finally{session.dispose();}
+});
+
+for(const kind of ['center','wall'])test(`a real raid hit starts ${kind} collapse and reaches the native condition observer on flush`,
+ {skip:!module&&'Build and select the spatial-services WASM first'},()=>{
+ const game=Game.newGame({seed:712,culture:'mapungubwe',slotId:'native-collapse-observer'});Game.resume(game,'intro');game.tutorial.step='done';const nav=new Navigation(712,'sabana',{});nav.field={blocked:()=>false,slope:()=>0,surface:()=>0};nav.propsAt=()=>[];nav.setState(game);Game.placeStructure(game,'center',{x:-20,z:-20},nav);if(kind==='wall')Game.placeStructure(game,'wall',{kind:'wall',material:'zarzas',x:0,z:0},nav);const center=kind==='wall'?game.structures.at(-1):game.structures[0];assert.equal(center.kind,kind);center.hp=kind==='wall'?25:130;game.initialPreparation=false;game.time=320;game.nightPlan={at:320,done:true,group:[]};
+ const animation='Weapon_Combo',duration=ANIMAL_ACTIONS.animals.rhino.clips[animation].duration,animal={id:'animal-100',species:'rhino',x:center.x,z:center.z+12,spawn:{x:center.x,z:center.z+40},radius:1,hitsRemaining:8,status:'attacking',targetId:center.id,reservation:'structure:'+center.id,path:null,animation,attackId:'attack-qa',attackDuration:duration,attackRemaining:duration,hitApplied:false};game.raid={id:'raid-qa',animals:[animal],reservations:{[animal.reservation]:animal.id},encounters:[]};
+ const session=createSpatialGameSession(module,game,{loaded:()=>new Map()});try{const planner=createEventDrivenTaskPlanner(session),changes=[],hits=[];planner.resetFromState(game);const stopWorld=planner.observeWorld(game),stopCondition=planner.observeStructureCondition(change=>changes.push(change)),stopEvents=Game.observeGameEvents(game,event=>{if(event.type==='StructureHit')hits.push({event,status:center.status,hp:center.hp});});try{Game.tick(game,duration,nav);assert.equal(hits.length,1);assert.equal(hits[0].status,'collapsing');assert.equal(hits[0].event.targetId,center.id);assert.equal(changes.length,0,'condition notification is deferred until flush');planner.flushWorldEvents();const change=changes.find(x=>x.structureId===center.id);assert.ok(change);assert.equal(change.previousStatus,'intact');assert.equal(change.status,'collapsing');assert.equal(change.hp,center.hp);assert.equal(change.change,'damaged');assert.equal(change.severity,'critical');}finally{stopEvents();stopCondition();stopWorld();}}finally{session.dispose();}
 });

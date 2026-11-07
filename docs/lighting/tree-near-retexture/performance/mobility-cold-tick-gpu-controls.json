@@ -1,0 +1,390 @@
+{
+  "scope": "Edge headless; separately initialized sessions; idle controls include initialization but do not execute the cold simulation tick. GPU groups classify render submission timestamps, not execution timestamps. Converted mangrove islands fixture and nine synthetic chunks; synthetic static-model visualization, no full game rendering or production integration.",
+  "fullSnapshotEqual": true,
+  "runs": [
+    {
+      "mode": "main-idle",
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": {
+        "count": 90,
+        "p95": 33.38499999999931,
+        "p99": 33.440000000000055,
+        "max": 33.440000000000055
+      },
+      "overlap": {
+        "count": 1,
+        "p95": 33.30000000000018,
+        "p99": 33.30000000000018,
+        "max": 33.30000000000018
+      },
+      "tickMs": null,
+      "responseMs": 0,
+      "gpu": {
+        "samples": 91,
+        "p95": 3.128896,
+        "p99": 3.93216,
+        "reason": null,
+        "disjointEvents": 0,
+        "discarded": 0,
+        "overflowSkipped": 0,
+        "pending": 0,
+        "groups": {
+          "before": {
+            "count": 15,
+            "p50": 0.523424,
+            "p95": 2.979328,
+            "p99": 2.979328
+          },
+          "during": {
+            "count": 0,
+            "p50": null,
+            "p95": null,
+            "p99": null
+          },
+          "after": {
+            "count": 76,
+            "p50": 0.428704,
+            "p95": 3.14048,
+            "p99": 3.93216
+          }
+        }
+      }
+    },
+    {
+      "mode": "worker-idle",
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": {
+        "count": 91,
+        "p95": 33.414999999999964,
+        "p99": 33.52500000000009,
+        "max": 33.52500000000009
+      },
+      "overlap": {
+        "count": 1,
+        "p95": 33.33999999999969,
+        "p99": 33.33999999999969,
+        "max": 33.33999999999969
+      },
+      "tickMs": null,
+      "responseMs": 0,
+      "gpu": {
+        "samples": 92,
+        "p95": 3.467744,
+        "p99": 4.455968,
+        "reason": null,
+        "disjointEvents": 0,
+        "discarded": 0,
+        "overflowSkipped": 0,
+        "pending": 0,
+        "groups": {
+          "before": {
+            "count": 15,
+            "p50": 0.546816,
+            "p95": 3.321504,
+            "p99": 3.321504
+          },
+          "during": {
+            "count": 0,
+            "p50": null,
+            "p95": null,
+            "p99": null
+          },
+          "after": {
+            "count": 77,
+            "p50": 0.404352,
+            "p95": 3.811552,
+            "p99": 4.455968
+          }
+        }
+      }
+    },
+    {
+      "mode": "worker",
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": {
+        "count": 90,
+        "p95": 33.39499999999998,
+        "p99": 33.45499999999993,
+        "max": 33.45499999999993
+      },
+      "overlap": {
+        "count": 4,
+        "p95": 33.34999999999991,
+        "p99": 33.34999999999991,
+        "max": 33.34999999999991
+      },
+      "tickMs": 109.43999999761581,
+      "responseMs": 118.55000001192093,
+      "gpu": {
+        "samples": 91,
+        "p95": 3.323904,
+        "p99": 4.033856,
+        "reason": null,
+        "disjointEvents": 0,
+        "discarded": 0,
+        "overflowSkipped": 0,
+        "pending": 0,
+        "groups": {
+          "before": {
+            "count": 15,
+            "p50": 0.434432,
+            "p95": 2.634688,
+            "p99": 2.634688
+          },
+          "during": {
+            "count": 4,
+            "p50": 1.954464,
+            "p95": 2.999904,
+            "p99": 2.999904
+          },
+          "after": {
+            "count": 72,
+            "p50": 0.452608,
+            "p95": 3.41264,
+            "p99": 4.033856
+          }
+        }
+      }
+    },
+    {
+      "mode": "main",
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": {
+        "count": 88,
+        "p95": 33.38500000000022,
+        "p99": 100.01999999999998,
+        "max": 100.01999999999998
+      },
+      "overlap": {
+        "count": 2,
+        "p95": 100.01999999999998,
+        "p99": 100.01999999999998,
+        "max": 100.01999999999998
+      },
+      "tickMs": 106.17000000178814,
+      "responseMs": 114.14000000059605,
+      "gpu": {
+        "samples": 89,
+        "p95": 2.050016,
+        "p99": 2.147744,
+        "reason": null,
+        "disjointEvents": 0,
+        "discarded": 0,
+        "overflowSkipped": 0,
+        "pending": 0,
+        "groups": {
+          "before": {
+            "count": 16,
+            "p50": 0.491232,
+            "p95": 2.147744,
+            "p99": 2.147744
+          },
+          "during": {
+            "count": 1,
+            "p50": 0.495136,
+            "p95": 0.495136,
+            "p99": 0.495136
+          },
+          "after": {
+            "count": 72,
+            "p50": 0.46544,
+            "p95": 0.493536,
+            "p99": 0.496288
+          }
+        }
+      }
+    },
+    {
+      "mode": "main",
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": {
+        "count": 88,
+        "p95": 33.38499999999976,
+        "p99": 100.01500000000033,
+        "max": 100.01500000000033
+      },
+      "overlap": {
+        "count": 2,
+        "p95": 100.01500000000033,
+        "p99": 100.01500000000033,
+        "max": 100.01500000000033
+      },
+      "tickMs": 109.92000000178814,
+      "responseMs": 118.32499998807907,
+      "gpu": {
+        "samples": 89,
+        "p95": 1.900544,
+        "p99": 2.063456,
+        "reason": null,
+        "disjointEvents": 0,
+        "discarded": 0,
+        "overflowSkipped": 0,
+        "pending": 0,
+        "groups": {
+          "before": {
+            "count": 16,
+            "p50": 0.473216,
+            "p95": 2.063456,
+            "p99": 2.063456
+          },
+          "during": {
+            "count": 1,
+            "p50": 0.453952,
+            "p95": 0.453952,
+            "p99": 0.453952
+          },
+          "after": {
+            "count": 72,
+            "p50": 0.4608,
+            "p95": 0.500288,
+            "p99": 0.513312
+          }
+        }
+      }
+    },
+    {
+      "mode": "worker",
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": {
+        "count": 90,
+        "p95": 33.38999999999987,
+        "p99": 33.429999999999836,
+        "max": 33.429999999999836
+      },
+      "overlap": {
+        "count": 4,
+        "p95": 33.350000000000364,
+        "p99": 33.350000000000364,
+        "max": 33.350000000000364
+      },
+      "tickMs": 110.8999999910593,
+      "responseMs": 119.8200000077486,
+      "gpu": {
+        "samples": 91,
+        "p95": 2.64192,
+        "p99": 2.770944,
+        "reason": null,
+        "disjointEvents": 0,
+        "discarded": 0,
+        "overflowSkipped": 0,
+        "pending": 0,
+        "groups": {
+          "before": {
+            "count": 15,
+            "p50": 0.41776,
+            "p95": 2.072576,
+            "p99": 2.072576
+          },
+          "during": {
+            "count": 4,
+            "p50": 0.458816,
+            "p95": 1.988224,
+            "p99": 1.988224
+          },
+          "after": {
+            "count": 72,
+            "p50": 0.45296,
+            "p95": 2.650112,
+            "p99": 2.770944
+          }
+        }
+      }
+    },
+    {
+      "mode": "worker-idle",
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": {
+        "count": 90,
+        "p95": 33.39499999999998,
+        "p99": 33.410000000000764,
+        "max": 33.410000000000764
+      },
+      "overlap": {
+        "count": 1,
+        "p95": 33.31999999999971,
+        "p99": 33.31999999999971,
+        "max": 33.31999999999971
+      },
+      "tickMs": null,
+      "responseMs": 0,
+      "gpu": {
+        "samples": 91,
+        "p95": 2.574976,
+        "p99": 2.838496,
+        "reason": null,
+        "disjointEvents": 0,
+        "discarded": 0,
+        "overflowSkipped": 0,
+        "pending": 0,
+        "groups": {
+          "before": {
+            "count": 16,
+            "p50": 0.540576,
+            "p95": 2.110784,
+            "p99": 2.110784
+          },
+          "during": {
+            "count": 0,
+            "p50": null,
+            "p95": null,
+            "p99": null
+          },
+          "after": {
+            "count": 75,
+            "p50": 0.452608,
+            "p95": 2.69504,
+            "p99": 2.838496
+          }
+        }
+      }
+    },
+    {
+      "mode": "main-idle",
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": {
+        "count": 90,
+        "p95": 33.39000000000033,
+        "p99": 33.46499999999992,
+        "max": 33.46499999999992
+      },
+      "overlap": {
+        "count": 1,
+        "p95": 33.340000000000146,
+        "p99": 33.340000000000146,
+        "max": 33.340000000000146
+      },
+      "tickMs": null,
+      "responseMs": 0,
+      "gpu": {
+        "samples": 91,
+        "p95": 2.770944,
+        "p99": 3.26384,
+        "reason": null,
+        "disjointEvents": 0,
+        "discarded": 0,
+        "overflowSkipped": 0,
+        "pending": 0,
+        "groups": {
+          "before": {
+            "count": 15,
+            "p50": 0.43008,
+            "p95": 2.213088,
+            "p99": 2.213088
+          },
+          "during": {
+            "count": 0,
+            "p50": null,
+            "p95": null,
+            "p99": null
+          },
+          "after": {
+            "count": 76,
+            "p50": 0.456896,
+            "p95": 2.774624,
+            "p99": 3.26384
+          }
+        }
+      }
+    }
+  ]
+}

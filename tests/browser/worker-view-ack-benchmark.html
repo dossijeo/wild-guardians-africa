@@ -1,0 +1,20 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {captureRaidWaitBindings} from '../../src/simulation/raid-wait-handoff.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+window.audit=async()=>{
+ const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
+ const fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),{game,nav}=fixture.diagnosticWorld(),snapshot=serialize(game),raidWaitBindings=captureRaidWaitBindings(game,nav),animal=game.raid.animals.find(a=>a.species==='hyena');fixture.dispose();
+ const send=async(client,command)=>{const request=client.submit(command);if(!request.accepted)throw Error('Worker queue rejected command');return request.result;};
+ async function run(compact,index){const client=createSimulationAuthorityClient({snapshot,chunkKeys:chunks,raidWaitBindings,physicsActorId:animal.id,compactViewAcks:compact,diagnostics:true,session:'view-bench-'+index});
+  try{await client.ready;const attack={kind:'castAttack',id:'bench-hit',targetId:animal.id,x:animal.x,z:animal.z};await send(client,attack);let bytes=0,viewMs=0,events=[],last;const start=performance.now();
+   for(let i=0;i<100;i++){const view={bounds:[0,-48,288,144],eye:{x:100+i*.1,z:5},target:{x:90,z:0}},v=await send(client,{kind:'setNavigationView',view});bytes+=JSON.stringify(v).length;viewMs+=v.diagnostics.executionMs;last=await send(client,{kind:'advance',seconds:.05,nightFastForward:true});events.push(...last.events);}
+   return {compact,totalMs:performance.now()-start,viewMs,bytes,snapshot:last.snapshot,events,pose:last.physicsPose};
+  }finally{client.dispose();}
+ }
+ const runs=[];for(const [index,compact] of [false,true,true,false].entries())runs.push(await run(compact,index));
+ const expected=runs[0];for(const result of runs)if(result.snapshot!==expected.snapshot||JSON.stringify(result.events)!==JSON.stringify(expected.events)||JSON.stringify(result.pose)!==JSON.stringify(expected.pose))throw Error('View acknowledgement changed simulation result');
+ return {runs:runs.map(({compact,totalMs,viewMs,bytes})=>({compact,totalMs,viewMs,bytes})),steps:100,scope:'Identical ordered commands and one active ragdoll in isolated Workers, alternating full and compact view replies. No scene rendering or GPU timing.'};
+};window.ready=true;
+</script>

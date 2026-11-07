@@ -1,0 +1,192 @@
+{
+  "ready": true,
+  "campaign": false,
+  "paused": true,
+  "workerGround": null,
+  "workers": [
+    {
+      "id": "worker-28",
+      "profile": "olderMale",
+      "x": 60,
+      "z": 0,
+      "status": "arriving",
+      "hits": 0
+    }
+  ],
+  "faceCandidate": false,
+  "faceCandidateSpecies": null,
+  "expressions": [
+    {
+      "id": "qa-beast-1",
+      "weights": [
+        1,
+        1,
+        0.8022854515908613
+      ],
+      "bindings": 11
+    }
+  ],
+  "entityCounts": {
+    "workers": 1,
+    "structures": 1,
+    "crops": 12,
+    "animals": 1
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 1,
+  "maxVisibleGuardians": 1,
+  "elapsed": 3012.5504600000518,
+  "simulate": false,
+  "clockMode": "presentation-only",
+  "shields": [
+    {
+      "id": "spell-41",
+      "remaining": 19.759999999999998,
+      "visualAge": 0.240000000000002
+    }
+  ],
+  "active": 1,
+  "origins": [
+    {
+      "origin": {
+        "x": 86.51992649842238,
+        "y": 14.235480448781068,
+        "z": -5.193655813388862
+      },
+      "opacity": 1
+    }
+  ],
+  "retainedAttacks": [
+    {
+      "age": 0.25999999999976353,
+      "source": [
+        89.81142595999101,
+        14.445074301524352,
+        -3.1849468319708847
+      ],
+      "target": [
+        90,
+        13.327137001683544,
+        -6
+      ]
+    }
+  ],
+  "retainedDraws": 3,
+  "attackVisual": [],
+  "reused": 1,
+  "health": 28,
+  "animalState": "walking",
+  "animalPosition": [
+    90,
+    -6
+  ],
+  "draws": 66,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "spirit_appear",
+      "at": 3012.290460000052,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3012.310460000052,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3012.310460000052,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3012.430460000052,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3012.5504600000518,
+      "emitter": "qa-beast-1",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3012.5504600000518,
+      "emitter": "impact:qa-beast-1",
+      "played": false
+    }
+  ],
+  "combatPhysics": {
+    "active": 0,
+    "physicsMs": 0,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 0,
+    "maxStepMs": 0,
+    "solverMs": 0,
+    "solverSteps": 0,
+    "bindingMs": 0,
+    "recoverySetupMs": 0,
+    "creationMs": 0,
+    "lastCreation": null
+  },
+  "physicsWorlds": 0,
+  "physicalBodies": 0,
+  "allDown": [
+    {
+      "id": "qa-beast-1",
+      "x": 90,
+      "z": -6
+    }
+  ],
+  "errors": [
+    "Error: No quedan cultivos disponibles para esta magia\n    at cast (http://127.0.0.1:5194/tests/browser/guardian-combat.js?t=1793191469398:109:388)\n    at $.onclick (http://127.0.0.1:5194/tests/browser/guardian-combat.js?t=1793191469398:112:85)"
+  ],
+  "report": null,
+  "commandCosts": [
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-1",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 90.26028459775668,
+        "y": 14.459729656735506,
+        "z": -3.0113126747398544
+      },
+      "plan": 1.899999976158142,
+      "logic": 1.0750000476837158,
+      "render": 11.144999980926514,
+      "total": 14.120000004768372
+    },
+    {
+      "kind": "shield",
+      "targetId": null,
+      "position": {
+        "x": 82.5,
+        "z": -6
+      },
+      "origin": {
+        "x": 86.51992649842238,
+        "y": 14.235480448781068,
+        "z": -5.193655813388862
+      },
+      "plan": 1.2750000953674316,
+      "logic": 0.7599999904632568,
+      "render": 16.105000019073486,
+      "total": 18.140000104904175
+    }
+  ]
+}

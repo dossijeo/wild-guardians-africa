@@ -8,7 +8,7 @@ export function awakeningHudState(state,{selecting=false,blocked=false}={}){
   const available=ready&&state.awakenings?.enabled!==false&&permission(state,'awakening')&&!blocked;
   return {progress,ready,available,selecting,disabled:!selecting&&!available,
     label:selecting?'Cancelar selección de Despertar':ready?'Despertar disponible: bendecir una planta o muralla':`Energía de Despertar: ${Math.floor(progress)} de 100`,
-    caption:selecting?'Elige una planta o muralla':ready?'¡Despertar!':'Despertar'};
+    caption:'Despertar'};
 }
 // Keep the native action sizes and use the right-hand part of the tutorial reserve.
 export function awakeningHudPlacement(dims,{statsRight=0,menuLeft=dims.w,safeBottom=0}={}){
@@ -37,7 +37,7 @@ export class AwakeningHud {
   render(state,options={}){
     const view=awakeningHudState(state,options);
     this.button.disabled=view.disabled;this.button.setAttribute('aria-label',view.label);this.button.setAttribute('aria-pressed',String(view.selecting));
-    const last=state.awakenings?.history.at(-1);
+    const last=state.awakenings?.history?.at(-1);
     this.button.title=last?`${view.label} · Última jornada: agricultura ${last.agriculture.toFixed(1)}, economía ${last.economy.toFixed(1)}, defensa ${last.defense.toFixed(1)}, acontecimientos ${last.events.toFixed(1)}`:view.label;
     this.element.classList.toggle('is-ready',view.available);this.element.classList.toggle('is-selecting',view.selecting);
     this.stage.classList.toggle('awakening-selecting',view.selecting);
@@ -45,7 +45,7 @@ export class AwakeningHud {
     this.element.style.setProperty('--awakening-arc',String(282.7433*(1-view.progress/100)));
     this.element.querySelector('[role="progressbar"]').setAttribute('aria-valuenow',String(Math.floor(view.progress)));
     this.element.querySelector('.awakening-caption').textContent=view.caption;
-    this.element.querySelector('.awakening-short-caption').textContent=view.selecting?'Cancelar':'Despertar';
+    this.element.querySelector('.awakening-short-caption').textContent=view.caption;
     this.element.querySelector('.awakening-value').textContent=`${Math.floor(view.progress)} / 100`;
   }
   layout(dims){

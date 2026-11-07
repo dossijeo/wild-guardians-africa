@@ -1,0 +1,128 @@
+{
+  "source": "C:\\Users\\PC\\.codex\\worktrees\\guardian-animation\\wild-guardians-africa\\public\\assets\\0c77a268cc0a7d22c66dedb7a471a66a414437f39e6bdfbc60c75dc36acf7920.glb",
+  "sha256": "0c77a268cc0a7d22c66dedb7a471a66a414437f39e6bdfbc60c75dc36acf7920",
+  "scope": "Original vertices and weights; disposable welded biconnected regions",
+  "meshes": [
+    {
+      "mesh": "Mesh_0",
+      "regions": {
+        "eyes": {
+          "vertices": 1815,
+          "dominantCounts": {
+            "Head": 1391,
+            "Neck": 424
+          },
+          "meanWeights": {
+            "Head": 0.5890113484432546,
+            "Neck": 0.4069344956355975,
+            "RightShoulder": 0.0022904137425899464,
+            "LeftShoulder": 0.0017637468394441735
+          }
+        },
+        "muzzle": {
+          "vertices": 1829,
+          "dominantCounts": {
+            "Neck": 1829
+          },
+          "meanWeights": {
+            "Neck": 0.6775235301683091,
+            "Head": 0.320521326095045,
+            "LeftShoulder": 0.0007974550081136906,
+            "RightShoulder": 0.0011576944030312125
+          }
+        },
+        "lower-lip-beard": {
+          "vertices": 985,
+          "dominantCounts": {
+            "Neck": 985
+          },
+          "meanWeights": {
+            "Neck": 0.8008833815603692,
+            "Head": 0.19786247127325401,
+            "LeftShoulder": 0.000623047029065337,
+            "RightShoulder": 0.0005780321200789534,
+            "Spine2": 5.307498241439083e-05
+          }
+        },
+        "neck-collar": {
+          "vertices": 5188,
+          "dominantCounts": {
+            "Neck": 4646,
+            "RightShoulder": 144,
+            "Spine1": 258,
+            "LeftShoulder": 140
+          },
+          "meanWeights": {
+            "Neck": 0.5030192612902296,
+            "LeftShoulder": 0.11523705756660829,
+            "Spine2": 0.13513902543434325,
+            "Spine1": 0.12376312002304111,
+            "RightShoulder": 0.11133632327106105,
+            "RightArm": 0.001593836223449538,
+            "Spine": 0.008219118833932493,
+            "LeftArm": 0.001238982751821911,
+            "LeftUpLeg": 0.00018764846457732854,
+            "Hips": 0.00018501435402915766,
+            "RightForeArm": 8.57387849976328e-07,
+            "RightUpLeg": 7.975134214439481e-05
+          }
+        }
+      },
+      "articulatedParts": [
+        {
+          "vertices": 7889,
+          "min": [
+            -1.5210820436477661,
+            -0.5061155557632446,
+            3.5183333579880127e-07
+          ],
+          "max": [
+            1.5287405252456665,
+            0.45718881487846375,
+            2.270000457763672
+          ]
+        }
+      ]
+    },
+    {
+      "mesh": "Icosphere",
+      "regions": {
+        "eyes": {
+          "vertices": 0,
+          "dominantCounts": {},
+          "meanWeights": {}
+        },
+        "muzzle": {
+          "vertices": 0,
+          "dominantCounts": {},
+          "meanWeights": {}
+        },
+        "lower-lip-beard": {
+          "vertices": 0,
+          "dominantCounts": {},
+          "meanWeights": {}
+        },
+        "neck-collar": {
+          "vertices": 0,
+          "dominantCounts": {},
+          "meanWeights": {}
+        }
+      },
+      "articulatedParts": [
+        {
+          "vertices": 42,
+          "min": [
+            -0.9510578513145447,
+            -0.9999999403953552,
+            -1.0
+          ],
+          "max": [
+            0.9510578513145447,
+            0.9999999403953552,
+            1.0
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -124,9 +124,12 @@ export function prepareActorMotion(state,actor,nav,worker,workerIndex=null){
   // A worker step only needs the local approach. Animal detours retain their
   // full native search corridor dependencies, including remote bodies that
   // may enter an incremental search while it is pending.
+  if(nav.dynamicBodyReview?.nativeOnly&&!nav.dynamicBodyReview.hasBlockers(`${worker?0:1}:${actor.id}`,worker?8:-1))return null;
   const blockers=actorBlockers(state,actor,worker,worker?8:Infinity,workerIndex);
   if(!blockers.length)return null;
-  const clear=(a,b)=>actorSegmentClear(a,b,actor,blockers);
+  const clear=nav.dynamicBodyReview?.nativeOnly?
+    (a,b)=>nav.dynamicBodyReview.clear(`${worker?0:1}:${actor.id}`,a,b,-1):
+    (a,b)=>actorSegmentClear(a,b,actor,blockers);
   if(!actor.path?.length)return clear;
   const horizon=Math.max(4,...blockers.map(b=>2*(radius(actor)+radius(b))+.2));
   let rejoin=0;
@@ -208,6 +211,15 @@ export function prepareActorMotion(state,actor,nav,worker,workerIndex=null){
     else yieldToOpposing();
     return clear;
   }
+  if(nav.dynamicBodyReview){
+    // Select the actor's existing native terrain profile before the native
+    // route query. This opt-in experiment retains the legacy fallback until
+    // all yield, pending-search and traffic cases have passed parity tests.
+    nav.walkable?.(actor.x,actor.z,radius(actor),null,worker);
+    const route=nav.dynamicBodyReview.detour(`${worker?0:1}:${actor.id}`,goal,-1);
+    if(route){actor.path=[...route,...actor.path.slice(rejoin+(look===length?1:0))];return clear;}
+    if(nav.dynamicBodyReview.nativeOnly){yieldToOpposing();return clear;}
+  }
   const nearby=blockers.filter(b=>edgeDistance(actor,goal,b.x,b.z)<radius(actor)+radius(b)+.1);
   const nodes=[{x:actor.x,z:actor.z},goal];
   for(const other of nearby){
@@ -216,7 +228,7 @@ export function prepareActorMotion(state,actor,nav,worker,workerIndex=null){
     const r=(radius(actor)+radius(other)+.02)/Math.cos(Math.PI/16);
     for(let i=0;i<16;i++){
       const angle=i*Math.PI/8,point={x:other.x+Math.sin(angle)*r,z:other.z+Math.cos(angle)*r};
-      if((nav.walkable?.(point.x,point.z,radius(actor),null,worker)??true)&&clear(point,point))nodes.push(point);
+      if(clear(point,point)&&(nav.walkable?.(point.x,point.z,radius(actor),null,worker)??true))nodes.push(point);
     }
   }
   const costs=nodes.map(()=>Infinity),previous=nodes.map(()=>-1),closed=new Set();costs[0]=0;

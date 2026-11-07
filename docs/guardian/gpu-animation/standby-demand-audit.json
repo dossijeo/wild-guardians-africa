@@ -1,0 +1,5489 @@
+{
+  "scope": "One instrumented paused mangrove camera trajectory. Net run changes can hide intermediate changes and counters can cover multiple internal preparations. Requests can repeat and overlap asynchronous work; do not treat their sums as unique trees or savings.",
+  "moveStart": 76428.10000000149,
+  "moveEnd": 80432.07999999821,
+  "requests": {
+    "n": 94,
+    "demand": {
+      "new": 277,
+      "identical": 12416,
+      "identity": 0,
+      "lod": 360,
+      "resource": 0
+    }
+  },
+  "all": {
+    "runs": 39,
+    "prepared": 56,
+    "net": {
+      "added": 223,
+      "removed": 7,
+      "identity": 0,
+      "lod": 262,
+      "resource": 0,
+      "unchanged": 16772
+    },
+    "counters": {
+      "addedEntries": 223,
+      "identityChanges": 0,
+      "lodChanges": 269,
+      "resourceDrops": 0,
+      "distanceDrops": 7,
+      "budgetEvictions": 0
+    },
+    "zeroNet": 24
+  },
+  "during": {
+    "runs": 11,
+    "prepared": 51,
+    "net": {
+      "added": 223,
+      "removed": 5,
+      "identity": 0,
+      "lod": 254,
+      "resource": 0,
+      "unchanged": 3956
+    },
+    "counters": {
+      "addedEntries": 223,
+      "identityChanges": 0,
+      "lodChanges": 254,
+      "resourceDrops": 0,
+      "distanceDrops": 5,
+      "budgetEvictions": 0
+    },
+    "zeroNet": 1
+  },
+  "rows": [
+    {
+      "at": 77318.69000000507,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        72.09329460993811,
+        18.674902050681187,
+        73.3727275418389
+      ],
+      "active": false,
+      "activeKey": null,
+      "trees": 242,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 15
+      },
+      "requested": true,
+      "requestCamera": {
+        "x": 72.09329460993811,
+        "z": 73.3727275418389
+      },
+      "entry": {
+        "x": 192.81883239746094,
+        "z": 216.5174560546875,
+        "level": 2
+      },
+      "demand": {
+        "new": 58,
+        "identical": 141,
+        "identity": 0,
+        "lod": 3,
+        "resource": 0
+      }
+    },
+    {
+      "at": 77506.35500000417,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        69.09779369881379,
+        18.67490205068119,
+        80.71216906314564
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 300,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 17
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 69.09779369881379,
+        "z": 80.71216906314564
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 41,
+        "identity": 0,
+        "lod": 6,
+        "resource": 0
+      }
+    },
+    {
+      "at": 77541.0399999991,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        67.82013545139388,
+        18.67490205068119,
+        83.84262980055668
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 334,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 18
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 67.82013545139388,
+        "z": 83.84262980055668
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 182,
+        "identity": 0,
+        "lod": 5,
+        "resource": 0
+      }
+    },
+    {
+      "at": 77613.32999999821,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        66.49828235443135,
+        18.67490205068119,
+        87.08137476934832
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 334,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 19
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 66.49828235443135,
+        "z": 87.08137476934832
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 172,
+        "identity": 0,
+        "lod": 7,
+        "resource": 0
+      }
+    },
+    {
+      "at": 77675.57500000298,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        66.49828235443135,
+        18.67490205068119,
+        87.08137476934832
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 334,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 19
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 66.49828235443135,
+        "z": 87.08137476934832
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 52,
+        "identity": 0,
+        "lod": 3,
+        "resource": 0
+      }
+    },
+    {
+      "at": 77774.28500000387,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        64.60542437238995,
+        18.67490205068119,
+        91.71917020975003
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 334,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 21
+      },
+      "changes": {
+        "added": 92,
+        "removed": 0,
+        "identity": 0,
+        "lod": 35,
+        "resource": 0,
+        "unchanged": 207
+      },
+      "counters": {
+        "preparations": 7,
+        "requests": 8,
+        "queuedReplacements": 2,
+        "addedEntries": 92,
+        "identityChanges": 0,
+        "lodChanges": 35,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 77788.2349999994,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        63.29517706563337,
+        18.67490205068119,
+        94.92947919369225
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 334,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 21
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 63.29517706563337,
+        "z": 94.92947919369225
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 175,
+        "identity": 0,
+        "lod": 4,
+        "resource": 0
+      }
+    },
+    {
+      "at": 77788.50500000268,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        63.29517706563337,
+        18.67490205068119,
+        94.92947919369225
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 334,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 21
+      }
+    },
+    {
+      "at": 77821.2899999991,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        63.29517706563337,
+        18.67490205068119,
+        94.92947919369225
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 334,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 21
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 63.29517706563337,
+        "z": 94.92947919369225
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 51,
+        "identity": 0,
+        "lod": 4,
+        "resource": 0
+      }
+    },
+    {
+      "at": 77857.26000000536,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        61.9796375185462,
+        18.67490205068119,
+        98.15275498671767
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 334,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 21
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 61.9796375185462,
+        "z": 98.15275498671767
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 174,
+        "identity": 0,
+        "lod": 8,
+        "resource": 0
+      }
+    },
+    {
+      "at": 77907.78000000119,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        60.99528080474113,
+        18.67490205068119,
+        100.56458150636517
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 334,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 22
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 60.99528080474113,
+        "z": 100.56458150636517
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 175,
+        "identity": 0,
+        "lod": 7,
+        "resource": 0
+      }
+    },
+    {
+      "at": 77951.45000000298,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        60.99528080474113,
+        18.67490205068119,
+        100.56458150636517
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 334,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 22
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 60.99528080474113,
+        "z": 100.56458150636517
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 43,
+        "identity": 0,
+        "lod": 9,
+        "resource": 0
+      }
+    },
+    {
+      "at": 77979.09000000358,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        59.68122679878483,
+        18.67490205068119,
+        103.78421749336782
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 334,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 23
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 59.68122679878483,
+        "z": 103.78421749336782
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 178,
+        "identity": 0,
+        "lod": 5,
+        "resource": 0
+      }
+    },
+    {
+      "at": 78045.96999999881,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        58.750720952149734,
+        18.67490205068119,
+        106.06410104180878
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 334,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 24
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 58.750720952149734,
+        "z": 106.06410104180878
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 51,
+        "identity": 0,
+        "lod": 4,
+        "resource": 0
+      }
+    },
+    {
+      "at": 78078.55000000447,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        57.816501252549116,
+        18.67490205068119,
+        108.35308410564565
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 334,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 25
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 57.816501252549116,
+        "z": 108.35308410564565
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 184,
+        "identity": 0,
+        "lod": 3,
+        "resource": 0
+      }
+    },
+    {
+      "at": 78141.78500000387,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        57.01050232469468,
+        18.67490205068119,
+        110.32790640506644
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 334,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 26
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 57.01050232469468,
+        "z": 110.32790640506644
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 47,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0
+      }
+    },
+    {
+      "at": 78163.71500000358,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        57.01050232469468,
+        18.67490205068119,
+        110.32790640506644
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 334,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 27
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 29,
+        "resource": 0,
+        "unchanged": 305
+      },
+      "counters": {
+        "preparations": 6,
+        "requests": 8,
+        "queuedReplacements": 2,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 29,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 78246.06000000238,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        55.005764523761705,
+        18.67490205068119,
+        115.23982474261689
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 334,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 27
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 55.005764523761705,
+        "z": 115.23982474261689
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 46,
+        "identity": 0,
+        "lod": 1,
+        "resource": 0
+      }
+    },
+    {
+      "at": 78246.17000000179,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        55.005764523761705,
+        18.67490205068119,
+        115.23982474261689
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 334,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 27
+      }
+    },
+    {
+      "at": 78267.96999999881,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        54.26884326015287,
+        18.67490205068119,
+        117.04539605791135
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 334,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 27
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 54.26884326015287,
+        "z": 117.04539605791135
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 178,
+        "identity": 0,
+        "lod": 9,
+        "resource": 0
+      }
+    },
+    {
+      "at": 78311.62000000477,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        53.47036488446369,
+        18.67490205068119,
+        119.00179183887577
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 334,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 28
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 53.47036488446369,
+        "z": 119.00179183887577
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 173,
+        "identity": 0,
+        "lod": 14,
+        "resource": 0
+      }
+    },
+    {
+      "at": 78330.64999999851,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        53.47036488446369,
+        18.67490205068119,
+        119.00179183887577
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 334,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 28
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 53.47036488446369,
+        "z": 119.00179183887577
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 43,
+        "identity": 0,
+        "lod": 4,
+        "resource": 0
+      }
+    },
+    {
+      "at": 78362.875,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        52.54088034737337,
+        18.67490205068119,
+        121.27917302063372
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 334,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 29
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 52.54088034737337,
+        "z": 121.27917302063372
+      },
+      "entry": null,
+      "demand": {
+        "new": 50,
+        "identical": 156,
+        "identity": 0,
+        "lod": 7,
+        "resource": 0
+      }
+    },
+    {
+      "at": 78404.0150000006,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        51.75335783769728,
+        18.67490205068119,
+        123.20872523175655
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 334,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 30
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 51.75335783769728,
+        "z": 123.20872523175655
+      },
+      "entry": null,
+      "demand": {
+        "new": 50,
+        "identical": 155,
+        "identity": 0,
+        "lod": 8,
+        "resource": 0
+      }
+    },
+    {
+      "at": 78424.34000000358,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        51.75335783769728,
+        18.67490205068119,
+        123.20872523175655
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 334,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 30
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 51.75335783769728,
+        "z": 123.20872523175655
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 36,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0
+      }
+    },
+    {
+      "at": 78453.63000000268,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        50.825823073462274,
+        18.67490205068119,
+        125.48132916781302
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 31
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 50.825823073462274,
+        "z": 125.48132916781302
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 205,
+        "identity": 0,
+        "lod": 8,
+        "resource": 0
+      }
+    },
+    {
+      "at": 78529.79500000179,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        49.763846833701585,
+        18.67490205068119,
+        128.08333555672624
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 32
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 49.763846833701585,
+        "z": 128.08333555672624
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 40,
+        "identity": 0,
+        "lod": 7,
+        "resource": 0
+      }
+    },
+    {
+      "at": 78578.80000000447,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        48.81662864899834,
+        18.67490205068119,
+        130.40416692377076
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 34
+      },
+      "changes": {
+        "added": 50,
+        "removed": 0,
+        "identity": 0,
+        "lod": 35,
+        "resource": 0,
+        "unchanged": 299
+      },
+      "counters": {
+        "preparations": 7,
+        "requests": 8,
+        "queuedReplacements": 2,
+        "addedEntries": 50,
+        "identityChanges": 0,
+        "lodChanges": 35,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 78625.81500000507,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        47.63376649704995,
+        18.67490205068119,
+        133.3023625343118
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 34
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 47.63376649704995,
+        "z": 133.3023625343118
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 191,
+        "identity": 0,
+        "lod": 11,
+        "resource": 0
+      }
+    },
+    {
+      "at": 78625.98000000417,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        47.63376649704995,
+        18.67490205068119,
+        133.3023625343118
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 34
+      }
+    },
+    {
+      "at": 78648.16000000387,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        47.63376649704995,
+        18.67490205068119,
+        133.3023625343118
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 34
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 47.63376649704995,
+        "z": 133.3023625343118
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 44,
+        "identity": 0,
+        "lod": 3,
+        "resource": 0
+      }
+    },
+    {
+      "at": 78669.21999999881,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        46.81476908409287,
+        18.674902050681187,
+        135.30903313694026
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 34
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 46.81476908409287,
+        "z": 135.30903313694026
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 190,
+        "identity": 0,
+        "lod": 12,
+        "resource": 0
+      }
+    },
+    {
+      "at": 78713.67500000447,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        46.205140128919666,
+        18.674902050681187,
+        136.8027185668371
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 35
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 46.205140128919666,
+        "z": 136.8027185668371
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 42,
+        "identity": 0,
+        "lod": 5,
+        "resource": 0
+      }
+    },
+    {
+      "at": 78768.23000000417,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        45.655768437164355,
+        18.674902050681187,
+        138.14876436175763
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 37
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 17,
+        "resource": 0,
+        "unchanged": 367
+      },
+      "counters": {
+        "preparations": 3,
+        "requests": 3,
+        "queuedReplacements": 1,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 17,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 78774.62000000477,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        44.83881364315847,
+        18.674902050681187,
+        140.150430231359
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 37
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 44.83881364315847,
+        "z": 140.150430231359
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 196,
+        "identity": 0,
+        "lod": 6,
+        "resource": 0
+      }
+    },
+    {
+      "at": 78774.79500000179,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        44.83881364315847,
+        18.674902050681187,
+        140.150430231359
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 37
+      }
+    },
+    {
+      "at": 78798.37000000477,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        44.83881364315847,
+        18.674902050681187,
+        140.150430231359
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 37
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 44.83881364315847,
+        "z": 140.150430231359
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 44,
+        "identity": 0,
+        "lod": 3,
+        "resource": 0
+      }
+    },
+    {
+      "at": 78818.86500000209,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        43.99576903257478,
+        18.674902050681187,
+        142.2160201953792
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 37
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 43.99576903257478,
+        "z": 142.2160201953792
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 193,
+        "identity": 0,
+        "lod": 9,
+        "resource": 0
+      }
+    },
+    {
+      "at": 78858.21500000358,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        43.272774717379136,
+        18.67490205068119,
+        143.98746832844753
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 38
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 43.272774717379136,
+        "z": 143.98746832844753
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 195,
+        "identity": 0,
+        "lod": 7,
+        "resource": 0
+      }
+    },
+    {
+      "at": 78875.31500000507,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        43.272774717379136,
+        18.67490205068119,
+        143.98746832844753
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 38
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 43.272774717379136,
+        "z": 143.98746832844753
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 43,
+        "identity": 0,
+        "lod": 4,
+        "resource": 0
+      }
+    },
+    {
+      "at": 78893.625,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        42.64680480935131,
+        18.67490205068119,
+        145.52119162561172
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 39
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 42.64680480935131,
+        "z": 145.52119162561172
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 197,
+        "identity": 0,
+        "lod": 5,
+        "resource": 0
+      }
+    },
+    {
+      "at": 78945.3599999994,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        42.00616518234487,
+        18.67490205068119,
+        147.0908580080134
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 40
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 42.00616518234487,
+        "z": 147.0908580080134
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 44,
+        "identity": 0,
+        "lod": 3,
+        "resource": 0
+      }
+    },
+    {
+      "at": 78963.45000000298,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        41.31213891975457,
+        18.67490205068119,
+        148.7913299222819
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 41
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 41.31213891975457,
+        "z": 148.7913299222819
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 200,
+        "identity": 0,
+        "lod": 2,
+        "resource": 0
+      }
+    },
+    {
+      "at": 79022.4149999991,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        40.634175070901186,
+        18.67490205068119,
+        150.4524464332937
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 42
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 40.634175070901186,
+        "z": 150.4524464332937
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 43,
+        "identity": 0,
+        "lod": 4,
+        "resource": 0
+      }
+    },
+    {
+      "at": 79075.60000000149,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        39.92872871071168,
+        18.67490205068119,
+        152.18089935674354
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 44
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 27,
+        "resource": 0,
+        "unchanged": 357
+      },
+      "counters": {
+        "preparations": 7,
+        "requests": 8,
+        "queuedReplacements": 2,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 27,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 79098.02000000328,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        39.131178798194696,
+        18.67490205068119,
+        154.1350202590285
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 44
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 39.131178798194696,
+        "z": 154.1350202590285
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 46,
+        "identity": 0,
+        "lod": 1,
+        "resource": 0
+      }
+    },
+    {
+      "at": 79098.1099999994,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        39.131178798194696,
+        18.67490205068119,
+        154.1350202590285
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 44
+      }
+    },
+    {
+      "at": 79158.26000000536,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        38.57605063438433,
+        18.674902050681194,
+        155.4951703027109
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 45
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 1,
+        "resource": 0,
+        "unchanged": 383
+      },
+      "counters": {
+        "preparations": 1,
+        "requests": 0,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 1,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 79176.78000000119,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        37.593550847062026,
+        18.674902050681194,
+        157.90244706466046
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 45
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 37.593550847062026,
+        "z": 157.90244706466046
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 189,
+        "identity": 0,
+        "lod": 13,
+        "resource": 0
+      }
+    },
+    {
+      "at": 79177.16000000387,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        37.593550847062026,
+        18.674902050681194,
+        157.90244706466046
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 45
+      }
+    },
+    {
+      "at": 79204.09499999881,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        37.593550847062026,
+        18.674902050681194,
+        157.90244706466046
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 45
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 37.593550847062026,
+        "z": 157.90244706466046
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 46,
+        "identity": 0,
+        "lod": 1,
+        "resource": 0
+      }
+    },
+    {
+      "at": 79258.99000000209,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        35.80876598471245,
+        18.674902050681194,
+        162.27544661097392
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 46
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 35.80876598471245,
+        "z": 162.27544661097392
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 195,
+        "identity": 0,
+        "lod": 7,
+        "resource": 0
+      }
+    },
+    {
+      "at": 79290.3900000006,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        35.80876598471245,
+        18.674902050681194,
+        162.27544661097392
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 46
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 35.80876598471245,
+        "z": 162.27544661097392
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 45,
+        "identity": 0,
+        "lod": 2,
+        "resource": 0
+      }
+    },
+    {
+      "at": 79320.2899999991,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        34.793677138053496,
+        18.674902050681194,
+        164.76257161945463
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 47
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 34.793677138053496,
+        "z": 164.76257161945463
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 194,
+        "identity": 0,
+        "lod": 8,
+        "resource": 0
+      }
+    },
+    {
+      "at": 79373.6099999994,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        33.713874404445676,
+        18.674902050681194,
+        167.40825568131896
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 48
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 33.713874404445676,
+        "z": 167.40825568131896
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 199,
+        "identity": 0,
+        "lod": 3,
+        "resource": 0
+      }
+    },
+    {
+      "at": 79388.88500000536,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        33.713874404445676,
+        18.674902050681194,
+        167.40825568131896
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 48
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 33.713874404445676,
+        "z": 167.40825568131896
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 43,
+        "identity": 0,
+        "lod": 4,
+        "resource": 0
+      }
+    },
+    {
+      "at": 79420.6649999991,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        32.90323316045351,
+        18.674902050681194,
+        169.39445237481513
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 49
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 32.90323316045351,
+        "z": 169.39445237481513
+      },
+      "entry": null,
+      "demand": {
+        "new": 38,
+        "identical": 180,
+        "identity": 0,
+        "lod": 4,
+        "resource": 0
+      }
+    },
+    {
+      "at": 79481.7349999994,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        31.940788178812987,
+        18.674902050681194,
+        171.75259175444043
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 50
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 31.940788178812987,
+        "z": 171.75259175444043
+      },
+      "entry": null,
+      "demand": {
+        "new": 38,
+        "identical": 179,
+        "identity": 0,
+        "lod": 5,
+        "resource": 0
+      }
+    },
+    {
+      "at": 79501.91000000387,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        31.940788178812987,
+        18.674902050681194,
+        171.75259175444043
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 384,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 50
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 31.940788178812987,
+        "z": 171.75259175444043
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 29,
+        "identity": 0,
+        "lod": 3,
+        "resource": 0
+      }
+    },
+    {
+      "at": 79539.2349999994,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        30.67334302684074,
+        18.674902050681194,
+        174.85802882502122
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 422,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 51
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 30.67334302684074,
+        "z": 174.85802882502122
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 216,
+        "identity": 0,
+        "lod": 6,
+        "resource": 0
+      }
+    },
+    {
+      "at": 79637.0549999997,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        29.221597924256034,
+        18.674902050681194,
+        178.41502934025883
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 422,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 52
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 29.221597924256034,
+        "z": 178.41502934025883
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 26,
+        "identity": 0,
+        "lod": 6,
+        "resource": 0
+      }
+    },
+    {
+      "at": 79673.2899999991,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        28.22405703260322,
+        18.674902050681194,
+        180.8591591391211
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 422,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 53
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 28.22405703260322,
+        "z": 180.8591591391211
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 218,
+        "identity": 0,
+        "lod": 4,
+        "resource": 0
+      }
+    },
+    {
+      "at": 79720.00500000268,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        27.295779497664434,
+        18.674902050681194,
+        183.1335829785279
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 422,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 54
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 27.295779497664434,
+        "z": 183.1335829785279
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 209,
+        "identity": 0,
+        "lod": 13,
+        "resource": 0
+      }
+    },
+    {
+      "at": 79744.78000000119,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        27.295779497664434,
+        18.674902050681194,
+        183.1335829785279
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 422,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 0,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 54
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 27.295779497664434,
+        "z": 183.1335829785279
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 30,
+        "identity": 0,
+        "lod": 2,
+        "resource": 0
+      }
+    },
+    {
+      "at": 79808.78500000387,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        26.322192957265685,
+        18.674902050681194,
+        185.5190209040019
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 421,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 1,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 56
+      },
+      "changes": {
+        "added": 38,
+        "removed": 1,
+        "identity": 0,
+        "lod": 61,
+        "resource": 0,
+        "unchanged": 322
+      },
+      "counters": {
+        "preparations": 11,
+        "requests": 14,
+        "queuedReplacements": 4,
+        "addedEntries": 38,
+        "identityChanges": 0,
+        "lodChanges": 61,
+        "resourceDrops": 0,
+        "distanceDrops": 1,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 79856.59499999881,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        25.516472568390583,
+        18.674902050681194,
+        187.49316073975103
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 421,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 1,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 56
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 25.516472568390583,
+        "z": 187.49316073975103
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 32,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0
+      }
+    },
+    {
+      "at": 79856.7100000009,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        25.516472568390583,
+        18.674902050681194,
+        187.49316073975103
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 421,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 1,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 56
+      }
+    },
+    {
+      "at": 79864.1799999997,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        25.516472568390583,
+        18.674902050681194,
+        187.49316073975103
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 421,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 1,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 56
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0,
+        "unchanged": 421
+      },
+      "counters": {
+        "preparations": 0,
+        "requests": 0,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 0,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 79885.12000000477,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        24.2707534559761,
+        18.674902050681194,
+        190.54536564597774
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 421,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 1,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 56
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 24.2707534559761,
+        "z": 190.54536564597774
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 214,
+        "identity": 0,
+        "lod": 8,
+        "resource": 0
+      }
+    },
+    {
+      "at": 79885.4450000003,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        24.2707534559761,
+        18.674902050681194,
+        190.54536564597774
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 421,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 1,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 56
+      }
+    },
+    {
+      "at": 79931.26000000536,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        23.374043670829202,
+        18.674902050681194,
+        192.7424436055364
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 421,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 1,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 56
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 23.374043670829202,
+        "z": 192.7424436055364
+      },
+      "entry": null,
+      "demand": {
+        "new": 43,
+        "identical": 161,
+        "identity": 0,
+        "lod": 12,
+        "resource": 0
+      }
+    },
+    {
+      "at": 79951.8200000003,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        23.374043670829202,
+        18.674902050681194,
+        192.7424436055364
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 421,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 1,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 56
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 23.374043670829202,
+        "z": 192.7424436055364
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 28,
+        "identity": 0,
+        "lod": 4,
+        "resource": 0
+      }
+    },
+    {
+      "at": 80001.84499999881,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        22.506023399446665,
+        18.674902050681194,
+        194.86922780962792
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 464,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 1,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 58
+      },
+      "changes": {
+        "added": 43,
+        "removed": 0,
+        "identity": 0,
+        "lod": 16,
+        "resource": 0,
+        "unchanged": 405
+      },
+      "counters": {
+        "preparations": 2,
+        "requests": 2,
+        "queuedReplacements": 1,
+        "addedEntries": 43,
+        "identityChanges": 0,
+        "lodChanges": 16,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 80008.90500000119,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        21.877453794370652,
+        18.674902050681194,
+        196.40932076750144
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 464,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 1,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 58
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 21.877453794370652,
+        "z": 196.40932076750144
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 213,
+        "identity": 0,
+        "lod": 3,
+        "resource": 0
+      }
+    },
+    {
+      "at": 80009.20499999821,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        21.877453794370652,
+        18.674902050681194,
+        196.40932076750144
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 464,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 1,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 58
+      }
+    },
+    {
+      "at": 80030.36500000209,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        21.877453794370652,
+        18.674902050681194,
+        196.40932076750144
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 464,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 1,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 58
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 21.877453794370652,
+        "z": 196.40932076750144
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 28,
+        "identity": 0,
+        "lod": 4,
+        "resource": 0
+      }
+    },
+    {
+      "at": 80115.65500000119,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        20.643340472300487,
+        18.674902050681194,
+        199.4330896885397
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 464,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 1,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 59
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 20.643340472300487,
+        "z": 199.4330896885397
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 27,
+        "identity": 0,
+        "lod": 5,
+        "resource": 0
+      }
+    },
+    {
+      "at": 80135.5,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        19.52853467505294,
+        18.674902050681194,
+        202.16453668163746
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 464,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 1,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 60
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 19.52853467505294,
+        "z": 202.16453668163746
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 210,
+        "identity": 0,
+        "lod": 6,
+        "resource": 0
+      }
+    },
+    {
+      "at": 80165.29500000179,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        18.96607165182244,
+        18.674902050681194,
+        203.54265826776918
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 464,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 1,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 61
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 18.96607165182244,
+        "z": 203.54265826776918
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 207,
+        "identity": 0,
+        "lod": 9,
+        "resource": 0
+      }
+    },
+    {
+      "at": 80180.43500000238,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        18.96607165182244,
+        18.674902050681194,
+        203.54265826776918
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 464,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 1,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 61
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 18.96607165182244,
+        "z": 203.54265826776918
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 27,
+        "identity": 0,
+        "lod": 5,
+        "resource": 0
+      }
+    },
+    {
+      "at": 80198.38500000536,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        18.35105760980771,
+        18.674902050681194,
+        205.04953799509175
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 464,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 2,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 62
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 18.35105760980771,
+        "z": 205.04953799509175
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 211,
+        "identity": 0,
+        "lod": 5,
+        "resource": 0
+      }
+    },
+    {
+      "at": 80265.51000000536,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        17.719609768842524,
+        18.674902050681194,
+        206.59668307700724
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 463,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 2,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 64
+      },
+      "changes": {
+        "added": 0,
+        "removed": 1,
+        "identity": 0,
+        "lod": 24,
+        "resource": 0,
+        "unchanged": 439
+      },
+      "counters": {
+        "preparations": 6,
+        "requests": 6,
+        "queuedReplacements": 1,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 24,
+        "resourceDrops": 0,
+        "distanceDrops": 1,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 80387.125,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.842209380250923,
+        18.674902050681194,
+        213.64676001306356
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 463,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 2,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 64
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.842209380250923,
+        "z": 213.64676001306356
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 207,
+        "identity": 0,
+        "lod": 9,
+        "resource": 0
+      }
+    },
+    {
+      "at": 80387.44000000507,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.842209380250923,
+        18.674902050681194,
+        213.64676001306356
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 463,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 2,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 64
+      }
+    },
+    {
+      "at": 80431.35000000149,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.252635230759495,
+        18.674902050681194,
+        215.09130806063612
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 460,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 5,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 65
+      },
+      "changes": {
+        "added": 0,
+        "removed": 3,
+        "identity": 0,
+        "lod": 9,
+        "resource": 0,
+        "unchanged": 451
+      },
+      "counters": {
+        "preparations": 1,
+        "requests": 0,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 9,
+        "resourceDrops": 0,
+        "distanceDrops": 3,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 80681.8350000009,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 460,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 5,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 65
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 215,
+        "identity": 0,
+        "lod": 1,
+        "resource": 0
+      }
+    },
+    {
+      "at": 80682.13500000536,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 460,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 5,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 65
+      }
+    },
+    {
+      "at": 80722.03500000387,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 66
+      },
+      "changes": {
+        "added": 0,
+        "removed": 2,
+        "identity": 0,
+        "lod": 1,
+        "resource": 0,
+        "unchanged": 457
+      },
+      "counters": {
+        "preparations": 1,
+        "requests": 0,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 1,
+        "resourceDrops": 0,
+        "distanceDrops": 2,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 82647.5700000003,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 66
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 206,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0
+      }
+    },
+    {
+      "at": 82647.74500000477,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 66
+      }
+    },
+    {
+      "at": 82693.01000000536,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 66
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 39,
+        "identity": 0,
+        "lod": 3,
+        "resource": 0
+      }
+    },
+    {
+      "at": 82693.13000000268,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 66
+      }
+    },
+    {
+      "at": 82698.00500000268,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 66
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0,
+        "unchanged": 458
+      },
+      "counters": {
+        "preparations": 0,
+        "requests": 1,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 3,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 82728.02000000328,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 66
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 206,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0
+      }
+    },
+    {
+      "at": 82758.32500000298,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 67
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 3,
+        "resource": 0,
+        "unchanged": 455
+      },
+      "counters": {
+        "preparations": 1,
+        "requests": 1,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 3,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 84682.24000000209,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 67
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 197,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0
+      }
+    },
+    {
+      "at": 84682.52000000328,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 67
+      }
+    },
+    {
+      "at": 84709.3049999997,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 67
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 50,
+        "identity": 0,
+        "lod": 1,
+        "resource": 0
+      }
+    },
+    {
+      "at": 84709.39500000328,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 67
+      }
+    },
+    {
+      "at": 84713.69000000507,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 67
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0,
+        "unchanged": 458
+      },
+      "counters": {
+        "preparations": 0,
+        "requests": 1,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 1,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 84734.89500000328,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 67
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 197,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0
+      }
+    },
+    {
+      "at": 84748.89999999851,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 68
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 1,
+        "resource": 0,
+        "unchanged": 457
+      },
+      "counters": {
+        "preparations": 1,
+        "requests": 1,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 1,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 86681.99500000477,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 68
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 197,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0
+      }
+    },
+    {
+      "at": 86682.2899999991,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 68
+      }
+    },
+    {
+      "at": 86703.14999999851,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 68
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0,
+        "unchanged": 458
+      },
+      "counters": {
+        "preparations": 0,
+        "requests": 0,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 0,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 88012.52499999851,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 68
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 197,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0
+      }
+    },
+    {
+      "at": 88012.7100000009,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 68
+      }
+    },
+    {
+      "at": 88020.95499999821,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 68
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0,
+        "unchanged": 458
+      },
+      "counters": {
+        "preparations": 0,
+        "requests": 0,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 0,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 88713.63000000268,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 68
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 190,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0
+      }
+    },
+    {
+      "at": 88713.8049999997,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 68
+      }
+    },
+    {
+      "at": 88732.8049999997,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 68
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 57,
+        "identity": 0,
+        "lod": 1,
+        "resource": 0
+      }
+    },
+    {
+      "at": 88732.89500000328,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 68
+      }
+    },
+    {
+      "at": 88735.95499999821,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 68
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0,
+        "unchanged": 458
+      },
+      "counters": {
+        "preparations": 0,
+        "requests": 1,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 1,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 88765.90500000119,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 69
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 1,
+        "resource": 0,
+        "unchanged": 457
+      },
+      "counters": {
+        "preparations": 1,
+        "requests": 0,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 1,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 90713.66000000387,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 69
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 180,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0
+      }
+    },
+    {
+      "at": 90713.82999999821,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 69
+      }
+    },
+    {
+      "at": 90729.44000000507,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 69
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 66,
+        "identity": 0,
+        "lod": 2,
+        "resource": 0
+      }
+    },
+    {
+      "at": 90729.54500000179,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 69
+      }
+    },
+    {
+      "at": 90733.6099999994,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 69
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0,
+        "unchanged": 458
+      },
+      "counters": {
+        "preparations": 0,
+        "requests": 1,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 2,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 90765.51000000536,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 2,
+        "resource": 0,
+        "unchanged": 456
+      },
+      "counters": {
+        "preparations": 1,
+        "requests": 0,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 2,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 92746.77000000328,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 180,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0
+      }
+    },
+    {
+      "at": 92746.9600000009,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      }
+    },
+    {
+      "at": 92760.52499999851,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0,
+        "unchanged": 458
+      },
+      "counters": {
+        "preparations": 0,
+        "requests": 0,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 0,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 94813.80000000447,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 180,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0
+      }
+    },
+    {
+      "at": 94813.95499999821,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      }
+    },
+    {
+      "at": 94828.21999999881,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0,
+        "unchanged": 458
+      },
+      "counters": {
+        "preparations": 0,
+        "requests": 0,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 0,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 96847.07500000298,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 180,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0
+      }
+    },
+    {
+      "at": 96847.25500000268,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      }
+    },
+    {
+      "at": 96860.44000000507,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0,
+        "unchanged": 458
+      },
+      "counters": {
+        "preparations": 0,
+        "requests": 0,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 0,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 96947.7650000006,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 177,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0
+      }
+    },
+    {
+      "at": 96947.94000000507,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      }
+    },
+    {
+      "at": 96965.74000000209,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 71,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0
+      }
+    },
+    {
+      "at": 96965.84000000358,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      }
+    },
+    {
+      "at": 96968.89500000328,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0,
+        "unchanged": 458
+      },
+      "counters": {
+        "preparations": 0,
+        "requests": 1,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 0,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 96977.0549999997,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0,
+        "unchanged": 458
+      },
+      "counters": {
+        "preparations": 0,
+        "requests": 0,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 0,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 97147.80000000447,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 166,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0
+      }
+    },
+    {
+      "at": 97147.99000000209,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      }
+    },
+    {
+      "at": 97184.4849999994,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 82,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0
+      }
+    },
+    {
+      "at": 97184.5850000009,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      }
+    },
+    {
+      "at": 97187.5,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0,
+        "unchanged": 458
+      },
+      "counters": {
+        "preparations": 0,
+        "requests": 1,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 0,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 97195.91000000387,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0,
+        "unchanged": 458
+      },
+      "counters": {
+        "preparations": 0,
+        "requests": 0,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 0,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 97213.75500000268,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 166,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0
+      }
+    },
+    {
+      "at": 97214.03000000119,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      }
+    },
+    {
+      "at": 97226.82500000298,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0,
+        "unchanged": 458
+      },
+      "counters": {
+        "preparations": 0,
+        "requests": 0,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 0,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 97413.8350000009,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 160,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0
+      }
+    },
+    {
+      "at": 97413.9849999994,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      }
+    },
+    {
+      "at": 97444.63500000536,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 88,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0
+      }
+    },
+    {
+      "at": 97444.76000000536,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      }
+    },
+    {
+      "at": 97447.71500000358,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0,
+        "unchanged": 458
+      },
+      "counters": {
+        "preparations": 0,
+        "requests": 1,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 0,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 97453.67000000179,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0,
+        "unchanged": 458
+      },
+      "counters": {
+        "preparations": 0,
+        "requests": 0,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 0,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 97547.3049999997,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 160,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0
+      }
+    },
+    {
+      "at": 97547.46500000358,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      }
+    },
+    {
+      "at": 97561.1400000006,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0,
+        "unchanged": 458
+      },
+      "counters": {
+        "preparations": 0,
+        "requests": 0,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 0,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 97680.3900000006,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 160,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0
+      }
+    },
+    {
+      "at": 97680.53500000387,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      }
+    },
+    {
+      "at": 97709.10000000149,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0,
+        "unchanged": 458
+      },
+      "counters": {
+        "preparations": 0,
+        "requests": 0,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 0,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 97781.99000000209,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 160,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0
+      }
+    },
+    {
+      "at": 97782.24500000477,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      }
+    },
+    {
+      "at": 97796.79500000179,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0,
+        "unchanged": 458
+      },
+      "counters": {
+        "preparations": 0,
+        "requests": 0,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 0,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 97880.81500000507,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 156,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0
+      }
+    },
+    {
+      "at": 97880.9600000009,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      }
+    },
+    {
+      "at": 97898.94000000507,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 92,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0
+      }
+    },
+    {
+      "at": 97899.0549999997,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      }
+    },
+    {
+      "at": 97902.04500000179,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0,
+        "unchanged": 458
+      },
+      "counters": {
+        "preparations": 0,
+        "requests": 1,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 0,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 97911.63500000536,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0,
+        "unchanged": 458
+      },
+      "counters": {
+        "preparations": 0,
+        "requests": 0,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 0,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 98048.49500000477,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 156,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0
+      }
+    },
+    {
+      "at": 98048.64500000328,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      }
+    },
+    {
+      "at": 98062.66000000387,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0,
+        "unchanged": 458
+      },
+      "counters": {
+        "preparations": 0,
+        "requests": 0,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 0,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    },
+    {
+      "at": 98114.06500000507,
+      "event": "request",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "requested": false,
+      "requestCamera": {
+        "x": 14.016527032066602,
+        "z": 215.6698097431334
+      },
+      "entry": null,
+      "demand": {
+        "new": 0,
+        "identical": 156,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0
+      }
+    },
+    {
+      "at": 98114.21999999881,
+      "event": "run-start",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      }
+    },
+    {
+      "at": 98127.82999999821,
+      "event": "run-end",
+      "bank": 1,
+      "eye": [
+        14.016527032066602,
+        18.674902050681194,
+        215.6698097431334
+      ],
+      "active": true,
+      "activeKey": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+      "trees": 458,
+      "keepDistance": 330,
+      "stats": {
+        "distanceDrops": 7,
+        "resourceDrops": 0,
+        "budgetEvictions": 0,
+        "preparations": 70
+      },
+      "changes": {
+        "added": 0,
+        "removed": 0,
+        "identity": 0,
+        "lod": 0,
+        "resource": 0,
+        "unchanged": 458
+      },
+      "counters": {
+        "preparations": 0,
+        "requests": 0,
+        "queuedReplacements": 0,
+        "addedEntries": 0,
+        "identityChanges": 0,
+        "lodChanges": 0,
+        "resourceDrops": 0,
+        "distanceDrops": 0,
+        "budgetEvictions": 0
+      }
+    }
+  ],
+  "stream": {
+    "created": 44,
+    "discarded": 1,
+    "failed": 0,
+    "fallbacks": 0,
+    "worker": false,
+    "asyncPreparation": true,
+    "queued": 0,
+    "busy": false,
+    "preparing": 0,
+    "stale": 0,
+    "epoch": 0
+  },
+  "pending": [
+    {
+      "native": false,
+      "regional": 0,
+      "worker": false,
+      "standby": false,
+      "closed": false
+    },
+    {
+      "native": false,
+      "regional": 0,
+      "worker": false,
+      "standby": false,
+      "closed": false
+    },
+    {
+      "native": false,
+      "regional": 0,
+      "worker": false,
+      "standby": false,
+      "closed": false
+    },
+    {
+      "native": false,
+      "regional": 0,
+      "worker": false,
+      "standby": false,
+      "closed": false
+    }
+  ]
+}

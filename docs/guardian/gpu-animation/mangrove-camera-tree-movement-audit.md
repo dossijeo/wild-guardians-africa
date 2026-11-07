@@ -1,0 +1,7 @@
+# Mangrove camera movement and tree readiness
+
+In the real game using the GTX 1660, seed 712 and native island mangroves, simulation was paused while the camera was directed toward the same initially unready distant tree. In a direct camera jump, the selected tree was recorded at readiness 0.17, 0.50, 0.80 and 1 over successive approximately 250 ms samples. The diagnostic candidate set also includes logical trees without physical records, so its unready total is not a count of visible impostors.
+
+An experimental four-second gradual camera movement to the same point had the selected tree at readiness 1 when it first entered the recorded candidate set. In the repeated gradual run with physical-frustum classification, none of the recorded unready candidates had a physical bounding box intersecting the frustum; some unready logical candidates had no physical record and their visibility is unknown. A bounding-box intersection is not proof of visible pixels, the checks sample at roughly 250 ms intervals, and the instrumentation is expensive. This does not establish that ordinary camera movement is free of transient impostors.
+
+These are two instrumented individual runs, not a GPU or frame-time A/B. The diagnostic changes no production behavior. Investigate unclassified logical candidates, other paths and speeds, plus image-level capture before deciding whether prewarming or altered transitions are worthwhile.

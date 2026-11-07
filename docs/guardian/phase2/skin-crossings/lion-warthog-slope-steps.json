@@ -1,0 +1,425 @@
+{
+  "scope": "Consecutive rendered recovery samples only; excludes phase boundaries. Speed alone does not prove discontinuity.",
+  "frames": 399,
+  "recoveryPairs": 397,
+  "phaseBoundaries": [
+    {
+      "id": "qa-beast-0",
+      "mode": "physical",
+      "before": "walking",
+      "after": "falling",
+      "time": 3013.457505000001,
+      "dt": 0.0500000000001819,
+      "distance": 6.346559142513868e-07
+    },
+    {
+      "id": "qa-beast-1",
+      "mode": "physical",
+      "before": "walking",
+      "after": "falling",
+      "time": 3013.457505000001,
+      "dt": 0.0500000000001819,
+      "distance": 2.1160635144158732e-06
+    },
+    {
+      "id": "qa-beast-2",
+      "mode": "physical",
+      "before": "walking",
+      "after": "falling",
+      "time": 3013.457505000001,
+      "dt": 0.0500000000001819,
+      "distance": 3.133994822276768e-06
+    },
+    {
+      "id": "qa-beast-3",
+      "mode": "baked",
+      "before": "walking",
+      "after": "falling",
+      "time": 3013.457505000001,
+      "dt": 0.0500000000001819,
+      "distance": 0.0006423389158469456
+    },
+    {
+      "id": "qa-beast-3",
+      "mode": "baked",
+      "before": "falling",
+      "after": "rolling",
+      "time": 3015.802805000004,
+      "dt": 0.016525000000001455,
+      "distance": 0.001187629544500151
+    },
+    {
+      "id": "qa-beast-0",
+      "mode": "physical",
+      "before": "falling",
+      "after": "rolling",
+      "time": 3016.617535000004,
+      "dt": 0.04986000000008062,
+      "distance": 0.0005518016207107203
+    },
+    {
+      "id": "qa-beast-0",
+      "mode": "physical",
+      "before": "rolling",
+      "after": "recovering",
+      "time": 3016.916880000004,
+      "dt": 0.03316499999982625,
+      "distance": 0.0008351600041618621
+    },
+    {
+      "id": "qa-beast-3",
+      "mode": "baked",
+      "before": "rolling",
+      "after": "recovering",
+      "time": 3017.199685000004,
+      "dt": 0.033144999999876745,
+      "distance": 0.0025519867483052606
+    },
+    {
+      "id": "qa-beast-1",
+      "mode": "physical",
+      "before": "falling",
+      "after": "rolling",
+      "time": 3018.4975000000054,
+      "dt": 0.0500000000001819,
+      "distance": 0.001089349428815045
+    },
+    {
+      "id": "qa-beast-2",
+      "mode": "physical",
+      "before": "falling",
+      "after": "rolling",
+      "time": 3018.4975000000054,
+      "dt": 0.0500000000001819,
+      "distance": 0.0007785239741437992
+    },
+    {
+      "id": "qa-beast-1",
+      "mode": "physical",
+      "before": "rolling",
+      "after": "recovering",
+      "time": 3019.262695000006,
+      "dt": 0.033214999999927386,
+      "distance": 0.003695298491919884
+    },
+    {
+      "id": "qa-beast-2",
+      "mode": "physical",
+      "before": "rolling",
+      "after": "recovering",
+      "time": 3019.9781900000057,
+      "dt": 0.0500000000001819,
+      "distance": 0.002370937326018379
+    },
+    {
+      "id": "qa-beast-0",
+      "mode": "navigation",
+      "before": "recovering",
+      "after": "walking",
+      "time": 3021.010715000008,
+      "dt": 0.0500000000001819,
+      "distance": 9.917492314137633e-05
+    },
+    {
+      "id": "qa-beast-3",
+      "mode": "navigation",
+      "before": "recovering",
+      "after": "walking",
+      "time": 3021.2603850000087,
+      "dt": 0.04986000000008062,
+      "distance": 0.0040303483429493525
+    },
+    {
+      "id": "qa-beast-1",
+      "mode": "navigation",
+      "before": "recovering",
+      "after": "walking",
+      "time": 3023.324350000011,
+      "dt": 0.03326999999990221,
+      "distance": 0.0003851025962138266
+    },
+    {
+      "id": "qa-beast-2",
+      "mode": "navigation",
+      "before": "recovering",
+      "after": "walking",
+      "time": 3024.056525000012,
+      "dt": 0.04998999999997977,
+      "distance": 0.003240637850010941
+    }
+  ],
+  "largest": [
+    {
+      "id": "qa-beast-3",
+      "mode": "baked",
+      "time": 3019.345915000006,
+      "wallMs": 29654.54,
+      "dt": 0.0500000000001819,
+      "distance": 1.0246023474608228,
+      "speed": 20.492046949141905,
+      "correctionDelta": 1.023020994099428,
+      "correction": [
+        0,
+        0,
+        1.023020994099428
+      ]
+    },
+    {
+      "id": "qa-beast-2",
+      "mode": "physical",
+      "time": 3020.028190000006,
+      "wallMs": 30618.95,
+      "dt": 0.0500000000001819,
+      "distance": 0.18798623543861828,
+      "speed": 3.759724708758688,
+      "correctionDelta": 0.1862457170875697,
+      "correction": [
+        -0.1862457170875697,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "qa-beast-3",
+      "mode": "baked",
+      "time": 3019.6453650000058,
+      "wallMs": 30020.4,
+      "dt": 0.04982999999992899,
+      "distance": 0.13876164183042933,
+      "speed": 2.7847008193984966,
+      "correctionDelta": 0.044276454133667986,
+      "correction": [
+        0,
+        0,
+        1.1556936618955884
+      ]
+    },
+    {
+      "id": "qa-beast-3",
+      "mode": "baked",
+      "time": 3019.595535000006,
+      "wallMs": 29970.57,
+      "dt": 0.033249999999952706,
+      "distance": 0.12095368307880981,
+      "speed": 3.6377047542550933,
+      "correctionDelta": 0.08493873217011094,
+      "correction": [
+        0,
+        0,
+        1.1114172077619204
+      ]
+    },
+    {
+      "id": "qa-beast-2",
+      "mode": "physical",
+      "time": 3022.7423400000107,
+      "wallMs": 34826.205,
+      "dt": 0.04995000000008076,
+      "distance": 0.12053807084576017,
+      "speed": 2.413174591502808,
+      "correctionDelta": 0.0,
+      "correction": [
+        -0.5274107191481611,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "qa-beast-0",
+      "mode": "physical",
+      "time": 3019.6453650000058,
+      "wallMs": 30020.4,
+      "dt": 0.04982999999992899,
+      "distance": 0.11545319857024353,
+      "speed": 2.31694157275553,
+      "correctionDelta": 0.0,
+      "correction": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "qa-beast-3",
+      "mode": "baked",
+      "time": 3019.9781900000057,
+      "wallMs": 30552.59,
+      "dt": 0.0500000000001819,
+      "distance": 0.10932612207351863,
+      "speed": 2.1865224414624183,
+      "correctionDelta": 0.0,
+      "correction": [
+        0,
+        0,
+        1.1556936618955884
+      ]
+    },
+    {
+      "id": "qa-beast-1",
+      "mode": "physical",
+      "time": 3021.7103850000103,
+      "wallMs": 33545.625,
+      "dt": 0.0500000000001819,
+      "distance": 0.10864102681035225,
+      "speed": 2.1728205361991404,
+      "correctionDelta": 0.0,
+      "correction": [
+        0,
+        0,
+        0.11446082346117052
+      ]
+    },
+    {
+      "id": "qa-beast-2",
+      "mode": "physical",
+      "time": 3020.461230000007,
+      "wallMs": 31550.14,
+      "dt": 0.0500000000001819,
+      "distance": 0.10707007551386126,
+      "speed": 2.141401510269435,
+      "correctionDelta": 0.08267217194170623,
+      "correction": [
+        -0.3917446771593912,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "qa-beast-2",
+      "mode": "physical",
+      "time": 3022.443065000011,
+      "wallMs": 34526.91,
+      "dt": 0.0500000000001819,
+      "distance": 0.09658641990685189,
+      "speed": 1.9317283981300102,
+      "correctionDelta": 0.0,
+      "correction": [
+        -0.5274107191481611,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "qa-beast-0",
+      "mode": "physical",
+      "time": 3019.345915000006,
+      "wallMs": 29654.54,
+      "dt": 0.0500000000001819,
+      "distance": 0.0963039382579919,
+      "speed": 1.9260787651528308,
+      "correctionDelta": 0.0,
+      "correction": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "qa-beast-1",
+      "mode": "physical",
+      "time": 3022.060235000011,
+      "wallMs": 34094.35,
+      "dt": 0.0500000000001819,
+      "distance": 0.08979560760662866,
+      "speed": 1.7959121521260397,
+      "correctionDelta": 0.0,
+      "correction": [
+        0,
+        0,
+        0.11446082346117052
+      ]
+    }
+  ],
+  "largestCorrection": [
+    {
+      "id": "qa-beast-3",
+      "mode": "baked",
+      "time": 3019.345915000006,
+      "wallMs": 29654.54,
+      "dt": 0.0500000000001819,
+      "distance": 1.0246023474608228,
+      "speed": 20.492046949141905,
+      "correctionDelta": 1.023020994099428,
+      "correction": [
+        0,
+        0,
+        1.023020994099428
+      ]
+    },
+    {
+      "id": "qa-beast-2",
+      "mode": "physical",
+      "time": 3020.028190000006,
+      "wallMs": 30618.95,
+      "dt": 0.0500000000001819,
+      "distance": 0.18798623543861828,
+      "speed": 3.759724708758688,
+      "correctionDelta": 0.1862457170875697,
+      "correction": [
+        -0.1862457170875697,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "qa-beast-3",
+      "mode": "baked",
+      "time": 3019.595535000006,
+      "wallMs": 29970.57,
+      "dt": 0.033249999999952706,
+      "distance": 0.12095368307880981,
+      "speed": 3.6377047542550933,
+      "correctionDelta": 0.08493873217011094,
+      "correction": [
+        0,
+        0,
+        1.1114172077619204
+      ]
+    },
+    {
+      "id": "qa-beast-2",
+      "mode": "physical",
+      "time": 3020.461230000007,
+      "wallMs": 31550.14,
+      "dt": 0.0500000000001819,
+      "distance": 0.10707007551386126,
+      "speed": 2.141401510269435,
+      "correctionDelta": 0.08267217194170623,
+      "correction": [
+        -0.3917446771593912,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "qa-beast-2",
+      "mode": "physical",
+      "time": 3020.5112300000073,
+      "wallMs": 31616.79,
+      "dt": 0.0500000000001819,
+      "distance": 0.08029671058287591,
+      "speed": 1.6059342116516757,
+      "correctionDelta": 0.061510914958926965,
+      "correction": [
+        -0.4532555921183182,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "qa-beast-2",
+      "mode": "physical",
+      "time": 3020.361230000007,
+      "wallMs": 31284.33,
+      "dt": 0.0500000000001819,
+      "distance": 0.07459205782155148,
+      "speed": 1.4918411564256024,
+      "correctionDelta": 0.047270628902321865,
+      "correction": [
+        -0.27290101996502214,
+        0,
+        0
+      ]
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import * as Game from '../src/simulation/game.js';
+import {clearNavigation} from './clear-navigation.js';
+import {serializeConfirmedState} from '../src/simulation/confirmed-live-state.js';
+import {projectMainThreadPublication} from '../src/simulation/main-thread-publication.js';
+import {createHostPublicationQueue} from '../src/simulation/host-publication-queue.js';
+import {createMainThreadHudDeltaEncoder} from '../src/simulation/main-thread-hud-delta.js';
+import {createWorkerHostedRuntime} from '../src/simulation/worker-hosted-runtime.js';
+import {ManualMagicActivity,confirmedManualMagicApplication} from '../src/ui/manual-magic-activity.js';
+
+test('confirmed magic activation and end survive coalesced HUD-only transport before command callback',async()=>{
+ const nav=clearNavigation(),state=Game.newGame({slotId:'hud-magic',seed:712});Game.resume(state,'intro');Game.placeStructure(state,'center',{x:0,z:0},nav);Game.plant(state,'seed','mijo',6,0,nav);Game.openInitialHiring(state);Game.hire(state,'hire',{olderFemale:1});Game.tick(state,30,nav);
+ const initial=serializeConfirmedState(state),wire=[],messages=[],encoder=createMainThreadHudDeltaEncoder(),queue=createHostPublicationQueue({session:'s',send:item=>wire.push(encoder.encode(item,{omitSnapshot:true}))}),worker={postMessage:item=>messages.push(item),terminate(){}},order=[],metrics=new ManualMagicActivity(),runtime=createWorkerHostedRuntime({confirmedReceiver:{accept(){throw Error('legacy receiver used');},acceptUnchanged(){throw Error('legacy receiver used');},status(){return {sequence:0,lastElapsed:0};}},session:'s',clientOptions:{snapshot:initial},runtimeOptions:{mainThreadProjection:true,coalescePublications:true,hudEntityDeltas:true,mainThreadHudOnly:true},workerFactory:()=>worker,onConfirmedEvents:events=>{order.push('events');metrics.consumeConfirmedEvents(events);}});
+ const make=(sequence,events=[])=>projectMainThreadPublication({session:'s',sequence,snapshot:serializeConfirmedState(state),events,physicsPose:null,elapsed:state.elapsed,pauses:state.pauses,saveAvailable:true,terrainChanged:false},{hud:true});
+ try{const started=runtime.start();queue.publication(make(1),true);assert.equal(wire[0].publication.snapshot,undefined);worker.onmessage({data:wire[0]});worker.onmessage({data:{kind:'started',session:'s',sequence:1,status:{}}});await started;
+  const request=runtime.submit({kind:'castAgricultural',id:'cast-id'}),command=messages.findLast(message=>message.kind==='command');queue.publication(make(2),true);const firstEvent=state.events.length;Game.cast(state,'cast-id','growth',6,0,nav,state.plants[0].id);Game.tick(state,30,nav);const facts=state.events.slice(firstEvent);assert.ok(facts.some(event=>event.type==='SpellActivated'));assert.ok(facts.some(event=>event.type==='AgriculturalSpellEnded'));queue.publication(make(3,facts),true);queue.ack(1);assert.equal(wire[1].publication.sequence,3);assert.equal(wire[1].firstSequence,2);assert.equal(wire[1].publication.snapshot,undefined);worker.onmessage({data:wire[1]});assert.equal(runtime.status().fault,null);worker.onmessage({data:{kind:'commandResult',session:'s',id:command.id,sequence:3}});const result=await request;order.push('callback');assert.deepEqual(order,['events','callback']);const application=confirmedManualMagicApplication(result.events,'cast-id');assert.ok(application);metrics.applied({day:application.day,spells:[]},application.spell,{gestureSeconds:.2,benefited:application.benefited});const row=metrics.report().days[0],ended=facts.find(event=>event.type==='AgriculturalSpellEnded');assert.equal(row.extraGrowthSeconds,ended.growthSecondsAdded);assert.equal(row.simulatedEffectSeconds,application.spell.remaining);metrics.consumeConfirmedEvents(facts);assert.equal(metrics.report().days[0].applications,1);
+ }finally{runtime.dispose();}
+});

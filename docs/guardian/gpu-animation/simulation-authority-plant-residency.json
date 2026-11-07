@@ -1,0 +1,36 @@
+{
+  "site": {
+    "x": 88,
+    "z": -20
+  },
+  "initialMissing": [
+    {
+      "cx": 2,
+      "cz": -1
+    },
+    {
+      "cx": 2,
+      "cz": 0
+    }
+  ],
+  "loaded": [
+    "2,-1",
+    "2,0"
+  ],
+  "events": [
+    "CropPlaced"
+  ],
+  "sequence": 2,
+  "equalSnapshot": true,
+  "blocked": {
+    "site": {
+      "x": 97,
+      "z": 19
+    },
+    "rejection": "Un árbol o roca grande ocupa este terreno",
+    "loaded": [
+      "2,0"
+    ]
+  },
+  "scope": "Programmatic valid and prop-blocked planting commands in a modified peaceful island-mangrove capture. Compares initially empty Worker residency against preloaded regions; no player UI, save/restore, concurrent geometry changes or production integration."
+}

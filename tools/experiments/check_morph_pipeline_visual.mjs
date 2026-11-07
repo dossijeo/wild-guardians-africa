@@ -1,0 +1,10 @@
+import {createRequire} from 'node:module';
+import {writeFile} from 'node:fs/promises';
+const {chromium}=createRequire(import.meta.url)(process.env.PLAYWRIGHT_MODULE??'playwright');const browser=await chromium.launch({channel:'msedge',headless:true});
+try{
+ const page=await browser.newPage({viewport:{width:700,height:1600}}),errors=[];page.on('pageerror',e=>errors.push(String(e)));
+ const enabled=process.env.WG_MORPH_PIPELINE==='1',zero=process.env.WG_ZERO_MORPH==='1';await page.goto(`${process.env.WG_BASE_URL??'http://127.0.0.1:5175'}/tests/browser/morph-pipeline-visual.html?morphPipeline=${enabled?1:0}&zeroMorph=${zero?1:0}`,{waitUntil:'domcontentloaded'});
+ await page.waitForFunction(()=>window.morphPipelineVisualResult?.done,{timeout:180000});const result=await page.evaluate(()=>window.morphPipelineVisualResult);
+ if(result.backend!=='WebGPU real'||result.errors.length||errors.length||result.frames.length!==4||new Set(result.frames.map(f=>f.sha256)).size<2||result.morphMeshes<2||result.morphValues<2||result.frames.some(f=>f.nonBackground<1000)||(enabled&&!result.pipelineKeys))throw Error(JSON.stringify({result,errors}));
+ if(process.env.WG_SCREENSHOT)await page.screenshot({path:process.env.WG_SCREENSHOT,fullPage:true});const output=JSON.stringify(result);if(process.env.WG_OUTPUT)await writeFile(process.env.WG_OUTPUT,output);else console.log(output);
+}finally{await browser.close();}

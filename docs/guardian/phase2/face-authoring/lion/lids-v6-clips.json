@@ -1,0 +1,82 @@
+{
+  "source": "public/assets/539e240badbd4705dd44b299b6c163c050c6dca388d9d25dc10688c88e0b4968.glb",
+  "edited": "C:/tmp/guardian-faces/lion-lids-v6.glb",
+  "bones": 78,
+  "samples": 246,
+  "maxPosition": 0.000002762077513678592,
+  "maxAngle": 0.000007762804223983093,
+  "clips": [
+    "Running",
+    "Walking",
+    "Charged_Upward_Slash",
+    "Right_Hand_Sword_Slash",
+    "Weapon_Combo",
+    "Weapon_Combo_2"
+  ],
+  "muzzle": {
+    "vertices": 1050,
+    "maxHeadRelativeError": 1.2072877792441454e-15,
+    "scope": "neutral core muzzle skin through all native clips",
+    "worst": {
+      "mesh": "Mesh_0_1",
+      "index": 11864,
+      "rest": [
+        -0.021850204983742995,
+        1.5497637892200347,
+        0.20415535901267426
+      ],
+      "weights": [
+        [
+          "Head",
+          1
+        ],
+        [
+          "Hips",
+          0
+        ],
+        [
+          "Hips",
+          0
+        ],
+        [
+          "Hips",
+          0
+        ]
+      ],
+      "clip": "Weapon_Combo",
+      "time": 1.875,
+      "expected": [
+        -0.34283443403781116,
+        1.4373401198590463,
+        1.1920761477396211
+      ],
+      "actual": [
+        -0.342834434037811,
+        1.4373401198590452,
+        1.1920761477396207
+      ]
+    },
+    "pass": true
+  },
+  "worstPosition": {
+    "bone": "ClothRear_L_Outer_03",
+    "clip": "Weapon_Combo",
+    "time": 1.03125,
+    "source": [
+      -0.27664100105738804,
+      0.5358822346597018,
+      0.7599439276245339
+    ],
+    "edited": [
+      -0.2766412914398473,
+      0.5358840709204026,
+      0.759945970391495
+    ]
+  },
+  "worstAngle": {
+    "bone": "ClothRear_L_Outer_03",
+    "clip": "Charged_Upward_Slash",
+    "time": 1.1375
+  },
+  "pass": true
+}

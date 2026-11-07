@@ -14,6 +14,7 @@ async function initialize(){
   });
   const module=await WebAssembly.compile(bytes);
   wasm=new WebAssembly.Instance(module,{env:{emscripten_notify_memory_growth(){}}}).exports;
+  wasm._initialize?.();
   compiledMs=performance.now()-start;
 }
 function visualBuffers(){

@@ -1,0 +1,13 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+import {centerCulture} from '../../src/world/centers.js';
+window.audit=async()=>{
+ const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);const fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),{game,nav}=fixture.diagnosticWorld(),animal=game.raid.animals.find(a=>a.species==='hyena'&&!['gone','retreating'].includes(a.status)),center=game.structures.find(s=>s.kind==='center'&&s.status==='intact');if(!animal||!center)throw Error('Missing fixture actors');let point=null;for(let z=-9;z<=9&&!point;z++)for(let x=-9;x<=9&&!point;x++)if(Math.hypot(x,z)<=9&&nav.walkable(center.x+x,center.z+z,animal.radius,null,false))point={x:center.x+x,z:center.z+z};if(!point)throw Error('Missing nearby physical site');animal.x=point.x;animal.z=point.z;animal.path=null;
+ const source=serialize(game),culture=centerCulture(center,game),target={id:animal.id,...point},manifest=await (await fetch('/content/worker-center-templates.json')).json(),templates={[culture]:manifest.templates[culture].template};fixture.dispose();
+ const options={snapshot:source,chunkKeys:chunks,physicsActorId:target.id,dynamicPhysics:true,compactPhysicsPoses:true},legacy=createSimulationAuthorityClient({...options,structureTemplates:templates,session:'legacy-center'}),authored=createSimulationAuthorityClient({...options,authoredCenterTemplates:true,session:'authored-center'}),send=async(client,command)=>{const result=client.submit(command);if(!result.accepted)throw Error(result.reason);return result.result;};
+ try{await Promise.all([legacy.ready,authored.ready]);let active=0;for(let i=0;i<101;i++){const command=i===0?{kind:'castAttack',id:'center-hit',targetId:target.id,x:target.x,z:target.z}:{kind:'advance',seconds:.05,nightFastForward:true},[a,b]=await Promise.all([send(legacy,command),send(authored,command)]);for(const key of ['snapshot','events','physicsPose','physicsPoses','value'])if(JSON.stringify(a[key])!==JSON.stringify(b[key]))throw Error(`${key} differs at ${i}`);if(i===0&&!a.value)throw Error('Attack rejected');if(a.physicsPose?.active)active++;}if(!active)throw Error('Impact never reached Rapier');return {culture,steps:100,active,scope:'Two real authority Workers and Rapier near one intact center; legacy supplied bounds vs Worker-loaded authored bounds, no renderer.'};}
+ finally{legacy.dispose();authored.dispose();}
+};window.ready=true;
+</script>

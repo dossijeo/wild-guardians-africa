@@ -63,7 +63,7 @@ test('actual camera stays above rendered triangles in six biomes and across nega
 test('focus keeps unrestricted travel and native canyon/home angles without altering simulation state',()=>{
   const saved={day:44,time:313,elapsed:4201},before=JSON.stringify(saved);
   for(const pack of packs){const field=new TerrainField({seed:'712',biome:pack.biomeId,relief:1,river:true}),camera=new THREE.PerspectiveCamera(),controls={target:new THREE.Vector3()};
-    const world={camera,controls,nav:{field},state:saved};WorldScene.prototype.focus.call(world,{x:-1234,z:987});
+    const world={camera,controls,nav:{field},state:saved,cameraField:WorldScene.prototype.cameraField};WorldScene.prototype.focus.call(world,{x:-1234,z:987});
     const expected=nativeCameraPose(field,[-1234,0,987],field.canyon?0:.5,field.canyon?1.18:1.16,field.canyon?34:38);
     assert.deepEqual(camera.position.toArray(),expected.eye);assert.deepEqual(controls.target.toArray(),expected.target);
     let updates=0;controls.update=()=>{updates++;camera.position.y=-1000;};WorldScene.prototype.updateCamera.call(world);assert.equal(updates,1);assert.ok(camera.position.y>=field.surface(camera.position.x,camera.position.z)+2-1e-9);
@@ -88,7 +88,11 @@ test('real OrbitControls do not turn a cliff height correction into a moving cam
 
 test('picking uses the protected camera even when input arrives before the next rendered frame',()=>{
   const camera=new THREE.PerspectiveCamera(42,1,.1,600),field={surface:()=>7},controls={target:new THREE.Vector3(0,7,0)};camera.position.set(2,-10,20);
-  const world={camera,controls,nav:{field},canvas:{getBoundingClientRect:()=>({left:0,top:0,width:100,height:100})},cursor:new THREE.Vector2(),raycaster:new THREE.Raycaster(),objects:new Map(),state:{plants:[]},terrainMeshes:[]};
-  assert.deepEqual(WorldScene.prototype.pick.call(world,{clientX:50,clientY:50}),{entityId:null,point:null});assert.ok(camera.position.y>=9);
+  const world={camera,controls,nav:{field},cameraField:WorldScene.prototype.cameraField,prepareDeferredActorPoses(){},canvas:{getBoundingClientRect:()=>({left:0,top:0,width:100,height:100})},cursor:new THREE.Vector2(),raycaster:new THREE.Raycaster(),objects:new Map(),state:{plants:[]},terrainMeshes:[]};
+  assert.deepEqual(WorldScene.prototype.pick.call(world,{clientX:50,clientY:50}),{entityId:null,point:null,hitPoint:null});assert.ok(camera.position.y>=9);
   assert.deepEqual(world.raycaster.ray.origin.toArray(),camera.position.toArray());
+});
+test('camera-only terrain injection preserves focus, limits, picking and raid reference',()=>{
+ const legacy={canyon:false,surface:()=>0},injected={canyon:false,surface:()=>40},camera=new THREE.PerspectiveCamera(42,1,.1,600),controls={target:new THREE.Vector3()},world={camera,controls,nav:{field:legacy},cameraField:WorldScene.prototype.cameraField,prepareDeferredActorPoses(){},raidCamera:{field:legacy,cancel(){}},canvas:{getBoundingClientRect:()=>({left:0,top:0,width:100,height:100})},cursor:new THREE.Vector2(),raycaster:new THREE.Raycaster(),objects:new Map(),state:{plants:[]},terrainMeshes:[]};
+ WorldScene.prototype.setCameraTerrainField.call(world,injected);assert.equal(world.nav.field,legacy);assert.equal(world.raidCamera.field,injected);WorldScene.prototype.focus.call(world,{x:0,z:0});assert.ok(camera.position.y>=42);camera.position.y=-20;WorldScene.prototype.pick.call(world,{clientX:50,clientY:50});assert.ok(camera.position.y>=42);assert.throws(()=>WorldScene.prototype.setCameraTerrainField.call(world,{surface(){}}),/Invalid/);assert.equal(world.cameraField(),injected);WorldScene.prototype.setCameraTerrainField.call(world,null);assert.equal(world.raidCamera.field,legacy);assert.equal(world.cameraField(),legacy);
 });

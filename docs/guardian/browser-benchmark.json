@@ -1,0 +1,37 @@
+{
+  "oldCpu": {
+    "medianMs": 1.0999999046325684,
+    "p95Ms": 1.5
+  },
+  "newCpu": {
+    "medianMs": 1.100000023841858,
+    "p95Ms": 1.6999999284744263
+  },
+  "newAnimationCpu": {
+    "medianMs": 0.2999999523162842,
+    "p95Ms": 0.5
+  },
+  "combinedFrameInterval": {
+    "medianMs": 35.60000002384186,
+    "p95Ms": 62.199999928474426
+  },
+  "oldTriangles": 9728,
+  "newMetrics": {
+    "updateMs": 0.2999999523162842,
+    "drawCalls": 6,
+    "triangles": 17025,
+    "geometries": 6,
+    "textures": 11,
+    "bones": 25
+  },
+  "oldCanvas": [
+    375,
+    375
+  ],
+  "newCanvas": [
+    375,
+    375
+  ],
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "note": "CPU includes render submission, not GPU elapsed time; both actors at their runtime DPR caps, 300 CSS px; warmup 30 + 240 measured frames."
+}

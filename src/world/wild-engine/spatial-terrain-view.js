@@ -14,7 +14,7 @@ export function createSpatialTerrainView(core){
   return {
     seed,c:{seed:String(seed),biome,river:!desert&&!wetland},canyon,wetland,desert,
     riverActive:!desert&&!wetland,riverLevel:core.fluidSurfaceLevel(),
-    surface,surfaceGrid:(...args)=>core.surfaceGrid?.(...args)??null,fluidInside,waterInfo,riverX:z=>core.riverCenter(z),
+    surface,surfaceGrid:(...args)=>core.surfaceGrid?.(...args)??null,fluidInside,waterInfo,waterShore:(x,z)=>core.waterShoreAnywhere(x,z),riverX:z=>core.riverCenter(z),
     riverEdge:(z,direction)=>core.riverEdge(z,direction),
     wetlandLevel:()=>core.fluidSurfaceLevel(),
     wetlandMask:(x,z)=>core.wetlandMaskAnywhere(x,z),

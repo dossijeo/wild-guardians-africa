@@ -1,0 +1,18 @@
+QA stage: boot
+QA stage: worker running; waiting for WebGPU world and props
+QA stage: pausing and settling camera
+QA stage: world ready; picking and capture
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+page.evaluate: Error: WebGPU picker unavailable
+    at globalThis.wildGuardiansWebGpuPickQa (http://127.0.0.1:5175/src/app/main.js?t=1793827709307:122:249)
+    at eval (eval at evaluate (:311:30), <anonymous>:1:146)
+    at UtilityScript.evaluate (<anonymous>:313:16)
+    at UtilityScript.<anonymous> (<anonymous>:1:44)
+    at C:\Users\Gabriel\source\repos\wild-guardians-africa\tools\experiments\audit_live_webgpu_world.mjs:23:55 {
+  log: []
+}
+
+Node.js v20.19.0

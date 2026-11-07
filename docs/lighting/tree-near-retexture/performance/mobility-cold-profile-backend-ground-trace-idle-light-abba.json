@@ -1,0 +1,428 @@
+{
+  "runs": [
+    {
+      "requested": "pthreads",
+      "backend": "pthreads",
+      "isolated": true,
+      "chunks": [
+        "0,-1",
+        "0,-2",
+        "0,0",
+        "0,1",
+        "0,2",
+        "1,-1",
+        "1,-2",
+        "1,0",
+        "1,1",
+        "1,2",
+        "2,-1",
+        "2,-2",
+        "2,0",
+        "2,1",
+        "2,2",
+        "3,-1",
+        "3,-2",
+        "3,0",
+        "3,1",
+        "3,2",
+        "4,-1",
+        "4,-2",
+        "4,0",
+        "4,1",
+        "4,2"
+      ],
+      "residency": {
+        "beforeIdle": {
+          "chunks": [
+            "0,-1",
+            "0,0",
+            "0,1",
+            "0,2",
+            "1,-1",
+            "1,0",
+            "1,1",
+            "1,2",
+            "2,-1",
+            "2,0",
+            "2,1",
+            "2,2",
+            "3,-1",
+            "3,0",
+            "3,1",
+            "3,2",
+            "4,-1",
+            "4,0",
+            "4,1",
+            "4,2"
+          ],
+          "desired": [
+            "0,-1",
+            "0,-2",
+            "0,0",
+            "0,1",
+            "0,2",
+            "1,-1",
+            "1,-2",
+            "1,0",
+            "1,1",
+            "1,2",
+            "2,-1",
+            "2,-2",
+            "2,0",
+            "2,1",
+            "2,2",
+            "3,-1",
+            "3,-2",
+            "3,0",
+            "3,1",
+            "3,2",
+            "4,-1",
+            "4,-2",
+            "4,0",
+            "4,1",
+            "4,2"
+          ],
+          "stream": {
+            "created": 25,
+            "discarded": 0,
+            "failed": 0,
+            "fallbacks": 0,
+            "worker": false,
+            "asyncPreparation": true,
+            "queued": 3,
+            "busy": true,
+            "preparing": 2,
+            "stale": 0,
+            "epoch": 0
+          }
+        },
+        "desired": [
+          "0,-1",
+          "0,-2",
+          "0,0",
+          "0,1",
+          "0,2",
+          "1,-1",
+          "1,-2",
+          "1,0",
+          "1,1",
+          "1,2",
+          "2,-1",
+          "2,-2",
+          "2,0",
+          "2,1",
+          "2,2",
+          "3,-1",
+          "3,-2",
+          "3,0",
+          "3,1",
+          "3,2",
+          "4,-1",
+          "4,-2",
+          "4,0",
+          "4,1",
+          "4,2"
+        ],
+        "stream": {
+          "created": 30,
+          "discarded": 0,
+          "failed": 0,
+          "fallbacks": 0,
+          "worker": false,
+          "asyncPreparation": true,
+          "queued": 0,
+          "busy": false,
+          "preparing": 0,
+          "stale": 0,
+          "epoch": 0
+        }
+      },
+      "firstTick": 1095.1050000041723,
+      "regionCalls": 237,
+      "regionSlow": [
+        {
+          "radius": 0.9,
+          "worker": false,
+          "ms": 269.32500000298023
+        },
+        {
+          "radius": 0.85,
+          "worker": false,
+          "ms": 284.3149999976158
+        },
+        {
+          "radius": 0.97,
+          "worker": false,
+          "ms": 261.26500000059605
+        },
+        {
+          "radius": 1.55,
+          "worker": false,
+          "ms": 223.8449999988079
+        }
+      ],
+      "tick": {
+        "count": 120,
+        "p95": 11.74499998986721,
+        "p99": 15.560000002384186,
+        "max": 1095.1050000041723
+      },
+      "render": {
+        "count": 120,
+        "p95": 60.84000000357628,
+        "p99": 77.59000000357628,
+        "max": 226.07499998807907
+      },
+      "total": {
+        "count": 120,
+        "p95": 68.23499999940395,
+        "p99": 92.18499998748302,
+        "max": 1145.359999999404
+      },
+      "frames": {
+        "count": 119,
+        "p95": 68.58499999344349,
+        "p99": 92.71500000357628,
+        "max": 1145.7600000053644
+      },
+      "gpu": {
+        "samples": 120,
+        "disjoint": 0,
+        "discarded": 0,
+        "elapsed": {
+          "count": 120,
+          "p95": 42.145792,
+          "p99": 48.293408,
+          "max": 195.115008
+        }
+      },
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "sceneErrors": [],
+      "groundTrace": [
+        {
+          "cx": 2,
+          "cz": 1,
+          "geometry": 6.004999995231628,
+          "material": 0.17499999701976776,
+          "attach": 6.930000007152557
+        },
+        {
+          "cx": 2,
+          "cz": 0,
+          "geometry": 2.5450000017881393,
+          "material": 0.05500000715255737,
+          "attach": 4.909999996423721
+        },
+        {
+          "cx": 1,
+          "cz": 1,
+          "geometry": 1.2549999952316284,
+          "material": 0.06000000238418579,
+          "attach": 4.560000002384186
+        },
+        {
+          "cx": 1,
+          "cz": 0,
+          "geometry": 1.3399999886751175,
+          "material": 0.04500000178813934,
+          "attach": 4.329999998211861
+        },
+        {
+          "cx": 3,
+          "cz": 1,
+          "geometry": 1.1700000017881393,
+          "material": 0.02000001072883606,
+          "attach": 4.149999991059303
+        },
+        {
+          "cx": 3,
+          "cz": 0,
+          "geometry": 1.1850000023841858,
+          "material": 0.03999999165534973,
+          "attach": 4.965000003576279
+        },
+        {
+          "cx": 2,
+          "cz": -1,
+          "geometry": 1.155000001192093,
+          "material": 0.034999996423721313,
+          "attach": 4.215000003576279
+        },
+        {
+          "cx": 2,
+          "cz": 2,
+          "geometry": 1.010000005364418,
+          "material": 0.009999990463256836,
+          "attach": 4.1099999994039536
+        },
+        {
+          "cx": 1,
+          "cz": -1,
+          "geometry": 1.625,
+          "material": 0.034999996423721313,
+          "attach": 4.704999998211861
+        },
+        {
+          "cx": 1,
+          "cz": 2,
+          "geometry": 2.0249999910593033,
+          "material": 0.034999996423721313,
+          "attach": 5.635000005364418
+        },
+        {
+          "cx": 0,
+          "cz": 0,
+          "geometry": 1.9350000023841858,
+          "material": 0.04500000178813934,
+          "attach": 6.08500000834465
+        },
+        {
+          "cx": 0,
+          "cz": 1,
+          "geometry": 1.780000001192093,
+          "material": 0.04499998688697815,
+          "attach": 6.680000007152557
+        },
+        {
+          "cx": 3,
+          "cz": -1,
+          "geometry": 2.010000005364418,
+          "material": 0.03999999165534973,
+          "attach": 7.090000003576279
+        },
+        {
+          "cx": 3,
+          "cz": 2,
+          "geometry": 1.7999999970197678,
+          "material": 0.030000001192092896,
+          "attach": 6.3599999994039536
+        },
+        {
+          "cx": 0,
+          "cz": -1,
+          "geometry": 2.0550000071525574,
+          "material": 0.03999999165534973,
+          "attach": 7.040000006556511
+        },
+        {
+          "cx": 0,
+          "cz": 2,
+          "geometry": 1.9749999940395355,
+          "material": 0.04500000178813934,
+          "attach": 6.459999993443489
+        },
+        {
+          "cx": 4,
+          "cz": 0,
+          "geometry": 2.0900000035762787,
+          "material": 0.040000006556510925,
+          "attach": 33.35999999940395
+        },
+        {
+          "cx": 4,
+          "cz": 1,
+          "geometry": 1.300000011920929,
+          "material": 0.03999999165534973,
+          "attach": 3.905000001192093
+        },
+        {
+          "cx": 2,
+          "cz": 3,
+          "geometry": 1.135000005364418,
+          "material": 0.06000000238418579,
+          "attach": 3.8999999910593033
+        },
+        {
+          "cx": 4,
+          "cz": -1,
+          "geometry": 1.0850000083446503,
+          "material": 0.034999996423721313,
+          "attach": 3.8799999952316284
+        },
+        {
+          "cx": 1,
+          "cz": 3,
+          "geometry": 1.854999989271164,
+          "material": 0.040000006556510925,
+          "attach": 3.875
+        },
+        {
+          "cx": 4,
+          "cz": 2,
+          "geometry": 1.9249999970197678,
+          "material": 0.07999999821186066,
+          "attach": 3.8900000005960464
+        },
+        {
+          "cx": 3,
+          "cz": 3,
+          "geometry": 2.469999998807907,
+          "material": 0.0650000125169754,
+          "attach": 6.259999990463257
+        },
+        {
+          "cx": 0,
+          "cz": 3,
+          "geometry": 1.5349999964237213,
+          "material": 0.030000001192092896,
+          "attach": 3.780000001192093
+        },
+        {
+          "cx": 4,
+          "cz": 3,
+          "geometry": 1.645000010728836,
+          "material": 0.05499999225139618,
+          "attach": 3.769999995827675
+        },
+        {
+          "cx": 2,
+          "cz": -2,
+          "geometry": 1.449999988079071,
+          "material": 0.030000001192092896,
+          "attach": 3.8050000071525574
+        },
+        {
+          "cx": 1,
+          "cz": -2,
+          "geometry": 1.280000001192093,
+          "material": 0.030000001192092896,
+          "attach": 3.7450000047683716
+        },
+        {
+          "cx": 3,
+          "cz": -2,
+          "geometry": 1.3199999928474426,
+          "material": 0.030000001192092896,
+          "attach": 3.730000004172325
+        },
+        {
+          "cx": 0,
+          "cz": -2,
+          "geometry": 1.6500000059604645,
+          "material": 0.030000001192092896,
+          "attach": 3.739999994635582
+        },
+        {
+          "cx": 4,
+          "cz": -2,
+          "geometry": 1.290000006556511,
+          "material": 0.025000005960464478,
+          "attach": 3.6099999994039536
+        }
+      ],
+      "hashes": {
+        "initial": "eda7456b3f81ce73b00c474af4217973c92a958cf51b904433364c564d9a9d0e",
+        "final": "ca2338389a4f4018a12ff34e569c0da8dbe92494bb504a1176f0a4b2e85bd62b",
+        "chunks": "4f2d501510695806c3a971f8c69016a1090545e5461f793386b9feadd1a129dd"
+      }
+    }
+  ],
+  "equality": {
+    "initial": true,
+    "final": true,
+    "chunks": true
+  },
+  "waitForIdle": true,
+  "idleLight": true,
+  "scope": "Four independent active QA scenes, mangrove island network, 20 synthetic actors, 120 advanceReal(.05) calls in standalone/pthreads/pthreads/standalone order; actual WorldScene and native session per run. Optional WAIT_IDLE=1 pumps the global scheduler while waiting for chunk stream idle; IDLE_LIGHT=1 suppresses drawing only during that wait. Measurement loop is manual and does not pump the global scheduler. First-use instrumentation on regionFor and GPU timers perturb timing. Fixed logical clock and slot ID; no real input, Rapier, complete native-state equivalence, campaign, integrated GPU, or Worker-owned simulation."
+}

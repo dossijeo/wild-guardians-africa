@@ -1,0 +1,47 @@
+{
+  "scope": "AB/BA CPU timing of QA query only, cloned day7 time255. Not renderer/GPU benchmark or full campaign throughput.",
+  "inputSHA256": "132f9771894b002ea1174df9cfe6003684ede3a23108e30129e59b5e2cb717be",
+  "sourceSHA256": "d377ac01eced113bb9dfc0da63989177dc93d7b26eb8fe631b17d800dd7f3e33",
+  "sameResult": true,
+  "stateUnchanged": true,
+  "results": [
+    {
+      "cache": false,
+      "calls": 5,
+      "ms": 1261.8868
+    },
+    {
+      "cache": true,
+      "calls": 5,
+      "ms": 336.53089999999975
+    },
+    {
+      "cache": true,
+      "calls": 5,
+      "ms": 2.307199999999739
+    },
+    {
+      "cache": false,
+      "calls": 5,
+      "ms": 697.7399
+    }
+  ],
+  "proof": {
+    "valid": false,
+    "reason": "no-complete-native-component-certificate",
+    "checks": [
+      {
+        "radius": 1.1,
+        "inside": {
+          "x": 82.5,
+          "z": -7.5
+        },
+        "outside": {
+          "x": 108.46000000000001,
+          "z": -7.5
+        },
+        "completeClosedComponent": false
+      }
+    ]
+  }
+}

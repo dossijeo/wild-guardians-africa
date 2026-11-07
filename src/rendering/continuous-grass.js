@@ -1,3 +1,4 @@
+import {cinematicLightingEnabled,patchCinematicVegetation} from './cinematic-lighting.js';
 import {DAYLIGHT_BIOMES,patchDaylightGrass} from './final-daylight.js';
 import {assetUrl} from './asset-url.js';
 import {mangroveFernEnabled} from './mangrove-fern-option.js';
@@ -8,7 +9,7 @@ import {markGroundDetailEvent} from './blender-ground-details.js';
 import * as THREE from 'three';
 import {hashCell,noise} from '../world/terrain.js';
 import {footprintDistance} from '../world/footprints.js';
-import {observeGameEvents} from '../simulation/game.js';
+import {observePresentationGameEvents} from '../simulation/game-event-observers.js';
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 const vertex=`
 in vec4 coverageAnchor,coverageData;in vec2 coverageSlope;in vec3 flatPosition,bladeRoot,flatNormal;
@@ -141,6 +142,7 @@ export async function createContinuousGrass(world){
  bins[q.variant==='C'&&detailed?0:1].push(p);}
  for(let k=0;k<2;k++){const entry=q.meshes[k],g=entry.mesh.geometry,bin=bins[k];q.stats.overflow+=Math.max(0,bin.length-entry.capacity);const count=Math.min(entry.capacity,bin.length);for(let i=0;i<count;i++){const p=bin[i];for(let j=0;j<4;j++){g.attributes.coverageAnchor.array[i*4+j]=p[j];g.attributes.coverageData.array[i*4+j]=p[j+4]}g.attributes.coverageSlope.array[i*2]=p[8];g.attributes.coverageSlope.array[i*2+1]=p[9]}for(const name of ['coverageAnchor','coverageData','coverageSlope'])g.attributes[name].needsUpdate=true;g.instanceCount=count;entry.mesh.visible=q.variant!=='A'&&count>0;}q.near=q.meshes[0].mesh.geometry.instanceCount;q.far=q.meshes[1].mesh.geometry.instanceCount;if(world.biomeGround.riverUnderlay)syncSelectedGrassMask(world,q);q.stats.selectionMs+=performance.now()-start;q.stats.selectionCount++;q.dirty=false;}
  q.renderHook=world.scene.onBeforeRender=function(...args){old?.apply(this,args);if(q.disposed)return;if(world.biomeGround.riverUnderlay)world.biomeGround.coverageUnderlay?.value.set(q.group.visible&&q.variant!=="A"&&q.quality!=="muy_baja"&&!q.stats.overflow?1:0,q.farDistance);q.uniforms.uCoverageTime.value=q.timeOverride??world.state.elapsed;const camera=world.camera,key=[Math.round((camera.position.x-world.scene.position.x)*2),Math.round(camera.position.y*2),Math.round((camera.position.z-world.scene.position.z)*2),...camera.quaternion.toArray().map(v=>v.toFixed(2)),...camera.projectionMatrix.elements,q.variant].join('|');if(q.quality!=='muy_baja'&&q.variant!=='A'&&(q.dirty||key!==q.signature)){q.signature=key;select()}q.syncLod?.();};
+ q.renderHook.groundDepthSafe=old===THREE.Object3D.prototype.onBeforeRender||old?.groundDepthSafe===true;
  q.configureQuality=quality=>{
   if(q.quality===quality)return;
   q.quality=quality;const low=['baja','muy_baja'].includes(quality);
@@ -158,7 +160,7 @@ export async function createContinuousGrass(world){
   q.chunks.clear();q.tiles.clear();q.blockers.clear();
  };
  for(const key of world.chunks.keys()){const [cx,cz]=key.split(',').map(Number);chunk(cx,cz)}
- q.releaseEvents=observeGameEvents(world.state,event=>{markGroundDetailEvent(q,world.state,event,id=>world.objects.get(id)?.position);if(cropSoil&&['CropPlaced','CropPicked','CropDestroyed'].includes(event.type)){cropSoil.invalidate();q.occupancyDirty=true;}});
+ q.releaseEvents=observePresentationGameEvents(world.state,event=>{markGroundDetailEvent(q,world.state,event,id=>world.objects.get(id)?.position);if(cropSoil&&['CropPlaced','CropPicked','CropDestroyed'].includes(event.type)){cropSoil.invalidate();q.occupancyDirty=true;}});
  q.audit=()=>({distribution:varied?'varied':'original',leafShape:mangrove?(cupped?'cupped':'original'):null,variant:q.variant,active:q.group.visible&&!q.disposed,quality:q.quality,biome:world.state.biome,edgePadding:q.edgePadding,nearDistance:q.nearDistance,moduleSpacing:q.spacing,near:q.near,far:q.far,leaves:q.near*(mangrove?8:12)+q.far*(mangrove?4:8),triangles:q.meshes.reduce((n,e)=>n+e.mesh.geometry.index.count/3*e.mesh.geometry.instanceCount,0),chunks:q.chunks.size,cachedTiles:q.tiles.size,bufferBytes:q.meshes.reduce((s,e)=>s+Object.values(e.mesh.geometry.attributes).reduce((n,a)=>n+a.array.byteLength,0)+(e.mesh.geometry.index?.array.byteLength??0),0),stats:{...q.stats},engineQueries:0,castShadow:false});
  if(fern){try{const {applyHollyFern}=await import('./mangrove-fern-material.js');await applyHollyFern(world,q);
   // Chunks can arrive or be replaced while the fern textures load. Reconcile
@@ -166,5 +168,6 @@ export async function createContinuousGrass(world){
   for(const key of q.chunks.keys())if(!world.chunks.has(key))q.release(key);
   for(const key of world.chunks.keys()){const [cx,cz]=key.split(',').map(Number);chunk(cx,cz);}
  }catch(e){q.dispose();throw e;}}
+ if(cinematicLightingEnabled(world.visualSearch))for(const {mesh} of q.meshes){mesh.material.vertexShader=patchCinematicVegetation(mesh.material.vertexShader);mesh.material.fragmentShader=patchCinematicVegetation(mesh.material.fragmentShader);mesh.material.needsUpdate=true;}
  return q;
 }

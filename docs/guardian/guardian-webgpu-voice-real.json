@@ -1,0 +1,190 @@
+{
+  "first": {
+    "time": 0.332144,
+    "status": "playing",
+    "cue": "ES_01",
+    "weights": {
+      "blink_L": 0,
+      "blink_R": 0,
+      "blink_L_25": 0,
+      "blink_L_50": 0,
+      "blink_L_75": 0,
+      "blink_R_25": 0,
+      "blink_R_50": 0,
+      "blink_R_75": 0,
+      "viseme_A": 0,
+      "viseme_B": 0.08735314990433277,
+      "viseme_C": 0.9126468500956673,
+      "viseme_D": 0,
+      "viseme_E": 0,
+      "viseme_F": 0,
+      "viseme_G": 0,
+      "viseme_H": 0,
+      "viseme_X": 0
+    },
+    "backend": "webgpu",
+    "failures": [],
+    "pipelines": [
+      {
+        "name": "createRenderPipeline",
+        "at": 701.6999999880791,
+        "label": "mipmap-rgba8unorm-srgb",
+        "stack": "Error\n    at device.<computed> [as createRenderPipeline] (http://127.0.0.1:5175/src/ui/guardian-3d-worker.js?worker_file&type=module:17:237)\n    at WebGPUTexturePassUtils.getTransferPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:33934:30)\n    at WebGPUTexturePassUtils._mipmapCreateBundles (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:34076:27)\n    at WebGPUTexturePassUtils.generateMipmaps (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:34059:63)\n    at WebGPUTextureUtils._generateMipmaps (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:34589:26)\n    at WebGPUTextureUtils.generateMipmaps (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:34316:14)\n    at WebGPUBackend.generateMipmaps (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:39174:23)\n    at Textures.updateTexture (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:14402:78)\n    at Bindings._init (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13825:23)\n    at Bindings.getForRender (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13766:14)",
+        "cpuMs": 0.7000000178813934,
+        "afterFirstDraw": false
+      },
+      {
+        "name": "createRenderPipeline",
+        "at": 705.2999999821186,
+        "label": "mipmap-rgba8unorm",
+        "stack": "Error\n    at device.<computed> [as createRenderPipeline] (http://127.0.0.1:5175/src/ui/guardian-3d-worker.js?worker_file&type=module:17:237)\n    at WebGPUTexturePassUtils.getTransferPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:33934:30)\n    at WebGPUTexturePassUtils._mipmapCreateBundles (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:34076:27)\n    at WebGPUTexturePassUtils.generateMipmaps (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:34059:63)\n    at WebGPUTextureUtils._generateMipmaps (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:34589:26)\n    at WebGPUTextureUtils.generateMipmaps (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:34316:14)\n    at WebGPUBackend.generateMipmaps (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:39174:23)\n    at Textures.updateTexture (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:14402:78)\n    at Bindings._init (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13825:23)\n    at Bindings.getForRender (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13766:14)",
+        "cpuMs": 0.20000001788139343,
+        "afterFirstDraw": false
+      },
+      {
+        "name": "createRenderPipelineAsync",
+        "at": 712.7999999821186,
+        "label": "renderPipeline_Material_0_25",
+        "stack": "Error\n    at device.<computed> [as createRenderPipelineAsync] (http://127.0.0.1:5175/src/ui/guardian-3d-worker.js?worker_file&type=module:17:237)\n    at http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:37512:16\n    at new Promise (<anonymous>)\n    at WebGPUPipelineUtils.createRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:37511:17)\n    at WebGPUBackend.createRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:39259:24)\n    at Pipelines._getRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13664:20)\n    at Pipelines.getForRender (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13572:25)\n    at WebGPURenderer._createObjectPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27710:21)\n    at WebGPURenderer.renderObject (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27641:12)\n    at WebGPURenderer._renderObjects (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27586:12)",
+        "cpuMs": 0.5,
+        "afterFirstDraw": false
+      },
+      {
+        "name": "createRenderPipelineAsync",
+        "at": 756.6999999880791,
+        "label": "renderPipeline_Carved painted Guardian lids_26",
+        "stack": "Error\n    at device.<computed> [as createRenderPipelineAsync] (http://127.0.0.1:5175/src/ui/guardian-3d-worker.js?worker_file&type=module:17:237)\n    at http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:37512:16\n    at new Promise (<anonymous>)\n    at WebGPUPipelineUtils.createRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:37511:17)\n    at WebGPUBackend.createRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:39259:24)\n    at Pipelines._getRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13664:20)\n    at Pipelines.getForRender (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13572:25)\n    at WebGPURenderer._createObjectPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27710:21)\n    at WebGPURenderer.renderObject (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27641:12)\n    at WebGPURenderer._renderObjects (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27586:12)",
+        "cpuMs": 0.09999999403953552,
+        "afterFirstDraw": false
+      },
+      {
+        "name": "createRenderPipelineAsync",
+        "at": 777.1999999880791,
+        "label": "renderPipeline_Original wood facial atlas_27",
+        "stack": "Error\n    at device.<computed> [as createRenderPipelineAsync] (http://127.0.0.1:5175/src/ui/guardian-3d-worker.js?worker_file&type=module:17:237)\n    at http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:37512:16\n    at new Promise (<anonymous>)\n    at WebGPUPipelineUtils.createRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:37511:17)\n    at WebGPUBackend.createRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:39259:24)\n    at Pipelines._getRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13664:20)\n    at Pipelines.getForRender (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13572:25)\n    at WebGPURenderer._createObjectPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27710:21)\n    at WebGPURenderer.renderObject (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27641:12)\n    at WebGPURenderer._renderObjects (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27586:12)",
+        "cpuMs": 0.09999999403953552,
+        "afterFirstDraw": false
+      },
+      {
+        "name": "createRenderPipelineAsync",
+        "at": 792.9000000059605,
+        "label": "renderPipeline_Batched painted facial details_28",
+        "stack": "Error\n    at device.<computed> [as createRenderPipelineAsync] (http://127.0.0.1:5175/src/ui/guardian-3d-worker.js?worker_file&type=module:17:237)\n    at http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:37512:16\n    at new Promise (<anonymous>)\n    at WebGPUPipelineUtils.createRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:37511:17)\n    at WebGPUBackend.createRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:39259:24)\n    at Pipelines._getRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13664:20)\n    at Pipelines.getForRender (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13572:25)\n    at WebGPURenderer._createObjectPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27710:21)\n    at WebGPURenderer.renderObject (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27641:12)\n    at WebGPURenderer._renderObjects (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27586:12)",
+        "cpuMs": 0.09999999403953552,
+        "afterFirstDraw": false
+      },
+      {
+        "name": "createRenderPipelineAsync",
+        "at": 801.5999999940395,
+        "label": "renderPipeline_MeshBasicNodeMaterial_17",
+        "stack": "Error\n    at device.<computed> [as createRenderPipelineAsync] (http://127.0.0.1:5175/src/ui/guardian-3d-worker.js?worker_file&type=module:17:237)\n    at http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:37512:16\n    at new Promise (<anonymous>)\n    at WebGPUPipelineUtils.createRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:37511:17)\n    at WebGPUBackend.createRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:39259:24)\n    at Pipelines._getRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13664:20)\n    at Pipelines.getForRender (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13572:25)\n    at WebGPURenderer._createObjectPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27710:21)\n    at WebGPURenderer.renderObject (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27641:12)\n    at WebGPURenderer._renderObjects (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27586:12)",
+        "cpuMs": 0.19999998807907104,
+        "afterFirstDraw": false
+      },
+      {
+        "name": "createRenderPipelineAsync",
+        "at": 812.4000000059605,
+        "label": "renderPipeline_MeshBasicNodeMaterial_18",
+        "stack": "Error\n    at device.<computed> [as createRenderPipelineAsync] (http://127.0.0.1:5175/src/ui/guardian-3d-worker.js?worker_file&type=module:17:237)\n    at http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:37512:16\n    at new Promise (<anonymous>)\n    at WebGPUPipelineUtils.createRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:37511:17)\n    at WebGPUBackend.createRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:39259:24)\n    at Pipelines._getRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13664:20)\n    at Pipelines.getForRender (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13572:25)\n    at WebGPURenderer._createObjectPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27710:21)\n    at WebGPURenderer.renderObject (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27641:12)\n    at WebGPURenderer._renderObjects (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27586:12)",
+        "cpuMs": 0,
+        "afterFirstDraw": false
+      }
+    ],
+    "webglRequests": 0
+  },
+  "second": {
+    "time": 1.35068,
+    "status": "playing",
+    "cue": "ES_01",
+    "weights": {
+      "blink_L": 0,
+      "blink_R": 0,
+      "blink_L_25": 0,
+      "blink_L_50": 0,
+      "blink_L_75": 0,
+      "blink_R_25": 0,
+      "blink_R_50": 0,
+      "blink_R_75": 0,
+      "viseme_A": 0.5808796450640741,
+      "viseme_B": 0,
+      "viseme_C": 0,
+      "viseme_D": 0.419120354935926,
+      "viseme_E": 0,
+      "viseme_F": 0,
+      "viseme_G": 0,
+      "viseme_H": 0,
+      "viseme_X": 0
+    },
+    "backend": "webgpu",
+    "failures": [],
+    "pipelines": [
+      {
+        "name": "createRenderPipeline",
+        "at": 701.6999999880791,
+        "label": "mipmap-rgba8unorm-srgb",
+        "stack": "Error\n    at device.<computed> [as createRenderPipeline] (http://127.0.0.1:5175/src/ui/guardian-3d-worker.js?worker_file&type=module:17:237)\n    at WebGPUTexturePassUtils.getTransferPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:33934:30)\n    at WebGPUTexturePassUtils._mipmapCreateBundles (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:34076:27)\n    at WebGPUTexturePassUtils.generateMipmaps (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:34059:63)\n    at WebGPUTextureUtils._generateMipmaps (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:34589:26)\n    at WebGPUTextureUtils.generateMipmaps (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:34316:14)\n    at WebGPUBackend.generateMipmaps (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:39174:23)\n    at Textures.updateTexture (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:14402:78)\n    at Bindings._init (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13825:23)\n    at Bindings.getForRender (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13766:14)",
+        "cpuMs": 0.7000000178813934,
+        "afterFirstDraw": false
+      },
+      {
+        "name": "createRenderPipeline",
+        "at": 705.2999999821186,
+        "label": "mipmap-rgba8unorm",
+        "stack": "Error\n    at device.<computed> [as createRenderPipeline] (http://127.0.0.1:5175/src/ui/guardian-3d-worker.js?worker_file&type=module:17:237)\n    at WebGPUTexturePassUtils.getTransferPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:33934:30)\n    at WebGPUTexturePassUtils._mipmapCreateBundles (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:34076:27)\n    at WebGPUTexturePassUtils.generateMipmaps (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:34059:63)\n    at WebGPUTextureUtils._generateMipmaps (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:34589:26)\n    at WebGPUTextureUtils.generateMipmaps (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:34316:14)\n    at WebGPUBackend.generateMipmaps (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:39174:23)\n    at Textures.updateTexture (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:14402:78)\n    at Bindings._init (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13825:23)\n    at Bindings.getForRender (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13766:14)",
+        "cpuMs": 0.20000001788139343,
+        "afterFirstDraw": false
+      },
+      {
+        "name": "createRenderPipelineAsync",
+        "at": 712.7999999821186,
+        "label": "renderPipeline_Material_0_25",
+        "stack": "Error\n    at device.<computed> [as createRenderPipelineAsync] (http://127.0.0.1:5175/src/ui/guardian-3d-worker.js?worker_file&type=module:17:237)\n    at http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:37512:16\n    at new Promise (<anonymous>)\n    at WebGPUPipelineUtils.createRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:37511:17)\n    at WebGPUBackend.createRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:39259:24)\n    at Pipelines._getRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13664:20)\n    at Pipelines.getForRender (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13572:25)\n    at WebGPURenderer._createObjectPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27710:21)\n    at WebGPURenderer.renderObject (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27641:12)\n    at WebGPURenderer._renderObjects (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27586:12)",
+        "cpuMs": 0.5,
+        "afterFirstDraw": false
+      },
+      {
+        "name": "createRenderPipelineAsync",
+        "at": 756.6999999880791,
+        "label": "renderPipeline_Carved painted Guardian lids_26",
+        "stack": "Error\n    at device.<computed> [as createRenderPipelineAsync] (http://127.0.0.1:5175/src/ui/guardian-3d-worker.js?worker_file&type=module:17:237)\n    at http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:37512:16\n    at new Promise (<anonymous>)\n    at WebGPUPipelineUtils.createRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:37511:17)\n    at WebGPUBackend.createRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:39259:24)\n    at Pipelines._getRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13664:20)\n    at Pipelines.getForRender (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13572:25)\n    at WebGPURenderer._createObjectPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27710:21)\n    at WebGPURenderer.renderObject (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27641:12)\n    at WebGPURenderer._renderObjects (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27586:12)",
+        "cpuMs": 0.09999999403953552,
+        "afterFirstDraw": false
+      },
+      {
+        "name": "createRenderPipelineAsync",
+        "at": 777.1999999880791,
+        "label": "renderPipeline_Original wood facial atlas_27",
+        "stack": "Error\n    at device.<computed> [as createRenderPipelineAsync] (http://127.0.0.1:5175/src/ui/guardian-3d-worker.js?worker_file&type=module:17:237)\n    at http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:37512:16\n    at new Promise (<anonymous>)\n    at WebGPUPipelineUtils.createRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:37511:17)\n    at WebGPUBackend.createRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:39259:24)\n    at Pipelines._getRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13664:20)\n    at Pipelines.getForRender (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13572:25)\n    at WebGPURenderer._createObjectPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27710:21)\n    at WebGPURenderer.renderObject (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27641:12)\n    at WebGPURenderer._renderObjects (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27586:12)",
+        "cpuMs": 0.09999999403953552,
+        "afterFirstDraw": false
+      },
+      {
+        "name": "createRenderPipelineAsync",
+        "at": 792.9000000059605,
+        "label": "renderPipeline_Batched painted facial details_28",
+        "stack": "Error\n    at device.<computed> [as createRenderPipelineAsync] (http://127.0.0.1:5175/src/ui/guardian-3d-worker.js?worker_file&type=module:17:237)\n    at http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:37512:16\n    at new Promise (<anonymous>)\n    at WebGPUPipelineUtils.createRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:37511:17)\n    at WebGPUBackend.createRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:39259:24)\n    at Pipelines._getRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13664:20)\n    at Pipelines.getForRender (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13572:25)\n    at WebGPURenderer._createObjectPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27710:21)\n    at WebGPURenderer.renderObject (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27641:12)\n    at WebGPURenderer._renderObjects (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27586:12)",
+        "cpuMs": 0.09999999403953552,
+        "afterFirstDraw": false
+      },
+      {
+        "name": "createRenderPipelineAsync",
+        "at": 801.5999999940395,
+        "label": "renderPipeline_MeshBasicNodeMaterial_17",
+        "stack": "Error\n    at device.<computed> [as createRenderPipelineAsync] (http://127.0.0.1:5175/src/ui/guardian-3d-worker.js?worker_file&type=module:17:237)\n    at http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:37512:16\n    at new Promise (<anonymous>)\n    at WebGPUPipelineUtils.createRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:37511:17)\n    at WebGPUBackend.createRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:39259:24)\n    at Pipelines._getRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13664:20)\n    at Pipelines.getForRender (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13572:25)\n    at WebGPURenderer._createObjectPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27710:21)\n    at WebGPURenderer.renderObject (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27641:12)\n    at WebGPURenderer._renderObjects (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27586:12)",
+        "cpuMs": 0.19999998807907104,
+        "afterFirstDraw": false
+      },
+      {
+        "name": "createRenderPipelineAsync",
+        "at": 812.4000000059605,
+        "label": "renderPipeline_MeshBasicNodeMaterial_18",
+        "stack": "Error\n    at device.<computed> [as createRenderPipelineAsync] (http://127.0.0.1:5175/src/ui/guardian-3d-worker.js?worker_file&type=module:17:237)\n    at http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:37512:16\n    at new Promise (<anonymous>)\n    at WebGPUPipelineUtils.createRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:37511:17)\n    at WebGPUBackend.createRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:39259:24)\n    at Pipelines._getRenderPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13664:20)\n    at Pipelines.getForRender (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:13572:25)\n    at WebGPURenderer._createObjectPipeline (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27710:21)\n    at WebGPURenderer.renderObject (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27641:12)\n    at WebGPURenderer._renderObjects (http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-5FFPRNLG.js?v=0c0aaed3:27586:12)",
+        "cpuMs": 0,
+        "afterFirstDraw": false
+      }
+    ],
+    "webglRequests": 0
+  },
+  "errors": [],
+  "scope": "Isolated NativeGuardian UI with real ES_01 audio, real browser media clock and Worker WebGPU. Main-thread WebGL contexts are forbidden; the Worker separately forbids them. Not the full game or a performance benchmark."
+}

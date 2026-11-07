@@ -36,6 +36,8 @@ rigid_pack = rigid_pack.replace('function updateRigidBuffers()', 'function rigid
 rigid_pack = rigid_pack.replace('rigidGeo[k].instancesFrom(rigidBuffers[k],Math.min(256,counts[k]));', 'rigidPacked[k].count=Math.min(256,counts[k]);')
 rigid_pack = rigid_pack.rstrip()[:-1]+'return rigidPacked;}\n'
 geometry = 'let fxVertices=[];\n'+section('function fxTri(', 'function paintGeometryFX(')
+# Mirror claw curvature along the attack axis; retain contact origin and timing.
+geometry = geometry.replace('arcRibbon(center,[1,0,0],[0,.91,.32]', 'arcRibbon(center,[-1,0,0],[0,.91,.32]')
 simulation = section('let current=', 'function updateRigidBuffers(')
 simulation = simulation.replace('if(rebuild)buildStation(current.id);', '')
 simulation = simulation.replace('const mouth=M.pt(toolModel,[.62,.21,0]);', "const source=waterSource?.(clock);if(waterSource&&!source)return;const mouth=source?.position??M.pt(toolModel,[.62,.21,0]);")
@@ -69,6 +71,8 @@ for original in ["'#a7d5a4'","'#d3dda2'","'#9fb765'"]:
     combat = combat.replace(original,"(agricultureMode==='multiply'?'#eac98d':"+original+")")
 combat = combat.replace('V.scale([.16,.43,.13],vis*.65)',"V.scale(agricultureMode==='multiply'?color('#eac98d'):[.16,.43,.13],vis*.65)")
 combat = combat.replace('V.scale([.11,.3,.2],vis*.45)',"V.scale(agricultureMode==='multiply'?color('#eac98d'):[.11,.3,.2],vis*.45)")
+# Avoid per-vertex iterator/spread temporary arrays without changing float output.
+geometry = geometry.replace('for(const [i,p]of[a,b,c].entries())fxVertices.push(...p,...(n[i]||n[0]),...col,alpha,kind);', 'for(let i=0;i<3;i++){const p=i===0?a:i===1?b:c,normal=n[i]||n[0];fxVertices.push(p[0],p[1],p[2],normal[0],normal[1],normal[2],col[0],col[1],col[2],alpha,kind);}')
 geometry = geometry.replace('const at=(r,a)=>V.add(p,V.add(V.scale(U,Math.cos(a)*r),V.scale(W,Math.sin(a)*r)));',"const at=(r,a)=>{const q=V.add(p,V.add(V.scale(U,Math.cos(a)*r),V.scale(W,Math.sin(a)*r)));if(agricultureMode&&current.id==='heal'&&surface)q[1]+=floorAt(q);return q;};")
 geometry = geometry.replace('return[Math.cos(angle)*(.55-.2*u),.18+u*1.6,Math.sin(angle)*(.55-.2*u)]',"const q=[Math.cos(angle)*(.55-.2*u),.18+u*1.6,Math.sin(angle)*(.55-.2*u)];if(agricultureMode&&surface)q[1]+=floorAt(q);return q")
 combat = combat.replace("solid('leaf',[Math.cos(a)*.55,.1,Math.sin(a)*.55]","solid('leaf',blessingLeafOrigin(a)")
@@ -76,14 +80,17 @@ combat = "function blessingLeafOrigin(a){const p=[Math.cos(a)*.55,.1,Math.sin(a)
 rects = section('const spriteRects={};', 'const MAX_SPRITES=')
 rects = 'export function createVfxAtlasRects(ASSETS,width,height){const atlasImage={width,height};'+rects+'return spriteRects;}\n'
 pack = section('function paintSprites(', 'gl.useProgram(spriteP.p);')
-pack = pack.replace('function paintSprites(list,env,cam)', 'export function packVfxSprites(list,spriteRects,cam)')
-pack = pack.replace('if(!list.length)return;', 'const spriteData=new Float32Array(MAX_SPRITES*25);if(!list.length)return {count:0,data:spriteData};')
+pack = pack.replace('function paintSprites(list,env,cam)', 'export function packVfxSprites(list,spriteRects,cam,spriteData=new Float32Array(MAX_SPRITES*25))')
+pack = pack.replace('if(!list.length)return;', 'if(spriteData.length<MAX_SPRITES*25)throw new RangeError("VFX sprite buffer too small");if(!list.length)return {count:0,data:spriteData};')
+pack = pack.replace('V.dot(V.sub(b.p,cam.eye),cam.forward)-V.dot(V.sub(a.p,cam.eye),cam.forward)', '((b.p[0]-cam.eye[0])*cam.forward[0]+(b.p[1]-cam.eye[1])*cam.forward[1]+(b.p[2]-cam.eye[2])*cam.forward[2])-((a.p[0]-cam.eye[0])*cam.forward[0]+(a.p[1]-cam.eye[1])*cam.forward[1]+(a.p[2]-cam.eye[2])*cam.forward[2])')
+pack = pack.replace('spriteData.set([f%1,s.orient||0,s.emit||0,s.soft||0],o+18);spriteData.set(s.dir||[0,1,0],o+22);', 'spriteData[o+18]=f%1;spriteData[o+19]=s.orient||0;spriteData[o+20]=s.emit||0;spriteData[o+21]=s.soft||0;spriteData[o+22]=s.dir?s.dir[0]:0;spriteData[o+23]=s.dir?s.dir[1]:1;spriteData[o+24]=s.dir?s.dir[2]:0;')
 pack += 'return {count,data:spriteData};}\n'
 
-module = '// Generated from original VFX Atelier V4 by tools/prepare_vfx_renderer.py.\n'+helpers+shaders+shapes+style+rects+'export const MAX_SPRITES=760,MAX_FX_VERTS=48000;\n'+pack
+module = "// Generated from original VFX Atelier V4 by tools/prepare_vfx_renderer.py.\nimport {vfxDefinitions} from './vfx-definitions.js';\nexport {vfxDefinitions} from './vfx-definitions.js';\n"+helpers+shaders+shapes+style+rects+'export const MAX_SPRITES=760,MAX_FX_VERTS=48000;\n'+pack
 environment = section(' const t=clamp(v/.46)', '// Test maquettes only.')
 module += 'export function vfxEnvironment(v,nightFill=.14){const settings={nightFill};\n'+environment
-module += definitions.replace('const definitions=', 'export const vfxDefinitions=')
+definitions_target = root/'src/rendering/vfx-definitions.js'
+definitions_target.write_text('// Generated from original VFX Atelier V4 by tools/prepare_vfx_renderer.py.\n'+definitions.replace('const definitions=', 'export const vfxDefinitions='), encoding='utf-8', newline='\n')
 module += '''
 export function createNativeVfx(id,spriteRects,{density=1,wind=.3,layers={},surface=null,waterSource=null,shieldMode=null,shieldDuration=20,agricultureMode=null,agricultureDuration=30,stepMode=false}={}){
  const definitions=vfxDefinitions,contacts=[],style=vfxRigidStyles;
@@ -100,12 +107,26 @@ export function createNativeVfx(id,spriteRects,{density=1,wind=.3,layers={},surf
  current=definitions.find(d=>d.id===id);if(!current)throw new Error('Composición VFX desconocida');restartEffect(false);
  return {
   get definition(){return current;},get time(){return clock;},get parts(){return parts;},get rigids(){return rigids;},get wetness(){return wetness;},contacts,
+  // Work-only checkpoint: callbacks and terrain belong to the destination, not
+  // to the serialized state. Callers must provide matching historical inputs.
+  exportWorkCheckpoint(){
+   if(!['dig','water','harvest','dust'].includes(current.id))throw Error('Unsupported work VFX checkpoint');
+   return structuredClone({version:1,id:current.id,config:{density,wind,layers:settings.layers,stepMode,hasSurface:!!surface,hasWaterSource:!!waterSource},clock,seed,eventIndex,parts,rigids,wetness,hitTime,paused});
+  },
+  importWorkCheckpoint(input){
+   const checkpoint=structuredClone(input),config={density,wind,layers:settings.layers,stepMode,hasSurface:!!surface,hasWaterSource:!!waterSource};
+   const validTree=value=>typeof value==='number'?Number.isFinite(value):value===null||typeof value==='string'||typeof value==='boolean'||Array.isArray(value)?Array.isArray(value)?value.every(validTree):true:value&&typeof value==='object'&&Object.values(value).every(validTree);
+   const vector=value=>Array.isArray(value)&&value.length===3&&value.every(Number.isFinite);
+   const numbers=(value,keys)=>keys.every(key=>Number.isFinite(value[key]));
+   if(!checkpoint||checkpoint.version!==1||checkpoint.id!==current.id||!['dig','water','harvest','dust'].includes(current.id)||JSON.stringify(checkpoint.config)!==JSON.stringify(config)||!Number.isFinite(checkpoint.clock)||checkpoint.clock<0||checkpoint.clock>current.duration+1e-7||!Number.isSafeInteger(checkpoint.seed)||checkpoint.seed< -2147483648||checkpoint.seed>2147483647||!Number.isSafeInteger(checkpoint.eventIndex)||checkpoint.eventIndex<0||checkpoint.eventIndex>events.length||events.slice(0,checkpoint.eventIndex).some(event=>event.t>checkpoint.clock+1e-7)||checkpoint.clock>0&&events.slice(checkpoint.eventIndex).some(event=>event.t<=checkpoint.clock+1e-7)||!Number.isFinite(checkpoint.wetness)||!Number.isFinite(checkpoint.hitTime)||typeof checkpoint.paused!=='boolean'||!Array.isArray(checkpoint.parts)||checkpoint.parts.length>MAX_SPRITES||!Array.isArray(checkpoint.rigids)||checkpoint.rigids.length>MAX_RIGIDS||!validTree(checkpoint.parts)||!validTree(checkpoint.rigids)||!checkpoint.parts.every(p=>p&&vector(p.p)&&vector(p.v)&&vector(p.col)&&numbers(p,['age','life','size0','size1','ratio','alpha','orient','emit','angle','spin','soft','drag','gravity','ground','phase'])&&typeof p.tex==='string')||!checkpoint.rigids.every(r=>r&&vector(r.p)&&vector(r.v)&&vector(r.size)&&vector(r.col)&&vector(r.rot)&&vector(r.spin)&&numbers(r,['age','life','gravity','bounce','drag'])&&typeof r.settled==='boolean'&&typeof r.landed==='boolean'&&Object.hasOwn(style,r.kind)&&(!r.flight||vector(r.flight.start)&&vector(r.flight.end)&&numbers(r.flight,['duration','arc'])&&r.flight.duration>0)))throw TypeError('Invalid work VFX checkpoint');
+   restartEffect(false);clock=checkpoint.clock;seed=checkpoint.seed;eventIndex=checkpoint.eventIndex;parts=checkpoint.parts;rigids=checkpoint.rigids;wetness=checkpoint.wetness;hitTime=checkpoint.hitTime;paused=checkpoint.paused;toolPose();
+  },
   get lights(){return {positions:[lightPos0.slice(),lightPos1.slice()],colors:[lightCol0.slice(),lightCol1.slice()]};},
   get tool(){return {visible:toolVisible,matrix:new Float32Array(toolModel)};},
   step(dt){if(!Number.isFinite(dt)||dt<0)throw new Error('Paso VFX inválido');if(dt)simulate(dt);},
   advance(dt){if(!Number.isFinite(dt)||dt<0)throw new Error('Paso VFX inválido');for(let remaining=dt;remaining>1e-9;){const sub=Math.min(1/60,remaining);simulate(sub);remaining-=sub;}},
   seek(t){if(!Number.isFinite(t)||t<0)throw new Error('Tiempo VFX inválido');contacts.length=0;seekTo(t);},
-  sprites(){return spriteInstances();},rigidInstances,geometry(){composeGeometryFX();return new Float32Array(fxVertices.slice(0,MAX_FX_VERTS*11));},
+  sprites(){return spriteInstances();},rigidInstances,geometry(target=null){composeGeometryFX();const length=Math.min(fxVertices.length,MAX_FX_VERTS*11);if(!target||target.length<length)return new Float32Array(fxVertices.slice(0,length));if(length===fxVertices.length)target.set(fxVertices);else for(let i=0;i<length;i++)target[i]=fxVertices[i];return target.subarray(0,length);},
   clear(){parts.length=0;rigids.length=0;events.length=0;contacts.length=0;fxVertices.length=0;lightCol0=[0,0,0];lightCol1=[0,0,0];},
  };
 }
@@ -117,7 +138,7 @@ header = atlas.read_bytes()[:30]
 assert header[:4] == b'RIFF' and header[12:16] == b'VP8X'
 dimensions = [1+int.from_bytes(header[24:27], 'little'),1+int.from_bytes(header[27:30], 'little')]
 manifest = {'source':source.relative_to(root).as_posix(),'sourceSha256':hashlib.sha256(source.read_bytes()).hexdigest(),
-    'moduleSha256':hashlib.sha256(target.read_bytes()).hexdigest(),'atlas':assets['atlas'],'atlasSha256':hashlib.sha256(atlas.read_bytes()).hexdigest(),
+    'moduleSha256':hashlib.sha256(target.read_bytes()).hexdigest(),'definitionsSha256':hashlib.sha256(definitions_target.read_bytes()).hexdigest(),'atlas':assets['atlas'],'atlasSha256':hashlib.sha256(atlas.read_bytes()).hexdigest(),
     'atlasDimensions':dimensions,'resources':len(assets['resources']),'compositions':18,'structuralDamage':'external','previewContactsOnly':True}
 (root/'content/manifests/vfx-native.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
 print('Extracted VFX Atelier: 18 compositions, 19 textures, original shaders and presentation physics')

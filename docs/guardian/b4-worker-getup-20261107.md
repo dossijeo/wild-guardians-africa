@@ -1,0 +1,16 @@
+# Recuperación de trabajadores con skinning GPU
+
+La salida de recuperación hacia reposo puede reutilizar el banco `Idle` ya admitido: durante la mezcla de 0,24 s se aproxima la pose mediante una fase suavizada y se actualiza con cada publicación confirmada. Una comparación con `AnimationMixer` en los cuatro perfiles y 400 combinaciones de fase y peso mantiene el error de vértices muestreados por debajo de 0,04 unidades de mundo. La salida hacia movimiento y las demás acciones conserva el mezclador CPU: una prueba exploratoria de interpolación lineal entre poses alcanzó aproximadamente 0,198 unidades y se descartó. La comparación es geométrica; quedan pendientes la paridad perceptiva y las mediciones en WebGPU real.
+
+La presentación WebGPU admite el clip precocinado `Worker_GetUp` para los cuatro perfiles también cuando un obstáculo limita el desplazamiento. El shader aplica la misma corrección local del rig original, calculada mediante la fase y un vector individual por malla derivado de la fracción confirmada. La corrección se compone con el movimiento GPU y el proxy de selección; la ruta CPU permanece activa durante la carga, al fallar la admisión y durante la mezcla de salida. La simulación conserva las posiciones, los barridos y el tiempo autoritativos.
+
+La fase histórica puede reproducir recuperaciones estacionarias con fracción, límite espacial, rumbo y duración constantes en todas las muestras confirmadas. Una variación de esos valores, de posición o un evento fuerza la vía ordinaria. Las pruebas comprueban un caso restringido real con Wild Engine/WASM frente a la referencia, cambios de fracción durante la admisión, cuatro rigs con fracciones 0, 0,35, 0,75 y 1, picking y tiempos intermedios. La mayor diferencia de vértices muestreados es inferior a 0,03 unidades de mundo. Una prueba usa el mismo material en dos trabajadores y verifica sus valores independientes. La generación WGSL para el pase de color y sombra se comprueba con una trayectoria GPU enlazada.
+
+Estas pruebas no sustituyen la validación visual de sombras, selección, transiciones o rendimiento en una partida WebGPU real. Cuando la fracción cambia dentro de un intervalo histórico se conserva la presentación ordinaria hasta el siguiente límite confirmado. Los cuatro paquetes siguen verificándose con `node tools/guardian/build-worker-gpu-walk.mjs --clip=Worker_GetUp --check`.
+Cuando una corrección espacial confirmada cambia la fracción, duración o
+rumbo durante la admisión de `Worker_GetUp`, el roster rechaza la candidatura
+anterior y vuelve a solicitar el clip para la nueva versión de recuperación.
+La solicitud no se repite continuamente si falla sin un cambio confirmado.
+Las pruebas cubren admisión retenida, sustitución y fallo persistente, además
+del rig y los contratos históricos existentes; queda pendiente comprobar la
+continuidad visual y el coste en WebGPU real.

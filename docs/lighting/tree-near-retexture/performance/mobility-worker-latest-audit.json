@@ -1,0 +1,62 @@
+{
+  "capacity": 1,
+  "heldMs": 215.5600000023842,
+  "first": {
+    "kind": "advanced",
+    "id": 1,
+    "steps": 10,
+    "version": 10,
+    "pending": 0,
+    "maxPending": 0,
+    "saturated": false,
+    "workerElapsedMs": 16.25499999523163
+  },
+  "advance": {
+    "kind": "advanced",
+    "id": 3,
+    "steps": 22,
+    "version": 32,
+    "pending": 1,
+    "maxPending": 1,
+    "saturated": true,
+    "workerElapsedMs": 22.269999995827675
+  },
+  "stopped": {
+    "kind": "advanced",
+    "id": 4,
+    "steps": 0,
+    "version": 32,
+    "pending": 1,
+    "maxPending": 1,
+    "saturated": true
+  },
+  "resumed": {
+    "kind": "advanced",
+    "id": 10,
+    "steps": 28,
+    "version": 60,
+    "pending": 0,
+    "maxPending": 0,
+    "saturated": false,
+    "workerElapsedMs": 9.529999993741512
+  },
+  "oldVersion": 10,
+  "finalVersion": 60,
+  "oldTime": 3430.9999999975794,
+  "finalTime": 3435.999999997575,
+  "event": {
+    "sequence": 1,
+    "event": {
+      "id": "event-9133",
+      "type": "StructureRuined",
+      "targetId": "structure-2"
+    }
+  },
+  "repeatedSequence": 1,
+  "invalidAck": false,
+  "wrongSessionAck": false,
+  "ack": true,
+  "finalPending": 0,
+  "referenceProjectionEqual": true,
+  "scope": "One retained latest projection; pending events retained until cumulative acknowledgment. Work is explicitly requested. Soft event limit is checked between ticks; a tick may exceed it. No render or production integration."
+}

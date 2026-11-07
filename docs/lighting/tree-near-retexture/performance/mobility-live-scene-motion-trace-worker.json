@@ -1,0 +1,82 @@
+{
+  "biome": "manglares",
+  "mangroveNetwork": true,
+  "animals": 20,
+  "chunks": 25,
+  "snapshotBytes": 29370,
+  "captureMs": 2.019999995827675,
+  "mainInitMs": 841.4099999964237,
+  "workerInitMs": 870.5499999970198,
+  "workerInitResponseMs": 1086.155000001192,
+  "rows": [
+    {
+      "steps": 1,
+      "snapshotEqual": true,
+      "projectionEqual": true,
+      "mainTickMs": [
+        1025.3350000083447
+      ],
+      "workerTickMs": [
+        1065.219999998808
+      ],
+      "responseMs": 1066.4249999970198,
+      "elapsed": 3000.4666850000012,
+      "coordinatePairs": 6,
+      "movingPairs": 6,
+      "incompleteAxes": 0,
+      "actorsWithMultiplePairsPerTick": 1
+    },
+    {
+      "steps": 5,
+      "snapshotEqual": true,
+      "projectionEqual": true,
+      "mainTickMs": [
+        12.435000002384186,
+        4.545000001788139,
+        3.209999993443489,
+        4.284999996423721,
+        4.030000001192093
+      ],
+      "workerTickMs": [
+        14.344999998807907,
+        9.319999992847443,
+        7.034999996423721,
+        6.175000011920929,
+        4.079999998211861
+      ],
+      "responseMs": 42.55500000715256,
+      "elapsed": 3000.716685000002,
+      "coordinatePairs": 66,
+      "movingPairs": 65,
+      "incompleteAxes": 0,
+      "actorsWithMultiplePairsPerTick": 1
+    },
+    {
+      "steps": 5,
+      "snapshotEqual": true,
+      "projectionEqual": true,
+      "mainTickMs": [
+        2.7000000029802322,
+        2.5550000071525574,
+        2.1099999994039536,
+        2.695000007748604,
+        1.905000001192093
+      ],
+      "workerTickMs": [
+        4.495000004768372,
+        4.440000012516975,
+        4.064999997615814,
+        4.670000001788139,
+        2.8999999910593033
+      ],
+      "responseMs": 21.530000001192093,
+      "elapsed": 3000.966685000003,
+      "coordinatePairs": 80,
+      "movingPairs": 80,
+      "incompleteAxes": 0,
+      "actorsWithMultiplePairsPerTick": 4
+    }
+  ],
+  "sceneErrors": [],
+  "scope": "Snapshot captured from live mangrove-islands QA scene with 20 test animals; QA ID qa-beast-0 is renamed in the copy because native intent IDs require a positive numeric suffix. Both main and Worker restore independent game and spatial sessions from the same adapted serialized state and visible chunk keys. Worker coordinate assignments are intercepted diagnostically; paired axes are not authoritative paths. No comparison against the original scene native state, physics manager, GPU, inputs, render, full residency or production migration."
+}

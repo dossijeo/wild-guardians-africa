@@ -1,0 +1,5 @@
+# Reserva de sombras de vegetación lejana
+
+La capa exclusiva de sombra permanece deshabilitada mientras no hay casters candidatos o publicados. En ese estado el render no necesita recorrer la escena para comprobar la reserva. La primera admisión valida la escena completa antes de habilitarla; las admisiones concurrentes comparten la reserva y la última liberación, diferida hasta terminar el trabajo GPU, vuelve a deshabilitarla.
+
+Mientras hay casters, el render sigue verificando la escena: Three.js permite modificar jerarquía, luces y máscaras directamente sin un evento fiable. Si la reserva deja de ser válida, primero se solicita restaurar la cobertura 3D y después se suspende la capa. No se admite otro caster hasta que se hayan liberado todos los anteriores y una nueva comprobación completa confirme que la capa está libre. Las pruebas cubren admisiones solapadas, liberaciones tardías, colisiones persistentes, sustitución de cámara de sombra y el orden de fallback. Se elimina el recorrido por fotograma únicamente en el estado sin casters; no se ha medido el impacto en una partida ni comprobado el resultado en GPU real.
