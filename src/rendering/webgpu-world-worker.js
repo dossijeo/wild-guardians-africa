@@ -70,6 +70,7 @@ self.onmessage=async({data})=>{try{if(data?.kind!=='initialize')updateSharedCame
  if(data.kind==='cropBegin'){const begun=runWebGpuPreview({resource:'crop-preview',begin:()=>surface?.crops?.beginProvisional(data.id,data.species,data.x,data.z),report:notice=>postMessage({kind:'resourceError',...notice})});if(!begun)surface?.crops?.abandonProvisional(data.id);return;}
  if(data.kind==='cropConfirm'){surface?.crops?.confirmProvisional(data.id,data.targetId);return;}
  if(data.kind==='cropReject'){surface?.crops?.rejectProvisional(data.id);return;}
+ if(data.kind==='prepareProvisionalFalls'){surface?.animalRoster?.prepareProvisionalFalls();return;}
  if(data.kind==='guardianBegin'){beginWebGpuGuardianImpact(surface?.guardianAttack,surface?.animalRoster,data.command,null,surface?.timelinePump?.deferUntilBoundary?.bind(surface.timelinePump)??null);return;}
  if(data.kind==='guardianResolve'){if(data.accepted===false)surface?.timelinePump?.cancelDeferred?.(`attack:${data.id}`);surface?.guardianAttack?.resolve(data.id,data.accepted);surface?.animalRoster?.resolveImpact(data.id,data.accepted,data.sequence);return;}
  throw Error('Unknown world worker message');

@@ -626,7 +626,7 @@ function closeSurface(){
   if(pendingVillage)cancelVillagePreview();
 }
 let cropSelectionGeneration=0;
-function armTool(value){cropSelectionGeneration++;world?.cancelTutorialFocus?.();if(world?.workerGpuOnly)world.webGpuWorld?.client.preferCropSpecies(value.kind==='plant'?value.species:null);tool=toolSession.select(value,performance.now()/1000);if(!world?.qaEarlyTutorial||world?.workerGpuOnly&&['center','plant'].includes(value.kind))world?.focusTutorialPlacement(value.kind);}
+function armTool(value){cropSelectionGeneration++;world?.cancelTutorialFocus?.();if(world?.workerGpuOnly&&value.kind==='spell'&&value.spell==='attack')world.webGpuWorld?.client.prepareProvisionalFalls();if(world?.workerGpuOnly)world.webGpuWorld?.client.preferCropSpecies(value.kind==='plant'?value.species:null);tool=toolSession.select(value,performance.now()/1000);if(!world?.qaEarlyTutorial||world?.workerGpuOnly&&['center','plant'].includes(value.kind))world?.focusTutorialPlacement(value.kind);}
 function cancelTool(){cropSelectionGeneration++;world?.cancelTutorialFocus?.();if(world?.workerGpuOnly)world.webGpuWorld?.client.preferCropSpecies(null);if(pendingVillage)cancelVillagePreview();if(world?.workerGpuOnly)world.wallDrawing.setEnabled(false);tool=null;toolSession.clear();commandFeedback='';}
 function toggleAwakening(){
   if(tool?.kind==='awakening'){cancelTool();return;}
