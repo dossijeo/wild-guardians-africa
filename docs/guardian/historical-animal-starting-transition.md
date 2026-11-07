@@ -46,3 +46,7 @@ cortes y los seis participantes aceptados. No se cambiaron posiciones, tiempos
 ni mecánicas. Esto no certifica recursos gráficos, terreno visible ni una
 ejecución en GPU: el test hardware debe verificar los contadores del stream y
 el resultado visual en la partida real.
+
+## Same-tick event poses
+
+Three alternatives were compared: reject every event-time pose differing from the tick (safe but rejects real events), capture extra per-actor intra-tick trajectories (more state and a new continuity proof), or synchronously apply the existing causal event snapshots followed by the already-captured silent post-tick delta. The last is used: all states retain the same actor identities and species, each observer sees its exact event state, and the silent state must match every observed actor tick exactly. The whole group is decoded before starting; no rendering, asynchronous yield or publication ACK occurs between its states. The next slice starts only after the silent state. Existing topology, terrain, physics, collision and 100 ms input-latency gates remain in force. This does not establish GPU hardware validation.
