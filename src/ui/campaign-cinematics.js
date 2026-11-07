@@ -1,5 +1,6 @@
 import './campaign-cinematics.css';
 import {PencilBackground} from './cinematic-pencil.js';
+import {WebGpuPencilBackground} from './cinematic-pencil-webgpu.js';
 
 const BASE=new URL('cinematics/',document.baseURI);
 const DELAY=matchMedia('(prefers-reduced-motion: reduce)').matches?140:580;
@@ -14,7 +15,8 @@ function loadImage(path){
 }
 
 export class CampaignCinematics{
-  constructor({host=document.body,onComplete,onClosed,onError}={}){
+  constructor({host=document.body,onComplete,onClosed,onError,pencilBackend='webgl'}={}){
+    if(!['webgl','webgpu-worker'].includes(pencilBackend))throw TypeError('Invalid cinematic pencil backend');this.pencilBackend=pencilBackend;
     this.host=host;this.onComplete=onComplete;this.onClosed=onClosed;this.onError=onError;this.token=0;this.active=false;this.finishing=false;
     this.voice=new Audio();this.voice.preload='metadata';this.voice.playsInline=true;
   }
@@ -33,7 +35,7 @@ export class CampaignCinematics{
       const response=await fetch(new URL('manifest.json',BASE));if(!response.ok)throw new Error(`Cinematics manifest HTTP ${response.status}`);
       const manifest=await response.json();const act=manifest.acts.find(item=>item.number===actNumber);
       if(!act||act.scenes.length!==5)throw new Error(`Cinematic act ${actNumber} unavailable`);
-      if(!matchMedia('(prefers-reduced-motion: reduce)').matches)this.pencil=new PencilBackground();
+      if(!matchMedia('(prefers-reduced-motion: reduce)').matches)this.pencil=this.pencilBackend==='webgpu-worker'?new WebGpuPencilBackground():new PencilBackground();
       const scenes=act.scenes;let next=this.prepare(scenes[0]);
       await sleep(DELAY); // Fade gameplay to black while the first slide decodes.
       for(let i=0;i<scenes.length;i++){

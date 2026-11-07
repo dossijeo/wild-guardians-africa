@@ -1,0 +1,9 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {WebGpuPencilBackground} from '../src/ui/cinematic-pencil-webgpu.js';
+
+test('cinematic WebGPU bridge coalesces draws and never reveals an unprepared or obsolete scene',()=>{
+ const saved={document:globalThis.document,window:globalThis.window,ResizeObserver:globalThis.ResizeObserver},messages=[],canvas={style:{},setAttribute(){},transferControlToOffscreen:()=>({}),remove(){this.removed=true;}},worker={postMessage(message){messages.push(message);},terminate(){this.closed=true;}},host={clientWidth:640,clientHeight:360,appendChild(node){this.child=node;}},image={src:'/image.webp',naturalWidth:1280,naturalHeight:720},guide={src:'/guide.webp'};
+ globalThis.document={createElement:()=>canvas};globalThis.window={devicePixelRatio:1};globalThis.ResizeObserver=class{observe(){}unobserve(){}disconnect(){}};
+ try{const player=new WebGpuPencilBackground({workerFactory:()=>worker});player.attach(host,image,guide,.1);player.draw(.1,true);player.draw(.2,true);assert.equal(messages.filter(item=>item.kind==='draw').length,1);worker.onmessage({data:{kind:'frame',scene:1,drawn:false}});assert.equal(canvas.style.display,'none');assert.equal(messages.filter(item=>item.kind==='draw').at(-1).progress,.2);player.attach(host,image,guide,.2);player.draw(.3,true);worker.onmessage({data:{kind:'frame',scene:1,drawn:true}});assert.equal(canvas.style.display,'none');worker.onmessage({data:{kind:'frame',scene:2,drawn:true}});assert.equal(canvas.style.display,'block');const count=messages.filter(item=>item.kind==='draw').length;player.draw(.3,true);assert.equal(messages.filter(item=>item.kind==='draw').length,count);player.draw(1,true);assert.equal(canvas.style.display,'none');player.dispose();assert.equal(worker.closed,true);assert.equal(canvas.removed,true);}finally{for(const [key,value] of Object.entries(saved))if(value===undefined)delete globalThis[key];else globalThis[key]=value;}
+});
