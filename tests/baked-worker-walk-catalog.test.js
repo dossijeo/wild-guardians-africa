@@ -20,5 +20,5 @@ test('worker bake rejects changed bytes and unknown profiles',async()=>{
 
 test('closing the graphics owner defers worker texture release through pending compilation',async()=>{
  const {closeBakedWalkResources}=await import('../src/rendering/baked-walk-catalog.js');let closed=0,disposed=0,release;const workerBank={close(){closed++},dispose(){disposed++}},admission={dispose(){},deferCompilations(fn){release=fn}};
- const workerRunBank={close(){closed++},dispose(){disposed++}},workerHarvestBank={close(){closed++},dispose(){disposed++}};closeBakedWalkResources({workerBank,workerRunBank,workerHarvestBank,admission});assert.equal(closed,3);assert.equal(disposed,0);release();assert.equal(disposed,3);
+ const workerRunBank={close(){closed++},dispose(){disposed++}},workerHarvestBank={close(){closed++},dispose(){disposed++}},workerIdleBank={close(){closed++},dispose(){disposed++}};closeBakedWalkResources({workerBank,workerRunBank,workerHarvestBank,workerIdleBank,admission});assert.equal(closed,4);assert.equal(disposed,0);release();assert.equal(disposed,4);
 });

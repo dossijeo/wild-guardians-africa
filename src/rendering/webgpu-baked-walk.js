@@ -24,6 +24,10 @@ export function createBakedWorkerHarvestTexture(meta,buffer){
  if(meta?.schema!=='wg-worker-gpu-walk/1'||!hasBakedWorkerWalk(meta.species)||meta.clip!=='Harvest'||meta.validation?.visibleAttachments!==0)throw TypeError('Invalid baked worker harvest data');
  return createPackedBakedWalkTexture(meta,buffer);
 }
+export function createBakedWorkerIdleTexture(meta,buffer){
+ if(meta?.schema!=='wg-worker-gpu-walk/1'||!hasBakedWorkerWalk(meta.species)||meta.clip!=='Idle'||meta.validation?.visibleAttachments!==0)throw TypeError('Invalid baked worker idle data');
+ return createPackedBakedWalkTexture(meta,buffer);
+}
 function createPackedBakedWalkTexture(meta,buffer){
  if(meta.sharedMatrixChannels!==1||!Number.isInteger(meta.frames)||meta.frames<2||!Number.isInteger(meta.strideFloats)||!Number.isFinite(meta.duration)||meta.duration<=0||!Number.isFinite(meta.sampleRate)||meta.sampleRate<=0||!Array.isArray(meta.channels)||!meta.channels.length||!Array.isArray(meta.sampleTimes)||meta.sampleTimes.length!==meta.frames||!(buffer instanceof ArrayBuffer)||meta.byteLength!==buffer.byteLength||buffer.byteLength!==meta.frames*meta.strideFloats*4)throw TypeError('Invalid baked walking data');
  const channel=meta.channels[0],bones=channel?.bones?.length,offset=channel?.matrixOffset;

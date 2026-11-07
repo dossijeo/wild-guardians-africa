@@ -1,0 +1,26 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {webcrypto} from 'node:crypto';
+import {Scene,Vector3} from 'three';
+import {MeshStandardNodeMaterial} from 'three/webgpu';
+import {uniform} from 'three/tsl';
+import {actorAsset} from './helpers/actor-geometry.js';
+import {prepareWorkerClips} from '../src/rendering/worker-clips.js';
+import {loadBakedWorkerWalkAsset,BAKED_WORKER_WALK_PROFILES} from '../src/rendering/baked-worker-walk-catalog.js';
+import {createWebGpuConfirmedWorker} from '../src/rendering/webgpu-confirmed-worker.js';
+const fetcher=async url=>{const data=await readFile('public'+url);return {ok:true,json:async()=>JSON.parse(data),arrayBuffer:async()=>data.buffer.slice(data.byteOffset,data.byteOffset+data.byteLength)}};
+for(const profile of BAKED_WORKER_WALK_PROFILES)test(`${profile}: GPU idle follows the CPU rest phase and falls back on other poses`,async()=>{
+ const bake=await loadBakedWorkerWalkAsset(profile,{clip:'Idle',fetcher,subtle:webcrypto.subtle}),library=JSON.parse(await readFile('public/content/worker-actions.json'))[profile],renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:()=>new MeshStandardNodeMaterial()}};
+ async function make(){const asset=await actorAsset(bake.meta.source),entity={id:'w',profile,status:'idle',idleState:{mode:'rest',elapsed:0},x:0,z:0},state={workers:[entity],tasks:[],elapsed:0},model=asset.scene,actor=await createWebGpuConfirmedWorker({scene:new Scene(),residency:{get:()=>null},state,actorId:'w',renderer,assetBank:{async acquire(){return {model,clips:prepareWorkerClips(asset.animations),library,release(){}};}}});return {actor,entity,state,model};}
+ const gpu=await make(),cpu=await make();try{await gpu.actor.installBakedIdle(bake,{pipelineAdmission:{prepare:()=>Promise.resolve()}});let maximum=0;
+ for(const t of Array.from({length:Math.floor(bake.meta.duration*60)},(_,i)=>i/60)){for(const item of [gpu,cpu]){item.entity.idleState.elapsed=t;item.state.elapsed=t+10;item.actor.update();item.actor.root.updateMatrixWorld(true);}assert.equal(gpu.actor.isBakedIdle(),true);const meshes=gpu.actor.admissionObjects().filter(node=>!node.isSkinnedMesh&&node.visible),restore=gpu.actor.preparePick(),sources=[];cpu.model.traverse(node=>{if(node.isSkinnedMesh)sources.push(node);});const proxies=meshes.map(mesh=>mesh.parent.children.find(node=>node!==mesh&&node.isMesh&&node.visible&&node.geometry!==mesh.geometry&&node.geometry.index===mesh.geometry.index));assert.equal(proxies.length,sources.length);assert.ok(proxies.every(Boolean));for(let j=0;j<sources.length;j++){const n=sources[j].geometry.attributes.position.count;for(let i=0;i<n;i+=Math.max(1,Math.floor(n/70))){const a=sources[j].getVertexPosition(i,new Vector3()).applyMatrix4(sources[j].matrixWorld),b=proxies[j].getVertexPosition(i,new Vector3()).applyMatrix4(proxies[j].matrixWorld);maximum=Math.max(maximum,a.distanceTo(b));}}restore();}
+ assert.ok(maximum<.02,`max idle proxy error ${maximum}`);gpu.entity.idleState.mode='watch';gpu.actor.update();assert.equal(gpu.actor.isBakedIdle(),false);gpu.entity.idleState.mode='rest';gpu.entity.gateWaiting=true;gpu.actor.update();assert.equal(gpu.actor.isBakedIdle(),false);
+ }finally{gpu.actor.dispose();cpu.actor.dispose();bake.dispose();}
+});
+
+test('idle phase is held outside a certified horizon and uses confirmed time without idle state',async()=>{
+ const profile='youngMale',bake=await loadBakedWorkerWalkAsset(profile,{clip:'Idle',fetcher,subtle:webcrypto.subtle}),asset=await actorAsset(bake.meta.source),model=asset.scene,library=JSON.parse(await readFile('public/content/worker-actions.json'))[profile],entity={id:'w',profile,status:'idle',x:0,z:0},state={workers:[entity],tasks:[],elapsed:7},clock={node:uniform(7),elapsed:7},renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:()=>new MeshStandardNodeMaterial()}},actor=await createWebGpuConfirmedWorker({scene:new Scene(),residency:{get:()=>null},state,actorId:'w',renderer,confirmedClock:clock,assetBank:{async acquire(){return {model,clips:prepareWorkerClips(asset.animations),library,release(){}};}}});
+ try{await actor.installBakedIdle(bake,{pipelineAdmission:{prepare:()=>Promise.resolve()}});assert.equal(actor.isBakedIdle(),true);const mesh=actor.admissionObjects().find(node=>!node.isSkinnedMesh&&node.visible);assert.equal(mesh._wgWalkClockWeight,0);assert.ok(Math.abs(mesh._wgWalkPhaseOffset-(7%bake.meta.duration))<1e-6);assert.equal(actor.idlePhase({idleMode:null,at:7.1}),7.1);entity.idleState={mode:'rest',elapsed:2};assert.equal(actor.idlePhase({idleMode:'rest',idleElapsed:2.1,at:7.1}),2.1);entity.idleState.mode='watch';assert.equal(actor.idlePhase({idleMode:'rest',idleElapsed:2.1,at:7.1}),null);
+ }finally{actor.dispose();bake.dispose();}
+});
