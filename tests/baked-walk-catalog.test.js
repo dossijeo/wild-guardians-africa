@@ -12,6 +12,10 @@ const sha=data=>createHash('sha256').update(data).digest('hex');
 test('closing the graphical owner cancels new loads but keeps shared walking textures until compilation ends',async()=>{
  let finish,released=0;const bank=createBakedWalkBank({load:async species=>({meta:{species},texture:{isDataTexture:true},dispose(){released++;}})});await bank.get('hyena');const scene=new Scene(),admission=createWebGpuPipelineAdmission({scene,camera:new PerspectiveCamera(),renderer:{backend:{isWebGPUBackend:true},compileAsync:()=>new Promise(resolve=>{finish=resolve;})}}),pending=admission.prepare(new Group());await Promise.resolve();const cancelled=assert.rejects(pending,/cancelled/);closeBakedWalkResources({bank,admission});await cancelled;await assert.rejects(bank.get('lion'),/disposed/);assert.equal(released,0);finish();await new Promise(resolve=>setImmediate(resolve));assert.equal(released,1);
 });
+test('closing the graphical owner also closes and releases the animal running bank',()=>{
+ let closed=0,released=0,finish;const animalRunBank={close(){closed++;},dispose(){released++;}},admission={dispose(){},deferCompilations(callback){finish=callback;}};
+ closeBakedWalkResources({animalRunBank,admission});assert.equal(closed,1);assert.equal(released,0);finish();assert.equal(released,1);
+});
 async function fetchFile(url){const data=await readFile('public'+url);return {ok:true,json:async()=>JSON.parse(data.toString()),arrayBuffer:async()=>data.buffer.slice(data.byteOffset,data.byteOffset+data.byteLength)};}
 
 test('catalogue assets match their original model and load for every species',async()=>{
