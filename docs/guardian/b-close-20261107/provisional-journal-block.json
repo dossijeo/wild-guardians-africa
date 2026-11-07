@@ -1,0 +1,223 @@
+{
+  "scope": "Failure before reserve fix; ID-driven input, not pixel picking",
+  "source": ".cache/historical-islet-certified.json",
+  "started": "2026-11-07T13:27:52.592Z",
+  "error": "Error: Expected historical physical start/sample/finish and matching pose audit; normal fallback is insufficient\n    at run (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tools/experiments/audit_webgpu_historical_rapier.mjs:46:347)\n    at async file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tools/experiments/audit_webgpu_historical_rapier.mjs:49:2",
+  "state": {
+    "closed": false,
+    "sequence": 325,
+    "lastElapsed": 15.849999999999742,
+    "fault": false,
+    "historicalEventMetrics": {
+      "starts": 0,
+      "boundaries": 0,
+      "events": 0,
+      "completed": 0
+    },
+    "historicalEventRejection": {
+      "sequence": 311,
+      "start": 14.349999999999774,
+      "end": 14.389999999999773,
+      "stage": "certificate",
+      "reason": "animal-not-ready",
+      "actorId": "animal-17"
+    },
+    "timing": {
+      "samples": 325,
+      "decode": {
+        "mean": 0.336692308645982,
+        "p95": 0.5649999976158142,
+        "max": 1.7699999809265137
+      },
+      "reconcile": {
+        "mean": 0.4992615378819979,
+        "p95": 0.6600000262260437,
+        "max": 32.25
+      },
+      "hooks": {
+        "mean": 3.012092308814709,
+        "p95": 8.370000004768372,
+        "max": 16.084999978542328
+      },
+      "total": {
+        "mean": 3.848046155342689,
+        "p95": 9.069999992847443,
+        "max": 48.83499997854233
+      }
+    }
+  },
+  "guardian": {
+    "closed": false,
+    "began": 1,
+    "confirmed": 0,
+    "rejected": 0,
+    "provisionalFrames": 2,
+    "lastCommand": "bbc46bd4-9847-48b7-a8cc-a61144ae0cb2",
+    "active": {
+      "id": "bbc46bd4-9847-48b7-a8cc-a61144ae0cb2",
+      "targetId": "animal-20",
+      "provisional": true,
+      "kind": "attack"
+    },
+    "ritualPreview": false,
+    "ritualReady": false,
+    "cropBeams": 0,
+    "modelReady": true,
+    "effectsReady": true,
+    "beamVisible": false,
+    "coreVisible": false
+  },
+  "runtime": {
+    "running": true,
+    "closed": false,
+    "fault": null,
+    "busy": false,
+    "queued": 16,
+    "pendingSteps": 651,
+    "pendingChunks": 0,
+    "confirmedSequence": 325,
+    "confirmedElapsed": 15.849999999999742,
+    "tutorialUpdate": {
+      "needed": true,
+      "narrated": "mechanic.first-raid"
+    },
+    "saveAvailable": true,
+    "lastAttackDiagnostic": null,
+    "completedKinds": {
+      "snapshot": 5,
+      "trackPathMotion": 1,
+      "advance": 217,
+      "pause": 2,
+      "resume": 1,
+      "tutorialStart": 1,
+      "microIncome": 1,
+      "tutorialCommand:update": 61,
+      "tutorialActionPause": 5,
+      "tutorialCommand:advance": 9,
+      "setNavigationView": 15,
+      "raidCameraFocus": 1,
+      "tutorialCommand:present": 2,
+      "tutorialCommand:dismiss": 3,
+      "tutorialCommand:resume-menu": 1
+    },
+    "queuedKinds": {
+      "steps": 6,
+      "tutorialCommand": 6,
+      "snapshot": 2,
+      "castAttack": 1,
+      "tutorialActionPause": 1
+    },
+    "outbox": {
+      "inFlight": 0,
+      "queued": 0,
+      "coalesced": 0,
+      "acknowledged": 325,
+      "foldedViewCount": 0,
+      "capacity": {
+        "queued": 256,
+        "snapshotChars": 134217728,
+        "eventFacts": 65536,
+        "bytes": 536870912
+      },
+      "retained": {
+        "snapshotChars": 0,
+        "eventFacts": 0,
+        "bytes": 0
+      },
+      "queuedPublications": 0,
+      "eventfulPublications": 0,
+      "tickPublications": 0,
+      "unchangedPublications": 0,
+      "queuedBySource": {},
+      "peakQueuedBySource": {
+        "tutorialCommand": 3,
+        "tutorialActionPause": 1,
+        "advance": 2,
+        "setNavigationView": 3,
+        "raidCameraFocus": 1
+      },
+      "snapshotChars": 0,
+      "peakSnapshotChars": 207000,
+      "peakEventfulPublications": 1,
+      "peakQueuedPublications": 10,
+      "peakQueuedMessages": 17
+    },
+    "visualPublication": {
+      "active": true,
+      "detached": false,
+      "negotiated": true,
+      "encoderRetainedBytes": 60876,
+      "inFlight": 0,
+      "queued": 0,
+      "received": 0,
+      "lastReceived": 325,
+      "coalesced": 0,
+      "acknowledged": 325,
+      "foldedViewCount": 0,
+      "capacity": {
+        "queued": 256,
+        "snapshotChars": 134217728,
+        "eventFacts": 65536,
+        "bytes": 536870912
+      },
+      "retained": {
+        "snapshotChars": 0,
+        "eventFacts": 0,
+        "bytes": 0
+      },
+      "queuedPublications": 0,
+      "eventfulPublications": 0,
+      "tickPublications": 0,
+      "unchangedPublications": 0,
+      "queuedBySource": {},
+      "peakQueuedBySource": {
+        "tutorialCommand": 25,
+        "advance": 98,
+        "snapshot": 1
+      },
+      "snapshotChars": 0,
+      "peakSnapshotChars": 3345338,
+      "peakEventfulPublications": 5,
+      "peakQueuedPublications": 124,
+      "peakQueuedMessages": 91
+    },
+    "publicationBacklog": 0,
+    "peakPublicationBacklog": 11,
+    "recoveryBaseSequence": 196,
+    "recoveryBaseBytes": 5634806,
+    "recoveryJournal": {
+      "base": 196,
+      "candidate": null,
+      "through": 325,
+      "entries": 129,
+      "bytes": 24208508,
+      "entryBytes": 18351482,
+      "overheadBytes": 5857026,
+      "capacity": 256,
+      "highWatermark": 128,
+      "maxBytes": 268435456,
+      "highWatermarkBytes": 201326592,
+      "pendingTerrain": false,
+      "saturated": true,
+      "encoderFault": false,
+      "checkpointDeferred": true,
+      "checkpointRetry": false,
+      "closed": false
+    },
+    "recoveryFault": null,
+    "tutorialGuideRevision": null,
+    "reception": {
+      "count": 310,
+      "mean": 3.505467741335592,
+      "p95": 4.975000023841858,
+      "p99": 7.985000014305115,
+      "max": 11.27999997138977
+    }
+  },
+  "physical": {
+    "starts": 0,
+    "samples": 0,
+    "finishes": 0,
+    "active": 0
+  }
+}
