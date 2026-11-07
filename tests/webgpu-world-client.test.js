@@ -177,3 +177,7 @@ test('first frame waiter observes successful draw or closes cleanly',async()=>{c
 test('quality follows the initial Worker and can change while it is initializing',async()=>{
  const {client,worker}=setup({quality:'muy_baja'});try{assert.equal(worker.messages[0].message.quality,'muy_baja');client.setQuality('alta');assert.deepEqual(worker.messages.at(-1).message,{kind:'quality',quality:'alta'});assert.throws(()=>client.setQuality('invalid'),/quality/);worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await client.ready;client.setQuality('media');assert.deepEqual(worker.messages.at(-1).message,{kind:'quality',quality:'media'});}finally{client.dispose();}assert.throws(()=>setup({quality:'invalid'}),/Invalid WebGPU world client/);
 });
+
+test('awakening selection is sent immediately, deduplicated and remains presentation-only',async()=>{
+ const {client,worker}=setup();try{client.setAwakeningSelection(true,'wall-1');assert.deepEqual(worker.messages.at(-1).message,{kind:'awakening-selection',selecting:true,targetId:'wall-1'});const count=worker.messages.length;client.setAwakeningSelection(true,'wall-1');assert.equal(worker.messages.length,count);assert.throws(()=>client.setAwakeningSelection(true,''),/selection/);worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await client.ready;client.setAwakeningSelection(false,null);assert.deepEqual(worker.messages.at(-1).message,{kind:'awakening-selection',selecting:false,targetId:null});}finally{client.dispose();}
+});
