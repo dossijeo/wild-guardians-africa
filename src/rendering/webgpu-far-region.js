@@ -25,7 +25,7 @@ export function createWebGpuFarRegion({query,currentSequence,currentRevision=()=
  }
  function invalidate({reason='world',chunks=null}={}){
   if(closed)throw Error('Far region disposed');if(typeof reason!=='string'||!reason||chunks!==null&&(!Array.isArray(chunks)||chunks.some(item=>!Number.isSafeInteger(item?.cx)||!Number.isSafeInteger(item?.cz))))throw TypeError('Invalid far region invalidation');
-  const at=sequence(),affected=chunks?.map(({cx,cz})=>({cx,cz}))??null;generation++;cancel();onInvalidate({reason,sequence:at,chunks:affected});if(affected){for(const item of affected){const id=key(item.cx,item.cz);offered.delete(id);deferred.delete(id);retryAt.delete(id);}}else{offered.clear();deferred.clear();retryAt.clear();revision=null;}nextRetry=0;
+  const at=sequence(),affected=chunks?.map(({cx,cz})=>({cx,cz}))??null;if(affected){const ids=new Set(affected.map(item=>key(item.cx,item.cz)));if(pending&&ids.has(pending.key))cancel();}else{generation++;cancel();}onInvalidate({reason,sequence:at,chunks:affected});if(affected){for(const item of affected){const id=key(item.cx,item.cz);offered.delete(id);deferred.delete(id);retryAt.delete(id);}}else{offered.clear();deferred.clear();retryAt.clear();revision=null;}nextRetry=0;
  }
  function pump(){
   if(closed||!camera||pending)return false;const time=now();if(time<nextRetry)return false;const at=sequence(),item=[...wanted.entries()].find(([id])=>!offered.has(id)&&!deferred.has(id)&&time>=(retryAt.get(id)??0));if(!item)return false;
