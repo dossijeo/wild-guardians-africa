@@ -17,9 +17,12 @@ export function createConfirmedHistoricalClock({initialElapsed,initialSequence=0
  function invalidate(at=now()){if(!active||closed)return false;advance(at);active.invalid=true;active.suspended=true;return true;}
  function commitBoundary(nextSequence,nextElapsed){if(closed||!active||active.invalid||active.index!==active.segments.length||nextSequence!==active.sequence||nextElapsed!==active.end||elapsed!==active.end)throw Error('Historical boundary is not complete');sequence=nextSequence;active=null;return true;}
  function cancelAtStart(){if(closed||!active||elapsed!==active.start||active.index!==0||active.spent!==0)throw Error('Historical playback already advanced');active=null;}
+ // Drop only the current certified interval. The confirmed stream must then
+ // commit its endpoint before anything is drawn or another interval starts.
+ function abandonForBoundary(preview){if(closed||!active||preview?.sequence!==active.sequence||preview.start!==active.start||preview.end!==active.end||elapsed>active.end)throw Error('Invalid historical fallback boundary');active=null;}
  function syncCommitted(nextSequence,nextElapsed){if(closed||active||!Number.isSafeInteger(nextSequence)||nextSequence!==sequence+1||!Number.isFinite(nextElapsed)||nextElapsed<elapsed)throw Error('Invalid committed historical boundary');sequence=nextSequence;elapsed=nextElapsed;updateNode();}
  // The stream commits only at a completed endpoint (or the legacy fallback).
  // Sharing this clock with effects prevents a second, frozen visual timeline.
  function commit(nextElapsed){if(active)return commitBoundary(active.sequence,nextElapsed);return syncCommitted(sequence+1,nextElapsed);}
- return {commit,node,motionNode,get epoch(){return epoch;},get elapsed(){return elapsed;},begin,advance,suspend,resume,invalidate,commitBoundary,cancelAtStart,syncCommitted,status(){return {closed,sequence,elapsed,active:active?{sequence:active.sequence,start:active.start,end:active.end,suspended:active.suspended,invalid:active.invalid,complete:active.index===active.segments.length}:null};},dispose(){closed=true;active=null;}};
+ return {commit,node,motionNode,get epoch(){return epoch;},get elapsed(){return elapsed;},begin,advance,suspend,resume,invalidate,commitBoundary,cancelAtStart,abandonForBoundary,syncCommitted,status(){return {closed,sequence,elapsed,active:active?{sequence:active.sequence,start:active.start,end:active.end,suspended:active.suspended,invalid:active.invalid,complete:active.index===active.segments.length}:null};},dispose(){closed=true;active=null;}};
 }

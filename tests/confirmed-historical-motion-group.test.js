@@ -15,6 +15,13 @@ test('real certifier closes presentation proof and reuses prepared tokens withou
  assert.equal(f.group.canStart(certified),true);assert.equal(f.group.start(certified),true);assert.equal(f.preparedCount(),1);assert.equal(f.group.canStart(certified),false);
 });
 
+test('watering certificate requires effect preparation and quiet other effects, and rolls back atomically',()=>{
+ const f=certificateFixture(),calls=[],effect={prepareHistoricalMotion:()=>({ok:true,watering:true,token:'water'}),startHistoricalMotion(_p,_s,token){calls.push(token);return true;},historicalMotionCurrent:()=>true,finishHistoricalMotion(){calls.push('finish');},abortHistoricalMotion(){calls.push('abort');},cancelHistoricalMotion(){calls.push('cancel');}};let quiet=false;
+ Object.assign(f.actor,{historicalMotionCurrent:()=>true,finishHistoricalMotion(){calls.push('actor finish');},cancelHistoricalMotion(){calls.push('actor cancel');},abortHistoricalMotion(){calls.push('actor abort');}});
+ const group=createConfirmedHistoricalMotionGroup({animals:f.actor,effects:effect,otherEffectsQuiet:()=>quiet,getSupport:()=>f.support,inputPolicy:'ordered-boundary'});assert.equal(group.certify(f.preview,f.current),null);quiet=true;const certified=group.certify(f.preview,f.current);assert.equal(certified.certificates.wateringSynchronized,true);assert.equal(group.start(certified),true);assert.equal(group.isCurrent(certified),true);quiet=false;assert.equal(group.isCurrent(certified),false);quiet=true;group.finish(certified);assert.deepEqual(calls,['water','finish','actor finish']);
+ effect.startHistoricalMotion=()=>false;const retry=group.certify(f.preview,f.current);assert.equal(group.start(retry),false);assert.ok(calls.includes('actor cancel'));
+});
+
 test('certifier rejects missing evidence, event barriers, excessive handoff latency and stale resources',()=>{
  for(const mutate of [f=>f.preview.reasons.push('events'),f=>delete f.preview.trace.separationEvidence,f=>f.preview.trace.physicsActivity.observed=true,f=>f.preview.clockSegments.segments[0].realDuration=.2,f=>f.preview.clockSegments.segments[0].rate=5,f=>f.current.sequence=1,f=>f.invalidate(),f=>f.actor.prepareHistoricalMotion=()=>({ok:false})]){
   const f=certificateFixture();mutate(f);assert.equal(f.group.certify(f.preview,f.current),null);

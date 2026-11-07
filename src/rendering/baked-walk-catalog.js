@@ -44,7 +44,7 @@ export function createBakedWalkBank({load=loadBakedWalkAsset,renderer=null,resou
 
 // Close producers before capturing active compilations, so no new user can
 // start using these textures after their deferred release has been scheduled.
-export function closeBakedWalkResources({bank=null,workerBank=null,workerRunBank=null,workerHarvestBank=null,workerIdleBank=null,bake=null,admission=null}={}){
- bank?.close();workerBank?.close();workerRunBank?.close();workerHarvestBank?.close();workerIdleBank?.close();admission?.dispose();const release=()=>{bake?.dispose();bank?.dispose();workerBank?.dispose();workerRunBank?.dispose();workerHarvestBank?.dispose();workerIdleBank?.dispose();};
+export function closeBakedWalkResources({bank=null,workerBank=null,workerRunBank=null,workerHarvestBank=null,workerIdleBank=null,workerWaterBank=null,bake=null,admission=null}={}){
+ bank?.close();workerBank?.close();workerRunBank?.close();workerHarvestBank?.close();workerIdleBank?.close();workerWaterBank?.close();admission?.dispose();const release=()=>{bake?.dispose();bank?.dispose();workerBank?.dispose();workerRunBank?.dispose();workerHarvestBank?.dispose();workerIdleBank?.dispose();workerWaterBank?.dispose();};
  if(typeof admission?.deferCompilations==='function')admission.deferCompilations(release);else release();
 }
