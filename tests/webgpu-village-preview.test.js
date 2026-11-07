@@ -20,6 +20,12 @@ test('village preview admits the current layout and cancels stale placements',as
  const f=fixture();try{f.view.show(f.preview(1,{pending:true}));await turn();assert.equal(f.pending.length,1);assert.equal(f.view.visible,false);f.view.show(f.preview(2));await turn();assert.equal(f.pending[0].signal.aborted,true);assert.equal(f.pending.length,2);f.pending[0].resolve();await turn();assert.equal(f.view.visible,false);f.pending[1].resolve();await turn();assert.equal(f.view.visible,true);assert.equal(f.pending[1].group.children[0].position.x,2);f.view.clear();assert.equal(f.scene.children.length,0);}finally{f.cleanup();}
 });
 
+test('a delayed village bank publishes only the latest still-active preview',async()=>{
+ const geometry=new THREE.BoxGeometry(),material=new THREE.MeshBasicMaterial(),assets=new Map([['house',{geometry,material,unit:{min:[-1,0,-1],max:[1,2,1]}}]]),scene=new THREE.Scene(),pending=[];let loaded=false;
+ const pipelineAdmission={prepare(group,{signal}){return new Promise((resolve,reject)=>{pending.push({group,signal,resolve});signal.addEventListener('abort',()=>reject(new DOMException('cancelled','AbortError')),{once:true});});}},view=createWebGpuVillagePreview({scene,surface:()=>2,assetsFor:()=>loaded?assets:null,pipelineAdmission}),preview=x=>({culture:'mapungubwe',valid:true,buildings:[{key:'house',x,z:0}]});
+ try{view.show(preview(1));view.show(preview(2));await turn();assert.equal(pending.length,0);loaded=true;view.assetsReady('other');await turn();assert.equal(pending.length,0);view.assetsReady('mapungubwe');await turn();assert.equal(pending.length,1);assert.equal(pending[0].group.children[0].position.x,2);view.clear();assert.equal(pending[0].signal.aborted,true);pending[0].resolve();await turn();assert.equal(view.visible,false);assert.equal(scene.children.length,0);view.assetsReady('mapungubwe');assert.equal(scene.children.length,0);}finally{view.dispose();geometry.dispose();material.dispose();}
+});
+
 test('changing validity recolors the existing preview without rebuilding its layout',async()=>{
  const f=fixture();try{f.view.show(f.preview(1,{pending:true}));await turn();f.pending[0].resolve();await turn();const mesh=f.pending[0].group.children[0];f.view.show(f.preview(1,{valid:false}));assert.equal(f.pending.length,1);assert.equal(mesh.material.color.getHexString(),'f4a198');assert.equal(f.view.visible,true);}finally{f.cleanup();}
 });

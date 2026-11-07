@@ -737,7 +737,7 @@ function buildPanel(){
 function cancelVillagePreview(){world?.clearVillagePreview();pendingVillage=null;if(tool?.kind==='village')tool=null;hideHudPanel();}
 async function villageCulturePanel() {
   if(confirmedUiState().pauses.includes('hiring'))return;
-  const owner=world,ownerState=state,version=++cropSelectionGeneration,culture=owner.workerGpuOnly?owner.confirmedHud?.construction?.culture??ownerState.culture:ownerState.culture,payload=villageCatalog.find(v=>v.id===(culture==='saheliana'?'saheliano':culture));await owner.ensureVillage(culture,payload);if(owner!==world||ownerState!==state||version!==cropSelectionGeneration)return;armTool({kind:'village',culture});hideHudPanel();
+  const owner=world,ownerState=state,culture=owner.workerGpuOnly?owner.confirmedHud?.construction?.culture??ownerState.culture:ownerState.culture,payload=villageCatalog.find(v=>v.id===(culture==='saheliana'?'saheliano':culture));if(!owner.workerGpuOnly){const version=++cropSelectionGeneration;await owner.ensureVillage(culture,payload);if(owner!==world||ownerState!==state||version!==cropSelectionGeneration)return;armTool({kind:'village',culture});hideHudPanel();return;}let version;selectToolWithPreparation({select(){armTool({kind:'village',culture});version=cropSelectionGeneration;hideHudPanel();},prepare:()=>owner.ensureVillage(culture,payload),isCurrent:()=>owner===world&&ownerState===state&&version===cropSelectionGeneration,onError:failure=>error(failure.message)});
 }
 function villageConfirmPanel() {
   if(confirmedUiState().pauses.includes('hiring'))return;
