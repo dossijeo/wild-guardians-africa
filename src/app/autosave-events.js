@@ -18,7 +18,7 @@ export function autosaveConfirmedEvents(events,save){
 // from the render loop or recursively from an unavailable checkpoint.
 export function createConfirmedAutosaveController({request,isCurrent=()=>true,onError=()=>{}}={}){
  if(typeof request!=='function'||typeof isCurrent!=='function'||typeof onError!=='function')throw TypeError('Invalid confirmed autosave controller');
- let pending=false,running=false,waiting=false,sawUnavailable=false,available=null,availabilityEpoch=0,closed=false;
+ let pending=false,running=false,waiting=false,sawUnavailable=false,available=null,availabilityEpoch=0,availabilitySequence=null,blockedSequence=null,closed=false;
  function run(){
   if(closed||!isCurrent()||running||waiting||!pending)return;
   pending=false;running=true;const startedEpoch=availabilityEpoch;let result;
@@ -27,14 +27,14 @@ export function createConfirmedAutosaveController({request,isCurrent=()=>true,on
    if(closed||!isCurrent())return;
    if(value?.saved===true)return;
    if(value?.saved===false&&value.reason==='physics-active'){
-    pending=true;waiting=!(available===true&&availabilityEpoch>startedEpoch);sawUnavailable=available===false;return;
+    pending=true;blockedSequence=availabilitySequence!==null&&Number.isSafeInteger(value.sequence)&&value.sequence>=0?value.sequence:null;waiting=blockedSequence!==null?!(available===true&&availabilitySequence>blockedSequence):!(available===true&&availabilityEpoch>startedEpoch);sawUnavailable=available===false;return;
    }
    throw Error('Invalid autosave checkpoint result');
   }).catch(error=>{if(!closed&&isCurrent()){pending=false;waiting=false;try{onError(error);}catch{}}}).finally(()=>{running=false;if(!closed&&isCurrent()&&pending&&!waiting)run();});
  }
  return {
   events(events){if(closed)return false;return autosaveConfirmedEvents(events,()=>{pending=true;run();return true;});},
-  observe(value){if(closed)return;if(typeof value!=='boolean')throw TypeError('Invalid checkpoint availability');if(available===false&&value)availabilityEpoch++;available=value;if(waiting){if(!value)sawUnavailable=true;else if(sawUnavailable){waiting=false;sawUnavailable=false;run();}}},
+  observe(value,sequence=null){if(closed)return;if(typeof value!=='boolean'||sequence!==null&&(!Number.isSafeInteger(sequence)||sequence<0))throw TypeError('Invalid checkpoint availability');if(sequence!==null&&availabilitySequence!==null&&sequence<availabilitySequence)return;if(available===false&&value)availabilityEpoch++;available=value;if(sequence!==null)availabilitySequence=sequence;if(waiting){if(!value)sawUnavailable=true;else if(blockedSequence!==null?sequence!==null&&sequence>blockedSequence:sawUnavailable){waiting=false;sawUnavailable=false;blockedSequence=null;run();}}},
   status(){return {pending,running,waiting,closed};},
   dispose(){closed=true;pending=false;waiting=false;}
  };
