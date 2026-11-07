@@ -59,3 +59,8 @@ test('actual replica bypasses a busy authority lane while commands remain determ
   const far=await whileBusy;assert.ok(far);assert.deepEqual(far.instances,first.instances);assert.equal(far.revision,revision);assert.equal(client.status().state,'ready');assert.equal(snapshots,1,'unchanged spatial inputs must not publish snapshots per tick');
  }finally{client.dispose();reference.dispose();}
 });
+
+test('a stalled spatial worker times out without blocking authority or consumers',async()=>{
+ const worker={postMessage(){},terminate(){this.terminated=true;}},client=createFarVisualReplicaClient({session:'s',timeoutMs:15,workerFactory:()=>worker});
+ client.updateSnapshot(snapshot());const pending=client.query(request);assert.equal(await pending,null);assert.equal(client.status().state,'failed');assert.match(client.status().failure,/timed out/);assert.equal(worker.terminated,true);assert.equal(await client.query(request),null);client.dispose();
+});

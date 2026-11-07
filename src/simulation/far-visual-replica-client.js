@@ -1,17 +1,20 @@
 // A read-only terrain lane. There is one operation in flight and one latest
 // snapshot slot, so neither camera motion nor authority updates grow a queue.
-export function createFarVisualReplicaClient({session,workerFactory=()=>new Worker(new URL('./far-visual-replica-worker.js',import.meta.url),{type:'module'})}){
- let worker=null,closed=false,failure=null,latest=null,applied=null,busy=null,pending=null,serial=0,confirmed=null;
+export function createFarVisualReplicaClient({session,timeoutMs=30000,workerFactory=()=>new Worker(new URL('./far-visual-replica-worker.js',import.meta.url),{type:'module'})}){
+ if(!Number.isFinite(timeoutMs)||timeoutMs<=0)throw TypeError('Invalid far replica timeout');
+ let worker=null,closed=false,failure=null,latest=null,applied=null,busy=null,pending=null,serial=0,confirmed=null,timer=null;
+ const clearTimer=()=>{if(timer!==null){clearTimeout(timer);timer=null;}};
+ const arm=()=>{clearTimer();timer=setTimeout(()=>fail(Error('Far replica operation timed out')),timeoutMs);};
  const finish=value=>{const item=pending;if(!item)return;pending=null;item.signal?.removeEventListener('abort',item.abort);item.resolve(value);};
- function fail(error){failure=String(error?.message??error);finish(null);busy=null;latest=null;applied=null;worker?.terminate();worker=null;}
+ function fail(error){clearTimer();failure=String(error?.message??error);finish(null);busy=null;latest=null;applied=null;worker?.terminate();worker=null;}
  const current=request=>confirmed&&confirmed.sequence>=request.expectedSequence&&(request.expectedRevision!=null?confirmed.revision===request.expectedRevision:confirmed.sequence===request.expectedSequence);
  function pump(){
   if(closed||failure||busy||!worker)return;
   try{
-   if(latest&&latest.revision!==applied?.revision){const snapshot=latest;busy={kind:'snapshot',revision:snapshot.revision};worker.postMessage({kind:'snapshot',session,...snapshot});return;}
+   if(latest&&latest.revision!==applied?.revision){const snapshot=latest;busy={kind:'snapshot',revision:snapshot.revision};arm();worker.postMessage({kind:'snapshot',session,...snapshot});return;}
    if(!pending)return;
    if(!current(pending.request)||applied?.revision!==confirmed.revision){finish(null);return;}
-   busy={kind:'query',id:pending.id};worker.postMessage({kind:'query',session,id:pending.id,request:pending.request,confirmed});
+   busy={kind:'query',id:pending.id};arm();worker.postMessage({kind:'query',session,id:pending.id,request:pending.request,confirmed});
   }catch(error){fail(error);}
  }
  return {
@@ -26,8 +29,8 @@ export function createFarVisualReplicaClient({session,workerFactory=()=>new Work
      if(closed||failure)return;
      if(data?.session!==session){fail(Error('Far replica session mismatch'));return;}
      if(data.kind==='error'){fail(Error(data.message));return;}
-     if(data.kind==='snapshotReady'&&busy?.kind==='snapshot'&&data.revision===busy.revision){applied={revision:data.revision};busy=null;pump();return;}
-     if(data.kind==='result'&&busy?.kind==='query'&&data.id===busy.id){busy=null;if(pending?.id===data.id){const value=data.result,request=pending.request;if(value!==null&&(!value||!Number.isSafeInteger(value.sequence)||value.sequence<request.expectedSequence||request.expectedRevision==null&&value.sequence!==request.expectedSequence||value.cx!==request.cx||value.cz!==request.cz||!Number.isSafeInteger(value.revision)||value.revision<1||!Number.isFinite(value.elapsed)||!Array.isArray(value.instances)||value.instances.length!==20||value.instances.some((items,slot)=>!Array.isArray(items)||!request.slots.includes(slot)&&items.length>0||items.some(item=>typeof item?.id!=='string'||!item.id||item.slot!==slot||![item.x,item.y,item.z,item.yaw,item.sx,item.sy,item.sz].every(Number.isFinite))))){fail(Error('Invalid far replica result'));return;}finish(current(request)&&value?.revision===confirmed?.revision?value:null);}pump();return;}
+     if(data.kind==='snapshotReady'&&busy?.kind==='snapshot'&&data.revision===busy.revision){applied={revision:data.revision};clearTimer();busy=null;pump();return;}
+     if(data.kind==='result'&&busy?.kind==='query'&&data.id===busy.id){clearTimer();busy=null;if(pending?.id===data.id){const value=data.result,request=pending.request;if(value!==null&&(!value||!Number.isSafeInteger(value.sequence)||value.sequence<request.expectedSequence||request.expectedRevision==null&&value.sequence!==request.expectedSequence||value.cx!==request.cx||value.cz!==request.cz||!Number.isSafeInteger(value.revision)||value.revision<1||!Number.isFinite(value.elapsed)||!Array.isArray(value.instances)||value.instances.length!==20||value.instances.some((items,slot)=>!Array.isArray(items)||!request.slots.includes(slot)&&items.length>0||items.some(item=>typeof item?.id!=='string'||!item.id||item.slot!==slot||![item.x,item.y,item.z,item.yaw,item.sx,item.sy,item.sz].every(Number.isFinite))))){fail(Error('Invalid far replica result'));return;}finish(current(request)&&value?.revision===confirmed?.revision?value:null);}pump();return;}
      fail(Error('Unexpected far replica response'));
     };worker.onerror=event=>fail(Error(event.message||'Far replica worker failed'));worker.onmessageerror=()=>fail(Error('Far replica message failed'));
    }catch(error){fail(error);return;}
@@ -45,6 +48,6 @@ export function createFarVisualReplicaClient({session,workerFactory=()=>new Work
    return new Promise(resolve=>{const item={id:++serial,request:structuredClone(request),resolve,signal,abort:()=>finish(null)};pending=item;signal?.addEventListener('abort',item.abort,{once:true});pump();});
   },
   status:()=>({mode:'replica',state:closed?'closed':failure?'failed':applied?'ready':'preparing',failure,pending:pending?.id??null,outstanding:busy?.kind==='query'?busy.id:null,revision:applied?.revision??null,pendingRevision:latest?.revision??null,expectedSequence:pending?.request.expectedSequence??null,expectedRevision:pending?.request.expectedRevision??null,dispatchAllowed:!closed&&!failure}),
-  dispose(){if(closed)return;closed=true;finish(null);latest=null;applied=null;busy=null;worker?.terminate();worker=null;}
+  dispose(){if(closed)return;closed=true;clearTimer();finish(null);latest=null;applied=null;busy=null;worker?.terminate();worker=null;}
  };
 }
