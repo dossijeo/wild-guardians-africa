@@ -23,3 +23,15 @@ Una descarga de caminata pendiente tampoco bloquea el historial de un trabajador
 La excepción para descargas pendientes distingue ahora el tipo de tramo: una pose estacionaria de ataque, reposo o trabajo no autoriza una trayectoria móvil. Para movimiento se exige una carrera GPU o, en trabajadores, transporte GPU; las demás acciones solo pueden habilitar intervalos estacionarios y siguen sujetas a sus certificados específicos. Las pruebas reproducen el caso de pose incompatible con caminata pendiente en ambos rosters. La validación en partida permanece pendiente.
 
 La carrera precocinada de bestias conserva ahora el recurso descargado si una pose física, impacto provisional o reconciliación impide su admisión. No se informa como error una cancelación por esa incompatibilidad; el rig anterior sigue visible y la instalación se reintenta cuando termina, incluso entre publicaciones. Una candidatura interrumpida durante su admisión vuelve a comprobar la identidad y la pose antes de publicarse. Las pruebas cubren ambos casos con banco y rig simulados, sin demostrar todavía continuidad visual ni rendimiento en GPU real.
+# Deferred animal attacks
+
+An attack bake whose admission is cancelled while a confirmed physical pose,
+provisional fall or reconciliation owns the animal can be retried once the
+actor is safe again. The retry still requires the same live attack and clip;
+an action superseded during admission cannot publish its old pose. The
+existing bake bank shares the loaded resource and genuine load or preparation
+errors remain reported instead of being retried continuously.
+
+Contract tests cover the physical/reconciliation wait and action replacement,
+using simulated admission. This does not establish visual parity, real GPU
+timing, or that every exceptional action uses a baked animation.
