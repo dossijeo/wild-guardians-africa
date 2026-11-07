@@ -1,0 +1,5 @@
+# Transición de carga WebGPU Worker
+
+El perfil Worker mantiene la simulación pausada mediante una razón propia durante la transición. Solicita una cámara dirigida al cielo y espera un fotograma enviado por el Worker para la versión actual de cámara y viewport; entonces retira el progreso y el botón de cancelación. Mantiene el HUD oculto, espera terreno confirmado en el punto de interés y gira suavemente hacia el encuadre de juego. Al terminar o fallar restaura su pausa; el cambio de mundo o la cancelación impiden que una respuesta tardía controle la nueva sesión.
+
+La señal de fotograma acredita un dibujo enviado, no la presentación física por el compositor. Una prueba con Worker de autoridad y WASM reales verifica que se genera y confirma un chunk mientras la razón de pausa está activa; la publicación gráfica se simula. Faltan validación visual y de dispositivo, tiempos de carga y comprobación en partida. El perfil Worker todavía utiliza una presentación de carga ligera: **no incluye el diorama interactivo de carga del renderizador anterior**. Esta transición no cierra esa parte de B7 ni afirma paridad visual con ella.
