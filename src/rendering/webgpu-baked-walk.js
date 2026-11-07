@@ -9,7 +9,7 @@ import {bakedWalkRecipe} from './webgpu-material-graph-catalog.js';
 // It is deliberately not installed on SkinnedMesh: Three's WebGPU renderer
 // would otherwise run its own skinning before this position node.
 export function createBakedWalkTexture(meta,buffer){
- if(!Object.hasOwn(ANIMAL_ACTIONS.animals,meta?.species)||meta.clip!=='Walking')throw TypeError('Invalid baked walking data');
+ if(!Object.hasOwn(ANIMAL_ACTIONS.animals,meta?.species)||!['Walking','Running'].includes(meta.clip))throw TypeError('Invalid baked walking data');
  return createPackedBakedWalkTexture(meta,buffer);
 }
 export function createBakedWorkerWalkTexture(meta,buffer){

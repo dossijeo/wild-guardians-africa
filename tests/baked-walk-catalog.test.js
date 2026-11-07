@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {createHash,webcrypto} from 'node:crypto';
 import {ANIMAL_ACTIONS} from '../src/simulation/animal-actions-data.js';
-import {loadBakedWalkAsset,ownDirectBakedWalkAsset,createBakedWalkBank,closeBakedWalkResources} from '../src/rendering/baked-walk-catalog.js';
+import {loadBakedWalkAsset,loadBakedAnimalRunAsset,ownDirectBakedWalkAsset,createBakedWalkBank,closeBakedWalkResources} from '../src/rendering/baked-walk-catalog.js';
 import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
 import {Scene,PerspectiveCamera,Group,DataTexture} from 'three';
 
@@ -53,3 +53,11 @@ test('bank closure cancels publication and retains an uploading walking texture'
 });
 
 test('direct bake lease retains the same texture and releases exactly once after closure',()=>{const registry=createWebGpuResourceRegistry(),texture=new DataTexture(),source={texture,meta:{species:'hyena'},dispose(){texture.dispose();}},owned=ownDirectBakedWalkAsset(source,registry);let disposed=0;texture.addEventListener('dispose',()=>disposed++);assert.equal(owned.texture,texture);registry.dispose();assert.equal(registry.status().owned.length,1);owned.dispose();owned.dispose();assert.equal(disposed,1);assert.equal(registry.status().owned.length,0);});
+
+
+test('running catalogue loads source-matched baked clips for all species',async()=>{
+ for(const [species,config] of Object.entries(ANIMAL_ACTIONS.animals)){
+  const asset=await loadBakedAnimalRunAsset(species,{fetcher:fetchFile,subtle:webcrypto.subtle});
+  assert.equal(asset.meta.clip,'Running');assert.equal(asset.meta.sourceSha256,sha(await readFile('public'+config.url)));assert.ok(asset.texture.isDataTexture);asset.dispose();
+ }
+});

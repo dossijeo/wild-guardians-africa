@@ -8,6 +8,7 @@ import {MeshBasicNodeMaterial} from 'three/webgpu';
 import {createConfirmedHistoricalClock} from '../src/rendering/confirmed-historical-clock.js';
 import {beginWebGpuGuardianImpact} from '../src/rendering/webgpu-guardian-impact.js';
 import {actorTickState} from '../src/simulation/worker-actor-tick-states.js';
+import {confirmedAnimalRunningSamples} from '../src/rendering/confirmed-animation-samples.js';
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
 test('production provisional fall bank is shared and does not enable geometric support',async()=>{
  const animals=['a','b'].map(id=>({id,species:'hyena',status:'walking',x:0,z:0,radius:.7})),state={elapsed:1,raid:{animals}},before=structuredClone(state),created=[],bank=new Map([['hyena:front',{}]]);let loads=0,finish;
@@ -189,4 +190,19 @@ test('a baked animal selected later retains its rig and historical phase',async(
 test('a selected animal retries its bake without replacing an already bound motion rig',async()=>{
  const scene=new Scene(),clock=createConfirmedHistoricalClock({initialElapsed:5}),geometry=new BoxGeometry(),material=new MeshBasicNodeMaterial(),animal={id:'a',species:'hyena',status:'waiting',x:0,z:0,motionPhase:0,heading:0},state={elapsed:5,raid:{animals:[animal]}},root=new Group();root.position.set(0,2,0);root.add(new Mesh(geometry,material));scene.add(root);let calls=0,installed=0,created=0,gotBinding=null;const renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:m=>m.clone()}},bank={get(){if(++calls===1)return Promise.reject(Error('temporary'));return Promise.resolve({meta:{species:'hyena'}});}},roster=createWebGpuAnimalRoster({scene,residency:{},state,renderer,assetBank:{tick(){},dispose(){}},pipelineAdmission:{prepare:async()=>{}},bakedWalkBank:bank,experimentalHistoricalMotion:{actorIds:['a'],clock},createAnimal:async()=>{created++;return {root,update(){root.visible=true;},isPhysical:()=>false,installBakedWalk:async(_bake,options)=>{gotBinding=options.motionBinding;installed++;return true;},dispose(){root.removeFromParent();}};}});
  try{roster.sync();for(let i=0;i<10&&!installed;i++)await flush();assert.equal(installed,1);assert.ok(gotBinding);assert.equal(typeof gotBinding.extend,'function');assert.equal(created,1);assert.equal(roster.get('a').root,root);}finally{roster.dispose();clock.dispose();geometry.dispose();material.dispose();}
+});
+
+
+test('running bake admission discards a stale action without mutating authority',async()=>{
+ const animal={id:'a',species:'hyena',status:'entering',motionPhase:0,x:0,z:0},state={elapsed:1,raid:{animals:[animal]}},before=structuredClone(state);let finish,install=0;
+ const roster=createWebGpuAnimalRoster({scene:{},residency:{},state,assetBank:{tick(){},dispose(){}},pipelineAdmission:{prepare:async()=>{}},bakedRunBank:{get:()=>new Promise(resolve=>{finish=resolve;})},createAnimal:()=>({root:new Group(),update(){},installBakedRun:async()=>{install++;return true;},dispose(){}})});
+ try{roster.sync();await flush();assert.equal(typeof finish,'function');assert.deepEqual(state,before);animal.status='walking';roster.sync();finish({meta:{species:'hyena',clip:'Running'}});await flush();await flush();assert.equal(install,0);assert.equal(state.raid.animals[0].status,'walking');}finally{roster.dispose();}
+});
+
+
+test('running history requires ordered continuous phases and rejects action changes',()=>{
+ const animal={id:'a',species:'hyena',status:'entering',motionPhase:.2,x:0,z:0},first=actorTickState(animal,5),last=actorTickState({...animal,motionPhase:.4},6),preview={start:5,end:6,trace:{actorTickStates:{complete:true,actors:[{actorId:'a',samples:[first,last]}]}}};
+ assert.deepEqual(confirmedAnimalRunningSamples(preview,'a',animal),[{at:5,phase:.2},{at:6,phase:.4}]);
+ for(const change of [{status:'attacking'},{motionPhase:.1},{falling:true},{taskId:'changed'}]){Object.assign(last,change);assert.equal(confirmedAnimalRunningSamples(preview,'a',animal),null);Object.assign(last,actorTickState({...animal,motionPhase:.4},6));}
+ preview.trace.actorTickStates.complete=false;assert.equal(confirmedAnimalRunningSamples(preview,'a',animal),null);
 });

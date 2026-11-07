@@ -18,6 +18,14 @@ export function confirmedWorkerRunningSamples(preview,actorId,entity){
  return samples.map(s=>({at:s.at,phase:s.runPhase}));
 }
 
+export function confirmedAnimalRunningSamples(preview,actorId,entity){
+ const ticks=preview?.trace?.actorTickStates;if(!ticks?.complete||!Array.isArray(ticks.actors))return null;
+ const matches=ticks.actors.filter(value=>value.actorId===actorId);if(matches.length!==1||!Array.isArray(matches[0].samples))return null;
+ const samples=matches[0].samples,first=samples[0];if(samples.length<2||first?.at!==preview.start||samples.at(-1)?.at!==preview.end||!['entering','retreating'].includes(first.status)||first.status!==entity?.status||first.motionPhase!==entity?.motionPhase)return null;
+ if(samples.some((s,i)=>!Number.isFinite(s.at)||!Number.isFinite(s.motionPhase)||s.motionPhase<0||i&&(s.at<=samples[i-1].at||s.motionPhase<samples[i-1].motionPhase)||s.status!==first.status||s.gateWaiting||s.incapacitated||s.recovery||s.recoveryExiting||s.falling||s.taskId!==first.taskId||s.animation!==first.animation))return null;
+ return samples.map(s=>({at:s.at,phase:s.motionPhase}));
+}
+
 export function confirmedWorkerCarrySamples(preview,actorId,entity){
  const ticks=preview?.trace?.actorTickStates;if(!ticks?.complete||!Array.isArray(ticks.actors))return null;
  const matches=ticks.actors.filter(value=>value.actorId===actorId);if(matches.length!==1||!Array.isArray(matches[0].samples))return null;
