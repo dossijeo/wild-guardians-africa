@@ -1,6 +1,7 @@
 import './campaign-cinematics.css';
 import {PencilBackground} from './cinematic-pencil.js';
 import {WebGpuPencilBackground} from './cinematic-pencil-webgpu.js';
+import {prepareCinematicGuide} from './cinematic-pencil-guide.js';
 
 const BASE=new URL('cinematics/',document.baseURI);
 const DELAY=matchMedia('(prefers-reduced-motion: reduce)').matches?140:580;
@@ -50,7 +51,7 @@ export class CampaignCinematics{
     }catch(error){if(token===this.token){this.onError?.(error);await this.finish(token);}}
   }
   prepare(scene){
-    const guide=this.pencil&&/^\d{2}$/.test(scene.id)?loadImage(`pencil-guides/scene-${scene.id}.webp`).catch(()=>null):Promise.resolve(null);
+    const guide=prepareCinematicGuide({pencil:this.pencil,backend:this.pencilBackend,sceneId:scene.id,loadImage,imageUrl});
     return Promise.all([Promise.all(scene.layers.map(layer=>loadImage(layer.image))),guide]).then(([images,guide])=>({scene,images,guide}),error=>({error}));
   }
   async show({scene,images,guide},token){
