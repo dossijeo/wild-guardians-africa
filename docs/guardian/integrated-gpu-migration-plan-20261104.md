@@ -517,6 +517,8 @@ Esto acredita cierre de diseño e implementación del núcleo. La calificación 
 
 ## B. Terminar la migración sobre los contratos cerrados
 
+La migración de contenido se separa del soporte técnico según [responsabilidades de infraestructura de B](b-infrastructure-ownership.md). Las carreras, contratos, soporte de mecánicas/animaciones y recuperación pendientes corresponden al trabajo de infraestructura, no al agente que migra modelos y materiales. Los bloqueos técnicos abiertos no se consideran resueltos por esta separación de responsabilidades.
+
 No se añaden sistemas alternativos por subsistema. Cada elemento debe suministrar su receta, recursos, eventos, temporalidad y política de recuperación a las interfaces de A.
 
 | Orden | Elementos que deben quedar integrados | Condición de cierre de contenido |
