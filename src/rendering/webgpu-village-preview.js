@@ -22,7 +22,10 @@ export function createWebGpuVillagePreview({scene,surface,assetsFor,pipelineAdmi
  if(resourceRegistry!==null&&typeof resourceRegistry?.adopt!=='function'||!scene?.isScene||typeof surface!=='function'||typeof assetsFor!=='function'||typeof pipelineAdmission?.prepare!=='function'||typeof onError!=='function'||typeof onChange!=='function')throw TypeError('Invalid village preview');
  const material=new THREE.MeshBasicMaterial({color:0xf0e5b9,transparent:true,opacity:.45,depthWrite:false,side:THREE.DoubleSide});let lease;try{if(resourceRegistry){lease=resourceRegistry.adopt({namespace:'village-preview-material',key:String(++nextVillagePreview),dispose:()=>material.dispose()});lease.commit();}}catch(error){if(lease)lease.release();else material.dispose();throw error;}let slot=null,current=null,epoch=0,closed=false;
  function refresh(){
-  if(closed||!current)return;const assets=assetsFor(current.culture);if(!assets)return;
+  if(closed||!current)return;const assets=assetsFor(current.culture);
+  // Never publish a partial layout or keep an obsolete one visible while a
+  // building's geometry or confirmed ground height is unavailable.
+  if(!assets||current.buildings.some(item=>!assets.has(item.key)||!Number.isFinite(surface(item.x,item.z)))){if(slot){scene.remove(slot.group);slot.dispose();slot=null;onChange();}return;}
   material.color.set(current.pending?'#f0e5b9':current.valid?'#d4f3c2':'#f4a198');
   if(!slot){slot=createWebGpuAdmittedVillage({pipelineAdmission,resourceRegistry,onReady:()=>{if(slot){slot.group.visible=slot.upToDate;onChange();}},onError});slot.group.visible=false;scene.add(slot.group);}
   const key=JSON.stringify([epoch,current.culture,current.buildings.map(item=>[item.key,item.x,item.z,item.yaw??0])]);
