@@ -54,7 +54,7 @@ export class WallDrawing {
       this.activity('release');
       // Resolve terrain only after release. A missed ray ends the contiguous
       // stroke, so an off-terrain interval cannot become an unintended bridge.
-      if(this.resolveStroke){const generation=this.resolveGeneration,result=Promise.resolve().then(()=>this.resolveStroke(samples));result.catch(()=>{});this.resolveTail=this.resolveTail.then(async()=>{try{const points=await result;if(this.enabled&&generation===this.resolveGeneration)this.stroke(Array.isArray(points)&&points.length>=2?points:[]);}catch(error){if(this.enabled&&generation===this.resolveGeneration)this.onResolveError(error);}});return;}
+      if(this.resolveStroke){const generation=this.resolveGeneration,result=Promise.resolve().then(()=>this.resolveStroke(samples));result.catch(()=>{});this.resolveTail=this.resolveTail.then(async()=>{try{const points=await result;if(this.enabled&&generation===this.resolveGeneration)this.stroke(Array.isArray(points)&&points.length>=2?points:[]);else points?.structureFeedback?.cancel();}catch(error){if(this.enabled&&generation===this.resolveGeneration)this.onResolveError(error);}});return;}
       const resolved=[];
       for(const sample of samples){
         const q=this.screenSpace?this.point({clientX:sample[0],clientY:sample[1]}):{x:sample[0],z:sample[1]};

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {createWebGpuDiscretePick} from '../src/app/webgpu-discrete-pick.js';
 
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
+test('construction feedback starts synchronously and is cancelled when picking fails',async()=>{let reject;const events=[],owner={},state={},tool={kind:'center'},canvas={width:100,height:100,getBoundingClientRect:()=>({left:0,top:0,width:100,height:100})},client={pick:()=>new Promise((_,fail)=>{reject=fail;})},feedback={cancelUnlessBound:()=>events.push('cancel')},pick=createWebGpuDiscretePick({context:()=>({owner,state,tool,canvas,client,sync(){}}),allowTerrainTools:true,onStart:()=>{events.push('start');return feedback;},deliver:()=>events.push('deliver')});assert.equal(pick({clientX:50,clientY:50},{}),true);assert.deepEqual(events,['start']);await flush();reject(Error('Stale WebGPU pick'));await flush();assert.deepEqual(events,['start','cancel']);});
 function setup(){let resolve,reject,current;const delivered=[],errors=[],calls=[],fallbacks=[];
  const client={pick:coordinate=>{calls.push(coordinate);return new Promise((a,b)=>{resolve=a;reject=b;});}};
  const owner={},state={},tool={kind:'spell',spell:'attack'};
