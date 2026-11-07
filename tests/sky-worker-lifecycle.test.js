@@ -17,3 +17,9 @@ test('sky decode reports worker errors and releases worker ownership',async()=>{
 test('water slope demand is sent to the auxiliary sky worker',async()=>{
  let message,transfer;const result={image:{},environment:{},waterSlope:{pixels:new Uint8Array([1,2])}},buffer=new ArrayBuffer(8),worker={terminate(){},postMessage(value,list){message=value;transfer=list;queueMicrotask(()=>worker.onmessage({data:result}));}};assert.equal(await prepareSkyPixelsAsync(buffer,0,{workerAvailable:true,waterSlope:true,createWorker:()=>worker}),result);assert.equal(message.waterSlope,true);assert.equal(transfer[0],buffer);
 });
+test('sky decode rejects an unreadable worker message and closes its worker once',async()=>{
+ let worker,terminated=0;const pending=prepareSkyPixelsAsync(new ArrayBuffer(8),0,{workerAvailable:true,createWorker:()=>worker={terminate(){terminated++;},postMessage(){}}});worker.onmessageerror();await assert.rejects(pending,/could not be decoded/);worker.onerror({message:'late error'});assert.equal(terminated,1);
+});
+test('sky decode rejects malformed worker responses instead of leaving the sky pending',async()=>{
+ let worker,terminated=0;const pending=prepareSkyPixelsAsync(new ArrayBuffer(8),0,{workerAvailable:true,createWorker:()=>worker={terminate(){terminated++;},postMessage(){}}});worker.onmessage({data:null});await assert.rejects(pending,/Invalid sky worker response/);assert.equal(terminated,1);
+});

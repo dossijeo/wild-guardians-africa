@@ -12,8 +12,9 @@ export function prepareSkyPixelsAsync(buffer,index,{signal,waterSlope=false,crea
   const abort=()=>finish(new Error('Sky preparation cancelled'));
   signal?.addEventListener('abort',abort,{once:true});
   if(signal?.aborted){abort();return;}
-  worker.onmessage=event=>event.data.error?finish(new Error(event.data.error)):finish(null,event.data);
+  worker.onmessage=event=>{const data=event?.data;if(!data||typeof data!=='object'){finish(new Error('Invalid sky worker response'));return;}data.error?finish(new Error(data.error)):finish(null,data);};
   worker.onerror=event=>finish(new Error(event.message??'Sky worker failed'));
+  worker.onmessageerror=()=>finish(new Error('Sky worker message could not be decoded'));
   try{worker.postMessage({buffer,index,...(waterSlope?{waterSlope:true}:{})},[buffer]);}catch(error){finish(error);}
  });
 }
