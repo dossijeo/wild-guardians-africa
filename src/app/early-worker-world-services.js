@@ -25,7 +25,7 @@ export function installEarlyWorkerWorldServices(world,{visualSearch='',dev=false
  // The legacy scene reports the camera region during chunk sync. The Worker
  // presentation has no WorldScene, so preserve that navigation contract here.
  world.syncNavigationView=()=>{
-  const nav=world.nav,owner=world.workerRuntime;if(!nav||!owner||!world.state&&!world.actorAudio||!world.camera?.position||!world.controls?.target)return;
+  const nav=world.nav,owner=world.workerRuntime;if(!nav||!owner||owner.status?.().visualDispatchBlocked===true||!world.state&&!world.actorAudio||!world.camera?.position||!world.controls?.target)return;
   if(!raidDemand||raidDemandPending!==(nav.raidEntryDemand??nav.pendingRaidEntry)||raidDemandConnectivity!==nav.raidConnectivityDemand||raidDemandConnectivitySize!==(nav.raidConnectivityDemand?.size??0))world.refreshRaidResidentDemand();
   const bounds=includeRaidBounds(activeChunkRegion(world.camera.position,world.quality).bounds,raidDemand);nav.setActiveBounds(bounds);nav.setRaidView(world.camera.position,world.controls.target);
   const view={bounds:[...nav.activeBounds],eye:{...nav.raidView.eye},target:{...nav.raidView.target}},key=JSON.stringify(view);if(world.workerNavigationViewKey===key)return;world.workerNavigationViewKey=key;

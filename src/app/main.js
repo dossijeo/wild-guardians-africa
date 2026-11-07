@@ -781,6 +781,7 @@ function setTutorialInteraction(blocking){
 }
 const budgetWarningVisible=()=>performance.now()<budgetWarningUntil&&(!tutorialMessageShownToday(world?.workerGpuOnly?world.actorAudio??state:state,'budget.reserve')||guardian?.key?.startsWith('budget.reserve:'))||guardian?.key?.startsWith('budget.reserve:')&&guardian.voice?.active;
 function refreshTutorialGuidance(){
+  if(world?.workerRuntime?.status().visualDispatchBlocked===true)return;
   const view=world?.workerGpuOnly?world.actorAudio??state:state,warning=budgetWarningVisible(),message=tutorial?.presentation({record:false});
   const guidePanel=surfaces.active==='panel'&&['basic.center','basic.plant'].includes(view.tutorial.reading);
   const guideAllowed=(!surfaces.active||guidePanel)&&!warning&&!view.pauses.some(p=>['menu','hiring','hidden','context-lost'].includes(p));

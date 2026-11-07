@@ -12,8 +12,9 @@ export function createWorkerTutorialBridge({runtime,profile,narrating=()=>null,o
   if(closed)return Promise.reject(Error('Tutorial bridge closed'));
   const result=runtime.submit({kind:'tutorialCommand',action,narrating:narrating(),...fields}).then(apply);result.catch(onError);return result;
  }
+ const presentationBlocked=()=>runtime.status?.().visualDispatchBlocked===true;
  function flushAdvance(){
-  if(closed||advancePending||!advanceQueue.length)return;const next=advanceQueue.shift();advancePending=true;
+  if(closed||presentationBlocked()||advancePending||!advanceQueue.length)return;const next=advanceQueue.shift();advancePending=true;
   const {hiddenTicket,...fields}=next;command('advance',fields).then(value=>{if(value)onChange({dismissed:true});},()=>{if(hiddenTicket!==undefined&&hiddenTicket===hiddenVersion)hiddenKey=null;}).finally(()=>{advancePending=false;flushAdvance();}).catch(()=>{});
  }
  return {
@@ -21,12 +22,12 @@ export function createWorkerTutorialBridge({runtime,profile,narrating=()=>null,o
   get started(){return started&&!closed;},
   resumeMenu(){if(!started||closed)return Promise.reject(Error('Tutorial bridge not started'));return command('resume-menu');},
   async start(){if(started||closed)throw Error('Tutorial bridge cannot start');started=true;return apply(await runtime.submit({kind:'tutorialStart',seen:[...profile.read()]}));},
-  presentation({record=true}={}){if(record&&current){const key=JSON.stringify([current.id,current.variant,current.reading]);if(key!==presentedKey&&clock()>=presentRetryAt){presentedKey=key;const ticket=++presentTicket;command('present').catch(()=>{if(!closed&&ticket===presentTicket&&presentedKey===key){presentedKey=null;presentRetryAt=clock()+1000;}});}}return current;},
-  update(){if(!started||closed||updatePending)return;const status=runtime.status?.().tutorialUpdate,voice=narrating();if(status?.needed===false&&status.narrated===voice)return;updatePending=true;command('update').finally(()=>{updatePending=false;}).catch(()=>{});},
+  presentation({record=true}={}){if(record&&current&&!presentationBlocked()){const key=JSON.stringify([current.id,current.variant,current.reading]);if(key!==presentedKey&&clock()>=presentRetryAt){presentedKey=key;const ticket=++presentTicket;command('present').catch(()=>{if(!closed&&ticket===presentTicket&&presentedKey===key){presentedKey=null;presentRetryAt=clock()+1000;}});}}return current;},
+  update(){if(!started||closed||presentationBlocked()||updatePending)return;flushAdvance();const status=runtime.status?.().tutorialUpdate,voice=narrating();if(status?.needed===false&&status.narrated===voice)return;updatePending=true;command('update').finally(()=>{updatePending=false;}).catch(()=>{});},
   present(){return command('present');},
   dismiss({automatic=false,message=current}={}){if(!message)return Promise.resolve(false);return command('dismiss',{automatic,messageId:message.id,variant:message.variant??null});},
   skipBasic(){return command('skip');},
-  advance(seconds,{visible=true}={}){if(!started||closed||!seconds)return false;const voice=narrating(),resetOnly=!visible||!current||voice===current.id,key=JSON.stringify([visible,current?.id??null,current?.variant??null,current?.reading??null,voice]);let hiddenTicket;if(!resetOnly){hiddenKey=null;hiddenVersion++;}else{if(hiddenKey===key)return false;hiddenKey=key;hiddenTicket=++hiddenVersion;}const submittedVisible=resetOnly?false:visible,last=advanceQueue.at(-1);if(last&&!resetOnly&&last.hiddenTicket===undefined&&last.visible===submittedVisible&&last.narrating===voice)last.seconds+=seconds;else advanceQueue.push({seconds,visible:submittedVisible,narrating:voice,...(hiddenTicket===undefined?{}:{hiddenTicket})});flushAdvance();return false;},
+  advance(seconds,{visible=true}={}){if(!started||closed||presentationBlocked()||!seconds)return false;const voice=narrating(),resetOnly=!visible||!current||voice===current.id,key=JSON.stringify([visible,current?.id??null,current?.variant??null,current?.reading??null,voice]);let hiddenTicket;if(!resetOnly){hiddenKey=null;hiddenVersion++;}else{if(hiddenKey===key)return false;hiddenKey=key;hiddenTicket=++hiddenVersion;}const submittedVisible=resetOnly?false:visible,last=advanceQueue.at(-1);if(last&&!resetOnly&&last.hiddenTicket===undefined&&last.visible===submittedVisible&&last.narrating===voice)last.seconds+=seconds;else advanceQueue.push({seconds,visible:submittedVisible,narrating:voice,...(hiddenTicket===undefined?{}:{hiddenTicket})});flushAdvance();return false;},
   dispose(){closed=true;current=null;},
  };
 }

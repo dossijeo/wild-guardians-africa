@@ -7,10 +7,10 @@ export function createWorkerTutorialGuide({client,runtime,isCurrent=()=>true,key
  const sameScene=(a,b)=>a&&b&&['terrainGeneration','selectableGeneration','cameraVersion','viewportVersion'].every(k=>a[k]===b[k]);
  function unsubscribe(){if(trackRevision&&subscribed){subscribed=false;Promise.resolve().then(()=>runtime.submit({kind:'tutorialGuideTarget',trackGuideRevision:false})).catch(()=>{});}}
  function clear(){generation++;active=false;heightInputs=[];activeRevision=null;client.clearGuardianGuide();onConfig(null);unsubscribe();}
- function valid(token,expected){return !closed&&generation===token&&isCurrent()&&keyNow()===expected;}
+ function valid(token,expected){return !closed&&runtime.status?.().visualDispatchBlocked!==true&&generation===token&&isCurrent()&&keyNow()===expected;}
  return {
   update({key:next,toolKind,toolSpell=null}={}){
-   if(closed)return;const frame=client.guardianFrame(),nextScene=frame?JSON.stringify([frame.terrainGeneration,frame.selectableGeneration,frame.cameraVersion,frame.viewportVersion??0]):null;
+   if(closed||runtime.status?.().visualDispatchBlocked===true)return;const frame=client.guardianFrame(),nextScene=frame?JSON.stringify([frame.terrainGeneration,frame.selectableGeneration,frame.cameraVersion,frame.viewportVersion??0]):null;
    if(next!==key||nextScene!==sceneKey||active&&(trackRevision?runtime.status().tutorialGuideRevision!==activeRevision:!heightsCurrent(heightInputs))){if(key!==null||sceneKey!==null)clear();key=next;sceneKey=nextScene;attempts=0;stableSince=clock();}
    // A transient rejection must not permanently suppress the tutorial. Slow
    // retries after repeated failures keep the authority free of a query storm.

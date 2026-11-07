@@ -9,6 +9,9 @@ import {EventDispatcher} from 'three';
 import {createWorkerNavigationProjection} from '../src/app/worker-navigation-projection.js';
 
 const fixture=()=>deserialize(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString());
+test('recovery holds navigation publication and sends the latest camera when the surface returns',()=>{
+ let blocked=true;const calls=[],nav=createWorkerNavigationProjection({bounds:[-24,-24,24,24],eye:{x:0,z:0},target:{x:0,z:0}}),world={nav,state:{raid:null},camera:{position:{x:0,z:0}},controls:{target:{x:1,z:2}},quality:'media',workerRuntime:{backgroundViews:true,status:()=>({visualDispatchBlocked:blocked}),setNavigationView:view=>calls.push(view)}};installEarlyWorkerWorldServices(world);world.syncNavigationView();world.camera.position.x=49;world.syncNavigationView();assert.equal(calls.length,0);assert.equal(world.workerNavigationViewKey,undefined);blocked=false;world.syncNavigationView();assert.equal(calls.length,1);assert.equal(calls[0].eye.x,49);world.syncNavigationView();assert.equal(calls.length,1);
+});
 
 test('Worker camera reports its current navigation view without waiting for a frame acknowledgement',()=>{
  const calls=[],nav=createWorkerNavigationProjection({bounds:[-24,-24,24,24],eye:{x:0,z:0},target:{x:0,z:0}}),owner={backgroundViews:true,setNavigationView:view=>calls.push(structuredClone(view))},world={nav,state:{raid:null},camera:{position:{x:0,z:0}},controls:{target:{x:1,z:2}},quality:'media',workerRuntime:owner};installEarlyWorkerWorldServices(world);
