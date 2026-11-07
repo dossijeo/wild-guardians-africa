@@ -1,0 +1,5 @@
+# WebGPU blessing glow integration
+
+The Worker world surface now requests a screen-space blessing glow when confirmed blessing particles are present. The pass captures the current framebuffer and applies cyan extraction and a Gaussian-weighted blur using a TSL material. Texture creation and pipeline admission are asynchronous; the pass is skipped until its resources are ready. Resizing retires the previous capture, and cancellation or surface disposal prevents a late admission from being drawn. Set `VITE_WEBGPU_BLESSING_GLOW=false` to disable the pass.
+
+The current implementation uses 25 samples per pixel in a single full-resolution pass. It is an approximation of the previous half-resolution separable effect, not a demonstrated visual or performance equivalent. The WGSL graph and resource lifecycle have automated tests, but actual framebuffer copying, visual parity, GPU cost and frame-time impact still require validation on a real WebGPU device as part of integrated testing. This is presentation only: blessing state and timing remain authoritative in the simulation.
