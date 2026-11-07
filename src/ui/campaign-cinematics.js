@@ -2,18 +2,13 @@ import './campaign-cinematics.css';
 import {PencilBackground} from './cinematic-pencil.js';
 import {WebGpuPencilBackground} from './cinematic-pencil-webgpu.js';
 import {prepareCinematicGuide} from './cinematic-pencil-guide.js';
+import {loadCinematicImage} from './cinematic-image.js';
 
 const BASE=new URL('cinematics/',document.baseURI);
 const DELAY=matchMedia('(prefers-reduced-motion: reduce)').matches?140:580;
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 const imageUrl=path=>new URL(path,BASE).href;
 const language=()=>window.WildGuardiansLanguage?.getLanguage?.()==='es'?'ES':'EN';
-
-function loadImage(path){
-  const image=new Image();image.decoding='async';image.src=imageUrl(path);
-  const ready=image.decode?image.decode():new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=reject;});
-  return ready.then(()=>{if(!image.naturalWidth)throw new Error(`Cinematic image unavailable: ${path}`);return image;});
-}
 
 export class CampaignCinematics{
   constructor({host=document.body,onComplete,onClosed,onError,pencilBackend='webgl'}={}){
@@ -23,7 +18,7 @@ export class CampaignCinematics{
   }
   async play(actNumber){
     if(this.active)return;
-    this.active=true;const token=++this.token;
+    this.active=true;const token=++this.token,controller=new AbortController();this.loadController=controller;
     this.element=document.createElement('section');this.element.className='campaign-cinema';this.element.setAttribute('role','dialog');this.element.setAttribute('aria-modal','true');
     this.element.innerHTML='<div class="campaign-cinema__veil"></div><div class="campaign-cinema__status" role="status">Cargando cinemática…</div><button type="button" class="campaign-cinema__skip"></button>';
     this.element.setAttribute('aria-label',language()==='ES'?'Cinemática de campaña':'Campaign cinematic');
@@ -34,23 +29,24 @@ export class CampaignCinematics{
     const root=this.element;
     requestAnimationFrame(()=>{if(token===this.token&&this.element===root)root.classList.add('is-open');});
     try{
-      const response=await fetch(new URL('manifest.json',BASE));if(token!==this.token)return;if(!response.ok)throw new Error(`Cinematics manifest HTTP ${response.status}`);
+      const response=await fetch(new URL('manifest.json',BASE),{signal:controller.signal});if(token!==this.token)return;if(!response.ok)throw new Error(`Cinematics manifest HTTP ${response.status}`);
       const manifest=await response.json();if(token!==this.token)return;const act=manifest.acts.find(item=>item.number===actNumber);
       if(!act||act.scenes.length!==5)throw new Error(`Cinematic act ${actNumber} unavailable`);
       if(!matchMedia('(prefers-reduced-motion: reduce)').matches)this.pencil=this.pencilBackend==='webgpu-worker'?new WebGpuPencilBackground():new PencilBackground();
-      const scenes=act.scenes;let next=this.prepare(scenes[0]);
+      const scenes=act.scenes;let next=this.prepare(scenes[0],controller.signal);
       await sleep(DELAY); // Fade gameplay to black while the first slide decodes.
       for(let i=0;i<scenes.length;i++){
         const prepared=await next;if(token!==this.token)return;
         if(prepared.error)throw prepared.error;
-        next=i+1<scenes.length?this.prepare(scenes[i+1]):null;
+        next=i+1<scenes.length?this.prepare(scenes[i+1],controller.signal):null;
         await this.show(prepared,token);
         if(token!==this.token)return;
       }
       await this.finish(token);
     }catch(error){if(token===this.token){this.onError?.(error);await this.finish(token);}}
   }
-  prepare(scene){
+  prepare(scene,signal){
+    const loadImage=path=>loadCinematicImage(imageUrl(path),{signal});
     const guide=prepareCinematicGuide({pencil:this.pencil,backend:this.pencilBackend,sceneId:scene.id,loadImage,imageUrl});
     return Promise.all([Promise.all(scene.layers.map(layer=>loadImage(layer.image))),guide]).then(([images,guide])=>({scene,images,guide}),error=>({error}));
   }
@@ -88,7 +84,7 @@ export class CampaignCinematics{
   }
   async finish(token=this.token){
     if(token!==this.token||!this.active||this.finishing)return;
-    this.finishing=true;++this.token;this.voice.pause();this.voice.removeAttribute('src');this.voice.load();
+    this.finishing=true;++this.token;this.loadController?.abort();this.loadController=null;this.voice.pause();this.voice.removeAttribute('src');this.voice.load();
     const root=this.element;
     root?.querySelector('.campaign-cinema__veil')?.classList.remove('is-clear');
     await sleep(DELAY);
@@ -118,5 +114,5 @@ export class CampaignCinematics{
     };
     await complete();
   }
-  dispose(){++this.token;this.active=false;this.finishing=false;this.voice.pause();this.voice.removeAttribute('src');this.voice.load();this.pencil?.dispose();this.pencil=null;this.element?.remove();this.element=null;}
+  dispose(){++this.token;this.active=false;this.finishing=false;this.loadController?.abort();this.loadController=null;this.voice.pause();this.voice.removeAttribute('src');this.voice.load();this.pencil?.dispose();this.pencil=null;this.element?.remove();this.element=null;}
 }
