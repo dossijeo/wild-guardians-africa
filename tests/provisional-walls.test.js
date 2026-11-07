@@ -3,6 +3,11 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {ProvisionalWalls} from '../src/rendering/provisional-walls.js';
 
+test('terrain revisions update all wall pieces atomically without replacing their mesh',()=>{
+ let missing=false,height=0;const scene=new THREE.Scene(),geometry=new THREE.BoxGeometry(),material=new THREE.MeshBasicMaterial(),prototype=new THREE.Mesh(geometry,material),walls=new ProvisionalWalls(scene,{zarzas_intacto:prototype},x=>missing&&x>0?null:height+x),matrix=new THREE.Matrix4(),position=new THREE.Vector3(),quaternion=new THREE.Quaternion(),scale=new THREE.Vector3();
+ try{walls.begin('w','zarzas',[{x:0,z:0,yaw:.2,scaleX:2},{x:1,z:0,yaw:.4}]);const mesh=walls.entries.get('w').mesh;const y=i=>{mesh.getMatrixAt(i,matrix);matrix.decompose(position,quaternion,scale);return position.y;};assert.ok(Math.abs(y(0)-.025)<1e-5);height=4;missing=true;walls.terrainChanged();assert.ok(Math.abs(y(0)-.025)<1e-5);missing=false;walls.terrainChanged();assert.equal(walls.entries.get('w').mesh,mesh);assert.ok(Math.abs(y(0)-4.025)<1e-5);assert.ok(Math.abs(y(1)-5.025)<1e-5);walls.remove('w');walls.terrainChanged();assert.equal(scene.children.length,0);}finally{walls.dispose();geometry.dispose();material.dispose();}
+});
+
 test('provisional wall instances share geometry and are released independently',()=>{
  let clock=0;const scene=new THREE.Scene(),geometry=new THREE.BoxGeometry(),prototype=new THREE.Mesh(geometry,new THREE.MeshBasicMaterial());
  const walls=new ProvisionalWalls(scene,{zarzas_intacto:prototype},()=>2,{now:()=>clock});

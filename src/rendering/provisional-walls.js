@@ -15,8 +15,9 @@ export class ProvisionalWalls {
   const mesh=new THREE.InstancedMesh(prototype.geometry,paint,pieces.length),dummy=new THREE.Object3D();mesh.frustumCulled=false;
   const scale=gate?({adobe:1.4,piedra:1.4,reforzado:1.6}[material]??1):1;
   pieces.forEach((piece,i)=>{dummy.position.set(piece.x,this.ground(piece.x,piece.z)+.025,piece.z);dummy.rotation.set(0,piece.yaw??0,0);dummy.scale.set((piece.scaleX??1)*scale,scale,scale);dummy.updateMatrix();mesh.setMatrixAt(i,dummy.matrix);});
-  mesh.instanceMatrix.needsUpdate=true;this.scene.add(mesh);this.entries.set(id,{mesh,paint,ownsPaint:!this.materialFor});return true;
+  mesh.instanceMatrix.needsUpdate=true;this.scene.add(mesh);this.entries.set(id,{mesh,paint,ownsPaint:!this.materialFor,pieces:pieces.map(piece=>({...piece})),scale});return true;
  }
+ terrainChanged(){const dummy=new THREE.Object3D();for(const {mesh,pieces,scale} of this.entries.values()){const heights=pieces.map(piece=>this.ground(piece.x,piece.z));if(heights.some(y=>!Number.isFinite(y)))continue;pieces.forEach((piece,i)=>{dummy.position.set(piece.x,heights[i]+.025,piece.z);dummy.rotation.set(0,piece.yaw??0,0);dummy.scale.set((piece.scaleX??1)*scale,scale,scale);dummy.updateMatrix();mesh.setMatrixAt(i,dummy.matrix);});mesh.instanceMatrix.needsUpdate=true;}}
  update(){const opacity=.48+.1*Math.sin(this.now()*.004);for(const {paint} of this.entries.values())paint.opacity=opacity;}
  remove(id){const entry=this.entries.get(id);if(!entry)return;this.scene.remove(entry.mesh);entry.mesh.dispose();if(entry.ownsPaint)entry.paint.dispose();this.entries.delete(id);}
  dispose(){for(const id of this.entries.keys())this.remove(id);}
