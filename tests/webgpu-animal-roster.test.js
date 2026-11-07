@@ -220,3 +220,15 @@ test('running history requires ordered continuous phases and rejects action chan
  for(const change of [{status:'attacking'},{motionPhase:.1},{falling:true},{taskId:'changed'}]){Object.assign(last,change);assert.equal(confirmedAnimalRunningSamples(preview,'a',animal),null);Object.assign(last,actorTickState({...animal,motionPhase:.4},6));}
  preview.trace.actorTickStates.complete=false;assert.equal(confirmedAnimalRunningSamples(preview,'a',animal),null);
 });
+
+test('a walk bake deferred by a physical pose resumes when the same animal is safe',async()=>{
+ const animal={id:'a',species:'hyena',status:'walking'},state={raid:{animals:[animal]}},calls=[],errors=[];let physical=true;
+ const roster=createWebGpuAnimalRoster({scene:{},residency:{},state,assetBank:{tick(){},dispose(){}},pipelineAdmission:{prepare:async()=>{}},bakedWalkBank:{async get(){calls.push('load');return {meta:{species:'hyena'}};}},onBakedWalkError:(_,error)=>errors.push(error),createAnimal:()=>({root:new Group(),update(){this.root.visible=true;},isPhysical:()=>physical,installBakedWalk:async()=>{calls.push('install');return true;},dispose(){}})});
+ try{roster.sync();await flush();await flush();assert.deepEqual(calls,['load']);assert.equal(errors.length,0);roster.sync();await flush();assert.deepEqual(calls,['load']);physical=false;roster.sync();await flush();await flush();assert.deepEqual(calls,['load','load','install']);assert.equal(errors.length,0);roster.sync();await flush();assert.deepEqual(calls,['load','load','install']);}finally{roster.dispose();}
+});
+
+test('a walk bake deferred by visual reconciliation resumes when its frame completes',async()=>{
+ const state={raid:{animals:[{id:'a',species:'hyena',status:'walking'}]}},calls=[];let reconciling=true,finish=false;
+ const roster=createWebGpuAnimalRoster({scene:{},residency:{},state,assetBank:{tick(){},dispose(){}},pipelineAdmission:{prepare:async()=>{}},bakedWalkBank:{async get(){calls.push('load');return {meta:{species:'hyena'}};}},createAnimal:()=>({root:new Group(),update(){this.root.visible=true;if(finish)reconciling=false;},isPhysical:()=>false,isReconciling:()=>reconciling,installBakedWalk:async()=>{calls.push('install');return true;},dispose(){}})});
+ try{roster.sync();await flush();await flush();assert.deepEqual(calls,['load']);finish=true;roster.tick(1);await flush();await flush();assert.deepEqual(calls,['load','load','install']);}finally{roster.dispose();}
+});
