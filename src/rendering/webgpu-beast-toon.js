@@ -1,10 +1,9 @@
-import { attribute, cameraPosition, clamp, diffuseColor, dot, fwidth, length, max, mix, normalize, normalWorld, positionWorld, pow, shadow, smoothstep, uniform, vec3, vec4 } from 'three/tsl';
+import { acos, atan, attribute, cameraPosition, clamp, diffuseColor, dot, fwidth, length, max, mix, normalize, normalWorld, positionWorld, pow, reflect, roughness, shadow, smoothstep, uniform, vec2, vec3, vec4 } from 'three/tsl';
 import * as THREE from 'three';
 import {skyNight} from './sky.js';
 import {beastToonRecipe} from './webgpu-material-graph-catalog.js';
 
-// Limited experiment for the default opaque beast style, with optional fur;
-// it omits shadows and environment reflection. Not a general AfricanToon port.
+// Default opaque beast style, with optional fur and the shared sky reflection.
 export function prepareWebGpuFurAttribute(object) {
   const geometry = object.geometry, source = geometry.getAttribute('_fur_light');
   if (!source) return false;
@@ -16,7 +15,7 @@ export function prepareWebGpuFurAttribute(object) {
   }
   return true;
 }
-export function createBeastToonOutput({ fur = false, night = uniform(0), sun = uniform(new THREE.Vector3(-6, 12, 9).normalize()), visibility = null } = {}) {
+export function createBeastToonOutput({ fur = false, night = uniform(0), sun = uniform(new THREE.Vector3(-6, 12, 9).normalize()), visibility = null, environment = null } = {}) {
   const n = normalize(normalWorld), view = normalize(cameraPosition.sub(positionWorld));
   const albedo = diffuseColor.rgb;
   const keyDir = normalize(view.mul(.62).add(vec3(0, .82, 0)).add(sun.mul(.16)));
@@ -32,6 +31,11 @@ export function createBeastToonOutput({ fur = false, night = uniform(0), sun = u
   const nv = max(dot(n, view), 0);
   const rim = pow(clamp(nv.oneMinus(), 0, 1), 2.8).mul(smoothstep(-.30, .55, n.y));
   light = light.add(max(albedo, vec3(0)).sqrt().mul(vec3(.11, .15, .21)).mul(rim).mul(mix(.45, .85, night)));
+  if (environment) {
+    const direction=normalize(reflect(view.negate(),n)),uv=vec2(atan(direction.z,direction.x).div(2*Math.PI).add(.5),acos(clamp(direction.y,-1,1)).div(Math.PI));
+    const day=environment.day.sample(uv).level(roughness.mul(7)).rgb.mul(4),dark=environment.dark.sample(uv).level(roughness.mul(7)).rgb.mul(4).add(vec3(.025,.045,.10));
+    light=light.add(mix(day,dark,night).mul(.012).mul(roughness.mul(.6).oneMinus()).mul(environment.blend));
+  }
   const exposure = light.max(0);
   let color = pow(clamp(exposure.mul(exposure.mul(2.51).add(.03)).div(exposure.mul(exposure.mul(2.43).add(.59)).add(.14)), 0, 1), 1 / 2.2);
   const luminance = dot(color, vec3(.299, .587, .114)); color = mix(vec3(luminance), color, 1.08);
@@ -43,12 +47,11 @@ export function createBeastToonOutput({ fur = false, night = uniform(0), sun = u
 }
 
 // Experimental material family for the existing WebGPU world. The underlying
-// toon recipe is shared across rigs; skeletons remain actor-owned. Environment
-// reflection is not yet ported, and native shadows require caller visibility.
-export function createWebGpuBeastStyle({renderer,light,visibility=null}={}){
- if(!renderer?.backend?.isWebGPUBackend||!renderer.library||!light?.isDirectionalLight)throw TypeError('Invalid WebGPU beast style');
+// toon recipe is shared across rigs; skeletons remain actor-owned.
+export function createWebGpuBeastStyle({renderer,light,visibility=null,environment=null}={}){
+ if(!renderer?.backend?.isWebGPUBackend||!renderer.library||!light?.isDirectionalLight||environment!==null&&(!environment.day?.isNode||!environment.dark?.isNode||!environment.blend?.isNode))throw TypeError('Invalid WebGPU beast style');
  const night=uniform(0),sun=uniform(new THREE.Vector3()),shadowVisibility=visibility??(renderer.shadowMap?.enabled&&light.castShadow?shadow(light).r:null),graphs=new Map();let closed=false;
- function graph(fur){const recipe=beastToonRecipe({fur,shadow:shadowVisibility!==null});let value=graphs.get(recipe.key);if(!value){value=createBeastToonOutput({night,sun,visibility:shadowVisibility,fur});graphs.set(recipe.key,value);}return value;}
+ function graph(fur){const recipe=beastToonRecipe({fur,shadow:shadowVisibility!==null});let value=graphs.get(recipe.key);if(!value){value=createBeastToonOutput({night,sun,visibility:shadowVisibility,fur,environment});graphs.set(recipe.key,value);}return value;}
  function configure(material,object){if(closed)throw Error('Beast style disposed');if(!material?.isNodeMaterial||!object?.isMesh||material.transparent)return false;material.outputNode=graph(prepareWebGpuFurAttribute(object)).output;material.needsUpdate=true;return true;}
  function convert(model){if(closed||!model?.isObject3D)throw TypeError('Invalid beast model');const variants=new Map(),originals=new Set(),created=new Set(),changes=[];
   try{model.traverse(object=>{if(!object.isMesh)return;const previous=object.material,values=Array.isArray(previous)?previous:[previous],converted=values.map(source=>{if(!source?.isMeshStandardMaterial||source.transparent)return source;const masked=!!object.geometry.getAttribute('_fur_light');let pair=variants.get(source);if(!pair){pair={};variants.set(source,pair);}const key=masked?'fur':'base';if(!pair[key]){const node=renderer.library.fromMaterial(source);if(!node?.isNodeMaterial)throw Error('Unsupported beast material');created.add(node);configure(node,object);pair[key]=node;originals.add(source);}else if(masked)prepareWebGpuFurAttribute(object);return pair[key];});changes.push({object,previous});object.material=Array.isArray(previous)?converted:converted[0];});}
