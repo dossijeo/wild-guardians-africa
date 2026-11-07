@@ -10,3 +10,11 @@ test('walking samples reject physical and action transitions and require exact i
  const samples=[{at:5,status:'walking',motionPhase:0},{at:6,status:'walking',motionPhase:1}],preview={start:5,end:6,trace:{actorTickStates:{complete:true,actors:[{actorId:'a',samples}]}}};
  assert.deepEqual(confirmedWalkingSamples(preview,'a','animal',{status:'walking',motionPhase:0}),[{at:5,phase:0},{at:6,phase:1}]);samples[1].status='attacking';assert.equal(confirmedWalkingSamples(preview,'a','animal',{status:'walking',motionPhase:0}),null);samples[1].status='walking';samples[1].recovery=true;assert.equal(confirmedWalkingSamples(preview,'a','animal',{status:'walking',motionPhase:0}),null);samples[1].recovery=false;assert.equal(confirmedWalkingSamples(preview,'a','animal',{status:'walking',motionPhase:.1}),null);
 });
+
+
+test('confirmed animation stops at its horizon and holds immediately on cancellation',()=>{
+ const clock=createConfirmedPresentationClock(5),phase=createConfirmedGpuAnimationPhase({clock,maxSegments:2});try{
+  phase.install([{at:5,phase:0},{at:6,phase:1}],{start:5,end:6});clock.commit(5.5);const held=phase.hold();assert.ok(held>0&&held<.5);clock.commit(6);assert.equal(phase.sample(),held);phase.reset();
+  phase.install([{at:5,phase:0},{at:6,phase:1}],{start:5,end:6});assert.ok(phase.sample()<=1);clock.commit(7);assert.ok(phase.sample()<=1);assert.ok(phase.sample()>.999);phase.reset();assert.equal(phase.status().installed,null);
+ }finally{phase.dispose();clock.dispose();}
+});

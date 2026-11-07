@@ -18,3 +18,13 @@ test('stationary running pose is held only while its confirmed phase is unchange
  const worker={id:'w',profile:'youngMale',status:'walking',running:true,runPhase:.4,x:2,z:3},path={actorId:'w',continuous:true,timed:true,startStatus:'walking',endStatus:'walking',start:{at:5,x:2,z:3},end:{at:5.1,x:2,z:3},segments:[]},samples=[actorTickState(worker,5),actorTickState(worker,5.1)],preview={start:5,end:5.1,clockSegments:{start:5,end:5.1,complete:true,segments:[{realDuration:.1,rate:1}]},trace:{actors:[path],actorTickStates:{complete:true,actors:[{actorId:'w',samples}]}}};
  assert.equal(confirmedHistoricalParticipant(preview,'w',worker,'worker'),'stationary');samples[1].runPhase=.5;assert.equal(confirmedHistoricalParticipant(preview,'w',worker,'worker'),null);
 });
+
+
+test('harvest requires unchanged confirmed task and target and positive monotonic remaining time',()=>{
+ const worker={id:'w',profile:'youngMale',status:'acting',x:2,z:3,taskId:'t',actionRemaining:2},tasks=[{id:'t',kind:'harvest',targetId:'plant-a'}],first=actorTickState(worker,5,tasks),last={...first,at:5.1,actionRemaining:1.9},path={actorId:'w',continuous:true,timed:true,startStatus:'acting',endStatus:'acting',start:{at:5,x:2,z:3},end:{at:5.1,x:2,z:3},segments:[]},preview={start:5,end:5.1,clockSegments:{start:5,end:5.1,complete:true,segments:[{realDuration:.1,rate:1}]},trace:{actors:[path],actorTickStates:{complete:true,actors:[{actorId:'w',samples:[first,last]}]}}};
+ const check=()=>confirmedHistoricalParticipant(preview,'w',worker,'worker',tasks);assert.equal(check(),'stationary');
+ last.actionTargetId='plant-b';assert.equal(check(),null);last.actionTargetId=first.actionTargetId;
+ last.actionRemaining=0;assert.equal(check(),null);last.actionRemaining=2.1;assert.equal(check(),null);last.actionRemaining=1.9;
+ last.taskId='other';assert.equal(check(),null);last.taskId='t';last.recoveryExiting=true;assert.equal(check(),null);last.recoveryExiting=false;
+ tasks[0].kind='water';assert.equal(check(),null);tasks[0].kind='harvest';worker.actionRemaining=1.9;assert.equal(check(),null);
+});
