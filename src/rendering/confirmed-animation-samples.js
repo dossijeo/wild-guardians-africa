@@ -1,3 +1,4 @@
+import {isWorkerIncapacitatedPresentation} from './worker-incapacitated-presentation.js';
 import {ANIMAL_ACTIONS} from '../simulation/animal-actions-data.js';
 import {isWorkerFleeIdle} from './worker-flee-idle.js';
 
@@ -16,8 +17,8 @@ export function confirmedWalkingSamples(preview,actorId,kind,entity){
 export function confirmedWorkerRunningSamples(preview,actorId,entity){
  const ticks=preview?.trace?.actorTickStates;if(!ticks?.complete||!Array.isArray(ticks.actors))return null;
  const matches=ticks.actors.filter(value=>value.actorId===actorId);if(matches.length!==1||!Array.isArray(matches[0].samples))return null;
- const samples=matches[0].samples,first=samples[0];if(samples.length<2||first?.at!==preview.start||samples.at(-1)?.at!==preview.end||!['walking','arriving','returning','fleeing'].includes(first.status)||first.status!==entity?.status||!first.running||first.runPhase!==entity?.runPhase)return null;
- if(samples.some((s,i)=>!Number.isFinite(s.at)||!Number.isFinite(s.runPhase)||s.runPhase<0||i&&(s.at<=samples[i-1].at||s.runPhase<samples[i-1].runPhase)||s.status!==first.status||!s.running||s.gateWaiting||s.incapacitated||s.recovery||s.falling||s.taskId!==first.taskId||s.animation!==first.animation))return null;
+ const samples=matches[0].samples,first=samples[0];if(samples.length<2||first?.at!==preview.start||samples.at(-1)?.at!==preview.end||!['walking','arriving','returning','fleeing'].includes(first.status)&&!isWorkerIncapacitatedPresentation(entity)||first.status!==entity?.status||isWorkerIncapacitatedPresentation(entity)&&first.incapacitated!==true||!first.running||first.runPhase!==entity?.runPhase)return null;
+ if(samples.some((s,i)=>!Number.isFinite(s.at)||!Number.isFinite(s.runPhase)||s.runPhase<0||i&&(s.at<=samples[i-1].at||s.runPhase<samples[i-1].runPhase)||s.status!==first.status||!s.running||s.gateWaiting||s.incapacitated!==first.incapacitated||s.incapacitated&&!isWorkerIncapacitatedPresentation(entity)||s.recovery||s.falling||s.taskId!==first.taskId||s.animation!==first.animation))return null;
  return samples.map(s=>({at:s.at,phase:s.runPhase}));
 }
 
@@ -48,5 +49,5 @@ export function confirmedWorkerCarrySamples(preview,actorId,entity){
 }
 
 export function confirmedWorkerFleeIdleSamples(preview,actorId,entity){
- if(!isWorkerFleeIdle(entity)||entity.id!==actorId)return null;const ticks=preview?.trace?.actorTickStates;if(ticks?.complete!==true||!Array.isArray(ticks.actors))return null;const matches=ticks.actors.filter(item=>item.actorId===actorId);if(matches.length!==1||!Array.isArray(matches[0].samples))return null;const samples=matches[0].samples,first=samples[0];if(samples.length<2||first?.at!==preview.start||samples.at(-1)?.at!==preview.end||first.status!==entity.status)return null;if(samples.some((sample,index)=>!Number.isFinite(sample.at)||index&&sample.at<=samples[index-1].at||sample.status!=='fleeing'||sample.running||sample.gateWaiting||sample.incapacitated||sample.recovery||sample.recoveryExiting||sample.falling||sample.taskId!==first.taskId||sample.animation!==first.animation))return null;return samples.map(sample=>({at:sample.at,phase:sample.at}));
+ if(!(isWorkerFleeIdle(entity)||isWorkerIncapacitatedPresentation(entity)&&entity.running===false&&!entity.gateWaiting)||entity.id!==actorId)return null;const ticks=preview?.trace?.actorTickStates;if(ticks?.complete!==true||!Array.isArray(ticks.actors))return null;const matches=ticks.actors.filter(item=>item.actorId===actorId);if(matches.length!==1||!Array.isArray(matches[0].samples))return null;const samples=matches[0].samples,first=samples[0];if(samples.length<2||first?.at!==preview.start||samples.at(-1)?.at!==preview.end||first.status!==entity.status)return null;if(samples.some((sample,index)=>!Number.isFinite(sample.at)||index&&sample.at<=samples[index-1].at||sample.status!==entity.status||sample.running||sample.gateWaiting||sample.incapacitated!==!!entity.incapacitated||sample.recovery||sample.recoveryExiting||sample.falling||sample.taskId!==first.taskId||sample.animation!==first.animation))return null;return samples.map(sample=>({at:sample.at,phase:sample.at}));
 }
