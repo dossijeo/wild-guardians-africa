@@ -1,6 +1,7 @@
+import {projectConfirmedHud} from '../src/simulation/confirmed-hud-projection.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {awakeningHudState,awakeningHudPlacement} from '../src/ui/awakening-hud.js';
+import {AwakeningHud,awakeningHudState,awakeningHudPlacement} from '../src/ui/awakening-hud.js';
 import {newGame} from '../src/simulation/game.js';
 import {awakeningState} from '../src/simulation/awakenings.js';
 
@@ -43,3 +44,13 @@ for(const [w,h] of [[320,568],[360,640],[390,844]])
     assert.ok(p.top+p.height<=h-34);assert.ok(p.width>=44&&p.height>=44);
     assert.equal(p.actions,undefined,'native action layout is untouched');
   });
+
+
+test('the actual HUD renders compact Worker awakening state and retains the last confirmed breakdown',()=>{
+ const state=newGame({seed:712}),toggle=()=>{},style={setProperty(){}},node={setAttribute(){},textContent:''},hud={button:{setAttribute(){}},element:{classList:{toggle},style,querySelector:()=>node},stage:{classList:{toggle}}};
+ const render=view=>AwakeningHud.prototype.render.call(hud,view);
+ const compact=projectConfirmedHud(state,1).rules;render(compact);assert.ok(hud.button.title);
+ render({...compact,awakenings:{progress:0,enabled:true}});
+ awakeningState(state).history=[{day:1,agriculture:1,economy:2,defense:3,events:4},{day:2,agriculture:5,economy:6,defense:7,events:8}];
+ const projected=projectConfirmedHud(state,2).rules;assert.equal(projected.awakenings.history.length,1);assert.notEqual(projected.awakenings.history[0],state.awakenings.history[1]);render(projected);assert.match(hud.button.title,/agricultura 5.0/);
+});

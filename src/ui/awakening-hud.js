@@ -37,7 +37,7 @@ export class AwakeningHud {
   render(state,options={}){
     const view=awakeningHudState(state,options);
     this.button.disabled=view.disabled;this.button.setAttribute('aria-label',view.label);this.button.setAttribute('aria-pressed',String(view.selecting));
-    const last=state.awakenings?.history.at(-1);
+    const last=state.awakenings?.history?.at(-1);
     this.button.title=last?`${view.label} · Última jornada: agricultura ${last.agriculture.toFixed(1)}, economía ${last.economy.toFixed(1)}, defensa ${last.defense.toFixed(1)}, acontecimientos ${last.events.toFixed(1)}`:view.label;
     this.element.classList.toggle('is-ready',view.available);this.element.classList.toggle('is-selecting',view.selecting);
     this.stage.classList.toggle('awakening-selecting',view.selecting);
