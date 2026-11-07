@@ -1,0 +1,5 @@
+# Luces de efectos en la presentación WebGPU
+
+El Worker gráfico crea cuatro luces puntuales fijas antes de admitir materiales de mundo. Al preparar el fotograma, los efectos de combate, escudo, impactos, pasos, trabajo y aura presentan sus dos focos nativos; se eligen los más relevantes por distancia, con la misma retención y escala de la ruta anterior. Los hechizos agrícolas siguen sin emitir luces al mundo, como en esa ruta. Cambiar de efecto solo modifica valores: no añade ni elimina luces durante la partida. La simulación y el tiempo de sus eventos permanecen autoritativos.
+
+El efecto se aplica a materiales que consumen las luces de Three.js. Los shaders que sustituyen por completo la salida de iluminación todavía requieren integración específica; esto no acredita paridad de iluminación completa. Las pruebas cubren transformaciones, intensidad, selección, exclusión de agricultura, cierre y conexión con el compositor, con renderizador simulado. Falta verificar la compilación real de pipelines, el aspecto y el coste CPU/GPU en una partida WebGPU.

@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {WebGPURenderer} from 'three/webgpu';
+import {texture,uniform} from 'three/tsl';
 import {createWebGpuVolcanicGround} from '../src/rendering/webgpu-volcanic-ground.js';
 
 const tile={base:'base',normal:'normal',arh:'arh',scale:.12,normalBoost:1.05,relief:.22};
@@ -23,6 +24,12 @@ test('volcanic chunks share their shader graph and own independent confirmed mas
 test('volcanic material generates WGSL including atlas gradients and parallax',async()=>{
  const provider=await createWebGpuVolcanicGround({fetchImpl,imageLoader:async()=>({close(){}})}),material=provider.create({cx:0,cz:0,groundMask:new Uint8Array(35*35*4)}),geometry=new THREE.PlaneGeometry(),canvas={width:1,height:1,style:{},addEventListener(){},removeEventListener(){},getContext(){return null;}},renderer=new WebGPURenderer({canvas});renderer.hasFeature=()=>true;
  try{const builder=renderer.backend.createNodeBuilder(new THREE.Mesh(geometry,material),renderer);builder.scene=new THREE.Scene();builder.camera=new THREE.PerspectiveCamera();builder.build();assert.match(builder.fragmentShader,/textureSampleGrad/);assert.match(builder.fragmentShader,/loop|for\s*\(/);}finally{material.dispose();geometry.dispose();provider.dispose();}
+});
+
+test('volcanic ground samples the shared sky endpoints with stable bindings',async()=>{
+ const placeholder=new THREE.DataTexture(new Uint8Array([64,64,64,255]),1,1);placeholder.minFilter=THREE.LinearMipmapLinearFilter;placeholder.magFilter=THREE.LinearFilter;
+ const environment={day:texture(placeholder),dark:texture(placeholder),night:uniform(0),blend:uniform(0)},provider=await createWebGpuVolcanicGround({fetchImpl,environment,imageLoader:async()=>({close(){}})}),material=provider.create({cx:0,cz:0}),geometry=new THREE.PlaneGeometry(),canvas={width:1,height:1,style:{},addEventListener(){},removeEventListener(){},getContext(){return null;}},renderer=new WebGPURenderer({canvas});renderer.hasFeature=()=>true;
+ try{const node=material.outputNode,builder=renderer.backend.createNodeBuilder(new THREE.Mesh(geometry,material),renderer);builder.scene=new THREE.Scene();builder.camera=new THREE.PerspectiveCamera();builder.build();assert.match(builder.fragmentShader,/textureSampleLevel/);assert.match(builder.fragmentShader,/atan2/);environment.night.value=1;environment.blend.value=1;assert.equal(material.outputNode,node);assert.equal(environment.day.value,placeholder);}finally{material.dispose();geometry.dispose();provider.dispose();placeholder.dispose();}
 });
 
 test('volcanic ground waits for submitted atlas uploads and releases after cancellation',async()=>{
