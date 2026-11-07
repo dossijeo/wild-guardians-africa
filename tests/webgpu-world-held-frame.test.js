@@ -2,6 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {build} from 'esbuild';
 import {resolve} from 'node:path';
+import {createSharedCameraMailbox} from '../src/rendering/shared-camera-mailbox.js';
+
+test('world worker consumes shared camera updates before drawing without acknowledgement',async()=>{
+ const saved={self:globalThis.self,postMessage:globalThis.postMessage,raf:globalThis.requestAnimationFrame,cancel:globalThis.cancelAnimationFrame,harness:globalThis.__sharedCameraHarness},messages=[],callbacks=[],applied=[];
+ globalThis.self={};globalThis.postMessage=message=>messages.push(message);globalThis.requestAnimationFrame=callback=>{callbacks.push(callback);return callbacks.length;};globalThis.cancelAnimationFrame=()=>{};globalThis.__sharedCameraHarness={surface:{setCamera:camera=>applied.push(camera),render:()=>true,dispose(){}}};
+ const plugin={name:'mock-shared-camera-surface',setup(build){build.onResolve({filter:/webgpu-world-surface\.js$/},()=>({path:'surface',namespace:'mock-shared'}));build.onResolve({filter:/webgpu-surface-owner\.js$/},()=>({path:'owner',namespace:'mock-shared'}));build.onLoad({filter:/.*/,namespace:'mock-shared'},args=>({contents:args.path==='surface'?'export const createWebGpuWorldSurface=()=>Promise.resolve(globalThis.__sharedCameraHarness.surface);':"export const createWebGpuSurfaceOwner=()=>({signal:new AbortController().signal,start:promise=>promise,claim:()=>true,close:()=>Promise.resolve()});",loader:'js'}));}};
+ try{const bundle=await build({entryPoints:[resolve('src/rendering/webgpu-world-worker.js')],bundle:true,write:false,platform:'node',format:'esm',define:{'import.meta.env':'{"DEV":false}'},plugins:[plugin]});await import('data:text/javascript;base64,'+Buffer.from(bundle.outputFiles[0].text).toString('base64')+'#shared-camera');const box=createSharedCameraMailbox(),pose={x:1,y:2,z:3,targetX:4,targetY:5,targetZ:6,fov:45,near:.1,far:1000};await self.onmessage({data:{kind:'initialize',session:'s',cameraMailbox:box.buffer}});box.write(pose,1);box.write({...pose,x:8},2);callbacks.shift()();assert.deepEqual(applied,[{...pose,x:8}]);assert.equal(messages.some(message=>message.kind==='cameraAck'||message.kind==='failure'),false);}finally{globalThis.self=saved.self;globalThis.postMessage=saved.postMessage;globalThis.requestAnimationFrame=saved.raf;globalThis.cancelAnimationFrame=saved.cancel;globalThis.__sharedCameraHarness=saved.harness;}
+});
 
 test('world worker does not acknowledge a held frame and resumes without failing',async()=>{
  const saved={self:globalThis.self,postMessage:globalThis.postMessage,raf:globalThis.requestAnimationFrame,cancel:globalThis.cancelAnimationFrame,harness:globalThis.__heldFrameHarness},messages=[],callbacks=[];let ready=false,advances=0,renders=0;
