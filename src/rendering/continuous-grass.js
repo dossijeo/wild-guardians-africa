@@ -1,3 +1,4 @@
+import {generateGrassTile} from './grass-tile-generation.js';
 import {sampleGrassTerrain} from './grass-terrain-sampling.js';
 import {cinematicLightingEnabled,patchCinematicVegetation} from './cinematic-lighting.js';
 import {DAYLIGHT_BIOMES,patchDaylightGrass} from './final-daylight.js';
@@ -8,8 +9,6 @@ import {syncSelectedGrassMask,disposeSelectedGrassMask} from './grass-underlay-m
 import {prepareMangroveLeaves,mangroveLeafShader,cuppedMangroveLeavesEnabled,variedMangroveDistributionEnabled} from './mangrove-leaf-cover.js';
 import {markGroundDetailEvent} from './blender-ground-details.js';
 import * as THREE from 'three';
-import {hashCell,noise} from '../world/terrain.js';
-import {footprintDistance} from '../world/footprints.js';
 import {observePresentationGameEvents} from '../simulation/game-event-observers.js';
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 const vertex=`
@@ -117,17 +116,7 @@ export async function createContinuousGrass(world){
  for(const cx of xs)for(const cz of zs){const neighbor=q.chunks.get(cx+','+cz);if(neighbor&&nearWaterChunk(neighbor,x,z))return true;}return false;
  }
  const sample=sampleGrassTerrain;
- function tile(c,tx,tz){const key=tx+','+tz;if(q.tiles.has(key))return q.tiles.get(key);const start=performance.now(),items=[],step=q.spacing,seed=world.nav.field.seed;
- for(let ix=Math.ceil(tx*8/step);ix<(tx+1)*8/step-1e-6;ix++)for(let iz=Math.ceil(tz*8/step);iz<(tz+1)*8/step-1e-6;iz++){
- const bits=hashCell(seed,ix,iz,8371),x=(ix+.5)*step+((bits&255)/255-.5)*step*(varied?.65:.25),z=(iz+.5)*step+(((bits>>>8)&255)/255-.5)*step*(varied?.65:.25);
- if(x<c.cx*48-24||x>=c.cx*48+24||z<c.cz*48-24||z>=c.cz*48+24)continue;
- const s=sample(c,x,z),[cover,meso,moisture,wear]=s.ctx;q.stats.candidates++;
- if(cover<(river?.20:.10)||(river&&moisture<.20)||wear>.25||Math.hypot(s.sx,s.sz)>.42||nearWater(c,x,z)||(q.blockers.get(Math.floor(x/8)+','+Math.floor(z/8))??[]).some(o=>o.polygon?footprintDistance(o.polygon,x,z)<q.edgePadding:Math.hypot(x-o.x,z-o.z)<o.r+q.edgePadding)){q.stats.masked++;continue;}
- // Check the footprint against the resident wear mask, keeping leaf reach off paths.
- let edgeWear=wear,fernEdgeCover=cover;for(const [dx,dz] of [[.6,0],[-.6,0],[0,.6],[0,-.6],[.42,.42],[-.42,.42],[.42,-.42],[-.42,-.42]]){const probe=sample(c,x+dx*(q.edgePadding/.6),z+dz*(q.edgePadding/.6)).ctx;edgeWear=Math.max(edgeWear,probe[3]);if(fern)fernEdgeCover=Math.min(fernEdgeCover,probe[0]);if(edgeWear>.27)break;}if(edgeWear>.27){q.stats.masked++;continue;}
- if(fern){const edge=Math.max(clamp((.42-fernEdgeCover)/.32,0,1),clamp((edgeWear-.06)/.21,0,1));if(hashCell(seed,ix,iz,21931)/4294967296<.30*edge)continue;}
- items.push([x,s.y+.006,z,(river?clamp((.27-edgeWear)/.17,0,1)*(.65+.25*((bits>>>16)&255)/255)*clamp((cover-.20)/.12,0,1)*clamp((moisture-.20)/.12,0,1):(.80+.32*((bits>>>16)&255)/255)*clamp((cover-.08)/.18,.7,1)),bits/4294967296*Math.PI*2,(varied?noise(x*.19,z*.19,seed^9581)*.65+noise(x*.71,z*.71,seed^9517)*.35:meso*.65+moisture*.35),cover,mangrove?wear:moisture,s.sx,s.sz]);}
- const result={chunk:c.cx+','+c.cz,tx,tz,items};q.tiles.set(key,result);q.stats.buildMs+=performance.now()-start;return result;}
+ function tile(c,tx,tz){const key=tx+','+tz;if(q.tiles.has(key))return q.tiles.get(key);const start=performance.now();const result=generateGrassTile(c,tx,tz,{spacing:q.spacing,seed:world.nav.field.seed,varied,river,mangrove,fern,edgePadding:q.edgePadding,blockers:q.blockers,nearWater,stats:q.stats});q.tiles.set(key,result);q.stats.buildMs+=performance.now()-start;return result;}
  const screenLodHistory=new WeakMap();
  const old=world.scene.onBeforeRender,frustum=new THREE.Frustum(),vp=new THREE.Matrix4(),sphere=new THREE.Sphere(new THREE.Vector3(),6.5);
  function select(){const start=performance.now(),camera=world.camera,eyeX=camera.position.x-world.scene.position.x,eyeZ=camera.position.z-world.scene.position.z;vp.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse);frustum.setFromProjectionMatrix(vp);const bins=[[],[]],visibleTiles=[];q.stats.overflow=0;
