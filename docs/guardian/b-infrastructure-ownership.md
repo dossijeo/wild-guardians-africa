@@ -26,6 +26,16 @@ Se compararon tres opciones: parches independientes por clip, reemplazar de golp
 
 Pruebas: `webgpu-worker-action-retry.test.js` cubre siete acciones, cancelación, fallo persistente y nueva acción; `webgpu-worker-fall-roster.test.js` cubre caída/recuperación. Las pruebas de roster y rig conservan sus comprobaciones de fases y selección. No son mediciones de mejora de FPS.
 
+## Ampliación de la política de admisión y propiedad de pose
+
+Walk también queda acotado por el estado confirmado: ni la finalización de Idle ni la de otra acción pueden relanzar una descarga o instalación fallida. Las diez acciones de trabajadores tratan un instalador que devuelve `false` como candidato no publicado, conservan la presentación vigente y esperan una oportunidad posterior. Una cancelación de Walk conserva el clip descargado cuando existe; un fallo real se notifica y no se repite en el mismo estado.
+
+Las bestias aplican la misma regla a Walk, Run y Attack. Sus cancelaciones registran la generación de admisión y la identidad de estado/ataque; se rearman mediante una publicación confirmada, el final del intervalo histórico o la liberación real de la pose física/reconciliación. Los callbacks de las acciones no pueden relanzarse mutuamente en esa misma generación. Los fallos reales de locomoción esperan un cambio de estado y los de ataque otra identidad autoritativa. No se añade un reloj ni se reintenta cada fotograma.
+
+La llegada de terreno ya no llama al roster de trabajadores fuera de la barrera temporal que protegía a las bestias. Ambos rosters evitan además reevaluar la pose CPU de participantes que están reproduciendo un intervalo GPU. Siguen comprobando cambios de identidad, retirada y estado para invalidar el certificado cuando corresponda; no se elimina la validación del soporte ni se permite continuar sobre terreno obsoleto.
+
+Validación: 159 pruebas de admisión, rosters, reloj, grupo histórico, épocas de superficie y autoridad WASM, incluidas caída y recuperación de trabajadores. Los nuevos casos prueban cancelación, fallo, candidato no publicado, solicitudes concurrentes, conservación del clip y retirada durante carga. Esta evidencia no certifica rendimiento, recuperación de dispositivo ni paridad de imagen en WebGPU real.
+
 ## Bloqueos que todavía no están resueltos
 
 1. Eventos dentro de trayectorias: los receptores aplican el estado final antes de notificar; hacen falta límites intermedios autoritativos o una representación equivalente que conserve todas las dependencias. No basta con quitar la barrera `events` ni entregar antes un daño con estado posterior.
