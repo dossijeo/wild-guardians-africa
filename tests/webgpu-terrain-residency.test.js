@@ -194,3 +194,42 @@ test('prepared temporal terrain participant retains logical identity until commi
  const scene=new THREE.Scene(),material=new THREE.MeshBasicMaterial(),published=[],view=createWebGpuTerrainResidency({scene,material,pipelineAdmission:{prepare(){},deferRelease(_group,release){release();}},coordinator:{offer(){throw Error('unexpected offer');},forget(){}},onPublished:(key,identity)=>published.push({key,identity})});
  try{const token=view.prepareRevision(chunk(),9,'source-epoch',{publicationEpoch:'graphics-epoch',publicationRevision:3,publicationOrder:1}),participant=token.participant();assert.equal(participant.epoch,'graphics-epoch');assert.equal(participant.revision,3);assert.equal(participant.activate(),true);participant.attach();const final=participant.finalize();assert.equal(published.length,0);final.retire();final.notify();assert.deepEqual(published,[{key:'0,0',identity:{epoch:'source-epoch',revision:9,publicationOrder:1}}]);}finally{view.dispose();material.dispose();}
 });
+
+test('explicit visual eviction requires permission and preserves the authoritative revision for restoration',()=>{
+ const scene=new THREE.Scene(),material=new THREE.MeshBasicMaterial(),events=[];let permit=false;
+ const view=createWebGpuTerrainResidency({scene,material,onRevision:event=>events.push(event),canEvictVisualLocal:()=>permit});
+ try{
+  view.replace(chunk(),7,'world');const original=view.get(0,0);assert.equal(view.evictVisualLocal(0,0),false);assert.equal(view.get(0,0),original);assert.equal(events.length,1);
+  permit=true;assert.equal(view.evictVisualLocal(0,0),true);assert.equal(view.get(0,0),null);assert.deepEqual(events.at(-1),{cx:0,cz:0,revision:7,epoch:'world',kind:'remove',cause:'visual-local'});
+  assert.equal(view.replace(chunk(),7,'other'),false);assert.equal(view.replace(chunk(),6,'world'),false);assert.equal(view.replace(chunk(),7,'world'),true);assert.deepEqual(view.revisionAt(0,0),{cx:0,cz:0,revision:7,epoch:'world'});assert.equal(view.replace(chunk(),7,'world'),false);
+  assert.equal(view.evictVisualLocal(0,0),true);assert.equal(view.remove(0,0,8),true);assert.equal(view.replace(chunk(),7,'world'),false);assert.equal(view.replace(chunk(),8,'world'),false);assert.equal(view.replace(chunk(),9,'world'),true);
+ }finally{view.dispose();material.dispose();}
+});
+
+test('visual eviction is unavailable without an explicit synchronous guard',()=>{
+ const material=new THREE.MeshBasicMaterial(),view=createWebGpuTerrainResidency({scene:new THREE.Scene(),material});try{view.replace(chunk(),1,'world');assert.equal(view.evictVisualLocal(0,0),false);assert.notEqual(view.get(0,0),null);}finally{view.dispose();material.dispose();}
+});
+
+test('reentrant eviction guard cannot evict a superseded resident',()=>{
+ const material=new THREE.MeshBasicMaterial();let view;view=createWebGpuTerrainResidency({scene:new THREE.Scene(),material,canEvictVisualLocal(){assert.equal(view.evictVisualLocal(0,0),false);view.replace(chunk(),2,'world');return true;}});try{view.replace(chunk(),1,'world');assert.equal(view.evictVisualLocal(0,0),false);assert.equal(view.revisionAt(0,0).revision,2);}finally{view.dispose();material.dispose();}
+});
+
+test('cancelled same-revision restoration restores visual eviction eligibility',()=>{
+ const material=new THREE.MeshBasicMaterial(),view=createWebGpuTerrainResidency({scene:new THREE.Scene(),material,canEvictVisualLocal:()=>true});try{view.replace(chunk(),4,'world');view.evictVisualLocal(0,0);const token=view.prepareRevision(chunk(),4,'world');assert.equal(token.applyLogical(),true);assert.equal(token.rollbackLogical(),true);token.abort();assert.equal(view.replace(chunk(),4,'world'),true);}finally{view.dispose();material.dispose();}
+});
+
+test('eviction notification cannot synchronously replace the chunk being withdrawn',()=>{
+ const material=new THREE.MeshBasicMaterial();let view;const events=[];view=createWebGpuTerrainResidency({scene:new THREE.Scene(),material,canEvictVisualLocal:()=>true,onRevision:event=>{events.push(event);if(event.cause==='visual-local')assert.throws(()=>view.replace(chunk(),2,'world'),/eviction in progress/);}});try{view.replace(chunk(),1,'world');assert.equal(view.evictVisualLocal(0,0),true);assert.equal(view.get(0,0),null);assert.equal(view.replace(chunk(),2,'world'),true);}finally{view.dispose();material.dispose();}
+});
+
+test('same-revision restoration rejects altered terrain and leaves its evidence intact',()=>{
+ const material=new THREE.MeshBasicMaterial(),view=createWebGpuTerrainResidency({scene:new THREE.Scene(),material,canEvictVisualLocal:()=>true});try{const original=chunk();view.replace(original,2,'world');view.evictVisualLocal(0,0);const altered=chunk();altered.terrain.positions[1]=10;assert.throws(()=>view.replace(altered,2,'world'),/payload changed/);assert.equal(view.get(0,0),null);assert.equal(view.replace(original,2,'world'),true);}finally{view.dispose();material.dispose();}
+});
+
+test('visual eviction journal fails closed at its bounded entry limit',()=>{
+ const material=new THREE.MeshBasicMaterial(),view=createWebGpuTerrainResidency({scene:new THREE.Scene(),material,canEvictVisualLocal:()=>true});try{for(let cx=0;cx<65;cx++)view.replace(chunk(cx,0),1,'world');for(let cx=0;cx<64;cx++)assert.equal(view.evictVisualLocal(cx,0),true);assert.equal(view.evictVisualLocal(64,0),false);assert.notEqual(view.get(64,0),null);assert.equal(view.replace(chunk(0,0),1,'world'),true);assert.equal(view.evictVisualLocal(64,0),true);}finally{view.dispose();material.dispose();}
+});
+
+test('visual eviction journal rejects a chunk exceeding its byte budget',()=>{
+ const material=new THREE.MeshBasicMaterial(),view=createWebGpuTerrainResidency({scene:new THREE.Scene(),material,canEvictVisualLocal:()=>true});try{const payload=chunk();payload.groundMask=new Uint8Array(16*1024*1024);view.replace(payload,1,'world');assert.equal(view.evictVisualLocal(0,0),false);assert.notEqual(view.get(0,0),null);}finally{view.dispose();material.dispose();}
+});

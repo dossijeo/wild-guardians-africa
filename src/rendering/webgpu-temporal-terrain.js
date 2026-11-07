@@ -21,7 +21,7 @@ export async function prepareWebGpuTemporalTerrain(messages,{signal,scene,reside
    check();const {payload,revision,sequence,epoch}=message,order=publicationOrder(),options={publicationEpoch:publicationEpoch(epoch),publicationOrder:order},identity=onPreparedIdentity?{key:`${payload.cx},${payload.cz}`,epoch:epoch??null,revision,sequence,publicationOrder:order}:null;
    if(onDiscardIdentity)identities.push({payload,identity});onPreparedIdentity?.(payload,identity);
    let mudGeometry=null,terrainToken;try{if(mudPreparer){mudGeometry=await mudPreparer.prepare(payload,revision,{signal});check();}terrainToken=residency.prepareRevision(payload,revision,epoch??null,{...options,mudGeometry,mudPrepared:!!mudPreparer});if(!terrainToken)throw Error('Terrain preparation is stale');mudGeometry=null;}finally{mudGeometry?.dispose();}
-   tokens.push(terrainToken);const biomeToken=biome.prepareRevision(payload,revision,{epoch:epoch??null,sequence},{...options,suppressed});if(!biomeToken)throw Error('Biome preparation is unavailable or stale');tokens.push(biomeToken);
+   tokens.push(terrainToken);const biomePrepare=terrainToken.visualReadmission?biome.prepareVisualReadmission:biome.prepareRevision;if(typeof biomePrepare!=='function')throw Error('Biome visual readmission is unavailable');const biomeToken=biomePrepare.call(biome,payload,revision,{epoch:epoch??null,sequence},{...options,suppressed});if(!biomeToken)throw Error('Biome preparation is unavailable or stale');tokens.push(biomeToken);
   }
   const parts=tokens.map(token=>token.participant()),batch=await coordinator.prepareBatch(parts,{signal,scene,...(requireShadowTarget?{requireShadowTarget:true}:{})});
   // Preserve the pre-existing return value and behaviour when no discard
