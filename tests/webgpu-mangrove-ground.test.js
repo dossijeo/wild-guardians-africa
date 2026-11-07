@@ -6,6 +6,16 @@ import {newGame} from '../src/simulation/game.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {serializeConfirmedPresentationState,deserializeConfirmedState} from '../src/simulation/confirmed-live-state.js';
 import {createSpatialTerrainView} from '../src/world/wild-engine/spatial-terrain-view.js';
+import * as THREE from 'three';
+import {WebGPURenderer} from 'three/webgpu';
+import {texture,uniform} from 'three/tsl';
+import {mangroveGroundRecipe} from '../src/rendering/webgpu-material-graph-catalog.js';
+
+test('mangrove reflection reuses live environment bindings without owning them',async()=>{
+ const day=new THREE.DataTexture(new Uint8Array([64,64,64,255]),1,1);day.magFilter=THREE.LinearFilter;day.minFilter=THREE.LinearMipmapLinearFilter;day.wrapS=THREE.RepeatWrapping;const dark=day.clone(),environment={day:texture(day),dark:texture(dark),night:uniform(0),blend:uniform(0)},tile={base:'base',normal:'normal',arh:'arh',scale:.115,normalBoost:1.3},fetchImpl=async()=>({ok:true,json:async()=>({mangrove:tile})}),provider=await createWebGpuMangroveGround({fetchImpl,environment,imageLoader:async()=>({close(){}})}),canvas={width:1,height:1,style:{},addEventListener(){},removeEventListener(){},getContext(){return null;}},renderer=new WebGPURenderer({canvas}),geometry=new THREE.PlaneGeometry(),version=provider.sharedMaterial.version,graph=provider.sharedMaterial.outputNode;renderer.hasFeature=()=>true;
+ let disposed=0;day.addEventListener('dispose',()=>disposed++);dark.addEventListener('dispose',()=>disposed++);
+ try{const args={textures:[new THREE.Texture(),new THREE.Texture(),new THREE.Texture()],scale:.115,normalBoost:1.3,environment},recipe=mangroveGroundRecipe(args);assert.notEqual(recipe.key,mangroveGroundRecipe({...args,environment:null}).key);const builder=renderer.backend.createNodeBuilder(new THREE.Mesh(geometry,provider.sharedMaterial),renderer);builder.scene=new THREE.Scene();builder.camera=new THREE.PerspectiveCamera();builder.build();assert.match(builder.fragmentShader,/textureSampleLevel/);environment.blend.value=1;environment.night.value=.5;assert.equal(recipe.key,mangroveGroundRecipe(args).key);assert.equal(provider.sharedMaterial.outputNode,graph);assert.equal(provider.sharedMaterial.version,version);provider.dispose();assert.equal(disposed,0);args.textures.forEach(t=>t.dispose());}finally{provider.dispose();day.dispose();dark.dispose();geometry.dispose();}
+});
 
 test('mangrove atlas offset matches the authored seed and stays a dynamic uniform',async()=>{
  const tile={base:'base',normal:'normal',arh:'arh',scale:1,normalBoost:1},fetchImpl=async()=>({ok:true,json:async()=>({mangrove:tile})}),provider=await createWebGpuMangroveGround({fetchImpl,imageLoader:async()=>({close(){}})});

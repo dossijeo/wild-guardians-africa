@@ -109,10 +109,10 @@ export function vertexTerrainRecipe({shadows=false}={}){if(typeof shadows!=='boo
 
 // This provider embeds texture identities and tile constants into its graph;
 // declaring them prevents treating a different atlas or light as equivalent.
-export function mangroveGroundRecipe({textures,scale,normalBoost,light=null,shadowNode=null,shadows=false}={}){
- if(!Array.isArray(textures)||textures.length!==3||textures.some(t=>!t?.isTexture)||!Number.isFinite(scale)||!Number.isFinite(normalBoost)||typeof shadows!=='boolean'||light!==null&&!light?.isDirectionalLight||shadowNode!==null&&!shadowNode?.isShadowNode)throw TypeError('Invalid mangrove ground recipe');
- const structural=Object.freeze({family:'mangrove-ground',textureIds:Object.freeze(textures.map(t=>t.uuid)),textures:Object.freeze(textures.map(textureStructure)),scale,normalBoost,lightId:light?.uuid??null,shadowId:shadowNode?.uuid??null,shadows,state:Object.freeze({side:DoubleSide,toneMapped:false})});
- return Object.freeze({structural,dynamic:Object.freeze(['night','sunDirection','atlasContents']),passes:Object.freeze({color:'mangrove-ground-output',depth:'color-pass',shadow:'terrain-mesh-does-not-cast'}),key:JSON.stringify(structural)});
+export function mangroveGroundRecipe({textures,scale,normalBoost,light=null,shadowNode=null,shadows=false,environment=null}={}){
+ if(!Array.isArray(textures)||textures.length!==3||textures.some(t=>!t?.isTexture)||!Number.isFinite(scale)||!Number.isFinite(normalBoost)||typeof shadows!=='boolean'||light!==null&&!light?.isDirectionalLight||shadowNode!==null&&!shadowNode?.isShadowNode||environment!==null&&(!environment.day?.isTextureNode||!environment.dark?.isTextureNode||!environment.blend?.isNode||!environment.night?.isNode))throw TypeError('Invalid mangrove ground recipe');
+ const structural=Object.freeze({family:'mangrove-ground',textureIds:Object.freeze(textures.map(t=>t.uuid)),textures:Object.freeze(textures.map(textureStructure)),scale,normalBoost,lightId:light?.uuid??null,shadowId:shadowNode?.uuid??null,environmentIds:environment?Object.freeze([environment.day.uuid,environment.dark.uuid,environment.blend.uuid,environment.night.uuid]):null,shadows,state:Object.freeze({side:DoubleSide,toneMapped:false})});
+ return Object.freeze({structural,dynamic:Object.freeze(['night','sunDirection','atlasContents','environmentContents','environmentBlend']),passes:Object.freeze({color:'mangrove-ground-output',depth:'color-pass',shadow:'terrain-mesh-does-not-cast'}),key:JSON.stringify(structural)});
 }
 
 const bakedDynamic=Object.freeze(['phaseOffset','clockWeight','bind','inverse','duration','sampleRate','frames','lastSample']);
