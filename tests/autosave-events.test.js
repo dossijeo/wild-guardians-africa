@@ -84,3 +84,7 @@ test('purchase and return-to-menu snapshots preserve the current slot and comman
  assert.deepEqual(loaded.pauses,['menu']);assert.equal(loaded.slotId,s.slotId);assert.equal(serialize(loaded),serialize(s));
  assert.equal(store.data.get(repo.key(other.slotId)),untouched);
 });
+test('recovery suspension keeps confirmed autosave boundaries pending until surface publication',async()=>{
+ let calls=0;const errors=[],controller=createConfirmedAutosaveController({request:()=>{calls++;return Promise.resolve({saved:true});},onError:error=>errors.push(error)});
+ try{controller.observe(true,1);controller.setSuspended(true);controller.events([{type:'RaidEnded'}]);controller.events([{type:'Dawn'}]);controller.observe(true,2);await new Promise(resolve=>setImmediate(resolve));assert.equal(calls,0);assert.equal(controller.status().pending,true);controller.setSuspended(false);await new Promise(resolve=>setImmediate(resolve));assert.equal(calls,1);assert.equal(controller.status().pending,false);controller.setSuspended(false);assert.equal(calls,1);assert.deepEqual(errors,[]);}finally{controller.dispose();}
+});
