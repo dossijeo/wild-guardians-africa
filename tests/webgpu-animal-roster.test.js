@@ -101,10 +101,20 @@ test('all-species walking requests each confirmed species and preserves CPU fall
  const species=['buffalo','hyena','lion','rhino','warthog'],state={raid:{animals:species.map((name,index)=>({id:`a${index}`,species:name,status:'walking'}))}},calls=[],errors=[],bank={tick(){},dispose(){}},roster=createWebGpuAnimalRoster({scene:{},residency:{},state,assetBank:bank,bakedWalkBank:{get(name){calls.push(name);return Promise.reject(Error('unavailable'));}},pipelineAdmission:{prepare:async()=>{}},onBakedWalkError:(name,error)=>errors.push([name,error.message]),createAnimal:()=>({root:new Group(),update(){this.root.visible=true;},dispose(){}})});
  try{roster.sync();await flush();await flush();assert.deepEqual(calls,species);assert.deepEqual(errors,species.map(name=>[name,'unavailable']));assert.equal(roster.status().ready,5);for(let index=0;index<species.length;index++)assert.equal(roster.get(`a${index}`).root.visible,true);}finally{roster.dispose();}
 });
-test('animal baked walking retries only after a confirmed status change and keeps its rig',async()=>{
+test('animal baked walking can retry on a confirmed status change before its timer and keeps its rig',async()=>{
  const entity={id:'a',species:'hyena',status:'walking'},state={raid:{animals:[entity]}},bank={tick(){},dispose(){}},errors=[];let requests=0,installed=0,created=0;
  const roster=createWebGpuAnimalRoster({scene:{},residency:{},state,assetBank:bank,pipelineAdmission:{prepare:async()=>{}},bakedWalkBank:{get(){if(++requests===1)return Promise.reject(Error('temporary'));return Promise.resolve({meta:{species:'hyena'}});}},onBakedWalkError:(_,error)=>errors.push(error.message),createAnimal:()=>{created++;return {root:new Group(),update(){this.root.visible=true;},async installBakedWalk(){installed++;return true;},dispose(){}};}});
  try{roster.sync();await flush();await flush();assert.deepEqual(errors,['temporary']);assert.equal(requests,1);for(let i=0;i<10;i++)roster.sync();await flush();assert.equal(requests,1);entity.status='waiting';roster.sync();await flush();await flush();assert.equal(requests,2);assert.equal(installed,1);assert.equal(created,1);entity.status='walking';roster.sync();await flush();assert.equal(requests,2);}finally{roster.dispose();}
+});
+test('a transient walking download is retried without a new publication',async()=>{
+ const entity={id:'a',species:'hyena',status:'walking'},state={raid:{animals:[entity]}},bank={tick(){},dispose(){}};let requests=0,installed=0,created=0;
+ const roster=createWebGpuAnimalRoster({scene:{},residency:{},state,assetBank:bank,walkRetryDelay:5,pipelineAdmission:{prepare:async()=>{}},bakedWalkBank:{get(){if(++requests===1)return Promise.reject(Error('temporary'));return Promise.resolve({meta:{species:'hyena'}});}},createAnimal:()=>{created++;return {root:new Group(),update(){this.root.visible=true;},async installBakedWalk(){installed++;return true;},dispose(){}};}});
+ try{roster.sync();await flush();await flush();assert.equal(requests,1);await new Promise(resolve=>setTimeout(resolve,35));await flush();assert.equal(requests,2);assert.equal(installed,1);assert.equal(created,1);}finally{roster.dispose();}
+});
+test('walking download retries are bounded and cancelled on removal',async()=>{
+ const animals=[{id:'a',species:'hyena',status:'walking'},{id:'b',species:'lion',status:'walking'}],state={raid:{animals}},calls=[],bank={tick(){},dispose(){}};
+ const roster=createWebGpuAnimalRoster({scene:{},residency:{},state,assetBank:bank,walkRetryDelay:5,pipelineAdmission:{prepare:async()=>{}},bakedWalkBank:{get(species){calls.push(species);return Promise.reject(Error('unavailable'));}},createAnimal:()=>({root:new Group(),update(){this.root.visible=true;},dispose(){}})});
+ try{roster.sync();await flush();await flush();animals.pop();roster.sync();await new Promise(resolve=>setTimeout(resolve,100));assert.equal(calls.filter(x=>x==='hyena').length,4);assert.equal(calls.filter(x=>x==='lion').length,1);assert.equal(roster.get('a').root.visible,true);}finally{roster.dispose();}
 });
 test('a status change during a failed animal bake is retained for one retry',async()=>{
  const entity={id:'a',species:'hyena',status:'walking'},state={raid:{animals:[entity]}},bank={tick(){},dispose(){}};let fail,requests=0,installs=0;
