@@ -8,6 +8,13 @@ import {createGrassTimelineCoordinator,createGrassTerrainMatcher,createGrassSurf
 import {createTemporalSurfaceRecovery} from '../src/rendering/temporal-surface-recovery.js';
 
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
+test('non-spatial plant updates retain cover but biome water and footprints invalidate it',()=>{
+ let occupancy=false;const calls=[],owner={occupancyChanged:()=>occupancy,suspend:()=>calls.push('hide'),resume:()=>calls.push('resume')},barrier=createGrassTimelineCoordinator({owner,initiallySuspended:false});
+ try{for(let i=1;i<=100;i++){barrier.beginMutation();barrier.historicalChanged(i,new Set(['plants']));barrier.confirmed(i,new Set(['plants','structures']));barrier.endMutation();}assert.deepEqual(calls,[]);
+  occupancy=true;barrier.historicalChanged(101,new Set(['plants']));assert.deepEqual(calls,['hide']);barrier.confirmed(101,new Set(['plants']));assert.deepEqual(calls,['hide','resume']);
+  occupancy=false;barrier.historicalChanged(102,new Set(['structures']),true);assert.equal(barrier.status().dirty,true);barrier.confirmed(102,new Set());assert.deepEqual(calls,['hide','resume','hide','resume']);
+ }finally{barrier.dispose();}
+});
 function bridgeFixture(){
  let suspended=true;const synced=[],removed=[],errors=[],revisions=new Map();
  const owner={suspend(){suspended=true;},resume(){suspended=false;},syncChunk(key){synced.push(key);},removeChunk(key){removed.push(key);}};

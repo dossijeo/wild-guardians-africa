@@ -1,16 +1,14 @@
 # Hierba WebGPU: límites temporales y de recuperación
 
-## Estado actual tras la prueba gráfica integrada
+## Estado actual: integración cerrada
 
-El perfil temporal de producto con entradas causales crea ahora cobertura de sabana y gran río, y helechos de manglar, sin banderas de laboratorio. `VITE_WEBGPU_GRASS=false` permite revertirla; `VITE_WEBGPU_MANGROVE_FERN=false` conserva la alternativa de hojas de manglar. Los apartados siguientes describen el historial anterior del bloqueo, no el estado de activación actual.
+El perfil temporal de producto activa la hierba de sabana y Gran Río y los helechos de manglares. Se han resuelto las carreras de terreno/ocupación, recuperación, llegada tardía de texturas y contaminación del pase de sombra. El detalle vigente, las pruebas de GPU real, los runners y los límites de esta entrega están en [el cierre de suelos y cobertura](ground-cover-integration-closure-20261107.md).
 
-Se eliminaron dos bloqueos verificados: cada tick suspendía y reconstruía cobertura incluso sin cambios relevantes; y un participante de bioma vacío no se adjuntaba a la escena, por lo que la admisión WebGPU real rechazaba el lote aunque las pruebas con dobles pasaran. La transacción ahora retiene la publicación sin invalidar geometría hasta que cambia terreno u ocupación. Los grupos vacíos también respetan el contrato de adjunción y rollback.
+No quedan gates de laboratorio que el agente de contenidos deba retirar. Esto no cierra el conjunto de B2 ni la evaluación global de rendimiento y paridad de C.
 
-La prueba `tools/experiments/audit_webgpu_temporal_ground.mjs` usa la superficie real en Worker, WebGPU obligatorio, terreno Wild Engine, canales confirmados y perfil de producto. Pasaron sabana, gran río y manglares (`mangroveNetwork:true`), con día y noche, NVIDIA/Turing, sin errores GPU y con imágenes no vacías. Tres publicaciones idénticas por caso conservaron los UUID de geometría. Las capturas quedan en `.cache/temporal-ground-<bioma>-<day|night>.png`. El contador final de draw calls se reinicia entre pases y no se usa como evidencia; se verifica la imagen leída del canvas. La prueba unitaria adicional verifica 100 ticks sin suspensión/reconstrucción.
+## Historial del bloqueo — superado
 
-Reproducción: iniciar Vite en el puerto 5200, definir `QA_BASE_URL=http://127.0.0.1:5200` y, si Playwright no está en node_modules, `PLAYWRIGHT_MODULE` con su ruta instalada; ejecutar con Node 20 `tools/experiments/audit_webgpu_temporal_ground.mjs`. No requiere variables VITE para habilitar cobertura.
-
-Límites: es una integración gráfica de un chunk con instancias de bioma vacías, no una campaña ni una prueba de rendimiento. Faltan recorridos reales con varios chunks, construcciones/destrucciones, guardado/restauración y comparación artística completa. No se afirma cierre de B2 ni mejora global de FPS. La expulsión visual opcional sigue denegada sin evidencia de readmisión; no se introdujo un productor de expulsiones. El terreno con datos de barro no registrados tampoco puede expulsarse, evitando una posterior readmisión imposible.
+Los apartados siguientes se conservan como historial; sus referencias a la hierba desactivada describen el estado anterior.
 
 La ruta de hierba de sabana y gran río solo se crea con `!temporal`, en desarrollo y con activación explícita. Esta restricción es necesaria: el propietario actual no participa en las transacciones temporales ni en la restauración de checkpoints. Esta nota identifica el trabajo pendiente; no habilita la hierba ni acredita una prueba integrada.
 
