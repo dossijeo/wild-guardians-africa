@@ -630,10 +630,10 @@ function startDueCinematic(){
   const ownerWorld=world,ownerState=state,runtime=ownerWorld?.workerRuntime??null;
   microevents?.cancel('cinematic');guardian?.hide({immediate:true,interrupt:true});dialogVoice.stop();
   if(audio.musicGain)audio.musicGain.gain.value=0;
-  const owner=new CampaignCinematics({host:document.body,onError:failure=>error((moneyLocale().startsWith('es')?'No se pudo reproducir la cinemática: ':'Could not play cinematic: ')+failure.message),onComplete:()=>{
+  const owner=new CampaignCinematics({host:document.body,onError:failure=>error((moneyLocale().startsWith('es')?'No se pudo reproducir la cinemática: ':'Could not play cinematic: ')+failure.message),onClosed:()=>{if(campaignCinema!==owner||world!==ownerWorld||state!==ownerState)return;campaignCinema=null;audio.volume();updateUI(true);},onComplete:()=>{
     if(campaignCinema!==owner)return;
-    const complete=async()=>{if(runtime){const result=await runtime.submit({kind:'cinematicFinish',act});if(result.rejection)throw Error(result.rejection);}else finishCinematicAct(ownerState,act);if(campaignCinema!==owner||world!==ownerWorld||state!==ownerState)return;campaignCinema=null;audio.volume();await save();updateUI(true);};
-    complete().catch(failure=>{if(campaignCinema===owner)error(failure.message);});
+    const complete=async()=>{if(runtime){const result=await runtime.submit({kind:'cinematicFinish',act});if(result.rejection)throw Error(result.rejection);}else finishCinematicAct(ownerState,act);if(campaignCinema!==owner||world!==ownerWorld||state!==ownerState)return;try{await save();}catch(failure){if(world===ownerWorld&&state===ownerState)error(failure.message);}};
+    return complete();
   }});
   campaignCinema=owner;
   if(runtime)runtime.submit({kind:'cinematicStart',act}).then(result=>{if(result.rejection)throw Error(result.rejection);if(campaignCinema===owner&&world===ownerWorld&&state===ownerState)owner.play(act);}).catch(failure=>{if(campaignCinema===owner){campaignCinema=null;owner.dispose();audio.volume();error(failure.message);}});

@@ -14,8 +14,8 @@ function loadImage(path){
 }
 
 export class CampaignCinematics{
-  constructor({host=document.body,onComplete,onError}={}){
-    this.host=host;this.onComplete=onComplete;this.onError=onError;this.token=0;this.active=false;
+  constructor({host=document.body,onComplete,onClosed,onError}={}){
+    this.host=host;this.onComplete=onComplete;this.onClosed=onClosed;this.onError=onError;this.token=0;this.active=false;this.finishing=false;
     this.voice=new Audio();this.voice.preload='metadata';this.voice.playsInline=true;
   }
   async play(actNumber){
@@ -83,17 +83,36 @@ export class CampaignCinematics{
     }
   }
   async finish(token=this.token){
-    if(token!==this.token||!this.active)return;
-    this.active=false;++this.token;this.voice.pause();this.voice.removeAttribute('src');this.voice.load();
+    if(token!==this.token||!this.active||this.finishing)return;
+    this.finishing=true;++this.token;this.voice.pause();this.voice.removeAttribute('src');this.voice.load();
     const root=this.element;
     root?.querySelector('.campaign-cinema__veil')?.classList.remove('is-clear');
     await sleep(DELAY);
     if(token+1!==this.token)return;
     this.pencil?.dispose();this.pencil=null;
-    this.onComplete?.(); // Prepare hiring/victory while the screen is black.
-    root?.classList.remove('is-open');
-    await sleep(DELAY);
-    root?.remove();if(this.element===root)this.element=null;
+    // Keep the cover in place until the authoritative transition settles.
+    // A transient failure must remain retryable while simulation stays paused.
+    let pending=false;
+    const complete=async()=>{
+      if(pending||token+1!==this.token)return;
+      pending=true;
+      try{await this.onComplete?.();}
+      catch(error){
+        if(token+1!==this.token)return;
+        this.onError?.(error);
+        let status=root?.querySelector('.campaign-cinema__status');
+        if(!status&&root){status=document.createElement('div');status.className='campaign-cinema__status';status.setAttribute('role','status');root.append(status);}
+        if(status)status.textContent=language()==='ES'?'No se pudo continuar. Inténtalo de nuevo.':'Could not continue. Please try again.';
+        const button=root?.querySelector('button');if(button){button.style.zIndex='5';button.textContent=language()==='ES'?'Reintentar':'Retry';button.onclick=()=>void complete();}
+        return;
+      }finally{pending=false;}
+      if(token+1!==this.token)return;
+      root?.classList.remove('is-open');
+      await sleep(DELAY);
+      if(token+1!==this.token)return;
+      root?.remove();if(this.element===root)this.element=null;this.active=false;this.finishing=false;this.onClosed?.();
+    };
+    await complete();
   }
-  dispose(){++this.token;this.active=false;this.voice.pause();this.voice.removeAttribute('src');this.voice.load();this.pencil?.dispose();this.pencil=null;this.element?.remove();this.element=null;}
+  dispose(){++this.token;this.active=false;this.finishing=false;this.voice.pause();this.voice.removeAttribute('src');this.voice.load();this.pencil?.dispose();this.pencil=null;this.element?.remove();this.element=null;}
 }
