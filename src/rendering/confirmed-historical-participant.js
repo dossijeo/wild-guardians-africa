@@ -3,8 +3,8 @@ import {actorTickState} from '../simulation/worker-actor-tick-states.js';
 
 // A short stationary fallback keeps the already displayed pose until the next
 // confirmed publication. It is never used for displacement, physical poses,
-// unobserved actions or ambiguous observations. Harvest is admitted only with
-// a stable, fully sampled task and a separately validated baked presentation.
+// unobserved actions or ambiguous observations. Harvest and crate pickup are
+// admitted only with a stable, fully sampled task and a validated bake.
 // Hidden actors still participate in the
 // complete roster/collision certificate but do not require a visual rig.
 export function confirmedHistoricalParticipant(preview,actorId,entity,kind,tasks=[]){
@@ -26,7 +26,7 @@ export function confirmedHistoricalParticipant(preview,actorId,entity,kind,tasks
  const current=actorTickState(entity,preview.start,tasks);if(keys.some(key=>first[key]!==current[key])||samples.some((sample,index)=>!Number.isFinite(sample?.at)||index&&sample.at<=samples[index-1].at||keys.some(key=>sample[key]!==first[key]))||path.start.x!==first.x||path.start.z!==first.z)return null;
  if(first.status===hiddenStatus)return historicalInactiveActor(path,ticks,preview.start,preview.end)?'hidden':null;
  const clock=preview.clockSegments;if(!clock?.complete||clock.start!==preview.start||clock.end!==preview.end||!Array.isArray(clock.segments)||!clock.segments.length||clock.segments.some(segment=>!Number.isFinite(segment.realDuration)||segment.realDuration<=0)||clock.segments.reduce((sum,segment)=>sum+segment.realDuration,0)>.100000001)return null;
- const harvest=kind==='worker'&&first.status==='acting'&&first.actionTaskKind==='harvest'&&typeof first.actionTargetId==='string'&&first.actionTargetId.length>0&&first.taskId!==null&&Number.isFinite(first.actionRemaining)&&first.actionRemaining>0&&first.actionRemaining===current.actionRemaining&&first.actionTaskKind===current.actionTaskKind&&first.actionTargetId===current.actionTargetId&&samples.every((sample,index)=>sample.actionTaskKind===first.actionTaskKind&&sample.actionTargetId===first.actionTargetId&&Number.isFinite(sample.actionRemaining)&&sample.actionRemaining>0&&(!index||sample.actionRemaining<=samples[index-1].actionRemaining));
+ const harvest=kind==='worker'&&first.status==='acting'&&['harvest','crate'].includes(first.actionTaskKind)&&typeof first.actionTargetId==='string'&&first.actionTargetId.length>0&&first.taskId!==null&&Number.isFinite(first.actionRemaining)&&first.actionRemaining>0&&first.actionRemaining===current.actionRemaining&&first.actionTaskKind===current.actionTaskKind&&first.actionTargetId===current.actionTargetId&&samples.every((sample,index)=>sample.actionTaskKind===first.actionTaskKind&&sample.actionTargetId===first.actionTargetId&&Number.isFinite(sample.actionRemaining)&&sample.actionRemaining>0&&(!index||sample.actionRemaining<=samples[index-1].actionRemaining));
  const allowed=kind==='animal'?['waiting','walking','entering','retreating']:['idle','waiting','walking','arriving','returning'];
  if(!allowed.includes(first.status)&&!harvest||first.incapacitated||first.recovery||first.recoveryExiting||first.gateWaiting||first.falling||entity.recovery||entity.fallRemaining>0||entity.incapacitated)return null;
  // A waiting animal chooses a different pose depending on whether it has a
