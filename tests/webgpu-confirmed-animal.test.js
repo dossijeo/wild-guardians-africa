@@ -7,7 +7,13 @@ import {gunzipSync} from 'node:zlib';
 import {Scene,Group,Bone,Mesh,AnimationClip} from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {createWebGpuConfirmedAnimal} from '../src/rendering/webgpu-confirmed-animal.js';
+import {RAGDOLL_LINKS} from '../src/simulation/beast-ragdoll.js';
 const state=()=>JSON.parse(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString());
+test('a fall bank arriving during impact does not replace the active fallback pose',async()=>{
+ const scene=new Scene(),model=new Group();for(const [name] of RAGDOLL_LINKS){const bone=new Bone();bone.name=name;model.add(bone);}const animal={id:'a',species:'hyena',status:'walking',x:0,z:0,heading:0,radius:.7},game={elapsed:1,raid:{animals:[animal]}},bank={async acquire(){return {model,clips:[new AnimationClip('Walking',1,[])],release(){}};}};let falls=null;const hit={at:1,impactAt:0,point:{x:0,y:1,z:0},direction:{x:1,y:0,z:0},intensity:1,ground:0},sample={animal:{...animal,magicImpact:hit},elapsed:.1};
+ const actor=await createWebGpuConfirmedAnimal({scene,residency:{get:()=>null},state:game,actorId:'a',assetBank:bank,getProvisional:()=>sample,getFalls:()=>falls});
+ try{falls={get:()=>({sample(){throw Error('new fall selected');}})};assert.doesNotThrow(()=>actor.update());hit.at=2;assert.throws(()=>actor.update(),/new fall selected/);}finally{actor.dispose();}
+});
 test('confirmed animal expressions follow simulation time during animation and physical poses',async()=>{
  const scene=new Scene(),model=new Group(),bone=new Bone(),face=new Mesh();bone.name='Hips';model.add(bone,face);
  face.morphTargetDictionary={blinkL:0,blinkR:1,mouthOpen:2};face.morphTargetInfluences=[0,0,0];
@@ -58,10 +64,10 @@ test('historical impact selects its fall direction in the visible anchored orien
  const actor=await createWebGpuConfirmedAnimal({scene,residency:{get:()=>null},state:game,actorId:'a',assetBank:bank,getProvisional:()=>sample,getProvisionalAnchor:()=>anchor,getFalls:()=>({get(key){selected=key;return null;}})});
  try{assert.equal(selected,'hyena:side');anchor={x:0,y:0,z:0,yaw:Math.PI/2};actor.update();assert.equal(selected,'hyena:front');assert.equal(actor.root.rotation.y,Math.PI/2);}finally{actor.dispose();}
 });
-test('QA bone reconciliation ends on the authoritative pose while root remains authoritative',async()=>{
+test('provisional bone reconciliation ends on the authoritative pose without QA terrain support',async()=>{
  const scene=new Scene(),model=new Group(),bone=new Bone();bone.name='Spine';model.add(bone);const animal={id:'a',species:'hyena',status:'walking',x:0,z:0,heading:0,radius:.7},game={raid:{animals:[animal]},elapsed:1},bank={async acquire(){return {model,clips:[new AnimationClip('Walking',1,[])],release(){}};}};let now=0,physical=null;
  const hit={at:0,impactAt:0,point:{x:0,y:1,z:0},direction:{x:1,y:0,z:0},intensity:1,ground:0},sample={animal:{...animal,magicImpact:hit},elapsed:.1};
- const actor=await createWebGpuConfirmedAnimal({scene,residency:{get:()=>null},state:game,actorId:'a',assetBank:bank,experimentalPoseReconciliation:true,clock:()=>now,getPose:()=>physical,getProvisional:()=>sample});actor.update();const initial=bone.quaternion.clone(),transform=(x=0)=>[x,0,0,0,0,0,1,1,1,1];
+ const actor=await createWebGpuConfirmedAnimal({scene,residency:{get:()=>null},state:game,actorId:'a',assetBank:bank,reconcileImpactPose:true,clock:()=>now,getPose:()=>physical,getProvisional:()=>sample});actor.update();const initial=bone.quaternion.clone(),transform=(x=0)=>[x,0,0,0,0,0,1,1,1,1];
  physical={actorId:'a',active:true,root:transform(7),model:transform(),bones:[{name:'Spine',transform:[0,0,0,0,Math.SQRT1_2,0,Math.SQRT1_2,1,1,1]}]};actor.update();assert.equal(actor.root.position.x,7);assert.equal(model.position.x,-7);assert.ok(bone.quaternion.angleTo(initial)<1e-6);assert.equal(actor.isReconciling(),true);
  now=150;actor.update();assert.equal(actor.isReconciling(),false);assert.equal(model.position.x,0);assert.ok(bone.quaternion.angleTo(new Bone().quaternion.set(0,Math.SQRT1_2,0,Math.SQRT1_2))<1e-6);actor.dispose();
 });

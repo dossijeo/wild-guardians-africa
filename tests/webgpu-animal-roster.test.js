@@ -9,6 +9,19 @@ import {createConfirmedHistoricalClock} from '../src/rendering/confirmed-histori
 import {beginWebGpuGuardianImpact} from '../src/rendering/webgpu-guardian-impact.js';
 import {actorTickState} from '../src/simulation/worker-actor-tick-states.js';
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
+test('production provisional fall bank is shared and does not enable geometric support',async()=>{
+ const animals=['a','b'].map(id=>({id,species:'hyena',status:'walking',x:0,z:0,radius:.7})),state={elapsed:1,raid:{animals}},before=structuredClone(state),created=[],bank=new Map([['hyena:front',{}]]);let loads=0,finish;
+ const roster=createWebGpuAnimalRoster({scene:{},residency:{get:()=>null},state,assetBank:{tick(){},dispose(){}},provisionalBakedFall:true,loadProvisionalFalls:()=>{loads++;return new Promise(resolve=>{finish=resolve;});},createAnimal:options=>{created.push(options);return {update(){},dispose(){}};}});
+ try{roster.sync();await flush();assert.equal(loads,0);assert.equal(created.length,2);for(const options of created){assert.equal(options.experimentalPoseReconciliation,false);assert.equal(options.reconcileImpactPose,true);assert.equal(options.getFalls(),null);}assert.equal(roster.beginImpact({kind:'castAttack',id:'one',targetId:'a'}),true);assert.equal(roster.beginImpact({kind:'castAttack',id:'two',targetId:'b'}),true);await flush();assert.equal(loads,1);finish(bank);await flush();for(const options of created)assert.equal(options.getFalls(),bank);assert.equal(roster.status().fallsReady,true);assert.deepEqual(state,before);}
+ finally{roster.dispose();}
+});
+test('a late provisional fall bank cannot publish after roster disposal',async()=>{
+ let finish;const animal={id:'a',species:'hyena',status:'walking',x:0,z:0,radius:.7},roster=createWebGpuAnimalRoster({scene:{},residency:{get:()=>null},state:{elapsed:1,raid:{animals:[animal]}},assetBank:{tick(){},dispose(){}},provisionalBakedFall:true,loadProvisionalFalls:()=>new Promise(resolve=>{finish=resolve;}),createAnimal:()=>({update(){},dispose(){}})});roster.sync();await flush();assert.equal(roster.beginImpact({kind:'castAttack',id:'one',targetId:'a'}),true);await flush();roster.dispose();finish(new Map());await flush();assert.equal(roster.status().fallsReady,false);
+});
+test('a failed fall bank retries on a later attack without changing authority',async()=>{
+ const animals=['a','b'].map(id=>({id,species:'hyena',status:'walking',x:0,z:0,radius:.7})),state={elapsed:1,raid:{animals}},before=structuredClone(state);let attempts=0;const roster=createWebGpuAnimalRoster({scene:{},residency:{get:()=>null},state,assetBank:{tick(){},dispose(){}},provisionalBakedFall:true,loadProvisionalFalls:async()=>{if(++attempts===1)throw Error('unavailable');return new Map();},createAnimal:()=>({update(){},dispose(){}})});
+ try{roster.sync();await flush();assert.equal(roster.beginImpact({kind:'castAttack',id:'one',targetId:'a'}),true);await flush();assert.equal(roster.status().fallLoadError,'unavailable');assert.equal(roster.beginImpact({kind:'castAttack',id:'two',targetId:'b'}),true);await flush();assert.equal(attempts,2);assert.equal(roster.status().fallsReady,true);assert.equal(roster.status().fallLoadError,null);assert.deepEqual(state,before);}finally{roster.dispose();}
+});
 test('deferred provisional impact retains its original gesture start time',async()=>{
  const animal={id:'a',species:'hyena',status:'walking',x:2,z:3,radius:.7},state={elapsed:10,raid:{animals:[animal]}};let sample;
  const roster=createWebGpuAnimalRoster({scene:{},residency:{get:()=>null},state,assetBank:{tick(){},dispose(){}},createAnimal:options=>{sample=options.getProvisional;return {update(){},dispose(){}};}});
