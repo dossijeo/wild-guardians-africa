@@ -12,3 +12,11 @@ y termina dentro de un lote, además de datos incompletos. También pasan las
 pruebas de captura y regresión de autoridad y recepción. Esto refuerza una
 barrera de seguridad; no implementa aún reproducción temporal parcial durante
 física activa ni demuestra una mejora de rendimiento o fluidez.
+
+La transición visual `recovery-exit` tampoco pertenece a los dos registros de
+cuerpos. El Worker la declara activa mientras exista en un rig de una bestia de
+la incursión, sin calcular nuevamente sus matrices óseas. Así, una transición
+que empiece y termine durante un lote no se interpreta como un intervalo sin
+excepciones. Una prueba usa el rig real y otra comprueba su aparición entre
+límites. El recorrido de rigs y el coste total no se han medido; la transición
+puede mantenerse marcada hasta que la publicación de poses limpie el rig.

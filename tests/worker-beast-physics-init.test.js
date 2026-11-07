@@ -51,7 +51,8 @@ test('a recovery exit is published as visual pose until its existing blend ends'
   physics=await createWorkerBeastPhysics(game,{actorSurface:()=>0},{actorIds:[animal.id]});
   const rig=physics.manager.world.mixers.get(animal.id),root=physics.manager.world.objects.get(animal.id);root.position.set(animal.x,0,animal.z);root.updateMatrixWorld(true);
   rig.recoveryExit=new BeastRecoveryExit(rig.model,game.elapsed);
+  assert.equal(physics.hasVisualTransition(),true);
   const initial=physics.poses({activeOnly:true});assert.equal(initial.length,1);assert.equal(initial[0].actorId,animal.id);assert.equal(initial[0].active,true);assert.equal(initial[0].visualTransition,'recovery-exit');assert.equal(initial[0].root[0],animal.x);assert.equal(initial[0].root[2],animal.z);
-  game.elapsed+=.31;assert.deepEqual(physics.poses({activeOnly:true}),[]);assert.equal(rig.recoveryExit,undefined);
+  game.elapsed+=.31;assert.deepEqual(physics.poses({activeOnly:true}),[]);assert.equal(rig.recoveryExit,undefined);assert.equal(physics.hasVisualTransition(),false);
  }finally{physics?.dispose();globalThis.fetch=originalFetch;}
 });
