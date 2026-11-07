@@ -8,11 +8,11 @@ export function physicsOwners(p){
  if(Object.hasOwn(p,'physicsOwnerSummary')){
   if(Object.hasOwn(p,'physicsPose')||Object.hasOwn(p,'physicsPoses')||typeof p.physicsOwnerSummary!=='string')return null;
   if(p.physicsOwnerSummary==='')return '';
-  try{const ids=JSON.parse(p.physicsOwnerSummary);return Array.isArray(ids)&&ids.every((id,index)=>typeof id==='string'&&id.length>0&&(!index||ids[index-1]<id))&&JSON.stringify(ids)===p.physicsOwnerSummary?p.physicsOwnerSummary:null;}catch{return null;}
+  try{const ids=JSON.parse(p.physicsOwnerSummary);return Array.isArray(ids)&&ids.every((id,index)=>typeof id==='string'&&id.length>0&&(!index||ids[index-1]<id))&&JSON.stringify(ids)===p.physicsOwnerSummary?(ids.length?p.physicsOwnerSummary:''):null;}catch{return null;}
  }
  if(p.physicsPose===null&&!p.physicsPoses)return '';
  const poses=p.physicsPoses??[p.physicsPose];if(!Array.isArray(poses)||!poses.length||!p.physicsPose||poses[0]?.actorId!==p.physicsPose.actorId||poses[0]?.active!==p.physicsPose.active)return null;
- const seen=new Set(),active=[];for(const pose of poses){if(!pose||typeof pose.actorId!=='string'||!pose.actorId||typeof pose.active!=='boolean'||seen.has(pose.actorId))return null;seen.add(pose.actorId);if(pose.active)active.push(pose.actorId);}return JSON.stringify(active.sort());
+ const seen=new Set(),active=[];for(const pose of poses){if(!pose||typeof pose.actorId!=='string'||!pose.actorId||typeof pose.active!=='boolean'||seen.has(pose.actorId))return null;seen.add(pose.actorId);if(pose.active)active.push(pose.actorId);}return active.length?JSON.stringify(active.sort()):'';
 }
 // The diagnostic path stream may be folded only when its boundaries match;
 // preserving an event does not permit silently losing intervening segments.

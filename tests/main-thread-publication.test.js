@@ -24,5 +24,5 @@ test('projection retains pose-owner boundaries and every event when ticks are fo
 });
 
 test('unchanged and malformed pose publications are not rewritten',()=>{
- const unchanged={unchanged:true},bad={physicsPose:{actorId:'a',active:true},physicsPoses:[{actorId:'b',active:true}]};assert.equal(projectMainThreadPublication(unchanged),unchanged);assert.equal(projectMainThreadPublication(bad),bad);assert.equal(physicsOwners({physicsOwnerSummary:'["b","a"]'}),null);assert.equal(physicsOwners({physicsOwnerSummary:'[]'}),'[]');
+ const unchanged={unchanged:true},bad={physicsPose:{actorId:'a',active:true},physicsPoses:[{actorId:'b',active:true}]};assert.equal(projectMainThreadPublication(unchanged),unchanged);assert.equal(projectMainThreadPublication(bad),bad);assert.equal(physicsOwners({physicsOwnerSummary:'["b","a"]'}),null);assert.equal(physicsOwners({physicsOwnerSummary:'[]'}),'');
 });
