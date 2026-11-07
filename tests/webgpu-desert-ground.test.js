@@ -40,3 +40,8 @@ test('cancellation during GPU upload releases the bitmap only after the submitte
  const controller=new AbortController(),images=[],waiters=[],renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone:()=>new Promise(resolve=>waiters.push(resolve))}}},initTexture(){}},pending=createWebGpuDesertGround({renderer,signal:controller.signal,fetchImpl,imageLoader:async()=>{const image={closed:false,close(){this.closed=true;}};images.push(image);return image;}});
  for(let i=0;i<10&&!waiters.length;i++)await new Promise(resolve=>setImmediate(resolve));assert.equal(waiters.length,1);const rejected=assert.rejects(pending,{name:'AbortError'});controller.abort();await rejected;assert.equal(images[0].closed,false);waiters[0]();await new Promise(resolve=>setImmediate(resolve));assert.equal(images[0].closed,true);
 });
+
+test('desert quality updates a shared uniform without changing the material graph',async()=>{
+ const provider=await createWebGpuDesertGround({fetchImpl,imageLoader:async()=>({close(){}})}),material=provider.create({cx:0,cz:0}),graph=material.outputNode;
+ try{assert.equal(provider.detailStrength,1);provider.setQuality('muy_baja');assert.equal(provider.detailStrength,.6);assert.equal(material.outputNode,graph);provider.setQuality('alta');assert.equal(provider.detailStrength,1);assert.equal(material.outputNode,graph);assert.throws(()=>provider.setQuality('invalid'),/quality/);}finally{material.dispose();provider.dispose();}
+});

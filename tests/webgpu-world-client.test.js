@@ -173,3 +173,7 @@ test('recovery frame wait cancels and rejects on worker failure or disposal',asy
 });
 
 test('first frame waiter observes successful draw or closes cleanly',async()=>{const {client,worker}=setup();worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await client.ready;const pending=client.waitForFirstFrame();worker.onmessage({data:{kind:'firstFrame'}});await pending;await client.waitForFirstFrame();client.dispose();await assert.rejects(client.waitForFirstFrame(),/disposed/);});
+
+test('quality follows the initial Worker and can change while it is initializing',async()=>{
+ const {client,worker}=setup({quality:'muy_baja'});try{assert.equal(worker.messages[0].message.quality,'muy_baja');client.setQuality('alta');assert.deepEqual(worker.messages.at(-1).message,{kind:'quality',quality:'alta'});assert.throws(()=>client.setQuality('invalid'),/quality/);worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await client.ready;client.setQuality('media');assert.deepEqual(worker.messages.at(-1).message,{kind:'quality',quality:'media'});}finally{client.dispose();}assert.throws(()=>setup({quality:'invalid'}),/Invalid WebGPU world client/);
+});
