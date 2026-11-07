@@ -539,6 +539,8 @@ La lista de animación incluye marcha, carrera, reposo, trabajo, ataques, impact
 
 La prueba `authority-historical-admission.test.js` vuelve a reproducir ocho intervalos de una incursión de sabana tras ceder al bucle de eventos entre publicaciones, como ocurre al recibir tareas separadas del Worker. Utiliza rigs y admisión simulados, además de autoridad WASM, terreno, receptor y buffers reales; no demuestra dibujo WebGPU. En el primer intervalo de la captura de manglares, aunque la separación ya se certifica, un evento `AnimalTargetUnavailable` sigue actuando como barrera temporal. No se ha demostrado que pueda entregarse durante la reproducción sin alterar su orden, por lo que permanece la ruta conservadora para ese intervalo.
 
+Como requisito previo para entregar hechos dentro de un intervalo, los receptores gráfico y HUD comprueban ahora que cada evento de un diario versión 2 tiene el mismo tiempo que su referencia en el diario; rechazan discrepancias antes de aplicar el estado o notificar. Las pruebas cubren los dos receptores y la compatibilidad de diarios anteriores. Esto todavía no genera estados intermedios ni habilita la reproducción de intervalos con eventos.
+
 ## C. Validar el sistema integrado
 
 Solo tras cerrar A y B se inicia la batería de partidas, campañas, capturas, vídeos, trazas y comparativas. Se reutilizan los harnesses existentes y una configuración reproducible, sin crear otra colección de laboratorios.

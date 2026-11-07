@@ -1,11 +1,17 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {newGame} from '../src/simulation/game.js';
+import {newGame,emit} from '../src/simulation/game.js';
 import {createPlant} from '../src/simulation/crops.js';
 import {projectConfirmedHud,validateConfirmedHudSchema} from '../src/simulation/confirmed-hud-projection.js';
 import {createConfirmedHudDeltaEncoder,createConfirmedHudDeltaDecoder} from '../src/simulation/confirmed-hud-delta.js';
 import {createConfirmedActorAudio,applyConfirmedActorAudio} from '../src/simulation/confirmed-actor-audio.js';
 import {createConfirmedHudReceiver} from '../src/simulation/confirmed-hud-receiver.js';
+
+test('HUD rejects a journal timestamp that disagrees with its confirmed event',()=>{
+ const state=newGame({seed:717}),initialState={slotId:state.slotId,elapsed:state.elapsed,sequence:state.sequence},seen=[],receiver=createConfirmedHudReceiver({session:'s',initialState,onPublication:(_,envelope)=>seen.push(...envelope.publication.events)}),encoder=createConfirmedHudDeltaEncoder({validate:validateConfirmedHudSchema});
+ state.elapsed+=.1;emit(state,'Test');const event=state.events.at(-1),publication={sequence:1,events:[event],hudDelta:encoder.encode(projectConfirmedHud(state,1)),presentationJournalVersion:2,presentationJournal:[{kind:'event',eventId:event.id,at:event.simulationTime}]},envelope={kind:'publication',session:'s',publication};
+ assert.throws(()=>receiver.accept({...envelope,publication:{...publication,presentationJournal:[{...publication.presentationJournal[0],at:initialState.elapsed}]}}),/HUD journal time/);assert.equal(receiver.status().sequence,0);assert.deepEqual(seen,[]);assert.equal(receiver.accept(envelope).sequence,1);assert.deepEqual(seen,[event]);receiver.dispose();
+});
 
 test('real HUD baseline and per-entity deltas preserve order, removals, events and raids',()=>{
  const state=newGame({seed:712}),encoder=createConfirmedHudDeltaEncoder({validate:validateConfirmedHudSchema}),decoder=createConfirmedHudDeltaDecoder({validate:validateConfirmedHudSchema}),view=sequence=>projectConfirmedHud(state,sequence);

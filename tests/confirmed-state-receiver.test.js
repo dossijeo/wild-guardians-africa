@@ -104,6 +104,8 @@ test('v2 lifecycle requires a timed reference for every confirmed event and acce
  const complete=[{kind:'event',eventId:first.id,at:start+.1},{kind:'event',eventId:second.id,at:start+.2}];
  assert.throws(()=>receiver.accept({...packet,presentationJournalVersion:2,presentationJournal:[complete[1]]}),/Incomplete/);
  assert.throws(()=>receiver.accept({...packet,presentationJournalVersion:2,presentationJournal:[complete[0],{kind:'event',eventId:second.id}]}),/lifecycle time/);
+ assert.throws(()=>receiver.accept({...packet,presentationJournalVersion:2,presentationJournal:[{...complete[0],at:start+.15},complete[1]]}),/lifecycle time/);
+ assert.throws(()=>receiver.accept({...packet,events:[{...first,simulationTime:undefined},second],presentationJournalVersion:2,presentationJournal:complete}),/lifecycle time/);
  assert.throws(()=>receiver.accept({...packet,presentationJournalVersion:3,presentationJournal:complete}),/lifecycle version/);
  assert.equal(receiver.status().sequence,0);assert.equal(receiver.accept({...packet,presentationJournalVersion:2,presentationJournal:complete}).accepted,true);
  const old=createConfirmedStateReceiver(fixture(),'legacy');assert.equal(old.accept({...packet,session:'legacy',presentationJournal:[{kind:'event',eventId:second.id}]}).accepted,true);
