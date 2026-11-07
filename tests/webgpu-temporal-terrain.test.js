@@ -18,3 +18,22 @@ test('duplicate chunks and aborted resource preparation never reach coordinator'
 test('prepared mud joins the terrain participant and is released on stale terrain',async()=>{
  let disposed=0,received;const geometry={dispose(){disposed++;}},options={scene:new Scene(),suppressed:[],validateInstances(){},publicationEpoch:epoch=>epoch,publicationOrder:()=>1,mudPreparer:{async prepare(){return geometry;}},residency:{prepareRevision(_p,_r,_e,value){received=value.mudGeometry;return null;}},biome:{ready:Promise.resolve(true),async requestSlots(){},prepareRevision(){}},coordinator:{prepareBatch(){throw Error('must not submit');}}};await assert.rejects(prepareWebGpuTemporalTerrain([message(0,0)],options),/stale/);assert.equal(received,geometry);assert.equal(disposed,1);
 });
+
+test('identity observer receives exact source payload and distinct publication orders across reuse',async()=>{
+ const first=message(0,2),second=message(1,3),seen=[],orders=[],token={participant(){return {};},abort(){}},result={commit(){},abort(){}};let order=0;
+ const options={scene:new Scene(),suppressed:[],validateInstances(){},publicationEpoch:epoch=>'render:'+epoch,publicationOrder:()=>++order,onPreparedIdentity(payload,identity){seen.push({payload,identity});},residency:{prepareRevision(_payload,_revision,_epoch,opts){orders.push(opts.publicationOrder);return token;}},biome:{ready:Promise.resolve(true),async requestSlots(){},prepareRevision(){return token;}},coordinator:{async prepareBatch(){return result;}}};
+ await prepareWebGpuTemporalTerrain([first,second],options);await prepareWebGpuTemporalTerrain([first],options);
+ assert.equal(seen[0].payload,first.payload);assert.equal(seen[1].payload,second.payload);assert.equal(seen[2].payload,first.payload);assert.deepEqual(seen.map(x=>x.identity),[{key:'0,0',epoch:'e',revision:1,sequence:1,publicationOrder:1},{key:'1,0',epoch:'e',revision:1,sequence:1,publicationOrder:2},{key:'0,0',epoch:'e',revision:1,sequence:1,publicationOrder:3}]);assert.deepEqual(orders,[1,2,3]);
+});
+
+test('identity observer failure aborts earlier participants and never prepares its failed chunk',async()=>{
+ const aborted=[],prepared=[],token=id=>({participant(){return {};},abort(){aborted.push(id);}});let order=0;
+ const options={scene:new Scene(),suppressed:[],validateInstances(){},publicationEpoch:epoch=>epoch,publicationOrder:()=>++order,onPreparedIdentity(payload){if(payload.cx===1)throw Error('identity failed');},residency:{prepareRevision(payload){prepared.push('terrain'+payload.cx);return token('terrain'+payload.cx);}},biome:{ready:Promise.resolve(true),async requestSlots(){},prepareRevision(payload){prepared.push('biome'+payload.cx);return token('biome'+payload.cx);}},coordinator:{prepareBatch(){throw Error('must not submit');}}};
+ await assert.rejects(prepareWebGpuTemporalTerrain([message(0,0),message(1,0)],options),/identity failed/);assert.deepEqual(prepared,['terrain0','biome0']);assert.deepEqual(aborted,['biome0','terrain0']);
+});
+
+test('cancellation after identity observation aborts prepared owners and prevents later identities',async()=>{
+ const controller=new AbortController(),seen=[],aborted=[],token=id=>({participant(){return {};},abort(){aborted.push(id);}});let order=0;
+ const options={scene:new Scene(),signal:controller.signal,suppressed:[],validateInstances(){},publicationEpoch:epoch=>epoch,publicationOrder:()=>++order,onPreparedIdentity(payload){seen.push(payload.cx);},residency:{prepareRevision(payload){return token('terrain'+payload.cx);}},biome:{ready:Promise.resolve(true),async requestSlots(){},prepareRevision(payload){controller.abort();return token('biome'+payload.cx);}},coordinator:{prepareBatch(){throw Error('must not submit');}}};
+ await assert.rejects(prepareWebGpuTemporalTerrain([message(0,0),message(1,0)],options),{name:'AbortError'});assert.deepEqual(seen,[0]);assert.deepEqual(aborted,['biome0','terrain0']);
+});

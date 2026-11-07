@@ -3,7 +3,7 @@
 export function createTerrainAdmission({scene,admission,coordinator=null,onError=()=>{},onPublished=()=>{}}){
  if(!scene?.isScene||typeof admission?.prepare!=='function'||coordinator!==null&&typeof coordinator?.offer!=='function'||typeof onError!=='function'||typeof onPublished!=='function')throw TypeError('Invalid terrain admission');
  const pending=new Map(),visible=new Map(),unavailable=new Set();let closed=false;
- function sourceSnapshot(value){if(value===null)return null;if(!value||!Number.isSafeInteger(value.revision)||value.revision<0||value.epoch!==null&&(typeof value.epoch!=='string'||!value.epoch))throw TypeError('Invalid terrain source identity');return Object.freeze({epoch:value.epoch,revision:value.revision});}
+ function sourceSnapshot(value){if(value===null)return null;if(!value||!Number.isSafeInteger(value.revision)||value.revision<0||value.epoch!==null&&(typeof value.epoch!=='string'||!value.epoch)||value.publicationOrder!==undefined&&(!Number.isSafeInteger(value.publicationOrder)||value.publicationOrder<1))throw TypeError('Invalid terrain source identity');return Object.freeze({epoch:value.epoch,revision:value.revision,...(value.publicationOrder===undefined?{}:{publicationOrder:value.publicationOrder})});}
  function release(record){
   if(!record||record.released)return;record.released=true;record.controller.abort();let notificationFailure=null;try{record.withdraw?.();}catch(error){try{onError(error);}catch(failure){notificationFailure=failure;}}record.withdraw=null;
   // Keep the compiled subtree intact until outstanding GPU work completes,

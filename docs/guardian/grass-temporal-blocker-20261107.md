@@ -22,3 +22,5 @@ En los límites normales del flujo temporal, el estado se confirma antes de `ter
 - Forzar rechazo, cancelación, fallo de replay y cierre durante preparación; verificar liberación de recursos y ausencia de cobertura parcialmente recuperada.
 - Verificar ausencia de avance de viento durante pausa y orden del tiempo de simulación con velocidad y reproducción histórica.
 - Ampliar los controles existentes de `webgpu-temporal-terrain`, `webgpu-terrain-residency`, `terrain-history-receiver`, `temporal-surface-recovery` y `confirmed-presentation-stream`. Una prueba con dobles comprueba el contrato; sigue haciendo falta una partida WebGPU real para acreditar aspecto y continuidad.
+
+Avance: la admisión de terreno publica la identidad lógica original y el orden gráfico único, y el preparador temporal puede registrar esa identidad por payload antes de la admisión. Esta notificación es una reserva, no una confirmación: puede ir seguida de cancelación o rollback. Las pruebas cubren payload reutilizado con órdenes diferentes y fallo/cancelación. Falta asociar esos datos en la superficie y resolver la expulsión y callbacks tardíos de bioma; el gate temporal continúa cerrado.
