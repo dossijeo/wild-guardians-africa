@@ -10,6 +10,11 @@ import {createConfirmedPresentationStream} from '../src/rendering/confirmed-pres
 import {certifyHistoricalSeparation} from '../src/simulation/worker-historical-separation.js';
 import {captureHistoricalGates} from '../src/simulation/worker-historical-gates.js';
 
+test('real authority can omit hyena diagnostics without changing confirmed state or motion evidence',()=>{
+ const module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm')),initial=deserialize(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString()),snapshot=serialize(initial),keys=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)keys.push(`${x},${z}`);
+ const diagnostic=createSimulationAuthority(module,snapshot,keys,{observeWorldMotion:true}),product=createSimulationAuthority(module,snapshot,keys,{observeWorldMotion:true,captureHyenaDiagnostics:false});try{for(let sequence=1;sequence<=2;sequence++){const command={kind:'advance',sequence,seconds:.05,steps:2,nightFastForward:true,captureClockSegments:true},a=diagnostic.execute(command),b=product.execute(command);assert.equal(b.snapshot,a.snapshot);assert.deepEqual(b.events,a.events);assert.ok(a.worldMotionTrace.hyenaTickSamples);assert.equal(Object.hasOwn(b.worldMotionTrace,'hyenaTickSamples'),false);const reference=structuredClone(a.worldMotionTrace);delete reference.hyenaTickSamples;assert.deepEqual(b.worldMotionTrace,reference);}}finally{diagnostic.dispose();product.dispose();}
+});
+
 test('real raid with a distant stationary gate preserves authority while overlapping workers prevent historical certification',()=>{
  const initial=deserialize(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString()),actors=[...initial.workers,...(initial.raid?.animals??[])],walls=initial.structures.filter(value=>value.kind==='wall');
  walls.sort((a,b)=>Math.min(...actors.map(actor=>Math.hypot(actor.x-b.x,actor.z-b.z)))-Math.min(...actors.map(actor=>Math.hypot(actor.x-a.x,actor.z-a.z))));const gate=walls[0];gate.gate=true;gate.gateOpen=0;const gateProof=captureHistoricalGates(initial),snapshot=serialize(initial),module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm')),keys=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)keys.push(`${x},${z}`);
