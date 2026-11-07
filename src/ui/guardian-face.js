@@ -47,7 +47,7 @@ export class GuardianFace {
   const talking=audio&&!audio.ended&&Number.isFinite(audio.currentTime)&&this.data;
   const weights=sampleVisemes(talking?this.data.mouthCues:null,talking?audio.currentTime:0,this.data?.duration??0);
   for(const v of VISEMES)this.set('viseme_'+v,viseme===null?weights[v]:Number(v===viseme));
-  const pause=talking?this.data.pauses?.find(p=>audio.currentTime>=p.start&&audio.currentTime<=p.end):null;
+  const pause=talking&&audio.paused!==true?this.data.pauses?.find(p=>audio.currentTime>=p.start&&audio.currentTime<=p.end):null;
   const pauseBlink=pause?Math.max(0,1-Math.abs(audio.currentTime-(pause.start+pause.end)/2)/.10):0;
   const closed=blink??(reduced?0:Math.max(blinkAt(time),pauseBlink));this.set('blink_L',closed);this.set('blink_R',closed);
   for(const e of ['joy','focus','surprise'])this.set(e,e===expression?.name?expression.value:0);

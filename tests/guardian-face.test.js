@@ -38,3 +38,9 @@ test('curved blink samples interpolate neighboring poses without doubling closur
   assert.equal(legacy.morphTargetInfluences[0],amount);
  }
 });
+
+test('pausing narration during a cue pause does not leave the guardian blinking indefinitely',async()=>{
+ const names=[...VISEMES.map(v=>'viseme_'+v),'blink_L','blink_R'],dictionary=Object.fromEntries(names.map((name,i)=>[name,i])),mesh={morphTargetDictionary:dictionary,morphTargetInfluences:Array(names.length).fill(0)};
+ const face=new GuardianFace({traverse:fn=>fn(mesh)},{fetchJson:async()=>({id:'voice',audio:'voice.ogg',duration:1,mouthCues:cues,pauses:[{start:.4,end:.6}]})});
+ try{await face.setRecord({id:'voice',path:'voice.ogg'});const audio={currentTime:.5,paused:false,ended:false};face.update(audio,1);assert.equal(mesh.morphTargetInfluences[dictionary.blink_L],1);assert.equal(mesh.morphTargetInfluences[dictionary.viseme_D],1);audio.paused=true;face.update(audio,1);assert.equal(mesh.morphTargetInfluences[dictionary.blink_L],0);assert.equal(mesh.morphTargetInfluences[dictionary.viseme_D],1);audio.paused=false;face.update(audio,1);assert.equal(mesh.morphTargetInfluences[dictionary.blink_L],1);}finally{face.dispose();}
+});

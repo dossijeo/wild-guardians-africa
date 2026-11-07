@@ -20,3 +20,5 @@ una partida WebGPU real. No se ha medido el coste de los mensajes ni de la
 evaluación facial. El llamador debe proporcionar muestras del audio vigente y
 una muestra vacía al dejar de narrar; el cliente reemplazado no debe seguir
 recibiéndolas.
+
+Si el audio se pausa o espera datos durante una pausa marcada del guion, el parpadeo asociado a esa pausa deja de mantener cerrados los ojos; los visemas siguen conservando la posición del reloj de audio. Al reanudar se vuelve a evaluar la pausa vigente. Una prueba de la cara y las pruebas del puente Worker cubren la transición con audio simulado; queda pendiente la validación audiovisual en navegador. La evaluación facial continúa en CPU dentro del Worker gráfico.
