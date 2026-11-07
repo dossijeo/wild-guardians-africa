@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {captureWorldMotion} from '../src/simulation/worker-world-motion.js';
 import {movePath,pathMotionClock} from '../src/simulation/locomotion.js';
+import {gateSwingPolygon} from '../src/world/gate-passages.js';
 
 test('inactive home/gone bodies retain identity but do not block visual certification inside buildings',()=>{
  const home={id:'home',x:0,z:0,status:'home',radius:.28},gone={id:'gone',x:0,z:0,status:'gone',species:'hyena',radius:.28},walking={id:'a',x:0,z:0,status:'walking',radius:.28,path:[{x:1,z:0}]},game={elapsed:0,workers:[home,walking],raid:{animals:[gone]},structures:[]},revisions={topology:0,chunks:0,terrain:0,payloads:0};let queries=0;
@@ -36,4 +37,14 @@ test('separation evidence fails closed for a live gate or unknown physics',()=>{
  const capture=captureWorldMotion(game,()=>revision,()=>false,options);game.elapsed=1;movePath(worker,1,null,pathMotionClock(worker,0,1,1));capture.sampleTick();assert.deepEqual(capture.finish().separationEvidence,{version:1,start:0,end:1,actors:1,gates:'none'});
  worker.path=[{x:2,z:0}];game.structures.push({gate:true,status:'intact'});const gated=captureWorldMotion(game,()=>revision,()=>false,options);game.elapsed=2;movePath(worker,1,null,pathMotionClock(worker,1,2,1));assert.equal(gated.finish().separationEvidence,undefined);
  game.structures=[];worker.path=[{x:3,z:0}];const unknown=captureWorldMotion(game,()=>revision,null,options);game.elapsed=3;movePath(worker,1,null,pathMotionClock(worker,2,3,1));assert.equal(unknown.finish().separationEvidence,undefined);
+});
+test('a stationary gate does not block certified motion outside its entire swing',()=>{
+ const revision={topology:0,chunks:0,terrain:0,payloads:0},gate={gate:true,status:'intact',material:'empalizada',x:100,z:0,yaw:0,gateOpen:0},worker={id:'w',x:0,z:0,status:'walking',radius:.28,path:[{x:1,z:0}]},game={elapsed:0,raid:{animals:[]},workers:[worker],structures:[gate]},capture=captureWorldMotion(game,()=>revision,()=>false,{spatialNavigation:{segmentClear:()=>true}});
+ game.elapsed=1;movePath(worker,1,null,pathMotionClock(worker,0,1,1));capture.sampleTick();assert.equal(capture.finish().separationEvidence?.gates,'swing-clear');
+});
+test('gate sweep proximity and gate geometry changes reject historical certification',()=>{
+ const revision={topology:0,chunks:0,terrain:0,payloads:0},gate={gate:true,status:'intact',material:'empalizada',x:0,z:0,yaw:0,gateOpen:0},polygon=gateSwingPolygon(gate),x=polygon.reduce((sum,p)=>sum+p.x,0)/polygon.length,z=polygon.reduce((sum,p)=>sum+p.z,0)/polygon.length,worker={id:'w',x,z,status:'idle',radius:.28},game={elapsed:0,raid:{animals:[]},workers:[worker],structures:[gate]},options={spatialNavigation:{segmentClear:()=>true}};
+ let capture=captureWorldMotion(game,()=>revision,()=>false,options);game.elapsed=1;capture.sampleTick();assert.equal(capture.finish().separationEvidence,undefined);
+ worker.x=100;capture=captureWorldMotion(game,()=>revision,()=>false,options);game.elapsed=2;gate.x=1;capture.sampleTick();gate.x=0;assert.equal(capture.finish().separationEvidence,undefined);
+ capture=captureWorldMotion(game,()=>revision,()=>false,options);game.elapsed=3;gate.gateOpen=.5;capture.sampleTick();gate.gateOpen=0;assert.equal(capture.finish().separationEvidence,undefined);
 });
