@@ -184,3 +184,13 @@ test('a retained visible ground keeps its geometry until the auxiliary user rele
 test('guardian terrain revision follows visible versioned chunk and removal',()=>{
  const scene=new THREE.Scene(),material=new THREE.MeshBasicMaterial(),view=createWebGpuTerrainResidency({scene,material});try{assert.equal(view.revisionAt(0,0),null);view.replace(chunk(),1,'epoch');assert.deepEqual(view.revisionAt(0,0),{cx:0,cz:0,epoch:'epoch',revision:1});view.replace(chunk(),2,'epoch');assert.deepEqual(view.revisionAt(0,0),{cx:0,cz:0,epoch:'epoch',revision:2});view.remove(0,0,3);assert.equal(view.revisionAt(0,0),null);}finally{view.dispose();material.dispose();}
 });
+
+test('terrain publication reports logical epoch and revision independently from render identity',()=>{
+ const scene=new THREE.Scene(),material=new THREE.MeshBasicMaterial(),published=[],offered=[],coordinator={offer(item){offered.push(item);return ()=>{};},forget(){}},view=createWebGpuTerrainResidency({scene,material,pipelineAdmission:{prepare(){},deferRelease(_group,release){release();}},coordinator,onPublished:(key,identity)=>published.push({key,identity})});
+ try{assert.equal(view.replace(chunk(),8,'source-epoch',{publicationEpoch:'graphics-epoch',publicationRevision:4,publicationOrder:1}),true);assert.equal(offered[0].epoch,'graphics-epoch');assert.equal(offered[0].revision,4);offered[0].attach();offered[0].finalize()();assert.deepEqual(published,[{key:'0,0',identity:{epoch:'source-epoch',revision:8}}]);}finally{view.dispose();material.dispose();}
+});
+
+test('prepared temporal terrain participant retains logical identity until committed notification',()=>{
+ const scene=new THREE.Scene(),material=new THREE.MeshBasicMaterial(),published=[],view=createWebGpuTerrainResidency({scene,material,pipelineAdmission:{prepare(){},deferRelease(_group,release){release();}},coordinator:{offer(){throw Error('unexpected offer');},forget(){}},onPublished:(key,identity)=>published.push({key,identity})});
+ try{const token=view.prepareRevision(chunk(),9,'source-epoch',{publicationEpoch:'graphics-epoch',publicationRevision:3,publicationOrder:1}),participant=token.participant();assert.equal(participant.epoch,'graphics-epoch');assert.equal(participant.revision,3);assert.equal(participant.activate(),true);participant.attach();const final=participant.finalize();assert.equal(published.length,0);final.retire();final.notify();assert.deepEqual(published,[{key:'0,0',identity:{epoch:'source-epoch',revision:9}}]);}finally{view.dispose();material.dispose();}
+});

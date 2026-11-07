@@ -3,6 +3,7 @@
 export function createTerrainAdmission({scene,admission,coordinator=null,onError=()=>{},onPublished=()=>{}}){
  if(!scene?.isScene||typeof admission?.prepare!=='function'||coordinator!==null&&typeof coordinator?.offer!=='function'||typeof onError!=='function'||typeof onPublished!=='function')throw TypeError('Invalid terrain admission');
  const pending=new Map(),visible=new Map(),unavailable=new Set();let closed=false;
+ function sourceSnapshot(value){if(value===null)return null;if(!value||!Number.isSafeInteger(value.revision)||value.revision<0||value.epoch!==null&&(typeof value.epoch!=='string'||!value.epoch))throw TypeError('Invalid terrain source identity');return Object.freeze({epoch:value.epoch,revision:value.revision});}
  function release(record){
   if(!record||record.released)return;record.released=true;record.controller.abort();let notificationFailure=null;try{record.withdraw?.();}catch(error){try{onError(error);}catch(failure){notificationFailure=failure;}}record.withdraw=null;
   // Keep the compiled subtree intact until outstanding GPU work completes,
@@ -16,12 +17,13 @@ export function createTerrainAdmission({scene,admission,coordinator=null,onError
  // revision; a failed attachment leaves the old visible owner untouched.
  function rollback(record){if(record.group.parent===scene)record.group.removeFromParent();}
  function attach(record){try{scene.add(record.group);}catch(error){rollback(record);throw error;}}
- function finalize(key,record){const old=visible.get(key);record.published=true;record.withdraw=null;visible.set(key,record);pending.delete(key);unavailable.delete(key);let notified=false;return ()=>{if(notified)return;notified=true;try{release(old);}catch(error){try{onError(error);}catch{}}try{onPublished(key);}catch(error){try{onError(error);}catch{}}};}
- function publish(key,group,meshes,dispose,{revision=null,epoch=null,publicationOrder=undefined}={}){
+ function finalize(key,record){const old=visible.get(key);record.published=true;record.withdraw=null;visible.set(key,record);pending.delete(key);unavailable.delete(key);let notified=false;return ()=>{if(notified)return;notified=true;try{release(old);}catch(error){try{onError(error);}catch{}}try{onPublished(key,record.sourceIdentity);}catch(error){try{onError(error);}catch{}}};}
+ function publish(key,group,meshes,dispose,{revision=null,epoch=null,publicationOrder=undefined,sourceIdentity=null}={}){
   if(closed)throw Error('Terrain admission closed');
+  sourceIdentity=sourceSnapshot(sourceIdentity);
   if(coordinator&&(!Number.isSafeInteger(revision)||revision<0||epoch!==null&&(typeof epoch!=='string'||!epoch)||publicationOrder!==undefined&&(!Number.isSafeInteger(publicationOrder)||publicationOrder<1)))throw TypeError('Invalid coordinated terrain identity');
   const previous=pending.get(key);if(previous){pending.delete(key);release(previous);}
-  const controller=new AbortController(),record={group,meshes,dispose,controller,released:false};pending.set(key,record);unavailable.add(key);
+  const controller=new AbortController(),record={group,meshes,dispose,controller,released:false,sourceIdentity};pending.set(key,record);unavailable.add(key);
   const commit=()=>{
    if(closed||pending.get(key)!==record||controller.signal.aborted)return;
    // Keep the pending owner until every mesh is attached. If attachment
@@ -40,11 +42,12 @@ export function createTerrainAdmission({scene,admission,coordinator=null,onError
  }
  // A batch candidate owns its resources but must not disturb a visible or
  // pending record until the coordinator activates the whole admitted batch.
- function prepareParticipant(key,group,meshes,dispose,{revision,epoch=null,publicationOrder}={}){
+ function prepareParticipant(key,group,meshes,dispose,{revision,epoch=null,publicationOrder,sourceIdentity=null}={}){
+  sourceIdentity=sourceSnapshot(sourceIdentity);
   if(closed||!coordinator||typeof key!=='string'||!key||!group?.isObject3D||!Array.isArray(meshes)||typeof dispose!=='function'||!Number.isSafeInteger(revision)||revision<1||epoch!==null&&(typeof epoch!=='string'||!epoch)||!Number.isSafeInteger(publicationOrder)||publicationOrder<1)throw TypeError('Invalid terrain batch participant');
-  if(pending.has(key))throw Error('Terrain batch has pending revision');const old=visible.get(key),wasUnavailable=unavailable.has(key),controller=new AbortController(),record={group,meshes,dispose,controller,released:false};let activated=false,attached=false,finalized=false;
+  if(pending.has(key))throw Error('Terrain batch has pending revision');const old=visible.get(key),wasUnavailable=unavailable.has(key),controller=new AbortController(),record={group,meshes,dispose,controller,released:false,sourceIdentity};let activated=false,attached=false,finalized=false;
   const current=()=>!closed&&!controller.signal.aborted&&pending.get(key)===record;
-  return {key,epoch,revision,publicationOrder,side:'terrain',object:group,signal:controller.signal,eventRoots(){return old?[group,old.group]:[group];},activate(){if(closed||controller.signal.aborted||pending.has(key)||visible.get(key)!==old)throw Error('Terrain batch participant is stale');pending.set(key,record);unavailable.add(key);activated=true;return true;},attach(){if(!current())throw Error('Terrain batch participant is stale');attach(record);attached=true;if(!current())throw Error('Terrain batch participant is stale');},rollback(){if(attached&&!record.published){rollback(record);attached=false;}},finalize(){if(!current()||!attached)throw Error('Terrain batch participant is stale');finalized=true;record.published=true;visible.set(key,record);pending.delete(key);unavailable.delete(key);return {retire(){try{release(old);}catch(error){try{onError(error);}catch{}}},notify(){try{onPublished(key);}catch(error){try{onError(error);}catch{}}}};},rollbackFinalized(){if(!finalized)return;if(closed||visible.get(key)!==record||pending.has(key))throw Error('Terrain batch ownership changed');finalized=false;record.published=false;if(old)visible.set(key,old);else visible.delete(key);pending.set(key,record);},cancel(){if(record.released)return;if(record.published)throw Error('Cannot cancel published terrain batch');if(activated&&pending.get(key)===record)pending.delete(key);if(!pending.has(key)){if(wasUnavailable)unavailable.add(key);else unavailable.delete(key);}release(record);}};
+  return {key,epoch,revision,publicationOrder,side:'terrain',object:group,signal:controller.signal,eventRoots(){return old?[group,old.group]:[group];},activate(){if(closed||controller.signal.aborted||pending.has(key)||visible.get(key)!==old)throw Error('Terrain batch participant is stale');pending.set(key,record);unavailable.add(key);activated=true;return true;},attach(){if(!current())throw Error('Terrain batch participant is stale');attach(record);attached=true;if(!current())throw Error('Terrain batch participant is stale');},rollback(){if(attached&&!record.published){rollback(record);attached=false;}},finalize(){if(!current()||!attached)throw Error('Terrain batch participant is stale');finalized=true;record.published=true;visible.set(key,record);pending.delete(key);unavailable.delete(key);return {retire(){try{release(old);}catch(error){try{onError(error);}catch{}}},notify(){try{onPublished(key,record.sourceIdentity);}catch(error){try{onError(error);}catch{}}}};},rollbackFinalized(){if(!finalized)return;if(closed||visible.get(key)!==record||pending.has(key))throw Error('Terrain batch ownership changed');finalized=false;record.published=false;if(old)visible.set(key,old);else visible.delete(key);pending.set(key,record);},cancel(){if(record.released)return;if(record.published)throw Error('Cannot cancel published terrain batch');if(activated&&pending.get(key)===record)pending.delete(key);if(!pending.has(key)){if(wasUnavailable)unavailable.add(key);else unavailable.delete(key);}release(record);}};
  }
  function remove(key){const item=pending.get(key);pending.delete(key);release(item);const old=visible.get(key);visible.delete(key);release(old);unavailable.delete(key);}
  function isRayReady(ray,limit=Infinity){
