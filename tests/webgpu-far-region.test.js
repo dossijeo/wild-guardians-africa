@@ -23,7 +23,7 @@ test('a changed native revision invalidates old coverage before offering new chu
 });
 test('coverage is confirmed only after admission, with cancellation on camera replacement',async()=>{
  let finish,signal;const removed=[];const owner=createWebGpuFarRegion({start:0,end:1,retryMs:0,currentSequence:()=>1,onChunk:(_,options)=>{signal=options.signal;return new Promise(resolve=>{finish=resolve;});},onRemove:value=>removed.push(value),onInvalidate:()=>{},query:async request=>({cx:request.cx,cz:request.cz,sequence:1,revision:1,instances:trees()})});
- owner.updateCamera({x:0,z:0});owner.pump();await turn();assert.equal(owner.status().offered,0);assert.equal(owner.status().pending,'0,0');owner.updateCamera({x:48,z:0});assert.equal(signal.aborted,true);finish(true);await turn();assert.equal(owner.status().offered,0);assert.deepEqual(removed,[]);owner.dispose();
+ owner.updateCamera({x:0,z:0});owner.pump();assert.equal(owner.status().pendingPhase,'query');await turn();assert.equal(owner.status().offered,0);assert.equal(owner.status().pending,'0,0');assert.equal(owner.status().pendingPhase,'admission');owner.updateCamera({x:48,z:0});assert.equal(signal.aborted,true);finish(true);await turn();assert.equal(owner.status().offered,0);assert.deepEqual(removed,[]);owner.dispose();
 });
 test('unchanged world revision keeps an admission valid across ticks but a changed revision rejects it',async()=>{
  let seq=1,rev=7,finish;const owner=createWebGpuFarRegion({start:0,end:1,retryMs:0,currentSequence:()=>seq,currentRevision:()=>rev,onChunk:()=>new Promise(resolve=>{finish=resolve;}),onRemove:()=>{},onInvalidate:()=>{},query:async request=>({cx:request.cx,cz:request.cz,sequence:seq,revision:7,instances:trees()})});
