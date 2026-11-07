@@ -1,5 +1,15 @@
 # Inicio de marcha animal en un intervalo histórico
 
+También se admite `waiting` con ruta activa estable cuando las muestras
+confirman el desplazamiento y el ataque ya terminó. La presentación normal
+utiliza Walking en ese caso; la ruta histórica conserva su pose de mixer
+durante el tramo acotado y entrega la pose al siguiente límite confirmado.
+No activa un bake ni infiere una fase nueva. Cambios de acción, recuperación,
+estado o discontinuidad conservan el fallback. La reproducción nativa del
+intervalo 14,35–14,39 s de la captura de islotes conserva snapshots y eventos
+idénticos con y sin observación. La prueba de roster comprueba la propiedad de
+pose; no acredita por sí sola fluidez de animación o paridad visual en GPU.
+
 Una captura nativa de sabana mostraba un obstáculo concreto para eventos
 interiores: dos jabalíes pasan de `waiting` sin ruta a `walking` durante un
 único tick, mientras la publicación contiene 14 eventos. Los extremos de
