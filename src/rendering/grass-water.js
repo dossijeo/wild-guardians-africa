@@ -1,3 +1,4 @@
+import {Box3,Matrix4} from 'three';
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 function nearWaterChunk(c,x,z,padding){
  if(c.water.some(b=>x>b[0]-padding&&x<b[2]+padding&&z>b[1]-padding&&z<b[3]+padding))return true;
@@ -17,4 +18,13 @@ export function indexConfirmedGrassWater(payload,padding){
  const waterTriangles=new Map();let waterTriangleCount=0;
  for(let i=0;i<payload.water.length;i+=9){const t=[];for(let j=0;j<3;j++)t.push(payload.water[i+j*3]+payload.cx*48,payload.water[i+j*3+2]+payload.cz*48);if(t.some(v=>!Number.isFinite(v)))throw TypeError('Invalid confirmed water vertex');const area=(t[2]-t[0])*(t[5]-t[1])-(t[3]-t[1])*(t[4]-t[0]);if(Math.abs(area)<1e-9)continue;waterTriangleCount++;const minX=Math.min(t[0],t[2],t[4])-padding,maxX=Math.max(t[0],t[2],t[4])+padding,minZ=Math.min(t[1],t[3],t[5])-padding,maxZ=Math.max(t[1],t[3],t[5])+padding;for(let x=Math.floor(minX/8);x<=Math.floor(maxX/8);x++)for(let z=Math.floor(minZ/8);z<=Math.floor(maxZ/8);z++){const key=x+','+z;if(!waterTriangles.has(key))waterTriangles.set(key,[]);waterTriangles.get(key).push(t);}}
  return {cx:payload.cx,cz:payload.cz,water:[],waterTriangles,waterTriangleCount};
+}
+
+// Fluid geometry belonging to biome assets, including instanced pools.
+// The mesh transform is chunk-local, matching the existing vegetation owner.
+export function appendGrassAssetWater(water,mesh,cx,cz){
+ if(!Array.isArray(water)||!mesh?.geometry?.isBufferGeometry||!Number.isSafeInteger(cx)||!Number.isSafeInteger(cz))throw TypeError('Invalid grass asset water');
+ mesh.geometry.computeBoundingBox();const bounds=mesh.geometry.boundingBox;if(!bounds||bounds.isEmpty())return;const box=new Box3(),matrix=new Matrix4();
+ const append=()=>water.push([box.min.x+cx*48,box.min.z+cz*48,box.max.x+cx*48,box.max.z+cz*48]);
+ if(mesh.isInstancedMesh){for(let i=0;i<mesh.count;i++){mesh.getMatrixAt(i,matrix);box.copy(bounds).applyMatrix4(matrix);append();}}else{box.copy(bounds);append();}
 }

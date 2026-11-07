@@ -10,3 +10,8 @@ test('confirmed water triangles exclude grass across chunk boundaries',()=>{
 test('confirmed water ignores degenerate triangles and rejects malformed buffers',()=>{
  const result=indexConfirmedGrassWater({cx:0,cz:0,water:new Float32Array(9)},.6);assert.equal(result.waterTriangleCount,0);assert.equal(result.waterTriangles.size,0);assert.throws(()=>indexConfirmedGrassWater({cx:0,cz:0,water:new Float32Array(1)},.6),/Invalid/);
 });
+
+test('instanced fluid bounds are transformed into the owning chunk coordinates',async()=>{
+ const THREE=await import('three'),{appendGrassAssetWater}=await import('../src/rendering/grass-water.js'),geometry=new THREE.BoxGeometry(2,1,4),material=new THREE.MeshBasicMaterial(),mesh=new THREE.InstancedMesh(geometry,material,2),water=[];
+ mesh.setMatrixAt(0,new THREE.Matrix4().makeTranslation(3,0,4));mesh.setMatrixAt(1,new THREE.Matrix4().makeTranslation(-2,0,-5));appendGrassAssetWater(water,mesh,1,-1);assert.deepEqual(water,[[50,-46,52,-42],[45,-55,47,-51]]);mesh.dispose();geometry.dispose();material.dispose();
+});

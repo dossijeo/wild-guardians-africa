@@ -1,4 +1,4 @@
-import {nearGrassWater} from './grass-water.js';
+import {nearGrassWater,appendGrassAssetWater} from './grass-water.js';
 import {generateGrassTile} from './grass-tile-generation.js';
 import {sampleGrassTerrain} from './grass-terrain-sampling.js';
 import {cinematicLightingEnabled,patchCinematicVegetation} from './cinematic-lighting.js';
@@ -94,7 +94,7 @@ export async function createContinuousGrass(world){
  function chunk(cx,cz){const key=cx+','+cz,source=world.chunks.get(key),ground=source?.children.find(o=>o.userData.ground);if(!ground)return;const start=performance.now(),p=ground.geometry.attributes.position,h=new Float32Array(49*49),seen=new Uint8Array(49*49);
  for(let i=0;i<p.count;i++){const x=Math.round(p.getX(i)+24),z=Math.round(p.getZ(i)+24);if(x>=0&&x<=48&&z>=0&&z<=48){h[z*49+x]=p.getY(i);seen[z*49+x]=1}}
  if(seen.some(x=>!x))throw Error('Coverage requires resident 49x49 renderer height lattice');
- const cropSoilTexture=ground.material.userData.biomeGround.uGroundMask.value;const priorSoil=q.chunks.get(key)?.cropSoilTexture;if(priorSoil&&priorSoil!==cropSoilTexture)cropSoil?.release(priorSoil);cropSoil?.attach(cropSoilTexture,cx,cz,world.state.plants);const mask=cropSoilTexture.image;const water=[],waterTriangles=new Map();let waterTriangleCount=0;const mat=new THREE.Matrix4(),box=new THREE.Box3();
+ const cropSoilTexture=ground.material.userData.biomeGround.uGroundMask.value;const priorSoil=q.chunks.get(key)?.cropSoilTexture;if(priorSoil&&priorSoil!==cropSoilTexture)cropSoil?.release(priorSoil);cropSoil?.attach(cropSoilTexture,cx,cz,world.state.plants);const mask=cropSoilTexture.image;const water=[],waterTriangles=new Map();let waterTriangleCount=0;
  for(const mesh of source.children.filter(m=>m.userData.nativeFluid)){
  if((river||mangrove)&&mesh.userData.nativeFluid==='chunk'){
  const position=mesh.geometry.attributes.position,index=mesh.geometry.index,count=index?.count??position.count;
@@ -103,7 +103,7 @@ export async function createContinuousGrass(world){
  waterTriangleCount++;const minX=Math.min(tri[0],tri[2],tri[4])-q.edgePadding,maxX=Math.max(tri[0],tri[2],tri[4])+q.edgePadding,minZ=Math.min(tri[1],tri[3],tri[5])-q.edgePadding,maxZ=Math.max(tri[1],tri[3],tri[5])+q.edgePadding;
  for(let bx=Math.floor(minX/8);bx<=Math.floor(maxX/8);bx++)for(let bz=Math.floor(minZ/8);bz<=Math.floor(maxZ/8);bz++){const key=bx+','+bz;if(!waterTriangles.has(key))waterTriangles.set(key,[]);waterTriangles.get(key).push(tri);}
  }continue;}
- mesh.geometry.computeBoundingBox();if(mesh.isInstancedMesh){for(let i=0;i<mesh.count;i++){mesh.getMatrixAt(i,mat);box.copy(mesh.geometry.boundingBox).applyMatrix4(mat);water.push([box.min.x+cx*48,box.min.z+cz*48,box.max.x+cx*48,box.max.z+cz*48])}}else{box.copy(mesh.geometry.boundingBox);water.push([box.min.x+cx*48,box.min.z+cz*48,box.max.x+cx*48,box.max.z+cz*48])}}
+ appendGrassAssetWater(water,mesh,cx,cz);}
  q.chunks.set(key,{cx,cz,h,mask,cropSoilTexture,water,waterTriangles,waterTriangleCount});invalidateWaterNeighbors(cx,cz);q.stats.buildMs+=performance.now()-start;}
  const nearWater=(c,x,z)=>nearGrassWater(q.chunks,c,x,z,q.edgePadding);
  const sample=sampleGrassTerrain;
