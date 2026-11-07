@@ -1,0 +1,5 @@
+# Antialiasing de la superficie WebGPU
+
+El renderer anterior solicita antialiasing y la superficie WebGPU estaba creada con `antialias:false`, pese a utilizar la misma resolución calculada para la cámara. La superficie principal solicita ahora MSAA de cuatro muestras, el valor que Three.js selecciona al activar `antialias`. Los destinos auxiliares mantienen sus propios recuentos de muestras y la clave de admisión ya incorpora los del renderer y cada destino. `VITE_WEBGPU_ANTIALIAS=false` permite construir la versión anterior para comparación o reversión; `true` también activa el nuevo valor.
+
+Las pruebas comprueban la selección en Three.js y los contratos existentes de admisión, profundidad y halo con dobles gráficos. No se ha ejecutado una comparación en dispositivo ni medido el coste de MSAA, su memoria, resolución de muestras o compatibilidad real con todos los pases. La configuración puede aumentar el coste GPU, especialmente en gráficos integrados; debe evaluarse junto con la nitidez y los tiempos de fotograma de la partida completa antes de considerarla validada. Tampoco corrige otras diferencias de materiales, iluminación o resolución.
