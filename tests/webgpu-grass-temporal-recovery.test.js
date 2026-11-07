@@ -48,6 +48,27 @@ test('surface bridge settles the exact committed order even with another attempt
   assert.equal(f.bridge.applied(p,1,{epoch:'e',sequence:2,publicationOrder:1}),false);assert.equal(f.bridge.discarded(p,old),true);assert.deepEqual(f.errors,[]);
  }finally{f.bridge.dispose();}
 });
+test('unknown eviction fails closed even after later state confirmations',()=>{
+ const f=bridgeFixture();try{
+  f.bridge.confirmed(1,new Set());assert.equal(f.isSuspended(),false);
+  f.bridge.unsequencedEviction();assert.equal(f.isSuspended(),true);assert.match(f.errors[0],/causal boundary/);
+  f.bridge.confirmed(5,new Set());assert.equal(f.isSuspended(),true);
+ }finally{f.bridge.dispose();}
+});
+test('mutation phases hold grass through observers and until historical confirmation',()=>{
+ const f=bridgeFixture();try{
+  f.bridge.confirmed(1,new Set());f.bridge.mutationPhase({phase:'start',sequence:2,kind:'commit'});f.bridge.confirmed(2,new Set());assert.equal(f.isSuspended(),true);
+  f.bridge.mutationPhase({phase:'end',sequence:2,kind:'commit'});assert.equal(f.isSuspended(),false);
+  f.bridge.mutationPhase({phase:'start',sequence:3,kind:'historical'});f.bridge.mutationPhase({phase:'end',sequence:3,kind:'historical'});assert.equal(f.isSuspended(),true);
+  f.bridge.confirmed(3,new Set());assert.equal(f.isSuspended(),false);assert.deepEqual(f.errors,[]);
+ }finally{f.bridge.dispose();}
+});
+test('aborted mutation fails closed and recovery retains its independent hold',()=>{
+ const f=bridgeFixture();try{
+  f.bridge.confirmed(1,new Set());f.bridge.beginRecovery();f.bridge.mutationPhase({phase:'start',sequence:2,kind:'commit'});f.bridge.confirmed(2,new Set());f.bridge.mutationPhase({phase:'end',sequence:2,kind:'commit'});assert.equal(f.isSuspended(),true);f.bridge.finishRecovery(2);assert.equal(f.isSuspended(),false);
+  f.bridge.mutationPhase({phase:'start',sequence:3,kind:'commit'});f.bridge.mutationPhase({phase:'abort',sequence:3,kind:'commit'});f.bridge.confirmed(3,new Set());assert.equal(f.isSuspended(),true);assert.match(f.errors[0],/aborted/);
+ }finally{f.bridge.dispose();}
+});
 test('surface bridge eviction releases only its own pending terrain and rejects unregistered publications',()=>{
  const f=bridgeFixture(),a={cx:0,cz:0},b={cx:1,cz:0},ia=bridgeIdentity('0,0',1),ib=bridgeIdentity('1,0',2);try{
   f.bridge.confirmed(1,new Set());f.bridge.prepared(a,ia);f.bridge.prepared(b,ib);f.bridge.published('0,0',ia);f.bridge.published('1,0',ib);f.bridge.removed('0,0');
