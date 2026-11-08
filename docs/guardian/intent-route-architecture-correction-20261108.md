@@ -34,6 +34,14 @@ parte de los commits de esta corrección ni deben descartarse.
 
 ## Contrato final y orden causal
 
+El alcance incluye **todas las intenciones, también las de los trabajadores**.
+AttackCrops es el primer caso de aceptación integrada, no una excepción que
+permita cerrar A6 dejando otros actores con planificación/ejecución ordinaria JS.
+La infraestructura de reloj, reservas, invalidación y ejecución es común;
+perfiles, velocidades/carga, puertas y consecuencias mantienen las reglas de
+cada intención. Las limitaciones actuales a animales en Desierto y marcha a
+1,5 m/s describen un incremento incompleto, no el contrato general.
+
 Reutilizar identidad `(session, slot, generation)` y flujo de cambios nativo.
 Cada transición incluye versión de protocolo, secuencia monotónica de evento,
 actor/intención/objetivo, instante de simulación y versión revocada. Asignación

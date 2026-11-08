@@ -24,6 +24,12 @@ camino crítico sin pedir autorización rutinaria entre hitos.
 
 - Wild Engine es el único propietario de intenciones, navegación, vigencia,
   conflictos, ejecución lógica y consecuencias; rutas completas como unidad.
+- A6 abarca todas las intenciones, incluidas las de los trabajadores, no solo
+  AttackCrops. La vertical AttackCrops es la primera prueba integrada, nunca el
+  criterio suficiente de cierre. Reloj, reservas, invalidación y ejecución deben
+  ser comunes; perfiles, velocidades, carga, puertas y fronteras de acción
+  conservan las reglas de cada intención. No crear un ejecutor por tarea ni
+  dejar la locomoción ordinaria de trabajadores en JS al declarar A6 cerrado.
 - Preparación gráfica separada de dibujo; GPU reproduce movimiento, orientación
   y animación autorizados sin posiciones o validaciones periódicas desde JS.
 - Revocación oportuna independiente de cargas/compilaciones, aislamiento por
@@ -73,7 +79,8 @@ camino crítico sin pedir autorización rutinaria entre hitos.
       Mutaciones de cuerpos incompatibles se rechazan antes de aplicarse;
       253 pruebas dirigidas pasan sin skips. Aún conservadoras, sin resolver
       cesiones/desvíos ni autorizar movimiento de producto/GPU.
-- [ ] Vertical AttackCrops completa y aceptación real A–F.
+- [ ] Vertical AttackCrops completa y aceptación real A–F (primer caso integrado,
+      no cierre de A6 por sí solo).
 - [ ] Generalizar a otras bestias, trabajadores, intenciones y animaciones;
       retirar planificación/validaciones duplicadas por clase validada.
 - [ ] Revisar de nuevo A1–A7 y cerrar infraestructura con evidencia integrada.
