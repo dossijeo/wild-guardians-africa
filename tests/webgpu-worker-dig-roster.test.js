@@ -1,6 +1,0 @@
-import test from 'node:test';import assert from 'node:assert/strict';import {Group} from 'three';import {createWebGpuWorkerRoster} from '../src/rendering/webgpu-worker-roster.js';
-const flush=()=>new Promise(resolve=>setImmediate(resolve));
-test('repair admission cancels a stale target and admits the next confirmed task',async()=>{
- const worker={id:'w',profile:'youngMale',status:'acting',taskId:'t'},state={workers:[worker],tasks:[{id:'t',kind:'repair',targetId:'wall'}]},loads=[],installed=[];let resolveFirst;const bank={get(){loads.push('Dig');return loads.length===1?new Promise(resolve=>{resolveFirst=resolve;}):Promise.resolve({});}},roster=createWebGpuWorkerRoster({scene:new Group(),residency:{},state,renderer:{backend:{isWebGPUBackend:true}},assetBank:{dispose(){}},pipelineAdmission:{prepare:async()=>{}},bakedDigBank:bank,createWorker:async()=>({root:new Group(),update(){},async installBakedDig(_bake,{isCurrent}){if(!isCurrent())throw new DOMException('stale','AbortError');installed.push(worker.taskId);return true;},dispose(){}})});
- try{roster.sync();for(let i=0;i<5;i++)await flush();assert.equal(loads.length,1);worker.taskId='t2';state.tasks=[{id:'t2',kind:'repair',targetId:'wall2'}];roster.sync();resolveFirst({});for(let i=0;i<12;i++)await flush();assert.deepEqual(installed,['t2']);assert.equal(loads.length,2);}finally{roster.dispose();}
-});
