@@ -586,6 +586,10 @@ Conservar mejoras reproducibles sin alterar las reglas ni degradar perceptibleme
 
 ## 4. Ejecución y seguimiento
 
+**Objetivo autónomo activo:** [registro de migración A → B → C](MIGRATION-OBJECTIVE.md).
+La infraestructura se cierra antes de B1–B7 y la aceptación integrada C1–C4 va
+después. La corrección de A6 prevalece sobre cierres históricos de este documento.
+
 Trabajar en la misma rama, sin tocar `main`, con commits pequeños y push de los avances. Mantener una sola línea compilable. Usar los adaptadores existentes para reversión por sesión; nunca dos autoridades o dos dibujos del mundo simultáneos. No retirar la referencia antigua de forma irreversible antes de la validación integrada.
 
 Dependencias de ejecución: A1 precede al resto; A2 y A3 pueden avanzar de forma independiente; A4 y A5 se cierran juntos sobre A3; A6 usa A2/A3; A7 integra A1/A2/A4/A6. B comienza tras la revisión completa de A. Los frentes de B pueden distribuirse una vez estables esas interfaces. C comienza tras cerrar todo B.
