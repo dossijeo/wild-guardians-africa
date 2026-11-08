@@ -1,0 +1,328 @@
+TAP version 13
+# Subtest: recovery journal retains terrain capture times independently of source payloads
+ok 1 - recovery journal retains terrain capture times independently of source payloads
+  ---
+  duration_ms: 3.8158
+  ...
+# Subtest: deferred checkpoint preserves journal and rearms once without a base
+ok 2 - deferred checkpoint preserves journal and rearms once without a base
+  ---
+  duration_ms: 2.5912
+  ...
+# Subtest: deferred checkpoint preserves journal and rearms once with a base
+ok 3 - deferred checkpoint preserves journal and rearms once with a base
+  ---
+  duration_ms: 6.3434
+  ...
+# Subtest: recovery folds known authority envelopes but keeps unknown kinds as boundaries
+ok 4 - recovery folds known authority envelopes but keeps unknown kinds as boundaries
+  ---
+  duration_ms: 5.7102
+  ...
+# Subtest: recovery folds authority paused and background view envelopes
+ok 5 - recovery folds authority paused and background view envelopes
+  ---
+  duration_ms: 1.4337
+  ...
+# Subtest: incremental recovery retains event and terrain boundaries through checkpoint renewal
+ok 6 - incremental recovery retains event and terrain boundaries through checkpoint renewal
+  ---
+  duration_ms: 41.0353
+  ...
+# Subtest: incremental recovery cannot start without a full checkpoint or with incompatible compaction
+ok 7 - incremental recovery cannot start without a full checkpoint or with incompatible compaction
+  ---
+  duration_ms: 2.1853
+  ...
+# Subtest: incremental retention accounts for bases, shared preparation and replay working memory
+ok 8 - incremental retention accounts for bases, shared preparation and replay working memory
+  ---
+  duration_ms: 1.9109
+  ...
+# Subtest: incremental capacity failure preserves prior replay but rejects further encoding
+ok 9 - incremental capacity failure preserves prior replay but rejects further encoding
+  ---
+  duration_ms: 2.4892
+  ...
+# Subtest: incremental clone failure cannot leave an apparently recoverable journal
+ok 10 - incremental clone failure cannot leave an apparently recoverable journal
+  ---
+  duration_ms: 1.4464
+  ...
+# Subtest: recovery compacts known path projections while retaining unknown versions as boundaries
+ok 11 - recovery compacts known path projections while retaining unknown versions as boundaries
+  ---
+  duration_ms: 1.2349
+  ...
+# Subtest: initial recovery checkpoint enriches the ordered command without injecting another
+ok 12 - initial recovery checkpoint enriches the ordered command without injecting another
+  ---
+  duration_ms: 2.5231
+  ...
+# Subtest: checkpoint promotion retains every later publication, pose and event in order
+ok 13 - checkpoint promotion retains every later publication, pose and event in order
+  ---
+  duration_ms: 1.5501
+  ...
+# Subtest: new candidate does not discard old replay until its exact acknowledgement
+ok 14 - new candidate does not discard old replay until its exact acknowledgement
+  ---
+  duration_ms: 1.562
+  ...
+# Subtest: a lost graphical channel cannot promote an unacknowledged candidate or hide its pending history
+ok 15 - a lost graphical channel cannot promote an unacknowledged candidate or hide its pending history
+  ---
+  duration_ms: 1.0274
+  ...
+# Subtest: journal signals saturation before capacity and never silently drops a publication
+ok 16 - journal signals saturation before capacity and never silently drops a publication
+  ---
+  duration_ms: 1.0351
+  ...
+# Subtest: terrain batches precede their publication, survive candidate ACK and retain independent bytes
+ok 17 - terrain batches precede their publication, survive candidate ACK and retain independent bytes
+  ---
+  duration_ms: 1.0245
+  ...
+# Subtest: byte pressure is bounded and releases memory only on checkpoint promotion
+ok 18 - byte pressure is bounded and releases memory only on checkpoint promotion
+  ---
+  duration_ms: 0.7115
+  ...
+# Subtest: recovery boundary rejects incomplete state but accepts an intact journal at the admission watermark
+ok 19 - recovery boundary rejects incomplete state but accepts an intact journal at the admission watermark
+  ---
+  duration_ms: 1.0494
+  ...
+# Subtest: a recovery retry accepts an intact journal at the admission watermark
+ok 20 - a recovery retry accepts an intact journal at the admission watermark
+  ---
+  duration_ms: 0.5041
+  ...
+# Subtest: checkpoint renewal starts early and waits for exact candidate acknowledgement
+ok 21 - checkpoint renewal starts early and waits for exact candidate acknowledgement
+  ---
+  duration_ms: 0.4634
+  ...
+# Subtest: compact journal keeps event, pose, terrain, pause and checkpoint boundaries
+ok 22 - compact journal keeps event, pose, terrain, pause and checkpoint boundaries
+  ---
+  duration_ms: 1.2086
+  ...
+# Subtest: compact journal never absorbs a publication carrying a terrain change
+ok 23 - compact journal never absorbs a publication carrying a terrain change
+  ---
+  duration_ms: 0.5221
+  ...
+# Subtest: compact journal treats malformed terrain metadata as a boundary
+ok 24 - compact journal treats malformed terrain metadata as a boundary
+  ---
+  duration_ms: 0.7332
+  ...
+# Subtest: reading a replay entry seals it against later folding
+ok 25 - reading a replay entry seals it against later folding
+  ---
+  duration_ms: 0.3865
+  ...
+# Subtest: compact journal retains one snapshot for a run of 100 eligible ticks
+ok 26 - compact journal retains one snapshot for a run of 100 eligible ticks
+  ---
+  duration_ms: 23.5439
+  ...
+# Subtest: compaction never hides malformed or explicitly present motion and lifecycle data
+ok 27 - compaction never hides malformed or explicitly present motion and lifecycle data
+  ---
+  duration_ms: 1.0653
+  ...
+# Subtest: paused acknowledgements compact across long pauses but preserve replay seals and resume
+ok 28 - paused acknowledgements compact across long pauses but preserve replay seals and resume
+  ---
+  duration_ms: 37.2277
+  ...
+# Subtest: paused acknowledgements do not fold across identity, time, terrain, poses or events
+ok 29 - paused acknowledgements do not fold across identity, time, terrain, poses or events
+  ---
+  duration_ms: 1.1523
+  ...
+# Subtest: identical background views coalesce without losing barriers or crossing a replay seal
+ok 30 - identical background views coalesce without losing barriers or crossing a replay seal
+  ---
+  duration_ms: 5.7353
+  ...
+# Subtest: quiet and paused compaction preserve input receipts, rejections and unknown fields
+ok 31 - quiet and paused compaction preserve input receipts, rejections and unknown fields
+  ---
+  duration_ms: 1.4799
+  ...
+# Subtest: unavailable first base does not accumulate unrecoverable publications (full)
+ok 32 - unavailable first base does not accumulate unrecoverable publications (full)
+  ---
+  duration_ms: 9.5787
+  ...
+# Subtest: unavailable first base does not accumulate unrecoverable publications (incremental)
+ok 33 - unavailable first base does not accumulate unrecoverable publications (incremental)
+  ---
+  duration_ms: 3.3242
+  ...
+# Subtest: shared recovery retention contributes to watermarks without an incremental encoder
+ok 34 - shared recovery retention contributes to watermarks without an incremental encoder
+  ---
+  duration_ms: 0.6797
+  ...
+# Subtest: checkpoint admission projects retained entries and replacement base before confirmation
+ok 35 - checkpoint admission projects retained entries and replacement base before confirmation
+  ---
+  duration_ms: 1.9094
+  ...
+# Subtest: incremental checkpoint admission includes encoder and candidate retention
+ok 36 - incremental checkpoint admission includes encoder and candidate retention
+  ---
+  duration_ms: 1.3287
+  ...
+# Subtest: recovery checkpoint estimate reuses the immutable preliminary payload and accounts for work
+ok 37 - recovery checkpoint estimate reuses the immutable preliminary payload and accounts for work
+  ---
+  duration_ms: 0.8883
+  ...
+# (node:20544) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:20544) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: surface recovery applies admitted terrain before replayed state events
+ok 38 - surface recovery applies admitted terrain before replayed state events
+  ---
+  duration_ms: 347.2912
+  ...
+# Subtest: failed checkpoint post-processing stops recovery without reporting success
+ok 39 - failed checkpoint post-processing stops recovery without reporting success
+  ---
+  duration_ms: 2.2496
+  ...
+# Subtest: recovery restores real guardian and blessing state before allowing replay
+ok 40 - recovery restores real guardian and blessing state before allowing replay
+  ---
+  duration_ms: 59.0734
+  ...
+# Subtest: visibility changes go to the recovery host only while the worker is fenced
+ok 41 - visibility changes go to the recovery host only while the worker is fenced
+  ---
+  duration_ms: 5.5296
+  ...
+# Subtest: visibility intent is sent immediately while commands are fenced, with the latest promise tracked
+ok 42 - visibility intent is sent immediately while commands are fenced, with the latest promise tracked
+  ---
+  duration_ms: 1.8218
+  ...
+# Subtest: missing system intent channel fails visibly instead of dropping a pause
+ok 43 - missing system intent channel fails visibly instead of dropping a pause
+  ---
+  duration_ms: 0.6551
+  ...
+# Subtest: recovery diagnostics report the active stage and current ownership
+ok 44 - recovery diagnostics report the active stage and current ownership
+  ---
+  duration_ms: 12.9989
+  ...
+# Subtest: historical errors recover only with explicit capability and coalesce simultaneous failure signals
+ok 45 - historical errors recover only with explicit capability and coalesce simultaneous failure signals
+  ---
+  duration_ms: 19.3999
+  ...
+# Subtest: coalesced device losses do not swallow a failed replacement or unrelated failure
+ok 46 - coalesced device losses do not swallow a failed replacement or unrelated failure
+  ---
+  duration_ms: 7.1668
+  ...
+# Subtest: only a device loss starts one ordered recovery and suppresses overlapping attempts
+ok 47 - only a device loss starts one ordered recovery and suppresses overlapping attempts
+  ---
+  duration_ms: 1.9748
+  ...
+# Subtest: failure or changed world never starts replacement and is reported only for current world
+ok 48 - failure or changed world never starts replacement and is reported only for current world
+  ---
+  duration_ms: 2.9342
+  ...
+# Subtest: a synchronous loss error does not leave a permanently pending attempt
+ok 49 - a synchronous loss error does not leave a permanently pending attempt
+  ---
+  duration_ms: 6.4383
+  ...
+# Subtest: backpressure detachment starts recovery without marking the channel lost twice
+ok 50 - backpressure detachment starts recovery without marking the channel lost twice
+  ---
+  duration_ms: 1.7253
+  ...
+# Subtest: backpressure detachment arriving during a device-loss mark permits one recovery
+ok 51 - backpressure detachment arriving during a device-loss mark permits one recovery
+  ---
+  duration_ms: 1.7597
+  ...
+# Subtest: disposing the general coordinator prevents a late replacement
+ok 52 - disposing the general coordinator prevents a late replacement
+  ---
+  duration_ms: 1.9966
+  ...
+# Subtest: a retryable attachment failure triggers one bounded recovery retry
+ok 53 - a retryable attachment failure triggers one bounded recovery retry
+  ---
+  duration_ms: 2.4718
+  ...
+# Subtest: a second retryable failure is reported without another attempt
+ok 54 - a second retryable failure is reported without another attempt
+  ---
+  duration_ms: 2.5228
+  ...
+# Subtest: initial markLost timeout closes later triggers and never runs a recovery attempt
+ok 55 - initial markLost timeout closes later triggers and never runs a recovery attempt
+  ---
+  duration_ms: 2.4676
+  ...
+# Subtest: unverified separation never inherits retry permission and blocks future automatic recovery
+ok 56 - unverified separation never inherits retry permission and blocks future automatic recovery
+  ---
+  duration_ms: 14.726
+  ...
+# Subtest: retry is permitted only after a successful separation response
+ok 57 - retry is permitted only after a successful separation response
+  ---
+  duration_ms: 1.1199
+  ...
+# Subtest: initial recovery fences inputs synchronously before markLost or any await
+ok 58 - initial recovery fences inputs synchronously before markLost or any await
+  ---
+  duration_ms: 16.182
+  ...
+# Subtest: host forwards only current regional results and aborts work on presentation disposal
+ok 59 - host forwards only current regional results and aborts work on presentation disposal
+  ---
+  duration_ms: 274.9737
+  ...
+# Subtest: a timed-out graphical attachment cannot reconnect after a newer retry
+ok 60 - a timed-out graphical attachment cannot reconnect after a newer retry
+  ---
+  duration_ms: 259.0236
+  ...
+# Subtest: host holds ordered commands under authority terrain pressure and resumes asynchronously
+ok 61 - host holds ordered commands under authority terrain pressure and resumes asynchronously
+  ---
+  duration_ms: 279.3765
+  ...
+# Subtest: host rejects partial history configuration and waits for visual negotiation before executing
+ok 62 - host rejects partial history configuration and waits for visual negotiation before executing
+  ---
+  duration_ms: 200.0859
+  ...
+# Subtest: prepared authority bootstraps its retained terrain before negotiating presentation and starting
+ok 63 - prepared authority bootstraps its retained terrain before negotiating presentation and starting
+  ---
+  duration_ms: 190.5975
+  ...
+1..63
+# tests 63
+# suites 0
+# pass 63
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2346.2189

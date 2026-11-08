@@ -517,6 +517,8 @@ Esto acredita cierre de diseño e implementación del núcleo. La calificación 
 
 ## B. Terminar la migración sobre los contratos cerrados
 
+**Cierre de infraestructura, 8 de noviembre:** quedan resueltos los tres asuntos de política de producto (recuperación, eventos interiores e impostores lejanos), soporte de grupos físicos aislados con transiciones por la vía confirmada y VFX sin dependencia indebida de normales. Se corrigieron además las carreras de renovación de checkpoints, final de voz y guardado durante el relevo. [Implementación, pruebas y límites](b-infrastructure-product-20261108/README.md): contratos, build WebGPU, Attack real y pérdida/recuperación del dispositivo hasta publicar una escena visible y desbloquear la interacción. El agente de B puede continuar migrando contenidos sobre esos propietarios; este cierre no declara terminada la paridad artística ni la validación integrada de C.
+
 La migración de contenido se separa del soporte técnico según [responsabilidades de infraestructura de B](b-infrastructure-ownership.md). Las carreras, contratos, soporte de mecánicas/animaciones y recuperación pendientes corresponden al trabajo de infraestructura, no al agente que migra modelos y materiales. Los bloqueos técnicos abiertos no se consideran resueltos por esta separación de responsabilidades.
 
 No se añaden sistemas alternativos por subsistema. Cada elemento debe suministrar su receta, recursos, eventos, temporalidad y política de recuperación a las interfaces de A.

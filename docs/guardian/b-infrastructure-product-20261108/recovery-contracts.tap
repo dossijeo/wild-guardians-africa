@@ -1,0 +1,263 @@
+TAP version 13
+# Subtest: a complete journal at the admission watermark remains recoverable; hard capacity and encoder errors do not
+ok 1 - a complete journal at the admission watermark remains recoverable; hard capacity and encoder errors do not
+  ---
+  duration_ms: 5.3038
+  ...
+# Subtest: journal proves historical terrain recovery through the authority manifest
+ok 2 - journal proves historical terrain recovery through the authority manifest
+  ---
+  duration_ms: 3.9882
+  ...
+# Subtest: missing or mismatched terrain boundaries are never accepted for reattachment
+ok 3 - missing or mismatched terrain boundaries are never accepted for reattachment
+  ---
+  duration_ms: 0.9995
+  ...
+# Subtest: real terrain ports continue the same epoch and revision after journalled recovery
+ok 4 - real terrain ports continue the same epoch and revision after journalled recovery
+  ---
+  duration_ms: 53.1615
+  ...
+# Subtest: GPU reconstruction may exceed ten seconds while acknowledged work advances
+ok 5 - GPU reconstruction may exceed ten seconds while acknowledged work advances
+  ---
+  duration_ms: 4.2894
+  ...
+# Subtest: lack of progress and total deadline each fail exactly once
+ok 6 - lack of progress and total deadline each fail exactly once
+  ---
+  duration_ms: 1.0362
+  ...
+# Subtest: activation waits for ordered work beyond the old RPC limit and cleans up its observer
+ok 7 - activation waits for ordered work beyond the old RPC limit and cleans up its observer
+  ---
+  duration_ms: 6.7027
+  ...
+# Subtest: stalled activation aborts queued barriers, while changing progress cannot evade total bound
+ok 8 - stalled activation aborts queued barriers, while changing progress cannot evade total bound
+  ---
+  duration_ms: 2.7169
+  ...
+# Subtest: surface is swapped only after a current frame, and previous is then released
+ok 9 - surface is swapped only after a current frame, and previous is then released
+  ---
+  duration_ms: 6.5139
+  ...
+# Subtest: world generation change cancels pending handoff without releasing the old surface
+ok 10 - world generation change cancels pending handoff without releasing the old surface
+  ---
+  duration_ms: 2.5938
+  ...
+# Subtest: timeout keeps the previous surface and never publishes the replacement
+ok 11 - timeout keeps the previous surface and never publishes the replacement
+  ---
+  duration_ms: 11.0386
+  ...
+# Subtest: failed authority finish keeps prior surface and disposes the candidate binding
+ok 12 - failed authority finish keeps prior surface and disposes the candidate binding
+  ---
+  duration_ms: 0.9774
+  ...
+# Subtest: acknowledgement alone never publishes or releases while a newer camera frame is pending
+ok 13 - acknowledgement alone never publishes or releases while a newer camera frame is pending
+  ---
+  duration_ms: 1.9937
+  ...
+# Subtest: failed second frame after acknowledgement never releases the old canvas or input fence
+ok 14 - failed second frame after acknowledgement never releases the old canvas or input fence
+  ---
+  duration_ms: 12.2426
+  ...
+# Subtest: a visibility change after activation requires its newer frame before publication
+ok 15 - a visibility change after activation requires its newer frame before publication
+  ---
+  duration_ms: 2.9599
+  ...
+# (node:3416) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:3416) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: host exposes validated tutorial revisions and rejects stale revisions
+ok 16 - host exposes validated tutorial revisions and rejects stale revisions
+  ---
+  duration_ms: 6.8349
+  ...
+# Subtest: historical presentation rejects partial setup before creating its worker
+ok 17 - historical presentation rejects partial setup before creating its worker
+  ---
+  duration_ms: 1.2687
+  ...
+# Subtest: temporal terrain loss reaches the owner without killing its authoritative runtime
+ok 18 - temporal terrain loss reaches the owner without killing its authoritative runtime
+  ---
+  duration_ms: 1.0727
+  ...
+# Subtest: generic recovery options are explicit, compatible and fail closed
+ok 19 - generic recovery options are explicit, compatible and fail closed
+  ---
+  duration_ms: 1.4667
+  ...
+# Subtest: generic recovery API preserves session, request identity and transferred ports
+ok 20 - generic recovery API preserves session, request identity and transferred ports
+  ---
+  duration_ms: 2.0096
+  ...
+# Subtest: backpressure notification is delivered separately from command results
+ok 21 - backpressure notification is delivered separately from command results
+  ---
+  duration_ms: 0.9299
+  ...
+# Subtest: backpressure recovery requires concurrent work recovery and a notification handler
+ok 22 - backpressure recovery requires concurrent work recovery and a notification handler
+  ---
+  duration_ms: 0.4057
+  ...
+# Subtest: memory pressure from the real visual queue reaches the host with one queued publication
+ok 23 - memory pressure from the real visual queue reaches the host with one queued publication
+  ---
+  duration_ms: 4.6273
+  ...
+# Subtest: confirmed state callback runs after reconciliation for every publication
+ok 24 - confirmed state callback runs after reconciliation for every publication
+  ---
+  duration_ms: 0.7488
+  ...
+# Subtest: hosted confirmed boundary queues a checkpoint after reconciliation and before its acknowledgement
+ok 25 - hosted confirmed boundary queues a checkpoint after reconciliation and before its acknowledgement
+  ---
+  duration_ms: 1.0569
+  ...
+# Subtest: player command and following save enter the same host port without a graphical receipt
+ok 26 - player command and following save enter the same host port without a graphical receipt
+  ---
+  duration_ms: 0.6629
+  ...
+# Subtest: prepared authority attaches presentation ports only at start and preserves supplied receiver
+ok 27 - prepared authority attaches presentation ports only at start and preserves supplied receiver
+  ---
+  duration_ms: 0.7512
+  ...
+# Subtest: disposing during preparation rejects its promise
+ok 28 - disposing during preparation rejects its promise
+  ---
+  duration_ms: 0.4679
+  ...
+# Subtest: prepared recovery fixes its journal configuration before authority initialization
+ok 29 - prepared recovery fixes its journal configuration before authority initialization
+  ---
+  duration_ms: 0.7738
+  ...
+# Subtest: confirmed events are delivered after each reconciliation before ACK without an event backlog
+ok 30 - confirmed events are delivered after each reconciliation before ACK without an event backlog
+  ---
+  duration_ms: 0.8276
+  ...
+# Subtest: presentation event failure is reported without terminating the authority
+ok 31 - presentation event failure is reported without terminating the authority
+  ---
+  duration_ms: 0.9171
+  ...
+# Subtest: hosted runtime publishes before resolving commands and rejects work on disposal
+ok 32 - hosted runtime publishes before resolving commands and rejects work on disposal
+  ---
+  duration_ms: 1.0405
+  ...
+# Subtest: hosted runtime fails pending commands on a wrong session
+ok 33 - hosted runtime fails pending commands on a wrong session
+  ---
+  duration_ms: 0.7335
+  ...
+# Subtest: hosted runtime reserves bounded space for control commands
+ok 34 - hosted runtime reserves bounded space for control commands
+  ---
+  duration_ms: 1.1244
+  ...
+# Subtest: hosted runtime rejects startup and command results that precede their publications
+ok 35 - hosted runtime rejects startup and command results that precede their publications
+  ---
+  duration_ms: 1.4065
+  ...
+# Subtest: diagnostic acknowledgements follow successful publication and are disabled otherwise
+ok 36 - diagnostic acknowledgements follow successful publication and are disabled otherwise
+  ---
+  duration_ms: 2.9366
+  ...
+# Subtest: folded camera confirmation returns the original unchanged receipt
+ok 37 - folded camera confirmation returns the original unchanged receipt
+  ---
+  duration_ms: 0.8906
+  ...
+# Subtest: background camera updates do not wait for a command result and accept ordered unchanged ranges
+ok 38 - background camera updates do not wait for a command result and accept ordered unchanged ranges
+  ---
+  duration_ms: 1.0207
+  ...
+# Subtest: posting camera and action isolates later caller mutations and rejects uncloneable payloads
+ok 39 - posting camera and action isolates later caller mutations and rejects uncloneable payloads
+  ---
+  duration_ms: 1.6184
+  ...
+# Subtest: native message channel captures mutable input at post time
+ok 40 - native message channel captures mutable input at post time
+  ---
+  duration_ms: 35.077
+  ...
+# Subtest: hosted recovery forwards the retryable attachment classification
+ok 41 - hosted recovery forwards the retryable attachment classification
+  ---
+  duration_ms: 1.4458
+  ...
+# Subtest: timed out and cancelled recovery requests release their slots and ignore matching late replies
+ok 42 - timed out and cancelled recovery requests release their slots and ignore matching late replies
+  ---
+  duration_ms: 33.3803
+  ...
+# Subtest: unverified visual separation fences new commands, navigation and speed without killing the authority
+ok 43 - unverified visual separation fences new commands, navigation and speed without killing the authority
+  ---
+  duration_ms: 1.5087
+  ...
+# Subtest: a wrong recovery acknowledgement rejects its request without clearing the fence or killing authority
+ok 44 - a wrong recovery acknowledgement rejects its request without clearing the fence or killing authority
+  ---
+  duration_ms: 1.3862
+  ...
+# (node:17792) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:17792) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: real authority accepts a command while the graphical checkpoint acknowledgement is pending
+ok 45 - real authority accepts a command while the graphical checkpoint acknowledgement is pending
+  ---
+  duration_ms: 1387.4583
+  ...
+# Subtest: host keeps historical recovery unavailable in a production build
+ok 46 - host keeps historical recovery unavailable in a production build
+  ---
+  duration_ms: 77.7951
+  ...
+# Subtest: real host direct rejects a stale historical handoff and propagates replay failure
+ok 47 - real host direct rejects a stale historical handoff and propagates replay failure
+  ---
+  duration_ms: 90.4353
+  ...
+# Subtest: real host prepared early rejects a stale historical handoff and propagates replay failure
+ok 48 - real host prepared early rejects a stale historical handoff and propagates replay failure
+  ---
+  duration_ms: 83.287
+  ...
+# (node:17792) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# Subtest: prepared host replays checkpoints and publications produced by real Wild Engine
+ok 49 - prepared host replays checkpoints and publications produced by real Wild Engine
+  ---
+  duration_ms: 1396.4451
+  ...
+1..49
+# tests 49
+# suites 0
+# pass 49
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3581.453

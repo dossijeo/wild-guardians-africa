@@ -1,0 +1,172 @@
+TAP version 13
+# (node:17852) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# Subtest: recovery holds navigation publication and sends the latest camera when the surface returns
+ok 1 - recovery holds navigation publication and sends the latest camera when the surface returns
+  ---
+  duration_ms: 4.9162
+  ...
+# Subtest: Worker camera reports its current navigation view without waiting for a frame acknowledgement
+ok 2 - Worker camera reports its current navigation view without waiting for a frame acknowledgement
+  ---
+  duration_ms: 2.8433
+  ...
+# Subtest: early world services focus the same farm and apply ordered confirmed state
+ok 3 - early world services focus the same farm and apply ordered confirmed state
+  ---
+  duration_ms: 182.6952
+  ...
+# Subtest: early presentation does not claim ownership of legacy prop meshes
+ok 4 - early presentation does not claim ownership of legacy prop meshes
+  ---
+  duration_ms: 0.9805
+  ...
+# Subtest: legacy receiver is required only for explicit development diagnostics
+ok 5 - legacy receiver is required only for explicit development diagnostics
+  ---
+  duration_ms: 22.6807
+  ...
+# Subtest: village preparation and preview belong to the graphical worker
+ok 6 - village preparation and preview belong to the graphical worker
+  ---
+  duration_ms: 0.6569
+  ...
+# Subtest: early spatial residency stores collision metadata without constructing meshes
+ok 7 - early spatial residency stores collision metadata without constructing meshes
+  ---
+  duration_ms: 0.4869
+  ...
+# Subtest: early loading cancels promptly and releases late resources
+ok 8 - early loading cancels promptly and releases late resources
+  ---
+  duration_ms: 19.4611
+  ...
+# Subtest: tutorial focus comes from the authority when no local navigation exists
+ok 9 - tutorial focus comes from the authority when no local navigation exists
+  ---
+  duration_ms: 2.9411
+  ...
+# Subtest: manual camera input cancels pending authoritative tutorial focus
+ok 10 - manual camera input cancels pending authoritative tutorial focus
+  ---
+  duration_ms: 2.7735
+  ...
+# Subtest: legacy tutorial targeting loads only on demand and ignores stale focus requests
+ok 11 - legacy tutorial targeting loads only on demand and ignores stale focus requests
+  ---
+  duration_ms: 1.7458
+  ...
+# Subtest: authority tutorial focus never loads local navigation
+ok 12 - authority tutorial focus never loads local navigation
+  ---
+  duration_ms: 1.6236
+  ...
+# Subtest: camera residency and farm focus use confirmed compact state after snapshot removal
+ok 13 - camera residency and farm focus use confirmed compact state after snapshot removal
+  ---
+  duration_ms: 1.9401
+  ...
+# Subtest: night-speed policy sends only changes and initializes each runtime
+ok 14 - night-speed policy sends only changes and initializes each runtime
+  ---
+  duration_ms: 4.7006
+  ...
+# Subtest: a failed policy delivery can be retried
+ok 15 - a failed policy delivery can be retried
+  ---
+  duration_ms: 1.1601
+  ...
+# Subtest: a policy change during visual recovery is sent after the fence opens
+ok 16 - a policy change during visual recovery is sent after the fence opens
+  ---
+  duration_ms: 0.5831
+  ...
+# Subtest: recovery fence defers automatic tutorial traffic without accruing hidden reading time
+ok 17 - recovery fence defers automatic tutorial traffic without accruing hidden reading time
+  ---
+  duration_ms: 17.0217
+  ...
+# Subtest: hidden advance resets once, preserves visible ordering and repeats for identity changes
+ok 18 - hidden advance resets once, preserves visible ordering and repeats for identity changes
+  ---
+  duration_ms: 6.1606
+  ...
+# Subtest: failed hidden reset is retried without replaying stale failures
+ok 19 - failed hidden reset is retried without replaying stale failures
+  ---
+  duration_ms: 2.8079
+  ...
+# Subtest: absent and narrated messages reset once without accumulating presentation age
+ok 20 - absent and narrated messages reset once without accumulating presentation age
+  ---
+  duration_ms: 3.8919
+  ...
+# Subtest: unconfirmed or narrated messages never accrue visible authority time
+ok 21 - unconfirmed or narrated messages never accrue visible authority time
+  ---
+  duration_ms: 2.2547
+  ...
+# Subtest: a rejected tutorial presentation retries without flooding the simulation
+ok 22 - a rejected tutorial presentation retries without flooding the simulation
+  ---
+  duration_ms: 15.5735
+  ...
+# Subtest: an old rejection does not reset a newer tutorial presentation
+ok 23 - an old rejection does not reset a newer tutorial presentation
+  ---
+  duration_ms: 5.8285
+  ...
+# Subtest: guide uses authoritative origin once and never declares visibility
+ok 24 - guide uses authoritative origin once and never declares visibility
+  ---
+  duration_ms: 23.5092
+  ...
+# Subtest: guide discards late authoritative answers after a camera or target change
+ok 25 - guide discards late authoritative answers after a camera or target change
+  ---
+  duration_ms: 7.4534
+  ...
+# Subtest: guide bounds retries when the authoritative context keeps changing
+ok 26 - guide bounds retries when the authoritative context keeps changing
+  ---
+  duration_ms: 3.6215
+  ...
+# Subtest: guide recovers from transient failures after its initial retry window
+ok 27 - guide recovers from transient failures after its initial retry window
+  ---
+  duration_ms: 3.1429
+  ...
+# Subtest: guide hides when an authority-sampled crop height changes
+ok 28 - guide hides when an authority-sampled crop height changes
+  ---
+  duration_ms: 3.3476
+  ...
+# Subtest: a crop changing while admission is pending cannot publish a stale guide
+ok 29 - a crop changing while admission is pending cannot publish a stale guide
+  ---
+  duration_ms: 2.4446
+  ...
+# Subtest: viewport revision clears a previously admitted guide
+ok 30 - viewport revision clears a previously admitted guide
+  ---
+  duration_ms: 2.3082
+  ...
+# Subtest: authority revision invalidates a shown guide and unsubscribes without scanning main state
+ok 31 - authority revision invalidates a shown guide and unsubscribes without scanning main state
+  ---
+  duration_ms: 2.0255
+  ...
+# Subtest: revision changed during frame verification prevents stale admission
+ok 32 - revision changed during frame verification prevents stale admission
+  ---
+  duration_ms: 2.7901
+  ...
+1..32
+# tests 32
+# suites 0
+# pass 32
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 555.5931

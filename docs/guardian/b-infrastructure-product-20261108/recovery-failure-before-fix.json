@@ -1,0 +1,249 @@
+{
+  "scope": "Stricter integrated test requires input unblocked and new surface live; exposed an actual activation/retry failure missed by the earlier runner.",
+  "failure": "Error: resumed simulation and input: [{\"at\":169583.6499999985,\"text\":\"Historical terrain recovery boundary unavailable\"},{\"at\":169584.06999999844,\"text\":\"Visual recovery has not published a confirmed surface; commands are blocked\"},{\"at\":169584.3449999988,\"text\":\"No se pudo guardar la partida: Historical terrain recovery boundary unavailable\"},{\"at\":169584.47999999858,\"text\":\"Historical terrain recovery boundary unavailable\"},{\"at\":169585.06999999844,\"text\":\"Visual recovery separation could not be verified; further commands are blocked\"},{\"at\":169610.19499999844,\"text\":\"Visual recovery has not published a confirmed surface; commands are blocked\"}]\n    at until (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tools/experiments/audit_integrated_device_recovery.mjs:18:853)\n    at async file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tools/experiments/audit_integrated_device_recovery.mjs:25:103",
+  "errors": [],
+  "atLoss": {
+    "state": {
+      "closed": false,
+      "sequence": 99,
+      "lastElapsed": 8.099744999995155,
+      "fault": false,
+      "historicalEventMetrics": {
+        "starts": 0,
+        "boundaries": 0,
+        "events": 0,
+        "completed": 0
+      },
+      "historicalEventRejection": {
+        "sequence": 2,
+        "start": 4.449744999995232,
+        "end": 4.54974499999523,
+        "stage": "preflight",
+        "reason": "world-change",
+        "actorId": null
+      },
+      "timing": {
+        "samples": 0,
+        "decode": null,
+        "reconcile": null,
+        "hooks": null,
+        "total": null
+      }
+    },
+    "status": {
+      "running": true,
+      "closed": false,
+      "fault": null,
+      "busy": false,
+      "queued": 8,
+      "pendingSteps": 231,
+      "pendingChunks": 0,
+      "confirmedSequence": 193,
+      "confirmedElapsed": 15.899744999994988,
+      "tutorialUpdate": {
+        "needed": true,
+        "narrated": "magic.shield"
+      },
+      "saveAvailable": true,
+      "farQuery": {
+        "mode": "replica",
+        "state": "ready",
+        "failure": null,
+        "pending": null,
+        "outstanding": null,
+        "revision": 4,
+        "pendingRevision": 4,
+        "expectedSequence": null,
+        "expectedRevision": null,
+        "dispatchAllowed": true,
+        "blockers": {
+          "tutorialCommand": 3,
+          "snapshot": 1
+        }
+      },
+      "outbox": {
+        "inFlight": 0,
+        "queued": 0,
+        "coalesced": 14,
+        "acknowledged": 193,
+        "foldedViewCount": 0,
+        "capacity": {
+          "queued": 256,
+          "snapshotChars": 134217728,
+          "eventFacts": 65536,
+          "bytes": 536870912
+        },
+        "retained": {
+          "snapshotChars": 0,
+          "eventFacts": 0,
+          "bytes": 0
+        }
+      },
+      "recoveryBaseSequence": 66,
+      "recoveryBaseBytes": 4031844,
+      "recoveryJournal": {
+        "base": 66,
+        "candidate": 131,
+        "through": 193,
+        "entries": 127,
+        "bytes": 50973908,
+        "entryBytes": 45561848,
+        "overheadBytes": 5412060,
+        "capacity": 256,
+        "highWatermark": 128,
+        "maxBytes": 268435456,
+        "highWatermarkBytes": 201326592,
+        "pendingTerrain": false,
+        "saturated": false,
+        "encoderFault": false,
+        "checkpointDeferred": false,
+        "checkpointRetry": false,
+        "closed": false
+      },
+      "recoveryFault": null,
+      "tutorialGuideRevision": null
+    }
+  },
+  "after": {
+    "state": {
+      "closed": false,
+      "sequence": 193,
+      "lastElapsed": 15.899744999994988,
+      "fault": false,
+      "historicalEventMetrics": {
+        "starts": 0,
+        "boundaries": 0,
+        "events": 0,
+        "completed": 0
+      },
+      "historicalEventRejection": null,
+      "timing": {
+        "samples": 0,
+        "decode": null,
+        "reconcile": null,
+        "hooks": null,
+        "total": null
+      }
+    },
+    "status": {
+      "running": true,
+      "closed": false,
+      "fault": null,
+      "busy": false,
+      "clockCaptureSuspended": true,
+      "queued": 8,
+      "pendingSteps": 251,
+      "pendingChunks": 0,
+      "confirmedSequence": 193,
+      "confirmedElapsed": 15.899744999994988,
+      "tutorialUpdate": {
+        "needed": true,
+        "narrated": "magic.shield"
+      },
+      "saveAvailable": true,
+      "farQuery": {
+        "mode": "replica",
+        "state": "ready",
+        "failure": null,
+        "pending": null,
+        "outstanding": null,
+        "revision": 4,
+        "pendingRevision": 4,
+        "expectedSequence": null,
+        "expectedRevision": null,
+        "dispatchAllowed": true,
+        "blockers": {
+          "tutorialCommand": 3,
+          "snapshot": 1
+        }
+      },
+      "outbox": {
+        "inFlight": 0,
+        "queued": 0,
+        "coalesced": 14,
+        "acknowledged": 193,
+        "foldedViewCount": 0,
+        "capacity": {
+          "queued": 256,
+          "snapshotChars": 134217728,
+          "eventFacts": 65536,
+          "bytes": 536870912
+        },
+        "retained": {
+          "snapshotChars": 0,
+          "eventFacts": 0,
+          "bytes": 0
+        }
+      },
+      "recoveryBaseSequence": 66,
+      "recoveryBaseBytes": 4031844,
+      "recoveryJournal": {
+        "base": 66,
+        "candidate": null,
+        "through": 193,
+        "entries": 127,
+        "bytes": 51604296,
+        "entryBytes": 45561848,
+        "overheadBytes": 6042448,
+        "capacity": 256,
+        "highWatermark": 128,
+        "maxBytes": 268435456,
+        "highWatermarkBytes": 201326592,
+        "pendingTerrain": false,
+        "saturated": false,
+        "encoderFault": false,
+        "checkpointDeferred": false,
+        "checkpointRetry": false,
+        "closed": false
+      },
+      "recoveryFault": null,
+      "visualDispatchBlocked": true,
+      "visualDispatchReason": "Visual recovery has not published a confirmed surface; commands are blocked",
+      "tutorialGuideRevision": null
+    }
+  },
+  "lastSamples": [
+    {
+      "phase": "resumed simulation and input",
+      "at": 11982,
+      "screen": "game",
+      "elapsed": 15.999744999994986,
+      "state": null,
+      "uiErrors": [],
+      "inspectionError": null
+    },
+    {
+      "phase": "resumed simulation and input",
+      "at": 12985,
+      "screen": "game",
+      "elapsed": 15.999744999994986,
+      "uiErrors": [
+        {
+          "at": 169583.6499999985,
+          "text": "Historical terrain recovery boundary unavailable"
+        },
+        {
+          "at": 169584.06999999844,
+          "text": "Visual recovery has not published a confirmed surface; commands are blocked"
+        },
+        {
+          "at": 169584.3449999988,
+          "text": "No se pudo guardar la partida: Historical terrain recovery boundary unavailable"
+        },
+        {
+          "at": 169584.47999999858,
+          "text": "Historical terrain recovery boundary unavailable"
+        },
+        {
+          "at": 169585.06999999844,
+          "text": "Visual recovery separation could not be verified; further commands are blocked"
+        },
+        {
+          "at": 169610.19499999844,
+          "text": "Visual recovery has not published a confirmed surface; commands are blocked"
+        }
+      ],
+      "inspectionError": "Error: WebGPU world unavailable"
+    }
+  ]
+}

@@ -1,5 +1,16 @@
 # Muestras históricas de física autoritativa
 
+## Extensión de infraestructura del 8 de noviembre
+
+El certificado v1 sigue siendo válido para un cuerpo. El v2 transporta actorIds para varios cuerpos; exige que las envolventes de intervalo de todos ellos sean mutuamente disjuntas, que no las atraviesen otros actores y que las puertas conserven su barrido libre. No basta con que estén separados al principio o al final. La captura, receptor, soporte de terreno, grupo de movimiento y roster consumen el mismo conjunto de IDs.
+
+Cada rig recibe únicamente sus propias muestras. Si falla la instalación de un participante, se retiran las poses históricas de todos antes de avanzar el reloj. La prueba de dos cuerpos cubre instalación parcial fallida, reintento, reproducción y finalización. Las pruebas de aislamiento rechazan contactos entre envolventes, cruce por el segundo cuerpo y cambios de participantes.
+
+Las recuperaciones, impactos provisionales, física baked y cuerpos interactuantes mantienen la vía confirmada ordinaria. Una prueba del receptor recorre dos cuerpos físicos, salida de recuperación y eliminación de poses, conservando orden de eventos y un ACK por publicación, sin retener la cola. Estos casos no requieren que el agente de contenido implemente nueva física. No se afirma interpolación GPU de sus poses ni paridad visual completa.
+
+## Evidencia original de un cuerpo
+
+
 El harness admite `QA_INPUT_MODE=id` para introducir un objetivo por ID a través
 del `onPick` habitual, obtener el contexto del guardián del Worker gráfico y
 someter la acción a la validación de la autoridad. No modifica el snapshot, la

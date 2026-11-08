@@ -1,0 +1,25 @@
+{
+  "scope": "Caller trace during device recovery; QA-only instrumentation, no change to command semantics.",
+  "failure": "Error: resumed simulation and input: [{\"at\":191136.47499999963,\"text\":\"Visual recovery has not published a confirmed surface; commands are blocked\"},{\"at\":191136.82499999925,\"text\":\"No se pudo guardar la partida: Visual recovery has not published a confirmed surface; commands are blocked\"}]\n    at until (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tools/experiments/audit_integrated_device_recovery.mjs:19:853)\n    at async file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tools/experiments/audit_integrated_device_recovery.mjs:26:103",
+  "blockedDispatch": [
+    {
+      "command": {
+        "kind": "tutorialCommand",
+        "action": "dismiss",
+        "narrating": null,
+        "automatic": true,
+        "messageId": "mechanic.first-raid",
+        "variant": null
+      },
+      "stack": "Error\n    at Object.submit (http://127.0.0.1:5202/src/simulation/worker-hosted-runtime.js:80:111)\n    at command (http://127.0.0.1:5202/src/tutorial/worker-bridge.js:13:24)\n    at Object.dismiss (http://127.0.0.1:5202/src/tutorial/worker-bridge.js:28:98)\n    at http://127.0.0.1:5202/src/app/main.js:824:271\n    at safe (http://127.0.0.1:5202/src/app/main.js:270:77)\n    at onVoiceEnded (http://127.0.0.1:5202/src/app/main.js:824:215)\n    at http://127.0.0.1:5202/src/ui/guardian.js:62:21\n    at audio.onended (http://127.0.0.1:5202/src/audio/spirit-voice.js:25:88)"
+    },
+    {
+      "command": {
+        "kind": "snapshot",
+        "physicsCheckpoint": "encoded",
+        "nativeAuthorityCheckpoint": true
+      },
+      "stack": "Error\n    at Object.submit (http://127.0.0.1:5202/src/simulation/worker-hosted-runtime.js:80:111)\n    at Object.request (http://127.0.0.1:5202/src/persistence/worker-save.js:18:42)\n    at saveWorkerGame (http://127.0.0.1:5202/src/app/save-game.js:17:34)\n    at owner.workerSave (http://127.0.0.1:5202/src/app/main.js:287:142)\n    at save (http://127.0.0.1:5202/src/app/main.js:288:120)\n    at http://127.0.0.1:5202/src/app/main.js:824:305\n    at safe (http://127.0.0.1:5202/src/app/main.js:270:77)\n    at onVoiceEnded (http://127.0.0.1:5202/src/app/main.js:824:215)\n    at http://127.0.0.1:5202/src/ui/guardian.js:62:21\n    at audio.onended (http://127.0.0.1:5202/src/audio/spirit-voice.js:25:88)"
+    }
+  ]
+}

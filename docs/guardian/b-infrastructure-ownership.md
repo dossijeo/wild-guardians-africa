@@ -1,74 +1,53 @@
 # Infraestructura y responsabilidades de la migración B
 
-## Cierre de los tres contratos de infraestructura
+## Contratos de producto
 
-| Área | Estado implementado | Límite y validación pendiente |
+Los contenidos de B utilizan los propietarios existentes. No deben implementar otro protocolo de recuperación, reloj, transporte, colisiones o propiedad de pose.
+
+| Asunto | Implementación | Ruta conservadora |
 | --- | --- | --- |
-| Eventos interiores | El protocolo v2 captura deltas causales al observar cada evento y un delta silencioso al terminar el tick. El receptor aplica sublímites ordenados, el reloj se detiene en ellos y el ACK exterior llega una sola vez al completar la publicación. El pump certifica cada tramo y recurre a la vía ordinaria si faltan pruebas. | El perfil es opt-in. Cambios interiores de `suppressed`, `structures` o `villages`, actividad física, lifecycle no representado y otros casos sin evidencia conservan fallback. Verificado en la incursión nativa con Worker y WebGPU reales: cuatro eventos en dos sublímites, una publicación completada y ninguna recuperación automática. Dos ejecuciones pasan; la última incluye la extensión de quietud certificada. [Evidencia](b-close-20261107/historical-events.json). [Contrato de eventos](historical-interior-events-contract.md). |
-| Física histórica | Hay captura Rapier y reproducción discreta de un único ragdoll aislado, con verificaciones de muestras, rig, terreno, separación y propiedad de pose. Los participantes restantes conservan sus certificados. | No equivale a interpolación articular ni cubre física baked, recuperación, transiciones, varios cuerpos físicos o intervalos con eventos interiores. Verificada la reproducción en la partida WebGPU con rig real: 78 huesos, error 0; dos inicios, cinco cambios de muestra y una finalización. Attack entró por ID en la ruta normal de acción; no valida selección por píxel ni paridad artística o separación completa de mallas. [Evidencia](b-close-20261107/historical-physical.json). [Muestras y límites](historical-physics-samples-20261107.md). |
-| Recuperación de presentación | Existen checkpoint, diario ordenado, reconstrucción de Worker y señal explícita de invalidación histórica; la nueva generación parte de un límite externo confirmado. Las pruebas de contrato cubren pérdida y repetición sin ACK prematuro. | Corregidos el falso rechazo del watermark, la carrera `markLost` → `prepareVisualRecovery`, los plazos gráficos y la acumulación de tiempo real. La repetición real sobre GTX 1660 pasa: generación nueva, base 66 → presentación recuperada 193 → reanudada 194 (autoridad 196), 13 animales preparados y dos eventos de replay sin duplicados. No incluye impacto físico activo ni certifica paridad visual. Evidencia: [informe](b-close-20261107/device-recovery.json) y [captura posterior](b-close-20261107/device-recovery-after.png). [Contrato de recuperación](temporal-recovery-contract.md). |
+| Configuración conjunta | `webGpuInfrastructureProfile` define una misma política al preparar la autoridad y al conectar la presentación. En WebGPU activa recuperación histórica, eventos interiores e impostores lejanos por defecto, también en producción. | Cada opción tiene reversión explícita. Desactivar recuperación desactiva eventos interiores; pedir estos explícitamente sin recuperación es un error. La selección del backend no cambia. |
+| Física y transiciones | El certificado v2 admite varios cuerpos Rapier con envolventes de intervalo mutuamente separadas. Cada actor consume sus propias muestras confirmadas, con instalación y retirada atómicas. Sigue aceptándose el certificado v1. | Contactos entre cuerpos, pasos de otros actores por sus envolventes, puertas, cambios de rig/lifecycle, impactos provisionales, recuperación y física baked sin certificado siguen la presentación ordinaria de límites confirmados. No se inventan poses ni se simula física en la presentación. |
+| VFX sin normales | Los billboards desactivan la rama de iluminación de escena redundante de BasicNodeMaterial. Su output TSL conserva iluminación propia y luces locales. | No se añaden normales falsas, no se elimina iluminación artística y no se cambia el tratamiento final del color. |
 
-Los tres contratos descritos tienen implementación y evidencia de ejecución real en el perfil de integración. No se habilitan por defecto ni certifican todos sus casos combinados. El cierre final pasa 307 pruebas dirigidas y la compilación WebGPU; la batería de recuperación independiente pasa 183 pruebas. [Reproducción y límites del cierre](b-close-20261107/README.md).
+El soporte de física no significa interpolación articular universal: se reproducen discretamente poses Rapier ya resueltas. Las excepciones siguen siendo funcionalidades soportadas por la vía confirmada, no tareas pendientes para el agente de contenido. La mejora de fluidez de esos casos puede estudiarse después.
 
-El núcleo revisado originalmente está en el commit `34124bd94`, sincronizado en GitHub; el
-barrido conjunto comunicado para ese núcleo pasa 363 pruebas. Estas pruebas no
-son una validación de imagen, una campaña completa ni una medición de rendimiento
-en GPU. La recuperación real tiene además la prueba específica descrita arriba. Las
-combinaciones con física y eventos no quedan cerradas por el barrido de contratos.
+La recuperación conserva el diario completo aunque alcance su umbral preventivo: solo se rechaza por pérdida de integridad o exceso de capacidad real. La activación observa avances de autoridad y ACKs, con 120 segundos sin progreso y 600 segundos de límite total. Durante la activación, el canal nuevo ya conectado puede renovar checkpoints al drenar comandos pendientes; mantener la prohibición de renovación propia del replay bloqueaba el diario en su umbral. El relevo de superficie y su RPC admiten esa misma operación; ya no abandonan una reconstrucción saludable a los 8–20 segundos.
 
-## Activación reproducible para investigar eventos
+El bloqueo de entrada durante la sustitución también se respeta en los sincronizadores automáticos de tutorial y navegación. El autoguardado conserva las solicitudes pendientes y las despacha una vez publicada la superficie; no pierde eventos ni insiste contra un runtime bloqueado. Los finales de voz automáticos conservan la identidad del mensaje durante el bloqueo; se entregan al reanudar y solo solicitan guardado tras aceptación de la autoridad.
 
-El perfil siguiente se selecciona al arrancar Vite; no se habilita mediante una
-URL de diagnóstico ni modifica el valor predeterminado del producto. En una
-sesión PowerShell desde la raíz del repositorio:
+## Activación y reversión
 
-```powershell
-$env:VITE_PRESENTATION_BACKEND = 'webgpu-worker'
-$env:VITE_HISTORICAL_PRESENTATION_RECOVERY = 'true'
-$env:VITE_HISTORICAL_EVENT_BOUNDARIES = 'true'
-npm run dev
-```
+Seleccionar `VITE_PRESENTATION_BACKEND=webgpu-worker` es suficiente. No se necesitan parámetros QA para activar estos contratos. La misma configuración se usa al arrancar, conectar y reconstruir el Worker gráfico.
 
-Inicia una partida en un navegador con WebGPU y verifica explícitamente el
-backend y el adaptador del dispositivo. Para contrastar con la ruta anterior,
-reinicia Vite con `VITE_HISTORICAL_EVENT_BOUNDARIES` sin definir o con otro
-valor; no basta con cambiarlo en una pestaña ya abierta. La activación por sí
-sola no demuestra que un intervalo haya sido admitido: hay que registrar los
-inicios, sublímites, rechazos y fallback, y verificar eventos, estado, pausas,
-ACK y recuperación contra una referencia. No atribuir resultados a hardware
-si el navegador utiliza un adaptador por software.
+Para comparar con la ruta anterior se pueden fijar, antes de arrancar Vite o compilar:
 
-Pruebas de contrato dirigidas:
+- `VITE_HISTORICAL_EVENT_BOUNDARIES=false`: eventos por límite confirmado ordinario.
+- `VITE_WEBGPU_FAR_VISUAL=false`: desactivar las consultas de impostores lejanos.
+- `VITE_HISTORICAL_PRESENTATION_RECOVERY=false`: desactivar el perfil histórico y sus eventos interiores. No combinarlo con eventos explícitamente activados.
 
-```powershell
-node --test tests/historical-event-boundaries.test.js tests/historical-event-auto-recovery-integration.test.js tests/confirmed-historical-event-playback.test.js tests/confirmed-historical-clock.test.js tests/slice-historical-preview.test.js tests/webgpu-historical-boundary-sync.test.js
-node --test tests/confirmed-physics-pose-samples.test.js tests/worker-historical-physics-isolation.test.js tests/worker-historical-physics-gates.test.js
-```
+Una variable vacía equivale al valor predeterminado. Los valores distintos de true/false/vacío se rechazan para evitar discrepancias silenciosas. El backend legacy conserva sus opciones desactivadas.
 
-Para física, utiliza además el procedimiento y las opciones del experimento
-indicados en [Muestras históricas de física](historical-physics-samples-20261107.md).
-Los dos grupos requieren pruebas de navegador con actores y terreno reales; los
-dobles gráficos de las pruebas de contrato no sustituyen ese paso.
+## Responsabilidades de contenido
 
-## Reparto de responsabilidades
-
-El trabajo de contenido comprende modelos, texturas, recetas TSL, clips,
-parámetros artísticos y conexión con los propietarios existentes. La
-infraestructura conserva la autoridad de simulación, transporte, secuencias,
-admisión, propiedad de recursos y poses, cancelación y recuperación. Evita
-replicar esos protocolos por especie, animación o efecto.
-
-| Área | Propietarios y obligaciones de infraestructura |
+| Área | Infraestructura que se reutiliza |
 | --- | --- |
-| B1 terreno, agua e iluminación | Surface, residencia temporal y admisión coordinan revisiones visibles y confirmadas, recursos y pases. La paridad de fórmulas y texturas corresponde a contenido. |
-| B2 vegetación y LOD | Coordinador de chunks y residencia gestionan generaciones, cancelación, relevo de LOD y recursos tras recuperación. |
-| B3 cultivos y construcción | Previews por ID y bancos progresivos mantienen orden entre petición, carga, confirmación, rechazo y destrucción sin crear colisiones provisionales. |
-| B4 trabajadores y bestias | Rosters, bancos compartidos, reloj y certificados coordinan acciones, sustituciones, movimiento y propiedad de pose; se mantienen los límites de eventos y física arriba indicados. |
-| B5 guardián y combate | Feedback provisional y autoridad conservan validación de objetivos, orden causal y transferencia de pose; contenido mantiene gestos, rostro y VFX. |
-| B6 efectos y destrucción | Diario y admisión conservan recursos y dependencias de terreno, sin duplicar ni perder eventos durante recuperación. |
-| B7 tutorial, cinemáticas y guardado | El perfil Worker mantiene continuidad, tiempo de simulación, pausas, cancelación y restauración sin introducir dependencias nuevas del renderer anterior. |
+| B1 terreno, agua e iluminación | Surface, residencia temporal, revisiones confirmadas, admisión y pases. |
+| B2 vegetación y LOD | Coordinador de chunks, generaciones, cancelación, relevo de LOD y reconstrucción tras pérdida de dispositivo. |
+| B3 cultivos y construcción | Previews por ID, bancos progresivos, confirmación, rechazo y destrucción. Las colisiones provisionales no son autoritativas. |
+| B4 trabajadores y bestias | Rosters, bancos compartidos, reloj y certificados; movimiento y propiedad de pose; fallback confirmado para excepciones. |
+| B5 guardián y combate | Feedback provisional, validación de objetivos en autoridad, orden causal y transferencia de pose. |
+| B6 efectos y destrucción | Diario, admisión, dependencias de terreno, iluminación de sprites y recuperación. |
+| B7 tutorial, cinemáticas y guardado | Tiempo de simulación, pausas, cancelación y restauración. |
 
-La lectura del código y las pruebas aisladas no acreditan que B esté terminado.
-La validación integrada debe cubrir inicio, interacción, cambios de mundo,
-incursiones, pausa, guardado, recuperación y continuidad visual antes de cerrar
-la migración o medir su rendimiento conjunto.
+El trabajo de contenido comprende modelos, texturas, recetas TSL, clips, parámetros artísticos y conexión con estos propietarios. No hay que replicar protocolos por especie, animación o efecto.
+
+## Evidencia y límites
+
+Los tres asuntos de esta entrega están implementados y comprobados. Véase el [cierre del 8 de noviembre](b-infrastructure-product-20261108/README.md), que incluye recuperación real hasta publicación visible y desbloqueo, Attack, contratos y build. El agente de contenido puede continuar sin implementar estas piezas de infraestructura.
+
+La evidencia del cierre previo sigue disponible en [cierre anterior](b-close-20261107/README.md), [eventos interiores](historical-interior-events-contract.md), [muestras físicas](historical-physics-samples-20261107.md) y [recuperación](temporal-recovery-contract.md). Aquellas pruebas usaban activación explícita y un único cuerpo físico; no describen los valores predeterminados actuales.
+
+Las nuevas pruebas cubren separación de varios cuerpos, interferencia con un segundo cuerpo o puerta, lifecycle, reversión de instalación parcial, reparto de muestras y salida física → recuperación → locomoción por límites confirmados sin retener la cola. También cubren igualdad de configuración al iniciar y conectar, reversión, y compilación WGSL de VFX sin normales bajo iluminación activa.
+
+El cierre de infraestructura no certifica toda la paridad artística de B, campañas prolongadas ni rendimiento global. La migración de contenidos y su validación visual siguen correspondiendo a B/C.

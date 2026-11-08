@@ -1,0 +1,143 @@
+TAP version 13
+# (node:19656) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:19656) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: an idle frame or unrelated new worker event never reuses an old dawn
+ok 1 - an idle frame or unrelated new worker event never reuses an old dawn
+  ---
+  duration_ms: 2.161
+  ...
+# Subtest: fresh boundaries work with repeated IDs in separate slots and a rolled-over event buffer
+ok 2 - fresh boundaries work with repeated IDs in separate slots and a rolled-over event buffer
+  ---
+  duration_ms: 0.3528
+  ...
+# Subtest: confirmed batches request one autosave for any boundary and none for unrelated events
+ok 3 - confirmed batches request one autosave for any boundary and none for unrelated events
+  ---
+  duration_ms: 0.7193
+  ...
+# Subtest: unavailable Worker autosave waits for confirmed availability before retrying
+ok 4 - unavailable Worker autosave waits for confirmed availability before retrying
+  ---
+  duration_ms: 9.7427
+  ...
+# Subtest: new confirmed boundaries during a save produce one later checkpoint and disposal stops retries
+ok 5 - new confirmed boundaries during a save produce one later checkpoint and disposal stops retries
+  ---
+  duration_ms: 1.2978
+  ...
+# Subtest: a checkpoint failure after availability recovered retries only once
+ok 6 - a checkpoint failure after availability recovered retries only once
+  ---
+  duration_ms: 1.0168
+  ...
+# Subtest: storage errors are reported without an automatic retry loop
+ok 7 - storage errors are reported without an automatic retry loop
+  ---
+  duration_ms: 1.3041
+  ...
+# Subtest: a later confirmed sequence rearms autosave even if the unavailable interval was not observed
+ok 8 - a later confirmed sequence rearms autosave even if the unavailable interval was not observed
+  ---
+  duration_ms: 1.7149
+  ...
+# Subtest: a later available sequence received before the failed save result is not lost
+ok 9 - a later available sequence received before the failed save result is not lost
+  ---
+  duration_ms: 2.1221
+  ...
+# Subtest: confirmed autosave persists the next available Worker checkpoint through the real coordinator
+ok 10 - confirmed autosave persists the next available Worker checkpoint through the real coordinator
+  ---
+  duration_ms: 11.7742
+  ...
+# Subtest: actual dawn saves after agriculture and queue rebuild, once, without changing another slot
+ok 11 - actual dawn saves after agriculture and queue rebuild, once, without changing another slot
+  ---
+  duration_ms: 8.9688
+  ...
+# Subtest: actual raid exit saves its final state once, with reservations and queues resolved
+ok 12 - actual raid exit saves its final state once, with reservations and queues resolved
+  ---
+  duration_ms: 9.872
+  ...
+# Subtest: economic defeat at dawn saves the terminal state even though no hiring Dawn is emitted
+ok 13 - economic defeat at dawn saves the terminal state even though no hiring Dawn is emitted
+  ---
+  duration_ms: 2.0253
+  ...
+# Subtest: hundredth-night victory saves the final outcome once rather than waiting for a hiring Dawn
+ok 14 - hundredth-night victory saves the final outcome once rather than waiting for a hiring Dawn
+  ---
+  duration_ms: 1.5241
+  ...
+# Subtest: purchase and return-to-menu snapshots preserve the current slot and command identities
+ok 15 - purchase and return-to-menu snapshots preserve the current slot and command identities
+  ---
+  duration_ms: 5.7
+  ...
+# Subtest: recovery suspension keeps confirmed autosave boundaries pending until surface publication
+ok 16 - recovery suspension keeps confirmed autosave boundaries pending until surface publication
+  ---
+  duration_ms: 4.0817
+  ...
+# Subtest: GPU reconstruction may exceed ten seconds while acknowledged work advances
+ok 17 - GPU reconstruction may exceed ten seconds while acknowledged work advances
+  ---
+  duration_ms: 3.2974
+  ...
+# Subtest: lack of progress and total deadline each fail exactly once
+ok 18 - lack of progress and total deadline each fail exactly once
+  ---
+  duration_ms: 0.667
+  ...
+# Subtest: activation waits for ordered work beyond the old RPC limit and cleans up its observer
+ok 19 - activation waits for ordered work beyond the old RPC limit and cleans up its observer
+  ---
+  duration_ms: 5.1259
+  ...
+# Subtest: stalled activation aborts queued barriers, while changing progress cannot evade total bound
+ok 20 - stalled activation aborts queued barriers, while changing progress cannot evade total bound
+  ---
+  duration_ms: 1.9762
+  ...
+# (node:9764) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:9764) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: real authority accepts a command while the graphical checkpoint acknowledgement is pending
+ok 21 - real authority accepts a command while the graphical checkpoint acknowledgement is pending
+  ---
+  duration_ms: 1383.3669
+  ...
+# Subtest: host keeps historical recovery unavailable in a production build
+ok 22 - host keeps historical recovery unavailable in a production build
+  ---
+  duration_ms: 79.7432
+  ...
+# Subtest: real host direct rejects a stale historical handoff and propagates replay failure
+ok 23 - real host direct rejects a stale historical handoff and propagates replay failure
+  ---
+  duration_ms: 89.8445
+  ...
+# Subtest: real host prepared early rejects a stale historical handoff and propagates replay failure
+ok 24 - real host prepared early rejects a stale historical handoff and propagates replay failure
+  ---
+  duration_ms: 79.6935
+  ...
+# (node:9764) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# Subtest: prepared host replays checkpoints and publications produced by real Wild Engine
+ok 25 - prepared host replays checkpoints and publications produced by real Wild Engine
+  ---
+  duration_ms: 1395.8643
+  ...
+1..25
+# tests 25
+# suites 0
+# pass 25
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3472.8171
