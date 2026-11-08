@@ -48,6 +48,11 @@ revocación aunque un recurso termine después; no readmite una versión retirad
 tras recuperación/cambio de Worker. Nueva sesión invalida handles anteriores.
 El guardado conserva consecuencias/acciones, no handles WASM reutilizables.
 
+**Límite actual:** el contador `session` nativo es local a una instancia WASM;
+otra instancia puede repetir sus valores. El futuro canal gráfico debe ligar el
+handle al epoch de autoridad/transporte existente y rechazar épocas retiradas.
+El tuple nativo solo, aun con protocolo 2, no protege cambios de Worker.
+
 ## Seguridad antes de habilitar autonomía
 
 Comparadas: (1) quitar guardas y confiar en procedencia, **rechazada** por puertas,
@@ -164,7 +169,9 @@ como coste global de navegación o prueba F superada.
 
 Pruebas nuevas con WASM real: muro lejano → cero candidatos/comprobaciones de la
 ruta; muro intersecante → una comprobación y revocación exacta; ruta completada
-→ ninguna suscripción restante. Batería dirigida de **72 aprobadas sin skips**
+→ ninguna suscripción restante. Cuatro rutas nativas disjuntas conservan tres
+generaciones intactas al cortar solo una, con un único candidato y comprobación.
+La batería nueva tiene 10 pruebas; batería dirigida de **73 aprobadas sin skips**
 (`.cache/intent-dependencies-regression.tap`), incluido ABI pthread, recuperación
 histórica y host gráfico simulado. Bridge: 18 aprobadas y los 2 fallos anteriores.
 Incursiones: 14 aprobadas y otros 4 fallos `Plan de incursión incoherente`, también
@@ -176,3 +183,7 @@ precocinadas de hiena con backend WebGPU nativo y scopes de validación sin erro
 en NVIDIA/Turing. **No es un facóquero consumiendo su ruta AttackCrops** y no
 cuenta como A ni D. Sigue pendiente la vertical completa, la anticipación de
 conflictos móviles y el canal autoridad → dibujo independiente de recursos.
+
+Build posterior a ambos incrementos: `VITE_PRESENTATION_BACKEND=webgpu-worker`
+y `VITE_WEBGPU_REMOTE_DRAW=true`, salida `.cache/intent-route-correction-build`,
+correcto (con aviso de tamaño de chunks). No se publicó ni modificó `dist/`.

@@ -170,6 +170,40 @@ test('completed routes release spatial subscriptions and cannot be reactivated b
   }finally{f.session.dispose();}
 });
 
+test('a local wall validates its subscriber, not other disjoint native routes',()=>{
+  const f=fixture();
+  try{
+    const first=f.bridge.planAttackCrop(f.state,f.actor);
+    assert.equal(first.status,'found');
+    const remote=[];
+    for(const [cx,cz] of [[35,35],[-40,35],[35,-40]]){
+      let plan;
+      for(let dz=0;dz<6&&!plan;dz++)for(let dx=0;dx<6&&!plan;dx++){
+        const actor={id:`animal-${900010+remote.length}`,species:'warthog',
+          x:cx+dx+.2,z:cz+dz+.2,exit:{x:cx+dx+4.2,z:cz+dz+.2}};
+        const route=f.bridge.planRetreatRoute(actor);
+        if(route.status==='found')plan=route;
+      }
+      assert(plan,'fixture needs a disjoint native route');
+      remote.push(plan);
+    }
+    f.bridge.intentChanges();
+    const wasm=f.session.core.wasm,checks=wasm.nav_intent_route_validation_count(),
+      candidates=wasm.nav_intent_reconcile_candidate_count();
+    const point=first.approach.path[Math.floor(first.approach.path.length/2)];
+    assert(f.session.core.addWall(point.x,point.z,.3,.3)>0);
+    assert.equal(f.bridge.reconcileTopology(),1);
+    assert.equal(wasm.nav_intent_route_validation_count(),checks+1);
+    assert.equal(wasm.nav_intent_reconcile_candidate_count(),candidates+1);
+    for(const route of remote)assert(f.bridge.routePoints(route.routeHandle),
+      'disjoint actors retain the exact route generation');
+    const events=f.bridge.intentChanges();
+    assert.equal(events.length,1);
+    assert.equal(events[0].actorId,900002);
+    // Reservations/conflict anticipation are not asserted by this index test.
+  }finally{f.session.dispose();}
+});
+
 test('entering an authorized attack completes the route without deciding a hit',()=>{
   const f=fixture();
   try{
