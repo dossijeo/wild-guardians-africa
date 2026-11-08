@@ -31,6 +31,31 @@ test('CPU-dependent historical intervals retain their conservative existing play
  const f=preparedFixture({allow:false});assert.equal(f.pump.advance(),2);assert.equal(f.pump.preparedInterval(),null);assert.equal(f.pump.status().historicalDiagnostics.preparedIntervals,0);assert.equal(f.pump.status().historicalDiagnostics.finishedSameTurn,2);f.pump.dispose();f.clock.dispose();
 });
 
+test('preparation diagnostics retain exact blockers without changing conservative fallback',()=>{
+ const f=preparedFixture({allow:{ready:false,remoteBlockers:['worker-cpu-presentation','other-effects-active'],clock:{sequence:1,elapsed:0,safeUntil:.1,paused:true}}});
+ try{assert.equal(f.pump.advance(),2);const d=f.pump.status().historicalDiagnostics;
+  assert.equal(d.preparationChecks,2);assert.equal(d.preparationRejections,2);
+  assert.deepEqual(d.preparationBlockers,{'worker-cpu-presentation':2,'other-effects-active':2});
+  assert.equal(d.lastPreparationRejection.sequence,2);assert.deepEqual(d.lastPreparationRejection.reasons,['worker-cpu-presentation','other-effects-active']);
+  d.lastPreparationRejection.reasons.push('forged');d.preparationBlockers['worker-cpu-presentation']=100;
+  assert.equal(f.pump.status().historicalDiagnostics.lastPreparationRejection.reasons.length,2);assert.equal(f.pump.status().historicalDiagnostics.preparationBlockers['worker-cpu-presentation'],2);
+ }finally{f.pump.dispose();f.clock.dispose();}
+});
+
+test('a same-time unclocked publication explains lastClock null without revoking historical evidence',()=>{
+ const segments={version:1,start:0,end:.1,startPauses:[],endPauses:[],complete:true,segments:[{start:0,end:.1,rate:1,realDuration:.1}]},f=fixture([{sequence:1,elapsed:.1,clock:segments},{sequence:2,elapsed:.1}]),pump=createConfirmedTimelinePump({stream:f.stream});
+ try{assert.equal(pump.advance(),2);const d=pump.status().historicalDiagnostics;assert.equal(pump.status().lastClock,null);assert.equal(d.clockedBoundaries,1);assert.equal(d.clocklessBoundaries,1);assert.deepEqual(d.lastClocklessBoundary,{sequence:2,start:.1,end:.1,kind:'boundary'});}finally{pump.dispose();}
+});
+
+test('event subinterval preparation uses the same blocker diagnostics as whole publications',()=>{
+ let elapsed=0,sequence=0,now=0;
+ const clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now}),samples=[0,1,2].map(at=>({at,x:at,z:0,status:'walking'})),actor={actorId:'a',start:{at:0,x:0,z:0},end:{at:2,x:2,z:0},startStatus:'walking',endStatus:'walking',radius:.2,continuous:true,timed:true,segments:[{at:1,t0:0,t1:1,x0:0,z0:0,x1:1,z1:0},{at:2,t0:1,t1:2,x0:1,z0:0,x1:2,z1:0}]};
+ const preview={sequence:1,start:0,end:2,eventBoundaries:[{at:1,eventIds:['e'],count:1}],reasons:['events','visual-time-and-support-unverified'],safeForAutonomousPlayback:false,trace:{start:0,end:2,actors:[actor],actorTickStates:{complete:true,actors:[{actorId:'a',samples}]},rosterChanged:false,topologyChanged:false,chunkChanged:false,terrainChanged:false,physicsActivity:{samplesComplete:true,observed:false},spatialEvidence:{version:1,start:0,end:2,actors:1,segments:2,revisions:{topology:0,chunks:0,terrain:0,payloads:0}},separationEvidence:{version:1,start:0,end:2,actors:1,gates:'none'}},clockSegments:{version:1,start:0,end:2,startPauses:[],endPauses:[],complete:true,segments:[{start:0,end:2,rate:1,realDuration:2}]}};
+ const stream={status:()=>({closed:false,sequence,lastElapsed:elapsed}),timelineStatus:()=>({receivedElapsed:2}),nextTimelineBoundary:()=>sequence?null:{sequence:1,elapsed:2},previewNextMotionBoundary:()=>preview,lastConfirmedClockSegments:()=>preview.clockSegments,advanceNextTimelineBoundary(){throw Error('must use historical event transaction');},beginHistoricalEvents:()=>preview.eventBoundaries,confirmHistoricalEventStart(){},advanceHistoricalEvent(){elapsed=1;},finishHistoricalEvents(){elapsed=2;sequence=1;clock.commitBoundary(1,2);return true;},cancelHistoricalEvents(){}};
+ const pump=createConfirmedTimelinePump({stream,preparedIntervals:true,historicalPlayback:{clock,certify:p=>({...p,reasons:[],safeForAutonomousPlayback:true}),start:()=>true,isCurrent:()=>true,finish(){},abort(){},canPrepareInterval:()=>({ready:false,remoteBlockers:['native-vfx-presentation']})}});
+ try{assert.equal(pump.advance(),0);now=2100;assert.equal(pump.advance(),1);const d=pump.status().historicalDiagnostics;assert.equal(d.eventPublicationsStarted,1);assert.equal(d.preparationChecks,2);assert.deepEqual(d.preparationBlockers,{'native-vfx-presentation':2});assert.equal(d.lastPreparationRejection.start,1);assert.equal(d.lastPreparationRejection.end,2);}finally{pump.dispose();clock.dispose();}
+});
+
 test('diagnostics distinguish rejected certificates from intervals consumed before any draw',()=>{
  const segments={version:1,start:0,end:.1,startPauses:[],endPauses:[],complete:true,segments:[{start:0,end:.1,realDuration:.1,rate:1}]};
  for(const reject of [true,false]){
