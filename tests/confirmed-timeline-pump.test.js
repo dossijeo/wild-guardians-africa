@@ -22,6 +22,32 @@ test('prepared intervals survive expensive preparation and require retained pack
  f.pump.dispose();f.clock.dispose();
 });
 
+test('confirmed progress remains publishable when the next boundary awaits GPU preparation',()=>{
+ let ready=false,rejection=null;
+ const f=preparedFixture({certify:preview=>{
+  if(preview.sequence===1){rejection={reason:'unsupported-presentation',preparationPending:false};return null;}
+  if(!ready){rejection={reason:'vfx-gpu-resources-pending',preparationPending:true};return null;}
+  rejection=null;return preview;
+ },lastRejection:()=>rejection});
+ try{
+  const advanced=f.pump.advance();assert.equal(advanced,1);
+  assert.deepEqual(f.seen.map(item=>item.sequence),[1]);assert.equal(f.stream.status().sequence,1);assert.equal(f.clock.elapsed,.1);
+  assert.deepEqual(f.pump.status().preparationPending,{sequence:2,reason:'vfx-gpu-resources-pending'});
+  assert.equal(f.stream.nextTimelineBoundary().sequence,2);
+  // The caller must publish that confirmed progress before sleeping for the
+  // next resource. Only a subsequent attempt with no progress can sleep.
+  assert.equal(!!f.pump.status().preparationPending&&advanced===0,false);
+  const waiting=f.pump.advance();assert.equal(waiting,0);
+  assert.equal(!!f.pump.status().preparationPending&&waiting===0,true);
+  assert.equal(f.clock.elapsed,.1);assert.equal(f.seen.length,1);
+  ready=true;assert.equal(f.pump.advance(),0);assert.equal(f.pump.status().preparationPending,null);
+  const interval=f.pump.preparedInterval();assert.equal(interval.sequence,2);assert.equal(interval.start,.1);assert.equal(interval.end,.2);
+  assert.equal(f.clock.elapsed,.1);assert.equal(f.stream.status().sequence,1);
+  f.pump.sealPreparedInterval(interval.token);assert.equal(f.pump.advance(),1);
+  assert.deepEqual(f.seen.map(item=>item.sequence),[1,2]);assert.equal(f.clock.elapsed,.2);
+ }finally{f.pump.dispose();f.clock.dispose();}
+});
+
 test('first-draw receipt during visibility hold retains its token without consuming hidden time',()=>{
  const f=preparedFixture();f.pump.advance();const first=f.pump.preparedInterval();f.pump.setHistoricalVisibility(true);assert.equal(f.pump.sealPreparedInterval(first.token),true);f.setNow(10000);assert.equal(f.pump.advance(),0);assert.equal(f.clock.elapsed,0);assert.equal(f.seen.length,0);assert.deepEqual(f.pump.status().preparedWaiting,{token:first.token,sequence:1,start:0,end:.1,sealed:true,held:true});
  f.pump.setHistoricalVisibility(false);assert.equal(f.pump.advance(),1);assert.equal(f.clock.elapsed,.1);assert.equal(f.pump.preparedInterval().start,.1);f.pump.dispose();f.clock.dispose();

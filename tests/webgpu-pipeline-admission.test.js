@@ -301,6 +301,13 @@ test('a ticket covers visibility switches for explicitly included alternatives',
  const renderer={backend:{isWebGPUBackend:true},compileAsync(){assert.equal(original.visible,true);assert.equal(alternate.visible,true);return Promise.resolve();}},admission=createWebGpuPipelineAdmission({renderer,scene,camera});
  try{const ticket=await admission.prepareTicket(root,{include:[original,alternate]});original.visible=false;alternate.visible=true;assert.equal(ticket.valid(),true);alternate.material.side=THREE.BackSide;assert.equal(ticket.valid(),false);}finally{admission.dispose();for(const mesh of [original,alternate]){mesh.geometry.dispose();mesh.material.dispose();}}
 });
+
+test('an explicitly included root can be published without invalidating its structural ticket',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),mesh=new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshBasicMaterial());scene.add(mesh);mesh.visible=false;let finish;
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(){assert.equal(mesh.visible,true);return new Promise(resolve=>{finish=resolve;});}},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),turn=()=>new Promise(resolve=>setImmediate(resolve));
+ try{const pending=admission.prepareTicket(mesh,{include:[mesh]});await turn();assert.equal(mesh.visible,false,'root remains hidden while compiling');finish();const ticket=await pending;assert.equal(ticket.valid(),true);mesh.visible=true;assert.equal(ticket.valid(),true);mesh.visible=false;assert.equal(ticket.valid(),true);mesh.material.side=THREE.BackSide;assert.equal(ticket.valid(),false,'fixed-function state remains strict');mesh.material.side=THREE.FrontSide;assert.equal(ticket.valid(),true);mesh.geometry.setAttribute('qaLayout',new THREE.Float32BufferAttribute(new Float32Array(mesh.geometry.attributes.position.count),1));assert.equal(ticket.valid(),false,'geometry layout remains strict');}
+ finally{admission.dispose();mesh.geometry.dispose();mesh.material.dispose();}
+});
 test('admission cannot temporarily reveal objects owned by another root',async()=>{const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),root=new THREE.Group(),other=new THREE.Mesh(),admission=createWebGpuPipelineAdmission({renderer:{backend:{isWebGPUBackend:true},compileAsync:()=>Promise.resolve()},scene,camera});await assert.rejects(admission.prepare(root,{include:[other]}),/Invalid admission visibility/);admission.dispose();});
 
 test('compilation suppresses implicit shadow updates only during synchronous setup',async()=>{

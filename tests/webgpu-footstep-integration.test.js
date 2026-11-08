@@ -9,6 +9,21 @@ import {createWebGpuAgricultureVfx} from '../src/rendering/webgpu-agriculture-vf
 import {createConfirmedPresentationClock} from '../src/rendering/confirmed-presentation-clock.js';
 import {createRemoteWebGpuClient} from '../src/rendering/remote-webgpu-client.js';
 import {actorTickState} from '../src/simulation/worker-actor-tick-states.js';
+import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
+
+test('real admission tickets remain valid when sampled footsteps become visible',async()=>{
+ const oldFetch=globalThis.fetch,oldBitmap=globalThis.createImageBitmap,catalogue=JSON.parse(readFileSync('public/content/vfx.json'));
+ globalThis.fetch=async()=>({ok:true,json:async()=>catalogue,blob:async()=>new Blob(['x'])});globalThis.createImageBitmap=async()=>({width:4096,height:2048,close(){}});
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),renderer={backend:{isWebGPUBackend:true},compileAsync:async()=>{},getRenderTarget:()=>null,setRenderTarget(){}},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),worker={id:'w',profile:'youngMale',status:'walking',walkPhase:0,x:0,z:0,heading:0},state={time:0,elapsed:0,spells:[],events:[],structures:[],plants:[],tasks:[],workers:[worker]},floor={},clock=createConfirmedPresentationClock(0),turn=()=>new Promise(resolve=>setImmediate(resolve)),vfx=createWebGpuAgricultureVfx({scene,state,residency:{get:()=>floor,getVisible:()=>floor,surface:()=>0,revisionAt:(cx,cz)=>({cx,cz,epoch:1,revision:1})},includeLocomotion:true,confirmedClock:clock,remoteGpu:true,pipelineAdmission:admission});
+ try{await vfx.prepareAssets();vfx.sync();worker.x=.1;worker.walkPhase=4;state.elapsed=.1;clock.commit(.1);vfx.sync();vfx.prepare(camera);await turn();const preview={start:.1,end:.15,trace:{actorTickStates:{complete:true,actors:[{actorId:'w',samples:[actorTickState(worker,.1),actorTickState(worker,.15)]}]}}};
+  for(let i=0;i<3;i++){vfx.prepare(camera);await turn();}const ready=vfx.prepareHistoricalMotion(preview,{valid:()=>true});assert.equal(ready.remoteAutonomous,true,JSON.stringify({ready,status:vfx.status(),admission:admission.status()}));
+  const compiles=admission.status().compilesStarted;for(let i=0;i<3;i++){vfx.prepare(camera);assert.equal(vfx.prepareHistoricalMotion(preview,{valid:()=>true}).remoteAutonomous,true);}assert.equal(admission.status().compilesStarted,compiles,'visibility does not request another pipeline');
+  // Structural mutation still invalidates a published ticket and starts a
+  // real new admission; normalizing visibility must not weaken that check.
+  const mesh=scene.children.flatMap(root=>root.children).find(object=>object._wgFootstepSamples&&object.isMesh);mesh.geometry.setAttribute('qaLayoutChange',new THREE.BufferAttribute(new Float32Array(mesh.geometry.attributes.position.count),1));
+  const pending=vfx.prepareHistoricalMotion(preview,{valid:()=>true});assert.equal(pending.preparationPending,true);await turn();assert.equal(vfx.prepareHistoricalMotion(preview,{valid:()=>true}).remoteAutonomous,true);assert.ok(admission.status().compilesStarted>compiles);
+ }finally{vfx.dispose();admission.dispose();clock.dispose();globalThis.fetch=oldFetch;globalThis.createImageBitmap=oldBitmap;}
+});
 
 test('retired pool generation settling cannot clear the next generation upload wait',async()=>{
  const oldFetch=globalThis.fetch,oldBitmap=globalThis.createImageBitmap,catalogue=JSON.parse(readFileSync('public/content/vfx.json'));
