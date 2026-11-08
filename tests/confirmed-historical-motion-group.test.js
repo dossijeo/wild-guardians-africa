@@ -22,6 +22,13 @@ test('watering certificate requires effect preparation and quiet other effects, 
  effect.startHistoricalMotion=()=>false;const retry=group.certify(f.preview,f.current);assert.equal(group.start(retry),false);assert.ok(calls.includes('actor cancel'));
 });
 
+test('combined work and combat publish both independent certificates',()=>{
+ const f=certificateFixture(),effect={prepareHistoricalMotion:()=>({ok:true,working:true,combat:true,token:'mixed'}),startHistoricalMotion:(_p,_s,token)=>token==='mixed',historicalMotionCurrent:()=>true,finishHistoricalMotion(){},abortHistoricalMotion(){},cancelHistoricalMotion(){}};
+ Object.assign(f.actor,{historicalMotionCurrent:()=>true,finishHistoricalMotion(){},cancelHistoricalMotion(){},abortHistoricalMotion(){}});
+ const group=createConfirmedHistoricalMotionGroup({animals:f.actor,effects:effect,otherEffectsQuiet:()=>true,getSupport:()=>f.support,inputPolicy:'ordered-boundary'}),certified=group.certify(f.preview,f.current);
+ assert.equal(certified.certificates.workSynchronized,true);assert.equal(certified.certificates.combatSynchronized,true);assert.equal(group.start(certified),true);assert.equal(group.isCurrent(certified),true);
+});
+
 test('certifier rejects missing evidence, event barriers, excessive handoff latency and stale resources',()=>{
  for(const mutate of [f=>f.preview.reasons.push('events'),f=>delete f.preview.trace.separationEvidence,f=>f.preview.trace.physicsActivity.observed=true,f=>f.preview.clockSegments.segments[0].realDuration=.2,f=>f.preview.clockSegments.segments[0].rate=5,f=>f.current.sequence=1,f=>f.invalidate(),f=>f.actor.prepareHistoricalMotion=()=>({ok:false})]){
   const f=certificateFixture();mutate(f);assert.equal(f.group.certify(f.preview,f.current),null);
