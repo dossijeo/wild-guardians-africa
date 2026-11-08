@@ -6,10 +6,10 @@ import {confirmedEventsAtEndpoint} from '../src/rendering/confirmed-endpoint-eve
 
 function fixture(items){let sequence=0,lastElapsed=0,ready=true,lastClock=null;const seen=[];return {seen,setReady(value){ready=value;},stream:{status:()=>({closed:false,sequence,lastElapsed}),timelineStatus:()=>({receivedElapsed:items.at(-1)?.elapsed??lastElapsed}),lastConfirmedClockSegments:()=>lastClock,nextTimelineBoundary:()=>items[0]??null,advanceNextTimelineBoundary(){if(!ready)return false;const item=items.shift();sequence=item.sequence;lastElapsed=item.elapsed;lastClock=item.clock??null;seen.push(item);return true;}}};}
 
-function preparedFixture({allow=true}={}){
+function preparedFixture({allow=true,certify=value=>value,lastRejection=()=>null}={}){
  let now=0;const items=[1,2].map(sequence=>{const start=(sequence-1)/10,end=sequence/10;return {sequence,elapsed:end,clock:{version:1,start,end,startPauses:[],endPauses:[],complete:true,segments:[{start,end,realDuration:.1,rate:1}]}};}),f=fixture(items),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now,timeOrigin:0});
  f.stream.previewNextMotionBoundary=()=>{const item=items[0];return item?{sequence:item.sequence,start:item.clock.start,end:item.elapsed,reasons:[],safeForAutonomousPlayback:true,clockSegments:item.clock}:null;};
- const pump=createConfirmedTimelinePump({stream:f.stream,preparedIntervals:true,historicalPlayback:{clock,now:()=>now,certify:value=>value,start(){now+=250;return true;},isCurrent:()=>true,canPrepareInterval:()=>allow,finish(){},abort(){}}});
+ const pump=createConfirmedTimelinePump({stream:f.stream,preparedIntervals:true,historicalPlayback:{clock,now:()=>now,certify,lastRejection,start(){now+=250;return true;},isCurrent:()=>true,canPrepareInterval:()=>allow,finish(){},abort(){}}});
  return {...f,clock,pump,setNow(value){now=value;}};
 }
 
@@ -111,3 +111,9 @@ test('historical handoff runs after successful boundary commit and never on fail
 });
 
 test('historical certification cannot replace confirmed endpoint headings',()=>{const segments={version:1,start:0,end:1,startPauses:[],endPauses:[],complete:true,segments:[{start:0,end:1,realDuration:1,rate:1}]},f=fixture([{sequence:1,elapsed:1,clock:segments}]),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>0});f.stream.previewNextMotionBoundary=()=>({sequence:1,start:0,end:1,reasons:[],safeForAutonomousPlayback:false,clockSegments:segments,workerHeadingProof:{version:1,sequence:1,start:0,end:1,initial:[],final:[{id:'w',yaw:1}]}});const pump=createConfirmedTimelinePump({stream:f.stream,historicalPlayback:{clock,certify:value=>({...value,reasons:[],safeForAutonomousPlayback:true,workerHeadingProof:{...value.workerHeadingProof,final:[{id:'w',yaw:2}]}}),start:()=>true,finish(){},abort(){},isCurrent:()=>true}});try{assert.throws(()=>pump.advance(),/Invalid historical playback certificate/);assert.equal(f.seen.length,0);}finally{pump.dispose();clock.dispose();}});
+
+
+test('remote resource preparation retains the confirmed boundary until ready instead of consuming a CPU fallback',()=>{
+ let ready=false,failed=false;const f=preparedFixture({certify:value=>ready?value:null,lastRejection:()=>({reason:'resources-pending',preparationPending:!failed})});
+ try{assert.equal(f.pump.advance(),0);assert.deepEqual(f.pump.status().preparationPending,{sequence:1,reason:'resources-pending'});assert.equal(f.clock.elapsed,0);assert.equal(f.seen.length,0);f.setNow(5000);assert.equal(f.pump.advance(),0);ready=true;assert.equal(f.pump.advance(),0);assert.equal(f.pump.status().preparationPending,null);assert.equal(f.pump.preparedInterval().start,0);f.pump.sealPreparedInterval(f.pump.preparedInterval().token);ready=false;failed=true;assert.equal(f.pump.advance(),2);assert.equal(f.seen.length,2);assert.equal(f.pump.status().preparationPending,null,'unsupported or failed preparation follows the conservative path');}finally{f.pump.dispose();f.clock.dispose();}
+});

@@ -92,3 +92,11 @@ test('start diagnostics distinguish changed support and participant start failur
 test('group defers animal phase release until the matching confirmed boundary',()=>{
  const f=certificateFixture(),calls=[];Object.assign(f.actor,{historicalMotionCurrent:()=>true,finishHistoricalMotion(_p,options){calls.push(['finish',options]);},historicalBoundaryCommitted(p,options){calls.push(['commit',p,options]);}});const certified=f.group.certify(f.preview,f.current);assert.equal(f.group.start(certified),true);assert.equal(f.group.finish(certified,{continuation:true}),true);assert.deepEqual(calls,[['finish',{continuation:true,deferHandoff:true}]]);f.group.afterCommit(certified,{continuation:true});assert.deepEqual(calls[1],['commit',certified,{continuation:true}]);
 });
+
+test('resource readiness is a functional result even when historical diagnostics are disabled',()=>{
+ const f=certificateFixture();let pending=true;
+ const effects={prepareHistoricalMotion:()=>pending?{ok:false,preparationPending:true,reason:'vfx-gpu-resources-pending'}:{ok:true,remoteAutonomous:true},startHistoricalMotion:()=>true,historicalMotionCurrent:()=>true,finishHistoricalMotion(){},abortHistoricalMotion(){},cancelHistoricalMotion(){}};
+ const group=createConfirmedHistoricalMotionGroup({animals:f.actor,effects,getSupport:()=>f.support,inputPolicy:'ordered-boundary'});
+ assert.equal(group.certify(f.preview,f.current),null);assert.equal(group.lastRejection().preparationPending,true);
+ pending=false;assert.ok(group.certify(f.preview,f.current));assert.equal(group.lastRejection(),null);
+});

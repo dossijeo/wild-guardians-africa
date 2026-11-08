@@ -8,13 +8,26 @@ import {createSimulationAuthority} from '../src/simulation/simulation-authority.
 import {createWebGpuAgricultureVfx} from '../src/rendering/webgpu-agriculture-vfx.js';
 import {createConfirmedPresentationClock} from '../src/rendering/confirmed-presentation-clock.js';
 import {createRemoteWebGpuClient} from '../src/rendering/remote-webgpu-client.js';
+import {actorTickState} from '../src/simulation/worker-actor-tick-states.js';
+
+test('retired pool generation settling cannot clear the next generation upload wait',async()=>{
+ const oldFetch=globalThis.fetch,oldBitmap=globalThis.createImageBitmap,catalogue=JSON.parse(readFileSync('public/content/vfx.json'));
+ globalThis.fetch=async()=>({ok:true,json:async()=>catalogue,blob:async()=>new Blob(['x'])});globalThis.createImageBitmap=async()=>({width:4096,height:2048,close(){}});
+ let controlled=false;const fences=[],turn=()=>new Promise(resolve=>setImmediate(resolve)),renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone:()=>controlled?new Promise(resolve=>fences.push(resolve)):Promise.resolve()}}},initTexture(){}};
+ const worker={id:'w',profile:'youngMale',status:'walking',walkPhase:0,x:0,z:0,heading:0},state={time:0,elapsed:0,spells:[],events:[],structures:[],plants:[],tasks:[],workers:[worker]},floor={},scene=new THREE.Scene(),clock=createConfirmedPresentationClock(0),camera=new THREE.PerspectiveCamera(),vfx=createWebGpuAgricultureVfx({scene,state,residency:{get:()=>floor,getVisible:()=>floor,surface:()=>0,revisionAt:(cx,cz)=>({cx,cz,epoch:1,revision:1})},includeLocomotion:true,confirmedClock:clock,remoteGpu:true,renderer});
+ try{await vfx.prepareAssets();vfx.sync();controlled=true;worker.x=.1;worker.walkPhase=4;state.elapsed=.1;clock.commit(.1);vfx.sync();vfx.prepare(camera);await turn();const retired=fences.splice(0);assert.ok(retired.length);
+  state.elapsed=3;clock.commit(3);worker.walkPhase=2*Math.PI;vfx.sync();worker.x=.2;worker.walkPhase=2*Math.PI+4;state.elapsed=3.1;clock.commit(3.1);vfx.sync();vfx.prepare(camera);await turn();assert.ok(fences.length);assert.ok(vfx.status().footstepResources.reused>0);
+  retired.forEach(resolve=>resolve());await turn();const preview={start:3.1,end:3.15,trace:{actorTickStates:{complete:true,actors:[{actorId:'w',samples:[actorTickState(worker,3.1),actorTickState(worker,3.15)]}]}}};const pending=vfx.prepareHistoricalMotion(preview,{valid:()=>true});assert.equal(pending.preparationPending,true,JSON.stringify({pending,status:vfx.status()}));
+  fences.splice(0).forEach(resolve=>resolve());await turn();assert.equal(vfx.prepareHistoricalMotion(preview,{valid:()=>true}).remoteAutonomous,true);
+ }finally{fences.splice(0).forEach(resolve=>resolve());await turn();vfx.dispose();clock.dispose();globalThis.fetch=oldFetch;globalThis.createImageBitmap=oldBitmap;}
+});
 
 test('actual remote proxy never fences a palette inside the open drawing transaction',async()=>{
  const oldFetch=globalThis.fetch,oldBitmap=globalThis.createImageBitmap,catalogue=JSON.parse(readFileSync('public/content/vfx.json'));
  globalThis.fetch=async()=>({ok:true,json:async()=>catalogue,blob:async()=>new Blob(['x'])});globalThis.createImageBitmap=async()=>({width:4096,height:2048,close(){}});
  const messages=[],errors=[],port={postMessage(message){messages.push(message);if(message.requestId)queueMicrotask(()=>port.onmessage({data:{type:'reply',requestId:message.requestId,result:null}}));if(message.type==='frame')queueMicrotask(()=>port.onmessage({data:{type:'presented',sequence:message.packet.sequence}}));}},remote=createRemoteWebGpuClient({port,capabilities:{width:16,height:16,format:'rgba8unorm'},onError:error=>errors.push(error)});
  const renderer={backend:{isWebGPUBackend:true,device:remote.device},initTexture(texture){const image=texture.image,resource=remote.device.createTexture({size:[image.width,image.height,1],format:'rgba32float',usage:6});remote.device.queue.writeTexture({texture:resource},image.data??new Uint8Array(4),{bytesPerRow:image.width*16},[image.width,image.height,1]);}},worker={id:'w',profile:'youngMale',status:'walking',walkPhase:0,x:0,z:0,heading:0},state={time:0,elapsed:0,spells:[],events:[],structures:[],plants:[],tasks:[],workers:[worker]},floor={},clock=createConfirmedPresentationClock(0),scene=new THREE.Scene();
- const vfx=createWebGpuAgricultureVfx({scene,state,residency:{get:()=>floor,getVisible:()=>floor,surface:()=>0,revisionAt:(cx,cz)=>({cx,cz,epoch:'test',revision:1})},includeLocomotion:true,confirmedClock:clock,renderer,onError:error=>errors.push(error)});
+ const vfx=createWebGpuAgricultureVfx({scene,state,residency:{get:()=>floor,getVisible:()=>floor,surface:()=>0,revisionAt:(cx,cz)=>({cx,cz,epoch:'test',revision:1})},includeLocomotion:true,confirmedClock:clock,remoteGpu:true,renderer,onError:error=>errors.push(error)});
  try{await vfx.prepareAssets();vfx.sync();worker.x=.1;worker.walkPhase=4;state.elapsed=.1;clock.commit(.1);vfx.sync();
   const buffer=remote.device.createBuffer({size:4,usage:72});remote.beginFrame();remote.device.queue.writeBuffer(buffer,0,new Float32Array([1]));
   await assert.rejects(remote.device.queue.onSubmittedWorkDone(),/Cannot fence uncommitted remote frame/);
@@ -30,7 +43,7 @@ test('reused footstep slots upload a fresh palette and publish its binding only 
  let controlled=false;const uploads=new Set(),fences=[],turn=()=>new Promise(resolve=>setImmediate(resolve));
  const renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone:()=>controlled?new Promise(resolve=>fences.push(resolve)):Promise.resolve()}}},initTexture(texture){assert.equal(uploads.has(texture),false,'a previously uploaded palette must never be overwritten');uploads.add(texture);}};
  const worker={id:'w',profile:'youngMale',status:'walking',walkPhase:0,x:0,z:0,heading:0},state={time:0,elapsed:0,spells:[],events:[],structures:[],plants:[],tasks:[],workers:[worker]},floor={},scene=new THREE.Scene(),clock=createConfirmedPresentationClock(0),camera=new THREE.PerspectiveCamera();
- const vfx=createWebGpuAgricultureVfx({scene,state,residency:{get:()=>floor,getVisible:()=>floor,surface:()=>0,revisionAt:(cx,cz)=>({cx,cz,epoch:'test',revision:1})},includeLocomotion:true,confirmedClock:clock,renderer});
+ const vfx=createWebGpuAgricultureVfx({scene,state,residency:{get:()=>floor,getVisible:()=>floor,surface:()=>0,revisionAt:(cx,cz)=>({cx,cz,epoch:'test',revision:1})},includeLocomotion:true,confirmedClock:clock,remoteGpu:true,renderer});
  const meshes=()=>{const found=[];scene.traverse(object=>{if(object._wgFootstepSamples)found.push(object);});return found;};
  try{await vfx.prepareAssets();vfx.sync();controlled=true;worker.x=.1;worker.walkPhase=4;state.elapsed=.1;clock.commit(.1);vfx.sync();const initial=meshes().map(mesh=>mesh._wgFootstepSamples);vfx.prepare(camera);await turn();assert.ok(fences.length);assert.deepEqual(meshes().map(mesh=>mesh._wgFootstepSamples),initial,'pending generations are not published');
   fences.splice(0).forEach(resolve=>resolve());await turn();vfx.prepare(camera);const active=new Set(meshes().map(mesh=>mesh._wgFootstepSamples)),pixels=new Map([...active].map(texture=>[texture,texture.image.data.slice()]));assert.ok(vfx.status().footstepResources.gpu>0);
@@ -45,7 +58,7 @@ test('real raid footsteps publish complete GPU lifetimes and stop CPU updates in
  const module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm')),snapshot=serialize(deserialize(gunzipSync(readFileSync('tests/fixtures/sabana712-d6-native-multi-reservation.json.gz')).toString())),keys=[];for(let z=-1;z<=2;z++)for(let x=1;x<=3;x++)keys.push(`${x},${z}`);
  const authority=createSimulationAuthority(module,snapshot,keys,{observeWorldMotion:true}),state=JSON.parse(authority.execute({kind:'snapshot',sequence:1}).snapshot),clock=createConfirmedPresentationClock(state.elapsed),floor=new THREE.Mesh(new THREE.PlaneGeometry(48,48),new THREE.MeshBasicMaterial()),camera=new THREE.PerspectiveCamera(),scene=new THREE.Scene(),support={valid:()=>true};
  let terrain=floor,terrainRevision=1;
- const vfx=createWebGpuAgricultureVfx({scene,state,residency:{get:()=>terrain,getVisible:()=>terrain,surface:()=>0,revisionAt:(cx,cz)=>({cx,cz,epoch:'test',revision:terrainRevision})},includeLocomotion:true,locomotionWater:()=>({available:true,inside:false}),confirmedClock:clock});let certified=0,births=0;
+ const vfx=createWebGpuAgricultureVfx({scene,state,residency:{get:()=>terrain,getVisible:()=>terrain,surface:()=>0,revisionAt:(cx,cz)=>({cx,cz,epoch:'test',revision:terrainRevision})},includeLocomotion:true,locomotionWater:()=>({available:true,inside:false}),confirmedClock:clock,remoteGpu:true});let certified=0,births=0;
  try{
   await vfx.prepareAssets();vfx.sync();
   for(let sequence=2;sequence<22;sequence++){
@@ -71,14 +84,14 @@ test('future footsteps remain hidden while admission is pending and become eligi
  const module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm')),snapshot=serialize(deserialize(gunzipSync(readFileSync('tests/fixtures/sabana712-d6-native-multi-reservation.json.gz')).toString())),keys=[];for(let z=-1;z<=2;z++)for(let x=1;x<=3;x++)keys.push(`${x},${z}`);
  const authority=createSimulationAuthority(module,snapshot,keys,{observeWorldMotion:true}),state=JSON.parse(authority.execute({kind:'snapshot',sequence:1}).snapshot),clock=createConfirmedPresentationClock(state.elapsed),scene=new THREE.Scene(),floor={},support={valid:()=>true},compiles=[],turn=()=>new Promise(resolve=>setImmediate(resolve));
  const admission={prepare:object=>new Promise(resolve=>compiles.push({object,resolve})),deferCompilations:release=>release()};
- const vfx=createWebGpuAgricultureVfx({scene,state,residency:{get:()=>floor,getVisible:()=>floor,surface:()=>0,revisionAt:(cx,cz)=>({cx,cz,epoch:'stable',revision:1})},includeLocomotion:true,locomotionWater:()=>({available:true,inside:false}),confirmedClock:clock,pipelineAdmission:admission});
+ const vfx=createWebGpuAgricultureVfx({scene,state,residency:{get:()=>floor,getVisible:()=>floor,surface:()=>0,revisionAt:(cx,cz)=>({cx,cz,epoch:'stable',revision:1})},includeLocomotion:true,locomotionWater:()=>({available:true,inside:false}),confirmedClock:clock,remoteGpu:true,pipelineAdmission:admission});
  try{await vfx.prepareAssets();vfx.sync();let preview,prepared;
   for(let sequence=2;sequence<62;sequence++){
    const publication=authority.execute({kind:'advance',sequence,seconds:.05,steps:1,nightFastForward:false,captureClockSegments:true}),next=JSON.parse(publication.snapshot);preview={sequence,start:state.elapsed,end:next.elapsed,trace:publication.worldMotionTrace};prepared=vfx.prepareHistoricalMotion(preview,support);
    if(vfx.status().footstepResources.pending)break;
    if(prepared.ok){assert.equal(vfx.startHistoricalMotion(preview,support,prepared.token),true);clock.commit(preview.end);assert.equal(vfx.finishHistoricalMotion(preview),true);}else clock.commit(preview.end);Object.assign(state,next);vfx.sync();
   }
-  assert.ok(vfx.status().footstepResources.pending>0);assert.equal(prepared.remoteAutonomous,false);await turn();assert.ok(compiles.length>0);
+  assert.ok(vfx.status().footstepResources.pending>0);assert.equal(prepared.preparationPending,true);assert.equal(prepared.ok,false);await turn();assert.ok(compiles.length>0);
   const future=scene.children.filter(root=>root.children.some(object=>object._wgFootstepBirth>state.elapsed));assert.ok(future.length>0);assert.ok(future.every(root=>!root.visible),'pending future effects cannot enter the scene');
   for(const item of compiles.splice(0))item.resolve();await turn();
   prepared=vfx.prepareHistoricalMotion(preview,support);assert.equal(prepared.remoteAutonomous,true,'ready hidden meshes are offered again to the admission publisher');assert.ok(future.every(root=>!root.visible),'admission does not itself start a future effect');
