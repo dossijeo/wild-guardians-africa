@@ -804,7 +804,8 @@ bool barrierClear(double x,double z,const int* ignored=nullptr,int ignoredCount=
 // endpoints are clear. Test the exact segment against the same expanded
 // rectangles used by barrierClear, so planning and continuous motion agree.
 bool wallSegmentClear(double x,double z,double nx,double nz,
-  const int* ignored=nullptr,int ignoredCount=0,double clearanceRadius=-1){
+  const int* ignored=nullptr,int ignoredCount=0,double clearanceRadius=-1,
+  bool includePassable=false){
   const uint8_t profileBit=workerNow?1:2;
   const auto& index=barrierIndex();
   const int minBx=int(std::floor(std::min(x,nx)/barrierBucketWidth));
@@ -817,7 +818,7 @@ bool wallSegmentClear(double x,double z,double nx,double nz,
     for(const int id:bucket->second){
       if(ignored&&std::find(ignored,ignored+ignoredCount,id)!=ignored+ignoredCount)continue;
       const Barrier& wall=index.byId.at(id);
-      if(wall.passMask&profileBit)continue;
+      if(!includePassable&&(wall.passMask&profileBit))continue;
       const double dx=x-wall.x,dz=z-wall.z,ex=nx-wall.x,ez=nz-wall.z;
       const double a[2]={dx*wall.c-dz*wall.s,dx*wall.s+dz*wall.c};
       const double b[2]={ex*wall.c-ez*wall.s,ex*wall.s+ez*wall.c};
@@ -1574,6 +1575,7 @@ extern "C" {
 EMSCRIPTEN_KEEPALIVE int spatial_execution_segment_clear(double x,double z,double nx,double nz,double radius){
   return executionSegmentClear(x,z,nx,nz,radius);
 }
+int spatial_execution_profile_kind(){return workerNow?0:1;}
 EMSCRIPTEN_KEEPALIVE double spatial_execution_clearance_checks(){return double(executionClearanceChecks);}
 EMSCRIPTEN_KEEPALIVE double spatial_execution_slope_samples(){return double(executionSlopeSamples);}
 int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){

@@ -1,6 +1,6 @@
 // Included inside spatial-savanna.cpp's native world namespace. This is a
 // one-time, continuous static sweep for route execution, not a second planner.
-// Initial scope: animal profiles on resident Desert terrain. Moving bodies,
+// Initial scope: actor profiles on resident Desert terrain. Moving bodies,
 // gate leaves and other biomes need their own authoritative execution rules.
 struct ExecutionPoint {double x,z;};
 uint64_t executionClearanceChecks=0,executionSlopeSamples=0;
@@ -119,6 +119,10 @@ int executionSolids(ExecutionPoint a,ExecutionPoint b,double radius){
     }
   }
   if(!wallSegmentClear(a.x,a.z,b.x,b.z,nullptr,0,radius))return 0;
+  // Worker-passable barriers may be automatic gates whose leaves still live
+  // outside this static world. Never certify their passage before native gate
+  // timing/geometry is connected. Other ordinary worker connectors are supported.
+  if(workerNow&&!wallSegmentClear(a.x,a.z,b.x,b.z,nullptr,0,radius,true))return -2;
   const int minX=int(std::floor(std::min(a.x,b.x)/barrierBucketWidth)),
     maxX=int(std::floor(std::max(a.x,b.x)/barrierBucketWidth)),
     minZ=int(std::floor(std::min(a.z,b.z)/barrierBucketWidth)),
@@ -129,12 +133,14 @@ int executionSolids(ExecutionPoint a,ExecutionPoint b,double radius){
     if(found==polygonIndex().buckets.end())continue;
     for(int id:found->second){
       if(!polygons.insert(id).second)continue;
-      const auto& polygon=polygonIndex().byId.at(id);if(polygon.passMask&2)continue;
-      if(executionInside(a,polygon)||executionInside(b,polygon))return 0;
+      const auto& polygon=polygonIndex().byId.at(id);
+      const bool passable=polygon.passMask&(workerNow?1:2);
+      if(passable&&!workerNow)continue;
+      if(executionInside(a,polygon)||executionInside(b,polygon))return passable?-2:0;
       const size_t count=polygon.xy.size()/2;
       for(size_t i=0,j=count-1;i<count;j=i++)
         if(executionEdgeDistance(a,b,{polygon.xy[i*2],polygon.xy[i*2+1]},
-             {polygon.xy[j*2],polygon.xy[j*2+1]})<radius)return 0;
+             {polygon.xy[j*2],polygon.xy[j*2+1]})<radius)return passable?-2:0;
     }
   }
   return 1;
@@ -146,7 +152,7 @@ int executionSegmentClear(double x,double z,double nx,double nz,double radius){
   if(!navReady||!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(nx)||!std::isfinite(nz)||
      std::max({std::abs(x),std::abs(z),std::abs(nx),std::abs(nz)})>=2147483000.0||
      !std::isfinite(radius)||radius<=0||radius>2||std::abs(radius-radiusNow)>1e-6)return -3;
-  if(worldBiome!=1||workerNow)return -2;
+  if(worldBiome!=1)return -2;
   const double length=std::hypot(nx-x,nz-z);if(length>10000)return -2;
   const float coordinate=float(std::max({1.0,std::abs(x),std::abs(z),std::abs(nx),std::abs(nz)})+radius+3);
   const double rounding=std::max(1e-7,double(std::nextafter(coordinate,std::numeric_limits<float>::infinity())-coordinate)),

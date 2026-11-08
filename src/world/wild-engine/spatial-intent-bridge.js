@@ -87,6 +87,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     'nav_intent_route_sample','nav_intent_route_sample_ptr',
     'nav_intent_timing_rejection',
     'nav_intent_route_reserve','nav_intent_route_reservation_result_ptr',
+    'nav_intent_route_prepare_motion','nav_intent_route_timing_width','nav_intent_route_sample_width',
     'nav_intent_apply_changes','nav_intent_plan_tasks','nav_intent_results_ptr',
     'nav_intent_restore_assigned_tasks',
     'nav_intent_discard','nav_intent_commit','nav_intent_damaged_structures',
@@ -125,6 +126,8 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     if(typeof wasm?.[name]!=='function')throw TypeError(`Missing ${name}`);
   if(wasm.nav_intent_protocol_version()!==2||wasm.nav_intent_change_width()!==15)
     throw Error('Unsupported native intent protocol; rebuild Wild Engine');
+  if(wasm.nav_intent_route_timing_width()!==20||wasm.nav_intent_route_sample_width()!==18)
+    throw Error('Unsupported native motion layout; rebuild Wild Engine');
   let sequence=0,initialized=false,owningState=null,lastIntentSequence=0;
   const controlObservers=new Set();
   const epoch=()=>`${authorityEpoch}/${wasm.nav_intent_session()}`;
@@ -500,9 +503,9 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
   const nativeRouteTiming=handle=>{
     if(handle?.authorityEpoch!==epoch()||
        wasm.nav_intent_route_timing(handle.session,handle.slot,handle.generation)!==1)return null;
-    const data=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_timing_ptr(),16)),
+    const data=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_timing_ptr(),20)),
       count=data[9];
-    if(data[0]!==1||data[10]!==1||!Number.isSafeInteger(count)||count<0||count>4096)
+    if(data[0]!==1||![1,2].includes(data[10])||!Number.isSafeInteger(count)||count<0||count>4096)
       throw Error('Invalid native route timing contract');
     const points=routePoints(handle),distances=Float64Array.from(new Float64Array(wasm.memory.buffer,
       wasm.nav_intent_route_distances_ptr(handle.session,handle.slot,handle.generation),count));
@@ -510,14 +513,37 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     return Object.freeze({actorId:data[1],routeHandle:handle,startTime:data[2],endTime:data[3],
       speed:data[4],radius:data[5],origin:Object.freeze({x:data[6],z:data[7]}),distance:data[8],
       duration:data[3]-data[2],assignmentSequence:data[11],profile:data[12],points,distances,
-      executionScope:'static-desert-animal',authorizedAutonomy:false});
+      executionScope:data[10]===2?'static-desert-worker':'static-desert-animal',authorizedAutonomy:false,
+      ...(data[10]===2?{motionMode:'worker',runDistance:data[16],runSpeed:data[17],
+        runBudget:data[18],motionFlags:data[19]}:{})});
   };
   const sampleNativeRoute=(handle,at)=>{
     if(handle?.authorityEpoch!==epoch()||
        wasm.nav_intent_route_sample(handle.session,handle.slot,handle.generation,at)!==1)return null;
-    const data=new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_sample_ptr(),9);
+    const data=new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_sample_ptr(),18);
     return {x:data[0],z:data[1],distance:data[2],phase:data[3],yaw:data[4],
-      firstRemainingPoint:data[5],arrived:data[6]===1,at:data[7],duration:data[8]};
+      firstRemainingPoint:data[5],arrived:data[6]===1,at:data[7],duration:data[8],
+      ...(data[17]===2?{runPhase:data[9],walkPhase:data[10],carryPhase:data[11],
+        runDistance:data[12],walkDistance:data[13],runRemaining:data[14],
+        running:data[15]===1,currentSpeed:data[16]}:{})};
+  };
+  const prepareNativeRouteMotion=(handle,{radius,urgent=false,flight=false,slow=false,
+    carrying=false,recovering=false,incapacitated=false,runRemaining=0}={})=>{
+    const facts=[urgent,flight,slow,carrying,recovering,incapacitated];
+    if(facts.some(value=>typeof value!=='boolean')||!Number.isFinite(radius)||radius<=0||radius>2||
+       !Number.isFinite(runRemaining)||runRemaining<0||runRemaining>1e9)
+      throw TypeError('Expected native route motion policy facts');
+    if(handle?.authorityEpoch!==epoch())return {status:'stale'};
+    syncBoundaryTime();
+    const flags=facts.reduce((value,enabled,bit)=>value|(enabled?1<<bit:0),0),
+      status=wasm.nav_intent_route_prepare_motion(handle.session,handle.slot,handle.generation,
+        radius,flags,runRemaining);
+    if(status!==1)return {status:status===-1?'stale':status===-7?
+      ({1:'blocked',2:'unknown',3:'unsupported',4:'invalid'}[wasm.nav_intent_timing_rejection()]??'invalid'):'unsupported'};
+    const data=new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_timing_ptr(),20),
+      replacement=routeHandle(data[13],data[14],data[15]),motionPlan=nativeRouteTiming(replacement);
+    flushNativeIntentControl();
+    return {status:'prepared',routeHandle:replacement,motionPlan};
   };
   const reserveNativeRoute=(handle,bodyId)=>{
     if(handle?.authorityEpoch!==epoch())return {status:'stale',authorizedAutonomy:false};
@@ -903,7 +929,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     structureFor:id=>structuresById.get(numericId(id))??null,
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
-    intentChanges,routePoints,nativeRouteTiming,sampleNativeRoute,reserveNativeRoute,projectRouteProgress,processEventBoundary,requestReroute,
+    intentChanges,routePoints,nativeRouteTiming,sampleNativeRoute,prepareNativeRouteMotion,reserveNativeRoute,projectRouteProgress,processEventBoundary,requestReroute,
     registerAttackIntent,planAttackCrop,planAttackWall,replanAttackRoute,
     planRetreatRoute,planHomeRoute,
     cancelHomeIntent:actorId=>wasm.nav_intent_cancel_home(numericId(actorId))===1,
@@ -1812,5 +1838,6 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     intentChanges:bridge.intentChanges,routePoints:bridge.routePoints,
     nativeRouteTiming:bridge.nativeRouteTiming,sampleNativeRoute:bridge.sampleNativeRoute,
     reserveNativeRoute:bridge.reserveNativeRoute,
+    prepareNativeRouteMotion:bridge.prepareNativeRouteMotion,
     discard:bridge.discard,commit:bridge.commit,sequence:bridge.sequence};
 }

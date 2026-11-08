@@ -427,3 +427,54 @@ registro físico, no puertas/terreno/topología ni publicaciones gráficas ya en
 vuelo. No se ha habilitado movimiento GPU, retirado JS ni superado el gate C de
 tráfico integrado. Siguen pendientes reloj causal, pérdida de canal, frontera
 de mutación completa y aceptación real A–F; **A6 permanece abierto**.
+
+## Preparación temporal común: trabajadores — 2026-11-09
+
+`prepareNativeRouteMotion(handle,facts)` transforma la ruta ya seleccionada por
+la intención nativa, sin solicitar otra ni planificar en JS. Funciona sobre los
+mismos slots de tareas directas, riego, reparación y regreso; un cambio temporal
+publica un reemplazo versionado y revoca exactamente la generación anterior.
+Los fallos conservan geometría, asignación, reservas y log. No se permite retimar
+una reserva activa ni convertir tarde una ruta y reiniciarla en su origen viejo.
+
+El modo de trabajador usa las reglas actuales de `moveWorker`: 0,72 m/s de base
+al andar, 1,6 al correr, multiplicador de desplazamiento 1,5, carrera limitada por
+presupuesto salvo huida, carga sin carrera, recuperación/incapacitación, y factor
+0,35 solo en la carrera lenta. Las fases conservan sus denominadores originales:
+carrera sobre 1,6 × 1,5 y marcha/carga sobre 0,72. Los datos de urgencia, carga,
+estado y presupuesto se suministran en la frontera de preparación; no se acepta
+una velocidad arbitraria del renderer. Esas decisiones de gameplay aún no han
+migrado todas a C++, ni se afirma lo contrario.
+
+La evaluación y el solver de reservas son comunes a animales y trabajadores.
+La unión temporal incluye también el agotamiento de carrera dentro de una arista:
+no basta con los waypoints geométricos. Tras una replanificación de trabajador se
+exigen hechos de movimiento actuales, no se reutiliza un presupuesto que podría
+haberse consumido. Las lecturas de candidatos usan layouts explícitos de 20
+doubles (plan) y 18 (muestra), comprobados por el bridge y en pthread.
+Se rechazan también relojes cuya cuantización exceda el margen espacial del
+solver o fusione un cambio de velocidad: no se presenta ese caso como continuo.
+
+El barrido estático continuo se amplió a perfiles de trabajador en Desierto,
+respetando sus máscaras. Los pasos por barreras/polígonos permitidos al trabajador
+se tratan como no soportados cuando intersectan el conector: podrían representar
+puertas cuyas hojas y reloj aún faltan. No se usa la pasabilidad del grafo como
+certificado de ejecución de una puerta móvil. Otros biomas siguen fuera del
+dominio probado.
+
+Ocho pruebas nuevas con WASM real: preparación/revocación sin planificación,
+paridad de posición/fases/presupuesto con nueve combinaciones de `moveWorker`,
+conflicto dentro de una arista con cambio de velocidad, mil evaluaciones sin
+validaciones ni mutación de gameplay, guardas heredadas y rechazo de puertas,
+retiro de reserva/cambio de hechos, tareas directas/riego/reparación realmente
+comprometidas por el planner nativo y distancia cero/fallos atómicos. Regresión
+ampliada: **261 aprobadas sin skips**, con ambos binarios reconstruidos y detours
+heredados contrastados contra el WASM previo de Git. Log:
+`.cache/native-worker-motion-regression.tap`.
+
+**No es cierre de A6:** preparación y reservas siguen opt-in y con
+`authorizedAutonomy:false`; el producto conserva su ejecutor/guardas actuales.
+Faltan ejecución lógica común y consecuencias, resolución de cesiones/desvíos,
+puertas/otros biomas, reloj causal, pérdida de canal y aceptación integrada real
+de animales **y trabajadores**. Ningún éxito específico de AttackCrops sustituye
+ese alcance.

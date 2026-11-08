@@ -79,6 +79,11 @@ camino crítico sin pedir autorización rutinaria entre hitos.
       Mutaciones de cuerpos incompatibles se rechazan antes de aplicarse;
       253 pruebas dirigidas pasan sin skips. Aún conservadoras, sin resolver
       cesiones/desvíos ni autorizar movimiento de producto/GPU.
+      Preparación temporal común también disponible para rutas de trabajadores
+      (tareas directas, riego, reparación y regreso), con carrera/presupuesto,
+      carga, huida y fases preservados frente a `moveWorker`. El barrido admite
+      conectores de trabajadores en Desierto, pero rechaza pasos automáticos sin
+      hojas/tiempos nativos. Regresión ampliada: 261 aprobadas sin skips.
 - [ ] Vertical AttackCrops completa y aceptación real A–F (primer caso integrado,
       no cierre de A6 por sí solo).
 - [ ] Generalizar a otras bestias, trabajadores, intenciones y animaciones;

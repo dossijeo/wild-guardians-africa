@@ -15,9 +15,12 @@ void reservationKnots(const ReservationPath& path,double now,std::vector<double>
   const auto& route=*path.route;
   if(route.startTime>now)times.push_back(route.startTime);
   for(double distance:route.distances){
-    const double at=route.startTime+distance/route.speed;
+    const double at=routeTimeAtDistance(route,distance);
     if(at>now)times.push_back(at);
   }
+  // A budget exhaustion can change speed in the middle of a geometric edge.
+  const double change=routeTimeAtDistance(route,route.runDistance);
+  if(route.runDistance>0&&change>now)times.push_back(change);
 }
 // Relative motion is affine on the union of both native timetables' knots.
 // Solve minimum separation on each interval analytically, including the held

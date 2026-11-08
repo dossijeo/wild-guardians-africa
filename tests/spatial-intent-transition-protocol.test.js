@@ -31,6 +31,9 @@ test('pthread runtime exposes the same native transition ABI as standalone',asyn
       'nav_intent_route_reservation_pairs','nav_intent_route_reservation_body_checks',
       'nav_intent_route_reservation_mutation_candidates'])
       assert.equal(typeof world.core.wasm[name],'function',name);
+    assert.equal(typeof world.core.wasm.nav_intent_route_prepare_motion,'function');
+    assert.equal(world.core.wasm.nav_intent_route_timing_width(),20);
+    assert.equal(world.core.wasm.nav_intent_route_sample_width(),18);
   }finally{await world.dispose();}
 });
 function fixture(options={}){
