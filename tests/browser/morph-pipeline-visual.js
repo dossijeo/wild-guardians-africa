@@ -32,7 +32,7 @@ try{
   await device.queue.onSubmittedWorkDone();result.shadowSettled=true;
  }
  for(const [frame,time] of [0,.25,.8,1.3].entries()){
-  for(const [actorIndex,actor] of actors.entries()){actor.mixer?.setTime(time);for(const [meshIndex,mesh] of actor.morphs.entries())for(let i=0;i<mesh.morphTargetInfluences.length;i++)mesh.morphTargetInfluences[i]=(!zeroMorph&&(i+meshIndex+actorIndex+frame)%4===0)?0.25:0;}
+  for(const [actorIndex,actor] of actors.entries()){actor.mixer?.setTime(time+(query.get('phaseOffsets')==='1'?actorIndex*.071:0));for(const [meshIndex,mesh] of actor.morphs.entries())for(let i=0;i<mesh.morphTargetInfluences.length;i++)mesh.morphTargetInfluences[i]=(!zeroMorph&&(i+meshIndex+actorIndex+frame)%4===0)?0.25:0;}
   if(query.get('settleShadows')==='1'){renderer.render(scene,camera);await device.queue.onSubmittedWorkDone();}
   let pixels;const repeatHashes=[];for(let repeat=0;repeat<repeats;repeat++){renderer.render(scene,camera);const current=Uint8Array.from(await renderer.readRenderTargetPixelsAsync(target,0,0,640,384)),hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',current))).map(v=>v.toString(16).padStart(2,'0')).join('');repeatHashes.push(hash);if(!pixels)pixels=current;}
   let nonBackground=0;for(let i=0;i<pixels.length;i+=4)if(pixels[i]!==pixels[0]||pixels[i+1]!==pixels[1]||pixels[i+2]!==pixels[2])nonBackground++;
