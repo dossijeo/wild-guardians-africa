@@ -3,6 +3,20 @@ import assert from 'node:assert/strict';
 import {createConfirmedHistoricalClock} from '../src/rendering/confirmed-historical-clock.js';
 
 const candidate=()=>({sequence:1,start:10,end:13,safeForAutonomousPlayback:true,reasons:[],clockSegments:{version:1,start:10,end:13,startPauses:[],endPauses:[],complete:true,segments:[{start:10,end:11,realDuration:1,rate:1},{start:11,end:13,realDuration:.4,rate:5}]}});
+const interval=(sequence,start,end)=>({sequence,start,end,safeForAutonomousPlayback:true,reasons:[],clockSegments:{version:1,start,end,startPauses:[],endPauses:[],complete:true,segments:[{start,end,realDuration:end-start,rate:1}]}});
+test('confirmed intervals share one wall timeline instead of accumulating frame rounding and preparation time',()=>{
+ let now=0;const clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now});
+ clock.begin(interval(1,0,.1));now=165;assert.equal(clock.advance(),.1);clock.commitBoundary(1,.1);
+ now=185;clock.begin(interval(2,.1,.2));assert.ok(Math.abs(clock.advance()-.185)<1e-10);
+ now=350;assert.equal(clock.advance(),.2);clock.commitBoundary(2,.2);
+ clock.begin(interval(3,.2,.3));assert.equal(clock.advance(),.3);clock.commitBoundary(3,.3);
+ clock.begin(interval(4,.3,.4));assert.ok(Math.abs(clock.advance()-.35)<1e-10);
+ assert.throws(()=>clock.commitBoundary(4,.4),/not complete/);clock.dispose();
+});
+test('explicit suspension excludes hidden time and fallback resets the timeline anchor',()=>{
+ let now=0;const clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now});clock.begin(interval(1,0,.1));now=50;clock.suspend();now=10050;clock.resume();now=10125;assert.equal(clock.advance(),.1);clock.commitBoundary(1,.1);clock.begin(interval(2,.1,.2));assert.ok(Math.abs(clock.advance()-.125)<1e-10);clock.abandonForBoundary(interval(2,.1,.2));clock.syncCommitted(2,.2);now=20000;clock.begin(interval(3,.2,.3));assert.equal(clock.advance(),.2);clock.dispose();
+});
+test('visibility between certified publications can explicitly reset continuity',()=>{let now=0;const clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now});clock.begin(interval(1,0,.1));assert.throws(()=>clock.resetContinuity(),/active/);now=150;clock.advance();clock.commitBoundary(1,.1);clock.resetContinuity();now=10000;clock.begin(interval(2,.1,.2));assert.equal(clock.advance(),.1);clock.dispose();});
 test('sublimits cannot be crossed before release and preserve elapsed frame time',()=>{let now=0;const clock=createConfirmedHistoricalClock({initialElapsed:10,now:()=>now});try{clock.begin(candidate());now=1200;assert.equal(clock.advanceUntil(10.5),10.5);assert.equal(clock.advance(),10.5);assert.throws(()=>clock.advanceUntil(11),/limit/);assert.throws(()=>clock.releaseLimit(11),/not reached/);clock.releaseLimit(10.5);assert.equal(clock.advanceUntil(11),11);clock.releaseLimit(11);assert.ok(Math.abs(clock.advance()-12)<1e-8);now=1400;assert.equal(clock.advance(),13);clock.commitBoundary(1,13);}finally{clock.dispose();}});
 test('the shared presentation clock commits once and cannot jump over a partial GPU interval',()=>{
  let now=0;const clock=createConfirmedHistoricalClock({initialElapsed:10,now:()=>now});

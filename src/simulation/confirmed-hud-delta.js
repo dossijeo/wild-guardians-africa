@@ -23,7 +23,8 @@ export function createConfirmedHudDeltaEncoder({validate=null}={}){
  },reset(){previous=null;}};
 }
 
-export function createConfirmedHudDeltaDecoder({validate=null}={}){
+export function createConfirmedHudDeltaDecoder({validate=null,immutable=false}={}){
+ if(immutable)return createImmutableHudDecoder(validate);
  if(validate!==null&&typeof validate!=='function')throw TypeError('Invalid HUD validator');let current=null,generation=0;
  return {decode(packet){if(!plain(packet)||!Number.isSafeInteger(packet.sequence)||packet.sequence<0)throw TypeError('Invalid HUD packet');if(packet.kind==='baseline'){checkView(packet.view,packet.sequence,validate);if(current&&(packet.sequence<current.sequence||packet.sequence===current.sequence&&!equal(packet.view,current)))throw Error('Stale HUD baseline');current=copy(packet.view);generation++;return copy(current);}if(packet.kind!=='delta'||!current||packet.base!==current.sequence||packet.sequence<=packet.base)throw Error('HUD delta base mismatch');
   const next=copy(current);applyFields(next,packet.root);if(Object.hasOwn(packet.root.set,'sequence')||packet.root.remove.includes('sequence')||Object.hasOwn(packet.root.set,'audio')||packet.root.remove.includes('audio'))throw TypeError('Invalid HUD root delta');applyFields(next.audio,packet.audio);for(const key of [...collectionNames,'raid'])if(Object.hasOwn(packet.audio.set,key)||packet.audio.remove.includes(key))throw TypeError('Invalid HUD audio delta');
@@ -32,4 +33,29 @@ export function createConfirmedHudDeltaDecoder({validate=null}={}){
   next.sequence=packet.sequence;checkView(next,packet.sequence,validate);current=next;generation++;return copy(current);
  },prepare(packet){const expected=generation,shadow=createConfirmedHudDeltaDecoder({validate});if(current)shadow.decode({kind:'baseline',sequence:current.sequence,view:current});const candidate=shadow.decode(packet);let used=false;return {view:copy(candidate),commit(){if(used||generation!==expected)throw Error('Stale HUD preparation');used=true;current=copy(candidate);generation++;return copy(current);}};
  },reset(){current=null;generation++;},status(){return {sequence:current?.sequence??null};}};
+}
+
+// The UI owns a read-only projection, not another mutable simulation snapshot.
+// Unchanged subtrees retain identity. A transaction publishes one frozen root;
+// neither callers nor validators can mutate a pending or committed generation.
+function createImmutableHudDecoder(validate){
+ if(validate!==null&&typeof validate!=='function')throw TypeError('Invalid HUD validator');
+ let current=null,generation=0;const frozen=new WeakSet();
+ function freeze(value){if(value&&typeof value==='object'&&!frozen.has(value)){for(const child of Object.values(value))freeze(child);Object.freeze(value);frozen.add(value);}return value;}
+ function candidate(packet){
+  if(!plain(packet)||!Number.isSafeInteger(packet.sequence)||packet.sequence<0)throw TypeError('Invalid HUD packet');
+  let next;
+  if(packet.kind==='baseline'){next=freeze(copy(packet.view));checkView(next,packet.sequence,validate);if(current&&(packet.sequence<current.sequence||packet.sequence===current.sequence&&!equal(next,current)))throw Error('Stale HUD baseline');return next;}
+  if(packet.kind!=='delta'||!current||packet.base!==current.sequence||packet.sequence<=packet.base)throw Error('HUD delta base mismatch');
+  next={...current,audio:{...current.audio,raid:current.audio.raid?{...current.audio.raid}:null}};
+  applyFields(next,packet.root);if(Object.hasOwn(packet.root.set,'sequence')||packet.root.remove.includes('sequence')||Object.hasOwn(packet.root.set,'audio')||packet.root.remove.includes('audio'))throw TypeError('Invalid HUD root delta');
+  applyFields(next.audio,packet.audio);for(const key of [...collectionNames,'raid'])if(Object.hasOwn(packet.audio.set,key)||packet.audio.remove.includes(key))throw TypeError('Invalid HUD audio delta');
+  if(Object.hasOwn(packet,'raid')){if(packet.raid!==null&&!plain(packet.raid))throw TypeError('Invalid HUD raid');next.audio.raid=packet.raid===null?null:{...copy(packet.raid),animals:[]};}
+  if(!plain(packet.collections)||Object.keys(packet.collections).some(name=>![...collectionNames,'raidAnimals'].includes(name)))throw TypeError('Invalid HUD collections');
+  for(const name of collectionNames)if(Object.hasOwn(packet.collections,name))next.audio[name]=applyCollection(next.audio[name],packet.collections[name]);
+  if(Object.hasOwn(packet.collections,'raidAnimals')){if(!next.audio.raid)throw TypeError('HUD raid missing');next.audio.raid.animals=applyCollection(next.audio.raid.animals,packet.collections.raidAnimals);}
+  next.sequence=packet.sequence;freeze(next);checkView(next,packet.sequence,validate);return next;
+ }
+ function prepare(packet){const expected=generation,next=candidate(packet);let used=false;return {view:next,commit(){if(used||generation!==expected)throw Error('Stale HUD preparation');used=true;current=next;generation++;return current;}};}
+ return {prepare,decode(packet){return prepare(packet).commit();},reset(){current=null;generation++;},status(){return {sequence:current?.sequence??null};}};
 }

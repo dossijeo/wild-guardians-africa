@@ -7,6 +7,15 @@ import {createConfirmedHudDeltaEncoder,createConfirmedHudDeltaDecoder} from '../
 import {createConfirmedActorAudio,applyConfirmedActorAudio} from '../src/simulation/confirmed-actor-audio.js';
 import {createConfirmedHudReceiver} from '../src/simulation/confirmed-hud-receiver.js';
 
+test('immutable HUD transactions share unchanged entities and isolate packets, validators and generations',()=>{
+ const state=newGame({seed:721}),encoder=createConfirmedHudDeltaEncoder(),reference=createConfirmedHudDeltaDecoder({validate:validateConfirmedHudSchema});let retained;
+ const decoder=createConfirmedHudDeltaDecoder({immutable:true,validate:(view,sequence)=>{retained=view;validateConfirmedHudSchema(view,sequence);}});
+ state.workers=[{id:'w1',profile:'farmer',status:'idle',x:1,z:2},{id:'w2',profile:'farmer',status:'idle',x:3,z:4}];
+ const packet=encoder.encode(projectConfirmedHud(state,1)),first=decoder.decode(packet);assert.deepEqual(first,reference.decode(packet));packet.view.audio.workers[0].x=999;assert.equal(first.audio.workers[0].x,1);assert.throws(()=>{retained.audio.workers[0].x=999;},TypeError);
+ state.workers[0].x=5;const delta=encoder.encode(projectConfirmedHud(state,2)),pending=decoder.prepare(delta),stale=decoder.prepare(delta);assert.equal(pending.view.audio.workers[1],first.audio.workers[1]);assert.notEqual(pending.view.audio.workers[0],first.audio.workers[0]);assert.equal(decoder.status().sequence,1);assert.throws(()=>{pending.view.audio.workers.push({});},TypeError);assert.deepEqual(pending.commit(),reference.decode(delta));assert.throws(()=>stale.commit(),/Stale/);
+ state.workers.reverse();state.workers.pop();state.raid={id:'r',animals:[{id:'a',species:'hyena',status:'walking',x:0,z:0}]};const next=encoder.encode(projectConfirmedHud(state,3));assert.throws(()=>decoder.prepare({...next,collections:{workers:{remove:['missing'],upsert:[]}}}),/entity removal/);assert.equal(decoder.status().sequence,2);assert.deepEqual(decoder.decode(next),reference.decode(next));state.raid=null;state.workers=[];const last=encoder.encode(projectConfirmedHud(state,4));assert.deepEqual(decoder.decode(last),reference.decode(last));const baseline=decoder.prepare({kind:'baseline',sequence:4,view:projectConfirmedHud(state,4)});decoder.reset();assert.throws(()=>baseline.commit(),/Stale/);
+});
+
 test('HUD rejects a journal timestamp that disagrees with its confirmed event',()=>{
  const state=newGame({seed:717}),initialState={slotId:state.slotId,elapsed:state.elapsed,sequence:state.sequence},seen=[],receiver=createConfirmedHudReceiver({session:'s',initialState,onPublication:(_,envelope)=>seen.push(...envelope.publication.events)}),encoder=createConfirmedHudDeltaEncoder({validate:validateConfirmedHudSchema});
  state.elapsed+=.1;emit(state,'Test');const event=state.events.at(-1),publication={sequence:1,events:[event],hudDelta:encoder.encode(projectConfirmedHud(state,1)),presentationJournalVersion:2,presentationJournal:[{kind:'event',eventId:event.id,at:event.simulationTime}]},envelope={kind:'publication',session:'s',publication};
