@@ -1,5 +1,7 @@
 # Copias del HUD: comparación y descarte de integración
 
+> Actualización: después de integrar la reutilización de hierba se repitió la comparación con un candidato de aislamiento reforzado; véase [la nueva evaluación](webgpu-hud-decoder-after-grass-20261108.md). El decodificador de producción no se ha sustituido.
+
 La traza de la incursión señaló `copy` en la recepción del HUD. Se compararon tres líneas: eliminar las copias redundantes manteniendo una transacción aislada; compartir estructuralmente las colecciones sin copiar las entidades intactas; y desplazar más trabajo de proyección a otro Worker. Se probó la primera porque no cambia el contrato ni añade sincronización. Las otras dos requieren revisar propiedad, mutaciones y seguridad del transporte; no se han implementado ni medido.
 
 El candidato construye una sola vista interna para `prepare`, entrega una copia al consumidor y publica la vista interna solo tras validar la generación. Conserva copias para los datos que salen del decodificador. Pasó las pruebas de orden, invalidación, eventos, aislamiento y autoridad WASM. Está archivado exclusivamente en [tools/experiments/hud-decoder-candidate.mjs](../../tools/experiments/hud-decoder-candidate.mjs); **la implementación de producción se ha restaurado**.

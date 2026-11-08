@@ -7,7 +7,7 @@ import {deserialize,serialize} from '../../src/persistence/snapshots.js';
 import {createSimulationAuthority} from '../../src/simulation/simulation-authority.js';
 import {projectConfirmedHud,validateConfirmedHudSchema} from '../../src/simulation/confirmed-hud-projection.js';
 import {createConfirmedHudDeltaEncoder} from '../../src/simulation/confirmed-hud-delta.js';
-import {createConfirmedHudDeltaDecoder as currentDecoder} from './hud-decoder-candidate.mjs';
+import {createConfirmedHudDeltaDecoder as currentDecoder} from './hud-decoder-isolated-candidate.mjs';
 
 const baselineRevision=process.env.QA_HUD_BASELINE??'168fb9d4f';
 const source=execFileSync('git',['show',`${baselineRevision}:src/simulation/confirmed-hud-delta.js`],{encoding:'utf8'}),{createConfirmedHudDeltaDecoder:baselineDecoder}=await import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'));
@@ -18,4 +18,4 @@ function run(factory,collect=false){const decoder=factory({validate:validateConf
 const a=run(baselineDecoder,true),b=run(currentDecoder,true);assert.deepEqual(a.outputs,b.outputs);let oldCount=0,newCount=0;const clone=globalThis.structuredClone;try{globalThis.structuredClone=(...args)=>{oldCount++;return clone(...args);};run(baselineDecoder);globalThis.structuredClone=(...args)=>{newCount++;return clone(...args);};run(currentDecoder);}finally{globalThis.structuredClone=clone;}
 const samples={baseline:[],current:[]};for(const order of [['baseline','current'],['current','baseline'],['current','baseline'],['baseline','current']])for(const name of order){globalThis.gc?.();const runResult=run(name==='baseline'?baselineDecoder:currentDecoder);samples[name].push(...runResult.times.slice(1));}
 const stats=values=>({count:values.length,mean:values.reduce((x,y)=>x+y,0)/values.length,p95:percentile(values,.95),p99:percentile(values,.99),max:Math.max(...values)});
-console.log(JSON.stringify({baselineRevision,fixture:'sabana712-d6-native-multi-reservation',packets:packets.length,passes:4,clones:{baseline:oldCount,current:newCount},baseline:stats(samples.baseline),current:stats(samples.current),scope:'Archived candidate only; Node prepare+commit of identical recorded real WASM HUD packets, schema validation included; no browser, render, GPU or end-to-end frametime'},null,2));
+console.log(JSON.stringify({baselineRevision,fixture:'sabana712-d6-native-multi-reservation',packets:packets.length,passes:4,clones:{baseline:oldCount,current:newCount},baseline:stats(samples.baseline),current:stats(samples.current),scope:'Archived isolated candidate; Node prepare+commit of identical recorded real WASM HUD packets, schema validation included; no browser, render, GPU or end-to-end frametime'},null,2));
