@@ -1,5 +1,7 @@
 # Incursión WebGPU: reutilización de morph y cobertura de hierba
 
+> Actualización: la reutilización de hierba se integró posteriormente; el cambio de morph continúa fuera de producción. Véase [la validación de la integración](webgpu-grass-reuse-integration-20261108.md).
+
 Fecha: 2026-11-08. Ninguna de las variantes está activada en producción. Se usa la misma incursión guardada y perfil temporal WebGPU de producto, con la hierba habilitada y adaptador NVIDIA Turing. El instrumento recoge solo tres inspecciones asíncronas, intervalos del hilo principal e intervalos entre callbacks del Worker gráfico. El tiempo GPU y la presentación física no se miden. Las ejecuciones no alcanzan el mismo estado de simulación, y el árbol contenía modificaciones locales ajenas.
 
 La variante de morph cambia temporalmente en QA el nombre interno de una referencia de Three para permitir reutilización de shaders; se comprobó que se interceptó el módulo. El candidato combinado añade el parche `grass-resume-reuse-experiment.patch`, que intenta conservar fragmentos sin cambios de terreno, agua, ocupación o calidad. La referencia usa ambas rutas originales. Se rechazó cualquier muestra final sin hierba visible; esta comprobación es necesaria pero no demuestra paridad visual completa.

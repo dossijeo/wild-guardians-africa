@@ -1,5 +1,7 @@
 # Incursión WebGPU: cola de presentación y reconstrucción de hierba
 
+> Actualización: el candidato de reutilización de hierba se integró después de esta investigación; véase [la validación y la reversión](webgpu-grass-reuse-integration-20261108.md). El resto de este informe conserva los resultados y la decisión de aquel momento.
+
 Fecha: 2026-11-08. Investigación de rendimiento; no es una integración de producción.
 
 ## Hallazgos

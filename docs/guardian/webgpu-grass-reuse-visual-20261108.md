@@ -1,5 +1,7 @@
 # Reutilización de hierba: equivalencia por bioma y captura WebGPU
 
+> Actualización: el candidato se integró posteriormente con una vía de reversión; véase [la integración y la medición GPU](webgpu-grass-reuse-integration-20261108.md). Las instrucciones de aplicar el parche de este informe describen únicamente el experimento anterior.
+
 Fecha: 2026-11-08. El parche `grass-resume-reuse-experiment.patch` sigue fuera de producción.
 
 ## Datos generados
