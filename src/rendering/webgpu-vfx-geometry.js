@@ -12,7 +12,26 @@ export function webGpuVfxGeometryGraph(){
  return sharedGraph=Object.freeze({output:vec4(rgb.min(1.7),clamp(alpha,0,.85)),eye,time});
 }
 export function createWebGpuVfxGeometryMaterial(){const material=new MeshBasicNodeMaterial(vfxPassRecipe('geometry').structural.state);material.outputNode=webGpuVfxGeometryGraph().output;return material;}
-export function createWebGpuVfxGeometry(root,{material=null}={}){
- if(!root?.isObject3D||material!==null&&(!material?.isNodeMaterial||material.outputNode!==webGpuVfxGeometryGraph().output))throw TypeError('Invalid VFX geometry');const owned=material===null;material??=createWebGpuVfxGeometryMaterial();const geometry=new THREE.BufferGeometry(),mesh=new THREE.Mesh(geometry,material);mesh._wgVfxGeometryEye=new THREE.Vector3();mesh._wgVfxGeometryTime=0;const eye={value:mesh._wgVfxGeometryEye},time={get value(){return mesh._wgVfxGeometryTime;},set value(value){mesh._wgVfxGeometryTime=value;}};mesh.frustumCulled=false;mesh.renderOrder=3;mesh.raycast=()=>{};root.add(mesh);let buffer=null,disposed=false;
- return {mesh,eye,time,update(data){const count=data.length/11,changed=!buffer||buffer.count<count;if(changed){buffer=new THREE.InterleavedBuffer(new Float32Array(Math.max(count,1)*11),11).setUsage(THREE.DynamicDrawUsage);for(const [name,size,offset] of [['position',3,0],['normal',3,3],['color',4,6],['vfxKind',1,10]])geometry.setAttribute(name,new THREE.InterleavedBufferAttribute(buffer,size,offset));}buffer.array.set(data);buffer.clearUpdateRanges();if(count){buffer.addUpdateRange(0,data.length);buffer.needsUpdate=true;}geometry.setDrawRange(0,count);mesh.visible=count>0;return changed;},dispose(){if(disposed)return;disposed=true;root.remove(mesh);geometry.dispose();if(owned)material.dispose();}};
+export function createWebGpuVfxGeometry(root,{material=null,deferRelease=release=>release()}={}){
+ if(typeof deferRelease!=='function'||!root?.isObject3D||material!==null&&(!material?.isNodeMaterial||material.outputNode!==webGpuVfxGeometryGraph().output))throw TypeError('Invalid VFX geometry');
+ const owned=material===null;material??=createWebGpuVfxGeometryMaterial();
+ const eye={value:new THREE.Vector3()};let currentTime=0,buffer=null,disposed=false;
+ const time={get value(){return currentTime;},set value(value){currentTime=value;mesh._wgVfxGeometryTime=value;}};
+ function generation(geometry){const value=new THREE.Mesh(geometry,material);value._wgVfxGeometryEye=eye.value;value._wgVfxGeometryTime=currentTime;value.frustumCulled=false;value.renderOrder=3;value.raycast=()=>{};root.add(value);return value;}
+ let mesh=generation(new THREE.BufferGeometry());
+ return {get mesh(){return mesh;},eye,time,update(data){
+  if(disposed)throw Error('VFX geometry disposed');if(!(data instanceof Float32Array)||data.length%11!==0)throw TypeError('Invalid VFX geometry data');
+  const count=data.length/11,changed=!buffer||buffer.count<count;
+  if(changed){
+   // Resource generations are immutable for an admitted draw object. Three's
+   // geometry disposal closes over its RenderObject: reusing that object for
+   // a larger buffer can retire its NEW bindings when the old geometry frees.
+   const previous=mesh,geometry=new THREE.BufferGeometry();
+   buffer=new THREE.InterleavedBuffer(new Float32Array(2**Math.ceil(Math.log2(Math.max(count,1)))*11),11).setUsage(THREE.DynamicDrawUsage);
+   for(const [name,size,offset] of [['position',3,0],['normal',3,3],['color',4,6],['vfxKind',1,10]])geometry.setAttribute(name,new THREE.InterleavedBufferAttribute(buffer,size,offset));
+   mesh=generation(geometry);root.remove(previous);previous.visible=false;deferRelease(()=>previous.geometry.dispose());
+  }
+  buffer.array.set(data);buffer.clearUpdateRanges();if(count){buffer.addUpdateRange(0,data.length);buffer.needsUpdate=true;}
+  mesh.geometry.setDrawRange(0,count);mesh.visible=count>0;return changed;
+ },dispose(){if(disposed)return;disposed=true;root.remove(mesh);mesh.geometry.dispose();if(owned)material.dispose();}};
 }
