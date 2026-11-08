@@ -1,5 +1,10 @@
 # A6: movimiento confirmado y entrega de pose
 
+> **2026-11-08: A6 reabierto.** Este mecanismo es reproducción histórica y no
+> satisface la autonomía por intenciones solicitada. La
+> [corrección arquitectónica](intent-route-architecture-correction-20261108.md)
+> prevalece sobre cualquier declaración anterior de cierre interno.
+
 ## Problema y decisión
 
 La entrada suspendía el intervalo visual y esperaba una confirmación que estaba

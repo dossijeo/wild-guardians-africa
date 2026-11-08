@@ -429,6 +429,10 @@ Reutilizar Vertex Colors, paquetes progresivos y KTX2/BC7. Seleccionar el format
 
 ### A6. Contrato de movilidad y animación autónomas
 
+**Corrección 2026-11-08: A6 reabierto.** El cierre interno histórico descrito
+debajo no satisface locomoción autónoma por planes completos. Véase la
+[auditoría y contrato corregido](intent-route-architecture-correction-20261108.md).
+
 Actualización 2026-11-06: resuelto el bloqueo circular entre input, trayectoria histórica y entrega de pose. El certificador real está conectado al perfil temporal; un reloj común, callbacks por ID en fronteras y rollback de versiones permiten continuar B sin exigir primero todos los clips GPU. Véase [contrato, pruebas y límites de A6](a6-autonomous-motion-handoff.md). Este cierre del contrato interno no equivale a activar el perfil en producción ni a superar la validación visual de C.
 
 
@@ -607,7 +611,7 @@ Cada entrega actualiza el registro siguiente con archivos, commit y comprobacion
 | A3 Materiales y pipelines | Cerrado internamente para familias actuales | Catálogo, parámetros, claves estructurales y cobertura de pases; evidencia en [matriz A1/A3](a1-a3-contract-audit.md). Nuevos contenidos B y paridad/pipelines físicos C pendientes. |
 | A4 Admisión gráfica | Cerrado internamente para rutas actuales | Admisión y publicación de instancias reales, cancelación y pases; indicador provisional inmediato pendiente B3 y validación GPU real C; los cambios globales estructurales futuros exigen transacción explícita |
 | A5 Recursos | Cerrado internamente | Generación, leases, residencia y presión heurística para propietarios explícitos y compuestos; contenidos nuevos B y medición/validación C pendientes |
-| A6 Movilidad y reproducción | Cerrado internamente en el perfil temporal explícito | Intervalos confirmados, horizonte, secuencia, actor e identidad de estado con entrega ordenada y fallbacks; clips B4 y validación C pendientes |
+| A6 Movilidad y reproducción | **Reabierto: corrección arquitectónica pendiente** | Intervalos históricos solo como excepción; faltan ruta completa autónoma, conflictos nativos anticipados, revocación directa y aceptación WASM/WebGPU A–F |
 | A7 Interacción y recuperación | Cerrado internamente en perfil explícito | IDs, orden autoritativo, checkpoint/replay, generaciones y fallo seguro; evidencia en [contrato de recuperación](temporal-recovery-contract.md). Contenido B y recuperación real con GPU/física C pendientes. |
 | B Migración completa | Pendiente tras A | Inventario B1–B7 sin elementos esenciales omitidos |
 | C Validación integrada | No iniciar antes de B | Resultados funcionales, visuales y mediciones |
