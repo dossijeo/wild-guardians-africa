@@ -1,0 +1,47 @@
+{
+  "date": "2026-11-08",
+  "harness": "tests/browser/worker-concurrent-webgpu-minimal.html: window.auditNativeRouteControl()",
+  "browser": "OpenCode/2.2.6 Chrome/152.0.7977.167 Electron/44.9.1 on Windows",
+  "adapter": {"vendor": "nvidia", "architecture": "turing"},
+  "crossOriginIsolated": true,
+  "canvas": [96, 96],
+  "scope": "Real native WASM AttackCrops transitions, sibling preparation/draw Workers, real WebGPU triangle and GPU uniform readback. Manual fixture clock, no authoritative simulation advance, no character model or animation. Component validation only, not acceptance A-F or gameplay performance.",
+  "runs": [
+    {
+      "authorityEpoch": "c5277860-7acd-4e47-ad2a-a0d88a27463d",
+      "blockedMs": 500.06494140625,
+      "controlAppliedDuringBlock": true,
+      "drawFramesDuringBlock": 15,
+      "maxIntervalMs": 33.89501953125,
+      "revokedAt": 10.15406005859375,
+      "gpuRouteTimes": [10.154059410095215, 10.502104759216309],
+      "packets": 1,
+      "replayFrames": 15,
+      "control": {"accepted": 3, "sequence": 3, "active": 1, "admissions": 2, "revoked": 1, "oldEpoch": 0}
+    },
+    {
+      "authorityEpoch": "e95d6466-3e1b-40af-8460-a5d92bdb1bcd",
+      "blockedMs": 500.614990234375,
+      "controlAppliedDuringBlock": true,
+      "drawFramesDuringBlock": 15,
+      "maxIntervalMs": 33.405029296875,
+      "revokedAt": 10.182169921875,
+      "gpuRouteTimes": [10.182169914245605, 10.530279159545898],
+      "packets": 1,
+      "replayFrames": 15,
+      "control": {"accepted": 3, "sequence": 3, "active": 1, "admissions": 2, "revoked": 1, "oldEpoch": 0}
+    },
+    {
+      "authorityEpoch": "e4d9f21f-0af2-4179-9ece-2b72a4febfe0",
+      "blockedMs": 500.074951171875,
+      "controlAppliedDuringBlock": true,
+      "drawFramesDuringBlock": 15,
+      "maxIntervalMs": 33.5400390625,
+      "revokedAt": 10.168750000000001,
+      "gpuRouteTimes": [10.168749809265137, 10.51668930053711],
+      "packets": 1,
+      "replayFrames": 15,
+      "control": {"accepted": 3, "sequence": 3, "active": 1, "admissions": 2, "revoked": 1, "oldEpoch": 0}
+    }
+  ]
+}

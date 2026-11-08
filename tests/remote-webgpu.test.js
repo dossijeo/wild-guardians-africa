@@ -49,6 +49,13 @@ function fakeGpu() {
 }
 const flush = async () => { for (let i = 0; i < 40; i++) await Promise.resolve(); };
 
+function nativeControlEvent(type,sequence,actorId,handle,time){
+  return {type,sequence,actorId,protocolVersion:2,authorityEpoch:'native-owner',
+    effectiveTime:time,routeHandle:type==='RouteAssigned'?handle:null,
+    revokedRouteHandle:type==='RouteInvalidated'?handle:null};
+}
+const nativeHandle=slot=>({authorityEpoch:'native-owner',session:1,slot,generation:1});
+
 async function fixture(clientOptions = {}, hostOptions = {}) {
   const [producerPort, consumerPort] = pair(), gpu = fakeGpu(), errors = [];
   const host = createRemoteWebGpuHost({ ...gpu, canvas: { width: 20, height: 10 }, port: consumerPort, requestFrame: () => 0, cancelFrame() {}, ...hostOptions });
@@ -84,6 +91,88 @@ test('remote drawing continues during delayed pipeline preparation, using fresh 
   assert.equal(f.host.inspect().replayFrames, 2);
   release({}); await preparing;
   assert.equal(f.errors.length, 0);
+});
+
+test('native revocation bypasses a resource FIFO blocked on a pending pipeline',async()=>{
+  const [authorityPort,drawControlPort]=pair();let now=0;
+  const f=await fixture({}, {absoluteNow:()=>now,
+    intentControl:{port:drawControlPort,authorityEpoch:'native-owner'}});
+  const first=nativeHandle(0),other=nativeHandle(1);
+  authorityPort.postMessage(nativeControlEvent('RouteAssigned',1,7,first,10));
+  authorityPort.postMessage(nativeControlEvent('RouteAssigned',2,8,other,10));
+  await flush();
+  f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'absolute',epoch:0,
+    nativeRoute:{actorId:7,routeHandle:first,assignmentSequence:1}});
+  f.client.registerClockBinding(f.buffer,{byteOffset:4,semantic:'absolute',epoch:0,
+    nativeRoute:{actorId:8,routeHandle:other,assignmentSequence:2}});
+  const clock={version:1,epoch:0,elapsed:10,safeUntil:20,anchorAbsoluteMs:0,
+    paused:false,segments:[{start:10,end:20,realDuration:10,rate:1}]};
+  const receipt=f.frame(0,{clock});
+  await flush();await f.host.idle();f.host.present();await receipt;
+  let release;
+  f.gpu.device.createRenderPipelineAsync=()=>new Promise(resolve=>{release=resolve;});
+  await f.host.handle({type:'create',method:'createRenderPipelineAsync',id:'blocked',descriptor:{}});
+  // This operation really holds the resource FIFO until the pipeline resolves.
+  f.client.device.queue.submit([{__remoteCommands:[{method:'beginRenderPass',
+    args:[{colorAttachments:[]}],commands:[{method:'setPipeline',
+      args:[{__remoteGpuId:'blocked'}]}]}]}]);
+  await flush();
+  assert(f.host.inspect().queuedMessages>0);
+  authorityPort.postMessage(nativeControlEvent('RouteInvalidated',3,7,first,10.25));
+  await flush();
+  assert.equal(f.host.intentControlStatus().sequence,3);
+  now=1000;f.host.present();
+  const values=new Float32Array(f.gpu.buffers[0].data.buffer);
+  assert.equal(values[0],10.25,'the revoked actor stops at its native application time');
+  assert.equal(values[1],11,'the unrelated actor continues autonomously');
+  assert.equal(f.host.inspect().replayFrames,1);
+  release({});await flush();await f.host.idle();
+  assert.deepEqual(f.errors,[]);
+});
+
+test('native permission is checked after resource preparation, preventing late resurrection',async()=>{
+  const [authorityPort,drawControlPort]=pair();
+  const f=await fixture({}, {absoluteNow:()=>0,intentControl:{port:drawControlPort,authorityEpoch:'native-owner'}});
+  const handle=nativeHandle(0);
+  authorityPort.postMessage(nativeControlEvent('RouteAssigned',1,7,handle,10));
+  await flush();
+  f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'absolute',epoch:0,
+    nativeRoute:{actorId:7,routeHandle:handle,assignmentSequence:1}});
+  let release;
+  f.gpu.device.createRenderPipelineAsync=()=>new Promise(resolve=>{release=resolve;});
+  const pipeline=f.client.device.createRenderPipeline({label:'late-route'});
+  f.client.beginFrame({clock:{version:1,epoch:0,elapsed:10,safeUntil:10,
+    anchorAbsoluteMs:0,paused:true,segments:[]}});
+  const encoder=f.client.device.createCommandEncoder();
+  const pass=encoder.beginRenderPass({colorAttachments:[]});
+  pass.setPipeline(pipeline);pass.setBindGroup(0,f.group);pass.draw(3);pass.end();
+  f.client.device.queue.submit([encoder.finish()]);
+  const receipt=f.client.endFrame(),rejected=assert.rejects(receipt,/obsolete or unauthorized/);
+  await flush();
+  authorityPort.postMessage(nativeControlEvent('RouteInvalidated',2,7,handle,11));
+  await flush();
+  assert.equal(f.host.intentControlStatus().sequence,2);
+  release({});await flush();await f.host.idle();await rejected;
+  assert.equal(f.host.inspect().activeSequence,null);
+  assert.equal(f.gpu.submitted.length,0);
+});
+
+test('queued route clock bindings capture the native identity before caller mutation',async()=>{
+  const [authorityPort,drawControlPort]=pair();
+  const f=await fixture({}, {absoluteNow:()=>0,intentControl:{port:drawControlPort,authorityEpoch:'native-owner'}});
+  const handle=nativeHandle(0);
+  authorityPort.postMessage(nativeControlEvent('RouteAssigned',1,7,handle,10));
+  await flush();
+  const binding={byteOffset:0,semantic:'absolute',epoch:0,
+    nativeRoute:{actorId:7,routeHandle:handle,assignmentSequence:1}};
+  f.client.registerClockBinding(f.buffer,binding);
+  binding.nativeRoute.routeHandle.generation=99;
+  binding.nativeRoute.assignmentSequence=99;
+  const receipt=f.frame(0,{clock:{version:1,epoch:0,elapsed:10,safeUntil:10,
+    anchorAbsoluteMs:0,paused:true,segments:[]}});
+  await flush();await f.host.idle();f.host.present();await receipt;
+  assert.deepEqual(f.errors,[]);
+  assert.equal(new Float32Array(f.gpu.buffers[0].data.buffer)[0],10);
 });
 
 test('frame publication is bounded and writes are invisible until the atomic presentation boundary', async () => {

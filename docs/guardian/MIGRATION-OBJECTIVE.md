@@ -44,9 +44,14 @@ camino crítico sin pedir autorización rutinaria entre hitos.
 - [ ] Ligar handles y control gráfico a la época de autoridad; impedir reuso
       entre instancias WASM, recuperación y cambios de Worker.
       Handles del bridge ya aislados y probados con dos WASM reales; falta
-      aplicar el mismo ámbito en control/admisión gráficos.
+      conectar su bootstrap al runtime completo. Control/admisión gráficos
+      también comprueban época, secuencia y versión.
 - [ ] Canal autoridad → dibujo independiente de preparación y política de
       aplicación/latencia segura; pruebas con preparación bloqueada.
+      Receptor directo y límites por versión implementados. Tres ejecuciones
+      WebGPU reales mantienen 15 dibujos durante bloqueo de 500 ms, con revocación
+      aplicada y readback GPU correcto. Falta bootstrap de producto, desconexión
+      del canal y coordinación anterior a cambios físicos; no es cierre A–F.
 - [ ] Ejecución temporal y reservas/conflictos nativos de rutas completas,
       incluyendo puertas, cuerpos móviles y excepciones físicas delimitadas.
 - [ ] Vertical AttackCrops completa y aceptación real A–F.
@@ -67,9 +72,9 @@ camino crítico sin pedir autorización rutinaria entre hitos.
 
 ## Próximo bloqueo
 
-Época de autoridad y revocación gráfica independiente. El tuple nativo
-`(session, slot, generation)` puede repetirse al crear otra instancia WASM;
-la FIFO de recursos no es un canal de control oportuno. No ampliar autorización
+Conectar el control nativo al bootstrap/runtime de producto sin pasar por el
+preparador, resolver desconexión y fronteras de aplicación física, y llevar
+ejecución temporal/conflictos al propietario nativo. No ampliar autorización
 visual ni eliminar el ejecutor protegido hasta resolver estas garantías.
 
 Actualizar este registro y el plan al terminar cada parte, distinguiendo siempre

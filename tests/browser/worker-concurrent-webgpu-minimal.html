@@ -1,4 +1,6 @@
 <!doctype html><meta charset="utf-8"><script type="module">
+import {auditNativeRouteControl} from './native-route-control.js';
+window.auditNativeRouteControl=auditNativeRouteControl;
 import {newGame} from '../../src/simulation/game.js';
 import {villageLayout} from '../../src/world/villages.js';
 import {serialize,deserialize} from '../../src/persistence/snapshots.js';

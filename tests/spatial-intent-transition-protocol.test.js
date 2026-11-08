@@ -6,6 +6,7 @@ import {deserialize} from '../src/persistence/snapshots.js';
 import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialIntentBridge} from '../src/world/wild-engine/spatial-intent-bridge.js';
 import {createThreadedSpatialWorld} from '../src/world/wild-engine/spatial-thread-runtime.js';
+import {createNativeRouteControl} from '../src/rendering/native-route-control.js';
 
 // No mock/optional skip: exercise the shipped native binary and real planner.
 const module=new WebAssembly.Module(readFileSync(new URL(
@@ -291,4 +292,26 @@ test('default bridge epochs do not repeat across independent native owners',()=>
     assert.throws(()=>createSpatialIntentBridge(first.session,{authorityEpoch:''}),
       /authority epoch/);
   }finally{first.session.dispose();second.session.dispose();}
+});
+
+test('the graphical permission mirror consumes the existing real native log without replanning',()=>{
+  const f=fixture();
+  try{
+    const control=createNativeRouteControl({authorityEpoch:f.bridge.authorityEpoch});
+    const plan=f.bridge.planAttackCrop(f.state,f.actor);
+    assert.equal(plan.status,'found');
+    const [assigned]=f.bridge.intentChanges();
+    assert(control.accept(assigned));
+    const descriptor={actorId:assigned.actorId,routeHandle:plan.routeHandle,
+      assignmentSequence:assigned.sequence},record=control.admit(descriptor);
+    const calls=f.session.core.wasm.nav_intent_actor_planning_calls(900002);
+    f.state.elapsed=12;
+    f.bridge.applyEvents(f.state,[{type:'target',remove:true,id:f.crop.id}]);
+    const [revoked]=f.bridge.intentChanges();
+    assert(control.accept(revoked));
+    assert.equal(record.safeUntil,12);
+    assert.throws(()=>control.admit(structuredClone(descriptor)),/obsolete/);
+    assert.equal(f.session.core.wasm.nav_intent_actor_planning_calls(900002),calls,
+      'graphical control does not ask Wild Engine to validate or plan a route');
+  }finally{f.session.dispose();}
 });

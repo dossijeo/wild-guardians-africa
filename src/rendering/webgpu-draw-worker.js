@@ -33,7 +33,7 @@ self.onmessage = async event => {
     if (!context) throw Error('Native WebGPU canvas context unavailable');
     const info = adapter.info || {};
     const adapterInfo = { vendor: info.vendor, architecture: info.architecture, device: info.device, description: info.description };
-    host = createRemoteWebGpuHost({ device, context, canvas, port, adapterInfo, hidden, cameraState: createRemoteCameraState({ mailbox: null }) });
+    host = createRemoteWebGpuHost({ device, context, canvas, port, intentControl:event.data.intentControl??null, adapterInfo, hidden, cameraState: createRemoteCameraState({ mailbox: null }) });
     port.postMessage({ type: 'ready', capabilities: { features: Array.from(device.features), limits: numericProperties(device.limits), format: navigator.gpu.getPreferredCanvasFormat(), width: canvas.width, height: canvas.height, adapterInfo } });
   } catch (error) { port.postMessage({ type: 'error', error: error?.stack || String(error) }); }
 };

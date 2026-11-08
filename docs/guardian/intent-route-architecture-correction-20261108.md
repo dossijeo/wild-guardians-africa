@@ -190,3 +190,42 @@ conflictos móviles y el canal autoridad → dibujo independiente de recursos.
 Build posterior a ambos incrementos: `VITE_PRESENTATION_BACKEND=webgpu-worker`
 y `VITE_WEBGPU_REMOTE_DRAW=true`, salida `.cache/intent-route-correction-build`,
 correcto (con aviso de tamaño de chunks). No se publicó ni modificó `dist/`.
+
+## Control gráfico independiente (implementado, conexión de producto pendiente)
+
+`native-route-control.js` consume el mismo log nativo v2 y solo conserva permisos
+por actor/versión. No contiene polilíneas, cuerpos, colisiones ni planificación.
+Una época antigua no autoriza nada; secuencias discontinuas, cambios sin revocar
+la versión previa y revocaciones incoherentes se rechazan. Los bindings resuelven
+el permiso una vez en admisión; el dibujo lee su límite temporal, sin consultar
+rutas o validar identidades por fotograma.
+
+El host WebGPU admite un `MessagePort` de control distinto del de recursos. Sus
+revocaciones no entran en la FIFO que puede esperar pipelines. Los relojes de
+ruta quedan limitados por el instante nativo de revocación y los otros actores
+siguen avanzando. La admisión vuelve a comprobar permisos **después** de esperar
+recursos, impidiendo que una carga tardía readmita una versión retirada. Una
+revocación anterior al tiempo ya presentado provoca fallo explícito, no rebobina
+la pose ni se presenta como una corrección visual segura.
+
+Se amplió el harness concurrente existente con `auditNativeRouteControl()`. Tres
+ejecuciones reales en NVIDIA/Turing bloquearon síncronamente el preparador
+500,06 / 500,61 / 500,07 ms: el dibujante hizo 15 fotogramas en cada bloqueo,
+usando un único paquete, y recibió la revocación durante el bloqueo. Readback de
+un buffer GPU confirmó que solo el reloj revocado se detuvo en su límite; el
+otro continuó. Máximos de intervalo del Worker: 33,90 / 33,41 / 33,54 ms. Datos
+en [native-route-control-20261108.json](performance/native-route-control-20261108.json).
+
+**Alcance limitado:** se usa un triángulo, no modelos/poses de personajes; el
+fixture ajusta el reloj manualmente y no avanza simulación. Los eventos AttackCrops
+sí proceden del WASM real. No es A, C ni D de aceptación, ni una prueba de FPS de
+partida. El bootstrap/runtime de producto aún no conecta este canal; siguen
+pendientes pérdida de canal, coordinación de revocación antes de cambios físicos,
+reservas/conflictos nativos y ejecución temporal completa. Los Workers son
+hermanos creados por Window: un ensayo inicial de dibujante anidado en el
+preparador falló por falta de proveedor rAF en Chromium y se corrigió el harness
+para respetar la propiedad usada por el producto.
+
+Regresión de este incremento: **84 pruebas aprobadas sin skips**, sintaxis de
+scripts de navegador correcta y build WebGPU remoto correcto (salida
+`.cache/native-route-control-build`). Esto no cambia el estado abierto de A6.

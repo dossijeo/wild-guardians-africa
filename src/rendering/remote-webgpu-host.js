@@ -3,6 +3,7 @@ import { remoteCameraWithinEnvelope } from './remote-camera-envelope.js';
 import { createRemoteFrameTimeGuard } from './remote-frame-time-guard.js';
 import { scheduleRemoteFrame } from './remote-frame-scheduler.js';
 import { evaluateRemoteClock } from './remote-presentation-clock.js';
+import { createNativeRouteControl } from './native-route-control.js';
 
 const REF = '__remoteGpuId';
 const CURRENT = '@canvas';
@@ -11,7 +12,9 @@ const QUEUE = new Set(['writeBuffer','writeTexture','copyExternalImageToTexture'
 const COMMANDS = new Set(['copyBufferToBuffer','copyBufferToTexture','copyTextureToBuffer','copyTextureToTexture','clearBuffer','resolveQuerySet','insertDebugMarker','pushDebugGroup','popDebugGroup']);
 const PASS = new Set(['setPipeline','setBindGroup','setVertexBuffer','setIndexBuffer','draw','drawIndexed','drawIndirect','drawIndexedIndirect','dispatchWorkgroups','dispatchWorkgroupsIndirect','setViewport','setScissorRect','setStencilReference','setBlendConstant','beginOcclusionQuery','endOcclusionQuery','executeBundles','insertDebugMarker','pushDebugGroup','popDebugGroup']);
 
-export function createRemoteWebGpuHost({ device, context, canvas, port, requestFrame = callback => requestAnimationFrame(callback), cancelFrame = handle => cancelAnimationFrame(handle), absoluteNow = () => performance.timeOrigin + performance.now(), cameraState = null, adapterInfo = null, hidden: initiallyHidden = false, maxFrameOperations = 100000, maxFrameBytes = 64 * 1024 * 1024, resourceSliceMs = 2, yieldResourceTask = () => globalThis.scheduler?.postTask ? globalThis.scheduler.postTask(() => {}, { priority: 'background' }) : new Promise(resolve => setTimeout(resolve, 0)) }) {
+export function createRemoteWebGpuHost({ device, context, canvas, port, intentControl = null, requestFrame = callback => requestAnimationFrame(callback), cancelFrame = handle => cancelAnimationFrame(handle), absoluteNow = () => performance.timeOrigin + performance.now(), cameraState = null, adapterInfo = null, hidden: initiallyHidden = false, maxFrameOperations = 100000, maxFrameBytes = 64 * 1024 * 1024, resourceSliceMs = 2, yieldResourceTask = () => globalThis.scheduler?.postTask ? globalThis.scheduler.postTask(() => {}, { priority: 'background' }) : new Promise(resolve => setTimeout(resolve, 0)) }) {
+  if(intentControl!==null&&(!intentControl.port||typeof intentControl.port.postMessage!=='function'))throw TypeError('Invalid native intent control port');
+  const routeControl=intentControl?createNativeRouteControl(intentControl):null;
   const resources = new Map([['@device', { id: '@device', value: device, pins: 0, dependencies: new Set() }]]);
   const retired = new Set(), clockBindings = new Map(), cameraBindings = new Map();
   const clockBindingKeys = new Map(), cameraBindingKeys = new Map();
@@ -364,9 +367,14 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
     if (elapsed !== null) {
       for (const binding of active.clockBindings) {
         if (!active?.retained?.has(binding.id)) continue;
-        const value = binding.semantic === 'relative' ? elapsed - binding.epoch : elapsed;
+        const routeTime=binding.routeRecord?Math.min(elapsed,binding.routeRecord.safeUntil):elapsed;
+        const value = binding.semantic === 'relative' ? routeTime - binding.epoch : routeTime;
         if (!Number.isFinite(value)) throw Error('Invalid remote presentation clock value');
-        device.queue.writeBuffer(resolve({ [REF]: binding.id }), binding.byteOffset, new Float32Array([floorFloat32(value)]));
+        const submittedValue=floorFloat32(value);
+        device.queue.writeBuffer(resolve({ [REF]: binding.id }), binding.byteOffset, new Float32Array([submittedValue]));
+        if(binding.routeRecord)binding.routeRecord.lastDrawTime=Math.max(
+          binding.routeRecord.lastDrawTime??-Infinity,
+          Math.min(routeTime,binding.semantic==='relative'?submittedValue+binding.epoch:submittedValue));
       }
     }
     if (camera) for (const binding of active.cameraBindings) {
@@ -403,7 +411,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
         if (next.width !== canvas.width) canvas.width = next.width;
         if (next.height !== canvas.height) canvas.height = next.height;
         active = next; active.retained = new Set(active.resourceSnapshot.keys());
-        active.clockBindings = Array.from(clockBindings.values());
+        active.clockBindings = active.admittedClockBindings;
         active.cameraBindings = Array.from(cameraBindings.values());
         active.baselineWrites = [];
         for (const key of active.baselineBuffers) {
@@ -556,6 +564,16 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
         packet.transportTiming.resourcesReadyAt = absoluteNow();
         packet.receivedAt = absoluteNow();
         packet.resourceSnapshot = snapshotResources(packet.references);
+        // Resolve permissions after all resource awaits. A direct revocation may
+        // have arrived while this generation waited for a model or pipeline.
+        packet.admittedClockBindings=Array.from(clockBindings.values())
+          .filter(binding=>packet.resourceSnapshot.has(binding.id))
+          .map(binding=>{
+            if(!binding.nativeRoute)return {...binding};
+            if(!routeControl)throw Error('Native route control unavailable');
+            if(!packet.metadata?.clock)throw Error('Native route requires a presentation clock lease');
+            return {...binding,routeRecord:routeControl.admit(binding.nativeRoute)};
+          });
         classifyBufferOwnership(packet);
         const writeCounts = new Map();
         for (const op of packet.operations) if (op.method === 'writeBuffer') {
@@ -654,7 +672,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
         });
         break;
       }
-      case 'inspect': reply(message, api.inspect()); break;
+      case 'inspect': reply(message, {...api.inspect(),intentControl:routeControl?.status()??null}); break;
       case 'device-destroy': deviceDestroyRequested = true; device.destroy(); break;
       case 'compilation-info': {
         const entry = resources.get(message.id);
@@ -688,7 +706,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
   port.onmessage = event => {
     const message = event.data;
     if (message.type === 'frame' || message.type === 'fence') message.receivedAt = absoluteNow();
-    if (message.type === 'inspect') { reply(message, api.inspect()); return; }
+    if (message.type === 'inspect') { reply(message, {...api.inspect(),intentControl:routeControl?.status()??null}); return; }
     if (message.type === 'device-destroy') { deviceDestroyRequested = true; device.destroy(); return; }
     if (++queuedMessages > maxFrameOperations) { fail(Error('Remote resource queue exceeds safety limit')); return; }
     chain = chain.then(async () => {
@@ -706,11 +724,26 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
     }).catch(error => { reply(message, null, error); fail(error); }).finally(() => { queuedMessages--; });
   };
   port.start?.();
+  if(intentControl){
+    // Never enter the resource FIFO: it can await native pipeline creation.
+    intentControl.port.onmessage=event=>{
+      if(stopped||failed)return;
+      try{
+        const accepted=routeControl.accept(event.data);
+        intentControl.port.postMessage({type:'intent-control-applied',
+          authorityEpoch:intentControl.authorityEpoch,
+          sequence:routeControl.status().sequence,accepted});
+      }catch(error){routeControl.dispose();fail(error);}
+    };
+    intentControl.port.onmessageerror=()=>{routeControl.dispose();fail(Error('Native route control transfer failed'));};
+    intentControl.port.start?.();
+  }
   device.lost?.then(info => { port.postMessage({ type: 'lost', info: { reason: info.reason, message: info.message } }); api.dispose(); });
   device.addEventListener?.('uncapturederror', event => { metrics.gpuErrors++; fail(event.error); });
   frameHandle = requestFrame(present);
   const api = {
     handle, present, idle: () => chain,
+    intentControlStatus:()=>routeControl?.status()??null,
     setVisibility(nextHidden) {
       nextHidden = !!nextHidden;
       if (nextHidden === hidden) return;
@@ -730,6 +763,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
     inspect: () => ({ ...metrics, hidden, resources: resources.size, pendingResources: pendingResources.size, activeSequence: active?.sequence || null, pendingSequence: pending?.sequence || null, queuedMessages, stagedOperations: stagedOperations.length, obsoleteVersions: obsoleteVersions.size, failed, backend: 'webgpu', rafIndependent: true, adapterInfo, frameTime: frameTime.status(), frameTimings: frameTimings.slice(), fenceTimings: fenceTimings.slice(), lease: active?.metadata?.clock || null, cameraSafe: active?.metadata?.cameraSafe ?? false, cameraEnvelope: active?.metadata?.cameraEnvelope || null, clockBindings: active?.clockBindings.length || 0, cameraBindings: active?.cameraBindings.length || 0, clockAtHorizon: !!active?.metadata?.clock && frameTime.status().elapsed >= active.metadata.clock.safeUntil, errors: errors.slice(), samples: sampleCursor < samples.length ? samples.slice(0, sampleCursor) : [...samples.slice(sampleCursor % samples.length), ...samples.slice(0, sampleCursor % samples.length)] }),
     dispose() {
       if (stopped) return; stopped = true;
+      routeControl?.dispose();intentControl?.port.close?.();
       for (const job of pendingResources.values()) job.reject(Error('Remote GPU disposed'));
       pendingResources.clear();
       if (frameHandle !== null) cancelFrame(frameHandle);

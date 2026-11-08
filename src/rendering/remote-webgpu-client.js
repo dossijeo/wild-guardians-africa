@@ -370,8 +370,9 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     registerClockBinding(buffer, binding) {
       if (!buffer?.[REF] || !['absolute', 'relative'].includes(binding.semantic) || !Number.isInteger(binding.byteOffset) || binding.byteOffset < 0 || binding.byteOffset % 4) throw TypeError('Invalid remote clock binding');
       const key = `${buffer[REF]}:${binding.byteOffset}`;
-      clockBindings.set(key, binding);
-      send({ type: 'clock-binding', id: buffer[REF], binding });
+      const captured=structuredClone(binding);
+      clockBindings.set(key, captured);
+      send({ type: 'clock-binding', id: buffer[REF], binding:captured });
     },
     registerCameraBinding(buffer, binding) { send({ type: 'camera-binding', id: buffer[REF], binding }); },
     setCameraMailbox(mailbox) { send({ type: 'camera-mailbox', mailbox }); },
@@ -390,7 +391,8 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
   return api;
 }
 
-export async function createRemoteWebGpu({ canvas, port: suppliedPort, onError, onPresented, workerFactory = () => new Worker(new URL('./webgpu-draw-worker.js', import.meta.url), { type: 'module', name: 'wild-guardians-gpu-draw' }) }) {
+export async function createRemoteWebGpu({ canvas, port: suppliedPort, intentControl = null, onError, onPresented, workerFactory = () => new Worker(new URL('./webgpu-draw-worker.js', import.meta.url), { type: 'module', name: 'wild-guardians-gpu-draw' }) }) {
+  if(intentControl!==null&&(suppliedPort||!intentControl.port||typeof intentControl.port.postMessage!=='function'))throw TypeError('Native intent control must be attached by the draw Worker owner');
   const worker = suppliedPort ? null : workerFactory();
   const channel = suppliedPort ? null : new MessageChannel();
   const port = suppliedPort || channel.port1;
@@ -402,7 +404,7 @@ export async function createRemoteWebGpu({ canvas, port: suppliedPort, onError, 
     port.start?.();
     if (worker) {
       worker.addEventListener('error', event => reject(Error(event.message)), { once: true });
-      worker.postMessage({ type: 'init', canvas, port: channel.port2 }, [canvas, channel.port2]);
+      worker.postMessage({ type: 'init', canvas, port: channel.port2, ...(intentControl?{intentControl}:{}) }, [canvas, channel.port2,...(intentControl?[intentControl.port]:[])]);
     }
   });
   return createRemoteWebGpuClient({ port, capabilities, onError, onPresented, terminate: () => worker?.terminate() });
