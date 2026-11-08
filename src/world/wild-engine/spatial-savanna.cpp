@@ -10,6 +10,11 @@
 #include <unordered_set>
 #include <utility>
 #include <vector>
+#ifdef __EMSCRIPTEN__
+#include <emscripten/emscripten.h>
+#else
+#define EMSCRIPTEN_KEEPALIVE
+#endif
 #ifdef __EMSCRIPTEN_PTHREADS__
 #include <atomic>
 #include <memory>
@@ -799,7 +804,7 @@ bool barrierClear(double x,double z,const int* ignored=nullptr,int ignoredCount=
 // endpoints are clear. Test the exact segment against the same expanded
 // rectangles used by barrierClear, so planning and continuous motion agree.
 bool wallSegmentClear(double x,double z,double nx,double nz,
-  const int* ignored=nullptr,int ignoredCount=0){
+  const int* ignored=nullptr,int ignoredCount=0,double clearanceRadius=-1){
   const uint8_t profileBit=workerNow?1:2;
   const auto& index=barrierIndex();
   const int minBx=int(std::floor(std::min(x,nx)/barrierBucketWidth));
@@ -816,7 +821,11 @@ bool wallSegmentClear(double x,double z,double nx,double nz,
       const double dx=x-wall.x,dz=z-wall.z,ex=nx-wall.x,ez=nz-wall.z;
       const double a[2]={dx*wall.c-dz*wall.s,dx*wall.s+dz*wall.c};
       const double b[2]={ex*wall.c-ez*wall.s,ex*wall.s+ez*wall.c};
-      const double half[2]={wall.halfX+radiusNow,wall.halfZ+radiusNow};
+      // Preserve legacy float arithmetic unless the continuous execution sweep
+      // explicitly requests its double-precision safety radius.
+      const double half[2]={clearanceRadius>=0?double(wall.halfX)+clearanceRadius:
+        double(wall.halfX+radiusNow),clearanceRadius>=0?double(wall.halfZ)+clearanceRadius:
+        double(wall.halfZ+radiusNow)};
       double entry=0,exit=1;
       bool possible=true;
       for(int axis=0;axis<2;axis++){
@@ -1550,6 +1559,10 @@ void horizonDesertNormals(HorizonSampler& sampler,int ox,int oz){
 }
 }
 
+namespace {
+#include "spatial-execution-clearance.h"
+}
+
 // Main-thread-only staging buffer; workers never access eviction requests.
 static std::vector<int32_t> chunkRemovalInput;
 static std::vector<float> surfaceGridOutput;
@@ -1558,6 +1571,11 @@ static std::vector<uint8_t> surfaceGridValid;
 static std::vector<Prop> farVisualProps;
 static uint64_t farVisualRevision=0;
 extern "C" {
+EMSCRIPTEN_KEEPALIVE int spatial_execution_segment_clear(double x,double z,double nx,double nz,double radius){
+  return executionSegmentClear(x,z,nx,nz,radius);
+}
+EMSCRIPTEN_KEEPALIVE double spatial_execution_clearance_checks(){return double(executionClearanceChecks);}
+EMSCRIPTEN_KEEPALIVE double spatial_execution_slope_samples(){return double(executionSlopeSamples);}
 int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){
   if(biome<0||biome>8)return -1;
   ++terrainInputRevision;++residencyRevision;

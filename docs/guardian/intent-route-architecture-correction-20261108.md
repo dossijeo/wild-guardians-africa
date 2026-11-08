@@ -307,3 +307,33 @@ anterior (`8ce756eb6`) con los demás módulos del árbol actual, en
 `.cache/native-control-runtime-baseline/`; esos tests dejan temporizadores vivos
 al fallar y el proceso tuvo que limitarse. No se cambiaron fixtures ni cambios
 locales ajenos, y no se declara limpia la suite completa.
+
+## Barrido estático continuo nativo — primer dominio de ejecución
+
+Se añadió `spatial_execution_segment_clear` al mismo mundo C++ (standalone y
+pthread), sin otro grafo ni callbacks JS. Su alcance inicial es explícito:
+animales sobre Desierto residente. No autoriza cuerpos móviles, hojas de puerta,
+otros biomas ni locomoción GPU. Los códigos diferencian paso continuo probado,
+bloqueado/no probado, residencia desconocida, clase no soportada y petición inválida.
+
+El terreno nativo es triangular y lineal a trozos. El barrido corta cada conector
+en todos los cruces de triángulo de las muestras desplazadas del footprint y de
+pendiente. Dentro de cada intervalo el vector de diferencias finitas es afín y
+su norma convexa: basta comprobar sus extremos, no muestras cada 0,2 m. Se acotan
+también los errores de entrada/salida float de las guardas heredadas. Props,
+rectángulos y polígonos se resuelven por distancias/intersecciones continuas con
+los índices y geometrías nativos existentes. La residencia incompleta no se
+convierte en un certificado de paso.
+
+Una regresión real coloca una penetración de polígono de 0,1 mm entre muestras:
+`spatial_local_clear` admite el segmento, la guarda de aterrizaje rechaza el punto
+intermedio y el nuevo barrido rechaza el conector **antes de ejecutarlo**. Otras
+pruebas contrastan 12 conectores aceptados contra 2.892 posiciones de las guardas
+JS/nativas anteriores, sin consultas de planificación ni cambios al mundo. Las
+guardas JS y el movimiento de producto permanecen activos; no se ha sustituido
+seguridad por muestreo más denso ni se considera A6 cerrado.
+
+Regresión dirigida posterior: **223 aprobadas sin skips**, con el WASM recién
+reconstruido y ABI de la nueva operación comprobado también en pthread. La
+aritmética float del barrido heredado se conserva; el margen double se usa solo
+cuando la nueva operación de ejecución lo solicita explícitamente.

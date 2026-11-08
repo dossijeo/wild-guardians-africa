@@ -6,7 +6,8 @@ Estado: **en ejecución; no completado**.
 
 Completar la migración del [plan integrado](integrated-gpu-migration-plan-20261104.md)
 en la rama actual, sin alterar `main`, las mecánicas ni los cambios locales ajenos.
-Trabajar autónomamente con commits pequeños; resolver el siguiente bloqueo del
+Trabajar autónomamente con commits pequeños y hacer push de cada commit terminado
+a `origin/codex/guardian-3d-animation`; resolver el siguiente bloqueo del
 camino crítico sin pedir autorización rutinaria entre hitos.
 
 1. **Infraestructura A completa y conectada**, con la
@@ -60,6 +61,9 @@ camino crítico sin pedir autorización rutinaria entre hitos.
       completas autónomas en GPU.
 - [ ] Ejecución temporal y reservas/conflictos nativos de rutas completas,
       incluyendo puertas, cuerpos móviles y excepciones físicas delimitadas.
+      Barrido estático continuo nativo implementado para animales en Desierto,
+      contrastado con guardas existentes y un fallo real entre muestras de 0,2 m.
+      Todavía no autoriza ejecución dinámica ni sustituye el movimiento JS.
 - [ ] Vertical AttackCrops completa y aceptación real A–F.
 - [ ] Generalizar a otras bestias, trabajadores, intenciones y animaciones;
       retirar planificación/validaciones duplicadas por clase validada.
