@@ -3,6 +3,13 @@ import assert from 'node:assert/strict';
 import {createMainSnapshotEncoder,createMainSnapshotDecoder,createSnapshotPreparationCache} from '../src/simulation/main-thread-snapshot-transport.js';
 import {confirmedSnapshotFor} from '../src/simulation/confirmed-snapshot-handoff.js';
 
+test('owned snapshot transaction decodes once and advances the transport only at commit',()=>{
+ const encoder=createMainSnapshotEncoder(),decoder=createMainSnapshotDecoder(),envelope=(sequence,value)=>({kind:'publication',publication:{sequence,snapshot:JSON.stringify({value,padding:'x'.repeat(2000),workers:[{id:'w',x:value}]})}});
+ const first=encoder.encode(envelope(1,1)),second=encoder.encode(envelope(2,2)),third=encoder.encode(envelope(3,3));decoder.decode(first);
+ const prepared=decoder.prepare(second),same=confirmedSnapshotFor(prepared.wire.publication);assert.equal(same.value,2);assert.throws(()=>decoder.prepare(third),/delta/);assert.equal(prepared.commit(),prepared.wire);assert.equal(confirmedSnapshotFor(prepared.wire.publication),same);assert.throws(()=>prepared.commit(),/Stale/);assert.equal(confirmedSnapshotFor(decoder.decode(third).publication).value,3);
+ const abandoned=decoder.prepare(encoder.encode(envelope(4,4)));decoder.dispose();assert.throws(()=>abandoned.commit(),/Stale/);encoder.dispose();
+});
+
 test('previewing incremental snapshot cannot advance or mutate its decoder baseline',()=>{const encoder=createMainSnapshotEncoder(),decoder=createMainSnapshotDecoder(),envelope=(sequence,value)=>({kind:'publication',publication:{sequence,snapshot:JSON.stringify({value,padding:'x'.repeat(2000),workers:[{id:'w',x:value}]})}}),first=encoder.encode(envelope(1,1)),second=encoder.encode(envelope(2,2)),third=encoder.encode(envelope(3,3));assert.ok(second.publication.snapshotDelta);decoder.decode(first);const preview=decoder.preview(second);assert.equal(confirmedSnapshotFor(preview.publication).workers[0].x,2);confirmedSnapshotFor(preview.publication).workers[0].x=99;assert.equal(confirmedSnapshotFor(decoder.preview(second).publication).workers[0].x,2);assert.equal(confirmedSnapshotFor(decoder.decode(second).publication).workers[0].x,2);assert.equal(confirmedSnapshotFor(decoder.decode(third).publication).workers[0].x,3);decoder.dispose();encoder.dispose();});
 import {createConfirmedStateReceiver} from '../src/simulation/confirmed-state-receiver.js';
 import {serializeConfirmedState,deserializeConfirmedState} from '../src/simulation/confirmed-live-state.js';
