@@ -2,7 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {webcrypto} from 'node:crypto';
-import {BAKED_WORKER_WALK_PROFILES,loadBakedWorkerWalkAsset,createBakedWorkerWalkBank} from '../src/rendering/baked-worker-walk-catalog.js';
+import {BAKED_WORKER_WALK_PROFILES,loadBakedWorkerWalkAsset,createBakedWorkerWalkBank,createBakedWorkerDigBank} from '../src/rendering/baked-worker-walk-catalog.js';
+import {createBakedWorkerDigTexture} from '../src/rendering/webgpu-baked-walk.js';
+
+test('repair banks load every real profile, share resources and validate hoe channels',async()=>{
+ const fetcher=async url=>{const data=await readFile('public'+url);return {ok:true,json:async()=>JSON.parse(data),arrayBuffer:async()=>data.buffer.slice(data.byteOffset,data.byteOffset+data.byteLength)}};
+ const load=(profile,options)=>loadBakedWorkerWalkAsset(profile,{...options,fetcher,subtle:webcrypto.subtle}),bank=createBakedWorkerDigBank({load});
+ try{for(const profile of BAKED_WORKER_WALK_PROFILES){const [bake,shared]=await Promise.all([bank.get(profile),bank.get(profile)]);assert.equal(bake,shared);assert.equal(bake.meta.clip,'Dig');assert.equal(bake.meta.attachments.length,4);assert.ok(bake.meta.attachments.every(item=>item.parent==='Prop_Hoe'));const changed=structuredClone(bake.meta);changed.attachments[0].parent='Other';assert.throws(()=>createBakedWorkerDigTexture(changed,new ArrayBuffer(changed.byteLength)),/repair/);}}finally{bank.dispose();}
+});
 
 test('all worker walking assets are bound to their source and pass checksum validation',async()=>{
  const fetcher=async url=>{const data=await readFile('public'+url);return {ok:true,json:async()=>JSON.parse(data),arrayBuffer:async()=>data.buffer.slice(data.byteOffset,data.byteOffset+data.byteLength)}};
