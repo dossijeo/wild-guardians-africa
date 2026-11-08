@@ -4,6 +4,20 @@ import {dirname} from 'node:path';
 import {once} from 'node:events';
 
 export async function installRaidStallInventory(context,{captureShaderSources=false}={}) {
+ await context.route('**/src/rendering/confirmed-historical-clock.js*',async route=>{
+  const response=await route.fetch();let source=await response.text();
+  for(const [anchor,kind] of [['function begin(preview){','begin'],['function syncCommitted(nextSequence,nextElapsed,continuity=null){','fallback'],['function commitBoundary(nextSequence,nextElapsed){','commit'],['function suspend(at=now()){','suspend'],['function resume(at=now()){','resume']]){
+   if(source.split(anchor).length!==2)throw Error('Clock trace anchor missing');
+   source=source.replace(anchor,anchor+`performance.mark('WG_PRESENTATION_CLOCK',{detail:{kind:'${kind}',sequence,elapsed,anchor:nextStartAt,at:now(),end:active?.end??null,endAt:active?.endAt??null}});`);
+  }
+  await route.fulfill({response,body:source});
+ });
+ await context.route('**/src/rendering/webgpu-pipeline-admission.js*',async route=>{
+  const response=await route.fetch(),source=await response.text(),anchor='function enqueue(item){';
+  if(source.split(anchor).length!==2)throw Error('Admission trace anchor missing');
+  const probe="performance.mark('WG_ADMISSION_REQUEST',{detail:{name:item.object?.name??'',materials:(()=>{const rows=[];item.object?.traverse(node=>{if(!node.isMesh)return;rows.push({type:node.type,material:node.material?.type,materialId:node.material?.id,instanced:!!node.isInstancedMesh,count:node.count??null});});return rows;})(),stack:new Error().stack}});";
+  await route.fulfill({response,body:source.replace(anchor,anchor+probe)});
+ });
  await context.route('**/src/rendering/webgpu-world-worker.js*',async route=>{
   const response=await route.fetch(),source=await response.text(),anchor="postMessage({kind:'inspection',";
   if(!source.includes(anchor))throw Error('World inspection trace anchor missing');

@@ -25,9 +25,17 @@ export function createConfirmedHistoricalClock({initialElapsed,initialSequence=0
  // Drop only the current certified interval. The confirmed stream must then
  // commit its endpoint before anything is drawn or another interval starts.
  function abandonForBoundary(preview){if(closed||!active||preview?.sequence!==active.sequence||preview.start!==active.start||preview.end!==active.end||elapsed>active.end)throw Error('Invalid historical fallback boundary');active=null;nextStartAt=null;}
- function syncCommitted(nextSequence,nextElapsed){if(closed||active||!Number.isSafeInteger(nextSequence)||nextSequence!==sequence+1||!Number.isFinite(nextElapsed)||nextElapsed<elapsed)throw Error('Invalid committed historical boundary');sequence=nextSequence;elapsed=nextElapsed;nextStartAt=null;updateNode();}
+ function syncCommitted(nextSequence,nextElapsed,continuity=null){if(closed||active||!Number.isSafeInteger(nextSequence)||nextSequence!==sequence+1||!Number.isFinite(nextElapsed)||nextElapsed<elapsed)throw Error('Invalid committed historical boundary');
+  let anchor=null;
+  if(continuity!==null){
+   if(typeof continuity!=='object'||typeof continuity.unpaused!=='boolean')throw TypeError('Invalid committed clock continuity');
+   const clock=continuity.clockSegments;
+   if(continuity.unpaused&&nextElapsed===elapsed)anchor=nextStartAt??now();
+   else if(continuity.unpaused&&clock?.complete===true){validateConfirmedClockSegments(clock,{start:elapsed,end:nextElapsed,startPauses:[],endPauses:[]});const duration=clock.segments.reduce((sum,segment)=>sum+segment.realDuration*1000,0),at=now();checkTime(at);anchor=nextStartAt===null?at:Math.min(at,nextStartAt+duration);}
+  }
+  sequence=nextSequence;elapsed=nextElapsed;nextStartAt=anchor;updateNode();}
  // The stream commits only at a completed endpoint (or the legacy fallback).
  // Sharing this clock with effects prevents a second, frozen visual timeline.
- function commit(nextElapsed){if(active)return commitBoundary(active.sequence,nextElapsed);return syncCommitted(sequence+1,nextElapsed);}
+ function commit(nextElapsed,continuity=null){if(active)return commitBoundary(active.sequence,nextElapsed);return syncCommitted(sequence+1,nextElapsed,continuity);}
  return {resetContinuity(){if(active)throw Error('Cannot reset active historical clock');nextStartAt=null;},commit,node,motionNode,get epoch(){return epoch;},get elapsed(){return elapsed;},begin,advance,advanceUntil,releaseLimit,suspend,resume,invalidate,commitBoundary,cancelAtStart,abandonForBoundary,syncCommitted,status(){return {closed,sequence,elapsed,active:active?{sequence:active.sequence,start:active.start,end:active.end,suspended:active.suspended,invalid:active.invalid,complete:active.index===active.segments.length}:null};},dispose(){closed=true;active=null;}};
 }

@@ -4,6 +4,26 @@ import {createConfirmedHistoricalClock} from '../src/rendering/confirmed-histori
 
 const candidate=()=>({sequence:1,start:10,end:13,safeForAutonomousPlayback:true,reasons:[],clockSegments:{version:1,start:10,end:13,startPauses:[],endPauses:[],complete:true,segments:[{start:10,end:11,realDuration:1,rate:1},{start:11,end:13,realDuration:.4,rate:5}]}});
 const interval=(sequence,start,end)=>({sequence,start,end,safeForAutonomousPlayback:true,reasons:[],clockSegments:{version:1,start,end,startPauses:[],endPauses:[],complete:true,segments:[{start,end,realDuration:end-start,rate:1}]}});
+
+test('ordered non-autonomous commits retain confirmed wall time including zero-time publications',()=>{
+ let now=0;const clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now});clock.begin(interval(1,0,.1));now=220;clock.advance();clock.commit(.1);
+ now=250;clock.commit(.2,{unpaused:true,clockSegments:interval(2,.1,.2).clockSegments});
+ now=270;clock.commit(.2,{unpaused:true,clockSegments:null});
+ now=280;clock.begin(interval(4,.2,.3));assert.ok(Math.abs(clock.advance()-.28)<1e-10);now=500;assert.equal(clock.advance(),.3);clock.commit(.3);clock.dispose();
+});
+
+test('confirmed discontinuities cannot carry wall time through a pause or unknown rate',()=>{
+ for(const continuity of [{unpaused:false,clockSegments:null},{unpaused:true,clockSegments:null}]){
+  let now=0;const clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now});clock.begin(interval(1,0,.1));now=1000;clock.advance();clock.commit(.1);clock.commit(.2,continuity);clock.begin(interval(3,.2,.3));assert.equal(clock.advance(),.2);clock.dispose();
+ }
+});
+
+test('fallback continuity uses confirmed rate changes and rejects mismatched intervals',()=>{
+ let now=0;const clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now});clock.begin(interval(1,0,.1));now=250;clock.advance();clock.commit(.1);
+ const segments={version:1,start:.1,end:.6,startPauses:[],endPauses:[],complete:true,segments:[{start:.1,end:.6,realDuration:.1,rate:5}]};
+ assert.throws(()=>clock.commit(.7,{unpaused:true,clockSegments:segments}));assert.equal(clock.elapsed,.1);
+ clock.commit(.6,{unpaused:true,clockSegments:segments});clock.begin(interval(3,.6,.7));assert.ok(Math.abs(clock.advance()-.65)<1e-10);clock.dispose();
+});
 test('confirmed intervals share one wall timeline instead of accumulating frame rounding and preparation time',()=>{
  let now=0;const clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now});
  clock.begin(interval(1,0,.1));now=165;assert.equal(clock.advance(),.1);clock.commitBoundary(1,.1);
