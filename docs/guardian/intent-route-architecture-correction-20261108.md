@@ -131,3 +131,48 @@ Ambos se reprodujeron con bridge, test y WASM anteriores de Git en
 `.cache/intent-protocol-baseline/`, manteniendo los demás módulos del árbol de
 trabajo. No se han alterado fixtures ni ocultado fallos. Esa comparación no
 acredita una suite completa limpia.
+
+## Segundo incremento: dependencias espaciales nativas (implementado, parcial)
+
+`lazy-sectors.cpp` notifica mutaciones al propietario existente de intenciones.
+Las rutas activas se suscriben a los sectores de su polilínea completa mediante
+referencias inversas actor → sectores → actores; no se copia otro grafo ni se
+planifica en JS. Se cubren conectores fraccionarios y un margen conservador de
+3 m (superior al radio máximo admitido por las intenciones, 2 m). Los segmentos
+largos se subdividen para acotar la cobertura de cada tramo diagonal.
+
+En la reconciliación ya no se recorre `activeIntents`: se sincronizan como máximo
+los seis perfiles participantes y se consumen IDs encolados por sectores
+modificados. Los candidatos se ordenan por identidad como antes. Se conserva la
+comprobación física nativa únicamente para candidatos potencialmente afectados.
+Liberación, cancelación, retirada y paso a acción retiran las suscripciones.
+Los conectores JS excepcionales añaden dependencias en la frontera existente de
+reconciliación, no en cada tick. Esto no legitima conservar ese ejecutor JS como
+arquitectura final.
+
+Una reconstrucción global del grafo conserva invalidación conservadora por
+perfil. Las intenciones pendientes sin corredor conocido todavía despiertan en
+cambios de su perfil: faltan dependencias nativas de frontera para restringirlas.
+Reconfirmar una lista de portales idéntica ya no encola todas las rutas; añadir o
+quitar portales notifica sus extremos. Las hojas móviles de puertas siguen sin
+estar cubiertas por este incremento.
+
+Contadores nativos reales: `nav_intent_route_validation_count`,
+`nav_intent_route_validation_segments`, `nav_intent_reconcile_candidate_count`.
+No cuentan preparación, GPU ni todas las validaciones JS: no deben presentarse
+como coste global de navegación o prueba F superada.
+
+Pruebas nuevas con WASM real: muro lejano → cero candidatos/comprobaciones de la
+ruta; muro intersecante → una comprobación y revocación exacta; ruta completada
+→ ninguna suscripción restante. Batería dirigida de **72 aprobadas sin skips**
+(`.cache/intent-dependencies-regression.tap`), incluido ABI pthread, recuperación
+histórica y host gráfico simulado. Bridge: 18 aprobadas y los 2 fallos anteriores.
+Incursiones: 14 aprobadas y otros 4 fallos `Plan de incursión incoherente`, también
+reproducidos con test/bridge/WASM anteriores (baseline local `raid-results.tap`).
+No se han cambiado validaciones de guardado ni fixtures para hacerlos pasar.
+
+Smoke gráfico real: `tests/browser/webgpu-baked-walk.html` dibujó tres fases
+precocinadas de hiena con backend WebGPU nativo y scopes de validación sin error
+en NVIDIA/Turing. **No es un facóquero consumiendo su ruta AttackCrops** y no
+cuenta como A ni D. Sigue pendiente la vertical completa, la anticipación de
+conflictos móviles y el canal autoridad → dibujo independiente de recursos.

@@ -1,5 +1,9 @@
 # Selección histórica tardía de actores residentes
 
+> **2026-11-08:** queda retirada la declaración final de cierre interno de A6.
+> Este mecanismo sigue siendo una excepción histórica; véase la
+> [corrección arquitectónica](intent-route-architecture-correction-20261108.md).
+
 Los rosters de animales y trabajadores crean `phase` y vinculan `motion` durante la creación inicial del rig, antes de que `admitRosterActor` publique sus recursos. Si un actor ya visible no formaba parte de esa selección y se añade después mediante `setHistoricalActors`, su entrada no obtiene esos recursos. La certificación de un intervalo en el que se mueve falla de forma conservadora y el flujo conserva la presentación anterior; no se ejecuta la trayectoria GPU. La evidencia actual no establece con qué frecuencia sucede en una partida real.
 
 No es seguro llamar directamente a `bindWebGpuActorMotion` sobre el rig publicado. Esa función sustituye inmediatamente sus materiales, instala el nodo TSL y modifica el raycast: el siguiente dibujo podría utilizar un pipeline aún no admitido. Tampoco basta con crear el reloj de fase después de instalar una marcha precocinada, porque el grafo de la marcha ya capturó su `phaseSource`.

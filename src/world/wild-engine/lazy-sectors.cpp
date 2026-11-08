@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <cstdlib>
 #include <limits>
+#include <set>
+#include <tuple>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
@@ -17,6 +19,8 @@ extern "C" float spatial_wetland_mask_resident(float,float);
 extern "C" float spatial_wetland_mask_lipschitz();
 extern "C" int spatial_canyon_river_face(int,int,int,int);
 extern "C" int spatial_canyon_cliff_face(int,int,int,int);
+// Optional native intent owner. Standalone graph laboratories do not link it.
+extern "C" void nav_intent_sector_changed(int,int,int,int) __attribute__((weak));
 
 // Sparse sector/route proof. Unknown sectors are never classified as blocked.
 // The movement engine remains responsible for physical motion.
@@ -67,6 +71,7 @@ struct Context {
   int cutFlow=0,cutCells=0;
   std::vector<Arc> previousArc,arcChain;
   std::vector<Portal> portals;
+  std::vector<Portal> committedPortals;
   std::unordered_set<RejectedEdge,RejectedEdgeHash> rejectedRouteEdges;
   std::vector<int32_t> weakHead,weakTo,weakNext;
   std::vector<uint8_t> weakOpen;
@@ -92,6 +97,10 @@ Context& active(){
   Context*& context=contexts[selectedContext];
   if(!context)context=new Context();
   return *context;
+}
+void notifyIntentSector(int sx,int sz,bool global=false){
+  if(nav_intent_sector_changed)
+    nav_intent_sector_changed(selectedContext,sx,sz,global?1:0);
 }
 // Keep the existing sector algorithm scoped to the selected movement profile.
 #define sectorSize (active().sectorSize)
@@ -329,12 +338,14 @@ int lazy_select_context(int profile){
   selectedContext=profile;return 1;
 }
 int lazy_selected_context(){return selectedContext;}
+int lazy_sector_size(){return sectorSize;}
 uint32_t lazy_route_revision(){return active().routeRevision;}
 #ifdef WILD_PROFILE_TWO_PASS_COMPAT_REVISION
 // Experimental compatibility counter for omitted border recommits. This does
 // not claim those commits occurred; it preserves the existing revision tokens.
 void lazy_profile_compat_revisions(uint32_t count){
   active().routeRevision+=count;
+  if(count)notifyIntentSector(0,0,true);
   updates+=static_cast<int>(count);
 }
 #endif
@@ -349,6 +360,8 @@ int lazy_reject_route_edge(int x,int z,int nx,int nz){
   traceSectorChange(0);
 #endif
   active().routeRevision++;
+  notifyIntentSector(floorDiv(x,sectorSize),floorDiv(z,sectorSize));
+  notifyIntentSector(floorDiv(nx,sectorSize),floorDiv(nz,sectorSize));
   return 1;
 }
 int lazy_init(int size){
@@ -358,12 +371,14 @@ int lazy_init(int size){
 #endif
   sectorSize=size;updates=0;
   active().routeRevision++;
+  notifyIntentSector(0,0,true);
   rejectedRouteEdges.clear();
   if(!sectors)sectors=new std::unordered_map<uint64_t,Sector>();else sectors->clear();
   byId.clear();freeIds.clear();
   stagedPass.assign(size*size,0);stagedSteps.assign(size*size,0);
   stagedInbound.assign(size*size,0);weakDirty=true;
   portals.clear();
+  active().committedPortals.clear();
   queueBuffer.reserve(size*size);return 1;
 }
 uint8_t* lazy_pass_ptr(){return stagedPass.data();}
@@ -392,6 +407,7 @@ int lazy_commit_sector(int sx,int sz){
   sector.pass=stagedPass;sector.steps=stagedSteps;sector.inbound=stagedInbound;
   flood(sector);updates++;
   active().routeRevision++;
+  notifyIntentSector(sx,sz);
   clearRejectedInSector(sx,sz);
   rebuildEdges(sector);
   for(int d=0;d<4;d++)if(Sector* neighbor=get(sx+dx[d],sz+dz[d]))rebuildEdges(*neighbor);
@@ -422,6 +438,7 @@ int lazy_remove_sector(int sx,int sz){
   }
   weakDirty=true;updates++;
   active().routeRevision++;
+  notifyIntentSector(sx,sz);
   clearRejectedInSector(sx,sz);
   return 1;
 }
@@ -473,6 +490,22 @@ int lazy_commit_portals(){
   for(Sector* sector:byId)if(sector)rebuildEdges(*sector);
   weakDirty=true;
   active().routeRevision++;
+  // A portal recommit is often a no-op. Only changed crossings can affect an
+  // existing route; waking blocked intentions remains an event-level concern.
+  const auto signature=[](const Portal& p){return std::make_tuple(p.fromX,p.fromZ,
+    p.toX,p.toZ,p.fromWorldX,p.fromWorldZ,p.toWorldX,p.toWorldZ);};
+  auto& previous=active().committedPortals;
+  std::set<decltype(signature(Portal{}))> before,after;
+  for(const auto& p:previous)before.insert(signature(p));
+  for(const auto& p:portals)after.insert(signature(p));
+  const auto changed=[&](const Portal& p){
+    if(!sectorSize)return;
+    notifyIntentSector(floorDiv(p.fromX,sectorSize),floorDiv(p.fromZ,sectorSize));
+    notifyIntentSector(floorDiv(p.toX,sectorSize),floorDiv(p.toZ,sectorSize));
+  };
+  for(const auto& p:previous)if(!after.count(signature(p)))changed(p);
+  for(const auto& p:portals)if(!before.count(signature(p)))changed(p);
+  previous=portals;
   rejectedRouteEdges.clear();
   return static_cast<int>(portals.size());
 }

@@ -27,6 +27,7 @@ int spatial_world_route_reason();
 int spatial_world_segment_clear(float,float,float,float);
 uint32_t lazy_route_revision();
 int lazy_selected_context();
+int lazy_sector_size();
 int spatial_select_nav_profile_index(int);
 int lazy_weak_region(int,int);
 int lazy_enclosure(int,int);
@@ -120,6 +121,8 @@ struct ActiveIntent {
   // A release must name the old handle even after the slot is reclaimed. This
   // is transition metadata, never another copy of the navigation state.
   uint32_t revokedSlot=0,revokedGeneration=0;
+  int dependencyProfile=-1;
+  std::set<std::pair<int,int>> routeSectors;
 };
 struct RouteSlot {std::vector<float> points;uint32_t generation=0;bool active=false;};
 struct Change {
@@ -149,6 +152,11 @@ struct IntentState {
   std::vector<float> routes;
   std::vector<std::pair<uint64_t,uint64_t>> proposals;
   std::unordered_map<uint64_t,ActiveIntent> activeIntents;
+  // Inverse references to existing intents/route slots, not another nav model.
+  std::map<std::tuple<int,int,int>,std::set<uint64_t>> routeSubscribers;
+  std::array<std::set<uint64_t>,6> profileParticipants,waitingSubscribers;
+  std::set<uint64_t> changedRouteActors;
+  uint64_t routeValidations=0,routeValidationSegments=0,reconcileCandidates=0;
 #ifdef WILD_DECLARATIVE_ATTACK
   // Experimental high-level intent survives loss of its current route/target.
   // Never used by the production binary.
@@ -243,7 +251,72 @@ bool parse(const double* row,Change& change){
   return change.center>0&&change.target>0&&integer(row[4],true)&&row[4]<=2;
 }
 void clearProposal(IntentState& s){s.proposals.clear();s.proposalOpen=false;}
+void clearRouteDependencies(IntentState& s,ActiveIntent& intent){
+  const int profile=intent.dependencyProfile;
+  if(profile<0)return;
+  for(const auto& [x,z]:intent.routeSectors){
+    const auto key=std::make_tuple(profile,x,z);
+    auto found=s.routeSubscribers.find(key);
+    if(found!=s.routeSubscribers.end()){
+      found->second.erase(intent.actor);
+      if(found->second.empty())s.routeSubscribers.erase(found);
+    }
+  }
+  s.profileParticipants[profile].erase(intent.actor);
+  s.waitingSubscribers[profile].erase(intent.actor);
+  intent.routeSectors.clear();intent.dependencyProfile=-1;
+}
+void subscribeRouteSegment(IntentState& s,ActiveIntent& intent,
+    double x,double z,double endX,double endZ){
+  const int size=lazy_sector_size();
+  if(size<=0)return;
+  // Cover the entire swept connector, including fractional endpoints and the
+  // largest supported body. Subdivision bounds the cells per diagonal segment.
+  constexpr double margin=3;
+  const int steps=std::max(1,int(std::ceil(std::hypot(endX-x,endZ-z)/(size*.5))));
+  const double startX=x,startZ=z;
+  for(int i=1;i<=steps;i++){
+    const double nextX=startX+(endX-startX)*i/steps,
+      nextZ=startZ+(endZ-startZ)*i/steps;
+    const int minX=int(std::floor((std::min(x,nextX)-margin)/size)),
+      maxX=int(std::floor((std::max(x,nextX)+margin)/size)),
+      minZ=int(std::floor((std::min(z,nextZ)-margin)/size)),
+      maxZ=int(std::floor((std::max(z,nextZ)+margin)/size));
+    for(int sx=minX;sx<=maxX;sx++)for(int sz=minZ;sz<=maxZ;sz++)
+      if(intent.routeSectors.emplace(sx,sz).second)
+        s.routeSubscribers[{intent.profile,sx,sz}].insert(intent.actor);
+    x=nextX;z=nextZ;
+  }
+}
+void indexRouteDependencies(IntentState& s,ActiveIntent& intent){
+  clearRouteDependencies(s,intent);
+  if(intent.profile<0||intent.profile>=6)return;
+  if(intent.state!=PlanningState::RouteActive&&
+     intent.state!=PlanningState::WaitingUnknown&&
+     intent.state!=PlanningState::WaitingBlocked)return;
+  intent.dependencyProfile=intent.profile;
+  s.profileParticipants[intent.profile].insert(intent.actor);
+  if(intent.state!=PlanningState::RouteActive){
+    s.waitingSubscribers[intent.profile].insert(intent.actor);return;
+  }
+  if(intent.slot>=s.routeSlots.size())return;
+  const auto& route=s.routeSlots[intent.slot];
+  if(!route.active||route.generation!=intent.generation)return;
+  const int original=lazy_selected_context();
+  if(original!=intent.profile)spatial_select_nav_profile_index(intent.profile);
+  const auto worker=s.workers.find(intent.actor);
+  double x=intent.animal?intent.routeStartX:
+    worker!=s.workers.end()?worker->second.x:intent.routeStartX;
+  double z=intent.animal?intent.routeStartZ:
+    worker!=s.workers.end()?worker->second.z:intent.routeStartZ;
+  for(size_t i=size_t(intent.routeCursor)*2;i+1<route.points.size();i+=2){
+    subscribeRouteSegment(s,intent,x,z,route.points[i],route.points[i+1]);
+    x=route.points[i];z=route.points[i+1];
+  }
+  if(original!=intent.profile)spatial_select_nav_profile_index(original);
+}
 void emitIntentChange(IntentState& s,ActiveIntent& intent){
+  indexRouteDependencies(s,intent);
   const IntentEvent event=intent.state==PlanningState::RouteActive?
     (intent.revokedGeneration?IntentEvent::RouteReplaced:IntentEvent::RouteAssigned):
     intent.revokedGeneration?
@@ -258,6 +331,7 @@ void emitIntentChange(IntentState& s,ActiveIntent& intent){
   intent.revokedSlot=0;intent.revokedGeneration=0;
 }
 void releaseRoute(IntentState& s,ActiveIntent& intent){
+  clearRouteDependencies(s,intent);
   if(intent.slot<s.routeSlots.size()){
     RouteSlot& route=s.routeSlots[intent.slot];
     if(route.active&&route.generation==intent.generation){
@@ -667,12 +741,35 @@ ServiceRoute findServiceRoute(const Worker& worker,const Target& target,int kind
 }
 
 extern "C" {
+// Native graph mutation notifications only enqueue inverse dependents. Physical
+// validation runs after the graph transaction is coherent, never from a draw or
+// actor tick. Global init remains conservatively scoped to its movement profile.
+void nav_intent_sector_changed(int profile,int sx,int sz,int global){
+  if(profile<0||profile>=6)return;
+  IntentState& s=state();
+  if(global){
+    const auto& actors=s.profileParticipants[profile];
+    s.changedRouteActors.insert(actors.begin(),actors.end());
+  }else{
+    const auto found=s.routeSubscribers.find({profile,sx,sz});
+    if(found!=s.routeSubscribers.end())
+      s.changedRouteActors.insert(found->second.begin(),found->second.end());
+    // Waiting routes do not yet have a usable spatial corridor. Wake them on
+    // profile changes until native frontier dependencies are represented.
+    const auto& waiting=s.waitingSubscribers[profile];
+    s.changedRouteActors.insert(waiting.begin(),waiting.end());
+  }
+}
 // Reset on a new WASM world/session or before replaying a restored snapshot.
 void nav_intent_reset(){
   IntentState& s=state();
   s.session++;
   if(!s.session)s.session=1;
   s.activeIntents.clear();s.byTarget.clear();s.byTask.clear();
+  s.routeSubscribers.clear();s.changedRouteActors.clear();
+  for(auto& actors:s.profileParticipants)actors.clear();
+  for(auto& actors:s.waitingSubscribers)actors.clear();
+  s.routeValidations=s.routeValidationSegments=s.reconcileCandidates=0;
 #ifdef WILD_DECLARATIVE_ATTACK
   s.attackDeclarations.clear();s.attackDeadlines.clear();
 #ifdef WILD_DECLARATIVE_STATS
@@ -1327,7 +1424,7 @@ int nav_intent_commit(){
     s.activeIntents.insert_or_assign(workerId,intent);
     s.byTarget[intent.target].insert(workerId);
     s.byTask[intent.task].insert(workerId);
-    emitIntentChange(s,intent);
+    emitIntentChange(s,s.activeIntents.at(workerId));
   }
   if(!s.proposals.empty())s.entityRevision++;
   const int committed=int(s.proposals.size());clearProposal(s);return committed;
@@ -1336,6 +1433,9 @@ int nav_intent_commit(){
 // Ordinary movement and ticks do not invoke the planner or emit rows.
 EMSCRIPTEN_KEEPALIVE int nav_intent_protocol_version(){return intentProtocolVersion;}
 EMSCRIPTEN_KEEPALIVE int nav_intent_change_width(){return intentChangeWidth;}
+EMSCRIPTEN_KEEPALIVE double nav_intent_route_validation_count(){return double(state().routeValidations);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_route_validation_segments(){return double(state().routeValidationSegments);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_reconcile_candidate_count(){return double(state().reconcileCandidates);}
 // The simulation supplies its clock at the command/event boundary, never at
 // graphical preparation/drain time. A restore starts a new native session.
 EMSCRIPTEN_KEEPALIVE int nav_intent_set_time(double elapsed){
@@ -1404,7 +1504,8 @@ const float* nav_intent_route_ptr(double session,double slot,double generation){
 // pinned polyline against the updated native collision map at this boundary,
 // rather than discarding every route merely because the global revision moved.
 // The continuous mover still performs its ordinary local collision checks.
-bool activeRouteClear(const IntentState& s,const ActiveIntent& intent){
+bool activeRouteClear(IntentState& s,const ActiveIntent& intent){
+  s.routeValidations++;
   if(intent.slot>=s.routeSlots.size())return false;
   const RouteSlot& route=s.routeSlots[intent.slot];
   if(!route.active||route.generation!=intent.generation||
@@ -1416,6 +1517,7 @@ bool activeRouteClear(const IntentState& s,const ActiveIntent& intent){
   if(intent.routeCursor>route.points.size()/2||
      !spatial_local_clear(x,z,x,z))return false;
   for(size_t i=size_t(intent.routeCursor)*2;i<route.points.size();i+=2){
+    s.routeValidationSegments++;
     const float nextX=route.points[i],nextZ=route.points[i+1];
     // The local predicate accepts only short connector segments. World routes
     // may contain validated shortcuts spanning several cells.
@@ -1458,6 +1560,7 @@ int nav_intent_route_progress(double actorId,double x,double z,int count){
   if(!route.active||route.generation!=intent.generation)return 0;
   const auto reject=[&](){
     intent.routeCursor=uint32_t(route.points.size()/2+1);
+    s.changedRouteActors.insert(intent.actor);
     return 0;
   };
   if(route.points.size()%2||size_t(count)*2>route.points.size()||
@@ -1470,14 +1573,35 @@ int nav_intent_route_progress(double actorId,double x,double z,int count){
      std::hypot(double(x)-route.points[route.points.size()-2],
                 double(z)-route.points.back())>.1)return reject();
   intent.routeCursor=uint32_t(cursor);
+  // Transitional JS motion can arrive from a local detour rather than from the
+  // original route corridor. At this event boundary add its current connector
+  // and validate it even if the changed sector had no old subscriber there.
+  if(count){
+    const size_t before=intent.routeSectors.size();
+    const int original=lazy_selected_context();
+    if(original!=intent.profile)spatial_select_nav_profile_index(intent.profile);
+    subscribeRouteSegment(s,intent,x,z,route.points[cursor*2],route.points[cursor*2+1]);
+    if(original!=intent.profile)spatial_select_nav_profile_index(original);
+    if(intent.routeSectors.size()!=before)s.changedRouteActors.insert(intent.actor);
+  }
   if(intent.animal){intent.routeStartX=float(x);intent.routeStartZ=float(z);}
   return 1;
 }
 int nav_intent_reconcile_topology(){
   IntentState& s=state();const int originalProfile=lazy_selected_context();
+  // Synchronize each participating native profile once. Sector commits enqueue
+  // only subscribers, so an unrelated wall no longer walks all live polylines.
+  for(int profile=0;profile<6;profile++)
+    if(!s.profileParticipants[profile].empty()&&lazy_selected_context()!=profile)
+      spatial_select_nav_profile_index(profile);
+  std::set<uint64_t> candidates;
+  candidates.swap(s.changedRouteActors);
+  s.reconcileCandidates+=candidates.size();
   std::vector<std::pair<uint64_t,uint32_t>> affected;
-  for(auto& item:s.activeIntents){
-    ActiveIntent& intent=item.second;
+  for(uint64_t actor:candidates){
+    const auto found=s.activeIntents.find(actor);
+    if(found==s.activeIntents.end())continue;
+    ActiveIntent& intent=found->second;
     if(lazy_selected_context()!=intent.profile)
       spatial_select_nav_profile_index(intent.profile);
     const uint32_t revision=lazy_route_revision();
@@ -1489,7 +1613,7 @@ int nav_intent_reconcile_topology(){
     if(intent.state==PlanningState::RouteActive||
        intent.state==PlanningState::WaitingUnknown||
        intent.state==PlanningState::WaitingBlocked)
-      affected.emplace_back(item.first,revision);
+      affected.emplace_back(actor,revision);
   }
   if(lazy_selected_context()!=originalProfile)
     spatial_select_nav_profile_index(originalProfile);
@@ -1690,7 +1814,7 @@ int nav_intent_register_attack(double actorId,double targetId,
   intent.routeStartX=float(startX);intent.routeStartZ=float(startZ);
   s.activeIntents.insert_or_assign(actor,intent);
   s.byTarget[targetIdValue].insert(actor);
-  emitIntentChange(s,intent);
+  emitIntentChange(s,s.activeIntents.at(actor));
   return 1;
 }
 // The raid controller has already committed the retreat transition. Pin a
@@ -1729,7 +1853,7 @@ int nav_intent_plan_retreat(double actorId,double startX,double startZ,
   intent.approachX=float(exitX);intent.approachZ=float(exitZ);
   intent.approachKnown=true;
   s.activeIntents.insert_or_assign(actor,intent);
-  emitIntentChange(s,intent);
+  emitIntentChange(s,s.activeIntents.at(actor));
   return 1;
 }
 // Restore a saved continuous route verbatim when its remaining points are
@@ -1774,7 +1898,7 @@ int nav_intent_restore_retreat(double actorId,double startX,double startZ,
   intent.approachX=float(exitX);intent.approachZ=float(exitZ);
   intent.approachKnown=true;
   s.activeIntents.insert_or_assign(actor,intent);
-  emitIntentChange(s,intent);
+  emitIntentChange(s,s.activeIntents.at(actor));
   return 1;
 }
 // A worker's confirmed return/flight to its village is a route-only
@@ -1829,7 +1953,7 @@ int workerHomeRoute(double actorId,double startX,double startZ,
   intent.approachX=float(homeX);intent.approachZ=float(homeZ);
   intent.approachKnown=true;
   s.activeIntents.insert_or_assign(actor,intent);
-  emitIntentChange(s,intent);
+  emitIntentChange(s,s.activeIntents.at(actor));
   return 1;
 }
 int nav_intent_plan_home(double actorId,double startX,double startZ,
@@ -2408,7 +2532,7 @@ int nav_intent_restore_attack_action(double actorId,double targetId,int hasLease
   intent.lease=hasLease!=0;
   s.activeIntents.emplace(actor,intent);
   s.byTarget[intent.target].insert(actor);
-  emitIntentChange(s,intent);
+  emitIntentChange(s,s.activeIntents.at(actor));
   return 1;
 }
 // Saved travel with no usable path keeps its logical target and lease. The
@@ -2433,7 +2557,7 @@ int nav_intent_restore_attack_pending(double actorId,double targetId,int hasLeas
   intent.profile=lazy_selected_context();intent.lease=hasLease!=0;
   s.activeIntents.emplace(actor,intent);
   s.byTarget[id].insert(actor);
-  emitIntentChange(s,intent);
+  emitIntentChange(s,s.activeIntents.at(actor));
   return 1;
 }
 // Restore the already-confirmed JS approach lease after an action or pending

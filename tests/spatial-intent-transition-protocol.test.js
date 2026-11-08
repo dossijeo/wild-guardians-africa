@@ -19,6 +19,7 @@ test('pthread runtime exposes the same native transition ABI as standalone',asyn
     assert.equal(world.core.wasm.nav_intent_change_width(),15);
     assert.equal(world.core.wasm.nav_intent_set_time(1),1);
     assert.equal(world.core.wasm.nav_intent_set_time(0),0);
+    assert.equal(typeof world.core.wasm.nav_intent_route_validation_count,'function');
   }finally{await world.dispose();}
 });
 function fixture(){
@@ -56,6 +57,7 @@ test('AttackCrops publishes one ordered native transition at mutation time, not 
     assert(Math.hypot(plan.approach.point.x-f.actor.x,
       plan.approach.point.z-f.actor.z)>8);
     const calls=f.session.core.wasm.nav_intent_actor_planning_calls(900002);
+    const validations=f.session.core.wasm.nav_intent_route_validation_count();
     f.state.elapsed=50; // A late preparer must not restamp an old assignment.
     const [event]=f.bridge.intentChanges();
     assert.equal(event.type,'RouteAssigned');
@@ -69,6 +71,7 @@ test('AttackCrops publishes one ordered native transition at mutation time, not 
       assert.deepEqual(f.bridge.intentChanges(),[]);
     }
     assert.equal(f.session.core.wasm.nav_intent_actor_planning_calls(900002),calls);
+    assert.equal(f.session.core.wasm.nav_intent_route_validation_count(),validations);
     // This checks native log/handle access, not autonomous simulation or GPU.
   }finally{f.session.dispose();}
 });
@@ -116,6 +119,54 @@ test('a real native wall revokes its intersected route with its old identity',()
     assert.equal(event.effectiveTime,11);
     assert.deepEqual(event.revokedRouteHandle,plan.routeHandle);
     assert.equal(f.bridge.routePoints(plan.routeHandle),null);
+  }finally{f.session.dispose();}
+});
+
+test('spatial subscriptions ignore distant mutations instead of scanning every active route',()=>{
+  const f=fixture();
+  try{
+    const plan=f.bridge.planAttackCrop(f.state,f.actor);
+    assert.equal(plan.status,'found');
+    f.bridge.intentChanges();
+    const wasm=f.session.core.wasm;
+    const checks=wasm.nav_intent_route_validation_count(),
+      candidates=wasm.nav_intent_reconcile_candidate_count();
+    const farWall=f.session.core.addWall(40,40,.3,.3);
+    assert(farWall>0);
+    assert.equal(f.bridge.reconcileTopology(),0);
+    assert.equal(wasm.nav_intent_route_validation_count(),checks,
+      'an unrelated native wall must not resample the actor polyline');
+    assert.equal(wasm.nav_intent_reconcile_candidate_count(),candidates);
+    assert(f.bridge.routePoints(plan.routeHandle));
+    assert.deepEqual(f.bridge.intentChanges(),[]);
+    const point=plan.approach.path[Math.floor(plan.approach.path.length/2)];
+    assert(f.session.core.addWall(point.x,point.z,.3,.3)>0);
+    assert.equal(f.bridge.reconcileTopology(),1);
+    assert.equal(wasm.nav_intent_route_validation_count(),checks+1);
+    assert.equal(wasm.nav_intent_reconcile_candidate_count(),candidates+1);
+    assert.deepEqual(f.bridge.intentChanges()[0].revokedRouteHandle,plan.routeHandle);
+  }finally{f.session.dispose();}
+});
+
+test('completed routes release spatial subscriptions and cannot be reactivated by a wall',()=>{
+  const f=fixture();
+  try{
+    const plan=f.bridge.planAttackCrop(f.state,f.actor);
+    assert.equal(plan.status,'found');
+    assert(f.bridge.markAttackActive(f.actor.id));
+    f.bridge.intentChanges();
+    const point=plan.approach.path[Math.floor(plan.approach.path.length/2)];
+    assert(f.session.core.addWall(point.x,point.z,.3,.3)>0);
+    const wasm=f.session.core.wasm,checks=wasm.nav_intent_route_validation_count(),
+      candidates=wasm.nav_intent_reconcile_candidate_count();
+    assert.equal(f.bridge.reconcileTopology(),0);
+    assert.equal(wasm.nav_intent_route_validation_count(),checks);
+    assert.equal(wasm.nav_intent_reconcile_candidate_count(),candidates,
+      'completion must remove inverse subscriptions, not merely skip its check');
+    assert.deepEqual(f.bridge.intentChanges(),[]);
+    assert.equal(wasm.nav_intent_actor(900002),1);
+    const record=new Float64Array(wasm.memory.buffer,wasm.nav_intent_actor_ptr(),10);
+    assert.equal(record[1],2,'the committed action remains authoritative');
   }finally{f.session.dispose();}
 });
 

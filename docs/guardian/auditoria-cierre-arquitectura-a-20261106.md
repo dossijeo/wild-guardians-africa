@@ -1,6 +1,13 @@
 # Auditoría de cierre de la arquitectura A — 6 de noviembre de 2026
 
-## Decisión actual tras la implementación
+## Corrección de la decisión — 2026-11-08
+
+**A6 reabierto; A no está cerrado globalmente.** El cierre interno que sigue
+describe contratos históricos, no autonomía por intenciones. La
+[auditoría corregida](intent-route-architecture-correction-20261108.md) identifica
+los propietarios duplicados y las garantías que faltan antes de retomar B/C.
+
+## Decisión anterior (superada para A6)
 
 **A1–A7 cerrados internamente a 7 de noviembre de 2026.** El cierre indicado aquí es interno
 de contratos, no aprobación de contenido, paridad ni rendimiento. El perfil
@@ -14,7 +21,7 @@ recuperación temporal explícita; no se activa silenciosamente como predetermin
 | A3 Catálogo, datos y pases | **Implementado internamente para las familias actuales** | Recetas de estados/bindings/deformaciones y cobertura de pases; paleta/offset de fluidos por material, recorte de sombras y clonación NodeMaterial corregidos. [Matriz A1/A3](a1-a3-contract-audit.md), pruebas lógicas y compilación. Nuevas máscaras/contenidos requieren receta B; paridad y pipelines físicos, C. |
 | A4 Admisión y mutaciones estructurales | **Implementado internamente para rutas soportadas** | Inventario de consumidores corregido: instancias reales de previews, ondas, Hi-Z y reasignación de buffers del escudo pasan por publicación atómica. Las luces/formatos globales son fijos en el perfil; un cambio estructural exige transacción o nueva generación. No hay sondeo indiscriminado por fotograma. Commits `594af3095` y `bc02200ac`, 155 pruebas locales. Indicador inmediato durante admisión B3; primera utilización y paridad GPU C. |
 | A5 Recursos y residencia | **Implementado internamente** | Registro por generación, versiones, cargas/leases, propietarios explícitos o compuestos, liberación diferida y presión configurable sobre inactivos. [Inventario A5](a5-resource-registry.md); 458 pruebas de contratos. Bytes desconocidos explícitos y límites heurísticos, no VRAM medida; calibración/dispositivo, C. |
-| A6 Trayectorias, reloj y pose | **Implementado internamente** | Intervalos ejecutados y confirmados, secuencia/actor/identidad, horizonte certificado y entrega de pose; selección tardía baked sin sustituir rig. [Contrato A6](a6-autonomous-motion-handoff.md), [admisión tardía](historical-late-actor-selection.md). Otros clips B4; continuidad visual y hardware C. |
+| A6 Trayectorias, reloj y pose | **Reabierto** | El mecanismo histórico no cumple autonomía por planes completos. Faltan ejecución nativa, conflictos anticipados, revocación directa al dibujo y aceptación WASM/WebGPU A–F. |
 | A7 Entrada, provisionales y recuperación | **Implementado internamente en perfil explícito** | Entrada autoritativa, IDs, confirmación/rechazo, checkpoint/replay, generaciones y recuperación o fallo seguro. [Contrato de recuperación](temporal-recovery-contract.md), 85 pruebas dirigidas. Saturación queda A2; contenidos B5/B6 y recuperación real con GPU/física C. |
 
 ### Verificación final y entrega
