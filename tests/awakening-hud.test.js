@@ -23,6 +23,11 @@ function dims(w,h){
   const aw=Math.max(58,portrait?Math.min(Math.max(78,Math.min(108,w*.24)),available/4*.715):Math.min(Math.max(164,Math.min(221,w*.155)),available/4*2.17));
   return {w,h,portrait,short,reserve,header,aw};
 }
+test('loading layout uses known HUD bounds while hidden DOM offsets are zero',()=>{
+ const previous=globalThis.getComputedStyle;globalThis.getComputedStyle=()=>({paddingBottom:'0'});
+ const hidden={offsetLeft:0,offsetWidth:0,style:{}},element={style:{setProperty(){}},classList:{toggle(){}},querySelector:()=>hidden},hud={element,stage:{querySelector:()=>hidden}};
+ try{AwakeningHud.prototype.layout.call(hud,{...dims(1280,720),statsRight:568,menuLeft:1197});assert.equal(element.style.left,'584px');assert.equal(element.style.top,'8px');assert.equal(element.style.width,'520px');assert.equal(element.style.height,'92px');}finally{if(previous===undefined)delete globalThis.getComputedStyle;else globalThis.getComputedStyle=previous;}
+});
 for(const [w,h] of [[1280,720],[1024,768],[844,390],[740,360],[640,360],[568,320],[390,844],[360,640],[320,568],[768,1024]])
   test(`awakening layout fits ${w}×${h}, preserves the stats and leaves the tutorial reserve clear`,()=>{
     const d=dims(w,h),statsRight=d.short?426:568,menuLeft=w-(d.short?59:83),p=awakeningHudPlacement(d,{statsRight,menuLeft});

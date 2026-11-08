@@ -31,7 +31,6 @@ export class AwakeningHud {
       <button type="button" id="awakeningButton" disabled><svg class="awakening-ring" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="45"/><circle class="awakening-ring-value" cx="50" cy="50" r="45"/></svg>
       <img class="awakening-icon" alt="" aria-hidden="true"><span class="awakening-caption">Despertar</span><span class="awakening-short-caption" aria-hidden="true">Despertar</span><span class="awakening-bar" aria-hidden="true"><i></i></span><span class="awakening-value" aria-hidden="true">0 / 100</span></button>`;
     this.button=this.element.querySelector('button');this.button.onclick=onActivate;
-    for(const [name,key] of [['corner-left','frame_tl'],['corner-right','frame_tr']])this.element.style.setProperty('--awakening-'+name,`url("${assetUrl(ASSETS[key].src)}")`);
     this.element.querySelector('img').src=assetUrl(ASSETS.magic_icon.src);stage.querySelector('#hud').append(this.element);
   }
   render(state,options={}){
@@ -51,7 +50,7 @@ export class AwakeningHud {
   layout(dims){
     const days=this.stage.querySelector('#days'),menu=this.stage.querySelector('#menuButton');
     const safeBottom=parseFloat(getComputedStyle(this.element.querySelector('.awakening-safe-probe')).paddingBottom)||0;
-    const placement=awakeningHudPlacement(dims,{statsRight:days.offsetLeft+days.offsetWidth,menuLeft:menu.offsetLeft,safeBottom});
+    const placement=awakeningHudPlacement(dims,{statsRight:dims.statsRight??days.offsetLeft+days.offsetWidth,menuLeft:dims.menuLeft??menu.offsetLeft,safeBottom});
     this.element.classList.toggle('is-medallion',placement.portrait);
     this.element.classList.toggle('is-compact-medallion',placement.portrait&&placement.width<65);
     Object.assign(this.element.style,{left:placement.left===undefined?'auto':placement.left+'px',right:placement.right===undefined?'auto':`max(${placement.right}px, env(safe-area-inset-right, 0px))`,top:placement.top+'px',width:placement.width+'px',height:placement.height+'px'});

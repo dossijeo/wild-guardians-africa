@@ -25,10 +25,8 @@
 #stage.portrait.awakening-selecting #placementBanner [data-placement-copy]{flex-basis:100%}
 #stage.portrait.awakening-selecting #placementBanner button{flex:1}
 @media(prefers-reduced-motion:reduce){#awakeningHud.is-ready #awakeningButton{animation:none}.awakening-bar i,.awakening-ring-value{transition:none}}
-/* Botanical gold framing reuses the game's original illustrated panel corners. */
+/* Gold framing belongs to this control; modal corners are not HUD assets. */
 #awakeningButton{border:3px solid #d9a23b;border-radius:30px;background:linear-gradient(#68412a,#342021 48%,#4a242f);box-shadow:inset 0 2px 2px #ffe7a1,inset 0 -3px 3px #a95618,0 0 0 2px #5b321b,0 3px 4px #241526;overflow:visible}
-#awakeningHud:not(.is-medallion)::before,#awakeningHud:not(.is-medallion)::after{content:'';position:absolute;top:-7px;width:66px;height:70px;background:var(--awakening-corner-left) center/100% 100% no-repeat;pointer-events:none;z-index:2}
-#awakeningHud:not(.is-medallion)::before{left:-10px}#awakeningHud:not(.is-medallion)::after{right:-9px;background-image:var(--awakening-corner-right)}
 .awakening-icon{width:78px;height:74px;left:-6px;z-index:3;filter:drop-shadow(0 0 5px #c143ff)}
 .awakening-caption{left:75px;right:30px;top:3px;font-size:clamp(12px,1.65vw,22px);line-height:24px;color:#fff5d8;text-shadow:0 2px 2px #261627}
 .awakening-caption::before,.awakening-caption::after{content:'◆';color:#f4a744;font-size:.65em;padding:0 15px;text-shadow:0 0 5px #f8b4ff}
