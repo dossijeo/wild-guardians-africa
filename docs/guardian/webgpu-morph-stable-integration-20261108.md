@@ -1,0 +1,21 @@
+# Referencias estables de morph en WebGPU
+
+Fecha: 2026-11-08. Se integra en el parche reproducible de instalación de Three r180 un nombre estable para la referencia de `morphTargetInfluences`. Three sigue leyendo los pesos de cada objeto: solo se evita que un identificador generado cambie el WGSL de mallas compatibles. No se comparten pesos ni se normaliza el código de otros shaders. El parche valida la versión y las tres fuentes esperadas antes de escribir; el proceso conserva los otros parches de Three existentes.
+
+## Validación
+
+La [evaluación A/B/B/A anterior](webgpu-morph-integrated-evaluation-20261108.md) registró en la incursión nativa un p99 de intervalos rAF principales de 600–633 ms en A y 66,7 ms en B. En trazas separadas se contabilizaron 113 solicitudes de pipeline en A frente a 36 en B. Son resultados de ese escenario y equipo, no una garantía de FPS ni tiempos de presentación física; las muestras GPU fueron insuficientes para estimar percentiles.
+
+Para verificar la instalación se repitió una incursión real de 10 s por variante: A restaura el código original solo por interceptación QA (siete módulos interceptados), B usa directamente el código instalado. Ambas declararon WebGPU, ejecución válida y ocho grupos de hierba visibles. A registró rAF media/p95/p99/máximo de 61,4/133,3/733,5/800,0 ms y B de 37,5/66,7/100,0/200,1 ms. El retraso entre simulación y presentación en la última lectura fue de 4,8 s en A y 6,0 s en B; las lecturas son asíncronas. Esta pareja es una comprobación de integración, no una comparación estadística adicional. [Datos A](webgpu-morph-installed-raid-a-20261108.jsonl), [datos B](webgpu-morph-installed-raid-b-20261108.jsonl).
+
+En la prueba visual WebGPU con sombras, diez modelos distintos incluyeron 37 mallas de morph y 130 pesos independientes; diez jabalíes incluyeron 40 mallas y 110 pesos. Las cuatro poses coincidieron entre el código original y el instalado después de estabilizar los dibujos repetidos. También coincidieron los controles con pesos a cero. La prueba prepara y repite dibujos **solo en el laboratorio**, no en el juego. Las [lecturas completas](webgpu-morph-stable-repeat-20261108.json) incluyen los intentos sin estabilizar: el primer dibujo y, en una ejecución de jabalíes, incluso una repetición posterior variaron con una pose inalterada. La referencia sin parche también presenta variaciones. Cinco repeticiones produjeron tres lecturas finales iguales en la comparación instalada de jabalíes. Esto no demuestra equivalencia en el primer dibujo ni explica por completo esa variación; tampoco sustituye una revisión visual de una partida completa.
+
+Las cuatro pruebas de `tests/three-webgpu-pipeline-patch.test.js` pasan. Se verificó la reversión real en fuente y ambos bundles, y se reactivó después. No se ha validado específicamente el fallback WebGL en esta evaluación.
+
+## Reproducción y reversión
+
+`npm install` ejecuta `tools/patch-three-webgpu-pipeline.mjs`. Para volver temporalmente al comportamiento original de morph, ejecutar en PowerShell `$env:WG_THREE_STABLE_MORPH='0'; node tools/patch-three-webgpu-pipeline.mjs`, eliminar después esa variable y volver a ejecutar el script para reactivar el cambio. Reiniciar Vite con `--force` o reconstruir el producto para invalidar dependencias precompiladas. Los parches de pipeline y sombras son independientes y permanecen aplicados.
+
+Para comparar las imágenes instaladas, ejecutar `tools/experiments/check_morph_pipeline_visual.mjs` con `WG_NO_CANONICAL=1`, `WG_SETTLE_SHADOWS=1`, `WG_REPEAT_FRAMES=5` y una ruta de salida `WG_OUTPUT` distinta por ejecución. Añadir `WG_ORIGINAL_MORPH=1` solo para la referencia y `WG_SAME_SPECIES=1` para los jabalíes. `tools/experiments/check_morph_repeat_results.mjs <referencia.json> <candidata.json>` exige que las tres últimas lecturas coincidan en cada pose. La configuración y los parámetros del escenario de incursión están en la evaluación anterior; `QA_ORIGINAL_MORPH=1` restaura la referencia en QA cuando el parche está instalado.
+
+La cola del Worker y la latencia de varios segundos siguen abiertas. Este cambio reduce compilaciones redundantes y no completa la migración ni resuelve por sí solo la fluidez del juego.

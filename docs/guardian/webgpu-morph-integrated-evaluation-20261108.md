@@ -1,6 +1,6 @@
 # Reutilización de shaders de morph tras integrar la hierba
 
-Fecha: 2026-11-08. El experimento cambia solo en QA el nombre de una referencia de `MorphNode` en Three r180; la referencia continúa tomando los pesos del objeto. No se activa el cambio en el juego. La normalización adicional de WGSL del laboratorio permanece desactivada.
+Fecha: 2026-11-08. Esta evaluación histórica usó un cambio solo en QA del nombre de una referencia de `MorphNode` en Three r180; la referencia continúa tomando los pesos del objeto. Posteriormente se integró el cambio reversible tras ampliar las comparaciones; véase [la integración y sus límites](webgpu-morph-stable-integration-20261108.md). La normalización adicional de WGSL del laboratorio permaneció desactivada.
 
 ## Incursión WebGPU
 
@@ -23,7 +23,7 @@ En WebGPU real, diez jabalíes con 40 mallas de morph y 110 pesos independientes
 
 Se añadió a la prueba la opción `WG_SETTLE_SHADOWS=1`: prepara la escena de prueba, espera la cola GPU y dibuja cada pose dos veces antes de leerla. Es una medida de diagnóstico visual, **no una precarga del juego**. Con esa opción, una pareja mixta coincidió en los cuatro fotogramas, pero otra candidata difirió en el tercero: 10.353 píxeles de la captura completa, máximo 188/255 en un canal. Otros controles muestran variación también entre referencias, con pesos de morph a cero y, en una repetición, sin sombras. Por tanto las diferencias no pueden atribuirse de forma fiable al cambio ni descartarse como regresión visual. La prueba aún no proporciona una referencia completamente determinista para todas las poses.
 
-[Resultados de las 29 ejecuciones visuales](webgpu-morph-integrated-visual-20261108.json); [referencia estabilizada](webgpu-morph-integrated-visual-a-20261108.png) y [candidata con diferencia](webgpu-morph-integrated-visual-b-20261108.png). Todas informaron backend WebGPU real y no reportaron errores de validación. Hay que estabilizar o aislar el origen de la variación y verificar la vinculación independiente de pesos y sombras antes de activar el cambio. Se mantiene fuera de producción pese al ahorro observado de compilaciones.
+[Resultados de las 29 ejecuciones visuales](webgpu-morph-integrated-visual-20261108.json); [referencia estabilizada](webgpu-morph-integrated-visual-a-20261108.png) y [candidata con diferencia](webgpu-morph-integrated-visual-b-20261108.png). Todas informaron backend WebGPU real y no reportaron errores de validación. En ese momento el cambio quedó fuera de producción; las pruebas posteriores y la variación que persiste en el primer dibujo se documentan en la evaluación de integración.
 
 ## Reproducción
 

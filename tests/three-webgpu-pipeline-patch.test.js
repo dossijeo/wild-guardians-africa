@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {patchPipelineSource,patchPipelineCacheSource,patchShadowCompileSource} from '../tools/patch-three-webgpu-pipeline.mjs';
+import {patchPipelineSource,patchPipelineCacheSource,patchShadowCompileSource,patchMorphInfluenceSource,restoreMorphInfluenceSource} from '../tools/patch-three-webgpu-pipeline.mjs';
 import Pipelines from '../node_modules/three/src/renderers/common/Pipelines.js';
 
 test('installed Three source is patched idempotently and unknown code fails closed',async()=>{
@@ -15,6 +15,15 @@ test('installed Three source is patched idempotently and unknown code fails clos
  }
  for(const path of ['build/three.webgpu.js','build/three.webgpu.nodes.js']){const source=await readFile(`node_modules/three/${path}`,'utf8');assert.equal(patchShadowCompileSource(source),source,path);}
  assert.throws(()=>patchShadowCompileSource('unsupported implementation'),/Unexpected/);
+});
+
+test('stable morph reference is reproducible, reversible and fails closed',async()=>{
+ for(const path of ['src/nodes/accessors/MorphNode.js','build/three.webgpu.js','build/three.webgpu.nodes.js']){
+  const source=await readFile(`node_modules/three/${path}`,'utf8');assert.equal(patchMorphInfluenceSource(source),source,path);
+  const original=restoreMorphInfluenceSource(source);assert.notEqual(original,source,path);assert.equal(restoreMorphInfluenceSource(original),original,path);assert.equal(patchMorphInfluenceSource(original),source,path);
+ }
+ assert.throws(()=>patchMorphInfluenceSource('unsupported implementation'),/Unexpected/);
+ assert.throws(()=>restoreMorphInfluenceSource('unsupported implementation'),/Unexpected/);
 });
 
 test('pipeline creation forwards failure to the compilation promise',async()=>{

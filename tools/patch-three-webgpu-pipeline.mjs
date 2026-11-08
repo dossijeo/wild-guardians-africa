@@ -25,6 +25,12 @@ const pendingAfter=pendingBefore.replace('\t\t\tpromises.push( p );','\t\t\tpipe
 const cachedBefore='\t\treturn data.pipeline;\n\n\t}\n\n\t/**\n\t * Deletes the pipeline for the given render object.';
 const cachedAfter='\t\tif ( promises !== null && data.pipeline !== undefined ) {\n\n\t\t\tconst pending = backend.get( data.pipeline ).pendingPromise;\n\t\t\tif ( pending !== undefined && ! promises.includes( pending ) ) promises.push( pending );\n\n\t\t}\n\n'+cachedBefore;
 
+// A generated node id in this reference becomes part of the WGSL source.
+// Keep its symbol stable across otherwise identical meshes while retaining
+// Three's per-object reference and binding updates.
+const morphBefore="reference( 'morphTargetInfluences', 'float' ).element( i )";
+const morphAfter="reference( 'morphTargetInfluences', 'float' ).setName( 'wgMorphInfluences' ).element( i )";
+
 // compileAsync normally replaces a non-scene root with an internal scene and
 // hardcodes renderObject. Shadow compilation must use the actual scene and the
 // same shadow callback as a real pass. Only the two bundled WebGPU renderers
@@ -80,13 +86,17 @@ export function patchPipelineSource(source){
 }
 export function patchPipelineCacheSource(source){return replaceOnce(source,cachedBefore,cachedAfter,'pipeline cache');}
 export function patchShadowCompileSource(source){return replaceOnce(replaceOnce(replaceOnce(source,shadowSceneBefore,shadowSceneAfter,'shadow scene'),shadowCallbackBefore,shadowCallbackAfter,'shadow callback'),shadowMethodBefore,shadowMethodAfter,'shadow method');}
+export function patchMorphInfluenceSource(source){return replaceOnce(source,morphBefore,morphAfter,'morph influence');}
+export function restoreMorphInfluenceSource(source){return replaceOnce(source,morphAfter,morphBefore,'morph influence restoration');}
 
-export async function patchInstalledThree(root='node_modules/three'){
+export async function patchInstalledThree(root='node_modules/three',{stableMorph=process.env.WG_THREE_STABLE_MORPH!=='0'}={}){
+ if(typeof stableMorph!=='boolean')throw TypeError('Invalid stable morph setting');
  const metadata=JSON.parse(await readFile(`${root}/package.json`,'utf8'));
  if(metadata.version!=='0.180.0')throw Error(`Unsupported Three.js version: ${metadata.version}`);
- const paths=['src/renderers/webgpu/utils/WebGPUPipelineUtils.js','src/renderers/common/Pipelines.js','build/three.webgpu.js','build/three.webgpu.nodes.js'].map(p=>`${root}/${p}`);
+ const paths=['src/renderers/webgpu/utils/WebGPUPipelineUtils.js','src/renderers/common/Pipelines.js','build/three.webgpu.js','build/three.webgpu.nodes.js','src/nodes/accessors/MorphNode.js'].map(p=>`${root}/${p}`);
  const originals=await Promise.all(paths.map(p=>readFile(p,'utf8')));
- const patched=originals.map((source,i)=>i===0?patchPipelineSource(source):i===1?patchPipelineCacheSource(source):patchShadowCompileSource(patchPipelineCacheSource(patchPipelineSource(source)))); // Validate all before writing any.
+ const morph=stableMorph?patchMorphInfluenceSource:restoreMorphInfluenceSource;
+ const patched=originals.map((source,i)=>i===0?patchPipelineSource(source):i===1?patchPipelineCacheSource(source):i===4?morph(source):morph(patchShadowCompileSource(patchPipelineCacheSource(patchPipelineSource(source))))); // Validate all before writing any.
  for(let i=0;i<paths.length;i++)if(patched[i]!==originals[i])await writeFile(paths[i],patched[i]);
 }
 
