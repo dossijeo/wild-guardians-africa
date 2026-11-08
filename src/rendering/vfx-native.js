@@ -218,6 +218,13 @@ function rigidInstances(){const counts=Object.fromEntries(Object.keys(rigidGeo).
  current=definitions.find(d=>d.id===id);if(!current)throw new Error('Composición VFX desconocida');restartEffect(false);
  return {
   get definition(){return current;},get time(){return clock;},get parts(){return parts;},get rigids(){return rigids;},get wetness(){return wetness;},contacts,
+  // An in-memory rollback belongs to this instance and never transports
+  // callbacks or terrain. The caller must validate those dependencies first.
+  beginCombatTransaction(){
+   if(!['rhino','lion','buffalo','warthog','hyena'].includes(current.id))throw Error('Unsupported combat VFX transaction');
+   const saved=structuredClone({id:current.id,clock,seed,eventIndex,parts,rigids,wetness,hitTime,paused,wallVisible,lastImpact,contacts,lightPos0,lightPos1,lightCol0,lightCol1}),eventList=events,eventCount=events.length;let active=true;
+   return {commit(){if(!active)throw Error('Combat VFX transaction closed');active=false;},rollback(){if(!active||current.id!==saved.id||events!==eventList||events.length!==eventCount)throw Error('Invalid combat VFX transaction');active=false;const copy=structuredClone(saved);clock=copy.clock;seed=copy.seed;eventIndex=copy.eventIndex;parts=copy.parts;rigids=copy.rigids;wetness=copy.wetness;hitTime=copy.hitTime;paused=copy.paused;wallVisible=copy.wallVisible;lastImpact=copy.lastImpact;contacts.splice(0,contacts.length,...copy.contacts);lightPos0=copy.lightPos0;lightPos1=copy.lightPos1;lightCol0=copy.lightCol0;lightCol1=copy.lightCol1;toolPose();}};
+  },
   // Work-only checkpoint: callbacks and terrain belong to the destination, not
   // to the serialized state. Callers must provide matching historical inputs.
   exportWorkCheckpoint(){
