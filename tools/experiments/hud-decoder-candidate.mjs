@@ -1,0 +1,43 @@
+// Independent transport codec. It does not authorize simulation actions or
+// silently recover a missing base: the owner must request a fresh baseline.
+const collectionNames=['workers','tasks','plants','crates','structures','spells','events'];
+const copy=value=>structuredClone(value);
+const equal=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
+const plain=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
+const safeKey=key=>!['__proto__','prototype','constructor'].includes(key);
+function fields(source,exclude=[]){const result={};for(const [key,value] of Object.entries(source)){if(!safeKey(key))throw TypeError('Invalid HUD field');if(!exclude.includes(key))result[key]=value;}return result;}
+function fieldDiff(before,after){const set={},remove=[];for(const key of Object.keys(before))if(!Object.hasOwn(after,key))remove.push(key);for(const [key,value] of Object.entries(after))if(!Object.hasOwn(before,key)||!equal(before[key],value))set[key]=copy(value);return {set,remove};}
+function indexed(items){if(!Array.isArray(items))throw TypeError('Invalid HUD collection');const map=new Map();for(const item of items){if(!plain(item)||typeof item.id!=='string'||!item.id||map.has(item.id))throw TypeError('Invalid HUD entity');map.set(item.id,item);}return map;}
+function collectionDiff(before,after){const a=indexed(before),b=indexed(after),remove=[...a.keys()].filter(id=>!b.has(id)),upsert=[];for(const [id,value] of b)if(!a.has(id)||!equal(a.get(id),value))upsert.push(copy(value));const oldOrder=[...a.keys()],newOrder=[...b.keys()],order=equal(oldOrder,newOrder)?undefined:newOrder;return remove.length||upsert.length||order?{remove,upsert,...(order?{order}:{})}:null;}
+function checkView(view,sequence,validate){if(!plain(view)||!Number.isSafeInteger(sequence)||sequence<0||view.sequence!==sequence||!plain(view.audio)||view.audio.raid!==null&&!plain(view.audio.raid))throw TypeError('Invalid HUD baseline');for(const name of collectionNames)indexed(view.audio[name]);if(view.audio.raid)indexed(view.audio.raid.animals);validate?.(view,sequence);}
+function applyFields(target,patch){if(!plain(patch)||!plain(patch.set)||!Array.isArray(patch.remove))throw TypeError('Invalid HUD fields');const removed=new Set();for(const key of patch.remove){if(typeof key!=='string'||!safeKey(key)||removed.has(key)||!Object.hasOwn(target,key)||Object.hasOwn(patch.set,key))throw TypeError('Invalid HUD field removal');removed.add(key);delete target[key];}for(const [key,value] of Object.entries(patch.set)){if(!safeKey(key))throw TypeError('Invalid HUD field');target[key]=copy(value);}}
+function applyCollection(before,patch){if(!plain(patch)||!Array.isArray(patch.remove)||!Array.isArray(patch.upsert)||patch.order!==undefined&&!Array.isArray(patch.order))throw TypeError('Invalid HUD collection delta');const map=indexed(before),removed=new Set(),updated=new Set();for(const id of patch.remove){if(typeof id!=='string'||removed.has(id)||!map.has(id))throw TypeError('Invalid HUD entity removal');removed.add(id);map.delete(id);}for(const item of patch.upsert){if(!plain(item)||typeof item.id!=='string'||!item.id||updated.has(item.id)||removed.has(item.id))throw TypeError('Invalid HUD entity update');updated.add(item.id);map.set(item.id,copy(item));}const order=patch.order??[...map.keys()];if(order.length!==map.size||new Set(order).size!==map.size||order.some(id=>!map.has(id)))throw TypeError('Invalid HUD entity order');return order.map(id=>map.get(id));}
+
+export function createConfirmedHudDeltaEncoder({validate=null}={}){
+ if(validate!==null&&typeof validate!=='function')throw TypeError('Invalid HUD validator');let previous=null;
+ return {encode(view){const sequence=view?.sequence;checkView(view,sequence,validate);if(previous&&sequence<=previous.sequence)throw Error('HUD sequence must increase');const next=copy(view);if(!previous){previous=next;return {kind:'baseline',sequence,view:copy(next)};}
+  const root=fieldDiff(fields(previous,['sequence','audio']),fields(next,['sequence','audio'])),audio=fieldDiff(fields(previous.audio,[...collectionNames,'raid']),fields(next.audio,[...collectionNames,'raid'])),oldRaid=previous.audio.raid,newRaid=next.audio.raid,oldMeta=oldRaid?fields(oldRaid,['animals']):null,newMeta=newRaid?fields(newRaid,['animals']):null,raidChanged=!equal(oldMeta,newMeta),collections={};
+  for(const name of collectionNames){const patch=collectionDiff(previous.audio[name],next.audio[name]);if(patch)collections[name]=patch;}
+  if(newRaid){const patch=collectionDiff(!raidChanged&&oldRaid?oldRaid.animals:[],newRaid.animals);if(patch)collections.raidAnimals=patch;}
+  const packet={kind:'delta',base:previous.sequence,sequence,root,audio,...(raidChanged?{raid:copy(newMeta)}:{}),collections};previous=next;return packet;
+ },reset(){previous=null;}};
+}
+
+// Construct an isolated candidate once. It is never exposed directly: the
+// receiver can validate a detached view before atomically publishing it.
+function decodeCandidate(packet,current,validate){
+ if(!plain(packet)||!Number.isSafeInteger(packet.sequence)||packet.sequence<0)throw TypeError('Invalid HUD packet');
+ if(packet.kind==='baseline'){checkView(packet.view,packet.sequence,validate);if(current&&(packet.sequence<current.sequence||packet.sequence===current.sequence&&!equal(packet.view,current)))throw Error('Stale HUD baseline');return copy(packet.view);}
+ if(packet.kind!=='delta'||!current||packet.base!==current.sequence||packet.sequence<=packet.base)throw Error('HUD delta base mismatch');
+ const next=copy(current);applyFields(next,packet.root);if(Object.hasOwn(packet.root.set,'sequence')||packet.root.remove.includes('sequence')||Object.hasOwn(packet.root.set,'audio')||packet.root.remove.includes('audio'))throw TypeError('Invalid HUD root delta');applyFields(next.audio,packet.audio);for(const key of [...collectionNames,'raid'])if(Object.hasOwn(packet.audio.set,key)||packet.audio.remove.includes(key))throw TypeError('Invalid HUD audio delta');
+ if(Object.hasOwn(packet,'raid')){if(packet.raid!==null&&!plain(packet.raid))throw TypeError('Invalid HUD raid');next.audio.raid=packet.raid===null?null:{...copy(packet.raid),animals:[]};}
+ if(!plain(packet.collections)||Object.keys(packet.collections).some(name=>![...collectionNames,'raidAnimals'].includes(name)))throw TypeError('Invalid HUD collections');for(const name of collectionNames)if(Object.hasOwn(packet.collections,name))next.audio[name]=applyCollection(next.audio[name],packet.collections[name]);if(Object.hasOwn(packet.collections,'raidAnimals')){if(!next.audio.raid)throw TypeError('HUD raid missing');next.audio.raid.animals=applyCollection(next.audio.raid.animals,packet.collections.raidAnimals);}
+ next.sequence=packet.sequence;checkView(next,packet.sequence,validate);return next;
+}
+
+export function createConfirmedHudDeltaDecoder({validate=null}={}){
+ if(validate!==null&&typeof validate!=='function')throw TypeError('Invalid HUD validator');let current=null,generation=0;
+ return {decode(packet){const candidate=decodeCandidate(packet,current,validate);current=candidate;generation++;return copy(current);},
+  prepare(packet){const expected=generation;if(current)checkView(current,current.sequence,validate);const candidate=decodeCandidate(packet,current,validate);let used=false;return {view:copy(candidate),commit(){if(used||generation!==expected)throw Error('Stale HUD preparation');used=true;current=candidate;generation++;return copy(current);}};
+ },reset(){current=null;generation++;},status(){return {sequence:current?.sequence??null};}};
+}
