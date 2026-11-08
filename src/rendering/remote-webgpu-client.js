@@ -234,7 +234,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     [REF]: '@device', queue, features: new Set(capabilities.features || []), limits: Object.freeze({ ...capabilities.limits }), adapterInfo: capabilities.adapterInfo || {}, lost,
     createBuffer(descriptor) {
       const value = resource('Buffer', descriptor);
-      let mapping = descriptor.mappedAtCreation ? new ArrayBuffer(descriptor.size) : null, mapOffset = 0;
+      let mapping = descriptor.mappedAtCreation ? new ArrayBuffer(descriptor.size) : null, mapOffset = 0, mapVersion = 0, destroyed = false;
       Object.assign(value, { size: descriptor.size, usage: descriptor.usage, mapState: mapping ? 'mapped' : 'unmapped' });
       value.getMappedRange = (offset = 0, size = value.size - offset) => {
         if (!mapping || value.mapState !== 'mapped') throw Error('Remote buffer is not mapped');
@@ -242,15 +242,26 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
         return mapping;
       };
       value.mapAsync = async (mode, offset = 0, size = value.size - offset) => {
-        if (value.mapState !== 'unmapped') throw Error('Remote buffer already mapped');
+        if (destroyed || value.mapState !== 'unmapped') throw Error('Remote buffer is destroyed or already mapped');
+        const version = ++mapVersion;
         value.mapState = 'pending';
-        const result = await request({ type: 'map', id: value[REF], mode, offset, size });
-        mapping = result.bytes; mapOffset = offset; value.mapState = 'mapped';
+        try {
+          const result = await request({ type: 'map', id: value[REF], mode, offset, size });
+          if (version !== mapVersion) throw Error('Remote buffer mapping canceled');
+          mapping = result.bytes; mapOffset = offset; value.mapState = 'mapped';
+        } catch (error) {
+          if (version === mapVersion) { mapping = null; mapOffset = 0; value.mapState = 'unmapped'; }
+          throw error;
+        }
       };
       value.unmap = () => {
-        if (value.mapState !== 'mapped') return;
-        send({ type: 'unmap', id: value[REF], offset: mapOffset, bytes: mapping.slice(0) });
-        mapping = null; mapOffset = 0; value.mapState = 'unmapped';
+        if (value.mapState === 'unmapped') return;
+        send({ type: 'unmap', id: value[REF], offset: mapOffset, bytes: mapping?.slice(0) || null });
+        mapVersion++; mapping = null; mapOffset = 0; value.mapState = 'unmapped';
+      };
+      value.destroy = () => {
+        destroyed = true; mapVersion++; mapping = null; mapOffset = 0; value.mapState = 'unmapped';
+        send({ type: 'destroy', id: value[REF] });
       };
       return value;
     },

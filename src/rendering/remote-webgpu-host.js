@@ -34,6 +34,23 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
   function reply(message, result, error) {
     if (message.requestId) port.postMessage({ type: 'reply', requestId: message.requestId, result, error: error?.message });
   }
+  // Start native work in FIFO order, but do not serialize unrelated work behind
+  // completion notifications. Pin the exact resource generation until settled.
+  function observeNative(message, promise, convert = value => value, entry = null) {
+    if (entry) entry.pins++;
+    Promise.resolve(promise).then(value => {
+      if (!stopped) reply(message, convert(value));
+    }).catch(error => { if (!stopped) reply(message, null, error); }).finally(() => {
+      if (entry) { entry.pins--; tryRetire(entry); }
+    });
+  }
+  function cancelMapping(entry, reason) {
+    const job = entry.mapJob;
+    if (!job) return;
+    entry.mapJob = null;
+    entry.value.unmap();
+    job.finish(null, Error(reason));
+  }
   function fail(error) {
     if (failed || stopped) return;
     failed = true;
@@ -516,7 +533,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
       }
       case 'destroy': {
         const entry = resources.get(message.id);
-        if (entry) { retired.add(message.id); entry.retirementRequested = true; tryRetire(entry); }
+        if (entry) { cancelMapping(entry, 'Remote buffer mapping canceled by destroy'); retired.add(message.id); entry.retirementRequested = true; tryRetire(entry); }
         break;
       }
       case 'release': {
@@ -528,16 +545,30 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
       }
       case 'map': {
         const entry = resources.get(message.id); if (!entry) throw Error('Unknown mapped buffer');
-        await entry.value.mapAsync(message.mode, message.offset, message.size);
-        entry.mapMode = message.mode;
-        entry.mappedRange = entry.value.getMappedRange(message.offset, message.size);
-        const bytes = entry.mappedRange.slice(0);
-        reply(message, { bytes }); break;
+        if (entry.mapJob || entry.mapMode) { reply(message, null, Error('Remote buffer already mapped')); break; }
+        const job = { done: false, finish(result, error) {
+          if (job.done) return;
+          job.done = true;
+          if (entry.mapJob === job) entry.mapJob = null;
+          if (!stopped) reply(message, result, error);
+          entry.pins--; tryRetire(entry);
+        } };
+        entry.mapJob = job; entry.pins++;
+        try {
+          Promise.resolve(entry.value.mapAsync(message.mode, message.offset, message.size)).then(() => {
+            if (job.done || stopped) return;
+            entry.mapMode = message.mode;
+            entry.mappedRange = entry.value.getMappedRange(message.offset, message.size);
+            job.finish({ bytes: entry.mappedRange.slice(0) });
+          }).catch(error => job.finish(null, error));
+        } catch (error) { job.finish(null, error); }
+        break;
       }
       case 'unmap': {
         const entry = resources.get(message.id); if (!entry) throw Error('Unknown unmapped buffer');
-        if (entry.mapMode & 2) new Uint8Array(entry.mappedRange || entry.value.getMappedRange(message.offset, message.bytes.byteLength)).set(new Uint8Array(message.bytes));
-        if ((entry.mapMode & 2) && entry.uniformShadow) entry.uniformShadow.set(new Uint8Array(message.bytes), message.offset);
+        if (entry.mapJob) { cancelMapping(entry, 'Remote buffer mapping canceled by unmap'); break; }
+        if ((entry.mapMode & 2) && message.bytes) new Uint8Array(entry.mappedRange || entry.value.getMappedRange(message.offset, message.bytes.byteLength)).set(new Uint8Array(message.bytes));
+        if ((entry.mapMode & 2) && entry.uniformShadow && message.bytes) entry.uniformShadow.set(new Uint8Array(message.bytes), message.offset);
         entry.value.unmap(); entry.mapMode = 0; entry.mappedRange = null; break;
       }
       case 'fence': {
@@ -548,13 +579,25 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
           reply(message, null, Error(`A fence cannot cover uncommitted changes to a published frame; publish the next frame first. Deferred: ${JSON.stringify(details)}\n${message.caller || ''}`));
           break;
         }
-        await device.queue.onSubmittedWorkDone(); timing.finishedAt = absoluteNow(); reply(message, { timing }); break;
+        // Native onSubmittedWorkDone captures this queue prefix immediately; its
+        // Promise does not prevent later writes/submits. Awaiting it in the FIFO
+        // would turn independent completion notifications into serial barriers.
+        device.queue.onSubmittedWorkDone().then(() => {
+          timing.finishedAt = absoluteNow();
+          if (!stopped) reply(message, { timing });
+        }, error => {
+          timing.finishedAt = absoluteNow(); timing.error = error?.message || String(error);
+          if (!stopped) reply(message, null, error);
+        });
+        break;
       }
       case 'inspect': reply(message, api.inspect()); break;
       case 'device-destroy': deviceDestroyRequested = true; device.destroy(); break;
       case 'compilation-info': {
-        const info = await resolve({ [REF]: message.id }).getCompilationInfo();
-        reply(message, { messages: Array.from(info.messages, item => ({ message: item.message, type: item.type, lineNum: item.lineNum, linePos: item.linePos, offset: item.offset, length: item.length })) }); break;
+        const entry = resources.get(message.id);
+        if (!entry) throw Error('Unknown shader module');
+        observeNative(message, entry.value.getCompilationInfo(), info => ({ messages: Array.from(info.messages, item => ({ message: item.message, type: item.type, lineNum: item.lineNum, linePos: item.linePos, offset: item.offset, length: item.length })) }), entry);
+        break;
       }
       case 'clock-binding': {
         const key = `${message.id}:${message.binding.byteOffset}`;
@@ -574,7 +617,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
       }
       case 'camera-mailbox': if (!cameraState) throw Error('Remote camera state unavailable'); else cameraState.setMailbox(message.mailbox); break;
       case 'push-error-scope': device.pushErrorScope(message.filter); break;
-      case 'pop-error-scope': { const error = await device.popErrorScope(); reply(message, error ? { message: error.message } : null); break; }
+      case 'pop-error-scope': observeNative(message, device.popErrorScope(), error => error ? { message: error.message } : null); break;
       case 'dispose': api.dispose(); break;
       default: throw Error(`Unknown remote GPU message ${message.type}`);
     }

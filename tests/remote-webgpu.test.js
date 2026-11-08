@@ -554,3 +554,98 @@ test('frame and fence diagnostics distinguish posting, admission, first draw, AC
   assert.equal(f.client.inspect().fenceTimings.at(-1).localRejected, true);
   f.client.cancelFrame(); await flush(); await f.host.idle();
 });
+
+test('pending native fence promises preserve their queue prefixes without blocking later resources or frames', async () => {
+  const f = await fixture();
+  let receipt = f.frame(1); await flush(); await f.host.idle(); f.host.present(); await receipt;
+  const held = [], completionOrder = [];
+  f.gpu.device.queue.onSubmittedWorkDone = () => new Promise(resolve => held.push({ resolve, prefix: f.gpu.calls.length }));
+  const firstFence = f.client.device.queue.onSubmittedWorkDone().then(() => completionOrder.push(1));
+  f.client.device.createBuffer({ size: 4, usage: 8 });
+  receipt = f.frame(2); await flush(); await f.host.idle();
+  assert.equal(held.length, 1);
+  assert.equal(f.gpu.buffers.length, 2);
+  f.host.present(); await receipt;
+  assert.equal(f.host.inspect().activeSequence, 2);
+  const secondFence = f.client.device.queue.onSubmittedWorkDone().then(() => completionOrder.push(2));
+  await flush(); await f.host.idle();
+  assert.equal(held.length, 2);
+  assert(held[0].prefix < held[1].prefix);
+  assert.deepEqual(completionOrder, []);
+  held[0].resolve(); await firstFence;
+  assert.deepEqual(completionOrder, [1]);
+  held[1].resolve(); await secondFence;
+  assert.deepEqual(completionOrder, [1, 2]);
+  assert.equal(f.errors.length, 0);
+});
+
+test('device loss rejects a pending fence without waiting for its native promise to finish', async () => {
+  const f = await fixture();
+  f.gpu.device.queue.onSubmittedWorkDone = () => new Promise(() => {});
+  const fence = f.client.device.queue.onSubmittedWorkDone();
+  const rejected = assert.rejects(fence, /device lost/);
+  await flush(); await f.host.idle();
+  f.client.device.destroy();
+  assert.equal((await f.client.device.lost).reason, 'destroyed');
+  await rejected;
+  assert.equal(f.errors.length, 0);
+});
+
+test('pending mapping, shader diagnostics and error scopes do not block ready frames', async () => {
+  const f = await fixture();
+  const readback = f.client.device.createBuffer({ size: 16, usage: 9 });
+  await flush(); await f.host.idle();
+  let finishMap, finishInfo, finishScope;
+  f.gpu.buffers[1].mapAsync = () => new Promise(resolve => { finishMap = resolve; });
+  f.gpu.device.createShaderModule = () => ({ getCompilationInfo: () => new Promise(resolve => { finishInfo = resolve; }) });
+  f.gpu.device.popErrorScope = () => new Promise(resolve => { finishScope = resolve; });
+  const mapping = readback.mapAsync(1), info = f.client.device.createShaderModule({ code: '' }).getCompilationInfo();
+  const scope = f.client.device.popErrorScope();
+  const receipt = f.frame(4); await flush(); await f.host.idle();
+  assert.equal(readback.mapState, 'pending');
+  assert.equal(typeof finishMap, 'function'); assert.equal(typeof finishInfo, 'function'); assert.equal(typeof finishScope, 'function');
+  f.host.present(); await receipt;
+  assert.equal(f.host.inspect().activeSequence, 1);
+  finishScope(null); assert.equal(await scope, null);
+  finishInfo({ messages: [{ message: 'warning', type: 'warning', lineNum: 1 }] });
+  assert.equal((await info).messages[0].message, 'warning');
+  finishMap(); await mapping;
+  assert.equal(readback.mapState, 'mapped'); assert.equal(readback.getMappedRange().byteLength, 16);
+  readback.unmap(); await flush(); await f.host.idle();
+  assert.equal(f.errors.length, 0);
+});
+
+test('pending mapping cancellation preserves newer mappings and explicit destruction', async () => {
+  const f = await fixture();
+  const buffer = f.client.device.createBuffer({ size: 16, usage: 9 });
+  await flush(); await f.host.idle();
+  const held = [];
+  f.gpu.buffers[1].mapAsync = () => new Promise((resolve, reject) => held.push({ resolve, reject }));
+  const first = buffer.mapAsync(1), firstRejected = assert.rejects(first, /canceled/);
+  await flush(); await f.host.idle(); buffer.unmap();
+  const second = buffer.mapAsync(1);
+  await firstRejected; await flush(); await f.host.idle();
+  held[0].resolve(); await flush();
+  assert.equal(buffer.mapState, 'pending');
+  held[1].resolve(); await second; assert.equal(buffer.mapState, 'mapped');
+  buffer.unmap(); await flush(); await f.host.idle();
+  const third = buffer.mapAsync(1), thirdRejected = assert.rejects(third, /destroy/);
+  await flush(); await f.host.idle(); buffer.destroy();
+  await thirdRejected; await flush(); await f.host.idle();
+  held[2].resolve(); await flush();
+  assert.equal(buffer.mapState, 'unmapped'); assert.equal(f.gpu.buffers[1].destroyed, true);
+  assert.equal(f.errors.length, 0);
+});
+
+test('native mapping rejection and device loss restore proxy mapState', async () => {
+  const f = await fixture();
+  const buffer = f.client.device.createBuffer({ size: 16, usage: 9 });
+  await flush(); await f.host.idle();
+  f.gpu.buffers[1].mapAsync = () => Promise.reject(Error('Invalid map range'));
+  await assert.rejects(buffer.mapAsync(1), /Invalid map range/);
+  assert.equal(buffer.mapState, 'unmapped'); assert.equal(f.errors.length, 0);
+  f.gpu.buffers[1].mapAsync = () => new Promise(() => {});
+  const mapped = buffer.mapAsync(1), rejected = assert.rejects(mapped, /device lost/);
+  await flush(); await f.host.idle(); f.client.device.destroy();
+  await rejected; assert.equal(buffer.mapState, 'unmapped');
+});
