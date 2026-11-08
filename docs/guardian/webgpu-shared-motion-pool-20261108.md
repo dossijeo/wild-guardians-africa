@@ -6,6 +6,8 @@ La opción `VITE_WEBGPU_SHARED_MOTION_POOL=true` está **desactivada por defecto
 
 Este paso solo comparte movimiento. Las fases históricas de animación siguen asociadas a cada actor y los materiales también pueden producir claves estructurales distintas. No constituye la arquitectura completa de material, fase y trayectoria compartidos.
 
+Actualización posterior: hay una [opción experimental de fase y movimiento compartidos](webgpu-shared-phase-motion-20261108.md), con pruebas de dos rigs y sombras. Ambas opciones siguen desactivadas por defecto y la mejora global de fluidez no está demostrada.
+
 ## Verificación
 
 Pasaron 102 pruebas de movimiento, binding, roster y rigs, incluyendo ranuras independientes, suspensión, fallback por capacidad y propiedad durante una activación cancelada. La compilación Vite con la opción activada terminó correctamente. Una prueba WebGPU con lectura de píxeles dibujó dos objetos con un grafo compartido: sus centros horizontales fueron 63,5/63,5 al inicio, 31,5/95,5 al terminar y 47,5/79,5 tras detener uno y actualizar la trayectoria del otro. No se notificaron errores GPU en esa prueba.
