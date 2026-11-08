@@ -64,3 +64,24 @@ test('real raid footsteps publish complete GPU lifetimes and stop CPU updates in
   assert.equal(vfx.status().footstepResources.gpu,0,'a semantic revision change on the same mesh revokes sampled playback and restores original CPU presentation');assert.equal(JSON.stringify(state),before);
  }finally{vfx.dispose();clock.dispose();floor.geometry.dispose();floor.material.dispose();authority.dispose();globalThis.fetch=oldFetch;globalThis.createImageBitmap=oldBitmap;}
 });
+
+test('future footsteps remain hidden while admission is pending and become eligible after asynchronous compilation',async()=>{
+ const oldFetch=globalThis.fetch,oldBitmap=globalThis.createImageBitmap,catalogue=JSON.parse(readFileSync('public/content/vfx.json'));
+ globalThis.fetch=async()=>({ok:true,json:async()=>catalogue,blob:async()=>new Blob(['x'])});globalThis.createImageBitmap=async()=>({width:4096,height:2048,close(){}});
+ const module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm')),snapshot=serialize(deserialize(gunzipSync(readFileSync('tests/fixtures/sabana712-d6-native-multi-reservation.json.gz')).toString())),keys=[];for(let z=-1;z<=2;z++)for(let x=1;x<=3;x++)keys.push(`${x},${z}`);
+ const authority=createSimulationAuthority(module,snapshot,keys,{observeWorldMotion:true}),state=JSON.parse(authority.execute({kind:'snapshot',sequence:1}).snapshot),clock=createConfirmedPresentationClock(state.elapsed),scene=new THREE.Scene(),floor={},support={valid:()=>true},compiles=[],turn=()=>new Promise(resolve=>setImmediate(resolve));
+ const admission={prepare:object=>new Promise(resolve=>compiles.push({object,resolve})),deferCompilations:release=>release()};
+ const vfx=createWebGpuAgricultureVfx({scene,state,residency:{get:()=>floor,getVisible:()=>floor,surface:()=>0,revisionAt:(cx,cz)=>({cx,cz,epoch:'stable',revision:1})},includeLocomotion:true,locomotionWater:()=>({available:true,inside:false}),confirmedClock:clock,pipelineAdmission:admission});
+ try{await vfx.prepareAssets();vfx.sync();let preview,prepared;
+  for(let sequence=2;sequence<62;sequence++){
+   const publication=authority.execute({kind:'advance',sequence,seconds:.05,steps:1,nightFastForward:false,captureClockSegments:true}),next=JSON.parse(publication.snapshot);preview={sequence,start:state.elapsed,end:next.elapsed,trace:publication.worldMotionTrace};prepared=vfx.prepareHistoricalMotion(preview,support);
+   if(vfx.status().footstepResources.pending)break;
+   if(prepared.ok){assert.equal(vfx.startHistoricalMotion(preview,support,prepared.token),true);clock.commit(preview.end);assert.equal(vfx.finishHistoricalMotion(preview),true);}else clock.commit(preview.end);Object.assign(state,next);vfx.sync();
+  }
+  assert.ok(vfx.status().footstepResources.pending>0);assert.equal(prepared.remoteAutonomous,false);await turn();assert.ok(compiles.length>0);
+  const future=scene.children.filter(root=>root.children.some(object=>object._wgFootstepBirth>state.elapsed));assert.ok(future.length>0);assert.ok(future.every(root=>!root.visible),'pending future effects cannot enter the scene');
+  for(const item of compiles.splice(0))item.resolve();await turn();
+  prepared=vfx.prepareHistoricalMotion(preview,support);assert.equal(prepared.remoteAutonomous,true,'ready hidden meshes are offered again to the admission publisher');assert.ok(future.every(root=>!root.visible),'admission does not itself start a future effect');
+  assert.equal(vfx.startHistoricalMotion(preview,support,prepared.token),true);assert.ok(future.every(root=>root.visible),'future draw commands are present before birth; shader time controls visibility');vfx.cancelHistoricalMotion();
+ }finally{for(const item of compiles)item.resolve();await turn();vfx.dispose();clock.dispose();authority.dispose();globalThis.fetch=oldFetch;globalThis.createImageBitmap=oldBitmap;}
+});
