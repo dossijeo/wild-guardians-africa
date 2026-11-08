@@ -1,7 +1,7 @@
 // One in-flight request and at most one queued request per chunk. Results are
 // proposals: consumers must additionally validate terrain and occupancy.
-export function createGrassGenerationQueue(worker) {
- if(!worker || typeof worker.postMessage!=='function' || typeof worker.addEventListener!=='function' || typeof worker.terminate!=='function') throw new TypeError('Invalid grass worker');
+export function createGrassGenerationQueue(worker,{maxQueued=64}={}) {
+ if(!worker || typeof worker.postMessage!=='function' || typeof worker.addEventListener!=='function' || typeof worker.terminate!=='function'||!Number.isSafeInteger(maxQueued)||maxQueued<1) throw new TypeError('Invalid grass worker');
  let closed=false,nextId=0,active=null;const queued=new Map();
  function pump(){
   if(closed||active||!queued.size)return;
@@ -23,6 +23,7 @@ export function createGrassGenerationQueue(worker) {
  return {
   submit(key,request){
    if(closed)return Promise.reject(new Error('Grass generation queue closed'));
+   if(!queued.has(key)&&queued.size>=maxQueued)return Promise.reject(new Error('Grass generation queue capacity exceeded'));
    const snapshot=structuredClone(request),id=++nextId;
    return new Promise((resolve,reject)=>{
     if(active?.key===key&&!active.stale){active.stale=true;active.resolve(null);}

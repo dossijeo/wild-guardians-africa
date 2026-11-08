@@ -14,3 +14,8 @@ test('queue coalesces by chunk, snapshots inputs, and drops superseded results',
 test('cancellation and worker failure settle every waiting request',async()=>{
  const worker=fakeWorker(),queue=createGrassGenerationQueue(worker),a=queue.submit('a',{}),b=queue.submit('b',{});queue.cancel('a');assert.equal(await a,null);worker.emit('error',{message:'failed'});await assert.rejects(b,/failed/);assert.deepEqual(queue.status(),{closed:true,active:0,queued:0});await assert.rejects(queue.submit('x',{}),/closed/);
 });
+test('queue capacity is bounded while replacements and cancellation remain possible',async()=>{
+ const worker=fakeWorker(),queue=createGrassGenerationQueue(worker,{maxQueued:1}),a=queue.submit('a',{}),old=queue.submit('b',{value:1});
+ await assert.rejects(queue.submit('c',{}),/capacity exceeded/);const latest=queue.submit('b',{value:2});assert.equal(await old,null);
+ queue.cancel('a');assert.equal(await a,null);worker.emit('message',{data:{id:worker.messages[0].id,result:null}});assert.equal(worker.messages[1].request.value,2);worker.emit('message',{data:{id:worker.messages[1].id,result:'ok'}});assert.equal(await latest,'ok');queue.dispose();
+});
