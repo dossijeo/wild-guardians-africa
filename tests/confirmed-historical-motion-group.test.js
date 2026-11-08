@@ -32,6 +32,17 @@ function certificateFixture(){
  return {actor,preview,current,support,invalidate(){valid=false;},preparedCount:()=>preparedCount,group:createConfirmedHistoricalMotionGroup({animals:actor,getSupport:()=>support,inputPolicy:'ordered-boundary'})};
 }
 
+test('other effect validity receives the same certified interval through its whole lease',()=>{
+ const f=certificateFixture(),seen=[];
+ Object.assign(f.actor,{prepareHistoricalMotion:()=>({ok:true,remoteAutonomous:true}),historicalMotionCurrent:()=>true,finishHistoricalMotion(){}});
+ const effects={prepareHistoricalMotion:()=>({ok:true,footsteps:true,remoteAutonomous:true}),startHistoricalMotion:()=>true,historicalMotionCurrent:()=>true,finishHistoricalMotion(){},abortHistoricalMotion(){},cancelHistoricalMotion(){}};
+ const group=createConfirmedHistoricalMotionGroup({animals:f.actor,effects,getSupport:()=>f.support,inputPolicy:'ordered-boundary',otherEffectsQuiet:preview=>{seen.push(preview);return preview?.start===5&&preview.end===5.05;}});
+ const clock=createConfirmedHistoricalClock({initialElapsed:5,now:()=>0,timeOrigin:1000}),certified=group.certify(f.preview,f.current);
+ assert.ok(certified);clock.begin(certified);assert.equal(group.start(certified),true);assert.equal(group.isCurrent(certified),true);
+ assert.equal(group.remoteLease(clock).paused,false);assert.equal(group.finish(certified),true);
+ assert.ok(seen.length>=5);assert.ok(seen.every(preview=>preview===certified));
+});
+
 test('real certifier closes presentation proof and reuses prepared tokens without mutating the observation',()=>{
  const f=certificateFixture(),before=structuredClone(f.preview),certified=f.group.certify(f.preview,f.current);
  assert.equal(certified.safeForAutonomousPlayback,true);assert.deepEqual(certified.certificates.actorIds,['a']);assert.deepEqual(f.preview,before);

@@ -5,6 +5,55 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {createWebGpuBlessingVfx} from '../src/rendering/webgpu-blessing-vfx.js';
 import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
+import {RITUAL} from '../src/rendering/awakening-presentation.js';
+
+function historicalBlessingFixture(options={}){
+ const scene=new THREE.Scene(),floor=new THREE.Mesh(new THREE.PlaneGeometry(20,20),new THREE.MeshBasicMaterial({side:THREE.DoubleSide}));floor.rotation.x=-Math.PI/2;floor.updateMatrixWorld(true);
+ const plant={id:'p',species:'maiz',alive:true,x:0,z:0,blessing:{at:0}},state={elapsed:5,plants:[plant],structures:[],events:[]},clock=createConfirmedPresentationClock(5),effect=createWebGpuBlessingVfx({scene,state,residency:{get:()=>floor},confirmedClock:clock,...options});
+ return {scene,state,plant,clock,effect,preview:(end=5.1)=>({sequence:1,start:5,end}),dispose(){effect.dispose();clock.dispose();floor.geometry.dispose();floor.material.dispose();}};
+}
+
+test('stable blessing particles authorize GPU replay without rebuilding instance data',()=>{
+ const f=historicalBlessingFixture();try{
+  const interval=f.preview(),geometry=f.scene.children[0].geometry,base=geometry.getAttribute('aBase');
+  assert.equal(f.effect.status().sources,1);assert.equal(f.effect.canReplayHistoricalInterval(interval),true);
+  f.clock.commit(5.05);assert.equal(f.effect.canReplayHistoricalInterval(interval),true);
+  assert.equal(geometry.getAttribute('aBase'),base);
+  f.clock.commit(5.1);assert.equal(f.effect.canReplayHistoricalInterval(interval),true);
+  f.effect.terrainChanged();assert.equal(f.effect.canReplayHistoricalInterval(interval),false);
+  assert.equal(f.effect.canReplayHistoricalInterval(f.preview()),true);
+  f.effect.dispose();assert.equal(f.effect.canReplayHistoricalInterval(f.preview()),false);
+ }finally{f.dispose();}
+});
+
+test('blessing replay stops before ritual membership and fade expiration boundaries',()=>{
+ const f=historicalBlessingFixture();try{
+  const first=f.preview();assert.equal(f.effect.canReplayHistoricalInterval(first),true);
+  f.effect.sync(false,[{id:'apply',type:'BlessingApplied',targetId:'p',presentation:{elapsed:5}}]);
+  const due=5+RITUAL.pulse;
+  assert.equal(f.effect.canReplayHistoricalInterval(first),false);
+  assert.equal(f.effect.canReplayHistoricalInterval(f.preview(due-.001)),true);
+  assert.equal(f.effect.canReplayHistoricalInterval(f.preview(due)),false);
+  assert.equal(f.effect.canReplayHistoricalInterval(f.preview(due+.001)),false);
+ }finally{f.dispose();}
+ const g=historicalBlessingFixture();try{
+  g.scene.children[0].onAfterRender();delete g.plant.blessing;
+  g.effect.sync(false,[{id:'remove',type:'BlessingRemoved',targetId:'p',presentation:{elapsed:5}}]);
+  assert.equal(g.effect.status().sources,0);assert.ok(g.effect.status().particles>0);
+  assert.equal(g.effect.canReplayHistoricalInterval(g.preview(5.64)),true);
+  assert.equal(g.effect.canReplayHistoricalInterval(g.preview(5.65)),false);
+ }finally{g.dispose();}
+});
+
+test('pending blessing admission cannot be mistaken for autonomous visible particles',async()=>{
+ let finish;const f=historicalBlessingFixture({pipelineAdmission:{prepare(){return new Promise(resolve=>{finish=resolve;});}}});try{
+  await new Promise(resolve=>setImmediate(resolve));
+  const interval=f.preview();assert.equal(f.effect.canReplayHistoricalInterval(interval),false);
+  finish();await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(f.effect.canReplayHistoricalInterval(interval),true);
+  f.state.elapsed=5.1;assert.equal(f.effect.canReplayHistoricalInterval(interval),false);
+ }finally{f.dispose();}
+});
 
 test('reduced motion retains the blessing shader while disabling particle displacement',async()=>{
  const {WebGPURenderer}=await import('three/webgpu'),floor=new THREE.Mesh(new THREE.PlaneGeometry(20,20),new THREE.MeshBasicMaterial({side:THREE.DoubleSide}));floor.rotation.x=-Math.PI/2;floor.updateMatrixWorld(true);
