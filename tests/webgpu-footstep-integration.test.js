@@ -14,7 +14,7 @@ test('actual remote proxy never fences a palette inside the open drawing transac
  globalThis.fetch=async()=>({ok:true,json:async()=>catalogue,blob:async()=>new Blob(['x'])});globalThis.createImageBitmap=async()=>({width:4096,height:2048,close(){}});
  const messages=[],errors=[],port={postMessage(message){messages.push(message);if(message.requestId)queueMicrotask(()=>port.onmessage({data:{type:'reply',requestId:message.requestId,result:null}}));if(message.type==='frame')queueMicrotask(()=>port.onmessage({data:{type:'presented',sequence:message.packet.sequence}}));}},remote=createRemoteWebGpuClient({port,capabilities:{width:16,height:16,format:'rgba8unorm'},onError:error=>errors.push(error)});
  const renderer={backend:{isWebGPUBackend:true,device:remote.device},initTexture(texture){const image=texture.image,resource=remote.device.createTexture({size:[image.width,image.height,1],format:'rgba32float',usage:6});remote.device.queue.writeTexture({texture:resource},image.data??new Uint8Array(4),{bytesPerRow:image.width*16},[image.width,image.height,1]);}},worker={id:'w',profile:'youngMale',status:'walking',walkPhase:0,x:0,z:0,heading:0},state={time:0,elapsed:0,spells:[],events:[],structures:[],plants:[],tasks:[],workers:[worker]},floor={},clock=createConfirmedPresentationClock(0),scene=new THREE.Scene();
- const vfx=createWebGpuAgricultureVfx({scene,state,residency:{get:()=>floor,getVisible:()=>floor,surface:()=>0},includeLocomotion:true,confirmedClock:clock,renderer,onError:error=>errors.push(error)});
+ const vfx=createWebGpuAgricultureVfx({scene,state,residency:{get:()=>floor,getVisible:()=>floor,surface:()=>0,revisionAt:(cx,cz)=>({cx,cz,epoch:'test',revision:1})},includeLocomotion:true,confirmedClock:clock,renderer,onError:error=>errors.push(error)});
  try{await vfx.prepareAssets();vfx.sync();worker.x=.1;worker.walkPhase=4;state.elapsed=.1;clock.commit(.1);vfx.sync();
   const buffer=remote.device.createBuffer({size:4,usage:72});remote.beginFrame();remote.device.queue.writeBuffer(buffer,0,new Float32Array([1]));
   await assert.rejects(remote.device.queue.onSubmittedWorkDone(),/Cannot fence uncommitted remote frame/);
@@ -30,7 +30,7 @@ test('reused footstep slots upload a fresh palette and publish its binding only 
  let controlled=false;const uploads=new Set(),fences=[],turn=()=>new Promise(resolve=>setImmediate(resolve));
  const renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone:()=>controlled?new Promise(resolve=>fences.push(resolve)):Promise.resolve()}}},initTexture(texture){assert.equal(uploads.has(texture),false,'a previously uploaded palette must never be overwritten');uploads.add(texture);}};
  const worker={id:'w',profile:'youngMale',status:'walking',walkPhase:0,x:0,z:0,heading:0},state={time:0,elapsed:0,spells:[],events:[],structures:[],plants:[],tasks:[],workers:[worker]},floor={},scene=new THREE.Scene(),clock=createConfirmedPresentationClock(0),camera=new THREE.PerspectiveCamera();
- const vfx=createWebGpuAgricultureVfx({scene,state,residency:{get:()=>floor,getVisible:()=>floor,surface:()=>0},includeLocomotion:true,confirmedClock:clock,renderer});
+ const vfx=createWebGpuAgricultureVfx({scene,state,residency:{get:()=>floor,getVisible:()=>floor,surface:()=>0,revisionAt:(cx,cz)=>({cx,cz,epoch:'test',revision:1})},includeLocomotion:true,confirmedClock:clock,renderer});
  const meshes=()=>{const found=[];scene.traverse(object=>{if(object._wgFootstepSamples)found.push(object);});return found;};
  try{await vfx.prepareAssets();vfx.sync();controlled=true;worker.x=.1;worker.walkPhase=4;state.elapsed=.1;clock.commit(.1);vfx.sync();const initial=meshes().map(mesh=>mesh._wgFootstepSamples);vfx.prepare(camera);await turn();assert.ok(fences.length);assert.deepEqual(meshes().map(mesh=>mesh._wgFootstepSamples),initial,'pending generations are not published');
   fences.splice(0).forEach(resolve=>resolve());await turn();vfx.prepare(camera);const active=new Set(meshes().map(mesh=>mesh._wgFootstepSamples)),pixels=new Map([...active].map(texture=>[texture,texture.image.data.slice()]));assert.ok(vfx.status().footstepResources.gpu>0);
@@ -44,8 +44,8 @@ test('real raid footsteps publish complete GPU lifetimes and stop CPU updates in
  globalThis.fetch=async()=>({ok:true,json:async()=>catalogue,blob:async()=>new Blob(['x'])});globalThis.createImageBitmap=async()=>({width:4096,height:2048,close(){}});
  const module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm')),snapshot=serialize(deserialize(gunzipSync(readFileSync('tests/fixtures/sabana712-d6-native-multi-reservation.json.gz')).toString())),keys=[];for(let z=-1;z<=2;z++)for(let x=1;x<=3;x++)keys.push(`${x},${z}`);
  const authority=createSimulationAuthority(module,snapshot,keys,{observeWorldMotion:true}),state=JSON.parse(authority.execute({kind:'snapshot',sequence:1}).snapshot),clock=createConfirmedPresentationClock(state.elapsed),floor=new THREE.Mesh(new THREE.PlaneGeometry(48,48),new THREE.MeshBasicMaterial()),camera=new THREE.PerspectiveCamera(),scene=new THREE.Scene(),support={valid:()=>true};
- let terrain=floor;
- const vfx=createWebGpuAgricultureVfx({scene,state,residency:{get:()=>terrain,getVisible:()=>terrain,surface:()=>0},includeLocomotion:true,locomotionWater:()=>({available:true,inside:false}),confirmedClock:clock});let certified=0,births=0;
+ let terrain=floor,terrainRevision=1;
+ const vfx=createWebGpuAgricultureVfx({scene,state,residency:{get:()=>terrain,getVisible:()=>terrain,surface:()=>0,revisionAt:(cx,cz)=>({cx,cz,epoch:'test',revision:terrainRevision})},includeLocomotion:true,locomotionWater:()=>({available:true,inside:false}),confirmedClock:clock});let certified=0,births=0;
  try{
   await vfx.prepareAssets();vfx.sync();
   for(let sequence=2;sequence<22;sequence++){
@@ -60,7 +60,7 @@ test('real raid footsteps publish complete GPU lifetimes and stop CPU updates in
    Object.assign(state,next);vfx.sync();vfx.prepare(camera);
   }
   assert.ok(certified>0);assert.ok(births>0);
-  const before=JSON.stringify(state);terrain=new THREE.Mesh(floor.geometry,floor.material);vfx.prepare(camera);
-  assert.equal(vfx.status().footstepResources.gpu,0,'terrain changes revoke sampled playback and restore original CPU presentation');assert.equal(JSON.stringify(state),before);
+  const before=JSON.stringify(state);assert.ok(vfx.status().footstepResources.gpu>0,'fresh revision descriptor objects do not invalidate equivalent terrain');terrainRevision++;vfx.prepare(camera);
+  assert.equal(vfx.status().footstepResources.gpu,0,'a semantic revision change on the same mesh revokes sampled playback and restores original CPU presentation');assert.equal(JSON.stringify(state),before);
  }finally{vfx.dispose();clock.dispose();floor.geometry.dispose();floor.material.dispose();authority.dispose();globalThis.fetch=oldFetch;globalThis.createImageBitmap=oldBitmap;}
 });
