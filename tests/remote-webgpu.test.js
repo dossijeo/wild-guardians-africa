@@ -18,7 +18,7 @@ function fakeGpu() {
     queue: {
       writeBuffer(buffer, offset, data) { buffer.data.set(new Uint8Array(data.buffer || data, data.byteOffset || 0, data.byteLength), offset); calls.push(['writeBuffer', offset, Array.from(new Uint8Array(data.buffer || data, data.byteOffset || 0, data.byteLength))]); },
       writeTexture() { calls.push(['writeTexture']); },
-      submit(commands) { for (const command of commands) { assert(!submitted.includes(command)); submitted.push(command); calls.push(['submit', command]); } },
+      submit(commands) { for (const command of commands) { assert(!submitted.includes(command)); for (const copy of command.copies || []) copy(); submitted.push(command); calls.push(['submit', command]); } },
       onSubmittedWorkDone: async () => {},
     },
     createBuffer(descriptor) {
@@ -27,15 +27,18 @@ function fakeGpu() {
       buffers.push(buffer); return buffer;
     },
     createBindGroup: descriptor => ({ descriptor }),
+    createBindGroupLayout: descriptor => ({ descriptor }),
+    createQuerySet: descriptor => ({ descriptor }),
     createRenderPipelineAsync: async descriptor => ({ descriptor }),
     createCommandEncoder() {
       const record = { id: ++commandVersion, passes: [] };
       return {
         beginRenderPass(descriptor) {
           record.passes.push(descriptor);
-          return { setPipeline() {}, setBindGroup() {}, draw() { calls.push(['draw']); }, end() {} };
+          return { setPipeline() {}, setBindGroup() {}, setVertexBuffer() {}, setIndexBuffer() {}, draw() { calls.push(['draw']); }, end() {} };
         },
-        copyBufferToBuffer() { calls.push(['copy']); },
+        copyBufferToBuffer(source, sourceOffset, destination, destinationOffset, size) { calls.push(['copy']); if (source) (record.copies ||= []).push(() => destination.data.set(source.data.slice(sourceOffset, sourceOffset + size), destinationOffset)); },
+        resolveQuerySet(querySet, firstQuery, queryCount, destination, offset) { (record.copies ||= []).push(() => new Uint32Array(destination.data.buffer, offset, queryCount * 2).fill(77)); },
         finish: () => record,
       };
     },
@@ -113,7 +116,7 @@ test('mappedAtCreation uploads through the native mapping without requiring COPY
   mapped.unmap();
   await flush(); await f.host.idle();
   assert.deepEqual(Array.from(new Uint32Array(f.gpu.buffers[1].data.buffer)), [12, 34]);
-  assert.equal(f.gpu.buffers[1].descriptor.usage, 32);
+  assert.equal(f.gpu.buffers[1].descriptor.usage, 36); // COPY_SRC reserved for native versioning.
 });
 
 test('destroy retains resources referenced by the active frame, then retires after replacement', async () => {
@@ -648,4 +651,118 @@ test('native mapping rejection and device loss restore proxy mapState', async ()
   const mapped = buffer.mapAsync(1), rejected = assert.rejects(mapped, /device lost/);
   await flush(); await f.host.idle(); f.client.device.destroy();
   await rejected; assert.equal(buffer.mapState, 'unmapped');
+});
+
+async function storageFixture(access = 'read-only-storage', usage = 168) {
+  const f = await fixture();
+  const storage = f.client.device.createBuffer({ size: 16, usage });
+  const layout = access === null ? undefined : f.client.device.createBindGroupLayout({ entries: [{ binding: 0, visibility: 1, buffer: { type: access } }] });
+  const group = f.client.device.createBindGroup({ layout, entries: [{ binding: 0, resource: { buffer: storage } }] });
+  f.client.device.queue.writeBuffer(storage, 0, new Uint32Array([1, 2, 3, 4]));
+  await flush(); await f.host.idle();
+  function render({ write, copy } = {}) {
+    f.client.beginFrame();
+    if (write) f.client.device.queue.writeBuffer(storage, 0, new Uint32Array(write));
+    const encoder = f.client.device.createCommandEncoder();
+    if (copy) encoder.copyBufferToBuffer(copy, 0, storage, 0, 16);
+    const pass = encoder.beginRenderPass({}); pass.setBindGroup(0, group); pass.draw(3); pass.end();
+    f.client.device.queue.submit([encoder.finish()]); return f.client.endFrame();
+  }
+  return { ...f, storage, render };
+}
+
+test('readonly storage forks by native copy, retains GPU contents and preserves the published generation', async () => {
+  const f = await storageFixture();
+  let receipt = f.render(); await flush(); await f.host.idle(); f.host.present(); await receipt;
+  const old = f.gpu.buffers[1];
+  // Emulate a completed native write before the snapshot; no CPU shadow exists.
+  new Uint32Array(old.data.buffer)[1] = 70;
+  f.client.device.queue.writeBuffer(f.storage, 8, new Uint32Array([90]));
+  await f.client.device.queue.onSubmittedWorkDone();
+  const fork = f.gpu.buffers[2];
+  assert.deepEqual(Array.from(new Uint32Array(old.data.buffer)), [1, 70, 3, 4]);
+  assert.deepEqual(Array.from(new Uint32Array(fork.data.buffer)), [1, 70, 90, 4]);
+  assert.equal(f.host.inspect().bufferForks, 1); assert.equal(f.host.inspect().stagedOperations, 0);
+  f.host.present(); assert.equal(old.destroyed, false);
+  receipt = f.render(); await flush(); await f.host.idle(); f.host.present(); await receipt;
+  assert.equal(f.host.inspect().activeSequence, 2); assert.equal(f.errors.length, 0);
+});
+
+test('native storage fork overlays pending CPU writes without publishing them early', async () => {
+  const f = await storageFixture();
+  const receipt = f.render({ write: [10, 20] }); await flush(); await f.host.idle();
+  f.client.device.queue.writeBuffer(f.storage, 8, new Uint32Array([30]));
+  await f.client.device.queue.onSubmittedWorkDone();
+  assert.deepEqual(Array.from(new Uint32Array(f.gpu.buffers[1].data.buffer)), [1, 2, 3, 4]);
+  assert.deepEqual(Array.from(new Uint32Array(f.gpu.buffers[2].data.buffer)), [10, 20, 30, 4]);
+  f.host.present(); await receipt;
+  assert.deepEqual(Array.from(new Uint32Array(f.gpu.buffers[1].data.buffer)), [10, 20, 3, 4]);
+});
+
+test('writable or unclassified storage and pending GPU outputs cannot bypass the fence invariant', async () => {
+  for (const access of ['storage', null]) {
+    const f = await storageFixture(access);
+    const receipt = f.render(); await flush(); await f.host.idle(); f.host.present(); await receipt;
+    f.client.device.queue.writeBuffer(f.storage, 0, new Uint32Array([9]));
+    await assert.rejects(f.client.device.queue.onSubmittedWorkDone(), /uncommitted/);
+    assert.equal(f.host.inspect().bufferForks || 0, 0);
+    assert.equal(new Uint32Array(f.gpu.buffers[1].data.buffer)[0], 1);
+  }
+  const f = await storageFixture();
+  const source = f.client.device.createBuffer({ size: 16, usage: 12 });
+  f.client.device.queue.writeBuffer(source, 0, new Uint32Array([5, 6, 7, 8]));
+  const receipt = f.render({ copy: source }); await flush(); await f.host.idle();
+  f.client.device.queue.writeBuffer(f.storage, 0, new Uint32Array([9]));
+  await assert.rejects(f.client.device.queue.onSubmittedWorkDone(), /uncommitted/);
+  assert.equal(f.host.inspect().bufferForks || 0, 0);
+  f.host.present(); await receipt;
+  assert.deepEqual(Array.from(new Uint32Array(f.gpu.buffers[1].data.buffer)), [5, 6, 7, 8]);
+});
+
+test('published vertex and index buffers use generation copies without CPU shadows', async () => {
+  const f = await fixture();
+  const vertex = f.client.device.createBuffer({ size: 16, usage: 40 });
+  const index = f.client.device.createBuffer({ size: 16, usage: 24 });
+  for (const buffer of [vertex, index]) f.client.device.queue.writeBuffer(buffer, 0, new Uint32Array([1, 2, 3, 4]));
+  f.client.beginFrame();
+  const encoder = f.client.device.createCommandEncoder(), pass = encoder.beginRenderPass({});
+  pass.setVertexBuffer(0, vertex); pass.setIndexBuffer(index, 'uint32'); pass.draw(3); pass.end();
+  f.client.device.queue.submit([encoder.finish()]);
+  const receipt = f.client.endFrame(); await flush(); await f.host.idle(); f.host.present(); await receipt;
+  f.client.device.queue.writeBuffer(vertex, 0, new Uint32Array([10]));
+  f.client.device.queue.writeBuffer(index, 0, new Uint32Array([20]));
+  await f.client.device.queue.onSubmittedWorkDone();
+  assert.equal(f.host.inspect().bufferForks, 2);
+  assert.deepEqual(f.gpu.buffers.slice(1).map(buffer => new Uint32Array(buffer.data.buffer)[0]), [1, 1, 10, 20]);
+});
+
+test('canvas reconfiguration cannot invalidate pending or active frames and unconfigure stops replay', async () => {
+  const f = await fixture();
+  const receipt = f.frame(1); await flush(); await f.host.idle();
+  let reconfigured = 0;
+  f.gpu.context.configure = () => { reconfigured++; };
+  const configure = { type: 'configure', descriptor: { format: 'bgra8unorm' } };
+  await assert.rejects(f.host.handle(configure), /configuration is fixed/);
+  f.host.present(); await receipt;
+  await assert.rejects(f.host.handle(configure), /configuration is fixed/);
+  assert.equal(reconfigured, 0);
+  const count = f.gpu.submitted.length;
+  await f.host.handle({ type: 'unconfigure' }); f.host.present();
+  assert.equal(f.gpu.submitted.length, count);
+});
+
+test('pending query resolution protects its actual destination buffer from premature generation copies', async () => {
+  const f = await storageFixture('read-only-storage', 168 | 512);
+  const queries = f.client.device.createQuerySet({ type: 'occlusion', count: 2 });
+  f.client.beginFrame();
+  const encoder = f.client.device.createCommandEncoder();
+  encoder.resolveQuerySet(queries, 0, 2, f.storage, 0);
+  const pass = encoder.beginRenderPass({}); pass.draw(3); pass.end();
+  f.client.device.queue.submit([encoder.finish()]);
+  const receipt = f.client.endFrame(); await flush(); await f.host.idle();
+  f.client.device.queue.writeBuffer(f.storage, 0, new Uint32Array([9]));
+  await assert.rejects(f.client.device.queue.onSubmittedWorkDone(), /uncommitted/);
+  assert.equal(f.host.inspect().bufferForks || 0, 0);
+  f.host.present(); await receipt;
+  assert.deepEqual(Array.from(new Uint32Array(f.gpu.buffers[1].data.buffer)), [77, 77, 77, 77]);
 });

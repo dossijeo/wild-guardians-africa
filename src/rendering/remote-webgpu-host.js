@@ -230,10 +230,11 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
     }
     entry.dependencyEntries?.clear();
   }
-  function forkPublishedUniform(key) {
+  function forkPublishedBuffer(key) {
     const entry = resources.get(key);
-    if (!entry?.uniformShadow) return false;
+    if (!entry || entry.kind !== 'createBuffer') return false;
     if (active?.resourceSnapshot?.get(key) !== entry && pending?.resourceSnapshot?.get(key) !== entry) return true;
+    if (!entry.uniformShadow) return forkPublishedReadOnlyBuffer(key, entry);
     const descriptor = { ...entry.descriptor, mappedAtCreation: false, usage: entry.descriptor.usage | 8 };
     const shadow = entry.uniformShadow.slice();
     // The producer has already issued a pending frame's writes, even though the
@@ -250,6 +251,51 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
     // reference the fork; old packets keep their original native groups.
     rebuildDependentBindings(key);
     return true;
+  }
+  function forkPublishedReadOnlyBuffer(key, entry) {
+    // COPY_SRC must have been reserved at allocation; mapping buffers and
+    // writable shader bindings require an explicit ownership protocol instead.
+    if (!(entry.descriptor.usage & 4) || (entry.descriptor.usage & 3) || entry.descriptor.size % 4) return false;
+    for (const packet of [active, pending]) if (packet?.resourceSnapshot?.get(key) === entry) {
+      if (packet.unsafeForkBuffers.has(key)) return false;
+      // Pending copies/compute have not executed yet. Copying current bytes
+      // would silently lose their output. Only pending CPU writes can be overlaid.
+      if (packet === pending && packet.gpuWrittenBuffers.has(key)) return false;
+    }
+    const descriptor = { ...entry.descriptor, mappedAtCreation: false, usage: entry.descriptor.usage | 8 };
+    const value = device.createBuffer(descriptor), encoder = device.createCommandEncoder();
+    encoder.copyBufferToBuffer(entry.value, 0, value, 0, descriptor.size);
+    device.queue.submit([encoder.finish()]);
+    if (pending?.resourceSnapshot?.get(key) === entry) for (const op of pending.operations) {
+      if (op.method === 'writeBuffer' && op.args[0][REF] === key) device.queue.writeBuffer(value, op.args[1], op.args[2]);
+    }
+    setResource(key, { ...entry, value, descriptor });
+    metrics.bufferForks = (metrics.bufferForks || 0) + 1;
+    metrics.bufferForkBytes = (metrics.bufferForkBytes || 0) + descriptor.size;
+    rebuildDependentBindings(key);
+    return true;
+  }
+  function classifyBufferOwnership(packet) {
+    packet.unsafeForkBuffers = new Set(); packet.gpuWrittenBuffers = new Set();
+    // Explicit layouts are authoritative. Pipeline-inferred layouts have no
+    // inspectable access declaration, so never infer read-only from usage bits.
+    for (const group of packet.resourceSnapshot.values()) if (group.kind === 'createBindGroup') {
+      const layout = group.dependencyEntries.get(group.descriptor.layout?.[REF]);
+      for (const binding of group.descriptor.entries || []) {
+        const key = binding.resource?.buffer?.[REF]; if (!key) continue;
+        const buffer = packet.resourceSnapshot.get(key);
+        if (!(buffer?.descriptor?.usage & 128)) continue;
+        const declaration = layout?.descriptor?.entries?.find(item => item.binding === binding.binding)?.buffer;
+        if (!declaration || !['uniform', 'read-only-storage'].includes(declaration.type || 'uniform')) packet.unsafeForkBuffers.add(key);
+      }
+    }
+    for (const op of packet.operations) if (op.method === 'submit') for (const buffer of op.args[0]) for (const command of buffer.__remoteCommands) {
+      const destination = command.method === 'copyBufferToBuffer' ? command.args[2]
+        : command.method === 'resolveQuerySet' ? command.args[3]
+        : command.method === 'clearBuffer' ? command.args[0]
+        : command.method === 'copyTextureToBuffer' ? command.args[1]?.buffer : null;
+      if (destination?.[REF]) packet.gpuWrittenBuffers.add(destination[REF]);
+    }
   }
   function rebuildDependentBindings(key) {
     for (const dependent of reverseDependencies.get(key) || []) {
@@ -438,7 +484,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
       let destination;
       if (command.method === 'beginComputePass') destination = command.commands;
       else if (command.method === 'beginRenderPass') destination = command.args[0];
-      else if (command.method === 'copyBufferToBuffer' || command.method === 'resolveQuerySet') destination = command.args[2];
+      else if (command.method === 'copyBufferToBuffer') destination = command.args[2];
+      else if (command.method === 'resolveQuerySet') destination = command.args[3];
       else if (command.method.startsWith('copy')) destination = command.args[1];
       else if (command.method === 'clearBuffer') destination = command.args[0];
       for (const key of retainClosure(references(destination))) result.add(key);
@@ -453,6 +500,9 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
         // Even Three's synchronous factory is admitted asynchronously here: its
         // producer gets an ID immediately; drawing keeps its prior generation.
         const method = message.method === 'createRenderPipeline' ? 'createRenderPipelineAsync' : message.method === 'createComputePipeline' ? 'createComputePipelineAsync' : message.method;
+        // Enable native generation copies without retaining large CPU shadows.
+        // MAP_READ/MAP_WRITE usage combinations cannot accept arbitrary flags.
+        if (message.method === 'createBuffer' && !(message.descriptor.usage & 3)) message.descriptor = { ...message.descriptor, usage: message.descriptor.usage | 4 };
         const uniformShadow = message.method === 'createBuffer' && (message.descriptor.usage & 64) && !(message.descriptor.usage & 128) ? new Uint8Array(message.descriptor.size) : null;
         createResourceJob(message, references(message.descriptor), () => device[method](resolve(message.descriptor)), { uniformShadow, mapMode: message.descriptor.mappedAtCreation ? 2 : 0 });
         break;
@@ -473,7 +523,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
         const readiness = waitForResources(references(message.op));
         if (readiness) await readiness;
         const touchesPublishedState = [...writtenResources(message.op)].some(key => active?.resourceSnapshot?.has(key) || pending?.resourceSnapshot?.has(key));
-        const canFork = !stagedOperations.length && touchesPublishedState && message.op.method === 'writeBuffer' && forkPublishedUniform(message.op.args[0][REF]);
+        const canFork = !stagedOperations.length && touchesPublishedState && message.op.method === 'writeBuffer' && forkPublishedBuffer(message.op.args[0][REF]);
         if (stagedOperations.length || (touchesPublishedState && !canFork)) {
           // Preparation may touch existing resources. Such mutations belong to
           // the next atomic generation, even if Three issued them before render.
@@ -482,7 +532,9 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
         } else applyQueue(message.op);
         break;
       }
-      case 'configure': context.configure(resolve(message.descriptor)); deviceConfigured = true; break;
+      case 'configure':
+        if (active || pending) throw Error('Remote canvas configuration is fixed while a frame is published; recreate the renderer to change it');
+        context.configure(resolve(message.descriptor)); deviceConfigured = true; break;
       case 'unconfigure': context.unconfigure(); deviceConfigured = false; break;
       case 'frame': {
         if (pending) throw Error('Remote GPU backpressure: pending generation already exists');
@@ -504,6 +556,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
         packet.transportTiming.resourcesReadyAt = absoluteNow();
         packet.receivedAt = absoluteNow();
         packet.resourceSnapshot = snapshotResources(packet.references);
+        classifyBufferOwnership(packet);
         const writeCounts = new Map();
         for (const op of packet.operations) if (op.method === 'writeBuffer') {
           const key = op.args[0][REF]; writeCounts.set(key, (writeCounts.get(key) || 0) + 1);
