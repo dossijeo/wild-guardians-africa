@@ -521,3 +521,36 @@ test('explicit proxy device destruction reaches the native device and resolves l
   assert.equal(f.client.inspect().pendingFrame, null);
   assert.equal(f.errors.length, 0);
 });
+
+test('clock offsets override stale multipass uniforms and baseline restoration before every submission', async () => {
+  const f = await fixture();
+  f.client.registerClockBinding(f.buffer, { byteOffset: 4, semantic: 'absolute', epoch: 0 });
+  const values = [], submit = f.gpu.device.queue.submit;
+  f.gpu.device.queue.submit = commands => { values.push(new Float32Array(f.gpu.buffers[0].data.buffer)[1]); submit(commands); };
+  f.client.beginFrame({ clock: { version: 1, epoch: 0, elapsed: 5, safeUntil: 5, anchorAbsoluteMs: 0, paused: true, segments: [] } });
+  for (const write of [false, true]) {
+    if (write) f.client.device.queue.writeBuffer(f.buffer, 0, new Float32Array([11, 99, 12, 13]));
+    const encoder = f.client.device.createCommandEncoder(), pass = encoder.beginRenderPass({});
+    pass.setBindGroup(0, f.group); pass.draw(3); pass.end();
+    f.client.device.queue.submit([encoder.finish()]);
+  }
+  const receipt = f.client.endFrame(); await flush(); await f.host.idle(); f.host.present(); await receipt; f.host.present();
+  assert.deepEqual(values, [5, 5, 5, 5]);
+});
+
+test('frame and fence diagnostics distinguish posting, admission, first draw, ACK and local refusal', async () => {
+  const f = await fixture();
+  const receipt = f.frame(1); await flush(); await f.host.idle(); f.host.present(); await receipt;
+  await f.client.device.queue.onSubmittedWorkDone();
+  const timing = f.client.inspect().frameTimings.at(-1);
+  assert(timing.endFrameCalledAt <= timing.endFrameReturnedAt);
+  assert(timing.postedAt <= timing.postCompletedAt);
+  assert(timing.consumer.workerReceivedAt <= timing.consumer.admissionStartedAt);
+  assert(timing.consumer.admittedAt <= timing.consumer.firstDrawStartedAt);
+  assert(timing.consumer.firstDrawCompletedAt <= timing.ackReceivedAt);
+  assert(f.client.inspect().fenceTimings.at(-1).consumer.finishedAt);
+  f.client.beginFrame(); f.client.device.queue.writeBuffer(f.buffer, 0, new Float32Array([2]));
+  await assert.rejects(f.client.device.queue.onSubmittedWorkDone(), /uncommitted/);
+  assert.equal(f.client.inspect().fenceTimings.at(-1).localRejected, true);
+  f.client.cancelFrame(); await flush(); await f.host.idle();
+});

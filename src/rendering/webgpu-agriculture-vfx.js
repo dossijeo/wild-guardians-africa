@@ -80,7 +80,7 @@ export function createWebGpuAgricultureVfx({scene,state,residency,onError=()=>{}
    const texture=createWebGpuFootstepTexture(),record={key:effect.plan.key,birth:effect.plan.birth,matrix:effect.root.matrixWorld.elements.slice(),versions,ready:false};effect.footstepPlayback=record;texture.image.data.set(sampled.data);texture.needsUpdate=true;
    let released=false;const release=()=>{if(!released){released=true;texture.dispose();}};
    const publish=()=>{if(closed||effect.disposed||effect.footstepPlayback!==record){release();return;}const previous=effect.footstepTexture;effect.footstepTexture=texture;effect.root.traverse(object=>{if(object.isMesh&&object._wgFootstepSamples)object._wgFootstepSamples=texture;});record.ready=true;const retire=()=>previous.dispose();if(pipelineAdmission?.deferCompilations)pipelineAdmission.deferCompilations(retire);else retire();onWorkCheckpointReady();};
-   if(renderer)effect.footstepUpload=prepareWebGpuTexture({renderer,texture,signal:abort.signal,release}).then(publish).catch(error=>{if(!closed&&!abort.signal.aborted&&effect.footstepPlayback===record){effect.footstepFallback=true;onError(error);}});else publish();
+   if(renderer)effect.footstepUpload=Promise.resolve().then(()=>prepareWebGpuTexture({renderer,texture,signal:abort.signal,release})).then(publish).catch(error=>{if(!closed&&!abort.signal.aborted&&effect.footstepPlayback===record){effect.footstepFallback=true;onError(error);}});else publish();
   }
   if(!effect.footstepPlayback.ready)return false;
   enableFootstepPlayback(effect,true);admitVisible(effect);

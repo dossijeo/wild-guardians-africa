@@ -7,6 +7,22 @@ import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {createSimulationAuthority} from '../src/simulation/simulation-authority.js';
 import {createWebGpuAgricultureVfx} from '../src/rendering/webgpu-agriculture-vfx.js';
 import {createConfirmedPresentationClock} from '../src/rendering/confirmed-presentation-clock.js';
+import {createRemoteWebGpuClient} from '../src/rendering/remote-webgpu-client.js';
+
+test('actual remote proxy never fences a palette inside the open drawing transaction',async()=>{
+ const oldFetch=globalThis.fetch,oldBitmap=globalThis.createImageBitmap,catalogue=JSON.parse(readFileSync('public/content/vfx.json'));
+ globalThis.fetch=async()=>({ok:true,json:async()=>catalogue,blob:async()=>new Blob(['x'])});globalThis.createImageBitmap=async()=>({width:4096,height:2048,close(){}});
+ const messages=[],errors=[],port={postMessage(message){messages.push(message);if(message.requestId)queueMicrotask(()=>port.onmessage({data:{type:'reply',requestId:message.requestId,result:null}}));if(message.type==='frame')queueMicrotask(()=>port.onmessage({data:{type:'presented',sequence:message.packet.sequence}}));}},remote=createRemoteWebGpuClient({port,capabilities:{width:16,height:16,format:'rgba8unorm'},onError:error=>errors.push(error)});
+ const renderer={backend:{isWebGPUBackend:true,device:remote.device},initTexture(texture){const image=texture.image,resource=remote.device.createTexture({size:[image.width,image.height,1],format:'rgba32float',usage:6});remote.device.queue.writeTexture({texture:resource},image.data??new Uint8Array(4),{bytesPerRow:image.width*16},[image.width,image.height,1]);}},worker={id:'w',profile:'youngMale',status:'walking',walkPhase:0,x:0,z:0,heading:0},state={time:0,elapsed:0,spells:[],events:[],structures:[],plants:[],tasks:[],workers:[worker]},floor={},clock=createConfirmedPresentationClock(0),scene=new THREE.Scene();
+ const vfx=createWebGpuAgricultureVfx({scene,state,residency:{get:()=>floor,getVisible:()=>floor,surface:()=>0},includeLocomotion:true,confirmedClock:clock,renderer,onError:error=>errors.push(error)});
+ try{await vfx.prepareAssets();vfx.sync();worker.x=.1;worker.walkPhase=4;state.elapsed=.1;clock.commit(.1);vfx.sync();
+  const buffer=remote.device.createBuffer({size:4,usage:72});remote.beginFrame();remote.device.queue.writeBuffer(buffer,0,new Float32Array([1]));
+  await assert.rejects(remote.device.queue.onSubmittedWorkDone(),/Cannot fence uncommitted remote frame/);
+  vfx.prepare(new THREE.PerspectiveCamera());const receipt=remote.endFrame();await receipt;await new Promise(resolve=>setImmediate(resolve));vfx.prepare(new THREE.PerspectiveCamera());
+  assert.deepEqual(errors,[]);assert.ok(vfx.status().footstepResources.gpu>0);
+  const frame=messages.findIndex(message=>message.type==='frame');assert.ok(messages.slice(frame+1).some(message=>message.type==='fence'));
+ }finally{vfx.dispose();clock.dispose();remote.dispose();globalThis.fetch=oldFetch;globalThis.createImageBitmap=oldBitmap;}
+});
 
 test('reused footstep slots upload a fresh palette and publish its binding only after its fence',async()=>{
  const oldFetch=globalThis.fetch,oldBitmap=globalThis.createImageBitmap,catalogue=JSON.parse(readFileSync('public/content/vfx.json'));
@@ -16,9 +32,9 @@ test('reused footstep slots upload a fresh palette and publish its binding only 
  const worker={id:'w',profile:'youngMale',status:'walking',walkPhase:0,x:0,z:0,heading:0},state={time:0,elapsed:0,spells:[],events:[],structures:[],plants:[],tasks:[],workers:[worker]},floor={},scene=new THREE.Scene(),clock=createConfirmedPresentationClock(0),camera=new THREE.PerspectiveCamera();
  const vfx=createWebGpuAgricultureVfx({scene,state,residency:{get:()=>floor,getVisible:()=>floor,surface:()=>0},includeLocomotion:true,confirmedClock:clock,renderer});
  const meshes=()=>{const found=[];scene.traverse(object=>{if(object._wgFootstepSamples)found.push(object);});return found;};
- try{await vfx.prepareAssets();vfx.sync();controlled=true;worker.x=.1;worker.walkPhase=4;state.elapsed=.1;clock.commit(.1);vfx.sync();const initial=meshes().map(mesh=>mesh._wgFootstepSamples);vfx.prepare(camera);assert.ok(fences.length);assert.deepEqual(meshes().map(mesh=>mesh._wgFootstepSamples),initial,'pending generations are not published');
+ try{await vfx.prepareAssets();vfx.sync();controlled=true;worker.x=.1;worker.walkPhase=4;state.elapsed=.1;clock.commit(.1);vfx.sync();const initial=meshes().map(mesh=>mesh._wgFootstepSamples);vfx.prepare(camera);await turn();assert.ok(fences.length);assert.deepEqual(meshes().map(mesh=>mesh._wgFootstepSamples),initial,'pending generations are not published');
   fences.splice(0).forEach(resolve=>resolve());await turn();vfx.prepare(camera);const active=new Set(meshes().map(mesh=>mesh._wgFootstepSamples)),pixels=new Map([...active].map(texture=>[texture,texture.image.data.slice()]));assert.ok(vfx.status().footstepResources.gpu>0);
-  state.elapsed=3;clock.commit(3);worker.walkPhase=2*Math.PI;vfx.sync();worker.x=.2;worker.walkPhase=2*Math.PI+4;state.elapsed=3.1;clock.commit(3.1);vfx.sync();vfx.prepare(camera);assert.ok(vfx.status().footstepResources.reused>0);assert.ok(fences.length);for(const mesh of meshes())assert.ok(active.has(mesh._wgFootstepSamples),'old binding survives until new upload completes');for(const [texture,data] of pixels)assert.deepEqual(texture.image.data,data,'retained generation stays immutable');
+  state.elapsed=3;clock.commit(3);worker.walkPhase=2*Math.PI;vfx.sync();worker.x=.2;worker.walkPhase=2*Math.PI+4;state.elapsed=3.1;clock.commit(3.1);vfx.sync();vfx.prepare(camera);await turn();assert.ok(vfx.status().footstepResources.reused>0);assert.ok(fences.length);for(const mesh of meshes())assert.ok(active.has(mesh._wgFootstepSamples),'old binding survives until new upload completes');for(const [texture,data] of pixels)assert.deepEqual(texture.image.data,data,'retained generation stays immutable');
   fences.splice(0).forEach(resolve=>resolve());await turn();vfx.prepare(camera);assert.ok(meshes().some(mesh=>!active.has(mesh._wgFootstepSamples)));
  }finally{fences.splice(0).forEach(resolve=>resolve());await turn();vfx.dispose();clock.dispose();globalThis.fetch=oldFetch;globalThis.createImageBitmap=oldBitmap;}
 });

@@ -27,6 +27,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
   let hidden = !!initiallyHidden, hiddenStartedAt = initiallyHidden ? absoluteNow() : null;
   let resourceSliceStarted = absoluteNow(), queuedMessages = 0;
   const samples = new Array(4096), errors = [];
+  const frameTimings = [], fenceTimings = [];
+  function recordTiming(ring, value, limit = 256) { ring.push(value); if (ring.length > limit) ring.shift(); return value; }
   const frameTime = createRemoteFrameTimeGuard();
   const metrics = { nativeFrames: 0, replayFrames: 0, packets: 0, computePackets: 0, commands: 0, queueWrites: 0, gpuErrors: 0, cameraUpdatesRejected: 0, uniformForks: 0, uniformForkBytes: 0, bindingForks: 0, resourceRetirements: 0, dependencyVisits: 0, retirementChecks: 0, producerReleases: 0, hiddenMs: 0, visibilityTransitions: 0, resourceTaskYields: 0, resourceJobMaxMs: 0, resourceJobMaxType: null };
   function reply(message, result, error) {
@@ -372,7 +374,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
       samples[sampleCursor++ % samples.length] = { at: startedAt, intervalMs: previousFrameAt === null ? null : startedAt - previousFrameAt, drawMs: absoluteNow() - startedAt, replay: !next, clockElapsed, safeUntil: active.metadata?.clock?.safeUntil ?? null, cameraVersion: camera?.version ?? null };
       previousFrameAt = startedAt;
       if (next) {
-        port.postMessage({ type: 'presented', sequence: active.sequence, metadata: active.metadata, absoluteTime: absoluteNow(), backend: 'webgpu', replayFrames: metrics.replayFrames });
+        active.transportTiming.firstDrawStartedAt = startedAt;
+        active.transportTiming.firstDrawCompletedAt = absoluteNow();
+        recordTiming(frameTimings, active.transportTiming);
+        port.postMessage({ type: 'presented', sequence: active.sequence, metadata: active.metadata, transportTiming: active.transportTiming, absoluteTime: absoluteNow(), backend: 'webgpu', replayFrames: metrics.replayFrames });
         releaseSnapshot(previous?.resourceSnapshot);
       }
     } catch (error) { fail(error); }
@@ -466,6 +471,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
         if (pending) throw Error('Remote GPU backpressure: pending generation already exists');
         if (!Array.isArray(message.packet?.operations)) throw Error('Invalid remote frame operations');
         const packet = { ...message.packet, operations: [...stagedOperations, ...message.packet.operations] };
+        packet.transportTiming = { ...message.packet.transportTiming, sequence: packet.sequence, workerReceivedAt: message.receivedAt ?? absoluteNow(), admissionStartedAt: absoluteNow() };
         packet.receivedAt = absoluteNow();
         if (!Number.isSafeInteger(packet.sequence) || packet.sequence <= (active?.sequence || 0)) throw Error('Stale remote frame');
         if (!Array.isArray(packet.operations) || packet.operations.length > maxFrameOperations || packetBytes(packet) > maxFrameBytes) throw Error('Remote frame exceeds safety limit');
@@ -476,7 +482,9 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
         if (hasCompute && packet.metadata?.clock && !packet.metadata.clock.paused && packet.metadata.clock.safeUntil > packet.metadata.clock.elapsed) throw Error('An advancing remote clock cannot replay a frame containing one-shot compute; certify a repeatable compute contract first');
         packet.references = references(packet.operations);
         const readiness = waitForResources(packet.references);
+        packet.transportTiming.resourcesWaitStartedAt = absoluteNow();
         if (readiness) await readiness;
+        packet.transportTiming.resourcesReadyAt = absoluteNow();
         packet.receivedAt = absoluteNow();
         packet.resourceSnapshot = snapshotResources(packet.references);
         const writeCounts = new Map();
@@ -502,6 +510,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
         stagedOperations = [];
         if (hasCompute) metrics.computePackets++;
         pending = packet;
+        packet.transportTiming.admittedAt = absoluteNow();
         for (const entry of pendingRetirement) tryRetire(entry);
         metrics.packets++; break;
       }
@@ -532,12 +541,14 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
         entry.value.unmap(); entry.mapMode = 0; entry.mappedRange = null; break;
       }
       case 'fence': {
+        const timing = recordTiming(fenceTimings, { requestId: message.requestId || null, producerRequestedAt: message.producerRequestedAt ?? null, workerReceivedAt: message.receivedAt ?? absoluteNow(), startedAt: absoluteNow(), caller: message.caller?.split('\n').find(line => line.includes('.js:') && !line.includes('remote-webgpu-client')) || null }, 128);
         if (stagedOperations.length) {
+          timing.finishedAt = absoluteNow(); timing.rejected = 'uncommitted-published-resources';
           const details = stagedOperations.slice(0, 8).map(op => ({ method: op.method, resources: [...writtenResources(op)].map(id => ({ id, kind: resources.get(id)?.kind, label: resources.get(id)?.descriptor?.label, usage: resources.get(id)?.descriptor?.usage, size: resources.get(id)?.descriptor?.size })) }));
           reply(message, null, Error(`A fence cannot cover uncommitted changes to a published frame; publish the next frame first. Deferred: ${JSON.stringify(details)}\n${message.caller || ''}`));
           break;
         }
-        await device.queue.onSubmittedWorkDone(); reply(message); break;
+        await device.queue.onSubmittedWorkDone(); timing.finishedAt = absoluteNow(); reply(message, { timing }); break;
       }
       case 'inspect': reply(message, api.inspect()); break;
       case 'device-destroy': deviceDestroyRequested = true; device.destroy(); break;
@@ -570,6 +581,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
   }
   port.onmessage = event => {
     const message = event.data;
+    if (message.type === 'frame' || message.type === 'fence') message.receivedAt = absoluteNow();
     if (message.type === 'inspect') { reply(message, api.inspect()); return; }
     if (message.type === 'device-destroy') { deviceDestroyRequested = true; device.destroy(); return; }
     if (++queuedMessages > maxFrameOperations) { fail(Error('Remote resource queue exceeds safety limit')); return; }
@@ -609,7 +621,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
       }
       hidden = nextHidden;
     },
-    inspect: () => ({ ...metrics, hidden, resources: resources.size, pendingResources: pendingResources.size, activeSequence: active?.sequence || null, pendingSequence: pending?.sequence || null, queuedMessages, stagedOperations: stagedOperations.length, obsoleteVersions: obsoleteVersions.size, failed, backend: 'webgpu', rafIndependent: true, adapterInfo, frameTime: frameTime.status(), lease: active?.metadata?.clock || null, cameraSafe: active?.metadata?.cameraSafe ?? false, cameraEnvelope: active?.metadata?.cameraEnvelope || null, clockBindings: active?.clockBindings.length || 0, cameraBindings: active?.cameraBindings.length || 0, clockAtHorizon: !!active?.metadata?.clock && frameTime.status().elapsed >= active.metadata.clock.safeUntil, errors: errors.slice(), samples: sampleCursor < samples.length ? samples.slice(0, sampleCursor) : [...samples.slice(sampleCursor % samples.length), ...samples.slice(0, sampleCursor % samples.length)] }),
+    inspect: () => ({ ...metrics, hidden, resources: resources.size, pendingResources: pendingResources.size, activeSequence: active?.sequence || null, pendingSequence: pending?.sequence || null, queuedMessages, stagedOperations: stagedOperations.length, obsoleteVersions: obsoleteVersions.size, failed, backend: 'webgpu', rafIndependent: true, adapterInfo, frameTime: frameTime.status(), frameTimings: frameTimings.slice(), fenceTimings: fenceTimings.slice(), lease: active?.metadata?.clock || null, cameraSafe: active?.metadata?.cameraSafe ?? false, cameraEnvelope: active?.metadata?.cameraEnvelope || null, clockBindings: active?.clockBindings.length || 0, cameraBindings: active?.cameraBindings.length || 0, clockAtHorizon: !!active?.metadata?.clock && frameTime.status().elapsed >= active.metadata.clock.safeUntil, errors: errors.slice(), samples: sampleCursor < samples.length ? samples.slice(0, sampleCursor) : [...samples.slice(sampleCursor % samples.length), ...samples.slice(0, sampleCursor % samples.length)] }),
     dispose() {
       if (stopped) return; stopped = true;
       for (const job of pendingResources.values()) job.reject(Error('Remote GPU disposed'));

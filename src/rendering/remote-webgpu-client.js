@@ -20,6 +20,9 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
   let outbound = Promise.resolve();
   const pending = new Map(), clockBindings = new Map(), canvasViewIds = new Set();
   const weakResources = new Map(), retainedCounts = new Map(), deferredFinalizations = new Set();
+  const frameTimings = [], fenceTimings = [];
+  const absoluteNow = () => performance.timeOrigin + performance.now();
+  function recordTiming(ring, value, limit = 256) { ring.push(value); if (ring.length > limit) ring.shift(); return value; }
   const finalizer = finalizationRegistryFactory(resourceId => {
     if (disposed || fatalError) return;
     if (retainedCounts.get(resourceId)) { deferredFinalizations.add(resourceId); return; }
@@ -89,6 +92,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     if (fatalError) throw fatalError;
     const retained = retainReferences(collectReferences(message));
     outbound = outbound.then(async () => {
+      if (message.type === 'frame') message.packet.transportTiming.sendStartedAt = absoluteNow();
       // Conversion starts at queue call time to capture the correct canvas
       // version. Await it only in the sender, never in the draw loop.
       const ownedImages = [];
@@ -99,7 +103,9 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
         delete op.prepareImage;
         ownedImages.push(bitmap);
       }
+      if (message.type === 'frame') message.packet.transportTiming.postedAt = absoluteNow();
       port.postMessage(message);
+      if (message.type === 'frame') message.packet.transportTiming.postCompletedAt = absoluteNow();
       for (const bitmap of ownedImages) bitmap.close();
     }).finally(() => releaseReferences(retained));
     outbound.catch(fail);
@@ -213,8 +219,15 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
       queueOp({ method: 'submit', args: [buffers.map(buffer => ({ __remoteCommands: buffer.__remoteCommands, descriptor: buffer.descriptor }))] });
     },
     onSubmittedWorkDone() {
-      if (frame?.operations.length) return Promise.reject(Error('Cannot fence uncommitted remote frame'));
-      return request({ type: 'fence', caller: new Error('Remote queue fence requested').stack });
+      const caller = new Error('Remote queue fence requested').stack;
+      const timing = recordTiming(fenceTimings, { requestedAt: absoluteNow(), frameSequence: frame?.sequence || null, localRejected: !!frame?.operations.length, caller: caller?.split('\n').find(line => line.includes('.js:') && !line.includes('remote-webgpu-client')) || null }, 128);
+      if (frame?.operations.length) {
+        timing.finishedAt = absoluteNow(); timing.error = 'Cannot fence uncommitted remote frame';
+        return Promise.reject(Error(timing.error));
+      }
+      return request({ type: 'fence', caller, producerRequestedAt: timing.requestedAt }).then(result => {
+        timing.finishedAt = absoluteNow(); timing.consumer = result?.timing || null;
+      }, error => { timing.finishedAt = absoluteNow(); timing.error = error.message; throw error; });
     },
   };
   const device = {
@@ -283,6 +296,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     } else if (message.type === 'presented') {
       metrics.framesPresented++;
       if (pendingFrame?.sequence === message.sequence) {
+        Object.assign(pendingFrame.timing, { ackReceivedAt: absoluteNow(), consumer: message.transportTiming || null });
         pendingFrame.resolve(message); releaseReferences(pendingFrame.retained); pendingFrame = null;
       }
       onPresented(message);
@@ -308,13 +322,16 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     endFrame(metadata) {
       if (!frame) throw Error('No remote GPU frame transaction');
       const packet = frame; frame = null;
+      const timing = recordTiming(frameTimings, { sequence: packet.sequence, endFrameCalledAt: absoluteNow() });
+      packet.transportTiming = timing;
       const retained = packet.retained; delete packet.retained;
       if (metadata !== undefined) packet.metadata = structuredClone(metadata);
       packet.width = canvas.width; packet.height = canvas.height;
       metrics.framesPublished++;
       return new Promise((resolve, reject) => {
-        pendingFrame = { sequence: packet.sequence, resolve, reject, retained };
+        pendingFrame = { sequence: packet.sequence, resolve, reject, retained, timing };
         send({ type: 'frame', packet });
+        timing.endFrameReturnedAt = absoluteNow();
       });
     },
     cancelFrame() {
@@ -340,7 +357,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     },
     registerCameraBinding(buffer, binding) { send({ type: 'camera-binding', id: buffer[REF], binding }); },
     setCameraMailbox(mailbox) { send({ type: 'camera-mailbox', mailbox }); },
-    inspect: () => ({ ...metrics, pendingFrame: pendingFrame?.sequence || null, openFrame: frame?.sequence || null, clockBindings: clockBindings.size, retainedResources: retainedCounts.size, weakResources: weakResources.size, finalizationAvailable: !!finalizer, backend: 'remote-webgpu', failed: !!fatalError }),
+    inspect: () => ({ ...metrics, pendingFrame: pendingFrame?.sequence || null, openFrame: frame?.sequence || null, clockBindings: clockBindings.size, retainedResources: retainedCounts.size, weakResources: weakResources.size, finalizationAvailable: !!finalizer, frameTimings: frameTimings.slice(), fenceTimings: fenceTimings.slice(), backend: 'remote-webgpu', failed: !!fatalError }),
     inspectAsync: () => request({ type: 'inspect' }).then(consumer => ({ ...api.inspect(), consumer })),
     dispose() {
       if (disposed) return;
