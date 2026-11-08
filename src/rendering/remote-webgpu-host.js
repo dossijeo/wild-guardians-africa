@@ -624,6 +624,16 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
         if ((entry.mapMode & 2) && entry.uniformShadow && message.bytes) entry.uniformShadow.set(new Uint8Array(message.bytes), message.offset);
         entry.value.unmap(); entry.mapMode = 0; entry.mappedRange = null; break;
       }
+      case 'ordered-submission': {
+        // The client outbox already captured asynchronous image payloads, and
+        // this FIFO has submitted every preceding operation. WebGPU preserves
+        // their order relative to later drawing without a queue-completion wait.
+        if (stagedOperations.length) { reply(message, null, Error('Cannot order uncommitted published resource mutations')); break; }
+        if (deviceDestroyRequested) { reply(message, null, Error('Remote GPU device is being destroyed')); break; }
+        metrics.orderedSubmissions = (metrics.orderedSubmissions || 0) + 1;
+        reply(message, { kind: 'remote-ordered-submission', submitted: true });
+        break;
+      }
       case 'fence': {
         const timing = recordTiming(fenceTimings, { requestId: message.requestId || null, producerRequestedAt: message.producerRequestedAt ?? null, workerReceivedAt: message.receivedAt ?? absoluteNow(), startedAt: absoluteNow(), caller: message.caller?.split('\n').find(line => line.includes('.js:') && !line.includes('remote-webgpu-client')) || null }, 128);
         if (stagedOperations.length) {

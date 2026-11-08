@@ -766,3 +766,63 @@ test('pending query resolution protects its actual destination buffer from prema
   f.host.present(); await receipt;
   assert.deepEqual(Array.from(new Uint32Array(f.gpu.buffers[1].data.buffer)), [77, 77, 77, 77]);
 });
+
+test('ordered resource admission acknowledges captured writes before GPU completion without weakening real fences', async () => {
+  const f = await fixture();
+  let nativeFenceCalls = 0, releaseGpu, completed = false;
+  f.gpu.device.queue.onSubmittedWorkDone = () => { nativeFenceCalls++; return new Promise(resolve => { releaseGpu = resolve; }); };
+  const resource = f.client.device.createBuffer({ size: 16, usage: 8 });
+  const bytes = new Uint32Array([12, 34, 56, 78]);
+  f.client.device.queue.writeBuffer(resource, 0, bytes); bytes.fill(99);
+  const ordered = await f.client.device.queue.onResourceSubmissionOrdered();
+  assert.deepEqual(ordered, { kind: 'remote-ordered-submission', submitted: true });
+  assert.deepEqual(Array.from(new Uint32Array(f.gpu.buffers[1].data.buffer)), [12, 34, 56, 78]);
+  assert.equal(nativeFenceCalls, 0);
+  const completion = f.client.device.queue.onSubmittedWorkDone().then(() => { completed = true; });
+  await flush(); await f.host.idle();
+  assert.equal(nativeFenceCalls, 1); assert.equal(completed, false);
+  const receipt = f.frame(2); await flush(); await f.host.idle(); f.host.present(); await receipt;
+  await f.client.device.queue.onResourceSubmissionOrdered();
+  assert.equal(completed, false);
+  releaseGpu(); await completion; assert.equal(completed, true);
+});
+
+test('ordered admission rejects uncommitted local frames and unsafe published mutations', async () => {
+  const f = await storageFixture('storage');
+  f.client.beginFrame(); f.client.device.queue.writeBuffer(f.storage, 0, new Uint32Array([9]));
+  await assert.rejects(f.client.device.queue.onResourceSubmissionOrdered(), /uncommitted remote frame/);
+  f.client.cancelFrame(); await flush(); await f.host.idle();
+  const receipt = f.render(); await flush(); await f.host.idle(); f.host.present(); await receipt;
+  f.client.device.queue.writeBuffer(f.storage, 0, new Uint32Array([10]));
+  await assert.rejects(f.client.device.queue.onResourceSubmissionOrdered(), /uncommitted published/);
+  await assert.rejects(f.client.device.queue.onSubmittedWorkDone(), /uncommitted/);
+  assert.equal(new Uint32Array(f.gpu.buffers[1].data.buffer)[0], 9);
+});
+
+test('ordered admission cannot hide a preceding resource upload error', async () => {
+  const f = await fixture();
+  f.gpu.device.queue.writeBuffer = () => { throw Error('Native upload rejected'); };
+  f.client.device.queue.writeBuffer(f.buffer, 0, new Float32Array([1]));
+  await assert.rejects(f.client.device.queue.onResourceSubmissionOrdered(), /Native upload rejected/);
+  assert.equal(f.host.inspect().failed, true);
+});
+
+test('ordered admission waits for captured external image payloads, never their GPU completion', async t => {
+  const originalCanvas = globalThis.OffscreenCanvas, originalBitmap = globalThis.createImageBitmap;
+  t.after(() => { globalThis.OffscreenCanvas = originalCanvas; globalThis.createImageBitmap = originalBitmap; });
+  globalThis.OffscreenCanvas = class {};
+  let finishCapture, acknowledged = false, closed = 0, uploads = 0, fences = 0;
+  class CapturedBitmap { constructor() { this.marker = 'captured'; } close() { closed++; } }
+  globalThis.createImageBitmap = () => new Promise(resolve => { finishCapture = () => resolve(new CapturedBitmap()); });
+  const f = await fixture();
+  f.gpu.device.createTexture = descriptor => ({ descriptor });
+  f.gpu.device.queue.copyExternalImageToTexture = source => { assert.equal(source.source.marker, 'captured'); uploads++; };
+  f.gpu.device.queue.onSubmittedWorkDone = () => { fences++; return new Promise(() => {}); };
+  const texture = f.client.device.createTexture({ size: [1, 1], format: 'rgba8unorm', usage: 2 });
+  f.client.device.queue.copyExternalImageToTexture({ source: new globalThis.OffscreenCanvas() }, { texture }, [1, 1]);
+  const ready = f.client.device.queue.onResourceSubmissionOrdered().then(() => { acknowledged = true; });
+  await flush(); await f.host.idle();
+  assert.equal(acknowledged, false); assert.equal(uploads, 0);
+  finishCapture(); await ready;
+  assert.equal(uploads, 1); assert.equal(closed, 1); assert.equal(fences, 0);
+});

@@ -19,3 +19,19 @@ test('device loss releases a disposed progressive asset even when uploads never 
 test('shared resources outlive both pending compilation and upload in either order',async()=>{
  for(const uploadFirst of [true,false]){const f=fixture();let compileDone;const admission={deferCompilations:callback=>{compileDone=callback;}};releaseAfterWebGpuWork({renderer:f.renderer,admission,uploadsPending:true,release:f.release});if(uploadFirst){f.finish();await turn();assert.equal(f.releases,0);compileDone();}else{compileDone();assert.equal(f.releases,0);f.finish();await turn();}assert.equal(f.releases,1);f.lose({reason:'destroyed'});await turn();assert.equal(f.releases,1);}
 });
+
+test('remote texture readiness needs ordered submission, not completed GPU execution',async()=>{
+ const f=fixture();let order,fences=0;const queue=f.renderer.backend.device.queue,completion=queue.onSubmittedWorkDone;
+ queue.onSubmittedWorkDone=()=>{fences++;return completion();};queue.onResourceSubmissionOrdered=()=>new Promise(resolve=>{order=resolve;});
+ let ready=false;const pending=prepareWebGpuTexture(f).then(()=>{ready=true;});await turn();assert.equal(ready,false);
+ order({kind:'remote-ordered-submission',submitted:true});await pending;assert.equal(ready,true);assert.equal(fences,0);assert.equal(f.releases,0);
+ const disposing=releaseAfterWebGpuUploads(f.renderer,f.release);await turn();assert.equal(f.releases,0);assert.equal(fences,1);f.finish();await disposing;assert.equal(f.releases,1);
+});
+
+test('cancelled ordered preparation retains its resource until an actual completion fence',async()=>{
+ const f=fixture(),controller=new AbortController();let order;
+ f.renderer.backend.device.queue.onResourceSubmissionOrdered=()=>new Promise(resolve=>{order=resolve;});
+ const pending=prepareWebGpuTexture({...f,signal:controller.signal}),rejected=assert.rejects(pending,{name:'AbortError'});
+ controller.abort();await rejected;order({kind:'remote-ordered-submission',submitted:true});await turn();assert.equal(f.releases,0);
+ f.finish();await turn();assert.equal(f.releases,1);f.lose({reason:'destroyed'});await turn();assert.equal(f.releases,1);
+});

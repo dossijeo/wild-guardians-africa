@@ -31,12 +31,16 @@ export function releaseAfterWebGpuWork({renderer,admission=null,uploadsPending=f
 export async function prepareWebGpuTexture({renderer,texture,signal,release}={}){
  const device=renderer?.backend?.device,queue=device?.queue;if(!renderer?.backend?.isWebGPUBackend||typeof renderer.initTexture!=='function'||!texture?.isTexture||typeof queue?.onSubmittedWorkDone!=='function'||typeof release!=='function')throw TypeError('Invalid WebGPU texture preparation');
  if(signal?.aborted){release();throw new DOMException('Texture preparation cancelled','AbortError');}
+ // A remote owner can acknowledge ordered writes without waiting for GPU
+ // execution. The next draw uses that same queue, so write-before-read is
+ // sufficient for readiness. This acknowledgement never authorizes disposal.
+ const ordered=typeof queue.onResourceSubmissionOrdered==='function';
  let submitted=null,abortListener,transferred=false,released=false;const free=()=>{if(!released){released=true;release();}};
  try{
-  renderer.initTexture(texture);submitted=Promise.resolve(queue.onSubmittedWorkDone());const lost=device.lost?.then(info=>{throw Error('WebGPU device lost: '+(info?.message||info?.reason||'unknown'));}),aborted=signal?new Promise((_,reject)=>{abortListener=()=>reject(new DOMException('Texture preparation cancelled','AbortError'));signal.addEventListener('abort',abortListener,{once:true});if(signal.aborted)abortListener();}):null;
+  renderer.initTexture(texture);submitted=Promise.resolve(ordered?queue.onResourceSubmissionOrdered():queue.onSubmittedWorkDone());const lost=device.lost?.then(info=>{throw Error('WebGPU device lost: '+(info?.message||info?.reason||'unknown'));}),aborted=signal?new Promise((_,reject)=>{abortListener=()=>reject(new DOMException('Texture preparation cancelled','AbortError'));signal.addEventListener('abort',abortListener,{once:true});if(signal.aborted)abortListener();}):null;
   await Promise.race([submitted,...(lost?[lost]:[]),...(aborted?[aborted]:[])]);if(signal?.aborted)throw new DOMException('Texture preparation cancelled','AbortError');transferred=true;
  }finally{
   if(abortListener)signal.removeEventListener('abort',abortListener);
-  if(!transferred){if(submitted){const settled=submitted.then(()=>null,()=>null),loss=device.lost?.then(()=>null,()=>null);void Promise.race([settled,...(loss?[loss]:[])]).then(free);}else free();}
+  if(!transferred){if(submitted){const completion=ordered?Promise.resolve().then(()=>queue.onSubmittedWorkDone()):submitted,settled=completion.then(()=>null,()=>null),loss=device.lost?.then(()=>null,()=>null);void Promise.race([settled,...(loss?[loss]:[])]).then(free);}else free();}
  }
 }

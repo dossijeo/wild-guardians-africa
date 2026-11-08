@@ -218,6 +218,13 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
       for (const buffer of buffers) { if (buffer.submitted) throw Error('Command buffer already submitted'); buffer.submitted = true; }
       queueOp({ method: 'submit', args: [buffers.map(buffer => ({ __remoteCommands: buffer.__remoteCommands, descriptor: buffer.descriptor }))] });
     },
+    // Remote-only admission contract: preceding payloads have crossed the
+    // boundary and their writes/submits have entered the native queue. This is
+    // NOT GPU completion and must never authorize readback or resource release.
+    onResourceSubmissionOrdered() {
+      if (frame?.operations.length) return Promise.reject(Error('Cannot order uncommitted remote frame resources'));
+      return request({ type: 'ordered-submission' });
+    },
     onSubmittedWorkDone() {
       const caller = new Error('Remote queue fence requested').stack;
       const timing = recordTiming(fenceTimings, { requestedAt: absoluteNow(), frameSequence: frame?.sequence || null, localRejected: !!frame?.operations.length, caller: caller?.split('\n').find(line => line.includes('.js:') && !line.includes('remote-webgpu-client')) || null }, 128);
