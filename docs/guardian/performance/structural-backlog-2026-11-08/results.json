@@ -1,0 +1,1735 @@
+{
+  "fixture": "tests/fixtures/sabana712-d6-native-multi-reservation.json.gz",
+  "fixtureSha256": "fb2fc1dd416086539159976f3d2d791d70a66112d5f24f9a01deb01311dc439d",
+  "scope": "Headed Edge, WebGPU hardware. Main-thread rAF excluded from graphics intervals. No GPU timestamps/memory collected. Trace and node instrumentation are not baseline frametime evidence.",
+  "records": [
+    {
+      "source": ".cache/structural-backlog-serial-valid.jsonl",
+      "run": 1,
+      "instrumented": false,
+      "valid": true,
+      "headless": false,
+      "backend": "WebGPU",
+      "gpu": {
+        "vendorId": 4318,
+        "deviceId": 8580,
+        "subSysId": 291977282,
+        "revision": 161,
+        "vendorString": "",
+        "deviceString": "NVIDIA GeForce GTX 1660",
+        "driverVendor": "NVIDIA",
+        "driverVersion": "32.0.15.8129"
+      },
+      "deviceAdapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "isFallbackAdapter": false
+      },
+      "readyMs": 21226.0572,
+      "requestedWindowMs": 20000,
+      "actualWindowMs": 20812.984300000004,
+      "drawCpu": {
+        "count": 195,
+        "meanMs": 78.99600000018492,
+        "p95Ms": 203.7800000011921,
+        "p99Ms": 279.71000000089407,
+        "maxMs": 366.20499999821186
+      },
+      "timelineCpu": {
+        "count": 195,
+        "meanMs": 33.660692307658685,
+        "p95Ms": 163.8449999988079,
+        "p99Ms": 214.48499999940395,
+        "maxMs": 323.1599999964237
+      },
+      "renderCpu": {
+        "count": 195,
+        "meanMs": 45.33530769252624,
+        "p95Ms": 59.67499999701977,
+        "p99Ms": 70.14999999850988,
+        "maxMs": 83.66499999910593
+      },
+      "drawIntervals": {
+        "count": 194,
+        "meanMs": 102.85582363482604,
+        "p95Ms": 269.80517578125,
+        "p99Ms": 399.510009765625,
+        "maxMs": 468.864990234375
+      },
+      "samples": [
+        {
+          "atMs": 84.91570000000502,
+          "inspectionMs": 84.71979999999894,
+          "lagSeconds": 0,
+          "sequenceLag": 0,
+          "terrain": {
+            "closed": false,
+            "confirmedSequence": 73,
+            "pending": false,
+            "presentationPending": false,
+            "lastId": 173,
+            "retainedRevisions": 0,
+            "retainedBytes": 0,
+            "waitingForCapacity": false,
+            "completeSequence": 73
+          },
+          "timeline": {
+            "pending": 0,
+            "bytes": 0,
+            "waiting": false,
+            "waitingBytes": 0,
+            "receivedSequence": 73,
+            "receivedElapsed": 3429.9999999975803,
+            "target": 3429.9999999975803,
+            "negotiated": true
+          },
+          "admission": {
+            "queued": 0,
+            "active": false
+          },
+          "sourceSequence": 73,
+          "materialKeys": {
+            "materials": 109,
+            "builds": 455,
+            "hits": 53219,
+            "fallbacks": 110,
+            "discoveries": 2408
+          },
+          "gpuErrors": [],
+          "invalidDraws": [],
+          "camera": {
+            "position": [
+              120.84432002190728,
+              25.72184119088879,
+              63.39157392253215
+            ],
+            "direction": [
+              -0.4395388242169119,
+              -0.3993395294062733,
+              -0.8045704209449855
+            ]
+          }
+        },
+        {
+          "atMs": 10325.668800000007,
+          "inspectionMs": 310.4297000000006,
+          "lagSeconds": 1.1500000000041837,
+          "sequenceLag": 17,
+          "terrain": {
+            "closed": false,
+            "confirmedSequence": 231,
+            "pending": false,
+            "presentationPending": false,
+            "lastId": 520,
+            "retainedRevisions": 0,
+            "retainedBytes": 4096,
+            "waitingForCapacity": false,
+            "completeSequence": 246
+          },
+          "timeline": {
+            "pending": 15,
+            "bytes": 3489948,
+            "waiting": false,
+            "waitingBytes": 0,
+            "receivedSequence": 246,
+            "receivedElapsed": 3439.799999997616,
+            "target": 3438.7999999976123,
+            "negotiated": true
+          },
+          "admission": {
+            "queued": 1,
+            "active": true
+          },
+          "sourceSequence": 248,
+          "materialKeys": {
+            "materials": 346,
+            "builds": 810,
+            "hits": 101056,
+            "fallbacks": 113,
+            "discoveries": 2796
+          },
+          "gpuErrors": [],
+          "invalidDraws": [],
+          "camera": {
+            "position": [
+              120.92457183005058,
+              25.789067135272553,
+              60.959426820299825
+            ],
+            "direction": [
+              -0.43953882421691187,
+              -0.3993395294062733,
+              -0.8045704209449853
+            ]
+          }
+        },
+        {
+          "atMs": 20301.2523,
+          "inspectionMs": 295.5941000000021,
+          "lagSeconds": 1.0500000000038199,
+          "sequenceLag": 15,
+          "terrain": {
+            "closed": false,
+            "confirmedSequence": 387,
+            "pending": false,
+            "presentationPending": false,
+            "lastId": 814,
+            "retainedRevisions": 0,
+            "retainedBytes": 1792,
+            "waitingForCapacity": false,
+            "completeSequence": 393
+          },
+          "timeline": {
+            "pending": 10,
+            "bytes": 7397290,
+            "waiting": false,
+            "waitingBytes": 0,
+            "receivedSequence": 397,
+            "receivedElapsed": 3449.8499999976525,
+            "target": 3449.14999999765,
+            "negotiated": true
+          },
+          "admission": {
+            "queued": 0,
+            "active": false
+          },
+          "sourceSequence": 402,
+          "materialKeys": {
+            "materials": 553,
+            "builds": 1140,
+            "hits": 133515,
+            "fallbacks": 162,
+            "discoveries": 4130
+          },
+          "gpuErrors": [],
+          "invalidDraws": [],
+          "camera": {
+            "position": [
+              120.92457183005058,
+              25.789067135272553,
+              60.959426820299825
+            ],
+            "direction": [
+              -0.43953882421691187,
+              -0.3993395294062733,
+              -0.8045704209449853
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "source": ".cache/structural-backlog-serial-valid.jsonl",
+      "run": 2,
+      "instrumented": false,
+      "valid": true,
+      "headless": false,
+      "backend": "WebGPU",
+      "gpu": {
+        "vendorId": 4318,
+        "deviceId": 8580,
+        "subSysId": 291977282,
+        "revision": 161,
+        "vendorString": "",
+        "deviceString": "NVIDIA GeForce GTX 1660",
+        "driverVendor": "NVIDIA",
+        "driverVersion": "32.0.15.8129"
+      },
+      "deviceAdapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "isFallbackAdapter": false
+      },
+      "readyMs": 19839.265799999994,
+      "requestedWindowMs": 20000,
+      "actualWindowMs": 20457.3061,
+      "drawCpu": {
+        "count": 212,
+        "meanMs": 71.87856132052136,
+        "p95Ms": 165.48499999940395,
+        "p99Ms": 203.72999999672174,
+        "maxMs": 212.9599999934435
+      },
+      "timelineCpu": {
+        "count": 212,
+        "meanMs": 24.152830188566785,
+        "p95Ms": 114.70000000298023,
+        "p99Ms": 150.51500000059605,
+        "maxMs": 168.36499999463558
+      },
+      "renderCpu": {
+        "count": 212,
+        "meanMs": 47.725731131954575,
+        "p95Ms": 66.49000000208616,
+        "p99Ms": 73.125,
+        "maxMs": 98.20000000298023
+      },
+      "drawIntervals": {
+        "count": 211,
+        "meanMs": 94.64850692387441,
+        "p95Ms": 198.6650390625,
+        "p99Ms": 326.06005859375,
+        "maxMs": 452.949951171875
+      },
+      "samples": [
+        {
+          "atMs": 84.45609999999579,
+          "inspectionMs": 84.38919999999052,
+          "lagSeconds": 0.0500000000001819,
+          "sequenceLag": 2,
+          "terrain": {
+            "closed": false,
+            "confirmedSequence": 70,
+            "pending": false,
+            "presentationPending": false,
+            "lastId": 172,
+            "retainedRevisions": 0,
+            "retainedBytes": 768,
+            "waitingForCapacity": false,
+            "completeSequence": 72
+          },
+          "timeline": {
+            "pending": 2,
+            "bytes": 166146,
+            "waiting": false,
+            "waitingBytes": 0,
+            "receivedSequence": 72,
+            "receivedElapsed": 3430.0499999975805,
+            "target": 3429.9999999975803,
+            "negotiated": true
+          },
+          "admission": {
+            "queued": 0,
+            "active": true
+          },
+          "sourceSequence": 72,
+          "materialKeys": {
+            "materials": 115,
+            "builds": 463,
+            "hits": 52941,
+            "fallbacks": 110,
+            "discoveries": 2414
+          },
+          "gpuErrors": [],
+          "invalidDraws": [],
+          "camera": {
+            "position": [
+              120.85279638575675,
+              25.747847544901035,
+              63.2743226681377
+            ],
+            "direction": [
+              -0.43953882421691204,
+              -0.3993395294062732,
+              -0.8045704209449852
+            ]
+          }
+        },
+        {
+          "atMs": 10258.749500000005,
+          "inspectionMs": 251.3929999999964,
+          "lagSeconds": 0.7500000000027285,
+          "sequenceLag": 13,
+          "terrain": {
+            "closed": false,
+            "confirmedSequence": 242,
+            "pending": false,
+            "presentationPending": false,
+            "lastId": 514,
+            "retainedRevisions": 0,
+            "retainedBytes": 512,
+            "waitingForCapacity": false,
+            "completeSequence": 243
+          },
+          "timeline": {
+            "pending": 9,
+            "bytes": 2301600,
+            "waiting": false,
+            "waitingBytes": 0,
+            "receivedSequence": 251,
+            "receivedElapsed": 3439.8999999976163,
+            "target": 3439.3499999976143,
+            "negotiated": true
+          },
+          "admission": {
+            "queued": 0,
+            "active": true
+          },
+          "sourceSequence": 255,
+          "materialKeys": {
+            "materials": 379,
+            "builds": 885,
+            "hits": 97908,
+            "fallbacks": 113,
+            "discoveries": 2865
+          },
+          "gpuErrors": [],
+          "invalidDraws": [],
+          "camera": {
+            "position": [
+              120.9290709704538,
+              25.788253720337252,
+              60.78591940203553
+            ],
+            "direction": [
+              -0.43953882421691187,
+              -0.39933952940627326,
+              -0.8045704209449853
+            ]
+          }
+        },
+        {
+          "atMs": 20131.551600000006,
+          "inspectionMs": 130.94250000000466,
+          "lagSeconds": 3.850000000014006,
+          "sequenceLag": 64,
+          "terrain": {
+            "closed": false,
+            "confirmedSequence": 324,
+            "pending": false,
+            "presentationPending": false,
+            "lastId": 676,
+            "retainedRevisions": 0,
+            "retainedBytes": 256,
+            "waitingForCapacity": false,
+            "completeSequence": 324
+          },
+          "timeline": {
+            "pending": 31,
+            "bytes": 10680632,
+            "waiting": false,
+            "waitingBytes": 0,
+            "receivedSequence": 355,
+            "receivedElapsed": 3446.999999997642,
+            "target": 3445.049999997635,
+            "negotiated": true
+          },
+          "admission": {
+            "queued": 0,
+            "active": false
+          },
+          "sourceSequence": 388,
+          "materialKeys": {
+            "materials": 651,
+            "builds": 1301,
+            "hits": 141156,
+            "fallbacks": 145,
+            "discoveries": 3958
+          },
+          "gpuErrors": [],
+          "invalidDraws": [],
+          "camera": {
+            "position": [
+              120.9290709704538,
+              25.788253720337252,
+              60.78591940203553
+            ],
+            "direction": [
+              -0.43953882421691187,
+              -0.39933952940627326,
+              -0.8045704209449853
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "source": ".cache/structural-backlog-window-valid.jsonl",
+      "run": 1,
+      "instrumented": false,
+      "valid": true,
+      "headless": false,
+      "backend": "WebGPU",
+      "gpu": {
+        "vendorId": 4318,
+        "deviceId": 8580,
+        "subSysId": 291977282,
+        "revision": 161,
+        "vendorString": "",
+        "deviceString": "NVIDIA GeForce GTX 1660",
+        "driverVendor": "NVIDIA",
+        "driverVersion": "32.0.15.8129"
+      },
+      "deviceAdapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "isFallbackAdapter": false
+      },
+      "readyMs": 20849.188000000002,
+      "requestedWindowMs": 20000,
+      "actualWindowMs": 20636.8766,
+      "drawCpu": {
+        "count": 172,
+        "meanMs": 86.4358139533203,
+        "p95Ms": 151.07000000029802,
+        "p99Ms": 182.0949999988079,
+        "maxMs": 250.79500000178814
+      },
+      "timelineCpu": {
+        "count": 172,
+        "meanMs": 40.08308139517037,
+        "p95Ms": 103.14499999582767,
+        "p99Ms": 129.04999999701977,
+        "maxMs": 197.97500000149012
+      },
+      "renderCpu": {
+        "count": 172,
+        "meanMs": 46.35273255814993,
+        "p95Ms": 59.35999999940395,
+        "p99Ms": 66.75,
+        "maxMs": 73.125
+      },
+      "drawIntervals": {
+        "count": 171,
+        "meanMs": 115.75967853389986,
+        "p95Ms": 237.6650390625,
+        "p99Ms": 405.68017578125,
+        "maxMs": 473.074951171875
+      },
+      "samples": [
+        {
+          "atMs": 88.3189999999995,
+          "inspectionMs": 88.1659000000036,
+          "lagSeconds": 0.0500000000001819,
+          "sequenceLag": 1,
+          "terrain": {
+            "closed": false,
+            "confirmedSequence": 70,
+            "pending": false,
+            "presentationPending": false,
+            "lastId": 169,
+            "retainedRevisions": 0,
+            "retainedBytes": 256,
+            "waitingForCapacity": false,
+            "completeSequence": 71
+          },
+          "timeline": {
+            "pending": 0,
+            "bytes": 0,
+            "waiting": false,
+            "waitingBytes": 0,
+            "receivedSequence": 70,
+            "receivedElapsed": 3429.9999999975803,
+            "target": 3429.9999999975803,
+            "negotiated": true
+          },
+          "admission": {
+            "queued": 0,
+            "active": true
+          },
+          "sourceSequence": 71,
+          "materialKeys": {
+            "materials": 115,
+            "builds": 463,
+            "hits": 54917,
+            "fallbacks": 109,
+            "discoveries": 2402
+          },
+          "gpuErrors": [],
+          "invalidDraws": [],
+          "camera": {
+            "position": [
+              120.84432002190728,
+              25.72184119088879,
+              63.39157392253215
+            ],
+            "direction": [
+              -0.4395388242169119,
+              -0.3993395294062733,
+              -0.8045704209449855
+            ]
+          }
+        },
+        {
+          "atMs": 10154.9002,
+          "inspectionMs": 140.27810000000318,
+          "lagSeconds": 0.1500000000005457,
+          "sequenceLag": 3,
+          "terrain": {
+            "closed": false,
+            "confirmedSequence": 241,
+            "pending": false,
+            "presentationPending": false,
+            "lastId": 511,
+            "retainedRevisions": 0,
+            "retainedBytes": 256,
+            "waitingForCapacity": false,
+            "completeSequence": 242
+          },
+          "timeline": {
+            "pending": 0,
+            "bytes": 0,
+            "waiting": false,
+            "waitingBytes": 0,
+            "receivedSequence": 241,
+            "receivedElapsed": 3439.6999999976156,
+            "target": 3439.6999999976156,
+            "negotiated": true
+          },
+          "admission": {
+            "queued": 0,
+            "active": false
+          },
+          "sourceSequence": 244,
+          "materialKeys": {
+            "materials": 341,
+            "builds": 836,
+            "hits": 95815,
+            "fallbacks": 112,
+            "discoveries": 2866
+          },
+          "gpuErrors": [],
+          "invalidDraws": [],
+          "camera": {
+            "position": [
+              120.92457183005058,
+              25.789067135272553,
+              60.959426820299825
+            ],
+            "direction": [
+              -0.43953882421691187,
+              -0.3993395294062733,
+              -0.8045704209449853
+            ]
+          }
+        },
+        {
+          "atMs": 20140.6661,
+          "inspectionMs": 133.23229999999603,
+          "lagSeconds": 0.3500000000012733,
+          "sequenceLag": 5,
+          "terrain": {
+            "closed": false,
+            "confirmedSequence": 401,
+            "pending": false,
+            "presentationPending": false,
+            "lastId": 831,
+            "retainedRevisions": 0,
+            "retainedBytes": 256,
+            "waitingForCapacity": false,
+            "completeSequence": 402
+          },
+          "timeline": {
+            "pending": 1,
+            "bytes": 1880,
+            "waiting": false,
+            "waitingBytes": 0,
+            "receivedSequence": 402,
+            "receivedElapsed": 3449.699999997652,
+            "target": 3449.699999997652,
+            "negotiated": true
+          },
+          "admission": {
+            "queued": 0,
+            "active": false
+          },
+          "sourceSequence": 406,
+          "materialKeys": {
+            "materials": 585,
+            "builds": 1224,
+            "hits": 126092,
+            "fallbacks": 151,
+            "discoveries": 4096
+          },
+          "gpuErrors": [],
+          "invalidDraws": [],
+          "camera": {
+            "position": [
+              120.92457183005058,
+              25.789067135272553,
+              60.959426820299825
+            ],
+            "direction": [
+              -0.43953882421691187,
+              -0.3993395294062733,
+              -0.8045704209449853
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "source": ".cache/structural-backlog-window-valid.jsonl",
+      "run": 2,
+      "instrumented": false,
+      "valid": true,
+      "headless": false,
+      "backend": "WebGPU",
+      "gpu": {
+        "vendorId": 4318,
+        "deviceId": 8580,
+        "subSysId": 291977282,
+        "revision": 161,
+        "vendorString": "",
+        "deviceString": "NVIDIA GeForce GTX 1660",
+        "driverVendor": "NVIDIA",
+        "driverVersion": "32.0.15.8129"
+      },
+      "deviceAdapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "isFallbackAdapter": false
+      },
+      "readyMs": 19854.434800000003,
+      "requestedWindowMs": 20000,
+      "actualWindowMs": 20502.49179999999,
+      "drawCpu": {
+        "count": 184,
+        "meanMs": 82.30861412996992,
+        "p95Ms": 142.07000000029802,
+        "p99Ms": 196.58500000089407,
+        "maxMs": 351.7250000014901
+      },
+      "timelineCpu": {
+        "count": 184,
+        "meanMs": 37.88608695655737,
+        "p95Ms": 93.07999999821186,
+        "p99Ms": 129.17000000178814,
+        "maxMs": 301.125
+      },
+      "renderCpu": {
+        "count": 184,
+        "meanMs": 44.42252717341256,
+        "p95Ms": 56.95000000298023,
+        "p99Ms": 75.23999999463558,
+        "maxMs": 87.2800000011921
+      },
+      "drawIntervals": {
+        "count": 183,
+        "meanMs": 108.5,
+        "p95Ms": 210.9150390625,
+        "p99Ms": 365.75,
+        "maxMs": 460.635009765625
+      },
+      "samples": [
+        {
+          "atMs": 100.37930000000051,
+          "inspectionMs": 100.27579999998852,
+          "lagSeconds": 0.0500000000001819,
+          "sequenceLag": 1,
+          "terrain": {
+            "closed": false,
+            "confirmedSequence": 68,
+            "pending": false,
+            "presentationPending": false,
+            "lastId": 165,
+            "retainedRevisions": 0,
+            "retainedBytes": 256,
+            "waitingForCapacity": false,
+            "completeSequence": 69
+          },
+          "timeline": {
+            "pending": 0,
+            "bytes": 0,
+            "waiting": false,
+            "waitingBytes": 0,
+            "receivedSequence": 68,
+            "receivedElapsed": 3429.9999999975803,
+            "target": 3429.9999999975803,
+            "negotiated": true
+          },
+          "admission": {
+            "queued": 0,
+            "active": true
+          },
+          "sourceSequence": 69,
+          "materialKeys": {
+            "materials": 115,
+            "builds": 475,
+            "hits": 58522,
+            "fallbacks": 110,
+            "discoveries": 2422
+          },
+          "gpuErrors": [],
+          "invalidDraws": [],
+          "camera": {
+            "position": [
+              120.84432002190728,
+              25.72184119088879,
+              63.39157392253215
+            ],
+            "direction": [
+              -0.4395388242169119,
+              -0.3993395294062733,
+              -0.8045704209449855
+            ]
+          }
+        },
+        {
+          "atMs": 10311.477499999994,
+          "inspectionMs": 294.46789999998873,
+          "lagSeconds": 0.4000000000014552,
+          "sequenceLag": 5,
+          "terrain": {
+            "closed": false,
+            "confirmedSequence": 239,
+            "pending": false,
+            "presentationPending": false,
+            "lastId": 511,
+            "retainedRevisions": 0,
+            "retainedBytes": 768,
+            "waitingForCapacity": false,
+            "completeSequence": 242
+          },
+          "timeline": {
+            "pending": 2,
+            "bytes": 1300742,
+            "waiting": false,
+            "waitingBytes": 0,
+            "receivedSequence": 241,
+            "receivedElapsed": 3439.799999997616,
+            "target": 3439.599999997615,
+            "negotiated": true
+          },
+          "admission": {
+            "queued": 0,
+            "active": true
+          },
+          "sourceSequence": 244,
+          "materialKeys": {
+            "materials": 359,
+            "builds": 862,
+            "hits": 100701,
+            "fallbacks": 115,
+            "discoveries": 2928
+          },
+          "gpuErrors": [],
+          "invalidDraws": [],
+          "camera": {
+            "position": [
+              120.92457183005058,
+              25.789067135272553,
+              60.959426820299825
+            ],
+            "direction": [
+              -0.43953882421691187,
+              -0.3993395294062733,
+              -0.8045704209449853
+            ]
+          }
+        },
+        {
+          "atMs": 20141.860499999995,
+          "inspectionMs": 128.85879999998724,
+          "lagSeconds": 0.3500000000012733,
+          "sequenceLag": 5,
+          "terrain": {
+            "closed": false,
+            "confirmedSequence": 399,
+            "pending": false,
+            "presentationPending": false,
+            "lastId": 829,
+            "retainedRevisions": 0,
+            "retainedBytes": 512,
+            "waitingForCapacity": false,
+            "completeSequence": 401
+          },
+          "timeline": {
+            "pending": 1,
+            "bytes": 258592,
+            "waiting": false,
+            "waitingBytes": 0,
+            "receivedSequence": 400,
+            "receivedElapsed": 3449.749999997652,
+            "target": 3449.649999997652,
+            "negotiated": true
+          },
+          "admission": {
+            "queued": 0,
+            "active": false
+          },
+          "sourceSequence": 404,
+          "materialKeys": {
+            "materials": 591,
+            "builds": 1236,
+            "hits": 134838,
+            "fallbacks": 152,
+            "discoveries": 4118
+          },
+          "gpuErrors": [],
+          "invalidDraws": [],
+          "camera": {
+            "position": [
+              120.92457183005058,
+              25.789067135272553,
+              60.959426820299825
+            ],
+            "direction": [
+              -0.43953882421691187,
+              -0.3993395294062733,
+              -0.8045704209449853
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "source": ".cache/structural-backlog-long-valid.jsonl",
+      "run": 1,
+      "instrumented": false,
+      "valid": true,
+      "headless": false,
+      "backend": "WebGPU",
+      "gpu": {
+        "vendorId": 4318,
+        "deviceId": 8580,
+        "subSysId": 291977282,
+        "revision": 161,
+        "vendorString": "",
+        "deviceString": "NVIDIA GeForce GTX 1660",
+        "driverVendor": "NVIDIA",
+        "driverVersion": "32.0.15.8129"
+      },
+      "deviceAdapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "isFallbackAdapter": false
+      },
+      "readyMs": 20217.766300000003,
+      "requestedWindowMs": 60000,
+      "actualWindowMs": 60663.169700000006,
+      "drawCpu": {
+        "count": 536,
+        "meanMs": 88.76287313425608,
+        "p95Ms": 160.66499999910593,
+        "p99Ms": 200.72500000149012,
+        "maxMs": 271.9399999976158
+      },
+      "timelineCpu": {
+        "count": 536,
+        "meanMs": 36.84538246276997,
+        "p95Ms": 111.53499999642372,
+        "p99Ms": 152.80000000447035,
+        "maxMs": 224.22500000149012
+      },
+      "renderCpu": {
+        "count": 536,
+        "meanMs": 51.91749067148611,
+        "p95Ms": 65.23499999940395,
+        "p99Ms": 75.88499999791384,
+        "maxMs": 97.02000000327826
+      },
+      "drawIntervals": {
+        "count": 535,
+        "meanMs": 111.96902836594626,
+        "p95Ms": 209.8251953125,
+        "p99Ms": 351.14013671875,
+        "maxMs": 648.635009765625
+      },
+      "samples": [
+        {
+          "atMs": 73.8150999999998,
+          "inspectionMs": 73.66579999999885,
+          "lagSeconds": 0,
+          "sequenceLag": 0,
+          "terrain": {
+            "closed": false,
+            "confirmedSequence": 62,
+            "pending": false,
+            "presentationPending": false,
+            "lastId": 153,
+            "retainedRevisions": 0,
+            "retainedBytes": 256,
+            "waitingForCapacity": false,
+            "completeSequence": 63
+          },
+          "timeline": {
+            "pending": 0,
+            "bytes": 0,
+            "waiting": false,
+            "waitingBytes": 0,
+            "receivedSequence": 62,
+            "receivedElapsed": 3429.9999999975803,
+            "target": 3429.9999999975803,
+            "negotiated": true
+          },
+          "admission": {
+            "queued": 0,
+            "active": false
+          },
+          "sourceSequence": 62,
+          "materialKeys": {
+            "materials": 139,
+            "builds": 487,
+            "hits": 61159,
+            "fallbacks": 110,
+            "discoveries": 2438
+          },
+          "gpuErrors": [],
+          "invalidDraws": [],
+          "camera": {
+            "position": [
+              120.84432002190728,
+              25.72184119088879,
+              63.39157392253215
+            ],
+            "direction": [
+              -0.4395388242169119,
+              -0.3993395294062733,
+              -0.8045704209449855
+            ]
+          }
+        },
+        {
+          "atMs": 30159.1702,
+          "inspectionMs": 143.420100000003,
+          "lagSeconds": 0.1000000000003638,
+          "sequenceLag": 2,
+          "terrain": {
+            "closed": false,
+            "confirmedSequence": 545,
+            "pending": false,
+            "presentationPending": false,
+            "lastId": 1119,
+            "retainedRevisions": 0,
+            "retainedBytes": 256,
+            "waitingForCapacity": false,
+            "completeSequence": 546
+          },
+          "timeline": {
+            "pending": 1,
+            "bytes": 2028,
+            "waiting": false,
+            "waitingBytes": 0,
+            "receivedSequence": 546,
+            "receivedElapsed": 3459.7499999976885,
+            "target": 3459.7499999976885,
+            "negotiated": true
+          },
+          "admission": {
+            "queued": 0,
+            "active": false
+          },
+          "sourceSequence": 547,
+          "materialKeys": {
+            "materials": 815,
+            "builds": 1623,
+            "hits": 159258,
+            "fallbacks": 240,
+            "discoveries": 6321
+          },
+          "gpuErrors": [],
+          "invalidDraws": [],
+          "camera": {
+            "position": [
+              120.92457183005058,
+              25.789067135272553,
+              60.959426820299825
+            ],
+            "direction": [
+              -0.43953882421691187,
+              -0.3993395294062733,
+              -0.8045704209449853
+            ]
+          }
+        },
+        {
+          "atMs": 60105.795300000005,
+          "inspectionMs": 105.47419999999693,
+          "lagSeconds": 0.5,
+          "sequenceLag": 1,
+          "terrain": {
+            "closed": false,
+            "confirmedSequence": 1048,
+            "pending": false,
+            "presentationPending": false,
+            "lastId": 2125,
+            "retainedRevisions": 0,
+            "retainedBytes": 256,
+            "waitingForCapacity": false,
+            "completeSequence": 1049
+          },
+          "timeline": {
+            "pending": 1,
+            "bytes": 156154,
+            "waiting": false,
+            "waitingBytes": 0,
+            "receivedSequence": 1049,
+            "receivedElapsed": 3539.5999999977535,
+            "target": 3539.0999999977535,
+            "negotiated": true
+          },
+          "admission": {
+            "queued": 0,
+            "active": false
+          },
+          "sourceSequence": 1049,
+          "materialKeys": {
+            "materials": 1171,
+            "builds": 2330,
+            "hits": 276952,
+            "fallbacks": 282,
+            "discoveries": 7611
+          },
+          "gpuErrors": [],
+          "invalidDraws": [],
+          "camera": {
+            "position": [
+              120.92457183005058,
+              25.789067135272553,
+              60.959426820299825
+            ],
+            "direction": [
+              -0.43953882421691187,
+              -0.3993395294062733,
+              -0.8045704209449853
+            ]
+          }
+        }
+      ],
+      "hudLayout": {
+        "awakening": {
+          "x": 584,
+          "y": 8,
+          "width": 520,
+          "height": 92
+        },
+        "days": {
+          "x": 395,
+          "y": 23,
+          "width": 173,
+          "height": 87.4140625
+        },
+        "menu": {
+          "x": 1197,
+          "y": 12,
+          "width": 66,
+          "height": 66
+        },
+        "corner": "none"
+      }
+    },
+    {
+      "source": ".cache/structural-backlog-resource-generations.jsonl",
+      "run": 1,
+      "instrumented": true,
+      "valid": true,
+      "headless": false,
+      "backend": "WebGPU",
+      "gpu": {
+        "vendorId": 4318,
+        "deviceId": 8580,
+        "subSysId": 291977282,
+        "revision": 161,
+        "vendorString": "",
+        "deviceString": "NVIDIA GeForce GTX 1660",
+        "driverVendor": "NVIDIA",
+        "driverVersion": "32.0.15.8129"
+      },
+      "deviceAdapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "isFallbackAdapter": false
+      },
+      "readyMs": 20497.7432,
+      "requestedWindowMs": 20000,
+      "actualWindowMs": 20766.4825,
+      "drawCpu": {
+        "count": 175,
+        "meanMs": 85.13748571417162,
+        "p95Ms": 164.125,
+        "p99Ms": 196.89499999582767,
+        "maxMs": 278.45499999821186
+      },
+      "timelineCpu": {
+        "count": 175,
+        "meanMs": 39.507371428438596,
+        "p95Ms": 108.69500000029802,
+        "p99Ms": 145.7800000011921,
+        "maxMs": 233.6850000023842
+      },
+      "renderCpu": {
+        "count": 175,
+        "meanMs": 45.63011428573302,
+        "p95Ms": 62.50999999791384,
+        "p99Ms": 69.35000000149012,
+        "maxMs": 97.05499999970198
+      },
+      "drawIntervals": {
+        "count": 174,
+        "meanMs": 113.70356276939656,
+        "p95Ms": 225.784912109375,
+        "p99Ms": 406.355224609375,
+        "maxMs": 601.010009765625
+      },
+      "samples": [
+        {
+          "atMs": 242.08000000000175,
+          "inspectionMs": 241.82660000000033,
+          "lagSeconds": 0.0500000000001819,
+          "sequenceLag": 1,
+          "terrain": {
+            "closed": false,
+            "confirmedSequence": 59,
+            "pending": false,
+            "presentationPending": false,
+            "lastId": 147,
+            "retainedRevisions": 0,
+            "retainedBytes": 256,
+            "waitingForCapacity": false,
+            "completeSequence": 60
+          },
+          "timeline": {
+            "pending": 0,
+            "bytes": 0,
+            "waiting": false,
+            "waitingBytes": 0,
+            "receivedSequence": 59,
+            "receivedElapsed": 3429.9999999975803,
+            "target": 3429.9999999975803,
+            "negotiated": true
+          },
+          "admission": {
+            "queued": 0,
+            "active": false
+          },
+          "sourceSequence": 60,
+          "materialKeys": {
+            "materials": 115,
+            "builds": 463,
+            "hits": 57764,
+            "fallbacks": 135,
+            "discoveries": 2440
+          },
+          "gpuErrors": [],
+          "invalidDraws": [],
+          "camera": {
+            "position": [
+              120.84432002190728,
+              25.72184119088879,
+              63.39157392253215
+            ],
+            "direction": [
+              -0.4395388242169119,
+              -0.3993395294062733,
+              -0.8045704209449855
+            ]
+          }
+        },
+        {
+          "atMs": 10490.083299999998,
+          "inspectionMs": 478.1583000000028,
+          "lagSeconds": 0.3000000000010914,
+          "sequenceLag": 3,
+          "terrain": {
+            "closed": false,
+            "confirmedSequence": 224,
+            "pending": false,
+            "presentationPending": false,
+            "lastId": 477,
+            "retainedRevisions": 0,
+            "retainedBytes": 256,
+            "waitingForCapacity": false,
+            "completeSequence": 225
+          },
+          "timeline": {
+            "pending": 1,
+            "bytes": 256194,
+            "waiting": false,
+            "waitingBytes": 0,
+            "receivedSequence": 225,
+            "receivedElapsed": 3439.799999997616,
+            "target": 3439.6999999976156,
+            "negotiated": true
+          },
+          "admission": {
+            "queued": 0,
+            "active": false
+          },
+          "sourceSequence": 227,
+          "materialKeys": {
+            "materials": 355,
+            "builds": 841,
+            "hits": 99920,
+            "fallbacks": 140,
+            "discoveries": 2911
+          },
+          "gpuErrors": [],
+          "invalidDraws": [],
+          "camera": {
+            "position": [
+              120.92457183005058,
+              25.789067135272553,
+              60.959426820299825
+            ],
+            "direction": [
+              -0.43953882421691187,
+              -0.3993395294062733,
+              -0.8045704209449853
+            ]
+          }
+        },
+        {
+          "atMs": 20307.2819,
+          "inspectionMs": 304.2286000000022,
+          "lagSeconds": 0.3000000000010914,
+          "sequenceLag": 5,
+          "terrain": {
+            "closed": false,
+            "confirmedSequence": 378,
+            "pending": false,
+            "presentationPending": false,
+            "lastId": 787,
+            "retainedRevisions": 0,
+            "retainedBytes": 512,
+            "waitingForCapacity": false,
+            "completeSequence": 380
+          },
+          "timeline": {
+            "pending": 0,
+            "bytes": 0,
+            "waiting": false,
+            "waitingBytes": 0,
+            "receivedSequence": 378,
+            "receivedElapsed": 3449.699999997652,
+            "target": 3449.699999997652,
+            "negotiated": true
+          },
+          "admission": {
+            "queued": 0,
+            "active": false
+          },
+          "sourceSequence": 383,
+          "materialKeys": {
+            "materials": 563,
+            "builds": 1175,
+            "hits": 130189,
+            "fallbacks": 189,
+            "discoveries": 4119
+          },
+          "gpuErrors": [],
+          "invalidDraws": [],
+          "camera": {
+            "position": [
+              120.92457183005058,
+              25.789067135272553,
+              60.959426820299825
+            ],
+            "direction": [
+              -0.43953882421691187,
+              -0.3993395294062733,
+              -0.8045704209449853
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "source": ".cache/structural-backlog-final-trace.jsonl",
+      "run": 1,
+      "instrumented": true,
+      "valid": true,
+      "headless": false,
+      "backend": "WebGPU",
+      "gpu": {
+        "vendorId": 4318,
+        "deviceId": 8580,
+        "subSysId": 291977282,
+        "revision": 161,
+        "vendorString": "",
+        "deviceString": "NVIDIA GeForce GTX 1660",
+        "driverVendor": "NVIDIA",
+        "driverVersion": "32.0.15.8129"
+      },
+      "deviceAdapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "isFallbackAdapter": false
+      },
+      "readyMs": 20750.834600000002,
+      "requestedWindowMs": 10000,
+      "actualWindowMs": 10769.027499999997,
+      "drawCpu": {
+        "count": 66,
+        "meanMs": 117.55280302995534,
+        "p95Ms": 190.75499999523163,
+        "p99Ms": 230.48499999940395,
+        "maxMs": 274.70499999821186
+      },
+      "timelineCpu": {
+        "count": 66,
+        "meanMs": 60.161742423971496,
+        "p95Ms": 125.07499999552965,
+        "p99Ms": 174.39500000327826,
+        "maxMs": 214.81999999284744
+      },
+      "renderCpu": {
+        "count": 66,
+        "meanMs": 57.391060605983846,
+        "p95Ms": 68.42999999970198,
+        "p99Ms": 91.02000000327826,
+        "maxMs": 104.32999999821186
+      },
+      "drawIntervals": {
+        "count": 65,
+        "meanMs": 150.9796123798077,
+        "p95Ms": 242.449951171875,
+        "p99Ms": 292.364990234375,
+        "maxMs": 443.31005859375
+      },
+      "samples": [
+        {
+          "atMs": 103.0596000000005,
+          "inspectionMs": 102.91630000000441,
+          "lagSeconds": 0,
+          "sequenceLag": 1,
+          "terrain": {
+            "closed": false,
+            "confirmedSequence": 64,
+            "pending": false,
+            "presentationPending": false,
+            "lastId": 157,
+            "retainedRevisions": 0,
+            "retainedBytes": 256,
+            "waitingForCapacity": false,
+            "completeSequence": 65
+          },
+          "timeline": {
+            "pending": 1,
+            "bytes": 1204,
+            "waiting": false,
+            "waitingBytes": 0,
+            "receivedSequence": 65,
+            "receivedElapsed": 3429.9999999975803,
+            "target": 3429.9999999975803,
+            "negotiated": true
+          },
+          "admission": {
+            "queued": 0,
+            "active": false
+          },
+          "sourceSequence": 65,
+          "materialKeys": {
+            "materials": 139,
+            "builds": 487,
+            "hits": 57871,
+            "fallbacks": 110,
+            "discoveries": 2438
+          },
+          "gpuErrors": [],
+          "invalidDraws": [],
+          "camera": {
+            "position": [
+              120.84432002190728,
+              25.72184119088879,
+              63.39157392253215
+            ],
+            "direction": [
+              -0.4395388242169119,
+              -0.3993395294062733,
+              -0.8045704209449855
+            ]
+          }
+        },
+        {
+          "atMs": 5145.5795,
+          "inspectionMs": 140.30950000000303,
+          "lagSeconds": 0.2000000000007276,
+          "sequenceLag": 2,
+          "terrain": {
+            "closed": false,
+            "confirmedSequence": 134,
+            "pending": false,
+            "presentationPending": false,
+            "lastId": 299,
+            "retainedRevisions": 0,
+            "retainedBytes": 512,
+            "waitingForCapacity": false,
+            "completeSequence": 136
+          },
+          "timeline": {
+            "pending": 1,
+            "bytes": 257984,
+            "waiting": false,
+            "waitingBytes": 0,
+            "receivedSequence": 135,
+            "receivedElapsed": 3434.1499999975954,
+            "target": 3434.049999997595,
+            "negotiated": true
+          },
+          "admission": {
+            "queued": 0,
+            "active": false
+          },
+          "sourceSequence": 136,
+          "materialKeys": {
+            "materials": 168,
+            "builds": 629,
+            "hits": 70901,
+            "fallbacks": 111,
+            "discoveries": 2590
+          },
+          "gpuErrors": [],
+          "invalidDraws": [],
+          "camera": {
+            "position": [
+              120.9290709704538,
+              25.788253720337252,
+              60.78591940203553
+            ],
+            "direction": [
+              -0.43953882421691187,
+              -0.39933952940627326,
+              -0.8045704209449853
+            ]
+          }
+        },
+        {
+          "atMs": 10269.569499999998,
+          "inspectionMs": 257.07240000000456,
+          "lagSeconds": 0.4000000000014552,
+          "sequenceLag": 4,
+          "terrain": {
+            "closed": false,
+            "confirmedSequence": 203,
+            "pending": false,
+            "presentationPending": false,
+            "lastId": 437,
+            "retainedRevisions": 0,
+            "retainedBytes": 512,
+            "waitingForCapacity": false,
+            "completeSequence": 205
+          },
+          "timeline": {
+            "pending": 1,
+            "bytes": 256186,
+            "waiting": false,
+            "waitingBytes": 0,
+            "receivedSequence": 204,
+            "receivedElapsed": 3439.7499999976158,
+            "target": 3439.6499999976154,
+            "negotiated": true
+          },
+          "admission": {
+            "queued": 4,
+            "active": true
+          },
+          "sourceSequence": 207,
+          "materialKeys": {
+            "materials": 236,
+            "builds": 717,
+            "hits": 84714,
+            "fallbacks": 113,
+            "discoveries": 2717
+          },
+          "gpuErrors": [],
+          "invalidDraws": [],
+          "camera": {
+            "position": [
+              120.9290709704538,
+              25.788253720337252,
+              60.78591940203553
+            ],
+            "direction": [
+              -0.43953882421691187,
+              -0.39933952940627326,
+              -0.8045704209449853
+            ]
+          }
+        }
+      ],
+      "hudLayout": {
+        "awakening": {
+          "x": 584,
+          "y": 8,
+          "width": 520,
+          "height": 92
+        },
+        "days": {
+          "x": 395,
+          "y": 23,
+          "width": 173,
+          "height": 87.4140625
+        },
+        "menu": {
+          "x": 1197,
+          "y": 12,
+          "width": 66,
+          "height": 66
+        },
+        "corner": "none"
+      }
+    }
+  ],
+  "finalTrace": {
+    "windowMs": 11107.639,
+    "longTasks": 76,
+    "categoriesSampledMs": {
+      "grass": 59.209,
+      "admission": 1150.234,
+      "timeline": 3975.520000000002,
+      "draw": 3754.1110000000003,
+      "other": 359.76800000000014
+    },
+    "topLeavesFromTopSixPerTask": [
+      [
+        "mergeTracked confirmed-state-receiver.js",
+        503.6270000000002
+      ],
+      [
+        "exportWorkCheckpoint vfx-native.js",
+        236.01100000000005
+      ],
+      [
+        "getNodeType chunk-EXC7KN5K.js",
+        194.707
+      ],
+      [
+        "advance confirmed-timeline-pump.js",
+        173.03499999999997
+      ],
+      [
+        "build chunk-EXC7KN5K.js",
+        138.44199999999998
+      ],
+      [
+        "previewNextMotionBoundary confirmed-presentation-stream.js",
+        119.79099999999998
+      ],
+      [
+        "cyrb53 chunk-EXC7KN5K.js",
+        119.59699999999998
+      ],
+      [
+        "decodeHistoricalEventBoundaries historical-event-boundaries.js",
+        107.981
+      ],
+      [
+        "renderObject chunk-EXC7KN5K.js",
+        97.65800000000003
+      ],
+      [
+        "update chunk-EXC7KN5K.js",
+        96.08000000000001
+      ],
+      [
+        "getPreview confirmed-motion-feed.js",
+        84.249
+      ],
+      [
+        "offerPreview confirmed-motion-feed.js",
+        83.002
+      ],
+      [
+        "_renderObjectDirect chunk-EXC7KN5K.js",
+        77.33300000000001
+      ],
+      [
+        "get chunk-EXC7KN5K.js",
+        72.73100000000001
+      ],
+      [
+        "reconcile confirmed-state-receiver.js",
+        67.16199999999999
+      ],
+      [
+        "getAttribute chunk-GHUIN7QU.js",
+        66.365
+      ],
+      [
+        "getTypeLength chunk-EXC7KN5K.js",
+        57.278999999999996
+      ],
+      [
+        "(garbage collector) ",
+        57.227000000000004
+      ]
+    ],
+    "worstTask": {
+      "startMs": 9160.52,
+      "durationMs": 294.12,
+      "sampledMs": 293.6739999999999,
+      "categoriesMs": {
+        "grass": 0,
+        "admission": 278.433,
+        "timeline": 0,
+        "draw": 0,
+        "other": 15.241
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 13,
+            "functionName": "getNodeType",
+            "lineNumber": 1771,
+            "scriptId": 122,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-EXC7KN5K.js?v=c9080a44"
+          },
+          "ms": 81.043
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 7,
+            "functionName": "build",
+            "lineNumber": 1214,
+            "scriptId": 122,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-EXC7KN5K.js?v=c9080a44"
+          },
+          "ms": 57.074999999999974
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 15,
+            "functionName": "getTypeLength",
+            "lineNumber": 22821,
+            "scriptId": 122,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-EXC7KN5K.js?v=c9080a44"
+          },
+          "ms": 34.71
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 25,
+            "functionName": "getNodeChildren",
+            "lineNumber": 626,
+            "scriptId": 122,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-EXC7KN5K.js?v=c9080a44"
+          },
+          "ms": 16.397000000000002
+        },
+        {
+          "leaf": {
+            "codeType": "other",
+            "functionName": "(garbage collector)",
+            "scriptId": 0
+          },
+          "ms": 10.786999999999999
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 10,
+            "functionName": "isMatrix",
+            "lineNumber": 22688,
+            "scriptId": 122,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-EXC7KN5K.js?v=c9080a44"
+          },
+          "ms": 10.185
+        }
+      ]
+    },
+    "limits": [
+      "Only complete RunTask intervals of at least 50 ms are included.",
+      "Sampled stacks are classified with grass before admission before timeline before drawing; nested work is not summed twice.",
+      "Sample deltas approximate attribution and do not measure GPU time or prove causality."
+    ]
+  }
+}
