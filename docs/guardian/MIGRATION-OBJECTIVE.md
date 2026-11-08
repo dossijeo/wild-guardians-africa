@@ -64,6 +64,10 @@ camino crítico sin pedir autorización rutinaria entre hitos.
       Barrido estático continuo nativo implementado para animales en Desierto,
       contrastado con guardas existentes y un fallo real entre muestras de 0,2 m.
       Todavía no autoriza ejecución dinámica ni sustituye el movimiento JS.
+      La misma ruta versionada incorpora ahora tiempos/distancias nativos para
+      candidatos AttackCrops en marcha estable a 1,5 m/s, evaluables sin volver
+      a planificar ni validar. Opt-in de prueba, `authorizedAutonomy:false`;
+      faltan reservas, ejecución lógica y garantías de reloj/mutación.
 - [ ] Vertical AttackCrops completa y aceptación real A–F.
 - [ ] Generalizar a otras bestias, trabajadores, intenciones y animaciones;
       retirar planificación/validaciones duplicadas por clase validada.

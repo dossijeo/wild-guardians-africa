@@ -25,6 +25,7 @@ int spatial_world_route_cached(float,float,float,float);
 const float* spatial_world_route_ptr();
 int spatial_world_route_reason();
 int spatial_world_segment_clear(float,float,float,float);
+int spatial_execution_segment_clear(double,double,double,double,double);
 uint32_t lazy_route_revision();
 int lazy_selected_context();
 int lazy_sector_size();
@@ -125,8 +126,19 @@ struct ActiveIntent {
   std::set<std::pair<int,int>> routeSectors;
   uint64_t assignmentSequence=0;
   double assignedAt=0;
+  int timingMode=0;
+  double timingRadius=0;
 };
-struct RouteSlot {std::vector<float> points;uint32_t generation=0;bool active=false;};
+struct RouteSlot {
+  std::vector<float> points;
+  // Execution timing belongs to this same versioned route, not another plan.
+  // Mode 1 is a statically checked walking candidate, not traffic authorization.
+  std::vector<double> distances;
+  double originX=0,originZ=0,startTime=0,speed=0,radius=0;
+  uint64_t actor=0;
+  int timingMode=0,profile=0;
+  uint32_t generation=0;bool active=false;
+};
 struct Change {
   int op,kind;
   uint64_t id,center,target,assigned;
@@ -193,6 +205,10 @@ struct IntentState {
   std::vector<double> intentChanges;
   std::vector<double> controlSnapshot;
   std::array<double,10> intentResult{};
+  std::array<double,16> timingResult{};
+  std::array<double,9> sampleResult{};
+  uint64_t routeTimeSamples=0;
+  int timingRejection=0;
   uint32_t session=0;
   uint64_t invalidations=0;
   std::unordered_map<uint64_t,uint64_t> planningCallsByActor;
@@ -217,6 +233,61 @@ bool integer(double value,bool allowZero=false){
     value<=maxId&&std::floor(value)==value;
 }
 bool coordinate(double value){return std::isfinite(value)&&std::abs(value)<2147483000.0;}
+int prepareRouteTiming(RouteSlot& route,uint64_t actor,double x,double z,
+    double time,double radius,int mode){
+  if(mode==0)return 1;
+  if(mode!=1||!std::isfinite(radius)||radius<=0||radius>2)return -3;
+  // Existing ordinary animal walking rule. Entering/retreat and worker speed
+  // changes must be represented explicitly before those classes use timing.
+  constexpr double walkingSpeed=1.5;
+  route.originX=x;route.originZ=z;route.startTime=time;route.speed=walkingSpeed;
+  route.radius=radius;route.actor=actor;route.profile=lazy_selected_context();
+  route.distances.clear();route.distances.reserve(route.points.size()/2);
+  double travelled=0;
+  if(route.points.empty()){
+    const int clear=spatial_execution_segment_clear(x,z,x,z,radius);
+    if(clear!=1)return clear;
+  }
+  for(size_t i=0;i<route.points.size();i+=2){
+    const double nx=route.points[i],nz=route.points[i+1];
+    const int clear=spatial_execution_segment_clear(x,z,nx,nz,radius);
+    if(clear!=1)return clear;
+    travelled+=std::hypot(nx-x,nz-z);route.distances.push_back(travelled);
+    x=nx;z=nz;
+  }
+  const double end=time+travelled/walkingSpeed;
+  if(!std::isfinite(end)||travelled>0&&end<=time)return -3;
+  route.timingMode=mode;return 1;
+}
+void recordTimingResult(IntentState& s,int result){
+  s.timingRejection=result==1?0:result==0?1:result==-1?2:result==-2?3:4;
+}
+std::array<double,9> sampleRouteTiming(const RouteSlot& route,double at){
+  const double length=route.distances.empty()?0:route.distances.back(),
+    elapsed=std::max(0.0,at-route.startTime),
+    distance=at>=route.startTime+length/route.speed?length:std::min(length,elapsed*route.speed);
+  const auto next=std::upper_bound(route.distances.begin(),route.distances.end(),distance);
+  size_t index=size_t(next-route.distances.begin());
+  const bool arrived=index==route.distances.size();
+  double x=route.originX,z=route.originZ,yaw=0;
+  if(!route.points.empty()){
+    size_t segment=arrived?route.distances.size()-1:index;
+    // Repeated waypoints have zero duration. Retain the last real tangent at
+    // completion; they must not cause division by zero or rotate an idle body.
+    while(segment>0&&route.distances[segment]==route.distances[segment-1])segment--;
+    const double from=segment?route.distances[segment-1]:0,
+      ax=segment?route.points[(segment-1)*2]:route.originX,
+      az=segment?route.points[(segment-1)*2+1]:route.originZ,
+      bx=route.points[segment*2],bz=route.points[segment*2+1],
+      span=route.distances[segment]-from,
+      fraction=span>0?std::clamp((distance-from)/span,0.0,1.0):1;
+    x=ax+(bx-ax)*fraction;z=az+(bz-az)*fraction;
+    if(span>0)yaw=std::atan2(bx-ax,bz-az);
+    if(arrived){x=route.points[route.points.size()-2];z=route.points.back();}
+  }
+  return {x,z,distance,route.speed>0?distance/route.speed:0,yaw,
+    double(index),arrived?1.0:0.0,route.startTime+distance/route.speed,length/route.speed};
+}
 #ifdef WILD_DECLARATIVE_ATTACK
 bool validAttackTransients(const IntentState& s,int blockers,int reserved){
   if(blockers<0||blockers>100000||reserved<0||reserved>100000||
@@ -275,7 +346,8 @@ void subscribeRouteSegment(IntentState& s,ActiveIntent& intent,
   if(size<=0)return;
   // Cover the entire swept connector, including fractional endpoints and the
   // largest supported body. Subdivision bounds the cells per diagonal segment.
-  constexpr double margin=3;
+  // Include footprint, +/-0.8 m slope samples and their enclosing mesh corners.
+  constexpr double margin=5;
   const int steps=std::max(1,int(std::ceil(std::hypot(endX-x,endZ-z)/(size*.5))));
   const double startX=x,startZ=z;
   for(int i=1;i<=steps;i++){
@@ -343,7 +415,8 @@ void releaseRoute(IntentState& s,ActiveIntent& intent){
     RouteSlot& route=s.routeSlots[intent.slot];
     if(route.active&&route.generation==intent.generation){
       intent.revokedSlot=intent.slot;intent.revokedGeneration=intent.generation;
-      route.active=false;route.points.clear();route.generation++;
+      route.active=false;route.points.clear();route.distances.clear();route.timingMode=0;
+      route.generation++;
     }
   }
   intent.slot=0;intent.generation=0;
@@ -785,6 +858,7 @@ void nav_intent_reset(){
 #endif
   s.byBlockedCropGroup.clear();s.wallOpportunityActors.clear();
   s.routeSlots.clear();s.intentChanges.clear();s.controlSnapshot.clear();s.intentResult.fill(0);
+  s.timingResult.fill(0);s.sampleResult.fill(0);s.routeTimeSamples=0;s.timingRejection=0;
   s.attackRouteInput.clear();s.attackBlockers.clear();
   s.attackReservedTargets.clear();s.attackResult.fill(0);
   s.wallAttackResult.fill(0);
@@ -1534,6 +1608,37 @@ const float* nav_intent_route_ptr(double session,double slot,double generation){
   return route.active&&route.generation==uint32_t(generation)?
     route.points.data():nullptr;
 }
+EMSCRIPTEN_KEEPALIVE int nav_intent_route_timing(double session,double slot,double generation){
+  IntentState& s=state();s.timingResult.fill(0);
+  if(nav_intent_route_points(session,slot,generation)<0)return -1;
+  const RouteSlot& route=s.routeSlots[size_t(slot)];
+  if(!route.timingMode)return 0;
+  const auto intent=s.activeIntents.find(route.actor);
+  if(intent==s.activeIntents.end()||intent->second.slot!=uint32_t(slot)||
+     intent->second.generation!=uint32_t(generation))return -1;
+  const double distance=route.distances.empty()?0:route.distances.back();
+  s.timingResult={1,double(route.actor),route.startTime,route.startTime+distance/route.speed,
+    route.speed,route.radius,route.originX,route.originZ,distance,double(route.distances.size()),
+    1,double(intent->second.assignmentSequence),double(route.profile),session,slot,generation};
+  return 1;
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_timing_ptr(){return state().timingResult.data();}
+EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_distances_ptr(double session,double slot,double generation){
+  const IntentState& s=state();
+  if(nav_intent_route_points(session,slot,generation)<0)return nullptr;
+  const RouteSlot& route=s.routeSlots[size_t(slot)];return route.timingMode?route.distances.data():nullptr;
+}
+EMSCRIPTEN_KEEPALIVE int nav_intent_route_sample(double session,double slot,double generation,double at){
+  IntentState& s=state();s.sampleResult.fill(0);
+  if(!std::isfinite(at)||at<0)return -3;
+  if(nav_intent_route_points(session,slot,generation)<0)return -1;
+  const RouteSlot& route=s.routeSlots[size_t(slot)];if(!route.timingMode)return 0;
+  s.sampleResult=sampleRouteTiming(route,at);s.routeTimeSamples++;return 1;
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_sample_ptr(){return state().sampleResult.data();}
+EMSCRIPTEN_KEEPALIVE double nav_intent_route_time_samples(){return double(state().routeTimeSamples);}
+EMSCRIPTEN_KEEPALIVE int nav_intent_timing_rejection(){return state().timingRejection;}
+
 // A topological event may be unrelated to an active worker path. Validate the
 // pinned polyline against the updated native collision map at this boundary,
 // rather than discarding every route merely because the global revision moved.
@@ -1555,7 +1660,9 @@ bool activeRouteClear(IntentState& s,const ActiveIntent& intent){
     const float nextX=route.points[i],nextZ=route.points[i+1];
     // The local predicate accepts only short connector segments. World routes
     // may contain validated shortcuts spanning several cells.
-    if(!spatial_world_segment_clear(x,z,nextX,nextZ))return false;
+    if(route.timingMode){
+      if(spatial_execution_segment_clear(x,z,nextX,nextZ,route.radius)!=1)return false;
+    }else if(!spatial_world_segment_clear(x,z,nextX,nextZ))return false;
     x=nextX;z=nextZ;
   }
   return true;
@@ -1678,7 +1785,7 @@ int nav_intent_replan_attack_route(double actorId,double startX,double startZ,
                                    double approachX,double approachZ){
   if(!integer(actorId)||!coordinate(startX)||!coordinate(startZ)||
      !coordinate(approachX)||!coordinate(approachZ))return -1;
-  IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  IntentState& s=state();s.timingRejection=0;const uint64_t actor=uint64_t(actorId);
   const auto found=s.activeIntents.find(actor);
   if(found==s.activeIntents.end()||!found->second.animal||
      found->second.state!=PlanningState::NeedsPlan)return -2;
@@ -1697,13 +1804,25 @@ int nav_intent_replan_attack_route(double actorId,double startX,double startZ,
     emitIntentChange(s,intent);
     return 3;
   }
+  const float* points=spatial_world_route_ptr();
+  RouteSlot candidate;
+  if(intent.timingMode){
+    candidate.points.assign(points,points+size_t(count)*2);
+    const int timing=prepareRouteTiming(candidate,actor,startX,startZ,s.effectiveTime,
+      intent.timingRadius,intent.timingMode);
+    recordTimingResult(s,timing);
+    if(timing!=1){
+      intent.state=PlanningState::WaitingUnknown;intent.topology=lazy_route_revision();
+      emitIntentChange(s,intent);return 3;
+    }
+  }
   uint32_t slot=uint32_t(s.routeSlots.size());
   for(uint32_t i=0;i<s.routeSlots.size();i++)
     if(!s.routeSlots[i].active){slot=i;break;}
   if(slot==s.routeSlots.size())s.routeSlots.emplace_back();
   RouteSlot& route=s.routeSlots[slot];
-  const float* points=spatial_world_route_ptr();
-  route.points.assign(points,points+size_t(count)*2);
+  if(intent.timingMode){candidate.generation=route.generation;route=std::move(candidate);}
+  else route.points.assign(points,points+size_t(count)*2);
   route.active=true;route.generation++;
   if(!route.generation)route.generation=1;
   intent.slot=slot;intent.generation=route.generation;
@@ -1800,10 +1919,12 @@ float* nav_intent_attack_route_input_ptr(int count){
   return s.attackRouteInput.data();
 }
 int nav_intent_register_attack(double actorId,double targetId,
-                               double startX,double startZ,int count){
+                               double startX,double startZ,int count,int timingMode=0,
+                               double timingRadius=0){
   if(!integer(actorId)||!integer(targetId)||!coordinate(startX)||
-     !coordinate(startZ)||count<0||count>4096)return -1;
-  IntentState& s=state();
+     !coordinate(startZ)||count<0||count>4096||(timingMode!=0&&timingMode!=1)||
+     timingMode==1&&(!std::isfinite(timingRadius)||timingRadius<=0||timingRadius>2))return -1;
+  IntentState& s=state();s.timingRejection=0;
   if(s.attackRouteInput.size()<size_t(count)*2)return -1;
   const uint64_t actor=uint64_t(actorId),targetIdValue=uint64_t(targetId);
   const auto target=s.targets.find(targetIdValue);
@@ -1831,6 +1952,14 @@ int nav_intent_register_attack(double actorId,double targetId,
   if(prior!=s.activeIntents.end()){
     if(!prior->second.animal||prior->second.state==PlanningState::ActionActive)
       return -4;
+  }
+  RouteSlot candidate;
+  if(timingMode){
+    candidate.points.assign(s.attackRouteInput.begin(),s.attackRouteInput.begin()+size_t(count)*2);
+    const int timing=prepareRouteTiming(candidate,actor,startX,startZ,s.effectiveTime,timingRadius,timingMode);
+    recordTimingResult(s,timing);if(timing!=1)return -7;
+  }
+  if(prior!=s.activeIntents.end()){
     releaseIntent(s,actor,PlanningState::Cancelled);
     s.activeIntents.erase(actor);
   }
@@ -1838,7 +1967,8 @@ int nav_intent_register_attack(double actorId,double targetId,
   for(uint32_t i=0;i<s.routeSlots.size();i++)if(!s.routeSlots[i].active){slot=i;break;}
   if(slot==s.routeSlots.size())s.routeSlots.emplace_back();
   RouteSlot& route=s.routeSlots[slot];
-  route.points.assign(s.attackRouteInput.begin(),
+  if(timingMode){candidate.generation=route.generation;route=std::move(candidate);}
+  else route.points.assign(s.attackRouteInput.begin(),
     s.attackRouteInput.begin()+size_t(count)*2);
   route.active=true;route.generation++;
   if(!route.generation)route.generation=1;
@@ -1846,6 +1976,7 @@ int nav_intent_register_attack(double actorId,double targetId,
     slot,route.generation,lazy_route_revision(),true,false};
   intent.profile=lazy_selected_context();
   intent.routeStartX=float(startX);intent.routeStartZ=float(startZ);
+  intent.timingMode=timingMode;intent.timingRadius=timingMode?timingRadius:0;
   s.activeIntents.insert_or_assign(actor,intent);
   s.byTarget[targetIdValue].insert(actor);
   emitIntentChange(s,s.activeIntents.at(actor));
@@ -2013,9 +2144,9 @@ int nav_intent_cancel_home(double actorId){
 int nav_intent_register_attack_site(double actorId,double targetId,
                                     double startX,double startZ,int count,
                                     double approachX,double approachZ,
-                                    double radius){
+                                    double radius,int timingMode=0){
   if(!integer(actorId)||!coordinate(approachX)||!coordinate(approachZ)||
-     !std::isfinite(radius)||radius<=0||radius>2)return -1;
+      !std::isfinite(radius)||radius<=0||radius>2||(timingMode!=0&&timingMode!=1))return -1;
   IntentState& s=state();
   for(const auto& [owner,intent]:s.activeIntents){
     // A retreat route records its exit as an approach coordinate, but has no
@@ -2027,7 +2158,7 @@ int nav_intent_register_attack_site(double actorId,double targetId,
                                      double(intent.approachZ)-approachZ);
     if(distance<double(intent.approachRadius)+radius+0.1)return -6;
   }
-  const int result=nav_intent_register_attack(actorId,targetId,startX,startZ,count);
+  const int result=nav_intent_register_attack(actorId,targetId,startX,startZ,count,timingMode,radius);
   if(result!=1)return result;
   ActiveIntent& intent=s.activeIntents.at(uint64_t(actorId));
   intent.approachX=float(approachX);intent.approachZ=float(approachZ);
@@ -2125,8 +2256,8 @@ double* nav_intent_attack_reserved_targets_ptr(int count){
 }
 int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
                                 double radius,int cropsEligible,int blockerCount,
-                                int reservedTargetCount){
-  IntentState& s=state();s.attackResult.fill(0);
+                                int reservedTargetCount,int timingMode=0){
+  IntentState& s=state();s.attackResult.fill(0);s.timingRejection=0;
   if(!integer(actorId)||!coordinate(startX)||!coordinate(startZ)||
      !std::isfinite(radius)||radius<=0||radius>2||
      (cropsEligible!=0&&cropsEligible!=1)||
@@ -2134,7 +2265,7 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
      s.attackBlockers.size()!=size_t(blockerCount)*3||
      reservedTargetCount<0||reservedTargetCount>100000||
      s.attackReservedTargets.size()!=size_t(reservedTargetCount)||
-     lazy_selected_context()==1)return -1;
+      lazy_selected_context()==1||(timingMode!=0&&timingMode!=1))return -1;
   for(int i=0;i<blockerCount;i++){
     const size_t offset=size_t(i)*3;
     if(!coordinate(s.attackBlockers[offset])||
@@ -2265,7 +2396,7 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
       const float* route=spatial_world_route_ptr();
       s.attackRouteInput.assign(route,route+size_t(count)*2);
       lastRegisterResult=nav_intent_register_attack_site(actorId,double(crop.id),
-        startX,startZ,count,px,pz,radius);
+        startX,startZ,count,px,pz,radius,timingMode);
       if(lastRegisterResult!=1)
         return false;
       const ActiveIntent& intent=s.activeIntents.at(actor);

@@ -83,6 +83,9 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     'nav_intent_protocol_version','nav_intent_change_width','nav_intent_set_time',
     'nav_intent_session','nav_intent_transition_sequence','nav_intent_effective_time',
     'nav_intent_control_snapshot','nav_intent_control_snapshot_ptr',
+    'nav_intent_route_timing','nav_intent_route_timing_ptr','nav_intent_route_distances_ptr',
+    'nav_intent_route_sample','nav_intent_route_sample_ptr',
+    'nav_intent_timing_rejection',
     'nav_intent_apply_changes','nav_intent_plan_tasks','nav_intent_results_ptr',
     'nav_intent_restore_assigned_tasks',
     'nav_intent_discard','nav_intent_commit','nav_intent_damaged_structures',
@@ -493,6 +496,28 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     return Float32Array.from(new Float32Array(wasm.memory.buffer,
       wasm.nav_intent_route_ptr(handle.session,handle.slot,handle.generation),count*2));
   };
+  const nativeRouteTiming=handle=>{
+    if(handle?.authorityEpoch!==epoch()||
+       wasm.nav_intent_route_timing(handle.session,handle.slot,handle.generation)!==1)return null;
+    const data=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_timing_ptr(),16)),
+      count=data[9];
+    if(data[0]!==1||data[10]!==1||!Number.isSafeInteger(count)||count<0||count>4096)
+      throw Error('Invalid native route timing contract');
+    const points=routePoints(handle),distances=Float64Array.from(new Float64Array(wasm.memory.buffer,
+      wasm.nav_intent_route_distances_ptr(handle.session,handle.slot,handle.generation),count));
+    if(!points||points.length!==count*2)throw Error('Native route timing lost its pinned geometry');
+    return Object.freeze({actorId:data[1],routeHandle:handle,startTime:data[2],endTime:data[3],
+      speed:data[4],radius:data[5],origin:Object.freeze({x:data[6],z:data[7]}),distance:data[8],
+      duration:data[3]-data[2],assignmentSequence:data[11],profile:data[12],points,distances,
+      executionScope:'static-desert-animal',authorizedAutonomy:false});
+  };
+  const sampleNativeRoute=(handle,at)=>{
+    if(handle?.authorityEpoch!==epoch()||
+       wasm.nav_intent_route_sample(handle.session,handle.slot,handle.generation,at)!==1)return null;
+    const data=new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_sample_ptr(),9);
+    return {x:data[0],z:data[1],distance:data[2],phase:data[3],yaw:data[4],
+      firstRemainingPoint:data[5],arrived:data[6]===1,at:data[7],duration:data[8]};
+  };
   const projectRouteProgress=state=>{
     let accepted=0;
     for(const actors of [state.workers,state.raid?.animals??[]])for(const actor of actors){
@@ -609,13 +634,15 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       reservedTargets.length).set(reservedTargets);
     return {blockerCount:blockers.length,reservedTargetCount:reservedTargets.length};
   };
-  const planAttackCrop=(state,animal)=>{
+  const planAttackCrop=(state,animal,{timedRoute=false}={})=>{
+    if(typeof timedRoute!=='boolean'||timedRoute&&animal.status!=='walking')
+      throw TypeError('Native timed AttackCrops currently requires a walking intention');
     if(!initialized||!state.raid)throw Error('No native raid intention session');
     const transient=prepareAttackTransients(state,animal);
     if(!transient)return null;
     const status=wasm.nav_intent_plan_attack_crop(numericId(animal.id),
       animal.x,animal.z,animal.radius,1,transient.blockerCount,
-      transient.reservedTargetCount);
+      transient.reservedTargetCount,timedRoute?1:0);
     if(status<0)throw Error(`Native crop intention rejected: ${status}`);
     const values=new Float64Array(wasm.memory.buffer,
       wasm.nav_intent_attack_result_ptr(),13);
@@ -639,7 +666,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
         x:values[2],z:values[3]},path:Array.from(
         {length:coordinates.length/2},(_,index)=>({
           x:coordinates[index*2],z:coordinates[index*2+1]}))},
-      native:true,routeHandle:handle,groupId:values[7],
+      native:true,routeHandle:handle,...(timedRoute?{motionPlan:nativeRouteTiming(handle)}:{}),groupId:values[7],
       regionQueries:values[8],routeQueries:values[9]};
   };
   const planAttackWall=(state,animal)=>{
@@ -678,8 +705,8 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     // The native route planner distinguishes an incomplete graph from a
     // physically blocked route to this particular interaction point. Neither
     // verdict certifies that every side of the target is blocked.
-    if(status===3)return {status:wasm.spatial_world_route_reason()===0?
-      'blocked-approach':'unknown'};
+    if(status===3)return {status:wasm.nav_intent_timing_rejection()!==0?'unknown':
+      wasm.spatial_world_route_reason()===0?'blocked-approach':'unknown'};
     if(status!==1)throw Error(`Native attack reroute rejected: ${status}`);
     if(wasm.nav_intent_actor(numericId(animal.id))!==1)
       throw Error('Native attack reroute lost its active intention');
@@ -863,7 +890,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     structureFor:id=>structuresById.get(numericId(id))??null,
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
-    intentChanges,routePoints,projectRouteProgress,processEventBoundary,requestReroute,
+    intentChanges,routePoints,nativeRouteTiming,sampleNativeRoute,projectRouteProgress,processEventBoundary,requestReroute,
     registerAttackIntent,planAttackCrop,planAttackWall,replanAttackRoute,
     planRetreatRoute,planHomeRoute,
     cancelHomeIntent:actorId=>wasm.nav_intent_cancel_home(numericId(actorId))===1,
@@ -1770,5 +1797,6 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     observeNativeIntentControl:bridge.observeNativeIntentControl,
     flushNativeIntentControl:bridge.flushNativeIntentControl,
     intentChanges:bridge.intentChanges,routePoints:bridge.routePoints,
+    nativeRouteTiming:bridge.nativeRouteTiming,sampleNativeRoute:bridge.sampleNativeRoute,
     discard:bridge.discard,commit:bridge.commit,sequence:bridge.sequence};
 }

@@ -337,3 +337,35 @@ Regresión dirigida posterior: **223 aprobadas sin skips**, con el WASM recién
 reconstruido y ABI de la nueva operación comprobado también en pthread. La
 aritmética float del barrido heredado se conserva; el margen double se usa solo
 cuando la nueva operación de ejecución lo solicita explícitamente.
+
+## Candidatos temporales nativos sobre la misma ruta versionada
+
+`RouteSlot` conserva origen, tiempo inicial, velocidad, radio/perfil y distancias
+acumuladas junto a su geometría y generación. El modo temporal 1 comprueba el
+barrido continuo antes de publicar la asignación; un fallo de preparación no
+revoca la versión anterior. El modo 0 conserva los llamadores y el comportamiento
+de producto existentes. El bridge ofrece `planAttackCrop(...,{timedRoute:true})`
+solo para marcha estable; rechaza `entering`, cuya transición 3,8 → 1,5 m/s no se
+ha sustituido por una velocidad constante.
+
+`nativeRouteTiming(handle)` copia ese candidato; `sampleNativeRoute(handle,at)`
+evalúa su posición/tangente/fase con búsqueda binaria de distancia, satura en la
+hora final declarada y no planifica, valida, publica posiciones ni mueve actores.
+La invalidación retira el handle exacto y la replanificación del mismo objetivo
+conserva el modo/radio temporal. La suscripción espacial incluye ahora las muestras
+de pendiente y los vértices del terreno que pueden afectar el barrido. La
+comprobación continua por eventos sigue siendo nativa, no una revisión por tick.
+
+Evidencia: **229 pruebas dirigidas aprobadas sin skips**, standalone recién
+reconstruido y exports temporales comprobados en pthread. Las seis pruebas nuevas
+cubren el plan completo de varios segundos, 1.000 evaluaciones sin planificación
+ni validación, paridad con `walkTo` protegido, revocación/reemplazo por evento,
+compatibilidad untimed/entering y fallo atómico de preparación. También comprueban
+saturación, rechazo de tiempos inválidos y retiro por reset de autoridad.
+
+**Límite explícito:** `executionScope:'static-desert-animal'` y
+`authorizedAutonomy:false`. No hay ejecución lógica de estos candidatos, reservas
+de trayectorias, conflictos temporales, garantía causal del reloj ni seguridad
+pre-mutation. No se conectan al movimiento GPU ni se retiran guardas JS. A6 y el
+acceso a B/C permanecen abiertos/bloqueados respectivamente; esta regresión
+dirigida no declara limpia la suite completa ni sustituye aceptación real A–F.
