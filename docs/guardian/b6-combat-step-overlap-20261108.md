@@ -7,3 +7,7 @@ Resultado: 249 ticks con planes temporales de ataque, 249 coincidentes con al me
 Es una estimación superior, no un recuento de rechazos gráficos reales: solicitar un chunk no demuestra que su geometría esté visible, y la prueba usa la orientación del estado en vez de las orientaciones visuales del Worker. Tampoco registra otros motivos de rechazo, dibuja WebGPU ni mide tiempo de fotograma. No extrapolar sus cifras a otros biomas o capturas.
 
 La siguiente integración debe mantener el nacimiento, posición, duración, terreno y cancelación de cada pisada bajo el mismo horizonte confirmado, incluidas las ondulaciones de agua, sin eliminar efectos ni introducir partículas prematuras. Hasta entonces la barrera existente sigue protegiendo la sincronización. Esta evidencia no demuestra una mejora de rendimiento.
+
+El cálculo de cruce, posición y tiempo de los marcadores se comparte ahora mediante `locomotionStepsBetween` con el observador de presentación existente, sin asignar una lista adicional por actor. Las pruebas cubren todos los clips medidos de los cuatro perfiles y cinco especies, orientación, posición y huecos largos; 39 casos pasan. La auditoría WASM conserva exactamente los mismos recuentos tras la extracción. La batería antigua `locomotion-vfx.test.js` mantiene cinco fallos de validación de fixture de incursión también reproducidos con la versión anterior.
+
+Esta extracción prepara la futura reproducción histórica: todavía no prevé nacimientos, no incorpora pisadas al horizonte ni retira la barrera. No demuestra una mejora de rendimiento.
