@@ -67,7 +67,12 @@ camino crítico sin pedir autorización rutinaria entre hitos.
       La misma ruta versionada incorpora ahora tiempos/distancias nativos para
       candidatos AttackCrops en marcha estable a 1,5 m/s, evaluables sin volver
       a planificar ni validar. Opt-in de prueba, `authorizedAutonomy:false`;
-      faltan reservas, ejecución lógica y garantías de reloj/mutación.
+      faltan ejecución lógica y garantías completas de reloj/mutación.
+      Reservas opt-in en el mismo slot ya anticipan conflictos continuos entre
+      trayectorias y destinos detenidos, usando cuerpos e índices existentes.
+      Mutaciones de cuerpos incompatibles se rechazan antes de aplicarse;
+      253 pruebas dirigidas pasan sin skips. Aún conservadoras, sin resolver
+      cesiones/desvíos ni autorizar movimiento de producto/GPU.
 - [ ] Vertical AttackCrops completa y aceptación real A–F.
 - [ ] Generalizar a otras bestias, trabajadores, intenciones y animaciones;
       retirar planificación/validaciones duplicadas por clase validada.

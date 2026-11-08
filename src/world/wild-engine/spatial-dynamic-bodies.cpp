@@ -9,6 +9,7 @@
 #include <limits>
 #include <array>
 #include <cstring>
+#include "spatial-dynamic-bodies.h"
 extern "C" int spatial_local_clear(float,float,float,float);
 extern "C" uint32_t lazy_route_revision();
 extern "C" int lazy_selected_context();
@@ -128,7 +129,7 @@ __attribute__((noinline)) int indexedSegment(uint64_t id,const Body& actor,doubl
 }
 }
 extern "C" {
-void spatial_bodies_reset(){bodies.clear();cells.clear();unindexed.clear();maxRadius=0;indexed=false;result.clear();for(auto& cache:terrainEdges){cache.values.clear();cache.initialized=false;}terrainCacheHits=terrainCacheMisses=0;blockedEdges.clear();blockedEdgeHits=blockedEdgeRechecks=blockedEdgeMisses=0;nextBodyRevision=1;lastSegmentBlocked=false;
+void spatial_bodies_reset(){spatialIntentBodiesResetting();bodies.clear();cells.clear();unindexed.clear();maxRadius=0;indexed=false;result.clear();for(auto& cache:terrainEdges){cache.values.clear();cache.initialized=false;}terrainCacheHits=terrainCacheMisses=0;blockedEdges.clear();blockedEdgeHits=blockedEdgeRechecks=blockedEdgeMisses=0;nextBodyRevision=1;lastSegmentBlocked=false;
 #ifdef WILD_CENTRAL_MOBILITY
  mobilityInput.clear();mobilityOutput.clear();
 #endif
@@ -141,7 +142,8 @@ double spatial_body_blocked_edge_rechecks(){return double(blockedEdgeRechecks);}
 double spatial_body_blocked_edge_misses(){return double(blockedEdgeMisses);}
 int spatial_body_blocked_edge_entries(){return int(blockedEdges.size());}
 int spatial_body_upsert(double id,double x,double z,double radius,int kind,int flags){
- if(!validId(id)||!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(radius)||radius<0||(kind!=0&&kind!=1))return 0;
+  if(!validId(id)||!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(radius)||radius<0||(kind!=0&&kind!=1))return 0;
+  if(!spatialIntentBodyCanChange(uint64_t(id),{x,z,radius,kind,flags}))return 0;
  const uint64_t key=uint64_t(id);const auto prior=bodies.find(key);const bool unchanged=prior!=bodies.end()&&bits(prior->second.x)==bits(x)&&bits(prior->second.z)==bits(z)&&bits(prior->second.r)==bits(radius)&&prior->second.kind==kind&&prior->second.flags==flags;const Body body{x,z,radius,kind,flags,unchanged?prior->second.revision:nextBodyRevision++};
  if(!indexed){
   bodies[key]=body;maxRadius=std::max(maxRadius,radius);
@@ -152,7 +154,7 @@ int spatial_body_upsert(double id,double x,double z,double radius,int kind,int f
  indexAdd(key,body);
  return 1;
 }
-int spatial_body_remove(double id){if(!validId(id))return 0;auto it=bodies.find(uint64_t(id));if(it==bodies.end())return 0;if(indexed)indexRemove(it->first,it->second);bodies.erase(it);if(indexed&&bodies.size()<32){cells.clear();unindexed.clear();indexed=false;}return 1;}
+int spatial_body_remove(double id){if(!validId(id))return 0;auto it=bodies.find(uint64_t(id));if(it==bodies.end())return 0;spatialIntentBodyRemoving(it->first);if(indexed)indexRemove(it->first,it->second);bodies.erase(it);if(indexed&&bodies.size()<32){cells.clear();unindexed.clear();indexed=false;}return 1;}
 int spatial_body_count(){return int(bodies.size());}
 // A negative range asks for all participating bodies; otherwise the same
 // conservative square as actorBlockers is used, including both radii.
@@ -166,6 +168,21 @@ int spatial_body_has_blockers(double id,double range){
   const double reach=range+actor.r+b.r;return range<0||(std::abs(actor.x-b.x)<=reach&&std::abs(actor.z-b.z)<=reach);
  })?1:0;
 }
+} // extern "C"
+bool spatialReadBody(uint64_t id,SpatialBodyView& out){
+  const auto found=bodies.find(id);if(found==bodies.end())return false;
+  const auto& b=found->second;out={b.x,b.z,b.r,b.kind,b.flags};return true;
+}
+bool spatialBodiesParticipate(const SpatialBodyView& actor,const SpatialBodyView& other){
+  return participates({actor.x,actor.z,actor.r,actor.kind,actor.flags,0},
+    {other.x,other.z,other.r,other.kind,other.flags,0},-1);
+}
+void spatialVisitBodiesBox(double minX,double minZ,double maxX,double maxZ,
+    SpatialBodyVisitor visitor,void* context){
+  visitBox(minX-maxRadius,minZ-maxRadius,maxX+maxRadius,maxZ+maxRadius,
+    [&](uint64_t id,const Body& b){visitor(id,{b.x,b.z,b.r,b.kind,b.flags},context);return false;});
+}
+extern "C" {
 // Conservative square query, deterministically ordered by ID. A caller can
 // compare the exact current state without round-tripping the entire registry.
 int spatial_bodies_near(double x,double z,double reach){

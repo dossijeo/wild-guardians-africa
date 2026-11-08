@@ -369,3 +369,53 @@ de trayectorias, conflictos temporales, garantía causal del reloj ni seguridad
 pre-mutation. No se conectan al movimiento GPU ni se retiran guardas JS. A6 y el
 acceso a B/C permanecen abiertos/bloqueados respectivamente; esta regresión
 dirigida no declara limpia la suite completa ni sustituye aceptación real A–F.
+
+## Reservas continuas y frontera de mutación de cuerpos — 2026-11-09
+
+La admisión `reserveNativeRoute(handle,bodyId)` liga el candidato temporal a una
+identidad del registro físico nativo existente. `RouteSlot` conserva la reserva;
+el índice inverso cuerpo → slot solo referencia esa misma ruta. No hay otro
+planificador, grafo ni copia de trayectorias o cuerpos. Se exige perfil/topología
+vigentes, origen/radio/actividad concordantes y reloj de asignación actual. Un
+rechazo no altera el candidato, la reserva anterior, los cuerpos ni el log.
+
+El narrow phase corta ambas trayectorias en la unión de sus tiempos de waypoint
+y resuelve analíticamente la separación relativa afín en cada intervalo, con
+margen conservador de redondeo. Incluye el cuerpo detenido en el destino durante
+tiempo indefinido. La admisión consulta los suscriptores de sectores existentes
+para otras rutas y el índice físico existente para discos actuales. El testigo
+de conflicto conserva cuerpo/actor, generación e instante de primer contacto;
+empates se ordenan por identidad, no por orden de tablas hash.
+
+El registro de cuerpos llama una frontera nativa **antes** de modificar posición,
+radio, tipo o participación. Una inserción/actualización que invada una reserva
+futura se rechaza atómicamente. Los cambios lejanos no inspeccionan polilíneas.
+Un cuerpo ligado no puede moverse ni cambiar política silenciosamente; publicación
+idéntica sigue siendo válida. Eliminar/resetear cuerpos retira primero las rutas
+ligadas con sus handles revocados exactos. Finalizar/cancelar/invalidar rutas
+retira sus reservas con el ciclo de vida existente. El ejecutor JS no puede
+modificar el cursor de una ruta reservada.
+
+Se reutiliza la política nativa existente de encuentros trabajador/animal: no se
+prohíbe el contacto de combate permitido ni se inventa una regla de separación.
+El escape de solapamientos heredados sigue fuera de la admisión ordinaria y
+mantiene sus guardas anteriores. Las sesiones sin reservas conservan su conducta.
+
+**Evidencia:** 11 pruebas nuevas con terreno/WASM real; cruce anticipado, mismo
+cruce separado temporalmente, destino detenido, cuerpo estacionario, mutación
+atómica, excepciones de contacto, retirada/reset, handles/perfiles/tiempos,
+primer contacto entre waypoints repetidos e índice con 120 cuerpos lejanos.
+Las fronteras de acción/cancelación retienen la protección de golpes comprometidos.
+La batería ampliada tiene **253 aprobadas sin skips**, incluido ABI pthread y
+paridad de detours/contactos frente al WASM previo de Git. Mil evaluaciones del
+reloj no vuelven a admitir ni comprobar conflictos. Log local:
+`.cache/native-route-reservations-regression.tap`.
+
+**Límites:** opt-in, `authorizedAutonomy:false`. Los discos físicos actuales se
+conservan ocupados además de las trayectorias: es una admisión conservadora,
+no la política de tráfico final. Un conflicto todavía no desencadena cesión,
+desvío ni ejecución lógica. La frontera nueva solo protege mutaciones del
+registro físico, no puertas/terreno/topología ni publicaciones gráficas ya en
+vuelo. No se ha habilitado movimiento GPU, retirado JS ni superado el gate C de
+tráfico integrado. Siguen pendientes reloj causal, pérdida de canal, frontera
+de mutación completa y aceptación real A–F; **A6 permanece abierto**.

@@ -11,6 +11,7 @@
 #include <unordered_set>
 #include <utility>
 #include <vector>
+#include "spatial-dynamic-bodies.h"
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
 #else
@@ -138,6 +139,8 @@ struct RouteSlot {
   uint64_t actor=0;
   int timingMode=0,profile=0;
   uint32_t generation=0;bool active=false;
+  // Admission fence in the existing slot, not a duplicate trajectory store.
+  bool reserved=false;uint64_t reservationBody=0;
 };
 struct Change {
   int op,kind;
@@ -209,6 +212,10 @@ struct IntentState {
   std::array<double,9> sampleResult{};
   uint64_t routeTimeSamples=0;
   int timingRejection=0;
+  std::map<uint64_t,uint32_t> reservedBodies;
+  std::array<double,6> reservationResult{};
+  uint64_t reservationChecks=0,reservationPairs=0,reservationBodyChecks=0,
+    reservationMutationCandidates=0;
   uint32_t session=0;
   uint64_t invalidations=0;
   std::unordered_map<uint64_t,uint64_t> planningCallsByActor;
@@ -415,6 +422,7 @@ void releaseRoute(IntentState& s,ActiveIntent& intent){
     RouteSlot& route=s.routeSlots[intent.slot];
     if(route.active&&route.generation==intent.generation){
       intent.revokedSlot=intent.slot;intent.revokedGeneration=intent.generation;
+      if(route.reserved){s.reservedBodies.erase(route.reservationBody);route.reserved=false;}
       route.active=false;route.points.clear();route.distances.clear();route.timingMode=0;
       route.generation++;
     }
@@ -441,6 +449,7 @@ void releaseIntent(IntentState& s,uint64_t actor,PlanningState next){
   emitIntentChange(s,intent);
   intent.task=0;intent.target=0;s.invalidations++;
 }
+#include "spatial-route-reservations.h"
 void invalidateDependents(IntentState& s,const Change& change){
   if(change.kind==1){
     if(!change.op){
@@ -820,6 +829,15 @@ ServiceRoute findServiceRoute(const Worker& worker,const Target& target,int kind
 }
 }
 
+bool spatialIntentBodyCanChange(uint64_t id,const SpatialBodyView& proposed){
+  return reservationBodyCanChange(state(),id,proposed);
+}
+void spatialIntentBodyRemoving(uint64_t id){reservationBodyRemoving(state(),id);}
+void spatialIntentBodiesResetting(){
+  auto& s=state();
+  while(!s.reservedBodies.empty())reservationBodyRemoving(s,s.reservedBodies.begin()->first);
+}
+
 extern "C" {
 // Native graph mutation notifications only enqueue inverse dependents. Physical
 // validation runs after the graph transaction is coherent, never from a draw or
@@ -859,6 +877,8 @@ void nav_intent_reset(){
   s.byBlockedCropGroup.clear();s.wallOpportunityActors.clear();
   s.routeSlots.clear();s.intentChanges.clear();s.controlSnapshot.clear();s.intentResult.fill(0);
   s.timingResult.fill(0);s.sampleResult.fill(0);s.routeTimeSamples=0;s.timingRejection=0;
+  s.reservedBodies.clear();s.reservationResult.fill(0);
+  s.reservationChecks=s.reservationPairs=s.reservationBodyChecks=s.reservationMutationCandidates=0;
   s.attackRouteInput.clear();s.attackBlockers.clear();
   s.attackReservedTargets.clear();s.attackResult.fill(0);
   s.wallAttackResult.fill(0);
@@ -1639,6 +1659,36 @@ EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_sample_ptr(){return state().
 EMSCRIPTEN_KEEPALIVE double nav_intent_route_time_samples(){return double(state().routeTimeSamples);}
 EMSCRIPTEN_KEEPALIVE int nav_intent_timing_rejection(){return state().timingRejection;}
 
+EMSCRIPTEN_KEEPALIVE int nav_intent_route_reserve(double session,double slot,double generation,double body){
+  IntentState& s=state();s.reservationResult.fill(0);
+  if(!integer(body,true)||nav_intent_route_points(session,slot,generation)<0)return -1;
+  auto& route=s.routeSlots[size_t(slot)];
+  const auto found=s.activeIntents.find(route.actor);
+  if(!route.timingMode||found==s.activeIntents.end()||found->second.state!=PlanningState::RouteActive||
+     found->second.slot!=uint32_t(slot)||found->second.generation!=uint32_t(generation))return -2;
+  if(route.reserved)return route.reservationBody==uint64_t(body)?1:-3;
+  if(route.startTime!=s.effectiveTime||route.points.empty()||found->second.routeCursor)return -2;
+  const int previous=lazy_selected_context();
+  if(previous!=route.profile)spatial_select_nav_profile_index(route.profile);
+  const bool topology=found->second.topology==lazy_route_revision();
+  if(previous!=route.profile)spatial_select_nav_profile_index(previous);
+  if(!topology)return -2;
+  SpatialBodyView physical;
+  if(!spatialReadBody(uint64_t(body),physical)||physical.kind!=1||!(physical.flags&1)||
+     (physical.flags&6)||physical.x!=route.originX||physical.z!=route.originZ||
+     physical.r!=route.radius||s.reservedBodies.count(uint64_t(body)))return -3;
+  s.reservationChecks++;
+  if(!reserveRouteClear(s,found->second,route,uint64_t(body),physical))return 0;
+  route.reserved=true;route.reservationBody=uint64_t(body);
+  s.reservedBodies.emplace(uint64_t(body),uint32_t(slot));return 1;
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_reservation_result_ptr(){return state().reservationResult.data();}
+EMSCRIPTEN_KEEPALIVE int nav_intent_route_reservation_count(){return int(state().reservedBodies.size());}
+EMSCRIPTEN_KEEPALIVE double nav_intent_route_reservation_checks(){return double(state().reservationChecks);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_route_reservation_pairs(){return double(state().reservationPairs);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_route_reservation_body_checks(){return double(state().reservationBodyChecks);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_route_reservation_mutation_candidates(){return double(state().reservationMutationCandidates);}
+
 // A topological event may be unrelated to an active worker path. Validate the
 // pinned polyline against the updated native collision map at this boundary,
 // rather than discarding every route merely because the global revision moved.
@@ -1699,6 +1749,9 @@ int nav_intent_route_progress(double actorId,double x,double z,int count){
   if(intent.slot>=s.routeSlots.size())return 0;
   const RouteSlot& route=s.routeSlots[intent.slot];
   if(!route.active||route.generation!=intent.generation)return 0;
+  // A reservation must not silently adopt a JS detour/cursor. Logical native
+  // execution will advance it; until connected, release explicitly first.
+  if(route.reserved)return 0;
   const auto reject=[&](){
     intent.routeCursor=uint32_t(route.points.size()/2+1);
     s.changedRouteActors.insert(intent.actor);

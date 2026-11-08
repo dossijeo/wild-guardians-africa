@@ -86,6 +86,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     'nav_intent_route_timing','nav_intent_route_timing_ptr','nav_intent_route_distances_ptr',
     'nav_intent_route_sample','nav_intent_route_sample_ptr',
     'nav_intent_timing_rejection',
+    'nav_intent_route_reserve','nav_intent_route_reservation_result_ptr',
     'nav_intent_apply_changes','nav_intent_plan_tasks','nav_intent_results_ptr',
     'nav_intent_restore_assigned_tasks',
     'nav_intent_discard','nav_intent_commit','nav_intent_damaged_structures',
@@ -518,6 +519,18 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     return {x:data[0],z:data[1],distance:data[2],phase:data[3],yaw:data[4],
       firstRemainingPoint:data[5],arrived:data[6]===1,at:data[7],duration:data[8]};
   };
+  const reserveNativeRoute=(handle,bodyId)=>{
+    if(handle?.authorityEpoch!==epoch())return {status:'stale',authorizedAutonomy:false};
+    const result=wasm.nav_intent_route_reserve(handle.session,handle.slot,handle.generation,bodyId);
+    const status=result===1?'reserved':result===0?'conflict':result===-1?'stale':
+      result===-2?'unsupported':result===-3?'body-mismatch':null;
+    if(!status)throw Error(`Native route reservation rejected: ${result}`);
+    const data=Array.from(new Float64Array(wasm.memory.buffer,
+      wasm.nav_intent_route_reservation_result_ptr(),6));
+    return {status,authorizedAutonomy:false,...(data[0]?{conflict:{
+      kind:data[0]===2?'trajectory':data[0]===3?'bound-body-mutation':'stationary-body',
+      bodyId:data[1],actorId:data[2],at:data[3],slot:data[4],generation:data[5]}}:{})};
+  };
   const projectRouteProgress=state=>{
     let accepted=0;
     for(const actors of [state.workers,state.raid?.animals??[]])for(const actor of actors){
@@ -890,7 +903,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     structureFor:id=>structuresById.get(numericId(id))??null,
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
-    intentChanges,routePoints,nativeRouteTiming,sampleNativeRoute,projectRouteProgress,processEventBoundary,requestReroute,
+    intentChanges,routePoints,nativeRouteTiming,sampleNativeRoute,reserveNativeRoute,projectRouteProgress,processEventBoundary,requestReroute,
     registerAttackIntent,planAttackCrop,planAttackWall,replanAttackRoute,
     planRetreatRoute,planHomeRoute,
     cancelHomeIntent:actorId=>wasm.nav_intent_cancel_home(numericId(actorId))===1,
@@ -1798,5 +1811,6 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     flushNativeIntentControl:bridge.flushNativeIntentControl,
     intentChanges:bridge.intentChanges,routePoints:bridge.routePoints,
     nativeRouteTiming:bridge.nativeRouteTiming,sampleNativeRoute:bridge.sampleNativeRoute,
+    reserveNativeRoute:bridge.reserveNativeRoute,
     discard:bridge.discard,commit:bridge.commit,sequence:bridge.sequence};
 }
