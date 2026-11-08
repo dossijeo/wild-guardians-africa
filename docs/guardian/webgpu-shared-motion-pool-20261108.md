@@ -12,6 +12,8 @@ Pasaron 102 pruebas de movimiento, binding, roster y rigs, incluyendo ranuras in
 
 La prueba histórica completa `audit_confirmed_gpu_motion_webgpu.mjs` no terminó: su caso existente de animal real informó `Animal has no pixels` antes de llegar al nuevo caso. La causa no se ha establecido. La prueba aislada `QA_POOLED_ONLY=1` sí pasó, pero solo cubre dos objetos geométricos; no demuestra paridad de rigs, sombras, morphs, ataques o recuperaciones. La incursión real verificó ocho ranuras activas y ocho animales visibles sin errores de recursos notificados, pero no establece paridad visual. No activar por defecto hasta resolver estas limitaciones y validar más biomas, cámaras, cargas y sesiones largas.
 
+Actualización posterior: se identificó y corrigió la composición de normales que impedía dibujar el facóquero, y la batería WebGPU completa pasó con el modelo real. También se corrigió una variante de sombra obsoleta al sustituir materiales. [Resultados, alcance y limitaciones](webgpu-motion-normal-shadow-20261108.md); el almacén continúa desactivado por defecto.
+
 ## Comparación A/B/B/A
 
 Incursión guardada de sabana, ocho animales, WebGPU en NVIDIA Turing, Worker auxiliar de hierba y admisión con iluminación compartida activados en ambos casos. A desactiva el almacén mediante una sustitución QA en el módulo servido; B usa la implementación integrada. Todas las ejecuciones terminaron válidas y sin errores de recursos notificados. Los intervalos gráficos son callbacks del Worker, no tiempos GPU ni fotogramas presentados físicamente.

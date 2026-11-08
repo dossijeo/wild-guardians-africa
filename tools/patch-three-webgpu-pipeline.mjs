@@ -39,6 +39,28 @@ const shadowSceneBefore='\t\tconst sceneRef = ( scene.isScene === true ) ? scene
 const shadowSceneAfter='\t\tconst sceneRef = this._wgCompileSceneReference || ( ( scene.isScene === true ) ? scene : _scene );\n\n\t\tif ( targetScene === null ) targetScene = scene;';
 const shadowCallbackBefore='\t\tthis._currentRenderContext = renderContext;\n\t\tthis._currentRenderObjectFunction = this.renderObject;\n\n\t\tthis._handleObjectFunction = this._createObjectPipeline;';
 const shadowCallbackAfter=shadowCallbackBefore.replace('this._currentRenderObjectFunction = this.renderObject;','this._currentRenderObjectFunction = this._wgCompileRenderObjectFunction || this.renderObject;');
+// The same shadow override material and render object survive material swaps.
+// Three only rechecks its cache key after a version change, so changing the
+// selected position graph must invalidate that object's shadow variant.
+const shadowPositionBefore='\t\t\tmaterial = overrideMaterial;';
+const shadowPositionRestoreBefore='\t\t\t\t\toverridePositionNode = overrideMaterial.positionNode;\n\t\t\t\t\toverrideMaterial.positionNode = material.castShadowPositionNode;';
+const shadowPositionRestoreAfter=shadowPositionRestoreBefore.replace('overridePositionNode = overrideMaterial.positionNode;','if ( overridePositionNode === undefined ) overridePositionNode = overrideMaterial.positionNode;');
+const shadowPositionAfter=`\t\t\tif ( overrideMaterial.isShadowPassMaterial === true ) {
+
+\t\t\t\tconst all = this._wgShadowPositionKeys || ( this._wgShadowPositionKeys = new WeakMap() );
+\t\t\t\tlet byMaterial = all.get( object );
+\t\t\t\tif ( byMaterial === undefined ) { byMaterial = new WeakMap(); all.set( object, byMaterial ); }
+\t\t\t\tconst position = overrideMaterial.positionNode || null;
+\t\t\t\tconst version = material === overrideMaterial ? null : material.version;
+\t\t\t\tconst previous = byMaterial.get( overrideMaterial );
+\t\t\t\tif ( previous === undefined || previous.position !== position || previous.material !== material || previous.version !== version ) {
+\t\t\t\t\tbyMaterial.set( overrideMaterial, { position, material, version } );
+\t\t\t\t\toverrideMaterial.needsUpdate = true;
+\t\t\t\t}
+
+\t\t\t}
+
+`+shadowPositionBefore;
 const shadowMethodBefore='\tasync compileAsync( scene, camera, targetScene = null ) {';
 const shadowMethodAfter=`\tcompileShadowAsync( object, scene, camera, light ) {
 
@@ -86,6 +108,7 @@ export function patchPipelineSource(source){
 }
 export function patchPipelineCacheSource(source){return replaceOnce(source,cachedBefore,cachedAfter,'pipeline cache');}
 export function patchShadowCompileSource(source){return replaceOnce(replaceOnce(replaceOnce(source,shadowSceneBefore,shadowSceneAfter,'shadow scene'),shadowCallbackBefore,shadowCallbackAfter,'shadow callback'),shadowMethodBefore,shadowMethodAfter,'shadow method');}
+export function patchShadowPositionSource(source){return replaceOnce(replaceOnce(source,shadowPositionRestoreBefore,shadowPositionRestoreAfter,'shadow position restoration'),shadowPositionBefore,shadowPositionAfter,'shadow position');}
 export function patchMorphInfluenceSource(source){return replaceOnce(source,morphBefore,morphAfter,'morph influence');}
 export function restoreMorphInfluenceSource(source){return replaceOnce(source,morphAfter,morphBefore,'morph influence restoration');}
 
@@ -93,10 +116,10 @@ export async function patchInstalledThree(root='node_modules/three',{stableMorph
  if(typeof stableMorph!=='boolean')throw TypeError('Invalid stable morph setting');
  const metadata=JSON.parse(await readFile(`${root}/package.json`,'utf8'));
  if(metadata.version!=='0.180.0')throw Error(`Unsupported Three.js version: ${metadata.version}`);
- const paths=['src/renderers/webgpu/utils/WebGPUPipelineUtils.js','src/renderers/common/Pipelines.js','build/three.webgpu.js','build/three.webgpu.nodes.js','src/nodes/accessors/MorphNode.js'].map(p=>`${root}/${p}`);
+ const paths=['src/renderers/webgpu/utils/WebGPUPipelineUtils.js','src/renderers/common/Pipelines.js','build/three.webgpu.js','build/three.webgpu.nodes.js','src/nodes/accessors/MorphNode.js','src/renderers/common/Renderer.js'].map(p=>`${root}/${p}`);
  const originals=await Promise.all(paths.map(p=>readFile(p,'utf8')));
  const morph=stableMorph?patchMorphInfluenceSource:restoreMorphInfluenceSource;
- const patched=originals.map((source,i)=>i===0?patchPipelineSource(source):i===1?patchPipelineCacheSource(source):i===4?morph(source):morph(patchShadowCompileSource(patchPipelineCacheSource(patchPipelineSource(source))))); // Validate all before writing any.
+ const patched=originals.map((source,i)=>i===0?patchPipelineSource(source):i===1?patchPipelineCacheSource(source):i===4?morph(source):i===5?patchShadowPositionSource(source):morph(patchShadowPositionSource(patchShadowCompileSource(patchPipelineCacheSource(patchPipelineSource(source)))))); // Validate all before writing any.
  for(let i=0;i<paths.length;i++)if(patched[i]!==originals[i])await writeFile(paths[i],patched[i]);
 }
 

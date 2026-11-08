@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {patchPipelineSource,patchPipelineCacheSource,patchShadowCompileSource,patchMorphInfluenceSource,restoreMorphInfluenceSource} from '../tools/patch-three-webgpu-pipeline.mjs';
+import {patchPipelineSource,patchPipelineCacheSource,patchShadowCompileSource,patchShadowPositionSource,patchMorphInfluenceSource,restoreMorphInfluenceSource} from '../tools/patch-three-webgpu-pipeline.mjs';
 import Pipelines from '../node_modules/three/src/renderers/common/Pipelines.js';
 
 test('installed Three source is patched idempotently and unknown code fails closed',async()=>{
@@ -15,6 +15,8 @@ test('installed Three source is patched idempotently and unknown code fails clos
  }
  for(const path of ['build/three.webgpu.js','build/three.webgpu.nodes.js']){const source=await readFile(`node_modules/three/${path}`,'utf8');assert.equal(patchShadowCompileSource(source),source,path);}
  assert.throws(()=>patchShadowCompileSource('unsupported implementation'),/Unexpected/);
+ for(const path of ['src/renderers/common/Renderer.js','build/three.webgpu.js','build/three.webgpu.nodes.js']){const source=await readFile(`node_modules/three/${path}`,'utf8');assert.equal(patchShadowPositionSource(source),source,path);}
+ assert.throws(()=>patchShadowPositionSource('unsupported implementation'),/Unexpected/);
 });
 
 test('stable morph reference is reproducible, reversible and fails closed',async()=>{
@@ -47,4 +49,9 @@ test('a reused pipeline retains its pending compilation promise',async()=>{
  pipelines.getForRender(renderObject,promises);assert.deepEqual(promises,[pending]);
  let complete=false;const waiting=Promise.all(promises).then(()=>{complete=true;});await Promise.resolve();assert.equal(complete,false);
  finish();await waiting;assert.equal(complete,true);
+});
+
+test('shadow material version changes only when its source or position changes',async()=>{
+ const source=await readFile('node_modules/three/src/renderers/common/Renderer.js','utf8'),match=source.match(/if \( overrideMaterial\.isShadowPassMaterial === true \) \{\n\n\s*const all = this\._wgShadowPositionKeys[\s\S]*?\n\s*\}\n\n\s*\}\n\n\s*material = overrideMaterial;/);assert.ok(match,'shadow tracking guard found');const body=match[0].slice(0,match[0].lastIndexOf('material = overrideMaterial;')),run=new Function('object','material','overrideMaterial',body),renderer={},object={},node={},otherNode={};let changes=0;const shadow={isShadowPassMaterial:true,positionNode:node,version:0,set needsUpdate(value){if(value){this.version++;changes++;}}},material={version:0};
+ run.call(renderer,object,material,shadow);run.call(renderer,object,material,shadow);assert.equal(changes,1);shadow.positionNode=otherNode;run.call(renderer,object,material,shadow);assert.equal(changes,2);material.version++;run.call(renderer,object,material,shadow);assert.equal(changes,3);run.call(renderer,object,material,shadow);assert.equal(changes,3);run.call(renderer,object,shadow,shadow);run.call(renderer,object,shadow,shadow);assert.equal(changes,4,'the override material does not invalidate itself indefinitely');
 });

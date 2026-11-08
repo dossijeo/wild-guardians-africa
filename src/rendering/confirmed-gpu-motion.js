@@ -22,7 +22,7 @@ export function createConfirmedGpuMotion({actorId,clock,maxSegments=64,resourceR
   Loop(maxSegments,({i})=>{If(i.lessThan(count),()=>{const a=textureLoad(path,ivec2(0,i)),b=textureLoad(path,ivec2(1,i));If(time.greaterThanEqual(a.x),()=>{const f=clamp(time.sub(a.x).div(a.y.sub(a.x)),float(0),float(1)),xz=mix(a.zw,b.xy,f);position.assign(vec3(xz.x,mix(b.z,b.w,f),xz.y));});});});
   Loop(maxSegments,({i})=>{If(i.lessThan(yawCount),()=>{const s=textureLoad(yawTexture,ivec2(0,i));If(time.greaterThanEqual(s.x),()=>{yaw.assign(mix(s.z,s.w,clamp(time.sub(s.x).div(s.y.sub(s.x)),float(0),float(1))));});});});
   const value=base.toVar(),world=modelWorldMatrix.mul(vec4(value,1)).xyz.sub(anchor),c=cos(yaw),s=sin(yaw),rotated=vec3(c.mul(world.x).add(s.mul(world.z)),world.y,c.mul(world.z).sub(s.mul(world.x))),worldNormal=modelWorldMatrix.mul(vec4(normalLocal,0)).xyz,rotatedNormal=vec3(c.mul(worldNormal.x).add(s.mul(worldNormal.z)),worldNormal.y,c.mul(worldNormal.z).sub(s.mul(worldNormal.x)));
-  If(yawCount.greaterThan(0),()=>{normalLocal.assign(modelWorldMatrixInverse.mul(vec4(rotatedNormal,0)).xyz.normalize());});return modelWorldMatrixInverse.mul(vec4(rotated.add(position),1)).xyz;
+  normalLocal.assign(yawCount.greaterThan(0).select(modelWorldMatrixInverse.mul(vec4(rotatedNormal,0)).xyz.normalize(),normalLocal));return modelWorldMatrixInverse.mul(vec4(rotated.add(position),1)).xyz;
  })();
  function safeTimeAt(at,start){const raw=relative?floorFloat32(Math.max(0,at-epoch)):Math.fround(Math.max(0,at)),margin=Math.fround(Math.max(Math.abs(raw),1)*0.000000476837158203125);return Math.fround(Math.fround(raw-margin)-start);}
  function install(trace,publicationSequence){
