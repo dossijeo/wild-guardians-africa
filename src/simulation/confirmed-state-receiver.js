@@ -7,6 +7,13 @@ import {validateConfirmedClockSegments} from './confirmed-clock-segments.js';
 import {decodeHistoricalEventBoundaries,groupHistoricalEventBoundaries} from './historical-event-boundaries.js';
 
 function isRecord(value){return value!==null&&typeof value==='object'&&!Array.isArray(value);}
+// Freeze owned publication data without invoking the transport's lazy snapshot
+// getter. Historical decoded states remain private to the transaction.
+function freezeOwned(value,seen=new WeakSet(),allowSnapshotGetter=false){
+ if(!value||typeof value!=='object'||seen.has(value))return value;
+ seen.add(value);for(const [key,descriptor] of Object.entries(Object.getOwnPropertyDescriptors(value))){if('value' in descriptor)freezeOwned(descriptor.value,seen);else if(!allowSnapshotGetter||key!=='snapshot')throw TypeError('Historical owned data contains an accessor');}
+ return Object.freeze(value);
+}
 function keyed(array){return array.length>0&&array.every(item=>isRecord(item)&&typeof item.id==='string')&&new Set(array.map(item=>item.id)).size===array.length;}
 // Preserve existing object identities so scene owners and UI selections can
 // continue to refer to actors while their confirmed data is reconciled.
@@ -92,14 +99,31 @@ export function createConfirmedStateReceiver(state,session,{onReconciled=null,de
   sequence=item.sequence;lastElapsed=item.next.elapsed;lastEvent=item.nextEvent;return {accepted:true,sequence,...(trackChangedKeys?{changedKeys}: {})};
  }
  function acceptPrepared(result){return result.accepted?commit(result.token):result;}
- function prepareHistorical(message,{requireActorTicks=false,...options}={}){if(typeof requireActorTicks!=='boolean')throw TypeError('Invalid historical actor validation');const prepared=prepare(message,options);if(!prepared.accepted)return prepared;try{const boundaries=decodeHistoricalEventBoundaries(message.historicalEventBoundaries,state,message,{requireActorTicks}),groups=groupHistoricalEventBoundaries(boundaries);pending.intermediate=boundaries;pending.intermediateIndex=0;pending.deliveredEvents=0;return {...prepared,boundaries:groups};}catch(error){pending=null;throw error;}}
+ function previewPreparedHistorical(token,{requireActorTicks=false}={}){
+  if(typeof requireActorTicks!=='boolean')throw TypeError('Invalid historical actor validation');
+  if(fault||!pending||pending.token!==token||pending.unchanged||pending.intermediate)throw Error('Invalid prepared historical token');
+  const base=JSON.stringify(state),cached=pending.historical;
+  if(cached){if(cached.base!==base||cached.sequence!==sequence||cached.elapsed!==lastElapsed)throw Error('Historical preparation base changed');if(requireActorTicks&&!cached.requireActorTicks)throw Error('Historical preparation requires actor ticks');return cached.groups;}
+  // Ownership is explicit before retaining a decoded proof. The transport may
+  // commit this same snapshot as its next read-only delta base, but observers
+  // must receive independent mutable presentation objects when it is applied.
+  freezeOwned(pending.message,new WeakSet(),true);freezeOwned(pending.next);pending.copy=true;
+  const boundaries=decodeHistoricalEventBoundaries(pending.message.historicalEventBoundaries,state,pending.message,{requireActorTicks}),groups=freezeOwned(groupHistoricalEventBoundaries(boundaries));
+  pending.historical={base,sequence,elapsed:lastElapsed,requireActorTicks,boundaries,groups};return groups;
+ }
+ function beginPreparedHistorical(token,options={}){
+  const boundaries=previewPreparedHistorical(token,options),item=pending;
+  item.intermediate=item.historical.boundaries;item.intermediateIndex=0;item.deliveredEvents=0;
+  return {accepted:true,token,elapsed:item.next.elapsed,boundaries};
+ }
+ function prepareHistorical(message,{requireActorTicks=false,...options}={}){if(typeof requireActorTicks!=='boolean')throw TypeError('Invalid historical actor validation');const prepared=prepare(message,options);if(!prepared.accepted)return prepared;try{return beginPreparedHistorical(prepared.token,{requireActorTicks});}catch(error){pending=null;throw error;}}
  function commitIntermediate(token,{beforeObservers=null}={}){
   if(fault||!pending||pending.token!==token||!pending.intermediate||pending.intermediateIndex>=pending.intermediate.length)throw Error('Invalid historical boundary token');if(beforeObservers!==null&&typeof beforeObservers!=='function')throw TypeError('Invalid historical boundary barrier');
   const item=pending,boundary=item.intermediate[item.intermediateIndex];let changedKeys;try{if(trackChangedKeys)changedKeys=reconcileChangedKeys(state,boundary.state,tracked,true);else reconcile(state,boundary.state,true);beforeObservers?.({at:boundary.at,events:boundary.events},changedKeys);for(const event of boundary.events)notifyConfirmedPresentationEvent(state,event);}catch(error){fault=true;throw error;}
   item.intermediateIndex++;item.deliveredEvents+=boundary.events.length;lastElapsed=boundary.at;return {accepted:true,sequence,at:boundary.at,eventIds:boundary.events.map(event=>event.id),...(trackChangedKeys?{changedKeys}:{})};
  }
  return {
-  prepare,prepareUnchanged,prepareHistorical,commitIntermediate,commit,
+  prepare,prepareUnchanged,prepareHistorical,previewPreparedHistorical,beginPreparedHistorical,commitIntermediate,commit,
   discard(token){if(fault||!pending||pending.token!==token||pending.intermediateIndex>0)throw Error('Invalid prepared publication token');pending=null;},
   accept(message,options){return acceptPrepared(prepare(message,options));},
   acceptUnchanged(message,options){return acceptPrepared(prepareUnchanged(message,options));},

@@ -15,7 +15,64 @@ import {createConfirmedTimelinePump} from '../src/rendering/confirmed-timeline-p
 import {syncWebGpuHistoricalBoundary} from '../src/rendering/webgpu-historical-boundary-sync.js';
 import {actorTickState} from '../src/simulation/worker-actor-tick-states.js';
 
+function preparedHistoricalFixture(){
+ const state=newGame({seed:712,slotId:'prepared-historical'}),authority=deserialize(serialize(state)),capture=createHistoricalEventBoundaryCapture(authority);
+ authority.elapsed=.02;authority.time=.02;emit(authority,'Prepared');const events=[authority.events.at(-1)];capture.event(authority,events[0],events);capture.sample(authority,events);authority.elapsed=.04;authority.time=.04;
+ const message={session:'s',sequence:1,elapsed:.04,snapshot:serialize(authority),events,historicalEventBoundaries:capture.finish(events)};let decodes=0;
+ const receiver=createConfirmedStateReceiver(state,'s',{decodeSnapshot:value=>{decodes++;return deserialize(value);}});
+ return {state,message,receiver,decodes:()=>decodes};
+}
+
+test('a prepared publication promotes its private historical decode without revalidating its snapshot',()=>{
+ const f=preparedHistoricalFixture(),prepared=f.receiver.prepare(f.message),first=f.receiver.previewPreparedHistorical(prepared.token);
+ assert.equal(f.decodes(),1);assert.equal(f.receiver.previewPreparedHistorical(prepared.token),first);
+ assert.ok(Object.isFrozen(first));assert.ok(Object.isFrozen(first[0].eventIds));
+ assert.throws(()=>first[0].eventIds.push('forged'),TypeError);
+ assert.throws(()=>{f.message.historicalEventBoundaries.boundaries[0].at=.03;},TypeError);
+ assert.throws(()=>{f.message.events[0].type='forged';},TypeError);
+ const historical=f.receiver.beginPreparedHistorical(prepared.token);
+ assert.equal(historical.token,prepared.token);assert.equal(historical.boundaries,first);assert.equal(f.decodes(),1);
+ for(const boundary of first)for(let i=0;i<boundary.count;i++)f.receiver.commitIntermediate(prepared.token);
+ f.receiver.commit(prepared.token);assert.equal(f.state.elapsed,.04);assert.equal(f.state.events.at(-1).type,'Prepared');
+ // Readonly transaction data must not freeze the mutable presented world.
+ f.state.events.at(-1).type='local-view';assert.equal(f.state.events.at(-1).type,'local-view');
+ assert.throws(()=>f.receiver.previewPreparedHistorical(prepared.token),/token/);
+});
+
+test('historical promotion rejects a changed base, changed validation requirements and discarded tokens',()=>{
+ const f=preparedHistoricalFixture(),prepared=f.receiver.prepare(f.message),groups=f.receiver.previewPreparedHistorical(prepared.token);
+ f.state.time+=.001;assert.throws(()=>f.receiver.beginPreparedHistorical(prepared.token),/base changed/);f.state.time-=.001;
+ assert.equal(f.receiver.previewPreparedHistorical(prepared.token),groups);
+ assert.throws(()=>f.receiver.beginPreparedHistorical(prepared.token,{requireActorTicks:true}),/requires actor ticks/);
+ f.receiver.discard(prepared.token);assert.throws(()=>f.receiver.beginPreparedHistorical(prepared.token),/token/);
+});
+
+test('historical owned data cannot hide mutable trace values behind an accessor',()=>{
+ const f=preparedHistoricalFixture(),prepared=f.receiver.prepare(f.message);
+ Object.defineProperty(f.message.historicalEventBoundaries,'complete',{get:()=>true,enumerable:true,configurable:true});
+ assert.throws(()=>f.receiver.previewPreparedHistorical(prepared.token),/accessor/);
+ f.receiver.discard(prepared.token);assert.equal(f.state.elapsed,0);
+});
+
 test('historical event counters do not exist when the feature is disabled',()=>{const state=newGame({seed:712,slotId:'no-historical-metrics'}),port={postMessage(){},start(){},close(){}},stream=createConfirmedPresentationStream({port,session:'s',state,terrain:{confirm(){}}});try{assert.equal(Object.hasOwn(stream.status(),'historicalEventMetrics'),false);}finally{stream.dispose();}});
+
+test('a preview never inspects an event tape that historical playback cannot consume',()=>{
+ for(const hasEvents of [false,true]){
+  const state=newGame({seed:712,slotId:'skip-unusable-events'});state.workers=[];
+  const authority=deserialize(serialize(state)),capture=createHistoricalEventBoundaryCapture(authority),events=[];
+  if(hasEvents){authority.elapsed=.05;authority.time=.05;emit(authority,'Test');events.push(authority.events.at(-1));capture.event(authority,events[0],events);capture.sample(authority,events);}
+  authority.elapsed=.1;authority.time=.1;
+  const tape=capture.finish(events),trace={start:0,end:.1,actors:[],rosterChanged:false,topologyChanged:false,chunkChanged:false,terrainChanged:false,physicsActivity:{samplesComplete:true,observed:hasEvents},actorTickStates:{complete:true,actors:[]},spatialEvidence:{version:1,start:0,end:.1,actors:0,segments:0,revisions:{topology:0,chunks:0,terrain:0,payloads:0}},separationEvidence:{version:1,start:0,end:.1,actors:0,gates:'none'}};
+  const message={session:'s',sequence:1,elapsed:.1,snapshot:serialize(authority),events,physicsPose:null,presentationJournalVersion:2,presentationJournal:events.map(event=>({kind:'event',eventId:event.id,at:.05})),worldMotionTrace:trace,historicalEventBoundaries:tape,clockSegments:{version:1,start:0,end:.1,startPauses:[],endPauses:[],complete:true,segments:[{start:0,end:.1,rate:1,realDuration:.1}]}},port={postMessage(){},start(){},close(){}},stream=createConfirmedPresentationStream({port,session:'s',state,presentationClock:{elapsed:0,commit(){}},onHistoricalBoundary(){},terrain:{ready:()=>true,matchesManifest:()=>true,confirm(){}},timeline:{maxPublications:2,maxBytes:10000000,manualBoundaries:true,experimentalHistoricalEvents:true}});
+  try{
+   port.onmessage({data:{kind:'publication',session:'s',publication:message}});
+   let reads=0;Object.defineProperty(tape,'version',{get(){reads++;return 2;},enumerable:true,configurable:true});
+   const preview=stream.previewNextMotionBoundary();assert.ok(preview);assert.equal(preview.eventBoundaries,undefined);assert.equal(reads,0);
+   assert.equal(preview.reasons.includes('events'),hasEvents);assert.equal(preview.reasons.includes('physics'),hasEvents);
+   assert.equal(Object.isFrozen(message),false);assert.equal(state.elapsed,0);assert.equal(stream.status().sequence,0);
+  }finally{stream.dispose();}
+ }
+});
 
 test('multiple interior boundaries deliver ordered events with their own state and fail closed on observer failure',()=>{
  const state=newGame({seed:712,slotId:'historical'}),authority=deserialize(serialize(state)),capture=createHistoricalEventBoundaryCapture(authority),events=[];authority.elapsed=.02;authority.time=.02;emit(authority,'A');events.push(authority.events.at(-1));capture.event(authority,events.at(-1),events);authority.time=.021;emit(authority,'B');events.push(authority.events.at(-1));capture.event(authority,events.at(-1),events);authority.time=.022;capture.sample(authority,events);authority.elapsed=.04;authority.time=.04;emit(authority,'C');events.push(authority.events.at(-1));capture.event(authority,events.at(-1),events);capture.sample(authority,events);authority.elapsed=.06;authority.time=.06;const message={session:'s',sequence:1,elapsed:authority.elapsed,snapshot:serialize(authority),events,historicalEventBoundaries:capture.finish(events)},receiver=createConfirmedStateReceiver(state,'s'),observed=[],stop=observePresentationGameEvents(state,event=>observed.push([event.type,state.elapsed,state.time]));
