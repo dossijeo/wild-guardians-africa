@@ -1,6 +1,29 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createConfirmedHistoricalMotionGroup} from '../src/rendering/confirmed-historical-motion-group.js';
+import {createConfirmedHistoricalClock} from '../src/rendering/confirmed-historical-clock.js';
+import {evaluateRemoteClock} from '../src/rendering/remote-presentation-clock.js';
+
+test('remote lease requires explicitly GPU autonomous installed participants and preserves event limit',()=>{
+ const f=certificateFixture();Object.assign(f.actor,{prepareHistoricalMotion:()=>({ok:true,remoteAutonomous:true}),historicalMotionCurrent:()=>true,cancelHistoricalMotion(){}});
+ const group=createConfirmedHistoricalMotionGroup({animals:f.actor,getSupport:()=>f.support,inputPolicy:'ordered-boundary'}),clock=createConfirmedHistoricalClock({initialElapsed:5,now:()=>0,timeOrigin:1000});
+ assert.deepEqual(group.remoteLease(clock).remoteBlockers,['no-active-historical-interval']);
+ const certified=group.certify(f.preview,f.current);clock.begin(certified);assert.equal(group.start(certified),true);clock.advanceUntil(5.025);
+ const lease=group.remoteLease(clock);assert.equal(lease.paused,false);assert.equal(evaluateRemoteClock(lease,10000),5.025);
+ const held=group.remoteLease(clock,{blockers:['guardian-guide-cpu-pose']});assert.equal(held.paused,true);assert.deepEqual(held.remoteBlockers,['guardian-guide-cpu-pose']);
+ group.cancel();assert.equal(group.remoteLease(clock).paused,true);
+});
+
+test('historical success does not falsely authorize remote CPU poses, effects or stale resources',()=>{
+ for(const mode of ['animal','worker','effects','stale','other-effects']){
+  const f=certificateFixture();Object.assign(f.actor,{prepareHistoricalMotion:()=>({ok:true,remoteAutonomous:mode!=='animal'}),historicalMotionCurrent:()=>mode!=='stale'});
+  const worker=mode==='worker'?{historicalActorIds:()=>[],prepareHistoricalMotion:()=>({ok:true}),startHistoricalMotion:()=>true,historicalMotionCurrent:()=>true}:null;
+  const effects=mode==='effects'?{prepareHistoricalMotion:()=>({ok:true,working:true,remoteAutonomous:false}),startHistoricalMotion:()=>true,historicalMotionCurrent:()=>true,finishHistoricalMotion(){},abortHistoricalMotion(){},cancelHistoricalMotion(){}}:null;
+  let quiet=true;const group=createConfirmedHistoricalMotionGroup({animals:f.actor,workers:worker,effects,otherEffectsQuiet:()=>quiet,getSupport:()=>f.support,inputPolicy:'ordered-boundary'}),clock=createConfirmedHistoricalClock({initialElapsed:5,now:()=>0,timeOrigin:1000}),certified=group.certify(f.preview,f.current);
+  clock.begin(certified);assert.equal(group.start(certified),true);if(mode==='other-effects')quiet=false;
+  const lease=group.remoteLease(clock);assert.equal(lease.paused,true,mode);assert.ok(lease.remoteBlockers.length,mode);assert.equal(evaluateRemoteClock(lease,1e6),5,mode);
+ }
+});
 
 function certificateFixture(){
  let valid=true,preparedCount=0;const start=5,end=5.05,support={sequence:1,start,end,valid:()=>valid,actors:[]},current={sequence:0,lastElapsed:start,closed:false};

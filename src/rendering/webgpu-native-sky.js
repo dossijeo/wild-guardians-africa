@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {acos,atan,clamp,dot,exp,exp2,float,floor,fract,length,max,mix,normalize,pow,screenUV,sin,smoothstep,step,texture,uniform,vec2,vec3,vec4} from 'three/tsl';
+import {acos,atan,cameraProjectionMatrixInverse,cameraWorldMatrix,clamp,dot,exp,exp2,float,floor,fract,length,max,mix,normalize,pow,screenUV,sin,smoothstep,step,texture,uniform,vec2,vec3,vec4} from 'three/tsl';
 import {assetUrl} from './asset-url.js';
 import {prepareSkyPixelsAsync} from './prepare-sky-pixels.js';
 import {skyNight} from './sky.js';
@@ -12,7 +12,9 @@ let nextSkyResourceOwner=0;
 export function createWebGpuNativeSky({scene,pipelineAdmission=null,resourceRegistry=null,onError=()=>{},onEnvironment=null,fetchImpl=globalThis.fetch,prepare=prepareSkyPixelsAsync}={}){
  if(resourceRegistry!==null&&typeof resourceRegistry?.adopt!=='function'||typeof document!=='undefined'||!scene?.isScene||pipelineAdmission!==null&&(typeof pipelineAdmission?.prepareBackgroundAndPublish!=='function'||typeof pipelineAdmission?.deferCompilations!=='function')||typeof onError!=='function'||onEnvironment!==null&&typeof onEnvironment!=='function'||typeof fetchImpl!=='function'||typeof prepare!=='function')throw TypeError('Invalid WebGPU sky');
  const resourceOwner=++nextSkyResourceOwner,leases=new Map();let nextTexture=0;
- const abort=new AbortController(),textures=[],forward=uniform(new THREE.Vector3(0,0,-1)),right=uniform(new THREE.Vector3(1,0,0)),up=uniform(new THREE.Vector3(0,1,0)),viewScale=uniform(new THREE.Vector2(1,1)),night=uniform(0),fallback=scene.backgroundNode;let closed=false,installed=null,failure=null;
+ // Camera basis and lens are evaluated from the same remote GPU uniforms as
+ // the world; a stalled preparation worker cannot freeze the sky orientation.
+ const abort=new AbortController(),textures=[],forward=cameraWorldMatrix.element(2).xyz.negate(),right=cameraWorldMatrix.element(0).xyz,up=cameraWorldMatrix.element(1).xyz,viewScale=vec2(cameraProjectionMatrixInverse.element(0).x,cameraProjectionMatrixInverse.element(1).y),night=uniform(0),fallback=scene.backgroundNode;let closed=false,installed=null,failure=null;
  const check=()=>{if(closed||abort.signal.aborted)throw new DOMException('Sky disposed','AbortError');};
  function releaseTextures(){const owned=textures.splice(0);if(!owned.length)return;const release=()=>{for(const tex of owned){const lease=leases.get(tex);if(lease){leases.delete(tex);lease.release();}else tex.dispose();}};if(pipelineAdmission)pipelineAdmission.deferCompilations(release);else release();}
  const read=async url=>{const response=await fetchImpl(assetUrl(url),{signal:abort.signal});if(!response.ok)throw Error('Sky resource unavailable: '+response.status);return response;};
@@ -26,5 +28,5 @@ export function createWebGpuNativeSky({scene,pipelineAdmission=null,resourceRegi
   const publish=()=>{check();if(scene.backgroundNode!==fallback)throw Error('Sky background ownership changed');for(const tex of textures)leases.get(tex)?.commit();scene.backgroundNode=candidate;installed=candidate;};
   if(pipelineAdmission)await pipelineAdmission.prepareBackgroundAndPublish(candidate,{signal:abort.signal},publish);else publish();return true;
  }catch(error){const report=!closed&&!abort.signal.aborted;abort.abort();releaseTextures();if(report){failure=String(error?.message??error);onError(error);}return false;}})();
- return {ready,update(camera,state){if(closed)throw Error('Sky disposed');if(!camera?.isPerspectiveCamera||!state)throw TypeError('Invalid sky camera or state');camera.updateMatrixWorld();camera.getWorldDirection(forward.value);right.value.setFromMatrixColumn(camera.matrixWorld,0);up.value.setFromMatrixColumn(camera.matrixWorld,1);const scale=Math.tan(THREE.MathUtils.degToRad(camera.fov)*.5);viewScale.value.set(scale*camera.aspect,scale);night.value=skyNight(state);},status(){return {closed,ready:!!installed,night:night.value,failure};},dispose(){if(closed)return;closed=true;abort.abort();if(scene.backgroundNode===installed)scene.backgroundNode=fallback??null;installed=null;releaseTextures();}};
+ return {ready,update(camera,state){if(closed)throw Error('Sky disposed');if(!camera?.isPerspectiveCamera||!state)throw TypeError('Invalid sky camera or state');night.value=skyNight(state);},status(){return {closed,ready:!!installed,night:night.value,failure};},dispose(){if(closed)return;closed=true;abort.abort();if(scene.backgroundNode===installed)scene.backgroundNode=fallback??null;installed=null;releaseTextures();}};
 }
