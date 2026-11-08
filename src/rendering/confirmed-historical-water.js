@@ -6,14 +6,14 @@ import {isWorkerPlantPhase,isWorkerWaterPhase} from './worker-plant-phase.js';
 export function confirmedHistoricalWaterPlans(state,preview){
  const ticks=preview?.trace?.actorTickStates;
  if(!state||!Array.isArray(state.workers)||!Array.isArray(state.tasks)||!ticks?.complete||!Array.isArray(ticks.actors)||!Number.isFinite(preview.start)||!Number.isFinite(preview.end)||preview.end<=preview.start)return null;
- const plans=workVfxPlans({...state,events:[]}),eligible=plans.filter(plan=>plan.id==='water'||plan.id==='dig');
+ const plans=workVfxPlans({...state,events:[]}),eligible=plans.filter(plan=>plan.id==='water'||plan.id==='dig'||plan.id==='harvest');
  if(!eligible.length)return {plans:[],watering:false,working:false};
  if(plans.length!==eligible.length)return null;
  const result=[];
  for(const plan of eligible){
   const worker=state.workers.find(item=>item.id===plan.workerId),task=state.tasks.find(item=>item.id===worker?.taskId),matches=ticks.actors.filter(item=>item.actorId===plan.workerId),samples=matches[0]?.samples;
-  const planting=plan.id==='dig'&&isWorkerPlantPhase(worker,task),watering=plan.id==='water'&&isWorkerWaterPhase(worker,task);
-  if(!worker||!planting&&!watering||typeof task.targetId!=='string'||!task.targetId||matches.length!==1||!Array.isArray(samples)||samples.length<2||samples[0]?.at!==preview.start||samples.at(-1)?.at!==preview.end)return null;
+  const harvesting=plan.id==='harvest'&&worker?.status==='acting'&&task?.kind==='harvest',planting=plan.id==='dig'&&isWorkerPlantPhase(worker,task),watering=plan.id==='water'&&isWorkerWaterPhase(worker,task);
+  if(!worker||!planting&&!watering&&!harvesting||typeof task.targetId!=='string'||!task.targetId||matches.length!==1||!Array.isArray(samples)||samples.length<2||samples[0]?.at!==preview.start||samples.at(-1)?.at!==preview.end)return null;
   const times=[];for(let i=0;i<samples.length;i++){
    const sample=samples[i];if(!Number.isFinite(sample.at)||i&&sample.at<=samples[i-1].at||sample.status!=='acting'||sample.taskId!==worker.taskId||sample.actionTaskKind!==task.kind||sample.actionTargetId!==task.targetId||!Number.isFinite(sample.actionRemaining)||sample.actionRemaining<=0||i&&sample.actionRemaining>samples[i-1].actionRemaining||sample.x!==worker.x||sample.z!==worker.z||sample.heading!==(worker.heading??null)||planting&&!isWorkerPlantPhase({...worker,actionRemaining:sample.actionRemaining},task)||watering&&!isWorkerWaterPhase({...worker,actionRemaining:sample.actionRemaining},task))return null;
    if(!i&&sample.actionRemaining!==worker.actionRemaining)return null;
