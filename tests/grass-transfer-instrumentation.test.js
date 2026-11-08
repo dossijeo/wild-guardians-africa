@@ -17,7 +17,7 @@ test('instrumented queue counts clones, posts, returned bytes and retained snaps
  const worker={addEventListener:(name,fn)=>listeners.set(name,fn),postMessage:message=>messages.push(message),terminate(){}};
  const queue=createGrassGenerationQueue(worker),first=queue.submit('a',{data:new Uint8Array(32)}),second=queue.submit('b',{data:new Uint8Array(64)});
  assert.equal(queue.status().qaTransfer.submissions,2);assert.equal(queue.status().qaTransfer.peakQueued,1);assert.ok(queue.status().qaTransfer.peakRetainedBytes>=96);
- listeners.get('message')({data:{id:messages[0].id,result:{anchors:new Float32Array(4),values:new Float32Array(4),slopes:new Float32Array(2)}}});await first;
- listeners.get('message')({data:{id:messages[1].id,result:{anchors:new Float32Array(0),values:new Float32Array(0),slopes:new Float32Array(0)}}});await second;
- const metrics=queue.status().qaTransfer;assert.equal(metrics.cloneMs.length,2);assert.equal(metrics.postMs.length,2);assert.equal(metrics.roundTripMs.length,2);assert.deepEqual(metrics.resultBytes,[40,0]);queue.dispose();
+ const stamp=()=>performance.timeOrigin+performance.now();let started=stamp();listeners.get('message')({data:{id:messages[0].id,qaTiming:{started,finished:started},result:{anchors:new Float32Array(4),values:new Float32Array(4),slopes:new Float32Array(2)}}});await first;
+ started=stamp();listeners.get('message')({data:{id:messages[1].id,qaTiming:{started,finished:started},result:{anchors:new Float32Array(0),values:new Float32Array(0),slopes:new Float32Array(0)}}});await second;
+ const metrics=queue.status().qaTransfer;assert.equal(metrics.cloneMs.length,2);assert.equal(metrics.postMs.length,2);assert.equal(metrics.roundTripMs.length,2);assert.equal(metrics.invalidTiming,0);assert.equal(metrics.workerMs.length,2);assert.deepEqual(metrics.resultBytes,[40,0]);queue.dispose();
 });

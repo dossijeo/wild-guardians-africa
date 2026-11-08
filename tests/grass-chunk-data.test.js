@@ -44,3 +44,10 @@ test('generation worker reports malformed requests without terminating',async()=
   assert.match((await result).error,/Invalid grass generation request/);
  } finally {await worker.terminate();}
 });
+
+test('generation worker returns optional timing while preserving the result',async()=>{
+ const moduleUrl=new URL('../src/rendering/grass-generation-worker.js',import.meta.url).href;
+ const source=`import {parentPort} from 'node:worker_threads'; globalThis.self={addEventListener(_name,fn){parentPort.on('message',data=>fn({data}));},postMessage(data,transfer){parentPort.postMessage(data,transfer);}}; await import(${JSON.stringify(moduleUrl)}); parentPort.postMessage({ready:true});`;
+ const worker=new Worker(new URL('data:text/javascript,'+encodeURIComponent(source)),{type:'module'});
+ try{await new Promise((resolve,reject)=>{worker.once('message',resolve);worker.once('error',reject);});const request=fixture('savanna',false),response=new Promise((resolve,reject)=>{worker.once('message',resolve);worker.once('error',reject);});worker.postMessage({id:42,request,qaTiming:true});const result=await response;assert.equal(result.id,42);assert.deepEqual(result.result,reference(request));assert.ok(Number.isFinite(result.qaTiming.started));assert.ok(result.qaTiming.finished>=result.qaTiming.started);}finally{await worker.terminate();}
+});
