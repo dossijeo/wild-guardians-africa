@@ -6,13 +6,14 @@ import {createVfxGeometries,vfxRigidStyles} from './vfx-native.js';
 
 // Share the native rigid fragment shapes and material across wall impacts.
 // Transforms and colors come directly from the existing VFX simulation.
-export function createWebGpuWallFragmentAssets({kinds=['wood','adobe','stone'],scene=null}={}){
+export function createWebGpuWallFragmentAssets({kinds=['wood','adobe','stone'],scene=null,sampled=null}={}){
  const shapes=createVfxGeometries(),geometries=new Map(),material=new MeshStandardNodeMaterial(auxiliaryPassRecipe('wallFragments').structural.state);let closed=false;
  // Named instanced attributes are bound per geometry by Three. InstanceNode
  // binds a particular InstancedMesh buffer and adds its UUID to the program
  // key; identical debris then rebuilds the entire graph for every footstep.
- const instanceTransform=mat4(...[0,1,2,3].map(i=>attribute('vfxMatrix'+i,'vec4'))),instanceTint=attribute('vfxInstanceColor','vec3');
+ const instanceTransform=sampled?.transform??mat4(...[0,1,2,3].map(i=>attribute('vfxMatrix'+i,'vec4'))),instanceTint=sampled?.tint??attribute('vfxInstanceColor','vec3');
  material.colorNode=materialColor.rgb.mul(instanceTint);
+ if(sampled?.opacity){material.opacityNode=sampled.opacity;material.alphaTestNode=float(.000001);}
  material.positionNode=Fn(()=>{normalLocal.assign(transformNormal(normalLocal,instanceTransform));return instanceTransform.mul(vec4(positionLocal,1)).xyz;})();
  // Native rigid VFX have two effect-local lights regardless of which sources
  // win the world's four shared slots. Exclude those slots from Three's direct
