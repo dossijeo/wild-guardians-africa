@@ -7,6 +7,20 @@ import {webGpuWorkerBakedWalking} from '../src/rendering/webgpu-presentation-cap
 import {MAX_PENDING_PRESENTATION_INPUTS} from '../src/rendering/presentation-input-limits.js';
 import {createSharedCameraMailbox} from '../src/rendering/shared-camera-mailbox.js';
 function setup(options={}){const worker={messages:[],postMessage(message,transfer){this.messages.push({message,transfer});},terminate(){this.terminated=true;}},ports=[],client=createWebGpuWorldClient({canvas:{transferControlToOffscreen:()=>({canvas:true})},session:'s',snapshot:'{}',...options,workerFactory:()=>worker,channelFactory:()=>{const a={close(){this.closed=true;}},b={close(){this.closed=true;}};ports.push(a,b);return {port1:a,port2:b};}});return {worker,ports,client};}
+test('remote drawing gives the canvas only to a window-owned GPU worker and closes both owners',async()=>{
+ const draw={messages:[],postMessage(message,transfer){this.messages.push({message,transfer});},terminate(){this.terminated=true;}};
+ const {worker,ports,client}=setup({remoteDraw:true,drawWorkerFactory:()=>draw});
+ const init=worker.messages[0],gpu=draw.messages[0];
+ assert.equal(init.message.canvas,undefined);
+ assert.equal(init.message.remoteGpuPort,ports[4]);
+ assert.ok(init.transfer.includes(ports[4]));
+ assert.equal(gpu.message.type,'init');assert.deepEqual(gpu.message.canvas,{canvas:true});
+ assert.equal(gpu.message.port,ports[5]);assert.deepEqual(gpu.transfer,[gpu.message.canvas,ports[5]]);
+ assert.ok(!init.transfer.includes(gpu.message.canvas));
+ worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await client.ready;
+ client.dispose();worker.onmessage({data:{kind:'disposed'}});
+ assert.equal(worker.terminated,true);assert.equal(draw.terminated,true);
+});
 test('motion preference is sent when a graphical Worker is started or replaced',async()=>{for(const reducedMotion of [true,false]){const {client,worker}=setup({reducedMotion});assert.equal(worker.messages[0].message.reducedMotion,reducedMotion);worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await client.ready;client.dispose();}assert.throws(()=>setup({reducedMotion:'yes'}),/Invalid WebGPU world client/);});
 test('each Worker reads the current system motion preference by default',async()=>{const previous=Object.getOwnPropertyDescriptor(globalThis,'matchMedia');let matches=true;Object.defineProperty(globalThis,'matchMedia',{configurable:true,value:query=>{assert.equal(query,'(prefers-reduced-motion: reduce)');return {matches};}});try{for(const value of [true,false]){matches=value;const {client,worker}=setup();assert.equal(worker.messages[0].message.reducedMotion,value);worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await client.ready;client.dispose();}}finally{if(previous)Object.defineProperty(globalThis,'matchMedia',previous);else delete globalThis.matchMedia;}});
 test('isolated camera updates publish the newest pose without waiting for a Worker acknowledgement',async()=>{const previous=Object.getOwnPropertyDescriptor(globalThis,'crossOriginIsolated');Object.defineProperty(globalThis,'crossOriginIsolated',{configurable:true,value:true});let client;try{const setupResult=setup();client=setupResult.client;const worker=setupResult.worker,mailbox=createSharedCameraMailbox(worker.messages[0].message.cameraMailbox),pose={x:1,y:2,z:3,targetX:4,targetY:5,targetZ:6,fov:45,near:.1,far:1000};worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await client.ready;client.setCamera(pose);client.setCamera({...pose,x:7});assert.deepEqual(mailbox.read(),{version:2,pose:{...pose,x:7}});assert.equal(worker.messages.filter(item=>item.message.kind==='camera').length,0);}finally{client?.dispose();if(previous)Object.defineProperty(globalThis,'crossOriginIsolated',previous);else delete globalThis.crossOriginIsolated;}});

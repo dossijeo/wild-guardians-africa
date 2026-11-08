@@ -6,6 +6,31 @@ import {confirmedEventsAtEndpoint} from '../src/rendering/confirmed-endpoint-eve
 
 function fixture(items){let sequence=0,lastElapsed=0,ready=true,lastClock=null;const seen=[];return {seen,setReady(value){ready=value;},stream:{status:()=>({closed:false,sequence,lastElapsed}),timelineStatus:()=>({receivedElapsed:items.at(-1)?.elapsed??lastElapsed}),lastConfirmedClockSegments:()=>lastClock,nextTimelineBoundary:()=>items[0]??null,advanceNextTimelineBoundary(){if(!ready)return false;const item=items.shift();sequence=item.sequence;lastElapsed=item.elapsed;lastClock=item.clock??null;seen.push(item);return true;}}};}
 
+function preparedFixture({allow=true}={}){
+ let now=0;const items=[1,2].map(sequence=>{const start=(sequence-1)/10,end=sequence/10;return {sequence,elapsed:end,clock:{version:1,start,end,startPauses:[],endPauses:[],complete:true,segments:[{start,end,realDuration:.1,rate:1}]}};}),f=fixture(items),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now,timeOrigin:0});
+ f.stream.previewNextMotionBoundary=()=>{const item=items[0];return item?{sequence:item.sequence,start:item.clock.start,end:item.elapsed,reasons:[],safeForAutonomousPlayback:true,clockSegments:item.clock}:null;};
+ const pump=createConfirmedTimelinePump({stream:f.stream,preparedIntervals:true,historicalPlayback:{clock,now:()=>now,certify:value=>value,start(){now+=250;return true;},isCurrent:()=>true,canPrepareInterval:()=>allow,finish(){},abort(){}}});
+ return {...f,clock,pump,setNow(value){now=value;}};
+}
+
+test('prepared intervals survive expensive preparation and require retained packet before advancing cursor',()=>{
+ const f=preparedFixture();assert.equal(f.pump.advance(),0);const first=f.pump.preparedInterval();assert.equal(first.start,0);assert.equal(first.end,.1);assert.equal(f.clock.elapsed,0);
+ assert.equal(f.clock.remoteLease({allowAdvance:true}).consumerAnchored,true);f.setNow(10000);assert.equal(f.pump.advance(),0);assert.equal(f.clock.elapsed,0);assert.equal(f.seen.length,0);
+ assert.throws(()=>f.pump.sealPreparedInterval(first.token+1),/token/);f.pump.sealPreparedInterval(first.token);assert.equal(f.clock.elapsed,0);assert.throws(()=>f.pump.sealPreparedInterval(first.token),/token/);
+ assert.equal(f.pump.advance(),1);assert.deepEqual(f.seen.map(item=>item.sequence),[1]);const second=f.pump.preparedInterval();assert.equal(second.start,.1);assert.equal(second.end,.2);assert.notEqual(first.token,second.token);assert.equal(f.clock.elapsed,.1);
+ f.pump.sealPreparedInterval(second.token);assert.equal(f.pump.advance(),1);assert.deepEqual(f.seen.map(item=>item.sequence),[1,2]);assert.equal(f.pump.status().historicalDiagnostics.finishedSameTurn,0);
+ f.pump.dispose();f.clock.dispose();
+});
+
+test('first-draw receipt during visibility hold retains its token without consuming hidden time',()=>{
+ const f=preparedFixture();f.pump.advance();const first=f.pump.preparedInterval();f.pump.setHistoricalVisibility(true);assert.equal(f.pump.sealPreparedInterval(first.token),true);f.setNow(10000);assert.equal(f.pump.advance(),0);assert.equal(f.clock.elapsed,0);assert.equal(f.seen.length,0);assert.deepEqual(f.pump.status().preparedWaiting,{token:first.token,sequence:1,start:0,end:.1,sealed:true,held:true});
+ f.pump.setHistoricalVisibility(false);assert.equal(f.pump.advance(),1);assert.equal(f.clock.elapsed,.1);assert.equal(f.pump.preparedInterval().start,.1);f.pump.dispose();f.clock.dispose();
+});
+
+test('CPU-dependent historical intervals retain their conservative existing playback path',()=>{
+ const f=preparedFixture({allow:false});assert.equal(f.pump.advance(),2);assert.equal(f.pump.preparedInterval(),null);assert.equal(f.pump.status().historicalDiagnostics.preparedIntervals,0);assert.equal(f.pump.status().historicalDiagnostics.finishedSameTurn,2);f.pump.dispose();f.clock.dispose();
+});
+
 test('diagnostics distinguish rejected certificates from intervals consumed before any draw',()=>{
  const segments={version:1,start:0,end:.1,startPauses:[],endPauses:[],complete:true,segments:[{start:0,end:.1,realDuration:.1,rate:1}]};
  for(const reject of [true,false]){
