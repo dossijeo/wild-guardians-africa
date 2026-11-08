@@ -70,7 +70,9 @@ test('a saved exhausted buffalo uses a physically clear continuous exit instead 
 
 test('the intent bridge projects a scaled gate using the physical wall frame',()=>{
  const memory={buffer:new ArrayBuffer(2048)},batches=[];
- const wasm=new Proxy({memory,
+  const wasm=new Proxy({memory,
+   nav_intent_protocol_version:()=>2,nav_intent_change_width:()=>15,
+   nav_intent_set_time:()=>1,
   nav_intent_changes_ptr:()=>8,
   nav_intent_apply_changes:(sequence,count)=>{
    const values=new Float64Array(memory.buffer,8,count*10);

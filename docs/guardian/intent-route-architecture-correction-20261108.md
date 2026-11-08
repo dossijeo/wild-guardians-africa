@@ -93,3 +93,41 @@ intención. Retirarlo por clase cuando no necesite planificación/validaciones
 duplicadas y pase regresiones de mecánicas/guardados. No mantener indefinidamente
 dos implementaciones completas. B y C generalizados siguen pendientes; pruebas
 de contrato, WGSL o build no cierran este bloque.
+
+## Primer incremento: identidad causal nativa (implementado, no cierre)
+
+El mismo `nav_intent_change_ptr` usa protocolo **2**, ancho **15** `double`:
+`actor, planningState, task, target, session, slot, generation, topology,
+eventSequence, effectiveTime, revokedSession, revokedSlot, revokedGeneration,
+eventType, protocolVersion`. Tipos: 1 asignación, 2 invalidación, 3 reemplazo,
+4 cambio de intención, 5 ruta completada. Un reemplazo puede ser dos eventos
+consecutivos (revocación y asignación); no se colapsan antes de consumir control.
+La reconciliación JS heredada todavía colapsa estados para actualizar entidades,
+por lo que **su retorno no sirve como canal de revocación gráfica**.
+
+`nav_intent_set_time` recibe el reloj de simulación en fronteras de mutación del
+bridge, rechaza regresiones y se reinicia con la sesión. Drenar tarde el log no
+cambia el instante. Liberar una ruta conserva su handle revocado en la transición,
+incluso si el slot se reutiliza antes del drenaje. Retirar un actor ya no suprime
+su revocación. Entrar en acción libera la ruta de trabajadores igual que la de
+animales; no aplica daños ni cambia hit frames.
+
+Standalone y pthread se reconstruyeron con Emscripten local. El bridge exige el
+mismo ABI y falla explícitamente con binarios antiguos; no hay protocolo paralelo
+de compatibilidad. Los nuevos exports usan `EMSCRIPTEN_KEEPALIVE`, también para
+la exposición JS del runtime pthread.
+
+Validación: `node --test tests/spatial-intent-transition-protocol.test.js` ejecuta
+**7 pruebas sin skips**, con WASM real standalone/pthread, facóquero AttackCrops,
+muro, objetivo, retirada, finalización de ruta, tiempo y sesión. Son pruebas del
+primer incremento; **no prueban autonomía de movimiento, seguridad dinámica ni
+WebGPU**. La asignación aún no lleva velocidad/tiempos de ejecución nativos.
+
+Regresión dirigida anterior: 30 aprobadas, 2 fallos en
+`spatial-native-intent-bridge.test.js`: `loading during a committed strike...`
+(metadatos temporales de eventos contra fixture anterior) y `event-fed native
+intent bridge...` (`Contador de entidad incoherente` al guardar entidades QA).
+Ambos se reprodujeron con bridge, test y WASM anteriores de Git en
+`.cache/intent-protocol-baseline/`, manteniendo los demás módulos del árbol de
+trabajo. No se han alterado fixtures ni ocultado fallos. Esa comparación no
+acredita una suite completa limpia.

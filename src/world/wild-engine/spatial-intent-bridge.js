@@ -78,6 +78,7 @@ const taskTargetLookup=state=>{
 export function createSpatialIntentBridge(session){
   const wasm=session?.core?.wasm;
   for(const name of ['nav_intent_reset','nav_intent_changes_ptr',
+    'nav_intent_protocol_version','nav_intent_change_width','nav_intent_set_time',
     'nav_intent_apply_changes','nav_intent_plan_tasks','nav_intent_results_ptr',
     'nav_intent_restore_assigned_tasks',
     'nav_intent_discard','nav_intent_commit','nav_intent_damaged_structures',
@@ -114,7 +115,14 @@ export function createSpatialIntentBridge(session){
     'nav_intent_routes_ptr',
     'nav_intent_route_point_count'])
     if(typeof wasm?.[name]!=='function')throw TypeError(`Missing ${name}`);
-  let sequence=0,initialized=false;
+  if(wasm.nav_intent_protocol_version()!==2||wasm.nav_intent_change_width()!==15)
+    throw Error('Unsupported native intent protocol; rebuild Wild Engine');
+  let sequence=0,initialized=false,owningState=null,lastIntentSequence=0;
+  const syncBoundaryTime=()=>{
+    if(!initialized)throw Error('Reset the native intent session first');
+    if(wasm.nav_intent_set_time(owningState.elapsed)!==1)
+      throw Error('Native intent time regressed; restore into a new session');
+  };
   const structuresById=new Map();
   const cropsById=new Map();
   const cropObjects=new Map();
@@ -131,8 +139,10 @@ export function createSpatialIntentBridge(session){
     return sequence;
   };
   const resetFromState=state=>{
-    wasm.nav_intent_reset();sequence=0;initialized=true;
+    wasm.nav_intent_reset();sequence=0;lastIntentSequence=0;
+    initialized=true;owningState=state;
     try{
+      syncBoundaryTime();
       const workers=[...state.workers].sort((a,b)=>a.id.localeCompare(b.id));
       const tasks=[...state.tasks].sort((a,b)=>
         a.created-b.created||a.id.localeCompare(b.id));
@@ -389,15 +399,24 @@ export function createSpatialIntentBridge(session){
     const count=wasm.nav_intent_change_count();
     if(!count)return [];
     const data=Array.from(new Float64Array(wasm.memory.buffer,
-      wasm.nav_intent_change_ptr(),count*8));
-    wasm.nav_intent_clear_changes();
-    return Array.from({length:count},(_,index)=>{
-      const at=index*8;
+      wasm.nav_intent_change_ptr(),count*15));
+    const types=['','RouteAssigned','RouteInvalidated','RouteReplaced',
+      'IntentChanged','RouteCompleted'];
+    const changes=Array.from({length:count},(_,index)=>{
+      const at=index*15;
+      if(data[at+14]!==2||data[at+8]!==lastIntentSequence+index+1||
+         !types[data[at+13]]||!Number.isFinite(data[at+9]))
+        throw Error('Invalid native intent transition order or protocol');
       return {actorId:data[at],state:data[at+1],taskId:data[at+2]||null,
         targetId:data[at+3]||null,routeHandle:data[at+6]?
           {session:data[at+4],slot:data[at+5],generation:data[at+6]}:null,
-        topologyRevision:data[at+7]};
+        topologyRevision:data[at+7],sequence:data[at+8],effectiveTime:data[at+9],
+        revokedRouteHandle:data[at+12]?{session:data[at+10],slot:data[at+11],
+          generation:data[at+12]}:null,type:types[data[at+13]],protocolVersion:2};
     });
+    wasm.nav_intent_clear_changes();
+    lastIntentSequence=changes.at(-1).sequence;
+    return changes;
   };
   const routePoints=handle=>{
     const count=wasm.nav_intent_route_points(handle.session,handle.slot,handle.generation);
@@ -767,7 +786,7 @@ export function createSpatialIntentBridge(session){
     }
     return {restoredHomeRouteIds,invalidSavedHomeRoutes};
   };
-  return {resetFromState,applyEvents,applyCommittedEvents,planTasks,
+  const api={resetFromState,applyEvents,applyCommittedEvents,planTasks,
     restoreAssignedTasks,restoreAttackIntents,restoreRetreatIntents,
     restoreHomeIntents,
     proposalRoute,
@@ -792,6 +811,20 @@ export function createSpatialIntentBridge(session){
     discard:()=>wasm.nav_intent_discard(),
     commit:()=>wasm.nav_intent_commit(),
     sequence:()=>sequence};
+  // Timestamp at authoritative mutation boundaries, not when a renderer or a
+  // delayed resource job drains the log. Read-only route access stays untouched.
+  for(const name of ['applyEvents','applyCommittedEvents','planTasks',
+    'restoreAssignedTasks','restoreAttackIntents','restoreRetreatIntents',
+    'restoreHomeIntents','findPlantingSite','releasePlantingSite',
+    'processEventBoundary','requestReroute','registerAttackIntent','planAttackCrop',
+    'planAttackWall','replanAttackRoute','planRetreatRoute','planHomeRoute',
+    'cancelHomeIntent','reconsiderWallOpportunity','markAttackActive',
+    'finishAttackIntent','cancelAttackIntent','retireActor','reconcileTopology',
+    'replanPendingRoutes','markActionActive','finishAction','commit']){
+    const operation=api[name];
+    api[name]=(...args)=>{syncBoundaryTime();return operation(...args);};
+  }
+  return api;
 }
 
 function structureCondition(structure){

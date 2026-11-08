@@ -1,0 +1,176 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {gunzipSync} from 'node:zlib';
+import {deserialize} from '../src/persistence/snapshots.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialIntentBridge} from '../src/world/wild-engine/spatial-intent-bridge.js';
+import {createThreadedSpatialWorld} from '../src/world/wild-engine/spatial-thread-runtime.js';
+
+// No mock/optional skip: exercise the shipped native binary and real planner.
+const module=new WebAssembly.Module(readFileSync(new URL(
+  '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
+
+test('pthread runtime exposes the same native transition ABI as standalone',async()=>{
+  const {default:factory}=await import('../public/wild-engine/spatial-threaded.mjs');
+  const world=await createThreadedSpatialWorld(factory);
+  try{
+    assert.equal(world.core.wasm.nav_intent_protocol_version(),2);
+    assert.equal(world.core.wasm.nav_intent_change_width(),15);
+    assert.equal(world.core.wasm.nav_intent_set_time(1),1);
+    assert.equal(world.core.wasm.nav_intent_set_time(0),0);
+  }finally{await world.dispose();}
+});
+function fixture(){
+  const state=deserialize(gunzipSync(readFileSync(new URL(
+    './fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))).toString());
+  state.workers=[];state.plants=[];state.tasks=[];state.crates=[];state.spells=[];
+  state.elapsed=10;
+  const loaded=new Map(),session=createSpatialGameSession(module,state,{
+    loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
+  for(let z=-1;z<=1;z++)for(let x=-1;x<=1;x++){
+    if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
+    loaded.set(`${x},${z}`,session.core.chunkPayload());
+  }
+  let start,end;
+  for(let z=-10;z<=10&&!end;z++)for(let x=-10;x<=10&&!end;x++){
+    const from={x:x+.2,z:z+.2},to={x:x+12.2,z:z+.2};
+    const result=session.routeActor(from,to,{worker:false,species:'warthog'});
+    if(result.status==='found'&&result.points.length){start=from;end=to;}
+  }
+  assert(end,'native fixture needs a multi-second warthog route');
+  const actor={id:'animal-900002',species:'warthog',radius:1.1,...start,
+    status:'walking',hitsRemaining:2};
+  const crop={id:'plant-900001',species:'mijo',alive:true,...end};
+  state.plants=[crop];state.raid={animals:[actor],reservations:{}};
+  const bridge=createSpatialIntentBridge(session);
+  bridge.resetFromState(state);
+  return {state,session,bridge,actor,crop,end};
+}
+
+test('AttackCrops publishes one ordered native transition at mutation time, not drain time',()=>{
+  const f=fixture();
+  try{
+    const plan=f.bridge.planAttackCrop(f.state,f.actor);
+    assert.equal(plan.status,'found');
+    assert(Math.hypot(plan.approach.point.x-f.actor.x,
+      plan.approach.point.z-f.actor.z)>8);
+    const calls=f.session.core.wasm.nav_intent_actor_planning_calls(900002);
+    f.state.elapsed=50; // A late preparer must not restamp an old assignment.
+    const [event]=f.bridge.intentChanges();
+    assert.equal(event.type,'RouteAssigned');
+    assert.equal(event.protocolVersion,2);
+    assert.equal(event.sequence,1);
+    assert.equal(event.effectiveTime,10);
+    assert.deepEqual(event.routeHandle,plan.routeHandle);
+    assert.equal(event.revokedRouteHandle,null);
+    for(let tick=0;tick<200;tick++){
+      assert(f.bridge.routePoints(plan.routeHandle).length>0);
+      assert.deepEqual(f.bridge.intentChanges(),[]);
+    }
+    assert.equal(f.session.core.wasm.nav_intent_actor_planning_calls(900002),calls);
+    // This checks native log/handle access, not autonomous simulation or GPU.
+  }finally{f.session.dispose();}
+});
+
+test('target removal retains the exact revoked route even after slot reuse',()=>{
+  const f=fixture();
+  try{
+    const first=f.bridge.planAttackCrop(f.state,f.actor);
+    assert.equal(first.status,'found');
+    const assigned=f.bridge.intentChanges()[0];
+    f.state.elapsed=12;
+    f.bridge.applyEvents(f.state,[{type:'target',remove:true,id:f.crop.id}]);
+    assert.equal(f.bridge.routePoints(first.routeHandle),null);
+    f.bridge.applyEvents(f.state,[{type:'target',entity:f.crop}]);
+    const second=f.bridge.planAttackCrop(f.state,f.actor);
+    assert.equal(second.status,'found');
+    assert.notDeepEqual(first.routeHandle,second.routeHandle);
+    f.state.elapsed=100;
+    const [revoked,replacement]=f.bridge.intentChanges();
+    assert.equal(revoked.type,'RouteInvalidated');
+    assert.equal(revoked.sequence,assigned.sequence+1);
+    assert.equal(revoked.effectiveTime,12);
+    assert.equal(revoked.routeHandle,null);
+    assert.deepEqual(revoked.revokedRouteHandle,first.routeHandle);
+    assert.equal(replacement.type,'RouteAssigned');
+    assert.equal(replacement.sequence,revoked.sequence+1);
+    assert.equal(replacement.effectiveTime,12);
+    assert.deepEqual(replacement.routeHandle,second.routeHandle);
+  }finally{f.session.dispose();}
+});
+
+test('a real native wall revokes its intersected route with its old identity',()=>{
+  const f=fixture();
+  try{
+    const plan=f.bridge.planAttackCrop(f.state,f.actor);
+    assert.equal(plan.status,'found');
+    f.bridge.intentChanges();
+    const path=plan.approach.path,point=path[Math.floor(path.length/2)];
+    const wall=f.session.core.addWall(point.x,point.z,.3,.3);
+    assert(wall>0);
+    f.state.elapsed=11;
+    assert.equal(f.bridge.reconcileTopology(),1);
+    const [event]=f.bridge.intentChanges();
+    assert.equal(event.type,'RouteInvalidated');
+    assert.equal(event.effectiveTime,11);
+    assert.deepEqual(event.revokedRouteHandle,plan.routeHandle);
+    assert.equal(f.bridge.routePoints(plan.routeHandle),null);
+  }finally{f.session.dispose();}
+});
+
+test('entering an authorized attack completes the route without deciding a hit',()=>{
+  const f=fixture();
+  try{
+    const plan=f.bridge.planAttackCrop(f.state,f.actor);
+    assert.equal(plan.status,'found');
+    f.bridge.intentChanges();
+    f.state.elapsed=18;
+    const before=structuredClone(f.state.events),hits=f.actor.hitsRemaining;
+    assert(f.bridge.markAttackActive(f.actor.id));
+    const [event]=f.bridge.intentChanges();
+    assert.equal(event.type,'RouteCompleted');
+    assert.equal(event.state,2);
+    assert.equal(event.effectiveTime,18);
+    assert.deepEqual(event.revokedRouteHandle,plan.routeHandle);
+    assert.equal(f.bridge.routePoints(plan.routeHandle),null);
+    assert.deepEqual(f.state.events,before);
+    assert.equal(f.actor.hitsRemaining,hits);
+  }finally{f.session.dispose();}
+});
+
+test('actor retirement cannot silently leave a published route executable',()=>{
+  const f=fixture();
+  try{
+    const plan=f.bridge.planAttackCrop(f.state,f.actor);
+    assert.equal(plan.status,'found');
+    f.bridge.intentChanges();
+    f.state.elapsed=13;
+    assert(f.bridge.retireActor(f.actor.id));
+    const [event]=f.bridge.intentChanges();
+    assert.equal(event.type,'RouteInvalidated');
+    assert.equal(event.effectiveTime,13);
+    assert.deepEqual(event.revokedRouteHandle,plan.routeHandle);
+    assert.equal(f.bridge.routePoints(plan.routeHandle),null);
+  }finally{f.session.dispose();}
+});
+
+test('time cannot rewind inside a session; restore changes session and restarts event order',()=>{
+  const f=fixture();
+  try{
+    const first=f.bridge.planAttackCrop(f.state,f.actor);
+    assert.equal(first.status,'found');
+    assert.equal(f.bridge.intentChanges()[0].sequence,1);
+    f.state.elapsed=9;
+    assert.throws(()=>f.bridge.cancelAttackIntent(f.actor.id),/time regressed/);
+    assert(f.bridge.routePoints(first.routeHandle));
+    f.bridge.resetFromState(f.state);
+    const second=f.bridge.planAttackCrop(f.state,f.actor);
+    assert.equal(second.status,'found');
+    assert.notEqual(first.routeHandle.session,second.routeHandle.session);
+    assert.equal(f.bridge.routePoints(first.routeHandle),null);
+    const [event]=f.bridge.intentChanges();
+    assert.equal(event.sequence,1);
+    assert.equal(event.effectiveTime,9);
+  }finally{f.session.dispose();}
+});

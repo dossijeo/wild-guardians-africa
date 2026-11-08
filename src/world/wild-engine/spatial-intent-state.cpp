@@ -11,6 +11,11 @@
 #include <unordered_set>
 #include <utility>
 #include <vector>
+#ifdef __EMSCRIPTEN__
+#include <emscripten/emscripten.h>
+#else
+#define EMSCRIPTEN_KEEPALIVE
+#endif
 
 // Experimental incremental read model for direct-service task intentions.
 // JS owns the game entities. Only confirmed, ordered deltas enter this index.
@@ -39,6 +44,9 @@ int spatial_world_biome();
 
 namespace {
 constexpr int changeWidth=10,resultWidth=8,maxChangeBatch=4096;
+constexpr int intentProtocolVersion=2,intentChangeWidth=15;
+enum class IntentEvent:int {RouteAssigned=1,RouteInvalidated=2,RouteReplaced=3,
+  IntentChanged=4,RouteCompleted=5};
 constexpr double maxId=9007199254740991.0;
 constexpr double pi=3.14159265358979323846;
 struct Worker {uint64_t id,center;double x,z;bool eligible,actionActive;double rank;};
@@ -109,6 +117,9 @@ struct ActiveIntent {
   float approachX=0,approachZ=0,approachRadius=0;
   bool approachKnown=false;
   std::vector<uint64_t> blockedCropGroups;
+  // A release must name the old handle even after the slot is reclaimed. This
+  // is transition metadata, never another copy of the navigation state.
+  uint32_t revokedSlot=0,revokedGeneration=0;
 };
 struct RouteSlot {std::vector<float> points;uint32_t generation=0;bool active=false;};
 struct Change {
@@ -175,6 +186,8 @@ struct IntentState {
   uint64_t invalidations=0;
   std::unordered_map<uint64_t,uint64_t> planningCallsByActor;
   uint64_t sequence=0,entityRevision=0,damageRevision=0,plannedEntityRevision=0;
+  uint64_t intentSequence=0;
+  double effectiveTime=0;
   uint32_t plannedGraphRevision=0;
   int plannedProfile=-1;
   uint64_t routeQueries=0,candidates=0;
@@ -230,16 +243,25 @@ bool parse(const double* row,Change& change){
   return change.center>0&&change.target>0&&integer(row[4],true)&&row[4]<=2;
 }
 void clearProposal(IntentState& s){s.proposals.clear();s.proposalOpen=false;}
-void emitIntentChange(IntentState& s,const ActiveIntent& intent){
+void emitIntentChange(IntentState& s,ActiveIntent& intent){
+  const IntentEvent event=intent.state==PlanningState::RouteActive?
+    (intent.revokedGeneration?IntentEvent::RouteReplaced:IntentEvent::RouteAssigned):
+    intent.revokedGeneration?
+      (intent.state==PlanningState::ActionActive?IntentEvent::RouteCompleted:
+        IntentEvent::RouteInvalidated):IntentEvent::IntentChanged;
   s.intentChanges.insert(s.intentChanges.end(),{double(intent.actor),
     double(int(intent.state)),double(intent.task),double(intent.target),
     double(s.session),double(intent.slot),double(intent.generation),
-    double(intent.topology)});
+    double(intent.topology),double(++s.intentSequence),s.effectiveTime,
+    intent.revokedGeneration?double(s.session):0,double(intent.revokedSlot),
+    double(intent.revokedGeneration),double(int(event)),double(intentProtocolVersion)});
+  intent.revokedSlot=0;intent.revokedGeneration=0;
 }
 void releaseRoute(IntentState& s,ActiveIntent& intent){
   if(intent.slot<s.routeSlots.size()){
     RouteSlot& route=s.routeSlots[intent.slot];
     if(route.active&&route.generation==intent.generation){
+      intent.revokedSlot=intent.slot;intent.revokedGeneration=intent.generation;
       route.active=false;route.points.clear();route.generation++;
     }
   }
@@ -675,6 +697,7 @@ void nav_intent_reset(){
   s.wallPortalCaches.clear();s.wallRevision=0;s.wallPortalBuilds=0;
   s.perimeterRows.clear();
   s.sequence=0;s.entityRevision=0;s.damageRevision=0;
+  s.intentSequence=0;s.effectiveTime=0;
   s.routeQueries=0;s.candidates=0;
 }
 // Diagnostic prototype: project physical wall faces into the same weak-region
@@ -1311,7 +1334,16 @@ int nav_intent_commit(){
 }
 // Drain only changes caused by confirmed events or a committed task batch.
 // Ordinary movement and ticks do not invoke the planner or emit rows.
-int nav_intent_change_count(){return int(state().intentChanges.size()/8);}
+EMSCRIPTEN_KEEPALIVE int nav_intent_protocol_version(){return intentProtocolVersion;}
+EMSCRIPTEN_KEEPALIVE int nav_intent_change_width(){return intentChangeWidth;}
+// The simulation supplies its clock at the command/event boundary, never at
+// graphical preparation/drain time. A restore starts a new native session.
+EMSCRIPTEN_KEEPALIVE int nav_intent_set_time(double elapsed){
+  IntentState& s=state();
+  if(!std::isfinite(elapsed)||elapsed<s.effectiveTime)return 0;
+  s.effectiveTime=elapsed;return 1;
+}
+int nav_intent_change_count(){return int(state().intentChanges.size()/intentChangeWidth);}
 const double* nav_intent_change_ptr(){return state().intentChanges.data();}
 void nav_intent_clear_changes(){state().intentChanges.clear();}
 double nav_intent_invalidation_count(){return double(state().invalidations);}
@@ -1329,12 +1361,9 @@ int nav_intent_retire_actor(double actorId){
   const auto active=s.activeIntents.find(actor);
   if(active!=s.activeIntents.end()){
     // The caller has already removed this actor from the confirmed game.
-    // Reclaim its route and inverse dependencies without publishing a new
-    // intention change for an actor that no longer exists.
-    const size_t changes=s.intentChanges.size();
-    const uint64_t invalidations=s.invalidations;
+    // Retirement must revoke a published route; a late graphical load may
+    // retain this actor's handle. Keep this transition in the same ordered log.
     releaseIntent(s,actor,PlanningState::Cancelled);
-    s.intentChanges.resize(changes);s.invalidations=invalidations;
     s.activeIntents.erase(actor);
   }
   s.planningCallsByActor.erase(actor);
@@ -2452,6 +2481,7 @@ int nav_intent_action_active(double actorId){
   if(!integer(actorId))return 0;
   IntentState& s=state();const auto it=s.activeIntents.find(uint64_t(actorId));
   if(it==s.activeIntents.end()||it->second.state!=PlanningState::RouteActive)return 0;
+  releaseRoute(s,it->second);
   it->second.state=PlanningState::ActionActive;emitIntentChange(s,it->second);return 1;
 }
 int nav_intent_finish(double actorId){
