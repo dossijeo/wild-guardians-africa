@@ -2,6 +2,7 @@ import { floorFloat32 } from './float32-time.js';
 import { remoteCameraWithinEnvelope } from './remote-camera-envelope.js';
 import { createRemoteFrameTimeGuard } from './remote-frame-time-guard.js';
 import { scheduleRemoteFrame } from './remote-frame-scheduler.js';
+import { evaluateRemoteClock } from './remote-presentation-clock.js';
 
 const REF = '__remoteGpuId';
 const CURRENT = '@canvas';
@@ -15,18 +16,19 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
   const retired = new Set(), clockBindings = new Map(), cameraBindings = new Map();
   const clockBindingKeys = new Map(), cameraBindingKeys = new Map();
   const reverseDependencies = new Map(), obsoleteVersions = new Set();
+  const pendingResources = new Map();
   const pendingRetirement = new Set(), nativeRetirement = new Set();
   let retirementScheduled = false;
   let resolutionResources = null;
   let stagedOperations = [];
-  let active = null, pending = null, stopped = false, failed = false, frameHandle = null, chain = Promise.resolve();
+  let active = null, pending = null, stopped = false, failed = false, deviceDestroyRequested = false, frameHandle = null, chain = Promise.resolve();
   let currentTexture = null, currentViews = new Map(), deviceConfigured = false;
   let previousFrameAt = null, sampleCursor = 0;
   let hidden = !!initiallyHidden, hiddenStartedAt = initiallyHidden ? absoluteNow() : null;
   let resourceSliceStarted = absoluteNow(), queuedMessages = 0;
   const samples = new Array(4096), errors = [];
   const frameTime = createRemoteFrameTimeGuard();
-  const metrics = { nativeFrames: 0, replayFrames: 0, packets: 0, computePackets: 0, commands: 0, queueWrites: 0, gpuErrors: 0, cameraUpdatesRejected: 0, uniformForks: 0, uniformForkBytes: 0, bindingForks: 0, resourceRetirements: 0, producerReleases: 0, hiddenMs: 0, visibilityTransitions: 0, resourceTaskYields: 0, resourceJobMaxMs: 0, resourceJobMaxType: null };
+  const metrics = { nativeFrames: 0, replayFrames: 0, packets: 0, computePackets: 0, commands: 0, queueWrites: 0, gpuErrors: 0, cameraUpdatesRejected: 0, uniformForks: 0, uniformForkBytes: 0, bindingForks: 0, resourceRetirements: 0, dependencyVisits: 0, retirementChecks: 0, producerReleases: 0, hiddenMs: 0, visibilityTransitions: 0, resourceTaskYields: 0, resourceJobMaxMs: 0, resourceJobMaxType: null };
   function reply(message, result, error) {
     if (message.requestId) port.postMessage({ type: 'reply', requestId: message.requestId, result, error: error?.message });
   }
@@ -49,6 +51,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
       if (key === CURRENT) return currentTexture ||= context.getCurrentTexture();
       const entry = resolutionResources?.get(key) || resources.get(key);
       if (!entry) throw Error(`Unknown remote GPU resource ${key}`);
+      if (entry.pending) throw Error(`Remote GPU resource is not ready ${key}`);
       if (entry.currentView) {
         if (!currentViews.has(key)) currentViews.set(key, resolve({ [REF]: CURRENT }).createView(entry.descriptor));
         return currentViews.get(key);
@@ -63,6 +66,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
   function retainClosure(initial) {
     const retained = new Set();
     const visit = (key, entry = resources.get(key)) => {
+      metrics.dependencyVisits++;
       if (retained.has(key)) return;
       retained.add(key);
       if (entry?.dependencyEntries) for (const [dependency, resolved] of entry.dependencyEntries) visit(dependency, resolved);
@@ -87,10 +91,60 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
     }
     if (previous && previous !== entry) { previous.producerReleased = true; previous.internalRetirement = true; obsoleteVersions.add(previous); tryRetire(previous); }
   }
+  function waitForResources(keys) {
+    const waits = [];
+    for (const key of keys) {
+      if (pendingResources.has(key)) waits.push(pendingResources.get(key).promise);
+      else if (key !== CURRENT && !resources.has(key)) throw Error(`Unknown remote GPU resource ${key}`);
+    }
+    return waits.length ? Promise.all(waits) : null;
+  }
+  function createResourceJob(message, dependencies, build, extra = {}) {
+    if (resources.has(message.id)) throw Error(`Duplicate remote resource ${message.id}`);
+    const waiting = waitForResources(dependencies);
+    const entry = { value: null, pending: true, dependencies, descriptor: message.descriptor, kind: message.method || message.type, ...extra };
+    setResource(message.id, entry);
+    let resolveReady, rejectReady;
+    const promise = new Promise((resolve, reject) => { resolveReady = resolve; rejectReady = reject; });
+    promise.catch(() => {});
+    pendingResources.set(message.id, { promise, reject: rejectReady });
+    const failedJob = error => {
+      entry.pending = false; pendingResources.delete(message.id); rejectReady(error);
+      if (stopped) return;
+      reply(message, null, error);
+      if (!deviceDestroyRequested) fail(error);
+    };
+    const finished = value => {
+      if (stopped) { rejectReady(Error('Remote GPU disposed during preparation')); return; }
+      entry.value = value; entry.pending = false; pendingResources.delete(message.id);
+      resolveReady(entry); reply(message); tryRetire(entry);
+    };
+    const start = () => {
+      if (stopped || failed) { failedJob(Error('Remote GPU preparation canceled')); return; }
+      // Resolve the native dependency generation held by this job, not whatever
+      // happens to be in the global alias table when asynchronous work finishes.
+      const previous = resolutionResources; resolutionResources = entry.dependencyEntries;
+      try {
+        const result = build();
+        if (result?.then) result.then(finished, failedJob);
+        else finished(result);
+      } catch (error) { failedJob(error); }
+      finally { resolutionResources = previous; }
+    };
+    if (waiting) waiting.then(async () => {
+      if (absoluteNow() - resourceSliceStarted >= resourceSliceMs) {
+        metrics.resourceTaskYields++; await yieldResourceTask(); resourceSliceStarted = absoluteNow();
+      }
+      start();
+    }).catch(failedJob);
+    else start();
+  }
   function snapshotResources(initial) {
     const result = new Map();
     const visit = (key, entry = resources.get(key)) => {
-      if (!entry) return;
+      metrics.dependencyVisits++;
+      if (key === CURRENT) return;
+      if (!entry || entry.pending || entry.retired || entry.nativeDestroyed) throw Error(`Unknown, pending or retired remote GPU resource ${key}`);
       if (result.has(key)) {
         if (result.get(key) !== entry) throw Error(`Mixed native generations for remote resource ${key}`);
         return;
@@ -126,9 +180,11 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
     });
   }
   function tryRetire(entry) {
-    if (!entry || entry.retired || entry.id === '@device' || entry.pins > 0) return;
+    metrics.retirementChecks++;
+    if (!entry || entry.pending || entry.retired || entry.id === '@device' || entry.pins > 0) return;
     const current = resources.get(entry.id) === entry;
     if (current && !entry.retirementRequested && !entry.producerReleased) return;
+    if (stagedOperations.length) { pendingRetirement.add(entry); return; }
     // Explicit GPUBuffer.destroy has different semantics from JS collection:
     // it invalidates native storage even if an unused bind group still refers
     // to it. Collection only releases ownership and never calls destroy.
@@ -136,7 +192,6 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
       entry.nativeDestroyed = true; scheduleNativeRetirement(entry.value);
     }
     if (entry.dependents > 0) return;
-    if (stagedOperations.length) { pendingRetirement.add(entry); return; }
     entry.retired = true; obsoleteVersions.delete(entry); pendingRetirement.delete(entry);
     if (current) {
       resources.delete(entry.id); retired.delete(entry.id);
@@ -180,6 +235,14 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
   function rebuildDependentBindings(key) {
     for (const dependent of reverseDependencies.get(key) || []) {
       const entry = resources.get(dependent);
+      if (entry?.pending) {
+        const previous = entry.dependencyEntries.get(key), current = resources.get(key);
+        if (previous !== current) {
+          entry.dependencyEntries.set(key, current); current.dependents++;
+          if (previous) { previous.dependents--; tryRetire(previous); }
+        }
+        continue;
+      }
       let value;
       if (entry?.kind === 'createBindGroup') value = device.createBindGroup(resolve(entry.descriptor));
       else if (entry?.kind === 'bundle') {
@@ -320,6 +383,30 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
     if (!value || typeof value !== 'object') return 0;
     return Object.values(value).reduce((sum, child) => sum + packetBytes(child), 0);
   }
+  function validateOperations(operations) {
+    let count = 0;
+    for (const op of operations) {
+      if (!QUEUE.has(op.method) || !Array.isArray(op.args)) throw Error(`Invalid remote queue operation ${op.method}`);
+      if (op.method !== 'submit') continue;
+      if (!Array.isArray(op.args[0])) throw Error('Invalid remote submission');
+      for (const buffer of op.args[0]) {
+        if (!Array.isArray(buffer.__remoteCommands)) throw Error('Invalid remote command buffer');
+        for (const command of buffer.__remoteCommands) {
+          if (++count > maxFrameOperations) throw Error('Remote command count exceeds safety limit');
+          if (!Array.isArray(command.args)) throw Error('Invalid remote command arguments');
+          if (command.method === 'beginRenderPass' || command.method === 'beginComputePass') {
+            if (!Array.isArray(command.commands)) throw Error('Invalid remote pass');
+            for (const item of command.commands) {
+              if (++count > maxFrameOperations || !PASS.has(item.method) || !Array.isArray(item.args)) throw Error(`Invalid remote pass command ${item.method}`);
+              const computeCommand = item.method.startsWith('dispatch');
+              if (computeCommand && command.method !== 'beginComputePass') throw Error('Compute dispatch cannot execute in a render pass');
+              if (command.method === 'beginComputePass' && !['setPipeline','setBindGroup','dispatchWorkgroups','dispatchWorkgroupsIndirect','insertDebugMarker','pushDebugGroup','popDebugGroup'].includes(item.method)) throw Error('Render command cannot execute in a compute pass');
+            }
+          } else if (!COMMANDS.has(command.method)) throw Error(`Invalid remote encoder command ${command.method}`);
+        }
+      }
+    }
+  }
   function writtenResources(op) {
     if (op.method === 'writeBuffer') return references(op.args[0]);
     if (op.method === 'writeTexture') return references(op.args[0].texture);
@@ -341,28 +428,28 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
     switch (message.type) {
       case 'create': {
         if (!CREATION.has(message.method)) throw Error(`Unsupported remote resource ${message.method}`);
-        if (resources.has(message.id)) throw Error(`Duplicate remote resource ${message.id}`);
         // Even Three's synchronous factory is admitted asynchronously here: its
         // producer gets an ID immediately; drawing keeps its prior generation.
         const method = message.method === 'createRenderPipeline' ? 'createRenderPipelineAsync' : message.method === 'createComputePipeline' ? 'createComputePipelineAsync' : message.method;
-        const value = await device[method](resolve(message.descriptor));
         const uniformShadow = message.method === 'createBuffer' && (message.descriptor.usage & 64) && !(message.descriptor.usage & 128) ? new Uint8Array(message.descriptor.size) : null;
-        setResource(message.id, { value, dependencies: references(message.descriptor), descriptor: message.descriptor, kind: message.method, uniformShadow, mapMode: message.descriptor.mappedAtCreation ? 2 : 0 });
-        reply(message); break;
+        createResourceJob(message, references(message.descriptor), () => device[method](resolve(message.descriptor)), { uniformShadow, mapMode: message.descriptor.mappedAtCreation ? 2 : 0 });
+        break;
       }
       case 'view': {
-        const entry = message.texture === CURRENT
-          ? { currentView: true, descriptor: message.descriptor, sequence: message.sequence ?? ((active?.sequence || 0) + 1), dependencies: new Set([CURRENT]) }
-          : { value: resolve({ [REF]: message.texture }).createView(resolve(message.descriptor)), dependencies: new Set([message.texture]) };
-        setResource(message.id, entry); break;
+        if (message.texture === CURRENT) setResource(message.id, { currentView: true, descriptor: message.descriptor, sequence: message.sequence ?? ((active?.sequence || 0) + 1), dependencies: new Set([CURRENT]) });
+        else createResourceJob(message, new Set([message.texture]), () => resolve({ [REF]: message.texture }).createView(resolve(message.descriptor)));
+        break;
       }
-      case 'pipeline-layout': setResource(message.id, { value: resolve({ [REF]: message.pipeline }).getBindGroupLayout(message.index), dependencies: new Set([message.pipeline]) }); break;
+      case 'pipeline-layout': createResourceJob(message, new Set([message.pipeline]), () => resolve({ [REF]: message.pipeline }).getBindGroupLayout(message.index)); break;
       case 'bundle': {
-        const encoder = device.createRenderBundleEncoder(resolve(message.descriptor));
-        runPass(encoder, message.commands, false);
-        setResource(message.id, { value: encoder.finish(), dependencies: references(message.commands), kind: 'bundle', descriptor: message.descriptor, commands: message.commands }); break;
+        createResourceJob(message, references(message.commands), () => {
+          const encoder = device.createRenderBundleEncoder(resolve(message.descriptor));
+          runPass(encoder, message.commands, false); return encoder.finish();
+        }, { commands: message.commands }); break;
       }
       case 'operation': {
+        const readiness = waitForResources(references(message.op));
+        if (readiness) await readiness;
         const touchesPublishedState = [...writtenResources(message.op)].some(key => active?.resourceSnapshot?.has(key) || pending?.resourceSnapshot?.has(key));
         const canFork = !stagedOperations.length && touchesPublishedState && message.op.method === 'writeBuffer' && forkPublishedUniform(message.op.args[0][REF]);
         if (stagedOperations.length || (touchesPublishedState && !canFork)) {
@@ -377,19 +464,21 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
       case 'unconfigure': context.unconfigure(); deviceConfigured = false; break;
       case 'frame': {
         if (pending) throw Error('Remote GPU backpressure: pending generation already exists');
-        const packet = message.packet;
+        if (!Array.isArray(message.packet?.operations)) throw Error('Invalid remote frame operations');
+        const packet = { ...message.packet, operations: [...stagedOperations, ...message.packet.operations] };
         packet.receivedAt = absoluteNow();
-        packet.operations = [...stagedOperations, ...packet.operations];
-        stagedOperations = [];
         if (!Number.isSafeInteger(packet.sequence) || packet.sequence <= (active?.sequence || 0)) throw Error('Stale remote frame');
         if (!Array.isArray(packet.operations) || packet.operations.length > maxFrameOperations || packetBytes(packet) > maxFrameBytes) throw Error('Remote frame exceeds safety limit');
         if (!packet.operations.some(op => op.method === 'submit')) throw Error('Remote frame contains no drawing submission');
+        validateOperations(packet.operations);
+        if (packet.metadata?.clock) evaluateRemoteClock(packet.metadata.clock, packet.metadata.clock.anchorAbsoluteMs);
         const hasCompute = packet.operations.some(op => op.method === 'submit' && op.args[0].some(buffer => buffer.__remoteCommands.some(command => command.method === 'beginComputePass')));
         if (hasCompute && packet.metadata?.clock && !packet.metadata.clock.paused && packet.metadata.clock.safeUntil > packet.metadata.clock.elapsed) throw Error('An advancing remote clock cannot replay a frame containing one-shot compute; certify a repeatable compute contract first');
-        if (hasCompute) metrics.computePackets++;
         packet.references = references(packet.operations);
+        const readiness = waitForResources(packet.references);
+        if (readiness) await readiness;
+        packet.receivedAt = absoluteNow();
         packet.resourceSnapshot = snapshotResources(packet.references);
-        pinSnapshot(packet.resourceSnapshot);
         const writeCounts = new Map();
         for (const op of packet.operations) if (op.method === 'writeBuffer') {
           const key = op.args[0][REF]; writeCounts.set(key, (writeCounts.get(key) || 0) + 1);
@@ -408,6 +497,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
             }
           }
         }
+        for (const key of packet.baselineBuffers) if (!packet.resourceSnapshot.get(key)?.uniformShadow) throw Error(`Cannot replay an unversioned GPU buffer read before its first write: ${key}`);
+        pinSnapshot(packet.resourceSnapshot);
+        stagedOperations = [];
+        if (hasCompute) metrics.computePackets++;
         pending = packet;
         for (const entry of pendingRetirement) tryRetire(entry);
         metrics.packets++; break;
@@ -447,6 +540,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
         await device.queue.onSubmittedWorkDone(); reply(message); break;
       }
       case 'inspect': reply(message, api.inspect()); break;
+      case 'device-destroy': deviceDestroyRequested = true; device.destroy(); break;
       case 'compilation-info': {
         const info = await resolve({ [REF]: message.id }).getCompilationInfo();
         reply(message, { messages: Array.from(info.messages, item => ({ message: item.message, type: item.type, lineNum: item.lineNum, linePos: item.linePos, offset: item.offset, length: item.length })) }); break;
@@ -477,6 +571,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
   port.onmessage = event => {
     const message = event.data;
     if (message.type === 'inspect') { reply(message, api.inspect()); return; }
+    if (message.type === 'device-destroy') { deviceDestroyRequested = true; device.destroy(); return; }
     if (++queuedMessages > maxFrameOperations) { fail(Error('Remote resource queue exceeds safety limit')); return; }
     chain = chain.then(async () => {
       // A resolved pipeline can unlock thousands of queued promise callbacks.
@@ -514,9 +609,11 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, requestF
       }
       hidden = nextHidden;
     },
-    inspect: () => ({ ...metrics, hidden, resources: resources.size, activeSequence: active?.sequence || null, pendingSequence: pending?.sequence || null, queuedMessages, stagedOperations: stagedOperations.length, obsoleteVersions: obsoleteVersions.size, failed, backend: 'webgpu', rafIndependent: true, adapterInfo, frameTime: frameTime.status(), lease: active?.metadata?.clock || null, cameraSafe: active?.metadata?.cameraSafe ?? false, cameraEnvelope: active?.metadata?.cameraEnvelope || null, clockBindings: active?.clockBindings.length || 0, cameraBindings: active?.cameraBindings.length || 0, clockAtHorizon: !!active?.metadata?.clock && frameTime.status().elapsed >= active.metadata.clock.safeUntil, errors: errors.slice(), samples: sampleCursor < samples.length ? samples.slice(0, sampleCursor) : [...samples.slice(sampleCursor % samples.length), ...samples.slice(0, sampleCursor % samples.length)] }),
+    inspect: () => ({ ...metrics, hidden, resources: resources.size, pendingResources: pendingResources.size, activeSequence: active?.sequence || null, pendingSequence: pending?.sequence || null, queuedMessages, stagedOperations: stagedOperations.length, obsoleteVersions: obsoleteVersions.size, failed, backend: 'webgpu', rafIndependent: true, adapterInfo, frameTime: frameTime.status(), lease: active?.metadata?.clock || null, cameraSafe: active?.metadata?.cameraSafe ?? false, cameraEnvelope: active?.metadata?.cameraEnvelope || null, clockBindings: active?.clockBindings.length || 0, cameraBindings: active?.cameraBindings.length || 0, clockAtHorizon: !!active?.metadata?.clock && frameTime.status().elapsed >= active.metadata.clock.safeUntil, errors: errors.slice(), samples: sampleCursor < samples.length ? samples.slice(0, sampleCursor) : [...samples.slice(sampleCursor % samples.length), ...samples.slice(0, sampleCursor % samples.length)] }),
     dispose() {
       if (stopped) return; stopped = true;
+      for (const job of pendingResources.values()) job.reject(Error('Remote GPU disposed'));
+      pendingResources.clear();
       if (frameHandle !== null) cancelFrame(frameHandle);
       device.queue.onSubmittedWorkDone().finally(() => {
         for (const [key, entry] of resources) if (key !== '@device') entry.value?.destroy?.();

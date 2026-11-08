@@ -12,8 +12,9 @@ function pair() {
 function fakeGpu() {
   const calls = [], buffers = [], submitted = [];
   let textureVersion = 0, commandVersion = 0;
+  let resolveLost;
   const device = {
-    lost: new Promise(() => {}),
+    lost: new Promise(resolve => { resolveLost = resolve; }),
     queue: {
       writeBuffer(buffer, offset, data) { buffer.data.set(new Uint8Array(data.buffer || data, data.byteOffset || 0, data.byteLength), offset); calls.push(['writeBuffer', offset, Array.from(new Uint8Array(data.buffer || data, data.byteOffset || 0, data.byteLength))]); },
       writeTexture() { calls.push(['writeTexture']); },
@@ -38,7 +39,7 @@ function fakeGpu() {
         finish: () => record,
       };
     },
-    destroy() {},
+    destroy() { calls.push(['deviceDestroy']); resolveLost({ reason: 'destroyed', message: 'Explicit native destruction' }); },
   };
   const context = { configure() {}, unconfigure() {}, getCurrentTexture() { const version = ++textureVersion; return { createView: () => ({ version }) }; } };
   return { device, context, calls, buffers, submitted };
@@ -398,4 +399,125 @@ test('a first packet received while hidden starts at resume rather than skipping
   f.host.setVisibility(false); f.host.present();
   assert.equal((await receipt).metadata.clock.anchorAbsoluteMs, 4000);
   assert.equal(f.host.inspect().frameTime.elapsed, 0);
+});
+
+test('invalid resource references are rejected before any frame upload mutates the displayed generation', async () => {
+  const f = await fixture();
+  const receipt = f.frame(1); await flush(); await f.host.idle(); f.host.present(); await receipt;
+  await assert.rejects(f.host.handle({ type: 'frame', packet: {
+    sequence: 2, width: 20, height: 10, metadata: {}, operations: [
+      { method: 'writeBuffer', args: [{ __remoteGpuId: f.buffer.__remoteGpuId }, 0, new Float32Array([99])] },
+      { method: 'submit', args: [[{ __remoteCommands: [{ method: 'beginRenderPass', args: [{}], commands: [{ method: 'setBindGroup', args: [0, { __remoteGpuId: 'missing' }] }, { method: 'draw', args: [3] }] }] }]] },
+    ],
+  } }), /Unknown.*remote GPU resource/);
+  assert.equal(new Float32Array(f.gpu.buffers[0].data.buffer)[0], 1);
+  assert.equal(f.host.inspect().activeSequence, 1);
+  assert.equal(f.host.inspect().pendingSequence, null);
+});
+
+test('a valid but regressive clock cannot mutate resources or replace the displayed generation', async () => {
+  const f = await fixture();
+  const clock = { version: 1, epoch: 0, elapsed: 2, safeUntil: 2, anchorAbsoluteMs: 0, paused: true, segments: [] };
+  const receipt = f.frame(1, { clock }); await flush(); await f.host.idle(); f.host.present(); await receipt;
+  await f.host.handle({ type: 'frame', packet: {
+    sequence: 2, width: 99, height: 99, metadata: { clock: { ...clock, elapsed: 1, safeUntil: 1 } }, operations: [
+      { method: 'writeBuffer', args: [{ __remoteGpuId: f.buffer.__remoteGpuId }, 0, new Float32Array([99])] },
+      { method: 'submit', args: [[{ __remoteCommands: [{ method: 'beginRenderPass', args: [{}], commands: [{ method: 'draw', args: [3] }] }] }]] },
+    ],
+  } });
+  f.host.present(); await flush();
+  assert.equal(new Float32Array(f.gpu.buffers[0].data.buffer)[0], 1);
+  assert.equal(f.host.inspect().activeSequence, 1);
+  assert.equal(f.host.inspect().nativeFrames, 1);
+  assert.match(f.errors[0]?.message, /rewind/);
+});
+
+test('retiring N unrelated resources performs N localized checks and no active graph traversals', async () => {
+  const f = await fixture();
+  const receipt = f.frame(1); await flush(); await f.host.idle(); f.host.present(); await receipt;
+  const count = 200;
+  for (let i = 0; i < count; i++) await f.host.handle({ type: 'create', method: 'createBuffer', id: `unused:${i}`, descriptor: { size: 4, usage: 8 } });
+  const before = f.host.inspect();
+  for (let i = 0; i < count; i++) await f.host.handle({ type: 'destroy', id: `unused:${i}` });
+  await flush();
+  const after = f.host.inspect();
+  assert.equal(after.dependencyVisits, before.dependencyVisits);
+  assert.equal(after.retirementChecks - before.retirementChecks, count);
+  assert.equal(before.resources - after.resources, count);
+  assert.equal(f.gpu.buffers[0].destroyed, false);
+});
+
+test('explicit native destruction waits for staged preparation to reach a generation boundary', async () => {
+  const f = await fixture();
+  const storage = f.client.device.createBuffer({ size: 16, usage: 136 });
+  const group = f.client.device.createBindGroup({ entries: [{ binding: 0, resource: { buffer: storage } }] });
+  function render() {
+    f.client.beginFrame();
+    const encoder = f.client.device.createCommandEncoder(), pass = encoder.beginRenderPass({});
+    pass.setBindGroup(0, group); pass.draw(3); pass.end();
+    f.client.device.queue.submit([encoder.finish()]); return f.client.endFrame();
+  }
+  let receipt = render(); await flush(); await f.host.idle(); f.host.present(); await receipt;
+  f.client.device.queue.writeBuffer(storage, 0, new Uint32Array([3]));
+  const transient = f.client.device.createBuffer({ size: 16, usage: 72 }); transient.destroy();
+  await flush(); await f.host.idle(); await flush();
+  assert.equal(f.host.inspect().stagedOperations, 1);
+  assert.equal(f.gpu.buffers[2].destroyed, false);
+  receipt = render(); await flush(); await f.host.idle(); f.host.present(); await receipt; await flush();
+  assert.equal(f.gpu.buffers[2].destroyed, true);
+});
+
+test('an unrelated asynchronous pipeline cannot block publication of a newer frame using ready resources', async () => {
+  const f = await fixture();
+  let receipt = f.frame(1); await flush(); await f.host.idle(); f.host.present(); await receipt;
+  let completePipeline;
+  f.gpu.device.createRenderPipelineAsync = () => new Promise(resolve => { completePipeline = resolve; });
+  const pipelinePromise = f.client.device.createRenderPipelineAsync({ label: 'new-material' });
+  receipt = f.frame(2);
+  await flush(); await f.host.idle();
+  assert.equal(f.host.inspect().pendingResources, 1);
+  f.host.present(); await receipt;
+  assert.equal(f.host.inspect().activeSequence, 2);
+  assert.equal(new Float32Array(f.gpu.buffers[0].data.buffer)[0], 2);
+  // Queue fences cover submitted queue work, not unrelated shader compilation.
+  await f.client.device.queue.onSubmittedWorkDone();
+  completePipeline({}); await pipelinePromise;
+  assert.equal(f.host.inspect().pendingResources, 0);
+});
+
+test('pipeline-derived layouts and bind groups wait only on their branch and follow uniform forks', async () => {
+  const f = await fixture();
+  let receipt = f.frame(1); await flush(); await f.host.idle(); f.host.present(); await receipt;
+  let completePipeline;
+  f.gpu.device.createRenderPipelineAsync = () => new Promise(resolve => { completePipeline = resolve; });
+  const pipeline = f.client.device.createRenderPipeline({ label: 'new-material' });
+  const layout = pipeline.getBindGroupLayout(0);
+  const group = f.client.device.createBindGroup({ layout, entries: [{ binding: 0, resource: { buffer: f.buffer } }] });
+  f.client.device.queue.writeBuffer(f.buffer, 0, new Float32Array([9]));
+  receipt = f.frame(2); await flush(); await f.host.idle();
+  assert.equal(f.host.inspect().pendingResources, 3);
+  f.host.present(); await receipt;
+  assert.equal(f.host.inspect().activeSequence, 2);
+  completePipeline({ getBindGroupLayout: () => ({ nativeLayout: true }) });
+  for (let i = 0; i < 20 && f.host.inspect().pendingResources; i++) { await new Promise(resolve => setTimeout(resolve, 0)); await flush(); }
+  assert.equal(f.host.inspect().pendingResources, 0);
+  f.client.beginFrame();
+  const encoder = f.client.device.createCommandEncoder(), pass = encoder.beginRenderPass({});
+  pass.setPipeline(pipeline); pass.setBindGroup(0, group); pass.draw(3); pass.end();
+  f.client.device.queue.submit([encoder.finish()]);
+  receipt = f.client.endFrame(); await flush(); await f.host.idle(); f.host.present(); await receipt;
+  assert.equal(f.errors.length, 0);
+  assert.equal(f.host.inspect().activeSequence, 3);
+});
+
+test('explicit proxy device destruction reaches the native device and resolves lost before cleanup', async () => {
+  const f = await fixture();
+  const receipt = f.frame(1), rejected = assert.rejects(receipt, /device lost/);
+  f.client.device.destroy();
+  const lost = await f.client.device.lost;
+  await rejected; await flush();
+  assert.equal(lost.reason, 'destroyed');
+  assert(f.gpu.calls.some(call => call[0] === 'deviceDestroy'));
+  assert.equal(f.client.inspect().pendingFrame, null);
+  assert.equal(f.errors.length, 0);
 });

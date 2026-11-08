@@ -261,7 +261,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     importExternalTexture() { throw Error('External video textures need an explicit remote resource owner'); },
     pushErrorScope: filter => send({ type: 'push-error-scope', filter }),
     popErrorScope: () => request({ type: 'pop-error-scope' }),
-    addEventListener() {}, removeEventListener() {}, destroy: () => api.dispose(),
+    addEventListener() {}, removeEventListener() {}, destroy: () => port.postMessage({ type: 'device-destroy' }),
   };
   const canvas = {
     width: capabilities.width, height: capabilities.height, style: {},
@@ -286,7 +286,15 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
         pendingFrame.resolve(message); releaseReferences(pendingFrame.retained); pendingFrame = null;
       }
       onPresented(message);
-    } else if (message.type === 'lost') resolveLost(message.info);
+    } else if (message.type === 'lost') {
+      resolveLost(message.info);
+      fatalError = Error(`WebGPU device lost: ${message.info?.reason || 'unknown'}: ${message.info?.message || ''}`);
+      pendingFrame?.reject(fatalError);
+      releaseReferences(pendingFrame?.retained); releaseReferences(frame?.retained);
+      pendingFrame = null; frame = null;
+      for (const entry of pending.values()) entry.reject(fatalError);
+      pending.clear();
+    }
     else if (message.type === 'error') fail(Error(message.error));
   };
   port.start?.();
