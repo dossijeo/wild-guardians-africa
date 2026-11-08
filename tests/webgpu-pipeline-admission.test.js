@@ -6,6 +6,22 @@ import {uniform} from 'three/tsl';
 import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
 import {closeWebGpuRenderer} from '../src/rendering/webgpu-world-surface.js';
 
+test('visible admissions are bounded fairly, preserve order and honour cancellation',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),started=[],finishes=[],objects=Array.from({length:8},(_,i)=>{const object=new THREE.Group();object.name=String(i);return object;}),controller=new AbortController();
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(object){started.push(object.name);return new Promise(resolve=>finishes.push(resolve));}},admission=createWebGpuPipelineAdmission({renderer,scene,camera});
+ const turn=()=>new Promise(resolve=>setImmediate(resolve)),first=admission.prepare(objects[0]);await turn();
+ const tasks=[first,admission.prepare(objects[1]),admission.prepare(objects[2],{priority:'visible'}),admission.prepare(objects[3],{priority:'visible'}),admission.prepare(objects[4],{priority:'visible',signal:controller.signal}),admission.prepare(objects[5],{priority:'visible'}),admission.prepare(objects[6]),admission.prepare(objects[7],{priority:'visible'})];
+ const cancelled=assert.rejects(tasks[4],{name:'AbortError'});for(const task of tasks)task.catch(()=>{});
+ try{assert.deepEqual(started,['0']);controller.abort();await cancelled;for(let i=0;i<7;i++){finishes[i]();await turn();}await Promise.all(tasks.filter((_,i)=>i!==4));assert.deepEqual(started,['0','2','3','1','5','7','6']);await assert.rejects(admission.prepare(new THREE.Group(),{priority:'invalid'}),/Invalid admission publication/);}finally{admission.dispose();}
+});
+
+test('a normal request arriving during a visible burst is not starved',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),started=[],finishes=[],turn=()=>new Promise(resolve=>setImmediate(resolve));
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(object){started.push(object.name);return new Promise(resolve=>finishes.push(resolve));}},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),objects=Array.from({length:4},(_,i)=>{const value=new THREE.Group();value.name=String(i);return value;});
+ const tasks=[admission.prepare(objects[0],{priority:'visible'}),admission.prepare(objects[1],{priority:'visible'}),admission.prepare(objects[2],{priority:'visible'})];for(const task of tasks)task.catch(()=>{});
+ try{await turn();finishes[0]();await turn();const normal=admission.prepare(objects[3]);normal.catch(()=>{});tasks.push(normal);finishes[1]();await turn();assert.deepEqual(started,['0','1','3']);finishes[2]();await turn();finishes[3]();await Promise.all(tasks);assert.deepEqual(started,['0','1','3','2']);}finally{admission.dispose();}
+});
+
 test('admission diagnostics identify active and queued mesh owners without publishing them',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),first=new THREE.Group(),second=new THREE.Group(),terrain=new THREE.Mesh(),actor=new THREE.Mesh();terrain.name='terrain';terrain.userData.ground=true;actor.name='actor';first.add(terrain);second.add(actor);let finish;const renderer={backend:{isWebGPUBackend:true},compileAsync:()=>new Promise(resolve=>{finish=resolve;})},admission=createWebGpuPipelineAdmission({renderer,scene,camera});const a=admission.prepare(first),b=admission.prepare(second);a.catch(()=>{});b.catch(()=>{});
  try{await new Promise(resolve=>setImmediate(resolve));const status=admission.status();assert.equal(status.compiling[0].meshes[0].name,'terrain');assert.equal(status.compiling[0].meshes[0].ground,true);assert.equal(status.queueHead[0].meshes[0].name,'actor');assert.equal(first.visible,true);assert.equal(second.visible,true);}finally{admission.dispose();finish();await Promise.allSettled([a,b]);terrain.geometry.dispose();terrain.material.dispose();actor.geometry.dispose();actor.material.dispose();}

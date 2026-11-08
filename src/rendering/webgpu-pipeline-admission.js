@@ -59,7 +59,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
  const lights=new Map();let lightsRevision=0,structuralRevision=0;
  function addLight(light){if(!light?.isLight||!light.shadow)throw TypeError('Invalid admission shadow light');const count=lights.get(light)??0;lights.set(light,count+1);if(count===0){lightsRevision++;structuralRevision++;}}
  if(shadowLights===null)scene.traverse(node=>{if(node.isLight&&node.shadow)addLight(node);});else for(const light of shadowLights)addLight(light);
- let closed=false,generation=0,active=false,inflightCompiles=0,cancel,auxiliaryRevision=0;const queue=[],targetWaiters=new Set(),compilingObjects=new Map(),compilationMembers=new Map(),uploadingObjects=new Map(),uploadBatch=new Set(),lifecycleSentinel={},auxiliaryTargets=new Map();let uploadScheduled=false,uploadActive=false;
+ let closed=false,generation=0,active=false,inflightCompiles=0,cancel,auxiliaryRevision=0,priorityBurst=0;const queue=[],targetWaiters=new Set(),compilingObjects=new Map(),compilationMembers=new Map(),uploadingObjects=new Map(),uploadBatch=new Set(),lifecycleSentinel={},auxiliaryTargets=new Map();let uploadScheduled=false,uploadActive=false;
  function frameTarget(){return renderer._getFrameBufferTarget?.()??renderer.getRenderTarget?.()??renderer.getOutputRenderTarget?.()??null;}
  let compilesStarted=0,compilesSettled=0;const compileStarts=new Map();
  const cancelled=new Promise(resolve=>{cancel=()=>resolve(Error('Pipeline admission cancelled'));});
@@ -84,7 +84,12 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
  }
  function pump(){
   if(closed||active||inflightCompiles||!queue.length)return;
-  const item=queue.shift();if(item.onAbort)item.signal.removeEventListener('abort',item.onAbort);active=true;
+  // Preserve FIFO within each class; after at most two visible requests a
+  // waiting normal request gets a turn. The currently compiling item is never
+  // interrupted. With only normal requests this is identical to FIFO.
+  const visible=queue.findIndex(item=>item.priority==='visible'),normal=queue.findIndex(item=>item.priority!=='visible');
+  const selected=visible>=0&&(priorityBurst<2||normal<0)?visible:normal;
+  const [item]=queue.splice(selected,1);priorityBurst=item.priority==='visible'?Math.min(priorityBurst+1,2):0;if(item.onAbort)item.signal.removeEventListener('abort',item.onAbort);active=true;
   executePlan(item).then(result=>{
    if(!result?.shadowTarget){
     try{
@@ -287,7 +292,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
    if(signal?.aborted)return Promise.reject(new DOMException('Pipeline admission cancelled','AbortError'));
    return new Promise((resolve,reject)=>enqueue({backgroundNode,expectedNode:scene.backgroundNode,expectedBackground:scene.background,signal,version:generation,publish,resolve,reject,onAbort:null}));
   },
-  prepare(object,{signal,include=[],target=undefined,shadowPass=includeShadowPass,passCamera=camera,targetScene=scene,publish=null,returnTicket=false,requireShadowTarget=false,materialAlternatives=[]}={}){
+  prepare(object,{signal,include=[],target=undefined,shadowPass=includeShadowPass,passCamera=camera,targetScene=scene,publish=null,returnTicket=false,requireShadowTarget=false,materialAlternatives=[],priority='normal'}={}){
    if(closed)return Promise.reject(Error('Pipeline admission closed'));
    if(!object?.isObject3D)return Promise.reject(TypeError('Invalid admission object'));
    if(!passCamera?.isCamera||!targetScene?.isObject3D)return Promise.reject(TypeError('Invalid admission pass context'));
@@ -295,9 +300,9 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
    if(!Array.isArray(include)||include.some(node=>{if(!node?.isObject3D||node===object)return true;for(let parent=node.parent;parent;parent=parent.parent)if(parent===object)return false;return true;}))return Promise.reject(TypeError('Invalid admission visibility'));
    if(!Array.isArray(materialAlternatives)||materialAlternatives.some(item=>{if(!item?.mesh?.isMesh||!item.material||!item.mesh.material||Array.isArray(item.material)!==Array.isArray(item.mesh.material)||(Array.isArray(item.material)?item.material.some(value=>!value?.isMaterial):!item.material.isMaterial)||Array.isArray(item.material)&&item.material.length!==item.mesh.material.length)return true;for(let parent=item.mesh;parent;parent=parent.parent)if(parent===object)return false;return true;})||new Set(materialAlternatives.map(item=>item.mesh)).size!==materialAlternatives.length)return Promise.reject(TypeError('Invalid admission material alternatives'));
    if(signal!==undefined&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))return Promise.reject(TypeError('Invalid admission signal'));
-   if(publish!==null&&typeof publish!=='function'||typeof returnTicket!=='boolean'||typeof requireShadowTarget!=='boolean'||publish!==null&&returnTicket)return Promise.reject(TypeError('Invalid admission publication'));
+   if(publish!==null&&typeof publish!=='function'||typeof returnTicket!=='boolean'||typeof requireShadowTarget!=='boolean'||publish!==null&&returnTicket||!['normal','visible'].includes(priority))return Promise.reject(TypeError('Invalid admission publication'));
    if(signal?.aborted)return Promise.reject(new DOMException('Pipeline admission cancelled','AbortError'));
-   return new Promise((resolve,reject)=>enqueue({object,signal,include:[...new Set(include)],target,shadowPass,passCamera,targetScene,publish,returnTicket,requireShadowTarget,materialAlternatives:materialAlternatives.map(item=>({mesh:item.mesh,material:item.material,original:item.mesh.material,root:object})),version:generation,resolve,reject,onAbort:null}));
+   return new Promise((resolve,reject)=>enqueue({object,signal,include:[...new Set(include)],target,shadowPass,passCamera,targetScene,publish,returnTicket,requireShadowTarget,priority,materialAlternatives:materialAlternatives.map(item=>({mesh:item.mesh,material:item.material,original:item.mesh.material,root:object})),version:generation,resolve,reject,onAbort:null}));
   },
   prepareAndPublish(object,options,publish){return this.prepare(object,{...options,publish});},
   prepareTicket(object,options){return this.prepare(object,{...options,returnTicket:true});},
