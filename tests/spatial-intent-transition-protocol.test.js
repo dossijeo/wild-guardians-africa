@@ -315,3 +315,63 @@ test('the graphical permission mirror consumes the existing real native log with
       'graphical control does not ask Wild Engine to validate or plan a route');
   }finally{f.session.dispose();}
 });
+
+test('native control bootstrap retains original assignment identity after the log is drained',()=>{
+  const f=fixture();
+  try{
+    const plan=f.bridge.planAttackCrop(f.state,f.actor);
+    assert.equal(plan.status,'found');
+    const [assigned]=f.bridge.intentChanges();
+    f.state.elapsed=12;
+    const wasm=f.session.core.wasm,calls=wasm.nav_intent_actor_planning_calls(900002),
+      checks=wasm.nav_intent_route_validation_count();
+    const baseline=f.bridge.nativeIntentControlBaseline();
+    assert.equal(baseline.type,'IntentBaseline');
+    assert.equal(baseline.sequence,assigned.sequence);
+    assert.equal(baseline.effectiveTime,12);
+    assert.deepEqual(baseline.routes,[{actorId:900002,routeHandle:plan.routeHandle,
+      assignmentSequence:assigned.sequence,startTime:10}]);
+    assert.equal(wasm.nav_intent_change_count(),0);
+    assert.equal(wasm.nav_intent_actor_planning_calls(900002),calls);
+    assert.equal(wasm.nav_intent_route_validation_count(),checks);
+    const control=createNativeRouteControl({authorityEpoch:baseline.authorityEpoch,
+      initialSequence:baseline.sequence,initialTime:baseline.effectiveTime,routes:baseline.routes});
+    assert(control.admit(baseline.routes[0]));
+  }finally{f.session.dispose();}
+});
+
+test('native control observers receive revocations before legacy drain/coalescing without a parallel log',()=>{
+  const f=fixture();
+  try{
+    const first=f.bridge.planAttackCrop(f.state,f.actor);
+    f.bridge.intentChanges();
+    const observed=[],stop=f.bridge.observeNativeIntentControl({
+      onBaseline:baseline=>observed.push(baseline),onChanges:events=>observed.push(...events)});
+    assert.equal(observed[0].sequence,1);
+    f.state.elapsed=12;
+    f.bridge.applyEvents(f.state,[{type:'target',remove:true,id:f.crop.id}]);
+    assert.equal(observed[1].type,'RouteInvalidated','control is notified at the mutation boundary');
+    assert.deepEqual(observed[1].revokedRouteHandle,first.routeHandle);
+    assert.equal(f.session.core.wasm.nav_intent_change_count(),1,'the native legacy log was not consumed');
+    f.bridge.applyEvents(f.state,[{type:'target',entity:f.crop}]);
+    assert.equal(f.bridge.planAttackCrop(f.state,f.actor).status,'found');
+    assert.deepEqual(observed.map(event=>event.sequence),[1,2,3]);
+    assert.deepEqual(f.bridge.intentChanges().map(event=>event.sequence),[2,3]);
+    assert.equal(observed.length,3,'draining legacy events does not republish control transitions');
+    stop();f.bridge.cancelAttackIntent(f.actor.id);
+    assert.equal(observed.length,3);
+  }finally{f.session.dispose();}
+});
+
+test('native reset retires an observer and changes the exposed epoch even in the same WASM instance',()=>{
+  const f=fixture();
+  try{
+    const oldEpoch=f.bridge.authorityEpoch,closed=[];
+    f.bridge.observeNativeIntentControl({onBaseline:()=>{},onChanges:()=>{},
+      onClosed:reason=>closed.push(reason)});
+    f.bridge.resetFromState(f.state);
+    assert.deepEqual(closed,['native-reset']);
+    assert.notEqual(f.bridge.authorityEpoch,oldEpoch);
+    assert.equal(f.bridge.nativeIntentControlBaseline().sequence,0);
+  }finally{f.session.dispose();}
+});

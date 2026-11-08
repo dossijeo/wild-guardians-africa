@@ -11,12 +11,25 @@ function validHandle(handle,epoch){return handle?.authorityEpoch===epoch&&
 // movement model. No points, bodies, targets or collision predicates live here.
 // Admission resolves a stable record once. Revocation updates that exact record
 // even if preparation has not finished; drawing only reads its time limit.
-export function createNativeRouteControl({authorityEpoch,initialSequence=0}={}){
+export function createNativeRouteControl({authorityEpoch,initialSequence=0,initialTime=null,routes=[]}={}){
   if(typeof authorityEpoch!=='string'||!authorityEpoch||
-     !Number.isSafeInteger(initialSequence)||initialSequence<0)
+     !Number.isSafeInteger(initialSequence)||initialSequence<0||
+     initialTime!==null&&(!Number.isFinite(initialTime)||initialTime<0)||!Array.isArray(routes))
     throw TypeError('Invalid native route control identity');
   const active=new Map();
-  let sequence=initialSequence,effectiveTime=-Infinity,closed=false;
+  const assignments=new Set();
+  for(const route of routes){
+    if(!id(route?.actorId)||active.has(route.actorId)||!validHandle(route.routeHandle,authorityEpoch)||
+       !id(route.assignmentSequence)||route.assignmentSequence>initialSequence||
+       assignments.has(route.assignmentSequence)||!Number.isFinite(route.startTime)||
+       route.startTime<0||initialTime===null||route.startTime>initialTime)
+      throw TypeError('Invalid native route control baseline');
+    assignments.add(route.assignmentSequence);
+    active.set(route.actorId,{actorId:route.actorId,handle:Object.freeze({...route.routeHandle}),
+      assignmentSequence:route.assignmentSequence,startTime:route.startTime,
+      safeUntil:Infinity,lastDrawTime:null});
+  }
+  let sequence=initialSequence,effectiveTime=initialTime??-Infinity,closed=false;
   const counters={accepted:0,revoked:0,oldEpoch:0,admissions:0};
   function accept(event){
     if(closed)throw Error('Native route control is closed');

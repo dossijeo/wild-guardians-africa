@@ -81,6 +81,8 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
   const wasm=session?.core?.wasm;
   for(const name of ['nav_intent_reset','nav_intent_changes_ptr',
     'nav_intent_protocol_version','nav_intent_change_width','nav_intent_set_time',
+    'nav_intent_session','nav_intent_transition_sequence','nav_intent_effective_time',
+    'nav_intent_control_snapshot','nav_intent_control_snapshot_ptr',
     'nav_intent_apply_changes','nav_intent_plan_tasks','nav_intent_results_ptr',
     'nav_intent_restore_assigned_tasks',
     'nav_intent_discard','nav_intent_commit','nav_intent_damaged_structures',
@@ -120,11 +122,19 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
   if(wasm.nav_intent_protocol_version()!==2||wasm.nav_intent_change_width()!==15)
     throw Error('Unsupported native intent protocol; rebuild Wild Engine');
   let sequence=0,initialized=false,owningState=null,lastIntentSequence=0;
+  const controlObservers=new Set();
+  const epoch=()=>`${authorityEpoch}/${wasm.nav_intent_session()}`;
   // Native counters are instance-local and can repeat in another WASM Worker.
   // Scope every externally visible handle before it crosses an async boundary.
   // This identity is ephemeral transport metadata, never saved game/RNG state.
   const routeHandle=(session,slot,generation)=>Object.freeze({
-    authorityEpoch,session,slot,generation});
+    authorityEpoch:epoch(),session,slot,generation});
+  const closeControlObservers=reason=>{
+    for(const observer of [...controlObservers]){
+      controlObservers.delete(observer);
+      try{observer.onClosed(reason);}catch{}
+    }
+  };
   const syncBoundaryTime=()=>{
     if(!initialized)throw Error('Reset the native intent session first');
     if(wasm.nav_intent_set_time(owningState.elapsed)!==1)
@@ -146,6 +156,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     return sequence;
   };
   const resetFromState=state=>{
+    closeControlObservers('native-reset');
     wasm.nav_intent_reset();sequence=0;lastIntentSequence=0;
     initialized=true;owningState=state;
     try{
@@ -402,16 +413,20 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
   };
   const releasePlantingSite=(reservationId,{committed=false}={})=>
     wasm.nav_intent_release_planting_site(reservationId,committed?1:0)===1;
-  const intentChanges=()=>{
+  const readIntentChanges=after=>{
     const count=wasm.nav_intent_change_count();
     if(!count)return [];
+    const first=new Float64Array(wasm.memory.buffer,wasm.nav_intent_change_ptr(),15)[8];
+    if(after<first-1)throw Error('Native intent control history has a gap');
+    const offset=Math.max(0,after-first+1),remaining=count-offset;
+    if(remaining<=0)return [];
     const data=Array.from(new Float64Array(wasm.memory.buffer,
-      wasm.nav_intent_change_ptr(),count*15));
+      wasm.nav_intent_change_ptr()+offset*15*8,remaining*15));
     const types=['','RouteAssigned','RouteInvalidated','RouteReplaced',
       'IntentChanged','RouteCompleted'];
-    const changes=Array.from({length:count},(_,index)=>{
+    return Array.from({length:remaining},(_,index)=>{
       const at=index*15;
-      if(data[at+14]!==2||data[at+8]!==lastIntentSequence+index+1||
+      if(data[at+14]!==2||data[at+8]!==after+index+1||
          !types[data[at+13]]||!Number.isFinite(data[at+9]))
         throw Error('Invalid native intent transition order or protocol');
       return {actorId:data[at],state:data[at+1],taskId:data[at+2]||null,
@@ -420,14 +435,57 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
         topologyRevision:data[at+7],sequence:data[at+8],effectiveTime:data[at+9],
         revokedRouteHandle:data[at+12]?
           routeHandle(data[at+10],data[at+11],data[at+12]):null,
-        type:types[data[at+13]],protocolVersion:2,authorityEpoch};
+        type:types[data[at+13]],protocolVersion:2,authorityEpoch:epoch()};
     });
+  };
+  const flushNativeIntentControl=()=>{
+    for(const observer of [...controlObservers]){
+      try{
+        if(observer.authorityEpoch!==epoch())throw Error('Native intent authority epoch changed');
+        const changes=readIntentChanges(observer.sequence);
+        if(!changes.length)continue;
+        observer.sequence=changes.at(-1).sequence;
+        observer.onChanges(changes);
+      }catch(error){
+        controlObservers.delete(observer);
+        try{observer.onClosed(error);}catch{}
+      }
+    }
+  };
+  const intentChanges=()=>{
+    // Publish before the legacy mover drains/coalesces this same native log.
+    // Observers hold cursors only; there is no second JS navigation/event log.
+    flushNativeIntentControl();
+    const changes=readIntentChanges(lastIntentSequence);
+    if(!changes.length)return [];
     wasm.nav_intent_clear_changes();
     lastIntentSequence=changes.at(-1).sequence;
     return changes;
   };
+  const nativeIntentControlBaseline=()=>{
+    syncBoundaryTime();
+    const count=wasm.nav_intent_control_snapshot();
+    if(count<0)throw Error('Native intent control baseline is incoherent');
+    const data=new Float64Array(wasm.memory.buffer,wasm.nav_intent_control_snapshot_ptr(),count*6);
+    return {type:'IntentBaseline',protocolVersion:2,authorityEpoch:epoch(),
+      sequence:wasm.nav_intent_transition_sequence(),effectiveTime:wasm.nav_intent_effective_time(),
+      routes:Array.from({length:count},(_,index)=>{
+        const at=index*6;
+        return {actorId:data[at],routeHandle:routeHandle(data[at+1],data[at+2],data[at+3]),
+          assignmentSequence:data[at+4],startTime:data[at+5]};
+      })};
+  };
+  const observeNativeIntentControl=({onBaseline,onChanges,onClosed=()=>{}}={})=>{
+    if(typeof onBaseline!=='function'||typeof onChanges!=='function'||typeof onClosed!=='function')
+      throw TypeError('Expected native intent control observers');
+    const baseline=nativeIntentControlBaseline(),observer={
+      authorityEpoch:baseline.authorityEpoch,sequence:baseline.sequence,onChanges,onClosed};
+    controlObservers.add(observer);
+    try{onBaseline(baseline);}catch(error){controlObservers.delete(observer);throw error;}
+    return ()=>controlObservers.delete(observer);
+  };
   const routePoints=handle=>{
-    if(handle?.authorityEpoch!==authorityEpoch)return null;
+    if(handle?.authorityEpoch!==epoch())return null;
     const count=wasm.nav_intent_route_points(handle.session,handle.slot,handle.generation);
     if(count<0)return null;
     // Movement may retain these points while WASM grows its memory. Copy once
@@ -795,7 +853,8 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     }
     return {restoredHomeRouteIds,invalidSavedHomeRoutes};
   };
-  const api={authorityEpoch,resetFromState,applyEvents,applyCommittedEvents,planTasks,
+  const api={get authorityEpoch(){return epoch();},resetFromState,applyEvents,applyCommittedEvents,planTasks,
+    nativeIntentControlBaseline,observeNativeIntentControl,flushNativeIntentControl,
     restoreAssignedTasks,restoreAttackIntents,restoreRetreatIntents,
     restoreHomeIntents,
     proposalRoute,
@@ -831,7 +890,10 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     'finishAttackIntent','cancelAttackIntent','retireActor','reconcileTopology',
     'replanPendingRoutes','markActionActive','finishAction','commit']){
     const operation=api[name];
-    api[name]=(...args)=>{syncBoundaryTime();return operation(...args);};
+    api[name]=(...args)=>{
+      syncBoundaryTime();
+      try{return operation(...args);}finally{if(controlObservers.size)flushNativeIntentControl();}
+    };
   }
   return api;
 }
@@ -1703,7 +1765,10 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
       if(result)pendingNativeChanges=true;
       return result;
     },
-    authorityEpoch:bridge.authorityEpoch,
+    get authorityEpoch(){return bridge.authorityEpoch;},
+    nativeIntentControlBaseline:bridge.nativeIntentControlBaseline,
+    observeNativeIntentControl:bridge.observeNativeIntentControl,
+    flushNativeIntentControl:bridge.flushNativeIntentControl,
     intentChanges:bridge.intentChanges,routePoints:bridge.routePoints,
     discard:bridge.discard,commit:bridge.commit,sequence:bridge.sequence};
 }

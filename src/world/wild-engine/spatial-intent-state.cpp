@@ -123,6 +123,8 @@ struct ActiveIntent {
   uint32_t revokedSlot=0,revokedGeneration=0;
   int dependencyProfile=-1;
   std::set<std::pair<int,int>> routeSectors;
+  uint64_t assignmentSequence=0;
+  double assignedAt=0;
 };
 struct RouteSlot {std::vector<float> points;uint32_t generation=0;bool active=false;};
 struct Change {
@@ -189,6 +191,7 @@ struct IntentState {
   uint64_t wallRevision=0,wallPortalBuilds=0;
   std::vector<double> perimeterRows;
   std::vector<double> intentChanges;
+  std::vector<double> controlSnapshot;
   std::array<double,10> intentResult{};
   uint32_t session=0;
   uint64_t invalidations=0;
@@ -322,10 +325,14 @@ void emitIntentChange(IntentState& s,ActiveIntent& intent){
     intent.revokedGeneration?
       (intent.state==PlanningState::ActionActive?IntentEvent::RouteCompleted:
         IntentEvent::RouteInvalidated):IntentEvent::IntentChanged;
+  const uint64_t transitionSequence=++s.intentSequence;
+  if(event==IntentEvent::RouteAssigned||event==IntentEvent::RouteReplaced){
+    intent.assignmentSequence=transitionSequence;intent.assignedAt=s.effectiveTime;
+  }
   s.intentChanges.insert(s.intentChanges.end(),{double(intent.actor),
     double(int(intent.state)),double(intent.task),double(intent.target),
     double(s.session),double(intent.slot),double(intent.generation),
-    double(intent.topology),double(++s.intentSequence),s.effectiveTime,
+    double(intent.topology),double(transitionSequence),s.effectiveTime,
     intent.revokedGeneration?double(s.session):0,double(intent.revokedSlot),
     double(intent.revokedGeneration),double(int(event)),double(intentProtocolVersion)});
   intent.revokedSlot=0;intent.revokedGeneration=0;
@@ -777,7 +784,7 @@ void nav_intent_reset(){
 #endif
 #endif
   s.byBlockedCropGroup.clear();s.wallOpportunityActors.clear();
-  s.routeSlots.clear();s.intentChanges.clear();s.intentResult.fill(0);
+  s.routeSlots.clear();s.intentChanges.clear();s.controlSnapshot.clear();s.intentResult.fill(0);
   s.attackRouteInput.clear();s.attackBlockers.clear();
   s.attackReservedTargets.clear();s.attackResult.fill(0);
   s.wallAttackResult.fill(0);
@@ -1433,6 +1440,33 @@ int nav_intent_commit(){
 // Ordinary movement and ticks do not invoke the planner or emit rows.
 EMSCRIPTEN_KEEPALIVE int nav_intent_protocol_version(){return intentProtocolVersion;}
 EMSCRIPTEN_KEEPALIVE int nav_intent_change_width(){return intentChangeWidth;}
+EMSCRIPTEN_KEEPALIVE uint32_t nav_intent_session(){return state().session;}
+EMSCRIPTEN_KEEPALIVE double nav_intent_transition_sequence(){return double(state().intentSequence);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_effective_time(){return state().effectiveTime;}
+// A structural bootstrap/recovery read, not another route registry or planner.
+// Rows: actor, session, slot, generation, original assignment sequence/time.
+// Reading this does not drain the ordered changes needed by the legacy mover.
+EMSCRIPTEN_KEEPALIVE int nav_intent_control_snapshot(){
+  IntentState& s=state();s.controlSnapshot.clear();
+  std::vector<uint64_t> actors;
+  for(const auto& [actor,intent]:s.activeIntents){
+    if(intent.state!=PlanningState::RouteActive)continue;
+    if(!intent.generation||intent.slot>=s.routeSlots.size()||
+       !s.routeSlots[intent.slot].active||
+       s.routeSlots[intent.slot].generation!=intent.generation||
+       !intent.assignmentSequence)return -1;
+    actors.push_back(actor);
+  }
+  std::sort(actors.begin(),actors.end());
+  for(uint64_t actor:actors){
+    const ActiveIntent& intent=s.activeIntents.at(actor);
+    s.controlSnapshot.insert(s.controlSnapshot.end(),{double(actor),double(s.session),
+      double(intent.slot),double(intent.generation),double(intent.assignmentSequence),
+      intent.assignedAt});
+  }
+  return int(actors.size());
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_intent_control_snapshot_ptr(){return state().controlSnapshot.data();}
 EMSCRIPTEN_KEEPALIVE double nav_intent_route_validation_count(){return double(state().routeValidations);}
 EMSCRIPTEN_KEEPALIVE double nav_intent_route_validation_segments(){return double(state().routeValidationSegments);}
 EMSCRIPTEN_KEEPALIVE double nav_intent_reconcile_candidate_count(){return double(state().reconcileCandidates);}

@@ -1,4 +1,5 @@
 import {createHistoricalEventBoundaryCapture} from './historical-event-boundaries.js';
+import {createNativeIntentControlPublication} from './native-intent-control-publication.js';
 import {createTutorialGuideRevision} from './tutorial-guide-revision.js';
 import {captureMudInputs} from './mud-terrain-input.js';
 import {captureSpatialFarState} from '../world/wild-engine/spatial-far-state.js';
@@ -42,11 +43,13 @@ export function parseSimulationChunkKey(key){
 // Owns the game state and a native world inside the simulation worker. Chunk
 // residency is explicit: callers must provide the confirmed simulation demand.
 export const authoritySnapshotFields=Symbol('authoritySnapshotFields');
-export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBindings=null,navigationView=null,compactViewAcks=false,compactPausedAcks=false,compactPhysicsPoses=false,checkpointRaidWaitsOnly=false,compactPresentationPaths=false,prepareTransportSnapshots=false,observeWorldMotion=false,captureHistoricalEvents=false,captureHyenaDiagnostics=true,presentationWorkerHeadingSeed=null,restoringPhysics=false,mudPresentation=false,onTerrainChunk=null}={}){
+export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBindings=null,navigationView=null,compactViewAcks=false,compactPausedAcks=false,compactPhysicsPoses=false,checkpointRaidWaitsOnly=false,compactPresentationPaths=false,prepareTransportSnapshots=false,observeWorldMotion=false,captureHistoricalEvents=false,captureHyenaDiagnostics=true,presentationWorkerHeadingSeed=null,restoringPhysics=false,mudPresentation=false,onTerrainChunk=null,onNativeIntentControlError=null}={}){
+  if(onNativeIntentControlError!==null&&typeof onNativeIntentControlError!=='function')throw TypeError('Invalid native intent control error handler');
  if(!(module instanceof WebAssembly.Module)||typeof snapshot!=='string'||!Array.isArray(chunkKeys)||new Set(chunkKeys).size!==chunkKeys.length||typeof checkpointRaidWaitsOnly!=='boolean'||typeof compactPresentationPaths!=='boolean'||typeof prepareTransportSnapshots!=='boolean'||typeof observeWorldMotion!=='boolean'||typeof captureHistoricalEvents!=='boolean'||typeof captureHyenaDiagnostics!=='boolean'||typeof mudPresentation!=='boolean'||onTerrainChunk!==null&&typeof onTerrainChunk!=='function')throw TypeError('Invalid simulation authority initialization');
  for(const key of chunkKeys)parseSimulationChunkKey(key);
  const tutorialGuideTracker=createTutorialGuideRevision(),game=(restoringPhysics?deserializeConfirmedState:deserialize)(snapshot),loaded=new Map(),savedWaitBindings=game.workerRaidWaitBindings??null,presentationHeadings=presentationWorkerHeadingSeed===null?null:createPresentationWorkerHeadings(presentationWorkerHeadingSeed,{initialWorkerIds:game.workers.map(worker=>worker.id)});delete game.workerRaidWaitBindings;delete game.workerPhysicsCheckpoint;delete game.workerNativeAuthorityCheckpoint;let session,stopTasks,stopWorld,stopEvents,stopSettlements,physics=null,physicsInitializing=false,tutorial=null,closed=false,sequence=0,events=[],settlements=[],trackMicroIncome=false,trackedActor=null,trackMotionPeers=false,trackWorldMotion=observeWorldMotion,stopMotion=null,motionSegments=null,terrainGeneration=0,reportedTerrainGeneration=0;
- let guardianMetadata=null,guardianMetadataFailure=null,guardianTerrainEpoch=null,guardianTerrainManifest=null,activeHistoricalCapture=null;
+  let guardianMetadata=null,guardianMetadataFailure=null,guardianTerrainEpoch=null,guardianTerrainManifest=null,activeHistoricalCapture=null;
+  let nativeIntentControl=null,pendingNativeIntentControl=null;
  try{
   const withMud=data=>mudPresentation&&session.field.c.biome==='mangrove'?{...data,mudInputs:captureMudInputs(session.field,data.cx,data.cz,data.terrain.positions)}:data;
   const acceptChunk=raw=>{const data=withMud(raw);loaded.set(`${data.cx},${data.cz}`,data);terrainGeneration++;onTerrainChunk?.(data,game.elapsed);};
@@ -108,6 +111,28 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   function requireGuardianMetadata(){if(!guardianMetadata)throw Error(guardianMetadataFailure?`Guardian metadata unavailable: ${guardianMetadataFailure}`:'Guardian metadata unavailable');}
   function setGuardianTerrainEpoch(epoch,manifest=null){if(closed||epoch!==null&&(typeof epoch!=='string'||!epoch)||manifest!==null&&(manifest?.epoch!==epoch||!Array.isArray(manifest.chunks)))throw TypeError('Invalid guardian terrain epoch');guardianTerrainEpoch=epoch;guardianTerrainManifest=manifest===null?null:structuredClone(manifest);}
   return {
+    async attachNativeIntentControl(port,transportSession){
+      if(closed||pendingNativeIntentControl)throw Error('Native intent control attachment unavailable');
+      let candidate;
+      candidate=createNativeIntentControlPublication({port,session:transportSession,
+        observe:planner.observeNativeIntentControl,onError:error=>{
+          if(nativeIntentControl===candidate)onNativeIntentControlError?.(error);
+        }});
+      pendingNativeIntentControl=candidate;
+      try{
+        const result=await candidate.ready;
+        if(closed||pendingNativeIntentControl!==candidate)throw Error('Native intent attachment became obsolete');
+        const previous=nativeIntentControl;
+        nativeIntentControl=candidate;pendingNativeIntentControl=null;
+        previous?.dispose('replaced');return result;
+      }catch(error){
+        candidate.dispose('attachment-failed');
+        if(pendingNativeIntentControl===candidate)pendingNativeIntentControl=null;
+        throw error;
+      }
+    },
+    nativeIntentControlStatus:()=>({current:nativeIntentControl?.status()??null,
+      pending:pendingNativeIntentControl?.status()??null}),
    setGuardianMetadata,setGuardianMetadataFailure,setGuardianTerrainEpoch,setGuardianMetadataForQa:setGuardianMetadata,setGuardianTerrainEpochForQa:setGuardianTerrainEpoch,farVisualRevision:()=>session.core.farVisualRevision(),
    captureFarVisualState(){
     if(closed||physicsInitializing)throw Error('Far visual snapshot unavailable');
@@ -271,7 +296,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      else if(!duplicate&&!game.structures.some(s=>s.id===command.targetId&&s.kind==='wall'))rejection='No existe esa defensa';
      value=rejection?false:removeWall(game,command.id,command.targetId,nav);
     }else if(command.kind!=='snapshot')throw TypeError('Unknown simulation command');
-    const tutorialOnly=['tutorialStart','tutorialCommand','tutorialActionPause','tutorialGuideTarget'].includes(command.kind),suspensionChanged=wasSuspended!==(game.pauses.length>0||!!game.result);
+     planner.flushNativeIntentControl();
+     const tutorialOnly=['tutorialStart','tutorialCommand','tutorialActionPause','tutorialGuideTarget'].includes(command.kind),suspensionChanged=wasSuspended!==(game.pauses.length>0||!!game.result);
     const invalidated=previousTrackedActor&&command.kind!=='advance'&&!['snapshot','setNavigationView','raidCameraFocus','previewVillage'].includes(command.kind)&&(command.kind!=='trackPathMotion'||value===true)&&(!tutorialOnly||suspensionChanged);
     // Until event-level dependencies and continuous contacts are certified,
     // stop at the beginning of an affected batch rather than extrapolating
@@ -307,7 +333,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     const preparedState=prepareTransportSnapshots?prepareConfirmedStateTransport(game,{projectPaths:projectedPaths}):null;const result={sequence,value,...(pausedQuiescent?{pausedQuiescent:true}:{}),...(tutorialGuideRevision===null?{}:{tutorialGuideRevision}),...(projectedPaths?{presentationPaths:'head-v1'}:{}),...(nativeAuthorityCheckpoint?{nativeAuthorityCheckpoint}:{}),...(presentationWorkerHeadings?.length?{presentationWorkerHeadings}:{}),...(terrainCheckpoint?{terrainCheckpoint}:{}),...(command.steps!==undefined?{stepsExecuted}:{}),...(clockCapture?{clockSegments:clockCapture}:{}),...(eventBoundaries&&emitted.length?{historicalEventBoundaries:eventBoundaries.finish(emitted)}:{}),...(motionTrace?{motionTrace}:{}),...(worldMotionTrace?{worldMotionTrace}:{}),...(motionInvalidation?{motionInvalidation}:{}),...(rejection?{rejection}:{}),...(commandLoadedChunks.length?{commandLoadedChunks}:{}),...(physical===undefined?{}:{physicsCheckpoint:physical&&command.physicsCheckpoint==='encoded'?encodePhysicsCheckpoint(physical):physical}),residency:resident,physicsPose:physicsPoses?.[0]??null,...(physicsPoses?.length>1?{physicsPoses}:{}),elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,...(emittedSettlements.length?{settlements:emittedSettlements}:{}),...(emitted.length?{presentationJournalVersion:2}:{}),presentationJournal:lifecycle,...(!checkpointRaidWaitsOnly||command.kind==='snapshot'?{raidWaitBindings:captureRaidWaitBindings(game,nav)}:{}),saveAvailable:saveAvailable(),snapshot:preparedState?null:(projectedPaths?serializeConfirmedPresentationState(game):serializeConfirmedState(game)),terrainChanged:takeTerrainChanged()};if(preparedState){Object.defineProperty(result,'snapshot',{enumerable:true,configurable:true,get:()=>preparedState.snapshot});Object.defineProperty(result,authoritySnapshotFields,{value:preparedState.fields});}if(tutorial)result.tutorialUpdate=tutorial.updateStatus(projectedPaths?JSON.stringify(game):result.snapshot);hasPublishedSnapshot=true;return result;
    },
    publishResidentTerrainForQa(publish){if(closed||typeof publish!=='function')throw TypeError('Invalid terrain bootstrap');const selected=session.core.currentChunk();try{for(const key of loaded.keys()){const [x,z]=parseSimulationChunkKey(key);if(session.core.selectChunk(x,z)<0)throw Error('Resident native chunk disappeared: '+key);publish(withMud(session.core.chunkPayload()),game.elapsed);}}finally{if(selected&&session.core.selectChunk(selected.cx,selected.cz)<0)throw Error('Could not restore selected native chunk');}},
-   dispose(){if(closed)return;closed=true;presentationJournal.dispose();stopMotion?.();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{session.dispose();}},
+    dispose(){if(closed)return;closed=true;pendingNativeIntentControl?.dispose();nativeIntentControl?.dispose();presentationJournal.dispose();stopMotion?.();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{session.dispose();}},
   };
  }catch(error){stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();session?.dispose();throw error;}
 }

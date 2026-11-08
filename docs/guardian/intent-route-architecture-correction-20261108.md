@@ -229,3 +229,31 @@ para respetar la propiedad usada por el producto.
 Regresión de este incremento: **84 pruebas aprobadas sin skips**, sintaxis de
 scripts de navegador correcta y build WebGPU remoto correcto (salida
 `.cache/native-route-control-build`). Esto no cambia el estado abierto de A6.
+
+## Bootstrap nativo y publicación directa (conexión entre Workers en curso)
+
+El registro nativo conserva ahora secuencia/tiempo de asignación por intención y
+exporta una base de permisos activos ordenada por actor. No copia polilíneas ni
+otro grafo, no drena el log, no simula y no valida navegación al leerla. La base
+incluye el high-water mark real del mismo flujo v2; un receptor nuevo no necesita
+reproducir asignaciones históricas potencialmente obsoletas.
+
+El bridge ofrece observadores con cursor sobre ese log nativo, sin mantener otro
+diario JS. Publica tras mutaciones y antes del drenaje/coalescing heredado. Un
+reset retira observadores y cambia la época expuesta, incluso al reutilizar la
+misma instancia WASM. `native-intent-control-publication.js` transfiere base y
+cambios directamente y mantiene únicamente cursores ACK. La autoridad de
+simulación incorpora esta conexión y retira la anterior después del ACK de la
+nueva base. No cambia el orden de comandos ni fuerza muestreos físicos.
+
+El host admite una base inicial ligada a la sesión de transporte y hace rendezvous
+con su secuencia antes de admitir paquetes de rutas. Las dos colas pueden llegar
+en distinto orden sin admitir datos no autorizados. Un relevo normal congela los
+relojes de rutas de la generación retirada; errores o resets fallan explícitamente.
+
+**95 pruebas dirigidas aprobadas sin skips**, incluidos WASM standalone/pthread,
+MessageChannel real, snapshots/eventos iguales con y sin observador y relevo de
+conexiones. Falta el cableado cliente/Worker/bootstrap de la aplicación. Esta
+base refleja permisos del planificador nativo actual; no acredita seguridad
+futura de la locomoción JS ni resuelve la coordinación previa a cambios físicos
+o pérdida silenciosa del canal. La autorización autónoma no se activa con ella.

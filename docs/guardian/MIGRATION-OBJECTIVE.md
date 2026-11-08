@@ -45,7 +45,9 @@ camino crítico sin pedir autorización rutinaria entre hitos.
       entre instancias WASM, recuperación y cambios de Worker.
       Handles del bridge ya aislados y probados con dos WASM reales; falta
       conectar su bootstrap al runtime completo. Control/admisión gráficos
-      también comprueban época, secuencia y versión.
+      también comprueban época, secuencia y versión. Base nativa de permisos y
+      publicación con ACK implementadas en la autoridad; cableado entre Workers
+      y arranque de la aplicación en curso.
 - [ ] Canal autoridad → dibujo independiente de preparación y política de
       aplicación/latencia segura; pruebas con preparación bloqueada.
       Receptor directo y límites por versión implementados. Tres ejecuciones

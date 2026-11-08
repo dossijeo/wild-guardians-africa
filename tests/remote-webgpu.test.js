@@ -175,6 +175,50 @@ test('queued route clock bindings capture the native identity before caller muta
   assert.equal(new Float32Array(f.gpu.buffers[0].data.buffer)[0],10);
 });
 
+test('a prepared native frame waits for its direct bootstrap rather than using an unscoped permission',async()=>{
+  const [authorityPort,drawControlPort]=pair();
+  const f=await fixture({}, {absoluteNow:()=>0,
+    intentControl:{port:drawControlPort,session:'session-a'}});
+  const handle=nativeHandle(0);
+  f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'absolute',epoch:0,
+    nativeRoute:{actorId:7,routeHandle:handle,assignmentSequence:3}});
+  const receipt=f.frame(0,{clock:{version:1,epoch:0,elapsed:10,safeUntil:10,
+    anchorAbsoluteMs:0,paused:true,segments:[]}});
+  await flush();f.host.present();
+  assert.equal(f.gpu.submitted.length,0);
+  authorityPort.postMessage({type:'IntentBaseline',protocolVersion:2,session:'session-a',
+    authorityEpoch:'native-owner',sequence:9,effectiveTime:10,
+    routes:[{actorId:7,routeHandle:handle,assignmentSequence:3,startTime:8}]});
+  await flush();await f.host.idle();f.host.present();await receipt;
+  assert.equal(f.host.intentControlStatus().sequence,9);
+  assert.equal(new Float32Array(f.gpu.buffers[0].data.buffer)[0],10);
+  assert.deepEqual(f.errors,[]);
+});
+
+test('retiring a control connection freezes its admitted clocks without reviving old packets',async()=>{
+  const [authorityPort,drawControlPort]=pair();let now=0;
+  const f=await fixture({}, {absoluteNow:()=>now,
+    intentControl:{port:drawControlPort,session:'session-a'}});
+  const handle=nativeHandle(0);
+  authorityPort.postMessage({type:'IntentBaseline',protocolVersion:2,session:'session-a',
+    authorityEpoch:'native-owner',sequence:3,effectiveTime:10,
+    routes:[{actorId:7,routeHandle:handle,assignmentSequence:3,startTime:10}]});
+  await flush();
+  f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'absolute',epoch:0,
+    nativeRoute:{actorId:7,routeHandle:handle,assignmentSequence:3}});
+  const receipt=f.frame(0,{clock:{version:1,epoch:0,elapsed:10,safeUntil:20,
+    anchorAbsoluteMs:0,paused:false,segments:[{start:10,end:20,realDuration:10,rate:1}]}});
+  await flush();await f.host.idle();f.host.present();await receipt;
+  now=100;f.host.present();
+  const last=new Float32Array(f.gpu.buffers[0].data.buffer)[0];
+  authorityPort.postMessage({type:'IntentControlClosed',protocolVersion:2,session:'session-a',
+    authorityEpoch:'native-owner',sequence:3,reason:'replaced'});
+  await flush();now=500;f.host.present();
+  assert.equal(new Float32Array(f.gpu.buffers[0].data.buffer)[0],last);
+  assert.equal(f.host.intentControlStatus().closed,true);
+  assert.deepEqual(f.errors,[]);
+});
+
 test('frame publication is bounded and writes are invisible until the atomic presentation boundary', async () => {
   const f = await fixture();
   const receipt = f.frame(7);

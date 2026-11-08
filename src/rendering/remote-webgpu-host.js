@@ -14,7 +14,10 @@ const PASS = new Set(['setPipeline','setBindGroup','setVertexBuffer','setIndexBu
 
 export function createRemoteWebGpuHost({ device, context, canvas, port, intentControl = null, requestFrame = callback => requestAnimationFrame(callback), cancelFrame = handle => cancelAnimationFrame(handle), absoluteNow = () => performance.timeOrigin + performance.now(), cameraState = null, adapterInfo = null, hidden: initiallyHidden = false, maxFrameOperations = 100000, maxFrameBytes = 64 * 1024 * 1024, resourceSliceMs = 2, yieldResourceTask = () => globalThis.scheduler?.postTask ? globalThis.scheduler.postTask(() => {}, { priority: 'background' }) : new Promise(resolve => setTimeout(resolve, 0)) }) {
   if(intentControl!==null&&(!intentControl.port||typeof intentControl.port.postMessage!=='function'))throw TypeError('Invalid native intent control port');
-  const routeControl=intentControl?createNativeRouteControl(intentControl):null;
+  if(intentControl&&!intentControl.authorityEpoch&&
+     (typeof intentControl.session!=='string'||!intentControl.session))throw TypeError('Missing native intent control session');
+  let routeControl=intentControl?.authorityEpoch?createNativeRouteControl(intentControl):null;
+  const nativeControlWaiters=new Set();
   const resources = new Map([['@device', { id: '@device', value: device, pins: 0, dependencies: new Set() }]]);
   const retired = new Set(), clockBindings = new Map(), cameraBindings = new Map();
   const clockBindingKeys = new Map(), cameraBindingKeys = new Map();
@@ -34,6 +37,21 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   function recordTiming(ring, value, limit = 256) { ring.push(value); if (ring.length > limit) ring.shift(); return value; }
   const frameTime = createRemoteFrameTimeGuard();
   const metrics = { nativeFrames: 0, replayFrames: 0, packets: 0, computePackets: 0, commands: 0, queueWrites: 0, gpuErrors: 0, cameraUpdatesRejected: 0, uniformForks: 0, uniformForkBytes: 0, bindingForks: 0, resourceRetirements: 0, dependencyVisits: 0, retirementChecks: 0, producerReleases: 0, hiddenMs: 0, visibilityTransitions: 0, resourceTaskYields: 0, resourceJobMaxMs: 0, resourceJobMaxType: null };
+  function settleNativeControl(error=null){
+    const current=routeControl?.status();
+    for(const waiter of nativeControlWaiters){
+      if(!error&&(!current||current.sequence<waiter.sequence))continue;
+      nativeControlWaiters.delete(waiter);error?waiter.reject(error):waiter.resolve();
+    }
+  }
+  function waitNativeControl(sequence){
+    if(!intentControl)return Promise.reject(Error('Native route control unavailable'));
+    if(!Number.isSafeInteger(sequence)||sequence<0)return Promise.reject(Error('Invalid native route assignment sequence'));
+    const current=routeControl?.status();
+    if(stopped||failed||current?.closed)return Promise.reject(Error('Native route control is closed'));
+    if(current&&current.sequence>=sequence)return Promise.resolve();
+    return new Promise((resolve,reject)=>nativeControlWaiters.add({sequence,resolve,reject}));
+  }
   function reply(message, result, error) {
     if (message.requestId) port.postMessage({ type: 'reply', requestId: message.requestId, result, error: error?.message });
   }
@@ -57,6 +75,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   function fail(error) {
     if (failed || stopped) return;
     failed = true;
+    routeControl?.dispose();settleNativeControl(error);
     errors.push(error?.stack || String(error));
     port.postMessage({ type: 'error', error: error?.stack || String(error) });
   }
@@ -564,6 +583,14 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         packet.transportTiming.resourcesReadyAt = absoluteNow();
         packet.receivedAt = absoluteNow();
         packet.resourceSnapshot = snapshotResources(packet.references);
+        const nativeBindings=Array.from(clockBindings.values()).filter(binding=>
+          packet.resourceSnapshot.has(binding.id)&&binding.nativeRoute);
+        if(nativeBindings.length){
+          // A control message and its prepared packet use different ports.
+          // Rendezvous on the native high-water mark, never on a resource job.
+          const through=Math.max(...nativeBindings.map(binding=>binding.nativeRoute.assignmentSequence));
+          await waitNativeControl(through);
+        }
         // Resolve permissions after all resource awaits. A direct revocation may
         // have arrived while this generation waited for a model or pipeline.
         packet.admittedClockBindings=Array.from(clockBindings.values())
@@ -729,13 +756,35 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     intentControl.port.onmessage=event=>{
       if(stopped||failed)return;
       try{
-        const accepted=routeControl.accept(event.data);
+        const message=event.data;
+        if(intentControl.session&&message?.session!==intentControl.session)
+          throw Error('Native intent control transport session mismatch');
+        let accepted;
+        if(message?.type==='IntentBaseline'){
+          if(routeControl||message.protocolVersion!==2||!Array.isArray(message.routes)||
+             !Number.isFinite(message.effectiveTime))throw Error('Invalid or repeated native intent baseline');
+          routeControl=createNativeRouteControl({authorityEpoch:message.authorityEpoch,
+            initialSequence:message.sequence,initialTime:message.effectiveTime,routes:message.routes});
+          accepted=true;
+        }else if(message?.type==='IntentControlClosed'){
+          if(message.protocolVersion!==2||message.authorityEpoch!==routeControl?.status().authorityEpoch)
+            throw Error('Invalid native intent control retirement');
+          routeControl.dispose();settleNativeControl(Error('Native intent control retired'));
+          if(!['replaced','disposed','consumer-retired'].includes(message.reason))
+            fail(Error('Native intent control failed: '+message.reason));
+          return;
+        }else{
+          if(!routeControl)throw Error('Native intent event arrived before its baseline');
+          accepted=routeControl.accept(message);
+        }
+        settleNativeControl();
         intentControl.port.postMessage({type:'intent-control-applied',
-          authorityEpoch:intentControl.authorityEpoch,
+          ...(intentControl.session?{session:intentControl.session}:{}),
+          authorityEpoch:routeControl.status().authorityEpoch,
           sequence:routeControl.status().sequence,accepted});
-      }catch(error){routeControl.dispose();fail(error);}
+      }catch(error){fail(error);}
     };
-    intentControl.port.onmessageerror=()=>{routeControl.dispose();fail(Error('Native route control transfer failed'));};
+    intentControl.port.onmessageerror=()=>fail(Error('Native route control transfer failed'));
     intentControl.port.start?.();
   }
   device.lost?.then(info => { port.postMessage({ type: 'lost', info: { reason: info.reason, message: info.message } }); api.dispose(); });
@@ -763,6 +812,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     inspect: () => ({ ...metrics, hidden, resources: resources.size, pendingResources: pendingResources.size, activeSequence: active?.sequence || null, pendingSequence: pending?.sequence || null, queuedMessages, stagedOperations: stagedOperations.length, obsoleteVersions: obsoleteVersions.size, failed, backend: 'webgpu', rafIndependent: true, adapterInfo, frameTime: frameTime.status(), frameTimings: frameTimings.slice(), fenceTimings: fenceTimings.slice(), lease: active?.metadata?.clock || null, cameraSafe: active?.metadata?.cameraSafe ?? false, cameraEnvelope: active?.metadata?.cameraEnvelope || null, clockBindings: active?.clockBindings.length || 0, cameraBindings: active?.cameraBindings.length || 0, clockAtHorizon: !!active?.metadata?.clock && frameTime.status().elapsed >= active.metadata.clock.safeUntil, errors: errors.slice(), samples: sampleCursor < samples.length ? samples.slice(0, sampleCursor) : [...samples.slice(sampleCursor % samples.length), ...samples.slice(0, sampleCursor % samples.length)] }),
     dispose() {
       if (stopped) return; stopped = true;
+      settleNativeControl(Error('Remote GPU disposed'));
+      try{if(routeControl)intentControl.port.postMessage({type:'intent-control-retired',
+        session:intentControl.session,authorityEpoch:routeControl.status().authorityEpoch,
+        sequence:routeControl.status().sequence});}catch{}
       routeControl?.dispose();intentControl?.port.close?.();
       for (const job of pendingResources.values()) job.reject(Error('Remote GPU disposed'));
       pendingResources.clear();

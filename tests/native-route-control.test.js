@@ -71,3 +71,19 @@ test('a coherent native replacement revokes the old record and admits the new on
   assert.equal(record.safeUntil,12);
   assert.equal(control.admit(descriptor(2,7,handle(3))).safeUntil,Infinity);
 });
+
+test('bootstrap accepts current native permissions without replaying retired assignments',()=>{
+  const route={...descriptor(3),startTime:10};
+  const control=createNativeRouteControl({authorityEpoch:'authority-a',
+    initialSequence:9,initialTime:12,routes:[route]});
+  const record=control.admit(route);
+  assert.equal(record.startTime,10);
+  assert.equal(control.status().sequence,9);
+  control.accept(revoked(10,7,handle(),12));
+  assert.equal(record.safeUntil,12);
+  assert.throws(()=>control.accept(assigned(1)),/order or time/);
+  assert.throws(()=>createNativeRouteControl({authorityEpoch:'authority-a',
+    initialSequence:9,initialTime:12,routes:[route,route]}),/baseline/);
+  assert.throws(()=>createNativeRouteControl({authorityEpoch:'authority-a',
+    initialSequence:2,initialTime:12,routes:[route]}),/baseline/);
+});
