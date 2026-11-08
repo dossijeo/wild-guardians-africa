@@ -1,15 +1,78 @@
 import {deserialize} from '../../src/persistence/snapshots.js';
 import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialIntentBridge} from '../../src/world/wild-engine/spatial-intent-bridge.js';
+import {createWorkerHostedRuntime} from '../../src/simulation/worker-hosted-runtime.js';
+import {createConfirmedStateReceiver} from '../../src/simulation/confirmed-state-receiver.js';
+import {createWebGpuWorldClient} from '../../src/rendering/webgpu-world-client.js';
+
+async function fixtureText(name){
+ const response=await fetch('/tests/fixtures/'+name),bytes=new Uint8Array(await response.arrayBuffer());
+ return bytes[0]===31&&bytes[1]===139?
+  new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text():
+  new TextDecoder().decode(bytes);
+}
+
+export async function auditNativeRuntimeControl(){
+ const snapshot=await fixtureText('sabana712-d1-native-active-raid.json.gz'),state=deserialize(snapshot),
+  session='native-runtime-'+crypto.randomUUID(),control=new MessageChannel(),diagnostic=new MessageChannel(),errors=[],
+  canvas=document.createElement('canvas');canvas.width=canvas.height=64;document.body.append(canvas);
+ let preparer,resolveBlockStart,resolveBlockEnd;
+ const blockStart=new Promise(resolve=>{resolveBlockStart=resolve;}),
+  blockEnd=new Promise(resolve=>{resolveBlockEnd=resolve;});
+ diagnostic.port1.onmessage=({data})=>{
+  if(data.kind==='block-start')resolveBlockStart(data);
+  else if(data.kind==='block-end')resolveBlockEnd(data);
+ };
+ const actor=state.raid.animals[0],target=state.plants.find(item=>item.id===actor.targetId),
+  report=error=>errors.push(String(error?.message??error)),client=createWebGpuWorldClient({
+   canvas,session,snapshot,width:64,height:64,remoteDraw:true,intentControlPort:control.port2,
+   workerFactory:()=>{preparer=new Worker(new URL('./fixtures/webgpu-preparation-stall-worker.js',import.meta.url),{type:'module'});
+    preparer.postMessage({kind:'configure-control-fault',port:diagnostic.port2},[diagnostic.port2]);return preparer;},
+   experimentalMinimalWorld:true,quality:'muy_baja',
+   camera:{x:actor.x+8,y:20,z:actor.z+12,targetX:actor.x,targetY:0,targetZ:actor.z},onError:report});
+ let runtime;
+ try{
+  await client.ready;
+  runtime=createWorkerHostedRuntime({world:{createConfirmedReceiver:id=>createConfirmedStateReceiver(state,id)},
+   session,clientOptions:{snapshot,chunkKeys:['1,-1','2,-1','3,-1','1,0','2,0','3,0','1,1','2,1','3,1']},
+   terrainPort:client.terrainPort,presentationPort:client.presentationPort,
+   runtimeOptions:{startupSuspended:true,stepSeconds:.05,maxBatchSteps:2,coalescePublications:true},onError:report});
+  await runtime.start();
+  const attached=await runtime.attachNativeIntentControl(control.port1),
+   before=(await client.inspect()).drawExecution?.consumer?.intentControl;
+  if(!before||before.active<1||before.authorityEpoch!==attached.authorityEpoch)
+   throw Error('Real saved raid did not bootstrap an active native permission');
+  await client.waitForFirstFrame();
+  preparer.postMessage({kind:'block-control-preparation'});const blocked=await blockStart;
+  const shield=await runtime.submit({kind:'castShield',id:'native-control-fixture-shield',x:target.x,z:target.z});
+  if(shield.value!==true)throw Error('Legal shield fixture failed: '+shield.rejection);
+  await runtime.activateClock();
+  const resumed=await blockEnd;
+  await runtime.submit({kind:'pause',reason:'native-control-fixture'});
+  const inspection=await client.inspect(),after=inspection.drawExecution?.consumer?.intentControl;
+  if(!after||after.closed||after.sequence<=before.sequence||after.revoked<1)
+   throw Error('Real raid did not deliver a live native revocation: '+JSON.stringify({before,after,errors}));
+  const draw=inspection.drawExecution.consumer,
+   frames=draw.samples.filter(frame=>frame.at>=blocked.start&&frame.at<=resumed.end);
+  if(!Number.isFinite(draw.nativeIntentControlAppliedAt)||draw.nativeIntentControlAppliedAt<blocked.start||
+     draw.nativeIntentControlAppliedAt>resumed.end||frames.filter(frame=>frame.replay).length<2)
+   throw Error('Product control/draw waited for the stalled preparation Worker');
+  if(errors.length)throw Error(errors.join('; '));
+  return {backend:inspection.backend,adapter:inspection.drawExecution.consumer.adapterInfo,
+   attached,before,after,blockedMs:resumed.end-blocked.start,drawFramesDuringBlock:frames.length,
+   replayFramesDuringBlock:frames.filter(frame=>frame.replay).length,
+   maxIntervalMs:Math.max(...frames.map(frame=>frame.intervalMs??0)),
+   controlAppliedAt:draw.nativeIntentControlAppliedAt,blockStartedAt:blocked.start,blockEndedAt:resumed.end,
+   confirmedSequence:runtime.status().confirmedSequence,
+   confirmedElapsed:runtime.status().confirmedElapsed,errors,
+   scope:'Real saved warthog raid, legal Shield, authority Worker, hosted runtime and product preparation/draw Workers; real 500 ms preparation stall and WebGPU draws. No character meshes or native autonomous locomotion; validates direct control bootstrap/live events, not full acceptance A-F.'};
+ }finally{runtime?.dispose();client.dispose();control.port1.close();diagnostic.port1.close();canvas.remove();}
+}
 
 // Extends the existing concurrent Worker harness. This checks control transport
 // and real GPU uniforms, not character-model parity or full-route game safety.
 export async function auditNativeRouteControl(){
- const response=await fetch('/tests/fixtures/desierto983-d15-partial-state.json.gz');
- const bytes=new Uint8Array(await response.arrayBuffer()),
-  source=bytes[0]===31&&bytes[1]===139?
-   await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text():
-   new TextDecoder().decode(bytes),
+ const source=await fixtureText('desierto983-d15-partial-state.json.gz'),
   state=deserialize(source),module=await WebAssembly.compileStreaming(fetch('/src/world/wild-engine/spatial-savanna.wasm'));
  state.workers=[];state.plants=[];state.tasks=[];state.crates=[];state.spells=[];state.elapsed=10;
  const loaded=new Map(),session=createSpatialGameSession(module,state,{

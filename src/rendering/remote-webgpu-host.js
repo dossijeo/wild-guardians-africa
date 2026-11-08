@@ -18,6 +18,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
      (typeof intentControl.session!=='string'||!intentControl.session))throw TypeError('Missing native intent control session');
   let routeControl=intentControl?.authorityEpoch?createNativeRouteControl(intentControl):null;
   const nativeControlWaiters=new Set();
+  const nativeControlTimeoutMs=intentControl?.timeoutMs??10000;
+  if(!Number.isFinite(nativeControlTimeoutMs)||nativeControlTimeoutMs<=0)throw TypeError('Invalid native intent control timeout');
   const resources = new Map([['@device', { id: '@device', value: device, pins: 0, dependencies: new Set() }]]);
   const retired = new Set(), clockBindings = new Map(), cameraBindings = new Map();
   const clockBindingKeys = new Map(), cameraBindingKeys = new Map();
@@ -41,7 +43,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     const current=routeControl?.status();
     for(const waiter of nativeControlWaiters){
       if(!error&&(!current||current.sequence<waiter.sequence))continue;
-      nativeControlWaiters.delete(waiter);error?waiter.reject(error):waiter.resolve();
+      nativeControlWaiters.delete(waiter);clearTimeout(waiter.timer);
+      error?waiter.reject(error):waiter.resolve();
     }
   }
   function waitNativeControl(sequence){
@@ -50,7 +53,15 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     const current=routeControl?.status();
     if(stopped||failed||current?.closed)return Promise.reject(Error('Native route control is closed'));
     if(current&&current.sequence>=sequence)return Promise.resolve();
-    return new Promise((resolve,reject)=>nativeControlWaiters.add({sequence,resolve,reject}));
+    return new Promise((resolve,reject)=>{
+      const waiter={sequence,resolve,reject,timer:null};
+      waiter.timer=setTimeout(()=>{
+        if(!nativeControlWaiters.delete(waiter))return;
+        const error=Error('Native intent control sequence did not arrive');
+        error.code='native-route-control-timeout';reject(error);
+      },nativeControlTimeoutMs);
+      nativeControlWaiters.add(waiter);
+    });
   }
   function reply(message, result, error) {
     if (message.requestId) port.postMessage({ type: 'reply', requestId: message.requestId, result, error: error?.message });
@@ -777,6 +788,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           if(!routeControl)throw Error('Native intent event arrived before its baseline');
           accepted=routeControl.accept(message);
         }
+        if(accepted){metrics.nativeIntentControlAppliedAt=absoluteNow();
+          metrics.nativeIntentControlAppliedSequence=routeControl.status().sequence;}
         settleNativeControl();
         intentControl.port.postMessage({type:'intent-control-applied',
           ...(intentControl.session?{session:intentControl.session}:{}),

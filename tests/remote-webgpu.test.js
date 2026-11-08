@@ -219,6 +219,19 @@ test('retiring a control connection freezes its admitted clocks without reviving
   assert.deepEqual(f.errors,[]);
 });
 
+test('missing native control fails admission explicitly instead of holding a generation forever',async()=>{
+  const [,drawControlPort]=pair();
+  const f=await fixture({}, {absoluteNow:()=>0,
+    intentControl:{port:drawControlPort,session:'session-a',timeoutMs:5}});
+  f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'absolute',epoch:0,
+    nativeRoute:{actorId:7,routeHandle:nativeHandle(0),assignmentSequence:3}});
+  const receipt=f.frame(0,{clock:{version:1,epoch:0,elapsed:10,safeUntil:10,
+    anchorAbsoluteMs:0,paused:true,segments:[]}}),rejected=assert.rejects(receipt,/sequence did not arrive/);
+  await flush();await f.host.idle();await rejected;
+  assert.equal(f.gpu.submitted.length,0);
+  assert.equal(f.host.inspect().failed,true);
+});
+
 test('frame publication is bounded and writes are invisible until the atomic presentation boundary', async () => {
   const f = await fixture();
   const receipt = f.frame(7);

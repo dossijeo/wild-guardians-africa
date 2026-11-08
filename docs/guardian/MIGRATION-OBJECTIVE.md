@@ -46,14 +46,18 @@ camino crítico sin pedir autorización rutinaria entre hitos.
       Handles del bridge ya aislados y probados con dos WASM reales; falta
       conectar su bootstrap al runtime completo. Control/admisión gráficos
       también comprueban época, secuencia y versión. Base nativa de permisos y
-      publicación con ACK implementadas en la autoridad; cableado entre Workers
-      y arranque de la aplicación en curso.
+      publicación con ACK conectadas entre Workers, arranque de aplicación y
+      relevo gráfico. Quedan pendientes las garantías temporales de ejecución.
 - [ ] Canal autoridad → dibujo independiente de preparación y política de
       aplicación/latencia segura; pruebas con preparación bloqueada.
       Receptor directo y límites por versión implementados. Tres ejecuciones
       WebGPU reales mantienen 15 dibujos durante bloqueo de 500 ms, con revocación
-      aplicada y readback GPU correcto. Falta bootstrap de producto, desconexión
-      del canal y coordinación anterior a cambios físicos; no es cierre A–F.
+      aplicada y readback GPU correcto. Bootstrap/relevo de producto conectados
+      y verificados;
+      tres pruebas con la autoridad y el preparador reales reciben una revocación
+      durante el bloqueo. Falta pérdida silenciosa del canal, reloj causal y
+      fronteras de aplicación física. Los personajes todavía no consumen rutas
+      completas autónomas en GPU.
 - [ ] Ejecución temporal y reservas/conflictos nativos de rutas completas,
       incluyendo puertas, cuerpos móviles y excepciones físicas delimitadas.
 - [ ] Vertical AttackCrops completa y aceptación real A–F.
@@ -74,10 +78,11 @@ camino crítico sin pedir autorización rutinaria entre hitos.
 
 ## Próximo bloqueo
 
-Conectar el control nativo al bootstrap/runtime de producto sin pasar por el
-preparador, resolver desconexión y fronteras de aplicación física, y llevar
-ejecución temporal/conflictos al propietario nativo. No ampliar autorización
-visual ni eliminar el ejecutor protegido hasta resolver estas garantías.
+Llevar ejecución temporal y conflictos al propietario nativo, junto con el
+reloj causal, desconexión y fronteras de aplicación física. El control directo
+ya está conectado al bootstrap/runtime; no convierte por sí solo las rutas
+geométricas actuales en una autorización segura de todo su futuro. No ampliar
+autorización visual ni eliminar el ejecutor protegido hasta resolverlo.
 
 Actualizar este registro y el plan al terminar cada parte, distinguiendo siempre
 implementación, pruebas ejecutadas y aceptación pendiente. Si se interrumpe la

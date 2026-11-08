@@ -181,6 +181,17 @@ test('crop handoff ignores stale camera frames and acknowledges only current or 
 test('recovery frame wait rejects stale camera, viewport and simulation sequence',async()=>{
  const {client,worker}=setup({presentationRecovery:true,recoveryPort:{close(){}}});worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await client.ready;client.finishRecovery();client.setCamera({x:1});client.resize(900,700);let resolved=false;const ready=client.waitForCurrentFrame({minSequence:9}).then(frame=>{resolved=true;return frame;});const frame={kind:'recovery-frame',sequence:9,terrainGeneration:2,selectableGeneration:4,cameraVersion:1,viewportVersion:1};for(const bad of [{...frame,sequence:8},{...frame,cameraVersion:0},{...frame,viewportVersion:0}]){worker.onmessage({data:bad});await Promise.resolve();assert.equal(resolved,false);}worker.onmessage({data:frame});assert.deepEqual(await ready,{sequence:9,terrainGeneration:2,selectableGeneration:4,cameraVersion:1,viewportVersion:1});assert.equal(client.hasCurrentFrame(),true);client.dispose();
 });
+test('native control is transferred only to the sibling draw Worker, never to preparation',async()=>{
+ const intentControlPort={postMessage(){},close(){}},draw={messages:[],
+  postMessage(message,transfer){this.messages.push({message,transfer});},terminate(){}};
+ const {worker,client}=setup({remoteDraw:true,intentControlPort,drawWorkerFactory:()=>draw});
+ assert.deepEqual(draw.messages[0].message.intentControl,{port:intentControlPort,session:'s'});
+ assert(draw.messages[0].transfer.includes(intentControlPort));
+ assert(!worker.messages[0].transfer.includes(intentControlPort));
+ assert.equal(worker.messages[0].message.intentControlPort,undefined);
+ worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await client.ready;client.dispose();
+ assert.throws(()=>setup({intentControlPort}),/own draw Worker port/);
+});
 
 test('recovery frame wait cancels and rejects on worker failure or disposal',async()=>{
  for(const mode of ['abort','failure','dispose']){const {client,worker}=setup({presentationRecovery:true,recoveryPort:{close(){}}});worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await client.ready;client.finishRecovery();const controller=new AbortController(),waiting=client.waitForCurrentFrame({minSequence:1,signal:controller.signal});if(mode==='abort')controller.abort();else if(mode==='failure')worker.onmessage({data:{kind:'failure',message:'device broke'}});else client.dispose();await assert.rejects(waiting,mode==='abort'?{name:'AbortError'}:mode==='failure'?/device broke/:/disposed/);client.dispose();}

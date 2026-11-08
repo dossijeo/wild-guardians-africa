@@ -30,6 +30,19 @@ test('generic recovery API preserves session, request identity and transferred p
  const terrainPort={},presentationPort={},recoveryPort={},attach=runtime.attachVisualRecovery({terrainPort,presentationPort,recoveryPort}),call=messages.at(-1);assert.deepEqual(call.transfer,[terrainPort,presentationPort,recoveryPort]);worker.onmessage({data:{kind:'visualRecoveryAttached',session:'s',id:call.message.id,sequence:1}});assert.equal((await attach).sequence,1);
  runtime.finishVisualRecovery();assert.equal(messages.at(-1).message.kind,'finishVisualRecovery');runtime.dispose();
 });
+test('hosted native control attachment transfers its own port without publishing game state',async()=>{
+ const messages=[],worker={postMessage:(message,transfer)=>messages.push({message,transfer}),terminate(){}},
+  receiver={accept(p){this.sequence=p.sequence;return {accepted:true};},acceptUnchanged(){return {accepted:true};},
+   status(){return {sequence:this.sequence??0,lastElapsed:0};}},runtime=createWorkerHostedRuntime({
+   confirmedReceiver:receiver,session:'s',clientOptions:{},workerFactory:()=>worker});
+ const started=runtime.start();worker.onmessage({data:{kind:'publication',session:'s',publication:{sequence:1,elapsed:0,events:[]}}});
+ worker.onmessage({data:{kind:'started',session:'s',sequence:1,status:{}}});await started;
+ const port={postMessage(){}},attached=runtime.attachNativeIntentControl(port),request=messages.at(-1);
+ assert.equal(request.message.kind,'attachNativeIntentControl');assert.deepEqual(request.transfer,[port]);
+ worker.onmessage({data:{kind:'nativeIntentControlAttached',session:'s',id:request.message.id,authorityEpoch:'native/1',sequence:19}});
+ assert.deepEqual(await attached,{authorityEpoch:'native/1',sequence:19});
+ assert.equal(runtime.status().confirmedSequence,1);runtime.dispose();
+});
 test('backpressure notification is delivered separately from command results',async()=>{
  const notifications=[],worker={postMessage(){},terminate(){}},receiver={accept(p){this.sequence=p.sequence;return {accepted:true};},acceptUnchanged(){return {accepted:true};},status(){return {sequence:this.sequence??0,lastElapsed:0};}},options={qaVisualRecovery:true,qaVisualRecoveryConcurrent:true,qaVisualWorkRecovery:true,qaVisualBackpressureRecovery:true};
  const runtime=createWorkerHostedRuntime({confirmedReceiver:receiver,session:'s',clientOptions:{},runtimeOptions:options,onVisualBackpressure:info=>notifications.push(info),workerFactory:()=>worker}),start=runtime.start();

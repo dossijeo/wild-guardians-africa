@@ -257,3 +257,53 @@ conexiones. Falta el cableado cliente/Worker/bootstrap de la aplicación. Esta
 base refleja permisos del planificador nativo actual; no acredita seguridad
 futura de la locomoción JS ni resuelve la coordinación previa a cambios físicos
 o pérdida silenciosa del canal. La autorización autónoma no se activa con ella.
+
+## Cableado de producto y prueba entre Workers reales
+
+El arranque `webgpu-worker` con dibujo remoto crea un puerto separado en Window,
+lo entrega directamente al dibujante y transfiere su otro extremo a la autoridad
+mediante el runtime alojado. El preparador no recibe ese puerto. La negociación
+se realiza entre comandos, no consume una secuencia de juego ni inserta snapshots.
+También funciona con una autoridad preparada antes del renderer. El relevo de
+superficie reconecta el control antes de iniciar el replay gráfico y retira el
+control anterior después de aceptar la nueva base. Errores de arranque y cierre
+rechazan RPC pendientes y no autorizan generaciones antiguas.
+
+Se comprobó la ruta real con una incursión guardada de facóquero y un Shield
+legal: autoridad WASM en Worker, host, preparador de producto y dibujante WebGPU.
+Un wrapper **solo de prueba** bloqueó síncronamente el preparador 500 ms. En tres
+ejecuciones NVIDIA/Turing, la secuencia nativa avanzó de 1 a 5, con una revocación
+recibida durante el bloqueo (78–82 ms desde su inicio, **no una medida aislada de
+latencia de transporte**). El dibujante ejecutó 15 frames, 14 de repetición, por
+ejecución; máximos de intervalo alrededor de 33,49 ms. No hubo errores reportados.
+
+El harness concurrente también completó checkpoint/replay y reconexión del puerto,
+con tres chunks residentes y un único `NightStarted`, sin cambiar la época de la
+autoridad y retirando el controlador anterior. El arranque real de `main.js`,
+con backend WebGPU remoto, alcanzó juego/tutorial, controlador conectado y cero
+errores GPU en la inspección. Había atraso gráfico histórico: no se afirma que
+esta corrección lo elimine.
+
+Datos y ámbitos exactos: [native-control-runtime-20261108.json](performance/native-control-runtime-20261108.json).
+**No hay locomoción autónoma nativa ni meshes de personajes en el ensayo de
+bloqueo** (`admissions=0`); no es cierre de A ni D. Sigue vigente el ejecutor
+protegido de JS. El siguiente trabajo es ejecución temporal/reservas nativas,
+reloj de presentación causal (incluidas pausa y velocidad sin preparador) y
+aplicación segura de cambios físicos; después se conecta la trayectoria GPU real.
+
+La espera de una base/secuencia de control necesaria para admitir una generación
+tiene timeout explícito (10 s por defecto): un canal ausente no deja una promesa
+retenida para siempre. Es un límite de negociación/admisión, **no** una ventana
+de autorización de movimiento; no resuelve la pérdida silenciosa de un canal con
+planes ya activos.
+
+Regresión conjunta de los grupos dirigidos: **219 aprobadas, sin skips**. Sintaxis
+de navegador y build WebGPU remoto correctos (`.cache/native-control-product-*`).
+Al ampliar la batería aparecen otros tres fallos históricos: dos `releaseCommand
+is not a function` en `worker-runtime-host-historical-recovery.test.js` y una
+expectativa `publication` frente a `presentationFailure` en
+`worker-runtime-host-timeline.test.js`. Los tres se reprodujeron usando el host
+anterior (`8ce756eb6`) con los demás módulos del árbol actual, en
+`.cache/native-control-runtime-baseline/`; esos tests dejan temporizadores vivos
+al fallar y el proceso tuvo que limitarse. No se cambiaron fixtures ni cambios
+locales ajenos, y no se declara limpia la suite completa.

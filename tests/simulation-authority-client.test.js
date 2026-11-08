@@ -1,5 +1,31 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {createSimulationAuthorityClient} from '../src/simulation/simulation-authority-client.js';import {createMainSnapshotEncoder} from '../src/simulation/main-thread-snapshot-transport.js';
 function fixture(capacity=2){const sent=[],worker={postMessage:m=>sent.push(m),terminate(){this.terminated=true;}},client=createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session:'s',capacity,workerFactory:()=>worker});return {client,worker,sent,receive:data=>worker.onmessage({data})};}
+test('native control attachment runs between commands without consuming a game sequence',async()=>{
+ const f=fixture(4);f.receive({kind:'ready',session:'s'});await f.client.ready;
+ const first=f.client.submit({kind:'snapshot'}),second=f.client.submit({kind:'pause',reason:'fixture'});
+ const port={postMessage(){},close(){}},attached=f.client.attachNativeIntentControl(port);
+ assert.equal(f.sent.at(-1).command.sequence,1);
+ f.receive({kind:'result',session:'s',sequence:1});await first.result;
+ assert.equal(f.sent.at(-1).kind,'attachNativeIntentControl');
+ assert.equal(f.sent.filter(message=>message.kind==='command').length,1);
+ f.receive({kind:'nativeIntentControlAttached',session:'s',authorityEpoch:'native/1',sequence:19});
+ assert.deepEqual(await attached,{authorityEpoch:'native/1',sequence:19});
+ assert.equal(f.sent.at(-1).command.sequence,2);
+ f.receive({kind:'result',session:'s',sequence:2});await second.result;
+ assert.equal(f.client.status().next,3);f.client.dispose();
+});
+test('native control can attach while terrain blocks simulation, and disposal rejects its pending RPC',async()=>{
+ const sent=[],worker={postMessage:message=>sent.push(message),terminate(){this.terminated=true;}},
+  client=createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session:'s',terrainPort:{},
+   terrainHistory:{maxPending:4,maxRetainedBytes:4096,maxBatchBytes:2048,maxBatchRevisions:4},workerFactory:()=>worker});
+ worker.onmessage({data:{kind:'ready',session:'s'}});await client.ready;
+ worker.onmessage({data:{kind:'terrainPressure',session:'s',blocked:true}});
+ const port={postMessage(){},close(){this.closed=true;}},attachment=client.attachNativeIntentControl(port),
+  command=client.submit({kind:'snapshot'}),settled=Promise.allSettled([attachment,command.result]);
+ assert.equal(sent.at(-1).kind,'attachNativeIntentControl');
+ client.dispose();assert.deepEqual((await settled).map(item=>item.status),['rejected','rejected']);
+ assert.equal(port.closed,true);assert.equal(worker.terminated,true);
+});
 test('authority client forwards the product diagnostic selection without changing defaults',()=>{for(const [option,expected] of [[undefined,undefined],[false,false],[true,undefined]]){const sent=[],worker={postMessage:message=>sent.push(message),terminate(){}},client=createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session:'s',...(option===undefined?{}:{captureHyenaDiagnostics:option}),workerFactory:()=>worker});client.ready.catch(()=>{});assert.equal(sent[0].captureHyenaDiagnostics,expected);client.dispose();}assert.throws(()=>createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session:'s',captureHyenaDiagnostics:'false'}),/Invalid/);});
 test('world observation is sent only when explicitly requested',()=>{const sent=[],worker={postMessage:message=>sent.push(message),terminate(){}},client=createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session:'s',observeWorldMotion:true,workerFactory:()=>worker});assert.equal(sent[0].observeWorldMotion,true);client.ready.catch(()=>{});client.dispose();const standard=fixture();assert.equal(standard.sent[0].observeWorldMotion,undefined);standard.client.ready.catch(()=>{});standard.client.dispose();assert.throws(()=>createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session:'s',observeWorldMotion:'yes',workerFactory:()=>worker}),/authority client/);});
 test('historical event capture is opt-in and forwarded to the authority worker',()=>{const sent=[],worker={postMessage:message=>sent.push(message),terminate(){}},client=createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session:'s',captureHistoricalEvents:true,workerFactory:()=>worker});client.ready.catch(()=>{});assert.equal(sent[0].captureHistoricalEvents,true);client.dispose();const standard=fixture();standard.client.ready.catch(()=>{});assert.equal(standard.sent[0].captureHistoricalEvents,undefined);standard.client.dispose();assert.throws(()=>createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session:'s',captureHistoricalEvents:'yes',workerFactory:()=>worker}),/authority client/);});
