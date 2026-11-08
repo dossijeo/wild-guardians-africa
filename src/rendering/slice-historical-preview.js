@@ -25,6 +25,6 @@ export function sliceHistoricalPreview(preview,start,end){
   const segments=[];for(const seg of clock.segments){const a=Math.max(start,seg.start),b=Math.min(end,seg.end);if(b>a)segments.push({...structuredClone(seg),start:a,end:b,realDuration:(b-a)/seg.rate});}
   const slicedClock={...structuredClone(clock),start,end,segments};validateConfirmedClockSegments(slicedClock,{start,end,startPauses:[],endPauses:[]});
   const slicedTrace={...structuredClone(trace),start,end,actors,actorTickStates,...(hyenaTickSamples?{hyenaTickSamples}:{}),spatialEvidence:{...structuredClone(spatial),start,end,segments:actors.reduce((n,actor)=>n+Math.max(1,actor.segments.length),0)},separationEvidence:{...structuredClone(separation),start,end}};
-  const result={...structuredClone(preview),start,end,trace:slicedTrace,clockSegments:slicedClock,safeForAutonomousPlayback:false};delete result.certificates;return result;
+  const result={...structuredClone(preview),start,end,trace:slicedTrace,clockSegments:slicedClock,safeForAutonomousPlayback:false};delete result.certificates;delete result.workerHeadingProof;return result;
  }catch{return null;}
 }

@@ -1,6 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createPresentationWorkerHeadings,mergePresentationWorkerHeadings} from '../src/simulation/presentation-worker-headings.js';
+import {createPresentationWorkerHeadings,mergePresentationWorkerHeadings,previewPresentationWorkerHeadings} from '../src/simulation/presentation-worker-headings.js';
+
+test('heading preview validates deltas without mutating the confirmed map',()=>{
+ const baseline=new Map([['a',.2],['b',.4]]),before={workers:[{id:'a',status:'walking'},{id:'b',status:'walking'}]},after={workers:[{id:'a',status:'walking'},{id:'c',status:'walking'}]},range={sequence:3,start:1,end:2};
+ const proof=previewPresentationWorkerHeadings(baseline,[{id:'a',yaw:1},{id:'b',yaw:null},{id:'c',yaw:2,add:true}],after,before,range);
+ assert.deepEqual(proof.initial,[{id:'a',yaw:.2},{id:'b',yaw:.4}]);assert.deepEqual(proof.final,[{id:'a',yaw:1},{id:'c',yaw:2}]);assert.deepEqual([...baseline],[['a',.2],['b',.4]]);
+ assert.throws(()=>previewPresentationWorkerHeadings(baseline,[{id:'missing',yaw:1}],after,before,range),/heading delta/);
+ assert.throws(()=>previewPresentationWorkerHeadings(baseline,null,after,before,range),/heading receiver/);
+ assert.equal(previewPresentationWorkerHeadings(null,[],after,before,range),null);
+});
 import {createSimulationAuthorityClient} from '../src/simulation/simulation-authority-client.js';
 
 test('tracks legacy worker heading changes without mutating confirmed state',()=>{

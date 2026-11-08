@@ -41,6 +41,18 @@ export function preparePresentationWorkerHeadingDeltas(current,changes,state,pre
  const seen=new Set(),prepared=[];for(const item of changes){const add=item?.add===true;if(!item||typeof item.id!=='string'||!item.id||seen.has(item.id)||item.yaw!==null&&!Number.isFinite(item.yaw)||item.add!==undefined&&!add||add&&(current.has(item.id)||item.yaw===null||!state?.workers?.some(w=>w.id===item.id&&w.status!=='home')||!Array.isArray(previousState?.workers)||previousState.workers.some(w=>w.id===item.id))||!add&&!current.has(item.id))throw TypeError('Invalid presentation heading delta');seen.add(item.id);prepared.push(add?{id:item.id,yaw:item.yaw,add:true}:{id:item.id,yaw:item.yaw});}return prepared;
 }
 export function applyPresentationWorkerHeadingDeltas(current,prepared){for(const item of prepared)if(item.yaw===null)current.delete(item.id);else current.set(item.id,item.yaw);}
+
+// Preview the validated endpoint without advancing the live presentation map.
+// A missing map means there is no authority for visual worker headings.
+export function previewPresentationWorkerHeadings(current,changes,state,previousState,{sequence,start,end}={}){
+ if(current===null)return null;
+ if(!(current instanceof Map)||!Number.isSafeInteger(sequence)||sequence<1||!Number.isFinite(start)||!Number.isFinite(end)||end<=start)throw TypeError('Invalid presentation heading preview');
+ const initial=[...current].map(([id,yaw])=>({id,yaw}));
+ createPresentationWorkerHeadingMap(initial);
+ const projected=new Map(current),prepared=preparePresentationWorkerHeadingDeltas(current,changes===undefined?[]:changes,state,previousState);
+ applyPresentationWorkerHeadingDeltas(projected,prepared);
+ return {version:1,sequence,start,end,initial,final:[...projected].map(([id,yaw])=>({id,yaw}))};
+}
 export function assertPresentationWorkerHeadingCheckpoint(current,seed){
  if(!(current instanceof Map))throw TypeError('Missing presentation heading baseline');const expected=createPresentationWorkerHeadingMap(seed);if(current.size!==expected.size)throw Error('Presentation heading checkpoint mismatch');for(const [id,yaw] of expected)if(!current.has(id)||!Object.is(current.get(id),yaw))throw Error('Presentation heading checkpoint mismatch');
 }
