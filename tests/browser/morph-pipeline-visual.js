@@ -24,8 +24,16 @@ try{
   const morphs=[];root.traverse(object=>{if(object.isMesh){object.castShadow=true;object.receiveShadow=true;}if(object.morphTargetInfluences?.length){morphs.push(object);result.morphMeshes++;result.morphValues+=object.morphTargetInfluences.length;}});
   const mixer=asset.animations.length?new THREE.AnimationMixer(model):null;if(mixer)mixer.clipAction(asset.animations[0]).play();actors.push({mixer,morphs});
  }
+ if(query.get('settleShadows')==='1'){
+  // Visual parity only: eliminate late first-use shadow preparation from the
+  // comparison. This is not a loading strategy for the game.
+  renderer.render(scene,camera);await device.queue.onSubmittedWorkDone();await renderer.compileAsync(scene,camera);
+  if(sun.castShadow){if(!sun.shadow.map||typeof renderer.compileShadowAsync!=='function')throw Error('Shadow preparation unavailable');await renderer.compileShadowAsync(scene,scene,camera,sun);}
+  await device.queue.onSubmittedWorkDone();result.shadowSettled=true;
+ }
  for(const [frame,time] of [0,.25,.8,1.3].entries()){
   for(const [actorIndex,actor] of actors.entries()){actor.mixer?.setTime(time);for(const [meshIndex,mesh] of actor.morphs.entries())for(let i=0;i<mesh.morphTargetInfluences.length;i++)mesh.morphTargetInfluences[i]=(!zeroMorph&&(i+meshIndex+actorIndex+frame)%4===0)?0.25:0;}
+  if(query.get('settleShadows')==='1'){renderer.render(scene,camera);await device.queue.onSubmittedWorkDone();}
   renderer.render(scene,camera);const pixels=Uint8Array.from(await renderer.readRenderTargetPixelsAsync(target,0,0,640,384)),hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',pixels))).map(v=>v.toString(16).padStart(2,'0')).join('');
   let nonBackground=0;for(let i=0;i<pixels.length;i+=4)if(pixels[i]!==pixels[0]||pixels[i+1]!==pixels[1]||pixels[i+2]!==pixels[2])nonBackground++;
   result.frames.push({time,sha256:hash,nonBackground});const display=document.createElement('canvas');display.width=640;display.height=384;display.getContext('2d').putImageData(new ImageData(new Uint8ClampedArray(pixels),640,384),0,0);document.querySelector('#frames').append(display,document.createElement('br'));
