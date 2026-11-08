@@ -46,3 +46,14 @@ test('unsupported root keys cannot become cacheable through needsUpdate',()=>{co
 test('bounded tuple interning preserves identities after sustained structural changes',()=>{const keys=createStableMaterialKeys(),m=new MeshBasicNodeMaterial();m.testField='initial';const get=()=>keys.get(m,()=>m.testField);assert.equal(get(),'initial');for(let i=0;i<10000;i++){m.testField='state:'+i;if(i%333===0)assert.equal(get(),m.testField);}assert.equal(get(),'state:9999');m.testField='initial';assert.equal(get(),'initial');keys.dispose();});
 
 test('absent and null optional sampler values have distinct reference keys',()=>{const keys=createStableMaterialKeys({audit:true}),m=new MeshBasicNodeMaterial();m.map=new Texture();const get=()=>keys.get(m,()=>String(m.map.wrapR));assert.equal(get(),'undefined');m.map.wrapR=null;assert.equal(get(),'null');m.map.wrapR=undefined;assert.equal(get(),'undefined');keys.dispose();});
+
+test('admission structural snapshots reuse identity and observe exact fixed state and texture binding changes',()=>{
+ const keys=createStableMaterialKeys(),m=new MeshBasicNodeMaterial(),texture=new Texture();m.map=texture;let builds=0;
+ const build=()=>{builds++;return [m.customProgramCacheKey(),m.side,m.depthFunc,m.map.type,m.map.channel,m.map.renderTarget?.samples,m.map.wrapS];},get=()=>keys.admissionInputs(m,build);
+ const initial=get();for(let i=0;i<100;i++)assert.equal(get(),initial);assert.equal(builds,1);
+ m.opacity=.3;m.color.setHex(0xff0000);texture.needsUpdate=true;assert.equal(get(),initial);assert.equal(builds,1);
+ for(const change of [()=>m.side=2,()=>m.depthFunc=7,()=>texture.type=1015,()=>texture.channel=1,()=>texture.renderTarget={samples:4},()=>texture.renderTarget.samples=8,()=>texture.wrapS=RepeatWrapping]){const before=get();change();assert.notEqual(get(),before);}
+ const before=get();m.colorNode=vec4(1);assert.notEqual(get(),before);const node=get();m.colorNode.needsUpdate=true;get();assert.ok(builds>8);keys.dispose();
+});
+
+test('readmission and custom key fallback preserve equivalent admission identities',()=>{const keys=createStableMaterialKeys(),m=new MeshBasicNodeMaterial(),build=()=>[m.customProgramCacheKey(),m.side],first=keys.admissionInputs(m,build);keys.invalidate(m);assert.equal(keys.admissionInputs(m,build),first);m.customProgramCacheKey=()=> 'custom';const custom=keys.admissionInputs(m,build);assert.equal(keys.admissionInputs(m,build),custom);m.side=2;assert.notEqual(keys.admissionInputs(m,build),custom);keys.dispose();});

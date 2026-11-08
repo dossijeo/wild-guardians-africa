@@ -33,7 +33,7 @@ function pipelineInputs(object,target,camera,renderer,include=[],attachedRootPar
   attributeLayout(geometry?.index);
   // Three builds separate render-list entries for visible materials selected
   // by geometry groups. These can change without bumping material.version.
-  for(const material of materials){values.push(material,material?.version,material?.visible);materialInputs(material,values);}
+  for(const material of materials){values.push(material,material?.version,material?.visible);if(renderer._wgMaterialKeys?.admissionInputs)values.push(renderer._wgMaterialKeys.admissionInputs(material,()=>{const inputs=[];materialInputs(material,inputs);return inputs;}));else materialInputs(material,values);}
   if(Array.isArray(node.material)){values.push(geometry?.groups?.length);for(const group of geometry?.groups??[])values.push(group.start,group.count,group.materialIndex);}
   for(const [name,attribute] of Object.entries(geometry?.attributes??{}).sort(([a],[b])=>a.localeCompare(b))){values.push(name);attributeLayout(attribute);}
   for(const [name,attributes] of Object.entries(geometry?.morphAttributes??{}).sort(([a],[b])=>a.localeCompare(b))){values.push(name,attributes.length);for(const attribute of attributes)attributeLayout(attribute);}

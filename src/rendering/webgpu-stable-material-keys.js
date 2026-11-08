@@ -22,6 +22,7 @@ function observe(object,key,notify){
  record.subscribers.add(notify);return ()=>{record.subscribers.delete(notify);if(!record.subscribers.size){record.restore();properties.delete(key);}};
 }
 const ignored=/^(is[A-Z]|_)|^(visible|version|uuid|name|opacity|userData)$/;
+const admissionTextureKeys=['type','compareFunction','colorSpace','channel','anisotropy','renderTarget','isCubeTexture','isArrayTexture','isDataArrayTexture','isCompressedArrayTexture','is3DTexture','isData3DTexture','isDepthTexture','isDataTexture'];
 const samplerKeys=['mapping','magFilter','minFilter','wrapS','wrapT','wrapR'];
 const shape=value=>value===null?'null':typeof value==='number'?value!==0:typeof value==='object'?'object':String(value);
 const valueToken=value=>JSON.stringify(value?.isNode?['node',value.id,value.version]:value?.isTexture?['texture',...samplerKeys.map(name=>String(value[name]))]:[typeof value,shape(value)]);
@@ -40,16 +41,17 @@ function structuralIdentity(values,onReset){
 }
 
 export function createStableMaterialKeys({audit=false}={}){
- const records=new WeakMap(),live=new Set();let closed=false,builds=0,hits=0,fallbacks=0,discoveries=0;
- function release(record){for(const stop of record.dependencies.splice(0))stop();for(const stop of record.properties.splice(0))stop();record.material.removeEventListener('dispose',record.dispose);live.delete(record);records.delete(record.material);}
+ const records=new WeakMap(),admissionSnapshots=new WeakMap(),live=new Set();let closed=false,builds=0,hits=0,fallbacks=0,discoveries=0;
+ function admissionSnapshot(material,build){const value=build(),old=admissionSnapshots.get(material);if(old&&old.length===value.length&&old.every((v,i)=>Object.is(v,value[i])))return old;admissionSnapshots.set(material,value);return value;}
+ function release(record,clearSnapshot=true){if(clearSnapshot)admissionSnapshots.delete(record.material);for(const stop of record.dependencies.splice(0))stop();for(const stop of record.properties.splice(0))stop();record.material.removeEventListener('dispose',record.dispose);live.delete(record);records.delete(record.material);}
  function adopt(material){
-  const record={material,properties:[],dependencies:[],dirty:true,bindingsDirty:true,key:null,unsupported:false,variants:new Map()};
+  const record={material,properties:[],dependencies:[],dirty:true,bindingsDirty:true,admissionDirty:true,admissionValue:null,key:null,unsupported:false,variants:new Map()};
   // Unsupported dependencies remain on the reference path until re-admission.
   const invalidate=()=>{record.dirty=true;};
   const keys=new Set(Object.keys(material));for(let p=Object.getPrototypeOf(material);p;p=Object.getPrototypeOf(p))for(const [key,d]of Object.entries(Object.getOwnPropertyDescriptors(p)))if(d.get&&!ignored.test(key))keys.add(key);
   record.recipe=[...keys].filter(key=>!ignored.test(key));keys.add('version');
   const indices=new Map(record.recipe.map((key,i)=>[key,i]));record.identity=structuralIdentity(record.recipe.map(key=>valueToken(material[key])),()=>record.variants.clear());
-  record.refresh=(key,value)=>{const index=indices.get(key);if(index!==undefined)record.identity.set(index,valueToken(value));};
+  record.refresh=(key,value)=>{record.admissionDirty=true;const index=indices.get(key);if(index!==undefined)record.identity.set(index,valueToken(value));};
   discoveries++;record.nodeProperties=new Set();record.textureProperties=new Set();
   for(const {property,index} of getNodeChildren(material)){
    // Collections and non-recipe roots have no assignment/version contract.
@@ -77,10 +79,19 @@ export function createStableMaterialKeys({audit=false}={}){
    if(childNode.getCacheKey!==Node.prototype.getCacheKey)return false;
    const stop=observe(childNode,'version',()=>{record.refresh(property,childNode);record.dirty=true;});if(!stop)return false;record.dependencies.push(stop);
   }
-  for(const key of record.textureProperties){const texture=record.material[key];if(!texture?.isTexture)continue;for(const property of samplerKeys){const stop=observe(texture,property,()=>{record.refresh(key,texture);record.dirty=true;});if(!stop)return false;record.dependencies.push(stop);}}
+  for(const key of record.textureProperties){const texture=record.material[key];if(!texture?.isTexture)continue;for(const property of [...samplerKeys,...admissionTextureKeys]){const stop=observe(texture,property,()=>{record.admissionDirty=true;if(property==='renderTarget')record.bindingsDirty=true;if(samplerKeys.includes(property)){record.refresh(key,texture);record.dirty=true;}});if(!stop)return false;record.dependencies.push(stop);}if(texture.renderTarget){const stop=observe(texture.renderTarget,'samples',()=>{record.admissionDirty=true;});if(!stop)return false;record.dependencies.push(stop);}}
   return true;
  }
  return {
+  admissionInputs(material,build){
+   if(closed)throw Error('Material key owner disposed');
+   const method=material.customProgramCacheKey;if(method!==NodeMaterial.prototype.customProgramCacheKey&&method!==Material.prototype.customProgramCacheKey)return admissionSnapshot(material,build);
+   const record=records.get(material)??adopt(material);if(!record||record.unsupported||record.collectionChanged)return admissionSnapshot(material,build);
+   if(record.bindingsDirty){record.bindingsDirty=false;if(!dependencies(record)){record.unsupported=true;return admissionSnapshot(material,build);}}
+   if(record.admissionDirty){record.admissionDirty=false;record.admissionValue=admissionSnapshot(material,build);}
+   if(audit){const reference=build();if(reference.length!==record.admissionValue.length||reference.some((v,i)=>!Object.is(v,record.admissionValue[i])))throw Error('Stable admission inputs differ');}
+   return record.admissionValue;
+  },
   get(material,build){
    if(closed)throw Error('Material key owner disposed');
    const method=material.customProgramCacheKey;
@@ -102,7 +113,7 @@ export function createStableMaterialKeys({audit=false}={}){
   },
   // Owners adding a public structural field or editing a nested graph in
   // place must invalidate explicitly, just as they must request admission.
-  invalidate(material){const record=records.get(material);if(record)release(record);},
+  invalidate(material){const record=records.get(material);if(record)release(record,false);},
   status(){return {materials:live.size,builds,hits,fallbacks,discoveries};},
   dispose(){if(closed)return;closed=true;for(const record of [...live])release(record);}
  };
