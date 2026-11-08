@@ -303,6 +303,9 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
    if(signal!==undefined&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))return Promise.reject(TypeError('Invalid admission signal'));
    if(publish!==null&&typeof publish!=='function'||typeof returnTicket!=='boolean'||typeof requireShadowTarget!=='boolean'||publish!==null&&returnTicket||!['normal','visible'].includes(priority))return Promise.reject(TypeError('Invalid admission publication'));
    if(signal?.aborted)return Promise.reject(new DOMException('Pipeline admission cancelled','AbortError'));
+   // Admission is the structural mutation boundary, including newly added
+   // fields that were not present when an earlier key recipe was captured.
+   if(renderer._wgMaterialKeys){const materials=new Set();object.traverse(node=>{for(const material of Array.isArray(node.material)?node.material:[node.material])if(material)materials.add(material);});for(const item of materialAlternatives)for(const material of Array.isArray(item.material)?item.material:[item.material])materials.add(material);for(const material of materials)renderer._wgMaterialKeys.invalidate(material);}
    return new Promise((resolve,reject)=>enqueue({object,signal,include:[...new Set(include)],target,shadowPass,passCamera,targetScene,publish,returnTicket,requireShadowTarget,priority,materialAlternatives:materialAlternatives.map(item=>({mesh:item.mesh,material:item.material,original:item.mesh.material,root:object})),version:generation,resolve,reject,onAbort:null}));
   },
   prepareAndPublish(object,options,publish){return this.prepare(object,{...options,publish});},

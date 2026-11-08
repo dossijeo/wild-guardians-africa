@@ -1,3 +1,4 @@
+import {patchStableMaterialKeys} from './patch-three-stable-material-keys.mjs';
 import {readFile,writeFile} from 'node:fs/promises';
 import {pathToFileURL} from 'node:url';
 
@@ -116,10 +117,10 @@ export async function patchInstalledThree(root='node_modules/three',{stableMorph
  if(typeof stableMorph!=='boolean')throw TypeError('Invalid stable morph setting');
  const metadata=JSON.parse(await readFile(`${root}/package.json`,'utf8'));
  if(metadata.version!=='0.180.0')throw Error(`Unsupported Three.js version: ${metadata.version}`);
- const paths=['src/renderers/webgpu/utils/WebGPUPipelineUtils.js','src/renderers/common/Pipelines.js','build/three.webgpu.js','build/three.webgpu.nodes.js','src/nodes/accessors/MorphNode.js','src/renderers/common/Renderer.js'].map(p=>`${root}/${p}`);
+ const paths=['src/renderers/webgpu/utils/WebGPUPipelineUtils.js','src/renderers/common/Pipelines.js','build/three.webgpu.js','build/three.webgpu.nodes.js','src/nodes/accessors/MorphNode.js','src/renderers/common/Renderer.js','src/renderers/common/RenderObject.js'].map(p=>`${root}/${p}`);
  const originals=await Promise.all(paths.map(p=>readFile(p,'utf8')));
  const morph=stableMorph?patchMorphInfluenceSource:restoreMorphInfluenceSource;
- const patched=originals.map((source,i)=>i===0?patchPipelineSource(source):i===1?patchPipelineCacheSource(source):i===4?morph(source):i===5?patchShadowPositionSource(source):morph(patchShadowPositionSource(patchShadowCompileSource(patchPipelineCacheSource(patchPipelineSource(source)))))); // Validate all before writing any.
+ const patched=originals.map((source,i)=>i===0?patchPipelineSource(source):i===1?patchPipelineCacheSource(source):i===4?morph(source):i===5?patchShadowPositionSource(source):i===6?patchStableMaterialKeys(source):patchStableMaterialKeys(morph(patchShadowPositionSource(patchShadowCompileSource(patchPipelineCacheSource(patchPipelineSource(source))))))); // Validate all before writing any.
  for(let i=0;i<paths.length;i++)if(patched[i]!==originals[i])await writeFile(paths[i],patched[i]);
 }
 

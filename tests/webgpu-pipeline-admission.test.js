@@ -6,6 +6,12 @@ import {uniform} from 'three/tsl';
 import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
 import {closeWebGpuRenderer} from '../src/rendering/webgpu-world-surface.js';
 
+test('stable key admission invalidates object materials and supports the independent sky transaction',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),material=new THREE.MeshBasicMaterial(),mesh=new THREE.Mesh(new THREE.BoxGeometry(),material),invalidated=[];
+ const renderer={backend:{isWebGPUBackend:true},_wgMaterialKeys:{invalidate:m=>invalidated.push(m)},compileAsync:async()=>{}},admission=createWebGpuPipelineAdmission({renderer,scene,camera});
+ try{await admission.prepare(mesh);assert.deepEqual(invalidated,[material]);const sky=uniform(1);await admission.prepareBackgroundAndPublish(sky,{},()=>{scene.backgroundNode=sky;});assert.equal(scene.backgroundNode,sky);assert.deepEqual(invalidated,[material]);}finally{admission.dispose();mesh.geometry.dispose();material.dispose();}
+});
+
 test('optional shared scene lighting is restored before asynchronous admission settles',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),oldNode={},oldLights=[],node={lights:oldLights,getLights(){return this.lights;},setLights(value){this.lights=value;}},list={lightsNode:oldNode,lightsArray:[new THREE.PointLight()]};let finish;
  const renderer={backend:{isWebGPUBackend:true},_renderLists:{get:()=>list},lighting:{getNode:()=>node},compileAsync(){assert.equal(this._wgCompileSceneReference,scene);assert.equal(list.lightsNode,node);node.setLights(list.lightsArray);return new Promise(resolve=>{finish=resolve;});}},admission=createWebGpuPipelineAdmission({renderer,scene,camera,sharedSceneLighting:true});
