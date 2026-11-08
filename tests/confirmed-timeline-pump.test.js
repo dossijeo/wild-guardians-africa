@@ -6,6 +6,19 @@ import {confirmedEventsAtEndpoint} from '../src/rendering/confirmed-endpoint-eve
 
 function fixture(items){let sequence=0,lastElapsed=0,ready=true,lastClock=null;const seen=[];return {seen,setReady(value){ready=value;},stream:{status:()=>({closed:false,sequence,lastElapsed}),timelineStatus:()=>({receivedElapsed:items.at(-1)?.elapsed??lastElapsed}),lastConfirmedClockSegments:()=>lastClock,nextTimelineBoundary:()=>items[0]??null,advanceNextTimelineBoundary(){if(!ready)return false;const item=items.shift();sequence=item.sequence;lastElapsed=item.elapsed;lastClock=item.clock??null;seen.push(item);return true;}}};}
 
+test('diagnostics distinguish rejected certificates from intervals consumed before any draw',()=>{
+ const segments={version:1,start:0,end:.1,startPauses:[],endPauses:[],complete:true,segments:[{start:0,end:.1,realDuration:.1,rate:1}]};
+ for(const reject of [true,false]){
+  let now=0;const f=fixture([{sequence:1,elapsed:.1,clock:segments}]),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now});
+  f.stream.previewNextMotionBoundary=()=>({sequence:1,start:0,end:.1,reasons:[],safeForAutonomousPlayback:true,clockSegments:segments});
+  const pump=createConfirmedTimelinePump({stream:f.stream,historicalPlayback:{clock,now:()=>now,certify:value=>reject?null:value,lastRejection:()=>({reason:'animal-bake-pending',actorId:'a'}),start(){now=150;return true;},finish(){},abort(){},isCurrent:()=>true}});
+  assert.equal(pump.advance(),1);const stats=pump.status().historicalDiagnostics;
+  assert.equal(stats.starts,reject?0:1);assert.equal(stats.finishedSameTurn,reject?0:1);assert.equal(stats.certifierRejections,reject?1:0);
+  if(reject){assert.equal(stats.lastRejection.reason,'animal-bake-pending');stats.lastRejection.reason='changed';assert.equal(pump.status().historicalDiagnostics.lastRejection.reason,'animal-bake-pending');}
+  assert.equal(pump.status().historicalPending,null);pump.dispose();clock.dispose();
+ }
+});
+
 test('certified endpoint events stay pending through playback and publish once at its end',()=>{
  let now=0,effects=0;const segments={version:1,start:0,end:.1,startPauses:[],endPauses:[],complete:true,segments:[{start:0,end:.1,realDuration:.1,rate:1}]};
  const item={sequence:1,elapsed:.1,clock:segments,events:[{id:'hit',simulationTime:.1}],presentationJournalVersion:2,presentationJournal:[{kind:'event',eventId:'hit',at:.1}]},f=fixture([item]),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now});
