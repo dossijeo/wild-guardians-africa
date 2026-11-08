@@ -59,8 +59,9 @@ export function attackVfxPlans(state){
 // target/terrain dependencies until its boundary. Never infer a new hit.
 export function confirmedHistoricalAttackPlans(state,preview){
  const ticks=preview?.trace?.actorTickStates;
- if(!state||!Array.isArray(state.plants)||!Array.isArray(state.structures)||!Array.isArray(state.spells)||!Array.isArray(state.raid?.animals)||!ticks?.complete||!Array.isArray(ticks.actors)||!Number.isFinite(preview.start)||!Number.isFinite(preview.end)||preview.end<=preview.start||state.spells.some(spell=>spell.kind==='shield'&&spell.remaining>0))return null;
+ if(!state||!Array.isArray(state.plants)||!Array.isArray(state.structures)||!Array.isArray(state.spells)||!Array.isArray(state.raid?.animals)||!ticks?.complete||!Array.isArray(ticks.actors)||!Number.isFinite(preview.start)||!Number.isFinite(preview.end)||preview.end<=preview.start)return null;
  const base=attackVfxPlans({...state,events:[]}),animals=state.raid.animals,result=[];
+ if(base.length&&state.spells.some(spell=>spell.kind==='shield'&&spell.remaining>0))return null;
  if(new Set(base.map(plan=>plan.key)).size!==base.length)return null;
  for(const plan of base){
   const matches=animals.filter(animal=>animal.attackId===plan.key),animal=matches[0],records=ticks.actors.filter(item=>item.actorId===animal?.id),samples=records[0]?.samples,target=[...state.plants,...state.structures].find(item=>item.id===animal?.targetId);
