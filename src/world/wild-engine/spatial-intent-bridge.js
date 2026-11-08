@@ -75,7 +75,9 @@ const taskTargetLookup=state=>{
     id.startsWith('crate-')?crate(id):structure(id);
 };
 
-export function createSpatialIntentBridge(session){
+export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.crypto.randomUUID()}={}){
+  if(typeof authorityEpoch!=='string'||!authorityEpoch||authorityEpoch.length>256)
+    throw TypeError('Expected an authority epoch for native route handles');
   const wasm=session?.core?.wasm;
   for(const name of ['nav_intent_reset','nav_intent_changes_ptr',
     'nav_intent_protocol_version','nav_intent_change_width','nav_intent_set_time',
@@ -118,6 +120,11 @@ export function createSpatialIntentBridge(session){
   if(wasm.nav_intent_protocol_version()!==2||wasm.nav_intent_change_width()!==15)
     throw Error('Unsupported native intent protocol; rebuild Wild Engine');
   let sequence=0,initialized=false,owningState=null,lastIntentSequence=0;
+  // Native counters are instance-local and can repeat in another WASM Worker.
+  // Scope every externally visible handle before it crosses an async boundary.
+  // This identity is ephemeral transport metadata, never saved game/RNG state.
+  const routeHandle=(session,slot,generation)=>Object.freeze({
+    authorityEpoch,session,slot,generation});
   const syncBoundaryTime=()=>{
     if(!initialized)throw Error('Reset the native intent session first');
     if(wasm.nav_intent_set_time(owningState.elapsed)!==1)
@@ -409,16 +416,18 @@ export function createSpatialIntentBridge(session){
         throw Error('Invalid native intent transition order or protocol');
       return {actorId:data[at],state:data[at+1],taskId:data[at+2]||null,
         targetId:data[at+3]||null,routeHandle:data[at+6]?
-          {session:data[at+4],slot:data[at+5],generation:data[at+6]}:null,
+          routeHandle(data[at+4],data[at+5],data[at+6]):null,
         topologyRevision:data[at+7],sequence:data[at+8],effectiveTime:data[at+9],
-        revokedRouteHandle:data[at+12]?{session:data[at+10],slot:data[at+11],
-          generation:data[at+12]}:null,type:types[data[at+13]],protocolVersion:2};
+        revokedRouteHandle:data[at+12]?
+          routeHandle(data[at+10],data[at+11],data[at+12]):null,
+        type:types[data[at+13]],protocolVersion:2,authorityEpoch};
     });
     wasm.nav_intent_clear_changes();
     lastIntentSequence=changes.at(-1).sequence;
     return changes;
   };
   const routePoints=handle=>{
+    if(handle?.authorityEpoch!==authorityEpoch)return null;
     const count=wasm.nav_intent_route_points(handle.session,handle.slot,handle.generation);
     if(count<0)return null;
     // Movement may retain these points while WASM grows its memory. Copy once
@@ -561,8 +570,8 @@ export function createSpatialIntentBridge(session){
         lastRouteCount:values[5],lastRegisterResult:values[6],
         unknownCauseMask:values[7]}};
     const targetId=values[1],target=cropObjects.get(targetId);
-    const routeHandle={session:values[4],slot:values[5],generation:values[6]};
-    const coordinates=routePoints(routeHandle);
+    const handle=routeHandle(values[4],values[5],values[6]);
+    const coordinates=routePoints(handle);
     if(!target||!coordinates||coordinates.length<2||coordinates.length%2){
       wasm.nav_intent_attack_cancel(numericId(animal.id));
       throw Error('Native crop intention has no confirmed JS target or route');
@@ -572,7 +581,7 @@ export function createSpatialIntentBridge(session){
         x:values[2],z:values[3]},path:Array.from(
         {length:coordinates.length/2},(_,index)=>({
           x:coordinates[index*2],z:coordinates[index*2+1]}))},
-      native:true,routeHandle,groupId:values[7],
+      native:true,routeHandle:handle,groupId:values[7],
       regionQueries:values[8],routeQueries:values[9]};
   };
   const planAttackWall=(state,animal)=>{
@@ -589,8 +598,8 @@ export function createSpatialIntentBridge(session){
     const target=state.structures.find(structure=>
       numericId(structure.id)===values[1]&&structure.kind==='wall'&&
       structure.status==='intact');
-    const routeHandle={session:values[4],slot:values[5],generation:values[6]};
-    const coordinates=routePoints(routeHandle);
+    const handle=routeHandle(values[4],values[5],values[6]);
+    const coordinates=routePoints(handle);
     if(!target||!coordinates||coordinates.length<2||coordinates.length%2){
       wasm.nav_intent_attack_cancel(numericId(animal.id));
       throw Error('Native wall intention has no confirmed JS target or route');
@@ -600,7 +609,7 @@ export function createSpatialIntentBridge(session){
         x:values[2],z:values[3]},path:Array.from(
         {length:coordinates.length/2},(_,index)=>({
           x:coordinates[index*2],z:coordinates[index*2+1]}))},
-      native:true,routeHandle,groupId:values[7],
+      native:true,routeHandle:handle,groupId:values[7],
       candidatesExamined:values[8],routeQueries:values[9]};
   };
   const replanAttackRoute=animal=>{
@@ -617,11 +626,11 @@ export function createSpatialIntentBridge(session){
     if(wasm.nav_intent_actor(numericId(animal.id))!==1)
       throw Error('Native attack reroute lost its active intention');
     const values=new Float64Array(wasm.memory.buffer,wasm.nav_intent_actor_ptr(),10);
-    const routeHandle={session:values[4],slot:values[5],generation:values[6]};
-    const points=routePoints(routeHandle);
+    const handle=routeHandle(values[4],values[5],values[6]);
+    const points=routePoints(handle);
     if(!points||points.length<2||points.length%2)
       throw Error('Native attack reroute has no usable points');
-    return {status:'found',routeHandle,path:Array.from(
+    return {status:'found',routeHandle:handle,path:Array.from(
       {length:points.length/2},(_,index)=>({
         x:points[index*2],z:points[index*2+1]}))};
   };
@@ -637,11 +646,11 @@ export function createSpatialIntentBridge(session){
     if(wasm.nav_intent_actor(numericId(animal.id))!==1)
       throw Error('Native retreat route lost its active intention');
     const values=new Float64Array(wasm.memory.buffer,wasm.nav_intent_actor_ptr(),10);
-    const routeHandle={session:values[4],slot:values[5],generation:values[6]};
-    const points=routePoints(routeHandle);
+    const handle=routeHandle(values[4],values[5],values[6]);
+    const points=routePoints(handle);
     if(!points||points.length<2||points.length%2)
       throw Error('Native retreat route has no usable points');
-    return {status:'found',routeHandle,path:Array.from(
+    return {status:'found',routeHandle:handle,path:Array.from(
       {length:points.length/2},(_,index)=>({
         x:points[index*2],z:points[index*2+1]}))};
   };
@@ -656,11 +665,11 @@ export function createSpatialIntentBridge(session){
     if(wasm.nav_intent_actor(numericId(worker.id))!==1)
       throw Error('Native home route lost its active intention');
     const values=new Float64Array(wasm.memory.buffer,wasm.nav_intent_actor_ptr(),10);
-    const routeHandle={session:values[4],slot:values[5],generation:values[6]};
-    const points=routePoints(routeHandle);
+    const handle=routeHandle(values[4],values[5],values[6]);
+    const points=routePoints(handle);
     if(!points||points.length<2||points.length%2)
       throw Error('Native home route has no usable points');
-    return {status:'found',routeHandle,path:Array.from(
+    return {status:'found',routeHandle:handle,path:Array.from(
       {length:points.length/2},(_,index)=>({
         x:points[index*2],z:points[index*2+1]}))};
   };
@@ -786,7 +795,7 @@ export function createSpatialIntentBridge(session){
     }
     return {restoredHomeRouteIds,invalidSavedHomeRoutes};
   };
-  const api={resetFromState,applyEvents,applyCommittedEvents,planTasks,
+  const api={authorityEpoch,resetFromState,applyEvents,applyCommittedEvents,planTasks,
     restoreAssignedTasks,restoreAttackIntents,restoreRetreatIntents,
     restoreHomeIntents,
     proposalRoute,
@@ -844,10 +853,10 @@ function structureCondition(structure){
 // deliver committed deltas at action boundaries; ordinary movement never
 // invokes the native planner. A pending physical result gets one bounded
 // recovery retry in case a dynamic obstruction produced no reliable event.
-export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
+export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEpoch}={}){
   if(!Number.isFinite(retrySeconds)||retrySeconds<=0)
     throw RangeError('retrySeconds must be positive');
-  const bridge=createSpatialIntentBridge(session);
+  const bridge=createSpatialIntentBridge(session,{authorityEpoch});
   const eligible=new Set(),requests=new Map(),animalRequests=new Map(),
     workerPlanCounts=new Map(),animalPlanCounts=new Map(),
     workerPeakPerMinute=new Map(),animalPeakPerMinute=new Map(),
@@ -1694,6 +1703,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       if(result)pendingNativeChanges=true;
       return result;
     },
+    authorityEpoch:bridge.authorityEpoch,
     intentChanges:bridge.intentChanges,routePoints:bridge.routePoints,
     discard:bridge.discard,commit:bridge.commit,sequence:bridge.sequence};
 }

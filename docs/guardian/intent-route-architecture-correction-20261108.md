@@ -48,10 +48,13 @@ revocación aunque un recurso termine después; no readmite una versión retirad
 tras recuperación/cambio de Worker. Nueva sesión invalida handles anteriores.
 El guardado conserva consecuencias/acciones, no handles WASM reutilizables.
 
-**Límite actual:** el contador `session` nativo es local a una instancia WASM;
-otra instancia puede repetir sus valores. El futuro canal gráfico debe ligar el
-handle al epoch de autoridad/transporte existente y rechazar épocas retiradas.
-El tuple nativo solo, aun con protocolo 2, no protege cambios de Worker.
+El contador `session` nativo es local a una instancia WASM; otra instancia puede
+repetir sus valores. El bridge ahora añade `authorityEpoch` a cada handle y
+transición, rechaza handles sin ámbito o de otro propietario y permite recibir
+la época del propietario de autoridad. Por defecto genera una identidad efímera
+por propietario, fuera de guardados y RNG del juego. Dos instancias reales con
+el mismo tuple nativo ya no pueden intercambiar handles. El receptor gráfico
+debe conservar ese ámbito: este cambio no conecta por sí solo el canal directo.
 
 ## Seguridad antes de habilitar autonomía
 

@@ -43,6 +43,8 @@ camino crítico sin pedir autorización rutinaria entre hitos.
 - [x] Suscripciones espaciales nativas para cambios de sectores/portales.
 - [ ] Ligar handles y control gráfico a la época de autoridad; impedir reuso
       entre instancias WASM, recuperación y cambios de Worker.
+      Handles del bridge ya aislados y probados con dos WASM reales; falta
+      aplicar el mismo ámbito en control/admisión gráficos.
 - [ ] Canal autoridad → dibujo independiente de preparación y política de
       aplicación/latencia segura; pruebas con preparación bloqueada.
 - [ ] Ejecución temporal y reservas/conflictos nativos de rutas completas,

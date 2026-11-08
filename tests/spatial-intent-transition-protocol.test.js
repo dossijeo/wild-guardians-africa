@@ -22,7 +22,7 @@ test('pthread runtime exposes the same native transition ABI as standalone',asyn
     assert.equal(typeof world.core.wasm.nav_intent_route_validation_count,'function');
   }finally{await world.dispose();}
 });
-function fixture(){
+function fixture(options={}){
   const state=deserialize(gunzipSync(readFileSync(new URL(
     './fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))).toString());
   state.workers=[];state.plants=[];state.tasks=[];state.crates=[];state.spells=[];
@@ -44,7 +44,7 @@ function fixture(){
     status:'walking',hitsRemaining:2};
   const crop={id:'plant-900001',species:'mijo',alive:true,...end};
   state.plants=[crop];state.raid={animals:[actor],reservations:{}};
-  const bridge=createSpatialIntentBridge(session);
+  const bridge=createSpatialIntentBridge(session,options);
   bridge.resetFromState(state);
   return {state,session,bridge,actor,crop,end};
 }
@@ -258,4 +258,37 @@ test('time cannot rewind inside a session; restore changes session and restarts 
     assert.equal(event.sequence,1);
     assert.equal(event.effectiveTime,9);
   }finally{f.session.dispose();}
+});
+
+test('repeating native handles in another WASM instance cannot revive an old route',()=>{
+  const first=fixture({authorityEpoch:'authority-before-worker-replacement'});
+  const replacement=fixture({authorityEpoch:'authority-after-worker-replacement'});
+  try{
+    const oldPlan=first.bridge.planAttackCrop(first.state,first.actor);
+    const newPlan=replacement.bridge.planAttackCrop(replacement.state,replacement.actor);
+    assert.equal(oldPlan.status,'found');assert.equal(newPlan.status,'found');
+    const tuple=({session,slot,generation})=>[session,slot,generation];
+    assert.deepEqual(tuple(oldPlan.routeHandle),tuple(newPlan.routeHandle),
+      'the regression requires an actual native counter collision across instances');
+    const lateLoad=structuredClone(oldPlan.routeHandle);
+    assert.equal(replacement.bridge.routePoints(lateLoad),null,
+      'a delayed load from a retired authority cannot read a current route');
+    assert.equal(first.bridge.routePoints(newPlan.routeHandle),null);
+    assert(replacement.bridge.routePoints(structuredClone(newPlan.routeHandle)));
+    const {authorityEpoch,...unscoped}=newPlan.routeHandle;
+    assert.equal(replacement.bridge.routePoints(unscoped),null,
+      'the native tuple alone is no longer an externally accepted handle');
+    const [event]=replacement.bridge.intentChanges();
+    assert.equal(event.authorityEpoch,authorityEpoch);
+    assert.equal(event.routeHandle.authorityEpoch,authorityEpoch);
+  }finally{first.session.dispose();replacement.session.dispose();}
+});
+
+test('default bridge epochs do not repeat across independent native owners',()=>{
+  const first=fixture(),second=fixture();
+  try{
+    assert.notEqual(first.bridge.authorityEpoch,second.bridge.authorityEpoch);
+    assert.throws(()=>createSpatialIntentBridge(first.session,{authorityEpoch:''}),
+      /authority epoch/);
+  }finally{first.session.dispose();second.session.dispose();}
 });
