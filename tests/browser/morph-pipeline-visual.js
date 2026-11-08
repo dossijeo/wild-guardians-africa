@@ -8,15 +8,15 @@ const result={errors:[],frames:[],morphMeshes:0,morphValues:0,pipelineKeys:0};wi
 try{
  const renderer=new WebGPURenderer({canvas:document.querySelector('#view'),antialias:false});await renderer.init();if(!renderer.backend?.isWebGPUBackend)throw Error('Expected WebGPU');
  const device=renderer.backend.device;device.addEventListener('uncapturederror',event=>result.errors.push('uncaptured: '+event.error.message));device.pushErrorScope('validation');
- const pipelines=renderer._pipelines,original=pipelines.getForRender;pipelines.getForRender=function(object,...args){const state=object.getNodeBuilderState();state.vertexShader=canonicalizeNodeBufferNames(state.vertexShader);return original.call(this,object,...args);};
+ if(new URLSearchParams(location.search).get('noCanonical')!=='1'){const pipelines=renderer._pipelines,original=pipelines.getForRender;pipelines.getForRender=function(object,...args){const state=object.getNodeBuilderState();state.vertexShader=canonicalizeNodeBufferNames(state.vertexShader);return original.call(this,object,...args);};}
  const query=new URLSearchParams(location.search),experimental=query.get('morphPipeline')==='1',zeroMorph=query.get('zeroMorph')==='1';if(experimental)installExperimentalMorphPipelineKey(renderer.backend,()=>result.pipelineKeys++);
- renderer.setSize(640,384,false);renderer.outputColorSpace=THREE.LinearSRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.shadowMap.enabled=true;
+ renderer.setSize(640,384,false);renderer.outputColorSpace=THREE.LinearSRGBColorSpace;renderer.toneMapping=THREE.NoToneMapping;renderer.shadowMap.enabled=query.get('noShadows')!=='1';
  const target=new THREE.RenderTarget(640,384,{depthBuffer:true,stencilBuffer:false});renderer.setRenderTarget(target);
- const scene=new THREE.Scene();scene.background=new THREE.Color(0x202020);scene.add(new THREE.HemisphereLight(0xe7f0e7,0x70624e,2));const sun=new THREE.DirectionalLight(0xfff0d4,3);sun.position.set(-6,12,9);sun.castShadow=true;sun.shadow.mapSize.set(512,512);sun.shadow.camera.left=-14;sun.shadow.camera.right=14;sun.shadow.camera.top=12;sun.shadow.camera.bottom=-12;scene.add(sun);
+ const scene=new THREE.Scene();scene.background=new THREE.Color(0x202020);scene.add(new THREE.HemisphereLight(0xe7f0e7,0x70624e,2));const sun=new THREE.DirectionalLight(0xfff0d4,3);sun.position.set(-6,12,9);sun.castShadow=query.get('noShadows')!=='1';sun.shadow.mapSize.set(512,512);sun.shadow.camera.left=-14;sun.shadow.camera.right=14;sun.shadow.camera.top=12;sun.shadow.camera.bottom=-12;scene.add(sun);
  const floor=new THREE.Mesh(new THREE.PlaneGeometry(25,18),new THREE.MeshStandardMaterial({color:0x777777}));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
  const camera=new THREE.OrthographicCamera(-11,11,6.6,-6.6,.1,100);camera.position.set(0,9,23);camera.lookAt(0,0.8,0);
  const manifest=await (await fetch('/tests/fixtures/character-lod-sources.json')).json(),loader=new GLTFLoader(),actors=[];
- const names=['guardian','hyena','lion','rhino','buffalo','warthog','olderMale','olderFemale','youngMale','youngFemale'];
+ const names=query.get('sameSpecies')==='1'?Array(10).fill('warthog'):['guardian','hyena','lion','rhino','buffalo','warthog','olderMale','olderFemale','youngMale','youngFemale'];
  for(const [slot,name] of names.entries()){
   const path='/'+manifest.find(item=>item.id===name).source.replace(/^public\//,''),asset=await loader.loadAsync(path),model=asset.scene;
   const box=new THREE.Box3().setFromObject(model),size=box.getSize(new THREE.Vector3());model.scale.multiplyScalar(2.3/Math.max(size.x,size.y,size.z,.0001));box.setFromObject(model);model.position.x-=(box.min.x+box.max.x)/2;model.position.y-=box.min.y;model.position.z-=(box.min.z+box.max.z)/2;

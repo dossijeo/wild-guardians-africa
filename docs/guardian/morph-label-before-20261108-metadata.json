@@ -1,0 +1,4725 @@
+{
+  "version": {
+    "protocolVersion": "1.3",
+    "product": "Edg/157.0.4341.42",
+    "revision": "@7b1486be4607d53d9f93841b7c776bc525ca74b7",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0",
+    "jsVersion": "15.7.11.4"
+  },
+  "system": {
+    "gpu": {
+      "devices": [
+        {
+          "vendorId": 4318,
+          "deviceId": 8580,
+          "subSysId": 291977282,
+          "revision": 161,
+          "vendorString": "",
+          "deviceString": "NVIDIA GeForce GTX 1660",
+          "driverVendor": "NVIDIA",
+          "driverVersion": "32.0.15.8129"
+        },
+        {
+          "vendorId": 5140,
+          "deviceId": 140,
+          "subSysId": 0,
+          "revision": 0,
+          "vendorString": "",
+          "deviceString": "Microsoft Basic Render Driver",
+          "driverVendor": "",
+          "driverVersion": "10.0.19041.5794"
+        }
+      ],
+      "auxAttributes": {
+        "amdSwitchable": false,
+        "bgra8OverlaySupport": "SOFTWARE",
+        "canSupportThreadedTextureMailbox": false,
+        "directComposition": true,
+        "directMLFeatureLevel": "Not supported",
+        "directRenderingVersion": "",
+        "displayType": "ANGLE_D3D11",
+        "dx12FeatureLevel": "Not supported",
+        "glExtensions": "GL_AMD_performance_monitor GL_ANGLE_base_vertex_base_instance_shader_builtin GL_ANGLE_blob_cache GL_ANGLE_client_arrays GL_ANGLE_clip_cull_distance GL_ANGLE_copy_texture_3d GL_ANGLE_depth_texture GL_ANGLE_framebuffer_blit GL_ANGLE_framebuffer_multisample GL_ANGLE_get_serialized_context_string GL_ANGLE_get_tex_level_parameter GL_ANGLE_instanced_arrays GL_ANGLE_memory_size GL_ANGLE_multiview_multisample GL_ANGLE_pack_reverse_row_order GL_ANGLE_polygon_mode GL_ANGLE_program_binary_readiness_query GL_ANGLE_program_cache_control GL_ANGLE_provoking_vertex GL_ANGLE_renderability_validation GL_ANGLE_request_extension GL_ANGLE_robust_client_memory GL_ANGLE_shader_pixel_local_storage GL_ANGLE_shader_pixel_local_storage_coherent GL_ANGLE_stencil_texturing GL_ANGLE_texture_compression_dxt3 GL_ANGLE_texture_compression_dxt5 GL_ANGLE_texture_multisample GL_ANGLE_texture_usage GL_ANGLE_translated_shader_source GL_APPLE_clip_distance GL_ARM_rgba8 GL_CHROMIUM_bind_generates_resource GL_CHROMIUM_bind_uniform_location GL_CHROMIUM_copy_compressed_texture GL_CHROMIUM_copy_texture GL_CHROMIUM_lose_context GL_EXT_EGL_image_external_wrap_modes GL_EXT_base_instance GL_EXT_blend_func_extended GL_EXT_blend_minmax GL_EXT_clip_control GL_EXT_clip_cull_distance GL_EXT_color_buffer_float GL_EXT_color_buffer_half_float GL_EXT_conservative_depth GL_EXT_debug_label GL_EXT_debug_marker GL_EXT_depth_clamp GL_EXT_discard_framebuffer GL_EXT_disjoint_timer_query GL_EXT_draw_buffers GL_EXT_draw_buffers_indexed GL_EXT_draw_elements_base_vertex GL_EXT_float_blend GL_EXT_frag_depth GL_EXT_instanced_arrays GL_EXT_map_buffer_range GL_EXT_occlusion_query_boolean GL_EXT_polygon_offset_clamp GL_EXT_read_format_bgra GL_EXT_render_snorm GL_EXT_robustness GL_EXT_sRGB GL_EXT_shader_texture_lod GL_EXT_texture_border_clamp GL_EXT_texture_compression_bptc GL_EXT_texture_compression_dxt1 GL_EXT_texture_compression_rgtc GL_EXT_texture_compression_s3tc_srgb GL_EXT_texture_filter_anisotropic GL_EXT_texture_format_BGRA8888 GL_EXT_texture_mirror_clamp_to_edge GL_EXT_texture_norm16 GL_EXT_texture_rg GL_EXT_texture_storage GL_EXT_texture_type_2_10_10_10_REV GL_EXT_unpack_subimage GL_KHR_debug GL_KHR_parallel_shader_compile GL_KHR_robustness GL_NV_EGL_stream_consumer_external GL_NV_fence GL_NV_framebuffer_blit GL_NV_pack_subimage GL_NV_pixel_buffer_object GL_NV_shader_noperspective_interpolation GL_OES_EGL_image GL_OES_EGL_image_external GL_OES_EGL_image_external_essl3 GL_OES_depth24 GL_OES_depth32 GL_OES_draw_buffers_indexed GL_OES_draw_elements_base_vertex GL_OES_element_index_uint GL_OES_fbo_render_mipmap GL_OES_get_program_binary GL_OES_mapbuffer GL_OES_packed_depth_stencil GL_OES_required_internalformat GL_OES_rgb8_rgba8 GL_OES_sample_variables GL_OES_shader_multisample_interpolation GL_OES_standard_derivatives GL_OES_surfaceless_context GL_OES_texture_border_clamp GL_OES_texture_float GL_OES_texture_float_linear GL_OES_texture_half_float GL_OES_texture_half_float_linear GL_OES_texture_npot GL_OES_texture_stencil8 GL_OES_texture_storage_multisample_2d_array GL_OES_vertex_array_object GL_OVR_multiview GL_OVR_multiview2 ",
+        "glImplementationParts": "(gl=egl-angle,angle=d3d11)",
+        "glRenderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11-32.0.15.8129)",
+        "glResetNotificationStrategy": 33362,
+        "glVendor": "Google Inc. (NVIDIA)",
+        "glVersion": "OpenGL ES 3.0 (ANGLE 2.1.48743 git hash: 5e4f9b85d7f0)",
+        "glWsExtensions": "EGL_EXT_create_context_robustness EGL_ANGLE_d3d_share_handle_client_buffer EGL_ANGLE_d3d_texture_client_buffer EGL_ANGLE_surface_d3d_texture_2d_share_handle EGL_ANGLE_query_surface_pointer EGL_ANGLE_window_fixed_size EGL_ANGLE_keyed_mutex EGL_ANGLE_surface_orientation EGL_ANGLE_direct_composition EGL_NV_post_sub_buffer EGL_KHR_create_context EGL_KHR_image EGL_KHR_image_base EGL_KHR_gl_texture_2D_image EGL_KHR_gl_texture_cubemap_image EGL_KHR_gl_renderbuffer_image EGL_KHR_get_all_proc_addresses EGL_KHR_stream EGL_KHR_stream_consumer_gltexture EGL_NV_stream_consumer_gltexture_yuv EGL_ANGLE_stream_producer_d3d_texture EGL_ANGLE_create_context_webgl_compatibility EGL_CHROMIUM_create_context_bind_generates_resource EGL_CHROMIUM_sync_control EGL_EXT_pixel_format_float EGL_KHR_surfaceless_context EGL_ANGLE_display_texture_share_group EGL_ANGLE_display_semaphore_share_group EGL_ANGLE_create_context_client_arrays EGL_ANGLE_program_cache_control EGL_ANGLE_robust_resource_initialization EGL_ANGLE_create_context_extensions_enabled EGL_ANDROID_blob_cache EGL_ANDROID_recordable EGL_ANGLE_image_d3d11_texture EGL_ANGLE_create_context_backwards_compatible EGL_KHR_no_config_context EGL_KHR_create_context_no_error EGL_KHR_reusable_sync EGL_ANGLE_memory_usage_report ",
+        "glWsVendor": "Google Inc. (NVIDIA)",
+        "glWsVersion": "1.5 (ANGLE 2.1.48743 git hash: 5e4f9b85d7f0)",
+        "inProcessGpu": false,
+        "initializationTime": 0.398117,
+        "isAsan": false,
+        "isClangCoverage": false,
+        "jpegDecodeAcceleratorSupported": false,
+        "maxMsaaSamples": "8",
+        "nv12OverlaySupport": "SCALING",
+        "optimus": false,
+        "p010OverlaySupport": "SOFTWARE",
+        "passthroughCmdDecoder": true,
+        "pixelShaderVersion": "5.0",
+        "playreadyHardwareDrmSupport": false,
+        "processCrashCount": 0,
+        "rgb10a2OverlaySupport": "SOFTWARE",
+        "sandboxed": false,
+        "skiaBackendType": "GaneshGL",
+        "subpixelFontRendering": true,
+        "supportsD3dSharedImages": true,
+        "supportsDirectML": false,
+        "supportsDx12": false,
+        "supportsOverlays": true,
+        "supportsVulkan": false,
+        "targetCpuBits": 64,
+        "vertexShaderVersion": "5.0",
+        "visibilityCallbackCallCount": 0,
+        "vulkanVersion": "Not supported",
+        "yuy2OverlaySupport": "SCALING"
+      },
+      "featureStatus": {
+        "2d_canvas": "enabled",
+        "direct_rendering_display_compositor": "disabled_off_ok",
+        "gpu_compositing": "enabled",
+        "multiple_raster_threads": "enabled_on",
+        "opengl": "enabled_on",
+        "rasterization": "enabled",
+        "skia_graphite": "disabled_off",
+        "trees_in_viz": "disabled_off",
+        "video_decode": "enabled",
+        "video_encode": "enabled",
+        "webgl": "enabled",
+        "webgpu": "enabled",
+        "webnn": "disabled_off"
+      },
+      "driverBugWorkarounds": [
+        "disable_d3d11_vp9_ksvc_decoding",
+        "disable_d3d12_video_encoder",
+        "disable_dcomp_texture",
+        "disable_ms_video_super_resolution",
+        "enable_webgl_timer_query_extensions",
+        "exit_on_context_lost",
+        "unpack_overlapping_rows_separately_unpack_buffer",
+        "disabled_extension_GL_KHR_blend_equation_advanced",
+        "disabled_extension_GL_KHR_blend_equation_advanced_coherent"
+      ],
+      "videoDecoding": [],
+      "videoEncoding": []
+    },
+    "modelName": "",
+    "modelVersion": "",
+    "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe\" --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=\"C:\\Users\\Gabriel\\AppData\\Local\\Temp\\playwright_chromiumdev_profile-HPGTwC\" --remote-debugging-pipe --no-startup-window --noerrdialogs --flag-switches-begin --flag-switches-end --enable-unsafe-swiftshader"
+  },
+  "categories": "toplevel,devtools.timeline,blink.user_timing,gpu,v8,loading,renderer.scheduler,disabled-by-default-devtools.timeline,disabled-by-default-devtools.timeline.frame,disabled-by-default-v8.cpu_profiler,disabled-by-default-v8.cpu_profiler.hires,disabled-by-default-gpu.service,disabled-by-default-gpu.device,disabled-by-default-gpu.dawn,disabled-by-default-gpu.decoder,dawn,gpu.dawn",
+  "buffer": [
+    {
+      "percentFull": 0.011587075889110565,
+      "eventCount": 0,
+      "value": 0.011587075889110565
+    },
+    {
+      "percentFull": 0.026958489790558815,
+      "eventCount": 0,
+      "value": 0.026958489790558815
+    },
+    {
+      "percentFull": 0.03915028274059296,
+      "eventCount": 0,
+      "value": 0.03915028274059296
+    },
+    {
+      "percentFull": 0.05405352637171745,
+      "eventCount": 0,
+      "value": 0.05405352637171745
+    },
+    {
+      "percentFull": 0.06727918237447739,
+      "eventCount": 0,
+      "value": 0.06727918237447739
+    },
+    {
+      "percentFull": 0.07980258762836456,
+      "eventCount": 0,
+      "value": 0.07980258762836456
+    },
+    {
+      "percentFull": 0.08520599454641342,
+      "eventCount": 0,
+      "value": 0.08520599454641342
+    },
+    {
+      "percentFull": 0.09538857638835907,
+      "eventCount": 0,
+      "value": 0.09538857638835907
+    },
+    {
+      "percentFull": 0.1073853000998497,
+      "eventCount": 0,
+      "value": 0.1073853000998497
+    },
+    {
+      "percentFull": 0.12234707176685333,
+      "eventCount": 0,
+      "value": 0.12234707176685333
+    },
+    {
+      "percentFull": 0.12899890542030334,
+      "eventCount": 0,
+      "value": 0.12899890542030334
+    }
+  ],
+  "dataLossOccurred": false,
+  "observations": {
+    "timeOrigin": 1794101476957.845,
+    "frames": [
+      {
+        "at": 50918.86,
+        "delta": -382.7849999995524
+      },
+      {
+        "at": 51285.545,
+        "delta": 366.6849999999977
+      },
+      {
+        "at": 51318.87,
+        "delta": 33.325000000004366
+      },
+      {
+        "at": 51352.215,
+        "delta": 33.34499999999389
+      },
+      {
+        "at": 51385.555,
+        "delta": 33.34000000000378
+      },
+      {
+        "at": 51418.88,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 51452.21,
+        "delta": 33.330000000001746
+      },
+      {
+        "at": 51485.535,
+        "delta": 33.325000000004366
+      },
+      {
+        "at": 51518.87,
+        "delta": 33.33499999999913
+      },
+      {
+        "at": 51552.2,
+        "delta": 33.32999999999447
+      },
+      {
+        "at": 51618.88,
+        "delta": 66.68000000000029
+      },
+      {
+        "at": 51652.2,
+        "delta": 33.31999999999971
+      },
+      {
+        "at": 51685.545,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 51718.84,
+        "delta": 33.294999999998254
+      },
+      {
+        "at": 51752.26,
+        "delta": 33.42000000000553
+      },
+      {
+        "at": 51785.515,
+        "delta": 33.25499999999738
+      },
+      {
+        "at": 51818.855,
+        "delta": 33.34000000000378
+      },
+      {
+        "at": 51852.2,
+        "delta": 33.34499999999389
+      },
+      {
+        "at": 51885.525,
+        "delta": 33.325000000004366
+      },
+      {
+        "at": 51918.86,
+        "delta": 33.33499999999913
+      },
+      {
+        "at": 51952.2,
+        "delta": 33.33999999999651
+      },
+      {
+        "at": 51985.49,
+        "delta": 33.29000000000087
+      },
+      {
+        "at": 52018.87,
+        "delta": 33.38000000000466
+      },
+      {
+        "at": 52052.225,
+        "delta": 33.354999999995925
+      },
+      {
+        "at": 52085.565,
+        "delta": 33.34000000000378
+      },
+      {
+        "at": 52152.205,
+        "delta": 66.63999999999942
+      },
+      {
+        "at": 52185.56,
+        "delta": 33.354999999995925
+      },
+      {
+        "at": 52218.88,
+        "delta": 33.31999999999971
+      },
+      {
+        "at": 52285.57,
+        "delta": 66.69000000000233
+      },
+      {
+        "at": 52318.905,
+        "delta": 33.33499999999913
+      },
+      {
+        "at": 52355.08,
+        "delta": 36.17500000000291
+      },
+      {
+        "at": 52718.98,
+        "delta": 363.90000000000146
+      },
+      {
+        "at": 52752.305,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 52785.65,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 52819.015,
+        "delta": 33.36499999999796
+      },
+      {
+        "at": 52852.32,
+        "delta": 33.30500000000029
+      },
+      {
+        "at": 53585.66,
+        "delta": 733.3400000000038
+      },
+      {
+        "at": 53618.88,
+        "delta": 33.21999999999389
+      },
+      {
+        "at": 53685.525,
+        "delta": 66.64500000000407
+      },
+      {
+        "at": 53785.54,
+        "delta": 100.01499999999942
+      },
+      {
+        "at": 53818.85,
+        "delta": 33.30999999999767
+      },
+      {
+        "at": 53853.05,
+        "delta": 34.200000000004366
+      },
+      {
+        "at": 53918.855,
+        "delta": 65.80500000000029
+      },
+      {
+        "at": 53952.21,
+        "delta": 33.354999999995925
+      },
+      {
+        "at": 53985.545,
+        "delta": 33.33499999999913
+      },
+      {
+        "at": 54018.875,
+        "delta": 33.330000000001746
+      },
+      {
+        "at": 54052.27,
+        "delta": 33.3949999999968
+      },
+      {
+        "at": 54085.54,
+        "delta": 33.270000000004075
+      },
+      {
+        "at": 54118.88,
+        "delta": 33.33999999999651
+      },
+      {
+        "at": 54152.205,
+        "delta": 33.325000000004366
+      },
+      {
+        "at": 54185.53,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 54252.215,
+        "delta": 66.68499999999767
+      },
+      {
+        "at": 54285.52,
+        "delta": 33.30500000000029
+      },
+      {
+        "at": 54318.86,
+        "delta": 33.34000000000378
+      },
+      {
+        "at": 54352.175,
+        "delta": 33.31500000000233
+      },
+      {
+        "at": 54418.88,
+        "delta": 66.70499999999447
+      },
+      {
+        "at": 54452.19,
+        "delta": 33.31000000000495
+      },
+      {
+        "at": 54485.54,
+        "delta": 33.349999999998545
+      },
+      {
+        "at": 54518.875,
+        "delta": 33.33499999999913
+      },
+      {
+        "at": 54552.205,
+        "delta": 33.330000000001746
+      },
+      {
+        "at": 54585.54,
+        "delta": 33.33499999999913
+      },
+      {
+        "at": 54652.24,
+        "delta": 66.69999999999709
+      },
+      {
+        "at": 54685.53,
+        "delta": 33.29000000000087
+      },
+      {
+        "at": 54752.22,
+        "delta": 66.69000000000233
+      },
+      {
+        "at": 54785.565,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 54818.89,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 54852.22,
+        "delta": 33.330000000001746
+      },
+      {
+        "at": 54885.525,
+        "delta": 33.30500000000029
+      },
+      {
+        "at": 54918.895,
+        "delta": 33.36999999999534
+      },
+      {
+        "at": 54985.575,
+        "delta": 66.68000000000029
+      },
+      {
+        "at": 55018.88,
+        "delta": 33.30500000000029
+      },
+      {
+        "at": 55052.215,
+        "delta": 33.33499999999913
+      },
+      {
+        "at": 55085.545,
+        "delta": 33.330000000001746
+      },
+      {
+        "at": 55118.87,
+        "delta": 33.325000000004366
+      },
+      {
+        "at": 55152.19,
+        "delta": 33.31999999999971
+      },
+      {
+        "at": 55252.215,
+        "delta": 100.02499999999418
+      },
+      {
+        "at": 55552.215,
+        "delta": 300
+      },
+      {
+        "at": 55585.605,
+        "delta": 33.390000000006694
+      },
+      {
+        "at": 55618.935,
+        "delta": 33.32999999999447
+      },
+      {
+        "at": 55652.22,
+        "delta": 33.28500000000349
+      },
+      {
+        "at": 55685.555,
+        "delta": 33.33499999999913
+      },
+      {
+        "at": 55718.895,
+        "delta": 33.33999999999651
+      },
+      {
+        "at": 55752.22,
+        "delta": 33.325000000004366
+      },
+      {
+        "at": 56518.93,
+        "delta": 766.7099999999991
+      },
+      {
+        "at": 56560.31,
+        "delta": 41.37999999999738
+      },
+      {
+        "at": 56785.545,
+        "delta": 225.23500000000058
+      },
+      {
+        "at": 56818.895,
+        "delta": 33.349999999998545
+      },
+      {
+        "at": 56918.885,
+        "delta": 99.99000000000524
+      },
+      {
+        "at": 56952.2,
+        "delta": 33.31499999999505
+      },
+      {
+        "at": 56985.555,
+        "delta": 33.3550000000032
+      },
+      {
+        "at": 57052.225,
+        "delta": 66.66999999999825
+      },
+      {
+        "at": 57085.56,
+        "delta": 33.33499999999913
+      },
+      {
+        "at": 57118.88,
+        "delta": 33.31999999999971
+      },
+      {
+        "at": 57152.225,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 57185.54,
+        "delta": 33.31500000000233
+      },
+      {
+        "at": 57218.875,
+        "delta": 33.33499999999913
+      },
+      {
+        "at": 57252.25,
+        "delta": 33.375
+      },
+      {
+        "at": 57318.91,
+        "delta": 66.66000000000349
+      },
+      {
+        "at": 57352.245,
+        "delta": 33.33499999999913
+      },
+      {
+        "at": 57385.545,
+        "delta": 33.299999999995634
+      },
+      {
+        "at": 57418.89,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 57452.24,
+        "delta": 33.349999999998545
+      },
+      {
+        "at": 57485.555,
+        "delta": 33.31500000000233
+      },
+      {
+        "at": 57518.89,
+        "delta": 33.33499999999913
+      },
+      {
+        "at": 57585.655,
+        "delta": 66.76499999999942
+      },
+      {
+        "at": 57618.865,
+        "delta": 33.20999999999913
+      },
+      {
+        "at": 57652.22,
+        "delta": 33.3550000000032
+      },
+      {
+        "at": 57685.575,
+        "delta": 33.354999999995925
+      },
+      {
+        "at": 57718.895,
+        "delta": 33.31999999999971
+      },
+      {
+        "at": 57752.27,
+        "delta": 33.375
+      },
+      {
+        "at": 58052.245,
+        "delta": 299.9750000000058
+      },
+      {
+        "at": 58085.565,
+        "delta": 33.31999999999971
+      },
+      {
+        "at": 58118.895,
+        "delta": 33.32999999999447
+      },
+      {
+        "at": 58152.24,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 58185.635,
+        "delta": 33.395000000004075
+      },
+      {
+        "at": 58218.965,
+        "delta": 33.32999999999447
+      },
+      {
+        "at": 58285.665,
+        "delta": 66.70000000000437
+      },
+      {
+        "at": 58319.005,
+        "delta": 33.33999999999651
+      },
+      {
+        "at": 58352.35,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 59085.595,
+        "delta": 733.2450000000026
+      },
+      {
+        "at": 59120.755,
+        "delta": 35.15999999999622
+      },
+      {
+        "at": 59152.225,
+        "delta": 31.470000000001164
+      },
+      {
+        "at": 59185.655,
+        "delta": 33.43000000000029
+      },
+      {
+        "at": 59452.24,
+        "delta": 266.5849999999991
+      },
+      {
+        "at": 59485.56,
+        "delta": 33.31999999999971
+      },
+      {
+        "at": 59518.92,
+        "delta": 33.36000000000058
+      },
+      {
+        "at": 59552.215,
+        "delta": 33.294999999998254
+      },
+      {
+        "at": 59618.91,
+        "delta": 66.69500000000698
+      },
+      {
+        "at": 59652.24,
+        "delta": 33.32999999999447
+      },
+      {
+        "at": 59685.6,
+        "delta": 33.36000000000058
+      },
+      {
+        "at": 59718.915,
+        "delta": 33.31500000000233
+      },
+      {
+        "at": 59785.58,
+        "delta": 66.66500000000087
+      },
+      {
+        "at": 59818.905,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 59852.225,
+        "delta": 33.31999999999971
+      },
+      {
+        "at": 59885.58,
+        "delta": 33.3550000000032
+      },
+      {
+        "at": 59952.22,
+        "delta": 66.63999999999942
+      },
+      {
+        "at": 59985.575,
+        "delta": 33.354999999995925
+      },
+      {
+        "at": 60018.905,
+        "delta": 33.330000000001746
+      },
+      {
+        "at": 60085.59,
+        "delta": 66.68499999999767
+      },
+      {
+        "at": 60118.975,
+        "delta": 33.38500000000204
+      },
+      {
+        "at": 60152.235,
+        "delta": 33.26000000000204
+      },
+      {
+        "at": 60185.58,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 60218.88,
+        "delta": 33.299999999995634
+      },
+      {
+        "at": 60252.265,
+        "delta": 33.38500000000204
+      },
+      {
+        "at": 60318.9,
+        "delta": 66.63500000000204
+      },
+      {
+        "at": 60352.23,
+        "delta": 33.330000000001746
+      },
+      {
+        "at": 60385.58,
+        "delta": 33.349999999998545
+      },
+      {
+        "at": 60418.905,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 60452.295,
+        "delta": 33.38999999999942
+      },
+      {
+        "at": 60499.775,
+        "delta": 47.4800000000032
+      },
+      {
+        "at": 60518.92,
+        "delta": 19.1449999999968
+      },
+      {
+        "at": 60552.295,
+        "delta": 33.375
+      },
+      {
+        "at": 60585.63,
+        "delta": 33.33499999999913
+      },
+      {
+        "at": 60618.965,
+        "delta": 33.33499999999913
+      },
+      {
+        "at": 60652.24,
+        "delta": 33.275000000001455
+      },
+      {
+        "at": 60685.62,
+        "delta": 33.38000000000466
+      },
+      {
+        "at": 60718.965,
+        "delta": 33.34499999999389
+      },
+      {
+        "at": 60752.23,
+        "delta": 33.265000000006694
+      },
+      {
+        "at": 60785.565,
+        "delta": 33.33499999999913
+      },
+      {
+        "at": 60852.295,
+        "delta": 66.72999999999593
+      },
+      {
+        "at": 60885.58,
+        "delta": 33.28500000000349
+      },
+      {
+        "at": 60918.915,
+        "delta": 33.33499999999913
+      },
+      {
+        "at": 60952.25,
+        "delta": 33.33499999999913
+      },
+      {
+        "at": 61685.605,
+        "delta": 733.3550000000032
+      },
+      {
+        "at": 61718.935,
+        "delta": 33.32999999999447
+      },
+      {
+        "at": 61752.275,
+        "delta": 33.34000000000378
+      },
+      {
+        "at": 61785.58,
+        "delta": 33.30500000000029
+      },
+      {
+        "at": 61885.605,
+        "delta": 100.02500000000146
+      },
+      {
+        "at": 62052.235,
+        "delta": 166.62999999999738
+      },
+      {
+        "at": 62085.57,
+        "delta": 33.33499999999913
+      },
+      {
+        "at": 62118.975,
+        "delta": 33.404999999998836
+      },
+      {
+        "at": 62152.305,
+        "delta": 33.330000000001746
+      },
+      {
+        "at": 62185.58,
+        "delta": 33.275000000001455
+      },
+      {
+        "at": 62218.925,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 62252.255,
+        "delta": 33.32999999999447
+      },
+      {
+        "at": 62285.58,
+        "delta": 33.325000000004366
+      },
+      {
+        "at": 62318.93,
+        "delta": 33.349999999998545
+      },
+      {
+        "at": 62352.295,
+        "delta": 33.36499999999796
+      },
+      {
+        "at": 62385.59,
+        "delta": 33.294999999998254
+      },
+      {
+        "at": 62452.265,
+        "delta": 66.67500000000291
+      },
+      {
+        "at": 62485.575,
+        "delta": 33.30999999999767
+      },
+      {
+        "at": 62552.285,
+        "delta": 66.7100000000064
+      },
+      {
+        "at": 62585.575,
+        "delta": 33.2899999999936
+      }
+    ],
+    "longTasks": [
+      {
+        "start": 51540.20500000194,
+        "duration": 85,
+        "name": "self"
+      },
+      {
+        "start": 51661.29500000179,
+        "duration": 87,
+        "name": "self"
+      },
+      {
+        "start": 51793.199999999255,
+        "duration": 75,
+        "name": "self"
+      },
+      {
+        "start": 51904.560000002384,
+        "duration": 76,
+        "name": "self"
+      },
+      {
+        "start": 52075.074999999255,
+        "duration": 82,
+        "name": "self"
+      },
+      {
+        "start": 52210.19000000134,
+        "duration": 75,
+        "name": "self"
+      },
+      {
+        "start": 52356.574999999255,
+        "duration": 367,
+        "name": "self"
+      },
+      {
+        "start": 52844.13000000268,
+        "duration": 100,
+        "name": "self"
+      },
+      {
+        "start": 53006.449999999255,
+        "duration": 81,
+        "name": "self"
+      },
+      {
+        "start": 53138.88000000268,
+        "duration": 72,
+        "name": "self"
+      },
+      {
+        "start": 53266.765000000596,
+        "duration": 72,
+        "name": "self"
+      },
+      {
+        "start": 53383.265000000596,
+        "duration": 74,
+        "name": "self"
+      },
+      {
+        "start": 53495.78500000015,
+        "duration": 72,
+        "name": "self"
+      },
+      {
+        "start": 53602.20500000194,
+        "duration": 88,
+        "name": "self"
+      },
+      {
+        "start": 53752.99500000104,
+        "duration": 79,
+        "name": "self"
+      },
+      {
+        "start": 54159.95500000194,
+        "duration": 112,
+        "name": "self"
+      },
+      {
+        "start": 54341.54000000283,
+        "duration": 83,
+        "name": "self"
+      },
+      {
+        "start": 54457.85500000045,
+        "duration": 75,
+        "name": "self"
+      },
+      {
+        "start": 54577.06500000134,
+        "duration": 73,
+        "name": "self"
+      },
+      {
+        "start": 54683.765000000596,
+        "duration": 80,
+        "name": "self"
+      },
+      {
+        "start": 54801.14499999955,
+        "duration": 75,
+        "name": "self"
+      },
+      {
+        "start": 54912.425000000745,
+        "duration": 92,
+        "name": "self"
+      },
+      {
+        "start": 55067.865000002086,
+        "duration": 80,
+        "name": "self"
+      },
+      {
+        "start": 55293.1950000003,
+        "duration": 275,
+        "name": "self"
+      },
+      {
+        "start": 55665.69000000134,
+        "duration": 83,
+        "name": "self"
+      },
+      {
+        "start": 55793.79500000179,
+        "duration": 78,
+        "name": "self"
+      },
+      {
+        "start": 55906.16000000015,
+        "duration": 79,
+        "name": "self"
+      },
+      {
+        "start": 56033.06500000134,
+        "duration": 79,
+        "name": "self"
+      },
+      {
+        "start": 56153.44000000134,
+        "duration": 71,
+        "name": "self"
+      },
+      {
+        "start": 56270.15500000119,
+        "duration": 114,
+        "name": "self"
+      },
+      {
+        "start": 56424.125,
+        "duration": 82,
+        "name": "self"
+      },
+      {
+        "start": 56813.31500000134,
+        "duration": 124,
+        "name": "self"
+      },
+      {
+        "start": 56992.210000000894,
+        "duration": 82,
+        "name": "self"
+      },
+      {
+        "start": 57126.85500000045,
+        "duration": 79,
+        "name": "self"
+      },
+      {
+        "start": 57238.53000000119,
+        "duration": 84,
+        "name": "self"
+      },
+      {
+        "start": 57388.24500000104,
+        "duration": 76,
+        "name": "self"
+      },
+      {
+        "start": 57503.710000000894,
+        "duration": 78,
+        "name": "self"
+      },
+      {
+        "start": 57620.9299999997,
+        "duration": 77,
+        "name": "self"
+      },
+      {
+        "start": 57731.66500000283,
+        "duration": 359,
+        "name": "self"
+      },
+      {
+        "start": 58202.35500000045,
+        "duration": 99,
+        "name": "self"
+      },
+      {
+        "start": 58333.83999999985,
+        "duration": 100,
+        "name": "self"
+      },
+      {
+        "start": 58492.210000000894,
+        "duration": 77,
+        "name": "self"
+      },
+      {
+        "start": 58612.824999999255,
+        "duration": 75,
+        "name": "self"
+      },
+      {
+        "start": 58713.83999999985,
+        "duration": 70,
+        "name": "self"
+      },
+      {
+        "start": 58816.54500000179,
+        "duration": 76,
+        "name": "self"
+      },
+      {
+        "start": 58918.960000000894,
+        "duration": 71,
+        "name": "self"
+      },
+      {
+        "start": 59027.14499999955,
+        "duration": 80,
+        "name": "self"
+      },
+      {
+        "start": 59205.484999999404,
+        "duration": 266,
+        "name": "self"
+      },
+      {
+        "start": 59550.00500000268,
+        "duration": 95,
+        "name": "self"
+      },
+      {
+        "start": 59716.710000000894,
+        "duration": 85,
+        "name": "self"
+      },
+      {
+        "start": 59874.560000002384,
+        "duration": 87,
+        "name": "self"
+      },
+      {
+        "start": 60010.98000000045,
+        "duration": 83,
+        "name": "self"
+      },
+      {
+        "start": 60132.60000000149,
+        "duration": 76,
+        "name": "self"
+      },
+      {
+        "start": 60243.990000002086,
+        "duration": 81,
+        "name": "self"
+      },
+      {
+        "start": 60360.83999999985,
+        "duration": 85,
+        "name": "self"
+      },
+      {
+        "start": 60766.425000000745,
+        "duration": 115,
+        "name": "self"
+      },
+      {
+        "start": 60964.13500000164,
+        "duration": 90,
+        "name": "self"
+      },
+      {
+        "start": 61099.15500000119,
+        "duration": 78,
+        "name": "self"
+      },
+      {
+        "start": 61210.15500000119,
+        "duration": 81,
+        "name": "self"
+      },
+      {
+        "start": 61316.00500000268,
+        "duration": 81,
+        "name": "self"
+      },
+      {
+        "start": 61426.64499999955,
+        "duration": 82,
+        "name": "self"
+      },
+      {
+        "start": 61539.800000000745,
+        "duration": 77,
+        "name": "self"
+      },
+      {
+        "start": 61654.9450000003,
+        "duration": 78,
+        "name": "self"
+      },
+      {
+        "start": 61777.085000000894,
+        "duration": 76,
+        "name": "self"
+      },
+      {
+        "start": 61883.60500000045,
+        "duration": 197,
+        "name": "self"
+      },
+      {
+        "start": 62366.58999999985,
+        "duration": 93,
+        "name": "self"
+      },
+      {
+        "start": 62498.199999999255,
+        "duration": 80,
+        "name": "self"
+      }
+    ]
+  },
+  "inventory": [
+    {
+      "id": 21,
+      "name": "",
+      "type": "MeshBasicMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": true,
+          "vertices": 66,
+          "instances": 256
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": true,
+          "vertices": 15,
+          "instances": 0
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "name": "",
+      "type": "MeshStandardNodeMaterial",
+      "map": "",
+      "objects": 10,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 113906,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 113906,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 113906,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 6,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "name": "",
+      "type": "MeshBasicMaterial",
+      "map": null,
+      "objects": 4,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": true,
+          "vertices": 18,
+          "instances": 8
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 18,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 198,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "name": "Material_0",
+      "type": "MeshStandardNodeMaterial",
+      "map": "data:application/x-wg-bc7,1",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh_0",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 30430,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 214,
+      "name": "Material_0 muzzle repair authoring",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,1",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh_0_1",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 19795,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 215,
+      "name": "Mane repairs muzzle repair authoring",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh_0_2",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 324,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 216,
+      "name": "Material_0 muzzle repair authoring",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,1",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 19795,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 217,
+      "name": "Mane repairs muzzle repair authoring",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 324,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 218,
+      "name": "Material_0 muzzle repair authoring",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,1",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 19795,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 219,
+      "name": "Mane repairs muzzle repair authoring",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 324,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 220,
+      "name": "Oral surfaces",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "OralCavity",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 1265,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 221,
+      "name": "Original fur eyelid atlas",
+      "type": "MeshStandardNodeMaterial",
+      "map": "data:application/x-wg-bc7,2",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "FacialLids",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 858,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 222,
+      "name": "Oral surfaces",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 1265,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 223,
+      "name": "Original fur eyelid atlas",
+      "type": "MeshStandardNodeMaterial",
+      "map": "data:application/x-wg-bc7,2",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 858,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 224,
+      "name": "Oral surfaces",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 1265,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 225,
+      "name": "Original fur eyelid atlas",
+      "type": "MeshStandardNodeMaterial",
+      "map": "data:application/x-wg-bc7,2",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 858,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 226,
+      "name": "Material_0",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,1",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh_0_1",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 16800,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 227,
+      "name": "Mane repairs",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh_0_2",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 15,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 228,
+      "name": "Material_0",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,1",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 16800,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 229,
+      "name": "Mane repairs",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 15,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 230,
+      "name": "Material_0",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,1",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 16800,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 231,
+      "name": "Mane repairs",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 15,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 232,
+      "name": "Warthog oral tissue",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "WarthogOralAnatomy",
+            "Armature",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 1396,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 233,
+      "name": "Warthog oral tissue",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Armature",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 1396,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 234,
+      "name": "Warthog oral tissue",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Armature",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 1396,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 235,
+      "name": "Actor eyelid original fur",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,2",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "ActorFacialLids",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 2210,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 236,
+      "name": "Actor eyelid original fur",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,2",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2210,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 237,
+      "name": "Actor eyelid original fur",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,2",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2210,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 238,
+      "name": "Material_0",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,1",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh_0_1",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 16800,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 239,
+      "name": "Mane repairs",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh_0_2",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 15,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 240,
+      "name": "Material_0",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,1",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 16800,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 241,
+      "name": "Mane repairs",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 15,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 242,
+      "name": "Material_0",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,1",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 16800,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 243,
+      "name": "Mane repairs",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 15,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 244,
+      "name": "Warthog oral tissue",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "WarthogOralAnatomy",
+            "Armature",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 1396,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 245,
+      "name": "Warthog oral tissue",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Armature",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 1396,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 246,
+      "name": "Warthog oral tissue",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Armature",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 1396,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 247,
+      "name": "Actor eyelid original fur",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,2",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "ActorFacialLids",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 2210,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 248,
+      "name": "Actor eyelid original fur",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,2",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2210,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 249,
+      "name": "Actor eyelid original fur",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,2",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2210,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 250,
+      "name": "Material_0",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,1",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh_0_1",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 16800,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 251,
+      "name": "Mane repairs",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh_0_2",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 15,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 252,
+      "name": "Material_0",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,1",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 16800,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 253,
+      "name": "Mane repairs",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 15,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 254,
+      "name": "Material_0",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,1",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 16800,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 255,
+      "name": "Mane repairs",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 15,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 256,
+      "name": "Warthog oral tissue",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "WarthogOralAnatomy",
+            "Armature",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 1396,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 257,
+      "name": "Warthog oral tissue",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Armature",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 1396,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 258,
+      "name": "Warthog oral tissue",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Armature",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 1396,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 259,
+      "name": "Actor eyelid original fur",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,2",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "ActorFacialLids",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 2210,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 260,
+      "name": "Actor eyelid original fur",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,2",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2210,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 261,
+      "name": "Actor eyelid original fur",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,2",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2210,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 262,
+      "name": "Material_0",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,1",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh_0_1",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 16800,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 263,
+      "name": "Mane repairs",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh_0_2",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 15,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 264,
+      "name": "Material_0",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,1",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 16800,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 265,
+      "name": "Mane repairs",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 15,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 266,
+      "name": "Material_0",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,1",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 16800,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 267,
+      "name": "Mane repairs",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 15,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 268,
+      "name": "Warthog oral tissue",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "WarthogOralAnatomy",
+            "Armature",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 1396,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 269,
+      "name": "Warthog oral tissue",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Armature",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 1396,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 270,
+      "name": "Warthog oral tissue",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Armature",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 1396,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 271,
+      "name": "Actor eyelid original fur",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,2",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "ActorFacialLids",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 2210,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 272,
+      "name": "Actor eyelid original fur",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,2",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2210,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 273,
+      "name": "Actor eyelid original fur",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,2",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2210,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 274,
+      "name": "Material_0",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,1",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh_0_1",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 16800,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 275,
+      "name": "Mane repairs",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh_0_2",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 15,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 276,
+      "name": "Material_0",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,1",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 16800,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 277,
+      "name": "Mane repairs",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 15,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 278,
+      "name": "Material_0",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,1",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 16800,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 279,
+      "name": "Mane repairs",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 15,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 280,
+      "name": "Warthog oral tissue",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "WarthogOralAnatomy",
+            "Armature",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 1396,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 281,
+      "name": "Warthog oral tissue",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Armature",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 1396,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 282,
+      "name": "Warthog oral tissue",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Armature",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 1396,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 283,
+      "name": "Actor eyelid original fur",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,2",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "ActorFacialLids",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 2210,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 284,
+      "name": "Actor eyelid original fur",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,2",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2210,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 285,
+      "name": "Actor eyelid original fur",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,2",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2210,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 286,
+      "name": "Material_0",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,1",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh_0_1",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 16800,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 287,
+      "name": "Mane repairs",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh_0_2",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 15,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 288,
+      "name": "Material_0",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,1",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 16800,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 289,
+      "name": "Mane repairs",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 15,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 290,
+      "name": "Material_0",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,1",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 16800,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 291,
+      "name": "Mane repairs",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 15,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 292,
+      "name": "Warthog oral tissue",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "WarthogOralAnatomy",
+            "Armature",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 1396,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 293,
+      "name": "Warthog oral tissue",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Armature",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 1396,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 294,
+      "name": "Warthog oral tissue",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Armature",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 1396,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 295,
+      "name": "Actor eyelid original fur",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,2",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "ActorFacialLids",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 2210,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 296,
+      "name": "Actor eyelid original fur",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,2",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2210,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 297,
+      "name": "Actor eyelid original fur",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,2",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2210,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 298,
+      "name": "Material_0",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,1",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh_0_1",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 16800,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 299,
+      "name": "Mane repairs",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh_0_2",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 15,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 300,
+      "name": "Material_0",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,1",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 16800,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 301,
+      "name": "Mane repairs",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 15,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 302,
+      "name": "Material_0",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,1",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 16800,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 303,
+      "name": "Mane repairs",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Mesh_0",
+            "Armature",
+            "Scene",
+            "Group"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 15,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 304,
+      "name": "Warthog oral tissue",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "WarthogOralAnatomy",
+            "Armature",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 1396,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 305,
+      "name": "Warthog oral tissue",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Armature",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 1396,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 306,
+      "name": "Warthog oral tissue",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Armature",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 1396,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 307,
+      "name": "Actor eyelid original fur",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,2",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "ActorFacialLids",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": true,
+          "instanced": false,
+          "vertices": 2210,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 308,
+      "name": "Actor eyelid original fur",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,2",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2210,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 309,
+      "name": "Actor eyelid original fur",
+      "type": "MeshPhysicalNodeMaterial",
+      "map": "data:application/x-wg-bc7,2",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Scene",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2210,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 68,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2401,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 69,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2401,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 17,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 681,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 474,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 978,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "name": "",
+      "type": "MeshStandardNodeMaterial",
+      "map": "",
+      "objects": 69,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 5567,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 4311,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 4791,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 62,
+      "name": "",
+      "type": "MeshStandardNodeMaterial",
+      "map": "",
+      "objects": 136,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 8945,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 5438,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 11795,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 63,
+      "name": "",
+      "type": "MeshStandardNodeMaterial",
+      "map": "",
+      "objects": 82,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 1383,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2111,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 1907,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 64,
+      "name": "",
+      "type": "MeshStandardNodeMaterial",
+      "map": "",
+      "objects": 21,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 1293,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 1293,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 1293,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 65,
+      "name": "",
+      "type": "MeshStandardNodeMaterial",
+      "map": "",
+      "objects": 9,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2604,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2604,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2604,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 9,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": true,
+          "vertices": 42,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": true,
+          "vertices": 42,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": true,
+          "vertices": 42,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 70,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2401,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 66,
+      "name": "",
+      "type": "MeshStandardNodeMaterial",
+      "map": "",
+      "objects": 60,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 3825,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2251,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 3353,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 71,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2401,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 72,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2401,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 73,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2401,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 67,
+      "name": "",
+      "type": "MeshStandardNodeMaterial",
+      "map": "",
+      "objects": 13,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 3947,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 3947,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 3947,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 74,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2401,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 75,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2401,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 76,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2401,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 77,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2401,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 78,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2401,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 79,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2401,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 80,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2401,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 81,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2401,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 82,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2401,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 83,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2401,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 84,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2401,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 85,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2401,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 86,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2401,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 87,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2401,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 88,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2401,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 89,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2401,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 90,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2401,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 91,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2401,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 92,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 2401,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 212,
+      "name": "atlas_1",
+      "type": "MeshStandardNodeMaterial",
+      "map": "base",
+      "objects": 6,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": true,
+          "vertices": 7149,
+          "instances": 35
+        },
+        {
+          "path": [
+            "Mesh",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": true,
+          "vertices": 7593,
+          "instances": 24
+        },
+        {
+          "path": [
+            "Mesh",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": true,
+          "vertices": 6481,
+          "instances": 23
+        }
+      ]
+    },
+    {
+      "id": 213,
+      "name": "atlas_1",
+      "type": "MeshStandardNodeMaterial",
+      "map": "base",
+      "objects": 4,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": true,
+          "vertices": 22728,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": true,
+          "vertices": 21674,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": true,
+          "vertices": 17732,
+          "instances": 2
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 8,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 84,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 84,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 84,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 311,
+      "name": "",
+      "type": "MeshStandardNodeMaterial",
+      "map": "",
+      "objects": 8,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 5567,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 5567,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 5567,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 313,
+      "name": "",
+      "type": "MeshStandardNodeMaterial",
+      "map": "",
+      "objects": 10,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 4311,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 4311,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 4311,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 315,
+      "name": "",
+      "type": "MeshStandardNodeMaterial",
+      "map": "",
+      "objects": 6,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 4791,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 4791,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 4791,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 318,
+      "name": "",
+      "type": "MeshBasicNodeMaterial",
+      "map": null,
+      "objects": 39,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 6,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 6,
+          "instances": 1
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 6,
+          "instances": 1
+        }
+      ]
+    },
+    {
+      "id": 319,
+      "name": "",
+      "type": "MeshStandardNodeMaterial",
+      "map": null,
+      "objects": 156,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": true,
+          "vertices": 702,
+          "instances": 0
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": true,
+          "vertices": 420,
+          "instances": 0
+        },
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": true,
+          "vertices": 1296,
+          "instances": 0
+        }
+      ]
+    },
+    {
+      "id": 312,
+      "name": "",
+      "type": "MeshStandardNodeMaterial",
+      "map": "",
+      "objects": 1,
+      "examples": [
+        {
+          "path": [
+            "Mesh",
+            "Group",
+            "Scene"
+          ],
+          "skinned": false,
+          "instanced": false,
+          "vertices": 5172,
+          "instances": 1
+        }
+      ]
+    }
+  ]
+}

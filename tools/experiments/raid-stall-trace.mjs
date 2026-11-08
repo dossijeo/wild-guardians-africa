@@ -3,12 +3,27 @@ import {mkdir,writeFile} from 'node:fs/promises';
 import {dirname} from 'node:path';
 import {once} from 'node:events';
 
-export async function installRaidStallInventory(context) {
+export async function installRaidStallInventory(context,{captureShaderSources=false}={}) {
  await context.route('**/src/rendering/webgpu-world-worker.js*',async route=>{
   const response=await route.fetch(),source=await response.text(),anchor="postMessage({kind:'inspection',";
   if(!source.includes(anchor))throw Error('World inspection trace anchor missing');
   const inventory=`materialInventory:(()=>{const items=new Map();surface?.scene?.traverse(o=>{for(const m of (Array.isArray(o.material)?o.material:[o.material])){if(!m)continue;let a=items.get(m.id);if(!a){a={id:m.id,name:m.name,type:m.type,map:m.map?.name??null,objects:0,examples:[]};items.set(m.id,a);}a.objects++;if(a.examples.length<3){const path=[];for(let p=o;p&&path.length<5;p=p.parent)path.push(p.name||p.type);a.examples.push({path,skinned:!!o.isSkinnedMesh,instanced:!!o.isInstancedMesh,vertices:o.geometry?.attributes?.position?.count??0,instances:o.count??null});}}});return [...items.values()];})(),`;
-  const probe=`\nif(globalThis.GPUDevice){for(const method of ['createRenderPipeline','createRenderPipelineAsync','createShaderModule']){const original=GPUDevice.prototype[method];GPUDevice.prototype[method]=function(descriptor,...rest){const start=performance.now();performance.mark('WG_GPU_REQUEST',{detail:{method,label:descriptor?.label??'',codeLength:descriptor?.code?.length??0}});try{return original.call(this,descriptor,...rest);}finally{performance.measure('WG_GPU_CALL',{start,end:performance.now(),detail:{method,label:descriptor?.label??''}});}};}}\n`;
+  const probe=`
+if(globalThis.GPUDevice){
+ const shaders=new WeakMap(),objects=new WeakMap();let nextObject=0;
+ const id=value=>{if(!value||typeof value!=='object')return value??null;if(!objects.has(value))objects.set(value,++nextObject);return objects.get(value);};
+ const hash=code=>{let h=2166136261;for(let i=0;i<code.length;i++){h^=code.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0).toString(16).padStart(8,'0');};
+ const plain=value=>{try{return value===undefined?null:JSON.parse(JSON.stringify(value));}catch{return '[unserializable]';}};
+ for(const method of ['createRenderPipeline','createRenderPipelineAsync','createShaderModule']){
+  const original=GPUDevice.prototype[method];GPUDevice.prototype[method]=function(descriptor,...rest){
+   const start=performance.now(),detail={method,label:descriptor?.label??'',codeLength:descriptor?.code?.length??0};
+   if(method==='createShaderModule'&&typeof descriptor?.code==='string'){detail.codeHash=hash(descriptor.code);if(${captureShaderSources}&&detail.label.startsWith('vertex_'))detail.code=descriptor.code;}
+   if(method!=='createShaderModule'){const vertex=descriptor?.vertex,fragment=descriptor?.fragment;detail.pipeline={layout:typeof descriptor?.layout==='string'?descriptor.layout:'object',layoutId:id(descriptor?.layout),vertex:{shader:shaders.get(vertex?.module)??null,entryPoint:vertex?.entryPoint??null,constants:plain(vertex?.constants),buffers:plain(vertex?.buffers)},fragment:fragment?{shader:shaders.get(fragment.module)??null,entryPoint:fragment.entryPoint??null,constants:plain(fragment.constants),targets:plain(fragment.targets)}:null,primitive:plain(descriptor?.primitive),depthStencil:plain(descriptor?.depthStencil),multisample:plain(descriptor?.multisample)};}
+   performance.mark('WG_GPU_REQUEST',{detail});try{const result=original.call(this,descriptor,...rest);if(method==='createShaderModule'&&result&&detail.codeHash)shaders.set(result,{hash:detail.codeHash,length:detail.codeLength});return result;}finally{performance.measure('WG_GPU_CALL',{start,end:performance.now(),detail:{method,label:detail.label}});}
+  };
+ }
+}
+`;
   await route.fulfill({response,body:probe+source.replace(anchor,anchor+inventory)});
  });
 }
