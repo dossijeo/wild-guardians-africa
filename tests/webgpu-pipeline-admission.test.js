@@ -6,6 +6,12 @@ import {uniform} from 'three/tsl';
 import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
 import {closeWebGpuRenderer} from '../src/rendering/webgpu-world-surface.js';
 
+test('optional shared scene lighting is restored before asynchronous admission settles',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),oldNode={},oldLights=[],node={lights:oldLights,getLights(){return this.lights;},setLights(value){this.lights=value;}},list={lightsNode:oldNode,lightsArray:[new THREE.PointLight()]};let finish;
+ const renderer={backend:{isWebGPUBackend:true},_renderLists:{get:()=>list},lighting:{getNode:()=>node},compileAsync(){assert.equal(this._wgCompileSceneReference,scene);assert.equal(list.lightsNode,node);node.setLights(list.lightsArray);return new Promise(resolve=>{finish=resolve;});}},admission=createWebGpuPipelineAdmission({renderer,scene,camera,sharedSceneLighting:true});
+ try{const pending=admission.prepare(object);await Promise.resolve();assert.equal(list.lightsNode,oldNode);assert.equal(node.lights,oldLights);assert.equal(renderer._wgCompileSceneReference,undefined);finish();await pending;}finally{admission.dispose();}
+});
+
 test('visible admissions are bounded fairly, preserve order and honour cancellation',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),started=[],finishes=[],objects=Array.from({length:8},(_,i)=>{const object=new THREE.Group();object.name=String(i);return object;}),controller=new AbortController();
  const renderer={backend:{isWebGPUBackend:true},compileAsync(object){started.push(object.name);return new Promise(resolve=>finishes.push(resolve));}},admission=createWebGpuPipelineAdmission({renderer,scene,camera});

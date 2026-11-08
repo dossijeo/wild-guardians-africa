@@ -1,4 +1,5 @@
 import {webGpuTextureBinding} from './webgpu-texture-binding.js';
+import {compileWithAdmissionSceneLighting} from './webgpu-admission-scene.js';
 
 // Three r180 includes public material properties and texture sampler layouts
 // in its render-object key, even when material.version has not changed.
@@ -54,8 +55,8 @@ function withMaterialAlternatives(alternatives,fn){
 // Serializes renderer compilation setup while allowing the draw loop to run
 // during asynchronous pipeline creation. The owner must keep objects hidden
 // until the returned promise resolves.
-export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=>{},shadowLights=null,includeShadowPass=false}){
- if(!renderer?.backend?.isWebGPUBackend||typeof renderer.compileAsync!=='function'||!scene?.isScene||!camera?.isCamera||typeof onFatal!=='function'||shadowLights!==null&&!Array.isArray(shadowLights)||typeof includeShadowPass!=='boolean'||includeShadowPass&&typeof renderer.compileShadowAsync!=='function')throw TypeError('Invalid pipeline admission');
+export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=>{},shadowLights=null,includeShadowPass=false,sharedSceneLighting=false}){
+ if(!renderer?.backend?.isWebGPUBackend||typeof renderer.compileAsync!=='function'||!scene?.isScene||!camera?.isCamera||typeof onFatal!=='function'||shadowLights!==null&&!Array.isArray(shadowLights)||typeof includeShadowPass!=='boolean'||typeof sharedSceneLighting!=='boolean'||includeShadowPass&&typeof renderer.compileShadowAsync!=='function')throw TypeError('Invalid pipeline admission');
  const lights=new Map();let lightsRevision=0,structuralRevision=0;
  function addLight(light){if(!light?.isLight||!light.shadow)throw TypeError('Invalid admission shadow light');const count=lights.get(light)??0;lights.set(light,count+1);if(count===0){lightsRevision++;structuralRevision++;}}
  if(shadowLights===null)scene.traverse(node=>{if(node.isLight&&node.shadow)addLight(node);});else for(const light of shadowLights)addLight(light);
@@ -208,7 +209,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
      // the shader graph; restore all flags before the next visible frame.
      for(const light of lights.keys()){const shadow=light.shadow;shadows.push([shadow,shadow.autoUpdate,shadow.needsUpdate]);shadow.autoUpdate=false;shadow.needsUpdate=false;}
      object.traverse(node=>{if(node.isMesh||node.isLine||node.isPoints){culling.push([node,node.frustumCulled]);node.frustumCulled=false;}});
-     for(const [node] of included)node.visible=true;object.visible=true;pending=renderer.compileAsync(object,passCamera,targetScene);});
+     for(const [node] of included)node.visible=true;object.visible=true;pending=sharedSceneLighting?compileWithAdmissionSceneLighting(renderer,object,passCamera,targetScene,()=>renderer.compileAsync(object,passCamera,targetScene)):renderer.compileAsync(object,passCamera,targetScene);});
     }finally{
      object.visible=visible;
      for(const [node,value] of included)node.visible=value;
