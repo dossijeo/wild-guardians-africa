@@ -7,6 +7,7 @@ import {deserializeConfirmedState} from '../src/simulation/confirmed-live-state.
 import {createSimulationAuthority} from '../src/simulation/simulation-authority.js';
 import {validateConfirmedMotion} from '../src/rendering/confirmed-motion-validation.js';
 import {confirmedHistoricalParticipant} from '../src/rendering/confirmed-historical-participant.js';
+import {confirmedHistoricalWaterPlans} from '../src/rendering/confirmed-historical-water.js';
 
 // Real WASM authority over a saved campaign; the initial task is arranged so
 // the test observes both an action-only publication and its actual completion.
@@ -22,8 +23,8 @@ test('native harvest history preserves task and target until the authoritative C
   assert.equal(observed.snapshot,control.snapshot);assert.deepEqual(observed.events,control.events);validateConfirmedMotion(observed,after,before.elapsed,before);
   const preview={start:before.elapsed,end:after.elapsed,trace:observed.worldMotionTrace,clockSegments:observed.clockSegments},record=observed.worldMotionTrace.actorTickStates.actors.find(actor=>actor.actorId===worker.id),samples=record.samples;
   assert.equal(observed.worldMotionTrace.actorTickStates.complete,true);
-  if(observed.events.some(event=>event.type==='CropPicked')){completion=true;assert.equal(after.workers[0].status,'carrying');assert.equal(confirmedHistoricalParticipant(preview,worker.id,before.workers[0],'worker',before.tasks),null);assert.notEqual(samples.at(-1).status,'acting');}
-  else if(samples.every(sample=>sample.status==='acting')&&!observed.events.length){assert.equal(confirmedHistoricalParticipant(preview,worker.id,before.workers[0],'worker',before.tasks),'stationary');assert.ok(samples.every(sample=>sample.actionTaskKind==='harvest'&&sample.actionTargetId===plant.id));admitted=true;}
+  if(observed.events.some(event=>event.type==='CropPicked')){completion=true;assert.equal(after.workers[0].status,'carrying');assert.equal(confirmedHistoricalParticipant(preview,worker.id,before.workers[0],'worker',before.tasks),null);assert.equal(confirmedHistoricalWaterPlans(before,preview),null);assert.notEqual(samples.at(-1).status,'acting');}
+  else if(samples.every(sample=>sample.status==='acting')&&!observed.events.length){assert.equal(confirmedHistoricalParticipant(preview,worker.id,before.workers[0],'worker',before.tasks),'stationary');assert.ok(samples.every(sample=>sample.actionTaskKind==='harvest'&&sample.actionTargetId===plant.id));const work=confirmedHistoricalWaterPlans(before,preview);assert.equal(work?.working,true);assert.equal(work.plans.length,1);assert.equal(work.plans[0].plan.id,'harvest');assert.equal(work.plans[0].task.targetId,plant.id);assert.ok(work.plans[0].times.at(-1).time>=work.plans[0].times[0].time);admitted=true;}
   before=after;
  }
  assert.equal(admitted,true,'a real event-free harvest interval was admitted');assert.equal(completion,true,'the authority completed and confirmed harvesting');
