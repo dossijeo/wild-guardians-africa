@@ -43,10 +43,14 @@ ejecutor protegido de producto. A6 incluye todas las intenciones y trabajadores.
     autoritativos; la máscara estática no es suficiente.
     **Parcial:** geometría autorada, reloj de 0,6 s, sensores/espera y política
     nativos implementados como servicio opt-in. Datos incompletos congelan el
-    motor. Pendientes el barrido físico continuo, pausas en la trayectoria,
-    reservas/admisión de cruces y conexión por eventos con el producto.
+    motor. Barrido continuo hoja/cuerpos y candidatos temporales validado mediante
+    cotas de distancia/velocidad; preparación atómica y altas/mutaciones de cuerpos
+    protegidas hasta la pose final. No equivale a clearance del mundo completo.
+    Pendientes marcos/obstáculos estáticos, pausas en la trayectoria,
+    reservas/admisión de cruces, recuperación y conexión por eventos con producto.
     `authorizedPassage:false`; los cruces nativos siguen rechazados. Evidencia:
-    11 pruebas WASM nuevas, 355 dirigidas + 39 y 74 heredadas sin skips.
+    11 pruebas de política + 12 de barrido WASM, 367 dirigidas + 39 y 74 heredadas
+    sin skips. No hay aún aceptación gráfica de personajes autónomos.
   - [ ] **A6-04.f — Efecto físico/gráfico coordinado.** No hacer efectiva una
     mutación mientras un dibujante pueda cruzar antes de su revocación; depende
     también de A6-06.
@@ -90,6 +94,9 @@ ejecutor protegido de producto. A6 incluye todas las intenciones y trabajadores.
 - `.cache/native-gates-regression.tap`: 355 aprobadas sin skips.
 - `.cache/native-gates-legacy-stream-geometry.tap`: 39 aprobadas sin skips.
 - `.cache/native-gates-legacy-recipe.tap`: 74 aprobadas sin skips.
+- `.cache/native-gate-sweep-regression.tap`: 367 aprobadas sin skips.
+- `.cache/native-gate-sweep-legacy-stream-geometry.tap`: 39 aprobadas sin skips.
+- `.cache/native-gate-sweep-legacy-recipe.tap`: 74 aprobadas sin skips.
 
 Quedan **2 de los 6 subpuntos de A6-04**: e (parcial) y f (pendiente).
 Los **11 puntos principales de A6** siguen abiertos; son niveles distintos,

@@ -844,3 +844,43 @@ producto. El controlador nativo se consulta explícitamente; no sustituye aún
 `gates.js` ni concede autonomía de animación/locomoción GPU. Tampoco prueba ACK
 causal o aceptación gráfica A–F. Quedan **e y f** de los seis subpuntos A6-04,
 y permanecen abiertos los once puntos principales de A6.
+
+### Barrido continuo hoja/cuerpos (incremento de A6-04.e)
+
+`spatial-gate-sweep.h` prueba la distancia al polígono autorado durante todo el
+intervalo. La cota de velocidad de sus vértices combina radio de bisagra,
+velocidad angular de 0,6 s y máxima escala singular; añade la velocidad del
+cuerpo y los nudos del timetable existente. La distancia es Lipschitz bajo ese
+desplazamiento. Subdivisión adaptativa con presupuesto finito: incertidumbre,
+contacto o agotamiento rechazan, nunca conceden permiso por muestras aisladas.
+Incluye poses inicial/final, cambios de velocidad de carrera y la envolvente del
+snap numérico de apertura heredado. El witness es un intervalo conservador, no
+una estimación de primer contacto exacto.
+
+`nav_gate_prepare_motion` propone todos los motores sin publicar y los preflighta
+contra el registro físico y suscriptores espaciales de curvas reservadas. Rechazo
+no modifica ningún motor ni sus certificados anteriores. Una pose guardada sin
+definir exige hidratación previa: no se certifica como continuo un salto inicial
+de apertura. `nav_gate_reconcile` sigue siendo solo política y retira certificados;
+no es un atajo para autorizar física. Ruined tampoco recibe certificado.
+
+Un certificado protege el giro restante y la pose final ante altas/mutaciones de
+cuerpos. La consulta read-only de candidatos temporales está en el bridge de
+intenciones y exige la época **exacta**, no solo el contador de sesión WASM.
+Muestrear geometría/apertura no ejecuta sensores, planificación ni clearance.
+
+Doce pruebas WASM nuevas cubren contacto intermedio aun con inicio/mitad/fin
+libres, intrusión de triángulo de 20 micras, poses extremas, puerta congelada,
+transacciones de varias puertas, rechazo preservando un motor certificado,
+trayectoria/tiempo y aislamiento de época. El primer pase detectó una premisa
+incorrecta del fixture autorado: `(0.3,0.9)` contacta a apertura 0,3 pero está
+libre a 0,5; se conserva ese contacto y se comprueban ambas poses explícitamente.
+Standalone/pthread reconstruidos. **367 dirigidas + 39 de streaming/geometría +
+74 de receta/estado**, aprobadas sin skips; logs `native-gate-sweep-*.tap` en
+`.cache`.
+
+Esto es certificación **hoja/cuerpos**, no instalación de collider de puerta ni
+prueba contra marcos, otras hojas, props o terreno. Cruces siguen no soportados:
+`authorizedPassage:false`. Holds, leases de cruce, recuperación, eventos de
+producto y frontera causal con ACK/dibujo siguen pendientes. No se cierran e/f,
+ni se activa autonomía GPU o se sustituye `gates.js`.

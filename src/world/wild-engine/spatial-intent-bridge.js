@@ -534,6 +534,14 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
         runDistance:data[12],walkDistance:data[13],runRemaining:data[14],
         running:data[15]===1,currentSpeed:data[16]}:{})};
   };
+  const nativeGateRouteSweep=(gateId,handle,target)=>{
+    if(handle?.authorityEpoch!==epoch())return {status:'stale',authorizedPassage:false};
+    if(wasm.nav_gate_sweep_version?.()!==1)throw Error('Rebuild native gate sweep service');
+    syncBoundaryTime();const result=wasm.nav_gate_route_sweep(numericId(gateId),handle.session,handle.slot,handle.generation,target),
+      a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_sweep_result_ptr(),6));
+    return {status:result===1?'clear':result===0?'blocked':'invalid',authorizedPassage:false,
+      witness:a[0]?{gateId:a[0],bodyId:a[1],from:a[2],to:a[3],reason:a[4]===1?'overlap':'unproven'}:null};
+  };
   const sampleNativeRoute=(handle,at)=>{
     if(handle?.authorityEpoch!==epoch()||
        wasm.nav_intent_route_sample(handle.session,handle.slot,handle.generation,at)!==1)return null;
@@ -965,7 +973,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     structureFor:id=>structuresById.get(numericId(id))??null,
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
-    intentChanges,routePoints,nativeRouteTiming,sampleNativeRoute,prepareNativeRouteMotion,reserveNativeRoute,
+    intentChanges,routePoints,nativeRouteTiming,sampleNativeRoute,nativeGateRouteSweep,prepareNativeRouteMotion,reserveNativeRoute,
     beginNativeRouteExecution,advanceNativeRouteExecution,stopNativeRouteExecution,nativeRouteExecution,
     projectRouteProgress,processEventBoundary,requestReroute,
     registerAttackIntent,planAttackCrop,planAttackWall,replanAttackRoute,
@@ -1875,6 +1883,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     flushNativeIntentControl:bridge.flushNativeIntentControl,
     intentChanges:bridge.intentChanges,routePoints:bridge.routePoints,
     nativeRouteTiming:bridge.nativeRouteTiming,sampleNativeRoute:bridge.sampleNativeRoute,
+    nativeGateRouteSweep:bridge.nativeGateRouteSweep,
     reserveNativeRoute:bridge.reserveNativeRoute,
     prepareNativeRouteMotion:bridge.prepareNativeRouteMotion,
     beginNativeRouteExecution:bridge.beginNativeRouteExecution,

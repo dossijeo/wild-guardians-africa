@@ -246,6 +246,8 @@ struct IntentState {
   std::unordered_map<uint64_t,uint64_t> gateBodyActors;
   std::vector<double> gateInput,gateResult;
   uint64_t gateBoundaries=0,gateWorkerChecks=0,gatePrefixSegments=0;
+  uint64_t gateSweepPairs=0,gateSweepEvaluations=0,gateSweepRejected=0;
+  std::array<double,6> gateSweepResult{};
   uint32_t session=0;
   uint64_t invalidations=0;
   std::unordered_map<uint64_t,uint64_t> planningCallsByActor;
@@ -456,6 +458,7 @@ void releaseIntent(IntentState& s,uint64_t actor,PlanningState next){
 #include "spatial-prop-mutation-state.h"
 #include "spatial-terrain-mutation-state.h"
 #include "spatial-gate-controller.h"
+#include "spatial-gate-sweep.h"
 void invalidateDependents(IntentState& s,const Change& change){
   if(change.kind==1){
     if(!change.op){
@@ -865,7 +868,7 @@ SpatialStaticTicket spatialIntentStaticBefore(const SpatialStaticMutation* shape
 }
 void spatialIntentStaticCommitted(const SpatialStaticTicket& ticket){staticMutationCommitted(state(),ticket);}
 bool spatialIntentBodyCanChange(uint64_t id,const SpatialBodyView& proposed){
-  auto& s=state();if(!reservationBodyCanChange(s,id,proposed))return false;
+  auto& s=state();if(!gateMotionBodyCanChange(s,proposed)||!reservationBodyCanChange(s,id,proposed))return false;
   if(s.bodyDomainActive){SpatialBodyView previous;const bool exists=spatialReadBody(id,previous);
     updateResidencyPinRevision(s,exists?&previous:nullptr,&proposed);}
   return true;
@@ -914,6 +917,7 @@ void nav_intent_reset(){
   if(!s.gates.empty())spatialGateSupportChanged();
   s.gates.clear();s.gateBodyActors.clear();s.gateInput.clear();s.gateResult.clear();
   s.gateBoundaries=s.gateWorkerChecks=s.gatePrefixSegments=0;
+  s.gateSweepPairs=s.gateSweepEvaluations=s.gateSweepRejected=0;s.gateSweepResult.fill(0);
   s.session++;
   if(!s.session)s.session=1;
   s.activeIntents.clear();s.byTarget.clear();s.byTask.clear();
@@ -1611,6 +1615,7 @@ int nav_intent_commit(){
 // Drain only changes caused by confirmed events or a committed task batch.
 // Ordinary movement and ticks do not invoke the planner or emit rows.
 EMSCRIPTEN_KEEPALIVE int nav_intent_protocol_version(){return intentProtocolVersion;}
+int nav_intent_route_points(double,double,double);
 #include "spatial-gate-api.inc"
 EMSCRIPTEN_KEEPALIVE int nav_intent_change_width(){return intentChangeWidth;}
 EMSCRIPTEN_KEEPALIVE uint32_t nav_intent_session(){return state().session;}

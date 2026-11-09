@@ -32,12 +32,12 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_reconcile(int enabled){
     if(!value.complete){
       // Uncertainty cannot leave a previous closing/opening target running.
       // Freeze the whole boundary at its current pose before reporting failure.
-      for(auto& [otherId,other]:s.gates){other.from=other.target=gateOpening(other,s.effectiveTime);other.at=s.effectiveTime;}
+      for(auto& [otherId,other]:s.gates){other.from=other.target=gateOpening(other,s.effectiveTime);other.at=s.effectiveTime;other.bodySweepCertified=false;}
       return -2;
     }facts.emplace(id,value);}
   s.gateBoundaries++;
   for(auto& [id,gate]:s.gates){
-    double current=gateOpening(gate,s.effectiveTime);
+    double current=gateOpening(gate,s.effectiveTime);gate.bodySweepCertified=false;
     if(!enabled){gate.from=gate.target=current;gate.at=s.effectiveTime;continue;}
     if(gate.status==2){gate.from=gate.target=0;gate.defined=true;gate.at=s.effectiveTime;continue;}
     if(gate.status!=0){gate.from=gate.target=current;gate.at=s.effectiveTime;continue;}
@@ -67,3 +67,40 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_worker_waiting(double actor){
 EMSCRIPTEN_KEEPALIVE double nav_gate_boundaries(){return double(state().gateBoundaries);}
 EMSCRIPTEN_KEEPALIVE double nav_gate_worker_checks(){return double(state().gateWorkerChecks);}
 EMSCRIPTEN_KEEPALIVE double nav_gate_prefix_segments(){return double(state().gatePrefixSegments);}
+EMSCRIPTEN_KEEPALIVE int nav_gate_sweep_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int nav_gate_prepare_motion(int enabled){
+  auto& s=state();s.gateSweepResult.fill(0);if(enabled!=0&&enabled!=1)return -1;
+  std::map<uint64_t,NativeGate> proposed=s.gates;
+  for(auto& [id,gate]:proposed){
+    // Save recovery may choose an initial pose through the legacy policy API,
+    // but that discontinuous choice is not a certified physical trajectory.
+    if(gate.status!=2&&!gate.defined)return -2;
+    const double current=gateOpening(gate,s.effectiveTime);
+    if(!enabled||gate.status==1){gate.from=gate.target=current;gate.at=s.effectiveTime;
+      if(!gateSweepBodies(s,gate)){s.gateSweepRejected++;return -3;}continue;}
+    if(gate.status==2){gate.from=gate.target=0;gate.at=s.effectiveTime;gate.defined=true;continue;}
+    const auto facts=gateFacts(s,gate);if(!facts.complete)return -2;
+    gate.from=gate.defined?current:facts.occupied?1:0;gate.target=facts.requested||facts.occupied?1:0;
+    gate.at=s.effectiveTime;gate.defined=true;gate.requested=facts.requested;gate.occupied=facts.occupied;
+    if(!gateSweepBodies(s,gate)){s.gateSweepRejected++;return -3;}
+  }
+  for(auto& [id,gate]:proposed)gate.bodySweepCertified=gate.status!=2;
+  s.gates.swap(proposed);return int(s.gates.size());
+}
+EMSCRIPTEN_KEEPALIVE int nav_gate_body_sweep_certified(double id){
+  auto& s=state();return integer(id)&&s.gates.count(uint64_t(id))&&s.gates.at(uint64_t(id)).bodySweepCertified?1:0;
+}
+EMSCRIPTEN_KEEPALIVE int nav_gate_route_sweep(double id,double session,double slot,double generation,double target){
+  auto& s=state();s.gateSweepResult.fill(0);
+  if(!integer(id)||!s.gates.count(uint64_t(id))||!std::isfinite(target)||target<0||target>1||
+     nav_intent_route_points(session,slot,generation)<0)return -1;
+  const auto& route=s.routeSlots[size_t(slot)];if(!route.timingMode)return -1;
+  auto proposal=s.gates.at(uint64_t(id));proposal.from=gateOpening(proposal,s.effectiveTime);proposal.target=target;proposal.at=s.effectiveTime;
+  const auto answer=gateSweepPair(s,proposal,{&route},route.radius,s.effectiveTime,
+    s.effectiveTime+std::abs(target-proposal.from)*nativeGateMoveSeconds);
+  if(!answer.clear)s.gateSweepResult={id,0,answer.from,answer.to,double(answer.reason),0};return answer.clear?1:0;
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_gate_sweep_result_ptr(){return state().gateSweepResult.data();}
+EMSCRIPTEN_KEEPALIVE double nav_gate_sweep_pairs(){return double(state().gateSweepPairs);}
+EMSCRIPTEN_KEEPALIVE double nav_gate_sweep_evaluations(){return double(state().gateSweepEvaluations);}
+EMSCRIPTEN_KEEPALIVE double nav_gate_sweep_rejected(){return double(state().gateSweepRejected);}
