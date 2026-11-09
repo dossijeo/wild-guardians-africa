@@ -59,7 +59,7 @@ void retireMutationRoutes(IntentState& s,const std::set<uint64_t>& affected,uint
   for(uint64_t actor:affected){
     auto& intent=s.activeIntents.at(actor);
     if(intent.state!=PlanningState::RouteActive||!s.routeSlots[intent.slot].reserved)continue;
-    releaseRoute(s,intent);intent.state=PlanningState::NeedsPlan;
+    stopRouteForEvent(s,intent);
     s.invalidations++;revocations++;emitIntentChange(s,intent);
   }
 }

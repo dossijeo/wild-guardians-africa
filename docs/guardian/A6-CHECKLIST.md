@@ -25,7 +25,7 @@ estaba dentro de e/f; no son funcionalidades adicionales ni renumeran A6-01–11
 |---|---|---|
 | Geometría/reloj/política | Hojas autoradas, apertura de 0,6 s, proximidad, ocupación y espera en C++; mecanismo nativo marco/hoja/apoyo consumido por colisión y `NativeWall`. | Clase validada: puertas intactas sobre datum plano nativo de Desierto. No activado en la partida; integración y ciclo de vida son e-R3. |
 | Barridos y protección | Contacto continuo contra cuerpos, objetos canónicos y otras hojas; veto previo de mutaciones incompatibles. La unión del mecanismo conserva todas sus regiones ocupadas. | No certifica apoyos arbitrarios/inclinados ni física de otras clases; se rechazan explícitamente. |
-| Timetable y fases | Esperas iniciales/intermedias sin gasto de fases/carrera, nudos completos y misma ruta/tarea/objetivo. Nueva admisión atómica opt-in de rutas completas por puertas inicialmente cerradas, con aperturas futuras y reservas nativas. | El lector de candidatos anterior sigue sin admitir. La nueva API exige el mecanismo validado de e-R1; faltan reanudación del sufijo y reversión diferida de un cierre en curso. No activa producto/GPU. |
+| Timetable y fases | Esperas iniciales/intermedias, admisión atómica opt-in por puertas cerradas y suspensión/reanudación del sufijo nativo con fases/presupuesto acumulados. | El lector de candidatos anterior sigue sin admitir. La nueva API exige el mecanismo validado de e-R1; falta reversión diferida de un cierre en curso. No activa producto/GPU ni persistencia entre acciones/guardados. |
 | Control directo y recibo GPU | Revocación por época/versión, canal independiente de preparación y recibo de retirada de trabajo GPU previo. | Un recibo no resuelve reloj causal, presentación o todos los consumidores de producto. |
 | Propuesta y commit de motor | Ticket de un uso; espera recibo nuevo y rechaza si cambian sus dependencias. | Motor de puerta opt-in; no transacción física/gráfica completa de todas las mutaciones. |
 
@@ -67,9 +67,15 @@ congelar/cerrar una promesa reservada ni borrar su puerta. Cancelar una apertura
 congela el motor y revoca por eventos las rutas dependientes; un cuerpo detenido
 en el paso mantiene la protección de ocupación.
 
-**Lo que falta dentro del mismo e-R2:** conservar/reanudar por eventos el sufijo,
-fases y presupuesto tras esa invalidación. Hoy se revoca y se libera la geometría,
-no se reanuda. Una inversión futura de un cierre ya en marcha requiere representar
+La suspensión ahora revoca el handle ejecutable y conserva el mismo `RouteSlot`,
+su sufijo y pose congelada. La reanudación por comando/evento nativo vuelve a
+probar el sufijo y reservas antes de asignar una generación nueva, sin planner.
+Offsets nativos conservan distancia/fases/presupuesto incluso en esperas o
+suspensiones repetidas. Fallar por tráfico/obstáculos conserva el sufijo; cancelar,
+cambiar objetivo, retirar cuerpo o reiniciar autoridad lo descarta. La reanudación
+no es un timer ni un retry por tick, y no activa consecuencias de gameplay.
+
+**Lo que falta dentro del mismo e-R2:** una inversión futura de un cierre ya en marcha requiere representar
 sus tramos sin congelar su movimiento previo: se rechaza explícitamente. Las
 reservas de esta entrega se retienen hasta liberar la ruta; no caducan por timer
 ni programan cierre automático. Un evento posterior de política puede cerrar
@@ -238,6 +244,7 @@ esta lista ni presentar más pruebas aisladas como cierre del producto.
 - `.cache/native-gate-mechanism-legacy-stream-geometry.tap`: 39 aprobadas sin skips.
 - `.cache/native-gate-mechanism-legacy-recipe.tap`: 74 aprobadas sin skips.
 - Avance parcial de e-R2: `.cache/native-gate-crossings-regression.tap`, 462 aprobadas sin skips, incluidas 16 de admisión/reservas. `.cache/native-gate-crossings-legacy-stream-geometry.tap` (39) y `.cache/native-gate-crossings-legacy-recipe.tap` (74), también aprobadas sin skips. No cierra e-R2 ni acredita personajes/GPU.
+- Suspensión/reanudación de e-R2: `.cache/native-gate-resume-regression.tap`, 474 aprobadas sin skips, incluidas 12 de sufijos/offsets. `.cache/native-gate-resume-legacy-stream-geometry.tap` (39) y `.cache/native-gate-resume-legacy-recipe.tap` (74), también aprobadas sin skips. Sigue pendiente la composición con cierre en curso.
 - [Mecanismo nativo y mallas reales WebGPU](performance/native-gate-mechanism-20261109.json) · [captura](performance/native-gate-mechanism-20261109.png).
 
 Quedan **2 de los 6 subpuntos de A6-04**: e y f (parciales).

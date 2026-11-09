@@ -153,6 +153,11 @@ struct RouteSlot {
   double originX=0,originZ=0,startTime=0,speed=0,radius=0;
   double departureTime=0;uint64_t waitGate=0;bool gateCandidate=false;
   bool gateAdmitted=false;
+  bool resumable=false,suspended=false;
+  double suspendedAt=0;
+  // Cumulative distance, motion time, run/walk/carry phases and distances.
+  // The suffix has local timing/distances; these offsets never advance at rest.
+  std::array<double,7> motionOffset{};
   std::vector<uint64_t> gateReservations;
   uint64_t actor=0;
   int timingMode=0,profile=0;
@@ -237,6 +242,9 @@ struct IntentState {
   uint64_t routeTimeSamples=0;
   int timingRejection=0;
   std::map<uint64_t,uint32_t> reservedBodies;
+  std::map<uint64_t,uint32_t> suspendedBodies;
+  uint64_t routeSuspensions=0,routeResumptions=0;
+  std::array<double,27> suspendedRouteResult{};
   std::array<double,6> reservationResult{};
   uint64_t reservationChecks=0,reservationPairs=0,reservationBodyChecks=0,
     reservationMutationCandidates=0;
@@ -417,6 +425,11 @@ void indexRouteDependencies(IntentState& s,ActiveIntent& intent){
   if(original!=intent.profile)spatial_select_nav_profile_index(original);
 }
 void drainStoppedReservations(IntentState& s);
+bool intentHasSuspendedRoute(const IntentState& s,const ActiveIntent& intent){
+  if(intent.slot>=s.routeSlots.size())return false;
+  const auto& route=s.routeSlots[intent.slot];
+  return route.active&&route.suspended&&route.actor==intent.actor&&route.generation==intent.generation;
+}
 void emitIntentChange(IntentState& s,ActiveIntent& intent){
   indexRouteDependencies(s,intent);
   const IntentEvent event=intent.state==PlanningState::RouteActive?
@@ -430,7 +443,8 @@ void emitIntentChange(IntentState& s,ActiveIntent& intent){
   }
   s.intentChanges.insert(s.intentChanges.end(),{double(intent.actor),
     double(int(intent.state)),double(intent.task),double(intent.target),
-    double(s.session),double(intent.slot),double(intent.generation),
+    double(s.session),intent.state==PlanningState::RouteActive?double(intent.slot):0,
+    intent.state==PlanningState::RouteActive?double(intent.generation):0,
     double(intent.topology),double(transitionSequence),s.effectiveTime,
     intent.revokedGeneration?double(s.session):0,double(intent.revokedSlot),
     double(intent.revokedGeneration),double(int(event)),double(intentProtocolVersion)});
@@ -443,7 +457,7 @@ void releaseRoute(IntentState& s,ActiveIntent& intent){
   if(intent.slot<s.routeSlots.size()){
     RouteSlot& route=s.routeSlots[intent.slot];
     if(route.active&&route.generation==intent.generation){
-      intent.revokedSlot=intent.slot;intent.revokedGeneration=intent.generation;
+      if(!route.suspended){intent.revokedSlot=intent.slot;intent.revokedGeneration=intent.generation;}
       releaseGateCrossings(s,route);
       if(route.reserved){
         s.residencyPinRevision++;
@@ -451,6 +465,8 @@ void releaseRoute(IntentState& s,ActiveIntent& intent){
           s.stoppedReservationBodies.insert(route.reservationBody);
         s.reservedBodies.erase(route.reservationBody);route.reserved=false;
       }
+      if(route.suspended)s.suspendedBodies.erase(route.reservationBody);
+      route.suspended=route.resumable=false;route.motionOffset.fill(0);route.suspendedAt=0;
       route.active=false;route.points.clear();route.distances.clear();route.timingMode=0;
       route.holds.clear();route.waitGate=0;route.gateCandidate=false;route.departureTime=0;
       route.gateReservations.clear();route.gateAdmitted=false;
@@ -458,6 +474,30 @@ void releaseRoute(IntentState& s,ActiveIntent& intent){
     }
   }
   intent.slot=0;intent.generation=0;
+}
+// Suspension retains the ONE allocated slot, but revokes its executable handle.
+// Cancel/target changes still use releaseRoute and permanently discard it.
+bool suspendRoute(IntentState& s,ActiveIntent& intent){
+  if(s.resettingBodies||intent.state!=PlanningState::RouteActive||intent.animal||intent.slot>=s.routeSlots.size())return false;
+  auto& route=s.routeSlots[intent.slot];
+  if(!route.active||route.suspended||!route.resumable||!route.reserved||route.generation!=intent.generation)return false;
+  const auto pose=route.hasExecution?route.executionPose:sampleRouteTiming(route,route.startTime);
+  SpatialBodyView body;
+  if(pose[6]||!spatialReadBody(route.reservationBody,body)||body.x!=pose[0]||body.z!=pose[1])return false;
+  intent.revokedSlot=intent.slot;intent.revokedGeneration=intent.generation;
+  clearRouteDependencies(s,intent);releaseGateCrossings(s,route);
+  s.reservedBodies.erase(route.reservationBody);route.reserved=false;
+  s.suspendedBodies.emplace(route.reservationBody,intent.slot);
+  if(s.executionEnabled)s.stoppedReservationBodies.insert(route.reservationBody);
+  route.gateReservations.clear();route.gateAdmitted=false;
+  route.executionPose=pose;route.hasExecution=true;route.suspended=true;route.suspendedAt=s.effectiveTime;
+  if(!++route.generation)route.generation=1;
+  intent.generation=route.generation;intent.state=PlanningState::WaitingBlocked;
+  intent.runBudget=pose[14];s.bodyDomainActive=true;s.residencyPinRevision++;s.routeSuspensions++;return true;
+}
+void stopRouteForEvent(IntentState& s,ActiveIntent& intent){
+  if(suspendRoute(s,intent))return;
+  releaseRoute(s,intent);intent.state=PlanningState::NeedsPlan;
 }
 void releaseIntent(IntentState& s,uint64_t actor,PlanningState next){
   const auto found=s.activeIntents.find(actor);
@@ -923,6 +963,7 @@ void spatialIntentBodiesResetting(){
   for(auto& [id,worker]:s.workers)worker.bodyBound=false;s.gateBodyActors.clear();
   s.resettingBodies=true;
   while(!s.reservedBodies.empty())reservationBodyRemoving(s,s.reservedBodies.begin()->first);
+  while(!s.suspendedBodies.empty())reservationBodyRemoving(s,s.suspendedBodies.begin()->first);
   s.resettingBodies=false;
   if(s.bodyDomainActive){s.bodyDomainActive=false;s.residencyPinRevision++;}
 }
@@ -974,11 +1015,12 @@ void nav_intent_reset(){
   s.byBlockedCropGroup.clear();s.wallOpportunityActors.clear();
   s.routeSlots.clear();s.intentChanges.clear();s.controlSnapshot.clear();s.intentResult.fill(0);
   s.timingResult.fill(0);s.sampleResult.fill(0);s.routeTimeSamples=0;s.timingRejection=0;
-  s.reservedBodies.clear();s.reservationResult.fill(0);
+  s.reservedBodies.clear();s.suspendedBodies.clear();s.reservationResult.fill(0);
+  s.routeSuspensions=s.routeResumptions=0;s.suspendedRouteResult.fill(0);
   s.reservationChecks=s.reservationPairs=s.reservationBodyChecks=s.reservationMutationCandidates=0;
   s.executionEnabled=s.bodyDomainActive=s.drainingStops=s.resettingBodies=false;
   s.executionWorldStamp.fill(0);s.executionResult.fill(0);
-  s.stoppedReservationBodies.clear();s.removingBodies.clear();
+  s.stoppedReservationBodies.clear();s.stoppedGateRouteActors.clear();s.removingBodies.clear();
   s.executionAdvances=s.executionEvaluations=s.executionBodyUpdates=s.executionStopInvalidations=0;
   s.staticMutationCandidates=s.staticMutationSegments=s.staticMutationBodyChecks=0;
   s.staticMutationRevocations=s.staticMutationRejected=s.staticMutationCommits=0;
@@ -1732,7 +1774,8 @@ int nav_intent_actor(double actorId){
   const ActiveIntent& intent=found->second;
   s.intentResult={double(intent.actor),double(int(intent.state)),
     double(intent.task),double(intent.target),double(s.session),
-    double(intent.slot),double(intent.generation),double(intent.topology),
+    intent.state==PlanningState::RouteActive?double(intent.slot):0,
+    intent.state==PlanningState::RouteActive?double(intent.generation):0,double(intent.topology),
     double(s.entityRevision),double(lazy_route_revision())};
   return 1;
 }
@@ -1743,7 +1786,7 @@ int nav_intent_route_points(double session,double slot,double generation){
     session!=double(s.session)||slot>=s.routeSlots.size()||
     generation>double(UINT32_MAX))return -1;
   const RouteSlot& route=s.routeSlots[size_t(slot)];
-  return route.active&&route.generation==uint32_t(generation)?
+  return route.active&&!route.suspended&&route.generation==uint32_t(generation)?
     int(route.points.size()/2):-1;
 }
 const float* nav_intent_route_ptr(double session,double slot,double generation){
@@ -1752,7 +1795,7 @@ const float* nav_intent_route_ptr(double session,double slot,double generation){
      slot>=s.routeSlots.size()||!integer(generation)||
      generation>double(UINT32_MAX))return nullptr;
   const RouteSlot& route=s.routeSlots[size_t(slot)];
-  return route.active&&route.generation==uint32_t(generation)?
+  return route.active&&!route.suspended&&route.generation==uint32_t(generation)?
     route.points.data():nullptr;
 }
 EMSCRIPTEN_KEEPALIVE int nav_intent_route_timing(double session,double slot,double generation){
@@ -2056,6 +2099,9 @@ int nav_intent_reconcile_topology(){
     const auto found=s.activeIntents.find(actor);
     if(found==s.activeIntents.end())continue;
     ActiveIntent& intent=found->second;
+    // Retained suffixes are re-proved by an explicit native resume event, not
+    // converted into generic planner requests by an unrelated sector update.
+    if(intentHasSuspendedRoute(s,intent))continue;
     if(lazy_selected_context()!=intent.profile)
       spatial_select_nav_profile_index(intent.profile);
     const uint32_t revision=lazy_route_revision();
@@ -2086,7 +2132,7 @@ int nav_intent_reconcile_topology(){
       intent.topology=revision;emitIntentChange(s,intent);s.invalidations++;
       continue;
     }
-    releaseRoute(s,intent);intent.state=PlanningState::NeedsPlan;
+    stopRouteForEvent(s,intent);
     intent.topology=revision;emitIntentChange(s,intent);s.invalidations++;
   }
   return int(affected.size());
@@ -3096,6 +3142,7 @@ int nav_intent_action_active(double actorId){
   IntentState& s=state();const auto it=s.activeIntents.find(uint64_t(actorId));
   if(it==s.activeIntents.end()||it->second.state!=PlanningState::RouteActive)return 0;
   const auto& route=s.routeSlots[it->second.slot];
+  if(route.resumable&&route.reserved&&(!route.hasExecution||route.executionPose[6]!=1))return 0;
   if(s.executionEnabled&&route.reserved&&route.hasExecution&&route.executionPose[6]!=1)return 0;
   releaseRoute(s,it->second);
   it->second.state=PlanningState::ActionActive;emitIntentChange(s,it->second);return 1;

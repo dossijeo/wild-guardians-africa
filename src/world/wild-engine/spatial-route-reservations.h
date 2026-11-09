@@ -102,9 +102,18 @@ std::set<uint64_t> reservationBodyCandidates(const IntentState& s,const SpatialB
   return reservationBoxCandidates(s,body.x-body.r,body.z-body.r,body.x+body.r,body.z+body.r);
 }
 bool reserveRouteClear(IntentState& s,const ActiveIntent& intent,const RouteSlot& route,
-    uint64_t body,const SpatialBodyView& physical){
+    uint64_t body,const SpatialBodyView& physical,bool suffix=false){
   const ReservationPath path{&route};
-  for(uint64_t actor:reservationCandidates(s,intent)){
+  double minX=route.originX,maxX=route.originX,minZ=route.originZ,maxZ=route.originZ;
+  for(size_t i=0;i<route.points.size();i+=2){
+    minX=std::min(minX,double(route.points[i]));maxX=std::max(maxX,double(route.points[i]));
+    minZ=std::min(minZ,double(route.points[i+1]));maxZ=std::max(maxZ,double(route.points[i+1]));
+  }
+  // A suspended intent has no live route subscriptions. Query the SAME inverse
+  // index from its candidate suffix, without publishing speculative subscribers.
+  const auto actors=suffix?reservationBoxCandidates(s,minX-route.radius,minZ-route.radius,maxX+route.radius,maxZ+route.radius):
+    reservationCandidates(s,intent);
+  for(uint64_t actor:actors){
     if(actor==route.actor)continue;
     const auto found=s.activeIntents.find(actor);
     if(found==s.activeIntents.end()||found->second.state!=PlanningState::RouteActive)continue;
@@ -115,11 +124,6 @@ bool reserveRouteClear(IntentState& s,const ActiveIntent& intent,const RouteSlot
     s.reservationPairs++;double at;
     if(reservationConflict(path,{&other},route.radius+other.radius,s.effectiveTime,at))
       reservationWitness(s,2,other.reservationBody,other.actor,at,found->second.slot,other.generation);
-  }
-  double minX=route.originX,maxX=route.originX,minZ=route.originZ,maxZ=route.originZ;
-  for(size_t i=0;i<route.points.size();i+=2){
-    minX=std::min(minX,double(route.points[i]));maxX=std::max(maxX,double(route.points[i]));
-    minZ=std::min(minZ,double(route.points[i+1]));maxZ=std::max(maxZ,double(route.points[i+1]));
   }
   struct Query {IntentState& s;const RouteSlot& route;uint64_t body;const SpatialBodyView& physical;};
   Query query{s,route,body,physical};
@@ -134,11 +138,16 @@ bool reserveRouteClear(IntentState& s,const ActiveIntent& intent,const RouteSlot
   return !s.reservationResult[0];
 }
 bool reservationBodyCanChange(IntentState& s,uint64_t id,const SpatialBodyView& proposed){
-  if(s.reservedBodies.empty())return true;
+  if(s.reservedBodies.empty()&&s.suspendedBodies.empty())return true;
   SpatialBodyView before;
   if(spatialReadBody(id,before)&&before.x==proposed.x&&before.z==proposed.z&&
      before.r==proposed.r&&before.kind==proposed.kind&&before.flags==proposed.flags)return true;
   s.reservationResult.fill(0);
+  const auto held=s.suspendedBodies.find(id);
+  if(held!=s.suspendedBodies.end()){
+    const auto& route=s.routeSlots[held->second];
+    reservationWitness(s,3,id,route.actor,s.effectiveTime,held->second,route.generation);return false;
+  }
   const auto own=s.reservedBodies.find(id);
   if(own!=s.reservedBodies.end()){
     const auto& route=s.routeSlots[own->second];
@@ -159,8 +168,9 @@ bool reservationBodyCanChange(IntentState& s,uint64_t id,const SpatialBodyView& 
   return !s.reservationResult[0];
 }
 void reservationBodyRemoving(IntentState& s,uint64_t id){
-  const auto found=s.reservedBodies.find(id);if(found==s.reservedBodies.end())return;
-  const auto actor=s.routeSlots[found->second].actor;
+  const auto found=s.reservedBodies.find(id),held=s.suspendedBodies.find(id);
+  if(found==s.reservedBodies.end()&&held==s.suspendedBodies.end())return;
+  const auto actor=s.routeSlots[found!=s.reservedBodies.end()?found->second:held->second].actor;
   s.removingBodies.insert(id);
   releaseIntent(s,actor,PlanningState::Cancelled);s.activeIntents.erase(actor);
   s.removingBodies.erase(id);
@@ -177,7 +187,7 @@ void drainStoppedReservations(IntentState& s){
       const uint64_t actor=*s.stoppedGateRouteActors.begin();s.stoppedGateRouteActors.erase(actor);
       const auto found=s.activeIntents.find(actor);
       if(found!=s.activeIntents.end()&&found->second.state==PlanningState::RouteActive){
-        auto& intent=found->second;releaseRoute(s,intent);intent.state=PlanningState::NeedsPlan;
+        auto& intent=found->second;stopRouteForEvent(s,intent);
         s.invalidations++;s.executionStopInvalidations++;emitIntentChange(s,intent);
       }
       continue;
@@ -194,7 +204,7 @@ void drainStoppedReservations(IntentState& s){
       double at;
       if(!reservationConflict({&route},{nullptr,stopped.x,stopped.z},route.radius+stopped.r,s.effectiveTime,at))continue;
       reservationWitness(s,1,id,actor,at,intent.slot,route.generation);
-      releaseRoute(s,intent);intent.state=PlanningState::NeedsPlan;
+      stopRouteForEvent(s,intent);
       s.invalidations++;s.executionStopInvalidations++;emitIntentChange(s,intent);
     }
   }

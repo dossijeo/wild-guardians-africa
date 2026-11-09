@@ -12,7 +12,7 @@ bool gateRouteBindingsCoherent(const IntentState& s,const RouteSlot& route,uint3
   return true;
 }
 int compileGateCrossings(IntentState& s,RouteSlot& candidate,std::map<uint64_t,NativeGate>& proposed,
-    std::vector<GateCrossingBoundary>& boundaries){
+    std::vector<GateCrossingBoundary>& boundaries,bool requireGate=true){
   for(const auto& [id,gate]:proposed){
     if(gate.status==2)continue;
     bool relevant=false;double x=candidate.originX,z=candidate.originZ,before=0,last=0;
@@ -35,7 +35,7 @@ int compileGateCrossings(IntentState& s,RouteSlot& candidate,std::map<uint64_t,N
     last=std::max(last,distance);
     boundaries.push_back({id,distance,last});
   }
-  if(boundaries.empty()||boundaries.size()>4096)return -2;
+  if(requireGate&&boundaries.empty()||boundaries.size()>4096)return -2;
   std::sort(boundaries.begin(),boundaries.end(),[](const auto& a,const auto& b){
     return a.distance!=b.distance?a.distance<b.distance:a.gate<b.gate;
   });
@@ -70,6 +70,40 @@ int gateCrossingFixedClear(const NativeGate& gate,const RouteSlot& route,const S
     x=nx;z=nz;
   }
   return 1;
+}
+int proveGateRouteAdmission(IntentState& s,const ActiveIntent& intent,RouteSlot& candidate,
+    uint64_t bodyId,const SpatialBodyView& body,std::map<uint64_t,NativeGate>& proposed,
+    std::vector<GateCrossingBoundary>& boundaries,bool requireGate=true){
+  int result=compileGateCrossings(s,candidate,proposed,boundaries,requireGate);
+  if(result==1)for(uint64_t id:candidate.gateReservations){
+    result=gateCrossingFixedClear(proposed.at(id),candidate,body);if(result!=1)break;
+    if(!gateSweepBodies(s,proposed.at(id),&candidate,bodyId)){result=0;break;}
+  }
+  recordTimingResult(s,result);if(result!=1)return -7;
+  s.reservationChecks++;
+  if(!reserveRouteClear(s,intent,candidate,bodyId,body,!requireGate))return 0;
+  const int objects=gateSweepStaticObjects(s,proposed,true);return objects==1?1:objects;
+}
+void publishGateRouteAdmission(IntentState& s,ActiveIntent& intent,uint32_t slot,RouteSlot& candidate,
+    uint64_t bodyId,std::map<uint64_t,NativeGate>& proposed,const std::vector<GateCrossingBoundary>& boundaries){
+  auto& old=s.routeSlots[slot];
+  candidate.active=true;candidate.generation=old.generation+2;
+  if(!candidate.generation)candidate.generation=1;
+  candidate.gateCandidate=false;candidate.gateAdmitted=!boundaries.empty();candidate.resumable=true;
+  candidate.reserved=true;candidate.reservationBody=bodyId;
+  for(const auto& boundary:boundaries){auto& gate=proposed.at(boundary.gate);
+    gate.bodySweepCertified=gate.staticSweepCertified=true;
+    gate.crossings.emplace(candidate.actor,GateCrossingReservation{bodyId,slot,candidate.generation,
+      routeTimeAtDistance(candidate,boundary.distance),routeTimeAtDistance(candidate,boundary.last)});
+  }
+  releaseRoute(s,intent);old=std::move(candidate);
+  s.reservedBodies.emplace(bodyId,slot);s.residencyPinRevision++;
+  intent.slot=slot;intent.generation=old.generation;intent.state=PlanningState::RouteActive;
+  intent.routeStartX=float(old.originX);intent.routeStartZ=float(old.originZ);intent.routeCursor=0;
+  intent.timingMode=2;intent.timingRadius=old.radius;intent.motionFlags=old.motionFlags;intent.runBudget=old.runBudget;
+  cancelGateMotionProposal(s);publishGateMotion(s,proposed);
+  if(s.executionEnabled){s.executionEvaluations++;projectExecutedPose(s,old,sampleRouteTiming(old,s.effectiveTime));}
+  emitIntentChange(s,intent);
 }
 void releaseGateCrossings(IntentState& s,const RouteSlot& route){
   if(route.gateReservations.empty())return;

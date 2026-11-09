@@ -1377,3 +1377,55 @@ Logs `.cache/native-gate-crossings-regression.tap`,
 `.cache/native-gate-crossings-legacy-stream-geometry.tap` y
 `.cache/native-gate-crossings-legacy-recipe.tap`. No se declara limpia la suite
 general; se mantienen documentados sus fallos históricos.
+
+## e-R2 — Sufijo suspendido y readmisión por evento, sin planner
+
+Se elimina el bloqueo de pérdida del sufijo: la suspensión de una ruta nativa
+resumible conserva su `RouteSlot` asignado y su pose ejecutada, pero revoca la
+generación ejecutable en el log de control. El estado de espera no publica otro
+handle de movimiento ni aparece en el baseline de rutas activas. Un token de
+reanudación de sesión/época/slot/generación solo sirve para ese comando; no puede
+usarse como ruta, reserva ordinaria o muestra temporal ejecutable.
+
+La cola iterativa de paradas retiene así las rutas dependientes de una apertura
+cancelada o de un cuerpo detenido; también las invalidaciones geométricas de
+rutas resumibles. El planner genérico no reemplaza un sufijo suspendido al cambiar
+un sector. Cambiar objetivo, cancelar la intención, retirar/resetear el cuerpo o
+restaurar la autoridad sí lo liberan definitivamente. El slot no puede reutilizarse
+mientras está suspendido, y el cuerpo detenido no puede moverse/religarse desde
+fuera sin resolver primero esa propiedad nativa.
+
+`nav_gate_resume_route` vuelve a probar estáticos, puertas y tráfico del sufijo
+desde la posición física exacta. Reutiliza las mismas funciones de admisión y el
+ejecutor común. No hay ruta nueva del planner. Como la espera no tiene suscripciones
+activas de movimiento, el tráfico futuro se consulta desde los límites del sufijo
+contra el mismo índice inverso nativo, sin instalar suscriptores especulativos.
+Un fallo no cambia reloj, token, geometría, presupuesto ni eventos publicados.
+El comando no recibe posiciones, presupuesto o fases nuevos desde JS.
+
+La nueva ruta usa tiempos/distancias locales del sufijo y offsets acumulados
+nativos de distancia, tiempo de movimiento, fases de carrera/marcha/carga y sus
+distancias. En reposo esos valores no avanzan; reanudar no reinicia una animación
+ni repone carrera. Funcionan esperas, cambios de velocidad por agotar carrera,
+huida lenta, puntos duplicados, esquinas y suspensiones repetidas. Si el resto ya
+no pasa por una puerta, se admite como sufijo estático nativo, no se reintroducen
+tramos cruzados. No es todavía persistencia entre acciones o guardados.
+
+Son comandos/eventos explícitos de la autoridad, no una cola universal de retries,
+un sondeo temporal o un nuevo planificador. Si no queda un cohort ejecutándose,
+la autoridad readmite y arranca el ejecutor común en esa misma frontera, como en
+la admisión inicial. No se permite pasar a trabajo antes de la llegada confirmada.
+No se activa esta API en gameplay ni se concede autonomía/pasaje de producto/GPU.
+
+Doce pruebas nuevas (`tests/spatial-native-gate-resume.test.js`) pasan en WASM,
+además de las 16 previas de admisión: suspensión manual y por eventos reales,
+reanudación/fallo atómico, fases/velocidades, tráfico futuro, tareas y retiro del
+objetivo, control de generaciones/épocas, reset y 300 avances sin geometría/planner.
+Standalone/pthread reconstruidos; **474 dirigidas + 39 + 74** aprobadas sin skips.
+Logs `.cache/native-gate-resume-regression.tap`,
+`.cache/native-gate-resume-legacy-stream-geometry.tap` y
+`.cache/native-gate-resume-legacy-recipe.tap`.
+
+Este incremento no cierra otro ID. Para e-R2 queda la composición de una apertura
+futura con un motor que ya está cerrando, sin congelar su tramo anterior. Tablero
+aún **1 cerrado, 7 pendientes**; no se declara aceptación con personajes.

@@ -108,11 +108,12 @@ std::array<double,18> sampleRouteTiming(const RouteSlot& route,double at){
     if(span>0)yaw=std::atan2(bx-ax,bz-az);
     if(geometricEnd){x=route.points[route.points.size()-2];z=route.points.back();}
   }
-  return {x,z,distance,routeMotionTimeAtDistance(route,distance),yaw,
+  return {x,z,route.motionOffset[0]+distance,route.motionOffset[1]+routeMotionTimeAtDistance(route,distance),yaw,
     double(index),arrived?1.0:0.0,waiting?std::clamp(at,hold->from,hold->until):routeTimeAtDistance(route,distance),duration,
-    worker?runDistance/(workerRunSpeed*workerTravelMultiplier):0,
-    worker&&!carrying?walkDistance/workerWalkSpeed:0,
-    worker&&carrying?walkDistance/workerWalkSpeed:0,runDistance,walkDistance,
+    route.motionOffset[2]+(worker?runDistance/(workerRunSpeed*workerTravelMultiplier):0),
+    route.motionOffset[3]+(worker&&!carrying?walkDistance/workerWalkSpeed:0),
+    route.motionOffset[4]+(worker&&carrying?walkDistance/workerWalkSpeed:0),
+    route.motionOffset[5]+runDistance,route.motionOffset[6]+walkDistance,
     (route.motionFlags&2)?route.runBudget:std::max(0.0,route.runBudget-runDistance),
     running?1.0:0.0,geometricEnd||waiting?0:running?route.runSpeed:route.speed,double(route.timingMode)};
 }

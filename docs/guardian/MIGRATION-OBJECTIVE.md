@@ -50,8 +50,8 @@ La [vista de entrega y pendientes fijos](A6-CHECKLIST.md#vista-de-entrega-y-pend
 separa componentes implementados de producto integrado: e/f siguen sin cerrar,
 con ocho entregables identificados como e-R1–R4 y f-R1–R4: **e-R1 cerrado,
 siete pendientes**. e-R2 ya tiene admisión nativa opt-in por puertas inicialmente
-cerradas y protección de reservas; sigue parcial porque faltan reanudación del
-sufijo tras invalidación y composición con un cierre previo en marcha. No se
+cerradas, protección de reservas y suspensión/reanudación del sufijo con offsets
+nativos. Sigue parcial por la composición con un cierre previo en marcha. No se
 sumarán esos niveles ni se usarán tests/commits como porcentaje de finalización.
 
 - [x] Auditar propietarios y reabrir A6; commits `e213c43f9`–`8892bbe80`.
