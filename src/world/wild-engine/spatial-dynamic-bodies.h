@@ -4,6 +4,9 @@
 // Native read access to the existing physical registry. No second body store.
 struct SpatialBodyView {double x,z,r;int kind,flags;};
 bool spatialReadBody(uint64_t id,SpatialBodyView& out);
+// Native intent executor only; not exported to JS. Updates this same registry
+// after the whole cohort transaction has passed its metadata preflight.
+bool spatialMoveBodyFromIntent(uint64_t id,double x,double z);
 bool spatialBodiesParticipate(const SpatialBodyView& actor,const SpatialBodyView& other);
 using SpatialBodyVisitor=void (*)(uint64_t,const SpatialBodyView&,void*);
 void spatialVisitBodiesBox(double minX,double minZ,double maxX,double maxZ,

@@ -1576,6 +1576,11 @@ EMSCRIPTEN_KEEPALIVE int spatial_execution_segment_clear(double x,double z,doubl
   return executionSegmentClear(x,z,nx,nz,radius);
 }
 int spatial_execution_profile_kind(){return workerNow?0:1;}
+// Fixed-world execution lease. Authoritative mutation counters, not per-route
+// collision checks or another geometry cache.
+uint64_t spatial_execution_revision(int kind){
+  return kind==0?terrainInputRevision:kind==1?residencyRevision:overlayRevision;
+}
 EMSCRIPTEN_KEEPALIVE double spatial_execution_clearance_checks(){return double(executionClearanceChecks);}
 EMSCRIPTEN_KEEPALIVE double spatial_execution_slope_samples(){return double(executionSlopeSamples);}
 int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){

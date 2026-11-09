@@ -478,3 +478,69 @@ Faltan ejecución lógica común y consecuencias, resolución de cesiones/desví
 puertas/otros biomas, reloj causal, pérdida de canal y aceptación integrada real
 de animales **y trabajadores**. Ningún éxito específico de AttackCrops sustituye
 ese alcance.
+
+## Avance cinemático nativo y cierre de paradas — 2026-11-09
+
+`beginNativeRouteExecution` activa explícitamente una cohorte de rutas admitidas
+en el mismo instante lógico; `advanceNativeRouteExecution` evalúa sus planes y
+mueve **los cuerpos reales del registro nativo existente**. No es ya solo una
+lectura de posiciones previstas. El mismo núcleo sirve a trabajadores y animales,
+actualiza posición/cursor y presupuesto nativos y usa una entrada C++ de escritura
+física que no está exportada a JS. Preflight y evaluación de toda la cohorte
+preceden a cualquier escritura. No se añaden cuerpos, planners ni timetables
+autoritativos paralelos.
+
+Mientras esta ejecución esté activa, `nav_intent_set_time` no puede saltarse el
+avance de cuerpos. Pausa/repetición de tiempo son idempotentes; regresiones se
+rechazan. Las proyecciones JS de trabajadores con posición obsoleta o inicio de
+acción antes de llegar rechazan el lote entero. Las entradas nativas de acción
+también exigen llegada en esta clase. Llegar mantiene el disco final reservado;
+no inicia por sí solo trabajo/ataques ni aplica daño. Las poses detenidas se
+conservan sin volver a evaluar la ruta en pasos posteriores.
+
+Una cancelación no puede simplemente borrar la reserva de una trayectoria que
+ya estaba moviéndose: su cuerpo pasa a detenerse en otro punto. El evento consulta
+los suscriptores existentes y retira las reservas futuras que intersecan ese
+disco; repite el proceso con los nuevos cuerpos detenidos mediante una cola
+ordenada e **iterativa**, no recursión por actor ni revisiones periódicas. Las
+intenciones/tareas/objetivos afectados quedan `NeedsPlan`, con sus leases; los
+no afectados continúan. Eliminar un cuerpo o resetear el registro no introduce
+falsamente un nuevo obstáculo detenido. Cada retirada publica el handle exacto
+antes de reutilizarlo.
+
+**Dominio provisional de mundo fijo:** la prueba continua queda ligada a los
+contadores nativos exactos de terreno, residencia y overlays. No se puede
+reestampar una prueba antigua al iniciar ejecución, ni admitirla tras una mutación
+que no cambie la pasabilidad del grafo. El avance compara esos tres contadores
+una vez por cohorte; cualquier cambio devuelve `world-changed` sin modificar
+cuerpos ni reloj. No hay consultas de colisión/validez por ruta y paso. Este
+bloqueo conservador incluso ante cambios lejanos **no es** la política final de
+mutación dirigida y **no impide todavía** que una API estática inserte geometría
+bajo un cuerpo en el instante del evento. Por eso no habilita autonomía gráfica.
+
+Diez pruebas nuevas con WASM real cubren ejecución mixta, reloj/pausa, llegada y
+acciones no duplicadas, cascada A → B → C con D intacto, aborto por mundo cambiado,
+retirada/reset de cuerpos, proyecciones JS obsoletas, actualización del índice
+físico con 80 cuerpos lejanos, bootstrap de prueba estática obsoleta y conservación
+de una tarea realmente comprometida al detener su ruta. Cien avances de dos
+actores producen 200 evaluaciones, cero planificación, admisiones o validaciones
+adicionales y ningún evento/publicación de posición de locomoción. Contadores:
+`nav_intent_execution_advances`, `..._evaluations`, `..._body_updates` y
+`..._stop_invalidations`.
+
+Regresión: **271 aprobadas sin skips**, standalone/pthread reconstruidos, exports
+verificados y contactos/detours heredados contrastados con el WASM anterior de
+Git. Log: `.cache/native-route-execution-regression.tap`. No hubo ejecución
+gráfica nueva en esta tanda; los servidores QA cancelados por el reinicio no se
+usaron como evidencia de WebGPU.
+
+**A6 continúa abierto.** Este ejecutor sigue opt-in y
+`authorizedAutonomy:false`; las entidades y consecuencias del producto conservan
+su propietario/guardas actuales. Las fases aquí son relativas a la ruta; falta
+conectar offsets persistentes, guardado/restauración y consecuencias de gameplay
+sin doble autoridad. El bridge no revierte automáticamente una transacción JS
+que el llamador haya adelantado: en caso de rechazo debe abortarse esa transacción.
+Faltan asimismo resolver los conflictos (no solo pararlos), transacciones previas
+de mundo/puertas/residencia, otros perfiles/biomas y reloj/ACK causal con política
+de pérdida de canal antes de la aceptación WASM/WebGPU completa para **todas** las
+intenciones. Ningún build o test de este incremento cierra A6.

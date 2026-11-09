@@ -84,6 +84,12 @@ camino crítico sin pedir autorización rutinaria entre hitos.
       carga, huida y fases preservados frente a `moveWorker`. El barrido admite
       conectores de trabajadores en Desierto, pero rechaza pasos automáticos sin
       hojas/tiempos nativos. Regresión ampliada: 261 aprobadas sin skips.
+      Avance cinemático nativo opt-in ya mueve cuerpos reales de ambos perfiles
+      en el registro existente, con reloj común y sin validaciones por paso.
+      Cancelar una trayectoria propaga las paradas conflictivas por evento,
+      conservando tareas/objetivos y otras rutas. Lease de mundo estático todavía
+      conservador: una mutación aborta el avance antes de mover cuerpos/reloj.
+      271 pruebas dirigidas pasan sin skips; no está activado en el producto.
 - [ ] Vertical AttackCrops completa y aceptación real A–F (primer caso integrado,
       no cierre de A6 por sí solo).
 - [ ] Generalizar a otras bestias, trabajadores, intenciones y animaciones;
@@ -103,11 +109,14 @@ camino crítico sin pedir autorización rutinaria entre hitos.
 
 ## Próximo bloqueo
 
-Llevar ejecución temporal y conflictos al propietario nativo, junto con el
-reloj causal, desconexión y fronteras de aplicación física. El control directo
-ya está conectado al bootstrap/runtime; no convierte por sí solo las rutas
-geométricas actuales en una autorización segura de todo su futuro. No ampliar
-autorización visual ni eliminar el ejecutor protegido hasta resolverlo.
+Conectar el avance cinemático común a entidades, fases persistentes y consecuencias
+de gameplay, sin conservar un ejecutor JS paralelo para las clases migradas.
+Sustituir el lease global de mundo fijo por fronteras de mutación dirigidas y
+coordinadas; completar cesiones/desvíos, puertas y otros perfiles/biomas. Después
+ligar reloj causal, desconexión y admisión GPU con aceptación integrada de animales
+y trabajadores. El control directo ya conectado no garantiza por sí solo todo el
+futuro de una ruta. No ampliar autorización visual ni eliminar las protecciones
+existentes antes de verificar su reemplazo.
 
 Actualizar este registro y el plan al terminar cada parte, distinguiendo siempre
 implementación, pruebas ejecutadas y aceptación pendiente. Si se interrumpe la

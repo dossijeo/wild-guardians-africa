@@ -28,6 +28,7 @@ int spatial_world_route_reason();
 int spatial_world_segment_clear(float,float,float,float);
 int spatial_execution_segment_clear(double,double,double,double,double);
 int spatial_execution_profile_kind();
+uint64_t spatial_execution_revision(int);
 uint32_t lazy_route_revision();
 int lazy_selected_context();
 int lazy_sector_size();
@@ -144,6 +145,9 @@ struct RouteSlot {
   uint32_t generation=0;bool active=false;
   // Admission fence in the existing slot, not a duplicate trajectory store.
   bool reserved=false;uint64_t reservationBody=0;
+  bool hasExecution=false;
+  std::array<double,18> executionPose{};
+  std::array<uint64_t,3> staticProofStamp{};
 };
 struct Change {
   int op,kind;
@@ -219,6 +223,11 @@ struct IntentState {
   std::array<double,6> reservationResult{};
   uint64_t reservationChecks=0,reservationPairs=0,reservationBodyChecks=0,
     reservationMutationCandidates=0;
+  bool executionEnabled=false,drainingStops=false,resettingBodies=false;
+  std::array<uint64_t,3> executionWorldStamp{};
+  std::array<double,18> executionResult{};
+  std::set<uint64_t> stoppedReservationBodies,removingBodies;
+  uint64_t executionAdvances=0,executionEvaluations=0,executionBodyUpdates=0,executionStopInvalidations=0;
   uint32_t session=0;
   uint64_t invalidations=0;
   std::unordered_map<uint64_t,uint64_t> planningCallsByActor;
@@ -243,6 +252,9 @@ bool integer(double value,bool allowZero=false){
     value<=maxId&&std::floor(value)==value;
 }
 bool coordinate(double value){return std::isfinite(value)&&std::abs(value)<2147483000.0;}
+std::array<uint64_t,3> executionWorldStamp(){
+  return {spatial_execution_revision(0),spatial_execution_revision(1),spatial_execution_revision(2)};
+}
 #include "spatial-route-motion.h"
 void recordTimingResult(IntentState& s,int result){
   s.timingRejection=result==1?0:result==0?1:result==-1?2:result==-2?3:4;
@@ -349,6 +361,7 @@ void indexRouteDependencies(IntentState& s,ActiveIntent& intent){
   }
   if(original!=intent.profile)spatial_select_nav_profile_index(original);
 }
+void drainStoppedReservations(IntentState& s);
 void emitIntentChange(IntentState& s,ActiveIntent& intent){
   indexRouteDependencies(s,intent);
   const IntentEvent event=intent.state==PlanningState::RouteActive?
@@ -367,6 +380,7 @@ void emitIntentChange(IntentState& s,ActiveIntent& intent){
     intent.revokedGeneration?double(s.session):0,double(intent.revokedSlot),
     double(intent.revokedGeneration),double(int(event)),double(intentProtocolVersion)});
   intent.revokedSlot=0;intent.revokedGeneration=0;
+  drainStoppedReservations(s);
 }
 void releaseRoute(IntentState& s,ActiveIntent& intent){
   clearRouteDependencies(s,intent);
@@ -374,7 +388,11 @@ void releaseRoute(IntentState& s,ActiveIntent& intent){
     RouteSlot& route=s.routeSlots[intent.slot];
     if(route.active&&route.generation==intent.generation){
       intent.revokedSlot=intent.slot;intent.revokedGeneration=intent.generation;
-      if(route.reserved){s.reservedBodies.erase(route.reservationBody);route.reserved=false;}
+      if(route.reserved){
+        if(s.executionEnabled&&!s.resettingBodies&&!s.removingBodies.count(route.reservationBody))
+          s.stoppedReservationBodies.insert(route.reservationBody);
+        s.reservedBodies.erase(route.reservationBody);route.reserved=false;
+      }
       route.active=false;route.points.clear();route.distances.clear();route.timingMode=0;
       route.generation++;
     }
@@ -402,6 +420,7 @@ void releaseIntent(IntentState& s,uint64_t actor,PlanningState next){
   intent.task=0;intent.target=0;s.invalidations++;
 }
 #include "spatial-route-reservations.h"
+#include "spatial-route-execution.h"
 void invalidateDependents(IntentState& s,const Change& change){
   if(change.kind==1){
     if(!change.op){
@@ -787,7 +806,9 @@ bool spatialIntentBodyCanChange(uint64_t id,const SpatialBodyView& proposed){
 void spatialIntentBodyRemoving(uint64_t id){reservationBodyRemoving(state(),id);}
 void spatialIntentBodiesResetting(){
   auto& s=state();
+  s.resettingBodies=true;
   while(!s.reservedBodies.empty())reservationBodyRemoving(s,s.reservedBodies.begin()->first);
+  s.resettingBodies=false;
 }
 
 extern "C" {
@@ -831,6 +852,10 @@ void nav_intent_reset(){
   s.timingResult.fill(0);s.sampleResult.fill(0);s.routeTimeSamples=0;s.timingRejection=0;
   s.reservedBodies.clear();s.reservationResult.fill(0);
   s.reservationChecks=s.reservationPairs=s.reservationBodyChecks=s.reservationMutationCandidates=0;
+  s.executionEnabled=s.drainingStops=s.resettingBodies=false;
+  s.executionWorldStamp.fill(0);s.executionResult.fill(0);
+  s.stoppedReservationBodies.clear();s.removingBodies.clear();
+  s.executionAdvances=s.executionEvaluations=s.executionBodyUpdates=s.executionStopInvalidations=0;
   s.attackRouteInput.clear();s.attackBlockers.clear();
   s.attackReservedTargets.clear();s.attackResult.fill(0);
   s.wallAttackResult.fill(0);
@@ -1010,6 +1035,14 @@ int nav_intent_apply_changes(double sequence,int count){
   std::vector<Change> parsed(static_cast<size_t>(count));
   for(int i=0;i<count;i++)
     if(!parse(s.changes.data()+size_t(i)*changeWidth,parsed[size_t(i)]))return 0;
+  if(s.executionEnabled)for(const auto& change:parsed){
+    if(change.kind!=1||!change.op)continue;
+    const auto active=s.activeIntents.find(change.id);
+    if(active==s.activeIntents.end()||active->second.state!=PlanningState::RouteActive)continue;
+    const auto& route=s.routeSlots[active->second.slot];if(!route.reserved||!route.hasExecution)continue;
+    if(change.x!=route.executionPose[0]||change.z!=route.executionPose[1]||
+       change.target&&route.executionPose[6]!=1)return 0;
+  }
   std::unordered_map<uint64_t,int> touchedTargetKinds;
   for(const Change& change:parsed){
     if(change.kind==2)touchedTargetKinds[change.id]=change.op?int(change.center):0;
@@ -1173,6 +1206,7 @@ int nav_intent_task_count(){return int(state().tasks.size());}
 // session and are generated afterwards from current physical positions.
 int nav_intent_restore_assigned_tasks(){
   IntentState& s=state();
+  if(!s.reservedBodies.empty())return -3;
   if(!s.activeIntents.empty()||s.proposalOpen)return -1;
   std::vector<const Task*> assigned;
   assigned.reserve(s.tasks.size());
@@ -1522,6 +1556,7 @@ EMSCRIPTEN_KEEPALIVE double nav_intent_reconcile_candidate_count(){return double
 EMSCRIPTEN_KEEPALIVE int nav_intent_set_time(double elapsed){
   IntentState& s=state();
   if(!std::isfinite(elapsed)||elapsed<s.effectiveTime)return 0;
+  if(s.executionEnabled&&elapsed!=s.effectiveTime)return 0;
   s.effectiveTime=elapsed;return 1;
 }
 int nav_intent_change_count(){return int(state().intentChanges.size()/intentChangeWidth);}
@@ -1661,12 +1696,13 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_route_reserve(double session,double slot,dou
   if(!route.timingMode||found==s.activeIntents.end()||found->second.state!=PlanningState::RouteActive||
      found->second.slot!=uint32_t(slot)||found->second.generation!=uint32_t(generation))return -2;
   if(route.reserved)return route.reservationBody==uint64_t(body)?1:-3;
+  if(s.executionEnabled&&s.executionWorldStamp!=executionWorldStamp())return -2;
   if(route.startTime!=s.effectiveTime||route.points.empty()||found->second.routeCursor)return -2;
   const int previous=lazy_selected_context();
   if(previous!=route.profile)spatial_select_nav_profile_index(route.profile);
   const bool topology=found->second.topology==lazy_route_revision();
   if(previous!=route.profile)spatial_select_nav_profile_index(previous);
-  if(!topology)return -2;
+  if(!topology||route.staticProofStamp!=executionWorldStamp())return -2;
   SpatialBodyView physical;
   if(!spatialReadBody(uint64_t(body),physical)||physical.kind!=(found->second.animal?1:0)||!(physical.flags&1)||
      (found->second.animal&&(physical.flags&6))||
@@ -1676,7 +1712,9 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_route_reserve(double session,double slot,dou
   s.reservationChecks++;
   if(!reserveRouteClear(s,found->second,route,uint64_t(body),physical))return 0;
   route.reserved=true;route.reservationBody=uint64_t(body);
-  s.reservedBodies.emplace(uint64_t(body),uint32_t(slot));return 1;
+  s.reservedBodies.emplace(uint64_t(body),uint32_t(slot));
+  if(s.executionEnabled){s.executionEvaluations++;projectExecutedPose(s,route,sampleRouteTiming(route,s.effectiveTime));}
+  return 1;
 }
 EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_reservation_result_ptr(){return state().reservationResult.data();}
 EMSCRIPTEN_KEEPALIVE int nav_intent_route_reservation_count(){return int(state().reservedBodies.size());}
@@ -1684,6 +1722,31 @@ EMSCRIPTEN_KEEPALIVE double nav_intent_route_reservation_checks(){return double(
 EMSCRIPTEN_KEEPALIVE double nav_intent_route_reservation_pairs(){return double(state().reservationPairs);}
 EMSCRIPTEN_KEEPALIVE double nav_intent_route_reservation_body_checks(){return double(state().reservationBodyChecks);}
 EMSCRIPTEN_KEEPALIVE double nav_intent_route_reservation_mutation_candidates(){return double(state().reservationMutationCandidates);}
+
+EMSCRIPTEN_KEEPALIVE int nav_intent_execution_begin(){return beginRouteExecution(state());}
+EMSCRIPTEN_KEEPALIVE int nav_intent_execution_advance(double at){return advanceRouteExecution(state(),at);}
+EMSCRIPTEN_KEEPALIVE int nav_intent_execution_stop(){
+  auto& s=state();const int count=int(s.reservedBodies.size());
+  for(const auto& [body,slot]:s.reservedBodies)if(!executionBindingCoherent(s,body,slot))return -3;
+  while(!s.reservedBodies.empty()){
+    const auto actor=s.routeSlots[s.reservedBodies.begin()->second].actor;
+    auto& intent=s.activeIntents.at(actor);releaseRoute(s,intent);
+    intent.state=PlanningState::NeedsPlan;emitIntentChange(s,intent);s.invalidations++;
+  }
+  s.executionEnabled=false;return count;
+}
+EMSCRIPTEN_KEEPALIVE int nav_intent_route_execution(double session,double slot,double generation){
+  auto& s=state();s.executionResult.fill(0);
+  if(nav_intent_route_points(session,slot,generation)<0)return -1;
+  const auto& route=s.routeSlots[size_t(slot)];
+  if(!s.executionEnabled||!route.reserved||!route.hasExecution)return 0;
+  s.executionResult=route.executionPose;return 1;
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_execution_ptr(){return state().executionResult.data();}
+EMSCRIPTEN_KEEPALIVE double nav_intent_execution_advances(){return double(state().executionAdvances);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_execution_evaluations(){return double(state().executionEvaluations);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_execution_body_updates(){return double(state().executionBodyUpdates);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_execution_stop_invalidations(){return double(state().executionStopInvalidations);}
 
 // A topological event may be unrelated to an active worker path. Validate the
 // pinned polyline against the updated native collision map at this boundary,
@@ -1697,8 +1760,9 @@ bool activeRouteClear(IntentState& s,const ActiveIntent& intent){
      route.points.size()<2||route.points.size()%2)return false;
   const auto worker=s.workers.find(intent.actor);
   if(!intent.animal&&worker==s.workers.end())return false;
-  float x=intent.animal?intent.routeStartX:float(worker->second.x);
-  float z=intent.animal?intent.routeStartZ:float(worker->second.z);
+  double x=intent.animal?intent.routeStartX:worker->second.x;
+  double z=intent.animal?intent.routeStartZ:worker->second.z;
+  if(route.reserved&&route.hasExecution){x=route.executionPose[0];z=route.executionPose[1];}
   if(intent.routeCursor>route.points.size()/2||
      !spatial_local_clear(x,z,x,z))return false;
   for(size_t i=size_t(intent.routeCursor)*2;i<route.points.size();i+=2){
@@ -2737,7 +2801,9 @@ int nav_intent_attack_action_active(double actorId){
   IntentState& s=state();
   const auto found=s.activeIntents.find(uint64_t(actorId));
   if(found==s.activeIntents.end()||!found->second.animal||
-     found->second.state!=PlanningState::RouteActive)return 0;
+      found->second.state!=PlanningState::RouteActive)return 0;
+  const auto& route=s.routeSlots[found->second.slot];
+  if(s.executionEnabled&&route.reserved&&route.hasExecution&&route.executionPose[6]!=1)return 0;
   releaseRoute(s,found->second);
   found->second.state=PlanningState::ActionActive;
   emitIntentChange(s,found->second);
@@ -2829,6 +2895,8 @@ int nav_intent_action_active(double actorId){
   if(!integer(actorId))return 0;
   IntentState& s=state();const auto it=s.activeIntents.find(uint64_t(actorId));
   if(it==s.activeIntents.end()||it->second.state!=PlanningState::RouteActive)return 0;
+  const auto& route=s.routeSlots[it->second.slot];
+  if(s.executionEnabled&&route.reserved&&route.hasExecution&&route.executionPose[6]!=1)return 0;
   releaseRoute(s,it->second);
   it->second.state=PlanningState::ActionActive;emitIntentChange(s,it->second);return 1;
 }

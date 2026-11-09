@@ -88,6 +88,8 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     'nav_intent_timing_rejection',
     'nav_intent_route_reserve','nav_intent_route_reservation_result_ptr',
     'nav_intent_route_prepare_motion','nav_intent_route_timing_width','nav_intent_route_sample_width',
+    'nav_intent_execution_begin','nav_intent_execution_advance','nav_intent_execution_stop',
+    'nav_intent_route_execution','nav_intent_route_execution_ptr',
     'nav_intent_apply_changes','nav_intent_plan_tasks','nav_intent_results_ptr',
     'nav_intent_restore_assigned_tasks',
     'nav_intent_discard','nav_intent_commit','nav_intent_damaged_structures',
@@ -517,15 +519,41 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       ...(data[10]===2?{motionMode:'worker',runDistance:data[16],runSpeed:data[17],
         runBudget:data[18],motionFlags:data[19]}:{})});
   };
-  const sampleNativeRoute=(handle,at)=>{
-    if(handle?.authorityEpoch!==epoch()||
-       wasm.nav_intent_route_sample(handle.session,handle.slot,handle.generation,at)!==1)return null;
-    const data=new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_sample_ptr(),18);
+  const decodeMotionSample=data=>{
     return {x:data[0],z:data[1],distance:data[2],phase:data[3],yaw:data[4],
       firstRemainingPoint:data[5],arrived:data[6]===1,at:data[7],duration:data[8],
       ...(data[17]===2?{runPhase:data[9],walkPhase:data[10],carryPhase:data[11],
         runDistance:data[12],walkDistance:data[13],runRemaining:data[14],
         running:data[15]===1,currentSpeed:data[16]}:{})};
+  };
+  const sampleNativeRoute=(handle,at)=>{
+    if(handle?.authorityEpoch!==epoch()||
+       wasm.nav_intent_route_sample(handle.session,handle.slot,handle.generation,at)!==1)return null;
+    return decodeMotionSample(new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_sample_ptr(),18));
+  };
+  const beginNativeRouteExecution=()=>{
+    syncBoundaryTime();const result=wasm.nav_intent_execution_begin();
+    return {status:result===1?'started':result===-2?'inactive':result===-4?'world-changed':'incoherent',authorizedAutonomy:false};
+  };
+  const advanceNativeRouteExecution=at=>{
+    // The caller proposes the same logical simulation time, never wall time or
+    // a presentation clock. On rejection its simulation transaction must abort.
+    if(at!==owningState?.elapsed)throw TypeError('Native execution must use the simulation clock');
+    const result=wasm.nav_intent_execution_advance(at);
+    return result>=0?{status:'advanced',routes:result,authorizedAutonomy:false}:
+      {status:result===-4?'world-changed':result===-1?'invalid-time':
+        result===-2?'inactive':'incoherent',authorizedAutonomy:false};
+  };
+  const stopNativeRouteExecution=()=>{
+    syncBoundaryTime();const count=wasm.nav_intent_execution_stop();
+    if(count<0)throw Error('Native execution bindings are incoherent; restore the authority session');
+    flushNativeIntentControl();return count;
+  };
+  const nativeRouteExecution=handle=>{
+    if(handle?.authorityEpoch!==epoch()||
+       wasm.nav_intent_route_execution(handle.session,handle.slot,handle.generation)!==1)return null;
+    return {...decodeMotionSample(new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_execution_ptr(),18)),
+      executedThrough:wasm.nav_intent_effective_time()};
   };
   const prepareNativeRouteMotion=(handle,{radius,urgent=false,flight=false,slow=false,
     carrying=false,recovering=false,incapacitated=false,runRemaining=0}={})=>{
@@ -929,7 +957,9 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     structureFor:id=>structuresById.get(numericId(id))??null,
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
-    intentChanges,routePoints,nativeRouteTiming,sampleNativeRoute,prepareNativeRouteMotion,reserveNativeRoute,projectRouteProgress,processEventBoundary,requestReroute,
+    intentChanges,routePoints,nativeRouteTiming,sampleNativeRoute,prepareNativeRouteMotion,reserveNativeRoute,
+    beginNativeRouteExecution,advanceNativeRouteExecution,stopNativeRouteExecution,nativeRouteExecution,
+    projectRouteProgress,processEventBoundary,requestReroute,
     registerAttackIntent,planAttackCrop,planAttackWall,replanAttackRoute,
     planRetreatRoute,planHomeRoute,
     cancelHomeIntent:actorId=>wasm.nav_intent_cancel_home(numericId(actorId))===1,
@@ -1839,5 +1869,8 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     nativeRouteTiming:bridge.nativeRouteTiming,sampleNativeRoute:bridge.sampleNativeRoute,
     reserveNativeRoute:bridge.reserveNativeRoute,
     prepareNativeRouteMotion:bridge.prepareNativeRouteMotion,
+    beginNativeRouteExecution:bridge.beginNativeRouteExecution,
+    advanceNativeRouteExecution:bridge.advanceNativeRouteExecution,
+    stopNativeRouteExecution:bridge.stopNativeRouteExecution,nativeRouteExecution:bridge.nativeRouteExecution,
     discard:bridge.discard,commit:bridge.commit,sequence:bridge.sequence};
 }

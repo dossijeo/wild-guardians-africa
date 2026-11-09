@@ -156,5 +156,34 @@ bool reservationBodyCanChange(IntentState& s,uint64_t id,const SpatialBodyView& 
 void reservationBodyRemoving(IntentState& s,uint64_t id){
   const auto found=s.reservedBodies.find(id);if(found==s.reservedBodies.end())return;
   const auto actor=s.routeSlots[found->second].actor;
+  s.removingBodies.insert(id);
   releaseIntent(s,actor,PlanningState::Cancelled);s.activeIntents.erase(actor);
+  s.removingBodies.erase(id);
+}
+// A moving body's cancellation changes its future from a trajectory to a held
+// disc. Retire precisely the conflicting reservations, then process their held
+// discs too. This work is event-driven, deterministic and iterative (no recursive
+// chain of stops). Task/target leases survive; only their routes need replanning.
+void drainStoppedReservations(IntentState& s){
+  if(s.drainingStops)return;
+  s.drainingStops=true;
+  while(!s.stoppedReservationBodies.empty()){
+    const uint64_t id=*s.stoppedReservationBodies.begin();s.stoppedReservationBodies.erase(id);
+    SpatialBodyView stopped;if(!spatialReadBody(id,stopped))continue;
+    for(uint64_t actor:reservationBodyCandidates(s,stopped)){
+      const auto found=s.activeIntents.find(actor);
+      if(found==s.activeIntents.end()||found->second.state!=PlanningState::RouteActive)continue;
+      auto& intent=found->second;auto& route=s.routeSlots[intent.slot];
+      if(!route.reserved||route.reservationBody==id)continue;
+      SpatialBodyView other;
+      if(!spatialReadBody(route.reservationBody,other)||!reservationParticipates(other,stopped))continue;
+      double at;
+      if(!reservationConflict({&route},{nullptr,stopped.x,stopped.z},route.radius+stopped.r,s.effectiveTime,at))continue;
+      reservationWitness(s,1,id,actor,at,intent.slot,route.generation);
+      releaseRoute(s,intent);intent.state=PlanningState::NeedsPlan;
+      s.invalidations++;s.executionStopInvalidations++;emitIntentChange(s,intent);
+    }
+  }
+  s.drainingStops=false;
+  if(s.reservedBodies.empty())s.executionEnabled=false;
 }

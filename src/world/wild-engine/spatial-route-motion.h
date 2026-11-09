@@ -47,7 +47,7 @@ int prepareRouteTiming(RouteSlot& route,uint64_t actor,double x,double z,
     const double change=routeTimeAtDistance(route,route.runDistance);
     if(change<=time||change>=end)return -2;
   }
-  route.timingMode=mode;return 1;
+  route.staticProofStamp=executionWorldStamp();route.timingMode=mode;return 1;
 }
 std::array<double,18> sampleRouteTiming(const RouteSlot& route,double at){
   const double length=route.distances.empty()?0:route.distances.back(),

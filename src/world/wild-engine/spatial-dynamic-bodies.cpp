@@ -173,6 +173,15 @@ bool spatialReadBody(uint64_t id,SpatialBodyView& out){
   const auto found=bodies.find(id);if(found==bodies.end())return false;
   const auto& b=found->second;out={b.x,b.z,b.r,b.kind,b.flags};return true;
 }
+bool spatialMoveBodyFromIntent(uint64_t id,double x,double z){
+  auto found=bodies.find(id);
+  if(found==bodies.end()||!std::isfinite(x)||!std::isfinite(z))return false;
+  if(found->second.x==x&&found->second.z==z)return true;
+  if(indexed)indexRemove(id,found->second);
+  found->second.x=x;found->second.z=z;found->second.revision=nextBodyRevision++;
+  if(indexed)indexAdd(id,found->second);
+  return true;
+}
 bool spatialBodiesParticipate(const SpatialBodyView& actor,const SpatialBodyView& other){
   return participates({actor.x,actor.z,actor.r,actor.kind,actor.flags,0},
     {other.x,other.z,other.r,other.kind,other.flags,0},-1);
