@@ -545,6 +545,39 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     return {status:result===1?'clear':result===0?'blocked':'invalid',authorizedPassage:false,
       witness:a[0]?{gateId:a[0],bodyId:a[1],from:a[2],to:a[3],reason:a[4]===1?'overlap':'unproven'}:null};
   };
+  const prepareNativeGateMotionAfterGpuFence=async({getPublication,enabled}={})=>{
+    if(!initialized||!owningState)throw Error('Reset the native intent session first');
+    if(typeof getPublication!=='function'||enabled!==undefined&&typeof enabled!=='boolean')
+      throw TypeError('Expected current native control publication and gate boundary facts');
+    if(wasm.nav_gate_motion_transaction_version?.()!==1)throw Error('Rebuild native gate transaction service');
+    const policy=()=>[!!owningState.pauses?.length,!!owningState.result,!!owningState.initialPreparation],beforePolicy=policy(),
+      running=enabled??!beforePolicy.some(Boolean),owner=epoch();
+    syncBoundaryTime();flushNativeIntentControl();
+    const source=getPublication(),control=source?.status?.(),at=wasm.nav_intent_effective_time(),
+      sequence=wasm.nav_intent_transition_sequence();
+    const outcome=(status,extra={})=>({status,authorizedAutonomy:false,authorizedPassage:false,...extra});
+    if(!source||typeof source.fenceGpu!=='function'||control?.closed||control?.authorityEpoch!==owner)
+      return outcome('control-unavailable');
+    // A GPU drain cannot invent a newer logical clock boundary. Until causal
+    // clock publication is implemented, only an exact published boundary is used.
+    if(control.sentSequence!==sequence||control.sentTime!==at)return outcome('control-boundary-mismatch');
+    const staged=wasm.nav_gate_motion_stage(running?1:0);
+    if(staged!==1)return outcome(staged===-2?'incomplete-facts':staged===-3?'blocked':staged===-4?'busy':'invalid');
+    if(wasm.nav_gate_motion_ticket()!==1)throw Error('Native gate proposal lost its ticket');
+    const [session,ticket,nativeSequence,nativeTime]=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_motion_ticket_ptr(),5));
+    try{
+      const receipt=await source.fenceGpu(),current=source.status();
+      if(epoch()!==owner||getPublication()!==source||current.closed||current.session!==control.session||
+         current.authorityEpoch!==owner)return outcome('control-replaced');
+      if(receipt.authorityEpoch!==owner||receipt.sequence!==nativeSequence||receipt.effectiveTime!==nativeTime||
+         !Number.isSafeInteger(receipt.fenceId)||receipt.fenceId<1)return outcome('invalid-receipt');
+      if(owningState.elapsed!==nativeTime||policy().some((value,i)=>value!==beforePolicy[i]))return outcome('stale');
+      const committed=wasm.nav_gate_motion_commit(session,ticket,receipt.sequence,receipt.effectiveTime);
+      return outcome(committed===1?'committed':committed===-3?'invalid-receipt':'stale',
+        committed===1?{receipt,ticket:Object.freeze({authorityEpoch:owner,session,ticket})}:{});
+    }catch(error){return outcome('control-failed',{error:String(error?.message??error)});}
+    finally{wasm.nav_gate_motion_cancel(session,ticket);}
+  };
   const sampleNativeRoute=(handle,at)=>{
     if(handle?.authorityEpoch!==epoch()||
        wasm.nav_intent_route_sample(handle.session,handle.slot,handle.generation,at)!==1)return null;
@@ -977,7 +1010,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     structureFor:id=>structuresById.get(numericId(id))??null,
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
-    intentChanges,routePoints,nativeRouteTiming,sampleNativeRoute,nativeGateRouteSweep,prepareNativeRouteMotion,reserveNativeRoute,
+    intentChanges,routePoints,nativeRouteTiming,sampleNativeRoute,nativeGateRouteSweep,prepareNativeGateMotionAfterGpuFence,prepareNativeRouteMotion,reserveNativeRoute,
     beginNativeRouteExecution,advanceNativeRouteExecution,stopNativeRouteExecution,nativeRouteExecution,
     projectRouteProgress,processEventBoundary,requestReroute,
     registerAttackIntent,planAttackCrop,planAttackWall,replanAttackRoute,
@@ -1888,6 +1921,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     intentChanges:bridge.intentChanges,routePoints:bridge.routePoints,
     nativeRouteTiming:bridge.nativeRouteTiming,sampleNativeRoute:bridge.sampleNativeRoute,
     nativeGateRouteSweep:bridge.nativeGateRouteSweep,
+    prepareNativeGateMotionAfterGpuFence:bridge.prepareNativeGateMotionAfterGpuFence,
     reserveNativeRoute:bridge.reserveNativeRoute,
     prepareNativeRouteMotion:bridge.prepareNativeRouteMotion,
     beginNativeRouteExecution:bridge.beginNativeRouteExecution,

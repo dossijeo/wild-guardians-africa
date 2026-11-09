@@ -124,9 +124,14 @@ Seguimiento por IDs acordados: [checklist A6-01–A6-11](A6-CHECKLIST.md).
       A6-04.f parcial: recibo GPU directo ligado a época/secuencia/tiempo,
       separado del ACK de control y verificado en tres auditorías WASM/WebGPU
       durante bloqueo real de preparación de 500 ms (15 dibujos por ejecución).
-      Falta transacción física pendiente/commit condicionado y reloj causal:
-      no es permiso de mutación ni aceptación con personajes.
-      Quedan e/f de A6-04; 382 dirigidas
+      Propuesta nativa de motor pendiente + ticket de un uso y commit tras recibo
+      nuevo, solo si siguen vigentes época, reloj, cuerpos, hechos y reservas.
+      Cuatro auditorías adicionales reales verifican tres commits y un rechazo
+      por cambio de cuerpo durante la espera, con 15 dibujos durante 500 ms.
+      Faltan transacción genérica para las otras mutaciones, integración física/
+      recursos de puerta, consumidores/relevo y reloj causal. No hay permiso de
+      cruce ni aceptación con personajes.
+      Quedan e/f de A6-04; 397 dirigidas
       + 39 y 74 heredadas pasan sin skips. No se marca e como terminado.
 - [ ] Vertical AttackCrops completa y aceptación real A–F (primer caso integrado,
       no cierre de A6 por sí solo).

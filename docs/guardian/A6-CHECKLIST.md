@@ -63,8 +63,14 @@ ejecutor protegido de producto. A6 incluye todas las intenciones y trabajadores.
     exactos; fallo, timeout o retiro no conceden recibo. Tres auditorías WASM/WebGPU
     reales mantienen 15 dibujos y reciben el fence durante bloqueo de preparación
     de 500 ms. Es diagnóstico con triángulo, no personajes ni permiso de mutación.
-    Faltan transacción nativa pendiente + commit condicionado, reloj causal,
-    coordinación de consumidores/relevo y presentación física/gráfica real.
+    Propuesta de motor nativa pendiente + commit condicionado al recibo ya
+    disponibles opt-in, con ticket de un uso y rechazo si cambian cuerpos, hechos,
+    reservas, mundo, reloj o conexión. Quince pruebas WASM adicionales y cuatro
+    auditorías nuevas WASM/WebGPU: tres commits y un rechazo por cambio de cuerpo
+    durante la espera, todas con 15 dibujos durante 500 ms de bloqueo.
+    No instala collider/recursos de puerta ni concede cruces. Faltan generalizar
+    la transacción a otras mutaciones, reloj causal, coordinación completa de
+    consumidores/relevo e integración física/gráfica de producto con personajes.
 - [ ] **A6-05 — Todas las intenciones, perfiles y biomas.** Completar animales
   (entrada, ataque, objetivo, retirada) y trabajadores (tareas, entrega/carga,
   regreso/huida, recuperación), además de impactos/ragdoll delimitados. La
@@ -113,6 +119,10 @@ ejecutor protegido de producto. A6 incluye todas las intenciones y trabajadores.
 - `.cache/native-gate-waits-legacy-recipe.tap`: 74 aprobadas sin skips.
 - `.cache/native-gpu-fence-regression.tap`: 382 aprobadas sin skips.
 - [Tres recibos GPU reales](performance/native-control-gpu-fence-20261109.json).
+- `.cache/native-gate-transactions-regression.tap`: 397 aprobadas sin skips.
+- `.cache/native-gate-transactions-legacy-stream-geometry.tap`: 39 aprobadas sin skips.
+- `.cache/native-gate-transactions-legacy-recipe.tap`: 74 aprobadas sin skips.
+- [Transacción de motor y rechazo tras cambio de cuerpo](performance/native-gate-transactions-20261109.json).
 
 Quedan **2 de los 6 subpuntos de A6-04**: e y f (parciales).
 Los **11 puntos principales de A6** siguen abiertos; son niveles distintos,

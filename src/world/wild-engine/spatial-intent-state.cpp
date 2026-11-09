@@ -250,6 +250,9 @@ struct IntentState {
   uint64_t gateBoundaries=0,gateWorkerChecks=0,gatePrefixSegments=0;
   uint64_t gateSweepPairs=0,gateSweepEvaluations=0,gateSweepRejected=0;
   std::array<double,6> gateSweepResult{};
+  NativeGateMotionProposal gateMotionProposal;
+  uint64_t nextGateMotionTicket=0;
+  std::array<double,5> gateMotionResult{};
   uint32_t session=0;
   uint64_t invalidations=0;
   std::unordered_map<uint64_t,uint64_t> planningCallsByActor;
@@ -462,6 +465,7 @@ void releaseIntent(IntentState& s,uint64_t actor,PlanningState next){
 #include "spatial-terrain-mutation-state.h"
 #include "spatial-gate-controller.h"
 #include "spatial-gate-sweep.h"
+#include "spatial-gate-transactions.h"
 void invalidateDependents(IntentState& s,const Change& change){
   if(change.kind==1){
     if(!change.op){
@@ -919,6 +923,7 @@ void nav_intent_reset(){
   IntentState& s=state();
   if(!s.gates.empty())spatialGateSupportChanged();
   s.gates.clear();s.gateBodyActors.clear();s.gateInput.clear();s.gateResult.clear();
+  cancelGateMotionProposal(s);s.gateMotionResult.fill(0);
   s.gateBoundaries=s.gateWorkerChecks=s.gatePrefixSegments=0;
   s.gateSweepPairs=s.gateSweepEvaluations=s.gateSweepRejected=0;s.gateSweepResult.fill(0);
   s.session++;
@@ -1950,6 +1955,7 @@ int nav_intent_route_progress(double actorId,double x,double z,int count){
   // A reservation must not silently adopt a JS detour/cursor. Logical native
   // execution will advance it; until connected, release explicitly first.
   if(route.reserved)return 0;
+  cancelGateMotionProposal(s);
   const auto reject=[&](){
     intent.routeCursor=uint32_t(route.points.size()/2+1);
     s.changedRouteActors.insert(intent.actor);

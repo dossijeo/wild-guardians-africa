@@ -1,6 +1,8 @@
 import {deserialize} from '../../src/persistence/snapshots.js';
 import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialIntentBridge} from '../../src/world/wild-engine/spatial-intent-bridge.js';
+import {createSpatialGateIntents} from '../../src/world/wild-engine/spatial-gate-intents.js';
+import {createNativeIntentControlPublication} from '../../src/simulation/native-intent-control-publication.js';
 import {createWorkerHostedRuntime} from '../../src/simulation/worker-hosted-runtime.js';
 import {createConfirmedStateReceiver} from '../../src/simulation/confirmed-state-receiver.js';
 import {createWebGpuWorldClient} from '../../src/rendering/webgpu-world-client.js';
@@ -71,7 +73,7 @@ export async function auditNativeRuntimeControl(){
 
 // Extends the existing concurrent Worker harness. This checks control transport
 // and real GPU uniforms, not character-model parity or full-route game safety.
-export async function auditNativeRouteControl({gpuFence=false}={}){
+export async function auditNativeRouteControl({gpuFence=false,gateTransaction=false,invalidateGateProposal=false}={}){
  const source=await fixtureText('desierto983-d15-partial-state.json.gz'),
   state=deserialize(source),module=await WebAssembly.compileStreaming(fetch('/src/world/wild-engine/spatial-savanna.wasm'));
  state.workers=[];state.plants=[];state.tasks=[];state.crates=[];state.spells=[];state.elapsed=10;
@@ -81,7 +83,7 @@ export async function auditNativeRouteControl({gpuFence=false}={}){
  const control=new MessageChannel(),resources=new MessageChannel(),
   worker=new Worker(new URL('./native-route-control-preparation-worker.js',import.meta.url),{type:'module'}),
   drawWorker=new Worker(new URL('../../src/rendering/webgpu-draw-worker.js',import.meta.url),{type:'module'});
- const waits=new Map(),messages=new Map();let failure=null,timer;
+  const waits=new Map(),messages=new Map();let failure=null,timer,publication=null;
  const expect=kind=>messages.has(kind)?Promise.resolve(messages.get(kind)):
   new Promise((resolve,reject)=>waits.set(kind,{resolve,reject}));
  const received=(kind,value)=>{messages.set(kind,value);waits.get(kind)?.resolve(value);waits.delete(kind);};
@@ -90,8 +92,8 @@ export async function auditNativeRouteControl({gpuFence=false}={}){
   else received(data.kind,data);
  };
  worker.onerror=event=>{failure=Error(event.message);for(const item of waits.values())item.reject(failure);waits.clear();};
-  control.port1.onmessage=({data})=>received(data.type==='intent-control-fenced'?`gpu-fence-${data.fenceId}`:`control-${data.sequence}`,{
-  ...data,receivedAt:performance.timeOrigin+performance.now()});
+  control.port1.addEventListener('message',({data})=>received(data.type==='intent-control-fenced'?`gpu-fence-${data.fenceId}`:`control-${data.sequence}`,{
+   ...data,receivedAt:performance.timeOrigin+performance.now()}));control.port1.start();
  const run=async()=>{
   for(let z=-1;z<=1;z++)for(let x=-1;x<=1;x++){
    if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);
@@ -113,14 +115,20 @@ export async function auditNativeRouteControl({gpuFence=false}={}){
   const other=bridge.planRetreatRoute({id:'animal-900003',species:'warthog',
    x:35.2,z:35.2,exit:{x:39.2,z:35.2}});
   if(other.status!=='found')throw Error('Disjoint native route failed');
-  const events=bridge.intentChanges(),offscreen=canvas.transferControlToOffscreen();
+   const events=bridge.intentChanges(),offscreen=canvas.transferControlToOffscreen();
+   const transportSession='native-gate-transaction-'+crypto.randomUUID(),gates=gateTransaction?createSpatialGateIntents(session,state):null,
+    gate={id:'structure-990001',gate:true,material:'zarzas',status:'intact',x:actor.x+20,z:actor.z,gateOpen:1};
+   if(gates&&!gates.register(gate))throw Error('Could not register native gate proposal fixture');
+   if(gates&&session.core.wasm.spatial_body_upsert(990077,gate.x+.3,gate.z-.9,.02,1,1)!==1)
+    throw Error('Could not register the native sweep body');
   // Match product ownership: preparation and draw are sibling Workers owned by
   // the Window, so the draw Worker has the document's animation-frame provider.
-  drawWorker.postMessage({type:'init',canvas:offscreen,port:resources.port2,
-   intentControl:{port:control.port2,authorityEpoch:bridge.authorityEpoch}},
+   drawWorker.postMessage({type:'init',canvas:offscreen,port:resources.port2,
+    intentControl:gateTransaction?{port:control.port2,session:transportSession}:{port:control.port2,authorityEpoch:bridge.authorityEpoch}},
    [offscreen,resources.port2,control.port2]);
   worker.postMessage({kind:'initialize',port:resources.port1},[resources.port1]);
-  for(const event of events)control.port1.postMessage(event);
+   if(gateTransaction){publication=createNativeIntentControlPublication({port:control.port1,session:transportSession,observe:bridge.observeNativeIntentControl});await publication.ready;}
+   else for(const event of events)control.port1.postMessage(event);
   await Promise.all([expect('device-ready'),expect(`control-${events.at(-1).sequence}`)]);
   worker.postMessage({kind:'start',routes:events.filter(event=>event.type==='RouteAssigned')
    .map(event=>({actorId:event.actorId,routeHandle:event.routeHandle,assignmentSequence:event.sequence}))});
@@ -131,10 +139,24 @@ export async function auditNativeRouteControl({gpuFence=false}={}){
   bridge.cancelAttackIntent(actor.id);
   const revocation=bridge.intentChanges().find(event=>event.type==='RouteInvalidated');
   if(!revocation)throw Error('Native cancellation omitted revocation');
-   control.port1.postMessage(revocation);
-   if(gpuFence)control.port1.postMessage({type:'IntentControlFence',protocolVersion:2,fenceVersion:1,
+   if(!gateTransaction)control.port1.postMessage(revocation);
+   let transaction=null;
+   if(gateTransaction){
+    const before=gates.read(gate.id),pending=bridge.prepareNativeGateMotionAfterGpuFence({getPublication:()=>publication}),
+     staged=gates.read(gate.id),checks=[session.core.wasm.nav_gate_worker_checks(),session.core.wasm.nav_gate_sweep_evaluations(),session.core.wasm.nav_intent_route_queries()];
+    if(session.core.wasm.nav_gate_motion_ticket()!==1||JSON.stringify(before)!==JSON.stringify(staged)||checks[1]<1)
+     throw Error('Staging must sweep a real native body without making the motor effective');
+    if(invalidateGateProposal&&session.core.wasm.spatial_body_upsert(990077,gate.x+.3,gate.z+.9,.02,1,1)!==1)
+     throw Error('The pending proposal must not block the authoritative body change');
+    const result=await pending,after=gates.read(gate.id),committedChecks=[session.core.wasm.nav_gate_worker_checks(),session.core.wasm.nav_gate_sweep_evaluations(),session.core.wasm.nav_intent_route_queries()];
+    if(result.status!==(invalidateGateProposal?'stale':'committed')||after.target!==(invalidateGateProposal?1:0)||
+       session.core.wasm.nav_gate_motion_ticket()!==0||JSON.stringify(checks)!==JSON.stringify(committedChecks))
+     throw Error('Native gate proposal was not committed atomically after GPU drain');
+    transaction={result,before,staged,after,checks,committedChecks,bodyChangedWhilePending:invalidateGateProposal};
+   }
+   if(gpuFence&&!gateTransaction)control.port1.postMessage({type:'IntentControlFence',protocolVersion:2,fenceVersion:1,
     authorityEpoch:bridge.authorityEpoch,sequence:revocation.sequence,effectiveTime:revocation.effectiveTime,fenceId:1});
-   const fenced=gpuFence?await expect('gpu-fence-1'):null;
+   const fenced=gpuFence||gateTransaction?await expect('gpu-fence-1'):null;
    const applied=await expect(`control-${revocation.sequence}`),end=await expect('block-end');
   worker.postMessage({kind:'inspect'});const report=await expect('inspection');
   if(failure)throw failure;
@@ -155,12 +177,14 @@ export async function auditNativeRouteControl({gpuFence=false}={}){
    packets:report.execution.consumer.packets,replayFrames:report.execution.consumer.replayFrames,
     nativeControl:report.execution.consumer.intentControl,
     ...(fenced?{gpuFence:fenced,gpuFencedAt:report.execution.consumer.nativeIntentGpuFencedAt}:{}),
-   scope:'Real WASM AttackCrops events, preparation/draw Workers and GPU uniform readback; triangle only, no character animation or authoritative simulation advance. Not acceptance A–F.'};
+    ...(transaction?{gateTransaction:transaction}:{}),
+    scope:gateTransaction?'Real WASM pending gate motor, live publication, GPU drain and conditional native commit/rejection during preparation stall. Triangle/readback only; no physical gate collider or resources, character animation or causal simulation/draw clock. Not closure of A6-04.e/f or acceptance A-F.':
+     'Real WASM AttackCrops events, preparation/draw Workers and GPU uniform readback; triangle only, no character animation or authoritative simulation advance. Not acceptance A–F.'};
  };
  try{
   return await Promise.race([run(),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Native route control audit timed out')),30000);})]);
  }finally{
-  clearTimeout(timer);worker.postMessage({kind:'dispose'});worker.terminate();drawWorker.terminate();control.port1.close();
+   clearTimeout(timer);publication?.dispose();worker.postMessage({kind:'dispose'});worker.terminate();drawWorker.terminate();control.port1.close();
   session.dispose();canvas.remove();
  }
 }

@@ -18,6 +18,8 @@ namespace {
 struct Body {double x,z,r; int kind,flags;uint64_t revision;};
 std::unordered_map<uint64_t,Body> bodies;
 uint64_t nextBodyRevision=1,lastSegmentBlocker=0;
+uint64_t bodyMutationRevision=1;
+void bodyMutationCommitted(){if(bodyMutationRevision!=std::numeric_limits<uint64_t>::max())bodyMutationRevision++;}
 bool lastSegmentBlocked=false;
 // Centre-cell index is persistent across simulation ticks. The largest radius
 // is conservative until reset, so an updated/removed large body may cost extra
@@ -129,7 +131,7 @@ __attribute__((noinline)) int indexedSegment(uint64_t id,const Body& actor,doubl
 }
 }
 extern "C" {
-void spatial_bodies_reset(){spatialIntentBodiesResetting();bodies.clear();cells.clear();unindexed.clear();maxRadius=0;indexed=false;result.clear();for(auto& cache:terrainEdges){cache.values.clear();cache.initialized=false;}terrainCacheHits=terrainCacheMisses=0;blockedEdges.clear();blockedEdgeHits=blockedEdgeRechecks=blockedEdgeMisses=0;nextBodyRevision=1;lastSegmentBlocked=false;
+void spatial_bodies_reset(){spatialIntentBodiesResetting();bodyMutationCommitted();bodies.clear();cells.clear();unindexed.clear();maxRadius=0;indexed=false;result.clear();for(auto& cache:terrainEdges){cache.values.clear();cache.initialized=false;}terrainCacheHits=terrainCacheMisses=0;blockedEdges.clear();blockedEdgeHits=blockedEdgeRechecks=blockedEdgeMisses=0;nextBodyRevision=1;lastSegmentBlocked=false;
 #ifdef WILD_CENTRAL_MOBILITY
  mobilityInput.clear();mobilityOutput.clear();
 #endif
@@ -145,6 +147,7 @@ int spatial_body_upsert(double id,double x,double z,double radius,int kind,int f
   if(!validId(id)||!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(radius)||radius<0||(kind!=0&&kind!=1))return 0;
   if(!spatialIntentBodyCanChange(uint64_t(id),{x,z,radius,kind,flags}))return 0;
  const uint64_t key=uint64_t(id);const auto prior=bodies.find(key);const bool unchanged=prior!=bodies.end()&&bits(prior->second.x)==bits(x)&&bits(prior->second.z)==bits(z)&&bits(prior->second.r)==bits(radius)&&prior->second.kind==kind&&prior->second.flags==flags;const Body body{x,z,radius,kind,flags,unchanged?prior->second.revision:nextBodyRevision++};
+ if(!unchanged)bodyMutationCommitted();
  if(!indexed){
   bodies[key]=body;maxRadius=std::max(maxRadius,radius);
   if(bodies.size()>=64){indexed=true;for(const auto& [otherId,other]:bodies)indexAdd(otherId,other);}
@@ -154,7 +157,7 @@ int spatial_body_upsert(double id,double x,double z,double radius,int kind,int f
  indexAdd(key,body);
  return 1;
 }
-int spatial_body_remove(double id){if(!validId(id))return 0;auto it=bodies.find(uint64_t(id));if(it==bodies.end())return 0;spatialIntentBodyRemoving(it->first);if(indexed)indexRemove(it->first,it->second);bodies.erase(it);if(indexed&&bodies.size()<32){cells.clear();unindexed.clear();indexed=false;}return 1;}
+int spatial_body_remove(double id){if(!validId(id))return 0;auto it=bodies.find(uint64_t(id));if(it==bodies.end())return 0;spatialIntentBodyRemoving(it->first);if(indexed)indexRemove(it->first,it->second);bodies.erase(it);bodyMutationCommitted();if(indexed&&bodies.size()<32){cells.clear();unindexed.clear();indexed=false;}return 1;}
 int spatial_body_count(){return int(bodies.size());}
 // A negative range asks for all participating bodies; otherwise the same
 // conservative square as actorBlockers is used, including both radii.
@@ -173,12 +176,14 @@ bool spatialReadBody(uint64_t id,SpatialBodyView& out){
   const auto found=bodies.find(id);if(found==bodies.end())return false;
   const auto& b=found->second;out={b.x,b.z,b.r,b.kind,b.flags};return true;
 }
+uint64_t spatialBodiesMutationRevision(){return bodyMutationRevision;}
 bool spatialMoveBodyFromIntent(uint64_t id,double x,double z){
   auto found=bodies.find(id);
   if(found==bodies.end()||!std::isfinite(x)||!std::isfinite(z))return false;
   if(found->second.x==x&&found->second.z==z)return true;
   if(indexed)indexRemove(id,found->second);
   found->second.x=x;found->second.z=z;found->second.revision=nextBodyRevision++;
+  bodyMutationCommitted();
   if(indexed)indexAdd(id,found->second);
   return true;
 }

@@ -82,5 +82,5 @@ export function createNativeIntentControlPublication({port,session,observe,
     });
   }
   return {ready,dispose,fenceGpu,status:()=>({session,authorityEpoch,baselineSequence,
-    sentSequence,appliedSequence,pendingGpuFences:gpuFences.size,closed,fault})};
+    sentSequence,sentTime,appliedSequence,pendingGpuFences:gpuFences.size,closed,fault})};
 }

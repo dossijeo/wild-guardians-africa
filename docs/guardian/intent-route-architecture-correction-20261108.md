@@ -978,3 +978,65 @@ también publicación de los recursos que representan esa misma mutación. Un AC
 antiguo no puede reutilizarse como permiso general para un mundo o conexión nuevos.
 El recibo actual es un requisito de esa transacción, **no** autorización de
 mutación/autonomía. Siguen abiertos e/f y los once puntos principales de A6.
+
+### Propuesta de motor pendiente y commit condicionado (incremento de A6-04.f)
+
+La preparación de motores se ha separado en propuesta y aplicación dentro de
+Wild Engine. `nav_gate_motion_stage` reutiliza los mismos sensores y barridos de
+la preparación inmediata, pero guarda solo una propuesta transitoria. No cambia
+ninguna hoja, objetivo o certificado vivo. Una propuesta pendiente por autoridad,
+sin otra cola de trabajo ni planificador. Ticket monotónico seguro, sesión nativa,
+secuencia y tiempo explícitos; no se reutiliza al resetear intenciones.
+
+El commit compara metadatos nativos, no vuelve a recorrer rutas o repetir
+clearance: tiempo, sesión, versión del mundo, revisiones/hechos de entidades,
+secuencia de intenciones, reservas y versión del registro físico. Esta última
+versión es no reseteable y vive en el registro de cuerpos existente; altas,
+movimientos, retirada y reset la modifican. Altas idénticas y mutaciones rechazadas
+no. Evita que borrar/recrear un cuerpo o vaciar/rellenar el registro produzca una
+falsa igualdad de pruebas. Saturación de versión/ID rechaza nuevas propuestas.
+Cambios explícitos de puerta, binding, política o proyección del cursor retiran
+la propuesta; no hay reintento periódico.
+
+`prepareNativeGateMotionAfterGpuFence` pertenece al bridge de intenciones, dueño
+de la época exacta. No recibe tickets o recibos externos como permiso: propone
+en C++, espera una petición **nueva** de la publicación directa actual y comprueba
+época/identidad de conexión y recibo antes del commit. Exige igualdad exacta del
+tiempo nativo con el tiempo publicado; un drain no inventa un reloj más reciente.
+Cambios de pausa/resultado/preparación o de reloj durante la espera rechazan.
+Retiro/reemplazo de la fuente seleccionada también rechaza. La limpieza de una
+petición vieja no puede cancelar una propuesta de la sesión nueva.
+
+Los argumentos numéricos del commit C++ son su precondición de metadata, **no**
+una autenticación del transporte. Esa autenticación y el await del recibo fresco
+corresponden al bridge/publicación existentes. No se cambia el tiempo lógico ni
+se añade una pausa oculta para completar el commit. Si la simulación avanzó,
+se aborta y la siguiente frontera explícita decidirá qué hacer. La preparación
+inmediata opt-in se conserva, sin presentarla como coordinación gráfica.
+
+Quince pruebas nuevas con WASM real cubren tickets de un uso, busy/cancelación,
+ausencia de efectos antes del commit, cuerpos/ABA/reset/no-op, mundo, reloj,
+hechos/cursor, reservas sin nueva generación, época, cambios de política,
+relevo/retiro y limpieza de sesiones. Standalone/pthread reconstruidos con ABI
+de transacción versión 1. **397 dirigidas + 39 de streaming/geometría + 74 de
+receta/estado**, todas aprobadas sin skips; logs `native-gate-transactions-*.tap`
+en `.cache`.
+
+`/tests/browser/native-gate-transaction.html` une el bridge y publicación reales
+con el draw Worker WebGPU. Cuatro ejecuciones NVIDIA Turing mantienen **15 dibujos
+por bloqueo de 500,060–500,105 ms**, con un paquete preparado. En tres, el motor
+vivo no cambia durante staging y se instala después del recibo GPU. En la cuarta,
+un cuerpo cambia a la región de contacto mientras la propuesta espera: llega un
+ACK GPU válido, pero C++ rechaza el commit y conserva el motor anterior. El
+barrido realiza cinco evaluaciones sobre el cuerpo nativo y ninguna más al
+completar o rechazar la propuesta. Evidencia íntegra descargada del navegador:
+`performance/native-gate-transactions-20261109.json`.
+
+**Límite vigente:** es una transacción del motor/clearance de cuerpos del servicio
+opt-in, no instalación de collider ni recursos visuales de la puerta. Sigue
+`authorizedPassage:false` y `authorizedAutonomy:false`. El harness representa las
+rutas con un triángulo; no mueve personajes ni una hoja física/gráfica. Falta
+extender la propuesta diferida a las otras mutaciones, relacionar recursos y
+todos los consumidores/relevos del runtime, y completar el reloj causal. La fuente
+seleccionada del harness no demuestra por sí sola cobertura de consumidores
+temporales/no registrados. No se cierran A6-04.e/f ni aceptación A–F.

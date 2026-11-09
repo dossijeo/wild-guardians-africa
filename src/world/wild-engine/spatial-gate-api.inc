@@ -13,16 +13,18 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_register(double id,double x,double z,double ya
   prepareGateGeometry(gate);
   std::set<uint64_t> affected;uint64_t candidates=0,segments=0;
   if(!mutationAffectedRoutes(s,&gate.unsupported,1,0,candidates,segments,affected,true)||!affected.empty())return 0;
+  cancelGateMotionProposal(s);
   const auto before=executionWorldStamp();s.gates.emplace(gate.id,std::move(gate));acknowledgeGateSupport(s,before);return 1;
 }
 EMSCRIPTEN_KEEPALIVE int nav_gate_remove(double id){auto& s=state();if(!integer(id)||!s.gates.count(uint64_t(id)))return 0;
-  const auto before=executionWorldStamp();s.gates.erase(uint64_t(id));acknowledgeGateSupport(s,before);return 1;}
+  cancelGateMotionProposal(s);const auto before=executionWorldStamp();s.gates.erase(uint64_t(id));acknowledgeGateSupport(s,before);return 1;}
 EMSCRIPTEN_KEEPALIVE int nav_gate_bind_worker(double actor,double id){
   auto& s=state();if(!integer(actor)||!integer(id,true))return 0;
   const auto found=s.workers.find(uint64_t(actor));SpatialBodyView body;
   if(found==s.workers.end()||!spatialReadBody(uint64_t(id),body)||body.kind!=0)return 0;
   const auto old=s.gateBodyActors.find(uint64_t(id));if(old!=s.gateBodyActors.end()&&old->second!=uint64_t(actor))return 0;
-  auto& worker=found->second;if(worker.bodyBound)s.gateBodyActors.erase(worker.body);
+  auto& worker=found->second;if(worker.bodyBound&&worker.body==uint64_t(id))return 1;
+  cancelGateMotionProposal(s);if(worker.bodyBound)s.gateBodyActors.erase(worker.body);
   worker.bodyBound=true;worker.body=uint64_t(id);s.gateBodyActors.insert_or_assign(worker.body,worker.id);return 1;
 }
 EMSCRIPTEN_KEEPALIVE int nav_gate_reconcile(int enabled){
@@ -32,10 +34,11 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_reconcile(int enabled){
     if(!value.complete){
       // Uncertainty cannot leave a previous closing/opening target running.
       // Freeze the whole boundary at its current pose before reporting failure.
+      cancelGateMotionProposal(s);
       for(auto& [otherId,other]:s.gates){other.from=other.target=gateOpening(other,s.effectiveTime);other.at=s.effectiveTime;other.bodySweepCertified=false;}
       return -2;
     }facts.emplace(id,value);}
-  s.gateBoundaries++;
+  cancelGateMotionProposal(s);s.gateBoundaries++;
   for(auto& [id,gate]:s.gates){
     double current=gateOpening(gate,s.effectiveTime);gate.bodySweepCertified=false;
     if(!enabled){gate.from=gate.target=current;gate.at=s.effectiveTime;continue;}
@@ -69,23 +72,41 @@ EMSCRIPTEN_KEEPALIVE double nav_gate_worker_checks(){return double(state().gateW
 EMSCRIPTEN_KEEPALIVE double nav_gate_prefix_segments(){return double(state().gatePrefixSegments);}
 EMSCRIPTEN_KEEPALIVE int nav_gate_sweep_version(){return 1;}
 EMSCRIPTEN_KEEPALIVE int nav_gate_prepare_motion(int enabled){
-  auto& s=state();s.gateSweepResult.fill(0);if(enabled!=0&&enabled!=1)return -1;
-  std::map<uint64_t,NativeGate> proposed=s.gates;
-  for(auto& [id,gate]:proposed){
-    // Save recovery may choose an initial pose through the legacy policy API,
-    // but that discontinuous choice is not a certified physical trajectory.
-    if(gate.status!=2&&!gate.defined)return -2;
-    const double current=gateOpening(gate,s.effectiveTime);
-    if(!enabled||gate.status==1){gate.from=gate.target=current;gate.at=s.effectiveTime;
-      if(!gateSweepBodies(s,gate)){s.gateSweepRejected++;return -3;}continue;}
-    if(gate.status==2){gate.from=gate.target=0;gate.at=s.effectiveTime;gate.defined=true;continue;}
-    const auto facts=gateFacts(s,gate);if(!facts.complete)return -2;
-    gate.from=gate.defined?current:facts.occupied?1:0;gate.target=facts.requested||facts.occupied?1:0;
-    gate.at=s.effectiveTime;gate.defined=true;gate.requested=facts.requested;gate.occupied=facts.occupied;
-    if(!gateSweepBodies(s,gate)){s.gateSweepRejected++;return -3;}
-  }
-  for(auto& [id,gate]:proposed)gate.bodySweepCertified=gate.status!=2;
+  auto& s=state();std::map<uint64_t,NativeGate> proposed;
+  const int result=proposeGateMotion(s,enabled,proposed);if(result<0)return result;
+  cancelGateMotionProposal(s);
   s.gates.swap(proposed);return int(s.gates.size());
+}
+EMSCRIPTEN_KEEPALIVE int nav_gate_motion_transaction_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int nav_gate_motion_stage(int enabled){
+  auto& s=state();if(!s.session)return -1;if(s.gateMotionProposal.pending)return -4;
+  if(s.nextGateMotionTicket>=uint64_t(maxId)||spatialBodiesMutationRevision()==std::numeric_limits<uint64_t>::max())return -5;
+  if(s.gates.empty())return -2;
+  std::map<uint64_t,NativeGate> proposed;const int result=proposeGateMotion(s,enabled,proposed);if(result<0)return result;
+  auto& p=s.gateMotionProposal;p.pending=true;p.session=s.session;p.ticket=++s.nextGateMotionTicket;
+  p.at=s.effectiveTime;p.bodies=spatialBodiesMutationRevision();p.entities=s.entityRevision;
+  p.factsSequence=s.sequence;p.intents=s.intentSequence;p.reservations=s.residencyPinRevision;
+  p.world=executionWorldStamp();p.gates.swap(proposed);return 1;
+}
+EMSCRIPTEN_KEEPALIVE int nav_gate_motion_ticket(){
+  auto& s=state();s.gateMotionResult.fill(0);const auto& p=s.gateMotionProposal;if(!p.pending)return 0;
+  s.gateMotionResult={double(p.session),double(p.ticket),double(p.intents),p.at,double(p.gates.size())};return 1;
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_gate_motion_ticket_ptr(){return state().gateMotionResult.data();}
+EMSCRIPTEN_KEEPALIVE int nav_gate_motion_cancel(double session,double ticket){
+  auto& s=state();const auto& p=s.gateMotionProposal;
+  if(!integer(session)||!integer(ticket)||!p.pending||session!=double(p.session)||ticket!=double(p.ticket))return 0;
+  cancelGateMotionProposal(s);return 1;
+}
+EMSCRIPTEN_KEEPALIVE int nav_gate_motion_commit(double session,double ticket,double sequence,double time){
+  auto& s=state();const auto& p=s.gateMotionProposal;
+  if(!integer(session)||!integer(ticket)||!p.pending||session!=double(p.session)||ticket!=double(p.ticket))return -1;
+  if(!gateMotionProposalCurrent(s)){cancelGateMotionProposal(s);return -2;}
+  // The authority bridge supplies these only after a fresh receipt from the
+  // still-current draw connection. Native metadata is necessary, not evidence
+  // of a transport receipt by itself and not a crossing/world-clearance permit.
+  if(!integer(sequence,true)||sequence!=double(p.intents)||!std::isfinite(time)||time!=p.at){cancelGateMotionProposal(s);return -3;}
+  s.gates.swap(s.gateMotionProposal.gates);cancelGateMotionProposal(s);return 1;
 }
 EMSCRIPTEN_KEEPALIVE int nav_gate_body_sweep_certified(double id){
   auto& s=state();return integer(id)&&s.gates.count(uint64_t(id))&&s.gates.at(uint64_t(id)).bodySweepCertified?1:0;
