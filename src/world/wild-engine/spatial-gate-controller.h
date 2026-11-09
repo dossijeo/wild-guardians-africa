@@ -29,17 +29,22 @@ void prepareGateGeometry(NativeGate& gate){
   auto& b=gate.unsupported;b.minX=hx-b.circleRadius;b.maxX=hx+b.circleRadius;b.minZ=hz-b.circleRadius;b.maxZ=hz+b.circleRadius;
 }
 bool gateBody(const Worker& worker,SpatialBodyView& body){return worker.bodyBound&&spatialReadBody(worker.body,body)&&body.kind==0;}
-bool gateRouteHits(IntentState& s,const Worker& worker,const SpatialBodyView& body,const std::vector<double>& polygon,double ahead){
-  const auto found=s.activeIntents.find(worker.id);
-  if(found==s.activeIntents.end()||found->second.state!=PlanningState::RouteActive)return false;
-  const auto& intent=found->second;const auto& route=s.routeSlots[intent.slot];double x=body.x,z=body.z,left=ahead;
-  for(size_t i=size_t(intent.routeCursor)*2;i<route.points.size();i+=2){
+bool gateRoutePrefixHits(IntentState& s,const RouteSlot& route,double x,double z,uint32_t cursor,
+    double radius,const std::vector<double>& polygon,double ahead){
+  double left=ahead;
+  for(size_t i=size_t(cursor)*2;i<route.points.size();i+=2){
     const double px=route.points[i],pz=route.points[i+1],length=std::hypot(px-x,pz-z),fraction=length?std::min(1.0,left/length):1,
       nx=x+(px-x)*fraction,nz=z+(pz-z)*fraction;s.gatePrefixSegments++;
-    if(spatialNativePolygonDistance(polygon.data(),int(polygon.size()/2),x,z,nx,nz)<body.r)return true;
+    if(spatialNativePolygonDistance(polygon.data(),int(polygon.size()/2),x,z,nx,nz)<radius)return true;
     left-=length;if(left<=0)break;x=px;z=pz;
   }
   return false;
+}
+bool gateRouteHits(IntentState& s,const Worker& worker,const SpatialBodyView& body,const std::vector<double>& polygon,double ahead){
+  const auto found=s.activeIntents.find(worker.id);
+  if(found==s.activeIntents.end()||found->second.state!=PlanningState::RouteActive)return false;
+  const auto& intent=found->second;
+  return gateRoutePrefixHits(s,s.routeSlots[intent.slot],body.x,body.z,intent.routeCursor,body.r,polygon,ahead);
 }
 struct GateFacts {bool requested=false,occupied=false,complete=true;};
 GateFacts gateFacts(IntentState& s,const NativeGate& gate){

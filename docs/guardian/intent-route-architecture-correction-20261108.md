@@ -1119,3 +1119,62 @@ collider/recursos de puerta y soporte 3D, esperas posteriores, reservas/admisió
 de cruce y recuperación; también reloj causal, consumidores/relevos de producto,
 las otras mutaciones diferidas y aceptación real con personajes. **e y f siguen
 abiertos**, al igual que los once puntos principales de A6.
+
+### Esperas intermedias en la ruta nativa (incremento de A6-04.e)
+
+El mismo `RouteSlot` incorpora ahora una lista ordenada de holds por distancia,
+con puerta, inicio, fin y retraso acumulado. La geometría y sus puntos no cambian.
+Un hold inicial sigue siendo legible mediante el contrato previo; una ruta con
+solo esperas posteriores **no** se confunde con una ruta estática admitida.
+Toda la lista se liga a la misma generación revocada/sustituida del intento.
+
+`spatial-gate-route-ranges.inc` obtiene intervalos nativos de activación sobre la
+polilínea existente: círculo de proximidad y distancia disco/polígono convexo
+autorado, mediante recortes de semiplanos, bandas de arista y círculos de vértice.
+Intersecta proximidad con el alcance real del prefijo, no con un hit remoto del
+resto de la ruta. Una pequeña anticipación de 1e-8 m evita colocar el hold después
+del límite numérico. Tangencias mal condicionadas y geometría no soportada
+rechazan sin sustituir el handle anterior. No hay consultas geométricas en JS,
+muestreo periódico de ruta o un segundo planificador.
+
+Las fronteras se ordenan por distancia/ID; al incorporar cada una se descuentan
+las esperas anteriores y se compara su llegada con el final del motor. Llegar
+después de la apertura no añade una espera ficticia. Relojes incompatibles,
+puertas no certificadas o cerrándose rechazan: el compilador no crea futuras
+solicitudes de apertura ni concede reservas de paso. Los holds del mismo punto
+se consolidan en el último final relevante.
+
+El evaluador común localiza holds por búsqueda binaria y conserva exactamente
+posición/distancia, fases y presupuesto durante la parada. Marcha, carrera,
+agotamiento dentro de una arista, carga, huida lenta/incapacitada y recuperación
+mantienen las reglas existentes al reanudar. La lectura de nudos nativos incluye
+ambos límites de cada espera, puntos geométricos y cambios de velocidad, de modo
+que cada intervalo siga siendo afín para los kernels de reservas/barridos. No se
+escanea toda la lista de holds al evaluar una pose.
+
+Capacidad plural de holds versión 1, filas de cuatro doubles (puerta, distancia,
+inicio, fin) y lector de nudos con aislamiento de época/versión. Los contratos de
+timing (20), muestra (18), hold inicial y log de intenciones no cambian. Preparación
+y lectores siguen dando `authorizedAutonomy:false` y `authorizedPassage:false`.
+Incluso un candidato que ya no necesita espera permanece no reservable/ejecutable.
+
+Trece pruebas WASM nuevas cubren dos paradas separadas, parada solo intermedia,
+paridad de fases/presupuesto con el mover existente, nudos completos y afinidad,
+prefijos con desvío, llegada tardía, reloj futuro no autorizado, tangencia,
+identidades obsoletas, los tres materiales/yaw/cuatro aproximaciones y mil
+evaluaciones sin repetir trabajo estructural. Tareas directas, riego y reparación
+conservan tarea/objetivo/lease y no repiten el planner. La primera premisa de ese
+test suponía una ruta recta restaurada: el planner real añade un conector de
+cuadrícula, por lo que la segunda puerta ya abre antes de llegar. Se conserva
+ese caso (una espera) y se contrasta otro reloj inicial más corto (dos esperas),
+sin modificar la ruta del planner ni constantes/reglas para obtener verde.
+
+Standalone/pthread reconstruidos, ABI comprobado. **432 dirigidas + 39 de
+streaming/geometría + 74 de receta/estado**, aprobadas sin skips, logs
+`native-gate-multiwaits-*.tap` en `.cache`. No se declara limpia la suite general.
+
+**Límite:** solo compila candidatos sobre relojes que ya están abriendo/abiertos
+y certificados en esa frontera. Faltan solicitud de apertura futura, leases que
+mantengan el hueco y revocación dirigida por cambio de ese reloj antes de admitir
+la trayectoria. Tampoco instala marco/hoja físicos, apoyo 3D, ejecución de producto
+o GPU de personajes. e/f y los once puntos principales siguen abiertos.

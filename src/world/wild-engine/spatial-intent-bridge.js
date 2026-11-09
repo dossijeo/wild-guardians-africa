@@ -523,13 +523,30 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     if(!points||points.length!==count*2)throw Error('Native route timing lost its pinned geometry');
     const held=wasm.nav_intent_route_initial_hold?.(handle.session,handle.slot,handle.generation)===1,
       hold=held?Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_initial_hold_ptr(),3)):null;
+    const gateCandidate=wasm.nav_intent_route_gate_candidate?
+      wasm.nav_intent_route_gate_candidate(handle.session,handle.slot,handle.generation)===1:held;
+    let holds=held?[Object.freeze({gateId:hold[0],distance:0,from:hold[1],until:hold[2]})]:[];
+    if(wasm.nav_intent_route_holds_version?.()===1){
+      const count=wasm.nav_intent_route_holds(handle.session,handle.slot,handle.generation);
+      if(!Number.isSafeInteger(count)||count<0||count>4096)throw Error('Invalid native route hold contract');
+      const rows=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_holds_ptr(),count*4));
+      holds=Array.from({length:count},(_,i)=>Object.freeze({gateId:rows[i*4],distance:rows[i*4+1],from:rows[i*4+2],until:rows[i*4+3]}));
+    }
     return Object.freeze({actorId:data[1],routeHandle:handle,startTime:data[2],endTime:data[3],
       speed:data[4],radius:data[5],origin:Object.freeze({x:data[6],z:data[7]}),distance:data[8],
       duration:data[3]-data[2],assignmentSequence:data[11],profile:data[12],points,distances,
-      executionScope:held?'unadmitted-desert-gate-candidate':data[10]===2?'static-desert-worker':'static-desert-animal',authorizedAutonomy:false,
-      ...(held?{initialHold:Object.freeze({gateId:hold[0],from:hold[1],until:hold[2]}),authorizedPassage:false}:{}),
+      executionScope:gateCandidate?'unadmitted-desert-gate-candidate':data[10]===2?'static-desert-worker':'static-desert-animal',authorizedAutonomy:false,
+      ...(gateCandidate?{holds:Object.freeze(holds),authorizedPassage:false}:{}),
+      ...(held?{initialHold:Object.freeze({gateId:hold[0],from:hold[1],until:hold[2]})}:{}),
       ...(data[10]===2?{motionMode:'worker',runDistance:data[16],runSpeed:data[17],
         runBudget:data[18],motionFlags:data[19]}:{})});
+  };
+  const nativeRouteTimeKnots=handle=>{
+    if(handle?.authorityEpoch!==epoch())return null;
+    if(wasm.nav_intent_route_holds_version?.()!==1)throw Error('Rebuild native route hold service');
+    const count=wasm.nav_intent_route_time_knots(handle.session,handle.slot,handle.generation);if(count<0)return null;
+    if(!Number.isSafeInteger(count)||count<1||count>16384)throw Error('Invalid native route time-knot contract');
+    return Float64Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_time_knots_ptr(),count));
   };
   const decodeMotionSample=data=>{
     return {x:data[0],z:data[1],distance:data[2],phase:data[3],yaw:data[4],
@@ -1013,7 +1030,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     structureFor:id=>structuresById.get(numericId(id))??null,
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
-    intentChanges,routePoints,nativeRouteTiming,sampleNativeRoute,nativeGateRouteSweep,prepareNativeGateMotionAfterGpuFence,prepareNativeRouteMotion,reserveNativeRoute,
+    intentChanges,routePoints,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,nativeGateRouteSweep,prepareNativeGateMotionAfterGpuFence,prepareNativeRouteMotion,reserveNativeRoute,
     beginNativeRouteExecution,advanceNativeRouteExecution,stopNativeRouteExecution,nativeRouteExecution,
     projectRouteProgress,processEventBoundary,requestReroute,
     registerAttackIntent,planAttackCrop,planAttackWall,replanAttackRoute,
@@ -1922,7 +1939,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     observeNativeIntentControl:bridge.observeNativeIntentControl,
     flushNativeIntentControl:bridge.flushNativeIntentControl,
     intentChanges:bridge.intentChanges,routePoints:bridge.routePoints,
-    nativeRouteTiming:bridge.nativeRouteTiming,sampleNativeRoute:bridge.sampleNativeRoute,
+    nativeRouteTiming:bridge.nativeRouteTiming,nativeRouteTimeKnots:bridge.nativeRouteTimeKnots,sampleNativeRoute:bridge.sampleNativeRoute,
     nativeGateRouteSweep:bridge.nativeGateRouteSweep,
     prepareNativeGateMotionAfterGpuFence:bridge.prepareNativeGateMotionAfterGpuFence,
     reserveNativeRoute:bridge.reserveNativeRoute,

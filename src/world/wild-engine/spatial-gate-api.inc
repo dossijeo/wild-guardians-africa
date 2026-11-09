@@ -145,8 +145,8 @@ EMSCRIPTEN_KEEPALIVE double nav_gate_sweep_pairs(){return double(state().gateSwe
 EMSCRIPTEN_KEEPALIVE double nav_gate_sweep_evaluations(){return double(state().gateSweepEvaluations);}
 EMSCRIPTEN_KEEPALIVE double nav_gate_sweep_rejected(){return double(state().gateSweepRejected);}
 
-// Initial gate wait on the SAME route/timetable. Native geometry and the
-// certified opening clock choose the hold, never JS route tests or a scheduler.
+// Gate waits on the SAME route/timetable. Native activation intervals and
+// certified opening clocks choose holds, never JS route tests or a scheduler.
 // This is deliberately an unadmitted candidate: frame/world contacts and crossing
 // leases must be implemented before it can be reserved or executed.
 EMSCRIPTEN_KEEPALIVE int nav_gate_prepare_waiting_route(double session,double slot,
@@ -160,27 +160,15 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_prepare_waiting_route(double session,double sl
   const auto worker=s.workers.find(found->first);SpatialBodyView body;
   if(worker==s.workers.end()||!gateBody(worker->second,body)||!(body.flags&1)||body.r!=radius||
      body.x!=old.originX||body.z!=old.originZ||bool(body.flags&2)!=bool(flags&32))return -2;
-  double departure=s.effectiveTime;uint64_t waitGate=0;
-  for(const auto& [id,gate]:s.gates){
-    if(gate.status==2||std::hypot(body.x-gate.x,body.z-gate.z)>gate.trigger)continue;
-    const double opening=gateOpening(gate,s.effectiveTime),ahead=std::max(4.0,gate.trigger+1);
-    const bool waiting=(gateRouteHits(s,worker->second,body,gate.closed,ahead)&&(gate.status!=0||opening<1))||
-      (opening>0&&opening<1&&gateRouteHits(s,worker->second,body,gate.swing,ahead));
-    if(!waiting)continue;
-    if(!gate.defined||!gate.bodySweepCertified||gate.status!=0||gate.target!=1)return -2;
-    const double until=gate.at+std::abs(gate.target-gate.from)*nativeGateMoveSeconds;
-    if(until>departure){departure=until;waitGate=id;}
-  }
-  if(!waitGate)return -2;
   const int previous=lazy_selected_context();
   if(previous!=found->second.profile)spatial_select_nav_profile_index(found->second.profile);
   RouteSlot candidate;candidate.points=old.points;
-  const int result=prepareRouteTiming(candidate,found->first,body.x,body.z,s.effectiveTime,
-    radius,2,flags,runBudget,true,departure);
+  int result=prepareRouteTiming(candidate,found->first,body.x,body.z,s.effectiveTime,
+    radius,2,flags,runBudget,true);
+  if(result==1)result=prepareGateRouteWaits(s,candidate);
   const uint32_t topology=lazy_route_revision();
   if(previous!=found->second.profile)spatial_select_nav_profile_index(previous);
   recordTimingResult(s,result);if(result!=1)return -7;
-  candidate.waitGate=waitGate;
   releaseRoute(s,found->second);candidate.active=true;candidate.generation=old.generation+1;
   if(!candidate.generation)candidate.generation=1;
   old=std::move(candidate);auto& intent=found->second;
@@ -189,3 +177,4 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_prepare_waiting_route(double session,double sl
   intent.timingMode=2;intent.timingRadius=radius;intent.motionFlags=flags;intent.runBudget=runBudget;
   emitIntentChange(s,intent);nav_intent_route_timing(session,slot,double(old.generation));return 1;
 }
+EMSCRIPTEN_KEEPALIVE double nav_gate_wait_segments(){return double(state().gateWaitSegments);}

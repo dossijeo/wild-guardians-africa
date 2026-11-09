@@ -139,11 +139,16 @@ struct ActiveIntent {
   double timingRadius=0;
   int motionFlags=0;double runBudget=0;
 };
+struct RouteHold {
+  double distance=0,from=0,until=0,delay=0;
+  uint64_t gate=0;
+};
 struct RouteSlot {
   std::vector<float> points;
   // Execution timing belongs to this same versioned route, not another plan.
   // Modes 1 (animal walk) / 2 (worker rules) are static candidates, not autonomy.
   std::vector<double> distances;
+  std::vector<RouteHold> holds;
   double originX=0,originZ=0,startTime=0,speed=0,radius=0;
   double departureTime=0;uint64_t waitGate=0;bool gateCandidate=false;
   uint64_t actor=0;
@@ -224,6 +229,7 @@ struct IntentState {
   std::array<double,10> intentResult{};
   std::array<double,20> timingResult{};
   std::array<double,3> holdResult{};
+  std::vector<double> routeHoldResult,routeKnotResult;
   std::array<double,18> sampleResult{};
   uint64_t routeTimeSamples=0;
   int timingRejection=0;
@@ -248,6 +254,7 @@ struct IntentState {
   std::unordered_map<uint64_t,uint64_t> gateBodyActors;
   std::vector<double> gateInput,gateResult;
   uint64_t gateBoundaries=0,gateWorkerChecks=0,gatePrefixSegments=0;
+  uint64_t gateWaitSegments=0;
   uint64_t gateSweepPairs=0,gateSweepEvaluations=0,gateSweepRejected=0;
   std::array<double,6> gateSweepResult{};
   NativeGateMotionProposal gateMotionProposal;
@@ -435,7 +442,7 @@ void releaseRoute(IntentState& s,ActiveIntent& intent){
         s.reservedBodies.erase(route.reservationBody);route.reserved=false;
       }
       route.active=false;route.points.clear();route.distances.clear();route.timingMode=0;
-      route.waitGate=0;route.gateCandidate=false;route.departureTime=0;
+      route.holds.clear();route.waitGate=0;route.gateCandidate=false;route.departureTime=0;
       route.generation++;
     }
   }
@@ -468,6 +475,7 @@ bool gateStaticProofCurrent(const IntentState&);
 #include "spatial-gate-sweep.h"
 #include "spatial-gate-static-sweep.h"
 #include "spatial-gate-static-fences.h"
+#include "spatial-gate-route-waits.h"
 #include "spatial-static-mutation-state.h"
 #include "spatial-residency-mutation-state.h"
 #include "spatial-prop-mutation-state.h"
@@ -931,6 +939,7 @@ void nav_intent_reset(){
   if(!s.gates.empty())spatialGateSupportChanged();
   s.gates.clear();s.gateBodyActors.clear();s.gateInput.clear();s.gateResult.clear();
   cancelGateMotionProposal(s);s.gateMotionResult.fill(0);
+  s.routeHoldResult.clear();s.routeKnotResult.clear();s.gateWaitSegments=0;
   s.gateStaticPairs=s.gateStaticEvaluations=s.gateStaticRejected=0;s.gateStaticResult.fill(0);
   s.gateStaticProofs=0;s.gateStaticWorldStamp.fill(0);
   s.gateBoundaries=s.gateWorkerChecks=s.gatePrefixSegments=0;
@@ -1755,6 +1764,27 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_route_initial_hold(double session,double slo
   s.holdResult={double(route.waitGate),route.startTime,route.departureTime};return 1;
 }
 EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_initial_hold_ptr(){return state().holdResult.data();}
+EMSCRIPTEN_KEEPALIVE int nav_intent_route_holds_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int nav_intent_route_gate_candidate(double session,double slot,double generation){
+  if(nav_intent_route_points(session,slot,generation)<0)return -1;
+  return state().routeSlots[size_t(slot)].gateCandidate?1:0;
+}
+EMSCRIPTEN_KEEPALIVE int nav_intent_route_holds(double session,double slot,double generation){
+  auto& s=state();s.routeHoldResult.clear();if(nav_intent_route_points(session,slot,generation)<0)return -1;
+  const auto& route=s.routeSlots[size_t(slot)];if(!route.timingMode)return -1;
+  for(const auto& hold:route.holds)s.routeHoldResult.insert(s.routeHoldResult.end(),{double(hold.gate),hold.distance,hold.from,hold.until});
+  return int(route.holds.size());
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_holds_ptr(){return state().routeHoldResult.data();}
+EMSCRIPTEN_KEEPALIVE int nav_intent_route_time_knots(double session,double slot,double generation){
+  auto& s=state();s.routeKnotResult.clear();if(nav_intent_route_points(session,slot,generation)<0)return -1;
+  const auto& route=s.routeSlots[size_t(slot)];if(!route.timingMode)return -1;
+  s.routeKnotResult.push_back(route.startTime);reservationKnots({&route},route.startTime,s.routeKnotResult);
+  std::sort(s.routeKnotResult.begin(),s.routeKnotResult.end());
+  s.routeKnotResult.erase(std::unique(s.routeKnotResult.begin(),s.routeKnotResult.end()),s.routeKnotResult.end());
+  return int(s.routeKnotResult.size());
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_time_knots_ptr(){return state().routeKnotResult.data();}
 EMSCRIPTEN_KEEPALIVE int nav_intent_route_timing_width(){return 20;}
 EMSCRIPTEN_KEEPALIVE int nav_intent_route_sample_width(){return 18;}
 EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_distances_ptr(double session,double slot,double generation){

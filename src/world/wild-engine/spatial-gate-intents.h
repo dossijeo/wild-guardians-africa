@@ -11,6 +11,11 @@ using SpatialGateStaticVisitor=bool (*)(const SpatialGateStaticObject&,void*);
 // Synchronous views of the existing canonical registries. No geometry cache.
 // 1 complete, 0 visitor stopped, -1 missing resident data, -2 unsupported.
 int spatialVisitGateStaticObjects(double,double,double,double,SpatialGateStaticVisitor,void*);
+bool spatialNativeConvexPolygon(const double*,int);
+int spatialNativeGateCircleRange(double,double,double,double,double,double,double,double*);
+// Convex authored polygon, point swept with a positive physical radius. Returns
+// 1 hit interval, 0 no hit, -1 unsupported. Native timing preparation only.
+int spatialNativeGatePolygonRange(const double*,int,double,double,double,double,double,double*);
 void spatialGateSupportChanged();
 bool spatialIntentGateUnsupported(double,double,double,double,double);
 // Internal, unadmitted gate-candidate proof. Still checks all static world

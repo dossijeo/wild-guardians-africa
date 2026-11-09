@@ -118,10 +118,12 @@ Seguimiento por IDs acordados: [checklist A6-01–A6-11](A6-CHECKLIST.md).
       atómica y fences de altas/mutaciones hasta la pose final. Barrido adicional
       opt-in de objetos canónicos y otras hojas, con veto previo de obstáculos
       nuevos/restaurados, retención de datos y extensión dirigida de pruebas.
-      Faltan unión física marco/hoja y terreno 3D, holds posteriores, leases de cruce,
+      Faltan unión física marco/hoja y terreno 3D, futuras solicitudes de apertura, leases de cruce,
       recuperación y conexión por eventos. `authorizedPassage:false`.
-      Espera inicial nativa de puerta en el mismo timetable, sin consumo de fases
-      o carrera, disponible como candidato no reservable/ejecutable. No se instala
+      Esperas iniciales e intermedias en el mismo timetable, con nudos completos
+      de llegada/salida y cambio de velocidad, sin gasto de fases/carrera durante
+      cada parada. Solo utiliza relojes de apertura ya certificados, sin inventar
+      solicitudes futuras. Candidato no reservable/ejecutable. No se instala
       aún un permiso de cruce ni se activa movimiento de producto.
       A6-04.f parcial: recibo GPU directo ligado a época/secuencia/tiempo,
       separado del ACK de control y verificado en tres auditorías WASM/WebGPU
@@ -136,7 +138,7 @@ Seguimiento por IDs acordados: [checklist A6-01–A6-11](A6-CHECKLIST.md).
       Faltan transacción genérica para las otras mutaciones, integración física/
       recursos de puerta, consumidores/relevo y reloj causal. No hay permiso de
       cruce ni aceptación con personajes.
-      Quedan e/f de A6-04; 419 dirigidas
+      Quedan e/f de A6-04; 432 dirigidas
       + 39 y 74 heredadas pasan sin skips. No se marca e como terminado.
 - [ ] Vertical AttackCrops completa y aceptación real A–F (primer caso integrado,
       no cierre de A6 por sí solo).

@@ -1669,6 +1669,7 @@ int spatialGateCandidateSegmentClear(double x,double z,double nx,double nz,doubl
   return executionSegmentClear(x,z,nx,nz,radius,true);
 }
 #include "spatial-gate-world.inc"
+#include "spatial-gate-route-ranges.inc"
 
 // Main-thread-only staging buffer; workers never access eviction requests.
 static std::vector<int32_t> chunkRemovalInput;

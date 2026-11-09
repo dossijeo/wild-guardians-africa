@@ -14,8 +14,10 @@ ejecutor protegido de producto. A6 incluye todas las intenciones y trabajadores.
   transiciones entre intenciones y guardados. Hay paridad temporal de marcha,
   carrera/carga/huida de trabajadores; faltan offsets persistentes y transiciones
   todavía no representadas, incluida entrada de animales.
+  Las esperas iniciales/intermedias del timetable ya detienen fases y carrera;
+  no equivalen aún a offsets persistidos entre intenciones o guardados.
 - [ ] **A6-03 — Resolución de tráfico.** Hay detección continua y cierre de
-  paradas. Faltan esperas, cesiones, desvíos y reanudación por eventos, sin
+  paradas. Faltan esperas/cesiones de tráfico, desvíos y reanudación por eventos, sin
   inanición ni planner JS paralelo.
 - [ ] **A6-04 — Mutaciones restantes del mundo.** Parcial:
   - [x] **A6-04.a — Overlays nativos.** Muros/polígonos, máscaras y lotes con
@@ -50,14 +52,16 @@ ejecutor protegido de producto. A6 incluye todas las intenciones y trabajadores.
     polígonos, props canónicos y otras hojas; protege el giro restante/pose final
     ante nuevas geometrías y conserva datos residentes. No equivale a clearance
     del mundo completo, unión física con el marco o contacto 3D con terreno.
-    Espera inicial nativa ligada al final de motores certificados: mismo slot,
-    nueva generación, fases/presupuesto no avanzan durante el hold. Solo candidato
+    Esperas iniciales e intermedias nativas ligadas al final de motores ya
+    certificados: mismo slot, nueva generación, fases/presupuesto no avanzan en
+    cada hold y los nudos incluyen entrada/salida y agotamiento de carrera. Solo candidato
     sin admisión: reserva y ejecución lo rechazan incluso al abrirse la puerta.
-    Pendientes integración física marco/hoja y soporte 3D, esperas posteriores de la ruta,
+    Pendientes integración física marco/hoja y soporte 3D, solicitudes futuras de apertura,
     reservas/admisión de cruces, recuperación y conexión por eventos con producto.
     `authorizedPassage:false`; los cruces nativos siguen rechazados. Evidencia:
     11 pruebas de política + 12 de barrido + 8 de espera iniciales; 20 nuevas de
-    objetos y 2 de coordinación. Batería actual: 419 dirigidas + 39 y 74 heredadas
+    objetos y 2 de coordinación; 13 nuevas de esperas múltiples. Batería actual:
+    432 dirigidas + 39 y 74 heredadas
     sin skips. No hay aún aceptación gráfica de personajes autónomos.
   - [ ] **A6-04.f — Efecto físico/gráfico coordinado.** No hacer efectiva una
     mutación mientras un dibujante pueda cruzar antes de su revocación; depende
@@ -134,6 +138,9 @@ ejecutor protegido de producto. A6 incluye todas las intenciones y trabajadores.
 - `.cache/native-gate-objects-legacy-stream-geometry.tap`: 39 aprobadas sin skips.
 - `.cache/native-gate-objects-legacy-recipe.tap`: 74 aprobadas sin skips.
 - [Certificados de objetos y rechazo tras obstáculo nuevo](performance/native-gate-objects-20261109.json).
+- `.cache/native-gate-multiwaits-regression.tap`: 432 aprobadas sin skips.
+- `.cache/native-gate-multiwaits-legacy-stream-geometry.tap`: 39 aprobadas sin skips.
+- `.cache/native-gate-multiwaits-legacy-recipe.tap`: 74 aprobadas sin skips.
 
 Quedan **2 de los 6 subpuntos de A6-04**: e y f (parciales).
 Los **11 puntos principales de A6** siguen abiertos; son niveles distintos,
