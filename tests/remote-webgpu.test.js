@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createRemoteWebGpuClient } from '../src/rendering/remote-webgpu-client.js';
 import { createRemoteWebGpuHost } from '../src/rendering/remote-webgpu-host.js';
+import { createNativeIntentControlPublication } from '../src/simulation/native-intent-control-publication.js';
 
 function pair() {
   const a = {}, b = {};
@@ -155,6 +156,67 @@ test('native permission is checked after resource preparation, preventing late r
   release({});await flush();await f.host.idle();await rejected;
   assert.equal(f.host.inspect().activeSequence,null);
   assert.equal(f.gpu.submitted.length,0);
+});
+
+test('direct native GPU fence waits for submitted GPU work while bypassing a blocked resource FIFO',async()=>{
+ const [authorityPort,drawControlPort]=pair(),messages=[];authorityPort.onmessage=({data})=>messages.push(data);
+ const f=await fixture({}, {absoluteNow:()=>0,intentControl:{port:drawControlPort,authorityEpoch:'native-owner'}});
+ const handle=nativeHandle(0);authorityPort.postMessage(nativeControlEvent('RouteAssigned',1,7,handle,10));await flush();
+ f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'absolute',epoch:0,nativeRoute:{actorId:7,routeHandle:handle,assignmentSequence:1}});
+ const receipt=f.frame(0,{clock:{version:1,epoch:0,elapsed:10,safeUntil:20,anchorAbsoluteMs:0,
+  paused:false,segments:[{start:10,end:20,realDuration:10,rate:1}]}});
+ await flush();await f.host.idle();f.host.present();await receipt;
+ let releaseGpu,releasePipeline;f.gpu.device.queue.onSubmittedWorkDone=()=>new Promise(resolve=>{releaseGpu=resolve;});
+ f.gpu.device.createRenderPipelineAsync=()=>new Promise(resolve=>{releasePipeline=resolve;});
+ await f.host.handle({type:'create',method:'createRenderPipelineAsync',id:'fence-blocked',descriptor:{}});
+ f.client.device.queue.submit([{__remoteCommands:[{method:'beginRenderPass',args:[{colorAttachments:[]}],
+  commands:[{method:'setPipeline',args:[{__remoteGpuId:'fence-blocked'}]}]}]}]);await flush();
+ authorityPort.postMessage(nativeControlEvent('RouteInvalidated',2,7,handle,10.25));
+ authorityPort.postMessage({type:'IntentControlFence',protocolVersion:2,fenceVersion:1,authorityEpoch:'native-owner',
+  sequence:2,effectiveTime:10.25,fenceId:1});await flush();
+ assert.equal(f.host.intentControlStatus().sequence,2);assert.equal(typeof releaseGpu,'function');
+ assert(!messages.some(message=>message.type==='intent-control-fenced'),'control ACK alone does not drain GPU');
+ assert(f.host.inspect().queuedMessages>0);f.host.present();
+ releaseGpu();await flush();const ack=messages.find(message=>message.type==='intent-control-fenced');
+ assert.equal(ack?.sequence,2);assert.equal(ack?.effectiveTime,10.25);assert.equal(ack?.fenceId,1);
+ assert(f.host.inspect().queuedMessages>0,'GPU receipt must not wait for preparation');
+ releasePipeline({});await flush();await f.host.idle();assert.deepEqual(f.errors,[]);f.host.dispose();
+});
+
+test('a native GPU fence cannot name an unreceived sequence or outlive its retired draw connection',async()=>{
+ const [authorityPort,drawControlPort]=pair(),messages=[];authorityPort.onmessage=({data})=>messages.push(data);
+ const f=await fixture({}, {intentControl:{port:drawControlPort,authorityEpoch:'native-owner'}});
+ authorityPort.postMessage(nativeControlEvent('RouteAssigned',1,7,nativeHandle(0),10));await flush();
+ let release;f.gpu.device.queue.onSubmittedWorkDone=()=>new Promise(resolve=>{release=resolve;});
+ authorityPort.postMessage({type:'IntentControlFence',protocolVersion:2,fenceVersion:1,authorityEpoch:'native-owner',sequence:1,effectiveTime:10,fenceId:1});
+ await flush();f.host.dispose();release();await flush();
+ assert(!messages.some(message=>message.type==='intent-control-fenced'));
+ const [badPort,drawPort]=pair(),g=await fixture({}, {intentControl:{port:drawPort,authorityEpoch:'native-owner'}});
+ badPort.postMessage(nativeControlEvent('RouteAssigned',1,7,nativeHandle(0),10));await flush();
+ badPort.postMessage({type:'IntentControlFence',protocolVersion:2,fenceVersion:1,authorityEpoch:'native-owner',sequence:2,effectiveTime:10,fenceId:1});
+ await flush();assert.equal(g.host.inspect().failed,true);g.host.dispose();
+});
+
+test('GPU drain failure closes drawing without issuing a successful native fence receipt',async()=>{
+ const [authorityPort,drawControlPort]=pair(),messages=[];authorityPort.onmessage=({data})=>messages.push(data);
+ const f=await fixture({}, {intentControl:{port:drawControlPort,authorityEpoch:'native-owner'}});
+ authorityPort.postMessage(nativeControlEvent('RouteAssigned',1,7,nativeHandle(0),10));await flush();
+ f.gpu.device.queue.onSubmittedWorkDone=()=>Promise.reject(Error('GPU drain failed'));
+ authorityPort.postMessage({type:'IntentControlFence',protocolVersion:2,fenceVersion:1,authorityEpoch:'native-owner',sequence:1,effectiveTime:10,fenceId:1});
+ await flush();assert.equal(f.host.inspect().failed,true);
+ assert(!messages.some(message=>message.type==='intent-control-fenced'));f.host.dispose();
+});
+
+test('publication and draw host exchange an exact GPU fence through their live control endpoints',async()=>{
+ const [authorityPort,drawControlPort]=pair(),f=await fixture({}, {intentControl:{port:drawControlPort,session:'fence-session'}});
+ const publication=createNativeIntentControlPublication({port:authorityPort,session:'fence-session',
+  observe:callbacks=>{callbacks.onBaseline({type:'IntentBaseline',protocolVersion:2,
+   authorityEpoch:'native-owner',sequence:9,effectiveTime:10,routes:[]});return ()=>{};}});
+ try{
+  await publication.ready;assert.deepEqual(await publication.fenceGpu(),{
+   authorityEpoch:'native-owner',sequence:9,effectiveTime:10,fenceId:1});
+  assert.equal(publication.status().pendingGpuFences,0);assert.deepEqual(f.errors,[]);
+ }finally{publication.dispose();await flush();f.host.dispose();}
 });
 
 test('queued route clock bindings capture the native identity before caller mutation',async()=>{

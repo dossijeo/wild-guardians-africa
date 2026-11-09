@@ -1,0 +1,21 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Native control GPU fence audit</title>
+<h1>Native control GPU fence audit</h1>
+<p>WASM + WebGPU diagnostic. No character locomotion or physical mutation admission.</p>
+<pre id="result">Ready</pre>
+<script type="module">
+import {auditNativeRouteControl} from './native-route-control.js';
+window.runNativeGpuFenceAudit=async()=>{
+ const results=[];
+ try{
+  for(let i=0;i<3;i++){
+   document.querySelector('#result').textContent=`Running ${i+1}/3`;
+   results.push(await auditNativeRouteControl({gpuFence:true}));
+  }
+  window.nativeGpuFenceAudit=results;
+  document.querySelector('#result').textContent=JSON.stringify(results,null,2);
+  return results;
+ }catch(error){document.querySelector('#result').textContent=String(error.stack??error);throw error;}
+};
+</script>

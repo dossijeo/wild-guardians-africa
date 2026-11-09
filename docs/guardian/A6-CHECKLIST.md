@@ -58,6 +58,13 @@ ejecutor protegido de producto. A6 incluye todas las intenciones y trabajadores.
   - [ ] **A6-04.f — Efecto físico/gráfico coordinado.** No hacer efectiva una
     mutación mientras un dibujante pueda cruzar antes de su revocación; depende
     también de A6-06.
+    **Parcial:** recibo de retirada del trabajo GPU previo por canal directo,
+    separado del ACK de recepción del control. Época/sesión/secuencia/tiempo e ID
+    exactos; fallo, timeout o retiro no conceden recibo. Tres auditorías WASM/WebGPU
+    reales mantienen 15 dibujos y reciben el fence durante bloqueo de preparación
+    de 500 ms. Es diagnóstico con triángulo, no personajes ni permiso de mutación.
+    Faltan transacción nativa pendiente + commit condicionado, reloj causal,
+    coordinación de consumidores/relevo y presentación física/gráfica real.
 - [ ] **A6-05 — Todas las intenciones, perfiles y biomas.** Completar animales
   (entrada, ataque, objetivo, retirada) y trabajadores (tareas, entrega/carga,
   regreso/huida, recuperación), además de impactos/ragdoll delimitados. La
@@ -104,8 +111,10 @@ ejecutor protegido de producto. A6 incluye todas las intenciones y trabajadores.
 - `.cache/native-gate-waits-regression.tap`: 375 aprobadas sin skips.
 - `.cache/native-gate-waits-legacy-stream-geometry.tap`: 39 aprobadas sin skips.
 - `.cache/native-gate-waits-legacy-recipe.tap`: 74 aprobadas sin skips.
+- `.cache/native-gpu-fence-regression.tap`: 382 aprobadas sin skips.
+- [Tres recibos GPU reales](performance/native-control-gpu-fence-20261109.json).
 
-Quedan **2 de los 6 subpuntos de A6-04**: e (parcial) y f (pendiente).
+Quedan **2 de los 6 subpuntos de A6-04**: e y f (parciales).
 Los **11 puntos principales de A6** siguen abiertos; son niveles distintos,
 no dos cantidades que deban sumarse.
 

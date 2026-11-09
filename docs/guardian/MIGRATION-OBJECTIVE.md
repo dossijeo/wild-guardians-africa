@@ -121,7 +121,12 @@ Seguimiento por IDs acordados: [checklist A6-01–A6-11](A6-CHECKLIST.md).
       Espera inicial nativa de puerta en el mismo timetable, sin consumo de fases
       o carrera, disponible como candidato no reservable/ejecutable. No se instala
       aún un permiso de cruce ni se activa movimiento de producto.
-      Quedan e/f de A6-04; 375 dirigidas
+      A6-04.f parcial: recibo GPU directo ligado a época/secuencia/tiempo,
+      separado del ACK de control y verificado en tres auditorías WASM/WebGPU
+      durante bloqueo real de preparación de 500 ms (15 dibujos por ejecución).
+      Falta transacción física pendiente/commit condicionado y reloj causal:
+      no es permiso de mutación ni aceptación con personajes.
+      Quedan e/f de A6-04; 382 dirigidas
       + 39 y 74 heredadas pasan sin skips. No se marca e como terminado.
 - [ ] Vertical AttackCrops completa y aceptación real A–F (primer caso integrado,
       no cierre de A6 por sí solo).

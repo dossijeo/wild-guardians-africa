@@ -71,7 +71,7 @@ export async function auditNativeRuntimeControl(){
 
 // Extends the existing concurrent Worker harness. This checks control transport
 // and real GPU uniforms, not character-model parity or full-route game safety.
-export async function auditNativeRouteControl(){
+export async function auditNativeRouteControl({gpuFence=false}={}){
  const source=await fixtureText('desierto983-d15-partial-state.json.gz'),
   state=deserialize(source),module=await WebAssembly.compileStreaming(fetch('/src/world/wild-engine/spatial-savanna.wasm'));
  state.workers=[];state.plants=[];state.tasks=[];state.crates=[];state.spells=[];state.elapsed=10;
@@ -90,7 +90,7 @@ export async function auditNativeRouteControl(){
   else received(data.kind,data);
  };
  worker.onerror=event=>{failure=Error(event.message);for(const item of waits.values())item.reject(failure);waits.clear();};
- control.port1.onmessage=({data})=>received(`control-${data.sequence}`,{
+  control.port1.onmessage=({data})=>received(data.type==='intent-control-fenced'?`gpu-fence-${data.fenceId}`:`control-${data.sequence}`,{
   ...data,receivedAt:performance.timeOrigin+performance.now()});
  const run=async()=>{
   for(let z=-1;z<=1;z++)for(let x=-1;x<=1;x++){
@@ -131,13 +131,18 @@ export async function auditNativeRouteControl(){
   bridge.cancelAttackIntent(actor.id);
   const revocation=bridge.intentChanges().find(event=>event.type==='RouteInvalidated');
   if(!revocation)throw Error('Native cancellation omitted revocation');
-  control.port1.postMessage(revocation);
-  const applied=await expect(`control-${revocation.sequence}`),end=await expect('block-end');
+   control.port1.postMessage(revocation);
+   if(gpuFence)control.port1.postMessage({type:'IntentControlFence',protocolVersion:2,fenceVersion:1,
+    authorityEpoch:bridge.authorityEpoch,sequence:revocation.sequence,effectiveTime:revocation.effectiveTime,fenceId:1});
+   const fenced=gpuFence?await expect('gpu-fence-1'):null;
+   const applied=await expect(`control-${revocation.sequence}`),end=await expect('block-end');
   worker.postMessage({kind:'inspect'});const report=await expect('inspection');
   if(failure)throw failure;
   if(report.execution.consumer.backend!=='webgpu'||report.execution.consumer.gpuErrors)
    throw Error('Expected actual WebGPU without validation errors');
-  if(applied.receivedAt>=end.end)throw Error('Revocation waited for the blocked preparer');
+   if(applied.receivedAt>=end.end)throw Error('Revocation waited for the blocked preparer');
+   if(fenced&&(fenced.accepted!==true||fenced.sequence!==revocation.sequence||fenced.effectiveTime!==revocation.effectiveTime||fenced.receivedAt>=end.end))
+    throw Error('GPU drain receipt did not confirm the exact boundary during preparation stall');
   if(Math.abs(report.values[0]-revocation.effectiveTime)>0.00001)
    throw Error('GPU did not retain the revoked route time');
   if(report.values[1]<=report.values[0]+.1)throw Error('Unrelated GPU route did not continue');
@@ -148,7 +153,8 @@ export async function auditNativeRouteControl(){
    maxIntervalMs:Math.max(...frames.map(frame=>frame.intervalMs??0)),
    gpuRouteTimes:report.values.slice(0,2),revokedAt:revocation.effectiveTime,
    packets:report.execution.consumer.packets,replayFrames:report.execution.consumer.replayFrames,
-   nativeControl:report.execution.consumer.intentControl,
+    nativeControl:report.execution.consumer.intentControl,
+    ...(fenced?{gpuFence:fenced,gpuFencedAt:report.execution.consumer.nativeIntentGpuFencedAt}:{}),
    scope:'Real WASM AttackCrops events, preparation/draw Workers and GPU uniform readback; triangle only, no character animation or authoritative simulation advance. Not acceptance A–F.'};
  };
  try{

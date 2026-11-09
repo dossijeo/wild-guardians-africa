@@ -17,6 +17,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   if(intentControl&&!intentControl.authorityEpoch&&
      (typeof intentControl.session!=='string'||!intentControl.session))throw TypeError('Missing native intent control session');
   let routeControl=intentControl?.authorityEpoch?createNativeRouteControl(intentControl):null;
+  let lastNativeGpuFence=0;const nativeGpuFences=new Set();
   const nativeControlWaiters=new Set();
   const nativeControlTimeoutMs=intentControl?.timeoutMs??10000;
   if(!Number.isFinite(nativeControlTimeoutMs)||nativeControlTimeoutMs<=0)throw TypeError('Invalid native intent control timeout');
@@ -770,6 +771,28 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         const message=event.data;
         if(intentControl.session&&message?.session!==intentControl.session)
           throw Error('Native intent control transport session mismatch');
+        if(message?.type==='IntentControlFence'){
+          const status=routeControl?.status();
+          if(!status||status.closed||message.protocolVersion!==2||message.fenceVersion!==1||
+             !Number.isFinite(message.effectiveTime)||message.effectiveTime<0||
+             !Number.isSafeInteger(message.fenceId)||message.fenceId<1||
+             message.authorityEpoch!==status.authorityEpoch||message.sequence!==status.sequence||
+             message.effectiveTime!==status.effectiveTime||message.fenceId!==lastNativeGpuFence+1||nativeGpuFences.size>=64)
+            throw Error('Invalid native GPU fence boundary');
+          lastNativeGpuFence=message.fenceId;nativeGpuFences.add(message.fenceId);
+          // Snapshot the already-submitted GPU work now, outside the resource
+          // FIFO. Future draws read the revoked records; late preparations must
+          // still pass native admission. This is not a new clock/mutation permit.
+          Promise.resolve(device.queue.onSubmittedWorkDone()).then(()=>{
+            nativeGpuFences.delete(message.fenceId);
+            if(stopped||failed||routeControl.status().closed)return;
+            metrics.nativeIntentGpuFencedAt=absoluteNow();metrics.nativeIntentGpuFencedSequence=message.sequence;
+            intentControl.port.postMessage({type:'intent-control-fenced',fenceVersion:1,
+              ...(intentControl.session?{session:intentControl.session}:{}),authorityEpoch:message.authorityEpoch,
+              sequence:message.sequence,effectiveTime:message.effectiveTime,fenceId:message.fenceId,accepted:true});
+          }).catch(error=>{nativeGpuFences.delete(message.fenceId);fail(error);});
+          return;
+        }
         let accepted;
         if(message?.type==='IntentBaseline'){
           if(routeControl||message.protocolVersion!==2||!Array.isArray(message.routes)||

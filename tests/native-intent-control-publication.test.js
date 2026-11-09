@@ -4,11 +4,15 @@ import {MessageChannel} from 'node:worker_threads';
 import {createNativeIntentControlPublication} from '../src/simulation/native-intent-control-publication.js';
 import {createNativeRouteControl} from '../src/rendering/native-route-control.js';
 
-function fixture({autoAck=true}={}){
+function fixture({autoAck=true,autoFence=true,timeoutMs=10000}={}){
   const {port1,port2}=new MessageChannel(),errors=[],received=[];
   let observers,control;
   port2.onmessage=({data:message})=>{
     received.push(message);
+    if(message.type==='IntentControlFence'){
+      if(autoFence)port2.postMessage({...message,type:'intent-control-fenced',accepted:true});
+      return;
+    }
     if(message.type==='IntentBaseline')control=createNativeRouteControl({
       authorityEpoch:message.authorityEpoch,initialSequence:message.sequence,
       initialTime:message.effectiveTime,routes:message.routes});
@@ -18,7 +22,7 @@ function fixture({autoAck=true}={}){
       authorityEpoch:message.authorityEpoch,sequence:message.sequence,accepted:true});
   };
   let stopped=false;
-  const publication=createNativeIntentControlPublication({port:port1,session:'session-a',
+  const publication=createNativeIntentControlPublication({port:port1,session:'session-a',timeoutMs,
     observe:callbacks=>{observers=callbacks;callbacks.onBaseline({type:'IntentBaseline',
       protocolVersion:2,authorityEpoch:'native-owner/1',sequence:9,effectiveTime:10,routes:[]});
       return ()=>{stopped=true;};},onError:error=>errors.push(error)});
@@ -68,4 +72,38 @@ test('native reset retires a live connection and releases its observer',async()=
     assert.equal(f.publication.status().closed,true);
     assert.deepEqual(f.errors,[]);
   }finally{f.dispose();}
+});
+
+test('GPU drain receipts are separate from ordinary control ACKs and keep their exact causal boundary',async()=>{
+ const f=fixture({autoFence:false});try{
+  await f.publication.ready;const message=new Promise(resolve=>f.port2.once('message',resolve));
+  let resolved=false;const receipt=f.publication.fenceGpu().then(value=>{resolved=true;return value;}),request=await message;
+  assert.equal(request.type,'IntentControlFence');assert.equal(request.fenceId,1);
+  assert.equal(resolved,false);assert.equal(f.publication.status().pendingGpuFences,1);
+  f.port2.postMessage({...request,type:'intent-control-fenced',accepted:true});
+  assert.deepEqual(await receipt,{authorityEpoch:'native-owner/1',sequence:9,effectiveTime:10,fenceId:1});
+  assert.equal(f.publication.status().pendingGpuFences,0);
+ }finally{f.dispose();}
+});
+
+test('wrong epoch or forged GPU drain receipts cannot authorize the pending boundary',async()=>{
+ for(const change of [{authorityEpoch:'other/1'},{session:'other'},{sequence:10},{effectiveTime:11},{fenceId:2},{accepted:false}]){
+  const f=fixture({autoFence:false});try{
+   await f.publication.ready;const message=new Promise(resolve=>f.port2.once('message',resolve)),
+    rejected=assert.rejects(f.publication.fenceGpu(),/GPU fence acknowledgement/),request=await message;
+   f.port2.postMessage({...request,type:'intent-control-fenced',accepted:true,...change});await rejected;
+   assert.equal(f.publication.status().closed,true);assert.equal(f.publication.status().pendingGpuFences,0);
+  }finally{f.dispose();}
+ }
+});
+
+test('retirement and missing GPU receipts reject pending fences rather than silently granting them',async()=>{
+ const f=fixture({autoFence:false});try{
+  await f.publication.ready;const rejected=assert.rejects(f.publication.fenceGpu(),/GPU fence closed/);
+  f.publication.dispose('replaced');await rejected;assert.equal(f.publication.status().pendingGpuFences,0);
+ }finally{f.dispose();}
+ const g=fixture({autoFence:false,timeoutMs:1000});try{
+  await g.publication.ready;await assert.rejects(g.publication.fenceGpu(),/GPU fence timed out/);
+  assert.equal(g.publication.status().closed,true);assert.equal(g.errors.length,1);
+ }finally{g.dispose();}
 });

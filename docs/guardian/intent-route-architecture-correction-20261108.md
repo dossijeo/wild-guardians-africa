@@ -928,3 +928,53 @@ Standalone/pthread reconstruidos; **375 dirigidas + 39 de streaming/geometría +
 74 de receta/estado**, todas aprobadas sin skips. Logs `native-gate-waits-*.tap`
 en `.cache`. Siguen abiertos A6-04.e/f y los once puntos principales: no hay
 aceptación real de cruce de personajes ni ACK causal de mutaciones físicas.
+
+## A6-04.f — Recibo de retirada de trabajo GPU previo (parcial)
+
+El ACK `intent-control-applied` existente confirma el espejo de permisos en el
+receptor. **No certificaba que los comandos GPU ya enviados hubieran terminado**.
+La publicación incorpora ahora `fenceGpu()`: toma la época, secuencia y tiempo del
+log enviado y solicita un `IntentControlFence` por el mismo canal directo, con
+ID de recibo monotónico y versión de capacidad 1. No crea un log autoritativo,
+una cola de mutaciones ni un scheduler; mantiene promesas transitorias de ACK.
+
+El receptor comprueba esa frontera contra su espejo actual, fuera del FIFO de
+recursos, y llama `device.queue.onSubmittedWorkDone()` inmediatamente. Solo tras
+resolver devuelve `intent-control-fenced` para la identidad exacta solicitada.
+La revocación ya aplicada limita los siguientes dibujos por su registro existente;
+la preparación tardía sigue pasando por admisión y no puede resucitar versiones.
+El drain no bloquea el bucle de dibujo ni la recepción de otros eventos.
+
+No se acepta un ACK ordinario como recibo GPU. Tampoco un recibo de otra
+sesión/época, secuencia, tiempo, ID o versión. Conexión retirada, timeout,
+fallo/device loss o GPU rechazada no producen confirmación exitosa; los fences
+pendientes se rechazan al cerrar. Límite de 64 peticiones pendientes y rechazo
+del agotamiento de IDs. No se activa automáticamente esta operación desde las
+mutaciones síncronas del mundo ni se cambia su semántica de producto.
+
+Siete pruebas adicionales contrastan recibos separados, identidades falsas,
+retiro/timeout, GPU sin terminar mientras recursos están bloqueados, secuencia
+futura, fallo GPU y el intercambio completo publicación/receptor.
+Batería dirigida completa: **382 aprobadas sin skips**
+(`.cache/native-gpu-fence-regression.tap`). Las baterías nativas de streaming/
+geometría (39) y receta/estado (74) también pasaron sin skips sobre estos mismos
+binarios, reconstruidos para el incremento de esperas; no se declara limpia la
+suite general.
+
+La auditoría `/tests/browser/native-route-control-fence.html` ejecutó tres veces
+el harness con WASM real, Workers de preparación/dibujo hermanos, WebGPU NVIDIA
+Turing y readback de uniformes. Bloqueos de **500,060–500,075 ms**, **15 dibujos**
+durante cada bloqueo, un único paquete preparado y continuación de la ruta ajena.
+En las tres ejecuciones llegó el recibo GPU dentro del bloqueo y la primera ruta
+quedó limitada al tiempo nativo de revocación. Evidencia persistida en
+`performance/native-control-gpu-fence-20261109.json`.
+
+**No cierra f:** `onSubmittedWorkDone` no es ACK de presentación/compositor, ni
+ordena por sí solo el reloj lógico con el dibujante. El harness usa un triángulo,
+no personajes animados ni una mutación física pendiente. Falta ligar una propuesta
+nativa todavía no efectiva a dependencias/revocaciones, todos los consumidores
+vivos y sus relevos, recibo válido y commit condicionado en la frontera causal;
+también publicación de los recursos que representan esa misma mutación. Un ACK
+antiguo no puede reutilizarse como permiso general para un mundo o conexión nuevos.
+El recibo actual es un requisito de esa transacción, **no** autorización de
+mutación/autonomía. Siguen abiertos e/f y los once puntos principales de A6.
