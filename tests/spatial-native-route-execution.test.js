@@ -79,12 +79,12 @@ test('a stopped native route invalidates only future conflicts and iteratively p
  }finally{f.session.dispose();}
 });
 
-test('an untracked residency mutation aborts the entire execution advance before clock or body writes',()=>{
+test('an untracked terrain mutation aborts the entire execution advance before clock or body writes',()=>{
  const f=fixture();
  try{
   const handle=f.worker(1,f.point(-6,0),f.point(6,0));f.bridge.beginNativeRouteExecution();f.advance(11);
   const before=f.body(1),clock=f.w.nav_intent_effective_time(),updates=f.w.nav_intent_execution_body_updates();
-  assert(f.session.core.addChunk(4,4));
+  const p=f.point(100,100);f.session.core.setSettlement(p.x,p.z,1,1);
   assert.equal(f.advance(12).status,'world-changed');
   assert.equal(f.w.nav_intent_effective_time(),clock);assert.deepEqual(f.body(1),before);
   assert.equal(f.w.nav_intent_execution_body_updates(),updates);

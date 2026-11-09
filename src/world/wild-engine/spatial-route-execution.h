@@ -12,6 +12,7 @@ bool executionBindingCoherent(const IntentState& s,uint64_t body,uint32_t slot){
 void projectExecutedPose(IntentState& s,RouteSlot& route,const std::array<double,18>& pose){
   SpatialBodyView before;spatialReadBody(route.reservationBody,before);
   spatialMoveBodyFromIntent(route.reservationBody,pose[0],pose[1]);
+  SpatialBodyView after=before;after.x=pose[0];after.z=pose[1];updateResidencyPinRevision(s,&before,&after);
   if(before.x!=pose[0]||before.z!=pose[1])s.executionBodyUpdates++;
   route.executionPose=pose;route.hasExecution=true;
   auto& intent=s.activeIntents.at(route.actor);
@@ -34,7 +35,7 @@ int beginRouteExecution(IntentState& s){
     if(route.startTime!=s.effectiveTime||!spatialReadBody(body,physical)||
        physical.x!=route.originX||physical.z!=route.originZ)return -3;
   }
-  s.executionWorldStamp=executionWorldStamp();s.executionEnabled=true;
+  s.executionWorldStamp=executionWorldStamp();s.executionEnabled=s.bodyDomainActive=true;s.residencyPinRevision++;
   for(const auto& [body,slot]:s.reservedBodies){
     auto& route=s.routeSlots[slot];s.executionEvaluations++;
     projectExecutedPose(s,route,sampleRouteTiming(route,s.effectiveTime));
@@ -45,8 +46,8 @@ int advanceRouteExecution(IntentState& s,double at){
   if(!std::isfinite(at)||at<s.effectiveTime)return -1;
   if(!s.executionEnabled)return -2;
   if(at==s.effectiveTime)return 0;
-  // Known overlay transactions extend the surviving cohort's proof at mutation
-  // time. Untracked terrain/residency changes still fail closed here: one
+  // Known overlay/residency transactions extend the surviving cohort's proof.
+  // Untracked terrain edits and whole-world resets still fail closed: one
   // mutation-counter check per cohort, never route collision/validity queries.
   if(s.executionWorldStamp!=executionWorldStamp())return -4;
   struct Move {uint32_t slot;std::array<double,18> pose;};

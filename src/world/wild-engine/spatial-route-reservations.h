@@ -189,5 +189,5 @@ void drainStoppedReservations(IntentState& s){
     }
   }
   s.drainingStops=false;
-  if(s.reservedBodies.empty())s.executionEnabled=false;
+  if(s.executionEnabled&&s.reservedBodies.empty()){s.executionEnabled=false;s.residencyPinRevision++;}
 }

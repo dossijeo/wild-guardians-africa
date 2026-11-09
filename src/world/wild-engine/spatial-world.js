@@ -123,8 +123,11 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     // Preserve the distinction when a resident chunk has zero props.
     return result>0?result-1:-1;
   }
-  function removeChunk(cx,cz){
-    const removed=wasm.spatial_remove_chunk(cx|0,cz|0);
+  function removeChunk(cx,cz,releaseOnly=false){
+    const remove=releaseOnly&&wasm.spatial_release_chunk?wasm.spatial_release_chunk:wasm.spatial_remove_chunk;
+    const removed=remove(cx|0,cz|0);
+    if(removed===-2)return 0; // Native body/data pin: no publication was removed.
+    if(removed<0)throw Error('Native chunk removal failed');
     if(removed){
       chunkRevision++;
       chunks=chunks.filter(([x,z])=>x!==(cx|0)||z!==(cz|0));
@@ -135,15 +138,17 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     }
     return removed;
   }
-  function removeChunks(coordinates){
+  function removeChunks(coordinates,releaseOnly=false){
     if(!Array.isArray(coordinates)||coordinates.length>4096||coordinates.some(p=>!Array.isArray(p)||p.length!==2||p.some(n=>!Number.isInteger(n)||n<-2147483648||n>2147483647)))throw TypeError('Invalid chunk removal batch');
     if(!coordinates.length)return 0;
-    if(!wasm.spatial_remove_chunks)return coordinates.reduce((count,[x,z])=>count+removeChunk(x,z),0);
+    if(!wasm.spatial_remove_chunks)return coordinates.reduce((count,[x,z])=>count+removeChunk(x,z,releaseOnly),0);
     const pointer=wasm.spatial_remove_chunks_ptr(coordinates.length);
     if(!pointer)throw Error('Could not allocate chunk removal batch');
     const data=new Int32Array(wasm.memory.buffer,pointer,coordinates.length*2);
     coordinates.forEach((p,i)=>data.set(p,i*2));
-    const removed=wasm.spatial_remove_chunks(coordinates.length);
+    const remove=releaseOnly&&wasm.spatial_release_chunks?wasm.spatial_release_chunks:wasm.spatial_remove_chunks;
+    const removed=remove(coordinates.length);
+    if(removed===-2)return 0; // The entire batch remains resident, not a partial eviction.
     if(removed<0)throw Error('Native chunk removal failed');
     if(removed){
       const keys=new Set(coordinates.map(([x,z])=>x+','+z));
@@ -349,7 +354,13 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     }
     wasm.lazy_commit_portals();
   }
-  return {wasm,preparation,generate,addChunk,selectChunk,removeChunk,removeChunks,currentChunk:()=>chunk,captureResidentChunks,queryFarVisualChunk,farVisualRevision:()=>{const revision=wasm.spatial_far_world_revision?.();if(!Number.isSafeInteger(revision)||revision<1)throw Error('Far visual revision unavailable');return revision;},
+  return {wasm,preparation,generate,addChunk,selectChunk,removeChunk,removeChunks,
+    releaseChunk:(cx,cz)=>removeChunk(cx,cz,true),releaseChunks:coordinates=>removeChunks(coordinates,true),
+    hasResidentChunk:(cx,cz)=>wasm.spatial_has_chunk?wasm.spatial_has_chunk(cx|0,cz|0)===1:
+      chunks.some(([x,z])=>x===(cx|0)&&z===(cz|0)),
+    residencyPinRevision:()=>{const revision=wasm.nav_intent_residency_pin_revision?.()??0;
+      if(!Number.isSafeInteger(revision)||revision<0)throw Error('Invalid native residency pin revision');return revision;},
+    currentChunk:()=>chunk,captureResidentChunks,queryFarVisualChunk,farVisualRevision:()=>{const revision=wasm.spatial_far_world_revision?.();if(!Number.isSafeInteger(revision)||revision<1)throw Error('Far visual revision unavailable');return revision;},
     enableConnectivityDiagnostics:()=>{diagnoseConnectivity=true;},
     connectivityDiagnostics:()=>structuredClone(connectivityReasons),
     enclosureAt:point=>navigationBuilt?wasm.lazy_enclosure(point.x,point.z):-1,

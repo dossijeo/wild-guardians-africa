@@ -13,6 +13,7 @@
 #include <vector>
 #include "spatial-dynamic-bodies.h"
 #include "spatial-static-mutations.h"
+#include "spatial-residency-mutations.h"
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
 #else
@@ -224,13 +225,15 @@ struct IntentState {
   std::array<double,6> reservationResult{};
   uint64_t reservationChecks=0,reservationPairs=0,reservationBodyChecks=0,
     reservationMutationCandidates=0;
-  bool executionEnabled=false,drainingStops=false,resettingBodies=false;
+  bool executionEnabled=false,bodyDomainActive=false,drainingStops=false,resettingBodies=false;
   std::array<uint64_t,3> executionWorldStamp{};
   std::array<double,18> executionResult{};
   std::set<uint64_t> stoppedReservationBodies,removingBodies;
   uint64_t executionAdvances=0,executionEvaluations=0,executionBodyUpdates=0,executionStopInvalidations=0;
   uint64_t staticMutationCandidates=0,staticMutationSegments=0,staticMutationBodyChecks=0,
     staticMutationRevocations=0,staticMutationRejected=0,staticMutationCommits=0;
+  uint64_t residencyCandidates=0,residencySegments=0,residencyBodyChecks=0,
+    residencyRevocations=0,residencyRejected=0,residencyCommits=0,residencyPinRevision=0;
   uint32_t session=0;
   uint64_t invalidations=0;
   std::unordered_map<uint64_t,uint64_t> planningCallsByActor;
@@ -259,6 +262,17 @@ std::array<uint64_t,3> executionWorldStamp(){
   return {spatial_execution_revision(0),spatial_execution_revision(1),spatial_execution_revision(2)};
 }
 #include "spatial-route-motion.h"
+void updateResidencyPinRevision(IntentState& s,const SpatialBodyView* before,const SpatialBodyView* after){
+  if(!s.bodyDomainActive)return;
+  const bool activeBefore=before&&(before->flags&1),activeAfter=after&&(after->flags&1);
+  if(activeBefore!=activeAfter){s.residencyPinRevision++;return;}
+  if(!activeBefore)return;
+  if(before->x==after->x&&before->z==after->z&&before->r==after->r)return;
+  std::array<int64_t,4> oldRange{},newRange{};
+  if(!spatialExecutionResidencyPinRange(before->x,before->z,before->r,oldRange)||
+     !spatialExecutionResidencyPinRange(after->x,after->z,after->r,newRange)||oldRange!=newRange)
+    s.residencyPinRevision++;
+}
 void recordTimingResult(IntentState& s,int result){
   s.timingRejection=result==1?0:result==0?1:result==-1?2:result==-2?3:4;
 }
@@ -392,6 +406,7 @@ void releaseRoute(IntentState& s,ActiveIntent& intent){
     if(route.active&&route.generation==intent.generation){
       intent.revokedSlot=intent.slot;intent.revokedGeneration=intent.generation;
       if(route.reserved){
+        s.residencyPinRevision++;
         if(s.executionEnabled&&!s.resettingBodies&&!s.removingBodies.count(route.reservationBody))
           s.stoppedReservationBodies.insert(route.reservationBody);
         s.reservedBodies.erase(route.reservationBody);route.reserved=false;
@@ -425,6 +440,7 @@ void releaseIntent(IntentState& s,uint64_t actor,PlanningState next){
 #include "spatial-route-reservations.h"
 #include "spatial-route-execution.h"
 #include "spatial-static-mutation-state.h"
+#include "spatial-residency-mutation-state.h"
 void invalidateDependents(IntentState& s,const Change& change){
   if(change.kind==1){
     if(!change.op){
@@ -804,8 +820,12 @@ ServiceRoute findServiceRoute(const Worker& worker,const Target& target,int kind
 }
 }
 
-bool spatialIntentStaticExecutionActive(){return state().executionEnabled;}
-bool spatialIntentStaticRestorationAllowed(){return !state().executionEnabled;}
+bool spatialIntentStaticProtectionActive(){return state().bodyDomainActive;}
+SpatialStaticTicket spatialIntentResidencyBefore(const SpatialResidencyRegion* regions,int count,bool removing,bool releaseOnly){
+  return residencyMutationBefore(state(),regions,count,removing,releaseOnly);
+}
+void spatialIntentResidencyCommitted(const SpatialStaticTicket& ticket,int count){residencyMutationCommitted(state(),ticket,count);}
+bool spatialIntentStaticRestorationAllowed(){return !state().bodyDomainActive;}
 bool spatialIntentStaticPreflight(const SpatialStaticMutation* shapes,int count){
   return staticMutationPreflight(state(),shapes,count);
 }
@@ -814,14 +834,22 @@ SpatialStaticTicket spatialIntentStaticBefore(const SpatialStaticMutation* shape
 }
 void spatialIntentStaticCommitted(const SpatialStaticTicket& ticket){staticMutationCommitted(state(),ticket);}
 bool spatialIntentBodyCanChange(uint64_t id,const SpatialBodyView& proposed){
-  return reservationBodyCanChange(state(),id,proposed);
+  auto& s=state();if(!reservationBodyCanChange(s,id,proposed))return false;
+  if(s.bodyDomainActive){SpatialBodyView previous;const bool exists=spatialReadBody(id,previous);
+    updateResidencyPinRevision(s,exists?&previous:nullptr,&proposed);}
+  return true;
 }
-void spatialIntentBodyRemoving(uint64_t id){reservationBodyRemoving(state(),id);}
+void spatialIntentBodyRemoving(uint64_t id){
+  auto& s=state();SpatialBodyView previous;
+  if(s.bodyDomainActive&&spatialReadBody(id,previous))updateResidencyPinRevision(s,&previous,nullptr);
+  reservationBodyRemoving(s,id);
+}
 void spatialIntentBodiesResetting(){
   auto& s=state();
   s.resettingBodies=true;
   while(!s.reservedBodies.empty())reservationBodyRemoving(s,s.reservedBodies.begin()->first);
   s.resettingBodies=false;
+  if(s.bodyDomainActive){s.bodyDomainActive=false;s.residencyPinRevision++;}
 }
 
 extern "C" {
@@ -865,12 +893,14 @@ void nav_intent_reset(){
   s.timingResult.fill(0);s.sampleResult.fill(0);s.routeTimeSamples=0;s.timingRejection=0;
   s.reservedBodies.clear();s.reservationResult.fill(0);
   s.reservationChecks=s.reservationPairs=s.reservationBodyChecks=s.reservationMutationCandidates=0;
-  s.executionEnabled=s.drainingStops=s.resettingBodies=false;
+  s.executionEnabled=s.bodyDomainActive=s.drainingStops=s.resettingBodies=false;
   s.executionWorldStamp.fill(0);s.executionResult.fill(0);
   s.stoppedReservationBodies.clear();s.removingBodies.clear();
   s.executionAdvances=s.executionEvaluations=s.executionBodyUpdates=s.executionStopInvalidations=0;
   s.staticMutationCandidates=s.staticMutationSegments=s.staticMutationBodyChecks=0;
   s.staticMutationRevocations=s.staticMutationRejected=s.staticMutationCommits=0;
+  s.residencyCandidates=s.residencySegments=s.residencyBodyChecks=0;
+  s.residencyRevocations=s.residencyRejected=s.residencyCommits=s.residencyPinRevision=0;
   s.attackRouteInput.clear();s.attackBlockers.clear();
   s.attackReservedTargets.clear();s.attackResult.fill(0);
   s.wallAttackResult.fill(0);
@@ -1728,6 +1758,7 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_route_reserve(double session,double slot,dou
   if(!reserveRouteClear(s,found->second,route,uint64_t(body),physical))return 0;
   route.reserved=true;route.reservationBody=uint64_t(body);
   s.reservedBodies.emplace(uint64_t(body),uint32_t(slot));
+  s.residencyPinRevision++;
   if(s.executionEnabled){s.executionEvaluations++;projectExecutedPose(s,route,sampleRouteTiming(route,s.effectiveTime));}
   return 1;
 }
@@ -1768,6 +1799,13 @@ EMSCRIPTEN_KEEPALIVE double nav_intent_static_mutation_body_checks(){return doub
 EMSCRIPTEN_KEEPALIVE double nav_intent_static_mutation_revocations(){return double(state().staticMutationRevocations);}
 EMSCRIPTEN_KEEPALIVE double nav_intent_static_mutation_rejected(){return double(state().staticMutationRejected);}
 EMSCRIPTEN_KEEPALIVE double nav_intent_static_mutation_commits(){return double(state().staticMutationCommits);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_residency_candidates(){return double(state().residencyCandidates);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_residency_segments(){return double(state().residencySegments);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_residency_body_checks(){return double(state().residencyBodyChecks);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_residency_revocations(){return double(state().residencyRevocations);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_residency_rejected(){return double(state().residencyRejected);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_residency_commits(){return double(state().residencyCommits);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_residency_pin_revision(){return double(state().residencyPinRevision);}
 
 // A topological event may be unrelated to an active worker path. Validate the
 // pinned polyline against the updated native collision map at this boundary,

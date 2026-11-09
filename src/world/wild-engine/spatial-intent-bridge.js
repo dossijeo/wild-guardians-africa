@@ -90,6 +90,8 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     'nav_intent_route_prepare_motion','nav_intent_route_timing_width','nav_intent_route_sample_width',
     'nav_intent_execution_begin','nav_intent_execution_advance','nav_intent_execution_stop',
     'nav_intent_route_execution','nav_intent_route_execution_ptr',
+    'nav_intent_residency_pin_revision',
+    'spatial_release_chunk','spatial_release_chunks',
     'nav_intent_apply_changes','nav_intent_plan_tasks','nav_intent_results_ptr',
     'nav_intent_restore_assigned_tasks',
     'nav_intent_discard','nav_intent_commit','nav_intent_damaged_structures',

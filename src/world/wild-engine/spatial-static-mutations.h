@@ -19,4 +19,4 @@ bool spatialIntentStaticPreflight(const SpatialStaticMutation*,int count);
 SpatialStaticTicket spatialIntentStaticBefore(const SpatialStaticMutation*,int count);
 void spatialIntentStaticCommitted(const SpatialStaticTicket&);
 bool spatialIntentStaticRestorationAllowed();
-bool spatialIntentStaticExecutionActive();
+bool spatialIntentStaticProtectionActive();

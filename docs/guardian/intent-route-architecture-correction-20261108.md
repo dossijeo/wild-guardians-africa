@@ -611,3 +611,66 @@ fases persistentes, consecuencias y save/restore de gameplay siguen pendientes
 de integración. No se activó autonomía GPU ni se retiraron guardas; **A6 sigue
 abierto para todas las intenciones, incluidos los trabajadores**. Estas pruebas
 no sustituyen la aceptación real A–F ni declaran limpia la suite completa.
+
+## A6-04.b — Residencia y leases de datos — 2026-11-09
+
+La carga/descarga usa ahora las fronteras del mismo propietario nativo. Publicar
+datos deterministas nuevos es disponibilidad monótona, no una razón para parar
+rutas ya probadas. La publicación real del pthread también está instrumentada,
+después de sus comprobaciones de inputs/perfiles obsoletos. Una carga conocida
+solo reconoce el incremento exacto de residencia, nunca una edición pendiente
+de terreno u overlays no reconocidos.
+
+La retirada explícita de autoridad (`removeChunk[s]`) comprueba todos los chunks
+presentes y únicos del lote antes de borrar ninguno. Se retiene el terreno usado
+por cuerpos actuales, incluyendo el halo de pendientes, vértices y cajas de los
+tramos cortos del barrido. El halo conservador de 2,5 m se suma al radio y a la
+envolvente de redondeo existente. Si los datos solo se necesitan en el futuro,
+se revocan las rutas dependientes y se cierra la cascada de paradas antes de
+retirarlos; las rutas ajenas conservan su generación.
+
+Se distingue esa operación de la liberación de caché gráfica
+(`releaseChunk[s]`): **evictar una malla no puede cancelar una intención**. Esa
+liberación conserva también los datos de todo sufijo reservado, incluso durante
+la preparación anterior a activar ejecución. El propietario nativo devuelve la
+decisión; no hay comprobación de ruta/footprint en JS ni otro planificador.
+
+Se corrigió el espejo de recursos: un `-2` nativo por dependencia retenida no se
+interpreta como retirada ni se anuncia con `onRelease`. La retención guarda el
+resultado nativo y reintenta cuando cambia una revisión de pins. Esa revisión
+cambia en fronteras de tiles/halos, actividad/retirada de cuerpos y cambios de
+leases, no en cada posición ni cada fotograma. En pasos sin esas fronteras solo
+se lee metadata; no se repite el preflight físico o de rutas. Los rangos de pin
+incluyen el redondeo de los bordes vecinos para no perder un despertar de
+liberación. Un lote retenido permanece íntegro, aunque pueda retener también
+datos ajenos hasta un próximo evento de pin.
+
+El dominio físico persiste cuando termina la última ruta: un cuerpo detenido
+sigue necesitando terreno y sigue protegido frente a nuevos sólidos. Solo
+retirar/resetear los cuerpos o cambiar la sesión retira esa propiedad. Destruir
+la retención gráfica no destruye esos datos físicos; el propietario de autoridad
+mantiene su ciclo de vida independiente.
+
+**Evidencia:** 17 pruebas nuevas con WASM real, incluidas dos publicaciones en
+pthread real. Cubren cargas/retiradas lejanas, cuerpo y halo actual, atomicidad
+de lotes, revocación específica de datos futuros, leases de preparación y de
+ejecución frente a liberación gráfica, cien avances sin nuevos preflights de
+retención, fronteras de pin, cuerpo detenido, actores registrados no ejecutados,
+actividad/retirada, retorno de propiedad gráfica, dispose, muestras de borde,
+edición de terreno no reconocida, duplicados/ausencias y publicación obsoleta.
+Las pruebas anteriores del fallback global ahora usan una edición de terreno:
+la residencia conocida dejó de pertenecer a ese fallback, no se eliminó su
+protección.
+
+**311 pruebas dirigidas y 39 de streaming/geometría heredada aprobadas sin
+skips**, con standalone/pthread reconstruidos, ABI verificado y contactos/detours
+contrastados contra el WASM anterior de Git. Logs:
+`.cache/native-residency-regression.tap` y
+`.cache/native-residency-legacy-stream-geometry.tap`.
+
+**Seguimiento:** A6-04.b implementado/validado en el dominio nativo actual;
+**A6-04 sigue parcial** por props, terreno, hojas móviles y coordinación de
+efecto gráfico. La prueba continua sigue limitada a Desierto, el ejecutor de
+producto no se ha activado y `authorizedAutonomy:false` se conserva. Faltan
+también entidades/fases persistentes/consecuencias, resolución de tráfico y reloj
+causal GPU. No se reclama aceptación WebGPU real nueva ni cierre de A6.

@@ -45,6 +45,8 @@ camino crítico sin pedir autorización rutinaria entre hitos.
 
 ## Lista de trabajo persistente
 
+Seguimiento por IDs acordados: [checklist A6-01–A6-11](A6-CHECKLIST.md).
+
 - [x] Auditar propietarios y reabrir A6; commits `e213c43f9`–`8892bbe80`.
 - [x] Log nativo versionado, secuencias/tiempos y revocación exacta.
 - [x] Suscripciones espaciales nativas para cambios de sectores/portales.
@@ -95,6 +97,12 @@ camino crítico sin pedir autorización rutinaria entre hitos.
       paradas antes del commit. Las rutas ajenas continúan sin nueva generación.
       Lotes rígidos se comprueban enteros antes de tocar IDs/geometría/rutas.
       288 pruebas dirigidas y 22 de geometría heredada pasan sin skips.
+      A6-04.b: residencia implementada en el dominio nativo actual. Publicación
+      síncrona/pthread no detiene rutas ajenas; retirada explícita revoca futuros
+      dependientes, pero liberación gráfica conserva sus leases. Pins de cuerpos
+      y halos sobreviven al fin de una ruta; retención reintenta por cambios de
+      frontera nativa, sin comprobaciones geométricas periódicas. 311 pruebas
+      dirigidas y 39 de streaming/geometría heredada pasan sin skips.
 - [ ] Vertical AttackCrops completa y aceptación real A–F (primer caso integrado,
       no cierre de A6 por sí solo).
 - [ ] Generalizar a otras bestias, trabajadores, intenciones y animaciones;
@@ -116,8 +124,8 @@ camino crítico sin pedir autorización rutinaria entre hitos.
 
 Conectar el avance cinemático común a entidades, fases persistentes y consecuencias
 de gameplay, sin conservar un ejecutor JS paralelo para las clases migradas.
-Extender las fronteras dirigidas ya implementadas para overlays a terreno,
-residencia y puertas móviles, con coordinación de efecto físico/gráfico;
+Extender las fronteras dirigidas ya implementadas para overlays/residencia a
+props, terreno y puertas móviles, con coordinación de efecto físico/gráfico;
 completar cesiones/desvíos y otros perfiles/biomas. Después
 ligar reloj causal, desconexión y admisión GPU con aceptación integrada de animales
 y trabajadores. El control directo ya conectado no garantiza por sí solo todo el

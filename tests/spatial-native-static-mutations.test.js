@@ -198,11 +198,11 @@ test('a static route revocation closes its dynamic stop conflicts without stoppi
  }finally{f.session.dispose();}
 });
 
-test('a tracked overlay cannot acknowledge a pending untracked residency mutation',()=>{
+test('a tracked overlay cannot acknowledge a pending untracked terrain mutation',()=>{
  const f=fixture();
  try{
   f.worker(1,f.point(-6,0),f.point(6,0));start(f);f.advance(11);const before=f.body(1);
-  assert(f.session.core.addChunk(4,4));const p=f.point(40,40);
+  const terrain=f.point(100,100);f.session.core.setSettlement(terrain.x,terrain.z,1,1);const p=f.point(40,40);
   assert(f.session.core.addWall(p.x,p.z,.2,.2)>0);
   assert.equal(f.advance(12).status,'world-changed');assert.deepEqual(f.body(1),before);
   assert.equal(f.w.nav_intent_effective_time(),11);

@@ -215,6 +215,9 @@ extern "C" EMSCRIPTEN_KEEPALIVE int spatial_prepare_publish(int id){
     if(live&&(found->radius!=navProfiles[i]->radius||found->worker!=navProfiles[i]->worker||!job.rasters[i]))return -2;
   }
   if(std::find(loadedChunks.begin(),loadedChunks.end(),std::pair<int,int>{job.cx,job.cz})!=loadedChunks.end())return -3;
+  const auto region=residencyRegion(job.cx,job.cz);
+  const auto ticket=spatialIntentResidencyBefore(&region,1,false);
+  if(!ticket.allowed)return -2;
   const double started=emscripten_get_now();
   selectPreparedChunkData(std::move(job.data));
   // The worker's indices belong to its filtered site snapshot, not this vector.
@@ -231,6 +234,7 @@ extern "C" EMSCRIPTEN_KEEPALIVE int spatial_prepare_publish(int id){
     }
   }
   selectProfile(previous);++residencyRevision;job.published=true;
+  spatialIntentResidencyCommitted(ticket,1);
   job.publishMs=emscripten_get_now()-started;
   return int(props.size())+1;
 }

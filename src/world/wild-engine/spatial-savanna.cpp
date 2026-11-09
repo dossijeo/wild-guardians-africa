@@ -11,6 +11,7 @@
 #include <utility>
 #include <vector>
 #include "spatial-static-mutations.h"
+#include "spatial-residency-mutations.h"
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
 #else
@@ -1201,6 +1202,9 @@ void publishSelectedChunk(){
   residentSolidProps()[key]=solidProps;
   residentVisibleProps()[key]=props;
 }
+SpatialResidencyRegion residencyRegion(int cx,int cz){
+  const double x=double(cx)*side-24,z=double(cz)*side-24;return {x,z,x+side,z+side};
+}
 void populateChunk(int cx,int cz,bool visual=true){
   prepareSelectedChunk(cx,cz,visual);
   auto prepared=takePreparedChunkData();
@@ -1486,7 +1490,7 @@ SpatialStaticMutation polygonMutation(const PolygonObstacle& polygon){
   return shape;
 }
 bool barrierBatchPreflight(int count){
-  if(!spatialIntentStaticExecutionActive())return true;
+  if(!spatialIntentStaticProtectionActive())return true;
   std::vector<SpatialStaticMutation> shapes;shapes.reserve(size_t(count));
   for(int i=0;i<count;i++){
     const size_t at=size_t(i)*6;const float yaw=barrierBatch[at+4];
@@ -1619,6 +1623,22 @@ bool spatialStaticMutationBlocks(const SpatialStaticMutation& shape,double x,dou
         {shape.xy[j*2],shape.xy[j*2+1]})<r)return true;
   return false;
 }
+bool spatialExecutionResidencyPinRange(double x,double z,double radius,std::array<int64_t,4>& out){
+  // Cover a neighboring chunk's far edge too, so pin-frontier notifications
+  // cannot precede the rounded eviction predicate and strand a deferred retry.
+  const float coordinate=float(std::max({1.0,std::abs(x),std::abs(z)})+radius+
+    spatialResidencyDependencyPadding+2*side+3);
+  if(!std::isfinite(coordinate))return false;
+  const double error=std::max(1e-7,double(std::nextafter(coordinate,std::numeric_limits<float>::infinity())-coordinate)),
+    r=radius+spatialResidencyDependencyPadding+2*error+1e-8,
+    values[4]={std::floor((x-r+24)/side),std::floor((z-r+24)/side),
+      std::floor((x+r+24)/side),std::floor((z+r+24)/side)};
+  for(int i=0;i<4;i++){
+    if(!std::isfinite(values[i])||values[i]<-9223372036854775808.0||values[i]>=9223372036854775808.0)return false;
+    out[size_t(i)]=int64_t(values[i]);
+  }
+  return true;
+}
 
 // Main-thread-only staging buffer; workers never access eviction requests.
 static std::vector<int32_t> chunkRemovalInput;
@@ -1668,6 +1688,8 @@ int spatial_add_chunk(int cx,int cz){
   if(!chunkRasters)return -1;
   if(chunkRasters->count(chunkKey(cx,cz)))return 0;
   for(const auto& [x,z]:loadedChunks)if(x==cx&&z==cz)return 0;
+  const auto region=residencyRegion(cx,cz);const auto ticket=spatialIntentResidencyBefore(&region,1,false);
+  if(!ticket.allowed)return -1;
   SPATIAL_TICK(totalStarted);
   populateChunk(cx,cz);loadedChunks.emplace_back(cx,cz);++residencyRevision;
   const int previous=activeProfile;
@@ -1680,6 +1702,7 @@ int spatial_add_chunk(int cx,int cz){
     SPATIAL_TICK(borderStarted);refreshNeighborBorders(cx,cz);SPATIAL_TOCK(3,borderStarted);
   }
   selectProfile(previous);
+  spatialIntentResidencyCommitted(ticket,1);
   SPATIAL_TOCK(4,totalStarted);
   return int(props.size())+1;
 }
@@ -1688,9 +1711,11 @@ int spatial_select_chunk(int cx,int cz){
   populateChunk(cx,cz);
   return int(props.size())+1;
 }
-int spatial_remove_chunk(int cx,int cz){
+int removeChunkNative(int cx,int cz,bool releaseOnly){
   const auto it=std::find(loadedChunks.begin(),loadedChunks.end(),std::pair<int,int>{cx,cz});
   if(it==loadedChunks.end())return 0;
+  const auto region=residencyRegion(cx,cz);const auto ticket=spatialIntentResidencyBefore(&region,1,true,releaseOnly);
+  if(!ticket.allowed)return -2;
   loadedChunks.erase(it);++residencyRevision;
   residentSpatial().erase(chunkKey(cx,cz));
   residentSolidProps().erase(chunkKey(cx,cz));
@@ -1709,26 +1734,36 @@ int spatial_remove_chunk(int cx,int cz){
     if(!loadedChunks.empty())populateChunk(loadedChunks.back().first,loadedChunks.back().second);
     else {selectedVisualPending=false;props.clear();solidProps.clear();ponds.clear();heights.clear();colors.clear();water.clear();groundMask.clear();waterLevels.clear();waterTriangles.clear();}
   }
-  return 1;
+  spatialIntentResidencyCommitted(ticket,1);return 1;
 }
+int spatial_remove_chunk(int cx,int cz){return removeChunkNative(cx,cz,false);}
+EMSCRIPTEN_KEEPALIVE int spatial_release_chunk(int cx,int cz){return removeChunkNative(cx,cz,true);}
 int32_t* spatial_remove_chunks_ptr(int count){
   if(count<0||count>4096)return nullptr;
   chunkRemovalInput.resize(size_t(count)*2);
   return chunkRemovalInput.data();
 }
-int spatial_remove_chunks(int count){
+int removeChunksNative(int count,bool releaseOnly){
   if(count<0||count>4096||size_t(count)*2!=chunkRemovalInput.size())return -1;
   std::vector<std::pair<int,int>> removed;
+  std::unordered_set<uint64_t> seen;
   for(int i=0;i<count;i++){
     const int cx=chunkRemovalInput[i*2],cz=chunkRemovalInput[i*2+1];
     const auto it=std::find(loadedChunks.begin(),loadedChunks.end(),std::pair<int,int>{cx,cz});
-    if(it==loadedChunks.end())continue;
-    removed.emplace_back(cx,cz);loadedChunks.erase(it);
+    if(it==loadedChunks.end()||!seen.insert(chunkKey(cx,cz)).second)continue;
+    removed.emplace_back(cx,cz);
+  }
+  if(removed.empty())return 0;
+  std::vector<SpatialResidencyRegion> regions;regions.reserve(removed.size());
+  for(const auto& [cx,cz]:removed)regions.push_back(residencyRegion(cx,cz));
+  const auto ticket=spatialIntentResidencyBefore(regions.data(),int(regions.size()),true,releaseOnly);
+  if(!ticket.allowed)return -2;
+  for(const auto& [cx,cz]:removed){
+    loadedChunks.erase(std::find(loadedChunks.begin(),loadedChunks.end(),std::pair<int,int>{cx,cz}));
     residentSpatial().erase(chunkKey(cx,cz));
     residentSolidProps().erase(chunkKey(cx,cz));
     residentVisibleProps().erase(chunkKey(cx,cz));
   }
-  if(removed.empty())return 0;
   residencyRevision+=removed.size();
   const int previous=activeProfile;
   for(int profile=0;profile<navigationProfiles;profile++){
@@ -1762,8 +1797,11 @@ int spatial_remove_chunks(int count){
     if(!loadedChunks.empty())selectResidentAfterEviction(loadedChunks.back().first,loadedChunks.back().second);
     else {selectedVisualPending=false;props.clear();solidProps.clear();ponds.clear();heights.clear();colors.clear();water.clear();groundMask.clear();waterLevels.clear();waterTriangles.clear();}
   }
-  return int(removed.size());
+  spatialIntentResidencyCommitted(ticket,int(removed.size()));return int(removed.size());
 }
+int spatial_remove_chunks(int count){return removeChunksNative(count,false);}
+EMSCRIPTEN_KEEPALIVE int spatial_release_chunks(int count){return removeChunksNative(count,true);}
+EMSCRIPTEN_KEEPALIVE int spatial_has_chunk(int cx,int cz){return residentSpatial().count(chunkKey(cx,cz))?1:0;}
 int spatial_chunk_count(){return int(loadedChunks.size());}
 int spatial_resident_prop_count(){
   int count=0;
