@@ -62,7 +62,10 @@ ejecutor protegido de producto. A6 incluye todas las intenciones y trabajadores.
     11 pruebas de política + 12 de barrido + 8 de espera iniciales; 20 nuevas de
     objetos y 2 de coordinación; 13 nuevas de esperas múltiples. Batería actual:
     432 dirigidas + 39 y 74 heredadas
-    sin skips. No hay aún aceptación gráfica de personajes autónomos.
+    sin skips. Tres auditorías WASM/WebGPU reproducen espera/reanudación y fases/
+    presupuesto desde un único paquete durante dos bloqueos de 500 ms cada una,
+    sin nuevas posiciones JS ni trabajo geométrico nativo. Son triángulos de
+    diagnóstico; no hay aceptación gráfica de personajes autónomos.
   - [ ] **A6-04.f — Efecto físico/gráfico coordinado.** No hacer efectiva una
     mutación mientras un dibujante pueda cruzar antes de su revocación; depende
     también de A6-06.
@@ -141,6 +144,7 @@ ejecutor protegido de producto. A6 incluye todas las intenciones y trabajadores.
 - `.cache/native-gate-multiwaits-regression.tap`: 432 aprobadas sin skips.
 - `.cache/native-gate-multiwaits-legacy-stream-geometry.tap`: 39 aprobadas sin skips.
 - `.cache/native-gate-multiwaits-legacy-recipe.tap`: 74 aprobadas sin skips.
+- [Tres replays GPU de espera intermedia y reanudación](performance/native-gate-multiwaits-20261109.json).
 
 Quedan **2 de los 6 subpuntos de A6-04**: e y f (parciales).
 Los **11 puntos principales de A6** siguen abiertos; son niveles distintos,

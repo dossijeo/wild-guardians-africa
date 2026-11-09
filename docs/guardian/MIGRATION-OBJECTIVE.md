@@ -125,6 +125,10 @@ Seguimiento por IDs acordados: [checklist A6-01–A6-11](A6-CHECKLIST.md).
       cada parada. Solo utiliza relojes de apertura ya certificados, sin inventar
       solicitudes futuras. Candidato no reservable/ejecutable. No se instala
       aún un permiso de cruce ni se activa movimiento de producto.
+      Tres auditorías WASM/WebGPU reproducen posición y fases/presupuesto del
+      timetable con una espera intermedia y reanudación, un paquete por ejecución,
+      dos bloqueos de 500 ms y 15 dibujos por bloqueo. Sin personajes ni ejecución
+      física: sigue siendo diagnóstico, no aceptación de autonomía.
       A6-04.f parcial: recibo GPU directo ligado a época/secuencia/tiempo,
       separado del ACK de control y verificado en tres auditorías WASM/WebGPU
       durante bloqueo real de preparación de 500 ms (15 dibujos por ejecución).

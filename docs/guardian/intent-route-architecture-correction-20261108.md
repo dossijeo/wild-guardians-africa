@@ -1178,3 +1178,45 @@ y certificados en esa frontera. Faltan solicitud de apertura futura, leases que
 mantengan el hueco y revocación dirigida por cambio de ese reloj antes de admitir
 la trayectoria. Tampoco instala marco/hoja físicos, apoyo 3D, ejecución de producto
 o GPU de personajes. e/f y los once puntos principales siguen abiertos.
+
+### Reproducción GPU del timetable con espera intermedia (diagnóstico)
+
+`/tests/browser/native-gate-multiwaits.html` construye un intento nativo de
+trabajador con presupuesto urgente de 0,05 m y dos motores ya certificados.
+El engine genera una espera de salida (10–10,15), agotamiento de carrera dentro
+de la primera arista (10,170833...), una parada posterior tras recorrer
+0,09999999 m (10,217129...–10,6) y el resto de la trayectoria. Preparación solo
+convierte los nudos/poses que devuelve C++ a una tabla GPU inmutable; no decide
+paradas, fases, presupuestos o ruta.
+
+Un único paquete gráfico reproduce la tabla en shader. Cada ejecución bloquea
+realmente el Worker preparador **dos veces durante 500 ms**: el primer readback
+comprueba posición/fases detenidas en el hold intermedio y el segundo comprueba
+reanudación y presupuesto ya agotado. El mismo sampler WGSL sirve a los vértices
+y al readback privado de diagnóstico. El reloj se copia en la cola GPU antes de
+ese readback; no se publican posiciones periódicas desde JS ni se vuelve a entrar
+en geometría/planning nativos mientras se dibuja.
+
+El primer intento de diagnóstico conservaba el mismo grupo de recursos para
+render y cómputo. La guarda existente detectó una mutación de un paquete publicado
+y la retuvo, produciendo ceros en el readback. **No se relajó esa guarda:** el
+diagnóstico usa ahora buffers/layout/módulo privados con la misma tabla/sampler,
+solo leyendo una copia ordenada del reloj. El cómputo de inspección no forma parte
+del paquete reproducido. También se reutiliza el comportamiento del lector de
+fixtures existente: aceptar gzip binario o texto ya decodificado por HTTP.
+
+Tres ejecuciones reales NVIDIA Turing, seis bloqueos de **500,055–500,405 ms**,
+**15 dibujos durante cada bloqueo**, un paquete por ejecución, 30 replays, cero
+paquetes de cómputo repetido, errores GPU, forks uniformes u operaciones diferidas. Los
+readbacks coinciden con el evaluador nativo con error absoluto de campos menor
+de **6e-7**, dentro de la tolerancia diagnóstica de 2e-5. Se conservan exactamente
+los contadores de rangos/prefijos/sensores, barridos, clearance, planning y log.
+Evidencia íntegra descargada del navegador:
+`performance/native-gate-multiwaits-20261109.json`.
+
+**No es aceptación con personajes:** se dibuja un triángulo, no mallas animadas.
+La autoridad no avanza cuerpos ni consecuencias; el reloj de presentación del
+diagnóstico no resuelve el reloj causal de producto. El error medido tampoco es
+un certificado de clearance físico GPU. No se activan autonomía, cruce, nuevos
+permisos de recurso, ni se sustituye el movimiento protegido/histórico actual.
+e/f, A6-08/09/10 y los demás puntos principales siguen abiertos.
