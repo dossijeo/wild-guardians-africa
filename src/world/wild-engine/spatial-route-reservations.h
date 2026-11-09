@@ -172,7 +172,16 @@ void reservationBodyRemoving(IntentState& s,uint64_t id){
 void drainStoppedReservations(IntentState& s){
   if(s.drainingStops)return;
   s.drainingStops=true;
-  while(!s.stoppedReservationBodies.empty()){
+  while(!s.stoppedGateRouteActors.empty()||!s.stoppedReservationBodies.empty()){
+    if(!s.stoppedGateRouteActors.empty()){
+      const uint64_t actor=*s.stoppedGateRouteActors.begin();s.stoppedGateRouteActors.erase(actor);
+      const auto found=s.activeIntents.find(actor);
+      if(found!=s.activeIntents.end()&&found->second.state==PlanningState::RouteActive){
+        auto& intent=found->second;releaseRoute(s,intent);intent.state=PlanningState::NeedsPlan;
+        s.invalidations++;s.executionStopInvalidations++;emitIntentChange(s,intent);
+      }
+      continue;
+    }
     const uint64_t id=*s.stoppedReservationBodies.begin();s.stoppedReservationBodies.erase(id);
     SpatialBodyView stopped;if(!spatialReadBody(id,stopped))continue;
     for(uint64_t actor:reservationBodyCandidates(s,stopped)){

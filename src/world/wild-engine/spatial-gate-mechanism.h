@@ -49,7 +49,7 @@ std::vector<double> gatePartWorld(const NativeGate& g,const std::vector<double>&
 std::vector<double> gateCollisionLeaf(const NativeGate& g,double at){
   return g.mesh?gatePartWorld(g,g.physicalLeaf,true,at):gateLeaf(g,gateOpening(g,at));
 }
-int gateMechanismSegment(const NativeGate& g,const SpatialBodyView& body,double x,double z,double nx,double nz,int& mask){
+int gateMechanismSegment(const NativeGate& g,const SpatialBodyView& body,double x,double z,double nx,double nz,int& mask,int components=15){
   mask=0;if(!(body.flags&1))return 1;
   const float magnitude=float(std::max({1.0,std::abs(x),std::abs(z),std::abs(nx),std::abs(nz),std::abs(g.x),std::abs(g.z),std::abs(g.baseY)}));
   const double error=std::max(1e-5,4.0*double(std::nextafter(magnitude,std::numeric_limits<float>::infinity())-magnitude));
@@ -65,7 +65,7 @@ int gateMechanismSegment(const NativeGate& g,const SpatialBodyView& body,double 
   std::array<std::vector<double>,4> scratch;
   if(!datum)scratch=gateMeshParts(g,(terrain[0]+.025-g.baseY-error)/g.sz,(terrain[1]+.025+g.mesh->height-g.baseY+error)/g.sz);
   const auto& parts=body.kind==1?g.fullParts:datum?g.workerParts:scratch;
-  for(int i=0;i<4;i++)if(parts[i].size()>=2){const auto polygon=gatePartWorld(g,parts[i],i==3,state().effectiveTime);
+  for(int i=0;i<4;i++)if((components&(1<<i))&&parts[i].size()>=2){const auto polygon=gatePartWorld(g,parts[i],i==3,state().effectiveTime);
     if(spatialNativePolygonDistance(polygon.data(),int(polygon.size()/2),x,z,nx,nz)<=body.r+error)mask|=1<<i;}
   return mask?0:1;
 }

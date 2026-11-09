@@ -6,7 +6,8 @@ bool executionBindingCoherent(const IntentState& s,uint64_t body,uint32_t slot){
   const auto& route=s.routeSlots[slot];const auto active=s.activeIntents.find(route.actor);
   return route.active&&route.reserved&&!route.gateCandidate&&route.reservationBody==body&&route.timingMode&&
     active!=s.activeIntents.end()&&active->second.state==PlanningState::RouteActive&&
-    active->second.slot==slot&&active->second.generation==route.generation&&
+     active->second.slot==slot&&active->second.generation==route.generation&&
+     (!route.gateAdmitted||gateRouteBindingsCoherent(s,route,slot))&&
     (active->second.animal||s.workers.count(route.actor));
 }
 void projectExecutedPose(IntentState& s,RouteSlot& route,const std::array<double,18>& pose){

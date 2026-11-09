@@ -18,6 +18,7 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_register(double id,double x,double z,double ya
   const auto before=executionWorldStamp();s.gates.emplace(gate.id,std::move(gate));acknowledgeGateSupport(s,before);return 1;
 }
 EMSCRIPTEN_KEEPALIVE int nav_gate_remove(double id){auto& s=state();if(!integer(id)||!s.gates.count(uint64_t(id)))return 0;
+  if(!s.gates.at(uint64_t(id)).crossings.empty())return 0;
   if(!gateStaticProofCurrent(s))return 0;
   cancelGateMotionProposal(s);const auto before=executionWorldStamp();s.gates.erase(uint64_t(id));
   updateGateStaticDomain(s);acknowledgeGateSupport(s,before);return 1;}
@@ -27,12 +28,13 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_bind_worker(double actor,double id){
   if(found==s.workers.end()||!spatialReadBody(uint64_t(id),body)||body.kind!=0)return 0;
   const auto old=s.gateBodyActors.find(uint64_t(id));if(old!=s.gateBodyActors.end()&&old->second!=uint64_t(actor))return 0;
   auto& worker=found->second;if(worker.bodyBound&&worker.body==uint64_t(id))return 1;
+  if(worker.bodyBound&&s.reservedBodies.count(worker.body))return 0;
   cancelGateMotionProposal(s);if(worker.bodyBound)s.gateBodyActors.erase(worker.body);
   worker.bodyBound=true;worker.body=uint64_t(id);s.gateBodyActors.insert_or_assign(worker.body,worker.id);return 1;
 }
 EMSCRIPTEN_KEEPALIVE int nav_gate_reconcile(int enabled){
   auto& s=state();if(enabled!=0&&enabled!=1)return -1;
-  for(const auto& [id,gate]:s.gates)if(gate.mesh){
+  for(const auto& [id,gate]:s.gates)if(gate.mesh||!gate.crossings.empty()){
     std::map<uint64_t,NativeGate> proposed;const int result=proposeGateMotion(s,enabled,proposed);if(result<0)return result;
     cancelGateMotionProposal(s);publishGateMotion(s,proposed);return int(s.gates.size());
   }
@@ -60,7 +62,7 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_reconcile(int enabled){
 }
 EMSCRIPTEN_KEEPALIVE int nav_gate_state(double id){auto& s=state();s.gateResult.clear();if(!integer(id)||!s.gates.count(uint64_t(id)))return 0;
   const auto& gate=s.gates.at(uint64_t(id));s.gateResult={id,gateOpening(gate,s.effectiveTime),gate.target,gate.at,
-    gate.at+std::abs(gate.target-gate.from)*nativeGateMoveSeconds,gate.requested?1.0:0,gate.occupied?1.0:0,
+    gateMotionEnd(gate),gate.requested?1.0:0,gate.occupied?1.0:0,
     double(gate.status),gate.trigger,gate.defined?1.0:0,1,gate.from,s.effectiveTime,0};return 1;}
 EMSCRIPTEN_KEEPALIVE int nav_gate_polygon(double id,int kind){auto& s=state();s.gateResult.clear();if(!integer(id)||!s.gates.count(uint64_t(id))||kind<0||kind>2)return 0;
   const auto& gate=s.gates.at(uint64_t(id));s.gateResult=kind==1?gate.swing:kind==2?gate.closed:gateLeaf(gate,gateOpening(gate,s.effectiveTime));
@@ -183,3 +185,4 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_prepare_waiting_route(double session,double sl
 }
 EMSCRIPTEN_KEEPALIVE double nav_gate_wait_segments(){return double(state().gateWaitSegments);}
 #include "spatial-gate-mechanism-api.inc"
+#include "spatial-gate-crossing-api.inc"

@@ -8,7 +8,11 @@ int proposeGateMotion(IntentState& s,int enabled,std::map<uint64_t,NativeGate>& 
   proposed=s.gates;
   bool mechanisms=false;for(const auto& [id,gate]:proposed)if(gate.mesh){mechanisms=true;break;}
   if(mechanisms&&!gateStaticProofCurrent(s))return -7;
+  if(!enabled)for(const auto& [id,gate]:proposed)if(!gate.crossings.empty())return -9;
   for(auto& [id,gate]:proposed){
+    // A policy reconciliation cannot rewrite a clock already promised to an
+    // admitted route. Cancellation goes through route release/revocation first.
+    if(!gate.crossings.empty())continue;
     gate.staticSweepCertified=false;
     if(gate.status!=2&&!gate.defined)return -2;
     const double current=gateOpening(gate,s.effectiveTime);

@@ -525,6 +525,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       hold=held?Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_initial_hold_ptr(),3)):null;
     const gateCandidate=wasm.nav_intent_route_gate_candidate?
       wasm.nav_intent_route_gate_candidate(handle.session,handle.slot,handle.generation)===1:held;
+    const gateAdmitted=wasm.nav_gate_route_admitted?.(handle.session,handle.slot,handle.generation)===1;
     let holds=held?[Object.freeze({gateId:hold[0],distance:0,from:hold[1],until:hold[2]})]:[];
     if(wasm.nav_intent_route_holds_version?.()===1){
       const count=wasm.nav_intent_route_holds(handle.session,handle.slot,handle.generation);
@@ -535,8 +536,8 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     return Object.freeze({actorId:data[1],routeHandle:handle,startTime:data[2],endTime:data[3],
       speed:data[4],radius:data[5],origin:Object.freeze({x:data[6],z:data[7]}),distance:data[8],
       duration:data[3]-data[2],assignmentSequence:data[11],profile:data[12],points,distances,
-      executionScope:gateCandidate?'unadmitted-desert-gate-candidate':data[10]===2?'static-desert-worker':'static-desert-animal',authorizedAutonomy:false,
-      ...(gateCandidate?{holds:Object.freeze(holds),authorizedPassage:false}:{}),
+      executionScope:gateAdmitted?'native-desert-gate-crossing':gateCandidate?'unadmitted-desert-gate-candidate':data[10]===2?'static-desert-worker':'static-desert-animal',authorizedAutonomy:false,
+      ...(gateCandidate||gateAdmitted?{holds:Object.freeze(holds),authorizedPassage:false,nativeCrossingAdmitted:gateAdmitted}:{}),
       ...(held?{initialHold:Object.freeze({gateId:hold[0],from:hold[1],until:hold[2]})}:{}),
       ...(data[10]===2?{motionMode:'worker',runDistance:data[16],runSpeed:data[17],
         runBudget:data[18],motionFlags:data[19]}:{})});
@@ -607,7 +608,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     if(control.sentSequence!==sequence||control.sentTime!==at)return outcome('control-boundary-mismatch');
     const staged=(staticObjects?wasm.nav_gate_motion_stage_objects:wasm.nav_gate_motion_stage)(running?1:0);
     if(staged!==1)return outcome(staged===-2?'incomplete-facts':staged===-3||staged===-8?'blocked':staged===-4?'busy':
-      staged===-6?'unknown':staged===-7?'unsupported':'invalid',staticObjects?{staticWitness:readNativeGateStaticWitness(wasm)}:{});
+      staged===-6?'unknown':staged===-7?'unsupported':staged===-9?'crossing-reserved':'invalid',staticObjects?{staticWitness:readNativeGateStaticWitness(wasm)}:{});
     if(wasm.nav_gate_motion_ticket()!==1)throw Error('Native gate proposal lost its ticket');
     const [session,ticket,nativeSequence,nativeTime]=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_motion_ticket_ptr(),5));
     try{
@@ -682,6 +683,32 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     return {status,authorizedAutonomy:false,...(data[0]?{conflict:{
       kind:data[0]===2?'trajectory':data[0]===3?'bound-body-mutation':'stationary-body',
       bodyId:data[1],actorId:data[2],at:data[3],slot:data[4],generation:data[5]}}:{})};
+  };
+  const admitNativeGateRoute=(handle,bodyId,{radius,urgent=false,flight=false,slow=false,
+    carrying=false,recovering=false,incapacitated=false,runRemaining=0}={})=>{
+    const facts=[urgent,flight,slow,carrying,recovering,incapacitated];
+    if(facts.some(value=>typeof value!=='boolean')||!Number.isFinite(radius)||radius<=0||radius>2||
+       !Number.isSafeInteger(bodyId)||bodyId<0||!Number.isFinite(runRemaining)||runRemaining<0||runRemaining>1e9)
+      throw TypeError('Expected native crossing body and motion policy facts');
+    const outcome=(status,extra={})=>({status,authorizedAutonomy:false,authorizedPassage:false,...extra});
+    if(handle?.authorityEpoch!==epoch())return outcome('stale');
+    if(wasm.nav_gate_crossing_version?.()!==1)throw Error('Rebuild native gate crossing service');
+    syncBoundaryTime();const flags=facts.reduce((value,enabled,bit)=>value|(enabled?1<<bit:0),0),
+      result=wasm.nav_gate_admit_route(handle.session,handle.slot,handle.generation,bodyId,radius,flags,runRemaining);
+    if(result!==1)return outcome(result===-1?'stale':result===-3?'body-mismatch':result===0?'conflict':
+      result===-6?'unknown':result===-8?'blocked':result===-7?
+        ({1:'blocked',2:'unknown',3:'unsupported',4:'invalid'}[wasm.nav_intent_timing_rejection()]??'unsupported'):'unsupported');
+    const data=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_timing_ptr(),20)),
+      replacement=routeHandle(data[13],data[14],data[15]),motionPlan=nativeRouteTiming(replacement);
+    flushNativeIntentControl();return outcome('admitted',{routeHandle:replacement,motionPlan});
+  };
+  const nativeGateCrossings=gateId=>{
+    if(wasm.nav_gate_crossing_version?.()!==1)throw Error('Rebuild native gate crossing service');
+    const count=wasm.nav_gate_crossings(numericId(gateId));if(count<0)return null;
+    if(!Number.isSafeInteger(count)||count>4096)throw Error('Invalid native gate crossing contract');
+    const rows=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_result_ptr(),count*6));
+    return Object.freeze(Array.from({length:count},(_,i)=>Object.freeze({actorId:rows[i*6],bodyId:rows[i*6+1],
+      routeHandle:routeHandle(wasm.nav_intent_session(),rows[i*6+2],rows[i*6+3]),from:rows[i*6+4],until:rows[i*6+5]})));
   };
   const projectRouteProgress=state=>{
     let accepted=0;
@@ -1055,7 +1082,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     structureFor:id=>structuresById.get(numericId(id))??null,
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
-    intentChanges,routePoints,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,prepareNativeRouteMotion,reserveNativeRoute,
+    intentChanges,routePoints,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,
     beginNativeRouteExecution,advanceNativeRouteExecution,stopNativeRouteExecution,nativeRouteExecution,
     projectRouteProgress,processEventBoundary,requestReroute,
     registerAttackIntent,planAttackCrop,planAttackWall,replanAttackRoute,
@@ -1968,6 +1995,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     nativeGateRouteSweep:bridge.nativeGateRouteSweep,
     nativeGateMechanism:bridge.nativeGateMechanism,nativeGateMechanismPose:bridge.nativeGateMechanismPose,nativeGateMechanismSegment:bridge.nativeGateMechanismSegment,
     nativeGateMechanismWorldVertices:bridge.nativeGateMechanismWorldVertices,
+    admitNativeGateRoute:bridge.admitNativeGateRoute,nativeGateCrossings:bridge.nativeGateCrossings,
     prepareNativeGateMotionAfterGpuFence:bridge.prepareNativeGateMotionAfterGpuFence,
     reserveNativeRoute:bridge.reserveNativeRoute,
     prepareNativeRouteMotion:bridge.prepareNativeRouteMotion,

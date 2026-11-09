@@ -1,4 +1,6 @@
 constexpr double nativeGateMoveSeconds=.6;
+double gateMotionEnd(const NativeGate& gate){return gate.at+std::abs(gate.target-gate.from)*nativeGateMoveSeconds;}
+std::vector<double> gateMotionKnots(const NativeGate& gate){return {gate.at,gateMotionEnd(gate)};}
 double gateOpening(const NativeGate& gate,double now){
   const double amount=std::max(0.0,now-gate.at)/nativeGateMoveSeconds;
   const double value=gate.target>=gate.from?std::min(gate.target,gate.from+amount):std::max(gate.target,gate.from-amount);

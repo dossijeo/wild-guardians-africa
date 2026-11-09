@@ -1306,3 +1306,74 @@ destrucción/morph o física excepcional sin la transición correspondiente. La
 aceptación con personajes y la activación del runtime no están hechas ni se
 deducen de este cierre. `authorizedPassage:false` y `authorizedAutonomy:false`
 siguen vigentes. El siguiente bloqueo del tablero es e-R2.
+
+## Avance de e-R2 — Admisión atómica nativa; entregable aún abierto
+
+`nav_gate_admit_route` / `admitNativeGateRoute` admiten una ruta de trabajador
+ya elegida, sin pedir otra al planner ni corregir su geometría desde JS. En una
+frontera nativa se preparan tiempos, esperas, aperturas futuras de cada puerta y
+reservas de cruce; se prueban mundo estático, marco/apoyo del mecanismo de e-R1,
+hoja móvil y abierta durante **toda** la ruta, tráfico y objetos/otros mecanismos.
+Un fallo en una puerta posterior no publica motores, ruta o reservas parciales.
+Se reutilizan `ActiveIntent`, `RouteSlot`, `NativeGate`, cuerpo, suscripciones y
+el log nativo existentes, no un scheduler, registro o planificador adicional.
+
+El reloj escalar existente permite un arranque futuro (`at > effectiveTime`);
+se incluyen principio y fin del motor en los nudos de prueba continua. Un reloj
+prometido se mantiene inmutable al admitir otro cruce compatible. Las esperas
+están en el mismo timetable: mantienen el gasto de carrera/fases detenido, y
+conservan tarea/objetivo. La nueva generación se reserva para el cuerpo físico
+existente y entra en el ejecutor nativo común, con comprobación de coherencia
+de sus referencias de puerta. En pasos ordinarios solo se muestrea/proyecta y
+se comprueban metadatos; no hay geometría ni planificación por tick.
+
+Cada puerta guarda referencias a actor/cuerpo/slot/generación e intervalo de
+traversal conservador. Las reservas no se eliminan por vencer ese intervalo:
+perduran hasta liberar la ruta. La política no puede reescribir su motor ni
+congelarlo durante una ruta que continúa ejecutándose; deshabilitar motor en
+ese estado devuelve `crossing-reserved`. Tampoco se puede retirar su puerta o
+reasignar el cuerpo ligado sin revocar primero. Al llegar no se publica aún
+una consecuencia de gameplay: la liberación en frontera de acción es e-R3.
+
+Al cancelar antes/durante una apertura se congela su pose actual: la trayectoria
+de un cuerpo que queda detenido no hereda la prueba de su movimiento anterior.
+Las demás rutas que dependían de esa apertura se revocan mediante la cola
+iterativa de paradas existente, que también propaga conflictos con cuerpos ya
+inmóviles. Si el paso ya está completamente abierto se mantiene así. Un evento
+posterior de motor solo puede cerrar si las reservas se han liberado y la
+ocupación/trayectorias lo permiten; no se añade un sondeo periódico de rutas.
+
+**No está terminado e-R2:** esta revocación todavía libera la polilínea y no
+conserva/reanuda el sufijo con offsets de fases y presupuesto. Tampoco se acepta
+una inversión diferida de un motor que aún está cerrando: necesita representar
+el tramo anterior y el nuevo sin sustituirlo silenciosamente por una pose fija.
+Se rechaza sin cambiar nada; puertas estacionarias cerradas/parciales y relojes
+de apertura ya certificados sí entran por la nueva admisión. No se programa un
+cierre automático al vencer el intervalo ni se activa esta API en gameplay.
+
+Una prueba con tareas reales detectó conectores de la rejilla anterior que
+contactan el marco de zarzas. Se conserva el fallo físico: esa ruta no se
+admite, no se ensancha el paso ni se retocan las mallas. Las pruebas cubren tanto
+el rechazo con contacto nativo de marco como tareas directas/riego/reparación
+admisibles con un corredor autorado alineado con su conector. La integración
+del planner con esos corredores sigue siendo parte del trabajo de producto.
+
+Pruebas reproducibles: `tests/spatial-native-gate-crossings.test.js`, standalone
+y ABI pthread. Incluyen tres materiales, múltiples puertas, promesa compartida,
+cancelación con dependientes, contacto después de acabar el motor, rechazo
+atómico, fases/presupuesto/carga/huida, tareas, cambios de soporte rechazados,
+liberación y cierre posterior, épocas/generaciones y contadores sin trabajo
+geométrico/planning en 300 avances ordinarios. No son una aceptación gráfica
+con personajes ni acreditan coordinación causal/GPU. Los candidatos anteriores
+siguen explícitamente sin admitir; `nativeCrossingAdmitted:true` distingue esta
+API de una autorización de producto/GPU, que permanece desactivada.
+
+**IDs cerrados en este avance: ninguno.** Tablero sin renumerar: e-R1 cerrado,
+e-R2–R4/f-R1–R4 pendientes (**1 cerrado, 7 pendientes**).
+
+Regresión de este avance: **462 dirigidas + 39 de streaming/geometría + 74 de
+receta/estado**, aprobadas sin skips, con standalone/pthread reconstruidos.
+Logs `.cache/native-gate-crossings-regression.tap`,
+`.cache/native-gate-crossings-legacy-stream-geometry.tap` y
+`.cache/native-gate-crossings-legacy-recipe.tap`. No se declara limpia la suite
+general; se mantienen documentados sus fallos históricos.

@@ -1,4 +1,3 @@
-double gateMotionEnd(const NativeGate& gate){return gate.at+std::abs(gate.target-gate.from)*nativeGateMoveSeconds;}
 double gateStaticError(const NativeGate& gate,double scale){
   return 1e-7+256*std::numeric_limits<double>::epsilon()*std::max(1.0,scale)+
     2*gateLeafSpeedBound(gate)*nativeGateMoveSeconds*1e-9;
@@ -8,7 +7,7 @@ GateSweepAnswer gateSweepStaticPair(IntentState& s,const NativeGate& gate,
   s.gateStaticPairs++;
   const double scale=std::max({std::abs(gate.x),std::abs(gate.z),std::abs(shape.minX),
     std::abs(shape.minZ),std::abs(shape.maxX),std::abs(shape.maxZ)}),error=gateStaticError(gate,scale);
-  return gateSweepIntervals(std::vector<double>{gateMotionEnd(gate)},begin,end,
+  return gateSweepIntervals(gateMotionKnots(gate),begin,end,
     gate.from==gate.target?0:gateLeafSpeedBound(gate),[&](double at){
       const auto leaf=gateCollisionLeaf(gate,at);s.gateStaticEvaluations++;
       return spatialGateShapeDistance(leaf.data(),int(leaf.size()/2),shape)-error;
@@ -19,14 +18,15 @@ GateSweepAnswer gateSweepLeafPair(IntentState& s,const NativeGate& a,const Nativ
   const double scale=std::max({std::abs(a.x),std::abs(a.z),std::abs(b.x),std::abs(b.z)}),
     error=gateStaticError(a,scale)+gateStaticError(b,scale),
     speed=(a.from==a.target?0:gateLeafSpeedBound(a))+(b.from==b.target?0:gateLeafSpeedBound(b));
-  return gateSweepIntervals(std::vector<double>{gateMotionEnd(a),gateMotionEnd(b)},begin,end,speed,[&](double at){
+  auto times=gateMotionKnots(a);const auto other=gateMotionKnots(b);times.insert(times.end(),other.begin(),other.end());
+  return gateSweepIntervals(std::move(times),begin,end,speed,[&](double at){
     const auto p=gateCollisionLeaf(a,at),q=gateCollisionLeaf(b,at);s.gateStaticEvaluations++;
     return spatialNativePolygonPairDistance(p.data(),int(p.size()/2),q.data(),int(q.size()/2))-error;
   });
 }
 GateSweepAnswer gateSweepFixedPolygon(IntentState& s,const NativeGate& gate,const std::vector<double>& polygon,double begin,double end){
   s.gateStaticPairs++;const double error=gateStaticError(gate,std::max(std::abs(gate.x),std::abs(gate.z)));
-  return gateSweepIntervals(std::vector<double>{gateMotionEnd(gate)},begin,end,gate.from==gate.target?0:gateLeafSpeedBound(gate),[&](double at){
+  return gateSweepIntervals(gateMotionKnots(gate),begin,end,gate.from==gate.target?0:gateLeafSpeedBound(gate),[&](double at){
     const auto leaf=gateCollisionLeaf(gate,at);s.gateStaticEvaluations++;
     return spatialNativePolygonPairDistance(leaf.data(),int(leaf.size()/2),polygon.data(),int(polygon.size()/2))-error;
   });

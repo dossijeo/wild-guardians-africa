@@ -152,6 +152,8 @@ struct RouteSlot {
   std::vector<RouteHold> holds;
   double originX=0,originZ=0,startTime=0,speed=0,radius=0;
   double departureTime=0;uint64_t waitGate=0;bool gateCandidate=false;
+  bool gateAdmitted=false;
+  std::vector<uint64_t> gateReservations;
   uint64_t actor=0;
   int timingMode=0,profile=0;
   int motionFlags=0;double runDistance=0,runSpeed=0,runBudget=0;
@@ -242,6 +244,7 @@ struct IntentState {
   std::array<uint64_t,3> executionWorldStamp{};
   std::array<double,18> executionResult{};
   std::set<uint64_t> stoppedReservationBodies,removingBodies;
+  std::set<uint64_t> stoppedGateRouteActors;
   uint64_t executionAdvances=0,executionEvaluations=0,executionBodyUpdates=0,executionStopInvalidations=0;
   uint64_t staticMutationCandidates=0,staticMutationSegments=0,staticMutationBodyChecks=0,
     staticMutationRevocations=0,staticMutationRejected=0,staticMutationCommits=0;
@@ -434,12 +437,14 @@ void emitIntentChange(IntentState& s,ActiveIntent& intent){
   intent.revokedSlot=0;intent.revokedGeneration=0;
   drainStoppedReservations(s);
 }
+void releaseGateCrossings(IntentState&,const RouteSlot&);
 void releaseRoute(IntentState& s,ActiveIntent& intent){
   clearRouteDependencies(s,intent);
   if(intent.slot<s.routeSlots.size()){
     RouteSlot& route=s.routeSlots[intent.slot];
     if(route.active&&route.generation==intent.generation){
       intent.revokedSlot=intent.slot;intent.revokedGeneration=intent.generation;
+      releaseGateCrossings(s,route);
       if(route.reserved){
         s.residencyPinRevision++;
         if(s.executionEnabled&&!s.resettingBodies&&!s.removingBodies.count(route.reservationBody))
@@ -448,6 +453,7 @@ void releaseRoute(IntentState& s,ActiveIntent& intent){
       }
       route.active=false;route.points.clear();route.distances.clear();route.timingMode=0;
       route.holds.clear();route.waitGate=0;route.gateCandidate=false;route.departureTime=0;
+      route.gateReservations.clear();route.gateAdmitted=false;
       route.generation++;
     }
   }
@@ -475,6 +481,7 @@ void releaseIntent(IntentState& s,uint64_t actor,PlanningState next){
 }
 #include "spatial-route-reservations.h"
 bool gateStaticProofCurrent(const IntentState&);
+bool gateRouteBindingsCoherent(const IntentState&,const RouteSlot&,uint32_t);
 #include "spatial-route-execution.h"
 #include "spatial-gate-controller.h"
 #include "spatial-gate-mechanism.h"
@@ -487,6 +494,7 @@ bool gateStaticProofCurrent(const IntentState&);
 #include "spatial-prop-mutation-state.h"
 #include "spatial-terrain-mutation-state.h"
 #include "spatial-gate-transactions.h"
+#include "spatial-gate-crossings.h"
 void invalidateDependents(IntentState& s,const Change& change){
   if(change.kind==1){
     if(!change.op){
@@ -1960,7 +1968,9 @@ bool activeRouteClear(IntentState& s,const ActiveIntent& intent){
     // The local predicate accepts only short connector segments. World routes
     // may contain validated shortcuts spanning several cells.
     if(route.timingMode){
-      if(spatial_execution_segment_clear(x,z,nextX,nextZ,route.radius)!=1)return false;
+      const int clear=route.gateAdmitted?spatialGateCandidateSegmentClear(x,z,nextX,nextZ,route.radius):
+        spatial_execution_segment_clear(x,z,nextX,nextZ,route.radius);
+      if(clear!=1)return false;
     }else if(!spatial_world_segment_clear(x,z,nextX,nextZ))return false;
     x=nextX;z=nextZ;
   }

@@ -44,7 +44,7 @@ export function createSpatialGateIntents(session,state){
    if(typeof enabled!=='boolean'||typeof staticObjects!=='boolean')throw TypeError('Expected gate boundary flags');
    if(staticObjects&&w.nav_gate_static_object_version?.()!==1)throw Error('Rebuild native gate static-object service');
    const result=(staticObjects?w.nav_gate_prepare_object_motion:w.nav_gate_prepare_motion)(enabled?1:0);
-   return {status:result>=0?'prepared':result===-2?'incomplete-facts':result===-3||result===-8?'blocked':result===-6?'unknown':result===-7?'unsupported':'invalid',
+    return {status:result>=0?'prepared':result===-2?'incomplete-facts':result===-3||result===-8?'blocked':result===-6?'unknown':result===-7?'unsupported':result===-9?'crossing-reserved':'invalid',
     witness:sweepResult(),...(staticObjects?{staticWitness:readNativeGateStaticWitness(w)}:{}),authorizedPassage:false};},
   bodySweepCertified:id=>w.nav_gate_body_sweep_certified(numeric(id))===1,
   installMechanism:(id,material)=>{
@@ -59,6 +59,6 @@ export function createSpatialGateIntents(session,state){
   bindWorker:(id,body)=>w.nav_gate_bind_worker(numeric(id),body)===1,
   reconcile:({enabled=!state.pauses?.length&&!state.result&&!state.initialPreparation}={})=>{
    boundary();if(typeof enabled!=='boolean')throw TypeError('Expected a gate clock boundary flag');
-   const result=w.nav_gate_reconcile(enabled?1:0);return {status:result>=0?'updated':result===-2?'incomplete-facts':'invalid',authorizedPassage:false};},
+    const result=w.nav_gate_reconcile(enabled?1:0);return {status:result>=0?'updated':result===-2?'incomplete-facts':result===-9?'crossing-reserved':'invalid',authorizedPassage:false};},
   waiting:id=>{const result=w.nav_gate_worker_waiting(numeric(id));return result<0?null:result===1;}};
 }

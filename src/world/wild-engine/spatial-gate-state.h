@@ -1,3 +1,8 @@
+// References into the existing route authority, not another trajectory store.
+struct GateCrossingReservation {
+  uint64_t body=0;uint32_t slot=0,generation=0;
+  double from=0,until=0;
+};
 struct NativeGate {
   uint64_t id=0;
   double x=0,z=0,yaw=0,sx=1,sz=1,hx=0,hz=0,trigger=0;
@@ -13,6 +18,7 @@ struct NativeGate {
   double baseY=0,supportMin=0,supportMax=0,physicalRadius=0;
   std::vector<double> physicalLeaf;
   std::array<std::vector<double>,4> workerParts,fullParts;
+  std::map<uint64_t,GateCrossingReservation> crossings;
 };
 // A transient transaction proposal, not another live gate/planning model.
 struct NativeGateMotionProposal {
