@@ -107,3 +107,43 @@ test('retirement and missing GPU receipts reject pending fences rather than sile
   assert.equal(g.publication.status().closed,true);assert.equal(g.errors.length,1);
  }finally{g.dispose();}
 });
+
+test('native causal clock publication retains its anchor for watermarks and reanchors policy changes outside preparation',async()=>{
+ const {port1,port2}=new MessageChannel();let callbacks,now=1000,draw;
+ const record={protocolVersion:2,clockVersion:1,authorityEpoch:'native-owner/1',nativeSession:1,clockSequence:4,intentSequence:9,
+  committedThrough:10,paused:false,rate:1,reanchor:false};
+ port2.onmessage=({data})=>{
+  if(data.type==='IntentBaseline'){
+   draw=createNativeRouteControl({authorityEpoch:data.authorityEpoch,initialSequence:data.sequence,initialTime:data.effectiveTime,routes:data.routes});
+   draw.acceptClock(data.clock,{baseline:true});port2.postMessage({type:'intent-control-applied',session:'clock',authorityEpoch:data.authorityEpoch,
+    sequence:data.sequence,accepted:true,clockSequence:data.clock.clockSequence,clockIntentSequence:data.clock.intentSequence,clockCommittedThrough:data.clock.committedThrough});
+  }else if(data.type==='IntentClock'){
+   draw.acceptClock(data);port2.postMessage({type:'intent-clock-applied',session:'clock',authorityEpoch:data.authorityEpoch,clockSequence:data.clockSequence,
+    intentSequence:data.intentSequence,committedThrough:data.committedThrough,accepted:true});
+  }else if(data.type==='IntentControlClosed')draw.dispose();
+  else if(data.type==='IntentControlFence')port2.postMessage({...data,type:'intent-control-fenced',accepted:true});
+ };
+ const source=createNativeIntentControlPublication({port:port1,session:'clock',absoluteNow:()=>now,
+  observe:observer=>{callbacks=observer;observer.onBaseline({type:'IntentBaseline',protocolVersion:2,authorityEpoch:record.authorityEpoch,
+   sequence:9,effectiveTime:10,routes:[],clock:record});return ()=>{};}});
+ try{
+  await source.ready;assert.equal(source.status().appliedClockSequence,4);
+  const received=new Promise(resolve=>port2.once('message',resolve));callbacks.onClock({...record,clockSequence:5,committedThrough:11});
+  const watermark=await received;assert.equal(watermark.anchorLogicalTime,10);assert.equal(watermark.anchorAbsoluteMs,1000);
+  now=1500;const policyMessage=new Promise(resolve=>port2.once('message',resolve));
+  callbacks.onClock({...record,clockSequence:6,committedThrough:11,rate:2,reanchor:true});
+  const policy=await policyMessage;assert.equal(policy.anchorLogicalTime,11);assert.equal(policy.anchorAbsoluteMs,1500);
+  assert.equal((await source.fenceGpu()).clockSequence,6);assert.equal(draw.status().clock.rate,2);
+ }finally{source.dispose();port2.close();}
+});
+
+test('a forged causal clock bootstrap acknowledgement cannot make a draw connection ready',async()=>{
+ const {port1,port2}=new MessageChannel(),record={protocolVersion:2,clockVersion:1,authorityEpoch:'native-owner/1',nativeSession:1,clockSequence:1,
+  intentSequence:9,committedThrough:10,paused:false,rate:1,reanchor:true};
+ port2.onmessage=({data})=>{if(data.type==='IntentBaseline')port2.postMessage({type:'intent-control-applied',session:'clock',authorityEpoch:record.authorityEpoch,
+  sequence:9,accepted:true,clockSequence:1,clockIntentSequence:9,clockCommittedThrough:11});};
+ const source=createNativeIntentControlPublication({port:port1,session:'clock',observe:observer=>{
+  observer.onBaseline({type:'IntentBaseline',protocolVersion:2,authorityEpoch:record.authorityEpoch,sequence:9,effectiveTime:10,routes:[],clock:record});return ()=>{};}});
+ try{await assert.rejects(source.ready,/clock acknowledgement/);assert.equal(source.status().closed,true);}
+ finally{source.dispose();port2.close();}
+});

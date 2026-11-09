@@ -38,5 +38,5 @@ bool gateMotionProposalCurrent(const IntentState& s){
   return p.pending&&p.session==s.session&&p.at==s.effectiveTime&&
     p.bodies==spatialBodiesMutationRevision()&&p.bodies!=std::numeric_limits<uint64_t>::max()&&
     p.entities==s.entityRevision&&p.factsSequence==s.sequence&&p.intents==s.intentSequence&&
-    p.reservations==s.residencyPinRevision&&p.world==executionWorldStamp();
+    p.reservations==s.residencyPinRevision&&p.world==executionWorldStamp()&&p.clockSequence==s.clockSequence;
 }

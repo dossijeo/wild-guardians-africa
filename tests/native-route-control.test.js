@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createNativeRouteControl} from '../src/rendering/native-route-control.js';
+import {evaluateRemoteClock} from '../src/rendering/remote-presentation-clock.js';
 
 const handle=(generation=1,authorityEpoch='authority-a')=>({authorityEpoch,
   session:1,slot:0,generation});
@@ -86,4 +87,29 @@ test('bootstrap accepts current native permissions without replaying retired ass
     initialSequence:9,initialTime:12,routes:[route,route]}),/baseline/);
   assert.throws(()=>createNativeRouteControl({authorityEpoch:'authority-a',
     initialSequence:2,initialTime:12,routes:[route]}),/baseline/);
+});
+
+const clock=(clockSequence=1,committedThrough=10,extra={})=>({protocolVersion:2,clockVersion:1,authorityEpoch:'authority-a',
+ nativeSession:1,clockSequence,intentSequence:1,committedThrough,rate:1,paused:false,reanchor:true,anchorLogicalTime:10,anchorAbsoluteMs:1000,...extra});
+test('causal control bounds time independently of prepared clocks and accepts pause/rate at non-rewinding native boundaries',()=>{
+ const c=createNativeRouteControl({authorityEpoch:'authority-a'});c.accept(assigned());c.acceptClock(clock());
+ assert.equal(evaluateRemoteClock(c.clockLease(0),9000),10);
+ c.acceptClock(clock(2,11,{reanchor:false}));assert.equal(evaluateRemoteClock(c.clockLease(0),1300),10.3);
+ assert.equal(evaluateRemoteClock(c.clockLease(0),9000),11);
+ c.acceptClock(clock(3,11,{paused:true,anchorLogicalTime:11,anchorAbsoluteMs:1400}));
+ assert.equal(evaluateRemoteClock(c.clockLease(0),9000),11);
+ c.acceptClock(clock(4,11,{rate:2,anchorLogicalTime:11,anchorAbsoluteMs:1500}));
+ c.acceptClock(clock(5,12,{rate:2,reanchor:false,anchorLogicalTime:11,anchorAbsoluteMs:1500}));
+ assert.equal(evaluateRemoteClock(c.clockLease(0),1750),11.5);assert.equal(evaluateRemoteClock(c.clockLease(0),9000),12);
+ c.accept(revoked(2,7,handle(),12));assert.equal(c.status().active,0);
+});
+
+test('causal clock gaps, old epochs, rewinds and forged reanchors are rejected atomically',()=>{
+ for(const extra of [{clockSequence:3},{authorityEpoch:'other'},{nativeSession:2},{intentSequence:2},{committedThrough:9},
+  {reanchor:true},{anchorLogicalTime:9},{anchorAbsoluteMs:500},{paused:true,reanchor:false}]){
+  const c=createNativeRouteControl({authorityEpoch:'authority-a'});c.accept(assigned());c.acceptClock(clock());const before=c.status();
+  assert.throws(()=>c.acceptClock(clock(2,11,{reanchor:false,...extra})),/clock boundary/);assert.deepEqual(c.status(),before);
+ }
+ const c=createNativeRouteControl({authorityEpoch:'authority-a'});c.accept(assigned());c.admit(descriptor()).lastDrawTime=12;
+ assert.throws(()=>c.acceptClock(clock()),/after presented time/);
 });

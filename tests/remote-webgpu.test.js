@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { createRemoteWebGpuClient } from '../src/rendering/remote-webgpu-client.js';
 import { createRemoteWebGpuHost } from '../src/rendering/remote-webgpu-host.js';
 import { createNativeIntentControlPublication } from '../src/simulation/native-intent-control-publication.js';
+import {createNativeRouteExecutionFixture} from './helpers/native-route-execution.js';
 
 function pair() {
   const a = {}, b = {};
@@ -129,6 +130,41 @@ test('native revocation bypasses a resource FIFO blocked on a pending pipeline',
   assert.equal(f.host.inspect().replayFrames,1);
   release({});await flush();await f.host.idle();
   assert.deepEqual(f.errors,[]);
+});
+
+test('real native causal watermarks, pause, speed and revocation control one prepared GPU packet outside a blocked resource FIFO',async()=>{
+ const native=createNativeRouteExecutionFixture(),[sourcePort,drawPort]=pair();let now=0,source,release;
+ const f=await fixture({}, {absoluteNow:()=>now,intentControl:{port:drawPort,session:'causal-test'}});
+ try{
+  const handle=native.worker(1,native.point(-6,0),native.point(6,0)),plan=native.bridge.nativeRouteTiming(handle);
+  assert.equal(native.bridge.beginNativeRouteExecution().status,'started');native.bridge.commitNativeCausalClock();
+  source=createNativeIntentControlPublication({port:sourcePort,session:'causal-test',observe:native.bridge.observeNativeIntentControl,absoluteNow:()=>now});
+  await source.ready;f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'absolute',epoch:0,
+   nativeRoute:{actorId:plan.actorId,routeHandle:handle,assignmentSequence:plan.assignmentSequence}});
+  const prepared={version:1,epoch:0,elapsed:10,safeUntil:100,anchorAbsoluteMs:0,paused:false,
+   segments:[{start:10,end:100,rate:1,realDuration:90}]},receipt=f.frame(0,{clock:prepared});
+  await flush();await f.host.idle();f.host.present();await receipt;
+  const value=()=>new Float32Array(f.gpu.buffers[0].data.buffer)[0];assert.equal(value(),10);
+  now=1000;f.host.present();assert.equal(value(),10,'preparation cannot invent time beyond the executed native horizon');
+  assert.equal(native.advance(10.25).status,'advanced');native.bridge.commitNativeCausalClock();await flush();
+  f.host.present();assert.equal(value(),10.25);
+  f.gpu.device.createRenderPipelineAsync=()=>new Promise(resolve=>{release=resolve;});
+  await f.host.handle({type:'create',method:'createRenderPipelineAsync',id:'causal-blocked',descriptor:{}});
+  f.client.device.queue.submit([{__remoteCommands:[{method:'beginRenderPass',args:[{colorAttachments:[]}],
+   commands:[{method:'setPipeline',args:[{__remoteGpuId:'causal-blocked'}]}]}]}]);await flush();assert(f.host.inspect().queuedMessages>0);
+  native.bridge.commitNativeCausalClock({paused:true});await flush();const standing=native.body(1);
+  now=5000;f.host.present();assert.equal(value(),10.25);assert.equal(native.advance(10.5).status,'paused');assert.deepEqual(native.body(1),standing);
+  native.bridge.commitNativeCausalClock({rate:2});assert.equal(native.advance(10.75).status,'advanced');
+  native.bridge.commitNativeCausalClock({rate:2});await flush();
+  now=5125;f.host.present();assert.equal(value(),10.5,'speed changes reach drawing without another prepared packet');
+  now=9000;f.host.present();assert.equal(value(),10.75,'silence exhausts the finite native watermark');
+  assert.equal(native.w.nav_intent_cancel_home(900011),1);native.bridge.commitNativeCausalClock({paused:true,rate:2});await flush();
+  now=12000;f.host.present();assert.equal(value(),10.75);assert.equal(f.host.inspect().failed,false);
+  assert.equal(f.host.intentControlStatus().active,0);assert.equal(f.host.inspect().packets,1);
+  assert.equal((await source.fenceGpu()).clockSequence,native.bridge.nativeCausalClock().clockSequence);
+  const times=f.host.inspect().samples.map(sample=>sample.clockElapsed);for(let i=1;i<times.length;i++)assert(times[i]>=times[i-1]);
+  release({});release=null;await flush();await f.host.idle();assert.deepEqual(f.errors,[]);
+ }finally{release?.({});source?.dispose();f.host.dispose();native.session.dispose();}
 });
 
 test('native permission is checked after resource preparation, preventing late resurrection',async()=>{

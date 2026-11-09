@@ -29,6 +29,7 @@ struct NativeGateMotionProposal {
   bool pending=false;uint32_t session=0;uint64_t ticket=0;
   double at=0;
   uint64_t bodies=0,entities=0,factsSequence=0,intents=0,reservations=0;
+  uint64_t clockSequence=0;
   std::array<uint64_t,3> world{};
   std::map<uint64_t,NativeGate> gates;
 };

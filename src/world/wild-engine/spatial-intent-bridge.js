@@ -456,14 +456,22 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
         type:types[data[at+13]],protocolVersion:2,authorityEpoch:epoch()};
     });
   };
+  const nativeCausalClock=()=>{
+    if(wasm.nav_intent_clock_snapshot?.()!==1)return null;
+    const a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_clock_ptr(),8));
+    return Object.freeze({protocolVersion:2,clockVersion:1,authorityEpoch:epoch(),nativeSession:a[1],
+      clockSequence:a[2],intentSequence:a[3],committedThrough:a[4],rate:a[5],paused:a[6]===1,reanchor:a[7]===1});
+  };
   const flushNativeIntentControl=()=>{
     for(const observer of [...controlObservers]){
       try{
         if(observer.authorityEpoch!==epoch())throw Error('Native intent authority epoch changed');
         const changes=readIntentChanges(observer.sequence);
-        if(!changes.length)continue;
-        observer.sequence=changes.at(-1).sequence;
-        observer.onChanges(changes);
+        if(changes.length){observer.sequence=changes.at(-1).sequence;observer.onChanges(changes);}
+        const clock=nativeCausalClock();
+        if(clock&&observer.onClock&&clock.clockSequence>observer.clockSequence){
+          observer.clockSequence=clock.clockSequence;observer.onClock(clock);
+        }
       }catch(error){
         controlObservers.delete(observer);
         try{observer.onClosed(error);}catch{}
@@ -485,7 +493,10 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     const count=wasm.nav_intent_control_snapshot();
     if(count<0)throw Error('Native intent control baseline is incoherent');
     const data=new Float64Array(wasm.memory.buffer,wasm.nav_intent_control_snapshot_ptr(),count*6);
-    return {type:'IntentBaseline',protocolVersion:2,authorityEpoch:epoch(),
+    const clock=nativeCausalClock();
+    if(clock&&(clock.intentSequence!==wasm.nav_intent_transition_sequence()||clock.committedThrough!==wasm.nav_intent_effective_time()))
+      throw Error('Commit the native causal clock before attaching a new draw consumer');
+    return {type:'IntentBaseline',protocolVersion:2,authorityEpoch:epoch(),...(clock?{clock}:{}),
       sequence:wasm.nav_intent_transition_sequence(),effectiveTime:wasm.nav_intent_effective_time(),
       routes:Array.from({length:count},(_,index)=>{
         const at=index*6;
@@ -493,11 +504,11 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
           assignmentSequence:data[at+4],startTime:data[at+5]};
       })};
   };
-  const observeNativeIntentControl=({onBaseline,onChanges,onClosed=()=>{}}={})=>{
-    if(typeof onBaseline!=='function'||typeof onChanges!=='function'||typeof onClosed!=='function')
+  const observeNativeIntentControl=({onBaseline,onChanges,onClosed=()=>{},onClock=null}={})=>{
+    if(typeof onBaseline!=='function'||typeof onChanges!=='function'||typeof onClosed!=='function'||onClock!==null&&typeof onClock!=='function')
       throw TypeError('Expected native intent control observers');
     const baseline=nativeIntentControlBaseline(),observer={
-      authorityEpoch:baseline.authorityEpoch,sequence:baseline.sequence,onChanges,onClosed};
+      authorityEpoch:baseline.authorityEpoch,sequence:baseline.sequence,clockSequence:baseline.clock?.clockSequence??0,onChanges,onClosed,onClock};
     controlObservers.add(observer);
     try{onBaseline(baseline);}catch(error){controlObservers.delete(observer);throw error;}
     return ()=>controlObservers.delete(observer);
@@ -644,7 +655,14 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     const result=wasm.nav_intent_execution_advance(at);
     return result>=0?{status:'advanced',routes:result,authorizedAutonomy:false}:
       {status:result===-4?'world-changed':result===-1?'invalid-time':
-        result===-2?'inactive':'incoherent',authorizedAutonomy:false};
+       result===-2?'inactive':result===-5?'paused':'incoherent',authorizedAutonomy:false};
+  };
+  const commitNativeCausalClock=({rate=1,paused=false}={})=>{
+    if(typeof paused!=='boolean'||!Number.isFinite(rate)||rate<=0||rate>1000000)throw TypeError('Invalid native clock policy');
+    syncBoundaryTime();if(wasm.nav_intent_clock_version?.()!==1)throw Error('Rebuild native causal clock service');
+    const result=wasm.nav_intent_clock_commit(rate,paused?1:0);
+    if(result<0)return {status:result===-2?'unexecuted-cohort':'invalid',authorizedAutonomy:false};
+    flushNativeIntentControl();return {status:result===1?'committed':'unchanged',clock:nativeCausalClock(),authorizedAutonomy:false};
   };
   const stopNativeRouteExecution=()=>{
     syncBoundaryTime();const count=wasm.nav_intent_execution_stop();
@@ -1112,7 +1130,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     return {restoredHomeRouteIds,invalidSavedHomeRoutes};
   };
   const api={get authorityEpoch(){return epoch();},resetFromState,applyEvents,applyCommittedEvents,planTasks,
-    nativeIntentControlBaseline,observeNativeIntentControl,flushNativeIntentControl,
+    nativeIntentControlBaseline,observeNativeIntentControl,flushNativeIntentControl,nativeCausalClock,commitNativeCausalClock,
     restoreAssignedTasks,restoreAttackIntents,restoreRetreatIntents,
     restoreHomeIntents,
     proposalRoute,
@@ -2027,6 +2045,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     },
     get authorityEpoch(){return bridge.authorityEpoch;},
     nativeIntentControlBaseline:bridge.nativeIntentControlBaseline,
+    nativeCausalClock:bridge.nativeCausalClock,commitNativeCausalClock:bridge.commitNativeCausalClock,
     observeNativeIntentControl:bridge.observeNativeIntentControl,
     flushNativeIntentControl:bridge.flushNativeIntentControl,
     intentChanges:bridge.intentChanges,routePoints:bridge.routePoints,

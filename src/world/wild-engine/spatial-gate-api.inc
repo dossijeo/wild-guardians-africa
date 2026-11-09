@@ -110,7 +110,7 @@ int stageGateMotion(int enabled,bool staticObjects){
   auto& p=s.gateMotionProposal;p.pending=true;p.session=s.session;p.ticket=++s.nextGateMotionTicket;
   p.at=s.effectiveTime;p.bodies=spatialBodiesMutationRevision();p.entities=s.entityRevision;
   p.factsSequence=s.sequence;p.intents=s.intentSequence;p.reservations=s.residencyPinRevision;
-  p.world=executionWorldStamp();p.gates.swap(proposed);return 1;
+  p.world=executionWorldStamp();p.clockSequence=s.clockSequence;p.gates.swap(proposed);return 1;
 }
 EMSCRIPTEN_KEEPALIVE int nav_gate_motion_stage(int enabled){return stageGateMotion(enabled,false);}
 EMSCRIPTEN_KEEPALIVE int nav_gate_motion_stage_objects(int enabled){return stageGateMotion(enabled,true);}

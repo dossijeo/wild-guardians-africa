@@ -17,6 +17,9 @@ test('pthread runtime exposes the same native transition ABI as standalone',asyn
   const world=await createThreadedSpatialWorld(factory);
   try{
     assert.equal(world.core.wasm.nav_intent_protocol_version(),2);
+    assert.equal(world.core.wasm.nav_intent_clock_version(),1);
+    for(const name of ['nav_intent_clock_commit','nav_intent_clock_snapshot','nav_intent_clock_ptr'])
+      assert.equal(typeof world.core.wasm[name],'function',name);
     assert.equal(world.core.wasm.nav_intent_change_width(),15);
     assert.equal(world.core.wasm.nav_intent_set_time(1),1);
     assert.equal(world.core.wasm.nav_intent_set_time(0),0);

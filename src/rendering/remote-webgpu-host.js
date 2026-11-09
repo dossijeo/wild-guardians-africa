@@ -435,8 +435,17 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         }
       }
       const previous = active;
+      if(next&&routeControl?.status().clock&&next.admittedClockBindings?.some(binding=>binding.routeRecord)){
+        const permit=routeControl.clockLease(next.metadata.clock.epoch),at=evaluateRemoteClock(permit,startedAt);
+        if(next.admittedClockBindings.some(binding=>binding.routeRecord&&binding.routeRecord.startTime>at))next=null;
+      }
       const candidate = next || active;
-      const timeTicket = frameTime.propose({ generation: candidate.sequence, lease: candidate.metadata?.clock ?? null, absoluteNow: startedAt });
+      if(!candidate)return;
+      const nativeTimed=candidate.admittedClockBindings?.some(binding=>binding.routeRecord),
+        causalLease=nativeTimed?routeControl?.clockLease(candidate.metadata?.clock?.epoch):null,
+        effectiveLease=causalLease??candidate.metadata?.clock??null;
+      if(causalLease&&candidate.hasCompute)throw Error('Native causal clock cannot replay one-shot compute');
+      const timeTicket = frameTime.propose({ generation: candidate.sequence, lease: effectiveLease, absoluteNow: startedAt });
       if (next) {
         pending = null;
         if (next.width !== canvas.width) canvas.width = next.width;
@@ -473,7 +482,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       metrics.nativeFrames++;
       frameTime.consume(timeTicket);
       if (!next) metrics.replayFrames++;
-      samples[sampleCursor++ % samples.length] = { at: startedAt, intervalMs: previousFrameAt === null ? null : startedAt - previousFrameAt, drawMs: absoluteNow() - startedAt, replay: !next, clockElapsed, safeUntil: active.metadata?.clock?.safeUntil ?? null, cameraVersion: camera?.version ?? null };
+      samples[sampleCursor++ % samples.length] = { at: startedAt, intervalMs: previousFrameAt === null ? null : startedAt - previousFrameAt, drawMs: absoluteNow() - startedAt, replay: !next, clockElapsed, safeUntil: effectiveLease?.safeUntil ?? null, cameraVersion: camera?.version ?? null };
       previousFrameAt = startedAt;
       if (next) {
         active.transportTiming.firstDrawStartedAt = startedAt;
@@ -587,6 +596,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         validateOperations(packet.operations);
         if (packet.metadata?.clock) evaluateRemoteClock(packet.metadata.clock, packet.metadata.clock.anchorAbsoluteMs);
         const hasCompute = packet.operations.some(op => op.method === 'submit' && op.args[0].some(buffer => buffer.__remoteCommands.some(command => command.method === 'beginComputePass')));
+        packet.hasCompute=hasCompute;
         if (hasCompute && packet.metadata?.clock && !packet.metadata.clock.paused && packet.metadata.clock.safeUntil > packet.metadata.clock.elapsed) throw Error('An advancing remote clock cannot replay a frame containing one-shot compute; certify a repeatable compute contract first');
         packet.references = references(packet.operations);
         const readiness = waitForResources(packet.references);
@@ -771,13 +781,14 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         const message=event.data;
         if(intentControl.session&&message?.session!==intentControl.session)
           throw Error('Native intent control transport session mismatch');
-        if(message?.type==='IntentControlFence'){
+         if(message?.type==='IntentControlFence'){
           const status=routeControl?.status();
           if(!status||status.closed||message.protocolVersion!==2||message.fenceVersion!==1||
              !Number.isFinite(message.effectiveTime)||message.effectiveTime<0||
              !Number.isSafeInteger(message.fenceId)||message.fenceId<1||
              message.authorityEpoch!==status.authorityEpoch||message.sequence!==status.sequence||
-             message.effectiveTime!==status.effectiveTime||message.fenceId!==lastNativeGpuFence+1||nativeGpuFences.size>=64)
+              message.effectiveTime!==status.effectiveTime||message.clockSequence!==status.clock?.clockSequence||
+              message.fenceId!==lastNativeGpuFence+1||nativeGpuFences.size>=64)
             throw Error('Invalid native GPU fence boundary');
           lastNativeGpuFence=message.fenceId;nativeGpuFences.add(message.fenceId);
           // Snapshot the already-submitted GPU work now, outside the resource
@@ -789,16 +800,28 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
             metrics.nativeIntentGpuFencedAt=absoluteNow();metrics.nativeIntentGpuFencedSequence=message.sequence;
             intentControl.port.postMessage({type:'intent-control-fenced',fenceVersion:1,
               ...(intentControl.session?{session:intentControl.session}:{}),authorityEpoch:message.authorityEpoch,
-              sequence:message.sequence,effectiveTime:message.effectiveTime,fenceId:message.fenceId,accepted:true});
+              sequence:message.sequence,effectiveTime:message.effectiveTime,fenceId:message.fenceId,accepted:true,
+              ...(message.clockSequence===undefined?{}:{clockSequence:message.clockSequence})});
           }).catch(error=>{nativeGpuFences.delete(message.fenceId);fail(error);});
           return;
-        }
+         }
+         if(message?.type==='IntentClock'){
+           if(!routeControl)throw Error('Native causal clock arrived before its baseline');
+           if(frameTime.status().elapsed!==null&&message.committedThrough<frameTime.status().elapsed)
+             throw Error('Native causal clock arrived after presented time');
+           routeControl.acceptClock(message);
+           metrics.nativeCausalClockAppliedAt=absoluteNow();metrics.nativeCausalClockAppliedSequence=message.clockSequence;
+           intentControl.port.postMessage({type:'intent-clock-applied',session:intentControl.session,
+             authorityEpoch:message.authorityEpoch,clockSequence:message.clockSequence,intentSequence:message.intentSequence,
+             committedThrough:message.committedThrough,accepted:true});return;
+         }
         let accepted;
         if(message?.type==='IntentBaseline'){
           if(routeControl||message.protocolVersion!==2||!Array.isArray(message.routes)||
              !Number.isFinite(message.effectiveTime))throw Error('Invalid or repeated native intent baseline');
-          routeControl=createNativeRouteControl({authorityEpoch:message.authorityEpoch,
-            initialSequence:message.sequence,initialTime:message.effectiveTime,routes:message.routes});
+           routeControl=createNativeRouteControl({authorityEpoch:message.authorityEpoch,
+             initialSequence:message.sequence,initialTime:message.effectiveTime,routes:message.routes});
+           if(message.clock)routeControl.acceptClock(message.clock,{baseline:true});
           accepted=true;
         }else if(message?.type==='IntentControlClosed'){
           if(message.protocolVersion!==2||message.authorityEpoch!==routeControl?.status().authorityEpoch)
@@ -817,7 +840,9 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         intentControl.port.postMessage({type:'intent-control-applied',
           ...(intentControl.session?{session:intentControl.session}:{}),
           authorityEpoch:routeControl.status().authorityEpoch,
-          sequence:routeControl.status().sequence,accepted});
+           sequence:routeControl.status().sequence,accepted,...(message?.type==='IntentBaseline'&&message.clock?{
+             clockSequence:message.clock.clockSequence,clockIntentSequence:message.clock.intentSequence,
+             clockCommittedThrough:message.clock.committedThrough}:{})});
       }catch(error){fail(error);}
     };
     intentControl.port.onmessageerror=()=>fail(Error('Native route control transfer failed'));
@@ -845,7 +870,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       }
       hidden = nextHidden;
     },
-    inspect: () => ({ ...metrics, hidden, resources: resources.size, pendingResources: pendingResources.size, activeSequence: active?.sequence || null, pendingSequence: pending?.sequence || null, queuedMessages, stagedOperations: stagedOperations.length, obsoleteVersions: obsoleteVersions.size, failed, backend: 'webgpu', rafIndependent: true, adapterInfo, frameTime: frameTime.status(), frameTimings: frameTimings.slice(), fenceTimings: fenceTimings.slice(), lease: active?.metadata?.clock || null, cameraSafe: active?.metadata?.cameraSafe ?? false, cameraEnvelope: active?.metadata?.cameraEnvelope || null, clockBindings: active?.clockBindings.length || 0, cameraBindings: active?.cameraBindings.length || 0, clockAtHorizon: !!active?.metadata?.clock && frameTime.status().elapsed >= active.metadata.clock.safeUntil, errors: errors.slice(), samples: sampleCursor < samples.length ? samples.slice(0, sampleCursor) : [...samples.slice(sampleCursor % samples.length), ...samples.slice(0, sampleCursor % samples.length)] }),
+    inspect: () => ({ ...metrics, hidden, resources: resources.size, pendingResources: pendingResources.size, activeSequence: active?.sequence || null, pendingSequence: pending?.sequence || null, queuedMessages, stagedOperations: stagedOperations.length, obsoleteVersions: obsoleteVersions.size, failed, backend: 'webgpu', rafIndependent: true, adapterInfo, frameTime: frameTime.status(), frameTimings: frameTimings.slice(), fenceTimings: fenceTimings.slice(), lease: active?.metadata?.clock || null, nativeCausalClock:routeControl?.status().clock??null, cameraSafe: active?.metadata?.cameraSafe ?? false, cameraEnvelope: active?.metadata?.cameraEnvelope || null, clockBindings: active?.clockBindings.length || 0, cameraBindings: active?.cameraBindings.length || 0, clockAtHorizon: !!active?.metadata?.clock && frameTime.status().elapsed >= (active?.admittedClockBindings?.some(binding=>binding.routeRecord)&&routeControl?.status().clock?.committedThrough!==undefined?routeControl.status().clock.committedThrough:active.metadata.clock.safeUntil), errors: errors.slice(), samples: sampleCursor < samples.length ? samples.slice(0, sampleCursor) : [...samples.slice(sampleCursor % samples.length), ...samples.slice(0, sampleCursor % samples.length)] }),
     dispose() {
       if (stopped) return; stopped = true;
       settleNativeControl(Error('Remote GPU disposed'));

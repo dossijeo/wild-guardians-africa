@@ -286,6 +286,12 @@ struct IntentState {
   uint64_t sequence=0,entityRevision=0,damageRevision=0,plannedEntityRevision=0;
   uint64_t intentSequence=0;
   double effectiveTime=0;
+  // Finite presentation watermark of THIS native execution authority. It is
+  // committed after execution/commands, never a prepared route's future clock.
+  bool causalClock=false,clockPaused=false,clockReanchor=true;
+  double clockThrough=0,clockRate=1;
+  uint64_t clockSequence=0,clockIntentSequence=0,clockProofSequence=UINT64_MAX;
+  std::array<double,8> clockResult{};
   uint32_t plannedGraphRevision=0;
   int plannedProfile=-1;
   uint64_t routeQueries=0,candidates=0;
@@ -1020,6 +1026,8 @@ void nav_intent_reset(){
   s.reservationChecks=s.reservationPairs=s.reservationBodyChecks=s.reservationMutationCandidates=0;
   s.executionEnabled=s.bodyDomainActive=s.drainingStops=s.resettingBodies=false;
   s.executionWorldStamp.fill(0);s.executionResult.fill(0);
+  s.causalClock=s.clockPaused=false;s.clockReanchor=true;s.clockThrough=0;s.clockRate=1;
+  s.clockSequence=s.clockIntentSequence=0;s.clockProofSequence=UINT64_MAX;s.clockResult.fill(0);
   s.stoppedReservationBodies.clear();s.stoppedGateRouteActors.clear();s.removingBodies.clear();
   s.executionAdvances=s.executionEvaluations=s.executionBodyUpdates=s.executionStopInvalidations=0;
   s.staticMutationCandidates=s.staticMutationSegments=s.staticMutationBodyChecks=0;
@@ -1704,6 +1712,7 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_change_width(){return intentChangeWidth;}
 EMSCRIPTEN_KEEPALIVE uint32_t nav_intent_session(){return state().session;}
 EMSCRIPTEN_KEEPALIVE double nav_intent_transition_sequence(){return double(state().intentSequence);}
 EMSCRIPTEN_KEEPALIVE double nav_intent_effective_time(){return state().effectiveTime;}
+#include "spatial-causal-clock-api.inc"
 // A structural bootstrap/recovery read, not another route registry or planner.
 // Rows: actor, session, slot, generation, original assignment sequence/time.
 // Reading this does not drain the ordered changes needed by the legacy mover.
@@ -1736,6 +1745,7 @@ EMSCRIPTEN_KEEPALIVE double nav_intent_reconcile_candidate_count(){return double
 EMSCRIPTEN_KEEPALIVE int nav_intent_set_time(double elapsed){
   IntentState& s=state();
   if(!std::isfinite(elapsed)||elapsed<s.effectiveTime)return 0;
+  if(s.causalClock&&elapsed!=s.effectiveTime)return 0;
   if(s.executionEnabled&&elapsed!=s.effectiveTime)return 0;
   if(elapsed!=s.effectiveTime&&!gateStaticProofCurrent(s))return 0;
   s.effectiveTime=elapsed;return 1;

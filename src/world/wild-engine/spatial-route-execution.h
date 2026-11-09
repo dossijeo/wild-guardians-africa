@@ -48,6 +48,7 @@ int advanceRouteExecution(IntentState& s,double at){
   if(!std::isfinite(at)||at<s.effectiveTime)return -1;
   if(!s.executionEnabled)return -2;
   if(at==s.effectiveTime)return 0;
+  if(s.causalClock&&s.clockPaused)return -5;
   // Known overlay/residency transactions extend the surviving cohort's proof.
   // Untracked terrain edits and whole-world resets still fail closed: one
   // mutation-counter check per cohort, never route collision/validity queries.

@@ -29,7 +29,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       assignmentSequence:route.assignmentSequence,startTime:route.startTime,
       safeUntil:Infinity,lastDrawTime:null});
   }
-  let sequence=initialSequence,effectiveTime=initialTime??-Infinity,closed=false;
+  let sequence=initialSequence,effectiveTime=initialTime??-Infinity,closed=false,clock=null;
   const counters={accepted:0,revoked:0,oldEpoch:0,admissions:0};
   function accept(event){
     if(closed)throw Error('Native route control is closed');
@@ -43,7 +43,8 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     if(revoked&&!validHandle(revoked,authorityEpoch)||
        handle&&!validHandle(handle,authorityEpoch)||assigned&&!handle||
        !assigned&&event.type!=='IntentChanged'&&handle||
-       ['RouteInvalidated','RouteCompleted','RouteReplaced'].includes(event.type)&&!revoked)
+        ['RouteInvalidated','RouteCompleted','RouteReplaced'].includes(event.type)&&!revoked||
+        clock&&handle&&handle.session!==clock.nativeSession)
       throw Error('Invalid native route transition identity');
     const current=active.get(event.actorId);
     if(current&&revoked&&!sameHandle(current.handle,revoked))
@@ -70,6 +71,37 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
   }
   return {
     accept,
+    acceptClock(message,{baseline=false}={}){
+      if(closed)throw Error('Native route control is closed');
+      const policy=!clock||message?.rate!==clock.rate||message?.paused!==clock.paused;
+      if(message?.protocolVersion!==2||message.clockVersion!==1||message.authorityEpoch!==authorityEpoch||
+         !id(message.nativeSession)||!id(message.clockSequence)||!Number.isSafeInteger(message.intentSequence)||message.intentSequence!==sequence||
+         !Number.isFinite(message.committedThrough)||message.committedThrough<effectiveTime||
+         !Number.isFinite(message.rate)||message.rate<=0||message.rate>1000000||typeof message.paused!=='boolean'||
+         typeof message.reanchor!=='boolean'||!Number.isFinite(message.anchorAbsoluteMs)||message.anchorAbsoluteMs<0||
+         !Number.isFinite(message.anchorLogicalTime)||message.anchorLogicalTime<0||message.anchorLogicalTime>message.committedThrough||
+         baseline&&clock||!baseline&&message.reanchor!==policy||
+         clock&&(message.nativeSession!==clock.nativeSession||message.clockSequence!==clock.clockSequence+1||message.committedThrough<clock.committedThrough)||
+         (baseline||policy)&&message.anchorLogicalTime!==message.committedThrough||
+         clock&&!policy&&!baseline&&(message.anchorLogicalTime!==clock.anchorLogicalTime||message.anchorAbsoluteMs!==clock.anchorAbsoluteMs)||
+         clock&&policy&&message.anchorAbsoluteMs<clock.anchorAbsoluteMs||
+         message.paused&&message.anchorLogicalTime!==message.committedThrough)
+        throw Error('Invalid native causal clock boundary');
+      for(const record of active.values()){
+        if(record.handle.session!==message.nativeSession)throw Error('Invalid native causal clock session');
+        if(record.lastDrawTime!==null&&record.lastDrawTime>message.committedThrough)
+          throw Error('Native causal clock arrived after presented time');
+      }
+      clock=Object.freeze({...message});effectiveTime=message.committedThrough;return true;
+    },
+    clockLease(visualEpoch){
+      if(!clock)return null;
+      if(!Number.isFinite(visualEpoch)||visualEpoch<0||clock.anchorLogicalTime<visualEpoch)throw Error('Native causal clock epoch mismatch');
+      const span=clock.committedThrough-clock.anchorLogicalTime;
+      return {version:1,epoch:visualEpoch,elapsed:clock.anchorLogicalTime,anchorAbsoluteMs:clock.anchorAbsoluteMs,
+        safeUntil:clock.committedThrough,paused:clock.paused,segments:!clock.paused&&span>0?
+          [{start:clock.anchorLogicalTime,end:clock.committedThrough,rate:clock.rate,realDuration:span/clock.rate}]:[]};
+    },
     admit({actorId,routeHandle,assignmentSequence}={}){
       if(closed)throw Error('Native route control is closed');
       const record=active.get(actorId);
@@ -81,7 +113,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       counters.admissions++;return record;
     },
     status:()=>({authorityEpoch,sequence,effectiveTime:Number.isFinite(effectiveTime)?
-      effectiveTime:null,active:active.size,closed,...counters}),
+      effectiveTime:null,active:active.size,closed,...counters,...(clock?{clock}:{} )}),
     dispose(){if(closed)return;closed=true;for(const record of active.values())
       record.safeUntil=record.lastDrawTime??record.startTime;active.clear();},
   };
