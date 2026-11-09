@@ -8,6 +8,7 @@ export function createNativeIntentControlPublication({port,session,observe,
   let authorityEpoch=null,baselineSequence=null,sentSequence=0,sentTime=null,appliedSequence=null,
     stop=null,closed=false,fault=null,timer=null,resolveReady,rejectReady;
   let nextFence=0;const gpuFences=new Map();
+  let nextMutationFence=0,mutationHold=null;
   let clock=null,appliedClockSequence=null,baselineClockSequence=null;const clockReceipts=new Map();
   function prepareClock(record,{baseline=false}={}){
     if(record?.protocolVersion!==2||record.clockVersion!==1||record.authorityEpoch!==authorityEpoch||record.intentSequence!==sentSequence||
@@ -33,6 +34,7 @@ export function createNativeIntentControlPublication({port,session,observe,
     if(closed)return;closed=true;clearTimeout(timer);stop?.();stop=null;
     for(const fence of gpuFences.values()){clearTimeout(fence.timer);fence.reject(Error('Native GPU fence closed: '+(fault??reason)));}
     gpuFences.clear();
+    if(mutationHold){clearTimeout(mutationHold.timer);mutationHold.reject(Error('Native mutation fence closed: '+(fault??reason)));mutationHold=null;}
     clockReceipts.clear();
     try{if(authorityEpoch)port.postMessage({type:'IntentControlClosed',protocolVersion:2,
       session,authorityEpoch,sequence:sentSequence,reason});}catch{}
@@ -51,6 +53,16 @@ export function createNativeIntentControlPublication({port,session,observe,
     }
     if(data?.type==='intent-control-retired'&&data.session===session&&
        data.authorityEpoch===authorityEpoch){dispose('consumer-retired');return;}
+    if(data?.type==='intent-mutation-quiesced'){
+      const hold=mutationHold;
+      if(!hold||hold.receipt||data.session!==session||data.authorityEpoch!==authorityEpoch||data.fenceVersion!==1||
+         data.accepted!==true||data.holdId!==hold.holdId||data.sequence!==hold.sequence||
+         data.effectiveTime!==hold.effectiveTime||data.clockSequence!==hold.clockSequence){
+        fail(Error('Invalid native mutation fence acknowledgement'));return;
+      }
+      hold.receipt=Object.freeze({authorityEpoch,session,holdId:hold.holdId,sequence:hold.sequence,
+        effectiveTime:hold.effectiveTime,clockSequence:hold.clockSequence});hold.resolve(hold.receipt);return;
+    }
     if(data?.type==='intent-control-fenced'){
       const fence=gpuFences.get(data.fenceId);
       if(!fence||data.session!==session||data.authorityEpoch!==authorityEpoch||
@@ -111,7 +123,7 @@ export function createNativeIntentControlPublication({port,session,observe,
   function fenceGpu(){
     // Receipt only: the caller still needs an authoritative pending mutation,
     // clock ordering and all live consumers before committing physical effects.
-    if(closed||appliedSequence===null)return Promise.reject(Error('Native GPU fence connection is not ready'));
+    if(closed||appliedSequence===null||mutationHold)return Promise.reject(Error('Native GPU fence connection is not ready'));
     if(gpuFences.size>=64)return Promise.reject(Error('Too many pending native GPU fences'));
     if(!Number.isSafeInteger(nextFence+1))return Promise.reject(Error('Native GPU fence identity exhausted'));
     const fenceId=++nextFence,sequence=sentSequence,effectiveTime=sentTime;
@@ -122,7 +134,32 @@ export function createNativeIntentControlPublication({port,session,observe,
          session,authorityEpoch,sequence,effectiveTime,fenceId,...(clock?{clockSequence:clock.clockSequence}:{})});}catch(error){fail(error);}
     });
   }
-  return {ready,dispose,fenceGpu,status:()=>({session,authorityEpoch,baselineSequence,
+  function quiesceGpuForMutation(){
+    if(closed||appliedSequence===null||!clock||clock.intentSequence!==sentSequence||clock.committedThrough!==sentTime)
+      return Promise.reject(Error('Native causal mutation boundary is not ready'));
+    if(mutationHold||gpuFences.size)return Promise.reject(Error('Native GPU mutation boundary is busy'));
+    if(!Number.isSafeInteger(nextMutationFence+1))return Promise.reject(Error('Native mutation fence identity exhausted'));
+    const holdId=++nextMutationFence,sequence=sentSequence,effectiveTime=sentTime,clockSequence=clock.clockSequence;
+    return new Promise((resolve,reject)=>{
+      mutationHold={holdId,sequence,effectiveTime,clockSequence,resolve,reject,receipt:null,
+        timer:setTimeout(()=>fail(Error('Native mutation fence timed out')),timeoutMs)};
+      try{port.postMessage({type:'IntentMutationQuiesce',protocolVersion:2,fenceVersion:1,
+        session,authorityEpoch,holdId,sequence,effectiveTime,clockSequence});}catch(error){fail(error);}
+    });
+  }
+  function releaseGpuAfterMutation(receipt,{committed=false}={}){
+    const hold=mutationHold;
+    if(typeof committed!=='boolean')throw TypeError('Expected native mutation commit outcome');
+    if(closed||!hold||!hold.receipt||receipt!==hold.receipt||!clock||clock.intentSequence!==sentSequence||
+       clock.committedThrough!==sentTime||clock.committedThrough<hold.effectiveTime)
+      throw Error('Native mutation hold is stale or its causal boundary is unpublished');
+    port.postMessage({type:'IntentMutationRelease',protocolVersion:2,fenceVersion:1,session,authorityEpoch,
+      holdId:hold.holdId,heldSequence:hold.sequence,heldTime:hold.effectiveTime,heldClockSequence:hold.clockSequence,
+      sequence:sentSequence,effectiveTime:sentTime,clockSequence:clock.clockSequence,committed});
+    clearTimeout(hold.timer);mutationHold=null;return true;
+  }
+  return {ready,dispose,fenceGpu,quiesceGpuForMutation,releaseGpuAfterMutation,status:()=>({session,authorityEpoch,baselineSequence,
     sentSequence,sentTime,appliedSequence,pendingGpuFences:gpuFences.size,closed,fault,
-    ...(clock?{clockSequence:clock.clockSequence,appliedClockSequence,pendingClockReceipts:clockReceipts.size}:{} )})};
+    ...(clock?{clockSequence:clock.clockSequence,appliedClockSequence,pendingClockReceipts:clockReceipts.size}:{} ),
+    pendingMutationHold:mutationHold?.holdId??null})};
 }

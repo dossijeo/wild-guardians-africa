@@ -18,6 +18,15 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
      (typeof intentControl.session!=='string'||!intentControl.session))throw TypeError('Missing native intent control session');
   let routeControl=intentControl?.authorityEpoch?createNativeRouteControl(intentControl):null;
   let lastNativeGpuFence=0;const nativeGpuFences=new Set();
+  let lastNativeMutationFence=0,nativeMutationHold=null,nativeMutationFloor=null;
+  let nativeMutationEpoch=0;
+  const mutationSubmissionWaiters=new Set();
+  function settleMutationSubmissions(error=null){
+    for(const waiter of mutationSubmissionWaiters){mutationSubmissionWaiters.delete(waiter);error?waiter.reject(error):waiter.resolve();}
+  }
+  function waitMutationSubmission(){
+    return nativeMutationHold?new Promise((resolve,reject)=>mutationSubmissionWaiters.add({resolve,reject})):Promise.resolve();
+  }
   const nativeControlWaiters=new Set();
   const nativeControlTimeoutMs=intentControl?.timeoutMs??10000;
   if(!Number.isFinite(nativeControlTimeoutMs)||nativeControlTimeoutMs<=0)throw TypeError('Invalid native intent control timeout');
@@ -87,6 +96,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   function fail(error) {
     if (failed || stopped) return;
     failed = true;
+    settleMutationSubmissions(error);
     routeControl?.dispose();settleNativeControl(error);
     errors.push(error?.stack || String(error));
     port.postMessage({ type: 'error', error: error?.stack || String(error) });
@@ -419,6 +429,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     if (stopped || failed) return;
     frameHandle = requestFrame(present);
     if (hidden) return;
+    if(nativeMutationHold)return; // No GPU submission between queue drain and native commit/revocations.
     if (!deviceConfigured || (!active && !pending)) return;
     try {
       const startedAt = absoluteNow();
@@ -435,19 +446,28 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         }
       }
       const previous = active;
+      if(next&&next.nativeMutationEpoch!==nativeMutationEpoch)next=null;
       if(next&&routeControl?.status().clock){
         const permit=routeControl.clockLease(next.metadata.clock.epoch,next.metadata.clock.safeUntil),at=evaluateRemoteClock(permit,startedAt);
-        if(at<next.metadata.clock.elapsed||next.admittedClockBindings.some(binding=>binding.routeRecord&&binding.routeRecord.startTime>at))next=null;
+        const bounded=Math.max(at,nativeMutationFloor??-Infinity);
+        if(nativeMutationFloor!==null&&(permit.safeUntil<nativeMutationFloor||next.admittedClockBindings.some(binding=>
+             binding.routeRecord&&binding.routeRecord.safeUntil<nativeMutationFloor))||bounded<next.metadata.clock.elapsed||
+           next.admittedClockBindings.some(binding=>binding.routeRecord&&binding.routeRecord.startTime>bounded))next=null;
       }
       const candidate = next || active;
       if(!candidate)return;
+      // Never replay a packet prepared before a physical commit. f-R4 will
+      // coordinate replacement resources; until then retain the last image.
+      if(candidate.nativeMutationEpoch!==nativeMutationEpoch)return;
       // Causal mode belongs to the direct connection, not a preparer's tags.
       // Omitting a nativeRoute binding in a later packet cannot restore an
       // unbounded producer clock or bypass the compute replay restriction.
       const causalLease=routeControl?.clockLease(candidate.metadata?.clock?.epoch,candidate.metadata?.clock?.safeUntil),
         effectiveLease=causalLease??candidate.metadata?.clock??null;
+      if(nativeMutationFloor!==null&&(!causalLease||causalLease.safeUntil<nativeMutationFloor))return;
       if(causalLease&&candidate.hasCompute)throw Error('Native causal clock cannot replay one-shot compute');
-      const timeTicket = frameTime.propose({ generation: candidate.sequence, lease: effectiveLease, absoluteNow: startedAt });
+      const timeTicket = frameTime.propose({ generation: candidate.sequence, lease: effectiveLease, absoluteNow: startedAt,
+        minimum:nativeMutationFloor });
       if (next) {
         pending = null;
         if (next.width !== canvas.width) canvas.width = next.width;
@@ -570,8 +590,16 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         }, { commands: message.commands }); break;
       }
       case 'operation': {
+        if(message.nativeMutationEpoch===undefined)message.nativeMutationEpoch=nativeMutationEpoch;
         const readiness = waitForResources(references(message.op));
         if (readiness) await readiness;
+        if(message.op.method==='submit'){
+          // Standalone resource/diagnostic submissions share the same queue as
+          // drawing. They cannot slip between the captured drain and release.
+          await waitMutationSubmission();
+          if(message.nativeMutationEpoch!==nativeMutationEpoch)
+            throw Error('Native mutation invalidated a pending standalone GPU submission');
+        }
         const touchesPublishedState = [...writtenResources(message.op)].some(key => active?.resourceSnapshot?.has(key) || pending?.resourceSnapshot?.has(key));
         const canFork = !stagedOperations.length && touchesPublishedState && message.op.method === 'writeBuffer' && forkPublishedBuffer(message.op.args[0][REF]);
         if (stagedOperations.length || (touchesPublishedState && !canFork)) {
@@ -587,6 +615,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         context.configure(resolve(message.descriptor)); deviceConfigured = true; break;
       case 'unconfigure': context.unconfigure(); deviceConfigured = false; break;
       case 'frame': {
+        if(message.nativeMutationEpoch===undefined)message.nativeMutationEpoch=nativeMutationEpoch;
+        if(message.nativeMutationEpoch!==nativeMutationEpoch){
+          stagedOperations=[];port.postMessage({type:'frame-obsolete',sequence:message.packet?.sequence,reason:'Native mutation invalidated the prepared frame'});break;
+        }
         if (pending) throw Error('Remote GPU backpressure: pending generation already exists');
         if (!Array.isArray(message.packet?.operations)) throw Error('Invalid remote frame operations');
         const packet = { ...message.packet, operations: [...stagedOperations, ...message.packet.operations] };
@@ -604,6 +636,9 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         const readiness = waitForResources(packet.references);
         packet.transportTiming.resourcesWaitStartedAt = absoluteNow();
         if (readiness) await readiness;
+        if(message.nativeMutationEpoch!==nativeMutationEpoch){
+          stagedOperations=[];port.postMessage({type:'frame-obsolete',sequence:packet.sequence,reason:'Native mutation invalidated the prepared frame'});break;
+        }
         packet.transportTiming.resourcesReadyAt = absoluteNow();
         packet.receivedAt = absoluteNow();
         packet.resourceSnapshot = snapshotResources(packet.references);
@@ -615,6 +650,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           const through=Math.max(...nativeBindings.map(binding=>binding.nativeRoute.assignmentSequence));
           await waitNativeControl(through);
         }
+        if(message.nativeMutationEpoch!==nativeMutationEpoch){
+          stagedOperations=[];port.postMessage({type:'frame-obsolete',sequence:packet.sequence,reason:'Native mutation invalidated the prepared frame'});break;
+        }
+        packet.nativeMutationEpoch=message.nativeMutationEpoch;
         // Resolve permissions after all resource awaits. A direct revocation may
         // have arrived while this generation waited for a model or pipeline.
         packet.admittedClockBindings=Array.from(clockBindings.values())
@@ -758,6 +797,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   }
   port.onmessage = event => {
     const message = event.data;
+    if(message.type==='frame'||message.type==='operation')message.nativeMutationEpoch=nativeMutationEpoch;
     if (message.type === 'frame' || message.type === 'fence') message.receivedAt = absoluteNow();
     if (message.type === 'inspect') { reply(message, {...api.inspect(),intentControl:routeControl?.status()??null}); return; }
     if (message.type === 'device-destroy') { deviceDestroyRequested = true; device.destroy(); return; }
@@ -782,9 +822,42 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     intentControl.port.onmessage=event=>{
       if(stopped||failed)return;
       try{
-        const message=event.data;
-        if(intentControl.session&&message?.session!==intentControl.session)
-          throw Error('Native intent control transport session mismatch');
+         const message=event.data;
+         if(intentControl.session&&message?.session!==intentControl.session)
+           throw Error('Native intent control transport session mismatch');
+         if(message?.type==='IntentMutationQuiesce'){
+           const status=routeControl?.status();
+           if(!status?.clock||status.closed||nativeMutationHold||message.protocolVersion!==2||message.fenceVersion!==1||
+              message.authorityEpoch!==status.authorityEpoch||message.sequence!==status.sequence||
+              message.effectiveTime!==status.effectiveTime||message.clockSequence!==status.clock.clockSequence||
+              !Number.isSafeInteger(message.holdId)||message.holdId!==lastNativeMutationFence+1||
+              active?.clockBindings?.some(binding=>binding.routeRecord&&binding.routeRecord.safeUntil<message.effectiveTime))
+             throw Error('Invalid or unsafe native mutation quiescence boundary');
+           lastNativeMutationFence=message.holdId;nativeMutationHold={...message,quiesced:false};
+           Promise.resolve(device.queue.onSubmittedWorkDone()).then(()=>{
+             if(stopped||failed||nativeMutationHold?.holdId!==message.holdId)return;
+             nativeMutationHold.quiesced=true;metrics.nativeMutationQuiescedAt=absoluteNow();
+             intentControl.port.postMessage({type:'intent-mutation-quiesced',fenceVersion:1,session:intentControl.session,
+               authorityEpoch:message.authorityEpoch,holdId:message.holdId,sequence:message.sequence,
+               effectiveTime:message.effectiveTime,clockSequence:message.clockSequence,accepted:true});
+           }).catch(error=>fail(error));return;
+         }
+         if(message?.type==='IntentMutationRelease'){
+           const status=routeControl?.status(),hold=nativeMutationHold;
+           if(!hold?.quiesced||!status?.clock||status.closed||message.protocolVersion!==2||message.fenceVersion!==1||
+              message.authorityEpoch!==status.authorityEpoch||message.holdId!==hold.holdId||
+              message.heldSequence!==hold.sequence||message.heldTime!==hold.effectiveTime||message.heldClockSequence!==hold.clockSequence||
+              message.sequence!==status.sequence||message.effectiveTime!==status.effectiveTime||message.clockSequence!==status.clock.clockSequence||
+              status.clock.committedThrough<hold.effectiveTime||typeof message.committed!=='boolean')throw Error('Invalid native mutation release boundary');
+           if(message.committed){
+             nativeMutationEpoch++;
+             if(pending){const stale=pending;pending=null;releaseSnapshot(stale.resourceSnapshot);
+               port.postMessage({type:'frame-obsolete',sequence:stale.sequence,reason:'Native mutation invalidated the prepared frame'});}
+           }
+           nativeMutationFloor=Math.max(nativeMutationFloor??0,hold.effectiveTime);nativeMutationHold=null;
+           settleMutationSubmissions();
+           metrics.nativeMutationReleasedAt=absoluteNow();return;
+         }
          if(message?.type==='IntentControlFence'){
           const status=routeControl?.status();
           if(!status||status.closed||message.protocolVersion!==2||message.fenceVersion!==1||
@@ -874,9 +947,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       }
       hidden = nextHidden;
     },
-    inspect: () => ({ ...metrics, hidden, resources: resources.size, pendingResources: pendingResources.size, activeSequence: active?.sequence || null, pendingSequence: pending?.sequence || null, queuedMessages, stagedOperations: stagedOperations.length, obsoleteVersions: obsoleteVersions.size, failed, backend: 'webgpu', rafIndependent: true, adapterInfo, frameTime: frameTime.status(), frameTimings: frameTimings.slice(), fenceTimings: fenceTimings.slice(), lease: active?.metadata?.clock || null, nativeCausalClock:routeControl?.status().clock??null, cameraSafe: active?.metadata?.cameraSafe ?? false, cameraEnvelope: active?.metadata?.cameraEnvelope || null, clockBindings: active?.clockBindings.length || 0, cameraBindings: active?.cameraBindings.length || 0, clockAtHorizon: !!active?.metadata?.clock && frameTime.status().elapsed >= Math.min(routeControl?.status().clock?.committedThrough??Infinity,active.metadata.clock.safeUntil), errors: errors.slice(), samples: sampleCursor < samples.length ? samples.slice(0, sampleCursor) : [...samples.slice(sampleCursor % samples.length), ...samples.slice(0, sampleCursor % samples.length)] }),
+    inspect: () => ({ ...metrics, hidden, resources: resources.size, pendingResources: pendingResources.size, activeSequence: active?.sequence || null, pendingSequence: pending?.sequence || null, queuedMessages, stagedOperations: stagedOperations.length, obsoleteVersions: obsoleteVersions.size, failed, backend: 'webgpu', rafIndependent: true, adapterInfo, frameTime: frameTime.status(), frameTimings: frameTimings.slice(), fenceTimings: fenceTimings.slice(), lease: active?.metadata?.clock || null, nativeCausalClock:routeControl?.status().clock??null, nativeMutationHold:nativeMutationHold?.holdId??null,nativeMutationFloor,nativeMutationEpoch, cameraSafe: active?.metadata?.cameraSafe ?? false, cameraEnvelope: active?.metadata?.cameraEnvelope || null, clockBindings: active?.clockBindings.length || 0, cameraBindings: active?.cameraBindings.length || 0, clockAtHorizon: !!active?.metadata?.clock && frameTime.status().elapsed >= Math.min(routeControl?.status().clock?.committedThrough??Infinity,active.metadata.clock.safeUntil), errors: errors.slice(), samples: sampleCursor < samples.length ? samples.slice(0, sampleCursor) : [...samples.slice(sampleCursor % samples.length), ...samples.slice(0, sampleCursor % samples.length)] }),
     dispose() {
       if (stopped) return; stopped = true;
+      settleMutationSubmissions(Error('Remote GPU disposed during native mutation'));
       settleNativeControl(Error('Remote GPU disposed'));
       try{if(routeControl)intentControl.port.postMessage({type:'intent-control-retired',
         session:intentControl.session,authorityEpoch:routeControl.status().authorityEpoch,

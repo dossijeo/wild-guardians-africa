@@ -156,3 +156,29 @@ test('an already-live legacy connection cannot be silently upgraded into a causa
   assert.equal(f.errors.length,1);
  }finally{f.dispose();}
 });
+
+test('mutation quiescence requires a clock-aware applied connection and releases an exact one-use receipt',async()=>{
+ const {port1,port2}=new MessageChannel();let callbacks,hold,draw;
+ port2.onmessage=({data:m})=>{
+  if(m.type==='IntentBaseline'){
+   draw=createNativeRouteControl({authorityEpoch:m.authorityEpoch,initialSequence:m.sequence,initialTime:m.effectiveTime,routes:m.routes});
+   draw.acceptClock(m.clock,{baseline:true});port2.postMessage({type:'intent-control-applied',session:'q',authorityEpoch:m.authorityEpoch,
+    sequence:m.sequence,accepted:true,clockSequence:m.clock.clockSequence,clockIntentSequence:m.clock.intentSequence,clockCommittedThrough:m.clock.committedThrough});
+  }else if(m.type==='IntentMutationQuiesce')hold=m;
+  else if(m.type==='IntentControlClosed')draw.dispose();
+ };
+ const clock={protocolVersion:2,clockVersion:1,authorityEpoch:'native-owner/1',nativeSession:1,clockSequence:1,intentSequence:9,
+  committedThrough:10,rate:1,paused:false,reanchor:true};
+ const source=createNativeIntentControlPublication({port:port1,session:'q',observe:observer=>{
+  callbacks=observer;observer.onBaseline({type:'IntentBaseline',protocolVersion:2,authorityEpoch:clock.authorityEpoch,sequence:9,effectiveTime:10,routes:[],clock});return ()=>{};}});
+ try{
+  await source.ready;const request=new Promise(resolve=>port2.once('message',resolve)),pending=source.quiesceGpuForMutation(),message=await request;
+  assert.deepEqual(message,hold);assert.equal(message.type,'IntentMutationQuiesce');assert.equal(source.status().pendingMutationHold,1);
+  await assert.rejects(source.quiesceGpuForMutation(),/busy/);await assert.rejects(source.fenceGpu(),/not ready/);
+  port2.postMessage({...message,type:'intent-mutation-quiesced',accepted:true});const receipt=await pending;
+  assert.throws(()=>source.releaseGpuAfterMutation({...receipt}),/stale/);
+  const release=new Promise(resolve=>port2.once('message',resolve));assert.equal(source.releaseGpuAfterMutation(receipt),true);
+  assert.equal((await release).type,'IntentMutationRelease');assert.equal(source.status().pendingMutationHold,null);
+  assert.throws(()=>source.releaseGpuAfterMutation(receipt),/stale/);
+ }finally{source.dispose();port2.close();}
+});

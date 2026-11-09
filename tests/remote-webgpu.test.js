@@ -223,6 +223,94 @@ test('a prepared future resource generation waits for causal time instead of sel
  }finally{f.host.dispose();}
 });
 
+test('conditioned native barrier drains GPU, blocks pre-commit packets and waits for fresh resources at the safe boundary',async()=>{
+ const native=createNativeRouteExecutionFixture(),[sourcePort,drawPort]=pair();let now=0,source,release;
+ const f=await fixture({}, {absoluteNow:()=>now,intentControl:{port:drawPort,session:'mutation-test'}});
+ try{
+  const handle=native.worker(1,native.point(-6,0),native.point(6,0)),plan=native.bridge.nativeRouteTiming(handle);
+  assert.equal(native.bridge.beginNativeRouteExecution().status,'started');native.bridge.commitNativeCausalClock();
+  source=createNativeIntentControlPublication({port:sourcePort,session:'mutation-test',observe:native.bridge.observeNativeIntentControl,absoluteNow:()=>now});await source.ready;
+  f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'absolute',epoch:0,nativeRoute:{actorId:plan.actorId,routeHandle:handle,assignmentSequence:plan.assignmentSequence}});
+  const receipt=f.frame(0,{clock:{version:1,epoch:0,elapsed:10,safeUntil:20,anchorAbsoluteMs:0,paused:false,
+   segments:[{start:10,end:20,rate:1,realDuration:10}]}});await flush();await f.host.idle();f.host.present();await receipt;
+  assert.equal(native.advance(11).status,'advanced');native.bridge.commitNativeCausalClock();await flush();
+  const before=native.session.core.snapshot(),draws=f.gpu.submitted.length;
+  f.gpu.device.queue.onSubmittedWorkDone=()=>new Promise(resolve=>{release=resolve;});
+  const pending=native.bridge.addNativeBarrierAfterGpuQuiescence({getPublication:()=>source,...native.point(2,0),halfX:.15,halfZ:.6,yaw:.2});await flush();
+  assert.equal(f.host.inspect().nativeMutationHold,1);assert.deepEqual(native.session.core.snapshot(),before);assert(native.bridge.nativeRouteTiming(handle));
+  now=100;f.host.present();f.host.present();assert.equal(f.gpu.submitted.length,draws,'no draw can be submitted while the mutation receipt is pending');
+  release();release=null;const result=await pending;assert.equal(result.status,'committed');await flush();
+  assert.equal(f.host.inspect().nativeMutationHold,null);assert.equal(f.host.inspect().nativeMutationFloor,11);
+  assert.equal(f.host.inspect().nativeMutationEpoch,1);
+  assert.equal(native.bridge.nativeRouteTiming(handle),null);assert.equal(f.host.intentControlStatus().active,0);
+  f.host.present();assert.equal(f.gpu.submitted.length,draws,'the old prepared packet cannot be replayed after the physical commit');
+  f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'absolute',epoch:0});
+  const replacement=f.frame(0,{clock:{version:1,epoch:0,elapsed:10,safeUntil:20,anchorAbsoluteMs:0,paused:false,
+   segments:[{start:10,end:20,rate:1,realDuration:10}]}});await flush();await f.host.idle();f.host.present();await replacement;
+  assert.equal(new Float32Array(f.gpu.buffers[0].data.buffer)[0],11,'the replacement starts no earlier than the physical boundary');
+  assert.equal(f.host.inspect().failed,false);assert.deepEqual(f.errors,[]);
+ }finally{release?.();source?.dispose();f.host.dispose();native.session.dispose();}
+});
+
+test('a cancelled native hold never advances expired prepared resources beyond their validity ceiling',async()=>{
+ const native=createNativeRouteExecutionFixture(),[sourcePort,drawPort]=pair();let now=0,source;
+ const f=await fixture({}, {absoluteNow:()=>now,intentControl:{port:drawPort,session:'expired-mutation'}});
+ try{
+  const handle=native.worker(1,native.point(-6,0),native.point(6,0)),plan=native.bridge.nativeRouteTiming(handle);
+  native.bridge.beginNativeRouteExecution();native.bridge.commitNativeCausalClock();
+  source=createNativeIntentControlPublication({port:sourcePort,session:'expired-mutation',observe:native.bridge.observeNativeIntentControl,absoluteNow:()=>now});await source.ready;
+  f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'absolute',epoch:0,nativeRoute:{actorId:plan.actorId,routeHandle:handle,assignmentSequence:plan.assignmentSequence}});
+  const receipt=f.frame(0,{clock:{version:1,epoch:0,elapsed:10,safeUntil:10.5,anchorAbsoluteMs:0,paused:false,
+   segments:[{start:10,end:10.5,rate:1,realDuration:.5}]}});await flush();await f.host.idle();f.host.present();await receipt;
+  native.advance(11);native.bridge.commitNativeCausalClock();await flush();
+  const hold=await source.quiesceGpuForMutation();assert.equal(source.releaseGpuAfterMutation(hold,{committed:false}),true);
+  await flush();const count=f.gpu.submitted.length;now=5000;f.host.present();
+  assert.equal(f.gpu.submitted.length,count,'expired packet remains frozen instead of being extended beyond its resources');
+  assert.equal(f.host.inspect().nativeMutationFloor,11);assert.equal(f.host.inspect().failed,false);assert.deepEqual(f.errors,[]);
+ }finally{source?.dispose();f.host.dispose();native.session.dispose();}
+});
+
+test('an older packet still waiting for GPU preparation is rejected after a conditioned mutation instead of resurrecting',async()=>{
+ const native=createNativeRouteExecutionFixture(),[sourcePort,drawPort]=pair();let now=0,source,releasePipeline;
+ const f=await fixture({}, {absoluteNow:()=>now,intentControl:{port:drawPort,session:'old-packet'}});
+ try{
+  const handle=native.worker(1,native.point(-6,0),native.point(6,0)),plan=native.bridge.nativeRouteTiming(handle);
+  native.bridge.beginNativeRouteExecution();native.bridge.commitNativeCausalClock();
+  source=createNativeIntentControlPublication({port:sourcePort,session:'old-packet',observe:native.bridge.observeNativeIntentControl,absoluteNow:()=>now});await source.ready;
+  f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'absolute',epoch:0,nativeRoute:{actorId:plan.actorId,routeHandle:handle,assignmentSequence:plan.assignmentSequence}});
+  const clock={version:1,epoch:0,elapsed:10,safeUntil:20,anchorAbsoluteMs:0,paused:false,segments:[{start:10,end:20,rate:1,realDuration:10}]};
+  const initial=f.frame(0,{clock});await flush();await f.host.idle();f.host.present();await initial;
+  native.advance(11);native.bridge.commitNativeCausalClock();await flush();
+  f.gpu.device.createRenderPipelineAsync=()=>new Promise(resolve=>{releasePipeline=resolve;});
+  const slow=f.client.device.createRenderPipeline({label:'pre-mutation-slow'});f.client.beginFrame({clock});
+  const encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
+  pass.setPipeline(slow);pass.setBindGroup(0,f.group);pass.draw(3);pass.end();f.client.device.queue.submit([encoder.finish()]);
+  const stale=f.client.endFrame(),rejected=assert.rejects(stale,error=>error.code==='remote-frame-native-mutation-obsolete');await flush();
+  const result=await native.bridge.addNativeBarrierAfterGpuQuiescence({getPublication:()=>source,...native.point(2,0),halfX:.15,halfZ:.6});
+  assert.equal(result.status,'committed');await flush();assert.equal(f.host.inspect().nativeMutationEpoch,1);
+  releasePipeline({});releasePipeline=null;await rejected;await f.host.idle();
+  assert.equal(f.host.inspect().pendingSequence,null);const submitted=f.gpu.submitted.length;f.host.present();assert.equal(f.gpu.submitted.length,submitted);
+  assert.equal(f.host.inspect().failed,false);assert.deepEqual(f.errors,[]);
+ }finally{releasePipeline?.({});source?.dispose();f.host.dispose();native.session.dispose();}
+});
+
+test('standalone GPU queue submissions cannot slip between a mutation drain and release',async()=>{
+ for(const committed of [false,true]){
+  const native=createNativeRouteExecutionFixture(),[sourcePort,drawPort]=pair();let source;
+  const f=await fixture({}, {absoluteNow:()=>0,intentControl:{port:drawPort,session:'standalone-hold'}});
+  try{
+   native.worker(1,native.point(-6,0),native.point(6,0));native.bridge.beginNativeRouteExecution();native.bridge.commitNativeCausalClock();
+   source=createNativeIntentControlPublication({port:sourcePort,session:'standalone-hold',observe:native.bridge.observeNativeIntentControl,absoluteNow:()=>0});await source.ready;
+   const hold=await source.quiesceGpuForMutation(),before=f.gpu.submitted.length;
+   f.client.device.queue.submit([{__remoteCommands:[{method:'beginRenderPass',args:[{colorAttachments:[]}],commands:[{method:'draw',args:[3]}]}]}]);
+   await flush();assert.equal(f.gpu.submitted.length,before);assert(f.host.inspect().queuedMessages>0);
+   source.releaseGpuAfterMutation(hold,{committed});await flush();await f.host.idle();
+   if(committed){assert.equal(f.gpu.submitted.length,before);assert.equal(f.host.inspect().failed,true);}
+   else {assert.equal(f.gpu.submitted.length,before+1);assert.equal(f.host.inspect().failed,false);}
+  }finally{source?.dispose();f.host.dispose();native.session.dispose();}
+ }
+});
+
 test('native permission is checked after resource preparation, preventing late resurrection',async()=>{
   const [authorityPort,drawControlPort]=pair();
   const f=await fixture({}, {absoluteNow:()=>0,intentControl:{port:drawControlPort,authorityEpoch:'native-owner'}});

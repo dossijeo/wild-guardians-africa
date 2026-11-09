@@ -45,6 +45,7 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_reconcile(int enabled){
       // Freeze the whole boundary at its current pose before reporting failure.
       cancelGateMotionProposal(s);
       for(auto& [otherId,other]:s.gates){other.from=other.target=gateOpening(other,s.effectiveTime);other.at=s.effectiveTime;other.precedingMotor=false;other.bodySweepCertified=false;other.staticSweepCertified=false;}
+      s.gateRevision++;
       updateGateStaticDomain(s);
       return -2;
     }facts.emplace(id,value);}
@@ -59,7 +60,7 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_reconcile(int enabled){
     if(!gate.defined)current=value.occupied?1:0;
     gate.defined=true;gate.from=current;gate.target=value.requested||value.occupied?1:0;gate.at=s.effectiveTime;
   }
-  updateGateStaticDomain(s);return int(s.gates.size());
+  s.gateRevision++;updateGateStaticDomain(s);return int(s.gates.size());
 }
 EMSCRIPTEN_KEEPALIVE int nav_gate_state(double id){auto& s=state();s.gateResult.clear();if(!integer(id)||!s.gates.count(uint64_t(id)))return 0;
   const auto& gate=s.gates.at(uint64_t(id));s.gateResult={id,gateOpening(gate,s.effectiveTime),gate.target,gate.at,

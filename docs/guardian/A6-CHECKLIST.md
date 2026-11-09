@@ -27,7 +27,7 @@ estaba dentro de e/f; no son funcionalidades adicionales ni renumeran A6-01–11
 | Barridos y protección | Contacto continuo contra cuerpos, objetos canónicos y otras hojas; veto previo de mutaciones incompatibles. La unión del mecanismo conserva todas sus regiones ocupadas. | No certifica apoyos arbitrarios/inclinados ni física de otras clases; se rechazan explícitamente. |
 | Timetable y fases | Esperas iniciales/intermedias, admisión atómica opt-in por puertas cerradas, cierre previo conservado hasta la inversión y suspensión/reanudación del sufijo con fases/presupuesto acumulados. | El lector de candidatos anterior sigue sin admitir. La nueva API exige el mecanismo validado de e-R1. No activa producto/GPU ni persistencia entre acciones/guardados. |
 | Control directo y recibo GPU | Revocación por época/versión, canal independiente de preparación, frontera finita de tiempo ya ejecutado en nativo y recibo GPU ligado también a su versión de reloj. | f-R1 cerrado para el cohort nativo opt-in. Un recibo/reloj no resuelve todos los consumidores de producto, relevo ni aplicación gráfica de las mutaciones. |
-| Propuesta y commit de motor | Ticket de un uso; espera recibo nuevo y rechaza si cambian sus dependencias. | Motor de puerta opt-in; no transacción física/gráfica completa de todas las mutaciones. |
+| Propuesta y commit condicionado | Motor de puerta y primera alta de barrera orientada opt-in: ticket nativo de un uso, preflight no efectivo y recibo GPU nuevo; la barrera detiene envíos mientras se confirma. | Solo una operación de overlay y un consumidor causal. Faltan polígonos/lotes/restantes overlays, residencia, props, terreno, relevo y recursos gráficos; no activar en partida. |
 
 Son cinco componentes agrupados para visibilidad, no cinco entregables de producto
 cerrados ni una medida porcentual. Cantidades de pruebas/commits son evidencia,
@@ -45,7 +45,7 @@ dependencias con A6-01/02/06/07/08/09; no se cuentan otra vez como trabajo nuevo
 | **A6-04.e-R3** | Integración de puertas con entidades y ciclo de vida. | Usar esas decisiones en las intenciones pertinentes de la partida, con llegadas/consecuencias, cancelación, guardado/restauración y recuperación; sin dos ejecutores autoritativos. |
 | **A6-04.e-R4** | Aceptación de puertas con personajes reales. | Partida WASM/WebGPU con trabajadores y animales, respetando qué puede cruzar cada uno; obstáculos, esperas, pausa/velocidad, acciones, guardado y determinismo. No basta el triángulo. |
 | **A6-04.f-R1** | **CERRADO — Frontera causal de tiempo y comandos.** | Simulación y dibujo aplican avances, pausa, velocidad y revocaciones en una frontera segura; no presentar movimiento que ya no puede autorizarse ni corregirlo mediante rebobinado. [Ejecución real WASM/WebGPU y tres bloqueos de preparación](performance/native-causal-clock-20261109.json). |
-| **A6-04.f-R2** | Commit condicionado para las demás mutaciones. | Extender la propuesta todavía no efectiva y su commit seguro a overlays, residencia, props y terreno, no solo al motor de puerta. |
+| **A6-04.f-R2** | **PARCIAL — Commit condicionado para las demás mutaciones.** | Extender la propuesta todavía no efectiva y su commit seguro a overlays, residencia, props y terreno, no solo al motor de puerta. |
 | **A6-04.f-R3** | Todos los consumidores, relevo y fallos. | La seguridad cubre consumidores activos/temporales, sustitución de Workers, pérdida de dispositivo y canal perdido o silencioso; un ACK viejo no permite aplicar cambios. |
 | **A6-04.f-R4** | Aplicación gráfica de la misma mutación. | Recursos y dibujo representan el cambio físico coordinado; probarlo con personajes reales y preparación bloqueada, sin depender de publicaciones periódicas de posición JS. |
 
@@ -132,6 +132,25 @@ props y terreno, antes de activar los cruces en la partida. f-R3/f-R4 y la
 integración de entidades de e-R3 permiten aceptar e-R4. Es un mapa
 de dependencias, no una promesa de duración o de que los ocho tengan igual tamaño.
 
+**Avance parcial de f-R2:** una **alta de barrera orientada** puede proponerse
+sin cambiar mundo, IDs, rutas ni reloj. El preflight y el ticket son nativos;
+comprueban cuerpos, trayectorias y protecciones de puerta existentes. El canal
+directo detiene nuevos envíos, espera el drenaje GPU y entrega un recibo exacto
+de sesión/época, intención, tiempo y versión de reloj. Solo entonces se confirma
+la barrera y se publican las revocaciones antes de liberar el dibujante. Cambios
+de cuerpo, mundo, ruta, reloj o motor mientras espera invalidan la propuesta.
+
+Tras un commit efectivo se invalida el paquete anterior y se rechazan los que
+todavía estaban esperando recursos; no se inventa un frame actualizado: la imagen
+permanece detenida hasta que llegue otro paquete. Las operaciones GPU fuera de
+frame tampoco pueden colarse durante el drenaje. **Dependencia descubierta:**
+mantener la imagen y generar/aplicar los recursos nuevos de manera coordinada es
+f-R4; la protección de todos los consumidores y relevos sigue en f-R3. Este
+incremento no acredita ninguno de esos IDs ni activa el camino en producto.
+Quedan para f-R2 el resto de overlays, residencia, props y terreno, con sus
+propuestas y commits efectivos propios. [Evidencia WASM/WebGPU de esta primera
+barrera](performance/native-barrier-mutation-20261109.json).
+
 **Cómo se informará el avance:** entrega cerrada y evidencia; entrega parcial
 y qué criterio falta; IDs aún pendientes; cambios de alcance descubiertos,
 si los hubiera, señalados expresamente. No añadir requisitos silenciosamente a
@@ -197,7 +216,7 @@ esta lista ni presentar más pruebas aisladas como cierre del producto.
     Evidencia:
     11 pruebas de política + 12 de barrido + 8 de espera iniciales; 20 nuevas de
     objetos y 2 de coordinación; 13 nuevas de esperas múltiples. Batería actual:
-    493 dirigidas + 39 y 74 heredadas
+    517 dirigidas + 39 y 74 heredadas
     sin skips. Tres auditorías WASM/WebGPU reproducen espera/reanudación y fases/
     presupuesto desde un único paquete durante dos bloqueos de 500 ms cada una,
     sin nuevas posiciones JS ni trabajo geométrico nativo. Son triángulos de
@@ -222,7 +241,10 @@ esta lista ni presentar más pruebas aisladas como cierre del producto.
     pausa/velocidad/revocación directas y replay GPU que no sobrepasa lo ejecutado
     ni rebobina. Prueba real con un paquete, tres bloqueos de 500 ms, recibo GPU
     durante preparación bloqueada y readback de fases/posición contra WASM.
-    No instala recursos de puerta ni activa cruces de producto. Faltan generalizar
+    f-R2 parcial: primera barrera orientada con propuesta nativa no efectiva,
+    quiescencia/drenaje GPU y commit/revocación condicionados; invalida paquetes
+    anteriores y conserva congelada la imagen hasta recursos nuevos. No instala
+    recursos de puerta ni activa cruces de producto. Faltan generalizar
     la transacción a otras mutaciones, coordinación completa de
     consumidores/relevo e integración física/gráfica de producto con personajes.
 - [ ] **A6-05 — Todas las intenciones, perfiles y biomas.** Completar animales
@@ -294,6 +316,7 @@ esta lista ni presentar más pruebas aisladas como cierre del producto.
 - Incremento de suspensión/reanudación de e-R2: `.cache/native-gate-resume-regression.tap`, 474 aprobadas sin skips, incluidas 12 de sufijos/offsets. `.cache/native-gate-resume-legacy-stream-geometry.tap` (39) y `.cache/native-gate-resume-legacy-recipe.tap` (74), también aprobadas sin skips. En ese incremento quedaba pendiente la composición con cierre en curso.
 - Cierre de e-R2: `.cache/native-gate-e-r2-regression.tap`, 479 aprobadas sin skips; `.cache/native-gate-e-r2-legacy-stream-geometry.tap` (39) y `.cache/native-gate-e-r2-legacy-recipe.tap` (74), aprobadas sin skips. [Registro de aceptación nativa](performance/native-gate-crossing-resume-20261109.json); se reproduce con `tests/spatial-native-gate-route-acceptance.test.js`.
 - Cierre de f-R1: `.cache/native-causal-clock-regression.tap`, 493 aprobadas sin skips; `.cache/native-causal-clock-legacy-stream-geometry.tap` (39) y `.cache/native-causal-clock-legacy-recipe.tap` (74), aprobadas sin skips. [Aceptación WASM/WebGPU del reloj causal](performance/native-causal-clock-20261109.json), reproducible en `/tests/browser/native-causal-clock.html`; diagnóstico, no personajes.
+- Avance parcial de f-R2: `.cache/native-barrier-quiescence-regression.tap`, 517 aprobadas sin skips; `.cache/native-barrier-quiescence-legacy-stream-geometry.tap` (39) y `.cache/native-barrier-quiescence-legacy-recipe.tap` (74), aprobadas sin skips. [Una barrera WASM/WebGPU con preparación bloqueada](performance/native-barrier-mutation-20261109.json), reproducible en `/tests/browser/native-barrier-mutation.html`. No cierra f-R2 ni acredita personajes/recursos nuevos.
 - [Mecanismo nativo y mallas reales WebGPU](performance/native-gate-mechanism-20261109.json) · [captura](performance/native-gate-mechanism-20261109.png).
 
 Quedan **2 de los 6 subpuntos de A6-04**: e y f (parciales).

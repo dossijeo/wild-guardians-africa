@@ -31,7 +31,7 @@ int proposeGateMotion(IntentState& s,int enabled,std::map<uint64_t,NativeGate>& 
   return int(proposed.size());
 }
 void publishGateMotion(IntentState& s,std::map<uint64_t,NativeGate>& proposed){
-  s.gates.swap(proposed);updateGateStaticDomain(s);
+  s.gates.swap(proposed);s.gateRevision++;updateGateStaticDomain(s);
 }
 bool gateMotionProposalCurrent(const IntentState& s){
   const auto& p=s.gateMotionProposal;

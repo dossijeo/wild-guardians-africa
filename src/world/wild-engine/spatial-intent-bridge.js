@@ -639,6 +639,55 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     }catch(error){return outcome('control-failed',{error:String(error?.message??error)});}
     finally{wasm.nav_gate_motion_cancel(session,ticket);}
   };
+  // First conditioned world mutation, opt-in. Geometry and affected-route
+  // preflight remain native; this bridge only carries an immutable input and
+  // an exact receipt from the current direct draw connection.
+  const addNativeBarrierAfterGpuQuiescence=async({getPublication,x,z,halfX,halfZ,yaw=0,passMask=0}={})=>{
+    if(!initialized||!owningState)throw Error('Reset the native intent session first');
+    if(typeof getPublication!=='function'||![x,z,halfX,halfZ,yaw].every(Number.isFinite)||
+       halfX<=0||halfZ<=0||halfX>100||halfZ>100||!Number.isInteger(passMask)||passMask<0||passMask>3)
+      throw TypeError('Expected a native barrier proposal');
+    if(wasm.nav_intent_barrier_proposal_version?.()!==1)throw Error('Rebuild native barrier proposal service');
+    const outcome=(status,extra={})=>({status,authorizedAutonomy:false,authorizedPassage:false,...extra}),
+      owner=epoch();syncBoundaryTime();flushNativeIntentControl();
+    const clock=nativeCausalClock(),source=getPublication(),control=source?.status?.();
+    if(!source||typeof source.quiesceGpuForMutation!=='function'||typeof source.releaseGpuAfterMutation!=='function'||
+       control?.closed||control?.authorityEpoch!==owner)return outcome('control-unavailable');
+    if(!clock||control.sentSequence!==clock.intentSequence||control.sentTime!==clock.committedThrough||
+       control.clockSequence!==clock.clockSequence||owningState.elapsed!==clock.committedThrough)return outcome('control-boundary-mismatch');
+    const result=wasm.spatial_barrier_proposal_stage(x,z,halfX,halfZ,yaw,passMask);
+    if(result!==1)return outcome(result===0?'blocked':result===-4?'busy':result===-2?'unsupported':'invalid');
+    if(wasm.nav_intent_barrier_proposal_ticket()!==1)throw Error('Native barrier proposal lost its ticket');
+    const [session,ticket,sequence,time,clockSequence]=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6));
+    let receipt=null,answer=outcome('control-failed');
+    try{
+      receipt=await source.quiesceGpuForMutation();const current=source.status();
+      if(epoch()!==owner||getPublication()!==source||current.closed||current.session!==control.session||current.authorityEpoch!==owner)
+        answer=outcome('control-replaced');
+      else if(receipt.authorityEpoch!==owner||receipt.session!==control.session||receipt.sequence!==sequence||
+         receipt.effectiveTime!==time||receipt.clockSequence!==clockSequence||!Number.isSafeInteger(receipt.holdId)||receipt.holdId<1)
+        answer=outcome('invalid-receipt');
+      else{
+        const committed=wasm.spatial_barrier_proposal_commit(session,ticket,sequence,time,clockSequence);
+        answer=committed>0?outcome('committed',{barrierId:committed,receipt}):
+          outcome(committed===-2?'stale':committed===-3?'invalid-receipt':committed===-6?'blocked':'stale');
+      }
+    }catch(error){answer=outcome('control-failed',{error:String(error?.message??error)});}
+    finally{
+      wasm.nav_intent_barrier_proposal_cancel(session,ticket);
+      if(receipt&&!source.status().closed){
+        try{
+          // The commit may have revoked routes. Publish their exact sequence and
+          // a same-time native watermark before releasing the GPU hold.
+          flushNativeIntentControl();const latest=nativeCausalClock();
+          if(!latest||wasm.nav_intent_clock_commit(latest.rate,latest.paused?1:0)<0)throw Error('Native clock cannot publish mutation boundary');
+          flushNativeIntentControl();source.releaseGpuAfterMutation(receipt,{committed:answer.status==='committed'});
+        }catch(error){source.dispose('mutation-release-failed');answer=outcome(answer.status==='committed'?'committed-control-failed':'control-failed',
+          {...(answer.barrierId?{barrierId:answer.barrierId}:{}),error:String(error?.message??error)});}
+      }
+    }
+    return answer;
+  };
   const sampleNativeRoute=(handle,at)=>{
     if(handle?.authorityEpoch!==epoch()||
        wasm.nav_intent_route_sample(handle.session,handle.slot,handle.generation,at)!==1)return null;
@@ -1139,7 +1188,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     structureFor:id=>structuresById.get(numericId(id))??null,
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
-    intentChanges,routePoints,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,
+    intentChanges,routePoints,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,addNativeBarrierAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,
     beginNativeRouteExecution,advanceNativeRouteExecution,stopNativeRouteExecution,nativeRouteExecution,
     projectRouteProgress,processEventBoundary,requestReroute,
     registerAttackIntent,planAttackCrop,planAttackWall,replanAttackRoute,
@@ -2045,6 +2094,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     },
     get authorityEpoch(){return bridge.authorityEpoch;},
     nativeIntentControlBaseline:bridge.nativeIntentControlBaseline,
+    addNativeBarrierAfterGpuQuiescence:bridge.addNativeBarrierAfterGpuQuiescence,
     nativeCausalClock:bridge.nativeCausalClock,commitNativeCausalClock:bridge.commitNativeCausalClock,
     observeNativeIntentControl:bridge.observeNativeIntentControl,
     flushNativeIntentControl:bridge.flushNativeIntentControl,

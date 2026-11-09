@@ -21,3 +21,8 @@ SpatialStaticTicket spatialIntentStaticBefore(const SpatialStaticMutation*,int c
 void spatialIntentStaticCommitted(const SpatialStaticTicket&);
 bool spatialIntentStaticRestorationAllowed();
 bool spatialIntentStaticProtectionActive();
+// One pending barrier proposal owned by the intent authority. Geometry stays
+// in this immutable value until its exact native boundary is committed/cancelled.
+struct SpatialBarrierProposalInput {float x,z,halfX,halfZ,yaw;int passMask;};
+int spatialIntentStageBarrier(const SpatialBarrierProposalInput&,const SpatialStaticMutation&);
+int spatialIntentTakeBarrier(double session,double ticket,double sequence,double time,double clockSequence,SpatialBarrierProposalInput&);

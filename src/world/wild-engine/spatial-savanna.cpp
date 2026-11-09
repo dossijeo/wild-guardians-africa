@@ -2444,6 +2444,18 @@ int spatial_add_barrier(float x,float z,float halfX,float halfZ,int passMask){
 int spatial_add_oriented_barrier(float x,float z,float halfX,float halfZ,float yaw,int passMask){
   return addBarrier(x,z,halfX,halfZ,passMask,yaw);
 }
+EMSCRIPTEN_KEEPALIVE int spatial_barrier_proposal_stage(float x,float z,float halfX,float halfZ,float yaw,int passMask){
+  if(!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(halfX)||!std::isfinite(halfZ)||!std::isfinite(yaw)||
+     halfX<=0||halfZ<=0||halfX>100||halfZ>100||passMask<0||passMask>3||nextBarrierId==std::numeric_limits<int>::max())return -1;
+  const Barrier barrier={nextBarrierId,x,z,halfX,halfZ,yaw,float(std::cos(yaw)),float(std::sin(yaw)),uint8_t(passMask)};
+  return spatialIntentStageBarrier({x,z,halfX,halfZ,yaw,passMask},barrierMutation(barrier));
+}
+EMSCRIPTEN_KEEPALIVE int spatial_barrier_proposal_commit(double session,double ticket,double sequence,double time,double clockSequence){
+  SpatialBarrierProposalInput input{};const int valid=spatialIntentTakeBarrier(session,ticket,sequence,time,clockSequence,input);
+  if(valid!=1)return valid;
+  const int id=addBarrier(input.x,input.z,input.halfX,input.halfZ,input.passMask,input.yaw);
+  return id>0?id:-6;
+}
 float* spatial_barrier_batch_ptr(int count){
   if(count<1||count>1024)return nullptr;
   barrierBatch.resize(size_t(count)*6);

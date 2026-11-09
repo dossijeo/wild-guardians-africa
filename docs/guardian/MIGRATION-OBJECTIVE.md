@@ -162,10 +162,15 @@ sumarán esos niveles ni se usarán tests/commits como porcentaje de finalizaci�
       ejecución, pausa/velocidad/revocación por canal directo, nunca reloj futuro
       concedido por el preparador. La prueba WASM/WebGPU reproduce un paquete
       durante tres bloqueos de 500 ms, sin sobrepasar lo ejecutado ni rebobinar.
-      Faltan transacción genérica para las otras mutaciones, integración física/
+      f-R2 parcial: una primera barrera orientada se propone sin efecto y solo
+      se confirma tras quiescencia/drenaje GPU, con comprobación nativa de
+      dependencias y revocación anterior a liberar el dibujo. Los paquetes
+      antiguos no se reproducen tras el commit; no se declara actualizado el
+      mundo gráfico. Faltan las demás mutaciones y su transacción condicionada,
+      integración física/
       recursos de puerta y consumidores/relevo. No hay permiso de
       cruce de producto/GPU ni aceptación con personajes.
-      Quedan e/f de A6-04; cinco entregables del desglose. 493 dirigidas
+      Quedan e/f de A6-04; cinco entregables del desglose. 517 dirigidas
       + 39 y 74 heredadas pasan sin skips. No se marca e como terminado.
 - [ ] Vertical AttackCrops completa y aceptación real A–F (primer caso integrado,
       no cierre de A6 por sí solo).

@@ -4,20 +4,27 @@ function reject(code,message){const error=new Error(message);error.code=code;thr
 
 // Guard the time actually submitted, not the producer's earlier clock sample.
 // Propose before changing a GPU generation; consume only after its submission
-// succeeds. This guard never changes a lease or silently clamps time forwards.
+// succeeds. It never changes a lease; an explicit, certified mutation minimum
+// may advance within its resource ceiling, but cannot invent wider coverage.
 export function createRemoteFrameTimeGuard(){
  let revision=0,generation=0,elapsed=null,epoch=null,sequence=null;
  const proposals=new WeakMap();
  const status=()=>({revision,generation,elapsed,epoch,sequence});
  return {
-  propose({generation:nextGeneration,lease=null,absoluteNow}={}){
+  propose({generation:nextGeneration,lease=null,absoluteNow,minimum=null}={}){
    if(!Number.isSafeInteger(nextGeneration)||nextGeneration<1||!Number.isFinite(absoluteNow))throw TypeError('Invalid remote frame time proposal');
    if(nextGeneration<generation)reject('remote-frame-generation-regression','Remote frame generation precedes the presented generation');
    let nextElapsed=null,nextEpoch=epoch,nextSequence=sequence;
-   if(lease===null){
+    if(minimum!==null&&(!Number.isFinite(minimum)||minimum<0))throw TypeError('Invalid remote frame minimum');
+    if(lease===null){
+     if(minimum!==null)reject('remote-clock-lease-missing','A causal mutation boundary requires a clock lease');
     if(elapsed!==null)reject('remote-clock-lease-missing','A timed presentation cannot be replaced without a clock lease');
    }else{
-    nextElapsed=evaluateRemoteClock(lease,absoluteNow);
+     nextElapsed=evaluateRemoteClock(lease,absoluteNow);
+     if(minimum!==null){
+      if(minimum>lease.safeUntil)reject('remote-clock-resource-expired','Prepared resources do not cover the causal mutation boundary');
+      nextElapsed=Math.max(nextElapsed,minimum);
+     }
     nextEpoch=lease.epoch;
     if(epoch!==null&&nextEpoch!==epoch)reject('remote-clock-epoch-mismatch','A new clock epoch requires a new presentation session');
     if(lease.sequence!==undefined){

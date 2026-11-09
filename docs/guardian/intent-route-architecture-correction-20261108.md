@@ -1616,3 +1616,80 @@ aprobadas sin skips. Logs `.cache/native-causal-clock-regression.tap`,
 **e-R3, e-R4 y f-R2–R4 pendientes (3 cerrados, 5 pendientes)**. Los padres e/f
 siguen parciales y los 11 puntos principales A6 abiertos. Siguiente bloqueo:
 f-R2, propuesta/commit condicionado de las demás mutaciones.
+
+## Avance parcial de A6-04.f-R2 — Primera barrera propuesta y drenaje GPU
+
+**No se cierra f-R2 ni ningún otro ID en este incremento.** La operación cubierta
+es exclusivamente **añadir una barrera orientada** en la autoridad nativa, sobre
+el dominio/ejecutor ya validado y con un consumidor causal opt-in. No cubre aún
+polígonos, lotes, cambios/eliminaciones de overlay, residencia, props o terreno.
+Las APIs históricas y protecciones existentes se mantienen; no se activa este
+camino en gameplay ni se finge que todas las mutaciones ya estén coordinadas.
+
+### Propuesta sin efecto y comprobación de dependencias
+
+`spatial_barrier_proposal_stage` construye el mismo `Barrier` float y forma que
+el índice canónico, sin asignar ID ni cambiar el mundo. El preflight de cuerpos,
+puertas y candidatos de ruta corre nativamente sin retirar rutas. El ticket de
+un uso pertenece al `IntentState` existente y contiene exclusivamente el input
+de esa propuesta y referencias de vigencia: sesión, instante, secuencias de
+intención/hechos/reloj, revisiones de cuerpos/entidades/reservas/mundo y una
+revisión del motor de puerta. No se crea otro mapa de obstáculos o planificador.
+
+El commit vuelve a usar el alta canónica y sus protecciones existentes, pero solo
+tras validar ticket, reloj, sesión y todas las dependencias. Cambios de cuerpo,
+terreno/residencia/overlay, intención, ejecución, política de reloj o motor de
+puerta durante la espera rechazan sin publicar la propuesta; el ticket no puede
+reutilizarse. La prevalidación no retira ninguna ruta ni consume un ID; un cuerpo
+en la geometría propuesta rechaza igualmente. El evento de commit aplica la
+protección ya existente: revoca exactamente los futuros afectados y propaga
+paradas antes de publicar el obstáculo. JS convierte el input y transporta el
+recibo; no revalida rutas ni decide contactos.
+
+### Quiescencia no es un ACK de recepción
+
+Un `fenceGpu` de prefijo por sí solo no impide que se envíen dibujos nuevos
+después de recibir el fence y antes del commit. `IntentMutationQuiesce` entra por
+el canal directo y detiene las siguientes presentaciones **antes** de capturar
+`onSubmittedWorkDone`. También espera/cierra el paso a submits GPU independientes
+de un frame, que comparten la cola. El recibo menciona sesión, época, secuencia de
+intención, instante, versión de reloj e ID de hold. Un recibo equivocado, cierre,
+timeout o cambio de dependencias no autoriza commit. El hold se libera solo
+después de publicar en el canal directo las revocaciones y la frontera de reloj
+posteriores al commit, en ese orden. Si no se pueden publicar, se cierra el canal
+en vez de fingir un release seguro.
+
+La presentación posterior al release tiene una frontera temporal mínima igual
+al instante físico, y jamás puede ampliar el techo de recursos preparado. Más
+importante: **un commit efectivo invalida la generación gráfica anterior**. No se
+reproduce la ruta antigua con una posición redondeada justo antes del obstáculo;
+un frame ya admitido queda detenido y un frame todavía esperando compilación se
+rechaza explícitamente sin resucitar. Los submits independientes antiguos también
+se rechazan de forma cerrada. Hasta que se entregue un paquete nuevo no se hacen
+nuevos dibujos: la última imagen permanece visible. Esto no pretende representar
+ya el obstáculo nuevo ni resolver la sincronización de sus recursos; eso es f-R4.
+
+### Evidencia y límites
+
+`/tests/browser/native-barrier-mutation.html` ejercita WASM y WebGPU reales con un
+trabajador nativo y triángulo diagnóstico. Durante un bloqueo síncrono de preparación
+de **500,09 ms**, se comprueba que la barrera y ruta aún no cambian al proponer;
+cinco dibujos preceden a la quiescencia. El drenaje, commit y revocación se
+completan antes de terminar el bloqueo; la barrera pasa de 121 a 122 y se revoca
+la ruta exacta en el tiempo 10,25. No se envían dibujos del paquete anterior
+después de liberar. No hubo errores GPU. No se ha dibujado un muro nuevo ni un
+personaje, y no se afirma que todos los dibujantes estén cubiertos.
+
+Evidencia: `performance/native-barrier-mutation-20261109.json`, verificada por
+`tests/native-barrier-mutation-evidence.test.js`. Pruebas WASM/ABI pthread y de
+transportes cubren preflight, rutas no afectadas, recibo falso, estado obsoleto,
+cancelación, motor revisado, sesión/token, hold GPU y una compilación antigua que
+termina después del commit. **517 dirigidas + 39 + 74** aprobadas sin skips; logs
+`.cache/native-barrier-quiescence-regression.tap`,
+`.cache/native-barrier-quiescence-legacy-stream-geometry.tap` y
+`.cache/native-barrier-quiescence-legacy-recipe.tap`. No se declara limpia la
+suite general.
+
+**IDs cerrados este turno: ninguno.** Sigue f-R2 hasta cubrir los otros tipos de
+mutación y sus variantes; f-R3/f-R4 y e-R3/e-R4 siguen abiertos. El tablero fijo
+permanece en **3 cerrados, 5 pendientes**; los padres e/f siguen parciales.

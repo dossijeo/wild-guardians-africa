@@ -18,6 +18,9 @@ test('pthread runtime exposes the same native transition ABI as standalone',asyn
   try{
     assert.equal(world.core.wasm.nav_intent_protocol_version(),2);
     assert.equal(world.core.wasm.nav_intent_clock_version(),1);
+    assert.equal(world.core.wasm.nav_intent_barrier_proposal_version(),1);
+    for(const name of ['nav_intent_barrier_proposal_ticket','nav_intent_barrier_proposal_ticket_ptr','nav_intent_barrier_proposal_cancel',
+      'spatial_barrier_proposal_stage','spatial_barrier_proposal_commit'])assert.equal(typeof world.core.wasm[name],'function',name);
     for(const name of ['nav_intent_clock_commit','nav_intent_clock_snapshot','nav_intent_clock_ptr'])
       assert.equal(typeof world.core.wasm[name],'function',name);
     assert.equal(world.core.wasm.nav_intent_change_width(),15);

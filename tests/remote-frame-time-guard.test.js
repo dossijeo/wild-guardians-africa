@@ -56,3 +56,12 @@ test('reordered wall timestamps cannot rewind autonomous output',()=>{
  assert.throws(()=>guard.propose({generation:1,lease:moving(),absoluteNow:1600}),{code:'remote-frame-time-regression'});
  assert.equal(guard.status().elapsed,10.7);
 });
+
+test('an explicit mutation minimum advances only within the existing resource ceiling and remains transactional',()=>{
+ const guard=createRemoteFrameTimeGuard(),lease=moving();submit(guard,1,lease,1000);
+ const ticket=guard.propose({generation:2,lease,absoluteNow:1100,minimum:11});assert.equal(ticket.elapsed,11);
+ assert.equal(guard.status().elapsed,10);guard.consume(ticket);assert.equal(guard.status().elapsed,11);
+ assert.throws(()=>guard.propose({generation:3,lease,absoluteNow:1200,minimum:12.1}),{code:'remote-clock-resource-expired'});
+ assert.throws(()=>guard.propose({generation:3,lease:null,absoluteNow:1200,minimum:11}),{code:'remote-clock-lease-missing'});
+ assert.equal(guard.status().elapsed,11);
+});

@@ -1,0 +1,15 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Native staged barrier and GPU quiescence</title>
+<style>body{font:14px system-ui;background:#172124;color:#e7ece5;margin:20px}pre{max-height:300px;overflow:auto;background:#223137;padding:12px}canvas{display:block}</style>
+<h1>Staged native barrier — f-R2 partial</h1>
+<p>Real WASM barrier proposal and direct WebGPU quiescence during a blocked preparation worker. Affected old packets stop; updated graphical resources remain f-R4.</p>
+<pre id="result">Ready</pre>
+<script type="module">
+import {auditNativeBarrierMutation} from './native-barrier-mutation.js';
+window.runNativeBarrierMutationAudit=async()=>{
+ try{document.querySelector('#result').textContent='Running';const result=await auditNativeBarrierMutation();
+  window.nativeBarrierMutationAudit=result;document.querySelector('#result').textContent=JSON.stringify(result,null,2);return result;
+ }catch(error){document.querySelector('#result').textContent=String(error.stack??error);throw error;}
+};
+</script>

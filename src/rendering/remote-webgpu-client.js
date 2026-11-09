@@ -318,6 +318,12 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
         pendingFrame.resolve(message); releaseReferences(pendingFrame.retained); pendingFrame = null;
       }
       onPresented(message);
+    } else if (message.type === 'frame-obsolete') {
+      if (pendingFrame?.sequence === message.sequence) {
+        const error=Error(message.reason || 'Remote frame invalidated by a native world mutation');
+        error.code='remote-frame-native-mutation-obsolete';
+        pendingFrame.reject(error);releaseReferences(pendingFrame.retained);pendingFrame=null;
+      }
     } else if (message.type === 'lost') {
       resolveLost(message.info);
       fatalError = Error(`WebGPU device lost: ${message.info?.reason || 'unknown'}: ${message.info?.message || ''}`);
