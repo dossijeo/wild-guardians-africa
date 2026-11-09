@@ -46,6 +46,10 @@ camino crítico sin pedir autorización rutinaria entre hitos.
 ## Lista de trabajo persistente
 
 Seguimiento por IDs acordados: [checklist A6-01–A6-11](A6-CHECKLIST.md).
+La [vista de entrega y pendientes fijos](A6-CHECKLIST.md#vista-de-entrega-y-pendientes-fijos)
+separa componentes implementados de producto integrado: e/f siguen sin cerrar,
+con ocho entregables pendientes identificados como e-R1–R4 y f-R1–R4. No se
+sumarán esos niveles ni se usarán tests/commits como porcentaje de finalización.
 
 - [x] Auditar propietarios y reabrir A6; commits `e213c43f9`–`8892bbe80`.
 - [x] Log nativo versionado, secuencias/tiempos y revocación exacta.
