@@ -87,9 +87,14 @@ camino crítico sin pedir autorización rutinaria entre hitos.
       Avance cinemático nativo opt-in ya mueve cuerpos reales de ambos perfiles
       en el registro existente, con reloj común y sin validaciones por paso.
       Cancelar una trayectoria propaga las paradas conflictivas por evento,
-      conservando tareas/objetivos y otras rutas. Lease de mundo estático todavía
-      conservador: una mutación aborta el avance antes de mover cuerpos/reloj.
+      conservando tareas/objetivos y otras rutas. Lease inicial de mundo fijo:
+      mutaciones no cubiertas todavía abortan el avance sin mover cuerpos/reloj.
       271 pruebas dirigidas pasan sin skips; no está activado en el producto.
+      Muros/polígonos y permisos estáticos cuentan ya con fronteras dirigidas:
+      preflight de cuerpos, revocación de futuros interceptados y cierre de sus
+      paradas antes del commit. Las rutas ajenas continúan sin nueva generación.
+      Lotes rígidos se comprueban enteros antes de tocar IDs/geometría/rutas.
+      288 pruebas dirigidas y 22 de geometría heredada pasan sin skips.
 - [ ] Vertical AttackCrops completa y aceptación real A–F (primer caso integrado,
       no cierre de A6 por sí solo).
 - [ ] Generalizar a otras bestias, trabajadores, intenciones y animaciones;
@@ -111,8 +116,9 @@ camino crítico sin pedir autorización rutinaria entre hitos.
 
 Conectar el avance cinemático común a entidades, fases persistentes y consecuencias
 de gameplay, sin conservar un ejecutor JS paralelo para las clases migradas.
-Sustituir el lease global de mundo fijo por fronteras de mutación dirigidas y
-coordinadas; completar cesiones/desvíos, puertas y otros perfiles/biomas. Después
+Extender las fronteras dirigidas ya implementadas para overlays a terreno,
+residencia y puertas móviles, con coordinación de efecto físico/gráfico;
+completar cesiones/desvíos y otros perfiles/biomas. Después
 ligar reloj causal, desconexión y admisión GPU con aceptación integrada de animales
 y trabajadores. El control directo ya conectado no garantiza por sí solo todo el
 futuro de una ruta. No ampliar autorización visual ni eliminar las protecciones

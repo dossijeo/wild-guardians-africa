@@ -10,6 +10,7 @@
 #include <unordered_set>
 #include <utility>
 #include <vector>
+#include "spatial-static-mutations.h"
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
 #else
@@ -803,6 +804,23 @@ bool barrierClear(double x,double z,const int* ignored=nullptr,int ignoredCount=
 // the swept centre line only between those samples, even though both grid
 // endpoints are clear. Test the exact segment against the same expanded
 // rectangles used by barrierClear, so planning and continuous motion agree.
+bool expandedBoxIntersects(const double a[2],const double b[2],const double half[2]){
+  double entry=0,exit=1;bool possible=true;
+  for(int axis=0;axis<2;axis++){
+    const double delta=b[axis]-a[axis];
+    if(std::abs(delta)<1e-12){
+      if(std::abs(a[axis])>=half[axis]){possible=false;break;}
+      continue;
+    }
+    const double t0=(-half[axis]-a[axis])/delta,t1=(half[axis]-a[axis])/delta;
+    entry=std::max(entry,std::min(t0,t1));exit=std::min(exit,std::max(t0,t1));
+  }
+  if(possible&&entry<=exit){
+    const double t=(entry+exit)*.5;
+    return std::abs(a[0]+(b[0]-a[0])*t)<half[0]&&std::abs(a[1]+(b[1]-a[1])*t)<half[1];
+  }
+  return false;
+}
 bool wallSegmentClear(double x,double z,double nx,double nz,
   const int* ignored=nullptr,int ignoredCount=0,double clearanceRadius=-1,
   bool includePassable=false){
@@ -827,24 +845,7 @@ bool wallSegmentClear(double x,double z,double nx,double nz,
       const double half[2]={clearanceRadius>=0?double(wall.halfX)+clearanceRadius:
         double(wall.halfX+radiusNow),clearanceRadius>=0?double(wall.halfZ)+clearanceRadius:
         double(wall.halfZ+radiusNow)};
-      double entry=0,exit=1;
-      bool possible=true;
-      for(int axis=0;axis<2;axis++){
-        const double delta=b[axis]-a[axis];
-        if(std::abs(delta)<1e-12){
-          if(std::abs(a[axis])>=half[axis]){possible=false;break;}
-          continue;
-        }
-        const double t0=(-half[axis]-a[axis])/delta;
-        const double t1=(half[axis]-a[axis])/delta;
-        entry=std::max(entry,std::min(t0,t1));
-        exit=std::min(exit,std::max(t0,t1));
-      }
-      if(possible&&entry<=exit){
-        const double t=(entry+exit)*.5;
-        if(std::abs(a[0]+(b[0]-a[0])*t)<half[0]&&
-           std::abs(a[1]+(b[1]-a[1])*t)<half[1])return false;
-      }
+      if(expandedBoxIntersects(a,b,half))return false;
     }
   }
   return true;
@@ -1469,14 +1470,44 @@ void flushBarrierBatch(){
   selectProfile(previous);
   deferredBarrierRefresh.clear();
 }
+SpatialStaticMutation barrierMutation(const Barrier& barrier,int affectedMask=3){
+  SpatialStaticMutation shape;
+  shape.x=barrier.x;shape.z=barrier.z;shape.halfX=barrier.halfX;shape.halfZ=barrier.halfZ;
+  shape.c=barrier.c;shape.s=barrier.s;shape.passMask=barrier.passMask;shape.affectedMask=affectedMask;
+  const double ex=std::abs(shape.c)*shape.halfX+std::abs(shape.s)*shape.halfZ,
+    ez=std::abs(shape.s)*shape.halfX+std::abs(shape.c)*shape.halfZ;
+  shape.minX=shape.x-ex;shape.maxX=shape.x+ex;shape.minZ=shape.z-ez;shape.maxZ=shape.z+ez;
+  return shape;
+}
+SpatialStaticMutation polygonMutation(const PolygonObstacle& polygon){
+  SpatialStaticMutation shape;
+  shape.xy=polygon.xy.data();shape.count=int(polygon.xy.size()/2);shape.passMask=polygon.passMask;
+  shape.minX=polygon.minX;shape.maxX=polygon.maxX;shape.minZ=polygon.minZ;shape.maxZ=polygon.maxZ;
+  return shape;
+}
+bool barrierBatchPreflight(int count){
+  if(!spatialIntentStaticExecutionActive())return true;
+  std::vector<SpatialStaticMutation> shapes;shapes.reserve(size_t(count));
+  for(int i=0;i<count;i++){
+    const size_t at=size_t(i)*6;const float yaw=barrierBatch[at+4];
+    const Barrier barrier={0,barrierBatch[at],barrierBatch[at+1],barrierBatch[at+2],barrierBatch[at+3],yaw,
+      float(std::cos(yaw)),float(std::sin(yaw)),uint8_t(barrierBatch[at+5])};
+    shapes.push_back(barrierMutation(barrier));
+  }
+  return spatialIntentStaticPreflight(shapes.data(),count);
+}
 int addBarrier(float x,float z,float halfX,float halfZ,int passMask,float yaw=0){
   if(!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(halfX)||!std::isfinite(halfZ)||
      !std::isfinite(yaw)||halfX<=0||halfZ<=0||halfX>100||halfZ>100||passMask<0||passMask>3||
      nextBarrierId==std::numeric_limits<int>::max())return 0;
-  const Barrier barrier={nextBarrierId++,x,z,halfX,halfZ,yaw,float(std::cos(yaw)),float(std::sin(yaw)),uint8_t(passMask)};
+  const Barrier barrier={nextBarrierId,x,z,halfX,halfZ,yaw,float(std::cos(yaw)),float(std::sin(yaw)),uint8_t(passMask)};
+  const auto shape=barrierMutation(barrier);const auto ticket=spatialIntentStaticBefore(&shape,1);
+  if(!ticket.allowed)return 0;
+  nextBarrierId++;
   barrierIndex().byId.emplace(barrier.id,barrier);
   indexBarrier(barrier,true);
   refreshBarrier(barrier);
+  spatialIntentStaticCommitted(ticket);
   return barrier.id;
 }
 // Far-field presentation queries use the same deterministic C++ recipe without
@@ -1562,6 +1593,31 @@ void horizonDesertNormals(HorizonSampler& sampler,int ox,int oz){
 
 namespace {
 #include "spatial-execution-clearance.h"
+}
+
+bool spatialStaticMutationBlocks(const SpatialStaticMutation& shape,double x,double z,
+    double nx,double nz,double radius,int kind,bool physical){
+  const int bit=kind==0?1:2;
+  if(!(shape.affectedMask&bit)||(physical&&(shape.passMask&bit))||
+     (kind==1&&(shape.passMask&2)))return false;
+  const float coordinate=float(std::max({1.0,std::abs(x),std::abs(z),std::abs(nx),std::abs(nz),
+    std::abs(shape.minX),std::abs(shape.minZ),std::abs(shape.maxX),std::abs(shape.maxZ)})+radius+3);
+  if(!std::isfinite(coordinate))return true;
+  const double error=std::max(1e-7,double(std::nextafter(coordinate,std::numeric_limits<float>::infinity())-coordinate)),
+    r=radius+2*error+1e-8;
+  if(!shape.count){
+    const double dx=x-shape.x,dz=z-shape.z,ex=nx-shape.x,ez=nz-shape.z,
+      a[2]={dx*shape.c-dz*shape.s,dx*shape.s+dz*shape.c},
+      b[2]={ex*shape.c-ez*shape.s,ex*shape.s+ez*shape.c},half[2]={shape.halfX+r,shape.halfZ+r};
+    return expandedBoxIntersects(a,b,half);
+  }
+  const ExecutionPoint a{x,z},b{nx,nz};
+  if(executionInsideVertices(a,shape.xy,size_t(shape.count))||
+     executionInsideVertices(b,shape.xy,size_t(shape.count)))return true;
+  for(int i=0,j=shape.count-1;i<shape.count;j=i++)
+    if(executionEdgeDistance(a,b,{shape.xy[i*2],shape.xy[i*2+1]},
+        {shape.xy[j*2],shape.xy[j*2+1]})<r)return true;
+  return false;
 }
 
 // Main-thread-only staging buffer; workers never access eviction requests.
@@ -2226,9 +2282,11 @@ int spatial_remove_wall(int id){
   const auto it=index.byId.find(id);
   if(it==index.byId.end())return 0;
   const Barrier barrier=it->second;
+  const auto ticket=spatialIntentStaticBefore(nullptr,0);
   indexBarrier(barrier,false);
   index.byId.erase(it);
   refreshBarrier(barrier);
+  spatialIntentStaticCommitted(ticket);
   return 1;
 }
 int spatial_remove_barrier(int id){return spatial_remove_wall(id);}
@@ -2253,10 +2311,14 @@ int spatial_add_polygon(int count,int passMask){
     area+=double(x)*polygonInput[next*2+1]-double(z)*polygonInput[next*2];
   }
   if(maxX-minX>100||maxZ-minZ>100||!std::isfinite(area)||std::abs(area)<1e-4)return 0;
-  PolygonObstacle polygon={nextPolygonId++,uint8_t(passMask),minX,minZ,maxX,maxZ,
+  PolygonObstacle polygon={nextPolygonId,uint8_t(passMask),minX,minZ,maxX,maxZ,
     std::vector<float>(polygonInput.begin(),polygonInput.begin()+count*2)};
+  const auto shape=polygonMutation(polygon);const auto ticket=spatialIntentStaticBefore(&shape,1);
+  if(!ticket.allowed)return 0;
+  nextPolygonId++;
   polygonIndex().byId.emplace(polygon.id,polygon);
   indexPolygon(polygon,true);refreshPolygon(polygon);
+  spatialIntentStaticCommitted(ticket);
   return polygon.id;
 }
 int spatial_remove_polygon(int id){
@@ -2264,7 +2326,9 @@ int spatial_remove_polygon(int id){
   const auto it=index.byId.find(id);
   if(it==index.byId.end())return 0;
   const PolygonObstacle polygon=it->second;
+  const auto ticket=spatialIntentStaticBefore(nullptr,0);
   indexPolygon(polygon,false);index.byId.erase(it);refreshPolygon(polygon);
+  spatialIntentStaticCommitted(ticket);
   return 1;
 }
 int spatial_add_barrier(float x,float z,float halfX,float halfZ,int passMask){
@@ -2291,6 +2355,7 @@ int spatial_add_barriers_batch(int count){
        halfX<=0||halfZ<=0||halfX>100||halfZ>100||
        !std::isfinite(passMask)||passMask<0||passMask>3||std::floor(passMask)!=passMask)return 0;
   }
+  if(!barrierBatchPreflight(count))return 0;
   barrierBatchIds.resize(count);
   batchingBarriers=true;
   for(int i=0;i<count;i++)barrierBatchIds[i]=addBarrier(
@@ -2325,6 +2390,7 @@ int spatial_apply_barrier_batch(int removeCount,int addCount){
        !std::isfinite(yaw)||halfX<=0||halfZ<=0||halfX>100||halfZ>100||
        !std::isfinite(passMask)||passMask<0||passMask>3||std::floor(passMask)!=passMask)return 0;
   }
+  if(!barrierBatchPreflight(addCount))return 0;
   barrierBatchIds.resize(addCount);
   batchingBarriers=true;
   for(int i=0;i<removeCount;i++)spatial_remove_barrier(barrierRemovalIds[i]);
@@ -2360,7 +2426,8 @@ BarrierStateRecord* spatial_barrier_restore_ptr(int count){
 }
 int spatial_restore_barriers(int count,int nextId){
   if(count<0||count>100000||barrierState.size()!=size_t(count)||
-     nextId<1||!barrierIndex().byId.empty())return 0;
+      nextId<1||!barrierIndex().byId.empty())return 0;
+  if(!spatialIntentStaticRestorationAllowed())return 0;
   int previousId=0;
   for(const BarrierStateRecord& item:barrierState){
     if(item.id<=previousId||item.id>=nextId||item.passMask<0||item.passMask>3||
@@ -2402,7 +2469,8 @@ PolygonStateRecord* spatial_polygon_restore_ptr(int count){
 }
 int spatial_restore_polygons(int count,int nextId){
   if(count<0||count>100000||polygonState.size()!=size_t(count)||
-     nextId<1||!polygonIndex().byId.empty())return 0;
+      nextId<1||!polygonIndex().byId.empty())return 0;
+  if(!spatialIntentStaticRestorationAllowed())return 0;
   int previousId=0;
   for(const PolygonStateRecord& item:polygonState){
     if(item.id<=previousId||item.id>=nextId||item.count<3||
@@ -2444,8 +2512,14 @@ int spatial_set_barrier_passability(int id,int passMask){
   if(it==index.byId.end())return 0;
   Barrier& barrier=it->second;
   if(barrier.passMask!=passMask){
+    Barrier proposed=barrier;proposed.passMask=uint8_t(passMask);
+    const int tightened=int(barrier.passMask)&~passMask;
+    const auto shape=barrierMutation(proposed,tightened);
+    const auto ticket=spatialIntentStaticBefore(tightened?&shape:nullptr,tightened?1:0);
+    if(!ticket.allowed)return 0;
     barrier.passMask=uint8_t(passMask);
     refreshBarrier(barrier);
+    spatialIntentStaticCommitted(ticket);
   }
   return 1;
 }

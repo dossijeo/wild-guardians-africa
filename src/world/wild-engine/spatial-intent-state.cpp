@@ -12,6 +12,7 @@
 #include <utility>
 #include <vector>
 #include "spatial-dynamic-bodies.h"
+#include "spatial-static-mutations.h"
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
 #else
@@ -228,6 +229,8 @@ struct IntentState {
   std::array<double,18> executionResult{};
   std::set<uint64_t> stoppedReservationBodies,removingBodies;
   uint64_t executionAdvances=0,executionEvaluations=0,executionBodyUpdates=0,executionStopInvalidations=0;
+  uint64_t staticMutationCandidates=0,staticMutationSegments=0,staticMutationBodyChecks=0,
+    staticMutationRevocations=0,staticMutationRejected=0,staticMutationCommits=0;
   uint32_t session=0;
   uint64_t invalidations=0;
   std::unordered_map<uint64_t,uint64_t> planningCallsByActor;
@@ -421,6 +424,7 @@ void releaseIntent(IntentState& s,uint64_t actor,PlanningState next){
 }
 #include "spatial-route-reservations.h"
 #include "spatial-route-execution.h"
+#include "spatial-static-mutation-state.h"
 void invalidateDependents(IntentState& s,const Change& change){
   if(change.kind==1){
     if(!change.op){
@@ -800,6 +804,15 @@ ServiceRoute findServiceRoute(const Worker& worker,const Target& target,int kind
 }
 }
 
+bool spatialIntentStaticExecutionActive(){return state().executionEnabled;}
+bool spatialIntentStaticRestorationAllowed(){return !state().executionEnabled;}
+bool spatialIntentStaticPreflight(const SpatialStaticMutation* shapes,int count){
+  return staticMutationPreflight(state(),shapes,count);
+}
+SpatialStaticTicket spatialIntentStaticBefore(const SpatialStaticMutation* shapes,int count){
+  return staticMutationBefore(state(),shapes,count);
+}
+void spatialIntentStaticCommitted(const SpatialStaticTicket& ticket){staticMutationCommitted(state(),ticket);}
 bool spatialIntentBodyCanChange(uint64_t id,const SpatialBodyView& proposed){
   return reservationBodyCanChange(state(),id,proposed);
 }
@@ -856,6 +869,8 @@ void nav_intent_reset(){
   s.executionWorldStamp.fill(0);s.executionResult.fill(0);
   s.stoppedReservationBodies.clear();s.removingBodies.clear();
   s.executionAdvances=s.executionEvaluations=s.executionBodyUpdates=s.executionStopInvalidations=0;
+  s.staticMutationCandidates=s.staticMutationSegments=s.staticMutationBodyChecks=0;
+  s.staticMutationRevocations=s.staticMutationRejected=s.staticMutationCommits=0;
   s.attackRouteInput.clear();s.attackBlockers.clear();
   s.attackReservedTargets.clear();s.attackResult.fill(0);
   s.wallAttackResult.fill(0);
@@ -1747,6 +1762,12 @@ EMSCRIPTEN_KEEPALIVE double nav_intent_execution_advances(){return double(state(
 EMSCRIPTEN_KEEPALIVE double nav_intent_execution_evaluations(){return double(state().executionEvaluations);}
 EMSCRIPTEN_KEEPALIVE double nav_intent_execution_body_updates(){return double(state().executionBodyUpdates);}
 EMSCRIPTEN_KEEPALIVE double nav_intent_execution_stop_invalidations(){return double(state().executionStopInvalidations);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_static_mutation_candidates(){return double(state().staticMutationCandidates);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_static_mutation_segments(){return double(state().staticMutationSegments);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_static_mutation_body_checks(){return double(state().staticMutationBodyChecks);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_static_mutation_revocations(){return double(state().staticMutationRevocations);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_static_mutation_rejected(){return double(state().staticMutationRejected);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_static_mutation_commits(){return double(state().staticMutationCommits);}
 
 // A topological event may be unrelated to an active worker path. Validate the
 // pinned polyline against the updated native collision map at this boundary,

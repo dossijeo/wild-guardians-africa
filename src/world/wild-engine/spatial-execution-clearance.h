@@ -21,14 +21,16 @@ double executionEdgeDistance(ExecutionPoint a,ExecutionPoint b,
   return std::min({executionPointDistance(a,c,d),executionPointDistance(b,c,d),
     executionPointDistance(c,a,b),executionPointDistance(d,a,b)});
 }
-bool executionInside(ExecutionPoint point,const PolygonObstacle& polygon){
-  bool inside=false;const size_t count=polygon.xy.size()/2;
+bool executionInsideVertices(ExecutionPoint point,const float* xy,size_t count){
+  bool inside=false;
   for(size_t i=0,j=count-1;i<count;j=i++){
-    const double ax=polygon.xy[i*2],az=polygon.xy[i*2+1],
-      bx=polygon.xy[j*2],bz=polygon.xy[j*2+1];
+    const double ax=xy[i*2],az=xy[i*2+1],bx=xy[j*2],bz=xy[j*2+1];
     if((az>point.z)!=(bz>point.z)&&point.x<(bx-ax)*(point.z-az)/(bz-az)+ax)inside=!inside;
   }
   return inside;
+}
+bool executionInside(ExecutionPoint point,const PolygonObstacle& polygon){
+  return executionInsideVertices(point,polygon.xy.data(),polygon.xy.size()/2);
 }
 bool executionLattice(int x,int z,double& value){
   int cx=0,cz=0;const auto* sample=residentSample(x,z,&cx,&cz);

@@ -1,4 +1,4 @@
-// Native kinematic execution on an explicitly admitted, fixed-world cohort.
+// Native kinematic execution on a cohort with versioned static proofs.
 // The route remains the only timetable, the body registry the physical owner.
 // This is not yet gameplay consequence ownership or a graphical clock permit.
 bool executionBindingCoherent(const IntentState& s,uint64_t body,uint32_t slot){
@@ -45,9 +45,9 @@ int advanceRouteExecution(IntentState& s,double at){
   if(!std::isfinite(at)||at<s.effectiveTime)return -1;
   if(!s.executionEnabled)return -2;
   if(at==s.effectiveTime)return 0;
-  // A mutation counter check once per cohort, never collision/validity queries
-  // for each route. Until pre-mutation world transactions are connected, any
-  // changed static world ends this immutable-world lease and fails closed.
+  // Known overlay transactions extend the surviving cohort's proof at mutation
+  // time. Untracked terrain/residency changes still fail closed here: one
+  // mutation-counter check per cohort, never route collision/validity queries.
   if(s.executionWorldStamp!=executionWorldStamp())return -4;
   struct Move {uint32_t slot;std::array<double,18> pose;};
   std::vector<Move> moves;moves.reserve(s.reservedBodies.size());

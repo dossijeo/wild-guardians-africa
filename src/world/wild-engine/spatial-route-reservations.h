@@ -76,11 +76,12 @@ std::set<uint64_t> reservationCandidates(const IntentState& s,const ActiveIntent
   }
   return actors;
 }
-std::set<uint64_t> reservationBodyCandidates(const IntentState& s,const SpatialBodyView& body){
+std::set<uint64_t> reservationBoxCandidates(const IntentState& s,
+    double worldMinX,double worldMinZ,double worldMaxX,double worldMaxZ){
   std::set<uint64_t> actors;if(s.reservedBodies.empty())return actors;
   const double size=lazy_sector_size(),
-    minX=std::floor((body.x-body.r)/size),maxX=std::floor((body.x+body.r)/size),
-    minZ=std::floor((body.z-body.r)/size),maxZ=std::floor((body.z+body.r)/size);
+    minX=std::floor(worldMinX/size),maxX=std::floor(worldMaxX/size),
+    minZ=std::floor(worldMinZ/size),maxZ=std::floor(worldMaxZ/size);
   if(size<=0||!std::isfinite(minX)||!std::isfinite(maxX)||!std::isfinite(minZ)||!std::isfinite(maxZ)||
      minX<std::numeric_limits<int>::min()||maxX>std::numeric_limits<int>::max()||
      minZ<std::numeric_limits<int>::min()||maxZ>std::numeric_limits<int>::max()||
@@ -95,6 +96,9 @@ std::set<uint64_t> reservationBodyCandidates(const IntentState& s,const SpatialB
       if(found!=s.routeSubscribers.end())actors.insert(found->second.begin(),found->second.end());
     }
   return actors;
+}
+std::set<uint64_t> reservationBodyCandidates(const IntentState& s,const SpatialBodyView& body){
+  return reservationBoxCandidates(s,body.x-body.r,body.z-body.r,body.x+body.r,body.z+body.r);
 }
 bool reserveRouteClear(IntentState& s,const ActiveIntent& intent,const RouteSlot& route,
     uint64_t body,const SpatialBodyView& physical){

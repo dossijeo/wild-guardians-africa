@@ -544,3 +544,70 @@ Faltan asimismo resolver los conflictos (no solo pararlos), transacciones previa
 de mundo/puertas/residencia, otros perfiles/biomas y reloj/ACK causal con política
 de pérdida de canal antes de la aceptación WASM/WebGPU completa para **todas** las
 intenciones. Ningún build o test de este incremento cierra A6.
+
+## Fronteras dirigidas de overlays estáticos — 2026-11-09
+
+Se sustituyó el bloqueo indiscriminado de la cohorte para las entradas nativas
+de muros rectos/orientados, polígonos, retirada, cambios de pasabilidad y lotes
+rígidos. El propietario de mundo entrega vistas temporales de **su geometría
+validada** al propietario existente de intenciones: no hay otro registro de
+obstáculos, planificador ni consulta geométrica JS. Las intersecciones usan los
+mismos kernels C++ de cajas expandidas y distancias/bordes de polígonos que el
+barrido continuo. La aritmética float de las guardas heredadas se conserva.
+
+Antes de modificar IDs, índices, máscaras o revisiones:
+
+1. El índice de cuerpos comprueba la propuesta contra los footprints actuales.
+   Se rechaza un solapamiento físico según la máscara del perfil, sin inventar
+   prohibiciones para cuerpos con paso declarado. Un paso de trabajador todavía
+   no soportado para autonomía retira su ruta, no convierte una mutación físicamente
+   permitida en una regla nueva de colisión.
+2. Los suscriptores espaciales existentes localizan las rutas potencialmente
+   afectadas. Solo sus sufijos desde la pose/cursor nativos se contrastan con la
+   propuesta continua. No se revalidan todas las rutas ni se recorren prefijos
+   ya ejecutados. Las versiones interceptadas se revocan y se cierra la cascada
+   de cuerpos detenidos **antes** de hacer efectiva la geometría.
+3. Tras el commit, solo una transacción overlay conocida, partiendo del stamp
+   reconocido y con incremento exacto de revisión, extiende la prueba de los
+   supervivientes. Estos mantienen handle, tiempos y generación, sin replanificar.
+   Una edición previa de terreno/residencia no puede quedar reconocida por
+   accidente al procesar después un overlay.
+
+Los lotes de altas y de retirada/alta hacen preflight de **todas** las nuevas
+piezas antes de la primera retirada o revocación. Un rechazo deja intactos IDs,
+geometría, permisos y log; no se confía en deshacer un lote parcialmente aplicado.
+Restaurar geometría en bloque durante ejecución activa se rechaza: restauración
+requiere la frontera de sesión correspondiente. Las previews siguen usando su
+WASM aislado o los servicios read-only; ni una preview abortada retira permisos
+de ejecución confirmados.
+
+**Evidencia:** 17 pruebas nuevas con WASM real, incluyendo edición lejana con
+cero candidatos/segmentos de ruta, retirada específica de una ruta orientada con
+otra intacta, rechazo bajo un cuerpo, penetración futura de polígono de 0,1 mm,
+paso de trabajador no soportado, permisos físicos conservados, lotes rechazados
+atómicamente y aceptados, endurecimiento/relajación de máscara, obstáculos detrás
+del cursor, cierre A → B → C dejando D en marcha, rechazo de restore activo y
+aislamiento de previews. El índice usa los bounds reales de un muro largo y
+estrecho, no su cuadrado envolvente. Los cambios lejanos no incrementan validaciones ni
+barridos continuos de rutas; los contadores nuevos distinguen candidatos,
+segmentos, footprints, revocaciones, rechazos y commits de esta frontera.
+
+Regresión ampliada: **288 aprobadas sin skips**, con standalone/pthread recién
+reconstruidos y ABI verificado. Además, **22 pruebas de geometría heredada sin
+skips** cubren escapes de solapamiento, overlays de puertas en seis biomas,
+proyecciones de obstáculos, previews y commit diferido. Contactos/detours se
+contrastaron también contra el WASM anterior de Git. Logs locales:
+`.cache/native-static-mutations-regression.tap` y
+`.cache/native-static-mutations-legacy-geometry.tap`. La fixture de ejecución se
+comparte ahora como helper de pruebas; la receta/guardado real no se ha alterado.
+
+**Límites:** solo la cohorte opt-in y estas mutaciones de overlays están cubiertas;
+terreno/residencia no instrumentados siguen fallando de forma conservadora. La
+frontera es nativa y ocurre en su reloj lógico actual: no equivale a ACK ni a
+revocación oportuna de fotogramas que un dibujante pudiera haber adelantado. No
+resuelve todavía hojas móviles, impactos/ragdoll, cesiones/desvíos ni la política
+de comando de construcción ante un rechazo físico. La transacción JS exterior,
+fases persistentes, consecuencias y save/restore de gameplay siguen pendientes
+de integración. No se activó autonomía GPU ni se retiraron guardas; **A6 sigue
+abierto para todas las intenciones, incluidos los trabajadores**. Estas pruebas
+no sustituyen la aceptación real A–F ni declaran limpia la suite completa.

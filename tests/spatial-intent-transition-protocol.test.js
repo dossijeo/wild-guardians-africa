@@ -39,6 +39,10 @@ test('pthread runtime exposes the same native transition ABI as standalone',asyn
       'nav_intent_execution_advances','nav_intent_execution_evaluations',
       'nav_intent_execution_body_updates','nav_intent_execution_stop_invalidations'])
       assert.equal(typeof world.core.wasm[name],'function',name);
+    for(const name of ['nav_intent_static_mutation_candidates','nav_intent_static_mutation_segments',
+      'nav_intent_static_mutation_body_checks','nav_intent_static_mutation_revocations',
+      'nav_intent_static_mutation_rejected','nav_intent_static_mutation_commits'])
+      assert.equal(typeof world.core.wasm[name],'function',name);
   }finally{await world.dispose();}
 });
 function fixture(options={}){
