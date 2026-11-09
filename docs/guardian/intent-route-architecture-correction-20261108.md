@@ -674,3 +674,65 @@ efecto gráfico. La prueba continua sigue limitada a Desierto, el ejecutor de
 producto no se ha activado y `authorizedAutonomy:false` se conserva. Faltan
 también entidades/fases persistentes/consecuencias, resolución de tráfico y reloj
 causal GPU. No se reclama aceptación WebGPU real nueva ni cierre de A6.
+
+## A6-04.c — Supresión/restauración canónica de props — 2026-11-09
+
+La supresión individual o por conjunto es monótona: no introduce sólidos ni
+modifica el relieve. El cambio conocido de inputs puede extender la prueba de
+los supervivientes, sin planificación o revalidación de rutas. La supresión por
+conjunto aprovecha los registros residentes y no ejecuta una receta especulativa.
+
+La restauración protegida no confía en `removedPropGeometry` como certificado:
+esos registros son witnesses de refresco y se invalidan con asentamientos. Antes
+de tocar el conjunto vivo, el mundo calcula el delta de identidades y sus chunks
+candidatos mediante la **misma** posición procedural C++ que usa el generador.
+En una vista temporal thread-local de la propuesta se ejecuta la receta actual
+solo para candidatos residentes, incluyendo halos cuyo dueño esté descargado.
+No se publican chunks, no se cambia residencia, no se reconstruye otro mundo ni
+se altera el grafo. El estado seleccionado se conserva mediante RAII.
+
+De esa receta salen los sólidos realmente nuevos. Sus discos usan el mismo
+kernel nativo de distancia al segmento del barrido continuo, no sus cajas
+envolventes. Decoración no sólida no inventa colisiones. Los índices existentes
+comprueban cuerpos actuales y sufijos futuros, incluidos leases preparados aún
+sin ejecución. Un sólido bajo un cuerpo rechaza todo el reemplazo, también sus
+supresiones acompañantes; no modifica identidad, witnesses, buffers seleccionados,
+reloj, revisiones ni log confirmado. Una ruta interceptada se retira antes del
+commit, con el cierre nativo de sus paradas.
+
+Tras la aprobación se intercambia el conjunto, se actualizan witnesses y se
+refrescan todos los candidatos/halos canónicos que podrían materializar el delta.
+No se usa el antiguo corte de 64 registros para provocar un refresco global:
+solo se actualizan datos y sectores locales. Incluir los candidatos canónicos
+evita depender de bounds recomputados desde posiciones visibles ya redondeadas.
+El incremento de inputs se reconoce exactamente (incluido el batch unitario
+heredado de dos incrementos), nunca absorbiendo una edición previa de terreno.
+
+El bootstrap legacy y el formato de supresiones guardadas se conservan; los
+casos protegidos con coordenadas procedurales no soportadas fallan antes de
+generar o comprometer datos. El bridge exige la capacidad nativa de mutación de
+props, versión 1: no habilita esta ruta con un WASM antiguo silenciosamente.
+
+**19 pruebas nuevas con WASM real:** supresión individual/bulk, restauración
+lejana, rechazo bajo trabajador y animal, cuerpo detenido, intercepción futura
+sin afectar otra ruta, lease preparado revocado, separación disco/caja,
+decoración bajo cuerpo, reemplazo mixto atómico, witness borrado, dueño descargado
+sin publicación scratch, sólido de halo con dueño ausente, historial de más de
+64 cambios, entradas inválidas/no soportadas, edición de terreno pendiente y
+dos casos de pthread real. Un rechazo mantiene publicable un resultado en vuelo;
+un cambio aceptado vuelve obsoleto ese resultado sin detener una ejecución ajena.
+
+Regresión: **330 dirigidas + 39 de streaming/geometría + 74 de receta, estado y
+consultas lejanas**, todas aprobadas sin skips. Standalone/pthread reconstruidos,
+ABI/capacidad verificados; contactos/detours contrastados contra el WASM previo
+de Git. Logs: `.cache/native-props-regression.tap`,
+`.cache/native-props-legacy-stream-geometry.tap` y
+`.cache/native-props-legacy-recipe.tap`.
+
+**Seguimiento:** A6-04.c implementado/validado en el dominio nativo actual;
+A6-04 sigue parcial por terreno, puertas móviles y coordinación física/gráfica.
+La frontera sigue en reloj lógico nativo, no concede ACK de fotogramas adelantados
+ni decide la política exterior de un comando rechazado. Continúan pendientes
+entidades/fases/consecuencias de gameplay, otros perfiles/biomas, tráfico resuelto
+y reloj causal GPU. `authorizedAutonomy:false` y las guardas de producto se
+mantienen. No se reclama nueva aceptación gráfica A–F ni suite general limpia.

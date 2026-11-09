@@ -4,7 +4,7 @@
 
 // Temporary views of proposed native geometry, never another obstacle store.
 struct SpatialStaticMutation {
-  double x=0,z=0,halfX=0,halfZ=0,c=1,s=0;
+  double x=0,z=0,halfX=0,halfZ=0,c=1,s=0,circleRadius=-1;
   double minX=0,minZ=0,maxX=0,maxZ=0;
   const float* xy=nullptr;
   int count=0,passMask=0,affectedMask=3;

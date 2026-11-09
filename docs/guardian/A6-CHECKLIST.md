@@ -26,8 +26,12 @@ ejecutor protegido de producto. A6 incluye todas las intenciones y trabajadores.
     en el dominio nativo actual; no activación general del ejecutor de producto.
     Evidencia: 17 pruebas WASM nuevas (dos con pthread real), batería dirigida
     de 311 y batería heredada de streaming/geometría de 39, sin skips.
-  - [ ] **A6-04.c — Props.** Extender estas fronteras a supresión/restauración de
-    props, sin aceptar cambios de geometría no comprobados.
+  - [x] **A6-04.c — Props nativos.** Supresión monótona y restauración transaccional
+    desde la receta C++ actual; cuerpos, sufijos futuros, leases preparados,
+    decoración, halos y ausencia de witnesses cubiertos. Implementado/validado
+    en el dominio nativo actual, sin activar el ejecutor general de producto.
+    Evidencia: 19 pruebas WASM nuevas (dos pthread), batería dirigida de 330 y
+    baterías heredadas de 39 y 74, sin skips.
   - [ ] **A6-04.d — Terreno.** Cambios de relieve/asentamientos dirigidos y seguros
     para cuerpos actuales y rutas futuras. Siguen bloqueando el lease de forma
     conservadora cuando no están instrumentados.
@@ -67,8 +71,12 @@ ejecutor protegido de producto. A6 incluye todas las intenciones y trabajadores.
 - [Arquitectura, incrementos y límites](intent-route-architecture-correction-20261108.md).
 - `.cache/native-residency-regression.tap`: 311 aprobadas sin skips.
 - `.cache/native-residency-legacy-stream-geometry.tap`: 39 aprobadas sin skips.
+- `.cache/native-props-regression.tap`: 330 aprobadas sin skips.
+- `.cache/native-props-legacy-stream-geometry.tap`: 39 aprobadas sin skips.
+- `.cache/native-props-legacy-recipe.tap`: 74 aprobadas sin skips.
 
-Próximo trabajo de A6-04: props y terreno; en paralelo de dependencias de diseño,
+Próximo trabajo de A6-04: terreno (A6-04.d), puertas y coordinación de efecto;
+en paralelo de dependencias de diseño,
 siguen pendientes la integración de entidades/fases/consecuencias (A6-01/02) y
 la coordinación temporal con dibujo (A6-06). No se declara completa la suite
 general ni la aceptación real A–F.

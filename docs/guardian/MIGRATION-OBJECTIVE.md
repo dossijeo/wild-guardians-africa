@@ -103,6 +103,11 @@ Seguimiento por IDs acordados: [checklist A6-01–A6-11](A6-CHECKLIST.md).
       y halos sobreviven al fin de una ruta; retención reintenta por cambios de
       frontera nativa, sin comprobaciones geométricas periódicas. 311 pruebas
       dirigidas y 39 de streaming/geometría heredada pasan sin skips.
+      A6-04.c: props implementados/validados en el mismo dominio. La restauración
+      propone geometría canónica sin publicar scratch ni cambiar el conjunto
+      vivo; preflight atómico, discos sólidos, halos y leases preparados.
+      Supresión monótona sin comprobación de rutas ni receta especulativa.
+      330 pruebas dirigidas + 39 y 74 heredadas pasan sin skips.
 - [ ] Vertical AttackCrops completa y aceptación real A–F (primer caso integrado,
       no cierre de A6 por sí solo).
 - [ ] Generalizar a otras bestias, trabajadores, intenciones y animaciones;
@@ -124,8 +129,8 @@ Seguimiento por IDs acordados: [checklist A6-01–A6-11](A6-CHECKLIST.md).
 
 Conectar el avance cinemático común a entidades, fases persistentes y consecuencias
 de gameplay, sin conservar un ejecutor JS paralelo para las clases migradas.
-Extender las fronteras dirigidas ya implementadas para overlays/residencia a
-props, terreno y puertas móviles, con coordinación de efecto físico/gráfico;
+Extender las fronteras dirigidas ya implementadas para overlays/residencia/props
+a terreno y puertas móviles, con coordinación de efecto físico/gráfico;
 completar cesiones/desvíos y otros perfiles/biomas. Después
 ligar reloj causal, desconexión y admisión GPU con aceptación integrada de animales
 y trabajadores. El control directo ya conectado no garantiza por sí solo todo el

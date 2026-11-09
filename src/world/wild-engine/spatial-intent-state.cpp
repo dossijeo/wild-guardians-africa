@@ -14,6 +14,7 @@
 #include "spatial-dynamic-bodies.h"
 #include "spatial-static-mutations.h"
 #include "spatial-residency-mutations.h"
+#include "spatial-prop-mutations.h"
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
 #else
@@ -234,6 +235,8 @@ struct IntentState {
     staticMutationRevocations=0,staticMutationRejected=0,staticMutationCommits=0;
   uint64_t residencyCandidates=0,residencySegments=0,residencyBodyChecks=0,
     residencyRevocations=0,residencyRejected=0,residencyCommits=0,residencyPinRevision=0;
+  uint64_t propMutationCandidates=0,propMutationSegments=0,propMutationBodyChecks=0,
+    propMutationRevocations=0,propMutationRejected=0,propMutationCommits=0,propMutationRecipeChunks=0;
   uint32_t session=0;
   uint64_t invalidations=0;
   std::unordered_map<uint64_t,uint64_t> planningCallsByActor;
@@ -441,6 +444,7 @@ void releaseIntent(IntentState& s,uint64_t actor,PlanningState next){
 #include "spatial-route-execution.h"
 #include "spatial-static-mutation-state.h"
 #include "spatial-residency-mutation-state.h"
+#include "spatial-prop-mutation-state.h"
 void invalidateDependents(IntentState& s,const Change& change){
   if(change.kind==1){
     if(!change.op){
@@ -821,6 +825,11 @@ ServiceRoute findServiceRoute(const Worker& worker,const Target& target,int kind
 }
 
 bool spatialIntentStaticProtectionActive(){return state().bodyDomainActive;}
+bool spatialIntentPropsProtected(){const auto& s=state();return s.bodyDomainActive||!s.reservedBodies.empty();}
+SpatialStaticTicket spatialIntentPropsBefore(const SpatialStaticMutation* shapes,int count,int recipes,bool known){
+  return propMutationBefore(state(),shapes,count,recipes,known);
+}
+void spatialIntentPropsCommitted(const SpatialStaticTicket& ticket,int terrainDelta){propMutationCommitted(state(),ticket,terrainDelta);}
 SpatialStaticTicket spatialIntentResidencyBefore(const SpatialResidencyRegion* regions,int count,bool removing,bool releaseOnly){
   return residencyMutationBefore(state(),regions,count,removing,releaseOnly);
 }
@@ -901,6 +910,8 @@ void nav_intent_reset(){
   s.staticMutationRevocations=s.staticMutationRejected=s.staticMutationCommits=0;
   s.residencyCandidates=s.residencySegments=s.residencyBodyChecks=0;
   s.residencyRevocations=s.residencyRejected=s.residencyCommits=s.residencyPinRevision=0;
+  s.propMutationCandidates=s.propMutationSegments=s.propMutationBodyChecks=s.propMutationRevocations=0;
+  s.propMutationRejected=s.propMutationCommits=s.propMutationRecipeChunks=0;
   s.attackRouteInput.clear();s.attackBlockers.clear();
   s.attackReservedTargets.clear();s.attackResult.fill(0);
   s.wallAttackResult.fill(0);
@@ -1806,6 +1817,14 @@ EMSCRIPTEN_KEEPALIVE double nav_intent_residency_revocations(){return double(sta
 EMSCRIPTEN_KEEPALIVE double nav_intent_residency_rejected(){return double(state().residencyRejected);}
 EMSCRIPTEN_KEEPALIVE double nav_intent_residency_commits(){return double(state().residencyCommits);}
 EMSCRIPTEN_KEEPALIVE double nav_intent_residency_pin_revision(){return double(state().residencyPinRevision);}
+EMSCRIPTEN_KEEPALIVE int nav_intent_props_mutation_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE double nav_intent_props_mutation_candidates(){return double(state().propMutationCandidates);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_props_mutation_segments(){return double(state().propMutationSegments);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_props_mutation_body_checks(){return double(state().propMutationBodyChecks);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_props_mutation_revocations(){return double(state().propMutationRevocations);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_props_mutation_rejected(){return double(state().propMutationRejected);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_props_mutation_commits(){return double(state().propMutationCommits);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_props_mutation_recipe_chunks(){return double(state().propMutationRecipeChunks);}
 
 // A topological event may be unrelated to an active worker path. Validate the
 // pinned polyline against the updated native collision map at this boundary,

@@ -92,6 +92,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     'nav_intent_route_execution','nav_intent_route_execution_ptr',
     'nav_intent_residency_pin_revision',
     'spatial_release_chunk','spatial_release_chunks',
+    'nav_intent_props_mutation_version',
     'nav_intent_apply_changes','nav_intent_plan_tasks','nav_intent_results_ptr',
     'nav_intent_restore_assigned_tasks',
     'nav_intent_discard','nav_intent_commit','nav_intent_damaged_structures',
@@ -132,6 +133,8 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     throw Error('Unsupported native intent protocol; rebuild Wild Engine');
   if(wasm.nav_intent_route_timing_width()!==20||wasm.nav_intent_route_sample_width()!==18)
     throw Error('Unsupported native motion layout; rebuild Wild Engine');
+  if(wasm.nav_intent_props_mutation_version()!==1)
+    throw Error('Unsupported native prop mutation service; rebuild Wild Engine');
   let sequence=0,initialized=false,owningState=null,lastIntentSequence=0;
   const controlObservers=new Set();
   const epoch=()=>`${authorityEpoch}/${wasm.nav_intent_session()}`;

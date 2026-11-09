@@ -5,6 +5,7 @@
 #include <cstring>
 #include <limits>
 #include <optional>
+#include <set>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -12,6 +13,7 @@
 #include <vector>
 #include "spatial-static-mutations.h"
 #include "spatial-residency-mutations.h"
+#include "spatial-prop-mutations.h"
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
 #else
@@ -142,9 +144,9 @@ std::unordered_map<uint64_t,std::vector<Prop>>& residentVisibleProps(){
   return *residentVisiblePropRegistry;
 }
 WILD_SAMPLING_LOCAL std::unordered_set<PropKey,PropKeyHash>* removedPropRegistry=nullptr;
-// Geometry retained only for a prop that was resident when suppressed. This
-// lets a preview restore that exact local footprint without rebuilding every
-// loaded sector. Settlement regeneration clears these witnesses.
+// Local refresh witnesses, not execution certificates. Protected restoration
+// regenerates canonical candidates before committing. Settlement changes clear
+// these witnesses because the recipe/habitat may no longer produce that prop.
 std::unordered_map<PropKey,Prop,PropKeyHash>* removedPropGeometryRegistry=nullptr;
 std::unordered_map<PropKey,Prop,PropKeyHash>& removedPropGeometry(){
   if(!removedPropGeometryRegistry)
@@ -1014,6 +1016,10 @@ double proceduralPropSpacing(int type){
   if(mangroveNetwork&&type==0)return 8.5;
   return worldBiome==1?desertSpacing[type]:worldBiome==5?canyonSpacing[type]:savannaSpacing[type];
 }
+std::pair<double,double> proceduralPropPosition(int type,int gx,int gz,double cell){
+  return {(gx+.14+unit(cellHash(gx,gz,310+type))*.72)*cell,
+    (gz+.14+unit(cellHash(gx,gz,311+type))*.72)*cell};
+}
 void buildSelectedVisual(){
   const int cx=chunkX,cz=chunkZ,x0=cx*side-24,z0=cz*side-24;
   heights.assign(grid*grid,0);colors.assign(grid*grid*3,0);
@@ -1082,8 +1088,8 @@ void prepareSelectedChunk(int cx,int cz,bool visual){
       for(int gx=int(std::floor((double(x0)-halo)/cell));gx<=int(std::floor((double(x0+48)+halo)/cell));gx++){
         const uint32_t h=cellHash(gx,gz,301+type*71);
         if(unit(h)>(worldBiome==1?desertDensity[type]:worldBiome==2?riverDensity[type]:worldBiome==3?volcanoDensity[type]:worldBiome==4?mangroveDensity[type]:worldBiome==5?canyonDensity[type]:savannaDensity[type]))continue;
-        const double x=(gx+.14+unit(cellHash(gx,gz,310+type))*.72)*cell;
-        const double z=(gz+.14+unit(cellHash(gx,gz,311+type))*.72)*cell;
+         const auto position=proceduralPropPosition(type,gx,gz,cell);
+         const double x=position.first,z=position.second;
         if(x<x0-halo||x>=x0+48+halo||z<z0-halo||z>=z0+48+halo)continue;
         const float scale=worldBiome==5&&type==5?
           float(.64+unit(cellHash(gx,gz,312+type))*.23):
@@ -1406,13 +1412,16 @@ void refreshRemovedPropChunks(const Prop* changed){
   if(!loadedChunks.empty()&&(chunkX!=selectedX||chunkZ!=selectedZ))
     populateChunk(selectedX,selectedZ);
 }
-void refreshRemovedPropChunksBatch(const std::vector<Prop>& changed){
+void refreshRemovedPropChunksBatch(const std::vector<Prop>& changed,
+    const std::set<std::pair<int,int>>* knownChunks=nullptr){
   ++terrainInputRevision;
   if(changed.empty())return;
-  if(changed.size()==1){refreshRemovedPropChunks(&changed.front());return;}
+  if(changed.size()==1&&!knownChunks){refreshRemovedPropChunks(&changed.front());return;}
+  if(changed.size()==1)++terrainInputRevision;
   const int selectedX=chunkX,selectedZ=chunkZ,previous=activeProfile;
   std::vector<std::pair<int,int>> affected;
-  for(const auto& [cx,cz]:loadedChunks){
+  if(knownChunks)affected.assign(knownChunks->begin(),knownChunks->end());
+  else for(const auto& [cx,cz]:loadedChunks){
     const int firstX=cx*side-24,firstZ=cz*side-24;
     if(std::none_of(changed.begin(),changed.end(),[&](const Prop& prop){
       return prop.x+prop.radius+maxIndexedRadius>=firstX&&
@@ -1423,7 +1432,7 @@ void refreshRemovedPropChunksBatch(const std::vector<Prop>& changed){
     affected.emplace_back(cx,cz);
   }
   std::sort(affected.begin(),affected.end());
-  // All removals are already committed. Generate each changed chunk once;
+  // The live suppression set is already committed. Generate each changed chunk once;
   // only its raster and sector graph vary with the unit profile.
   for(const auto& [cx,cz]:affected){
     populateChunk(cx,cz,false);
@@ -1597,6 +1606,7 @@ void horizonDesertNormals(HorizonSampler& sampler,int ox,int oz){
 
 namespace {
 #include "spatial-execution-clearance.h"
+#include "spatial-prop-transaction.inc"
 }
 
 bool spatialStaticMutationBlocks(const SpatialStaticMutation& shape,double x,double z,
@@ -1609,6 +1619,8 @@ bool spatialStaticMutationBlocks(const SpatialStaticMutation& shape,double x,dou
   if(!std::isfinite(coordinate))return true;
   const double error=std::max(1e-7,double(std::nextafter(coordinate,std::numeric_limits<float>::infinity())-coordinate)),
     r=radius+2*error+1e-8;
+  if(shape.circleRadius>=0)
+    return executionPointDistance({shape.x,shape.z},{x,z},{nx,nz})<shape.circleRadius+r;
   if(!shape.count){
     const double dx=x-shape.x,dz=z-shape.z,ex=nx-shape.x,ez=nz-shape.z,
       a[2]={dx*shape.c-dz*shape.s,dx*shape.s+dz*shape.c},
@@ -1864,9 +1876,12 @@ int spatial_remove_prop(int group,int gx,int gz){
   }
   if(!found)return 0;
   const Prop changed=*found;
+  const auto ticket=spatialIntentPropsBefore(nullptr,0);
+  if(!ticket.allowed)return 0;
   removedPropGeometry().insert_or_assign({group,gx,gz},changed);
   removedProps().insert({group,gx,gz});
   refreshRemovedPropChunks(&changed);
+  spatialIntentPropsCommitted(ticket,1);
   return 1;
 }
 int spatial_removed_prop_count(){return int(removedProps().size());}
@@ -1898,6 +1913,7 @@ int spatial_restore_removed_props(int count){
     if(key.group<0||key.group>5||!replacement.insert(key).second)return 0;
   }
   if(replacement==removedProps())return 1;
+  if(spatialIntentPropsProtected())return restoreProtectedProps(replacement);
   std::vector<Prop> changed;
   std::vector<PropKey> restored;
   bool local=true;
