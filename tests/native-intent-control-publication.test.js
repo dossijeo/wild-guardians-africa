@@ -147,3 +147,12 @@ test('a forged causal clock bootstrap acknowledgement cannot make a draw connect
  try{await assert.rejects(source.ready,/clock acknowledgement/);assert.equal(source.status().closed,true);}
  finally{source.dispose();port2.close();}
 });
+
+test('an already-live legacy connection cannot be silently upgraded into a causal clock permit',async()=>{
+ const f=fixture();try{
+  await f.publication.ready;f.observers.onClock({protocolVersion:2,clockVersion:1,authorityEpoch:'native-owner/1',nativeSession:1,
+   clockSequence:1,intentSequence:9,committedThrough:10,paused:false,rate:1,reanchor:true});
+  assert.equal(f.publication.status().closed,true);assert.match(f.publication.status().fault,/fresh clock-aware bootstrap/);
+  assert.equal(f.errors.length,1);
+ }finally{f.dispose();}
+});

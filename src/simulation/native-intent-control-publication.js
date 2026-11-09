@@ -89,7 +89,12 @@ export function createNativeIntentControlPublication({port,session,observe,
         port.postMessage({...baseline,...(initial?{clock:initial}:{}),session});
       },
       onClock(record){
-        if(closed)return;const permit=prepareClock(record);
+        if(closed)return;
+        // An already-live legacy consumer may have presented an unbounded
+        // producer clock. Never pretend a late upgrade retroactively fenced it.
+        // Causal mode requires a fresh, clock-aware baseline handshake.
+        if(!clock){fail(Error('Native causal clock requires a fresh clock-aware bootstrap'));return;}
+        const permit=prepareClock(record);
         port.postMessage({type:'IntentClock',...permit,session});
       },
       onChanges(changes){

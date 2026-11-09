@@ -94,13 +94,14 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       }
       clock=Object.freeze({...message});effectiveTime=message.committedThrough;return true;
     },
-    clockLease(visualEpoch){
+    clockLease(visualEpoch,resourceCeiling=Infinity){
       if(!clock)return null;
-      if(!Number.isFinite(visualEpoch)||visualEpoch<0||clock.anchorLogicalTime<visualEpoch)throw Error('Native causal clock epoch mismatch');
-      const span=clock.committedThrough-clock.anchorLogicalTime;
-      return {version:1,epoch:visualEpoch,elapsed:clock.anchorLogicalTime,anchorAbsoluteMs:clock.anchorAbsoluteMs,
-        safeUntil:clock.committedThrough,paused:clock.paused,segments:!clock.paused&&span>0?
-          [{start:clock.anchorLogicalTime,end:clock.committedThrough,rate:clock.rate,realDuration:span/clock.rate}]:[]};
+      const through=Math.min(clock.committedThrough,resourceCeiling),elapsed=Math.min(clock.anchorLogicalTime,through);
+      if(!Number.isFinite(visualEpoch)||visualEpoch<0||elapsed<visualEpoch||!Number.isFinite(through))throw Error('Native causal clock epoch or resource ceiling mismatch');
+      const span=through-elapsed;
+      return {version:1,epoch:visualEpoch,elapsed,anchorAbsoluteMs:clock.anchorAbsoluteMs,
+        safeUntil:through,paused:clock.paused,segments:!clock.paused&&span>0?
+          [{start:elapsed,end:through,rate:clock.rate,realDuration:span/clock.rate}]:[]};
     },
     admit({actorId,routeHandle,assignmentSequence}={}){
       if(closed)throw Error('Native route control is closed');

@@ -435,14 +435,16 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         }
       }
       const previous = active;
-      if(next&&routeControl?.status().clock&&next.admittedClockBindings?.some(binding=>binding.routeRecord)){
-        const permit=routeControl.clockLease(next.metadata.clock.epoch),at=evaluateRemoteClock(permit,startedAt);
-        if(next.admittedClockBindings.some(binding=>binding.routeRecord&&binding.routeRecord.startTime>at))next=null;
+      if(next&&routeControl?.status().clock){
+        const permit=routeControl.clockLease(next.metadata.clock.epoch,next.metadata.clock.safeUntil),at=evaluateRemoteClock(permit,startedAt);
+        if(at<next.metadata.clock.elapsed||next.admittedClockBindings.some(binding=>binding.routeRecord&&binding.routeRecord.startTime>at))next=null;
       }
       const candidate = next || active;
       if(!candidate)return;
-      const nativeTimed=candidate.admittedClockBindings?.some(binding=>binding.routeRecord),
-        causalLease=nativeTimed?routeControl?.clockLease(candidate.metadata?.clock?.epoch):null,
+      // Causal mode belongs to the direct connection, not a preparer's tags.
+      // Omitting a nativeRoute binding in a later packet cannot restore an
+      // unbounded producer clock or bypass the compute replay restriction.
+      const causalLease=routeControl?.clockLease(candidate.metadata?.clock?.epoch,candidate.metadata?.clock?.safeUntil),
         effectiveLease=causalLease??candidate.metadata?.clock??null;
       if(causalLease&&candidate.hasCompute)throw Error('Native causal clock cannot replay one-shot compute');
       const timeTicket = frameTime.propose({ generation: candidate.sequence, lease: effectiveLease, absoluteNow: startedAt });
@@ -621,7 +623,9 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
             if(!binding.nativeRoute)return {...binding};
             if(!routeControl)throw Error('Native route control unavailable');
             if(!packet.metadata?.clock)throw Error('Native route requires a presentation clock lease');
-            return {...binding,routeRecord:routeControl.admit(binding.nativeRoute)};
+            const routeRecord=routeControl.admit(binding.nativeRoute);
+            if(packet.metadata.clock.safeUntil<routeRecord.startTime)throw Error('Prepared clock does not cover native route assignment');
+            return {...binding,routeRecord};
           });
         classifyBufferOwnership(packet);
         const writeCounts = new Map();
@@ -870,7 +874,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       }
       hidden = nextHidden;
     },
-    inspect: () => ({ ...metrics, hidden, resources: resources.size, pendingResources: pendingResources.size, activeSequence: active?.sequence || null, pendingSequence: pending?.sequence || null, queuedMessages, stagedOperations: stagedOperations.length, obsoleteVersions: obsoleteVersions.size, failed, backend: 'webgpu', rafIndependent: true, adapterInfo, frameTime: frameTime.status(), frameTimings: frameTimings.slice(), fenceTimings: fenceTimings.slice(), lease: active?.metadata?.clock || null, nativeCausalClock:routeControl?.status().clock??null, cameraSafe: active?.metadata?.cameraSafe ?? false, cameraEnvelope: active?.metadata?.cameraEnvelope || null, clockBindings: active?.clockBindings.length || 0, cameraBindings: active?.cameraBindings.length || 0, clockAtHorizon: !!active?.metadata?.clock && frameTime.status().elapsed >= (active?.admittedClockBindings?.some(binding=>binding.routeRecord)&&routeControl?.status().clock?.committedThrough!==undefined?routeControl.status().clock.committedThrough:active.metadata.clock.safeUntil), errors: errors.slice(), samples: sampleCursor < samples.length ? samples.slice(0, sampleCursor) : [...samples.slice(sampleCursor % samples.length), ...samples.slice(0, sampleCursor % samples.length)] }),
+    inspect: () => ({ ...metrics, hidden, resources: resources.size, pendingResources: pendingResources.size, activeSequence: active?.sequence || null, pendingSequence: pending?.sequence || null, queuedMessages, stagedOperations: stagedOperations.length, obsoleteVersions: obsoleteVersions.size, failed, backend: 'webgpu', rafIndependent: true, adapterInfo, frameTime: frameTime.status(), frameTimings: frameTimings.slice(), fenceTimings: fenceTimings.slice(), lease: active?.metadata?.clock || null, nativeCausalClock:routeControl?.status().clock??null, cameraSafe: active?.metadata?.cameraSafe ?? false, cameraEnvelope: active?.metadata?.cameraEnvelope || null, clockBindings: active?.clockBindings.length || 0, cameraBindings: active?.cameraBindings.length || 0, clockAtHorizon: !!active?.metadata?.clock && frameTime.status().elapsed >= Math.min(routeControl?.status().clock?.committedThrough??Infinity,active.metadata.clock.safeUntil), errors: errors.slice(), samples: sampleCursor < samples.length ? samples.slice(0, sampleCursor) : [...samples.slice(sampleCursor % samples.length), ...samples.slice(0, sampleCursor % samples.length)] }),
     dispose() {
       if (stopped) return; stopped = true;
       settleNativeControl(Error('Remote GPU disposed'));

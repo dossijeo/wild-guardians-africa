@@ -1501,3 +1501,118 @@ f-R1 y el resto de coordinación pendiente.
 **e-R3, e-R4 y f-R1–R4 pendientes (2 cerrados, 6 pendientes)**. Los padres e/f
 siguen parciales y los 11 puntos principales A6 abiertos. Siguiente bloqueo:
 f-R1, frontera causal de tiempo y comandos.
+
+## Cierre de A6-04.f-R1 — Tiempo causal ejecutado y control directo
+
+Se cumple el criterio fijo de f-R1 en el camino opt-in de ejecución nativa:
+simulación y dibujo comparten una frontera finita de tiempo ejecutado, con
+pausa/velocidad/revocación por el canal directo. No se presenta tiempo que una
+decisión posterior pueda invalidar en el pasado ni se corrige mediante rebobinado.
+No se activa el nuevo movimiento en gameplay, ni se cierran todos los consumidores
+y recuperación (f-R3), las otras transacciones (f-R2), aplicación gráfica de las
+mutaciones (f-R4) o aceptación con personajes (e-R4).
+
+### El preparador no concede tiempo futuro
+
+El mecanismo anterior podía conceder a un paquete todo el reloj futuro de su
+ruta, sin probar que una orden de pausa o revocación llegaría antes del dibujo.
+Detectar después una revocación tardía era un fallo explícito, no una prevención.
+El nuevo reloj cambia la autorización, no relaja esa protección.
+
+`nav_intent_clock_commit` publica desde el mismo `IntentState` nativo una frontera
+`committedThrough`, versión de reloj, high-water de intenciones, sesión y política
+de pausa/velocidad. Solo puede activarse con un cohort ejecutado/coherente; una
+ruta cruda, no reservada o sin empezar no concede futuro gráfico. La ejecución
+nativa actualiza cuerpos antes de extender la frontera. Un avance aún no
+publicado tampoco amplía el permiso del dibujante. No hay otra copia de rutas,
+registro de cuerpos, planificador o scheduler.
+
+En este modo `nav_intent_set_time` no puede adelantar el tiempo fuera del ejecutor,
+y una pausa nativa rechaza los avances sin mover cuerpos ni consumir fases. La
+coherencia de membresía se comprueba al cambiar la secuencia de intenciones;
+los avances comunes reutilizan las comprobaciones de metadatos/stamp existentes,
+sin geometría, sensores o validaciones completas de rutas. La política se entrega
+como un hecho de comando autorizado; no se deriva de recursos gráficos o wall time.
+
+### Mismo canal independiente, dos contadores explícitos
+
+La base y el observador nativos entregan reloj e intenciones al transportador
+existente. Los cambios de ruta se publican antes del permiso que los cubre. El
+contador de reloj no se confunde con el de transiciones: cada permiso nombra su
+high-water de intenciones, y el receptor rechaza saltos, otras épocas/sesiones,
+fronteras regresivas y anclajes inventados. Una base nueva requiere un reloj
+nativo comprometido en esa frontera; no hereda un ACK antiguo. No se actualiza
+en caliente un consumidor histórico ya vivo: su reloj previo podría haber
+presentado futuro. Intentar ese cambio cierra la conexión y requiere otra base
+consciente del reloj, sin fingir un fence retroactivo. El relevo completo y su
+integración con todos los consumidores permanecen en f-R3.
+
+La conversión de transporte añade un anclaje absoluto para interpolación, sin
+decidir rutas, posiciones, duración autorizada o presupuesto. Un avance conserva
+el anclaje; pausa o cambio de velocidad lo sustituye en el tiempo nativo actual.
+Ese tiempo nunca es inferior a la frontera que el consumidor pudo dibujar.
+Los ACKs de reloj identifican su versión y frontera exactas. Los recibos GPU
+siguen separados de los ACKs de aplicación y ahora incluyen versión de reloj.
+Cambiar política invalida una propuesta de motor anterior aun con idéntico tiempo
+lógico y secuencia de intención, evitando reutilizar su recibo/decisión.
+
+El receptor remoto aplica el reloj por fuera del FIFO de recursos. Una vez
+activo en esa conexión, utiliza el permiso directo, no la lease futura del
+preparador; omitir una etiqueta de ruta en otra generación no permite eludirlo.
+Se conserva además el límite de validez de los recursos preparados: el tiempo
+no supera ni la frontera nativa ni ese techo. Si una pausa ancla el reloj nativo
+más allá de unos recursos vencidos, esos recursos quedan en su techo anterior,
+sin rebobinar o ampliarse hasta que una generación válida los sustituya. Una
+generación futura espera también a su inicio válido: ni sus recursos nuevos ni
+sus bindings pueden adelantar el reloj causal para hacerse visibles antes.
+La propuesta/consumo de tiempo
+ya existente continúa rechazando rebobinados, y el float enviado a GPU sigue
+redondeándose hacia abajo. Una nueva ruta no se dibuja antes de su asignación.
+Los frames con compute de un solo uso no se vuelven repetibles por cambiar de
+reloj. El silencio solo permite agotar la última frontera finita, no seguir
+indefinidamente por tener un plan completo. Una conexión vieja conserva como
+máximo su límite finito; el relevo global/fallos sigue en f-R3.
+
+No es reproducción histórica como unidad nueva de locomoción: la GPU conserva
+la ruta/timetable completo, sin posiciones JS periódicas ni nuevos paquetes
+durante los bloqueos. Lo que se publica es la frontera escalar ya ejecutada por
+la autoridad. Si la autoridad se retrasa, el tiempo gráfico se detiene en ella;
+la existencia de una ruta futura no autoriza extrapolar sobre decisiones aún no
+ejecutadas. La preparación puede quedar bloqueada sin detener la autoridad o
+el replay de dibujo. El fallback histórico de producto se mantiene protegido.
+
+### Criterio observable y evidencia real
+
+`/tests/browser/native-causal-clock.html` crea el mecanismo físico y un trabajador
+admitido/ejecutado en WASM, comparte sus nudos nativos con el preparador y envía
+**un solo paquete** a un Worker WebGPU NVIDIA Turing. El reloj futuro propuesto
+por ese paquete no puede saltarse el permiso directo de la autoridad.
+
+1. **Pausa y cambio de velocidad:** preparación bloqueada 500,07 ms; 15 dibujos,
+   todos en tiempo nativo 10, aunque la lease preparada permitiría avanzar.
+2. **Reanudación a velocidad ×2:** preparación bloqueada 500,06 ms; 15 dibujos,
+   tiempo 10,04–10,96 dentro de las fronteras ejecutadas que llegan directamente.
+3. **Silencio y revocación:** preparación bloqueada 500,03 ms; 15 dibujos detenidos
+   en 11,00038, sin superar el último avance nativo. La revocación y su recibo GPU
+   llegan unos 2,25 ms después de aplicar el comando, antes del desbloqueo.
+
+Los 46 dibujos (45 replays) no producen errores GPU. Todas las muestras son
+monótonas y quedan dentro de una frontera nativa ya comprometida. Los readbacks
+GPU de posición/fases/carrera coinciden con el sampler nativo (error máximo
+8,59e-7); no aumentan contadores de geometría, sensores, barridos o planificación.
+Es un triángulo diagnóstico, no un personaje. No certifica todavía las mutaciones
+gráficas ni las reglas de producto/guardado ante todos los fallos.
+
+Evidencia persistida: `performance/native-causal-clock-20261109.json`; la prueba
+`tests/native-causal-clock-evidence.test.js` verifica también el registro retenido.
+Pruebas WASM/ABI pthread, permisos, ACKs falsos, pausa/cambio de velocidad y un
+cohort WASM real con el host GPU instrumentado completan la cobertura dirigida.
+Regresión: **493 dirigidas + 39 de streaming/geometría + 74 de receta/estado**,
+aprobadas sin skips. Logs `.cache/native-causal-clock-regression.tap`,
+`.cache/native-causal-clock-legacy-stream-geometry.tap` y
+`.cache/native-causal-clock-legacy-recipe.tap`. No se declara limpia toda la suite.
+
+**Cerrado en este turno: A6-04.f-R1.** Tablero fijo: e-R1/e-R2/f-R1 cerrados;
+**e-R3, e-R4 y f-R2–R4 pendientes (3 cerrados, 5 pendientes)**. Los padres e/f
+siguen parciales y los 11 puntos principales A6 abiertos. Siguiente bloqueo:
+f-R2, propuesta/commit condicionado de las demás mutaciones.

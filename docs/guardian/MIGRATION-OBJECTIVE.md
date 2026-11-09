@@ -48,11 +48,14 @@ camino crítico sin pedir autorización rutinaria entre hitos.
 Seguimiento por IDs acordados: [checklist A6-01–A6-11](A6-CHECKLIST.md).
 La [vista de entrega y pendientes fijos](A6-CHECKLIST.md#vista-de-entrega-y-pendientes-fijos)
 separa componentes implementados de producto integrado: e/f siguen sin cerrar,
-con ocho entregables identificados como e-R1–R4 y f-R1–R4: **e-R1/e-R2 cerrados,
-seis pendientes**. e-R2 incluye admisión nativa opt-in por puertas inicialmente
+con ocho entregables identificados como e-R1–R4 y f-R1–R4: **e-R1/e-R2/f-R1 cerrados,
+cinco pendientes**. e-R2 incluye admisión nativa opt-in por puertas inicialmente
 cerradas, protección de reservas, composición con cierre previo y suspensión/
 reanudación del sufijo con offsets nativos. La aceptación reproducible no activa
-producto/GPU ni cierra e-R3/e-R4/f. Siguiente dependencia: f-R1. No se
+producto/GPU ni cierra e-R3/e-R4 o el padre f. f-R1 añade una frontera finita
+publicada desde ejecución nativa para avance/pausa/velocidad/revocación, validada
+en WASM/WebGPU sin preparación, sin autorizar tiempo futuro no ejecutado ni
+rebobinar. Siguiente dependencia: f-R2. No se
 sumarán esos niveles ni se usarán tests/commits como porcentaje de finalización.
 
 - [x] Auditar propietarios y reabrir A6; commits `e213c43f9`–`8892bbe80`.
@@ -155,10 +158,14 @@ sumarán esos niveles ni se usarán tests/commits como porcentaje de finalizaci�
       El modo de objetos se liga al mismo ticket/recibo. Cuatro auditorías nuevas
       verifican tres commits/vetos posteriores y un rechazo por obstáculo nuevo
       mientras se espera, manteniendo 15 dibujos durante cada bloqueo de 500 ms.
+      f-R1 cerrado para el cohort nativo: permisos de tiempo finitos desde
+      ejecución, pausa/velocidad/revocación por canal directo, nunca reloj futuro
+      concedido por el preparador. La prueba WASM/WebGPU reproduce un paquete
+      durante tres bloqueos de 500 ms, sin sobrepasar lo ejecutado ni rebobinar.
       Faltan transacción genérica para las otras mutaciones, integración física/
-      recursos de puerta, consumidores/relevo y reloj causal. No hay permiso de
+      recursos de puerta y consumidores/relevo. No hay permiso de
       cruce de producto/GPU ni aceptación con personajes.
-      Quedan e/f de A6-04; seis entregables del desglose. 479 dirigidas
+      Quedan e/f de A6-04; cinco entregables del desglose. 493 dirigidas
       + 39 y 74 heredadas pasan sin skips. No se marca e como terminado.
 - [ ] Vertical AttackCrops completa y aceptación real A–F (primer caso integrado,
       no cierre de A6 por sí solo).

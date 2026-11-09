@@ -167,6 +167,62 @@ test('real native causal watermarks, pause, speed and revocation control one pre
  }finally{release?.({});source?.dispose();f.host.dispose();native.session.dispose();}
 });
 
+test('a later prepared packet cannot drop a native-route tag to escape the causal clock of its connection',async()=>{
+ const [sourcePort,drawPort]=pair();let now=0;
+ const f=await fixture({}, {absoluteNow:()=>now,intentControl:{port:drawPort,authorityEpoch:'native-owner'}});
+ try{
+  const h=nativeHandle(0);sourcePort.postMessage(nativeControlEvent('RouteAssigned',1,7,h,10));
+  sourcePort.postMessage({type:'IntentClock',protocolVersion:2,clockVersion:1,authorityEpoch:'native-owner',nativeSession:1,
+   clockSequence:1,intentSequence:1,committedThrough:10,paused:false,rate:1,reanchor:true,anchorLogicalTime:10,anchorAbsoluteMs:0});await flush();
+  const clock={version:1,epoch:0,elapsed:10,safeUntil:100,anchorAbsoluteMs:0,paused:false,segments:[{start:10,end:100,rate:1,realDuration:90}]};
+  f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'absolute',epoch:0,nativeRoute:{actorId:7,routeHandle:h,assignmentSequence:1}});
+  let receipt=f.frame(0,{clock});await flush();await f.host.idle();f.host.present();await receipt;
+  f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'absolute',epoch:0});
+  receipt=f.frame(0,{clock});await flush();await f.host.idle();now=9000;f.host.present();await receipt;
+  assert.equal(f.host.inspect().frameTime.elapsed,10);assert.equal(f.host.inspect().clockAtHorizon,true);
+  assert.equal(f.host.inspect().failed,false);assert.deepEqual(f.errors,[]);
+ }finally{f.host.dispose();}
+});
+
+test('native clock authority cannot widen the prepared resource ceiling, even when a later pause anchors beyond it',async()=>{
+ const [sourcePort,drawPort]=pair();let now=0;
+ const f=await fixture({}, {absoluteNow:()=>now,intentControl:{port:drawPort,authorityEpoch:'native-owner'}});
+ try{
+  const h=nativeHandle(0);sourcePort.postMessage(nativeControlEvent('RouteAssigned',1,7,h,10));
+  const clock={type:'IntentClock',protocolVersion:2,clockVersion:1,authorityEpoch:'native-owner',nativeSession:1,clockSequence:1,
+   intentSequence:1,committedThrough:10,paused:false,rate:1,reanchor:true,anchorLogicalTime:10,anchorAbsoluteMs:0};
+  sourcePort.postMessage(clock);await flush();
+  f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'absolute',epoch:0,nativeRoute:{actorId:7,routeHandle:h,assignmentSequence:1}});
+  const receipt=f.frame(0,{clock:{version:1,epoch:0,elapsed:10,safeUntil:10.25,anchorAbsoluteMs:0,paused:false,
+   segments:[{start:10,end:10.25,rate:1,realDuration:.25}]}});await flush();await f.host.idle();f.host.present();await receipt;
+  sourcePort.postMessage({...clock,clockSequence:2,committedThrough:12,reanchor:false});await flush();now=3000;f.host.present();
+  assert.equal(f.host.inspect().frameTime.elapsed,10.25);
+  sourcePort.postMessage({...clock,clockSequence:3,committedThrough:12,reanchor:true,paused:true,anchorLogicalTime:12,anchorAbsoluteMs:3000});
+  await flush();now=5000;f.host.present();assert.equal(f.host.inspect().frameTime.elapsed,10.25);
+  assert.equal(f.host.inspect().clockAtHorizon,true);assert.equal(f.host.inspect().failed,false);assert.deepEqual(f.errors,[]);
+ }finally{f.host.dispose();}
+});
+
+test('a prepared future resource generation waits for causal time instead of selecting its own logical start',async()=>{
+ const [sourcePort,drawPort]=pair();let now=0;
+ const f=await fixture({}, {absoluteNow:()=>now,intentControl:{port:drawPort,authorityEpoch:'native-owner'}});
+ try{
+  const h=nativeHandle(0);sourcePort.postMessage(nativeControlEvent('RouteAssigned',1,7,h,10));
+  const clock={type:'IntentClock',protocolVersion:2,clockVersion:1,authorityEpoch:'native-owner',nativeSession:1,clockSequence:1,
+   intentSequence:1,committedThrough:10,paused:false,rate:1,reanchor:true,anchorLogicalTime:10,anchorAbsoluteMs:0};
+  sourcePort.postMessage(clock);await flush();f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'absolute',epoch:0,
+   nativeRoute:{actorId:7,routeHandle:h,assignmentSequence:1}});
+  let receipt=f.frame(0,{clock:{version:1,epoch:0,elapsed:10,safeUntil:20,anchorAbsoluteMs:0,paused:false,
+   segments:[{start:10,end:20,rate:1,realDuration:10}]}});await flush();await f.host.idle();f.host.present();await receipt;
+  sourcePort.postMessage({...clock,clockSequence:2,committedThrough:12,reanchor:false});await flush();
+  receipt=f.frame(0,{clock:{version:1,epoch:0,elapsed:11,safeUntil:12,anchorAbsoluteMs:9000,paused:false,
+   segments:[{start:11,end:12,rate:1,realDuration:1}]}});await flush();await f.host.idle();now=500;f.host.present();
+  assert.equal(f.host.inspect().activeSequence,1);assert.equal(f.host.inspect().pendingSequence,2);assert.equal(f.host.inspect().frameTime.elapsed,10.5);
+  now=1100;f.host.present();await receipt;assert.equal(f.host.inspect().activeSequence,2);assert.equal(f.host.inspect().frameTime.elapsed,11.1);
+  assert.deepEqual(f.errors,[]);
+ }finally{f.host.dispose();}
+});
+
 test('native permission is checked after resource preparation, preventing late resurrection',async()=>{
   const [authorityPort,drawControlPort]=pair();
   const f=await fixture({}, {absoluteNow:()=>0,intentControl:{port:drawControlPort,authorityEpoch:'native-owner'}});
