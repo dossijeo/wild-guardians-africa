@@ -794,3 +794,53 @@ siguen pendientes, al igual que la aplicación visual causal. Faltan A6-04.e/f,
 integración de gameplay/fases, tráfico resuelto, otros perfiles/biomas y aceptación
 real WASM/WebGPU. Se mantienen `authorizedAutonomy:false` y las guardas actuales;
 no se declara cerrado A6 ni limpia la suite general.
+
+## A6-04.e — Geometría, reloj y política de puertas (parcial)
+
+El nuevo servicio opt-in convierte los polígonos locales autorados y sus bisagras
+sin inferir rutas o tiempos en JS. C++ aplica yaw/escala no uniforme, produce la
+hoja y el polígono circunscrito de giro y calcula el radio de activación. Usa los
+kernels geométricos del mismo mundo, generalizados a coordenadas double sin
+cambiar la aritmética float de los obstáculos existentes.
+
+En una frontera explícita de hechos del motor, los cuerpos nativos enlazados a
+trabajadores y los sufijos de intenciones existentes determinan petición,
+ocupación y espera. No hay otro planner. El reloj es `nav_intent_effective_time`,
+no wall time ni el del dibujante. Entre fronteras, la apertura se evalúa como una
+trayectoria de 0,6 s, con origen, objetivo, instante inicial y fin explícitos; no
+repite sensores o prefijos de ruta al muestrear estado/geometría. Se conservan
+el hold por ocupación, exclusión de home/inactivos, inicialización del save sin
+apertura explícita, pausa y estados collapsing/ruined.
+
+Las identidades físicas se enlazan una vez y sobreviven a deltas de trabajador;
+retirada/reset impide reciclar el binding para otro cuerpo. Un trabajador físico
+cercano no enlazado no puede quedar oculto por una proyección distante. Hechos
+incompletos congelan **también un motor ya en marcha**, en vez de dejar su último
+objetivo de cierre ejecutándose. Esa congelación es conservadora y se comunica
+como `incomplete-facts`, no como transición autorizada.
+
+**No hay permiso de paso:** `authorizedPassage:false`. Registrar una puerta que
+interceptaría una curva ya reservada se rechaza sin cambiarla. Las nuevas pruebas
+temporales que cruzan su región de giro retornan clase no soportada; un cambio
+de soporte invalida pruebas candidatas antiguas sin reestamparlas. Las curvas
+ejecutadas ajenas pueden conservar su prueba ante un cambio conocido. Esto es
+una frontera de capacidad, no un nuevo collider circular ni una hoja física:
+no se añade ese círculo al grafo o a las guardas de locomoción legacy.
+
+Once pruebas con WASM real contrastan los tres materiales móviles, yaw y escala
+con los polígonos autorados, reloj/espera contra `advanceGateLeaves`/`waitForGate`,
+save ocupado, hold/cierre, home, incertidumbre de hechos, pausa/estados, mil
+muestras sin nuevo trabajo de sensores/planning, rechazo de cruces y bindings.
+Regresión: **355 dirigidas + 39 de streaming/geometría + 74 de receta/estado**,
+todas aprobadas sin skips, con standalone/pthread reconstruidos y ABI de versión
+1/ancho 14 comprobado. Logs `.cache/native-gates-regression.tap`,
+`.cache/native-gates-legacy-stream-geometry.tap` y
+`.cache/native-gates-legacy-recipe.tap`.
+
+**A6-04.e sigue parcial:** faltan barrido físico continuo de la hoja (incluidas
+excepciones de recuperación), esperas dentro del timetable con fases/presupuesto
+preservados, reservas de cruce y conexión automática de fronteras a eventos del
+producto. El controlador nativo se consulta explícitamente; no sustituye aún
+`gates.js` ni concede autonomía de animación/locomoción GPU. Tampoco prueba ACK
+causal o aceptación gráfica A–F. Quedan **e y f** de los seis subpuntos A6-04,
+y permanecen abiertos los once puntos principales de A6.

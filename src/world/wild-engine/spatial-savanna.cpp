@@ -15,6 +15,7 @@
 #include "spatial-residency-mutations.h"
 #include "spatial-prop-mutations.h"
 #include "spatial-terrain-mutations.h"
+#include "spatial-gate-intents.h"
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
 #else
@@ -1653,6 +1654,15 @@ bool spatialExecutionResidencyPinRange(double x,double z,double radius,std::arra
   }
   return true;
 }
+double spatialNativePolygonDistance(const double* xy,int count,double x,double z,double nx,double nz){
+  const ExecutionPoint a{x,z},b{nx,nz};
+  if(executionInsideVertices(a,xy,size_t(count))||executionInsideVertices(b,xy,size_t(count)))return 0;
+  double best=std::numeric_limits<double>::infinity();
+  for(int i=0,j=count-1;i<count;j=i++)best=std::min(best,
+    executionEdgeDistance(a,b,{xy[i*2],xy[i*2+1]},{xy[j*2],xy[j*2+1]}));
+  return best;
+}
+void spatialGateSupportChanged(){++overlayRevision;}
 
 // Main-thread-only staging buffer; workers never access eviction requests.
 static std::vector<int32_t> chunkRemovalInput;

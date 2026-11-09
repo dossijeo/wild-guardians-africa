@@ -21,7 +21,7 @@ double executionEdgeDistance(ExecutionPoint a,ExecutionPoint b,
   return std::min({executionPointDistance(a,c,d),executionPointDistance(b,c,d),
     executionPointDistance(c,a,b),executionPointDistance(d,a,b)});
 }
-bool executionInsideVertices(ExecutionPoint point,const float* xy,size_t count){
+template<class Coordinate> bool executionInsideVertices(ExecutionPoint point,const Coordinate* xy,size_t count){
   bool inside=false;
   for(size_t i=0,j=count-1;i<count;j=i++){
     const double ax=xy[i*2],az=xy[i*2+1],bx=xy[j*2],bz=xy[j*2+1];
@@ -155,6 +155,7 @@ int executionSegmentClear(double x,double z,double nx,double nz,double radius){
      std::max({std::abs(x),std::abs(z),std::abs(nx),std::abs(nz)})>=2147483000.0||
      !std::isfinite(radius)||radius<=0||radius>2||std::abs(radius-radiusNow)>1e-6)return -3;
   if(worldBiome!=1)return -2;
+  if(spatialIntentGateUnsupported(x,z,nx,nz,radius))return -2;
   const double length=std::hypot(nx-x,nz-z);if(length>10000)return -2;
   const float coordinate=float(std::max({1.0,std::abs(x),std::abs(z),std::abs(nx),std::abs(nz)})+radius+3);
   const double rounding=std::max(1e-7,double(std::nextafter(coordinate,std::numeric_limits<float>::infinity())-coordinate)),

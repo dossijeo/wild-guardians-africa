@@ -41,6 +41,12 @@ ejecutor protegido de producto. A6 incluye todas las intenciones y trabajadores.
     de 344 y baterías heredadas de 39 y 74, sin skips.
   - [ ] **A6-04.e — Puertas móviles.** Hojas, barrido, apertura/cierre y esperas
     autoritativos; la máscara estática no es suficiente.
+    **Parcial:** geometría autorada, reloj de 0,6 s, sensores/espera y política
+    nativos implementados como servicio opt-in. Datos incompletos congelan el
+    motor. Pendientes el barrido físico continuo, pausas en la trayectoria,
+    reservas/admisión de cruces y conexión por eventos con el producto.
+    `authorizedPassage:false`; los cruces nativos siguen rechazados. Evidencia:
+    11 pruebas WASM nuevas, 355 dirigidas + 39 y 74 heredadas sin skips.
   - [ ] **A6-04.f — Efecto físico/gráfico coordinado.** No hacer efectiva una
     mutación mientras un dibujante pueda cruzar antes de su revocación; depende
     también de A6-06.
@@ -81,6 +87,13 @@ ejecutor protegido de producto. A6 incluye todas las intenciones y trabajadores.
 - `.cache/native-terrain-regression.tap`: 344 aprobadas sin skips.
 - `.cache/native-terrain-legacy-stream-geometry.tap`: 39 aprobadas sin skips.
 - `.cache/native-terrain-legacy-recipe.tap`: 74 aprobadas sin skips.
+- `.cache/native-gates-regression.tap`: 355 aprobadas sin skips.
+- `.cache/native-gates-legacy-stream-geometry.tap`: 39 aprobadas sin skips.
+- `.cache/native-gates-legacy-recipe.tap`: 74 aprobadas sin skips.
+
+Quedan **2 de los 6 subpuntos de A6-04**: e (parcial) y f (pendiente).
+Los **11 puntos principales de A6** siguen abiertos; son niveles distintos,
+no dos cantidades que deban sumarse.
 
 Próximo trabajo de A6-04: puertas móviles (A6-04.e) y coordinación de efecto;
 en paralelo de dependencias de diseño,

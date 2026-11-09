@@ -16,6 +16,7 @@
 #include "spatial-residency-mutations.h"
 #include "spatial-prop-mutations.h"
 #include "spatial-terrain-mutations.h"
+#include "spatial-gate-intents.h"
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
 #else
@@ -58,7 +59,8 @@ enum class IntentEvent:int {RouteAssigned=1,RouteInvalidated=2,RouteReplaced=3,
   IntentChanged=4,RouteCompleted=5};
 constexpr double maxId=9007199254740991.0;
 constexpr double pi=3.14159265358979323846;
-struct Worker {uint64_t id,center;double x,z;bool eligible,actionActive;double rank;};
+struct Worker {uint64_t id,center;double x,z;bool eligible,actionActive;double rank;bool bodyBound=false;uint64_t body=0;};
+#include "spatial-gate-state.h"
 // Target kind: 0 direct, 1 ordinary crop, 2 banana, 3 wall, 4 center.
 struct Target {
   uint64_t id;double x,z;bool active;int kind;double yaw,shape;
@@ -240,6 +242,10 @@ struct IntentState {
     propMutationRevocations=0,propMutationRejected=0,propMutationCommits=0,propMutationRecipeChunks=0;
   uint64_t terrainCandidates=0,terrainSegments=0,terrainBodyChecks=0,terrainRevocations=0,
     terrainRejected=0,terrainCommits=0,terrainRecipeChunks=0;
+  std::map<uint64_t,NativeGate> gates;
+  std::unordered_map<uint64_t,uint64_t> gateBodyActors;
+  std::vector<double> gateInput,gateResult;
+  uint64_t gateBoundaries=0,gateWorkerChecks=0,gatePrefixSegments=0;
   uint32_t session=0;
   uint64_t invalidations=0;
   std::unordered_map<uint64_t,uint64_t> planningCallsByActor;
@@ -449,6 +455,7 @@ void releaseIntent(IntentState& s,uint64_t actor,PlanningState next){
 #include "spatial-residency-mutation-state.h"
 #include "spatial-prop-mutation-state.h"
 #include "spatial-terrain-mutation-state.h"
+#include "spatial-gate-controller.h"
 void invalidateDependents(IntentState& s,const Change& change){
   if(change.kind==1){
     if(!change.op){
@@ -829,6 +836,11 @@ ServiceRoute findServiceRoute(const Worker& worker,const Target& target,int kind
 }
 
 bool spatialIntentStaticProtectionActive(){return state().bodyDomainActive;}
+bool spatialIntentGateUnsupported(double x,double z,double nx,double nz,double radius){
+  const auto& s=state();for(const auto& [id,gate]:s.gates)
+    if(gate.status!=2&&spatialStaticMutationBlocks(gate.unsupported,x,z,nx,nz,radius,0,true))return true;
+  return false;
+}
 bool spatialIntentPropsProtected(){const auto& s=state();return s.bodyDomainActive||!s.reservedBodies.empty();}
 bool spatialIntentTerrainProtected(){return spatialIntentPropsProtected();}
 SpatialStaticTicket spatialIntentTerrainBefore(const SpatialStaticMutation* boxes,int count,
@@ -860,11 +872,16 @@ bool spatialIntentBodyCanChange(uint64_t id,const SpatialBodyView& proposed){
 }
 void spatialIntentBodyRemoving(uint64_t id){
   auto& s=state();SpatialBodyView previous;
+  if(const auto binding=s.gateBodyActors.find(id);binding!=s.gateBodyActors.end()){
+    if(const auto worker=s.workers.find(binding->second);worker!=s.workers.end())worker->second.bodyBound=false;
+    s.gateBodyActors.erase(binding);
+  }
   if(s.bodyDomainActive&&spatialReadBody(id,previous))updateResidencyPinRevision(s,&previous,nullptr);
   reservationBodyRemoving(s,id);
 }
 void spatialIntentBodiesResetting(){
   auto& s=state();
+  for(auto& [id,worker]:s.workers)worker.bodyBound=false;s.gateBodyActors.clear();
   s.resettingBodies=true;
   while(!s.reservedBodies.empty())reservationBodyRemoving(s,s.reservedBodies.begin()->first);
   s.resettingBodies=false;
@@ -894,6 +911,9 @@ void nav_intent_sector_changed(int profile,int sx,int sz,int global){
 // Reset on a new WASM world/session or before replaying a restored snapshot.
 void nav_intent_reset(){
   IntentState& s=state();
+  if(!s.gates.empty())spatialGateSupportChanged();
+  s.gates.clear();s.gateBodyActors.clear();s.gateInput.clear();s.gateResult.clear();
+  s.gateBoundaries=s.gateWorkerChecks=s.gatePrefixSegments=0;
   s.session++;
   if(!s.session)s.session=1;
   s.activeIntents.clear();s.byTarget.clear();s.byTask.clear();
@@ -1191,7 +1211,8 @@ int nav_intent_apply_changes(double sequence,int count){
     }
 #endif
     if(!change.op){
-      if(change.kind==1)s.workers.erase(change.id);
+      if(change.kind==1){const auto worker=s.workers.find(change.id);
+        if(worker!=s.workers.end()&&worker->second.bodyBound)s.gateBodyActors.erase(worker->second.body);s.workers.erase(change.id);}
       else if(change.kind==2){
         const auto found=s.targets.find(change.id);
         if(found!=s.targets.end()){
@@ -1203,8 +1224,10 @@ int nav_intent_apply_changes(double sequence,int count){
         removeDamage(s,found->second);found->second.damageKnown=false;
       }
     }else if(change.kind==1){
-      s.workers.insert_or_assign(change.id,Worker{change.id,change.center,
-        change.x,change.z,change.flag,change.target!=0,change.rank});
+      Worker next{change.id,change.center,change.x,change.z,change.flag,change.target!=0,change.rank};
+      if(const auto old=s.workers.find(change.id);old!=s.workers.end()){
+        next.bodyBound=old->second.bodyBound;next.body=old->second.body;}
+      s.workers.insert_or_assign(change.id,next);
     }else if(change.kind==2){
       auto found=s.targets.find(change.id);
       if(found==s.targets.end()){
@@ -1588,6 +1611,7 @@ int nav_intent_commit(){
 // Drain only changes caused by confirmed events or a committed task batch.
 // Ordinary movement and ticks do not invoke the planner or emit rows.
 EMSCRIPTEN_KEEPALIVE int nav_intent_protocol_version(){return intentProtocolVersion;}
+#include "spatial-gate-api.inc"
 EMSCRIPTEN_KEEPALIVE int nav_intent_change_width(){return intentChangeWidth;}
 EMSCRIPTEN_KEEPALIVE uint32_t nav_intent_session(){return state().session;}
 EMSCRIPTEN_KEEPALIVE double nav_intent_transition_sequence(){return double(state().intentSequence);}

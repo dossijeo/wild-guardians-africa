@@ -113,6 +113,10 @@ Seguimiento por IDs acordados: [checklist A6-01–A6-11](A6-CHECKLIST.md).
       protegido y futuros dependientes retirados antes del commit. Reemplazar
       el mundo requiere retirar la autoridad. 344 pruebas dirigidas + 39 y 74
       heredadas pasan sin skips; no se activa autonomía GPU.
+      A6-04.e parcial: geometría, sensores/espera y reloj de puertas nativos;
+      faltan barrido físico, holds de trayectoria, leases de cruce y conexión
+      por eventos. `authorizedPassage:false`. Quedan e/f de A6-04; 355 dirigidas
+      + 39 y 74 heredadas pasan sin skips. No se marca e como terminado.
 - [ ] Vertical AttackCrops completa y aceptación real A–F (primer caso integrado,
       no cierre de A6 por sí solo).
 - [ ] Generalizar a otras bestias, trabajadores, intenciones y animaciones;
