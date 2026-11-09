@@ -642,12 +642,10 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
   // First conditioned world mutation, opt-in. Geometry and affected-route
   // preflight remain native; this bridge only carries an immutable input and
   // an exact receipt from the current direct draw connection.
-  const addNativeBarrierAfterGpuQuiescence=async({getPublication,x,z,halfX,halfZ,yaw=0,passMask=0}={})=>{
+  const commitNativeWorldProposal=async(getPublication,stage,commit)=>{
     if(!initialized||!owningState)throw Error('Reset the native intent session first');
-    if(typeof getPublication!=='function'||![x,z,halfX,halfZ,yaw].every(Number.isFinite)||
-       halfX<=0||halfZ<=0||halfX>100||halfZ>100||!Number.isInteger(passMask)||passMask<0||passMask>3)
-      throw TypeError('Expected a native barrier proposal');
-    if(wasm.nav_intent_barrier_proposal_version?.()!==1)throw Error('Rebuild native barrier proposal service');
+    if(typeof getPublication!=='function')throw TypeError('Expected current native control publication');
+    if(wasm.nav_intent_barrier_proposal_version?.()!==1)throw Error('Rebuild native world proposal service');
     const outcome=(status,extra={})=>({status,authorizedAutonomy:false,authorizedPassage:false,...extra}),
       owner=epoch();syncBoundaryTime();flushNativeIntentControl();
     const clock=nativeCausalClock(),source=getPublication(),control=source?.status?.();
@@ -655,11 +653,11 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
        control?.closed||control?.authorityEpoch!==owner)return outcome('control-unavailable');
     if(!clock||control.sentSequence!==clock.intentSequence||control.sentTime!==clock.committedThrough||
        control.clockSequence!==clock.clockSequence||owningState.elapsed!==clock.committedThrough)return outcome('control-boundary-mismatch');
-    const result=wasm.spatial_barrier_proposal_stage(x,z,halfX,halfZ,yaw,passMask);
+    const result=stage();
     if(result!==1)return outcome(result===0?'blocked':result===-4?'busy':result===-2?'unsupported':'invalid');
     if(wasm.nav_intent_barrier_proposal_ticket()!==1)throw Error('Native barrier proposal lost its ticket');
     const [session,ticket,sequence,time,clockSequence]=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6));
-    let receipt=null,answer=outcome('control-failed');
+    let receipt=null,answer=outcome('control-failed'),physicalCommitted=false,commitAttempted=false,commitFailed=false,committedValue={};
     try{
       receipt=await source.quiesceGpuForMutation();const current=source.status();
       if(epoch()!==owner||getPublication()!==source||current.closed||current.session!==control.session||current.authorityEpoch!==owner)
@@ -668,26 +666,100 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
          receipt.effectiveTime!==time||receipt.clockSequence!==clockSequence||!Number.isSafeInteger(receipt.holdId)||receipt.holdId<1)
         answer=outcome('invalid-receipt');
       else{
-        const committed=wasm.spatial_barrier_proposal_commit(session,ticket,sequence,time,clockSequence);
-        answer=committed>0?outcome('committed',{barrierId:committed,receipt}):
-          outcome(committed===-2?'stale':committed===-3?'invalid-receipt':committed===-6?'blocked':'stale');
+        commitAttempted=true;
+        const committed=commit(value=>{physicalCommitted=true;committedValue=value??{};},session,ticket,sequence,time,clockSequence);
+        if(committed.status===1&&!physicalCommitted)throw Error('Native mutation returned without a commit marker');
+        answer=committed.status===1?outcome('committed',{...committed.value,receipt}):
+          outcome(committed.status===-2?'stale':committed.status===-3?'invalid-receipt':committed.status===-6?'blocked':'stale');
       }
-    }catch(error){answer=outcome('control-failed',{error:String(error?.message??error)});}
+    }catch(error){commitFailed=commitAttempted;answer=outcome(physicalCommitted?'committed-control-failed':'control-failed',
+      {...committedValue,error:String(error?.message??error)});}
     finally{
       wasm.nav_intent_barrier_proposal_cancel(session,ticket);
+      if(commitFailed&&!source.status().closed)source.dispose('mutation-commit-failed');
       if(receipt&&!source.status().closed){
         try{
           // The commit may have revoked routes. Publish their exact sequence and
           // a same-time native watermark before releasing the GPU hold.
           flushNativeIntentControl();const latest=nativeCausalClock();
           if(!latest||wasm.nav_intent_clock_commit(latest.rate,latest.paused?1:0)<0)throw Error('Native clock cannot publish mutation boundary');
-          flushNativeIntentControl();source.releaseGpuAfterMutation(receipt,{committed:answer.status==='committed'});
-        }catch(error){source.dispose('mutation-release-failed');answer=outcome(answer.status==='committed'?'committed-control-failed':'control-failed',
-          {...(answer.barrierId?{barrierId:answer.barrierId}:{}),error:String(error?.message??error)});}
+          flushNativeIntentControl();source.releaseGpuAfterMutation(receipt,{committed:physicalCommitted});
+        }catch(error){source.dispose('mutation-release-failed');answer=outcome(physicalCommitted?'committed-control-failed':'control-failed',
+          {...committedValue,error:String(error?.message??error)});}
       }
     }
     return answer;
   };
+  const addNativeBarrierAfterGpuQuiescence=({getPublication,x,z,halfX,halfZ,yaw=0,passMask=0}={})=>{
+    if(![x,z,halfX,halfZ,yaw].every(Number.isFinite)||halfX<=0||halfZ<=0||halfX>100||halfZ>100||
+       !Number.isInteger(passMask)||passMask<0||passMask>3)throw TypeError('Expected a native barrier proposal');
+    return commitNativeWorldProposal(getPublication,()=>wasm.spatial_barrier_proposal_stage(x,z,halfX,halfZ,yaw,passMask),
+      (markCommitted,...boundary)=>{const id=wasm.spatial_barrier_proposal_commit(...boundary);
+        if(id<=0)return {status:id};markCommitted({barrierId:id});return {status:1,value:{barrierId:id}};});
+  };
+  const mutateNativeWorldAfterGpuQuiescence=({getPublication,mutation}={})=>{
+    if(wasm.spatial_world_proposal_version?.()!==1)throw Error('Rebuild native world proposal service');
+    const m=mutation;if(!m||typeof m!=='object'||Array.isArray(m))throw TypeError('Expected a native world mutation');
+    let kind,mode=0,floats=[],integers=[];
+    const pass=value=>Number.isInteger(value)&&value>=0&&value<=3,
+      id=value=>Number.isInteger(value)&&value>0&&value<=2147483647;
+    if(m.type==='barriers'){
+      const remove=m.removeIds??[],add=m.additions??[];
+      if(!Array.isArray(remove)||!Array.isArray(add)||remove.length>1024||add.length>1024||!remove.length&&!add.length||
+         remove.some(v=>!id(v))||new Set(remove).size!==remove.length||add.some(v=>!v||![v.x,v.z,v.halfX,v.halfZ,v.yaw??0].every(Number.isFinite)||
+           v.halfX<=0||v.halfZ<=0||v.halfX>100||v.halfZ>100||!pass(v.passMask??0)))throw TypeError('Invalid native barrier batch');
+      kind=2;mode=remove.length;integers=remove.slice();floats=add.flatMap(v=>[v.x,v.z,v.halfX,v.halfZ,v.yaw??0,v.passMask??0]);
+    }else if(m.type==='addPolygon'){
+      if(!Array.isArray(m.points)||m.points.length<3||m.points.length>64||!pass(m.passMask??0)||
+         m.points.some(p=>!p||![p.x,p.z].every(Number.isFinite)))throw TypeError('Invalid native polygon');
+      kind=3;mode=m.passMask??0;floats=m.points.flatMap(p=>[p.x,p.z]);
+    }else if(m.type==='removePolygon'){
+      if(!id(m.id))throw TypeError('Invalid native polygon ID');kind=4;integers=[m.id];
+    }else if(m.type==='barrierPassability'){
+      if(!id(m.id)||!pass(m.passMask))throw TypeError('Invalid native barrier passability');kind=5;mode=m.passMask;integers=[m.id];
+    }else if(m.type==='addChunk'){
+      if(![m.cx,m.cz].every(v=>Number.isInteger(v)&&Math.abs(v)<=44739000))throw TypeError('Invalid native chunk coordinates');
+      kind=6;integers=[m.cx,m.cz];
+    }else if(m.type==='removeChunks'){
+      if(!Array.isArray(m.chunks)||!m.chunks.length||m.chunks.length>4096||typeof (m.releaseOnly??false)!=='boolean'||
+         m.chunks.some(c=>!Array.isArray(c)||c.length!==2||c.some(v=>!Number.isInteger(v)||Math.abs(v)>44739000)))
+        throw TypeError('Invalid native chunk removal');
+      kind=7;mode=m.releaseOnly?1:0;integers=m.chunks.flat();
+    }else if(m.type==='removeProp'){
+      if(!Number.isInteger(m.group)||m.group<0||m.group>5||![m.gx,m.gz].every(v=>Number.isInteger(v)&&v>=-2147483648&&v<=2147483647))
+        throw TypeError('Invalid native prop identity');
+      kind=8;integers=[m.group,m.gx,m.gz];
+    }else if(m.type==='restoreRemovedProps'){
+      if(!Array.isArray(m.records)||m.records.length>100000||m.records.some(p=>!p||!Number.isInteger(p.group)||p.group<0||p.group>5||
+         ![p.gx,p.gz].every(v=>Number.isInteger(v)&&v>=-2147483648&&v<=2147483647)))throw TypeError('Invalid native prop restoration');
+      kind=9;integers=m.records.flatMap(p=>[p.group,p.gx,p.gz]);
+    }else if(m.type==='settlements'){
+      if(!Array.isArray(m.sites)||m.sites.length>256||typeof (m.replace??false)!=='boolean'||m.sites.some(s=>!s||
+         ![s.x,s.z,s.hx,s.hz,s.waterFalloff??6].every(v=>Number.isFinite(v)&&Number.isFinite(Math.fround(v)))||
+         s.hx<=0||s.hz<=0||s.hx>100||s.hz>100||(s.waterFalloff??6)<.25||(s.waterFalloff??6)>6))throw TypeError('Invalid native settlement mutation');
+      kind=10;mode=m.replace?1:0;floats=m.sites.flatMap(s=>[s.x,s.z,s.hx,s.hz,s.waterFalloff??6]);
+    }else if(m.type==='publishPreparedChunk'){
+      if(!id(m.id))throw TypeError('Invalid native prepared chunk ID');kind=11;integers=[m.id];
+    }else throw TypeError('Unsupported native world mutation');
+    // Only serialization into the authority-owned temporary input buffers.
+    return commitNativeWorldProposal(getPublication,()=>{
+      const fp=wasm.spatial_world_proposal_float_ptr(floats.length);if(floats.length&&!fp)throw Error('Native proposal allocation failed');
+      if(floats.length)new Float32Array(wasm.memory.buffer,fp,floats.length).set(floats);
+      const ip=wasm.spatial_world_proposal_int_ptr(integers.length);if(integers.length&&!ip)throw Error('Native proposal allocation failed');
+      if(integers.length)new Int32Array(wasm.memory.buffer,ip,integers.length).set(integers);
+      return wasm.spatial_world_proposal_stage(kind,mode,floats.length,integers.length);
+    },(markCommitted,...boundary)=>{
+      const status=wasm.spatial_world_proposal_commit(...boundary);if(status!==1)return {status};
+      // Once native state changed, every failure must still retire the old GPU
+      // packet. Never report/release as an aborted physical mutation.
+      markCommitted();const count=wasm.spatial_world_proposal_result_count();
+      if(!Number.isSafeInteger(count)||count<0||count>8192)throw Error('Invalid native mutation result');
+      const ids=Array.from(new Int32Array(wasm.memory.buffer,wasm.spatial_world_proposal_result_ptr(),count));markCommitted({ids});
+      if(kind===6||kind===7||kind===11)session.core.adoptNativeResidencyCommit(kind,ids);
+      return {status:1,value:{ids}};
+    });
+  };
+  const mutateNativeOverlayAfterGpuQuiescence=mutateNativeWorldAfterGpuQuiescence;
   const sampleNativeRoute=(handle,at)=>{
     if(handle?.authorityEpoch!==epoch()||
        wasm.nav_intent_route_sample(handle.session,handle.slot,handle.generation,at)!==1)return null;
@@ -1188,7 +1260,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     structureFor:id=>structuresById.get(numericId(id))??null,
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
-    intentChanges,routePoints,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,addNativeBarrierAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,
+    intentChanges,routePoints,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,
     beginNativeRouteExecution,advanceNativeRouteExecution,stopNativeRouteExecution,nativeRouteExecution,
     projectRouteProgress,processEventBoundary,requestReroute,
     registerAttackIntent,planAttackCrop,planAttackWall,replanAttackRoute,
@@ -2095,6 +2167,8 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     get authorityEpoch(){return bridge.authorityEpoch;},
     nativeIntentControlBaseline:bridge.nativeIntentControlBaseline,
     addNativeBarrierAfterGpuQuiescence:bridge.addNativeBarrierAfterGpuQuiescence,
+    mutateNativeOverlayAfterGpuQuiescence:bridge.mutateNativeOverlayAfterGpuQuiescence,
+    mutateNativeWorldAfterGpuQuiescence:bridge.mutateNativeWorldAfterGpuQuiescence,
     nativeCausalClock:bridge.nativeCausalClock,commitNativeCausalClock:bridge.commitNativeCausalClock,
     observeNativeIntentControl:bridge.observeNativeIntentControl,
     flushNativeIntentControl:bridge.flushNativeIntentControl,

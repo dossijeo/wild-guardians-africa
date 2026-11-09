@@ -2,7 +2,7 @@
 // data is monotonic; eviction first protects current proof data, then retires
 // future routes depending on it. Both use the existing native inverse indices.
 SpatialStaticTicket residencyMutationBefore(IntentState& s,const SpatialResidencyRegion* regions,int count,bool removing,bool releaseOnly){
-  SpatialStaticTicket ticket;if(!s.bodyDomainActive&&s.reservedBodies.empty()&&!s.gateStaticProofs)return ticket;
+  SpatialStaticTicket ticket;ticket.preview=s.worldMutationPreview;if(!s.bodyDomainActive&&s.reservedBodies.empty()&&!s.gateStaticProofs)return ticket;
   if(!gateStaticMutationStart(s,ticket))return ticket;
   std::vector<SpatialStaticMutation> bounds;bounds.reserve(size_t(count));
   for(int i=0;i<count;i++){
@@ -30,7 +30,7 @@ SpatialStaticTicket residencyMutationBefore(IntentState& s,const SpatialResidenc
     // A drawing/resource eviction cannot cancel an authorized simulation route.
     ticket.allowed=false;s.residencyRejected++;return ticket;
   }
-  retireMutationRoutes(s,affected,s.residencyRevocations);return ticket;
+  if(!ticket.preview)retireMutationRoutes(s,affected,s.residencyRevocations);return ticket;
 }
 void residencyMutationCommitted(IntentState& s,const SpatialStaticTicket& ticket,int count){
   if(count>0)gateStaticMutationCommitted(s,ticket,{0,uint64_t(count),0});

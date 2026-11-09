@@ -180,6 +180,8 @@ struct PendingBarrierProposal {
   double at=0;uint64_t bodies=0,entities=0,facts=0,intents=0,reservations=0,clock=0,gates=0;
   std::array<uint64_t,3> world{};
   SpatialBarrierProposalInput input{};
+  SpatialWorldProposalInput worldInput;
+  int kind=0;
 };
 struct IntentState {
   std::unordered_map<uint64_t,Worker> workers;
@@ -279,6 +281,7 @@ struct IntentState {
   uint64_t nextGateMotionTicket=0;
   uint64_t gateRevision=0,nextBarrierProposal=0;
   PendingBarrierProposal barrierProposal;
+  bool worldMutationPreview=false;
   std::array<double,6> barrierProposalResult{};
   std::array<double,5> gateMotionResult{};
   uint64_t gateStaticPairs=0,gateStaticEvaluations=0,gateStaticRejected=0;
@@ -930,51 +933,80 @@ ServiceRoute findServiceRoute(const Worker& worker,const Target& target,int kind
 }
 
 bool spatialIntentStaticProtectionActive(){return state().bodyDomainActive||state().gateStaticProofs;}
-int spatialIntentStageBarrier(const SpatialBarrierProposalInput& input,const SpatialStaticMutation& shape){
+int spatialIntentBeginWorldPreview(){
+  auto& s=state();if(s.worldMutationPreview||s.barrierProposal.pending)return -4;
+  if(!s.session||!s.causalClock||s.clockThrough!=s.effectiveTime||s.clockIntentSequence!=s.intentSequence||
+     !gateStaticProofCurrent(s)||s.executionEnabled&&s.executionWorldStamp!=executionWorldStamp())return -2;
+  if(s.nextBarrierProposal>=uint64_t(maxId)||spatialBodiesMutationRevision()==std::numeric_limits<uint64_t>::max())return -5;
+  s.worldMutationPreview=true;return 1;
+}
+void spatialIntentEndWorldPreview(){state().worldMutationPreview=false;}
+int stageWorldMutationBoundary(const SpatialStaticMutation* shapes,int count){
   auto& s=state();if(s.barrierProposal.pending)return -4;
   if(!s.session||!s.causalClock||s.clockThrough!=s.effectiveTime||s.clockIntentSequence!=s.intentSequence||
      !gateStaticProofCurrent(s)||s.executionEnabled&&s.executionWorldStamp!=executionWorldStamp())return -2;
   if(s.nextBarrierProposal>=uint64_t(maxId)||spatialBodiesMutationRevision()==std::numeric_limits<uint64_t>::max())return -5;
   // This is read-only preflight. No route, slot, world index, ID, or clock is
   // released or published while the graphics receipt is outstanding.
-  if(!staticMutationPreflight(s,&shape,1))return 0;
+  if(count>=0&&!staticMutationPreflight(s,shapes,count))return 0;
   std::set<uint64_t> affected;uint64_t candidates=0,segments=0;
-  if(s.executionEnabled&&!mutationAffectedRoutes(s,&shape,1,0,candidates,segments,affected))return -2;
+  if(count>=0&&s.executionEnabled&&!mutationAffectedRoutes(s,shapes,count,0,candidates,segments,affected))return -2;
   auto& p=s.barrierProposal;p.pending=true;p.session=s.session;p.ticket=++s.nextBarrierProposal;p.at=s.effectiveTime;
   p.bodies=spatialBodiesMutationRevision();p.entities=s.entityRevision;p.facts=s.sequence;p.intents=s.intentSequence;
-  p.reservations=s.residencyPinRevision;p.clock=s.clockSequence;p.gates=s.gateRevision;p.world=executionWorldStamp();p.input=input;
+  p.reservations=s.residencyPinRevision;p.clock=s.clockSequence;p.gates=s.gateRevision;p.world=executionWorldStamp();
   return 1;
 }
-int spatialIntentTakeBarrier(double session,double ticket,double sequence,double time,double clockSequence,SpatialBarrierProposalInput& out){
+int spatialIntentStageBarrier(const SpatialBarrierProposalInput& input,const SpatialStaticMutation& shape){
+  const int result=stageWorldMutationBoundary(&shape,1);if(result!=1)return result;
+  auto& p=state().barrierProposal;p.kind=1;p.input=input;return 1;
+}
+int spatialIntentStageWorld(const SpatialWorldProposalInput& input,const SpatialStaticMutation* shapes,int count){
+  if(input.kind<2)return -1;
+  const int result=stageWorldMutationBoundary(shapes,count);if(result!=1)return result;
+  auto& p=state().barrierProposal;p.kind=input.kind;p.worldInput=input;return 1;
+}
+void clearWorldMutationProposal(PendingBarrierProposal& p){
+  p.pending=false;p.kind=0;p.worldInput=SpatialWorldProposalInput{};
+}
+int takeWorldMutationBoundary(double session,double ticket,double sequence,double time,double clockSequence,int kind){
   auto& s=state();const auto& p=s.barrierProposal;
-  if(!integer(session)||!integer(ticket)||!p.pending||session!=double(p.session)||ticket!=double(p.ticket))return -1;
+  if(!integer(session)||!integer(ticket)||!p.pending||session!=double(p.session)||ticket!=double(p.ticket)||
+     (kind==1?p.kind!=1:p.kind<2))return -1;
   const bool current=p.session==s.session&&p.at==s.effectiveTime&&p.bodies==spatialBodiesMutationRevision()&&
     p.bodies!=std::numeric_limits<uint64_t>::max()&&p.entities==s.entityRevision&&p.facts==s.sequence&&
     p.intents==s.intentSequence&&p.reservations==s.residencyPinRevision&&p.clock==s.clockSequence&&
     p.gates==s.gateRevision&&p.world==executionWorldStamp()&&gateStaticProofCurrent(s)&&
     s.causalClock&&s.clockThrough==s.effectiveTime&&s.clockIntentSequence==s.intentSequence;
-  if(!current){s.barrierProposal.pending=false;return -2;}
+  if(!current){clearWorldMutationProposal(s.barrierProposal);return -2;}
   if(!integer(sequence,true)||sequence!=double(p.intents)||!std::isfinite(time)||time!=p.at||
-     !integer(clockSequence)||clockSequence!=double(p.clock)){s.barrierProposal.pending=false;return -3;}
-  out=p.input;s.barrierProposal.pending=false;return 1;
+     !integer(clockSequence)||clockSequence!=double(p.clock)){clearWorldMutationProposal(s.barrierProposal);return -3;}
+  return 1;
+}
+int spatialIntentTakeBarrier(double session,double ticket,double sequence,double time,double clockSequence,SpatialBarrierProposalInput& out){
+  const int result=takeWorldMutationBoundary(session,ticket,sequence,time,clockSequence,1);if(result!=1)return result;
+  auto& p=state().barrierProposal;out=p.input;clearWorldMutationProposal(p);return 1;
+}
+int spatialIntentTakeWorld(double session,double ticket,double sequence,double time,double clockSequence,SpatialWorldProposalInput& out){
+  const int result=takeWorldMutationBoundary(session,ticket,sequence,time,clockSequence,2);if(result!=1)return result;
+  auto& p=state().barrierProposal;out=std::move(p.worldInput);clearWorldMutationProposal(p);return 1;
 }
 extern "C" EMSCRIPTEN_KEEPALIVE int nav_intent_barrier_proposal_version(){return 1;}
 extern "C" EMSCRIPTEN_KEEPALIVE int nav_intent_barrier_proposal_ticket(){
   auto& s=state();s.barrierProposalResult.fill(0);const auto& p=s.barrierProposal;if(!p.pending)return 0;
-  s.barrierProposalResult={double(p.session),double(p.ticket),double(p.intents),p.at,double(p.clock),1};return 1;
+  s.barrierProposalResult={double(p.session),double(p.ticket),double(p.intents),p.at,double(p.clock),double(p.kind)};return 1;
 }
 extern "C" EMSCRIPTEN_KEEPALIVE const double* nav_intent_barrier_proposal_ticket_ptr(){return state().barrierProposalResult.data();}
 extern "C" EMSCRIPTEN_KEEPALIVE int nav_intent_barrier_proposal_cancel(double session,double ticket){
   auto& s=state();const auto& p=s.barrierProposal;
   if(!integer(session)||!integer(ticket)||!p.pending||session!=double(p.session)||ticket!=double(p.ticket))return 0;
-  s.barrierProposal.pending=false;return 1;
+  clearWorldMutationProposal(s.barrierProposal);return 1;
 }
 bool spatialIntentGateUnsupported(double x,double z,double nx,double nz,double radius){
   const auto& s=state();for(const auto& [id,gate]:s.gates)
     if(gate.status!=2&&spatialStaticMutationBlocks(gate.unsupported,x,z,nx,nz,radius,0,true))return true;
   return false;
 }
-bool spatialIntentPropsProtected(){const auto& s=state();return s.bodyDomainActive||!s.reservedBodies.empty()||s.gateStaticProofs;}
+bool spatialIntentPropsProtected(){const auto& s=state();return s.worldMutationPreview||s.bodyDomainActive||!s.reservedBodies.empty()||s.gateStaticProofs;}
 bool spatialIntentTerrainProtected(){return spatialIntentPropsProtected();}
 SpatialStaticTicket spatialIntentTerrainBefore(const SpatialStaticMutation* boxes,int count,
     SpatialTerrainProbe probe,void* context,int recipes,bool known){
@@ -1048,7 +1080,7 @@ void nav_intent_reset(){
   if(!s.gates.empty())spatialGateSupportChanged();
   s.gates.clear();s.gateBodyActors.clear();s.gateInput.clear();s.gateResult.clear();
   cancelGateMotionProposal(s);s.gateMotionResult.fill(0);
-  s.barrierProposal=PendingBarrierProposal{};s.barrierProposalResult.fill(0);s.gateRevision=0;
+  s.barrierProposal=PendingBarrierProposal{};s.barrierProposalResult.fill(0);s.gateRevision=0;s.worldMutationPreview=false;
   s.routeHoldResult.clear();s.routeKnotResult.clear();s.gateWaitSegments=0;
   s.gateStaticPairs=s.gateStaticEvaluations=s.gateStaticRejected=0;s.gateStaticResult.fill(0);
   s.gateStaticProofs=0;s.gateStaticWorldStamp.fill(0);

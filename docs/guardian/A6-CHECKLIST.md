@@ -12,7 +12,7 @@ ejecutor protegido de producto. A6 incluye todas las intenciones y trabajadores.
 personajes autónomos en GPU. Hay una validación de las mallas originales de puerta;
 los diagnósticos de locomoción aún usan triángulos, no personajes. Desde la petición de cerrar e/f se han cerrado **0 de esos 2
 subpuntos**. Sus componentes internos avanzaron, pero la entrega integrada no.
-En el desglose fijo de entrega, **e-R1, e-R2 y f-R1 están cerrados; quedan 5 de 8**.
+En el desglose fijo de entrega, **e-R1, e-R2, f-R1 y f-R2 están cerrados; quedan 4 de 8**.
 
 **Niveles que no se suman:** A6 tiene 11 puntos principales, todos abiertos.
 Dentro de A6-04, a–d están marcados implementados/validados en el dominio nativo
@@ -27,13 +27,13 @@ estaba dentro de e/f; no son funcionalidades adicionales ni renumeran A6-01–11
 | Barridos y protección | Contacto continuo contra cuerpos, objetos canónicos y otras hojas; veto previo de mutaciones incompatibles. La unión del mecanismo conserva todas sus regiones ocupadas. | No certifica apoyos arbitrarios/inclinados ni física de otras clases; se rechazan explícitamente. |
 | Timetable y fases | Esperas iniciales/intermedias, admisión atómica opt-in por puertas cerradas, cierre previo conservado hasta la inversión y suspensión/reanudación del sufijo con fases/presupuesto acumulados. | El lector de candidatos anterior sigue sin admitir. La nueva API exige el mecanismo validado de e-R1. No activa producto/GPU ni persistencia entre acciones/guardados. |
 | Control directo y recibo GPU | Revocación por época/versión, canal independiente de preparación, frontera finita de tiempo ya ejecutado en nativo y recibo GPU ligado también a su versión de reloj. | f-R1 cerrado para el cohort nativo opt-in. Un recibo/reloj no resuelve todos los consumidores de producto, relevo ni aplicación gráfica de las mutaciones. |
-| Propuesta y commit condicionado | Motor de puerta y primera alta de barrera orientada opt-in: ticket nativo de un uso, preflight no efectivo y recibo GPU nuevo; la barrera detiene envíos mientras se confirma. | Solo una operación de overlay y un consumidor causal. Faltan polígonos/lotes/restantes overlays, residencia, props, terreno, relevo y recursos gráficos; no activar en partida. |
+| Propuesta y commit condicionado | Overlays, residencia, props y terreno: propuestas nativas no efectivas, tickets de un uso, preflight y commit tras quiescencia/drenaje GPU. Incluye publicación pthread. | Dominio nativo actual y un consumidor causal opt-in. Faltan consumidores/relevo y recursos gráficos coordinados; no activar en partida. |
 
 Son cinco componentes agrupados para visibilidad, no cinco entregables de producto
 cerrados ni una medida porcentual. Cantidades de pruebas/commits son evidencia,
 no el indicador principal de avance.
 
-### Entregables de cierre: 3 cerrados, 5 pendientes
+### Entregables de cierre: 4 cerrados, 4 pendientes
 
 Se mantienen estos IDs al avanzar. Algunos comparten
 dependencias con A6-01/02/06/07/08/09; no se cuentan otra vez como trabajo nuevo.
@@ -45,7 +45,7 @@ dependencias con A6-01/02/06/07/08/09; no se cuentan otra vez como trabajo nuevo
 | **A6-04.e-R3** | Integración de puertas con entidades y ciclo de vida. | Usar esas decisiones en las intenciones pertinentes de la partida, con llegadas/consecuencias, cancelación, guardado/restauración y recuperación; sin dos ejecutores autoritativos. |
 | **A6-04.e-R4** | Aceptación de puertas con personajes reales. | Partida WASM/WebGPU con trabajadores y animales, respetando qué puede cruzar cada uno; obstáculos, esperas, pausa/velocidad, acciones, guardado y determinismo. No basta el triángulo. |
 | **A6-04.f-R1** | **CERRADO — Frontera causal de tiempo y comandos.** | Simulación y dibujo aplican avances, pausa, velocidad y revocaciones en una frontera segura; no presentar movimiento que ya no puede autorizarse ni corregirlo mediante rebobinado. [Ejecución real WASM/WebGPU y tres bloqueos de preparación](performance/native-causal-clock-20261109.json). |
-| **A6-04.f-R2** | **PARCIAL — Commit condicionado para las demás mutaciones.** | Extender la propuesta todavía no efectiva y su commit seguro a overlays, residencia, props y terreno, no solo al motor de puerta. |
+| **A6-04.f-R2** | **CERRADO — Commit condicionado para las demás mutaciones.** | Extender la propuesta todavía no efectiva y su commit seguro a overlays, residencia, props y terreno, no solo al motor de puerta. [Seis casos WASM/WebGPU](performance/native-world-mutations-20261109.json). |
 | **A6-04.f-R3** | Todos los consumidores, relevo y fallos. | La seguridad cubre consumidores activos/temporales, sustitución de Workers, pérdida de dispositivo y canal perdido o silencioso; un ACK viejo no permite aplicar cambios. |
 | **A6-04.f-R4** | Aplicación gráfica de la misma mutación. | Recursos y dibujo representan el cambio físico coordinado; probarlo con personajes reales y preparación bloqueada, sin depender de publicaciones periódicas de posición JS. |
 
@@ -127,18 +127,15 @@ diagnóstico, no aceptación con personajes. Si la autoridad no publica avances,
 el dibujo se detiene: la existencia de una ruta futura no concede tiempo no
 ejecutado. No se activa este modo en gameplay ni se retira el fallback protegido.
 
-**Siguiente bloqueo concreto:** f-R2, commit condicionado de overlays, residencia,
-props y terreno, antes de activar los cruces en la partida. f-R3/f-R4 y la
-integración de entidades de e-R3 permiten aceptar e-R4. Es un mapa
-de dependencias, no una promesa de duración o de que los ocho tengan igual tamaño.
-
-**Avance parcial de f-R2:** una **alta de barrera orientada** puede proponerse
-sin cambiar mundo, IDs, rutas ni reloj. El preflight y el ticket son nativos;
-comprueban cuerpos, trayectorias y protecciones de puerta existentes. El canal
-directo detiene nuevos envíos, espera el drenaje GPU y entrega un recibo exacto
-de sesión/época, intención, tiempo y versión de reloj. Solo entonces se confirma
-la barrera y se publican las revocaciones antes de liberar el dibujante. Cambios
-de cuerpo, mundo, ruta, reloj o motor mientras espera invalidan la propuesta.
+**Alcance del cierre de f-R2:** las cuatro familias del criterio usan una
+propuesta nativa no efectiva y el mismo commit condicionado: barreras individuales
+y en lotes, polígonos y permeabilidad; altas/bajas de residencia y publicación
+pthread; supresión/restauración canónica de props; lotes/reemplazo de asentamientos
+del terreno. El preflight conserva los vetos actuales y no publica mundo, IDs ni
+revocaciones. Se confirma solo tras el recibo GPU exacto; cambios de cuerpo,
+mundo, ruta, reloj o motor durante la espera invalidan el ticket. La mutación
+canónica vuelve a comprobar sus dependencias al commit; no hay planner JS ni
+comprobación geométrica periódica.
 
 Tras un commit efectivo se invalida el paquete anterior y se rechazan los que
 todavía estaban esperando recursos; no se inventa un frame actualizado: la imagen
@@ -147,9 +144,22 @@ frame tampoco pueden colarse durante el drenaje. **Dependencia descubierta:**
 mantener la imagen y generar/aplicar los recursos nuevos de manera coordinada es
 f-R4; la protección de todos los consumidores y relevos sigue en f-R3. Este
 incremento no acredita ninguno de esos IDs ni activa el camino en producto.
-Quedan para f-R2 el resto de overlays, residencia, props y terreno, con sus
-propuestas y commits efectivos propios. [Evidencia WASM/WebGPU de esta primera
-barrera](performance/native-barrier-mutation-20261109.json).
+Las altas/bajas de chunk actualizan el espejo JS existente únicamente con los
+resultados nativos; el enlace con el stream/recursos de juego sigue sin activar.
+Si falla la conversión después de un commit físico, se cierra el canal: nunca se
+libera como si el commit no hubiera ocurrido.
+
+[Evidencia WASM/WebGPU de una barrera](performance/native-barrier-mutation-20261109.json)
+y [seis operaciones de las cuatro familias](performance/native-world-mutations-20261109.json),
+cada una durante un bloqueo real de 500 ms. El paquete previo se mantiene
+congelado tras el commit; no se afirma que la geometría nueva ya esté dibujada.
+El dominio es el validado por A6-04.a–d; no se generaliza silenciosamente a
+terrenos/estados no soportados. Las recetas de props/terreno se comprueban de
+nuevo al commit nativo: ese coste de evento y la congelación hasta recursos nuevos
+quedan explícitos, no son trabajo por tick ni aceptación de rendimiento integrado.
+
+**Siguiente bloqueo concreto:** f-R3, consumidores, relevo y fallos; después
+f-R4 y la integración de entidades de e-R3 permiten aceptar e-R4.
 
 **Cómo se informará el avance:** entrega cerrada y evidencia; entrega parcial
 y qué criterio falta; IDs aún pendientes; cambios de alcance descubiertos,
@@ -216,7 +226,7 @@ esta lista ni presentar más pruebas aisladas como cierre del producto.
     Evidencia:
     11 pruebas de política + 12 de barrido + 8 de espera iniciales; 20 nuevas de
     objetos y 2 de coordinación; 13 nuevas de esperas múltiples. Batería actual:
-    517 dirigidas + 39 y 74 heredadas
+    536 dirigidas + 39 y 74 heredadas
     sin skips. Tres auditorías WASM/WebGPU reproducen espera/reanudación y fases/
     presupuesto desde un único paquete durante dos bloqueos de 500 ms cada una,
     sin nuevas posiciones JS ni trabajo geométrico nativo. Son triángulos de
@@ -241,11 +251,11 @@ esta lista ni presentar más pruebas aisladas como cierre del producto.
     pausa/velocidad/revocación directas y replay GPU que no sobrepasa lo ejecutado
     ni rebobina. Prueba real con un paquete, tres bloqueos de 500 ms, recibo GPU
     durante preparación bloqueada y readback de fases/posición contra WASM.
-    f-R2 parcial: primera barrera orientada con propuesta nativa no efectiva,
-    quiescencia/drenaje GPU y commit/revocación condicionados; invalida paquetes
-    anteriores y conserva congelada la imagen hasta recursos nuevos. No instala
-    recursos de puerta ni activa cruces de producto. Faltan generalizar
-    la transacción a otras mutaciones, coordinación completa de
+    f-R2 cerrado en el dominio nativo actual: overlays, residencia (incluido
+    pthread), props y terreno con propuestas no efectivas y commit condicionado.
+    Invalida paquetes anteriores y conserva congelada la imagen hasta recursos
+    nuevos. No instala recursos de puerta ni activa cruces de producto. Faltan
+    coordinación completa de
     consumidores/relevo e integración física/gráfica de producto con personajes.
 - [ ] **A6-05 — Todas las intenciones, perfiles y biomas.** Completar animales
   (entrada, ataque, objetivo, retirada) y trabajadores (tareas, entrega/carga,
@@ -317,10 +327,11 @@ esta lista ni presentar más pruebas aisladas como cierre del producto.
 - Cierre de e-R2: `.cache/native-gate-e-r2-regression.tap`, 479 aprobadas sin skips; `.cache/native-gate-e-r2-legacy-stream-geometry.tap` (39) y `.cache/native-gate-e-r2-legacy-recipe.tap` (74), aprobadas sin skips. [Registro de aceptación nativa](performance/native-gate-crossing-resume-20261109.json); se reproduce con `tests/spatial-native-gate-route-acceptance.test.js`.
 - Cierre de f-R1: `.cache/native-causal-clock-regression.tap`, 493 aprobadas sin skips; `.cache/native-causal-clock-legacy-stream-geometry.tap` (39) y `.cache/native-causal-clock-legacy-recipe.tap` (74), aprobadas sin skips. [Aceptación WASM/WebGPU del reloj causal](performance/native-causal-clock-20261109.json), reproducible en `/tests/browser/native-causal-clock.html`; diagnóstico, no personajes.
 - Avance parcial de f-R2: `.cache/native-barrier-quiescence-regression.tap`, 517 aprobadas sin skips; `.cache/native-barrier-quiescence-legacy-stream-geometry.tap` (39) y `.cache/native-barrier-quiescence-legacy-recipe.tap` (74), aprobadas sin skips. [Una barrera WASM/WebGPU con preparación bloqueada](performance/native-barrier-mutation-20261109.json), reproducible en `/tests/browser/native-barrier-mutation.html`. No cierra f-R2 ni acredita personajes/recursos nuevos.
+- Cierre de f-R2: `.cache/native-world-mutations-regression.tap`, 536 aprobadas sin skips; `.cache/native-world-mutations-legacy-stream-geometry.tap` (39) y `.cache/native-world-mutations-legacy-recipe.tap` (74), aprobadas sin skips. [Seis mutaciones WASM/WebGPU](performance/native-world-mutations-20261109.json), reproducibles en `/tests/browser/native-world-mutations.html`. No son aceptación gráfica de recursos nuevos/personajes.
 - [Mecanismo nativo y mallas reales WebGPU](performance/native-gate-mechanism-20261109.json) · [captura](performance/native-gate-mechanism-20261109.png).
 
 Quedan **2 de los 6 subpuntos de A6-04**: e y f (parciales).
-Dentro de su desglose fijo quedan **5 de 8**: e-R1/e-R2/f-R1 cerrados; e-R3/e-R4/f-R2–R4 pendientes.
+Dentro de su desglose fijo quedan **4 de 8**: e-R1/e-R2/f-R1/f-R2 cerrados; e-R3/e-R4/f-R3/f-R4 pendientes.
 Los **11 puntos principales de A6** siguen abiertos; son niveles distintos,
 no dos cantidades que deban sumarse.
 

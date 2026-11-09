@@ -1,6 +1,6 @@
 SpatialStaticTicket terrainMutationBefore(IntentState& s,const SpatialStaticMutation* bounds,int count,
     SpatialTerrainProbe probe,void* context,int recipes,bool known){
-  SpatialStaticTicket ticket;if(!gateStaticMutationStart(s,ticket))return ticket;
+  SpatialStaticTicket ticket;ticket.preview=s.worldMutationPreview;if(!gateStaticMutationStart(s,ticket))return ticket;
   if(s.gateStaticProofs&&!known){s.gateStaticRejected++;ticket.allowed=false;return ticket;}
   if(!gateStaticRegionPreflight(s,bounds,count,7)){ticket.allowed=false;return ticket;}
   if(!s.bodyDomainActive&&s.reservedBodies.empty())return ticket;
@@ -39,7 +39,7 @@ SpatialStaticTicket terrainMutationBefore(IntentState& s,const SpatialStaticMuta
       x=nx;z=nz;
     }
   }
-  retireMutationRoutes(s,affected,s.terrainRevocations);return ticket;
+  if(!ticket.preview)retireMutationRoutes(s,affected,s.terrainRevocations);return ticket;
 }
 void terrainMutationCommitted(IntentState& s,const SpatialStaticTicket& ticket){
   gateStaticMutationCommitted(s,ticket,{1,0,0});

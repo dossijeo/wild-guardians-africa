@@ -1693,3 +1693,88 @@ suite general.
 **IDs cerrados este turno: ninguno.** Sigue f-R2 hasta cubrir los otros tipos de
 mutación y sus variantes; f-R3/f-R4 y e-R3/e-R4 siguen abiertos. El tablero fijo
 permanece en **3 cerrados, 5 pendientes**; los padres e/f siguen parciales.
+
+## Cierre de A6-04.f-R2 — Mutaciones nativas condicionadas al dibujante
+
+Se cumple el criterio fijo de f-R2 en el dominio nativo validado de A6-04.a–d:
+**overlays, residencia, props y terreno** tienen propuesta todavía no efectiva
+y commit condicionado al recibo del dibujante. Es un camino opt-in con una
+conexión causal, no activación de producto. f-R3 sigue cubriendo todos los
+consumidores, relevo y fallos; f-R4 sigue cubriendo la aplicación de los recursos
+gráficos y la prueba con personajes. Los padres e/f permanecen parciales.
+
+### Las cuatro familias usan la misma frontera, no otra autoridad
+
+El ticket nativo de un uso y la quiescencia GPU del incremento anterior se
+reutilizan mediante un payload temporal inmutable en `IntentState`. No se crea
+otro registro del mundo, planificador, scheduler de movimiento ni test JS de
+colisión. Los buffers que recibe WASM son solo entrada serializada: después de
+proponer, cambiar esos buffers o el objeto JS no modifica el candidato retenido.
+Un solo ticket pendiente evita intercalar una propuesta de barrera y otra familia.
+
+| Familia | Operaciones nativas propuestas y confirmadas |
+|---|---|
+| Overlay | Alta y lotes de barreras con retiradas/altas atómicas; polígonos de 3–64 vértices, retirada y cambios de permeabilidad. |
+| Residencia | Alta síncrona, retiro/lotes y `releaseOnly`, además de publicación de un trabajo realmente preparado en pthread. |
+| Props | Supresión de una identidad canónica y restauración del conjunto autorizado de identidades. |
+| Terreno | Lotes de asentamientos, adición o reemplazo, usando la receta y los vetos de apoyo existentes. |
+
+Las funciones canónicas siguen siendo propietarias del preflight, los datos y
+el commit. Para residencia, props y terreno se introduce una **vista de propuesta**
+síncrona: ejecuta las mismas pruebas, pero el ticket indica que todavía no se
+pueden publicar datos ni retirar rutas. Las recetas de props/terreno usan sus
+vistas scratch existentes y devuelven antes de intercambiar el estado vivo.
+Los buffers de entrada antiguos se guardan y restauran; no se sobrescribe una
+preparación ajena. Las rutas afectadas permanecen reservadas y sus handles válidos
+hasta el commit. Un cuerpo o apoyo actual incompatible rechaza la propuesta antes
+de pedir el recibo GPU.
+
+El commit valida sesión, reloj, high-water de intenciones, cuerpos, entidades,
+reservas, mundo y revisión del motor; luego llama la operación nativa canónica,
+que conserva sus vetos y retiros de rutas antes de publicar el cambio físico.
+Las recetas de props/terreno se vuelven a calcular en esa frontera: es coste de
+dos eventos, no un scheduler, planner duplicado ni comprobación por tick. Queda
+por medir/reducir el coste estructural, y la quiescencia puede congelar dibujo
+hasta que f-R4 entregue recursos nuevos. Un trabajo pthread cancelado después de
+proponer devuelve rechazo sin publicar el chunk. Cambiar política, cuerpo o
+mundo mientras se espera invalida el ticket; un recibo viejo no confirma nada.
+
+La adición/retiro de chunks entrega identidades/resultados nativos exactos al
+espejo JS de residencia ya existente; JS no escoge qué chunk cambiar. Si la
+conversión falla después de una mutación física, el resultado se informa como
+`committed-control-failed` y se cierra el canal retenido. Una excepción durante
+el commit no se libera como si el mundo siguiera intacto. El enlace del stream,
+recursos y recuperación de producto sigue pendiente, sin fallback silencioso.
+
+### Evidencia del criterio de f-R2
+
+`/tests/browser/native-world-mutations.html` ejecuta **seis casos reales
+WASM/WebGPU NVIDIA Turing**, cada uno con su autoridad, canal directo y bloqueo
+síncrono de preparación de 500 ms: polígono que revoca una ruta, alta y retiro
+de residencia, supresión/restauración de prop y mutación de terreno. En cada uno
+el estado y ruta son idénticos antes del recibo; el commit ocurre durante el
+bloqueo después del drenaje; la generación previa no vuelve a dibujarse. Hubo
+5–6 dibujos antes de cada hold y ninguno de ese paquete después del release;
+no hubo errores GPU. La prueba previa de barrera orientada también sigue pasando.
+
+Las pruebas nativas/transportes adicionales verifican lotes y permeabilidad,
+identidades de polygon, entradas malformadas, cuerpos/apoyo protegidos, futura
+evicción y terreno que revocan **solo al commit**, restauración de prop bajo un
+cuerpo o en una ruta futura, rechazo ante cambios de reloj para las cuatro
+familias, pérdida del canal, datos de entrada inmutables y actualización exacta
+del espejo de residencia. También ejercitan publicación pthread real y su
+cancelación durante la espera. Si la conversión JS falla tras publicar, el
+canal se cierra y no se confunde con una propuesta abortada.
+
+Evidencia: `performance/native-world-mutations-20261109.json`, comprobada por
+`tests/native-world-mutation-evidence.test.js`; la barrera inicial está en
+`performance/native-barrier-mutation-20261109.json`. Standalone/pthread
+reconstruidos; **536 dirigidas + 39 de streaming/geometría + 74 de receta/estado**
+aprobadas sin skips. Logs `.cache/native-world-mutations-regression.tap`,
+`.cache/native-world-mutations-legacy-stream-geometry.tap` y
+`.cache/native-world-mutations-legacy-recipe.tap`. No se declara limpia la suite
+general ni se convierten cantidades de tests en porcentaje de producto.
+
+**Cerrado en este turno: A6-04.f-R2.** Tablero fijo: e-R1/e-R2/f-R1/f-R2
+cerrados; **e-R3, e-R4, f-R3 y f-R4 pendientes (4 cerrados, 4 pendientes)**.
+Los 11 puntos principales A6 siguen abiertos. La siguiente dependencia es f-R3.

@@ -1,6 +1,7 @@
 #pragma once
 #include <array>
 #include <cstdint>
+#include <vector>
 
 // Temporary views of proposed native geometry, never another obstacle store.
 struct SpatialStaticMutation {
@@ -12,7 +13,7 @@ struct SpatialStaticMutation {
 struct SpatialStaticTicket {
   std::array<uint64_t,3> before{};
   bool allowed=true,executing=false,tracked=false;
-  bool gateObjects=false;
+  bool gateObjects=false,preview=false;
 };
 bool spatialStaticMutationBlocks(const SpatialStaticMutation&,double x,double z,
   double nx,double nz,double radius,int kind,bool physical=false);
@@ -26,3 +27,9 @@ bool spatialIntentStaticProtectionActive();
 struct SpatialBarrierProposalInput {float x,z,halfX,halfZ,yaw;int passMask;};
 int spatialIntentStageBarrier(const SpatialBarrierProposalInput&,const SpatialStaticMutation&);
 int spatialIntentTakeBarrier(double session,double ticket,double sequence,double time,double clockSequence,SpatialBarrierProposalInput&);
+// Bounded, immutable transaction input; transient proposal, not a second world.
+struct SpatialWorldProposalInput {int kind=0,mode=0;std::vector<float> floats;std::vector<int32_t> integers;};
+int spatialIntentStageWorld(const SpatialWorldProposalInput&,const SpatialStaticMutation*,int count);
+int spatialIntentTakeWorld(double,double,double,double,double,SpatialWorldProposalInput&);
+int spatialIntentBeginWorldPreview();
+void spatialIntentEndWorldPreview();

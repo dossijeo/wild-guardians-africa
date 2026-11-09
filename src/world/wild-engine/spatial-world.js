@@ -168,6 +168,26 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     if(wasm.spatial_chunk_count()!==chunks.length||new Set(chunks.map(([x,z])=>`${x},${z}`)).size!==chunks.length)throw Error('Native chunk residency mirror mismatch');
     return {revision:chunkRevision,keys:chunks.map(([x,z])=>`${x},${z}`),selected:chunk?{cx:chunk.cx,cz:chunk.cz}:null};
   }
+  // Consume the exact native commit result. This only updates the existing
+  // publication mirror; it never plans, tests a route or chooses residency.
+  function adoptNativeResidencyCommit(kind,values){
+    if(!generated||!Array.isArray(values)||values.some(v=>!Number.isInteger(v)))throw Error('Invalid native residency commit result');
+    if(kind===6||kind===11){
+      if(values.length!==3)throw Error('Invalid native chunk publication result');
+      const [cx,cz,count]=values;
+      if(count<0||chunks.some(([x,z])=>x===cx&&z===cz)||wasm.spatial_has_chunk(cx,cz)!==1||wasm.spatial_chunk_count()!==chunks.length+1)
+        throw Error('Native chunk publication mirror mismatch');
+      chunks.push([cx,cz]);chunk={cx,cz,count};chunkRevision++;return;
+    }
+    if(kind!==7||!values.length||values.length%2)throw Error('Invalid native chunk removal result');
+    const keys=new Set();for(let i=0;i<values.length;i+=2){const cx=values[i],cz=values[i+1],key=`${cx},${cz}`;
+      if(keys.has(key)||!chunks.some(([x,z])=>x===cx&&z===cz)||wasm.spatial_has_chunk(cx,cz)!==0)
+        throw Error('Native chunk removal mirror mismatch');keys.add(key);
+    }
+    if(wasm.spatial_chunk_count()!==chunks.length-keys.size)throw Error('Native chunk removal count mismatch');
+    chunks=chunks.filter(([x,z])=>!keys.has(`${x},${z}`));chunkRevision+=keys.size;
+    if(chunk&&keys.has(`${chunk.cx},${chunk.cz}`)){const last=chunks.at(-1);chunk=last?{cx:last[0],cz:last[1],count:wasm.spatial_prop_count()}:null;}
+  }
   function props(){
     return spatialProps(wasm);
   }
@@ -355,7 +375,7 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     }
     wasm.lazy_commit_portals();
   }
-  return {wasm,preparation,generate,addChunk,selectChunk,removeChunk,removeChunks,
+  return {wasm,preparation,generate,addChunk,selectChunk,removeChunk,removeChunks,adoptNativeResidencyCommit,
     releaseChunk:(cx,cz)=>removeChunk(cx,cz,true),releaseChunks:coordinates=>removeChunks(coordinates,true),
     hasResidentChunk:(cx,cz)=>wasm.spatial_has_chunk?wasm.spatial_has_chunk(cx|0,cz|0)===1:
       chunks.some(([x,z])=>x===(cx|0)&&z===(cz|0)),

@@ -1742,6 +1742,7 @@ int spatial_add_chunk(int cx,int cz){
   for(const auto& [x,z]:loadedChunks)if(x==cx&&z==cz)return 0;
   const auto region=residencyRegion(cx,cz);const auto ticket=spatialIntentResidencyBefore(&region,1,false);
   if(!ticket.allowed)return -1;
+  if(ticket.preview)return 1;
   SPATIAL_TICK(totalStarted);
   populateChunk(cx,cz);loadedChunks.emplace_back(cx,cz);++residencyRevision;
   const int previous=activeProfile;
@@ -1768,6 +1769,7 @@ int removeChunkNative(int cx,int cz,bool releaseOnly){
   if(it==loadedChunks.end())return 0;
   const auto region=residencyRegion(cx,cz);const auto ticket=spatialIntentResidencyBefore(&region,1,true,releaseOnly);
   if(!ticket.allowed)return -2;
+  if(ticket.preview)return 1;
   loadedChunks.erase(it);++residencyRevision;
   residentSpatial().erase(chunkKey(cx,cz));
   residentSolidProps().erase(chunkKey(cx,cz));
@@ -1810,6 +1812,7 @@ int removeChunksNative(int count,bool releaseOnly){
   for(const auto& [cx,cz]:removed)regions.push_back(residencyRegion(cx,cz));
   const auto ticket=spatialIntentResidencyBefore(regions.data(),int(regions.size()),true,releaseOnly);
   if(!ticket.allowed)return -2;
+  if(ticket.preview)return int(removed.size());
   for(const auto& [cx,cz]:removed){
     loadedChunks.erase(std::find(loadedChunks.begin(),loadedChunks.end(),std::pair<int,int>{cx,cz}));
     residentSpatial().erase(chunkKey(cx,cz));
@@ -1931,6 +1934,7 @@ int spatial_remove_prop(int group,int gx,int gz){
   const Prop changed=*found;
   const auto ticket=spatialIntentPropsBefore(nullptr,0);
   if(!ticket.allowed)return 0;
+  if(ticket.preview)return 1;
   removedPropGeometry().insert_or_assign({group,gx,gz},changed);
   removedProps().insert({group,gx,gz});
   refreshRemovedPropChunks(&changed);
@@ -2641,6 +2645,142 @@ int spatial_set_barrier_passability(int id,int passMask){
     spatialIntentStaticCommitted(ticket);
   }
   return 1;
+}
+// One temporary input view for a staged mutation. The intent authority owns the
+// immutable copy after staging; these buffers are not a live obstacle store.
+static WILD_SAMPLING_LOCAL std::vector<float> worldProposalFloatInput;
+static WILD_SAMPLING_LOCAL std::vector<int32_t> worldProposalIntInput,worldProposalResult;
+// Do not overwrite another caller's uncommitted legacy input buffers while
+// preparing or applying this immutable proposal.
+struct ScopedWorldProposalInputs {
+  std::vector<float> barriers,polygon;
+  std::vector<int> removals;
+  std::vector<int32_t> props,chunks;
+  std::array<float,256*5> settlements;
+  ScopedWorldProposalInputs(){
+    barriers.swap(barrierBatch);polygon.swap(polygonInput);removals.swap(barrierRemovalIds);
+    props.swap(removedPropState);chunks.swap(chunkRemovalInput);
+    std::copy_n(settlementBatchInput,settlements.size(),settlements.begin());
+  }
+  ~ScopedWorldProposalInputs(){
+    barriers.swap(barrierBatch);polygon.swap(polygonInput);removals.swap(barrierRemovalIds);
+    props.swap(removedPropState);chunks.swap(chunkRemovalInput);
+    std::copy(settlements.begin(),settlements.end(),settlementBatchInput);
+  }
+};
+int applyWorldProposalInput(const SpatialWorldProposalInput& input){
+  ScopedWorldProposalInputs scratch;int result=0;
+  if(input.kind==2){
+    barrierBatch=input.floats;barrierRemovalIds.assign(input.integers.begin(),input.integers.end());
+    result=spatial_apply_barrier_batch(input.mode,int(input.floats.size()/6));
+    if(result==1)worldProposalResult.assign(barrierBatchIds.begin(),barrierBatchIds.end());
+  }else if(input.kind==3){
+    polygonInput=input.floats;result=spatial_add_polygon(int(input.floats.size()/2),input.mode);
+    if(result>0){worldProposalResult.push_back(result);result=1;}
+  }else if(input.kind==4)result=spatial_remove_polygon(input.integers[0]);
+  else if(input.kind==5)result=spatial_set_barrier_passability(input.integers[0],input.mode);
+  else if(input.kind==6){
+    const int added=spatial_add_chunk(input.integers[0],input.integers[1]);result=added>0?1:0;
+    if(result)worldProposalResult={input.integers[0],input.integers[1],added-1};
+  }
+  else if(input.kind==7){
+    std::vector<int32_t> removed;std::unordered_set<uint64_t> seen;
+    for(size_t i=0;i<input.integers.size();i+=2){const int x=input.integers[i],z=input.integers[i+1];
+      if(spatial_has_chunk(x,z)&&seen.insert(chunkKey(x,z)).second)removed.insert(removed.end(),{x,z});}
+    chunkRemovalInput=input.integers;const int count=removeChunksNative(int(input.integers.size()/2),input.mode==1);
+    result=count>0?1:0;if(result)worldProposalResult=std::move(removed);
+  }else if(input.kind==8)result=spatial_remove_prop(input.integers[0],input.integers[1],input.integers[2]);
+  else if(input.kind==9){removedPropState=input.integers;result=spatial_restore_removed_props(int(input.integers.size()/3));}
+  else if(input.kind==10){
+    std::copy(input.floats.begin(),input.floats.end(),settlementBatchInput);
+    result=spatial_apply_settlement_batch(int(input.floats.size()/5),input.mode)>=0?1:0;
+  }
+#ifdef __EMSCRIPTEN_PTHREADS__
+  else if(input.kind==11){
+    const int x=preparationReadable()&&preparationJob->id==input.integers[0]?preparationJob->cx:0,
+      z=preparationReadable()&&preparationJob->id==input.integers[0]?preparationJob->cz:0,
+      added=spatial_prepare_publish(input.integers[0]);result=added>0?1:0;
+    if(result)worldProposalResult={x,z,added-1};
+  }
+#endif
+  return result;
+}
+EMSCRIPTEN_KEEPALIVE float* spatial_world_proposal_float_ptr(int count){
+  if(count<0||count>500000)return nullptr;worldProposalFloatInput.resize(size_t(count));return worldProposalFloatInput.data();
+}
+EMSCRIPTEN_KEEPALIVE int32_t* spatial_world_proposal_int_ptr(int count){
+  if(count<0||count>300000)return nullptr;worldProposalIntInput.resize(size_t(count));return worldProposalIntInput.data();
+}
+EMSCRIPTEN_KEEPALIVE const int32_t* spatial_world_proposal_result_ptr(){return worldProposalResult.data();}
+EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_result_count(){return int(worldProposalResult.size());}
+EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_version(){return 1;}
+// 2–5 overlays; 6/7 residency; 8/9 props; 10 terrain; 11 pthread publication.
+EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stage(int kind,int mode,int floatCount,int intCount){
+  if(floatCount<0||intCount<0||size_t(floatCount)!=worldProposalFloatInput.size()||
+     size_t(intCount)!=worldProposalIntInput.size())return -1;
+  const auto& f=worldProposalFloatInput;const auto& ids=worldProposalIntInput;
+  std::vector<SpatialStaticMutation> shapes;std::vector<PolygonObstacle> polygons;
+  if(kind==2){
+    if(mode<0||mode>1024||mode!=intCount||floatCount%6||floatCount/6>1024||
+       !mode&&!floatCount||floatCount/6>std::numeric_limits<int>::max()-nextBarrierId)return -1;
+    std::unordered_set<int> unique;
+    for(int id:ids)if(id<=0||!unique.insert(id).second||!barrierIndex().byId.count(id))return -1;
+    for(int i=0;i<floatCount;i+=6){
+      if(!std::isfinite(f[i])||!std::isfinite(f[i+1])||!std::isfinite(f[i+2])||!std::isfinite(f[i+3])||
+         !std::isfinite(f[i+4])||!std::isfinite(f[i+5])||f[i+2]<=0||f[i+3]<=0||f[i+2]>100||f[i+3]>100||
+         f[i+5]<0||f[i+5]>3||std::floor(f[i+5])!=f[i+5])return -1;
+      const float yaw=f[i+4];const Barrier barrier={0,f[i],f[i+1],f[i+2],f[i+3],yaw,
+        float(std::cos(yaw)),float(std::sin(yaw)),uint8_t(f[i+5])};shapes.push_back(barrierMutation(barrier));
+    }
+  }else if(kind==3){
+    const int count=floatCount/2;if(intCount||floatCount%2||count<3||count>maxPolygonVertices||mode<0||mode>3||
+       nextPolygonId==std::numeric_limits<int>::max())return -1;
+    float minX=std::numeric_limits<float>::infinity(),minZ=minX,maxX=-minX,maxZ=-minX;double area=0;
+    for(int i=0;i<count;i++){const float x=f[i*2],z=f[i*2+1];const int next=(i+1)%count;
+      if(!std::isfinite(x)||!std::isfinite(z)||std::abs(x)>2147483000.0f||std::abs(z)>2147483000.0f)return -1;
+      minX=std::min(minX,x);maxX=std::max(maxX,x);minZ=std::min(minZ,z);maxZ=std::max(maxZ,z);
+      area+=double(x)*f[next*2+1]-double(z)*f[next*2];
+    }
+    if(maxX-minX>100||maxZ-minZ>100||!std::isfinite(area)||std::abs(area)<1e-4)return -1;
+    polygons.push_back({0,uint8_t(mode),minX,minZ,maxX,maxZ,f});shapes.push_back(polygonMutation(polygons.back()));
+  }else if(kind==4){
+    if(floatCount||intCount!=1||mode||!polygonIndex().byId.count(ids[0]))return -1;
+  }else if(kind==5){
+    if(floatCount||intCount!=1||mode<0||mode>3)return -1;
+    const auto found=barrierIndex().byId.find(ids[0]);if(found==barrierIndex().byId.end()||found->second.passMask==mode)return -1;
+    Barrier proposed=found->second;const int tightened=int(proposed.passMask)&~mode;proposed.passMask=uint8_t(mode);
+    if(tightened)shapes.push_back(barrierMutation(proposed,tightened));
+  }else if(kind==6){
+    if(floatCount||intCount!=2||mode||std::abs(double(ids[0]))>44739000||std::abs(double(ids[1]))>44739000||
+       spatial_has_chunk(ids[0],ids[1]))return -1;
+  }else if(kind==7){
+    if(floatCount||intCount<2||intCount%2||intCount>8192||(mode!=0&&mode!=1))return -1;
+    for(int v:ids)if(std::abs(double(v))>44739000)return -1;
+  }else if(kind==8){
+    if(floatCount||intCount!=3||mode||ids[0]<0||ids[0]>5)return -1;
+  }else if(kind==9){
+    if(floatCount||intCount%3||intCount>300000||mode)return -1;
+  }else if(kind==10){
+    if(intCount||floatCount%5||floatCount>256*5||(mode!=0&&mode!=1))return -1;
+  }else if(kind==11){
+    if(floatCount||intCount!=1||mode||ids[0]<=0)return -1;
+#ifndef __EMSCRIPTEN_PTHREADS__
+    return -1;
+#endif
+  }else return -1;
+  const SpatialWorldProposalInput input{kind,mode,f,ids};
+  if(kind>=6){
+    const int ready=spatialIntentBeginWorldPreview();if(ready!=1)return ready;
+    struct PreviewGuard {~PreviewGuard(){spatialIntentEndWorldPreview();}} guard;
+    const int result=applyWorldProposalInput(input);worldProposalResult.clear();
+    if(result!=1)return 0;
+  }
+  return spatialIntentStageWorld(input,kind<=5?shapes.data():nullptr,kind<=5?int(shapes.size()):-1);
+}
+EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_commit(double session,double ticket,double sequence,double time,double clockSequence){
+  SpatialWorldProposalInput input;const int valid=spatialIntentTakeWorld(session,ticket,sequence,time,clockSequence,input);
+  if(valid!=1)return valid;worldProposalResult.clear();const int result=applyWorldProposalInput(input);
+  return result==1?1:-6;
 }
 int spatial_walkable(int x,int z){return walkable(x,z);}
 int spatial_edge(int x,int z,int nx,int nz){return std::abs(x-nx)+std::abs(z-nz)==1&&edge(x,z,nx,nz);}
