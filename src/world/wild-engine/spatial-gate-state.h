@@ -8,6 +8,11 @@ struct NativeGate {
   int status=0;
   std::vector<double> local,closed,swing;
   SpatialStaticMutation unsupported;
+  const NativeGateMeshModel* mesh=nullptr;
+  uint64_t mechanism=0;
+  double baseY=0,supportMin=0,supportMax=0,physicalRadius=0;
+  std::vector<double> physicalLeaf;
+  std::array<std::vector<double>,4> workerParts,fullParts;
 };
 // A transient transaction proposal, not another live gate/planning model.
 struct NativeGateMotionProposal {

@@ -16,6 +16,9 @@ int spatialNativeGateCircleRange(double,double,double,double,double,double,doubl
 // Convex authored polygon, point swept with a positive physical radius. Returns
 // 1 hit interval, 0 no hit, -1 unsupported. Native timing preparation only.
 int spatialNativeGatePolygonRange(const double*,int,double,double,double,double,double,double*);
+// Native resident triangle support, never a renderer height callback.
+int spatialGateTerrainRange(double,double,double,double,double*);
+int spatialGateMountSupport(double,double,double,double,double,double,double*);
 void spatialGateSupportChanged();
 bool spatialIntentGateUnsupported(double,double,double,double,double);
 // Internal, unadmitted gate-candidate proof. Still checks all static world

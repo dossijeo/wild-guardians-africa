@@ -1220,3 +1220,89 @@ diagnóstico no resuelve el reloj causal de producto. El error medido tampoco es
 un certificado de clearance físico GPU. No se activan autonomía, cruce, nuevos
 permisos de recurso, ni se sustituye el movimiento protegido/histórico actual.
 e/f, A6-08/09/10 y los demás puntos principales siguen abiertos.
+
+## Cierre de A6-04.e-R1 — Mecanismo nativo marco/hoja y apoyo 3D
+
+Se cumple el entregable fijo e-R1 para la clase nativa validada: puertas intactas
+zarzas/empalizada/reforzado, con apoyo plano verificado en Desierto. No se activa
+en la partida normal. Integración/ciclo de vida, admisión de cruces, personajes
+y aplicación causal siguen en sus IDs pendientes; no se cierran e/f ni A6.
+
+### Un mecanismo cinemático, no una excepción por IDs
+
+Las puertas existentes son cinemáticas: el reloj de 0,6 s prescribe la rotación
+de la hoja en un conjunto. El modelo físico nativo es la **unión ocupada** de
+marco y hoja, incluida toda zona donde se solapen. No se declara que sus piezas
+estén separadas ni se emite un certificado de ausencia de contacto interno.
+Tampoco se eliminan triángulos, se mueven bisagras o se ignoran objetos externos
+por compartir un ID/owner. La consulta de un cuerpo en el solapamiento devuelve
+ambos componentes ocupados y bloquea la mutación. Un polígono externo idéntico al
+marco sigue bloqueando la instalación, no se convierte mágicamente en parte propia.
+
+`prepare_gate_mechanisms.py` exporta la misma partición y triangulación autorada
+que `splitGateBridge`, con posiciones float, flags de hoja y calibración. Header
+C++ inmutable, manifest de procedencia y `--check`; JSON normalizado a LF y assets
+binarios con hash exacto. No hay cambios en mallas, bisagras o velocidades. Son
+17.415/6.081/6.861 vértices de los tres mecanismos originales, no cajas de QA.
+
+### Apoyo, colisión y dibujo comparten el estado nativo
+
+El montaje consulta los triángulos de terreno residentes y encierra alturas por
+sus vértices, sin callback del renderer ni muestreo de pocos puntos. Mantiene la
+raíz existente `surface(float(x),float(z)) + .025`, pero exige un datum plano
+validado para esta clase. Datos ausentes o terreno no plano rechazan sin instalar
+parcialmente ni desplazar cuerpos/raíz. Los cambios posteriores de ese apoyo y
+la retirada de sus datos pasan por las protecciones nativas ya existentes.
+
+Marco, hoja y alturas viven en el `NativeGate` existente, con asset canónico y
+aceleraciones derivadas de ese mismo asset, no otro registro de mundo. Las
+consultas de cuerpo/segmento recortan geometría 3D a su intervalo vertical nativo
+y conservan la unión de las regiones ocupadas; segmentos/puntos degenerados de
+proyección tampoco se descartan. En el datum se reutilizan secciones preparadas;
+no se recorren triángulos del asset en cada consulta habitual. Animales mantienen
+además la política existente de ver la envolvente completa del muro.
+
+La instalación preflighta cuerpos, futuras rutas y objetos antes de publicar.
+Las partes fijas también participan en veto de geometría posterior y colisiones
+con otros mecanismos. Una preparación solo de cuerpos o reconciliación de
+política no desactiva la protección física de un mecanismo instalado. Un stamp
+de soporte/mundo obsoleto no se reautoriza silenciosamente.
+
+El engine exporta matrices de raíz/bisagra y geometría ligada a sesión/época y
+serial no reutilizable. `NativeWall.bindNativeGateMechanism` valida una vez la
+geometría/partición autorada y toma la base nativa. Vinculado, `update` consume
+esas matrices: no decide apertura, reloj ni altura. `gateOpen` de la entidad no
+puede sobrescribir la pose nativa. Una pose ausente, vieja o de otra instancia,
+o una transición visual/de ciclo de vida no soportada, rechaza sin fallback.
+El camino de paredes no vinculadas conserva su comportamiento anterior.
+
+### Evidencia del criterio de cierre
+
+Nueve pruebas nuevas verifican procedencia, los tres materiales con dos giros y
+dos escalas, cinco fases del motor, colisión cerrada/abierta, raíz/hoja compartidas,
+regiones de contacto interno aún ocupadas, política animal, montaje desconocido/
+no plano, rechazo atómico sobre cuerpo/marco externo, protección de soporte y
+rechazo de identidades/geometry/lifecycle falsos. Las cinco pruebas previas de
+articulación también pasan. Standalone/pthread reconstruidos con ABI de mecanismo
+versión 1. Batería ampliada: **446 dirigidas + 39 de streaming/geometría + 74 de
+receta/estado**, todas aprobadas sin skips. No se declara limpia la suite general.
+
+`/tests/browser/native-gate-mechanism.html` ha dibujado las tres **mallas reales**
+en WebGPU NVIDIA Turing, usando la clase `NativeWall` de producto vinculada al
+engine. En cinco estados nativos (0/20/50/80/100 %) se comparan todos los vértices
+mundiales de C++ con la geometría entregada al dibujo; error máximo **6,98e-8**
+antes de GPU. La consulta física nativa da bloqueado al cerrar y libre al abrir
+para el corredor de trabajador. La cola GPU termina sin error de validación.
+Esta diferencia es de geometría de preparación, no un readback de posiciones GPU.
+
+Evidencia: `performance/native-gate-mechanism-20261109.json` y captura PNG homónima;
+logs `.cache/native-gate-mechanism-*.tap`. El primer intento del showroom detectó
+URLs de assets relativas al documento que devolvían HTML. Se corrigió la resolución
+desde la raíz y se validan tipo/alineación; no se cambiaron assets o expectativas.
+
+**Resultado:** e-R1 cerrado como componente nativo en la clase explícita anterior;
+quedan e-R2–R4 y f-R1–R4 (**7 de 8**). No se generaliza a apoyos inclinados,
+destrucción/morph o física excepcional sin la transición correspondiente. La
+aceptación con personajes y la activación del runtime no están hechas ni se
+deducen de este cierre. `authorizedPassage:false` y `authorizedAutonomy:false`
+siguen vigentes. El siguiente bloqueo del tablero es e-R2.

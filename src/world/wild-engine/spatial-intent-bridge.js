@@ -563,6 +563,31 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     return {status:result===1?'clear':result===0?'blocked':'invalid',authorizedPassage:false,
       witness:a[0]?{gateId:a[0],bodyId:a[1],from:a[2],to:a[3],reason:a[4]===1?'overlap':'unproven'}:null};
   };
+  const nativeGateMechanismPose=gateId=>{
+    if(wasm.nav_gate_mechanism_version?.()!==1)throw Error('Rebuild native gate mechanism service');
+    if(wasm.nav_gate_mechanism_pose(numericId(gateId))!==1)return null;
+    const a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_mechanism_pose_ptr(),40));
+    return Object.freeze({version:1,authorityEpoch:epoch(),nativeSession:wasm.nav_intent_session(),entityId:gateId,gateId:a[0],modelId:a[1],mechanism:a[2],
+      collisionModel:'kinematic-union',supportClass:'flat-native-datum',visualClass:'intact-full-health',baseY:a[3],supportMin:a[4],supportMax:a[5],sampledAt:a[6],opening:a[7],
+      rootMatrix:Object.freeze(a.slice(8,24)),leafMatrix:Object.freeze(a.slice(24,40)),authorizedPassage:false,authorizedAutonomy:false});
+  };
+  const nativeGateMechanism=gateId=>{
+    const pose=nativeGateMechanismPose(gateId);if(!pose)return null;
+    const count=wasm.nav_gate_mechanism_vertices(numericId(gateId));if(!Number.isSafeInteger(count)||count<3||count>100000)throw Error('Invalid native gate geometry contract');
+    return Object.freeze({...pose,positions:Float32Array.from(new Float32Array(wasm.memory.buffer,wasm.nav_gate_mechanism_positions_ptr(numericId(gateId)),count*3)),
+      leafFlags:Uint8Array.from(new Uint8Array(wasm.memory.buffer,wasm.nav_gate_mechanism_leaf_ptr(numericId(gateId)),count))});
+  };
+  const nativeGateMechanismSegment=(gateId,body,from,to)=>{
+    const pose=nativeGateMechanismPose(gateId);if(!pose)return {status:'unknown'};
+    const result=wasm.nav_gate_mechanism_segment(numericId(gateId),body,from.x,from.z,to.x,to.z),
+      a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_mechanism_collision_ptr(),8));
+    return {status:result===1?'clear':result===0?'blocked':result===-2?'unsupported':'unknown',components:a[2],sampledAt:a[3],mechanism:a[7],authorizedPassage:false};
+  };
+  const nativeGateMechanismWorldVertices=gateId=>{
+    const pose=nativeGateMechanismPose(gateId);if(!pose)return null;
+    const count=wasm.nav_gate_mechanism_world_vertices(numericId(gateId));if(count<3||count>100000)throw Error('Invalid native gate world geometry');
+    return Float64Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_mechanism_world_ptr(),count*3));
+  };
   const prepareNativeGateMotionAfterGpuFence=async({getPublication,enabled,staticObjects=false}={})=>{
     if(!initialized||!owningState)throw Error('Reset the native intent session first');
     if(typeof getPublication!=='function'||enabled!==undefined&&typeof enabled!=='boolean'||typeof staticObjects!=='boolean')
@@ -1030,7 +1055,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     structureFor:id=>structuresById.get(numericId(id))??null,
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
-    intentChanges,routePoints,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,nativeGateRouteSweep,prepareNativeGateMotionAfterGpuFence,prepareNativeRouteMotion,reserveNativeRoute,
+    intentChanges,routePoints,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,prepareNativeRouteMotion,reserveNativeRoute,
     beginNativeRouteExecution,advanceNativeRouteExecution,stopNativeRouteExecution,nativeRouteExecution,
     projectRouteProgress,processEventBoundary,requestReroute,
     registerAttackIntent,planAttackCrop,planAttackWall,replanAttackRoute,
@@ -1941,6 +1966,8 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     intentChanges:bridge.intentChanges,routePoints:bridge.routePoints,
     nativeRouteTiming:bridge.nativeRouteTiming,nativeRouteTimeKnots:bridge.nativeRouteTimeKnots,sampleNativeRoute:bridge.sampleNativeRoute,
     nativeGateRouteSweep:bridge.nativeGateRouteSweep,
+    nativeGateMechanism:bridge.nativeGateMechanism,nativeGateMechanismPose:bridge.nativeGateMechanismPose,nativeGateMechanismSegment:bridge.nativeGateMechanismSegment,
+    nativeGateMechanismWorldVertices:bridge.nativeGateMechanismWorldVertices,
     prepareNativeGateMotionAfterGpuFence:bridge.prepareNativeGateMotionAfterGpuFence,
     reserveNativeRoute:bridge.reserveNativeRoute,
     prepareNativeRouteMotion:bridge.prepareNativeRouteMotion,

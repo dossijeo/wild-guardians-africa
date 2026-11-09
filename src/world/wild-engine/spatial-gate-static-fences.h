@@ -24,6 +24,7 @@ bool gateStaticOverlayPreflight(IntentState& s,const SpatialStaticMutation* shap
       if(b.maxX+.001<c.minX||b.minX-.001>c.maxX||b.maxZ+.001<c.minZ||b.minZ-.001>c.maxZ)continue;
       const auto answer=gateSweepStaticPair(s,gate,c,s.effectiveTime,std::max(s.effectiveTime,gateMotionEnd(gate)));
       if(!answer.clear){s.gateStaticRejected++;gateStaticWitness(s,id,5,0,0,0,answer);return false;}
+      if(!gateFixedPartsClear(s,gate,c)){s.gateStaticRejected++;gateStaticWitness(s,id,5,0,0,0,{false,1,s.effectiveTime,s.effectiveTime});return false;}
     }
   }
   return true;
@@ -57,6 +58,10 @@ bool gateStaticRegistrationClear(IntentState& s,const NativeGate& proposed){
     if(b.maxX+.001<c.minX||b.minX-.001>c.maxX||b.maxZ+.001<c.minZ||b.minZ-.001>c.maxZ)continue;
     const auto answer=gateSweepLeafPair(s,gate,proposed,s.effectiveTime,std::max(s.effectiveTime,gateMotionEnd(gate)));
     if(!answer.clear){s.gateStaticRejected++;gateStaticWitness(s,id,4,double(proposed.id),0,0,answer);return false;}
+    if(gate.mesh)for(int part=0;part<3;part++)if(gate.fullParts[part].size()>=2){const auto polygon=gatePartWorld(gate,gate.fullParts[part],false,s.effectiveTime);
+      const auto contact=gateSweepFixedPolygon(s,proposed,polygon,s.effectiveTime,s.effectiveTime);
+      if(!contact.clear){s.gateStaticRejected++;gateStaticWitness(s,id,4,double(proposed.id),0,0,contact);return false;}
+    }
   }
   return true;
 }

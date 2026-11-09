@@ -6,6 +6,8 @@ void cancelGateMotionProposal(IntentState& s){
 int proposeGateMotion(IntentState& s,int enabled,std::map<uint64_t,NativeGate>& proposed,bool staticObjects=false){
   s.gateSweepResult.fill(0);s.gateStaticResult.fill(0);if(enabled!=0&&enabled!=1)return -1;
   proposed=s.gates;
+  bool mechanisms=false;for(const auto& [id,gate]:proposed)if(gate.mesh){mechanisms=true;break;}
+  if(mechanisms&&!gateStaticProofCurrent(s))return -7;
   for(auto& [id,gate]:proposed){
     gate.staticSweepCertified=false;
     if(gate.status!=2&&!gate.defined)return -2;
@@ -18,9 +20,9 @@ int proposeGateMotion(IntentState& s,int enabled,std::map<uint64_t,NativeGate>& 
     gate.at=s.effectiveTime;gate.defined=true;gate.requested=facts.requested;gate.occupied=facts.occupied;
     if(!gateSweepBodies(s,gate)){s.gateSweepRejected++;return -3;}
   }
-  if(staticObjects){const int result=gateSweepStaticObjects(s,proposed);if(result!=1)return result;}
+  if(staticObjects||mechanisms){const int result=gateSweepStaticObjects(s,proposed,!staticObjects);if(result!=1)return result;}
   for(auto& [id,gate]:proposed)gate.bodySweepCertified=gate.status!=2;
-  for(auto& [id,gate]:proposed)gate.staticSweepCertified=staticObjects&&gate.status!=2;
+  for(auto& [id,gate]:proposed)gate.staticSweepCertified=(staticObjects||gate.mesh)&&gate.status!=2;
   return int(proposed.size());
 }
 void publishGateMotion(IntentState& s,std::map<uint64_t,NativeGate>& proposed){

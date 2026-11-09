@@ -9,9 +9,10 @@ ejecutor protegido de producto. A6 incluye todas las intenciones y trabajadores.
 ## Vista de entrega y pendientes fijos
 
 **Situación de producto:** no se han activado los nuevos cruces nativos ni los
-personajes autónomos en GPU. Los diagnósticos gráficos recientes usan triángulos,
-no personajes. Desde la petición de cerrar e/f se han cerrado **0 de esos 2
+personajes autónomos en GPU. Hay una validación de las mallas originales de puerta;
+los diagnósticos de locomoción aún usan triángulos, no personajes. Desde la petición de cerrar e/f se han cerrado **0 de esos 2
 subpuntos**. Sus componentes internos avanzaron, pero la entrega integrada no.
+En el desglose fijo de entrega, **e-R1 está cerrado; quedan 7 de 8**.
 
 **Niveles que no se suman:** A6 tiene 11 puntos principales, todos abiertos.
 Dentro de A6-04, a–d están marcados implementados/validados en el dominio nativo
@@ -22,8 +23,8 @@ estaba dentro de e/f; no son funcionalidades adicionales ni renumeran A6-01–11
 
 | Componente | Hecho | Límite de lo entregado |
 |---|---|---|
-| Geometría/reloj/política | Hojas autoradas, apertura de 0,6 s, proximidad, ocupación y espera en C++. | Servicio opt-in; aún no es el mecanismo físico integrado de producto. |
-| Barridos y protección | Contacto continuo contra cuerpos, objetos canónicos y otras hojas; veto previo de mutaciones incompatibles. | Dominio validado principalmente Desierto; sin unión física marco/hoja o clearance 3D completo. |
+| Geometría/reloj/política | Hojas autoradas, apertura de 0,6 s, proximidad, ocupación y espera en C++; mecanismo nativo marco/hoja/apoyo consumido por colisión y `NativeWall`. | Clase validada: puertas intactas sobre datum plano nativo de Desierto. No activado en la partida; integración y ciclo de vida son e-R3. |
+| Barridos y protección | Contacto continuo contra cuerpos, objetos canónicos y otras hojas; veto previo de mutaciones incompatibles. La unión del mecanismo conserva todas sus regiones ocupadas. | No certifica apoyos arbitrarios/inclinados ni física de otras clases; se rechazan explícitamente. |
 | Timetable y fases | Esperas iniciales/intermedias sin gasto de fases/carrera, nudos completos y misma ruta/tarea/objetivo. | Solo relojes de apertura ya certificados; candidatos que no se pueden reservar/ejecutar. |
 | Control directo y recibo GPU | Revocación por época/versión, canal independiente de preparación y recibo de retirada de trabajo GPU previo. | Un recibo no resuelve reloj causal, presentación o todos los consumidores de producto. |
 | Propuesta y commit de motor | Ticket de un uso; espera recibo nuevo y rechaza si cambian sus dependencias. | Motor de puerta opt-in; no transacción física/gráfica completa de todas las mutaciones. |
@@ -32,14 +33,14 @@ Son cinco componentes agrupados para visibilidad, no cinco entregables de produc
 cerrados ni una medida porcentual. Cantidades de pruebas/commits son evidencia,
 no el indicador principal de avance.
 
-### Entregables de cierre pendientes: 8
+### Entregables de cierre: 1 cerrado, 7 pendientes
 
-Todos siguen pendientes. Se mantienen estos IDs al avanzar. Algunos comparten
+Se mantienen estos IDs al avanzar. Algunos comparten
 dependencias con A6-01/02/06/07/08/09; no se cuentan otra vez como trabajo nuevo.
 
-| ID fijo | Entrega pendiente | Criterio observable de cierre |
+| ID fijo | Entrega y estado | Criterio observable de cierre |
 |---|---|---|
-| **A6-04.e-R1** | Mecanismo físico marco/hoja y apoyo 3D. | Un estado nativo coherente define marco, hoja y apoyo para colisión y dibujo; validar los materiales móviles sin ignorar falsamente sus contactos propios. |
+| **A6-04.e-R1** | **CERRADO — Mecanismo físico marco/hoja y apoyo 3D.** | Un estado nativo coherente define marco, hoja y apoyo para colisión y dibujo; validar los materiales móviles sin ignorar falsamente sus contactos propios. [Evidencia de las tres mallas reales WASM/WebGPU](performance/native-gate-mechanism-20261109.json). |
 | **A6-04.e-R2** | Aperturas futuras, reservas y admisión de cruces. | Autorizar una ruta completa a través de puertas que inicialmente no estén abriendo; reservar el intervalo, impedir cierre sobre el cruce e invalidar/reanudar por eventos. |
 | **A6-04.e-R3** | Integración de puertas con entidades y ciclo de vida. | Usar esas decisiones en las intenciones pertinentes de la partida, con llegadas/consecuencias, cancelación, guardado/restauración y recuperación; sin dos ejecutores autoritativos. |
 | **A6-04.e-R4** | Aceptación de puertas con personajes reales. | Partida WASM/WebGPU con trabajadores y animales, respetando qué puede cruzar cada uno; obstáculos, esperas, pausa/velocidad, acciones, guardado y determinismo. No basta el triángulo. |
@@ -48,7 +49,15 @@ dependencias con A6-01/02/06/07/08/09; no se cuentan otra vez como trabajo nuevo
 | **A6-04.f-R3** | Todos los consumidores, relevo y fallos. | La seguridad cubre consumidores activos/temporales, sustitución de Workers, pérdida de dispositivo y canal perdido o silencioso; un ACK viejo no permite aplicar cambios. |
 | **A6-04.f-R4** | Aplicación gráfica de la misma mutación. | Recursos y dibujo representan el cambio físico coordinado; probarlo con personajes reales y preparación bloqueada, sin depender de publicaciones periódicas de posición JS. |
 
-**Siguiente bloqueo concreto:** e-R1. Después, las reservas/admisión de e-R2 y
+**Alcance del cierre de e-R1:** mecanismo cinemático de unión ocupada, materiales
+zarzas/empalizada/reforzado intactos y apoyo plano validado por el terreno nativo.
+No se alteran mallas, bisagras ni velocidad. No se declara separación interna de
+sus piezas: las zonas de solapamiento siguen ocupadas para cuerpos/obstáculos,
+sin excepciones por ID. Apoyo no plano/desconocido y cambio visual/de ciclo de
+vida no soportado rechazan explícitamente; no hay fallback silencioso ni activación
+en la partida. La expansión de clases y la integración pertenecen a A6-05/e-R3.
+
+**Siguiente bloqueo concreto:** e-R2. Las reservas/admisión de e-R2 y
 la aplicación causal de f-R1–R4 permiten integrar y aceptar e-R3/e-R4. Es un mapa
 de dependencias, no una promesa de duración o de que los ocho tengan igual tamaño.
 
@@ -104,17 +113,18 @@ esta lista ni presentar más pruebas aisladas como cierre del producto.
     protegidas hasta la pose final. Barrido adicional opt-in contra muros,
     polígonos, props canónicos y otras hojas; protege el giro restante/pose final
     ante nuevas geometrías y conserva datos residentes. No equivale a clearance
-    del mundo completo, unión física con el marco o contacto 3D con terreno.
+    del mundo completo. El mecanismo marco/hoja y apoyo nativo de la clase
+    validada ya está cerrado como e-R1; no certifica apoyos arbitrarios.
     Esperas iniciales e intermedias nativas ligadas al final de motores ya
     certificados: mismo slot, nueva generación, fases/presupuesto no avanzan en
     cada hold y los nudos incluyen entrada/salida y agotamiento de carrera. Solo candidato
     sin admisión: reserva y ejecución lo rechazan incluso al abrirse la puerta.
-    Pendientes integración física marco/hoja y soporte 3D, solicitudes futuras de apertura,
+    Pendientes solicitudes futuras de apertura,
     reservas/admisión de cruces, recuperación y conexión por eventos con producto.
     `authorizedPassage:false`; los cruces nativos siguen rechazados. Evidencia:
     11 pruebas de política + 12 de barrido + 8 de espera iniciales; 20 nuevas de
     objetos y 2 de coordinación; 13 nuevas de esperas múltiples. Batería actual:
-    432 dirigidas + 39 y 74 heredadas
+    446 dirigidas + 39 y 74 heredadas
     sin skips. Tres auditorías WASM/WebGPU reproducen espera/reanudación y fases/
     presupuesto desde un único paquete durante dos bloqueos de 500 ms cada una,
     sin nuevas posiciones JS ni trabajo geométrico nativo. Son triángulos de
@@ -198,8 +208,13 @@ esta lista ni presentar más pruebas aisladas como cierre del producto.
 - `.cache/native-gate-multiwaits-legacy-stream-geometry.tap`: 39 aprobadas sin skips.
 - `.cache/native-gate-multiwaits-legacy-recipe.tap`: 74 aprobadas sin skips.
 - [Tres replays GPU de espera intermedia y reanudación](performance/native-gate-multiwaits-20261109.json).
+- `.cache/native-gate-mechanism-regression.tap`: 446 aprobadas sin skips (incluye 9 nuevas de mecanismo y 5 de render antes separadas).
+- `.cache/native-gate-mechanism-legacy-stream-geometry.tap`: 39 aprobadas sin skips.
+- `.cache/native-gate-mechanism-legacy-recipe.tap`: 74 aprobadas sin skips.
+- [Mecanismo nativo y mallas reales WebGPU](performance/native-gate-mechanism-20261109.json) · [captura](performance/native-gate-mechanism-20261109.png).
 
 Quedan **2 de los 6 subpuntos de A6-04**: e y f (parciales).
+Dentro de su desglose fijo quedan **7 de 8**: e-R1 cerrado, e-R2–R4/f-R1–R4 pendientes.
 Los **11 puntos principales de A6** siguen abiertos; son niveles distintos,
 no dos cantidades que deban sumarse.
 

@@ -48,7 +48,8 @@ camino crítico sin pedir autorización rutinaria entre hitos.
 Seguimiento por IDs acordados: [checklist A6-01–A6-11](A6-CHECKLIST.md).
 La [vista de entrega y pendientes fijos](A6-CHECKLIST.md#vista-de-entrega-y-pendientes-fijos)
 separa componentes implementados de producto integrado: e/f siguen sin cerrar,
-con ocho entregables pendientes identificados como e-R1–R4 y f-R1–R4. No se
+con ocho entregables identificados como e-R1–R4 y f-R1–R4: **e-R1 cerrado,
+siete pendientes**. No se
 sumarán esos niveles ni se usarán tests/commits como porcentaje de finalización.
 
 - [x] Auditar propietarios y reabrir A6; commits `e213c43f9`–`8892bbe80`.
@@ -122,7 +123,13 @@ sumarán esos niveles ni se usarán tests/commits como porcentaje de finalizaci�
       atómica y fences de altas/mutaciones hasta la pose final. Barrido adicional
       opt-in de objetos canónicos y otras hojas, con veto previo de obstáculos
       nuevos/restaurados, retención de datos y extensión dirigida de pruebas.
-      Faltan unión física marco/hoja y terreno 3D, futuras solicitudes de apertura, leases de cruce,
+      e-R1 cerrado: mecanismo cinemático nativo de unión marco/hoja, apoyo 3D en
+      datum plano de Desierto y matrices/geometría nativas consumidas por colisión
+      y `NativeWall`. Las tres mallas originales fueron dibujadas en WebGPU y
+      contrastadas en cinco estados con las consultas físicas nativas. No se
+      cambian mallas/bisagras ni se ignoran regiones ocupadas por solapamiento.
+      Apoyo no plano/desconocido y estados visuales no soportados rechazan.
+      Faltan futuras solicitudes de apertura, leases de cruce,
       recuperación y conexión por eventos. `authorizedPassage:false`.
       Esperas iniciales e intermedias en el mismo timetable, con nudos completos
       de llegada/salida y cambio de velocidad, sin gasto de fases/carrera durante
@@ -146,7 +153,7 @@ sumarán esos niveles ni se usarán tests/commits como porcentaje de finalizaci�
       Faltan transacción genérica para las otras mutaciones, integración física/
       recursos de puerta, consumidores/relevo y reloj causal. No hay permiso de
       cruce ni aceptación con personajes.
-      Quedan e/f de A6-04; 432 dirigidas
+      Quedan e/f de A6-04; siete entregables del desglose. 446 dirigidas
       + 39 y 74 heredadas pasan sin skips. No se marca e como terminado.
 - [ ] Vertical AttackCrops completa y aceptación real A–F (primer caso integrado,
       no cierre de A6 por sí solo).

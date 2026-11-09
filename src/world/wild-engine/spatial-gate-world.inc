@@ -2,7 +2,7 @@
 // resident prop stores. Never grants terrain, hinge-contact or passage clearance.
 template<class Coordinate> double gatePolygonPairDistance(const double* leaf,int count,
     const Coordinate* other,int otherCount){
-  if(count<3||otherCount<3||!leaf||!other)return std::numeric_limits<double>::quiet_NaN();
+  if(count<1||otherCount<1||!leaf||!other)return std::numeric_limits<double>::quiet_NaN();
   if(executionInsideVertices({leaf[0],leaf[1]},other,size_t(otherCount))||
      executionInsideVertices({double(other[0]),double(other[1])},leaf,size_t(count)))return 0;
   double best=std::numeric_limits<double>::infinity();

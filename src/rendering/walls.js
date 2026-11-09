@@ -21,7 +21,7 @@ export function wallBridge(source,destination=null){
 
 export class NativeWall extends THREE.Group {
   constructor(prototypes,entity,elapsed,{previous=null}={}){
-    super();this.prototypes=prototypes;this.entityId=entity.id;this.parts=[];this.blessingUniform={value:new THREE.Vector4()};
+    super();this.prototypes=prototypes;this.entityId=entity.id;this.nativeGateMaterial=entity.material;this.parts=[];this.blessingUniform={value:new THREE.Vector4()};
     if(previous){this.lastStatus=previous.lastStatus;this.visual=previous.visual;this.collapseFromVisual=previous.collapseFromVisual;}
     this.userData.entityId=entity.id;this.userData.nativeWall=true;
     const scale=entity.gate?({adobe:1.4,piedra:1.4,reforzado:1.6}[entity.material]??1):1;this.scale.setScalar(scale);
@@ -41,6 +41,11 @@ export class NativeWall extends THREE.Group {
   }
   update(entity,seconds,elapsed){
     this.blessingUniform.value.set(awakeningVisible(entity,elapsed)?1:0,awakeningVisibleAt(entity),entity.blessing?(this.blessingDamageAt??-1000):0,this.awakeningSelecting&&!entity.blessing&&entity.status==='intact'?(this.awakeningSelected?2:1):0);
+    if(this.nativeGateBinding){
+      if(entity.gate!==true||entity.status!=='intact'||entity.hp!==entity.maxHp||entity.material!==this.nativeGateMaterial)
+        throw Error('Native gate binding requires an explicit geometry/lifecycle transition');
+      this.applyNativeGatePose(entity.nativeGatePose);return;
+    }
     const target=entity.hp/entity.maxHp;let visual=target;
     if(entity.wallPresentation&&(Number.isFinite(elapsed)||entity.status==='collapsing'))visual=wallVisualAt(entity,elapsed??entity.wallPresentation.at);
     else if(entity.status==='ruined')visual=0;
@@ -86,6 +91,47 @@ export class NativeWall extends THREE.Group {
       const ao=mesh.geometry.attributes.ambientVisibility;if(ao){const release=Math.sin(Math.PI*t);for(let k=0;k<ao.count;k++){const fade=Math.max(release,bridge.leafFlags?.[k]?opening:0);ao.array[k]=bridge.visibility[k]+(1-bridge.visibility[k])*fade;}ao.needsUpdate=true;}
       mesh.geometry.computeBoundingBox();mesh.geometry.computeBoundingSphere();
     });
+  }
+  bindNativeGateMechanism(mechanism){
+    const model={zarzas:1,empalizada:2,reforzado:3}[this.nativeGateMaterial],part=this.parts[0];
+    if(this.nativeGateBinding||!this.gate||this.visual!==1||this.lastStatus!=='intact'||this.parts.length!==1||
+       mechanism?.version!==1||mechanism.entityId!==this.entityId||mechanism.modelId!==model||mechanism.collisionModel!=='kinematic-union'||
+       !mechanism.authorityEpoch||!Number.isSafeInteger(mechanism.nativeSession)||mechanism.nativeSession<1||
+       !Number.isSafeInteger(mechanism.mechanism)||mechanism.mechanism<1||
+       mechanism.positions?.length!==part?.bridge.pos.length||mechanism.leafFlags?.length!==part?.bridge.leafFlags?.length)
+      throw Error('Invalid native gate mechanism binding');
+    for(let i=0;i<mechanism.positions.length;i++)if(!Number.isFinite(mechanism.positions[i])||Math.abs(mechanism.positions[i]-part.bridge.pos[i])>1e-6)
+      throw Error('Native gate geometry does not match the authored render mesh');
+    for(let i=0;i<mechanism.leafFlags.length;i++)if(mechanism.leafFlags[i]!==part.bridge.leafFlags[i])
+      throw Error('Native gate partition does not match the authored render mesh');
+    this.nativeGateBinding=Object.freeze({authorityEpoch:mechanism.authorityEpoch,nativeSession:mechanism.nativeSession,
+      entityId:mechanism.entityId,modelId:mechanism.modelId,mechanism:mechanism.mechanism});
+    part.bridge.pos=Float32Array.from(mechanism.positions);this.applyNativeGatePose(mechanism);
+  }
+  applyNativeGatePose(pose){
+    const binding=this.nativeGateBinding;
+    if(!binding||pose?.version!==1||pose.collisionModel!=='kinematic-union'||
+       Object.entries(binding).some(([key,value])=>pose[key]!==value)||
+       !Number.isFinite(pose.sampledAt)||pose.sampledAt<(this.nativeGateTime??-Infinity)||
+       !Number.isFinite(pose.opening)||pose.opening<0||pose.opening>1||
+       pose.rootMatrix?.length!==16||pose.leafMatrix?.length!==16||
+       !pose.rootMatrix.every(Number.isFinite)||!pose.leafMatrix.every(Number.isFinite))
+      throw Error('Native gate pose is missing, obsolete or from another mechanism');
+    const {mesh,bridge}=this.parts[0],positions=mesh.geometry.attributes.position.array,normals=mesh.geometry.attributes.normal.array,m=pose.leafMatrix;
+    // Only apply the authority's matrices. No opening clock, hinge decision,
+    // ground sampling or collision predicate exists in this bound draw path.
+    for(let i=0;i<bridge.leafFlags.length;i++){const at=i*3,x=bridge.pos[at],y=bridge.pos[at+1],z=bridge.pos[at+2],
+      nx=bridge.normal[at],ny=bridge.normal[at+1],nz=bridge.normal[at+2];
+      if(bridge.leafFlags[i]){
+        positions[at]=m[0]*x+m[4]*y+m[8]*z+m[12];positions[at+1]=m[1]*x+m[5]*y+m[9]*z+m[13];positions[at+2]=m[2]*x+m[6]*y+m[10]*z+m[14];
+        normals[at]=m[0]*nx+m[4]*ny+m[8]*nz;normals[at+1]=m[1]*nx+m[5]*ny+m[9]*nz;normals[at+2]=m[2]*nx+m[6]*ny+m[10]*nz;
+      }else{positions.set(bridge.pos.subarray(at,at+3),at);normals.set(bridge.normal.subarray(at,at+3),at);}
+    }
+    this.matrixAutoUpdate=false;this.matrix.fromArray(pose.rootMatrix);this.position.set(pose.rootMatrix[12],pose.rootMatrix[13],pose.rootMatrix[14]);this.matrixWorldNeedsUpdate=true;
+    this.nativeGateTime=pose.sampledAt;this.gateOpen=pose.opening;
+    mesh.geometry.attributes.position.needsUpdate=true;mesh.geometry.attributes.normal.needsUpdate=true;
+    const ao=mesh.geometry.attributes.ambientVisibility;if(ao){for(let i=0;i<ao.count;i++)ao.array[i]=bridge.visibility[i]+(1-bridge.visibility[i])*(bridge.leafFlags[i]?pose.opening:0);ao.needsUpdate=true;}
+    mesh.geometry.computeBoundingBox();mesh.geometry.computeBoundingSphere();
   }
   disposeParts(){for(const {mesh,releaseMaterialReplica} of this.parts){releaseMaterialReplica?.();mesh.geometry.dispose();mesh.material.dispose();this.remove(mesh);}this.parts=[];}
   dispose(){this.disposeParts();}

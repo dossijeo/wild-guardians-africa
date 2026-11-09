@@ -4,7 +4,7 @@ double gateLeafSpeedBound(const NativeGate& gate){
   double radius=0;
   for(size_t i=0;i<gate.local.size();i+=2)
     radius=std::max(radius,std::hypot(gate.local[i]-gate.hx,gate.local[i+1]-gate.hz));
-  return radius*std::max(gate.sx,gate.sz)*(pi/2)/nativeGateMoveSeconds*(1+1e-12);
+  return std::max(radius,gate.physicalRadius)*std::max(gate.sx,gate.sz)*(pi/2)/nativeGateMoveSeconds*(1+1e-12);
 }
 struct GateSweepAnswer {bool clear=true;int reason=0;double from=0,to=0;};
 // One interval proof kernel for bodies, canonical static objects and leaf pairs.
@@ -44,7 +44,7 @@ GateSweepAnswer gateSweepPair(IntentState& s,const NativeGate& gate,const Reserv
   std::vector<double> times;reservationKnots(path,begin,times);
   times.push_back(gate.at+std::abs(gate.target-gate.from)*nativeGateMoveSeconds);
   return gateSweepIntervals(std::move(times),begin,end,speed,[&](double at){
-    const auto point=reservationPosition(path,at);const auto leaf=gateLeaf(gate,gateOpening(gate,at));s.gateSweepEvaluations++;
+    const auto point=reservationPosition(path,at);const auto leaf=gateCollisionLeaf(gate,at);s.gateSweepEvaluations++;
     const double scale=std::max({1.0,std::abs(gate.x),std::abs(gate.z),std::abs(point.first),std::abs(point.second)}),
       // Enclose arithmetic and snapping at both the sampled pose and any
       // interval pose, including the legacy 1e-9 opening endpoint snap.

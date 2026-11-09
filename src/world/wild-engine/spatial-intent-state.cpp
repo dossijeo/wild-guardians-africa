@@ -17,6 +17,7 @@
 #include "spatial-prop-mutations.h"
 #include "spatial-terrain-mutations.h"
 #include "spatial-gate-intents.h"
+#include "spatial-gate-mechanisms-native.h"
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
 #else
@@ -262,6 +263,10 @@ struct IntentState {
   std::array<double,5> gateMotionResult{};
   uint64_t gateStaticPairs=0,gateStaticEvaluations=0,gateStaticRejected=0;
   std::array<double,8> gateStaticResult{};
+  uint64_t nextGateMechanism=0;
+  std::array<double,40> gateMechanismPose{};
+  std::array<double,8> gateMechanismCollision{};
+  std::vector<double> gateMechanismWorld;
   int gateStaticProofs=0;
   std::array<uint64_t,3> gateStaticWorldStamp{};
   uint32_t session=0;
@@ -472,6 +477,7 @@ void releaseIntent(IntentState& s,uint64_t actor,PlanningState next){
 bool gateStaticProofCurrent(const IntentState&);
 #include "spatial-route-execution.h"
 #include "spatial-gate-controller.h"
+#include "spatial-gate-mechanism.h"
 #include "spatial-gate-sweep.h"
 #include "spatial-gate-static-sweep.h"
 #include "spatial-gate-static-fences.h"
@@ -890,7 +896,7 @@ SpatialStaticTicket spatialIntentStaticBefore(const SpatialStaticMutation* shape
 }
 void spatialIntentStaticCommitted(const SpatialStaticTicket& ticket){staticMutationCommitted(state(),ticket);}
 bool spatialIntentBodyCanChange(uint64_t id,const SpatialBodyView& proposed){
-  auto& s=state();if(!gateMotionBodyCanChange(s,proposed)||!reservationBodyCanChange(s,id,proposed))return false;
+  auto& s=state();if(!gateMechanismBodyCanChange(s,proposed)||!gateMotionBodyCanChange(s,proposed)||!reservationBodyCanChange(s,id,proposed))return false;
   if(s.bodyDomainActive){SpatialBodyView previous;const bool exists=spatialReadBody(id,previous);
     updateResidencyPinRevision(s,exists?&previous:nullptr,&proposed);}
   return true;

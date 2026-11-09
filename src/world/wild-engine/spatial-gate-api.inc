@@ -32,6 +32,10 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_bind_worker(double actor,double id){
 }
 EMSCRIPTEN_KEEPALIVE int nav_gate_reconcile(int enabled){
   auto& s=state();if(enabled!=0&&enabled!=1)return -1;
+  for(const auto& [id,gate]:s.gates)if(gate.mesh){
+    std::map<uint64_t,NativeGate> proposed;const int result=proposeGateMotion(s,enabled,proposed);if(result<0)return result;
+    cancelGateMotionProposal(s);publishGateMotion(s,proposed);return int(s.gates.size());
+  }
   std::map<uint64_t,GateFacts> facts;
   if(enabled)for(const auto& [id,gate]:s.gates)if(gate.status==0){auto value=gateFacts(s,gate);
     if(!value.complete){
@@ -178,3 +182,4 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_prepare_waiting_route(double session,double sl
   emitIntentChange(s,intent);nav_intent_route_timing(session,slot,double(old.generation));return 1;
 }
 EMSCRIPTEN_KEEPALIVE double nav_gate_wait_segments(){return double(state().gateWaitSegments);}
+#include "spatial-gate-mechanism-api.inc"

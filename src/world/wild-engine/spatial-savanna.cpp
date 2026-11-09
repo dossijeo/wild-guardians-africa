@@ -1670,6 +1670,26 @@ int spatialGateCandidateSegmentClear(double x,double z,double nx,double nz,doubl
 }
 #include "spatial-gate-world.inc"
 #include "spatial-gate-route-ranges.inc"
+int spatialGateTerrainRange(double minX,double minZ,double maxX,double maxZ,double* out){
+  if(worldBiome!=1||!std::isfinite(minX)||!std::isfinite(minZ)||!std::isfinite(maxX)||!std::isfinite(maxZ)||
+     minX>maxX||minZ>maxZ||maxX-minX>64||maxZ-minZ>64||
+     std::max({std::abs(minX),std::abs(minZ),std::abs(maxX),std::abs(maxZ)})>=1000000)return -2;
+  out[0]=std::numeric_limits<double>::infinity();out[1]=-out[0];
+  // The resident surface is affine on its triangles; enclosing lattice
+  // vertices bound every height in this box, not a few sampled locations.
+  for(int z=int(std::floor(minZ));z<=int(std::ceil(maxZ));z++)for(int x=int(std::floor(minX));x<=int(std::ceil(maxX));x++){
+    double height;if(!executionLattice(x,z,height))return -1;out[0]=std::min(out[0],height);out[1]=std::max(out[1],height);
+  }
+  return 1;
+}
+int spatialGateMountSupport(double x,double z,double minX,double minZ,double maxX,double maxZ,double* out){
+  double range[2];const int status=spatialGateTerrainRange(minX,minZ,maxX,maxZ,range);if(status!=1)return status;
+  double height;if(!executionSurface(float(x),float(z),height))return -1;
+  // Current supported mounting class is a flat native datum, matching the
+  // existing centre-ground + .025 root without transporting it vertically.
+  if(range[1]-range[0]>1e-6)return 0;
+  out[0]=double(float(height))+.025;out[1]=range[0];out[2]=range[1];return 1;
+}
 
 // Main-thread-only staging buffer; workers never access eviction requests.
 static std::vector<int32_t> chunkRemovalInput;

@@ -1,0 +1,17 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Native physical gate mechanism</title>
+<style>body{font:14px system-ui;background:#172124;color:#e7ece5;margin:20px}pre{max-height:230px;overflow:auto;background:#223137;padding:12px}canvas{display:block;max-width:100%;margin-top:16px}</style>
+<h1>Native physical gate mechanism — e-R1</h1>
+<p>Actual authored gate meshes, native kinematic compound/support/hinge and physical actor queries. No crossing permission or character autonomy.</p>
+<pre id="result">Ready</pre>
+<script type="module">
+import {auditNativeGateMechanism} from './native-gate-mechanism.js';
+window.runNativeGateMechanismAudit=async()=>{
+ window.nativeGateMechanismView?.dispose();
+ try{document.querySelector('#result').textContent='Running native mechanism validation';
+  const result=await auditNativeGateMechanism();window.nativeGateMechanismAudit=result;
+  document.querySelector('#result').textContent=JSON.stringify(result,null,2);return result;
+ }catch(error){document.querySelector('#result').textContent=String(error.stack??error);throw error;}
+};
+</script>
