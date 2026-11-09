@@ -79,19 +79,19 @@ test('a stopped native route invalidates only future conflicts and iteratively p
  }finally{f.session.dispose();}
 });
 
-test('an untracked terrain mutation aborts the entire execution advance before clock or body writes',()=>{
+test('whole-world replacement is rejected before clock, residency or body writes during native ownership',()=>{
  const f=fixture();
  try{
   const handle=f.worker(1,f.point(-6,0),f.point(6,0));f.bridge.beginNativeRouteExecution();f.advance(11);
   const before=f.body(1),clock=f.w.nav_intent_effective_time(),updates=f.w.nav_intent_execution_body_updates();
-  const p=f.point(100,100);f.session.core.setSettlement(p.x,p.z,1,1);
-  assert.equal(f.advance(12).status,'world-changed');
+  assert.throws(()=>f.session.core.generate(999,0,0,'desert'),/retire the authority/);
   assert.equal(f.w.nav_intent_effective_time(),clock);assert.deepEqual(f.body(1),before);
   assert.equal(f.w.nav_intent_execution_body_updates(),updates);
   assert.equal(f.bridge.nativeRouteExecution(handle).executedThrough,11);
+  assert.equal(f.advance(12).status,'advanced');
   assert.equal(f.bridge.stopNativeRouteExecution(),1);
   assert.equal(f.bridge.nativeRouteExecution(handle),null);assert.equal(f.w.nav_intent_route_reservation_count(),0);
-  assert.equal(f.advance(12).status,'inactive');
+  assert.equal(f.advance(13).status,'inactive');
  }finally{f.session.dispose();}
 });
 

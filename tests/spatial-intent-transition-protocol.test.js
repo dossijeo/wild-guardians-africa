@@ -49,6 +49,10 @@ test('pthread runtime exposes the same native transition ABI as standalone',asyn
       'spatial_has_chunk','spatial_release_chunk','spatial_release_chunks'])
       assert.equal(typeof world.core.wasm[name],'function',name);
     assert.equal(world.core.wasm.nav_intent_props_mutation_version(),1);
+    assert.equal(world.core.wasm.nav_intent_terrain_mutation_version(),1);
+    for(const name of ['nav_intent_terrain_candidates','nav_intent_terrain_segments','nav_intent_terrain_body_checks',
+      'nav_intent_terrain_revocations','nav_intent_terrain_rejected','nav_intent_terrain_commits','nav_intent_terrain_recipe_chunks'])
+      assert.equal(typeof world.core.wasm[name],'function',name);
     for(const name of ['nav_intent_props_mutation_candidates','nav_intent_props_mutation_segments',
       'nav_intent_props_mutation_body_checks','nav_intent_props_mutation_revocations',
       'nav_intent_props_mutation_rejected','nav_intent_props_mutation_commits','nav_intent_props_mutation_recipe_chunks'])

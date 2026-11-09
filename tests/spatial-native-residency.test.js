@@ -195,13 +195,13 @@ test('adding neighboring deterministic data preserves boundary samples and an al
  }finally{f.session.dispose();}
 });
 
-test('a residency transaction cannot acknowledge a pending untracked terrain edit',()=>{
+test('a rejected world replacement preserves the proof used by a residency transaction',()=>{
  const f=fixture();
  try{
   f.worker(1,f.point(-6,0),f.point(6,0));start(f);f.advance(11);const before=f.body(1),p=f.point(100,100);
-  f.session.core.setSettlement(p.x,p.z,1,1);assert(f.session.core.addChunk(4,4)>=0);
-  assert.equal(f.advance(12).status,'world-changed');assert.deepEqual(f.body(1),before);
-  assert.equal(f.w.nav_intent_effective_time(),11);
+  assert.throws(()=>f.session.core.generate(999,0,0,'desert'),/retire the authority/);
+  assert.deepEqual(f.body(1),before);assert(f.session.core.addChunk(4,4)>=0);
+  assert.equal(f.advance(12).status,'advanced');assert.equal(f.w.nav_intent_effective_time(),12);
  }finally{f.session.dispose();}
 });
 

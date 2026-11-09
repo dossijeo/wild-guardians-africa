@@ -108,6 +108,11 @@ Seguimiento por IDs acordados: [checklist A6-01–A6-11](A6-CHECKLIST.md).
       vivo; preflight atómico, discos sólidos, halos y leases preparados.
       Supresión monótona sin comprobación de rutas ni receta especulativa.
       330 pruebas dirigidas + 39 y 74 heredadas pasan sin skips.
+      A6-04.d: terreno implementado/validado para el dominio nativo Desierto.
+      Propuesta canónica en dos fases, sin publicar datos ni sitios; apoyo vivo
+      protegido y futuros dependientes retirados antes del commit. Reemplazar
+      el mundo requiere retirar la autoridad. 344 pruebas dirigidas + 39 y 74
+      heredadas pasan sin skips; no se activa autonomía GPU.
 - [ ] Vertical AttackCrops completa y aceptación real A–F (primer caso integrado,
       no cierre de A6 por sí solo).
 - [ ] Generalizar a otras bestias, trabajadores, intenciones y animaciones;
@@ -129,8 +134,8 @@ Seguimiento por IDs acordados: [checklist A6-01–A6-11](A6-CHECKLIST.md).
 
 Conectar el avance cinemático común a entidades, fases persistentes y consecuencias
 de gameplay, sin conservar un ejecutor JS paralelo para las clases migradas.
-Extender las fronteras dirigidas ya implementadas para overlays/residencia/props
-a terreno y puertas móviles, con coordinación de efecto físico/gráfico;
+Extender las fronteras dirigidas ya implementadas para overlays/residencia/props/
+terreno a puertas móviles, con coordinación de efecto físico/gráfico;
 completar cesiones/desvíos y otros perfiles/biomas. Después
 ligar reloj causal, desconexión y admisión GPU con aceptación integrada de animales
 y trabajadores. El control directo ya conectado no garantiza por sí solo todo el

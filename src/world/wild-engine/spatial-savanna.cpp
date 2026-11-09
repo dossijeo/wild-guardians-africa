@@ -14,6 +14,7 @@
 #include "spatial-static-mutations.h"
 #include "spatial-residency-mutations.h"
 #include "spatial-prop-mutations.h"
+#include "spatial-terrain-mutations.h"
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
 #else
@@ -1607,6 +1608,7 @@ void horizonDesertNormals(HorizonSampler& sampler,int ox,int oz){
 namespace {
 #include "spatial-execution-clearance.h"
 #include "spatial-prop-transaction.inc"
+#include "spatial-terrain-transaction.inc"
 }
 
 bool spatialStaticMutationBlocks(const SpatialStaticMutation& shape,double x,double z,
@@ -1673,6 +1675,7 @@ EMSCRIPTEN_KEEPALIVE double spatial_execution_clearance_checks(){return double(e
 EMSCRIPTEN_KEEPALIVE double spatial_execution_slope_samples(){return double(executionSlopeSamples);}
 int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){
   if(biome<0||biome>8)return -1;
+  if(spatialIntentTerrainProtected())return -1; // A new world requires authority retirement first.
   ++terrainInputRevision;++residencyRevision;
   worldSeed=seed;canyonOpenRight=biome==6;mangroveChannels=biome==7;mangroveNetwork=biome==8;worldBiome=(mangroveChannels||mangroveNetwork)?4:canyonOpenRight?5:biome;barrierIndex().byId.clear();barrierIndex().buckets.clear();
   polygonIndex().byId.clear();polygonIndex().buckets.clear();polygonInput.clear();polygonState.clear();nextPolygonId=1;
@@ -1843,6 +1846,11 @@ int spatial_apply_settlement_batch(int count,int replace){
   if(!replace&&incoming.empty())return 0;
   std::vector<Settlement> changed=replace?settlements:std::vector<Settlement>{};
   changed.insert(changed.end(),incoming.begin(),incoming.end());
+  if(spatialIntentTerrainProtected()){
+    auto proposed=replace?incoming:settlements;
+    if(!replace)proposed.insert(proposed.end(),incoming.begin(),incoming.end());
+    return applyProtectedTerrain(proposed,changed)?count:-1;
+  }
   if(replace)settlements=std::move(incoming);
   else settlements.insert(settlements.end(),incoming.begin(),incoming.end());
   if(!changed.empty())refreshSettlementChunks(changed);
@@ -1853,6 +1861,10 @@ float spatial_set_settlement(float x,float z,float hx,float hz){
      hx<=0||hz<=0||hx>100||hz>100)return -1;
   std::vector<Settlement> changed=settlements;
   const Settlement site=makeSettlement(x,z,hx,hz);
+  if(spatialIntentTerrainProtected()){
+    auto proposed=std::vector<Settlement>{site};changed.push_back(site);
+    return applyProtectedTerrain(proposed,changed)?float(site.y):std::numeric_limits<float>::quiet_NaN();
+  }
   settlements.assign(1,site);changed.push_back(site);
   refreshSettlementChunks(changed);
   return float(site.y);
@@ -1861,6 +1873,10 @@ float spatial_add_settlement(float x,float z,float hx,float hz){
   if(!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(hx)||!std::isfinite(hz)||
      hx<=0||hz<=0||hx>100||hz>100)return -1;
   const Settlement site=makeSettlement(x,z,hx,hz);
+  if(spatialIntentTerrainProtected()){
+    auto proposed=settlements;proposed.push_back(site);
+    return applyProtectedTerrain(proposed,{site})?float(site.y):std::numeric_limits<float>::quiet_NaN();
+  }
   settlements.push_back(site);
   refreshSettlementChunks({site});
   return float(site.y);

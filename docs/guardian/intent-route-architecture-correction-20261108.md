@@ -736,3 +736,61 @@ ni decide la política exterior de un comando rechazado. Continúan pendientes
 entidades/fases/consecuencias de gameplay, otros perfiles/biomas, tráfico resuelto
 y reloj causal GPU. `authorizedAutonomy:false` y las guardas de producto se
 mantienen. No se reclama nueva aceptación gráfica A–F ni suite general limpia.
+
+## A6-04.d — Propuestas transaccionales de terreno — 2026-11-09
+
+Las altas, reemplazos y lotes de asentamientos tienen una frontera nativa en el
+dominio Desierto. La propuesta conserva el mundo vivo: una vista RAII de sitios
+y muestras residentes permite generar primero todas las alturas candidatas y
+después sus props. Así los halos no consultan una mezcla de alturas antiguas y
+nuevas. No se publican chunks, datos visuales, sitios, revisiones o grafos durante
+esa preparación; el estado seleccionado vuelve íntegro antes del preflight.
+
+Se identifican los vértices realmente distintos y los discos sólidos que la
+receta vuelve a introducir, por ejemplo al retirar una zona de limpieza. Sus
+bounds consultan los índices existentes de cuerpos y suscriptores de rutas.
+Solo los candidatos se contrastan con la propuesta: los datos de apoyo/pendiente
+de un cuerpo actual deben permanecer iguales y libres de nuevos sólidos. Un
+cambio bajo trabajador, animal o cuerpo detenido rechaza la transacción completa;
+no se inventa un traslado vertical ni se decide una nueva regla de construcción.
+
+Un sufijo futuro dependiente de vértices o sólidos modificados se retira antes
+de hacerlos efectivos, incluyendo leases preparados y el cierre de sus paradas.
+Las otras rutas conservan versión y reloj. La dependencia conservadora se obtiene
+de los tramos de hasta un metro y sus halos de radio, pendiente y vértices: no
+es muestreo de seguridad cada cierta distancia ni comprobación por tick. Las
+ediciones lejanas y reemplazos geométricamente equivalentes no consultan rutas.
+
+Tras aprobar se publican todos los datos candidatos antes de reconstruir perfiles
+y bordes; el conjunto de sitios y el contador de inputs se comprometen juntos.
+Solo se reconoce el incremento exacto esperado de terreno, conservando los
+otros contadores. El generador de mundo completo no es una vía de escape:
+requiere retirar antes la autoridad física o sus leases y el wrapper no altera
+su espejo de residencia si esa operación se rechaza. El bridge exige el servicio
+de mutación de terreno versión 1. Los caminos legacy no activados mantienen su
+receta y formato de guardado.
+
+**14 pruebas nuevas con WASM real**, dos con pthread: edición lejana, rechazo de
+apoyo de trabajador/animal y cuerpo detenido, publicación futura con otro actor
+intacto, lease preparado, reemplazo equivalente, batch atómico, entradas inválidas,
+regeneración de mundo protegida, cuerpo remoto grande y regeneración de un sólido
+por pérdida de hábitat. Un rechazo conserva publicable un resultado pthread;
+un cambio aceptado lo vuelve obsoleto sin parar rutas ajenas.
+
+Regresión: **344 dirigidas + 39 de streaming/geometría + 74 de receta/estado**,
+aprobadas sin skips, standalone/pthread reconstruidos y ABI comprobado. Los tests
+anteriores de terreno no instrumentado ahora verifican el rechazo de reemplazar
+el mundo durante propiedad nativa y la continuidad de las otras transacciones:
+los setters públicos de asentamientos dejaron de ser un escritor no cubierto.
+Logs: `.cache/native-terrain-regression.tap`,
+`.cache/native-terrain-legacy-stream-geometry.tap` y
+`.cache/native-terrain-legacy-recipe.tap`.
+
+**Límites:** A6-04.d implementado/validado en el dominio nativo actual, no en todos
+los biomas. La propuesta usa copias temporales de los datos residentes y su coste
+es estructural, no está optimizado ni medido como coste GPU. La política de comandos
+que necesitan desplazar cuerpos/alterar su apoyo y la transacción JS exterior
+siguen pendientes, al igual que la aplicación visual causal. Faltan A6-04.e/f,
+integración de gameplay/fases, tráfico resuelto, otros perfiles/biomas y aceptación
+real WASM/WebGPU. Se mantienen `authorizedAutonomy:false` y las guardas actuales;
+no se declara cerrado A6 ni limpia la suite general.

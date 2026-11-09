@@ -15,6 +15,7 @@
 #include "spatial-static-mutations.h"
 #include "spatial-residency-mutations.h"
 #include "spatial-prop-mutations.h"
+#include "spatial-terrain-mutations.h"
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
 #else
@@ -237,6 +238,8 @@ struct IntentState {
     residencyRevocations=0,residencyRejected=0,residencyCommits=0,residencyPinRevision=0;
   uint64_t propMutationCandidates=0,propMutationSegments=0,propMutationBodyChecks=0,
     propMutationRevocations=0,propMutationRejected=0,propMutationCommits=0,propMutationRecipeChunks=0;
+  uint64_t terrainCandidates=0,terrainSegments=0,terrainBodyChecks=0,terrainRevocations=0,
+    terrainRejected=0,terrainCommits=0,terrainRecipeChunks=0;
   uint32_t session=0;
   uint64_t invalidations=0;
   std::unordered_map<uint64_t,uint64_t> planningCallsByActor;
@@ -445,6 +448,7 @@ void releaseIntent(IntentState& s,uint64_t actor,PlanningState next){
 #include "spatial-static-mutation-state.h"
 #include "spatial-residency-mutation-state.h"
 #include "spatial-prop-mutation-state.h"
+#include "spatial-terrain-mutation-state.h"
 void invalidateDependents(IntentState& s,const Change& change){
   if(change.kind==1){
     if(!change.op){
@@ -826,6 +830,12 @@ ServiceRoute findServiceRoute(const Worker& worker,const Target& target,int kind
 
 bool spatialIntentStaticProtectionActive(){return state().bodyDomainActive;}
 bool spatialIntentPropsProtected(){const auto& s=state();return s.bodyDomainActive||!s.reservedBodies.empty();}
+bool spatialIntentTerrainProtected(){return spatialIntentPropsProtected();}
+SpatialStaticTicket spatialIntentTerrainBefore(const SpatialStaticMutation* boxes,int count,
+    SpatialTerrainProbe probe,void* context,int recipes,bool known){
+  return terrainMutationBefore(state(),boxes,count,probe,context,recipes,known);
+}
+void spatialIntentTerrainCommitted(const SpatialStaticTicket& ticket){terrainMutationCommitted(state(),ticket);}
 SpatialStaticTicket spatialIntentPropsBefore(const SpatialStaticMutation* shapes,int count,int recipes,bool known){
   return propMutationBefore(state(),shapes,count,recipes,known);
 }
@@ -912,6 +922,8 @@ void nav_intent_reset(){
   s.residencyRevocations=s.residencyRejected=s.residencyCommits=s.residencyPinRevision=0;
   s.propMutationCandidates=s.propMutationSegments=s.propMutationBodyChecks=s.propMutationRevocations=0;
   s.propMutationRejected=s.propMutationCommits=s.propMutationRecipeChunks=0;
+  s.terrainCandidates=s.terrainSegments=s.terrainBodyChecks=s.terrainRevocations=0;
+  s.terrainRejected=s.terrainCommits=s.terrainRecipeChunks=0;
   s.attackRouteInput.clear();s.attackBlockers.clear();
   s.attackReservedTargets.clear();s.attackResult.fill(0);
   s.wallAttackResult.fill(0);
@@ -1818,6 +1830,14 @@ EMSCRIPTEN_KEEPALIVE double nav_intent_residency_rejected(){return double(state(
 EMSCRIPTEN_KEEPALIVE double nav_intent_residency_commits(){return double(state().residencyCommits);}
 EMSCRIPTEN_KEEPALIVE double nav_intent_residency_pin_revision(){return double(state().residencyPinRevision);}
 EMSCRIPTEN_KEEPALIVE int nav_intent_props_mutation_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int nav_intent_terrain_mutation_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE double nav_intent_terrain_candidates(){return double(state().terrainCandidates);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_terrain_segments(){return double(state().terrainSegments);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_terrain_body_checks(){return double(state().terrainBodyChecks);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_terrain_revocations(){return double(state().terrainRevocations);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_terrain_rejected(){return double(state().terrainRejected);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_terrain_commits(){return double(state().terrainCommits);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_terrain_recipe_chunks(){return double(state().terrainRecipeChunks);}
 EMSCRIPTEN_KEEPALIVE double nav_intent_props_mutation_candidates(){return double(state().propMutationCandidates);}
 EMSCRIPTEN_KEEPALIVE double nav_intent_props_mutation_segments(){return double(state().propMutationSegments);}
 EMSCRIPTEN_KEEPALIVE double nav_intent_props_mutation_body_checks(){return double(state().propMutationBodyChecks);}

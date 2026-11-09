@@ -268,13 +268,13 @@ test('malformed or unsupported replacement histories remain atomic and do not re
  }finally{f.session.dispose();}
 });
 
-test('a prop suppression cannot acknowledge an earlier untracked terrain edit',()=>{
+test('a rejected world replacement preserves the proof used by monotonic prop suppression',()=>{
  const f=fixture();
  try{
   const p=props(f).find(p=>solid(p)&&Math.hypot(p.x-f.point(0,0).x,p.z-f.point(0,0).z)>35);assert(p);
   f.worker(1,f.point(-6,0),f.point(6,0));start(f);f.advance(11);const body=f.body(1);
-  f.session.core.addSettlement(1000,1000,1,1);assert.equal(f.session.core.removeProp(identity(p)),1);
-  assert.equal(f.advance(12).status,'world-changed');assert.deepEqual(f.body(1),body);
+  assert.throws(()=>f.session.core.generate(999,0,0,'desert'),/retire the authority/);assert.deepEqual(f.body(1),body);
+  assert.equal(f.session.core.removeProp(identity(p)),1);assert.equal(f.advance(12).status,'advanced');
  }finally{f.session.dispose();}
 });
 

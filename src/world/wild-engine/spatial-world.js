@@ -80,6 +80,7 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     if(canyonOpenRight&&name!=='canyons')throw RangeError('One-wall variant requires canyons');
     if((mangroveChannels||mangroveNetwork)&&name!=='mangrove')throw RangeError('Channel variant requires mangrove');
     const count=wasm.spatial_generate_biome(seed>>>0,mangroveNetwork?8:mangroveChannels?7:canyonOpenRight?6:SPATIAL_BIOME_CODES[name],cx|0,cz|0);
+    if(count<0)throw Error('Native world generation rejected; retire the authority before replacing its world');
     chunk={cx:cx|0,cz:cz|0,count};chunks=[[cx|0,cz|0]];navigationBuilt=false;generated=true;
     workerPortalRoutes=[];chunkRevision++;
     return chunk;
@@ -496,11 +497,13 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     },
     setSettlement:(x,z,hx,hz)=>{
       if(!generated)throw Error('Generate the world before placing a settlement');
-      return wasm.spatial_set_settlement(x,z,hx,hz);
+      const level=wasm.spatial_set_settlement(x,z,hx,hz);
+      if(!Number.isFinite(level))throw Error('Native terrain mutation rejected');return level;
     },
     addSettlement:(x,z,hx,hz)=>{
       if(!generated)throw Error('Generate the world before placing a settlement');
-      return wasm.spatial_add_settlement(x,z,hx,hz);
+      const level=wasm.spatial_add_settlement(x,z,hx,hz);
+      if(!Number.isFinite(level))throw Error('Native terrain mutation rejected');return level;
     },
     buildNavigation:(radius,worker)=>{
       if(!chunk)throw Error('Generate a chunk before building its navigation');

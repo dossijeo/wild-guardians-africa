@@ -32,9 +32,13 @@ ejecutor protegido de producto. A6 incluye todas las intenciones y trabajadores.
     en el dominio nativo actual, sin activar el ejecutor general de producto.
     Evidencia: 19 pruebas WASM nuevas (dos pthread), batería dirigida de 330 y
     baterías heredadas de 39 y 74, sin skips.
-  - [ ] **A6-04.d — Terreno.** Cambios de relieve/asentamientos dirigidos y seguros
-    para cuerpos actuales y rutas futuras. Siguen bloqueando el lease de forma
-    conservadora cuando no están instrumentados.
+  - [x] **A6-04.d — Terreno nativo.** Altas/reemplazos de asentamientos y lotes
+    propuestos sin publicación; comparación de vértices y sólidos canónicos,
+    preflight de apoyo actual y revocación de futuros dependientes. Implementado
+    y validado en Desierto. Cambiar el apoyo de un cuerpo vivo se rechaza, no se
+    transporta verticalmente de forma implícita; la política exterior sigue
+    pendiente. Evidencia: 14 pruebas WASM nuevas (dos pthread), batería dirigida
+    de 344 y baterías heredadas de 39 y 74, sin skips.
   - [ ] **A6-04.e — Puertas móviles.** Hojas, barrido, apertura/cierre y esperas
     autoritativos; la máscara estática no es suficiente.
   - [ ] **A6-04.f — Efecto físico/gráfico coordinado.** No hacer efectiva una
@@ -74,8 +78,11 @@ ejecutor protegido de producto. A6 incluye todas las intenciones y trabajadores.
 - `.cache/native-props-regression.tap`: 330 aprobadas sin skips.
 - `.cache/native-props-legacy-stream-geometry.tap`: 39 aprobadas sin skips.
 - `.cache/native-props-legacy-recipe.tap`: 74 aprobadas sin skips.
+- `.cache/native-terrain-regression.tap`: 344 aprobadas sin skips.
+- `.cache/native-terrain-legacy-stream-geometry.tap`: 39 aprobadas sin skips.
+- `.cache/native-terrain-legacy-recipe.tap`: 74 aprobadas sin skips.
 
-Próximo trabajo de A6-04: terreno (A6-04.d), puertas y coordinación de efecto;
+Próximo trabajo de A6-04: puertas móviles (A6-04.e) y coordinación de efecto;
 en paralelo de dependencias de diseño,
 siguen pendientes la integración de entidades/fases/consecuencias (A6-01/02) y
 la coordinación temporal con dibujo (A6-06). No se declara completa la suite
