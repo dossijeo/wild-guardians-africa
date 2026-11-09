@@ -12,7 +12,7 @@ ejecutor protegido de producto. A6 incluye todas las intenciones y trabajadores.
 personajes autónomos en GPU. Hay una validación de las mallas originales de puerta;
 los diagnósticos de locomoción aún usan triángulos, no personajes. Desde la petición de cerrar e/f se han cerrado **0 de esos 2
 subpuntos**. Sus componentes internos avanzaron, pero la entrega integrada no.
-En el desglose fijo de entrega, **e-R1 está cerrado; quedan 7 de 8**.
+En el desglose fijo de entrega, **e-R1 y e-R2 están cerrados; quedan 6 de 8**.
 
 **Niveles que no se suman:** A6 tiene 11 puntos principales, todos abiertos.
 Dentro de A6-04, a–d están marcados implementados/validados en el dominio nativo
@@ -25,7 +25,7 @@ estaba dentro de e/f; no son funcionalidades adicionales ni renumeran A6-01–11
 |---|---|---|
 | Geometría/reloj/política | Hojas autoradas, apertura de 0,6 s, proximidad, ocupación y espera en C++; mecanismo nativo marco/hoja/apoyo consumido por colisión y `NativeWall`. | Clase validada: puertas intactas sobre datum plano nativo de Desierto. No activado en la partida; integración y ciclo de vida son e-R3. |
 | Barridos y protección | Contacto continuo contra cuerpos, objetos canónicos y otras hojas; veto previo de mutaciones incompatibles. La unión del mecanismo conserva todas sus regiones ocupadas. | No certifica apoyos arbitrarios/inclinados ni física de otras clases; se rechazan explícitamente. |
-| Timetable y fases | Esperas iniciales/intermedias, admisión atómica opt-in por puertas cerradas y suspensión/reanudación del sufijo nativo con fases/presupuesto acumulados. | El lector de candidatos anterior sigue sin admitir. La nueva API exige el mecanismo validado de e-R1; falta reversión diferida de un cierre en curso. No activa producto/GPU ni persistencia entre acciones/guardados. |
+| Timetable y fases | Esperas iniciales/intermedias, admisión atómica opt-in por puertas cerradas, cierre previo conservado hasta la inversión y suspensión/reanudación del sufijo con fases/presupuesto acumulados. | El lector de candidatos anterior sigue sin admitir. La nueva API exige el mecanismo validado de e-R1. No activa producto/GPU ni persistencia entre acciones/guardados. |
 | Control directo y recibo GPU | Revocación por época/versión, canal independiente de preparación y recibo de retirada de trabajo GPU previo. | Un recibo no resuelve reloj causal, presentación o todos los consumidores de producto. |
 | Propuesta y commit de motor | Ticket de un uso; espera recibo nuevo y rechaza si cambian sus dependencias. | Motor de puerta opt-in; no transacción física/gráfica completa de todas las mutaciones. |
 
@@ -33,7 +33,7 @@ Son cinco componentes agrupados para visibilidad, no cinco entregables de produc
 cerrados ni una medida porcentual. Cantidades de pruebas/commits son evidencia,
 no el indicador principal de avance.
 
-### Entregables de cierre: 1 cerrado, 7 pendientes
+### Entregables de cierre: 2 cerrados, 6 pendientes
 
 Se mantienen estos IDs al avanzar. Algunos comparten
 dependencias con A6-01/02/06/07/08/09; no se cuentan otra vez como trabajo nuevo.
@@ -41,7 +41,7 @@ dependencias con A6-01/02/06/07/08/09; no se cuentan otra vez como trabajo nuevo
 | ID fijo | Entrega y estado | Criterio observable de cierre |
 |---|---|---|
 | **A6-04.e-R1** | **CERRADO — Mecanismo físico marco/hoja y apoyo 3D.** | Un estado nativo coherente define marco, hoja y apoyo para colisión y dibujo; validar los materiales móviles sin ignorar falsamente sus contactos propios. [Evidencia de las tres mallas reales WASM/WebGPU](performance/native-gate-mechanism-20261109.json). |
-| **A6-04.e-R2** | **PARCIAL — Aperturas futuras, reservas y admisión de cruces.** | Autorizar una ruta completa a través de puertas que inicialmente no estén abriendo; reservar el intervalo, impedir cierre sobre el cruce e invalidar/reanudar por eventos. |
+| **A6-04.e-R2** | **CERRADO — Aperturas futuras, reservas y admisión de cruces.** | Autorizar una ruta completa a través de puertas que inicialmente no estén abriendo; reservar el intervalo, impedir cierre sobre el cruce e invalidar/reanudar por eventos. [Aceptación nativa integrada y reproducible](performance/native-gate-crossing-resume-20261109.json). |
 | **A6-04.e-R3** | Integración de puertas con entidades y ciclo de vida. | Usar esas decisiones en las intenciones pertinentes de la partida, con llegadas/consecuencias, cancelación, guardado/restauración y recuperación; sin dos ejecutores autoritativos. |
 | **A6-04.e-R4** | Aceptación de puertas con personajes reales. | Partida WASM/WebGPU con trabajadores y animales, respetando qué puede cruzar cada uno; obstáculos, esperas, pausa/velocidad, acciones, guardado y determinismo. No basta el triángulo. |
 | **A6-04.f-R1** | Frontera causal de tiempo y comandos. | Simulación y dibujo aplican avances, pausa, velocidad y revocaciones en una frontera segura; no presentar movimiento que ya no puede autorizarse ni corregirlo mediante rebobinado. |
@@ -57,7 +57,7 @@ sin excepciones por ID. Apoyo no plano/desconocido y cambio visual/de ciclo de
 vida no soportado rechazan explícitamente; no hay fallback silencioso ni activación
 en la partida. La expansión de clases y la integración pertenecen a A6-05/e-R3.
 
-**Avance de e-R2, sin cierre:** `nav_gate_admit_route` prueba y publica en una
+**Alcance del cierre de e-R2:** `nav_gate_admit_route` prueba y publica en una
 operación la ruta existente, esperas, motores futuros y reservas ligadas a
 sesión/slot/generación/cuerpo. El ejecutor nativo la recorre sin repetir geometría
 o planificación en pasos ordinarios. Se validan las tres puertas cerradas,
@@ -75,12 +75,27 @@ suspensiones repetidas. Fallar por tráfico/obstáculos conserva el sufijo; canc
 cambiar objetivo, retirar cuerpo o reiniciar autoridad lo descarta. La reanudación
 no es un timer ni un retry por tick, y no activa consecuencias de gameplay.
 
-**Lo que falta dentro del mismo e-R2:** una inversión futura de un cierre ya en marcha requiere representar
-sus tramos sin congelar su movimiento previo: se rechaza explícitamente. Las
-reservas de esta entrega se retienen hasta liberar la ruta; no caducan por timer
-ni programan cierre automático. Un evento posterior de política puede cerrar
-solo después de liberar y comprobar ocupación/trayectorias. Nada de esto cierra
-otro ID o añade nuevos entregables al tablero.
+También se conserva un cierre ya autorizado hasta el instante nativo de petición
+futura; se invierte continuamente desde su pose prevista, manteniendo la regla
+de 0,6 s. Los nudos y cotas de movimiento cubren ambos tramos en las pruebas de
+cuerpos/objetos/otras hojas. Cancelar al principio, aun con apertura actual 1,
+retira también ese cierre futuro y suspende las rutas que dependían de él.
+
+Las reservas se retienen hasta liberar la ruta; no caducan por timer ni programan
+cierre automático. Un evento posterior de política puede cerrar solo después de
+liberar y comprobar ocupación/trayectorias. Es la clase física nativa de e-R1,
+no activación en gameplay, persistencia entre acciones/guardados, resolución de
+todo el tráfico o aceptación con personajes. Esos límites ya pertenecen a los
+IDs pendientes; no se añaden nuevos entregables.
+
+**Evidencia del criterio, no porcentaje de avance:** el escenario WASM integrado
+recorre dos puertas inicialmente cerradas con la polilínea elegida, se suspende
+ante la segunda, conserva el sufijo/fases/carrera, rechaza una reanudación con
+obstáculo y se readmite tras retirarlo hasta llegada/fin. Repetir el registro de
+comandos da el mismo resultado. Los 300 avances ordinarios no añaden geometría,
+sensores, barridos o consultas de planificación. Las pruebas complementarias
+verifican cierre protegido, ocupación detenida, los tres materiales, inversión
+parcial de cierre, reservas compartidas, épocas/generaciones y fallos atómicos.
 
 **Límite de integración descubierto:** algunos conectores del planner anterior
 tocan el marco real. La admisión los rechaza y conserva ruta/tarea/objetivo; no
@@ -89,8 +104,9 @@ admisibles cuando el corredor autorado y el conector coinciden. Producir rutas
 de gameplay compatibles pertenece a la integración ya pendiente, no se da por
 resuelto por admitir una polilínea de prueba.
 
-**Siguiente bloqueo concreto:** terminar e-R2. La admisión/reanudación de e-R2 y
-la aplicación causal de f-R1–R4 permiten integrar y aceptar e-R3/e-R4. Es un mapa
+**Siguiente bloqueo concreto:** f-R1, frontera causal de tiempo/comandos, antes
+de activar los cruces en la partida. La aplicación causal de f-R1–R4 y la
+integración de entidades de e-R3 permiten aceptar e-R4. Es un mapa
 de dependencias, no una promesa de duración o de que los ocho tengan igual tamaño.
 
 **Cómo se informará el avance:** entrega cerrada y evidencia; entrega parcial
@@ -147,16 +163,18 @@ esta lista ni presentar más pruebas aisladas como cierre del producto.
     ante nuevas geometrías y conserva datos residentes. No equivale a clearance
     del mundo completo. El mecanismo marco/hoja y apoyo nativo de la clase
     validada ya está cerrado como e-R1; no certifica apoyos arbitrarios.
-    Esperas iniciales e intermedias nativas ligadas al final de motores ya
-    certificados: mismo slot, nueva generación, fases/presupuesto no avanzan en
-    cada hold y los nudos incluyen entrada/salida y agotamiento de carrera. Solo candidato
-    sin admisión: reserva y ejecución lo rechazan incluso al abrirse la puerta.
-    Pendientes solicitudes futuras de apertura,
-    reservas/admisión de cruces, recuperación y conexión por eventos con producto.
-    `authorizedPassage:false`; los cruces nativos siguen rechazados. Evidencia:
+    e-R2 cerrado: admisión atómica nativa de la ruta completa, aperturas futuras
+    y reservas ligadas al mismo slot/cuerpo, con cierre previo conservado hasta
+    la inversión. Suspensión/reanudación del sufijo por eventos, sin planner,
+    manteniendo fases/carrera. Los candidatos previos siguen sin admitir; la
+    nueva API nativa puede reservar y ejecutar solo tras sus pruebas completas.
+    Pendientes conexión con entidades, recuperación/guardado, consecuencias y
+    frontera física/gráfica de producto (e-R3/e-R4/f). `authorizedPassage:false`
+    sigue indicando que no se activa producto/GPU, no ausencia de admisión nativa.
+    Evidencia:
     11 pruebas de política + 12 de barrido + 8 de espera iniciales; 20 nuevas de
     objetos y 2 de coordinación; 13 nuevas de esperas múltiples. Batería actual:
-    446 dirigidas + 39 y 74 heredadas
+    479 dirigidas + 39 y 74 heredadas
     sin skips. Tres auditorías WASM/WebGPU reproducen espera/reanudación y fases/
     presupuesto desde un único paquete durante dos bloqueos de 500 ms cada una,
     sin nuevas posiciones JS ni trabajo geométrico nativo. Son triángulos de
@@ -243,12 +261,13 @@ esta lista ni presentar más pruebas aisladas como cierre del producto.
 - `.cache/native-gate-mechanism-regression.tap`: 446 aprobadas sin skips (incluye 9 nuevas de mecanismo y 5 de render antes separadas).
 - `.cache/native-gate-mechanism-legacy-stream-geometry.tap`: 39 aprobadas sin skips.
 - `.cache/native-gate-mechanism-legacy-recipe.tap`: 74 aprobadas sin skips.
-- Avance parcial de e-R2: `.cache/native-gate-crossings-regression.tap`, 462 aprobadas sin skips, incluidas 16 de admisión/reservas. `.cache/native-gate-crossings-legacy-stream-geometry.tap` (39) y `.cache/native-gate-crossings-legacy-recipe.tap` (74), también aprobadas sin skips. No cierra e-R2 ni acredita personajes/GPU.
-- Suspensión/reanudación de e-R2: `.cache/native-gate-resume-regression.tap`, 474 aprobadas sin skips, incluidas 12 de sufijos/offsets. `.cache/native-gate-resume-legacy-stream-geometry.tap` (39) y `.cache/native-gate-resume-legacy-recipe.tap` (74), también aprobadas sin skips. Sigue pendiente la composición con cierre en curso.
+- Incremento previo de e-R2: `.cache/native-gate-crossings-regression.tap`, 462 aprobadas sin skips, incluidas 16 de admisión/reservas. `.cache/native-gate-crossings-legacy-stream-geometry.tap` (39) y `.cache/native-gate-crossings-legacy-recipe.tap` (74), también aprobadas sin skips. Aún no cerraba e-R2 ni acreditaba personajes/GPU.
+- Incremento de suspensión/reanudación de e-R2: `.cache/native-gate-resume-regression.tap`, 474 aprobadas sin skips, incluidas 12 de sufijos/offsets. `.cache/native-gate-resume-legacy-stream-geometry.tap` (39) y `.cache/native-gate-resume-legacy-recipe.tap` (74), también aprobadas sin skips. En ese incremento quedaba pendiente la composición con cierre en curso.
+- Cierre de e-R2: `.cache/native-gate-e-r2-regression.tap`, 479 aprobadas sin skips; `.cache/native-gate-e-r2-legacy-stream-geometry.tap` (39) y `.cache/native-gate-e-r2-legacy-recipe.tap` (74), aprobadas sin skips. [Registro de aceptación nativa](performance/native-gate-crossing-resume-20261109.json); se reproduce con `tests/spatial-native-gate-route-acceptance.test.js`.
 - [Mecanismo nativo y mallas reales WebGPU](performance/native-gate-mechanism-20261109.json) · [captura](performance/native-gate-mechanism-20261109.png).
 
 Quedan **2 de los 6 subpuntos de A6-04**: e y f (parciales).
-Dentro de su desglose fijo quedan **7 de 8**: e-R1 cerrado, e-R2–R4/f-R1–R4 pendientes.
+Dentro de su desglose fijo quedan **6 de 8**: e-R1/e-R2 cerrados, e-R3/e-R4/f-R1–R4 pendientes.
 Los **11 puntos principales de A6** siguen abiertos; son niveles distintos,
 no dos cantidades que deban sumarse.
 

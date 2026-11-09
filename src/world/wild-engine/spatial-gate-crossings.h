@@ -40,15 +40,15 @@ int compileGateCrossings(IntentState& s,RouteSlot& candidate,std::map<uint64_t,N
     return a.distance!=b.distance?a.distance<b.distance:a.gate<b.gate;
   });
   for(const auto& boundary:boundaries){auto& gate=proposed.at(boundary.gate);
-    // Existing opening promises are immutable. A stationary closed/partial gate
-    // can open at activation ETA. A closing motor needs a piecewise reversal;
-    // do not silently replace its intervening motion with a frozen pose.
+    // Existing opening promises are immutable. Keep an already-authorized close
+    // until activation ETA, then reverse continuously at its predicted pose.
     if(gate.crossings.empty()&&gate.target!=1){
-      const double current=gateOpening(gate,s.effectiveTime);if(current!=gate.target)return -2;
-      gate.from=current;gate.target=1;
       const double activation=!candidate.holds.empty()&&candidate.holds.back().distance==boundary.distance?
         candidate.holds.back().from:routeTimeAtDistance(candidate,boundary.distance);
-      gate.at=std::max(s.effectiveTime,activation);
+      const double at=std::max(s.effectiveTime,activation),opening=gateOpening(gate,at),current=gateOpening(gate,s.effectiveTime);
+      gate.precedingMotor=at>s.effectiveTime&&current!=gate.target;
+      gate.precedingFrom=gate.from;gate.precedingTarget=gate.target;gate.precedingAt=gate.at;
+      gate.from=opening;gate.target=1;gate.at=at;
     }
     if(gate.target!=1)return -2;
     if(appendRouteGateHold(candidate,boundary.gate,boundary.distance,gateMotionEnd(gate))<0)return -2;
@@ -116,8 +116,8 @@ void releaseGateCrossings(IntentState& s,const RouteSlot& route){
     // A stopped body must not inherit the motor proof for its former moving
     // trajectory. Freezing is a subset of the certified motion and cannot sweep
     // over it. Revoke other promises affected by this clock change iteratively.
-    if(current!=gate.target){
-      gate.from=gate.target=current;gate.at=s.effectiveTime;
+    if(current!=gate.target||gateMotionPending(gate,s.effectiveTime)){
+      gate.from=gate.target=current;gate.at=s.effectiveTime;gate.precedingMotor=false;
       for(const auto& [actor,crossing]:gate.crossings)s.stoppedGateRouteActors.insert(actor);
     }
   }

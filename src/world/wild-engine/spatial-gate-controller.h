@@ -1,10 +1,26 @@
 constexpr double nativeGateMoveSeconds=.6;
 double gateMotionEnd(const NativeGate& gate){return gate.at+std::abs(gate.target-gate.from)*nativeGateMoveSeconds;}
-std::vector<double> gateMotionKnots(const NativeGate& gate){return {gate.at,gateMotionEnd(gate)};}
-double gateOpening(const NativeGate& gate,double now){
-  const double amount=std::max(0.0,now-gate.at)/nativeGateMoveSeconds;
-  const double value=gate.target>=gate.from?std::min(gate.target,gate.from+amount):std::max(gate.target,gate.from-amount);
+bool gateHasMotion(const NativeGate& gate){return gate.from!=gate.target||gate.precedingMotor&&gate.precedingFrom!=gate.precedingTarget;}
+bool gateMotionPending(const NativeGate& gate,double now){
+  return gate.from!=gate.target&&gateMotionEnd(gate)>now||
+    gate.precedingMotor&&gate.precedingFrom!=gate.precedingTarget&&gate.precedingAt<gate.at&&
+      std::min(gate.at,gate.precedingAt+std::abs(gate.precedingTarget-gate.precedingFrom)*nativeGateMoveSeconds)>now;
+}
+std::vector<double> gateMotionKnots(const NativeGate& gate){
+  std::vector<double> times{gate.at,gateMotionEnd(gate)};
+  if(gate.precedingMotor){times.push_back(gate.precedingAt);
+    times.push_back(std::min(gate.at,gate.precedingAt+std::abs(gate.precedingTarget-gate.precedingFrom)*nativeGateMoveSeconds));}
+  return times;
+}
+double gateMotorOpening(double from,double target,double at,double now){
+  const double amount=std::max(0.0,now-at)/nativeGateMoveSeconds;
+  const double value=target>=from?std::min(target,from+amount):std::max(target,from-amount);
   return value>1-1e-9?1:value<1e-9?0:value;
+}
+double gateOpening(const NativeGate& gate,double now){
+  return gate.precedingMotor&&now<gate.at?
+    gateMotorOpening(gate.precedingFrom,gate.precedingTarget,gate.precedingAt,now):
+    gateMotorOpening(gate.from,gate.target,gate.at,now);
 }
 std::vector<double> gateLeaf(const NativeGate& gate,double opening){
   const double angle=std::clamp(opening,0.0,1.0)*pi/2,co=std::cos(angle),si=std::sin(angle),c=std::cos(gate.yaw),s=std::sin(gate.yaw);

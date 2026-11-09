@@ -1429,3 +1429,75 @@ Logs `.cache/native-gate-resume-regression.tap`,
 Este incremento no cierra otro ID. Para e-R2 queda la composición de una apertura
 futura con un motor que ya está cerrando, sin congelar su tramo anterior. Tablero
 aún **1 cerrado, 7 pendientes**; no se declara aceptación con personajes.
+
+## Cierre de A6-04.e-R2 — Ruta completa, reservas y reanudación nativas
+
+Se cumple el criterio fijo de e-R2 en la clase física nativa validada de e-R1:
+puertas intactas de zarzas/empalizada/reforzado sobre apoyo plano residente de
+Desierto, con las reglas físicas y de locomoción existentes. Este cierre no
+activa gameplay/GPU ni cierra e-R3/e-R4 o la coordinación causal f-R1–R4.
+
+### Último bloqueo: preservar un cierre previo hasta su inversión
+
+`NativeGate` conserva un prefijo de su reloj ya autorizado cuando una ruta pide
+una apertura futura. Hasta el instante de activación sigue cerrando (o permanece
+cerrada si ya acabó ese movimiento); después abre desde la pose prevista allí,
+sin salto, pausa inventada ni cambio de la regla de 0,6 s. No hay un scheduler
+general: es un prefijo local del mismo motor, no otro controlador o entidad.
+
+Las cotas de velocidad y nudos del kernel continuo común incluyen prefijo,
+agotamiento del cierre, inversión y fin de apertura para cuerpos, objetos y
+otras hojas. Preparar/reconciliar/reemplazar un motor limpia el prefijo anterior
+solo tras tomar la pose nativa actual. Promesas ya reservadas siguen inmutables.
+Cancelar antes del cierre, cuando la puerta aún está en apertura 1, también
+retira el movimiento futuro: comparar solo apertura actual con objetivo final
+sería insuficiente. Se congela y se suspenden dependientes, igual que a mitad
+de la apertura. Los rechazos de admisión dejan intacto el cierre original.
+
+### Criterio observable satisfecho
+
+| Requisito acordado | Resultado observado |
+|---|---|
+| Ruta completa por puertas que inicialmente no abren | Admisión atómica de la polilínea existente por una o varias puertas cerradas; además se compone con un cierre en marcha en los tres materiales. No se pide otra ruta ni se ensancha el hueco. |
+| Reservar intervalo e impedir cierre sobre el cruce | Reservas de actor/cuerpo/sesión/slot/generación y tiempos nativos; política y retirada de puerta no pueden romper la promesa. La ocupación del cuerpo detenido protege el paso aun tras cancelar su intención. |
+| Invalidar y reanudar por eventos | El log revoca la ruta, el mismo slot retiene el sufijo y su estado, y el comando nativo de reanudación lo readmite tras probar las nuevas dependencias. Fallar no pierde geometría ni publica una ruta parcial. |
+| Conservar locomoción y arquitectura | Offsets nativos preservan distancia/fases/carrera; misma tarea/objetivo y cuerpo. No hay planner JS, planificador duplicado, polling de rutas o validación geométrica durante los avances ordinarios. |
+
+El caso integrado de aceptación recorre dos puertas inicialmente cerradas,
+suspende ante la segunda tras cruzar la primera, identifica el sufijo exacto,
+rechaza reanudar con un muro en el futuro y, tras retirarlo por evento, readmite
+y alcanza el final. Conserva los estados de locomoción y la llegada permite el
+fin nativo. Los **300 avances ordinarios** no incrementan trabajo de geometría,
+sensores, barridos ni consultas de planificación. Repetir el mismo registro de
+comandos en otra instancia WASM da el mismo resultado normalizado de autoridad.
+
+Evidencia persistida: `performance/native-gate-crossing-resume-20261109.json`.
+Reproducción: `tests/spatial-native-gate-route-acceptance.test.js`. Complementan
+las 16 pruebas de admisión, 12 de suspensión/reanudación y cuatro de inversión
+de reloj: materiales, varias puertas, promesas compartidas, tareas, tráfico
+anticipado, geometría rechazada, cancelación dentro del paso, resets y tokens
+obsoletos. Standalone/pthread reconstruidos; **479 dirigidas + 39 + 74** aprobadas
+sin skips. Logs `.cache/native-gate-e-r2-regression.tap`,
+`.cache/native-gate-e-r2-legacy-stream-geometry.tap` y
+`.cache/native-gate-e-r2-legacy-recipe.tap`. No se declara limpia toda la suite.
+
+### Límites que no se confunden con el cierre
+
+La API anterior de candidatos sigue sin admitir. La admisión nueva diferencia
+`nativeCrossingAdmitted:true` de permisos de producto/GPU que continúan falsos.
+El ejecutor y sus comandos se validaron realmente en WASM, no con personajes
+dibujados. No es aceptación de e-R4, de fallos/relevo ni del reloj físico/gráfico.
+Tampoco persiste fases entre acciones/guardados, produce rutas nuevas compatibles
+con todos los conectores del planner heredado o resuelve todo el tráfico. Esas
+dependencias ya pertenecían a A6-01/02/03, e-R3/e-R4 y f; no se añaden nuevos IDs.
+
+Las reservas se liberan en eventos, no al vencer un timer. El cierre posterior
+requiere liberación y prueba de ocupación/trayectorias; no se programa un cierre
+a ciegas sobre el destino retenido. La integración de esos eventos con el juego
+y guardado sigue en e-R3. Antes de activarla se debe resolver la frontera causal
+f-R1 y el resto de coordinación pendiente.
+
+**Cerrado en este turno: A6-04.e-R2.** Tablero fijo: e-R1/e-R2 cerrados;
+**e-R3, e-R4 y f-R1–R4 pendientes (2 cerrados, 6 pendientes)**. Los padres e/f
+siguen parciales y los 11 puntos principales A6 abiertos. Siguiente bloqueo:
+f-R1, frontera causal de tiempo y comandos.

@@ -48,10 +48,11 @@ camino crítico sin pedir autorización rutinaria entre hitos.
 Seguimiento por IDs acordados: [checklist A6-01–A6-11](A6-CHECKLIST.md).
 La [vista de entrega y pendientes fijos](A6-CHECKLIST.md#vista-de-entrega-y-pendientes-fijos)
 separa componentes implementados de producto integrado: e/f siguen sin cerrar,
-con ocho entregables identificados como e-R1–R4 y f-R1–R4: **e-R1 cerrado,
-siete pendientes**. e-R2 ya tiene admisión nativa opt-in por puertas inicialmente
-cerradas, protección de reservas y suspensión/reanudación del sufijo con offsets
-nativos. Sigue parcial por la composición con un cierre previo en marcha. No se
+con ocho entregables identificados como e-R1–R4 y f-R1–R4: **e-R1/e-R2 cerrados,
+seis pendientes**. e-R2 incluye admisión nativa opt-in por puertas inicialmente
+cerradas, protección de reservas, composición con cierre previo y suspensión/
+reanudación del sufijo con offsets nativos. La aceptación reproducible no activa
+producto/GPU ni cierra e-R3/e-R4/f. Siguiente dependencia: f-R1. No se
 sumarán esos niveles ni se usarán tests/commits como porcentaje de finalización.
 
 - [x] Auditar propietarios y reabrir A6; commits `e213c43f9`–`8892bbe80`.
@@ -131,13 +132,15 @@ sumarán esos niveles ni se usarán tests/commits como porcentaje de finalizaci�
       contrastadas en cinco estados con las consultas físicas nativas. No se
       cambian mallas/bisagras ni se ignoran regiones ocupadas por solapamiento.
       Apoyo no plano/desconocido y estados visuales no soportados rechazan.
-      Faltan futuras solicitudes de apertura, leases de cruce,
-      recuperación y conexión por eventos. `authorizedPassage:false`.
-      Esperas iniciales e intermedias en el mismo timetable, con nudos completos
-      de llegada/salida y cambio de velocidad, sin gasto de fases/carrera durante
-      cada parada. Solo utiliza relojes de apertura ya certificados, sin inventar
-      solicitudes futuras. Candidato no reservable/ejecutable. No se instala
-      aún un permiso de cruce ni se activa movimiento de producto.
+      e-R2 cerrado: admisión nativa atómica por puertas inicialmente cerradas,
+      aperturas futuras y leases de cruce, conservando un cierre previo hasta
+      su inversión. El mismo ejecutor recorre la ruta; una invalidación retiene
+      el sufijo y lo readmite por evento sin planner ni reiniciar fases/carrera.
+      El escenario integrado se reproduce determinísticamente con dos puertas,
+      suspensión, reanudación rechazada por obstáculo, retirada y llegada.
+      Faltan integración con entidades, consecuencias, guardado/recuperación y
+      coordinación causal con todos los dibujantes. `authorizedPassage:false`
+      sigue significando sin permiso de producto/GPU, no que falte admisión nativa.
       Tres auditorías WASM/WebGPU reproducen posición y fases/presupuesto del
       timetable con una espera intermedia y reanudación, un paquete por ejecución,
       dos bloqueos de 500 ms y 15 dibujos por bloqueo. Sin personajes ni ejecución
@@ -154,8 +157,8 @@ sumarán esos niveles ni se usarán tests/commits como porcentaje de finalizaci�
       mientras se espera, manteniendo 15 dibujos durante cada bloqueo de 500 ms.
       Faltan transacción genérica para las otras mutaciones, integración física/
       recursos de puerta, consumidores/relevo y reloj causal. No hay permiso de
-      cruce ni aceptación con personajes.
-      Quedan e/f de A6-04; siete entregables del desglose. 446 dirigidas
+      cruce de producto/GPU ni aceptación con personajes.
+      Quedan e/f de A6-04; seis entregables del desglose. 479 dirigidas
       + 39 y 74 heredadas pasan sin skips. No se marca e como terminado.
 - [ ] Vertical AttackCrops completa y aceptación real A–F (primer caso integrado,
       no cierre de A6 por sí solo).

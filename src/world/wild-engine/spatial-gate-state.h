@@ -7,6 +7,10 @@ struct NativeGate {
   uint64_t id=0;
   double x=0,z=0,yaw=0,sx=1,sz=1,hx=0,hz=0,trigger=0;
   double from=0,target=0,at=0;
+  // A future request retains the already-authorized closing clock until `at`.
+  // One gate-local prefix, not another motor controller or a global scheduler.
+  bool precedingMotor=false;
+  double precedingFrom=0,precedingTarget=0,precedingAt=0;
   bool defined=false,requested=false,occupied=false;
   bool bodySweepCertified=false;
   bool staticSweepCertified=false;

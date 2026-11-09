@@ -8,7 +8,7 @@ GateSweepAnswer gateSweepStaticPair(IntentState& s,const NativeGate& gate,
   const double scale=std::max({std::abs(gate.x),std::abs(gate.z),std::abs(shape.minX),
     std::abs(shape.minZ),std::abs(shape.maxX),std::abs(shape.maxZ)}),error=gateStaticError(gate,scale);
   return gateSweepIntervals(gateMotionKnots(gate),begin,end,
-    gate.from==gate.target?0:gateLeafSpeedBound(gate),[&](double at){
+    gateHasMotion(gate)?gateLeafSpeedBound(gate):0,[&](double at){
       const auto leaf=gateCollisionLeaf(gate,at);s.gateStaticEvaluations++;
       return spatialGateShapeDistance(leaf.data(),int(leaf.size()/2),shape)-error;
     });
@@ -17,7 +17,7 @@ GateSweepAnswer gateSweepLeafPair(IntentState& s,const NativeGate& a,const Nativ
   s.gateStaticPairs++;
   const double scale=std::max({std::abs(a.x),std::abs(a.z),std::abs(b.x),std::abs(b.z)}),
     error=gateStaticError(a,scale)+gateStaticError(b,scale),
-    speed=(a.from==a.target?0:gateLeafSpeedBound(a))+(b.from==b.target?0:gateLeafSpeedBound(b));
+    speed=(gateHasMotion(a)?gateLeafSpeedBound(a):0)+(gateHasMotion(b)?gateLeafSpeedBound(b):0);
   auto times=gateMotionKnots(a);const auto other=gateMotionKnots(b);times.insert(times.end(),other.begin(),other.end());
   return gateSweepIntervals(std::move(times),begin,end,speed,[&](double at){
     const auto p=gateCollisionLeaf(a,at),q=gateCollisionLeaf(b,at);s.gateStaticEvaluations++;
@@ -26,7 +26,7 @@ GateSweepAnswer gateSweepLeafPair(IntentState& s,const NativeGate& a,const Nativ
 }
 GateSweepAnswer gateSweepFixedPolygon(IntentState& s,const NativeGate& gate,const std::vector<double>& polygon,double begin,double end){
   s.gateStaticPairs++;const double error=gateStaticError(gate,std::max(std::abs(gate.x),std::abs(gate.z)));
-  return gateSweepIntervals(gateMotionKnots(gate),begin,end,gate.from==gate.target?0:gateLeafSpeedBound(gate),[&](double at){
+  return gateSweepIntervals(gateMotionKnots(gate),begin,end,gateHasMotion(gate)?gateLeafSpeedBound(gate):0,[&](double at){
     const auto leaf=gateCollisionLeaf(gate,at);s.gateStaticEvaluations++;
     return spatialNativePolygonPairDistance(leaf.data(),int(leaf.size()/2),polygon.data(),int(polygon.size()/2))-error;
   });

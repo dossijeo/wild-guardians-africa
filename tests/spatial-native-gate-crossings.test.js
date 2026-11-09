@@ -219,12 +219,15 @@ test('releasing an arrived route permits a later native close event only when it
  }finally{f.session.dispose();}
 });
 
-test('an active closing motor is explicitly unsupported instead of silently frozen until a future request',()=>{
+test('an active closing motor continues until a future opening request instead of being frozen prematurely',()=>{
  const f=setup({opening:1});try{
   assert.equal(f.service.prepareMotion().status,'prepared');const before=f.service.read(f.gates[0].id);
   assert.equal(before.opening,1);assert.equal(before.target,0);
-  const r=f.route(),sequence=f.w.nav_intent_transition_sequence();assert.equal(f.admit(r).status,'unsupported');
-  assert.deepEqual(f.service.read(f.gates[0].id),before);assert.deepEqual(f.bridge.routePoints(r.handle),r.points);
-  assert.equal(f.w.nav_intent_transition_sequence(),sequence);assert.equal(f.w.nav_intent_route_reservation_count(),0);
+  const r=f.route(),result=f.admit(r);assert.equal(result.status,'admitted');const clock=f.service.read(f.gates[0].id);
+  assert(clock.at>before.endsAt);assert.equal(clock.opening,1);assert.equal(f.bridge.beginNativeRouteExecution().status,'started');
+  assert.equal(f.advance(10.3).status,'advanced');near(f.service.read(f.gates[0].id).opening,.5);
+  assert.equal(f.advance(10.6).status,'advanced');assert.equal(f.service.read(f.gates[0].id).opening,0);
+  assert.equal(f.advance(clock.at+.3).status,'advanced');near(f.service.read(f.gates[0].id).opening,.5);
+  assert.equal(f.advance(result.motionPlan.endTime).status,'advanced');assert.equal(f.bridge.nativeRouteExecution(result.routeHandle).arrived,true);
  }finally{f.session.dispose();}
 });

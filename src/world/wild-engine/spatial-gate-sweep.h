@@ -40,7 +40,7 @@ GateSweepAnswer gateSweepPair(IntentState& s,const NativeGate& gate,const Reserv
   s.gateSweepPairs++;
   if(!std::isfinite(radius)||radius<0)return {false,2,begin,end};
   const double bodySpeed=path.route?std::max(path.route->speed,path.route->runSpeed):0,
-    speed=(gate.from==gate.target?0:gateLeafSpeedBound(gate))+bodySpeed;
+    speed=(gateHasMotion(gate)?gateLeafSpeedBound(gate):0)+bodySpeed;
   std::vector<double> times;reservationKnots(path,begin,times);
   const auto motor=gateMotionKnots(gate);times.insert(times.end(),motor.begin(),motor.end());
   return gateSweepIntervals(std::move(times),begin,end,speed,[&](double at){

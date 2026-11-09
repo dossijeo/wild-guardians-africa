@@ -16,6 +16,7 @@ int proposeGateMotion(IntentState& s,int enabled,std::map<uint64_t,NativeGate>& 
     gate.staticSweepCertified=false;
     if(gate.status!=2&&!gate.defined)return -2;
     const double current=gateOpening(gate,s.effectiveTime);
+    gate.precedingMotor=false;
     if(!enabled||gate.status==1){gate.from=gate.target=current;gate.at=s.effectiveTime;
       if(!gateSweepBodies(s,gate)){s.gateSweepRejected++;return -3;}continue;}
     if(gate.status==2){gate.from=gate.target=0;gate.at=s.effectiveTime;gate.defined=true;continue;}

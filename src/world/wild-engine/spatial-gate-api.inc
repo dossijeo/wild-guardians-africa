@@ -44,13 +44,14 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_reconcile(int enabled){
       // Uncertainty cannot leave a previous closing/opening target running.
       // Freeze the whole boundary at its current pose before reporting failure.
       cancelGateMotionProposal(s);
-      for(auto& [otherId,other]:s.gates){other.from=other.target=gateOpening(other,s.effectiveTime);other.at=s.effectiveTime;other.bodySweepCertified=false;other.staticSweepCertified=false;}
+      for(auto& [otherId,other]:s.gates){other.from=other.target=gateOpening(other,s.effectiveTime);other.at=s.effectiveTime;other.precedingMotor=false;other.bodySweepCertified=false;other.staticSweepCertified=false;}
       updateGateStaticDomain(s);
       return -2;
     }facts.emplace(id,value);}
   cancelGateMotionProposal(s);s.gateBoundaries++;
   for(auto& [id,gate]:s.gates){
     double current=gateOpening(gate,s.effectiveTime);gate.bodySweepCertified=false;gate.staticSweepCertified=false;
+    gate.precedingMotor=false;
     if(!enabled){gate.from=gate.target=current;gate.at=s.effectiveTime;continue;}
     if(gate.status==2){gate.from=gate.target=0;gate.defined=true;gate.at=s.effectiveTime;continue;}
     if(gate.status!=0){gate.from=gate.target=current;gate.at=s.effectiveTime;continue;}
@@ -142,6 +143,7 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_route_sweep(double id,double session,double sl
      nav_intent_route_points(session,slot,generation)<0)return -1;
   const auto& route=s.routeSlots[size_t(slot)];if(!route.timingMode)return -1;
   auto proposal=s.gates.at(uint64_t(id));proposal.from=gateOpening(proposal,s.effectiveTime);proposal.target=target;proposal.at=s.effectiveTime;
+  proposal.precedingMotor=false;
   const auto answer=gateSweepPair(s,proposal,{&route},route.radius,s.effectiveTime,
     s.effectiveTime+std::abs(target-proposal.from)*nativeGateMoveSeconds);
   if(!answer.clear)s.gateSweepResult={id,0,answer.from,answer.to,double(answer.reason),0};return answer.clear?1:0;
