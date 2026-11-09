@@ -4,7 +4,7 @@
 bool executionBindingCoherent(const IntentState& s,uint64_t body,uint32_t slot){
   if(slot>=s.routeSlots.size())return false;
   const auto& route=s.routeSlots[slot];const auto active=s.activeIntents.find(route.actor);
-  return route.active&&route.reserved&&route.reservationBody==body&&route.timingMode&&
+  return route.active&&route.reserved&&!route.gateCandidate&&route.reservationBody==body&&route.timingMode&&
     active!=s.activeIntents.end()&&active->second.state==PlanningState::RouteActive&&
     active->second.slot==slot&&active->second.generation==route.generation&&
     (active->second.animal||s.workers.count(route.actor));

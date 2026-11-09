@@ -14,6 +14,7 @@ void reservationKnots(const ReservationPath& path,double now,std::vector<double>
   if(!path.route)return;
   const auto& route=*path.route;
   if(route.startTime>now)times.push_back(route.startTime);
+  if(route.departureTime>now)times.push_back(route.departureTime);
   for(double distance:route.distances){
     const double at=routeTimeAtDistance(route,distance);
     if(at>now)times.push_back(at);

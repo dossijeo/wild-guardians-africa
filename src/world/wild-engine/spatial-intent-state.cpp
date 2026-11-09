@@ -145,6 +145,7 @@ struct RouteSlot {
   // Modes 1 (animal walk) / 2 (worker rules) are static candidates, not autonomy.
   std::vector<double> distances;
   double originX=0,originZ=0,startTime=0,speed=0,radius=0;
+  double departureTime=0;uint64_t waitGate=0;bool gateCandidate=false;
   uint64_t actor=0;
   int timingMode=0,profile=0;
   int motionFlags=0;double runDistance=0,runSpeed=0,runBudget=0;
@@ -222,6 +223,7 @@ struct IntentState {
   std::vector<double> controlSnapshot;
   std::array<double,10> intentResult{};
   std::array<double,20> timingResult{};
+  std::array<double,3> holdResult{};
   std::array<double,18> sampleResult{};
   uint64_t routeTimeSamples=0;
   int timingRejection=0;
@@ -426,6 +428,7 @@ void releaseRoute(IntentState& s,ActiveIntent& intent){
         s.reservedBodies.erase(route.reservationBody);route.reserved=false;
       }
       route.active=false;route.points.clear();route.distances.clear();route.timingMode=0;
+      route.waitGate=0;route.gateCandidate=false;route.departureTime=0;
       route.generation++;
     }
   }
@@ -1616,6 +1619,7 @@ int nav_intent_commit(){
 // Ordinary movement and ticks do not invoke the planner or emit rows.
 EMSCRIPTEN_KEEPALIVE int nav_intent_protocol_version(){return intentProtocolVersion;}
 int nav_intent_route_points(double,double,double);
+int nav_intent_route_timing(double,double,double);
 #include "spatial-gate-api.inc"
 EMSCRIPTEN_KEEPALIVE int nav_intent_change_width(){return intentChangeWidth;}
 EMSCRIPTEN_KEEPALIVE uint32_t nav_intent_session(){return state().session;}
@@ -1729,6 +1733,13 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_route_timing(double session,double slot,doub
   return 1;
 }
 EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_timing_ptr(){return state().timingResult.data();}
+EMSCRIPTEN_KEEPALIVE int nav_intent_route_hold_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int nav_intent_route_initial_hold(double session,double slot,double generation){
+  auto& s=state();s.holdResult.fill(0);if(nav_intent_route_points(session,slot,generation)<0)return -1;
+  const auto& route=s.routeSlots[size_t(slot)];if(!route.timingMode||!route.waitGate)return 0;
+  s.holdResult={double(route.waitGate),route.startTime,route.departureTime};return 1;
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_initial_hold_ptr(){return state().holdResult.data();}
 EMSCRIPTEN_KEEPALIVE int nav_intent_route_timing_width(){return 20;}
 EMSCRIPTEN_KEEPALIVE int nav_intent_route_sample_width(){return 18;}
 EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_distances_ptr(double session,double slot,double generation){
@@ -1790,7 +1801,7 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_route_reserve(double session,double slot,dou
   if(!integer(body,true)||nav_intent_route_points(session,slot,generation)<0)return -1;
   auto& route=s.routeSlots[size_t(slot)];
   const auto found=s.activeIntents.find(route.actor);
-  if(!route.timingMode||found==s.activeIntents.end()||found->second.state!=PlanningState::RouteActive||
+  if(!route.timingMode||route.gateCandidate||found==s.activeIntents.end()||found->second.state!=PlanningState::RouteActive||
      found->second.slot!=uint32_t(slot)||found->second.generation!=uint32_t(generation))return -2;
   if(route.reserved)return route.reservationBody==uint64_t(body)?1:-3;
   if(s.executionEnabled&&s.executionWorldStamp!=executionWorldStamp())return -2;

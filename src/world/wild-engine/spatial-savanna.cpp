@@ -1663,6 +1663,9 @@ double spatialNativePolygonDistance(const double* xy,int count,double x,double z
   return best;
 }
 void spatialGateSupportChanged(){++overlayRevision;}
+int spatialGateCandidateSegmentClear(double x,double z,double nx,double nz,double radius){
+  return executionSegmentClear(x,z,nx,nz,radius,true);
+}
 
 // Main-thread-only staging buffer; workers never access eviction requests.
 static std::vector<int32_t> chunkRemovalInput;

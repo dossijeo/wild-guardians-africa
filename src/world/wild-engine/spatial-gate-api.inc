@@ -104,3 +104,48 @@ EMSCRIPTEN_KEEPALIVE const double* nav_gate_sweep_result_ptr(){return state().ga
 EMSCRIPTEN_KEEPALIVE double nav_gate_sweep_pairs(){return double(state().gateSweepPairs);}
 EMSCRIPTEN_KEEPALIVE double nav_gate_sweep_evaluations(){return double(state().gateSweepEvaluations);}
 EMSCRIPTEN_KEEPALIVE double nav_gate_sweep_rejected(){return double(state().gateSweepRejected);}
+
+// Initial gate wait on the SAME route/timetable. Native geometry and the
+// certified opening clock choose the hold, never JS route tests or a scheduler.
+// This is deliberately an unadmitted candidate: frame/world contacts and crossing
+// leases must be implemented before it can be reserved or executed.
+EMSCRIPTEN_KEEPALIVE int nav_gate_prepare_waiting_route(double session,double slot,
+    double generation,double radius,int flags,double runBudget){
+  auto& s=state();s.timingRejection=0;
+  if(nav_intent_route_points(session,slot,generation)<0)return -1;
+  auto& old=s.routeSlots[size_t(slot)];const auto found=s.activeIntents.find(old.actor);
+  if(found==s.activeIntents.end()||found->second.animal||found->second.slot!=uint32_t(slot)||
+     found->second.generation!=uint32_t(generation)||found->second.state!=PlanningState::RouteActive||
+     old.reserved||found->second.routeCursor||old.points.empty()||s.effectiveTime!=found->second.assignedAt)return -2;
+  const auto worker=s.workers.find(found->first);SpatialBodyView body;
+  if(worker==s.workers.end()||!gateBody(worker->second,body)||!(body.flags&1)||body.r!=radius||
+     body.x!=old.originX||body.z!=old.originZ||bool(body.flags&2)!=bool(flags&32))return -2;
+  double departure=s.effectiveTime;uint64_t waitGate=0;
+  for(const auto& [id,gate]:s.gates){
+    if(gate.status==2||std::hypot(body.x-gate.x,body.z-gate.z)>gate.trigger)continue;
+    const double opening=gateOpening(gate,s.effectiveTime),ahead=std::max(4.0,gate.trigger+1);
+    const bool waiting=(gateRouteHits(s,worker->second,body,gate.closed,ahead)&&(gate.status!=0||opening<1))||
+      (opening>0&&opening<1&&gateRouteHits(s,worker->second,body,gate.swing,ahead));
+    if(!waiting)continue;
+    if(!gate.defined||!gate.bodySweepCertified||gate.status!=0||gate.target!=1)return -2;
+    const double until=gate.at+std::abs(gate.target-gate.from)*nativeGateMoveSeconds;
+    if(until>departure){departure=until;waitGate=id;}
+  }
+  if(!waitGate)return -2;
+  const int previous=lazy_selected_context();
+  if(previous!=found->second.profile)spatial_select_nav_profile_index(found->second.profile);
+  RouteSlot candidate;candidate.points=old.points;
+  const int result=prepareRouteTiming(candidate,found->first,body.x,body.z,s.effectiveTime,
+    radius,2,flags,runBudget,true,departure);
+  const uint32_t topology=lazy_route_revision();
+  if(previous!=found->second.profile)spatial_select_nav_profile_index(previous);
+  recordTimingResult(s,result);if(result!=1)return -7;
+  candidate.waitGate=waitGate;
+  releaseRoute(s,found->second);candidate.active=true;candidate.generation=old.generation+1;
+  if(!candidate.generation)candidate.generation=1;
+  old=std::move(candidate);auto& intent=found->second;
+  intent.slot=uint32_t(slot);intent.generation=old.generation;intent.topology=topology;
+  intent.routeStartX=float(body.x);intent.routeStartZ=float(body.z);intent.routeCursor=0;
+  intent.timingMode=2;intent.timingRadius=radius;intent.motionFlags=flags;intent.runBudget=runBudget;
+  emitIntentChange(s,intent);nav_intent_route_timing(session,slot,double(old.generation));return 1;
+}

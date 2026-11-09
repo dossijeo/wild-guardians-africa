@@ -116,9 +116,12 @@ Seguimiento por IDs acordados: [checklist A6-01–A6-11](A6-CHECKLIST.md).
       A6-04.e parcial: geometría, sensores/espera y reloj de puertas nativos;
       barrido continuo contra cuerpos y candidatos temporales, con preparación
       atómica y fences de altas/mutaciones hasta la pose final. Faltan contactos
-      con marcos/mundo estático, holds de trayectoria, leases de cruce,
+      con marcos/mundo estático, holds posteriores de trayectoria, leases de cruce,
       recuperación y conexión por eventos. `authorizedPassage:false`.
-      Quedan e/f de A6-04; 367 dirigidas
+      Espera inicial nativa de puerta en el mismo timetable, sin consumo de fases
+      o carrera, disponible como candidato no reservable/ejecutable. No se instala
+      aún un permiso de cruce ni se activa movimiento de producto.
+      Quedan e/f de A6-04; 375 dirigidas
       + 39 y 74 heredadas pasan sin skips. No se marca e como terminado.
 - [ ] Vertical AttackCrops completa y aceptación real A–F (primer caso integrado,
       no cierre de A6 por sí solo).

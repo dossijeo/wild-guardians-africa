@@ -149,13 +149,13 @@ int executionSolids(ExecutionPoint a,ExecutionPoint b,double radius){
 }
 // 1 continuous static clearance, 0 blocked/unproven, -1 missing resident data,
 // -2 unsupported execution class, -3 invalid request. Never authorizes traffic.
-int executionSegmentClear(double x,double z,double nx,double nz,double radius){
+int executionSegmentClear(double x,double z,double nx,double nz,double radius,bool gateCandidate=false){
   executionClearanceChecks++;
   if(!navReady||!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(nx)||!std::isfinite(nz)||
      std::max({std::abs(x),std::abs(z),std::abs(nx),std::abs(nz)})>=2147483000.0||
      !std::isfinite(radius)||radius<=0||radius>2||std::abs(radius-radiusNow)>1e-6)return -3;
   if(worldBiome!=1)return -2;
-  if(spatialIntentGateUnsupported(x,z,nx,nz,radius))return -2;
+  if(!gateCandidate&&spatialIntentGateUnsupported(x,z,nx,nz,radius))return -2;
   const double length=std::hypot(nx-x,nz-z);if(length>10000)return -2;
   const float coordinate=float(std::max({1.0,std::abs(x),std::abs(z),std::abs(nx),std::abs(nz)})+radius+3);
   const double rounding=std::max(1e-7,double(std::nextafter(coordinate,std::numeric_limits<float>::infinity())-coordinate)),

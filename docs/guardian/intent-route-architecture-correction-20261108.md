@@ -884,3 +884,47 @@ prueba contra marcos, otras hojas, props o terreno. Cruces siguen no soportados:
 `authorizedPassage:false`. Holds, leases de cruce, recuperación, eventos de
 producto y frontera causal con ACK/dibujo siguen pendientes. No se cierran e/f,
 ni se activa autonomía GPU o se sustituye `gates.js`.
+
+### Espera inicial de puerta en el timetable (candidato, A6-04.e)
+
+`RouteSlot` incorpora un instante de salida diferente de su asignación. El mismo
+evaluador temporal mantiene el origen hasta esa salida, avanza después por la
+polilínea fijada y conserva yaw, fases de marcha/carrera/carga y presupuesto.
+La duración total incluye la espera; la fase de locomoción y el gasto de carrera
+no. Los nudos de reservas incluyen la salida, sin introducir scheduler o planner
+alternativo. Rutas sin espera conservan sus reglas anteriores. El ABI de muestras
+sigue de ancho 18 y el de timing de ancho 20; la capacidad de hold versión 1
+expone por separado puerta, inicio y fin.
+
+`nav_gate_prepare_waiting_route` recibe las mismas políticas de locomoción que la
+preparación común. **No recibe tiempos, duración ni selección de puerta desde JS**:
+el nativo consulta la geometría/ruta y motores cercanos ya certificados, elige el
+último final de apertura y construye el hold inicial. No retima una curva reservada,
+ya recorrida o de una asignación anterior. Falta de binding/certificado, cierre,
+pausa o pose indefinida rechazan sin tocar generación/ruta.
+
+Esta preparación comprueba el mundo estático mediante el kernel existente; solo
+omite la frontera de capacidad circular de las puertas registradas. No omite
+muros, polígonos, terreno, props, ni el rechazo de overlays worker-passable sin
+propietario modelado. **No se toma como prueba física completa:** lleva
+`gateCandidate=true`, scope `unadmitted-desert-gate-candidate`,
+`authorizedPassage:false` y `authorizedAutonomy:false`. Tanto reserva como
+ejecución nativas lo rechazan, también después de terminar el hold. El evaluador
+de candidatos no escribe posiciones físicas. No basta esperar 0,6 s para abrir
+un permiso inseguro.
+
+La sustitución revoca exactamente la generación anterior y publica el timetable
+nuevo en el mismo slot. No cambia tarea/objetivo, no vuelve a pedir una ruta y
+muestrearlo no repite clearance, sensores, barridos o planificación. No hay todavía
+holds a distancia para puertas posteriores ni offsets persistentes entre
+intenciones; tampoco leases que impidan cerrar sobre un cruce admitido.
+
+Ocho pruebas WASM: identidad/revocación y geometría conservadas; marcha, carrera
+limitada, carga, huida lenta/incapacitada y recuperación sin gasto durante espera;
+prohibición de reserva/ejecución antes y después de abrir; hechos incompletos,
+parada y conversión tardía; bloqueo por muro y rechazo de paso automático sin
+ownership; selección de varios motores y mil muestras sin trabajo geométrico.
+Standalone/pthread reconstruidos; **375 dirigidas + 39 de streaming/geometría +
+74 de receta/estado**, todas aprobadas sin skips. Logs `native-gate-waits-*.tap`
+en `.cache`. Siguen abiertos A6-04.e/f y los once puntos principales: no hay
+aceptación real de cruce de personajes ni ACK causal de mutaciones físicas.

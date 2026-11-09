@@ -53,6 +53,9 @@ test('pthread runtime exposes the same native transition ABI as standalone',asyn
     assert.equal(world.core.wasm.nav_gate_version(),1);
     assert.equal(world.core.wasm.nav_gate_state_width(),14);
     assert.equal(world.core.wasm.nav_gate_sweep_version(),1);
+    assert.equal(world.core.wasm.nav_intent_route_hold_version(),1);
+    for(const name of ['nav_intent_route_initial_hold','nav_intent_route_initial_hold_ptr','nav_gate_prepare_waiting_route'])
+      assert.equal(typeof world.core.wasm[name],'function',name);
     for(const name of ['nav_gate_prepare_motion','nav_gate_body_sweep_certified','nav_gate_route_sweep',
       'nav_gate_sweep_result_ptr','nav_gate_sweep_pairs','nav_gate_sweep_evaluations','nav_gate_sweep_rejected'])
       assert.equal(typeof world.core.wasm[name],'function',name);

@@ -518,12 +518,15 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     if(data[0]!==1||![1,2].includes(data[10])||!Number.isSafeInteger(count)||count<0||count>4096)
       throw Error('Invalid native route timing contract');
     const points=routePoints(handle),distances=Float64Array.from(new Float64Array(wasm.memory.buffer,
-      wasm.nav_intent_route_distances_ptr(handle.session,handle.slot,handle.generation),count));
+       wasm.nav_intent_route_distances_ptr(handle.session,handle.slot,handle.generation),count));
     if(!points||points.length!==count*2)throw Error('Native route timing lost its pinned geometry');
+    const held=wasm.nav_intent_route_initial_hold?.(handle.session,handle.slot,handle.generation)===1,
+      hold=held?Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_initial_hold_ptr(),3)):null;
     return Object.freeze({actorId:data[1],routeHandle:handle,startTime:data[2],endTime:data[3],
       speed:data[4],radius:data[5],origin:Object.freeze({x:data[6],z:data[7]}),distance:data[8],
       duration:data[3]-data[2],assignmentSequence:data[11],profile:data[12],points,distances,
-      executionScope:data[10]===2?'static-desert-worker':'static-desert-animal',authorizedAutonomy:false,
+      executionScope:held?'unadmitted-desert-gate-candidate':data[10]===2?'static-desert-worker':'static-desert-animal',authorizedAutonomy:false,
+      ...(held?{initialHold:Object.freeze({gateId:hold[0],from:hold[1],until:hold[2]}),authorizedPassage:false}:{}),
       ...(data[10]===2?{motionMode:'worker',runDistance:data[16],runSpeed:data[17],
         runBudget:data[18],motionFlags:data[19]}:{})});
   };
@@ -572,15 +575,16 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       executedThrough:wasm.nav_intent_effective_time()};
   };
   const prepareNativeRouteMotion=(handle,{radius,urgent=false,flight=false,slow=false,
-    carrying=false,recovering=false,incapacitated=false,runRemaining=0}={})=>{
+    carrying=false,recovering=false,incapacitated=false,runRemaining=0,waitForGates=false}={})=>{
     const facts=[urgent,flight,slow,carrying,recovering,incapacitated];
-    if(facts.some(value=>typeof value!=='boolean')||!Number.isFinite(radius)||radius<=0||radius>2||
+    if(typeof waitForGates!=='boolean'||facts.some(value=>typeof value!=='boolean')||!Number.isFinite(radius)||radius<=0||radius>2||
        !Number.isFinite(runRemaining)||runRemaining<0||runRemaining>1e9)
       throw TypeError('Expected native route motion policy facts');
     if(handle?.authorityEpoch!==epoch())return {status:'stale'};
     syncBoundaryTime();
     const flags=facts.reduce((value,enabled,bit)=>value|(enabled?1<<bit:0),0),
-      status=wasm.nav_intent_route_prepare_motion(handle.session,handle.slot,handle.generation,
+      prepare=waitForGates?wasm.nav_gate_prepare_waiting_route:wasm.nav_intent_route_prepare_motion,
+      status=prepare(handle.session,handle.slot,handle.generation,
         radius,flags,runRemaining);
     if(status!==1)return {status:status===-1?'stale':status===-7?
       ({1:'blocked',2:'unknown',3:'unsupported',4:'invalid'}[wasm.nav_intent_timing_rejection()]??'invalid'):'unsupported'};
