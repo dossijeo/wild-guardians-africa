@@ -42,18 +42,22 @@ ejecutor protegido de producto. A6 incluye todas las intenciones y trabajadores.
   - [ ] **A6-04.e — Puertas móviles.** Hojas, barrido, apertura/cierre y esperas
     autoritativos; la máscara estática no es suficiente.
     **Parcial:** geometría autorada, reloj de 0,6 s, sensores/espera y política
-    nativos implementados como servicio opt-in. Datos incompletos congelan el
-    motor. Barrido continuo hoja/cuerpos y candidatos temporales validado mediante
+    nativos implementados como servicio opt-in. Política incompleta congela el
+    motor; una propuesta transaccional rechazada conserva el anterior. Barrido
+    continuo hoja/cuerpos y candidatos temporales validado mediante
     cotas de distancia/velocidad; preparación atómica y altas/mutaciones de cuerpos
-    protegidas hasta la pose final. No equivale a clearance del mundo completo.
+    protegidas hasta la pose final. Barrido adicional opt-in contra muros,
+    polígonos, props canónicos y otras hojas; protege el giro restante/pose final
+    ante nuevas geometrías y conserva datos residentes. No equivale a clearance
+    del mundo completo, unión física con el marco o contacto 3D con terreno.
     Espera inicial nativa ligada al final de motores certificados: mismo slot,
     nueva generación, fases/presupuesto no avanzan durante el hold. Solo candidato
     sin admisión: reserva y ejecución lo rechazan incluso al abrirse la puerta.
-    Pendientes marcos/obstáculos estáticos, esperas posteriores de la ruta,
+    Pendientes integración física marco/hoja y soporte 3D, esperas posteriores de la ruta,
     reservas/admisión de cruces, recuperación y conexión por eventos con producto.
     `authorizedPassage:false`; los cruces nativos siguen rechazados. Evidencia:
-    11 pruebas de política + 12 de barrido + 8 de espera WASM,
-    375 dirigidas + 39 y 74 heredadas
+    11 pruebas de política + 12 de barrido + 8 de espera iniciales; 20 nuevas de
+    objetos y 2 de coordinación. Batería actual: 419 dirigidas + 39 y 74 heredadas
     sin skips. No hay aún aceptación gráfica de personajes autónomos.
   - [ ] **A6-04.f — Efecto físico/gráfico coordinado.** No hacer efectiva una
     mutación mientras un dibujante pueda cruzar antes de su revocación; depende
@@ -68,6 +72,9 @@ ejecutor protegido de producto. A6 incluye todas las intenciones y trabajadores.
     reservas, mundo, reloj o conexión. Quince pruebas WASM adicionales y cuatro
     auditorías nuevas WASM/WebGPU: tres commits y un rechazo por cambio de cuerpo
     durante la espera, todas con 15 dibujos durante 500 ms de bloqueo.
+    El modo de objetos también participa en staging/commit: otras cuatro
+    auditorías reales verifican tres certificados/vetos de geometría posterior y
+    un rechazo por obstáculo introducido durante la espera, sin repetir clearance.
     No instala collider/recursos de puerta ni concede cruces. Faltan generalizar
     la transacción a otras mutaciones, reloj causal, coordinación completa de
     consumidores/relevo e integración física/gráfica de producto con personajes.
@@ -123,6 +130,10 @@ ejecutor protegido de producto. A6 incluye todas las intenciones y trabajadores.
 - `.cache/native-gate-transactions-legacy-stream-geometry.tap`: 39 aprobadas sin skips.
 - `.cache/native-gate-transactions-legacy-recipe.tap`: 74 aprobadas sin skips.
 - [Transacción de motor y rechazo tras cambio de cuerpo](performance/native-gate-transactions-20261109.json).
+- `.cache/native-gate-objects-regression.tap`: 419 aprobadas sin skips.
+- `.cache/native-gate-objects-legacy-stream-geometry.tap`: 39 aprobadas sin skips.
+- `.cache/native-gate-objects-legacy-recipe.tap`: 74 aprobadas sin skips.
+- [Certificados de objetos y rechazo tras obstáculo nuevo](performance/native-gate-objects-20261109.json).
 
 Quedan **2 de los 6 subpuntos de A6-04**: e y f (parciales).
 Los **11 puntos principales de A6** siguen abiertos; son niveles distintos,

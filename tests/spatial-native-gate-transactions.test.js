@@ -191,3 +191,20 @@ test('cleanup of an old asynchronous receipt cannot cancel a replacement native-
   assert.equal(commit(f,replacement),1);assert.equal(f.w.nav_gate_motion_ticket(),0);
  }finally{c.dispose();f.session.dispose();}
 });
+
+test('an object sweep certificate becomes live only after the current GPU receipt and native commit',async()=>{
+ const f=setup(),c=await controlled(f);try{
+  const pending=f.bridge.prepareNativeGateMotionAfterGpuFence({getPublication:c.getPublication,staticObjects:true});await c.received;
+  assert.equal(f.service.staticObjectsCertified(f.gate.id),false);c.ack();assert.equal((await pending).status,'committed');
+  assert(f.service.staticObjectsCertified(f.gate.id));const p=f.point(.3,.9);assert.equal(f.session.core.addWall(p.x,p.z,.005,.005),0);
+ }finally{c.dispose();f.session.dispose();}
+});
+
+test('an object proposal waiting for GPU receipt does not block a new authoritative obstacle but cannot commit over it',async()=>{
+ const f=setup(),c=await controlled(f);try{
+  const pending=f.bridge.prepareNativeGateMotionAfterGpuFence({getPublication:c.getPublication,staticObjects:true});await c.received;
+  const p=f.point(.3,.9);assert(f.session.core.addWall(p.x,p.z,.005,.005)>0);
+  c.ack();assert.equal((await pending).status,'stale');assert.equal(f.service.staticObjectsCertified(f.gate.id),false);
+  assert.equal(f.service.read(f.gate.id).target,1);
+ }finally{c.dispose();f.session.dispose();}
+});

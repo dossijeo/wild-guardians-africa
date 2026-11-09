@@ -2,8 +2,8 @@
 // data is monotonic; eviction first protects current proof data, then retires
 // future routes depending on it. Both use the existing native inverse indices.
 SpatialStaticTicket residencyMutationBefore(IntentState& s,const SpatialResidencyRegion* regions,int count,bool removing,bool releaseOnly){
-  SpatialStaticTicket ticket;if(!s.bodyDomainActive&&s.reservedBodies.empty())return ticket;
-  ticket.executing=true;ticket.before=executionWorldStamp();ticket.tracked=s.executionWorldStamp==ticket.before;
+  SpatialStaticTicket ticket;if(!s.bodyDomainActive&&s.reservedBodies.empty()&&!s.gateStaticProofs)return ticket;
+  if(!gateStaticMutationStart(s,ticket))return ticket;
   std::vector<SpatialStaticMutation> bounds;bounds.reserve(size_t(count));
   for(int i=0;i<count;i++){
     const auto& r=regions[i];
@@ -14,6 +14,9 @@ SpatialStaticTicket residencyMutationBefore(IntentState& s,const SpatialResidenc
     shape.x=(r.minX+r.maxX)*.5;shape.z=(r.minZ+r.maxZ)*.5;
     shape.halfX=(r.maxX-r.minX)*.5;shape.halfZ=(r.maxZ-r.minZ)*.5;bounds.push_back(shape);
   }
+  if(removing&&!gateStaticRegionPreflight(s,bounds.data(),count,6)){ticket.allowed=false;return ticket;}
+  if(!s.bodyDomainActive&&s.reservedBodies.empty())return ticket;
+  ticket.executing=true;ticket.before=executionWorldStamp();ticket.tracked=s.executionWorldStamp==ticket.before;
   if(!removing)return ticket;
   ticket.allowed=mutationBodiesClear(bounds.data(),count,spatialResidencyDependencyPadding,
     s.residencyBodyChecks,s.residencyRejected);
@@ -30,6 +33,7 @@ SpatialStaticTicket residencyMutationBefore(IntentState& s,const SpatialResidenc
   retireMutationRoutes(s,affected,s.residencyRevocations);return ticket;
 }
 void residencyMutationCommitted(IntentState& s,const SpatialStaticTicket& ticket,int count){
+  if(count>0)gateStaticMutationCommitted(s,ticket,{0,uint64_t(count),0});
   if(!ticket.executing||!ticket.allowed||count<=0)return;
   s.residencyCommits+=uint64_t(count);const auto after=executionWorldStamp();
   if(ticket.tracked&&s.executionEnabled&&s.executionWorldStamp==ticket.before&&

@@ -4,9 +4,11 @@
 #include <cstdint>
 #include <cstring>
 #include <limits>
+#include <map>
 #include <optional>
 #include <set>
 #include <string>
+#include <tuple>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
@@ -1666,6 +1668,7 @@ void spatialGateSupportChanged(){++overlayRevision;}
 int spatialGateCandidateSegmentClear(double x,double z,double nx,double nz,double radius){
   return executionSegmentClear(x,z,nx,nz,radius,true);
 }
+#include "spatial-gate-world.inc"
 
 // Main-thread-only staging buffer; workers never access eviction requests.
 static std::vector<int32_t> chunkRemovalInput;

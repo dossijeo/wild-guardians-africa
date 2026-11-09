@@ -1040,3 +1040,82 @@ extender la propuesta diferida a las otras mutaciones, relacionar recursos y
 todos los consumidores/relevos del runtime, y completar el reloj causal. La fuente
 seleccionada del harness no demuestra por sí sola cobertura de consumidores
 temporales/no registrados. No se cierran A6-04.e/f ni aceptación A–F.
+
+### Barrido de objetos canónicos y otras hojas (incremento de A6-04.e/f)
+
+El modo explícito `staticObjects:true` añade un certificado **de objetos**,
+separado del de cuerpos. `spatial-gate-world.inc` visita los mismos índices de
+barreras/polígonos y listas de props sólidos residentes; no mantiene otro mundo,
+collider store o modelo de navegación. Vistas síncronas, candidatos locales
+ordenados, props deduplicados por identidad canónica. Las máscaras de paso de
+actores no vuelven intangible un objeto para la hoja.
+
+Las distancias hoja/rectángulo orientado, hoja/polígono, hoja/disco canónico y
+hoja/hoja usan los kernels geométricos nativos existentes. Para muros se invierte
+la matriz `c/s` almacenada, sin asumir norma uno de sus columnas float. El mismo
+solver de intervalos sirve ahora para cuerpos y objetos: distancia Lipschitz,
+cota angular/escala y subdivisión adaptativa con presupuesto finito. Otras hojas
+suman sus cotas de velocidad y los fines de ambos motores. La envolvente circular
+solo selecciona candidatos; no se usa como collider del giro. La tolerancia
+incluye snapping en ambas poses y aritmética; incertidumbre rechaza.
+
+Dominio inicial: objetos residentes de Desierto, envolvente de hasta 16 m por eje,
+coordenadas por debajo de 1.000.000 m y hoja no degenerada. Fuera de él retorna
+unsupported, y ausencia de registros residentes retorna unknown: nunca se
+interpreta como espacio vacío. La receta sólida de Desierto alcanza menos de
+7,21 m de radio, dentro del halo canónico de 10 m. No se certifica relieve, agua,
+altura/anclaje de hoja o contacto 3D por comprobar objetos proyectados.
+
+El certificado se instala solo después de completar **todo** el lote de cuerpos,
+objetos y hojas. Altas de muros/polígonos y restauración canónica de props pasan
+por preflight contra el giro restante y la pose final; rechazo precede a IDs,
+índices y datos vivos. Batches no publican sus piezas seguras si otra colisiona.
+Cambios de soporte/datos cercanos o retirada de chunks necesarios se vetan
+conservadoramente. Liberación gráfica no cancela motores para liberar sus datos:
+el frontier de pins nativo despierta la retención al retirar el certificado.
+
+Las transacciones conocidas y ajenas extienden la revisión de la prueba sin
+volver a recorrer geometría. Un cambio de mundo no reconocido no puede seguir
+avanzando su reloj: setters y ejecutor común consultan un único stamp de cohorte,
+no vuelven a validar rutas. Reconciliación solo de política y preparación solo
+de cuerpos retiran el certificado de objetos; no son atajos para concederlo.
+Registro de otra hoja también protege el barrido certificado existente.
+
+La preparación diferida usa el mismo ticket de motor y recibo GPU. Un certificado
+pendiente no veta una mutación autoritativa nueva, pero ese cambio de mundo hace
+obsoleta la propuesta y el commit la rechaza aun con un ACK GPU válido. Una vez
+instalado, el certificado sí protege contra geometría futura interceptada.
+Capability de objetos versión 1 y witness de ocho doubles; los contratos de
+estado de puerta (14), timing (20), muestra (18) y barrido de cuerpos (6) no cambian.
+
+**No se ignoran marcos propios:** tanto los proxies rígidos actuales como los
+polígonos autorados de los tres materiales móviles se comprueban. Las proyecciones
+producen contactos conservadores en la unión de la bisagra y se rechazan. No
+demuestran por sí mismas un defecto en el modelo 3D; falta una regla de unión/
+collider físico autorada y sustituir las envolventes del grafo donde corresponda.
+No se ha inventado una excepción por ID/owner para obtener permiso de cruce.
+
+Veinte pruebas de objetos más dos de coordinación con WASM real cubren contacto
+intermedio con inicio/mitad/fin libres, rectángulos orientados, polígonos y todas
+las máscaras, contención, hoja degenerada, intrusión micrométrica, otras hojas e
+IDs grandes, altas/batches atómicos, pose final, props/restauración, datos/pins,
+terreno remoto y protección de reemplazo del mundo sin cuerpos ejecutándose.
+Standalone/pthread reconstruidos y ABI comprobado. **419 dirigidas + 39 de
+streaming/geometría + 74 de receta/estado**, todas aprobadas sin skips; logs
+`native-gate-objects-*.tap` en `.cache`. No se declara limpia la suite general.
+
+`/tests/browser/native-gate-objects.html` ejecutó cuatro auditorías NVIDIA Turing
+con WASM, publicación y GPU reales: **15 dibujos por bloqueo de
+500,060–500,125 ms**, un paquete preparado, cinco evaluaciones de cuerpo y cinco
+de objeto sin repetirlas al completar el recibo. En tres instala el certificado
+y después veta un obstáculo nuevo que interceptaría el giro; en la cuarta se
+introduce ese obstáculo mientras la propuesta espera y se rechaza el commit.
+Evidencia íntegra descargada del navegador en
+`performance/native-gate-objects-20261109.json`.
+
+Siguen `authorizedPassage:false` y `authorizedAutonomy:false`. El harness dibuja
+un triángulo/readback, no la hoja ni personajes. Faltan unión física del marco,
+collider/recursos de puerta y soporte 3D, esperas posteriores, reservas/admisión
+de cruce y recuperación; también reloj causal, consumidores/relevos de producto,
+las otras mutaciones diferidas y aceptación real con personajes. **e y f siguen
+abiertos**, al igual que los once puntos principales de A6.

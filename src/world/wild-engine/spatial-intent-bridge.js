@@ -8,6 +8,7 @@ import {ANIMAL_SPATIAL_PROFILES} from './spatial-movement-profiles.js';
 import {targetReservationKey} from '../../simulation/raid-target-reservations.js';
 import {actorBlockers} from '../../simulation/actor-motion.js';
 import {wallCollisionFrame} from '../wall-collision-frame.js';
+import {readNativeGateStaticWitness} from './spatial-gate-intents.js';
 import {applyConfirmedTaskAssignments,notifyWorkerPlanningChange,
   observeTaskChanges,releaseTask,replaceTasks} from '../../simulation/tasks.js';
 
@@ -545,11 +546,12 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     return {status:result===1?'clear':result===0?'blocked':'invalid',authorizedPassage:false,
       witness:a[0]?{gateId:a[0],bodyId:a[1],from:a[2],to:a[3],reason:a[4]===1?'overlap':'unproven'}:null};
   };
-  const prepareNativeGateMotionAfterGpuFence=async({getPublication,enabled}={})=>{
+  const prepareNativeGateMotionAfterGpuFence=async({getPublication,enabled,staticObjects=false}={})=>{
     if(!initialized||!owningState)throw Error('Reset the native intent session first');
-    if(typeof getPublication!=='function'||enabled!==undefined&&typeof enabled!=='boolean')
+    if(typeof getPublication!=='function'||enabled!==undefined&&typeof enabled!=='boolean'||typeof staticObjects!=='boolean')
       throw TypeError('Expected current native control publication and gate boundary facts');
     if(wasm.nav_gate_motion_transaction_version?.()!==1)throw Error('Rebuild native gate transaction service');
+    if(staticObjects&&wasm.nav_gate_static_object_version?.()!==1)throw Error('Rebuild native gate static-object service');
     const policy=()=>[!!owningState.pauses?.length,!!owningState.result,!!owningState.initialPreparation],beforePolicy=policy(),
       running=enabled??!beforePolicy.some(Boolean),owner=epoch();
     syncBoundaryTime();flushNativeIntentControl();
@@ -561,8 +563,9 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     // A GPU drain cannot invent a newer logical clock boundary. Until causal
     // clock publication is implemented, only an exact published boundary is used.
     if(control.sentSequence!==sequence||control.sentTime!==at)return outcome('control-boundary-mismatch');
-    const staged=wasm.nav_gate_motion_stage(running?1:0);
-    if(staged!==1)return outcome(staged===-2?'incomplete-facts':staged===-3?'blocked':staged===-4?'busy':'invalid');
+    const staged=(staticObjects?wasm.nav_gate_motion_stage_objects:wasm.nav_gate_motion_stage)(running?1:0);
+    if(staged!==1)return outcome(staged===-2?'incomplete-facts':staged===-3||staged===-8?'blocked':staged===-4?'busy':
+      staged===-6?'unknown':staged===-7?'unsupported':'invalid',staticObjects?{staticWitness:readNativeGateStaticWitness(wasm)}:{});
     if(wasm.nav_gate_motion_ticket()!==1)throw Error('Native gate proposal lost its ticket');
     const [session,ticket,nativeSequence,nativeTime]=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_motion_ticket_ptr(),5));
     try{

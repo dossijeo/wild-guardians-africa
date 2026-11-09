@@ -64,6 +64,8 @@ GateFacts gateFacts(IntentState& s,const NativeGate& gate){
 }
 void acknowledgeGateSupport(IntentState& s,const std::array<uint64_t,3>& before){
   spatialGateSupportChanged();const auto after=executionWorldStamp();
+  if(s.gateStaticProofs&&s.gateStaticWorldStamp==before&&after[0]==before[0]&&after[1]==before[1]&&after[2]==before[2]+1)
+    s.gateStaticWorldStamp=after;
   if(s.executionEnabled&&s.executionWorldStamp==before&&after[0]==before[0]&&after[1]==before[1]&&after[2]==before[2]+1)
     s.executionWorldStamp=after;
 }

@@ -115,8 +115,10 @@ Seguimiento por IDs acordados: [checklist A6-01–A6-11](A6-CHECKLIST.md).
       heredadas pasan sin skips; no se activa autonomía GPU.
       A6-04.e parcial: geometría, sensores/espera y reloj de puertas nativos;
       barrido continuo contra cuerpos y candidatos temporales, con preparación
-      atómica y fences de altas/mutaciones hasta la pose final. Faltan contactos
-      con marcos/mundo estático, holds posteriores de trayectoria, leases de cruce,
+      atómica y fences de altas/mutaciones hasta la pose final. Barrido adicional
+      opt-in de objetos canónicos y otras hojas, con veto previo de obstáculos
+      nuevos/restaurados, retención de datos y extensión dirigida de pruebas.
+      Faltan unión física marco/hoja y terreno 3D, holds posteriores, leases de cruce,
       recuperación y conexión por eventos. `authorizedPassage:false`.
       Espera inicial nativa de puerta en el mismo timetable, sin consumo de fases
       o carrera, disponible como candidato no reservable/ejecutable. No se instala
@@ -128,10 +130,13 @@ Seguimiento por IDs acordados: [checklist A6-01–A6-11](A6-CHECKLIST.md).
       nuevo, solo si siguen vigentes época, reloj, cuerpos, hechos y reservas.
       Cuatro auditorías adicionales reales verifican tres commits y un rechazo
       por cambio de cuerpo durante la espera, con 15 dibujos durante 500 ms.
+      El modo de objetos se liga al mismo ticket/recibo. Cuatro auditorías nuevas
+      verifican tres commits/vetos posteriores y un rechazo por obstáculo nuevo
+      mientras se espera, manteniendo 15 dibujos durante cada bloqueo de 500 ms.
       Faltan transacción genérica para las otras mutaciones, integración física/
       recursos de puerta, consumidores/relevo y reloj causal. No hay permiso de
       cruce ni aceptación con personajes.
-      Quedan e/f de A6-04; 397 dirigidas
+      Quedan e/f de A6-04; 419 dirigidas
       + 39 y 74 heredadas pasan sin skips. No se marca e como terminado.
 - [ ] Vertical AttackCrops completa y aceptación real A–F (primer caso integrado,
       no cierre de A6 por sí solo).

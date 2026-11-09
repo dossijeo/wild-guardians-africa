@@ -73,7 +73,8 @@ export async function auditNativeRuntimeControl(){
 
 // Extends the existing concurrent Worker harness. This checks control transport
 // and real GPU uniforms, not character-model parity or full-route game safety.
-export async function auditNativeRouteControl({gpuFence=false,gateTransaction=false,invalidateGateProposal=false}={}){
+export async function auditNativeRouteControl({gpuFence=false,gateTransaction=false,invalidateGateProposal=false,
+ gateStaticObjects=false,invalidateGateObjectProposal=false}={}){
  const source=await fixtureText('desierto983-d15-partial-state.json.gz'),
   state=deserialize(source),module=await WebAssembly.compileStreaming(fetch('/src/world/wild-engine/spatial-savanna.wasm'));
  state.workers=[];state.plants=[];state.tasks=[];state.crates=[];state.spells=[];state.elapsed=10;
@@ -121,6 +122,8 @@ export async function auditNativeRouteControl({gpuFence=false,gateTransaction=fa
    if(gates&&!gates.register(gate))throw Error('Could not register native gate proposal fixture');
    if(gates&&session.core.wasm.spatial_body_upsert(990077,gate.x+.3,gate.z-.9,.02,1,1)!==1)
     throw Error('Could not register the native sweep body');
+   if(gateStaticObjects&&session.core.addOrientedBarrier(gate.x+.4,gate.z-.7,.005,.005,.73,0)<=0)
+    throw Error('Could not register the native static sweep object');
   // Match product ownership: preparation and draw are sibling Workers owned by
   // the Window, so the draw Worker has the document's animation-frame provider.
    drawWorker.postMessage({type:'init',canvas:offscreen,port:resources.port2,
@@ -142,17 +145,29 @@ export async function auditNativeRouteControl({gpuFence=false,gateTransaction=fa
    if(!gateTransaction)control.port1.postMessage(revocation);
    let transaction=null;
    if(gateTransaction){
-    const before=gates.read(gate.id),pending=bridge.prepareNativeGateMotionAfterGpuFence({getPublication:()=>publication}),
-     staged=gates.read(gate.id),checks=[session.core.wasm.nav_gate_worker_checks(),session.core.wasm.nav_gate_sweep_evaluations(),session.core.wasm.nav_intent_route_queries()];
-    if(session.core.wasm.nav_gate_motion_ticket()!==1||JSON.stringify(before)!==JSON.stringify(staged)||checks[1]<1)
+    const before=gates.read(gate.id),pending=bridge.prepareNativeGateMotionAfterGpuFence({getPublication:()=>publication,staticObjects:gateStaticObjects}),
+     staged=gates.read(gate.id),checks=[session.core.wasm.nav_gate_worker_checks(),session.core.wasm.nav_gate_sweep_evaluations(),session.core.wasm.nav_intent_route_queries(),
+      ...(gateStaticObjects?[session.core.wasm.nav_gate_static_evaluations(),session.core.wasm.nav_gate_static_pairs()]:[])];
+    if(session.core.wasm.nav_gate_motion_ticket()!==1)throw Error('Native gate staging rejected: '+JSON.stringify(await pending));
+    if(JSON.stringify(before)!==JSON.stringify(staged)||checks[1]<1)
      throw Error('Staging must sweep a real native body without making the motor effective');
     if(invalidateGateProposal&&session.core.wasm.spatial_body_upsert(990077,gate.x+.3,gate.z+.9,.02,1,1)!==1)
      throw Error('The pending proposal must not block the authoritative body change');
-    const result=await pending,after=gates.read(gate.id),committedChecks=[session.core.wasm.nav_gate_worker_checks(),session.core.wasm.nav_gate_sweep_evaluations(),session.core.wasm.nav_intent_route_queries()];
-    if(result.status!==(invalidateGateProposal?'stale':'committed')||after.target!==(invalidateGateProposal?1:0)||
+    if(invalidateGateObjectProposal&&session.core.addWall(gate.x+.3,gate.z+.9,.005,.005)<=0)
+     throw Error('A staged certificate must not block the authoritative object change');
+    const interrupted=invalidateGateProposal||invalidateGateObjectProposal,result=await pending,after=gates.read(gate.id),
+     committedChecks=[session.core.wasm.nav_gate_worker_checks(),session.core.wasm.nav_gate_sweep_evaluations(),session.core.wasm.nav_intent_route_queries(),
+      ...(gateStaticObjects?[session.core.wasm.nav_gate_static_evaluations(),session.core.wasm.nav_gate_static_pairs()]:[])];
+    if(result.status!==(interrupted?'stale':'committed')||after.target!==(interrupted?1:0)||
        session.core.wasm.nav_gate_motion_ticket()!==0||JSON.stringify(checks)!==JSON.stringify(committedChecks))
      throw Error('Native gate proposal was not committed atomically after GPU drain');
-    transaction={result,before,staged,after,checks,committedChecks,bodyChangedWhilePending:invalidateGateProposal};
+    if(gateStaticObjects&&(checks[3]<1||gates.staticObjectsCertified(gate.id)===interrupted))
+     throw Error('Expected an actual static object proof installed only on native commit');
+    let collidingObjectVetoed=null;
+    if(gateStaticObjects&&!interrupted){collidingObjectVetoed=session.core.addWall(gate.x+.3,gate.z+.9,.005,.005)===0;
+     if(!collidingObjectVetoed)throw Error('Committed object certificate did not protect the remaining swing');}
+    transaction={result,before,staged,after,checks,committedChecks,bodyChangedWhilePending:invalidateGateProposal,
+     ...(gateStaticObjects?{objectChangedWhilePending:invalidateGateObjectProposal,staticObjectsCertified:gates.staticObjectsCertified(gate.id),collidingObjectVetoed}: {})};
    }
    if(gpuFence&&!gateTransaction)control.port1.postMessage({type:'IntentControlFence',protocolVersion:2,fenceVersion:1,
     authorityEpoch:bridge.authorityEpoch,sequence:revocation.sequence,effectiveTime:revocation.effectiveTime,fenceId:1});
@@ -178,7 +193,8 @@ export async function auditNativeRouteControl({gpuFence=false,gateTransaction=fa
     nativeControl:report.execution.consumer.intentControl,
     ...(fenced?{gpuFence:fenced,gpuFencedAt:report.execution.consumer.nativeIntentGpuFencedAt}:{}),
     ...(transaction?{gateTransaction:transaction}:{}),
-    scope:gateTransaction?'Real WASM pending gate motor, live publication, GPU drain and conditional native commit/rejection during preparation stall. Triangle/readback only; no physical gate collider or resources, character animation or causal simulation/draw clock. Not closure of A6-04.e/f or acceptance A-F.':
+    scope:gateStaticObjects?'Real WASM canonical static object sweep, pending gate motor, direct GPU receipt, conditional commit/rejection and live obstacle veto during preparation stall. Triangle/readback only; no leaf mesh/collider installation, frame-joint or terrain clearance, character locomotion or crossing admission. Not closure of A6-04.e/f or acceptance A-F.':
+     gateTransaction?'Real WASM pending gate motor, live publication, GPU drain and conditional native commit/rejection during preparation stall. Triangle/readback only; no physical gate collider or resources, character animation or causal simulation/draw clock. Not closure of A6-04.e/f or acceptance A-F.':
      'Real WASM AttackCrops events, preparation/draw Workers and GPU uniform readback; triangle only, no character animation or authoritative simulation advance. Not acceptance A–F.'};
  };
  try{

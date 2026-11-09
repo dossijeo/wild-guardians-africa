@@ -26,6 +26,7 @@ void projectExecutedPose(IntentState& s,RouteSlot& route,const std::array<double
   // a cursor never rescans/reindexes the polyline on ordinary logical steps.
 }
 int beginRouteExecution(IntentState& s){
+  if(!gateStaticProofCurrent(s))return -4;
   if(s.executionEnabled)return s.executionWorldStamp==executionWorldStamp()?1:-4;
   if(s.reservedBodies.empty())return -2;
   for(const auto& [body,slot]:s.reservedBodies){
@@ -49,7 +50,7 @@ int advanceRouteExecution(IntentState& s,double at){
   // Known overlay/residency transactions extend the surviving cohort's proof.
   // Untracked terrain edits and whole-world resets still fail closed: one
   // mutation-counter check per cohort, never route collision/validity queries.
-  if(s.executionWorldStamp!=executionWorldStamp())return -4;
+  if(s.executionWorldStamp!=executionWorldStamp()||!gateStaticProofCurrent(s))return -4;
   struct Move {uint32_t slot;std::array<double,18> pose;};
   std::vector<Move> moves;moves.reserve(s.reservedBodies.size());
   for(const auto& [body,slot]:s.reservedBodies){

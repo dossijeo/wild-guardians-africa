@@ -17,7 +17,8 @@ bool mutationBodiesClear(const SpatialStaticMutation* shapes,int count,double pa
   return true;
 }
 bool staticMutationPreflight(IntentState& s,const SpatialStaticMutation* shapes,int count){
-  return !s.bodyDomainActive||mutationBodiesClear(shapes,count,0,s.staticMutationBodyChecks,s.staticMutationRejected);
+  return gateStaticOverlayPreflight(s,shapes,count)&&
+    (!s.bodyDomainActive||mutationBodiesClear(shapes,count,0,s.staticMutationBodyChecks,s.staticMutationRejected));
 }
 bool mutationAffectedRoutes(IntentState& s,const SpatialStaticMutation* shapes,int count,double padding,
     uint64_t& candidateCount,uint64_t& segmentCount,std::set<uint64_t>& affected,bool allowPrepared=false){
@@ -63,7 +64,8 @@ void retireMutationRoutes(IntentState& s,const std::set<uint64_t>& affected,uint
   }
 }
 SpatialStaticTicket staticMutationBefore(IntentState& s,const SpatialStaticMutation* shapes,int count){
-  SpatialStaticTicket ticket;if(!s.bodyDomainActive)return ticket;
+  SpatialStaticTicket ticket;if(!gateStaticMutationStart(s,ticket))return ticket;
+  if(!s.bodyDomainActive){ticket.allowed=gateStaticOverlayPreflight(s,shapes,count);return ticket;}
   ticket.executing=true;ticket.before=executionWorldStamp();
   ticket.tracked=s.executionWorldStamp==ticket.before;
   ticket.allowed=staticMutationPreflight(s,shapes,count);if(!ticket.allowed)return ticket;
@@ -78,6 +80,7 @@ SpatialStaticTicket staticMutationBefore(IntentState& s,const SpatialStaticMutat
   return ticket;
 }
 void staticMutationCommitted(IntentState& s,const SpatialStaticTicket& ticket){
+  gateStaticMutationCommitted(s,ticket,{0,0,1});
   if(!ticket.executing||!ticket.allowed)return;
   s.staticMutationCommits++;
   const auto after=executionWorldStamp();

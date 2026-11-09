@@ -7,25 +7,15 @@ double gateLeafSpeedBound(const NativeGate& gate){
   return radius*std::max(gate.sx,gate.sz)*(pi/2)/nativeGateMoveSeconds*(1+1e-12);
 }
 struct GateSweepAnswer {bool clear=true;int reason=0;double from=0,to=0;};
-GateSweepAnswer gateSweepPair(IntentState& s,const NativeGate& gate,const ReservationPath& path,double radius,double begin,double end){
-  s.gateSweepPairs++;
-  if(!std::isfinite(radius)||radius<0||!std::isfinite(begin)||!std::isfinite(end)||end<begin)
+// One interval proof kernel for bodies, canonical static objects and leaf pairs.
+template<class Gap> GateSweepAnswer gateSweepIntervals(std::vector<double> times,
+    double begin,double end,double speed,Gap gap){
+  if(!std::isfinite(begin)||!std::isfinite(end)||end<begin||!std::isfinite(speed)||speed<0)
     return {false,2,begin,end};
-  const double bodySpeed=path.route?std::max(path.route->speed,path.route->runSpeed):0,
-    speed=(gate.from==gate.target?0:gateLeafSpeedBound(gate))+bodySpeed;
-  std::vector<double> times{begin,end};reservationKnots(path,begin,times);
-  const double finish=gate.at+std::abs(gate.target-gate.from)*nativeGateMoveSeconds;
-  if(finish>begin&&finish<end)times.push_back(finish);
+  times.push_back(begin);times.push_back(end);
   times.erase(std::remove_if(times.begin(),times.end(),[&](double at){return at<begin||at>end;}),times.end());
   std::sort(times.begin(),times.end());times.erase(std::unique(times.begin(),times.end()),times.end());
   uint64_t budget=32768;
-  const auto gap=[&](double at){
-    const auto point=reservationPosition(path,at);const auto leaf=gateLeaf(gate,gateOpening(gate,at));s.gateSweepEvaluations++;
-    const double scale=std::max({1.0,std::abs(gate.x),std::abs(gate.z),std::abs(point.first),std::abs(point.second)}),
-      // Covers trig arithmetic and the legacy 1e-9 endpoint snap in opening.
-      error=1e-7+256*std::numeric_limits<double>::epsilon()*scale+gateLeafSpeedBound(gate)*nativeGateMoveSeconds*1e-9;
-    return spatialNativePolygonDistance(leaf.data(),int(leaf.size()/2),point.first,point.second,point.first,point.second)-radius-error;
-  };
   struct Interval {double a,b;int depth;};std::vector<Interval> pending;
   for(double at:times){const double value=gap(at);
     if(!std::isfinite(value)||value<=0)return {false,std::isfinite(value)?1:2,at,at};}
@@ -45,6 +35,22 @@ GateSweepAnswer gateSweepPair(IntentState& s,const NativeGate& gate,const Reserv
     pending.push_back({mid,interval.b,interval.depth+1});pending.push_back({interval.a,mid,interval.depth+1});
   }
   return {};
+}
+GateSweepAnswer gateSweepPair(IntentState& s,const NativeGate& gate,const ReservationPath& path,double radius,double begin,double end){
+  s.gateSweepPairs++;
+  if(!std::isfinite(radius)||radius<0)return {false,2,begin,end};
+  const double bodySpeed=path.route?std::max(path.route->speed,path.route->runSpeed):0,
+    speed=(gate.from==gate.target?0:gateLeafSpeedBound(gate))+bodySpeed;
+  std::vector<double> times;reservationKnots(path,begin,times);
+  times.push_back(gate.at+std::abs(gate.target-gate.from)*nativeGateMoveSeconds);
+  return gateSweepIntervals(std::move(times),begin,end,speed,[&](double at){
+    const auto point=reservationPosition(path,at);const auto leaf=gateLeaf(gate,gateOpening(gate,at));s.gateSweepEvaluations++;
+    const double scale=std::max({1.0,std::abs(gate.x),std::abs(gate.z),std::abs(point.first),std::abs(point.second)}),
+      // Enclose arithmetic and snapping at both the sampled pose and any
+      // interval pose, including the legacy 1e-9 opening endpoint snap.
+      error=1e-7+256*std::numeric_limits<double>::epsilon()*scale+2*gateLeafSpeedBound(gate)*nativeGateMoveSeconds*1e-9;
+    return spatialNativePolygonDistance(leaf.data(),int(leaf.size()/2),point.first,point.second,point.first,point.second)-radius-error;
+  });
 }
 bool gateSweepBodies(IntentState& s,const NativeGate& proposal){
   std::set<uint64_t> bodies;

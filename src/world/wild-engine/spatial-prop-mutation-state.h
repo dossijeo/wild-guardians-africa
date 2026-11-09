@@ -2,7 +2,10 @@
 // relief. Only canonical newly solid props need current-body/future-route checks.
 SpatialStaticTicket propMutationBefore(IntentState& s,const SpatialStaticMutation* shapes,
     int count,int recipes,bool known){
-  SpatialStaticTicket ticket;if(!s.bodyDomainActive&&s.reservedBodies.empty())return ticket;
+  SpatialStaticTicket ticket;if(!gateStaticMutationStart(s,ticket))return ticket;
+  if(s.gateStaticProofs&&!known){s.gateStaticRejected++;ticket.allowed=false;return ticket;}
+  if(!gateStaticOverlayPreflight(s,shapes,count)){ticket.allowed=false;return ticket;}
+  if(!s.bodyDomainActive&&s.reservedBodies.empty())return ticket;
   ticket.executing=true;ticket.before=executionWorldStamp();ticket.tracked=s.executionWorldStamp==ticket.before;
   s.propMutationRecipeChunks+=uint64_t(recipes);
   if(!known){ticket.allowed=false;s.propMutationRejected++;return ticket;}
@@ -15,6 +18,7 @@ SpatialStaticTicket propMutationBefore(IntentState& s,const SpatialStaticMutatio
   retireMutationRoutes(s,affected,s.propMutationRevocations);return ticket;
 }
 void propMutationCommitted(IntentState& s,const SpatialStaticTicket& ticket,int terrainDelta){
+  gateStaticMutationCommitted(s,ticket,{uint64_t(terrainDelta),0,0});
   if(!ticket.executing||!ticket.allowed)return;
   s.propMutationCommits++;const auto after=executionWorldStamp();
   if(ticket.tracked&&s.executionEnabled&&s.executionWorldStamp==ticket.before&&

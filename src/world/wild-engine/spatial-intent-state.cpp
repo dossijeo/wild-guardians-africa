@@ -253,6 +253,10 @@ struct IntentState {
   NativeGateMotionProposal gateMotionProposal;
   uint64_t nextGateMotionTicket=0;
   std::array<double,5> gateMotionResult{};
+  uint64_t gateStaticPairs=0,gateStaticEvaluations=0,gateStaticRejected=0;
+  std::array<double,8> gateStaticResult{};
+  int gateStaticProofs=0;
+  std::array<uint64_t,3> gateStaticWorldStamp{};
   uint32_t session=0;
   uint64_t invalidations=0;
   std::unordered_map<uint64_t,uint64_t> planningCallsByActor;
@@ -458,13 +462,16 @@ void releaseIntent(IntentState& s,uint64_t actor,PlanningState next){
   intent.task=0;intent.target=0;s.invalidations++;
 }
 #include "spatial-route-reservations.h"
+bool gateStaticProofCurrent(const IntentState&);
 #include "spatial-route-execution.h"
+#include "spatial-gate-controller.h"
+#include "spatial-gate-sweep.h"
+#include "spatial-gate-static-sweep.h"
+#include "spatial-gate-static-fences.h"
 #include "spatial-static-mutation-state.h"
 #include "spatial-residency-mutation-state.h"
 #include "spatial-prop-mutation-state.h"
 #include "spatial-terrain-mutation-state.h"
-#include "spatial-gate-controller.h"
-#include "spatial-gate-sweep.h"
 #include "spatial-gate-transactions.h"
 void invalidateDependents(IntentState& s,const Change& change){
   if(change.kind==1){
@@ -845,13 +852,13 @@ ServiceRoute findServiceRoute(const Worker& worker,const Target& target,int kind
 }
 }
 
-bool spatialIntentStaticProtectionActive(){return state().bodyDomainActive;}
+bool spatialIntentStaticProtectionActive(){return state().bodyDomainActive||state().gateStaticProofs;}
 bool spatialIntentGateUnsupported(double x,double z,double nx,double nz,double radius){
   const auto& s=state();for(const auto& [id,gate]:s.gates)
     if(gate.status!=2&&spatialStaticMutationBlocks(gate.unsupported,x,z,nx,nz,radius,0,true))return true;
   return false;
 }
-bool spatialIntentPropsProtected(){const auto& s=state();return s.bodyDomainActive||!s.reservedBodies.empty();}
+bool spatialIntentPropsProtected(){const auto& s=state();return s.bodyDomainActive||!s.reservedBodies.empty()||s.gateStaticProofs;}
 bool spatialIntentTerrainProtected(){return spatialIntentPropsProtected();}
 SpatialStaticTicket spatialIntentTerrainBefore(const SpatialStaticMutation* boxes,int count,
     SpatialTerrainProbe probe,void* context,int recipes,bool known){
@@ -866,7 +873,7 @@ SpatialStaticTicket spatialIntentResidencyBefore(const SpatialResidencyRegion* r
   return residencyMutationBefore(state(),regions,count,removing,releaseOnly);
 }
 void spatialIntentResidencyCommitted(const SpatialStaticTicket& ticket,int count){residencyMutationCommitted(state(),ticket,count);}
-bool spatialIntentStaticRestorationAllowed(){return !state().bodyDomainActive;}
+bool spatialIntentStaticRestorationAllowed(){return !state().bodyDomainActive&&!state().gateStaticProofs;}
 bool spatialIntentStaticPreflight(const SpatialStaticMutation* shapes,int count){
   return staticMutationPreflight(state(),shapes,count);
 }
@@ -924,6 +931,8 @@ void nav_intent_reset(){
   if(!s.gates.empty())spatialGateSupportChanged();
   s.gates.clear();s.gateBodyActors.clear();s.gateInput.clear();s.gateResult.clear();
   cancelGateMotionProposal(s);s.gateMotionResult.fill(0);
+  s.gateStaticPairs=s.gateStaticEvaluations=s.gateStaticRejected=0;s.gateStaticResult.fill(0);
+  s.gateStaticProofs=0;s.gateStaticWorldStamp.fill(0);
   s.gateBoundaries=s.gateWorkerChecks=s.gatePrefixSegments=0;
   s.gateSweepPairs=s.gateSweepEvaluations=s.gateSweepRejected=0;s.gateSweepResult.fill(0);
   s.session++;
@@ -1663,6 +1672,7 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_set_time(double elapsed){
   IntentState& s=state();
   if(!std::isfinite(elapsed)||elapsed<s.effectiveTime)return 0;
   if(s.executionEnabled&&elapsed!=s.effectiveTime)return 0;
+  if(elapsed!=s.effectiveTime&&!gateStaticProofCurrent(s))return 0;
   s.effectiveTime=elapsed;return 1;
 }
 int nav_intent_change_count(){return int(state().intentChanges.size()/intentChangeWidth);}

@@ -12,6 +12,7 @@ struct SpatialStaticMutation {
 struct SpatialStaticTicket {
   std::array<uint64_t,3> before{};
   bool allowed=true,executing=false,tracked=false;
+  bool gateObjects=false;
 };
 bool spatialStaticMutationBlocks(const SpatialStaticMutation&,double x,double z,
   double nx,double nz,double radius,int kind,bool physical=false);

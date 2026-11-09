@@ -4,6 +4,7 @@ struct NativeGate {
   double from=0,target=0,at=0;
   bool defined=false,requested=false,occupied=false;
   bool bodySweepCertified=false;
+  bool staticSweepCertified=false;
   int status=0;
   std::vector<double> local,closed,swing;
   SpatialStaticMutation unsupported;
