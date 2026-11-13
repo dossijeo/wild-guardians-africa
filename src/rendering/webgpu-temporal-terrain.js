@@ -21,7 +21,7 @@ export async function prepareWebGpuTemporalTerrain(messages,{signal,scene,reside
   for(const message of messages){
    check();const {payload,revision,sequence,epoch}=message,order=publicationOrder(),options={publicationEpoch:publicationEpoch(epoch),publicationOrder:order},identity=onPreparedIdentity?{key:`${payload.cx},${payload.cz}`,epoch:epoch??null,revision,sequence,publicationOrder:order}:null;
    if(payload.removed){
-    const terrainToken=residency.prepareRemoval(payload,revision,epoch??null,options);if(!terrainToken)throw Error('Terrain removal preparation is stale');tokens.push(terrainToken);
+    const terrainToken=residency.prepareRemoval(payload,revision,epoch??null,{...options,sequence});if(!terrainToken)throw Error('Terrain removal preparation is stale');tokens.push(terrainToken);
     const biomeToken=biome.prepareRemoval(payload,revision,{epoch:epoch??null,sequence},options);if(!biomeToken)throw Error('Biome removal preparation is stale');tokens.push(biomeToken);
     removalIdentities.push({payload,identity:{key:`${payload.cx},${payload.cz}`,epoch:epoch??null,revision,sequence,publicationOrder:order,removed:true}});continue;
    }

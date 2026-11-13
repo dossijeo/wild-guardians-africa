@@ -86,11 +86,31 @@ o sustituirla por una retirada posterior no restaura la generación eliminada.
 El callback de geometría preparada no recibe tombstones; la identidad de la
 retirada solo se expone tras confirmar su lote.
 
-**Pendiente de f-R4:** conectar el callback de retirada del surface, incluidos
-cámara y grass temporal, y la admisión de la frontera nativa completa antes de
-abrir el frame. No se habilita todavía ese callback si falta algún propietario.
-También siguen pendientes recuperación de uploads de frames rechazados, cambios
-visibles con personajes reales y el resto del criterio original de aceptación.
+El incremento posterior conecta ese callback en el surface temporal, según el
+apartado siguiente. **Pendiente de f-R4:** la admisión de la frontera nativa
+completa antes de abrir el frame, recuperación de uploads de frames rechazados,
+cambios visibles con personajes reales y el resto del criterio original de
+aceptación. No se etiqueta un frame como actualizado solo por retirar chunks.
+
+### Cámara y grass temporal después del commit preparado
+
+La notificación del propietario de terreno lleva ahora causa confirmada,
+secuencia y orden de publicación. Grass distingue ese commit de una expulsión
+local o sin secuencia: retira la cobertura del chunk y conserva la barrera de
+ocupación de sus vecinos hasta confirmar el mismo estado. Mantiene el orden de
+la retirada para ignorar notificaciones antiguas y conserva los intentos de
+preparación posteriores. La notificación de bioma no repite la retirada.
+
+El surface temporal acepta `onRemoved` después del commit del lote y notifica a
+los propietarios dependientes existentes. La cámara recibe una retirada sin
+alturas por el mismo canal y con su revisión/secuencia; descarta alturas y mud,
+manteniendo la revisión para impedir resurrecciones. El Worker omite buffers en
+ese mensaje. Una revisión posterior puede readmitir el chunk. Si todavía existe
+su mesh visible, la cámara rechaza la retirada en lugar de inventar el resultado.
+
+La capacidad de retirada preparada permanece limitada al perfil temporal con
+coordinación de chunks; el receptor que no la proporciona conserva el fallo
+explícito. No se activa por ello el ejecutor nativo de producto.
 
 ## Validación ejecutada
 
@@ -143,6 +163,38 @@ rollback de activación/finalización y lotes mixtos. Comprueban también el rep
 del receptor y las notificaciones después del commit. **No son prueba WebGPU de
 la retirada visible.** Build de producción WebGPU aprobado en **45,50 s**,
 `.cache/prepared-terrain-removals-build.log`, con los avisos existentes.
+
+Validación de cámara/grass y su conexión al surface: **571 pruebas de 49 archivos,
+cero fallos/skips**, `.cache/confirmed-terrain-retirement-selection.json` y
+`.cache/confirmed-terrain-retirement-regression.tap`. Incluye retiro/readmisión
+por el receptor con los propietarios reales, confirmación, recuperación y
+protección ante alturas/identidades atrasadas. Build WebGPU aprobado en **52,60 s**
+(`.cache/confirmed-terrain-retirement-build.log`). La regresión del arranque con
+autoridad y Workers gráficos conserva Shield/revocación y 15 dibujos durante
+500 ms de bloqueo; su alcance sigue siendo el del harness de control.
+
+[Recibo WebGPU real](performance/confirmed-terrain-retirement-20261113.json):
+surface de producto, admisión real NVIDIA/Turing, terreno WASM, grass y cámara.
+Tras tres publicaciones sin cambios, la secuencia 4 retira el chunk: cero chunks
+de terreno/bioma/cámara y cero cobertura visible; la secuencia 5 readmite la
+revisión 3 y restaura los tres. Se inspeccionan las capturas de
+[retirada](performance/confirmed-terrain-retirement-20261113-removed.png) y
+[readmisión](performance/confirmed-terrain-retirement-20261113-readmitted.png).
+No hubo errores recogidos por el surface/dispositivo en este ensayo.
+
+Se amplía el harness existente de terreno temporal con una opción de retirada,
+sin otro renderer. Mantiene vacías las instancias de props del fixture: acredita
+terreno/cobertura, no árboles 3D ni personajes. Las mutaciones de este control de
+recursos se secuencian manualmente; **no** acredita propuesta nativa, quiescencia,
+preparador bloqueado y aplicación visible en una sola ejecución. f-R4 sigue
+parcial; sus pruebas anteriores de control no sustituyen esa aceptación conjunta.
+
+```powershell
+$env:QA_BASE_URL='http://127.0.0.1:5181'
+$env:QA_RETIREMENT='true'
+# PLAYWRIGHT_MODULE apunta a la instalación externa de Playwright.
+.cache/tooling/node20.exe tools/experiments/audit_webgpu_temporal_ground.mjs
+```
 
 ## Siguiente punto pendiente
 

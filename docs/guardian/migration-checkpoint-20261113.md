@@ -170,3 +170,11 @@ retirada en el coordinador/adaptador existente, incluidos rollback de lotes mixt
 y notificaciones después del commit. Pasan 362 pruebas y build. Los tickets GPU
 de estas pruebas son simulados; faltan callback del surface/cámara/grass,
 frontera completa y aceptación gráfica con personajes. f-R4 sigue parcial.
+
+Incremento posterior: callback de retirada del surface temporal conectado a
+cámara y grass con la secuencia confirmada. Pasan 571 pruebas y build. El
+[control WebGPU real](performance/confirmed-terrain-retirement-20261113.json)
+retira y readmite terreno/cobertura/cámara con el mismo surface. Este control
+secuencia recursos manualmente y no contiene personajes ni propuesta causal
+nativa; no cierra f-R4. El siguiente bloqueo es la frontera nativa completa antes
+de abrir el frame, incluidos uploads de frames rechazados, y su aceptación real.

@@ -4,9 +4,10 @@ import {deserialize} from '../../src/persistence/snapshots.js';
 import {serializeConfirmedState} from '../../src/simulation/confirmed-live-state.js';
 import {estimateRetainedBytes} from '../../src/simulation/retained-size.js';
 import wasmUrl from '../../src/world/wild-engine/spatial-savanna.wasm?url';
+import {createConfirmedCameraTerrain,CameraTerrainUnavailable} from '../../src/app/confirmed-camera-terrain.js';
 
 self.onmessage=async({data})=>{
- let surface,world,terrain=new MessageChannel(),presentation=new MessageChannel();const errors=[];
+ let surface,world,terrain=new MessageChannel(),presentation=new MessageChannel();const errors=[],cameraPayloads=[],cameraTerrain=data.retirement?createConfirmedCameraTerrain():null;
  try{
   const original=OffscreenCanvas.prototype.getContext;OffscreenCanvas.prototype.getContext=function(kind,...args){if(/^webgl/i.test(kind))throw Error('WebGL forbidden');return original.call(this,kind,...args);};
   const response=await fetch('/tests/fixtures/manglares-123-d10-raid-state.json.gz'),body=response.headers.get('content-encoding')?.includes('gzip')?response.body:response.body.pipeThrough(new DecompressionStream('gzip')),state=deserialize(await new Response(body).text());
@@ -14,7 +15,7 @@ self.onmessage=async({data})=>{
   for(const worker of state.workers)worker.status='idle';state.tasks=[];state.raid=null;
   state.biome=data.biome;if(data.biome==='manglares'){state.mangroveNetwork=true;state.mangroveSettlementVersion=2;}else{delete state.mangroveNetwork;delete state.mangroveSettlementVersion;}if(data.daylight)state.time=100;
   const module=await WebAssembly.compile(await (await fetch(wasmUrl)).arrayBuffer());world=createSpatialWorld(module);world.generate(712,0,0,data.biome==='sabana'?'savanna':data.biome,data.biome==='manglares'?{mangroveNetwork:true}:{});const payload=world.chunkPayload();payload.instances=Array.from({length:20},()=>[]);const cameraView={x:15,y:data.biome==='gran-canon'?Math.max(...payload.terrain.positions.filter((_,i)=>i%3===1))+30:12,z:20,targetX:0,targetY:payload.terrain.positions[(24*49+24)*3+1],targetZ:0};
-  surface=await createWebGpuWorldSurface({canvas:data.canvas,session:'ground',terrainPort:terrain.port1,presentationPort:presentation.port1,snapshot:serializeConfirmedState(state),width:512,height:512,experimentalMangroveGround:true,presentationCapabilities:{causalInputs:true,coordinatedChunks:true},experimentalTemporalPresentation:{product:true,maxPublications:8,maxBytes:50000000,maxHistory:64,maxHistoryBytes:50000000},camera:cameraView,onError:error=>errors.push(String(error.stack??error)),onResourceError:(kind,error)=>errors.push(kind+': '+String(error.stack??error))});
+  surface=await createWebGpuWorldSurface({canvas:data.canvas,session:'ground',terrainPort:terrain.port1,presentationPort:presentation.port1,snapshot:serializeConfirmedState(state),width:512,height:512,experimentalMangroveGround:true,presentationCapabilities:{causalInputs:true,coordinatedChunks:true,...(data.retirement?{cameraTerrain:true}:{})},...(cameraTerrain?{onCameraTerrain:p=>{cameraPayloads.push(p);cameraTerrain.ingest(p);}}:{}),experimentalTemporalPresentation:{product:true,maxPublications:8,maxBytes:50000000,maxHistory:64,maxHistoryBytes:50000000},camera:cameraView,onError:error=>errors.push(String(error.stack??error)),onResourceError:(kind,error)=>errors.push(kind+': '+String(error.stack??error))});
   if(!surface.renderer.backend?.isWebGPUBackend)throw Error('WebGPU required');surface.renderer.backend.device.addEventListener('uncapturederror',event=>errors.push(event.error.message));
   presentation.port2.postMessage({kind:'presentationTimelineReady',session:'ground',version:1});
   terrain.port2.postMessage({kind:'terrainHello',session:'ground',epoch:'e',version:1});
@@ -32,7 +33,33 @@ self.onmessage=async({data})=>{
    const until=performance.now()+10000;while(surface.stream.status().sequence<sequence&&performance.now()<until&&!errors.length){surface.timelinePump?.advance();surface.render();await new Promise(resolve=>setTimeout(resolve,16));}
    if(surface.stream.status().sequence!==sequence||errors.length)throw Error('Publication failed '+errors.join('\n'));if(coverIds()!==before)throw Error('Unchanged publication rebuilt ground cover');
   }
-  const image=await data.canvas.convertToBlob({type:'image/png'}),result={ok:true,backend:'WebGPU',adapter:Object.fromEntries(["vendor","architecture","device","description"].map(key=>[key,surface.renderer.backend.device.adapterInfo?.[key]])),biome:data.biome,grass:surface.grassStatus,ground:surface.groundStatus,frames,unchangedPublications:3};
+  let retirement=null,retiredImage=null;
+  if(data.retirement){
+   cameraTerrain.confirm(3);if(!Number.isFinite(cameraTerrain.surface(0,0)))throw Error('Camera height unavailable before retirement');
+   const before={terrain:surface.residency.size,biome:surface.biomeProps.status().chunks,grass:surface.grassStatus,camera:cameraTerrain.status()};
+   // This is a resource/admission test. Native proposal and causal-clock
+   // acceptance remain in their existing harness; no character plan is implied.
+   if(world.removeChunk(0,0)!==1)throw Error('Could not retire the native fixture chunk');
+   const send=async(sequence,revision,value,id)=>{
+    terrain.port2.postMessage({kind:'terrainBatchBegin',session:'ground',epoch:'e',sequence,id,count:1,bytes:estimateRetainedBytes(value)});
+    terrain.port2.postMessage({kind:'terrain',session:'ground',epoch:'e',sequence,id:id+1,revision,payload:value});
+    terrain.port2.postMessage({kind:'terrainBatchEnd',session:'ground',epoch:'e',sequence,id:id+2});
+    presentation.port2.postMessage({kind:'publication',session:'ground',publication:{session:'ground',sequence,elapsed:state.elapsed,snapshot:serializeConfirmedState(state),events:[]}});
+    const until=performance.now()+30000;while(surface.stream.status().sequence<sequence&&performance.now()<until&&!errors.length){surface.timelinePump.advance();surface.render();await new Promise(resolve=>setTimeout(resolve,16));}
+    if(surface.stream.status().sequence!==sequence||errors.length)throw Error('Resource boundary failed '+errors.join('\n'));cameraTerrain.confirm(sequence);
+   };
+   await send(4,2,{authority:'spatial-wasm',cx:0,cz:0,removed:true,capturedAt:state.elapsed},10);
+   for(let i=0;i<3;i++){surface.render();await new Promise(resolve=>setTimeout(resolve,16));}await surface.renderer.backend.device.queue.onSubmittedWorkDone();
+   let cameraUnavailable=false;try{cameraTerrain.surface(0,0);}catch(error){cameraUnavailable=error instanceof CameraTerrainUnavailable;}
+   const removed={terrain:surface.residency.size,biome:surface.biomeProps.status().chunks,grass:surface.grassStatus,camera:cameraTerrain.status(),cameraUnavailable};
+   if(removed.terrain||removed.biome||removed.grass.chunks||removed.grass.visible||removed.grass.suspended||!cameraUnavailable||removed.camera.chunks)throw Error('Retired resources remain visible '+JSON.stringify(removed));
+   retiredImage=await data.canvas.convertToBlob({type:'image/png'});
+   if(world.addChunk(0,0)<0)throw Error('Could not readmit native fixture chunk');const again=world.chunkPayload();again.instances=Array.from({length:20},()=>[]);await send(5,3,again,13);
+   const until=performance.now()+30000;while(performance.now()<until&&!surface.grassStatus.visible&&!errors.length){surface.render();await new Promise(resolve=>setTimeout(resolve,16));}
+   surface.render();await surface.renderer.backend.device.queue.onSubmittedWorkDone();if(errors.length||!surface.grassStatus.visible||surface.grassStatus.suspended||!Number.isFinite(cameraTerrain.surface(0,0)))throw Error('Readmission failed '+errors.join('\n'));
+   retirement={before,removed,readmitted:{terrain:surface.residency.size,biome:surface.biomeProps.status().chunks,grass:surface.grassStatus,camera:cameraTerrain.status()},cameraPayloads:cameraPayloads.map(p=>({sequence:p.sequence,revision:p.revision,removed:p.removed===true,hasHeights:!!p.heights})),scope:'Real product surface and WebGPU admission for native terrain resources, grass and camera. Manually sequenced resource mutations; no causal native proposal, blocked preparer or character/autonomous-plan acceptance.'};
+  }
+  const image=await data.canvas.convertToBlob({type:'image/png'}),result={ok:true,backend:'WebGPU',adapter:Object.fromEntries(["vendor","architecture","device","description"].map(key=>[key,surface.renderer.backend.device.adapterInfo?.[key]])),biome:data.biome,grass:surface.grassStatus,ground:surface.groundStatus,frames,unchangedPublications:3,...(retirement?{retirement}:{})};
   if(data.biome==='manglares'&&data.daylight){
    const checkpoint={session:'ground',sequence:3,elapsed:state.elapsed,snapshot:serializeConfirmedState(state),terrainCheckpoint:{sequence:3,chunks:[payload],terrainManifest:{epoch:'e',chunks:[{cx:0,cz:0,revision:1}]}},presentationCheckpoint:surface.captureTemporalPresentationCheckpoint(3),workCheckpoint:{version:1,sequence:3,elapsed:state.elapsed,effects:[]}};
    await surface.dispose();terrain.port2.close();presentation.port2.close();terrain=new MessageChannel();presentation=new MessageChannel();
@@ -41,6 +68,6 @@ self.onmessage=async({data})=>{
    await surface.applyTimelineRecoveryBoundary({sequence:4,terrain:[],publication:{session:'ground',sequence:4,elapsed:state.elapsed,snapshot:checkpoint.snapshot,events:[]}});surface.finishTimelineRecovery();
    const until=performance.now()+30000;while(performance.now()<until&&!errors.length&&!surface.grassStatus.visible){surface.render();await new Promise(resolve=>setTimeout(resolve,16));}surface.render();await surface.renderer.backend.device.queue.onSubmittedWorkDone();if(errors.length||!surface.grassStatus.visible||surface.grassStatus.suspended)throw Error('Recovery failed '+errors.join('\n'));result.recovery={sequence:surface.stream.status().sequence,grass:surface.grassStatus};
   }
-  self.postMessage({image,...result});
+  self.postMessage({image,...(retiredImage?{retiredImage}:{}),...result});
  }catch(error){self.postMessage({ok:false,error:String(error.stack??error)});}finally{await surface?.dispose();world?.dispose();terrain.port2.close();presentation.port2.close();}
 };

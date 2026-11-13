@@ -74,10 +74,10 @@ export function createWebGpuTerrainResidency({scene,material,waterMaterial=null,
  }
  // A physical retirement participates in the same reversible terrain/biome
  // batch. The empty group is a transaction marker, not replacement geometry.
- function prepareRemoval(payload,revision,epoch=null,{publicationEpoch=epoch,publicationRevision=revision,publicationOrder}={}){
+ function prepareRemoval(payload,revision,epoch=null,{publicationEpoch=epoch,publicationRevision=revision,publicationOrder,sequence}={}){
   validateTerrainResourceRemoval(payload);const {cx,cz,capturedAt}=payload,key=check(cx,cz,revision);
   if(epoch!==null&&(typeof epoch!=='string'||!epoch)||publicationEpoch!==null&&(typeof publicationEpoch!=='string'||!publicationEpoch)||
-     !Number.isSafeInteger(publicationRevision)||publicationRevision<1||!Number.isSafeInteger(publicationOrder)||publicationOrder<1)
+     !Number.isSafeInteger(publicationRevision)||publicationRevision<1||!Number.isSafeInteger(publicationOrder)||publicationOrder<1||!Number.isSafeInteger(sequence)||sequence<0)
    throw TypeError('Invalid prepared terrain removal');
   if(!publisher||!coordinator)throw Error('Prepared terrain removal requires coordinated admission');
   const maps=[entries,versions,epochs,visualEvictions,waters,surfaceView.chunks],base=maps.map(map=>({present:map.has(key),value:map.get(key)}));
@@ -92,7 +92,7 @@ export function createWebGpuTerrainResidency({scene,material,waterMaterial=null,
      for(const map of maps)map.delete(key);versions.set(key,revision);applied=true;
      try{return visual.activate();}catch(error){restore();throw error;}
     },finalize(){const result=visual.finalize();return {retire(){active=false;leased=null;applied=false;prepared.delete(token);try{result.retire();}finally{publisher.remove(key);}},
-      notify(){onRevision?.({cx,cz,revision,epoch,kind:'remove'});}};},
+      notify(){onRevision?.({cx,cz,revision,epoch,kind:'remove',cause:'confirmed',sequence,publicationOrder});}};},
     cancel(){if(!active)return;leased=null;try{visual.cancel();}finally{if(applied){if(entries.has(key)||versions.get(key)!==revision)throw Error('Terrain removal rollback is stale');restore();}active=false;prepared.delete(token);}}
    };leased=participant;return participant;
   }};prepared.add(token);return token;

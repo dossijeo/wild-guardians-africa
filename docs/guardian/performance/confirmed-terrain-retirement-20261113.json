@@ -1,0 +1,127 @@
+[
+  {
+    "ok": true,
+    "backend": "WebGPU",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "biome": "sabana",
+    "grass": {
+      "closed": false,
+      "suspended": false,
+      "generation": 2,
+      "chunks": 1,
+      "visible": 1,
+      "retained": 1,
+      "pending": 0,
+      "generating": 0,
+      "generationBackend": "local",
+      "generationQueue": null
+    },
+    "ground": {
+      "experimental": true,
+      "error": null,
+      "chunks": 1
+    },
+    "frames": 15,
+    "unchangedPublications": 3,
+    "retirement": {
+      "before": {
+        "terrain": 1,
+        "biome": 1,
+        "grass": {
+          "closed": false,
+          "suspended": false,
+          "generation": 1,
+          "chunks": 1,
+          "visible": 1,
+          "retained": 1,
+          "pending": 0,
+          "generating": 0,
+          "generationBackend": "local",
+          "generationQueue": null
+        },
+        "camera": {
+          "closed": false,
+          "epoch": "e",
+          "confirmed": 3,
+          "pending": 0,
+          "chunks": 1
+        }
+      },
+      "removed": {
+        "terrain": 0,
+        "biome": 0,
+        "grass": {
+          "closed": false,
+          "suspended": false,
+          "generation": 1,
+          "chunks": 0,
+          "visible": 0,
+          "retained": 0,
+          "pending": 0,
+          "generating": 0,
+          "generationBackend": "local",
+          "generationQueue": null
+        },
+        "camera": {
+          "closed": false,
+          "epoch": "e",
+          "confirmed": 4,
+          "pending": 0,
+          "chunks": 0
+        },
+        "cameraUnavailable": true
+      },
+      "readmitted": {
+        "terrain": 1,
+        "biome": 1,
+        "grass": {
+          "closed": false,
+          "suspended": false,
+          "generation": 2,
+          "chunks": 1,
+          "visible": 1,
+          "retained": 1,
+          "pending": 0,
+          "generating": 0,
+          "generationBackend": "local",
+          "generationQueue": null
+        },
+        "camera": {
+          "closed": false,
+          "epoch": "e",
+          "confirmed": 5,
+          "pending": 0,
+          "chunks": 1
+        }
+      },
+      "cameraPayloads": [
+        {
+          "sequence": 0,
+          "revision": 1,
+          "removed": false,
+          "hasHeights": true
+        },
+        {
+          "sequence": 4,
+          "revision": 2,
+          "removed": true,
+          "hasHeights": false
+        },
+        {
+          "sequence": 5,
+          "revision": 3,
+          "removed": false,
+          "hasHeights": true
+        }
+      ],
+      "scope": "Real product surface and WebGPU admission for native terrain resources, grass and camera. Manually sequenced resource mutations; no causal native proposal, blocked preparer or character/autonomous-plan acceptance."
+    },
+    "differingPixels": 227622,
+    "daylight": true
+  }
+]
