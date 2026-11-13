@@ -35,6 +35,20 @@ function setup({core=null}={}){
 }
 const options=(f,c)=>({getPublication:()=>c.source,...f.point(2,0),halfX:.15,halfZ:.6,yaw:.2});
 
+test('the actual native commit supplies a resource identity retained by a subsequent control baseline',async()=>{
+ const f=setup(),c=transport(f);try{
+  await c.source.ready;assert.equal(f.bridge.nativeIntentControlBaseline().worldBoundary,null);
+  const request=c.wait('IntentMutationQuiesce'),pending=f.bridge.mutateNativeWorldAfterGpuQuiescence({getPublication:()=>c.source,
+   mutation:{type:'addChunk',cx:4,cz:4}});c.ack(await request);const committed=await pending;
+  assert.equal(committed.status,'committed');const b=committed.worldBoundary;
+  assert.equal(b.version,1);assert.equal(b.authorityEpoch,c.source.status().authorityEpoch);assert.equal(b.nativeSession,f.a.session);
+  assert.equal(b.effectiveTime,11);assert(Number.isSafeInteger(b.ticket)&&b.ticket>0);assert(Object.isFrozen(b));
+  assert.deepEqual(c.source.status().worldBoundary,b);assert.deepEqual(f.bridge.nativeIntentControlBaseline().worldBoundary,b);
+  const blocked=await f.bridge.mutateNativeWorldAfterGpuQuiescence({getPublication:()=>c.source,mutation:{type:'removeChunks',chunks:[[0,0]]}});
+  assert.equal(blocked.status,'blocked');assert.deepEqual(f.bridge.nativeIntentControlBaseline().worldBoundary,b);
+ }finally{c.dispose();f.session.dispose();}
+});
+
 test('the authority stages no world changes, waits for its exact direct receipt, then publishes revocation before releasing drawing',async()=>{
  const f=setup(),c=transport(f);try{
   await c.source.ready;const before=f.session.core.snapshot(),sequence=f.w.nav_intent_transition_sequence(),received=c.wait('IntentMutationQuiesce'),

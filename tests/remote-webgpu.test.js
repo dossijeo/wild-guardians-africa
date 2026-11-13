@@ -302,7 +302,7 @@ test('conditioned native barrier drains GPU, blocks pre-commit packets and waits
   assert.equal(native.bridge.nativeRouteTiming(handle),null);assert.equal(f.host.intentControlStatus().active,0);
   f.host.present();assert.equal(f.gpu.submitted.length,draws,'the old prepared packet cannot be replayed after the physical commit');
   f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'absolute',epoch:0});
-  const replacement=f.frame(0,{clock:{version:1,epoch:0,elapsed:10,safeUntil:20,anchorAbsoluteMs:0,paused:false,
+  const replacement=f.frame(0,{nativeWorldBoundary:result.worldBoundary,clock:{version:1,epoch:0,elapsed:10,safeUntil:20,anchorAbsoluteMs:0,paused:false,
    segments:[{start:10,end:20,rate:1,realDuration:10}]}});await flush();await f.host.idle();f.host.present();await replacement;
   assert.equal(new Float32Array(f.gpu.buffers[0].data.buffer)[0],11,'the replacement starts no earlier than the physical boundary');
   assert.equal(f.host.inspect().failed,false);assert.deepEqual(f.errors,[]);
@@ -325,6 +325,77 @@ test('a cancelled native hold never advances expired prepared resources beyond t
   assert.equal(f.gpu.submitted.length,count,'expired packet remains frozen instead of being extended beyond its resources');
   assert.equal(f.host.inspect().nativeMutationFloor,11);assert.equal(f.host.inspect().failed,false);assert.deepEqual(f.errors,[]);
  }finally{source?.dispose();f.host.dispose();native.session.dispose();}
+});
+
+test('a frame prepared before the physical commit but sent afterwards cannot borrow the new consumer epoch',async()=>{
+ const native=createNativeRouteExecutionFixture(),[sourcePort,drawPort]=pair();let source;
+ const f=await fixture({}, {intentControl:{port:drawPort,session:'late-world-frame'}});
+ try{
+  const handle=native.worker(1,native.point(-6,0),native.point(6,0));native.bridge.beginNativeRouteExecution();native.bridge.commitNativeCausalClock();
+  source=createNativeIntentControlPublication({port:sourcePort,session:'late-world-frame',observe:native.bridge.observeNativeIntentControl});await source.ready;
+  const clock={version:1,epoch:0,elapsed:10,safeUntil:20,anchorAbsoluteMs:0,paused:false,segments:[{start:10,end:20,rate:1,realDuration:10}]};
+  const first=f.frame(1,{clock});await flush();await f.host.idle();f.host.present();await first;
+  const count=f.gpu.submitted.length;
+  f.client.beginFrame({clock});const encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({
+   colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
+  pass.setPipeline(f.pipeline);pass.setBindGroup(0,f.group);pass.draw(3);pass.end();f.client.device.queue.submit([encoder.finish()]);
+  const committed=await native.bridge.mutateNativeWorldAfterGpuQuiescence({getPublication:()=>source,mutation:{type:'addChunk',cx:4,cz:4}});
+  assert.equal(committed.status,'committed');await flush();assert.deepEqual(f.client.requiredNativeWorldBoundary(),committed.worldBoundary);
+  assert(native.bridge.nativeRouteTiming(handle),'the route stays valid: world identity must reject the late packet independently');
+  const late=f.client.endFrame(),rejected=assert.rejects(late,e=>e.code==='remote-frame-native-mutation-obsolete');
+  await rejected;await f.host.idle();f.host.present();assert.equal(f.gpu.submitted.length,count);
+  const fresh=f.frame(2,{clock,nativeWorldBoundary:committed.worldBoundary});await flush();await f.host.idle();f.host.present();await fresh;
+  assert.equal(f.gpu.submitted.length,count+1);assert.equal(f.host.inspect().failed,false);assert.deepEqual(f.errors,[]);
+ }finally{source?.dispose();f.host.dispose();native.session.dispose();}
+});
+
+test('a producer cannot relabel an already prepared frame with a later native world identity',async()=>{
+ const f=await fixture();try{
+  f.client.beginFrame({});
+  assert.throws(()=>f.client.endFrame({nativeWorldBoundary:{version:1,authorityEpoch:'native/1',nativeSession:1,ticket:1,effectiveTime:10}}),/cannot be retagged/);
+  assert.equal(f.client.inspect().framesPublished,0);f.client.cancelFrame();
+ }finally{f.host.dispose();}
+});
+
+test('old command buffers cannot be wrapped in a newly tagged frame or submitted outside the frame after commit',async()=>{
+ const native=createNativeRouteExecutionFixture(),[sourcePort,drawPort]=pair();let source;
+ const f=await fixture({}, {intentControl:{port:drawPort,session:'old-world-commands'}});
+ try{
+  native.worker(1,native.point(-6,0),native.point(6,0));native.bridge.beginNativeRouteExecution();native.bridge.commitNativeCausalClock();
+  source=createNativeIntentControlPublication({port:sourcePort,session:'old-world-commands',observe:native.bridge.observeNativeIntentControl});await source.ready;
+  const old=f.client.device.createCommandEncoder(),pass=old.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
+  pass.setPipeline(f.pipeline);pass.draw(3);pass.end();const oldBuffer=old.finish();
+  const committed=await native.bridge.mutateNativeWorldAfterGpuQuiescence({getPublication:()=>source,mutation:{type:'addChunk',cx:4,cz:4}});
+  assert.equal(committed.status,'committed');
+  const clock={version:1,epoch:0,elapsed:10,safeUntil:20,anchorAbsoluteMs:0,paused:false,segments:[{start:10,end:20,rate:1,realDuration:10}]};
+  f.client.beginFrame({clock,nativeWorldBoundary:committed.worldBoundary});f.client.device.queue.submit([oldBuffer]);
+  await assert.rejects(f.client.endFrame(),e=>e.code==='remote-frame-native-mutation-obsolete');assert.equal(f.gpu.submitted.length,0);
+  const fresh=f.frame(2,{clock,nativeWorldBoundary:committed.worldBoundary});await flush();await f.host.idle();f.host.present();await fresh;
+  const count=f.gpu.submitted.length,standalone=f.client.device.createCommandEncoder(),outside=standalone.beginRenderPass({colorAttachments:[]});
+  outside.setPipeline(f.pipeline);outside.draw(3);outside.end();f.client.device.queue.submit([standalone.finish()]);await flush();await f.host.idle();
+  assert.equal(f.gpu.submitted.length,count);assert.equal(f.host.inspect().failed,true);assert.match(f.errors[0].message,/Standalone drawing resources/);
+ }finally{source?.dispose();f.host.dispose();native.session.dispose();}
+});
+
+test('a control-bound drawing owner cannot present even an untagged scene before receiving its native baseline',async()=>{
+ const native=createNativeRouteExecutionFixture(),[sourcePort,drawPort]=pair();let source;
+ const f=await fixture({}, {intentControl:{port:drawPort,session:'initial-world'}});
+ try{
+  native.worker(1,native.point(-6,0),native.point(6,0));native.bridge.beginNativeRouteExecution();native.bridge.commitNativeCausalClock();
+  const clock={version:1,epoch:0,elapsed:10,safeUntil:20,anchorAbsoluteMs:0,paused:false,segments:[{start:10,end:20,rate:1,realDuration:10}]};
+  const first=f.frame(1,{clock});await flush();await f.host.idle();f.host.present();assert.equal(f.gpu.submitted.length,0);
+  source=createNativeIntentControlPublication({port:sourcePort,session:'initial-world',observe:native.bridge.observeNativeIntentControl});await source.ready;
+  f.host.present();await first;assert.equal(f.gpu.submitted.length,1);assert.deepEqual(f.errors,[]);
+ }finally{source?.dispose();f.host.dispose();native.session.dispose();}
+});
+
+test('standalone canvas commands cannot bypass the native bootstrap wait',async()=>{
+ const [,drawPort]=pair(),f=await fixture({}, {intentControl:{port:drawPort,session:'no-world-bootstrap'}});
+ try{
+  const encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
+  pass.setPipeline(f.pipeline);pass.draw(3);pass.end();f.client.device.queue.submit([encoder.finish()]);await flush();await f.host.idle();
+  assert.equal(f.gpu.submitted.length,0);assert.equal(f.host.inspect().failed,true);assert.match(f.errors[0].message,/requires a native baseline/);
+ }finally{f.host.dispose();}
 });
 
 test('an older packet still waiting for GPU preparation is rejected after a conditioned mutation instead of resurrecting',async()=>{
@@ -361,7 +432,8 @@ test('standalone GPU queue submissions cannot slip between a mutation drain and 
    const hold=await source.quiesceGpuForMutation(),before=f.gpu.submitted.length;
    f.client.device.queue.submit([{__remoteCommands:[{method:'beginRenderPass',args:[{colorAttachments:[]}],commands:[{method:'draw',args:[3]}]}]}]);
    await flush();assert.equal(f.gpu.submitted.length,before);assert(f.host.inspect().queuedMessages>0);
-   source.releaseGpuAfterMutation(hold,{committed});await flush();await f.host.idle();
+   source.releaseGpuAfterMutation(hold,{committed,...(committed?{worldBoundary:{version:1,authorityEpoch:source.status().authorityEpoch,
+    nativeSession:native.bridge.nativeCausalClock().nativeSession,ticket:1,effectiveTime:10}}:{})});await flush();await f.host.idle();
    if(committed){assert.equal(f.gpu.submitted.length,before);assert.equal(f.host.inspect().failed,true);}
    else {assert.equal(f.gpu.submitted.length,before+1);assert.equal(f.host.inspect().failed,false);}
   }finally{source?.dispose();f.host.dispose();native.session.dispose();}

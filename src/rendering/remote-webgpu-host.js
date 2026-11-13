@@ -4,6 +4,7 @@ import { createRemoteFrameTimeGuard } from './remote-frame-time-guard.js';
 import { scheduleRemoteFrame } from './remote-frame-scheduler.js';
 import { evaluateRemoteClock } from './remote-presentation-clock.js';
 import { createNativeRouteControl } from './native-route-control.js';
+import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 
 const REF = '__remoteGpuId';
 const CURRENT = '@canvas';
@@ -20,6 +21,15 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   let lastNativeGpuFence=0;const nativeGpuFences=new Set();
   let lastNativeMutationFence=0,nativeMutationHold=null,nativeMutationFloor=null;
   let nativeMutationEpoch=0;
+  let nativeWorldBoundary=null,worldBoundaryRequired=false;
+  const frameWorldCurrent=packet=>!worldBoundaryRequired||sameNativeWorldBoundary(packet.metadata?.nativeWorldBoundary??null,nativeWorldBoundary);
+  const drawCommandsCurrent=(op,boundary)=>!worldBoundaryRequired||op.method!=='submit'||op.args[0].every(buffer=>
+    !buffer.__remoteCommands.some(command=>command.method==='beginRenderPass')||sameNativeWorldBoundary(buffer.nativeWorldBoundary??null,boundary));
+  function publishWorldBoundary(){port.postMessage({type:'native-world-boundary',worldBoundary:nativeWorldBoundary});}
+  function invalidatePendingNativeWorld(reason){
+    if(!pending)return;const stale=pending;pending=null;releaseSnapshot(stale.resourceSnapshot);
+    port.postMessage({type:'frame-obsolete',sequence:stale.sequence,reason});
+  }
   let nativeConsumerRetirement=null;
   let nativeConsumerToken=null,nativeRetirementNotified=false,deviceIsLost=false;
   function notifyNativeRetired(){
@@ -440,6 +450,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     frameHandle = requestFrame(present);
     if (hidden) return;
     if(nativeMutationHold||nativeConsumerRetirement)return; // No submission during a native boundary or retirement.
+    if(intentControl&&!routeControl)return; // A prepared image is not a native baseline.
     if (!deviceConfigured || (!active && !pending)) return;
     try {
       const startedAt = absoluteNow();
@@ -468,7 +479,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       if(!candidate)return;
       // Never replay a packet prepared before a physical commit. f-R4 will
       // coordinate replacement resources; until then retain the last image.
-      if(candidate.nativeMutationEpoch!==nativeMutationEpoch)return;
+      if(candidate.nativeMutationEpoch!==nativeMutationEpoch||!frameWorldCurrent(candidate))return;
       // Causal mode belongs to the direct connection, not a preparer's tags.
       // Omitting a nativeRoute binding in a later packet cannot restore an
       // unbounded producer clock or bypass the compute replay restriction.
@@ -606,11 +617,14 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         if (readiness) await readiness;
         if(stopped||failed||nativeConsumerRetirement)throw Error('Native GPU consumer is retiring or closed');
         if(message.op.method==='submit'){
+          if(intentControl&&!routeControl&&[...references(message.op)].some(key=>key===CURRENT||resources.get(key)?.currentView))
+            throw Error('Standalone world drawing requires a native baseline');
           // Standalone resource/diagnostic submissions share the same queue as
           // drawing. They cannot slip between the captured drain and release.
           await waitMutationSubmission();
           if(message.nativeMutationEpoch!==nativeMutationEpoch)
             throw Error('Native mutation invalidated a pending standalone GPU submission');
+          if(!drawCommandsCurrent(message.op,nativeWorldBoundary))throw Error('Standalone drawing resources do not match the committed native world');
         }
         const touchesPublishedState = [...writtenResources(message.op)].some(key => active?.resourceSnapshot?.has(key) || pending?.resourceSnapshot?.has(key));
         const canFork = !stagedOperations.length && touchesPublishedState && message.op.method === 'writeBuffer' && forkPublishedBuffer(message.op.args[0][REF]);
@@ -627,6 +641,9 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         context.configure(resolve(message.descriptor)); deviceConfigured = true; break;
       case 'unconfigure': context.unconfigure(); deviceConfigured = false; break;
       case 'frame': {
+        if(!frameWorldCurrent(message.packet)){
+          stagedOperations=[];port.postMessage({type:'frame-obsolete',sequence:message.packet?.sequence,reason:'Prepared resources do not match the committed native world'});break;
+        }
         if(message.nativeMutationEpoch===undefined)message.nativeMutationEpoch=nativeMutationEpoch;
         if(message.nativeMutationEpoch!==nativeMutationEpoch){
           stagedOperations=[];port.postMessage({type:'frame-obsolete',sequence:message.packet?.sequence,reason:'Native mutation invalidated the prepared frame'});break;
@@ -634,6 +651,9 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         if (pending) throw Error('Remote GPU backpressure: pending generation already exists');
         if (!Array.isArray(message.packet?.operations)) throw Error('Invalid remote frame operations');
         const packet = { ...message.packet, operations: [...stagedOperations, ...message.packet.operations] };
+        if(packet.operations.some(op=>!drawCommandsCurrent(op,packet.metadata?.nativeWorldBoundary??null))){
+          stagedOperations=[];port.postMessage({type:'frame-obsolete',sequence:packet.sequence,reason:'Old draw commands cannot be retagged for another native world'});break;
+        }
         packet.transportTiming = { ...message.packet.transportTiming, sequence: packet.sequence, workerReceivedAt: message.receivedAt ?? absoluteNow(), admissionStartedAt: absoluteNow() };
         packet.receivedAt = absoluteNow();
         if (!Number.isSafeInteger(packet.sequence) || packet.sequence <= (active?.sequence || 0)) throw Error('Stale remote frame');
@@ -649,7 +669,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         packet.transportTiming.resourcesWaitStartedAt = absoluteNow();
         if (readiness) await readiness;
         if(stopped||failed||nativeConsumerRetirement)throw Error('Native GPU consumer is retiring or closed');
-        if(message.nativeMutationEpoch!==nativeMutationEpoch){
+        if(message.nativeMutationEpoch!==nativeMutationEpoch||!frameWorldCurrent(packet)){
           stagedOperations=[];port.postMessage({type:'frame-obsolete',sequence:packet.sequence,reason:'Native mutation invalidated the prepared frame'});break;
         }
         packet.transportTiming.resourcesReadyAt = absoluteNow();
@@ -663,7 +683,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           const through=Math.max(...nativeBindings.map(binding=>binding.nativeRoute.assignmentSequence));
           await waitNativeControl(through);
         }
-        if(message.nativeMutationEpoch!==nativeMutationEpoch){
+        if(message.nativeMutationEpoch!==nativeMutationEpoch||!frameWorldCurrent(packet)){
           stagedOperations=[];port.postMessage({type:'frame-obsolete',sequence:packet.sequence,reason:'Native mutation invalidated the prepared frame'});break;
         }
         packet.nativeMutationEpoch=message.nativeMutationEpoch;
@@ -880,11 +900,16 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
               message.sequence!==status.sequence||message.effectiveTime!==status.effectiveTime||message.clockSequence!==status.clock.clockSequence||
               status.clock.committedThrough<hold.effectiveTime||typeof message.committed!=='boolean')throw Error('Invalid native mutation release boundary');
            if(message.committed){
+             const boundary=copyNativeWorldBoundary(message.worldBoundary??null);
+             if(worldBoundaryRequired&&(!boundary||boundary.authorityEpoch!==status.authorityEpoch||
+                boundary.nativeSession!==status.clock.nativeSession||boundary.effectiveTime!==message.effectiveTime||
+                nativeWorldBoundary&&boundary.ticket<=nativeWorldBoundary.ticket))throw Error('Invalid committed world resource boundary');
+             nativeWorldBoundary=boundary;
              nativeMutationEpoch++;
-             if(pending){const stale=pending;pending=null;releaseSnapshot(stale.resourceSnapshot);
-               port.postMessage({type:'frame-obsolete',sequence:stale.sequence,reason:'Native mutation invalidated the prepared frame'});}
+             invalidatePendingNativeWorld('Native mutation invalidated the prepared frame');
            }
            nativeMutationFloor=Math.max(nativeMutationFloor??0,hold.effectiveTime);nativeMutationHold=null;
+           if(message.committed&&worldBoundaryRequired)publishWorldBoundary();
            settleMutationSubmissions();
            metrics.nativeMutationReleasedAt=absoluteNow();return;
          }
@@ -931,6 +956,14 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
            if(message.consumerToken!==undefined&&(typeof message.consumerToken!=='string'||!message.consumerToken))throw Error('Invalid native consumer identity');
            nativeConsumerToken=message.consumerToken??null;
            if(message.clock)routeControl.acceptClock(message.clock,{baseline:true});
+           if(message.worldBoundaryVersion!==undefined&&message.worldBoundaryVersion!==1)throw Error('Unsupported native world resource boundary');
+           worldBoundaryRequired=message.worldBoundaryVersion===1;
+           nativeWorldBoundary=copyNativeWorldBoundary(message.worldBoundary??null);
+           if(nativeWorldBoundary&&(nativeWorldBoundary.authorityEpoch!==message.authorityEpoch||
+              nativeWorldBoundary.nativeSession!==message.clock?.nativeSession||
+              nativeWorldBoundary.effectiveTime>message.clock.committedThrough))throw Error('Invalid native world resource baseline');
+           if(worldBoundaryRequired)publishWorldBoundary();
+           if(pending&&!frameWorldCurrent(pending))invalidatePendingNativeWorld('Prepared resources precede the native world baseline');
           accepted=true;
         }else if(message?.type==='IntentControlClosed'){
           if(message.protocolVersion!==2||message.authorityEpoch!==routeControl?.status().authorityEpoch)

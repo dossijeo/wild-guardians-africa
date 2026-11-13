@@ -441,6 +441,12 @@ comprueba también todos los consumidores registrados antes/después del drenaje
 Se cierra el criterio de seguridad de f-R3 en su dominio nativo opt-in; f-R4 sigue
 pendiente. No cierra A6 ni autoriza continuar B como si A estuviera resuelto.
 
+Avance parcial de f-R4: el commit nativo conserva una identidad de recursos que
+viaja al consumidor actual y al bootstrap de reemplazo. Frames y command buffers
+anteriores no se readmiten por llegar después del commit. Hay rechazo y sustitución
+WebGPU reales con el preparador bloqueado; [alcance y pendientes](f-r4-resource-boundary-20261113.md).
+Falta aplicar el payload visible y validarlo con personajes; f-R4 permanece abierto.
+
 Actualización 2026-11-06: resuelto el bloqueo circular entre input, trayectoria histórica y entrega de pose. El certificador real está conectado al perfil temporal; un reloj común, callbacks por ID en fronteras y rollback de versiones permiten continuar B sin exigir primero todos los clips GPU. Véase [contrato, pruebas y límites de A6](a6-autonomous-motion-handoff.md). Este cierre del contrato interno no equivale a activar el perfil en producción ni a superar la validación visual de C.
 
 

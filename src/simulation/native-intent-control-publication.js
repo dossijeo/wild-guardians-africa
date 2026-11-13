@@ -1,5 +1,6 @@
 // Direct authority -> draw transport for the existing native intent protocol.
 // The native owner supplies the baseline/log; this sender keeps ACK cursors only.
+import {copyNativeWorldBoundary} from '../world/native-world-boundary.js';
 export function createNativeIntentControlPublication({port,session,observe,
   controlOwner=null,onError=()=>{},timeoutMs=10000,absoluteNow=()=>performance.timeOrigin+performance.now()}={}){
   if(!port||typeof port.postMessage!=='function'||typeof observe!=='function'||
@@ -13,6 +14,7 @@ export function createNativeIntentControlPublication({port,session,observe,
   let nextMutationFence=0,mutationHold=null;
   const consumerToken=crypto.randomUUID();
   let retirement=null,drained=false;
+  let worldBoundary=null;
   let clock=null,appliedClockSequence=null,baselineClockSequence=null;const clockReceipts=new Map();
   function prepareClock(record,{baseline=false}={}){
     if(record?.protocolVersion!==2||record.clockVersion!==1||record.authorityEpoch!==authorityEpoch||record.intentSequence!==sentSequence||
@@ -122,9 +124,13 @@ export function createNativeIntentControlPublication({port,session,observe,
       onBaseline(baseline){
         if(authorityEpoch!==null)throw Error('Native intent baseline repeated');
         authorityEpoch=baseline.authorityEpoch;baselineSequence=sentSequence=baseline.sequence;sentTime=baseline.effectiveTime;
+        worldBoundary=copyNativeWorldBoundary(baseline.worldBoundary??null);
+        if(worldBoundary&&worldBoundary.authorityEpoch!==authorityEpoch)throw Error('Native world baseline belongs to another authority');
         const initial=baseline.clock?prepareClock(baseline.clock,{baseline:true}):null;
+        if(worldBoundary&&(!initial||worldBoundary.nativeSession!==initial.nativeSession||worldBoundary.effectiveTime>initial.committedThrough))
+          throw Error('Native world resources precede their causal baseline');
         baselineClockSequence=initial?.clockSequence??null;
-        port.postMessage({...baseline,...(initial?{clock:initial}:{}),session,consumerToken});
+        port.postMessage({...baseline,...(initial?{clock:initial}:{}),worldBoundary,worldBoundaryVersion:1,session,consumerToken});
       },
       onClock(record){
         if(closed||retirement)return;
@@ -173,15 +179,23 @@ export function createNativeIntentControlPublication({port,session,observe,
         session,authorityEpoch,holdId,sequence,effectiveTime,clockSequence});}catch(error){fail(error);}
     });
   }
-  function releaseGpuAfterMutation(receipt,{committed=false}={}){
+  function releaseGpuAfterMutation(receipt,{committed=false,worldBoundary:nextBoundary=null}={}){
     const hold=mutationHold;
     if(typeof committed!=='boolean')throw TypeError('Expected native mutation commit outcome');
     if(closed||!hold||!hold.receipt||receipt!==hold.receipt||!clock||clock.intentSequence!==sentSequence||
        clock.committedThrough!==sentTime||clock.committedThrough<hold.effectiveTime)
       throw Error('Native mutation hold is stale or its causal boundary is unpublished');
+    if(committed){
+      nextBoundary=copyNativeWorldBoundary(nextBoundary);
+      if(!nextBoundary||nextBoundary.authorityEpoch!==authorityEpoch||nextBoundary.nativeSession!==clock.nativeSession||
+         nextBoundary.effectiveTime!==sentTime||worldBoundary&&nextBoundary.ticket<=worldBoundary.ticket)
+        throw Error('Native committed mutation requires a new world resource boundary');
+    }else if(nextBoundary!==null)throw Error('Cancelled mutation cannot replace world resources');
     port.postMessage({type:'IntentMutationRelease',protocolVersion:2,fenceVersion:1,session,authorityEpoch,
       holdId:hold.holdId,heldSequence:hold.sequence,heldTime:hold.effectiveTime,heldClockSequence:hold.clockSequence,
-      sequence:sentSequence,effectiveTime:sentTime,clockSequence:clock.clockSequence,committed});
+      sequence:sentSequence,effectiveTime:sentTime,clockSequence:clock.clockSequence,committed,
+      ...(committed?{worldBoundary:nextBoundary}:{})});
+    if(committed)worldBoundary=nextBoundary;
     clearTimeout(hold.timer);mutationHold=null;return true;
   }
   function retireGpu(reason='replaced'){
@@ -204,5 +218,5 @@ export function createNativeIntentControlPublication({port,session,observe,
     ownsGpuConsumer:consumer=>consumer===publication,status:()=>({session,authorityEpoch,baselineSequence,
     sentSequence,sentTime,appliedSequence,pendingGpuFences:gpuFences.size,closed,fault,
     ...(clock?{clockSequence:clock.clockSequence,appliedClockSequence,pendingClockReceipts:clockReceipts.size}:{} ),
-    pendingMutationHold:mutationHold?.holdId??null,retiring:retirement!==null,drained})});
+    pendingMutationHold:mutationHold?.holdId??null,retiring:retirement!==null,drained,worldBoundary})});
 }

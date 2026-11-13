@@ -9,6 +9,7 @@ import {targetReservationKey} from '../../simulation/raid-target-reservations.js
 import {actorBlockers} from '../../simulation/actor-motion.js';
 import {wallCollisionFrame} from '../wall-collision-frame.js';
 import {readNativeGateStaticWitness} from './spatial-gate-intents.js';
+import {copyNativeWorldBoundary} from '../native-world-boundary.js';
 import {applyConfirmedTaskAssignments,notifyWorkerPlanningChange,
   observeTaskChanges,releaseTask,replaceTasks} from '../../simulation/tasks.js';
 
@@ -144,6 +145,8 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
   // Retention is independent of the event subscription: closing a port or
   // stopping an observer does not prove its device stopped executing work.
   const controlConsumers=new Map();
+  let committedWorldBoundary=null;
+  const nativeWorldBoundary=()=>committedWorldBoundary?.authorityEpoch===epoch()?committedWorldBoundary:null;
   const pruneDrainedConsumers=()=>{
     for(const [publication] of controlConsumers)if(publication.status?.().drained)controlConsumers.delete(publication);
   };
@@ -506,7 +509,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     const clock=nativeCausalClock();
     if(clock&&(clock.intentSequence!==wasm.nav_intent_transition_sequence()||clock.committedThrough!==wasm.nav_intent_effective_time()))
       throw Error('Commit the native causal clock before attaching a new draw consumer');
-    return {type:'IntentBaseline',protocolVersion:2,authorityEpoch:epoch(),...(clock?{clock}:{}),
+    return {type:'IntentBaseline',protocolVersion:2,authorityEpoch:epoch(),worldBoundary:nativeWorldBoundary(),...(clock?{clock}:{}),
       sequence:wasm.nav_intent_transition_sequence(),effectiveTime:wasm.nav_intent_effective_time(),
       routes:Array.from({length:count},(_,index)=>{
         const at=index*6;
@@ -682,9 +685,11 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
         answer=outcome('invalid-receipt');
       else{
         commitAttempted=true;
-        const committed=commit(value=>{physicalCommitted=true;committedValue=value??{};},session,ticket,sequence,time,clockSequence);
+        const committed=commit(value=>{physicalCommitted=true;committedValue=value??{};
+          committedWorldBoundary=copyNativeWorldBoundary({version:1,authorityEpoch:owner,nativeSession:session,ticket,effectiveTime:time});
+        },session,ticket,sequence,time,clockSequence);
         if(committed.status===1&&!physicalCommitted)throw Error('Native mutation returned without a commit marker');
-        answer=committed.status===1?outcome('committed',{...committed.value,receipt}):
+        answer=committed.status===1?outcome('committed',{...committed.value,receipt,worldBoundary:nativeWorldBoundary()}):
           outcome(committed.status===-2?'stale':committed.status===-3?'invalid-receipt':committed.status===-6?'blocked':'stale');
       }
     }catch(error){commitFailed=commitAttempted;answer=outcome(physicalCommitted?'committed-control-failed':'control-failed',
@@ -698,7 +703,8 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
           // a same-time native watermark before releasing the GPU hold.
           flushNativeIntentControl();const latest=nativeCausalClock();
           if(!latest||wasm.nav_intent_clock_commit(latest.rate,latest.paused?1:0)<0)throw Error('Native clock cannot publish mutation boundary');
-          flushNativeIntentControl();source.releaseGpuAfterMutation(receipt,{committed:physicalCommitted});
+          flushNativeIntentControl();source.releaseGpuAfterMutation(receipt,{committed:physicalCommitted,
+            ...(physicalCommitted?{worldBoundary:nativeWorldBoundary()}:{})});
         }catch(error){source.dispose('mutation-release-failed');answer=outcome(physicalCommitted?'committed-control-failed':'control-failed',
           {...committedValue,error:String(error?.message??error)});}
       }

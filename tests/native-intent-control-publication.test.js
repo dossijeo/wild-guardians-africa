@@ -216,6 +216,8 @@ test('mutation quiescence requires a clock-aware applied connection and releases
   await assert.rejects(source.quiesceGpuForMutation(),/busy/);await assert.rejects(source.fenceGpu(),/not ready/);
   port2.postMessage({...message,type:'intent-mutation-quiesced',accepted:true});const receipt=await pending;
   assert.throws(()=>source.releaseGpuAfterMutation({...receipt}),/stale/);
+  assert.throws(()=>source.releaseGpuAfterMutation(receipt,{committed:true}),/requires a new world resource boundary/);
+  assert.equal(source.status().pendingMutationHold,1,'missing native identity cannot release the physical hold');
   const release=new Promise(resolve=>port2.once('message',resolve));assert.equal(source.releaseGpuAfterMutation(receipt),true);
   assert.equal((await release).type,'IntentMutationRelease');assert.equal(source.status().pendingMutationHold,null);
   assert.throws(()=>source.releaseGpuAfterMutation(receipt),/stale/);

@@ -1,7 +1,7 @@
 import {createRemoteWebGpu} from '../../src/rendering/remote-webgpu-client.js';
 
 const now=()=>performance.timeOrigin+performance.now();
-let remote,clockBuffer,diagnosticClock,resultBuffer,readback,computeGroup,compute;
+let remote,clockBuffer,diagnosticClock,resultBuffer,readback,computeGroup,compute,prepareFrame;
 self.onmessage=async({data})=>{
  try{
   if(data.kind==='initialize'){
@@ -63,10 +63,11 @@ struct Vertex { @builtin(position) position:vec4f, @location(0) phase:f32 }
    remote.registerClockBinding(clockBuffer,{byteOffset:0,semantic:'absolute',epoch:0,nativeRoute:data.route});
    const anchor=now()+50,clock={version:1,epoch:0,elapsed:data.startTime,safeUntil:data.endTime,
     anchorAbsoluteMs:anchor,paused:false,segments:[{start:data.startTime,end:data.endTime,rate:1,realDuration:data.endTime-data.startTime}]};
-   remote.beginFrame({clock});const encoder=device.createCommandEncoder(),pass=encoder.beginRenderPass({
+   prepareFrame=worldBoundary=>{remote.beginFrame({clock,nativeWorldBoundary:worldBoundary});const encoder=device.createCommandEncoder(),pass=encoder.beginRenderPass({
     colorAttachments:[{view:remote.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store',clearValue:{r:.01,g:.02,b:.03,a:1}}],
    });
-   pass.setPipeline(render);pass.setBindGroup(0,group);pass.draw(3);pass.end();device.queue.submit([encoder.finish()]);await remote.endFrame();
+   pass.setPipeline(render);pass.setBindGroup(0,group);pass.draw(3);pass.end();device.queue.submit([encoder.finish()]);};
+   prepareFrame(data.worldBoundary??null);await remote.endFrame();
    postMessage({kind:'drawing',anchor});return;
   }
   if(data.kind==='block'){
@@ -82,6 +83,12 @@ struct Vertex { @builtin(position) position:vec4f, @location(0) phase:f32 }
    postMessage({kind:'inspection',id:data.id,values,execution:await remote.inspectAsync()});return;
   }
   if(data.kind==='status'){postMessage({kind:'status',id:data.id,execution:await remote.inspectAsync()});return;}
+  if(data.kind==='prepare-frame'){prepareFrame(data.worldBoundary??null);postMessage({kind:'frame-prepared',id:data.id});return;}
+  if(data.kind==='publish-frame'){
+   try{await remote.endFrame();postMessage({kind:'frame-published',id:data.id,outcome:'presented'});}
+   catch(error){if(error.code!=='remote-frame-native-mutation-obsolete')throw error;postMessage({kind:'frame-published',id:data.id,outcome:'obsolete'});}
+   return;
+  }
   if(data.kind==='lose-device'){remote.device.destroy();return;}
   if(data.kind==='dispose'){remote?.dispose();close();return;}
   throw Error('Unknown native gate hold audit request');

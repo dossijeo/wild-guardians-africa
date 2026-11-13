@@ -67,6 +67,10 @@ El objetivo autónomo persistente está activo en este chat. Registro de consumi
 y retirada GPU implementados y ligados a todas las fronteras condicionadas del
 bridge. f-R3 cerrado en su alcance de seguridad; f-R4 es la siguiente dependencia.
 
+f-R4 en curso: [identidad del commit y sustitución gráfica](f-r4-resource-boundary-20261113.md)
+implementadas en los propietarios existentes. Quedan el payload visible y la
+aceptación con personajes, sin publicaciones periódicas de posición JS.
+
 - [x] Auditar propietarios y reabrir A6; commits `e213c43f9`–`8892bbe80`.
 - [x] Log nativo versionado, secuencias/tiempos y revocación exacta.
 - [x] Suscripciones espaciales nativas para cambios de sectores/portales.

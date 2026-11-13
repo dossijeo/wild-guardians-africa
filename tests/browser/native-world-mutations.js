@@ -5,7 +5,7 @@ import {createNativeIntentControlPublication} from '../../src/simulation/native-
 import {createNativeIntentControlCohort} from '../../src/simulation/native-intent-control-cohort.js';
 
 const now=()=>performance.timeOrigin+performance.now();
-async function runCase(module,text,kind,{lifecycle=false}={}){
+async function runCase(module,text,kind,{lifecycle=false,resourceIdentity=false}={}){
  const state=deserialize(text),template=structuredClone(state.workers[0]);
  state.workers=[];state.tasks=[];state.plants=[];state.crates=[];state.spells=[];state.raid=null;state.elapsed=10;state.pauses=[];
  const loaded=new Map(),session=createSpatialGameSession(module,state,{loaded:()=>loaded,onData:c=>loaded.set(`${c.cx},${c.cz}`,c)}),
@@ -52,6 +52,7 @@ async function runCase(module,text,kind,{lifecycle=false}={}){
   const startPacket={kind:'start',startTime:plan.startTime,endTime:plan.endTime,rows,route:{actorId:plan.actorId,routeHandle:handle,assignmentSequence:plan.assignmentSequence}};
   preparer.postMessage(startPacket);await expect('drawing');
   if(lifecycle)return await exerciseControlLifecycle({state,session,bridge,publication,preparer,expect,transportSession,startPacket,mutation});
+  if(resourceIdentity){preparer.postMessage({kind:'prepare-frame',id:2});await expect('frame-prepared-2');}
   preparer.postMessage({kind:'block',id:1});const start=await expect('block-start-1');
   const action=new Promise((resolve,reject)=>{commandTimer=setTimeout(async()=>{try{
    state.elapsed=10.25;if(bridge.advanceNativeRouteExecution(state.elapsed).status!=='advanced'||bridge.commitNativeCausalClock().status!=='committed')throw Error('Native clock advance failed');
@@ -66,19 +67,30 @@ async function runCase(module,text,kind,{lifecycle=false}={}){
     throw Error('Unexpected conditioned world commit '+JSON.stringify({kind,result,changes}));
    resolve({stagedAt,committedAt,sequence,result,changes,worldChanged:afterSnapshot!==snapshot,residencyChanged:afterResidency!==residency});
   }catch(error){reject(error);}},180);});
-  const [endBlock,mutationResult]=await Promise.all([expect('block-end-1'),action]);preparer.postMessage({kind:'inspect',id:1});
+  const [endBlock,mutationResult]=await Promise.all([expect('block-end-1'),action]);
+  if(resourceIdentity){preparer.postMessage({kind:'publish-frame',id:2});if((await expect('frame-published-2')).outcome!=='obsolete')throw Error('Late pre-commit resources borrowed the new native world');}
+  preparer.postMessage({kind:'inspect',id:1});
   const report=await expect('inspection-1'),host=report.execution.consumer,
    beforeFrames=host.samples.filter(f=>f.at>=start.start&&f.at<host.nativeMutationQuiescedAt),
    afterFrames=host.samples.filter(f=>f.at>=host.nativeMutationReleasedAt&&f.at<=endBlock.end);
   if(mutationResult.committedAt>=endBlock.end||host.nativeMutationQuiescedAt<mutationResult.stagedAt||
      host.nativeMutationReleasedAt<host.nativeMutationQuiescedAt||host.nativeMutationEpoch!==1||host.nativeMutationFloor!==10.25||
      beforeFrames.length<2||afterFrames.length||host.failed||host.gpuErrors||host.packets!==1)throw Error('Draw boundary failed '+kind);
-  return {kind,adapter:host.adapterInfo,block:{start:start.start,end:endBlock.end,blockedMs:endBlock.end-start.start,
+  const summary={kind,adapter:host.adapterInfo,block:{start:start.start,end:endBlock.end,blockedMs:endBlock.end-start.start,
     drawFramesBeforeQuiescence:beforeFrames.length,drawFramesAfterRelease:afterFrames.length},
    mutation:{...mutationResult,result:{status:mutationResult.result.status,ids:mutationResult.result.ids,receipt:mutationResult.result.receipt},
     changes:mutationResult.changes.map(e=>({type:e.type,sequence:e.sequence,effectiveTime:e.effectiveTime,actorId:e.actorId}))},
    drawStats:{quiescedAt:host.nativeMutationQuiescedAt,releasedAt:host.nativeMutationReleasedAt,mutationEpoch:host.nativeMutationEpoch,
     floor:host.nativeMutationFloor,packets:host.packets,nativeFrames:host.nativeFrames,gpuErrors:host.gpuErrors,failed:host.failed}};
+  if(resourceIdentity){
+   preparer.postMessage({kind:'prepare-frame',id:3,worldBoundary:mutationResult.result.worldBoundary});await expect('frame-prepared-3');
+   preparer.postMessage({kind:'publish-frame',id:3});if((await expect('frame-published-3')).outcome!=='presented')throw Error('Fresh native resource identity did not admit replacement');
+   preparer.postMessage({kind:'inspect',id:3});const fresh=await expect('inspection-3'),after=fresh.execution.consumer;
+   if(after.packets!==2||after.activeSequence!==3||after.failed||after.gpuErrors||fresh.values[0]!==10.25)throw Error('Replacement world did not draw at the native boundary');
+   summary.resourceIdentity={latePacket:'obsolete',freshPacket:'presented',worldBoundary:mutationResult.result.worldBoundary,
+    activeSequence:after.activeSequence,packets:after.packets,presentedTime:fresh.values[0],scope:'Native resource identity and packet replacement; unchanged diagnostic route, no characters or visible mutation projection.'};
+  }
+  return summary;
  };
  try{return await Promise.race([run(),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Native world mutation audit timed out: '+kind)),30000);})]);}
  finally{clearTimeout(timer);clearTimeout(commandTimer);publication?.dispose();preparer.terminate();draw.terminate();session.dispose();canvas.remove();}
@@ -123,7 +135,7 @@ async function exerciseControlLifecycle({state,session,bridge,publication,prepar
   const deadline=performance.now()+5000;while(!publication.connections().current?.drained&&performance.now()<deadline)await new Promise(resolve=>setTimeout(resolve,5));
   if(!publication.connections().current?.drained)throw Error('Lost device did not retire safely');
   const recovery=peer({relay:true});await Promise.all([recovery.attach(),recovery.expect('device-ready')]);
-  recovery.preparation.postMessage(startPacket);await recovery.expect('drawing');
+  recovery.preparation.postMessage({...startPacket,worldBoundary:publication.connections().current.worldBoundary});await recovery.expect('drawing');
   const afterLoss=publication.connections(),safeState=same();recovery.silence();
   const pendingFailure=mutate({type:'addChunk',cx:5,cz:5});
   await new Promise(resolve=>setTimeout(resolve,150));
@@ -151,4 +163,11 @@ export async function auditNativeControlLifecycle(){
   text=bytes[0]===31&&bytes[1]===139?await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text():new TextDecoder().decode(bytes),
   module=await WebAssembly.compileStreaming(fetch('/src/world/wild-engine/spatial-savanna.wasm'));
  return runCase(module,text,'residency-add',{lifecycle:true});
+}
+export async function auditNativeWorldResources(){
+ const bytes=new Uint8Array(await(await fetch('/tests/fixtures/desierto983-d15-partial-state.json.gz')).arrayBuffer()),
+  text=bytes[0]===31&&bytes[1]===139?await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text():new TextDecoder().decode(bytes),
+  module=await WebAssembly.compileStreaming(fetch('/src/world/wild-engine/spatial-savanna.wasm'));
+ return {checklistId:'A6-04.f-R4',backend:'webgpu',...await runCase(module,text,'residency-add',{resourceIdentity:true}),
+  scope:'Native commit identity and graphical replacement only. Visible mutation resources and real characters remain pending.',authorizedAutonomy:false,authorizedPassage:false};
 }

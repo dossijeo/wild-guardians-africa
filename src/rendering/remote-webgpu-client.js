@@ -1,5 +1,6 @@
 // The producer owns Three's object graph, never the native GPU device. Only
 // serializable WebGPU descriptors and commands cross this boundary.
+import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 const REF = '__remoteGpuId';
 const CURRENT = '@canvas';
 const ENCODER_METHODS = ['copyBufferToBuffer','copyBufferToTexture','copyTextureToBuffer','copyTextureToTexture','clearBuffer','resolveQuerySet','insertDebugMarker','pushDebugGroup','popDebugGroup'];
@@ -18,6 +19,7 @@ function copyBytes(data, offset = 0, size) {
 export function createRemoteWebGpuClient({ port, capabilities, onError = () => {}, onPresented = () => {}, terminate = () => {}, finalizationRegistryFactory = callback => typeof FinalizationRegistry === 'function' ? new FinalizationRegistry(callback) : null }) {
   let nextId = 0, sequence = 0, frame = null, pendingFrame = null, disposed = false, fatalError = null;
   let outbound = Promise.resolve();
+  let requiredWorldBoundary=null;
   const pending = new Map(), clockBindings = new Map(), canvasViewIds = new Set();
   const weakResources = new Map(), retainedCounts = new Map(), deferredFinalizations = new Set();
   const frameTimings = [], fenceTimings = [];
@@ -167,6 +169,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     send(message); return value;
   }
   function encoder(descriptor = {}, bundle = false) {
+    const nativeWorldBoundary=copyNativeWorldBoundary(frame?.metadata.nativeWorldBoundary??null);
     const commands = [];
     const recordedReferences = collectReferences(descriptor);
     const result = { label: descriptor.label || '' };
@@ -195,7 +198,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
         send({ type: 'bundle', id: value[REF], descriptor: encode(descriptor), commands });
         return value;
       }
-      return { __remoteCommands: commands, descriptor: encode(descriptor), __remoteReferences: recordedReferences, submitted: false };
+      return { __remoteCommands: commands, descriptor: encode(descriptor), __remoteReferences: recordedReferences, submitted: false,nativeWorldBoundary };
     };
     return result;
   }
@@ -216,7 +219,8 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     },
     submit(buffers) {
       for (const buffer of buffers) { if (buffer.submitted) throw Error('Command buffer already submitted'); buffer.submitted = true; }
-      queueOp({ method: 'submit', args: [buffers.map(buffer => ({ __remoteCommands: buffer.__remoteCommands, descriptor: buffer.descriptor }))] });
+      queueOp({ method: 'submit', args: [buffers.map(buffer => ({ __remoteCommands: buffer.__remoteCommands, descriptor: buffer.descriptor,
+        nativeWorldBoundary:buffer.nativeWorldBoundary??null }))] });
     },
     // Remote-only admission contract: preceding payloads have crossed the
     // boundary and their writes/submits have entered the native queue. This is
@@ -311,6 +315,14 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     if (message.type === 'reply') {
       const entry = pending.get(message.requestId);
       if (entry) { pending.delete(message.requestId); message.error ? entry.reject(Error(message.error)) : entry.resolve(message.result); }
+    } else if (message.type === 'native-world-boundary') {
+      try{
+        const boundary=copyNativeWorldBoundary(message.worldBoundary);
+        if(requiredWorldBoundary&&(!boundary||boundary.authorityEpoch!==requiredWorldBoundary.authorityEpoch||
+           boundary.nativeSession!==requiredWorldBoundary.nativeSession||boundary.ticket<=requiredWorldBoundary.ticket))
+          throw Error('Remote native world boundary regressed');
+        requiredWorldBoundary=boundary;
+      }catch(error){fail(error);}
     } else if (message.type === 'presented') {
       metrics.framesPresented++;
       if (pendingFrame?.sequence === message.sequence) {
@@ -345,6 +357,8 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     },
     endFrame(metadata) {
       if (!frame) throw Error('No remote GPU frame transaction');
+      if(metadata!==undefined&&!sameNativeWorldBoundary(frame.metadata.nativeWorldBoundary??null,metadata.nativeWorldBoundary??null))
+        throw Error('A prepared frame cannot be retagged for another native world');
       const packet = frame; frame = null;
       const timing = recordTiming(frameTimings, { sequence: packet.sequence, endFrameCalledAt: absoluteNow() });
       packet.transportTiming = timing;
@@ -381,6 +395,9 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
       send({ type: 'clock-binding', id: buffer[REF], binding:captured });
     },
     registerCameraBinding(buffer, binding) { send({ type: 'camera-binding', id: buffer[REF], binding }); },
+    // This is a requirement, never an automatic tag for existing resources.
+    // Only the preparation owner knows when it has applied that native world.
+    requiredNativeWorldBoundary:()=>requiredWorldBoundary,
     setCameraMailbox(mailbox) { send({ type: 'camera-mailbox', mailbox }); },
     inspect: () => ({ ...metrics, pendingFrame: pendingFrame?.sequence || null, openFrame: frame?.sequence || null, clockBindings: clockBindings.size, retainedResources: retainedCounts.size, weakResources: weakResources.size, finalizationAvailable: !!finalizer, frameTimings: frameTimings.slice(), fenceTimings: fenceTimings.slice(), backend: 'remote-webgpu', failed: !!fatalError }),
     inspectAsync: () => request({ type: 'inspect' }).then(consumer => ({ ...api.inspect(), consumer })),

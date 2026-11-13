@@ -49,6 +49,12 @@ dependencias con A6-01/02/06/07/08/09; no se cuentan otra vez como trabajo nuevo
 | **A6-04.f-R3** | **CERRADO — Todos los consumidores, relevo y fallos.** | La seguridad cubre consumidores activos/temporales, sustitución de Workers, pérdida de dispositivo y canal perdido o silencioso; un ACK viejo no permite aplicar cambios. [Relevo real WASM/WebGPU](performance/native-control-lifecycle-20261113.json) y [alcance/registro nativo](migration-checkpoint-20261113.md#cierre-del-criterio-de-seguridad-f-r3). |
 | **A6-04.f-R4** | Aplicación gráfica de la misma mutación. | Recursos y dibujo representan el cambio físico coordinado; probarlo con personajes reales y preparación bloqueada, sin depender de publicaciones periódicas de posición JS. |
 
+Avance de f-R4: [identidad de recursos ligada al commit nativo](f-r4-resource-boundary-20261113.md).
+Los paquetes que llegan tarde, los command buffers antiguos y los envíos directos
+no pueden adoptar la época nueva por su momento de recepción. El reemplazo GPU
+se comprueba con preparación bloqueada; payload visible y personajes reales
+siguen pendientes. No cambia la cuenta fija de entregables.
+
 **Alcance del cierre de e-R1:** mecanismo cinemático de unión ocupada, materiales
 zarzas/empalizada/reforzado intactos y apoyo plano validado por el terreno nativo.
 No se alteran mallas, bisagras ni velocidad. No se declara separación interna de
