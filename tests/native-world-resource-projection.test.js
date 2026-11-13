@@ -11,7 +11,7 @@ import {createConfirmedTerrainReceiver} from '../src/rendering/confirmed-terrain
 function setup(options={}){
  const f=createNativeRouteExecutionFixture(options);f.worker(1,f.point(-6,0),f.point(6,0));
  f.bridge.beginNativeRouteExecution();f.advance(11);f.bridge.commitNativeCausalClock();
- const {port1,port2}=new MessageChannel(),messages=[];let acknowledge=true;
+ const {port1,port2}=new MessageChannel(),messages=[];let acknowledge=true,holdStart=0;
  port2.onmessage=({data:m})=>{
   messages.push(m);
   if(m.type==='IntentBaseline')port2.postMessage({type:'intent-control-applied',session:m.session,authorityEpoch:m.authorityEpoch,
@@ -24,8 +24,8 @@ function setup(options={}){
  };
  const source=createNativeIntentControlPublication({port:port1,session:'native-resources',observe:f.bridge.observeNativeIntentControl});
  return {...f,source,messages,mutate:mutation=>f.bridge.mutateNativeWorldAfterGpuQuiescence({getPublication:()=>source,mutation}),
-  hold(){acknowledge=false;},release(){const m=messages.findLast(m=>m.type==='IntentMutationQuiesce');assert(m);port2.postMessage({...m,type:'intent-mutation-quiesced',accepted:true});},
-  async waitHold(){for(let i=0;i<200&&!messages.some(m=>m.type==='IntentMutationQuiesce');i++)await delay(1);assert(messages.some(m=>m.type==='IntentMutationQuiesce'));},
+  hold(){acknowledge=false;holdStart=messages.length;},release(){const m=messages.slice(holdStart).findLast(m=>m.type==='IntentMutationQuiesce');assert(m);port2.postMessage({...m,type:'intent-mutation-quiesced',accepted:true});},
+  async waitHold(){for(let i=0;i<200&&!messages.slice(holdStart).some(m=>m.type==='IntentMutationQuiesce');i++)await delay(1);assert(messages.slice(holdStart).some(m=>m.type==='IntentMutationQuiesce'));},
   dispose(){source.dispose();port2.close();f.session.dispose();}};
 }
 const key=p=>`${p.cx},${p.cz}`;
@@ -58,6 +58,27 @@ test('native eviction emits exact tombstones and never rebuilds an evicted chunk
   assert.equal(result.resources.kind,7);assert.deepEqual(result.resources.chunks,[]);assert.deepEqual(result.resources.removed,[{cx:4,cz:4}]);
   canonical(f.session.core,result.resources);assert.equal(f.w.spatial_has_chunk(4,4),0);
  }finally{f.dispose();}
+});
+
+test('a native removal reaches the existing terrain channel only after its physical commit and state confirmation',async()=>{
+ const {port1,port2}=new MessageChannel(),errors=[],accepted=[],removed=[],boundaries=[],
+  publication=createTerrainPublication({port:port1,session:'terrain-removal',epoch:'terrain/1'}),
+  receiver=createConfirmedTerrainReceiver({port:port2,session:'terrain-removal',confirmedElapsed:11,
+   residency:{replace:(payload,revision)=>{accepted.push({payload,revision});return true;},remove:(cx,cz,revision)=>{removed.push({cx,cz,revision});return true;}},
+   onRemoved(){},onError:e=>errors.push(e)}),
+  f=setup({onData:payload=>publication.stage(payload,11),onRelease:(cx,cz,metadata)=>{
+   assert.equal(f.w.spatial_has_chunk(cx,cz),0);boundaries.push(metadata.nativeWorldBoundary);
+   assert.equal(publication.stage({authority:'spatial-wasm',cx,cz,removed:true},11),true);
+  }});
+ try{
+  await f.source.ready;assert.equal((await f.mutate({type:'addChunk',cx:4,cz:4})).status,'committed');publication.commit(1);receiver.confirm(1,11);
+  for(let i=0;i<100&&!accepted.length;i++)await delay(1);assert.equal(accepted.length,1);
+  f.hold();const pending=f.mutate({type:'removeChunks',chunks:[[4,4]],releaseOnly:true});await f.waitHold();assert.deepEqual(boundaries,[]);assert.equal(f.w.spatial_has_chunk(4,4),1);
+  f.release();const result=await pending;assert.equal(result.status,'committed');assert.deepEqual(boundaries,[result.worldBoundary]);
+  publication.commit(2);await delay(5);assert.deepEqual(removed,[]);receiver.confirm(2,11);
+  for(let i=0;i<100&&!removed.length;i++)await delay(1);assert.deepEqual(removed,[{cx:4,cz:4,revision:2}]);assert.deepEqual(errors,[]);
+  assert.deepEqual(publication.manifest(),{epoch:'terrain/1',chunks:[]});assert.equal(f.w.spatial_has_chunk(4,4),0);
+ }finally{receiver.dispose();publication.dispose();f.dispose();}
 });
 
 test('the existing session stream and terrain channel carry canonical post-commit resources with the confirmed sequence',async()=>{

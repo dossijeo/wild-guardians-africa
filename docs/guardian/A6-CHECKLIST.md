@@ -2,7 +2,7 @@
 
 Actualizado: 2026-11-13. IDs acordados en la conversación; no se renumeran al avanzar.
 
-Último incremento de f-R4: [payloads canónicos del commit y publicación confirmada](f-r4-canonical-resources-20261113.md).
+Último incremento de f-R4: [payloads canónicos y retiradas versionadas por el canal existente](f-r4-canonical-resources-20261113.md).
 Su admisión gráfica y aceptación con personajes siguen pendientes; no cambia el recuento de cierres.
 
 **Ningún punto principal está cerrado todavía.** Un subpunto marcado como nativo

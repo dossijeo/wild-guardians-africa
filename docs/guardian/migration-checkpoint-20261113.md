@@ -159,3 +159,8 @@ registro conserva el 404 de consola sin atribución descrito arriba.
 commit nativo publica sus chunks reales por la sesión/canal de terreno existente
 y entrega una frontera compacta a la publicación confirmada de la autoridad.
 f-R4 sigue parcial: faltan admisión/retiradas gráficas y personajes reales.
+
+El incremento siguiente conserva las retiradas por ese mismo canal: revisión,
+confirmación y handoff sin resurrección por mensajes atrasados. Un receptor sin
+propietario de retirada gráfica falla antes de cambiar residencia. Pasan 190
+pruebas dirigidas y build; la admisión del surface y los cierres siguen pendientes.

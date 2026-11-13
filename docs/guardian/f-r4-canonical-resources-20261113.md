@@ -39,6 +39,30 @@ Los ACK del transporte siguen sin significar disponibilidad GPU. El surface aún
 debe coordinar payload, retirada, preparación y admisión antes de etiquetar un
 frame con la identidad nueva; consultar el ticket actual no basta.
 
+### Retiradas en el canal existente
+
+Después de `0a0f33560`, las retiradas físicas también producen tombstones
+`authority: spatial-wasm, removed: true, cx, cz, capturedAt`. Comparten la revisión
+por chunk y la secuencia de confirmación con los payloads, sin buffers ni
+geometría de sustitución. La autoridad publica solo las retiradas que proceden
+del commit nativo; la política de retención ordinaria conserva su comportamiento.
+
+El manifiesto residente excluye los chunks retirados. El handoff conserva sus
+revisiones y la marca de retirada: volver a añadirlos continúa la numeración.
+El journal de recuperación incluye esa marca y exige coincidencia entre el
+payload y su manifiesto. Descartar staging no retira el chunk ni consume revisión.
+
+El receptor tiene una notificación `onRemoved` explícita para el propietario de
+los demás recursos gráficos; no entrega tombstones al callback de geometría.
+Sin esa capacidad, falla **antes** de tocar residencia. En el modo preparado,
+el lote completo debe estar listo y confirmar antes de notificar la retirada;
+cancelación o rechazo no acreditan aplicación. Un ACK del transporte no la prueba.
+
+**Pendiente:** el surface aún no proporciona esa retirada coordinada de terreno,
+vegetación, contactos/cámara y demás recursos. En particular, el preparador
+temporal todavía requiere participantes reversibles de retirada; el contrato
+nuevo no permite saltarse esa preparación ni etiquetar un frame como actualizado.
+
 ## Validación ejecutada
 
 - Nueve pruebas nuevas con WASM real: recibo antes de publicar, propiedad de
@@ -69,6 +93,17 @@ Recibos locales reproducibles: `.cache/native-resource-projection-regression.tap
 `.cache/native-canonical-resource-boundary.json`,
 `.cache/native-world-mutations-regression.json` y
 `.cache/native-canonical-control-lifecycle.json`.
+
+Validación del incremento de retiradas: **190 pruebas de 19 archivos, cero
+fallos/skips**, selección en `.cache/terrain-tombstones-selection.json` y resultado
+en `.cache/terrain-tombstones-regression.tap`. Incluye retirada WASM real por
+MessagePorts después del recibo, secuencia confirmada, handoff, coalescing,
+replay, upload atrasado, rechazo y cancelación de preparación. Build WebGPU
+aprobado en **47,42 s**, `.cache/terrain-tombstones-build.log`, con los avisos
+existentes. El arranque conectado de producto conserva Shield legal, revocación
+y **15 dibujos durante 500 ms** de bloqueo; cero errores capturados en su
+alcance (`.cache/native-product-control-resource-boundary.json`). Este último
+no dibuja personajes ni prueba la retirada visible o locomoción autónoma.
 
 ## Siguiente punto pendiente
 

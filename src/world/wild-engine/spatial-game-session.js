@@ -210,7 +210,7 @@ export function createSpatialGameSession(module,state,streamOptions){
     }
     for(const {cx,cz} of resources.removed){
       const key=`${cx},${cz}`;streamOptions.loaded().delete(key);nativeProps.delete(key);retainedProps.delete(key);
-      chunkRevisions.set(key,(chunkRevisions.get(key)??0)+1);streamOptions.onRelease?.(cx,cz);
+      chunkRevisions.set(key,(chunkRevisions.get(key)??0)+1);streamOptions.onRelease?.(cx,cz,{nativeWorldBoundary:boundary});
     }
     if(resources.kind===10)terrainRevision++;
     publishedNativeResources={nativeSession:resources.nativeSession,ticket:resources.ticket};return resources;

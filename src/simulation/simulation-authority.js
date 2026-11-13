@@ -54,7 +54,11 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
  try{
   const withMud=data=>mudPresentation&&session.field.c.biome==='mangrove'?{...data,mudInputs:captureMudInputs(session.field,data.cx,data.cz,data.terrain.positions)}:data;
   const acceptChunk=raw=>{const data=withMud(raw);loaded.set(`${data.cx},${data.cz}`,data);terrainGeneration++;onTerrainChunk?.(data,game.elapsed);};
-  session=createSpatialGameSession(module,game,{loaded:()=>loaded,onData:acceptChunk});
+  session=createSpatialGameSession(module,game,{loaded:()=>loaded,onData:acceptChunk,onRelease:(cx,cz,metadata)=>{
+    // Ordinary native retention keeps its existing presentation policy. Only
+    // a committed physical proposal publishes a graphical tombstone here.
+    if(metadata?.nativeWorldBoundary){terrainGeneration++;onTerrainChunk?.({authority:'spatial-wasm',cx,cz,removed:true},game.elapsed);}
+  }});
   for(const key of chunkKeys){const [x,z]=parseSimulationChunkKey(key);if(session.core.selectChunk(x,z)<0&&session.core.addChunk(x,z)<0)throw Error('Could not add simulation chunk '+key);session.stream.onData(session.core.chunkPayload());}
   const planner=createEventDrivenTaskPlanner(session,{onNativeWorldResources:resources=>{
     if(!resources.chunks.length)terrainGeneration++;
