@@ -2,7 +2,7 @@
 
 Actualizado: 2026-11-14. IDs acordados en la conversación; no se renumeran al avanzar.
 
-Último incremento de f-R4: [retención de lotes gráficos de props sin cambios](f-r4-retained-biome-slots-20261113.md).
+Último incremento de f-R4: [instalación de terreno preparado y medición del relevo gráfico pendiente](f-r4-native-prepared-terrain-20261114.md).
 Publicaciones vivas y aceptación de personajes autónomos siguen pendientes; no cambia el recuento de cierres.
 
 **Ningún punto principal está cerrado todavía.** Un subpunto marcado como nativo

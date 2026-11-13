@@ -1,4 +1,6 @@
 struct TerrainProposal {
+  std::vector<std::pair<int,int>> affected;
+  PreparedTerrainNavigation navigation;
   std::unordered_map<uint64_t,ChunkSpatialSample> samples;
   std::unordered_set<uint64_t> changed;
   std::vector<PreparedChunkData> chunks;
@@ -38,8 +40,12 @@ bool applyProtectedTerrain(std::vector<Settlement>& proposed,const std::vector<S
   if(worldBiome!=1){spatialIntentTerrainBefore(nullptr,0,nullptr,nullptr,0,false);return false;}
   for(const auto& site:proposed)if(std::abs(site.x)+site.hx+64>=2147482000.0||std::abs(site.z)+site.hz+64>=2147482000.0){
     spatialIntentTerrainBefore(nullptr,0,nullptr,nullptr,0,false);return false;}
-  std::vector<std::pair<int,int>> affected;
-  const auto& original=residentSpatial();TerrainProposal plan;
+  const auto* prepared=worldResourcePreviewApplying;
+  TerrainProposal local;auto& plan=prepared&&prepared->terrainChange?*prepared->terrainChange:local;
+  const bool cached=&plan!=&local;
+  auto& affected=plan.affected;
+  if(!cached){
+  const auto& original=residentSpatial();
   for(const auto& cell:loadedChunks){const int cx=cell.first,cz=cell.second;
     if(!std::any_of(changedSites.begin(),changedSites.end(),[&](const Settlement& site){return settlementNearChunk(site,cx,cz);}))continue;
     const auto found=original.find(chunkKey(cx,cz));
@@ -80,24 +86,37 @@ bool applyProtectedTerrain(std::vector<Settlement>& proposed,const std::vector<S
   }
   std::vector<Prop> ordered;for(const auto& [key,p]:newSolids)ordered.push_back(p);std::sort(ordered.begin(),ordered.end(),propKeyLess);
   for(const auto& p:ordered){const auto shape=propMutation(p);plan.solids.push_back(shape);plan.bounds.push_back(shape);}
-  const auto ticket=spatialIntentTerrainBefore(plan.bounds.data(),int(plan.bounds.size()),terrainProposalClear,&plan,int(affected.size()));
+  }
+  const auto ticket=spatialIntentTerrainBefore(plan.bounds.data(),int(plan.bounds.size()),terrainProposalClear,&plan,cached?0:int(affected.size()));
   if(!ticket.allowed)return false;
   if(ticket.preview){
-    if(worldResourcePreviewCapture){ScopedTerrainRecipeView scratch(proposed,plan);
-      for(auto& data:plan.chunks){selectPreparedChunkData(std::move(data));ensureSelectedVisual();captureWorldResourcePreview(takePreparedChunkData());}}
+    if(worldResourcePreviewCapture){
+      {ScopedTerrainRecipeView scratch(proposed,plan);
+        for(auto& data:plan.chunks){selectPreparedChunkData(std::move(data));ensureSelectedVisual();captureWorldResourcePreview(takePreparedChunkData());}
+        plan.navigation=prepareTerrainNavigation(worldResourcePreviewCapture->chunks);
+      }
+      plan.chunks.clear();
+      // The commit and its probe only need affected samples. Do not retain a
+      // copy of all resident terrain across asynchronous graphical preparation.
+      std::unordered_set<uint64_t> keys;for(const auto& [cx,cz]:affected)keys.insert(chunkKey(cx,cz));
+      for(auto it=plan.samples.begin();it!=plan.samples.end();)if(!keys.count(it->first))it=plan.samples.erase(it);else ++it;
+      worldResourcePreviewCapture->terrainChange=std::make_shared<TerrainProposal>(std::move(plan));
+    }
     return true;
   }
   const int selectedX=chunkX,selectedZ=chunkZ,previous=activeProfile;
   settlements=std::move(proposed);++terrainInputRevision;removedPropGeometry().clear();changedSettlementChunks.clear();
   // Publish the approved complete candidate data before rebuilding any profile.
-  for(auto& data:plan.chunks){const auto key=chunkKey(data.cx,data.cz);
+  for(size_t index=0;index<affected.size();index++){
+    auto data=cached?prepared->chunks.at(affected[index]):std::move(plan.chunks[index]);const auto key=chunkKey(data.cx,data.cz);
     residentSpatial().insert_or_assign(key,std::move(plan.samples.at(key)));
     changedSettlementChunks.push_back(data.cx);changedSettlementChunks.push_back(data.cz);
     selectPreparedChunkData(std::move(data));publishSelectedChunk();}
-  for(const auto& [cx,cz]:affected){
+  for(size_t index=0;index<affected.size();index++){const auto [cx,cz]=affected[index];
     selectResidentAfterEviction(cx,cz);
     for(int profile=0;profile<navigationProfiles;profile++){selectProfile(profile);if(!navReady)continue;
-      buildActiveRaster();commitActiveSectors();refreshNeighborBorders(cx,cz);}
+      if(cached){auto& step=plan.navigation.chunks[index];installPreparedRaster(std::move(*step.rasters[profile]));installPreparedSectors(step.sectors[profile]);}
+      else {buildActiveRaster();commitActiveSectors();refreshNeighborBorders(cx,cz);}}
   }
   selectProfile(previous);
   if(residentSpatial().count(chunkKey(selectedX,selectedZ)))selectResidentAfterEviction(selectedX,selectedZ);
