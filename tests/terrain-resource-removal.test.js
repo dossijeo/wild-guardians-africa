@@ -116,3 +116,40 @@ test('recovery replay requires agreement between tombstone payload and revision 
   await f.receiver.waitForReplayBoundary(2);f.receiver.confirm(2,2);assert.equal(f.retired.length,1);assert.deepEqual(f.applied,[]);assert.deepEqual(f.errors,[]);
  }finally{f.dispose();}
 });
+
+test('a boundary receipt appears only after an explicit prepared graphical commit and state confirmation',async()=>{
+ const f=channel({retainRevisions:true,prepareGraphicalBatch:async()=>({commit:()=>true,abort(){}})});try{
+  f.publication.stage(chunk(),1);f.publication.stage(removal(1),1);f.publication.commit(1);f.drain();await turn();
+  assert.equal(f.receiver.admittedBoundary(1),null);f.receiver.confirm(1,1);f.drain();
+  const receipt=f.receiver.admittedBoundary(1);assert.deepEqual(receipt,{version:1,sequence:1,epoch:'e',changes:[{cx:0,cz:0,revision:1,removed:false,capturedAt:1},{cx:1,cz:0,revision:1,removed:true,capturedAt:1}]});
+  assert(Object.isFrozen(receipt));assert(Object.isFrozen(receipt.changes));assert(Object.isFrozen(receipt.changes[0]));assert.throws(()=>receipt.changes[0].revision++);assert.equal(f.receiver.admittedBoundary(0),null);
+  f.publication.commit(2);f.drain();await turn();f.receiver.confirm(2,2);f.drain();assert.equal(f.receiver.admittedBoundary(1),null);assert.equal(f.receiver.admittedBoundary(2),null);
+  assert.deepEqual(f.errors,[]);
+ }finally{f.dispose();}
+});
+
+test('logical or ambiguous graphical commits cannot produce a prepared-resource receipt',async()=>{
+ for(const mode of ['logical','ambiguous']){
+  const f=channel({retainRevisions:true,...(mode==='ambiguous'?{prepareGraphicalBatch:async()=>({commit(){},abort(){}})}:{})});try{
+   f.publication.stage(removal(),1);f.publication.commit(1);f.drain();await turn();f.receiver.confirm(1,1);f.drain();
+   assert.equal(f.receiver.admittedBoundary(1),null);assert.deepEqual(f.errors,[]);
+  }finally{f.dispose();}
+ }
+});
+
+test('failed notifications, checkpoints and disposal invalidate prepared-resource receipts',async()=>{
+ let fail=false;const f=channel({retainRevisions:true,onRemoved(){if(fail)throw Error('retirement callback failed');},prepareGraphicalBatch:async()=>({commit:()=>true,abort(){}})});
+ try{
+  f.publication.stage(removal(),1);f.publication.commit(1);f.drain();await turn();f.receiver.confirm(1,1);f.drain();assert(f.receiver.admittedBoundary(1));
+  f.receiver.checkpoint(1);assert.equal(f.receiver.admittedBoundary(1),null);
+  f.publication.stage(removal(),2);f.publication.commit(2);f.drain();await turn();fail=true;
+  assert.throws(()=>f.receiver.confirm(2,2),/callback failed/);assert.equal(f.receiver.admittedBoundary(1),null);assert.equal(f.receiver.admittedBoundary(2),null);
+ }finally{f.dispose();}assert.equal(f.receiver.admittedBoundary(2),null);
+});
+
+test('prepared receipts preserve committed identity when a notification mutates its payload',async()=>{
+ const f=channel({retainRevisions:true,onRemoved:p=>{p.cx=99;},prepareGraphicalBatch:async()=>({commit:()=>true,abort(){}})});try{
+  f.publication.stage(removal(),1);f.publication.commit(1);f.drain();await turn();f.receiver.confirm(1,1);f.drain();
+  assert.equal(f.receiver.admittedBoundary(1).changes[0].cx,0);assert.deepEqual(f.errors,[]);
+ }finally{f.dispose();}
+});

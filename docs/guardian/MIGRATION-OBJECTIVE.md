@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [retirada preparada de recursos, cámara y grass temporal](f-r4-canonical-resources-20261113.md).
+Último avance: [retirada preparada y constancia de los lotes gráficos aplicados](f-r4-canonical-resources-20261113.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio

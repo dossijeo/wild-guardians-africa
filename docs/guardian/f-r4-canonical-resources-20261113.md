@@ -112,6 +112,27 @@ La capacidad de retirada preparada permanece limitada al perfil temporal con
 coordinación de chunks; el receptor que no la proporciona conserva el fallo
 explícito. No se activa por ello el ejecutor nativo de producto.
 
+### Constancia del lote gráfico aplicado
+
+Después de `8f1f38392`, el receptor de terreno preparado expone
+`admittedBoundary(sequence)`: versión, secuencia, época y cambios compactos
+`cx, cz, revision, removed, capturedAt`. Solo conserva el lote de la secuencia
+confirmada actual, sin buffers de geometría. Captura la identidad antes de los
+callbacks y publica la constancia después del commit **explícitamente true** del
+lote y de sus notificaciones. ACK, preparación sin aplicar, commit lógico o
+resultado ambiguo no la acreditan. Fallo/cierre o checkpoint la invalidan.
+
+El objeto y sus entradas son inmutables: un callback que modifique el payload
+después del commit no cambia la identidad acreditada. Una frontera vacía o una
+secuencia posterior no reutiliza el recibo anterior. La prueba con propietarios
+de terreno/bioma reales verifica su aparición después de la retirada conjunta.
+
+Es evidencia del lote de terreno, **no** de todo el mundo ni de tiempo autorizado.
+Sigue pendiente contrastarla con `nativeWorldResources`, el estado y los demás
+propietarios antes de asignar la identidad nativa al frame. Tampoco sirve como
+baseline de recuperación completo ni repara uploads descartados. No se relaja el
+rechazo de paquetes antiguos para aprovechar este recibo.
+
 ## Validación ejecutada
 
 - Nueve pruebas nuevas con WASM real: recibo antes de publicar, propiedad de
@@ -195,6 +216,13 @@ $env:QA_RETIREMENT='true'
 # PLAYWRIGHT_MODULE apunta a la instalación externa de Playwright.
 .cache/tooling/node20.exe tools/experiments/audit_webgpu_temporal_ground.mjs
 ```
+
+Regresión de la constancia de lote: **575 pruebas de los mismos 49 archivos,
+cero fallos/skips**, `.cache/terrain-admitted-boundary-regression.tap`; build
+WebGPU aprobado en **52,18 s** (`.cache/terrain-admitted-boundary-build.log`).
+El contraste dirigido con los propietarios reales pasa también en
+`.cache/terrain-admitted-boundary-real-owners.tap`. No añade una aceptación
+gráfica nativa integrada ni cambia los cierres de A6.
 
 ## Siguiente punto pendiente
 

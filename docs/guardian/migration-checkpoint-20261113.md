@@ -178,3 +178,8 @@ retira y readmite terreno/cobertura/cámara con el mismo surface. Este control
 secuencia recursos manualmente y no contiene personajes ni propuesta causal
 nativa; no cierra f-R4. El siguiente bloqueo es la frontera nativa completa antes
 de abrir el frame, incluidos uploads de frames rechazados, y su aceptación real.
+
+El receptor preparado conserva ahora una constancia inmutable de las revisiones
+que confirmó su lote gráfico; no la produce por ACK, commit lógico o resultado
+ambiguo. Pasan 575 pruebas y build. Es una entrada para el contraste nativo del
+frame, todavía pendiente, y no un permiso global de mundo/reloj ni recuperación.
