@@ -218,3 +218,5 @@ inyectado en el harness; queda verificar el journal/cliente principal con la
 autoridad normal y la admisión de publicaciones vivas. Pasan 791 pruebas de 67
 archivos sin skips/fallos y build en 47,65 s. f-R4 sigue parcial y los 11 padres
 A6 abiertos; no es aceptación de locomoción nativa ni de 500 ms conjunta.
+
+Se incorpora una [vista nativa de recursos antes del efecto físico](f-r4-prepared-world-resources-20261113.md): solo el delta canónico se entrega al hook de preparación antes del hold GPU. Cancelación/fallo o dependencias nuevas no detienen el dibujo anterior. Pasan 859 pruebas/73 archivos y build WebGPU; standalone y pthread reconstruidos. El handle GPU de estas pruebas es un doble, no aceptación gráfica. La observación del usuario sobre 3123 recursos corrige expresamente el alcance: el fallback que recrea un dispositivo sano sigue siendo demasiado amplio y pendiente de sustituir por conservación de recursos y uploads. No se ha eliminado aún ese fallback ni cerrado f-R4.

@@ -2,7 +2,7 @@
 
 Actualizado: 2026-11-13. IDs acordados en la conversación; no se renumeran al avanzar.
 
-Último incremento de f-R4: [replay nativo, admisión y recuperación de frames rechazados](f-r4-canonical-resources-20261113.md).
+Último incremento de f-R4: [vista canónica previa al efecto y corrección de reutilización](f-r4-prepared-world-resources-20261113.md).
 Publicaciones vivas y aceptación de personajes autónomos siguen pendientes; no cambia el recuento de cierres.
 
 **Ningún punto principal está cerrado todavía.** Un subpunto marcado como nativo

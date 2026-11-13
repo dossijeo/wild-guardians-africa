@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [recuperación de frames nativos rechazados con baseline y recursos nuevos](f-r4-canonical-resources-20261113.md).
+Último avance: [propuesta de recursos canónicos antes del efecto físico](f-r4-prepared-world-resources-20261113.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio
@@ -24,6 +24,12 @@ camino crítico sin pedir autorización rutinaria entre hitos.
    desacoplamiento/fallos y costes estructurales CPU/GPU medidos por separado.
 
 ## Condiciones de cierre
+
+- Las mutaciones normales conservan dispositivo, renderer y recursos gráficos
+  sin cambios; la preparación del delta precede al efecto físico. Un frame
+  rechazado con dispositivo sano no debe reconstruir toda la escena para perder
+  su bookkeeping de uploads. La reconstrucción de 3123 recursos del ensayo de
+  recuperación es evidencia de seguridad parcial, no cumplimiento de este punto.
 
 - Wild Engine es el único propietario de intenciones, navegación, vigencia,
   conflictos, ejecución lógica y consecuencias; rutas completas como unidad.

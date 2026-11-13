@@ -33,3 +33,5 @@ int spatialIntentStageWorld(const SpatialWorldProposalInput&,const SpatialStatic
 int spatialIntentTakeWorld(double,double,double,double,double,SpatialWorldProposalInput&);
 int spatialIntentBeginWorldPreview();
 void spatialIntentEndWorldPreview();
+
+int spatialIntentWorldProposalSnapshot(std::array<double,6>&);

@@ -1199,6 +1199,19 @@ PreparedChunkData takePreparedChunkData(){
     std::move(groundMask),std::move(lattice),std::move(ponds),std::move(props),
     std::move(solidProps),std::move(propBuckets),std::move(nearbySettlements),selectedVisualPending};
 }
+// Optional, bounded resources of one non-effective native proposal. These are
+// outputs of the canonical recipe, not another resident world or navigation map.
+struct WorldResourcePreview {
+  std::array<double,9> header{};
+  std::map<std::pair<int,int>,PreparedChunkData> chunks;
+  std::set<std::pair<int,int>> removed;
+  std::vector<int32_t> changes;
+};
+WILD_SAMPLING_LOCAL std::optional<WorldResourcePreview> worldResourcePreview;
+WILD_SAMPLING_LOCAL WorldResourcePreview* worldResourcePreviewCapture=nullptr;
+void captureWorldResourcePreview(PreparedChunkData data){
+  if(worldResourcePreviewCapture)worldResourcePreviewCapture->chunks.insert_or_assign({data.cx,data.cz},std::move(data));
+}
 void selectPreparedChunkData(PreparedChunkData data){
   selectedVisualPending=data.visualPending;
   chunkX=data.cx;chunkZ=data.cz;haloPropCount=data.halo;
@@ -1428,7 +1441,7 @@ void refreshRemovedPropChunks(const Prop* changed){
   }
   selectProfile(previous);
   if(!loadedChunks.empty()&&(chunkX!=selectedX||chunkZ!=selectedZ))
-    populateChunk(selectedX,selectedZ);
+    selectResidentAfterEviction(selectedX,selectedZ);
 }
 void refreshRemovedPropChunksBatch(const std::vector<Prop>& changed,
     const std::set<std::pair<int,int>>* knownChunks=nullptr){
@@ -1476,7 +1489,7 @@ void refreshRemovedPropChunksBatch(const std::vector<Prop>& changed,
   }
   selectProfile(previous);
   if(!loadedChunks.empty()&&(chunkX!=selectedX||chunkZ!=selectedZ))
-    populateChunk(selectedX,selectedZ);
+    selectResidentAfterEviction(selectedX,selectedZ);
 }
 void flushBarrierBatch(){
   const float maxRadius=maxBuiltRadius();
@@ -1743,6 +1756,7 @@ int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){
   activeProfile=0;radiusNow=.3f;workerNow=false;navReady=false;
   chunkRasters=&navProfile(0).rasters;lazy_select_context(0);
   loadedChunks.clear();nextBarrierId=1;
+  worldResourcePreview.reset();
   if(worldResourcePublication){worldResourcePublication->valid=false;worldResourcePublication->changes.clear();}
   residentSpatial().clear();
   residentSolidProps().clear();
@@ -1757,7 +1771,10 @@ int spatial_add_chunk(int cx,int cz){
   for(const auto& [x,z]:loadedChunks)if(x==cx&&z==cz)return 0;
   const auto region=residencyRegion(cx,cz);const auto ticket=spatialIntentResidencyBefore(&region,1,false);
   if(!ticket.allowed)return -1;
-  if(ticket.preview)return 1;
+  if(ticket.preview){
+    if(worldResourcePreviewCapture){ScopedVisualQueryChunk scratch;prepareSelectedChunk(cx,cz,true);captureWorldResourcePreview(takePreparedChunkData());}
+    return 1;
+  }
   SPATIAL_TICK(totalStarted);
   populateChunk(cx,cz);loadedChunks.emplace_back(cx,cz);++residencyRevision;
   const int previous=activeProfile;
@@ -1827,7 +1844,10 @@ int removeChunksNative(int count,bool releaseOnly){
   for(const auto& [cx,cz]:removed)regions.push_back(residencyRegion(cx,cz));
   const auto ticket=spatialIntentResidencyBefore(regions.data(),int(regions.size()),true,releaseOnly);
   if(!ticket.allowed)return -2;
-  if(ticket.preview)return int(removed.size());
+  if(ticket.preview){
+    if(worldResourcePreviewCapture)for(const auto& point:removed)worldResourcePreviewCapture->removed.insert(point);
+    return int(removed.size());
+  }
   for(const auto& [cx,cz]:removed){
     loadedChunks.erase(std::find(loadedChunks.begin(),loadedChunks.end(),std::pair<int,int>{cx,cz}));
     residentSpatial().erase(chunkKey(cx,cz));
@@ -1949,7 +1969,14 @@ int spatial_remove_prop(int group,int gx,int gz){
   const Prop changed=*found;
   const auto ticket=spatialIntentPropsBefore(nullptr,0);
   if(!ticket.allowed)return 0;
-  if(ticket.preview)return 1;
+  if(ticket.preview){
+    if(worldResourcePreviewCapture){auto proposed=removedProps();proposed.insert({group,gx,gz});ScopedPropRecipeView scratch(proposed);
+      for(const auto& [cx,cz]:loadedChunks){const int firstX=cx*side-24,firstZ=cz*side-24;
+        if(changed.x+changed.radius+maxIndexedRadius<firstX||changed.x-changed.radius-maxIndexedRadius>=firstX+side||
+           changed.z+changed.radius+maxIndexedRadius<firstZ||changed.z-changed.radius-maxIndexedRadius>=firstZ+side)continue;
+        prepareSelectedChunk(cx,cz,true);captureWorldResourcePreview(takePreparedChunkData());}}
+    return 1;
+  }
   removedPropGeometry().insert_or_assign({group,gx,gz},changed);
   removedProps().insert({group,gx,gz});
   refreshRemovedPropChunks(&changed);
@@ -2738,7 +2765,13 @@ EMSCRIPTEN_KEEPALIVE int spatial_world_resource_snapshot(){
 EMSCRIPTEN_KEEPALIVE const double* spatial_world_resource_header_ptr(){return worldResourcePublication?worldResourcePublication->header.data():nullptr;}
 EMSCRIPTEN_KEEPALIVE const int32_t* spatial_world_resource_changes_ptr(){return worldResourcePublication?worldResourcePublication->changes.data():nullptr;}
 // 2–5 overlays; 6/7 residency; 8/9 props; 10 terrain; 11 pthread publication.
-EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stage(int kind,int mode,int floatCount,int intCount){
+int stageWorldProposal(int kind,int mode,int floatCount,int intCount,bool captureResources){
+  if(captureResources&&kind<6)return -2;
+  WorldResourcePreview candidate;
+  struct CaptureGuard {WorldResourcePreview* previous;
+    CaptureGuard(WorldResourcePreview* target):previous(worldResourcePreviewCapture){worldResourcePreviewCapture=target;}
+    ~CaptureGuard(){worldResourcePreviewCapture=previous;}
+  } capture(captureResources?&candidate:nullptr);
   if(floatCount<0||intCount<0||size_t(floatCount)!=worldProposalFloatInput.size()||
      size_t(intCount)!=worldProposalIntInput.size())return -1;
   const auto& f=worldProposalFloatInput;const auto& ids=worldProposalIntInput;
@@ -2798,7 +2831,56 @@ EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stage(int kind,int mode,int floa
     const int result=applyWorldProposalInput(input);worldProposalResult.clear();
     if(result!=1)return 0;
   }
-  return spatialIntentStageWorld(input,kind<=5?shapes.data():nullptr,kind<=5?int(shapes.size()):-1);
+  const int staged=spatialIntentStageWorld(input,kind<=5?shapes.data():nullptr,kind<=5?int(shapes.size()):-1);
+  if(staged==1&&captureResources){
+    std::array<double,6> identity{};
+    if(spatialIntentWorldProposalSnapshot(identity)!=1)return -2;
+    for(const auto& [point,data]:candidate.chunks)candidate.changes.insert(candidate.changes.end(),{1,point.first,point.second});
+    for(const auto& point:candidate.removed)candidate.changes.insert(candidate.changes.end(),{2,point.first,point.second});
+    candidate.header={1,identity[0],identity[1],identity[3],double(kind),double(candidate.changes.size()/3),
+      double(terrainInputRevision),double(overlayRevision),double(residencyRevision)};
+    worldResourcePreview=std::move(candidate);
+  }
+  return staged;
+}
+EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stage(int kind,int mode,int floatCount,int intCount){return stageWorldProposal(kind,mode,floatCount,intCount,false);}
+EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stage_resources(int kind,int mode,int floatCount,int intCount){return stageWorldProposal(kind,mode,floatCount,intCount,true);}
+EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_resource_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_resource_snapshot(double session,double ticket){
+  if(!worldResourcePreview)return 0;
+  const auto& h=worldResourcePreview->header;
+  if(h[1]!=session||h[2]!=ticket)return -1;
+  std::array<double,6> identity{};
+  if(spatialIntentWorldProposalSnapshot(identity)!=1||identity[0]!=session||identity[1]!=ticket||identity[3]!=h[3]||identity[5]!=h[4]||
+     h[6]!=double(terrainInputRevision)||h[7]!=double(overlayRevision)||h[8]!=double(residencyRevision))return -1;
+  return 1;
+}
+EMSCRIPTEN_KEEPALIVE const double* spatial_world_proposal_resource_header_ptr(){return worldResourcePreview?worldResourcePreview->header.data():nullptr;}
+EMSCRIPTEN_KEEPALIVE const int32_t* spatial_world_proposal_resource_changes_ptr(){return worldResourcePreview?worldResourcePreview->changes.data():nullptr;}
+extern "C++" {
+std::pair<void*,size_t> worldProposalResourceBuffer(int index,int field){
+  if(!worldResourcePreview||index<0||size_t(index)*3+2>=worldResourcePreview->changes.size())return {nullptr,0};
+  const auto& rows=worldResourcePreview->changes;const size_t at=size_t(index)*3;
+  if(rows[at]!=1)return {nullptr,0};
+  const auto found=worldResourcePreview->chunks.find({rows[at+1],rows[at+2]});if(found==worldResourcePreview->chunks.end())return {nullptr,0};
+  auto& d=found->second;
+  switch(field){
+    case 0:return {d.heights.data(),d.heights.size()*sizeof(float)};
+    case 1:return {d.colors.data(),d.colors.size()*sizeof(float)};
+    case 2:return {d.groundMask.data(),d.groundMask.size()};
+    case 3:return {d.water.data(),d.water.size()};
+    case 4:return {d.waterLevels.data(),d.waterLevels.size()*sizeof(float)};
+    case 5:return {d.waterTriangles.data(),d.waterTriangles.size()*sizeof(float)};
+    case 6:return {d.props.data(),d.props.size()*sizeof(Prop)};
+  }
+  return {nullptr,0};
+}
+}
+EMSCRIPTEN_KEEPALIVE void* spatial_world_proposal_resource_buffer_ptr(int index,int field){return worldProposalResourceBuffer(index,field).first;}
+EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_resource_buffer_bytes(int index,int field){return int(worldProposalResourceBuffer(index,field).second);}
+EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_resource_release(double session,double ticket){
+  if(!worldResourcePreview||worldResourcePreview->header[1]!=session||worldResourcePreview->header[2]!=ticket)return 0;
+  worldResourcePreview.reset();return 1;
 }
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_commit(double session,double ticket,double sequence,double time,double clockSequence){
   SpatialWorldProposalInput input;const int valid=spatialIntentTakeWorld(session,ticket,sequence,time,clockSequence,input);

@@ -380,6 +380,11 @@ $env:OUTPUT='.cache/native-world-obsolete-webgpu.json'
 
 ## Siguiente punto pendiente
 
+Corrección posterior del mismo día: [vista previa y reutilización](f-r4-prepared-world-resources-20261113.md).
+El fallback de 3123 recursos no es el camino incremental aceptado para un frame
+rechazado con dispositivo sano; conservar sus recursos/uploads queda pendiente.
+
+
 Conectar la admisión nativa a publicaciones vivas y verificar el rechazo/recuperación
 con la autoridad Worker y la interfaz normales. Después acreditar el mismo cambio
 físico y visible con personajes consumiendo planes nativos completos, bloqueo del

@@ -209,6 +209,26 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     }finally{if(selected&&selectChunk(selected.cx,selected.cz)<0)throw Error('Could not restore native resource selection');}
     return Object.freeze({version:1,nativeSession,ticket,effectiveTime,kind:h[4],chunks:Object.freeze(upserts),removed:Object.freeze(removed)});
   }
+  // Owned copies of the native proposal's canonical scratch outputs. Reading
+  // these buffers never selects/publishes a live chunk or advances any clock.
+  function captureNativeWorldProposalResources({nativeSession,ticket,effectiveTime}={}){
+    if(!generated||wasm.spatial_world_proposal_resource_version?.()!==1)throw Error('Rebuild native proposal resource projection');
+    if(wasm.spatial_world_proposal_resource_snapshot(nativeSession,ticket)!==1)throw Error('Native proposal resources are unavailable or stale');
+    const h=Array.from(new Float64Array(wasm.memory.buffer,wasm.spatial_world_proposal_resource_header_ptr(),9)),count=h[5];
+    if(h[0]!==1||h[1]!==nativeSession||h[2]!==ticket||h[3]!==effectiveTime||!Number.isSafeInteger(h[4])||h[4]<6||h[4]>11||!Number.isSafeInteger(count)||count<0||count>32768)throw Error('Native proposal resource identity mismatch');
+    const rows=Array.from(new Int32Array(wasm.memory.buffer,wasm.spatial_world_proposal_resource_changes_ptr(),count*3)),chunks=[],removed=[],seen=new Set();
+    for(let index=0;index<count;index++){
+      const [operation,cx,cz]=rows.slice(index*3,index*3+3),key=cx+','+cz;
+      if(seen.has(key)||![1,2].includes(operation))throw Error('Invalid native proposal resource journal');seen.add(key);
+      if(operation===2){removed.push(Object.freeze({cx,cz}));continue;}
+      const bytes=field=>wasm.spatial_world_proposal_resource_buffer_bytes(index,field),ptr=field=>wasm.spatial_world_proposal_resource_buffer_ptr(index,field);
+      if(bytes(0)!==49*49*4||bytes(1)!==49*49*12||bytes(2)!==35*35*4||bytes(5)<0||bytes(5)%36||bytes(6)<0||bytes(6)%40)throw Error('Invalid native proposal chunk buffers');
+      const facade={memory:wasm.memory,spatial_heights_ptr:()=>ptr(0),spatial_colors_ptr:()=>ptr(1),spatial_ground_mask_ptr:()=>ptr(2),
+        spatial_water_triangles_ptr:()=>ptr(5),spatial_water_vertex_count:()=>bytes(5)/12,spatial_prop_count:()=>bytes(6)/40,spatial_props_ptr:()=>ptr(6)};
+      chunks.push(spatialChunkPayload(facade,cx,cz));
+    }
+    return Object.freeze({version:1,phase:'proposal',nativeSession,ticket,effectiveTime,kind:h[4],chunks:Object.freeze(chunks),removed:Object.freeze(removed)});
+  }
   function props(){
     return spatialProps(wasm);
   }
@@ -396,7 +416,7 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     }
     wasm.lazy_commit_portals();
   }
-  return {wasm,preparation,generate,addChunk,selectChunk,removeChunk,removeChunks,adoptNativeResidencyCommit,captureNativeWorldResources,
+  return {wasm,preparation,generate,addChunk,selectChunk,removeChunk,removeChunks,adoptNativeResidencyCommit,captureNativeWorldResources,captureNativeWorldProposalResources,
     releaseChunk:(cx,cz)=>removeChunk(cx,cz,true),releaseChunks:coordinates=>removeChunks(coordinates,true),
     hasResidentChunk:(cx,cz)=>wasm.spatial_has_chunk?wasm.spatial_has_chunk(cx|0,cz|0)===1:
       chunks.some(([x,z])=>x===(cx|0)&&z===(cz|0)),

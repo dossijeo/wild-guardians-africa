@@ -218,7 +218,7 @@ extern "C" EMSCRIPTEN_KEEPALIVE int spatial_prepare_publish(int id){
   const auto region=residencyRegion(job.cx,job.cz);
   const auto ticket=spatialIntentResidencyBefore(&region,1,false);
   if(!ticket.allowed)return -2;
-  if(ticket.preview)return int(job.data.props.size())+1;
+  if(ticket.preview){if(worldResourcePreviewCapture)captureWorldResourcePreview(job.data);return int(job.data.props.size())+1;}
   const double started=emscripten_get_now();
   selectPreparedChunkData(std::move(job.data));
   // The worker's indices belong to its filtered site snapshot, not this vector.

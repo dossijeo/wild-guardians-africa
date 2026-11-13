@@ -990,6 +990,12 @@ int spatialIntentTakeWorld(double session,double ticket,double sequence,double t
   const int result=takeWorldMutationBoundary(session,ticket,sequence,time,clockSequence,2);if(result!=1)return result;
   auto& p=state().barrierProposal;out=std::move(p.worldInput);clearWorldMutationProposal(p);return 1;
 }
+int spatialIntentWorldProposalSnapshot(std::array<double,6>& out){
+  auto& p=state().barrierProposal;if(!p.pending||p.kind<2)return 0;
+  const int valid=takeWorldMutationBoundary(double(p.session),double(p.ticket),double(p.intents),p.at,double(p.clock),2);
+  if(valid!=1)return valid;
+  out={double(p.session),double(p.ticket),double(p.intents),p.at,double(p.clock),double(p.kind)};return 1;
+}
 extern "C" EMSCRIPTEN_KEEPALIVE int nav_intent_barrier_proposal_version(){return 1;}
 extern "C" EMSCRIPTEN_KEEPALIVE int nav_intent_barrier_proposal_ticket(){
   auto& s=state();s.barrierProposalResult.fill(0);const auto& p=s.barrierProposal;if(!p.pending)return 0;

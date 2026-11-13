@@ -82,7 +82,11 @@ bool applyProtectedTerrain(std::vector<Settlement>& proposed,const std::vector<S
   for(const auto& p:ordered){const auto shape=propMutation(p);plan.solids.push_back(shape);plan.bounds.push_back(shape);}
   const auto ticket=spatialIntentTerrainBefore(plan.bounds.data(),int(plan.bounds.size()),terrainProposalClear,&plan,int(affected.size()));
   if(!ticket.allowed)return false;
-  if(ticket.preview)return true;
+  if(ticket.preview){
+    if(worldResourcePreviewCapture){ScopedTerrainRecipeView scratch(proposed,plan);
+      for(auto& data:plan.chunks){selectPreparedChunkData(std::move(data));ensureSelectedVisual();captureWorldResourcePreview(takePreparedChunkData());}}
+    return true;
+  }
   const int selectedX=chunkX,selectedZ=chunkZ,previous=activeProfile;
   settlements=std::move(proposed);++terrainInputRevision;removedPropGeometry().clear();changedSettlementChunks.clear();
   // Publish the approved complete candidate data before rebuilding any profile.

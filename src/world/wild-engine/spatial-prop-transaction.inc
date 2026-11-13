@@ -69,7 +69,11 @@ int restoreProtectedProps(std::unordered_set<PropKey,PropKeyHash>& replacement){
   for(const auto& prop:additions)shapes.push_back(propMutation(prop));
   const auto ticket=spatialIntentPropsBefore(shapes.data(),int(shapes.size()),recipes);
   if(!ticket.allowed)return 0;
-  if(ticket.preview)return 1;
+  if(ticket.preview){
+    if(worldResourcePreviewCapture){ScopedPropRecipeView scratch(replacement);
+      for(const auto& [cx,cz]:touched){prepareSelectedChunk(cx,cz,true);captureWorldResourcePreview(takePreparedChunkData());}}
+    return 1;
+  }
   // Only now may identities, witnesses, resident data and graph become effective.
   removedProps().swap(replacement);
   for(const auto& [key,prop]:cacheUpdates)removedPropGeometry().insert_or_assign(key,prop);
