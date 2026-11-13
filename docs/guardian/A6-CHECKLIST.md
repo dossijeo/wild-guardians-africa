@@ -1,8 +1,8 @@
 # Seguimiento de cierre de A6
 
-Actualizado: 2026-11-13. IDs acordados en la conversación; no se renumeran al avanzar.
+Actualizado: 2026-11-14. IDs acordados en la conversación; no se renumeran al avanzar.
 
-Último incremento de f-R4: [commit nativo de props mediante su preparación previa](f-r4-native-prepared-props-20261113.md).
+Último incremento de f-R4: [retención de lotes gráficos de props sin cambios](f-r4-retained-biome-slots-20261113.md).
 Publicaciones vivas y aceptación de personajes autónomos siguen pendientes; no cambia el recuento de cierres.
 
 **Ningún punto principal está cerrado todavía.** Un subpunto marcado como nativo
@@ -381,3 +381,5 @@ Avance parcial f-R4: [continuación de un rechazo nativo preparado sobre los mis
 Avance parcial f-R4: [retención de terreno en revisiones de props](f-r4-unchanged-terrain-20261113.md), contrastada con fuentes de Three/Godot. Eliminación/restauración nativa real conserva geometría, material, máscara y los cuatro buffers de terreno en los chunks afectados, con el mismo dispositivo, sin errores GPU y con drenaje al cerrar. Props todavía se preparan por chunk y su commit/proyección nativa tarda 14–18 ms en el ensayo; quedan esas familias, autoridad normal y aceptación de locomoción. No cambian los cierres.
 
 Avance parcial f-R4: [instalación nativa de props preparados](f-r4-native-prepared-props-20261113.md), contrastada con Detour/Godot. Supresión/restauración protegida conservan rasters/sectores/candidatos antes del hold y los instalan en el orden canónico. En el harness GPU, commit/proyección baja de 14,2/18,2 ms a 0,9/1,3 ms, sin recetas nuevas durante commit y conservando terreno/dispositivo. Quedan reutilización gráfica de instancias, terreno y otras familias, autoridad normal y aceptación; no cambian los cierres.
+
+Avance parcial f-R4: [retención de slots de props](f-r4-retained-biome-slots-20261113.md), con patrones consultados en el código de Three/Godot. La admisión conjunta valida grupos nuevos y conservados antes del commit; rollback/retirada afectan solo a los lotes sustituidos. En GPU real se conservan 6/16 meshes y sus buffers; preparación de props pasa de 278/785 ms a 11/170 ms en el fixture. Quedan streams dentro de slots modificados, terreno, otras familias, autoridad normal y aceptación. No cambian los cierres.

@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [instalación de props nativos preparados antes del hold, contrastada con Detour/Godot](f-r4-native-prepared-props-20261113.md).
+Último avance: [lotes gráficos de props sin cambios conservados mediante la admisión conjunta](f-r4-retained-biome-slots-20261113.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio
