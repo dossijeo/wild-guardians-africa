@@ -29,3 +29,9 @@ test('listeners registered after admission reject the batch before activation',a
 test('an observer on a retiring tree blocks the batch, unrelated trees do not',async()=>{
  const f=fixture(),old=new Group(),child=new Mesh(),unrelated=new Group(),parts=['terrain','biome'].map(side=>f.part('0,0',side));old.add(child);f.scene.add(old,unrelated);unrelated.addEventListener('removed',()=>{});parts[0].eventRoots=()=>[parts[0].object,old];const batch=await f.coordinator.prepareBatch(parts,{scene:f.scene});child.addEventListener('removed',()=>{});assert.throws(()=>batch.commit(),/synchronous removed observer/);assert.equal(f.calls.some(call=>call.startsWith('activate')),false);f.coordinator.dispose();child.geometry.dispose();child.material.dispose();
 });
+
+test('prepared batch validity observes the actual admission tickets and ownership lifetime',async()=>{
+ const f=fixture(),parts=['terrain','biome'].map(side=>f.part('0,0',side)),batch=await f.coordinator.prepareBatch(parts,{scene:f.scene});
+ assert.equal(batch.valid(),true);assert.deepEqual(f.calls,[]);f.invalidate();assert.equal(batch.valid(),false);batch.abort();assert.equal(batch.valid(),false);f.coordinator.dispose();
+ const g=fixture(),committed=await g.coordinator.prepareBatch(['terrain','biome'].map(side=>g.part('0,0',side)),{scene:g.scene});assert.equal(committed.valid(),true);assert.equal(committed.commit(),true);assert.equal(committed.valid(),false);g.coordinator.dispose();
+});

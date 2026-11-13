@@ -711,7 +711,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
           committedWorldBoundary=copyNativeWorldBoundary({version:1,authorityEpoch:owner,nativeSession,ticket,effectiveTime:time});
         },nativeSession,ticket,sequence,time,clockSequence);
         if(committed.status===1&&!physicalCommitted)throw Error('Native mutation returned without a commit marker');
-        if(committed.status===1&&preparedResources&&preparedResources.commit({worldBoundary:nativeWorldBoundary(),resources:committed.value.resources})!==true)throw Error('Native prepared resources were not applied');
+        if(committed.status===1&&preparedResources&&preparedResources.commit({worldBoundary:nativeWorldBoundary(),resources:committed.value.resources})!==true)throw Error('Native prepared resources were not retained for publication');
         answer=committed.status===1?outcome('committed',{...committed.value,receipt,worldBoundary:nativeWorldBoundary()}):
           outcome(committed.status===-2?'stale':committed.status===-3?'invalid-receipt':committed.status===-6?'blocked':'stale');
       }

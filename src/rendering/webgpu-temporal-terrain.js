@@ -32,7 +32,7 @@ export async function prepareWebGpuTemporalTerrain(messages,{signal,scene,reside
   }
   const parts=tokens.map(token=>token.participant()),rawBatch=await coordinator.prepareBatch(parts,{signal,scene,...(requireShadowTarget?{requireShadowTarget:true}:{})});
   if(!rawBatch||typeof rawBatch.commit!=='function'||typeof rawBatch.abort!=='function')throw TypeError('Invalid prepared temporal batch');
-  const batch=Object.isExtensible(rawBatch)&&!Object.hasOwn(rawBatch,'canonicalPropsUnmasked')?rawBatch:{commit:()=>rawBatch.commit(),abort:()=>rawBatch.abort()};
+  const batch=Object.isExtensible(rawBatch)&&!Object.hasOwn(rawBatch,'canonicalPropsUnmasked')?rawBatch:{valid:()=>rawBatch.valid?.()===true,commit:()=>rawBatch.commit(),abort:()=>rawBatch.abort()};
   Object.defineProperty(batch,'canonicalPropsUnmasked',{value:canonicalPropsUnmasked});
   // Preserve the pre-existing return value and behaviour when no discard
   // observer was requested.
@@ -43,7 +43,7 @@ export async function prepareWebGpuTemporalTerrain(messages,{signal,scene,reside
   const abort=()=>{if(!active)return false;if(committing)return batch.abort();active=false;detach();let result,error;try{result=batch.abort();}catch(failure){error=failure;}const failure=discard();if(error||failure)throw error??failure;return result;};
   const onAbort=()=>{try{abort();}catch{}};
   signal?.addEventListener('abort',onAbort,{once:true});if(signal?.aborted){abort();throw new DOMException('Temporal terrain preparation cancelled','AbortError');}
-  return {canonicalPropsUnmasked,commit(){if(!active)throw Error('Temporal terrain batch is no longer active');let result;committing=true;try{result=batch.commit();}catch(error){committing=false;try{abort();}catch{}throw error;}committing=false;active=false;detach();if(result!==true){const error=discard();if(error)throw error;}else{committedIdentities=new WeakMap([...identities,...removalIdentities].map(({payload,identity})=>[payload,identity]));identities.length=0;removalIdentities.length=0;}return result;},abort,identityFor(payload){return committedIdentities?.get(payload)??null;}};
+  return {canonicalPropsUnmasked,valid:()=>active&&!committing&&batch.valid?.()===true,commit(){if(!active)throw Error('Temporal terrain batch is no longer active');let result;committing=true;try{result=batch.commit();}catch(error){committing=false;try{abort();}catch{}throw error;}committing=false;active=false;detach();if(result!==true){const error=discard();if(error)throw error;}else{committedIdentities=new WeakMap([...identities,...removalIdentities].map(({payload,identity})=>[payload,identity]));identities.length=0;removalIdentities.length=0;}return result;},abort,identityFor(payload){return committedIdentities?.get(payload)??null;}};
  }catch(error){for(const token of tokens.reverse())try{token.abort();}catch{}discard();throw error;}
 }
 
