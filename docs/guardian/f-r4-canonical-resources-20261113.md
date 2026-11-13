@@ -58,10 +58,39 @@ Sin esa capacidad, falla **antes** de tocar residencia. En el modo preparado,
 el lote completo debe estar listo y confirmar antes de notificar la retirada;
 cancelación o rechazo no acreditan aplicación. Un ACK del transporte no la prueba.
 
-**Pendiente:** el surface aún no proporciona esa retirada coordinada de terreno,
-vegetación, contactos/cámara y demás recursos. En particular, el preparador
-temporal todavía requiere participantes reversibles de retirada; el contrato
-nuevo no permite saltarse esa preparación ni etiquetar un frame como actualizado.
+El surface aún no proporciona la retirada completa de contactos/cámara y demás
+recursos. El incremento siguiente implementa los participantes de terreno y
+vegetación descritos abajo. El contrato no permite saltarse lo que queda de
+preparación ni etiquetar un frame como actualizado.
+
+### Retirada preparada de terreno y vegetación
+
+Después de `f8a31ab8e`, ambos propietarios existentes proporcionan
+`prepareRemoval`. El adaptador de preparación temporal los incluye en el mismo
+lote del coordinador, compartiendo época, revisión y orden por chunk. No llama
+al generador de terreno, al preparador de mud ni a la carga de slots para un
+lote que solo retira recursos. Los grupos vacíos son marcadores de la
+transacción; no son geometría de sustitución ni un permiso de dibujo.
+
+Hasta el commit se conservan terreno, agua y vegetación visibles. La fase lógica
+es reversible: residencia, muestreo de superficie, índices de props, versiones y
+visibilidad se restauran si falla otro participante, incluso después de una
+finalización parcial. Tras confirmar todo el lote se retiran los meshes mediante
+los propietarios y mecanismos de liberación existentes, se descartan los
+marcadores y se notifican contactos/árboles. Las revisiones anteriores no pueden
+resucitar recursos. Un lote puede combinar retirada y alta de chunks diferentes.
+
+Se rechazan identidad/tiempo modificados, tickets gráficos caducados y
+observadores síncronos que pudieran ver el cambio parcial. Cancelar una reserva
+o sustituirla por una retirada posterior no restaura la generación eliminada.
+El callback de geometría preparada no recibe tombstones; la identidad de la
+retirada solo se expone tras confirmar su lote.
+
+**Pendiente de f-R4:** conectar el callback de retirada del surface, incluidos
+cámara y grass temporal, y la admisión de la frontera nativa completa antes de
+abrir el frame. No se habilita todavía ese callback si falta algún propietario.
+También siguen pendientes recuperación de uploads de frames rechazados, cambios
+visibles con personajes reales y el resto del criterio original de aceptación.
 
 ## Validación ejecutada
 
@@ -104,6 +133,16 @@ existentes. El arranque conectado de producto conserva Shield legal, revocación
 y **15 dibujos durante 500 ms** de bloqueo; cero errores capturados en su
 alcance (`.cache/native-product-control-resource-boundary.json`). Este último
 no dibuja personajes ni prueba la retirada visible o locomoción autónoma.
+
+Validación de la retirada preparada: **362 pruebas de 23 archivos, cero
+fallos/skips**, `.cache/prepared-terrain-removals-selection.json` y
+`.cache/prepared-terrain-removals-regression.tap`. Las once nuevas usan terreno
+WASM, el pack de bioma y los propietarios/coordinador reales con tickets GPU
+simulados: confirmación, readmisión, cancelación, sustitución, identidad/tiempo,
+rollback de activación/finalización y lotes mixtos. Comprueban también el replay
+del receptor y las notificaciones después del commit. **No son prueba WebGPU de
+la retirada visible.** Build de producción WebGPU aprobado en **45,50 s**,
+`.cache/prepared-terrain-removals-build.log`, con los avisos existentes.
 
 ## Siguiente punto pendiente
 

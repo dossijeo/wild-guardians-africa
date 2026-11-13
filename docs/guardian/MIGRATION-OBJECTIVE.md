@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [proyección canónica de recursos del commit nativo](f-r4-canonical-resources-20261113.md).
+Último avance: [recursos canónicos y retirada preparada de terreno/vegetación](f-r4-canonical-resources-20261113.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio

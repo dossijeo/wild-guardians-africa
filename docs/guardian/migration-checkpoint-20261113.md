@@ -164,3 +164,9 @@ El incremento siguiente conserva las retiradas por ese mismo canal: revisión,
 confirmación y handoff sin resurrección por mensajes atrasados. Un receptor sin
 propietario de retirada gráfica falla antes de cambiar residencia. Pasan 190
 pruebas dirigidas y build; la admisión del surface y los cierres siguen pendientes.
+
+Después de `f8a31ab8e`, terreno y vegetación tienen participantes reversibles de
+retirada en el coordinador/adaptador existente, incluidos rollback de lotes mixtos
+y notificaciones después del commit. Pasan 362 pruebas y build. Los tickets GPU
+de estas pruebas son simulados; faltan callback del surface/cámara/grass,
+frontera completa y aceptación gráfica con personajes. f-R4 sigue parcial.
