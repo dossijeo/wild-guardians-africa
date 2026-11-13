@@ -52,7 +52,9 @@ int restoreProtectedProps(std::unordered_set<PropKey,PropKeyHash>& replacement){
   if(!restored.empty()){
     ScopedPropRecipeView scratch(replacement);
     for(const auto& [cx,cz]:touched){
-      prepareSelectedChunk(cx,cz,false);recipes++;
+      if(worldResourcePreviewApplying&&worldResourcePreviewApplying->propChange)
+        selectPreparedChunkData(worldResourcePreviewApplying->chunks.at({cx,cz}));
+      else {prepareSelectedChunk(cx,cz,false);recipes++;}
       for(const auto& prop:props){const PropKey key{prop.group,prop.gx,prop.gz};
         if(restored.count(key))changed.insert_or_assign(key,prop);}
       for(const auto& prop:solidProps){const PropKey key{prop.group,prop.gx,prop.gz};
@@ -71,7 +73,12 @@ int restoreProtectedProps(std::unordered_set<PropKey,PropKeyHash>& replacement){
   if(!ticket.allowed)return 0;
   if(ticket.preview){
     if(worldResourcePreviewCapture){ScopedPropRecipeView scratch(replacement);
-      for(const auto& [cx,cz]:touched){prepareSelectedChunk(cx,cz,true);captureWorldResourcePreview(takePreparedChunkData());}}
+      for(const auto& [cx,cz]:touched){prepareSelectedChunk(cx,cz,true);captureWorldResourcePreview(takePreparedChunkData());}
+      // A valid suppression key need not name an actual generated prop. Keep
+      // private recipe candidates, but publish no chunks if canonical commit
+      // only changes the suppression set/input revision.
+      worldResourcePreviewCapture->publishChunks=!ordered.empty();
+      preparePropNavigation(ordered,false);}
     return 1;
   }
   // Only now may identities, witnesses, resident data and graph become effective.

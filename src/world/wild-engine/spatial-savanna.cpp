@@ -1209,25 +1209,38 @@ struct PreparedSector {
   int x,z;
   std::array<uint8_t,sector*sector> pass{},steps{},inbound{};
 };
-struct PreparedChunkNavigation {
+struct PreparedNavigationDependencies {
   std::array<bool,navigationProfiles> ready{},worker{};
   std::array<float,navigationProfiles> radius{};
   std::array<uint32_t,navigationProfiles> revision{};
+};
+struct PreparedChunkNavigation : PreparedNavigationDependencies {
   std::array<std::optional<ChunkRaster>,navigationProfiles> rasters;
   std::array<std::vector<PreparedSector>,navigationProfiles> sectors;
 };
-bool preparedNavigationCurrent(const PreparedChunkNavigation& prepared){
+struct PreparedPropNavigation : PreparedNavigationDependencies {
+  std::array<std::vector<ChunkRaster>,navigationProfiles> rasters;
+  std::array<std::vector<PreparedSector>,navigationProfiles> sectors;
+};
+bool preparedNavigationCurrent(const PreparedNavigationDependencies& prepared){
   struct ContextGuard {int previous=lazy_selected_context();~ContextGuard(){lazy_select_context(previous);}} restore;
   for(int i=0;i<navigationProfiles;i++){
     const auto* profile=navProfiles[i];const bool ready=profile&&profile->ready;
-    if(ready!=prepared.ready[i]||ready&&(profile->radius!=prepared.radius[i]||profile->worker!=prepared.worker[i]||!prepared.rasters[i]))return false;
+    if(ready!=prepared.ready[i]||ready&&(profile->radius!=prepared.radius[i]||profile->worker!=prepared.worker[i]))return false;
     if(ready){lazy_select_context(i);if(lazy_route_revision()!=prepared.revision[i])return false;}
   }
   return true;
 }
+bool preparedNavigationCurrent(const PreparedChunkNavigation& prepared){
+  if(!preparedNavigationCurrent(static_cast<const PreparedNavigationDependencies&>(prepared)))return false;
+  for(int i=0;i<navigationProfiles;i++)if(prepared.ready[i]&&!prepared.rasters[i])return false;
+  return true;
+}
 struct WorldResourcePreview {
   std::array<double,9> header{};
+  bool publishChunks=true;
   std::optional<PreparedChunkNavigation> addition;
+  std::optional<PreparedPropNavigation> propChange;
   std::map<std::pair<int,int>,PreparedChunkData> chunks;
   std::set<std::pair<int,int>> removed;
   std::vector<int32_t> changes;
@@ -1399,6 +1412,60 @@ void patchActiveRaster(const Prop& changed){
     }
   }
 }
+// Detour-style tile preparation: sample the canonical patch on owned raster
+// copies, then install the completed tiles only after the proposal is accepted.
+// Only chunks touched by the patch or its sector borders enter this scratch map.
+void preparePropNavigation(const std::vector<Prop>& changed,bool single){
+  auto& preview=*worldResourcePreviewCapture;
+  PreparedPropNavigation result;ScopedVisualQueryChunk selected;
+  const int previous=activeProfile;
+  struct ProfileGuard {int previous;~ProfileGuard(){selectProfile(previous);}} restore{previous};
+  saveProfile();
+  for(int profile=0;profile<navigationProfiles;profile++){
+    const auto* source=navProfiles[profile];result.ready[profile]=source&&source->ready;
+    if(!result.ready[profile])continue;
+    selectProfile(profile);result.radius[profile]=radiusNow;result.worker[profile]=workerNow;result.revision[profile]=lazy_route_revision();
+    std::vector<std::pair<int,int>> tiles;
+    for(const auto& prop:changed){
+      const double reach=prop.radius+radiusNow+2;
+      forEachRectSector(int(std::floor(prop.x-reach)),int(std::floor(prop.z-reach)),
+        int(std::ceil(prop.x+reach)),int(std::ceil(prop.z+reach)),[&](int x,int z){tiles.emplace_back(x,z);});
+    }
+    if(!single){
+      std::sort(tiles.begin(),tiles.end(),[](const auto& a,const auto& b){return chunkKey(a.first,a.second)<chunkKey(b.first,b.second);});
+      tiles.erase(std::unique(tiles.begin(),tiles.end()),tiles.end());
+    }
+    std::unordered_map<uint64_t,ChunkRaster> scratch;
+    const auto copy=[&](int x,int z){const auto found=chunkRasters->find(chunkKey(x,z));if(found!=chunkRasters->end())scratch.emplace(found->first,found->second);};
+    for(const auto& [point,data]:preview.chunks)copy(point.first,point.second);
+    for(const auto& [x,z]:tiles){const int cx=floorDiv(x*sector+24,side),cz=floorDiv(z*sector+24,side);
+      copy(cx,cz);copy(cx+1,cz);copy(cx-1,cz);copy(cx,cz+1);copy(cx,cz-1);}
+    struct RasterGuard {decltype(chunkRasters) previous;~RasterGuard(){chunkRasters=previous;}} rasterGuard{chunkRasters};chunkRasters=&scratch;
+    for(const auto& [point,data]:preview.chunks){
+      selectPreparedChunkData(data);
+      for(const auto& prop:changed)patchActiveRaster(prop);
+    }
+    for(const auto& [x,z]:tiles){auto& out=result.sectors[profile].emplace_back();out.x=x;out.z=z;
+      prepareSectorOverlay(x,z,out.pass.data(),out.steps.data(),out.inbound.data());}
+    for(const auto& [point,data]:preview.chunks){const auto found=scratch.find(chunkKey(point.first,point.second));
+      if(found!=scratch.end())result.rasters[profile].push_back(std::move(found->second));}
+  }
+  preview.propChange=std::move(result);
+}
+bool installPreparedPropChange(const std::vector<std::pair<int,int>>& affected){
+  auto* prepared=worldResourcePreviewApplying;
+  if(!prepared||!prepared->propChange)return false;
+  const int selectedX=chunkX,selectedZ=chunkZ,previous=activeProfile;
+  for(const auto& point:affected){selectPreparedChunkData(prepared->chunks.at(point));publishSelectedChunk();}
+  for(int profile=0;profile<navigationProfiles;profile++){
+    selectProfile(profile);if(!navReady)continue;
+    for(auto& raster:prepared->propChange->rasters[profile])installPreparedRaster(std::move(raster));
+    installPreparedSectors(prepared->propChange->sectors[profile]);
+  }
+  selectProfile(previous);
+  if(!loadedChunks.empty()&&(chunkX!=selectedX||chunkZ!=selectedZ))selectResidentAfterEviction(selectedX,selectedZ);
+  return true;
+}
 void commitChunkSectors(int cx,int cz){
   const int firstX=cx*side-24,firstZ=cz*side-24;
   for(int sz=0;sz<4;sz++)for(int sx=0;sx<4;sx++)refreshSector(firstX/sector+sx,firstZ/sector+sz);
@@ -1491,6 +1558,7 @@ void refreshRemovedPropChunks(const Prop* changed){
   }
   // The generated relief and props do not depend on the movement profile.
   // Populate each affected chunk once, then update its per-profile raster.
+  if(installPreparedPropChange(affected))return;
   for(const auto& [cx,cz]:affected){
     populateChunk(cx,cz,false);
     for(int profile=0;profile<navigationProfiles;profile++){
@@ -1538,6 +1606,7 @@ void refreshRemovedPropChunksBatch(const std::vector<Prop>& changed,
     affected.emplace_back(cx,cz);
   }
   std::sort(affected.begin(),affected.end());
+  if(installPreparedPropChange(affected))return;
   // The live suppression set is already committed. Generate each changed chunk once;
   // only its raster and sector graph vary with the unit profile.
   for(const auto& [cx,cz]:affected){
@@ -2054,7 +2123,8 @@ int spatial_remove_prop(int group,int gx,int gz){
       for(const auto& [cx,cz]:loadedChunks){const int firstX=cx*side-24,firstZ=cz*side-24;
         if(changed.x+changed.radius+maxIndexedRadius<firstX||changed.x-changed.radius-maxIndexedRadius>=firstX+side||
            changed.z+changed.radius+maxIndexedRadius<firstZ||changed.z-changed.radius-maxIndexedRadius>=firstZ+side)continue;
-        prepareSelectedChunk(cx,cz,true);captureWorldResourcePreview(takePreparedChunkData());}}
+        prepareSelectedChunk(cx,cz,true);captureWorldResourcePreview(takePreparedChunkData());}
+      preparePropNavigation({changed},true);}
     return 1;
   }
   removedPropGeometry().insert_or_assign({group,gx,gz},changed);
@@ -2915,7 +2985,7 @@ int stageWorldProposal(int kind,int mode,int floatCount,int intCount,bool captur
   if(staged==1&&captureResources){
     std::array<double,6> identity{};
     if(spatialIntentWorldProposalSnapshot(identity)!=1)return -2;
-    for(const auto& [point,data]:candidate.chunks)candidate.changes.insert(candidate.changes.end(),{1,point.first,point.second});
+    if(candidate.publishChunks)for(const auto& [point,data]:candidate.chunks)candidate.changes.insert(candidate.changes.end(),{1,point.first,point.second});
     for(const auto& point:candidate.removed)candidate.changes.insert(candidate.changes.end(),{2,point.first,point.second});
     candidate.header={1,identity[0],identity[1],identity[3],double(kind),double(candidate.changes.size()/3),
       double(terrainInputRevision),double(overlayRevision),double(residencyRevision)};
@@ -2929,7 +2999,7 @@ EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_resource_version(){return 1;}
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_resource_snapshot(double session,double ticket){
   if(!worldResourcePreview)return 0;
   const auto& h=worldResourcePreview->header;
-  if(h[1]!=session||h[2]!=ticket||worldResourcePreview->addition&&!preparedNavigationCurrent(*worldResourcePreview->addition))return -1;
+  if(h[1]!=session||h[2]!=ticket||worldResourcePreview->addition&&!preparedNavigationCurrent(*worldResourcePreview->addition)||worldResourcePreview->propChange&&!preparedNavigationCurrent(*worldResourcePreview->propChange))return -1;
   std::array<double,6> identity{};
   if(spatialIntentWorldProposalSnapshot(identity)!=1||identity[0]!=session||identity[1]!=ticket||identity[3]!=h[3]||identity[5]!=h[4]||
      h[6]!=double(terrainInputRevision)||h[7]!=double(overlayRevision)||h[8]!=double(residencyRevision))return -1;
@@ -2973,7 +3043,10 @@ EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_commit(double session,double tic
   const bool hasPrepared=worldResourcePreview&&worldResourcePreview->header[1]==session&&worldResourcePreview->header[2]==ticket;
   if(hasPrepared&&spatial_world_proposal_resource_snapshot(session,ticket)!=1)return -2;
   struct ApplyingGuard {WorldResourcePreview* previous;~ApplyingGuard(){worldResourcePreviewApplying=previous;}} applyingGuard{worldResourcePreviewApplying};
-  worldResourcePreviewApplying=hasPrepared&&worldResourcePreview->header[4]==6?worldResourcePreview.get():nullptr;
+  // The legacy restoration without native bodies has different halo/revision
+  // semantics. Keep its canonical path until that owner uses protected commits.
+  const bool installingPrepared=hasPrepared&&(worldResourcePreview->header[4]==6||worldResourcePreview->header[4]==8||worldResourcePreview->header[4]==9&&spatialIntentPropsProtected());
+  worldResourcePreviewApplying=installingPrepared?worldResourcePreview.get():nullptr;
   SpatialWorldProposalInput input;const int valid=spatialIntentTakeWorld(session,ticket,sequence,time,clockSequence,input);
   if(valid!=1)return valid;worldProposalResult.clear();
   std::map<std::pair<int,int>,int> resources;
@@ -2993,7 +3066,7 @@ EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_commit(double session,double tic
     publication.header={1,session,ticket,time,double(input.kind),double(resources.size()),
       double(terrainInputRevision),double(overlayRevision),double(residencyRevision)};
     publication.prepared.reset();
-    if(hasPrepared&&(input.kind==6||input.kind==11)&&worldResourcePreview->changes==publication.changes)publication.prepared=worldResourcePreview;
+    if(hasPrepared&&(installingPrepared||input.kind==11)&&worldResourcePreview->changes==publication.changes)publication.prepared=worldResourcePreview;
     publication.valid=true;
   }
   return result==1?1:-6;

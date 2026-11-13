@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [terreno sin cambios conservado durante revisiones nativas de props, contrastado con Three y Godot](f-r4-unchanged-terrain-20261113.md).
+Último avance: [instalación de props nativos preparados antes del hold, contrastada con Detour/Godot](f-r4-native-prepared-props-20261113.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio

@@ -2,7 +2,7 @@
 
 Actualizado: 2026-11-13. IDs acordados en la conversación; no se renumeran al avanzar.
 
-Último incremento de f-R4: [terreno sin cambios conservado al revisar props](f-r4-unchanged-terrain-20261113.md).
+Último incremento de f-R4: [commit nativo de props mediante su preparación previa](f-r4-native-prepared-props-20261113.md).
 Publicaciones vivas y aceptación de personajes autónomos siguen pendientes; no cambia el recuento de cierres.
 
 **Ningún punto principal está cerrado todavía.** Un subpunto marcado como nativo
@@ -379,3 +379,5 @@ Avance parcial f-R4: [commit nativo de la adición preparada](f-r4-native-prepar
 Avance parcial f-R4: [continuación de un rechazo nativo preparado sobre los mismos recursos](f-r4-frame-continuation-20261113.md), con patrones contrastados en fuentes de Babylon/Three. Dos rechazos reales en tránsito, Workers de producto y mismo dispositivo/propietario, 93 buffers compartidos y uploads retenidos usados sin reenvío. Cierre/drenaje y 914 pruebas aprobados. No cierra la autoridad normal, todos los casos de recuperación ni la aceptación con locomoción; recuentos sin cambios.
 
 Avance parcial f-R4: [retención de terreno en revisiones de props](f-r4-unchanged-terrain-20261113.md), contrastada con fuentes de Three/Godot. Eliminación/restauración nativa real conserva geometría, material, máscara y los cuatro buffers de terreno en los chunks afectados, con el mismo dispositivo, sin errores GPU y con drenaje al cerrar. Props todavía se preparan por chunk y su commit/proyección nativa tarda 14–18 ms en el ensayo; quedan esas familias, autoridad normal y aceptación de locomoción. No cambian los cierres.
+
+Avance parcial f-R4: [instalación nativa de props preparados](f-r4-native-prepared-props-20261113.md), contrastada con Detour/Godot. Supresión/restauración protegida conservan rasters/sectores/candidatos antes del hold y los instalan en el orden canónico. En el harness GPU, commit/proyección baja de 14,2/18,2 ms a 0,9/1,3 ms, sin recetas nuevas durante commit y conservando terreno/dispositivo. Quedan reutilización gráfica de instancias, terreno y otras familias, autoridad normal y aceptación; no cambian los cierres.
