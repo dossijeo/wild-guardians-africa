@@ -1,7 +1,7 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
 Continuación 2026-11-13: [recursos canónicos del commit nativo, f-R4 parcial](f-r4-canonical-resources-20261113.md).
-Se conserva el orden A → B → C → D; no se ha cerrado la admisión gráfica ni la aceptación con personajes.
+Se conserva el orden A → B → C → D; el replay preparado avanza, pero la admisión viva y la aceptación con personajes autónomos siguen pendientes.
 
 Revisión del 5 de noviembre de 2026. Rama de trabajo: `codex/guardian-3d-animation`. Este documento sustituye la secuencia del plan del 4 de noviembre; su versión anterior permanece en Git. Estado: plan de implementación, no arquitectura ya terminada.
 

@@ -19,7 +19,7 @@ function copyBytes(data, offset = 0, size) {
 export function createRemoteWebGpuClient({ port, capabilities, onError = () => {}, onPresented = () => {}, terminate = () => {}, finalizationRegistryFactory = callback => typeof FinalizationRegistry === 'function' ? new FinalizationRegistry(callback) : null }) {
   let nextId = 0, sequence = 0, frame = null, pendingFrame = null, disposed = false, fatalError = null;
   let outbound = Promise.resolve();
-  let requiredWorldBoundary=null;
+  let requiredWorldBoundary=null, texturePreparation=null;
   const pending = new Map(), clockBindings = new Map(), canvasViewIds = new Set();
   const weakResources = new Map(), retainedCounts = new Map(), deferredFinalizations = new Set();
   const frameTimings = [], fenceTimings = [];
@@ -143,6 +143,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
   }
   function texture(descriptor, suppliedId) {
     const value = suppliedId ? object('Texture', descriptor, suppliedId) : resource('Texture', descriptor);
+    if (texturePreparation?.temporaries && !suppliedId) texturePreparation.temporaries.push(value);
     const size = descriptor.size || [canvas.width, canvas.height, 1];
     const dimensions = Array.isArray(size) ? size : [size.width, size.height, size.depthOrArrayLayers];
     Object.assign(value, { width: dimensions[0], height: dimensions[1] || 1, depthOrArrayLayers: dimensions[2] || 1, mipLevelCount: descriptor.mipLevelCount || 1, sampleCount: descriptor.sampleCount || 1, dimension: descriptor.dimension || '2d', format: descriptor.format || capabilities.format, usage: descriptor.usage || 0 });
@@ -170,6 +171,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
   }
   function encoder(descriptor = {}, bundle = false) {
     const nativeWorldBoundary=copyNativeWorldBoundary(frame?.metadata.nativeWorldBoundary??null);
+    const preparation=texturePreparation;
     const commands = [];
     const recordedReferences = collectReferences(descriptor);
     const result = { label: descriptor.label || '' };
@@ -198,7 +200,8 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
         send({ type: 'bundle', id: value[REF], descriptor: encode(descriptor), commands });
         return value;
       }
-      return { __remoteCommands: commands, descriptor: encode(descriptor), __remoteReferences: recordedReferences, submitted: false,nativeWorldBoundary };
+      collectReferences(preparation,recordedReferences);
+      return { __remoteCommands: commands, descriptor: encode(descriptor), __remoteReferences: recordedReferences, submitted: false,nativeWorldBoundary, texturePreparation:preparation?encode(preparation):null };
     };
     return result;
   }
@@ -220,7 +223,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     submit(buffers) {
       for (const buffer of buffers) { if (buffer.submitted) throw Error('Command buffer already submitted'); buffer.submitted = true; }
       queueOp({ method: 'submit', args: [buffers.map(buffer => ({ __remoteCommands: buffer.__remoteCommands, descriptor: buffer.descriptor,
-        nativeWorldBoundary:buffer.nativeWorldBoundary??null }))] });
+        nativeWorldBoundary:buffer.nativeWorldBoundary??null,texturePreparation:buffer.texturePreparation??null }))] });
     },
     // Remote-only admission contract: preceding payloads have crossed the
     // boundary and their writes/submits have entered the native queue. This is
@@ -350,6 +353,17 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
   port.start?.();
   const api = {
     device, context, canvas,
+    withTextureClear(callback) {
+      const previous=texturePreparation;texturePreparation={version:1,operation:'clear'};
+      try{return callback();}finally{texturePreparation=previous;}
+    },
+    withTexturePreparation(texture, operation, callback) {
+      if (!texture?.[REF] || texture[REF]===CURRENT || !weakResources.has(texture[REF]) || typeof texture.createView!=='function' || !['mipmaps','flip-y'].includes(operation) || typeof callback!=='function') throw TypeError('Invalid remote texture preparation');
+      const previous=texturePreparation;
+      texturePreparation={version:1,operation,texture,temporaries:[]};
+      try {const result=callback();if(result?.then)throw TypeError('Remote texture preparation must be synchronous');return result;}
+      finally {texturePreparation=previous;}
+    },
     beginFrame(metadata = {}) {
       if (disposed || fatalError) throw fatalError || Error('Remote GPU is disposed');
       if (frame || pendingFrame) throw Error('Remote GPU frame backpressure: one generation already pending');

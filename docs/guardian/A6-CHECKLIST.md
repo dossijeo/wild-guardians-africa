@@ -2,8 +2,8 @@
 
 Actualizado: 2026-11-13. IDs acordados en la conversación; no se renumeran al avanzar.
 
-Último incremento de f-R4: [retirada y baseline de checkpoint preparado con identidad nativa](f-r4-canonical-resources-20261113.md).
-Su admisión gráfica y aceptación con personajes siguen pendientes; no cambia el recuento de cierres.
+Último incremento de f-R4: [replay nativo y admisión de la escena completa](f-r4-canonical-resources-20261113.md).
+Publicaciones vivas y aceptación de personajes autónomos siguen pendientes; no cambia el recuento de cierres.
 
 **Ningún punto principal está cerrado todavía.** Un subpunto marcado como nativo
 implementado/validado no autoriza por sí solo activar autonomía GPU o retirar el

@@ -6,6 +6,7 @@ import { evaluateRemoteClock } from './remote-presentation-clock.js';
 import { createNativeRouteControl } from './native-route-control.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 
+import {validRemoteTexturePreparation} from './remote-texture-preparation.js';
 const REF = '__remoteGpuId';
 const CURRENT = '@canvas';
 const CREATION = new Set(['createBuffer','createTexture','createSampler','createBindGroup','createBindGroupLayout','createPipelineLayout','createShaderModule','createQuerySet','createRenderPipeline','createRenderPipelineAsync','createComputePipeline','createComputePipelineAsync']);
@@ -23,8 +24,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   let nativeMutationEpoch=0;
   let nativeWorldBoundary=null,worldBoundaryRequired=false;
   const frameWorldCurrent=packet=>!worldBoundaryRequired||sameNativeWorldBoundary(packet.metadata?.nativeWorldBoundary??null,nativeWorldBoundary);
-  const drawCommandsCurrent=(op,boundary)=>!worldBoundaryRequired||op.method!=='submit'||op.args[0].every(buffer=>
-    !buffer.__remoteCommands.some(command=>command.method==='beginRenderPass')||sameNativeWorldBoundary(buffer.nativeWorldBoundary??null,boundary));
+  const drawCommandsCurrent=(op,boundary)=>op.method!=='submit'||op.args[0].every(buffer=>{
+    if(buffer.texturePreparation)return validRemoteTexturePreparation(buffer,key=>resolutionResources?.get(key)||resources.get(key));
+    return !worldBoundaryRequired||!buffer.__remoteCommands.some(command=>command.method==='beginRenderPass')||sameNativeWorldBoundary(buffer.nativeWorldBoundary??null,boundary);
+  });
   function publishWorldBoundary(){port.postMessage({type:'native-world-boundary',worldBoundary:nativeWorldBoundary});}
   function invalidatePendingNativeWorld(reason){
     if(!pending)return;const stale=pending;pending=null;releaseSnapshot(stale.resourceSnapshot);
@@ -390,6 +393,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     }
   }
   function encodeCommandBuffer(buffer, replay = false) {
+    if(buffer.texturePreparation){if(!validRemoteTexturePreparation(buffer,key=>resolutionResources?.get(key)||resources.get(key)))throw Error('Invalid remote texture preparation');if(replay)return null;}
     const encoder = device.createCommandEncoder(buffer.descriptor || {});
     let count = 0;
     for (const command of buffer.__remoteCommands || []) {

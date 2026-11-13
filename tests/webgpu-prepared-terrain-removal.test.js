@@ -113,7 +113,7 @@ test('the history receiver commits the real paired retirement before notifying i
  try{
   receiver.beginReplay({sequence:1,epoch:'e'});receiver.stageReplayBoundary(2,[{chunks:[input.payload],terrainManifest:{epoch:'e',chunks:[{cx:0,cz:0,revision:2,removed:true}]}}]);
   await receiver.waitForReplayBoundary(2);f.assertOriginal();assert.deepEqual(notifications,[]);assert.equal(receiver.admittedBoundary(2),null);receiver.confirm(2,2);
-  assert.deepEqual(receiver.admittedBoundary(2),{version:1,sequence:2,epoch:'e',changes:[{cx:0,cz:0,revision:2,removed:true,capturedAt:2}]});
+  assert.deepEqual(receiver.admittedBoundary(2),{version:1,sequence:2,epoch:'e',canonicalPropsUnmasked:true,changes:[{cx:0,cz:0,revision:2,removed:true,capturedAt:2}]});
   assert.equal(notifications.length,1);assert.equal(notifications[0].metadata.publicationOrder,2);assert.equal(receiver.status().confirmedSequence,2);assert.equal(f.scene.children.length,0);assert.deepEqual(f.errors,[]);
  }finally{receiver.dispose();f.dispose();}
 });

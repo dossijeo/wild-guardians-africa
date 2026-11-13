@@ -7,6 +7,7 @@ import wasmUrl from '../../src/world/wild-engine/spatial-savanna.wasm?url';
 import {createConfirmedCameraTerrain,CameraTerrainUnavailable} from '../../src/app/confirmed-camera-terrain.js';
 
 self.onmessage=async({data})=>{
+ if(data.nativeReplay){await auditNativeWorldReplay(data);return;}
  let surface,world,terrain=new MessageChannel(),presentation=new MessageChannel();const errors=[],cameraPayloads=[],cameraTerrain=data.retirement?createConfirmedCameraTerrain():null;
  try{
   const original=OffscreenCanvas.prototype.getContext;OffscreenCanvas.prototype.getContext=function(kind,...args){if(/^webgl/i.test(kind))throw Error('WebGL forbidden');return original.call(this,kind,...args);};
@@ -71,3 +72,73 @@ self.onmessage=async({data})=>{
   self.postMessage({image,...(retiredImage?{retiredImage}:{}),...result});
  }catch(error){self.postMessage({ok:false,error:String(error.stack??error)});}finally{await surface?.dispose();world?.dispose();terrain.port2.close();presentation.port2.close();}
 };
+
+// Replay a real native physical boundary into a replacement product surface.
+// The worker remains at one native instant: locomotion/blocked-preparer
+// acceptance is deliberately separate from this resource-recovery check.
+async function auditNativeWorldReplay(data){
+ const {createSpatialGameSession}=await import('../../src/world/wild-engine/spatial-game-session.js'),
+  {createSpatialIntentBridge}=await import('../../src/world/wild-engine/spatial-intent-bridge.js'),
+  {createNativeIntentControlCohort}=await import('../../src/simulation/native-intent-control-cohort.js'),
+  {createRemoteWebGpu}=await import('../../src/rendering/remote-webgpu-client.js');
+ let spatial,cohort,surface,remote,oldSurface,oldRemote;const errors=[],ports=[],now=()=>performance.timeOrigin+performance.now();
+ try{
+  const response=await fetch('/tests/fixtures/desierto983-d15-partial-state.json.gz'),body=response.headers.get('content-encoding')?.includes('gzip')?response.body:response.body.pipeThrough(new DecompressionStream('gzip')),state=deserialize(await new Response(body).text()),template=structuredClone(state.workers[0]);
+  state.workers=[];state.tasks=[];state.plants=[];state.crates=[];state.spells=[];state.raid=null;state.structures=[];state.elapsed=10;state.pauses=['qa-native-replay'];
+  state.villages=state.villages.slice(0,1);
+  const module=await WebAssembly.compile(await (await fetch(wasmUrl)).arrayBuffer()),loaded=new Map();
+  spatial=createSpatialGameSession(module,state,{loaded:()=>loaded,onData:p=>loaded.set(`${p.cx},${p.cz}`,p)});
+  for(let z=-1;z<=1;z++)for(let x=-1;x<=1;x++){if(spatial.core.selectChunk(x,z)<0)spatial.core.addChunk(x,z);loaded.set(`${x},${z}`,spatial.core.chunkPayload());}
+  spatial.core.setSettlement(20,30,20,20);for(const key of loaded.keys()){const [x,z]=key.split(',').map(Number);spatial.core.selectChunk(x,z);loaded.set(key,spatial.core.chunkPayload());}
+  const actorId=Number(template.id.split('-').at(-1)),origin={x:20.05,z:24},end={x:20.05,z:36};state.workers=[{...template,...origin,path:[],radius:.28,status:'returning',taskId:null,recovering:false,incapacitated:false}];
+  const bridge=createSpatialIntentBridge(spatial);bridge.resetFromState(state);const w=spatial.core.wasm;spatial.actorSectorRevision({worker:true});
+  const ptr=w.nav_intent_attack_route_input_ptr(1);new Float32Array(w.memory.buffer,ptr,2).set([end.x,end.z]);if(w.nav_intent_restore_home(actorId,origin.x,origin.z,end.x,end.z,1)!==1)throw Error('Native replay route unavailable');
+  const prepared=bridge.prepareNativeRouteMotion(bridge.intentChanges().at(-1).routeHandle,{radius:.28});
+  if(prepared.status!=='prepared'||w.spatial_body_upsert(1,origin.x,origin.z,.28,0,1)!==1||bridge.reserveNativeRoute(prepared.routeHandle,1).status!=='reserved'||bridge.beginNativeRouteExecution().status!=='started'||bridge.commitNativeCausalClock().status!=='committed')throw Error('Native replay execution unavailable');
+  cohort=createNativeIntentControlCohort({observe:bridge.observeNativeIntentControl});
+  const gpu=async index=>{const port=index?data.resourceNext:data.resource,control=index?data.controlNext:data.control;ports.push(control);const creating=createRemoteWebGpu({port,onError:e=>errors.push(String(e.stack??e))}),attached=cohort.attach(control,'ground-native');const value=await creating;await attached;return value;};
+  const makeSurface=async(gpu,sequence=0,checkpoint=null)=>{
+   const terrain=new MessageChannel(),presentation=new MessageChannel();ports.push(terrain.port2,presentation.port2);
+   const view=await createWebGpuWorldSurface({canvas:gpu.canvas,remoteGpu:gpu,session:'ground-native',terrainPort:terrain.port1,presentationPort:presentation.port1,
+    snapshot:checkpoint?.snapshot??serializeConfirmedState(state),initialSequence:sequence,width:512,height:512,quality:'muy_baja',experimentalAllActors:true,
+    presentationRecovery:true,presentationWorkRecovery:true,experimentalTimelineRecovery:!!checkpoint,
+    presentationCapabilities:{causalInputs:true,coordinatedChunks:true,cameraTerrain:true},experimentalTemporalPresentation:{product:true,checkpoints:true,maxPublications:16,maxBytes:50000000,maxHistory:128,maxHistoryBytes:50000000},
+    camera:{x:origin.x,y:spatial.core.surface(origin.x,origin.z)+10,z:origin.z+.1,targetX:origin.x,targetY:spatial.core.surface(origin.x,origin.z)+1,targetZ:origin.z},onError:e=>errors.push(String(e.stack??e)),onResourceError:(kind,e)=>errors.push(kind+': '+String(e.stack??e))});
+   return {view,terrain:terrain.port2,presentation:presentation.port2};
+  };
+  const render=async()=>{remote.beginFrame({nativeWorldBoundary:surface.nativeWorldBoundary});if(!surface.render()){remote.cancelFrame();return false;}await remote.endFrame(surface.remoteFrameMetadata());return true;},
+   chunks=()=>[...loaded.values()].map(p=>({...p,capturedAt:10}));
+  remote=await gpu(0);let channels=await makeSurface(remote);surface=channels.view;let id=0;
+  const send=async(sequence,values,metadata)=>{
+   channels.terrain.postMessage({kind:'terrainHello',session:'ground-native',epoch:'e',version:1});
+   channels.terrain.postMessage({kind:'terrainBatchBegin',session:'ground-native',epoch:'e',sequence,id:++id,count:values.length,bytes:values.reduce((n,p)=>n+estimateRetainedBytes(p),0)});
+   for(const p of values)channels.terrain.postMessage({kind:'terrain',session:'ground-native',epoch:'e',sequence,id:++id,revision:sequence===0?1:2,payload:p});
+   channels.terrain.postMessage({kind:'terrainBatchEnd',session:'ground-native',epoch:'e',sequence,id:++id});
+   if(sequence)channels.presentation.postMessage({kind:'publication',session:'ground-native',publication:{session:'ground-native',sequence,elapsed:10,physicsPose:null,snapshot:serializeConfirmedState(state),events:[],...(metadata?{nativeWorldResources:[metadata]}:{})}});
+  };
+  channels.presentation.postMessage({kind:'presentationTimelineReady',session:'ground-native',version:1});await send(0,chunks());
+  const until=performance.now()+90000;while(performance.now()<until&&!errors.length){surface.timelinePump.advance();await render();if(surface.residency.size===loaded.size&&surface.workerRoster.status().ready===1)break;await new Promise(resolve=>setTimeout(resolve,16));}
+  if(errors.length||surface.workerRoster.status().ready!==1||surface.residency.size!==loaded.size)throw Error('Native replay bootstrap failed '+errors.join('\n'));
+  // Advance only the presentation sequence; native time and worker pose stay 10.
+  channels.terrain.postMessage({kind:'terrainBatchBegin',session:'ground-native',epoch:'e',sequence:1,id:++id,count:0,bytes:0});channels.terrain.postMessage({kind:'terrainBatchEnd',session:'ground-native',epoch:'e',sequence:1,id:++id});
+  channels.presentation.postMessage({kind:'publication',session:'ground-native',publication:{session:'ground-native',sequence:1,elapsed:10,physicsPose:null,snapshot:serializeConfirmedState(state),events:[]}});
+  const sequenceDeadline=performance.now()+30000;while(surface.stream.status().sequence<1&&!errors.length&&performance.now()<sequenceDeadline){surface.timelinePump.advance();await new Promise(resolve=>setTimeout(resolve,16));}
+  if(surface.stream.status().sequence!==1||errors.length)throw Error('Native replay initial publication did not become ready');
+  const first=await bridge.mutateNativeWorldAfterGpuQuiescence({getPublication:()=>cohort,mutation:{type:'addChunk',cx:4,cz:4}});if(first.status!=='committed')throw Error('Native checkpoint commit failed '+JSON.stringify(first));
+  const checkpoint={session:'ground-native',sequence:1,elapsed:10,physicsPose:null,snapshot:serializeConfirmedState(state),terrainCheckpoint:{sequence:1,chunks:chunks(),nativeWorldBoundary:bridge.nativeWorldResourceBoundary(),terrainManifest:{epoch:'e',chunks:[...loaded.values()].map(({cx,cz})=>({cx,cz,revision:1}))}},presentationCheckpoint:(()=>{try{return surface.captureTemporalPresentationCheckpoint(1);}catch(error){throw Error(error.message+' '+JSON.stringify({stream:surface.stream.status(),source:state.elapsed,presentation:surface.presentationClock,surface:surface.state.elapsed,errors}));}})(),workCheckpoint:{version:1,sequence:1,elapsed:10,effects:[]}};
+  const second=await bridge.mutateNativeWorldAfterGpuQuiescence({getPublication:()=>cohort,mutation:{type:'removeChunks',chunks:[[4,4]],releaseOnly:true}});if(second.status!=='committed')throw Error('Native replay mutation failed '+JSON.stringify(second));
+  const replay={sequence:2,terrain:[{chunks:[{authority:'spatial-wasm',cx:4,cz:4,removed:true,capturedAt:10}],terrainManifest:{epoch:'e',chunks:[{cx:4,cz:4,revision:2,removed:true}]}}],publication:{session:'ground-native',sequence:2,elapsed:10,physicsPose:null,snapshot:serializeConfirmedState(state),events:[],nativeWorldResources:[{version:1,kind:7,worldBoundary:second.worldBoundary,chunks:[],removed:second.resources.removed}]}};
+  oldSurface=surface;oldRemote=remote;surface=null;remote=await gpu(1);const transferred=cohort.connections();await oldSurface.dispose();oldSurface=null;oldRemote=null;
+  channels=await makeSurface(remote,1,checkpoint);surface=channels.view;await surface.restoreTimelineCheckpoint(checkpoint);
+  const intermediate=surface.nativeWorldBoundary;if(intermediate.ticket!==first.worldBoundary.ticket)throw Error('Prepared checkpoint identity lost');
+  if((await remote.inspectAsync()).consumer.nativeFrames!==0)throw Error('Hidden checkpoint was presented before replay');
+  await surface.applyTimelineRecoveryBoundary(replay);if(surface.nativeWorldBoundary.ticket!==second.worldBoundary.ticket||surface.residency.get(4,4))throw Error('Native replay identity/resources mismatch');
+  if(!surface.finishTimelineRecovery())throw Error('Native replay not ready');for(let frame=0;frame<3;frame++){await render();await new Promise(resolve=>setTimeout(resolve,32));}await remote.device.queue.onSubmittedWorkDone();const inspection=await remote.inspectAsync(),actor=surface.workerRoster.get(template.id);
+  if(inspection.consumer.gpuErrors||inspection.consumer.nativeFrames<1||!actor||errors.length)throw Error('Native replay presentation failed '+errors.join('\n'));
+  const captured=new Promise(resolve=>{const timer=setTimeout(resolve,10000);self.onmessage=({data})=>{if(data.nativeReplayCaptured){clearTimeout(timer);resolve();}};});
+  self.postMessage({ok:true,backend:'WebGPU',adapter:inspection.consumer.adapterInfo,checkpointWorld:first.worldBoundary,replayWorld:second.worldBoundary,preparedWorld:surface.nativeWorldBoundary,requiredWorld:remote.requiredNativeWorldBoundary(),
+   sequence:surface.stream.status().sequence,resident:surface.residency.size,workers:surface.workerRoster.status(),workerPosition:actor.root.position.toArray(),workerVisible:actor.root.visible,terrainHeight:surface.residency.surface(origin.x,origin.z),workerBounds:await(async()=>{const {Box3,Vector3,Raycaster}=await import('three');actor.root.updateWorldMatrix(true,true);const box=new Box3().setFromObject(actor.root),center=box.getCenter(new Vector3());const ray=new Raycaster(surface.camera.position,center.clone().sub(surface.camera.position).normalize());const hits=ray.intersectObject(surface.scene,true).slice(0,4).map(h=>({name:h.object.name,distance:h.distance,point:h.point.toArray()}));return {min:box.min.toArray(),max:box.max.toArray(),hits,ndc:center.project(surface.camera).toArray()};})(),workerMeshes:(()=>{let meshes=0;actor.root.traverse(o=>{if(o.isMesh)meshes++;});return meshes;})(),renderInfo:{...surface.renderer.info.render},camera:{position:surface.camera.position.toArray(),rotation:surface.camera.quaternion.toArray()},nativePose:bridge.sampleNativeRoute(prepared.routeHandle,10),draw:{frames:inspection.consumer.nativeFrames,packets:inspection.consumer.packets,gpuErrors:inspection.consumer.gpuErrors},handoff:transferred,errors,
+   scope:'Real native commits, canonical checkpoints, prepared terrain/biome replay and product surface with one real stationary worker mesh through the production draw Worker. Time stays at 10; no native GPU locomotion or 500 ms stall acceptance.'});await captured;
+ }catch(error){self.postMessage({ok:false,error:String(error.stack??error),errors});}
+ finally{await surface?.dispose().catch(()=>{});await oldSurface?.dispose().catch(()=>{});remote?.dispose();oldRemote?.dispose();cohort?.dispose();spatial?.dispose();for(const port of ports)port.close();}
+}

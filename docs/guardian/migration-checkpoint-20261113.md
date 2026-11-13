@@ -189,3 +189,20 @@ el journal canónico sigue vigente. El preparador lo valida y el surface lo adop
 tras restaurar sus recursos; el Worker lo captura al abrir/cerrar el frame.
 Pasan 696 pruebas y build. El replay de nuevas fronteras, recuperación ante frame
 obsoleto/uploads y personajes reales siguen pendientes; no se cierra f-R4.
+
+El replay recuperado contrasta ahora las fronteras canónicas con los lotes
+realmente aplicados y admite la escena completa antes de exponer su identidad.
+La preparación independiente de texturas conserva el guard de mundo para los
+dibujos y no se repite en rAF. Pasan 728 pruebas de 58 archivos sin fallos/skips.
+El [recibo GPU real](performance/native-world-replay-20261113.json) y la
+[captura](performance/native-world-replay-20261113.png) acreditan relevo, checkpoint
+ticket 1, retirada ticket 2 y nueve chunks con un trabajador estacionario visible,
+seis dibujos y cero errores GPU. Tiempo fijo 10 y calidad muy baja; no son
+locomoción autónoma, paridad visual ni bloqueo conjunto de 500 ms. Siguen pendientes
+publicaciones vivas, recuperación de uploads rechazados y esa aceptación integrada.
+f-R4 permanece parcial, sin cambios en los recuentos de A6/e/f.
+`VITE_WEBGPU_REMOTE_DRAW=true`: build aprobado en 46,42 s; registros `.cache/native-world-replay-build.log` y `.cache/native-world-replay-regression.tap`.
+
+La regresión de autoridad/control de producto conserva Shield y 15 dibujos durante
+500 ms de bloqueo, sin errores capturados (`.cache/native-world-replay-product.log`).
+Su fixture no contiene mallas de personajes ni locomoción nativa autónoma.

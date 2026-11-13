@@ -13,7 +13,7 @@ export async function prepareWebGpuTemporalTerrain(messages,{signal,scene,reside
  for(const message of messages){const payload=message?.payload,key=`${payload?.cx},${payload?.cz}`;if(!Number.isSafeInteger(sequence)||sequence<0||message?.sequence!==sequence||(message.epoch??null)!==epoch||!Number.isSafeInteger(payload?.cx)||!Number.isSafeInteger(payload?.cz)||!Number.isSafeInteger(message?.revision)||message.revision<1||keys.has(key))throw TypeError('Invalid temporal terrain boundary');keys.add(key);if(payload.removed!==undefined){validateTerrainResourceRemoval(payload);if(typeof residency.prepareRemoval!=='function'||typeof biome.prepareRemoval!=='function')throw Error('Prepared graphical terrain retirement unavailable');}else{validateInstances(payload);for(let slot=0;slot<payload.instances.length;slot++)if(payload.instances[slot].some(item=>!removed.has(item.id)))slots.add(slot);}}
  check();if(!await biome.ready)throw Error('Biome resources unavailable');check();if(messages.some(message=>!message.payload.removed))await biome.requestSlots([...slots]);check();
  if(mudPreparer!==null&&typeof mudPreparer?.prepare!=='function')throw TypeError('Invalid mud preparer');
- const tokens=[],identities=[],removalIdentities=[];
+ const tokens=[],identities=[],removalIdentities=[];let canonicalPropsUnmasked=true;
  // Discard every observed identity even if one observer itself fails. A
  // partially registered callback is included because it may already have
  // installed entries before throwing.
@@ -28,9 +28,12 @@ export async function prepareWebGpuTemporalTerrain(messages,{signal,scene,reside
    }
    if(onDiscardIdentity)identities.push({payload,identity});onPreparedIdentity?.(payload,identity);
    let mudGeometry=null,terrainToken;try{if(mudPreparer){mudGeometry=await mudPreparer.prepare(payload,revision,{signal});check();}terrainToken=residency.prepareRevision(payload,revision,epoch??null,{...options,mudGeometry,mudPrepared:!!mudPreparer});if(!terrainToken)throw Error('Terrain preparation is stale');mudGeometry=null;}finally{mudGeometry?.dispose();}
-   tokens.push(terrainToken);const biomePrepare=terrainToken.visualReadmission?biome.prepareVisualReadmission:biome.prepareRevision;if(typeof biomePrepare!=='function')throw Error('Biome visual readmission is unavailable');const biomeToken=biomePrepare.call(biome,payload,revision,{epoch:epoch??null,sequence},{...options,suppressed});if(!biomeToken)throw Error('Biome preparation is unavailable or stale');tokens.push(biomeToken);
+   tokens.push(terrainToken);const biomePrepare=terrainToken.visualReadmission?biome.prepareVisualReadmission:biome.prepareRevision;if(typeof biomePrepare!=='function')throw Error('Biome visual readmission is unavailable');canonicalPropsUnmasked&&=payload.instances.every(items=>items.every(item=>!removed.has(item.id)));const biomeToken=biomePrepare.call(biome,payload,revision,{epoch:epoch??null,sequence},{...options,suppressed:[...removed]});if(!biomeToken)throw Error('Biome preparation is unavailable or stale');tokens.push(biomeToken);
   }
-  const parts=tokens.map(token=>token.participant()),batch=await coordinator.prepareBatch(parts,{signal,scene,...(requireShadowTarget?{requireShadowTarget:true}:{})});
+  const parts=tokens.map(token=>token.participant()),rawBatch=await coordinator.prepareBatch(parts,{signal,scene,...(requireShadowTarget?{requireShadowTarget:true}:{})});
+  if(!rawBatch||typeof rawBatch.commit!=='function'||typeof rawBatch.abort!=='function')throw TypeError('Invalid prepared temporal batch');
+  const batch=Object.isExtensible(rawBatch)&&!Object.hasOwn(rawBatch,'canonicalPropsUnmasked')?rawBatch:{commit:()=>rawBatch.commit(),abort:()=>rawBatch.abort()};
+  Object.defineProperty(batch,'canonicalPropsUnmasked',{value:canonicalPropsUnmasked});
   // Preserve the pre-existing return value and behaviour when no discard
   // observer was requested.
   if(!onDiscardIdentity)return batch;
@@ -40,7 +43,7 @@ export async function prepareWebGpuTemporalTerrain(messages,{signal,scene,reside
   const abort=()=>{if(!active)return false;if(committing)return batch.abort();active=false;detach();let result,error;try{result=batch.abort();}catch(failure){error=failure;}const failure=discard();if(error||failure)throw error??failure;return result;};
   const onAbort=()=>{try{abort();}catch{}};
   signal?.addEventListener('abort',onAbort,{once:true});if(signal?.aborted){abort();throw new DOMException('Temporal terrain preparation cancelled','AbortError');}
-  return {commit(){if(!active)throw Error('Temporal terrain batch is no longer active');let result;committing=true;try{result=batch.commit();}catch(error){committing=false;try{abort();}catch{}throw error;}committing=false;active=false;detach();if(result!==true){const error=discard();if(error)throw error;}else{committedIdentities=new WeakMap([...identities,...removalIdentities].map(({payload,identity})=>[payload,identity]));identities.length=0;removalIdentities.length=0;}return result;},abort,identityFor(payload){return committedIdentities?.get(payload)??null;}};
+  return {canonicalPropsUnmasked,commit(){if(!active)throw Error('Temporal terrain batch is no longer active');let result;committing=true;try{result=batch.commit();}catch(error){committing=false;try{abort();}catch{}throw error;}committing=false;active=false;detach();if(result!==true){const error=discard();if(error)throw error;}else{committedIdentities=new WeakMap([...identities,...removalIdentities].map(({payload,identity})=>[payload,identity]));identities.length=0;removalIdentities.length=0;}return result;},abort,identityFor(payload){return committedIdentities?.get(payload)??null;}};
  }catch(error){for(const token of tokens.reverse())try{token.abort();}catch{}discard();throw error;}
 }
 

@@ -4,6 +4,17 @@ import {Scene} from 'three';
 import {prepareWebGpuTemporalTerrain} from '../src/rendering/webgpu-temporal-terrain.js';
 
 const message=(cx,slot)=>{const instances=Array.from({length:20},()=>[]);instances[slot].push({id:'a'});return {payload:{cx,cz:0,instances},revision:1,sequence:1,epoch:'e'};};
+test('canonical suppression evidence belongs to the resources prepared before asynchronous admission',async()=>{
+ for(const suppressed of [[],['a']]){
+  const input=message(0,0),options=identityOptions({prepareBatch:async()=>{input.payload.instances[0][0].id='other';return {commit:()=>true,abort:()=>true};}});
+  const result=await prepareWebGpuTemporalTerrain([input],{...options,suppressed});assert.equal(result.canonicalPropsUnmasked,suppressed.length===0);
+ }
+});
+test('biome preparation uses the owned suppression snapshot after asynchronous resource loads',async()=>{
+ const suppressed=['a'],input=message(0,0),options=identityOptions({prepareBatch:async()=>({commit:()=>true,abort:()=>true})});let actual;
+ options.biome.requestSlots=async()=>suppressed.splice(0);options.biome.prepareRevision=(_p,_r,_m,value)=>{actual=value.suppressed;return {participant:()=>({}),abort(){}};};
+ const result=await prepareWebGpuTemporalTerrain([input],{...options,suppressed});assert.deepEqual(actual,['a']);assert.equal(result.canonicalPropsUnmasked,false);
+});
 test('terrain adapter loads only demanded slots and passes paired identities to the coordinator',async()=>{
  const calls=[],scene=new Scene(),signal=new AbortController().signal,token=kind=>({participant(){return {kind};},abort(){calls.push('abort '+kind);}});let order=0;const result={commit(){},abort(){}};
  const value=await prepareWebGpuTemporalTerrain([message(0,2),message(1,3)],{scene,signal,suppressed:[],validateInstances(){},publicationEpoch:epoch=>'wire:'+epoch,publicationOrder:()=>++order,residency:{prepareRevision(payload,revision,epoch,options){calls.push(['terrain',payload.cx,revision,epoch,options]);return token('terrain');}},biome:{ready:Promise.resolve(true),async requestSlots(slots){calls.push(['slots',slots]);},prepareRevision(payload,revision,metadata,options){calls.push(['biome',payload.cx,revision,metadata,options]);return token('biome');}},coordinator:{async prepareBatch(parts,options){calls.push(['batch',parts,options]);return result;}}});

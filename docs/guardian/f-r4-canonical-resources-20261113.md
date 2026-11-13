@@ -260,12 +260,82 @@ La regresión real del arranque/control conserva 15 dibujos durante 500 ms y cer
 errores capturados (`.cache/native-world-checkpoint-product.log`); no certifica
 recuperación nativa tras una mutación ni personajes autónomos.
 
+## Replay nativo y admisión de la escena completa
+
+El preparador de recuperación contrasta ahora cada publicación nativa con la
+constancia de terreno que este consumidor realmente aplicó. Exige secuencia,
+época, coordenadas, operación, revisión y tiempos compatibles; los commits se
+ordenan por ticket y conservan autoridad/sesión. Si varios commits afectan una
+coordenada antes de publicar, prevalece su última operación. Rechaza una frontera
+atrasada, una retirada/upsert discordante, supresión de props canónicos y las
+familias overlay que todavía no tienen propietario gráfico. Una frontera sin
+cambios de terreno obtiene una constancia explícita vacía de esa secuencia; no
+reutiliza el recibo anterior ni afirma que se ejecutó trabajo GPU inexistente.
+
+Antes de exponer la identidad recuperada espera la disponibilidad común de
+terreno, bioma, animales/trabajadores, construcciones, cultivos y cajas, y pide un
+ticket real de admisión para la escena completa, incluidos sus pases de sombra.
+Un ticket invalidado se prepara otra vez. Cancelación, cierre, cambio de frontera
+o plazo de preparación agotado fallan sin exponer esa identidad. El plazo no es
+una vigencia de navegación ni un permiso para avanzar el reloj.
+
+Un checkpoint antiguo puede prepararse oculto mientras el consumidor gráfico ya
+exige una frontera posterior. El replay debe alcanzarla antes de finalizar la
+recuperación; el host conserva además su comprobación al admitir/dibujar el frame.
+No se etiqueta con el ticket más reciente una escena que aún no lo aplicó.
+
+La ejecución real descubrió dos operaciones legítimas de inicialización fuera de
+un frame: filtros de textura de Three r180 y borrado de profundidad auxiliar.
+El cliente declara un ámbito síncrono solo alrededor de mipmaps, flipY y clear
+fuera del canvas. El host comprueba recursos y comandos: no admite buffers,
+texturas ajenas, canvas, geometría indexada/indirecta ni compute en los filtros;
+el borrado exige adjuntos fuera del canvas, un clear real y ningún dibujo.
+Estas operaciones se ejecutan una vez y no se repiten en rAF. Conservan drenaje,
+retención, snapshots y staging de recursos publicados. El dibujo ordinario sigue
+exigiendo la identidad exacta capturada al crear su encoder.
+
+### Evidencia y límites
+
+[Recibo WebGPU real](performance/native-world-replay-20261113.json) y
+[captura inspeccionada](performance/native-world-replay-20261113.png): dos commits
+físicos WASM reales, journal canónico, relevo con drenaje por el cohort existente,
+checkpoint ticket 1 y replay de retirada ticket 2 en el surface de producto.
+El checkpoint intermedio permanece sin frames; la secuencia 2 termina con nueve
+chunks residentes y la identidad preparada igual a la exigida. NVIDIA/Turing,
+seis dibujos nativos de tres paquetes y cero errores GPU capturados. La captura
+se toma después de una fence GPU real y antes de liberar el surface.
+
+Un trabajador original está cargado y aparece en la captura cenital; su posición
+coincide con la muestra nativa en el instante 10. El tiempo permanece fijo, y el
+perfil de calidad muy baja informa textured:false para ese recurso. Esto no
+acredita locomoción/animación nativa en GPU, paridad de materiales ni la aceptación
+con preparador bloqueado durante 500 ms. El harness usa preparación y fuente
+nativa en el mismo Worker y dos Workers de dibujo de producto creados desde el
+hilo principal; no sustituye la prueba conjunta con la autoridad Worker normal.
+Los overlays y la integración de publicaciones vivas siguen pendientes.
+
+Validación: 728 pruebas de 58 archivos, cero fallos/skips
+('.cache/native-world-replay-selection.json',
+'.cache/native-world-replay-regression.tap'). Incluye los propietarios reales,
+el native WASM real, reconciliación del replay, espera/cancelación de admisión,
+recursos prohibidos y filtros ejecutados una sola vez tras un commit nativo.
+Las 99 pruebas dirigidas de propiedad/renderer/terreno también pasan tras retener
+las texturas declaradas durante la vida del command buffer, incluso si un filtro
+no genera pases. Build WebGPU aprobado; duración final en el checkpoint.
+
+Reproducción:
+
+~~~powershell
+$env:QA_BASE_URL='http://127.0.0.1:5181'
+$env:QA_NATIVE_REPLAY='true'
+# PLAYWRIGHT_MODULE apunta a la instalación externa de Playwright.
+.cache/tooling/node20.exe tools/experiments/audit_webgpu_temporal_ground.mjs
+~~~
+
 ## Siguiente punto pendiente
 
-Aplicar esta frontera en el preparador gráfico existente, incluyendo retiradas,
-cancelación y recuperación de recursos rechazados. Admitir todos los recursos
-afectados antes de abrir el frame nuevo y conservar congelada la generación
-anterior mientras tanto. Después acreditar el mismo cambio físico y visible con
-personajes reales consumiendo planes nativos completos, bloqueo del preparador,
-pausa/velocidad y revocación, sin posiciones JS periódicas. No se reduce f-R4 a
-estos contratos de datos ni se cierran e/f por sus incrementos internos.
+Conectar esta frontera a publicaciones vivas y recuperar uploads de frames
+rechazados mediante un baseline preparado nuevo. Después acreditar el mismo
+cambio físico y visible con personajes consumiendo planes nativos completos,
+bloqueo del preparador, pausa/velocidad y revocación, sin posiciones JS periódicas.
+No se reduce f-R4 a este replay de recursos ni se cierran e/f por sus incrementos.

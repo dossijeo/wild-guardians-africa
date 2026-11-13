@@ -7,6 +7,7 @@ import {createNativeIntentControlPublication} from '../src/simulation/native-int
 import {createThreadedSpatialWorld} from '../src/world/wild-engine/spatial-thread-runtime.js';
 import {createTerrainPublication} from '../src/simulation/terrain-publication.js';
 import {createConfirmedTerrainReceiver} from '../src/rendering/confirmed-terrain-receiver.js';
+import {reconcileNativeWorldResources} from '../src/world/native-world-boundary.js';
 
 function setup(options={}){
  const f=createNativeRouteExecutionFixture(options);f.worker(1,f.point(-6,0),f.point(6,0));
@@ -79,6 +80,37 @@ test('a native removal reaches the existing terrain channel only after its physi
   for(let i=0;i<100&&!removed.length;i++)await delay(1);assert.deepEqual(removed,[{cx:4,cz:4,revision:2}]);assert.deepEqual(errors,[]);
   assert.deepEqual(publication.manifest(),{epoch:'terrain/1',chunks:[]});assert.equal(f.w.spatial_has_chunk(4,4),0);
  }finally{receiver.dispose();publication.dispose();f.dispose();}
+});
+
+test('real native commits correlate through canonical terrain transport and the paired graphical owners',async()=>{
+ const THREE=await import('three'),{readFile}=await import('node:fs/promises'),
+  {createChunkPublicationCoordinator}=await import('../src/rendering/webgpu-chunk-publication.js'),
+  {createWebGpuTerrainResidency}=await import('../src/rendering/webgpu-terrain-residency.js'),
+  {createWebGpuBiomeProps}=await import('../src/rendering/webgpu-biome-props.js'),
+  {prepareWebGpuTemporalTerrain}=await import('../src/rendering/webgpu-temporal-terrain.js');
+ const {port1,port2}=new MessageChannel(),errors=[],publication=createTerrainPublication({port:port1,session:'native-paired',epoch:'e',retainRevisions:true}),
+  f=setup({onData:p=>publication.stage(p,11),onRelease:(cx,cz)=>publication.stage({authority:'spatial-wasm',cx,cz,removed:true},11)}),
+  scene=new THREE.Scene(),material=new THREE.MeshBasicMaterial(),admission={prepare(){},async prepareManyAndPublish(){throw Error('Unprepared publication');},async prepareTicket(){return {valid:()=>true,validAfterAttach:()=>true};},deferRelease(_o,release){release();}},
+  coordinator=createChunkPublicationCoordinator({admission,onError:e=>errors.push(e)}),terrain=createWebGpuTerrainResidency({scene,material,waterMaterial:material,pipelineAdmission:admission,coordinator}),
+  pack=JSON.parse(await readFile(new URL('../public/content/biome-desert.json',import.meta.url),'utf8')),
+  biome=createWebGpuBiomeProps({scene,state:f.state,biomePack:pack,initialSlots:[],pipelineAdmission:admission,coordinator,imageLoader:async()=>({close(){}}),
+   byteLoader:async url=>{const value=await readFile(new URL('../public'+url,import.meta.url));return value.buffer.slice(value.byteOffset,value.byteOffset+value.byteLength);},onError:e=>errors.push(e)});
+ let order=0;const receiver=createConfirmedTerrainReceiver({port:port2,session:'native-paired',confirmedElapsed:11,retainRevisions:true,residency:terrain,validateRevision:(...args)=>terrain.validateRevision(...args),
+  prepareGraphicalBatch:(messages,{signal})=>prepareWebGpuTemporalTerrain(messages,{signal,scene,residency:terrain,biome,coordinator,publicationEpoch:e=>e,publicationOrder:()=>++order,validateInstances(){},suppressed:f.state.suppressed??[]}),onRemoved(){},onError:e=>errors.push(e)});
+ try{
+  await f.source.ready;let previous=null;
+  for(const [sequence,mutation] of [[1,{type:'addChunk',cx:4,cz:4}],[2,{type:'removeChunks',chunks:[[4,4]],releaseOnly:true}]]){
+   const result=await f.mutate(mutation);assert.equal(result.status,'committed');assert.equal(publication.commit(sequence),true);
+   for(let i=0;i<1000&&!receiver.ready(sequence)&&!receiver.status().closed;i++)await delay(1);assert.deepEqual(errors,[]);assert.equal(receiver.ready(sequence),true);
+   const compact={version:1,kind:result.resources.kind,worldBoundary:result.worldBoundary,chunks:result.resources.chunks.map(({cx,cz})=>({cx,cz})),removed:result.resources.removed};
+   assert.throws(()=>reconcileNativeWorldResources({publication:{sequence,elapsed:11,nativeWorldResources:[compact]},admitted:receiver.admittedBoundary(sequence),previous}),/lack/);
+   receiver.confirm(sequence,11);const boundary=reconcileNativeWorldResources({publication:{sequence,elapsed:11,nativeWorldResources:[compact]},admitted:receiver.admittedBoundary(sequence),previous});assert.deepEqual(boundary,f.bridge.nativeWorldResourceBoundary());
+   if(sequence===1){assert.equal(terrain.matchesCheckpoint(result.resources.chunks[0],{epoch:'e',revision:1}),true);assert.equal(biome.matchesCheckpoint(result.resources.chunks[0],{epoch:'e',revision:1}),true);}
+   else{assert.equal(terrain.size,0);assert.equal(biome.status().chunks,0);assert.equal(scene.children.length,0);assert(boundary.ticket>previous.ticket);}
+   previous=boundary;
+  }
+  assert.deepEqual(errors,[]);
+ }finally{receiver.dispose();publication.dispose();biome.dispose();terrain.dispose();coordinator.dispose();material.dispose();f.dispose();}
 });
 
 test('the existing session stream and terrain channel carry canonical post-commit resources with the confirmed sequence',async()=>{

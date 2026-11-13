@@ -28,6 +28,7 @@ function fakeGpu() {
       const buffer = { data, descriptor, destroyed: false, mapAsync: async () => {}, getMappedRange(offset = 0, size = descriptor.size) { assert.equal(offset, 0); assert.equal(size, descriptor.size); return data.buffer; }, unmap() { calls.push(['unmap']); }, destroy() { this.destroyed = true; } };
       buffers.push(buffer); return buffer;
     },
+    createTexture: descriptor => ({descriptor,createView: view=>({descriptor:view}),destroy(){}}),
     createBindGroup: descriptor => ({ descriptor }),
     createBindGroupLayout: descriptor => ({ descriptor }),
     createQuerySet: descriptor => ({ descriptor }),
@@ -50,6 +51,28 @@ function fakeGpu() {
   return { device, context, calls, buffers, submitted };
 }
 const flush = async () => { for (let i = 0; i < 40; i++) await Promise.resolve(); };
+
+test('declared offscreen texture preparation survives a native commit and runs once across frame replay',async()=>{
+ const native=createNativeRouteExecutionFixture(),[sourcePort,drawPort]=pair();let source;
+ const f=await fixture({}, {intentControl:{port:drawPort,session:'texture-preparation'}});
+ try{
+  native.worker(1,native.point(-6,0),native.point(6,0));native.bridge.beginNativeRouteExecution();native.bridge.commitNativeCausalClock();
+  source=createNativeIntentControlPublication({port:sourcePort,session:'texture-preparation',observe:native.bridge.observeNativeIntentControl});await source.ready;
+  const committed=await native.bridge.mutateNativeWorldAfterGpuQuiescence({getPublication:()=>source,mutation:{type:'addChunk',cx:4,cz:4}});assert.equal(committed.status,'committed');
+  const texture=f.client.device.createTexture({size:[4,4],format:'rgba8unorm',usage:20});
+  const filter=()=>f.client.withTexturePreparation(texture,'mipmaps',()=>{
+   const encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:texture.createView(),loadOp:'clear',storeOp:'store'}]});
+   pass.setPipeline(f.pipeline);pass.draw(4,1,0,0);pass.end();f.client.device.queue.submit([encoder.finish()]);
+  });
+  filter();await flush();await f.host.idle();assert.equal(f.host.inspect().failed,false);assert.equal(f.gpu.submitted.length,1);
+  const clock={version:1,epoch:0,elapsed:10,safeUntil:20,anchorAbsoluteMs:0,paused:false,segments:[{start:10,end:20,rate:1,realDuration:10}]};
+  f.client.beginFrame({nativeWorldBoundary:committed.worldBoundary,clock});filter();
+  const encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
+  pass.draw(3);pass.end();f.client.device.queue.submit([encoder.finish()]);const receipt=f.client.endFrame();
+  await flush();await f.host.idle();f.host.present();await receipt;
+  assert.equal(f.gpu.submitted.length,3);f.host.present();assert.equal(f.gpu.submitted.length,4);assert.equal(f.errors.length,0);
+ }finally{source?.dispose();f.host.dispose();native.session.dispose();}
+});
 
 function nativeControlEvent(type,sequence,actorId,handle,time){
   return {type,sequence,actorId,protocolVersion:2,authorityEpoch:'native-owner',

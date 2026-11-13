@@ -123,7 +123,7 @@ test('a boundary receipt appears only after an explicit prepared graphical commi
   assert.equal(f.receiver.admittedBoundary(1),null);f.receiver.confirm(1,1);f.drain();
   const receipt=f.receiver.admittedBoundary(1);assert.deepEqual(receipt,{version:1,sequence:1,epoch:'e',changes:[{cx:0,cz:0,revision:1,removed:false,capturedAt:1},{cx:1,cz:0,revision:1,removed:true,capturedAt:1}]});
   assert(Object.isFrozen(receipt));assert(Object.isFrozen(receipt.changes));assert(Object.isFrozen(receipt.changes[0]));assert.throws(()=>receipt.changes[0].revision++);assert.equal(f.receiver.admittedBoundary(0),null);
-  f.publication.commit(2);f.drain();await turn();f.receiver.confirm(2,2);f.drain();assert.equal(f.receiver.admittedBoundary(1),null);assert.equal(f.receiver.admittedBoundary(2),null);
+  f.publication.commit(2);f.drain();await turn();f.receiver.confirm(2,2);f.drain();assert.equal(f.receiver.admittedBoundary(1),null);assert.deepEqual(f.receiver.admittedBoundary(2),{version:1,sequence:2,epoch:'e',changes:[],empty:true,canonicalPropsUnmasked:true});
   assert.deepEqual(f.errors,[]);
  }finally{f.dispose();}
 });
