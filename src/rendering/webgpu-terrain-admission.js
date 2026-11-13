@@ -49,6 +49,29 @@ export function createTerrainAdmission({scene,admission,coordinator=null,onError
   const current=()=>!closed&&!controller.signal.aborted&&pending.get(key)===record;
   return {key,epoch,revision,publicationOrder,side:'terrain',object:group,signal:controller.signal,eventRoots(){return old?[group,old.group]:[group];},activate(){if(closed||controller.signal.aborted||pending.has(key)||visible.get(key)!==old)throw Error('Terrain batch participant is stale');pending.set(key,record);unavailable.add(key);activated=true;return true;},attach(){if(!current())throw Error('Terrain batch participant is stale');attach(record);attached=true;if(!current())throw Error('Terrain batch participant is stale');},rollback(){if(attached&&!record.published){rollback(record);attached=false;}},finalize(){if(!current()||!attached)throw Error('Terrain batch participant is stale');finalized=true;record.published=true;visible.set(key,record);pending.delete(key);unavailable.delete(key);return {retire(){try{release(old);}catch(error){try{onError(error);}catch{}}},notify(){try{onPublished(key,record.sourceIdentity);}catch(error){try{onError(error);}catch{}}}};},rollbackFinalized(){if(!finalized)return;if(closed||visible.get(key)!==record||pending.has(key))throw Error('Terrain batch ownership changed');finalized=false;record.published=false;if(old)visible.set(key,old);else visible.delete(key);pending.set(key,record);},cancel(){if(record.released)return;if(record.published)throw Error('Cannot cancel published terrain batch');if(activated&&pending.get(key)===record)pending.delete(key);if(!pending.has(key)){if(wasUnavailable)unavailable.add(key);else unavailable.delete(key);}release(record);}};
  }
+ // A content-identical revision changes publication identity, not ownership of
+ // the visible subtree. In particular cancellation must never release it.
+ function prepareRetainedParticipant(key,mesh,{revision,epoch=null,publicationOrder,sourceIdentity}={}){
+  sourceIdentity=sourceSnapshot(sourceIdentity);
+  const old=visible.get(key),priorIdentity=old?.sourceIdentity,wasUnavailable=unavailable.has(key);
+  if(closed||!coordinator||!old||old.meshes[0]!==mesh||pending.has(key)||!Number.isSafeInteger(revision)||revision<1||epoch!==null&&(typeof epoch!=='string'||!epoch)||!Number.isSafeInteger(publicationOrder)||publicationOrder<1||!sourceIdentity)throw Error('Retained terrain participant unavailable');
+  const controller=new AbortController();let active=true,activated=false,attached=false,finalized=false;
+  const detach=()=>old.controller.signal.removeEventListener('abort',onRetired);
+  const onRetired=()=>controller.abort();old.controller.signal.addEventListener('abort',onRetired,{once:true});
+  const current=()=>active&&!closed&&!controller.signal.aborted&&!old.released&&visible.get(key)===old&&!pending.has(key)&&old.sourceIdentity===(finalized?sourceIdentity:priorIdentity);
+  const check=()=>{if(!current())throw Error('Retained terrain participant is stale');};
+  return {key,epoch,revision,publicationOrder,side:'terrain',object:old.group,signal:controller.signal,
+   eventRoots:()=>[old.group],
+   activate(){check();if(activated)throw Error('Retained terrain already activated');activated=true;unavailable.add(key);return true;},
+   attach(){check();if(!activated||attached)throw Error('Retained terrain not activated');attached=true;},
+   rollback(){attached=false;},
+   finalize(){check();if(!attached||finalized)throw Error('Retained terrain not attached');old.sourceIdentity=sourceIdentity;finalized=true;unavailable.delete(key);
+    return {retire(){active=false;detach();},notify(){try{onPublished(key,sourceIdentity);}catch(error){try{onError(error);}catch{}}}};
+   },
+   rollbackFinalized(){if(!finalized)return;check();old.sourceIdentity=priorIdentity;finalized=false;unavailable.add(key);},
+   cancel(){if(!active)return;if(finalized)throw Error('Cannot cancel published retained terrain');active=false;detach();if(activated&&!closed&&visible.get(key)===old&&!pending.has(key)){if(wasUnavailable)unavailable.add(key);else unavailable.delete(key);}controller.abort();}
+  };
+ }
  function remove(key){const item=pending.get(key);pending.delete(key);release(item);const old=visible.get(key);visible.delete(key);release(old);unavailable.delete(key);}
  function isRayReady(ray,limit=Infinity){
   if(closed||!ray?.origin||!ray?.direction||![ray.origin.x,ray.origin.z,ray.direction.x,ray.direction.z].every(Number.isFinite)||typeof limit!=='number'||Number.isNaN(limit)||limit<0)return false;
@@ -61,5 +84,5 @@ export function createTerrainAdmission({scene,admission,coordinator=null,onError
   }
   return true;
  }
- return {publish,prepareParticipant,remove,isReady(){return !closed&&unavailable.size===0;},isRayReady,visibleMesh(key){return visible.get(key)?.meshes[0]??null;},isVisible(key,mesh){return visible.get(key)?.meshes[0]===mesh;},dispose(){if(closed)return;closed=true;for(const key of new Set([...pending.keys(),...visible.keys(),...unavailable]))remove(key);}};
+ return {publish,prepareParticipant,prepareRetainedParticipant,remove,isReady(){return !closed&&unavailable.size===0;},isRayReady,visibleMesh(key){return visible.get(key)?.meshes[0]??null;},isVisible(key,mesh){return visible.get(key)?.meshes[0]===mesh;},dispose(){if(closed)return;closed=true;for(const key of new Set([...pending.keys(),...visible.keys(),...unavailable]))remove(key);}};
 }

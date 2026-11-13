@@ -258,7 +258,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
     // Descendant ownership, geometry, materials and pass state remain strict.
     const originalParent=baseInputs[renderPassInputs(target,passCamera,renderer).length+1];
     const valid=(attachedRootParent=undefined)=>!closed&&!lostError&&renderer._initialized!==false&&renderer._isDeviceLost!==true&&version===generation&&!signal?.aborted&&(!isCurrent||isCurrent())&&!lightsChanged()&&shadowTargets.every(([light,map])=>light.shadow.map===map)&&sameInputs(baseInputs,pipelineInputs(object,currentTarget(),passCamera,renderer,include,attachedRootParent))&&withMaterialAlternatives(alternatives,()=>sameInputs(inputs,pipelineInputs(object,currentTarget(),passCamera,renderer,include,attachedRootParent)));
-    return {valid:()=>valid(),validAfterAttach:()=>originalParent===null&&object.parent===targetScene&&valid(null)};
+    return {valid:()=>valid(),validAfterAttach:()=>originalParent!==null&&object.parent===originalParent?valid():originalParent===null&&object.parent===targetScene&&valid(null)};
   }catch(error){
    if(error?.name==='GPUPipelineError'){const layouts=[];object.traverse(node=>{if(node.geometry)layouts.push({name:node.name||node.type,attributes:Object.keys(node.geometry.attributes),material:node.material?.name||node.material?.type});});error=Object.assign(new Error(error.message+' '+JSON.stringify(layouts),{cause:error}),{name:error.name});}
    // Three r180 may retain an unsuccessful pipeline in its internal cache.

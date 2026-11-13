@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [continuación de frames nativos preparados en el mismo surface, contrastada con Three y Babylon](f-r4-frame-continuation-20261113.md).
+Último avance: [terreno sin cambios conservado durante revisiones nativas de props, contrastado con Three y Godot](f-r4-unchanged-terrain-20261113.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio

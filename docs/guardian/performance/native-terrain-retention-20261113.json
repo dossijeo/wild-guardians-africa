@@ -1,0 +1,378 @@
+[
+  {
+    "ok": true,
+    "backend": "WebGPU",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "mode": "prepared-native-delta",
+    "before": {
+      "resourcesCreated": 2163,
+      "resourceTypes": {
+        "createBindGroup": 461,
+        "createBindGroupLayout": 272,
+        "createBuffer": 960,
+        "createPipelineLayout": 126,
+        "createRenderPipeline": 8,
+        "createRenderPipelineAsync": 120,
+        "createSampler": 38,
+        "createShaderModule": 139,
+        "createTexture": 39
+      },
+      "unchangedGpuBuffers": {
+        "position": "Buffer:2142",
+        "color": "Buffer:2140",
+        "normal": "Buffer:2141",
+        "index": "Buffer:2143"
+      },
+      "frames": 183,
+      "biomeChunks": 9
+    },
+    "after": {
+      "resourcesCreated": 3263,
+      "resourceTypes": {
+        "createBindGroup": 709,
+        "createBindGroupLayout": 402,
+        "createBuffer": 1500,
+        "createPipelineLayout": 186,
+        "createRenderPipeline": 8,
+        "createRenderPipelineAsync": 180,
+        "createSampler": 39,
+        "createShaderModule": 199,
+        "createTexture": 40
+      },
+      "unchangedGpuBuffers": {
+        "position": "Buffer:2142",
+        "color": "Buffer:2140",
+        "normal": "Buffer:2141",
+        "index": "Buffer:2143"
+      },
+      "bufferForks": 0,
+      "bindingForks": 0,
+      "frames": 255,
+      "resident": 9
+    },
+    "mutations": [
+      {
+        "sequence": 2,
+        "mutation": {
+          "type": "removeChunks",
+          "chunks": [
+            [
+              -1,
+              -1
+            ]
+          ],
+          "releaseOnly": true
+        },
+        "proposed": {
+          "version": 1,
+          "authorityEpoch": "f8e0dfe2-a2d0-4077-ba43-ba969e15f404/1",
+          "nativeSession": 1,
+          "ticket": 1,
+          "effectiveTime": 10
+        },
+        "world": {
+          "version": 1,
+          "authorityEpoch": "f8e0dfe2-a2d0-4077-ba43-ba969e15f404/1",
+          "nativeSession": 1,
+          "ticket": 1,
+          "effectiveTime": 10
+        },
+        "preparationMs": 1.699951171875,
+        "readyBeforePhysicalCommitMs": 3.699951171875,
+        "drainMs": 1.2001953125,
+        "physicalCommitAndProjectionMs": 1.89990234375,
+        "resident": 8,
+        "resourcesCreated": 2252,
+        "resourceTypesReady": {
+          "createBindGroup": 461,
+          "createBindGroupLayout": 272,
+          "createBuffer": 960,
+          "createPipelineLayout": 126,
+          "createRenderPipeline": 8,
+          "createRenderPipelineAsync": 120,
+          "createSampler": 38,
+          "createShaderModule": 139,
+          "createTexture": 39
+        },
+        "resourceTypesAfter": {
+          "createBindGroup": 490,
+          "createBindGroupLayout": 274,
+          "createBuffer": 1018,
+          "createPipelineLayout": 126,
+          "createRenderPipeline": 8,
+          "createRenderPipelineAsync": 120,
+          "createSampler": 38,
+          "createShaderModule": 139,
+          "createTexture": 39
+        }
+      },
+      {
+        "sequence": 3,
+        "mutation": {
+          "type": "addChunk",
+          "cx": -1,
+          "cz": -1
+        },
+        "proposed": {
+          "version": 1,
+          "authorityEpoch": "f8e0dfe2-a2d0-4077-ba43-ba969e15f404/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 10
+        },
+        "world": {
+          "version": 1,
+          "authorityEpoch": "f8e0dfe2-a2d0-4077-ba43-ba969e15f404/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 10
+        },
+        "preparationMs": 385.2998046875,
+        "readyBeforePhysicalCommitMs": 504.300048828125,
+        "drainMs": 0.60009765625,
+        "physicalCommitAndProjectionMs": 1.599853515625,
+        "blockedPreparation": {
+          "durationMs": 500.9000000022352,
+          "nativeFrames": 15,
+          "worldBefore": {
+            "version": 1,
+            "authorityEpoch": "f8e0dfe2-a2d0-4077-ba43-ba969e15f404/1",
+            "nativeSession": 1,
+            "ticket": 1,
+            "effectiveTime": 10
+          },
+          "worldAfter": {
+            "version": 1,
+            "authorityEpoch": "f8e0dfe2-a2d0-4077-ba43-ba969e15f404/1",
+            "nativeSession": 1,
+            "ticket": 1,
+            "effectiveTime": 10
+          },
+          "holdBefore": null,
+          "holdAfter": null
+        },
+        "resident": 9,
+        "resourcesCreated": 2524,
+        "resourceTypesReady": {
+          "createBindGroup": 520,
+          "createBindGroupLayout": 304,
+          "createBuffer": 1089,
+          "createPipelineLayout": 140,
+          "createRenderPipeline": 8,
+          "createRenderPipelineAsync": 134,
+          "createSampler": 39,
+          "createShaderModule": 153,
+          "createTexture": 40
+        },
+        "resourceTypesAfter": {
+          "createBindGroup": 551,
+          "createBindGroupLayout": 306,
+          "createBuffer": 1153,
+          "createPipelineLayout": 140,
+          "createRenderPipeline": 8,
+          "createRenderPipelineAsync": 134,
+          "createSampler": 39,
+          "createShaderModule": 153,
+          "createTexture": 40
+        }
+      },
+      {
+        "sequence": 4,
+        "mutation": {
+          "type": "removeProp",
+          "group": 0,
+          "gx": -2,
+          "gz": -3
+        },
+        "proposed": {
+          "version": 1,
+          "authorityEpoch": "f8e0dfe2-a2d0-4077-ba43-ba969e15f404/1",
+          "nativeSession": 1,
+          "ticket": 3,
+          "effectiveTime": 10
+        },
+        "world": {
+          "version": 1,
+          "authorityEpoch": "f8e0dfe2-a2d0-4077-ba43-ba969e15f404/1",
+          "nativeSession": 1,
+          "ticket": 3,
+          "effectiveTime": 10
+        },
+        "preparationMs": 286.900146484375,
+        "readyBeforePhysicalCommitMs": 15.099853515625,
+        "drainMs": 0.300048828125,
+        "physicalCommitAndProjectionMs": 14.199951171875,
+        "retainedTerrain": [
+          {
+            "key": "-1,-1",
+            "buffersBefore": {
+              "position": "Buffer:2760",
+              "color": "Buffer:2758",
+              "normal": "Buffer:2759",
+              "index": "Buffer:2761"
+            },
+            "buffersAfter": {
+              "position": "Buffer:2760",
+              "color": "Buffer:2758",
+              "normal": "Buffer:2759",
+              "index": "Buffer:2761"
+            },
+            "maskTextureBefore": "Texture:2767",
+            "maskTextureAfter": "Texture:2767",
+            "sameMesh": true,
+            "sameGeometry": true,
+            "sameMaterial": true,
+            "sameMask": true
+          }
+        ],
+        "resident": 9,
+        "resourcesCreated": 2759,
+        "resourceTypesReady": {
+          "createBindGroup": 575,
+          "createBindGroupLayout": 330,
+          "createBuffer": 1207,
+          "createPipelineLayout": 152,
+          "createRenderPipeline": 8,
+          "createRenderPipelineAsync": 146,
+          "createSampler": 39,
+          "createShaderModule": 165,
+          "createTexture": 40
+        },
+        "resourceTypesAfter": {
+          "createBindGroup": 606,
+          "createBindGroupLayout": 332,
+          "createBuffer": 1271,
+          "createPipelineLayout": 152,
+          "createRenderPipeline": 8,
+          "createRenderPipelineAsync": 146,
+          "createSampler": 39,
+          "createShaderModule": 165,
+          "createTexture": 40
+        }
+      },
+      {
+        "sequence": 5,
+        "mutation": {
+          "type": "restoreRemovedProps",
+          "records": []
+        },
+        "proposed": {
+          "version": 1,
+          "authorityEpoch": "f8e0dfe2-a2d0-4077-ba43-ba969e15f404/1",
+          "nativeSession": 1,
+          "ticket": 4,
+          "effectiveTime": 10
+        },
+        "world": {
+          "version": 1,
+          "authorityEpoch": "f8e0dfe2-a2d0-4077-ba43-ba969e15f404/1",
+          "nativeSession": 1,
+          "ticket": 4,
+          "effectiveTime": 10
+        },
+        "preparationMs": 764.800048828125,
+        "readyBeforePhysicalCommitMs": 19.300048828125,
+        "drainMs": 0.400146484375,
+        "physicalCommitAndProjectionMs": 18.199951171875,
+        "retainedTerrain": [
+          {
+            "key": "-1,-1",
+            "buffersBefore": {
+              "position": "Buffer:2760",
+              "color": "Buffer:2758",
+              "normal": "Buffer:2759",
+              "index": "Buffer:2761"
+            },
+            "buffersAfter": {
+              "position": "Buffer:2760",
+              "color": "Buffer:2758",
+              "normal": "Buffer:2759",
+              "index": "Buffer:2761"
+            },
+            "maskTextureBefore": "Texture:2767",
+            "maskTextureAfter": "Texture:2767",
+            "sameMesh": true,
+            "sameGeometry": true,
+            "sameMaterial": true,
+            "sameMask": true
+          },
+          {
+            "key": "0,-1",
+            "buffersBefore": {
+              "position": "Buffer:844",
+              "color": "Buffer:842",
+              "normal": "Buffer:843",
+              "index": "Buffer:845"
+            },
+            "buffersAfter": {
+              "position": "Buffer:844",
+              "color": "Buffer:842",
+              "normal": "Buffer:843",
+              "index": "Buffer:845"
+            },
+            "maskTextureBefore": "Texture:851",
+            "maskTextureAfter": "Texture:851",
+            "sameMesh": true,
+            "sameGeometry": true,
+            "sameMaterial": true,
+            "sameMask": true
+          }
+        ],
+        "resident": 9,
+        "resourcesCreated": 3263,
+        "resourceTypesReady": {
+          "createBindGroup": 674,
+          "createBindGroupLayout": 400,
+          "createBuffer": 1424,
+          "createPipelineLayout": 186,
+          "createRenderPipeline": 8,
+          "createRenderPipelineAsync": 180,
+          "createSampler": 39,
+          "createShaderModule": 199,
+          "createTexture": 40
+        },
+        "resourceTypesAfter": {
+          "createBindGroup": 709,
+          "createBindGroupLayout": 402,
+          "createBuffer": 1500,
+          "createPipelineLayout": 186,
+          "createRenderPipeline": 8,
+          "createRenderPipelineAsync": 180,
+          "createSampler": 39,
+          "createShaderModule": 199,
+          "createTexture": 40
+        }
+      }
+    ],
+    "sameRenderer": true,
+    "sameDevice": true,
+    "sameScene": true,
+    "sameWorkerRoot": true,
+    "unchangedTerrainMesh": true,
+    "unchangedTerrainGeometry": true,
+    "preparedWorld": {
+      "version": 1,
+      "authorityEpoch": "f8e0dfe2-a2d0-4077-ba43-ba969e15f404/1",
+      "nativeSession": 1,
+      "ticket": 4,
+      "effectiveTime": 10
+    },
+    "requiredWorld": {
+      "version": 1,
+      "authorityEpoch": "f8e0dfe2-a2d0-4077-ba43-ba969e15f404/1",
+      "nativeSession": 1,
+      "ticket": 4,
+      "effectiveTime": 10
+    },
+    "gpuErrors": 0,
+    "errors": [],
+    "scope": "Real native precommit resource proposal through the existing terrain channel and real product surface owners, one GPU device/draw Worker. Chunk removal/readmission and canonical prop removal/restoration, retaining terrain GPU resources in changed chunks; one stationary worker. No ordinary gameplay activation, blocked-preparer locomotion or no-stutter acceptance.",
+    "daylight": true,
+    "disposalAndGpuDrainVerified": true
+  }
+]
