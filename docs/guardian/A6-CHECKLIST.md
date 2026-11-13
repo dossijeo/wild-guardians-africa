@@ -373,3 +373,5 @@ la coordinación temporal con dibujo (A6-06). No se declara completa la suite
 general ni la aceptación real A–F.
 
 Avance parcial f-R4 (13 de noviembre): [propuesta y consumo del delta gráfico real](f-r4-prepared-terrain-delta-20261113.md). El mismo surface/dispositivo conserva los buffers del chunk sin cambios; no reconstruye otra escena en este ensayo. Preparación bloqueada 500,7 ms con 15 dibujos estacionarios antes del efecto. Permanecen la regeneración nativa dentro del hold (39,9 ms), el fallback tras frame obsoleto y la integración/aceptación con personajes autónomos. Sin cambios en los recuentos de cierre.
+
+Avance parcial f-R4: [commit nativo de la adición preparada](f-r4-native-prepared-commit-20261113.md). Reutiliza receta, rasters y sectores tras revalidar perfil/grafo; proyección desde buffers propios sin regeneración. Readmisión medida: 1,6 ms tras drenaje frente a 39,9 ms anteriores, con el mismo surface. Paridad canónica de seis biomas/seis perfiles y 902 pruebas aprobadas. No cierra otras familias, el rechazo de frames ni la integración/aceptación con personajes autónomos.

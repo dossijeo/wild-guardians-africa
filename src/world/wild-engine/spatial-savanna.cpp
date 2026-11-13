@@ -5,6 +5,7 @@
 #include <cstring>
 #include <limits>
 #include <map>
+#include <memory>
 #include <optional>
 #include <set>
 #include <string>
@@ -25,7 +26,6 @@
 #endif
 #ifdef __EMSCRIPTEN_PTHREADS__
 #include <atomic>
-#include <memory>
 #include <pthread.h>
 #include <emscripten/threading.h>
 #include <emscripten/emscripten.h>
@@ -51,6 +51,8 @@ extern "C" EMSCRIPTEN_KEEPALIVE double spatial_profile_ms(int index){return inde
 extern "C" {
 int lazy_init(int size);
 int lazy_select_context(int profile);
+int lazy_selected_context();
+uint32_t lazy_route_revision();
 uint8_t* lazy_pass_ptr();
 uint8_t* lazy_steps_ptr();
 uint8_t* lazy_inbound_ptr();
@@ -205,7 +207,9 @@ WILD_SAMPLING_LOCAL std::unordered_map<uint64_t,ChunkRaster>* chunkRasters=nullp
 std::vector<std::pair<int,int>> loadedChunks;
 // Per-commit resource projection. Preview work never installs this recorder;
 // the same canonical refresh functions identify the actually rebuilt chunks.
+struct WorldResourcePreview;
 struct WorldResourcePublication {
+  std::shared_ptr<WorldResourcePreview> prepared;
   bool valid=false;
   std::array<double,9> header{};
   std::vector<int32_t> changes;
@@ -1201,14 +1205,36 @@ PreparedChunkData takePreparedChunkData(){
 }
 // Optional, bounded resources of one non-effective native proposal. These are
 // outputs of the canonical recipe, not another resident world or navigation map.
+struct PreparedSector {
+  int x,z;
+  std::array<uint8_t,sector*sector> pass{},steps{},inbound{};
+};
+struct PreparedChunkNavigation {
+  std::array<bool,navigationProfiles> ready{},worker{};
+  std::array<float,navigationProfiles> radius{};
+  std::array<uint32_t,navigationProfiles> revision{};
+  std::array<std::optional<ChunkRaster>,navigationProfiles> rasters;
+  std::array<std::vector<PreparedSector>,navigationProfiles> sectors;
+};
+bool preparedNavigationCurrent(const PreparedChunkNavigation& prepared){
+  struct ContextGuard {int previous=lazy_selected_context();~ContextGuard(){lazy_select_context(previous);}} restore;
+  for(int i=0;i<navigationProfiles;i++){
+    const auto* profile=navProfiles[i];const bool ready=profile&&profile->ready;
+    if(ready!=prepared.ready[i]||ready&&(profile->radius!=prepared.radius[i]||profile->worker!=prepared.worker[i]||!prepared.rasters[i]))return false;
+    if(ready){lazy_select_context(i);if(lazy_route_revision()!=prepared.revision[i])return false;}
+  }
+  return true;
+}
 struct WorldResourcePreview {
   std::array<double,9> header{};
+  std::optional<PreparedChunkNavigation> addition;
   std::map<std::pair<int,int>,PreparedChunkData> chunks;
   std::set<std::pair<int,int>> removed;
   std::vector<int32_t> changes;
 };
-WILD_SAMPLING_LOCAL std::optional<WorldResourcePreview> worldResourcePreview;
+WILD_SAMPLING_LOCAL std::shared_ptr<WorldResourcePreview> worldResourcePreview;
 WILD_SAMPLING_LOCAL WorldResourcePreview* worldResourcePreviewCapture=nullptr;
+WorldResourcePreview* worldResourcePreviewApplying=nullptr;
 void captureWorldResourcePreview(PreparedChunkData data){
   if(worldResourcePreviewCapture)worldResourcePreviewCapture->chunks.insert_or_assign({data.cx,data.cz},std::move(data));
 }
@@ -1297,6 +1323,55 @@ void installPreparedRaster(ChunkRaster raster){
   chunkRasters->insert_or_assign(key,std::move(raster));
 }
 void buildActiveRaster(){installPreparedRaster(prepareActiveRaster());}
+// Same prepared sector format and installation for synchronous proposals and
+// the existing pthread preparer. Neither preparation publishes a graph tile.
+std::vector<PreparedSector> prepareChunkAndNeighborSectors(int cx,int cz){
+  std::vector<PreparedSector> sectors;
+  const auto prepare=[&](int x,int z){sectors.push_back({x,z});auto& out=sectors.back();prepareSectorOverlay(x,z,out.pass.data(),out.steps.data(),out.inbound.data());};
+  const int firstX=(cx*side-24)/sector,firstZ=(cz*side-24)/sector;
+  for(int z=0;z<4;z++)for(int x=0;x<4;x++)prepare(firstX+x,firstZ+z);
+  constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1};
+  for(int d=0;d<4;d++){
+    const int nx=cx+dx[d],nz=cz+dz[d];if(!chunkRasters->count(chunkKey(nx,nz)))continue;
+    const int x0=(nx*side-24)/sector,z0=(nz*side-24)/sector;
+    for(int i=0;i<4;i++)prepare(x0+(d==0?0:d==1?3:i),z0+(d==2?0:d==3?3:i));
+  }
+  return sectors;
+}
+void installPreparedSectors(const std::vector<PreparedSector>& sectors){
+  for(const auto& tile:sectors){
+    std::copy(tile.pass.begin(),tile.pass.end(),lazy_pass_ptr());
+    std::copy(tile.steps.begin(),tile.steps.end(),lazy_steps_ptr());
+    std::copy(tile.inbound.begin(),tile.inbound.end(),lazy_inbound_ptr());lazy_commit_sector(tile.x,tile.z);
+  }
+}
+PreparedChunkNavigation prepareSelectedChunkNavigation(){
+  PreparedChunkNavigation result;
+  const int previous=activeProfile;
+  struct ProfileGuard {int previous;~ProfileGuard(){selectProfile(previous);}} restore{previous};
+  // Canonical addition publishes this relief before rasterization. Supply that
+  // identical view privately, without changing live residence or input revisions.
+  std::unordered_map<uint64_t,ChunkSpatialSample> samples;
+  for(int z=chunkZ-1;z<=chunkZ+1;z++)for(int x=chunkX-1;x<=chunkX+1;x++){
+    const auto found=residentSpatial().find(chunkKey(x,z));if(found!=residentSpatial().end())samples.emplace(found->first,found->second);
+  }
+  samples.insert_or_assign(chunkKey(chunkX,chunkZ),ChunkSpatialSample{lattice,ponds});
+  struct SampleGuard {decltype(residentSpatialRegistry) previous;~SampleGuard(){residentSpatialRegistry=previous;}} sampleGuard{residentSpatialRegistry};residentSpatialRegistry=&samples;
+  saveProfile();
+  for(int i=0;i<navigationProfiles;i++){
+    const auto* profile=navProfiles[i];result.ready[i]=profile&&profile->ready;if(!result.ready[i])continue;
+    result.radius[i]=profile->radius;result.worker[i]=profile->worker;selectProfile(i);result.revision[i]=lazy_route_revision();
+    std::unordered_map<uint64_t,ChunkRaster> neighbors;
+    for(int z=chunkZ-1;z<=chunkZ+1;z++)for(int x=chunkX-1;x<=chunkX+1;x++){
+      const auto found=chunkRasters->find(chunkKey(x,z));if(found!=chunkRasters->end())neighbors.emplace(found->first,found->second);
+    }
+    neighbors.insert_or_assign(chunkKey(chunkX,chunkZ),prepareActiveRaster());
+    struct RasterGuard {decltype(chunkRasters) previous;~RasterGuard(){chunkRasters=previous;}} rasterGuard{chunkRasters};chunkRasters=&neighbors;
+    result.sectors[i]=prepareChunkAndNeighborSectors(chunkX,chunkZ);result.rasters[i]=std::move(neighbors.at(chunkKey(chunkX,chunkZ)));
+  }
+  return result;
+}
+
 #ifdef __EMSCRIPTEN_PTHREADS__
 #include "spatial-preparation-worker.inc"
 #endif
@@ -1757,7 +1832,7 @@ int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){
   chunkRasters=&navProfile(0).rasters;lazy_select_context(0);
   loadedChunks.clear();nextBarrierId=1;
   worldResourcePreview.reset();
-  if(worldResourcePublication){worldResourcePublication->valid=false;worldResourcePublication->changes.clear();}
+  if(worldResourcePublication){worldResourcePublication->valid=false;worldResourcePublication->changes.clear();worldResourcePublication->prepared.reset();}
   residentSpatial().clear();
   residentSolidProps().clear();
   residentVisibleProps().clear();
@@ -1772,19 +1847,24 @@ int spatial_add_chunk(int cx,int cz){
   const auto region=residencyRegion(cx,cz);const auto ticket=spatialIntentResidencyBefore(&region,1,false);
   if(!ticket.allowed)return -1;
   if(ticket.preview){
-    if(worldResourcePreviewCapture){ScopedVisualQueryChunk scratch;prepareSelectedChunk(cx,cz,true);captureWorldResourcePreview(takePreparedChunkData());}
+    if(worldResourcePreviewCapture){ScopedVisualQueryChunk scratch;prepareSelectedChunk(cx,cz,true);worldResourcePreviewCapture->addition=prepareSelectedChunkNavigation();captureWorldResourcePreview(takePreparedChunkData());}
     return 1;
   }
   SPATIAL_TICK(totalStarted);
-  populateChunk(cx,cz);loadedChunks.emplace_back(cx,cz);++residencyRevision;
+  auto* prepared=worldResourcePreviewApplying&&worldResourcePreviewApplying->addition?worldResourcePreviewApplying:nullptr;
+  if(prepared){selectPreparedChunkData(prepared->chunks.at({cx,cz}));publishSelectedChunk();}else populateChunk(cx,cz);
+  loadedChunks.emplace_back(cx,cz);++residencyRevision;
   const int previous=activeProfile;
   for(int profile=0;profile<navigationProfiles;profile++){
     selectProfile(profile);
     if(!navReady)continue;
-    // Both radii rasterize the same freshly generated terrain and props.
-    SPATIAL_TICK(rasterStarted);buildActiveRaster();SPATIAL_TOCK(1,rasterStarted);
-    SPATIAL_TICK(commitStarted);commitActiveSectors();SPATIAL_TOCK(2,commitStarted);
-    SPATIAL_TICK(borderStarted);refreshNeighborBorders(cx,cz);SPATIAL_TOCK(3,borderStarted);
+    if(prepared){installPreparedRaster(std::move(*prepared->addition->rasters[profile]));installPreparedSectors(prepared->addition->sectors[profile]);}
+    else{
+      // Both radii rasterize the same freshly generated terrain and props.
+      SPATIAL_TICK(rasterStarted);buildActiveRaster();SPATIAL_TOCK(1,rasterStarted);
+      SPATIAL_TICK(commitStarted);commitActiveSectors();SPATIAL_TOCK(2,commitStarted);
+      SPATIAL_TICK(borderStarted);refreshNeighborBorders(cx,cz);SPATIAL_TOCK(3,borderStarted);
+    }
   }
   selectProfile(previous);
   spatialIntentResidencyCommitted(ticket,1);
@@ -2839,7 +2919,7 @@ int stageWorldProposal(int kind,int mode,int floatCount,int intCount,bool captur
     for(const auto& point:candidate.removed)candidate.changes.insert(candidate.changes.end(),{2,point.first,point.second});
     candidate.header={1,identity[0],identity[1],identity[3],double(kind),double(candidate.changes.size()/3),
       double(terrainInputRevision),double(overlayRevision),double(residencyRevision)};
-    worldResourcePreview=std::move(candidate);
+    worldResourcePreview=std::make_shared<WorldResourcePreview>(std::move(candidate));
   }
   return staged;
 }
@@ -2849,7 +2929,7 @@ EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_resource_version(){return 1;}
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_resource_snapshot(double session,double ticket){
   if(!worldResourcePreview)return 0;
   const auto& h=worldResourcePreview->header;
-  if(h[1]!=session||h[2]!=ticket)return -1;
+  if(h[1]!=session||h[2]!=ticket||worldResourcePreview->addition&&!preparedNavigationCurrent(*worldResourcePreview->addition))return -1;
   std::array<double,6> identity{};
   if(spatialIntentWorldProposalSnapshot(identity)!=1||identity[0]!=session||identity[1]!=ticket||identity[3]!=h[3]||identity[5]!=h[4]||
      h[6]!=double(terrainInputRevision)||h[7]!=double(overlayRevision)||h[8]!=double(residencyRevision))return -1;
@@ -2858,11 +2938,11 @@ EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_resource_snapshot(double session
 EMSCRIPTEN_KEEPALIVE const double* spatial_world_proposal_resource_header_ptr(){return worldResourcePreview?worldResourcePreview->header.data():nullptr;}
 EMSCRIPTEN_KEEPALIVE const int32_t* spatial_world_proposal_resource_changes_ptr(){return worldResourcePreview?worldResourcePreview->changes.data():nullptr;}
 extern "C++" {
-std::pair<void*,size_t> worldProposalResourceBuffer(int index,int field){
-  if(!worldResourcePreview||index<0||size_t(index)*3+2>=worldResourcePreview->changes.size())return {nullptr,0};
-  const auto& rows=worldResourcePreview->changes;const size_t at=size_t(index)*3;
+std::pair<void*,size_t> worldResourceBuffer(WorldResourcePreview* owner,int index,int field){
+  if(!owner||index<0||size_t(index)*3+2>=owner->changes.size())return {nullptr,0};
+  const auto& rows=owner->changes;const size_t at=size_t(index)*3;
   if(rows[at]!=1)return {nullptr,0};
-  const auto found=worldResourcePreview->chunks.find({rows[at+1],rows[at+2]});if(found==worldResourcePreview->chunks.end())return {nullptr,0};
+  const auto found=owner->chunks.find({rows[at+1],rows[at+2]});if(found==owner->chunks.end())return {nullptr,0};
   auto& d=found->second;
   switch(field){
     case 0:return {d.heights.data(),d.heights.size()*sizeof(float)};
@@ -2876,13 +2956,24 @@ std::pair<void*,size_t> worldProposalResourceBuffer(int index,int field){
   return {nullptr,0};
 }
 }
-EMSCRIPTEN_KEEPALIVE void* spatial_world_proposal_resource_buffer_ptr(int index,int field){return worldProposalResourceBuffer(index,field).first;}
-EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_resource_buffer_bytes(int index,int field){return int(worldProposalResourceBuffer(index,field).second);}
+EMSCRIPTEN_KEEPALIVE void* spatial_world_proposal_resource_buffer_ptr(int index,int field){return worldResourceBuffer(worldResourcePreview.get(),index,field).first;}
+EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_resource_buffer_bytes(int index,int field){return int(worldResourceBuffer(worldResourcePreview.get(),index,field).second);}
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_resource_release(double session,double ticket){
   if(!worldResourcePreview||worldResourcePreview->header[1]!=session||worldResourcePreview->header[2]!=ticket)return 0;
   worldResourcePreview.reset();return 1;
 }
+EMSCRIPTEN_KEEPALIVE int spatial_world_resource_prepared_snapshot(double session,double ticket){
+  if(spatial_world_resource_snapshot()!=1)return -1;
+  const auto& p=*worldResourcePublication;if(p.header[1]!=session||p.header[2]!=ticket)return -1;
+  return p.prepared?1:0;
+}
+EMSCRIPTEN_KEEPALIVE void* spatial_world_resource_buffer_ptr(int index,int field){return worldResourceBuffer(worldResourcePublication?worldResourcePublication->prepared.get():nullptr,index,field).first;}
+EMSCRIPTEN_KEEPALIVE int spatial_world_resource_buffer_bytes(int index,int field){return int(worldResourceBuffer(worldResourcePublication?worldResourcePublication->prepared.get():nullptr,index,field).second);}
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_commit(double session,double ticket,double sequence,double time,double clockSequence){
+  const bool hasPrepared=worldResourcePreview&&worldResourcePreview->header[1]==session&&worldResourcePreview->header[2]==ticket;
+  if(hasPrepared&&spatial_world_proposal_resource_snapshot(session,ticket)!=1)return -2;
+  struct ApplyingGuard {WorldResourcePreview* previous;~ApplyingGuard(){worldResourcePreviewApplying=previous;}} applyingGuard{worldResourcePreviewApplying};
+  worldResourcePreviewApplying=hasPrepared&&worldResourcePreview->header[4]==6?worldResourcePreview.get():nullptr;
   SpatialWorldProposalInput input;const int valid=spatialIntentTakeWorld(session,ticket,sequence,time,clockSequence,input);
   if(valid!=1)return valid;worldProposalResult.clear();
   std::map<std::pair<int,int>,int> resources;
@@ -2901,6 +2992,8 @@ EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_commit(double session,double tic
     for(const auto& [point,operation]:resources)publication.changes.insert(publication.changes.end(),{operation,point.first,point.second});
     publication.header={1,session,ticket,time,double(input.kind),double(resources.size()),
       double(terrainInputRevision),double(overlayRevision),double(residencyRevision)};
+    publication.prepared.reset();
+    if(hasPrepared&&(input.kind==6||input.kind==11)&&worldResourcePreview->changes==publication.changes)publication.prepared=worldResourcePreview;
     publication.valid=true;
   }
   return result==1?1:-6;

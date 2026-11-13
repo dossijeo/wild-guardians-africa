@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [delta nativo preparado y consumido por el surface existente; commit nativo y reanudación tras rechazo todavía pendientes](f-r4-prepared-terrain-delta-20261113.md).
+Último avance: [adición nativa sin regeneración dentro del hold; reanudación tras frame obsoleto pendiente](f-r4-native-prepared-commit-20261113.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio

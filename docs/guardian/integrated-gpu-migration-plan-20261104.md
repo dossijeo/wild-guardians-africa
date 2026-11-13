@@ -1,6 +1,6 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
-Continuación 2026-11-13: [delta preparado en el surface existente; commit nativo y reanudación tras rechazo pendientes](f-r4-prepared-terrain-delta-20261113.md).
+Continuación 2026-11-13: [adición nativa preparada y conservada hasta el commit; reanudación tras rechazo pendiente](f-r4-native-prepared-commit-20261113.md).
 Se conserva el orden A → B → C → D; el replay preparado avanza, pero la admisión viva y la aceptación con personajes autónomos siguen pendientes.
 
 Revisión del 5 de noviembre de 2026. Rama de trabajo: `codex/guardian-3d-animation`. Este documento sustituye la secuencia del plan del 4 de noviembre; su versión anterior permanece en Git. Estado: plan de implementación, no arquitectura ya terminada.
