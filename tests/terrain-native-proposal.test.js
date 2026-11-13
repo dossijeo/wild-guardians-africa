@@ -29,7 +29,7 @@ test('native delta prepares before publication and transfers its real batch once
   const actual=resources();f.producer.stage(actual.chunks[0],10);
   assert.equal(handle.commit({worldBoundary:boundary,resources:actual}),true);assert.equal(handle.abort(),false);
   f.producer.commit(1);await until(()=>f.receiver.ready(1));
-  assert.deepEqual([...f.live],[[0,1],[1,1]],'prepared geometry is still hidden until the confirmed boundary');
+  assert.deepEqual([...f.live],[[0,1],[1,1]],'prepared geometry is still hidden until the confirmed boundary');assert.equal(f.receiver.status().nativeProposal.phase,'adopting');assert.deepEqual(f.receiver.status().nativeProposal.worldBoundary,boundary);
   f.receiver.confirm(1,10);assert.deepEqual([...f.live],[[0,2],[1,1]]);assert.equal(f.prepares,1,'ordinary batch did not invoke the preparer again');assert.equal(f.prepared.length,1);assert.equal(f.commits,2);
   assert.equal(f.changes.length,f.initialChanges+1);assert.equal(f.changes.at(-1)[1],2);assert.equal(f.changes.at(-1)[2].publicationOrder,100);
   assert.deepEqual(f.receiver.admittedBoundary(1).nativeWorldBoundary,boundary);assert.deepEqual(f.producer.manifest().chunks,[{cx:0,cz:0,revision:2},{cx:1,cz:0,revision:1}]);assert.deepEqual(f.errors,[]);

@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [adición nativa sin regeneración dentro del hold; reanudación tras frame obsoleto pendiente](f-r4-native-prepared-commit-20261113.md).
+Último avance: [continuación de frames nativos preparados en el mismo surface, contrastada con Three y Babylon](f-r4-frame-continuation-20261113.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio
@@ -22,6 +22,17 @@ camino crítico sin pedir autorización rutinaria entre hitos.
    flujo completo. No crear otros renderers, planificadores ni estados autoritativos.
 3. **Validación C1–C4 real**, funcional/determinista, visual/recursos,
    desacoplamiento/fallos y costes estructurales CPU/GPU medidos por separado.
+
+## Flujo de implementación arquitectónica
+
+Antes de diseñar o implementar cada mecanismo pendiente, contrastar el problema
+con motores, frameworks o bibliotecas consolidadas y leer su código fuente real.
+Identificar los patrones aplicables y adaptar soluciones contrastadas a los
+propietarios existentes. No sustituir la arquitectura ni añadir dependencias sin
+una ventaja técnica demostrable. Registrar brevemente revisión/rutas consultadas,
+decisión y límites junto al incremento; esta investigación acompaña el trabajo
+y sus validaciones, sin convertirse en una fase separada. Instrucción explícita
+del usuario incorporada durante la continuación de f-R4.
 
 ## Condiciones de cierre
 

@@ -11,6 +11,12 @@ function pair() {
   b.postMessage = data => queueMicrotask(() => a.onmessage?.({ data: structuredClone(data) }));
   return [a, b];
 }
+
+test('native boundary observers wake only after the validated direct requirement is installed',()=>{
+ const errors=[],seen=[],port={postMessage(){},close(){}},boundary={version:1,authorityEpoch:'owner',nativeSession:1,ticket:2,effectiveTime:10};let client;
+ client=createRemoteWebGpuClient({port,capabilities:{width:20,height:10,format:'rgba8unorm'},onError:error=>errors.push(error),onNativeWorldBoundary:value=>seen.push([value,client.requiredNativeWorldBoundary()])});
+ try{port.onmessage({data:{type:'native-world-boundary',worldBoundary:boundary}});assert.deepEqual(seen,[[boundary,boundary]]);port.onmessage({data:{type:'native-world-boundary',worldBoundary:{...boundary,ticket:1}}});assert.equal(seen.length,1);assert.match(errors[0].message,/regressed/);assert.deepEqual(client.requiredNativeWorldBoundary(),boundary);}finally{client.dispose();}
+});
 function fakeGpu() {
   const calls = [], buffers = [], submitted = [];
   let textureVersion = 0, commandVersion = 0;

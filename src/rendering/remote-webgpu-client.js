@@ -16,7 +16,7 @@ function copyBytes(data, offset = 0, size) {
   return new Uint8Array(view ? data.buffer : data, (view ? data.byteOffset : 0) + start, count).slice();
 }
 
-export function createRemoteWebGpuClient({ port, capabilities, onError = () => {}, onPresented = () => {}, terminate = () => {}, finalizationRegistryFactory = callback => typeof FinalizationRegistry === 'function' ? new FinalizationRegistry(callback) : null }) {
+export function createRemoteWebGpuClient({ port, capabilities, onError = () => {}, onPresented = () => {}, onNativeWorldBoundary = () => {}, terminate = () => {}, finalizationRegistryFactory = callback => typeof FinalizationRegistry === 'function' ? new FinalizationRegistry(callback) : null }) {
   let nextId = 0, sequence = 0, frame = null, pendingFrame = null, disposed = false, fatalError = null;
   let outbound = Promise.resolve();
   let requiredWorldBoundary=null, texturePreparation=null;
@@ -324,7 +324,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
         if(requiredWorldBoundary&&(!boundary||boundary.authorityEpoch!==requiredWorldBoundary.authorityEpoch||
            boundary.nativeSession!==requiredWorldBoundary.nativeSession||boundary.ticket<=requiredWorldBoundary.ticket))
           throw Error('Remote native world boundary regressed');
-        requiredWorldBoundary=boundary;
+        requiredWorldBoundary=boundary;onNativeWorldBoundary(boundary);
       }catch(error){fail(error);}
     } else if (message.type === 'presented') {
       metrics.framesPresented++;
@@ -429,7 +429,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
   return api;
 }
 
-export async function createRemoteWebGpu({ canvas, port: suppliedPort, intentControl = null, onError, onPresented, workerFactory = () => new Worker(new URL('./webgpu-draw-worker.js', import.meta.url), { type: 'module', name: 'wild-guardians-gpu-draw' }) }) {
+export async function createRemoteWebGpu({ canvas, port: suppliedPort, intentControl = null, onError, onPresented, onNativeWorldBoundary, workerFactory = () => new Worker(new URL('./webgpu-draw-worker.js', import.meta.url), { type: 'module', name: 'wild-guardians-gpu-draw' }) }) {
   if(intentControl!==null&&(suppliedPort||!intentControl.port||typeof intentControl.port.postMessage!=='function'))throw TypeError('Native intent control must be attached by the draw Worker owner');
   const worker = suppliedPort ? null : workerFactory();
   const channel = suppliedPort ? null : new MessageChannel();
@@ -445,5 +445,5 @@ export async function createRemoteWebGpu({ canvas, port: suppliedPort, intentCon
       worker.postMessage({ type: 'init', canvas, port: channel.port2, ...(intentControl?{intentControl}:{}) }, [canvas, channel.port2,...(intentControl?[intentControl.port]:[])]);
     }
   });
-  return createRemoteWebGpuClient({ port, capabilities, onError, onPresented, terminate: () => worker?.terminate() });
+  return createRemoteWebGpuClient({ port, capabilities, onError, onPresented, onNativeWorldBoundary, terminate: () => worker?.terminate() });
 }
