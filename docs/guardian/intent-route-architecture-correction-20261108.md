@@ -8,6 +8,12 @@ autónoma de una intención. No autorizan continuar B1–B7 como si esta depende
 estuviese resuelta. Este documento prevalece sobre declaraciones anteriores
 de cierre interno de A6.
 
+Seguimiento del 13 de noviembre: [registro de consumidores y cierre de seguridad
+f-R3](migration-checkpoint-20261113.md#cierre-del-criterio-de-seguridad-f-r3).
+Los criterios nativos e-R1/e-R2/f-R1/f-R2/f-R3 están cerrados en sus clases
+documentadas. f-R4, e-R3/e-R4 y la integración de todas las intenciones siguen
+pendientes; esto mantiene A6 y los gates de producto abiertos.
+
 Hay modificaciones locales previas en simulación, escena, carga y QA. No forman
 parte de los commits de esta corrección ni deben descartarse.
 

@@ -141,6 +141,16 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     throw Error('Unsupported native terrain mutation service; rebuild Wild Engine');
   let sequence=0,initialized=false,owningState=null,lastIntentSequence=0;
   const controlObservers=new Set();
+  // Retention is independent of the event subscription: closing a port or
+  // stopping an observer does not prove its device stopped executing work.
+  const controlConsumers=new Map();
+  const pruneDrainedConsumers=()=>{
+    for(const [publication] of controlConsumers)if(publication.status?.().drained)controlConsumers.delete(publication);
+  };
+  const coversGpuConsumers=source=>{
+    pruneDrainedConsumers();
+    return controlConsumers.size>0&&[...controlConsumers].every(([consumer,owner])=>owner===source&&source.ownsGpuConsumer?.(consumer)===true);
+  };
   const epoch=()=>`${authorityEpoch}/${wasm.nav_intent_session()}`;
   // Native counters are instance-local and can repeat in another WASM Worker.
   // Scope every externally visible handle before it crosses an async boundary.
@@ -504,13 +514,16 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
           assignmentSequence:data[at+4],startTime:data[at+5]};
       })};
   };
-  const observeNativeIntentControl=({onBaseline,onChanges,onClosed=()=>{},onClock=null}={})=>{
+  const observeNativeIntentControl=({onBaseline,onChanges,onClosed=()=>{},onClock=null,gpuConsumer=null}={})=>{
     if(typeof onBaseline!=='function'||typeof onChanges!=='function'||typeof onClosed!=='function'||onClock!==null&&typeof onClock!=='function')
       throw TypeError('Expected native intent control observers');
+    if(gpuConsumer!==null&&(!gpuConsumer.publication||typeof gpuConsumer.publication!=='object'||
+       !gpuConsumer.owner||typeof gpuConsumer.owner!=='object'))throw TypeError('Expected native GPU consumer ownership');
     const baseline=nativeIntentControlBaseline(),observer={
       authorityEpoch:baseline.authorityEpoch,sequence:baseline.sequence,clockSequence:baseline.clock?.clockSequence??0,onChanges,onClosed,onClock};
     controlObservers.add(observer);
     try{onBaseline(baseline);}catch(error){controlObservers.delete(observer);throw error;}
+    if(gpuConsumer){pruneDrainedConsumers();controlConsumers.set(gpuConsumer.publication,gpuConsumer.owner);}
     return ()=>controlObservers.delete(observer);
   };
   const routePoints=handle=>{
@@ -618,6 +631,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     const outcome=(status,extra={})=>({status,authorizedAutonomy:false,authorizedPassage:false,...extra});
     if(!source||typeof source.fenceGpu!=='function'||control?.closed||control?.authorityEpoch!==owner)
       return outcome('control-unavailable');
+    if(!coversGpuConsumers(source))return outcome('control-consumers-mismatch');
     // A GPU drain cannot invent a newer logical clock boundary. Until causal
     // clock publication is implemented, only an exact published boundary is used.
     if(control.sentSequence!==sequence||control.sentTime!==at)return outcome('control-boundary-mismatch');
@@ -629,7 +643,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     try{
       const receipt=await source.fenceGpu(),current=source.status();
       if(epoch()!==owner||getPublication()!==source||current.closed||current.session!==control.session||
-         current.authorityEpoch!==owner)return outcome('control-replaced');
+         current.authorityEpoch!==owner||!coversGpuConsumers(source))return outcome('control-replaced');
       if(receipt.authorityEpoch!==owner||receipt.sequence!==nativeSequence||receipt.effectiveTime!==nativeTime||
          !Number.isSafeInteger(receipt.fenceId)||receipt.fenceId<1)return outcome('invalid-receipt');
       if(owningState.elapsed!==nativeTime||policy().some((value,i)=>value!==beforePolicy[i]))return outcome('stale');
@@ -651,6 +665,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     const clock=nativeCausalClock(),source=getPublication(),control=source?.status?.();
     if(!source||typeof source.quiesceGpuForMutation!=='function'||typeof source.releaseGpuAfterMutation!=='function'||
        control?.closed||control?.authorityEpoch!==owner)return outcome('control-unavailable');
+    if(!coversGpuConsumers(source))return outcome('control-consumers-mismatch');
     if(!clock||control.sentSequence!==clock.intentSequence||control.sentTime!==clock.committedThrough||
        control.clockSequence!==clock.clockSequence||owningState.elapsed!==clock.committedThrough)return outcome('control-boundary-mismatch');
     const result=stage();
@@ -660,7 +675,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     let receipt=null,answer=outcome('control-failed'),physicalCommitted=false,commitAttempted=false,commitFailed=false,committedValue={};
     try{
       receipt=await source.quiesceGpuForMutation();const current=source.status();
-      if(epoch()!==owner||getPublication()!==source||current.closed||current.session!==control.session||current.authorityEpoch!==owner)
+      if(epoch()!==owner||getPublication()!==source||current.closed||current.session!==control.session||current.authorityEpoch!==owner||!coversGpuConsumers(source))
         answer=outcome('control-replaced');
       else if(receipt.authorityEpoch!==owner||receipt.session!==control.session||receipt.sequence!==sequence||
          receipt.effectiveTime!==time||receipt.clockSequence!==clockSequence||!Number.isSafeInteger(receipt.holdId)||receipt.holdId<1)

@@ -17,7 +17,7 @@ el orden A → B → C → D ni cierran la migración actual.
 | A2/A4/A5/A7 | Publicación incremental y recuperación; admisión/registro de recursos; `b-infrastructure-product-20261108/README.md` con Attack y recuperación real | Componentes integrados y evidencia acotada que se conservan. La nueva vía autónoma debe conectar sus garantías temporales y de relevo. |
 | A6-04.e-R1/e-R2 | `8a1603029`, `75b52783d`, `18324a07f`, `95f834112`: mecanismo, admisión, reservas y reanudación nativos | Cerrados para la clase nativa documentada. No activan cruces ni consecuencias de gameplay. |
 | A6-04.f-R1/f-R2 | `7e16571cc`, `8e0fb20e4`, `139a1c14a`, `14f36652f`: reloj ejecutado y propuestas no efectivas con commit condicionado | Cerrados en su dominio opt-in. Un consumidor y triángulos diagnósticos no equivalen a personajes de producto. |
-| A6-04.f-R3 | Antes de este incremento, `attachNativeIntentControl` cerraba el canal anterior tras el ACK de bootstrap del reemplazo | Siguiente dependencia. Un cierre de puerto no prueba drenaje GPU. Se implementa abajo; el entregable completo permanece abierto. |
+| A6-04.f-R3 | Antes de este incremento, `attachNativeIntentControl` cerraba el canal anterior tras el ACK de bootstrap del reemplazo | Criterio de seguridad cerrado con el registro nativo y la evidencia descritos abajo. Un cierre de puerto no prueba drenaje GPU. |
 | A6 restante y e-R3/e-R4/f-R4 | Checklist principal y corrección de propietarios | Integración de entidades, tráfico, persistencia, recursos coordinados y aceptación con personajes siguen pendientes. Los 11 puntos principales de A6 permanecen abiertos. |
 | B1–B7 | Inventario del plan, cierres técnicos de suelo/cobertura y de infraestructura de B | Avances parciales reutilizables; no declarar B completo ni continuar contenido como sustituto del bloqueo A6. |
 | C/D | Evidencia histórica con alcance explícito | No se ha superado C1–C4 para la migración completa. D va después de A/B/C. |
@@ -64,10 +64,8 @@ No es la suite completa ni una medición de rendimiento.
 Los cambios locales previos de carga, simulación, escena, destrucción y QA quedan
 fuera de estos commits.
 
-**Pendiente fijo:** f-R3 sigue parcial; no se cambia la cuenta de 4 entregables
-cerrados y 4 pendientes. Falta completar la recuperación segura de un propietario
-incierto y acreditar la conexión de todas las fronteras de producto. Después:
-f-R4, e-R3 y e-R4; resto de A6, B y C según sus dependencias.
+El primer incremento de registro/retirada era parcial. El cierre de f-R3 se
+documenta al final, tras conectar el registro también al bridge nativo.
 
 ## Evidencia real de relevo, pérdida y silencio
 
@@ -107,7 +105,8 @@ Reproducción, con Vite en 5181 y `PLAYWRIGHT_MODULE` apuntando a Playwright:
 `QA_BASE_URL` y `OUTPUT` permiten cambiar origen/destino. Se usa Edge headless;
 no se habilita un adaptador software. Es aceptación de estas fronteras con
 triángulos diagnósticos y ejecución nativa, no personajes reales, consecuencias,
-recuperación de un Worker irrecuperable ni cierre de f-R3 o del producto.
+recuperación de un Worker irrecuperable ni cierre del producto. Por sí solo no
+cerraba f-R3: todavía faltaba ligar la cobertura del recibo al propietario nativo.
 
 Regresión gráfica del mismo harness: los seis casos anteriores de f-R2 vuelven
 a pasar con WebGPU real y preparación bloqueada; todos confirman la mutación
@@ -115,3 +114,41 @@ y no dibujan el paquete antiguo después del commit. Recibo local:
 `.cache/native-world-mutations-regression.json`; la evidencia histórica no se
 sobrescribe. Los tres comprobadores de recibos f-R1/f-R2/f-R3 y el análisis de
 sintaxis de los scripts modificados también pasan.
+
+## Cierre del criterio de seguridad f-R3
+
+El bridge de Wild Engine registra cada cola gráfica que solicita baseline y su
+propietario de frontera. Comprueba cobertura y pertenencia **antes de staging y
+después del recibo**, tanto para motores de puerta como para las cuatro familias
+de mutación. No basta entregar un publicador con el mismo estado o señalar un
+propietario que no lo tenga registrado. Los observadores de diagnóstico sin GPU
+no se convierten en colas gráficas.
+
+La vida del registro es independiente de las suscripciones al log. Un cierre de
+puerto, timeout o unsubscribe mantiene la cola incierta en el registro; un
+recibo de drenaje válido permite retirarla. Las pruebas con WASM real cubren
+omisión de otro consumidor activo, puerto ya cerrado, llegada durante la espera,
+copia de publicador y asignación de propietario sin pertenencia. Ninguno cambia
+el mundo ni revoca rutas. Después de drenar realmente el consumidor adicional,
+la misma propuesta puede confirmar.
+
+El [ensayo gráfico posterior al registro](performance/native-control-consumers-20261113.json)
+vuelve a comprobar relevo durante bloqueo de 500 ms, pérdida real de dispositivo
+y silencio, usando los mismos Workers. La política de seguridad ante conexión
+irrecuperable es fallo explícito, ausencia de commit y retención del propietario
+incierto. Ese fallo no se presenta como recuperación exitosa. Una pérdida real
+de dispositivo puede recuperarse conservando la autoridad tras su prueba de
+retirada; no se inventa esa prueba a partir de la muerte de un Worker.
+
+**f-R3 cerrado en el dominio nativo opt-in de f-R1/f-R2.** De los ocho entregables
+fijos quedan e-R3/e-R4/f-R4. Los padres e/f y los once puntos principales de A6
+siguen abiertos. El siguiente bloqueo es f-R4: aplicar la misma mutación física
+a los recursos/dibujo con personajes reales y preparación bloqueada. Todavía no
+se activa autonomía de producto ni se sustituye el movimiento JS protegido.
+
+Validación final de este incremento: **190 pruebas dirigidas, cero fallos/skips**,
+añadiendo `spatial-native-gate-transactions.test.js` a la selección anterior.
+Build WebGPU aprobado en 45,21 s con los avisos existentes. Recibos locales:
+`.cache/native-consumer-registry-regression.tap` y
+`.cache/native-consumer-registry-build.log`. El recibo gráfico posterior al
+registro conserva el 404 de consola sin atribución descrito arriba.

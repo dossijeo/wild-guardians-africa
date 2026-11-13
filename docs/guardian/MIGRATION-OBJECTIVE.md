@@ -48,8 +48,8 @@ camino crítico sin pedir autorización rutinaria entre hitos.
 Seguimiento por IDs acordados: [checklist A6-01–A6-11](A6-CHECKLIST.md).
 La [vista de entrega y pendientes fijos](A6-CHECKLIST.md#vista-de-entrega-y-pendientes-fijos)
 separa componentes implementados de producto integrado: e/f siguen sin cerrar,
-con ocho entregables identificados como e-R1–R4 y f-R1–R4: **e-R1/e-R2/f-R1/f-R2 cerrados,
-cuatro pendientes**. e-R2 incluye admisión nativa opt-in por puertas inicialmente
+con ocho entregables identificados como e-R1–R4 y f-R1–R4: **e-R1/e-R2/f-R1/f-R2/f-R3 cerrados,
+tres pendientes**. e-R2 incluye admisión nativa opt-in por puertas inicialmente
 cerradas, protección de reservas, composición con cierre previo y suspensión/
 reanudación del sufijo con offsets nativos. La aceptación reproducible no activa
 producto/GPU ni cierra e-R3/e-R4 o el padre f. f-R1 añade una frontera finita
@@ -57,12 +57,15 @@ publicada desde ejecución nativa para avance/pausa/velocidad/revocación, valid
 en WASM/WebGPU sin preparación, sin autorizar tiempo futuro no ejecutado ni
 rebobinar. f-R2 extiende propuestas no efectivas y commit condicionado a overlays,
 residencia, props y terreno en el dominio nativo actual. Siguiente dependencia:
-f-R3. No se
+f-R4. f-R3 cierra la seguridad de consumidores/relevo/fallos en el dominio nativo
+opt-in mediante registro en el bridge y drenaje por conexión. Un canal incierto
+aborta sin commit y conserva sus propietarios. No se
 sumarán esos niveles ni se usarán tests/commits como porcentaje de finalización.
 
 Continuación del 13 de noviembre: [auditoría del estado real e incremento f-R3](migration-checkpoint-20261113.md).
 El objetivo autónomo persistente está activo en este chat. Registro de consumidores
-y retirada GPU implementados; el cierre completo de f-R3 permanece pendiente.
+y retirada GPU implementados y ligados a todas las fronteras condicionadas del
+bridge. f-R3 cerrado en su alcance de seguridad; f-R4 es la siguiente dependencia.
 
 - [x] Auditar propietarios y reabrir A6; commits `e213c43f9`–`8892bbe80`.
 - [x] Log nativo versionado, secuencias/tiempos y revocación exacta.
@@ -175,7 +178,7 @@ y retirada GPU implementados; el cierre completo de f-R3 permanece pendiente.
       gráfico. Faltan integración física/
       recursos de puerta y consumidores/relevo. No hay permiso de
       cruce de producto/GPU ni aceptación con personajes.
-      Quedan e/f de A6-04; cuatro entregables del desglose. 536 dirigidas
+      Quedan e/f de A6-04; tres entregables del desglose. 536 dirigidas
       + 39 y 74 heredadas pasan sin skips. No se marca e como terminado.
 - [ ] Vertical AttackCrops completa y aceptación real A–F (primer caso integrado,
       no cierre de A6 por sí solo).

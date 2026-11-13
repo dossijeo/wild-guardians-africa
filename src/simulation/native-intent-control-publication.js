@@ -1,10 +1,12 @@
 // Direct authority -> draw transport for the existing native intent protocol.
 // The native owner supplies the baseline/log; this sender keeps ACK cursors only.
 export function createNativeIntentControlPublication({port,session,observe,
-  onError=()=>{},timeoutMs=10000,absoluteNow=()=>performance.timeOrigin+performance.now()}={}){
+  controlOwner=null,onError=()=>{},timeoutMs=10000,absoluteNow=()=>performance.timeOrigin+performance.now()}={}){
   if(!port||typeof port.postMessage!=='function'||typeof observe!=='function'||
      typeof session!=='string'||!session||typeof onError!=='function'||
       !Number.isFinite(timeoutMs)||timeoutMs<=0||typeof absoluteNow!=='function')throw TypeError('Invalid native intent publication');
+  if(controlOwner!==null&&(typeof controlOwner!=='object'||Array.isArray(controlOwner)))throw TypeError('Invalid native control owner');
+  const publication={};
   let authorityEpoch=null,baselineSequence=null,sentSequence=0,sentTime=null,appliedSequence=null,
     stop=null,closed=false,fault=null,timer=null,resolveReady,rejectReady;
   let nextFence=0;const gpuFences=new Map();
@@ -116,6 +118,7 @@ export function createNativeIntentControlPublication({port,session,observe,
   timer=setTimeout(()=>fail(Error('Native intent control bootstrap timed out')),timeoutMs);
   try{
     stop=observe({
+      gpuConsumer:{publication,owner:controlOwner??publication},
       onBaseline(baseline){
         if(authorityEpoch!==null)throw Error('Native intent baseline repeated');
         authorityEpoch=baseline.authorityEpoch;baselineSequence=sentSequence=baseline.sequence;sentTime=baseline.effectiveTime;
@@ -197,8 +200,9 @@ export function createNativeIntentControlPublication({port,session,observe,
     catch(error){fail(error);}
     return promise;
   }
-  return {ready,dispose,fenceGpu,quiesceGpuForMutation,releaseGpuAfterMutation,retireGpu,status:()=>({session,authorityEpoch,baselineSequence,
+  return Object.assign(publication,{ready,dispose,fenceGpu,quiesceGpuForMutation,releaseGpuAfterMutation,retireGpu,
+    ownsGpuConsumer:consumer=>consumer===publication,status:()=>({session,authorityEpoch,baselineSequence,
     sentSequence,sentTime,appliedSequence,pendingGpuFences:gpuFences.size,closed,fault,
     ...(clock?{clockSequence:clock.clockSequence,appliedClockSequence,pendingClockReceipts:clockReceipts.size}:{} ),
-    pendingMutationHold:mutationHold?.holdId??null,retiring:retirement!==null,drained})};
+    pendingMutationHold:mutationHold?.holdId??null,retiring:retirement!==null,drained})});
 }

@@ -22,7 +22,7 @@ export function createNativeIntentControlCohort({observe,onError=()=>{},publicat
   }
   async function attach(port,session){
     if(status().closed||pending||boundary)throw Error('Native intent control attachment unavailable');
-    const candidate=createNativeIntentControlPublication({...publicationOptions,port,session,observe,onError:fail});
+    const candidate=createNativeIntentControlPublication({...publicationOptions,port,session,observe,controlOwner:api,onError:fail});
     members.add(candidate);pending=candidate;
     try{
       const result=await candidate.ready;
@@ -71,7 +71,8 @@ export function createNativeIntentControlCohort({observe,onError=()=>{},publicat
       boundary=null;return true;
     }catch(error){fail(error);throw error;}
   }
-  return {attach,status,fenceGpu,quiesceGpuForMutation,releaseGpuAfterMutation,
+  const api={attach,status,fenceGpu,quiesceGpuForMutation,releaseGpuAfterMutation,ownsGpuConsumer:consumer=>members.has(consumer),
     connections:()=>({current:current?.status()??null,pending:pending?.status()??null,cohort:status()}),
     dispose(reason='disposed'){if(closed)return;closed=true;for(const member of members)member.dispose(reason);}};
+  return api;
 }

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {MessageChannel} from 'node:worker_threads';
 import {setImmediate as turn} from 'node:timers/promises';
 import {createNativeIntentControlCohort} from '../src/simulation/native-intent-control-cohort.js';
+import {createNativeIntentControlPublication} from '../src/simulation/native-intent-control-publication.js';
 import {createNativeRouteControl} from '../src/rendering/native-route-control.js';
 import {createNativeRouteExecutionFixture} from './helpers/native-route-execution.js';
 
@@ -93,4 +94,53 @@ test('silence after quiescence was requested cannot apply a staged native mutati
   assert.equal((await pending).status,'control-failed');assert.deepEqual(f.session.core.snapshot(),before);
   assert.equal(f.cohort.status().closed,true);a.ack(request);await turn();assert.deepEqual(f.session.core.snapshot(),before);
  }finally{a.dispose();f.dispose();}
+});
+
+test('the native owner rejects an individual receipt that omits another registered GPU consumer, including a closed port',async()=>{
+ const f=setup(),a=consumer(),b=consumer();let first,second;
+ try{
+  first=createNativeIntentControlPublication({port:a.port,session:'individual',observe:f.bridge.observeNativeIntentControl});await first.ready;
+  second=createNativeIntentControlPublication({port:b.port,session:'individual',observe:f.bridge.observeNativeIntentControl});await second.ready;
+  const before=f.session.core.snapshot(),mutate=()=>f.bridge.addNativeBarrierAfterGpuQuiescence({getPublication:()=>first,...f.point(2,0),halfX:.15,halfZ:.6});
+  assert.equal((await mutate()).status,'control-consumers-mismatch');assert.deepEqual(f.session.core.snapshot(),before);
+  assert.equal((await f.bridge.prepareNativeGateMotionAfterGpuFence({getPublication:()=>first})).status,'control-consumers-mismatch');
+  assert.equal(a.messages.some(m=>m.type==='IntentMutationQuiesce'),false);
+  second.dispose();assert.equal((await mutate()).status,'control-consumers-mismatch');
+  assert.deepEqual(f.session.core.snapshot(),before,'dropping a subscription cannot hide an undrained GPU');
+ }finally{first?.dispose();second?.dispose();a.dispose();b.dispose();f.dispose();}
+});
+
+test('a copied publisher identity cannot stand in for the registered owner of a physical boundary',async()=>{
+ const f=setup(),a=consumer();let source;
+ try{
+  source=createNativeIntentControlPublication({port:a.port,session:'individual',observe:f.bridge.observeNativeIntentControl});await source.ready;
+  const before=f.session.core.snapshot(),copy={...source};
+  const result=await f.bridge.addNativeBarrierAfterGpuQuiescence({getPublication:()=>copy,...f.point(2,0),halfX:.15,halfZ:.6});
+  assert.equal(result.status,'control-consumers-mismatch');assert.deepEqual(f.session.core.snapshot(),before);
+ }finally{source?.dispose();a.dispose();f.dispose();}
+});
+
+test('naming another publisher as owner without registering membership cannot omit a GPU queue',async()=>{
+ const f=setup(),a=consumer(),b=consumer();let first,second;
+ try{
+  first=createNativeIntentControlPublication({port:a.port,session:'individual',observe:f.bridge.observeNativeIntentControl});await first.ready;
+  second=createNativeIntentControlPublication({port:b.port,session:'individual',observe:f.bridge.observeNativeIntentControl,controlOwner:first});await second.ready;
+  const before=f.session.core.snapshot(),result=await f.bridge.addNativeBarrierAfterGpuQuiescence({getPublication:()=>first,...f.point(2,0),halfX:.15,halfZ:.6});
+  assert.equal(result.status,'control-consumers-mismatch');assert.deepEqual(f.session.core.snapshot(),before);
+ }finally{first?.dispose();second?.dispose();a.dispose();b.dispose();f.dispose();}
+});
+
+test('a consumer arriving during the GPU drain cancels the physical proposal before commit',async()=>{
+ const f=setup(),a=consumer({quiesce:false}),b=consumer();let first,second;
+ try{
+  first=createNativeIntentControlPublication({port:a.port,session:'individual',observe:f.bridge.observeNativeIntentControl});await first.ready;
+  const before=f.session.core.snapshot(),pending=f.bridge.addNativeBarrierAfterGpuQuiescence({getPublication:()=>first,...f.point(2,0),halfX:.15,halfZ:.6}),request=await a.request('IntentMutationQuiesce');
+  second=createNativeIntentControlPublication({port:b.port,session:'individual',observe:f.bridge.observeNativeIntentControl});await second.ready;
+  a.ack(request);assert.equal((await pending).status,'control-replaced');assert.deepEqual(f.session.core.snapshot(),before);
+  await second.retireGpu();assert.equal(second.status().drained,true);
+  const next=f.bridge.addNativeBarrierAfterGpuQuiescence({getPublication:()=>first,...f.point(2,0),halfX:.15,halfZ:.6});
+  for(let i=0;i<200&&!a.messages.some(m=>m.type==='IntentMutationQuiesce'&&m.holdId===2);i++)await turn();
+  const nextRequest=a.messages.find(m=>m.type==='IntentMutationQuiesce'&&m.holdId===2);assert(nextRequest);a.ack(nextRequest);
+  assert.equal((await next).status,'committed','only an actual drained consumer may leave the physical registry');
+ }finally{first?.dispose();second?.dispose();a.dispose();b.dispose();f.dispose();}
 });

@@ -12,7 +12,7 @@ ejecutor protegido de producto. A6 incluye todas las intenciones y trabajadores.
 personajes autónomos en GPU. Hay una validación de las mallas originales de puerta;
 los diagnósticos de locomoción aún usan triángulos, no personajes. Desde la petición de cerrar e/f se han cerrado **0 de esos 2
 subpuntos**. Sus componentes internos avanzaron, pero la entrega integrada no.
-En el desglose fijo de entrega, **e-R1, e-R2, f-R1 y f-R2 están cerrados; quedan 4 de 8**.
+En el desglose fijo de entrega, **e-R1, e-R2, f-R1, f-R2 y f-R3 están cerrados; quedan 3 de 8**.
 
 **Niveles que no se suman:** A6 tiene 11 puntos principales, todos abiertos.
 Dentro de A6-04, a–d están marcados implementados/validados en el dominio nativo
@@ -33,7 +33,7 @@ Son cinco componentes agrupados para visibilidad, no cinco entregables de produc
 cerrados ni una medida porcentual. Cantidades de pruebas/commits son evidencia,
 no el indicador principal de avance.
 
-### Entregables de cierre: 4 cerrados, 4 pendientes
+### Entregables de cierre: 5 cerrados, 3 pendientes
 
 Se mantienen estos IDs al avanzar. Algunos comparten
 dependencias con A6-01/02/06/07/08/09; no se cuentan otra vez como trabajo nuevo.
@@ -46,7 +46,7 @@ dependencias con A6-01/02/06/07/08/09; no se cuentan otra vez como trabajo nuevo
 | **A6-04.e-R4** | Aceptación de puertas con personajes reales. | Partida WASM/WebGPU con trabajadores y animales, respetando qué puede cruzar cada uno; obstáculos, esperas, pausa/velocidad, acciones, guardado y determinismo. No basta el triángulo. |
 | **A6-04.f-R1** | **CERRADO — Frontera causal de tiempo y comandos.** | Simulación y dibujo aplican avances, pausa, velocidad y revocaciones en una frontera segura; no presentar movimiento que ya no puede autorizarse ni corregirlo mediante rebobinado. [Ejecución real WASM/WebGPU y tres bloqueos de preparación](performance/native-causal-clock-20261109.json). |
 | **A6-04.f-R2** | **CERRADO — Commit condicionado para las demás mutaciones.** | Extender la propuesta todavía no efectiva y su commit seguro a overlays, residencia, props y terreno, no solo al motor de puerta. [Seis casos WASM/WebGPU](performance/native-world-mutations-20261109.json). |
-| **A6-04.f-R3** | Todos los consumidores, relevo y fallos. | La seguridad cubre consumidores activos/temporales, sustitución de Workers, pérdida de dispositivo y canal perdido o silencioso; un ACK viejo no permite aplicar cambios. |
+| **A6-04.f-R3** | **CERRADO — Todos los consumidores, relevo y fallos.** | La seguridad cubre consumidores activos/temporales, sustitución de Workers, pérdida de dispositivo y canal perdido o silencioso; un ACK viejo no permite aplicar cambios. [Relevo real WASM/WebGPU](performance/native-control-lifecycle-20261113.json) y [alcance/registro nativo](migration-checkpoint-20261113.md#cierre-del-criterio-de-seguridad-f-r3). |
 | **A6-04.f-R4** | Aplicación gráfica de la misma mutación. | Recursos y dibujo representan el cambio físico coordinado; probarlo con personajes reales y preparación bloqueada, sin depender de publicaciones periódicas de posición JS. |
 
 **Alcance del cierre de e-R1:** mecanismo cinemático de unión ocupada, materiales
@@ -158,15 +158,30 @@ terrenos/estados no soportados. Las recetas de props/terreno se comprueban de
 nuevo al commit nativo: ese coste de evento y la congelación hasta recursos nuevos
 quedan explícitos, no son trabajo por tick ni aceptación de rendimiento integrado.
 
-**Siguiente bloqueo concreto:** f-R3, consumidores, relevo y fallos; después
-f-R4 y la integración de entidades de e-R3 permiten aceptar e-R4.
+**Siguiente bloqueo concreto:** f-R4, representación gráfica coordinada de la
+mutación. Junto con la integración de entidades de e-R3 permite aceptar e-R4.
 
 **Incremento f-R3, 13 de noviembre:** registro de consumidor actual y candidato
 en la autoridad, retirada directa con congelación/drenaje GPU y tokens por
 conexión, mutación bloqueada durante relevo y rechazo conservador de propietarios
 sin prueba. Pérdida real de dispositivo y disposición drenada se distinguen de
 un cierre de puerto. [Auditoría, implementación y límites](migration-checkpoint-20261113.md).
-f-R3 continúa parcial: no cambia la cuenta fija ni habilita autonomía de producto.
+El primer incremento era parcial; el registro nativo de todas las colas y sus
+comprobaciones antes/después de cada frontera completan el criterio de seguridad
+de f-R3. No se habilita autonomía de producto ni se cierra el padre f.
+
+**Alcance de f-R3:** mismas clases nativas opt-in que f-R1/f-R2. Los publicadores
+se registran en su bridge con el propietario de frontera; una mutación o motor
+de puerta no acepta un recibo individual que omita otra cola. Una cola que llega
+durante la espera invalida la propuesta antes del commit. Dejar de observar o
+cerrar un puerto conserva su entrada; solo un drenaje certificado permite
+retirarla. El relevo de la autoridad usa el mismo registro de consumidores.
+La política ante un canal irrecuperable es fallo explícito y ausencia de commit;
+no se simula progreso, no se concede tiempo futuro y no se descarta ese
+propietario incierto al abrir un Worker nuevo. Recuperar un dispositivo perdido
+real sí conserva la autoridad, como acredita el recibo de navegador. Las
+mutaciones todavía congelan el paquete anterior: aplicar recursos nuevos y
+personajes reales pertenece al criterio f-R4 que sigue pendiente.
 
 **Cómo se informará el avance:** entrega cerrada y evidencia; entrega parcial
 y qué criterio falta; IDs aún pendientes; cambios de alcance descubiertos,
@@ -338,7 +353,7 @@ esta lista ni presentar más pruebas aisladas como cierre del producto.
 - [Mecanismo nativo y mallas reales WebGPU](performance/native-gate-mechanism-20261109.json) · [captura](performance/native-gate-mechanism-20261109.png).
 
 Quedan **2 de los 6 subpuntos de A6-04**: e y f (parciales).
-Dentro de su desglose fijo quedan **4 de 8**: e-R1/e-R2/f-R1/f-R2 cerrados; e-R3/e-R4/f-R3/f-R4 pendientes.
+Dentro de su desglose fijo quedan **3 de 8**: e-R1/e-R2/f-R1/f-R2/f-R3 cerrados; e-R3/e-R4/f-R4 pendientes.
 Los **11 puntos principales de A6** siguen abiertos; son niveles distintos,
 no dos cantidades que deban sumarse.
 
