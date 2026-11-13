@@ -12,7 +12,7 @@ const snapshot=gunzipSync(readFileSync(new URL(
   './fixtures/sabana712-d1-native-active-raid.json.gz',import.meta.url))).toString();
 const chunks=Array.from({length:9},(_,i)=>`${i%3+1},${Math.floor(i/3)-1}`);
 
-function receiver(session='control-session'){
+function receiver(session='control-session',{autoDrain=true}={}){
   const {port1,port2}=new MessageChannel(),messages=[],errors=[];
   let control,resolveClosed;
   const closed=new Promise(resolve=>{resolveClosed=resolve;});
@@ -20,6 +20,9 @@ function receiver(session='control-session'){
     messages.push(data);
     try{
       assert.equal(data.session,session);
+      if(data.type==='IntentControlRetire'){
+        control.dispose();if(autoDrain)port2.postMessage({...data,type:'intent-control-drained',accepted:true});return;
+      }
       if(data.type==='IntentBaseline')control=createNativeRouteControl({
         authorityEpoch:data.authorityEpoch,initialSequence:data.sequence,
         initialTime:data.effectiveTime,routes:data.routes});
@@ -33,7 +36,7 @@ function receiver(session='control-session'){
         authorityEpoch:data.authorityEpoch,sequence:data.sequence,accepted:false});
     }
   };
-  return {port:port1,messages,errors,closed,get control(){return control;},
+  return {port:port1,messages,errors,closed,drain:request=>port2.postMessage({...request,type:'intent-control-drained',accepted:true}),get control(){return control;},
     dispose(){port1.close();port2.close();}};
 }
 
@@ -57,6 +60,22 @@ test('real simulation authority bootstraps native permissions without changing c
     assert.deepEqual(draw.errors,[]);
     assert.equal(authority.nativeIntentControlStatus().current.closed,false);
   }finally{authority.dispose();reference.dispose();draw.dispose();}
+});
+
+test('the real authority keeps both graphics owners registered until the predecessor GPU is drained',async()=>{
+ const authority=createSimulationAuthority(module,snapshot,chunks),first=receiver('control-session',{autoDrain:false}),second=receiver(),third=receiver();
+ try{
+  await authority.attachNativeIntentControl(first.port,'control-session');
+  let ready=false;const replacing=authority.attachNativeIntentControl(second.port,'control-session').then(r=>{ready=true;return r;});
+  for(let i=0;i<100&&!first.messages.some(m=>m.type==='IntentControlRetire');i++)await new Promise(resolve=>setImmediate(resolve));
+  const request=first.messages.find(m=>m.type==='IntentControlRetire');assert(request);
+  assert.equal(ready,false);assert.equal(authority.nativeIntentControlStatus().cohort.consumers,2);
+  assert(authority.nativeIntentControlStatus().pending);assert.equal(authority.nativeIntentControlStatus().cohort.coherent,false);
+  await assert.rejects(authority.attachNativeIntentControl(third.port,'control-session'),/unavailable/);
+  first.drain(request);await replacing;await first.closed;
+  assert.equal(authority.nativeIntentControlStatus().cohort.consumers,1);assert.equal(authority.nativeIntentControlStatus().cohort.coherent,true);
+  assert.equal(authority.nativeIntentControlStatus().pending,null);assert.deepEqual(first.errors,[]);assert.deepEqual(second.errors,[]);
+ }finally{authority.dispose();first.dispose();second.dispose();third.dispose();}
 });
 
 test('a replacement draw connection receives a fresh native baseline and retires its predecessor',async()=>{

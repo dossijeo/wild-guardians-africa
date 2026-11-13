@@ -60,6 +60,10 @@ residencia, props y terreno en el dominio nativo actual. Siguiente dependencia:
 f-R3. No se
 sumarán esos niveles ni se usarán tests/commits como porcentaje de finalización.
 
+Continuación del 13 de noviembre: [auditoría del estado real e incremento f-R3](migration-checkpoint-20261113.md).
+El objetivo autónomo persistente está activo en este chat. Registro de consumidores
+y retirada GPU implementados; el cierre completo de f-R3 permanece pendiente.
+
 - [x] Auditar propietarios y reabrir A6; commits `e213c43f9`–`8892bbe80`.
 - [x] Log nativo versionado, secuencias/tiempos y revocación exacta.
 - [x] Suscripciones espaciales nativas para cambios de sectores/portales.

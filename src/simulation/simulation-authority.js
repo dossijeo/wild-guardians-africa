@@ -1,5 +1,5 @@
 import {createHistoricalEventBoundaryCapture} from './historical-event-boundaries.js';
-import {createNativeIntentControlPublication} from './native-intent-control-publication.js';
+import {createNativeIntentControlCohort} from './native-intent-control-cohort.js';
 import {createTutorialGuideRevision} from './tutorial-guide-revision.js';
 import {captureMudInputs} from './mud-terrain-input.js';
 import {captureSpatialFarState} from '../world/wild-engine/spatial-far-state.js';
@@ -49,13 +49,15 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
  for(const key of chunkKeys)parseSimulationChunkKey(key);
  const tutorialGuideTracker=createTutorialGuideRevision(),game=(restoringPhysics?deserializeConfirmedState:deserialize)(snapshot),loaded=new Map(),savedWaitBindings=game.workerRaidWaitBindings??null,presentationHeadings=presentationWorkerHeadingSeed===null?null:createPresentationWorkerHeadings(presentationWorkerHeadingSeed,{initialWorkerIds:game.workers.map(worker=>worker.id)});delete game.workerRaidWaitBindings;delete game.workerPhysicsCheckpoint;delete game.workerNativeAuthorityCheckpoint;let session,stopTasks,stopWorld,stopEvents,stopSettlements,physics=null,physicsInitializing=false,tutorial=null,closed=false,sequence=0,events=[],settlements=[],trackMicroIncome=false,trackedActor=null,trackMotionPeers=false,trackWorldMotion=observeWorldMotion,stopMotion=null,motionSegments=null,terrainGeneration=0,reportedTerrainGeneration=0;
   let guardianMetadata=null,guardianMetadataFailure=null,guardianTerrainEpoch=null,guardianTerrainManifest=null,activeHistoricalCapture=null;
-  let nativeIntentControl=null,pendingNativeIntentControl=null;
+  let nativeIntentControl=null;
  try{
   const withMud=data=>mudPresentation&&session.field.c.biome==='mangrove'?{...data,mudInputs:captureMudInputs(session.field,data.cx,data.cz,data.terrain.positions)}:data;
   const acceptChunk=raw=>{const data=withMud(raw);loaded.set(`${data.cx},${data.cz}`,data);terrainGeneration++;onTerrainChunk?.(data,game.elapsed);};
   session=createSpatialGameSession(module,game,{loaded:()=>loaded,onData:acceptChunk});
   for(const key of chunkKeys){const [x,z]=parseSimulationChunkKey(key);if(session.core.selectChunk(x,z)<0&&session.core.addChunk(x,z)<0)throw Error('Could not add simulation chunk '+key);session.stream.onData(session.core.chunkPayload());}
   const planner=createEventDrivenTaskPlanner(session);planner.resetFromState(game);
+  nativeIntentControl=createNativeIntentControlCohort({observe:planner.observeNativeIntentControl,
+    onError:error=>onNativeIntentControlError?.(error)});
   const nav=createSpatialNavigationMovement(session,game);stopTasks=planner.observeTasks(game);stopWorld=planner.observeWorld(game);nav.intentTaskPlanner=planner;nav.raidEntryResident=(entry,radii)=>[...raidEntryChunks(entry,radii)].every(key=>loaded.has(key));if(raidWaitBindings!==null||savedWaitBindings!==null)restoreRaidWaitBindings(game,nav,raidWaitBindings??savedWaitBindings);
   function setNavigationView(view){if(!view||!Array.isArray(view.bounds)||![view.eye?.x,view.eye?.z,view.target?.x,view.target?.z].every(Number.isFinite))throw TypeError('Invalid navigation view');nav.setActiveBounds(view.bounds);nav.setRaidView(view.eye,view.target);}
   if(navigationView!==null)setNavigationView(navigationView);
@@ -111,28 +113,11 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   function requireGuardianMetadata(){if(!guardianMetadata)throw Error(guardianMetadataFailure?`Guardian metadata unavailable: ${guardianMetadataFailure}`:'Guardian metadata unavailable');}
   function setGuardianTerrainEpoch(epoch,manifest=null){if(closed||epoch!==null&&(typeof epoch!=='string'||!epoch)||manifest!==null&&(manifest?.epoch!==epoch||!Array.isArray(manifest.chunks)))throw TypeError('Invalid guardian terrain epoch');guardianTerrainEpoch=epoch;guardianTerrainManifest=manifest===null?null:structuredClone(manifest);}
   return {
-    async attachNativeIntentControl(port,transportSession){
-      if(closed||pendingNativeIntentControl)throw Error('Native intent control attachment unavailable');
-      let candidate;
-      candidate=createNativeIntentControlPublication({port,session:transportSession,
-        observe:planner.observeNativeIntentControl,onError:error=>{
-          if(nativeIntentControl===candidate)onNativeIntentControlError?.(error);
-        }});
-      pendingNativeIntentControl=candidate;
-      try{
-        const result=await candidate.ready;
-        if(closed||pendingNativeIntentControl!==candidate)throw Error('Native intent attachment became obsolete');
-        const previous=nativeIntentControl;
-        nativeIntentControl=candidate;pendingNativeIntentControl=null;
-        previous?.dispose('replaced');return result;
-      }catch(error){
-        candidate.dispose('attachment-failed');
-        if(pendingNativeIntentControl===candidate)pendingNativeIntentControl=null;
-        throw error;
-      }
+    attachNativeIntentControl(port,transportSession){
+      if(closed)return Promise.reject(Error('Native intent control attachment unavailable'));
+      return nativeIntentControl.attach(port,transportSession);
     },
-    nativeIntentControlStatus:()=>({current:nativeIntentControl?.status()??null,
-      pending:pendingNativeIntentControl?.status()??null}),
+    nativeIntentControlStatus:()=>nativeIntentControl.connections(),
    setGuardianMetadata,setGuardianMetadataFailure,setGuardianTerrainEpoch,setGuardianMetadataForQa:setGuardianMetadata,setGuardianTerrainEpochForQa:setGuardianTerrainEpoch,farVisualRevision:()=>session.core.farVisualRevision(),
    captureFarVisualState(){
     if(closed||physicsInitializing)throw Error('Far visual snapshot unavailable');
@@ -333,7 +318,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     const preparedState=prepareTransportSnapshots?prepareConfirmedStateTransport(game,{projectPaths:projectedPaths}):null;const result={sequence,value,...(pausedQuiescent?{pausedQuiescent:true}:{}),...(tutorialGuideRevision===null?{}:{tutorialGuideRevision}),...(projectedPaths?{presentationPaths:'head-v1'}:{}),...(nativeAuthorityCheckpoint?{nativeAuthorityCheckpoint}:{}),...(presentationWorkerHeadings?.length?{presentationWorkerHeadings}:{}),...(terrainCheckpoint?{terrainCheckpoint}:{}),...(command.steps!==undefined?{stepsExecuted}:{}),...(clockCapture?{clockSegments:clockCapture}:{}),...(eventBoundaries&&emitted.length?{historicalEventBoundaries:eventBoundaries.finish(emitted)}:{}),...(motionTrace?{motionTrace}:{}),...(worldMotionTrace?{worldMotionTrace}:{}),...(motionInvalidation?{motionInvalidation}:{}),...(rejection?{rejection}:{}),...(commandLoadedChunks.length?{commandLoadedChunks}:{}),...(physical===undefined?{}:{physicsCheckpoint:physical&&command.physicsCheckpoint==='encoded'?encodePhysicsCheckpoint(physical):physical}),residency:resident,physicsPose:physicsPoses?.[0]??null,...(physicsPoses?.length>1?{physicsPoses}:{}),elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,...(emittedSettlements.length?{settlements:emittedSettlements}:{}),...(emitted.length?{presentationJournalVersion:2}:{}),presentationJournal:lifecycle,...(!checkpointRaidWaitsOnly||command.kind==='snapshot'?{raidWaitBindings:captureRaidWaitBindings(game,nav)}:{}),saveAvailable:saveAvailable(),snapshot:preparedState?null:(projectedPaths?serializeConfirmedPresentationState(game):serializeConfirmedState(game)),terrainChanged:takeTerrainChanged()};if(preparedState){Object.defineProperty(result,'snapshot',{enumerable:true,configurable:true,get:()=>preparedState.snapshot});Object.defineProperty(result,authoritySnapshotFields,{value:preparedState.fields});}if(tutorial)result.tutorialUpdate=tutorial.updateStatus(projectedPaths?JSON.stringify(game):result.snapshot);hasPublishedSnapshot=true;return result;
    },
    publishResidentTerrainForQa(publish){if(closed||typeof publish!=='function')throw TypeError('Invalid terrain bootstrap');const selected=session.core.currentChunk();try{for(const key of loaded.keys()){const [x,z]=parseSimulationChunkKey(key);if(session.core.selectChunk(x,z)<0)throw Error('Resident native chunk disappeared: '+key);publish(withMud(session.core.chunkPayload()),game.elapsed);}}finally{if(selected&&session.core.selectChunk(selected.cx,selected.cz)<0)throw Error('Could not restore selected native chunk');}},
-    dispose(){if(closed)return;closed=true;pendingNativeIntentControl?.dispose();nativeIntentControl?.dispose();presentationJournal.dispose();stopMotion?.();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{session.dispose();}},
+    dispose(){if(closed)return;closed=true;nativeIntentControl?.dispose();presentationJournal.dispose();stopMotion?.();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{session.dispose();}},
   };
  }catch(error){stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();session?.dispose();throw error;}
 }

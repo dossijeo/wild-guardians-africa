@@ -1,6 +1,6 @@
 # Seguimiento de cierre de A6
 
-Actualizado: 2026-11-09. IDs acordados en la conversación; no se renumeran al avanzar.
+Actualizado: 2026-11-13. IDs acordados en la conversación; no se renumeran al avanzar.
 
 **Ningún punto principal está cerrado todavía.** Un subpunto marcado como nativo
 implementado/validado no autoriza por sí solo activar autonomía GPU o retirar el
@@ -160,6 +160,13 @@ quedan explícitos, no son trabajo por tick ni aceptación de rendimiento integr
 
 **Siguiente bloqueo concreto:** f-R3, consumidores, relevo y fallos; después
 f-R4 y la integración de entidades de e-R3 permiten aceptar e-R4.
+
+**Incremento f-R3, 13 de noviembre:** registro de consumidor actual y candidato
+en la autoridad, retirada directa con congelación/drenaje GPU y tokens por
+conexión, mutación bloqueada durante relevo y rechazo conservador de propietarios
+sin prueba. Pérdida real de dispositivo y disposición drenada se distinguen de
+un cierre de puerto. [Auditoría, implementación y límites](migration-checkpoint-20261113.md).
+f-R3 continúa parcial: no cambia la cuenta fija ni habilita autonomía de producto.
 
 **Cómo se informará el avance:** entrega cerrada y evidencia; entrega parcial
 y qué criterio falta; IDs aún pendientes; cambios de alcance descubiertos,

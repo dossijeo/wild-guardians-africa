@@ -20,6 +20,15 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   let lastNativeGpuFence=0;const nativeGpuFences=new Set();
   let lastNativeMutationFence=0,nativeMutationHold=null,nativeMutationFloor=null;
   let nativeMutationEpoch=0;
+  let nativeConsumerRetirement=null;
+  let nativeConsumerToken=null,nativeRetirementNotified=false,deviceIsLost=false;
+  function notifyNativeRetired(){
+    if(nativeRetirementNotified)return;nativeRetirementNotified=true;
+    try{if(routeControl)intentControl.port.postMessage({type:'intent-control-retired',protocolVersion:2,
+      session:intentControl.session,authorityEpoch:routeControl.status().authorityEpoch,
+      sequence:routeControl.status().sequence,consumerToken:nativeConsumerToken,drained:true});}catch{}
+    intentControl?.port.close?.();
+  }
   const mutationSubmissionWaiters=new Set();
   function settleMutationSubmissions(error=null){
     for(const waiter of mutationSubmissionWaiters){mutationSubmissionWaiters.delete(waiter);error?waiter.reject(error):waiter.resolve();}
@@ -391,6 +400,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     return count ? encoder.finish() : null;
   }
   function applyQueue(op, replay = false) {
+    if(nativeConsumerRetirement)throw Error('Native GPU consumer is retiring');
     if (!QUEUE.has(op.method)) throw Error(`Unsupported remote queue method ${op.method}`);
     if (op.method === 'submit') {
       const buffers = op.args[0].map(buffer => encodeCommandBuffer(buffer, replay)).filter(Boolean);
@@ -429,7 +439,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     if (stopped || failed) return;
     frameHandle = requestFrame(present);
     if (hidden) return;
-    if(nativeMutationHold)return; // No GPU submission between queue drain and native commit/revocations.
+    if(nativeMutationHold||nativeConsumerRetirement)return; // No submission during a native boundary or retirement.
     if (!deviceConfigured || (!active && !pending)) return;
     try {
       const startedAt = absoluteNow();
@@ -564,6 +574,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   }
   async function handle(message) {
     if (stopped || failed) return;
+    if(nativeConsumerRetirement&&['operation','frame'].includes(message.type))throw Error('Native GPU consumer is retiring');
     switch (message.type) {
       case 'create': {
         if (!CREATION.has(message.method)) throw Error(`Unsupported remote resource ${message.method}`);
@@ -593,6 +604,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         if(message.nativeMutationEpoch===undefined)message.nativeMutationEpoch=nativeMutationEpoch;
         const readiness = waitForResources(references(message.op));
         if (readiness) await readiness;
+        if(stopped||failed||nativeConsumerRetirement)throw Error('Native GPU consumer is retiring or closed');
         if(message.op.method==='submit'){
           // Standalone resource/diagnostic submissions share the same queue as
           // drawing. They cannot slip between the captured drain and release.
@@ -636,6 +648,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         const readiness = waitForResources(packet.references);
         packet.transportTiming.resourcesWaitStartedAt = absoluteNow();
         if (readiness) await readiness;
+        if(stopped||failed||nativeConsumerRetirement)throw Error('Native GPU consumer is retiring or closed');
         if(message.nativeMutationEpoch!==nativeMutationEpoch){
           stagedOperations=[];port.postMessage({type:'frame-obsolete',sequence:packet.sequence,reason:'Native mutation invalidated the prepared frame'});break;
         }
@@ -825,6 +838,23 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
          const message=event.data;
          if(intentControl.session&&message?.session!==intentControl.session)
            throw Error('Native intent control transport session mismatch');
+         if(message?.type==='IntentControlRetire'){
+           const status=routeControl?.status();
+           if(!status||status.closed||nativeConsumerRetirement||nativeMutationHold||nativeGpuFences.size||
+              message.protocolVersion!==2||message.fenceVersion!==1||message.authorityEpoch!==status.authorityEpoch||
+              message.sequence!==status.sequence||message.effectiveTime!==status.effectiveTime||
+              message.clockSequence!==status.clock?.clockSequence||typeof message.retirementId!=='string'||!message.retirementId)
+             throw Error('Invalid native GPU retirement boundary');
+           nativeConsumerRetirement={...message,drained:false};
+           // Freeze both rAF and standalone submissions before capturing the
+           // queue. Resource jobs may finish, but cannot submit after this fence.
+           routeControl.dispose();settleNativeControl(Error('Native GPU consumer is retiring'));
+           Promise.resolve(device.queue.onSubmittedWorkDone()).then(()=>{
+             if(stopped||failed||nativeConsumerRetirement?.retirementId!==message.retirementId)return;
+             nativeConsumerRetirement.drained=true;metrics.nativeRetiredAt=absoluteNow();
+             intentControl.port.postMessage({...message,type:'intent-control-drained',accepted:true});
+           }).catch(error=>fail(error));return;
+         }
          if(message?.type==='IntentMutationQuiesce'){
            const status=routeControl?.status();
            if(!status?.clock||status.closed||nativeMutationHold||message.protocolVersion!==2||message.fenceVersion!==1||
@@ -898,6 +928,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
              !Number.isFinite(message.effectiveTime))throw Error('Invalid or repeated native intent baseline');
            routeControl=createNativeRouteControl({authorityEpoch:message.authorityEpoch,
              initialSequence:message.sequence,initialTime:message.effectiveTime,routes:message.routes});
+           if(message.consumerToken!==undefined&&(typeof message.consumerToken!=='string'||!message.consumerToken))throw Error('Invalid native consumer identity');
+           nativeConsumerToken=message.consumerToken??null;
            if(message.clock)routeControl.acceptClock(message.clock,{baseline:true});
           accepted=true;
         }else if(message?.type==='IntentControlClosed'){
@@ -925,12 +957,12 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     intentControl.port.onmessageerror=()=>fail(Error('Native route control transfer failed'));
     intentControl.port.start?.();
   }
-  device.lost?.then(info => { port.postMessage({ type: 'lost', info: { reason: info.reason, message: info.message } }); api.dispose(); });
+  device.lost?.then(info => { deviceIsLost=true;port.postMessage({ type: 'lost', info: { reason: info.reason, message: info.message } }); api.dispose();notifyNativeRetired(); });
   device.addEventListener?.('uncapturederror', event => { metrics.gpuErrors++; fail(event.error); });
   frameHandle = requestFrame(present);
   const api = {
     handle, present, idle: () => chain,
-    intentControlStatus:()=>routeControl?.status()??null,
+    intentControlStatus:()=>routeControl?{...routeControl.status(),retiring:nativeConsumerRetirement!==null,drained:nativeConsumerRetirement?.drained??false}:null,
     setVisibility(nextHidden) {
       nextHidden = !!nextHidden;
       if (nextHidden === hidden) return;
@@ -952,14 +984,13 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       if (stopped) return; stopped = true;
       settleMutationSubmissions(Error('Remote GPU disposed during native mutation'));
       settleNativeControl(Error('Remote GPU disposed'));
-      try{if(routeControl)intentControl.port.postMessage({type:'intent-control-retired',
-        session:intentControl.session,authorityEpoch:routeControl.status().authorityEpoch,
-        sequence:routeControl.status().sequence});}catch{}
-      routeControl?.dispose();intentControl?.port.close?.();
+      routeControl?.dispose();
       for (const job of pendingResources.values()) job.reject(Error('Remote GPU disposed'));
       pendingResources.clear();
       if (frameHandle !== null) cancelFrame(frameHandle);
-      device.queue.onSubmittedWorkDone().finally(() => {
+      device.queue.onSubmittedWorkDone().then(notifyNativeRetired,error=>{
+        if(deviceIsLost)notifyNativeRetired();else throw error;
+      }).finally(() => {
         for (const [key, entry] of resources) if (key !== '@device') entry.value?.destroy?.();
         resources.clear(); context.unconfigure(); device.destroy();
       }).catch(() => {});

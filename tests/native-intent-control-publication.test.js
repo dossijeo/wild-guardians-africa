@@ -13,6 +13,7 @@ function fixture({autoAck=true,autoFence=true,timeoutMs=10000}={}){
       if(autoFence)port2.postMessage({...message,type:'intent-control-fenced',accepted:true});
       return;
     }
+    if(message.type==='IntentControlRetire')return;
     if(message.type==='IntentBaseline')control=createNativeRouteControl({
       authorityEpoch:message.authorityEpoch,initialSequence:message.sequence,
       initialTime:message.effectiveTime,routes:message.routes});
@@ -46,6 +47,44 @@ test('direct native publication starts from a high-water baseline, not obsolete 
     assert(f.control.admit({actorId:7,routeHandle:handle,assignmentSequence:10}));
     assert.deepEqual(f.errors,[]);
   }finally{f.dispose();}
+});
+
+test('GPU retirement waits for an exact fresh drain token before closing its observer and connection',async()=>{
+ const f=fixture();try{
+  await f.publication.ready;const requested=new Promise(resolve=>f.port2.once('message',resolve));
+  let done=false;const pending=f.publication.retireGpu().then(r=>{done=true;return r;}),request=await requested;
+  assert.equal(request.type,'IntentControlRetire');assert.equal(done,false);assert.equal(f.stopped,true);
+  assert.equal(f.publication.status().retiring,true);assert.equal(f.publication.status().drained,false);
+  await assert.rejects(f.publication.fenceGpu(),/not ready/);
+  f.port2.postMessage({...request,type:'intent-control-drained',accepted:true});
+  const receipt=await pending;assert.equal(receipt.retirementId,request.retirementId);
+  assert.equal(f.publication.status().closed,true);assert.equal(f.publication.status().drained,true);
+  assert.equal((await f.publication.retireGpu()).retirementId,request.retirementId);
+ }finally{f.dispose();}
+});
+
+test('old, forged, silent and prematurely retired consumers cannot certify a GPU drain',async()=>{
+ for(const change of [{retirementId:'old-worker-token'},{session:'old-session'},{authorityEpoch:'old-owner'},
+   {sequence:8},{effectiveTime:9},{clockSequence:3},{accepted:false},{protocolVersion:1},{fenceVersion:2},null,'retired']){
+  const f=fixture({timeoutMs:50});try{
+   await f.publication.ready;const requested=new Promise(resolve=>f.port2.once('message',resolve));
+   const rejected=assert.rejects(f.publication.retireGpu(),/retirement/),request=await requested;
+   if(change==='retired')f.port2.postMessage({...request,type:'intent-control-retired'});
+   else if(change)f.port2.postMessage({...request,type:'intent-control-drained',accepted:true,...change});
+   await rejected;assert.equal(f.publication.status().drained,false);assert.equal(f.publication.status().closed,true);
+  }finally{f.dispose();}
+ }
+});
+
+test('a terminal drain proof from a different Worker in the same authority epoch cannot retire this connection',async()=>{
+ const f=fixture();try{
+  await f.publication.ready;const baseline=f.received[0];
+  f.port2.postMessage({type:'intent-control-retired',protocolVersion:2,session:baseline.session,
+   authorityEpoch:baseline.authorityEpoch,consumerToken:'token-from-previous-worker',drained:true});
+  for(let i=0;i<100&&!f.publication.status().closed;i++)await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(f.publication.status().closed,true);assert.equal(f.publication.status().drained,false);
+  assert.match(f.publication.status().fault,/connection-bound drain receipt/);
+ }finally{f.dispose();}
 });
 
 test('an acknowledgement from another transport session closes the source',async()=>{

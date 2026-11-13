@@ -95,6 +95,63 @@ test('remote drawing continues during delayed pipeline preparation, using fresh 
   assert.equal(f.errors.length, 0);
 });
 
+test('native retirement bypasses blocked preparation, freezes every submission and waits for the real queue drain',async()=>{
+ const native=createNativeRouteExecutionFixture(),[sourcePort,drawPort]=pair();let source,drain,releasePipeline;
+ const f=await fixture({}, {intentControl:{port:drawPort,session:'retirement'}});
+ try{
+  native.worker(1,native.point(-6,0),native.point(6,0));native.bridge.beginNativeRouteExecution();native.bridge.commitNativeCausalClock();
+  source=createNativeIntentControlPublication({port:sourcePort,session:'retirement',observe:native.bridge.observeNativeIntentControl});await source.ready;
+  const frame=f.frame(1,{clock:{version:1,epoch:0,elapsed:10,safeUntil:20,anchorAbsoluteMs:0,paused:false,
+   segments:[{start:10,end:20,rate:1,realDuration:10}]}});await flush();await f.host.idle();f.host.present();await frame;
+  f.gpu.device.createRenderPipelineAsync=()=>new Promise(resolve=>{releasePipeline=resolve;});
+  const preparing=f.host.handle({type:'create',method:'createRenderPipelineAsync',id:'retirement-slow',descriptor:{}});
+  await flush();assert.equal(typeof releasePipeline,'function');
+  f.gpu.device.queue.onSubmittedWorkDone=()=>new Promise(resolve=>{drain=resolve;});
+  const submissions=f.gpu.submitted.length;let retired=false;
+  const pending=source.retireGpu().then(r=>{retired=true;return r;});await flush();
+  assert.equal(retired,false);assert.equal(f.host.intentControlStatus().retiring,true);
+  f.host.present();f.host.present();assert.equal(f.gpu.submitted.length,submissions);
+  await assert.rejects(f.host.handle({type:'operation',op:{method:'submit',args:[[]]}}),/retiring/);
+  drain();drain=null;await pending;await flush();assert.equal(f.host.intentControlStatus().drained,true);
+  assert.equal(source.status().drained,true);assert.equal(source.status().closed,true);
+  releasePipeline({});releasePipeline=null;await preparing;
+  f.host.present();assert.equal(f.gpu.submitted.length,submissions);assert.equal(f.host.inspect().failed,false);
+  assert.deepEqual(f.errors,[]);
+ }finally{drain?.();releasePipeline?.({});source?.dispose();f.host.dispose();native.session.dispose();}
+});
+
+test('a pending operation cannot resume and submit after a native retirement receipt',async()=>{
+ const native=createNativeRouteExecutionFixture(),[sourcePort,drawPort]=pair();let source,releasePipeline;
+ const f=await fixture({}, {intentControl:{port:drawPort,session:'retired-operation'}});
+ try{
+  native.worker(1,native.point(-6,0),native.point(6,0));native.bridge.beginNativeRouteExecution();native.bridge.commitNativeCausalClock();
+  source=createNativeIntentControlPublication({port:sourcePort,session:'retired-operation',observe:native.bridge.observeNativeIntentControl});await source.ready;
+  f.gpu.device.createRenderPipelineAsync=()=>new Promise(resolve=>{releasePipeline=resolve;});
+  await f.host.handle({type:'create',method:'createRenderPipelineAsync',id:'retirement-slow',descriptor:{}});await flush();
+  const count=f.gpu.submitted.length,operation=f.host.handle({type:'operation',op:{method:'submit',args:[[
+    {__remoteCommands:[{method:'beginRenderPass',args:[{colorAttachments:[]}],commands:[{method:'setPipeline',args:[{__remoteGpuId:'retirement-slow'}]},{method:'draw',args:[3]}]}]}
+  ]]}}),rejected=assert.rejects(operation,/retiring/);
+  await source.retireGpu();releasePipeline({});releasePipeline=null;await rejected;
+  assert.equal(f.gpu.submitted.length,count);assert.equal(source.status().drained,true);
+ }finally{releasePipeline?.({});source?.dispose();f.host.dispose();native.session.dispose();}
+});
+
+test('disposal does not certify retirement before the queue drains, and actual device loss retires its own connection',async()=>{
+ for(const lost of [false,true]){
+  const native=createNativeRouteExecutionFixture(),[sourcePort,drawPort]=pair();let source,drain;
+  const f=await fixture({}, {intentControl:{port:drawPort,session:'terminal-drain'}});
+  try{
+   native.worker(1,native.point(-6,0),native.point(6,0));native.bridge.beginNativeRouteExecution();native.bridge.commitNativeCausalClock();
+   source=createNativeIntentControlPublication({port:sourcePort,session:'terminal-drain',observe:native.bridge.observeNativeIntentControl});await source.ready;
+   f.gpu.device.queue.onSubmittedWorkDone=()=>new Promise(resolve=>{drain=resolve;});
+   if(lost)f.gpu.device.destroy();else f.host.dispose();await flush();
+   assert.equal(source.status().drained,lost);
+   if(!lost){assert.equal(source.status().closed,false);drain();drain=null;await flush();}
+   assert.equal(source.status().drained,true);assert.equal(source.status().closed,true);
+  }finally{drain?.();source?.dispose();f.host.dispose();native.session.dispose();}
+ }
+});
+
 test('native revocation bypasses a resource FIFO blocked on a pending pipeline',async()=>{
   const [authorityPort,drawControlPort]=pair();let now=0;
   const f=await fixture({}, {absoluteNow:()=>now,

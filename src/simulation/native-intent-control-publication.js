@@ -9,6 +9,8 @@ export function createNativeIntentControlPublication({port,session,observe,
     stop=null,closed=false,fault=null,timer=null,resolveReady,rejectReady;
   let nextFence=0;const gpuFences=new Map();
   let nextMutationFence=0,mutationHold=null;
+  const consumerToken=crypto.randomUUID();
+  let retirement=null,drained=false;
   let clock=null,appliedClockSequence=null,baselineClockSequence=null;const clockReceipts=new Map();
   function prepareClock(record,{baseline=false}={}){
     if(record?.protocolVersion!==2||record.clockVersion!==1||record.authorityEpoch!==authorityEpoch||record.intentSequence!==sentSequence||
@@ -36,6 +38,7 @@ export function createNativeIntentControlPublication({port,session,observe,
     gpuFences.clear();
     if(mutationHold){clearTimeout(mutationHold.timer);mutationHold.reject(Error('Native mutation fence closed: '+(fault??reason)));mutationHold=null;}
     clockReceipts.clear();
+    if(retirement){clearTimeout(retirement.timer);retirement.reject(Error('Native GPU retirement closed: '+(fault??reason)));}
     try{if(authorityEpoch)port.postMessage({type:'IntentControlClosed',protocolVersion:2,
       session,authorityEpoch,sequence:sentSequence,reason});}catch{}
     port.onmessage=null;port.onmessageerror=null;port.close?.();
@@ -48,11 +51,31 @@ export function createNativeIntentControlPublication({port,session,observe,
   }
   port.onmessage=({data})=>{
     if(closed)return;
+    if(data?.type==='intent-control-drained'){
+      const pending=retirement;
+      if(!pending||data.accepted!==true||data.protocolVersion!==2||data.fenceVersion!==1||
+         data.session!==session||data.authorityEpoch!==authorityEpoch||data.retirementId!==pending.id||
+         data.sequence!==pending.sequence||data.effectiveTime!==pending.time||data.clockSequence!==pending.clockSequence){
+        fail(Error('Invalid native GPU retirement acknowledgement'));return;
+      }
+      clearTimeout(pending.timer);drained=true;
+      pending.resolve(Object.freeze({authorityEpoch,session,retirementId:pending.id,sequence:pending.sequence,
+        effectiveTime:pending.time,...(pending.clockSequence===undefined?{}:{clockSequence:pending.clockSequence})}));
+      dispose(pending.reason);return;
+    }
     if(data?.type==='intent-clock-applied'){
       try{acknowledgeClock(data);}catch(error){fail(error);}return;
     }
     if(data?.type==='intent-control-retired'&&data.session===session&&
-       data.authorityEpoch===authorityEpoch){dispose('consumer-retired');return;}
+       data.authorityEpoch===authorityEpoch){
+      if(data.protocolVersion!==2||data.consumerToken!==consumerToken||data.drained!==true){
+        fail(Error('Native GPU retirement lacks a connection-bound drain receipt'));return;
+      }
+      drained=true;
+      if(retirement)retirement.resolve(Object.freeze({authorityEpoch,session,retirementId:retirement.id,
+        sequence:retirement.sequence,effectiveTime:retirement.time,clockSequence:retirement.clockSequence}));
+      dispose('consumer-retired');return;
+    }
     if(data?.type==='intent-mutation-quiesced'){
       const hold=mutationHold;
       if(!hold||hold.receipt||data.session!==session||data.authorityEpoch!==authorityEpoch||data.fenceVersion!==1||
@@ -98,10 +121,10 @@ export function createNativeIntentControlPublication({port,session,observe,
         authorityEpoch=baseline.authorityEpoch;baselineSequence=sentSequence=baseline.sequence;sentTime=baseline.effectiveTime;
         const initial=baseline.clock?prepareClock(baseline.clock,{baseline:true}):null;
         baselineClockSequence=initial?.clockSequence??null;
-        port.postMessage({...baseline,...(initial?{clock:initial}:{}),session});
+        port.postMessage({...baseline,...(initial?{clock:initial}:{}),session,consumerToken});
       },
       onClock(record){
-        if(closed)return;
+        if(closed||retirement)return;
         // An already-live legacy consumer may have presented an unbounded
         // producer clock. Never pretend a late upgrade retroactively fenced it.
         // Causal mode requires a fresh, clock-aware baseline handshake.
@@ -110,7 +133,7 @@ export function createNativeIntentControlPublication({port,session,observe,
         port.postMessage({type:'IntentClock',...permit,session});
       },
       onChanges(changes){
-        if(closed)return;
+        if(closed||retirement)return;
         for(const event of changes){
           if(event.authorityEpoch!==authorityEpoch||event.sequence!==sentSequence+1)
             throw Error('Native intent publication lost causal order');
@@ -123,7 +146,7 @@ export function createNativeIntentControlPublication({port,session,observe,
   function fenceGpu(){
     // Receipt only: the caller still needs an authoritative pending mutation,
     // clock ordering and all live consumers before committing physical effects.
-    if(closed||appliedSequence===null||mutationHold)return Promise.reject(Error('Native GPU fence connection is not ready'));
+    if(closed||retirement||appliedSequence===null||mutationHold)return Promise.reject(Error('Native GPU fence connection is not ready'));
     if(gpuFences.size>=64)return Promise.reject(Error('Too many pending native GPU fences'));
     if(!Number.isSafeInteger(nextFence+1))return Promise.reject(Error('Native GPU fence identity exhausted'));
     const fenceId=++nextFence,sequence=sentSequence,effectiveTime=sentTime;
@@ -135,7 +158,7 @@ export function createNativeIntentControlPublication({port,session,observe,
     });
   }
   function quiesceGpuForMutation(){
-    if(closed||appliedSequence===null||!clock||clock.intentSequence!==sentSequence||clock.committedThrough!==sentTime)
+    if(closed||retirement||appliedSequence===null||!clock||clock.intentSequence!==sentSequence||clock.committedThrough!==sentTime)
       return Promise.reject(Error('Native causal mutation boundary is not ready'));
     if(mutationHold||gpuFences.size)return Promise.reject(Error('Native GPU mutation boundary is busy'));
     if(!Number.isSafeInteger(nextMutationFence+1))return Promise.reject(Error('Native mutation fence identity exhausted'));
@@ -158,8 +181,24 @@ export function createNativeIntentControlPublication({port,session,observe,
       sequence:sentSequence,effectiveTime:sentTime,clockSequence:clock.clockSequence,committed});
     clearTimeout(hold.timer);mutationHold=null;return true;
   }
-  return {ready,dispose,fenceGpu,quiesceGpuForMutation,releaseGpuAfterMutation,status:()=>({session,authorityEpoch,baselineSequence,
+  function retireGpu(reason='replaced'){
+    if(retirement)return retirement.promise;
+    if(closed||appliedSequence===null||mutationHold||gpuFences.size)
+      return Promise.reject(Error('Native GPU retirement boundary is not ready'));
+    // A fresh token, rather than a counter reset on each connection, prevents
+    // an old Worker receipt from retiring its replacement in the same epoch.
+    const id=crypto.randomUUID(),sequence=sentSequence,time=sentTime,clockSequence=clock?.clockSequence;
+    let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});
+    retirement={id,sequence,time,clockSequence,reason,promise,resolve,reject,
+      timer:setTimeout(()=>fail(Error('Native GPU retirement timed out')),timeoutMs)};
+    stop?.();stop=null;
+    try{port.postMessage({type:'IntentControlRetire',protocolVersion:2,fenceVersion:1,session,authorityEpoch,
+      retirementId:id,sequence,effectiveTime:time,...(clockSequence===undefined?{}:{clockSequence})});}
+    catch(error){fail(error);}
+    return promise;
+  }
+  return {ready,dispose,fenceGpu,quiesceGpuForMutation,releaseGpuAfterMutation,retireGpu,status:()=>({session,authorityEpoch,baselineSequence,
     sentSequence,sentTime,appliedSequence,pendingGpuFences:gpuFences.size,closed,fault,
     ...(clock?{clockSequence:clock.clockSequence,appliedClockSequence,pendingClockReceipts:clockReceipts.size}:{} ),
-    pendingMutationHold:mutationHold?.holdId??null})};
+    pendingMutationHold:mutationHold?.holdId??null,retiring:retirement!==null,drained})};
 }
