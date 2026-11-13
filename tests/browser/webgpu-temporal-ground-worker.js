@@ -133,10 +133,10 @@ async function auditNativeWorldReplay(data){
   if(data.nativeObsolete){
    const probe=remote.device.createBuffer({size:4,usage:9});remote.beginFrame({nativeWorldBoundary:surface.nativeWorldBoundary});
    remote.device.queue.writeBuffer(probe,0,new Uint32Array([123]));surface.render();
-   try{await remote.endFrame(surface.remoteFrameMetadata());throw Error('Obsolete frame was accepted');}catch(error){if(error.code!=='remote-frame-native-mutation-obsolete')throw error;obsolete={code:error.code};}
+   try{await remote.endFrame(surface.remoteFrameMetadata());throw Error('Obsolete frame was accepted');}catch(error){if(error.code!=='remote-frame-native-mutation-obsolete')throw error;obsolete={code:error.code,resourcePreparationsRetained:error.resourcePreparationsRetained===true};}
    await probe.mapAsync(1);obsolete.discardedUpload=new Uint32Array(probe.getMappedRange())[0];probe.unmap();
-   remote.device.queue.writeBuffer(probe,0,new Uint32Array([123]));await probe.mapAsync(1);obsolete.controlUpload=new Uint32Array(probe.getMappedRange())[0];probe.unmap();probe.destroy();
-   if(obsolete.discardedUpload!==0||obsolete.controlUpload!==123)throw Error('Obsolete frame upload isolation failed');
+   if(!obsolete.resourcePreparationsRetained){remote.device.queue.writeBuffer(probe,0,new Uint32Array([123]));await probe.mapAsync(1);obsolete.controlUpload=new Uint32Array(probe.getMappedRange())[0];probe.unmap();}else obsolete.controlUpload=null;probe.destroy();
+   if(obsolete.discardedUpload!==0||!obsolete.resourcePreparationsRetained&&obsolete.controlUpload!==123)throw Error('Obsolete frame upload isolation failed');
   }
   const recoverSurface=async()=>{
    oldSurface=surface;oldRemote=remote;surface=null;remote=await gpu(1);await oldSurface.dispose();oldSurface=null;oldRemote=null;

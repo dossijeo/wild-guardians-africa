@@ -67,6 +67,10 @@ que no cambió. Así el journal físico no exige reconstruir esa geometría ajen
 
 ## Validación y límites pendientes
 
+Continuación: [retención en transporte y evidencia en el mismo dispositivo](f-r4-retained-preparations-20261113.md).
+La conexión del preparador de producto sigue pendiente; su fallback todavía recrea
+3123 recursos. Este enlace no cierra la aceptación de fluidez ni de personajes.
+
 - Siete pruebas nuevas de Wild Engine real verifican espera antes del hold,
   identidad, igualdad exacta con los payloads del commit, mundo/selección sin
   efecto, cancelación con preparación no resuelta y llegada tardía, dependencias

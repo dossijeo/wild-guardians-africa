@@ -1,7 +1,7 @@
 import {createRemoteWebGpu} from '../../src/rendering/remote-webgpu-client.js';
 
 const now=()=>performance.timeOrigin+performance.now();
-let remote,clockBuffer,diagnosticClock,resultBuffer,readback,computeGroup,compute,prepareFrame;
+let remote,clockBuffer,diagnosticClock,resultBuffer,readback,computeGroup,compute,prepareFrame,retainedBuffer,retainedReadback;
 self.onmessage=async({data})=>{
  try{
   if(data.kind==='initialize'){
@@ -17,9 +17,11 @@ self.onmessage=async({data})=>{
    clockBuffer=device.createBuffer({size:16,usage:76});device.queue.writeBuffer(clockBuffer,0,new Float32Array([data.startTime,0,0,0]));
    const knots=device.createBuffer({size:rows.byteLength,usage:136});device.queue.writeBuffer(knots,0,rows);
    resultBuffer=device.createBuffer({size:32,usage:132});readback=device.createBuffer({size:32,usage:9});
+   if(data.retainPreparations){retainedBuffer=device.createBuffer({size:16,usage:76});retainedReadback=device.createBuffer({size:16,usage:9});device.queue.writeBuffer(retainedBuffer,0,new Float32Array(4));}
    const layout=device.createBindGroupLayout({entries:[
     {binding:0,visibility:1,buffer:{type:'uniform'}},{binding:1,visibility:1,buffer:{type:'read-only-storage'}},
-   ]}),group=device.createBindGroup({layout,entries:[{binding:0,resource:{buffer:clockBuffer}},{binding:1,resource:{buffer:knots}}]});
+    ...(data.retainPreparations?[{binding:3,visibility:2,buffer:{type:'uniform'}}]:[]),
+   ]}),group=device.createBindGroup({layout,entries:[{binding:0,resource:{buffer:clockBuffer}},{binding:1,resource:{buffer:knots}},...(data.retainPreparations?[{binding:3,resource:{buffer:retainedBuffer}}]:[])]});
    // One-shot diagnostics cannot write to, or retain a writable view of, the
    // published render packet. Use a private immutable table and a queue-ordered
    // copy of its live clock; keep the production resource guards unchanged.
@@ -40,6 +42,7 @@ struct Clock { at:f32, padding0:f32, padding1:vec2f }
 @group(0) @binding(0) var<uniform> clock:Clock;
 @group(0) @binding(1) var<storage,read> knots:array<Sample>;
 @group(0) @binding(2) var<storage,read_write> result:Sample;
+${data.retainPreparations?'@group(0) @binding(3) var<uniform> retained:vec4f;':''}
 fn sample_route(at:f32)->Sample {
  if(at<=knots[0].clock){ return Sample(at,knots[0].x,knots[0].z,knots[0].phase,knots[0].run,knots[0].walk,knots[0].carry,knots[0].budget); }
  for(var i=1u;i<${count}u;i++){
@@ -53,7 +56,7 @@ struct Vertex { @builtin(position) position:vec4f, @location(0) phase:f32 }
  let p=sample_route(clock.at);let points=array<vec2f,3>(vec2f(-0.3,-0.3),vec2f(0.3,-0.3),vec2f(0.0,0.3));
  return Vertex(vec4f(points[i]+vec2f(p.x-knots[0].x,p.z-knots[0].z)*0.1,0.0,1.0),p.walk);
 }
-@fragment fn fragment(v:Vertex)->@location(0) vec4f {return vec4f(0.2,0.6+min(v.phase,0.3),0.3,1.0);}
+@fragment fn fragment(v:Vertex)->@location(0) vec4f {return vec4f(0.2${data.retainPreparations?'+retained.x*0.001':''},0.6+min(v.phase,0.3),0.3,1.0);}
 @compute @workgroup_size(1) fn inspect(){result=sample_route(clock.at);}
 `,module=device.createShaderModule({code}),pipelineLayout=device.createPipelineLayout({bindGroupLayouts:[layout]}),render=await device.createRenderPipelineAsync({
     layout:pipelineLayout,vertex:{module,entryPoint:'vertex'},fragment:{module,entryPoint:'fragment',targets:[{format}]},primitive:{topology:'triangle-list'},
@@ -63,12 +66,12 @@ struct Vertex { @builtin(position) position:vec4f, @location(0) phase:f32 }
    remote.registerClockBinding(clockBuffer,{byteOffset:0,semantic:'absolute',epoch:0,nativeRoute:data.route});
    const anchor=now()+50,clock={version:1,epoch:0,elapsed:data.startTime,safeUntil:data.endTime,
     anchorAbsoluteMs:anchor,paused:false,segments:[{start:data.startTime,end:data.endTime,rate:1,realDuration:data.endTime-data.startTime}]};
-   prepareFrame=worldBoundary=>{remote.beginFrame({clock,nativeWorldBoundary:worldBoundary});const encoder=device.createCommandEncoder(),pass=encoder.beginRenderPass({
+   prepareFrame=(worldBoundary,upload=null)=>{remote.beginFrame({clock,nativeWorldBoundary:worldBoundary});if(upload!==null){if(!retainedBuffer)throw Error('Retained upload fixture unavailable');device.queue.writeBuffer(retainedBuffer,0,new Float32Array([upload,0,0,0]));}const encoder=device.createCommandEncoder(),pass=encoder.beginRenderPass({
     colorAttachments:[{view:remote.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store',clearValue:{r:.01,g:.02,b:.03,a:1}}],
    });
    pass.setPipeline(render);pass.setBindGroup(0,group);pass.draw(3);pass.end();device.queue.submit([encoder.finish()]);};
    prepareFrame(data.worldBoundary??null);await remote.endFrame();
-   postMessage({kind:'drawing',anchor});return;
+   postMessage({kind:'drawing',anchor,...(retainedBuffer?{resourceBaseline:await remote.inspectAsync(),retainedResourceId:retainedBuffer.__remoteGpuId}:{})});return;
   }
   if(data.kind==='block'){
    const start=now();postMessage({kind:'block-start',id:data.id,start});const end=performance.now()+500;
@@ -80,13 +83,14 @@ struct Vertex { @builtin(position) position:vec4f, @location(0) phase:f32 }
    const pass=encoder.beginComputePass();pass.setPipeline(compute);pass.setBindGroup(0,computeGroup);pass.dispatchWorkgroups(1);pass.end();
    encoder.copyBufferToBuffer(resultBuffer,0,readback,0,32);remote.device.queue.submit([encoder.finish()]);await readback.mapAsync(1);
    const values=Array.from(new Float32Array(readback.getMappedRange()));readback.unmap();
-   postMessage({kind:'inspection',id:data.id,values,execution:await remote.inspectAsync()});return;
+   let retainedValue=null;if(retainedBuffer){const copy=remote.device.createCommandEncoder();copy.copyBufferToBuffer(retainedBuffer,0,retainedReadback,0,16);remote.device.queue.submit([copy.finish()]);await retainedReadback.mapAsync(1);retainedValue=new Float32Array(retainedReadback.getMappedRange())[0];retainedReadback.unmap();}
+   postMessage({kind:'inspection',id:data.id,values,retainedValue,retainedResourceId:retainedBuffer?.__remoteGpuId??null,execution:await remote.inspectAsync()});return;
   }
   if(data.kind==='status'){postMessage({kind:'status',id:data.id,execution:await remote.inspectAsync()});return;}
-  if(data.kind==='prepare-frame'){prepareFrame(data.worldBoundary??null);postMessage({kind:'frame-prepared',id:data.id});return;}
+  if(data.kind==='prepare-frame'){prepareFrame(data.worldBoundary??null,data.retainedUpload??null);postMessage({kind:'frame-prepared',id:data.id});return;}
   if(data.kind==='publish-frame'){
    try{await remote.endFrame();postMessage({kind:'frame-published',id:data.id,outcome:'presented'});}
-   catch(error){if(error.code!=='remote-frame-native-mutation-obsolete')throw error;postMessage({kind:'frame-published',id:data.id,outcome:'obsolete'});}
+   catch(error){if(error.code!=='remote-frame-native-mutation-obsolete')throw error;postMessage({kind:'frame-published',id:data.id,outcome:'obsolete',resourcePreparationsRetained:error.resourcePreparationsRetained===true});}
    return;
   }
   if(data.kind==='lose-device'){remote.device.destroy();return;}

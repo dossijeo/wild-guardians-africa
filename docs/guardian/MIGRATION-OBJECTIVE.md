@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [propuesta de recursos canónicos antes del efecto físico](f-r4-prepared-world-resources-20261113.md).
+Último avance: [retención de uploads en el dispositivo original, con la integración de producto aún pendiente](f-r4-retained-preparations-20261113.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio

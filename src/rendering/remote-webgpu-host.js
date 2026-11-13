@@ -7,6 +7,7 @@ import { createNativeRouteControl } from './native-route-control.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 
 import {validRemoteTexturePreparation} from './remote-texture-preparation.js';
+import {rejectedFramePreparations,closePreparationImages} from './remote-frame-preparations.js';
 const REF = '__remoteGpuId';
 const CURRENT = '@canvas';
 const CREATION = new Set(['createBuffer','createTexture','createSampler','createBindGroup','createBindGroupLayout','createPipelineLayout','createShaderModule','createQuerySet','createRenderPipeline','createRenderPipelineAsync','createComputePipeline','createComputePipelineAsync']);
@@ -30,8 +31,9 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   });
   function publishWorldBoundary(){port.postMessage({type:'native-world-boundary',worldBoundary:nativeWorldBoundary});}
   function invalidatePendingNativeWorld(reason){
-    if(!pending)return;const stale=pending;pending=null;releaseSnapshot(stale.resourceSnapshot);
-    port.postMessage({type:'frame-obsolete',sequence:stale.sequence,reason});
+    admittingFrame?.cancel();
+    if(!pending)return;const stale=pending;pending=null;
+    rejectPreparedFrame(stale,reason,true);releaseSnapshot(stale.resourceSnapshot);
   }
   let nativeConsumerRetirement=null;
   let nativeConsumerToken=null,nativeRetirementNotified=false,deviceIsLost=false;
@@ -60,7 +62,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   const pendingRetirement = new Set(), nativeRetirement = new Set();
   let retirementScheduled = false;
   let resolutionResources = null;
-  let stagedOperations = [];
+  let admittingFrame=null;
+  let stagedOperations = [],retainedPreparationSnapshot=null,preparationRecoveryRequired=false,lastReceivedFrameSequence=0,retainedPreparationOperationCount=0;
   let active = null, pending = null, stopped = false, failed = false, deviceDestroyRequested = false, frameHandle = null, chain = Promise.resolve();
   let currentTexture = null, currentViews = new Map(), deviceConfigured = false;
   let previousFrameAt = null, sampleCursor = 0;
@@ -75,24 +78,26 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     const current=routeControl?.status();
     for(const waiter of nativeControlWaiters){
       if(!error&&(!current||current.sequence<waiter.sequence))continue;
-      nativeControlWaiters.delete(waiter);clearTimeout(waiter.timer);
+      nativeControlWaiters.delete(waiter);clearTimeout(waiter.timer);waiter.signal?.removeEventListener('abort',waiter.abort);
       error?waiter.reject(error):waiter.resolve();
     }
   }
-  function waitNativeControl(sequence){
+  function waitNativeControl(sequence,signal){
+    if(signal?.aborted)return Promise.resolve();
     if(!intentControl)return Promise.reject(Error('Native route control unavailable'));
     if(!Number.isSafeInteger(sequence)||sequence<0)return Promise.reject(Error('Invalid native route assignment sequence'));
     const current=routeControl?.status();
     if(stopped||failed||current?.closed)return Promise.reject(Error('Native route control is closed'));
     if(current&&current.sequence>=sequence)return Promise.resolve();
     return new Promise((resolve,reject)=>{
-      const waiter={sequence,resolve,reject,timer:null};
+      const waiter={sequence,resolve,reject,timer:null,signal,abort:null};
+      waiter.abort=()=>{if(!nativeControlWaiters.delete(waiter))return;clearTimeout(waiter.timer);resolve();};
       waiter.timer=setTimeout(()=>{
-        if(!nativeControlWaiters.delete(waiter))return;
+        if(!nativeControlWaiters.delete(waiter))return;signal?.removeEventListener('abort',waiter.abort);
         const error=Error('Native intent control sequence did not arrive');
         error.code='native-route-control-timeout';reject(error);
       },nativeControlTimeoutMs);
-      nativeControlWaiters.add(waiter);
+      nativeControlWaiters.add(waiter);signal?.addEventListener('abort',waiter.abort,{once:true});if(signal?.aborted)waiter.abort();
     });
   }
   function reply(message, result, error) {
@@ -118,6 +123,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   function fail(error) {
     if (failed || stopped) return;
     failed = true;
+    discardRetainedPreparations();
     settleMutationSubmissions(error);
     routeControl?.dispose();settleNativeControl(error);
     errors.push(error?.stack || String(error));
@@ -224,12 +230,12 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     }).catch(failedJob);
     else start();
   }
-  function snapshotResources(initial) {
+  function snapshotResources(initial,{allowPending=false,source=null}={}) {
     const result = new Map();
     const visit = (key, entry = resources.get(key)) => {
       metrics.dependencyVisits++;
       if (key === CURRENT) return;
-      if (!entry || entry.pending || entry.retired || entry.nativeDestroyed) throw Error(`Unknown, pending or retired remote GPU resource ${key}`);
+      if (!entry || entry.pending&&!allowPending || entry.retired || entry.nativeDestroyed) throw Error(`Unknown, pending or retired remote GPU resource ${key}`);
       if (result.has(key)) {
         if (result.get(key) !== entry) throw Error(`Mixed native generations for remote resource ${key}`);
         return;
@@ -237,7 +243,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       result.set(key, entry);
       for (const [dependency, resolved] of entry.dependencyEntries || []) visit(dependency, resolved);
     };
-    for (const key of initial) visit(key);
+    for (const key of initial) visit(key,source?.get(key)||resources.get(key));
     return result;
   }
   function pinSnapshot(snapshot) {
@@ -542,6 +548,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     finally { resolutionResources = null; }
   }
   function packetBytes(value) {
+    if(typeof ImageBitmap!=='undefined'&&value instanceof ImageBitmap)return value.width*value.height*4;
     if (ArrayBuffer.isView(value) || value instanceof ArrayBuffer) return value.byteLength;
     if (!value || typeof value !== 'object') return 0;
     return Object.values(value).reduce((sum, child) => sum + packetBytes(child), 0);
@@ -586,6 +593,49 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       for (const key of retainClosure(references(destination))) result.add(key);
     }
     return result;
+  }
+  function discardRetainedPreparations(closeImages=true){
+    const old=retainedPreparationSnapshot;retainedPreparationSnapshot=null;
+    if(closeImages)closePreparationImages(stagedOperations);stagedOperations=[];retainedPreparationOperationCount=0;releaseSnapshot(old);
+    for(const entry of pendingRetirement)tryRetire(entry);
+  }
+  function rejectPreparedFrame(packet,reason,wasPending=false){
+    if(!wasPending)validateOperations(packet.operations);
+    const groups=wasPending?[{operations:packet.operations,source:packet.resourceSnapshot},{operations:stagedOperations,source:retainedPreparationSnapshot}]:
+      [{operations:stagedOperations,source:retainedPreparationSnapshot},{operations:packet.operations,source:null}];
+    const operations=[],snapshot=new Map();let retained=!preparationRecoveryRequired;
+    try{
+      for(const group of groups){
+        const projected=rejectedFramePreparations(group.operations,buffer=>validRemoteTexturePreparation(buffer,key=>group.source?.get(key)||resources.get(key)));
+        if(!projected){retained=false;break;}operations.push(...projected);
+        const owned=snapshotResources(references(projected),{allowPending:true,source:group.source});
+        for(const [key,entry]of owned){if(snapshot.has(key)&&snapshot.get(key)!==entry)throw Error('Rejected preparation mixed resource generations');snapshot.set(key,entry);}
+      }
+      validateOperations(operations);
+      if(operations.length>maxFrameOperations||packetBytes(operations)>maxFrameBytes)retained=false;
+    }catch{retained=false;}
+    if(retained){
+      pinSnapshot(snapshot);const old=retainedPreparationSnapshot;retainedPreparationSnapshot=snapshot;stagedOperations=operations;retainedPreparationOperationCount=operations.length;releaseSnapshot(old);
+    }else{
+      preparationRecoveryRequired=true;
+      closePreparationImages(groups.flatMap(group=>group.operations));
+      discardRetainedPreparations(false);
+    }
+    port.postMessage({type:'frame-obsolete',sequence:packet.sequence,reason,resourcePreparationsRetained:retained});
+  }
+  function retainedPreparationsFor(operations){
+    if(!retainedPreparationSnapshot)return stagedOperations;
+    const later=stagedOperations.slice(retainedPreparationOperationCount),needed=snapshotResources(references([...later,...operations]),{allowPending:true}),result=[];
+    for(const op of stagedOperations.slice(0,retainedPreparationOperationCount)){
+      const targets=writtenResources(op);
+      if(![...targets].some(key=>needed.has(key)))continue;
+      for(const key of references(op)){
+        const prior=retainedPreparationSnapshot.get(key),current=needed.get(key)||resources.get(key);
+        if(prior&&current!==prior)throw Error('Retained preparation no longer owns its resource generation');
+      }
+      result.push(op);
+    }
+    return [...result,...later];
   }
   async function handle(message) {
     if (stopped || failed) return;
@@ -645,18 +695,25 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         context.configure(resolve(message.descriptor)); deviceConfigured = true; break;
       case 'unconfigure': context.unconfigure(); deviceConfigured = false; break;
       case 'frame': {
+        if(!Number.isSafeInteger(message.packet?.sequence)||message.packet.sequence<=lastReceivedFrameSequence)throw Error('Stale remote frame');
+        lastReceivedFrameSequence=message.packet.sequence;
+        if(!Array.isArray(message.packet.operations)||message.packet.operations.length>maxFrameOperations||packetBytes(message.packet)>maxFrameBytes)throw Error('Remote frame exceeds safety limit');
+        if(preparationRecoveryRequired){rejectPreparedFrame(message.packet,'Rejected preparation requires a fresh surface');break;}
+        const controller=new AbortController();let cancel;const cancelled=new Promise(resolve=>{cancel=()=>{controller.abort();resolve();};});
+        const admission={packet:message.packet,cancel,controller};admittingFrame=admission;
+        try{
         if(!frameWorldCurrent(message.packet)){
-          stagedOperations=[];port.postMessage({type:'frame-obsolete',sequence:message.packet?.sequence,reason:'Prepared resources do not match the committed native world'});break;
+          rejectPreparedFrame(message.packet,'Prepared resources do not match the committed native world');break;
         }
         if(message.nativeMutationEpoch===undefined)message.nativeMutationEpoch=nativeMutationEpoch;
         if(message.nativeMutationEpoch!==nativeMutationEpoch){
-          stagedOperations=[];port.postMessage({type:'frame-obsolete',sequence:message.packet?.sequence,reason:'Native mutation invalidated the prepared frame'});break;
+          rejectPreparedFrame(message.packet,'Native mutation invalidated the prepared frame');break;
         }
         if (pending) throw Error('Remote GPU backpressure: pending generation already exists');
         if (!Array.isArray(message.packet?.operations)) throw Error('Invalid remote frame operations');
-        const packet = { ...message.packet, operations: [...stagedOperations, ...message.packet.operations] };
+        const packet = { ...message.packet,resourceSnapshot:null, operations: [...retainedPreparationsFor(message.packet.operations), ...message.packet.operations] };
         if(packet.operations.some(op=>!drawCommandsCurrent(op,packet.metadata?.nativeWorldBoundary??null))){
-          stagedOperations=[];port.postMessage({type:'frame-obsolete',sequence:packet.sequence,reason:'Old draw commands cannot be retagged for another native world'});break;
+          rejectPreparedFrame({...packet,operations:message.packet.operations},'Old draw commands cannot be retagged for another native world');break;
         }
         packet.transportTiming = { ...message.packet.transportTiming, sequence: packet.sequence, workerReceivedAt: message.receivedAt ?? absoluteNow(), admissionStartedAt: absoluteNow() };
         packet.receivedAt = absoluteNow();
@@ -671,10 +728,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         packet.references = references(packet.operations);
         const readiness = waitForResources(packet.references);
         packet.transportTiming.resourcesWaitStartedAt = absoluteNow();
-        if (readiness) await readiness;
+        if (readiness) await Promise.race([readiness,cancelled]);
         if(stopped||failed||nativeConsumerRetirement)throw Error('Native GPU consumer is retiring or closed');
         if(message.nativeMutationEpoch!==nativeMutationEpoch||!frameWorldCurrent(packet)){
-          stagedOperations=[];port.postMessage({type:'frame-obsolete',sequence:packet.sequence,reason:'Native mutation invalidated the prepared frame'});break;
+          rejectPreparedFrame({...packet,operations:message.packet.operations},'Native mutation invalidated the prepared frame');break;
         }
         packet.transportTiming.resourcesReadyAt = absoluteNow();
         packet.receivedAt = absoluteNow();
@@ -685,10 +742,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           // A control message and its prepared packet use different ports.
           // Rendezvous on the native high-water mark, never on a resource job.
           const through=Math.max(...nativeBindings.map(binding=>binding.nativeRoute.assignmentSequence));
-          await waitNativeControl(through);
+          await Promise.race([waitNativeControl(through,controller.signal),cancelled]);
         }
         if(message.nativeMutationEpoch!==nativeMutationEpoch||!frameWorldCurrent(packet)){
-          stagedOperations=[];port.postMessage({type:'frame-obsolete',sequence:packet.sequence,reason:'Native mutation invalidated the prepared frame'});break;
+          rejectPreparedFrame({...packet,operations:message.packet.operations},'Native mutation invalidated the prepared frame');break;
         }
         packet.nativeMutationEpoch=message.nativeMutationEpoch;
         // Resolve permissions after all resource awaits. A direct revocation may
@@ -724,12 +781,14 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         }
         for (const key of packet.baselineBuffers) if (!packet.resourceSnapshot.get(key)?.uniformShadow) throw Error(`Cannot replay an unversioned GPU buffer read before its first write: ${key}`);
         pinSnapshot(packet.resourceSnapshot);
-        stagedOperations = [];
+        closePreparationImages(stagedOperations.filter(op=>!packet.operations.includes(op)));
+        stagedOperations = [];retainedPreparationOperationCount=0;const retained=retainedPreparationSnapshot;retainedPreparationSnapshot=null;releaseSnapshot(retained);
         if (hasCompute) metrics.computePackets++;
         pending = packet;
         packet.transportTiming.admittedAt = absoluteNow();
         for (const entry of pendingRetirement) tryRetire(entry);
         metrics.packets++; break;
+        }finally{controller.abort();if(admittingFrame===admission)admittingFrame=null;}
       }
       case 'destroy': {
         const entry = resources.get(message.id);
@@ -870,6 +929,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
               message.clockSequence!==status.clock?.clockSequence||typeof message.retirementId!=='string'||!message.retirementId)
              throw Error('Invalid native GPU retirement boundary');
            nativeConsumerRetirement={...message,drained:false};
+           discardRetainedPreparations();
            // Freeze both rAF and standalone submissions before capturing the
            // queue. Resource jobs may finish, but cannot submit after this fence.
            routeControl.dispose();settleNativeControl(Error('Native GPU consumer is retiring'));
@@ -967,7 +1027,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
               nativeWorldBoundary.nativeSession!==message.clock?.nativeSession||
               nativeWorldBoundary.effectiveTime>message.clock.committedThrough))throw Error('Invalid native world resource baseline');
            if(worldBoundaryRequired)publishWorldBoundary();
-           if(pending&&!frameWorldCurrent(pending))invalidatePendingNativeWorld('Prepared resources precede the native world baseline');
+           if(pending&&!frameWorldCurrent(pending)||admittingFrame&&!frameWorldCurrent(admittingFrame.packet))invalidatePendingNativeWorld('Prepared resources precede the native world baseline');
           accepted=true;
         }else if(message?.type==='IntentControlClosed'){
           if(message.protocolVersion!==2||message.authorityEpoch!==routeControl?.status().authorityEpoch)
@@ -1016,9 +1076,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       }
       hidden = nextHidden;
     },
-    inspect: () => ({ ...metrics, hidden, resources: resources.size, pendingResources: pendingResources.size, activeSequence: active?.sequence || null, pendingSequence: pending?.sequence || null, queuedMessages, stagedOperations: stagedOperations.length, obsoleteVersions: obsoleteVersions.size, failed, backend: 'webgpu', rafIndependent: true, adapterInfo, frameTime: frameTime.status(), frameTimings: frameTimings.slice(), fenceTimings: fenceTimings.slice(), lease: active?.metadata?.clock || null, nativeCausalClock:routeControl?.status().clock??null, nativeMutationHold:nativeMutationHold?.holdId??null,nativeMutationFloor,nativeMutationEpoch, cameraSafe: active?.metadata?.cameraSafe ?? false, cameraEnvelope: active?.metadata?.cameraEnvelope || null, clockBindings: active?.clockBindings.length || 0, cameraBindings: active?.cameraBindings.length || 0, clockAtHorizon: !!active?.metadata?.clock && frameTime.status().elapsed >= Math.min(routeControl?.status().clock?.committedThrough??Infinity,active.metadata.clock.safeUntil), errors: errors.slice(), samples: sampleCursor < samples.length ? samples.slice(0, sampleCursor) : [...samples.slice(sampleCursor % samples.length), ...samples.slice(0, sampleCursor % samples.length)] }),
+    inspect: () => ({ ...metrics, hidden, resources: resources.size, pendingResources: pendingResources.size, activeSequence: active?.sequence || null, pendingSequence: pending?.sequence || null, queuedMessages, stagedOperations: stagedOperations.length,retainedPreparationResources:retainedPreparationSnapshot?.size??0,retainedPreparationBytes:retainedPreparationSnapshot?packetBytes(stagedOperations):0,preparationRecoveryRequired, obsoleteVersions: obsoleteVersions.size, failed, backend: 'webgpu', rafIndependent: true, adapterInfo, frameTime: frameTime.status(), frameTimings: frameTimings.slice(), fenceTimings: fenceTimings.slice(), lease: active?.metadata?.clock || null, nativeCausalClock:routeControl?.status().clock??null, nativeMutationHold:nativeMutationHold?.holdId??null,nativeMutationFloor,nativeMutationEpoch, cameraSafe: active?.metadata?.cameraSafe ?? false, cameraEnvelope: active?.metadata?.cameraEnvelope || null, clockBindings: active?.clockBindings.length || 0, cameraBindings: active?.cameraBindings.length || 0, clockAtHorizon: !!active?.metadata?.clock && frameTime.status().elapsed >= Math.min(routeControl?.status().clock?.committedThrough??Infinity,active.metadata.clock.safeUntil), errors: errors.slice(), samples: sampleCursor < samples.length ? samples.slice(0, sampleCursor) : [...samples.slice(sampleCursor % samples.length), ...samples.slice(0, sampleCursor % samples.length)] }),
     dispose() {
       if (stopped) return; stopped = true;
+      admittingFrame?.cancel();discardRetainedPreparations();
       settleMutationSubmissions(Error('Remote GPU disposed during native mutation'));
       settleNativeControl(Error('Remote GPU disposed'));
       routeControl?.dispose();

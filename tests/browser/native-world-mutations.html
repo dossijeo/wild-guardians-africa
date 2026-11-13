@@ -6,7 +6,11 @@
 <p>Real WASM and WebGPU: polygon, residency, canonical props and terrain. One causal consumer; diagnostic triangle. Graphical replacement and recovery remain separate.</p>
 <pre id="result">Ready</pre>
 <script type="module">
-import {auditNativeWorldMutations,auditNativeControlLifecycle,auditNativeWorldResources} from './native-world-mutations.js';
+import {auditNativeWorldMutations,auditNativeControlLifecycle,auditNativeWorldResources,auditNativeRetainedPreparations} from './native-world-mutations.js';
+window.runNativeRetainedPreparationsAudit=async()=>{
+ try{document.querySelector('#result').textContent='Running retained preparation';const result=await auditNativeRetainedPreparations();document.querySelector('#result').textContent=JSON.stringify(result,null,2);return result;}
+ catch(error){document.querySelector('#result').textContent=String(error.stack??error);throw error;}
+};
 window.runNativeWorldResourcesAudit=async()=>{
  try{document.querySelector('#result').textContent='Running resource identity';const result=await auditNativeWorldResources();
   document.querySelector('#result').textContent=JSON.stringify(result,null,2);return result;

@@ -52,6 +52,107 @@ function fakeGpu() {
 }
 const flush = async () => { for (let i = 0; i < 40; i++) await Promise.resolve(); };
 
+async function nativePreparationFixture(hostOptions={}){
+ const native=createNativeRouteExecutionFixture(),[sourcePort,drawPort]=pair();let source;
+ const f=await fixture({}, {intentControl:{port:drawPort,session:'retained-preparation'},...hostOptions});
+ native.worker(1,native.point(-6,0),native.point(6,0));native.bridge.beginNativeRouteExecution();native.bridge.commitNativeCausalClock();
+ source=createNativeIntentControlPublication({port:sourcePort,session:'retained-preparation',observe:native.bridge.observeNativeIntentControl});await source.ready;
+ const clock={version:1,epoch:0,elapsed:10,safeUntil:20,anchorAbsoluteMs:0,paused:false,segments:[{start:10,end:20,rate:1,realDuration:10}]};
+ return {...f,native,source,clock,commit:()=>native.bridge.mutateNativeWorldAfterGpuQuiescence({getPublication:()=>source,mutation:{type:'addChunk',cx:4,cz:4}}),close(){source.dispose();f.host.dispose();native.session.dispose();}};
+}
+function preparationDraw(f,buffer,metadata,pipeline=f.pipeline,upload=null){
+ f.client.beginFrame(metadata);if(upload!==null)f.client.device.queue.writeBuffer(buffer,0,new Uint32Array([upload]));
+ const group=f.client.device.createBindGroup({entries:[{binding:0,resource:{buffer}}]}),encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
+ pass.setPipeline(pipeline);pass.setBindGroup(0,group);pass.draw(3);pass.end();f.client.device.queue.submit([encoder.finish()]);return f.client.endFrame();
+}
+test('obsolete initialization survives until fresh commands use the same GPU buffer, without resending its upload',async()=>{
+ const f=await nativePreparationFixture();try{
+  const buffer=f.client.device.createBuffer({size:16,usage:72});await flush();await f.host.idle();const nativeBuffer=f.gpu.buffers[1],resourcesBefore=f.client.inspect().resourcesCreated;
+  f.client.beginFrame({clock:f.clock});f.client.device.queue.writeBuffer(buffer,0,new Uint32Array([123]));
+  const encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});pass.draw(3);pass.end();f.client.device.queue.submit([encoder.finish()]);
+  const committed=await f.commit();assert.equal(committed.status,'committed');await flush();
+  await assert.rejects(f.client.endFrame(),e=>e.code==='remote-frame-native-mutation-obsolete'&&e.resourcePreparationsRetained===true);await f.host.idle();
+  assert.equal(new Uint32Array(nativeBuffer.data.buffer)[0],0);assert.equal(f.host.inspect().stagedOperations,1);assert.equal(f.gpu.submitted.length,0);
+  const packet=preparationDraw(f,buffer,{clock:f.clock,nativeWorldBoundary:committed.worldBoundary});await flush();await f.host.idle();f.host.present();await packet;
+  assert.equal(new Uint32Array(nativeBuffer.data.buffer)[0],123);assert.equal(f.gpu.buffers[1],nativeBuffer);assert.equal(f.gpu.buffers.length,2);assert.equal(f.client.inspect().resourcesCreated,resourcesBefore+1,'only the newly recorded bind group is created');
+  assert.equal(f.host.inspect().retainedPreparationResources,0);assert.equal(f.host.inspect().stagedOperations,0);f.host.present();assert.equal(f.gpu.calls.filter(c=>c[0]==='writeBuffer').length,1);assert.equal(f.errors.length,0);
+ }finally{f.close();}
+});
+test('native commit cancels an obsolete frame waiting for an unused pipeline, preserving only its uploads',async()=>{
+ const f=await nativePreparationFixture();let release;
+ try{
+  const buffer=f.client.device.createBuffer({size:16,usage:72});f.gpu.device.createRenderPipelineAsync=()=>new Promise(resolve=>{release=resolve;});const slow=f.client.device.createRenderPipeline({label:'unused-old-world'});
+  const old=preparationDraw(f,buffer,{clock:f.clock},slow,77),rejected=assert.rejects(old,e=>e.resourcePreparationsRetained===true);await flush();
+  for(let i=0;i<100&&!release;i++)await new Promise(resolve=>setTimeout(resolve,1));
+  assert.equal(typeof release,'function');assert.equal(f.host.inspect().pendingSequence,null);
+  const committed=await f.commit();assert.equal(committed.status,'committed');await rejected;await f.host.idle();assert.equal(new Uint32Array(f.gpu.buffers[1].data.buffer)[0],0);
+  // The old pipeline is deliberately still unresolved; recording uses the
+  // already admitted pipeline and the original buffer on the original device.
+  f.gpu.device.createRenderPipelineAsync=async()=>({});const packet=preparationDraw(f,buffer,{clock:f.clock,nativeWorldBoundary:committed.worldBoundary});await flush();await f.host.idle();f.host.present();await packet;
+  assert.equal(new Uint32Array(f.gpu.buffers[1].data.buffer)[0],77);assert.equal(f.host.inspect().nativeFrames,1);assert.equal(f.host.inspect().failed,false);assert.equal(f.errors.length,0);
+ }finally{release?.({});await flush();f.close();}
+});
+test('already admitted pending uploads transfer their exact resource pins after a physical commit',async()=>{
+ const f=await nativePreparationFixture();try{
+  const buffer=f.client.device.createBuffer({size:16,usage:72}),old=preparationDraw(f,buffer,{clock:f.clock},f.pipeline,91),rejected=assert.rejects(old,e=>e.resourcePreparationsRetained===true);
+  await flush();await f.host.idle();assert.equal(f.host.inspect().pendingSequence,1);const committed=await f.commit();await rejected;assert.equal(f.host.inspect().pendingSequence,null);
+  const packet=preparationDraw(f,buffer,{clock:f.clock,nativeWorldBoundary:committed.worldBoundary});await flush();await f.host.idle();f.host.present();await packet;
+  assert.equal(new Uint32Array(f.gpu.buffers[1].data.buffer)[0],91);assert.equal(f.host.inspect().retainedPreparationResources,0);assert.equal(f.host.inspect().failed,false);
+ }finally{f.close();}
+});
+test('later writes follow the retained initialization and unused released resources retire without being uploaded',async()=>{
+ const f=await nativePreparationFixture();try{
+  const buffer=f.client.device.createBuffer({size:16,usage:72}),unused=f.client.device.createBuffer({size:16,usage:72});
+  f.client.beginFrame({clock:f.clock});f.client.device.queue.writeBuffer(buffer,0,new Uint32Array([5]));f.client.device.queue.writeBuffer(unused,0,new Uint32Array([9]));
+  const encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[]});pass.draw(3);pass.end();f.client.device.queue.submit([encoder.finish()]);
+  const committed=await f.commit();await assert.rejects(f.client.endFrame(),e=>e.resourcePreparationsRetained===true);unused.destroy();f.client.device.queue.writeBuffer(buffer,0,new Uint32Array([8]));await flush();await f.host.idle();assert.equal(f.gpu.buffers[2].destroyed,false);
+  const packet=preparationDraw(f,buffer,{clock:f.clock,nativeWorldBoundary:committed.worldBoundary});await flush();await f.host.idle();f.host.present();await packet;await flush();
+  assert.equal(new Uint32Array(f.gpu.buffers[1].data.buffer)[0],8);assert.equal(new Uint32Array(f.gpu.buffers[2].data.buffer)[0],0);assert.equal(f.gpu.buffers[2].destroyed,true);assert.equal(f.host.inspect().retainedPreparationResources,0);assert.equal(f.errors.length,0);
+ }finally{f.close();}
+});
+test('unrepeatable rejected compute requires explicit recovery instead of losing its state and presenting a partial repair',async()=>{
+ const f=await nativePreparationFixture();try{
+  const committed=await f.commit();f.client.beginFrame({clock:f.clock});const encoder=f.client.device.createCommandEncoder(),pass=encoder.beginComputePass();pass.dispatchWorkgroups(1);pass.end();f.client.device.queue.submit([encoder.finish()]);
+  await assert.rejects(f.client.endFrame(),e=>e.resourcePreparationsRetained===false);assert.equal(f.host.inspect().preparationRecoveryRequired,true);assert.equal(f.gpu.submitted.length,0);
+  await assert.rejects(f.frame(2,{clock:f.clock,nativeWorldBoundary:committed.worldBoundary}),e=>e.resourcePreparationsRetained===false);assert.equal(f.gpu.submitted.length,0);assert.equal(f.host.inspect().failed,false);
+ }finally{f.close();}
+});
+test('retained payload capacity is bounded across rejected frames and an overflow releases its retained generations',async()=>{
+ const f=await nativePreparationFixture({maxFrameBytes:4});try{
+  await f.commit();const buffer=f.client.device.createBuffer({size:16,usage:72});
+  await assert.rejects(preparationDraw(f,buffer,{clock:f.clock},f.pipeline,1),e=>e.resourcePreparationsRetained===true);assert.equal(f.host.inspect().retainedPreparationBytes,4);
+  await assert.rejects(preparationDraw(f,buffer,{clock:f.clock},f.pipeline,2),e=>e.resourcePreparationsRetained===false);
+  assert.equal(f.host.inspect().preparationRecoveryRequired,true);assert.equal(f.host.inspect().retainedPreparationResources,0);assert.equal(f.host.inspect().stagedOperations,0);assert.equal(new Uint32Array(f.gpu.buffers[1].data.buffer)[0],0);assert.equal(f.errors.length,0);
+ }finally{f.close();}
+});
+test('retirement discards unsubmitted retained uploads before draining the original GPU queue',async()=>{
+ const f=await nativePreparationFixture();try{
+  await f.commit();const buffer=f.client.device.createBuffer({size:16,usage:72});await assert.rejects(preparationDraw(f,buffer,{clock:f.clock},f.pipeline,10),e=>e.resourcePreparationsRetained===true);
+  assert(f.host.inspect().retainedPreparationResources>0);await f.source.retireGpu();assert.equal(f.source.status().drained,true);assert.equal(f.host.inspect().retainedPreparationResources,0);assert.equal(f.host.inspect().stagedOperations,0);
+  await f.client.device.queue.onSubmittedWorkDone();assert.equal(new Uint32Array(f.gpu.buffers[1].data.buffer)[0],0);assert.equal(f.host.inspect().failed,false);
+ }finally{f.close();}
+});
+test('producer-supplied snapshot metadata cannot choose the native generation retained for an obsolete upload',async()=>{
+ const f=await nativePreparationFixture();try{
+  const committed=await f.commit(),buffer=f.client.device.createBuffer({size:16,usage:72});await flush();await f.host.idle();
+  f.client.beginFrame({});f.client.cancelFrame();const id=buffer.__remoteGpuId;
+  await f.host.handle({type:'frame',packet:{sequence:1,metadata:{nativeWorldBoundary:null},resourceSnapshot:new Map([[id,{id,kind:'createBuffer',pending:false,retired:true,nativeDestroyed:true,dependencies:new Set()}]]),operations:[{method:'writeBuffer',args:[{__remoteGpuId:id},0,new Uint32Array([39])]}]}});
+  assert.equal(f.host.inspect().preparationRecoveryRequired,false);assert.equal(f.host.inspect().retainedPreparationResources,1);
+  const packet=preparationDraw(f,buffer,{clock:f.clock,nativeWorldBoundary:committed.worldBoundary});await flush();await f.host.idle();f.host.present();await packet;assert.equal(new Uint32Array(f.gpu.buffers[1].data.buffer)[0],39);assert.equal(f.host.inspect().failed,false);
+ }finally{f.close();}
+});
+test('retained texture uploads and declared mip passes execute once on the next world, using the original texture',async()=>{
+ const f=await nativePreparationFixture();try{
+  const texture=f.client.device.createTexture({size:[4,4],format:'rgba8unorm',usage:20});f.client.beginFrame({clock:f.clock});
+  f.client.device.queue.writeTexture({texture},new Uint8Array(64),{bytesPerRow:16},[4,4,1]);
+  f.client.withTexturePreparation(texture,'mipmaps',()=>{const encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:texture.createView(),loadOp:'clear',storeOp:'store'}]});pass.setPipeline(f.pipeline);pass.draw(4,1,0,0);pass.end();f.client.device.queue.submit([encoder.finish()]);});
+  const encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});pass.draw(3);pass.end();f.client.device.queue.submit([encoder.finish()]);
+  const committed=await f.commit();await assert.rejects(f.client.endFrame(),e=>e.resourcePreparationsRetained===true);assert.equal(f.gpu.calls.filter(c=>c[0]==='writeTexture').length,0);
+  f.client.beginFrame({clock:f.clock,nativeWorldBoundary:committed.worldBoundary});const group=f.client.device.createBindGroup({entries:[{binding:0,resource:texture.createView()}]}),fresh=f.client.device.createCommandEncoder(),drawing=fresh.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});drawing.setPipeline(f.pipeline);drawing.setBindGroup(0,group);drawing.draw(3);drawing.end();f.client.device.queue.submit([fresh.finish()]);const shown=f.client.endFrame();
+  await flush();await f.host.idle();f.host.present();await shown;assert.equal(f.gpu.calls.filter(c=>c[0]==='writeTexture').length,1);assert.equal(f.gpu.calls.filter(c=>c[0]==='draw').length,2);f.host.present();assert.equal(f.gpu.calls.filter(c=>c[0]==='writeTexture').length,1);assert.equal(f.gpu.calls.filter(c=>c[0]==='draw').length,3);assert.equal(f.host.inspect().failed,false);assert.equal(f.errors.length,0);
+ }finally{f.close();}
+});
+
 test('declared offscreen texture preparation survives a native commit and runs once across frame replay',async()=>{
  const native=createNativeRouteExecutionFixture(),[sourcePort,drawPort]=pair();let source;
  const f=await fixture({}, {intentControl:{port:drawPort,session:'texture-preparation'}});

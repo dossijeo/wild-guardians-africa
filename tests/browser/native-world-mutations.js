@@ -5,7 +5,7 @@ import {createNativeIntentControlPublication} from '../../src/simulation/native-
 import {createNativeIntentControlCohort} from '../../src/simulation/native-intent-control-cohort.js';
 
 const now=()=>performance.timeOrigin+performance.now();
-async function runCase(module,text,kind,{lifecycle=false,resourceIdentity=false}={}){
+async function runCase(module,text,kind,{lifecycle=false,resourceIdentity=false,retainedPreparations=false}={}){
  const state=deserialize(text),template=structuredClone(state.workers[0]);
  state.workers=[];state.tasks=[];state.plants=[];state.crates=[];state.spells=[];state.raid=null;state.elapsed=10;state.pauses=[];
  const loaded=new Map(),session=createSpatialGameSession(module,state,{loaded:()=>loaded,onData:c=>loaded.set(`${c.cx},${c.cz}`,c)}),
@@ -49,10 +49,10 @@ async function runCase(module,text,kind,{lifecycle=false,resourceIdentity=false}
    attached=publication.attach(control.port1,transportSession);}
   else {publication=createNativeIntentControlPublication({port:control.port1,session:transportSession,observe:bridge.observeNativeIntentControl});attached=publication.ready;}
   await Promise.all([attached,expect('device-ready')]);
-  const startPacket={kind:'start',startTime:plan.startTime,endTime:plan.endTime,rows,route:{actorId:plan.actorId,routeHandle:handle,assignmentSequence:plan.assignmentSequence}};
-  preparer.postMessage(startPacket);await expect('drawing');
+  const startPacket={kind:'start',retainPreparations:retainedPreparations,startTime:plan.startTime,endTime:plan.endTime,rows,route:{actorId:plan.actorId,routeHandle:handle,assignmentSequence:plan.assignmentSequence}};
+  preparer.postMessage(startPacket);const initialDrawing=await expect('drawing');
   if(lifecycle)return await exerciseControlLifecycle({state,session,bridge,publication,preparer,expect,transportSession,startPacket,mutation});
-  if(resourceIdentity){preparer.postMessage({kind:'prepare-frame',id:2});await expect('frame-prepared-2');}
+  if(resourceIdentity){preparer.postMessage({kind:'prepare-frame',id:2,...(retainedPreparations?{retainedUpload:123}:{})});await expect('frame-prepared-2');}
   preparer.postMessage({kind:'block',id:1});const start=await expect('block-start-1');
   const action=new Promise((resolve,reject)=>{commandTimer=setTimeout(async()=>{try{
    state.elapsed=10.25;if(bridge.advanceNativeRouteExecution(state.elapsed).status!=='advanced'||bridge.commitNativeCausalClock().status!=='committed')throw Error('Native clock advance failed');
@@ -68,9 +68,9 @@ async function runCase(module,text,kind,{lifecycle=false,resourceIdentity=false}
    resolve({stagedAt,committedAt,sequence,result,changes,worldChanged:afterSnapshot!==snapshot,residencyChanged:afterResidency!==residency});
   }catch(error){reject(error);}},180);});
   const [endBlock,mutationResult]=await Promise.all([expect('block-end-1'),action]);
-  if(resourceIdentity){preparer.postMessage({kind:'publish-frame',id:2});if((await expect('frame-published-2')).outcome!=='obsolete')throw Error('Late pre-commit resources borrowed the new native world');}
-  preparer.postMessage({kind:'inspect',id:1});
-  const report=await expect('inspection-1'),host=report.execution.consumer,
+  if(resourceIdentity){preparer.postMessage({kind:'publish-frame',id:2});const obsolete=await expect('frame-published-2');if(obsolete.outcome!=='obsolete'||retainedPreparations&&!obsolete.resourcePreparationsRetained)throw Error('Late pre-commit resources were not safely retained');}
+  preparer.postMessage({kind:retainedPreparations?'status':'inspect',id:1});
+  const report=await expect((retainedPreparations?'status':'inspection')+'-1'),host=report.execution.consumer,
    beforeFrames=host.samples.filter(f=>f.at>=start.start&&f.at<host.nativeMutationQuiescedAt),
    afterFrames=host.samples.filter(f=>f.at>=host.nativeMutationReleasedAt&&f.at<=endBlock.end);
   if(mutationResult.committedAt>=endBlock.end||host.nativeMutationQuiescedAt<mutationResult.stagedAt||
@@ -87,6 +87,13 @@ async function runCase(module,text,kind,{lifecycle=false,resourceIdentity=false}
    preparer.postMessage({kind:'publish-frame',id:3});if((await expect('frame-published-3')).outcome!=='presented')throw Error('Fresh native resource identity did not admit replacement');
    preparer.postMessage({kind:'inspect',id:3});const fresh=await expect('inspection-3'),after=fresh.execution.consumer;
    if(after.packets!==2||after.activeSequence!==3||after.failed||after.gpuErrors||fresh.values[0]!==10.25)throw Error('Replacement world did not draw at the native boundary');
+   if(retainedPreparations){
+    if(fresh.retainedValue!==123||fresh.retainedResourceId!==initialDrawing.retainedResourceId||fresh.execution.resourcesCreated!==initialDrawing.resourceBaseline.resourcesCreated||after.retainedPreparationResources!==0||host.retainedPreparationBytes!==16||after.uniformForks!==0||after.bindingForks!==0)throw Error('The original device resources were not reused');
+    summary.retainedPreparations={readback:fresh.retainedValue,bufferBefore:initialDrawing.retainedResourceId,bufferAfter:fresh.retainedResourceId,
+      resourcesBefore:initialDrawing.resourceBaseline.resourcesCreated,resourcesAfter:fresh.execution.resourcesCreated,
+      bufferForks:after.uniformForks,bindingForks:after.bindingForks,retainedBytesBeforeFrame:host.retainedPreparationBytes,retainedResourcesAfterFrame:after.retainedPreparationResources,consumerNativeFrames:after.nativeFrames,
+      scope:'Same production draw Worker, GPUDevice, pipeline, groups and buffers; one rejected 16-byte upload reused by fresh world commands, not a character/visible-world delta acceptance.'};
+   }
    summary.resourceIdentity={latePacket:'obsolete',freshPacket:'presented',worldBoundary:mutationResult.result.worldBoundary,
     activeSequence:after.activeSequence,packets:after.packets,presentedTime:fresh.values[0],scope:'Native resource identity and packet replacement; unchanged diagnostic route, no characters or visible mutation projection.'};
   }
@@ -170,4 +177,12 @@ export async function auditNativeWorldResources(){
   module=await WebAssembly.compileStreaming(fetch('/src/world/wild-engine/spatial-savanna.wasm'));
  return {checklistId:'A6-04.f-R4',backend:'webgpu',...await runCase(module,text,'residency-add',{resourceIdentity:true}),
   scope:'Native commit identity and graphical replacement only. Visible mutation resources and real characters remain pending.',authorizedAutonomy:false,authorizedPassage:false};
+}
+
+export async function auditNativeRetainedPreparations(){
+ const bytes=new Uint8Array(await(await fetch('/tests/fixtures/desierto983-d15-partial-state.json.gz')).arrayBuffer()),
+  text=bytes[0]===31&&bytes[1]===139?await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text():new TextDecoder().decode(bytes),
+  module=await WebAssembly.compileStreaming(fetch('/src/world/wild-engine/spatial-savanna.wasm'));
+ return {checklistId:'A6-04.f-R4',backend:'webgpu',...await runCase(module,text,'residency-add',{resourceIdentity:true,retainedPreparations:true}),
+  scope:'Retained uploads and original GPU resources after an obsolete frame; diagnostic triangle, not product characters or visible mutation projection.',authorizedAutonomy:false,authorizedPassage:false};
 }

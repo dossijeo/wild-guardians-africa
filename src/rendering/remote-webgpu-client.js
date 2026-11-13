@@ -337,6 +337,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
       if (pendingFrame?.sequence === message.sequence) {
         const error=Error(message.reason || 'Remote frame invalidated by a native world mutation');
         error.code='remote-frame-native-mutation-obsolete';
+        error.resourcePreparationsRetained=message.resourcePreparationsRetained===true;
         pendingFrame.reject(error);releaseReferences(pendingFrame.retained);pendingFrame=null;
       }
     } else if (message.type === 'lost') {
