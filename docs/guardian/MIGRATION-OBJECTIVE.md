@@ -2,6 +2,9 @@
 
 Estado: **en ejecución; no completado**.
 
+Último avance: [proyección canónica de recursos del commit nativo](f-r4-canonical-resources-20261113.md).
+f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
+
 ## Objetivo y orden obligatorio
 
 Completar la migración del [plan integrado](integrated-gpu-migration-plan-20261104.md)

@@ -77,7 +77,8 @@ const taskTargetLookup=state=>{
     id.startsWith('crate-')?crate(id):structure(id);
 };
 
-export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.crypto.randomUUID()}={}){
+export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.crypto.randomUUID(),onNativeWorldResources=null}={}){
+  if(onNativeWorldResources!==null&&typeof onNativeWorldResources!=='function')throw TypeError('Invalid native world resource observer');
   if(typeof authorityEpoch!=='string'||!authorityEpoch||authorityEpoch.length>256)
     throw TypeError('Expected an authority epoch for native route handles');
   const wasm=session?.core?.wasm;
@@ -720,6 +721,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
   };
   const mutateNativeWorldAfterGpuQuiescence=({getPublication,mutation}={})=>{
     if(wasm.spatial_world_proposal_version?.()!==1)throw Error('Rebuild native world proposal service');
+    if(wasm.spatial_world_resource_version?.()!==1)throw Error('Rebuild native world resource projection');
     const m=mutation;if(!m||typeof m!=='object'||Array.isArray(m))throw TypeError('Expected a native world mutation');
     let kind,mode=0,floats=[],integers=[];
     const pass=value=>Number.isInteger(value)&&value>=0&&value<=3,
@@ -777,7 +779,10 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       if(!Number.isSafeInteger(count)||count<0||count>8192)throw Error('Invalid native mutation result');
       const ids=Array.from(new Int32Array(wasm.memory.buffer,wasm.spatial_world_proposal_result_ptr(),count));markCommitted({ids});
       if(kind===6||kind===7||kind===11)session.core.adoptNativeResidencyCommit(kind,ids);
-      return {status:1,value:{ids}};
+      const resources=session.publishNativeWorldResources(committedWorldBoundary);
+      if(resources.kind!==kind)throw Error('Native world resource family mismatch');
+      if(onNativeWorldResources)onNativeWorldResources({...resources,worldBoundary:nativeWorldBoundary()});
+      return {status:1,value:{ids,resources}};
     });
   };
   const mutateNativeOverlayAfterGpuQuiescence=mutateNativeWorldAfterGpuQuiescence;
@@ -1335,10 +1340,10 @@ function structureCondition(structure){
 // deliver committed deltas at action boundaries; ordinary movement never
 // invokes the native planner. A pending physical result gets one bounded
 // recovery retry in case a dynamic obstruction produced no reliable event.
-export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEpoch}={}){
+export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEpoch,onNativeWorldResources=null}={}){
   if(!Number.isFinite(retrySeconds)||retrySeconds<=0)
     throw RangeError('retrySeconds must be positive');
-  const bridge=createSpatialIntentBridge(session,{authorityEpoch});
+  const bridge=createSpatialIntentBridge(session,{authorityEpoch,onNativeWorldResources});
   const eligible=new Set(),requests=new Map(),animalRequests=new Map(),
     workerPlanCounts=new Map(),animalPlanCounts=new Map(),
     workerPeakPerMinute=new Map(),animalPeakPerMinute=new Map(),

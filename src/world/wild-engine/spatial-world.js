@@ -188,6 +188,27 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     chunks=chunks.filter(([x,z])=>!keys.has(`${x},${z}`));chunkRevision+=keys.size;
     if(chunk&&keys.has(`${chunk.cx},${chunk.cz}`)){const last=chunks.at(-1);chunk=last?{cx:last[0],cz:last[1],count:wasm.spatial_prop_count()}:null;}
   }
+  function captureNativeWorldResources({nativeSession,ticket,effectiveTime}={}){
+    if(!generated||wasm.spatial_world_resource_version?.()!==1)throw Error('Rebuild native world resource projection');
+    const status=wasm.spatial_world_resource_snapshot();
+    if(status!==1)throw Error(status<0?'Native world resource projection is stale':'Native world resource projection is unavailable');
+    const h=Array.from(new Float64Array(wasm.memory.buffer,wasm.spatial_world_resource_header_ptr(),9)),count=h[5];
+    if(h[0]!==1||h[1]!==nativeSession||h[2]!==ticket||h[3]!==effectiveTime||!Number.isSafeInteger(h[4])||h[4]<2||h[4]>11||
+       !Number.isSafeInteger(count)||count<0||count>32768)throw Error('Native resource projection does not match the committed proposal');
+    // Selection can grow WASM memory. Copy the journal before selecting any
+    // chunk, then copy the canonical payloads using the existing export path.
+    const rows=Array.from(new Int32Array(wasm.memory.buffer,wasm.spatial_world_resource_changes_ptr(),count*3)),
+      selected=chunk?{cx:chunk.cx,cz:chunk.cz}:null,upserts=[],removed=[],keys=new Set();
+    try{
+      for(let i=0;i<rows.length;i+=3){
+        const [operation,cx,cz]=rows.slice(i,i+3),key=`${cx},${cz}`;
+        if(keys.has(key)||![1,2].includes(operation))throw Error('Invalid native resource projection journal');keys.add(key);
+        if(operation===2){if(wasm.spatial_has_chunk(cx,cz)!==0)throw Error('Native removed resource is still resident');removed.push(Object.freeze({cx,cz}));}
+        else {if(selectChunk(cx,cz)<0)throw Error('Native resource chunk disappeared');upserts.push(chunkPayload());}
+      }
+    }finally{if(selected&&selectChunk(selected.cx,selected.cz)<0)throw Error('Could not restore native resource selection');}
+    return Object.freeze({version:1,nativeSession,ticket,effectiveTime,kind:h[4],chunks:Object.freeze(upserts),removed:Object.freeze(removed)});
+  }
   function props(){
     return spatialProps(wasm);
   }
@@ -375,7 +396,7 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     }
     wasm.lazy_commit_portals();
   }
-  return {wasm,preparation,generate,addChunk,selectChunk,removeChunk,removeChunks,adoptNativeResidencyCommit,
+  return {wasm,preparation,generate,addChunk,selectChunk,removeChunk,removeChunks,adoptNativeResidencyCommit,captureNativeWorldResources,
     releaseChunk:(cx,cz)=>removeChunk(cx,cz,true),releaseChunks:coordinates=>removeChunks(coordinates,true),
     hasResidentChunk:(cx,cz)=>wasm.spatial_has_chunk?wasm.spatial_has_chunk(cx|0,cz|0)===1:
       chunks.some(([x,z])=>x===(cx|0)&&z===(cz|0)),

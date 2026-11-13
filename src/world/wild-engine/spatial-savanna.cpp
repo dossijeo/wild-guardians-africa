@@ -203,6 +203,19 @@ float maxBuiltRadius(){
 int activeProfile=0;
 WILD_SAMPLING_LOCAL std::unordered_map<uint64_t,ChunkRaster>* chunkRasters=nullptr;
 std::vector<std::pair<int,int>> loadedChunks;
+// Per-commit resource projection. Preview work never installs this recorder;
+// the same canonical refresh functions identify the actually rebuilt chunks.
+struct WorldResourcePublication {
+  bool valid=false;
+  std::array<double,9> header{};
+  std::vector<int32_t> changes;
+};
+WILD_SAMPLING_LOCAL WorldResourcePublication* worldResourcePublication=nullptr;
+WILD_SAMPLING_LOCAL std::map<std::pair<int,int>,int>* worldResourceCapture=nullptr;
+void recordWorldResourceChunk(int cx,int cz){
+  if(worldResourceCapture&&std::find(loadedChunks.begin(),loadedChunks.end(),std::pair<int,int>{cx,cz})!=loadedChunks.end())
+    worldResourceCapture->insert_or_assign({cx,cz},1);
+}
 std::vector<float> barrierBatch;
 std::vector<int> barrierBatchIds;
 std::vector<int> barrierRemovalIds;
@@ -1206,6 +1219,7 @@ struct ScopedVisualQueryChunk {
   ScopedVisualQueryChunk& operator=(const ScopedVisualQueryChunk&)=delete;
 };
 void publishSelectedChunk(){
+  recordWorldResourceChunk(chunkX,chunkZ);
   const auto key=chunkKey(chunkX,chunkZ);
   // Settlement changes invalidate relief explicitly; ordinary selection keeps it.
   if(!residentSpatial().count(key))residentSpatial()[key]={lattice,ponds};
@@ -1729,6 +1743,7 @@ int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){
   activeProfile=0;radiusNow=.3f;workerNow=false;navReady=false;
   chunkRasters=&navProfile(0).rasters;lazy_select_context(0);
   loadedChunks.clear();nextBarrierId=1;
+  if(worldResourcePublication){worldResourcePublication->valid=false;worldResourcePublication->changes.clear();}
   residentSpatial().clear();
   residentSolidProps().clear();
   residentVisibleProps().clear();
@@ -2714,6 +2729,14 @@ EMSCRIPTEN_KEEPALIVE int32_t* spatial_world_proposal_int_ptr(int count){
 EMSCRIPTEN_KEEPALIVE const int32_t* spatial_world_proposal_result_ptr(){return worldProposalResult.data();}
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_result_count(){return int(worldProposalResult.size());}
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int spatial_world_resource_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int spatial_world_resource_snapshot(){
+  if(!worldResourcePublication||!worldResourcePublication->valid)return 0;
+  const auto& h=worldResourcePublication->header;
+  return h[6]==double(terrainInputRevision)&&h[7]==double(overlayRevision)&&h[8]==double(residencyRevision)?1:-1;
+}
+EMSCRIPTEN_KEEPALIVE const double* spatial_world_resource_header_ptr(){return worldResourcePublication?worldResourcePublication->header.data():nullptr;}
+EMSCRIPTEN_KEEPALIVE const int32_t* spatial_world_resource_changes_ptr(){return worldResourcePublication?worldResourcePublication->changes.data():nullptr;}
 // 2–5 overlays; 6/7 residency; 8/9 props; 10 terrain; 11 pthread publication.
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stage(int kind,int mode,int floatCount,int intCount){
   if(floatCount<0||intCount<0||size_t(floatCount)!=worldProposalFloatInput.size()||
@@ -2779,7 +2802,25 @@ EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stage(int kind,int mode,int floa
 }
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_commit(double session,double ticket,double sequence,double time,double clockSequence){
   SpatialWorldProposalInput input;const int valid=spatialIntentTakeWorld(session,ticket,sequence,time,clockSequence,input);
-  if(valid!=1)return valid;worldProposalResult.clear();const int result=applyWorldProposalInput(input);
+  if(valid!=1)return valid;worldProposalResult.clear();
+  std::map<std::pair<int,int>,int> resources;
+  struct ResourceGuard {
+    std::map<std::pair<int,int>,int>* previous;
+    explicit ResourceGuard(std::map<std::pair<int,int>,int>& target):previous(worldResourceCapture){worldResourceCapture=&target;}
+    ~ResourceGuard(){worldResourceCapture=previous;}
+  } recording(resources);
+  const int result=applyWorldProposalInput(input);
+  if(result==1){
+    if(input.kind==6||input.kind==11)recordWorldResourceChunk(worldProposalResult[0],worldProposalResult[1]);
+    if(input.kind==7)for(size_t i=0;i<worldProposalResult.size();i+=2)
+      resources.insert_or_assign({worldProposalResult[i],worldProposalResult[i+1]},2);
+    if(!worldResourcePublication)worldResourcePublication=new WorldResourcePublication();
+    auto& publication=*worldResourcePublication;publication.changes.clear();
+    for(const auto& [point,operation]:resources)publication.changes.insert(publication.changes.end(),{operation,point.first,point.second});
+    publication.header={1,session,ticket,time,double(input.kind),double(resources.size()),
+      double(terrainInputRevision),double(overlayRevision),double(residencyRevision)};
+    publication.valid=true;
+  }
   return result==1?1:-6;
 }
 int spatial_walkable(int x,int z){return walkable(x,z);}

@@ -152,3 +152,10 @@ Build WebGPU aprobado en 45,21 s con los avisos existentes. Recibos locales:
 `.cache/native-consumer-registry-regression.tap` y
 `.cache/native-consumer-registry-build.log`. El recibo gráfico posterior al
 registro conserva el 404 de consola sin atribución descrito arriba.
+
+## Último incremento: recursos canónicos de f-R4
+
+[Implementación, validación y límites](f-r4-canonical-resources-20261113.md): el
+commit nativo publica sus chunks reales por la sesión/canal de terreno existente
+y entrega una frontera compacta a la publicación confirmada de la autoridad.
+f-R4 sigue parcial: faltan admisión/retiradas gráficas y personajes reales.

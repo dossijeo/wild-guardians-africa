@@ -10,6 +10,15 @@ import {createConfirmedStateReceiver} from '../src/simulation/confirmed-state-re
 import {handoffConfirmedSnapshot,confirmedSnapshotFor} from '../src/simulation/confirmed-snapshot-handoff.js';
 import {createSnapshotPreparationCache} from '../src/simulation/main-thread-snapshot-transport.js';
 const packet=(sequence,events=[],physicsPose=null)=>({sequence,events,physicsPose,snapshot:String(sequence)});
+test('native world resource commits remain ordered barriers between ordinary publications',()=>{
+ const sent=[],q=createHostPublicationQueue({session:'s',send:value=>sent.push(value)}),commit=ticket=>({version:1,
+  worldBoundary:{version:1,authorityEpoch:'native/1',nativeSession:1,ticket,effectiveTime:10},kind:7,chunks:[],removed:[{cx:4,cz:4}]});
+ q.publication(packet(1),true);q.publication({...packet(2),nativeWorldResources:[commit(1)]},true);
+ q.publication({...packet(3),nativeWorldResources:[commit(2)]},true);q.publication(packet(4),true);
+ q.ack(1);assert.deepEqual(sent[1].publication.nativeWorldResources,[commit(1)]);assert.equal(sent[1].publication.sequence,2);
+ q.ack(2);assert.deepEqual(sent[2].publication.nativeWorldResources,[commit(2)]);assert.equal(sent[2].publication.sequence,3);
+ q.ack(3);assert.equal(sent[3].publication.sequence,4);assert.equal(sent[3].publication.nativeWorldResources,undefined);
+});
 test('inactive and absent physical poses share one owner state but active transitions stay ordered',()=>{
  const sent=[],queue=createHostPublicationQueue({session:'s',send:item=>sent.push(item)}),inactive={actorId:'a',active:false},active={actorId:'a',active:true},event={id:'e',type:'CropPlaced'};
  queue.publication(packet(1),true);queue.publication(packet(2,[],inactive),true);queue.publication(packet(3,[event]),true);queue.publication(packet(4,[],active),true);queue.ack(1);
