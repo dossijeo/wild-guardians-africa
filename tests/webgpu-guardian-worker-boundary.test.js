@@ -1,3 +1,4 @@
+import {isPreparedFrameInvalidation} from '../src/rendering/webgpu-frame-recovery.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -17,11 +18,11 @@ import {deserialize,serialize} from '../src/persistence/snapshots.js';
 // Run the actual Worker message branch without a browser or WebGPU device.
 // Only the surface bootstrap is substituted; dispatch and its imported impact
 // coordinator are the production source. No historical certificate is enabled.
-function workerMessage(surface,messages){
+function workerMessage(surface,messages,{recovery=false,onClose=()=>{}}={}){
  let source=readFileSync(new URL('../src/rendering/webgpu-world-worker.js',import.meta.url),'utf8');
  source=source.replace(/^import .*;\r?\n/gm,'').replaceAll('import.meta.env.DEV','false');
- source=source.replace("function fail(error){", "phase='running';surface=testSurface;function fail(error){");
- const worker={};new Function('self','testSurface','createWebGpuSurfaceOwner','beginWebGpuGuardianImpact','postMessage',source)(worker,surface,()=>({close:async()=>{}}),beginWebGpuGuardianImpact,message=>messages.push(message));return worker.onmessage;
+ source=source.replace("function fail(error){", "phase='running';recoveryEnabled=testRecovery;surface=testSurface;function fail(error){");
+ const worker={};new Function('self','testSurface','createWebGpuSurfaceOwner','beginWebGpuGuardianImpact','postMessage','isPreparedFrameInvalidation','testRecovery',source)(worker,surface,()=>({close:async()=>{onClose();}}),beginWebGpuGuardianImpact,message=>messages.push(message),isPreparedFrameInvalidation,recovery);return worker.onmessage;
 }
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
 async function setup({onCommit=()=>{}}={}){
@@ -36,6 +37,16 @@ async function setup({onCommit=()=>{}}={}){
 }
 const command={kind:'castAttack',id:'hit',targetId:'a',selection:{origin:{x:0,y:2,z:0},contact:{x:0,y:1,z:0}}};
 test('Worker preserves the typed historical invalidation across its failure message',async()=>{const messages=[],error=Error('invalid support');error.code='historical-playback-invalidated';const send=workerMessage({timelinePump:{setHistoricalVisibility(){throw error;}}},messages);await send({data:{kind:'presentation-visibility',hidden:false}});assert.equal(messages.length,1);assert.equal(messages[0].kind,'failure');assert.equal(messages[0].code,'historical-playback-invalidated');assert.match(messages[0].message,/invalid support/);});
+
+test('obsolete native frames preserve the GPU owner only while fresh-surface recovery is enabled',async()=>{
+ for(const recovery of [false,true]){
+  const messages=[],error=Object.assign(Error('committed world changed'),{code:'remote-frame-native-mutation-obsolete'});let closed=0;
+  const send=workerMessage({timelinePump:{setHistoricalVisibility(){throw error;}}},messages,{recovery,onClose:()=>closed++});
+  await send({data:{kind:'presentation-visibility',hidden:false}});assert.equal(closed,recovery?0:1);assert.equal(messages[0].code,error.code);
+ }
+ let closed=0;const messages=[],send=workerMessage({timelinePump:{setHistoricalVisibility(){throw Error('unrelated');}}},messages,{recovery:true,onClose:()=>closed++});
+ await send({data:{kind:'presentation-visibility',hidden:false}});assert.equal(closed,1);assert.equal(messages[0].code,undefined);
+});
 test('support invalidation closes the real stream without acknowledging its pending boundary',async()=>{
  const state=deserialize(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString()),start=state.elapsed,end=start+1,channel=new MessageChannel(),wire=[];let now=0,valid=true,notifications=0;
  channel.port1.on('message',message=>wire.push(message));const segments={version:1,start,end,startPauses:[],endPauses:[],complete:true,segments:[{start,end,realDuration:1,rate:1}]},clock=createConfirmedHistoricalClock({initialElapsed:start,now:()=>now});

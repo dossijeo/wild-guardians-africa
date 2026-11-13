@@ -332,10 +332,56 @@ $env:QA_NATIVE_REPLAY='true'
 .cache/tooling/node20.exe tools/experiments/audit_webgpu_temporal_ground.mjs
 ~~~
 
+## Recuperación de frames rechazados por una mutación nativa
+
+Un frame rechazado puede haber consumido el bookkeeping local de uploads de
+Three. Se clasifica ahora su error tipado como invalidación que exige un surface
+nuevo; no se reintenta con el mismo renderer ni se reasigna identidad a comandos
+antiguos. El Worker deja de preparar/dibujar y conserva su propietario GPU si la
+recuperación está habilitada. La interfaz conserva ese cliente hasta que el
+protocolo existente retire/drene su consumidor y el reemplazo esté listo.
+El coordinador automático, bajo la capacidad de recuperación temporal existente,
+marca la presentación perdida y ejecuta la recuperación de baseline ya existente.
+Las señales coincidentes se agrupan en una operación; los límites y bloqueos ante
+separación indeterminada siguen siendo los del coordinador actual.
+
+Una cadena de texto sin el código tipado, otro error y un perfil sin recuperación
+no activan esta vía. Se conserva el cierre habitual cuando no puede recuperarse.
+No hay un nuevo renderer, canal autoritativo ni ejecutor de juego.
+
+[Recibo GPU del rechazo y recuperación](performance/native-world-obsolete-20261113.json)
+y [captura inspeccionada](performance/native-world-obsolete-20261113.png): el
+frame de la escena vieja incluye un writeBuffer de valor 123. La mutación física
+real hace que el host rechace el paquete; el readback nativo devuelve 0. Un upload
+posterior permitido devuelve 123 en el mismo buffer, como control del readback.
+Dos señales del error producen exactamente mark-lost y fresh-surface. El cliente
+nuevo crea 3123 recursos, restaura ticket 1, aplica ticket 2 y presenta seis dibujos
+de tres paquetes, sin errores GPU. Sigue visible el trabajador estacionario.
+
+Este ensayo ejecuta el coordinador automático real con markLost inyectado; la
+fuente nativa y el preparador permanecen en el mismo Worker. No acredita la
+negociación del journal de autoridad ni el handoff de interfaz principal en una
+partida real. Las pruebas del Worker ejercitan la retención/cierre y el transporte
+del código con las ramas de producción. La integración en main compila; la
+aceptación conjunta de autoridad, personajes autónomos y bloqueo sigue pendiente.
+
+Validación: **791 pruebas de 67 archivos**, cero fallos/skips,
+'.cache/native-frame-recovery-selection.json' y
+'.cache/native-frame-recovery-regression.tap'. Incluye las dos nuevas pruebas de
+recuperación/retención, suites de replay, ownership y handoff. Build WebGPU
+aprobado en **47,65 s** ('.cache/native-frame-recovery-build.log').
+
+Para reproducir el rechazo, añadir al comando anterior:
+
+~~~powershell
+$env:QA_NATIVE_OBSOLETE='true'
+$env:OUTPUT='.cache/native-world-obsolete-webgpu.json'
+~~~
+
 ## Siguiente punto pendiente
 
-Conectar esta frontera a publicaciones vivas y recuperar uploads de frames
-rechazados mediante un baseline preparado nuevo. Después acreditar el mismo
-cambio físico y visible con personajes consumiendo planes nativos completos,
-bloqueo del preparador, pausa/velocidad y revocación, sin posiciones JS periódicas.
-No se reduce f-R4 a este replay de recursos ni se cierran e/f por sus incrementos.
+Conectar la admisión nativa a publicaciones vivas y verificar el rechazo/recuperación
+con la autoridad Worker y la interfaz normales. Después acreditar el mismo cambio
+físico y visible con personajes consumiendo planes nativos completos, bloqueo del
+preparador, pausa/velocidad y revocación, sin posiciones JS periódicas. No se reduce
+f-R4 a estos replays de recursos ni se cierran e/f por sus incrementos.

@@ -206,3 +206,15 @@ f-R4 permanece parcial, sin cambios en los recuentos de A6/e/f.
 La regresión de autoridad/control de producto conserva Shield y 15 dibujos durante
 500 ms de bloqueo, sin errores capturados (`.cache/native-world-replay-product.log`).
 Su fixture no contiene mallas de personajes ni locomoción nativa autónoma.
+
+Los frames rechazados por cambio nativo ya activan la recuperación de surface
+nuevo mediante el coordinador existente, con retención del consumidor anterior
+hasta el relevo y sin reusar el bookkeeping de uploads. En WebGPU real, el paquete
+rechazado deja 0 donde intentaba escribir 123; un upload permitido devuelve 123.
+Una recuperación agrupada crea 3123 recursos y vuelve a presentar ticket 2:
+[recibo](performance/native-world-obsolete-20261113.json),
+[captura](performance/native-world-obsolete-20261113.png). Se usa markLost
+inyectado en el harness; queda verificar el journal/cliente principal con la
+autoridad normal y la admisión de publicaciones vivas. Pasan 791 pruebas de 67
+archivos sin skips/fallos y build en 47,65 s. f-R4 sigue parcial y los 11 padres
+A6 abiertos; no es aceptación de locomoción nativa ni de 500 ms conjunta.

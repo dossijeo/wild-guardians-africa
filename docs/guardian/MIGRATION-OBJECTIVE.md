@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [replay de recursos nativos con admisión completa y WebGPU real](f-r4-canonical-resources-20261113.md).
+Último avance: [recuperación de frames nativos rechazados con baseline y recursos nuevos](f-r4-canonical-resources-20261113.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio

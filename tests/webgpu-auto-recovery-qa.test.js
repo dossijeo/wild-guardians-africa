@@ -29,3 +29,14 @@ test('a second retryable failure is reported without another attempt',async()=>{
 });
 
 test('initial markLost timeout closes later triggers and never runs a recovery attempt',async()=>{let notice=null,attempts=0,fenced=0;const auto=createWebGpuAutoRecovery({historicalRecovery:true,isCurrent:()=>true,onBegin:()=>fenced++,markLost:async()=>{throw Error('Visual recovery request timed out');},recover:async()=>attempts++,onError:error=>notice=error});try{assert.equal(auto.trigger(Object.assign(Error('invalidated'),{code:'historical-playback-invalidated'})),true);assert.equal(fenced,1);await new Promise(resolve=>setImmediate(resolve));assert.equal(notice?.code,'visual-recovery-indeterminate');assert.match(notice.message,/timed out/);assert.equal(auto.status().blocked,true);assert.equal(attempts,0);assert.equal(auto.triggerDetached(),false);assert.equal(auto.trigger(Object.assign(Error('again'),{code:'historical-playback-invalidated'})),false);assert.equal(fenced,1);}finally{auto.dispose();}});
+test('native obsolete frames require recovery capability, coalesce and rebuild after markLost',async()=>{
+ const failure=Object.assign(Error('physical world changed'),{code:'remote-frame-native-mutation-obsolete'}),calls=[];let release;
+ const disabled=createWebGpuAutoRecovery({isCurrent:()=>true,markLost:async()=>{},recover:async()=>{}});
+ assert.equal(disabled.trigger(failure),false);disabled.dispose();
+ const auto=createWebGpuAutoRecovery({historicalRecovery:true,isCurrent:()=>true,markLost:()=>new Promise(resolve=>{calls.push('lost');release=resolve;}),recover:async()=>calls.push('fresh-baseline')});
+ try{
+  assert.equal(auto.trigger(failure),true);await Promise.resolve();assert.deepEqual(calls,['lost']);assert.equal(auto.trigger(failure),true);
+  release();await new Promise(resolve=>setImmediate(resolve));assert.deepEqual(calls,['lost','fresh-baseline']);assert.equal(auto.status().recovering,false);
+  assert.equal(auto.trigger(Error('remote-frame-native-mutation-obsolete')),false);
+ }finally{auto.dispose();}
+});

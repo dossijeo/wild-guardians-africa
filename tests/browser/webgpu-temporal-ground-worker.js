@@ -81,7 +81,7 @@ async function auditNativeWorldReplay(data){
   {createSpatialIntentBridge}=await import('../../src/world/wild-engine/spatial-intent-bridge.js'),
   {createNativeIntentControlCohort}=await import('../../src/simulation/native-intent-control-cohort.js'),
   {createRemoteWebGpu}=await import('../../src/rendering/remote-webgpu-client.js');
- let spatial,cohort,surface,remote,oldSurface,oldRemote;const errors=[],ports=[],now=()=>performance.timeOrigin+performance.now();
+ let spatial,cohort,surface,remote,oldSurface,oldRemote,autoRecovery;const errors=[],ports=[],now=()=>performance.timeOrigin+performance.now();
  try{
   const response=await fetch('/tests/fixtures/desierto983-d15-partial-state.json.gz'),body=response.headers.get('content-encoding')?.includes('gzip')?response.body:response.body.pipeThrough(new DecompressionStream('gzip')),state=deserialize(await new Response(body).text()),template=structuredClone(state.workers[0]);
   state.workers=[];state.tasks=[];state.plants=[];state.crates=[];state.spells=[];state.raid=null;state.structures=[];state.elapsed=10;state.pauses=['qa-native-replay'];
@@ -128,17 +128,39 @@ async function auditNativeWorldReplay(data){
   const checkpoint={session:'ground-native',sequence:1,elapsed:10,physicsPose:null,snapshot:serializeConfirmedState(state),terrainCheckpoint:{sequence:1,chunks:chunks(),nativeWorldBoundary:bridge.nativeWorldResourceBoundary(),terrainManifest:{epoch:'e',chunks:[...loaded.values()].map(({cx,cz})=>({cx,cz,revision:1}))}},presentationCheckpoint:(()=>{try{return surface.captureTemporalPresentationCheckpoint(1);}catch(error){throw Error(error.message+' '+JSON.stringify({stream:surface.stream.status(),source:state.elapsed,presentation:surface.presentationClock,surface:surface.state.elapsed,errors}));}})(),workCheckpoint:{version:1,sequence:1,elapsed:10,effects:[]}};
   const second=await bridge.mutateNativeWorldAfterGpuQuiescence({getPublication:()=>cohort,mutation:{type:'removeChunks',chunks:[[4,4]],releaseOnly:true}});if(second.status!=='committed')throw Error('Native replay mutation failed '+JSON.stringify(second));
   const replay={sequence:2,terrain:[{chunks:[{authority:'spatial-wasm',cx:4,cz:4,removed:true,capturedAt:10}],terrainManifest:{epoch:'e',chunks:[{cx:4,cz:4,revision:2,removed:true}]}}],publication:{session:'ground-native',sequence:2,elapsed:10,physicsPose:null,snapshot:serializeConfirmedState(state),events:[],nativeWorldResources:[{version:1,kind:7,worldBoundary:second.worldBoundary,chunks:[],removed:second.resources.removed}]}};
-  oldSurface=surface;oldRemote=remote;surface=null;remote=await gpu(1);const transferred=cohort.connections();await oldSurface.dispose();oldSurface=null;oldRemote=null;
-  channels=await makeSurface(remote,1,checkpoint);surface=channels.view;await surface.restoreTimelineCheckpoint(checkpoint);
-  const intermediate=surface.nativeWorldBoundary;if(intermediate.ticket!==first.worldBoundary.ticket)throw Error('Prepared checkpoint identity lost');
-  if((await remote.inspectAsync()).consumer.nativeFrames!==0)throw Error('Hidden checkpoint was presented before replay');
-  await surface.applyTimelineRecoveryBoundary(replay);if(surface.nativeWorldBoundary.ticket!==second.worldBoundary.ticket||surface.residency.get(4,4))throw Error('Native replay identity/resources mismatch');
-  if(!surface.finishTimelineRecovery())throw Error('Native replay not ready');for(let frame=0;frame<3;frame++){await render();await new Promise(resolve=>setTimeout(resolve,32));}await remote.device.queue.onSubmittedWorkDone();const inspection=await remote.inspectAsync(),actor=surface.workerRoster.get(template.id);
+  let obsolete=null;
+  const recoveryCalls=[];
+  if(data.nativeObsolete){
+   const probe=remote.device.createBuffer({size:4,usage:9});remote.beginFrame({nativeWorldBoundary:surface.nativeWorldBoundary});
+   remote.device.queue.writeBuffer(probe,0,new Uint32Array([123]));surface.render();
+   try{await remote.endFrame(surface.remoteFrameMetadata());throw Error('Obsolete frame was accepted');}catch(error){if(error.code!=='remote-frame-native-mutation-obsolete')throw error;obsolete={code:error.code};}
+   await probe.mapAsync(1);obsolete.discardedUpload=new Uint32Array(probe.getMappedRange())[0];probe.unmap();
+   remote.device.queue.writeBuffer(probe,0,new Uint32Array([123]));await probe.mapAsync(1);obsolete.controlUpload=new Uint32Array(probe.getMappedRange())[0];probe.unmap();probe.destroy();
+   if(obsolete.discardedUpload!==0||obsolete.controlUpload!==123)throw Error('Obsolete frame upload isolation failed');
+  }
+  const recoverSurface=async()=>{
+   oldSurface=surface;oldRemote=remote;surface=null;remote=await gpu(1);await oldSurface.dispose();oldSurface=null;oldRemote=null;
+   channels=await makeSurface(remote,1,checkpoint);surface=channels.view;await surface.restoreTimelineCheckpoint(checkpoint);
+   const intermediate=surface.nativeWorldBoundary;if(intermediate.ticket!==first.worldBoundary.ticket)throw Error('Prepared checkpoint identity lost');
+   if((await remote.inspectAsync()).consumer.nativeFrames!==0)throw Error('Hidden checkpoint was presented before replay');
+   await surface.applyTimelineRecoveryBoundary(replay);if(surface.nativeWorldBoundary.ticket!==second.worldBoundary.ticket||surface.residency.get(4,4))throw Error('Native replay identity/resources mismatch');
+   if(!surface.finishTimelineRecovery())throw Error('Native replay not ready');for(let frame=0;frame<3;frame++){await render();await new Promise(resolve=>setTimeout(resolve,32));}await remote.device.queue.onSubmittedWorkDone();return await remote.inspectAsync();
+  };
+  let inspection;
+  if(obsolete){
+   const {createWebGpuAutoRecovery}=await import('../../src/app/webgpu-auto-recovery.js');let resolveRecovery,rejectRecovery;
+   const recovered=new Promise((resolve,reject)=>{resolveRecovery=resolve;rejectRecovery=reject;});
+   autoRecovery=createWebGpuAutoRecovery({historicalRecovery:true,isCurrent:()=>true,markLost:async()=>{recoveryCalls.push('mark-lost');},recover:async()=>{recoveryCalls.push('fresh-surface');inspection=await recoverSurface();resolveRecovery();},onError:rejectRecovery});
+   const error=Object.assign(Error('obsolete native frame'),{code:obsolete.code});
+   if(!autoRecovery.trigger(error)||!autoRecovery.trigger(error))throw Error('Native frame recovery did not coalesce');await recovered;
+   if(recoveryCalls.join(',')!=='mark-lost,fresh-surface')throw Error('Native frame recovery replayed the old renderer');
+  }else inspection=await recoverSurface();
+  const actor=surface.workerRoster.get(template.id),transferred=cohort.connections();
   if(inspection.consumer.gpuErrors||inspection.consumer.nativeFrames<1||!actor||errors.length)throw Error('Native replay presentation failed '+errors.join('\n'));
   const captured=new Promise(resolve=>{const timer=setTimeout(resolve,10000);self.onmessage=({data})=>{if(data.nativeReplayCaptured){clearTimeout(timer);resolve();}};});
   self.postMessage({ok:true,backend:'WebGPU',adapter:inspection.consumer.adapterInfo,checkpointWorld:first.worldBoundary,replayWorld:second.worldBoundary,preparedWorld:surface.nativeWorldBoundary,requiredWorld:remote.requiredNativeWorldBoundary(),
-   sequence:surface.stream.status().sequence,resident:surface.residency.size,workers:surface.workerRoster.status(),workerPosition:actor.root.position.toArray(),workerVisible:actor.root.visible,terrainHeight:surface.residency.surface(origin.x,origin.z),workerBounds:await(async()=>{const {Box3,Vector3,Raycaster}=await import('three');actor.root.updateWorldMatrix(true,true);const box=new Box3().setFromObject(actor.root),center=box.getCenter(new Vector3());const ray=new Raycaster(surface.camera.position,center.clone().sub(surface.camera.position).normalize());const hits=ray.intersectObject(surface.scene,true).slice(0,4).map(h=>({name:h.object.name,distance:h.distance,point:h.point.toArray()}));return {min:box.min.toArray(),max:box.max.toArray(),hits,ndc:center.project(surface.camera).toArray()};})(),workerMeshes:(()=>{let meshes=0;actor.root.traverse(o=>{if(o.isMesh)meshes++;});return meshes;})(),renderInfo:{...surface.renderer.info.render},camera:{position:surface.camera.position.toArray(),rotation:surface.camera.quaternion.toArray()},nativePose:bridge.sampleNativeRoute(prepared.routeHandle,10),draw:{frames:inspection.consumer.nativeFrames,packets:inspection.consumer.packets,gpuErrors:inspection.consumer.gpuErrors},handoff:transferred,errors,
+   ...(obsolete?{obsolete,recoveryCalls,recoveryScope:'Production auto coordinator with an injected markLost callback; no main UI or authority journal handoff in this harness',replacementResources:remote.inspect().resourcesCreated}:{}),sequence:surface.stream.status().sequence,resident:surface.residency.size,workers:surface.workerRoster.status(),workerPosition:actor.root.position.toArray(),workerVisible:actor.root.visible,terrainHeight:surface.residency.surface(origin.x,origin.z),workerBounds:await(async()=>{const {Box3,Vector3,Raycaster}=await import('three');actor.root.updateWorldMatrix(true,true);const box=new Box3().setFromObject(actor.root),center=box.getCenter(new Vector3());const ray=new Raycaster(surface.camera.position,center.clone().sub(surface.camera.position).normalize());const hits=ray.intersectObject(surface.scene,true).slice(0,4).map(h=>({name:h.object.name,distance:h.distance,point:h.point.toArray()}));return {min:box.min.toArray(),max:box.max.toArray(),hits,ndc:center.project(surface.camera).toArray()};})(),workerMeshes:(()=>{let meshes=0;actor.root.traverse(o=>{if(o.isMesh)meshes++;});return meshes;})(),renderInfo:{...surface.renderer.info.render},camera:{position:surface.camera.position.toArray(),rotation:surface.camera.quaternion.toArray()},nativePose:bridge.sampleNativeRoute(prepared.routeHandle,10),draw:{frames:inspection.consumer.nativeFrames,packets:inspection.consumer.packets,gpuErrors:inspection.consumer.gpuErrors},handoff:transferred,errors,
    scope:'Real native commits, canonical checkpoints, prepared terrain/biome replay and product surface with one real stationary worker mesh through the production draw Worker. Time stays at 10; no native GPU locomotion or 500 ms stall acceptance.'});await captured;
  }catch(error){self.postMessage({ok:false,error:String(error.stack??error),errors});}
- finally{await surface?.dispose().catch(()=>{});await oldSurface?.dispose().catch(()=>{});remote?.dispose();oldRemote?.dispose();cohort?.dispose();spatial?.dispose();for(const port of ports)port.close();}
+ finally{autoRecovery?.dispose();await surface?.dispose().catch(()=>{});await oldSurface?.dispose().catch(()=>{});remote?.dispose();oldRemote?.dispose();cohort?.dispose();spatial?.dispose();for(const port of ports)port.close();}
 }
