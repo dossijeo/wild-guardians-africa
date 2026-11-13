@@ -148,6 +148,11 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
   const controlConsumers=new Map();
   let committedWorldBoundary=null;
   const nativeWorldBoundary=()=>committedWorldBoundary?.authorityEpoch===epoch()?committedWorldBoundary:null;
+  const nativeWorldResourceBoundary=()=>{
+    const boundary=nativeWorldBoundary();
+    if(boundary&&wasm.spatial_world_resource_snapshot?.()!==1)throw Error('Native world changed outside its committed resource boundary');
+    return boundary;
+  };
   const pruneDrainedConsumers=()=>{
     for(const [publication] of controlConsumers)if(publication.status?.().drained)controlConsumers.delete(publication);
   };
@@ -1277,7 +1282,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     return {restoredHomeRouteIds,invalidSavedHomeRoutes};
   };
   const api={get authorityEpoch(){return epoch();},resetFromState,applyEvents,applyCommittedEvents,planTasks,
-    nativeIntentControlBaseline,observeNativeIntentControl,flushNativeIntentControl,nativeCausalClock,commitNativeCausalClock,
+    nativeIntentControlBaseline,nativeWorldResourceBoundary,observeNativeIntentControl,flushNativeIntentControl,nativeCausalClock,commitNativeCausalClock,
     restoreAssignedTasks,restoreAttackIntents,restoreRetreatIntents,
     restoreHomeIntents,
     proposalRoute,
@@ -2192,6 +2197,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     },
     get authorityEpoch(){return bridge.authorityEpoch;},
     nativeIntentControlBaseline:bridge.nativeIntentControlBaseline,
+    nativeWorldResourceBoundary:bridge.nativeWorldResourceBoundary,
     addNativeBarrierAfterGpuQuiescence:bridge.addNativeBarrierAfterGpuQuiescence,
     mutateNativeOverlayAfterGpuQuiescence:bridge.mutateNativeOverlayAfterGpuQuiescence,
     mutateNativeWorldAfterGpuQuiescence:bridge.mutateNativeWorldAfterGpuQuiescence,

@@ -318,7 +318,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      const selected=session.core.currentChunk(),chunks=[];
      try{for(const key of loaded.keys()){const [x,z]=parseSimulationChunkKey(key);if(session.core.selectChunk(x,z)<0)throw Error('Resident native chunk disappeared: '+key);chunks.push({...withMud(session.core.chunkPayload()),capturedAt:game.elapsed});}}
      finally{if(selected&&session.core.selectChunk(selected.cx,selected.cz)<0)throw Error('Could not restore selected native chunk');}
-     terrainCheckpoint={sequence,chunks,...(presentationHeadings?{workerHeadings:presentationHeadings.snapshot()}:{}),...(command.visualRecoveryOnly===true?{recoveryOnly:true}:{})};
+     const nativeWorldBoundary=planner.nativeWorldResourceBoundary();
+     terrainCheckpoint={sequence,chunks,...(nativeWorldBoundary?{nativeWorldBoundary}:{}),...(presentationHeadings?{workerHeadings:presentationHeadings.snapshot()}:{}),...(command.visualRecoveryOnly===true?{recoveryOnly:true}:{})};
     }
     const physicsPoses=pausedPoses===undefined?(physics?.poses({activeOnly:command.visualTerrain===true?false:compactPhysicsPoses})??null):pausedPoses;
     const physical=command.kind==='snapshot'&&(command.physicsCheckpoint===true||command.physicsCheckpoint==='encoded')?physics?.checkpointFall()??null:undefined;

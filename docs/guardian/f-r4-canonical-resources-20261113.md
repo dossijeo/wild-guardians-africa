@@ -133,6 +133,31 @@ propietarios antes de asignar la identidad nativa al frame. Tampoco sirve como
 baseline de recuperación completo ni repara uploads descartados. No se relaja el
 rechazo de paquetes antiguos para aprovechar este recibo.
 
+### Identidad nativa de un checkpoint preparado
+
+Después de `c9c1eafdd`, el checkpoint visual de la autoridad conserva la identidad
+del último commit físico en `terrainCheckpoint.nativeWorldBoundary`, solo cuando
+existe. El bridge verifica que su journal canónico sigue vigente: una mutación
+por otra ruta no puede aprovechar ese ticket para identificar el mundo actual.
+La marca pertenece a recuperación visual dentro de esa autoridad; no se incorpora
+al snapshot durable del juego ni se restauran handles de otra sesión.
+
+El preparador de checkpoints copia/valida la identidad y la expone solo si su
+lote confirma explícitamente. Cancelación, veto, resultado ambiguo o cambio de
+ticket durante la preparación no conceden esa identidad y abortan el lote.
+Rechaza un tiempo físico posterior al snapshot y una supresión JS que ocultaría
+props presentes en el payload canónico. Los checkpoints heredados sin identidad
+mantienen su contrato anterior; la ruta de restauración sin preparación no puede
+adoptar un checkpoint nativo.
+
+El surface adopta la identidad después de restaurar el checkpoint preparado y
+sus dependencias de presentación/trabajo. El Worker la captura al abrir el frame
+y la conserva al cerrarlo; no consulta la etiqueta requerida por dibujo para
+reclasificar geometría anterior. El dibujante conserva sus verificaciones de
+identidad/control. Esto conecta el **baseline preparado**, no las mutaciones
+incrementales posteriores: replay de otras fronteras nativas, recuperación de
+un frame obsoleto/uploads y la aceptación integrada siguen pendientes.
+
 ## Validación ejecutada
 
 - Nueve pruebas nuevas con WASM real: recibo antes de publicar, propiedad de
@@ -223,6 +248,17 @@ WebGPU aprobado en **52,18 s** (`.cache/terrain-admitted-boundary-build.log`).
 El contraste dirigido con los propietarios reales pasa también en
 `.cache/terrain-admitted-boundary-real-owners.tap`. No añade una aceptación
 gráfica nativa integrada ni cambia los cierres de A6.
+
+Validación de checkpoint/identidad: **696 pruebas de 55 archivos, cero
+fallos/skips**, `.cache/native-world-checkpoint-selection.json` y
+`.cache/native-world-checkpoint-regression.tap`. Se incluyen el journal de
+recuperación, checkpoint con propietarios reales, contratos del renderer remoto
+y transiciones nativas; las seis nuevas verifican admisión, propiedad, veto,
+cancelación, alteración, tiempo/supresión y transporte del checkpoint.
+Build WebGPU aprobado en **59,47 s** (`.cache/native-world-checkpoint-build.log`).
+La regresión real del arranque/control conserva 15 dibujos durante 500 ms y cero
+errores capturados (`.cache/native-world-checkpoint-product.log`); no certifica
+recuperación nativa tras una mutación ni personajes autónomos.
 
 ## Siguiente punto pendiente
 

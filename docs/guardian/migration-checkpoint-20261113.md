@@ -183,3 +183,9 @@ El receptor preparado conserva ahora una constancia inmutable de las revisiones
 que confirmó su lote gráfico; no la produce por ACK, commit lógico o resultado
 ambiguo. Pasan 575 pruebas y build. Es una entrada para el contraste nativo del
 frame, todavía pendiente, y no un permiso global de mundo/reloj ni recuperación.
+
+El checkpoint visual conserva ahora el ticket físico de su autoridad solo si
+el journal canónico sigue vigente. El preparador lo valida y el surface lo adopta
+tras restaurar sus recursos; el Worker lo captura al abrir/cerrar el frame.
+Pasan 696 pruebas y build. El replay de nuevas fronteras, recuperación ante frame
+obsoleto/uploads y personajes reales siguen pendientes; no se cierra f-R4.

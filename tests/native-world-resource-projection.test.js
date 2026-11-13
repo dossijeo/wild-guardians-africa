@@ -41,10 +41,10 @@ function canonical(core,resources){
 
 test('a native addition emits only its actual canonical chunk after the GPU receipt and preserves independent data ownership',async()=>{
  const observed=[],f=setup({onNativeWorldResources:r=>observed.push(r)});try{
-  await f.source.ready;f.hold();const before=f.session.core.captureResidentChunks(),pending=f.mutate({type:'addChunk',cx:4,cz:4});
+  await f.source.ready;assert.equal(f.bridge.nativeWorldResourceBoundary(),null);f.hold();const before=f.session.core.captureResidentChunks(),pending=f.mutate({type:'addChunk',cx:4,cz:4});
   await f.waitHold();assert.equal(f.w.spatial_world_resource_snapshot(),0);assert.deepEqual(observed,[]);assert.deepEqual(f.session.core.captureResidentChunks(),before);
   f.release();const result=await pending;assert.equal(result.status,'committed');const r=result.resources;
-  assert.equal(r.kind,6);assert.equal(r.ticket,result.worldBoundary.ticket);assert.equal(r.nativeSession,result.worldBoundary.nativeSession);assert.equal(r.effectiveTime,11);
+  assert.equal(r.kind,6);assert.equal(r.ticket,result.worldBoundary.ticket);assert.equal(r.nativeSession,result.worldBoundary.nativeSession);assert.equal(r.effectiveTime,11);assert.deepEqual(f.bridge.nativeWorldResourceBoundary(),result.worldBoundary);assert(Object.isFrozen(f.bridge.nativeWorldResourceBoundary()));
   assert.deepEqual(r.chunks.map(key),['4,4']);assert.deepEqual(r.removed,[]);assert.equal(observed.length,1);assert.deepEqual(observed[0].worldBoundary,result.worldBoundary);canonical(f.session.core,r);
   const height=r.chunks[0].terrain.positions[1];r.chunks[0].terrain.positions[1]+=100;
   assert.equal(f.session.core.chunkPayload().terrain.positions[1],height,'resource buffers must not alias WASM');
@@ -129,8 +129,9 @@ test('a staging attempt cannot replace the last commit projection and stale or f
   const ptr=f.w.spatial_world_proposal_int_ptr(2);new Int32Array(f.w.memory.buffer,ptr,2).set([5,5]);f.w.spatial_world_proposal_float_ptr(0);
   assert.equal(f.w.spatial_world_proposal_stage(6,0,0,2),1);assert.deepEqual(core.captureNativeWorldResources(boundary).chunks.map(key),['4,4']);
   assert.equal(f.w.nav_intent_barrier_proposal_ticket(),1);const t=Array.from(new Float64Array(f.w.memory.buffer,f.w.nav_intent_barrier_proposal_ticket_ptr(),6));f.w.nav_intent_barrier_proposal_cancel(t[0],t[1]);
+  assert.deepEqual(f.bridge.nativeWorldResourceBoundary(),boundary);
   const selected=core.captureResidentChunks();for(const change of [{ticket:boundary.ticket+1},{nativeSession:boundary.nativeSession+1},{effectiveTime:12}])assert.throws(()=>core.captureNativeWorldResources({...boundary,...change}),/does not match/);
-  assert.deepEqual(core.captureResidentChunks(),selected);assert(core.addChunk(6,6)>=0);assert.throws(()=>core.captureNativeWorldResources(boundary),/stale/);
+  assert.deepEqual(core.captureResidentChunks(),selected);assert(core.addChunk(6,6)>=0);assert.throws(()=>core.captureNativeWorldResources(boundary),/stale/);assert.throws(()=>f.bridge.nativeWorldResourceBoundary(),/changed outside/);
  }finally{f.dispose();}
 });
 
