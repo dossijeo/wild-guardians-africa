@@ -81,6 +81,8 @@ struct Vertex { @builtin(position) position:vec4f, @location(0) phase:f32 }
    const values=Array.from(new Float32Array(readback.getMappedRange()));readback.unmap();
    postMessage({kind:'inspection',id:data.id,values,execution:await remote.inspectAsync()});return;
   }
+  if(data.kind==='status'){postMessage({kind:'status',id:data.id,execution:await remote.inspectAsync()});return;}
+  if(data.kind==='lose-device'){remote.device.destroy();return;}
   if(data.kind==='dispose'){remote?.dispose();close();return;}
   throw Error('Unknown native gate hold audit request');
  }catch(error){postMessage({kind:'failure',message:String(error.stack??error)});}

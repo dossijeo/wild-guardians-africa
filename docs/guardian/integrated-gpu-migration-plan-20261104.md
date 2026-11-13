@@ -433,6 +433,12 @@ Reutilizar Vertex Colors, paquetes progresivos y KTX2/BC7. Seleccionar el format
 debajo no satisface locomoción autónoma por planes completos. Véase la
 [auditoría y contrato corregido](intent-route-architecture-correction-20261108.md).
 
+Continuación del 13 de noviembre: [auditoría del estado real y avance de f-R3](migration-checkpoint-20261113.md).
+La autoridad registra el consumidor actual y su reemplazo hasta la retirada
+GPU certificada. Hay evidencia WASM/WebGPU de relevo durante preparación bloqueada,
+pérdida real de dispositivo y rechazo de mutación por canal silencioso. f-R3 sigue
+parcial; no cierra A6 ni autoriza continuar B como si A estuviera resuelto.
+
 Actualización 2026-11-06: resuelto el bloqueo circular entre input, trayectoria histórica y entrega de pose. El certificador real está conectado al perfil temporal; un reloj común, callbacks por ID en fronteras y rollback de versiones permiten continuar B sin exigir primero todos los clips GPU. Véase [contrato, pruebas y límites de A6](a6-autonomous-motion-handoff.md). Este cierre del contrato interno no equivale a activar el perfil en producción ni a superar la validación visual de C.
 
 

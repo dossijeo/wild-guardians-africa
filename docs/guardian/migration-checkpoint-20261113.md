@@ -68,3 +68,50 @@ fuera de estos commits.
 cerrados y 4 pendientes. Falta completar la recuperación segura de un propietario
 incierto y acreditar la conexión de todas las fronteras de producto. Después:
 f-R4, e-R3 y e-R4; resto de A6, B y C según sus dependencias.
+
+## Evidencia real de relevo, pérdida y silencio
+
+Código anterior: `9a8d56e9c`, publicado en la rama. El harness existente
+`tests/browser/native-world-mutations.html` incorpora
+`runNativeControlLifecycleAudit()`, reutilizando el preparador y dibujante de
+f-R1/f-R2; no se añade otro renderer ni planificador.
+
+[Recibo completo](performance/native-control-lifecycle-20261113.json): WASM real
+y tres Workers de dibujo WebGPU NVIDIA/Turing sucesivos. Durante un bloqueo
+síncrono de preparación de **500,065 ms**, la retirada se confirma aproximadamente
+113 ms después del comienzo; el consumidor anterior dibuja cuatro veces y no
+vuelve a dibujar después del drenaje. Un intento de mutación con el candidato
+pendiente se rechaza sin modificar mundo/residencia. El reemplazo puede después
+confirmar la adición de chunk mediante el mismo contrato condicionado.
+
+Se destruye realmente el dispositivo del reemplazo y se conecta otro consumidor
+a la misma autoridad/época después de su prueba de retirada. Un relay de prueba
+retiene a continuación `IntentMutationQuiesce`: el reloj visible se mantiene en
+10,25 s, límite nativo ejecutado; agotar el timeout cancela la propuesta, deja el
+mundo intacto y cierra el grupo. No se acepta una retirada incierta por timeout.
+
+Cero excepciones de página y cero respuestas HTTP fallidas observadas por el
+listener de la página. La consola conserva **un 404 sin URL atribuida**; no se
+silencia ni se declara resuelto, y el listener de página no cubre todas las
+peticiones de Workers. Este ensayo no es aprobación global de recursos.
+
+Reproducción, con Vite en 5181 y `PLAYWRIGHT_MODULE` apuntando a Playwright:
+
+```powershell
+.cache/tooling/node20.exe node_modules/vite/bin/vite.js --host 127.0.0.1 --port 5181 --strictPort
+# En otra terminal:
+.cache/tooling/node20.exe tools/guardian/audit_native_control_lifecycle.mjs
+.cache/tooling/node20.exe --test tests/native-control-lifecycle-evidence.test.js
+```
+
+`QA_BASE_URL` y `OUTPUT` permiten cambiar origen/destino. Se usa Edge headless;
+no se habilita un adaptador software. Es aceptación de estas fronteras con
+triángulos diagnósticos y ejecución nativa, no personajes reales, consecuencias,
+recuperación de un Worker irrecuperable ni cierre de f-R3 o del producto.
+
+Regresión gráfica del mismo harness: los seis casos anteriores de f-R2 vuelven
+a pasar con WebGPU real y preparación bloqueada; todos confirman la mutación
+y no dibujan el paquete antiguo después del commit. Recibo local:
+`.cache/native-world-mutations-regression.json`; la evidencia histórica no se
+sobrescribe. Los tres comprobadores de recibos f-R1/f-R2/f-R3 y el análisis de
+sintaxis de los scripts modificados también pasan.

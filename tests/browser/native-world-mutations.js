@@ -2,9 +2,10 @@ import {deserialize} from '../../src/persistence/snapshots.js';
 import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialIntentBridge} from '../../src/world/wild-engine/spatial-intent-bridge.js';
 import {createNativeIntentControlPublication} from '../../src/simulation/native-intent-control-publication.js';
+import {createNativeIntentControlCohort} from '../../src/simulation/native-intent-control-cohort.js';
 
 const now=()=>performance.timeOrigin+performance.now();
-async function runCase(module,text,kind){
+async function runCase(module,text,kind,{lifecycle=false}={}){
  const state=deserialize(text),template=structuredClone(state.workers[0]);
  state.workers=[];state.tasks=[];state.plants=[];state.crates=[];state.spells=[];state.raid=null;state.elapsed=10;state.pauses=[];
  const loaded=new Map(),session=createSpatialGameSession(module,state,{loaded:()=>loaded,onData:c=>loaded.set(`${c.cx},${c.cz}`,c)}),
@@ -43,9 +44,14 @@ async function runCase(module,text,kind){
   if(bridge.commitNativeCausalClock().status!=='committed')throw Error('Native clock fixture failed');bridge.intentChanges();
   const offscreen=canvas.transferControlToOffscreen();draw.postMessage({type:'init',canvas:offscreen,port:resources.port2,intentControl:{port:control.port2,session:transportSession}},[offscreen,resources.port2,control.port2]);
   preparer.postMessage({kind:'initialize',port:resources.port1},[resources.port1]);
-  publication=createNativeIntentControlPublication({port:control.port1,session:transportSession,observe:bridge.observeNativeIntentControl});
-  await Promise.all([publication.ready,expect('device-ready')]);
-  preparer.postMessage({kind:'start',startTime:plan.startTime,endTime:plan.endTime,rows,route:{actorId:plan.actorId,routeHandle:handle,assignmentSequence:plan.assignmentSequence}});await expect('drawing');
+  let attached;
+  if(lifecycle){publication=createNativeIntentControlCohort({observe:bridge.observeNativeIntentControl,publicationOptions:{timeoutMs:2000}});
+   attached=publication.attach(control.port1,transportSession);}
+  else {publication=createNativeIntentControlPublication({port:control.port1,session:transportSession,observe:bridge.observeNativeIntentControl});attached=publication.ready;}
+  await Promise.all([attached,expect('device-ready')]);
+  const startPacket={kind:'start',startTime:plan.startTime,endTime:plan.endTime,rows,route:{actorId:plan.actorId,routeHandle:handle,assignmentSequence:plan.assignmentSequence}};
+  preparer.postMessage(startPacket);await expect('drawing');
+  if(lifecycle)return await exerciseControlLifecycle({state,session,bridge,publication,preparer,expect,transportSession,startPacket,mutation});
   preparer.postMessage({kind:'block',id:1});const start=await expect('block-start-1');
   const action=new Promise((resolve,reject)=>{commandTimer=setTimeout(async()=>{try{
    state.elapsed=10.25;if(bridge.advanceNativeRouteExecution(state.elapsed).status!=='advanced'||bridge.commitNativeCausalClock().status!=='committed')throw Error('Native clock advance failed');
@@ -77,6 +83,61 @@ async function runCase(module,text,kind){
  try{return await Promise.race([run(),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Native world mutation audit timed out: '+kind)),30000);})]);}
  finally{clearTimeout(timer);clearTimeout(commandTimer);publication?.dispose();preparer.terminate();draw.terminate();session.dispose();canvas.remove();}
 }
+async function exerciseControlLifecycle({state,session,bridge,publication,preparer,expect,transportSession,startPacket,mutation}){
+ const peers=[],same=()=>JSON.stringify(session.core.snapshot())+'|'+JSON.stringify(session.core.captureResidentChunks());
+ function peer({relay=false}={}){
+  const canvas=document.createElement('canvas');canvas.width=canvas.height=96;document.body.append(canvas);
+  const control=new MessageChannel(),resources=new MessageChannel(),draw=new Worker(new URL('../../src/rendering/webgpu-draw-worker.js',import.meta.url),{type:'module'}),
+   preparation=new Worker(new URL('./native-gate-holds-preparation-worker.js',import.meta.url),{type:'module'}),messages=new Map(),waiters=new Map();
+  let drop=false,relayChannel=null,withheld=null;
+  if(relay){relayChannel=new MessageChannel();control.port2.onmessage=({data})=>{
+   if(drop&&data.type==='IntentMutationQuiesce'){withheld=data;return;}relayChannel.port1.postMessage(data);};
+   relayChannel.port1.onmessage=({data})=>control.port2.postMessage(data);}
+  preparation.onmessage=({data})=>{
+   if(data.kind==='failure'){for(const w of waiters.values())w.reject(Error(data.message));waiters.clear();return;}
+   const key=data.id===undefined?data.kind:`${data.kind}-${data.id}`;messages.set(key,data);waiters.get(key)?.resolve(data);waiters.delete(key);
+  };
+  const port=relayChannel?.port2??control.port2,offscreen=canvas.transferControlToOffscreen();
+  draw.postMessage({type:'init',canvas:offscreen,port:resources.port2,intentControl:{port,session:transportSession}},[offscreen,resources.port2,port]);
+  preparation.postMessage({kind:'initialize',port:resources.port1},[resources.port1]);
+  const p={preparation,attach:()=>publication.attach(control.port1,transportSession),
+   expect:key=>messages.has(key)?Promise.resolve(messages.get(key)):new Promise((resolve,reject)=>waiters.set(key,{resolve,reject})),
+   silence(){drop=true;},get withheld(){return withheld;},
+   dispose(){draw.terminate();preparation.terminate();control.port1.close();control.port2.close();relayChannel?.port1.close();relayChannel?.port2.close();canvas.remove();}};
+  peers.push(p);return p;
+ }
+ const mutate=mutation=>bridge.mutateNativeWorldAfterGpuQuiescence({getPublication:()=>publication,mutation});
+ try{
+  preparer.postMessage({kind:'block',id:1});const blockStart=await expect('block-start-1');
+  const before=same(),replacement=peer(),attached=replacement.attach(),during=await mutate(mutation);
+  if(during.status!=='control-failed'||same()!==before||publication.status().consumers!==2)throw Error('Temporary consumer escaped the physical boundary');
+  await attached;const handoffAt=now();if(publication.status().consumers!==1)throw Error('Undrained predecessor was retained or omitted');
+  const blockEnd=await expect('block-end-1');preparer.postMessage({kind:'status',id:1});const old=(await expect('status-1')).execution.consumer;
+  if(!old.nativeRetiredAt||old.nativeRetiredAt>blockEnd.end||old.samples.some(f=>f.at>old.nativeRetiredAt)||handoffAt>blockEnd.end)throw Error('Retirement waited for preparation or submitted after drain');
+  await replacement.expect('device-ready');replacement.preparation.postMessage(startPacket);await replacement.expect('drawing');
+  state.elapsed=10.25;bridge.advanceNativeRouteExecution(state.elapsed);bridge.commitNativeCausalClock();
+  const committed=await mutate(mutation);if(committed.status!=='committed')throw Error('Fresh replacement could not commit '+committed.status);
+  // A real device loss, unlike a port close, can prove the old device is unable
+  // to submit. Recovery must retain the same authority and get a fresh baseline.
+  replacement.preparation.postMessage({kind:'lose-device'});
+  const deadline=performance.now()+5000;while(!publication.connections().current?.drained&&performance.now()<deadline)await new Promise(resolve=>setTimeout(resolve,5));
+  if(!publication.connections().current?.drained)throw Error('Lost device did not retire safely');
+  const recovery=peer({relay:true});await Promise.all([recovery.attach(),recovery.expect('device-ready')]);
+  recovery.preparation.postMessage(startPacket);await recovery.expect('drawing');
+  const afterLoss=publication.connections(),safeState=same();recovery.silence();
+  const pendingFailure=mutate({type:'addChunk',cx:5,cz:5});
+  await new Promise(resolve=>setTimeout(resolve,150));
+  recovery.preparation.postMessage({kind:'status',id:2});const recovered=(await recovery.expect('status-2')).execution.consumer;
+  const failed=await pendingFailure;
+  if(failed.status!=='control-failed'||same()!==safeState||!recovery.withheld||!publication.status().closed)throw Error('Silent channel authorized a mutation');
+  if(recovered.frameTime.elapsed>10.25||recovered.gpuErrors)throw Error('Silent consumer exceeded native time or failed GPU validation');
+  return {checklistId:'A6-04.f-R3',backend:'webgpu',scope:'Cohort handoff, device loss and silent-channel safety using native execution and diagnostic triangles; product/entity acceptance remains open.',
+   block:{start:blockStart.start,end:blockEnd.end,blockedMs:blockEnd.end-blockStart.start,handoffAt,retiredAt:old.nativeRetiredAt,oldFrames:old.nativeFrames,afterRetirementFrames:old.samples.filter(f=>f.at>old.nativeRetiredAt).length},
+   temporaryConsumer:{mutation:during.status,worldUnchanged:true},replacement:{mutation:committed.status,consumers:afterLoss.cohort.consumers},
+   deviceLoss:{drained:true,authorityEpoch:afterLoss.current.authorityEpoch},silentChannel:{mutation:failed.status,worldUnchanged:true,closed:publication.status().closed,presentedThrough:recovered.frameTime.elapsed,committedThrough:10.25},
+   adapter:old.adapterInfo,authorizedAutonomy:false,authorizedPassage:false};
+ }finally{for(const p of peers)p.dispose();}
+}
 export async function auditNativeWorldMutations(){
  const bytes=new Uint8Array(await(await fetch('/tests/fixtures/desierto983-d15-partial-state.json.gz')).arrayBuffer()),
   text=bytes[0]===31&&bytes[1]===139?await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text():new TextDecoder().decode(bytes),
@@ -84,4 +145,10 @@ export async function auditNativeWorldMutations(){
  for(const kind of ['polygon','residency-add','residency-remove','prop-remove','prop-restore','terrain'])cases.push(await runCase(module,text,kind));
  return {checklistId:'A6-04.f-R2',backend:'webgpu',scope:'Six opt-in native mutations and one causal draw consumer; old packets freeze after commit. Triangle only. Graphical replacement, all-consumer failover, and gameplay integration remain separate.',
   cases,authorizedAutonomy:false,authorizedPassage:false};
+}
+export async function auditNativeControlLifecycle(){
+ const bytes=new Uint8Array(await(await fetch('/tests/fixtures/desierto983-d15-partial-state.json.gz')).arrayBuffer()),
+  text=bytes[0]===31&&bytes[1]===139?await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text():new TextDecoder().decode(bytes),
+  module=await WebAssembly.compileStreaming(fetch('/src/world/wild-engine/spatial-savanna.wasm'));
+ return runCase(module,text,'residency-add',{lifecycle:true});
 }
