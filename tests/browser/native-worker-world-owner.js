@@ -59,6 +59,7 @@ export async function auditNativeWorkerWorldOwner({runningTransition=false,carry
    const replacement=await client.prepareNativeRoute(state.workers[0].id,nextPacket,{terrainManifest}),replaced=await client.inspect(),oldRelease=await client.releaseNativeRoute(state.workers[0].id,route.nativeRoute);
    if(Object.values(replacement.qaLastRenderFactories??{missing:1}).some(Boolean))throw Error('Native replacement first product render created GPU resources '+JSON.stringify(replacement.qaLastRenderFactories));
    if(carrying&&JSON.stringify(replaced.qaNativeRig?.attachments)!==JSON.stringify(before.qaNativeRig?.attachments))throw Error('Native Carry replacement recreated attachment geometry');
+   if(carrying)for(const factory of ['createShaderModule','createPipelineLayout','createRenderPipeline','createRenderPipelineAsync'])if(replacement.qaCumulativeFactories[factory]!==prepared.qaCumulativeFactories[factory])throw Error('Native Carry route replacement recreated '+factory);
    if(oldRelease!==false||replaced.workers.native!==1||replaced.inspectionGeneration!==before.inspectionGeneration||replaced.drawExecution.consumer.failed||replaced.drawExecution.consumer.gpuErrors)throw Error('Production native suffix replacement failed');
    // Confirmed endpoint publication precedes fallback; resource release itself
    // neither advances authority nor invents the worker's final CPU position.

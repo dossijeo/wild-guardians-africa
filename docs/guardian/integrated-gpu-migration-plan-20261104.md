@@ -843,3 +843,6 @@ Continuación parcial f-R4, 14 de noviembre: [Carry nativo y parámetros de ruta
 
 
 Continuación parcial f-R4, 14 de noviembre: [materiales de la variante nativa utilizada](f-r4-native-selected-materials-20261114.md). El binder y la admisión conservan fuentes CPU y clips ocultos al preparar el relevo. Carry en GPU real reduce 213 a 90 buffers, 108 a 48 pares de bind groups/layouts y 12 a tres pipelines; primer render sin creaciones, geometrías y drenaje conservados. Quedan tres sombras idénticas recreadas y el resto del presupuesto, además de fases/ejecución ordinarias y aceptación integrada. Se documenta el patrón de material fuente de Three para la siguiente corrección; ningún cierre cambia.
+
+
+Continuación parcial f-R4, 14 de noviembre: [sombras por material fuente](f-r4-native-shadow-source-20261114.md). Se adapta el código real de Three 253fa7ad al parche r180 existente: identidad/versión/listener del material fuente y ChainMap por longitud. El relevo Carry equivalente pasa de tres a cero shaders/pipelines nuevos, manteniendo primer render sin creaciones, nueve piezas, dibujo durante bloqueo y drenaje. Permanecen 90 buffers y 48 pares de bind groups/layouts nuevos, fases y autoridad ordinarias e integración A–F/B/C; no cambian los cierres.
