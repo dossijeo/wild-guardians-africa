@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createNativeRouteExecutionFixture} from './helpers/native-route-execution.js';
 import {nativeGateCrossingFixture} from './helpers/native-gate-crossings.js';
-import {NATIVE_ROUTE_PRESENTATION_FIELDS as fields,NATIVE_ROUTE_PRESENTATION_WIDTH as width,NATIVE_ROUTE_PRESENTATION_CONTINUOUS as continuous} from '../src/world/native-route-presentation.js';
+import {NATIVE_ROUTE_PRESENTATION_FIELDS as fields,NATIVE_ROUTE_PRESENTATION_WIDTH as width,NATIVE_ROUTE_PRESENTATION_CONTINUOUS as continuous,copyNativeRoutePresentation} from '../src/world/native-route-presentation.js';
 
 function checkNativeIntervals(f,handle,packet){
  const plan=f.bridge.nativeRouteTiming(handle),rows=packet.rows,knots=f.bridge.nativeRouteTimeKnots(handle);
@@ -51,4 +51,13 @@ test('native animal presentation uses its native clock and does not invent worke
 
 test('revocation and foreign authority prevent another capture without changing the owned earlier copy',()=>{
  const f=createNativeRouteExecutionFixture();try{const handle=f.worker(1,f.point(-6,0),f.point(6,0)),packet=f.bridge.captureNativeRoutePresentation(handle),before=packet.rows.slice();assert.equal(f.bridge.captureNativeRoutePresentation({...handle,authorityEpoch:'other'}),null);assert.equal(f.w.nav_intent_cancel_home(900011),1);assert.equal(f.bridge.captureNativeRoutePresentation(handle),null);assert.deepEqual(packet.rows,before);}finally{f.session.dispose();}
+});
+
+
+test('worker presentation preserves native carrying policy facts while legacy walking packets remain readable',()=>{
+ const f=createNativeRouteExecutionFixture();try{const handle=f.worker(1,f.point(-6,0),f.point(6,0),{carrying:true}),plan=f.bridge.nativeRouteTiming(handle),packet=f.bridge.captureNativeRoutePresentation(handle);assert.equal(plan.motionFlags,8);assert.equal(packet.motionFlags,plan.motionFlags);assert.equal(copyNativeRoutePresentation(packet).motionFlags,8);checkNativeIntervals(f,handle,packet);assert(packet.rows[16+fields.indexOf('carryPhase')]>0);
+ const legacy={...packet};delete legacy.motionFlags;assert.equal(copyNativeRoutePresentation(legacy).motionFlags,0);
+ for(const flags of [null,-1,64,1.5,'8'])assert.throws(()=>copyNativeRoutePresentation({...packet,motionFlags:flags}),/motion flags/);
+ assert.throws(()=>copyNativeRoutePresentation({...packet,motionMode:'animal',motionFlags:8}),/motion flags/);
+ }finally{f.session.dispose();}
 });

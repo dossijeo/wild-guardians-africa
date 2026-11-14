@@ -281,3 +281,6 @@ Continuación parcial f-R4, 14 de noviembre: [preparación y relevo en los propi
 
 
 Continuación parcial f-R4, 14 de noviembre: [Run/Walk nativos sobre la misma malla](f-r4-native-run-walk-20261114.md). El shader consume los dos bakes originales y selecciona sus fases con C++, sin cambios CPU al cruzar el límite. La prueba con los dos Workers normales cruza ese límite durante un bloqueo de 500 ms; no crea recursos en el primer render. Quedan Carry, Idle/puerta/acción, productor/ejecución ordinarios e integración completa.
+
+
+Continuación parcial f-R4, 14 de noviembre: [Carry nativo y parámetros de ruta como datos](f-r4-native-carry-20261114.md). Caja de nueve piezas y cuerpo comparten fases C++, conservan rig/geometrías y admiten Walk ↔ Carry antes del relevo. GPU real: 15 dibujos durante 500 ms, cero fábricas en el primer render y drenaje al cerrar. La preparación de un relevo baja de 22 a 12 pipelines al retirar constantes de ruta del shader; quedan 213 buffers y 108 pares de bind groups/layouts, sin aceptación de reutilización completa. Siguen pendientes productor/ejecución ordinarios, Idle/puerta/acción, consecuencias e integración A–F/B/C. No cambian los cierres.

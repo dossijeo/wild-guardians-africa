@@ -237,3 +237,6 @@ Actualizar este registro y el plan al terminar cada parte, distinguiendo siempre
 implementación, pruebas ejecutadas y aceptación pendiente. Si se interrumpe la
 sesión, este archivo permite continuar el objetivo; no implica que exista un
 proceso externo ejecutándose después de detenerse el agente.
+
+
+Continuación parcial f-R4, 14 de noviembre: [Carry nativo y parámetros de ruta como datos](f-r4-native-carry-20261114.md). Caja de nueve piezas y cuerpo comparten fases C++, conservan rig/geometrías y admiten Walk ↔ Carry antes del relevo. GPU real: 15 dibujos durante 500 ms, cero fábricas en el primer render y drenaje al cerrar. La preparación de un relevo baja de 22 a 12 pipelines al retirar constantes de ruta del shader; quedan 213 buffers y 108 pares de bind groups/layouts, sin aceptación de reutilización completa. Siguen pendientes productor/ejecución ordinarios, Idle/puerta/acción, consecuencias e integración A–F/B/C. No cambian los cierres.

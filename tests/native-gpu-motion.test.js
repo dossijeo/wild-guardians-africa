@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {uniform} from 'three/tsl';
-import {MeshBasicNodeMaterial} from 'three/webgpu';
+import {MeshBasicNodeMaterial,WebGPURenderer} from 'three/webgpu';
 import {createNativeRouteExecutionFixture} from './helpers/native-route-execution.js';
 import {createWebGpuTerrainResidency} from '../src/rendering/webgpu-terrain-residency.js';
 import {createConfirmedTerrainSupport} from '../src/rendering/confirmed-terrain-support.js';
@@ -53,4 +53,11 @@ test('native phase selection and the original worker foot offset use the same as
 
 test('the graphical entity must match the native assignment instead of borrowing another actor clock',()=>{
  const f=fixture();try{assert.throws(()=>createNativeGpuMotion({actorId:'worker-900012',support:f.support}),/identity mismatch/);assert.throws(()=>createNativeGpuMotion({actorId:'invalid',support:f.support}),/Unsupported native intent ID/);const position={x:Math.fround(f.point(-6,0).x),z:Math.fround(f.point(-6,0).z)},handle=f.worker(1,position,position),packet=f.bridge.captureNativeRoutePresentation(handle),support=f.terrain.prepareNativeRoute(packet,{terrainManifest:f.manifest}),motion=createNativeGpuMotion({actorId:'worker-900011',support});try{assert.equal(motion.status().rows,1);assert.equal(motion.status().installed.start.at,motion.status().installed.end.at);assert(Number.isFinite(motion.sample(packet.startTime).y));}finally{motion.dispose();}}finally{f.close();}
+});
+
+
+test('route counts, packed columns, durations and anchor yaw remain data in a structurally identical GPU program',()=>{
+ const f=fixture(),gpu=new WebGPURenderer({canvas:{width:1,height:1,style:{},addEventListener(){},removeEventListener(){},getContext(){return null;}}}),geometry=new THREE.BoxGeometry(),camera=new THREE.PerspectiveCamera();gpu.hasFeature=()=>true;
+ const generated=[],motions=[],materials=[];function shader(support,yaw){const motion=createNativeGpuMotion({actorId:'worker-900011',support,anchorYaw:yaw}),material=new MeshBasicNodeMaterial(),mesh=new THREE.Mesh(geometry,material);motions.push(motion);materials.push(material);motion.bind(material);const builder=gpu.backend.createNodeBuilder(mesh,gpu);builder.scene=f.scene;builder.camera=camera;builder.build();return builder.vertexShader;}
+ try{generated.push(shader(f.support,.17));const start=f.point(-6,0),end=f.point(-5,0),handle=f.worker(1,start,end),packet=f.bridge.captureNativeRoutePresentation(handle),support=f.terrain.prepareNativeRoute(packet,{terrainManifest:f.manifest});assert(support);const a=prepareNativeRouteGpuTable(f.support),b=prepareNativeRouteGpuTable(support);assert.notEqual(a.count,b.count);assert.notEqual(a.columns,b.columns);assert.notEqual(a.duration,b.duration);generated.push(shader(support,-2.31));assert.equal(generated[0],generated[1]);}finally{for(const motion of motions)motion.dispose();for(const material of materials)material.dispose();geometry.dispose();f.close();}
 });
