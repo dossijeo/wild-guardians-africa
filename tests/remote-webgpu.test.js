@@ -4,6 +4,7 @@ import { createRemoteWebGpuClient } from '../src/rendering/remote-webgpu-client.
 import { createRemoteWebGpuHost } from '../src/rendering/remote-webgpu-host.js';
 import {nativeGateCrossingFixture} from './helpers/native-gate-crossings.js';
 import {nativeSuspendedBodiesFromProposal} from '../src/world/native-suspended-body-reference.js';
+import {nativeResumeReferenceFromProposal} from '../src/world/native-resume-reference.js';
 import {captureNativeRoutePickFrame} from '../src/rendering/native-route-pick-frame.js';
 import { createNativeIntentControlPublication } from '../src/simulation/native-intent-control-publication.js';
 import {createNativeRouteExecutionFixture} from './helpers/native-route-execution.js';
@@ -138,6 +139,46 @@ for(const attest of [true,false])test(`an actual native suspended body requires 
   assert.equal(native.advance(at+.2).status,'advanced');native.bridge.commitNativeCausalClock();await flush();f.host.present();const status=f.host.inspect();assert(status.frameTime.elapsed<=at+.2);assert.equal(status.nativeCausalClock.committedThrough,at+.2);assert.equal(status.failed,false);
   const count=f.gpu.submitted.length;assert.equal(native.bridge.cancelHomeIntent(`worker-${reference.nativeRoute.actorId}`),true);await flush();f.host.present();f.host.present();assert.equal(f.gpu.submitted.length,count,'a cancelled body never replays its held image');assert.deepEqual(f.errors,[]);
  }finally{source?.dispose();f.client.dispose();await f.host.dispose();native.session.dispose();}
+});
+
+for(const [attest,stale] of [[true,false],[false,false],[true,true]])test(`a native resume packet needs the actual direct assignment (${attest}, stale ${stale}) before causal execution and picking`,async()=>{
+ const native=nativeGateCrossingFixture(),[sourcePort,drawPort]=pair(),f=await fixture({capabilities:{width:20,height:10,format:'rgba8unorm',nativeSuspendedVersion:1,nativeResumeVersion:1}},{intentControl:{port:drawPort,session:'native-resume'}});let source,prepared,reference,held;
+ try{
+  native.session.actorSectorRevision({worker:true});const origin=native.point(0,0);let exitZ;for(let z=6;z<=16;z+=2)if(native.w.spatial_execution_segment_clear(-32.2,z+.2,-17.2,z+.2,.28)===1){exitZ=z+.2;break;}assert(Number.isFinite(exitZ));
+  const request=native.route({points:[[.05,3],[-17.2-origin.x,exitZ-origin.z],[-32.2-origin.x,exitZ-origin.z]]});assert.equal(native.admit(request).status,'admitted');assert.equal(native.bridge.beginNativeRouteExecution().status,'started');const at=native.service.read(native.gates[0].id).at+.3;assert.equal(native.advance(at).status,'advanced');native.bridge.commitNativeCausalClock();
+  source=createNativeIntentControlPublication({port:sourcePort,session:'native-resume',observe:native.bridge.observeNativeIntentControl});await source.ready;
+  const heldClock={version:1,epoch:0,elapsed:at,safeUntil:Number.MAX_SAFE_INTEGER,anchorAbsoluteMs:0,paused:false,segments:[{start:at,end:Number.MAX_SAFE_INTEGER,rate:1,realDuration:Number.MAX_SAFE_INTEGER-at}]};
+  const first=f.frame(1,{clock:heldClock});await flush();await f.host.idle();f.host.present();await first;
+  const stop=await native.bridge.mutateNativeWorldAfterGpuQuiescence({getPublication:()=>source,mutation:{type:'removeChunks',chunks:[[-1,0]],releaseOnly:false},prepareResources:async({resources,proposedWorldBoundary})=>{
+   [held]=nativeSuspendedBodiesFromProposal(resources,proposedWorldBoundary);assert(held);f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'relative',epoch:at,nativeSuspended:held});const packet=await preparedWorldDraw({...f,clock:heldClock},proposedWorldBoundary);prepared=packet;
+   return {preparedWorldBoundary:packet.preparedWorldBoundary,valid:packet.valid,commit:data=>packet.commit(data.worldBoundary),abort:packet.abort};
+  }});assert.equal(stop.status,'committed',JSON.stringify(stop));await flush();f.host.present();await prepared.presented;
+  // Restore the affected suffix before proposing its resumption. The pinned
+  // body's original authority proof remains valid through this later world.
+  const restore=await native.bridge.mutateNativeWorldAfterGpuQuiescence({getPublication:()=>source,mutation:{type:'addChunk',cx:-1,cz:0},prepareResources:async({proposedWorldBoundary})=>{
+   const packet=await preparedWorldDraw({...f,clock:heldClock},proposedWorldBoundary);prepared=packet;return {preparedWorldBoundary:packet.preparedWorldBoundary,valid:packet.valid,commit:data=>packet.commit(data.worldBoundary),abort:packet.abort};
+  }});assert.equal(restore.status,'committed',JSON.stringify(restore));await flush();f.host.present();await prepared.presented;
+  const before=native.body(1),resumeHandle=native.bridge.nativeSuspendedGateRoute(held.nativeRoute.actorId).resumeHandle;
+  if(!attest){const release=source.releaseGpuAfterMutation;source.releaseGpuAfterMutation=(receipt,options)=>release(receipt,{...options,nativeResumedRoutes:[]});}
+  assert.throws(()=>native.bridge.resumeNativeGateRouteAfterGpuQuiescence({getPublication:()=>source,resumeHandle}),/retained resource preparation/);
+  let aborted;const result=await native.bridge.resumeNativeGateRouteAfterGpuQuiescence({getPublication:()=>source,resumeHandle,prepareResources:async({resources,proposedWorldBoundary})=>{
+   reference=nativeResumeReferenceFromProposal(resources);assert.equal(Object.hasOwn(resources,'assignmentSequence'),false);assert.equal(native.bridge.nativeRouteTiming(reference.expectedRouteHandle),null);assert.deepEqual(native.body(1),before);
+   const clock={...heldClock,safeUntil:resources.endTime,segments:[{start:at,end:resources.endTime,rate:1,realDuration:resources.endTime-at}]};f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'relative',epoch:at,nativeResume:reference});prepared=await preparedWorldDraw({...f,clock},proposedWorldBoundary);
+   const active=f.host.inspect().activeSequence;f.host.present();assert.equal(f.host.inspect().activeSequence,active);assert.deepEqual(native.body(1),before);assert.equal(native.bridge.nativeRouteTiming(reference.expectedRouteHandle),null);
+   resources.rows.fill(-1);resources.points.fill(-1);for(const gate of resources.gates)gate.rows.fill(-1);
+   if(stale){aborted=assert.rejects(prepared.presented,{name:'AbortError'});assert.equal(native.advance(at+.1).status,'advanced');native.bridge.commitNativeCausalClock();}
+   return {preparedWorldBoundary:prepared.preparedWorldBoundary,valid:prepared.valid,commit:data=>prepared.commit(data.worldBoundary),abort:prepared.abort};
+  }});
+  if(stale){assert.equal(result.status,'stale',JSON.stringify(result));await aborted;await flush();f.host.present();assert(native.bridge.nativeSuspendedGateRoute(held.nativeRoute.actorId));assert.equal(native.bridge.nativeRouteTiming(reference.expectedRouteHandle),null);assert.equal(f.host.inspect().failed,false);assert.deepEqual(f.errors,[]);return;}
+  if(!attest){const rejected=assert.rejects(prepared.presented,/attestation|obsolete/);await flush();await rejected;const count=f.gpu.submitted.length;f.host.present();assert.equal(f.gpu.submitted.length,count);assert.equal(f.host.inspect().failed,true);return;}
+  assert.equal(result.status,'committed',JSON.stringify(result));assert(result.nativeRoute.assignmentSequence>reference.sourceControlSequence);assert.deepEqual(result.nativeRoute.routeHandle,reference.expectedRouteHandle);await flush();f.host.present();await prepared.presented;
+  assert.equal(captureNativeRoutePickFrame(f.host.inspect()).getResumeTime(reference,at),at);assert.throws(()=>captureNativeRoutePickFrame(f.host.inspect()).getSuspendedTime(held,at),/no submitted/);assert.equal(native.advance(at+.2).status,'advanced');native.bridge.commitNativeCausalClock();await flush();f.host.present();assert.equal(f.host.inspect().failed,false);assert.equal(f.host.inspect().nativeCausalClock.committedThrough,at+.2);
+  const count=f.gpu.submitted.length;native.bridge.cancelHomeIntent(`worker-${reference.actorId}`);await flush();f.host.present();assert.equal(f.gpu.submitted.length,count);assert.deepEqual(f.errors,[]);
+ }finally{source?.dispose();f.client.dispose();await f.host.dispose();native.session.dispose();}
+});
+
+test('a draw owner without resume support refuses the candidate clock',async()=>{
+ const f=await fixture();try{assert.throws(()=>f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'relative',epoch:10,nativeResume:{}}),/does not support/);assert.equal(f.client.inspect().clockBindings,0);}finally{f.client.dispose();await f.host.dispose();}
 });
 
 test('a draw owner without suspension support cannot silently accept the new clock as an ordinary clock',async()=>{

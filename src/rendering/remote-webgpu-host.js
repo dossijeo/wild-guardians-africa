@@ -1,3 +1,4 @@
+import {copyNativeResumeReference,nativeResumeReferenceCovered} from '../world/native-resume-reference.js';
 import {copyNativeSuspendedBodyReference,nativeSuspendedBodyReferenceCovered} from '../world/native-suspended-body-reference.js';
 import { floorFloat32 } from './float32-time.js';
 import {copyNativeRouteReference} from '../world/native-route-reference.js';
@@ -481,8 +482,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         if (!Number.isFinite(value)) throw Error('Invalid remote presentation clock value');
         const submittedValue=floorFloat32(value);
         device.queue.writeBuffer(resolve({ [REF]: binding.id }), binding.byteOffset, new Float32Array([submittedValue]));
-        if(binding.nativeRoute||binding.nativeGate||binding.nativeSuspended)nativeTimes.set(binding.nativeClockKey,{
-          ...(binding.nativeRoute?{nativeRoute:binding.nativeRoute}:binding.nativeGate?{nativeGate:binding.nativeGate}:{nativeSuspended:binding.nativeSuspended}),semantic:binding.semantic,epoch:binding.epoch,
+        if(binding.nativeRoute||binding.nativeGate||binding.nativeSuspended||binding.nativeResume)nativeTimes.set(binding.nativeClockKey,{
+          ...(binding.nativeRoute?{nativeRoute:binding.nativeRoute}:binding.nativeGate?{nativeGate:binding.nativeGate}:binding.nativeResume?{nativeResume:binding.nativeResume}:{nativeSuspended:binding.nativeSuspended}),semantic:binding.semantic,epoch:binding.epoch,
           elapsed:binding.semantic==='relative'?submittedValue+binding.epoch:submittedValue});
         if(binding.routeRecord)binding.routeRecord.lastDrawTime=Math.max(
           binding.routeRecord.lastDrawTime??-Infinity,
@@ -528,7 +529,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
            next.admittedClockBindings.some(binding=>binding.routeRecord&&binding.routeRecord.startTime>bounded))next=null;
       }
       const candidate = next || active;
-      if(!candidate||candidate.admittedClockBindings.some(binding=>binding.suspendedRecord&&!binding.suspendedRecord.isCurrent()))return;
+      if(!candidate||candidate.admittedClockBindings.some(binding=>binding.suspendedRecord&&!binding.suspendedRecord.isCurrent()||binding.resumeRecord&&!binding.resumeRecord.isCurrent()))return;
       // Never replay a packet prepared before a physical commit. f-R4 will
       // coordinate replacement resources; until then retain the last image.
       if(candidate.nativeMutationEpoch!==nativeMutationEpoch||!frameWorldCurrent(candidate))return;
@@ -720,6 +721,12 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   }
   function admitClockBindings(packet,preparing=false){
     return (packet.preparedClockBindings??Array.from(clockBindings.values())).filter(binding=>packet.resourceSnapshot.has(binding.id)).map(binding=>{
+      if(binding.nativeResume){
+        if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeResumeReferenceCovered(binding.nativeResume,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeResumeReferenceCovered(binding.nativeResume,nativeWorldBoundary))throw Error('Native resume requires its applied world and causal clock');
+        const resumeRecord=routeControl.admitResume(binding.nativeResume,{preparingWorldBoundary:preparing?packet.metadata.nativeWorldBoundary:null});
+        if(packet.metadata.clock.safeUntil<binding.nativeResume.worldBoundary.effectiveTime||packet.metadata.clock.safeUntil>binding.nativeResume.endTime)throw Error('Prepared clock exceeds native resume resources');
+        return {...binding,resumeRecord,...(!preparing?{routeRecord:resumeRecord.routeRecord}:{})};
+      }
       if(binding.nativeSuspended){
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeSuspendedBodyReferenceCovered(binding.nativeSuspended,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeSuspendedBodyReferenceCovered(binding.nativeSuspended,nativeWorldBoundary))throw Error('Native suspension requires its applied world and causal clock');
         const suspendedRecord=routeControl.admitSuspended(binding.nativeSuspended,{preparingWorldBoundary:preparing?packet.metadata.nativeWorldBoundary:null});
@@ -1020,10 +1027,11 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       case 'clock-binding': {
         const key = `${message.id}:${message.binding.byteOffset}`;
         const nativeRoute=message.binding.nativeRoute?copyNativeRouteReference(message.binding.nativeRoute):null,nativeGate=message.binding.nativeGate?copyNativeGateReference(message.binding.nativeGate):null;
+        const nativeResume=message.binding.nativeResume?copyNativeResumeReference(message.binding.nativeResume):null;
         const nativeSuspended=message.binding.nativeSuspended?copyNativeSuspendedBodyReference(message.binding.nativeSuspended):null;
-        if([nativeRoute,nativeGate,nativeSuspended].filter(Boolean).length>1)throw Error('Conflicting native clock references');
-        clockBindings.set(key, { ...message.binding, ...(nativeRoute?{nativeRoute}:{}),...(nativeGate?{nativeGate}:{}),...(nativeSuspended?{nativeSuspended}:{}),
-          ...((nativeRoute||nativeGate||nativeSuspended)?{nativeClockKey:JSON.stringify([nativeRoute?'route':nativeGate?'gate':'suspended',nativeRoute??nativeGate??nativeSuspended,message.binding.semantic,message.binding.epoch])}:{}), id: message.id });
+        if([nativeRoute,nativeGate,nativeSuspended,nativeResume].filter(Boolean).length>1)throw Error('Conflicting native clock references');
+        clockBindings.set(key, { ...message.binding, ...(nativeRoute?{nativeRoute}:{}),...(nativeGate?{nativeGate}:{}),...(nativeSuspended?{nativeSuspended}:{}),...(nativeResume?{nativeResume}:{}),
+          ...((nativeRoute||nativeGate||nativeSuspended||nativeResume)?{nativeClockKey:JSON.stringify([nativeRoute?'route':nativeGate?'gate':nativeResume?'resume':'suspended',nativeRoute??nativeGate??nativeSuspended??nativeResume,message.binding.semantic,message.binding.epoch])}:{}), id: message.id });
         if (!clockBindingKeys.has(message.id)) clockBindingKeys.set(message.id, new Set());
         clockBindingKeys.get(message.id).add(key); break;
       }
@@ -1126,6 +1134,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
               message.heldSequence!==hold.sequence||message.heldTime!==hold.effectiveTime||message.heldClockSequence!==hold.clockSequence||
               message.sequence!==status.sequence||message.effectiveTime!==status.effectiveTime||message.clockSequence!==status.clock.clockSequence||
               status.clock.committedThrough<hold.effectiveTime||typeof message.committed!=='boolean')throw Error('Invalid native mutation release boundary');
+           if(message.nativeResumedRoutes!==undefined&&(!Array.isArray(message.nativeResumedRoutes)||!message.committed||message.nativeResumedRoutes.some(value=>value?.reference?.sourceControlSequence!==hold.sequence)))throw Error('Uncommitted or mismatched native resume attestation');
            if(message.nativeSuspendedBodies!==undefined&&(!Array.isArray(message.nativeSuspendedBodies)||!message.committed))throw Error('Uncommitted native suspension attestation');
            if(message.committed){
              const boundary=copyNativeWorldBoundary(message.worldBoundary??null);
@@ -1134,6 +1143,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
                 boundary.nativeSession!==status.clock.nativeSession||boundary.effectiveTime!==message.effectiveTime||
                 nativeWorldBoundary&&boundary.ticket<=nativeWorldBoundary.ticket))throw Error('Invalid committed world resource boundary');
              routeControl.installSuspendedBodies(boundary,message.nativeSuspendedBodies??[]);
+             routeControl.installResumedRoutes(boundary,message.nativeResumedRoutes??[]);
              nativeWorldBoundary=boundary;
              nativeMutationEpoch++;
              invalidatePendingNativeWorld('Native mutation invalidated the prepared frame');

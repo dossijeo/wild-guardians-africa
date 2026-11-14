@@ -1,5 +1,6 @@
 // Direct authority -> draw transport for the existing native intent protocol.
 // The native owner supplies the baseline/log; this sender keeps ACK cursors only.
+import {copyNativeResumeReference} from '../world/native-resume-reference.js';
 import {copyNativeSuspendedBodyReference} from '../world/native-suspended-body-reference.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 export function createNativeIntentControlPublication({port,session,observe,
@@ -181,7 +182,7 @@ export function createNativeIntentControlPublication({port,session,observe,
         session,authorityEpoch,holdId,sequence,effectiveTime,clockSequence,...(preparedWorldBoundary?{preparedWorldBoundary}:{})});}catch(error){fail(error);}
     });
   }
-  function releaseGpuAfterMutation(receipt,{committed=false,worldBoundary:nextBoundary=null,nativeSuspendedBodies=[]}={}){
+  function releaseGpuAfterMutation(receipt,{committed=false,worldBoundary:nextBoundary=null,nativeSuspendedBodies=[],nativeResumedRoutes=[]}={}){
     const hold=mutationHold;
     if(typeof committed!=='boolean')throw TypeError('Expected native mutation commit outcome');
     if(closed||!hold||!hold.receipt||receipt!==hold.receipt||!clock||clock.intentSequence!==sentSequence||
@@ -197,10 +198,14 @@ export function createNativeIntentControlPublication({port,session,observe,
     if(!Array.isArray(nativeSuspendedBodies)||nativeSuspendedBodies.length>32768||!committed&&nativeSuspendedBodies.length)throw TypeError('Invalid committed native suspended bodies');
     const bodies=nativeSuspendedBodies.map(copyNativeSuspendedBodyReference),actors=new Set(),bodyIds=new Set();
     for(const reference of bodies){if(!sameNativeWorldBoundary(reference.worldBoundary,nextBoundary)||actors.has(reference.nativeRoute.actorId)||bodyIds.has(reference.bodyId))throw Error('Native suspended body differs from committed world boundary');actors.add(reference.nativeRoute.actorId);bodyIds.add(reference.bodyId);}
+    if(!Array.isArray(nativeResumedRoutes)||nativeResumedRoutes.length>32768||!committed&&nativeResumedRoutes.length)throw TypeError('Invalid committed native resumed routes');
+    const resumes=nativeResumedRoutes.map(value=>{const reference=copyNativeResumeReference(value?.reference),assignmentSequence=value.assignmentSequence;
+      if(!sameNativeWorldBoundary(reference.worldBoundary,nextBoundary)||reference.sourceControlSequence!==hold.sequence||!Number.isSafeInteger(assignmentSequence)||assignmentSequence<=reference.sourceControlSequence||assignmentSequence>sentSequence||actors.has(reference.actorId)||bodyIds.has(reference.bodyId))throw Error('Native resumed route differs from its committed authority boundary');
+      actors.add(reference.actorId);bodyIds.add(reference.bodyId);return {reference,assignmentSequence};});
     port.postMessage({type:'IntentMutationRelease',protocolVersion:2,fenceVersion:1,session,authorityEpoch,
       holdId:hold.holdId,heldSequence:hold.sequence,heldTime:hold.effectiveTime,heldClockSequence:hold.clockSequence,
       sequence:sentSequence,effectiveTime:sentTime,clockSequence:clock.clockSequence,committed,
-      ...(committed?{worldBoundary:nextBoundary,...(bodies.length?{nativeSuspendedBodies:bodies}:{})}:{})});
+      ...(committed?{worldBoundary:nextBoundary,...(bodies.length?{nativeSuspendedBodies:bodies}:{}),...(resumes.length?{nativeResumedRoutes:resumes}:{})}:{})});
     if(committed)worldBoundary=nextBoundary;
     clearTimeout(hold.timer);mutationHold=null;return true;
   }

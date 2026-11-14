@@ -2,7 +2,7 @@
 
 Actualizado: 2026-11-14. IDs acordados en la conversación; no se renumeran al avanzar.
 
-Último incremento de f-R4: [propuesta nativa de reanudación](f-r4-native-resume-proposal-20261114.md).
+Último incremento de f-R4: [permiso de reanudación ligado a la asignación real](f-r4-native-resume-attestation-20261114.md).
 Publicaciones ordinarias y aceptación integrada de personajes autónomos siguen pendientes; no cambia el recuento de cierres.
 
 **Ningún punto principal está cerrado todavía.** Un subpunto marcado como nativo

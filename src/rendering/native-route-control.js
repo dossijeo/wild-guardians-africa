@@ -1,3 +1,4 @@
+import {copyNativeResumeReference,sameNativeResumeReference} from '../world/native-resume-reference.js';
 import {copyNativeSuspendedBodyReference,sameNativeSuspendedBodyReference} from '../world/native-suspended-body-reference.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 
@@ -20,7 +21,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
      initialTime!==null&&(!Number.isFinite(initialTime)||initialTime<0)||!Array.isArray(routes))
     throw TypeError('Invalid native route control identity');
   const active=new Map(),actors=new Map();
-  const actorContext=actorId=>{let value=actors.get(actorId);if(!value){value={closed:false,latestSequence:0,state:null,current:null,revoked:null,proof:null};actors.set(actorId,value);}return value;};
+  const actorContext=actorId=>{let value=actors.get(actorId);if(!value){value={closed:false,latestSequence:0,state:null,current:null,revoked:null,proof:null,resumeProof:null};actors.set(actorId,value);}return value;};
   const matches=(record,reference)=>!!record&&record.actorId===reference.actorId&&record.assignmentSequence===reference.assignmentSequence&&sameHandle(record.handle,reference.routeHandle);
   const assignments=new Set();
   for(const route of routes){
@@ -65,6 +66,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       error.code='native-route-revocation-late';throw error;
     }
     const actor=assigned?actorContext(event.actorId):actors.get(event.actorId);
+    const sourceSuspension=assigned&&actor?.proof&&suspendedCurrent(actor.proof,actor.revoked,actor)?{reference:actor.proof,sequence:actor.latestSequence}:null;
     if(current&&revoked){
       current.revokedSequence=event.sequence;current.revokedState=Number.isInteger(event.state)?event.state:null;
       if(actor){actor.revoked=current;actor.current=null;actor.proof=null;}
@@ -73,8 +75,8 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     }
     if(assigned){const record={actorId:event.actorId,handle:Object.freeze({...handle}),
       assignmentSequence:event.sequence,startTime:event.effectiveTime,
-      safeUntil:Infinity,lastDrawTime:null,actor};active.set(event.actorId,record);actor.current=record;actor.proof=null;}
-    if(actor){actor.latestSequence=event.sequence;actor.state=assigned?1:Number.isInteger(event.state)?event.state:null;
+      safeUntil:Infinity,lastDrawTime:null,actor,sourceSuspension};active.set(event.actorId,record);actor.current=record;actor.proof=null;}
+    if(actor){actor.resumeProof=null;actor.latestSequence=event.sequence;actor.state=assigned?1:Number.isInteger(event.state)?event.state:null;
       if(!actor.current&&actor.state!==4){actor.closed=true;actors.delete(event.actorId);}}
     sequence=event.sequence;effectiveTime=event.effectiveTime;counters.accepted++;
     return true;
@@ -85,8 +87,31 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       actor.latestSequence===record.revokedSequence&&record.safeUntil===reference.suspendedAt&&
       sameNativeSuspendedBodyReference(actor.proof,reference);
   }
+  function resumeSourceMatches(reference,proof){
+    const source=reference.sourceResumeHandle,old=proof?.nativeRoute;
+    return !!old&&old.actorId===reference.actorId&&old.assignmentSequence===reference.sourceAssignmentSequence&&proof.bodyId===reference.bodyId&&proof.suspendedAt===reference.suspendedAt&&proof.resumeGeneration===source.generation&&old.routeHandle.authorityEpoch===source.authorityEpoch&&old.routeHandle.session===source.session&&old.routeHandle.slot===source.slot;
+  }
+  function resumeCurrent(reference,actor){
+    const record=actor?.current,proof=actor?.resumeProof;
+    return !closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.actorId)===actor&&actor.state===1&&active.get(reference.actorId)===record&&!!record&&actor.latestSequence===record.assignmentSequence&&sameHandle(record.handle,reference.expectedRouteHandle)&&record.startTime===reference.worldBoundary.effectiveTime&&proof?.assignmentSequence===record.assignmentSequence&&sameNativeResumeReference(proof.reference,reference);
+  }
   return {
     accept,
+    installResumedRoutes(boundary,values=[]){
+      boundary=copyNativeWorldBoundary(boundary);
+      if(closed||!clock||!boundary||boundary.authorityEpoch!==authorityEpoch||boundary.nativeSession!==clock.nativeSession||boundary.effectiveTime!==clock.committedThrough||!Array.isArray(values)||values.length>32768)throw Error('Invalid native resumed route attestation boundary');
+      const staged=[],ids=new Set(),bodies=new Set();
+      for(const value of values){const reference=copyNativeResumeReference(value?.reference),actor=actors.get(reference.actorId),record=actor?.current,source=record?.sourceSuspension;
+        if(!sameNativeWorldBoundary(reference.worldBoundary,boundary)||ids.has(reference.actorId)||bodies.has(reference.bodyId)||!actor||actor.closed||actor.state!==1||active.get(reference.actorId)!==record||!record||actor.latestSequence!==record.assignmentSequence||value.assignmentSequence!==record.assignmentSequence||record.assignmentSequence<=reference.sourceControlSequence||!source||source.sequence>reference.sourceControlSequence||!resumeSourceMatches(reference,source.reference)||!sameHandle(record.handle,reference.expectedRouteHandle)||record.startTime!==boundary.effectiveTime)throw Error('Native resume attestation does not match its issued assignment and source body');
+        ids.add(reference.actorId);bodies.add(reference.bodyId);staged.push({actor,proof:Object.freeze({reference,assignmentSequence:record.assignmentSequence})});}
+      for(const {actor,proof} of staged)actor.resumeProof=proof;return staged.length;
+    },
+    admitResume(value,{preparingWorldBoundary=null}={}){
+      const reference=copyNativeResumeReference(value),actor=actors.get(reference.actorId),boundary=copyNativeWorldBoundary(preparingWorldBoundary);
+      const current=()=>resumeCurrent(reference,actor),pending=()=>!closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.actorId)===actor&&sameNativeWorldBoundary(boundary,reference.worldBoundary)&&sequence===reference.sourceControlSequence&&clock.committedThrough===reference.worldBoundary.effectiveTime&&!!actor.proof&&suspendedCurrent(actor.proof,actor.revoked,actor)&&resumeSourceMatches(reference,actor.proof);
+      if(reference.worldBoundary.authorityEpoch!==authorityEpoch||!clock||reference.worldBoundary.nativeSession!==clock.nativeSession||!current()&&!pending()){const error=Error('Native resume is obsolete or lacks direct assignment attestation');error.code='native-resume-admission-obsolete';throw error;}
+      counters.admissions++;return Object.freeze({reference,isCurrent:current,isPrepared:()=>current()||pending(),get routeRecord(){return current()?actor.current:null;}});
+    },
     // Called only with facts delivered on the direct authority connection at
     // physical release. Resource/preparation metadata cannot install a proof.
     installSuspendedBodies(boundary,values=[]){

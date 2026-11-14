@@ -71,6 +71,12 @@ test('clock metadata does not alter enumerable node structure or its structural 
  assert.deepEqual(Object.keys(node),keys);assert.equal(node.getCacheKey(),key);
 });
 
+test('a prepared resume uniform preserves the Three graph key and cannot be tagged as an assigned route',()=>{
+ const worldBoundary={version:1,authorityEpoch:'native-owner',nativeSession:1,ticket:3,effectiveTime:10},reference={kind:'native-route-resume-reference',version:1,actorId:7,bodyId:9,sourceAssignmentSequence:3,sourceControlSequence:4,suspendedAt:9,endTime:12,sourceResumeHandle:{authorityEpoch:'native-owner',session:1,slot:0,generation:3},expectedRouteHandle:{authorityEpoch:'native-owner',session:1,slot:0,generation:5},worldBoundary},node=uniform(0),key=node.getCacheKey();markRemoteClockNode(node,'relative',10,null,null,null,reference);
+ const calls=[],group=new NodeUniformsGroup('native-resume',node.groupNode);group.addUniform(new NumberNodeUniform(new NodeUniform('native-time','float',node)));void group.buffer;const backend={get:()=>({buffer:{id:1}}),updateBinding(){}},hook=installRemoteClockBindings({backend},{registerClockBinding:(buffer,binding)=>calls.push(binding)});
+ try{backend.updateBinding(group);assert.deepEqual(calls[0].nativeResume,reference);assert.equal(calls[0].nativeRoute,undefined);assert.equal(node.getCacheKey(),key);assert(Object.isFrozen(calls[0].nativeResume));assert.throws(()=>markRemoteClockNode(uniform(0),'relative',10,{actorId:7,assignmentSequence:3,routeHandle:reference.expectedRouteHandle},null,null,reference),/Conflicting/);}finally{hook.dispose();}
+});
+
 test('a real Three uniform registers its captured native assignment at the physical buffer offset',()=>{
  const reference={actorId:7,assignmentSequence:3,routeHandle:{authorityEpoch:'native-owner',session:1,slot:2,generation:4}},node=uniform(0),keys=Object.keys(node),key=node.getCacheKey();markRemoteClockNode(node,'relative',10,reference);
  reference.actorId=99;reference.assignmentSequence=9;reference.routeHandle.generation=99;

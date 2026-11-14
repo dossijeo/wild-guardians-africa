@@ -6,6 +6,11 @@ const route=()=>({actorId:7,assignmentSequence:3,routeHandle:{authorityEpoch:'ow
 const binding=()=>({nativeRoute:route(),semantic:'relative',epoch:10,elapsed:10.25});
 const consumer=(bindings=[binding()])=>({failed:false,nativeRouteFrame:{sequence:1,clockElapsed:11,bindings}});
 
+test('resume picks require the exact submitted proposal identity and applied world',()=>{
+ const worldBoundary={version:1,authorityEpoch:'owner',nativeSession:1,ticket:3,effectiveTime:10},nativeResume={kind:'native-route-resume-reference',version:1,actorId:7,bodyId:9,sourceAssignmentSequence:3,sourceControlSequence:4,suspendedAt:9,endTime:12,sourceResumeHandle:{authorityEpoch:'owner',session:1,slot:0,generation:3},expectedRouteHandle:{authorityEpoch:'owner',session:1,slot:0,generation:5},worldBoundary},value=consumer([{nativeResume,semantic:'relative',epoch:10,elapsed:10.5}]);value.nativeRouteFrame.worldBoundary=worldBoundary;
+ const pick=captureNativeRoutePickFrame(value);assert.equal(pick.getResumeTime(nativeResume,10),10.5);assert.throws(()=>pick.getTime(route(),10),/no submitted/);assert.throws(()=>pick.getResumeTime({...nativeResume,worldBoundary:{...worldBoundary,ticket:4}},10),/no submitted/);value.nativeRouteFrame.worldBoundary={...worldBoundary,ticket:2};assert.throws(()=>captureNativeRoutePickFrame(value),/world mismatch/);
+});
+
 test('suspended picks use their own submitted identity and cannot borrow the revoked route clock',()=>{
  const worldBoundary={version:1,authorityEpoch:'owner',nativeSession:1,ticket:3,effectiveTime:10},nativeSuspended={kind:'native-suspended-body',version:1,nativeRoute:route(),bodyId:9,resumeGeneration:3,suspendedAt:10,worldBoundary},value=consumer([{nativeSuspended,semantic:'relative',epoch:10,elapsed:10.5}]);value.nativeRouteFrame.worldBoundary=worldBoundary;
  const pick=captureNativeRoutePickFrame(value);assert.equal(pick.getSuspendedTime(nativeSuspended,10),10.5);assert.throws(()=>pick.getTime(route(),10),/no submitted/);assert.throws(()=>pick.getSuspendedTime({...nativeSuspended,bodyId:10},10),/no submitted/);
