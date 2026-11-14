@@ -80,3 +80,21 @@ renovarla; no justifica parar la simulación ni garantiza que reintentar alcance
 una frontera válida. Falta resolver esa adopción y conectar productor/ejecutor
 ordinarios, todas las intenciones, acciones, consecuencias, persistencia y
 aceptación integrada A/B/C. No se declara ausencia global de tirones.
+
+### Comprobación del siguiente mecanismo
+
+Se ensayó después una coordinación con reintentos acotados y los recursos
+retenidos. La prueba nativa pasó, pero la prueba real WebGPU con reloj cada
+20 ms agotó 16 intentos: una preparación y 15 renovaciones, todas caducadas
+antes del commit. Se retiró el mecanismo provisional y su fixture; no se entrega
+como solución. El resultado confirma que reintentar la misma frontera exacta no
+garantiza admisión bajo avance continuo.
+
+También se leyó [React 19.2, ReactFiberWorkLoop.js](https://github.com/facebook/react/blob/v19.2.0/packages/react-reconciler/src/ReactFiberWorkLoop.js),
+`performWorkOnRoot` e `isRenderConsistentWithExternalStores` (1081–1108 y
+1534–1587): compara snapshots después del trabajo concurrente y rehace un
+resultado inconsistente. Su fallback síncrono bloquea nuevas mutaciones; no
+se traslada a la simulación de Wild Guardians. El siguiente mecanismo debe
+permitir fijar el instante definitivo sobre datos gráficos compatibles,
+con prueba física actual y nueva confirmación directa, sin parar otros cuerpos.
+Ese mecanismo aún no está implementado ni validado.
