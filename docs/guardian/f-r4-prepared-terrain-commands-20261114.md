@@ -5,6 +5,8 @@ Continúa el [plan integrado](integrated-gpu-migration-plan-20261104.md) y los
 [comandos preparados de puerta](f-r4-prepared-world-commands-20261114.md).
 Los once padres A6 y e-R3/e-R4/f-R4 permanecen abiertos.
 
+Continúa con [colocaciones preparadas sobre los objetos originales](f-r4-prepared-placement-20261114.md); los cierres globales siguen pendientes.
+
 ## Cambio efectivo
 
 La propuesta del canal de terreno graba ahora su paquete de dibujo antes del

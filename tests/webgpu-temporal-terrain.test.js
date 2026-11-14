@@ -54,13 +54,13 @@ function identityOptions({onPreparedIdentity,onDiscardIdentity,prepareBatch,sign
  return {scene:new Scene(),suppressed:[],signal,validateInstances(){},publicationEpoch:epoch=>epoch,publicationOrder:()=>++next,onPreparedIdentity,onDiscardIdentity,residency:{prepareRevision(){return token;}},biome:{ready:Promise.resolve(true),async requestSlots(){},prepareRevision(){return token;}},coordinator:{prepareBatch}};
 }
 
-test('unsupported presentation support aborts all prepared owners before dependent admission',async()=>{
+test('unsupported presentation support aborts terrain and prepared dependents before GPU admission',async()=>{
  const aborted=[],options=identityOptions({prepareBatch(){assert.fail('unsupported support reached GPU admission');}});
  options.residency.prepareRevision=()=>({surfaceMesh:{},participant(){assert.fail('unsupported support consumed a participant');},abort(){aborted.push('terrain');}});
  options.biome.prepareRevision=()=>({participant(){assert.fail('unsupported support consumed a participant');},abort(){aborted.push('biome');}});
- options.prepareDependents=()=>assert.fail('unsupported support reached dependents');
- options.validatePresentationSupport=view=>{assert.equal(view.changedKeys.has('0,0'),true);assert.ok(view.get(0,0));throw Error('unprepared entity support');};
- await assert.rejects(prepareWebGpuTemporalTerrain([message(0,0)],options),/unprepared entity support/);assert.deepEqual(aborted,['biome','terrain']);
+ const dependent={cancel(){aborted.push('dependent');}};options.prepareDependents=()=>[dependent];
+ options.validatePresentationSupport=(view,parts)=>{assert.equal(view.changedKeys.has('0,0'),true);assert.ok(view.get(0,0));assert.deepEqual(parts,[dependent]);throw Error('unprepared entity support');};
+ await assert.rejects(prepareWebGpuTemporalTerrain([message(0,0)],options),/unprepared entity support/);assert.deepEqual(aborted,['dependent','biome','terrain']);
 });
 
 test('history receiver forwards only the identity of the batch it committed',async()=>{

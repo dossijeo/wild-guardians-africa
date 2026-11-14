@@ -1,5 +1,7 @@
 import {Group} from 'three';
 import {createActorTerrainSampler} from './webgpu-actor-terrain.js';
+import {createSettlementHeightSampler} from './webgpu-settlement-height.js';
+import {createPreparedTerrainPlacement} from './webgpu-terrain-placement.js';
 
 // Loose crates belong to confirmed presentation. Carried crates remain part
 // of the worker rig; delivered history has no visual object.
@@ -12,5 +14,14 @@ export function createWebGpuCrateRoster({scene,residency,state,assetBank,pipelin
   for(const [id,entry] of entries){const crate=desired.get(id);if(!crate||(crate.profile??'olderMale')!==entry.profile)remove(id,entry);}
   for(const [id,crate] of desired){let entry=entries.get(id);if(entry){update(entry,crate);continue;}entry={profile:crate.profile??'olderMale',root:null,pendingRoot:null,lease:null,controller:new AbortController(),surface:createActorTerrainSampler(residency)};entries.set(id,entry);Promise.resolve().then(()=>assetBank.acquireCrate(entry.profile)).then(async lease=>{if(closed||entries.get(id)!==entry){lease.release();return;}entry.lease=lease;const root=new Group();entry.pendingRoot=root;root.visible=false;root.userData.entityId=id;root.add(lease.model);const publish=()=>{if(closed||entries.get(id)!==entry)return;entry.pendingRoot=null;entry.root=root;scene.add(root);onSelectableChange();const current=(state.crates??[]).find(c=>c.id===id);if(current&&!current.delivered&&!current.carrierId)update(entry,current);else remove(id,entry);};if(pipelineAdmission){const options={signal:entry.controller.signal};if(typeof pipelineAdmission.prepareAndPublish==='function')await pipelineAdmission.prepareAndPublish(root,options,publish);else{await pipelineAdmission.prepare(root,options);publish();}}else publish();}).catch(error=>{if(closed||entries.get(id)!==entry)return;remove(id,entry);onError(error);});}
  }
- return {sync,syncConfirmed(changedKeys){if(changedKeys==null||changedKeys.has('crates'))sync();},status(){let ready=0;for(const entry of entries.values())if(entry.root?.visible)ready++;return {closed,count:entries.size,ready,pending:entries.size-ready};},dispose(){if(closed)return;closed=true;for(const [id,entry] of entries)remove(id,entry);}};
+ function prepareTerrainSupport(view){
+  const previous=createSettlementHeightSampler(residency),next=createSettlementHeightSampler(view),parts=[];
+  try{for(const entity of state.crates??[]){
+   if(entity.delivered||entity.carrierId||!view.changedKeys.has(`${Math.floor((entity.x+24)/48)},${Math.floor((entity.z+24)/48)}`))continue;
+   const previousHeight=previous(entity.x,entity.z),nextHeight=next(entity.x,entity.z);if(previousHeight===nextHeight)continue;
+   const entry=entries.get(entity.id);if(closed||!entry?.root)throw Error('Crate terrain resources unavailable');const stamp=JSON.stringify(entity);
+   parts.push(createPreparedTerrainPlacement({object:entry.root,entity,previousHeight,nextHeight,signal:entry.controller.signal,isCurrent:()=>!closed&&entries.get(entity.id)===entry&&state.crates.includes(entity)&&JSON.stringify(entity)===stamp}));
+  }return parts;}catch(error){for(const part of parts.reverse())part.cancel();throw error;}
+ }
+ return {sync,prepareTerrainSupport,syncConfirmed(changedKeys){if(changedKeys==null||changedKeys.has('crates'))sync();},status(){let ready=0;for(const entry of entries.values())if(entry.root?.visible)ready++;return {closed,count:entries.size,ready,pending:entries.size-ready};},dispose(){if(closed)return;closed=true;for(const [id,entry] of entries)remove(id,entry);}};
 }

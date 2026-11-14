@@ -10,6 +10,7 @@ import {createWebGpuAdmittedVillage} from './webgpu-village-admission.js';
 import {buildWebGpuVillage,createWebGpuVillagePreview,villagePreviewReconciled} from './webgpu-village-preview.js';
 import {createWebGpuAdmittedCenterDamage} from './webgpu-center-damage-admission.js';
 import {createSettlementHeightSampler} from './webgpu-settlement-height.js';
+import {createPreparedTerrainPlacement} from './webgpu-terrain-placement.js';
 import {wallBufferReader} from './wall-buffer-reader.js';
 import {centerCulture} from '../world/centers.js';
 import {ProvisionalWalls} from './provisional-walls.js';
@@ -121,7 +122,13 @@ export function createWebGpuSettlements({scene,state,residency,renderer=null,pip
  function prepareVillageTerrain(view){
   if(closed||!view||typeof view.get!=='function'||!(view.changedKeys instanceof Set))throw TypeError('Invalid proposed village terrain');
   const liveMeshes=new Map(),sample=createSettlementHeightSampler({get(cx,cz){const mesh=view.get(cx,cz),key=`${cx},${cz}`;if(!view.changedKeys.has(key))liveMeshes.set(key,mesh);return mesh;}}),parts=[];
-  try{for(const entity of state.villages??[]){
+  try{for(const entity of state.structures??[]){
+   if(!view.changedKeys.has(`${Math.floor((entity.x+24)/48)},${Math.floor((entity.z+24)/48)}`)||entity.gate)continue;
+   const previousHeight=surface(entity.x,entity.z),nextHeight=sample(entity.x,entity.z);if(previousHeight===nextHeight)continue;
+   const id='s:'+entity.id,entry=entries.get(id);if(!entry||entry.kind==='wall'&&!entry.wall?.upToDate||entry.kind==='center'&&!entry.centerReady)throw Error('Structure terrain resources unavailable');
+   const stamp=JSON.stringify(entity);parts.push(createPreparedTerrainPlacement({object:entry.group,entity,previousHeight,nextHeight,isCurrent:()=>!closed&&entries.get(id)===entry&&state.structures.includes(entity)&&JSON.stringify(entity)===stamp}));
+  }
+  for(const entity of state.villages??[]){
    if(!entity.buildings.some(b=>view.changedKeys.has(`${Math.floor((b.x+24)/48)},${Math.floor((b.z+24)/48)}`)))continue;
    const id='v:'+entity.id,entry=entries.get(id),assets=banks.get('village:'+entity.culture)?.value;
    if(!entry?.village||!assets)throw Error('Village terrain resources unavailable');

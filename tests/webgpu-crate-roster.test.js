@@ -3,6 +3,14 @@ import assert from 'node:assert/strict';
 import {Scene,Mesh,PlaneGeometry,MeshBasicMaterial,DoubleSide,Group,PerspectiveCamera} from 'three';
 import {createWebGpuCrateRoster} from '../src/rendering/webgpu-crate-roster.js';
 import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
+
+test('loose crate support is prepared on the admitted root without reacquiring its assets',async()=>{
+ const scene=new Scene(),state={crates:[{id:'crate-original',x:1,z:2}]},material=new MeshBasicMaterial({side:DoubleSide}),geometry=new PlaneGeometry(48,48);geometry.rotateX(-Math.PI/2);
+ const old=new Mesh(geometry,material),next=new Mesh(geometry,material);old.position.y=2;next.position.y=6;let current=old,loads=0,releases=0;const model=new Group(),residency={get:()=>current},owner=createWebGpuCrateRoster({scene,state,residency,assetBank:{async acquireCrate(){loads++;return {model,release(){releases++;}};}},pipelineAdmission:{prepare(){},prepareAndPublish:async(_root,_options,publish)=>publish()}});
+ try{owner.sync();await flush();const root=scene.children[0],view={get:()=>next,changedKeys:new Set(['0,0'])},[part]=owner.prepareTerrainSupport(view);assert.equal(root.position.y,2.025);assert.equal(part.terrainSupport.entity,state.crates[0]);assert.equal(part.presentation().placements[0].position[1],6.025);assert.equal(loads,1);current=next;part.activate();part.attach();const result=part.finalize();result.retire();result.notify();owner.sync();assert.equal(root.position.y,6.025);assert.equal(root.children[0],model);assert.equal(scene.children[0],root);assert.equal(loads,1);assert.equal(releases,0);
+  const retirement=owner.prepareTerrainSupport({get:()=>null,changedKeys:new Set(['0,0'])})[0];retirement.activate();retirement.attach();assert.equal(root.visible,false);retirement.rollback();retirement.cancel();assert.equal(root.visible,true);assert.equal(root.position.y,6.025);
+ }finally{owner.dispose();geometry.dispose();material.dispose();}assert.equal(releases,1);
+});
 test('a crate is attached inside its verified admission callback',async()=>{
  const scene=new Scene(),state={crates:[{id:'a',x:0,z:0}]};let commit,released=0;
  const admission={prepare(){throw Error('non-atomic admission used');},prepareAndPublish(root,_options,publish){return new Promise(resolve=>{commit=()=>{assert.equal(root.parent,null);publish();resolve();};});}},roster=createWebGpuCrateRoster({scene,state,residency:{get:()=>null},pipelineAdmission:admission,assetBank:{async acquireCrate(){return {model:new Group(),release(){released++;}};}}});

@@ -63,18 +63,20 @@ export function createChunkPublicationCoordinator({admission,onError=()=>{},boot
    function capturePresentation(record){
     if(typeof record!=='function'||committing||!valid())throw Error('Chunk presentation capture unavailable');
     assertNoSynchronousObservers(scene,parts);
-    const shown=new Set(),hidden=new Set(),allowed=new Set();
-    for(const part of parts){for(const root of part.eventRoots())root.traverse(object=>allowed.add(object));const selection=part.presentation?.();if(!selection||!Array.isArray(selection.show)||!Array.isArray(selection.hide))throw Error('Chunk owner has no prepared presentation');for(const object of selection.show)shown.add(object);for(const object of selection.hide)hidden.add(object);}
-    if([...shown,...hidden].some(object=>!object?.isObject3D||!allowed.has(object))||[...shown].some(object=>hidden.has(object)))throw Error('Conflicting prepared chunk presentation');
-    const attached=[],visibility=new Map([...shown,...hidden].map(object=>[object,object.visible]));let result,failure;
+    const shown=new Set(),hidden=new Set(),allowed=new Set(),placements=new Map();
+    for(const part of parts){for(const root of part.eventRoots())root.traverse(object=>allowed.add(object));const selection=part.presentation?.();if(!selection||!Array.isArray(selection.show)||!Array.isArray(selection.hide))throw Error('Chunk owner has no prepared presentation');for(const object of selection.show)shown.add(object);for(const object of selection.hide)hidden.add(object);for(const placement of selection.placements??[]){if(!placement?.object?.isObject3D||!Array.isArray(placement.position)||placement.position.length!==3||!placement.position.every(Number.isFinite)||placements.has(placement.object))throw Error('Invalid prepared chunk placement');placements.set(placement.object,placement.position.slice());}}
+    if([...shown,...hidden,...placements.keys()].some(object=>!object?.isObject3D||!allowed.has(object))||[...shown].some(object=>hidden.has(object)))throw Error('Conflicting prepared chunk presentation');
+    const attached=[],visibility=new Map([...shown,...hidden].map(object=>[object,object.visible])),positions=new Map([...placements.keys()].map(object=>[object,object.position.clone()]));let result,failure;
     committing=true;
     try{
      for(const object of shown){if(object.parent===null){attached.push(object);scene.add(object);}object.visible=true;}
      for(const object of hidden)object.visible=false;
+     for(const [object,position] of placements){object.position.fromArray(position);object.updateWorldMatrix(true,true);}
      if([...shown].some(object=>{let root=object;while(root.parent)root=root.parent;return root!==scene;}))throw Error('Prepared chunk presentation is detached from its scene');
      result=record();if(result&&typeof result.then==='function')throw Error('Chunk presentation capture must be synchronous');
+     if([...placements].some(([object,position])=>!object.position.toArray().every((value,index)=>value===position[index])))throw Error('Prepared placement changed while recording');
     }catch(error){failure=error;}
-    finally{for(const [object,visible] of visibility)object.visible=visible;for(const object of attached.reverse())object.removeFromParent();committing=false;}
+    finally{for(const [object,position] of positions)object.position.copy(position);for(const [object,visible] of visibility)object.visible=visible;for(const object of attached.reverse())object.removeFromParent();for(const object of positions.keys())object.updateWorldMatrix(true,true);committing=false;}
     if(failure||!valid()){cancel();throw failure??Error('Chunk presentation changed while recording');}return result;
    }
    return {valid,capturePresentation,commit(){
