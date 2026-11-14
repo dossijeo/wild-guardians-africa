@@ -256,3 +256,10 @@ La [auditoría de consumidores retenidos](f-r4-retained-terrain-consumers-202611
 
 
 La [identidad de ruta nativa en los uniforms de Three](f-r4-native-three-clock-20261114.md) enlaza el adaptador existente con actor/asignación/handle inmutable, sin otro reloj ni cambios de clave estructural. Se consultaron las implementaciones de grupos/bindings de Three r180. Siete casos nuevos usan offsets reales de NodeUniformsGroup sobre un backend de prueba; pasan 22 dirigidas, 127 de regresión y build en 45,25 s. Todavía no se ha demostrado locomoción de mallas reales: sigue la representación de la ruta futura con apoyo 3D y su admisión/recuperación. No se reutiliza un permiso histórico para autorizar futuro ni se activa autonomía de producto; A6/e/f mantienen sus pendientes.
+
+La [captura completa de asignaciones nativas y su apoyo 3D](f-r4-native-route-support-20261114.md)
+usa los nudos/muestras C++ y el cálculo de triángulos ya existente. Conserva el
+recurso entero, fases y la identidad inmutable; cambiar terreno ajeno a la ruta no
+invalida su apoyo. Las pruebas contrastan WASM y raycast de Three. Es preparación
+de datos, aún sin reproducción GPU en personajes originales ni autonomía ordinaria;
+f-R4 y los once padres de A6 permanecen abiertos.

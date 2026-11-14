@@ -2,7 +2,7 @@
 
 Actualizado: 2026-11-14. IDs acordados en la conversación; no se renumeran al avanzar.
 
-Último incremento de f-R4: [retención existente contrastada para centros, muros, cultivos y cajas](f-r4-retained-terrain-consumers-20261114.md).
+Último incremento de f-R4: [captura de ruta nativa completa y apoyo 3D reutilizado](f-r4-native-route-support-20261114.md).
 Publicaciones vivas y aceptación de personajes autónomos siguen pendientes; no cambia el recuento de cierres.
 
 **Ningún punto principal está cerrado todavía.** Un subpunto marcado como nativo

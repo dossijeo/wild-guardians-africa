@@ -1,3 +1,5 @@
+import {copyNativeRouteReference} from '../world/native-route-reference.js';
+
 // Symbol metadata is intentionally non-enumerable: it must not alter TSL graph
 // structure/cache keys. Registration occurs when a physical binding is updated,
 // never by discovering graph nodes during replay.
@@ -6,11 +8,9 @@ export function markRemoteClockNode(node,semantic,epoch,nativeRoute=null){
  if(!node?.isNode||!['absolute','relative'].includes(semantic)||!Number.isFinite(epoch)||epoch<0)throw TypeError('Invalid remote clock node');
  let route=null;
  if(nativeRoute!==null){
-  const {actorId,assignmentSequence,routeHandle}=nativeRoute??{},id=value=>Number.isSafeInteger(value)&&value>0;
-  if(!id(actorId)||!id(assignmentSequence)||typeof routeHandle?.authorityEpoch!=='string'||!routeHandle.authorityEpoch||!id(routeHandle.session)||!Number.isSafeInteger(routeHandle.slot)||routeHandle.slot<0||!id(routeHandle.generation))throw TypeError('Invalid native route clock reference');
   // A compiled uniform belongs to this exact assignment. Caller mutation must
   // never retag an already admitted GPU binding for another route generation.
-  route=Object.freeze({actorId,assignmentSequence,routeHandle:Object.freeze({authorityEpoch:routeHandle.authorityEpoch,session:routeHandle.session,slot:routeHandle.slot,generation:routeHandle.generation})});
+  try{route=copyNativeRouteReference(nativeRoute);}catch{throw TypeError('Invalid native route clock reference');}
  }
  Object.defineProperty(node,clockMetadata,{value:Object.freeze({semantic,epoch,...(route?{nativeRoute:route}:{})}),enumerable:false});
  return node;

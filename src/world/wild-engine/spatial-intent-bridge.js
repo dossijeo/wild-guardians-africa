@@ -10,6 +10,7 @@ import {actorBlockers} from '../../simulation/actor-motion.js';
 import {wallCollisionFrame} from '../wall-collision-frame.js';
 import {readNativeGateStaticWitness} from './spatial-gate-intents.js';
 import {copyNativeWorldBoundary} from '../native-world-boundary.js';
+import {NATIVE_ROUTE_PRESENTATION_VERSION,NATIVE_ROUTE_PRESENTATION_WIDTH} from '../native-route-presentation.js';
 import {applyConfirmedTaskAssignments,notifyWorkerPlanningChange,
   observeTaskChanges,releaseTask,replaceTasks} from '../../simulation/tasks.js';
 
@@ -818,6 +819,23 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
        wasm.nav_intent_route_sample(handle.session,handle.slot,handle.generation,at)!==1)return null;
     return decodeMotionSample(new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_sample_ptr(),18));
   };
+  // Copy once for a route assignment. This is not a position publication or
+  // another solver: native reservation knots define every affine interval.
+  const captureNativeRoutePresentation=handle=>{
+    const plan=nativeRouteTiming(handle),knots=plan?nativeRouteTimeKnots(handle):null;
+    if(!plan||!knots)return null;
+    if(knots[0]!==plan.startTime||knots.at(-1)!==plan.endTime||knots.some((at,i)=>!Number.isFinite(at)||i>0&&at<=knots[i-1]))throw Error('Invalid native presentation knots');
+    const worldBoundary=copyNativeWorldBoundary(nativeWorldResourceBoundary()),rows=new Float64Array(knots.length*NATIVE_ROUTE_PRESENTATION_WIDTH);
+    for(let i=0;i<knots.length;i++){
+      const at=knots[i],pose=sampleNativeRoute(handle,at),right=i+1<knots.length?sampleNativeRoute(handle,at+(knots[i+1]-at)*.5):pose;
+      if(!pose||!right)return null;
+      const values=[at,pose.x,pose.z,pose.distance,pose.phase,right.yaw,right.firstRemainingPoint,right.arrived?1:0,pose.runPhase??0,pose.walkPhase??0,pose.carryPhase??0,pose.runDistance??0,pose.walkDistance??0,pose.runRemaining??0,right.running?1:0,right.currentSpeed??(right.arrived?0:plan.speed)];
+      if(!values.every(Number.isFinite))throw Error('Invalid native presentation sample');rows.set(values,i*NATIVE_ROUTE_PRESENTATION_WIDTH);
+    }
+    return Object.freeze({kind:'native-route-presentation',version:NATIVE_ROUTE_PRESENTATION_VERSION,rowWidth:NATIVE_ROUTE_PRESENTATION_WIDTH,
+      nativeRoute:Object.freeze({actorId:plan.actorId,assignmentSequence:plan.assignmentSequence,routeHandle:routeHandle(handle.session,handle.slot,handle.generation)}),
+      worldBoundary,startTime:plan.startTime,endTime:plan.endTime,motionMode:plan.motionMode??'animal',profile:plan.profile,radius:plan.radius,executionScope:plan.executionScope,nativeCrossingAdmitted:plan.nativeCrossingAdmitted===true,authorizedAutonomy:false,rows});
+  };
   const beginNativeRouteExecution=()=>{
     syncBoundaryTime();const result=wasm.nav_intent_execution_begin();
     return {status:result===1?'started':result===-2?'inactive':result===-4?'world-changed':'incoherent',authorizedAutonomy:false};
@@ -1313,7 +1331,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     structureFor:id=>structuresById.get(numericId(id))??null,
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
-    intentChanges,routePoints,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,
+    intentChanges,routePoints,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,captureNativeRoutePresentation,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,
     beginNativeRouteExecution,advanceNativeRouteExecution,stopNativeRouteExecution,nativeRouteExecution,
     projectRouteProgress,processEventBoundary,requestReroute,
     registerAttackIntent,planAttackCrop,planAttackWall,replanAttackRoute,
@@ -2227,7 +2245,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     observeNativeIntentControl:bridge.observeNativeIntentControl,
     flushNativeIntentControl:bridge.flushNativeIntentControl,
     intentChanges:bridge.intentChanges,routePoints:bridge.routePoints,
-    nativeRouteTiming:bridge.nativeRouteTiming,nativeRouteTimeKnots:bridge.nativeRouteTimeKnots,sampleNativeRoute:bridge.sampleNativeRoute,
+    nativeRouteTiming:bridge.nativeRouteTiming,nativeRouteTimeKnots:bridge.nativeRouteTimeKnots,sampleNativeRoute:bridge.sampleNativeRoute,captureNativeRoutePresentation:bridge.captureNativeRoutePresentation,
     nativeGateRouteSweep:bridge.nativeGateRouteSweep,
     nativeGateMechanism:bridge.nativeGateMechanism,nativeGateMechanismPose:bridge.nativeGateMechanismPose,nativeGateMechanismSegment:bridge.nativeGateMechanismSegment,
     nativeGateMechanismWorldVertices:bridge.nativeGateMechanismWorldVertices,

@@ -1,6 +1,6 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
-Continuación 2026-11-14: [apoyo retenido de centros/muros/cultivos/cajas verificado; efectos, personajes nativos y autoridad normal pendientes](f-r4-retained-terrain-consumers-20261114.md).
+Continuación 2026-11-14: [ruta nativa completa y apoyo 3D preparados; reproducción en personajes originales y autoridad normal pendientes](f-r4-native-route-support-20261114.md).
 Se conserva el orden A → B → C → D; el replay preparado avanza, pero la admisión viva y la aceptación con personajes autónomos siguen pendientes.
 
 Revisión del 5 de noviembre de 2026. Rama de trabajo: `codex/guardian-3d-animation`. Este documento sustituye la secuencia del plan del 4 de noviembre; su versión anterior permanece en Git. Estado: plan de implementación, no arquitectura ya terminada.

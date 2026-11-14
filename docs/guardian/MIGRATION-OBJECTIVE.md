@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [retención verificada de centros, muros, cultivos y cajas sobre terreno cambiado](f-r4-retained-terrain-consumers-20261114.md).
+Último avance: [recurso completo de asignación nativa y apoyo 3D sobre el terreno residente](f-r4-native-route-support-20261114.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio
