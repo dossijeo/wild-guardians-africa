@@ -37,5 +37,5 @@ export function sampleNativeRouteGpuTable(table,at){
  let low=0,high=count;while(low<high){const middle=Math.floor((low+high)/2);if(data[middle*NATIVE_ROUTE_GPU_WIDTH]<=time)low=middle+1;else high=middle;}
  const index=Math.max(0,low-1),offset=index*NATIVE_ROUTE_GPU_WIDTH,next=Math.min(index+1,count-1)*NATIVE_ROUTE_GPU_WIDTH,span=data[next]-data[offset],fraction=span>0?Math.max(0,Math.min(1,(time-data[offset])/span)):0,result={};
  for(let column=1;column<NATIVE_ROUTE_GPU_FIELDS.length;column++)result[NATIVE_ROUTE_GPU_FIELDS[column]]=[6,7,8,15,16].includes(column)?data[offset+column]:data[offset+column]+(data[next+column]-data[offset+column])*fraction;
- return result;
+ return {...result,relativeTime:time};
 }

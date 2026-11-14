@@ -246,3 +246,6 @@ Continuación parcial f-R4, 14 de noviembre: [materiales de la variante nativa u
 
 
 Continuación parcial f-R4, 14 de noviembre: [sombras por material fuente](f-r4-native-shadow-source-20261114.md). Se adapta el código real de Three 253fa7ad al parche r180 existente: identidad/versión/listener del material fuente y ChainMap por longitud. El relevo Carry equivalente pasa de tres a cero shaders/pipelines nuevos, manteniendo primer render sin creaciones, nueve piezas, dibujo durante bloqueo y drenaje. Permanecen 90 buffers y 48 pares de bind groups/layouts nuevos, fases y autoridad ordinarias e integración A–F/B/C; no cambian los cierres.
+
+
+Continuación parcial f-R4, 14 de noviembre: [Idle durante esperas nativas](f-r4-native-idle-20261114.md). El selector de la misma malla consume Idle/Run/Walk del reloj C++ finito; Carry conserva su fase y caja en el hold. El relevo retiene los clips ya admitidos para reutilizar programas. La prueba GPU de una espera nativa registra cuatro dibujos detenidos y once posteriores durante 500 ms, sin cambios CPU y sin shaders/pipelines nuevos al relevar. Falta conectar el dibujo de la hoja de puerta al mismo estado nativo, además de fases/acciones y autoridad ordinarias e integración A–F/B/C. No cambia ningún cierre.
