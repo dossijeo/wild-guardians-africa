@@ -1,0 +1,17 @@
+{
+  "ticks": 60,
+  "blockedAtTick": 32,
+  "blockedReason": "event-capacity",
+  "neededBytes": 184,
+  "capacity": 150,
+  "maxPublishedBytes": 94,
+  "finalVersion": 60,
+  "eventTypes": [
+    "synthetic-hold",
+    "StructureRuined"
+  ],
+  "eventsAcknowledged": 2,
+  "pending": 0,
+  "projectionEqual": true,
+  "scope": "Saved savanna raid; synthetic retained event fills part of a 150-byte serialized-JSON event capacity before real StructureRuined. One completed simulation step is held outside that capacity until acks free space; retained state, JS heap, messages and copies are not byte bounded. Explicit caller-driven steps; no render, production recovery or performance comparison."
+}

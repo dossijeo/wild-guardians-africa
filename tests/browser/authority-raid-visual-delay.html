@@ -1,0 +1,24 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {deserialize} from '../../src/persistence/snapshots.js';
+import {createConfirmedStateReceiver} from '../../src/simulation/confirmed-state-receiver.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+import {createWorkerGameRuntime} from '../../src/simulation/worker-game-runtime.js';
+import {openVisualStream} from '../../src/simulation/visual-publication-stream.js';
+const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+window.audit=async()=>{
+ const source=await (await fetch('/tests/fixtures/desierto123-d9-exterior-formation.json.gz')).text(),keys=[];for(let z=-2;z<=2;z++)for(let x=-1;x<=5;x++)keys.push(`${x},${z}`);
+ function setup(id,hold){
+  const state=deserialize(source),channel=new MessageChannel(),events=[],received=[],acks=[];let now=0,wake,runtime;
+  channel.port2.onmessage=({data})=>{if(data.kind==='publication'){received.push({sequence:data.publication.sequence,events:data.publication.events});if(hold)acks.push(data.publication.sequence);else channel.port2.postMessage({kind:'publicationAck',session:id,sequence:data.publication.sequence});}};channel.port2.start();
+  const stream=openVisualStream(channel.port1,id,()=>runtime?.resumeDispatch(),{diagnostics:true}),receiver=createConfirmedStateReceiver(state,id),world={createConfirmedReceiver(){return {accept(message,meta){const r=receiver.accept(message);if(r.accepted){events.push(...message.events.map(e=>structuredClone(e)));stream.publish(message,meta.kind==='advance');}return r;},acceptUnchanged(message,meta){const r=receiver.acceptUnchanged(message);if(r.accepted)stream.publish(message,meta.kind==='advance');return r;},status:()=>receiver.status()};}};
+  const client=createSimulationAuthorityClient({snapshot:source,chunkKeys:keys,session:id,navigationView:{bounds:[-80,-140,240,140],eye:{x:80,z:30},target:{x:60,z:0}}});
+  runtime=createWorkerGameRuntime({client,world,session:id,stepSeconds:.05,maxBatchSteps:1,now:()=>now,schedule:fn=>(wake=fn,1),cancel(){},canDispatch:()=>!stream.blocked()});
+  async function settled(){for(let i=0;i<1000;i++){const status=runtime.status();if(status.fault)throw Error(status.fault);if(!status.busy&&!status.queued&&!status.pendingSteps)return;await sleep(5);}throw Error('Authority did not settle');}
+  return {state,events,received,acks,stream,runtime,async start(){await runtime.start();await settled();},async tick(){now+=50;wake();await settled();},async snapshot(){return runtime.submit({kind:'snapshot'});},async release(){hold=false;const first=acks.shift();if(first!==undefined)channel.port2.postMessage({kind:'publicationAck',session:id,sequence:first});for(let i=0;i<1000;i++){const status=stream.status();if(!status.inFlight&&!status.queued)return;await sleep(5);}throw Error('Visual queue did not drain');},dispose(){stream.close();runtime.dispose();channel.port2.close();}};
+ }
+ const fast=setup('raid-fast',false),slow=setup('raid-held',true);
+ try{await Promise.all([fast.start(),slow.start()]);let firstSpawn=null;for(let i=0;i<60;i++){await Promise.all([fast.tick(),slow.tick()]);if(JSON.stringify(fast.events)!==JSON.stringify(slow.events))throw Error('Event stream diverged at tick '+i);if(JSON.stringify(fast.state)!==JSON.stringify(slow.state))throw Error('State diverged at tick '+i);if(firstSpawn===null&&fast.state.raid?.animals?.length)firstSpawn=i+1;}
+  const [a,b]=await Promise.all([fast.snapshot(),slow.snapshot()]);if(a.snapshot!==b.snapshot)throw Error('Final authoritative snapshots diverged');if(firstSpawn===null)throw Error('Fixture did not start an incursion');const status=slow.stream.status();if(!slow.acks.length||status.acknowledged!==0)throw Error('Presentation ACK was not held');await slow.release();const delivered=slow.received.flatMap(item=>item.events);if(JSON.stringify(delivered)!==JSON.stringify(slow.events))throw Error('Visual events lost or reordered after release');return {ticks:60,spawnTick:firstSpawn,animals:fast.state.raid?.animals?.length??0,events:fast.events.map(e=>({id:e.id,type:e.type})),delivered:delivered.length,held:status,scope:'Two real authority Workers, deterministic manually driven worker runtimes and visual publication queues; one visual consumer withholds ACK. No renderer/GPU or long saturation test.'};
+ }finally{fast.dispose();slow.dispose();}
+};window.ready=true;
+</script>

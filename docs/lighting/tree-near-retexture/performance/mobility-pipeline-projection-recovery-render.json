@@ -1,0 +1,54 @@
+{
+  "worker": {
+    "coldMs": 1080.195000000298,
+    "coldResponseMs": 1088.4700000006706,
+    "gapResponseMs": 17.679999999701977,
+    "recoveryResponseMs": 33.14500000141561
+  },
+  "frames": {
+    "count": 31,
+    "p95": 38.709999999031425,
+    "p99": 38.80499999970198,
+    "max": 39.505000000819564
+  },
+  "coldFrames": {
+    "count": 31,
+    "p95": 38.709999999031425,
+    "p99": 38.80499999970198,
+    "max": 39.505000000819564
+  },
+  "render": {
+    "count": 32,
+    "p95": 38.16000000014901,
+    "p99": 38.50999999977648,
+    "max": 39.17999999970198
+  },
+  "gpu": {
+    "samples": 32,
+    "disjoint": 0,
+    "discarded": 0,
+    "pending": 0,
+    "elapsed": {
+      "count": 32,
+      "p95": 27.879584,
+      "p99": 29.812992,
+      "max": 30.34656
+    }
+  },
+  "drawsDuringWait": 32,
+  "draws": 3,
+  "deliveredEvents": 12,
+  "sceneErrors": [],
+  "authority": "spatial-wasm",
+  "network": true,
+  "animals": 20,
+  "chunks": 25,
+  "gap": "gap",
+  "recoveredVersion": 3,
+  "duplicateNewEvents": 0,
+  "finalVersion": 4,
+  "finalSnapshotEqual": true,
+  "eventEqual": true,
+  "receivedEvents": 12,
+  "scope": "QA Worker with deliberately dropped projection, snapshot retry, frozen last-confirmed scene rendered during selected waits, partial scene updates and three explicit commit draws. No real input, Rapier, Worker crash, complete visual state or safe horizon; not production."
+}

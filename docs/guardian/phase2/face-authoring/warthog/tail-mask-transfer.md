@@ -1,0 +1,5 @@
+# Máscara de cola tras edición facial
+
+La máscara anterior solo reconocía la geometría original 6d41a31b… y no se aplicaba al jabalí expresivo. Se transfieren las 426 posiciones únicas previamente revisadas, con tolerancia 2e-6, a 1221 vértices actuales; la selección original tenía 1193 vértices con duplicados distintos. No se infiere una nueva región por umbrales espaciales. El script falla si falta cualquier posición original. Se conserva la máscara del original.
+
+Prueba: punta conocida localizada por posición, cola excluida y contactos de la mano retenidos; una geometría alterada no hereda la máscara. Al recuperar la exclusión de cola, el muestreo alterno no estabilizaba una caída: el primer ajuste del jabalí ahora recorre todos los vértices y después reutiliza los soportes cacheados. Pasan las 15 pruebas de ragdoll; clips horneados regenerados. Pendiente revisión visual específica del apoyo sin cola en el modelo instalado. El fallo independiente del fixture de tres hienas sigue abierto.

@@ -1,0 +1,755 @@
+{
+  "ready": true,
+  "campaign": false,
+  "paused": true,
+  "lastPick": null,
+  "workerCandidate": null,
+  "workerGround": null,
+  "workers": [
+    {
+      "id": "worker-28",
+      "profile": "olderMale",
+      "x": 60,
+      "z": 0,
+      "status": "home",
+      "hits": 0
+    }
+  ],
+  "faceCandidate": false,
+  "faceCandidateSpecies": null,
+  "expressions": [
+    {
+      "id": "qa-beast-0",
+      "weights": [
+        0,
+        0,
+        0.65
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-1",
+      "weights": [
+        0,
+        0,
+        1.7929921778508002e-220
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-2",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-3",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 10
+    },
+    {
+      "id": "qa-beast-4",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 10
+    },
+    {
+      "id": "qa-beast-5",
+      "weights": [
+        0,
+        0,
+        9.190026074443533e-124
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-6",
+      "weights": [
+        0,
+        0,
+        1.5024823300156135e-156
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-7",
+      "weights": [
+        0,
+        0,
+        1.3448409150982976e-166
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-8",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 10
+    },
+    {
+      "id": "qa-beast-9",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 10
+    },
+    {
+      "id": "qa-beast-10",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-11",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-12",
+      "weights": [
+        0,
+        0,
+        4.842991064535713e-134
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-14",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 10
+    },
+    {
+      "id": "qa-beast-16",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-17",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    }
+  ],
+  "entityCounts": {
+    "workers": 1,
+    "structures": 1,
+    "crops": 12,
+    "animals": 20
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 0,
+  "maxVisibleGuardians": 0,
+  "slopeSite": null,
+  "guideTrial": false,
+  "guideOrigin": null,
+  "guidePosition": null,
+  "elapsed": 3044.775090000151,
+  "simulate": true,
+  "clockMode": "Game.tick",
+  "shields": [],
+  "active": 0,
+  "origins": [],
+  "retainedAttacks": [],
+  "retainedDraws": 0,
+  "attackVisual": [],
+  "reused": 0,
+  "animalState": "attacking",
+  "animalPosition": [
+    88.25799059817864,
+    -11.794391846804048
+  ],
+  "draws": 98,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "beast_hit_structure",
+      "at": 3009.8215250001126,
+      "emitter": "qa-beast-15",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "game_building_attacked",
+      "at": 3009.8215250001126,
+      "emitter": "ui:structure-danger",
+      "played": false
+    },
+    {
+      "id": "beast_hit_structure",
+      "at": 3011.4315050001146,
+      "emitter": "qa-beast-15",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_hit_structure",
+      "at": 3016.038380000122,
+      "emitter": "qa-beast-15",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_hit_structure",
+      "at": 3016.2879300001223,
+      "emitter": "qa-beast-5",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_hit_structure",
+      "at": 3017.634825000125,
+      "emitter": "qa-beast-15",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_hit_structure",
+      "at": 3019.3755800001277,
+      "emitter": "qa-beast-12",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_hit_structure",
+      "at": 3019.575115000128,
+      "emitter": "qa-beast-5",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_hit_structure",
+      "at": 3021.0038850001297,
+      "emitter": "qa-beast-12",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_hit_structure",
+      "at": 3021.40027500013,
+      "emitter": "qa-beast-15",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_hit_structure",
+      "at": 3022.8616950001315,
+      "emitter": "qa-beast-5",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_hit_structure",
+      "at": 3024.308115000133,
+      "emitter": "qa-beast-12",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_hit_structure",
+      "at": 3025.1706950001335,
+      "emitter": "qa-beast-15",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_hit_structure",
+      "at": 3025.9491300001337,
+      "emitter": "qa-beast-12",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_hit_structure",
+      "at": 3026.132230000134,
+      "emitter": "qa-beast-5",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_hit_structure",
+      "at": 3026.780995000135,
+      "emitter": "qa-beast-15",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_hit_structure",
+      "at": 3027.578290000136,
+      "emitter": "qa-beast-12",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_hit_structure",
+      "at": 3028.344355000137,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_hit_structure",
+      "at": 3029.890630000139,
+      "emitter": "qa-beast-5",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_hit_structure",
+      "at": 3029.974150000139,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "wall_collapse_full",
+      "at": 3033.214760000142,
+      "emitter": "structure-2",
+      "played": false
+    }
+  ],
+  "combatPhysics": {
+    "active": 0,
+    "physicsMs": 0.014999985694885254,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 0,
+    "maxStepMs": 0.060000061988830566,
+    "solverMs": 0,
+    "solverSteps": 0,
+    "bindingMs": 0,
+    "recoverySetupMs": 0,
+    "creationMs": 0,
+    "lastCreation": null,
+    "recoveryFollowMs": 0,
+    "bakedActive": 0,
+    "kinematic": 0
+  },
+  "physicsWorlds": 0,
+  "physicalBodies": 0,
+  "allDown": [
+    {
+      "id": "qa-beast-0",
+      "x": 88.25799059817864,
+      "z": -11.794391846804048
+    },
+    {
+      "id": "qa-beast-1",
+      "x": 89.17584070133019,
+      "z": -24
+    },
+    {
+      "id": "qa-beast-2",
+      "x": 94.1,
+      "z": -6
+    },
+    {
+      "id": "qa-beast-3",
+      "x": 95.9,
+      "z": -6
+    },
+    {
+      "id": "qa-beast-4",
+      "x": 97.7,
+      "z": -6
+    },
+    {
+      "id": "qa-beast-5",
+      "x": 91.69947562743666,
+      "z": -9.98566879086697
+    },
+    {
+      "id": "qa-beast-6",
+      "x": 96.55280467921767,
+      "z": -10
+    },
+    {
+      "id": "qa-beast-7",
+      "x": 101.66212623449813,
+      "z": -15.50823647880017
+    },
+    {
+      "id": "qa-beast-8",
+      "x": 100.31281160994658,
+      "z": -4.62282440596058
+    },
+    {
+      "id": "qa-beast-9",
+      "x": 98.9844630515756,
+      "z": -13.106671825994272
+    },
+    {
+      "id": "qa-beast-10",
+      "x": 93.33743633994027,
+      "z": -10.889302001152153
+    },
+    {
+      "id": "qa-beast-11",
+      "x": 89.69179534063062,
+      "z": -8
+    },
+    {
+      "id": "qa-beast-12",
+      "x": 96.21376117540882,
+      "z": -0.26308701490374764
+    },
+    {
+      "id": "qa-beast-13",
+      "x": 102.5,
+      "z": -6
+    },
+    {
+      "id": "qa-beast-14",
+      "x": 102.89638269198203,
+      "z": -5.350910917906176
+    },
+    {
+      "id": "qa-beast-15",
+      "x": 102.5,
+      "z": -6
+    },
+    {
+      "id": "qa-beast-16",
+      "x": 103.65154298493933,
+      "z": -8.08684558838728
+    },
+    {
+      "id": "qa-beast-17",
+      "x": 101.40765499940943,
+      "z": -10.641438891839567
+    },
+    {
+      "id": "qa-beast-18",
+      "x": 102.5,
+      "z": -6
+    },
+    {
+      "id": "qa-beast-19",
+      "x": 102.5,
+      "z": -6
+    }
+  ],
+  "errors": [],
+  "report": {
+    "scope": "ABBA/BAAB terrain-foot-support toggle only, 20 spawned beasts, actual Game.tick and WorldScene, no spell commands. Different trajectory states across blocks; incremental CPU evidence, not baseline-engine diagnosis.",
+    "visibility": "visible",
+    "blocks": [
+      {
+        "guardian": false,
+        "mode": false,
+        "frames": 70,
+        "averageFps": 17.182151671761996,
+        "frameP50": 49.91500000000087,
+        "frameP95": 83.21500000000015,
+        "frameP99": 383.3600000000006,
+        "renderP95": 54.204999923706055,
+        "animationP95": 0.004999995231628418,
+        "vfxP95": 0.010000109672546387,
+        "terrainSupportP95": 0.029999971389770508,
+        "terrainSupportCalls": 20,
+        "drawP95": 185,
+        "hiddenFrames": 0,
+        "castFrames": 6,
+        "castCpuP95": 0.004999995231628418,
+        "afterCastFrameP95": 383.3600000000006,
+        "otherFrameP95": 67.72000000000116,
+        "stagesP95": [
+          0.4150000810623169,
+          21.325000047683716,
+          0.5399999618530273,
+          0.004999995231628418,
+          1.6150000095367432,
+          4.650000095367432,
+          0.004999995231628418,
+          0.004999995231628418,
+          0.004999995231628418,
+          29.12000000476837
+        ]
+      },
+      {
+        "guardian": true,
+        "mode": true,
+        "frames": 74,
+        "averageFps": 18.697964701274756,
+        "frameP50": 49.95999999999913,
+        "frameP95": 67.20000000000073,
+        "frameP99": 149.5600000000013,
+        "renderP95": 58.950000047683716,
+        "animationP95": 0.004999995231628418,
+        "vfxP95": 0.010000109672546387,
+        "terrainSupportP95": 1.9049999713897705,
+        "terrainSupportCalls": 20,
+        "drawP95": 1,
+        "hiddenFrames": 0,
+        "castFrames": 7,
+        "castCpuP95": 0.004999995231628418,
+        "afterCastFrameP95": 149.5600000000013,
+        "otherFrameP95": 66.71999999999753,
+        "stagesP95": [
+          0.36500000953674316,
+          24.325000047683716,
+          0.6200000047683716,
+          0.004999995231628418,
+          1.4450000524520874,
+          5.289999961853027,
+          0.004999995231628418,
+          0.004999995231628418,
+          0.004999995231628418,
+          32.40499997138977
+        ]
+      },
+      {
+        "guardian": true,
+        "mode": true,
+        "frames": 79,
+        "averageFps": 19.393784660252816,
+        "frameP50": 49.86999999999898,
+        "frameP95": 66.87999999999738,
+        "frameP99": 83.31000000000131,
+        "renderP95": 56.674999952316284,
+        "animationP95": 0.004999995231628418,
+        "vfxP95": 0.009999990463256836,
+        "terrainSupportP95": 1.674999713897705,
+        "terrainSupportCalls": 20,
+        "drawP95": 1,
+        "hiddenFrames": 0,
+        "castFrames": 7,
+        "castCpuP95": 0.014999985694885254,
+        "afterCastFrameP95": 66.53499999999985,
+        "otherFrameP95": 66.87999999999738,
+        "stagesP95": [
+          0.39499998092651367,
+          24.87000000476837,
+          0.5850000381469727,
+          0.004999995231628418,
+          1.2699999809265137,
+          4.209999918937683,
+          0.004999995231628418,
+          0.004999995231628418,
+          0.004999995231628418,
+          31.99500000476837
+        ]
+      },
+      {
+        "guardian": false,
+        "mode": false,
+        "frames": 78,
+        "averageFps": 19.463627346396393,
+        "frameP50": 49.904999999998836,
+        "frameP95": 66.79500000000553,
+        "frameP99": 67.46500000000378,
+        "renderP95": 52.78999996185303,
+        "animationP95": 0.004999995231628418,
+        "vfxP95": 0.014999985694885254,
+        "terrainSupportP95": 0.02499997615814209,
+        "terrainSupportCalls": 20,
+        "drawP95": 1,
+        "hiddenFrames": 0,
+        "castFrames": 7,
+        "castCpuP95": 0.004999995231628418,
+        "afterCastFrameP95": 67.46500000000378,
+        "otherFrameP95": 66.74499999999534,
+        "stagesP95": [
+          0.36000001430511475,
+          20.990000009536743,
+          0.5099999904632568,
+          0.004999995231628418,
+          1.2850000858306885,
+          4.0950000286102295,
+          0.004999995231628418,
+          0.004999995231628418,
+          0.004999995231628418,
+          30.764999985694885
+        ]
+      },
+      {
+        "guardian": true,
+        "mode": true,
+        "frames": 75,
+        "averageFps": 18.485199516920105,
+        "frameP50": 49.93000000000029,
+        "frameP95": 66.73500000000058,
+        "frameP99": 149.5550000000003,
+        "renderP95": 56.33500003814697,
+        "animationP95": 0.004999995231628418,
+        "vfxP95": 0.009999990463256836,
+        "terrainSupportP95": 1.7550002336502075,
+        "terrainSupportCalls": 20,
+        "drawP95": 1,
+        "hiddenFrames": 0,
+        "castFrames": 7,
+        "castCpuP95": 0.009999990463256836,
+        "afterCastFrameP95": 149.5550000000003,
+        "otherFrameP95": 66.66999999999825,
+        "stagesP95": [
+          0.34999990463256836,
+          23.950000047683716,
+          0.7599999904632568,
+          0.004999995231628418,
+          1.5999999046325684,
+          4.564999938011169,
+          0.004999995231628418,
+          0.004999995231628418,
+          0.004999995231628418,
+          31.87999999523163
+        ]
+      },
+      {
+        "guardian": false,
+        "mode": false,
+        "frames": 76,
+        "averageFps": 19.123153106002665,
+        "frameP50": 49.720000000001164,
+        "frameP95": 66.94000000000233,
+        "frameP99": 597.114999999998,
+        "renderP95": 41.50999999046326,
+        "animationP95": 0.004999995231628418,
+        "vfxP95": 0.009999990463256836,
+        "terrainSupportP95": 0.02499997615814209,
+        "terrainSupportCalls": 20,
+        "drawP95": 1,
+        "hiddenFrames": 0,
+        "castFrames": 7,
+        "castCpuP95": 0.004999995231628418,
+        "afterCastFrameP95": 597.114999999998,
+        "otherFrameP95": 65.29000000000087,
+        "stagesP95": [
+          0.36500000953674316,
+          22.299999952316284,
+          0.5499999523162842,
+          0.004999995231628418,
+          1.2950000762939453,
+          1.53000009059906,
+          0.004999995231628418,
+          0.004999995231628418,
+          0.004999995231628418,
+          20.110000014305115
+        ]
+      },
+      {
+        "guardian": false,
+        "mode": false,
+        "frames": 107,
+        "averageFps": 26.371762989325582,
+        "frameP50": 33.31500000000233,
+        "frameP95": 51.099999999998545,
+        "frameP99": 66.59500000000116,
+        "renderP95": 40.9449999332428,
+        "animationP95": 0.004999995231628418,
+        "vfxP95": 0.009999990463256836,
+        "terrainSupportP95": 0.02500009536743164,
+        "terrainSupportCalls": 19,
+        "drawP95": 105,
+        "hiddenFrames": 0,
+        "castFrames": 7,
+        "castCpuP95": 0,
+        "afterCastFrameP95": 50.62999999999738,
+        "otherFrameP95": 52.395000000004075,
+        "stagesP95": [
+          0.41999995708465576,
+          21.625,
+          0.6000000238418579,
+          0.004999995231628418,
+          1.2699999809265137,
+          1.165000081062317,
+          0.004999995231628418,
+          0.004999995231628418,
+          0.004999995231628418,
+          18.33999991416931
+        ]
+      },
+      {
+        "guardian": true,
+        "mode": true,
+        "frames": 106,
+        "averageFps": 26.23265644005529,
+        "frameP50": 33.26499999999942,
+        "frameP95": 66.44000000000233,
+        "frameP99": 83.19999999999709,
+        "renderP95": 38.625,
+        "animationP95": 0.004999995231628418,
+        "vfxP95": 0.009999990463256836,
+        "terrainSupportP95": 1.4499999284744263,
+        "terrainSupportCalls": 16,
+        "drawP95": 115,
+        "hiddenFrames": 0,
+        "castFrames": 7,
+        "castCpuP95": 0.004999995231628418,
+        "afterCastFrameP95": 49.97500000000582,
+        "otherFrameP95": 66.50499999999738,
+        "stagesP95": [
+          0.38499999046325684,
+          18.789999961853027,
+          0.5800000429153442,
+          0.004999995231628418,
+          1.6100000143051147,
+          2.165000081062317,
+          0.004999995231628418,
+          0.004999995231628418,
+          0.004999995231628418,
+          19.289999961853027
+        ]
+      }
+    ],
+    "species": [
+      "hyena",
+      "lion",
+      "warthog",
+      "buffalo",
+      "rhino",
+      "hyena",
+      "lion",
+      "warthog",
+      "buffalo",
+      "rhino",
+      "hyena",
+      "lion",
+      "warthog",
+      "buffalo",
+      "rhino",
+      "hyena",
+      "lion",
+      "warthog",
+      "buffalo",
+      "rhino"
+    ]
+  },
+  "commandCosts": []
+}

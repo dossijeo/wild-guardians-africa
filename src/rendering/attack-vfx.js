@@ -20,6 +20,16 @@ function frame(species,animal,target){
 }
 function shieldFor(state,target){return state.spells.find(s=>s.kind==='shield'&&s.remaining>0&&Math.hypot(s.x-target.x,s.z-target.z)<=s.radius);}
 
+// Version 1 hit facts contain every value needed to position the dissipating
+// visual, independently of a later target or raid snapshot. Older saves remain
+// on the existing snapshot-aware compatibility path below.
+export function attackVfxPlanFromEvent(event,elapsed){
+ const p=event?.presentation,contact=attackVfxContacts[event?.species],point=t=>t&&Number.isFinite(t.x)&&Number.isFinite(t.z);
+ if(event?.type!=='AnimalLogicalHit'||p?.version!==1||!contact||!Number.isFinite(elapsed)||!Number.isFinite(p.elapsed)||!point(p.animal)||!point(p.target)||p.shield&&(!point(p.shield)||!(p.shield.radius>0))||!p.shield&&p.target.kind==='center'&&(typeof p.target.culture!=='string'||!Number.isFinite(p.target.yaw)))return null;
+ const age=elapsed-p.elapsed,time=contact.time+age;if(age<0||time>=definitions.get(event.species).duration)return null;
+ return {key:event.attackId,id:event.species,...frame(event.species,p.animal,p.shield??p.target),time,blocked:!!p.shield};
+}
+
 export function attackVfxPlans(state){
   const plans=new Map(),targets=new Map([...state.plants,...state.structures].map(t=>[t.id,t]));
   for(const animal of state.raid?.animals??[]){
@@ -34,6 +44,7 @@ export function attackVfxPlans(state){
   // after the animal/raid has left. Old saves without this metadata remain valid.
   for(const event of state.events){
     if(event.type!=='AnimalLogicalHit'||!event.presentation)continue;
+    const standalone=attackVfxPlanFromEvent(event,state.elapsed);if(standalone){plans.set(event.attackId,standalone);continue;}
     const p=event.presentation,contact=attackVfxContacts[event.species],point=t=>t&&Number.isFinite(t.x)&&Number.isFinite(t.z);
     if(!contact||!Number.isFinite(p.elapsed)||!point(p.animal)||!point(p.target)||p.shield&&(!point(p.shield)||!(p.shield.radius>0)))continue;
     const age=state.elapsed-p.elapsed,time=contact.time+age;
@@ -42,6 +53,26 @@ export function attackVfxPlans(state){
     plans.set(event.attackId,{key:event.attackId,id:event.species,...frame(event.species,p.animal,savedTarget),time,blocked:!!p.shield});
   }
   return [...plans.values()];
+}
+
+// The caller must supply a stream-validated event-free interval and retain the
+// target/terrain dependencies until its boundary. Never infer a new hit.
+export function confirmedHistoricalAttackPlans(state,preview){
+ const ticks=preview?.trace?.actorTickStates;
+ if(!state||!Array.isArray(state.plants)||!Array.isArray(state.structures)||!Array.isArray(state.spells)||!Array.isArray(state.raid?.animals)||!ticks?.complete||!Array.isArray(ticks.actors)||!Number.isFinite(preview.start)||!Number.isFinite(preview.end)||preview.end<=preview.start)return null;
+ const base=attackVfxPlans({...state,events:[]}),animals=state.raid.animals,result=[];
+ if(base.length&&state.spells.some(spell=>spell.kind==='shield'&&spell.remaining>0))return null;
+ if(new Set(base.map(plan=>plan.key)).size!==base.length)return null;
+ for(const plan of base){
+  const matches=animals.filter(animal=>animal.attackId===plan.key),animal=matches[0],records=ticks.actors.filter(item=>item.actorId===animal?.id),samples=records[0]?.samples,target=[...state.plants,...state.structures].find(item=>item.id===animal?.targetId);
+  if(matches.length!==1||!animal||!target||typeof animal.targetId!=='string'||!animal.targetId||animal.hitApplied||animal.status!=='attacking'||records.length!==1||!Array.isArray(samples)||samples.length<2||samples[0]?.at!==preview.start||samples.at(-1)?.at!==preview.end||samples[0].attackRemaining!==animal.attackRemaining)return null;
+  const times=[];for(let i=0;i<samples.length;i++){
+   const sample=samples[i];if(!Number.isFinite(sample.at)||i&&sample.at<=samples[i-1].at||sample.status!=='attacking'||sample.attackId!==animal.attackId||sample.attackTargetId!==animal.targetId||sample.attackHitApplied!==false||sample.attackHitsRemaining!==animal.hitsRemaining||sample.attackDuration!==animal.attackDuration||!Number.isFinite(sample.attackRemaining)||sample.attackRemaining<=0||sample.attackRemaining>animal.attackDuration||i&&sample.attackRemaining>samples[i-1].attackRemaining||sample.x!==animal.x||sample.z!==animal.z||sample.heading!==(animal.heading??null))return null;
+   const next=attackVfxPlans({...state,events:[],raid:{...state.raid,animals:[{...animal,attackRemaining:sample.attackRemaining}]}});if(next.length!==1||next[0].key!==plan.key||next[0].id!==plan.id||!Number.isFinite(next[0].time)||i&&next[0].time<times[i-1].time)return null;times.push({at:sample.at,time:next[0].time});
+  }
+  result.push({animal,target,plan,times});
+ }
+ return result;
 }
 
 export class AttackVfx {

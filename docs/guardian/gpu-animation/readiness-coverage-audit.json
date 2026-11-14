@@ -1,0 +1,1521 @@
+{
+  "scope": "Two independently loaded paused island-mangrove sessions, A original and B shared, canonical pose, LOD rebuild and two settle gates. The 23 IDs came from a previous ABBA sequence. Bank and availability reflect recorded CPU state; not direct GPU visibility proof.",
+  "sessions": [
+    {
+      "name": "a",
+      "pose": {
+        "eye": [
+          14.01652703206657,
+          18.67490205068118,
+          215.66980974313358
+        ],
+        "quaternion": [
+          -0.19761644173348863,
+          0.24220349189081208,
+          0.05045976189709417,
+          0.9485457410698656
+        ],
+        "target": [
+          -2.685948288176107,
+          3.499999933242798,
+          185.09613374722426
+        ]
+      },
+      "clock": {
+        "day": 1,
+        "time": 6,
+        "elapsed": 6
+      },
+      "pending": [
+        {
+          "native": false,
+          "regional": 0,
+          "worker": false,
+          "standby": false,
+          "closed": false
+        },
+        {
+          "native": false,
+          "regional": 0,
+          "worker": false,
+          "standby": false,
+          "closed": false
+        },
+        {
+          "native": false,
+          "regional": 0,
+          "worker": false,
+          "standby": false,
+          "closed": false
+        },
+        {
+          "native": false,
+          "regional": 0,
+          "worker": false,
+          "standby": false,
+          "closed": false
+        }
+      ],
+      "stream": {
+        "created": 44,
+        "discarded": 1,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": false,
+        "asyncPreparation": true,
+        "queued": 0,
+        "busy": false,
+        "preparing": 0,
+        "stale": 0,
+        "epoch": 0
+      }
+    },
+    {
+      "name": "b",
+      "pose": {
+        "eye": [
+          14.01652703206657,
+          18.67490205068118,
+          215.66980974313358
+        ],
+        "quaternion": [
+          -0.19761644173348863,
+          0.24220349189081208,
+          0.05045976189709417,
+          0.9485457410698656
+        ],
+        "target": [
+          -2.685948288176107,
+          3.499999933242798,
+          185.09613374722426
+        ]
+      },
+      "clock": {
+        "day": 1,
+        "time": 6,
+        "elapsed": 6
+      },
+      "pending": [
+        {
+          "native": false,
+          "regional": 0,
+          "worker": false,
+          "standby": false,
+          "closed": false
+        },
+        {
+          "native": false,
+          "regional": 0,
+          "worker": false,
+          "standby": false,
+          "closed": false
+        },
+        {
+          "native": false,
+          "regional": 0,
+          "worker": false,
+          "standby": false,
+          "closed": false
+        },
+        {
+          "native": false,
+          "regional": 0,
+          "worker": false,
+          "standby": false,
+          "closed": false
+        }
+      ],
+      "stream": {
+        "created": 44,
+        "discarded": 1,
+        "failed": 0,
+        "fallbacks": 0,
+        "worker": false,
+        "asyncPreparation": true,
+        "queued": 0,
+        "busy": false,
+        "preparing": 0,
+        "stale": 0,
+        "epoch": 0
+      }
+    }
+  ],
+  "audit": [
+    {
+      "index": 0,
+      "id": "spatial:0:19:0",
+      "a": {
+        "state": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": true,
+        "standbyAvailable": true,
+        "physical": [],
+        "bankEntries": [
+          {
+            "index": 0,
+            "active": false,
+            "key": "spatial:0:19:0:164.27020263671875:3.3399999141693115:5.099290370941162:3.6039469242095947:1.162777066230774:1.162777066230774:1.162777066230774",
+            "level": 2,
+            "resource": "0:1de6734b-6b47-4602-af53-aac1773c3ff5:2430018b-3e14-4249-9967-10d13526396e:3",
+            "currentResource": "0:1de6734b-6b47-4602-af53-aac1773c3ff5:2430018b-3e14-4249-9967-10d13526396e:3"
+          },
+          {
+            "index": 1,
+            "active": true,
+            "key": "spatial:0:19:0:164.27020263671875:3.3399999141693115:5.099290370941162:3.6039469242095947:1.162777066230774:1.162777066230774:1.162777066230774",
+            "level": 2,
+            "resource": "0:1de6734b-6b47-4602-af53-aac1773c3ff5:2430018b-3e14-4249-9967-10d13526396e:3",
+            "currentResource": "0:1de6734b-6b47-4602-af53-aac1773c3ff5:2430018b-3e14-4249-9967-10d13526396e:3"
+          }
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      },
+      "b": {
+        "state": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": true,
+        "standbyAvailable": true,
+        "physical": [],
+        "bankEntries": [
+          {
+            "index": 0,
+            "active": false,
+            "key": "spatial:0:19:0:164.27020263671875:3.3399999141693115:5.099290370941162:3.6039469242095947:1.162777066230774:1.162777066230774:1.162777066230774",
+            "level": 2,
+            "resource": "0:788e45fd-4449-4b1b-addd-4ad90d02755b:62544e19-52f8-45c6-9944-a6efd66ff6de:3",
+            "currentResource": "0:788e45fd-4449-4b1b-addd-4ad90d02755b:62544e19-52f8-45c6-9944-a6efd66ff6de:3"
+          },
+          {
+            "index": 1,
+            "active": true,
+            "key": "spatial:0:19:0:164.27020263671875:3.3399999141693115:5.099290370941162:3.6039469242095947:1.162777066230774:1.162777066230774:1.162777066230774",
+            "level": 2,
+            "resource": "0:788e45fd-4449-4b1b-addd-4ad90d02755b:62544e19-52f8-45c6-9944-a6efd66ff6de:3",
+            "currentResource": "0:788e45fd-4449-4b1b-addd-4ad90d02755b:62544e19-52f8-45c6-9944-a6efd66ff6de:3"
+          }
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      }
+    },
+    {
+      "index": 0,
+      "id": "spatial:0:19:9",
+      "a": {
+        "state": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": true,
+        "standbyAvailable": true,
+        "physical": [],
+        "bankEntries": [
+          {
+            "index": 0,
+            "active": false,
+            "key": "spatial:0:19:9:168.64732360839844:3.319999933242798:80.6766586303711:5.2444844245910645:0.9421762228012085:0.9421762228012085:0.9421762228012085",
+            "level": 2,
+            "resource": "0:1de6734b-6b47-4602-af53-aac1773c3ff5:2430018b-3e14-4249-9967-10d13526396e:3",
+            "currentResource": "0:1de6734b-6b47-4602-af53-aac1773c3ff5:2430018b-3e14-4249-9967-10d13526396e:3"
+          },
+          {
+            "index": 1,
+            "active": true,
+            "key": "spatial:0:19:9:168.64732360839844:3.319999933242798:80.6766586303711:5.2444844245910645:0.9421762228012085:0.9421762228012085:0.9421762228012085",
+            "level": 2,
+            "resource": "0:1de6734b-6b47-4602-af53-aac1773c3ff5:2430018b-3e14-4249-9967-10d13526396e:3",
+            "currentResource": "0:1de6734b-6b47-4602-af53-aac1773c3ff5:2430018b-3e14-4249-9967-10d13526396e:3"
+          }
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      },
+      "b": {
+        "state": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": true,
+        "standbyAvailable": true,
+        "physical": [],
+        "bankEntries": [
+          {
+            "index": 0,
+            "active": false,
+            "key": "spatial:0:19:9:168.64732360839844:3.319999933242798:80.6766586303711:5.2444844245910645:0.9421762228012085:0.9421762228012085:0.9421762228012085",
+            "level": 2,
+            "resource": "0:788e45fd-4449-4b1b-addd-4ad90d02755b:62544e19-52f8-45c6-9944-a6efd66ff6de:3",
+            "currentResource": "0:788e45fd-4449-4b1b-addd-4ad90d02755b:62544e19-52f8-45c6-9944-a6efd66ff6de:3"
+          },
+          {
+            "index": 1,
+            "active": true,
+            "key": "spatial:0:19:9:168.64732360839844:3.319999933242798:80.6766586303711:5.2444844245910645:0.9421762228012085:0.9421762228012085:0.9421762228012085",
+            "level": 2,
+            "resource": "0:788e45fd-4449-4b1b-addd-4ad90d02755b:62544e19-52f8-45c6-9944-a6efd66ff6de:3",
+            "currentResource": "0:788e45fd-4449-4b1b-addd-4ad90d02755b:62544e19-52f8-45c6-9944-a6efd66ff6de:3"
+          }
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      }
+    },
+    {
+      "index": 0,
+      "id": "spatial:0:2:0",
+      "a": {
+        "state": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": true,
+        "standbyAvailable": true,
+        "physical": [],
+        "bankEntries": [
+          {
+            "index": 0,
+            "active": false,
+            "key": "spatial:0:2:0:21.295379638671875:3.319999933242798:5.560177326202393:1.424126148223877:1.179296612739563:1.179296612739563:1.179296612739563",
+            "level": 2,
+            "resource": "0:1de6734b-6b47-4602-af53-aac1773c3ff5:2430018b-3e14-4249-9967-10d13526396e:3",
+            "currentResource": "0:1de6734b-6b47-4602-af53-aac1773c3ff5:2430018b-3e14-4249-9967-10d13526396e:3"
+          },
+          {
+            "index": 1,
+            "active": true,
+            "key": "spatial:0:2:0:21.295379638671875:3.319999933242798:5.560177326202393:1.424126148223877:1.179296612739563:1.179296612739563:1.179296612739563",
+            "level": 2,
+            "resource": "0:1de6734b-6b47-4602-af53-aac1773c3ff5:2430018b-3e14-4249-9967-10d13526396e:3",
+            "currentResource": "0:1de6734b-6b47-4602-af53-aac1773c3ff5:2430018b-3e14-4249-9967-10d13526396e:3"
+          }
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      },
+      "b": {
+        "state": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": true,
+        "standbyAvailable": true,
+        "physical": [],
+        "bankEntries": [
+          {
+            "index": 0,
+            "active": false,
+            "key": "spatial:0:2:0:21.295379638671875:3.319999933242798:5.560177326202393:1.424126148223877:1.179296612739563:1.179296612739563:1.179296612739563",
+            "level": 2,
+            "resource": "0:788e45fd-4449-4b1b-addd-4ad90d02755b:62544e19-52f8-45c6-9944-a6efd66ff6de:3",
+            "currentResource": "0:788e45fd-4449-4b1b-addd-4ad90d02755b:62544e19-52f8-45c6-9944-a6efd66ff6de:3"
+          },
+          {
+            "index": 1,
+            "active": true,
+            "key": "spatial:0:2:0:21.295379638671875:3.319999933242798:5.560177326202393:1.424126148223877:1.179296612739563:1.179296612739563:1.179296612739563",
+            "level": 2,
+            "resource": "0:788e45fd-4449-4b1b-addd-4ad90d02755b:62544e19-52f8-45c6-9944-a6efd66ff6de:3",
+            "currentResource": "0:788e45fd-4449-4b1b-addd-4ad90d02755b:62544e19-52f8-45c6-9944-a6efd66ff6de:3"
+          }
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      }
+    },
+    {
+      "index": 0,
+      "id": "spatial:0:2:20",
+      "a": {
+        "state": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": true,
+        "prepared": true,
+        "nativeMissing": false,
+        "retainedPrepared": true,
+        "standbyAvailable": true,
+        "physical": [
+          {
+            "chunk": "0,4",
+            "frustum": true,
+            "treeFrustum": true,
+            "orders": [
+              false,
+              false,
+              true,
+              false
+            ]
+          }
+        ],
+        "bankEntries": [
+          {
+            "index": 0,
+            "active": false,
+            "key": "spatial:0:2:20:20.98147964477539:3.319999933242798:172.55868530273438:5.831596851348877:1.0901710987091064:1.0901710987091064:1.0901710987091064",
+            "level": 1,
+            "resource": "0:c6b836b1-a73f-41b0-b2a4-141cd331511f:2430018b-3e14-4249-9967-10d13526396e:3",
+            "currentResource": "0:c6b836b1-a73f-41b0-b2a4-141cd331511f:2430018b-3e14-4249-9967-10d13526396e:3"
+          },
+          {
+            "index": 1,
+            "active": true,
+            "key": "spatial:0:2:20:20.98147964477539:3.319999933242798:172.55868530273438:5.831596851348877:1.0901710987091064:1.0901710987091064:1.0901710987091064",
+            "level": 1,
+            "resource": "0:c6b836b1-a73f-41b0-b2a4-141cd331511f:2430018b-3e14-4249-9967-10d13526396e:3",
+            "currentResource": "0:c6b836b1-a73f-41b0-b2a4-141cd331511f:2430018b-3e14-4249-9967-10d13526396e:3"
+          }
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      },
+      "b": {
+        "state": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": true,
+        "prepared": true,
+        "nativeMissing": false,
+        "retainedPrepared": true,
+        "standbyAvailable": true,
+        "physical": [
+          {
+            "chunk": "0,4",
+            "frustum": true,
+            "treeFrustum": true,
+            "orders": [
+              false,
+              false,
+              true,
+              false
+            ]
+          }
+        ],
+        "bankEntries": [
+          {
+            "index": 0,
+            "active": false,
+            "key": "spatial:0:2:20:20.98147964477539:3.319999933242798:172.55868530273438:5.831596851348877:1.0901710987091064:1.0901710987091064:1.0901710987091064",
+            "level": 1,
+            "resource": "0:6acc5c08-9e11-47db-b253-ac864dcc78ba:62544e19-52f8-45c6-9944-a6efd66ff6de:3",
+            "currentResource": "0:6acc5c08-9e11-47db-b253-ac864dcc78ba:62544e19-52f8-45c6-9944-a6efd66ff6de:3"
+          },
+          {
+            "index": 1,
+            "active": true,
+            "key": "spatial:0:2:20:20.98147964477539:3.319999933242798:172.55868530273438:5.831596851348877:1.0901710987091064:1.0901710987091064:1.0901710987091064",
+            "level": 1,
+            "resource": "0:6acc5c08-9e11-47db-b253-ac864dcc78ba:62544e19-52f8-45c6-9944-a6efd66ff6de:3",
+            "currentResource": "0:6acc5c08-9e11-47db-b253-ac864dcc78ba:62544e19-52f8-45c6-9944-a6efd66ff6de:3"
+          }
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      }
+    },
+    {
+      "index": 0,
+      "id": "spatial:0:21:-23",
+      "a": {
+        "state": {
+          "ready": 0,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": false,
+        "standbyAvailable": false,
+        "physical": [],
+        "bankEntries": [
+          null,
+          null
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      },
+      "b": {
+        "state": {
+          "ready": 0,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": false,
+        "standbyAvailable": false,
+        "physical": [],
+        "bankEntries": [
+          null,
+          null
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      }
+    },
+    {
+      "index": 0,
+      "id": "spatial:0:21:31",
+      "a": {
+        "state": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": true,
+        "standbyAvailable": true,
+        "physical": [],
+        "bankEntries": [
+          {
+            "index": 0,
+            "active": false,
+            "key": "spatial:0:21:31:180.6514892578125:3.319999933242798:267.25238037109375:0.24150225520133972:0.8761157989501953:0.8761157989501953:0.8761157989501953",
+            "level": 2,
+            "resource": "0:1de6734b-6b47-4602-af53-aac1773c3ff5:2430018b-3e14-4249-9967-10d13526396e:3",
+            "currentResource": "0:1de6734b-6b47-4602-af53-aac1773c3ff5:2430018b-3e14-4249-9967-10d13526396e:3"
+          },
+          {
+            "index": 1,
+            "active": true,
+            "key": "spatial:0:21:31:180.6514892578125:3.319999933242798:267.25238037109375:0.24150225520133972:0.8761157989501953:0.8761157989501953:0.8761157989501953",
+            "level": 2,
+            "resource": "0:1de6734b-6b47-4602-af53-aac1773c3ff5:2430018b-3e14-4249-9967-10d13526396e:3",
+            "currentResource": "0:1de6734b-6b47-4602-af53-aac1773c3ff5:2430018b-3e14-4249-9967-10d13526396e:3"
+          }
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      },
+      "b": {
+        "state": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": true,
+        "standbyAvailable": true,
+        "physical": [],
+        "bankEntries": [
+          {
+            "index": 0,
+            "active": false,
+            "key": "spatial:0:21:31:180.6514892578125:3.319999933242798:267.25238037109375:0.24150225520133972:0.8761157989501953:0.8761157989501953:0.8761157989501953",
+            "level": 2,
+            "resource": "0:788e45fd-4449-4b1b-addd-4ad90d02755b:62544e19-52f8-45c6-9944-a6efd66ff6de:3",
+            "currentResource": "0:788e45fd-4449-4b1b-addd-4ad90d02755b:62544e19-52f8-45c6-9944-a6efd66ff6de:3"
+          },
+          {
+            "index": 1,
+            "active": true,
+            "key": "spatial:0:21:31:180.6514892578125:3.319999933242798:267.25238037109375:0.24150225520133972:0.8761157989501953:0.8761157989501953:0.8761157989501953",
+            "level": 2,
+            "resource": "0:788e45fd-4449-4b1b-addd-4ad90d02755b:62544e19-52f8-45c6-9944-a6efd66ff6de:3",
+            "currentResource": "0:788e45fd-4449-4b1b-addd-4ad90d02755b:62544e19-52f8-45c6-9944-a6efd66ff6de:3"
+          }
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      }
+    },
+    {
+      "index": 0,
+      "id": "spatial:0:22:-13",
+      "a": {
+        "state": {
+          "ready": 0,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": false,
+        "standbyAvailable": false,
+        "physical": [],
+        "bankEntries": [
+          null,
+          null
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      },
+      "b": {
+        "state": {
+          "ready": 0,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": false,
+        "standbyAvailable": false,
+        "physical": [],
+        "bankEntries": [
+          null,
+          null
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      }
+    },
+    {
+      "index": 0,
+      "id": "spatial:0:22:-22",
+      "a": {
+        "state": {
+          "ready": 0,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": false,
+        "standbyAvailable": false,
+        "physical": [],
+        "bankEntries": [
+          null,
+          null
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      },
+      "b": {
+        "state": {
+          "ready": 0,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": false,
+        "standbyAvailable": false,
+        "physical": [],
+        "bankEntries": [
+          null,
+          null
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      }
+    },
+    {
+      "index": 0,
+      "id": "spatial:0:22:25",
+      "a": {
+        "state": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": true,
+        "standbyAvailable": true,
+        "physical": [],
+        "bankEntries": [
+          {
+            "index": 0,
+            "active": false,
+            "key": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+            "level": 2,
+            "resource": "0:1de6734b-6b47-4602-af53-aac1773c3ff5:2430018b-3e14-4249-9967-10d13526396e:3",
+            "currentResource": "0:1de6734b-6b47-4602-af53-aac1773c3ff5:2430018b-3e14-4249-9967-10d13526396e:3"
+          },
+          {
+            "index": 1,
+            "active": true,
+            "key": "spatial:0:22:25:192.81883239746094:3.319999933242798:216.5174560546875:2.307276487350464:1.0788642168045044:1.0788642168045044:1.0788642168045044",
+            "level": 2,
+            "resource": "0:1de6734b-6b47-4602-af53-aac1773c3ff5:2430018b-3e14-4249-9967-10d13526396e:3",
+            "currentResource": "0:1de6734b-6b47-4602-af53-aac1773c3ff5:2430018b-3e14-4249-9967-10d13526396e:3"
+          }
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      },
+      "b": {
+        "state": {
+          "ready": 0,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": false,
+        "standbyAvailable": false,
+        "physical": [],
+        "bankEntries": [
+          null,
+          null
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      }
+    },
+    {
+      "index": 0,
+      "id": "spatial:0:23:68",
+      "a": {
+        "state": {
+          "ready": 0,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": false,
+        "standbyAvailable": false,
+        "physical": [],
+        "bankEntries": [
+          null,
+          null
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      },
+      "b": {
+        "state": {
+          "ready": 0,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": false,
+        "standbyAvailable": false,
+        "physical": [],
+        "bankEntries": [
+          null,
+          null
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      }
+    },
+    {
+      "index": 1,
+      "id": "spatial:0:20:-12",
+      "a": {
+        "state": {
+          "ready": 0,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": false,
+        "standbyAvailable": false,
+        "physical": [],
+        "bankEntries": [
+          null,
+          null
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      },
+      "b": {
+        "state": {
+          "ready": 0,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": false,
+        "standbyAvailable": false,
+        "physical": [],
+        "bankEntries": [
+          null,
+          null
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      }
+    },
+    {
+      "index": 1,
+      "id": "spatial:0:20:-19",
+      "a": {
+        "state": {
+          "ready": 0,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": false,
+        "standbyAvailable": false,
+        "physical": [],
+        "bankEntries": [
+          null,
+          null
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      },
+      "b": {
+        "state": {
+          "ready": 0,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": false,
+        "standbyAvailable": false,
+        "physical": [],
+        "bankEntries": [
+          null,
+          null
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      }
+    },
+    {
+      "index": 1,
+      "id": "spatial:0:20:16",
+      "a": {
+        "state": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": true,
+        "standbyAvailable": true,
+        "physical": [],
+        "bankEntries": [
+          {
+            "index": 0,
+            "active": true,
+            "key": "spatial:0:20:16:172.0474853515625:3.3399999141693115:139.22341918945312:5.177786350250244:1.0971479415893555:1.0971479415893555:1.0971479415893555",
+            "level": 2,
+            "resource": "0:c4fd3639-c3e9-4479-866c-d02162991a8a:cc81f5cc-bbd7-4d6f-ab02-05bd3a4c90f3:3",
+            "currentResource": "0:c4fd3639-c3e9-4479-866c-d02162991a8a:cc81f5cc-bbd7-4d6f-ab02-05bd3a4c90f3:3"
+          },
+          {
+            "index": 1,
+            "active": false,
+            "key": "spatial:0:20:16:172.0474853515625:3.3399999141693115:139.22341918945312:5.177786350250244:1.0971479415893555:1.0971479415893555:1.0971479415893555",
+            "level": 2,
+            "resource": "0:c4fd3639-c3e9-4479-866c-d02162991a8a:cc81f5cc-bbd7-4d6f-ab02-05bd3a4c90f3:3",
+            "currentResource": "0:c4fd3639-c3e9-4479-866c-d02162991a8a:cc81f5cc-bbd7-4d6f-ab02-05bd3a4c90f3:3"
+          }
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      },
+      "b": {
+        "state": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": true,
+        "standbyAvailable": true,
+        "physical": [],
+        "bankEntries": [
+          {
+            "index": 0,
+            "active": false,
+            "key": "spatial:0:20:16:172.0474853515625:3.3399999141693115:139.22341918945312:5.177786350250244:1.0971479415893555:1.0971479415893555:1.0971479415893555",
+            "level": 2,
+            "resource": "0:f7dea3ac-7710-4a17-be88-74fe3cf081aa:08502e4b-1de6-4a01-9ee1-e6b178cdc9c5:3",
+            "currentResource": "0:f7dea3ac-7710-4a17-be88-74fe3cf081aa:08502e4b-1de6-4a01-9ee1-e6b178cdc9c5:3"
+          },
+          {
+            "index": 1,
+            "active": true,
+            "key": "spatial:0:20:16:172.0474853515625:3.3399999141693115:139.22341918945312:5.177786350250244:1.0971479415893555:1.0971479415893555:1.0971479415893555",
+            "level": 2,
+            "resource": "0:f7dea3ac-7710-4a17-be88-74fe3cf081aa:08502e4b-1de6-4a01-9ee1-e6b178cdc9c5:3",
+            "currentResource": "0:f7dea3ac-7710-4a17-be88-74fe3cf081aa:08502e4b-1de6-4a01-9ee1-e6b178cdc9c5:3"
+          }
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      }
+    },
+    {
+      "index": 1,
+      "id": "spatial:0:20:50",
+      "a": {
+        "state": {
+          "ready": 0,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": false,
+        "standbyAvailable": false,
+        "physical": [],
+        "bankEntries": [
+          null,
+          null
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      },
+      "b": {
+        "state": {
+          "ready": 0,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": false,
+        "standbyAvailable": false,
+        "physical": [],
+        "bankEntries": [
+          null,
+          null
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      }
+    },
+    {
+      "index": 1,
+      "id": "spatial:0:20:62",
+      "a": {
+        "state": {
+          "ready": 0,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": false,
+        "standbyAvailable": false,
+        "physical": [],
+        "bankEntries": [
+          null,
+          null
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      },
+      "b": {
+        "state": {
+          "ready": 0,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": false,
+        "standbyAvailable": false,
+        "physical": [],
+        "bankEntries": [
+          null,
+          null
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      }
+    },
+    {
+      "index": 1,
+      "id": "spatial:0:22:16",
+      "a": {
+        "state": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": true,
+        "standbyAvailable": true,
+        "physical": [],
+        "bankEntries": [
+          {
+            "index": 0,
+            "active": true,
+            "key": "spatial:0:22:16:190.70008850097656:3.3399999141693115:140.6790313720703:4.986515998840332:0.7875804901123047:0.7875804901123047:0.7875804901123047",
+            "level": 2,
+            "resource": "0:c4fd3639-c3e9-4479-866c-d02162991a8a:cc81f5cc-bbd7-4d6f-ab02-05bd3a4c90f3:3",
+            "currentResource": "0:c4fd3639-c3e9-4479-866c-d02162991a8a:cc81f5cc-bbd7-4d6f-ab02-05bd3a4c90f3:3"
+          },
+          {
+            "index": 1,
+            "active": false,
+            "key": "spatial:0:22:16:190.70008850097656:3.3399999141693115:140.6790313720703:4.986515998840332:0.7875804901123047:0.7875804901123047:0.7875804901123047",
+            "level": 2,
+            "resource": "0:c4fd3639-c3e9-4479-866c-d02162991a8a:cc81f5cc-bbd7-4d6f-ab02-05bd3a4c90f3:3",
+            "currentResource": "0:c4fd3639-c3e9-4479-866c-d02162991a8a:cc81f5cc-bbd7-4d6f-ab02-05bd3a4c90f3:3"
+          }
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      },
+      "b": {
+        "state": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": true,
+        "standbyAvailable": true,
+        "physical": [],
+        "bankEntries": [
+          {
+            "index": 0,
+            "active": false,
+            "key": "spatial:0:22:16:190.70008850097656:3.3399999141693115:140.6790313720703:4.986515998840332:0.7875804901123047:0.7875804901123047:0.7875804901123047",
+            "level": 2,
+            "resource": "0:f7dea3ac-7710-4a17-be88-74fe3cf081aa:08502e4b-1de6-4a01-9ee1-e6b178cdc9c5:3",
+            "currentResource": "0:f7dea3ac-7710-4a17-be88-74fe3cf081aa:08502e4b-1de6-4a01-9ee1-e6b178cdc9c5:3"
+          },
+          {
+            "index": 1,
+            "active": true,
+            "key": "spatial:0:22:16:190.70008850097656:3.3399999141693115:140.6790313720703:4.986515998840332:0.7875804901123047:0.7875804901123047:0.7875804901123047",
+            "level": 2,
+            "resource": "0:f7dea3ac-7710-4a17-be88-74fe3cf081aa:08502e4b-1de6-4a01-9ee1-e6b178cdc9c5:3",
+            "currentResource": "0:f7dea3ac-7710-4a17-be88-74fe3cf081aa:08502e4b-1de6-4a01-9ee1-e6b178cdc9c5:3"
+          }
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      }
+    },
+    {
+      "index": 1,
+      "id": "spatial:0:22:29",
+      "a": {
+        "state": {
+          "ready": 0,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": false,
+        "standbyAvailable": false,
+        "physical": [],
+        "bankEntries": [
+          null,
+          null
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      },
+      "b": {
+        "state": {
+          "ready": 0,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": false,
+        "standbyAvailable": false,
+        "physical": [],
+        "bankEntries": [
+          null,
+          null
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      }
+    },
+    {
+      "index": 1,
+      "id": "spatial:0:22:36",
+      "a": {
+        "state": {
+          "ready": 0,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": false,
+        "standbyAvailable": false,
+        "physical": [],
+        "bankEntries": [
+          null,
+          null
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      },
+      "b": {
+        "state": {
+          "ready": 0,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": false,
+        "standbyAvailable": false,
+        "physical": [],
+        "bankEntries": [
+          null,
+          null
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      }
+    },
+    {
+      "index": 1,
+      "id": "spatial:0:24:1",
+      "a": {
+        "state": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": true,
+        "standbyAvailable": true,
+        "physical": [],
+        "bankEntries": [
+          {
+            "index": 0,
+            "active": true,
+            "key": "spatial:0:24:1:209.50845336914062:3.319999933242798:9.939352989196777:2.2332675457000732:0.9781816601753235:0.9781816601753235:0.9781816601753235",
+            "level": 2,
+            "resource": "0:c4fd3639-c3e9-4479-866c-d02162991a8a:cc81f5cc-bbd7-4d6f-ab02-05bd3a4c90f3:3",
+            "currentResource": "0:c4fd3639-c3e9-4479-866c-d02162991a8a:cc81f5cc-bbd7-4d6f-ab02-05bd3a4c90f3:3"
+          },
+          {
+            "index": 1,
+            "active": false,
+            "key": "spatial:0:24:1:209.50845336914062:3.319999933242798:9.939352989196777:2.2332675457000732:0.9781816601753235:0.9781816601753235:0.9781816601753235",
+            "level": 2,
+            "resource": "0:c4fd3639-c3e9-4479-866c-d02162991a8a:cc81f5cc-bbd7-4d6f-ab02-05bd3a4c90f3:3",
+            "currentResource": "0:c4fd3639-c3e9-4479-866c-d02162991a8a:cc81f5cc-bbd7-4d6f-ab02-05bd3a4c90f3:3"
+          }
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      },
+      "b": {
+        "state": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": true,
+        "standbyAvailable": true,
+        "physical": [],
+        "bankEntries": [
+          {
+            "index": 0,
+            "active": false,
+            "key": "spatial:0:24:1:209.50845336914062:3.319999933242798:9.939352989196777:2.2332675457000732:0.9781816601753235:0.9781816601753235:0.9781816601753235",
+            "level": 2,
+            "resource": "0:f7dea3ac-7710-4a17-be88-74fe3cf081aa:08502e4b-1de6-4a01-9ee1-e6b178cdc9c5:3",
+            "currentResource": "0:f7dea3ac-7710-4a17-be88-74fe3cf081aa:08502e4b-1de6-4a01-9ee1-e6b178cdc9c5:3"
+          },
+          {
+            "index": 1,
+            "active": true,
+            "key": "spatial:0:24:1:209.50845336914062:3.319999933242798:9.939352989196777:2.2332675457000732:0.9781816601753235:0.9781816601753235:0.9781816601753235",
+            "level": 2,
+            "resource": "0:f7dea3ac-7710-4a17-be88-74fe3cf081aa:08502e4b-1de6-4a01-9ee1-e6b178cdc9c5:3",
+            "currentResource": "0:f7dea3ac-7710-4a17-be88-74fe3cf081aa:08502e4b-1de6-4a01-9ee1-e6b178cdc9c5:3"
+          }
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      }
+    },
+    {
+      "index": 2,
+      "id": "spatial:0:18:49",
+      "a": {
+        "state": {
+          "ready": 0,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": false,
+        "standbyAvailable": false,
+        "physical": [],
+        "bankEntries": [
+          null,
+          null
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      },
+      "b": {
+        "state": {
+          "ready": 0,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": false,
+        "standbyAvailable": false,
+        "physical": [],
+        "bankEntries": [
+          null,
+          null
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      }
+    },
+    {
+      "index": 2,
+      "id": "spatial:0:2:60",
+      "a": {
+        "state": {
+          "ready": 0,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": false,
+        "standbyAvailable": false,
+        "physical": [],
+        "bankEntries": [
+          null,
+          null
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      },
+      "b": {
+        "state": {
+          "ready": 0,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": false,
+        "standbyAvailable": false,
+        "physical": [],
+        "bankEntries": [
+          null,
+          null
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      }
+    },
+    {
+      "index": 2,
+      "id": "spatial:0:21:22",
+      "a": {
+        "state": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": true,
+        "standbyAvailable": true,
+        "physical": [],
+        "bankEntries": [
+          {
+            "index": 0,
+            "active": false,
+            "key": "spatial:0:21:22:180.74526977539062:3.319999933242798:189.2928924560547:5.2619404792785645:0.8676296472549438:0.8676296472549438:0.8676296472549438",
+            "level": 2,
+            "resource": "0:e08105f7-96e4-4045-b432-8c5d8cd68fe3:bbb07472-e0fe-4f46-89ba-a231dc903d7b:3",
+            "currentResource": "0:e08105f7-96e4-4045-b432-8c5d8cd68fe3:bbb07472-e0fe-4f46-89ba-a231dc903d7b:3"
+          },
+          {
+            "index": 1,
+            "active": true,
+            "key": "spatial:0:21:22:180.74526977539062:3.319999933242798:189.2928924560547:5.2619404792785645:0.8676296472549438:0.8676296472549438:0.8676296472549438",
+            "level": 2,
+            "resource": "0:e08105f7-96e4-4045-b432-8c5d8cd68fe3:bbb07472-e0fe-4f46-89ba-a231dc903d7b:3",
+            "currentResource": "0:e08105f7-96e4-4045-b432-8c5d8cd68fe3:bbb07472-e0fe-4f46-89ba-a231dc903d7b:3"
+          }
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      },
+      "b": {
+        "state": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": true,
+        "standbyAvailable": true,
+        "physical": [],
+        "bankEntries": [
+          {
+            "index": 0,
+            "active": false,
+            "key": "spatial:0:21:22:180.74526977539062:3.319999933242798:189.2928924560547:5.2619404792785645:0.8676296472549438:0.8676296472549438:0.8676296472549438",
+            "level": 2,
+            "resource": "0:eee07384-b168-4915-8c38-931876445a67:91583eb7-c2ac-4f83-8102-fb9243e4c56f:3",
+            "currentResource": "0:eee07384-b168-4915-8c38-931876445a67:91583eb7-c2ac-4f83-8102-fb9243e4c56f:3"
+          },
+          {
+            "index": 1,
+            "active": true,
+            "key": "spatial:0:21:22:180.74526977539062:3.319999933242798:189.2928924560547:5.2619404792785645:0.8676296472549438:0.8676296472549438:0.8676296472549438",
+            "level": 2,
+            "resource": "0:eee07384-b168-4915-8c38-931876445a67:91583eb7-c2ac-4f83-8102-fb9243e4c56f:3",
+            "currentResource": "0:eee07384-b168-4915-8c38-931876445a67:91583eb7-c2ac-4f83-8102-fb9243e4c56f:3"
+          }
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      }
+    },
+    {
+      "index": 3,
+      "id": "spatial:0:22:9",
+      "a": {
+        "state": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": true,
+        "standbyAvailable": true,
+        "physical": [],
+        "bankEntries": [
+          {
+            "index": 0,
+            "active": false,
+            "key": "spatial:0:22:9:190.13372802734375:3.319999933242798:81.46800231933594:3.1849043369293213:1.1191837787628174:1.1191837787628174:1.1191837787628174",
+            "level": 2,
+            "resource": "0:8e12dc08-042b-4d9d-b325-49cd9c27cbb1:1de8c8ed-f94c-45ec-b4a0-8aefe0ac4688:3",
+            "currentResource": "0:8e12dc08-042b-4d9d-b325-49cd9c27cbb1:1de8c8ed-f94c-45ec-b4a0-8aefe0ac4688:3"
+          },
+          {
+            "index": 1,
+            "active": true,
+            "key": "spatial:0:22:9:190.13372802734375:3.319999933242798:81.46800231933594:3.1849043369293213:1.1191837787628174:1.1191837787628174:1.1191837787628174",
+            "level": 2,
+            "resource": "0:8e12dc08-042b-4d9d-b325-49cd9c27cbb1:1de8c8ed-f94c-45ec-b4a0-8aefe0ac4688:3",
+            "currentResource": "0:8e12dc08-042b-4d9d-b325-49cd9c27cbb1:1de8c8ed-f94c-45ec-b4a0-8aefe0ac4688:3"
+          }
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      },
+      "b": {
+        "state": {
+          "ready": 1,
+          "enabled": true
+        },
+        "coverage": false,
+        "prepared": false,
+        "nativeMissing": true,
+        "retainedPrepared": true,
+        "standbyAvailable": true,
+        "physical": [],
+        "bankEntries": [
+          {
+            "index": 0,
+            "active": true,
+            "key": "spatial:0:22:9:190.13372802734375:3.319999933242798:81.46800231933594:3.1849043369293213:1.1191837787628174:1.1191837787628174:1.1191837787628174",
+            "level": 2,
+            "resource": "0:7238f1f7-3922-4d7f-ae02-da4e240e2fb4:3f47decc-e6b4-480e-8a7b-60a12d020620:3",
+            "currentResource": "0:7238f1f7-3922-4d7f-ae02-da4e240e2fb4:3f47decc-e6b4-480e-8a7b-60a12d020620:3"
+          },
+          {
+            "index": 1,
+            "active": false,
+            "key": "spatial:0:22:9:190.13372802734375:3.319999933242798:81.46800231933594:3.1849043369293213:1.1191837787628174:1.1191837787628174:1.1191837787628174",
+            "level": 2,
+            "resource": "0:7238f1f7-3922-4d7f-ae02-da4e240e2fb4:3f47decc-e6b4-480e-8a7b-60a12d020620:3",
+            "currentResource": "0:7238f1f7-3922-4d7f-ae02-da4e240e2fb4:3f47decc-e6b4-480e-8a7b-60a12d020620:3"
+          }
+        ],
+        "transitionRange": [
+          90,
+          120
+        ],
+        "draw": null
+      }
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+<!doctype html>
+<meta charset="utf-8">
+<link rel="icon" href="data:,">
+<title>Native route on original worker</title>
+<style>body{font:14px system-ui;background:#172124;color:#eef2e8;margin:20px}pre{max-height:200px;overflow:auto}canvas{display:block}</style>
+<h1>Native route on original worker</h1>
+<p>Component validation using the production rig, bake, material admission and draw Worker. Full migration acceptance remains open.</p>
+<pre id="result">Ready</pre>
+<script type="module">
+import {auditNativeGpuCharacter} from './native-gpu-character.js';
+window.runNativeGpuCharacterAudit=async options=>{try{document.querySelector('#result').textContent='Running';const result=await auditNativeGpuCharacter(options);document.querySelector('#result').textContent=JSON.stringify(result,null,2);return result;}catch(error){document.querySelector('#result').textContent=String(error.stack??error);throw error;}};
+</script>

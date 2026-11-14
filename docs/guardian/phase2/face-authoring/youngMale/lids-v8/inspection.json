@@ -1,0 +1,51 @@
+{
+  "input": "C:/tmp/guardian-faces/youngMale-lids-v8.glb",
+  "expression": "blinkL,blinkR",
+  "amount": 1,
+  "meshes": [
+    {
+      "mesh": "Mesh0",
+      "vertices": 15080,
+      "headVertices": 2777
+    },
+    {
+      "mesh": "ActorFacialLids",
+      "vertices": 5330,
+      "headVertices": 5330
+    },
+    {
+      "mesh": "Icosphere",
+      "vertices": 42,
+      "headVertices": 0
+    }
+  ],
+  "center": [
+    0.001679636538028717,
+    -0.02067137509584427,
+    1.3619275093078613
+  ],
+  "extent": 0.9040243864,
+  "directions": {
+    "front": [
+      0,
+      -1,
+      0.05
+    ],
+    "quarter": [
+      1,
+      -1,
+      0.08
+    ],
+    "side": [
+      1,
+      0,
+      0.05
+    ],
+    "other-side": [
+      -1,
+      0,
+      0.05
+    ]
+  },
+  "clay": false
+}

@@ -1,0 +1,150 @@
+{
+  "backend": "WebGPU",
+  "nativeOutput": true,
+  "unlit": true,
+  "samples": [
+    {
+      "frame": {
+        "time": 3.1,
+        "audio": {
+          "currentTime": 1,
+          "ended": false
+        },
+        "gesture": "speak"
+      },
+      "mean": 3.3048,
+      "max": 157,
+      "changedPixels": 12019,
+      "weightMax": 0,
+      "boneMax": 0,
+      "invalidBones": 0,
+      "boneLengths": [
+        [
+          1024,
+          1024,
+          1024,
+          1024
+        ],
+        [
+          592,
+          592,
+          592,
+          592
+        ]
+      ]
+    },
+    {
+      "frame": {
+        "time": 1,
+        "audio": null,
+        "gesture": "idle"
+      },
+      "mean": 3.507035,
+      "max": 163,
+      "changedPixels": 12763,
+      "weightMax": 0,
+      "boneMax": 0,
+      "invalidBones": 0,
+      "boneLengths": [
+        [
+          1024,
+          1024,
+          1024,
+          1024
+        ],
+        [
+          592,
+          592,
+          592,
+          592
+        ]
+      ]
+    },
+    {
+      "frame": {
+        "time": 7.8,
+        "audio": null,
+        "gesture": "warning",
+        "reduced": false
+      },
+      "mean": 3.4255133333333334,
+      "max": 155,
+      "changedPixels": 12240,
+      "weightMax": 0,
+      "boneMax": 0,
+      "invalidBones": 0,
+      "boneLengths": [
+        [
+          1024,
+          1024,
+          1024,
+          1024
+        ],
+        [
+          592,
+          592,
+          592,
+          592
+        ]
+      ]
+    },
+    {
+      "frame": {
+        "time": 1,
+        "audio": null,
+        "gesture": "warning",
+        "reduced": true
+      },
+      "mean": 3.404368333333333,
+      "max": 157,
+      "changedPixels": 12018,
+      "weightMax": 0,
+      "boneMax": 0,
+      "invalidBones": 0,
+      "boneLengths": [
+        [
+          1024,
+          1024,
+          1024,
+          1024
+        ],
+        [
+          592,
+          592,
+          592,
+          592
+        ]
+      ]
+    },
+    {
+      "frame": {
+        "time": 7.8,
+        "audio": null,
+        "gesture": "warning",
+        "reduced": true
+      },
+      "mean": 3.40436,
+      "max": 157,
+      "changedPixels": 12018,
+      "weightMax": 0,
+      "boneMax": 0,
+      "invalidBones": 0,
+      "boneLengths": [
+        [
+          1024,
+          1024,
+          1024,
+          1024
+        ],
+        [
+          592,
+          592,
+          592,
+          592
+        ]
+      ]
+    }
+  ],
+  "visualParityPassed": false,
+  "scope": "Full model and translated vortex; WebGL and WebGPU side by side with simulated audio, static poses including reduced motion, no game or performance comparison. Mean threshold is only a diagnostic gate, not perceptual approval."
+}

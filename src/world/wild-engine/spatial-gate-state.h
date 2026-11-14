@@ -1,0 +1,35 @@
+// References into the existing route authority, not another trajectory store.
+struct GateCrossingReservation {
+  uint64_t body=0;uint32_t slot=0,generation=0;
+  double from=0,until=0;
+};
+struct NativeGate {
+  uint64_t id=0;
+  double x=0,z=0,yaw=0,sx=1,sz=1,hx=0,hz=0,trigger=0;
+  double from=0,target=0,at=0;
+  // A future request retains the already-authorized closing clock until `at`.
+  // One gate-local prefix, not another motor controller or a global scheduler.
+  bool precedingMotor=false;
+  double precedingFrom=0,precedingTarget=0,precedingAt=0;
+  bool defined=false,requested=false,occupied=false;
+  bool bodySweepCertified=false;
+  bool staticSweepCertified=false;
+  int status=0;
+  std::vector<double> local,closed,swing;
+  SpatialStaticMutation unsupported;
+  const NativeGateMeshModel* mesh=nullptr;
+  uint64_t mechanism=0;
+  double baseY=0,supportMin=0,supportMax=0,physicalRadius=0;
+  std::vector<double> physicalLeaf;
+  std::array<std::vector<double>,4> workerParts,fullParts;
+  std::map<uint64_t,GateCrossingReservation> crossings;
+};
+// A transient transaction proposal, not another live gate/planning model.
+struct NativeGateMotionProposal {
+  bool pending=false;uint32_t session=0;uint64_t ticket=0;
+  double at=0;
+  uint64_t bodies=0,entities=0,factsSequence=0,intents=0,reservations=0;
+  uint64_t clockSequence=0;
+  std::array<uint64_t,3> world{};
+  std::map<uint64_t,NativeGate> gates;
+};

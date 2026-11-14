@@ -11,6 +11,18 @@
 #include <unordered_set>
 #include <utility>
 #include <vector>
+#include "spatial-dynamic-bodies.h"
+#include "spatial-static-mutations.h"
+#include "spatial-residency-mutations.h"
+#include "spatial-prop-mutations.h"
+#include "spatial-terrain-mutations.h"
+#include "spatial-gate-intents.h"
+#include "spatial-gate-mechanisms-native.h"
+#ifdef __EMSCRIPTEN__
+#include <emscripten/emscripten.h>
+#else
+#define EMSCRIPTEN_KEEPALIVE
+#endif
 
 // Experimental incremental read model for direct-service task intentions.
 // JS owns the game entities. Only confirmed, ordered deltas enter this index.
@@ -20,8 +32,12 @@ int spatial_world_route_cached(float,float,float,float);
 const float* spatial_world_route_ptr();
 int spatial_world_route_reason();
 int spatial_world_segment_clear(float,float,float,float);
+int spatial_execution_segment_clear(double,double,double,double,double);
+int spatial_execution_profile_kind();
+uint64_t spatial_execution_revision(int);
 uint32_t lazy_route_revision();
 int lazy_selected_context();
+int lazy_sector_size();
 int spatial_select_nav_profile_index(int);
 int lazy_weak_region(int,int);
 int lazy_enclosure(int,int);
@@ -39,9 +55,13 @@ int spatial_world_biome();
 
 namespace {
 constexpr int changeWidth=10,resultWidth=8,maxChangeBatch=4096;
+constexpr int intentProtocolVersion=2,intentChangeWidth=15;
+enum class IntentEvent:int {RouteAssigned=1,RouteInvalidated=2,RouteReplaced=3,
+  IntentChanged=4,RouteCompleted=5};
 constexpr double maxId=9007199254740991.0;
 constexpr double pi=3.14159265358979323846;
-struct Worker {uint64_t id,center;double x,z;bool eligible,actionActive;double rank;};
+struct Worker {uint64_t id,center;double x,z;bool eligible,actionActive;double rank;bool bodyBound=false;uint64_t body=0;};
+#include "spatial-gate-state.h"
 // Target kind: 0 direct, 1 ordinary crop, 2 banana, 3 wall, 4 center.
 struct Target {
   uint64_t id;double x,z;bool active;int kind;double yaw,shape;
@@ -109,13 +129,59 @@ struct ActiveIntent {
   float approachX=0,approachZ=0,approachRadius=0;
   bool approachKnown=false;
   std::vector<uint64_t> blockedCropGroups;
+  // A release must name the old handle even after the slot is reclaimed. This
+  // is transition metadata, never another copy of the navigation state.
+  uint32_t revokedSlot=0,revokedGeneration=0;
+  int dependencyProfile=-1;
+  std::set<std::pair<int,int>> routeSectors;
+  uint64_t assignmentSequence=0;
+  double assignedAt=0;
+  int timingMode=0;
+  double timingRadius=0;
+  int motionFlags=0;double runBudget=0;
 };
-struct RouteSlot {std::vector<float> points;uint32_t generation=0;bool active=false;};
+struct RouteHold {
+  double distance=0,from=0,until=0,delay=0;
+  uint64_t gate=0;
+};
+struct RouteSlot {
+  std::vector<float> points;
+  // Execution timing belongs to this same versioned route, not another plan.
+  // Modes 1 (animal walk) / 2 (worker rules) are static candidates, not autonomy.
+  std::vector<double> distances;
+  std::vector<RouteHold> holds;
+  double originX=0,originZ=0,startTime=0,speed=0,radius=0;
+  double departureTime=0;uint64_t waitGate=0;bool gateCandidate=false;
+  bool gateAdmitted=false;
+  bool resumable=false,suspended=false;
+  double suspendedAt=0;
+  // Cumulative distance, motion time, run/walk/carry phases and distances.
+  // The suffix has local timing/distances; these offsets never advance at rest.
+  std::array<double,7> motionOffset{};
+  std::vector<uint64_t> gateReservations;
+  uint64_t actor=0;
+  int timingMode=0,profile=0;
+  int motionFlags=0;double runDistance=0,runSpeed=0,runBudget=0;
+  uint32_t generation=0;bool active=false;
+  // Admission fence in the existing slot, not a duplicate trajectory store.
+  bool reserved=false;uint64_t reservationBody=0;
+  bool hasExecution=false;
+  std::array<double,18> executionPose{};
+  std::array<uint64_t,3> staticProofStamp{};
+};
 struct Change {
   int op,kind;
   uint64_t id,center,target,assigned;
   double x,z,created,rank;
   bool flag;
+};
+struct PendingBarrierProposal {
+  bool pending=false;uint32_t session=0;uint64_t ticket=0;
+  double at=0;uint64_t bodies=0,entities=0,facts=0,intents=0,reservations=0,clock=0,gates=0;
+  std::array<uint64_t,3> world{};
+  SpatialBarrierProposalInput input{};
+  SpatialWorldProposalInput worldInput;
+  int kind=0;
 };
 struct IntentState {
   std::unordered_map<uint64_t,Worker> workers;
@@ -138,6 +204,23 @@ struct IntentState {
   std::vector<float> routes;
   std::vector<std::pair<uint64_t,uint64_t>> proposals;
   std::unordered_map<uint64_t,ActiveIntent> activeIntents;
+  // Inverse references to existing intents/route slots, not another nav model.
+  std::map<std::tuple<int,int,int>,std::set<uint64_t>> routeSubscribers;
+  std::array<std::set<uint64_t>,6> profileParticipants,waitingSubscribers;
+  std::set<uint64_t> changedRouteActors;
+  uint64_t routeValidations=0,routeValidationSegments=0,reconcileCandidates=0;
+#ifdef WILD_DECLARATIVE_ATTACK
+  // Experimental high-level intent survives loss of its current route/target.
+  // Never used by the production binary.
+  struct AttackDeclaration {double radius;int profile;bool dirty;
+    bool waiting=false;double since=0,next=0;int attempts=0;
+    bool blockedApproach=false;};
+  std::unordered_map<uint64_t,AttackDeclaration> attackDeclarations;
+  std::set<std::pair<double,uint64_t>> attackDeadlines;
+#ifdef WILD_DECLARATIVE_STATS
+  uint64_t attackWakeEvents=0,attackWakeVisits=0,attackWakeIdle=0,attackWakeTransitions=0;
+#endif
+#endif
   std::unordered_map<uint64_t,std::unordered_set<uint64_t>> byTarget,byTask;
   std::unordered_map<uint64_t,std::unordered_set<uint64_t>> byBlockedCropGroup;
   std::vector<double> wallOpportunityActors;
@@ -158,22 +241,120 @@ struct IntentState {
   uint64_t wallRevision=0,wallPortalBuilds=0;
   std::vector<double> perimeterRows;
   std::vector<double> intentChanges;
+  std::vector<double> controlSnapshot;
   std::array<double,10> intentResult{};
+  std::array<double,20> timingResult{};
+  std::array<double,3> holdResult{};
+  std::vector<double> routeHoldResult,routeKnotResult;
+  std::array<double,18> sampleResult{};
+  uint64_t routeTimeSamples=0;
+  int timingRejection=0;
+  std::map<uint64_t,uint32_t> reservedBodies;
+  std::map<uint64_t,uint32_t> suspendedBodies;
+  uint64_t routeSuspensions=0,routeResumptions=0;
+  std::array<double,27> suspendedRouteResult{};
+  std::array<double,6> reservationResult{};
+  uint64_t reservationChecks=0,reservationPairs=0,reservationBodyChecks=0,
+    reservationMutationCandidates=0;
+  bool executionEnabled=false,bodyDomainActive=false,drainingStops=false,resettingBodies=false;
+  std::array<uint64_t,3> executionWorldStamp{};
+  std::array<double,18> executionResult{};
+  std::set<uint64_t> stoppedReservationBodies,removingBodies;
+  std::set<uint64_t> stoppedGateRouteActors;
+  uint64_t executionAdvances=0,executionEvaluations=0,executionBodyUpdates=0,executionStopInvalidations=0;
+  uint64_t staticMutationCandidates=0,staticMutationSegments=0,staticMutationBodyChecks=0,
+    staticMutationRevocations=0,staticMutationRejected=0,staticMutationCommits=0;
+  uint64_t residencyCandidates=0,residencySegments=0,residencyBodyChecks=0,
+    residencyRevocations=0,residencyRejected=0,residencyCommits=0,residencyPinRevision=0;
+  uint64_t propMutationCandidates=0,propMutationSegments=0,propMutationBodyChecks=0,
+    propMutationRevocations=0,propMutationRejected=0,propMutationCommits=0,propMutationRecipeChunks=0;
+  uint64_t terrainCandidates=0,terrainSegments=0,terrainBodyChecks=0,terrainRevocations=0,
+    terrainRejected=0,terrainCommits=0,terrainRecipeChunks=0;
+  std::map<uint64_t,NativeGate> gates;
+  std::unordered_map<uint64_t,uint64_t> gateBodyActors;
+  std::vector<double> gateInput,gateResult;
+  uint64_t gateBoundaries=0,gateWorkerChecks=0,gatePrefixSegments=0;
+  uint64_t gateWaitSegments=0;
+  uint64_t gateSweepPairs=0,gateSweepEvaluations=0,gateSweepRejected=0;
+  std::array<double,6> gateSweepResult{};
+  NativeGateMotionProposal gateMotionProposal;
+  uint64_t nextGateMotionTicket=0;
+  uint64_t gateRevision=0,nextBarrierProposal=0;
+  PendingBarrierProposal barrierProposal;
+  bool worldMutationPreview=false;
+  std::array<double,6> barrierProposalResult{};
+  std::array<double,5> gateMotionResult{};
+  uint64_t gateStaticPairs=0,gateStaticEvaluations=0,gateStaticRejected=0;
+  std::array<double,8> gateStaticResult{};
+  uint64_t nextGateMechanism=0;
+  std::array<double,40> gateMechanismPose{};
+  std::array<double,8> gateMechanismCollision{};
+  std::vector<double> gateMechanismWorld;
+  int gateStaticProofs=0;
+  std::array<uint64_t,3> gateStaticWorldStamp{};
   uint32_t session=0;
   uint64_t invalidations=0;
   std::unordered_map<uint64_t,uint64_t> planningCallsByActor;
   uint64_t sequence=0,entityRevision=0,damageRevision=0,plannedEntityRevision=0;
+  uint64_t intentSequence=0;
+  double effectiveTime=0;
+  // Finite presentation watermark of THIS native execution authority. It is
+  // committed after execution/commands, never a prepared route's future clock.
+  bool causalClock=false,clockPaused=false,clockReanchor=true;
+  double clockThrough=0,clockRate=1;
+  uint64_t clockSequence=0,clockIntentSequence=0,clockProofSequence=UINT64_MAX;
+  std::array<double,8> clockResult{};
   uint32_t plannedGraphRevision=0;
   int plannedProfile=-1;
   uint64_t routeQueries=0,candidates=0;
   bool proposalOpen=false;
 };
 IntentState& state(){static IntentState* value=new IntentState();return *value;}
+#ifdef WILD_DECLARATIVE_ATTACK
+void clearAttackDeadline(IntentState& s,uint64_t actor){
+  const auto found=s.attackDeclarations.find(actor);
+  if(found==s.attackDeclarations.end()||!found->second.waiting)return;
+  s.attackDeadlines.erase({found->second.next,actor});found->second.waiting=false;
+}
+#endif
 bool integer(double value,bool allowZero=false){
   return std::isfinite(value)&&value>=double(allowZero?0:1)&&
     value<=maxId&&std::floor(value)==value;
 }
 bool coordinate(double value){return std::isfinite(value)&&std::abs(value)<2147483000.0;}
+std::array<uint64_t,3> executionWorldStamp(){
+  return {spatial_execution_revision(0),spatial_execution_revision(1),spatial_execution_revision(2)};
+}
+#include "spatial-route-motion.h"
+void updateResidencyPinRevision(IntentState& s,const SpatialBodyView* before,const SpatialBodyView* after){
+  if(!s.bodyDomainActive)return;
+  const bool activeBefore=before&&(before->flags&1),activeAfter=after&&(after->flags&1);
+  if(activeBefore!=activeAfter){s.residencyPinRevision++;return;}
+  if(!activeBefore)return;
+  if(before->x==after->x&&before->z==after->z&&before->r==after->r)return;
+  std::array<int64_t,4> oldRange{},newRange{};
+  if(!spatialExecutionResidencyPinRange(before->x,before->z,before->r,oldRange)||
+     !spatialExecutionResidencyPinRange(after->x,after->z,after->r,newRange)||oldRange!=newRange)
+    s.residencyPinRevision++;
+}
+void recordTimingResult(IntentState& s,int result){
+  s.timingRejection=result==1?0:result==0?1:result==-1?2:result==-2?3:4;
+}
+#ifdef WILD_DECLARATIVE_ATTACK
+bool validAttackTransients(const IntentState& s,int blockers,int reserved){
+  if(blockers<0||blockers>100000||reserved<0||reserved>100000||
+     s.attackBlockers.size()!=size_t(blockers)*3||
+     s.attackReservedTargets.size()!=size_t(reserved))return false;
+  for(int i=0;i<blockers;i++){
+    const size_t at=size_t(i)*3;
+    if(!coordinate(s.attackBlockers[at])||!coordinate(s.attackBlockers[at+1])||
+       !std::isfinite(s.attackBlockers[at+2])||s.attackBlockers[at+2]<=0||
+       s.attackBlockers[at+2]>2)return false;
+  }
+  for(double id:s.attackReservedTargets)if(!integer(id))return false;
+  return true;
+}
+#endif
 bool parse(const double* row,Change& change){
   if(!integer(row[0],true)||row[0]>1||!integer(row[1])||row[1]>6||
     !integer(row[2]))return false;
@@ -196,20 +377,145 @@ bool parse(const double* row,Change& change){
   return change.center>0&&change.target>0&&integer(row[4],true)&&row[4]<=2;
 }
 void clearProposal(IntentState& s){s.proposals.clear();s.proposalOpen=false;}
-void emitIntentChange(IntentState& s,const ActiveIntent& intent){
+void clearRouteDependencies(IntentState& s,ActiveIntent& intent){
+  const int profile=intent.dependencyProfile;
+  if(profile<0)return;
+  for(const auto& [x,z]:intent.routeSectors){
+    const auto key=std::make_tuple(profile,x,z);
+    auto found=s.routeSubscribers.find(key);
+    if(found!=s.routeSubscribers.end()){
+      found->second.erase(intent.actor);
+      if(found->second.empty())s.routeSubscribers.erase(found);
+    }
+  }
+  s.profileParticipants[profile].erase(intent.actor);
+  s.waitingSubscribers[profile].erase(intent.actor);
+  intent.routeSectors.clear();intent.dependencyProfile=-1;
+}
+void subscribeRouteSegment(IntentState& s,ActiveIntent& intent,
+    double x,double z,double endX,double endZ){
+  const int size=lazy_sector_size();
+  if(size<=0)return;
+  // Cover the entire swept connector, including fractional endpoints and the
+  // largest supported body. Subdivision bounds the cells per diagonal segment.
+  // Include footprint, +/-0.8 m slope samples and their enclosing mesh corners.
+  constexpr double margin=5;
+  const int steps=std::max(1,int(std::ceil(std::hypot(endX-x,endZ-z)/(size*.5))));
+  const double startX=x,startZ=z;
+  for(int i=1;i<=steps;i++){
+    const double nextX=startX+(endX-startX)*i/steps,
+      nextZ=startZ+(endZ-startZ)*i/steps;
+    const int minX=int(std::floor((std::min(x,nextX)-margin)/size)),
+      maxX=int(std::floor((std::max(x,nextX)+margin)/size)),
+      minZ=int(std::floor((std::min(z,nextZ)-margin)/size)),
+      maxZ=int(std::floor((std::max(z,nextZ)+margin)/size));
+    for(int sx=minX;sx<=maxX;sx++)for(int sz=minZ;sz<=maxZ;sz++)
+      if(intent.routeSectors.emplace(sx,sz).second)
+        s.routeSubscribers[{intent.profile,sx,sz}].insert(intent.actor);
+    x=nextX;z=nextZ;
+  }
+}
+void indexRouteDependencies(IntentState& s,ActiveIntent& intent){
+  clearRouteDependencies(s,intent);
+  if(intent.profile<0||intent.profile>=6)return;
+  if(intent.state!=PlanningState::RouteActive&&
+     intent.state!=PlanningState::WaitingUnknown&&
+     intent.state!=PlanningState::WaitingBlocked)return;
+  intent.dependencyProfile=intent.profile;
+  s.profileParticipants[intent.profile].insert(intent.actor);
+  if(intent.state!=PlanningState::RouteActive){
+    s.waitingSubscribers[intent.profile].insert(intent.actor);return;
+  }
+  if(intent.slot>=s.routeSlots.size())return;
+  const auto& route=s.routeSlots[intent.slot];
+  if(!route.active||route.generation!=intent.generation)return;
+  const int original=lazy_selected_context();
+  if(original!=intent.profile)spatial_select_nav_profile_index(intent.profile);
+  const auto worker=s.workers.find(intent.actor);
+  double x=intent.animal?intent.routeStartX:
+    worker!=s.workers.end()?worker->second.x:intent.routeStartX;
+  double z=intent.animal?intent.routeStartZ:
+    worker!=s.workers.end()?worker->second.z:intent.routeStartZ;
+  for(size_t i=size_t(intent.routeCursor)*2;i+1<route.points.size();i+=2){
+    subscribeRouteSegment(s,intent,x,z,route.points[i],route.points[i+1]);
+    x=route.points[i];z=route.points[i+1];
+  }
+  if(original!=intent.profile)spatial_select_nav_profile_index(original);
+}
+void drainStoppedReservations(IntentState& s);
+bool intentHasSuspendedRoute(const IntentState& s,const ActiveIntent& intent){
+  if(intent.slot>=s.routeSlots.size())return false;
+  const auto& route=s.routeSlots[intent.slot];
+  return route.active&&route.suspended&&route.actor==intent.actor&&route.generation==intent.generation;
+}
+void emitIntentChange(IntentState& s,ActiveIntent& intent){
+  indexRouteDependencies(s,intent);
+  const IntentEvent event=intent.state==PlanningState::RouteActive?
+    (intent.revokedGeneration?IntentEvent::RouteReplaced:IntentEvent::RouteAssigned):
+    intent.revokedGeneration?
+      (intent.state==PlanningState::ActionActive?IntentEvent::RouteCompleted:
+        IntentEvent::RouteInvalidated):IntentEvent::IntentChanged;
+  const uint64_t transitionSequence=++s.intentSequence;
+  if(event==IntentEvent::RouteAssigned||event==IntentEvent::RouteReplaced){
+    intent.assignmentSequence=transitionSequence;intent.assignedAt=s.effectiveTime;
+  }
   s.intentChanges.insert(s.intentChanges.end(),{double(intent.actor),
     double(int(intent.state)),double(intent.task),double(intent.target),
-    double(s.session),double(intent.slot),double(intent.generation),
-    double(intent.topology)});
+    double(s.session),intent.state==PlanningState::RouteActive?double(intent.slot):0,
+    intent.state==PlanningState::RouteActive?double(intent.generation):0,
+    double(intent.topology),double(transitionSequence),s.effectiveTime,
+    intent.revokedGeneration?double(s.session):0,double(intent.revokedSlot),
+    double(intent.revokedGeneration),double(int(event)),double(intentProtocolVersion)});
+  intent.revokedSlot=0;intent.revokedGeneration=0;
+  drainStoppedReservations(s);
 }
+void releaseGateCrossings(IntentState&,const RouteSlot&);
 void releaseRoute(IntentState& s,ActiveIntent& intent){
+  clearRouteDependencies(s,intent);
   if(intent.slot<s.routeSlots.size()){
     RouteSlot& route=s.routeSlots[intent.slot];
     if(route.active&&route.generation==intent.generation){
-      route.active=false;route.points.clear();route.generation++;
+      if(!route.suspended){intent.revokedSlot=intent.slot;intent.revokedGeneration=intent.generation;}
+      releaseGateCrossings(s,route);
+      if(route.reserved){
+        s.residencyPinRevision++;
+        if(s.executionEnabled&&!s.resettingBodies&&!s.removingBodies.count(route.reservationBody))
+          s.stoppedReservationBodies.insert(route.reservationBody);
+        s.reservedBodies.erase(route.reservationBody);route.reserved=false;
+      }
+      if(route.suspended)s.suspendedBodies.erase(route.reservationBody);
+      route.suspended=route.resumable=false;route.motionOffset.fill(0);route.suspendedAt=0;
+      route.active=false;route.points.clear();route.distances.clear();route.timingMode=0;
+      route.holds.clear();route.waitGate=0;route.gateCandidate=false;route.departureTime=0;
+      route.gateReservations.clear();route.gateAdmitted=false;
+      route.generation++;
     }
   }
   intent.slot=0;intent.generation=0;
+}
+// Suspension retains the ONE allocated slot, but revokes its executable handle.
+// Cancel/target changes still use releaseRoute and permanently discard it.
+bool suspendRoute(IntentState& s,ActiveIntent& intent){
+  if(s.resettingBodies||intent.state!=PlanningState::RouteActive||intent.animal||intent.slot>=s.routeSlots.size())return false;
+  auto& route=s.routeSlots[intent.slot];
+  if(!route.active||route.suspended||!route.resumable||!route.reserved||route.generation!=intent.generation)return false;
+  const auto pose=route.hasExecution?route.executionPose:sampleRouteTiming(route,route.startTime);
+  SpatialBodyView body;
+  if(pose[6]||!spatialReadBody(route.reservationBody,body)||body.x!=pose[0]||body.z!=pose[1])return false;
+  intent.revokedSlot=intent.slot;intent.revokedGeneration=intent.generation;
+  clearRouteDependencies(s,intent);releaseGateCrossings(s,route);
+  s.reservedBodies.erase(route.reservationBody);route.reserved=false;
+  s.suspendedBodies.emplace(route.reservationBody,intent.slot);
+  if(s.executionEnabled)s.stoppedReservationBodies.insert(route.reservationBody);
+  route.gateReservations.clear();route.gateAdmitted=false;
+  route.executionPose=pose;route.hasExecution=true;route.suspended=true;route.suspendedAt=s.effectiveTime;
+  if(!++route.generation)route.generation=1;
+  intent.generation=route.generation;intent.state=PlanningState::WaitingBlocked;
+  intent.runBudget=pose[14];s.bodyDomainActive=true;s.residencyPinRevision++;s.routeSuspensions++;return true;
+}
+void stopRouteForEvent(IntentState& s,ActiveIntent& intent){
+  if(suspendRoute(s,intent))return;
+  releaseRoute(s,intent);intent.state=PlanningState::NeedsPlan;
 }
 void releaseIntent(IntentState& s,uint64_t actor,PlanningState next){
   const auto found=s.activeIntents.find(actor);
@@ -231,6 +537,22 @@ void releaseIntent(IntentState& s,uint64_t actor,PlanningState next){
   emitIntentChange(s,intent);
   intent.task=0;intent.target=0;s.invalidations++;
 }
+#include "spatial-route-reservations.h"
+bool gateStaticProofCurrent(const IntentState&);
+bool gateRouteBindingsCoherent(const IntentState&,const RouteSlot&,uint32_t);
+#include "spatial-route-execution.h"
+#include "spatial-gate-controller.h"
+#include "spatial-gate-mechanism.h"
+#include "spatial-gate-sweep.h"
+#include "spatial-gate-static-sweep.h"
+#include "spatial-gate-static-fences.h"
+#include "spatial-gate-route-waits.h"
+#include "spatial-static-mutation-state.h"
+#include "spatial-residency-mutation-state.h"
+#include "spatial-prop-mutation-state.h"
+#include "spatial-terrain-mutation-state.h"
+#include "spatial-gate-transactions.h"
+#include "spatial-gate-crossings.h"
 void invalidateDependents(IntentState& s,const Change& change){
   if(change.kind==1){
     if(!change.op){
@@ -298,6 +620,13 @@ void invalidateDependents(IntentState& s,const Change& change){
     const auto active=s.activeIntents.find(actor);
     if(active==s.activeIntents.end())continue;
     if(active->second.animal){
+#ifdef WILD_DECLARATIVE_ATTACK
+      const auto declaration=s.attackDeclarations.find(actor);
+      if(declaration!=s.attackDeclarations.end()){
+        clearAttackDeadline(s,actor);declaration->second.dirty=true;
+        declaration->second.blockedApproach=false;
+      }
+#endif
       if(active->second.state==PlanningState::ActionActive){
         // A committed strike resolves against its original target ID at the
         // animation's damage frame. Its lease becomes stale, but the hit is
@@ -603,15 +932,199 @@ ServiceRoute findServiceRoute(const Worker& worker,const Target& target,int kind
 }
 }
 
+bool spatialIntentStaticProtectionActive(){return state().bodyDomainActive||state().gateStaticProofs;}
+int spatialIntentBeginWorldPreview(){
+  auto& s=state();if(s.worldMutationPreview||s.barrierProposal.pending)return -4;
+  if(!s.session||!s.causalClock||s.clockThrough!=s.effectiveTime||s.clockIntentSequence!=s.intentSequence||
+     !gateStaticProofCurrent(s)||s.executionEnabled&&s.executionWorldStamp!=executionWorldStamp())return -2;
+  if(s.nextBarrierProposal>=uint64_t(maxId)||spatialBodiesMutationRevision()==std::numeric_limits<uint64_t>::max())return -5;
+  s.worldMutationPreview=true;return 1;
+}
+void spatialIntentEndWorldPreview(){state().worldMutationPreview=false;}
+int stageWorldMutationBoundary(const SpatialStaticMutation* shapes,int count){
+  auto& s=state();if(s.barrierProposal.pending)return -4;
+  if(!s.session||!s.causalClock||s.clockThrough!=s.effectiveTime||s.clockIntentSequence!=s.intentSequence||
+     !gateStaticProofCurrent(s)||s.executionEnabled&&s.executionWorldStamp!=executionWorldStamp())return -2;
+  if(s.nextBarrierProposal>=uint64_t(maxId)||spatialBodiesMutationRevision()==std::numeric_limits<uint64_t>::max())return -5;
+  // This is read-only preflight. No route, slot, world index, ID, or clock is
+  // released or published while the graphics receipt is outstanding.
+  if(count>=0&&!staticMutationPreflight(s,shapes,count))return 0;
+  std::set<uint64_t> affected;uint64_t candidates=0,segments=0;
+  if(count>=0&&s.executionEnabled&&!mutationAffectedRoutes(s,shapes,count,0,candidates,segments,affected))return -2;
+  auto& p=s.barrierProposal;p.pending=true;p.session=s.session;p.ticket=++s.nextBarrierProposal;p.at=s.effectiveTime;
+  p.bodies=spatialBodiesMutationRevision();p.entities=s.entityRevision;p.facts=s.sequence;p.intents=s.intentSequence;
+  p.reservations=s.residencyPinRevision;p.clock=s.clockSequence;p.gates=s.gateRevision;p.world=executionWorldStamp();
+  return 1;
+}
+int spatialIntentStageBarrier(const SpatialBarrierProposalInput& input,const SpatialStaticMutation& shape){
+  const int result=stageWorldMutationBoundary(&shape,1);if(result!=1)return result;
+  auto& p=state().barrierProposal;p.kind=1;p.input=input;return 1;
+}
+int spatialIntentStageWorld(const SpatialWorldProposalInput& input,const SpatialStaticMutation* shapes,int count){
+  if(input.kind<2)return -1;
+  const int result=stageWorldMutationBoundary(shapes,count);if(result!=1)return result;
+  auto& p=state().barrierProposal;p.kind=input.kind;p.worldInput=input;return 1;
+}
+void clearWorldMutationProposal(PendingBarrierProposal& p){
+  p.pending=false;p.kind=0;p.worldInput=SpatialWorldProposalInput{};
+}
+int takeWorldMutationBoundary(double session,double ticket,double sequence,double time,double clockSequence,int kind){
+  auto& s=state();const auto& p=s.barrierProposal;
+  if(!integer(session)||!integer(ticket)||!p.pending||session!=double(p.session)||ticket!=double(p.ticket)||
+     (kind==1?p.kind!=1:p.kind<2))return -1;
+  const bool current=p.session==s.session&&p.at==s.effectiveTime&&p.bodies==spatialBodiesMutationRevision()&&
+    p.bodies!=std::numeric_limits<uint64_t>::max()&&p.entities==s.entityRevision&&p.facts==s.sequence&&
+    p.intents==s.intentSequence&&p.reservations==s.residencyPinRevision&&p.clock==s.clockSequence&&
+    p.gates==s.gateRevision&&p.world==executionWorldStamp()&&gateStaticProofCurrent(s)&&
+    s.causalClock&&s.clockThrough==s.effectiveTime&&s.clockIntentSequence==s.intentSequence;
+  if(!current){clearWorldMutationProposal(s.barrierProposal);return -2;}
+  if(!integer(sequence,true)||sequence!=double(p.intents)||!std::isfinite(time)||time!=p.at||
+     !integer(clockSequence)||clockSequence!=double(p.clock)){clearWorldMutationProposal(s.barrierProposal);return -3;}
+  return 1;
+}
+int spatialIntentTakeBarrier(double session,double ticket,double sequence,double time,double clockSequence,SpatialBarrierProposalInput& out){
+  const int result=takeWorldMutationBoundary(session,ticket,sequence,time,clockSequence,1);if(result!=1)return result;
+  auto& p=state().barrierProposal;out=p.input;clearWorldMutationProposal(p);return 1;
+}
+int spatialIntentTakeWorld(double session,double ticket,double sequence,double time,double clockSequence,SpatialWorldProposalInput& out){
+  const int result=takeWorldMutationBoundary(session,ticket,sequence,time,clockSequence,2);if(result!=1)return result;
+  auto& p=state().barrierProposal;out=std::move(p.worldInput);clearWorldMutationProposal(p);return 1;
+}
+int spatialIntentWorldProposalSnapshot(std::array<double,6>& out){
+  auto& p=state().barrierProposal;if(!p.pending||p.kind<2)return 0;
+  const int valid=takeWorldMutationBoundary(double(p.session),double(p.ticket),double(p.intents),p.at,double(p.clock),2);
+  if(valid!=1)return valid;
+  out={double(p.session),double(p.ticket),double(p.intents),p.at,double(p.clock),double(p.kind)};return 1;
+}
+extern "C" EMSCRIPTEN_KEEPALIVE int nav_intent_barrier_proposal_version(){return 1;}
+extern "C" EMSCRIPTEN_KEEPALIVE int nav_intent_barrier_proposal_ticket(){
+  auto& s=state();s.barrierProposalResult.fill(0);const auto& p=s.barrierProposal;if(!p.pending)return 0;
+  s.barrierProposalResult={double(p.session),double(p.ticket),double(p.intents),p.at,double(p.clock),double(p.kind)};return 1;
+}
+extern "C" EMSCRIPTEN_KEEPALIVE const double* nav_intent_barrier_proposal_ticket_ptr(){return state().barrierProposalResult.data();}
+extern "C" EMSCRIPTEN_KEEPALIVE int nav_intent_barrier_proposal_cancel(double session,double ticket){
+  auto& s=state();const auto& p=s.barrierProposal;
+  if(!integer(session)||!integer(ticket)||!p.pending||session!=double(p.session)||ticket!=double(p.ticket))return 0;
+  clearWorldMutationProposal(s.barrierProposal);return 1;
+}
+bool spatialIntentGateUnsupported(double x,double z,double nx,double nz,double radius){
+  const auto& s=state();for(const auto& [id,gate]:s.gates)
+    if(gate.status!=2&&spatialStaticMutationBlocks(gate.unsupported,x,z,nx,nz,radius,0,true))return true;
+  return false;
+}
+bool spatialIntentPropsProtected(){const auto& s=state();return s.worldMutationPreview||s.bodyDomainActive||!s.reservedBodies.empty()||s.gateStaticProofs;}
+bool spatialIntentTerrainProtected(){return spatialIntentPropsProtected();}
+SpatialStaticTicket spatialIntentTerrainBefore(const SpatialStaticMutation* boxes,int count,
+    SpatialTerrainProbe probe,void* context,int recipes,bool known){
+  return terrainMutationBefore(state(),boxes,count,probe,context,recipes,known);
+}
+void spatialIntentTerrainCommitted(const SpatialStaticTicket& ticket){terrainMutationCommitted(state(),ticket);}
+SpatialStaticTicket spatialIntentPropsBefore(const SpatialStaticMutation* shapes,int count,int recipes,bool known){
+  return propMutationBefore(state(),shapes,count,recipes,known);
+}
+void spatialIntentPropsCommitted(const SpatialStaticTicket& ticket,int terrainDelta){propMutationCommitted(state(),ticket,terrainDelta);}
+SpatialStaticTicket spatialIntentResidencyBefore(const SpatialResidencyRegion* regions,int count,bool removing,bool releaseOnly){
+  return residencyMutationBefore(state(),regions,count,removing,releaseOnly);
+}
+void spatialIntentResidencyCommitted(const SpatialStaticTicket& ticket,int count){residencyMutationCommitted(state(),ticket,count);}
+bool spatialIntentStaticRestorationAllowed(){return !state().bodyDomainActive&&!state().gateStaticProofs;}
+bool spatialIntentStaticPreflight(const SpatialStaticMutation* shapes,int count){
+  return staticMutationPreflight(state(),shapes,count);
+}
+SpatialStaticTicket spatialIntentStaticBefore(const SpatialStaticMutation* shapes,int count){
+  return staticMutationBefore(state(),shapes,count);
+}
+void spatialIntentStaticCommitted(const SpatialStaticTicket& ticket){staticMutationCommitted(state(),ticket);}
+bool spatialIntentBodyCanChange(uint64_t id,const SpatialBodyView& proposed){
+  auto& s=state();if(!gateMechanismBodyCanChange(s,proposed)||!gateMotionBodyCanChange(s,proposed)||!reservationBodyCanChange(s,id,proposed))return false;
+  if(s.bodyDomainActive){SpatialBodyView previous;const bool exists=spatialReadBody(id,previous);
+    updateResidencyPinRevision(s,exists?&previous:nullptr,&proposed);}
+  return true;
+}
+void spatialIntentBodyRemoving(uint64_t id){
+  auto& s=state();SpatialBodyView previous;
+  if(const auto binding=s.gateBodyActors.find(id);binding!=s.gateBodyActors.end()){
+    if(const auto worker=s.workers.find(binding->second);worker!=s.workers.end())worker->second.bodyBound=false;
+    s.gateBodyActors.erase(binding);
+  }
+  if(s.bodyDomainActive&&spatialReadBody(id,previous))updateResidencyPinRevision(s,&previous,nullptr);
+  reservationBodyRemoving(s,id);
+}
+void spatialIntentBodiesResetting(){
+  auto& s=state();
+  for(auto& [id,worker]:s.workers)worker.bodyBound=false;s.gateBodyActors.clear();
+  s.resettingBodies=true;
+  while(!s.reservedBodies.empty())reservationBodyRemoving(s,s.reservedBodies.begin()->first);
+  while(!s.suspendedBodies.empty())reservationBodyRemoving(s,s.suspendedBodies.begin()->first);
+  s.resettingBodies=false;
+  if(s.bodyDomainActive){s.bodyDomainActive=false;s.residencyPinRevision++;}
+}
+
 extern "C" {
+// Native graph mutation notifications only enqueue inverse dependents. Physical
+// validation runs after the graph transaction is coherent, never from a draw or
+// actor tick. Global init remains conservatively scoped to its movement profile.
+void nav_intent_sector_changed(int profile,int sx,int sz,int global){
+  if(profile<0||profile>=6)return;
+  IntentState& s=state();
+  if(global){
+    const auto& actors=s.profileParticipants[profile];
+    s.changedRouteActors.insert(actors.begin(),actors.end());
+  }else{
+    const auto found=s.routeSubscribers.find({profile,sx,sz});
+    if(found!=s.routeSubscribers.end())
+      s.changedRouteActors.insert(found->second.begin(),found->second.end());
+    // Waiting routes do not yet have a usable spatial corridor. Wake them on
+    // profile changes until native frontier dependencies are represented.
+    const auto& waiting=s.waitingSubscribers[profile];
+    s.changedRouteActors.insert(waiting.begin(),waiting.end());
+  }
+}
 // Reset on a new WASM world/session or before replaying a restored snapshot.
 void nav_intent_reset(){
   IntentState& s=state();
+  if(!s.gates.empty())spatialGateSupportChanged();
+  s.gates.clear();s.gateBodyActors.clear();s.gateInput.clear();s.gateResult.clear();
+  cancelGateMotionProposal(s);s.gateMotionResult.fill(0);
+  s.barrierProposal=PendingBarrierProposal{};s.barrierProposalResult.fill(0);s.gateRevision=0;s.worldMutationPreview=false;
+  s.routeHoldResult.clear();s.routeKnotResult.clear();s.gateWaitSegments=0;
+  s.gateStaticPairs=s.gateStaticEvaluations=s.gateStaticRejected=0;s.gateStaticResult.fill(0);
+  s.gateStaticProofs=0;s.gateStaticWorldStamp.fill(0);
+  s.gateBoundaries=s.gateWorkerChecks=s.gatePrefixSegments=0;
+  s.gateSweepPairs=s.gateSweepEvaluations=s.gateSweepRejected=0;s.gateSweepResult.fill(0);
   s.session++;
   if(!s.session)s.session=1;
   s.activeIntents.clear();s.byTarget.clear();s.byTask.clear();
+  s.routeSubscribers.clear();s.changedRouteActors.clear();
+  for(auto& actors:s.profileParticipants)actors.clear();
+  for(auto& actors:s.waitingSubscribers)actors.clear();
+  s.routeValidations=s.routeValidationSegments=s.reconcileCandidates=0;
+#ifdef WILD_DECLARATIVE_ATTACK
+  s.attackDeclarations.clear();s.attackDeadlines.clear();
+#ifdef WILD_DECLARATIVE_STATS
+  s.attackWakeEvents=s.attackWakeVisits=s.attackWakeIdle=s.attackWakeTransitions=0;
+#endif
+#endif
   s.byBlockedCropGroup.clear();s.wallOpportunityActors.clear();
-  s.routeSlots.clear();s.intentChanges.clear();s.intentResult.fill(0);
+  s.routeSlots.clear();s.intentChanges.clear();s.controlSnapshot.clear();s.intentResult.fill(0);
+  s.timingResult.fill(0);s.sampleResult.fill(0);s.routeTimeSamples=0;s.timingRejection=0;
+  s.reservedBodies.clear();s.suspendedBodies.clear();s.reservationResult.fill(0);
+  s.routeSuspensions=s.routeResumptions=0;s.suspendedRouteResult.fill(0);
+  s.reservationChecks=s.reservationPairs=s.reservationBodyChecks=s.reservationMutationCandidates=0;
+  s.executionEnabled=s.bodyDomainActive=s.drainingStops=s.resettingBodies=false;
+  s.executionWorldStamp.fill(0);s.executionResult.fill(0);
+  s.causalClock=s.clockPaused=false;s.clockReanchor=true;s.clockThrough=0;s.clockRate=1;
+  s.clockSequence=s.clockIntentSequence=0;s.clockProofSequence=UINT64_MAX;s.clockResult.fill(0);
+  s.stoppedReservationBodies.clear();s.stoppedGateRouteActors.clear();s.removingBodies.clear();
+  s.executionAdvances=s.executionEvaluations=s.executionBodyUpdates=s.executionStopInvalidations=0;
+  s.staticMutationCandidates=s.staticMutationSegments=s.staticMutationBodyChecks=0;
+  s.staticMutationRevocations=s.staticMutationRejected=s.staticMutationCommits=0;
+  s.residencyCandidates=s.residencySegments=s.residencyBodyChecks=0;
+  s.residencyRevocations=s.residencyRejected=s.residencyCommits=s.residencyPinRevision=0;
+  s.propMutationCandidates=s.propMutationSegments=s.propMutationBodyChecks=s.propMutationRevocations=0;
+  s.propMutationRejected=s.propMutationCommits=s.propMutationRecipeChunks=0;
+  s.terrainCandidates=s.terrainSegments=s.terrainBodyChecks=s.terrainRevocations=0;
+  s.terrainRejected=s.terrainCommits=s.terrainRecipeChunks=0;
   s.attackRouteInput.clear();s.attackBlockers.clear();
   s.attackReservedTargets.clear();s.attackResult.fill(0);
   s.wallAttackResult.fill(0);
@@ -628,6 +1141,7 @@ void nav_intent_reset(){
   s.wallPortalCaches.clear();s.wallRevision=0;s.wallPortalBuilds=0;
   s.perimeterRows.clear();
   s.sequence=0;s.entityRevision=0;s.damageRevision=0;
+  s.intentSequence=0;s.effectiveTime=0;
   s.routeQueries=0;s.candidates=0;
 }
 // Diagnostic prototype: project physical wall faces into the same weak-region
@@ -790,6 +1304,14 @@ int nav_intent_apply_changes(double sequence,int count){
   std::vector<Change> parsed(static_cast<size_t>(count));
   for(int i=0;i<count;i++)
     if(!parse(s.changes.data()+size_t(i)*changeWidth,parsed[size_t(i)]))return 0;
+  if(s.executionEnabled)for(const auto& change:parsed){
+    if(change.kind!=1||!change.op)continue;
+    const auto active=s.activeIntents.find(change.id);
+    if(active==s.activeIntents.end()||active->second.state!=PlanningState::RouteActive)continue;
+    const auto& route=s.routeSlots[active->second.slot];if(!route.reserved||!route.hasExecution)continue;
+    if(change.x!=route.executionPose[0]||change.z!=route.executionPose[1]||
+       change.target&&route.executionPose[6]!=1)return 0;
+  }
   std::unordered_map<uint64_t,int> touchedTargetKinds;
   for(const Change& change:parsed){
     if(change.kind==2)touchedTargetKinds[change.id]=change.op?int(change.center):0;
@@ -851,8 +1373,27 @@ int nav_intent_apply_changes(double sequence,int count){
   for(const Change& change:parsed){
     if(change.kind==2||change.kind==5)s.cropProtection.erase(change.id);
     invalidateDependents(s,change);
+#ifdef WILD_DECLARATIVE_ATTACK
+    if(change.kind==2||change.kind==5){
+#ifdef WILD_DECLARATIVE_STATS
+      s.attackWakeEvents++;
+#endif
+      for(auto& [actor,declaration]:s.attackDeclarations){
+#ifdef WILD_DECLARATIVE_STATS
+        s.attackWakeVisits++;
+#endif
+        if(!s.activeIntents.count(actor)){
+#ifdef WILD_DECLARATIVE_STATS
+          s.attackWakeIdle++;if(!declaration.dirty)s.attackWakeTransitions++;
+#endif
+          declaration.dirty=true;
+        }
+      }
+    }
+#endif
     if(!change.op){
-      if(change.kind==1)s.workers.erase(change.id);
+      if(change.kind==1){const auto worker=s.workers.find(change.id);
+        if(worker!=s.workers.end()&&worker->second.bodyBound)s.gateBodyActors.erase(worker->second.body);s.workers.erase(change.id);}
       else if(change.kind==2){
         const auto found=s.targets.find(change.id);
         if(found!=s.targets.end()){
@@ -864,8 +1405,10 @@ int nav_intent_apply_changes(double sequence,int count){
         removeDamage(s,found->second);found->second.damageKnown=false;
       }
     }else if(change.kind==1){
-      s.workers.insert_or_assign(change.id,Worker{change.id,change.center,
-        change.x,change.z,change.flag,change.target!=0,change.rank});
+      Worker next{change.id,change.center,change.x,change.z,change.flag,change.target!=0,change.rank};
+      if(const auto old=s.workers.find(change.id);old!=s.workers.end()){
+        next.bodyBound=old->second.bodyBound;next.body=old->second.body;}
+      s.workers.insert_or_assign(change.id,next);
     }else if(change.kind==2){
       auto found=s.targets.find(change.id);
       if(found==s.targets.end()){
@@ -935,6 +1478,7 @@ int nav_intent_task_count(){return int(state().tasks.size());}
 // session and are generated afterwards from current physical positions.
 int nav_intent_restore_assigned_tasks(){
   IntentState& s=state();
+  if(!s.reservedBodies.empty())return -3;
   if(!s.activeIntents.empty()||s.proposalOpen)return -1;
   std::vector<const Task*> assigned;
   assigned.reserve(s.tasks.size());
@@ -1231,6 +1775,7 @@ int nav_intent_commit(){
     if(slot==s.routeSlots.size())s.routeSlots.emplace_back();
     RouteSlot& route=s.routeSlots[slot];
     route.points.assign(s.routes.begin()+offset,s.routes.begin()+offset+count);
+    route.actor=workerId;route.originX=s.workers.at(workerId).x;route.originZ=s.workers.at(workerId).z;
     route.active=true;route.generation++;
     if(!route.generation)route.generation=1;
     ActiveIntent intent{workerId,taskId,s.tasks.at(taskId).target,
@@ -1239,14 +1784,60 @@ int nav_intent_commit(){
     s.activeIntents.insert_or_assign(workerId,intent);
     s.byTarget[intent.target].insert(workerId);
     s.byTask[intent.task].insert(workerId);
-    emitIntentChange(s,intent);
+    emitIntentChange(s,s.activeIntents.at(workerId));
   }
   if(!s.proposals.empty())s.entityRevision++;
   const int committed=int(s.proposals.size());clearProposal(s);return committed;
 }
 // Drain only changes caused by confirmed events or a committed task batch.
 // Ordinary movement and ticks do not invoke the planner or emit rows.
-int nav_intent_change_count(){return int(state().intentChanges.size()/8);}
+EMSCRIPTEN_KEEPALIVE int nav_intent_protocol_version(){return intentProtocolVersion;}
+int nav_intent_route_points(double,double,double);
+int nav_intent_route_timing(double,double,double);
+#include "spatial-gate-api.inc"
+EMSCRIPTEN_KEEPALIVE int nav_intent_change_width(){return intentChangeWidth;}
+EMSCRIPTEN_KEEPALIVE uint32_t nav_intent_session(){return state().session;}
+EMSCRIPTEN_KEEPALIVE double nav_intent_transition_sequence(){return double(state().intentSequence);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_effective_time(){return state().effectiveTime;}
+#include "spatial-causal-clock-api.inc"
+// A structural bootstrap/recovery read, not another route registry or planner.
+// Rows: actor, session, slot, generation, original assignment sequence/time.
+// Reading this does not drain the ordered changes needed by the legacy mover.
+EMSCRIPTEN_KEEPALIVE int nav_intent_control_snapshot(){
+  IntentState& s=state();s.controlSnapshot.clear();
+  std::vector<uint64_t> actors;
+  for(const auto& [actor,intent]:s.activeIntents){
+    if(intent.state!=PlanningState::RouteActive)continue;
+    if(!intent.generation||intent.slot>=s.routeSlots.size()||
+       !s.routeSlots[intent.slot].active||
+       s.routeSlots[intent.slot].generation!=intent.generation||
+       !intent.assignmentSequence)return -1;
+    actors.push_back(actor);
+  }
+  std::sort(actors.begin(),actors.end());
+  for(uint64_t actor:actors){
+    const ActiveIntent& intent=s.activeIntents.at(actor);
+    s.controlSnapshot.insert(s.controlSnapshot.end(),{double(actor),double(s.session),
+      double(intent.slot),double(intent.generation),double(intent.assignmentSequence),
+      intent.assignedAt});
+  }
+  return int(actors.size());
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_intent_control_snapshot_ptr(){return state().controlSnapshot.data();}
+EMSCRIPTEN_KEEPALIVE double nav_intent_route_validation_count(){return double(state().routeValidations);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_route_validation_segments(){return double(state().routeValidationSegments);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_reconcile_candidate_count(){return double(state().reconcileCandidates);}
+// The simulation supplies its clock at the command/event boundary, never at
+// graphical preparation/drain time. A restore starts a new native session.
+EMSCRIPTEN_KEEPALIVE int nav_intent_set_time(double elapsed){
+  IntentState& s=state();
+  if(!std::isfinite(elapsed)||elapsed<s.effectiveTime)return 0;
+  if(s.causalClock&&elapsed!=s.effectiveTime)return 0;
+  if(s.executionEnabled&&elapsed!=s.effectiveTime)return 0;
+  if(elapsed!=s.effectiveTime&&!gateStaticProofCurrent(s))return 0;
+  s.effectiveTime=elapsed;return 1;
+}
+int nav_intent_change_count(){return int(state().intentChanges.size()/intentChangeWidth);}
 const double* nav_intent_change_ptr(){return state().intentChanges.data();}
 void nav_intent_clear_changes(){state().intentChanges.clear();}
 double nav_intent_invalidation_count(){return double(state().invalidations);}
@@ -1258,15 +1849,15 @@ double nav_intent_actor_planning_calls(double actorId){
 int nav_intent_retire_actor(double actorId){
   if(!integer(actorId))return 0;
   IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+#ifdef WILD_DECLARATIVE_ATTACK
+  clearAttackDeadline(s,actor);s.attackDeclarations.erase(actor);
+#endif
   const auto active=s.activeIntents.find(actor);
   if(active!=s.activeIntents.end()){
     // The caller has already removed this actor from the confirmed game.
-    // Reclaim its route and inverse dependencies without publishing a new
-    // intention change for an actor that no longer exists.
-    const size_t changes=s.intentChanges.size();
-    const uint64_t invalidations=s.invalidations;
+    // Retirement must revoke a published route; a late graphical load may
+    // retain this actor's handle. Keep this transition in the same ordered log.
     releaseIntent(s,actor,PlanningState::Cancelled);
-    s.intentChanges.resize(changes);s.invalidations=invalidations;
     s.activeIntents.erase(actor);
   }
   s.planningCallsByActor.erase(actor);
@@ -1280,7 +1871,8 @@ int nav_intent_actor(double actorId){
   const ActiveIntent& intent=found->second;
   s.intentResult={double(intent.actor),double(int(intent.state)),
     double(intent.task),double(intent.target),double(s.session),
-    double(intent.slot),double(intent.generation),double(intent.topology),
+    intent.state==PlanningState::RouteActive?double(intent.slot):0,
+    intent.state==PlanningState::RouteActive?double(intent.generation):0,double(intent.topology),
     double(s.entityRevision),double(lazy_route_revision())};
   return 1;
 }
@@ -1291,7 +1883,7 @@ int nav_intent_route_points(double session,double slot,double generation){
     session!=double(s.session)||slot>=s.routeSlots.size()||
     generation>double(UINT32_MAX))return -1;
   const RouteSlot& route=s.routeSlots[size_t(slot)];
-  return route.active&&route.generation==uint32_t(generation)?
+  return route.active&&!route.suspended&&route.generation==uint32_t(generation)?
     int(route.points.size()/2):-1;
 }
 const float* nav_intent_route_ptr(double session,double slot,double generation){
@@ -1300,33 +1892,243 @@ const float* nav_intent_route_ptr(double session,double slot,double generation){
      slot>=s.routeSlots.size()||!integer(generation)||
      generation>double(UINT32_MAX))return nullptr;
   const RouteSlot& route=s.routeSlots[size_t(slot)];
-  return route.active&&route.generation==uint32_t(generation)?
+  return route.active&&!route.suspended&&route.generation==uint32_t(generation)?
     route.points.data():nullptr;
 }
+EMSCRIPTEN_KEEPALIVE int nav_intent_route_timing(double session,double slot,double generation){
+  IntentState& s=state();s.timingResult.fill(0);
+  if(nav_intent_route_points(session,slot,generation)<0)return -1;
+  const RouteSlot& route=s.routeSlots[size_t(slot)];
+  if(!route.timingMode)return 0;
+  const auto intent=s.activeIntents.find(route.actor);
+  if(intent==s.activeIntents.end()||intent->second.slot!=uint32_t(slot)||
+     intent->second.generation!=uint32_t(generation))return -1;
+  const double distance=route.distances.empty()?0:route.distances.back();
+  s.timingResult={1,double(route.actor),route.startTime,routeTimeAtDistance(route,distance),
+    route.speed,route.radius,route.originX,route.originZ,distance,double(route.distances.size()),
+    double(route.timingMode),double(intent->second.assignmentSequence),double(route.profile),session,slot,generation,
+    route.runDistance,route.runSpeed,route.runBudget,double(route.motionFlags)};
+  return 1;
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_timing_ptr(){return state().timingResult.data();}
+EMSCRIPTEN_KEEPALIVE int nav_intent_route_hold_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int nav_intent_route_initial_hold(double session,double slot,double generation){
+  auto& s=state();s.holdResult.fill(0);if(nav_intent_route_points(session,slot,generation)<0)return -1;
+  const auto& route=s.routeSlots[size_t(slot)];if(!route.timingMode||!route.waitGate)return 0;
+  s.holdResult={double(route.waitGate),route.startTime,route.departureTime};return 1;
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_initial_hold_ptr(){return state().holdResult.data();}
+EMSCRIPTEN_KEEPALIVE int nav_intent_route_holds_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int nav_intent_route_gate_candidate(double session,double slot,double generation){
+  if(nav_intent_route_points(session,slot,generation)<0)return -1;
+  return state().routeSlots[size_t(slot)].gateCandidate?1:0;
+}
+EMSCRIPTEN_KEEPALIVE int nav_intent_route_holds(double session,double slot,double generation){
+  auto& s=state();s.routeHoldResult.clear();if(nav_intent_route_points(session,slot,generation)<0)return -1;
+  const auto& route=s.routeSlots[size_t(slot)];if(!route.timingMode)return -1;
+  for(const auto& hold:route.holds)s.routeHoldResult.insert(s.routeHoldResult.end(),{double(hold.gate),hold.distance,hold.from,hold.until});
+  return int(route.holds.size());
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_holds_ptr(){return state().routeHoldResult.data();}
+EMSCRIPTEN_KEEPALIVE int nav_intent_route_time_knots(double session,double slot,double generation){
+  auto& s=state();s.routeKnotResult.clear();if(nav_intent_route_points(session,slot,generation)<0)return -1;
+  const auto& route=s.routeSlots[size_t(slot)];if(!route.timingMode)return -1;
+  s.routeKnotResult.push_back(route.startTime);reservationKnots({&route},route.startTime,s.routeKnotResult);
+  std::sort(s.routeKnotResult.begin(),s.routeKnotResult.end());
+  s.routeKnotResult.erase(std::unique(s.routeKnotResult.begin(),s.routeKnotResult.end()),s.routeKnotResult.end());
+  return int(s.routeKnotResult.size());
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_time_knots_ptr(){return state().routeKnotResult.data();}
+EMSCRIPTEN_KEEPALIVE int nav_intent_route_timing_width(){return 20;}
+EMSCRIPTEN_KEEPALIVE int nav_intent_route_sample_width(){return 18;}
+EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_distances_ptr(double session,double slot,double generation){
+  const IntentState& s=state();
+  if(nav_intent_route_points(session,slot,generation)<0)return nullptr;
+  const RouteSlot& route=s.routeSlots[size_t(slot)];return route.timingMode?route.distances.data():nullptr;
+}
+EMSCRIPTEN_KEEPALIVE int nav_intent_route_sample(double session,double slot,double generation,double at){
+  IntentState& s=state();s.sampleResult.fill(0);
+  if(!std::isfinite(at)||at<0)return -3;
+  if(nav_intent_route_points(session,slot,generation)<0)return -1;
+  const RouteSlot& route=s.routeSlots[size_t(slot)];if(!route.timingMode)return 0;
+  s.sampleResult=sampleRouteTiming(route,at);s.routeTimeSamples++;return 1;
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_sample_ptr(){return state().sampleResult.data();}
+EMSCRIPTEN_KEEPALIVE double nav_intent_route_time_samples(){return double(state().routeTimeSamples);}
+EMSCRIPTEN_KEEPALIVE int nav_intent_timing_rejection(){return state().timingRejection;}
+
+// Prepare the route already selected by any worker intention, not another route
+// request. Policy facts are supplied only at this boundary; speed/phase rules
+// and the entire timetable are native. A successful change revokes the old
+// generation atomically; a failed proof leaves it untouched.
+EMSCRIPTEN_KEEPALIVE int nav_intent_route_prepare_motion(double session,double slot,
+    double generation,double radius,int flags,double runBudget){
+  IntentState& s=state();s.timingRejection=0;
+  if(nav_intent_route_points(session,slot,generation)<0)return -1;
+  auto& old=s.routeSlots[size_t(slot)];
+  const auto intent=s.activeIntents.find(old.actor);
+  if(intent==s.activeIntents.end()||intent->second.slot!=uint32_t(slot)||
+     intent->second.generation!=uint32_t(generation)||intent->second.state!=PlanningState::RouteActive||
+     old.reserved||intent->second.routeCursor||old.points.empty()||
+     s.effectiveTime!=intent->second.assignedAt)return -2;
+  // Before native logical execution owns current position/budget, a late
+  // upgrade must not restart an old route from its original position.
+  const int mode=intent->second.animal?1:2;
+  // Entering/retreat speed transitions are not yet represented by mode 1.
+  if(mode==1&&old.timingMode!=1)return -2;
+  double x=old.originX,z=old.originZ;
+  const int previous=lazy_selected_context();
+  if(previous!=intent->second.profile)spatial_select_nav_profile_index(intent->second.profile);
+  RouteSlot candidate;candidate.points=old.points;
+  const int result=prepareRouteTiming(candidate,intent->first,x,z,s.effectiveTime,radius,mode,flags,runBudget);
+  const uint32_t topology=lazy_route_revision();
+  if(previous!=intent->second.profile)spatial_select_nav_profile_index(previous);
+  recordTimingResult(s,result);if(result!=1)return -7;
+  releaseRoute(s,intent->second);
+  candidate.active=true;candidate.generation=old.generation+1;
+  if(!candidate.generation)candidate.generation=1;
+  old=std::move(candidate);
+  auto& active=intent->second;active.slot=uint32_t(slot);active.generation=old.generation;
+  active.routeStartX=float(x);active.routeStartZ=float(z);active.routeCursor=0;active.topology=topology;
+  active.timingMode=mode;active.timingRadius=radius;active.motionFlags=flags;active.runBudget=runBudget;
+  emitIntentChange(s,active);
+  nav_intent_route_timing(session,slot,double(old.generation));return 1;
+}
+
+EMSCRIPTEN_KEEPALIVE int nav_intent_route_reserve(double session,double slot,double generation,double body){
+  IntentState& s=state();s.reservationResult.fill(0);
+  if(!integer(body,true)||nav_intent_route_points(session,slot,generation)<0)return -1;
+  auto& route=s.routeSlots[size_t(slot)];
+  const auto found=s.activeIntents.find(route.actor);
+  if(!route.timingMode||route.gateCandidate||found==s.activeIntents.end()||found->second.state!=PlanningState::RouteActive||
+     found->second.slot!=uint32_t(slot)||found->second.generation!=uint32_t(generation))return -2;
+  if(route.reserved)return route.reservationBody==uint64_t(body)?1:-3;
+  if(s.executionEnabled&&s.executionWorldStamp!=executionWorldStamp())return -2;
+  if(route.startTime!=s.effectiveTime||route.points.empty()||found->second.routeCursor)return -2;
+  const int previous=lazy_selected_context();
+  if(previous!=route.profile)spatial_select_nav_profile_index(route.profile);
+  const bool topology=found->second.topology==lazy_route_revision();
+  if(previous!=route.profile)spatial_select_nav_profile_index(previous);
+  if(!topology||route.staticProofStamp!=executionWorldStamp())return -2;
+  SpatialBodyView physical;
+  if(!spatialReadBody(uint64_t(body),physical)||physical.kind!=(found->second.animal?1:0)||!(physical.flags&1)||
+     (found->second.animal&&(physical.flags&6))||
+     (!found->second.animal&&bool(physical.flags&2)!=bool(route.motionFlags&32))||
+     physical.x!=route.originX||physical.z!=route.originZ||
+     physical.r!=route.radius||s.reservedBodies.count(uint64_t(body)))return -3;
+  s.reservationChecks++;
+  if(!reserveRouteClear(s,found->second,route,uint64_t(body),physical))return 0;
+  route.reserved=true;route.reservationBody=uint64_t(body);
+  s.reservedBodies.emplace(uint64_t(body),uint32_t(slot));
+  s.residencyPinRevision++;
+  if(s.executionEnabled){s.executionEvaluations++;projectExecutedPose(s,route,sampleRouteTiming(route,s.effectiveTime));}
+  return 1;
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_reservation_result_ptr(){return state().reservationResult.data();}
+EMSCRIPTEN_KEEPALIVE int nav_intent_route_reservation_count(){return int(state().reservedBodies.size());}
+EMSCRIPTEN_KEEPALIVE double nav_intent_route_reservation_checks(){return double(state().reservationChecks);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_route_reservation_pairs(){return double(state().reservationPairs);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_route_reservation_body_checks(){return double(state().reservationBodyChecks);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_route_reservation_mutation_candidates(){return double(state().reservationMutationCandidates);}
+
+EMSCRIPTEN_KEEPALIVE int nav_intent_execution_begin(){return beginRouteExecution(state());}
+EMSCRIPTEN_KEEPALIVE int nav_intent_execution_advance(double at){return advanceRouteExecution(state(),at);}
+EMSCRIPTEN_KEEPALIVE int nav_intent_execution_stop(){
+  auto& s=state();const int count=int(s.reservedBodies.size());
+  for(const auto& [body,slot]:s.reservedBodies)if(!executionBindingCoherent(s,body,slot))return -3;
+  while(!s.reservedBodies.empty()){
+    const auto actor=s.routeSlots[s.reservedBodies.begin()->second].actor;
+    auto& intent=s.activeIntents.at(actor);releaseRoute(s,intent);
+    intent.state=PlanningState::NeedsPlan;emitIntentChange(s,intent);s.invalidations++;
+  }
+  s.executionEnabled=false;return count;
+}
+EMSCRIPTEN_KEEPALIVE int nav_intent_route_execution(double session,double slot,double generation){
+  auto& s=state();s.executionResult.fill(0);
+  if(nav_intent_route_points(session,slot,generation)<0)return -1;
+  const auto& route=s.routeSlots[size_t(slot)];
+  if(!s.executionEnabled||!route.reserved||!route.hasExecution)return 0;
+  s.executionResult=route.executionPose;return 1;
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_execution_ptr(){return state().executionResult.data();}
+EMSCRIPTEN_KEEPALIVE double nav_intent_execution_advances(){return double(state().executionAdvances);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_execution_evaluations(){return double(state().executionEvaluations);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_execution_body_updates(){return double(state().executionBodyUpdates);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_execution_stop_invalidations(){return double(state().executionStopInvalidations);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_static_mutation_candidates(){return double(state().staticMutationCandidates);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_static_mutation_segments(){return double(state().staticMutationSegments);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_static_mutation_body_checks(){return double(state().staticMutationBodyChecks);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_static_mutation_revocations(){return double(state().staticMutationRevocations);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_static_mutation_rejected(){return double(state().staticMutationRejected);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_static_mutation_commits(){return double(state().staticMutationCommits);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_residency_candidates(){return double(state().residencyCandidates);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_residency_segments(){return double(state().residencySegments);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_residency_body_checks(){return double(state().residencyBodyChecks);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_residency_revocations(){return double(state().residencyRevocations);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_residency_rejected(){return double(state().residencyRejected);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_residency_commits(){return double(state().residencyCommits);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_residency_pin_revision(){return double(state().residencyPinRevision);}
+EMSCRIPTEN_KEEPALIVE int nav_intent_props_mutation_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int nav_intent_terrain_mutation_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE double nav_intent_terrain_candidates(){return double(state().terrainCandidates);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_terrain_segments(){return double(state().terrainSegments);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_terrain_body_checks(){return double(state().terrainBodyChecks);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_terrain_revocations(){return double(state().terrainRevocations);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_terrain_rejected(){return double(state().terrainRejected);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_terrain_commits(){return double(state().terrainCommits);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_terrain_recipe_chunks(){return double(state().terrainRecipeChunks);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_props_mutation_candidates(){return double(state().propMutationCandidates);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_props_mutation_segments(){return double(state().propMutationSegments);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_props_mutation_body_checks(){return double(state().propMutationBodyChecks);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_props_mutation_revocations(){return double(state().propMutationRevocations);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_props_mutation_rejected(){return double(state().propMutationRejected);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_props_mutation_commits(){return double(state().propMutationCommits);}
+EMSCRIPTEN_KEEPALIVE double nav_intent_props_mutation_recipe_chunks(){return double(state().propMutationRecipeChunks);}
+
 // A topological event may be unrelated to an active worker path. Validate the
 // pinned polyline against the updated native collision map at this boundary,
 // rather than discarding every route merely because the global revision moved.
 // The continuous mover still performs its ordinary local collision checks.
-bool activeRouteClear(const IntentState& s,const ActiveIntent& intent){
+bool activeRouteClear(IntentState& s,const ActiveIntent& intent){
+  s.routeValidations++;
   if(intent.slot>=s.routeSlots.size())return false;
   const RouteSlot& route=s.routeSlots[intent.slot];
   if(!route.active||route.generation!=intent.generation||
      route.points.size()<2||route.points.size()%2)return false;
   const auto worker=s.workers.find(intent.actor);
   if(!intent.animal&&worker==s.workers.end())return false;
-  float x=intent.animal?intent.routeStartX:float(worker->second.x);
-  float z=intent.animal?intent.routeStartZ:float(worker->second.z);
+  double x=intent.animal?intent.routeStartX:worker->second.x;
+  double z=intent.animal?intent.routeStartZ:worker->second.z;
+  if(route.reserved&&route.hasExecution){x=route.executionPose[0];z=route.executionPose[1];}
   if(intent.routeCursor>route.points.size()/2||
      !spatial_local_clear(x,z,x,z))return false;
   for(size_t i=size_t(intent.routeCursor)*2;i<route.points.size();i+=2){
+    s.routeValidationSegments++;
     const float nextX=route.points[i],nextZ=route.points[i+1];
     // The local predicate accepts only short connector segments. World routes
     // may contain validated shortcuts spanning several cells.
-    if(!spatial_world_segment_clear(x,z,nextX,nextZ))return false;
+    if(route.timingMode){
+      const int clear=route.gateAdmitted?spatialGateCandidateSegmentClear(x,z,nextX,nextZ,route.radius):
+        spatial_execution_segment_clear(x,z,nextX,nextZ,route.radius);
+      if(clear!=1)return false;
+    }else if(!spatial_world_segment_clear(x,z,nextX,nextZ))return false;
     x=nextX;z=nextZ;
   }
   return true;
 }
+#ifdef WILD_SECTOR_CHANGE_TRACE
+// Diagnostic only: inspect the real pinned route/cursor without mutating it.
+int nav_intent_debug_route_clear(double actorId){
+  if(!integer(actorId))return -1;
+  IntentState& s=state();const auto found=s.activeIntents.find(uint64_t(actorId));
+  if(found==s.activeIntents.end()||found->second.state!=PlanningState::RouteActive)return -1;
+  const int previous=lazy_selected_context();
+  if(previous!=found->second.profile)spatial_select_nav_profile_index(found->second.profile);
+  const bool clear=activeRouteClear(s,found->second);
+  if(previous!=found->second.profile)spatial_select_nav_profile_index(previous);
+  return clear?1:0;
+}
+#endif
 // JS movement consumes a suffix of the pinned native route. At a topology
 // event, accept that progress only when every remaining point exactly matches
 // the native suffix. An unmatched JS path forces a conservative reroute at
@@ -1346,8 +2148,13 @@ int nav_intent_route_progress(double actorId,double x,double z,int count){
   if(intent.slot>=s.routeSlots.size())return 0;
   const RouteSlot& route=s.routeSlots[intent.slot];
   if(!route.active||route.generation!=intent.generation)return 0;
+  // A reservation must not silently adopt a JS detour/cursor. Logical native
+  // execution will advance it; until connected, release explicitly first.
+  if(route.reserved)return 0;
+  cancelGateMotionProposal(s);
   const auto reject=[&](){
     intent.routeCursor=uint32_t(route.points.size()/2+1);
+    s.changedRouteActors.insert(intent.actor);
     return 0;
   };
   if(route.points.size()%2||size_t(count)*2>route.points.size()||
@@ -1360,14 +2167,38 @@ int nav_intent_route_progress(double actorId,double x,double z,int count){
      std::hypot(double(x)-route.points[route.points.size()-2],
                 double(z)-route.points.back())>.1)return reject();
   intent.routeCursor=uint32_t(cursor);
+  // Transitional JS motion can arrive from a local detour rather than from the
+  // original route corridor. At this event boundary add its current connector
+  // and validate it even if the changed sector had no old subscriber there.
+  if(count){
+    const size_t before=intent.routeSectors.size();
+    const int original=lazy_selected_context();
+    if(original!=intent.profile)spatial_select_nav_profile_index(intent.profile);
+    subscribeRouteSegment(s,intent,x,z,route.points[cursor*2],route.points[cursor*2+1]);
+    if(original!=intent.profile)spatial_select_nav_profile_index(original);
+    if(intent.routeSectors.size()!=before)s.changedRouteActors.insert(intent.actor);
+  }
   if(intent.animal){intent.routeStartX=float(x);intent.routeStartZ=float(z);}
   return 1;
 }
 int nav_intent_reconcile_topology(){
   IntentState& s=state();const int originalProfile=lazy_selected_context();
+  // Synchronize each participating native profile once. Sector commits enqueue
+  // only subscribers, so an unrelated wall no longer walks all live polylines.
+  for(int profile=0;profile<6;profile++)
+    if(!s.profileParticipants[profile].empty()&&lazy_selected_context()!=profile)
+      spatial_select_nav_profile_index(profile);
+  std::set<uint64_t> candidates;
+  candidates.swap(s.changedRouteActors);
+  s.reconcileCandidates+=candidates.size();
   std::vector<std::pair<uint64_t,uint32_t>> affected;
-  for(auto& item:s.activeIntents){
-    ActiveIntent& intent=item.second;
+  for(uint64_t actor:candidates){
+    const auto found=s.activeIntents.find(actor);
+    if(found==s.activeIntents.end())continue;
+    ActiveIntent& intent=found->second;
+    // Retained suffixes are re-proved by an explicit native resume event, not
+    // converted into generic planner requests by an unrelated sector update.
+    if(intentHasSuspendedRoute(s,intent))continue;
     if(lazy_selected_context()!=intent.profile)
       spatial_select_nav_profile_index(intent.profile);
     const uint32_t revision=lazy_route_revision();
@@ -1379,7 +2210,7 @@ int nav_intent_reconcile_topology(){
     if(intent.state==PlanningState::RouteActive||
        intent.state==PlanningState::WaitingUnknown||
        intent.state==PlanningState::WaitingBlocked)
-      affected.emplace_back(item.first,revision);
+      affected.emplace_back(actor,revision);
   }
   if(lazy_selected_context()!=originalProfile)
     spatial_select_nav_profile_index(originalProfile);
@@ -1387,6 +2218,10 @@ int nav_intent_reconcile_topology(){
   for(const auto& [actor,revision]:affected){
     ActiveIntent& intent=s.activeIntents.at(actor);
     if(intent.animal){
+#ifdef WILD_DECLARATIVE_ATTACK
+      const auto declaration=s.attackDeclarations.find(actor);
+      if(declaration!=s.attackDeclarations.end())declaration->second.dirty=true;
+#endif
       // A wall can invalidate the travel route without invalidating the
       // target or its exclusive lease. The caller supplies the animal's live
       // position at this event boundary for a same-target native reroute.
@@ -1394,7 +2229,7 @@ int nav_intent_reconcile_topology(){
       intent.topology=revision;emitIntentChange(s,intent);s.invalidations++;
       continue;
     }
-    releaseRoute(s,intent);intent.state=PlanningState::NeedsPlan;
+    stopRouteForEvent(s,intent);
     intent.topology=revision;emitIntentChange(s,intent);s.invalidations++;
   }
   return int(affected.size());
@@ -1406,7 +2241,7 @@ int nav_intent_replan_attack_route(double actorId,double startX,double startZ,
                                    double approachX,double approachZ){
   if(!integer(actorId)||!coordinate(startX)||!coordinate(startZ)||
      !coordinate(approachX)||!coordinate(approachZ))return -1;
-  IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  IntentState& s=state();s.timingRejection=0;const uint64_t actor=uint64_t(actorId);
   const auto found=s.activeIntents.find(actor);
   if(found==s.activeIntents.end()||!found->second.animal||
      found->second.state!=PlanningState::NeedsPlan)return -2;
@@ -1425,13 +2260,26 @@ int nav_intent_replan_attack_route(double actorId,double startX,double startZ,
     emitIntentChange(s,intent);
     return 3;
   }
+  const float* points=spatial_world_route_ptr();
+  RouteSlot candidate;
+  if(intent.timingMode){
+    candidate.points.assign(points,points+size_t(count)*2);
+    const int timing=prepareRouteTiming(candidate,actor,startX,startZ,s.effectiveTime,
+      intent.timingRadius,intent.timingMode);
+    recordTimingResult(s,timing);
+    if(timing!=1){
+      intent.state=PlanningState::WaitingUnknown;intent.topology=lazy_route_revision();
+      emitIntentChange(s,intent);return 3;
+    }
+  }
   uint32_t slot=uint32_t(s.routeSlots.size());
   for(uint32_t i=0;i<s.routeSlots.size();i++)
     if(!s.routeSlots[i].active){slot=i;break;}
   if(slot==s.routeSlots.size())s.routeSlots.emplace_back();
   RouteSlot& route=s.routeSlots[slot];
-  const float* points=spatial_world_route_ptr();
-  route.points.assign(points,points+size_t(count)*2);
+  if(intent.timingMode){candidate.generation=route.generation;route=std::move(candidate);}
+  else route.points.assign(points,points+size_t(count)*2);
+  route.actor=actor;route.originX=startX;route.originZ=startZ;
   route.active=true;route.generation++;
   if(!route.generation)route.generation=1;
   intent.slot=slot;intent.generation=route.generation;
@@ -1470,7 +2318,12 @@ int nav_intent_replan_pending_routes(){
       for(uint32_t j=0;j<s.routeSlots.size();j++)if(!s.routeSlots[j].active){slot=j;break;}
       if(slot==s.routeSlots.size())s.routeSlots.emplace_back();
       RouteSlot& route=s.routeSlots[slot];
-      route.points=service.points;route.active=true;route.generation++;
+      route.points=service.points;route.actor=actor;
+      route.originX=worker->second.x;route.originZ=worker->second.z;
+      // Replanning must not silently reuse a possibly spent worker run budget.
+      // The next motion-preparation event supplies current policy facts again.
+      route.timingMode=0;intent.timingMode=0;
+      route.active=true;route.generation++;
       if(!route.generation)route.generation=1;
       intent.slot=slot;intent.generation=route.generation;
       intent.routeCursor=0;
@@ -1511,6 +2364,10 @@ int nav_intent_request_reroute(double actorId){
       found->second.state!=PlanningState::WaitingUnknown&&
       found->second.state!=PlanningState::WaitingBlocked))return 0;
   ActiveIntent& intent=found->second;
+#ifdef WILD_DECLARATIVE_ATTACK
+  const auto declaration=s.attackDeclarations.find(uint64_t(actorId));
+  if(declaration!=s.attackDeclarations.end())declaration->second.dirty=true;
+#endif
   releaseRoute(s,intent);intent.state=PlanningState::NeedsPlan;
   intent.topology=lazy_route_revision();
   emitIntentChange(s,intent);s.invalidations++;
@@ -1524,10 +2381,12 @@ float* nav_intent_attack_route_input_ptr(int count){
   return s.attackRouteInput.data();
 }
 int nav_intent_register_attack(double actorId,double targetId,
-                               double startX,double startZ,int count){
+                               double startX,double startZ,int count,int timingMode=0,
+                               double timingRadius=0){
   if(!integer(actorId)||!integer(targetId)||!coordinate(startX)||
-     !coordinate(startZ)||count<0||count>4096)return -1;
-  IntentState& s=state();
+     !coordinate(startZ)||count<0||count>4096||(timingMode!=0&&timingMode!=1)||
+     timingMode==1&&(!std::isfinite(timingRadius)||timingRadius<=0||timingRadius>2))return -1;
+  IntentState& s=state();s.timingRejection=0;
   if(s.attackRouteInput.size()<size_t(count)*2)return -1;
   const uint64_t actor=uint64_t(actorId),targetIdValue=uint64_t(targetId);
   const auto target=s.targets.find(targetIdValue);
@@ -1555,6 +2414,14 @@ int nav_intent_register_attack(double actorId,double targetId,
   if(prior!=s.activeIntents.end()){
     if(!prior->second.animal||prior->second.state==PlanningState::ActionActive)
       return -4;
+  }
+  RouteSlot candidate;
+  if(timingMode){
+    candidate.points.assign(s.attackRouteInput.begin(),s.attackRouteInput.begin()+size_t(count)*2);
+    const int timing=prepareRouteTiming(candidate,actor,startX,startZ,s.effectiveTime,timingRadius,timingMode);
+    recordTimingResult(s,timing);if(timing!=1)return -7;
+  }
+  if(prior!=s.activeIntents.end()){
     releaseIntent(s,actor,PlanningState::Cancelled);
     s.activeIntents.erase(actor);
   }
@@ -1562,17 +2429,20 @@ int nav_intent_register_attack(double actorId,double targetId,
   for(uint32_t i=0;i<s.routeSlots.size();i++)if(!s.routeSlots[i].active){slot=i;break;}
   if(slot==s.routeSlots.size())s.routeSlots.emplace_back();
   RouteSlot& route=s.routeSlots[slot];
-  route.points.assign(s.attackRouteInput.begin(),
+  if(timingMode){candidate.generation=route.generation;route=std::move(candidate);}
+  else route.points.assign(s.attackRouteInput.begin(),
     s.attackRouteInput.begin()+size_t(count)*2);
+  route.actor=actor;route.originX=startX;route.originZ=startZ;
   route.active=true;route.generation++;
   if(!route.generation)route.generation=1;
   ActiveIntent intent{actor,0,targetIdValue,PlanningState::RouteActive,
     slot,route.generation,lazy_route_revision(),true,false};
   intent.profile=lazy_selected_context();
   intent.routeStartX=float(startX);intent.routeStartZ=float(startZ);
+  intent.timingMode=timingMode;intent.timingRadius=timingMode?timingRadius:0;
   s.activeIntents.insert_or_assign(actor,intent);
   s.byTarget[targetIdValue].insert(actor);
-  emitIntentChange(s,intent);
+  emitIntentChange(s,s.activeIntents.at(actor));
   return 1;
 }
 // The raid controller has already committed the retreat transition. Pin a
@@ -1601,6 +2471,7 @@ int nav_intent_plan_retreat(double actorId,double startX,double startZ,
   RouteSlot& route=s.routeSlots[slot];
   const float* points=spatial_world_route_ptr();
   route.points.assign(points,points+size_t(count)*2);
+  route.actor=actor;route.originX=startX;route.originZ=startZ;
   route.active=true;route.generation++;
   if(!route.generation)route.generation=1;
   ActiveIntent intent{actor,0,0,PlanningState::RouteActive,
@@ -1611,7 +2482,7 @@ int nav_intent_plan_retreat(double actorId,double startX,double startZ,
   intent.approachX=float(exitX);intent.approachZ=float(exitZ);
   intent.approachKnown=true;
   s.activeIntents.insert_or_assign(actor,intent);
-  emitIntentChange(s,intent);
+  emitIntentChange(s,s.activeIntents.at(actor));
   return 1;
 }
 // Restore a saved continuous route verbatim when its remaining points are
@@ -1646,6 +2517,7 @@ int nav_intent_restore_retreat(double actorId,double startX,double startZ,
   RouteSlot& route=s.routeSlots[slot];
   route.points.assign(s.attackRouteInput.begin(),
     s.attackRouteInput.begin()+size_t(count)*2);
+  route.actor=actor;route.originX=startX;route.originZ=startZ;
   route.active=true;route.generation++;
   if(!route.generation)route.generation=1;
   ActiveIntent intent{actor,0,0,PlanningState::RouteActive,
@@ -1656,7 +2528,7 @@ int nav_intent_restore_retreat(double actorId,double startX,double startZ,
   intent.approachX=float(exitX);intent.approachZ=float(exitZ);
   intent.approachKnown=true;
   s.activeIntents.insert_or_assign(actor,intent);
-  emitIntentChange(s,intent);
+  emitIntentChange(s,s.activeIntents.at(actor));
   return 1;
 }
 // A worker's confirmed return/flight to its village is a route-only
@@ -1701,6 +2573,7 @@ int workerHomeRoute(double actorId,double startX,double startZ,
   const float* points=savedCount?s.attackRouteInput.data():
     spatial_world_route_ptr();
   route.points.assign(points,points+size_t(count)*2);
+  route.actor=actor;route.originX=startX;route.originZ=startZ;
   route.active=true;route.generation++;
   if(!route.generation)route.generation=1;
   ActiveIntent intent{actor,0,0,PlanningState::RouteActive,
@@ -1711,7 +2584,7 @@ int workerHomeRoute(double actorId,double startX,double startZ,
   intent.approachX=float(homeX);intent.approachZ=float(homeZ);
   intent.approachKnown=true;
   s.activeIntents.insert_or_assign(actor,intent);
-  emitIntentChange(s,intent);
+  emitIntentChange(s,s.activeIntents.at(actor));
   return 1;
 }
 int nav_intent_plan_home(double actorId,double startX,double startZ,
@@ -1737,9 +2610,9 @@ int nav_intent_cancel_home(double actorId){
 int nav_intent_register_attack_site(double actorId,double targetId,
                                     double startX,double startZ,int count,
                                     double approachX,double approachZ,
-                                    double radius){
+                                    double radius,int timingMode=0){
   if(!integer(actorId)||!coordinate(approachX)||!coordinate(approachZ)||
-     !std::isfinite(radius)||radius<=0||radius>2)return -1;
+      !std::isfinite(radius)||radius<=0||radius>2||(timingMode!=0&&timingMode!=1))return -1;
   IntentState& s=state();
   for(const auto& [owner,intent]:s.activeIntents){
     // A retreat route records its exit as an approach coordinate, but has no
@@ -1751,7 +2624,7 @@ int nav_intent_register_attack_site(double actorId,double targetId,
                                      double(intent.approachZ)-approachZ);
     if(distance<double(intent.approachRadius)+radius+0.1)return -6;
   }
-  const int result=nav_intent_register_attack(actorId,targetId,startX,startZ,count);
+  const int result=nav_intent_register_attack(actorId,targetId,startX,startZ,count,timingMode,radius);
   if(result!=1)return result;
   ActiveIntent& intent=s.activeIntents.at(uint64_t(actorId));
   intent.approachX=float(approachX);intent.approachZ=float(approachZ);
@@ -1849,8 +2722,8 @@ double* nav_intent_attack_reserved_targets_ptr(int count){
 }
 int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
                                 double radius,int cropsEligible,int blockerCount,
-                                int reservedTargetCount){
-  IntentState& s=state();s.attackResult.fill(0);
+                                int reservedTargetCount,int timingMode=0){
+  IntentState& s=state();s.attackResult.fill(0);s.timingRejection=0;
   if(!integer(actorId)||!coordinate(startX)||!coordinate(startZ)||
      !std::isfinite(radius)||radius<=0||radius>2||
      (cropsEligible!=0&&cropsEligible!=1)||
@@ -1858,7 +2731,7 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
      s.attackBlockers.size()!=size_t(blockerCount)*3||
      reservedTargetCount<0||reservedTargetCount>100000||
      s.attackReservedTargets.size()!=size_t(reservedTargetCount)||
-     lazy_selected_context()==1)return -1;
+      lazy_selected_context()==1||(timingMode!=0&&timingMode!=1))return -1;
   for(int i=0;i<blockerCount;i++){
     const size_t offset=size_t(i)*3;
     if(!coordinate(s.attackBlockers[offset])||
@@ -1989,7 +2862,7 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
       const float* route=spatial_world_route_ptr();
       s.attackRouteInput.assign(route,route+size_t(count)*2);
       lastRegisterResult=nav_intent_register_attack_site(actorId,double(crop.id),
-        startX,startZ,count,px,pz,radius);
+        startX,startZ,count,px,pz,radius,timingMode);
       if(lastRegisterResult!=1)
         return false;
       const ActiveIntent& intent=s.activeIntents.at(actor);
@@ -2046,6 +2919,152 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
   s.attackResult[8]=regionQueries;s.attackResult[9]=routeQueries;
   return int(s.attackResult[0]);
 }
+#ifdef WILD_DECLARATIVE_ATTACK
+#ifdef WILD_DECLARATIVE_STATS
+void nav_declarative_attack_wake_reset(){auto& s=state();s.attackWakeEvents=s.attackWakeVisits=s.attackWakeIdle=s.attackWakeTransitions=0;}
+double nav_declarative_attack_wake_events(){return double(state().attackWakeEvents);}
+double nav_declarative_attack_wake_visits(){return double(state().attackWakeVisits);}
+double nav_declarative_attack_wake_idle(){return double(state().attackWakeIdle);}
+double nav_declarative_attack_wake_transitions(){return double(state().attackWakeTransitions);}
+#endif
+// The embedding supplies current actor position and the existing transient
+// collision/lease facts at an event boundary. No movement policy is replaced.
+int nav_declarative_attack_declare(double actorId,double x,double z,double radius,
+                                   int eligible,int blockers,int reserved){
+  IntentState& s=state();
+  if(!integer(actorId)||s.attackDeclarations.count(uint64_t(actorId)))return -2;
+  const int profile=lazy_selected_context();
+  const int result=nav_intent_plan_attack_crop(actorId,x,z,radius,eligible,blockers,reserved);
+  if(result>=0)s.attackDeclarations.emplace(uint64_t(actorId),
+    IntentState::AttackDeclaration{radius,profile,false});
+  return result;
+}
+int nav_declarative_attack_present(double actorId){
+  return integer(actorId)&&state().attackDeclarations.count(uint64_t(actorId))?1:0;
+}
+// Adopt an already restored crop route without changing its lease or route.
+int nav_declarative_attack_adopt(double actorId,double radius){
+  if(!integer(actorId)||!std::isfinite(radius)||radius<=0||radius>2)return -1;
+  IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  if(s.attackDeclarations.count(actor))return 0;
+  const auto active=s.activeIntents.find(actor);
+  if(active==s.activeIntents.end()||!active->second.animal||
+     active->second.state!=PlanningState::RouteActive)return -2;
+  const auto target=s.targets.find(active->second.target);
+  if(target==s.targets.end()||!target->second.active||
+     (target->second.kind!=1&&target->second.kind!=2))return -3;
+  s.attackDeclarations.emplace(actor,IntentState::AttackDeclaration{
+    radius,active->second.profile,false});return 1;
+}
+int nav_declarative_attack_reconcile(double actorId,double x,double z,
+                                     int eligible,int blockers,int reserved){
+  if(!integer(actorId)||!coordinate(x)||!coordinate(z)||
+     (eligible!=0&&eligible!=1)||blockers<0||blockers>100000||
+     reserved<0||reserved>100000)return -1;
+  IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  const auto declaration=s.attackDeclarations.find(actor);
+  if(declaration==s.attackDeclarations.end())return -2;
+  if(!declaration->second.dirty)return 5;
+  if(lazy_selected_context()!=declaration->second.profile)return -3;
+  if(!validAttackTransients(s,blockers,reserved))return -1;
+  const auto active=s.activeIntents.find(actor);
+  if(active!=s.activeIntents.end()){
+    if(active->second.state==PlanningState::ActionActive)return 6;
+    if(active->second.state!=PlanningState::NeedsPlan)return 7;
+    const int result=nav_intent_replan_attack_route(actorId,x,z,
+      active->second.approachX,active->second.approachZ);
+    if(result==3&&spatial_world_route_reason()==0){
+      // Preserve the existing raid ordering: release at this actor's action
+      // boundary and choose a replacement at a later selection boundary.
+      clearAttackDeadline(s,actor);
+      declaration->second.blockedApproach=true;
+      declaration->second.dirty=false;return 8;
+    }
+    if(result==1)clearAttackDeadline(s,actor);
+    if(result>=0)declaration->second.dirty=false;
+    return result;
+  }
+  const int result=nav_intent_plan_attack_crop(actorId,x,z,
+    declaration->second.radius,eligible,blockers,reserved);
+  if(result>=0)declaration->second.dirty=false;
+  return result;
+}
+// Apply the blocked-approach transition at the same ordered actor boundary as
+// the current raid policy. The high-level goal is retained for selection at
+// the next boundary; other actors may claim their own reservations in between.
+int nav_declarative_attack_release_blocked(double actorId){
+  if(!integer(actorId))return -1;
+  IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  const auto declaration=s.attackDeclarations.find(actor);
+  if(declaration==s.attackDeclarations.end()||!declaration->second.blockedApproach)return 0;
+  const auto active=s.activeIntents.find(actor);
+  if(active==s.activeIntents.end()||active->second.state==PlanningState::ActionActive)return -2;
+  clearAttackDeadline(s,actor);releaseIntent(s,actor,PlanningState::Cancelled);
+  s.activeIntents.erase(actor);declaration->second.blockedApproach=false;
+  declaration->second.dirty=true;return 1;
+}
+int nav_declarative_attack_cancel(double actorId){
+  if(!integer(actorId))return -1;
+  IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  const auto declaration=s.attackDeclarations.find(actor);
+  if(declaration==s.attackDeclarations.end())return 0;
+  const auto active=s.activeIntents.find(actor);
+  if(active!=s.activeIntents.end()&&active->second.state==PlanningState::ActionActive)return -2;
+  if(active!=s.activeIntents.end()){
+    releaseIntent(s,actor,PlanningState::Cancelled);s.activeIntents.erase(actor);
+  }
+  clearAttackDeadline(s,actor);s.attackDeclarations.erase(actor);return 1;
+}
+// A scheduler can sleep until this single world-level deadline. It must
+// service all due actors in ascending deadline/ID order at the boundary.
+double nav_declarative_attack_next_deadline(){
+  const auto& deadlines=state().attackDeadlines;
+  return deadlines.empty()?std::numeric_limits<double>::infinity():deadlines.begin()->first;
+}
+double nav_declarative_attack_next_due(double now){
+  if(!std::isfinite(now))return -1;
+  const auto& deadlines=state().attackDeadlines;
+  return deadlines.empty()||deadlines.begin()->first>now?0:double(deadlines.begin()->second);
+}
+int nav_declarative_attack_begin_wait(double actorId,double now){
+  if(!integer(actorId)||!std::isfinite(now)||now<0||!std::isfinite(now+90))return -1;
+  IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  const auto declaration=s.attackDeclarations.find(actor);
+  const auto active=s.activeIntents.find(actor);
+  if(declaration==s.attackDeclarations.end()||active==s.activeIntents.end()||
+     active->second.state!=PlanningState::WaitingUnknown)return -2;
+  if(declaration->second.waiting)return 0;
+  auto& wait=declaration->second;wait.waiting=true;wait.since=now;wait.next=now+8;wait.attempts=0;
+  s.attackDeadlines.insert({wait.next,actor});return 1;
+}
+// 8 requests an ordered blocked-approach transition. 9 means the bounded wait
+// expired; the caller retains authority for the established retreat policy.
+int nav_declarative_attack_service_wait(double actorId,double now,double x,double z,
+                                        int eligible,int blockers,int reserved){
+  if(!integer(actorId)||!std::isfinite(now)||!coordinate(x)||!coordinate(z)||
+     (eligible!=0&&eligible!=1))return -1;
+  IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  const auto found=s.attackDeclarations.find(actor);
+  if(found==s.attackDeclarations.end()||!found->second.waiting)return -2;
+  auto& wait=found->second;
+  if(now<wait.since)return -1;
+  if(now<wait.next)return 5;
+  if(s.attackDeadlines.empty()||s.attackDeadlines.begin()->second!=actor)return -5;
+  if(now-wait.since>=90){clearAttackDeadline(s,actor);return 9;}
+  if(lazy_selected_context()!=wait.profile)return -3;
+  if(!validAttackTransients(s,blockers,reserved))return -1;
+  if(nav_intent_request_reroute(actorId)!=1)return -4;
+  wait.dirty=true;
+  const int result=nav_declarative_attack_reconcile(actorId,x,z,eligible,blockers,reserved);
+  if(result==1)return 1;
+  if(result==8)return 8;
+  if(!s.activeIntents.count(actor)){clearAttackDeadline(s,actor);return result;}
+  if(result!=3)return result;
+  s.attackDeadlines.erase({wait.next,actor});wait.attempts++;
+  wait.next=std::min(wait.since+90,now+8*(1<<std::min(wait.attempts,3)));
+  s.attackDeadlines.insert({wait.next,actor});return 3;
+}
+#endif
 // Experimental complete wall proposal. Crop groups nominate only first
 // crossings of certified enclosures; the native route and attack-site lease
 // then confirm one physically reachable, unreserved wall in the same call.
@@ -2125,7 +3144,9 @@ int nav_intent_attack_action_active(double actorId){
   IntentState& s=state();
   const auto found=s.activeIntents.find(uint64_t(actorId));
   if(found==s.activeIntents.end()||!found->second.animal||
-     found->second.state!=PlanningState::RouteActive)return 0;
+      found->second.state!=PlanningState::RouteActive)return 0;
+  const auto& route=s.routeSlots[found->second.slot];
+  if(s.executionEnabled&&route.reserved&&route.hasExecution&&route.executionPose[6]!=1)return 0;
   releaseRoute(s,found->second);
   found->second.state=PlanningState::ActionActive;
   emitIntentChange(s,found->second);
@@ -2144,7 +3165,7 @@ int nav_intent_restore_attack_action(double actorId,double targetId,int hasLease
   intent.lease=hasLease!=0;
   s.activeIntents.emplace(actor,intent);
   s.byTarget[intent.target].insert(actor);
-  emitIntentChange(s,intent);
+  emitIntentChange(s,s.activeIntents.at(actor));
   return 1;
 }
 // Saved travel with no usable path keeps its logical target and lease. The
@@ -2169,7 +3190,7 @@ int nav_intent_restore_attack_pending(double actorId,double targetId,int hasLeas
   intent.profile=lazy_selected_context();intent.lease=hasLease!=0;
   s.activeIntents.emplace(actor,intent);
   s.byTarget[id].insert(actor);
-  emitIntentChange(s,intent);
+  emitIntentChange(s,s.activeIntents.at(actor));
   return 1;
 }
 // Restore the already-confirmed JS approach lease after an action or pending
@@ -2193,6 +3214,12 @@ int nav_intent_attack_finished(double actorId){
   if(found==s.activeIntents.end()||!found->second.animal||
      found->second.state!=PlanningState::ActionActive)return -1;
   const int tactical=found->second.tacticalPending?1:0;
+#ifdef WILD_DECLARATIVE_ATTACK
+  const auto declaration=s.attackDeclarations.find(actor);
+  if(declaration!=s.attackDeclarations.end()){
+    clearAttackDeadline(s,actor);declaration->second.dirty=true;
+  }
+#endif
   releaseIntent(s,actor,PlanningState::Cancelled);
   s.activeIntents.erase(actor);
   return tactical;
@@ -2211,6 +3238,10 @@ int nav_intent_action_active(double actorId){
   if(!integer(actorId))return 0;
   IntentState& s=state();const auto it=s.activeIntents.find(uint64_t(actorId));
   if(it==s.activeIntents.end()||it->second.state!=PlanningState::RouteActive)return 0;
+  const auto& route=s.routeSlots[it->second.slot];
+  if(route.resumable&&route.reserved&&(!route.hasExecution||route.executionPose[6]!=1))return 0;
+  if(s.executionEnabled&&route.reserved&&route.hasExecution&&route.executionPose[6]!=1)return 0;
+  releaseRoute(s,it->second);
   it->second.state=PlanningState::ActionActive;emitIntentChange(s,it->second);return 1;
 }
 int nav_intent_finish(double actorId){

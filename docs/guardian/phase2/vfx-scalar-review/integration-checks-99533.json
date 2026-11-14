@@ -1,0 +1,52 @@
+{
+  "revision": "99533cb4a3f3e1a39afc61be1fe77448eccaa3d8",
+  "originMain": "020dc1ea58857f3c0cdf154b62fc65bdd429cdea",
+  "commitsBehindMain": 0,
+  "testFiles": [
+    "tests\\beast-ragdoll.test.js",
+    "tests\\beast-physics-environment.test.js",
+    "tests\\beast-normal-study.test.js",
+    "tests\\beast-ground-contact.test.js",
+    "tests\\authored-recovery-solids.test.js",
+    "tests\\beast-combat-physics.test.js",
+    "tests\\baked-wall-skin-regression.test.js",
+    "tests\\baked-solid-contacts.test.js",
+    "tests\\baked-ragdoll-clip.test.js",
+    "tests\\authored-recovery-terrain.test.js",
+    "tests\\baked-beast-fall.test.js",
+    "tests\\guardian-combat.test.js",
+    "tests\\guardian-combat-audio.test.js",
+    "tests\\guardian-canvas-executor.test.js",
+    "tests\\guardian-audio.test.js",
+    "tests\\guardian-attack-echoes.test.js",
+    "tests\\guardian-singleton.test.js",
+    "tests\\guardian-prop-bounds.test.js",
+    "tests\\guardian-placement.test.js",
+    "tests\\guardian-peer-contacts.test.js",
+    "tests\\guardian-native.test.js",
+    "tests\\guardian-model.test.js",
+    "tests\\guardian-lifecycle.test.js",
+    "tests\\guardian-face.test.js",
+    "tests\\guardian-cue-bank.test.js",
+    "tests\\guardian-copy.test.js",
+    "tests\\guardian-voice-close.test.js",
+    "tests\\worker-recovery-state.test.js",
+    "tests\\worker-recovery-idle-exit.test.js",
+    "tests\\worker-recovery-boundaries.test.js"
+  ],
+  "tests": 174,
+  "passed": 174,
+  "failed": 0,
+  "skipped": 0,
+  "durationMs": 35510.5305,
+  "build": {
+    "command": "npm run build",
+    "passed": true,
+    "seconds": 8.4,
+    "warnings": [
+      "mixed static/dynamic imports",
+      "chunk sizes exceed advisory threshold"
+    ]
+  },
+  "scope": "Selected integration suite only; not full repository or graphical acceptance"
+}

@@ -1,0 +1,69 @@
+{
+  "profile": "warthog",
+  "source": "/assets/53c8f76ba3af3c972206a86e9fb4c9c25be3bb890077caa99c9c0b1bc3240b89.glb",
+  "sourceSHA256": "53c8f76ba3af3c972206a86e9fb4c9c25be3bb890077caa99c9c0b1bc3240b89",
+  "binary": "/content/lighting/global-ao/model-warthog.bin",
+  "outputSHA256": "847516cc7a5277ac4ef26525c688c0a866e6c1eb39309bbf6ec052cd3d44525c",
+  "byteLength": 20421,
+  "samples": 32,
+  "records": [
+    {
+      "mesh": 0,
+      "primitive": 0,
+      "name": "Mesh_0",
+      "offset": 0,
+      "count": 16800,
+      "radius": 0.14744397878646853,
+      "mean": 189.03636904761905,
+      "minimum": 0,
+      "excludedMorphVertices": 1411,
+      "dominantJointFiltered": true,
+      "traversalLimit": 0,
+      "invalidNormals": 0
+    },
+    {
+      "mesh": 0,
+      "primitive": 1,
+      "name": "Mesh_0",
+      "offset": 16800,
+      "count": 15,
+      "radius": 0.060938439965248115,
+      "mean": 241.66666666666666,
+      "minimum": 143,
+      "excludedMorphVertices": 0,
+      "dominantJointFiltered": true,
+      "traversalLimit": 0,
+      "invalidNormals": 0
+    },
+    {
+      "mesh": 1,
+      "primitive": 0,
+      "name": "WarthogOralAnatomy",
+      "offset": 16815,
+      "count": 1396,
+      "radius": 0.02037601083517075,
+      "mean": 220.03366762177652,
+      "minimum": 0,
+      "excludedMorphVertices": 868,
+      "dominantJointFiltered": true,
+      "traversalLimit": 0,
+      "invalidNormals": 0
+    },
+    {
+      "mesh": 2,
+      "primitive": 0,
+      "name": "Actor eyelid surfaces",
+      "offset": 18211,
+      "count": 2210,
+      "radius": 0,
+      "mean": 255.0,
+      "minimum": 255,
+      "excludedMorphVertices": 2080,
+      "dominantJointFiltered": true,
+      "invalidNormals": 0,
+      "traversalLimit": 0
+    }
+  ],
+  "seconds": 6.355345000047237,
+  "scope": "Local cavity candidate; excludes moving morph surfaces and cross-joint occlusion. No dynamic AO claim."
+}

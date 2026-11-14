@@ -1,0 +1,47 @@
+{
+  "path": ".cache/webgpu-horde-stable-morph.json.summary.json",
+  "loss": false,
+  "apiRequests": {
+    "createShaderModule": 40,
+    "createRenderPipeline": 0,
+    "createRenderPipelineAsync": 39
+  },
+  "results": [
+    {
+      "label": "vertex_Material_0",
+      "count": 0,
+      "exact": 0,
+      "normalized": 0,
+      "normalizedGroups": [],
+      "example": null
+    },
+    {
+      "label": "vertex_Mane repairs",
+      "count": 0,
+      "exact": 0,
+      "normalized": 0,
+      "normalizedGroups": [],
+      "example": null
+    },
+    {
+      "label": "vertex_Warthog oral tissue",
+      "count": 0,
+      "exact": 0,
+      "normalized": 0,
+      "normalizedGroups": [],
+      "example": null
+    },
+    {
+      "label": "vertex_Actor eyelid original fur",
+      "count": 0,
+      "exact": 0,
+      "normalized": 0,
+      "normalizedGroups": [],
+      "example": null
+    }
+  ],
+  "limitations": [
+    "Normalization compares only NodeBuffer identifiers; equivalent layouts or resource bindings are not established.",
+    "Repeated shader source requests do not prove reuse of complete pipelines."
+  ]
+}

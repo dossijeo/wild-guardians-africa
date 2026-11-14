@@ -1,0 +1,1783 @@
+{
+  "ready": true,
+  "campaign": false,
+  "faceCandidate": true,
+  "faceCandidateSpecies": "lion",
+  "expressions": [],
+  "entityCounts": {
+    "workers": 1,
+    "structures": 1,
+    "crops": 1,
+    "animals": 1
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 0,
+  "maxVisibleGuardians": 1,
+  "elapsed": 3071.713083999924,
+  "simulate": true,
+  "active": 0,
+  "origins": [],
+  "retainedAttacks": [],
+  "retainedDraws": 0,
+  "attackVisual": [],
+  "reused": 0,
+  "health": 140,
+  "animalState": "attacking",
+  "animalPosition": [
+    89.43453323048084,
+    -5.061873579859647
+  ],
+  "draws": 63,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "spirit_appear",
+      "at": 3063.725583999915,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3063.858483999915,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "rhino_hurt",
+      "at": 3063.958283999915,
+      "emitter": "qa-beast-0",
+      "phase": "falling",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3063.958283999915,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3065.920983999915,
+      "emitter": "guardian-world",
+      "played": false
+    }
+  ],
+  "combatPhysics": {
+    "active": 0,
+    "physicsMs": 0,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 15.200000047683716,
+    "maxStepMs": 16.299999952316284,
+    "solverMs": 0,
+    "solverSteps": 0,
+    "bindingMs": 0,
+    "recoverySetupMs": 0,
+    "creationMs": 0,
+    "lastCreation": {
+      "species": "rhino",
+      "captureMs": 1.2000000476837158,
+      "colliderFitMs": 7.199999928474426,
+      "environmentMs": 3.899999976158142,
+      "bodiesMs": 2.700000047683716
+    },
+    "recoveryFollowMs": 0,
+    "bakedActive": 0,
+    "kinematic": 0
+  },
+  "physicsWorlds": 0,
+  "physicalBodies": 0,
+  "allDown": [
+    {
+      "id": "qa-beast-0",
+      "x": 89.43453323048084,
+      "z": -5.061873579859647
+    }
+  ],
+  "errors": [],
+  "report": {
+    "scope": "Real Attack cycles, continuous Game.tick and WorldScene. Diagnostic, not a paired before/after benchmark.",
+    "requestedImpacts": 1,
+    "headOn": false,
+    "recoveryTrace": [
+      {
+        "wallMs": 116.90000009536743,
+        "time": 0.11619999999993524,
+        "phase": "walking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 218.10000002384186,
+        "time": 0.14939999999978681,
+        "phase": "walking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 323.7000000476837,
+        "time": 0.24919999999974607,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 424.7000000476837,
+        "time": 0.3490999999999076,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 526.1000000238419,
+        "time": 0.43229999999994106,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 632.8000000715256,
+        "time": 0.5323000000003049,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 745.1000000238419,
+        "time": 0.6485000000006949,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 851.2000000476837,
+        "time": 0.7150000000006003,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 960.3000000715256,
+        "time": 0.781600000000708,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 1061,
+        "time": 0.8816000000010717,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 1168.6000000238419,
+        "time": 0.9978000000005522,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 1282.9000000953674,
+        "time": 1.097700000000259,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 1385.3000000715256,
+        "time": 1.1974000000004708,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 1495.7000000476837,
+        "time": 1.2806000000005042,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 1601.7000000476837,
+        "time": 1.3969000000006417,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 1722.8000000715256,
+        "time": 1.513300000000072,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 1825.2000000476837,
+        "time": 1.6131000000000313,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 1929.8000000715256,
+        "time": 1.7127999999997883,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 2030,
+        "time": 1.796100000000024,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 2137.9000000953674,
+        "time": 1.8960000000001855,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 2255.4000000953674,
+        "time": 2.012300000000323,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 2366,
+        "time": 2.0954999999999018,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 2475.3000000715256,
+        "time": 2.211899999999787,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 2579.3000000715256,
+        "time": 2.3449999999998,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 2693.8000000715256,
+        "time": 2.461399999999685,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 2795.3000000715256,
+        "time": 2.544499999999516,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 2895.600000023842,
+        "time": 2.6608999999989464,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 3009.100000023842,
+        "time": 2.744199999999182,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 3111.2000000476837,
+        "time": 2.844199999999546,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 3226.5,
+        "time": 2.9437999999995554,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 3334.2000000476837,
+        "time": 3.043699999999717,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 3444.7000000476837,
+        "time": 3.143199999999524,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 3553.600000023842,
+        "time": 3.243199999999888,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 3659.100000023842,
+        "time": 3.342699999999695,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 3774.7000000476837,
+        "time": 3.4424999999996544,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 3889.8000000715256,
+        "time": 3.5756999999998698,
+        "phase": "falling",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 3995.3000000715256,
+        "time": 3.625499999999647,
+        "phase": "recovering",
+        "recoveryAge": 0,
+        "groundCorrection": 0,
+        "pelvis": {
+          "position": [
+            89.59530588341869,
+            13.337313073976352,
+            -4.970413530480803
+          ],
+          "groundGap": 0.7081139897446924
+        },
+        "hands": [
+          {
+            "position": [
+              90.13636625997226,
+              13.292091590396296,
+              -3.9899745201579613
+            ],
+            "target": [
+              88.49684022941501,
+              13.07447150218033,
+              -4.635096028734778
+            ],
+            "targetDistance": 1.77527064654896,
+            "groundGap": 0.5677606649135605
+          },
+          {
+            "position": [
+              89.73846794605018,
+              13.237407259035912,
+              -5.312044527642703
+            ],
+            "target": [
+              89.41805815419616,
+              13.060903345765722,
+              -5.2992926759939305
+            ],
+            "targetDistance": 0.36603097660730666,
+            "groundGap": 0.5909196597215427
+          }
+        ]
+      },
+      {
+        "wallMs": 4103.200000047684,
+        "time": 3.7253999999998086,
+        "phase": "recovering",
+        "recoveryAge": 0.09990000000000873,
+        "groundCorrection": 0.014033507001940393,
+        "pelvis": {
+          "position": [
+            89.59530588341869,
+            13.352498753213075,
+            -4.970413530480803
+          ],
+          "groundGap": 0.7232996689814151
+        },
+        "hands": [
+          {
+            "position": [
+              90.13038337079074,
+              13.38426005030507,
+              -3.975767581680616
+            ],
+            "target": [
+              88.49684022941501,
+              13.07447150218033,
+              -4.635096028734778
+            ],
+            "targetDistance": 1.7886157050578972,
+            "groundGap": 0.6613119901235365
+          },
+          {
+            "position": [
+              89.7519086103642,
+              13.258947763289346,
+              -5.313794750900709
+            ],
+            "target": [
+              89.41805815419616,
+              13.060903345765722,
+              -5.2992926759939305
+            ],
+            "targetDistance": 0.38844308279653983,
+            "groundGap": 0.6106114593771874
+          }
+        ]
+      },
+      {
+        "wallMs": 4208.800000071526,
+        "time": 3.825199999999768,
+        "phase": "recovering",
+        "recoveryAge": 0.19970000000001165,
+        "groundCorrection": 0.247386007820257,
+        "pelvis": {
+          "position": [
+            89.59530588341869,
+            13.58888433909679,
+            -4.970413530480803
+          ],
+          "groundGap": 0.9596852548651302
+        },
+        "hands": [
+          {
+            "position": [
+              90.11342737589291,
+              13.860719321268283,
+              -3.999642094057093
+            ],
+            "target": [
+              88.49684022941501,
+              13.07447150218033,
+              -4.635096028734778
+            ],
+            "targetDistance": 1.9066571108291768,
+            "groundGap": 1.1419576525556447
+          },
+          {
+            "position": [
+              89.78294139952516,
+              13.502775385523865,
+              -5.322494363655279
+            ],
+            "target": [
+              89.41805815419616,
+              13.060903345765722,
+              -5.2992926759939305
+            ],
+            "targetDistance": 0.5735233217160206,
+            "groundGap": 0.8502085811257665
+          }
+        ]
+      },
+      {
+        "wallMs": 4311.400000095367,
+        "time": 3.9252000000001317,
+        "phase": "recovering",
+        "recoveryAge": 0.2997000000000116,
+        "groundCorrection": 0.5930397655097757,
+        "pelvis": {
+          "position": [
+            89.59530588341869,
+            13.938833923540841,
+            -4.970413530480803
+          ],
+          "groundGap": 1.3096348393091812
+        },
+        "hands": [
+          {
+            "position": [
+              89.89613904741496,
+              14.698713617654851,
+              -4.306997511532146
+            ],
+            "target": [
+              88.49684022941501,
+              13.07447150218033,
+              -4.635096028734778
+            ],
+            "targetDistance": 2.1688356942672646,
+            "groundGap": 2.024162330151343
+          },
+          {
+            "position": [
+              89.77645346573354,
+              13.815911603697094,
+              -5.345929004145654
+            ],
+            "target": [
+              89.41805815419616,
+              13.060903345765722,
+              -5.2992926759939305
+            ],
+            "targetDistance": 0.8370541296594957,
+            "groundGap": 1.1644348379270575
+          }
+        ]
+      },
+      {
+        "wallMs": 4441.900000095367,
+        "time": 4.0745999999999185,
+        "phase": "recovering",
+        "recoveryAge": 0.4491000000000203,
+        "groundCorrection": 1.0166777118156034,
+        "pelvis": {
+          "position": [
+            89.59530588341869,
+            14.369864182020628,
+            -4.970413530480803
+          ],
+          "groundGap": 1.740665097788968
+        },
+        "hands": [
+          {
+            "position": [
+              89.59497010806933,
+              13.871379199950253,
+              -5.0594232539785535
+            ],
+            "target": [
+              88.49684022941501,
+              13.07447150218033,
+              -4.635096028734778
+            ],
+            "targetDistance": 1.4216204497830602,
+            "groundGap": 1.242724707634446
+          },
+          {
+            "position": [
+              89.65030075608519,
+              14.121067244938004,
+              -5.368220743513578
+            ],
+            "target": [
+              89.41805815419616,
+              13.060903345765722,
+              -5.2992926759939305
+            ],
+            "targetDistance": 1.0874903207534106,
+            "groundGap": 1.48725743320143
+          }
+        ]
+      },
+      {
+        "wallMs": 4550.300000071526,
+        "time": 4.157900000000154,
+        "phase": "recovering",
+        "recoveryAge": 0.5324000000000233,
+        "groundCorrection": 0.9855875902793247,
+        "pelvis": {
+          "position": [
+            89.59530588341869,
+            14.34272399578978,
+            -4.970413530480803
+          ],
+          "groundGap": 1.713524911558121
+        },
+        "hands": [
+          {
+            "position": [
+              89.06076524693637,
+              13.66100763603587,
+              -4.697691175275522
+            ],
+            "target": [
+              88.49684022941501,
+              13.07447150218033,
+              -4.635096028734778
+            ],
+            "targetDistance": 0.8160601779741024,
+            "groundGap": 1.1057670630798633
+          },
+          {
+            "position": [
+              89.54476179467291,
+              14.042877563244561,
+              -5.348753758534033
+            ],
+            "target": [
+              89.41805815419616,
+              13.060903345765722,
+              -5.2992926759939305
+            ],
+            "targetDistance": 0.9913493708018778,
+            "groundGap": 1.4235375779687462
+          }
+        ]
+      },
+      {
+        "wallMs": 4670.600000023842,
+        "time": 4.2577000000001135,
+        "phase": "recovering",
+        "recoveryAge": 0.6322000000000118,
+        "groundCorrection": 0.5616024938579542,
+        "pelvis": {
+          "position": [
+            89.59530588341869,
+            13.92266995796643,
+            -4.970413530480803
+          ],
+          "groundGap": 1.2934708737347709
+        },
+        "hands": [
+          {
+            "position": [
+              88.62535839733047,
+              13.514157368434837,
+              -4.650145861581603
+            ],
+            "target": [
+              88.49684022941501,
+              13.07447150218033,
+              -4.635096028734778
+            ],
+            "targetDistance": 0.4583307516816211,
+            "groundGap": 0.9716781934032994
+          },
+          {
+            "position": [
+              89.44856630580622,
+              13.613160047189739,
+              -5.312557542087483
+            ],
+            "target": [
+              89.41805815419616,
+              13.060903345765722,
+              -5.2992926759939305
+            ],
+            "targetDistance": 0.5532577774011667,
+            "groundGap": 1.006858642444886
+          }
+        ]
+      },
+      {
+        "wallMs": 4788.200000047684,
+        "time": 4.357700000000477,
+        "phase": "recovering",
+        "recoveryAge": 0.7322000000000118,
+        "groundCorrection": 0.15342481175577305,
+        "pelvis": {
+          "position": [
+            89.59530588341869,
+            13.516959883874494,
+            -4.970413530480803
+          ],
+          "groundGap": 0.8877607996428338
+        },
+        "hands": [
+          {
+            "position": [
+              88.4968398064581,
+              13.227895825579123,
+              -4.635096001328515
+            ],
+            "target": [
+              88.49684022941501,
+              13.07447150218033,
+              -4.635096028734778
+            ],
+            "targetDistance": 0.15342432339937875,
+            "groundGap": 0.6868549720596206
+          },
+          {
+            "position": [
+              89.41805837463782,
+              13.214328212940066,
+              -5.2992927041114175
+            ],
+            "target": [
+              89.41805815419616,
+              13.060903345765722,
+              -5.2992926759939305
+            ],
+            "targetDistance": 0.15342486717450504,
+            "groundGap": 0.6121473963079804
+          }
+        ]
+      },
+      {
+        "wallMs": 4900.900000095367,
+        "time": 4.457600000000639,
+        "phase": "recovering",
+        "recoveryAge": 0.8321000000000206,
+        "groundCorrection": 0.1353076661021575,
+        "pelvis": {
+          "position": [
+            89.59530588341869,
+            13.50224599413345,
+            -4.970413530480803
+          ],
+          "groundGap": 0.8730469099017899
+        },
+        "hands": [
+          {
+            "position": [
+              88.49683969027242,
+              13.209778732394595,
+              -4.635095769204829
+            ],
+            "target": [
+              88.49684022941501,
+              13.07447150218033,
+              -4.635096028734778
+            ],
+            "targetDistance": 0.13530723021558763,
+            "groundGap": 0.6687378801753887
+          },
+          {
+            "position": [
+              89.41805842338552,
+              13.19621112042823,
+              -5.299292815476477
+            ],
+            "target": [
+              89.41805815419616,
+              13.060903345765722,
+              -5.2992926759939305
+            ],
+            "targetDistance": 0.135307774662849,
+            "groundGap": 0.5940302979460252
+          }
+        ]
+      },
+      {
+        "wallMs": 5001.200000047684,
+        "time": 4.557300000000851,
+        "phase": "recovering",
+        "recoveryAge": 0.9318000000000177,
+        "groundCorrection": 0.1299211389093049,
+        "pelvis": {
+          "position": [
+            89.59530588341869,
+            13.535694664116718,
+            -4.970413530480803
+          ],
+          "groundGap": 0.9064955798850587
+        },
+        "hands": [
+          {
+            "position": [
+              88.5353354919604,
+              13.23110152051312,
+              -4.629640991332543
+            ],
+            "target": [
+              88.49684022941501,
+              13.07447150218033,
+              -4.635096028734778
+            ],
+            "targetDistance": 0.16138341090219774,
+            "groundGap": 0.6896298408212882
+          },
+          {
+            "position": [
+              89.41959050158327,
+              13.19020826159643,
+              -5.2999751025987765
+            ],
+            "target": [
+              89.41805815419616,
+              13.060903345765722,
+              -5.2992926759939305
+            ],
+            "targetDistance": 0.1293157958355142,
+            "groundGap": 0.5878206386365132
+          }
+        ]
+      },
+      {
+        "wallMs": 5121.400000095367,
+        "time": 4.65710000000081,
+        "phase": "recovering",
+        "recoveryAge": 1.0316000000000207,
+        "groundCorrection": 0.1193678911291709,
+        "pelvis": {
+          "position": [
+            89.59530588341869,
+            13.602241081682195,
+            -4.970413530480803
+          ],
+          "groundGap": 0.9730419974505349
+        },
+        "hands": [
+          {
+            "position": [
+              88.82495654090333,
+              13.154653074911428,
+              -4.680856244636405
+            ],
+            "target": [
+              88.49684022941501,
+              13.07447150218033,
+              -4.635096028734778
+            ],
+            "targetDistance": 0.3408568553362147,
+            "groundGap": 0.6098704138974771
+          },
+          {
+            "position": [
+              89.46734173200798,
+              13.17176243581891,
+              -5.325557317339037
+            ],
+            "target": [
+              89.41805815419616,
+              13.060903345765722,
+              -5.2992926759939305
+            ],
+            "targetDistance": 0.12413073863609124,
+            "groundGap": 0.5629644771718532
+          }
+        ]
+      },
+      {
+        "wallMs": 5221.900000095367,
+        "time": 4.7568000000010215,
+        "phase": "recovering",
+        "recoveryAge": 1.131300000000018,
+        "groundCorrection": 0.09298649610034815,
+        "pelvis": {
+          "position": [
+            89.59530588341869,
+            13.68193977572236,
+            -4.970413530480803
+          ],
+          "groundGap": 1.0527406914907012
+        },
+        "hands": [
+          {
+            "position": [
+              89.38440881941648,
+              13.146120688138256,
+              -4.69510184029826
+            ],
+            "target": [
+              88.49684022941501,
+              13.07447150218033,
+              -4.635096028734778
+            ],
+            "targetDistance": 0.8924753807400029,
+            "groundGap": 0.5460200209601584
+          },
+          {
+            "position": [
+              89.55280811321329,
+              13.171337361706017,
+              -5.385283445785431
+            ],
+            "target": [
+              89.41805815419616,
+              13.060903345765722,
+              -5.2992926759939305
+            ],
+            "targetDistance": 0.19428750814489873,
+            "groundGap": 0.5511794875826741
+          }
+        ]
+      },
+      {
+        "wallMs": 5335.800000071526,
+        "time": 4.856100000001334,
+        "phase": "recovering",
+        "recoveryAge": 1.230600000000021,
+        "groundCorrection": 0.04544670745538326,
+        "pelvis": {
+          "position": [
+            89.59530588341869,
+            13.759865049364354,
+            -4.970413530480803
+          ],
+          "groundGap": 1.1306659651326942
+        },
+        "hands": [
+          {
+            "position": [
+              89.95010904043643,
+              13.362005203897144,
+              -4.640594785510051
+            ],
+            "target": [
+              88.49684022941501,
+              13.07447150218033,
+              -4.635096028734778
+            ],
+            "targetDistance": 1.4814506751953131,
+            "groundGap": 0.6817172157033387
+          },
+          {
+            "position": [
+              89.61082242727345,
+              13.185439236365267,
+              -5.469106874612331
+            ],
+            "target": [
+              89.41805815419616,
+              13.060903345765722,
+              -5.2992926759939305
+            ],
+            "targetDistance": 0.28548925562067423,
+            "groundGap": 0.5579226281700684
+          }
+        ]
+      },
+      {
+        "wallMs": 5447.100000023842,
+        "time": 4.956000000001495,
+        "phase": "recovering",
+        "recoveryAge": 1.3305000000000153,
+        "groundCorrection": 0.04544658169199067,
+        "pelvis": {
+          "position": [
+            89.59530588341869,
+            13.896913449631299,
+            -4.970413530480803
+          ],
+          "groundGap": 1.2677143653996392
+        },
+        "hands": [
+          {
+            "position": [
+              90.31719266105992,
+              13.71372450011673,
+              -4.566565724300584
+            ],
+            "target": [
+              88.49684022941501,
+              13.07447150218033,
+              -4.635096028734778
+            ],
+            "targetDistance": 1.930550121957998,
+            "groundGap": 0.9520654471469285
+          },
+          {
+            "position": [
+              89.55863930780887,
+              13.375843041654573,
+              -5.568307547238346
+            ],
+            "target": [
+              89.41805815419616,
+              13.060903345765722,
+              -5.2992926759939305
+            ],
+            "targetDistance": 0.4374003586513085,
+            "groundGap": 0.7562943548620584
+          }
+        ]
+      },
+      {
+        "wallMs": 5549,
+        "time": 5.006000000001677,
+        "phase": "recovering",
+        "recoveryAge": 1.3805000000000154,
+        "groundCorrection": 0.04544652220608647,
+        "pelvis": {
+          "position": [
+            89.59530588341869,
+            13.96671813073922,
+            -4.970413530480803
+          ],
+          "groundGap": 1.3375190465075608
+        },
+        "hands": [
+          {
+            "position": [
+              90.41876187723629,
+              13.846756287485743,
+              -4.532201561213951
+            ],
+            "target": [
+              88.49684022941501,
+              13.07447150218033,
+              -4.635096028734778
+            ],
+            "targetDistance": 2.0738355483076956,
+            "groundGap": 1.061280424494715
+          },
+          {
+            "position": [
+              89.50659698474428,
+              13.466962584870126,
+              -5.610677475208567
+            ],
+            "target": [
+              89.41805815419616,
+              13.060903345765722,
+              -5.2992926759939305
+            ],
+            "targetDistance": 0.5193108157537406,
+            "groundGap": 0.8542640313149956
+          }
+        ]
+      },
+      {
+        "wallMs": 5656.900000095367,
+        "time": 5.105900000001839,
+        "phase": "recovering",
+        "recoveryAge": 1.4804000000000097,
+        "groundCorrection": 0.045446438704448866,
+        "pelvis": {
+          "position": [
+            89.59530588341869,
+            14.102870629421918,
+            -4.970413530480803
+          ],
+          "groundGap": 1.4736715451902587
+        },
+        "hands": [
+          {
+            "position": [
+              90.47861774888233,
+              13.949356876489105,
+              -4.470863573782102
+            ],
+            "target": [
+              88.49684022941501,
+              13.07447150218033,
+              -4.635096028734778
+            ],
+            "targetDistance": 2.1725190112183626,
+            "groundGap": 1.1495262593757243
+          },
+          {
+            "position": [
+              89.37559451849754,
+              13.640648896775483,
+              -5.670749700898132
+            ],
+            "target": [
+              89.41805815419616,
+              13.060903345765722,
+              -5.2992926759939305
+            ],
+            "targetDistance": 0.6898466392054381,
+            "groundGap": 1.0451638836213313
+          }
+        ]
+      },
+      {
+        "wallMs": 5757.800000071526,
+        "time": 5.205800000002,
+        "phase": "recovering",
+        "recoveryAge": 1.580300000000004,
+        "groundCorrection": 0.045446424269687924,
+        "pelvis": {
+          "position": [
+            89.59530588341869,
+            14.226952658418151,
+            -4.970413530480803
+          ],
+          "groundGap": 1.5977535741864912
+        },
+        "hands": [
+          {
+            "position": [
+              90.42490834980504,
+              13.94193034456468,
+              -4.418089958091
+            ],
+            "target": [
+              88.49684022941501,
+              13.07447150218033,
+              -4.635096028734778
+            ],
+            "targetDistance": 2.1253289521369076,
+            "groundGap": 1.1542662120783618
+          },
+          {
+            "position": [
+              89.2533959962888,
+              13.809592493230825,
+              -5.706150447602264
+            ],
+            "target": [
+              89.41805815419616,
+              13.060903345765722,
+              -5.2992926759939305
+            ],
+            "targetDistance": 0.8678607676907802,
+            "groundGap": 1.2301509869937526
+          }
+        ]
+      },
+      {
+        "wallMs": 5859.200000047684,
+        "time": 5.25570000000198,
+        "phase": "recovering",
+        "recoveryAge": 1.6302000000000127,
+        "groundCorrection": 0.04732802548242532,
+        "pelvis": {
+          "position": [
+            89.59530588341869,
+            14.283429379547659,
+            -4.970413530480803
+          ],
+          "groundGap": 1.6542302953159993
+        },
+        "hands": [
+          {
+            "position": [
+              90.3939747929804,
+              13.944314557518075,
+              -4.39471837136678
+            ],
+            "target": [
+              88.49684022941501,
+              13.07447150218033,
+              -4.635096028734778
+            ],
+            "targetDistance": 2.1008398109697617,
+            "groundGap": 1.163754902771018
+          },
+          {
+            "position": [
+              89.20216143484542,
+              13.89428465743996,
+              -5.7217816094321
+            ],
+            "target": [
+              89.41805815419616,
+              13.060903345765722,
+              -5.2992926759939305
+            ],
+            "targetDistance": 0.9589748187267517,
+            "groundGap": 1.3215702679133692
+          }
+        ]
+      },
+      {
+        "wallMs": 5967.300000071526,
+        "time": 5.355700000002344,
+        "phase": "recovering",
+        "recoveryAge": 1.7302000000000128,
+        "groundCorrection": 0.07086260313880821,
+        "pelvis": {
+          "position": [
+            89.59530588341869,
+            14.395821565879286,
+            -4.970413530480803
+          ],
+          "groundGap": 1.7666224816476266
+        },
+        "hands": [
+          {
+            "position": [
+              90.3350169428139,
+              13.974899404933772,
+              -4.356603229536969
+            ],
+            "target": [
+              88.49684022941501,
+              13.07447150218033,
+              -4.635096028734778
+            ],
+            "targetDistance": 2.065725605433573,
+            "groundGap": 1.2078080078767943
+          },
+          {
+            "position": [
+              89.12390976071701,
+              14.063185343636741,
+              -5.7472335311876
+            ],
+            "target": [
+              89.41805815419616,
+              13.060903345765722,
+              -5.2992926759939305
+            ],
+            "targetDistance": 1.1365489388470353,
+            "groundGap": 1.5007464377342803
+          }
+        ]
+      },
+      {
+        "wallMs": 6070.400000095367,
+        "time": 5.455500000002303,
+        "phase": "recovering",
+        "recoveryAge": 1.8300000000000158,
+        "groundCorrection": 0.03384462245894504,
+        "pelvis": {
+          "position": [
+            89.59530588341869,
+            14.412507226142624,
+            -4.970413530480803
+          ],
+          "groundGap": 1.7833081419109647
+        },
+        "hands": [
+          {
+            "position": [
+              90.29469140535936,
+              13.94638707746583,
+              -4.333576065570256
+            ],
+            "target": [
+              88.49684022941501,
+              13.07447150218033,
+              -4.635096028734778
+            ],
+            "targetDistance": 2.0207473640850417,
+            "groundGap": 1.1885262861763177
+          },
+          {
+            "position": [
+              89.08047859175507,
+              14.120039345994375,
+              -5.7625943954513446
+            ],
+            "target": [
+              89.41805815419616,
+              13.060903345765722,
+              -5.2992926759939305
+            ],
+            "targetDistance": 1.204316200675913,
+            "groundGap": 1.563304319352051
+          }
+        ]
+      },
+      {
+        "wallMs": 6170.800000071526,
+        "time": 5.505500000002485,
+        "phase": "recovering",
+        "recoveryAge": 1.8800000000000159,
+        "groundCorrection": 0.021617323080349138,
+        "pelvis": {
+          "position": [
+            89.59530588341869,
+            14.411177290507181,
+            -4.970413530480803
+          ],
+          "groundGap": 1.7819782062755216
+        },
+        "hands": [
+          {
+            "position": [
+              90.28611448424516,
+              13.936308282671392,
+              -4.328908186141583
+            ],
+            "target": [
+              88.49684022941501,
+              13.07447150218033,
+              -4.635096028734778
+            ],
+            "targetDistance": 2.0094815227209857,
+            "groundGap": 1.1804121795756934
+          },
+          {
+            "position": [
+              89.07207426163315,
+              14.127383351059509,
+              -5.7657073561895205
+            ],
+            "target": [
+              89.41805815419616,
+              13.060903345765722,
+              -5.2992926759939305
+            ],
+            "targetDistance": 1.2143422538586248,
+            "groundGap": 1.5717521673717592
+          }
+        ]
+      },
+      {
+        "wallMs": 6300.200000047684,
+        "time": 5.655300000002626,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 6405,
+        "time": 5.705100000002403,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 6513.300000071526,
+        "time": 5.755100000002585,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 6622.200000047684,
+        "time": 5.855000000002747,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 6731.5,
+        "time": 5.905000000002929,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 6839.400000095367,
+        "time": 6.004800000002888,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 6960.900000095367,
+        "time": 6.104800000003252,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 7075.5,
+        "time": 6.1548000000034335,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 7192.400000095367,
+        "time": 6.254800000003797,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 7292.800000071526,
+        "time": 6.304800000003979,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 7406,
+        "time": 6.404800000004343,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 7508.300000071526,
+        "time": 6.454800000004525,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 7615.600000023842,
+        "time": 6.5047000000045045,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 7724.800000071526,
+        "time": 6.604700000004868,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 7832.700000047684,
+        "time": 6.65470000000505,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 7942.900000095367,
+        "time": 6.7545000000050095,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 8052.200000047684,
+        "time": 6.804500000005191,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 8160.900000095367,
+        "time": 6.904500000005555,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 8267,
+        "time": 6.954500000005737,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 8380.200000047684,
+        "time": 7.054500000006101,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 8481.800000071526,
+        "time": 7.104500000006283,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 8597.100000023842,
+        "time": 7.204300000006242,
+        "phase": "walking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 8701.300000071526,
+        "time": 7.304300000006606,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 8815.700000047684,
+        "time": 7.354300000006788,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 8924,
+        "time": 7.40430000000697,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 9030.900000095367,
+        "time": 7.504300000007333,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 9145.600000023842,
+        "time": 7.604000000007545,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 9247.200000047684,
+        "time": 7.654000000007727,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 9354.300000071526,
+        "time": 7.754000000008091,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 9458.100000023842,
+        "time": 7.804000000008273,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 9567.600000023842,
+        "time": 7.854000000008455,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 9678.200000047684,
+        "time": 7.9540000000088185,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      },
+      {
+        "wallMs": 9787.100000023842,
+        "time": 8.004000000009,
+        "phase": "attacking",
+        "recoveryAge": null,
+        "groundCorrection": null,
+        "pelvis": null,
+        "hands": []
+      }
+    ],
+    "rejectedPhysics": 0,
+    "completedSimulation": true,
+    "species": "rhino",
+    "direction": "auto",
+    "wallMs": 9788.300000071526,
+    "simulationSeconds": 8.004000000009,
+    "frames": 174,
+    "hiddenFrames": 0,
+    "metrics": {
+      "dt": {
+        "mean": 56.096551724137946,
+        "p95": 83.30000000000291,
+        "p99": 99.80000000000291,
+        "max": 116.5
+      },
+      "renderMs": {
+        "mean": 12.697701149288266,
+        "p95": 17.799999952316284,
+        "p99": 23,
+        "max": 24.799999952316284
+      },
+      "physicsTotal": {
+        "mean": 2.103448272436515,
+        "p95": 4.399999976158142,
+        "p99": 10.600000023841858,
+        "max": 16.299999952316284
+      },
+      "solverMs": {
+        "mean": 1.068965508334938,
+        "p95": 2.700000047683716,
+        "p99": 3.5,
+        "max": 6.5
+      },
+      "solverSteps": {
+        "mean": 1.8275862068965518,
+        "p95": 3,
+        "p99": 3,
+        "max": 3
+      },
+      "creationMs": {
+        "mean": 0.0902298853315156,
+        "p95": 0,
+        "p99": 0,
+        "max": 15.700000047683716
+      },
+      "bindingMs": {
+        "mean": 0.13218391215664216,
+        "p95": 0.40000009536743164,
+        "p99": 0.6000000238418579,
+        "max": 0.9000000953674316
+      },
+      "recoverySetupMs": {
+        "mean": 0.05632183880641543,
+        "p95": 0,
+        "p99": 0,
+        "max": 9.799999952316284
+      },
+      "recoveryFollowMs": {
+        "mean": 0.6856321829488907,
+        "p95": 3.5,
+        "p99": 4.299999952316284,
+        "max": 4.399999976158142
+      },
+      "recoveryMs": {
+        "mean": 0.5339080444697676,
+        "p95": 2.8000000715255737,
+        "p99": 3.399999976158142,
+        "max": 3.799999952316284
+      },
+      "animationMs": {
+        "mean": 0.10344827723229068,
+        "p95": 0.5,
+        "p99": 0.7999999523162842,
+        "max": 0.9000000953674316
+      },
+      "vfxMs": {
+        "mean": 0.48218390927917654,
+        "p95": 2.5,
+        "p99": 3.6999999284744263,
+        "max": 4.799999952316284
+      },
+      "draws": {
+        "mean": 64.07471264367815,
+        "p95": 71,
+        "p99": 73,
+        "max": 73
+      }
+    },
+    "peakActive": 1,
+    "peakBaked": 0,
+    "finalDownCount": 0,
+    "finalDown": null,
+    "memory": {
+      "geometries": 202,
+      "textures": 91
+    },
+    "heap": 432082753,
+    "errors": []
+  },
+  "commandCosts": [
+    {
+      "kind": "attack",
+      "plan": 1.7000000476837158,
+      "logic": 1.2999999523162842,
+      "render": 0,
+      "total": 3
+    }
+  ]
+}

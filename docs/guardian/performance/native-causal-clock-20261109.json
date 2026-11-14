@@ -1,0 +1,790 @@
+{
+  "date": "2026-11-09",
+  "audit": "/tests/browser/native-causal-clock.html",
+  "result": {
+    "checklistId": "A6-04.f-R1",
+    "backend": "webgpu",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "scope": "Real native execution and direct finite clock permits, one prepared native timetable replayed in WebGPU. Diagnostic triangle, not character/product acceptance or all-consumer recovery.",
+    "blocks": [
+      {
+        "kind": "paused-speed-change",
+        "start": 1794243601671.175,
+        "end": 1794243602171.25,
+        "blockedMs": 500.074951171875,
+        "drawFrames": 15,
+        "minClock": 10,
+        "maxClock": 10
+      },
+      {
+        "kind": "native-speed-two",
+        "start": 1794243602174.6199,
+        "end": 1794243602674.675,
+        "blockedMs": 500.05517578125,
+        "drawFrames": 15,
+        "minClock": 10.04085009765625,
+        "maxClock": 10.961379882812498
+      },
+      {
+        "kind": "clock-silence-then-revocation",
+        "start": 1794243602679.56,
+        "end": 1794243603179.595,
+        "blockedMs": 500.034912109375,
+        "drawFrames": 15,
+        "minClock": 11.000379882812497,
+        "maxClock": 11.000379882812497
+      }
+    ],
+    "readbacks": [
+      {
+        "gpu": [
+          10,
+          20.049999237060547,
+          24,
+          0,
+          0,
+          0,
+          0,
+          3.25
+        ],
+        "cpu": [
+          20.05,
+          24,
+          0,
+          0,
+          0,
+          0,
+          3.25
+        ],
+        "maxError": 7.629394538355427e-7
+      },
+      {
+        "gpu": [
+          10.961379051208496,
+          20.049999237060547,
+          26.307310104370117,
+          0.96137934923172,
+          0.96137934923172,
+          0,
+          0,
+          0.9426894187927246
+        ],
+        "cpu": [
+          20.0499998533052,
+          26.307309722900385,
+          0.9613790512084962,
+          0.9613790512084962,
+          0,
+          0,
+          0.9426902770996088
+        ],
+        "maxError": 8.58306884232718e-7
+      },
+      {
+        "gpu": [
+          11.00037956237793,
+          20.049999237060547,
+          26.400911331176758,
+          1.0003799200057983,
+          1.0003799200057983,
+          0,
+          0,
+          0.849088191986084
+        ],
+        "cpu": [
+          20.049999847354144,
+          26.400911718749988,
+          1.0003798828124975,
+          1.0003798828124975,
+          0,
+          0,
+          0.8490882812500056
+        ],
+        "maxError": 6.102935969920509e-7
+      }
+    ],
+    "revoked": {
+      "appliedAt": 1794243602869.0598,
+      "clock": {
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 29,
+        "intentSequence": 3,
+        "committedThrough": 11.000379882812497,
+        "rate": 2,
+        "paused": true,
+        "reanchor": true
+      },
+      "receipt": {
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "sequence": 3,
+        "effectiveTime": 11.000379882812497,
+        "fenceId": 1,
+        "clockSequence": 29
+      },
+      "receivedAt": 1794243602871.305
+    },
+    "watermarks": [
+      {
+        "authorizedAt": 1794243601209.9648,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 1,
+        "intentSequence": 2,
+        "committedThrough": 10,
+        "rate": 1,
+        "paused": true,
+        "reanchor": true
+      },
+      {
+        "authorizedAt": 1794243601671.2449,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 2,
+        "intentSequence": 2,
+        "committedThrough": 10,
+        "rate": 2,
+        "paused": true,
+        "reanchor": true
+      },
+      {
+        "authorizedAt": 1794243602174.68,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 3,
+        "intentSequence": 2,
+        "committedThrough": 10,
+        "rate": 2,
+        "paused": false,
+        "reanchor": true
+      },
+      {
+        "authorizedAt": 1794243602195.4548,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 4,
+        "intentSequence": 2,
+        "committedThrough": 10.04085009765625,
+        "rate": 2,
+        "paused": false,
+        "reanchor": false
+      },
+      {
+        "authorizedAt": 1794243602216.0698,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 5,
+        "intentSequence": 2,
+        "committedThrough": 10.082580078125,
+        "rate": 2,
+        "paused": false,
+        "reanchor": false
+      },
+      {
+        "authorizedAt": 1794243602235.635,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 6,
+        "intentSequence": 2,
+        "committedThrough": 10.121699707031249,
+        "rate": 2,
+        "paused": false,
+        "reanchor": false
+      },
+      {
+        "authorizedAt": 1794243602255.0598,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 7,
+        "intentSequence": 2,
+        "committedThrough": 10.16052001953125,
+        "rate": 2,
+        "paused": false,
+        "reanchor": false
+      },
+      {
+        "authorizedAt": 1794243602275.0598,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 8,
+        "intentSequence": 2,
+        "committedThrough": 10.2005400390625,
+        "rate": 2,
+        "paused": false,
+        "reanchor": false
+      },
+      {
+        "authorizedAt": 1794243602296.035,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 9,
+        "intentSequence": 2,
+        "committedThrough": 10.242540039062499,
+        "rate": 2,
+        "paused": false,
+        "reanchor": false
+      },
+      {
+        "authorizedAt": 1794243602316.04,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 10,
+        "intentSequence": 2,
+        "committedThrough": 10.28252001953125,
+        "rate": 2,
+        "paused": false,
+        "reanchor": false
+      },
+      {
+        "authorizedAt": 1794243602335.68,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 11,
+        "intentSequence": 2,
+        "committedThrough": 10.32181005859375,
+        "rate": 2,
+        "paused": false,
+        "reanchor": false
+      },
+      {
+        "authorizedAt": 1794243602355.1199,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 12,
+        "intentSequence": 2,
+        "committedThrough": 10.360520019531249,
+        "rate": 2,
+        "paused": false,
+        "reanchor": false
+      },
+      {
+        "authorizedAt": 1794243602376.025,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 13,
+        "intentSequence": 2,
+        "committedThrough": 10.40247998046875,
+        "rate": 2,
+        "paused": false,
+        "reanchor": false
+      },
+      {
+        "authorizedAt": 1794243602395.9749,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 14,
+        "intentSequence": 2,
+        "committedThrough": 10.442429687499999,
+        "rate": 2,
+        "paused": false,
+        "reanchor": false
+      },
+      {
+        "authorizedAt": 1794243602415.9849,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 15,
+        "intentSequence": 2,
+        "committedThrough": 10.482429687499998,
+        "rate": 2,
+        "paused": false,
+        "reanchor": false
+      },
+      {
+        "authorizedAt": 1794243602435.585,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 16,
+        "intentSequence": 2,
+        "committedThrough": 10.521639648437498,
+        "rate": 2,
+        "paused": false,
+        "reanchor": false
+      },
+      {
+        "authorizedAt": 1794243602454.97,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 17,
+        "intentSequence": 2,
+        "committedThrough": 10.560399902343748,
+        "rate": 2,
+        "paused": false,
+        "reanchor": false
+      },
+      {
+        "authorizedAt": 1794243602475.9749,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 18,
+        "intentSequence": 2,
+        "committedThrough": 10.602409667968749,
+        "rate": 2,
+        "paused": false,
+        "reanchor": false
+      },
+      {
+        "authorizedAt": 1794243602495.9548,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 19,
+        "intentSequence": 2,
+        "committedThrough": 10.64239990234375,
+        "rate": 2,
+        "paused": false,
+        "reanchor": false
+      },
+      {
+        "authorizedAt": 1794243602515.9548,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 20,
+        "intentSequence": 2,
+        "committedThrough": 10.6823798828125,
+        "rate": 2,
+        "paused": false,
+        "reanchor": false
+      },
+      {
+        "authorizedAt": 1794243602535.4448,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 21,
+        "intentSequence": 2,
+        "committedThrough": 10.721369628906249,
+        "rate": 2,
+        "paused": false,
+        "reanchor": false
+      },
+      {
+        "authorizedAt": 1794243602555.49,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 22,
+        "intentSequence": 2,
+        "committedThrough": 10.761439941406248,
+        "rate": 2,
+        "paused": false,
+        "reanchor": false
+      },
+      {
+        "authorizedAt": 1794243602575.4849,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 23,
+        "intentSequence": 2,
+        "committedThrough": 10.801429687499999,
+        "rate": 2,
+        "paused": false,
+        "reanchor": false
+      },
+      {
+        "authorizedAt": 1794243602595.4448,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 24,
+        "intentSequence": 2,
+        "committedThrough": 10.841379882812499,
+        "rate": 2,
+        "paused": false,
+        "reanchor": false
+      },
+      {
+        "authorizedAt": 1794243602615.4749,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 25,
+        "intentSequence": 2,
+        "committedThrough": 10.881389648437498,
+        "rate": 2,
+        "paused": false,
+        "reanchor": false
+      },
+      {
+        "authorizedAt": 1794243602635.585,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 26,
+        "intentSequence": 2,
+        "committedThrough": 10.921639648437498,
+        "rate": 2,
+        "paused": false,
+        "reanchor": false
+      },
+      {
+        "authorizedAt": 1794243602655.46,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 27,
+        "intentSequence": 2,
+        "committedThrough": 10.961379882812498,
+        "rate": 2,
+        "paused": false,
+        "reanchor": false
+      },
+      {
+        "authorizedAt": 1794243602674.96,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 28,
+        "intentSequence": 2,
+        "committedThrough": 11.000379882812497,
+        "rate": 2,
+        "paused": false,
+        "reanchor": false
+      },
+      {
+        "authorizedAt": 1794243602869.28,
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+        "nativeSession": 1,
+        "clockSequence": 29,
+        "intentSequence": 3,
+        "committedThrough": 11.000379882812497,
+        "rate": 2,
+        "paused": true,
+        "reanchor": true
+      }
+    ],
+    "drawStats": {
+      "packets": 1,
+      "computePackets": 0,
+      "replayFrames": 45,
+      "nativeFrames": 46,
+      "gpuErrors": 0,
+      "failed": false
+    },
+    "clock": {
+      "type": "IntentClock",
+      "protocolVersion": 2,
+      "clockVersion": 1,
+      "authorityEpoch": "5dda4331-2f86-45c3-a92d-d24996ca7bae/1",
+      "nativeSession": 1,
+      "clockSequence": 29,
+      "intentSequence": 3,
+      "committedThrough": 11.000379882812497,
+      "rate": 2,
+      "paused": true,
+      "reanchor": true,
+      "anchorLogicalTime": 11.000379882812497,
+      "anchorAbsoluteMs": 1794243602869.55,
+      "session": "causal-60737df9-f699-44be-b0d9-7ca3363b72db"
+    },
+    "countersBefore": {
+      "nav_gate_wait_segments": 2,
+      "nav_gate_prefix_segments": 0,
+      "nav_gate_worker_checks": 0,
+      "nav_gate_sweep_evaluations": 315,
+      "nav_gate_static_evaluations": 0,
+      "spatial_execution_clearance_checks": 1,
+      "nav_intent_route_queries": 0
+    },
+    "countersAfter": {
+      "nav_gate_wait_segments": 2,
+      "nav_gate_prefix_segments": 0,
+      "nav_gate_worker_checks": 0,
+      "nav_gate_sweep_evaluations": 315,
+      "nav_gate_static_evaluations": 0,
+      "spatial_execution_clearance_checks": 1,
+      "nav_intent_route_queries": 0
+    },
+    "safeClockSamples": [
+      {
+        "at": 1794243601668.745,
+        "elapsed": 10,
+        "safeUntil": 10
+      },
+      {
+        "at": 1794243601701.99,
+        "elapsed": 10,
+        "safeUntil": 10
+      },
+      {
+        "at": 1794243601735.4102,
+        "elapsed": 10,
+        "safeUntil": 10
+      },
+      {
+        "at": 1794243601768.79,
+        "elapsed": 10,
+        "safeUntil": 10
+      },
+      {
+        "at": 1794243601802.02,
+        "elapsed": 10,
+        "safeUntil": 10
+      },
+      {
+        "at": 1794243601835.33,
+        "elapsed": 10,
+        "safeUntil": 10
+      },
+      {
+        "at": 1794243601868.7002,
+        "elapsed": 10,
+        "safeUntil": 10
+      },
+      {
+        "at": 1794243601901.975,
+        "elapsed": 10,
+        "safeUntil": 10
+      },
+      {
+        "at": 1794243601935.3352,
+        "elapsed": 10,
+        "safeUntil": 10
+      },
+      {
+        "at": 1794243601968.655,
+        "elapsed": 10,
+        "safeUntil": 10
+      },
+      {
+        "at": 1794243602002.0051,
+        "elapsed": 10,
+        "safeUntil": 10
+      },
+      {
+        "at": 1794243602035.3801,
+        "elapsed": 10,
+        "safeUntil": 10
+      },
+      {
+        "at": 1794243602068.645,
+        "elapsed": 10,
+        "safeUntil": 10
+      },
+      {
+        "at": 1794243602102.0452,
+        "elapsed": 10,
+        "safeUntil": 10
+      },
+      {
+        "at": 1794243602135.3052,
+        "elapsed": 10,
+        "safeUntil": 10
+      },
+      {
+        "at": 1794243602168.6301,
+        "elapsed": 10,
+        "safeUntil": 10
+      },
+      {
+        "at": 1794243602202.02,
+        "elapsed": 10.04085009765625,
+        "safeUntil": 10.04085009765625
+      },
+      {
+        "at": 1794243602235.3252,
+        "elapsed": 10.082580078125,
+        "safeUntil": 10.082580078125
+      },
+      {
+        "at": 1794243602268.6501,
+        "elapsed": 10.16052001953125,
+        "safeUntil": 10.16052001953125
+      },
+      {
+        "at": 1794243602301.995,
+        "elapsed": 10.242540039062499,
+        "safeUntil": 10.242540039062499
+      },
+      {
+        "at": 1794243602335.33,
+        "elapsed": 10.28252001953125,
+        "safeUntil": 10.28252001953125
+      },
+      {
+        "at": 1794243602368.74,
+        "elapsed": 10.360520019531249,
+        "safeUntil": 10.360520019531249
+      },
+      {
+        "at": 1794243602402.02,
+        "elapsed": 10.442429687499999,
+        "safeUntil": 10.442429687499999
+      },
+      {
+        "at": 1794243602435.3052,
+        "elapsed": 10.482429687499998,
+        "safeUntil": 10.482429687499998
+      },
+      {
+        "at": 1794243602468.7102,
+        "elapsed": 10.560399902343748,
+        "safeUntil": 10.560399902343748
+      },
+      {
+        "at": 1794243602501.985,
+        "elapsed": 10.64239990234375,
+        "safeUntil": 10.64239990234375
+      },
+      {
+        "at": 1794243602535.31,
+        "elapsed": 10.6823798828125,
+        "safeUntil": 10.6823798828125
+      },
+      {
+        "at": 1794243602568.6802,
+        "elapsed": 10.761439941406248,
+        "safeUntil": 10.761439941406248
+      },
+      {
+        "at": 1794243602601.975,
+        "elapsed": 10.841379882812499,
+        "safeUntil": 10.841379882812499
+      },
+      {
+        "at": 1794243602635.33,
+        "elapsed": 10.881389648437498,
+        "safeUntil": 10.881389648437498
+      },
+      {
+        "at": 1794243602668.625,
+        "elapsed": 10.961379882812498,
+        "safeUntil": 10.961379882812498
+      },
+      {
+        "at": 1794243602701.985,
+        "elapsed": 11.000379882812497,
+        "safeUntil": 11.000379882812497
+      },
+      {
+        "at": 1794243602735.3152,
+        "elapsed": 11.000379882812497,
+        "safeUntil": 11.000379882812497
+      },
+      {
+        "at": 1794243602768.655,
+        "elapsed": 11.000379882812497,
+        "safeUntil": 11.000379882812497
+      },
+      {
+        "at": 1794243602801.995,
+        "elapsed": 11.000379882812497,
+        "safeUntil": 11.000379882812497
+      },
+      {
+        "at": 1794243602835.32,
+        "elapsed": 11.000379882812497,
+        "safeUntil": 11.000379882812497
+      },
+      {
+        "at": 1794243602868.655,
+        "elapsed": 11.000379882812497,
+        "safeUntil": 11.000379882812497
+      },
+      {
+        "at": 1794243602902.0151,
+        "elapsed": 11.000379882812497,
+        "safeUntil": 11.000379882812497
+      },
+      {
+        "at": 1794243602935.31,
+        "elapsed": 11.000379882812497,
+        "safeUntil": 11.000379882812497
+      },
+      {
+        "at": 1794243602968.7002,
+        "elapsed": 11.000379882812497,
+        "safeUntil": 11.000379882812497
+      },
+      {
+        "at": 1794243603002.03,
+        "elapsed": 11.000379882812497,
+        "safeUntil": 11.000379882812497
+      },
+      {
+        "at": 1794243603035.3352,
+        "elapsed": 11.000379882812497,
+        "safeUntil": 11.000379882812497
+      },
+      {
+        "at": 1794243603068.6702,
+        "elapsed": 11.000379882812497,
+        "safeUntil": 11.000379882812497
+      },
+      {
+        "at": 1794243603101.955,
+        "elapsed": 11.000379882812497,
+        "safeUntil": 11.000379882812497
+      },
+      {
+        "at": 1794243603135.35,
+        "elapsed": 11.000379882812497,
+        "safeUntil": 11.000379882812497
+      },
+      {
+        "at": 1794243603168.6401,
+        "elapsed": 11.000379882812497,
+        "safeUntil": 11.000379882812497
+      }
+    ],
+    "authorizedAutonomy": false,
+    "authorizedPassage": false
+  }
+}

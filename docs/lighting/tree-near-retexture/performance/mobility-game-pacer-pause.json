@@ -1,0 +1,77 @@
+{
+  "scope": "Experimental main-thread pacer and one Worker owning an adapted mangrove game with real Rapier and test rig. Pause pacer while first tick is in flight; wait, resume at 2x, compare 30 steps to independent main-thread reference. No render, actual game pause command, input queue, session recovery, or visual horizon.",
+  "results": [
+    {
+      "steps": 30,
+      "pausedDuringFirstStep": true,
+      "pauseTargetSteps": 1.4795999997854232,
+      "ackDelayMs": 296.5100000053644,
+      "pauseWallMs": 426.04999999701977,
+      "firstStepResponseMs": 303.4399999976158,
+      "completedAfterPause": 1,
+      "simulationEqual": true,
+      "rateAfterResume": 2,
+      "totalWallMs": 701.6850000023842,
+      "finalPacer": {
+        "session": "pacer-test",
+        "targetSteps": 31.59660000085831,
+        "completed": 30,
+        "confirmedTime": 6069.500000003826,
+        "inflight": null,
+        "paused": false,
+        "rate": 2,
+        "backlogSteps": 1,
+        "overloaded": false,
+        "nextDelayMs": 0
+      }
+    },
+    {
+      "steps": 30,
+      "pausedDuringFirstStep": true,
+      "pauseTargetSteps": 1.4268000000715255,
+      "ackDelayMs": 287,
+      "pauseWallMs": 420.90000000596046,
+      "firstStepResponseMs": 292.8799999952316,
+      "completedAfterPause": 1,
+      "simulationEqual": true,
+      "rateAfterResume": 2,
+      "totalWallMs": 695.7150000035763,
+      "finalPacer": {
+        "session": "pacer-test",
+        "targetSteps": 31.550999999642368,
+        "completed": 30,
+        "confirmedTime": 6069.500000003826,
+        "inflight": null,
+        "paused": false,
+        "rate": 2,
+        "backlogSteps": 1,
+        "overloaded": false,
+        "nextDelayMs": 0
+      }
+    },
+    {
+      "steps": 30,
+      "pausedDuringFirstStep": true,
+      "pauseTargetSteps": 1.4568000000715255,
+      "ackDelayMs": 286.6550000011921,
+      "pauseWallMs": 418.85999999940395,
+      "firstStepResponseMs": 292.5649999976158,
+      "completedAfterPause": 1,
+      "simulationEqual": true,
+      "rateAfterResume": 2,
+      "totalWallMs": 694.9950000047684,
+      "finalPacer": {
+        "session": "pacer-test",
+        "targetSteps": 31.679400000572198,
+        "completed": 30,
+        "confirmedTime": 6069.500000003826,
+        "inflight": null,
+        "paused": false,
+        "rate": 2,
+        "backlogSteps": 1,
+        "overloaded": false,
+        "nextDelayMs": 0
+      }
+    }
+  ]
+}

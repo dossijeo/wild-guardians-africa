@@ -1,0 +1,2225 @@
+{
+  "ready": true,
+  "campaign": false,
+  "faceCandidate": false,
+  "faceCandidateSpecies": null,
+  "expressions": [
+    {
+      "id": "qa-beast-98",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-103",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-108",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    },
+    {
+      "id": "qa-beast-113",
+      "weights": [
+        0,
+        0,
+        0
+      ],
+      "bindings": 11
+    }
+  ],
+  "entityCounts": {
+    "workers": 1,
+    "structures": 1,
+    "crops": 12,
+    "animals": 20
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 1,
+  "maxVisibleGuardians": 1,
+  "elapsed": 3100.692716999932,
+  "simulate": false,
+  "active": 1,
+  "origins": [
+    {
+      "origin": {
+        "x": 88.79556819348751,
+        "y": 14.244947051313662,
+        "z": -3.2523930369390412
+      },
+      "opacity": 1
+    }
+  ],
+  "retainedAttacks": [],
+  "retainedDraws": 0,
+  "attackVisual": [
+    {
+      "age": 0.11999999999989086,
+      "beam": false,
+      "impact": false,
+      "core": [
+        88.62191199127264,
+        14.22752681436993,
+        -3.763154519244274
+      ]
+    }
+  ],
+  "reused": 37,
+  "health": 28,
+  "animalState": "walking",
+  "animalPosition": [
+    90,
+    -6
+  ],
+  "draws": 94,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "beast_take_damage",
+      "at": 3057.802166999934,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3058.184636999934,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3058.3343769999337,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3058.4341669999335,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3058.4341669999335,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3058.7500869999335,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3058.899616999933,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3059.0160119999327,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3059.0160119999327,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3059.1990469999328,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3059.2822919999326,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3059.2822919999326,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3059.7810669999326,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3059.914191999933,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3059.914191999933,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3060.4129269999335,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3060.529286999934,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3060.529286999934,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3061.044771999934,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3061.144511999934,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3061.144511999934,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3061.676631999934,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3061.759851999934,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3061.759851999934,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3062.275226999935,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3062.3917469999346,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3062.3917469999346,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3062.907086999934,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3063.006941999934,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3063.006941999934,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3063.522466999934,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3063.622241999934,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3063.622241999934,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3064.1376969999333,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3064.2374819999336,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3064.2374819999336,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3064.337246999933,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3064.4369469999333,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3064.4369469999333,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3064.9525569999328,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3065.0356069999325,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3065.0356069999325,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3065.567681999932,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3065.667426999932,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3065.667426999932,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3066.1497969999327,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3066.2661219999327,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3066.2661219999327,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3066.7815269999323,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3066.897936999932,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3066.897936999932,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3067.4301119999323,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3067.529886999932,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3067.529886999932,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3068.045371999931,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3068.1451469999306,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3068.1451469999306,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3068.6440219999304,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3068.76037199993,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3068.76037199993,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3069.2425869999297,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3069.34238199993,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3069.34238199993,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3069.4089519999297,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3069.59178699993,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3069.6582769999295,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3069.6582769999295,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3070.024351999929,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3070.174166999929,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3070.2906119999293,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3070.2906119999293,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3070.5899669999294,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3070.7397519999295,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3070.8560119999297,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3070.8560119999297,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3071.2219519999294,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3071.388056999929,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3071.4713219999294,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3071.4713219999294,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3071.78729199993,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3071.95364199993,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3072.0533069999296,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3072.0533069999296,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3072.4191469999296,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3072.56876199993,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3072.6851319999296,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3072.6851319999296,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3073.0011769999296,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3073.1840819999297,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3073.2671219999297,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3073.2671219999297,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3073.61645199993,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3073.78259199993,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3073.86583199993,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3073.86583199993,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3074.1819869999304,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3074.3480669999303,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3074.4312869999303,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3074.4312869999303,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3100.5727169999323,
+      "emitter": "guardian-world",
+      "played": false
+    }
+  ],
+  "combatPhysics": {
+    "active": 0,
+    "physicsMs": 0,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 0,
+    "maxStepMs": 0,
+    "solverMs": 0,
+    "solverSteps": 0,
+    "bindingMs": 0,
+    "recoverySetupMs": 0,
+    "creationMs": 0,
+    "lastCreation": null
+  },
+  "physicsWorlds": 0,
+  "physicalBodies": 0,
+  "allDown": [
+    {
+      "id": "qa-beast-98",
+      "x": 90,
+      "z": -6
+    },
+    {
+      "id": "qa-beast-99",
+      "x": 92.3,
+      "z": -6
+    },
+    {
+      "id": "qa-beast-100",
+      "x": 94.1,
+      "z": -6
+    },
+    {
+      "id": "qa-beast-101",
+      "x": 95.9,
+      "z": -6
+    },
+    {
+      "id": "qa-beast-102",
+      "x": 97.7,
+      "z": -6
+    },
+    {
+      "id": "qa-beast-103",
+      "x": 90.5,
+      "z": -4.2
+    },
+    {
+      "id": "qa-beast-104",
+      "x": 92.3,
+      "z": -4.2
+    },
+    {
+      "id": "qa-beast-105",
+      "x": 94.1,
+      "z": -4.2
+    },
+    {
+      "id": "qa-beast-106",
+      "x": 95.9,
+      "z": -4.2
+    },
+    {
+      "id": "qa-beast-107",
+      "x": 97.7,
+      "z": -4.2
+    },
+    {
+      "id": "qa-beast-108",
+      "x": 90.5,
+      "z": -2.4
+    },
+    {
+      "id": "qa-beast-109",
+      "x": 92.3,
+      "z": -2.4
+    },
+    {
+      "id": "qa-beast-110",
+      "x": 94.1,
+      "z": -2.4
+    },
+    {
+      "id": "qa-beast-111",
+      "x": 95.9,
+      "z": -2.4
+    },
+    {
+      "id": "qa-beast-112",
+      "x": 97.7,
+      "z": -2.4
+    },
+    {
+      "id": "qa-beast-113",
+      "x": 90.5,
+      "z": -0.5999999999999996
+    },
+    {
+      "id": "qa-beast-114",
+      "x": 92.3,
+      "z": -0.5999999999999996
+    },
+    {
+      "id": "qa-beast-115",
+      "x": 94.1,
+      "z": -0.5999999999999996
+    },
+    {
+      "id": "qa-beast-116",
+      "x": 95.9,
+      "z": -0.5999999999999996
+    },
+    {
+      "id": "qa-beast-117",
+      "x": 97.7,
+      "z": -0.5999999999999996
+    }
+  ],
+  "errors": [],
+  "report": {
+    "scope": "Latin-square order, interleaved frozen identical world at cast age 0.12s; 40 warmup + 240 timed frames; GPU elapsed queries, not RAF FPS",
+    "modes": [
+      {
+        "mode": "none",
+        "cpuSamples": 60,
+        "gpuSamples": 60,
+        "cpuP50": 24.959999918937683,
+        "cpuP95": 34.44000005722046,
+        "gpuP50": 23.608697,
+        "gpuP95": 27.574426,
+        "drawP95": 83
+      },
+      {
+        "mode": "body",
+        "cpuSamples": 60,
+        "gpuSamples": 60,
+        "cpuP50": 25.195000052452087,
+        "cpuP95": 36.7150000333786,
+        "gpuP50": 23.91703,
+        "gpuP95": 27.079531,
+        "drawP95": 89
+      },
+      {
+        "mode": "effects",
+        "cpuSamples": 60,
+        "gpuSamples": 60,
+        "cpuP50": 25.265000104904175,
+        "cpuP95": 29.18499994277954,
+        "gpuP50": 23.576562,
+        "gpuP95": 26.919634,
+        "drawP95": 88
+      },
+      {
+        "mode": "all",
+        "cpuSamples": 60,
+        "gpuSamples": 60,
+        "cpuP50": 25.41000008583069,
+        "cpuP95": 32.580000042915344,
+        "gpuP50": 24.318854,
+        "gpuP95": 27.44026,
+        "drawP95": 94
+      }
+    ],
+    "timer": {
+      "supported": true,
+      "reason": null,
+      "disjointEvents": 0,
+      "discarded": 0,
+      "overflowSkipped": 0,
+      "foreignQuerySkipped": 0,
+      "allocationFailures": 0,
+      "unresolvedAtDispose": 0,
+      "contextLost": false,
+      "pending": 0,
+      "samples": [
+        {
+          "frame": 40,
+          "ms": 25.461926
+        },
+        {
+          "frame": 41,
+          "ms": 24.756197
+        },
+        {
+          "frame": 42,
+          "ms": 24.55828
+        },
+        {
+          "frame": 43,
+          "ms": 25.158228
+        },
+        {
+          "frame": 44,
+          "ms": 24.816406
+        },
+        {
+          "frame": 45,
+          "ms": 21.63526
+        },
+        {
+          "frame": 46,
+          "ms": 25.720572
+        },
+        {
+          "frame": 47,
+          "ms": 25.94677
+        },
+        {
+          "frame": 48,
+          "ms": 24.953436
+        },
+        {
+          "frame": 49,
+          "ms": 27.079531
+        },
+        {
+          "frame": 50,
+          "ms": 27.459999
+        },
+        {
+          "frame": 51,
+          "ms": 25.277395
+        },
+        {
+          "frame": 52,
+          "ms": 24.827603
+        },
+        {
+          "frame": 53,
+          "ms": 23.147811
+        },
+        {
+          "frame": 54,
+          "ms": 27.44026
+        },
+        {
+          "frame": 55,
+          "ms": 27.574426
+        },
+        {
+          "frame": 56,
+          "ms": 22.941562
+        },
+        {
+          "frame": 57,
+          "ms": 25.099999
+        },
+        {
+          "frame": 58,
+          "ms": 24.004635
+        },
+        {
+          "frame": 59,
+          "ms": 24.690885
+        },
+        {
+          "frame": 60,
+          "ms": 24.852239
+        },
+        {
+          "frame": 61,
+          "ms": 21.31276
+        },
+        {
+          "frame": 62,
+          "ms": 21.701978
+        },
+        {
+          "frame": 63,
+          "ms": 25.985364
+        },
+        {
+          "frame": 64,
+          "ms": 21.634218
+        },
+        {
+          "frame": 65,
+          "ms": 23.800468
+        },
+        {
+          "frame": 66,
+          "ms": 24.654218
+        },
+        {
+          "frame": 67,
+          "ms": 24.530206
+        },
+        {
+          "frame": 68,
+          "ms": 24.095207
+        },
+        {
+          "frame": 69,
+          "ms": 24.885416
+        },
+        {
+          "frame": 70,
+          "ms": 24.41776
+        },
+        {
+          "frame": 71,
+          "ms": 23.50651
+        },
+        {
+          "frame": 72,
+          "ms": 24.61927
+        },
+        {
+          "frame": 73,
+          "ms": 24.604062
+        },
+        {
+          "frame": 74,
+          "ms": 21.516822
+        },
+        {
+          "frame": 75,
+          "ms": 22.062811
+        },
+        {
+          "frame": 76,
+          "ms": 24.440936
+        },
+        {
+          "frame": 77,
+          "ms": 23.549478
+        },
+        {
+          "frame": 78,
+          "ms": 21.624583
+        },
+        {
+          "frame": 79,
+          "ms": 23.605884
+        },
+        {
+          "frame": 80,
+          "ms": 21.17802
+        },
+        {
+          "frame": 81,
+          "ms": 24.195624
+        },
+        {
+          "frame": 82,
+          "ms": 23.989322
+        },
+        {
+          "frame": 83,
+          "ms": 22.037135
+        },
+        {
+          "frame": 84,
+          "ms": 21.727759
+        },
+        {
+          "frame": 85,
+          "ms": 24.437707
+        },
+        {
+          "frame": 86,
+          "ms": 22.095676
+        },
+        {
+          "frame": 87,
+          "ms": 23.454478
+        },
+        {
+          "frame": 88,
+          "ms": 23.232343
+        },
+        {
+          "frame": 89,
+          "ms": 22.267083
+        },
+        {
+          "frame": 90,
+          "ms": 20.780363
+        },
+        {
+          "frame": 91,
+          "ms": 24.063385
+        },
+        {
+          "frame": 92,
+          "ms": 21.512759
+        },
+        {
+          "frame": 93,
+          "ms": 25.682656
+        },
+        {
+          "frame": 94,
+          "ms": 21.521405
+        },
+        {
+          "frame": 95,
+          "ms": 24.676354
+        },
+        {
+          "frame": 96,
+          "ms": 23.545051
+        },
+        {
+          "frame": 97,
+          "ms": 21.831874
+        },
+        {
+          "frame": 98,
+          "ms": 23.507499
+        },
+        {
+          "frame": 99,
+          "ms": 24.318854
+        },
+        {
+          "frame": 100,
+          "ms": 23.714791
+        },
+        {
+          "frame": 101,
+          "ms": 23.555937
+        },
+        {
+          "frame": 102,
+          "ms": 21.47052
+        },
+        {
+          "frame": 103,
+          "ms": 24.183593
+        },
+        {
+          "frame": 104,
+          "ms": 24.173176
+        },
+        {
+          "frame": 105,
+          "ms": 21.697916
+        },
+        {
+          "frame": 106,
+          "ms": 21.098229
+        },
+        {
+          "frame": 107,
+          "ms": 23.647447
+        },
+        {
+          "frame": 108,
+          "ms": 23.87828
+        },
+        {
+          "frame": 109,
+          "ms": 23.565572
+        },
+        {
+          "frame": 110,
+          "ms": 23.481249
+        },
+        {
+          "frame": 111,
+          "ms": 21.11177
+        },
+        {
+          "frame": 112,
+          "ms": 23.093385
+        },
+        {
+          "frame": 113,
+          "ms": 21.165781
+        },
+        {
+          "frame": 114,
+          "ms": 24.28578
+        },
+        {
+          "frame": 115,
+          "ms": 25.623645
+        },
+        {
+          "frame": 116,
+          "ms": 21.069374
+        },
+        {
+          "frame": 117,
+          "ms": 26.919634
+        },
+        {
+          "frame": 118,
+          "ms": 27.946875
+        },
+        {
+          "frame": 119,
+          "ms": 24.786666
+        },
+        {
+          "frame": 120,
+          "ms": 21.192082
+        },
+        {
+          "frame": 121,
+          "ms": 25.767916
+        },
+        {
+          "frame": 122,
+          "ms": 25.084739
+        },
+        {
+          "frame": 123,
+          "ms": 26.343229
+        },
+        {
+          "frame": 124,
+          "ms": 29.537135
+        },
+        {
+          "frame": 125,
+          "ms": 28.165885
+        },
+        {
+          "frame": 126,
+          "ms": 28.537967
+        },
+        {
+          "frame": 127,
+          "ms": 26.841979
+        },
+        {
+          "frame": 128,
+          "ms": 27.055781
+        },
+        {
+          "frame": 129,
+          "ms": 26.588541
+        },
+        {
+          "frame": 130,
+          "ms": 26.263957
+        },
+        {
+          "frame": 131,
+          "ms": 26.02927
+        },
+        {
+          "frame": 132,
+          "ms": 21.780467
+        },
+        {
+          "frame": 133,
+          "ms": 25.720312
+        },
+        {
+          "frame": 134,
+          "ms": 27.073228
+        },
+        {
+          "frame": 135,
+          "ms": 25.345989
+        },
+        {
+          "frame": 136,
+          "ms": 26.390468
+        },
+        {
+          "frame": 137,
+          "ms": 27.369895
+        },
+        {
+          "frame": 138,
+          "ms": 21.187968
+        },
+        {
+          "frame": 139,
+          "ms": 27.330676
+        },
+        {
+          "frame": 140,
+          "ms": 26.853436
+        },
+        {
+          "frame": 141,
+          "ms": 28.456458
+        },
+        {
+          "frame": 142,
+          "ms": 21.428489
+        },
+        {
+          "frame": 143,
+          "ms": 20.902343
+        },
+        {
+          "frame": 144,
+          "ms": 25.581249
+        },
+        {
+          "frame": 145,
+          "ms": 25.975312
+        },
+        {
+          "frame": 146,
+          "ms": 21.291978
+        },
+        {
+          "frame": 147,
+          "ms": 21.522812
+        },
+        {
+          "frame": 148,
+          "ms": 21.388384
+        },
+        {
+          "frame": 149,
+          "ms": 21.150624
+        },
+        {
+          "frame": 150,
+          "ms": 21.551458
+        },
+        {
+          "frame": 151,
+          "ms": 20.575103
+        },
+        {
+          "frame": 152,
+          "ms": 21.016926
+        },
+        {
+          "frame": 153,
+          "ms": 25.418749
+        },
+        {
+          "frame": 154,
+          "ms": 24.351092
+        },
+        {
+          "frame": 155,
+          "ms": 26.321458
+        },
+        {
+          "frame": 156,
+          "ms": 26.497604
+        },
+        {
+          "frame": 157,
+          "ms": 25.306614
+        },
+        {
+          "frame": 158,
+          "ms": 25.060572
+        },
+        {
+          "frame": 159,
+          "ms": 24.937759
+        },
+        {
+          "frame": 160,
+          "ms": 25.930416
+        },
+        {
+          "frame": 161,
+          "ms": 25.717812
+        },
+        {
+          "frame": 162,
+          "ms": 20.826354
+        },
+        {
+          "frame": 163,
+          "ms": 24.822083
+        },
+        {
+          "frame": 164,
+          "ms": 25.894739
+        },
+        {
+          "frame": 165,
+          "ms": 20.654425
+        },
+        {
+          "frame": 166,
+          "ms": 25.911927
+        },
+        {
+          "frame": 167,
+          "ms": 25.249426
+        },
+        {
+          "frame": 168,
+          "ms": 21.01302
+        },
+        {
+          "frame": 169,
+          "ms": 25.762499
+        },
+        {
+          "frame": 170,
+          "ms": 25.496718
+        },
+        {
+          "frame": 171,
+          "ms": 26.014427
+        },
+        {
+          "frame": 172,
+          "ms": 21.599791
+        },
+        {
+          "frame": 173,
+          "ms": 25.352656
+        },
+        {
+          "frame": 174,
+          "ms": 26.520104
+        },
+        {
+          "frame": 175,
+          "ms": 20.595156
+        },
+        {
+          "frame": 176,
+          "ms": 27.417603
+        },
+        {
+          "frame": 177,
+          "ms": 21.218748
+        },
+        {
+          "frame": 178,
+          "ms": 25.903488
+        },
+        {
+          "frame": 179,
+          "ms": 22.018957
+        },
+        {
+          "frame": 180,
+          "ms": 25.904791
+        },
+        {
+          "frame": 181,
+          "ms": 20.902342
+        },
+        {
+          "frame": 182,
+          "ms": 21.391457
+        },
+        {
+          "frame": 183,
+          "ms": 25.174166
+        },
+        {
+          "frame": 184,
+          "ms": 24.993176
+        },
+        {
+          "frame": 185,
+          "ms": 26.596354
+        },
+        {
+          "frame": 186,
+          "ms": 24.855729
+        },
+        {
+          "frame": 187,
+          "ms": 25.388489
+        },
+        {
+          "frame": 188,
+          "ms": 24.619635
+        },
+        {
+          "frame": 189,
+          "ms": 24.451302
+        },
+        {
+          "frame": 190,
+          "ms": 23.893801
+        },
+        {
+          "frame": 191,
+          "ms": 23.576562
+        },
+        {
+          "frame": 192,
+          "ms": 21.310885
+        },
+        {
+          "frame": 193,
+          "ms": 21.375676
+        },
+        {
+          "frame": 194,
+          "ms": 21.34078
+        },
+        {
+          "frame": 195,
+          "ms": 22.004791
+        },
+        {
+          "frame": 196,
+          "ms": 23.833124
+        },
+        {
+          "frame": 197,
+          "ms": 23.639062
+        },
+        {
+          "frame": 198,
+          "ms": 21.656457
+        },
+        {
+          "frame": 199,
+          "ms": 22.728332
+        },
+        {
+          "frame": 200,
+          "ms": 23.744427
+        },
+        {
+          "frame": 201,
+          "ms": 24.137186
+        },
+        {
+          "frame": 202,
+          "ms": 24.441041
+        },
+        {
+          "frame": 203,
+          "ms": 23.190467
+        },
+        {
+          "frame": 204,
+          "ms": 23.435312
+        },
+        {
+          "frame": 205,
+          "ms": 23.395833
+        },
+        {
+          "frame": 206,
+          "ms": 25.345155
+        },
+        {
+          "frame": 207,
+          "ms": 23.353593
+        },
+        {
+          "frame": 208,
+          "ms": 23.313854
+        },
+        {
+          "frame": 209,
+          "ms": 23.91703
+        },
+        {
+          "frame": 210,
+          "ms": 23.65927
+        },
+        {
+          "frame": 211,
+          "ms": 24.462916
+        },
+        {
+          "frame": 212,
+          "ms": 25.63229
+        },
+        {
+          "frame": 213,
+          "ms": 23.731926
+        },
+        {
+          "frame": 214,
+          "ms": 23.948384
+        },
+        {
+          "frame": 215,
+          "ms": 22.826874
+        },
+        {
+          "frame": 216,
+          "ms": 23.082968
+        },
+        {
+          "frame": 217,
+          "ms": 25.685102
+        },
+        {
+          "frame": 218,
+          "ms": 24.637291
+        },
+        {
+          "frame": 219,
+          "ms": 20.999895
+        },
+        {
+          "frame": 220,
+          "ms": 24.02453
+        },
+        {
+          "frame": 221,
+          "ms": 23.331926
+        },
+        {
+          "frame": 222,
+          "ms": 23.753124
+        },
+        {
+          "frame": 223,
+          "ms": 20.812968
+        },
+        {
+          "frame": 224,
+          "ms": 23.046041
+        },
+        {
+          "frame": 225,
+          "ms": 23.141197
+        },
+        {
+          "frame": 226,
+          "ms": 23.138176
+        },
+        {
+          "frame": 227,
+          "ms": 21.336093
+        },
+        {
+          "frame": 228,
+          "ms": 21.086041
+        },
+        {
+          "frame": 229,
+          "ms": 23.24901
+        },
+        {
+          "frame": 230,
+          "ms": 23.561249
+        },
+        {
+          "frame": 231,
+          "ms": 23.120676
+        },
+        {
+          "frame": 232,
+          "ms": 23.022447
+        },
+        {
+          "frame": 233,
+          "ms": 21.079999
+        },
+        {
+          "frame": 234,
+          "ms": 20.825468
+        },
+        {
+          "frame": 235,
+          "ms": 23.132291
+        },
+        {
+          "frame": 236,
+          "ms": 23.46625
+        },
+        {
+          "frame": 237,
+          "ms": 22.957499
+        },
+        {
+          "frame": 238,
+          "ms": 23.313489
+        },
+        {
+          "frame": 239,
+          "ms": 23.172031
+        },
+        {
+          "frame": 240,
+          "ms": 22.765624
+        },
+        {
+          "frame": 241,
+          "ms": 23.431458
+        },
+        {
+          "frame": 242,
+          "ms": 20.869583
+        },
+        {
+          "frame": 243,
+          "ms": 21.613593
+        },
+        {
+          "frame": 244,
+          "ms": 23.711093
+        },
+        {
+          "frame": 245,
+          "ms": 21.321613
+        },
+        {
+          "frame": 246,
+          "ms": 23.998645
+        },
+        {
+          "frame": 247,
+          "ms": 23.829635
+        },
+        {
+          "frame": 248,
+          "ms": 23.647655
+        },
+        {
+          "frame": 249,
+          "ms": 24.082447
+        },
+        {
+          "frame": 250,
+          "ms": 23.608697
+        },
+        {
+          "frame": 251,
+          "ms": 24.290103
+        },
+        {
+          "frame": 252,
+          "ms": 26.54526
+        },
+        {
+          "frame": 253,
+          "ms": 25.15177
+        },
+        {
+          "frame": 254,
+          "ms": 25.298905
+        },
+        {
+          "frame": 255,
+          "ms": 23.523593
+        },
+        {
+          "frame": 256,
+          "ms": 22.351249
+        },
+        {
+          "frame": 257,
+          "ms": 24.034947
+        },
+        {
+          "frame": 258,
+          "ms": 23.878854
+        },
+        {
+          "frame": 259,
+          "ms": 21.569687
+        },
+        {
+          "frame": 260,
+          "ms": 26.655676
+        },
+        {
+          "frame": 261,
+          "ms": 21.496406
+        },
+        {
+          "frame": 262,
+          "ms": 23.543488
+        },
+        {
+          "frame": 263,
+          "ms": 22.897811
+        },
+        {
+          "frame": 264,
+          "ms": 23.253176
+        },
+        {
+          "frame": 265,
+          "ms": 21.449686
+        },
+        {
+          "frame": 266,
+          "ms": 22.949218
+        },
+        {
+          "frame": 267,
+          "ms": 21.133905
+        },
+        {
+          "frame": 268,
+          "ms": 24.194062
+        },
+        {
+          "frame": 269,
+          "ms": 23.454218
+        },
+        {
+          "frame": 270,
+          "ms": 22.148176
+        },
+        {
+          "frame": 271,
+          "ms": 30.304687
+        },
+        {
+          "frame": 272,
+          "ms": 24.010311
+        },
+        {
+          "frame": 273,
+          "ms": 24.687134
+        },
+        {
+          "frame": 274,
+          "ms": 26.181562
+        },
+        {
+          "frame": 275,
+          "ms": 25.75427
+        },
+        {
+          "frame": 276,
+          "ms": 26.678124
+        },
+        {
+          "frame": 277,
+          "ms": 22.725624
+        },
+        {
+          "frame": 278,
+          "ms": 23.184999
+        },
+        {
+          "frame": 279,
+          "ms": 27.01901
+        }
+      ]
+    }
+  },
+  "commandCosts": [
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.41999995708465576,
+      "logic": 0.0700000524520874,
+      "render": 0,
+      "total": 0.49000000953674316
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.5749999284744263,
+      "logic": 0.0700000524520874,
+      "render": 0,
+      "total": 0.6449999809265137
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.26999998092651367,
+      "logic": 0.0700000524520874,
+      "render": 0,
+      "total": 0.3400000333786011
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.26999998092651367,
+      "logic": 0.04499995708465576,
+      "render": 0,
+      "total": 0.31499993801116943
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.41999995708465576,
+      "logic": 0.09000003337860107,
+      "render": 0.004999995231628418,
+      "total": 0.5149999856948853
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.31000006198883057,
+      "logic": 0.059999942779541016,
+      "render": 0,
+      "total": 0.3700000047683716
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.26999998092651367,
+      "logic": 0.04999995231628418,
+      "render": 0,
+      "total": 0.31999993324279785
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.36500000953674316,
+      "logic": 0.06499993801116943,
+      "render": 0,
+      "total": 0.4299999475479126
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.33000004291534424,
+      "logic": 0.09000003337860107,
+      "render": 0,
+      "total": 0.4200000762939453
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.33000004291534424,
+      "logic": 0.0549999475479126,
+      "render": 0,
+      "total": 0.38499999046325684
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.3950001001358032,
+      "logic": 0.06499993801116943,
+      "render": 0,
+      "total": 0.46000003814697266
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.26999998092651367,
+      "logic": 0.05500006675720215,
+      "render": 0,
+      "total": 0.3250000476837158
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.44499993324279785,
+      "logic": 0.0700000524520874,
+      "render": 0,
+      "total": 0.5149999856948853
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.4849998950958252,
+      "logic": 0.08500003814697266,
+      "render": 0,
+      "total": 0.5699999332427979
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.3400000333786011,
+      "logic": 0.06499993801116943,
+      "render": 0,
+      "total": 0.4049999713897705
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.3500000238418579,
+      "logic": 0.06500005722045898,
+      "render": 0,
+      "total": 0.4150000810623169
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.48500001430511475,
+      "logic": 0.08500003814697266,
+      "render": 0.004999995231628418,
+      "total": 0.5750000476837158
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.3799999952316284,
+      "logic": 0.06500005722045898,
+      "render": 0.004999995231628418,
+      "total": 0.4500000476837158
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.45500004291534424,
+      "logic": 0.06499993801116943,
+      "render": 0,
+      "total": 0.5199999809265137
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.32499992847442627,
+      "logic": 0.05500006675720215,
+      "render": 0.004999995231628418,
+      "total": 0.38499999046325684
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.36000001430511475,
+      "logic": 0.060000061988830566,
+      "render": 0,
+      "total": 0.4200000762939453
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.9750000238418579,
+      "logic": 0.18500006198883057,
+      "render": 0.009999990463256836,
+      "total": 1.1700000762939453
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.7599999904632568,
+      "logic": 0.1499999761581421,
+      "render": 0,
+      "total": 0.9099999666213989
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.5349999666213989,
+      "logic": 0.12000000476837158,
+      "render": 0,
+      "total": 0.6549999713897705
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.440000057220459,
+      "logic": 0.11000001430511475,
+      "render": 0.004999995231628418,
+      "total": 0.5550000667572021
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.559999942779541,
+      "logic": 0.06500005722045898,
+      "render": 0,
+      "total": 0.625
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.5950000286102295,
+      "logic": 0.125,
+      "render": 0,
+      "total": 0.7250000238418579
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.6299999952316284,
+      "logic": 0.12000000476837158,
+      "render": 0,
+      "total": 0.75
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.6799999475479126,
+      "logic": 0.09000003337860107,
+      "render": 0.004999995231628418,
+      "total": 0.7749999761581421
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-98",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "plan": 0.7200000286102295,
+      "logic": 0.0849999189376831,
+      "render": 4.645000100135803,
+      "total": 5.455000042915344
+    }
+  ]
+}

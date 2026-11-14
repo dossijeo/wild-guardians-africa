@@ -1,0 +1,36 @@
+{
+  "report": {
+    "scope": "QA presentation clock; remove live target between frames, next observation crosses the impact marker. Not a physics or gameplay cadence test.",
+    "before": {
+      "elapsed": 3031.4795149999945,
+      "age": 0.11999999999989086,
+      "objects": {
+        "group": true,
+        "aura": true,
+        "beam": false,
+        "impact": false,
+        "core": true,
+        "vortex": true
+      },
+      "active": 1,
+      "pending": 0
+    },
+    "after": {
+      "elapsed": 3031.7095149999946,
+      "age": null,
+      "objects": {
+        "group": false,
+        "aura": false,
+        "beam": false,
+        "impact": false,
+        "core": false,
+        "vortex": false
+      },
+      "active": 0,
+      "pending": 0
+    },
+    "cancelled": true
+  },
+  "errors": [],
+  "worldAuthority": "spatial-wasm"
+}

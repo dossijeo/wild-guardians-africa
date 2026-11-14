@@ -4,10 +4,6 @@
 // Live registries and navigation remain main-thread owned. The worker receives
 // bounded sampling inputs and produces an owned result in the same WASM memory.
 struct PreparationProfile {int index;float radius;bool worker;};
-struct PreparedSector {
-  int x,z;
-  std::array<uint8_t,sector*sector> pass{},steps{},inbound{};
-};
 struct PreparationJob {
   uint32_t seed=0;
   uint64_t terrainRevision=0,residentRevision=0,obstacleRevision=0;
@@ -59,20 +55,7 @@ void* preparationLoop(void*){
         auto& local=job.neighbors[profile.index];
         local.insert_or_assign(chunkKey(job.cx,job.cz),prepareActiveRaster());
         chunkRasters=&local;barrierRegistry=&job.barriers;polygonRegistry=&job.polygons;
-        auto& sectors=job.sectors[profile.index];
-        auto prepare=[&](int x,int z){
-          sectors.push_back({x,z});auto& out=sectors.back();
-          prepareSectorOverlay(x,z,out.pass.data(),out.steps.data(),out.inbound.data());
-        };
-        const int firstX=(job.cx*side-24)/sector,firstZ=(job.cz*side-24)/sector;
-        for(int z=0;z<4;z++)for(int x=0;x<4;x++)prepare(firstX+x,firstZ+z);
-        constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1};
-        for(int d=0;d<4;d++){
-          const int nx=job.cx+dx[d],nz=job.cz+dz[d];
-          if(!local.count(chunkKey(nx,nz)))continue;
-          const int x0=(nx*side-24)/sector,z0=(nz*side-24)/sector;
-          for(int i=0;i<4;i++)prepare(x0+(d==0?0:d==1?3:i),z0+(d==2?0:d==3?3:i));
-        }
+        job.sectors[profile.index]=prepareChunkAndNeighborSectors(job.cx,job.cz);
         job.rasters[profile.index]=std::move(local.at(chunkKey(job.cx,job.cz)));
       }
       if(job.waterBedRequested&&!preparationCancel.load(std::memory_order_acquire))job.waterBed=prepareWaterBed(job.cx,job.cz,job.waterShoreRequested);
@@ -215,6 +198,10 @@ extern "C" EMSCRIPTEN_KEEPALIVE int spatial_prepare_publish(int id){
     if(live&&(found->radius!=navProfiles[i]->radius||found->worker!=navProfiles[i]->worker||!job.rasters[i]))return -2;
   }
   if(std::find(loadedChunks.begin(),loadedChunks.end(),std::pair<int,int>{job.cx,job.cz})!=loadedChunks.end())return -3;
+  const auto region=residencyRegion(job.cx,job.cz);
+  const auto ticket=spatialIntentResidencyBefore(&region,1,false);
+  if(!ticket.allowed)return -2;
+  if(ticket.preview){if(worldResourcePreviewCapture)captureWorldResourcePreview(job.data);return int(job.data.props.size())+1;}
   const double started=emscripten_get_now();
   selectPreparedChunkData(std::move(job.data));
   // The worker's indices belong to its filtered site snapshot, not this vector.
@@ -223,14 +210,10 @@ extern "C" EMSCRIPTEN_KEEPALIVE int spatial_prepare_publish(int id){
   const int previous=activeProfile;
   for(const auto& profile:job.profiles){
     selectProfile(profile.index);installPreparedRaster(std::move(*job.rasters[profile.index]));
-    for(const auto& sector:job.sectors[profile.index]){
-      std::copy(sector.pass.begin(),sector.pass.end(),lazy_pass_ptr());
-      std::copy(sector.steps.begin(),sector.steps.end(),lazy_steps_ptr());
-      std::copy(sector.inbound.begin(),sector.inbound.end(),lazy_inbound_ptr());
-      lazy_commit_sector(sector.x,sector.z);
-    }
+    installPreparedSectors(job.sectors[profile.index]);
   }
   selectProfile(previous);++residencyRevision;job.published=true;
+  spatialIntentResidencyCommitted(ticket,1);
   job.publishMs=emscripten_get_now()-started;
   return int(props.size())+1;
 }

@@ -1,0 +1,19 @@
+{
+  "source": "campaign-77cfb1ac-no-walls-712-100/days.jsonl",
+  "journalSHA256": "33b2922e942042d5cb57312f107083309c9c9e61572889e1f7493ec9667d1822",
+  "requestedNights": 100,
+  "observedCompleteDays": 58,
+  "termination": "manual early calibration stop; not native defeat or completed campaign",
+  "strategy": "no-walls with native magic including shield",
+  "openingAfterCenter": 700,
+  "income": 820425,
+  "seeds": 432641,
+  "wages": 83670,
+  "cropDestructionEvents": 337,
+  "finalMoney": 304814,
+  "finalLiving": 353,
+  "meanDailyNetDays25Through58": 8649.323529411764,
+  "meanDailyCropDestructionDays25Through58": 6.735294117647059,
+  "cashConservation": "700 + 820425 - 432641 - 83670 = 304814",
+  "scope": "Read-only audit of retained native daily journal. Per-raid exposure, hit budgets, full observer trajectories and terminal snapshot were lost when the earlier process was forcibly stopped; they are not reconstructed from daily aggregates. Crop destruction here is the native daily event count, not proof that every destruction was caused by an animal. No new campaign, projection or pressure acceptance."
+}

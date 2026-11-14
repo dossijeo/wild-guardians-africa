@@ -1,0 +1,7 @@
+# Texturas cercanas de bioma en WebGPU
+
+Los modelos que aportan atlas revisado de primer plano conservan también el atlas original. Su material TSL mezcla el color y, cuando existe un atlas distinto, rugosidad y metalicidad entre ambos usando los límites `blendStart` y `blendEnd` de autoría. Se mantienen la geometría 3D, sus dos conjuntos de UV, las normales originales y la cobertura del atlas cercano usada por el pase de sombra. No se alteran las instancias confirmadas ni la selección de colisiones.
+
+La distancia de la transición utiliza ahora, para cada instancia, el centro y radio aproximado de la ruta de autoría: centro vertical de la caja y un cuarto de su mayor anchura horizontal, teniendo en cuenta la escala de la instancia. El centro se conserva en coordenadas locales del chunk y el grafo aplica la matriz del modelo; la selección de texturas es uniforme en toda la copa. La supresión compacta este atributo junto con los demás datos de instancia. Las mallas independientes que no adoptan este contrato conservan la distancia por fragmento.
+
+El atributo persistente añade 16 bytes por instancia cercana y una geometría por chunk para las mallas instanciadas nativas; no se recalcula cada fotograma. Las pruebas cubren las dos variantes de instancing, transformaciones del chunk, supresión, recursos reales y generación WGSL sin dispositivo. La equivalencia visual y el coste de memoria y GPU siguen pendientes de medición. Esta integración tampoco implementa selección de LOD geométrico ni impostores 2D; ambos atlas siguen residentes y muestreados.

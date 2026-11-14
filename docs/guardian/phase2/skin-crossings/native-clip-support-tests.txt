@@ -1,0 +1,65 @@
+TAP version 13
+# Subtest: hyena sampled feet clear a sloping plane without cumulative lifting
+ok 1 - hyena sampled feet clear a sloping plane without cumulative lifting
+  ---
+  duration_ms: 131.5251
+  ...
+# Subtest: lion sampled feet clear a sloping plane without cumulative lifting
+ok 2 - lion sampled feet clear a sloping plane without cumulative lifting
+  ---
+  duration_ms: 129.2521
+  ...
+# Subtest: warthog sampled feet clear a sloping plane without cumulative lifting
+ok 3 - warthog sampled feet clear a sloping plane without cumulative lifting
+  ---
+  duration_ms: 136.9979
+  ...
+# Subtest: buffalo sampled feet clear a sloping plane without cumulative lifting
+ok 4 - buffalo sampled feet clear a sloping plane without cumulative lifting
+  ---
+  duration_ms: 229.7304
+  ...
+# Subtest: rhino sampled feet clear a sloping plane without cumulative lifting
+ok 5 - rhino sampled feet clear a sloping plane without cumulative lifting
+  ---
+  duration_ms: 158.4693
+  ...
+# Subtest: hyena every native clip keeps full foot skin above two slope planes
+ok 6 - hyena every native clip keeps full foot skin above two slope planes
+  ---
+  duration_ms: 132.862
+  ...
+# {"species":"hyena","clips":6,"poses":156,"footVertices":552,"worst":0.005697057606913393,"where":"Charged_Upward_Slash frame4 slope1"}
+# Subtest: lion every native clip keeps full foot skin above two slope planes
+ok 7 - lion every native clip keeps full foot skin above two slope planes
+  ---
+  duration_ms: 190.539
+  ...
+# {"species":"lion","clips":6,"poses":156,"footVertices":1304,"worst":0.007019735437514774,"where":"Charged_Upward_Slash frame2 slope-1"}
+# Subtest: warthog every native clip keeps full foot skin above two slope planes
+ok 8 - warthog every native clip keeps full foot skin above two slope planes
+  ---
+  duration_ms: 168.3518
+  ...
+# {"species":"warthog","clips":7,"poses":182,"footVertices":433,"worst":0.002227713697017422,"where":"Walking frame5 slope-1"}
+# Subtest: buffalo every native clip keeps full foot skin above two slope planes
+ok 9 - buffalo every native clip keeps full foot skin above two slope planes
+  ---
+  duration_ms: 376.3647
+  ...
+# {"species":"buffalo","clips":6,"poses":156,"footVertices":4539,"worst":0.006123664408841278,"where":"Running frame10 slope1"}
+# Subtest: rhino every native clip keeps full foot skin above two slope planes
+ok 10 - rhino every native clip keeps full foot skin above two slope planes
+  ---
+  duration_ms: 460.6324
+  ...
+# {"species":"rhino","clips":6,"poses":156,"footVertices":6326,"worst":0.0037160892676876556,"where":"Weapon_Combo_2 frame7 slope1"}
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2311.5302

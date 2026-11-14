@@ -1,0 +1,9 @@
+import {isPreparedFrameInvalidation} from '../rendering/webgpu-frame-recovery.js';
+// One initial attempt and at most one explicitly retryable reattachment. The replacement is never exposed until
+// recovery has succeeded; ownership is checked again after every await.
+export function createWebGpuAutoRecovery({isCurrent,markLost,recover,onBegin=()=>{},onError=()=>{},historicalRecovery=false}){
+ if([isCurrent,markLost,recover,onBegin,onError].some(fn=>typeof fn!=='function')||typeof historicalRecovery!=='boolean')throw TypeError('Invalid visual recovery coordinator');
+ let pending=null,closed=false,detached=false,blocked=false,stage='idle';
+ function begin(mark){onBegin();pending=Promise.resolve().then(async()=>{try{if(closed||!isCurrent())return;if(mark)try{stage='mark-lost';await markLost();}catch(error){if(!detached){const failure=Error(String(error?.message??error),{cause:error});failure.code='visual-recovery-indeterminate';throw failure;}}if(!closed&&isCurrent()){try{stage='recover';await recover();}catch(error){if(!error?.retryable||closed||!isCurrent())throw error;stage='retry';await recover();}}}catch(failure){if(failure?.code==='visual-recovery-indeterminate')blocked=true;if(!closed&&isCurrent())onError(failure);}finally{pending=null;detached=false;stage='idle';}});return true;}
+ return {trigger(error){if(closed||blocked||!isCurrent()||!(String(error?.message??error).includes('WebGPU device lost:')||historicalRecovery&&(isPreparedFrameInvalidation(error)||error?.code==='historical-terrain-detached')))return false;return pending?true:begin(true);},triggerDetached(){if(closed||blocked||!isCurrent())return false;detached=true;return pending?true:begin(false);},status(){return {closed,blocked,recovering:!!pending,stage,current:!closed&&isCurrent()};},dispose(){closed=true;}};
+}

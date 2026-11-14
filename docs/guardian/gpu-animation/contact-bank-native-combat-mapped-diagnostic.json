@@ -1,0 +1,438 @@
+{
+  "scope": "Instrumented native combat cycle with two staged beasts: candidate support is calculated in shadow, then the original support is always applied. Eligibility excludes non-Walking clips and active impact reaction; no candidate is integrated. Candidate and reference both run, so timing and FPS are not performance comparisons. Does not validate other biomes, visual differences, falling/recovery, all pose modifications or future integration.",
+  "setup": {
+    "authority": "spatial-wasm",
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+  },
+  "intercepted": 1,
+  "frames": 343,
+  "quality": {
+    "hiddenFrames": 0,
+    "rejectedPhysics": 0,
+    "reportedErrors": []
+  },
+  "outcome": [
+    {
+      "id": "qa-beast-0",
+      "status": "entering",
+      "health": 84,
+      "x": 39.93011092637286,
+      "z": 71,
+      "down": false
+    },
+    {
+      "id": "qa-beast-1",
+      "status": "walking",
+      "health": 84,
+      "x": 87,
+      "z": -7.890382483291682,
+      "down": false
+    }
+  ],
+  "audit": {
+    "eligible": 189,
+    "fallback": {
+      "other-clip": 125
+    },
+    "bySpecies": {
+      "lion": {
+        "count": 189,
+        "maxError": 0.023849567596912813,
+        "sumError": 0.14592217714301103,
+        "statuses": {
+          "walking": 182,
+          "waiting": 7
+        },
+        "maxPhaseMismatch": 0,
+        "worst": {
+          "phase": 0.05829829483866744,
+          "actionTime": 0.05829829483866744,
+          "original": 0.03148846095334701,
+          "candidate": 0.007638893356434195,
+          "status": "walking",
+          "x": 89.02840787017979,
+          "z": -0.08346294437077509,
+          "heading": -0.32806570354300457,
+          "bankContactIds": [
+            {
+              "mesh": "Mesh_0_1",
+              "index": 4362
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 10231
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 9201
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 15650
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 6978
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 18606
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 12462
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 18311
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 5392
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 6067
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 8037
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 18337
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 5386
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 4707
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 11413
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 11405
+            }
+          ],
+          "rootMatrix": [
+            0.9466673686098346,
+            0,
+            0.32221249697882853,
+            0,
+            0,
+            1,
+            0,
+            0,
+            -0.32221249697882853,
+            0,
+            0.9466673686098346,
+            0,
+            89.02840787017979,
+            6.691803932189941,
+            -0.08346294437077509,
+            1
+          ],
+          "localPosition": [
+            1.4210854715202004e-14,
+            0.053682234602084655,
+            3.552713678800501e-15
+          ],
+          "localScale": [
+            1,
+            1,
+            1
+          ],
+          "localQuaternion": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "contactComparisons": [
+            {
+              "mesh": "Mesh_0_1",
+              "index": 4362,
+              "actual": [
+                88.81730599991245,
+                6.71686867424479,
+                0.05635997323551353
+              ],
+              "predicted": [
+                88.76201836104443,
+                6.715344638777132,
+                0.0016423443071826582
+              ],
+              "distance": 0.07780144350361468,
+              "actualTerrain": 6.68491792678833,
+              "predictedTerrain": 6.683832168579102
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 10231,
+              "actual": [
+                88.77588091185609,
+                6.716177554269247,
+                0.18738092649776159
+              ],
+              "predicted": [
+                88.68601811969799,
+                6.715344488122162,
+                0.11612800965950384
+              ],
+              "distance": 0.11468650126154843,
+              "actualTerrain": 6.6841044425964355,
+              "predictedTerrain": 6.682340145111084
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 9201,
+              "actual": [
+                88.78038628133312,
+                6.716121765324441,
+                0.20010041635992434
+              ],
+              "predicted": [
+                88.6868353293689,
+                6.715344482534227,
+                0.1295971934777743
+              ],
+              "distance": 0.11714558983895869,
+              "actualTerrain": 6.684193134307861,
+              "predictedTerrain": 6.682355880737305
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 15650,
+              "actual": [
+                88.87368572494593,
+                6.741548131127611,
+                0.016969547247248612
+              ],
+              "predicted": [
+                88.82714827253992,
+                6.739757865236949,
+                -0.020750588205602993
+              ],
+              "distance": 0.05993119510724562,
+              "actualTerrain": 6.686025142669678,
+              "predictedTerrain": 6.685110569000244
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 6978,
+              "actual": [
+                88.90110005407732,
+                6.716053691093636,
+                0.24707912734661966
+              ],
+              "predicted": [
+                88.78987931041475,
+                6.71534457867354,
+                0.20808763492620783
+              ],
+              "distance": 0.11785963321871779,
+              "actualTerrain": 6.686559677124023,
+              "predictedTerrain": 6.684379577636719
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 18606,
+              "actual": [
+                88.97930595942394,
+                6.738024439670668,
+                0.08288124386286042
+              ],
+              "predicted": [
+                88.91044796963676,
+                6.7364142987164035,
+                0.07178253593719985
+              ],
+              "distance": 0.06976529673872661,
+              "actualTerrain": 6.6880974769592285,
+              "predictedTerrain": 6.686746597290039
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 12462,
+              "actual": [
+                88.98365562315601,
+                6.716727650311396,
+                0.13082243779311298
+              ],
+              "predicted": [
+                88.90133265700233,
+                6.715344764164999,
+                0.1191514765830329
+              ],
+              "distance": 0.0831576482712294,
+              "actualTerrain": 6.6881818771362305,
+              "predictedTerrain": 6.686567306518555
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 18311,
+              "actual": [
+                88.9702996804644,
+                6.716174412761369,
+                0.24111133752778172
+              ],
+              "predicted": [
+                88.85803581615431,
+                6.715344661385036,
+                0.22146328250104955
+              ],
+              "distance": 0.11397328539404339,
+              "actualTerrain": 6.687917232513428,
+              "predictedTerrain": 6.685715675354004
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 5392,
+              "actual": [
+                89.12789642026388,
+                6.727507710410652,
+                0.10556696175935115
+              ],
+              "predicted": [
+                89.02386948107326,
+                6.736718917070746,
+                0.23185764235314568
+              ],
+              "distance": 0.1638773517309433,
+              "actualTerrain": 6.7033843994140625,
+              "predictedTerrain": 6.691277503967285
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 6067,
+              "actual": [
+                89.12885029815246,
+                6.704880214992249,
+                0.15692358806321696
+              ],
+              "predicted": [
+                89.01145683566195,
+                6.7143368284197384,
+                0.281809259664082
+              ],
+              "distance": 0.17165979012053817,
+              "actualTerrain": 6.703494071960449,
+              "predictedTerrain": 6.6898322105407715
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 8037,
+              "actual": [
+                89.1535395293251,
+                6.7045091580166325,
+                0.2614845707380584
+              ],
+              "predicted": [
+                89.00847630743088,
+                6.714335035297785,
+                0.3892003344600775
+              ],
+              "distance": 0.1935231317279004,
+              "actualTerrain": 6.706364154815674,
+              "predictedTerrain": 6.689482688903809
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 18337,
+              "actual": [
+                89.22604992082266,
+                6.7356053622947165,
+                0.029325542703481727
+              ],
+              "predicted": [
+                89.13835199750464,
+                6.743887870202808,
+                0.18334476514204265
+              ],
+              "distance": 0.1774301174325246,
+              "actualTerrain": 6.71480655670166,
+              "predictedTerrain": 6.704598903656006
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 5386,
+              "actual": [
+                89.20412649686368,
+                6.705683614460368,
+                0.07900135325098281
+              ],
+              "predicted": [
+                89.10421233714706,
+                6.714333382321607,
+                0.2258229909691161
+              ],
+              "distance": 0.1778039681732837,
+              "actualTerrain": 6.712254047393799,
+              "predictedTerrain": 6.700625419616699
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 4707,
+              "actual": [
+                89.28114003197324,
+                6.706198021669744,
+                0.06234162036511967
+              ],
+              "predicted": [
+                89.18292018873069,
+                6.714329535179789,
+                0.22949029245966115
+              ],
+              "distance": 0.19404107220256994,
+              "actualTerrain": 6.721215724945068,
+              "predictedTerrain": 6.709783554077148
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 11413,
+              "actual": [
+                89.33405255687705,
+                6.705880847518334,
+                0.1884042015044696
+              ],
+              "predicted": [
+                89.20169688240593,
+                6.714326190719493,
+                0.36490623933682265
+              ],
+              "distance": 0.22077662409201304,
+              "actualTerrain": 6.72736930847168,
+              "predictedTerrain": 6.711965084075928
+            },
+            {
+              "mesh": "Mesh_0_1",
+              "index": 11405,
+              "actual": [
+                89.33103861182923,
+                6.705806387178663,
+                0.20019649707238554
+              ],
+              "predicted": [
+                89.19575681437975,
+                6.714326284779157,
+                0.37552935673521004
+              ],
+              "distance": 0.2216198661082275,
+              "actualTerrain": 6.727018356323242,
+              "predictedTerrain": 6.711273193359375
+            }
+          ]
+        },
+        "p95": 0.00321215708004452,
+        "p99": 0.020498254049103437
+      }
+    }
+  },
+  "errors": [],
+  "fixtureErrors": []
+}

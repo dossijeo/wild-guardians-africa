@@ -1,0 +1,62 @@
+{
+  "sequence": 14,
+  "newCenter": {
+    "kind": "center",
+    "x": 87,
+    "z": -44,
+    "yaw": 0
+  },
+  "gate": {
+    "kind": "wall",
+    "material": "zarzas",
+    "gate": true,
+    "x": 31,
+    "z": -60,
+    "yaw": 0
+  },
+  "centerEvent": {
+    "id": "event-15632",
+    "type": "PlacementCommitted",
+    "kind": "center",
+    "targetId": "structure-7760",
+    "presentation": {
+      "x": 87.4407041718994,
+      "z": -43.5592958281006
+    }
+  },
+  "gateEvent": {
+    "id": "event-15634",
+    "type": "PlacementCommitted",
+    "kind": "wall",
+    "targetId": "structure-7761",
+    "presentation": {
+      "x": 31,
+      "z": -60
+    }
+  },
+  "duplicate": false,
+  "invalid": "La construcción solapa otro edificio",
+  "incompleteResidency": {
+    "outcome": "loaded",
+    "chunks": [
+      "2,-1",
+      "0,-2",
+      "1,-2",
+      "2,-2",
+      "3,-2",
+      "0,-1",
+      "1,-1",
+      "3,-1",
+      "0,0",
+      "1,0",
+      "2,0",
+      "3,0",
+      "0,1",
+      "1,1",
+      "2,1",
+      "3,1"
+    ]
+  },
+  "subsequentAdvances": 10,
+  "scope": "Programmatic center and individual gate placement in a modified peaceful island-mangrove capture compared with direct Game functions. The empty-residency Worker completes the same center placement. No player UI, active raid, save/restore or production integration."
+}

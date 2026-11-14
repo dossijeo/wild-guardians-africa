@@ -7,6 +7,24 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {geometryOnly} from '../tools/calibrate_footsteps.mjs';
 import {LoadingTransferOwner} from '../src/app/loading-transfer-owner.js';
 const counts=resources=>{const result=new Map();for(const r of resources){result.set(r,0);r.addEventListener('dispose',()=>result.set(r,result.get(r)+1));}return result;};
+test('experimental compressed atlas matches absolute URLs and retains normal texture ownership',async()=>{
+ const assets=new Assets(),compressed=new THREE.CompressedTexture([{data:new Uint8Array(16),width:4,height:4}],4,4),original=new THREE.Texture();let compressedLoads=0,ordinaryLoads=0,loaderDisposed=0;
+ assets.experimentalKtx={renderer:{},variant:'etc1s'};assets.experimentalKtxTexture=async()=>{compressedLoads++;return compressed;};assets.experimentalKtxLoader={dispose:()=>loaderDisposed++};assets.textures={loadAsync:async()=>{ordinaryLoads++;return original;}};
+ const url='http://localhost/assets/images/01e1c811b957b401a88c30717e4c0cb02f5364d925de5bba40e701718dac83a7.webp',watched=counts([compressed,original]);
+ assert.equal(await assets.texture(url,true),compressed);assert.equal(await assets.texture(url,true),compressed);assert.equal(await assets.texture('http://localhost/other.webp',true),original);assert.equal(compressedLoads,1);assert.equal(ordinaryLoads,1);assert.equal(compressed.colorSpace,THREE.SRGBColorSpace);assets.disposeModels();assets.disposeModels();assert.deepEqual([...watched.values()],[1,1]);assert.equal(loaderDisposed,1);
+});
+test('experimental near-tree texture matches relative URLs and remains cloneable for its second UV channel',async()=>{
+ const assets=new Assets(),texture=new THREE.CompressedTexture([{data:new Uint8Array(16),width:4,height:4}],4,4);assets.experimentalKtx={renderer:{},variant:'etc1s',asset:'tree01'};assets.experimentalKtxTexture=async()=>texture;
+ const loaded=await assets.texture('content/trees-near/savanna/tree_01/baseColor.webp',true),copy=loaded.clone();copy.channel=1;assert.equal(copy.isCompressedTexture,true);assert.equal(copy.source,texture.source);assert.equal(copy.channel,1);assert.equal(copy.colorSpace,THREE.SRGBColorSpace);copy.dispose();assets.disposeModels();
+});
+test('native BC7 falls back to the original texture when the GPU lacks BPTC support',async()=>{
+ const assets=new Assets(),original=new THREE.Texture();let compressedLoads=0,ordinaryLoads=0;assets.experimentalKtx={renderer:{getContext:()=>({getExtension:()=>null})},variant:'bc7',asset:'tree01'};assets.experimentalKtxTexture=async()=>{compressedLoads++;throw Error('BC7 should not be requested');};assets.textures={loadAsync:async()=>{ordinaryLoads++;return original;}};
+ assert.equal(await assets.texture('content/trees-near/savanna/tree_01/baseColor.webp',true),original);assert.equal(compressedLoads,0);assert.equal(ordinaryLoads,1);assets.disposeModels();
+});
+test('native BC7 model selection uses the original when BPTC is unavailable',async()=>{
+ const assets=new Assets(),urls=[];assets.experimentalNativeModel={renderer:{getContext:()=>({getExtension:()=>null})}};assets.loader={loadAsync:async url=>{urls.push(url);return {scene:new THREE.Group()};}};assets.prepareNativeModelLoader=()=>{throw Error('Native loader should not run');};
+ await assets.model('/content/character-lod/hyena.glb');assert.deepEqual(urls,['/content/character-lod/hyena.glb']);assets.disposeModels();
+});
 test('pending shared GLTF promises are not cache hits and a completed model is',async()=>{
  const owner=new LoadingTransferOwner(),assets=new Assets();let finish;assets.loader={loadAsync:()=>new Promise(resolve=>finish=resolve)};
  const first=assets.model('/same.glb'),second=assets.model('/same.glb');assert.equal(owner.downloads.snapshot().pending,1);assert.equal(owner.downloads.snapshot().cacheHits,0);

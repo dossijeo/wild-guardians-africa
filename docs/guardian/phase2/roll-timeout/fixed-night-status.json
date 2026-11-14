@@ -1,0 +1,396 @@
+{
+  "ready": true,
+  "campaign": false,
+  "paused": false,
+  "lastPick": null,
+  "workerCandidate": null,
+  "workerGround": null,
+  "workers": [
+    {
+      "id": "worker-28",
+      "profile": "olderMale",
+      "x": 60,
+      "z": 0,
+      "status": "home",
+      "hits": 0
+    }
+  ],
+  "faceCandidate": false,
+  "faceCandidateSpecies": null,
+  "expressions": [
+    {
+      "id": "qa-beast-6",
+      "weights": [
+        0,
+        0,
+        2.6740808830919693e-156
+      ],
+      "bindings": 11
+    }
+  ],
+  "entityCounts": {
+    "workers": 1,
+    "structures": 1,
+    "crops": 12,
+    "animals": 1
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 0,
+  "maxVisibleGuardians": 1,
+  "slopeSite": null,
+  "guideTrial": false,
+  "guideOrigin": null,
+  "guidePosition": null,
+  "elapsed": 3053.893685000071,
+  "simulate": false,
+  "clockMode": "presentation-only",
+  "shields": [],
+  "active": 0,
+  "origins": [],
+  "retainedAttacks": [],
+  "retainedDraws": 0,
+  "attackVisual": [],
+  "reused": 1,
+  "health": 0,
+  "animalState": "retreating",
+  "animalPosition": [
+    93.64353431095181,
+    -3
+  ],
+  "draws": 54,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "hyena_aggressive",
+      "at": 3024.5397400000656,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": true
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3025.3879250000664,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3025.5708100000666,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3025.6706400000667,
+      "emitter": "qa-beast-0",
+      "phase": "falling",
+      "played": true
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3025.6706400000667,
+      "emitter": "impact:qa-beast-0",
+      "played": true
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3026.9008000000663,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3028.380645000065,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3028.4305000000654,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3029.910575000066,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3031.357410000066,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3031.524010000066,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "rhino_hurt",
+      "at": 3031.6072900000663,
+      "emitter": "qa-beast-3",
+      "phase": "falling",
+      "played": true
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3031.6072900000663,
+      "emitter": "impact:qa-beast-3",
+      "played": true
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3032.887845000067,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3034.3510500000675,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3034.5173850000674,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "rhino_hurt",
+      "at": 3034.6005000000678,
+      "emitter": "qa-beast-3",
+      "phase": "falling",
+      "played": true
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3034.6005000000678,
+      "emitter": "impact:qa-beast-3",
+      "played": true
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3035.8971150000666,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3037.293900000067,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3037.443550000067,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3037.576330000067,
+      "emitter": "qa-beast-6",
+      "phase": "falling",
+      "played": true
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3037.576330000067,
+      "emitter": "impact:qa-beast-6",
+      "played": true
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3038.2913000000685,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3038.4578200000688,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3038.541070000069,
+      "emitter": "qa-beast-6",
+      "phase": "falling",
+      "played": true
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3038.541070000069,
+      "emitter": "impact:qa-beast-6",
+      "played": true
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3039.820540000069,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "hyena_retreat",
+      "at": 3047.027850000071,
+      "emitter": "qa-beast-6",
+      "phase": "retreating",
+      "played": true
+    }
+  ],
+  "combatPhysics": {
+    "active": 0,
+    "physicsMs": 0.039999961853027344,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 6.829999923706055,
+    "maxStepMs": 33.66500008106232,
+    "solverMs": 0,
+    "solverSteps": 0,
+    "bindingMs": 0,
+    "recoverySetupMs": 0,
+    "creationMs": 0,
+    "lastCreation": {
+      "species": "hyena",
+      "captureMs": 0.36000001430511475,
+      "colliderFitMs": 2.1999999284744263,
+      "environmentMs": 2.6100000143051147,
+      "bodiesMs": 1.6150000095367432
+    },
+    "recoveryFollowMs": 0,
+    "bakedActive": 0,
+    "kinematic": 0,
+    "rollFailures": 0,
+    "lastRoll": {
+      "seconds": 1.0500000000000012,
+      "contactDelay": 0,
+      "error": 0.37770770054477676,
+      "speed": 0.3423868275684004,
+      "timedOut": false
+    }
+  },
+  "physicsWorlds": 0,
+  "physicalBodies": 0,
+  "allDown": [
+    {
+      "id": "qa-beast-6",
+      "x": 93.64353431095181,
+      "z": -3
+    }
+  ],
+  "errors": [],
+  "report": null,
+  "commandCosts": [
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 88.78507409932213,
+        "z": -6.520682528861945
+      },
+      "origin": {
+        "x": 89.29006265385631,
+        "y": 14.289144734997972,
+        "z": -3.563490184798158
+      },
+      "plan": 2.4399999380111694,
+      "logic": 0.8350000381469727,
+      "render": 9.965000033378601,
+      "total": 13.240000009536743
+    },
+    {
+      "kind": "shield",
+      "targetId": null,
+      "position": {
+        "x": 82.5,
+        "z": -6
+      },
+      "origin": {
+        "x": 86.51992649842238,
+        "y": 14.235480448781068,
+        "z": -5.1936558133888635
+      },
+      "plan": 1.1899999380111694,
+      "logic": 0.42500007152557373,
+      "render": 10.47000002861023,
+      "total": 12.085000038146973
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-3",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 86.95850566645721,
+        "y": 14.235480448781068,
+        "z": -8.017873192008633
+      },
+      "plan": 1.0749999284744263,
+      "logic": 0.12999999523162842,
+      "render": 6.180000066757202,
+      "total": 7.384999990463257
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-3",
+      "position": {
+        "x": 89.73618507728412,
+        "z": -6.967972113850068
+      },
+      "origin": {
+        "x": 89.74800632569622,
+        "y": 14.356941203069072,
+        "z": -3.3179912566282135
+      },
+      "plan": 1.25,
+      "logic": 0.10000002384185791,
+      "render": 11.795000076293945,
+      "total": 13.145000100135803
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 88.60130757756838,
+        "y": 14.240190357348396,
+        "z": -8.653989357068403
+      },
+      "plan": 0.9450000524520874,
+      "logic": 0.0849999189376831,
+      "render": 8.110000014305115,
+      "total": 9.139999985694885
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90.71010703945046,
+        "z": -4.881643332344639
+      },
+      "origin": {
+        "x": 88.90722652262507,
+        "y": 14.244083485174661,
+        "z": -7.279480241321437
+      },
+      "plan": 0.9449999332427979,
+      "logic": 0.24000000953674316,
+      "render": 7.634999990463257,
+      "total": 8.819999933242798
+    }
+  ]
+}

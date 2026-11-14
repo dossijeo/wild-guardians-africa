@@ -1,0 +1,112 @@
+TAP version 13
+# Subtest: audio-clock sampling is normalized and continuous across cues, seeks and low FPS
+ok 1 - audio-clock sampling is normalized and continuous across cues, seeks and low FPS
+  ---
+  duration_ms: 51.4115
+  ...
+# Subtest: short, repeated and missing cues remain finite
+ok 2 - short, repeated and missing cues remain finite
+  ---
+  duration_ms: 0.8701
+  ...
+# Subtest: a late language response cannot animate the newer recording; pausing preserves the pose
+ok 3 - a late language response cannot animate the newer recording; pausing preserves the pose
+  ---
+  duration_ms: 2.2963
+  ...
+# Subtest: all 54 real recordings have bounded Rhubarb cues and matching source identities
+ok 4 - all 54 real recordings have bounded Rhubarb cues and matching source identities
+  ---
+  duration_ms: 290.9498
+  ...
+# Subtest: blink closes fully and returns to rest
+ok 5 - blink closes fully and returns to rest
+  ---
+  duration_ms: 1.0846
+  ...
+# Subtest: shipping rig is floating, bounded, and has all facial controls
+ok 6 - shipping rig is floating, bounded, and has all facial controls
+  ---
+  duration_ms: 3.2776
+  ...
+# Subtest: cloth and body clips have disjoint properties and eyes are free for gaze
+ok 7 - cloth and body clips have disjoint properties and eyes are free for gaze
+  ---
+  duration_ms: 1.0588
+  ...
+# Subtest: closeAfter cannot retire loading or playing voice on a caption timer; real ended closes once
+ok 8 - closeAfter cannot retire loading or playing voice on a caption timer; real ended closes once
+  ---
+  duration_ms: 9.8029
+  ...
+# Subtest: a superseded ended callback cannot close the next presentation
+ok 9 - a superseded ended callback cannot close the next presentation
+  ---
+  duration_ms: 1.8227
+  ...
+# Subtest: closeAfter retains timed fallback when media is unavailable or no voice exists
+ok 10 - closeAfter retains timed fallback when media is unavailable or no voice exists
+  ---
+  duration_ms: 5.0064
+  ...
+# (node:28020) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: 54 original Opus stereo clips match registered bytes, hashes and both current text catalogs
+ok 11 - 54 original Opus stereo clips match registered bytes, hashes and both current text catalogs
+  ---
+  duration_ms: 51.782
+  ...
+# Subtest: muted narration skips loading, and muting active audio switches to identified text fallback
+ok 12 - muted narration skips loading, and muting active audio switches to identified text fallback
+  ---
+  duration_ms: 2.4257
+  ...
+# Subtest: replacement stops/releases old media immediately and ignores stale ended and play promises
+ok 13 - replacement stops/releases old media immediately and ignores stale ended and play promises
+  ---
+  duration_ms: 0.5918
+  ...
+# Subtest: blocked autoplay, load error, hung loading and stalled playback fall back without advancing
+ok 14 - blocked autoplay, load error, hung loading and stalled playback fall back without advancing
+  ---
+  duration_ms: 88.8346
+  ...
+# Subtest: actual ended preserves uncompleted center and planting actions, their hands and signaled pause
+ok 15 - actual ended preserves uncompleted center and planting actions, their hands and signaled pause
+  ---
+  duration_ms: 14.0808
+  ...
+# Subtest: a delayed play resolution cannot cancel recovery after media starts waiting
+ok 16 - a delayed play resolution cannot cancel recovery after media starts waiting
+  ---
+  duration_ms: 27.7246
+  ...
+# Subtest: playing after waiting cancels recovery and advances only on actual ended
+ok 17 - playing after waiting cancels recovery and advances only on actual ended
+  ---
+  duration_ms: 26.6692
+  ...
+# Subtest: a stalled download cannot cut buffered narration or advance its tutorial caption
+ok 18 - a stalled download cannot cut buffered narration or advance its tutorial caption
+  ---
+  duration_ms: 23.9766
+  ...
+# Subtest: buffered download stalls do not disable real waiting recovery
+ok 19 - buffered download stalls do not disable real waiting recovery
+  ---
+  duration_ms: 23.442
+  ...
+# Subtest: ignoring a buffered download stall does not cancel a hung initial play watchdog
+ok 20 - ignoring a buffered download stall does not cancel a hung initial play watchdog
+  ---
+  duration_ms: 33.9648
+  ...
+1..20
+# tests 20
+# suites 0
+# pass 20
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1405.358

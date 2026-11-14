@@ -1,0 +1,132 @@
+import {deserializeConfirmedState} from './confirmed-live-state.js';
+import {notifyConfirmedPresentationEvent} from './game-event-observers.js';
+import {physicsOwners} from './host-publication-queue.js';
+import {validateSnapshot} from '../persistence/snapshots.js';
+import {confirmedSnapshotFor} from './confirmed-snapshot-handoff.js';
+import {validateConfirmedClockSegments} from './confirmed-clock-segments.js';
+import {decodeHistoricalEventBoundaries,groupHistoricalEventBoundaries} from './historical-event-boundaries.js';
+
+function isRecord(value){return value!==null&&typeof value==='object'&&!Array.isArray(value);}
+// Freeze owned publication data without invoking the transport's lazy snapshot
+// getter. Historical decoded states remain private to the transaction.
+function freezeOwned(value,seen=new WeakSet(),allowSnapshotGetter=false){
+ if(!value||typeof value!=='object'||seen.has(value))return value;
+ seen.add(value);for(const [key,descriptor] of Object.entries(Object.getOwnPropertyDescriptors(value))){if('value' in descriptor)freezeOwned(descriptor.value,seen);else if(!allowSnapshotGetter||key!=='snapshot')throw TypeError('Historical owned data contains an accessor');}
+ return Object.freeze(value);
+}
+function keyed(array){return array.length>0&&array.every(item=>isRecord(item)&&typeof item.id==='string')&&new Set(array.map(item=>item.id)).size===array.length;}
+// Preserve existing object identities so scene owners and UI selections can
+// continue to refer to actors while their confirmed data is reconciled.
+function reconcile(target,source,copy=false){
+ if(Array.isArray(target)&&Array.isArray(source)){
+  const byId=keyed(target)&&keyed(source)?new Map(target.map(item=>[item.id,item])):null;
+  const values=source.map((value,index)=>merge(byId?byId.get(value.id):target[index],value,copy));target.length=values.length;for(let i=0;i<values.length;i++)target[i]=values[i];return target;
+ }
+ for(const key of Object.keys(target))if(!Object.hasOwn(source,key))delete target[key];
+ for(const [key,value] of Object.entries(source))target[key]=merge(target[key],value,copy);
+ return target;
+}
+function merge(target,source,copy=false){if(Array.isArray(source))return Array.isArray(target)?reconcile(target,source,copy):copy?structuredClone(source):source;if(isRecord(source))return isRecord(target)?reconcile(target,source,copy):copy?structuredClone(source):source;return source;}
+function mergeTracked(target,source,mark,copy=false){
+ if(Array.isArray(source)&&Array.isArray(target)){
+  const byId=keyed(target)&&keyed(source)?new Map(target.map(item=>[item.id,item])):null,values=source.map((value,index)=>mergeTracked(byId?byId.get(value.id):target[index],value,mark,copy));
+  if(target.length!==values.length)mark();for(let i=0;i<values.length;i++)if(!Object.is(target[i],values[i]))mark();target.length=values.length;for(let i=0;i<values.length;i++)target[i]=values[i];return target;
+ }
+ if(isRecord(source)&&isRecord(target)){
+  for(const key of Object.keys(target))if(!Object.hasOwn(source,key)){delete target[key];mark();}
+  for(const [key,value] of Object.entries(source)){const exists=Object.hasOwn(target,key),before=target[key],next=mergeTracked(before,value,mark,copy);if(!exists||!Object.is(before,next))mark();target[key]=next;}return target;
+ }
+ return copy&&(Array.isArray(source)||isRecord(source))?structuredClone(source):source;
+}
+function reconcileChangedKeys(target,source,tracked,copy=false){
+ const changed=new Set();for(const key of Object.keys(target))if(!Object.hasOwn(source,key)){delete target[key];if(!tracked||tracked.has(key))changed.add(key);}
+ for(const [key,value] of Object.entries(source)){const watched=!tracked||tracked.has(key),exists=watched?Object.hasOwn(target,key):true,before=target[key],next=watched?mergeTracked(before,value,()=>changed.add(key),copy):merge(before,value,copy);if(watched&&(!exists||!Object.is(before,next)))changed.add(key);target[key]=next;}return changed;
+}
+
+// The caller supplies a state dedicated to presentation, not the authority.
+// On observer failure the bridge becomes unusable: partial effects cannot be
+// rolled back safely and must not be replayed as if they had been confirmed.
+export function createConfirmedStateReceiver(state,session,{onReconciled=null,decodeSnapshot=deserializeConfirmedState,initialSequence=0,trackChangedKeys=false}={}){
+ if(!state||typeof state!=='object'||typeof session!=='string'||!session||!Number.isSafeInteger(state.sequence)||state.sequence<1)throw TypeError('Invalid presentation receiver');
+ if(!Number.isSafeInteger(initialSequence)||initialSequence<0||onReconciled!==null&&typeof onReconciled!=='function'||typeof decodeSnapshot!=='function'||trackChangedKeys!==true&&trackChangedKeys!==false&&(!Array.isArray(trackChangedKeys)||trackChangedKeys.some(key=>typeof key!=='string'||!key)||new Set(trackChangedKeys).size!==trackChangedKeys.length))throw TypeError('Invalid reconciliation callback or decoder');
+ const tracked=Array.isArray(trackChangedKeys)?new Set(trackChangedKeys):null;
+ let sequence=initialSequence,lastElapsed=state.elapsed,lastEvent=state.sequence-1,fault=false,pending=null;
+ function prepareUnchanged(message,{firstSequence=message?.sequence}={}){
+   if(pending)throw Error('Confirmed publication already prepared');
+   if(fault)return {accepted:false,reason:'fault'};
+   if(message?.session!==session)return {accepted:false,reason:'session'};
+   if(!Number.isSafeInteger(message.sequence)||message.sequence<1)return {accepted:false,reason:'sequence'};
+   if(message.sequence<=sequence)return {accepted:false,reason:'stale'};
+   if(!Number.isSafeInteger(firstSequence)||firstSequence!==sequence+1||firstSequence>message.sequence)return {accepted:false,reason:'gap'};
+   if(!sequence||message.unchanged!==true||message.slotId!==state.slotId||message.stateSequence!==state.sequence||message.elapsed!==lastElapsed||state.elapsed!==lastElapsed||!Array.isArray(message.events)||message.events.length||message.presentationJournal?.length||!Array.isArray(message.pauses)||JSON.stringify(message.pauses)!==JSON.stringify(state.pauses)||typeof message.saveAvailable!=='boolean'||Object.hasOwn(message,'snapshot')||Object.hasOwn(message,'physicsPose')||Object.hasOwn(message,'physicsPoses')||Object.hasOwn(message,'worldMotionTrace')||Object.hasOwn(message,'presentationPaths')||Object.hasOwn(message,'clockSegments'))throw TypeError('Invalid unchanged publication');
+   const token=Object.freeze({});pending={token,unchanged:true,sequence:message.sequence};return {accepted:true,token,elapsed:lastElapsed};
+ }
+ function prepare(message,{firstSequence=message?.sequence}={}){
+   if(pending)throw Error('Confirmed publication already prepared');
+   if(fault)return {accepted:false,reason:'fault'};
+   if(message?.session!==session)return {accepted:false,reason:'session'};
+   if(!Number.isSafeInteger(message.sequence)||message.sequence<1)return {accepted:false,reason:'sequence'};
+   if(message.sequence<=sequence)return {accepted:false,reason:'stale'};
+   if(!Number.isSafeInteger(firstSequence)||firstSequence!==sequence+1||firstSequence>message.sequence)return {accepted:false,reason:'gap'};
+   if(firstSequence!==message.sequence&&(!Array.isArray(message.events)||physicsOwners(message)===null))throw TypeError('Invalid coalesced publication');
+   const handed=confirmedSnapshotFor(message);if(handed===undefined&&typeof message.snapshot!=='string'||!Array.isArray(message.events))throw TypeError('Invalid confirmed state');
+   if(message.presentationPaths!==undefined&&(message.presentationPaths!=='head-v1'||message.terrainCheckpoint||message.motionTrace||message.motionInvalidation))throw TypeError('Invalid presentation path projection');
+   if(message.presentationJournalVersion!==undefined&&message.presentationJournalVersion!==2)throw TypeError('Invalid presentation lifecycle version');
+   if(message.presentationJournalVersion===2&&!Array.isArray(message.presentationJournal))throw TypeError('Missing presentation lifecycle journal');
+   if(message.presentationJournal!==undefined){
+    if(!Array.isArray(message.presentationJournal))throw TypeError('Invalid presentation lifecycle journal');
+    const ids=new Map(message.events.map((event,index)=>[event?.id,index])),relevant=new Set(message.events.filter(event=>message.presentationJournalVersion===2||['SpellActivated','CropPicked','CropDestroyed','RaidEnded'].includes(event.type)).map(event=>event.id)),gone=new Set();let last=-1;
+    for(const fact of message.presentationJournal){if(!fact||typeof fact!=='object')throw TypeError('Invalid presentation lifecycle fact');if(fact.kind==='event'){const index=ids.get(fact.eventId);if(index===undefined||index<=last||!relevant.delete(fact.eventId))throw TypeError('Invalid presentation lifecycle event order');last=index;}else if(fact.kind!=='animalGone'||typeof fact.actorId!=='string'||!fact.actorId||gone.has(fact.actorId))throw TypeError('Invalid presentation lifecycle fact');else gone.add(fact.actorId);}
+    if(relevant.size)throw TypeError('Incomplete presentation lifecycle journal');
+   }
+   const next=handed===undefined?decodeSnapshot(message.snapshot):handed;if(handed!==undefined)validateSnapshot(next,{livePhysics:true});if(Object.hasOwn(message,'elapsed')&&(!Number.isFinite(message.elapsed)||message.elapsed!==next.elapsed))throw TypeError('Confirmed publication time does not match snapshot');if(next.elapsed<lastElapsed)throw Error('Confirmed simulation time moved backwards');if(next.slotId!==state.slotId||!Number.isSafeInteger(next.sequence)||next.sequence<state.sequence)throw Error('Confirmed simulation identity or sequence changed');if(message.clockSegments!==undefined)validateConfirmedClockSegments(message.clockSegments,{start:lastElapsed,end:next.elapsed,startPauses:state.pauses,endPauses:next.pauses});
+   if(message.presentationJournalVersion===2||message.presentationJournal?.some(fact=>Object.hasOwn(fact,'at'))){let at=lastElapsed;const events=message.presentationJournalVersion===2?new Map(message.events.map(event=>[event.id,event])):null;for(const fact of message.presentationJournal){if(!Number.isFinite(fact.at)||fact.at<at||fact.at>next.elapsed||events&&fact.kind==='event'&&events.get(fact.eventId)?.simulationTime!==fact.at)throw TypeError('Invalid presentation lifecycle time');at=fact.at;}}
+   if(message.presentationPaths==='head-v1'&&[...next.workers,...(next.raid?.animals??[])].some(actor=>Array.isArray(actor.path)&&actor.path.length>1))throw TypeError('Invalid projected presentation path');
+   if(message.presentationJournal)for(const fact of message.presentationJournal)if(fact.kind==='animalGone'){const animal=next.raid?.animals?.find(a=>a.id===fact.actorId);if(animal&&animal.status!=='gone')throw TypeError('Presentation lifecycle conflicts with state');}
+   let nextEvent=Math.max(lastEvent,state.sequence-1);for(const event of message.events){const match=typeof event?.id==='string'?/^event-(0|[1-9]\d*)$/.exec(event.id):null,n=match?Number(match[1]):NaN;if(!Number.isSafeInteger(n)||n<=nextEvent||n>=next.sequence||typeof event.type!=='string')throw TypeError('Invalid confirmed event sequence');nextEvent=n;}
+   // The caller retains no right to mutate the transferred publication until
+   // commit or discard. Its decoded snapshot is private to this receiver.
+   const token=Object.freeze({});pending={token,sequence:message.sequence,next,nextEvent,message,copy:handed!==undefined};return {accepted:true,token,elapsed:next.elapsed};
+ }
+ function commit(token,{beforeObservers=null}={}){
+  if(fault||!pending||pending.token!==token)throw Error('Invalid prepared publication token');
+  if(beforeObservers!==null&&typeof beforeObservers!=='function')throw TypeError('Invalid confirmed publication barrier');
+  if(pending.intermediate&&pending.intermediateIndex!==pending.intermediate.length)throw Error('Historical boundaries not consumed');
+  const item=pending;pending=null;
+  if(item.unchanged){try{beforeObservers?.();}catch(error){fault=true;throw error;}sequence=item.sequence;return {accepted:true,sequence,...(trackChangedKeys?{changedKeys:new Set()}: {})};}
+  let changedKeys;try{if(trackChangedKeys)changedKeys=reconcileChangedKeys(state,item.next,tracked,item.copy);else reconcile(state,item.next,item.copy);beforeObservers?.();onReconciled?.(item.message);for(const event of item.message.events.slice(item.deliveredEvents??0))notifyConfirmedPresentationEvent(state,event);}
+  catch(error){fault=true;throw error;}
+  sequence=item.sequence;lastElapsed=item.next.elapsed;lastEvent=item.nextEvent;return {accepted:true,sequence,...(trackChangedKeys?{changedKeys}: {})};
+ }
+ function acceptPrepared(result){return result.accepted?commit(result.token):result;}
+ function previewPreparedHistorical(token,{requireActorTicks=false}={}){
+  if(typeof requireActorTicks!=='boolean')throw TypeError('Invalid historical actor validation');
+  if(fault||!pending||pending.token!==token||pending.unchanged||pending.intermediate)throw Error('Invalid prepared historical token');
+  const base=JSON.stringify(state),cached=pending.historical;
+  if(cached){if(cached.base!==base||cached.sequence!==sequence||cached.elapsed!==lastElapsed)throw Error('Historical preparation base changed');if(requireActorTicks&&!cached.requireActorTicks)throw Error('Historical preparation requires actor ticks');return cached.groups;}
+  // Ownership is explicit before retaining a decoded proof. The transport may
+  // commit this same snapshot as its next read-only delta base, but observers
+  // must receive independent mutable presentation objects when it is applied.
+  freezeOwned(pending.message,new WeakSet(),true);freezeOwned(pending.next);pending.copy=true;
+  const boundaries=decodeHistoricalEventBoundaries(pending.message.historicalEventBoundaries,state,pending.message,{requireActorTicks}),groups=freezeOwned(groupHistoricalEventBoundaries(boundaries));
+  pending.historical={base,sequence,elapsed:lastElapsed,requireActorTicks,boundaries,groups};return groups;
+ }
+ function beginPreparedHistorical(token,options={}){
+  const boundaries=previewPreparedHistorical(token,options),item=pending;
+  item.intermediate=item.historical.boundaries;item.intermediateIndex=0;item.deliveredEvents=0;
+  return {accepted:true,token,elapsed:item.next.elapsed,boundaries};
+ }
+ function prepareHistorical(message,{requireActorTicks=false,...options}={}){if(typeof requireActorTicks!=='boolean')throw TypeError('Invalid historical actor validation');const prepared=prepare(message,options);if(!prepared.accepted)return prepared;try{return beginPreparedHistorical(prepared.token,{requireActorTicks});}catch(error){pending=null;throw error;}}
+ function commitIntermediate(token,{beforeObservers=null}={}){
+  if(fault||!pending||pending.token!==token||!pending.intermediate||pending.intermediateIndex>=pending.intermediate.length)throw Error('Invalid historical boundary token');if(beforeObservers!==null&&typeof beforeObservers!=='function')throw TypeError('Invalid historical boundary barrier');
+  const item=pending,boundary=item.intermediate[item.intermediateIndex];let changedKeys;try{if(trackChangedKeys)changedKeys=reconcileChangedKeys(state,boundary.state,tracked,true);else reconcile(state,boundary.state,true);beforeObservers?.({at:boundary.at,events:boundary.events},changedKeys);for(const event of boundary.events)notifyConfirmedPresentationEvent(state,event);}catch(error){fault=true;throw error;}
+  item.intermediateIndex++;item.deliveredEvents+=boundary.events.length;lastElapsed=boundary.at;return {accepted:true,sequence,at:boundary.at,eventIds:boundary.events.map(event=>event.id),...(trackChangedKeys?{changedKeys}:{})};
+ }
+ return {
+  prepare,prepareUnchanged,prepareHistorical,previewPreparedHistorical,beginPreparedHistorical,commitIntermediate,commit,
+  discard(token){if(fault||!pending||pending.token!==token||pending.intermediateIndex>0)throw Error('Invalid prepared publication token');pending=null;},
+  accept(message,options){return acceptPrepared(prepare(message,options));},
+  acceptUnchanged(message,options){return acceptPrepared(prepareUnchanged(message,options));},
+  status(){return {sequence,lastElapsed,fault};}
+ };
+}

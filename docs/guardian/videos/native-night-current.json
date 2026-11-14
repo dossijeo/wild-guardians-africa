@@ -1,0 +1,462 @@
+{
+  "worldAuthority": "spatial-wasm",
+  "maxVisibleGuardians": 1,
+  "audioTrace": [
+    {
+      "id": "hyena_aggressive",
+      "at": 3033.1949650000124,
+      "emitter": "qa-beast-0",
+      "phase": "walking",
+      "played": true
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3034.011370000014,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3034.177685000014,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3034.2940650000146,
+      "emitter": "qa-beast-0",
+      "phase": "falling",
+      "played": true
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3034.2940650000146,
+      "emitter": "impact:qa-beast-0",
+      "played": true
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3035.5431950000175,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3037.090615000021,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3037.140615000021,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3038.6397950000255,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "rhino_aggressive",
+      "at": 3039.539265000028,
+      "emitter": "qa-beast-3",
+      "phase": "walking",
+      "played": true
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3039.5892650000283,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3039.739265000029,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "rhino_hurt",
+      "at": 3039.855870000029,
+      "emitter": "qa-beast-3",
+      "phase": "falling",
+      "played": true
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3039.855870000029,
+      "emitter": "impact:qa-beast-3",
+      "played": true
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3041.122090000032,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3042.521610000036,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3042.6716100000367,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "rhino_hurt",
+      "at": 3042.804935000037,
+      "emitter": "qa-beast-3",
+      "phase": "falling",
+      "played": true
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3042.804935000037,
+      "emitter": "impact:qa-beast-3",
+      "played": true
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3044.054095000041,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "hyena_aggressive",
+      "at": 3044.9366700000437,
+      "emitter": "qa-beast-6",
+      "phase": "walking",
+      "played": true
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3045.419630000045,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3045.569355000045,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3045.6692150000454,
+      "emitter": "qa-beast-6",
+      "phase": "falling",
+      "played": true
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3045.6692150000454,
+      "emitter": "impact:qa-beast-6",
+      "played": true
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3046.7179000000483,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3046.8676950000486,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3046.967695000049,
+      "emitter": "qa-beast-6",
+      "phase": "falling",
+      "played": true
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3046.967695000049,
+      "emitter": "impact:qa-beast-6",
+      "played": true
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3048.250120000053,
+      "emitter": "guardian-world",
+      "played": true
+    },
+    {
+      "id": "hyena_retreat",
+      "at": 3055.3100550000704,
+      "emitter": "qa-beast-6",
+      "phase": "retreating",
+      "played": true
+    }
+  ],
+  "report": {
+    "kind": "recorded-spell-sequence",
+    "framingTrace": [],
+    "settledCast": true,
+    "clockMode": "Game.tick",
+    "initialWaterPrepared": false,
+    "night": true,
+    "initial": {
+      "elapsed": 3033.1449850000126,
+      "plants": [
+        {
+          "id": "plant-3",
+          "species": "mijo",
+          "growth": 0,
+          "alive": true,
+          "water": [
+            "due",
+            "future"
+          ]
+        },
+        {
+          "id": "plant-5",
+          "species": "mijo",
+          "growth": 0,
+          "alive": true,
+          "water": [
+            "due",
+            "future"
+          ]
+        },
+        {
+          "id": "plant-7",
+          "species": "mijo",
+          "growth": 0,
+          "alive": true,
+          "water": [
+            "due",
+            "future"
+          ]
+        },
+        {
+          "id": "plant-9",
+          "species": "mijo",
+          "growth": 0,
+          "alive": true,
+          "water": [
+            "due",
+            "future"
+          ]
+        },
+        {
+          "id": "plant-11",
+          "species": "mijo",
+          "growth": 0,
+          "alive": true,
+          "water": [
+            "due",
+            "future"
+          ]
+        },
+        {
+          "id": "plant-13",
+          "species": "mijo",
+          "growth": 0,
+          "alive": true,
+          "water": [
+            "due",
+            "future"
+          ]
+        },
+        {
+          "id": "plant-15",
+          "species": "mijo",
+          "growth": 0,
+          "alive": true,
+          "water": [
+            "due",
+            "future"
+          ]
+        },
+        {
+          "id": "plant-17",
+          "species": "mijo",
+          "growth": 0,
+          "alive": true,
+          "water": [
+            "due",
+            "future"
+          ]
+        },
+        {
+          "id": "plant-19",
+          "species": "mijo",
+          "growth": 0,
+          "alive": true,
+          "water": [
+            "due",
+            "future"
+          ]
+        },
+        {
+          "id": "plant-21",
+          "species": "mijo",
+          "growth": 0,
+          "alive": true,
+          "water": [
+            "due",
+            "future"
+          ]
+        },
+        {
+          "id": "plant-23",
+          "species": "mijo",
+          "growth": 0,
+          "alive": true,
+          "water": [
+            "due",
+            "future"
+          ]
+        },
+        {
+          "id": "plant-25",
+          "species": "mijo",
+          "growth": 0,
+          "alive": true,
+          "water": [
+            "due",
+            "future"
+          ]
+        }
+      ]
+    },
+    "final": {
+      "elapsed": 3055.8264400000717,
+      "plants": [
+        {
+          "id": "plant-3",
+          "species": "mijo",
+          "growth": 0,
+          "alive": true,
+          "water": [
+            "due",
+            "future"
+          ]
+        },
+        {
+          "id": "plant-5",
+          "species": "mijo",
+          "growth": 0,
+          "alive": true,
+          "water": [
+            "due",
+            "future"
+          ]
+        },
+        {
+          "id": "plant-7",
+          "species": "mijo",
+          "growth": 0,
+          "alive": true,
+          "water": [
+            "due",
+            "future"
+          ]
+        },
+        {
+          "id": "plant-9",
+          "species": "mijo",
+          "growth": 0,
+          "alive": true,
+          "water": [
+            "due",
+            "future"
+          ]
+        },
+        {
+          "id": "plant-11",
+          "species": "mijo",
+          "growth": 0,
+          "alive": true,
+          "water": [
+            "due",
+            "future"
+          ]
+        },
+        {
+          "id": "plant-13",
+          "species": "mijo",
+          "growth": 0,
+          "alive": true,
+          "water": [
+            "due",
+            "future"
+          ]
+        },
+        {
+          "id": "plant-15",
+          "species": "mijo",
+          "growth": 0,
+          "alive": true,
+          "water": [
+            "due",
+            "future"
+          ]
+        },
+        {
+          "id": "plant-17",
+          "species": "mijo",
+          "growth": 0,
+          "alive": true,
+          "water": [
+            "due",
+            "future"
+          ]
+        },
+        {
+          "id": "plant-19",
+          "species": "mijo",
+          "growth": 0,
+          "alive": true,
+          "water": [
+            "due",
+            "future"
+          ]
+        },
+        {
+          "id": "plant-21",
+          "species": "mijo",
+          "growth": 0,
+          "alive": true,
+          "water": [
+            "due",
+            "future"
+          ]
+        },
+        {
+          "id": "plant-23",
+          "species": "mijo",
+          "growth": 0,
+          "alive": true,
+          "water": [
+            "due",
+            "future"
+          ]
+        },
+        {
+          "id": "plant-25",
+          "species": "mijo",
+          "growth": 0,
+          "alive": true,
+          "water": [
+            "due",
+            "future"
+          ]
+        }
+      ],
+      "active": 0,
+      "pending": 0
+    },
+    "errors": []
+  }
+}

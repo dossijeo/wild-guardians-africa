@@ -1,0 +1,95 @@
+{
+  "scope": "Edge headless, converted mangrove islands fixture, nine synthetic chunks, same-sender FIFO messages and shared flag checked between completed ticks. Pauses before/during/after a 40-step batch, duplicate token and reattempt after resume. No message loss, Worker failure, multi-producer ordering, full gameplay, render or production integration.",
+  "runs": [
+    {
+      "mode": "before",
+      "performed": 0,
+      "interrupted": true,
+      "remainder": 40,
+      "ackPaused": true,
+      "duplicateSafe": true,
+      "pauseLatencyMs": 17.689999997615814,
+      "snapshotEqual": true
+    },
+    {
+      "mode": "before",
+      "performed": 0,
+      "interrupted": true,
+      "remainder": 40,
+      "ackPaused": true,
+      "duplicateSafe": true,
+      "pauseLatencyMs": 17.644999995827675,
+      "snapshotEqual": true
+    },
+    {
+      "mode": "before",
+      "performed": 0,
+      "interrupted": true,
+      "remainder": 40,
+      "ackPaused": true,
+      "duplicateSafe": true,
+      "pauseLatencyMs": 18.78999999165535,
+      "snapshotEqual": true
+    },
+    {
+      "mode": "during",
+      "performed": 1,
+      "interrupted": true,
+      "remainder": 39,
+      "ackPaused": true,
+      "duplicateSafe": true,
+      "pauseLatencyMs": 130.875,
+      "snapshotEqual": true
+    },
+    {
+      "mode": "during",
+      "performed": 1,
+      "interrupted": true,
+      "remainder": 39,
+      "ackPaused": true,
+      "duplicateSafe": true,
+      "pauseLatencyMs": 135.32499998807907,
+      "snapshotEqual": true
+    },
+    {
+      "mode": "during",
+      "performed": 1,
+      "interrupted": true,
+      "remainder": 39,
+      "ackPaused": true,
+      "duplicateSafe": true,
+      "pauseLatencyMs": 129.09000000357628,
+      "snapshotEqual": true
+    },
+    {
+      "mode": "after",
+      "performed": 40,
+      "interrupted": false,
+      "remainder": 0,
+      "ackPaused": true,
+      "duplicateSafe": true,
+      "pauseLatencyMs": 8.29500000178814,
+      "snapshotEqual": true
+    },
+    {
+      "mode": "after",
+      "performed": 40,
+      "interrupted": false,
+      "remainder": 0,
+      "ackPaused": true,
+      "duplicateSafe": true,
+      "pauseLatencyMs": 9.629999995231628,
+      "snapshotEqual": true
+    },
+    {
+      "mode": "after",
+      "performed": 40,
+      "interrupted": false,
+      "remainder": 0,
+      "ackPaused": true,
+      "duplicateSafe": true,
+      "pauseLatencyMs": 8.474999994039536,
+      "snapshotEqual": true
+    }
+  ]
+}

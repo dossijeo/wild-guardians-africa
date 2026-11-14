@@ -1,4 +1,4 @@
-import {waitGpuFrame} from '../../tools/experiments/wait-gpu-frame.js';
+import {waitGpuFrame} from '../rendering/wait-gpu-frame.js';
 
 // Prepare the first regional representation beneath the existing loading screen.
 // render(0) uploads resources without advancing the gameplay clock.

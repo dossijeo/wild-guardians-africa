@@ -1,0 +1,13 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {newGame} from '../../src/simulation/game.js';
+import {WILD_ENGINE_WORLD_VERSION} from '../../src/world/wild-engine/world-version.js';
+import {villageLayout} from '../../src/world/villages.js';
+import {createSpatialGameSession} from '../../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spatial-navigation-movement.js';
+import {captureNativeAuthorityBootstrap} from '../../src/simulation/native-authority-bootstrap.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+import {createWorkerSaveCoordinator} from '../../src/persistence/worker-save.js';
+import {BrowserSaveRepository} from '../../src/persistence/browser-saves.js';
+window.makeSave=async()=>{const payload=(await(await fetch('/content/villages.json')).json()).find(v=>v.id==='mapungubwe'),state=newGame({seed:712,biome:'sabana',culture:'mapungubwe',slotId:'qa-early-native-continue'});state.wildEngineWorldVersion=WILD_ENGINE_WORLD_VERSION;state.villages[0].buildings=villageLayout(payload,0,0).filter(v=>v.kind!=='Zona común'&&v.footprint?.length).slice(0,1);const module=await WebAssembly.compile(await (await fetch('/src/world/wild-engine/spatial-savanna.wasm')).arrayBuffer()),loaded=new Map(),native=createSpatialGameSession(module,state,{loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});let client;
+ try{if(native.core.selectChunk(0,0)<0)native.core.addChunk(0,0);loaded.set('0,0',native.core.chunkPayload());const nav=createSpatialNavigationMovement(native,state);nav.setActiveBounds([-24,-24,24,24]);nav.setRaidView({x:10,z:10},{x:0,z:0});const capture=captureNativeAuthorityBootstrap(state,nav,native);client=createSimulationAuthorityClient({snapshot:capture.snapshot,chunkKeys:capture.chunkKeys,raidWaitBindings:capture.raidWaitBindings,navigationView:capture.navigationView,nativeBootstrap:{version:1,chunkKeys:capture.chunkKeys,spatialState:capture.spatialState},session:'qa-seed'});await client.ready;const repository=new BrowserSaveRepository(localStorage),save=createWorkerSaveCoordinator({runtime:{submit(command){const r=client.submit(command);if(!r.accepted)throw Error(r.reason);return r.result;}},repository,slotId:state.slotId,experimentalNativeAuthority:true});const result=await save.request();if(!result.saved)throw Error('Seed save failed');return {slotId:state.slotId,elapsed:state.elapsed};}finally{client?.dispose();native.dispose();}};window.ready=true;
+</script>

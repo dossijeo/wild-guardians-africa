@@ -1,0 +1,249 @@
+{
+  "network": true,
+  "animals": 20,
+  "reuseCalls": 12,
+  "rows": [
+    {
+      "tick": 1,
+      "referenceShadow": {
+        "changed": 0,
+        "max": 0
+      },
+      "candidateShadow": {
+        "changed": 0,
+        "max": 0
+      },
+      "referenceColor": {
+        "changed": 57,
+        "max": 1
+      },
+      "candidateColor": {
+        "changed": 4,
+        "max": 1
+      },
+      "stateUnchanged": true
+    },
+    {
+      "tick": 2,
+      "referenceShadow": {
+        "changed": 0,
+        "max": 0
+      },
+      "candidateShadow": {
+        "changed": 0,
+        "max": 0
+      },
+      "referenceColor": {
+        "changed": 12,
+        "max": 1
+      },
+      "candidateColor": {
+        "changed": 44,
+        "max": 1
+      },
+      "stateUnchanged": true
+    },
+    {
+      "tick": 3,
+      "referenceShadow": {
+        "changed": 0,
+        "max": 0
+      },
+      "candidateShadow": {
+        "changed": 0,
+        "max": 0
+      },
+      "referenceColor": {
+        "changed": 59,
+        "max": 4
+      },
+      "candidateColor": {
+        "changed": 19,
+        "max": 1
+      },
+      "stateUnchanged": true
+    },
+    {
+      "tick": 4,
+      "referenceShadow": {
+        "changed": 0,
+        "max": 0
+      },
+      "candidateShadow": {
+        "changed": 0,
+        "max": 0
+      },
+      "referenceColor": {
+        "changed": 40,
+        "max": 9
+      },
+      "candidateColor": {
+        "changed": 71,
+        "max": 9
+      },
+      "stateUnchanged": true
+    },
+    {
+      "tick": 5,
+      "referenceShadow": {
+        "changed": 0,
+        "max": 0
+      },
+      "candidateShadow": {
+        "changed": 0,
+        "max": 0
+      },
+      "referenceColor": {
+        "changed": 46,
+        "max": 9
+      },
+      "candidateColor": {
+        "changed": 59,
+        "max": 14
+      },
+      "stateUnchanged": true
+    },
+    {
+      "tick": 6,
+      "referenceShadow": {
+        "changed": 0,
+        "max": 0
+      },
+      "candidateShadow": {
+        "changed": 0,
+        "max": 0
+      },
+      "referenceColor": {
+        "changed": 95,
+        "max": 14
+      },
+      "candidateColor": {
+        "changed": 114,
+        "max": 9
+      },
+      "stateUnchanged": true
+    },
+    {
+      "tick": 7,
+      "referenceShadow": {
+        "changed": 0,
+        "max": 0
+      },
+      "candidateShadow": {
+        "changed": 0,
+        "max": 0
+      },
+      "referenceColor": {
+        "changed": 30,
+        "max": 1
+      },
+      "candidateColor": {
+        "changed": 14,
+        "max": 7
+      },
+      "stateUnchanged": true
+    },
+    {
+      "tick": 8,
+      "referenceShadow": {
+        "changed": 0,
+        "max": 0
+      },
+      "candidateShadow": {
+        "changed": 0,
+        "max": 0
+      },
+      "referenceColor": {
+        "changed": 27,
+        "max": 1
+      },
+      "candidateColor": {
+        "changed": 22,
+        "max": 9
+      },
+      "stateUnchanged": true
+    },
+    {
+      "tick": 9,
+      "referenceShadow": {
+        "changed": 0,
+        "max": 0
+      },
+      "candidateShadow": {
+        "changed": 0,
+        "max": 0
+      },
+      "referenceColor": {
+        "changed": 51,
+        "max": 1
+      },
+      "candidateColor": {
+        "changed": 29,
+        "max": 1
+      },
+      "stateUnchanged": true
+    },
+    {
+      "tick": 10,
+      "referenceShadow": {
+        "changed": 0,
+        "max": 0
+      },
+      "candidateShadow": {
+        "changed": 0,
+        "max": 0
+      },
+      "referenceColor": {
+        "changed": 59,
+        "max": 14
+      },
+      "candidateColor": {
+        "changed": 64,
+        "max": 14
+      },
+      "stateUnchanged": true
+    },
+    {
+      "tick": 11,
+      "referenceShadow": {
+        "changed": 0,
+        "max": 0
+      },
+      "candidateShadow": {
+        "changed": 0,
+        "max": 0
+      },
+      "referenceColor": {
+        "changed": 44,
+        "max": 14
+      },
+      "candidateColor": {
+        "changed": 22,
+        "max": 1
+      },
+      "stateUnchanged": true
+    },
+    {
+      "tick": 12,
+      "referenceShadow": {
+        "changed": 0,
+        "max": 0
+      },
+      "candidateShadow": {
+        "changed": 0,
+        "max": 0
+      },
+      "referenceColor": {
+        "changed": 35,
+        "max": 1
+      },
+      "candidateColor": {
+        "changed": 32,
+        "max": 1
+      },
+      "stateUnchanged": true
+    }
+  ],
+  "sceneErrors": [],
+  "scope": "Twelve real Game.tick steps in one deterministic QA mangrove-islands scene with 20 synthetic animals; after each tick force three shadow redraws at same state (reference/reference/candidate). Compares packed shadow color and displayed RGBA, not depth texture directly; synchronous readback, not a performance measurement. No input, audio, recovery impacts, context loss, other biomes or integrated GPU."
+}

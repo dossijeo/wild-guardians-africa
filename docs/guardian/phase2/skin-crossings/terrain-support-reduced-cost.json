@@ -1,0 +1,45 @@
+{
+  "scope": "Node CPU microbenchmark; warm single-model support on analytic plane, not game frame/GPU acceptance.",
+  "actors": [
+    {
+      "species": "warthog",
+      "samples": 17,
+      "setupMs": 39.64429999999999,
+      "medianMs": 0.010699999999985721,
+      "p95Ms": 0.06419999999997117,
+      "maxMs": 0.5264999999999986
+    },
+    {
+      "species": "hyena",
+      "samples": 16,
+      "setupMs": 37.6687,
+      "medianMs": 0.012400000000013733,
+      "p95Ms": 0.028400000000033288,
+      "maxMs": 0.1811999999999898
+    },
+    {
+      "species": "buffalo",
+      "samples": 18,
+      "setupMs": 61.537499999999966,
+      "medianMs": 0.01969999999994343,
+      "p95Ms": 0.03050000000007458,
+      "maxMs": 0.41390000000001237
+    },
+    {
+      "species": "lion",
+      "samples": 16,
+      "setupMs": 40.37800000000004,
+      "medianMs": 0.018299999999953798,
+      "p95Ms": 0.02949999999998454,
+      "maxMs": 0.37590000000000146
+    },
+    {
+      "species": "rhino",
+      "samples": 16,
+      "setupMs": 44.585199999999986,
+      "medianMs": 0.012600000000020373,
+      "p95Ms": 0.028599999999983083,
+      "maxMs": 1.524499999999989
+    }
+  ]
+}

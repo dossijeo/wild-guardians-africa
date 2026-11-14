@@ -1,0 +1,1576 @@
+TAP version 13
+# (node:15008) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:15008) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: native raid publications reach the autonomous consumer without changing simulation
+ok 1 - native raid publications reach the autonomous consumer without changing simulation
+  ---
+  duration_ms: 7605.9067
+  ...
+# (node:11724) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:11724) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: real native idle samples retain watch phase and leave gameplay unchanged
+ok 2 - real native idle samples retain watch phase and leave gameplay unchanged
+  ---
+  duration_ms: 3719.7768
+  ...
+# Subtest: a real watch transition ends the certified interval without changing gameplay
+ok 3 - a real watch transition ends the certified interval without changing gameplay
+  ---
+  duration_ms: 2479.7113
+  ...
+# (node:20912) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:20912) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: native carried crate movement preserves crate identity and confirmed phases
+ok 4 - native carried crate movement preserves crate identity and confirmed phases
+  ---
+  duration_ms: 4417.4835
+  ...
+# Subtest: native disabled center drops the carried crate and ends the carry state
+ok 5 - native disabled center drops the carried crate and ends the carry state
+  ---
+  duration_ms: 2528.8152
+  ...
+# (node:16376) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:16376) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: native crate pickup history preserves task and target until carrying
+ok 6 - native crate pickup history preserves task and target until carrying
+  ---
+  duration_ms: 2601.477
+  ...
+# (node:20464) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:20464) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: native harvest history preserves task and target until the authoritative CropPicked boundary
+ok 7 - native harvest history preserves task and target until the authoritative CropPicked boundary
+  ---
+  duration_ms: 2821.3674
+  ...
+# (node:20876) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:20876) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: real native idle samples retain rest phase and leave gameplay unchanged
+ok 8 - real native idle samples retain rest phase and leave gameplay unchanged
+  ---
+  duration_ms: 2848.6601
+  ...
+# (node:11384) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:11384) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: native incapacitated return preserves authority and certifies only sampled motion
+ok 9 - native incapacitated return preserves authority and certifies only sampled motion
+  ---
+  duration_ms: 3165.5799
+  ...
+# (node:18704) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:18704) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: native initial work preserves authority and stops Plant horizon at Water handoff
+ok 10 - native initial work preserves authority and stops Plant horizon at Water handoff
+  ---
+  duration_ms: 3940.8162
+  ...
+# Subtest: native initial task admits only its confirmed Water phase and stops on completion
+ok 11 - native initial task admits only its confirmed Water phase and stops on completion
+  ---
+  duration_ms: 5840.1104
+  ...
+# Subtest: real blessing interrupts initial planting without changing authority results
+ok 12 - real blessing interrupts initial planting without changing authority results
+  ---
+  duration_ms: 2544.5043
+  ...
+# Subtest: real blessing interrupts initial watering without changing authority results
+ok 13 - real blessing interrupts initial watering without changing authority results
+  ---
+  duration_ms: 2488.5688
+  ...
+# (node:2808) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:2808) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: unmodified native raid certifies its one-tick waiting to walking transitions
+ok 14 - unmodified native raid certifies its one-tick waiting to walking transitions
+  ---
+  duration_ms: 20428.031
+  ...
+# Subtest: unaltered islet raid retains native authority results and certifies an interior event through both motion slices
+ok 15 - unaltered islet raid retains native authority results and certifies an interior event through both motion slices
+  ---
+  duration_ms: 11952.2246
+  ...
+# Subtest: native islet waiting animal with active path retains its walking pose through an event slice
+ok 16 - native islet waiting animal with active path retains its walking pose through an event slice
+  ---
+  duration_ms: 13548.7641
+  ...
+# (node:20664) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:20664) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: native watering preserves task until authoritative completion
+ok 17 - native watering preserves task until authoritative completion
+  ---
+  duration_ms: 2333.9351
+  ...
+# Subtest: real blessing interrupts an active watering task without changing authority results
+ok 18 - real blessing interrupts an active watering task without changing authority results
+  ---
+  duration_ms: 2317.1281
+  ...
+# Subtest: sublimits cannot be crossed before release and preserve elapsed frame time
+ok 19 - sublimits cannot be crossed before release and preserve elapsed frame time
+  ---
+  duration_ms: 5.9559
+  ...
+# Subtest: the shared presentation clock commits once and cannot jump over a partial GPU interval
+ok 20 - the shared presentation clock commits once and cannot jump over a partial GPU interval
+  ---
+  duration_ms: 1.1385
+  ...
+# Subtest: historical clock follows confirmed mixed-rate segments and clamps at their endpoint
+ok 21 - historical clock follows confirmed mixed-rate segments and clamps at their endpoint
+  ---
+  duration_ms: 1.0885
+  ...
+# Subtest: pause holds the visual clock and invalidation prohibits committing a partial boundary
+ok 22 - pause holds the visual clock and invalidation prohibits committing a partial boundary
+  ---
+  duration_ms: 0.9205
+  ...
+# Subtest: clock rejects observations, pauses, events and malformed time maps before starting
+ok 23 - clock rejects observations, pauses, events and malformed time maps before starting
+  ---
+  duration_ms: 1.1398
+  ...
+# Subtest: event playback stops at each subboundary and acknowledges once after ordered state hooks
+ok 24 - event playback stops at each subboundary and acknowledges once after ordered state hooks
+  ---
+  duration_ms: 12.5058
+  ...
+# Subtest: event playback waits at a committed subboundary until the next participant is ready
+ok 25 - event playback waits at a committed subboundary until the next participant is ready
+  ---
+  duration_ms: 1.9301
+  ...
+# Subtest: subsequent participant start failures are reported on initial attempt and retry
+ok 26 - subsequent participant start failures are reported on initial attempt and retry
+  ---
+  duration_ms: 2.2312
+  ...
+# Subtest: event handoff follows each commit and failed subboundary never releases it
+ok 27 - event handoff follows each commit and failed subboundary never releases it
+  ---
+  duration_ms: 3.101
+  ...
+# Subtest: failed initial current check cancels the clock before rolling back participants
+ok 28 - failed initial current check cancels the clock before rolling back participants
+  ---
+  duration_ms: 1.8624
+  ...
+# Subtest: stale continuation rolls back at the committed boundary and retries without advancing
+ok 29 - stale continuation rolls back at the committed boundary and retries without advancing
+  ---
+  duration_ms: 1.0285
+  ...
+# Subtest: a stale continuation without a rollback interface fails closed
+ok 30 - a stale continuation without a rollback interface fails closed
+  ---
+  duration_ms: 0.8262
+  ...
+# Subtest: real certifier closes presentation proof and reuses prepared tokens without mutating the observation
+ok 31 - real certifier closes presentation proof and reuses prepared tokens without mutating the observation
+  ---
+  duration_ms: 7.298
+  ...
+# Subtest: watering certificate requires effect preparation and quiet other effects, and rolls back atomically
+ok 32 - watering certificate requires effect preparation and quiet other effects, and rolls back atomically
+  ---
+  duration_ms: 2.1854
+  ...
+# Subtest: certifier rejects missing evidence, event barriers, excessive handoff latency and stale resources
+ok 33 - certifier rejects missing evidence, event barriers, excessive handoff latency and stale resources
+  ---
+  duration_ms: 2.1496
+  ...
+# Subtest: a worker rejection or exception cancels the already installed animals before the clock advances
+ok 34 - a worker rejection or exception cancels the already installed animals before the clock advances
+  ---
+  duration_ms: 1.9228
+  ...
+# Subtest: missing worker animation is rejected before mutating the animal roster
+ok 35 - missing worker animation is rejected before mutating the animal roster
+  ---
+  duration_ms: 0.7539
+  ...
+# Subtest: the complete actor roster must match the trace before any rig starts
+ok 36 - the complete actor roster must match the trace before any rig starts
+  ---
+  duration_ms: 0.6102
+  ...
+# Subtest: event diagnostic marker reaches participants through the certificate copy
+ok 37 - event diagnostic marker reaches participants through the certificate copy
+  ---
+  duration_ms: 3.7921
+  ...
+# Subtest: start diagnostics distinguish changed support and participant start failures
+ok 38 - start diagnostics distinguish changed support and participant start failures
+  ---
+  duration_ms: 2.2743
+  ...
+# Subtest: group defers animal phase release until the matching confirmed boundary
+ok 39 - group defers animal phase release until the matching confirmed boundary
+  ---
+  duration_ms: 2.4333
+  ...
+# Subtest: worker fall requires a stationary continuous and uninterrupted confirmed fall
+ok 40 - worker fall requires a stationary continuous and uninterrupted confirmed fall
+  ---
+  duration_ms: 3.9515
+  ...
+# Subtest: ambient worker walking is accepted only while its mode and phase remain confirmed
+ok 41 - ambient worker walking is accepted only while its mode and phase remain confirmed
+  ---
+  duration_ms: 2.3596
+  ...
+# Subtest: stationary fallback is bounded in real time rather than accelerated simulation time
+ok 42 - stationary fallback is bounded in real time rather than accelerated simulation time
+  ---
+  duration_ms: 1.0147
+  ...
+# Subtest: stationary running pose is held only while its confirmed phase is unchanged
+ok 43 - stationary running pose is held only while its confirmed phase is unchanged
+  ---
+  duration_ms: 1.5827
+  ...
+# Subtest: a stationary animal attack requires the same confirmed attack and uninterrupted phase
+ok 44 - a stationary animal attack requires the same confirmed attack and uninterrupted phase
+  ---
+  duration_ms: 2.2249
+  ...
+# Subtest: harvest requires unchanged confirmed task and target and positive monotonic remaining time
+ok 45 - harvest requires unchanged confirmed task and target and positive monotonic remaining time
+  ---
+  duration_ms: 1.9797
+  ...
+# Subtest: crate requires unchanged confirmed task and target and positive monotonic remaining time
+ok 46 - crate requires unchanged confirmed task and target and positive monotonic remaining time
+  ---
+  duration_ms: 0.5533
+  ...
+# Subtest: gate idle requires a stationary and uninterrupted confirmed wait
+ok 47 - gate idle requires a stationary and uninterrupted confirmed wait
+  ---
+  duration_ms: 1.0707
+  ...
+# Subtest: gate carrying is admitted only for an unchanged stationary crate and phase
+ok 48 - gate carrying is admitted only for an unchanged stationary crate and phase
+  ---
+  duration_ms: 1.0262
+  ...
+# Subtest: fleeing idle is certified only while the explicit non-running state persists
+ok 49 - fleeing idle is certified only while the explicit non-running state persists
+  ---
+  duration_ms: 1.3778
+  ...
+# Subtest: planting dig advances with certified time and rejects a phase transition or target change
+ok 50 - planting dig advances with certified time and rejects a phase transition or target change
+  ---
+  duration_ms: 92.6384
+  ...
+# (node:8480) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:8480) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: certified group replays a walking animal while preserving stationary and hidden workers
+ok 51 - certified group replays a walking animal while preserving stationary and hidden workers
+  ---
+  duration_ms: 61.3358
+  ...
+# Subtest: water phase uses confirmed action samples and rejects task, endpoint and direction changes
+ok 52 - water phase uses confirmed action samples and rejects task, endpoint and direction changes
+  ---
+  duration_ms: 6.2496
+  ...
+# Subtest: initial task water VFX advances on the confirmed horizon
+ok 53 - initial task water VFX advances on the confirmed horizon
+  ---
+  duration_ms: 118.7906
+  ...
+# Subtest: water VFX advances only to confirmed clock, holds on pause and rejects changed terrain
+ok 54 - water VFX advances only to confirmed clock, holds on pause and rejects changed terrain
+  ---
+  duration_ms: 270.8132
+  ...
+# Subtest: a terrain failure during VFX preparation holds the frame and falls back to the ordered confirmed boundary
+ok 55 - a terrain failure during VFX preparation holds the frame and falls back to the ordered confirmed boundary
+  ---
+  duration_ms: 172.6979
+  ...
+# Subtest: worker roster and watering VFX share one certified horizon and invalidate together
+ok 56 - worker roster and watering VFX share one certified horizon and invalidate together
+  ---
+  duration_ms: 60.309
+  ...
+# Subtest: planting roster and dig VFX share one certified horizon and invalidate together
+ok 57 - planting roster and dig VFX share one certified horizon and invalidate together
+  ---
+  duration_ms: 38.9685
+  ...
+# Subtest: physical sample validation requires ordered steps, stable rigs and the exact published endpoint
+ok 58 - physical sample validation requires ordered steps, stable rigs and the exact published endpoint
+  ---
+  duration_ms: 7.2361
+  ...
+# (node:5172) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:5172) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: early adapter validates the decoded handoff without requesting its snapshot text
+ok 59 - early adapter validates the decoded handoff without requesting its snapshot text
+  ---
+  duration_ms: 210.7418
+  ...
+# Subtest: an invalid early pose discards the prepared state and permits a valid retry
+ok 60 - an invalid early pose discards the prepared state and permits a valid retry
+  ---
+  duration_ms: 187.7789
+  ...
+# Subtest: stable adapter hands confirmed sequence and ordered buffered events to the scene
+ok 61 - stable adapter hands confirmed sequence and ordered buffered events to the scene
+  ---
+  duration_ms: 282.3142
+  ...
+# Subtest: capacity failure and invalid handoff do not advance or lose buffered events
+ok 62 - capacity failure and invalid handoff do not advance or lose buffered events
+  ---
+  duration_ms: 188.4247
+  ...
+# Subtest: a failing handoff consumer faults closed rather than delivering buffered events twice
+ok 63 - a failing handoff consumer faults closed rather than delivering buffered events twice
+  ---
+  duration_ms: 118.1252
+  ...
+# (node:20320) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# Subtest: GPU clock follows only committed simulation time, including a held publication
+ok 64 - GPU clock follows only committed simulation time, including a held publication
+  ---
+  duration_ms: 419.0034
+  ...
+# (node:2668) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:2668) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: mutation phase brackets confirmed state and closes on callback errors or reentrancy
+ok 65 - mutation phase brackets confirmed state and closes on callback errors or reentrancy
+  ---
+  duration_ms: 665.3743
+  ...
+# Subtest: a failing end phase closes the stream before acknowledging a publication
+ok 66 - a failing end phase closes the stream before acknowledging a publication
+  ---
+  duration_ms: 125.9599
+  ...
+# Subtest: live journal resumes after a transient watering profile failure without dropping events
+ok 67 - live journal resumes after a transient watering profile failure without dropping events
+  ---
+  duration_ms: 1615.8302
+  ...
+# Subtest: confirmed clock, poses, events and motion observe the same committed time
+ok 68 - confirmed clock, poses, events and motion observe the same committed time
+  ---
+  duration_ms: 149.1235
+  ...
+# Subtest: clock ignores rejected publications and does not advance for unchanged acknowledgements
+ok 69 - clock ignores rejected publications and does not advance for unchanged acknowledgements
+  ---
+  duration_ms: 153.9713
+  ...
+# Subtest: a presentation clock must start at the same time as the confirmed state
+ok 70 - a presentation clock must start at the same time as the confirmed state
+  ---
+  duration_ms: 23.5882
+  ...
+# Subtest: a failure after reconciliation fails closed with the clock matching the reconciled state
+ok 71 - a failure after reconciliation fails closed with the clock matching the reconciled state
+  ---
+  duration_ms: 178.2708
+  ...
+# Subtest: recovery commits confirmed time before replay observers without sending an acknowledgement
+ok 72 - recovery commits confirmed time before replay observers without sending an acknowledgement
+  ---
+  duration_ms: 147.2149
+  ...
+# Subtest: incremental graphical channel preserves checkpoints, poses and event order
+ok 73 - incremental graphical channel preserves checkpoints, poses and event order
+  ---
+  duration_ms: 320.6698
+  ...
+# Subtest: replayed recovery is followed by a fresh live baseline and incremental updates
+ok 74 - replayed recovery is followed by a fresh live baseline and incremental updates
+  ---
+  duration_ms: 387.8292
+  ...
+# Subtest: tracked state changes reach consumers after reconciliation and before acknowledgement
+ok 75 - tracked state changes reach consumers after reconciliation and before acknowledgement
+  ---
+  duration_ms: 172.9499
+  ...
+# Subtest: selective crate change tracking distinguishes unrelated state and real crate changes
+ok 76 - selective crate change tracking distinguishes unrelated state and real crate changes
+  ---
+  duration_ms: 438.4853
+  ...
+# Subtest: certified unchanged publications skip scene reconciliation while still confirming terrain and sequence
+ok 77 - certified unchanged publications skip scene reconciliation while still confirming terrain and sequence
+  ---
+  duration_ms: 134.3764
+  ...
+# Subtest: explicit recovery accepts ordered publications without emitting live acknowledgements
+ok 78 - explicit recovery accepts ordered publications without emitting live acknowledgements
+  ---
+  duration_ms: 133.6699
+  ...
+# Subtest: authority failure rejects pending visual input without manufacturing a result
+ok 79 - authority failure rejects pending visual input without manufacturing a result
+  ---
+  duration_ms: 78.7877
+  ...
+# Subtest: recoverable visual detachment terminates pending inputs as unknown without reporting an authority failure
+ok 80 - recoverable visual detachment terminates pending inputs as unknown without reporting an authority failure
+  ---
+  duration_ms: 164.4614
+  ...
+# Subtest: presentation input backpressure rejects before posting and releases slots on authority failure
+ok 81 - presentation input backpressure rejects before posting and releases slots on authority failure
+  ---
+  duration_ms: 59.2745
+  ...
+# Subtest: work checkpoint acknowledgement waits for asynchronous preparation after state and terrain
+ok 82 - work checkpoint acknowledgement waits for asynchronous preparation after state and terrain
+  ---
+  duration_ms: 126.8136
+  ...
+# Subtest: failure transferring an asynchronous work checkpoint closes the stream and reports the error
+ok 83 - failure transferring an asynchronous work checkpoint closes the stream and reports the error
+  ---
+  duration_ms: 122.9631
+  ...
+# Subtest: a transfer error cannot be mistaken for a temporary checkpoint preparation error
+ok 84 - a transfer error cannot be mistaken for a temporary checkpoint preparation error
+  ---
+  duration_ms: 128.2793
+  ...
+# Subtest: terrain readiness during checkpoint preparation rearms only after the deferred acknowledgement
+ok 85 - terrain readiness during checkpoint preparation rearms only after the deferred acknowledgement
+  ---
+  duration_ms: 168.9189
+  ...
+# Subtest: only the typed temporary terrain error defers the work checkpoint
+ok 86 - only the typed temporary terrain error defers the work checkpoint
+  ---
+  duration_ms: 131.8586
+  ...
+# Subtest: QA hold retains one confirmed publication without exposing events, terrain or its ACK
+ok 87 - QA hold retains one confirmed publication without exposing events, terrain or its ACK
+  ---
+  duration_ms: 286.1413
+  ...
+# Subtest: QA hold cancellation before receipt resumes immediately; dispose with held state never acknowledges it
+ok 88 - QA hold cancellation before receipt resumes immediately; dispose with held state never acknowledges it
+  ---
+  duration_ms: 205.9678
+  ...
+# Subtest: QA hold validates physical poses immediately but applies them only with their state
+ok 89 - QA hold validates physical poses immediately but applies them only with their state
+  ---
+  duration_ms: 188.8394
+  ...
+# Subtest: QA hold fails closed on an unexpected second publication and never acknowledges either
+ok 90 - QA hold fails closed on an unexpected second publication and never acknowledges either
+  ---
+  duration_ms: 149.0825
+  ...
+# Subtest: automatic checkpoint confirms terrain then acknowledges its exact sequence without rebuilding
+ok 91 - automatic checkpoint confirms terrain then acknowledges its exact sequence without rebuilding
+  ---
+  duration_ms: 162.3449
+  ...
+# Subtest: reconciles state and events before releasing terrain and acknowledging
+ok 92 - reconciles state and events before releasing terrain and acknowledging
+  ---
+  duration_ms: 229.2802
+  ...
+# Subtest: invalid sequence closes only the presentation stream
+ok 93 - invalid sequence closes only the presentation stream
+  ---
+  duration_ms: 129.5748
+  ...
+# Subtest: validates movement against confirmed state before exposing it or releasing terrain
+ok 94 - validates movement against confirmed state before exposing it or releasing terrain
+  ---
+  duration_ms: 128.9477
+  ...
+# Subtest: rejects forged motion before presentation state or terrain changes
+ok 95 - rejects forged motion before presentation state or terrain changes
+  ---
+  duration_ms: 155.2589
+  ...
+# Subtest: delivers an invalidation in order and removes the previous track
+ok 96 - delivers an invalidation in order and removes the previous track
+  ---
+  duration_ms: 169.1675
+  ...
+# Subtest: forwards physical ownership even when the publication has no motion payload
+ok 97 - forwards physical ownership even when the publication has no motion payload
+  ---
+  duration_ms: 141.138
+  ...
+# Subtest: validates all physical poses before reconciliation and installs them before confirmed events
+ok 98 - validates all physical poses before reconciliation and installs them before confirmed events
+  ---
+  duration_ms: 133.8344
+  ...
+# Subtest: rejects a physical pose for an animal which is not down before mutating state
+ok 99 - rejects a physical pose for an animal which is not down before mutating state
+  ---
+  duration_ms: 114.208
+  ...
+# Subtest: publication journal drives real WebGPU guardian after snapshot reconciliation and suppresses same-publication exit
+ok 100 - publication journal drives real WebGPU guardian after snapshot reconciliation and suppresses same-publication exit
+  ---
+  duration_ms: 154.1801
+  ...
+# Subtest: compacted quiet recovery ticks preserve final state and ordered event against reference replay
+ok 101 - compacted quiet recovery ticks preserve final state and ordered event against reference replay
+  ---
+  duration_ms: 421.9754
+  ...
+# Subtest: a forged world start is rejected before state, terrain or ACK mutate
+ok 102 - a forged world start is rejected before state, terrain or ACK mutate
+  ---
+  duration_ms: 115.6656
+  ...
+# Subtest: held world trace requires the same terrain epoch and generation at both boundaries
+ok 103 - held world trace requires the same terrain epoch and generation at both boundaries
+  ---
+  duration_ms: 182.6746
+  ...
+# Subtest: deferred work checkpoint resumes across the live channel without losing ordered events
+ok 104 - deferred work checkpoint resumes across the live channel without losing ordered events
+  ---
+  duration_ms: 322.346
+  ...
+# Subtest: guardian guide release rearms a saturated deferred checkpoint without another publication
+ok 105 - guardian guide release rearms a saturated deferred checkpoint without another publication
+  ---
+  duration_ms: 479.682
+  ...
+# Subtest: preflight rejects an oversized recovery base before asking presentation for a work checkpoint
+ok 106 - preflight rejects an oversized recovery base before asking presentation for a work checkpoint
+  ---
+  duration_ms: 520.0687
+  ...
+# Subtest: checkpoint preparation skip is rejected outside a checkpoint publication
+ok 107 - checkpoint preparation skip is rejected outside a checkpoint publication
+  ---
+  duration_ms: 104.5508
+  ...
+# Subtest: incremental presentation remains ordered after the first recovery base is rejected
+ok 108 - incremental presentation remains ordered after the first recovery base is rejected
+  ---
+  duration_ms: 634.5634
+  ...
+# Subtest: early recovery-only rejection keeps incremental presentation synchronized
+ok 109 - early recovery-only rejection keeps incremental presentation synchronized
+  ---
+  duration_ms: 395.8794
+  ...
+# Subtest: confirmed recovery exit is superseded by a new physical pose in order
+ok 110 - confirmed recovery exit is superseded by a new physical pose in order
+  ---
+  duration_ms: 184.3562
+  ...
+# (node:21256) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:21256) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: uncertified multi-body contacts and recovery exit drain through confirmed boundaries without holding the timeline
+ok 111 - uncertified multi-body contacts and recovery exit drain through confirmed boundaries without holding the timeline
+  ---
+  duration_ms: 477.4904
+  ...
+# Subtest: recovery replays a projected real temporal publication and keeps the authority checkpoint complete
+ok 112 - recovery replays a projected real temporal publication and keeps the authority checkpoint complete
+  ---
+  duration_ms: 4582.2651
+  ...
+# Subtest: checkpoint capture keeps its confirmed boundary until acknowledgement (automatic timeline)
+ok 113 - checkpoint capture keeps its confirmed boundary until acknowledgement (automatic timeline)
+  ---
+  duration_ms: 273.6843
+  ...
+# Subtest: checkpoint capture keeps its confirmed boundary until acknowledgement (manual timeline)
+ok 114 - checkpoint capture keeps its confirmed boundary until acknowledgement (manual timeline)
+  ---
+  duration_ms: 478.0159
+  ...
+# Subtest: historical fallback clock synchronizes before pose, events and roster observers
+ok 115 - historical fallback clock synchronizes before pose, events and roster observers
+  ---
+  duration_ms: 199.6497
+  ...
+# Subtest: recovery publications enter the ordered timeline without live ACKs
+ok 116 - recovery publications enter the ordered timeline without live ACKs
+  ---
+  duration_ms: 256.0255
+  ...
+# Subtest: clock segments become accessible only after their complete confirmed boundary
+ok 117 - clock segments become accessible only after their complete confirmed boundary
+  ---
+  duration_ms: 193.9732
+  ...
+# Subtest: temporal checkpoint ACK includes presentation only after async capture
+ok 118 - temporal checkpoint ACK includes presentation only after async capture
+  ---
+  duration_ms: 232.135
+  ...
+# Subtest: temporal ACK negotiates presentation checkpoint separately from optional work
+ok 119 - temporal ACK negotiates presentation checkpoint separately from optional work
+  ---
+  duration_ms: 335.3445
+  ...
+# Subtest: timeline exposes matching reconciled state and terrain before pose and event observers
+ok 120 - timeline exposes matching reconciled state and terrain before pose and event observers
+  ---
+  duration_ms: 280.8595
+  ...
+# Subtest: failed terrain barrier emits neither pose nor event nor application acknowledgement
+ok 121 - failed terrain barrier emits neither pose nor event nor application acknowledgement
+  ---
+  duration_ms: 202.0942
+  ...
+# Subtest: timeline retains ordered publications until both simulation time and terrain are ready
+ok 122 - timeline retains ordered publications until both simulation time and terrain are ready
+  ---
+  duration_ms: 302.7232
+  ...
+# Subtest: timeline holds one publication without ACK while saturated and resumes in order
+ok 123 - timeline holds one publication without ACK while saturated and resumes in order
+  ---
+  duration_ms: 300.5458
+  ...
+# Subtest: timeline rejects a publication exceeding the individual byte allowance
+ok 124 - timeline rejects a publication exceeding the individual byte allowance
+  ---
+  duration_ms: 44.5599
+  ...
+# Subtest: timeline exchanges receipts and application ACKs with the real visual producer
+ok 125 - timeline exchanges receipts and application ACKs with the real visual producer
+  ---
+  duration_ms: 432.4399
+  ...
+# Subtest: real visual ports negotiate and exert bounded backpressure until state is applied
+ok 126 - real visual ports negotiate and exert bounded backpressure until state is applied
+  ---
+  duration_ms: 401.8724
+  ...
+# Subtest: timeline hides recovery bypass and reports producer failure without acknowledging it
+ok 127 - timeline hides recovery bypass and reports producer failure without acknowledging it
+  ---
+  duration_ms: 38.6611
+  ...
+# Subtest: terrain waits for the exact admitted snapshot or incremental delta without advancing simulation
+ok 128 - terrain waits for the exact admitted snapshot or incremental delta without advancing simulation
+  ---
+  duration_ms: 316.1971
+  ...
+# Subtest: terrain suppression waiter is cancellable and receives no premature publication receipt
+ok 129 - terrain suppression waiter is cancellable and receives no premature publication receipt
+  ---
+  duration_ms: 37.4048
+  ...
+# Subtest: manual timeline advances one same-time boundary at a time even when terrain is ready
+ok 130 - manual timeline advances one same-time boundary at a time even when terrain is ready
+  ---
+  duration_ms: 294.557
+  ...
+# Subtest: confirmed support follows the real piecewise triangular terrain including stationary intervals
+ok 131 - confirmed support follows the real piecewise triangular terrain including stationary intervals
+  ---
+  duration_ms: 88.4604
+  ...
+# Subtest: support rejects missing geometry, noncanonical topology, chunk crossings and unrelated safety failures
+ok 132 - support rejects missing geometry, noncanonical topology, chunk crossings and unrelated safety failures
+  ---
+  duration_ms: 13.7296
+  ...
+# Subtest: support validity expires on revisions, changed buffers and disposal
+ok 133 - support validity expires on revisions, changed buffers and disposal
+  ---
+  duration_ms: 29.0966
+  ...
+# Subtest: physical support retains all collider-bound terrain chunks without inventing a movement segment
+ok 134 - physical support retains all collider-bound terrain chunks without inventing a movement segment
+  ---
+  duration_ms: 10.4677
+  ...
+# Subtest: support crosses a matching chunk seam and rejects a discontinuous or missing side
+ok 135 - support crosses a matching chunk seam and rejects a discontinuous or missing side
+  ---
+  duration_ms: 15.4388
+  ...
+# Subtest: motion preview exposes support only while the confirmed terrain is unchanged
+ok 136 - motion preview exposes support only while the confirmed terrain is unchanged
+  ---
+  duration_ms: 14.1032
+  ...
+# Subtest: support can prepare one selected actor without scanning unsupported distant actors
+ok 137 - support can prepare one selected actor without scanning unsupported distant actors
+  ---
+  duration_ms: 19.3666
+  ...
+# Subtest: support accepts and follows an actual Wild Engine terrain chunk
+ok 138 - support accepts and follows an actual Wild Engine terrain chunk
+  ---
+  duration_ms: 698.5209
+  ...
+# Subtest: terrain diagnostic identifies missing or noncanonical endpoint chunks without admitting support
+ok 139 - terrain diagnostic identifies missing or noncanonical endpoint chunks without admitting support
+  ---
+  duration_ms: 9.2216
+  ...
+# Subtest: captured islet preview uses exact native chunks and the actual mangrove material
+ok 140 - captured islet preview uses exact native chunks and the actual mangrove material
+  ---
+  duration_ms: 2194.6914
+  ...
+# Subtest: 32-bit terrain indices receive the same topology and lifetime checks
+ok 141 - 32-bit terrain indices receive the same topology and lifetime checks
+  ---
+  duration_ms: 52.1288
+  ...
+# (node:2508) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:2508) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: early authority attaches ordered callbacks after construction without a graphical scene
+ok 142 - early authority attaches ordered callbacks after construction without a graphical scene
+  ---
+  duration_ms: 5.3315
+  ...
+# Subtest: early authority rejects malformed setup before creating a runtime
+ok 143 - early authority rejects malformed setup before creating a runtime
+  ---
+  duration_ms: 1.1757
+  ...
+# Subtest: prepared authority exposes snapshot-free presentation profile to its owner
+ok 144 - prepared authority exposes snapshot-free presentation profile to its owner
+  ---
+  duration_ms: 0.4737
+  ...
+# Subtest: prepared authority retains the far visual capability without recreating its client
+ok 145 - prepared authority retains the far visual capability without recreating its client
+  ---
+  duration_ms: 0.4723
+  ...
+# Subtest: far visual capability is fixed at early authority startup
+ok 146 - far visual capability is fixed at early authority startup
+  ---
+  duration_ms: 4.938
+  ...
+# Subtest: prepared authority attaches from its own snapshot without rebuilding state or navigation
+ok 147 - prepared authority attaches from its own snapshot without rebuilding state or navigation
+  ---
+  duration_ms: 1.7592
+  ...
+# Subtest: worker bootstrap ignores diagnostic URL switches in production
+ok 148 - worker bootstrap ignores diagnostic URL switches in production
+  ---
+  duration_ms: 1.9022
+  ...
+# Subtest: a product bootstrap can configure worker authority without QA flags
+ok 149 - a product bootstrap can configure worker authority without QA flags
+  ---
+  duration_ms: 0.6834
+  ...
+# Subtest: diagnostic overrides preserve legacy publication and trace behaviour
+ok 150 - diagnostic overrides preserve legacy publication and trace behaviour
+  ---
+  duration_ms: 0.5513
+  ...
+# Subtest: invalid batches fail before starting an authority
+ok 151 - invalid batches fail before starting an authority
+  ---
+  duration_ms: 1.3953
+  ...
+# Subtest: incremental HUD is enabled for the compatible product worker profile only
+ok 152 - incremental HUD is enabled for the compatible product worker profile only
+  ---
+  duration_ms: 0.7579
+  ...
+# Subtest: product HUD-only profile requires compact projected publications and excludes diagnostics
+ok 153 - product HUD-only profile requires compact projected publications and excludes diagnostics
+  ---
+  duration_ms: 1.3476
+  ...
+# Subtest: product Worker sends only active physics poses while diagnostics retain their profile
+ok 154 - product Worker sends only active physics poses while diagnostics retain their profile
+  ---
+  duration_ms: 1.6968
+  ...
+# Subtest: product omits diagnostic hyena samples while diagnostic and legacy profiles keep them
+ok 155 - product omits diagnostic hyena samples while diagnostic and legacy profiles keep them
+  ---
+  duration_ms: 2.4942
+  ...
+# (node:11124) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# Subtest: Worker camera reports its current navigation view without waiting for a frame acknowledgement
+ok 156 - Worker camera reports its current navigation view without waiting for a frame acknowledgement
+  ---
+  duration_ms: 6.1454
+  ...
+# Subtest: early world services focus the same farm and apply ordered confirmed state
+ok 157 - early world services focus the same farm and apply ordered confirmed state
+  ---
+  duration_ms: 257.2158
+  ...
+# Subtest: early presentation does not claim ownership of legacy prop meshes
+ok 158 - early presentation does not claim ownership of legacy prop meshes
+  ---
+  duration_ms: 1.2543
+  ...
+# Subtest: legacy receiver is required only for explicit development diagnostics
+ok 159 - legacy receiver is required only for explicit development diagnostics
+  ---
+  duration_ms: 39.8405
+  ...
+# Subtest: village preparation and preview belong to the graphical worker
+ok 160 - village preparation and preview belong to the graphical worker
+  ---
+  duration_ms: 0.9682
+  ...
+# Subtest: early spatial residency stores collision metadata without constructing meshes
+ok 161 - early spatial residency stores collision metadata without constructing meshes
+  ---
+  duration_ms: 0.6908
+  ...
+# Subtest: early loading cancels promptly and releases late resources
+ok 162 - early loading cancels promptly and releases late resources
+  ---
+  duration_ms: 30.0148
+  ...
+# Subtest: tutorial focus comes from the authority when no local navigation exists
+ok 163 - tutorial focus comes from the authority when no local navigation exists
+  ---
+  duration_ms: 3.0839
+  ...
+# Subtest: manual camera input cancels pending authoritative tutorial focus
+ok 164 - manual camera input cancels pending authoritative tutorial focus
+  ---
+  duration_ms: 4.3383
+  ...
+# Subtest: legacy tutorial targeting loads only on demand and ignores stale focus requests
+ok 165 - legacy tutorial targeting loads only on demand and ignores stale focus requests
+  ---
+  duration_ms: 4.9948
+  ...
+# Subtest: authority tutorial focus never loads local navigation
+ok 166 - authority tutorial focus never loads local navigation
+  ---
+  duration_ms: 1.8814
+  ...
+# Subtest: camera residency and farm focus use confirmed compact state after snapshot removal
+ok 167 - camera residency and farm focus use confirmed compact state after snapshot removal
+  ---
+  duration_ms: 1.7933
+  ...
+# (node:5292) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:5292) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: event invalidation reaches automatic recovery after the real stream applies a subboundary
+ok 168 - event invalidation reaches automatic recovery after the real stream applies a subboundary
+  ---
+  duration_ms: 1895.6684
+  ...
+# (node:2568) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:2568) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: historical event counters do not exist when the feature is disabled
+ok 169 - historical event counters do not exist when the feature is disabled
+  ---
+  duration_ms: 4.2255
+  ...
+# Subtest: multiple interior boundaries deliver ordered events with their own state and fail closed on observer failure
+ok 170 - multiple interior boundaries deliver ordered events with their own state and fail closed on observer failure
+  ---
+  duration_ms: 19.7246
+  ...
+# Subtest: replacement presentation replays the retained external boundary once in its new generation
+ok 171 - replacement presentation replays the retained external boundary once in its new generation
+  ---
+  duration_ms: 22.1894
+  ...
+# Subtest: real authority captures event ticks without changing the simulation or external sequence
+ok 172 - real authority captures event ticks without changing the simulation or external sequence
+  ---
+  duration_ms: 8052.6617
+  ...
+# Subtest: stream refuses interior events whose actor state differs from the sampled tick
+ok 173 - stream refuses interior events whose actor state differs from the sampled tick
+  ---
+  duration_ms: 6401.363
+  ...
+# Subtest: real night event uses an interior boundary through stream, clock and participant group
+ok 174 - real night event uses an interior boundary through stream, clock and participant group
+  ---
+  duration_ms: 2133.5334
+  ...
+# Subtest: same-time causal poses are observed in order before the validated post-tick pose and one ACK
+ok 175 - same-time causal poses are observed in order before the validated post-tick pose and one ACK
+  ---
+  duration_ms: 35.8722
+  ...
+# Subtest: an embedded stationary body remains in the pairwise safety test for passing actors
+ok 176 - an embedded stationary body remains in the pairwise safety test for passing actors
+  ---
+  duration_ms: 3.2545
+  ...
+# Subtest: a cloned certificate reuses the exact live support and terrain invalidation revokes it
+ok 177 - a cloned certificate reuses the exact live support and terrain invalidation revokes it
+  ---
+  duration_ms: 4.3813
+  ...
+# Subtest: slices are prepared once for exact trace and checked again on terrain change
+ok 178 - slices are prepared once for exact trace and checked again on terrain change
+  ---
+  duration_ms: 2.0587
+  ...
+# Subtest: unresolved event barriers cannot prepare slice support
+ok 179 - unresolved event barriers cannot prepare slice support
+  ---
+  duration_ms: 0.5021
+  ...
+# Subtest: diagnostics retain the latest rejected preview and copy only on request
+ok 180 - diagnostics retain the latest rejected preview and copy only on request
+  ---
+  duration_ms: 1.133
+  ...
+# Subtest: only recoverable historical profile bounds the publication horizon
+ok 181 - only recoverable historical profile bounds the publication horizon
+  ---
+  duration_ms: 3.5141
+  ...
+# Subtest: bounded batches retain all accepted ticks, events and intervening command order
+ok 182 - bounded batches retain all accepted ticks, events and intervening command order
+  ---
+  duration_ms: 11.7248
+  ...
+# (node:19316) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:19316) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: real authority keeps two-step real horizon through night fast-forward transition
+ok 183 - real authority keeps two-step real horizon through night fast-forward transition
+  ---
+  duration_ms: 1537.3003
+  ...
+# Subtest: journal proves historical terrain recovery through the authority manifest
+ok 184 - journal proves historical terrain recovery through the authority manifest
+  ---
+  duration_ms: 8.1575
+  ...
+# Subtest: missing or mismatched terrain boundaries are never accepted for reattachment
+ok 185 - missing or mismatched terrain boundaries are never accepted for reattachment
+  ---
+  duration_ms: 2.9481
+  ...
+# Subtest: real terrain ports continue the same epoch and revision after journalled recovery
+ok 186 - real terrain ports continue the same epoch and revision after journalled recovery
+  ---
+  duration_ms: 62.1214
+  ...
+# Subtest: cuts complete trace, ticks, clock and proof only at observed endpoints
+ok 187 - cuts complete trace, ticks, clock and proof only at observed endpoints
+  ---
+  duration_ms: 22.4554
+  ...
+# Subtest: rejects unobserved cuts, segment crossings and incomplete evidence
+ok 188 - rejects unobserved cuts, segment crossings and incomplete evidence
+  ---
+  duration_ms: 2.0625
+  ...
+# Subtest: refuses to inherit an overlap that is not resolved in the slice
+ok 189 - refuses to inherit an overlap that is not resolved in the slice
+  ---
+  duration_ms: 1.3134
+  ...
+# (node:19836) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:19836) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: historical event boundaries require and preserve the explicit recovery profile
+ok 190 - historical event boundaries require and preserve the explicit recovery profile
+  ---
+  duration_ms: 5.9572
+  ...
+# Subtest: product temporal mangrove enables mud consistently with an explicit opt-out
+ok 191 - product temporal mangrove enables mud consistently with an explicit opt-out
+  ---
+  duration_ms: 0.7072
+  ...
+# Subtest: explicit production mud is restricted to WebGPU mangrove and preserves bootstrap identity
+ok 192 - explicit production mud is restricted to WebGPU mangrove and preserves bootstrap identity
+  ---
+  duration_ms: 0.465
+  ...
+# Subtest: product temporal recovery requires an explicit complete profile and survives early preparation
+ok 193 - product temporal recovery requires an explicit complete profile and survives early preparation
+  ---
+  duration_ms: 0.4871
+  ...
+# Subtest: DEV mud selection remains consistent between early authority and graphical attachment
+ok 194 - DEV mud selection remains consistent between early authority and graphical attachment
+  ---
+  duration_ms: 0.7327
+  ...
+# Subtest: temporal mode is opt-in and fails closed for incomplete configurations
+ok 195 - temporal mode is opt-in and fails closed for incomplete configurations
+  ---
+  duration_ms: 0.582
+  ...
+# Subtest: coordinated temporal options reach the hosted runtime with distinct ports
+ok 196 - coordinated temporal options reach the hosted runtime with distinct ports
+  ---
+  duration_ms: 2.2957
+  ...
+# Subtest: an early authority negotiates the same temporal profile at preparation and graphical attachment
+ok 197 - an early authority negotiates the same temporal profile at preparation and graphical attachment
+  ---
+  duration_ms: 1.4147
+  ...
+# Subtest: harness-only complete recovery negotiates checkpoints while normal builds reject it
+ok 198 - harness-only complete recovery negotiates checkpoints while normal builds reject it
+  ---
+  duration_ms: 54.9451
+  ...
+# Subtest: reduced motion retains the blessing shader while disabling particle displacement
+ok 199 - reduced motion retains the blessing shader while disabling particle displacement
+  ---
+  duration_ms: 89.2016
+  ...
+# Subtest: blessing checkpoint retains the ritual delay after graphics recovery
+ok 200 - blessing checkpoint retains the ritual delay after graphics recovery
+  ---
+  duration_ms: 4.5646
+  ...
+# Subtest: blessing is admitted before display and a removed target cannot reappear
+ok 201 - blessing is admitted before display and a removed target cannot reappear
+  ---
+  duration_ms: 23.177
+  ...
+# Subtest: a transient admission failure retries without waiting for another state change
+ok 202 - a transient admission failure retries without waiting for another state change
+  ---
+  duration_ms: 7.2743
+  ...
+# Subtest: an unpublished admission is throttled and removal cancels retries
+ok 203 - an unpublished admission is throttled and removal cancels retries
+  ---
+  duration_ms: 7.3324
+  ...
+# Subtest: closing a blessing retains geometry until its active compilation settles
+ok 204 - closing a blessing retains geometry until its active compilation settles
+  ---
+  duration_ms: 35.089
+  ...
+# Subtest: confirmed blessings appear after ritual, loaded blessings immediately, and disappear on removal
+ok 205 - confirmed blessings appear after ritual, loaded blessings immediately, and disappear on removal
+  ---
+  duration_ms: 4.274
+  ...
+# Subtest: confirmed blessing synchronization wakes on target changes, events and ritual deadlines
+ok 206 - confirmed blessing synchronization wakes on target changes, events and ritual deadlines
+  ---
+  duration_ms: 3.1147
+  ...
+# Subtest: a blessing event wakes synchronization even without a changed target field
+ok 207 - a blessing event wakes synchronization even without a changed target field
+  ---
+  duration_ms: 3.865
+  ...
+# Subtest: new confirmed source waits for the ritual even if its event arrives later
+ok 208 - new confirmed source waits for the ritual even if its event arrives later
+  ---
+  duration_ms: 2.0034
+  ...
+# Subtest: confirmed batch delivers blessing events evicted from the state ring exactly once
+ok 209 - confirmed batch delivers blessing events evicted from the state ring exactly once
+  ---
+  duration_ms: 5.2351
+  ...
+# Subtest: a confirmed blessing event does not recreate a target absent from the final state
+ok 210 - a confirmed blessing event does not recreate a target absent from the final state
+  ---
+  duration_ms: 1.3366
+  ...
+# Subtest: shared confirmed clock drives blessing timing without advancing on unconfirmed state
+ok 211 - shared confirmed clock drives blessing timing without advancing on unconfirmed state
+  ---
+  duration_ms: 2.2205
+  ...
+# Subtest: confirmed blessing removal fades in GPU time and survives a recovery checkpoint
+ok 212 - confirmed blessing removal fades in GPU time and survives a recovery checkpoint
+  ---
+  duration_ms: 4.4423
+  ...
+# Subtest: a blessing removed before becoming visible does not create a fade
+ok 213 - a blessing removed before becoming visible does not create a fade
+  ---
+  duration_ms: 2.162
+  ...
+# Subtest: blessing fade is evaluated in the GPU graph from simulation time
+ok 214 - blessing fade is evaluated in the GPU graph from simulation time
+  ---
+  duration_ms: 25.0357
+  ...
+# Subtest: reveal timing for crop materials follows the recovered ritual checkpoint
+ok 215 - reveal timing for crop materials follows the recovered ritual checkpoint
+  ---
+  duration_ms: 4.2445
+  ...
+# Subtest: confirmed crop hit preserves the material flash across a recovery checkpoint
+ok 216 - confirmed crop hit preserves the material flash across a recovery checkpoint
+  ---
+  duration_ms: 5.7033
+  ...
+# Subtest: confirmed wall hit preserves its blessing flash through recovery
+ok 217 - confirmed wall hit preserves its blessing flash through recovery
+  ---
+  duration_ms: 4.6478
+  ...
+# Subtest: removal before GPU admission cannot produce a retrospective fade
+ok 218 - removal before GPU admission cannot produce a retrospective fade
+  ---
+  duration_ms: 16.2411
+  ...
+# Subtest: a new source in a visible shared batch must render before it can fade
+ok 219 - a new source in a visible shared batch must render before it can fade
+  ---
+  duration_ms: 3.0345
+  ...
+# Subtest: presented source survives a recovery checkpoint before the next draw
+ok 220 - presented source survives a recovery checkpoint before the next draw
+  ---
+  duration_ms: 5.6841
+  ...
+# Subtest: a confirmed wall supplies glow while particle admission is pending
+ok 221 - a confirmed wall supplies glow while particle admission is pending
+  ---
+  duration_ms: 7.3293
+  ...
+# Subtest: center damage keeps separate instance state and restores intact geometry after repair
+ok 222 - center damage keeps separate instance state and restores intact geometry after repair
+  ---
+  duration_ms: 119.9828
+  ...
+# Subtest: admission preserves the real destruction instance across ash transitions
+ok 223 - admission preserves the real destruction instance across ash transitions
+  ---
+  duration_ms: 107.0773
+  ...
+# Subtest: destruction smoke uses the shared terrain depth binding with a safe disabled fallback
+ok 224 - destruction smoke uses the shared terrain depth binding with a safe disabled fallback
+  ---
+  duration_ms: 131.4862
+  ...
+# Subtest: historical boundary synchronizes only certified state, time and ordered events
+ok 225 - historical boundary synchronizes only certified state, time and ordered events
+  ---
+  duration_ms: 5.4814
+  ...
+# Subtest: clock, state and event mismatches fail before any participant runs
+ok 226 - clock, state and event mismatches fail before any participant runs
+  ---
+  duration_ms: 1.2729
+  ...
+# Subtest: silent post-tick state synchronizes participants without lifecycle events
+ok 227 - silent post-tick state synchronizes participants without lifecycle events
+  ---
+  duration_ms: 0.8914
+  ...
+# Subtest: night coverage follows the intermediate lighting before participant synchronization
+ok 228 - night coverage follows the intermediate lighting before participant synchronization
+  ---
+  duration_ms: 0.6852
+  ...
+# (node:920) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:920) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: two isolated ragdolls share the clock, keep their own poses and roll back together
+ok 229 - two isolated ragdolls share the clock, keep their own poses and roll back together
+  ---
+  duration_ms: 28.146
+  ...
+# Subtest: isolated physical animal plays confirmed poses discretely and hands off at the end
+ok 230 - isolated physical animal plays confirmed poses discretely and hands off at the end
+  ---
+  duration_ms: 4.2341
+  ...
+# Subtest: product enables one temporal/recovery/event/far profile without QA flags
+ok 231 - product enables one temporal/recovery/event/far profile without QA flags
+  ---
+  duration_ms: 4.9782
+  ...
+# Subtest: legacy and explicit reversions do not accidentally enable dependent protocols
+ok 232 - legacy and explicit reversions do not accidentally enable dependent protocols
+  ---
+  duration_ms: 0.7646
+  ...
+# Subtest: VFX recipes describe their real depth and non-casting contracts
+ok 233 - VFX recipes describe their real depth and non-casting contracts
+  ---
+  duration_ms: 2.7542
+  ...
+# Subtest: auxiliary recipes distinguish reduction, transparent ripples and opaque instanced shadow casters
+ok 234 - auxiliary recipes distinguish reduction, transparent ripples and opaque instanced shadow casters
+  ---
+  duration_ms: 0.3864
+  ...
+# Subtest: authored deformations retain source ownership and distinguish all passes
+ok 235 - authored deformations retain source ownership and distinguish all passes
+  ---
+  duration_ms: 0.8449
+  ...
+# Subtest: mangrove ground recipes retain bound atlas identity and embedded tile parameters
+ok 236 - mangrove ground recipes retain bound atlas identity and embedded tile parameters
+  ---
+  duration_ms: 0.9776
+  ...
+# Subtest: color recipes separate graph structure from dynamic material data
+ok 237 - color recipes separate graph structure from dynamic material data
+  ---
+  duration_ms: 2.7259
+  ...
+# Subtest: structure recipe distinguishes vertex color layouts and keeps per-material inputs
+ok 238 - structure recipe distinguishes vertex color layouts and keeps per-material inputs
+  ---
+  duration_ms: 1.1717
+  ...
+# Subtest: nearest and repeat sampling can generate a different WebGPU shader
+ok 239 - nearest and repeat sampling can generate a different WebGPU shader
+  ---
+  duration_ms: 53.7948
+  ...
+# Subtest: anisotropy leaves generated WebGPU color code unchanged while sampler policy remains separate
+ok 240 - anisotropy leaves generated WebGPU color code unchanged while sampler policy remains separate
+  ---
+  duration_ms: 16.1456
+  ...
+# Subtest: water recipe separates graph inputs from clipping state and shadow-light identity
+ok 241 - water recipe separates graph inputs from clipping state and shadow-light identity
+  ---
+  duration_ms: 2.0217
+  ...
+# Subtest: lava recipe keeps clipped material state distinct while sharing its color graph
+ok 242 - lava recipe keeps clipped material state distinct while sharing its color graph
+  ---
+  duration_ms: 3.1849
+  ...
+# Subtest: beast toon recipe separates fur and shadows from lighting data
+ok 243 - beast toon recipe separates fur and shadows from lighting data
+  ---
+  duration_ms: 0.6845
+  ...
+# Subtest: guardian uses the catalogued render state while gestures update uniforms
+ok 244 - guardian uses the catalogued render state while gestures update uniforms
+  ---
+  duration_ms: 2.7709
+  ...
+# Subtest: default terrain state distinguishes shadow code and preserves vertex colors
+ok 245 - default terrain state distinguishes shadow code and preserves vertex colors
+  ---
+  duration_ms: 0.6981
+  ...
+# Subtest: baked walk recipe distinguishes texture and timing sources from per-instance values
+ok 246 - baked walk recipe distinguishes texture and timing sources from per-instance values
+  ---
+  duration_ms: 1.6007
+  ...
+# Subtest: biome surface recipe makes clip, instance layout and shadow coverage structural
+ok 247 - biome surface recipe makes clip, instance layout and shadow coverage structural
+  ---
+  duration_ms: 1.1831
+  ...
+# THREE.TSL: "atan2" is overloaded. Use "atan" instead.
+# Subtest: shield geometry shares its shader while retaining independent eye and time values
+ok 248 - shield geometry shares its shader while retaining independent eye and time values
+  ---
+  duration_ms: 11.3069
+  ...
+# Subtest: rigid effects share a graph but retain independent local lights and exclude world VFX slots
+ok 249 - rigid effects share a graph but retain independent local lights and exclude world VFX slots
+  ---
+  duration_ms: 399.2551
+  ...
+# Subtest: leaf wind uses the effect clock independently in color and shadow passes
+ok 250 - leaf wind uses the effect clock independently in color and shadow passes
+  ---
+  duration_ms: 1873.1813
+  ...
+# Subtest: sprite effects share shader graphs while material references remain independent
+ok 251 - sprite effects share shader graphs while material references remain independent
+  ---
+  duration_ms: 27.2319
+  ...
+# Subtest: sprite graph distinguishes incompatible atlas layouts and resource identities
+ok 252 - sprite graph distinguishes incompatible atlas layouts and resource identities
+  ---
+  duration_ms: 9.456
+  ...
+# Subtest: lit world does not request normals or duplicate lighting for authored billboard output
+ok 253 - lit world does not request normals or duplicate lighting for authored billboard output
+  ---
+  duration_ms: 313.88
+  ...
+# Subtest: guardian vortex ribbons preserve authored output without a normal attribute in a lit scene
+ok 254 - guardian vortex ribbons preserve authored output without a normal attribute in a lit scene
+  ---
+  duration_ms: 48.1307
+  ...
+# Subtest: optional terrain depth graph shares bindings, supports resizing and builds WGSL without a GPU
+ok 255 - optional terrain depth graph shares bindings, supports resizing and builds WGSL without a GPU
+  ---
+  duration_ms: 138.2455
+  ...
+# Subtest: a failed resize retries the latest requested size after backoff without enabling stale depth
+ok 256 - a failed resize retries the latest requested size after backoff without enabling stale depth
+  ---
+  duration_ms: 24.7331
+  ...
+# Subtest: a transient AbortError without an aborted owner cannot cause an unbounded retry loop
+ok 257 - a transient AbortError without an aborted owner cannot cause an unbounded retry loop
+  ---
+  duration_ms: 4.9225
+  ...
+# Subtest: depth capture follows demand and never waits for preparation in a frame
+ok 258 - depth capture follows demand and never waits for preparation in a frame
+  ---
+  duration_ms: 14.9908
+  ...
+# Subtest: resize disables depth until the newest target is published and disposes safely
+ok 259 - resize disables depth until the newest target is published and disposes safely
+  ---
+  duration_ms: 7.7587
+  ...
+# THREE.TSL: "atan2" is overloaded. Use "atan" instead.
+# Subtest: capture errors disable the effect and limit retries
+ok 260 - capture errors disable the effect and limit retries
+  ---
+  duration_ms: 3.0984
+  ...
+# Subtest: real VFX and terrain capture wait for the visible revision before applying soft depth
+ok 261 - real VFX and terrain capture wait for the visible revision before applying soft depth
+  ---
+  duration_ms: 110.1608
+  ...
+# Subtest: confirmed effects share stable light slots and retain world transforms
+ok 262 - confirmed effects share stable light slots and retain world transforms
+  ---
+  duration_ms: 14.2009
+  ...
+# Subtest: light selection favours nearby sources and never grows the slot set
+ok 263 - light selection favours nearby sources and never grows the slot set
+  ---
+  duration_ms: 1.7278
+  ...
+# Subtest: product temporal profile enables confirmed movement observation before early authority preparation
+ok 264 - product temporal profile enables confirmed movement observation before early authority preparation
+  ---
+  duration_ms: 8.6145
+  ...
+# Subtest: far visual option is explicit and stable for a replacement presentation
+ok 265 - far visual option is explicit and stable for a replacement presentation
+  ---
+  duration_ms: 2.8029
+  ...
+# Subtest: the temporal attachment is composed into the immutable profile before worker startup
+ok 266 - the temporal attachment is composed into the immutable profile before worker startup
+  ---
+  duration_ms: 1.8036
+  ...
+# Subtest: water Hi-SSR is opt-in for development and cannot be enabled in production by URL
+ok 267 - water Hi-SSR is opt-in for development and cannot be enabled in production by URL
+  ---
+  duration_ms: 0.8121
+  ...
+# Subtest: the product Worker selects the textured mangrove ground consistently on recovery
+ok 268 - the product Worker selects the textured mangrove ground consistently on recovery
+  ---
+  duration_ms: 3.4511
+  ...
+# Subtest: camera terrain follows product capabilities and ignores diagnostic URLs in production
+ok 269 - camera terrain follows product capabilities and ignores diagnostic URLs in production
+  ---
+  duration_ms: 0.783
+  ...
+# Subtest: initial and recovered worlds share the complete early presentation profile
+ok 270 - initial and recovered worlds share the complete early presentation profile
+  ---
+  duration_ms: 1.2887
+  ...
+# Subtest: profile selection ignores removed animals and does not enable development-only flags in production
+ok 271 - profile selection ignores removed animals and does not enable development-only flags in production
+  ---
+  duration_ms: 0.5733
+  ...
+# Subtest: diagnostic URLs cannot alter the production graphical profile
+ok 272 - diagnostic URLs cannot alter the production graphical profile
+  ---
+  duration_ms: 1.5099
+  ...
+# Subtest: the causal QA profile exercises the general presentation input channel
+ok 273 - the causal QA profile exercises the general presentation input channel
+  ---
+  duration_ms: 0.8038
+  ...
+# Subtest: the actual game profile can exercise all baked walking species and retains the setting across recovery
+ok 274 - the actual game profile can exercise all baked walking species and retains the setting across recovery
+  ---
+  duration_ms: 0.7092
+  ...
+# Subtest: explicit recovery config is shared by the renderer outside QA
+ok 275 - explicit recovery config is shared by the renderer outside QA
+  ---
+  duration_ms: 2.9782
+  ...
+# Subtest: explicit presentation capabilities are independent of diagnostic flags and stable across recovery
+ok 276 - explicit presentation capabilities are independent of diagnostic flags and stable across recovery
+  ---
+  duration_ms: 1.1734
+  ...
+# Subtest: explicit graphical input enables authoritative guardian placement for a new hosted authority
+ok 277 - explicit graphical input enables authoritative guardian placement for a new hosted authority
+  ---
+  duration_ms: 0.9268
+  ...
+# Subtest: physical collider bounds must remain outside the complete swing of every unchanged gate
+ok 278 - physical collider bounds must remain outside the complete swing of every unchanged gate
+  ---
+  duration_ms: 54.2063
+  ...
+# Subtest: a gate conflict with the second body rejects the complete group
+ok 279 - a gate conflict with the second body rejects the complete group
+  ---
+  duration_ms: 1.9216
+  ...
+# Subtest: multiple bodies require disjoint whole-interval envelopes and stable identities
+ok 280 - multiple bodies require disjoint whole-interval envelopes and stable identities
+  ---
+  duration_ms: 11.7545
+  ...
+# Subtest: only an isolated single ragdoll with a clear complete path of other actors is certified
+ok 281 - only an isolated single ragdoll with a clear complete path of other actors is certified
+  ---
+  duration_ms: 1.6464
+  ...
+# Subtest: continuous body separation rejects crossing trajectories and stationary bodies
+ok 282 - continuous body separation rejects crossing trajectories and stationary bodies
+  ---
+  duration_ms: 5.3136
+  ...
+# Subtest: existing overlaps may escape only by continuous separation and without re-entry
+ok 283 - existing overlaps may escape only by continuous separation and without re-entry
+  ---
+  duration_ms: 1.6851
+  ...
+# Subtest: rejects discontinuous, untimed and over-budget traces
+ok 284 - rejects discontinuous, untimed and over-budget traces
+  ---
+  duration_ms: 0.8109
+  ...
+# Subtest: visual paths must match the authority at every recorded tick
+ok 285 - visual paths must match the authority at every recorded tick
+  ---
+  duration_ms: 0.8494
+  ...
+# (node:14388) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:14388) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: real authority accepts a command while the graphical checkpoint acknowledgement is pending
+ok 286 - real authority accepts a command while the graphical checkpoint acknowledgement is pending
+  ---
+  duration_ms: 3641.1863
+  ...
+# Subtest: host keeps historical recovery unavailable in a production build
+ok 287 - host keeps historical recovery unavailable in a production build
+  ---
+  duration_ms: 129.9619
+  ...
+# Subtest: real host direct rejects a stale historical handoff and propagates replay failure
+ok 288 - real host direct rejects a stale historical handoff and propagates replay failure
+  ---
+  duration_ms: 155.0629
+  ...
+# Subtest: real host prepared early rejects a stale historical handoff and propagates replay failure
+ok 289 - real host prepared early rejects a stale historical handoff and propagates replay failure
+  ---
+  duration_ms: 127.1808
+  ...
+# (node:14388) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# Subtest: prepared host replays checkpoints and publications produced by real Wild Engine
+ok 290 - prepared host replays checkpoints and publications produced by real Wild Engine
+  ---
+  duration_ms: 3364.6209
+  ...
+# Subtest: capture emits multi-body evidence without changing state and revokes it across lifecycle changes
+ok 291 - capture emits multi-body evidence without changing state and revokes it across lifecycle changes
+  ---
+  duration_ms: 116.0838
+  ...
+# Subtest: inactive home/gone bodies retain identity but do not block visual certification inside buildings
+ok 292 - inactive home/gone bodies retain identity but do not block visual certification inside buildings
+  ---
+  duration_ms: 5.2309
+  ...
+# Subtest: observes all animals and workers over one existing movement batch
+ok 293 - observes all animals and workers over one existing movement batch
+  ---
+  duration_ms: 2.1461
+  ...
+# Subtest: reports roster, chunk and terrain changes without claiming a safe interval
+ok 294 - reports roster, chunk and terrain changes without claiming a safe interval
+  ---
+  duration_ms: 2.8054
+  ...
+# Subtest: captures physics activity across ticks and fails closed on invalid samples
+ok 295 - captures physics activity across ticks and fails closed on invalid samples
+  ---
+  duration_ms: 2.0728
+  ...
+# Subtest: spatial evidence is bounded, revision-bound and fails closed on blocked segments
+ok 296 - spatial evidence is bounded, revision-bound and fails closed on blocked segments
+  ---
+  duration_ms: 3.3189
+  ...
+# Subtest: separation evidence fails closed for a live gate or unknown physics
+ok 297 - separation evidence fails closed for a live gate or unknown physics
+  ---
+  duration_ms: 1.847
+  ...
+# Subtest: a stationary gate does not block certified motion outside its entire swing
+ok 298 - a stationary gate does not block certified motion outside its entire swing
+  ---
+  duration_ms: 2.5164
+  ...
+# Subtest: gate sweep proximity and gate geometry changes reject historical certification
+ok 299 - gate sweep proximity and gate geometry changes reject historical certification
+  ---
+  duration_ms: 4.1961
+  ...
+1..299
+# tests 299
+# suites 0
+# pass 299
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 96003.345

@@ -2,10 +2,26 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {LoadingCinematic} from '../src/rendering/loading-cinematic.js';
+import {FarTreeTransitions} from '../tools/experiments/far-tree-transitions.js';
 function fixture(){const camera=new THREE.PerspectiveCamera(42,1,.1,500);camera.position.set(8,7.5,10);const target=new THREE.Vector3(0,.18,0);camera.lookAt(target);const calls=[],world={camera,controls:{target,enabled:false},nav:{field:{surface:()=>0}},objects:new Map(),state:{villages:[],structures:[],plants:[{id:'real-crop'}]},render(){calls.push('world');}},diorama={camera:camera.clone(),stopPlanting(){this.stopped=true;},render(dt,progress,options){calls.push(options.skyOnly?'sky':'diorama');}};return {world,diorama,calls};}
 
 test('loading audio handoff fires once before the first world presentation',async()=>{
  const {world,diorama,calls}=fixture(),cinema=new LoadingCinematic(world,diorama,{onHandoff:()=>calls.push('handoff')});cinema.step(.8);assert.equal(calls.includes('handoff'),false);cinema.step(.4);assert.deepEqual(calls.slice(-2),['handoff','world']);cinema.step(.3);assert.equal(calls.filter(c=>c==='handoff').length,1);cinema.cancel();
+});
+test('loading overlay ends at the sky before world handoff, even when a frame skips phases',()=>{
+ for(const step of [.8,3]){
+  const {world,diorama,calls}=fixture(),cinema=new LoadingCinematic(world,diorama,{onSky:()=>calls.push('hide-overlay'),onHandoff:()=>calls.push('handoff')});
+  cinema.step(.2);assert.equal(calls.includes('hide-overlay'),false);cinema.step(step);
+  assert.equal(calls.filter(x=>x==='hide-overlay').length,1);
+  if(step===3)assert.ok(calls.indexOf('hide-overlay')<calls.indexOf('handoff'));
+  cinema.step(.2);assert.equal(calls.filter(x=>x==='hide-overlay').length,1);cinema.cancel();
+ }
+});
+test('cinematic advances far presentation without advancing simulation',()=>{
+ const {world,diorama}=fixture(),before=JSON.stringify(world.state),calls=[];
+ world.render=(simulationDelta,farVisualDelta)=>calls.push([simulationDelta,farVisualDelta]);
+ const cinema=new LoadingCinematic(world,diorama);cinema.step(1.2);cinema.step(.2);
+ assert.deepEqual(calls,[[0,1.2],[0,.2]]);assert.equal(JSON.stringify(world.state),before);cinema.cancel();
 });
 test('camera sky handoff and travel preserve exact gameplay pose and simulation state',async()=>{
  const {world,diorama,calls}=fixture(),before=JSON.stringify(world.state),eye=world.camera.position.toArray(),q=world.camera.quaternion.toArray(),target=world.controls.target.toArray(),cinema=new LoadingCinematic(world,diorama);
@@ -16,6 +32,17 @@ test('reduced motion completes with the same exact final pose',async()=>{const {
 test('cancelled cinematic restores the camera and rejects completion',async()=>{const {world,diorama}=fixture(),eye=world.camera.position.clone(),cinema=new LoadingCinematic(world,diorama);cinema.step(.8);cinema.cancel();await assert.rejects(cinema.finished,/cancelled/);assert.deepEqual(world.camera.position,eye);assert.equal(world.cinematic,false);});
 
 test('reveal prewarm does not start transition or change final camera',async()=>{const {world,diorama,calls}=fixture(),eye=world.camera.position.toArray(),cinema=new LoadingCinematic(world,diorama,{autoStart:false});await cinema.prepare({nextFrame:async()=>{},afterRender:()=>calls.push('cover')});assert.equal(cinema.time,0);assert.deepEqual(world.camera.position.toArray(),eye);cinema.step(3);assert.equal(cinema.time,0);assert.deepEqual(calls,['world','cover','world','cover']);cinema.start();cinema.step(5);await cinema.finished;assert.deepEqual(world.camera.position.toArray(),eye);});
+
+test('reveal settles only GPU-ready tree transitions beneath the cover',async()=>{
+ const {world,diorama}=fixture(),values=new Map(),transitions=new FarTreeTransitions();
+ transitions.bind({setTreeReadiness:(id,value)=>values.set(id,value),setTreeEnabled(){}},[{id:'ready'},{id:'pending'}]);
+ transitions.setCoverage({revision:1,has:id=>id==='ready'},true);
+ let updates=0;world.farVegetation={adapters:[{layer:{transitions}}],update:()=>updates++};
+ const cinema=new LoadingCinematic(world,diorama,{autoStart:false});
+ await cinema.prepare({nextFrame:async()=>{}});
+ assert.equal(values.get('ready'),1);assert.equal(values.get('pending'),0);assert.equal(updates,2);assert.equal(cinema.time,0);
+ cinema.cancel();
+});
 
 test('cinematic rejects a moving orbit before capturing presentation pose',()=>{const {world,diorama}=fixture();diorama.orbit={settled:false};assert.throws(()=>new LoadingCinematic(world,diorama),/must settle/);assert.equal(world.cinematic,undefined);diorama.orbit.settled=true;const cinema=new LoadingCinematic(world,diorama);assert.deepEqual(cinema.loadingEye,diorama.camera.position);cinema.cancel();});
 

@@ -12,6 +12,17 @@ function fixture(){
  Game.placeStructure(s,'center',{x:-12,z:0},nav);Game.plant(s,'seed','mijo',8,4,nav);
  s.day=6;s.time=320;s.initialPreparation=false;s.dayPlan={done:true};s.nightPlan={done:true};return {s,nav};
 }
+
+test('observer contract counts several area receipts as one consumed attack and sums clamped damage',()=>{
+ const {s}=fixture(),observer=createNativeRaidCampaignEvidence(s);
+ // Observer-only receipt fixture; not a simulated combat or balance result.
+ Game.emit(s,'RaidSpawned',{raidFacts:{id:'fixture',day:6,daytime:false,elapsed:s.elapsed,exposedLiving:2,exposedWounded:0,actors:[{id:'a',species:'warthog',hitsRemaining:2,spawn:{x:0,z:0},exit:{x:0,z:0}}]}});
+ for(const [targetId,central,damage] of [['one',true,1],['two',false,.5]])Game.emit(s,'CropHit',{targetId,central,damage,before:0,after:damage,animalId:'a',attackId:'hit-a'});
+ Game.emit(s,'AnimalLogicalHit',{species:'warthog',attackId:'hit-a',presentation:{}});
+ Game.emit(s,'RaidEnded');const report=observer.report(s),r=report.raids[0];
+ assert.equal(report.status,'verified');assert.equal(r.cropHits,2);assert.equal(r.species.warthog.cropHits,1);
+ assert.equal(r.species.warthog.observedBudgetConsumed,1);assert.equal(r.agriculturalHpDamage,1.5);assert.equal(r.centralHpDamage,1);assert.equal(r.peripheralHpDamage,.5);
+});
 test('native contacts reconcile budgets and physical crop replacement costs without mutation through reload',()=>{
  let {s,nav}=fixture();const observer=createNativeRaidCampaignEvidence(s);spawnRaid(s,{group:['warthog']},nav);observer.observe(s);
  const initial=s.raid.animals[0].hitsRemaining;let steps=0;

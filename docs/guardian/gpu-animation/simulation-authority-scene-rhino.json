@@ -1,0 +1,28 @@
+{
+  "species": "rhino",
+  "biome": "manglares",
+  "network": true,
+  "animalId": "qa-beast-4",
+  "site": {
+    "x": 70.59110991546882,
+    "z": -36.89417145876975
+  },
+  "chunks": 25,
+  "publications": 91,
+  "framesWhilePending": 260,
+  "activeSteps": 87,
+  "verifiedPoses": 87,
+  "phases": [
+    "released",
+    "falling",
+    "rolling",
+    "recovering"
+  ],
+  "finalPhase": "released",
+  "visualEvents": 65,
+  "simulationEvents": 0,
+  "saveAvailable": true,
+  "sequence": 91,
+  "sceneErrors": [],
+  "scope": "One programmatic impact on a relocated animal in the real island-mangrove WorldScene QA fixture with 20 animals. Worker physics supports only that actor and rejects missing nearby building geometry. Confirmed poses are applied on the main thread, not GPU. No original WorldScene physical comparison, player UI, multiple ragdolls, moving obstacles, recovery across save, production integration or continuous visual acceptance."
+}

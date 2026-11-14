@@ -1,0 +1,37 @@
+TAP version 13
+# (node:21344) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: residency pins actual sparse birth/exit chunks without generating the expanded rectangle
+ok 1 - residency pins actual sparse birth/exit chunks without generating the expanded rectangle
+  ---
+  duration_ms: 5.5305
+  ...
+# Subtest: pins are evicted and bounds restored after cancellation, without disrupting normal chunks
+ok 2 - pins are evicted and bounds restored after cancellation, without disrupting normal chunks
+  ---
+  duration_ms: 1.7353
+  ...
+# Subtest: active actor next-step corridor remains pinned and all demand disappears after real departure
+ok 3 - active actor next-step corridor remains pinned and all demand disappears after real departure
+  ---
+  duration_ms: 0.4875
+  ...
+# Subtest: bounds refresh retains validated sparse demand while a new full worker key is prepared
+ok 4 - bounds refresh retains validated sparse demand while a new full worker key is prepared
+  ---
+  duration_ms: 5.7807
+  ...
+# Subtest: headless driver waits for the same retained daytime owner instead of the nighttime key
+ok 5 - headless driver waits for the same retained daytime owner instead of the nighttime key
+  ---
+  duration_ms: 30.0891
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 706.4209

@@ -1,0 +1,143 @@
+{
+  "runs": [
+    {
+      "run": 0,
+      "chunks": 9,
+      "profiles": [
+        {
+          "species": "hyena",
+          "radius": 0.9,
+          "count": 1587,
+          "free": 991,
+          "fastMs": 8.21289999999999,
+          "firstMs": 123.82569999999998,
+          "referenceMs": 14.303899999999999,
+          "mismatches": 0
+        },
+        {
+          "species": "buffalo",
+          "radius": 0.97,
+          "count": 1587,
+          "free": 975,
+          "fastMs": 6.750799999999913,
+          "firstMs": 119.99839999999995,
+          "referenceMs": 8.474299999999971,
+          "mismatches": 0
+        },
+        {
+          "species": "lion",
+          "radius": 0.85,
+          "count": 1587,
+          "free": 1003,
+          "fastMs": 6.289499999999975,
+          "firstMs": 126.08449999999993,
+          "referenceMs": 6.6096,
+          "mismatches": 0
+        },
+        {
+          "species": "rhino",
+          "radius": 1.55,
+          "count": 1587,
+          "free": 825,
+          "fastMs": 5.36869999999999,
+          "firstMs": 109.05709999999999,
+          "referenceMs": 6.970299999999952,
+          "mismatches": 0
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "chunks": 9,
+      "profiles": [
+        {
+          "species": "hyena",
+          "radius": 0.9,
+          "count": 1587,
+          "free": 991,
+          "fastMs": 7.6621000000000095,
+          "firstMs": 124.86169999999993,
+          "referenceMs": 9.105600000000095,
+          "mismatches": 0
+        },
+        {
+          "species": "buffalo",
+          "radius": 0.97,
+          "count": 1587,
+          "free": 975,
+          "fastMs": 6.542299999999841,
+          "firstMs": 122.0168000000001,
+          "referenceMs": 7.266099999999824,
+          "mismatches": 0
+        },
+        {
+          "species": "lion",
+          "radius": 0.85,
+          "count": 1587,
+          "free": 1003,
+          "fastMs": 6.488600000000133,
+          "firstMs": 126.22459999999978,
+          "referenceMs": 6.646600000000035,
+          "mismatches": 0
+        },
+        {
+          "species": "rhino",
+          "radius": 1.55,
+          "count": 1587,
+          "free": 825,
+          "fastMs": 6.185599999999795,
+          "firstMs": 107.20380000000023,
+          "referenceMs": 5.852699999999913,
+          "mismatches": 0
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "chunks": 9,
+      "profiles": [
+        {
+          "species": "hyena",
+          "radius": 0.9,
+          "count": 1587,
+          "free": 991,
+          "fastMs": 7.278400000000147,
+          "firstMs": 122.22559999999976,
+          "referenceMs": 7.988600000000133,
+          "mismatches": 0
+        },
+        {
+          "species": "buffalo",
+          "radius": 0.97,
+          "count": 1587,
+          "free": 975,
+          "fastMs": 6.526400000000194,
+          "firstMs": 120.70710000000008,
+          "referenceMs": 8.425600000000031,
+          "mismatches": 0
+        },
+        {
+          "species": "lion",
+          "radius": 0.85,
+          "count": 1587,
+          "free": 1003,
+          "fastMs": 6.68060000000014,
+          "firstMs": 124.9082999999996,
+          "referenceMs": 6.738400000000183,
+          "mismatches": 0
+        },
+        {
+          "species": "rhino",
+          "radius": 1.55,
+          "count": 1587,
+          "free": 825,
+          "fastMs": 5.50229999999965,
+          "firstMs": 107.71149999999989,
+          "referenceMs": 5.6952000000001135,
+          "mismatches": 0
+        }
+      ]
+    }
+  ],
+  "scope": "Experimental WASM only, Node, mangrove island fixture with nine resident chunks, synthetic oriented barrier and four cold animal profiles. Candidate borrows an existing active profile solely for residency, temporarily sets exact radius and mobility, and runs the same short collision query; reference builds the full profile. Static point and short-segment samples only. No dynamic changes while reading, doors, excluded walls, exhaustive biome or actor coverage, routes, simulation, rendering, GPU, workers, publication, proof that resident profile sets always match, or production integration."
+}

@@ -1,0 +1,5 @@
+import {writeFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import sharp from 'sharp';
+const [preloaded,deferred,output]=process.argv.slice(2);if(!deferred)throw Error('Usage: node compare_uber_grass_lazy_images.mjs PRELOADED.png DEFERRED.png [OUTPUT]');
+const [a,b]=await Promise.all([preloaded,deferred].map(path=>sharp(path).ensureAlpha().raw().toBuffer({resolveWithObject:true})));if(a.info.width!==b.info.width||a.info.height!==b.info.height||a.data.length!==b.data.length)throw Error('Screenshot dimensions differ');let differingChannels=0,maxChannelDifference=0;for(let i=0;i<a.data.length;i++){let value=Math.abs(a.data[i]-b.data[i]);if(value)differingChannels++;maxChannelDifference=Math.max(maxChannelDifference,value);}const digest=data=>createHash('sha256').update(data).digest('hex'),result={width:a.info.width,height:a.info.height,originalSha256:digest(a.data),deferredSha256:digest(b.data),differingChannels,maxChannelDifference};if(differingChannels)throw Error('Deferred texture visual mismatch: '+JSON.stringify(result));const json=JSON.stringify(result,null,2);if(output)await writeFile(output,json);else console.log(json);

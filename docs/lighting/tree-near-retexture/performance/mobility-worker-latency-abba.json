@@ -1,0 +1,413 @@
+{
+  "description": "Isolated browser laboratory; synthetic requests to production Wild Engine WASM, fixed visual horizon and static rig. Not game integration.",
+  "results": [
+    {
+      "mode": "main",
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": 116,
+      "intervals": {
+        "p95": 33.39500000000044,
+        "p99": 99.99000000000069,
+        "max": 100.03499999999985
+      },
+      "jobs": [
+        {
+          "id": 1,
+          "duration": 30,
+          "requestedAt": 3052.4249999970198,
+          "startedAt": 3052.4499999955297,
+          "elapsed": 30.189999997615814,
+          "queries": 388,
+          "found": 134,
+          "unknown": 254,
+          "finishedAt": 3082.759999997914,
+          "receivedAt": 3082.759999997914,
+          "requestToStartMs": 0.02499999850988388,
+          "responseLatencyMs": 30.33500000089407,
+          "maxIntervalMs": 33.375
+        },
+        {
+          "id": 2,
+          "duration": 50,
+          "requestedAt": 3852.445000000298,
+          "startedAt": 3852.4649999961257,
+          "elapsed": 50.44500000029802,
+          "queries": 713,
+          "found": 247,
+          "unknown": 466,
+          "finishedAt": 3902.9199999943376,
+          "receivedAt": 3902.9199999943376,
+          "requestToStartMs": 0.019999995827674866,
+          "responseLatencyMs": 50.474999994039536,
+          "maxIntervalMs": 33.35500000000002
+        },
+        {
+          "id": 3,
+          "duration": 100,
+          "requestedAt": 4652.394999995828,
+          "startedAt": 4652.394999995828,
+          "elapsed": 100.35000000149012,
+          "queries": 1448,
+          "found": 502,
+          "unknown": 946,
+          "finishedAt": 4752.789999999106,
+          "receivedAt": 4752.789999999106,
+          "requestToStartMs": 0,
+          "responseLatencyMs": 100.39500000327826,
+          "maxIntervalMs": 100.03499999999985
+        },
+        {
+          "id": 4,
+          "duration": 100,
+          "requestedAt": 5452.39999999851,
+          "startedAt": 5452.39999999851,
+          "elapsed": 100,
+          "queries": 1457,
+          "found": 503,
+          "unknown": 954,
+          "finishedAt": 5552.409999996424,
+          "receivedAt": 5552.409999996424,
+          "requestToStartMs": 0,
+          "responseLatencyMs": 100.00999999791384,
+          "maxIntervalMs": 99.99000000000069
+        }
+      ],
+      "gpu": {
+        "reason": null,
+        "samples": 117,
+        "p95": 0.490592,
+        "p99": 0.593376,
+        "discarded": 0
+      },
+      "visual": {
+        "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "compiled": 8,
+        "visual": [
+          {
+            "count": 7910,
+            "centerX": 318.3748419721871,
+            "centerY": 191.3385587863464
+          },
+          {
+            "count": 9251,
+            "centerX": 407.34407091125286,
+            "centerY": 184.84336828450978
+          },
+          {
+            "count": 9251,
+            "centerX": 407.34407091125286,
+            "centerY": 184.84336828450978
+          }
+        ],
+        "horizon": 3.5,
+        "staticPose": true
+      }
+    },
+    {
+      "mode": "worker",
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": 120,
+      "intervals": {
+        "p95": 33.39000000000033,
+        "p99": 33.44499999999971,
+        "max": 33.44499999999971
+      },
+      "jobs": [
+        {
+          "id": 1,
+          "duration": 30,
+          "requestedAt": 1548.0950000062585,
+          "startedAt": 1548.469970703125,
+          "finishedAt": 1578.679931640625,
+          "receivedAt": 1578.8250000029802,
+          "elapsed": 30.070000000298023,
+          "queries": 382,
+          "found": 131,
+          "unknown": 251,
+          "requestToStartMs": 0.3749706968665123,
+          "responseLatencyMs": 30.729999996721745,
+          "maxIntervalMs": 33.34500000000003
+        },
+        {
+          "id": 2,
+          "duration": 50,
+          "requestedAt": 2381.4700000062585,
+          "startedAt": 2381.570068359375,
+          "finishedAt": 2431.68505859375,
+          "receivedAt": 2431.820000000298,
+          "elapsed": 50.09000000357628,
+          "queries": 682,
+          "found": 236,
+          "unknown": 446,
+          "requestToStartMs": 0.1000683531165123,
+          "responseLatencyMs": 50.349999994039536,
+          "maxIntervalMs": 33.39000000000033
+        },
+        {
+          "id": 3,
+          "duration": 100,
+          "requestedAt": 3181.445000000298,
+          "startedAt": 3181.56494140625,
+          "finishedAt": 3281.909912109375,
+          "receivedAt": 3282.030000001192,
+          "elapsed": 100.27499999850988,
+          "queries": 1406,
+          "found": 486,
+          "unknown": 920,
+          "requestToStartMs": 0.11994140595197678,
+          "responseLatencyMs": 100.58500000089407,
+          "maxIntervalMs": 33.34999999999991
+        },
+        {
+          "id": 4,
+          "duration": 100,
+          "requestedAt": 3948.0250000059605,
+          "startedAt": 3948.150146484375,
+          "finishedAt": 4048.530029296875,
+          "receivedAt": 4048.795000001788,
+          "elapsed": 100.32999999821186,
+          "queries": 1417,
+          "found": 491,
+          "unknown": 926,
+          "requestToStartMs": 0.12514647841453552,
+          "responseLatencyMs": 100.76999999582767,
+          "maxIntervalMs": 33.3449999999998
+        }
+      ],
+      "gpu": {
+        "reason": null,
+        "samples": 121,
+        "p95": 0.490304,
+        "p99": 0.537504,
+        "discarded": 0
+      },
+      "visual": {
+        "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "compiled": 8,
+        "visual": [
+          {
+            "count": 7910,
+            "centerX": 318.3748419721871,
+            "centerY": 191.3385587863464
+          },
+          {
+            "count": 9251,
+            "centerX": 407.34407091125286,
+            "centerY": 184.84336828450978
+          },
+          {
+            "count": 9251,
+            "centerX": 407.34407091125286,
+            "centerY": 184.84336828450978
+          }
+        ],
+        "horizon": 3.5,
+        "staticPose": true
+      }
+    },
+    {
+      "mode": "worker",
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": 120,
+      "intervals": {
+        "p95": 33.38000000000011,
+        "p99": 33.429999999999836,
+        "max": 33.429999999999836
+      },
+      "jobs": [
+        {
+          "id": 1,
+          "duration": 30,
+          "requestedAt": 1524.4949999973178,
+          "startedAt": 1524.885009765625,
+          "finishedAt": 1555.114990234375,
+          "receivedAt": 1555.2700000032783,
+          "elapsed": 30.094999998807907,
+          "queries": 384,
+          "found": 133,
+          "unknown": 251,
+          "requestToStartMs": 0.390009768307209,
+          "responseLatencyMs": 30.775000005960464,
+          "maxIntervalMs": 33.33999999999992
+        },
+        {
+          "id": 2,
+          "duration": 50,
+          "requestedAt": 2324.4249999970198,
+          "startedAt": 2324.544921875,
+          "finishedAt": 2375.130126953125,
+          "receivedAt": 2375.25,
+          "elapsed": 50.55000000447035,
+          "queries": 664,
+          "found": 230,
+          "unknown": 434,
+          "requestToStartMs": 0.11992187798023224,
+          "responseLatencyMs": 50.82500000298023,
+          "maxIntervalMs": 33.36000000000013
+        },
+        {
+          "id": 3,
+          "duration": 100,
+          "requestedAt": 3124.405000001192,
+          "startedAt": 3124.52001953125,
+          "finishedAt": 3224.81005859375,
+          "receivedAt": 3225.005000002682,
+          "elapsed": 100.25,
+          "queries": 1368,
+          "found": 474,
+          "unknown": 894,
+          "requestToStartMs": 0.1150195300579071,
+          "responseLatencyMs": 100.60000000149012,
+          "maxIntervalMs": 33.429999999999836
+        },
+        {
+          "id": 4,
+          "duration": 100,
+          "requestedAt": 3924.4799999967217,
+          "startedAt": 3924.574951171875,
+          "finishedAt": 4025.9599609375,
+          "receivedAt": 4026.119999997318,
+          "elapsed": 101.32000000029802,
+          "queries": 1497,
+          "found": 519,
+          "unknown": 978,
+          "requestToStartMs": 0.09495117515325546,
+          "responseLatencyMs": 101.64000000059605,
+          "maxIntervalMs": 33.3449999999998
+        }
+      ],
+      "gpu": {
+        "reason": null,
+        "samples": 121,
+        "p95": 0.497664,
+        "p99": 0.614304,
+        "discarded": 0
+      },
+      "visual": {
+        "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "compiled": 8,
+        "visual": [
+          {
+            "count": 7910,
+            "centerX": 318.3748419721871,
+            "centerY": 191.3385587863464
+          },
+          {
+            "count": 9251,
+            "centerX": 407.34407091125286,
+            "centerY": 184.84336828450978
+          },
+          {
+            "count": 9251,
+            "centerX": 407.34407091125286,
+            "centerY": 184.84336828450978
+          }
+        ],
+        "horizon": 3.5,
+        "staticPose": true
+      }
+    },
+    {
+      "mode": "main",
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": 117,
+      "intervals": {
+        "p95": 33.38000000000011,
+        "p99": 99.88999999999987,
+        "max": 100.05500000000029
+      },
+      "jobs": [
+        {
+          "id": 1,
+          "duration": 30,
+          "requestedAt": 1627.304999999702,
+          "startedAt": 1627.320000000298,
+          "elapsed": 30.145000003278255,
+          "queries": 382,
+          "found": 131,
+          "unknown": 251,
+          "finishedAt": 1657.6450000032783,
+          "receivedAt": 1657.6450000032783,
+          "requestToStartMs": 0.015000000596046448,
+          "responseLatencyMs": 30.34000000357628,
+          "maxIntervalMs": 33.37999999999988
+        },
+        {
+          "id": 2,
+          "duration": 50,
+          "requestedAt": 2427.1500000059605,
+          "startedAt": 2427.1600000038743,
+          "elapsed": 50.51000000536442,
+          "queries": 713,
+          "found": 247,
+          "unknown": 466,
+          "finishedAt": 2477.6750000044703,
+          "receivedAt": 2477.6750000044703,
+          "requestToStartMs": 0.009999997913837433,
+          "responseLatencyMs": 50.524999998509884,
+          "maxIntervalMs": 33.33999999999969
+        },
+        {
+          "id": 3,
+          "duration": 100,
+          "requestedAt": 3227.179999999702,
+          "startedAt": 3227.185000002384,
+          "elapsed": 100.10000000149012,
+          "queries": 1455,
+          "found": 503,
+          "unknown": 952,
+          "finishedAt": 3327.320000000298,
+          "receivedAt": 3327.320000000298,
+          "requestToStartMs": 0.005000002682209015,
+          "responseLatencyMs": 100.14000000059605,
+          "maxIntervalMs": 100.05500000000029
+        },
+        {
+          "id": 4,
+          "duration": 100,
+          "requestedAt": 4027.210000000894,
+          "startedAt": 4027.210000000894,
+          "elapsed": 100.29999999701977,
+          "queries": 1497,
+          "found": 519,
+          "unknown": 978,
+          "finishedAt": 4127.520000003278,
+          "receivedAt": 4127.520000003278,
+          "requestToStartMs": 0,
+          "responseLatencyMs": 100.31000000238419,
+          "maxIntervalMs": 99.88999999999987
+        }
+      ],
+      "gpu": {
+        "reason": null,
+        "samples": 118,
+        "p95": 0.526048,
+        "p99": 0.828864,
+        "discarded": 0
+      },
+      "visual": {
+        "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "compiled": 8,
+        "visual": [
+          {
+            "count": 7910,
+            "centerX": 318.3748419721871,
+            "centerY": 191.3385587863464
+          },
+          {
+            "count": 9251,
+            "centerX": 407.34407091125286,
+            "centerY": 184.84336828450978
+          },
+          {
+            "count": 9251,
+            "centerX": 407.34407091125286,
+            "centerY": 184.84336828450978
+          }
+        ],
+        "horizon": 3.5,
+        "staticPose": true
+      }
+    }
+  ]
+}

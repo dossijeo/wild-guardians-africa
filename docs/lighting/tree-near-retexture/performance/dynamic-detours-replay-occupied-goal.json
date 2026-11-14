@@ -1,0 +1,30 @@
+{
+  "scope": "Node WASM deterministic replay of 32 moving bodies and 240 local detours; includes upserts, no GPU or complete simulation.",
+  "binarySha256": [
+    "d5a1f67c760a938829bde8255372fa2539096d452b8866d961ca65e297d91651",
+    "bd26309976782b61d3ee522b7eddfd8531fe4e37a61e58cfe09bace9ac268915"
+  ],
+  "operations": 240,
+  "bodies": 32,
+  "geometricallyOccupied": 226,
+  "routesFound": 0,
+  "routeParity": true,
+  "blocks": [
+    {
+      "kind": "baseline",
+      "ms": 39.89469999999994
+    },
+    {
+      "kind": "candidate",
+      "ms": 4.581900000000019
+    },
+    {
+      "kind": "candidate",
+      "ms": 4.407899999999927
+    },
+    {
+      "kind": "baseline",
+      "ms": 37.25439999999992
+    }
+  ]
+}

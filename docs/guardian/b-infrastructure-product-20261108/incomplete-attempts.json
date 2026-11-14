@@ -1,0 +1,16 @@
+[
+  {
+    "source": ".cache/b-infrastructure-rapier-final.json",
+    "passed": false,
+    "error": "Error: Global timeout waiting for authority/presentation backlog to settle\n    at run (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tools/experiments/audit_webgpu_historical_rapier.mjs:43:966)\n    at async file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tools/experiments/audit_webgpu_historical_rapier.mjs:71:2",
+    "warnings": [],
+    "note": "Two GPU browser scenarios and contract/build checks overlapped during startup; timed out while draining paused advances. Not evidence of Attack playback. Repeated separately."
+  },
+  {
+    "source": ".cache/b-infrastructure-recovery-final/report.json",
+    "passed": false,
+    "error": "TypeError: Cannot read properties of null (reading 'sequence')\n    at file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tools/experiments/audit_integrated_device_recovery.mjs:25:156\n    at until (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tools/experiments/audit_integrated_device_recovery.mjs:18:925)\n    at async file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tools/experiments/audit_integrated_device_recovery.mjs:25:103",
+    "warnings": [],
+    "note": "The stricter runner dereferenced a temporarily null surface while replacing its Worker. Fixed the optional guard and repeated; this run does not certify recovery."
+  }
+]

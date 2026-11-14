@@ -1,3 +1,5 @@
+import {nativeEntityNumericId as numericId} from '../native-entity-id.js';
+import {copyNativeGatePresentation} from '../native-gate-presentation.js';
 import {centerGeometry,centerServicePoint} from '../centers.js';
 import {contractExpired,PROFILES} from '../../simulation/workforce.js';
 import {observeGameEvents,repairCost} from '../../simulation/game.js';
@@ -8,6 +10,9 @@ import {ANIMAL_SPATIAL_PROFILES} from './spatial-movement-profiles.js';
 import {targetReservationKey} from '../../simulation/raid-target-reservations.js';
 import {actorBlockers} from '../../simulation/actor-motion.js';
 import {wallCollisionFrame} from '../wall-collision-frame.js';
+import {readNativeGateStaticWitness} from './spatial-gate-intents.js';
+import {copyNativeWorldBoundary} from '../native-world-boundary.js';
+import {NATIVE_ROUTE_PRESENTATION_VERSION,NATIVE_ROUTE_PRESENTATION_WIDTH} from '../native-route-presentation.js';
 import {applyConfirmedTaskAssignments,notifyWorkerPlanningChange,
   observeTaskChanges,releaseTask,replaceTasks} from '../../simulation/tasks.js';
 
@@ -19,12 +24,6 @@ const materialCodes=new Map(BALANCE.walls.map((wall,index)=>[wall.id,index+1]));
 const cropCodes=new Map(BALANCE.crops.map((crop,index)=>[crop.id,index+1]));
 const cropValues=new Map(BALANCE.crops.map(crop=>[crop.id,crop.base_harvest_value]));
 const structureStatus={intact:0,collapsing:1,ruined:2};
-const numericId=id=>{
-  const match=/-(\d+)$/.exec(id??'');
-  if(!match||!Number.isSafeInteger(Number(match[1]))||Number(match[1])<1)
-    throw TypeError(`Unsupported native intent ID: ${id}`);
-  return Number(match[1]);
-};
 const lexicalRank=id=>Number(`0.${/-(\d+)$/.exec(id)[1]}`);
 const workerRow=(worker,state)=>[1,1,numericId(worker.id),
   worker.centerId?numericId(worker.centerId):0,worker.x,worker.z,
@@ -75,9 +74,26 @@ const taskTargetLookup=state=>{
     id.startsWith('crate-')?crate(id):structure(id);
 };
 
-export function createSpatialIntentBridge(session){
+export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.crypto.randomUUID(),onNativeWorldResources=null}={}){
+  if(onNativeWorldResources!==null&&typeof onNativeWorldResources!=='function')throw TypeError('Invalid native world resource observer');
+  if(typeof authorityEpoch!=='string'||!authorityEpoch||authorityEpoch.length>256)
+    throw TypeError('Expected an authority epoch for native route handles');
   const wasm=session?.core?.wasm;
   for(const name of ['nav_intent_reset','nav_intent_changes_ptr',
+    'nav_intent_protocol_version','nav_intent_change_width','nav_intent_set_time',
+    'nav_intent_session','nav_intent_transition_sequence','nav_intent_effective_time',
+    'nav_intent_control_snapshot','nav_intent_control_snapshot_ptr',
+    'nav_intent_route_timing','nav_intent_route_timing_ptr','nav_intent_route_distances_ptr',
+    'nav_intent_route_sample','nav_intent_route_sample_ptr',
+    'nav_intent_timing_rejection',
+    'nav_intent_route_reserve','nav_intent_route_reservation_result_ptr',
+    'nav_intent_route_prepare_motion','nav_intent_route_timing_width','nav_intent_route_sample_width',
+    'nav_intent_execution_begin','nav_intent_execution_advance','nav_intent_execution_stop',
+    'nav_intent_route_execution','nav_intent_route_execution_ptr',
+    'nav_intent_residency_pin_revision',
+    'spatial_release_chunk','spatial_release_chunks',
+    'nav_intent_props_mutation_version',
+    'nav_intent_terrain_mutation_version',
     'nav_intent_apply_changes','nav_intent_plan_tasks','nav_intent_results_ptr',
     'nav_intent_restore_assigned_tasks',
     'nav_intent_discard','nav_intent_commit','nav_intent_damaged_structures',
@@ -114,7 +130,50 @@ export function createSpatialIntentBridge(session){
     'nav_intent_routes_ptr',
     'nav_intent_route_point_count'])
     if(typeof wasm?.[name]!=='function')throw TypeError(`Missing ${name}`);
-  let sequence=0,initialized=false;
+  if(wasm.nav_intent_protocol_version()!==2||wasm.nav_intent_change_width()!==15)
+    throw Error('Unsupported native intent protocol; rebuild Wild Engine');
+  if(wasm.nav_intent_route_timing_width()!==20||wasm.nav_intent_route_sample_width()!==18)
+    throw Error('Unsupported native motion layout; rebuild Wild Engine');
+  if(wasm.nav_intent_props_mutation_version()!==1)
+    throw Error('Unsupported native prop mutation service; rebuild Wild Engine');
+  if(wasm.nav_intent_terrain_mutation_version()!==1)
+    throw Error('Unsupported native terrain mutation service; rebuild Wild Engine');
+  let sequence=0,initialized=false,owningState=null,lastIntentSequence=0;
+  const controlObservers=new Set();
+  // Retention is independent of the event subscription: closing a port or
+  // stopping an observer does not prove its device stopped executing work.
+  const controlConsumers=new Map();
+  let committedWorldBoundary=null;
+  const nativeWorldBoundary=()=>committedWorldBoundary?.authorityEpoch===epoch()?committedWorldBoundary:null;
+  const nativeWorldResourceBoundary=()=>{
+    const boundary=nativeWorldBoundary();
+    if(boundary&&wasm.spatial_world_resource_snapshot?.()!==1)throw Error('Native world changed outside its committed resource boundary');
+    return boundary;
+  };
+  const pruneDrainedConsumers=()=>{
+    for(const [publication] of controlConsumers)if(publication.status?.().drained)controlConsumers.delete(publication);
+  };
+  const coversGpuConsumers=source=>{
+    pruneDrainedConsumers();
+    return controlConsumers.size>0&&[...controlConsumers].every(([consumer,owner])=>owner===source&&source.ownsGpuConsumer?.(consumer)===true);
+  };
+  const epoch=()=>`${authorityEpoch}/${wasm.nav_intent_session()}`;
+  // Native counters are instance-local and can repeat in another WASM Worker.
+  // Scope every externally visible handle before it crosses an async boundary.
+  // This identity is ephemeral transport metadata, never saved game/RNG state.
+  const routeHandle=(session,slot,generation)=>Object.freeze({
+    authorityEpoch:epoch(),session,slot,generation});
+  const closeControlObservers=reason=>{
+    for(const observer of [...controlObservers]){
+      controlObservers.delete(observer);
+      try{observer.onClosed(reason);}catch{}
+    }
+  };
+  const syncBoundaryTime=()=>{
+    if(!initialized)throw Error('Reset the native intent session first');
+    if(wasm.nav_intent_set_time(owningState.elapsed)!==1)
+      throw Error('Native intent time regressed; restore into a new session');
+  };
   const structuresById=new Map();
   const cropsById=new Map();
   const cropObjects=new Map();
@@ -131,8 +190,11 @@ export function createSpatialIntentBridge(session){
     return sequence;
   };
   const resetFromState=state=>{
-    wasm.nav_intent_reset();sequence=0;initialized=true;
+    closeControlObservers('native-reset');
+    wasm.nav_intent_reset();sequence=0;lastIntentSequence=0;
+    initialized=true;owningState=state;
     try{
+      syncBoundaryTime();
       const workers=[...state.workers].sort((a,b)=>a.id.localeCompare(b.id));
       const tasks=[...state.tasks].sort((a,b)=>
         a.created-b.created||a.id.localeCompare(b.id));
@@ -385,27 +447,528 @@ export function createSpatialIntentBridge(session){
   };
   const releasePlantingSite=(reservationId,{committed=false}={})=>
     wasm.nav_intent_release_planting_site(reservationId,committed?1:0)===1;
-  const intentChanges=()=>{
+  const readIntentChanges=after=>{
     const count=wasm.nav_intent_change_count();
     if(!count)return [];
+    const first=new Float64Array(wasm.memory.buffer,wasm.nav_intent_change_ptr(),15)[8];
+    if(after<first-1)throw Error('Native intent control history has a gap');
+    const offset=Math.max(0,after-first+1),remaining=count-offset;
+    if(remaining<=0)return [];
     const data=Array.from(new Float64Array(wasm.memory.buffer,
-      wasm.nav_intent_change_ptr(),count*8));
-    wasm.nav_intent_clear_changes();
-    return Array.from({length:count},(_,index)=>{
-      const at=index*8;
+      wasm.nav_intent_change_ptr()+offset*15*8,remaining*15));
+    const types=['','RouteAssigned','RouteInvalidated','RouteReplaced',
+      'IntentChanged','RouteCompleted'];
+    return Array.from({length:remaining},(_,index)=>{
+      const at=index*15;
+      if(data[at+14]!==2||data[at+8]!==after+index+1||
+         !types[data[at+13]]||!Number.isFinite(data[at+9]))
+        throw Error('Invalid native intent transition order or protocol');
       return {actorId:data[at],state:data[at+1],taskId:data[at+2]||null,
         targetId:data[at+3]||null,routeHandle:data[at+6]?
-          {session:data[at+4],slot:data[at+5],generation:data[at+6]}:null,
-        topologyRevision:data[at+7]};
+          routeHandle(data[at+4],data[at+5],data[at+6]):null,
+        topologyRevision:data[at+7],sequence:data[at+8],effectiveTime:data[at+9],
+        revokedRouteHandle:data[at+12]?
+          routeHandle(data[at+10],data[at+11],data[at+12]):null,
+        type:types[data[at+13]],protocolVersion:2,authorityEpoch:epoch()};
     });
   };
+  const nativeCausalClock=()=>{
+    if(wasm.nav_intent_clock_snapshot?.()!==1)return null;
+    const a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_clock_ptr(),8));
+    return Object.freeze({protocolVersion:2,clockVersion:1,authorityEpoch:epoch(),nativeSession:a[1],
+      clockSequence:a[2],intentSequence:a[3],committedThrough:a[4],rate:a[5],paused:a[6]===1,reanchor:a[7]===1});
+  };
+  const flushNativeIntentControl=()=>{
+    for(const observer of [...controlObservers]){
+      try{
+        if(observer.authorityEpoch!==epoch())throw Error('Native intent authority epoch changed');
+        const changes=readIntentChanges(observer.sequence);
+        if(changes.length){observer.sequence=changes.at(-1).sequence;observer.onChanges(changes);}
+        const clock=nativeCausalClock();
+        if(clock&&observer.onClock&&clock.clockSequence>observer.clockSequence){
+          observer.clockSequence=clock.clockSequence;observer.onClock(clock);
+        }
+      }catch(error){
+        controlObservers.delete(observer);
+        try{observer.onClosed(error);}catch{}
+      }
+    }
+  };
+  const intentChanges=()=>{
+    // Publish before the legacy mover drains/coalesces this same native log.
+    // Observers hold cursors only; there is no second JS navigation/event log.
+    flushNativeIntentControl();
+    const changes=readIntentChanges(lastIntentSequence);
+    if(!changes.length)return [];
+    wasm.nav_intent_clear_changes();
+    lastIntentSequence=changes.at(-1).sequence;
+    return changes;
+  };
+  const nativeIntentControlBaseline=()=>{
+    syncBoundaryTime();
+    const count=wasm.nav_intent_control_snapshot();
+    if(count<0)throw Error('Native intent control baseline is incoherent');
+    const data=new Float64Array(wasm.memory.buffer,wasm.nav_intent_control_snapshot_ptr(),count*6);
+    const clock=nativeCausalClock();
+    if(clock&&(clock.intentSequence!==wasm.nav_intent_transition_sequence()||clock.committedThrough!==wasm.nav_intent_effective_time()))
+      throw Error('Commit the native causal clock before attaching a new draw consumer');
+    return {type:'IntentBaseline',protocolVersion:2,authorityEpoch:epoch(),worldBoundary:nativeWorldBoundary(),...(clock?{clock}:{}),
+      sequence:wasm.nav_intent_transition_sequence(),effectiveTime:wasm.nav_intent_effective_time(),
+      routes:Array.from({length:count},(_,index)=>{
+        const at=index*6;
+        return {actorId:data[at],routeHandle:routeHandle(data[at+1],data[at+2],data[at+3]),
+          assignmentSequence:data[at+4],startTime:data[at+5]};
+      })};
+  };
+  const observeNativeIntentControl=({onBaseline,onChanges,onClosed=()=>{},onClock=null,gpuConsumer=null}={})=>{
+    if(typeof onBaseline!=='function'||typeof onChanges!=='function'||typeof onClosed!=='function'||onClock!==null&&typeof onClock!=='function')
+      throw TypeError('Expected native intent control observers');
+    if(gpuConsumer!==null&&(!gpuConsumer.publication||typeof gpuConsumer.publication!=='object'||
+       !gpuConsumer.owner||typeof gpuConsumer.owner!=='object'))throw TypeError('Expected native GPU consumer ownership');
+    const baseline=nativeIntentControlBaseline(),observer={
+      authorityEpoch:baseline.authorityEpoch,sequence:baseline.sequence,clockSequence:baseline.clock?.clockSequence??0,onChanges,onClosed,onClock};
+    controlObservers.add(observer);
+    try{onBaseline(baseline);}catch(error){controlObservers.delete(observer);throw error;}
+    if(gpuConsumer){pruneDrainedConsumers();controlConsumers.set(gpuConsumer.publication,gpuConsumer.owner);}
+    return ()=>controlObservers.delete(observer);
+  };
   const routePoints=handle=>{
+    if(handle?.authorityEpoch!==epoch())return null;
     const count=wasm.nav_intent_route_points(handle.session,handle.slot,handle.generation);
     if(count<0)return null;
     // Movement may retain these points while WASM grows its memory. Copy once
     // when an action changes; ordinary ticks keep using the same JS view.
     return Float32Array.from(new Float32Array(wasm.memory.buffer,
       wasm.nav_intent_route_ptr(handle.session,handle.slot,handle.generation),count*2));
+  };
+  const nativeRouteTiming=handle=>{
+    if(handle?.authorityEpoch!==epoch()||
+       wasm.nav_intent_route_timing(handle.session,handle.slot,handle.generation)!==1)return null;
+    const data=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_timing_ptr(),20)),
+      count=data[9];
+    if(data[0]!==1||![1,2].includes(data[10])||!Number.isSafeInteger(count)||count<0||count>4096)
+      throw Error('Invalid native route timing contract');
+    const points=routePoints(handle),distances=Float64Array.from(new Float64Array(wasm.memory.buffer,
+       wasm.nav_intent_route_distances_ptr(handle.session,handle.slot,handle.generation),count));
+    if(!points||points.length!==count*2)throw Error('Native route timing lost its pinned geometry');
+    const held=wasm.nav_intent_route_initial_hold?.(handle.session,handle.slot,handle.generation)===1,
+      hold=held?Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_initial_hold_ptr(),3)):null;
+    const gateCandidate=wasm.nav_intent_route_gate_candidate?
+      wasm.nav_intent_route_gate_candidate(handle.session,handle.slot,handle.generation)===1:held;
+    const gateAdmitted=wasm.nav_gate_route_admitted?.(handle.session,handle.slot,handle.generation)===1;
+    const resumable=wasm.nav_gate_route_resumable?.(handle.session,handle.slot,handle.generation)===1,
+      offsets=resumable?Array.from(new Float64Array(wasm.memory.buffer,
+        wasm.nav_intent_route_motion_offset_ptr(handle.session,handle.slot,handle.generation),7)):null;
+    let holds=held?[Object.freeze({gateId:hold[0],distance:0,from:hold[1],until:hold[2]})]:[];
+    if(wasm.nav_intent_route_holds_version?.()===1){
+      const count=wasm.nav_intent_route_holds(handle.session,handle.slot,handle.generation);
+      if(!Number.isSafeInteger(count)||count<0||count>4096)throw Error('Invalid native route hold contract');
+      const rows=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_holds_ptr(),count*4));
+      holds=Array.from({length:count},(_,i)=>Object.freeze({gateId:rows[i*4],distance:rows[i*4+1],from:rows[i*4+2],until:rows[i*4+3]}));
+    }
+    return Object.freeze({actorId:data[1],routeHandle:handle,startTime:data[2],endTime:data[3],
+      speed:data[4],radius:data[5],origin:Object.freeze({x:data[6],z:data[7]}),distance:data[8],
+      duration:data[3]-data[2],assignmentSequence:data[11],profile:data[12],points,distances,
+      executionScope:gateAdmitted?'native-desert-gate-crossing':gateCandidate?'unadmitted-desert-gate-candidate':resumable?'native-desert-worker-suffix':data[10]===2?'static-desert-worker':'static-desert-animal',authorizedAutonomy:false,
+      ...(resumable?{resumable:true,motionOffset:Object.freeze({distance:offsets[0],phase:offsets[1],runPhase:offsets[2],walkPhase:offsets[3],carryPhase:offsets[4],runDistance:offsets[5],walkDistance:offsets[6]})}:{}),
+      ...(gateCandidate||gateAdmitted?{holds:Object.freeze(holds),authorizedPassage:false,nativeCrossingAdmitted:gateAdmitted}:{}),
+      ...(held?{initialHold:Object.freeze({gateId:hold[0],from:hold[1],until:hold[2]})}:{}),
+      ...(data[10]===2?{motionMode:'worker',runDistance:data[16],runSpeed:data[17],
+        runBudget:data[18],motionFlags:data[19]}:{})});
+  };
+  const nativeRouteTimeKnots=handle=>{
+    if(handle?.authorityEpoch!==epoch())return null;
+    if(wasm.nav_intent_route_holds_version?.()!==1)throw Error('Rebuild native route hold service');
+    const count=wasm.nav_intent_route_time_knots(handle.session,handle.slot,handle.generation);if(count<0)return null;
+    if(!Number.isSafeInteger(count)||count<1||count>16384)throw Error('Invalid native route time-knot contract');
+    return Float64Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_time_knots_ptr(),count));
+  };
+  const decodeMotionSample=data=>{
+    return {x:data[0],z:data[1],distance:data[2],phase:data[3],yaw:data[4],
+      firstRemainingPoint:data[5],arrived:data[6]===1,at:data[7],duration:data[8],
+      ...(data[17]===2?{runPhase:data[9],walkPhase:data[10],carryPhase:data[11],
+        runDistance:data[12],walkDistance:data[13],runRemaining:data[14],
+        running:data[15]===1,currentSpeed:data[16]}:{})};
+  };
+  const nativeGateRouteSweep=(gateId,handle,target)=>{
+    if(handle?.authorityEpoch!==epoch())return {status:'stale',authorizedPassage:false};
+    if(wasm.nav_gate_sweep_version?.()!==1)throw Error('Rebuild native gate sweep service');
+    syncBoundaryTime();const result=wasm.nav_gate_route_sweep(numericId(gateId),handle.session,handle.slot,handle.generation,target),
+      a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_sweep_result_ptr(),6));
+    return {status:result===1?'clear':result===0?'blocked':'invalid',authorizedPassage:false,
+      witness:a[0]?{gateId:a[0],bodyId:a[1],from:a[2],to:a[3],reason:a[4]===1?'overlap':'unproven'}:null};
+  };
+  const nativeGateMechanismPose=gateId=>{
+    if(wasm.nav_gate_mechanism_version?.()!==1)throw Error('Rebuild native gate mechanism service');
+    if(wasm.nav_gate_mechanism_pose(numericId(gateId))!==1)return null;
+    const a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_mechanism_pose_ptr(),40));
+    return Object.freeze({version:1,authorityEpoch:epoch(),nativeSession:wasm.nav_intent_session(),entityId:gateId,gateId:a[0],modelId:a[1],mechanism:a[2],
+      collisionModel:'kinematic-union',supportClass:'flat-native-datum',visualClass:'intact-full-health',baseY:a[3],supportMin:a[4],supportMax:a[5],sampledAt:a[6],opening:a[7],
+      rootMatrix:Object.freeze(a.slice(8,24)),leafMatrix:Object.freeze(a.slice(24,40)),authorizedPassage:false,authorizedAutonomy:false});
+  };
+  const nativeGateMechanism=gateId=>{
+    const pose=nativeGateMechanismPose(gateId);if(!pose)return null;
+    const count=wasm.nav_gate_mechanism_vertices(numericId(gateId));if(!Number.isSafeInteger(count)||count<3||count>100000)throw Error('Invalid native gate geometry contract');
+    return Object.freeze({...pose,positions:Float32Array.from(new Float32Array(wasm.memory.buffer,wasm.nav_gate_mechanism_positions_ptr(numericId(gateId)),count*3)),
+      leafFlags:Uint8Array.from(new Uint8Array(wasm.memory.buffer,wasm.nav_gate_mechanism_leaf_ptr(numericId(gateId)),count))});
+  };
+  const nativeGateMechanismSegment=(gateId,body,from,to)=>{
+    const pose=nativeGateMechanismPose(gateId);if(!pose)return {status:'unknown'};
+    const result=wasm.nav_gate_mechanism_segment(numericId(gateId),body,from.x,from.z,to.x,to.z),
+      a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_mechanism_collision_ptr(),8));
+    return {status:result===1?'clear':result===0?'blocked':result===-2?'unsupported':'unknown',components:a[2],sampledAt:a[3],mechanism:a[7],authorizedPassage:false};
+  };
+  const nativeGateMechanismWorldVertices=gateId=>{
+    const pose=nativeGateMechanismPose(gateId);if(!pose)return null;
+    const count=wasm.nav_gate_mechanism_world_vertices(numericId(gateId));if(count<3||count>100000)throw Error('Invalid native gate world geometry');
+    return Float64Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_mechanism_world_ptr(),count*3));
+  };
+  const prepareNativeGateMotionAfterGpuFence=async({getPublication,enabled,staticObjects=false}={})=>{
+    if(!initialized||!owningState)throw Error('Reset the native intent session first');
+    if(typeof getPublication!=='function'||enabled!==undefined&&typeof enabled!=='boolean'||typeof staticObjects!=='boolean')
+      throw TypeError('Expected current native control publication and gate boundary facts');
+    if(wasm.nav_gate_motion_transaction_version?.()!==1)throw Error('Rebuild native gate transaction service');
+    if(staticObjects&&wasm.nav_gate_static_object_version?.()!==1)throw Error('Rebuild native gate static-object service');
+    const policy=()=>[!!owningState.pauses?.length,!!owningState.result,!!owningState.initialPreparation],beforePolicy=policy(),
+      running=enabled??!beforePolicy.some(Boolean),owner=epoch();
+    syncBoundaryTime();flushNativeIntentControl();
+    const source=getPublication(),control=source?.status?.(),at=wasm.nav_intent_effective_time(),
+      sequence=wasm.nav_intent_transition_sequence();
+    const outcome=(status,extra={})=>({status,authorizedAutonomy:false,authorizedPassage:false,...extra});
+    if(!source||typeof source.fenceGpu!=='function'||control?.closed||control?.authorityEpoch!==owner)
+      return outcome('control-unavailable');
+    if(!coversGpuConsumers(source))return outcome('control-consumers-mismatch');
+    // A GPU drain cannot invent a newer logical clock boundary. Until causal
+    // clock publication is implemented, only an exact published boundary is used.
+    if(control.sentSequence!==sequence||control.sentTime!==at)return outcome('control-boundary-mismatch');
+    const staged=(staticObjects?wasm.nav_gate_motion_stage_objects:wasm.nav_gate_motion_stage)(running?1:0);
+    if(staged!==1)return outcome(staged===-2?'incomplete-facts':staged===-3||staged===-8?'blocked':staged===-4?'busy':
+      staged===-6?'unknown':staged===-7?'unsupported':staged===-9?'crossing-reserved':'invalid',staticObjects?{staticWitness:readNativeGateStaticWitness(wasm)}:{});
+    if(wasm.nav_gate_motion_ticket()!==1)throw Error('Native gate proposal lost its ticket');
+    const [session,ticket,nativeSequence,nativeTime]=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_motion_ticket_ptr(),5));
+    try{
+      const receipt=await source.fenceGpu(),current=source.status();
+      if(epoch()!==owner||getPublication()!==source||current.closed||current.session!==control.session||
+         current.authorityEpoch!==owner||!coversGpuConsumers(source))return outcome('control-replaced');
+      if(receipt.authorityEpoch!==owner||receipt.sequence!==nativeSequence||receipt.effectiveTime!==nativeTime||
+         !Number.isSafeInteger(receipt.fenceId)||receipt.fenceId<1)return outcome('invalid-receipt');
+      if(owningState.elapsed!==nativeTime||policy().some((value,i)=>value!==beforePolicy[i]))return outcome('stale');
+      const committed=wasm.nav_gate_motion_commit(session,ticket,receipt.sequence,receipt.effectiveTime);
+      return outcome(committed===1?'committed':committed===-3?'invalid-receipt':'stale',
+        committed===1?{receipt,ticket:Object.freeze({authorityEpoch:owner,session,ticket})}:{});
+    }catch(error){return outcome('control-failed',{error:String(error?.message??error)});}
+    finally{wasm.nav_gate_motion_cancel(session,ticket);}
+  };
+  // First conditioned world mutation, opt-in. Geometry and affected-route
+  // preflight remain native; this bridge only carries an immutable input and
+  // an exact receipt from the current direct draw connection.
+  const commitNativeWorldProposal=async(getPublication,stage,commit,prepareResources=null,signal=null)=>{
+    if(!initialized||!owningState)throw Error('Reset the native intent session first');
+    if(typeof getPublication!=='function')throw TypeError('Expected current native control publication');
+    if(wasm.nav_intent_barrier_proposal_version?.()!==1)throw Error('Rebuild native world proposal service');
+    const outcome=(status,extra={})=>({status,authorizedAutonomy:false,authorizedPassage:false,...extra}),
+      owner=epoch();syncBoundaryTime();flushNativeIntentControl();
+    const clock=nativeCausalClock(),source=getPublication(),control=source?.status?.();
+    if(!source||typeof source.quiesceGpuForMutation!=='function'||typeof source.releaseGpuAfterMutation!=='function'||
+       control?.closed||control?.authorityEpoch!==owner)return outcome('control-unavailable');
+    if(!coversGpuConsumers(source))return outcome('control-consumers-mismatch');
+    if(!clock||control.sentSequence!==clock.intentSequence||control.sentTime!==clock.committedThrough||
+       control.clockSequence!==clock.clockSequence||owningState.elapsed!==clock.committedThrough)return outcome('control-boundary-mismatch');
+    const result=stage();
+    if(result!==1)return outcome(result===0?'blocked':result===-4?'busy':result===-2?'unsupported':'invalid');
+    if(wasm.nav_intent_barrier_proposal_ticket()!==1)throw Error('Native barrier proposal lost its ticket');
+    const [nativeSession,ticket,sequence,time,clockSequence]=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6));
+    let receipt=null,preparedResources=null,answer=outcome('control-failed'),physicalCommitted=false,commitAttempted=false,commitFailed=false,committedValue={};
+    const preparationController=new AbortController(),abortPreparation=()=>preparationController.abort();signal?.addEventListener('abort',abortPreparation,{once:true});
+    try{
+      if(signal?.aborted)throw new DOMException('Native resource preparation cancelled','AbortError');
+      if(prepareResources){
+        const proposedWorldBoundary=copyNativeWorldBoundary({version:1,authorityEpoch:owner,nativeSession,ticket,effectiveTime:time}),
+          resources=session.core.captureNativeWorldProposalResources(proposedWorldBoundary);
+        let stopWaiting;const interrupted=new Promise((resolve,reject)=>{stopWaiting=()=>reject(new DOMException('Native resource preparation cancelled','AbortError'));});interrupted.catch(()=>{});
+        preparationController.signal.addEventListener('abort',stopWaiting,{once:true});
+        const preparing=Promise.resolve().then(()=>prepareResources({proposedWorldBoundary,resources,signal:preparationController.signal})).then(handle=>{
+          if(preparationController.signal.aborted){handle?.abort?.();throw new DOMException('Native resource preparation cancelled','AbortError');}return handle;
+        });
+        try{preparedResources=await Promise.race([preparing,interrupted]);}finally{preparationController.signal.removeEventListener('abort',stopWaiting);}
+        if(!preparedResources||['valid','commit','abort'].some(key=>typeof preparedResources[key]!=='function')||preparedResources.valid()!==true)throw Error('Native resources were not prepared');
+        if(epoch()!==owner||getPublication()!==source||source.status().closed||!coversGpuConsumers(source))return outcome('control-replaced');
+        if(wasm.spatial_world_proposal_resource_snapshot(nativeSession,ticket)!==1)return outcome('stale');
+      }
+      receipt=await source.quiesceGpuForMutation();const current=source.status();
+      if(epoch()!==owner||getPublication()!==source||current.closed||current.session!==control.session||current.authorityEpoch!==owner||!coversGpuConsumers(source))
+        answer=outcome('control-replaced');
+      else if(receipt.authorityEpoch!==owner||receipt.session!==control.session||receipt.sequence!==sequence||
+         receipt.effectiveTime!==time||receipt.clockSequence!==clockSequence||!Number.isSafeInteger(receipt.holdId)||receipt.holdId<1)
+        answer=outcome('invalid-receipt');
+      else{
+        if(preparationController.signal.aborted||preparedResources&&preparedResources.valid()!==true)throw Error('Native prepared resources became stale');
+        commitAttempted=true;
+        const committed=commit(value=>{physicalCommitted=true;committedValue=value??{};
+          committedWorldBoundary=copyNativeWorldBoundary({version:1,authorityEpoch:owner,nativeSession,ticket,effectiveTime:time});
+        },nativeSession,ticket,sequence,time,clockSequence);
+        if(committed.status===1&&!physicalCommitted)throw Error('Native mutation returned without a commit marker');
+        if(committed.status===1&&preparedResources&&preparedResources.commit({worldBoundary:nativeWorldBoundary(),resources:committed.value.resources})!==true)throw Error('Native prepared resources were not retained for publication');
+        answer=committed.status===1?outcome('committed',{...committed.value,receipt,worldBoundary:nativeWorldBoundary()}):
+          outcome(committed.status===-2?'stale':committed.status===-3?'invalid-receipt':committed.status===-6?'blocked':'stale');
+      }
+    }catch(error){commitFailed=commitAttempted;answer=outcome(physicalCommitted?'committed-control-failed':'control-failed',
+      {...committedValue,error:String(error?.message??error)});}
+    finally{
+      signal?.removeEventListener('abort',abortPreparation);preparationController.abort();
+      if(preparedResources)try{preparedResources.abort();}catch{}
+      wasm.spatial_world_proposal_resource_release?.(nativeSession,ticket);
+      wasm.nav_intent_barrier_proposal_cancel(nativeSession,ticket);
+      if(commitFailed&&!source.status().closed)source.dispose('mutation-commit-failed');
+      if(receipt&&!source.status().closed){
+        try{
+          // The commit may have revoked routes. Publish their exact sequence and
+          // a same-time native watermark before releasing the GPU hold.
+          flushNativeIntentControl();const latest=nativeCausalClock();
+          if(!latest||wasm.nav_intent_clock_commit(latest.rate,latest.paused?1:0)<0)throw Error('Native clock cannot publish mutation boundary');
+          flushNativeIntentControl();source.releaseGpuAfterMutation(receipt,{committed:physicalCommitted,
+            ...(physicalCommitted?{worldBoundary:nativeWorldBoundary()}:{})});
+        }catch(error){source.dispose('mutation-release-failed');answer=outcome(physicalCommitted?'committed-control-failed':'control-failed',
+          {...committedValue,error:String(error?.message??error)});}
+      }
+    }
+    return answer;
+  };
+  const addNativeBarrierAfterGpuQuiescence=({getPublication,x,z,halfX,halfZ,yaw=0,passMask=0}={})=>{
+    if(![x,z,halfX,halfZ,yaw].every(Number.isFinite)||halfX<=0||halfZ<=0||halfX>100||halfZ>100||
+       !Number.isInteger(passMask)||passMask<0||passMask>3)throw TypeError('Expected a native barrier proposal');
+    return commitNativeWorldProposal(getPublication,()=>wasm.spatial_barrier_proposal_stage(x,z,halfX,halfZ,yaw,passMask),
+      (markCommitted,...boundary)=>{const id=wasm.spatial_barrier_proposal_commit(...boundary);
+        if(id<=0)return {status:id};markCommitted({barrierId:id});return {status:1,value:{barrierId:id}};});
+  };
+  const mutateNativeWorldAfterGpuQuiescence=({getPublication,mutation,prepareResources=null,signal=null}={})=>{
+    if(prepareResources!==null&&typeof prepareResources!=='function'||signal!==null&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Invalid native resource preparation');
+    if(prepareResources&&wasm.spatial_world_proposal_resource_version?.()!==1)throw Error('Rebuild native proposal resources');
+    if(wasm.spatial_world_proposal_version?.()!==1)throw Error('Rebuild native world proposal service');
+    if(wasm.spatial_world_resource_version?.()!==1)throw Error('Rebuild native world resource projection');
+    const m=mutation;if(!m||typeof m!=='object'||Array.isArray(m))throw TypeError('Expected a native world mutation');
+    let kind,mode=0,floats=[],integers=[];
+    const pass=value=>Number.isInteger(value)&&value>=0&&value<=3,
+      id=value=>Number.isInteger(value)&&value>0&&value<=2147483647;
+    if(m.type==='barriers'){
+      const remove=m.removeIds??[],add=m.additions??[];
+      if(!Array.isArray(remove)||!Array.isArray(add)||remove.length>1024||add.length>1024||!remove.length&&!add.length||
+         remove.some(v=>!id(v))||new Set(remove).size!==remove.length||add.some(v=>!v||![v.x,v.z,v.halfX,v.halfZ,v.yaw??0].every(Number.isFinite)||
+           v.halfX<=0||v.halfZ<=0||v.halfX>100||v.halfZ>100||!pass(v.passMask??0)))throw TypeError('Invalid native barrier batch');
+      kind=2;mode=remove.length;integers=remove.slice();floats=add.flatMap(v=>[v.x,v.z,v.halfX,v.halfZ,v.yaw??0,v.passMask??0]);
+    }else if(m.type==='addPolygon'){
+      if(!Array.isArray(m.points)||m.points.length<3||m.points.length>64||!pass(m.passMask??0)||
+         m.points.some(p=>!p||![p.x,p.z].every(Number.isFinite)))throw TypeError('Invalid native polygon');
+      kind=3;mode=m.passMask??0;floats=m.points.flatMap(p=>[p.x,p.z]);
+    }else if(m.type==='removePolygon'){
+      if(!id(m.id))throw TypeError('Invalid native polygon ID');kind=4;integers=[m.id];
+    }else if(m.type==='barrierPassability'){
+      if(!id(m.id)||!pass(m.passMask))throw TypeError('Invalid native barrier passability');kind=5;mode=m.passMask;integers=[m.id];
+    }else if(m.type==='addChunk'){
+      if(![m.cx,m.cz].every(v=>Number.isInteger(v)&&Math.abs(v)<=44739000))throw TypeError('Invalid native chunk coordinates');
+      kind=6;integers=[m.cx,m.cz];
+    }else if(m.type==='removeChunks'){
+      if(!Array.isArray(m.chunks)||!m.chunks.length||m.chunks.length>4096||typeof (m.releaseOnly??false)!=='boolean'||
+         m.chunks.some(c=>!Array.isArray(c)||c.length!==2||c.some(v=>!Number.isInteger(v)||Math.abs(v)>44739000)))
+        throw TypeError('Invalid native chunk removal');
+      kind=7;mode=m.releaseOnly?1:0;integers=m.chunks.flat();
+    }else if(m.type==='removeProp'){
+      if(!Number.isInteger(m.group)||m.group<0||m.group>5||![m.gx,m.gz].every(v=>Number.isInteger(v)&&v>=-2147483648&&v<=2147483647))
+        throw TypeError('Invalid native prop identity');
+      kind=8;integers=[m.group,m.gx,m.gz];
+    }else if(m.type==='restoreRemovedProps'){
+      if(!Array.isArray(m.records)||m.records.length>100000||m.records.some(p=>!p||!Number.isInteger(p.group)||p.group<0||p.group>5||
+         ![p.gx,p.gz].every(v=>Number.isInteger(v)&&v>=-2147483648&&v<=2147483647)))throw TypeError('Invalid native prop restoration');
+      kind=9;integers=m.records.flatMap(p=>[p.group,p.gx,p.gz]);
+    }else if(m.type==='settlements'){
+      if(!Array.isArray(m.sites)||m.sites.length>256||typeof (m.replace??false)!=='boolean'||m.sites.some(s=>!s||
+         ![s.x,s.z,s.hx,s.hz,s.waterFalloff??6].every(v=>Number.isFinite(v)&&Number.isFinite(Math.fround(v)))||
+         s.hx<=0||s.hz<=0||s.hx>100||s.hz>100||(s.waterFalloff??6)<.25||(s.waterFalloff??6)>6))throw TypeError('Invalid native settlement mutation');
+      kind=10;mode=m.replace?1:0;floats=m.sites.flatMap(s=>[s.x,s.z,s.hx,s.hz,s.waterFalloff??6]);
+    }else if(m.type==='publishPreparedChunk'){
+      if(!id(m.id))throw TypeError('Invalid native prepared chunk ID');kind=11;integers=[m.id];
+    }else throw TypeError('Unsupported native world mutation');
+    // Only serialization into the authority-owned temporary input buffers.
+    return commitNativeWorldProposal(getPublication,()=>{
+      const fp=wasm.spatial_world_proposal_float_ptr(floats.length);if(floats.length&&!fp)throw Error('Native proposal allocation failed');
+      if(floats.length)new Float32Array(wasm.memory.buffer,fp,floats.length).set(floats);
+      const ip=wasm.spatial_world_proposal_int_ptr(integers.length);if(integers.length&&!ip)throw Error('Native proposal allocation failed');
+      if(integers.length)new Int32Array(wasm.memory.buffer,ip,integers.length).set(integers);
+      return (prepareResources?wasm.spatial_world_proposal_stage_resources:wasm.spatial_world_proposal_stage)(kind,mode,floats.length,integers.length);
+    },(markCommitted,...boundary)=>{
+      const status=wasm.spatial_world_proposal_commit(...boundary);if(status!==1)return {status};
+      // Once native state changed, every failure must still retire the old GPU
+      // packet. Never report/release as an aborted physical mutation.
+      markCommitted();const count=wasm.spatial_world_proposal_result_count();
+      if(!Number.isSafeInteger(count)||count<0||count>8192)throw Error('Invalid native mutation result');
+      const ids=Array.from(new Int32Array(wasm.memory.buffer,wasm.spatial_world_proposal_result_ptr(),count));markCommitted({ids});
+      if(kind===6||kind===7||kind===11)session.core.adoptNativeResidencyCommit(kind,ids);
+      const resources=session.publishNativeWorldResources(committedWorldBoundary);
+      if(resources.kind!==kind)throw Error('Native world resource family mismatch');
+      if(onNativeWorldResources)onNativeWorldResources({...resources,worldBoundary:nativeWorldBoundary()});
+      return {status:1,value:{ids,resources}};
+    },prepareResources,signal);
+  };
+  const mutateNativeOverlayAfterGpuQuiescence=mutateNativeWorldAfterGpuQuiescence;
+  const sampleNativeRoute=(handle,at)=>{
+    if(handle?.authorityEpoch!==epoch()||
+       wasm.nav_intent_route_sample(handle.session,handle.slot,handle.generation,at)!==1)return null;
+    return decodeMotionSample(new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_sample_ptr(),18));
+  };
+  // Copy once for a route assignment. This is not a position publication or
+  // another solver: native reservation knots define every affine interval.
+  const captureNativeRoutePresentation=handle=>{
+    const plan=nativeRouteTiming(handle),knots=plan?nativeRouteTimeKnots(handle):null;
+    if(!plan||!knots)return null;
+    if(knots[0]!==plan.startTime||knots.at(-1)!==plan.endTime||knots.some((at,i)=>!Number.isFinite(at)||i>0&&at<=knots[i-1]))throw Error('Invalid native presentation knots');
+    const worldBoundary=copyNativeWorldBoundary(nativeWorldResourceBoundary()),rows=new Float64Array(knots.length*NATIVE_ROUTE_PRESENTATION_WIDTH);
+    for(let i=0;i<knots.length;i++){
+      const at=knots[i],pose=sampleNativeRoute(handle,at),right=i+1<knots.length?sampleNativeRoute(handle,at+(knots[i+1]-at)*.5):pose;
+      if(!pose||!right)return null;
+      const values=[at,pose.x,pose.z,pose.distance,pose.phase,right.yaw,right.firstRemainingPoint,right.arrived?1:0,pose.runPhase??0,pose.walkPhase??0,pose.carryPhase??0,pose.runDistance??0,pose.walkDistance??0,pose.runRemaining??0,right.running?1:0,right.currentSpeed??(right.arrived?0:plan.speed)];
+      if(!values.every(Number.isFinite))throw Error('Invalid native presentation sample');rows.set(values,i*NATIVE_ROUTE_PRESENTATION_WIDTH);
+    }
+    const nativeRoute=Object.freeze({actorId:plan.actorId,assignmentSequence:plan.assignmentSequence,routeHandle:routeHandle(handle.session,handle.slot,handle.generation)});
+    if(wasm.nav_gate_route_presentations_version?.()!==1)throw Error('Rebuild native gate presentation service');
+    const count=wasm.nav_gate_route_presentations(handle.session,handle.slot,handle.generation);
+    if(count<0)throw Error('Native gate presentation unavailable');
+    const ids=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_result_ptr(),count)),gates=ids.map(id=>{
+      const entityId=`structure-${id}`,mechanism=nativeGateMechanism(entityId);
+      const knots=wasm.nav_gate_route_presentation(handle.session,handle.slot,handle.generation,id);
+      if(!mechanism||knots<1||knots>6)throw Error('Native gate presentation curve unavailable');
+      const data=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_result_ptr(),21+knots*2));
+      if(data[0]!==id||data[1]!==mechanism.mechanism||data[2]!==mechanism.modelId)throw Error('Native gate presentation identity mismatch');
+      return copyNativeGatePresentation({kind:'native-gate-presentation',version:1,nativeRoute,gateId:id,entityId,mechanism:data[1],modelId:data[2],
+        startTime:plan.startTime,endTime:plan.endTime,rootMatrix:data.slice(5,21),hinge:[data[3],0,data[4]],
+        positions:mechanism.positions,leafFlags:mechanism.leafFlags,rows:Float64Array.from(data.slice(21)),authorizedAutonomy:false},
+        {nativeRoute,startTime:plan.startTime,endTime:plan.endTime});
+    });
+    return Object.freeze({kind:'native-route-presentation',version:NATIVE_ROUTE_PRESENTATION_VERSION,rowWidth:NATIVE_ROUTE_PRESENTATION_WIDTH,
+      nativeRoute,
+      worldBoundary,startTime:plan.startTime,endTime:plan.endTime,motionMode:plan.motionMode??'animal',motionFlags:plan.motionFlags??0,profile:plan.profile,radius:plan.radius,executionScope:plan.executionScope,nativeCrossingAdmitted:plan.nativeCrossingAdmitted===true,authorizedAutonomy:false,rows,gates:Object.freeze(gates)});
+  };
+  const beginNativeRouteExecution=()=>{
+    syncBoundaryTime();const result=wasm.nav_intent_execution_begin();
+    return {status:result===1?'started':result===-2?'inactive':result===-4?'world-changed':'incoherent',authorizedAutonomy:false};
+  };
+  const advanceNativeRouteExecution=at=>{
+    // The caller proposes the same logical simulation time, never wall time or
+    // a presentation clock. On rejection its simulation transaction must abort.
+    if(at!==owningState?.elapsed)throw TypeError('Native execution must use the simulation clock');
+    const result=wasm.nav_intent_execution_advance(at);
+    return result>=0?{status:'advanced',routes:result,authorizedAutonomy:false}:
+      {status:result===-4?'world-changed':result===-1?'invalid-time':
+       result===-2?'inactive':result===-5?'paused':'incoherent',authorizedAutonomy:false};
+  };
+  const commitNativeCausalClock=({rate=1,paused=false}={})=>{
+    if(typeof paused!=='boolean'||!Number.isFinite(rate)||rate<=0||rate>1000000)throw TypeError('Invalid native clock policy');
+    syncBoundaryTime();if(wasm.nav_intent_clock_version?.()!==1)throw Error('Rebuild native causal clock service');
+    const result=wasm.nav_intent_clock_commit(rate,paused?1:0);
+    if(result<0)return {status:result===-2?'unexecuted-cohort':'invalid',authorizedAutonomy:false};
+    flushNativeIntentControl();return {status:result===1?'committed':'unchanged',clock:nativeCausalClock(),authorizedAutonomy:false};
+  };
+  const stopNativeRouteExecution=()=>{
+    syncBoundaryTime();const count=wasm.nav_intent_execution_stop();
+    if(count<0)throw Error('Native execution bindings are incoherent; restore the authority session');
+    flushNativeIntentControl();return count;
+  };
+  const nativeRouteExecution=handle=>{
+    if(handle?.authorityEpoch!==epoch()||
+       wasm.nav_intent_route_execution(handle.session,handle.slot,handle.generation)!==1)return null;
+    return {...decodeMotionSample(new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_execution_ptr(),18)),
+      executedThrough:wasm.nav_intent_effective_time()};
+  };
+  const prepareNativeRouteMotion=(handle,{radius,urgent=false,flight=false,slow=false,
+    carrying=false,recovering=false,incapacitated=false,runRemaining=0,waitForGates=false}={})=>{
+    const facts=[urgent,flight,slow,carrying,recovering,incapacitated];
+    if(typeof waitForGates!=='boolean'||facts.some(value=>typeof value!=='boolean')||!Number.isFinite(radius)||radius<=0||radius>2||
+       !Number.isFinite(runRemaining)||runRemaining<0||runRemaining>1e9)
+      throw TypeError('Expected native route motion policy facts');
+    if(handle?.authorityEpoch!==epoch())return {status:'stale'};
+    syncBoundaryTime();
+    const flags=facts.reduce((value,enabled,bit)=>value|(enabled?1<<bit:0),0),
+      prepare=waitForGates?wasm.nav_gate_prepare_waiting_route:wasm.nav_intent_route_prepare_motion,
+      status=prepare(handle.session,handle.slot,handle.generation,
+        radius,flags,runRemaining);
+    if(status!==1)return {status:status===-1?'stale':status===-7?
+      ({1:'blocked',2:'unknown',3:'unsupported',4:'invalid'}[wasm.nav_intent_timing_rejection()]??'invalid'):'unsupported'};
+    const data=new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_timing_ptr(),20),
+      replacement=routeHandle(data[13],data[14],data[15]),motionPlan=nativeRouteTiming(replacement);
+    flushNativeIntentControl();
+    return {status:'prepared',routeHandle:replacement,motionPlan};
+  };
+  const reserveNativeRoute=(handle,bodyId)=>{
+    if(handle?.authorityEpoch!==epoch())return {status:'stale',authorizedAutonomy:false};
+    const result=wasm.nav_intent_route_reserve(handle.session,handle.slot,handle.generation,bodyId);
+    const status=result===1?'reserved':result===0?'conflict':result===-1?'stale':
+      result===-2?'unsupported':result===-3?'body-mismatch':null;
+    if(!status)throw Error(`Native route reservation rejected: ${result}`);
+    const data=Array.from(new Float64Array(wasm.memory.buffer,
+      wasm.nav_intent_route_reservation_result_ptr(),6));
+    return {status,authorizedAutonomy:false,...(data[0]?{conflict:{
+      kind:data[0]===2?'trajectory':data[0]===3?'bound-body-mutation':'stationary-body',
+      bodyId:data[1],actorId:data[2],at:data[3],slot:data[4],generation:data[5]}}:{})};
+  };
+  const admitNativeGateRoute=(handle,bodyId,{radius,urgent=false,flight=false,slow=false,
+    carrying=false,recovering=false,incapacitated=false,runRemaining=0}={})=>{
+    const facts=[urgent,flight,slow,carrying,recovering,incapacitated];
+    if(facts.some(value=>typeof value!=='boolean')||!Number.isFinite(radius)||radius<=0||radius>2||
+       !Number.isSafeInteger(bodyId)||bodyId<0||!Number.isFinite(runRemaining)||runRemaining<0||runRemaining>1e9)
+      throw TypeError('Expected native crossing body and motion policy facts');
+    const outcome=(status,extra={})=>({status,authorizedAutonomy:false,authorizedPassage:false,...extra});
+    if(handle?.authorityEpoch!==epoch())return outcome('stale');
+    if(wasm.nav_gate_crossing_version?.()!==1)throw Error('Rebuild native gate crossing service');
+    syncBoundaryTime();const flags=facts.reduce((value,enabled,bit)=>value|(enabled?1<<bit:0),0),
+      result=wasm.nav_gate_admit_route(handle.session,handle.slot,handle.generation,bodyId,radius,flags,runRemaining);
+    if(result!==1)return outcome(result===-1?'stale':result===-3?'body-mismatch':result===0?'conflict':
+      result===-6?'unknown':result===-8?'blocked':result===-7?
+        ({1:'blocked',2:'unknown',3:'unsupported',4:'invalid'}[wasm.nav_intent_timing_rejection()]??'unsupported'):'unsupported');
+    const data=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_timing_ptr(),20)),
+      replacement=routeHandle(data[13],data[14],data[15]),motionPlan=nativeRouteTiming(replacement);
+    flushNativeIntentControl();return outcome('admitted',{routeHandle:replacement,motionPlan});
+  };
+  const nativeGateCrossings=gateId=>{
+    if(wasm.nav_gate_crossing_version?.()!==1)throw Error('Rebuild native gate crossing service');
+    const count=wasm.nav_gate_crossings(numericId(gateId));if(count<0)return null;
+    if(!Number.isSafeInteger(count)||count>4096)throw Error('Invalid native gate crossing contract');
+    const rows=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_result_ptr(),count*6));
+    return Object.freeze(Array.from({length:count},(_,i)=>Object.freeze({actorId:rows[i*6],bodyId:rows[i*6+1],
+      routeHandle:routeHandle(wasm.nav_intent_session(),rows[i*6+2],rows[i*6+3]),from:rows[i*6+4],until:rows[i*6+5]})));
+  };
+  const nativeSuspendedGateRoute=actorId=>{
+    if(wasm.nav_gate_route_suspend_version?.()!==1)throw Error('Rebuild native route suspension service');
+    if(wasm.nav_gate_suspended_route(actorId)!==1)return null;
+    const a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_suspended_route_ptr(),27)),
+      resumeHandle=routeHandle(a[1],a[2],a[3]),count=a[5];
+    if(!Number.isSafeInteger(count)||count<0||count>4096)throw Error('Invalid native retained suffix');
+    const pointer=wasm.nav_gate_suspended_points_ptr(a[1],a[2],a[3]);if(!pointer)return null;
+    return Object.freeze({actorId:a[0],resumeHandle,suspendedAt:a[4],bodyId:a[6],motionFlags:a[7],radius:a[8],
+      remainingPoints:Float32Array.from(new Float32Array(wasm.memory.buffer,pointer,count*2)),
+      pose:Object.freeze(decodeMotionSample(a.slice(9))),authorizedAutonomy:false,authorizedPassage:false});
+  };
+  const suspendNativeGateRoute=handle=>{
+    const outcome=(status,extra={})=>({status,authorizedAutonomy:false,authorizedPassage:false,...extra});
+    if(handle?.authorityEpoch!==epoch())return outcome('stale');
+    syncBoundaryTime();
+    if(wasm.nav_gate_route_suspend_version?.()!==1)throw Error('Rebuild native route suspension service');
+    if(wasm.nav_intent_route_timing(handle.session,handle.slot,handle.generation)!==1)return outcome('stale');
+    const actorId=new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_timing_ptr(),20)[1],
+      result=wasm.nav_gate_suspend_route(handle.session,handle.slot,handle.generation);
+    if(result!==1)return outcome(result===-1?'stale':'unsupported');
+    flushNativeIntentControl();return outcome('suspended',{suspendedRoute:nativeSuspendedGateRoute(actorId)});
+  };
+  const resumeNativeGateRoute=resumeHandle=>{
+    const outcome=(status,extra={})=>({status,authorizedAutonomy:false,authorizedPassage:false,...extra});
+    if(resumeHandle?.authorityEpoch!==epoch())return outcome('stale');
+    syncBoundaryTime();
+    if(wasm.nav_gate_route_suspend_version?.()!==1)throw Error('Rebuild native route suspension service');
+    const result=wasm.nav_gate_resume_route(resumeHandle.session,resumeHandle.slot,resumeHandle.generation);
+    if(result!==1)return outcome(result===-1?'stale':result===-3?'body-mismatch':result===0?'conflict':
+      result===-6?'unknown':result===-8?'blocked':result===-7?
+        ({1:'blocked',2:'unknown',3:'unsupported',4:'invalid'}[wasm.nav_intent_timing_rejection()]??'unsupported'):'unsupported');
+    const a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_timing_ptr(),20)),
+      replacement=routeHandle(a[13],a[14],a[15]),motionPlan=nativeRouteTiming(replacement);
+    flushNativeIntentControl();return outcome('resumed',{routeHandle:replacement,motionPlan});
   };
   const projectRouteProgress=state=>{
     let accepted=0;
@@ -523,13 +1086,15 @@ export function createSpatialIntentBridge(session){
       reservedTargets.length).set(reservedTargets);
     return {blockerCount:blockers.length,reservedTargetCount:reservedTargets.length};
   };
-  const planAttackCrop=(state,animal)=>{
+  const planAttackCrop=(state,animal,{timedRoute=false}={})=>{
+    if(typeof timedRoute!=='boolean'||timedRoute&&animal.status!=='walking')
+      throw TypeError('Native timed AttackCrops currently requires a walking intention');
     if(!initialized||!state.raid)throw Error('No native raid intention session');
     const transient=prepareAttackTransients(state,animal);
     if(!transient)return null;
     const status=wasm.nav_intent_plan_attack_crop(numericId(animal.id),
       animal.x,animal.z,animal.radius,1,transient.blockerCount,
-      transient.reservedTargetCount);
+      transient.reservedTargetCount,timedRoute?1:0);
     if(status<0)throw Error(`Native crop intention rejected: ${status}`);
     const values=new Float64Array(wasm.memory.buffer,
       wasm.nav_intent_attack_result_ptr(),13);
@@ -542,8 +1107,8 @@ export function createSpatialIntentBridge(session){
         lastRouteCount:values[5],lastRegisterResult:values[6],
         unknownCauseMask:values[7]}};
     const targetId=values[1],target=cropObjects.get(targetId);
-    const routeHandle={session:values[4],slot:values[5],generation:values[6]};
-    const coordinates=routePoints(routeHandle);
+    const handle=routeHandle(values[4],values[5],values[6]);
+    const coordinates=routePoints(handle);
     if(!target||!coordinates||coordinates.length<2||coordinates.length%2){
       wasm.nav_intent_attack_cancel(numericId(animal.id));
       throw Error('Native crop intention has no confirmed JS target or route');
@@ -553,7 +1118,7 @@ export function createSpatialIntentBridge(session){
         x:values[2],z:values[3]},path:Array.from(
         {length:coordinates.length/2},(_,index)=>({
           x:coordinates[index*2],z:coordinates[index*2+1]}))},
-      native:true,routeHandle,groupId:values[7],
+      native:true,routeHandle:handle,...(timedRoute?{motionPlan:nativeRouteTiming(handle)}:{}),groupId:values[7],
       regionQueries:values[8],routeQueries:values[9]};
   };
   const planAttackWall=(state,animal)=>{
@@ -570,8 +1135,8 @@ export function createSpatialIntentBridge(session){
     const target=state.structures.find(structure=>
       numericId(structure.id)===values[1]&&structure.kind==='wall'&&
       structure.status==='intact');
-    const routeHandle={session:values[4],slot:values[5],generation:values[6]};
-    const coordinates=routePoints(routeHandle);
+    const handle=routeHandle(values[4],values[5],values[6]);
+    const coordinates=routePoints(handle);
     if(!target||!coordinates||coordinates.length<2||coordinates.length%2){
       wasm.nav_intent_attack_cancel(numericId(animal.id));
       throw Error('Native wall intention has no confirmed JS target or route');
@@ -581,7 +1146,7 @@ export function createSpatialIntentBridge(session){
         x:values[2],z:values[3]},path:Array.from(
         {length:coordinates.length/2},(_,index)=>({
           x:coordinates[index*2],z:coordinates[index*2+1]}))},
-      native:true,routeHandle,groupId:values[7],
+      native:true,routeHandle:handle,groupId:values[7],
       candidatesExamined:values[8],routeQueries:values[9]};
   };
   const replanAttackRoute=animal=>{
@@ -592,17 +1157,17 @@ export function createSpatialIntentBridge(session){
     // The native route planner distinguishes an incomplete graph from a
     // physically blocked route to this particular interaction point. Neither
     // verdict certifies that every side of the target is blocked.
-    if(status===3)return {status:wasm.spatial_world_route_reason()===0?
-      'blocked-approach':'unknown'};
+    if(status===3)return {status:wasm.nav_intent_timing_rejection()!==0?'unknown':
+      wasm.spatial_world_route_reason()===0?'blocked-approach':'unknown'};
     if(status!==1)throw Error(`Native attack reroute rejected: ${status}`);
     if(wasm.nav_intent_actor(numericId(animal.id))!==1)
       throw Error('Native attack reroute lost its active intention');
     const values=new Float64Array(wasm.memory.buffer,wasm.nav_intent_actor_ptr(),10);
-    const routeHandle={session:values[4],slot:values[5],generation:values[6]};
-    const points=routePoints(routeHandle);
+    const handle=routeHandle(values[4],values[5],values[6]);
+    const points=routePoints(handle);
     if(!points||points.length<2||points.length%2)
       throw Error('Native attack reroute has no usable points');
-    return {status:'found',routeHandle,path:Array.from(
+    return {status:'found',routeHandle:handle,path:Array.from(
       {length:points.length/2},(_,index)=>({
         x:points[index*2],z:points[index*2+1]}))};
   };
@@ -618,11 +1183,11 @@ export function createSpatialIntentBridge(session){
     if(wasm.nav_intent_actor(numericId(animal.id))!==1)
       throw Error('Native retreat route lost its active intention');
     const values=new Float64Array(wasm.memory.buffer,wasm.nav_intent_actor_ptr(),10);
-    const routeHandle={session:values[4],slot:values[5],generation:values[6]};
-    const points=routePoints(routeHandle);
+    const handle=routeHandle(values[4],values[5],values[6]);
+    const points=routePoints(handle);
     if(!points||points.length<2||points.length%2)
       throw Error('Native retreat route has no usable points');
-    return {status:'found',routeHandle,path:Array.from(
+    return {status:'found',routeHandle:handle,path:Array.from(
       {length:points.length/2},(_,index)=>({
         x:points[index*2],z:points[index*2+1]}))};
   };
@@ -637,11 +1202,11 @@ export function createSpatialIntentBridge(session){
     if(wasm.nav_intent_actor(numericId(worker.id))!==1)
       throw Error('Native home route lost its active intention');
     const values=new Float64Array(wasm.memory.buffer,wasm.nav_intent_actor_ptr(),10);
-    const routeHandle={session:values[4],slot:values[5],generation:values[6]};
-    const points=routePoints(routeHandle);
+    const handle=routeHandle(values[4],values[5],values[6]);
+    const points=routePoints(handle);
     if(!points||points.length<2||points.length%2)
       throw Error('Native home route has no usable points');
-    return {status:'found',routeHandle,path:Array.from(
+    return {status:'found',routeHandle:handle,path:Array.from(
       {length:points.length/2},(_,index)=>({
         x:points[index*2],z:points[index*2+1]}))};
   };
@@ -767,7 +1332,8 @@ export function createSpatialIntentBridge(session){
     }
     return {restoredHomeRouteIds,invalidSavedHomeRoutes};
   };
-  return {resetFromState,applyEvents,applyCommittedEvents,planTasks,
+  const api={get authorityEpoch(){return epoch();},resetFromState,applyEvents,applyCommittedEvents,planTasks,
+    nativeIntentControlBaseline,nativeWorldResourceBoundary,observeNativeIntentControl,flushNativeIntentControl,nativeCausalClock,commitNativeCausalClock,
     restoreAssignedTasks,restoreAttackIntents,restoreRetreatIntents,
     restoreHomeIntents,
     proposalRoute,
@@ -776,7 +1342,9 @@ export function createSpatialIntentBridge(session){
     structureFor:id=>structuresById.get(numericId(id))??null,
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
-    intentChanges,routePoints,projectRouteProgress,processEventBoundary,requestReroute,
+    intentChanges,routePoints,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,captureNativeRoutePresentation,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,
+    beginNativeRouteExecution,advanceNativeRouteExecution,stopNativeRouteExecution,nativeRouteExecution,
+    projectRouteProgress,processEventBoundary,requestReroute,
     registerAttackIntent,planAttackCrop,planAttackWall,replanAttackRoute,
     planRetreatRoute,planHomeRoute,
     cancelHomeIntent:actorId=>wasm.nav_intent_cancel_home(numericId(actorId))===1,
@@ -792,6 +1360,23 @@ export function createSpatialIntentBridge(session){
     discard:()=>wasm.nav_intent_discard(),
     commit:()=>wasm.nav_intent_commit(),
     sequence:()=>sequence};
+  // Timestamp at authoritative mutation boundaries, not when a renderer or a
+  // delayed resource job drains the log. Read-only route access stays untouched.
+  for(const name of ['applyEvents','applyCommittedEvents','planTasks',
+    'restoreAssignedTasks','restoreAttackIntents','restoreRetreatIntents',
+    'restoreHomeIntents','findPlantingSite','releasePlantingSite',
+    'processEventBoundary','requestReroute','registerAttackIntent','planAttackCrop',
+    'planAttackWall','replanAttackRoute','planRetreatRoute','planHomeRoute',
+    'cancelHomeIntent','reconsiderWallOpportunity','markAttackActive',
+    'finishAttackIntent','cancelAttackIntent','retireActor','reconcileTopology',
+    'replanPendingRoutes','markActionActive','finishAction','commit']){
+    const operation=api[name];
+    api[name]=(...args)=>{
+      syncBoundaryTime();
+      try{return operation(...args);}finally{if(controlObservers.size)flushNativeIntentControl();}
+    };
+  }
+  return api;
 }
 
 function structureCondition(structure){
@@ -811,10 +1396,10 @@ function structureCondition(structure){
 // deliver committed deltas at action boundaries; ordinary movement never
 // invokes the native planner. A pending physical result gets one bounded
 // recovery retry in case a dynamic obstruction produced no reliable event.
-export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
+export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEpoch,onNativeWorldResources=null}={}){
   if(!Number.isFinite(retrySeconds)||retrySeconds<=0)
     throw RangeError('retrySeconds must be positive');
-  const bridge=createSpatialIntentBridge(session);
+  const bridge=createSpatialIntentBridge(session,{authorityEpoch,onNativeWorldResources});
   const eligible=new Set(),requests=new Map(),animalRequests=new Map(),
     workerPlanCounts=new Map(),animalPlanCounts=new Map(),
     workerPeakPerMinute=new Map(),animalPeakPerMinute=new Map(),
@@ -1661,6 +2246,27 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8}={}){
       if(result)pendingNativeChanges=true;
       return result;
     },
+    get authorityEpoch(){return bridge.authorityEpoch;},
+    nativeIntentControlBaseline:bridge.nativeIntentControlBaseline,
+    nativeWorldResourceBoundary:bridge.nativeWorldResourceBoundary,
+    addNativeBarrierAfterGpuQuiescence:bridge.addNativeBarrierAfterGpuQuiescence,
+    mutateNativeOverlayAfterGpuQuiescence:bridge.mutateNativeOverlayAfterGpuQuiescence,
+    mutateNativeWorldAfterGpuQuiescence:bridge.mutateNativeWorldAfterGpuQuiescence,
+    nativeCausalClock:bridge.nativeCausalClock,commitNativeCausalClock:bridge.commitNativeCausalClock,
+    observeNativeIntentControl:bridge.observeNativeIntentControl,
+    flushNativeIntentControl:bridge.flushNativeIntentControl,
     intentChanges:bridge.intentChanges,routePoints:bridge.routePoints,
+    nativeRouteTiming:bridge.nativeRouteTiming,nativeRouteTimeKnots:bridge.nativeRouteTimeKnots,sampleNativeRoute:bridge.sampleNativeRoute,captureNativeRoutePresentation:bridge.captureNativeRoutePresentation,
+    nativeGateRouteSweep:bridge.nativeGateRouteSweep,
+    nativeGateMechanism:bridge.nativeGateMechanism,nativeGateMechanismPose:bridge.nativeGateMechanismPose,nativeGateMechanismSegment:bridge.nativeGateMechanismSegment,
+    nativeGateMechanismWorldVertices:bridge.nativeGateMechanismWorldVertices,
+    admitNativeGateRoute:bridge.admitNativeGateRoute,nativeGateCrossings:bridge.nativeGateCrossings,
+    nativeSuspendedGateRoute:bridge.nativeSuspendedGateRoute,suspendNativeGateRoute:bridge.suspendNativeGateRoute,resumeNativeGateRoute:bridge.resumeNativeGateRoute,
+    prepareNativeGateMotionAfterGpuFence:bridge.prepareNativeGateMotionAfterGpuFence,
+    reserveNativeRoute:bridge.reserveNativeRoute,
+    prepareNativeRouteMotion:bridge.prepareNativeRouteMotion,
+    beginNativeRouteExecution:bridge.beginNativeRouteExecution,
+    advanceNativeRouteExecution:bridge.advanceNativeRouteExecution,
+    stopNativeRouteExecution:bridge.stopNativeRouteExecution,nativeRouteExecution:bridge.nativeRouteExecution,
     discard:bridge.discard,commit:bridge.commit,sequence:bridge.sequence};
 }

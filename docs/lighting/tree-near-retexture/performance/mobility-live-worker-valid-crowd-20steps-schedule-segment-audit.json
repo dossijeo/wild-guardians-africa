@@ -1,0 +1,427 @@
+{
+  "animals": 20,
+  "moved": 20,
+  "initializationMs": 847.9500000029802,
+  "workerTickMs": 964.2099999934435,
+  "responseMs": 1022.5149999856949,
+  "applyDelayMs": 2.635000005364418,
+  "frames": {
+    "count": 119,
+    "p95": 33.38500000000204,
+    "p99": 33.400000000001455,
+    "max": 33.404999999998836
+  },
+  "overlapFrames": {
+    "count": 31,
+    "p95": 33.36000000000058,
+    "p99": 33.37000000000262,
+    "max": 33.404999999998836
+  },
+  "renderMs": {
+    "count": 120,
+    "p95": 32.53000000119209,
+    "p99": 37.20000000298023,
+    "max": 38.76500000059605
+  },
+  "maxPositionError": 0,
+  "baselineCount": 20,
+  "segments": [
+    {
+      "id": "qa-beast-1000000",
+      "distance": 1.415488418454645,
+      "terrainClear": true,
+      "staticBodiesClear": false
+    },
+    {
+      "id": "qa-beast-1",
+      "distance": 1.415488418454645,
+      "terrainClear": true,
+      "staticBodiesClear": false
+    },
+    {
+      "id": "qa-beast-2",
+      "distance": 0.7499999999999973,
+      "terrainClear": true,
+      "staticBodiesClear": true
+    },
+    {
+      "id": "qa-beast-3",
+      "distance": 1.415488418454645,
+      "terrainClear": true,
+      "staticBodiesClear": false
+    },
+    {
+      "id": "qa-beast-4",
+      "distance": 0.38450417612328114,
+      "terrainClear": true,
+      "staticBodiesClear": false
+    },
+    {
+      "id": "qa-beast-5",
+      "distance": 1.415488418454645,
+      "terrainClear": true,
+      "staticBodiesClear": true
+    },
+    {
+      "id": "qa-beast-6",
+      "distance": 1.3555857457116731,
+      "terrainClear": true,
+      "staticBodiesClear": true
+    },
+    {
+      "id": "qa-beast-7",
+      "distance": 0.22500000000000112,
+      "terrainClear": true,
+      "staticBodiesClear": false
+    },
+    {
+      "id": "qa-beast-8",
+      "distance": 0.534162707164597,
+      "terrainClear": true,
+      "staticBodiesClear": true
+    },
+    {
+      "id": "qa-beast-9",
+      "distance": 1.4943533311562414,
+      "terrainClear": true,
+      "staticBodiesClear": true
+    },
+    {
+      "id": "qa-beast-10",
+      "distance": 1.3791920818597376,
+      "terrainClear": true,
+      "staticBodiesClear": false
+    },
+    {
+      "id": "qa-beast-11",
+      "distance": 1.415488418454645,
+      "terrainClear": true,
+      "staticBodiesClear": false
+    },
+    {
+      "id": "qa-beast-12",
+      "distance": 1.424999999999982,
+      "terrainClear": true,
+      "staticBodiesClear": true
+    },
+    {
+      "id": "qa-beast-13",
+      "distance": 0.22498171930319194,
+      "terrainClear": true,
+      "staticBodiesClear": true
+    },
+    {
+      "id": "qa-beast-14",
+      "distance": 0.028679141852125348,
+      "terrainClear": true,
+      "staticBodiesClear": true
+    },
+    {
+      "id": "qa-beast-15",
+      "distance": 1.4999999999999638,
+      "terrainClear": true,
+      "staticBodiesClear": true
+    },
+    {
+      "id": "qa-beast-16",
+      "distance": 1.4249999999999914,
+      "terrainClear": true,
+      "staticBodiesClear": true
+    },
+    {
+      "id": "qa-beast-17",
+      "distance": 0.11886230177038842,
+      "terrainClear": true,
+      "staticBodiesClear": true
+    },
+    {
+      "id": "qa-beast-18",
+      "distance": 0.23865517597662345,
+      "terrainClear": true,
+      "staticBodiesClear": true
+    },
+    {
+      "id": "qa-beast-19",
+      "distance": 1.415488418454645,
+      "terrainClear": true,
+      "staticBodiesClear": true
+    }
+  ],
+  "overlappingPairs": 0,
+  "newSweptConflicts": 0,
+  "traceAudit": {
+    "steps": [
+      {
+        "step": 1,
+        "movedAnimals": 6,
+        "blockedTerrain": 0,
+        "blockedInitialBodies": 0,
+        "initialOverlaps": 0,
+        "newSweptConflicts": 0,
+        "events": [
+          "AnimalTargetUnavailable",
+          "AnimalTargetUnavailable",
+          "AnimalTargetUnavailable",
+          "AnimalTargetUnavailable",
+          "AnimalTargetUnavailable",
+          "AnimalTargetUnavailable",
+          "AnimalTargetUnavailable",
+          "AnimalTargetUnavailable",
+          "AnimalTargetUnavailable",
+          "AnimalTargetUnavailable",
+          "AnimalTargetUnavailable",
+          "AnimalTargetUnavailable",
+          "AnimalTargetUnavailable",
+          "AnimalTargetUnavailable"
+        ],
+        "scheduleAuditMs": 0.6700000017881393,
+        "schedulePairs": 210,
+        "scheduleConflicts": 0
+      },
+      {
+        "step": 2,
+        "movedAnimals": 19,
+        "blockedTerrain": 0,
+        "blockedInitialBodies": 0,
+        "initialOverlaps": 0,
+        "newSweptConflicts": 0,
+        "events": [
+          "AnimalTargetUnavailable",
+          "AnimalTargetUnavailable",
+          "AnimalTargetUnavailable",
+          "AnimalTargetUnavailable",
+          "AnimalTargetUnavailable",
+          "AnimalTargetUnavailable",
+          "AnimalTargetUnavailable",
+          "AnimalTargetUnavailable",
+          "AnimalTargetUnavailable",
+          "AnimalTargetUnavailable",
+          "AnimalTargetUnavailable",
+          "AnimalTargetUnavailable"
+        ],
+        "scheduleAuditMs": 0.3050000071525574,
+        "schedulePairs": 210,
+        "scheduleConflicts": 0
+      },
+      {
+        "step": 3,
+        "movedAnimals": 18,
+        "blockedTerrain": 0,
+        "blockedInitialBodies": 0,
+        "initialOverlaps": 0,
+        "newSweptConflicts": 0,
+        "events": [],
+        "scheduleAuditMs": 0.1599999964237213,
+        "schedulePairs": 190,
+        "scheduleConflicts": 0
+      },
+      {
+        "step": 4,
+        "movedAnimals": 18,
+        "blockedTerrain": 0,
+        "blockedInitialBodies": 0,
+        "initialOverlaps": 0,
+        "newSweptConflicts": 0,
+        "events": [],
+        "scheduleAuditMs": 0.18000000715255737,
+        "schedulePairs": 190,
+        "scheduleConflicts": 0
+      },
+      {
+        "step": 5,
+        "movedAnimals": 17,
+        "blockedTerrain": 0,
+        "blockedInitialBodies": 0,
+        "initialOverlaps": 0,
+        "newSweptConflicts": 0,
+        "events": [],
+        "scheduleAuditMs": 0.1600000113248825,
+        "schedulePairs": 190,
+        "scheduleConflicts": 0
+      },
+      {
+        "step": 6,
+        "movedAnimals": 17,
+        "blockedTerrain": 0,
+        "blockedInitialBodies": 0,
+        "initialOverlaps": 0,
+        "newSweptConflicts": 0,
+        "events": [],
+        "scheduleAuditMs": 0.3150000125169754,
+        "schedulePairs": 190,
+        "scheduleConflicts": 0
+      },
+      {
+        "step": 7,
+        "movedAnimals": 17,
+        "blockedTerrain": 0,
+        "blockedInitialBodies": 0,
+        "initialOverlaps": 0,
+        "newSweptConflicts": 0,
+        "events": [],
+        "scheduleAuditMs": 0.12999999523162842,
+        "schedulePairs": 190,
+        "scheduleConflicts": 0
+      },
+      {
+        "step": 8,
+        "movedAnimals": 17,
+        "blockedTerrain": 0,
+        "blockedInitialBodies": 0,
+        "initialOverlaps": 0,
+        "newSweptConflicts": 0,
+        "events": [],
+        "scheduleAuditMs": 0.125,
+        "schedulePairs": 190,
+        "scheduleConflicts": 0
+      },
+      {
+        "step": 9,
+        "movedAnimals": 17,
+        "blockedTerrain": 0,
+        "blockedInitialBodies": 0,
+        "initialOverlaps": 0,
+        "newSweptConflicts": 0,
+        "events": [],
+        "scheduleAuditMs": 0.10500000417232513,
+        "schedulePairs": 190,
+        "scheduleConflicts": 0
+      },
+      {
+        "step": 10,
+        "movedAnimals": 17,
+        "blockedTerrain": 0,
+        "blockedInitialBodies": 0,
+        "initialOverlaps": 0,
+        "newSweptConflicts": 0,
+        "events": [],
+        "scheduleAuditMs": 0.04500000178813934,
+        "schedulePairs": 190,
+        "scheduleConflicts": 0
+      },
+      {
+        "step": 11,
+        "movedAnimals": 15,
+        "blockedTerrain": 0,
+        "blockedInitialBodies": 0,
+        "initialOverlaps": 0,
+        "newSweptConflicts": 0,
+        "events": [],
+        "scheduleAuditMs": 0.040000006556510925,
+        "schedulePairs": 190,
+        "scheduleConflicts": 0
+      },
+      {
+        "step": 12,
+        "movedAnimals": 15,
+        "blockedTerrain": 0,
+        "blockedInitialBodies": 0,
+        "initialOverlaps": 0,
+        "newSweptConflicts": 0,
+        "events": [],
+        "scheduleAuditMs": 0.03999999165534973,
+        "schedulePairs": 190,
+        "scheduleConflicts": 0
+      },
+      {
+        "step": 13,
+        "movedAnimals": 15,
+        "blockedTerrain": 0,
+        "blockedInitialBodies": 0,
+        "initialOverlaps": 0,
+        "newSweptConflicts": 0,
+        "events": [],
+        "scheduleAuditMs": 0.04500000178813934,
+        "schedulePairs": 190,
+        "scheduleConflicts": 0
+      },
+      {
+        "step": 14,
+        "movedAnimals": 15,
+        "blockedTerrain": 0,
+        "blockedInitialBodies": 0,
+        "initialOverlaps": 0,
+        "newSweptConflicts": 0,
+        "events": [],
+        "scheduleAuditMs": 0.04499998688697815,
+        "schedulePairs": 190,
+        "scheduleConflicts": 0
+      },
+      {
+        "step": 15,
+        "movedAnimals": 15,
+        "blockedTerrain": 0,
+        "blockedInitialBodies": 0,
+        "initialOverlaps": 0,
+        "newSweptConflicts": 0,
+        "events": [],
+        "scheduleAuditMs": 0.04500000178813934,
+        "schedulePairs": 190,
+        "scheduleConflicts": 0
+      },
+      {
+        "step": 16,
+        "movedAnimals": 15,
+        "blockedTerrain": 0,
+        "blockedInitialBodies": 0,
+        "initialOverlaps": 0,
+        "newSweptConflicts": 0,
+        "events": [],
+        "scheduleAuditMs": 0.04999999701976776,
+        "schedulePairs": 190,
+        "scheduleConflicts": 0
+      },
+      {
+        "step": 17,
+        "movedAnimals": 13,
+        "blockedTerrain": 0,
+        "blockedInitialBodies": 0,
+        "initialOverlaps": 0,
+        "newSweptConflicts": 0,
+        "events": [],
+        "scheduleAuditMs": 0.03999999165534973,
+        "schedulePairs": 190,
+        "scheduleConflicts": 0
+      },
+      {
+        "step": 18,
+        "movedAnimals": 13,
+        "blockedTerrain": 0,
+        "blockedInitialBodies": 0,
+        "initialOverlaps": 0,
+        "newSweptConflicts": 0,
+        "events": [],
+        "scheduleAuditMs": 0.04500000178813934,
+        "schedulePairs": 190,
+        "scheduleConflicts": 0
+      },
+      {
+        "step": 19,
+        "movedAnimals": 13,
+        "blockedTerrain": 0,
+        "blockedInitialBodies": 0,
+        "initialOverlaps": 0,
+        "newSweptConflicts": 0,
+        "events": [],
+        "scheduleAuditMs": 0.04500000178813934,
+        "schedulePairs": 190,
+        "scheduleConflicts": 0
+      },
+      {
+        "step": 20,
+        "movedAnimals": 16,
+        "blockedTerrain": 0,
+        "blockedInitialBodies": 0,
+        "initialOverlaps": 0,
+        "newSweptConflicts": 0,
+        "events": [],
+        "scheduleAuditMs": 0.04500000178813934,
+        "schedulePairs": 190,
+        "scheduleConflicts": 0
+      }
+    ],
+    "scope": "Straight interpolation per tick; original static scene navigation, initial positions and linear discs including non-home workers. Does not reproduce within-tick paths or event-driven geometry changes."
+  },
+  "sceneErrors": [],
+  "scope": "Single frozen mangrove QA scene with 20 animals manually placed in native-standable non-overlapping positions; Worker restores adapted copy and executes 20 ticks; after response the test copies only x/z back for rendering. After measurement, straight segments are checked against the original scene navigation and initial body positions, plus a simultaneous linear disc approximation between animals. This is not an authoritative gameplay bridge, trajectory, collision, pose, input or visual-equivalence proof. Initialization and segment audits outside measurement; no GPU timer."
+}

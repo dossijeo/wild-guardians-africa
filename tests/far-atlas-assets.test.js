@@ -33,16 +33,20 @@ test('runtime atlases retain approved hashes and premultiplied transparent RGB',
   return;
  }
  const approved=JSON.parse(await fs.readFile('docs/qa/tree-atlas-refresh-20261026/imagegen-manifest.json','utf8'));let count=0;
+ const cleaned=JSON.parse(await fs.readFile('docs/lighting/tree-near-retexture/impostors/installed.json','utf8'));let cleanedCount=0;
  for(const [biome,trees]of Object.entries(manifest.biomes))for(const tree of trees){
   assert.equal(tree.prelitAlphaEncoding,'srgb-encoded-linear-premultiplied');
   const reference=approved.biomes[biome].find(x=>x.slot===tree.slot);assert.ok(reference);
   for(const phase of ['day','night']){
    const file=await fs.readFile('public/'+tree[phase].slice(2)),hash=createHash('sha256').update(file).digest('hex');
-   assert.equal(hash,reference.runtimeSha256[phase],`${biome}/${tree.slot}/${phase} approved content`);assert.equal(hash,tree.runtimeSha256[phase]);
+   const cleanup=tree.cleanupProvenance?cleaned.records.find(r=>r.biome===biome&&r.slot===tree.slot&&r.phase===phase):null;
+   if(tree.cleanupProvenance){assert.ok(cleanup);assert.equal(tree[phase],cleanup.output);const png=await fs.readFile(cleanup.input);assert.equal(createHash('sha256').update(png).digest('hex'),cleanup.inputSHA256);const source=await sharp(png).ensureAlpha().raw().toBuffer(),actual=await sharp(file).ensureAlpha().raw().toBuffer();assert.deepEqual(actual,source);assert.equal(createHash('sha256').update(actual).digest('hex'),cleanup.rgbaSHA256);cleanedCount++;}
+   assert.equal(hash,cleanup?.sha256??reference.runtimeSha256[phase],`${biome}/${tree.slot}/${phase} reviewed content`);assert.equal(hash,tree.runtimeSha256[phase]);
    const pixels=await sharp(file).ensureAlpha().raw().toBuffer();
    for(let i=0;i<pixels.length;i+=4)if(pixels[i+3]===0)assert.equal(pixels[i]|pixels[i+1]|pixels[i+2],0,`${biome}/${tree.slot}/${phase} hidden RGB must remain zero for mipmaps`);
    count++;
   }
  }
  assert.equal(count,44);
+ assert.equal(cleanedCount,6);
 });

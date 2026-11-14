@@ -1,0 +1,27 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {captureRaidWaitBindings} from '../../src/simulation/raid-wait-handoff.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+import {createWorkerSaveCoordinator} from '../../src/persistence/worker-save.js';
+window.audit=async()=>{
+ const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
+ const fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),{game,nav}=fixture.diagnosticWorld(),animal=game.raid.animals.find(a=>a.species==='hyena'),source=serialize(game),bindings=captureRaidWaitBindings(game,nav);fixture.dispose();
+ const original=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,raidWaitBindings:bindings,dynamicPhysics:true,session:'original'});
+ const submit=async(client,command)=>{const request=client.submit(command);if(!request.accepted)throw Error('Command not admitted');return request.result;};let restored;
+ try{
+  await original.ready;const attack=await submit(original,{kind:'castAttack',id:'checkpoint-attack',targetId:animal.id,x:animal.x,z:animal.z});
+  if(!attack.value||!attack.saveAvailable)throw Error('Impact was not saveable before contact');
+  for(let i=0;i<3;i++){const pre=await submit(original,{kind:'advance',seconds:.05,nightFastForward:true});if(!pre.saveAvailable||pre.physicsPose?.active)throw Error('Projectile unexpectedly entered active physics');}
+  let stored=null;const saver=createWorkerSaveCoordinator({runtime:{submit:command=>submit(original,command)},repository:{save:state=>{stored=serialize(state);}},slotId:game.slotId,now:()=>123});const receipt=await saver.request();if(!receipt.saved||!stored)throw Error('Checkpoint coordinator did not save the pending impact');
+  restored=createSimulationAuthorityClient({snapshot:stored,chunkKeys:chunks,session:'restored'});await restored.ready;
+  let active=0;for(let i=0;i<60;i++){
+   const command={kind:'advance',seconds:.05,nightFastForward:true},[a,b]=await Promise.all([submit(original,command),submit(restored,command)]);
+   const normalized=p=>{const state=JSON.parse(p.snapshot);delete state.savedAt;for(const actor of state.raid?.animals??[])if(actor.raidWait)delete actor.raidWait.epoch;return JSON.stringify(state);};
+   if(normalized(a)!==normalized(b)||JSON.stringify(a.events)!==JSON.stringify(b.events)||JSON.stringify(a.physicsPose)!==JSON.stringify(b.physicsPose))throw Error('Restored impact diverged at tick '+i+': '+JSON.stringify({state:normalized(a)===normalized(b),events:JSON.stringify(a.events)===JSON.stringify(b.events),pose:JSON.stringify(a.physicsPose)===JSON.stringify(b.physicsPose)}));
+   if(a.physicsPose?.active)active++;
+  }
+  if(!active)throw Error('No active physical fall was observed');return {ticks:60,active,scope:'Two real Workers and a pre-impact mangrove checkpoint; no active Rapier snapshot, UI save or full campaign.'};
+ }finally{original.dispose();restored?.dispose();}
+};window.ready=true;
+</script>

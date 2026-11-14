@@ -1,0 +1,7 @@
+# Native contour rejection diagnostic
+
+`f4ab3696`, executed with `node tools/probe-funded-defense-snapshot.mjs RETAINED_SNAPSHOT NEW_EMPTY_DIRECTORY`. The tool reads a separate clone of the failed funded campaign after7nights, reconstructs native navigation, pays a real day8 contract for11 older workers (330coins), and asks the updated bounded planner for geometry. It verifies input SHA unchanged, no wall payment, and no logical-state mutation by the failed quote. This is an explicitly paid-next-day fixture, not a continued economic campaign or survival result. Complete source/input hashes are in `diagnosis.json`.
+
+All9rectangular contours have native placement omissions, even after legal small vegetation removal is allowed. Smallest:59expected pieces,53legal. Others omit6–13modules. Quote-reported removal of2–7small props per option is permitted only by actual paid native builds; no removal occurs in this diagnostic. Protected next wage is330, cash after actual current wage259. Geometry failure is independent of pretending those funds cover the perimeter.
+
+The tool now distinguishes slot bounds, damaged/conflicting walls, native omitted modules and incomplete coverage instead of a bare legal false. Do not infer which obstacle caused each omission without inspecting the native placement result. Do not use this day8 clone as the exact missing day6trace. Old rectangular negative and no-walls outputs remain unchanged.

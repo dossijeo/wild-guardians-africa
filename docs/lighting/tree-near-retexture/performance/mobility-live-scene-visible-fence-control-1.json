@@ -1,0 +1,156 @@
+{
+  "network": true,
+  "chunks": 25,
+  "animals": 20,
+  "initMs": 951.75,
+  "publications": [
+    {
+      "sequence": 1,
+      "elapsed": 3000.383185000001,
+      "tickMs": 1242.1649999916553,
+      "responseMs": 1248.3500000089407,
+      "applyDelayMs": 0.06999999284744263,
+      "applyMs": 92.53500001132488,
+      "events": 12,
+      "actorsApplied": 21,
+      "actorsChanged": 5
+    },
+    {
+      "sequence": 2,
+      "elapsed": 3000.4331850000012,
+      "tickMs": 16.17000000178814,
+      "responseMs": 50.20000000298023,
+      "applyDelayMs": 0.05500000715255737,
+      "applyMs": 42.29999999701977,
+      "events": 0,
+      "actorsApplied": 21,
+      "actorsChanged": 11
+    },
+    {
+      "sequence": 3,
+      "elapsed": 3000.4831850000014,
+      "tickMs": 5.545000001788139,
+      "responseMs": 43.65500000119209,
+      "applyDelayMs": 0.05500000715255737,
+      "applyMs": 37.354999989271164,
+      "events": 0,
+      "actorsApplied": 21,
+      "actorsChanged": 13
+    },
+    {
+      "sequence": 4,
+      "elapsed": 3000.5331850000016,
+      "tickMs": 5.084999993443489,
+      "responseMs": 39.19999998807907,
+      "applyDelayMs": 0.0650000125169754,
+      "applyMs": 39.99499998986721,
+      "events": 0,
+      "actorsApplied": 21,
+      "actorsChanged": 13
+    },
+    {
+      "sequence": 5,
+      "elapsed": 3000.583185000002,
+      "tickMs": 6.2249999940395355,
+      "responseMs": 35.5249999910593,
+      "applyDelayMs": 0.05500000715255737,
+      "applyMs": 35.81999999284744,
+      "events": 0,
+      "actorsApplied": 21,
+      "actorsChanged": 13
+    },
+    {
+      "sequence": 6,
+      "elapsed": 3000.633185000002,
+      "tickMs": 4.0250000059604645,
+      "responseMs": 33.12000000476837,
+      "applyDelayMs": 0.04999999701976776,
+      "applyMs": 36.900000005960464,
+      "events": 0,
+      "actorsApplied": 21,
+      "actorsChanged": 14
+    },
+    {
+      "sequence": 7,
+      "elapsed": 3000.683185000002,
+      "tickMs": 2.8250000029802322,
+      "responseMs": 39.32500000298023,
+      "applyDelayMs": 0.06000000238418579,
+      "applyMs": 34.934999987483025,
+      "events": 0,
+      "actorsApplied": 21,
+      "actorsChanged": 14
+    },
+    {
+      "sequence": 8,
+      "elapsed": 3000.7331850000023,
+      "tickMs": 2.709999993443489,
+      "responseMs": 35.49499998986721,
+      "applyDelayMs": 0.05500000715255737,
+      "applyMs": 33.564999997615814,
+      "events": 0,
+      "actorsApplied": 21,
+      "actorsChanged": 15
+    },
+    {
+      "sequence": 9,
+      "elapsed": 3000.7831850000025,
+      "tickMs": 2.3299999982118607,
+      "responseMs": 33.79999999701977,
+      "applyDelayMs": 0.06499999761581421,
+      "applyMs": 33.67000000178814,
+      "events": 0,
+      "actorsApplied": 21,
+      "actorsChanged": 15
+    },
+    {
+      "sequence": 10,
+      "elapsed": 3000.8331850000027,
+      "tickMs": 2.594999998807907,
+      "responseMs": 38.76500000059605,
+      "applyDelayMs": 0.08499999344348907,
+      "applyMs": 37.060000002384186,
+      "events": 0,
+      "actorsApplied": 21,
+      "actorsChanged": 16
+    }
+  ],
+  "eventsReceived": 12,
+  "observerCount": 12,
+  "simulationObserverCount": 0,
+  "visibility": [
+    {
+      "visible": false,
+      "at": 49771.66500000656
+    },
+    {
+      "visible": true,
+      "at": 49863.12000000477
+    }
+  ],
+  "fenceState": {
+    "received": 10,
+    "nextEvent": 12,
+    "displayed": 10,
+    "minimum": 1,
+    "pending": 0,
+    "fault": false,
+    "hide": false,
+    "visible": true
+  },
+  "frames": {
+    "count": 209,
+    "p95": 47.76500000059605,
+    "p99": 76.28499999642372,
+    "max": 142.81500001251698
+  },
+  "renderMs": {
+    "count": 210,
+    "p95": 37.53000000119209,
+    "p99": 46.73999999463558,
+    "max": 49.75499999523163
+  },
+  "fullSnapshotEqual": true,
+  "sceneErrors": [],
+  "scope": "Ten sequential Worker-owned clone ticks and confirmed projection/event publications into a frozen real mangrove-islands QA scene. At most one request in flight. QA animal ID 0 renamed, 25 chunk keys, no physics manager; only positions and heading copied. All events classified structural; canvas CSS visibility is held hidden for two RAFs on invalidation and restored after synchronous application and draw. No compositor pixel proof, gameplay input, interpolation, synchronized animations, continuous collision, transaction rollback or production authority. The final Worker snapshot alone is checked against a reference."
+}

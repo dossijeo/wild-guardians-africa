@@ -1,0 +1,102 @@
+{
+  "scope": "One cold real tick of converted mangrove island snapshot and nine synthetic chunks; rendered static warthog model with synthetic GPU trajectory. No WorldScene, live simulation-render state publication, physics manager, interactions or real GPU trajectory contract. Frame overlap uses request and response times; GPU and CPU contention may remain.",
+  "fullSnapshotEqual": true,
+  "runs": [
+    {
+      "mode": "main",
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": {
+        "count": 88,
+        "p95": 33.42000000000007,
+        "p99": 100.03999999999996,
+        "max": 100.03999999999996
+      },
+      "overlap": {
+        "count": 2,
+        "p95": 100.03999999999996,
+        "p99": 100.03999999999996,
+        "max": 100.03999999999996
+      },
+      "tickMs": 106.58500000834465,
+      "responseMs": 114.47999998927116,
+      "gpu": {
+        "samples": 89,
+        "p95": 0.60416,
+        "p99": 3.696608,
+        "reason": null
+      }
+    },
+    {
+      "mode": "worker",
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": {
+        "count": 90,
+        "p95": 33.38000000000011,
+        "p99": 33.445000000000164,
+        "max": 33.445000000000164
+      },
+      "overlap": {
+        "count": 4,
+        "p95": 33.36499999999978,
+        "p99": 33.36499999999978,
+        "max": 33.36499999999978
+      },
+      "tickMs": 111.54500000178814,
+      "responseMs": 120.4750000089407,
+      "gpu": {
+        "samples": 91,
+        "p95": 4.03856,
+        "p99": 4.716064,
+        "reason": null
+      }
+    },
+    {
+      "mode": "worker",
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": {
+        "count": 91,
+        "p95": 33.39000000000033,
+        "p99": 33.45000000000027,
+        "max": 33.45000000000027
+      },
+      "overlap": {
+        "count": 4,
+        "p95": 33.434999999999945,
+        "p99": 33.434999999999945,
+        "max": 33.434999999999945
+      },
+      "tickMs": 110.71499998867512,
+      "responseMs": 119.125,
+      "gpu": {
+        "samples": 92,
+        "p95": 4.115808,
+        "p99": 4.424896,
+        "reason": null
+      }
+    },
+    {
+      "mode": "main",
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": {
+        "count": 89,
+        "p95": 33.40000000000009,
+        "p99": 99.99499999999989,
+        "max": 99.99499999999989
+      },
+      "overlap": {
+        "count": 2,
+        "p95": 99.99499999999989,
+        "p99": 99.99499999999989,
+        "max": 99.99499999999989
+      },
+      "tickMs": 108.16499999165535,
+      "responseMs": 116.21499998867512,
+      "gpu": {
+        "samples": 90,
+        "p95": 0.512576,
+        "p99": 0.584832,
+        "reason": null
+      }
+    }
+  ]
+}

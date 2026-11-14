@@ -67,5 +67,5 @@ test('arrival sound preloads with the upcoming species and shares one cached dec
  const audio=new AudioSystem({sfx:0,music:0},{json:async()=>bank,bytes:async url=>{loads.push(url);return {};}});audio.context={state:'running',decodeAudioData:async b=>b};
  const state={day:2,nightPlan:{group:['warthog','hyena']}};audio.prepareAnimalSounds(state);audio.prepareAnimalSounds(state);await Promise.all(audio.animalSoundPreparation.values());
  const alert=bank.items.find(i=>i.id==='game_enemy_detected').audio.url;
- assert.equal(loads.filter(url=>url===alert).length,1);assert.equal(loads.length,9);assert.equal(audio.buffers.size,9);
+ assert.equal(loads.filter(url=>url===alert).length,1);assert.equal(loads.length,11);assert.equal(audio.buffers.size,11);for(const species of ['warthog','hyena'])assert.equal(loads.filter(url=>url===bank.items.find(i=>i.id===species+'_hurt').audio.url).length,1);
 });

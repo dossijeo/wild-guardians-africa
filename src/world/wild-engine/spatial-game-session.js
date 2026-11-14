@@ -197,6 +197,24 @@ export function createSpatialGameSession(module,state,streamOptions){
       retainedProps.delete(key);
       streamOptions.onData(data);
     }});
+  let publishedNativeResources=null;
+  function publishNativeWorldResources(boundary){
+    const resources=core.captureNativeWorldResources(boundary);
+    if(publishedNativeResources?.nativeSession===resources.nativeSession&&resources.ticket<=publishedNativeResources.ticket)
+      throw Error('Native world resource publication is stale');
+    // Physical publication has already happened. Reuse the same data owner and
+    // onData path as ordinary streaming; do not regenerate or mutate WASM here.
+    for(const payload of resources.chunks){
+      const key=`${payload.cx},${payload.cz}`;chunkRevisions.set(key,(chunkRevisions.get(key)??0)+1);
+      stream.onData({...payload});
+    }
+    for(const {cx,cz} of resources.removed){
+      const key=`${cx},${cz}`;streamOptions.loaded().delete(key);nativeProps.delete(key);retainedProps.delete(key);
+      chunkRevisions.set(key,(chunkRevisions.get(key)??0)+1);streamOptions.onRelease?.(cx,cz,{nativeWorldBoundary:boundary});
+    }
+    if(resources.kind===10)terrainRevision++;
+    publishedNativeResources={nativeSession:resources.nativeSession,ticket:resources.ticket};return resources;
+  }
   function syncState(next){
     if(next.seed!==state.seed||next.biome!==state.biome)
       throw TypeError('A spatial session cannot change seed or biome');
@@ -479,7 +497,7 @@ export function createSpatialGameSession(module,state,streamOptions){
   const queryPropsAt=(x,z,radius)=>queryResidentSpatialProps(
     streamOptions.loaded(),props.suppressed,x,z,radius,
     key=>chunkRevisions.get(key)??0,retainedProps);
-  return {get core(){return core;},field,stream,horizonSource,topologySource,routeStamp,
+  return {get core(){return core;},field,stream,horizonSource,topologySource,routeStamp,publishNativeWorldResources,
     routeUnaffectedByWalls,suppressed:props.suppressed,syncState,
     routeActor,routeActorNative,routeActorNativeBatch,actorConnectivity,actorSectorRevision,actorRegions,actorEnclosure,actorRegionsBatch,actorCanStand,actorStepClear,
     actorStepClearExceptWalls,

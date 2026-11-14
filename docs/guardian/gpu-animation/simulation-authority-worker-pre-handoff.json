@@ -1,0 +1,102 @@
+{
+  "results": [
+    {
+      "sequence": 1,
+      "kind": "advance",
+      "value": null,
+      "events": [
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreating",
+        "AnimalRetreating"
+      ],
+      "elapsed": 6069.013000003833,
+      "pauses": []
+    },
+    {
+      "sequence": 2,
+      "kind": "advance",
+      "value": null,
+      "events": [],
+      "elapsed": 6069.038000003834,
+      "pauses": []
+    },
+    {
+      "sequence": 3,
+      "kind": "pause",
+      "value": null,
+      "events": [],
+      "elapsed": 6069.038000003834,
+      "pauses": [
+        "test"
+      ]
+    },
+    {
+      "sequence": 4,
+      "kind": "advance",
+      "value": null,
+      "events": [],
+      "elapsed": 6069.038000003834,
+      "pauses": [
+        "test"
+      ]
+    },
+    {
+      "sequence": 5,
+      "kind": "resume",
+      "value": null,
+      "events": [],
+      "elapsed": 6069.038000003834,
+      "pauses": []
+    },
+    {
+      "sequence": 6,
+      "kind": "castShield",
+      "value": true,
+      "events": [
+        "SpellActivated"
+      ],
+      "elapsed": 6069.038000003834,
+      "pauses": []
+    },
+    {
+      "sequence": 7,
+      "kind": "castShield",
+      "value": false,
+      "events": [],
+      "elapsed": 6069.038000003834,
+      "pauses": []
+    },
+    {
+      "sequence": 8,
+      "kind": "advance",
+      "value": null,
+      "events": [
+        "AnimalRouteUnavailable"
+      ],
+      "elapsed": 6069.054000003834,
+      "pauses": []
+    },
+    {
+      "sequence": 9,
+      "kind": "snapshot",
+      "value": null,
+      "events": [],
+      "elapsed": 6069.054000003834,
+      "pauses": []
+    }
+  ],
+  "duplicateRejected": true,
+  "clientQueueMatched": false,
+  "reconstructionDifferences": [
+    {
+      "path": "/raid/animals/7/raidWait/epoch",
+      "worker": "5,536",
+      "reference": "5,540"
+    }
+  ],
+  "shieldCommandMatched": true,
+  "renderer": "none",
+  "scope": "Real simulation and Wild Engine from one restored island-mangrove raid snapshot, 24 explicitly supplied chunks, ordered advances/pause/resume, shield, duplicate shield and snapshot. The second client initializes after shield and is compared to the uninterrupted reference, exposing native reconstruction differences when present. No input integration, physics manager or rendered game."
+}

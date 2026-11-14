@@ -1,0 +1,150 @@
+{
+  "status": "installed-on-work-branch-visual-validation-in-progress",
+  "actor": "hyena",
+  "sourceBranch": "codex/global-visual-lab",
+  "editableLocalSource": "content/source/actors/hyena/expressive-candidate.blend",
+  "reproduce": [
+    "tools/guardian/build_actor_face.py",
+    "tools/guardian/inspect_actor_face.py",
+    "tools/guardian/actor_mouth.py",
+    "tools/guardian/prototype_hyena_dental_jaw.py",
+    "tools/guardian/hyena_muzzle_patch.py",
+    "tools/guardian/actor_dentition.py",
+    "tools/guardian/audit_actor_dentition.py",
+    "tools/guardian/restore_hyena_collar.py",
+    "tools/guardian/bake_actor_materials.py",
+    "tools/guardian/add_hyena_eyelids.py",
+    "tools/guardian/repair_hyena_face_weights.py"
+  ],
+  "viewsPerIteration": [
+    "front",
+    "quarter",
+    "side",
+    "other-side"
+  ],
+  "rejected": [
+    "v1 socket collapse stretches brow and nose",
+    "v2 new lid UV interpolation crosses source islands",
+    "v3 eyelid width/center mismatch",
+    "v5 continuous lip skin elongated nose",
+    "v7-v8 cavity edge did not match actual skin delta",
+    "v10 mouth bag protruded below cheek",
+    "v6-v11: horizontal seam cuts the chin below the original dental/lip boundary; rejected after user review",
+    "dental-v1/v2 harmonic weights stretch attached teeth and muzzle",
+    "dental-v3 color-based face isolation creates jagged holes",
+    "closed oral lining and cut-edge bridges looked like a black wall across the entrance; rejected by user",
+    "mirrored proximity weights for fused left canine stretched its tip; removed"
+  ],
+  "current": "v12 expressive hyena installed in the work-branch catalogue. Native and compressed assets, action calibration and baked fall bank updated. Original assets retained. Wider species/scene visual validation remains.",
+  "remaining": [
+    "Complete intermediate eyelid and animated skin visual matrix; calibrated depth is now closer to original eye surface",
+    "Validate native clips visually with mouth and eyelids combined",
+    "Complete wider actual-encounter validation of installed hyena",
+    "Calibrate remaining beasts/farmers and complete performance comparison"
+  ],
+  "exportCheck": {
+    "file": "C:/tmp/guardian-faces/hyena-expression.glb",
+    "bytes": 71759972,
+    "nativeClips": 6,
+    "nativeClipStartEndTimes": "all equal to source",
+    "morphs": {
+      "Mesh_0": [
+        "mouthOpen"
+      ],
+      "Oral cavity": [
+        "mouthOpen"
+      ],
+      "Expressive fur lids": [
+        "blinkL",
+        "blinkR"
+      ]
+    },
+    "notVerified": [
+      "full animation pose equivalence",
+      "Three.js visual playback",
+      "runtime compression",
+      "GPU cost"
+    ],
+    "status": "Historical rejected chin-cut candidate; not an export of the current dental correction"
+  },
+  "acceptanceCriteria": [
+    "Trace original upper/lower dental boundary and both lip corners on unmodified source geometry before authoring",
+    "Preserve chin as part of lower jaw; attach lower teeth to jaw motion and preserve upper teeth",
+    "Inspect closed, partial and full opening from front, both sides and three-quarter views",
+    "Reject any second opening below the original mouth or exposed background through corners"
+  ],
+  "anatomyDiagnostic": {
+    "source": "unmodified visual-lab hyena",
+    "method": "highlight existing boundary edges on temporary welded analysis mesh; source mesh remains unchanged",
+    "reference": "Original teeth and lip corners, not a horizontal chin plane",
+    "finding": "Existing cavity boundary follows dental line, rising toward the corners; investigate deformation using this original opening before adding any seam",
+    "evidence": [
+      "original-dental-boundary-side.png",
+      "original-dental-boundary-quarter.png",
+      "original-dental-boundary-front.png",
+      "original-dental-boundary-other-side.png"
+    ],
+    "notValidated": "Final animated runtime deformation remains unvalidated"
+  },
+  "textureRepair": {
+    "method": "Localized generated fur patch projected bilaterally; all three tagged dental islands excluded",
+    "asset": "content/source/actors/hyena/muzzle-fur-repair.png",
+    "evidence": [
+      "muzzle-before-hidden-canine.png",
+      "muzzle-after-hidden-canine.png"
+    ],
+    "runtimeReady": false,
+    "remaining": [
+      "bake into original UV atlas",
+      "neutral/partial/open all-view validation"
+    ]
+  },
+  "dentition": {
+    "method": "detach biconnected dental islands without replacing tooth geometry",
+    "vertexCounts": [
+      57,
+      90,
+      91
+    ],
+    "fullOpenRigidErrorMeters": 0,
+    "halfOpenMaxRelativeEdgeContraction": 0.012776720564962152,
+    "scope": "Morph geometry only; not native animated clip validation"
+  },
+  "collarRepair": "hyena-collar-restored.collar.json",
+  "currentNativeClipAudit": "hyena-face-v12-clips.json",
+  "eyelidExperiment": {
+    "candidate": "C:/tmp/guardian-faces/hyena-face-v12.blend",
+    "method": "Continuous eye envelope bounded by visible aperture, intermediate 25/50/75 percent morphs, controller blends adjacent poses only, 2048 frontal fur atlas",
+    "observed": "v11 uses temple depth slope and independent left/right depth offsets. Front closed and half, both profiles, and independent left closure inspected. v10 symmetric depth exposed the left eyeball and was rejected.",
+    "evidence": [
+      "lids-v7-runtime-half.png",
+      "lids-v9-runtime-closed.png",
+      "lids-v11-runtime-closed.png",
+      "lids-v11-runtime-half.png"
+    ],
+    "tests": "6 expression/controller tests pass; 246 native clip samples preserve 21 bone poses",
+    "drawCalls": 4,
+    "remaining": [
+      "Independent eyes and all partial values in both profiles",
+      "All native clips with expressions and skin/collar inspection",
+      "Runtime compression parity and actual encounter/performance validation"
+    ]
+  },
+  "skinRegression": {
+    "cause": "Existing horizontal rigid-head threshold split the muzzle between Head and Neck/Shoulder weights. Native bone-track parity did not detect this. Detached dental islands also retained mixed weights.",
+    "repair": "Complete anterior muzzle and tagged teeth follow Head, with posterior/inferior transition; collar and geometry untouched.",
+    "check": "1011 core muzzle vertices, 246 samples over six native clips: maximum head-relative error 1.36e-15 m; the same audit rejected the previous weights with 0.245 m error.",
+    "scope": "Neutral core skin rigidity and bone track parity; not full-expression/all-surface acceptance."
+  },
+  "runtimeCandidate": "content/source/actors/hyena/expressive-candidate.glb",
+  "combatValidation": {
+    "evidence": "face-v12-combat-cycle.json",
+    "scope": "One continuous native Attack cycle in WorldScene, hyena only. Not a global performance or all-scenario acceptance.",
+    "completed": true,
+    "errors": [],
+    "physicalBodiesAfter": 0,
+    "productionInstalled": true,
+    "installedEvidence": "hyena-installed-cycle.json",
+    "concurrencyEvidence": "face-v12-four-impacts.json"
+  }
+}

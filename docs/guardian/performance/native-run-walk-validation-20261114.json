@@ -1,0 +1,196 @@
+{
+  "date": "2026-11-14",
+  "baseRevision": "bb3494b54",
+  "scope": "Native Run/Walk selection on one retained production worker mesh. Ordinary authority producer/execution, Carry/idle/action transitions and full migration acceptance remain pending.",
+  "tests": {
+    "directed": {
+      "log": ".cache/native-run-walk-directed.tap",
+      "tests": 78,
+      "pass": 78,
+      "fail": 0,
+      "skipped": 0,
+      "failures": []
+    },
+    "regression": {
+      "log": ".cache/native-run-walk-regression.tap",
+      "tests": 510,
+      "pass": 508,
+      "fail": 2,
+      "skipped": 0,
+      "failures": [
+        "late crate admission is rejected after drop and retries a later pickup",
+        "confirmed harvest installs its sampled GPU horizon and cancels on changed target"
+      ]
+    },
+    "baseline": {
+      "log": ".cache/native-run-walk-baseline.tap",
+      "tests": 54,
+      "pass": 52,
+      "fail": 2,
+      "skipped": 0,
+      "failures": [
+        "late crate admission is rejected after drop and retries a later pickup",
+        "confirmed harvest installs its sampled GPU horizon and cancels on changed target"
+      ]
+    },
+    "controlAndCloseDirected": {
+      "log": ".cache/native-close-directed.tap",
+      "tests": 120,
+      "pass": 120,
+      "fail": 0,
+      "skipped": 0,
+      "failures": []
+    }
+  },
+  "expandedTestFiles": [
+    "tests/baked-walk-catalog.test.js",
+    "tests/baked-worker-walk-catalog.test.js",
+    "tests/native-frame-continuation.test.js",
+    "tests/native-gpu-motion.test.js",
+    "tests/native-route-terrain-support.test.js",
+    "tests/native-worker-roster.test.js",
+    "tests/remote-webgpu.test.js",
+    "tests/webgpu-actor-motion-binding.test.js",
+    "tests/webgpu-baked-walk.test.js",
+    "tests/webgpu-confirmed-worker-clock.test.js",
+    "tests/webgpu-hidden-actor-motion.test.js",
+    "tests/webgpu-pipeline-admission.test.js",
+    "tests/webgpu-resource-registry.test.js",
+    "tests/webgpu-shared-shadow.test.js",
+    "tests/webgpu-worker-action-retry.test.js",
+    "tests/webgpu-worker-baked-alert.test.js",
+    "tests/webgpu-worker-baked-carry.test.js",
+    "tests/webgpu-worker-baked-fall.test.js",
+    "tests/webgpu-worker-baked-getup.test.js",
+    "tests/webgpu-worker-baked-harvest.test.js",
+    "tests/webgpu-worker-baked-idle.test.js",
+    "tests/webgpu-worker-baked-plant.test.js",
+    "tests/webgpu-worker-baked-run.test.js",
+    "tests/webgpu-worker-baked-walk.test.js",
+    "tests/webgpu-worker-baked-water.test.js",
+    "tests/webgpu-worker-carry-roster.test.js",
+    "tests/webgpu-worker-carry-tool.test.js",
+    "tests/webgpu-worker-fall-roster.test.js",
+    "tests/webgpu-worker-getup-roster.test.js",
+    "tests/webgpu-worker-harvest-roster.test.js",
+    "tests/webgpu-worker-recovery-exit-motion.test.js",
+    "tests/webgpu-worker-roster.test.js",
+    "tests/webgpu-worker-run-roster.test.js",
+    "tests/webgpu-worker-water-tools.test.js",
+    "tests/webgpu-world-client-temporal-profile.test.js",
+    "tests/webgpu-world-client.test.js"
+  ],
+  "baselineComparison": {
+    "base": "bb3494b54",
+    "sameFailures": true,
+    "loader": ".cache/native-run-walk-baseline-loader.mjs",
+    "method": "Three changed production modules returned from git-show by a Node load hook at their original URLs; checkout untouched.",
+    "files": [
+      "tests/webgpu-worker-roster.test.js",
+      "tests/webgpu-worker-carry-roster.test.js"
+    ],
+    "diagnosis": [
+      "Preexisting late carry admission expects 1 but gets 0.",
+      "Preexisting historical harvest horizon expects true but gets false."
+    ],
+    "actorSourceBlobsIdenticalToPreviousBase": "651048dc6"
+  },
+  "hardware": {
+    "receipt": "native-worker-world-owner-run-walk-20261114.json",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "blockedMs": 500.0849609375,
+    "drawFrames": 15,
+    "transition": {
+      "at": 10.416666666666666,
+      "before": {
+        "x": 7.175999999999999,
+        "z": -11.800000015513103,
+        "distance": 0.9759999999999992,
+        "phase": 0.4066666666666663,
+        "yaw": 1.5707963426894676,
+        "firstRemainingPoint": 0,
+        "arrived": false,
+        "at": 10.406666666666666,
+        "duration": 10.601852558277272,
+        "runPhase": 0.4066666666666663,
+        "walkPhase": 0,
+        "carryPhase": 0,
+        "runDistance": 0.9759999999999992,
+        "walkDistance": 0,
+        "runRemaining": 0.0240000000000008,
+        "running": true,
+        "currentSpeed": 2.4000000000000004
+      },
+      "after": {
+        "x": 7.210799999999999,
+        "z": -11.800000016066233,
+        "distance": 1.0107999999999993,
+        "phase": 0.4266666666666659,
+        "yaw": 1.5707963426894676,
+        "firstRemainingPoint": 0,
+        "arrived": false,
+        "at": 10.426666666666666,
+        "duration": 10.601852558277272,
+        "runPhase": 0.41666666666666663,
+        "walkPhase": 0.014999999999998966,
+        "carryPhase": 0,
+        "runDistance": 1,
+        "walkDistance": 0.010799999999999255,
+        "runRemaining": 0,
+        "running": false,
+        "currentSpeed": 1.08
+      },
+      "drawsBefore": 3,
+      "drawsAfter": 12
+    },
+    "resourcesBeforeReuse": 1831,
+    "resourcesAfterReuse": 1831,
+    "initialRenderFactories": {
+      "createBuffer": 0,
+      "createTexture": 0,
+      "createSampler": 0,
+      "createBindGroup": 0,
+      "createBindGroupLayout": 0,
+      "createPipelineLayout": 0,
+      "createShaderModule": 0,
+      "createRenderPipeline": 0,
+      "createRenderPipelineAsync": 0,
+      "createComputePipeline": 0,
+      "createComputePipelineAsync": 0
+    },
+    "replacementRenderFactories": {
+      "createBuffer": 0,
+      "createTexture": 0,
+      "createSampler": 0,
+      "createBindGroup": 0,
+      "createBindGroupLayout": 0,
+      "createPipelineLayout": 0,
+      "createShaderModule": 0,
+      "createRenderPipeline": 0,
+      "createRenderPipelineAsync": 0,
+      "createComputePipeline": 0,
+      "createComputePipelineAsync": 0
+    },
+    "sameSurfaceGeneration": true,
+    "gpuErrors": 0,
+    "errors": [],
+    "drainedBeforeAuthorityDisposal": true
+  },
+  "build": {
+    "command": ".cache/tooling/node20.exe node_modules/vite/bin/vite.js build",
+    "status": "passed",
+    "log": ".cache/native-run-walk-build.log",
+    "seconds": 42.71,
+    "warnings": [
+      "Existing Vite chunk size advice."
+    ]
+  },
+  "completeMigration": false,
+  "allIntentsAccepted": false,
+  "ordinaryNativeAutonomyEnabled": false
+}

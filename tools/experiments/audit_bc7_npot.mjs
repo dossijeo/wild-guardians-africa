@@ -1,0 +1,4 @@
+import {createRequire} from 'node:module';
+const {chromium}=createRequire(import.meta.url)(process.env.PLAYWRIGHT_MODULE??'playwright');
+const browser=await chromium.launch({channel:'msedge',headless:true,args:process.env.QA_NATIVE_GPU==='1'?[]:['--enable-unsafe-swiftshader']});
+try{const page=await browser.newPage();await page.goto(`${process.env.QA_BASE_URL??'http://127.0.0.1:5175'}/tests/browser/bc7-npot-audit.html`);await page.waitForFunction(()=>window.bc7NpotResult||window.bc7NpotError,null,{timeout:30000});const {result,error}=await page.evaluate(()=>({result:window.bc7NpotResult,error:window.bc7NpotError}));if(error)throw Error(error);if(process.env.QA_EXPECT_GPU&&!result.device.includes(process.env.QA_EXPECT_GPU))throw Error('Unexpected GPU');console.log(JSON.stringify(result,null,2));}finally{await browser.close();}

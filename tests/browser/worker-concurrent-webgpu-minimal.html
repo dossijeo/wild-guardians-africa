@@ -1,0 +1,39 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {auditNativeRouteControl,auditNativeRuntimeControl} from './native-route-control.js';
+window.auditNativeRouteControl=auditNativeRouteControl;
+window.auditNativeRuntimeControl=auditNativeRuntimeControl;
+import {newGame} from '../../src/simulation/game.js';
+import {villageLayout} from '../../src/world/villages.js';
+import {serialize,deserialize} from '../../src/persistence/snapshots.js';
+import {createConfirmedStateReceiver} from '../../src/simulation/confirmed-state-receiver.js';
+import {createWorkerHostedRuntime} from '../../src/simulation/worker-hosted-runtime.js';
+import {createWebGpuWorldClient} from '../../src/rendering/webgpu-world-client.js';
+const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+window.audit=async({remoteDraw=false,nativeControl=false}={})=>{
+ if(nativeControl&&!remoteDraw)throw Error('Native control audit requires the independent draw Worker');
+ const payload=(await (await fetch('/content/villages.json')).json()).find(item=>item.id==='mapungubwe'),initial=newGame({seed:712,biome:'sabana',culture:'mapungubwe',slotId:'minimal-webgpu-recovery'});initial.villages[0].buildings=villageLayout(payload,0,0).filter(building=>building.kind!=='Zona común'&&building.footprint?.length).slice(0,1);initial.time=299.95;initial.elapsed=299.95;initial.pauses=['fixture'];const source=serialize(initial),state=deserialize(source),session='minimal-webgpu-recovery',camera={x:20,y:30,z:30,targetX:0,targetY:0,targetZ:0},errors=[],canvas=()=>{const c=document.createElement('canvas');c.width=c.height=32;document.body.append(c);return c;},report=e=>errors.push(String(e?.message??e));
+  const firstControl=nativeControl?new MessageChannel():null,secondControl=nativeControl?new MessageChannel():null;
+  const firstCanvas=canvas(),first=createWebGpuWorldClient({canvas:firstCanvas,session,snapshot:source,camera,width:32,height:32,experimentalCameraTerrain:true,remoteDraw,intentControlPort:firstControl?.port2??null,onError:report});let second=null,secondCanvas=null,runtime=null,controlAttachment=null;
+ try{
+  await first.ready;if(first.status().backend!=='WebGPU')throw Error('Expected actual WebGPU');
+   runtime=createWorkerHostedRuntime({world:{createConfirmedReceiver:id=>createConfirmedStateReceiver(state,id)},session,clientOptions:{snapshot:source,chunkKeys:['0,0']},terrainPort:first.terrainPort,presentationPort:first.presentationPort,runtimeOptions:{stepSeconds:.05,maxBatchSteps:2,diagnostics:true,coalescePublications:true,qaVisualRecovery:true,qaVisualRecoveryConcurrent:true},onError:report});await runtime.start();
+   if(firstControl)controlAttachment=await runtime.attachNativeIntentControl(firstControl.port1);
+  await runtime.submit({kind:'snapshot',visualTerrain:true});for(let i=0;i<100&&!runtime.status().recoveryBaseSequence;i++)await sleep(100);if(!runtime.status().recoveryBaseSequence)throw Error('Checkpoint not acknowledged');const prepared=await runtime.prepareVisualRecoveryForQa(),checkpoint=prepared.checkpoint;
+  // A bounded backlog and delayed ACKs keep the actual replay open while the
+  // real authority emits an event and loads chunks; no renderer work is faked.
+  for(let i=0;i<16;i++)await runtime.submit({kind:'snapshot'});
+  const toHost=new MessageChannel(),toRenderer=new MessageChannel(),replayed=[];toHost.port1.onmessage=({data})=>{replayed.push({kind:data.kind,sequence:data.sequence,terrainManifest:data.terrainManifest??null});toRenderer.port2.postMessage(data);};toRenderer.port2.onmessage=({data})=>setTimeout(()=>toHost.port1.postMessage(data),15);toHost.port1.start();toRenderer.port2.start();
+   secondCanvas=canvas();second=createWebGpuWorldClient({canvas:secondCanvas,session,snapshot:checkpoint.snapshot,camera,width:32,height:32,initialSequence:checkpoint.sequence,recoveryPort:toRenderer.port1,experimentalCameraTerrain:true,remoteDraw,intentControlPort:secondControl?.port2??null,onError:report});await second.ready;
+   const before=state.elapsed,attaching=runtime.attachVisualRecoveryForQa({terrainPort:second.terrainPort,presentationPort:second.presentationPort,recoveryPort:toHost.port2,intentControlPort:secondControl?.port1??null});await runtime.submit({kind:'resume',reason:'fixture'});const preview=await runtime.submit({kind:'previewVillage',culture:'mapungubwe',x:60,z:0,payload});if(!preview.terrainChanged||!preview.commandLoadedChunks?.length)throw Error('Preview did not load additional terrain');
+  const attached=await attaching,after=state.elapsed;if(after<=before)throw Error('Authority clock did not advance during replay');const ti=replayed.findIndex(entry=>entry.kind==='recoveryTerrain');if(ti<0||!replayed.slice(ti+1).some(entry=>entry.kind==='recoveryPublication'&&entry.sequence===replayed[ti].sequence))throw Error('Terrain was not replayed before its publication');toHost.port1.close();toRenderer.port2.close();const inspection=await second.inspect();if(inspection.backend!=='WebGPU'||inspection.state.sequence!==attached.sequence)throw Error('Recovery backend or sequence mismatch');if(inspection.recoveryEvents.filter(event=>event.type==='NightStarted').length!==1)throw Error('NightStarted was lost or duplicated in replay');if(inspection.resident<3)throw Error('Recovered terrain missing');const baseManifest=checkpoint.terrainCheckpoint.terrainManifest;if(!baseManifest)throw Error('Recovery checkpoint missing terrain identity');const chunks=new Map(baseManifest.chunks.map(chunk=>[chunk.cx+','+chunk.cz,chunk]));for(const item of replayed)if(item.kind==='recoveryTerrain'){if(item.terrainManifest?.epoch!==baseManifest.epoch)throw Error('Recovery terrain epoch mismatch');for(const chunk of item.terrainManifest.chunks)chunks.set(chunk.cx+','+chunk.cz,chunk);}const manifest={epoch:baseManifest.epoch,chunks:[...chunks.values()]};for(let i=0;i<200;i++){second.confirmCameraTerrain(runtime.status().confirmedSequence);if(second.cameraTerrain?.status().chunks===manifest.chunks.length&&second.cameraTrees?.matchesTreeManifest(manifest))break;await sleep(50);}if(second.cameraTerrain?.status().chunks!==manifest.chunks.length||!second.cameraTrees?.matchesTreeManifest(manifest))throw Error('Confirmed camera recovery incomplete '+JSON.stringify({manifest,terrain:second.cameraTerrain?.status(),trees:second.cameraTrees?.status(),client:second.status()}));if(errors.length)throw Error('WebGPU fixture errors: '+errors.join('; '));
+   let controlStatus=null;
+   if(nativeControl){
+    const next=inspection.drawExecution?.consumer?.intentControl,previous=(await first.inspect()).drawExecution?.consumer?.intentControl;
+    if(!next||next.closed||next.authorityEpoch!==controlAttachment.authorityEpoch||!previous?.closed)
+      throw Error('Native control did not bootstrap or retire the replaced draw generation');
+    controlStatus={attachment:controlAttachment,replacement:next,previousRetired:previous.closed};
+   }
+   second.finishRecoveryForQa();runtime.finishVisualRecoveryForQa();return {backend:inspection.backend,remoteDraw,nativeControl:controlStatus,base:checkpoint.sequence,attached:attached.sequence,before,after,recoveryEvents:inspection.recoveryEvents,loadedChunks:preview.commandLoadedChunks,resident:inspection.resident,cameraManifest:manifest,cameraTrees:second.cameraTrees.status(),errors,scope:'Real Three.js WebGPU presentation Workers, 32x32 canvases, initially one native chunk, no animal/worker models; test clock starts paused before night and resumes during replay. Not full game or performance.'};
+  }finally{second?.dispose();runtime?.dispose();first.dispose();firstControl?.port1.close();secondControl?.port1.close();secondCanvas?.remove();firstCanvas.remove();}
+};window.ready=true;
+</script>

@@ -1,4 +1,6 @@
 // Generated from original VFX Atelier V4 by tools/prepare_vfx_renderer.py.
+import {vfxDefinitions} from './vfx-definitions.js';
+export {vfxDefinitions} from './vfx-definitions.js';
 const TAU=Math.PI*2;
 const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)), mix=(a,b,t)=>a+(b-a)*t;
 const smooth=(a,b,x)=>{const t=clamp((x-a)/(b-a));return t*t*(3-2*t);};
@@ -46,7 +48,7 @@ export const vfxRigidStyles={soil:[0,.97,1,0],wood:[1,.91,1,0],adobe:[3,.95,1,0]
 export function createVfxAtlasRects(ASSETS,width,height){const atlasImage={width,height};const spriteRects={};for(const a of ASSETS.resources){spriteRects[a.id]=[];const [x,y,w,h]=a.rect,[cols,rows]=a.grid;for(let i=0;i<(a.frames||cols*rows);i++){let xx=x+(i%cols)*w/cols,yy=y+Math.floor(i/cols)*h/rows;spriteRects[a.id].push([(xx+.7)/atlasImage.width,1-(yy+h/rows-.7)/atlasImage.height,(w/cols-1.4)/atlasImage.width,(h/rows-1.4)/atlasImage.height]);}}
 return spriteRects;}
 export const MAX_SPRITES=760,MAX_FX_VERTS=48000;
-export function packVfxSprites(list,spriteRects,cam,target=null){const spriteData=target??new Float32Array(MAX_SPRITES*25);if(!list.length)return {count:0,data:spriteData};list.sort((a,b)=>V.dot(V.sub(b.p,cam.eye),cam.forward)-V.dot(V.sub(a.p,cam.eye),cam.forward));const count=Math.min(MAX_SPRITES,list.length);for(let i=0;i<count;i++){const s=list[i],o=i*25;const frames=spriteRects[s.tex];const f=clamp(s.frame||0,0,frames.length-1),a=frames[Math.floor(f)],b=frames[Math.min(Math.floor(f)+1,frames.length-1)];spriteData.set(s.p,o);spriteData.set(s.size,o+3);spriteData[o+5]=s.angle||0;spriteData.set(a,o+6);spriteData.set(b,o+10);spriteData.set(s.col,o+14);spriteData[o+17]=s.alpha;spriteData.set([f%1,s.orient||0,s.emit||0,s.soft||0],o+18);spriteData.set(s.dir||[0,1,0],o+22);}
+export function packVfxSprites(list,spriteRects,cam,spriteData=new Float32Array(MAX_SPRITES*25)){if(spriteData.length<MAX_SPRITES*25)throw new RangeError("VFX sprite buffer too small");if(!list.length)return {count:0,data:spriteData};list.sort((a,b)=>((b.p[0]-cam.eye[0])*cam.forward[0]+(b.p[1]-cam.eye[1])*cam.forward[1]+(b.p[2]-cam.eye[2])*cam.forward[2])-((a.p[0]-cam.eye[0])*cam.forward[0]+(a.p[1]-cam.eye[1])*cam.forward[1]+(a.p[2]-cam.eye[2])*cam.forward[2]));const count=Math.min(MAX_SPRITES,list.length);for(let i=0;i<count;i++){const s=list[i],o=i*25;const frames=spriteRects[s.tex];const f=clamp(s.frame||0,0,frames.length-1),a=frames[Math.floor(f)],b=frames[Math.min(Math.floor(f)+1,frames.length-1)];spriteData.set(s.p,o);spriteData.set(s.size,o+3);spriteData[o+5]=s.angle||0;spriteData.set(a,o+6);spriteData.set(b,o+10);spriteData.set(s.col,o+14);spriteData[o+17]=s.alpha;spriteData[o+18]=f%1;spriteData[o+19]=s.orient||0;spriteData[o+20]=s.emit||0;spriteData[o+21]=s.soft||0;spriteData[o+22]=s.dir?s.dir[0]:0;spriteData[o+23]=s.dir?s.dir[1]:1;spriteData[o+24]=s.dir?s.dir[2]:0;}
 return {count,data:spriteData};}
 export function vfxEnvironment(v,nightFill=.14){const settings={nightFill};
  const t=clamp(v/.46),n=smooth(.42,1,v);let sun=V.lerp([1.9,1.73,1.37],[1.34,.83,.4],t);sun=V.lerp(sun,[.105,.154,.25],n);
@@ -58,26 +60,6 @@ export function vfxEnvironment(v,nightFill=.14){const settings={nightFill};
  const shadowVP=M.mul(M.ortho(-6.3,6.3,-6.3,6.3,.1,26),M.look(V.scale(dir,12),[0,0,0]));
  return {night:n,sun,sky,ground,dir,top,bottom,shadowVP,particle:V.add(V.scale(sky,.95),V.scale(sun,.4))};}
 
-export const vfxDefinitions=[
-{id:'rhino',name:'Rinoceronte',title:'Embestida del rinoceronte',group:'Bestias',duration:4.5,icon:'rhino',species:'Rinoceronte',phases:[.88,1.7,2.4],desc:'Carril de aviso → arranque pesado → choque puntual. Polvo de carrera, líneas de velocidad, impacto animado y ondas tridimensionales. No rompe el objetivo.',chips:['Aviso + carga + contacto','Big hit · CodeManu','Polvo y suelo 3D']},
-{id:'lion',name:'León',title:'Combo de tres zarpazos',group:'Bestias',duration:4.1,icon:'claw',species:'León',phases:[.77,1.05,2.35],desc:'Tres golpes encadenados con barridos inclinados, marcas de garra, estelas afiladas y destellos breves. Cada contacto emite su propio evento.',chips:['Garras · Kenney','Cintas 3D afiladas','3 contactos separados']},
-{id:'buffalo',name:'Búfalo',title:'Pisotón de la sabana',group:'Bestias',duration:4.5,icon:'buffalo',species:'Búfalo',phases:[1.25,1.43,2.7],desc:'Círculo de aviso, elevación del cuerpo y golpe pesado. Corona de polvo, ondas rasantes y tierra con gravedad; ningún edificio se fragmenta.',chips:['Corona de polvo','Onda de suelo','Terrones, no escombros']},
-{id:'warthog',name:'Facóquero',title:'Barrido de colmillos',group:'Bestias',duration:4.1,icon:'horn',species:'Facóquero',phases:[.83,1.27,2.2],desc:'Carga corta que termina en dos barridos ascendentes. Los filos siguen los colmillos en el espacio y el polvo permanece junto al suelo.',chips:['Slash curvo · Kenney','Doble estela 3D','Impulso ascendente']},
-{id:'hyena',name:'Hiena',title:'Mordida y retirada',group:'Bestias',duration:3.9,icon:'bite',species:'Hiena',phases:[.89,1.25,2.1],desc:'Un salto corto, dos arcos que se cierran sobre el punto de contacto y retirada. Golpe seco sin sangre ni explosión.',chips:['Arcos de mordida','Impacto blanco · CodeManu','Contacto localizado']},
-{id:'roar',name:'Rugido',title:'Rugido intimidatorio',group:'Bestias',duration:4.6,icon:'roar',species:'León',phases:[.78,.95,2.9],desc:'El cono indica el área de amenaza. Cuatro frentes de presión se alejan de la boca, orientados en tres dimensiones, y remueven el polvo.',chips:['Aviso en cono','Frentes de presión 3D','Sin daño programado']},
-{id:'shield',name:'Protección',title:'Cúpula del guardián',group:'Espíritu',duration:5.1,icon:'shield',phases:[.4,.9,3.7],desc:'Una cúpula tridimensional envuelve el tótem. Bordes Fresnel, patrón de celdas y una ondulación localizada cuando recibe un impacto de prueba.',chips:['Superficie 3D','Colisión visual localizada','Luz verde controlada']},
-{id:'repel',name:'Repulsión',title:'Pulso de repulsión',group:'Espíritu',duration:4.6,icon:'repel',phases:[.3,1.27,2.9],desc:'La energía converge, se enrolla sobre el suelo y sale en tres ondas. El efecto comunica expulsión, no una explosión de fuego.',chips:['Charge + vortex · CodeManu','Tres frentes expansivos','Motivo circular']},
-{id:'heal',name:'Bendición',title:'Bendición de la tierra',group:'Espíritu',duration:5,icon:'heart',phases:[.3,.8,3.9],desc:'Aura animada en verde, corrientes ascendentes, hojas y pequeños corazones. Una señal de recuperación que puede acompañar al espíritu.',chips:['Aura · CodeManu','Corazones · Kenney','Espirales tridimensionales']},
-{id:'stun',name:'Aturdimiento',title:'Aturdimiento legible',group:'Espíritu',duration:4.6,icon:'stun',phases:[.25,.6,3.5],desc:'Estrellas orbitan la cabeza de la maqueta y dejan estelas discretas. Feedback de estado separado del ataque, sin cambiar la IA.',chips:['Estrellas · Kenney','Órbita sobre la cabeza','Estado visual independiente']},
-{id:'dust',name:'Pisadas',title:'Pisadas en tierra',group:'Movimiento',duration:3.6,icon:'dust',desc:'Tres apoyos cortos: polvo bajo, motas pequeñas y dispersión lateral. Sin humo blanco ni emisión de luz.',chips:['Kenney · humo','Tamaño: 15–55 cm','Alpha normal']},
-{id:'dig',name:'Cavar',title:'Tierra con peso',group:'Cultivo',duration:3.5,icon:'dig',desc:'El golpe de la azada levanta terrones sólidos y una nube animada. Los fragmentos caen, rebotan y se asientan.',chips:['Brackeys · 64 frames','Terrones 3D','Kenney · tierra']},
-{id:'water',name:'Regar',title:'Agua sobre la tierra',group:'Cultivo',duration:4.3,icon:'water',desc:'Gotas 3D desde una regadera, gravedad hacia abajo, salpicaduras al contacto y un pequeño rastro húmedo.',chips:['Gotas 3D','Kenney · ondas','Agua sin glow']},
-{id:'harvest',name:'Cosechar',title:'Una buena cosecha',group:'Cultivo',duration:3.9,icon:'harvest',desc:'Hojas que giran, pequeñas mazorcas que llegan a la cesta y un destello breve para confirmar la recogida.',chips:['Hojas y cosecha 3D','Kenney · destello','Brillo acotado']},
-{id:'wood',name:'Madera',title:'Impacto en madera',group:'Defensa',duration:3.1,icon:'wood',desc:'Astillas alargadas salen de la cara golpeada. Un toque de serrín acompaña el impacto, sin chispas de metal.',chips:['Astillas 3D','Kenney · tierra','Material mate']},
-{id:'adobe',name:'Adobe',title:'Impacto en adobe',group:'Defensa',duration:3.3,icon:'adobe',desc:'Fragmentos rojizos y polvo cálido. La nube queda pegada al punto de impacto y se disipa sin tapar el muro.',chips:['Brackeys · polvo','Fragmentos 3D','Color del material']},
-{id:'stone',name:'Piedra',title:'Impacto en piedra',group:'Defensa',duration:3.3,icon:'stone',desc:'Esquirlas cortas y pesadas, rebote más seco y una cantidad pequeña de polvo mineral. Nada de explosiones.',chips:['Piedras 3D','Polvo mineral','Rebote controlado']},
-{id:'spirit',name:'Espíritu',title:'La presencia del guardián',group:'Espíritu',duration:5.5,icon:'spirit',desc:'Motas diminutas trazan espirales en el espacio. Dos luces locales colorean la madera; la escena conserva su oscuridad.',chips:['Kenney · halo y estela','Trayectorias 3D','Dos luces locales']},
-];
 
 export function createNativeVfx(id,spriteRects,{density=1,wind=.3,layers={},surface=null,waterSource=null,shieldMode=null,shieldDuration=20,agricultureMode=null,agricultureDuration=30,stepMode=false}={}){
  const definitions=vfxDefinitions,contacts=[],style=vfxRigidStyles;
@@ -134,7 +116,7 @@ function spriteInstances(){const out=[];for(const p of parts){const t=p.age/p.li
  return out.filter(p=>settings.layers.textures&&(settings.layers.dust||!DUST_TEXTURES.has(p.tex)));
 }
 let fxVertices=[];
-function fxTri(a,b,c,col,alpha,kind=0,normals=null){if(alpha<.003)return;const n=normals||[V.norm(V.cross(V.sub(b,a),V.sub(c,a)))];for(const [i,p]of[a,b,c].entries())fxVertices.push(...p,...(n[i]||n[0]),...col,alpha,kind);}
+function fxTri(a,b,c,col,alpha,kind=0,normals=null){if(alpha<.003)return;const n=normals||[V.norm(V.cross(V.sub(b,a),V.sub(c,a)))];for(let i=0;i<3;i++){const p=i===0?a:i===1?b:c,normal=n[i]||n[0];fxVertices.push(p[0],p[1],p[2],normal[0],normal[1],normal[2],col[0],col[1],col[2],alpha,kind);}}
 function fxQuad(a,b,c,d,col,alpha,kind=0){fxTri(a,b,c,col,alpha,kind);fxTri(a,c,d,col,alpha,kind);}
 function fxBand(p,r0,r1,a0,a1,c,alpha,U=[1,0,0],W=[0,0,1],steps=56,kind=0){if(r1<=r0||alpha<.003)return;const at=(r,a)=>{const q=V.add(p,V.add(V.scale(U,Math.cos(a)*r),V.scale(W,Math.sin(a)*r)));if(agricultureMode&&current.id==='heal'&&surface)q[1]+=floorAt(q);return q;};for(let i=0;i<steps;i++){const a=mix(a0,a1,i/steps),b=mix(a0,a1,(i+1)/steps);fxQuad(at(r0,a),at(r1,a),at(r1,b),at(r0,b),c,alpha,kind);}}
 function fxLine(a,b,w,c,alpha,normal=[0,1,0]){const side=V.scale(V.norm(V.cross(V.sub(b,a),normal)),w*.5);fxQuad(V.add(a,side),V.sub(a,side),V.sub(b,side),V.add(b,side),c,alpha);}
@@ -147,7 +129,7 @@ function shieldDome(radius,alpha){if(alpha<.005)return;const center=[0,.04,0],se
 function attackWindow(start,length){const u=(clock-start)/length;return u<0||u>1?null:u;}
 function composeGeometryFX(){fxVertices=[];const id=current.id,t=clock,amber=color('#eac18a'),ivory=color('#f7e2b4'),jade=color('#81d8b7'),blue=color('#91cfdb');
  if(id==='rhino'){warningLane(-2.7,1.38,.57,t/.91);const u=attackWindow(1.7,.64);if(u!==null&&settings.layers.ribbons){const r=.22+u*1.55;fxBand([.86,.65,0],r,r+.075*(1-u),0,TAU,ivory,.55*(1-u),[0,1,0],[0,0,1]);for(let j=0;j<2;j++)arcRibbon([.6,.045,0],[1,0,0],[0,0,1],.35+u*(1.8+j*.35),.09*(1-u),-.9,2.9,amber,.6*(1-u));}}
- if(id==='lion'){warningCone([-.84,0,0],1.7,.54,t/.77);if(settings.layers.ribbons)for(const [i,at]of[1.05,1.38,1.75].entries()){const u=attackWindow(at-.09,.51);if(u===null)continue;const a=(1-smooth(.55,1,u))*smooth(0,.16,u),sweep=u*1.4;for(let claw=0;claw<3;claw++){let center=[.62+(claw-1)*.12,1.07+(claw-1)*.15,.03+(claw-1)*.18];arcRibbon(center,[1,0,0],[0,.91,.32],.74+claw*.085,.09,Math.PI*.04+sweep,Math.PI*1.22+sweep,i===1?amber:ivory,a*.8);}}}
+ if(id==='lion'){warningCone([-.84,0,0],1.7,.54,t/.77);if(settings.layers.ribbons)for(const [i,at]of[1.05,1.38,1.75].entries()){const u=attackWindow(at-.09,.51);if(u===null)continue;const a=(1-smooth(.55,1,u))*smooth(0,.16,u),sweep=u*1.4;for(let claw=0;claw<3;claw++){let center=[.62+(claw-1)*.12,1.07+(claw-1)*.15,.03+(claw-1)*.18];arcRibbon(center,[-1,0,0],[0,.91,.32],.74+claw*.085,.09,Math.PI*.04+sweep,Math.PI*1.22+sweep,i===1?amber:ivory,a*.8);}}}
  if(id==='buffalo'){warningCircle([-.2,0,0],1.65,t/1.25);const u=attackWindow(1.43,1.18);if(u!==null&&settings.layers.ribbons){for(let j=0;j<2;j++){const x=clamp(u-j*.16);if(x<=0)continue;let r=.24+x*2.7;fxBand([-.03,.025,0],r,r+.043*(1-x),0,TAU,amber,.62*(1-x));}}}
  if(id==='warthog'){warningLane(-2.35,1.32,.4,t/.83);const u=attackWindow(1.24,.61);if(u!==null&&settings.layers.ribbons)for(const s of[-1,1])arcRibbon([.57,.93,s*.25],[1,0,0],[0,1,0],.83,.16,.9+u*1.1,4.7+u*1.1,ivory,.76*(1-smooth(.5,1,u)));}
  if(id==='hyena'){warningCircle([.72,0,0],.66,t/.89);const u=attackWindow(1.21,.32);if(u!==null&&settings.layers.ribbons){const close=1-smooth(0,.48,u),a=(1-smooth(.52,1,u));for(const s of[-1,1])arcRibbon([.8,1.05+s*.19*close,.05],[1,0,0],[0,1,0],.38+.07*close,.065,s>0?0:Math.PI,s>0?Math.PI:TAU,ivory,a*.85);}}
@@ -236,12 +218,33 @@ function rigidInstances(){const counts=Object.fromEntries(Object.keys(rigidGeo).
  current=definitions.find(d=>d.id===id);if(!current)throw new Error('Composición VFX desconocida');restartEffect(false);
  return {
   get definition(){return current;},get time(){return clock;},get parts(){return parts;},get rigids(){return rigids;},get wetness(){return wetness;},contacts,
+  // An in-memory rollback belongs to this instance and never transports
+  // callbacks or terrain. The caller must validate those dependencies first.
+  beginCombatTransaction(){
+   if(!['rhino','lion','buffalo','warthog','hyena'].includes(current.id))throw Error('Unsupported combat VFX transaction');
+   const saved=structuredClone({id:current.id,clock,seed,eventIndex,parts,rigids,wetness,hitTime,paused,wallVisible,lastImpact,contacts,lightPos0,lightPos1,lightCol0,lightCol1}),eventList=events,eventCount=events.length;let active=true;
+   return {commit(){if(!active)throw Error('Combat VFX transaction closed');active=false;},rollback(){if(!active||current.id!==saved.id||events!==eventList||events.length!==eventCount)throw Error('Invalid combat VFX transaction');active=false;const copy=structuredClone(saved);clock=copy.clock;seed=copy.seed;eventIndex=copy.eventIndex;parts=copy.parts;rigids=copy.rigids;wetness=copy.wetness;hitTime=copy.hitTime;paused=copy.paused;wallVisible=copy.wallVisible;lastImpact=copy.lastImpact;contacts.splice(0,contacts.length,...copy.contacts);lightPos0=copy.lightPos0;lightPos1=copy.lightPos1;lightCol0=copy.lightCol0;lightCol1=copy.lightCol1;toolPose();}};
+  },
+  // Work-only checkpoint: callbacks and terrain belong to the destination, not
+  // to the serialized state. Callers must provide matching historical inputs.
+  exportWorkCheckpoint(){
+   if(!['dig','water','harvest','dust'].includes(current.id))throw Error('Unsupported work VFX checkpoint');
+   return structuredClone({version:1,id:current.id,config:{density,wind,layers:settings.layers,stepMode,hasSurface:!!surface,hasWaterSource:!!waterSource},clock,seed,eventIndex,parts,rigids,wetness,hitTime,paused});
+  },
+  importWorkCheckpoint(input){
+   const checkpoint=structuredClone(input),config={density,wind,layers:settings.layers,stepMode,hasSurface:!!surface,hasWaterSource:!!waterSource};
+   const validTree=value=>typeof value==='number'?Number.isFinite(value):value===null||typeof value==='string'||typeof value==='boolean'||Array.isArray(value)?Array.isArray(value)?value.every(validTree):true:value&&typeof value==='object'&&Object.values(value).every(validTree);
+   const vector=value=>Array.isArray(value)&&value.length===3&&value.every(Number.isFinite);
+   const numbers=(value,keys)=>keys.every(key=>Number.isFinite(value[key]));
+   if(!checkpoint||checkpoint.version!==1||checkpoint.id!==current.id||!['dig','water','harvest','dust'].includes(current.id)||JSON.stringify(checkpoint.config)!==JSON.stringify(config)||!Number.isFinite(checkpoint.clock)||checkpoint.clock<0||checkpoint.clock>current.duration+1e-7||!Number.isSafeInteger(checkpoint.seed)||checkpoint.seed< -2147483648||checkpoint.seed>2147483647||!Number.isSafeInteger(checkpoint.eventIndex)||checkpoint.eventIndex<0||checkpoint.eventIndex>events.length||events.slice(0,checkpoint.eventIndex).some(event=>event.t>checkpoint.clock+1e-7)||checkpoint.clock>0&&events.slice(checkpoint.eventIndex).some(event=>event.t<=checkpoint.clock+1e-7)||!Number.isFinite(checkpoint.wetness)||!Number.isFinite(checkpoint.hitTime)||typeof checkpoint.paused!=='boolean'||!Array.isArray(checkpoint.parts)||checkpoint.parts.length>MAX_SPRITES||!Array.isArray(checkpoint.rigids)||checkpoint.rigids.length>MAX_RIGIDS||!validTree(checkpoint.parts)||!validTree(checkpoint.rigids)||!checkpoint.parts.every(p=>p&&vector(p.p)&&vector(p.v)&&vector(p.col)&&numbers(p,['age','life','size0','size1','ratio','alpha','orient','emit','angle','spin','soft','drag','gravity','ground','phase'])&&typeof p.tex==='string')||!checkpoint.rigids.every(r=>r&&vector(r.p)&&vector(r.v)&&vector(r.size)&&vector(r.col)&&vector(r.rot)&&vector(r.spin)&&numbers(r,['age','life','gravity','bounce','drag'])&&typeof r.settled==='boolean'&&typeof r.landed==='boolean'&&Object.hasOwn(style,r.kind)&&(!r.flight||vector(r.flight.start)&&vector(r.flight.end)&&numbers(r.flight,['duration','arc'])&&r.flight.duration>0)))throw TypeError('Invalid work VFX checkpoint');
+   restartEffect(false);clock=checkpoint.clock;seed=checkpoint.seed;eventIndex=checkpoint.eventIndex;parts=checkpoint.parts;rigids=checkpoint.rigids;wetness=checkpoint.wetness;hitTime=checkpoint.hitTime;paused=checkpoint.paused;toolPose();
+  },
   get lights(){return {positions:[lightPos0.slice(),lightPos1.slice()],colors:[lightCol0.slice(),lightCol1.slice()]};},
   get tool(){return {visible:toolVisible,matrix:new Float32Array(toolModel)};},
   step(dt){if(!Number.isFinite(dt)||dt<0)throw new Error('Paso VFX inválido');if(dt)simulate(dt);},
   advance(dt){if(!Number.isFinite(dt)||dt<0)throw new Error('Paso VFX inválido');for(let remaining=dt;remaining>1e-9;){const sub=Math.min(1/60,remaining);simulate(sub);remaining-=sub;}},
   seek(t){if(!Number.isFinite(t)||t<0)throw new Error('Tiempo VFX inválido');contacts.length=0;seekTo(t);},
-  sprites(){return spriteInstances();},rigidInstances,geometry(){composeGeometryFX();return new Float32Array(fxVertices.slice(0,MAX_FX_VERTS*11));},
+  sprites(){return spriteInstances();},rigidInstances,geometry(target=null){composeGeometryFX();const length=Math.min(fxVertices.length,MAX_FX_VERTS*11);if(!target||target.length<length)return new Float32Array(fxVertices.slice(0,length));if(length===fxVertices.length)target.set(fxVertices);else for(let i=0;i<length;i++)target[i]=fxVertices[i];return target.subarray(0,length);},
   clear(){parts.length=0;rigids.length=0;events.length=0;contacts.length=0;fxVertices.length=0;lightCol0=[0,0,0];lightCol1=[0,0,0];},
  };
 }

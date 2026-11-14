@@ -3,12 +3,12 @@ import * as THREE from 'three';
 // A single instanced draw for all water contacts, without a depth capture,
 // textures, lights or audio. Step timestamps use the simulation clock.
 export class StepRipples {
- constructor(scene,capacity=128){
+ constructor(scene,capacity=128,{material=null}={}){
   this.capacity=capacity;this.contacts=[];this.matrix=new THREE.Matrix4();
   this.geometry=new THREE.RingGeometry(.86,1,24);
   this.alpha=new THREE.InstancedBufferAttribute(new Float32Array(capacity),1);
   this.alpha.setUsage(THREE.DynamicDrawUsage);this.geometry.setAttribute('stepAlpha',this.alpha);
-  this.material=new THREE.ShaderMaterial({transparent:true,depthWrite:false,side:THREE.DoubleSide,
+  this.material=material??new THREE.ShaderMaterial({transparent:true,depthWrite:false,side:THREE.DoubleSide,
    vertexShader:'attribute float stepAlpha; varying float opacity; void main(){opacity=stepAlpha; gl_Position=projectionMatrix*modelViewMatrix*instanceMatrix*vec4(position,1.);}',
    fragmentShader:'varying float opacity; void main(){gl_FragColor=vec4(.56,.75,.76,opacity);\n #include <tonemapping_fragment>\n #include <colorspace_fragment>\n}',
   });

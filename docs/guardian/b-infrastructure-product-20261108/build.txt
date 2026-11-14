@@ -1,0 +1,55 @@
+vite v6.4.3 building for production...
+transforming...
+✓ 693 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/assets/loading-image-worker-CNcGMC6u.js                0.51 kB
+dist/index.html                                             0.56 kB │ gzip:     0.38 kB
+dist/assets/biome-tangents-worker-Ch_kHS7g.js               1.44 kB
+dist/assets/mangrove-mud-edge-worker-Dd-smhXK.js            2.40 kB
+dist/assets/sky-pixels-worker-TPp-8HSF.js                   2.88 kB
+dist/assets/cinematic-pencil-webgpu-worker-CTMBq2Dr.js      6.82 kB
+dist/assets/building-data-worker-Yf5KmUwU.js               10.15 kB
+dist/assets/horizon-worker-CzbkByWh.js                     17.80 kB
+dist/assets/baked-beast-fallbacks-CvdkLceW.js              33.65 kB
+dist/assets/chunk-worker-B78_hbk5.js                       33.74 kB
+dist/assets/far-visual-replica-worker-UdlNX23Z.js          46.28 kB
+dist/assets/spatial-horizon-worker-BJD1l_Jx.js             46.74 kB
+dist/assets/snapshot-decode-worker-VLPBpaoq.js             56.39 kB
+dist/assets/far-ground-seam-worker-Dgo4FdCt.js             59.60 kB
+dist/assets/worker-checkpoint-store-Bm9KpgkW.js            75.50 kB
+dist/assets/mud-worker-browser-B5t3QxSD.js                 83.54 kB
+dist/assets/far-scene-worker-DwJ8mTMX.js                   87.24 kB
+dist/assets/worker-beast-physics-o_F4J381.js              118.96 kB
+dist/assets/worker-runtime-host-QuOEo0ts.js               148.37 kB
+dist/assets/spatial-initial-site-worker-n9XcxR-x.js       148.51 kB
+dist/assets/character-preview-data-worker-Czpum4u3.js     156.95 kB
+dist/assets/fresh-worker-bootstrap-worker-Cjhc9aWm.js     222.14 kB
+dist/assets/guardian-3d-worker-CK49tQxt.js                241.11 kB
+dist/assets/spatial-savanna-upTRNM09.wasm                 600.88 kB │ gzip:   202.24 kB
+dist/assets/simulation-authority-worker-CCxZXIHF.js       903.11 kB
+dist/assets/guardian-3d-webgpu-experiment-Dk7TXTnH.js   1,114.57 kB
+dist/assets/worker-loading-diorama-render-eFW8ywem.js   1,126.85 kB
+dist/assets/webgpu-world-worker-B339hBwC.js             2,214.69 kB
+dist/assets/index-Dzi8qAYD.css                             45.14 kB │ gzip:    10.27 kB
+dist/assets/native-bc7-glb-BuljZlDR.js                      0.24 kB │ gzip:     0.20 kB
+dist/assets/far-atmosphere-Bqvztrmn.js                      0.39 kB │ gzip:     0.27 kB
+dist/assets/tutorial-hand-target-Bq9Y8Un4.js                1.66 kB │ gzip:     0.88 kB
+dist/assets/mangrove-fern-lod-BVazf3Eo.js                   4.27 kB │ gzip:     2.05 kB
+dist/assets/mangrove-fern-material-DuJOhD8_.js              6.52 kB │ gzip:     2.93 kB
+dist/assets/mountain-backdrop-profile-B1XBEace.js           8.61 kB │ gzip:     3.15 kB
+dist/assets/loading-diorama-DdV1Ppi5.js                    29.11 kB │ gzip:     9.86 kB
+dist/assets/crop-library-Bp8GoNfj.js                       33.84 kB │ gzip:    12.41 kB
+dist/assets/KTX2Loader-DtXMyfck.js                         59.18 kB │ gzip:    24.02 kB
+dist/assets/far-vegetation-DoOWeF_P.js                     90.90 kB │ gzip:    30.32 kB
+dist/assets/scene-C0Cl4izD.js                             644.96 kB │ gzip:   213.06 kB
+dist/assets/index-P9yDxBk_.js                           2,028.47 kB │ gzip:   606.49 kB
+dist/assets/rapier-Dr7-2af2.js                          4,336.69 kB │ gzip: 1,645.15 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 44.86s
+Shared GLB images: 22 models, 11 banks, 35379776 bytes saved
+Wall buffer bank: { filesSaved: 159, bytes: 5135464 }

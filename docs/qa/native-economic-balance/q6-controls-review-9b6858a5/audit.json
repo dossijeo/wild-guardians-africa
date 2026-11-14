@@ -1,0 +1,30 @@
+{
+  "identicalSourceHashes": true,
+  "audits": [
+    {
+      "strategy": "no-walls",
+      "gitHead": "9b6858a54b5e75ca05da3314a74c40a505be4771",
+      "snapshotValid": true,
+      "ledgerReconciled": true,
+      "observer": "verified",
+      "completedNights": 7,
+      "money": 1210,
+      "living": 205,
+      "idleFraction": 0.6204761904761985,
+      "shieldEnabled": true
+    },
+    {
+      "strategy": "no-shield",
+      "gitHead": "9b6858a54b5e75ca05da3314a74c40a505be4771",
+      "snapshotValid": true,
+      "ledgerReconciled": true,
+      "observer": "verified",
+      "completedNights": 7,
+      "money": 888,
+      "living": 186,
+      "idleFraction": 0.693809523809512,
+      "shieldEnabled": false
+    }
+  ],
+  "scope": "Native seven-night controls; different decisions can alter RNG and agricultural pressure. Neither policy passes activity acceptance. No extrapolation to100/180, GPU or visual acceptance."
+}

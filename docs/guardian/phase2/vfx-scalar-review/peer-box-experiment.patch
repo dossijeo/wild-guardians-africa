@@ -1,0 +1,60 @@
+diff --git a/src/rendering/baked-beast-fallbacks.js b/src/rendering/baked-beast-fallbacks.js
+index cbe783ac3..92722f014 100644
+--- a/src/rendering/baked-beast-fallbacks.js
++++ b/src/rendering/baked-beast-fallbacks.js
+@@ -16,7 +16,7 @@ export class BakedBeastFallbacks {
+   const axis=Math.abs(dx)>Math.abs(dz)?(dx<0?'left':'side'):(dz<0?'back':'front'),direction=d.y<-.5?({front:'down',back:'downBack',side:'downSide',left:'downLeft'}[axis]):axis,clip=this.clips.get(animal.species+':'+direction);if(!clip)return false;
+   const binding=new BeastRagdollBinding(data.model),previous=this.entries.get(animal.id);if(previous){if(previous.recovery){previous.recovery.age=0;previous.recovery.apply(previous.recoveryAge);}else previous.fall.apply(Math.max(0,w.state.elapsed-previous.at));}
+   root.updateMatrixWorld(true);binding.capture();const hip=binding.entries[0].bone.getWorldPosition(new Vector3()),offset={x:hip.x-animal.x,z:hip.z-animal.z},last=hip.clone();
+-  const fall=new BakedBeastFall(binding,clip,{solidContacts:BakedSolidContacts.forAnimal(w,animal,binding),surface:(x,z)=>w.nav.field.surface(x,z),clipPosition:point=>{if(w.nav.segmentClear&&!w.nav.segmentClear(last,point,Math.max(.8,animal.radius??.8))){point.x=last.x;point.z=last.z;}last.copy(point);}});
++  const fall=new BakedBeastFall(binding,clip,{solidContacts:BakedSolidContacts.forAnimal(w,animal,binding,{peers:true}),surface:(x,z)=>w.nav.field.surface(x,z),clipPosition:point=>{if(w.nav.segmentClear&&!w.nav.segmentClear(last,point,Math.max(.8,animal.radius??.8))){point.x=last.x;point.z=last.z;}last.copy(point);}});
+   this.entries.set(animal.id,{animal,data,root,binding,fall,offset,at:animal.magicImpact.impactAt??w.state.elapsed,recovery:null,recoveryAge:0,snapshot:new Float32Array(98)});
+   animal.magicDown={phase:'falling',mode:'baked',since:w.state.elapsed,until:w.state.elapsed+clip.duration+3};animal.path=null;animal.attackRemaining=0;animal.hitApplied=true;if(animal.status==='attacking')animal.status='walking';return true;
+  }
+diff --git a/src/rendering/baked-solid-contacts.js b/src/rendering/baked-solid-contacts.js
+index f4f6a92a8..e9a16efa8 100644
+--- a/src/rendering/baked-solid-contacts.js
++++ b/src/rendering/baked-solid-contacts.js
+@@ -5,18 +5,37 @@ import {visitBeastSolids} from './beast-physics-environment.js';
+ // Conservative sampled skin envelope, translated away from nearby solid boxes.
+ // Keep the entry side of each obstacle: never eject through a thin wall.
+ export class BakedSolidContacts{
+- constructor(binding,boxes){
+-  this.binding=binding;this.boxes=boxes;this.samples=BeastRecovery.contactSamples(binding.model);this.positions=new Float64Array(this.samples.length*3);this.bounds=new Box3();this.point=new Vector3();this.reference=binding.bones.get('Hips').getWorldPosition(new Vector3());this.shift=new Vector3();
++ constructor(binding,boxes,peers=null){
++  this.binding=binding;this.boxes=boxes;this.peers=peers;this.peerCache=new Map();this.peerBoxes=[];this.partBox=new Box3();this.samples=BeastRecovery.contactSamples(binding.model);this.positions=new Float64Array(this.samples.length*3);this.bounds=new Box3();this.point=new Vector3();this.reference=binding.bones.get('Hips').getWorldPosition(new Vector3());this.shift=new Vector3();
++ }
++ static forAnimal(world,animal,binding,{peers=false}={}){const boxes=[];visitBeastSolids(world,animal,(key,read)=>{const box=read();if(key.startsWith('structure:')){const id=key.slice(10);box.active=()=>{for(const s of world.state.structures)if(s.id===id)return s.status==='intact';return false;};}boxes.push(box);});return new BakedSolidContacts(binding,boxes,peers?()=>{const manager=world.nav.beastPhysics,entries=[...(manager?.entries.values()??[])];for(const e of manager?.baked?.entries.values()??[]){if(e.animal.id===animal.id)break;entries.push(e);}return entries;}:null);}
++ refreshPeers(){
++  this.peerBoxes.length=0;const seen=new Set();
++  for(const e of this.peers?.()??[]){
++   const model=e.data.model;seen.add(model);let cached=this.peerCache.get(model);
++   if(!cached){cached={box:new Box3(),samples:BeastRecovery.contactSamples(model)};this.peerCache.set(model,cached);}
++   cached.box.makeEmpty();
++   if(e.actor){for(const {body}of e.actor.parts){
++    const collider=body.collider(0),position=collider.translation(),rotation=collider.rotation();this.partBox.makeEmpty();
++    if(collider.shapeType()===e.solver.R.ShapeType.ConvexPolyhedron){const vertices=collider.vertices();for(let i=0;i<vertices.length;i+=3){this.point.fromArray(vertices,i).applyQuaternion(rotation).add(position);this.partBox.expandByPoint(this.point);}}
++    else{const half=collider.halfHeight()??0,radius=collider.radius()??0;for(const sign of [-1,1]){this.point.set(0,sign*half,0).applyQuaternion(rotation).add(position);this.partBox.expandByPoint(this.point);}this.partBox.expandByScalar(radius);}
++    cached.box.union(this.partBox);
++   }}else for(const {mesh,index}of cached.samples){mesh.getVertexPosition(index,this.point).applyMatrix4(mesh.matrixWorld);cached.box.expandByPoint(this.point);}
++   // A small proactive margin prevents the baked path from entering a neighbor
++   // before the next pose update. Keep the initial side, as for static solids.
++   cached.box.expandByScalar(.08);this.peerBoxes.push(cached.box);
++  }
++  for(const model of this.peerCache.keys())if(!seen.has(model))this.peerCache.delete(model);
+  }
+- static forAnimal(world,animal,binding){const boxes=[];visitBeastSolids(world,animal,(key,read)=>{const box=read();if(key.startsWith('structure:')){const id=key.slice(10);box.active=()=>{for(const s of world.state.structures)if(s.id===id)return s.status==='intact';return false;};}boxes.push(box);});return new BakedSolidContacts(binding,boxes);}
+  resolve(surface=null){
+-  this.minimumClearance=Infinity;this.shift.set(0,0,0);if(!this.boxes.length)return this.shift;
++  if(this.peers)this.refreshPeers();
++  this.minimumClearance=Infinity;this.shift.set(0,0,0);if(!this.boxes.length&&!this.peerBoxes.length)return this.shift;
+   this.bounds.makeEmpty();let offset=0;for(const {mesh,index}of this.samples){mesh.getVertexPosition(index,this.point).applyMatrix4(mesh.matrixWorld);this.bounds.expandByPoint(this.point);if(surface){this.positions[offset++]=this.point.x;this.positions[offset++]=this.point.y;this.positions[offset++]=this.point.z;}}
+   // Include the contact skin in broad-phase overlap, not just separation.
+   // Sparse support samples can miss small features between extrema.
+   this.bounds.expandByScalar(.015);
+   const b=this.bounds,r=this.reference;
+-  for(let pass=0;pass<4;pass++)for(const solid of this.boxes){
++  for(let pass=0;pass<4;pass++)for(const solid of [...this.peerBoxes,...this.boxes]){
+    if(solid.active?.()===false||!b.intersectsBox(solid))continue;
+    const x=r.x<(solid.min.x+solid.max.x)/2?solid.min.x-b.max.x-.015:solid.max.x-b.min.x+.015;
+    const z=r.z<(solid.min.z+solid.max.z)/2?solid.min.z-b.max.z-.015:solid.max.z-b.min.z+.015;

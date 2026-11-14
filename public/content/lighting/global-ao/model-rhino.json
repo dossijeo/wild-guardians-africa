@@ -1,0 +1,83 @@
+{
+  "profile": "rhino",
+  "source": "/assets/34b30faf0194b34477ce037b2d45b2a3a9a042f2095b893beae0e99a7d1beea4.glb",
+  "sourceSHA256": "34b30faf0194b34477ce037b2d45b2a3a9a042f2095b893beae0e99a7d1beea4",
+  "binary": "/content/lighting/global-ao/model-rhino.bin",
+  "outputSHA256": "d7710b7729beaaf36bf87b3775562e7218d07b53a9e5ebdda102a447da9c3f0b",
+  "byteLength": 46518,
+  "samples": 32,
+  "records": [
+    {
+      "mesh": 0,
+      "primitive": 0,
+      "name": "Mesh_0",
+      "offset": 0,
+      "count": 41986,
+      "radius": 0.19863750696182253,
+      "mean": 160.12987662554184,
+      "minimum": 0,
+      "excludedMorphVertices": 269,
+      "dominantJointFiltered": true,
+      "traversalLimit": 0,
+      "invalidNormals": 0
+    },
+    {
+      "mesh": 1,
+      "primitive": 0,
+      "name": "RearCloth",
+      "offset": 41986,
+      "count": 828,
+      "radius": 0.06233427047729493,
+      "mean": 161.93478260869566,
+      "minimum": 0,
+      "excludedMorphVertices": 0,
+      "dominantJointFiltered": true,
+      "traversalLimit": 0,
+      "invalidNormals": 0
+    },
+    {
+      "mesh": 2,
+      "primitive": 0,
+      "name": "RhinoOralAnatomy",
+      "offset": 42814,
+      "count": 1494,
+      "radius": 0.013480802327394487,
+      "mean": 237.8574297188755,
+      "minimum": 8,
+      "excludedMorphVertices": 887,
+      "dominantJointFiltered": true,
+      "traversalLimit": 0,
+      "invalidNormals": 0
+    },
+    {
+      "mesh": 3,
+      "primitive": 0,
+      "name": "Actor eyelid surfaces",
+      "offset": 44308,
+      "count": 1105,
+      "radius": 0,
+      "mean": 255.0,
+      "minimum": 255,
+      "excludedMorphVertices": 1105,
+      "dominantJointFiltered": true,
+      "invalidNormals": 0,
+      "traversalLimit": 0
+    },
+    {
+      "mesh": 4,
+      "primitive": 0,
+      "name": "Actor eyelid surfaces.001",
+      "offset": 45413,
+      "count": 1105,
+      "radius": 0,
+      "mean": 255.0,
+      "minimum": 255,
+      "excludedMorphVertices": 1105,
+      "dominantJointFiltered": true,
+      "invalidNormals": 0,
+      "traversalLimit": 0
+    }
+  ],
+  "seconds": 16.287412600009702,
+  "scope": "Local cavity candidate; excludes moving morph surfaces and cross-joint occlusion. No dynamic AO claim."
+}

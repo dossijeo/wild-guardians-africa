@@ -1,0 +1,20 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {serializeConfirmedState} from '../../src/simulation/confirmed-live-state.js';
+import {microState,trackIncome} from '../../src/microevents/economy.js';
+import {observeGameEvents,advanceReal} from '../../src/simulation/game.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+window.audit=async()=>{
+ const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
+ const fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),{game,nav}=fixture.diagnosticWorld();game.raid=null;game.pauses=[];game.time=599.99;game.dayPlan=null;game.nightPlan=null;game.day=101;game.completedNights=100;game.postgame=true;game.initialPreparation=false;game.tutorial.step='done';
+ const memory=microState(game);memory.day=game.day;memory.income=125;memory.previousIncome=50;
+ const client=createSimulationAuthorityClient({snapshot:serialize(game),chunkKeys:chunks,session:'micro-income'}),events=[];let enabled=false;
+ const stop=observeGameEvents(game,event=>{events.push(structuredClone(event));if(enabled&&(event.type==='Dawn'||event.type==='CrateDelivered'))trackIncome(game,[event]);});
+ try{await client.ready;let request=client.submit({kind:'microIncome',enabled:true});enabled=true;trackIncome(game,[]);let result=await request.result;if(result.snapshot!==serializeConfirmedState(game))throw Error('Income enable mismatch');
+  request=client.submit({kind:'advance',seconds:.05,nightFastForward:false});advanceReal(game,.05,nav,{nightFastForward:false});trackIncome(game,[]);nav.serviceRaidConnectivityDemand?.();result=await request.result;
+  if(result.snapshot!==serializeConfirmedState(game)||JSON.stringify(result.events)!==JSON.stringify(events)||!events.some(e=>e.type==='Dawn')||game.microevents.previousIncome!==125)throw Error('Dawn income mismatch');
+  return {day:game.day,previousIncome:game.microevents.previousIncome,events:events.map(e=>e.type),scope:'Synthetic peaceful mangrove dawn in a real Worker versus direct simulation; no crate delivery, UI, renderer, save/load or campaign.'};
+ }finally{stop();client.dispose();fixture.dispose();}
+};window.ready=true;
+</script>

@@ -41,6 +41,15 @@ test('QA-011: one real frame straddling raid arrival matches two frames split at
     assert.deepEqual(a,b);
   }
 });
+test('clock observations follow the actual 5x to 1x transition inside one advance',()=>{
+ const s=scheduledRaid(),segments=[];advanceReal(s,.02,nav,{onClockSegment:segment=>segments.push(segment)});assert.equal(segments.length,2);assert.deepEqual(segments.map(segment=>segment.rate),[5,1]);close(segments[0].start,0);close(segments[0].end,.05);close(segments[1].start,.05);close(segments[1].end,.06);close(segments[0].realDuration,.01);close(segments[1].realDuration,.01);
+});
+test('paused simulation emits no advancing clock segments',()=>{
+ const s=fixture(),segments=[];pause(s,'test');const elapsed=s.elapsed;advanceReal(s,.5,nav,{onClockSegment:segment=>segments.push(segment)});assert.equal(s.elapsed,elapsed);assert.deepEqual(segments,[]);
+});
+test('clock observations stop when the authority pauses before consuming the requested real interval',()=>{
+ const s=fixture(),segments=[];s.time=599.95;s.nightPlan={done:true,group:[]};advanceReal(s,.2,nav,{onClockSegment:segment=>segments.push(segment)});assert.ok(s.pauses.length>0);assert.ok(segments.length>0);close(segments.at(-1).end,s.elapsed);assert.ok(segments.reduce((total,segment)=>total+segment.realDuration,0)<.2);for(const segment of segments)close(segment.end-segment.start,segment.realDuration*segment.rate);
+});
 
 test('QA-009/010/015: 300 real daytime seconds and 60 calm-night seconds reach one blocked dawn',()=>{
   const s=fixture();assert.equal(clockLabel(s),'07:05');advanceReal(s,300,nav);

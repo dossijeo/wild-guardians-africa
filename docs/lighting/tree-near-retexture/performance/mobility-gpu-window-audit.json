@@ -1,0 +1,760 @@
+{
+  "results": [
+    {
+      "windows": [
+        {
+          "start": 0,
+          "end": -4,
+          "preparationMs": 0.1550000011920929,
+          "samples": [
+            {
+              "displacement": 0,
+              "mainDraws": 0,
+              "shadowDraws": 0,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -2,
+              "mainDraws": 0,
+              "shadowDraws": 0,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -4,
+              "mainDraws": 0,
+              "shadowDraws": 0,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            }
+          ]
+        },
+        {
+          "start": -4,
+          "end": -8,
+          "preparationMs": 0.009999990463256836,
+          "samples": [
+            {
+              "displacement": -4,
+              "mainDraws": 0,
+              "shadowDraws": 0,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -6,
+              "mainDraws": 0,
+              "shadowDraws": 0,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -8,
+              "mainDraws": 0,
+              "shadowDraws": 0,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            }
+          ]
+        },
+        {
+          "start": -8,
+          "end": -12,
+          "preparationMs": 1.665000006556511,
+          "samples": [
+            {
+              "displacement": -8,
+              "mainDraws": 0,
+              "shadowDraws": 2,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -10,
+              "mainDraws": 0,
+              "shadowDraws": 2,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -12,
+              "mainDraws": 0,
+              "shadowDraws": 2,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            }
+          ]
+        },
+        {
+          "start": -12,
+          "end": -16,
+          "preparationMs": 0.01000000536441803,
+          "samples": [
+            {
+              "displacement": -12,
+              "mainDraws": 4,
+              "shadowDraws": 4,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -14,
+              "mainDraws": 4,
+              "shadowDraws": 4,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -16,
+              "mainDraws": 4,
+              "shadowDraws": 4,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            }
+          ]
+        },
+        {
+          "start": -16,
+          "end": -20,
+          "preparationMs": 0.02000001072883606,
+          "samples": [
+            {
+              "displacement": -16,
+              "mainDraws": 4,
+              "shadowDraws": 4,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -18,
+              "mainDraws": 4,
+              "shadowDraws": 4,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -20,
+              "mainDraws": 4,
+              "shadowDraws": 4,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            }
+          ]
+        }
+      ],
+      "staleWindow": {
+        "changed": 10789,
+        "max": 137
+      },
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "meshCount": 4,
+      "skinned": 4,
+      "cpu": {
+        "mainDraws": 4,
+        "shadowDraws": 4
+      },
+      "uncull": {
+        "mainDraws": 4,
+        "shadowDraws": 4,
+        "diff": {
+          "changed": 16,
+          "max": 1
+        }
+      },
+      "naive": {
+        "mainDraws": 0,
+        "shadowDraws": 0,
+        "diff": {
+          "changed": 10789,
+          "max": 137
+        }
+      },
+      "swept": {
+        "mainDraws": 4,
+        "shadowDraws": 4,
+        "diff": {
+          "changed": 16,
+          "max": 1
+        }
+      },
+      "sweptOffscreen": {
+        "mainDraws": 4,
+        "shadowDraws": 4
+      },
+      "normalOffscreen": {
+        "mainDraws": 0,
+        "shadowDraws": 0,
+        "diff": {
+          "changed": 0,
+          "max": 0
+        }
+      },
+      "scope": "Static-pose warthog and directional shadow; five experimentally installed straight 4-unit windows and 15 samples. Results check against uncull rendering with synchronous pixel reads; preparation is diagnostic, not a benchmark. Not an authoritative safe horizon, animation envelope, temporal protocol or gameplay integration."
+    },
+    {
+      "windows": [
+        {
+          "start": 0,
+          "end": -4,
+          "preparationMs": 0.17500001192092896,
+          "samples": [
+            {
+              "displacement": 0,
+              "mainDraws": 0,
+              "shadowDraws": 0,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -2,
+              "mainDraws": 0,
+              "shadowDraws": 0,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -4,
+              "mainDraws": 0,
+              "shadowDraws": 0,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            }
+          ]
+        },
+        {
+          "start": -4,
+          "end": -8,
+          "preparationMs": 0.024999991059303284,
+          "samples": [
+            {
+              "displacement": -4,
+              "mainDraws": 0,
+              "shadowDraws": 0,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -6,
+              "mainDraws": 0,
+              "shadowDraws": 0,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -8,
+              "mainDraws": 0,
+              "shadowDraws": 0,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            }
+          ]
+        },
+        {
+          "start": -8,
+          "end": -12,
+          "preparationMs": 1.2950000017881393,
+          "samples": [
+            {
+              "displacement": -8,
+              "mainDraws": 0,
+              "shadowDraws": 2,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -10,
+              "mainDraws": 0,
+              "shadowDraws": 2,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -12,
+              "mainDraws": 0,
+              "shadowDraws": 2,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            }
+          ]
+        },
+        {
+          "start": -12,
+          "end": -16,
+          "preparationMs": 0.019999995827674866,
+          "samples": [
+            {
+              "displacement": -12,
+              "mainDraws": 4,
+              "shadowDraws": 4,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -14,
+              "mainDraws": 4,
+              "shadowDraws": 4,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -16,
+              "mainDraws": 4,
+              "shadowDraws": 4,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            }
+          ]
+        },
+        {
+          "start": -16,
+          "end": -20,
+          "preparationMs": 0.015000000596046448,
+          "samples": [
+            {
+              "displacement": -16,
+              "mainDraws": 4,
+              "shadowDraws": 4,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -18,
+              "mainDraws": 4,
+              "shadowDraws": 4,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -20,
+              "mainDraws": 4,
+              "shadowDraws": 4,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            }
+          ]
+        }
+      ],
+      "staleWindow": {
+        "changed": 10789,
+        "max": 137
+      },
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "meshCount": 4,
+      "skinned": 4,
+      "cpu": {
+        "mainDraws": 4,
+        "shadowDraws": 4
+      },
+      "uncull": {
+        "mainDraws": 4,
+        "shadowDraws": 4,
+        "diff": {
+          "changed": 16,
+          "max": 1
+        }
+      },
+      "naive": {
+        "mainDraws": 0,
+        "shadowDraws": 0,
+        "diff": {
+          "changed": 10789,
+          "max": 137
+        }
+      },
+      "swept": {
+        "mainDraws": 4,
+        "shadowDraws": 4,
+        "diff": {
+          "changed": 16,
+          "max": 1
+        }
+      },
+      "sweptOffscreen": {
+        "mainDraws": 4,
+        "shadowDraws": 4
+      },
+      "normalOffscreen": {
+        "mainDraws": 0,
+        "shadowDraws": 0,
+        "diff": {
+          "changed": 0,
+          "max": 0
+        }
+      },
+      "scope": "Static-pose warthog and directional shadow; five experimentally installed straight 4-unit windows and 15 samples. Results check against uncull rendering with synchronous pixel reads; preparation is diagnostic, not a benchmark. Not an authoritative safe horizon, animation envelope, temporal protocol or gameplay integration."
+    },
+    {
+      "windows": [
+        {
+          "start": 0,
+          "end": -4,
+          "preparationMs": 0.1850000023841858,
+          "samples": [
+            {
+              "displacement": 0,
+              "mainDraws": 0,
+              "shadowDraws": 0,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -2,
+              "mainDraws": 0,
+              "shadowDraws": 0,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -4,
+              "mainDraws": 0,
+              "shadowDraws": 0,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            }
+          ]
+        },
+        {
+          "start": -4,
+          "end": -8,
+          "preparationMs": 0.02000001072883606,
+          "samples": [
+            {
+              "displacement": -4,
+              "mainDraws": 0,
+              "shadowDraws": 0,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -6,
+              "mainDraws": 0,
+              "shadowDraws": 0,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -8,
+              "mainDraws": 0,
+              "shadowDraws": 0,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            }
+          ]
+        },
+        {
+          "start": -8,
+          "end": -12,
+          "preparationMs": 0.015000000596046448,
+          "samples": [
+            {
+              "displacement": -8,
+              "mainDraws": 0,
+              "shadowDraws": 2,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -10,
+              "mainDraws": 0,
+              "shadowDraws": 2,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -12,
+              "mainDraws": 0,
+              "shadowDraws": 2,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            }
+          ]
+        },
+        {
+          "start": -12,
+          "end": -16,
+          "preparationMs": 0.01000000536441803,
+          "samples": [
+            {
+              "displacement": -12,
+              "mainDraws": 4,
+              "shadowDraws": 4,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -14,
+              "mainDraws": 4,
+              "shadowDraws": 4,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -16,
+              "mainDraws": 4,
+              "shadowDraws": 4,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            }
+          ]
+        },
+        {
+          "start": -16,
+          "end": -20,
+          "preparationMs": 0.015000000596046448,
+          "samples": [
+            {
+              "displacement": -16,
+              "mainDraws": 4,
+              "shadowDraws": 4,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -18,
+              "mainDraws": 4,
+              "shadowDraws": 4,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            },
+            {
+              "displacement": -20,
+              "mainDraws": 4,
+              "shadowDraws": 4,
+              "wholeMainDraws": 4,
+              "wholeShadowDraws": 4,
+              "diff": {
+                "changed": 0,
+                "max": 0
+              }
+            }
+          ]
+        }
+      ],
+      "staleWindow": {
+        "changed": 10789,
+        "max": 137
+      },
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "meshCount": 4,
+      "skinned": 4,
+      "cpu": {
+        "mainDraws": 4,
+        "shadowDraws": 4
+      },
+      "uncull": {
+        "mainDraws": 4,
+        "shadowDraws": 4,
+        "diff": {
+          "changed": 16,
+          "max": 1
+        }
+      },
+      "naive": {
+        "mainDraws": 0,
+        "shadowDraws": 0,
+        "diff": {
+          "changed": 10789,
+          "max": 137
+        }
+      },
+      "swept": {
+        "mainDraws": 4,
+        "shadowDraws": 4,
+        "diff": {
+          "changed": 16,
+          "max": 1
+        }
+      },
+      "sweptOffscreen": {
+        "mainDraws": 4,
+        "shadowDraws": 4
+      },
+      "normalOffscreen": {
+        "mainDraws": 0,
+        "shadowDraws": 0,
+        "diff": {
+          "changed": 0,
+          "max": 0
+        }
+      },
+      "scope": "Static-pose warthog and directional shadow; five experimentally installed straight 4-unit windows and 15 samples. Results check against uncull rendering with synchronous pixel reads; preparation is diagnostic, not a benchmark. Not an authoritative safe horizon, animation envelope, temporal protocol or gameplay integration."
+    }
+  ]
+}

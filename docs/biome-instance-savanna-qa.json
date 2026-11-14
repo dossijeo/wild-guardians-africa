@@ -1,0 +1,69 @@
+{
+  "rows": [
+    {
+      "backend": "WebGPU",
+      "shared": false,
+      "biome": "sabana",
+      "hash": "0c8ef52ad221c8ee1126f0ea5b3106afc6ed5c5cda6d58e9e4e54fac7a5397e7",
+      "first": {
+        "createTexture": 13,
+        "createBuffer": 259,
+        "createShaderModule": 47,
+        "createRenderPipeline": 41,
+        "uniqueShaderCodes": 47
+      },
+      "second": {
+        "createTexture": 13,
+        "createBuffer": 354,
+        "createShaderModule": 66,
+        "createRenderPipeline": 60,
+        "uniqueShaderCodes": 66
+      },
+      "status": {
+        "ready": true,
+        "chunks": 2,
+        "meshes": 38,
+        "materials": 19,
+        "sharedMaterials": false,
+        "instanceContract": "native",
+        "failure": null
+      },
+      "scope": "Real biome assets and instanced meshes; shadow pass and second chunk, fixed camera; creation calls, not FPS or driver completion time."
+    },
+    {
+      "backend": "WebGPU",
+      "shared": true,
+      "biome": "sabana",
+      "hash": "c9914743a1a99dd28c6f501348393cea08332192829991dcf4ef7c5c609b6d29",
+      "first": {
+        "createTexture": 13,
+        "createBuffer": 227,
+        "createShaderModule": 11,
+        "createRenderPipeline": 7,
+        "uniqueShaderCodes": 11
+      },
+      "second": {
+        "createTexture": 13,
+        "createBuffer": 322,
+        "createShaderModule": 11,
+        "createRenderPipeline": 7,
+        "uniqueShaderCodes": 11
+      },
+      "status": {
+        "ready": true,
+        "chunks": 2,
+        "meshes": 38,
+        "materials": 9,
+        "sharedMaterials": true,
+        "instanceContract": "attributes",
+        "failure": null
+      },
+      "scope": "Real biome assets and instanced meshes; shadow pass and second chunk, fixed camera; creation calls, not FPS or driver completion time."
+    }
+  ],
+  "comparison": {
+    "meanAbsoluteRgb": 8.477105034722222e-7,
+    "maxChannel": 1,
+    "pixelsAbove3": 0
+  }
+}

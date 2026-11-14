@@ -1,0 +1,20 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+window.audit=async()=>{
+ const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
+ const fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),game=fixture.diagnosticWorld().game,animal=game.raid.animals.find(a=>a.species==='hyena');if(!animal)throw Error('Missing animal');const source=serialize(game),targetId=animal.id,x=animal.x,z=animal.z;fixture.dispose();
+ const client=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,dynamicPhysics:true,session:'spell-rejection'});
+ try{
+  await client.ready;async function send(command){const request=client.submit(command);if(!request.accepted)throw Error('Request rejected by client');return request.result;}
+  const before=await send({kind:'snapshot'}),bad=await send({kind:'castAttack',id:'invalid-target',targetId:'not-an-animal',x,z});if(bad.sequence!==2||bad.value!==false||!bad.rejection||bad.snapshot!==before.snapshot||bad.events.length||bad.physicsPose!==null)throw Error('Invalid target mutated state or loaded rig');
+  const good=await send({kind:'castAttack',id:'valid-hit',targetId,x,z});if(!good.value||good.rejection||!good.events.some(e=>e.type==='GuardianMagicHit'))throw Error('Valid attack failed');
+  const cooling=await send({kind:'castAttack',id:'cooling-hit',targetId,x,z});if(cooling.sequence!==4||cooling.value!==false||!cooling.rejection||cooling.snapshot!==good.snapshot||cooling.events.length)throw Error('Cooldown rejection mutated state');
+  const next=await send({kind:'advance',seconds:.05,nightFastForward:true});if(next.sequence!==5||client.status().state!=='ready')throw Error('Worker failed after rejected command');
+  const live=JSON.parse(next.snapshot).raid.animals.find(a=>a.id===targetId),shield=await send({kind:'castShield',id:'overlap-shield',x:live.x,z:live.z});if(shield.sequence!==6||shield.value!==false||!shield.rejection||shield.snapshot!==next.snapshot||shield.events.length||client.status().state!=='ready')throw Error('Shield rejection failed');
+  const duplicate=await send({kind:'castAttack',id:'valid-hit',targetId:'not-an-animal',x,z});if(duplicate.sequence!==7||duplicate.value!==false||duplicate.rejection||duplicate.snapshot!==shield.snapshot||duplicate.events.length)throw Error('Duplicate command did not remain idempotent');
+  return {invalidTarget:bad.rejection,cooldown:cooling.rejection,shield:shield.rejection,sequences:[before.sequence,bad.sequence,good.sequence,cooling.sequence,next.sequence,shield.sequence,duplicate.sequence],stateUnchangedForRejectedCommands:true,duplicateIdempotent:true,validAttackAfterRejection:true,advanceAfterRejection:true,scope:'Programmatic Worker commands against island-mangrove capture. Checks normal spell rejections, ordered continuation and no game-state mutation; no player UI or full gameplay integration.'};
+ }finally{client.dispose();}
+};window.ready=true;
+</script>

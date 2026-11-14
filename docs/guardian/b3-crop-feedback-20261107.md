@@ -1,0 +1,7 @@
+# Feedback de plantación en WebGPU
+
+Al iniciar la selección del terreno, la interfaz muestra un indicador inmediato. Cuando llega el punto, el indicador se vincula al ID del comando y lo sigue en pantalla; el Worker gráfico crea el brote provisional existente. El indicador se retira cuando el brote o el cultivo confirmado han participado en dos dibujos consecutivos de la cámara principal con las mismas versiones de cámara y viewport. El callback comprueba la cámara y solo cuenta el pase principal, no sombras ni preparación. Dos dibujos enviados no garantizan por sí solos que el compositor los haya presentado.
+
+El rechazo, el fallo o la sustitución del Worker retiran el indicador de su ámbito. La confirmación y el rechazo de la vista previa se dirigen al cliente que recibió el inicio, no a un Worker posterior. El seguimiento por ID también contempla que `CropPlaced` llegue antes que la orden de vista previa. El brote no constituye un cultivo lógico: Wild Engine conserva la autoridad.
+
+Las pruebas dirigidas cubren el seguimiento, el fallback y el orden de eventos con dobles, además de la invalidación de acuses con cámara obsoleta. Quedan pendientes la comprobación visual y la sustitución del Worker de extremo a extremo en una partida WebGPU real. El indicador inicial no es en sí mismo un modelo de planta y la aparición del brote sigue dependiendo de disponer de terreno confirmado.

@@ -1,0 +1,103 @@
+{
+  "scope": "Edge headless cross-origin isolated; 700 synthetic real native route queries per batch, checks Atomics between completed queries with no frame yield. Separate small WebGL clear, not actual game or one interruptible native query. Workload queries are diagnostics and no authoritative simulation is mutated; no game safety or production result.",
+  "runs": [
+    {
+      "check": false,
+      "cancel": false,
+      "status": "completed",
+      "queries": 700,
+      "hash": 1269783446,
+      "workerMs": 54.94499999284744,
+      "responseMs": 55.625,
+      "cancelToObservationMs": null,
+      "frameCount": 60,
+      "frameP95": 33.4050000000002,
+      "frameP99": 33.43500000000017,
+      "frameMax": 33.450000000000045
+    },
+    {
+      "check": true,
+      "cancel": false,
+      "status": "completed",
+      "queries": 700,
+      "hash": 1269783446,
+      "workerMs": 54.44499999284744,
+      "responseMs": 55.17000000178814,
+      "cancelToObservationMs": null,
+      "frameCount": 60,
+      "frameP95": 33.35500000000002,
+      "frameP99": 33.375,
+      "frameMax": 33.434999999999945
+    },
+    {
+      "check": true,
+      "cancel": false,
+      "status": "completed",
+      "queries": 700,
+      "hash": 1269783446,
+      "workerMs": 56.25,
+      "responseMs": 56.90999999642372,
+      "cancelToObservationMs": null,
+      "frameCount": 60,
+      "frameP95": 33.40499999999997,
+      "frameP99": 33.424999999999955,
+      "frameMax": 33.45499999999993
+    },
+    {
+      "check": false,
+      "cancel": false,
+      "status": "completed",
+      "queries": 700,
+      "hash": 1269783446,
+      "workerMs": 54.13500000536442,
+      "responseMs": 54.83499999344349,
+      "cancelToObservationMs": null,
+      "frameCount": 60,
+      "frameP95": 33.36500000000001,
+      "frameP99": 33.38499999999999,
+      "frameMax": 33.38999999999987
+    },
+    {
+      "check": true,
+      "cancel": true,
+      "status": "cancelled",
+      "queries": 129,
+      "hash": null,
+      "workerMs": 11.995000004768372,
+      "responseMs": 12.680000007152557,
+      "cancelToObservationMs": 0.045126959681510925,
+      "frameCount": 60,
+      "frameP95": 33.36999999999989,
+      "frameP99": 33.389999999999986,
+      "frameMax": 33.405000000000086
+    },
+    {
+      "check": true,
+      "cancel": true,
+      "status": "cancelled",
+      "queries": 125,
+      "hash": null,
+      "workerMs": 11.974999994039536,
+      "responseMs": 12.614999994635582,
+      "cancelToObservationMs": 0.15478515625,
+      "frameCount": 61,
+      "frameP95": 33.39499999999998,
+      "frameP99": 33.444999999999936,
+      "frameMax": 33.49500000000012
+    },
+    {
+      "check": true,
+      "cancel": true,
+      "status": "cancelled",
+      "queries": 101,
+      "hash": null,
+      "workerMs": 11.055000007152557,
+      "responseMs": 11.775000005960464,
+      "cancelToObservationMs": 0.04998047649860382,
+      "frameCount": 60,
+      "frameP95": 33.375,
+      "frameP99": 33.39499999999998,
+      "frameMax": 33.424999999999955
+    }
+  ]
+}

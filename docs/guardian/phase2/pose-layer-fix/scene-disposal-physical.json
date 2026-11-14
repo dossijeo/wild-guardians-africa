@@ -1,0 +1,41 @@
+{
+  "scope": "Actual WorldScene, spatial session and audio disposal. QA queued casts bypass cooldown. No replacement scene or heap-leak claim.",
+  "before": {
+    "disposed": false,
+    "slots": 1,
+    "pending": 2,
+    "visible": 3,
+    "attached": 6,
+    "physicalActors": 1,
+    "bakedActors": 0,
+    "solverPresent": true,
+    "mixers": 1,
+    "audioVoices": 0
+  },
+  "immediate": {
+    "disposed": true,
+    "slots": 0,
+    "pending": 0,
+    "visible": 0,
+    "attached": 0,
+    "physicalActors": 0,
+    "bakedActors": 0,
+    "solverPresent": false,
+    "mixers": 0,
+    "audioVoices": 0
+  },
+  "after": {
+    "disposed": true,
+    "slots": 0,
+    "pending": 0,
+    "visible": 0,
+    "attached": 0,
+    "physicalActors": 0,
+    "bakedActors": 0,
+    "solverPresent": false,
+    "mixers": 0,
+    "audioVoices": 0
+  },
+  "errors": [],
+  "pass": true
+}

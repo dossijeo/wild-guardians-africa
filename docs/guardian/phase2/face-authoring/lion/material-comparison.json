@@ -1,0 +1,136 @@
+{
+  "original": {
+    "bytes": 46004516,
+    "imageHashes": [
+      "526440c6c25ed39b3c43c3bd53f9e47dbe231d0747bbcc2d35562c73cedc7702",
+      "fc7efd43d2d52b57d1df1459f253dcd92c739b39cb8f454d6652de6152d3da96"
+    ],
+    "materials": [
+      {
+        "doubleSided": true,
+        "name": "LionOralTissue",
+        "pbrMetallicRoughness": {
+          "metallicFactor": 0,
+          "roughnessFactor": 0.6399999856948853
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Material_0",
+        "normalTexture": {
+          "index": 0
+        },
+        "pbrMetallicRoughness": {
+          "baseColorTexture": {
+            "index": 1
+          },
+          "metallicFactor": 0,
+          "roughnessFactor": 0.5
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Mane repairs",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.3799999952316284,
+            0.04500000178813934,
+            0.008999999612569809,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.8999999761581421
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Rear cloth",
+        "normalTexture": {
+          "index": 2
+        },
+        "pbrMetallicRoughness": {
+          "baseColorTexture": {
+            "index": 3
+          },
+          "metallicFactor": 0,
+          "roughnessFactor": 0.5
+        }
+      }
+    ],
+    "meshes": 3,
+    "primitives": 4
+  },
+  "fur": {
+    "bytes": 46004800,
+    "imageHashes": [
+      "526440c6c25ed39b3c43c3bd53f9e47dbe231d0747bbcc2d35562c73cedc7702",
+      "fc7efd43d2d52b57d1df1459f253dcd92c739b39cb8f454d6652de6152d3da96"
+    ],
+    "materials": [
+      {
+        "doubleSided": true,
+        "name": "LionOralTissue",
+        "pbrMetallicRoughness": {
+          "metallicFactor": 0,
+          "roughnessFactor": 0.6399999856948853
+        }
+      },
+      {
+        "doubleSided": true,
+        "extensions": {
+          "KHR_materials_specular": {
+            "specularFactor": 0.36000001430511475
+          }
+        },
+        "name": "Material_0",
+        "normalTexture": {
+          "index": 0,
+          "scale": 0.550000011920929
+        },
+        "pbrMetallicRoughness": {
+          "baseColorTexture": {
+            "index": 1
+          },
+          "metallicFactor": 0,
+          "roughnessFactor": 0.8500000238418579
+        }
+      },
+      {
+        "doubleSided": true,
+        "name": "Mane repairs",
+        "pbrMetallicRoughness": {
+          "baseColorFactor": [
+            0.3799999952316284,
+            0.04500000178813934,
+            0.008999999612569809,
+            1
+          ],
+          "metallicFactor": 0,
+          "roughnessFactor": 0.8999999761581421
+        }
+      },
+      {
+        "doubleSided": true,
+        "extensions": {
+          "KHR_materials_specular": {
+            "specularFactor": 0.36000001430511475
+          }
+        },
+        "name": "Rear cloth",
+        "normalTexture": {
+          "index": 2,
+          "scale": 0.550000011920929
+        },
+        "pbrMetallicRoughness": {
+          "baseColorTexture": {
+            "index": 3
+          },
+          "metallicFactor": 0,
+          "roughnessFactor": 0.8500000238418579
+        }
+      }
+    ],
+    "meshes": 3,
+    "primitives": 4
+  }
+}

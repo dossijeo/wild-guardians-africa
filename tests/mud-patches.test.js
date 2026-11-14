@@ -5,6 +5,20 @@ import assert from 'node:assert/strict';
 import {TerrainField} from '../src/world/terrain.js';
 import {mudPatchGeometry,clipMudTriangle} from '../src/rendering/mud-patches.js';
 import {renderedTerrainSurface} from '../src/rendering/terrain-surface.js';
+import {createSpatialWorld} from '../src/world/wild-engine/spatial-world.js';
+import {createSpatialTerrainView} from '../src/world/wild-engine/spatial-terrain-view.js';
+
+test('native mud geometry and contact outlines match full water queries',()=>{
+  const module=new WebAssembly.Module(readFileSync(new URL('../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
+  const core=createSpatialWorld(module);core.generate(712,0,0,'mangrove');
+  const field=createSpatialTerrainView(core),fallback={...field,fluidInside:undefined};
+  for(const [cx,cz] of [[0,0],[1,-2],[-1,-1]]){
+    const fast=mudPatchGeometry(field,cx,cz),reference=mudPatchGeometry(fallback,cx,cz);
+    assert.equal(!!fast,!!reference);
+    if(!fast)continue;
+    try{for(const key of ['position','normal','uv'])assert.deepEqual(fast.attributes[key].array,reference.attributes[key].array);assert.deepEqual(fast.userData,reference.userData);}finally{fast.dispose();reference.dispose();}
+  }
+});
 
 test('independent mud conforms to actual terrain triangles in signed chunks without inverted faces',()=>{
   const field=new TerrainField({seed:'712',biome:'mangrove',river:true,relief:1});let patches=0;

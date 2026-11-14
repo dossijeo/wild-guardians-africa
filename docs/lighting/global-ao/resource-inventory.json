@@ -1,0 +1,238 @@
+{
+  "scope": "All optional globalAO banks on disk; not per-scene downloads, transfer compression, GPU residency or a performance benchmark.",
+  "binaryBytes": 2979913,
+  "metadataBytes": 213395,
+  "catalogueBytes": 2060,
+  "exclusions": [
+    "Existing work-center AO textures",
+    "Impostor atlases",
+    "Terrain contact atlas",
+    "GPU/CPU clones and expanded wall attributes"
+  ],
+  "groups": {
+    "biomeProps": {
+      "banks": 6,
+      "bytes": 1080841,
+      "metadataBytes": 106277
+    },
+    "actors": {
+      "banks": 9,
+      "bytes": 313691,
+      "metadataBytes": 52021
+    },
+    "crops": {
+      "banks": 2,
+      "bytes": 771509,
+      "metadataBytes": 24185
+    },
+    "guardian": {
+      "banks": 1,
+      "bytes": 17733,
+      "metadataBytes": 1914
+    },
+    "villages": {
+      "banks": 5,
+      "bytes": 724772,
+      "metadataBytes": 12950
+    },
+    "walls": {
+      "banks": 1,
+      "bytes": 71367,
+      "metadataBytes": 13988
+    }
+  },
+  "banks": [
+    {
+      "name": "canyons.bin",
+      "group": "biomeProps",
+      "bytes": 164098,
+      "metadataBytes": 17738,
+      "records": 60,
+      "sha256": "346c5067d6efb8594f3eeb6fcad37acb750f90ba962b9a2eab6c16b651f2123a"
+    },
+    {
+      "name": "desert.bin",
+      "group": "biomeProps",
+      "bytes": 136540,
+      "metadataBytes": 17694,
+      "records": 60,
+      "sha256": "aa2b7212632736fc2f2f4038a1fec7139823804e98f0b1a9d8d60de8dcf9a02d"
+    },
+    {
+      "name": "grand_river.bin",
+      "group": "biomeProps",
+      "bytes": 180956,
+      "metadataBytes": 17706,
+      "records": 60,
+      "sha256": "09502f5685f0909375772be14bf669c899c79238ab37e1ad54b4955c8610c924"
+    },
+    {
+      "name": "mangrove.bin",
+      "group": "biomeProps",
+      "bytes": 180894,
+      "metadataBytes": 17713,
+      "records": 60,
+      "sha256": "3e125faf5ebf6b9a9bcbe3fc818424839c103389c7386baf54fb4aed1787d3d7"
+    },
+    {
+      "name": "model-buffalo.bin",
+      "group": "actors",
+      "bytes": 51598,
+      "metadataBytes": 1606,
+      "records": 3,
+      "sha256": "187dd0816ab0fac22ee2dea1ada5e83d5487aa1ba327af4ceb6e24eea8d93939"
+    },
+    {
+      "name": "model-crop-bridges.bin",
+      "group": "crops",
+      "bytes": 538722,
+      "metadataBytes": 9205,
+      "records": 32,
+      "sha256": "8c0d1428f6ea023784372d45c60fd64cd22b7874279fd83619fa889038491390"
+    },
+    {
+      "name": "model-crops.bin",
+      "group": "crops",
+      "bytes": 232787,
+      "metadataBytes": 14980,
+      "records": 40,
+      "sha256": "3ceaa1d633cceb7ce1b5602df948c29f5dd2b2bc3afae95f267eeebdd1af2be0"
+    },
+    {
+      "name": "model-guardian.bin",
+      "group": "guardian",
+      "bytes": 17733,
+      "metadataBytes": 1914,
+      "records": 4,
+      "sha256": "5425c7e362d9ca50f4320fd6120a97d99576a2cb1abec69b692a0173d1955f34"
+    },
+    {
+      "name": "model-hyena.bin",
+      "group": "actors",
+      "bytes": 22242,
+      "metadataBytes": 1980,
+      "records": 4,
+      "sha256": "0f26fbcc282da46c39a5836fe5c634f12feee1a70a5a7d86b5a1b58c5042daa3"
+    },
+    {
+      "name": "model-lion.bin",
+      "group": "actors",
+      "bytes": 24579,
+      "metadataBytes": 2295,
+      "records": 5,
+      "sha256": "de63b04fa5896cbbba2e31c38c38d31b029bc24a02c5584e57fad7af58aba993"
+    },
+    {
+      "name": "model-rhino.bin",
+      "group": "actors",
+      "bytes": 46518,
+      "metadataBytes": 2308,
+      "records": 5,
+      "sha256": "d7710b7729beaaf36bf87b3775562e7218d07b53a9e5ebdda102a447da9c3f0b"
+    },
+    {
+      "name": "model-warthog.bin",
+      "group": "actors",
+      "bytes": 20421,
+      "metadataBytes": 1971,
+      "records": 4,
+      "sha256": "847516cc7a5277ac4ef26525c688c0a866e6c1eb39309bbf6ec052cd3d44525c"
+    },
+    {
+      "name": "model-worker-olderFemale.bin",
+      "group": "actors",
+      "bytes": 42433,
+      "metadataBytes": 10288,
+      "records": 27,
+      "sha256": "de4be1869e00b42c4ede26b147a08ad508c77e966badf3b22e1e161a0daa65d4"
+    },
+    {
+      "name": "model-worker-olderMale.bin",
+      "group": "actors",
+      "bytes": 34507,
+      "metadataBytes": 10287,
+      "records": 27,
+      "sha256": "625feed940c39498a532ea64834004e5fa2e914a94516237941ffd191301e2d8"
+    },
+    {
+      "name": "model-worker-youngFemale.bin",
+      "group": "actors",
+      "bytes": 35750,
+      "metadataBytes": 10642,
+      "records": 28,
+      "sha256": "0cdd70db34843057209c462f385716f5fc915796802e53d51c4354b3b0036bf3"
+    },
+    {
+      "name": "model-worker-youngMale.bin",
+      "group": "actors",
+      "bytes": 35643,
+      "metadataBytes": 10644,
+      "records": 28,
+      "sha256": "6d91bd8fce952a41a83495a8b8e22c81f30cc715ea84dbfa147dbcd4e2699e70"
+    },
+    {
+      "name": "savanna.bin",
+      "group": "biomeProps",
+      "bytes": 252487,
+      "metadataBytes": 17715,
+      "records": 60,
+      "sha256": "ff813466e21f0fbe74a4bb024bbc1e3a5f2e6f3b71f1aed59a03220cad8294f9"
+    },
+    {
+      "name": "village-etiope.bin",
+      "group": "villages",
+      "bytes": 152143,
+      "metadataBytes": 2549,
+      "records": 9,
+      "sha256": "e69af07a3e00d1f3446a21de3e35bf77be4624ef3efdb1ffe40ae3d415959291"
+    },
+    {
+      "name": "village-mapungubwe.bin",
+      "group": "villages",
+      "bytes": 113906,
+      "metadataBytes": 2743,
+      "records": 10,
+      "sha256": "3fe75260f8ba6f5e34b622f6618db88f5a4a37163da9c9965cc75f2b6b62736d"
+    },
+    {
+      "name": "village-musgum.bin",
+      "group": "villages",
+      "bytes": 129945,
+      "metadataBytes": 2765,
+      "records": 10,
+      "sha256": "c491d9ce728a25eb476ddd7b4d4dd60cde6570a5042e83b47c71a6e3f161892e"
+    },
+    {
+      "name": "village-saheliano.bin",
+      "group": "villages",
+      "bytes": 144733,
+      "metadataBytes": 2764,
+      "records": 10,
+      "sha256": "cce179b2beb69f9a2ac1b05f756e869a64705e7db8b0b5b61459562288847b2b"
+    },
+    {
+      "name": "village-suajili.bin",
+      "group": "villages",
+      "bytes": 184045,
+      "metadataBytes": 2129,
+      "records": 7,
+      "sha256": "3f8d52873724668b147e38eae52c935279240a03c21c88243d918b505d097f1d"
+    },
+    {
+      "name": "volcanoes.bin",
+      "group": "biomeProps",
+      "bytes": 165866,
+      "metadataBytes": 17711,
+      "records": 60,
+      "sha256": "f07eb13ceb8bf842c50fadba2190657a64028603c3fb20661087a97c43382002"
+    },
+    {
+      "name": "walls.bin",
+      "group": "walls",
+      "bytes": 71367,
+      "metadataBytes": 13988,
+      "records": 20,
+      "sha256": "0969fa0548e730a5cca88e41eddeb33f4a8849489aa61292015ee877716955cc"
+    }
+  ]
+}

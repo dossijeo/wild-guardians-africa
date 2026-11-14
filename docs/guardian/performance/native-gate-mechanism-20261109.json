@@ -1,0 +1,300 @@
+{
+  "date": "2026-11-09",
+  "audit": "/tests/browser/native-gate-mechanism.html",
+  "result": {
+    "checklistId": "A6-04.e-R1",
+    "scope": "Three authored intact kinematic compound gates on validated flat native support. Actual NativeWall geometry rendered in WebGPU, native collision/root/hinge/support source, no ID exceptions. No future opening leases, character locomotion, runtime activation or causal-clock acceptance.",
+    "backend": "webgpu",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "maximumError": 6.975279021048664e-8,
+    "phases": [
+      {
+        "at": 10,
+        "entries": [
+          {
+            "material": "zarzas",
+            "opening": 0,
+            "baseY": 11.789455795288086,
+            "supportMin": 11.764456068788547,
+            "supportMax": 11.764456068788547,
+            "maxVertexError": 0,
+            "collision": {
+              "status": "blocked",
+              "components": 8,
+              "sampledAt": 10,
+              "mechanism": 1,
+              "authorizedPassage": false
+            },
+            "vertices": 17415,
+            "mechanism": 1
+          },
+          {
+            "material": "empalizada",
+            "opening": 0,
+            "baseY": 11.789455795288086,
+            "supportMin": 11.764456068788547,
+            "supportMax": 11.764456068788547,
+            "maxVertexError": 0,
+            "collision": {
+              "status": "blocked",
+              "components": 8,
+              "sampledAt": 10,
+              "mechanism": 2,
+              "authorizedPassage": false
+            },
+            "vertices": 6081,
+            "mechanism": 2
+          },
+          {
+            "material": "reforzado",
+            "opening": 0,
+            "baseY": 11.789455795288086,
+            "supportMin": 11.764456068788547,
+            "supportMax": 11.764456068788547,
+            "maxVertexError": 0,
+            "collision": {
+              "status": "blocked",
+              "components": 8,
+              "sampledAt": 10,
+              "mechanism": 3,
+              "authorizedPassage": false
+            },
+            "vertices": 6861,
+            "mechanism": 3
+          }
+        ]
+      },
+      {
+        "at": 10.12,
+        "entries": [
+          {
+            "material": "zarzas",
+            "opening": 0.1999999999999987,
+            "baseY": 11.789455795288086,
+            "supportMin": 11.764456068788547,
+            "supportMax": 11.764456068788547,
+            "maxVertexError": 2.97844096053268e-8,
+            "collision": {
+              "status": "blocked",
+              "components": 8,
+              "sampledAt": 10.12,
+              "mechanism": 1,
+              "authorizedPassage": false
+            },
+            "vertices": 17415,
+            "mechanism": 1
+          },
+          {
+            "material": "empalizada",
+            "opening": 0.1999999999999987,
+            "baseY": 11.789455795288086,
+            "supportMin": 11.764456068788547,
+            "supportMax": 11.764456068788547,
+            "maxVertexError": 3.454202968100617e-8,
+            "collision": {
+              "status": "blocked",
+              "components": 8,
+              "sampledAt": 10.12,
+              "mechanism": 2,
+              "authorizedPassage": false
+            },
+            "vertices": 6081,
+            "mechanism": 2
+          },
+          {
+            "material": "reforzado",
+            "opening": 0.1999999999999987,
+            "baseY": 11.789455795288086,
+            "supportMin": 11.764456068788547,
+            "supportMax": 11.764456068788547,
+            "maxVertexError": 4.324342484096633e-8,
+            "collision": {
+              "status": "blocked",
+              "components": 8,
+              "sampledAt": 10.12,
+              "mechanism": 3,
+              "authorizedPassage": false
+            },
+            "vertices": 6861,
+            "mechanism": 3
+          }
+        ]
+      },
+      {
+        "at": 10.3,
+        "entries": [
+          {
+            "material": "zarzas",
+            "opening": 0.5000000000000012,
+            "baseY": 11.789455795288086,
+            "supportMin": 11.764456068788547,
+            "supportMax": 11.764456068788547,
+            "maxVertexError": 5.733435060051306e-8,
+            "collision": {
+              "status": "blocked",
+              "components": 8,
+              "sampledAt": 10.3,
+              "mechanism": 1,
+              "authorizedPassage": false
+            },
+            "vertices": 17415,
+            "mechanism": 1
+          },
+          {
+            "material": "empalizada",
+            "opening": 0.5000000000000012,
+            "baseY": 11.789455795288086,
+            "supportMin": 11.764456068788547,
+            "supportMax": 11.764456068788547,
+            "maxVertexError": 5.699505578604658e-8,
+            "collision": {
+              "status": "blocked",
+              "components": 8,
+              "sampledAt": 10.3,
+              "mechanism": 2,
+              "authorizedPassage": false
+            },
+            "vertices": 6081,
+            "mechanism": 2
+          },
+          {
+            "material": "reforzado",
+            "opening": 0.5000000000000012,
+            "baseY": 11.789455795288086,
+            "supportMin": 11.764456068788547,
+            "supportMax": 11.764456068788547,
+            "maxVertexError": 5.0441688159708065e-8,
+            "collision": {
+              "status": "blocked",
+              "components": 8,
+              "sampledAt": 10.3,
+              "mechanism": 3,
+              "authorizedPassage": false
+            },
+            "vertices": 6861,
+            "mechanism": 3
+          }
+        ]
+      },
+      {
+        "at": 10.48,
+        "entries": [
+          {
+            "material": "zarzas",
+            "opening": 0.8000000000000007,
+            "baseY": 11.789455795288086,
+            "supportMin": 11.764456068788547,
+            "supportMax": 11.764456068788547,
+            "maxVertexError": 5.9146358921680076e-8,
+            "collision": {
+              "status": "blocked",
+              "components": 8,
+              "sampledAt": 10.48,
+              "mechanism": 1,
+              "authorizedPassage": false
+            },
+            "vertices": 17415,
+            "mechanism": 1
+          },
+          {
+            "material": "empalizada",
+            "opening": 0.8000000000000007,
+            "baseY": 11.789455795288086,
+            "supportMin": 11.764456068788547,
+            "supportMax": 11.764456068788547,
+            "maxVertexError": 6.591823620283321e-8,
+            "collision": {
+              "status": "blocked",
+              "components": 8,
+              "sampledAt": 10.48,
+              "mechanism": 2,
+              "authorizedPassage": false
+            },
+            "vertices": 6081,
+            "mechanism": 2
+          },
+          {
+            "material": "reforzado",
+            "opening": 0.8000000000000007,
+            "baseY": 11.789455795288086,
+            "supportMin": 11.764456068788547,
+            "supportMax": 11.764456068788547,
+            "maxVertexError": 4.7659288071599804e-8,
+            "collision": {
+              "status": "blocked",
+              "components": 8,
+              "sampledAt": 10.48,
+              "mechanism": 3,
+              "authorizedPassage": false
+            },
+            "vertices": 6861,
+            "mechanism": 3
+          }
+        ]
+      },
+      {
+        "at": 10.6,
+        "entries": [
+          {
+            "material": "zarzas",
+            "opening": 1,
+            "baseY": 11.789455795288086,
+            "supportMin": 11.764456068788547,
+            "supportMax": 11.764456068788547,
+            "maxVertexError": 5.4836274188119205e-8,
+            "collision": {
+              "status": "clear",
+              "components": 0,
+              "sampledAt": 10.6,
+              "mechanism": 1,
+              "authorizedPassage": false
+            },
+            "vertices": 17415,
+            "mechanism": 1
+          },
+          {
+            "material": "empalizada",
+            "opening": 1,
+            "baseY": 11.789455795288086,
+            "supportMin": 11.764456068788547,
+            "supportMax": 11.764456068788547,
+            "maxVertexError": 6.975279021048664e-8,
+            "collision": {
+              "status": "clear",
+              "components": 0,
+              "sampledAt": 10.6,
+              "mechanism": 2,
+              "authorizedPassage": false
+            },
+            "vertices": 6081,
+            "mechanism": 2
+          },
+          {
+            "material": "reforzado",
+            "opening": 1,
+            "baseY": 11.789455795288086,
+            "supportMin": 11.764456068788547,
+            "supportMax": 11.764456068788547,
+            "maxVertexError": 5.155695248504344e-8,
+            "collision": {
+              "status": "clear",
+              "components": 0,
+              "sampledAt": 10.6,
+              "mechanism": 3,
+              "authorizedPassage": false
+            },
+            "vertices": 6861,
+            "mechanism": 3
+          }
+        ]
+      }
+    ],
+    "authorizedPassage": false,
+    "authorizedAutonomy": false
+  }
+}

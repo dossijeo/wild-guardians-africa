@@ -1,0 +1,63 @@
+{
+  "scope": "Unchanged native-islet QA raid; explicit QA target ID through the normal action path, not a pixel-picking test. Pose audit uses the current discrete historical sample.",
+  "completed": true,
+  "inputMode": "id",
+  "fixture": "docs/qa/mangrove-magic-20261026/hydraulic-v2-raid/fixture.json",
+  "device": {
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "isFallbackAdapter": false
+    },
+    "maxVertexBuffers": 8
+  },
+  "backend": "WebGPU",
+  "pose": {
+    "actorId": "animal-20",
+    "historical": true,
+    "expectedBones": 78,
+    "visualBones": 78,
+    "maxError": 0
+  },
+  "physicalObserved": true,
+  "historicalPoseObserved": true,
+  "counts": {
+    "starts": 2,
+    "samples": 4,
+    "finishes": 1,
+    "active": 1
+  },
+  "guardian": {
+    "closed": false,
+    "began": 1,
+    "confirmed": 1,
+    "rejected": 0,
+    "provisionalFrames": 1,
+    "lastCommand": "50a2d092-e240-4078-8d33-a3a97e8fb302",
+    "active": null,
+    "ritualPreview": false,
+    "ritualReady": false,
+    "cropBeams": 0,
+    "modelReady": true,
+    "effectsReady": true,
+    "beamVisible": false,
+    "coreVisible": false
+  },
+  "events": {
+    "starts": 0,
+    "boundaries": 0,
+    "events": 0,
+    "completed": 0
+  },
+  "warnings": [
+    "THREE.TSL: \"atan2\" is overloaded. Use \"atan\" instead."
+  ],
+  "errors": [],
+  "limits": [
+    "One real impacted animal; multi-body isolation and rollback are covered by contract tests.",
+    "Pixel picking, complete recovery to standing and artistic parity are not certified by this run.",
+    "Existing dark animal silhouettes are visible also in the earlier closure capture. This is not a visual-parity pass."
+  ]
+}

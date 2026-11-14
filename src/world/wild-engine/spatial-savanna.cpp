@@ -4,15 +4,28 @@
 #include <cstdint>
 #include <cstring>
 #include <limits>
+#include <map>
+#include <memory>
 #include <optional>
+#include <set>
 #include <string>
+#include <tuple>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
 #include <vector>
+#include "spatial-static-mutations.h"
+#include "spatial-residency-mutations.h"
+#include "spatial-prop-mutations.h"
+#include "spatial-terrain-mutations.h"
+#include "spatial-gate-intents.h"
+#ifdef __EMSCRIPTEN__
+#include <emscripten/emscripten.h>
+#else
+#define EMSCRIPTEN_KEEPALIVE
+#endif
 #ifdef __EMSCRIPTEN_PTHREADS__
 #include <atomic>
-#include <memory>
 #include <pthread.h>
 #include <emscripten/threading.h>
 #include <emscripten/emscripten.h>
@@ -22,9 +35,9 @@
 #endif
 #ifdef WILD_SPATIAL_PROFILE
 #include <emscripten/emscripten.h>
-namespace { WILD_SAMPLING_LOCAL double spatialProfileTimes[14]{}; }
-extern "C" EMSCRIPTEN_KEEPALIVE void spatial_profile_reset(){std::fill_n(spatialProfileTimes,14,0.0);}
-extern "C" EMSCRIPTEN_KEEPALIVE double spatial_profile_ms(int index){return index>=0&&index<14?spatialProfileTimes[index]:-1;}
+namespace { WILD_SAMPLING_LOCAL double spatialProfileTimes[19]{}; }
+extern "C" EMSCRIPTEN_KEEPALIVE void spatial_profile_reset(){std::fill_n(spatialProfileTimes,19,0.0);}
+extern "C" EMSCRIPTEN_KEEPALIVE double spatial_profile_ms(int index){return index>=0&&index<19?spatialProfileTimes[index]:-1;}
 #define SPATIAL_TICK(name) const double name=emscripten_get_now()
 #define SPATIAL_TOCK(index,name) spatialProfileTimes[index]+=emscripten_get_now()-name
 #else
@@ -38,11 +51,16 @@ extern "C" EMSCRIPTEN_KEEPALIVE double spatial_profile_ms(int index){return inde
 extern "C" {
 int lazy_init(int size);
 int lazy_select_context(int profile);
+int lazy_selected_context();
+uint32_t lazy_route_revision();
 uint8_t* lazy_pass_ptr();
 uint8_t* lazy_steps_ptr();
 uint8_t* lazy_inbound_ptr();
 int lazy_stage_sector(int sx,int sz);
 int lazy_commit_sector(int sx,int sz);
+#ifdef WILD_PROFILE_TWO_PASS_COMPAT_REVISION
+void lazy_profile_compat_revisions(uint32_t count);
+#endif
 int lazy_remove_sector(int sx,int sz);
 int lazy_route(int fromX,int fromZ,int toX,int toZ);
 int lazy_component(int worldX,int worldZ);
@@ -132,9 +150,9 @@ std::unordered_map<uint64_t,std::vector<Prop>>& residentVisibleProps(){
   return *residentVisiblePropRegistry;
 }
 WILD_SAMPLING_LOCAL std::unordered_set<PropKey,PropKeyHash>* removedPropRegistry=nullptr;
-// Geometry retained only for a prop that was resident when suppressed. This
-// lets a preview restore that exact local footprint without rebuilding every
-// loaded sector. Settlement regeneration clears these witnesses.
+// Local refresh witnesses, not execution certificates. Protected restoration
+// regenerates canonical candidates before committing. Settlement changes clear
+// these witnesses because the recipe/habitat may no longer produce that prop.
 std::unordered_map<PropKey,Prop,PropKeyHash>* removedPropGeometryRegistry=nullptr;
 std::unordered_map<PropKey,Prop,PropKeyHash>& removedPropGeometry(){
   if(!removedPropGeometryRegistry)
@@ -187,6 +205,21 @@ float maxBuiltRadius(){
 int activeProfile=0;
 WILD_SAMPLING_LOCAL std::unordered_map<uint64_t,ChunkRaster>* chunkRasters=nullptr;
 std::vector<std::pair<int,int>> loadedChunks;
+// Per-commit resource projection. Preview work never installs this recorder;
+// the same canonical refresh functions identify the actually rebuilt chunks.
+struct WorldResourcePreview;
+struct WorldResourcePublication {
+  std::shared_ptr<WorldResourcePreview> prepared;
+  bool valid=false;
+  std::array<double,9> header{};
+  std::vector<int32_t> changes;
+};
+WILD_SAMPLING_LOCAL WorldResourcePublication* worldResourcePublication=nullptr;
+WILD_SAMPLING_LOCAL std::map<std::pair<int,int>,int>* worldResourceCapture=nullptr;
+void recordWorldResourceChunk(int cx,int cz){
+  if(worldResourceCapture&&std::find(loadedChunks.begin(),loadedChunks.end(),std::pair<int,int>{cx,cz})!=loadedChunks.end())
+    worldResourceCapture->insert_or_assign({cx,cz},1);
+}
 std::vector<float> barrierBatch;
 std::vector<int> barrierBatchIds;
 std::vector<int> barrierRemovalIds;
@@ -693,8 +726,17 @@ bool terrainValid(double x,double z,float radius,bool worker){
   for(int i=0;i<5;i++){
     const double px=x+(i==1?radius:i==2?-radius:0),pz=z+(i==3?radius:i==4?-radius:0);
     if(worldBiome!=4&&!(worldBiome==5&&worker)&&fluid(px,pz))return false;
+#ifdef WILD_EXPERIMENT_SLOPE_BOUND
+    const double slopeX=travelSurface(px+.8,pz)-travelSurface(px-.8,pz);
+    const double slopeZ=travelSurface(px,pz+.8)-travelSurface(px,pz-.8);
+    // If both components are at most 0.5, hypot is below 0.8 by a wide
+    // margin. Ambiguous and non-finite values keep the original predicate.
+    if(!(std::abs(slopeX)<=.5&&std::abs(slopeZ)<=.5)&&
+       std::hypot(slopeX,slopeZ)/1.6>.5)return false;
+#else
     if(std::hypot(travelSurface(px+.8,pz)-travelSurface(px-.8,pz),
       travelSurface(px,pz+.8)-travelSurface(px,pz-.8))/1.6>.5)return false;
+#endif
   }
   return true;
 }
@@ -786,8 +828,26 @@ bool barrierClear(double x,double z,const int* ignored=nullptr,int ignoredCount=
 // the swept centre line only between those samples, even though both grid
 // endpoints are clear. Test the exact segment against the same expanded
 // rectangles used by barrierClear, so planning and continuous motion agree.
+bool expandedBoxIntersects(const double a[2],const double b[2],const double half[2]){
+  double entry=0,exit=1;bool possible=true;
+  for(int axis=0;axis<2;axis++){
+    const double delta=b[axis]-a[axis];
+    if(std::abs(delta)<1e-12){
+      if(std::abs(a[axis])>=half[axis]){possible=false;break;}
+      continue;
+    }
+    const double t0=(-half[axis]-a[axis])/delta,t1=(half[axis]-a[axis])/delta;
+    entry=std::max(entry,std::min(t0,t1));exit=std::min(exit,std::max(t0,t1));
+  }
+  if(possible&&entry<=exit){
+    const double t=(entry+exit)*.5;
+    return std::abs(a[0]+(b[0]-a[0])*t)<half[0]&&std::abs(a[1]+(b[1]-a[1])*t)<half[1];
+  }
+  return false;
+}
 bool wallSegmentClear(double x,double z,double nx,double nz,
-  const int* ignored=nullptr,int ignoredCount=0){
+  const int* ignored=nullptr,int ignoredCount=0,double clearanceRadius=-1,
+  bool includePassable=false){
   const uint8_t profileBit=workerNow?1:2;
   const auto& index=barrierIndex();
   const int minBx=int(std::floor(std::min(x,nx)/barrierBucketWidth));
@@ -800,29 +860,16 @@ bool wallSegmentClear(double x,double z,double nx,double nz,
     for(const int id:bucket->second){
       if(ignored&&std::find(ignored,ignored+ignoredCount,id)!=ignored+ignoredCount)continue;
       const Barrier& wall=index.byId.at(id);
-      if(wall.passMask&profileBit)continue;
+      if(!includePassable&&(wall.passMask&profileBit))continue;
       const double dx=x-wall.x,dz=z-wall.z,ex=nx-wall.x,ez=nz-wall.z;
       const double a[2]={dx*wall.c-dz*wall.s,dx*wall.s+dz*wall.c};
       const double b[2]={ex*wall.c-ez*wall.s,ex*wall.s+ez*wall.c};
-      const double half[2]={wall.halfX+radiusNow,wall.halfZ+radiusNow};
-      double entry=0,exit=1;
-      bool possible=true;
-      for(int axis=0;axis<2;axis++){
-        const double delta=b[axis]-a[axis];
-        if(std::abs(delta)<1e-12){
-          if(std::abs(a[axis])>=half[axis]){possible=false;break;}
-          continue;
-        }
-        const double t0=(-half[axis]-a[axis])/delta;
-        const double t1=(half[axis]-a[axis])/delta;
-        entry=std::max(entry,std::min(t0,t1));
-        exit=std::min(exit,std::max(t0,t1));
-      }
-      if(possible&&entry<=exit){
-        const double t=(entry+exit)*.5;
-        if(std::abs(a[0]+(b[0]-a[0])*t)<half[0]&&
-           std::abs(a[1]+(b[1]-a[1])*t)<half[1])return false;
-      }
+      // Preserve legacy float arithmetic unless the continuous execution sweep
+      // explicitly requests its double-precision safety radius.
+      const double half[2]={clearanceRadius>=0?double(wall.halfX)+clearanceRadius:
+        double(wall.halfX+radiusNow),clearanceRadius>=0?double(wall.halfZ)+clearanceRadius:
+        double(wall.halfZ+radiusNow)};
+      if(expandedBoxIntersects(a,b,half))return false;
     }
   }
   return true;
@@ -990,6 +1037,10 @@ double proceduralPropSpacing(int type){
   if(mangroveNetwork&&type==0)return 8.5;
   return worldBiome==1?desertSpacing[type]:worldBiome==5?canyonSpacing[type]:savannaSpacing[type];
 }
+std::pair<double,double> proceduralPropPosition(int type,int gx,int gz,double cell){
+  return {(gx+.14+unit(cellHash(gx,gz,310+type))*.72)*cell,
+    (gz+.14+unit(cellHash(gx,gz,311+type))*.72)*cell};
+}
 void buildSelectedVisual(){
   const int cx=chunkX,cz=chunkZ,x0=cx*side-24,z0=cz*side-24;
   heights.assign(grid*grid,0);colors.assign(grid*grid*3,0);
@@ -1058,8 +1109,8 @@ void prepareSelectedChunk(int cx,int cz,bool visual){
       for(int gx=int(std::floor((double(x0)-halo)/cell));gx<=int(std::floor((double(x0+48)+halo)/cell));gx++){
         const uint32_t h=cellHash(gx,gz,301+type*71);
         if(unit(h)>(worldBiome==1?desertDensity[type]:worldBiome==2?riverDensity[type]:worldBiome==3?volcanoDensity[type]:worldBiome==4?mangroveDensity[type]:worldBiome==5?canyonDensity[type]:savannaDensity[type]))continue;
-        const double x=(gx+.14+unit(cellHash(gx,gz,310+type))*.72)*cell;
-        const double z=(gz+.14+unit(cellHash(gx,gz,311+type))*.72)*cell;
+         const auto position=proceduralPropPosition(type,gx,gz,cell);
+         const double x=position.first,z=position.second;
         if(x<x0-halo||x>=x0+48+halo||z<z0-halo||z>=z0+48+halo)continue;
         const float scale=worldBiome==5&&type==5?
           float(.64+unit(cellHash(gx,gz,312+type))*.23):
@@ -1152,6 +1203,64 @@ PreparedChunkData takePreparedChunkData(){
     std::move(groundMask),std::move(lattice),std::move(ponds),std::move(props),
     std::move(solidProps),std::move(propBuckets),std::move(nearbySettlements),selectedVisualPending};
 }
+// Optional, bounded resources of one non-effective native proposal. These are
+// outputs of the canonical recipe, not another resident world or navigation map.
+struct PreparedSector {
+  int x,z;
+  std::array<uint8_t,sector*sector> pass{},steps{},inbound{};
+};
+struct PreparedNavigationDependencies {
+  std::array<bool,navigationProfiles> ready{},worker{};
+  std::array<float,navigationProfiles> radius{};
+  std::array<uint32_t,navigationProfiles> revision{};
+};
+struct PreparedChunkNavigation : PreparedNavigationDependencies {
+  std::array<std::optional<ChunkRaster>,navigationProfiles> rasters;
+  std::array<std::vector<PreparedSector>,navigationProfiles> sectors;
+};
+struct PreparedPropNavigation : PreparedNavigationDependencies {
+  std::array<std::vector<ChunkRaster>,navigationProfiles> rasters;
+  std::array<std::vector<PreparedSector>,navigationProfiles> sectors;
+};
+struct PreparedTerrainChunk {
+  int cx,cz;
+  std::array<std::optional<ChunkRaster>,navigationProfiles> rasters;
+  std::array<std::vector<PreparedSector>,navigationProfiles> sectors;
+};
+struct PreparedTerrainNavigation : PreparedNavigationDependencies {
+  std::vector<PreparedTerrainChunk> chunks;
+};
+bool preparedNavigationCurrent(const PreparedNavigationDependencies& prepared){
+  struct ContextGuard {int previous=lazy_selected_context();~ContextGuard(){lazy_select_context(previous);}} restore;
+  for(int i=0;i<navigationProfiles;i++){
+    const auto* profile=navProfiles[i];const bool ready=profile&&profile->ready;
+    if(ready!=prepared.ready[i]||ready&&(profile->radius!=prepared.radius[i]||profile->worker!=prepared.worker[i]))return false;
+    if(ready){lazy_select_context(i);if(lazy_route_revision()!=prepared.revision[i])return false;}
+  }
+  return true;
+}
+bool preparedNavigationCurrent(const PreparedChunkNavigation& prepared){
+  if(!preparedNavigationCurrent(static_cast<const PreparedNavigationDependencies&>(prepared)))return false;
+  for(int i=0;i<navigationProfiles;i++)if(prepared.ready[i]&&!prepared.rasters[i])return false;
+  return true;
+}
+struct TerrainProposal;
+struct WorldResourcePreview {
+  std::array<double,9> header{};
+  bool publishChunks=true;
+  std::optional<PreparedChunkNavigation> addition;
+  std::optional<PreparedPropNavigation> propChange;
+  std::shared_ptr<TerrainProposal> terrainChange;
+  std::map<std::pair<int,int>,PreparedChunkData> chunks;
+  std::set<std::pair<int,int>> removed;
+  std::vector<int32_t> changes;
+};
+WILD_SAMPLING_LOCAL std::shared_ptr<WorldResourcePreview> worldResourcePreview;
+WILD_SAMPLING_LOCAL WorldResourcePreview* worldResourcePreviewCapture=nullptr;
+WorldResourcePreview* worldResourcePreviewApplying=nullptr;
+void captureWorldResourcePreview(PreparedChunkData data){
+  if(worldResourcePreviewCapture)worldResourcePreviewCapture->chunks.insert_or_assign({data.cx,data.cz},std::move(data));
+}
 void selectPreparedChunkData(PreparedChunkData data){
   selectedVisualPending=data.visualPending;
   chunkX=data.cx;chunkZ=data.cz;haloPropCount=data.halo;
@@ -1162,12 +1271,25 @@ void selectPreparedChunkData(PreparedChunkData data){
   props=std::move(data.props);solidProps=std::move(data.solidProps);
   propBuckets=std::move(data.propBuckets);nearbySettlements=std::move(data.nearbySettlements);
 }
+// A visual query must never publish its scratch chunk or replace the currently
+// selected simulation buffers. The old selection is moved back on every exit.
+struct ScopedVisualQueryChunk {
+  PreparedChunkData previous;
+  ScopedVisualQueryChunk():previous(takePreparedChunkData()){}
+  ~ScopedVisualQueryChunk(){selectPreparedChunkData(std::move(previous));}
+  ScopedVisualQueryChunk(const ScopedVisualQueryChunk&)=delete;
+  ScopedVisualQueryChunk& operator=(const ScopedVisualQueryChunk&)=delete;
+};
 void publishSelectedChunk(){
+  recordWorldResourceChunk(chunkX,chunkZ);
   const auto key=chunkKey(chunkX,chunkZ);
   // Settlement changes invalidate relief explicitly; ordinary selection keeps it.
   if(!residentSpatial().count(key))residentSpatial()[key]={lattice,ponds};
   residentSolidProps()[key]=solidProps;
   residentVisibleProps()[key]=props;
+}
+SpatialResidencyRegion residencyRegion(int cx,int cz){
+  const double x=double(cx)*side-24,z=double(cz)*side-24;return {x,z,x+side,z+side};
 }
 void populateChunk(int cx,int cz,bool visual=true){
   prepareSelectedChunk(cx,cz,visual);
@@ -1224,6 +1346,55 @@ void installPreparedRaster(ChunkRaster raster){
   chunkRasters->insert_or_assign(key,std::move(raster));
 }
 void buildActiveRaster(){installPreparedRaster(prepareActiveRaster());}
+// Same prepared sector format and installation for synchronous proposals and
+// the existing pthread preparer. Neither preparation publishes a graph tile.
+std::vector<PreparedSector> prepareChunkAndNeighborSectors(int cx,int cz){
+  std::vector<PreparedSector> sectors;
+  const auto prepare=[&](int x,int z){sectors.push_back({x,z});auto& out=sectors.back();prepareSectorOverlay(x,z,out.pass.data(),out.steps.data(),out.inbound.data());};
+  const int firstX=(cx*side-24)/sector,firstZ=(cz*side-24)/sector;
+  for(int z=0;z<4;z++)for(int x=0;x<4;x++)prepare(firstX+x,firstZ+z);
+  constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1};
+  for(int d=0;d<4;d++){
+    const int nx=cx+dx[d],nz=cz+dz[d];if(!chunkRasters->count(chunkKey(nx,nz)))continue;
+    const int x0=(nx*side-24)/sector,z0=(nz*side-24)/sector;
+    for(int i=0;i<4;i++)prepare(x0+(d==0?0:d==1?3:i),z0+(d==2?0:d==3?3:i));
+  }
+  return sectors;
+}
+void installPreparedSectors(const std::vector<PreparedSector>& sectors){
+  for(const auto& tile:sectors){
+    std::copy(tile.pass.begin(),tile.pass.end(),lazy_pass_ptr());
+    std::copy(tile.steps.begin(),tile.steps.end(),lazy_steps_ptr());
+    std::copy(tile.inbound.begin(),tile.inbound.end(),lazy_inbound_ptr());lazy_commit_sector(tile.x,tile.z);
+  }
+}
+PreparedChunkNavigation prepareSelectedChunkNavigation(){
+  PreparedChunkNavigation result;
+  const int previous=activeProfile;
+  struct ProfileGuard {int previous;~ProfileGuard(){selectProfile(previous);}} restore{previous};
+  // Canonical addition publishes this relief before rasterization. Supply that
+  // identical view privately, without changing live residence or input revisions.
+  std::unordered_map<uint64_t,ChunkSpatialSample> samples;
+  for(int z=chunkZ-1;z<=chunkZ+1;z++)for(int x=chunkX-1;x<=chunkX+1;x++){
+    const auto found=residentSpatial().find(chunkKey(x,z));if(found!=residentSpatial().end())samples.emplace(found->first,found->second);
+  }
+  samples.insert_or_assign(chunkKey(chunkX,chunkZ),ChunkSpatialSample{lattice,ponds});
+  struct SampleGuard {decltype(residentSpatialRegistry) previous;~SampleGuard(){residentSpatialRegistry=previous;}} sampleGuard{residentSpatialRegistry};residentSpatialRegistry=&samples;
+  saveProfile();
+  for(int i=0;i<navigationProfiles;i++){
+    const auto* profile=navProfiles[i];result.ready[i]=profile&&profile->ready;if(!result.ready[i])continue;
+    result.radius[i]=profile->radius;result.worker[i]=profile->worker;selectProfile(i);result.revision[i]=lazy_route_revision();
+    std::unordered_map<uint64_t,ChunkRaster> neighbors;
+    for(int z=chunkZ-1;z<=chunkZ+1;z++)for(int x=chunkX-1;x<=chunkX+1;x++){
+      const auto found=chunkRasters->find(chunkKey(x,z));if(found!=chunkRasters->end())neighbors.emplace(found->first,found->second);
+    }
+    neighbors.insert_or_assign(chunkKey(chunkX,chunkZ),prepareActiveRaster());
+    struct RasterGuard {decltype(chunkRasters) previous;~RasterGuard(){chunkRasters=previous;}} rasterGuard{chunkRasters};chunkRasters=&neighbors;
+    result.sectors[i]=prepareChunkAndNeighborSectors(chunkX,chunkZ);result.rasters[i]=std::move(neighbors.at(chunkKey(chunkX,chunkZ)));
+  }
+  return result;
+}
+
 #ifdef __EMSCRIPTEN_PTHREADS__
 #include "spatial-preparation-worker.inc"
 #endif
@@ -1251,10 +1422,93 @@ void patchActiveRaster(const Prop& changed){
     }
   }
 }
-void commitActiveSectors(){
-  const int firstX=chunkX*side-24,firstZ=chunkZ*side-24;
+// Detour-style tile preparation: sample the canonical patch on owned raster
+// copies, then install the completed tiles only after the proposal is accepted.
+// Only chunks touched by the patch or its sector borders enter this scratch map.
+void preparePropNavigation(const std::vector<Prop>& changed,bool single){
+  auto& preview=*worldResourcePreviewCapture;
+  PreparedPropNavigation result;ScopedVisualQueryChunk selected;
+  const int previous=activeProfile;
+  struct ProfileGuard {int previous;~ProfileGuard(){selectProfile(previous);}} restore{previous};
+  saveProfile();
+  for(int profile=0;profile<navigationProfiles;profile++){
+    const auto* source=navProfiles[profile];result.ready[profile]=source&&source->ready;
+    if(!result.ready[profile])continue;
+    selectProfile(profile);result.radius[profile]=radiusNow;result.worker[profile]=workerNow;result.revision[profile]=lazy_route_revision();
+    std::vector<std::pair<int,int>> tiles;
+    for(const auto& prop:changed){
+      const double reach=prop.radius+radiusNow+2;
+      forEachRectSector(int(std::floor(prop.x-reach)),int(std::floor(prop.z-reach)),
+        int(std::ceil(prop.x+reach)),int(std::ceil(prop.z+reach)),[&](int x,int z){tiles.emplace_back(x,z);});
+    }
+    if(!single){
+      std::sort(tiles.begin(),tiles.end(),[](const auto& a,const auto& b){return chunkKey(a.first,a.second)<chunkKey(b.first,b.second);});
+      tiles.erase(std::unique(tiles.begin(),tiles.end()),tiles.end());
+    }
+    std::unordered_map<uint64_t,ChunkRaster> scratch;
+    const auto copy=[&](int x,int z){const auto found=chunkRasters->find(chunkKey(x,z));if(found!=chunkRasters->end())scratch.emplace(found->first,found->second);};
+    for(const auto& [point,data]:preview.chunks)copy(point.first,point.second);
+    for(const auto& [x,z]:tiles){const int cx=floorDiv(x*sector+24,side),cz=floorDiv(z*sector+24,side);
+      copy(cx,cz);copy(cx+1,cz);copy(cx-1,cz);copy(cx,cz+1);copy(cx,cz-1);}
+    struct RasterGuard {decltype(chunkRasters) previous;~RasterGuard(){chunkRasters=previous;}} rasterGuard{chunkRasters};chunkRasters=&scratch;
+    for(const auto& [point,data]:preview.chunks){
+      selectPreparedChunkData(data);
+      for(const auto& prop:changed)patchActiveRaster(prop);
+    }
+    for(const auto& [x,z]:tiles){auto& out=result.sectors[profile].emplace_back();out.x=x;out.z=z;
+      prepareSectorOverlay(x,z,out.pass.data(),out.steps.data(),out.inbound.data());}
+    for(const auto& [point,data]:preview.chunks){const auto found=scratch.find(chunkKey(point.first,point.second));
+      if(found!=scratch.end())result.rasters[profile].push_back(std::move(found->second));}
+  }
+  preview.propChange=std::move(result);
+}
+// Sample the same per-chunk/per-profile sequence as the terrain committer.
+// Neighbor border tiles must see earlier rebuilt rasters and later old rasters,
+// exactly as on the canonical path, including intermediate graph revisions.
+PreparedTerrainNavigation prepareTerrainNavigation(const std::map<std::pair<int,int>,PreparedChunkData>& chunks){
+  PreparedTerrainNavigation result;ScopedVisualQueryChunk selected;
+  const int previous=activeProfile;
+  struct ProfileGuard {int previous;~ProfileGuard(){selectProfile(previous);}} restore{previous};
+  std::array<std::unordered_map<uint64_t,ChunkRaster>,navigationProfiles> scratch;
+  saveProfile();
+  for(int profile=0;profile<navigationProfiles;profile++){
+    const auto* source=navProfiles[profile];result.ready[profile]=source&&source->ready;
+    if(!result.ready[profile])continue;
+    selectProfile(profile);result.radius[profile]=radiusNow;result.worker[profile]=workerNow;result.revision[profile]=lazy_route_revision();
+    for(const auto& [point,data]:chunks)for(int z=point.second-1;z<=point.second+1;z++)for(int x=point.first-1;x<=point.first+1;x++){
+      const auto found=chunkRasters->find(chunkKey(x,z));if(found!=chunkRasters->end())scratch[profile].emplace(found->first,found->second);
+    }
+  }
+  for(const auto& [point,data]:chunks){
+    selectPreparedChunkData(data);auto& step=result.chunks.emplace_back();step.cx=point.first;step.cz=point.second;
+    for(int profile=0;profile<navigationProfiles;profile++){
+      selectProfile(profile);if(!navReady)continue;
+      struct RasterGuard {decltype(chunkRasters) previous;~RasterGuard(){chunkRasters=previous;}} rasterGuard{chunkRasters};chunkRasters=&scratch[profile];
+      auto raster=prepareActiveRaster();scratch[profile].insert_or_assign(chunkKey(step.cx,step.cz),raster);step.rasters[profile]=std::move(raster);
+      step.sectors[profile]=prepareChunkAndNeighborSectors(step.cx,step.cz);
+    }
+  }
+  return result;
+}
+bool installPreparedPropChange(const std::vector<std::pair<int,int>>& affected){
+  auto* prepared=worldResourcePreviewApplying;
+  if(!prepared||!prepared->propChange)return false;
+  const int selectedX=chunkX,selectedZ=chunkZ,previous=activeProfile;
+  for(const auto& point:affected){selectPreparedChunkData(prepared->chunks.at(point));publishSelectedChunk();}
+  for(int profile=0;profile<navigationProfiles;profile++){
+    selectProfile(profile);if(!navReady)continue;
+    for(auto& raster:prepared->propChange->rasters[profile])installPreparedRaster(std::move(raster));
+    installPreparedSectors(prepared->propChange->sectors[profile]);
+  }
+  selectProfile(previous);
+  if(!loadedChunks.empty()&&(chunkX!=selectedX||chunkZ!=selectedZ))selectResidentAfterEviction(selectedX,selectedZ);
+  return true;
+}
+void commitChunkSectors(int cx,int cz){
+  const int firstX=cx*side-24,firstZ=cz*side-24;
   for(int sz=0;sz<4;sz++)for(int sx=0;sx<4;sx++)refreshSector(firstX/sector+sx,firstZ/sector+sz);
 }
+void commitActiveSectors(){commitChunkSectors(chunkX,chunkZ);}
 void refreshNeighborBorders(int cx,int cz){
   constexpr int dx[4]={1,-1,0,0},dz[4]={0,0,1,-1};
   for(int direction=0;direction<4;direction++){
@@ -1342,6 +1596,7 @@ void refreshRemovedPropChunks(const Prop* changed){
   }
   // The generated relief and props do not depend on the movement profile.
   // Populate each affected chunk once, then update its per-profile raster.
+  if(installPreparedPropChange(affected))return;
   for(const auto& [cx,cz]:affected){
     populateChunk(cx,cz,false);
     for(int profile=0;profile<navigationProfiles;profile++){
@@ -1367,15 +1622,18 @@ void refreshRemovedPropChunks(const Prop* changed){
   }
   selectProfile(previous);
   if(!loadedChunks.empty()&&(chunkX!=selectedX||chunkZ!=selectedZ))
-    populateChunk(selectedX,selectedZ);
+    selectResidentAfterEviction(selectedX,selectedZ);
 }
-void refreshRemovedPropChunksBatch(const std::vector<Prop>& changed){
+void refreshRemovedPropChunksBatch(const std::vector<Prop>& changed,
+    const std::set<std::pair<int,int>>* knownChunks=nullptr){
   ++terrainInputRevision;
   if(changed.empty())return;
-  if(changed.size()==1){refreshRemovedPropChunks(&changed.front());return;}
+  if(changed.size()==1&&!knownChunks){refreshRemovedPropChunks(&changed.front());return;}
+  if(changed.size()==1)++terrainInputRevision;
   const int selectedX=chunkX,selectedZ=chunkZ,previous=activeProfile;
   std::vector<std::pair<int,int>> affected;
-  for(const auto& [cx,cz]:loadedChunks){
+  if(knownChunks)affected.assign(knownChunks->begin(),knownChunks->end());
+  else for(const auto& [cx,cz]:loadedChunks){
     const int firstX=cx*side-24,firstZ=cz*side-24;
     if(std::none_of(changed.begin(),changed.end(),[&](const Prop& prop){
       return prop.x+prop.radius+maxIndexedRadius>=firstX&&
@@ -1386,7 +1644,8 @@ void refreshRemovedPropChunksBatch(const std::vector<Prop>& changed){
     affected.emplace_back(cx,cz);
   }
   std::sort(affected.begin(),affected.end());
-  // All removals are already committed. Generate each changed chunk once;
+  if(installPreparedPropChange(affected))return;
+  // The live suppression set is already committed. Generate each changed chunk once;
   // only its raster and sector graph vary with the unit profile.
   for(const auto& [cx,cz]:affected){
     populateChunk(cx,cz,false);
@@ -1412,7 +1671,7 @@ void refreshRemovedPropChunksBatch(const std::vector<Prop>& changed){
   }
   selectProfile(previous);
   if(!loadedChunks.empty()&&(chunkX!=selectedX||chunkZ!=selectedZ))
-    populateChunk(selectedX,selectedZ);
+    selectResidentAfterEviction(selectedX,selectedZ);
 }
 void flushBarrierBatch(){
   const float maxRadius=maxBuiltRadius();
@@ -1437,14 +1696,44 @@ void flushBarrierBatch(){
   selectProfile(previous);
   deferredBarrierRefresh.clear();
 }
+SpatialStaticMutation barrierMutation(const Barrier& barrier,int affectedMask=3){
+  SpatialStaticMutation shape;
+  shape.x=barrier.x;shape.z=barrier.z;shape.halfX=barrier.halfX;shape.halfZ=barrier.halfZ;
+  shape.c=barrier.c;shape.s=barrier.s;shape.passMask=barrier.passMask;shape.affectedMask=affectedMask;
+  const double ex=std::abs(shape.c)*shape.halfX+std::abs(shape.s)*shape.halfZ,
+    ez=std::abs(shape.s)*shape.halfX+std::abs(shape.c)*shape.halfZ;
+  shape.minX=shape.x-ex;shape.maxX=shape.x+ex;shape.minZ=shape.z-ez;shape.maxZ=shape.z+ez;
+  return shape;
+}
+SpatialStaticMutation polygonMutation(const PolygonObstacle& polygon){
+  SpatialStaticMutation shape;
+  shape.xy=polygon.xy.data();shape.count=int(polygon.xy.size()/2);shape.passMask=polygon.passMask;
+  shape.minX=polygon.minX;shape.maxX=polygon.maxX;shape.minZ=polygon.minZ;shape.maxZ=polygon.maxZ;
+  return shape;
+}
+bool barrierBatchPreflight(int count){
+  if(!spatialIntentStaticProtectionActive())return true;
+  std::vector<SpatialStaticMutation> shapes;shapes.reserve(size_t(count));
+  for(int i=0;i<count;i++){
+    const size_t at=size_t(i)*6;const float yaw=barrierBatch[at+4];
+    const Barrier barrier={0,barrierBatch[at],barrierBatch[at+1],barrierBatch[at+2],barrierBatch[at+3],yaw,
+      float(std::cos(yaw)),float(std::sin(yaw)),uint8_t(barrierBatch[at+5])};
+    shapes.push_back(barrierMutation(barrier));
+  }
+  return spatialIntentStaticPreflight(shapes.data(),count);
+}
 int addBarrier(float x,float z,float halfX,float halfZ,int passMask,float yaw=0){
   if(!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(halfX)||!std::isfinite(halfZ)||
      !std::isfinite(yaw)||halfX<=0||halfZ<=0||halfX>100||halfZ>100||passMask<0||passMask>3||
      nextBarrierId==std::numeric_limits<int>::max())return 0;
-  const Barrier barrier={nextBarrierId++,x,z,halfX,halfZ,yaw,float(std::cos(yaw)),float(std::sin(yaw)),uint8_t(passMask)};
+  const Barrier barrier={nextBarrierId,x,z,halfX,halfZ,yaw,float(std::cos(yaw)),float(std::sin(yaw)),uint8_t(passMask)};
+  const auto shape=barrierMutation(barrier);const auto ticket=spatialIntentStaticBefore(&shape,1);
+  if(!ticket.allowed)return 0;
+  nextBarrierId++;
   barrierIndex().byId.emplace(barrier.id,barrier);
   indexBarrier(barrier,true);
   refreshBarrier(barrier);
+  spatialIntentStaticCommitted(ticket);
   return barrier.id;
 }
 // Far-field presentation queries use the same deterministic C++ recipe without
@@ -1528,14 +1817,111 @@ void horizonDesertNormals(HorizonSampler& sampler,int ox,int oz){
 }
 }
 
+namespace {
+#include "spatial-execution-clearance.h"
+#include "spatial-prop-transaction.inc"
+#include "spatial-terrain-transaction.inc"
+}
+
+bool spatialStaticMutationBlocks(const SpatialStaticMutation& shape,double x,double z,
+    double nx,double nz,double radius,int kind,bool physical){
+  const int bit=kind==0?1:2;
+  if(!(shape.affectedMask&bit)||(physical&&(shape.passMask&bit))||
+     (kind==1&&(shape.passMask&2)))return false;
+  const float coordinate=float(std::max({1.0,std::abs(x),std::abs(z),std::abs(nx),std::abs(nz),
+    std::abs(shape.minX),std::abs(shape.minZ),std::abs(shape.maxX),std::abs(shape.maxZ)})+radius+3);
+  if(!std::isfinite(coordinate))return true;
+  const double error=std::max(1e-7,double(std::nextafter(coordinate,std::numeric_limits<float>::infinity())-coordinate)),
+    r=radius+2*error+1e-8;
+  if(shape.circleRadius>=0)
+    return executionPointDistance({shape.x,shape.z},{x,z},{nx,nz})<shape.circleRadius+r;
+  if(!shape.count){
+    const double dx=x-shape.x,dz=z-shape.z,ex=nx-shape.x,ez=nz-shape.z,
+      a[2]={dx*shape.c-dz*shape.s,dx*shape.s+dz*shape.c},
+      b[2]={ex*shape.c-ez*shape.s,ex*shape.s+ez*shape.c},half[2]={shape.halfX+r,shape.halfZ+r};
+    return expandedBoxIntersects(a,b,half);
+  }
+  const ExecutionPoint a{x,z},b{nx,nz};
+  if(executionInsideVertices(a,shape.xy,size_t(shape.count))||
+     executionInsideVertices(b,shape.xy,size_t(shape.count)))return true;
+  for(int i=0,j=shape.count-1;i<shape.count;j=i++)
+    if(executionEdgeDistance(a,b,{shape.xy[i*2],shape.xy[i*2+1]},
+        {shape.xy[j*2],shape.xy[j*2+1]})<r)return true;
+  return false;
+}
+bool spatialExecutionResidencyPinRange(double x,double z,double radius,std::array<int64_t,4>& out){
+  // Cover a neighboring chunk's far edge too, so pin-frontier notifications
+  // cannot precede the rounded eviction predicate and strand a deferred retry.
+  const float coordinate=float(std::max({1.0,std::abs(x),std::abs(z)})+radius+
+    spatialResidencyDependencyPadding+2*side+3);
+  if(!std::isfinite(coordinate))return false;
+  const double error=std::max(1e-7,double(std::nextafter(coordinate,std::numeric_limits<float>::infinity())-coordinate)),
+    r=radius+spatialResidencyDependencyPadding+2*error+1e-8,
+    values[4]={std::floor((x-r+24)/side),std::floor((z-r+24)/side),
+      std::floor((x+r+24)/side),std::floor((z+r+24)/side)};
+  for(int i=0;i<4;i++){
+    if(!std::isfinite(values[i])||values[i]<-9223372036854775808.0||values[i]>=9223372036854775808.0)return false;
+    out[size_t(i)]=int64_t(values[i]);
+  }
+  return true;
+}
+double spatialNativePolygonDistance(const double* xy,int count,double x,double z,double nx,double nz){
+  const ExecutionPoint a{x,z},b{nx,nz};
+  if(executionInsideVertices(a,xy,size_t(count))||executionInsideVertices(b,xy,size_t(count)))return 0;
+  double best=std::numeric_limits<double>::infinity();
+  for(int i=0,j=count-1;i<count;j=i++)best=std::min(best,
+    executionEdgeDistance(a,b,{xy[i*2],xy[i*2+1]},{xy[j*2],xy[j*2+1]}));
+  return best;
+}
+void spatialGateSupportChanged(){++overlayRevision;}
+int spatialGateCandidateSegmentClear(double x,double z,double nx,double nz,double radius){
+  return executionSegmentClear(x,z,nx,nz,radius,true);
+}
+#include "spatial-gate-world.inc"
+#include "spatial-gate-route-ranges.inc"
+int spatialGateTerrainRange(double minX,double minZ,double maxX,double maxZ,double* out){
+  if(worldBiome!=1||!std::isfinite(minX)||!std::isfinite(minZ)||!std::isfinite(maxX)||!std::isfinite(maxZ)||
+     minX>maxX||minZ>maxZ||maxX-minX>64||maxZ-minZ>64||
+     std::max({std::abs(minX),std::abs(minZ),std::abs(maxX),std::abs(maxZ)})>=1000000)return -2;
+  out[0]=std::numeric_limits<double>::infinity();out[1]=-out[0];
+  // The resident surface is affine on its triangles; enclosing lattice
+  // vertices bound every height in this box, not a few sampled locations.
+  for(int z=int(std::floor(minZ));z<=int(std::ceil(maxZ));z++)for(int x=int(std::floor(minX));x<=int(std::ceil(maxX));x++){
+    double height;if(!executionLattice(x,z,height))return -1;out[0]=std::min(out[0],height);out[1]=std::max(out[1],height);
+  }
+  return 1;
+}
+int spatialGateMountSupport(double x,double z,double minX,double minZ,double maxX,double maxZ,double* out){
+  double range[2];const int status=spatialGateTerrainRange(minX,minZ,maxX,maxZ,range);if(status!=1)return status;
+  double height;if(!executionSurface(float(x),float(z),height))return -1;
+  // Current supported mounting class is a flat native datum, matching the
+  // existing centre-ground + .025 root without transporting it vertically.
+  if(range[1]-range[0]>1e-6)return 0;
+  out[0]=double(float(height))+.025;out[1]=range[0];out[2]=range[1];return 1;
+}
+
 // Main-thread-only staging buffer; workers never access eviction requests.
 static std::vector<int32_t> chunkRemovalInput;
 static std::vector<float> surfaceGridOutput;
 static std::vector<double> surfaceGridCorners;
 static std::vector<uint8_t> surfaceGridValid;
+static std::vector<Prop> farVisualProps;
+static uint64_t farVisualRevision=0;
 extern "C" {
+EMSCRIPTEN_KEEPALIVE int spatial_execution_segment_clear(double x,double z,double nx,double nz,double radius){
+  return executionSegmentClear(x,z,nx,nz,radius);
+}
+int spatial_execution_profile_kind(){return workerNow?0:1;}
+// Fixed-world execution lease. Authoritative mutation counters, not per-route
+// collision checks or another geometry cache.
+uint64_t spatial_execution_revision(int kind){
+  return kind==0?terrainInputRevision:kind==1?residencyRevision:overlayRevision;
+}
+EMSCRIPTEN_KEEPALIVE double spatial_execution_clearance_checks(){return double(executionClearanceChecks);}
+EMSCRIPTEN_KEEPALIVE double spatial_execution_slope_samples(){return double(executionSlopeSamples);}
 int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){
   if(biome<0||biome>8)return -1;
+  if(spatialIntentTerrainProtected())return -1; // A new world requires authority retirement first.
   ++terrainInputRevision;++residencyRevision;
   worldSeed=seed;canyonOpenRight=biome==6;mangroveChannels=biome==7;mangroveNetwork=biome==8;worldBiome=(mangroveChannels||mangroveNetwork)?4:canyonOpenRight?5:biome;barrierIndex().byId.clear();barrierIndex().buckets.clear();
   polygonIndex().byId.clear();polygonIndex().buckets.clear();polygonInput.clear();polygonState.clear();nextPolygonId=1;
@@ -1552,6 +1938,8 @@ int spatial_generate_biome(uint32_t seed,int biome,int cx,int cz){
   activeProfile=0;radiusNow=.3f;workerNow=false;navReady=false;
   chunkRasters=&navProfile(0).rasters;lazy_select_context(0);
   loadedChunks.clear();nextBarrierId=1;
+  worldResourcePreview.reset();
+  if(worldResourcePublication){worldResourcePublication->valid=false;worldResourcePublication->changes.clear();worldResourcePublication->prepared.reset();}
   residentSpatial().clear();
   residentSolidProps().clear();
   residentVisibleProps().clear();
@@ -1563,18 +1951,30 @@ int spatial_add_chunk(int cx,int cz){
   if(!chunkRasters)return -1;
   if(chunkRasters->count(chunkKey(cx,cz)))return 0;
   for(const auto& [x,z]:loadedChunks)if(x==cx&&z==cz)return 0;
+  const auto region=residencyRegion(cx,cz);const auto ticket=spatialIntentResidencyBefore(&region,1,false);
+  if(!ticket.allowed)return -1;
+  if(ticket.preview){
+    if(worldResourcePreviewCapture){ScopedVisualQueryChunk scratch;prepareSelectedChunk(cx,cz,true);worldResourcePreviewCapture->addition=prepareSelectedChunkNavigation();captureWorldResourcePreview(takePreparedChunkData());}
+    return 1;
+  }
   SPATIAL_TICK(totalStarted);
-  populateChunk(cx,cz);loadedChunks.emplace_back(cx,cz);++residencyRevision;
+  auto* prepared=worldResourcePreviewApplying&&worldResourcePreviewApplying->addition?worldResourcePreviewApplying:nullptr;
+  if(prepared){selectPreparedChunkData(prepared->chunks.at({cx,cz}));publishSelectedChunk();}else populateChunk(cx,cz);
+  loadedChunks.emplace_back(cx,cz);++residencyRevision;
   const int previous=activeProfile;
   for(int profile=0;profile<navigationProfiles;profile++){
     selectProfile(profile);
     if(!navReady)continue;
-    // Both radii rasterize the same freshly generated terrain and props.
-    SPATIAL_TICK(rasterStarted);buildActiveRaster();SPATIAL_TOCK(1,rasterStarted);
-    SPATIAL_TICK(commitStarted);commitActiveSectors();SPATIAL_TOCK(2,commitStarted);
-    SPATIAL_TICK(borderStarted);refreshNeighborBorders(cx,cz);SPATIAL_TOCK(3,borderStarted);
+    if(prepared){installPreparedRaster(std::move(*prepared->addition->rasters[profile]));installPreparedSectors(prepared->addition->sectors[profile]);}
+    else{
+      // Both radii rasterize the same freshly generated terrain and props.
+      SPATIAL_TICK(rasterStarted);buildActiveRaster();SPATIAL_TOCK(1,rasterStarted);
+      SPATIAL_TICK(commitStarted);commitActiveSectors();SPATIAL_TOCK(2,commitStarted);
+      SPATIAL_TICK(borderStarted);refreshNeighborBorders(cx,cz);SPATIAL_TOCK(3,borderStarted);
+    }
   }
   selectProfile(previous);
+  spatialIntentResidencyCommitted(ticket,1);
   SPATIAL_TOCK(4,totalStarted);
   return int(props.size())+1;
 }
@@ -1583,9 +1983,12 @@ int spatial_select_chunk(int cx,int cz){
   populateChunk(cx,cz);
   return int(props.size())+1;
 }
-int spatial_remove_chunk(int cx,int cz){
+int removeChunkNative(int cx,int cz,bool releaseOnly){
   const auto it=std::find(loadedChunks.begin(),loadedChunks.end(),std::pair<int,int>{cx,cz});
   if(it==loadedChunks.end())return 0;
+  const auto region=residencyRegion(cx,cz);const auto ticket=spatialIntentResidencyBefore(&region,1,true,releaseOnly);
+  if(!ticket.allowed)return -2;
+  if(ticket.preview)return 1;
   loadedChunks.erase(it);++residencyRevision;
   residentSpatial().erase(chunkKey(cx,cz));
   residentSolidProps().erase(chunkKey(cx,cz));
@@ -1604,26 +2007,40 @@ int spatial_remove_chunk(int cx,int cz){
     if(!loadedChunks.empty())populateChunk(loadedChunks.back().first,loadedChunks.back().second);
     else {selectedVisualPending=false;props.clear();solidProps.clear();ponds.clear();heights.clear();colors.clear();water.clear();groundMask.clear();waterLevels.clear();waterTriangles.clear();}
   }
-  return 1;
+  spatialIntentResidencyCommitted(ticket,1);return 1;
 }
+int spatial_remove_chunk(int cx,int cz){return removeChunkNative(cx,cz,false);}
+EMSCRIPTEN_KEEPALIVE int spatial_release_chunk(int cx,int cz){return removeChunkNative(cx,cz,true);}
 int32_t* spatial_remove_chunks_ptr(int count){
   if(count<0||count>4096)return nullptr;
   chunkRemovalInput.resize(size_t(count)*2);
   return chunkRemovalInput.data();
 }
-int spatial_remove_chunks(int count){
+int removeChunksNative(int count,bool releaseOnly){
   if(count<0||count>4096||size_t(count)*2!=chunkRemovalInput.size())return -1;
   std::vector<std::pair<int,int>> removed;
+  std::unordered_set<uint64_t> seen;
   for(int i=0;i<count;i++){
     const int cx=chunkRemovalInput[i*2],cz=chunkRemovalInput[i*2+1];
     const auto it=std::find(loadedChunks.begin(),loadedChunks.end(),std::pair<int,int>{cx,cz});
-    if(it==loadedChunks.end())continue;
-    removed.emplace_back(cx,cz);loadedChunks.erase(it);
+    if(it==loadedChunks.end()||!seen.insert(chunkKey(cx,cz)).second)continue;
+    removed.emplace_back(cx,cz);
+  }
+  if(removed.empty())return 0;
+  std::vector<SpatialResidencyRegion> regions;regions.reserve(removed.size());
+  for(const auto& [cx,cz]:removed)regions.push_back(residencyRegion(cx,cz));
+  const auto ticket=spatialIntentResidencyBefore(regions.data(),int(regions.size()),true,releaseOnly);
+  if(!ticket.allowed)return -2;
+  if(ticket.preview){
+    if(worldResourcePreviewCapture)for(const auto& point:removed)worldResourcePreviewCapture->removed.insert(point);
+    return int(removed.size());
+  }
+  for(const auto& [cx,cz]:removed){
+    loadedChunks.erase(std::find(loadedChunks.begin(),loadedChunks.end(),std::pair<int,int>{cx,cz}));
     residentSpatial().erase(chunkKey(cx,cz));
     residentSolidProps().erase(chunkKey(cx,cz));
     residentVisibleProps().erase(chunkKey(cx,cz));
   }
-  if(removed.empty())return 0;
   residencyRevision+=removed.size();
   const int previous=activeProfile;
   for(int profile=0;profile<navigationProfiles;profile++){
@@ -1657,8 +2074,11 @@ int spatial_remove_chunks(int count){
     if(!loadedChunks.empty())selectResidentAfterEviction(loadedChunks.back().first,loadedChunks.back().second);
     else {selectedVisualPending=false;props.clear();solidProps.clear();ponds.clear();heights.clear();colors.clear();water.clear();groundMask.clear();waterLevels.clear();waterTriangles.clear();}
   }
-  return int(removed.size());
+  spatialIntentResidencyCommitted(ticket,int(removed.size()));return int(removed.size());
 }
+int spatial_remove_chunks(int count){return removeChunksNative(count,false);}
+EMSCRIPTEN_KEEPALIVE int spatial_release_chunks(int count){return removeChunksNative(count,true);}
+EMSCRIPTEN_KEEPALIVE int spatial_has_chunk(int cx,int cz){return residentSpatial().count(chunkKey(cx,cz))?1:0;}
 int spatial_chunk_count(){return int(loadedChunks.size());}
 int spatial_resident_prop_count(){
   int count=0;
@@ -1688,6 +2108,11 @@ int spatial_apply_settlement_batch(int count,int replace){
   if(!replace&&incoming.empty())return 0;
   std::vector<Settlement> changed=replace?settlements:std::vector<Settlement>{};
   changed.insert(changed.end(),incoming.begin(),incoming.end());
+  if(spatialIntentTerrainProtected()){
+    auto proposed=replace?incoming:settlements;
+    if(!replace)proposed.insert(proposed.end(),incoming.begin(),incoming.end());
+    return applyProtectedTerrain(proposed,changed)?count:-1;
+  }
   if(replace)settlements=std::move(incoming);
   else settlements.insert(settlements.end(),incoming.begin(),incoming.end());
   if(!changed.empty())refreshSettlementChunks(changed);
@@ -1698,6 +2123,10 @@ float spatial_set_settlement(float x,float z,float hx,float hz){
      hx<=0||hz<=0||hx>100||hz>100)return -1;
   std::vector<Settlement> changed=settlements;
   const Settlement site=makeSettlement(x,z,hx,hz);
+  if(spatialIntentTerrainProtected()){
+    auto proposed=std::vector<Settlement>{site};changed.push_back(site);
+    return applyProtectedTerrain(proposed,changed)?float(site.y):std::numeric_limits<float>::quiet_NaN();
+  }
   settlements.assign(1,site);changed.push_back(site);
   refreshSettlementChunks(changed);
   return float(site.y);
@@ -1706,6 +2135,10 @@ float spatial_add_settlement(float x,float z,float hx,float hz){
   if(!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(hx)||!std::isfinite(hz)||
      hx<=0||hz<=0||hx>100||hz>100)return -1;
   const Settlement site=makeSettlement(x,z,hx,hz);
+  if(spatialIntentTerrainProtected()){
+    auto proposed=settlements;proposed.push_back(site);
+    return applyProtectedTerrain(proposed,{site})?float(site.y):std::numeric_limits<float>::quiet_NaN();
+  }
   settlements.push_back(site);
   refreshSettlementChunks({site});
   return float(site.y);
@@ -1721,9 +2154,21 @@ int spatial_remove_prop(int group,int gx,int gz){
   }
   if(!found)return 0;
   const Prop changed=*found;
+  const auto ticket=spatialIntentPropsBefore(nullptr,0);
+  if(!ticket.allowed)return 0;
+  if(ticket.preview){
+    if(worldResourcePreviewCapture){auto proposed=removedProps();proposed.insert({group,gx,gz});ScopedPropRecipeView scratch(proposed);
+      for(const auto& [cx,cz]:loadedChunks){const int firstX=cx*side-24,firstZ=cz*side-24;
+        if(changed.x+changed.radius+maxIndexedRadius<firstX||changed.x-changed.radius-maxIndexedRadius>=firstX+side||
+           changed.z+changed.radius+maxIndexedRadius<firstZ||changed.z-changed.radius-maxIndexedRadius>=firstZ+side)continue;
+        prepareSelectedChunk(cx,cz,true);captureWorldResourcePreview(takePreparedChunkData());}
+      preparePropNavigation({changed},true);}
+    return 1;
+  }
   removedPropGeometry().insert_or_assign({group,gx,gz},changed);
   removedProps().insert({group,gx,gz});
   refreshRemovedPropChunks(&changed);
+  spatialIntentPropsCommitted(ticket,1);
   return 1;
 }
 int spatial_removed_prop_count(){return int(removedProps().size());}
@@ -1755,6 +2200,7 @@ int spatial_restore_removed_props(int count){
     if(key.group<0||key.group>5||!replacement.insert(key).second)return 0;
   }
   if(replacement==removedProps())return 1;
+  if(spatialIntentPropsProtected())return restoreProtectedProps(replacement);
   std::vector<Prop> changed;
   std::vector<PropKey> restored;
   bool local=true;
@@ -2081,6 +2527,27 @@ int spatial_water_vertex_count(){ensureSelectedVisual();return int(waterTriangle
 Prop* spatial_props_ptr(){return props.data();}
 int spatial_prop_count(){return int(props.size());}
 int spatial_halo_prop_count(){return haloPropCount;}
+// One bounded request reads the authoritative world without changing live
+// residency, navigation or selection. A caller can combine chunks only if
+// their revisions match and discard results after a later structural change.
+int spatial_far_query_chunk(int cx,int cz,uint32_t slotMask){
+  if(!chunkRasters||cx<-1000000||cx>1000000||cz<-1000000||cz>1000000||!slotMask||(slotMask&~((1u<<20)-1)))return -1;
+  farVisualProps.clear();
+  const auto key=chunkKey(cx,cz);
+  const auto resident=residentVisibleProps().find(key);
+  if(resident!=residentVisibleProps().end()){
+    for(const auto& prop:resident->second)if(prop.slot>=0&&prop.slot<20&&(slotMask&(1u<<prop.slot)))farVisualProps.push_back(prop);
+  }else{
+    ScopedVisualQueryChunk previous;
+    prepareSelectedChunk(cx,cz,false);
+    for(const auto& prop:props)if(prop.slot>=0&&prop.slot<20&&(slotMask&(1u<<prop.slot)))farVisualProps.push_back(prop);
+  }
+  farVisualRevision=terrainInputRevision;
+  return int(farVisualProps.size());
+}
+Prop* spatial_far_query_ptr(){return farVisualProps.data();}
+double spatial_far_query_revision(){return double(farVisualRevision);}
+double spatial_far_world_revision(){return double(terrainInputRevision);}
 int spatial_build_nav_profile(int index,float radius,int worker){
   if(index<0||index>=navigationProfiles||(index==1)!=(worker!=0))return 0;
   if(loadedChunks.empty()||!chunkRasters||radius<=0||radius>maxIndexedRadius)return 0;
@@ -2090,10 +2557,40 @@ int spatial_build_nav_profile(int index,float radius,int worker){
   if(!lazy_init(sector))return 0;
   const int selectedX=chunkX,selectedZ=chunkZ;
   chunkRasters->clear();
+#ifdef WILD_PROFILE_TWO_PASS
   for(const auto& [cx,cz]:loadedChunks){
-    populateChunk(cx,cz,false);buildActiveRaster();commitActiveSectors();refreshNeighborBorders(cx,cz);
+    SPATIAL_TICK(profilePopulate);populateChunk(cx,cz,false);SPATIAL_TOCK(14,profilePopulate);
+    SPATIAL_TICK(profileRaster);buildActiveRaster();SPATIAL_TOCK(15,profileRaster);
   }
-  if(chunkX!=selectedX||chunkZ!=selectedZ)populateChunk(selectedX,selectedZ);
+  for(const auto& [cx,cz]:loadedChunks){
+#ifndef WILD_PROFILE_TWO_PASS_DIRECT_COMMIT
+    SPATIAL_TICK(profilePopulate);populateChunk(cx,cz,false);SPATIAL_TOCK(14,profilePopulate);
+    SPATIAL_TICK(profileCommit);commitActiveSectors();SPATIAL_TOCK(16,profileCommit);
+#else
+    // Experimental: sector overlay reads resident rasters and obstacle
+    // indexes by coordinates; it does not require selecting this chunk again.
+    SPATIAL_TICK(profileCommit);commitChunkSectors(cx,cz);SPATIAL_TOCK(16,profileCommit);
+#endif
+  }
+#ifdef WILD_PROFILE_TWO_PASS_COMPAT_REVISION
+  // The old one-pass builder recommits four sectors for each shared border.
+  // Preserve its externally visible revision tokens without rebuilding them.
+  uint32_t omittedCommits=0;
+  for(const auto& [cx,cz]:loadedChunks){
+    if(chunkRasters->count(chunkKey(cx+1,cz)))omittedCommits+=4;
+    if(chunkRasters->count(chunkKey(cx,cz+1)))omittedCommits+=4;
+  }
+  lazy_profile_compat_revisions(omittedCommits);
+#endif
+#else
+  for(const auto& [cx,cz]:loadedChunks){
+    SPATIAL_TICK(profilePopulate);populateChunk(cx,cz,false);SPATIAL_TOCK(14,profilePopulate);
+    SPATIAL_TICK(profileRaster);buildActiveRaster();SPATIAL_TOCK(15,profileRaster);
+    SPATIAL_TICK(profileCommit);commitActiveSectors();SPATIAL_TOCK(16,profileCommit);
+    SPATIAL_TICK(profileBorder);refreshNeighborBorders(cx,cz);SPATIAL_TOCK(17,profileBorder);
+  }
+#endif
+  SPATIAL_TICK(profileRestore);if(chunkX!=selectedX||chunkZ!=selectedZ)populateChunk(selectedX,selectedZ);SPATIAL_TOCK(18,profileRestore);
   navReady=true;
   saveProfile();
   return lazy_loaded_sectors();
@@ -2126,9 +2623,11 @@ int spatial_remove_wall(int id){
   const auto it=index.byId.find(id);
   if(it==index.byId.end())return 0;
   const Barrier barrier=it->second;
+  const auto ticket=spatialIntentStaticBefore(nullptr,0);
   indexBarrier(barrier,false);
   index.byId.erase(it);
   refreshBarrier(barrier);
+  spatialIntentStaticCommitted(ticket);
   return 1;
 }
 int spatial_remove_barrier(int id){return spatial_remove_wall(id);}
@@ -2153,10 +2652,14 @@ int spatial_add_polygon(int count,int passMask){
     area+=double(x)*polygonInput[next*2+1]-double(z)*polygonInput[next*2];
   }
   if(maxX-minX>100||maxZ-minZ>100||!std::isfinite(area)||std::abs(area)<1e-4)return 0;
-  PolygonObstacle polygon={nextPolygonId++,uint8_t(passMask),minX,minZ,maxX,maxZ,
+  PolygonObstacle polygon={nextPolygonId,uint8_t(passMask),minX,minZ,maxX,maxZ,
     std::vector<float>(polygonInput.begin(),polygonInput.begin()+count*2)};
+  const auto shape=polygonMutation(polygon);const auto ticket=spatialIntentStaticBefore(&shape,1);
+  if(!ticket.allowed)return 0;
+  nextPolygonId++;
   polygonIndex().byId.emplace(polygon.id,polygon);
   indexPolygon(polygon,true);refreshPolygon(polygon);
+  spatialIntentStaticCommitted(ticket);
   return polygon.id;
 }
 int spatial_remove_polygon(int id){
@@ -2164,7 +2667,9 @@ int spatial_remove_polygon(int id){
   const auto it=index.byId.find(id);
   if(it==index.byId.end())return 0;
   const PolygonObstacle polygon=it->second;
+  const auto ticket=spatialIntentStaticBefore(nullptr,0);
   indexPolygon(polygon,false);index.byId.erase(it);refreshPolygon(polygon);
+  spatialIntentStaticCommitted(ticket);
   return 1;
 }
 int spatial_add_barrier(float x,float z,float halfX,float halfZ,int passMask){
@@ -2172,6 +2677,18 @@ int spatial_add_barrier(float x,float z,float halfX,float halfZ,int passMask){
 }
 int spatial_add_oriented_barrier(float x,float z,float halfX,float halfZ,float yaw,int passMask){
   return addBarrier(x,z,halfX,halfZ,passMask,yaw);
+}
+EMSCRIPTEN_KEEPALIVE int spatial_barrier_proposal_stage(float x,float z,float halfX,float halfZ,float yaw,int passMask){
+  if(!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(halfX)||!std::isfinite(halfZ)||!std::isfinite(yaw)||
+     halfX<=0||halfZ<=0||halfX>100||halfZ>100||passMask<0||passMask>3||nextBarrierId==std::numeric_limits<int>::max())return -1;
+  const Barrier barrier={nextBarrierId,x,z,halfX,halfZ,yaw,float(std::cos(yaw)),float(std::sin(yaw)),uint8_t(passMask)};
+  return spatialIntentStageBarrier({x,z,halfX,halfZ,yaw,passMask},barrierMutation(barrier));
+}
+EMSCRIPTEN_KEEPALIVE int spatial_barrier_proposal_commit(double session,double ticket,double sequence,double time,double clockSequence){
+  SpatialBarrierProposalInput input{};const int valid=spatialIntentTakeBarrier(session,ticket,sequence,time,clockSequence,input);
+  if(valid!=1)return valid;
+  const int id=addBarrier(input.x,input.z,input.halfX,input.halfZ,input.passMask,input.yaw);
+  return id>0?id:-6;
 }
 float* spatial_barrier_batch_ptr(int count){
   if(count<1||count>1024)return nullptr;
@@ -2191,6 +2708,7 @@ int spatial_add_barriers_batch(int count){
        halfX<=0||halfZ<=0||halfX>100||halfZ>100||
        !std::isfinite(passMask)||passMask<0||passMask>3||std::floor(passMask)!=passMask)return 0;
   }
+  if(!barrierBatchPreflight(count))return 0;
   barrierBatchIds.resize(count);
   batchingBarriers=true;
   for(int i=0;i<count;i++)barrierBatchIds[i]=addBarrier(
@@ -2225,6 +2743,7 @@ int spatial_apply_barrier_batch(int removeCount,int addCount){
        !std::isfinite(yaw)||halfX<=0||halfZ<=0||halfX>100||halfZ>100||
        !std::isfinite(passMask)||passMask<0||passMask>3||std::floor(passMask)!=passMask)return 0;
   }
+  if(!barrierBatchPreflight(addCount))return 0;
   barrierBatchIds.resize(addCount);
   batchingBarriers=true;
   for(int i=0;i<removeCount;i++)spatial_remove_barrier(barrierRemovalIds[i]);
@@ -2260,7 +2779,8 @@ BarrierStateRecord* spatial_barrier_restore_ptr(int count){
 }
 int spatial_restore_barriers(int count,int nextId){
   if(count<0||count>100000||barrierState.size()!=size_t(count)||
-     nextId<1||!barrierIndex().byId.empty())return 0;
+      nextId<1||!barrierIndex().byId.empty())return 0;
+  if(!spatialIntentStaticRestorationAllowed())return 0;
   int previousId=0;
   for(const BarrierStateRecord& item:barrierState){
     if(item.id<=previousId||item.id>=nextId||item.passMask<0||item.passMask>3||
@@ -2302,7 +2822,8 @@ PolygonStateRecord* spatial_polygon_restore_ptr(int count){
 }
 int spatial_restore_polygons(int count,int nextId){
   if(count<0||count>100000||polygonState.size()!=size_t(count)||
-     nextId<1||!polygonIndex().byId.empty())return 0;
+      nextId<1||!polygonIndex().byId.empty())return 0;
+  if(!spatialIntentStaticRestorationAllowed())return 0;
   int previousId=0;
   for(const PolygonStateRecord& item:polygonState){
     if(item.id<=previousId||item.id>=nextId||item.count<3||
@@ -2344,10 +2865,249 @@ int spatial_set_barrier_passability(int id,int passMask){
   if(it==index.byId.end())return 0;
   Barrier& barrier=it->second;
   if(barrier.passMask!=passMask){
+    Barrier proposed=barrier;proposed.passMask=uint8_t(passMask);
+    const int tightened=int(barrier.passMask)&~passMask;
+    const auto shape=barrierMutation(proposed,tightened);
+    const auto ticket=spatialIntentStaticBefore(tightened?&shape:nullptr,tightened?1:0);
+    if(!ticket.allowed)return 0;
     barrier.passMask=uint8_t(passMask);
     refreshBarrier(barrier);
+    spatialIntentStaticCommitted(ticket);
   }
   return 1;
+}
+// One temporary input view for a staged mutation. The intent authority owns the
+// immutable copy after staging; these buffers are not a live obstacle store.
+static WILD_SAMPLING_LOCAL std::vector<float> worldProposalFloatInput;
+static WILD_SAMPLING_LOCAL std::vector<int32_t> worldProposalIntInput,worldProposalResult;
+// Do not overwrite another caller's uncommitted legacy input buffers while
+// preparing or applying this immutable proposal.
+struct ScopedWorldProposalInputs {
+  std::vector<float> barriers,polygon;
+  std::vector<int> removals;
+  std::vector<int32_t> props,chunks;
+  std::array<float,256*5> settlements;
+  ScopedWorldProposalInputs(){
+    barriers.swap(barrierBatch);polygon.swap(polygonInput);removals.swap(barrierRemovalIds);
+    props.swap(removedPropState);chunks.swap(chunkRemovalInput);
+    std::copy_n(settlementBatchInput,settlements.size(),settlements.begin());
+  }
+  ~ScopedWorldProposalInputs(){
+    barriers.swap(barrierBatch);polygon.swap(polygonInput);removals.swap(barrierRemovalIds);
+    props.swap(removedPropState);chunks.swap(chunkRemovalInput);
+    std::copy(settlements.begin(),settlements.end(),settlementBatchInput);
+  }
+};
+int applyWorldProposalInput(const SpatialWorldProposalInput& input){
+  ScopedWorldProposalInputs scratch;int result=0;
+  if(input.kind==2){
+    barrierBatch=input.floats;barrierRemovalIds.assign(input.integers.begin(),input.integers.end());
+    result=spatial_apply_barrier_batch(input.mode,int(input.floats.size()/6));
+    if(result==1)worldProposalResult.assign(barrierBatchIds.begin(),barrierBatchIds.end());
+  }else if(input.kind==3){
+    polygonInput=input.floats;result=spatial_add_polygon(int(input.floats.size()/2),input.mode);
+    if(result>0){worldProposalResult.push_back(result);result=1;}
+  }else if(input.kind==4)result=spatial_remove_polygon(input.integers[0]);
+  else if(input.kind==5)result=spatial_set_barrier_passability(input.integers[0],input.mode);
+  else if(input.kind==6){
+    const int added=spatial_add_chunk(input.integers[0],input.integers[1]);result=added>0?1:0;
+    if(result)worldProposalResult={input.integers[0],input.integers[1],added-1};
+  }
+  else if(input.kind==7){
+    std::vector<int32_t> removed;std::unordered_set<uint64_t> seen;
+    for(size_t i=0;i<input.integers.size();i+=2){const int x=input.integers[i],z=input.integers[i+1];
+      if(spatial_has_chunk(x,z)&&seen.insert(chunkKey(x,z)).second)removed.insert(removed.end(),{x,z});}
+    chunkRemovalInput=input.integers;const int count=removeChunksNative(int(input.integers.size()/2),input.mode==1);
+    result=count>0?1:0;if(result)worldProposalResult=std::move(removed);
+  }else if(input.kind==8)result=spatial_remove_prop(input.integers[0],input.integers[1],input.integers[2]);
+  else if(input.kind==9){removedPropState=input.integers;result=spatial_restore_removed_props(int(input.integers.size()/3));}
+  else if(input.kind==10){
+    std::copy(input.floats.begin(),input.floats.end(),settlementBatchInput);
+    result=spatial_apply_settlement_batch(int(input.floats.size()/5),input.mode)>=0?1:0;
+  }
+#ifdef __EMSCRIPTEN_PTHREADS__
+  else if(input.kind==11){
+    const int x=preparationReadable()&&preparationJob->id==input.integers[0]?preparationJob->cx:0,
+      z=preparationReadable()&&preparationJob->id==input.integers[0]?preparationJob->cz:0,
+      added=spatial_prepare_publish(input.integers[0]);result=added>0?1:0;
+    if(result)worldProposalResult={x,z,added-1};
+  }
+#endif
+  return result;
+}
+EMSCRIPTEN_KEEPALIVE float* spatial_world_proposal_float_ptr(int count){
+  if(count<0||count>500000)return nullptr;worldProposalFloatInput.resize(size_t(count));return worldProposalFloatInput.data();
+}
+EMSCRIPTEN_KEEPALIVE int32_t* spatial_world_proposal_int_ptr(int count){
+  if(count<0||count>300000)return nullptr;worldProposalIntInput.resize(size_t(count));return worldProposalIntInput.data();
+}
+EMSCRIPTEN_KEEPALIVE const int32_t* spatial_world_proposal_result_ptr(){return worldProposalResult.data();}
+EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_result_count(){return int(worldProposalResult.size());}
+EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int spatial_world_resource_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int spatial_world_resource_snapshot(){
+  if(!worldResourcePublication||!worldResourcePublication->valid)return 0;
+  const auto& h=worldResourcePublication->header;
+  return h[6]==double(terrainInputRevision)&&h[7]==double(overlayRevision)&&h[8]==double(residencyRevision)?1:-1;
+}
+EMSCRIPTEN_KEEPALIVE const double* spatial_world_resource_header_ptr(){return worldResourcePublication?worldResourcePublication->header.data():nullptr;}
+EMSCRIPTEN_KEEPALIVE const int32_t* spatial_world_resource_changes_ptr(){return worldResourcePublication?worldResourcePublication->changes.data():nullptr;}
+// 2–5 overlays; 6/7 residency; 8/9 props; 10 terrain; 11 pthread publication.
+int stageWorldProposal(int kind,int mode,int floatCount,int intCount,bool captureResources){
+  if(captureResources&&kind<6)return -2;
+  WorldResourcePreview candidate;
+  struct CaptureGuard {WorldResourcePreview* previous;
+    CaptureGuard(WorldResourcePreview* target):previous(worldResourcePreviewCapture){worldResourcePreviewCapture=target;}
+    ~CaptureGuard(){worldResourcePreviewCapture=previous;}
+  } capture(captureResources?&candidate:nullptr);
+  if(floatCount<0||intCount<0||size_t(floatCount)!=worldProposalFloatInput.size()||
+     size_t(intCount)!=worldProposalIntInput.size())return -1;
+  const auto& f=worldProposalFloatInput;const auto& ids=worldProposalIntInput;
+  std::vector<SpatialStaticMutation> shapes;std::vector<PolygonObstacle> polygons;
+  if(kind==2){
+    if(mode<0||mode>1024||mode!=intCount||floatCount%6||floatCount/6>1024||
+       !mode&&!floatCount||floatCount/6>std::numeric_limits<int>::max()-nextBarrierId)return -1;
+    std::unordered_set<int> unique;
+    for(int id:ids)if(id<=0||!unique.insert(id).second||!barrierIndex().byId.count(id))return -1;
+    for(int i=0;i<floatCount;i+=6){
+      if(!std::isfinite(f[i])||!std::isfinite(f[i+1])||!std::isfinite(f[i+2])||!std::isfinite(f[i+3])||
+         !std::isfinite(f[i+4])||!std::isfinite(f[i+5])||f[i+2]<=0||f[i+3]<=0||f[i+2]>100||f[i+3]>100||
+         f[i+5]<0||f[i+5]>3||std::floor(f[i+5])!=f[i+5])return -1;
+      const float yaw=f[i+4];const Barrier barrier={0,f[i],f[i+1],f[i+2],f[i+3],yaw,
+        float(std::cos(yaw)),float(std::sin(yaw)),uint8_t(f[i+5])};shapes.push_back(barrierMutation(barrier));
+    }
+  }else if(kind==3){
+    const int count=floatCount/2;if(intCount||floatCount%2||count<3||count>maxPolygonVertices||mode<0||mode>3||
+       nextPolygonId==std::numeric_limits<int>::max())return -1;
+    float minX=std::numeric_limits<float>::infinity(),minZ=minX,maxX=-minX,maxZ=-minX;double area=0;
+    for(int i=0;i<count;i++){const float x=f[i*2],z=f[i*2+1];const int next=(i+1)%count;
+      if(!std::isfinite(x)||!std::isfinite(z)||std::abs(x)>2147483000.0f||std::abs(z)>2147483000.0f)return -1;
+      minX=std::min(minX,x);maxX=std::max(maxX,x);minZ=std::min(minZ,z);maxZ=std::max(maxZ,z);
+      area+=double(x)*f[next*2+1]-double(z)*f[next*2];
+    }
+    if(maxX-minX>100||maxZ-minZ>100||!std::isfinite(area)||std::abs(area)<1e-4)return -1;
+    polygons.push_back({0,uint8_t(mode),minX,minZ,maxX,maxZ,f});shapes.push_back(polygonMutation(polygons.back()));
+  }else if(kind==4){
+    if(floatCount||intCount!=1||mode||!polygonIndex().byId.count(ids[0]))return -1;
+  }else if(kind==5){
+    if(floatCount||intCount!=1||mode<0||mode>3)return -1;
+    const auto found=barrierIndex().byId.find(ids[0]);if(found==barrierIndex().byId.end()||found->second.passMask==mode)return -1;
+    Barrier proposed=found->second;const int tightened=int(proposed.passMask)&~mode;proposed.passMask=uint8_t(mode);
+    if(tightened)shapes.push_back(barrierMutation(proposed,tightened));
+  }else if(kind==6){
+    if(floatCount||intCount!=2||mode||std::abs(double(ids[0]))>44739000||std::abs(double(ids[1]))>44739000||
+       spatial_has_chunk(ids[0],ids[1]))return -1;
+  }else if(kind==7){
+    if(floatCount||intCount<2||intCount%2||intCount>8192||(mode!=0&&mode!=1))return -1;
+    for(int v:ids)if(std::abs(double(v))>44739000)return -1;
+  }else if(kind==8){
+    if(floatCount||intCount!=3||mode||ids[0]<0||ids[0]>5)return -1;
+  }else if(kind==9){
+    if(floatCount||intCount%3||intCount>300000||mode)return -1;
+  }else if(kind==10){
+    if(intCount||floatCount%5||floatCount>256*5||(mode!=0&&mode!=1))return -1;
+  }else if(kind==11){
+    if(floatCount||intCount!=1||mode||ids[0]<=0)return -1;
+#ifndef __EMSCRIPTEN_PTHREADS__
+    return -1;
+#endif
+  }else return -1;
+  const SpatialWorldProposalInput input{kind,mode,f,ids};
+  if(kind>=6){
+    const int ready=spatialIntentBeginWorldPreview();if(ready!=1)return ready;
+    struct PreviewGuard {~PreviewGuard(){spatialIntentEndWorldPreview();}} guard;
+    const int result=applyWorldProposalInput(input);worldProposalResult.clear();
+    if(result!=1)return 0;
+  }
+  const int staged=spatialIntentStageWorld(input,kind<=5?shapes.data():nullptr,kind<=5?int(shapes.size()):-1);
+  if(staged==1&&captureResources){
+    std::array<double,6> identity{};
+    if(spatialIntentWorldProposalSnapshot(identity)!=1)return -2;
+    if(candidate.publishChunks)for(const auto& [point,data]:candidate.chunks)candidate.changes.insert(candidate.changes.end(),{1,point.first,point.second});
+    for(const auto& point:candidate.removed)candidate.changes.insert(candidate.changes.end(),{2,point.first,point.second});
+    candidate.header={1,identity[0],identity[1],identity[3],double(kind),double(candidate.changes.size()/3),
+      double(terrainInputRevision),double(overlayRevision),double(residencyRevision)};
+    worldResourcePreview=std::make_shared<WorldResourcePreview>(std::move(candidate));
+  }
+  return staged;
+}
+EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stage(int kind,int mode,int floatCount,int intCount){return stageWorldProposal(kind,mode,floatCount,intCount,false);}
+EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stage_resources(int kind,int mode,int floatCount,int intCount){return stageWorldProposal(kind,mode,floatCount,intCount,true);}
+EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_resource_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_resource_snapshot(double session,double ticket){
+  if(!worldResourcePreview)return 0;
+  const auto& h=worldResourcePreview->header;
+  if(h[1]!=session||h[2]!=ticket||worldResourcePreview->addition&&!preparedNavigationCurrent(*worldResourcePreview->addition)||worldResourcePreview->propChange&&!preparedNavigationCurrent(*worldResourcePreview->propChange)||worldResourcePreview->terrainChange&&!preparedNavigationCurrent(worldResourcePreview->terrainChange->navigation))return -1;
+  std::array<double,6> identity{};
+  if(spatialIntentWorldProposalSnapshot(identity)!=1||identity[0]!=session||identity[1]!=ticket||identity[3]!=h[3]||identity[5]!=h[4]||
+     h[6]!=double(terrainInputRevision)||h[7]!=double(overlayRevision)||h[8]!=double(residencyRevision))return -1;
+  return 1;
+}
+EMSCRIPTEN_KEEPALIVE const double* spatial_world_proposal_resource_header_ptr(){return worldResourcePreview?worldResourcePreview->header.data():nullptr;}
+EMSCRIPTEN_KEEPALIVE const int32_t* spatial_world_proposal_resource_changes_ptr(){return worldResourcePreview?worldResourcePreview->changes.data():nullptr;}
+extern "C++" {
+std::pair<void*,size_t> worldResourceBuffer(WorldResourcePreview* owner,int index,int field){
+  if(!owner||index<0||size_t(index)*3+2>=owner->changes.size())return {nullptr,0};
+  const auto& rows=owner->changes;const size_t at=size_t(index)*3;
+  if(rows[at]!=1)return {nullptr,0};
+  const auto found=owner->chunks.find({rows[at+1],rows[at+2]});if(found==owner->chunks.end())return {nullptr,0};
+  auto& d=found->second;
+  switch(field){
+    case 0:return {d.heights.data(),d.heights.size()*sizeof(float)};
+    case 1:return {d.colors.data(),d.colors.size()*sizeof(float)};
+    case 2:return {d.groundMask.data(),d.groundMask.size()};
+    case 3:return {d.water.data(),d.water.size()};
+    case 4:return {d.waterLevels.data(),d.waterLevels.size()*sizeof(float)};
+    case 5:return {d.waterTriangles.data(),d.waterTriangles.size()*sizeof(float)};
+    case 6:return {d.props.data(),d.props.size()*sizeof(Prop)};
+  }
+  return {nullptr,0};
+}
+}
+EMSCRIPTEN_KEEPALIVE void* spatial_world_proposal_resource_buffer_ptr(int index,int field){return worldResourceBuffer(worldResourcePreview.get(),index,field).first;}
+EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_resource_buffer_bytes(int index,int field){return int(worldResourceBuffer(worldResourcePreview.get(),index,field).second);}
+EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_resource_release(double session,double ticket){
+  if(!worldResourcePreview||worldResourcePreview->header[1]!=session||worldResourcePreview->header[2]!=ticket)return 0;
+  worldResourcePreview.reset();return 1;
+}
+EMSCRIPTEN_KEEPALIVE int spatial_world_resource_prepared_snapshot(double session,double ticket){
+  if(spatial_world_resource_snapshot()!=1)return -1;
+  const auto& p=*worldResourcePublication;if(p.header[1]!=session||p.header[2]!=ticket)return -1;
+  return p.prepared?1:0;
+}
+EMSCRIPTEN_KEEPALIVE void* spatial_world_resource_buffer_ptr(int index,int field){return worldResourceBuffer(worldResourcePublication?worldResourcePublication->prepared.get():nullptr,index,field).first;}
+EMSCRIPTEN_KEEPALIVE int spatial_world_resource_buffer_bytes(int index,int field){return int(worldResourceBuffer(worldResourcePublication?worldResourcePublication->prepared.get():nullptr,index,field).second);}
+EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_commit(double session,double ticket,double sequence,double time,double clockSequence){
+  const bool hasPrepared=worldResourcePreview&&worldResourcePreview->header[1]==session&&worldResourcePreview->header[2]==ticket;
+  if(hasPrepared&&spatial_world_proposal_resource_snapshot(session,ticket)!=1)return -2;
+  struct ApplyingGuard {WorldResourcePreview* previous;~ApplyingGuard(){worldResourcePreviewApplying=previous;}} applyingGuard{worldResourcePreviewApplying};
+  // The legacy restoration without native bodies has different halo/revision
+  // semantics. Keep its canonical path until that owner uses protected commits.
+  const bool installingPrepared=hasPrepared&&(worldResourcePreview->header[4]==6||worldResourcePreview->header[4]==8||worldResourcePreview->header[4]==9&&spatialIntentPropsProtected()||worldResourcePreview->header[4]==10&&spatialIntentTerrainProtected());
+  worldResourcePreviewApplying=installingPrepared?worldResourcePreview.get():nullptr;
+  SpatialWorldProposalInput input;const int valid=spatialIntentTakeWorld(session,ticket,sequence,time,clockSequence,input);
+  if(valid!=1)return valid;worldProposalResult.clear();
+  std::map<std::pair<int,int>,int> resources;
+  struct ResourceGuard {
+    std::map<std::pair<int,int>,int>* previous;
+    explicit ResourceGuard(std::map<std::pair<int,int>,int>& target):previous(worldResourceCapture){worldResourceCapture=&target;}
+    ~ResourceGuard(){worldResourceCapture=previous;}
+  } recording(resources);
+  const int result=applyWorldProposalInput(input);
+  if(result==1){
+    if(input.kind==6||input.kind==11)recordWorldResourceChunk(worldProposalResult[0],worldProposalResult[1]);
+    if(input.kind==7)for(size_t i=0;i<worldProposalResult.size();i+=2)
+      resources.insert_or_assign({worldProposalResult[i],worldProposalResult[i+1]},2);
+    if(!worldResourcePublication)worldResourcePublication=new WorldResourcePublication();
+    auto& publication=*worldResourcePublication;publication.changes.clear();
+    for(const auto& [point,operation]:resources)publication.changes.insert(publication.changes.end(),{operation,point.first,point.second});
+    publication.header={1,session,ticket,time,double(input.kind),double(resources.size()),
+      double(terrainInputRevision),double(overlayRevision),double(residencyRevision)};
+    publication.prepared.reset();
+    if(hasPrepared&&(installingPrepared||input.kind==11)&&worldResourcePreview->changes==publication.changes)publication.prepared=worldResourcePreview;
+    publication.valid=true;
+  }
+  return result==1?1:-6;
 }
 int spatial_walkable(int x,int z){return walkable(x,z);}
 int spatial_edge(int x,int z,int nx,int nz){return std::abs(x-nx)+std::abs(z-nz)==1&&edge(x,z,nx,nz);}

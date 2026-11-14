@@ -1,0 +1,17 @@
+import {createRequire} from 'node:module';
+const {chromium}=createRequire(import.meta.url)(process.env.PLAYWRIGHT_MODULE??'playwright'),base=process.env.QA_BASE_URL??'http://127.0.0.1:5194',browser=await chromium.launch({channel:'msedge',headless:true,args:['--enable-unsafe-webgpu']});
+try{
+ const page=await browser.newPage({viewport:{width:640,height:480},deviceScaleFactor:1,reducedMotion:'reduce'}),errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
+ await page.goto(base+'/tests/browser/create-early-native-plant-save.html');await page.waitForFunction(()=>window.ready,{timeout:10000});const seed=await page.evaluate(()=>window.makeSave());
+ await page.goto(`${base}/?qa-worker-load-slot=${encodeURIComponent(seed.slotId)}&qa-worker-game&qa-worker-early-native&qa-worker-early-gpu-view&qa-worker-delay-plant&qa-webgpu-world&qa-webgpu-picking&qa-webgpu-single-actor&wildEngineThreads=0`,{waitUntil:'domcontentloaded'});
+ try{await page.waitForFunction(()=>typeof globalThis.wildGuardiansEarlyGpuQa==='function',{timeout:30000});}catch(e){throw Error(JSON.stringify({message:e.message,text:(await page.locator('body').innerText()).slice(0,500),errors}));}
+ const inspect=()=>page.evaluate(()=>globalThis.wildGuardiansEarlyGpuQa());let status=await inspect();if(status.backend!=='WebGPU')throw Error('Missing WebGPU');await page.locator('[data-menu="grow"]').click({timeout:10000});
+ try{await page.locator('[data-crop="maiz"]:not([disabled])').waitFor({timeout:20000});}catch(e){throw Error(JSON.stringify({message:e.message,status:await inspect(),text:(await page.locator('body').innerText()).slice(0,800),errors}));}
+ await page.locator('[data-crop="maiz"]').click();const box=await page.locator('#world').boundingBox();if(!box)throw Error('No canvas');let chosen=null,preview=false;
+ for(const [x,y] of [[.5,.65],[.35,.65],[.65,.65],[.4,.5],[.6,.5]]){await page.mouse.click(box.x+box.width*x,box.y+box.height*y);for(let i=0;i<18;i++){await page.waitForTimeout(40);status=await inspect();if(status.renderer.crops?.provisional>0)preview=true;if(status.plants>seed.plants){chosen=[x,y];break;}}if(chosen)break;}
+ if(!chosen||!preview)throw Error(JSON.stringify({message:'Missing accepted crop or provisional',status,preview,errors}));
+ for(let i=0;i<50;i++){status=await inspect();if(!status.renderer.crops?.provisional)break;await page.waitForTimeout(40);}if(status.renderer.crops?.provisional||status.pending)throw Error('Accepted crop preview was not reconciled');
+ await page.mouse.click(box.x+box.width*chosen[0],box.y+box.height*chosen[1]);let rejectedPreview=false;for(let i=0;i<15;i++){await page.waitForTimeout(40);status=await inspect();if(status.renderer.crops?.provisional>0)rejectedPreview=true;}
+ for(let i=0;i<50;i++){status=await inspect();if(!status.renderer.crops?.provisional)break;await page.waitForTimeout(40);}if(!rejectedPreview||status.renderer.crops?.provisional||status.plants!==seed.plants+1)throw Error(JSON.stringify({message:'Rejected crop preview did not resolve',status,rejectedPreview,errors}));
+ console.log(JSON.stringify({backend:status.backend,plants:status.plants,acceptedPreview:preview,rejectedPreview,remainingPreview:status.renderer.crops.provisional,events:status.events.map(e=>e.type),scope:'Actual QA Continue path, WebGPU camera and real crop UI/picking; 500ms authority delay for preview audit; no legacy WorldScene.load, partial world.'}));
+}finally{await browser.close();}

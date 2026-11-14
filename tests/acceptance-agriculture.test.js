@@ -107,7 +107,7 @@ test('QA-015: large real frames stop at each dawn and charge only an explicitly 
   const s=farm();sow(s,'platano');Game.openInitialHiring(s);Game.hire(s,'hire-day-101',{olderFemale:1});
   assert.equal(numberOf(s.ledger.balance),9820);
   Game.advanceReal(s,1000,nav);assert.equal(s.day,102);assert.equal(s.pauses.includes('hiring'),true);
-  assert.equal(numberOf(s.ledger.balance),9820);assert.equal(s.events.filter(e=>e.type==='Dawn').length,1);
+  assert.equal(numberOf(s.ledger.balance),9820);assert.equal(s.events.filter(e=>e.type==='Dawn').length,1);const dawn=s.events.find(e=>e.type==='Dawn');assert.equal(dawn.completedNights,s.completedNights);assert.equal(dawn.result,null);assert.equal(dawn.simulationTime,s.elapsed);
   Game.hire(s,'hire-day-102',{olderFemale:1});assert.equal(numberOf(s.ledger.balance),9790);
   assert.equal(Game.hire(s,'repeat-day-102',{olderFemale:1}),false);
   Game.advanceReal(s,1000,nav);assert.equal(s.day,103);assert.equal(s.pauses.includes('hiring'),true);

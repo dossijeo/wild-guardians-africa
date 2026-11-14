@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "postinstall": "node tools/patch-three-webgpu-pipeline.mjs",
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1",
@@ -23,6 +24,7 @@
     "desktop:build": "tauri build -- --locked"
   },
   "dependencies": {
+    "@dimforge/rapier3d-compat": "0.21.0",
     "three": "0.180.0",
     "vite": "6.4.3"
   },

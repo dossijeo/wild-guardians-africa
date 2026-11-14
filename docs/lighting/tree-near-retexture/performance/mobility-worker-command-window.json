@@ -1,0 +1,38 @@
+{
+  "scope": "Edge headless, mangrove islands fixture, 40 ticks, no rendering; sender-side admission only, no recovery from lost acknowledgments.",
+  "runs": [
+    {
+      "performedBeforePause": 1,
+      "remaining": 39,
+      "total": 40,
+      "rejected": 5000,
+      "sent": 4,
+      "pauseLatencyMs": 125.50999999046326,
+      "firstResponseMs": 118.57500000298023,
+      "totalResponseMs": 1025.4899999946356,
+      "snapshotEqual": true
+    },
+    {
+      "performedBeforePause": 1,
+      "remaining": 39,
+      "total": 40,
+      "rejected": 5000,
+      "sent": 4,
+      "pauseLatencyMs": 126.83499999344349,
+      "firstResponseMs": 120.39000000059605,
+      "totalResponseMs": 1029.3400000035763,
+      "snapshotEqual": true
+    },
+    {
+      "performedBeforePause": 1,
+      "remaining": 39,
+      "total": 40,
+      "rejected": 5000,
+      "sent": 4,
+      "pauseLatencyMs": 127.82500000298023,
+      "firstResponseMs": 121.27500000596046,
+      "totalResponseMs": 1030.1799999922514,
+      "snapshotEqual": true
+    }
+  ]
+}

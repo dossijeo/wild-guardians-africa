@@ -1,0 +1,20 @@
+{
+  "sequence": 6,
+  "site": {
+    "x": 88,
+    "z": -20
+  },
+  "plantEvents": [
+    "CropPlaced"
+  ],
+  "growthEvents": [
+    "SpellActivated"
+  ],
+  "multiplyEvents": [
+    "SpellActivated"
+  ],
+  "invalidPlant": "No se puede construir sobre agua o lava",
+  "conflict": "Las áreas mágicas no pueden solaparse",
+  "duplicate": false,
+  "scope": "Programmatic commands on a modified peaceful island-mangrove capture, compared against direct Game functions. No player UI, save/restore, campaign or production integration."
+}

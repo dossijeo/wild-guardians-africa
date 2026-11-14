@@ -1,0 +1,305 @@
+{
+  "date": "2026-11-09",
+  "audit": "/tests/browser/native-world-mutations.html",
+  "result": {
+    "checklistId": "A6-04.f-R2",
+    "backend": "webgpu",
+    "scope": "Six opt-in native mutations and one causal draw consumer; old packets freeze after commit. Triangle only. Graphical replacement, all-consumer failover, and gameplay integration remain separate.",
+    "cases": [
+      {
+        "kind": "polygon",
+        "adapter": {
+          "vendor": "nvidia",
+          "architecture": "turing",
+          "device": "",
+          "description": ""
+        },
+        "block": {
+          "start": 1794247070020.385,
+          "end": 1794247070520.465,
+          "blockedMs": 500.080078125,
+          "drawFramesBeforeQuiescence": 5,
+          "drawFramesAfterRelease": 0
+        },
+        "mutation": {
+          "stagedAt": 1794247070212.2751,
+          "committedAt": 1794247070219.6401,
+          "sequence": 2,
+          "result": {
+            "status": "committed",
+            "ids": [
+              10
+            ],
+            "receipt": {
+              "authorityEpoch": "0791e5fc-0fbc-4ee2-8ff4-3a4f517d33cf/1",
+              "session": "world-d03315e0-8115-4887-921c-f46518d79c65",
+              "holdId": 1,
+              "sequence": 2,
+              "effectiveTime": 10.25,
+              "clockSequence": 2
+            }
+          },
+          "changes": [
+            {
+              "type": "RouteInvalidated",
+              "sequence": 3,
+              "effectiveTime": 10.25,
+              "actorId": 900011
+            }
+          ],
+          "worldChanged": true,
+          "residencyChanged": false
+        },
+        "drawStats": {
+          "quiescedAt": 1794247070214.455,
+          "releasedAt": 1794247070219.9102,
+          "mutationEpoch": 1,
+          "floor": 10.25,
+          "packets": 1,
+          "nativeFrames": 6,
+          "gpuErrors": 0,
+          "failed": false
+        }
+      },
+      {
+        "kind": "residency-add",
+        "adapter": {
+          "vendor": "nvidia",
+          "architecture": "turing",
+          "device": "",
+          "description": ""
+        },
+        "block": {
+          "start": 1794247071554.055,
+          "end": 1794247072054.14,
+          "blockedMs": 500.0849609375,
+          "drawFramesBeforeQuiescence": 5,
+          "drawFramesAfterRelease": 0
+        },
+        "mutation": {
+          "stagedAt": 1794247071742.145,
+          "committedAt": 1794247071781.8901,
+          "sequence": 2,
+          "result": {
+            "status": "committed",
+            "ids": [
+              4,
+              4,
+              11
+            ],
+            "receipt": {
+              "authorityEpoch": "d0dfd858-2c26-46d4-9924-595a8be66031/1",
+              "session": "world-2e55bca9-4ecc-4cba-bf7c-e77fb9b004d3",
+              "holdId": 1,
+              "sequence": 2,
+              "effectiveTime": 10.25,
+              "clockSequence": 2
+            }
+          },
+          "changes": [],
+          "worldChanged": false,
+          "residencyChanged": true
+        },
+        "drawStats": {
+          "quiescedAt": 1794247071743.2,
+          "releasedAt": 1794247071782.035,
+          "mutationEpoch": 1,
+          "floor": 10.25,
+          "packets": 1,
+          "nativeFrames": 6,
+          "gpuErrors": 0,
+          "failed": false
+        }
+      },
+      {
+        "kind": "residency-remove",
+        "adapter": {
+          "vendor": "nvidia",
+          "architecture": "turing",
+          "device": "",
+          "description": ""
+        },
+        "block": {
+          "start": 1794247073286.915,
+          "end": 1794247073786.9849,
+          "blockedMs": 500.06982421875,
+          "drawFramesBeforeQuiescence": 5,
+          "drawFramesAfterRelease": 0
+        },
+        "mutation": {
+          "stagedAt": 1794247073470.1501,
+          "committedAt": 1794247073473.2202,
+          "sequence": 2,
+          "result": {
+            "status": "committed",
+            "ids": [
+              1,
+              1
+            ],
+            "receipt": {
+              "authorityEpoch": "f12121da-9baa-4e20-874a-e8f9d60691c1/1",
+              "session": "world-112ddaf5-215a-41f8-8e89-1cb5c3c79a7c",
+              "holdId": 1,
+              "sequence": 2,
+              "effectiveTime": 10.25,
+              "clockSequence": 2
+            }
+          },
+          "changes": [],
+          "worldChanged": false,
+          "residencyChanged": true
+        },
+        "drawStats": {
+          "quiescedAt": 1794247073471.885,
+          "releasedAt": 1794247073473.345,
+          "mutationEpoch": 1,
+          "floor": 10.25,
+          "packets": 1,
+          "nativeFrames": 6,
+          "gpuErrors": 0,
+          "failed": false
+        }
+      },
+      {
+        "kind": "prop-remove",
+        "adapter": {
+          "vendor": "nvidia",
+          "architecture": "turing",
+          "device": "",
+          "description": ""
+        },
+        "block": {
+          "start": 1794247074820.495,
+          "end": 1794247075320.57,
+          "blockedMs": 500.074951171875,
+          "drawFramesBeforeQuiescence": 5,
+          "drawFramesAfterRelease": 0
+        },
+        "mutation": {
+          "stagedAt": 1794247075012.985,
+          "committedAt": 1794247075021.9502,
+          "sequence": 2,
+          "result": {
+            "status": "committed",
+            "ids": [],
+            "receipt": {
+              "authorityEpoch": "f8e0b046-e741-41b1-ad16-9df065ff629f/1",
+              "session": "world-fa233e6d-9c28-4e83-88c2-b68fa97517d9",
+              "holdId": 1,
+              "sequence": 2,
+              "effectiveTime": 10.25,
+              "clockSequence": 2
+            }
+          },
+          "changes": [],
+          "worldChanged": true,
+          "residencyChanged": false
+        },
+        "drawStats": {
+          "quiescedAt": 1794247075014.23,
+          "releasedAt": 1794247075022.115,
+          "mutationEpoch": 1,
+          "floor": 10.25,
+          "packets": 1,
+          "nativeFrames": 6,
+          "gpuErrors": 0,
+          "failed": false
+        }
+      },
+      {
+        "kind": "prop-restore",
+        "adapter": {
+          "vendor": "nvidia",
+          "architecture": "turing",
+          "device": "",
+          "description": ""
+        },
+        "block": {
+          "start": 1794247076353.9802,
+          "end": 1794247076854.06,
+          "blockedMs": 500.079833984375,
+          "drawFramesBeforeQuiescence": 6,
+          "drawFramesAfterRelease": 0
+        },
+        "mutation": {
+          "stagedAt": 1794247076547.9502,
+          "committedAt": 1794247076564.655,
+          "sequence": 2,
+          "result": {
+            "status": "committed",
+            "ids": [],
+            "receipt": {
+              "authorityEpoch": "f9af468a-32a2-428e-bff0-26f5ca1edfac/1",
+              "session": "world-7e073408-2038-4124-b378-9155a7669ddf",
+              "holdId": 1,
+              "sequence": 2,
+              "effectiveTime": 10.25,
+              "clockSequence": 2
+            }
+          },
+          "changes": [],
+          "worldChanged": true,
+          "residencyChanged": false
+        },
+        "drawStats": {
+          "quiescedAt": 1794247076554.155,
+          "releasedAt": 1794247076564.8,
+          "mutationEpoch": 1,
+          "floor": 10.25,
+          "packets": 1,
+          "nativeFrames": 7,
+          "gpuErrors": 0,
+          "failed": false
+        }
+      },
+      {
+        "kind": "terrain",
+        "adapter": {
+          "vendor": "nvidia",
+          "architecture": "turing",
+          "device": "",
+          "description": ""
+        },
+        "block": {
+          "start": 1794247077887.385,
+          "end": 1794247078387.465,
+          "blockedMs": 500.080078125,
+          "drawFramesBeforeQuiescence": 5,
+          "drawFramesAfterRelease": 0
+        },
+        "mutation": {
+          "stagedAt": 1794247078069.62,
+          "committedAt": 1794247078071.905,
+          "sequence": 2,
+          "result": {
+            "status": "committed",
+            "ids": [],
+            "receipt": {
+              "authorityEpoch": "bf229c70-1c91-448c-ab10-23d5b4e1f506/1",
+              "session": "world-d8677b17-1b65-4476-9d2d-2eb2cc8146f1",
+              "holdId": 1,
+              "sequence": 2,
+              "effectiveTime": 10.25,
+              "clockSequence": 2
+            }
+          },
+          "changes": [],
+          "worldChanged": true,
+          "residencyChanged": false
+        },
+        "drawStats": {
+          "quiescedAt": 1794247078071.6748,
+          "releasedAt": 1794247078072.025,
+          "mutationEpoch": 1,
+          "floor": 10.25,
+          "packets": 1,
+          "nativeFrames": 6,
+          "gpuErrors": 0,
+          "failed": false
+        }
+      }
+    ],
+    "authorizedAutonomy": false,
+    "authorizedPassage": false
+  }
+}

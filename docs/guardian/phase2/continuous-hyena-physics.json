@@ -1,0 +1,181 @@
+{
+  "ready": true,
+  "campaign": false,
+  "entityCounts": {
+    "workers": 1,
+    "structures": 1,
+    "crops": 1,
+    "animals": 1
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 0,
+  "maxVisibleGuardians": 1,
+  "elapsed": 3024.4540539999834,
+  "simulate": true,
+  "active": 0,
+  "origins": [],
+  "retainedAttacks": [],
+  "retainedDraws": 0,
+  "attackVisual": [],
+  "reused": 0,
+  "health": 28,
+  "animalState": "attacking",
+  "animalPosition": [
+    88.2880654726401,
+    -7.276304356661269
+  ],
+  "draws": 64,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "spirit_appear",
+      "at": 3016.439053999988,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3016.538853999988,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3016.6719539999876,
+      "emitter": "qa-beast-0",
+      "phase": "falling",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3016.6719539999876,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3018.600853999988,
+      "emitter": "guardian-world",
+      "played": false
+    }
+  ],
+  "combatPhysics": {
+    "active": 0,
+    "physicsMs": 0,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 10.100000023841858,
+    "maxStepMs": 16.300000071525574,
+    "solverMs": 0,
+    "solverSteps": 0,
+    "bindingMs": 0,
+    "recoverySetupMs": 0,
+    "creationMs": 0
+  },
+  "errors": [],
+  "report": {
+    "scope": "One real Attack cycle, continuous Game.tick and WorldScene. Diagnostic, not a paired before/after benchmark.",
+    "species": "hyena",
+    "direction": "side",
+    "wallMs": 8161.899999976158,
+    "simulationSeconds": 8.064899999995305,
+    "frames": 233,
+    "hiddenFrames": 0,
+    "metrics": {
+      "dt": {
+        "mean": 35.04206008583691,
+        "p95": 50,
+        "p99": 66.40000000000146,
+        "max": 83.5
+      },
+      "renderMs": {
+        "mean": 8.01459227559904,
+        "p95": 11.5,
+        "p99": 13.5,
+        "max": 16.199999928474426
+      },
+      "physicsTotal": {
+        "mean": 0.7497854099764845,
+        "p95": 2,
+        "p99": 3.100000023841858,
+        "max": 16.300000071525574
+      },
+      "solverMs": {
+        "mean": 0.5961373374185849,
+        "p95": 1.7999999523162842,
+        "p99": 2.399999976158142,
+        "max": 5
+      },
+      "solverSteps": {
+        "mean": 0.9055793991416309,
+        "p95": 3,
+        "p99": 3,
+        "max": 3
+      },
+      "creationMs": {
+        "mean": 0.045493562334085226,
+        "p95": 0,
+        "p99": 0,
+        "max": 10.600000023841858
+      },
+      "bindingMs": {
+        "mean": 0.05793991723285724,
+        "p95": 0.20000004768371582,
+        "p99": 0.30000007152557373,
+        "max": 0.6000000238418579
+      },
+      "recoverySetupMs": {
+        "mean": 0.01802575076598466,
+        "p95": 0,
+        "p99": 0,
+        "max": 4.199999928474426
+      },
+      "recoveryMs": {
+        "mean": 0.24163090159453035,
+        "p95": 1.399999976158142,
+        "p99": 1.7000000476837158,
+        "max": 1.7999999523162842
+      },
+      "animationMs": {
+        "mean": 0.058369098814771925,
+        "p95": 0.2999999523162842,
+        "p99": 0.3999999761581421,
+        "max": 1.2999999523162842
+      },
+      "vfxMs": {
+        "mean": 0.29957081524599266,
+        "p95": 1.7000000476837158,
+        "p99": 2,
+        "max": 2.899999976158142
+      },
+      "draws": {
+        "mean": 66.06437768240343,
+        "p95": 76,
+        "p99": 79,
+        "max": 79
+      }
+    },
+    "peakActive": 1,
+    "finalDown": null,
+    "memory": {
+      "geometries": 190,
+      "textures": 74
+    },
+    "heap": 452951411,
+    "errors": []
+  },
+  "commandCosts": [
+    {
+      "kind": "attack",
+      "plan": 2.100000023841858,
+      "logic": 1.3000000715255737,
+      "render": 0,
+      "total": 3.4000000953674316
+    }
+  ]
+}

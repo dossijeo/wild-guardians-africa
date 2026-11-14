@@ -1,6 +1,8 @@
+import {awakeningVisible,awakeningVisibleAt} from './awakening-presentation.js';
 import {loadingSyncWitness} from './loading-sync-witness.js';
 import {declareBlessingInstance} from './blessing-material.js';
 import {waitGpuFrame} from '../../tools/experiments/wait-gpu-frame.js';
+import {authoredCropHeight} from './crop-authored-height.js';
 // CULT V4 authored FrontSide states/bridges; legacy V3 data remains readable.
 import * as THREE from 'three';
 import {cropSpec} from '../simulation/rules.js';
@@ -17,7 +19,7 @@ export function createCropBatch(scene,renderer,gltf,bridgeData,MAX_PLANTS=128,{s
  const dirty=new Map();
  // A bounded sample per species and one synchronous pose avoid copying plant
  // state and allocating identical botanical recipes for mature/paused cohorts.
- const stageSamples=Array(8),renderPlant={};
+ const stageSamples=Array(8),authoredHeights=Array(8),renderPlant={};
  // Consumed synchronously by writeValues; no per-plant upload tuple allocation.
  const instanceValues=[0,0,0,0];
  const blessingValues=[0,0,0,0];
@@ -171,6 +173,7 @@ function* prepareBridges(data){
    const index=A.meta.cropIndex*4+A.meta.stage-1,template=data.bakedTemplates?.get(index);
    if(!template||template.userData.a!==pair.a||template.userData.b!==pair.b)throw new Error('Falta el puente V4 horneado: '+index);
    const geo=template.geometry.clone();
+   if(A.material.userData.modelAmbientVisibility&&!geo.hasAttribute('ambientVisibility'))throw Error('Missing V4 crop bridge AO bank');
    for(const [name,loaded]of [['aRoot','_aroot'],['aPeerRoot','_apeerroot'],['aSpin','_aspin'],['aPart','_apart']]){const source=geo.getAttribute(loaded);if(!source)throw new Error('Atributo V4 ausente: '+loaded);geo.setAttribute(name,source);geo.deleteAttribute(loaded);}
    const attr=new THREE.InstancedBufferAttribute(new Float32Array(MAX_PLANTS*4),4).setUsage(THREE.DynamicDrawUsage);geo.setAttribute('iBridge',attr);geo.setAttribute('iBlessing',new THREE.InstancedBufferAttribute(new Float32Array(MAX_PLANTS*4),4).setUsage(THREE.DynamicDrawUsage));geo.computeBoundingSphere();
    const material=A.material.clone();material.transparent=false;material.opacity=1;material.depthWrite=true;material.alphaTest=0;material.side=authoredSide;material.shadowSide=authoredSide;patchBridge(material,A.meta,B.meta);
@@ -181,6 +184,7 @@ function* prepareBridges(data){
   const total=A.geo.index.count+B.geo.index.count;
   const pos=new Float32Array(total*3),norm=new Float32Array(total*3),uv=new Float32Array(total*2);
   const roots=new Float32Array(total*3),peers=new Float32Array(total*3),spins=new Float32Array(total*4),parts=new Float32Array(total*4);
+  const ao=A.geo.hasAttribute('ambientVisibility')&&B.geo.hasAttribute('ambientVisibility')?new Uint8Array(total):null;
   let cursor=0;
   for(let role=0;role<2;role++){
    const own=role?B:A,other=role?A:B,rd=data.models[role?pair.b:pair.a],pd=data.models[role?pair.a:pair.b],mapping=role?pair.b2a:pair.a2b;
@@ -209,7 +213,7 @@ function* prepareBridges(data){
     if(face%512===0)yield;
     const d=drivers[rd.faceLabels[face]];if(!d)throw new Error('Región de transición desconocida');
     for(let j=0;j<3;j++,cursor++){
-     const vi=ix[face*3+j];pos.set([pg.getX(vi),pg.getY(vi),pg.getZ(vi)],cursor*3);
+     const vi=ix[face*3+j];if(ao)ao[cursor]=Math.round(own.geo.getAttribute('ambientVisibility').getX(vi)*255);pos.set([pg.getX(vi),pg.getY(vi),pg.getZ(vi)],cursor*3);
      norm.set([ng.getX(vi),ng.getY(vi),ng.getZ(vi)],cursor*3);uv.set([ug.getX(vi),ug.getY(vi)],cursor*2);
      roots.set(d.root,cursor*3);peers.set(d.peer,cursor*3);spins.set(d.spin,cursor*4);parts.set([role,d.kind,d.phase,0],cursor*4);
     }
@@ -265,12 +269,13 @@ function writeBlessing(item,slot,plant){
 
 function stageSample(crop,growth){
  const offset=crop*5,first=models[offset].meta;
- if(growth<MARKS[0]){const t=smooth(growth/MARKS[0]),sy=mix(.045,1,t),sr=mix(.30,1,t);return{height:.10+(first.height-.10)*sy,stage:0,phase:'original',items:[{index:offset,sy,sr,open:mix(.45,1,t)}]};}
+ let heights=authoredHeights[crop];if(!heights){const stages=models.slice(offset,offset+5);if(stages.length===5&&stages.every(Boolean))heights=authoredHeights[crop]=stages.map(model=>model.meta.height);}
+ if(growth<MARKS[0]){const t=smooth(growth/MARKS[0]),sy=mix(.045,1,t),sr=mix(.30,1,t);return{height:heights?authoredCropHeight(heights,growth):.10+(first.height-.10)*sy,stage:0,phase:'original',items:[{index:offset,sy,sr,open:mix(.45,1,t)}]};}
  if(growth>=1)return{height:models[offset+4].meta.height,stage:4,phase:'original',items:[{index:offset+4,sy:1,sr:1,open:1}]};
  let a=0;while(a<3&&growth>=MARKS[a+1])a++;
  const local=clamp((growth-MARKS[a])/(MARKS[a+1]-MARKS[a]),0,1),e=smooth(local);
  const am=models[offset+a].meta,bm=models[offset+a+1].meta;
- const height=mix(am.height,bm.height,e),radius=mix(am.foliageRadius,bm.foliageRadius,e),w=transitionWindow(crop,a);
+ const height=heights?authoredCropHeight(heights,growth):mix(am.height,bm.height,e),radius=mix(am.foliageRadius,bm.foliageRadius,e),w=transitionWindow(crop,a);
  if(local>w.start&&local<w.end){
   const t=clamp((local-w.start)/(w.end-w.start),0,1);
   return{height,stage:t>=.5?a+1:a,phase:'morph',from:a,to:a+1,t,seconds:w.seconds,items:[],bridge:{index:crop*4+a,t,e}};
@@ -306,7 +311,7 @@ function writeInstance(modelIndex,plant,part){
      entry.y=ground(entity.x,entity.z);entry.x=entity.x;entry.z=entity.z;entry.hasHeight=true;
     }
     const p=renderPlant;p.x=entity.x;p.z=entity.z;p.rotation=entity.rotation;p.crop=entry.crop;p.growth=entity.growth/entry.duration;p.y=entry.y;p.seed=entry.seed;
-    p.blessed=entity.blessing?1:0;p.blessedAt=entity.blessing?.at??0;p.damageAt=entity.blessing?(presentation?.damageAt?.get(entity.id)??-1000):0;
+    p.blessed=awakeningVisible(entity,clock)?1:0;p.blessedAt=awakeningVisibleAt(entity);p.damageAt=entity.blessing?(presentation?.damageAt?.get(entity.id)??-1000):0;
     p.selectable=presentation?.selecting&&!entity.blessing?(presentation.selectedTargetId===entity.id?2:1):0;
     const cached=stageSamples[p.crop];
     const sample=cached?.growth===p.growth?cached.sample:stageSample(p.crop,p.growth);

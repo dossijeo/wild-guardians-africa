@@ -4,9 +4,9 @@ import {CameraBuildingRegistry} from './camera-building-registry.js';
 const ease=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
 // Camera poses are presentation-only and never written to simulation/save data.
 export class LoadingCinematic {
-  constructor(world,diorama,{reducedMotion=false,durations=[.7,.4,1.4,1.5],autoStart=true,onHandoff=()=>{}}={}) {
+  constructor(world,diorama,{reducedMotion=false,durations=[.7,.4,1.4,1.5],autoStart=true,onSky=()=>{},onHandoff=()=>{}}={}) {
     if(diorama.orbit&&!diorama.orbit.settled)throw Error('Loading orbit must settle before cinematic capture');
-    this.world=world;this.diorama=diorama;this.durations=reducedMotion?[.12,.12,.12,.12]:durations;this.time=0;this.done=false;this.armed=autoStart;this.onHandoff=onHandoff;this.handedOff=false;
+    this.world=world;this.diorama=diorama;this.durations=reducedMotion?[.12,.12,.12,.12]:durations;this.time=0;this.done=false;this.armed=autoStart;this.onSky=onSky;this.skyReached=false;this.onHandoff=onHandoff;this.handedOff=false;
     this.gameplay={eye:world.camera.position.clone(),quaternion:world.camera.quaternion.clone(),target:world.controls.target.clone()};
     // Raising above the existing opening eye preserves the same X/Z chunk
     // centre. Never ask the reveal to generate a different resident region.
@@ -34,6 +34,12 @@ export class LoadingCinematic {
         check();
         this.world.camera.position.copy(eye);this.world.camera.quaternion.copy(quaternion);this.world.camera.updateMatrixWorld();
         if(this.world.renderLoadingFrame)await this.world.renderLoadingFrame({nextFrame:frame,afterRender});else this.world.render(0);afterRender();
+        // No world pixels have been handed off yet. Start already verified
+        // 3D representations at their final coverage instead of revealing a
+        // forest of impostors and fading it all in after gameplay begins.
+        // setCoverage only targets entries with a prepared GPU-backed model.
+        for(const adapter of this.world.farVegetation?.adapters??[]){const transitions=adapter.layer.transitions;transitions.advance(transitions.duration);}
+        this.world.farVegetation?.update(0);
         this.restore();this.world.cinematic=true;
         await frame();check();
       }
@@ -45,13 +51,14 @@ export class LoadingCinematic {
     if(this.done||!this.armed)return;
     if(this.world.disposed||this.diorama.disposed)return this.cancel();
     this.time+=Math.max(0,dt);const [a,b,c,d]=this.durations,{world,diorama}=this;
+    if(this.time>=a&&!this.skyReached){this.skyReached=true;this.onSky();}
     diorama.loadingSky?.setGrade(1-ease(this.time/a));
     if(diorama.loadingSky)diorama.mist.uniforms.uLoadingTransition.value=1-ease(this.time/a);
     if(this.time<a){const t=ease(this.time/a);diorama.camera.fov=THREE.MathUtils.lerp(this.loadingFov,world.camera.fov,t);diorama.camera.updateProjectionMatrix();diorama.camera.position.lerpVectors(this.loadingEye,this.loadingSkyEye,t);diorama.camera.quaternion.slerpQuaternions(this.loadingQuaternion,this.skyQuaternion,t);diorama.render(dt,1,{ready:true});return;}
     if(this.time<a+b){diorama.camera.fov=world.camera.fov;diorama.camera.updateProjectionMatrix();diorama.camera.quaternion.copy(this.skyQuaternion);diorama.render(dt,1,{ready:true,skyOnly:true});world.camera.position.copy(this.panorama);world.camera.quaternion.copy(this.skyQuaternion);return;}
     if(!this.handedOff){this.handedOff=true;this.onHandoff();}
-    if(this.time<a+b+c){world.camera.position.copy(this.panorama);world.camera.quaternion.slerpQuaternions(this.skyQuaternion,this.panoramaQuaternion,ease((this.time-a-b)/c));world.render(0);return;}
-    const t=ease((this.time-a-b-c)/d);world.camera.position.lerpVectors(this.panorama,this.gameplay.eye,t);world.camera.quaternion.slerpQuaternions(this.panoramaQuaternion,this.gameplay.quaternion,t);world.render(0);
+    if(this.time<a+b+c){world.camera.position.copy(this.panorama);world.camera.quaternion.slerpQuaternions(this.skyQuaternion,this.panoramaQuaternion,ease((this.time-a-b)/c));world.render(0,Math.max(0,dt));return;}
+    const t=ease((this.time-a-b-c)/d);world.camera.position.lerpVectors(this.panorama,this.gameplay.eye,t);world.camera.quaternion.slerpQuaternions(this.panoramaQuaternion,this.gameplay.quaternion,t);world.render(0,Math.max(0,dt));
     if(this.time>=a+b+c+d){this.restore();this.done=true;this.resolve();}
   }
   restore(){const {world}=this;if(world.disposed)return;world.camera.position.copy(this.gameplay.eye);world.camera.quaternion.copy(this.gameplay.quaternion);world.controls.target.copy(this.gameplay.target);world.camera.updateMatrixWorld();world.cinematic=false;}

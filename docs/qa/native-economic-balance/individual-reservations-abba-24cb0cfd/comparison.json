@@ -1,0 +1,864 @@
+[
+  {
+    "layout": "mono",
+    "count": 1,
+    "budget": 2,
+    "before": {
+      "layout": "mono",
+      "count": 1,
+      "budget": 2,
+      "rngAtSpawn": 906758654,
+      "rngAfter": 951087663,
+      "spent": 2,
+      "remainingBudget": 0,
+      "ended": true,
+      "elapsed": 12.600000000000001,
+      "destroyed": 1,
+      "agriculturalHp": 2,
+      "structuralHp": 0,
+      "simultaneousTargets": 1,
+      "simultaneousWallTargets": 0,
+      "simultaneousCenterTargets": 0,
+      "simultaneousAttacking": 1,
+      "overlapPairs": 0,
+      "minimumBodyMargin": null,
+      "conservativeFinalPoseSegmentFlags": 0,
+      "retirements": [
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        }
+      ],
+      "cpu": {
+        "updates": 126,
+        "totalMs": 14.6681999999999,
+        "p50Ms": 0.015399999999999636,
+        "p95Ms": 0.18470000000002074,
+        "p99Ms": 1.3016000000000076,
+        "maxMs": 7.686900000000037
+      }
+    },
+    "after": {
+      "layout": "mono",
+      "count": 1,
+      "budget": 2,
+      "rngAtSpawn": 906758654,
+      "rngAfter": 951087663,
+      "spent": 2,
+      "remainingBudget": 0,
+      "ended": true,
+      "elapsed": 12.600000000000001,
+      "destroyed": 1,
+      "agriculturalHp": 2,
+      "structuralHp": 0,
+      "simultaneousTargets": 1,
+      "simultaneousWallTargets": 0,
+      "simultaneousCenterTargets": 0,
+      "simultaneousAttacking": 1,
+      "overlapPairs": 0,
+      "minimumBodyMargin": null,
+      "conservativeFinalPoseSegmentFlags": 0,
+      "retirements": [
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        }
+      ],
+      "cpu": {
+        "updates": 126,
+        "totalMs": 16.32700000000017,
+        "p50Ms": 0.019500000000022055,
+        "p95Ms": 0.3311000000000206,
+        "p99Ms": 1.314300000000003,
+        "maxMs": 8.24199999999999
+      }
+    },
+    "cpuMean": {
+      "totalMs": {
+        "before": 15.918499999999966,
+        "after": 14.439100000000025
+      },
+      "p95Ms": {
+        "before": 0.24230000000000018,
+        "after": 0.252200000000002
+      },
+      "p99Ms": {
+        "before": 1.4531999999999812,
+        "after": 1.4508500000000026
+      },
+      "maxMs": {
+        "before": 8.183299999999974,
+        "after": 7.217300000000009
+      }
+    }
+  },
+  {
+    "layout": "mono",
+    "count": 2,
+    "budget": 4,
+    "before": {
+      "layout": "mono",
+      "count": 2,
+      "budget": 4,
+      "rngAtSpawn": 1363271303,
+      "rngAfter": 661917272,
+      "spent": 4,
+      "remainingBudget": 0,
+      "ended": true,
+      "elapsed": 36.5,
+      "destroyed": 1,
+      "agriculturalHp": 2,
+      "structuralHp": 40,
+      "simultaneousTargets": 2,
+      "simultaneousWallTargets": 0,
+      "simultaneousCenterTargets": 1,
+      "simultaneousAttacking": 1,
+      "overlapPairs": 0,
+      "minimumBodyMargin": 1.1000000000000005,
+      "conservativeFinalPoseSegmentFlags": 0,
+      "retirements": [
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        }
+      ],
+      "cpu": {
+        "updates": 365,
+        "totalMs": 15.357399999999416,
+        "p50Ms": 0.012499999999988631,
+        "p95Ms": 0.06979999999998654,
+        "p99Ms": 0.3768000000000029,
+        "maxMs": 6.482899999999972
+      }
+    },
+    "after": {
+      "layout": "mono",
+      "count": 2,
+      "budget": 4,
+      "rngAtSpawn": 1363271303,
+      "rngAfter": 661917272,
+      "spent": 4,
+      "remainingBudget": 0,
+      "ended": true,
+      "elapsed": 15.8,
+      "destroyed": 2,
+      "agriculturalHp": 4,
+      "structuralHp": 0,
+      "simultaneousTargets": 2,
+      "simultaneousWallTargets": 0,
+      "simultaneousCenterTargets": 0,
+      "simultaneousAttacking": 2,
+      "overlapPairs": 0,
+      "minimumBodyMargin": 0.8219762272139945,
+      "conservativeFinalPoseSegmentFlags": 0,
+      "retirements": [
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        }
+      ],
+      "cpu": {
+        "updates": 158,
+        "totalMs": 13.832200000000142,
+        "p50Ms": 0.03280000000000882,
+        "p95Ms": 0.151299999999992,
+        "p99Ms": 0.3965000000000032,
+        "maxMs": 7.261400000000009
+      }
+    },
+    "cpuMean": {
+      "totalMs": {
+        "before": 16.681950000000313,
+        "after": 11.741650000000092
+      },
+      "p95Ms": {
+        "before": 0.09114999999997053,
+        "after": 0.12040000000000362
+      },
+      "p99Ms": {
+        "before": 0.460049999999967,
+        "after": 0.6787499999999937
+      },
+      "maxMs": {
+        "before": 6.218599999999981,
+        "after": 5.840699999999998
+      }
+    }
+  },
+  {
+    "layout": "mono",
+    "count": 5,
+    "budget": 14,
+    "before": {
+      "layout": "mono",
+      "count": 5,
+      "budget": 14,
+      "rngAtSpawn": 4219306216,
+      "rngAfter": 3128492279,
+      "spent": 14,
+      "remainingBudget": 0,
+      "ended": true,
+      "elapsed": 62.1,
+      "destroyed": 5,
+      "agriculturalHp": 10,
+      "structuralHp": 80,
+      "simultaneousTargets": 2,
+      "simultaneousWallTargets": 0,
+      "simultaneousCenterTargets": 1,
+      "simultaneousAttacking": 2,
+      "overlapPairs": 0,
+      "minimumBodyMargin": 0.006994341960103512,
+      "conservativeFinalPoseSegmentFlags": 0,
+      "retirements": [
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        }
+      ],
+      "cpu": {
+        "updates": 621,
+        "totalMs": 95.97580000000033,
+        "p50Ms": 0.02539999999999054,
+        "p95Ms": 0.9827999999999975,
+        "p99Ms": 2.570699999999988,
+        "maxMs": 6.113800000000026
+      }
+    },
+    "after": {
+      "layout": "mono",
+      "count": 5,
+      "budget": 14,
+      "rngAtSpawn": 4219306216,
+      "rngAfter": 3128492279,
+      "spent": 14,
+      "remainingBudget": 0,
+      "ended": true,
+      "elapsed": 29,
+      "destroyed": 7,
+      "agriculturalHp": 14,
+      "structuralHp": 0,
+      "simultaneousTargets": 5,
+      "simultaneousWallTargets": 0,
+      "simultaneousCenterTargets": 0,
+      "simultaneousAttacking": 4,
+      "overlapPairs": 0,
+      "minimumBodyMargin": 0.09896917684665851,
+      "conservativeFinalPoseSegmentFlags": 0,
+      "retirements": [
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        }
+      ],
+      "cpu": {
+        "updates": 290,
+        "totalMs": 80.4815999999997,
+        "p50Ms": 0.030100000000004457,
+        "p95Ms": 1.0859000000000094,
+        "p99Ms": 1.951599999999985,
+        "maxMs": 14.638800000000003
+      }
+    },
+    "cpuMean": {
+      "totalMs": {
+        "before": 101.23915000000082,
+        "after": 74.90614999999993
+      },
+      "p95Ms": {
+        "before": 0.9627499999999714,
+        "after": 1.0732
+      },
+      "p99Ms": {
+        "before": 2.75120000000004,
+        "after": 1.7976499999999902
+      },
+      "maxMs": {
+        "before": 6.132800000000003,
+        "after": 13.120900000000006
+      }
+    }
+  },
+  {
+    "layout": "mono",
+    "count": 12,
+    "budget": 32,
+    "before": {
+      "layout": "mono",
+      "count": 12,
+      "budget": 32,
+      "rngAtSpawn": 1437346842,
+      "rngAfter": 3533332002,
+      "spent": 32,
+      "remainingBudget": 0,
+      "ended": true,
+      "elapsed": 139.6,
+      "destroyed": 9,
+      "agriculturalHp": 20,
+      "structuralHp": 240,
+      "simultaneousTargets": 2,
+      "simultaneousWallTargets": 0,
+      "simultaneousCenterTargets": 1,
+      "simultaneousAttacking": 2,
+      "overlapPairs": 0,
+      "minimumBodyMargin": 0.004967937952983892,
+      "conservativeFinalPoseSegmentFlags": 0,
+      "retirements": [
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        }
+      ],
+      "cpu": {
+        "updates": 1396,
+        "totalMs": 256.4365999999975,
+        "p50Ms": 0.05700000000001637,
+        "p95Ms": 1.1902000000000044,
+        "p99Ms": 2.008699999999976,
+        "maxMs": 6.510899999999992
+      }
+    },
+    "after": {
+      "layout": "mono",
+      "count": 12,
+      "budget": 32,
+      "rngAtSpawn": 1437346842,
+      "rngAfter": 3533332002,
+      "spent": 32,
+      "remainingBudget": 0,
+      "ended": true,
+      "elapsed": 37.800000000000004,
+      "destroyed": 14,
+      "agriculturalHp": 32,
+      "structuralHp": 0,
+      "simultaneousTargets": 12,
+      "simultaneousWallTargets": 0,
+      "simultaneousCenterTargets": 0,
+      "simultaneousAttacking": 7,
+      "overlapPairs": 0,
+      "minimumBodyMargin": 0.0022999632881410825,
+      "conservativeFinalPoseSegmentFlags": 3,
+      "retirements": [
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        }
+      ],
+      "cpu": {
+        "updates": 378,
+        "totalMs": 386.0456000000002,
+        "p50Ms": 0.1711999999999989,
+        "p95Ms": 4.564199999999971,
+        "p99Ms": 6.849099999999964,
+        "maxMs": 28.65960000000001
+      }
+    },
+    "cpuMean": {
+      "totalMs": {
+        "before": 259.1033999999997,
+        "after": 354.8070000000007
+      },
+      "p95Ms": {
+        "before": 1.1945499999999925,
+        "after": 4.0516999999999825
+      },
+      "p99Ms": {
+        "before": 1.9688500000000317,
+        "after": 6.804849999999988
+      },
+      "maxMs": {
+        "before": 7.025649999999985,
+        "after": 27.603700000000018
+      }
+    }
+  },
+  {
+    "layout": "closed-walls",
+    "count": 12,
+    "budget": 32,
+    "before": {
+      "layout": "closed-walls",
+      "count": 12,
+      "budget": 32,
+      "rngAtSpawn": 1437346842,
+      "rngAfter": 3533332002,
+      "spent": 32,
+      "remainingBudget": 0,
+      "ended": true,
+      "elapsed": 100.7,
+      "destroyed": 0,
+      "agriculturalHp": 0,
+      "structuralHp": 640,
+      "simultaneousTargets": 2,
+      "simultaneousWallTargets": 1,
+      "simultaneousCenterTargets": 1,
+      "simultaneousAttacking": 2,
+      "overlapPairs": 0,
+      "minimumBodyMargin": 0.005569182924113125,
+      "conservativeFinalPoseSegmentFlags": 1,
+      "retirements": [
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        }
+      ],
+      "cpu": {
+        "updates": 1007,
+        "totalMs": 54769.630100000046,
+        "p50Ms": 0.1309999999939464,
+        "p95Ms": 14.265800000001036,
+        "p99Ms": 21.70270000000164,
+        "maxMs": 13180.3932
+      }
+    },
+    "after": {
+      "layout": "closed-walls",
+      "count": 12,
+      "budget": 32,
+      "rngAtSpawn": 1437346842,
+      "rngAfter": 3533332002,
+      "spent": 32,
+      "remainingBudget": 0,
+      "ended": true,
+      "elapsed": 35.4,
+      "destroyed": 0,
+      "agriculturalHp": 0,
+      "structuralHp": 640,
+      "simultaneousTargets": 12,
+      "simultaneousWallTargets": 12,
+      "simultaneousCenterTargets": 0,
+      "simultaneousAttacking": 9,
+      "overlapPairs": 0,
+      "minimumBodyMargin": 0.0009006147475898452,
+      "conservativeFinalPoseSegmentFlags": 1,
+      "retirements": [
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        }
+      ],
+      "cpu": {
+        "updates": 354,
+        "totalMs": 877.0661000000009,
+        "p50Ms": 0.1773000000000593,
+        "p95Ms": 10.378500000000031,
+        "p99Ms": 38.671100000000024,
+        "maxMs": 248.96370000000002
+      }
+    },
+    "cpuMean": {
+      "totalMs": {
+        "before": 51696.60934999997,
+        "after": 825.3412999999989
+      },
+      "p95Ms": {
+        "before": 13.621800000000803,
+        "after": 9.31110000000001
+      },
+      "p99Ms": {
+        "before": 21.28545000000122,
+        "after": 38.19710000000009
+      },
+      "maxMs": {
+        "before": 12784.0987,
+        "after": 242.942
+      }
+    }
+  },
+  {
+    "layout": "center-only",
+    "count": 12,
+    "budget": 32,
+    "before": {
+      "layout": "center-only",
+      "count": 12,
+      "budget": 32,
+      "rngAtSpawn": 1437346842,
+      "rngAfter": 3052630937,
+      "spent": 24,
+      "remainingBudget": 8,
+      "ended": true,
+      "elapsed": 276.3,
+      "destroyed": 0,
+      "agriculturalHp": 0,
+      "structuralHp": 480,
+      "simultaneousTargets": 1,
+      "simultaneousWallTargets": 0,
+      "simultaneousCenterTargets": 1,
+      "simultaneousAttacking": 1,
+      "overlapPairs": 0,
+      "minimumBodyMargin": 0.002824557909127723,
+      "conservativeFinalPoseSegmentFlags": 0,
+      "retirements": [
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "no-reachable-unleased-target",
+          "remainingHits": 3
+        },
+        {
+          "reason": "no-reachable-unleased-target",
+          "remainingHits": 3
+        },
+        {
+          "reason": "no-reachable-unleased-target",
+          "remainingHits": 2
+        }
+      ],
+      "cpu": {
+        "updates": 2763,
+        "totalMs": 136.4863000000696,
+        "p50Ms": 0.03250000000116415,
+        "p95Ms": 0.10930000000371365,
+        "p99Ms": 0.3076999999975669,
+        "maxMs": 1.3331000000034692
+      }
+    },
+    "after": {
+      "layout": "center-only",
+      "count": 12,
+      "budget": 32,
+      "rngAtSpawn": 1437346842,
+      "rngAfter": 2877814137,
+      "spent": 25,
+      "remainingBudget": 7,
+      "ended": true,
+      "elapsed": 67,
+      "destroyed": 0,
+      "agriculturalHp": 0,
+      "structuralHp": 480,
+      "simultaneousTargets": 10,
+      "simultaneousWallTargets": 0,
+      "simultaneousCenterTargets": 10,
+      "simultaneousAttacking": 4,
+      "overlapPairs": 0,
+      "minimumBodyMargin": 0.0034028790588327418,
+      "conservativeFinalPoseSegmentFlags": 16,
+      "retirements": [
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "budget-exhausted",
+          "remainingHits": 0
+        },
+        {
+          "reason": "no-reachable-unleased-target",
+          "remainingHits": 2
+        },
+        {
+          "reason": "no-reachable-unleased-target",
+          "remainingHits": 3
+        },
+        {
+          "reason": "no-reachable-unleased-target",
+          "remainingHits": 1
+        },
+        {
+          "reason": "no-reachable-unleased-target",
+          "remainingHits": 1
+        }
+      ],
+      "cpu": {
+        "updates": 670,
+        "totalMs": 616.6099999999994,
+        "p50Ms": 0.37530000000015207,
+        "p95Ms": 3.0974999999998545,
+        "p99Ms": 6.129599999999982,
+        "maxMs": 61.165899999999965
+      }
+    },
+    "cpuMean": {
+      "totalMs": {
+        "before": 137.03049999988434,
+        "after": 595.4943500000012
+      },
+      "p95Ms": {
+        "before": 0.10535000000163564,
+        "after": 2.994049999999902
+      },
+      "p99Ms": {
+        "before": 0.30654999999751453,
+        "after": 5.969900000000052
+      },
+      "maxMs": {
+        "before": 2.3809500000024855,
+        "after": 62.4156999999999
+      }
+    }
+  }
+]

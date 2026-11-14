@@ -1,0 +1,77 @@
+# Smooth release of initial support penetration
+
+The negative native capture belongs to the FIRST recovery, before the second
+hit: recovering at 3005.27993, second falling at 3006.17919. Its lowest vertex
+30255 is weighted mostly to LeftLeg/LeftUpLeg. Therefore the later recovery-hit
+collider refit is not a demonstrated cause or fix of this initial penetration.
+
+Authored recovery retained incoming negative support clearance for the entire
+0.65 s pose blend. It now smoothly moves that support target to +0.01 m over
+150 ms, only when entry clearance is negative. Time zero retains the exact
+incoming pose and the smooth curve begins at zero velocity. Already-supported
+entries keep their original timing. Bone rotations and lengths are unchanged;
+this neither performs a full collider refit nor adds full-skin per-frame work.
+
+The regression fails on the old code and passes with this change. Seven tests
+pass including all five species' inclined-terrain support cases and collider
+refit equivalence.
+
+Native WorldScene/Game.tick repeated-hit receipt: `rhino-entry-settle.json`.
+Both knockdowns finish, errors are empty, maximum visible Guardians is one.
+Negative full-skin samples are still present at entry (age 0, -0.013603 m) and
+age 0.133275 (-0.003927 m). Later sampled recovery positions are nonnegative.
+This explicitly does NOT eliminate the incoming physical-pose penetration.
+
+`rhino-entry-settle.mp4` records the real cycle. Its 1 fps contact sheet was
+inspected: both falls, the interrupted rise, subsequent rise and disappearance
+are visible. The wide camera and grass limit millimetre-scale contact inspection;
+the sheet does not validate every transition frame or frame pacing. No measured
+browser performance claim is made. Incoming collider/skin fit and the separate
+costly recovery-hit refit remain open.
+
+## Cross-system follow-up
+
+At d8eff70e3, all 14 tests in authored-recovery-solids, baked-beast-fall,
+baked-solid-contacts and recovery-entry-clearance pass without skips. Full TAP
+is preserved in `entry-solid-tests.tap.gz`. This checks the five species beside
+walls/corners and the baked fallback affected by the shared recovery class.
+Workers do not use AuthoredBeastRecovery, so this change does not alter their
+recovery implementation. Production build passes in 16.79 seconds with existing
+large-chunk and mixed-import warnings.
+
+`hyena-entry-settle.json` and its MP4 show another actual native repeated-hit
+cycle: both impacts and final recovery complete, errors are empty, maximum
+Guardians is one, and recorded full-skin recovery samples have no negative
+clearance. The 1 fps sheet was inspected and shows the fall, repeated cast,
+second fall and resumed upright pose. Wide framing/grass limit detailed contact
+judgment. Audio is not part of the recording. Tests/build overlapped with the
+browser session, so this video and its timings are not performance evidence.
+These results do not establish a universal absence of initial penetration.
+
+## Lion, warthog and buffalo native follow-up
+
+Three consecutive fixture runs at f2b6ec29f used spatial-wasm/Game.tick, fixed
+wide framing and the reversible ground-cover hide control. Each resets QA
+cooldown/durability, so these are interruption tests, not balance validation.
+All three complete the second knockdown and final recovery with no errors and
+maximum one Guardian. Audio was not enabled. Full videos and receipts are named
+`lion-entry-settle`, `warthog-entry-settle`, and `buffalo-entry-settle`.
+
+| Species | Full-skin recovery samples | Lowest clearance | Contact result |
+| --- | ---: | ---: | --- |
+| Lion | 46 | +0.006938 m | No negative sampled clearance |
+| Warthog | 51 | -0.033419 m | Defect remains |
+| Buffalo | 42 | +0.009329 m | No negative sampled clearance |
+
+Warthog's deepest sample occurs at recovery age 0.482435 s, vertex 5264,
+weighted entirely to Head. Additional negatives occur around 0.58–0.65 s and
+a near-zero negative at 0.99938 s. This is later than initial support settling;
+do not attribute it to the initial-entry fix or claim it is corrected. Next
+investigation should capture that pose and compare head support samples with
+the exact skin minimum. The recording shows a long tilted physical phase before
+recovery; its naturalness remains a visual concern despite eventual completion.
+
+All 1 fps sheets were inspected. The warthog overview covers only the first
+20 seconds; `warthog-entry-final.jpg` additionally samples its last six seconds
+at 2 fps and shows it upright again. Framing is still too wide for fine skin
+contact acceptance. Ground cover was restored before closing the QA tab.

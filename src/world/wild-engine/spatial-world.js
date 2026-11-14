@@ -15,6 +15,9 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     // game never exits the spatial module. Older binaries omit the import.
     wasi_snapshot_preview1:{proc_exit(code){throw Error(`Wild Engine exited: ${code}`);}}
   }).exports;
+  // Newer standalone Emscripten reactors expose explicit C++ constructors.
+  // Threaded runtime exports are initialized by their factory already.
+  if(!runtimeExports)wasm._initialize?.();
   let chunk=null,navigationBuilt=false,chunks=[],generated=false,chunkRevision=0;
   let workerPortalRoutes=[];
   let diagnoseConnectivity=false;
@@ -77,6 +80,7 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     if(canyonOpenRight&&name!=='canyons')throw RangeError('One-wall variant requires canyons');
     if((mangroveChannels||mangroveNetwork)&&name!=='mangrove')throw RangeError('Channel variant requires mangrove');
     const count=wasm.spatial_generate_biome(seed>>>0,mangroveNetwork?8:mangroveChannels?7:canyonOpenRight?6:SPATIAL_BIOME_CODES[name],cx|0,cz|0);
+    if(count<0)throw Error('Native world generation rejected; retire the authority before replacing its world');
     chunk={cx:cx|0,cz:cz|0,count};chunks=[[cx|0,cz|0]];navigationBuilt=false;generated=true;
     workerPortalRoutes=[];chunkRevision++;
     return chunk;
@@ -120,8 +124,11 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     // Preserve the distinction when a resident chunk has zero props.
     return result>0?result-1:-1;
   }
-  function removeChunk(cx,cz){
-    const removed=wasm.spatial_remove_chunk(cx|0,cz|0);
+  function removeChunk(cx,cz,releaseOnly=false){
+    const remove=releaseOnly&&wasm.spatial_release_chunk?wasm.spatial_release_chunk:wasm.spatial_remove_chunk;
+    const removed=remove(cx|0,cz|0);
+    if(removed===-2)return 0; // Native body/data pin: no publication was removed.
+    if(removed<0)throw Error('Native chunk removal failed');
     if(removed){
       chunkRevision++;
       chunks=chunks.filter(([x,z])=>x!==(cx|0)||z!==(cz|0));
@@ -132,15 +139,17 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     }
     return removed;
   }
-  function removeChunks(coordinates){
+  function removeChunks(coordinates,releaseOnly=false){
     if(!Array.isArray(coordinates)||coordinates.length>4096||coordinates.some(p=>!Array.isArray(p)||p.length!==2||p.some(n=>!Number.isInteger(n)||n<-2147483648||n>2147483647)))throw TypeError('Invalid chunk removal batch');
     if(!coordinates.length)return 0;
-    if(!wasm.spatial_remove_chunks)return coordinates.reduce((count,[x,z])=>count+removeChunk(x,z),0);
+    if(!wasm.spatial_remove_chunks)return coordinates.reduce((count,[x,z])=>count+removeChunk(x,z,releaseOnly),0);
     const pointer=wasm.spatial_remove_chunks_ptr(coordinates.length);
     if(!pointer)throw Error('Could not allocate chunk removal batch');
     const data=new Int32Array(wasm.memory.buffer,pointer,coordinates.length*2);
     coordinates.forEach((p,i)=>data.set(p,i*2));
-    const removed=wasm.spatial_remove_chunks(coordinates.length);
+    const remove=releaseOnly&&wasm.spatial_release_chunks?wasm.spatial_release_chunks:wasm.spatial_remove_chunks;
+    const removed=remove(coordinates.length);
+    if(removed===-2)return 0; // The entire batch remains resident, not a partial eviction.
     if(removed<0)throw Error('Native chunk removal failed');
     if(removed){
       const keys=new Set(coordinates.map(([x,z])=>x+','+z));
@@ -151,12 +160,99 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     }
     return removed;
   }
+  // This is the already-maintained native publication list, not the set of
+  // meshes installed by a renderer. Pending/cancelled preparation has not
+  // been published and therefore must not appear in the transfer.
+  function captureResidentChunks(){
+    if(!generated)throw Error('Generate the world before capturing residency');
+    if(wasm.spatial_chunk_count()!==chunks.length||new Set(chunks.map(([x,z])=>`${x},${z}`)).size!==chunks.length)throw Error('Native chunk residency mirror mismatch');
+    return {revision:chunkRevision,keys:chunks.map(([x,z])=>`${x},${z}`),selected:chunk?{cx:chunk.cx,cz:chunk.cz}:null};
+  }
+  // Consume the exact native commit result. This only updates the existing
+  // publication mirror; it never plans, tests a route or chooses residency.
+  function adoptNativeResidencyCommit(kind,values){
+    if(!generated||!Array.isArray(values)||values.some(v=>!Number.isInteger(v)))throw Error('Invalid native residency commit result');
+    if(kind===6||kind===11){
+      if(values.length!==3)throw Error('Invalid native chunk publication result');
+      const [cx,cz,count]=values;
+      if(count<0||chunks.some(([x,z])=>x===cx&&z===cz)||wasm.spatial_has_chunk(cx,cz)!==1||wasm.spatial_chunk_count()!==chunks.length+1)
+        throw Error('Native chunk publication mirror mismatch');
+      chunks.push([cx,cz]);chunk={cx,cz,count};chunkRevision++;return;
+    }
+    if(kind!==7||!values.length||values.length%2)throw Error('Invalid native chunk removal result');
+    const keys=new Set();for(let i=0;i<values.length;i+=2){const cx=values[i],cz=values[i+1],key=`${cx},${cz}`;
+      if(keys.has(key)||!chunks.some(([x,z])=>x===cx&&z===cz)||wasm.spatial_has_chunk(cx,cz)!==0)
+        throw Error('Native chunk removal mirror mismatch');keys.add(key);
+    }
+    if(wasm.spatial_chunk_count()!==chunks.length-keys.size)throw Error('Native chunk removal count mismatch');
+    chunks=chunks.filter(([x,z])=>!keys.has(`${x},${z}`));chunkRevision+=keys.size;
+    if(chunk&&keys.has(`${chunk.cx},${chunk.cz}`)){const last=chunks.at(-1);chunk=last?{cx:last[0],cz:last[1],count:wasm.spatial_prop_count()}:null;}
+  }
+  function copiedNativeResourcePayload(index,cx,cz,bufferPtr,bufferBytes){
+    const bytes=field=>bufferBytes(index,field),ptr=field=>bufferPtr(index,field);
+    if(bytes(0)!==49*49*4||bytes(1)!==49*49*12||bytes(2)!==35*35*4||bytes(5)<0||bytes(5)%36||bytes(6)<0||bytes(6)%40)throw Error('Invalid prepared native chunk buffers');
+    const facade={memory:wasm.memory,spatial_heights_ptr:()=>ptr(0),spatial_colors_ptr:()=>ptr(1),spatial_ground_mask_ptr:()=>ptr(2),
+      spatial_water_triangles_ptr:()=>ptr(5),spatial_water_vertex_count:()=>bytes(5)/12,spatial_prop_count:()=>bytes(6)/40,spatial_props_ptr:()=>ptr(6)};
+    return spatialChunkPayload(facade,cx,cz);
+  }
+  function captureNativeWorldResources({nativeSession,ticket,effectiveTime}={}){
+    if(!generated||wasm.spatial_world_resource_version?.()!==1)throw Error('Rebuild native world resource projection');
+    const status=wasm.spatial_world_resource_snapshot();
+    if(status!==1)throw Error(status<0?'Native world resource projection is stale':'Native world resource projection is unavailable');
+    const h=Array.from(new Float64Array(wasm.memory.buffer,wasm.spatial_world_resource_header_ptr(),9)),count=h[5];
+    if(h[0]!==1||h[1]!==nativeSession||h[2]!==ticket||h[3]!==effectiveTime||!Number.isSafeInteger(h[4])||h[4]<2||h[4]>11||
+       !Number.isSafeInteger(count)||count<0||count>32768)throw Error('Native resource projection does not match the committed proposal');
+    // Selection can grow WASM memory. Copy the journal before selecting any
+    // chunk, then copy the canonical payloads using the existing export path.
+    const rows=Array.from(new Int32Array(wasm.memory.buffer,wasm.spatial_world_resource_changes_ptr(),count*3)),
+      selected=chunk?{cx:chunk.cx,cz:chunk.cz}:null,upserts=[],removed=[],keys=new Set();
+    const prepared=wasm.spatial_world_resource_prepared_snapshot?.(nativeSession,ticket)===1;let selectedChanged=false;
+    try{
+      for(let i=0;i<rows.length;i+=3){
+        const [operation,cx,cz]=rows.slice(i,i+3),key=`${cx},${cz}`;
+        if(keys.has(key)||![1,2].includes(operation))throw Error('Invalid native resource projection journal');keys.add(key);
+        if(operation===2){if(wasm.spatial_has_chunk(cx,cz)!==0)throw Error('Native removed resource is still resident');removed.push(Object.freeze({cx,cz}));}
+        else if(prepared)upserts.push(copiedNativeResourcePayload(i/3,cx,cz,wasm.spatial_world_resource_buffer_ptr,wasm.spatial_world_resource_buffer_bytes));
+        else {selectedChanged=true;if(selectChunk(cx,cz)<0)throw Error('Native resource chunk disappeared');upserts.push(chunkPayload());}
+      }
+    }finally{if(selectedChanged&&selected&&selectChunk(selected.cx,selected.cz)<0)throw Error('Could not restore native resource selection');}
+    return Object.freeze({version:1,nativeSession,ticket,effectiveTime,kind:h[4],chunks:Object.freeze(upserts),removed:Object.freeze(removed)});
+  }
+  // Owned copies of the native proposal's canonical scratch outputs. Reading
+  // these buffers never selects/publishes a live chunk or advances any clock.
+  function captureNativeWorldProposalResources({nativeSession,ticket,effectiveTime}={}){
+    if(!generated||wasm.spatial_world_proposal_resource_version?.()!==1)throw Error('Rebuild native proposal resource projection');
+    if(wasm.spatial_world_proposal_resource_snapshot(nativeSession,ticket)!==1)throw Error('Native proposal resources are unavailable or stale');
+    const h=Array.from(new Float64Array(wasm.memory.buffer,wasm.spatial_world_proposal_resource_header_ptr(),9)),count=h[5];
+    if(h[0]!==1||h[1]!==nativeSession||h[2]!==ticket||h[3]!==effectiveTime||!Number.isSafeInteger(h[4])||h[4]<6||h[4]>11||!Number.isSafeInteger(count)||count<0||count>32768)throw Error('Native proposal resource identity mismatch');
+    const rows=Array.from(new Int32Array(wasm.memory.buffer,wasm.spatial_world_proposal_resource_changes_ptr(),count*3)),chunks=[],removed=[],seen=new Set();
+    for(let index=0;index<count;index++){
+      const [operation,cx,cz]=rows.slice(index*3,index*3+3),key=cx+','+cz;
+      if(seen.has(key)||![1,2].includes(operation))throw Error('Invalid native proposal resource journal');seen.add(key);
+      if(operation===2){removed.push(Object.freeze({cx,cz}));continue;}
+      chunks.push(copiedNativeResourcePayload(index,cx,cz,wasm.spatial_world_proposal_resource_buffer_ptr,wasm.spatial_world_proposal_resource_buffer_bytes));
+    }
+    return Object.freeze({version:1,phase:'proposal',nativeSession,ticket,effectiveTime,kind:h[4],chunks:Object.freeze(chunks),removed:Object.freeze(removed)});
+  }
   function props(){
     return spatialProps(wasm);
   }
   function instances(){
     if(!chunk)throw Error('Generate a chunk before reading prop instances');
     return spatialInstances(wasm,chunk.cx,chunk.cz);
+  }
+  // Regional presentation can request one bounded chunk without publishing it
+  // to navigation. Combine results only when their native revisions match.
+  function queryFarVisualChunk(cx,cz,{slots=[0,1,2,3],expectedRevision=null}={}){
+    if(!generated)throw Error('Generate the world before querying far props');
+    if(!Number.isSafeInteger(cx)||!Number.isSafeInteger(cz)||Math.abs(cx)>1000000||Math.abs(cz)>1000000||!Array.isArray(slots)||!slots.length||slots.some(slot=>!Number.isInteger(slot)||slot<0||slot>=20)||new Set(slots).size!==slots.length||expectedRevision!==null&&(!Number.isSafeInteger(expectedRevision)||expectedRevision<1))throw TypeError('Invalid far visual query');
+    if(typeof wasm.spatial_far_query_chunk!=='function'||typeof wasm.spatial_far_world_revision!=='function')throw Error('Far visual query unavailable in this Wild Engine build');
+    const before=wasm.spatial_far_world_revision();if(!Number.isSafeInteger(before)||before<1)throw Error('Invalid far visual world revision');if(expectedRevision!==null&&expectedRevision!==before)return null;
+    const mask=slots.reduce((value,slot)=>value|(1<<slot),0),count=wasm.spatial_far_query_chunk(cx,cz,mask);
+    if(!Number.isSafeInteger(count)||count<0)throw Error('Far visual native query failed');
+    const revision=wasm.spatial_far_query_revision();if(revision!==before||wasm.spatial_far_world_revision()!==before)throw Error('Far visual world changed during query');
+    const props=spatialProps(wasm,count,wasm.spatial_far_query_ptr());
+    return {cx,cz,revision,instances:spatialInstances(wasm,cx,cz,props)};
   }
   function chunkPayload(){
     if(!chunk)throw Error('Generate a chunk before reading its render payload');
@@ -325,7 +421,13 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     }
     wasm.lazy_commit_portals();
   }
-  return {wasm,preparation,generate,addChunk,selectChunk,removeChunk,removeChunks,currentChunk:()=>chunk,
+  return {wasm,preparation,generate,addChunk,selectChunk,removeChunk,removeChunks,adoptNativeResidencyCommit,captureNativeWorldResources,captureNativeWorldProposalResources,
+    releaseChunk:(cx,cz)=>removeChunk(cx,cz,true),releaseChunks:coordinates=>removeChunks(coordinates,true),
+    hasResidentChunk:(cx,cz)=>wasm.spatial_has_chunk?wasm.spatial_has_chunk(cx|0,cz|0)===1:
+      chunks.some(([x,z])=>x===(cx|0)&&z===(cz|0)),
+    residencyPinRevision:()=>{const revision=wasm.nav_intent_residency_pin_revision?.()??0;
+      if(!Number.isSafeInteger(revision)||revision<0)throw Error('Invalid native residency pin revision');return revision;},
+    currentChunk:()=>chunk,captureResidentChunks,queryFarVisualChunk,farVisualRevision:()=>{const revision=wasm.spatial_far_world_revision?.();if(!Number.isSafeInteger(revision)||revision<1)throw Error('Far visual revision unavailable');return revision;},
     enableConnectivityDiagnostics:()=>{diagnoseConnectivity=true;},
     connectivityDiagnostics:()=>structuredClone(connectivityReasons),
     enclosureAt:point=>navigationBuilt?wasm.lazy_enclosure(point.x,point.z):-1,
@@ -461,11 +563,13 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     },
     setSettlement:(x,z,hx,hz)=>{
       if(!generated)throw Error('Generate the world before placing a settlement');
-      return wasm.spatial_set_settlement(x,z,hx,hz);
+      const level=wasm.spatial_set_settlement(x,z,hx,hz);
+      if(!Number.isFinite(level))throw Error('Native terrain mutation rejected');return level;
     },
     addSettlement:(x,z,hx,hz)=>{
       if(!generated)throw Error('Generate the world before placing a settlement');
-      return wasm.spatial_add_settlement(x,z,hx,hz);
+      const level=wasm.spatial_add_settlement(x,z,hx,hz);
+      if(!Number.isFinite(level))throw Error('Native terrain mutation rejected');return level;
     },
     buildNavigation:(radius,worker)=>{
       if(!chunk)throw Error('Generate a chunk before building its navigation');

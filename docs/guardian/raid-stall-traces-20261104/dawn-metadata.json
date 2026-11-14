@@ -1,0 +1,2217 @@
+{
+  "version": {
+    "protocolVersion": "1.3",
+    "product": "Edg/156.0.4314.58",
+    "revision": "@7806b68d20d1c1273d5b07b4f4de18e8f5852581",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0",
+    "jsVersion": "15.6.12.10"
+  },
+  "system": {
+    "gpu": {
+      "devices": [
+        {
+          "vendorId": 4318,
+          "deviceId": 8580,
+          "subSysId": 291977282,
+          "revision": 161,
+          "vendorString": "",
+          "deviceString": "NVIDIA GeForce GTX 1660",
+          "driverVendor": "NVIDIA",
+          "driverVersion": "32.0.15.8129"
+        },
+        {
+          "vendorId": 5140,
+          "deviceId": 140,
+          "subSysId": 0,
+          "revision": 0,
+          "vendorString": "",
+          "deviceString": "Microsoft Basic Render Driver",
+          "driverVendor": "",
+          "driverVersion": "10.0.19041.5794"
+        }
+      ],
+      "auxAttributes": {
+        "amdSwitchable": false,
+        "bgra8OverlaySupport": "SOFTWARE",
+        "canSupportThreadedTextureMailbox": false,
+        "directComposition": true,
+        "directMLFeatureLevel": "Not supported",
+        "directRenderingVersion": "",
+        "displayType": "ANGLE_D3D11",
+        "dx12FeatureLevel": "Not supported",
+        "glExtensions": "GL_AMD_performance_monitor GL_ANGLE_base_vertex_base_instance_shader_builtin GL_ANGLE_blob_cache GL_ANGLE_client_arrays GL_ANGLE_clip_cull_distance GL_ANGLE_copy_texture_3d GL_ANGLE_depth_texture GL_ANGLE_framebuffer_blit GL_ANGLE_framebuffer_multisample GL_ANGLE_get_serialized_context_string GL_ANGLE_get_tex_level_parameter GL_ANGLE_instanced_arrays GL_ANGLE_memory_size GL_ANGLE_multiview_multisample GL_ANGLE_pack_reverse_row_order GL_ANGLE_polygon_mode GL_ANGLE_program_binary_readiness_query GL_ANGLE_program_cache_control GL_ANGLE_provoking_vertex GL_ANGLE_renderability_validation GL_ANGLE_request_extension GL_ANGLE_robust_client_memory GL_ANGLE_shader_pixel_local_storage GL_ANGLE_shader_pixel_local_storage_coherent GL_ANGLE_stencil_texturing GL_ANGLE_texture_compression_dxt3 GL_ANGLE_texture_compression_dxt5 GL_ANGLE_texture_multisample GL_ANGLE_texture_usage GL_ANGLE_translated_shader_source GL_APPLE_clip_distance GL_ARM_rgba8 GL_CHROMIUM_bind_generates_resource GL_CHROMIUM_bind_uniform_location GL_CHROMIUM_copy_compressed_texture GL_CHROMIUM_copy_texture GL_CHROMIUM_lose_context GL_EXT_EGL_image_external_wrap_modes GL_EXT_base_instance GL_EXT_blend_func_extended GL_EXT_blend_minmax GL_EXT_clip_control GL_EXT_clip_cull_distance GL_EXT_color_buffer_float GL_EXT_color_buffer_half_float GL_EXT_conservative_depth GL_EXT_debug_label GL_EXT_debug_marker GL_EXT_depth_clamp GL_EXT_discard_framebuffer GL_EXT_disjoint_timer_query GL_EXT_draw_buffers GL_EXT_draw_buffers_indexed GL_EXT_draw_elements_base_vertex GL_EXT_float_blend GL_EXT_frag_depth GL_EXT_instanced_arrays GL_EXT_map_buffer_range GL_EXT_occlusion_query_boolean GL_EXT_polygon_offset_clamp GL_EXT_read_format_bgra GL_EXT_render_snorm GL_EXT_robustness GL_EXT_sRGB GL_EXT_shader_texture_lod GL_EXT_texture_border_clamp GL_EXT_texture_compression_bptc GL_EXT_texture_compression_dxt1 GL_EXT_texture_compression_rgtc GL_EXT_texture_compression_s3tc_srgb GL_EXT_texture_filter_anisotropic GL_EXT_texture_format_BGRA8888 GL_EXT_texture_mirror_clamp_to_edge GL_EXT_texture_norm16 GL_EXT_texture_rg GL_EXT_texture_storage GL_EXT_texture_type_2_10_10_10_REV GL_EXT_unpack_subimage GL_KHR_debug GL_KHR_parallel_shader_compile GL_KHR_robustness GL_NV_EGL_stream_consumer_external GL_NV_fence GL_NV_framebuffer_blit GL_NV_pack_subimage GL_NV_pixel_buffer_object GL_NV_shader_noperspective_interpolation GL_OES_EGL_image GL_OES_EGL_image_external GL_OES_EGL_image_external_essl3 GL_OES_depth24 GL_OES_depth32 GL_OES_draw_buffers_indexed GL_OES_draw_elements_base_vertex GL_OES_element_index_uint GL_OES_fbo_render_mipmap GL_OES_get_program_binary GL_OES_mapbuffer GL_OES_packed_depth_stencil GL_OES_required_internalformat GL_OES_rgb8_rgba8 GL_OES_sample_variables GL_OES_shader_multisample_interpolation GL_OES_standard_derivatives GL_OES_surfaceless_context GL_OES_texture_border_clamp GL_OES_texture_float GL_OES_texture_float_linear GL_OES_texture_half_float GL_OES_texture_half_float_linear GL_OES_texture_npot GL_OES_texture_stencil8 GL_OES_texture_storage_multisample_2d_array GL_OES_vertex_array_object GL_OVR_multiview GL_OVR_multiview2 ",
+        "glImplementationParts": "(gl=egl-angle,angle=d3d11)",
+        "glRenderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11-32.0.15.8129)",
+        "glResetNotificationStrategy": 33362,
+        "glVendor": "Google Inc. (NVIDIA)",
+        "glVersion": "OpenGL ES 3.0 (ANGLE 2.1.48499 git hash: 05a891fa2b4b)",
+        "glWsExtensions": "EGL_EXT_create_context_robustness EGL_ANGLE_d3d_share_handle_client_buffer EGL_ANGLE_d3d_texture_client_buffer EGL_ANGLE_surface_d3d_texture_2d_share_handle EGL_ANGLE_query_surface_pointer EGL_ANGLE_window_fixed_size EGL_ANGLE_keyed_mutex EGL_ANGLE_surface_orientation EGL_ANGLE_direct_composition EGL_NV_post_sub_buffer EGL_KHR_create_context EGL_KHR_image EGL_KHR_image_base EGL_KHR_gl_texture_2D_image EGL_KHR_gl_texture_cubemap_image EGL_KHR_gl_renderbuffer_image EGL_KHR_get_all_proc_addresses EGL_KHR_stream EGL_KHR_stream_consumer_gltexture EGL_NV_stream_consumer_gltexture_yuv EGL_ANGLE_stream_producer_d3d_texture EGL_ANGLE_create_context_webgl_compatibility EGL_CHROMIUM_create_context_bind_generates_resource EGL_CHROMIUM_sync_control EGL_EXT_pixel_format_float EGL_KHR_surfaceless_context EGL_ANGLE_display_texture_share_group EGL_ANGLE_display_semaphore_share_group EGL_ANGLE_create_context_client_arrays EGL_ANGLE_program_cache_control EGL_ANGLE_robust_resource_initialization EGL_ANGLE_create_context_extensions_enabled EGL_ANDROID_blob_cache EGL_ANDROID_recordable EGL_ANGLE_image_d3d11_texture EGL_ANGLE_create_context_backwards_compatible EGL_KHR_no_config_context EGL_KHR_create_context_no_error EGL_KHR_reusable_sync EGL_ANGLE_memory_usage_report ",
+        "glWsVendor": "Google Inc. (NVIDIA)",
+        "glWsVersion": "1.5 (ANGLE 2.1.48499 git hash: 05a891fa2b4b)",
+        "inProcessGpu": false,
+        "initializationTime": 0.41554,
+        "isAsan": false,
+        "isClangCoverage": false,
+        "jpegDecodeAcceleratorSupported": false,
+        "maxMsaaSamples": "8",
+        "nv12OverlaySupport": "SCALING",
+        "optimus": false,
+        "p010OverlaySupport": "SOFTWARE",
+        "passthroughCmdDecoder": true,
+        "pixelShaderVersion": "5.0",
+        "playreadyHardwareDrmSupport": false,
+        "processCrashCount": 0,
+        "rgb10a2OverlaySupport": "SOFTWARE",
+        "sandboxed": false,
+        "skiaBackendType": "GaneshGL",
+        "subpixelFontRendering": true,
+        "supportsD3dSharedImages": true,
+        "supportsDirectML": false,
+        "supportsDx12": false,
+        "supportsOverlays": true,
+        "supportsVulkan": false,
+        "targetCpuBits": 64,
+        "vertexShaderVersion": "5.0",
+        "visibilityCallbackCallCount": 0,
+        "vulkanVersion": "Not supported",
+        "yuy2OverlaySupport": "SCALING"
+      },
+      "featureStatus": {
+        "2d_canvas": "enabled",
+        "direct_rendering_display_compositor": "disabled_off_ok",
+        "gpu_compositing": "enabled",
+        "multiple_raster_threads": "enabled_on",
+        "opengl": "enabled_on",
+        "rasterization": "enabled",
+        "raw_draw": "disabled_off_ok",
+        "skia_graphite": "disabled_off",
+        "trees_in_viz": "disabled_off",
+        "video_decode": "enabled",
+        "video_encode": "enabled",
+        "webgl": "enabled",
+        "webgpu": "enabled",
+        "webnn": "disabled_off"
+      },
+      "driverBugWorkarounds": [
+        "disable_d3d11_vp9_ksvc_decoding",
+        "disable_d3d12_video_encoder",
+        "disable_dcomp_texture",
+        "disable_ms_video_super_resolution",
+        "enable_webgl_timer_query_extensions",
+        "exit_on_context_lost",
+        "unpack_overlapping_rows_separately_unpack_buffer",
+        "disabled_extension_GL_KHR_blend_equation_advanced",
+        "disabled_extension_GL_KHR_blend_equation_advanced_coherent"
+      ],
+      "videoDecoding": [],
+      "videoEncoding": []
+    },
+    "modelName": "",
+    "modelVersion": "",
+    "commandLine": "\"C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe\" --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=\"C:\\Users\\Gabriel\\AppData\\Local\\Temp\\playwright_chromiumdev_profile-JX6zj8\" --remote-debugging-pipe --no-startup-window --noerrdialogs --flag-switches-begin --flag-switches-end --enable-unsafe-swiftshader"
+  },
+  "categories": "toplevel,devtools.timeline,blink.user_timing,gpu,v8,loading,renderer.scheduler,disabled-by-default-devtools.timeline,disabled-by-default-devtools.timeline.frame,disabled-by-default-v8.cpu_profiler,disabled-by-default-v8.cpu_profiler.hires,disabled-by-default-gpu.service,disabled-by-default-gpu.device,disabled-by-default-gpu.dawn,disabled-by-default-gpu.decoder,dawn,gpu.dawn",
+  "buffer": [
+    {
+      "percentFull": 0.003569755470380187,
+      "eventCount": 0,
+      "value": 0.003569755470380187
+    },
+    {
+      "percentFull": 0.005208330228924751,
+      "eventCount": 0,
+      "value": 0.005208330228924751
+    },
+    {
+      "percentFull": 0.008056335151195526,
+      "eventCount": 0,
+      "value": 0.008056335151195526
+    },
+    {
+      "percentFull": 0.008504991419613361,
+      "eventCount": 0,
+      "value": 0.008504991419613361
+    },
+    {
+      "percentFull": 0.02270599454641342,
+      "eventCount": 0,
+      "value": 0.02270599454641342
+    },
+    {
+      "percentFull": 0.03417602926492691,
+      "eventCount": 0,
+      "value": 0.03417602926492691
+    },
+    {
+      "percentFull": 0.04350031539797783,
+      "eventCount": 0,
+      "value": 0.04350031539797783
+    },
+    {
+      "percentFull": 0.051771219819784164,
+      "eventCount": 0,
+      "value": 0.051771219819784164
+    },
+    {
+      "percentFull": 0.05918383225798607,
+      "eventCount": 0,
+      "value": 0.05918383225798607
+    },
+    {
+      "percentFull": 0.06653792411088943,
+      "eventCount": 0,
+      "value": 0.06653792411088943
+    },
+    {
+      "percentFull": 0.07379447668790817,
+      "eventCount": 0,
+      "value": 0.07379447668790817
+    },
+    {
+      "percentFull": 0.08151919394731522,
+      "eventCount": 0,
+      "value": 0.08151919394731522
+    },
+    {
+      "percentFull": 0.0893024355173111,
+      "eventCount": 0,
+      "value": 0.0893024355173111
+    },
+    {
+      "percentFull": 0.09806101769208908,
+      "eventCount": 0,
+      "value": 0.09806101769208908
+    },
+    {
+      "percentFull": 0.1056491881608963,
+      "eventCount": 0,
+      "value": 0.1056491881608963
+    },
+    {
+      "percentFull": 0.11325686424970627,
+      "eventCount": 0,
+      "value": 0.11325686424970627
+    },
+    {
+      "percentFull": 0.12148876488208771,
+      "eventCount": 0,
+      "value": 0.12148876488208771
+    },
+    {
+      "percentFull": 0.12981820106506348,
+      "eventCount": 0,
+      "value": 0.12981820106506348
+    },
+    {
+      "percentFull": 0.13775749504566193,
+      "eventCount": 0,
+      "value": 0.13775749504566193
+    },
+    {
+      "percentFull": 0.14690621197223663,
+      "eventCount": 0,
+      "value": 0.14690621197223663
+    }
+  ],
+  "dataLossOccurred": false,
+  "observations": {
+    "timeOrigin": 1793823466531.995,
+    "frames": [
+      {
+        "at": 75517.77,
+        "delta": 3300.6849999916594
+      },
+      {
+        "at": 75550.99,
+        "delta": 33.220000000001164
+      },
+      {
+        "at": 75584.405,
+        "delta": 33.4149999999936
+      },
+      {
+        "at": 75617.745,
+        "delta": 33.33999999999651
+      },
+      {
+        "at": 75784.345,
+        "delta": 166.60000000000582
+      },
+      {
+        "at": 75817.58,
+        "delta": 33.23500000000058
+      },
+      {
+        "at": 75850.95,
+        "delta": 33.36999999999534
+      },
+      {
+        "at": 75884.32,
+        "delta": 33.370000000009895
+      },
+      {
+        "at": 75917.6,
+        "delta": 33.279999999998836
+      },
+      {
+        "at": 75950.96,
+        "delta": 33.36000000000058
+      },
+      {
+        "at": 75984.32,
+        "delta": 33.36000000000058
+      },
+      {
+        "at": 76017.68,
+        "delta": 33.35999999998603
+      },
+      {
+        "at": 76050.995,
+        "delta": 33.31500000000233
+      },
+      {
+        "at": 76084.32,
+        "delta": 33.32500000001164
+      },
+      {
+        "at": 76117.61,
+        "delta": 33.2899999999936
+      },
+      {
+        "at": 76150.995,
+        "delta": 33.38499999999476
+      },
+      {
+        "at": 76184.285,
+        "delta": 33.29000000000815
+      },
+      {
+        "at": 76217.65,
+        "delta": 33.36499999999069
+      },
+      {
+        "at": 76250.975,
+        "delta": 33.32500000001164
+      },
+      {
+        "at": 76284.29,
+        "delta": 33.314999999987776
+      },
+      {
+        "at": 76317.655,
+        "delta": 33.36500000000524
+      },
+      {
+        "at": 76350.98,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 76384.3,
+        "delta": 33.320000000006985
+      },
+      {
+        "at": 76417.635,
+        "delta": 33.33499999999185
+      },
+      {
+        "at": 76450.975,
+        "delta": 33.34000000001106
+      },
+      {
+        "at": 76484.365,
+        "delta": 33.38999999999942
+      },
+      {
+        "at": 76517.67,
+        "delta": 33.304999999993015
+      },
+      {
+        "at": 76550.99,
+        "delta": 33.320000000006985
+      },
+      {
+        "at": 76584.325,
+        "delta": 33.33499999999185
+      },
+      {
+        "at": 76617.62,
+        "delta": 33.294999999998254
+      },
+      {
+        "at": 76650.955,
+        "delta": 33.3350000000064
+      },
+      {
+        "at": 76684.35,
+        "delta": 33.395000000004075
+      },
+      {
+        "at": 76717.615,
+        "delta": 33.26499999999942
+      },
+      {
+        "at": 76750.98,
+        "delta": 33.36499999999069
+      },
+      {
+        "at": 76784.3,
+        "delta": 33.320000000006985
+      },
+      {
+        "at": 76817.65,
+        "delta": 33.34999999999127
+      },
+      {
+        "at": 76850.965,
+        "delta": 33.31500000000233
+      },
+      {
+        "at": 76884.355,
+        "delta": 33.38999999999942
+      },
+      {
+        "at": 76917.66,
+        "delta": 33.30500000000757
+      },
+      {
+        "at": 77084.26,
+        "delta": 166.59999999999127
+      },
+      {
+        "at": 77117.615,
+        "delta": 33.35500000001048
+      },
+      {
+        "at": 77150.965,
+        "delta": 33.34999999999127
+      },
+      {
+        "at": 77184.325,
+        "delta": 33.36000000000058
+      },
+      {
+        "at": 77217.685,
+        "delta": 33.36000000000058
+      },
+      {
+        "at": 77250.945,
+        "delta": 33.26000000000931
+      },
+      {
+        "at": 77284.325,
+        "delta": 33.379999999990105
+      },
+      {
+        "at": 77317.615,
+        "delta": 33.29000000000815
+      },
+      {
+        "at": 77351.01,
+        "delta": 33.39499999998952
+      },
+      {
+        "at": 77384.365,
+        "delta": 33.35500000001048
+      },
+      {
+        "at": 77417.645,
+        "delta": 33.279999999998836
+      },
+      {
+        "at": 77450.965,
+        "delta": 33.31999999999243
+      },
+      {
+        "at": 77484.34,
+        "delta": 33.375
+      },
+      {
+        "at": 77517.66,
+        "delta": 33.320000000006985
+      },
+      {
+        "at": 77550.955,
+        "delta": 33.294999999998254
+      },
+      {
+        "at": 77584.35,
+        "delta": 33.395000000004075
+      },
+      {
+        "at": 77617.64,
+        "delta": 33.2899999999936
+      },
+      {
+        "at": 77650.96,
+        "delta": 33.320000000006985
+      },
+      {
+        "at": 77684.27,
+        "delta": 33.30999999999767
+      },
+      {
+        "at": 77717.605,
+        "delta": 33.33499999999185
+      },
+      {
+        "at": 77751.005,
+        "delta": 33.40000000000873
+      },
+      {
+        "at": 77784.36,
+        "delta": 33.354999999995925
+      },
+      {
+        "at": 77817.65,
+        "delta": 33.2899999999936
+      },
+      {
+        "at": 77850.985,
+        "delta": 33.3350000000064
+      },
+      {
+        "at": 77884.34,
+        "delta": 33.354999999995925
+      },
+      {
+        "at": 77917.635,
+        "delta": 33.294999999998254
+      },
+      {
+        "at": 77950.96,
+        "delta": 33.32500000001164
+      },
+      {
+        "at": 77984.32,
+        "delta": 33.36000000000058
+      },
+      {
+        "at": 78017.645,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 78050.98,
+        "delta": 33.33499999999185
+      },
+      {
+        "at": 78084.28,
+        "delta": 33.30000000000291
+      },
+      {
+        "at": 78117.625,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 78150.95,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 78184.35,
+        "delta": 33.40000000000873
+      },
+      {
+        "at": 78217.645,
+        "delta": 33.294999999998254
+      },
+      {
+        "at": 78250.95,
+        "delta": 33.304999999993015
+      },
+      {
+        "at": 78284.335,
+        "delta": 33.38500000000931
+      },
+      {
+        "at": 78317.655,
+        "delta": 33.31999999999243
+      },
+      {
+        "at": 78351.005,
+        "delta": 33.35000000000582
+      },
+      {
+        "at": 78384.285,
+        "delta": 33.279999999998836
+      },
+      {
+        "at": 78417.68,
+        "delta": 33.39499999998952
+      },
+      {
+        "at": 78451,
+        "delta": 33.320000000006985
+      },
+      {
+        "at": 78484.265,
+        "delta": 33.26499999999942
+      },
+      {
+        "at": 78517.62,
+        "delta": 33.354999999995925
+      },
+      {
+        "at": 78550.98,
+        "delta": 33.36000000000058
+      },
+      {
+        "at": 78584.305,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 78617.65,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 78651,
+        "delta": 33.35000000000582
+      },
+      {
+        "at": 78684.3,
+        "delta": 33.30000000000291
+      },
+      {
+        "at": 78717.64,
+        "delta": 33.33999999999651
+      },
+      {
+        "at": 78751.005,
+        "delta": 33.36500000000524
+      },
+      {
+        "at": 78784.33,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 78817.64,
+        "delta": 33.30999999999767
+      },
+      {
+        "at": 78850.99,
+        "delta": 33.35000000000582
+      },
+      {
+        "at": 78884.32,
+        "delta": 33.330000000001746
+      },
+      {
+        "at": 78917.705,
+        "delta": 33.38499999999476
+      },
+      {
+        "at": 78951.03,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 78984.31,
+        "delta": 33.279999999998836
+      },
+      {
+        "at": 79017.695,
+        "delta": 33.38500000000931
+      },
+      {
+        "at": 79051.015,
+        "delta": 33.31999999999243
+      },
+      {
+        "at": 79084.34,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 79117.7,
+        "delta": 33.36000000000058
+      },
+      {
+        "at": 79150.975,
+        "delta": 33.27500000000873
+      },
+      {
+        "at": 79184.325,
+        "delta": 33.34999999999127
+      },
+      {
+        "at": 79217.615,
+        "delta": 33.29000000000815
+      },
+      {
+        "at": 79250.97,
+        "delta": 33.354999999995925
+      },
+      {
+        "at": 79284.315,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 79317.665,
+        "delta": 33.34999999999127
+      },
+      {
+        "at": 79350.99,
+        "delta": 33.32500000001164
+      },
+      {
+        "at": 79384.385,
+        "delta": 33.39499999998952
+      },
+      {
+        "at": 79417.615,
+        "delta": 33.23000000001048
+      },
+      {
+        "at": 79450.95,
+        "delta": 33.33499999999185
+      },
+      {
+        "at": 79484.385,
+        "delta": 33.43499999999767
+      },
+      {
+        "at": 79517.64,
+        "delta": 33.25500000000466
+      },
+      {
+        "at": 79550.995,
+        "delta": 33.354999999995925
+      },
+      {
+        "at": 79584.35,
+        "delta": 33.35500000001048
+      },
+      {
+        "at": 79617.675,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 79651.015,
+        "delta": 33.33999999999651
+      },
+      {
+        "at": 79684.315,
+        "delta": 33.30000000000291
+      },
+      {
+        "at": 79717.63,
+        "delta": 33.31500000000233
+      },
+      {
+        "at": 79750.965,
+        "delta": 33.33499999999185
+      },
+      {
+        "at": 79784.31,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 79817.695,
+        "delta": 33.38500000000931
+      },
+      {
+        "at": 79850.985,
+        "delta": 33.2899999999936
+      },
+      {
+        "at": 79884.35,
+        "delta": 33.36500000000524
+      },
+      {
+        "at": 79917.68,
+        "delta": 33.329999999987194
+      },
+      {
+        "at": 79951.005,
+        "delta": 33.32500000001164
+      },
+      {
+        "at": 79984.345,
+        "delta": 33.33999999999651
+      },
+      {
+        "at": 80017.655,
+        "delta": 33.30999999999767
+      },
+      {
+        "at": 80050.99,
+        "delta": 33.3350000000064
+      },
+      {
+        "at": 80084.345,
+        "delta": 33.354999999995925
+      },
+      {
+        "at": 80117.63,
+        "delta": 33.28500000000349
+      },
+      {
+        "at": 80151,
+        "delta": 33.36999999999534
+      },
+      {
+        "at": 80184.325,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 80217.69,
+        "delta": 33.36500000000524
+      },
+      {
+        "at": 80250.985,
+        "delta": 33.294999999998254
+      },
+      {
+        "at": 80284.315,
+        "delta": 33.330000000001746
+      },
+      {
+        "at": 80317.7,
+        "delta": 33.38499999999476
+      },
+      {
+        "at": 80350.97,
+        "delta": 33.270000000004075
+      },
+      {
+        "at": 80384.35,
+        "delta": 33.38000000000466
+      },
+      {
+        "at": 80417.67,
+        "delta": 33.31999999999243
+      },
+      {
+        "at": 80451,
+        "delta": 33.330000000001746
+      },
+      {
+        "at": 80484.355,
+        "delta": 33.354999999995925
+      },
+      {
+        "at": 80517.62,
+        "delta": 33.26499999999942
+      },
+      {
+        "at": 80551.01,
+        "delta": 33.38999999999942
+      },
+      {
+        "at": 80584.34,
+        "delta": 33.330000000001746
+      },
+      {
+        "at": 80617.655,
+        "delta": 33.31500000000233
+      },
+      {
+        "at": 80650.985,
+        "delta": 33.330000000001746
+      },
+      {
+        "at": 80684.335,
+        "delta": 33.35000000000582
+      },
+      {
+        "at": 80717.71,
+        "delta": 33.375
+      },
+      {
+        "at": 80751.005,
+        "delta": 33.294999999998254
+      },
+      {
+        "at": 80784.315,
+        "delta": 33.30999999999767
+      },
+      {
+        "at": 80817.69,
+        "delta": 33.375
+      },
+      {
+        "at": 80851.015,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 80884.3,
+        "delta": 33.28500000000349
+      },
+      {
+        "at": 80917.64,
+        "delta": 33.33999999999651
+      },
+      {
+        "at": 80950.96,
+        "delta": 33.320000000006985
+      },
+      {
+        "at": 80984.395,
+        "delta": 33.43499999999767
+      },
+      {
+        "at": 81017.655,
+        "delta": 33.25999999999476
+      },
+      {
+        "at": 81050.98,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 81084.3,
+        "delta": 33.320000000006985
+      },
+      {
+        "at": 81117.72,
+        "delta": 33.419999999998254
+      },
+      {
+        "at": 81151.07,
+        "delta": 33.35000000000582
+      },
+      {
+        "at": 81184.335,
+        "delta": 33.26499999999942
+      },
+      {
+        "at": 81217.64,
+        "delta": 33.304999999993015
+      },
+      {
+        "at": 81250.99,
+        "delta": 33.35000000000582
+      },
+      {
+        "at": 81284.33,
+        "delta": 33.33999999999651
+      },
+      {
+        "at": 81317.695,
+        "delta": 33.36500000000524
+      },
+      {
+        "at": 81350.985,
+        "delta": 33.2899999999936
+      },
+      {
+        "at": 81384.36,
+        "delta": 33.375
+      },
+      {
+        "at": 81417.695,
+        "delta": 33.3350000000064
+      },
+      {
+        "at": 81451.015,
+        "delta": 33.31999999999243
+      },
+      {
+        "at": 81484.315,
+        "delta": 33.30000000000291
+      },
+      {
+        "at": 81517.625,
+        "delta": 33.30999999999767
+      },
+      {
+        "at": 81551.005,
+        "delta": 33.38000000000466
+      },
+      {
+        "at": 81584.365,
+        "delta": 33.36000000000058
+      },
+      {
+        "at": 81617.69,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 81651.02,
+        "delta": 33.330000000001746
+      },
+      {
+        "at": 81684.32,
+        "delta": 33.30000000000291
+      },
+      {
+        "at": 81717.705,
+        "delta": 33.38499999999476
+      },
+      {
+        "at": 81750.995,
+        "delta": 33.2899999999936
+      },
+      {
+        "at": 81784.325,
+        "delta": 33.330000000001746
+      },
+      {
+        "at": 81817.65,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 81850.99,
+        "delta": 33.34000000001106
+      },
+      {
+        "at": 81884.37,
+        "delta": 33.379999999990105
+      },
+      {
+        "at": 81917.69,
+        "delta": 33.320000000006985
+      },
+      {
+        "at": 81950.995,
+        "delta": 33.304999999993015
+      },
+      {
+        "at": 81984.315,
+        "delta": 33.320000000006985
+      },
+      {
+        "at": 82017.675,
+        "delta": 33.36000000000058
+      },
+      {
+        "at": 82051.035,
+        "delta": 33.36000000000058
+      },
+      {
+        "at": 82084.36,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 82117.675,
+        "delta": 33.31500000000233
+      },
+      {
+        "at": 82150.985,
+        "delta": 33.30999999999767
+      },
+      {
+        "at": 82184.305,
+        "delta": 33.31999999999243
+      },
+      {
+        "at": 82217.665,
+        "delta": 33.36000000000058
+      },
+      {
+        "at": 82251.015,
+        "delta": 33.35000000000582
+      },
+      {
+        "at": 82284.33,
+        "delta": 33.31500000000233
+      },
+      {
+        "at": 82317.7,
+        "delta": 33.36999999999534
+      },
+      {
+        "at": 82350.995,
+        "delta": 33.294999999998254
+      },
+      {
+        "at": 82384.315,
+        "delta": 33.320000000006985
+      },
+      {
+        "at": 82417.65,
+        "delta": 33.33499999999185
+      },
+      {
+        "at": 82451.02,
+        "delta": 33.370000000009895
+      },
+      {
+        "at": 82484.365,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 82517.655,
+        "delta": 33.2899999999936
+      },
+      {
+        "at": 82551.02,
+        "delta": 33.36500000000524
+      },
+      {
+        "at": 82584.37,
+        "delta": 33.34999999999127
+      },
+      {
+        "at": 82617.695,
+        "delta": 33.32500000001164
+      },
+      {
+        "at": 82651.02,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 82684.33,
+        "delta": 33.30999999999767
+      },
+      {
+        "at": 82717.705,
+        "delta": 33.375
+      },
+      {
+        "at": 82750.985,
+        "delta": 33.279999999998836
+      },
+      {
+        "at": 82784.33,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 82817.665,
+        "delta": 33.33499999999185
+      },
+      {
+        "at": 82850.98,
+        "delta": 33.31500000000233
+      },
+      {
+        "at": 82884.33,
+        "delta": 33.35000000000582
+      },
+      {
+        "at": 82917.63,
+        "delta": 33.30000000000291
+      },
+      {
+        "at": 82950.995,
+        "delta": 33.36499999999069
+      },
+      {
+        "at": 82984.295,
+        "delta": 33.30000000000291
+      },
+      {
+        "at": 83017.7,
+        "delta": 33.404999999998836
+      },
+      {
+        "at": 83051,
+        "delta": 33.30000000000291
+      },
+      {
+        "at": 83084.33,
+        "delta": 33.330000000001746
+      },
+      {
+        "at": 83117.675,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 83150.995,
+        "delta": 33.31999999999243
+      },
+      {
+        "at": 83184.31,
+        "delta": 33.31500000000233
+      },
+      {
+        "at": 83217.675,
+        "delta": 33.36500000000524
+      },
+      {
+        "at": 83251,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 83284.31,
+        "delta": 33.30999999999767
+      },
+      {
+        "at": 83317.685,
+        "delta": 33.375
+      },
+      {
+        "at": 83351.015,
+        "delta": 33.330000000001746
+      },
+      {
+        "at": 83384.34,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 83417.635,
+        "delta": 33.294999999998254
+      },
+      {
+        "at": 83450.99,
+        "delta": 33.35500000001048
+      },
+      {
+        "at": 83484.33,
+        "delta": 33.33999999999651
+      },
+      {
+        "at": 83517.675,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 83551.015,
+        "delta": 33.33999999999651
+      },
+      {
+        "at": 83584.295,
+        "delta": 33.279999999998836
+      },
+      {
+        "at": 83617.65,
+        "delta": 33.354999999995925
+      },
+      {
+        "at": 83650.995,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 83684.365,
+        "delta": 33.370000000009895
+      },
+      {
+        "at": 83717.665,
+        "delta": 33.29999999998836
+      },
+      {
+        "at": 83751.005,
+        "delta": 33.34000000001106
+      },
+      {
+        "at": 83784.38,
+        "delta": 33.375
+      },
+      {
+        "at": 83817.685,
+        "delta": 33.304999999993015
+      },
+      {
+        "at": 83851.03,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 83884.32,
+        "delta": 33.29000000000815
+      },
+      {
+        "at": 83917.655,
+        "delta": 33.33499999999185
+      },
+      {
+        "at": 83950.97,
+        "delta": 33.31500000000233
+      },
+      {
+        "at": 83984.325,
+        "delta": 33.354999999995925
+      },
+      {
+        "at": 84017.66,
+        "delta": 33.3350000000064
+      },
+      {
+        "at": 84050.98,
+        "delta": 33.31999999999243
+      },
+      {
+        "at": 84084.335,
+        "delta": 33.35500000001048
+      },
+      {
+        "at": 84117.71,
+        "delta": 33.375
+      },
+      {
+        "at": 84151.02,
+        "delta": 33.30999999999767
+      },
+      {
+        "at": 84184.365,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 84217.66,
+        "delta": 33.294999999998254
+      },
+      {
+        "at": 84250.97,
+        "delta": 33.30999999999767
+      },
+      {
+        "at": 84284.315,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 84317.685,
+        "delta": 33.36999999999534
+      },
+      {
+        "at": 84350.985,
+        "delta": 33.30000000000291
+      },
+      {
+        "at": 84384.335,
+        "delta": 33.35000000000582
+      },
+      {
+        "at": 84417.685,
+        "delta": 33.34999999999127
+      },
+      {
+        "at": 84451,
+        "delta": 33.31500000000233
+      },
+      {
+        "at": 84484.34,
+        "delta": 33.33999999999651
+      },
+      {
+        "at": 84517.65,
+        "delta": 33.30999999999767
+      },
+      {
+        "at": 84551.045,
+        "delta": 33.395000000004075
+      },
+      {
+        "at": 84584.36,
+        "delta": 33.31500000000233
+      },
+      {
+        "at": 84617.68,
+        "delta": 33.31999999999243
+      },
+      {
+        "at": 84650.975,
+        "delta": 33.295000000012806
+      },
+      {
+        "at": 84684.31,
+        "delta": 33.33499999999185
+      },
+      {
+        "at": 84717.68,
+        "delta": 33.36999999999534
+      },
+      {
+        "at": 84750.98,
+        "delta": 33.30000000000291
+      },
+      {
+        "at": 84784.305,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 84817.67,
+        "delta": 33.36500000000524
+      },
+      {
+        "at": 84851.03,
+        "delta": 33.36000000000058
+      },
+      {
+        "at": 84884.355,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 84917.665,
+        "delta": 33.30999999999767
+      },
+      {
+        "at": 84950.98,
+        "delta": 33.31500000000233
+      },
+      {
+        "at": 84984.325,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 85017.67,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 85051.015,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 85084.335,
+        "delta": 33.320000000006985
+      },
+      {
+        "at": 85117.635,
+        "delta": 33.29999999998836
+      },
+      {
+        "at": 85151.01,
+        "delta": 33.375
+      },
+      {
+        "at": 85184.36,
+        "delta": 33.35000000000582
+      },
+      {
+        "at": 85217.66,
+        "delta": 33.30000000000291
+      },
+      {
+        "at": 85251.005,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 85284.39,
+        "delta": 33.38499999999476
+      },
+      {
+        "at": 85317.655,
+        "delta": 33.26499999999942
+      },
+      {
+        "at": 85351.02,
+        "delta": 33.36500000000524
+      },
+      {
+        "at": 85384.38,
+        "delta": 33.36000000000058
+      },
+      {
+        "at": 85417.685,
+        "delta": 33.304999999993015
+      },
+      {
+        "at": 85451.01,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 85484.34,
+        "delta": 33.330000000001746
+      },
+      {
+        "at": 85517.66,
+        "delta": 33.320000000006985
+      },
+      {
+        "at": 85550.985,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 85584.355,
+        "delta": 33.36999999999534
+      },
+      {
+        "at": 85617.67,
+        "delta": 33.31500000000233
+      },
+      {
+        "at": 85651.035,
+        "delta": 33.36500000000524
+      },
+      {
+        "at": 85684.355,
+        "delta": 33.31999999999243
+      },
+      {
+        "at": 85717.68,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 85751.025,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 85784.385,
+        "delta": 33.36000000000058
+      },
+      {
+        "at": 85817.68,
+        "delta": 33.294999999998254
+      },
+      {
+        "at": 85850.98,
+        "delta": 33.30000000000291
+      },
+      {
+        "at": 85884.305,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 85917.675,
+        "delta": 33.370000000009895
+      },
+      {
+        "at": 85951.045,
+        "delta": 33.36999999999534
+      },
+      {
+        "at": 85984.375,
+        "delta": 33.330000000001746
+      },
+      {
+        "at": 86017.66,
+        "delta": 33.28500000000349
+      },
+      {
+        "at": 86051.005,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 86084.32,
+        "delta": 33.31500000000233
+      },
+      {
+        "at": 86117.695,
+        "delta": 33.375
+      },
+      {
+        "at": 86151.01,
+        "delta": 33.314999999987776
+      },
+      {
+        "at": 86184.345,
+        "delta": 33.3350000000064
+      },
+      {
+        "at": 86217.675,
+        "delta": 33.330000000001746
+      },
+      {
+        "at": 86250.97,
+        "delta": 33.294999999998254
+      },
+      {
+        "at": 86284.365,
+        "delta": 33.395000000004075
+      },
+      {
+        "at": 86317.68,
+        "delta": 33.314999999987776
+      },
+      {
+        "at": 86350.995,
+        "delta": 33.31500000000233
+      },
+      {
+        "at": 86384.355,
+        "delta": 33.36000000000058
+      },
+      {
+        "at": 86417.64,
+        "delta": 33.28500000000349
+      },
+      {
+        "at": 86451.02,
+        "delta": 33.38000000000466
+      },
+      {
+        "at": 86484.33,
+        "delta": 33.30999999999767
+      },
+      {
+        "at": 86517.645,
+        "delta": 33.31500000000233
+      },
+      {
+        "at": 86551.03,
+        "delta": 33.38499999999476
+      },
+      {
+        "at": 86584.325,
+        "delta": 33.294999999998254
+      },
+      {
+        "at": 86617.69,
+        "delta": 33.36500000000524
+      },
+      {
+        "at": 86651.03,
+        "delta": 33.33999999999651
+      },
+      {
+        "at": 86684.355,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 86717.7,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 86751.015,
+        "delta": 33.31500000000233
+      },
+      {
+        "at": 86784.31,
+        "delta": 33.294999999998254
+      },
+      {
+        "at": 86817.675,
+        "delta": 33.36500000000524
+      },
+      {
+        "at": 86851.04,
+        "delta": 33.36499999999069
+      },
+      {
+        "at": 86884.37,
+        "delta": 33.330000000001746
+      },
+      {
+        "at": 86917.71,
+        "delta": 33.34000000001106
+      },
+      {
+        "at": 86951.035,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 86984.36,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 87017.7,
+        "delta": 33.33999999999651
+      },
+      {
+        "at": 87051.055,
+        "delta": 33.354999999995925
+      },
+      {
+        "at": 87084.325,
+        "delta": 33.270000000004075
+      },
+      {
+        "at": 87117.705,
+        "delta": 33.38000000000466
+      },
+      {
+        "at": 87151.01,
+        "delta": 33.304999999993015
+      },
+      {
+        "at": 87184.345,
+        "delta": 33.3350000000064
+      },
+      {
+        "at": 87217.69,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 87251.005,
+        "delta": 33.31500000000233
+      },
+      {
+        "at": 87284.365,
+        "delta": 33.36000000000058
+      },
+      {
+        "at": 87317.68,
+        "delta": 33.314999999987776
+      },
+      {
+        "at": 87351.015,
+        "delta": 33.3350000000064
+      },
+      {
+        "at": 87384.36,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 87417.755,
+        "delta": 33.395000000004075
+      },
+      {
+        "at": 87451.085,
+        "delta": 33.330000000001746
+      },
+      {
+        "at": 87484.315,
+        "delta": 33.229999999995925
+      },
+      {
+        "at": 87517.695,
+        "delta": 33.38000000000466
+      },
+      {
+        "at": 87551.03,
+        "delta": 33.33499999999185
+      },
+      {
+        "at": 87584.405,
+        "delta": 33.375
+      },
+      {
+        "at": 87617.69,
+        "delta": 33.28500000000349
+      },
+      {
+        "at": 87651.025,
+        "delta": 33.33499999999185
+      },
+      {
+        "at": 87684.315,
+        "delta": 33.29000000000815
+      },
+      {
+        "at": 87717.685,
+        "delta": 33.36999999999534
+      },
+      {
+        "at": 87751.015,
+        "delta": 33.330000000001746
+      },
+      {
+        "at": 87784.385,
+        "delta": 33.36999999999534
+      },
+      {
+        "at": 87817.71,
+        "delta": 33.32500000001164
+      },
+      {
+        "at": 87851.02,
+        "delta": 33.30999999999767
+      },
+      {
+        "at": 87884.355,
+        "delta": 33.33499999999185
+      },
+      {
+        "at": 87917.725,
+        "delta": 33.370000000009895
+      },
+      {
+        "at": 87951.015,
+        "delta": 33.2899999999936
+      },
+      {
+        "at": 87984.34,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 88017.665,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 88050.995,
+        "delta": 33.330000000001746
+      },
+      {
+        "at": 88084.335,
+        "delta": 33.34000000001106
+      },
+      {
+        "at": 88117.66,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 88151.015,
+        "delta": 33.354999999995925
+      },
+      {
+        "at": 88184.335,
+        "delta": 33.320000000006985
+      },
+      {
+        "at": 88217.67,
+        "delta": 33.33499999999185
+      },
+      {
+        "at": 88251.015,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 88284.37,
+        "delta": 33.354999999995925
+      },
+      {
+        "at": 88317.71,
+        "delta": 33.34000000001106
+      },
+      {
+        "at": 88351.025,
+        "delta": 33.314999999987776
+      },
+      {
+        "at": 88384.32,
+        "delta": 33.295000000012806
+      },
+      {
+        "at": 88417.69,
+        "delta": 33.36999999999534
+      },
+      {
+        "at": 88451.025,
+        "delta": 33.33499999999185
+      },
+      {
+        "at": 88484.365,
+        "delta": 33.34000000001106
+      },
+      {
+        "at": 88517.695,
+        "delta": 33.330000000001746
+      },
+      {
+        "at": 88550.995,
+        "delta": 33.29999999998836
+      },
+      {
+        "at": 88584.315,
+        "delta": 33.320000000006985
+      },
+      {
+        "at": 88617.715,
+        "delta": 33.39999999999418
+      },
+      {
+        "at": 88651.005,
+        "delta": 33.29000000000815
+      },
+      {
+        "at": 88684.36,
+        "delta": 33.354999999995925
+      },
+      {
+        "at": 88717.685,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 88751.025,
+        "delta": 33.33999999999651
+      },
+      {
+        "at": 88784.38,
+        "delta": 33.35500000001048
+      },
+      {
+        "at": 88817.74,
+        "delta": 33.36000000000058
+      },
+      {
+        "at": 88850.99,
+        "delta": 33.25
+      },
+      {
+        "at": 88884.385,
+        "delta": 33.39499999998952
+      },
+      {
+        "at": 88917.66,
+        "delta": 33.27500000000873
+      },
+      {
+        "at": 88951.02,
+        "delta": 33.36000000000058
+      },
+      {
+        "at": 88984.365,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 89017.68,
+        "delta": 33.314999999987776
+      },
+      {
+        "at": 89051.02,
+        "delta": 33.34000000001106
+      },
+      {
+        "at": 89084.355,
+        "delta": 33.33499999999185
+      },
+      {
+        "at": 89117.69,
+        "delta": 33.3350000000064
+      },
+      {
+        "at": 89151.06,
+        "delta": 33.36999999999534
+      },
+      {
+        "at": 89184.355,
+        "delta": 33.294999999998254
+      },
+      {
+        "at": 89217.69,
+        "delta": 33.3350000000064
+      },
+      {
+        "at": 89251.025,
+        "delta": 33.33499999999185
+      },
+      {
+        "at": 89284.355,
+        "delta": 33.330000000001746
+      },
+      {
+        "at": 89317.76,
+        "delta": 33.404999999998836
+      },
+      {
+        "at": 89351.045,
+        "delta": 33.28500000000349
+      },
+      {
+        "at": 89384.33,
+        "delta": 33.28500000000349
+      },
+      {
+        "at": 89417.72,
+        "delta": 33.38999999999942
+      },
+      {
+        "at": 89451.055,
+        "delta": 33.33499999999185
+      },
+      {
+        "at": 89484.325,
+        "delta": 33.270000000004075
+      },
+      {
+        "at": 89517.64,
+        "delta": 33.31500000000233
+      },
+      {
+        "at": 89551.055,
+        "delta": 33.4149999999936
+      },
+      {
+        "at": 89584.35,
+        "delta": 33.295000000012806
+      },
+      {
+        "at": 89617.69,
+        "delta": 33.33999999999651
+      },
+      {
+        "at": 89650.995,
+        "delta": 33.304999999993015
+      },
+      {
+        "at": 89684.36,
+        "delta": 33.36500000000524
+      },
+      {
+        "at": 89717.67,
+        "delta": 33.30999999999767
+      },
+      {
+        "at": 89750.995,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 89784.345,
+        "delta": 33.35000000000582
+      },
+      {
+        "at": 89817.7,
+        "delta": 33.354999999995925
+      },
+      {
+        "at": 89851.035,
+        "delta": 33.3350000000064
+      },
+      {
+        "at": 89884.355,
+        "delta": 33.31999999999243
+      },
+      {
+        "at": 89917.675,
+        "delta": 33.320000000006985
+      },
+      {
+        "at": 89951.055,
+        "delta": 33.379999999990105
+      },
+      {
+        "at": 89984.375,
+        "delta": 33.320000000006985
+      },
+      {
+        "at": 90017.71,
+        "delta": 33.3350000000064
+      },
+      {
+        "at": 90051.03,
+        "delta": 33.31999999999243
+      },
+      {
+        "at": 90084.37,
+        "delta": 33.33999999999651
+      },
+      {
+        "at": 90117.74,
+        "delta": 33.370000000009895
+      },
+      {
+        "at": 90151.02,
+        "delta": 33.279999999998836
+      },
+      {
+        "at": 90184.39,
+        "delta": 33.36999999999534
+      },
+      {
+        "at": 90217.71,
+        "delta": 33.320000000006985
+      },
+      {
+        "at": 90251.05,
+        "delta": 33.33999999999651
+      },
+      {
+        "at": 90284.365,
+        "delta": 33.31500000000233
+      },
+      {
+        "at": 90317.685,
+        "delta": 33.31999999999243
+      },
+      {
+        "at": 90351.02,
+        "delta": 33.3350000000064
+      },
+      {
+        "at": 90384.35,
+        "delta": 33.330000000001746
+      },
+      {
+        "at": 90417.725,
+        "delta": 33.375
+      },
+      {
+        "at": 90450.995,
+        "delta": 33.26999999998952
+      },
+      {
+        "at": 90484.335,
+        "delta": 33.34000000001106
+      },
+      {
+        "at": 90517.695,
+        "delta": 33.36000000000058
+      },
+      {
+        "at": 90551,
+        "delta": 33.304999999993015
+      },
+      {
+        "at": 90584.355,
+        "delta": 33.354999999995925
+      },
+      {
+        "at": 90617.675,
+        "delta": 33.320000000006985
+      },
+      {
+        "at": 90651.035,
+        "delta": 33.36000000000058
+      },
+      {
+        "at": 90684.38,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 90717.66,
+        "delta": 33.279999999998836
+      },
+      {
+        "at": 90751.015,
+        "delta": 33.354999999995925
+      },
+      {
+        "at": 90784.35,
+        "delta": 33.3350000000064
+      },
+      {
+        "at": 90817.705,
+        "delta": 33.354999999995925
+      },
+      {
+        "at": 90851.045,
+        "delta": 33.33999999999651
+      },
+      {
+        "at": 90884.38,
+        "delta": 33.3350000000064
+      },
+      {
+        "at": 90917.64,
+        "delta": 33.25999999999476
+      },
+      {
+        "at": 90951.015,
+        "delta": 33.375
+      },
+      {
+        "at": 90984.335,
+        "delta": 33.320000000006985
+      },
+      {
+        "at": 91017.67,
+        "delta": 33.33499999999185
+      },
+      {
+        "at": 91051.02,
+        "delta": 33.35000000000582
+      },
+      {
+        "at": 91084.335,
+        "delta": 33.31500000000233
+      },
+      {
+        "at": 91117.73,
+        "delta": 33.39499999998952
+      },
+      {
+        "at": 91151.01,
+        "delta": 33.279999999998836
+      },
+      {
+        "at": 91184.37,
+        "delta": 33.36000000000058
+      },
+      {
+        "at": 91217.665,
+        "delta": 33.294999999998254
+      },
+      {
+        "at": 91251.04,
+        "delta": 33.375
+      },
+      {
+        "at": 91284.375,
+        "delta": 33.3350000000064
+      },
+      {
+        "at": 91317.67,
+        "delta": 33.294999999998254
+      },
+      {
+        "at": 91351.01,
+        "delta": 33.33999999999651
+      },
+      {
+        "at": 91384.41,
+        "delta": 33.40000000000873
+      },
+      {
+        "at": 91417.675,
+        "delta": 33.26499999999942
+      },
+      {
+        "at": 91451.05,
+        "delta": 33.375
+      },
+      {
+        "at": 91484.36,
+        "delta": 33.30999999999767
+      },
+      {
+        "at": 91517.705,
+        "delta": 33.345000000001164
+      },
+      {
+        "at": 91551.045,
+        "delta": 33.33999999999651
+      },
+      {
+        "at": 91584.335,
+        "delta": 33.29000000000815
+      },
+      {
+        "at": 91617.68,
+        "delta": 33.34499999998661
+      },
+      {
+        "at": 91651.085,
+        "delta": 33.40500000001339
+      },
+      {
+        "at": 91684.405,
+        "delta": 33.31999999999243
+      },
+      {
+        "at": 91717.675,
+        "delta": 33.270000000004075
+      },
+      {
+        "at": 91751.025,
+        "delta": 33.34999999999127
+      },
+      {
+        "at": 91784.385,
+        "delta": 33.36000000000058
+      },
+      {
+        "at": 91817.69,
+        "delta": 33.30500000000757
+      },
+      {
+        "at": 91851.055,
+        "delta": 33.36499999999069
+      },
+      {
+        "at": 91884.37,
+        "delta": 33.31500000000233
+      },
+      {
+        "at": 91917.725,
+        "delta": 33.35500000001048
+      },
+      {
+        "at": 91951.045,
+        "delta": 33.31999999999243
+      },
+      {
+        "at": 91984.335,
+        "delta": 33.29000000000815
+      },
+      {
+        "at": 92017.67,
+        "delta": 33.33499999999185
+      },
+      {
+        "at": 92051.06,
+        "delta": 33.38999999999942
+      },
+      {
+        "at": 92084.375,
+        "delta": 33.31500000000233
+      },
+      {
+        "at": 92117.735,
+        "delta": 33.36000000000058
+      },
+      {
+        "at": 92151.035,
+        "delta": 33.30000000000291
+      },
+      {
+        "at": 92184.395,
+        "delta": 33.36000000000058
+      },
+      {
+        "at": 92217.72,
+        "delta": 33.32499999999709
+      },
+      {
+        "at": 92251.035,
+        "delta": 33.31500000000233
+      },
+      {
+        "at": 92284.375,
+        "delta": 33.33999999999651
+      },
+      {
+        "at": 92317.69,
+        "delta": 33.31500000000233
+      }
+    ],
+    "longTasks": [
+      {
+        "start": 75985.1099999845,
+        "duration": 51,
+        "name": "self"
+      }
+    ]
+  }
+}

@@ -1,0 +1,29 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {serializeConfirmedState} from '../../src/simulation/confirmed-live-state.js';
+import {microState,reserveEvent,settleEvent,disableMicroEconomy} from '../../src/microevents/economy.js';
+import {observeGameEvents,pause,resume} from '../../src/simulation/game.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+window.audit=async()=>{
+ const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
+ const fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),{game}=fixture.diagnosticWorld();game.raid=null;game.pauses=[];game.time=100;game.dayPlan=null;game.nightPlan=null;
+ const plant=game.plants.find(p=>p.alive);if(!plant)throw Error('Missing plant');microState(game).previousIncome=10000;
+ const client=createSimulationAuthorityClient({snapshot:serialize(game),chunkKeys:chunks,session:'microevents'}),events=[],stop=observeGameEvents(game,event=>events.push(structuredClone(event)));let seq=0;
+ try{await client.ready;
+  async function compare(command,apply){const expected=apply()??null,localEvents=events.splice(0),request=client.submit(command);if(!request.accepted)throw Error('Command not admitted');const result=await request.result;if(result.sequence!==++seq||JSON.stringify(result.value)!==JSON.stringify(expected)||result.snapshot!==serializeConfirmedState(game)||JSON.stringify(result.events)!==JSON.stringify(localEvents))throw Error('Microevent divergence at '+seq);return result.value;}
+  const seeds=await compare({kind:'microReserve',eventType:'seeds',targetId:plant.id},()=>reserveEvent(game,'seeds',plant.id));
+  const reward=await compare({kind:'microSettle',ticket:seeds,outcome:'completed',enabled:true,losses:true},()=>settleEvent(game,seeds,'completed'));
+  const duplicate=await compare({kind:'microSettle',ticket:seeds,outcome:'completed',enabled:true,losses:true},()=>settleEvent(game,seeds,'completed'));
+  const birds=await compare({kind:'microReserve',eventType:'birds',targetId:plant.id},()=>reserveEvent(game,'birds',plant.id));
+  const loss=await compare({kind:'microSettle',ticket:birds,outcome:'ignored',enabled:true,losses:true},()=>settleEvent(game,birds,'ignored'));
+  const again=await compare({kind:'microReserve',eventType:'seeds',targetId:plant.id},()=>reserveEvent(game,'seeds',plant.id));
+  await compare({kind:'pause',reason:'test'},()=>pause(game,'test'));
+  const paused=await compare({kind:'microSettle',ticket:again,outcome:'completed',enabled:true,losses:true},()=>settleEvent(game,again,'completed'));
+  await compare({kind:'resume',reason:'test'},()=>resume(game,'test'));
+  await compare({kind:'microDisable'},()=>disableMicroEconomy(game));
+  if(reward.delta!==1||duplicate.applied||!loss.applied||paused.delta!==0||Object.keys(game.microevents.pendingLosses).length)throw Error('Incomplete economy coverage');
+  return {sequence:seq,reward,duplicate,loss,paused,scope:'Commands on a real simulation Worker compared to direct economy functions in a synthetic mangrove fixture; no director, player UI, event timing, save/load or production integration.'};
+ }finally{stop();client.dispose();fixture.dispose();}
+};window.ready=true;
+</script>

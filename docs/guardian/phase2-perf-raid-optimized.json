@@ -1,0 +1,305 @@
+{
+  "ready": true,
+  "visibleGuardians": 0,
+  "maxVisibleGuardians": 1,
+  "elapsed": 3084.3169000000057,
+  "simulate": false,
+  "active": 0,
+  "origins": [],
+  "reused": 24,
+  "health": 972,
+  "animalState": "walking",
+  "animalPosition": [
+    97.7,
+    -0.5999999999999996
+  ],
+  "draws": 72,
+  "audioVoices": 0,
+  "errors": [],
+  "report": [
+    {
+      "mode": "raid-baseline",
+      "actors": 20,
+      "frames": 106,
+      "frameMedian": 82.79999999999563,
+      "frameP95": 100,
+      "frameP99": 116.20000000000437,
+      "frameMax": 116.59999999999854,
+      "averageFps": 13.25314762256036,
+      "animationP95": 0,
+      "vfxP95": 0,
+      "drawP95": 72,
+      "memory": {
+        "geometries": 180,
+        "textures": 87
+      },
+      "heap": 472345030
+    },
+    {
+      "mode": "raid-guardian",
+      "actors": 20,
+      "frames": 208,
+      "frameMedian": 33.30000000000291,
+      "frameP95": 66.10000000000582,
+      "frameP99": 66.69999999999709,
+      "frameMax": 66.79999999999563,
+      "averageFps": 26.00487591423392,
+      "animationP95": 0.20000004768371582,
+      "vfxP95": 0.9000000953674316,
+      "drawP95": 83,
+      "memory": {
+        "geometries": 180,
+        "textures": 87
+      },
+      "heap": 469152910
+    },
+    {
+      "mode": "raid-reference",
+      "actors": 20,
+      "frames": 211,
+      "frameMedian": 33.30000000000291,
+      "frameP95": 50.5,
+      "frameP99": 66.59999999999854,
+      "frameMax": 67,
+      "averageFps": 26.38027605521106,
+      "animationP95": 0,
+      "vfxP95": 0,
+      "drawP95": 72,
+      "memory": {
+        "geometries": 180,
+        "textures": 87
+      },
+      "heap": 474051930
+    },
+    {
+      "mode": "raid-guardian-repeat",
+      "actors": 20,
+      "frames": 207,
+      "frameMedian": 33.30000000000291,
+      "frameP95": 66.5,
+      "frameP99": 67.19999999999709,
+      "frameMax": 83.19999999999709,
+      "averageFps": 25.82657517155334,
+      "animationP95": 0.20000004768371582,
+      "vfxP95": 1,
+      "drawP95": 83,
+      "memory": {
+        "geometries": 180,
+        "textures": 87
+      },
+      "heap": 433813085
+    }
+  ],
+  "commandCosts": [
+    {
+      "kind": "attack",
+      "plan": 0.7999999523162842,
+      "logic": 0,
+      "render": 20.899999976158142,
+      "total": 21.699999928474426
+    },
+    {
+      "kind": "attack",
+      "plan": 0.9000000953674316,
+      "logic": 0,
+      "render": 20.699999928474426,
+      "total": 21.600000023841858
+    },
+    {
+      "kind": "attack",
+      "plan": 1.3000000715255737,
+      "logic": 0,
+      "render": 15.899999976158142,
+      "total": 17.200000047683716
+    },
+    {
+      "kind": "attack",
+      "plan": 1,
+      "logic": 0,
+      "render": 20,
+      "total": 21
+    },
+    {
+      "kind": "attack",
+      "plan": 0.6000000238418579,
+      "logic": 0.10000002384185791,
+      "render": 13.100000023841858,
+      "total": 13.800000071525574
+    },
+    {
+      "kind": "attack",
+      "plan": 0.6999999284744263,
+      "logic": 0,
+      "render": 16.100000023841858,
+      "total": 16.799999952316284
+    },
+    {
+      "kind": "attack",
+      "plan": 0.6000000238418579,
+      "logic": 0,
+      "render": 14.100000023841858,
+      "total": 14.700000047683716
+    },
+    {
+      "kind": "attack",
+      "plan": 0.8999999761581421,
+      "logic": 0.10000002384185791,
+      "render": 13.799999952316284,
+      "total": 14.799999952316284
+    },
+    {
+      "kind": "attack",
+      "plan": 0.5999999046325684,
+      "logic": 0,
+      "render": 22.100000023841858,
+      "total": 22.699999928474426
+    },
+    {
+      "kind": "attack",
+      "plan": 0.7000000476837158,
+      "logic": 0,
+      "render": 17.399999976158142,
+      "total": 18.100000023841858
+    },
+    {
+      "kind": "attack",
+      "plan": 1.1999999284744263,
+      "logic": 0.30000007152557373,
+      "render": 16.09999990463257,
+      "total": 17.59999990463257
+    },
+    {
+      "kind": "attack",
+      "plan": 0.6999999284744263,
+      "logic": 0.10000002384185791,
+      "render": 13.200000047683716,
+      "total": 14
+    },
+    {
+      "kind": "attack",
+      "plan": 0.6000000238418579,
+      "logic": 0.10000002384185791,
+      "render": 18.299999952316284,
+      "total": 19
+    },
+    {
+      "kind": "attack",
+      "plan": 1,
+      "logic": 0.10000002384185791,
+      "render": 19.800000071525574,
+      "total": 20.90000009536743
+    },
+    {
+      "kind": "attack",
+      "plan": 0.8999999761581421,
+      "logic": 0,
+      "render": 13.300000071525574,
+      "total": 14.200000047683716
+    },
+    {
+      "kind": "attack",
+      "plan": 1,
+      "logic": 0,
+      "render": 22.5,
+      "total": 23.5
+    },
+    {
+      "kind": "attack",
+      "plan": 0.5,
+      "logic": 0,
+      "render": 14.700000047683716,
+      "total": 15.200000047683716
+    },
+    {
+      "kind": "attack",
+      "plan": 0.5,
+      "logic": 0.10000002384185791,
+      "render": 20.899999976158142,
+      "total": 21.5
+    },
+    {
+      "kind": "attack",
+      "plan": 0.7999999523162842,
+      "logic": 0,
+      "render": 17.600000023841858,
+      "total": 18.399999976158142
+    },
+    {
+      "kind": "attack",
+      "plan": 0.7999999523162842,
+      "logic": 0.10000002384185791,
+      "render": 16.299999952316284,
+      "total": 17.199999928474426
+    },
+    {
+      "kind": "attack",
+      "plan": 0.5,
+      "logic": 0,
+      "render": 13.600000023841858,
+      "total": 14.100000023841858
+    },
+    {
+      "kind": "attack",
+      "plan": 0.5,
+      "logic": 0.10000002384185791,
+      "render": 21.399999976158142,
+      "total": 22
+    },
+    {
+      "kind": "attack",
+      "plan": 1.100000023841858,
+      "logic": 0,
+      "render": 20.399999976158142,
+      "total": 21.5
+    },
+    {
+      "kind": "attack",
+      "plan": 0.6000000238418579,
+      "logic": 0,
+      "render": 13.899999976158142,
+      "total": 14.5
+    },
+    {
+      "kind": "attack",
+      "plan": 0.6000000238418579,
+      "logic": 0,
+      "render": 14,
+      "total": 14.600000023841858
+    },
+    {
+      "kind": "attack",
+      "plan": 0.6000000238418579,
+      "logic": 0,
+      "render": 13.600000023841858,
+      "total": 14.200000047683716
+    },
+    {
+      "kind": "attack",
+      "plan": 1.2999999523162842,
+      "logic": 0,
+      "render": 20.40000009536743,
+      "total": 21.700000047683716
+    },
+    {
+      "kind": "attack",
+      "plan": 0.5,
+      "logic": 0.10000002384185791,
+      "render": 15.800000071525574,
+      "total": 16.40000009536743
+    },
+    {
+      "kind": "attack",
+      "plan": 0.6000000238418579,
+      "logic": 0,
+      "render": 14.399999976158142,
+      "total": 15
+    },
+    {
+      "kind": "attack",
+      "plan": 0.7999999523162842,
+      "logic": 0,
+      "render": 15.200000047683716,
+      "total": 16
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "added": [
+    "2,1"
+  ],
+  "events": [
+    "VillageFounded"
+  ],
+  "duplicate": false,
+  "rejection": "El nuevo poblado debe conservar la cultura de la partida",
+  "ui": null,
+  "previewTiming": {
+    "local": false,
+    "firstHandlerMs": 18.344999998807907,
+    "secondHandlerMs": 7.044999986886978,
+    "readyMs": 1155,
+    "frames": {
+      "count": 39,
+      "p95": 66.53499999999622,
+      "p99": 900.0050000000047,
+      "max": 900.0050000000047,
+      "longest": {
+        "start": 32856.7,
+        "end": 33756.705,
+        "ms": 900.0050000000047
+      },
+      "longTasks": [
+        {
+          "startTime": 32825.7650000155,
+          "duration": 944,
+          "name": "self"
+        }
+      ]
+    }
+  },
+  "guardianWorker": null,
+  "scope": "Synthetic desert postgame on a real browser Worker, comparing one village with isolated native result and a missing site chunk; optional real UI save. Preview timings use direct QA input, include asset preparation and contention, and are not a general FPS benchmark. No active physics or full campaign."
+}

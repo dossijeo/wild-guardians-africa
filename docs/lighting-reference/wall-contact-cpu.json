@@ -1,0 +1,89 @@
+{
+  "scope": "Node CPU microbenchmark, empty natural-prop chunks, 256 squared atlas. Includes cache-key construction and rasterization; excludes GPU upload, browser scheduling and full-game frametime.",
+  "results": [
+    {
+      "walls": 0,
+      "buildings": false,
+      "cached": {
+        "samples": 1000,
+        "medianMs": 0.0014000000000180535,
+        "p95Ms": 0.00190000000000623
+      },
+      "rebuild": {
+        "samples": 100,
+        "medianMs": 0.054500000000018645,
+        "p95Ms": 0.0771999999999764
+      }
+    },
+    {
+      "walls": 0,
+      "buildings": true,
+      "cached": {
+        "samples": 1000,
+        "medianMs": 0.0017999999999744887,
+        "p95Ms": 0.002200000000016189
+      },
+      "rebuild": {
+        "samples": 100,
+        "medianMs": 0.05369999999999209,
+        "p95Ms": 0.2359000000000151
+      }
+    },
+    {
+      "walls": 50,
+      "buildings": false,
+      "cached": {
+        "samples": 1000,
+        "medianMs": 0.0013999999999896318,
+        "p95Ms": 0.00190000000000623
+      },
+      "rebuild": {
+        "samples": 100,
+        "medianMs": 0.04779999999999518,
+        "p95Ms": 0.0625
+      }
+    },
+    {
+      "walls": 50,
+      "buildings": true,
+      "cached": {
+        "samples": 1000,
+        "medianMs": 0.03380000000004202,
+        "p95Ms": 0.050299999999992906
+      },
+      "rebuild": {
+        "samples": 100,
+        "medianMs": 1.5748000000000388,
+        "p95Ms": 2.7416999999999803
+      }
+    },
+    {
+      "walls": 200,
+      "buildings": false,
+      "cached": {
+        "samples": 1000,
+        "medianMs": 0.0013999999999896318,
+        "p95Ms": 0.0014000000000464752
+      },
+      "rebuild": {
+        "samples": 100,
+        "medianMs": 0.04670000000004393,
+        "p95Ms": 0.05299999999999727
+      }
+    },
+    {
+      "walls": 200,
+      "buildings": true,
+      "cached": {
+        "samples": 1000,
+        "medianMs": 0.12550000000010186,
+        "p95Ms": 0.24299999999993815
+      },
+      "rebuild": {
+        "samples": 100,
+        "medianMs": 6.846700000000055,
+        "p95Ms": 9.282500000000027
+      }
+    }
+  ]
+}

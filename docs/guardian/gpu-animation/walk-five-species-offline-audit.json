@@ -1,0 +1,228 @@
+{
+  "schema": "wg-gpu-walk-species-audit/1",
+  "sampleRate": 30,
+  "repeats": 2,
+  "results": [
+    {
+      "species": "buffalo",
+      "sourceSha256": "d9a945fd2c707943741b110aa6a8c30fe02d85c1a14dca0c673edfe32bb9fe6e",
+      "sha256": "1ca99df0c5a467575aa41de92d4231ebd6cfdd291956056b1ba80510389bba23",
+      "duration": 1.041666705161333,
+      "frames": 33,
+      "byteLength": 128964,
+      "sharedMatrixChannels": 1,
+      "channels": [
+        {
+          "name": "BuffaloOralAnatomy",
+          "bones": 61,
+          "matrixOffset": 1
+        },
+        {
+          "name": "Mesh_0",
+          "bones": 61,
+          "matrixOffset": 1
+        },
+        {
+          "name": "ActorFacialLids",
+          "bones": 61,
+          "matrixOffset": 1
+        }
+      ],
+      "validation": {
+        "exactMismatches": 0,
+        "packedMismatches": 0,
+        "midpointPairs": 32,
+        "maxMatrixElementError": 0.04779922962188721,
+        "maxGroundHeightError": 0.0009025689214468002,
+        "vertexComparisons": 9999,
+        "maxWorldVertexError": 0.023952936642621,
+        "maxWrapWorldVertexError": 8.263607802469882e-8,
+        "maxSourceLoopJump": 0.16435933929448585,
+        "rmsWorldVertexError": 0.0017212191197060638
+      }
+    },
+    {
+      "species": "hyena",
+      "sourceSha256": "022436860982f39f1bac2989423fcbc9d2be99f6433809ba1f60a664d6be307f",
+      "sha256": "4474a53547835cd45ef59ba2140f2bb676386aa064af661d3b2bc02040b5002c",
+      "duration": 1.041666705161333,
+      "frames": 33,
+      "byteLength": 44484,
+      "sharedMatrixChannels": 1,
+      "channels": [
+        {
+          "name": "Mesh_0_1",
+          "bones": 21,
+          "matrixOffset": 1
+        },
+        {
+          "name": "Mesh_0_2",
+          "bones": 21,
+          "matrixOffset": 1
+        },
+        {
+          "name": "OralCavity",
+          "bones": 21,
+          "matrixOffset": 1
+        },
+        {
+          "name": "FacialLids",
+          "bones": 21,
+          "matrixOffset": 1
+        }
+      ],
+      "validation": {
+        "exactMismatches": 0,
+        "packedMismatches": 0,
+        "midpointPairs": 32,
+        "maxMatrixElementError": 0.02783796191215515,
+        "maxGroundHeightError": 0.005176470149308443,
+        "vertexComparisons": 13959,
+        "maxWorldVertexError": 0.009695259158315246,
+        "maxWrapWorldVertexError": 1.2516737847039172e-7,
+        "maxSourceLoopJump": 0.1210555459271244,
+        "rmsWorldVertexError": 0.0018615702108623318
+      }
+    },
+    {
+      "species": "lion",
+      "sourceSha256": "12d919219b27d40f50957bd1e7e239187fb9c0dd44d821a642f540f1e55e4a55",
+      "sha256": "4a62d9d6de2159426f358619cabb41f9e3dc6da3cc6ac2e3fb551baac5b5c9fe",
+      "duration": 1.041666705161333,
+      "frames": 33,
+      "byteLength": 164868,
+      "sharedMatrixChannels": 1,
+      "channels": [
+        {
+          "name": "LionOralAnatomy",
+          "bones": 78,
+          "matrixOffset": 1
+        },
+        {
+          "name": "Mesh_0_1",
+          "bones": 78,
+          "matrixOffset": 1
+        },
+        {
+          "name": "Mesh_0_2",
+          "bones": 78,
+          "matrixOffset": 1
+        },
+        {
+          "name": "RearCloth",
+          "bones": 78,
+          "matrixOffset": 1
+        },
+        {
+          "name": "LionFacialLids",
+          "bones": 78,
+          "matrixOffset": 1
+        }
+      ],
+      "validation": {
+        "exactMismatches": 0,
+        "packedMismatches": 0,
+        "midpointPairs": 32,
+        "maxMatrixElementError": 0.03530946373939514,
+        "maxGroundHeightError": 0.0010584546253085136,
+        "vertexComparisons": 14619,
+        "maxWorldVertexError": 0.015116216545457226,
+        "maxWrapWorldVertexError": 7.355674141471652e-8,
+        "maxSourceLoopJump": 0.10950543302593427,
+        "rmsWorldVertexError": 0.0015458536262216206
+      }
+    },
+    {
+      "species": "rhino",
+      "sourceSha256": "34b30faf0194b34477ce037b2d45b2a3a9a042f2095b893beae0e99a7d1beea4",
+      "sha256": "ade73424ec2f4488e9fa23c2d1515dde36a20f7a6b9038696a1adfcbc351b48a",
+      "duration": 1.041666705161333,
+      "frames": 33,
+      "byteLength": 160644,
+      "sharedMatrixChannels": 1,
+      "channels": [
+        {
+          "name": "Mesh_0",
+          "bones": 76,
+          "matrixOffset": 1
+        },
+        {
+          "name": "RearCloth",
+          "bones": 76,
+          "matrixOffset": 1
+        },
+        {
+          "name": "RhinoOralAnatomy",
+          "bones": 76,
+          "matrixOffset": 1
+        },
+        {
+          "name": "RhinoLidL",
+          "bones": 76,
+          "matrixOffset": 1
+        },
+        {
+          "name": "RhinoLidR",
+          "bones": 76,
+          "matrixOffset": 1
+        }
+      ],
+      "validation": {
+        "exactMismatches": 0,
+        "packedMismatches": 0,
+        "midpointPairs": 32,
+        "maxMatrixElementError": 0.08225741982460022,
+        "maxGroundHeightError": 0.001926087774336338,
+        "vertexComparisons": 16962,
+        "maxWorldVertexError": 0.032249595297723394,
+        "maxWrapWorldVertexError": 1.3021725598926482e-7,
+        "maxSourceLoopJump": 0.2265052169879427,
+        "rmsWorldVertexError": 0.002857807133932558
+      }
+    },
+    {
+      "species": "warthog",
+      "sourceSha256": "53c8f76ba3af3c972206a86e9fb4c9c25be3bb890077caa99c9c0b1bc3240b89",
+      "sha256": "fbc5cf2120df361c6ee62ef7afb81eb22d8df7786023056cc57cada36bf5abf9",
+      "duration": 1.041666705161333,
+      "frames": 33,
+      "byteLength": 44484,
+      "sharedMatrixChannels": 1,
+      "channels": [
+        {
+          "name": "Mesh_0_1",
+          "bones": 21,
+          "matrixOffset": 1
+        },
+        {
+          "name": "Mesh_0_2",
+          "bones": 21,
+          "matrixOffset": 1
+        },
+        {
+          "name": "WarthogOralAnatomy",
+          "bones": 21,
+          "matrixOffset": 1
+        },
+        {
+          "name": "ActorFacialLids",
+          "bones": 21,
+          "matrixOffset": 1
+        }
+      ],
+      "validation": {
+        "exactMismatches": 0,
+        "packedMismatches": 0,
+        "midpointPairs": 32,
+        "maxMatrixElementError": 0.0542465562166754,
+        "maxGroundHeightError": 0.0032569970935583115,
+        "vertexComparisons": 10692,
+        "maxWorldVertexError": 0.013919189534860188,
+        "maxWrapWorldVertexError": 8.9586644728095e-8,
+        "maxSourceLoopJump": 0.09909582899203573,
+        "rmsWorldVertexError": 0.0019764609497959747
+      }
+    }
+  ],
+  "scope": "Offline canonical-root walking clips. Exact stored samples and packed matrices are checked; midpoint vertex checks are sparse. No moving terrain, transitions, images, GPU timings, real raids or production integration."
+}

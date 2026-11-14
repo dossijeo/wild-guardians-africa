@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {nativeLodBins} from './lod-source.js';
+import {nearTreeLodBins} from './near-tree-textures.js';
 import {obstructionGeometry,obstructionMaterial} from './obstruction.js';
 import {createAssetShadow,updateAssetShadow} from './asset-shadows.js';
 import {assetClipGeometry,assetClipMaterial} from './asset-clip.js';
@@ -9,7 +9,7 @@ let batchSerial=0;
 // contact AO and water continue using the full, unmodified instance population.
 export function createAssetLod(group,levels,instances,asset,slot,clipBounds=null){
   const bounds=levels[0].geometry.boundingBox;
-  const prototype={...asset,size:bounds.getSize(new THREE.Vector3()).toArray(),centerY:(bounds.min.y+bounds.max.y)/2};
+  const prototype={...asset,nearTextureDistance:levels[0].userData?.nearTextureDistance,size:bounds.getSize(new THREE.Vector3()).toArray(),centerY:(bounds.min.y+bounds.max.y)/2};
   const chunkOrigin=group.userData.nativeChunkOrigin??[0,0];
   const batch={chunkOrigin,uid:++batchSerial,slot,levels,instances,prototype,group:asset.group,clip:!!clipBounds,meshes:[],orders:[],key:null,fade:null,shadow:createAssetShadow(levels,instances.length,asset.group)};
   for(const [level,original] of levels.entries()){
@@ -40,7 +40,7 @@ export function updateAssetLods(chunks,camera,quality){
   let dummy;
   for(const group of chunks.values())for(const batch of group.userData.lodBatches??[]){
     if(batch.key!==key){
-      const bins=nativeLodBins(batch.instances,batch.prototype,batch.group,eye,quality,batch.meshes.length);
+      const bins=nearTreeLodBins(batch.instances,batch.prototype,batch.group,eye,quality,batch.meshes.length);
       for(const [level,mesh] of batch.meshes.entries()){
         const order=bins[level],old=batch.orders[level];
         if(order.length!==old.length||order.some((i,j)=>i!==old[j])){
@@ -51,7 +51,7 @@ export function updateAssetLods(chunks,camera,quality){
       }
       packLodCoverage(batch);updateAssetShadow(batch);batch.key=key;
     }
-    let active=0;for(const [level,mesh] of batch.meshes.entries()){stats.counts[level]+=mesh.count;active+=mesh.count;stats.triangles+=(mesh.geometry.index?.count??mesh.geometry.attributes.position.count)/3*mesh.count;}stats.culled+=batch.instances.length-active;
+    let active=0;for(const [level,mesh] of batch.meshes.entries()){stats.counts[level]=(stats.counts[level]??0)+mesh.count;active+=mesh.count;stats.triangles+=(mesh.geometry.index?.count??mesh.geometry.attributes.position.count)/3*mesh.count;}stats.culled+=batch.instances.length-active;
     const full=batch.meshes[0].geometry;stats.fullTriangles+=(full.index?.count??full.attributes.position.count)/3*batch.instances.length;
     if(batch.shadow.castShadow&&batch.shadow.count){const g=batch.shadow.geometry;stats.shadowTriangles+=(g.index?.count??g.attributes.position.count)/3*batch.shadow.count;stats.shadowDraws++;}
   }

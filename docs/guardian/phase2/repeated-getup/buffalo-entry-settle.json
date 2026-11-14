@@ -1,0 +1,3044 @@
+{
+  "ready": true,
+  "modelAO": [],
+  "nativeAO": [
+    {
+      "slot": "tree_01",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "tree_02",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "tree_03",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "tree_04",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "shrub_01",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "shrub_02",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "shrub_03",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "plant_01",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "plant_02",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "plant_03",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "rock_01",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "rock_02",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "rock_03",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "debris_01",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "debris_02",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "debris_03",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "debris_04",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "special_01",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "special_02",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "slot": "special_03",
+      "enabled": 0,
+      "vertices": [
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "worldAuthority": "spatial-wasm",
+  "mangroveNetwork": false,
+  "campaign": false,
+  "paused": true,
+  "lastPick": null,
+  "workerCandidate": null,
+  "workerGround": null,
+  "workers": [
+    {
+      "id": "worker-28",
+      "profile": "olderMale",
+      "x": 60,
+      "z": 0,
+      "status": "home",
+      "hits": 0
+    }
+  ],
+  "faceCandidate": false,
+  "faceCandidateSpecies": null,
+  "expressions": [
+    {
+      "id": "qa-beast-6",
+      "weights": [
+        0,
+        0,
+        6.2296690540691434e-58
+      ],
+      "bindings": 10
+    }
+  ],
+  "entityCounts": {
+    "workers": 1,
+    "structures": 1,
+    "crops": 12,
+    "animals": 1
+  },
+  "groundCoverHidden": true,
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 0,
+  "maxVisibleGuardians": 1,
+  "slopeSite": null,
+  "guideTrial": false,
+  "guideOrigin": null,
+  "guidePosition": null,
+  "elapsed": 3045.926185000101,
+  "simulate": true,
+  "clockMode": "Game.tick",
+  "shields": [],
+  "active": 0,
+  "origins": [],
+  "pendingSummons": 0,
+  "attackVisual": [],
+  "reused": 0,
+  "health": 144,
+  "animalState": "walking",
+  "animalPosition": [
+    88.92457027499205,
+    -8
+  ],
+  "draws": 80,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "spirit_appear",
+      "at": 3011.7691000000054,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3011.9020850000056,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "lion_hurt",
+      "at": 3012.018570000006,
+      "emitter": "qa-beast-0",
+      "phase": "falling",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3012.018570000006,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3013.2679400000097,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3015.6658700000153,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3015.7658700000156,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "lion_hurt",
+      "at": 3015.865870000016,
+      "emitter": "qa-beast-0",
+      "phase": "falling",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3015.865870000016,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3017.1654000000203,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3022.0792550000333,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3022.1790500000334,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "warthog_hurt",
+      "at": 3022.3121650000335,
+      "emitter": "qa-beast-3",
+      "phase": "falling",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3022.3121650000335,
+      "emitter": "impact:qa-beast-3",
+      "played": false
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3023.578075000036,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3029.640390000052,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3029.7737250000523,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "warthog_hurt",
+      "at": 3029.8402050000527,
+      "emitter": "qa-beast-3",
+      "phase": "falling",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3029.8402050000527,
+      "emitter": "impact:qa-beast-3",
+      "played": false
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3031.1386800000573,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3035.884750000071,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3036.0013800000715,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "buffalo_hurt",
+      "at": 3036.117990000072,
+      "emitter": "qa-beast-6",
+      "phase": "falling",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3036.117990000072,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3037.3501850000757,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3039.8148250000822,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3039.9479850000826,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "buffalo_hurt",
+      "at": 3040.031195000083,
+      "emitter": "qa-beast-6",
+      "phase": "falling",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3040.031195000083,
+      "emitter": "impact:qa-beast-6",
+      "played": false
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3041.2965550000868,
+      "emitter": "guardian-world",
+      "played": false
+    }
+  ],
+  "combatPhysics": {
+    "active": 0,
+    "physicsMs": 0.10000002384185791,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 6.789999961853027,
+    "maxStepMs": 26.30999994277954,
+    "solverMs": 0,
+    "solverSteps": 0,
+    "bindingMs": 0,
+    "recoverySetupMs": 0,
+    "creationMs": 0,
+    "lastCreation": {
+      "species": "buffalo",
+      "captureMs": 1.1100000143051147,
+      "colliderFitMs": 6.409999966621399,
+      "environmentMs": 2.774999976158142,
+      "bodiesMs": 2.6500000953674316
+    },
+    "recoveryFollowMs": 0,
+    "bakedActive": 0,
+    "kinematic": 0,
+    "rollFailures": 0,
+    "lastRoll": {
+      "seconds": 0.2333333333333333,
+      "contactDelay": 0,
+      "error": 0.27341512874808915,
+      "speed": 0.20064398608008852,
+      "timedOut": false
+    },
+    "recoveryPoseMisses": 335
+  },
+  "physicsWorlds": 0,
+  "physicalBodies": 0,
+  "allDown": [
+    {
+      "id": "qa-beast-6",
+      "x": 88.92457027499205,
+      "z": -8
+    }
+  ],
+  "errors": [],
+  "report": {
+    "kind": "attack-during-getup",
+    "releaseContacts": [],
+    "species": "buffalo",
+    "second": true,
+    "entered": true,
+    "finished": true,
+    "rows": [
+      {
+        "support": null,
+        "time": 3035.9513800000714,
+        "x": 90,
+        "z": -6,
+        "phase": null,
+        "recoveryAge": null,
+        "active": 0,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3036.0179900000717,
+        "x": 90,
+        "z": -6,
+        "phase": null,
+        "recoveryAge": null,
+        "active": 0,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3036.117990000072,
+        "x": 90.00018684374238,
+        "z": -6.042590906881856,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3036.2510250000723,
+        "x": 90.00047856108623,
+        "z": -6.210565360221332,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3036.3010250000725,
+        "x": 89.99821112679507,
+        "z": -6.254668409440427,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3036.450890000073,
+        "x": 89.97342057741858,
+        "z": -6.423355724383845,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3036.584160000073,
+        "x": 89.90331657118604,
+        "z": -6.579836396010148,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3036.6341600000733,
+        "x": 89.87042903633142,
+        "z": -6.650263037375115,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3036.784160000074,
+        "x": 89.75064832132252,
+        "z": -6.865185178108377,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3036.9007150000743,
+        "x": 89.6289188710852,
+        "z": -7.007730896979167,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3036.9507150000745,
+        "x": 89.58439850288639,
+        "z": -7.080009546565801,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3037.017395000075,
+        "x": 89.5360399176511,
+        "z": -7.1912490850272865,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3037.117185000075,
+        "x": 89.45897102671786,
+        "z": -7.36581143863841,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3037.2336550000755,
+        "x": 89.38313396097944,
+        "z": -7.58159835464706,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3037.3001850000755,
+        "x": 89.32738827894465,
+        "z": -7.638691721233467,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3037.3501850000757,
+        "x": 89.2758625756282,
+        "z": -7.671526406963737,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3037.466715000076,
+        "x": 89.21000746107391,
+        "z": -7.735596913189553,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3037.549695000076,
+        "x": 89.18351584819702,
+        "z": -7.754759235925354,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3037.6496950000765,
+        "x": 89.19040887744306,
+        "z": -7.752225859731835,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3037.7496150000766,
+        "x": 89.22049618365708,
+        "z": -7.739483487050823,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3037.882840000077,
+        "x": 89.26414465304121,
+        "z": -7.7268940793310765,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3037.9328400000772,
+        "x": 89.26958512604061,
+        "z": -7.723182609339727,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3038.082840000078,
+        "x": 89.27952522654702,
+        "z": -7.721329695730454,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3038.1992350000783,
+        "x": 89.273476771665,
+        "z": -7.7190835315195505,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3038.2492350000784,
+        "x": 89.27167545298755,
+        "z": -7.718104263086435,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3038.349235000079,
+        "x": 89.27285717325091,
+        "z": -7.716965175397933,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3038.449235000079,
+        "x": 89.27497486016011,
+        "z": -7.715098002777097,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3038.5656350000795,
+        "x": 89.27440625868269,
+        "z": -7.713072992141935,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3038.6156150000793,
+        "x": 89.27467682354192,
+        "z": -7.711804833801577,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3038.6821100000793,
+        "x": 89.27485988147336,
+        "z": -7.710538618208073,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3038.7821100000797,
+        "x": 89.275246966855,
+        "z": -7.708575223294806,
+        "phase": "falling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3038.89873500008,
+        "x": 89.27526130991977,
+        "z": -7.706633972090527,
+        "phase": "rolling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3038.96523000008,
+        "x": 89.27504289522773,
+        "z": -7.705384600884806,
+        "phase": "rolling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3039.01523000008,
+        "x": 89.27520059418761,
+        "z": -7.704049319804889,
+        "phase": "rolling",
+        "recoveryAge": null,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.016076253394161633,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 26504,
+            "position": [
+              89.38720112759026,
+              6.662954019049679,
+              -7.260646166830274
+            ],
+            "bones": [
+              {
+                "name": "Hips",
+                "weight": 0.6530421376228333
+              },
+              {
+                "name": "RightUpLeg",
+                "weight": 0.16749653220176697
+              },
+              {
+                "name": "LeftUpLeg",
+                "weight": 0.1659000962972641
+              },
+              {
+                "name": "Spine",
+                "weight": 0.013561253435909748
+              }
+            ]
+          }
+        },
+        "time": 3039.1485700000803,
+        "x": 89.27564683648036,
+        "z": -7.703515599486066,
+        "phase": "recovering",
+        "recoveryAge": 0.0833399999999965,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.017237051186119956,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 40911,
+            "position": [
+              89.35629311356897,
+              6.660827978310143,
+              -7.248430077294667
+            ],
+            "bones": [
+              {
+                "name": "Hips",
+                "weight": 0.6530135869979858
+              },
+              {
+                "name": "RightUpLeg",
+                "weight": 0.1675254851579666
+              },
+              {
+                "name": "LeftUpLeg",
+                "weight": 0.16590258479118347
+              },
+              {
+                "name": "Spine",
+                "weight": 0.013558315113186836
+              }
+            ]
+          }
+        },
+        "time": 3039.2651750000805,
+        "x": 89.27564683648036,
+        "z": -7.703515599486066,
+        "phase": "recovering",
+        "recoveryAge": 0.19994499999997786,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.014142598866042633,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 1966,
+            "position": [
+              89.522756432951,
+              6.6752234361157985,
+              -7.491448939499854
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 0.7895384430885315
+              },
+              {
+                "name": "LeftLeg",
+                "weight": 0.21046152710914612
+              }
+            ]
+          }
+        },
+        "time": 3039.414870000081,
+        "x": 89.27564683648036,
+        "z": -7.703515599486066,
+        "phase": "recovering",
+        "recoveryAge": 0.34963999999998485,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.01181881862598022,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 1966,
+            "position": [
+              89.61041936538332,
+              6.68211501079517,
+              -7.684937188312111
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 0.7895384430885315
+              },
+              {
+                "name": "LeftLeg",
+                "weight": 0.21046152710914612
+              }
+            ]
+          }
+        },
+        "time": 3039.531455000081,
+        "x": 89.27564683648036,
+        "z": -7.703515599486066,
+        "phase": "recovering",
+        "recoveryAge": 0.4662249999999767,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.010159887623172104,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 1966,
+            "position": [
+              89.67195302806086,
+              6.686948217701297,
+              -7.833446102700675
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 0.7895384430885315
+              },
+              {
+                "name": "LeftLeg",
+                "weight": 0.21046152710914612
+              }
+            ]
+          }
+        },
+        "time": 3039.6648250000817,
+        "x": 89.27564683648036,
+        "z": -7.703515599486066,
+        "phase": "recovering",
+        "recoveryAge": 0.5995949999999721,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.009999999803886439,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 1966,
+            "position": [
+              89.67614835454702,
+              6.687230834764824,
+              -7.846720514966463
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 0.7895384430885315
+              },
+              {
+                "name": "LeftLeg",
+                "weight": 0.21046152710914612
+              }
+            ]
+          }
+        },
+        "time": 3039.764825000082,
+        "x": 89.27564683648036,
+        "z": -7.703515599486066,
+        "phase": "recovering",
+        "recoveryAge": 0.6995949999999722,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.009813560252078801,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 1960,
+            "position": [
+              89.67451265197109,
+              6.686873210673221,
+              -7.829904949489207
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 0.8174201250076294
+              },
+              {
+                "name": "LeftLeg",
+                "weight": 0.18257984519004822
+              }
+            ]
+          }
+        },
+        "time": 3039.8979850000824,
+        "x": 89.27564683648036,
+        "z": -7.703515599486066,
+        "phase": "recovering",
+        "recoveryAge": 0.8327549999999758,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3040.031195000083,
+        "x": 89.26642326421845,
+        "z": -7.723649997373867,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3040.131195000083,
+        "x": 89.21137789486906,
+        "z": -7.84301126311891,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3040.2478950000836,
+        "x": 89.14188671852924,
+        "z": -7.966314930947881,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3040.297895000084,
+        "x": 89.11463120170664,
+        "z": -7.9906209386266855,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3040.397895000084,
+        "x": 89.08104101782365,
+        "z": -8.020820626918768,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3040.4978950000846,
+        "x": 89.0647091013498,
+        "z": -8.03751968758892,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3040.614235000085,
+        "x": 89.05834615609538,
+        "z": -8.042597104642491,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3040.6642350000852,
+        "x": 89.05837547915908,
+        "z": -8.04250567460882,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3040.7308600000856,
+        "x": 89.05838267499776,
+        "z": -8.042516233225614,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3040.830860000086,
+        "x": 89.05839115664637,
+        "z": -8.042521221681744,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3040.9307700000863,
+        "x": 89.05840870657215,
+        "z": -8.042458500994265,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3040.9807700000865,
+        "x": 89.05838461393522,
+        "z": -8.042488098866396,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3041.047120000086,
+        "x": 89.05838395292893,
+        "z": -8.042486019669175,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3041.1468850000865,
+        "x": 89.0583838464918,
+        "z": -8.042487004247384,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3041.2965550000868,
+        "x": 89.05839058158328,
+        "z": -8.042449388939819,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3041.363315000087,
+        "x": 89.05839053637854,
+        "z": -8.04243112233836,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3041.413315000087,
+        "x": 89.05839055164773,
+        "z": -8.042428258097909,
+        "phase": "falling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3041.5300100000873,
+        "x": 89.05839023440835,
+        "z": -8.04242536809027,
+        "phase": "rolling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3041.6300100000876,
+        "x": 89.0620308609104,
+        "z": -8.036357098405883,
+        "phase": "rolling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3041.729885000088,
+        "x": 89.06358225754992,
+        "z": -8.036931585726956,
+        "phase": "rolling",
+        "recoveryAge": 0,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.019768632841790534,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 40911,
+            "position": [
+              89.20159961422311,
+              6.646690286589349,
+              -8.114774299178245
+            ],
+            "bones": [
+              {
+                "name": "Hips",
+                "weight": 0.6530135869979858
+              },
+              {
+                "name": "RightUpLeg",
+                "weight": 0.1675254851579666
+              },
+              {
+                "name": "LeftUpLeg",
+                "weight": 0.16590258479118347
+              },
+              {
+                "name": "Spine",
+                "weight": 0.013558315113186836
+              }
+            ]
+          }
+        },
+        "time": 3041.8798850000885,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 0.1,
+        "active": 1,
+        "guardians": 1,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.017731969491069144,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 40911,
+            "position": [
+              89.18442116630403,
+              6.642834012642925,
+              -8.117631863512319
+            ],
+            "bones": [
+              {
+                "name": "Hips",
+                "weight": 0.6530135869979858
+              },
+              {
+                "name": "RightUpLeg",
+                "weight": 0.1675254851579666
+              },
+              {
+                "name": "LeftUpLeg",
+                "weight": 0.16590258479118347
+              },
+              {
+                "name": "Spine",
+                "weight": 0.013558315113186836
+              }
+            ]
+          }
+        },
+        "time": 3041.996390000089,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 0.21650500000000467,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.013447677537521407,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 40911,
+            "position": [
+              89.146099372044,
+              6.6344899291244355,
+              -8.12594106154011
+            ],
+            "bones": [
+              {
+                "name": "Hips",
+                "weight": 0.6530135869979858
+              },
+              {
+                "name": "RightUpLeg",
+                "weight": 0.1675254851579666
+              },
+              {
+                "name": "LeftUpLeg",
+                "weight": 0.16590258479118347
+              },
+              {
+                "name": "Spine",
+                "weight": 0.013558315113186836
+              }
+            ]
+          }
+        },
+        "time": 3042.1796800000893,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 0.3997949999999837,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.011134845821087147,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 1966,
+            "position": [
+              89.48496395400197,
+              6.66795991143388,
+              -8.155103506594614
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 0.7895384430885315
+              },
+              {
+                "name": "LeftLeg",
+                "weight": 0.21046152710914612
+              }
+            ]
+          }
+        },
+        "time": 3042.29668500009,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 0.5167999999999884,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.010000000085151228,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 1966,
+            "position": [
+              89.46685903631776,
+              6.664901504601753,
+              -8.163154731659116
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 0.7895384430885315
+              },
+              {
+                "name": "LeftLeg",
+                "weight": 0.21046152710914612
+              }
+            ]
+          }
+        },
+        "time": 3042.4299800000904,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 0.6500950000000013,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.010000000045897295,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 1966,
+            "position": [
+              89.4753192720185,
+              6.665796051071288,
+              -8.163162287203566
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 0.7895384430885315
+              },
+              {
+                "name": "LeftLeg",
+                "weight": 0.21046152710914612
+              }
+            ]
+          }
+        },
+        "time": 3042.5299800000907,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 0.7500950000000014,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.010000000033045353,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 1966,
+            "position": [
+              89.48874653721892,
+              6.667217979464198,
+              -8.16090994303244
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 0.7895384430885315
+              },
+              {
+                "name": "LeftLeg",
+                "weight": 0.21046152710914612
+              }
+            ]
+          }
+        },
+        "time": 3042.6798000000913,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 0.8999149999999794,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.0100000000199163,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 1966,
+            "position": [
+              89.48992372463123,
+              6.667344818135151,
+              -8.158554144051031
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 0.7895384430885315
+              },
+              {
+                "name": "LeftLeg",
+                "weight": 0.21046152710914612
+              }
+            ]
+          }
+        },
+        "time": 3042.7465350000916,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 0.9666499999999655,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.009999999991585184,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 1966,
+            "position": [
+              89.48699083124255,
+              6.667041072837044,
+              -8.153877000133965
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 0.7895384430885315
+              },
+              {
+                "name": "LeftLeg",
+                "weight": 0.21046152710914612
+              }
+            ]
+          }
+        },
+        "time": 3042.846535000092,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 1.0666499999999655,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.009999999904072965,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 1966,
+            "position": [
+              89.49567431716237,
+              6.66797567357961,
+              -8.139846488668203
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 0.7895384430885315
+              },
+              {
+                "name": "LeftLeg",
+                "weight": 0.21046152710914612
+              }
+            ]
+          }
+        },
+        "time": 3042.9798850000925,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 1.1999999999999713,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.009999999930291992,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 1966,
+            "position": [
+              89.506386809445,
+              6.669146308829218,
+              -8.107709872128073
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 0.7895384430885315
+              },
+              {
+                "name": "LeftLeg",
+                "weight": 0.21046152710914612
+              }
+            ]
+          }
+        },
+        "time": 3043.079885000093,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 1.2999999999999714,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.010000000333032055,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 40911,
+            "position": [
+              89.07994797664996,
+              6.624102840756616,
+              -8.106244855427393
+            ],
+            "bones": [
+              {
+                "name": "Hips",
+                "weight": 0.6530135869979858
+              },
+              {
+                "name": "RightUpLeg",
+                "weight": 0.1675254851579666
+              },
+              {
+                "name": "LeftUpLeg",
+                "weight": 0.16590258479118347
+              },
+              {
+                "name": "Spine",
+                "weight": 0.013558315113186836
+              }
+            ]
+          }
+        },
+        "time": 3043.179690000093,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 1.3998049999999935,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.010000000000000675,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 10636,
+            "position": [
+              89.6528103860414,
+              6.684758911132813,
+              -7.9150448383396
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        "time": 3043.2964550000934,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 1.5165700000000075,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.00960303416682784,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 36277,
+            "position": [
+              89.67589411805395,
+              6.686597834734455,
+              -8.16511260781531
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        "time": 3043.3961500000937,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 1.6162650000000145,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.009328698053521656,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 6147,
+            "position": [
+              89.72779892333168,
+              6.691780423059625,
+              -8.18958058846136
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        "time": 3043.495960000094,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 1.7160750000000122,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.009775446628935036,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 6147,
+            "position": [
+              89.70674949274438,
+              6.690006540989287,
+              -8.185959671620182
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        "time": 3043.612525000094,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 1.8326400000000147,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.009872508682363446,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 6147,
+            "position": [
+              89.70844587917236,
+              6.690354896225088,
+              -8.125418810746343
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        "time": 3043.7624500000943,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 1.9825650000000032,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.009744011400620423,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 6147,
+            "position": [
+              89.71940982777444,
+              6.691438518999497,
+              -8.080760622063051
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        "time": 3043.8789750000947,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 2.0990899999999972,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.009592333478387616,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 6147,
+            "position": [
+              89.71710572349346,
+              6.691078940076288,
+              -8.051354078474285
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        "time": 3043.978975000095,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 2.199089999999997,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.009427608994838188,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 6147,
+            "position": [
+              89.69564393858832,
+              6.688708843736049,
+              -7.974539820150545
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        "time": 3044.0789750000954,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 2.2990899999999965,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.009999999999999787,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 6173,
+            "position": [
+              89.68488783120813,
+              6.68815351486206,
+              -7.869339065966044
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        "time": 3044.195565000096,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 2.4156799999999925,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.009999999999998899,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 6173,
+            "position": [
+              89.73628828264147,
+              6.693579444885253,
+              -7.95590951526091
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        "time": 3044.3287350000965,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 2.548849999999976,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.010000000000000675,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 6173,
+            "position": [
+              89.76304888967383,
+              6.696377048492432,
+              -8.022820762785111
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        "time": 3044.428735000097,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 2.6488499999999755,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.009999999999999787,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 6173,
+            "position": [
+              89.74859625077836,
+              6.694801578521728,
+              -8.062655632558027
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        "time": 3044.562000000097,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 2.78211499999996,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.009999999999999787,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 6173,
+            "position": [
+              89.72708895655124,
+              6.692537078857422,
+              -8.055613024495852
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        "time": 3044.6620000000976,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 2.88211499999996,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.009599198974403755,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 7515,
+            "position": [
+              89.70702138171325,
+              6.690088262237343,
+              -7.919444817543525
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        "time": 3044.795150000098,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 3.0152649999999537,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.009999999999999787,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 6173,
+            "position": [
+              89.72005751953175,
+              6.691856632232666,
+              -8.002762448325491
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        "time": 3044.910380000098,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 3.130494999999964,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.009999999999999787,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 6173,
+            "position": [
+              89.72292863534203,
+              6.69216323852539,
+              -8.000586207270436
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        "time": 3045.093440000099,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 3.313554999999961,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.010000000000000675,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 6173,
+            "position": [
+              89.72339654535587,
+              6.692213783264161,
+              -7.993635700111481
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        "time": 3045.176630000099,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 3.3967449999999633,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.010000000000000675,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 6173,
+            "position": [
+              89.72337145353967,
+              6.692211875915528,
+              -7.9853057916008625
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        "time": 3045.243215000099,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 3.4633299999999547,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.009999999999999787,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 6173,
+            "position": [
+              89.72279044877246,
+              6.692150840759277,
+              -7.981572060491119
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        "time": 3045.3432150000995,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 3.5633299999999544,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.009999999999999787,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 6173,
+            "position": [
+              89.72307789271852,
+              6.692180881500244,
+              -7.9811259425218495
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        "time": 3045.4931200000997,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 3.7132349999999525,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.009999999999999787,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 6173,
+            "position": [
+              89.72164653077924,
+              6.692030200958252,
+              -7.979761113096617
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        "time": 3045.5431200001,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 3.7632349999999524,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.009999999999998899,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 6173,
+            "position": [
+              89.62892843928252,
+              6.682235965728759,
+              -7.894385916784078
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        "time": 3045.6431200001,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 3.863234999999952,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": {
+          "minimum": 0.009999999999999787,
+          "count": 51598,
+          "limiter": "Mesh_0",
+          "witness": {
+            "index": 6173,
+            "position": [
+              89.48323659723253,
+              6.666848907470703,
+              -7.736592516596338
+            ],
+            "bones": [
+              {
+                "name": "LeftFoot",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        "time": 3045.759745000101,
+        "x": 89.0644489636414,
+        "z": -8.037301585290567,
+        "phase": "recovering",
+        "recoveryAge": 3.9798599999999515,
+        "active": 1,
+        "guardians": 0,
+        "maxGuardians": 1
+      },
+      {
+        "support": null,
+        "time": 3045.926185000101,
+        "x": 88.92457027499205,
+        "z": -8,
+        "phase": null,
+        "recoveryAge": null,
+        "active": 0,
+        "guardians": 0,
+        "maxGuardians": 1
+      }
+    ],
+    "errors": [],
+    "scope": "Actual cast and Game.tick; fixture resets cooldown and increases durability to isolate repeated contact.",
+    "videoSaved": true
+  },
+  "commandCosts": [
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 89.98836341466304,
+        "y": 8.415460300445556,
+        "z": -3.050022950956788
+      },
+      "planningCamera": {
+        "matrixWorld": [
+          0.5368754921931593,
+          2.7755575615628914e-17,
+          -0.8436614877321075,
+          0,
+          -0.2697595189544798,
+          0.9475024426087101,
+          -0.17166514842557806,
+          0,
+          0.7993713203610701,
+          0.31974852814442806,
+          0.5086908402297718,
+          0,
+          100,
+          11.713836193084717,
+          2,
+          1
+        ],
+        "projection": [
+          1.4653625988902634,
+          0,
+          0,
+          0,
+          0,
+          2.6050890646938014,
+          0,
+          0,
+          0,
+          0,
+          -1.0004000800160033,
+          -1,
+          0,
+          0,
+          -0.20004000800160032,
+          0
+        ]
+      },
+      "camera": {
+        "position": [
+          100,
+          11.713836193084717,
+          2
+        ],
+        "matrixWorld": [
+          0.5368754921931593,
+          2.7755575615628914e-17,
+          -0.8436614877321075,
+          0,
+          -0.2697595189544798,
+          0.9475024426087101,
+          -0.17166514842557806,
+          0,
+          0.7993713203610701,
+          0.31974852814442806,
+          0.5086908402297718,
+          0,
+          100,
+          11.713836193084717,
+          2,
+          1
+        ],
+        "projection": [
+          1.4653625988902634,
+          0,
+          0,
+          0,
+          0,
+          2.6050890646938014,
+          0,
+          0,
+          0,
+          0,
+          -1.0004000800160033,
+          -1,
+          0,
+          0,
+          -0.20004000800160032,
+          0
+        ],
+        "near": 0.1,
+        "far": 500
+      },
+      "plan": 17.49500000476837,
+      "logic": 1.3350000381469727,
+      "render": 0.04999995231628418,
+      "total": 18.87999999523163
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 88.922590008877,
+        "z": -7.8861183501438425
+      },
+      "origin": {
+        "x": 88.75206884868531,
+        "y": 8.303055477142333,
+        "z": -4.941050857890586
+      },
+      "planningCamera": {
+        "matrixWorld": [
+          0.5368754921931593,
+          2.7755575615628914e-17,
+          -0.8436614877321075,
+          0,
+          -0.2697595189544798,
+          0.9475024426087101,
+          -0.17166514842557806,
+          0,
+          0.7993713203610701,
+          0.31974852814442806,
+          0.5086908402297718,
+          0,
+          100,
+          11.713836193084717,
+          2,
+          1
+        ],
+        "projection": [
+          1.4653625988902634,
+          0,
+          0,
+          0,
+          0,
+          2.6050890646938014,
+          0,
+          0,
+          0,
+          0,
+          -1.0004000800160033,
+          -1,
+          0,
+          0,
+          -0.20004000800160032,
+          0
+        ]
+      },
+      "camera": {
+        "position": [
+          100,
+          11.713836193084717,
+          2
+        ],
+        "matrixWorld": [
+          0.5368754921931593,
+          2.7755575615628914e-17,
+          -0.8436614877321075,
+          0,
+          -0.2697595189544798,
+          0.9475024426087101,
+          -0.17166514842557806,
+          0,
+          0.7993713203610701,
+          0.31974852814442806,
+          0.5086908402297718,
+          0,
+          100,
+          11.713836193084717,
+          2,
+          1
+        ],
+        "projection": [
+          1.4653625988902634,
+          0,
+          0,
+          0,
+          0,
+          2.6050890646938014,
+          0,
+          0,
+          0,
+          0,
+          -1.0004000800160033,
+          -1,
+          0,
+          0,
+          -0.20004000800160032,
+          0
+        ],
+        "near": 0.1,
+        "far": 500
+      },
+      "plan": 13.789999961853027,
+      "logic": 0.3500000238418579,
+      "render": 0.029999971389770508,
+      "total": 14.169999957084656
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-3",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 89.9873772633633,
+        "y": 8.415517044067382,
+        "z": -2.800024895953126
+      },
+      "planningCamera": {
+        "matrixWorld": [
+          0.5368754921931593,
+          2.7755575615628914e-17,
+          -0.8436614877321075,
+          0,
+          -0.2697595189544798,
+          0.9475024426087101,
+          -0.17166514842557806,
+          0,
+          0.7993713203610701,
+          0.31974852814442806,
+          0.5086908402297718,
+          0,
+          100,
+          11.713836193084717,
+          2,
+          1
+        ],
+        "projection": [
+          1.4653625988902634,
+          0,
+          0,
+          0,
+          0,
+          2.6050890646938014,
+          0,
+          0,
+          0,
+          0,
+          -1.0004000800160033,
+          -1,
+          0,
+          0,
+          -0.20004000800160032,
+          0
+        ]
+      },
+      "camera": {
+        "position": [
+          100,
+          11.713836193084717,
+          2
+        ],
+        "matrixWorld": [
+          0.5368754921931593,
+          2.7755575615628914e-17,
+          -0.8436614877321075,
+          0,
+          -0.2697595189544798,
+          0.9475024426087101,
+          -0.17166514842557806,
+          0,
+          0.7993713203610701,
+          0.31974852814442806,
+          0.5086908402297718,
+          0,
+          100,
+          11.713836193084717,
+          2,
+          1
+        ],
+        "projection": [
+          1.4653625988902634,
+          0,
+          0,
+          0,
+          0,
+          2.6050890646938014,
+          0,
+          0,
+          0,
+          0,
+          -1.0004000800160033,
+          -1,
+          0,
+          0,
+          -0.20004000800160032,
+          0
+        ],
+        "near": 0.1,
+        "far": 500
+      },
+      "plan": 12.319999933242798,
+      "logic": 0.24000000953674316,
+      "render": 0.034999966621398926,
+      "total": 12.59499990940094
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-3",
+      "position": {
+        "x": 89.86381684579008,
+        "z": -8.19135812514131
+      },
+      "origin": {
+        "x": 91.05873380300578,
+        "y": 8.63474531173706,
+        "z": -5.222827602246458
+      },
+      "planningCamera": {
+        "matrixWorld": [
+          0.5368754921931593,
+          2.7755575615628914e-17,
+          -0.8436614877321075,
+          0,
+          -0.2697595189544798,
+          0.9475024426087101,
+          -0.17166514842557806,
+          0,
+          0.7993713203610701,
+          0.31974852814442806,
+          0.5086908402297718,
+          0,
+          100,
+          11.713836193084717,
+          2,
+          1
+        ],
+        "projection": [
+          1.4653625988902634,
+          0,
+          0,
+          0,
+          0,
+          2.6050890646938014,
+          0,
+          0,
+          0,
+          0,
+          -1.0004000800160033,
+          -1,
+          0,
+          0,
+          -0.20004000800160032,
+          0
+        ]
+      },
+      "camera": {
+        "position": [
+          100,
+          11.713836193084717,
+          2
+        ],
+        "matrixWorld": [
+          0.5368754921931593,
+          2.7755575615628914e-17,
+          -0.8436614877321075,
+          0,
+          -0.2697595189544798,
+          0.9475024426087101,
+          -0.17166514842557806,
+          0,
+          0.7993713203610701,
+          0.31974852814442806,
+          0.5086908402297718,
+          0,
+          100,
+          11.713836193084717,
+          2,
+          1
+        ],
+        "projection": [
+          1.4653625988902634,
+          0,
+          0,
+          0,
+          0,
+          2.6050890646938014,
+          0,
+          0,
+          0,
+          0,
+          -1.0004000800160033,
+          -1,
+          0,
+          0,
+          -0.20004000800160032,
+          0
+        ],
+        "near": 0.1,
+        "far": 500
+      },
+      "plan": 13.02999997138977,
+      "logic": 0.21000003814697266,
+      "render": 0.02499997615814209,
+      "total": 13.269999980926514
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 89.98789006203917,
+        "y": 8.415488910675048,
+        "z": -2.9300238845550304
+      },
+      "planningCamera": {
+        "matrixWorld": [
+          0.5368754921931593,
+          2.7755575615628914e-17,
+          -0.8436614877321075,
+          0,
+          -0.2697595189544798,
+          0.9475024426087101,
+          -0.17166514842557806,
+          0,
+          0.7993713203610701,
+          0.31974852814442806,
+          0.5086908402297718,
+          0,
+          100,
+          11.713836193084717,
+          2,
+          1
+        ],
+        "projection": [
+          1.4653625988902634,
+          0,
+          0,
+          0,
+          0,
+          2.6050890646938014,
+          0,
+          0,
+          0,
+          0,
+          -1.0004000800160033,
+          -1,
+          0,
+          0,
+          -0.20004000800160032,
+          0
+        ]
+      },
+      "camera": {
+        "position": [
+          100,
+          11.713836193084717,
+          2
+        ],
+        "matrixWorld": [
+          0.5368754921931593,
+          2.7755575615628914e-17,
+          -0.8436614877321075,
+          0,
+          -0.2697595189544798,
+          0.9475024426087101,
+          -0.17166514842557806,
+          0,
+          0.7993713203610701,
+          0.31974852814442806,
+          0.5086908402297718,
+          0,
+          100,
+          11.713836193084717,
+          2,
+          1
+        ],
+        "projection": [
+          1.4653625988902634,
+          0,
+          0,
+          0,
+          0,
+          2.6050890646938014,
+          0,
+          0,
+          0,
+          0,
+          -1.0004000800160033,
+          -1,
+          0,
+          0,
+          -0.20004000800160032,
+          0
+        ],
+        "near": 0.1,
+        "far": 500
+      },
+      "plan": 13.480000019073486,
+      "logic": 0.20500004291534424,
+      "render": 0.029999971389770508,
+      "total": 13.715000033378601
+    },
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-6",
+      "position": {
+        "x": 89.27564683648036,
+        "z": -7.703515599486066
+      },
+      "origin": {
+        "x": 90.57029382088288,
+        "y": 8.531960201263427,
+        "z": -4.919850895219861
+      },
+      "planningCamera": {
+        "matrixWorld": [
+          0.5368754921931593,
+          2.7755575615628914e-17,
+          -0.8436614877321075,
+          0,
+          -0.2697595189544798,
+          0.9475024426087101,
+          -0.17166514842557806,
+          0,
+          0.7993713203610701,
+          0.31974852814442806,
+          0.5086908402297718,
+          0,
+          100,
+          11.713836193084717,
+          2,
+          1
+        ],
+        "projection": [
+          1.4653625988902634,
+          0,
+          0,
+          0,
+          0,
+          2.6050890646938014,
+          0,
+          0,
+          0,
+          0,
+          -1.0004000800160033,
+          -1,
+          0,
+          0,
+          -0.20004000800160032,
+          0
+        ]
+      },
+      "camera": {
+        "position": [
+          100,
+          11.713836193084717,
+          2
+        ],
+        "matrixWorld": [
+          0.5368754921931593,
+          2.7755575615628914e-17,
+          -0.8436614877321075,
+          0,
+          -0.2697595189544798,
+          0.9475024426087101,
+          -0.17166514842557806,
+          0,
+          0.7993713203610701,
+          0.31974852814442806,
+          0.5086908402297718,
+          0,
+          100,
+          11.713836193084717,
+          2,
+          1
+        ],
+        "projection": [
+          1.4653625988902634,
+          0,
+          0,
+          0,
+          0,
+          2.6050890646938014,
+          0,
+          0,
+          0,
+          0,
+          -1.0004000800160033,
+          -1,
+          0,
+          0,
+          -0.20004000800160032,
+          0
+        ],
+        "near": 0.1,
+        "far": 500
+      },
+      "plan": 8.044999957084656,
+      "logic": 0.24000000953674316,
+      "render": 0.02499997615814209,
+      "total": 8.309999942779541
+    }
+  ]
+}

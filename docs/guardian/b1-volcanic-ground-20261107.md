@@ -1,0 +1,5 @@
+# Terreno volcánico WebGPU
+
+El perfil Worker con entradas causales prepara el material volcánico con los tres atlas de producción y utiliza la máscara de cada chunk confirmado. El grafo comparte atlas, semilla, luz, reflejo y código; la máscara y posición son datos por material. Conserva la mezcla de la rama volcánica, el relieve por parallax, el mapa normal, la rugosidad y la oclusión del atlas. La admisión y liberación del material y de la máscara usan el ciclo existente del terreno. Si no se pueden preparar los recursos se informa del error y se usa el terreno de vértices anterior.
+
+No están implementados el AO de contacto ni las variantes de laboratorio. La generación WGSL y las pruebas de recursos no garantizan compilación de GPU ni paridad artística; se requiere comparación visual en partida de día y de noche y medición en C. La preparación de las máscaras y cualquier coste de primer uso GPU siguen sin medirse. Los demás biomas todavía necesitan su propia migración; no se presenta como cierre de B1.

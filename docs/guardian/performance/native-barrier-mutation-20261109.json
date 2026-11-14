@@ -1,0 +1,70 @@
+{
+  "date": "2026-11-09",
+  "audit": "/tests/browser/native-barrier-mutation.html",
+  "result": {
+    "checklistId": "A6-04.f-R2",
+    "status": "partial",
+    "backend": "webgpu",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "scope": "One oriented native barrier add only, with one causal draw connection and a diagnostic triangle. The old packet freezes after commit; replacement resources and other mutation types remain open.",
+    "block": {
+      "start": 1794245607846.685,
+      "end": 1794245608346.7751,
+      "blockedMs": 500.090087890625,
+      "drawFramesBeforeQuiescence": 5,
+      "drawFramesAfterRelease": 0
+    },
+    "mutation": {
+      "stagedAt": 1794245608033.3398,
+      "committedAt": 1794245608039.6948,
+      "beforeCount": 121,
+      "afterCount": 122,
+      "sequence": 2,
+      "barrierId": 122,
+      "receipt": {
+        "authorityEpoch": "fd8ce2a8-59d3-45bb-8e88-7f8ee170b098/1",
+        "session": "barrier-2e0b142b-7140-4c55-982a-734099f80c37",
+        "holdId": 1,
+        "sequence": 2,
+        "effectiveTime": 10.25,
+        "clockSequence": 2
+      },
+      "changes": [
+        {
+          "type": "RouteInvalidated",
+          "sequence": 3,
+          "effectiveTime": 10.25,
+          "actorId": 900011
+        }
+      ]
+    },
+    "drawStats": {
+      "quiescedAt": 1794245608035,
+      "releasedAt": 1794245608039.94,
+      "mutationEpoch": 1,
+      "floor": 10.25,
+      "packets": 1,
+      "nativeFrames": 6,
+      "replayFrames": 5,
+      "gpuErrors": 0,
+      "failed": false
+    },
+    "readback": [
+      10,
+      20.049999237060547,
+      24,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "authorizedAutonomy": false,
+    "authorizedPassage": false
+  }
+}

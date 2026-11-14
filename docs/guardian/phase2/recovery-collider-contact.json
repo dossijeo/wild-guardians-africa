@@ -1,0 +1,154 @@
+{
+  "ready": true,
+  "campaign": false,
+  "entityCounts": {
+    "workers": 1,
+    "structures": 1,
+    "crops": 1,
+    "animals": 2
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 0,
+  "maxVisibleGuardians": 1,
+  "elapsed": 3046.2678559999426,
+  "simulate": true,
+  "active": 0,
+  "origins": [],
+  "retainedAttacks": [],
+  "retainedDraws": 0,
+  "attackVisual": [],
+  "reused": 1,
+  "health": 28,
+  "animalState": "walking",
+  "animalPosition": [
+    89.62025670536372,
+    -5.41051584135046
+  ],
+  "draws": 64,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "spirit_appear",
+      "at": 3042.9078559999457,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_appear",
+      "at": 3042.9078559999457,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3043.1478559999455,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3043.1478559999455,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3043.1478559999455,
+      "emitter": "qa-beast-0",
+      "phase": "falling",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3043.1478559999455,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    },
+    {
+      "id": "hyena_hurt",
+      "at": 3043.1478559999455,
+      "emitter": "qa-beast-1",
+      "phase": "falling",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3043.1478559999455,
+      "emitter": "impact:qa-beast-1",
+      "played": false
+    },
+    {
+      "id": "spirit_disappear",
+      "at": 3045.1878559999436,
+      "emitter": "guardian-world",
+      "played": false
+    }
+  ],
+  "combatPhysics": {
+    "active": 2,
+    "physicsMs": 3.100000023841858,
+    "recoveryMs": 1.100000023841858,
+    "rejected": 0,
+    "startMs": 7.899999976158142,
+    "maxStepMs": 22.59999990463257,
+    "solverMs": 1,
+    "solverSteps": 2,
+    "bindingMs": 0,
+    "recoverySetupMs": 0,
+    "creationMs": 0,
+    "lastCreation": {
+      "species": "hyena",
+      "captureMs": 0.3999999761581421,
+      "colliderFitMs": 3.600000023841858,
+      "environmentMs": 0.20000004768371582,
+      "bodiesMs": 3.6999999284744263
+    },
+    "recoveryFollowMs": 2,
+    "bakedActive": 0,
+    "kinematic": 1
+  },
+  "physicsWorlds": 1,
+  "physicalBodies": 28,
+  "down": {
+    "phase": "falling",
+    "since": 3043.1478559999455,
+    "until": 3052.1478559999455
+  },
+  "allDown": [
+    {
+      "id": "qa-beast-0",
+      "phase": "falling",
+      "x": 89.62025670536372,
+      "z": -5.41051584135046
+    },
+    {
+      "id": "qa-beast-1",
+      "phase": "recovering",
+      "x": 90.86964959319266,
+      "z": -5.661359879720829
+    }
+  ],
+  "errors": [],
+  "report": null,
+  "commandCosts": [
+    {
+      "kind": "attack",
+      "plan": 1.6999999284744263,
+      "logic": 1,
+      "render": 0,
+      "total": 2.6999999284744263
+    },
+    {
+      "kind": "attack",
+      "plan": 1.100000023841858,
+      "logic": 0.10000002384185791,
+      "render": 0,
+      "total": 1.2000000476837158
+    }
+  ]
+}

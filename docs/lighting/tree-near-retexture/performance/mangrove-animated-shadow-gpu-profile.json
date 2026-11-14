@@ -1,0 +1,55 @@
+{
+  "network": true,
+  "animals": 20,
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "renderCpu": {
+    "count": 180,
+    "p50": 34.73999999463558,
+    "p95": 42.724999994039536,
+    "p99": 46.17499999701977,
+    "max": 47.76500000059605
+  },
+  "frames": {
+    "count": 179,
+    "p50": 33.33499999999913,
+    "p95": 66.65499999999884,
+    "p99": 66.78499999999622,
+    "max": 66.79000000000087
+  },
+  "fullGpu": {
+    "reason": null,
+    "ms": {
+      "count": 90,
+      "p50": 18.40016,
+      "p95": 24.168448,
+      "p99": 26.262944,
+      "max": 26.968032
+    },
+    "disjointEvents": 0,
+    "discarded": 0,
+    "overflowSkipped": 0,
+    "foreignQuerySkipped": 0,
+    "pending": 0
+  },
+  "shadowGpu": {
+    "reason": null,
+    "ms": {
+      "count": 90,
+      "p50": 9.007104,
+      "p95": 13.712608,
+      "p99": 15.237376,
+      "max": 18.462176
+    },
+    "disjointEvents": 0,
+    "discarded": 0,
+    "overflowSkipped": 0,
+    "foreignQuerySkipped": 0,
+    "pending": 0
+  },
+  "shadowCalls": 90,
+  "shadowTimed": 90,
+  "cacheDraws": 180,
+  "cacheHits": 30,
+  "sceneErrors": [],
+  "scope": "One Edge headless GTX 1660 session; synthetic walking on 20 animals in mangrove islands. Alternating whole-frame and shadow-pass timer queries avoid nesting; shadow timing includes that wrapper pass, potentially cached draws, and is not directly additive with full-frame samples. No Game.tick, input, audio, production FPS or performance change."
+}

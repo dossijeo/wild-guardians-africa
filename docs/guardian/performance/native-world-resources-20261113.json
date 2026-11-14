@@ -1,0 +1,77 @@
+{
+  "result": {
+    "checklistId": "A6-04.f-R4",
+    "backend": "webgpu",
+    "kind": "residency-add",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "block": {
+      "start": 1794586302680.2,
+      "end": 1794586303180.285,
+      "blockedMs": 500.0849609375,
+      "drawFramesBeforeQuiescence": 5,
+      "drawFramesAfterRelease": 0
+    },
+    "mutation": {
+      "stagedAt": 1794586302874.835,
+      "committedAt": 1794586302909.74,
+      "sequence": 2,
+      "result": {
+        "status": "committed",
+        "ids": [
+          4,
+          4,
+          11
+        ],
+        "receipt": {
+          "authorityEpoch": "92f38f25-3ce7-4886-8541-84fd95eaf10f/1",
+          "session": "world-adb5a3a0-0719-49d9-a83e-80d01fcec505",
+          "holdId": 1,
+          "sequence": 2,
+          "effectiveTime": 10.25,
+          "clockSequence": 2
+        }
+      },
+      "changes": [],
+      "worldChanged": false,
+      "residencyChanged": true
+    },
+    "drawStats": {
+      "quiescedAt": 1794586302876.895,
+      "releasedAt": 1794586302909.955,
+      "mutationEpoch": 1,
+      "floor": 10.25,
+      "packets": 1,
+      "nativeFrames": 6,
+      "gpuErrors": 0,
+      "failed": false
+    },
+    "resourceIdentity": {
+      "latePacket": "obsolete",
+      "freshPacket": "presented",
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "92f38f25-3ce7-4886-8541-84fd95eaf10f/1",
+        "nativeSession": 1,
+        "ticket": 1,
+        "effectiveTime": 10.25
+      },
+      "activeSequence": 3,
+      "packets": 2,
+      "presentedTime": 10.25,
+      "scope": "Native resource identity and packet replacement; unchanged diagnostic route, no characters or visible mutation projection."
+    },
+    "scope": "Native commit identity and graphical replacement only. Visible mutation resources and real characters remain pending.",
+    "authorizedAutonomy": false,
+    "authorizedPassage": false
+  },
+  "errors": [],
+  "httpFailures": [],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ]
+}

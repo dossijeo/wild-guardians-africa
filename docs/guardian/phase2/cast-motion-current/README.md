@@ -1,0 +1,25 @@
+# Current daytime cast motion review
+
+Recorded the installed model and production GuardianSummons in the real WorldScene fixture on revision a03a039bf. day.webm uses the ordinary fixture camera; day-close.webm adds the new opt-in `?castClose=1` camera zoom of 2. This affects the QA page only. Both sequences execute Grow/Multiply six times, rotate the camera, change distance, and end with two orders separated by 300 ms. Costs/cooldowns are reset by this existing fixture, so this is not a balance test. Daytime uses presentation-only clock advancement, not a full raid simulation.
+
+Both browser status receipts report no errors and maximum one visible Guardian. The audio bus was unlocked before recording and the traces report accepted appearance, launch and disappearance sources. Audio is included, but no perceptual mix judgment is made here. These captures do not replace the requested voiced tutorial recording.
+
+Inspected day-contact.jpg (2 frames/second across the ordinary recording) and first-cast-detail.jpg (5 frames/second from seconds 1–3 of the close recording). Arrival silhouette, helical energy, the connection toward the crop and disintegration are visible. The rotated/distant views still retain the target. This does not establish every obstacle or camera configuration.
+
+The close Grow sequence shows limited change in the mantle silhouette during this short cast. The existing wide 12-second wind clip and static edge checks are insufficient artistic acceptance for a roughly two-second summon. Next evaluate the mantle playback rate/phase during actual casts against this baseline before changing its baked amplitude or mesh. No production animation change was made in this review. These sampled images are not a claim of frame-by-frame or real-time perceptual validation.
+
+Reproduce at `/tests/browser/guardian-combat.html` (or `?castClose=1`), wait for ready, activate sound, then select **Grabar día**. The existing local receiver on port 5197 saves combat-day.webm. Copy it before the next recording overwrites that receiver output.
+
+## Rejected double-speed experiment
+
+day-wind2.webm / day-wind2.json were recorded with only Mantle_Spell sampled at `(state.elapsed * 2) % duration`; body, float, tutorial and baked geometry remained unchanged. The authoring clip has three main waves per twelve-second loop. Sixteen model/singleton tests and the production build passed during the experiment.
+
+Inspected wind2-detail.jpg at the same five-frame-per-second sampling as first-cast-detail.jpg. The visible silhouette difference is insufficient to establish a convincing artistic improvement. This was not a phase-matched numerical comparison: recordings begin at different simulation times. The speed change was removed after review; runtime remains at the original rate. No claim of improved wind or performance is made. Next diagnose evaluated mantle vertices/bone contributions during the actual WorldScene cast, rather than increasing speed again without evidence.
+
+## CPU deformation localization
+
+`node tools/guardian/audit_cast_wind.mjs` samples the installed GLB with the summon action selection/time rule, at simulation time 3000–3002 seconds, in 1/12-second steps. Texture loading is removed only in memory. Receipt: cpu-wind.json, bound to the runtime GLB SHA. This is a CPU evaluation, not an observation of GPU output or the full WorldScene gust/aim overlays.
+
+The four terminal mantle bones sweep 64.9–89.4 degrees during these two seconds. For 1,246 vertices whose summed mantle influence is at least .8, maximum displacement from the first sample has median .0203, p95 .0620 and maximum .1254 in mesh-local units (before the summon model scale of 2.4). These distances include the selected Grow/Float deformation; they do not isolate wind from body movement. The output proves that the animation reaches the sampled skeleton and CPU-skinned mesh. It does not prove correct GPU deformation or identify weights as the sole cause of the weak silhouette.
+
+Next inspect terminal-bone pivot positions and the weight distribution over the broad cloth panels. Large angular sweep with limited cloth displacement makes that a better-founded next experiment than increasing playback speed again. Keep original rig/model files until a local trial has been compared visually.

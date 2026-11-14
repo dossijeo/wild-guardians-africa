@@ -1,0 +1,4 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {pausedAuthorityQuiescent} from '../src/simulation/paused-authority-quiescence.js';
+const base=()=>({enabled:true,hasSnapshot:true,game:{pauses:['menu'],day:2,microevents:{day:2}},physics:null,trackMicroIncome:false,nav:{},resident:{missing:[]},terrainGeneration:3,reportedTerrainGeneration:3});
+test('authority certifies only a fully quiet paused state',()=>{const yes=base();assert.equal(pausedAuthorityQuiescent(yes),true);assert.equal(pausedAuthorityQuiescent({...yes,physics:{actorIds:[]}}),true);for(const change of [{enabled:false},{hasSnapshot:false},{game:{...yes.game,pauses:[]}},{physics:{actorIds:['animal']}},{physics:{}},{nav:{serviceRaidConnectivityDemand(){}}},{trackMicroIncome:true,game:{...yes.game,microevents:{day:1}}},{resident:{missing:['1,2']}},{terrainGeneration:4},{resident:{}}])assert.equal(pausedAuthorityQuiescent({...yes,...change}),false,JSON.stringify(change));});

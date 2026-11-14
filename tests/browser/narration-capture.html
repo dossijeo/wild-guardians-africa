@@ -1,0 +1,22 @@
+<!doctype html><meta charset="utf-8"><title>Narration capture QA</title>
+<button id="run">Probar captura ES + EN</button><pre id="result">Pendiente</pre>
+<script type="module">
+import {SpiritVoice} from '/src/audio/spirit-voice.js';
+import manifest from '/content/manifests/spirit-voices.json';
+import {captureNarration} from '/tools/experiments/narration-audio-capture.js';
+const button=document.querySelector('#run'),out=document.querySelector('#result');
+button.onclick=async()=>{
+ button.disabled=true;const context=new AudioContext(),voice=new SpiritVoice({url:path=>'/'+path}),destination=context.createMediaStreamDestination();let tap,source;
+ const receipt={scope:'Two real narration clips, first 3 s each; audio capture only',clips:[]};
+ try{
+  await context.resume();tap=captureNarration(context,destination,[voice]);source=context.createMediaStreamSource(destination.stream);const analyser=context.createAnalyser();source.connect(analyser);const samples=new Float32Array(analyser.fftSize);
+  for(const language of ['es','en']){
+   const record=manifest.records.find(r=>r.language===language);voice.play(record);let peak=0;const started=performance.now();
+   while(performance.now()-started<3000){await new Promise(resolve=>setTimeout(resolve,50));analyser.getFloatTimeDomainData(samples);for(const sample of samples)peak=Math.max(peak,Math.abs(sample));}
+   receipt.clips.push({id:record.id,status:voice.status,time:voice.audio?.currentTime,peak});voice.stop();
+  }
+  receipt.capture=tap.report;receipt.pass=tap.report.attached===2&&!tap.report.errors.length&&receipt.clips.every(c=>c.status==='playing'&&c.time>1&&c.peak>.001);
+ }catch(error){receipt.error=String(error);receipt.pass=false;}
+ finally{tap?.release();voice.dispose();source?.disconnect();for(const track of destination.stream.getTracks())track.stop();await context.close();out.textContent=JSON.stringify(receipt,null,2);button.disabled=false;}
+};
+</script>

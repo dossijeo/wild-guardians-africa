@@ -1,0 +1,58 @@
+{
+  "runs": [
+    {
+      "mode": "main",
+      "elapsed": 3439.999999997571,
+      "frames": {
+        "count": 119,
+        "p95": 33.39499999999998,
+        "p99": 33.42500000000018,
+        "max": 66.58499999999981
+      },
+      "responseMs": 68.75,
+      "firstTickMs": 8.405000001192093,
+      "totalMs": 3973.7849999964237
+    },
+    {
+      "mode": "worker",
+      "elapsed": 3439.999999997571,
+      "frames": {
+        "count": 119,
+        "p95": 33.36000000000013,
+        "p99": 33.38500000000022,
+        "max": 33.43999999999983
+      },
+      "responseMs": 65.72999999672174,
+      "firstTickMs": 8.129999995231628,
+      "totalMs": 3942.289999999106
+    },
+    {
+      "mode": "worker",
+      "elapsed": 3439.999999997571,
+      "frames": {
+        "count": 119,
+        "p95": 33.38000000000011,
+        "p99": 33.404999999999745,
+        "max": 33.475000000000136
+      },
+      "responseMs": 66.4050000011921,
+      "firstTickMs": 8.185000002384186,
+      "totalMs": 3956.204999998212
+    },
+    {
+      "mode": "main",
+      "elapsed": 3439.999999997571,
+      "frames": {
+        "count": 119,
+        "p95": 33.38999999999987,
+        "p99": 33.45499999999993,
+        "max": 66.68000000000006
+      },
+      "responseMs": 66.49000000208616,
+      "firstTickMs": 8.880000002682209,
+      "totalMs": 3989.704999998212
+    }
+  ],
+  "selectedProjectionEqual": true,
+  "scope": "Edge headless, restored saved raid and real simulation ticks; simple WebGL clear only, no WorldScene, physics manager, user input, audio or gameplay publication. One artificially batched 100-step request per session, not a single slow navigation operation. The fixture uses its saved biome, not a mangrove scenario. Frame percentiles have 119 samples and cannot represent full production."
+}

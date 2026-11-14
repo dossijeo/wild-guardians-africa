@@ -1,0 +1,41 @@
+{
+  "date": "2026-11-05",
+  "runs": [
+    {
+      "samplesPerBatch": 256,
+      "batches": 16,
+      "maxDifference": 0,
+      "raycastMs": {
+        "mean": 144.15981875,
+        "p95": 253.02199999999993,
+        "p99": 253.02199999999993,
+        "max": 253.02199999999993
+      },
+      "residentSurfaceMs": {
+        "mean": 0.1011312500000372,
+        "p95": 0.15560000000004948,
+        "p99": 0.15560000000004948,
+        "max": 0.15560000000004948
+      },
+      "scope": "Node CPU sampling of one real Wild Engine mangrove chunk; alternating order after warmup, not full game, WebGPU, water or FPS."
+    },
+    {
+      "samplesPerBatch": 256,
+      "batches": 16,
+      "maxDifference": 0,
+      "raycastMs": {
+        "mean": 131.56326874999996,
+        "p95": 188.06939999999986,
+        "p99": 188.06939999999986,
+        "max": 188.06939999999986
+      },
+      "residentSurfaceMs": {
+        "mean": 0.09880000000001843,
+        "p95": 0.1630999999999858,
+        "p99": 0.1630999999999858,
+        "max": 0.1630999999999858
+      },
+      "scope": "Node CPU sampling of one real Wild Engine mangrove chunk; alternating order after warmup, not full game, WebGPU, water or FPS."
+    }
+  ]
+}

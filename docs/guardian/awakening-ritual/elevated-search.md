@@ -1,0 +1,7 @@
+# Occluded free-footprint fallback — 2026-10-29
+
+Found a real solver gap: elevated search ran only for occupied footprints, not for geometrically free candidates hidden by buildings. Added a failing regression with a clear ground footprint behind an occluding silhouette; it returned y=1.7. It now finds a visible elevated alternative. Eighteen placement tests pass. The bounded wider rings are also considered when no nearby candidate is both framed and unoccluded. An elevated alternative replaces a clear ground candidate only if its evaluated score improves.
+
+Eight-view fixture now records planned and final origins. In the tower case the new search moves the Guardian higher. [Rendered result](elevated-search.png), [raw UI](elevated-search-ui.txt). All eight lifecycle checks still pass, with no errors. **The tower view remains artistically unacceptable:** only the upper portion/energy is legible above the roof, especially by day. Wider search did not improve this particular composition. Do not call this a full tower fix. Review full-resolution silhouettes and scoring next; no camera behavior was changed.
+
+Production build passed after the elevated-search change (535 modules, 15.81s, existing warnings); the subsequent one-line wider-search condition was covered by all 18 placement tests and whitespace check but not another build. Additional candidate work occurs only on command planning; its worst-case incremental cost remains to be measured. This does not close visual or performance acceptance.

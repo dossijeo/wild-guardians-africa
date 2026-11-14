@@ -11,8 +11,10 @@ export const SAVE_VERSION=1;
 function wholeMoney(value){
   return value&&typeof value.n==='string'&&typeof value.d==='string'&&/^-?\d+$/.test(value.n)&&/^[1-9]\d*$/.test(value.d)&&BigInt(value.n)%BigInt(value.d)===0n;
 }
-export function validateSnapshot(state) {
+export function validateSnapshot(state,{livePhysics=false}={}) {
   if(!state || state.saveVersion!==SAVE_VERSION || typeof state.slotId!=='string')throw new Error('Guardado incompatible');
+  if(state.workerPhysicsCheckpoint!==undefined&&(typeof state.workerPhysicsCheckpoint!=='string'||!state.workerPhysicsCheckpoint.length||state.workerPhysicsCheckpoint.length>32*1024*1024))throw new Error('Física guardada inválida');
+  if(state.guardianAttackStartedAt!==undefined&&(!Number.isFinite(state.guardianAttackStartedAt)||state.guardianAttackStartedAt<0||state.guardianAttackStartedAt>state.elapsed))throw new Error('Gesto de ataque inválido');
   if(state.mangroveSettlementVersion!==undefined&&(![1,2].includes(state.mangroveSettlementVersion)||state.biome!=='manglares'||!state.mangroveNetwork))throw new Error('Reserva de Manglares incompatible');
   if(state.mangroveNetwork!==undefined&&(typeof state.mangroveNetwork!=='boolean'||state.biome!=='manglares'))throw new Error('Variante de Manglares inválida');
   if(state.mangroveChannels!==undefined&&(typeof state.mangroveChannels!=='boolean'||state.biome!=='manglares'))throw new Error('Variante de Manglares inválida');
@@ -37,14 +39,31 @@ export function validateSnapshot(state) {
     if(!m||typeof m!=='object'||Array.isArray(m)||Object.entries(m).some(([key,value])=>key==='shieldRaid'?typeof value!=='string':!['growthAt','multiplyAt','lastAt'].includes(key)||!Number.isFinite(value)||value<0||value>state.elapsed))throw new Error('Recordatorios de magia inválidos');
   }
   if(state.pauses?.includes('tutorial-reading')&&!tutorial.reading)throw new Error('Lectura tutorial incoherente');
+  // A generated raid is created once by its daily plan. A missing night plan
+  // can be recreated on the next tick; a missing day plan can be recreated by
+  // hiring. Arbitrary legacy raid IDs retain their prior compatibility.
+  const raidId=typeof state.raid?.id==='string'?/^raid-(0|[1-9]\d*)-(day|night)$/.exec(state.raid.id):null;
+  if(raidId){const day=Number(raidId[1]),daytime=raidId[2]==='day',plan=daytime?state.dayPlan:state.nightPlan;if(!Number.isSafeInteger(day)||day!==state.day||state.raid.daytime!==undefined&&state.raid.daytime!==daytime||!plan||plan.done!==true)throw new Error('Plan de incursión incoherente');}
   if(state.raid?.cameraFocusedAnimalId!==undefined&&(typeof state.raid.cameraFocusedAnimalId!=='string'||!state.raid.animals.some(a=>a.id===state.raid.cameraFocusedAnimalId)))throw new Error('Foco de incursión inválido');
   if(state.raid?.introCropLimit!==undefined){
     const r=state.raid;
     if(!Number.isSafeInteger(r.introPlantCount)||r.introPlantCount<0||!Number.isSafeInteger(r.introCropLimit)||r.introCropLimit<0||r.introCropLimit>Math.max(0,r.introPlantCount-1)||!Number.isSafeInteger(r.introCropsDestroyed)||r.introCropsDestroyed<0||r.introCropsDestroyed>r.introCropLimit)throw new Error('Límite de incursión inicial inválido');
   }
   if(!validRaidContention(state))throw new Error('Turnos de incursión inválidos');
-  const ids=new Set();
+  // Generated entity numbers share one monotonic counter across all kinds.
+  // Older/imported arbitrary IDs remain valid, but a stale counter must never
+  // silently reuse a live generated identity in this restored session.
+  if(!Number.isSafeInteger(state.nextId)||state.nextId<1||!Number.isSafeInteger(state.sequence)||state.sequence<1)throw new Error('Contadores de identidad inválidos');
+  const ids=new Set(),generated=/^(?:plant|structure|person|worker|crate|spell|task|village|animal)-(0|[1-9]\d*)$/;
+  const addIdentity=entity=>{if(typeof entity?.id!=='string'||!entity.id||ids.has(entity.id))throw new Error('Identidad duplicada');ids.add(entity.id);const match=generated.exec(entity.id);if(match){const n=Number(match[1]);if(!Number.isSafeInteger(n)||n>=state.nextId)throw new Error('Contador de entidad incoherente');}};
+  for(const animal of state.raid?.animals??[])addIdentity(animal);
+  for(const person of state.people??[])addIdentity(person);
+  for(const [list,prefix] of [[state.events??[],'event-'],[state.messages??[],'message-']]){const observed=new Set();for(const item of list){if(typeof item?.id==='string'){if(observed.has(item.id))throw new Error('Identidad duplicada');observed.add(item.id);}const match=typeof item?.id==='string'?/^(?:event|message)-(0|[1-9]\d*)$/.exec(item.id):null;if(match&&item.id.startsWith(prefix)){const n=Number(match[1]);if(!Number.isSafeInteger(n)||n>=state.sequence)throw new Error('Contador de eventos incoherente');}}}
   for(const animal of state.raid?.animals??[]){
+    if(animal.magicDown!==undefined){const d=animal.magicDown;if(!d||!(['falling','recovering'].includes(d.phase)||d.phase==='rolling'&&(livePhysics||state.workerPhysicsCheckpoint!==undefined))||![d.since,d.until].every(Number.isFinite)||d.since<0||d.since>state.elapsed||d.until<d.since||!livePhysics&&state.workerPhysicsCheckpoint===undefined&&d.until-d.since>12)throw new Error('Derribo mágico inválido');}
+    if(animal.magicHealth!==undefined&&(!Number.isFinite(animal.magicHealth)||animal.magicHealth<0||animal.magicHealth>1000))throw new Error('Resistencia mágica inválida');
+    if(animal.magicStunUntil!==undefined&&(!Number.isFinite(animal.magicStunUntil)||animal.magicStunUntil<0))throw new Error('Interrupción mágica inválida');
+    if(animal.magicImpact!==undefined){const h=animal.magicImpact;if(!h||!Number.isFinite(h.at)||h.at<0||h.at>state.elapsed||(h.impactAt!==undefined&&(!Number.isFinite(h.impactAt)||h.impactAt<h.at||h.impactAt-h.at>.5))||(h.ground!==undefined&&!Number.isFinite(h.ground))||(h.intensity!==undefined&&(!Number.isFinite(h.intensity)||h.intensity<0||h.intensity>2))||![h.point,h.direction,h.origin].every(p=>p&&[p.x,p.y,p.z].every(Number.isFinite)))throw new Error('Impacto mágico inválido');}
     if(animal.damageProfile!==undefined&&!validDamageProfile(animal.damageProfile))throw new Error('Perfil de impacto inválido');
     const ids=animal.agriculturalAttackIds;if(ids!==undefined&&(!Array.isArray(ids)||ids.length>64||new Set(ids).size!==ids.length||ids.some(id=>typeof id!=='string'||!id.length||id.length>96)))throw new Error('Impactos agrícolas inválidos');
   }
@@ -68,7 +87,7 @@ export function validateSnapshot(state) {
   for(const name of ['plants','structures','workers','crates','villages','spells','tasks']) {
     if(!Array.isArray(state[name]))throw new Error('Entidades inválidas');
     for(const e of state[name]) {
-      if(typeof e.id!=='string'||ids.has(e.id))throw new Error('Identidad duplicada');ids.add(e.id);
+      addIdentity(e);
       if(['plants','structures','workers','crates','villages','spells'].includes(name) && (!Number.isFinite(e.x)||!Number.isFinite(e.z)))throw new Error('Posición inválida');
     }
   }
