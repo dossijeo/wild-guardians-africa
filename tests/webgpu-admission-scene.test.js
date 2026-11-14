@@ -2,6 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {compileWithAdmissionSceneLighting} from '../src/rendering/webgpu-admission-scene.js';
+import Nodes from 'three/src/renderers/common/nodes/Nodes.js';
+
+for(const wholeScene of [false,true])test(`admission refreshes Three's actual per-call scene hash without advancing render time (${wholeScene?'scene':'group'})`,()=>{
+ const scene=new THREE.Scene(),object=wholeScene?scene:new THREE.Group(),camera=new THREE.PerspectiveCamera(),node={lights:[],getLights(){return this.lights;},setLights(value){this.lights=value;},getCacheKey:()=>7},list={lightsNode:wholeScene?node:{},lightsArray:[]},renderer={info:{calls:1},shadowMap:{enabled:false},getOutputRenderTarget:()=>null,_renderLists:{get:()=>list},lighting:{getNode:()=>node}};
+ renderer._nodes=new Nodes(renderer,{});if(wholeScene)scene.add(new THREE.HemisphereLight());scene.fog=new THREE.Fog(0x778899,1,20);const before=renderer._nodes.getCacheKey(scene,node);scene.fog=new THREE.FogExp2(0x778899,.03);
+ assert.equal(renderer._nodes.getCacheKey(scene,node),before,'Three memoizes within info.calls');
+ const refreshed=compileWithAdmissionSceneLighting(renderer,object,camera,scene,()=>renderer._nodes.getCacheKey(scene,node));assert.notEqual(refreshed,before);assert.equal(renderer.info.calls,1);assert.equal(renderer._wgCompileSceneReference,undefined);
+});
 
 function fixture(){const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),oldNode={},oldLights=[new THREE.HemisphereLight()],node={lights:oldLights,getLights(){return this.lights;},setLights(value){this.lights=value;}},list={lightsNode:oldNode,lightsArray:[new THREE.PointLight()]},renderer={_wgCompileSceneReference:null,_renderLists:{get:()=>list},lighting:{getNode:()=>node}};return {scene,camera,object,oldNode,oldLights,node,list,renderer};}
 test('admission temporarily shares scene light identity and restores it before awaiting',async()=>{

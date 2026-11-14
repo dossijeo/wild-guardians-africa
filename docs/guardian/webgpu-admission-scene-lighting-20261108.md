@@ -1,6 +1,6 @@
 # WebGPU admission: scene and lighting identity
 
-**2026-11-14 follow-up:** [Real shadow bindings](f-r4-prepared-shadow-bindings-20261114.md) now use the existing identity adapter for the actual shadow camera on the normal path. The color-pass option described below remains opt-in with its validation requirements unchanged.
+**2026-11-14 follow-up:** [Prepared color context](f-r4-prepared-color-context-20261114.md) supersedes the opt-in status below. The shared identity adapter is now the common default, with explicit `VITE_WEBGPU_ADMISSION_SHARED_LIGHTS=false` opt-out. Structural fog/environment/light invalidation, exact GPU visual parity, six biomes/day/night and native newly visible geometry pass their functional checks. Whole-game autonomy and performance acceptance remain open. The earlier measurements below remain historical; the integrated plan suspends further benchmark/raid campaigns during structural migration.
 
 ## Finding
 
@@ -8,7 +8,7 @@ In a saved savanna night raid, the instrumented Three.js r180 node cache reporte
 
 The experiment temporarily uses the real scene and its light-node identity during the synchronous setup of `compileAsync`, and restores the original render-list ownership and light array before awaiting the compilation. A candidate group containing visible, camera-layer lights, a non-scene target, or an unsupported renderer uses the previous path. Reentrant ownership changes are rejected rather than overwritten. This uses private Three r180 APIs and the repository's Three WebGPU patch; it must be revalidated when upgrading Three.
 
-The implementation is **opt-in** via `VITE_WEBGPU_ADMISSION_SHARED_LIGHTS=true`; the default production behavior remains unchanged. It is not yet approved for general use: fog, environment and light changes, other biomes, day/night transitions, and visual equivalence require further validation. It does not address all remaining draw, upload, or simulation costs.
+The initial implementation was **opt-in** via `VITE_WEBGPU_ADMISSION_SHARED_LIGHTS=true`. The follow-up above records the new default and its scoped functional evidence; it does not address all remaining draw, upload, or simulation costs.
 
 ## Observations
 
@@ -24,4 +24,4 @@ Paused captures under the QA override looked similar, but differed in 30,595 of 
 
 Start Vite with `VITE_PRESENTATION_BACKEND=webgpu-worker`, `VITE_WEBGPU_GRASS=true`, `VITE_WEBGPU_TEMPORAL_GRASS=true`, and optionally `VITE_WEBGPU_ADMISSION_SHARED_LIGHTS=true`. Run `tools/experiments/measure_webgpu_native_horde.mjs` with `QA_ONLY_SKIP_LEGACY=1`, `QA_REPEATS=1`, `QA_WINDOW_MS=10000`, `QA_QUEUE_DIAGNOSTICS=1`, `QA_REQUIRE_VISIBLE_GRASS=1`, and `QA_NODE_BUILD_DIAGNOSTICS=1`; `QA_OUT_FILE` selects the JSONL output. The script requires Playwright and a WebGPU-capable Edge installation. Do not compare instrumented timings directly with uninstrumented runs.
 
-Run focused checks with `node --test tests/webgpu-admission-scene.test.js tests/webgpu-pipeline-admission.test.js tests/admission-scene-reference.test.js tests/node-builder-diagnostics.test.js`. Before enabling by default, compare identical visual states across representative lighting and scene changes, and repeat end-to-end measurements of the integrated implementation without diagnostic instrumentation.
+Run focused checks with `node --test tests/webgpu-admission-scene.test.js tests/webgpu-pipeline-admission.test.js tests/admission-scene-reference.test.js tests/node-builder-diagnostics.test.js`. The follow-up records identical-state comparisons across lighting/scene changes. End-to-end performance acceptance stays in the integrated plan's later validation/measurement phases.

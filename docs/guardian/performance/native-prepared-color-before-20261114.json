@@ -1,0 +1,334 @@
+{
+  "ok": false,
+  "mode": "prepared-native-color-delta",
+  "sharedColorLighting": false,
+  "error": "Prepared native first frame created unexpected GPU resources",
+  "details": {
+    "sequence": 3,
+    "before": 2297,
+    "after": 2361,
+    "created": [
+      {
+        "id": "Buffer:2784",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "Buffer:2785",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "BindGroup:2786",
+        "method": "createBindGroup",
+        "label": "bindGroup_object"
+      },
+      {
+        "id": "BindGroup:2787",
+        "method": "createBindGroup",
+        "label": "bindGroup_object"
+      },
+      {
+        "id": "BindGroupLayout:2788",
+        "method": "createBindGroupLayout",
+        "label": null
+      },
+      {
+        "id": "Buffer:2789",
+        "method": "createBuffer",
+        "label": "bindingBuffer_render"
+      },
+      {
+        "id": "Buffer:2790",
+        "method": "createBuffer",
+        "label": "bindingBuffer_render"
+      },
+      {
+        "id": "BindGroup:2791",
+        "method": "createBindGroup",
+        "label": "bindGroup_render"
+      },
+      {
+        "id": "BindGroupLayout:2792",
+        "method": "createBindGroupLayout",
+        "label": null
+      },
+      {
+        "id": "Buffer:2793",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "Buffer:2794",
+        "method": "createBuffer",
+        "label": "bindingBuffer_UniformBuffer_314"
+      },
+      {
+        "id": "Buffer:2795",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "BindGroup:2796",
+        "method": "createBindGroup",
+        "label": "bindGroup_object"
+      },
+      {
+        "id": "ShaderModule:2797",
+        "method": "createShaderModule",
+        "label": "vertex"
+      },
+      {
+        "id": "PipelineLayout:2798",
+        "method": "createPipelineLayout",
+        "label": null
+      },
+      {
+        "id": "Pipeline:2799",
+        "method": "createRenderPipeline",
+        "label": "renderPipeline_MeshStandardNodeMaterial_24"
+      },
+      {
+        "id": "BindGroupLayout:2800",
+        "method": "createBindGroupLayout",
+        "label": null
+      },
+      {
+        "id": "Buffer:2801",
+        "method": "createBuffer",
+        "label": "bindingBuffer_render"
+      },
+      {
+        "id": "Buffer:2802",
+        "method": "createBuffer",
+        "label": "bindingBuffer_render"
+      },
+      {
+        "id": "BindGroup:2803",
+        "method": "createBindGroup",
+        "label": "bindGroup_render"
+      },
+      {
+        "id": "BindGroupLayout:2804",
+        "method": "createBindGroupLayout",
+        "label": null
+      },
+      {
+        "id": "Buffer:2805",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "Buffer:2806",
+        "method": "createBuffer",
+        "label": "bindingBuffer_UniformBuffer_316"
+      },
+      {
+        "id": "Buffer:2807",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "BindGroup:2808",
+        "method": "createBindGroup",
+        "label": "bindGroup_object"
+      },
+      {
+        "id": "ShaderModule:2809",
+        "method": "createShaderModule",
+        "label": "vertex"
+      },
+      {
+        "id": "PipelineLayout:2810",
+        "method": "createPipelineLayout",
+        "label": null
+      },
+      {
+        "id": "Pipeline:2811",
+        "method": "createRenderPipeline",
+        "label": "renderPipeline_MeshStandardNodeMaterial_30"
+      },
+      {
+        "id": "BindGroupLayout:2812",
+        "method": "createBindGroupLayout",
+        "label": null
+      },
+      {
+        "id": "Buffer:2813",
+        "method": "createBuffer",
+        "label": "bindingBuffer_render"
+      },
+      {
+        "id": "Buffer:2814",
+        "method": "createBuffer",
+        "label": "bindingBuffer_render"
+      },
+      {
+        "id": "BindGroup:2815",
+        "method": "createBindGroup",
+        "label": "bindGroup_render"
+      },
+      {
+        "id": "BindGroupLayout:2816",
+        "method": "createBindGroupLayout",
+        "label": null
+      },
+      {
+        "id": "Buffer:2817",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "Buffer:2818",
+        "method": "createBuffer",
+        "label": "bindingBuffer_UniformBuffer_318"
+      },
+      {
+        "id": "Buffer:2819",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "BindGroup:2820",
+        "method": "createBindGroup",
+        "label": "bindGroup_object"
+      },
+      {
+        "id": "ShaderModule:2821",
+        "method": "createShaderModule",
+        "label": "vertex"
+      },
+      {
+        "id": "PipelineLayout:2822",
+        "method": "createPipelineLayout",
+        "label": null
+      },
+      {
+        "id": "Pipeline:2823",
+        "method": "createRenderPipeline",
+        "label": "renderPipeline_MeshStandardNodeMaterial_29"
+      },
+      {
+        "id": "BindGroupLayout:2824",
+        "method": "createBindGroupLayout",
+        "label": null
+      },
+      {
+        "id": "Buffer:2825",
+        "method": "createBuffer",
+        "label": "bindingBuffer_render"
+      },
+      {
+        "id": "Buffer:2826",
+        "method": "createBuffer",
+        "label": "bindingBuffer_render"
+      },
+      {
+        "id": "BindGroup:2827",
+        "method": "createBindGroup",
+        "label": "bindGroup_render"
+      },
+      {
+        "id": "BindGroupLayout:2828",
+        "method": "createBindGroupLayout",
+        "label": null
+      },
+      {
+        "id": "Buffer:2829",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "Buffer:2830",
+        "method": "createBuffer",
+        "label": "bindingBuffer_UniformBuffer_320"
+      },
+      {
+        "id": "Buffer:2831",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "BindGroup:2832",
+        "method": "createBindGroup",
+        "label": "bindGroup_object"
+      },
+      {
+        "id": "ShaderModule:2833",
+        "method": "createShaderModule",
+        "label": "vertex"
+      },
+      {
+        "id": "PipelineLayout:2834",
+        "method": "createPipelineLayout",
+        "label": null
+      },
+      {
+        "id": "Pipeline:2835",
+        "method": "createRenderPipeline",
+        "label": "renderPipeline_MeshStandardNodeMaterial_28"
+      },
+      {
+        "id": "BindGroupLayout:2836",
+        "method": "createBindGroupLayout",
+        "label": null
+      },
+      {
+        "id": "Buffer:2837",
+        "method": "createBuffer",
+        "label": "bindingBuffer_render"
+      },
+      {
+        "id": "Buffer:2838",
+        "method": "createBuffer",
+        "label": "bindingBuffer_render"
+      },
+      {
+        "id": "BindGroup:2839",
+        "method": "createBindGroup",
+        "label": "bindGroup_render"
+      },
+      {
+        "id": "BindGroupLayout:2840",
+        "method": "createBindGroupLayout",
+        "label": null
+      },
+      {
+        "id": "Buffer:2841",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "Buffer:2842",
+        "method": "createBuffer",
+        "label": "bindingBuffer_UniformBuffer_322"
+      },
+      {
+        "id": "Buffer:2843",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "BindGroup:2844",
+        "method": "createBindGroup",
+        "label": "bindGroup_object"
+      },
+      {
+        "id": "ShaderModule:2845",
+        "method": "createShaderModule",
+        "label": "vertex"
+      },
+      {
+        "id": "PipelineLayout:2846",
+        "method": "createPipelineLayout",
+        "label": null
+      },
+      {
+        "id": "Pipeline:2847",
+        "method": "createRenderPipeline",
+        "label": "renderPipeline_MeshStandardNodeMaterial_27"
+      }
+    ]
+  },
+  "scope": "Negative regression: newly visible readmitted chunk in the same native delta harness; no complete gameplay acceptance."
+}

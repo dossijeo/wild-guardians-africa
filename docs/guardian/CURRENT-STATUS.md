@@ -1,6 +1,6 @@
 # Current delivery status (2026-10-29)
 
-**Migration update, 2026-11-14:** follow the [integrated plan](integrated-gpu-migration-plan-20261104.md) and its [A6 correction](intent-route-architecture-correction-20261108.md). The [current audit and continuation](migration-checkpoint-20261113.md) records e-R1/e-R2/f-R1/f-R2/f-R3 closed in their native scope; f-R4 is next. Overall A/B/C acceptance remains open. Latest prepared native-world work: [real shadow bindings prepared](f-r4-prepared-shadow-bindings-20261114.md); color admission, changed dependencies and autonomous-character acceptance remain pending. October entries below are historical, scoped evidence.
+**Migration update, 2026-11-14:** follow the [integrated plan](integrated-gpu-migration-plan-20261104.md) and its [A6 correction](intent-route-architecture-correction-20261108.md). The [current audit and continuation](migration-checkpoint-20261113.md) records e-R1/e-R2/f-R1/f-R2/f-R3 closed in their native scope; f-R4 is next. Overall A/B/C acceptance remains open. Latest prepared native-world work: [prepared color with visible native geometry and exact GPU parity](f-r4-prepared-color-context-20261114.md); changed dependencies and autonomous-character acceptance remain pending. October entries below are historical, scoped evidence.
 
 This is an index of current evidence, not acceptance of the entire phase. Earlier entries in PHASE2.md and CINEMATIC-RAGDOLL.md describe historical iterations; their pending lists must be read with the later evidence below.
 

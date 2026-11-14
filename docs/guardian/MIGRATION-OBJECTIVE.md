@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [contexto de sombras y prefijo GPU completos antes de solicitar quiescencia](f-r4-prepared-shadow-bindings-20261114.md).
+Último avance: [contexto de color admitido por defecto, validado con geometría visible y comparación GPU exacta](f-r4-prepared-color-context-20261114.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio
