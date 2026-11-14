@@ -263,3 +263,15 @@ recurso entero, fases y la identidad inmutable; cambiar terreno ajeno a la ruta 
 invalida su apoyo. Las pruebas contrastan WASM y raycast de Three. Es preparación
 de datos, aún sin reproducción GPU en personajes originales ni autonomía ordinaria;
 f-R4 y los once padres de A6 permanecen abiertos.
+
+La [reproducción GPU de la ruta completa sobre el trabajador original](f-r4-native-gpu-character-20261114.md)
+utiliza la búsqueda binaria leída en Godot y las primitivas TSL de Three. El
+propietario de materiales/transform es común con el histórico. Dos pruebas con
+WASM y el dibujante real conservan 15 frames durante un bloqueo de 500 ms, rig y
+uniform CPU inmóviles, tiempo nativo finito, cancelación y drenaje. La ruta larga
+retiene 2.971 nudos y se consulta más allá del cursor 106, sin recortarla. Primera
+presentación preparada del personaje: cero fábricas GPU instrumentadas. El
+perfil olderFemale utiliza sus texturas y bake originales. Esto sustituye la
+limitación de triángulos en esta prueba de componente; no conecta todavía las
+asignaciones a WorldSurface/rosters ordinarios ni sus cambios de clip/recuperación.
+f-R4, e-R3/e-R4 y los once padres permanecen abiertos.

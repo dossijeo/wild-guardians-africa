@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [recurso completo de asignación nativa y apoyo 3D sobre el terreno residente](f-r4-native-route-support-20261114.md).
+Último avance: [ruta nativa GPU y animación del trabajador original con preparador bloqueado y cero fábricas tardías](f-r4-native-gpu-character-20261114.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio

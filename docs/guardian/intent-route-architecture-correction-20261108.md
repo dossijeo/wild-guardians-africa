@@ -13,6 +13,9 @@ f-R3](migration-checkpoint-20261113.md#cierre-del-criterio-de-seguridad-f-r3).
 Los criterios nativos e-R1/e-R2/f-R1/f-R2/f-R3 están cerrados en sus clases
 documentadas. f-R4, e-R3/e-R4 y la integración de todas las intenciones siguen
 pendientes; esto mantiene A6 y los gates de producto abiertos.
+El [incremento del trabajador original en GPU](f-r4-native-gpu-character-20261114.md)
+prueba ruta completa, fases y control causal con preparación bloqueada como
+componente; la alimentación ordinaria y las transiciones siguen pendientes.
 
 Hay modificaciones locales previas en simulación, escena, carga y QA. No forman
 parte de los commits de esta corrección ni deben descartarse.

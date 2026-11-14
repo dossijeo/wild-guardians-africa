@@ -2,8 +2,8 @@
 
 Actualizado: 2026-11-14. IDs acordados en la conversación; no se renumeran al avanzar.
 
-Último incremento de f-R4: [captura de ruta nativa completa y apoyo 3D reutilizado](f-r4-native-route-support-20261114.md).
-Publicaciones vivas y aceptación de personajes autónomos siguen pendientes; no cambia el recuento de cierres.
+Último incremento de f-R4: [ruta completa y fases nativas en GPU sobre el trabajador original](f-r4-native-gpu-character-20261114.md).
+Publicaciones ordinarias y aceptación integrada de personajes autónomos siguen pendientes; no cambia el recuento de cierres.
 
 **Ningún punto principal está cerrado todavía.** Un subpunto marcado como nativo
 implementado/validado no autoriza por sí solo activar autonomía GPU o retirar el
@@ -12,9 +12,10 @@ ejecutor protegido de producto. A6 incluye todas las intenciones y trabajadores.
 ## Vista de entrega y pendientes fijos
 
 **Situación de producto:** no se han activado los nuevos cruces nativos ni los
-personajes autónomos en GPU. Hay una validación de las mallas originales de puerta;
-los diagnósticos de locomoción aún usan triángulos, no personajes. Desde la petición de cerrar e/f se han cerrado **0 de esos 2
-subpuntos**. Sus componentes internos avanzaron, pero la entrega integrada no.
+personajes autónomos en GPU en la partida ordinaria. Las mallas originales de puerta
+y la reproducción GPU del trabajador original tienen pruebas de componente. La
+alimentación ordinaria y las transiciones de clips siguen pendientes. Desde la
+petición de cerrar e/f se han cerrado **0 de esos 2 subpuntos**. Sus componentes internos avanzaron, pero la entrega integrada no.
 En el desglose fijo de entrega, **e-R1, e-R2, f-R1, f-R2 y f-R3 están cerrados; quedan 3 de 8**.
 
 **Niveles que no se suman:** A6 tiene 11 puntos principales, todos abiertos.

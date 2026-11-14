@@ -1,8 +1,9 @@
 import {floorFloat32,ceilFloat32} from './float32-time.js';
 import {DataTexture, FloatType, NearestFilter, RGBAFormat, Vector3} from 'three';
-import {Fn, If, Loop, clamp, cos, float, ivec2, mix, modelWorldMatrix, modelWorldMatrixInverse, normalLocal, positionLocal, sin, textureLoad, uniform, vec3, vec4} from 'three/tsl';
+import {Fn, If, Loop, clamp, float, ivec2, mix, textureLoad, uniform, vec3} from 'three/tsl';
+import {bindGpuMotionMaterial,unbindGpuMotionMaterial,gpuActorLocalTransform} from './gpu-actor-motion-material.js';
 
-const materialOwners=new WeakMap();let nextMotionResource=0;
+let nextMotionResource=0;
 
 // Replays only already-confirmed, timed path segments; it never predicts a
 // safe route or owns an actor. A caller must supply a presentation clock and
@@ -21,8 +22,7 @@ export function createConfirmedGpuMotion({actorId,clock,maxSegments=64,resourceR
   const time=clamp(conservativeClock.sub(startTime),float(0),horizon.min(endTime)).toVar(),position=initialPosition.toVar(),yaw=initialYaw.toVar();
   Loop(maxSegments,({i})=>{If(i.lessThan(count),()=>{const a=textureLoad(path,ivec2(0,i)),b=textureLoad(path,ivec2(1,i));If(time.greaterThanEqual(a.x),()=>{const f=clamp(time.sub(a.x).div(a.y.sub(a.x)),float(0),float(1)),xz=mix(a.zw,b.xy,f);position.assign(vec3(xz.x,mix(b.z,b.w,f),xz.y));});});});
   Loop(maxSegments,({i})=>{If(i.lessThan(yawCount),()=>{const s=textureLoad(yawTexture,ivec2(0,i));If(time.greaterThanEqual(s.x),()=>{yaw.assign(mix(s.z,s.w,clamp(time.sub(s.x).div(s.y.sub(s.x)),float(0),float(1))));});});});
-  const value=base.toVar(),world=modelWorldMatrix.mul(vec4(value,1)).xyz.sub(anchor),c=cos(yaw),s=sin(yaw),rotated=vec3(c.mul(world.x).add(s.mul(world.z)),world.y,c.mul(world.z).sub(s.mul(world.x))),worldNormal=modelWorldMatrix.mul(vec4(normalLocal,0)).xyz,rotatedNormal=vec3(c.mul(worldNormal.x).add(s.mul(worldNormal.z)),worldNormal.y,c.mul(worldNormal.z).sub(s.mul(worldNormal.x)));
-  normalLocal.assign(yawCount.greaterThan(0).select(modelWorldMatrixInverse.mul(vec4(rotatedNormal,0)).xyz.normalize(),normalLocal));return modelWorldMatrixInverse.mul(vec4(rotated.add(position),1)).xyz;
+  return gpuActorLocalTransform(base,position,yaw,anchor,yawCount.greaterThan(0));
  })();
  function safeTimeAt(at,start){const raw=relative?floorFloat32(Math.max(0,at-epoch)):Math.fround(Math.max(0,at)),margin=Math.fround(Math.max(Math.abs(raw),1)*0.000000476837158203125);return Math.fround(Math.fround(raw-margin)-start);}
  function install(trace,publicationSequence){
@@ -49,8 +49,8 @@ export function createConfirmedGpuMotion({actorId,clock,maxSegments=64,resourceR
  }
  function sample(at){if(disposed||!installed||!Number.isFinite(at))throw TypeError('Invalid motion sample');const time=Math.max(0,Math.min(safeTimeAt(at,startTime.value),horizon.value,endTime.value));let x=initialPosition.value.x,y=initialPosition.value.y,z=initialPosition.value.z;for(let i=0;i<count.value;i++){const j=i*8,t0=data[j],t1=data[j+1];if(time>=t0){const t=Math.max(0,Math.min(1,(time-t0)/(t1-t0)));x=data[j+2]+(data[j+4]-data[j+2])*t;y=data[j+6]+(data[j+7]-data[j+6])*t;z=data[j+3]+(data[j+5]-data[j+3])*t;}}let yaw=0;for(let i=0;i<yawCount.value;i++){const j=i*4,t0=yawData[j],t1=yawData[j+1];if(time>=t0){const t=Math.max(0,Math.min(1,(time-t0)/(t1-t0)));yaw=yawData[j+2]+(yawData[j+3]-yawData[j+2])*t;}}return {x,z,dx:x-anchor.value.x,dz:z-anchor.value.z,...(vertical?{y,dy:y-anchor.value.y}:{}),...(oriented?{yawDelta:yaw}:{})};}
  function hold(at){if(disposed)throw Error('GPU motion disposed');if(!installed||!Number.isFinite(at)||at<installed.start.at||at>allowedUntil)throw TypeError('Invalid motion hold');horizon.value=floorFloat32(at-installed.start.at);allowedUntil=at;}
- function bind(material){if(disposed)throw Error('GPU motion disposed');if(!material?.isNodeMaterial||material.castShadowPositionNode)throw TypeError('Expected compatible node material');if(bindings.has(material))return material;if(materialOwners.has(material))throw Error('Motion material already owned');const previous=material.positionNode,node=slot?pool.transform(previous??positionLocal):transform(previous??positionLocal);material.positionNode=node;bindings.set(material,{node,previous});materialOwners.set(material,bindings);material.needsUpdate=true;return material;}
- function unbind(material){const binding=bindings.get(material);if(!binding)return false;if(material.positionNode===binding.node){material.positionNode=binding.previous;material.needsUpdate=true;}if(materialOwners.get(material)===bindings)materialOwners.delete(material);bindings.delete(material);return true;}
+ function bind(material){if(disposed)throw Error('GPU motion disposed');return bindGpuMotionMaterial(bindings,material,base=>slot?pool.transform(base):transform(base));}
+ function unbind(material){return unbindGpuMotionMaterial(bindings,material);}
  function bootstrap(point){if(disposed||installed||sequence!==0)throw Error('Motion bootstrap unavailable');install({actorId,continuous:true,timed:true,start:point,end:{...point},segments:[]},1);sequence=0;return installed;}
  function reset(){if(disposed)throw Error('GPU motion disposed');count.value=0;yawCount.value=0;initialYaw.value=0;oriented=false;initialPosition.value.set(0,0,0);anchor.value.set(0,0,0);installed=null;allowedUntil=null;vertical=false;continuation=null;}
  // Installation is transactional across rosters. A failed admission may undo

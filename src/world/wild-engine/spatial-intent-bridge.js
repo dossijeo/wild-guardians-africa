@@ -1,3 +1,4 @@
+import {nativeEntityNumericId as numericId} from '../native-entity-id.js';
 import {centerGeometry,centerServicePoint} from '../centers.js';
 import {contractExpired,PROFILES} from '../../simulation/workforce.js';
 import {observeGameEvents,repairCost} from '../../simulation/game.js';
@@ -22,12 +23,6 @@ const materialCodes=new Map(BALANCE.walls.map((wall,index)=>[wall.id,index+1]));
 const cropCodes=new Map(BALANCE.crops.map((crop,index)=>[crop.id,index+1]));
 const cropValues=new Map(BALANCE.crops.map(crop=>[crop.id,crop.base_harvest_value]));
 const structureStatus={intact:0,collapsing:1,ruined:2};
-const numericId=id=>{
-  const match=/-(\d+)$/.exec(id??'');
-  if(!match||!Number.isSafeInteger(Number(match[1]))||Number(match[1])<1)
-    throw TypeError(`Unsupported native intent ID: ${id}`);
-  return Number(match[1]);
-};
 const lexicalRank=id=>Number(`0.${/-(\d+)$/.exec(id)[1]}`);
 const workerRow=(worker,state)=>[1,1,numericId(worker.id),
   worker.centerId?numericId(worker.centerId):0,worker.x,worker.z,
