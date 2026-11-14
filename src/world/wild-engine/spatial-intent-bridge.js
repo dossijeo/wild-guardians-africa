@@ -1042,7 +1042,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       (mark,...boundary)=>{const status=wasm.nav_gate_resume_proposal_commit(...boundary);if(status!==1)return {status};mark();
         const plan=nativeRouteTiming(candidate.expectedRouteHandle);if(!plan||plan.actorId!==candidate.actorId)throw Error('Native resumed assignment unavailable');
         const started=beginNativeRouteExecution();if(started.status!=='started')throw Error('Native resumed execution could not establish its causal boundary');
-        const nativeRoute=Object.freeze({actorId:plan.actorId,routeHandle:candidate.expectedRouteHandle,assignmentSequence:plan.assignmentSequence}),resources=Object.freeze({version:1,kind:13,phase:'committed',worldBoundary:nativeWorldBoundary(),nativeRoute});mark({resources,nativeRoute});return {status:1,value:{resources,nativeRoute}};
+        const nativeRoute=Object.freeze({actorId:plan.actorId,routeHandle:candidate.expectedRouteHandle,assignmentSequence:plan.assignmentSequence}),resources=Object.freeze({version:1,kind:13,phase:'committed',worldBoundary:nativeWorldBoundary(),nativeRoute,presentation:captureNativeRoutePresentation(candidate.expectedRouteHandle)});mark({resources,nativeRoute});return {status:1,value:{resources,nativeRoute}};
       },prepareResources,signal,protocol);
   };
   const resumeNativeGateRoute=resumeHandle=>{

@@ -1,3 +1,4 @@
+import {copyNativePresentationSamples} from './native-presentation-samples.js';
 import {copyNativeRouteReference} from './native-route-reference.js';
 import {copyNativeGatePresentation} from './native-gate-presentation.js';
 import {copyNativeWorldBoundary} from './native-world-boundary.js';
@@ -25,13 +26,10 @@ export function copyNativeRoutePresentation(value){
  if(value?.kind!=='native-route-presentation'||value.version!==NATIVE_ROUTE_PRESENTATION_VERSION||value.rowWidth!==width||value.authorizedAutonomy!==false||!(rows instanceof Float64Array)||rows.length<width||rows.length%width!==0||rows.length/width>16384||!['worker','animal'].includes(value.motionMode)||!Number.isSafeInteger(value.profile)||value.profile<0||!Number.isFinite(value.radius)||value.radius<=0||typeof value.executionScope!=='string'||!value.executionScope||typeof value.nativeCrossingAdmitted!=='boolean'||!Number.isFinite(value.startTime)||value.startTime<0||!Number.isFinite(value.endTime)||value.endTime<value.startTime||rows[0]!==value.startTime||rows.at(-width)!==value.endTime)throw TypeError('Invalid native route presentation');
  const nativeRoute=copyNativeRouteReference(value.nativeRoute),worldBoundary=copyNativeWorldBoundary(value.worldBoundary);
  if(worldBoundary&&(worldBoundary.authorityEpoch!==nativeRoute.routeHandle.authorityEpoch||worldBoundary.nativeSession!==nativeRoute.routeHandle.session))throw TypeError('Native presentation belongs to another world');
- for(let i=0;i<rows.length;i+=width){
-  for(let column=0;column<width;column++)if(!Number.isFinite(rows[i+column]))throw TypeError('Invalid native presentation sample');
-  if(i>0&&rows[i]<=rows[i-width]||!Number.isSafeInteger(rows[i+6])||rows[i+6]<0||![0,1].includes(rows[i+7])||![0,1].includes(rows[i+14])||rows[i+15]<0)throw TypeError('Invalid native presentation interval');
- }
+ const samples=copyNativePresentationSamples(value);
  const sources=value.gates??[];
  if(!Array.isArray(sources)||sources.length>1024||sources.length&&!value.nativeCrossingAdmitted)throw TypeError('Invalid native route gate resources');
  const gates=sources.map(gate=>copyNativeGatePresentation(gate,{nativeRoute,startTime:value.startTime,endTime:value.endTime}));
  if(new Set(gates.map(gate=>gate.gateId)).size!==gates.length)throw TypeError('Duplicate native route gate resource');
- return Object.freeze({kind:value.kind,version:value.version,rowWidth:width,nativeRoute,worldBoundary,startTime:value.startTime,endTime:value.endTime,motionMode:value.motionMode,motionFlags,profile:value.profile,radius:value.radius,executionScope:value.executionScope,nativeCrossingAdmitted:value.nativeCrossingAdmitted,authorizedAutonomy:false,rows:rows.slice(),gates:Object.freeze(gates)});
+ return Object.freeze({kind:value.kind,version:value.version,rowWidth:width,nativeRoute,worldBoundary,startTime:value.startTime,endTime:value.endTime,motionMode:value.motionMode,motionFlags,profile:value.profile,radius:value.radius,executionScope:value.executionScope,nativeCrossingAdmitted:value.nativeCrossingAdmitted,authorizedAutonomy:false,rows:samples,gates:Object.freeze(gates)});
 }

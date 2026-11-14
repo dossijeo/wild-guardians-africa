@@ -237,6 +237,13 @@ test('native gate resources retain an abortable preparation until the caller com
  }finally{f.client.dispose();}
 });
 
+test('native resume resources use the retained transaction with their own request and terrain manifest',async()=>{
+ const draw={postMessage(){},terminate(){}},f=setup({remoteDraw:true,intentControlPort:{postMessage(){},start(){}},drawWorkerFactory:()=>draw});
+ try{f.worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await f.client.ready;const resources={kind:'native-route-resume-proposal',worldBoundary:{version:1,authorityEpoch:'owner',nativeSession:1,ticket:4,effectiveTime:20}},terrainManifest={epoch:'terrain',chunks:[{cx:0,cz:0,revision:3}]},controller=new AbortController(),pending=f.client.prepareNativeResumeResources(resources,{signal:controller.signal,minSequence:3,terrainManifest}),request=f.worker.messages.at(-1).message;
+  assert.equal(request.kind,'prepareNativeResumeResources');assert.equal(request.terrainManifest,terrainManifest);assert.equal(request.minSequence,3);f.worker.onmessage({data:{kind:'nativeGateResourcesResult',id:request.id,result:{preparedWorldBoundary:resources.worldBoundary}}});const handle=await pending;assert(handle.valid());controller.abort();assert.equal(handle.valid(),false);assert.equal(f.worker.messages.at(-1).message.kind,'abortNativeGateResources');await assert.rejects(f.client.prepareNativeResumeResources({kind:12}),/resume proposal/);
+ }finally{f.client.dispose();}
+});
+
 test('an older material-only gate reply cannot certify a retained native command packet',async()=>{
  const draw={postMessage(){},terminate(){}},f=setup({remoteDraw:true,intentControlPort:{postMessage(){}},drawWorkerFactory:()=>draw});try{
   f.worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await f.client.ready;

@@ -1,3 +1,4 @@
+import {copyNativeResumeProposal} from '../world/native-resume-presentation.js';
 import {copyNativeSuspendedBodyReference} from '../world/native-suspended-body-reference.js';
 import {historicalPhysicalActorIds} from '../simulation/worker-historical-physics-isolation.js';
 import {createActorTerrainSampler} from './webgpu-actor-terrain.js';
@@ -28,11 +29,19 @@ export function createConfirmedTerrainSupport({residency,maxPieces=16384,maxActo
  function prepareNativeRoute(value,{terrainManifest}={}){
   if(closed)throw Error('Confirmed terrain support disposed');
   let presentation;try{presentation=copyNativeRoutePresentation(value);}catch{return null;}
+  return prepareNativeMotion(presentation,terrainManifest,String(presentation.nativeRoute.actorId),'native-route-terrain-support');
+ }
+ function prepareNativeResumeProposal(value,{terrainManifest}={}){
+  if(closed)throw Error('Confirmed terrain support disposed');
+  let presentation;try{presentation=copyNativeResumeProposal(value);}catch{return null;}
+  return prepareNativeMotion(presentation,terrainManifest,String(presentation.actorId),'native-resume-terrain-support');
+ }
+ function prepareNativeMotion(presentation,terrainManifest,actorId,kind){
   if(!residency.matchesManifest(terrainManifest))return null;
-  const {rows,startTime:start,endTime:end}=presentation,width=NATIVE_ROUTE_PRESENTATION_WIDTH,actorId=String(presentation.nativeRoute.actorId),segments=[];
+  const {rows,startTime:start,endTime:end}=presentation,width=NATIVE_ROUTE_PRESENTATION_WIDTH,segments=[];
   for(let i=width;i<rows.length;i+=width)segments.push({t0:rows[i-width],t1:rows[i],x0:rows[i-width+1],z0:rows[i-width+2],x1:rows[i+1],z1:rows[i+2]});
-  const trace={start,end,terrainManifest,actors:[{actorId,continuous:true,timed:true,start:{at:start,x:rows[1],z:rows[2]},end:{at:end,x:rows.at(-width+1),z:rows.at(-width+2)},segments}]},result=preparePaths(trace,{wanted:null,sequence:presentation.nativeRoute.assignmentSequence,physicalIds:[],sourceLimit:maxNativeSourceSegments,exactManifest:false});
-  return result?Object.freeze({kind:'native-route-terrain-support',presentation,actor:result.actors[0],valid:result.valid,unchangedBy:result.unchangedBy}):null;
+  const trace={start,end,terrainManifest,actors:[{actorId,continuous:true,timed:true,start:{at:start,x:rows[1],z:rows[2]},end:{at:end,x:rows.at(-width+1),z:rows.at(-width+2)},segments}]},result=preparePaths(trace,{wanted:null,sequence:presentation.nativeRoute?.assignmentSequence??null,physicalIds:[],sourceLimit:maxNativeSourceSegments,exactManifest:false});
+  return result?Object.freeze({kind,presentation,actor:result.actors[0],valid:result.valid,unchangedBy:result.unchangedBy}):null;
  }
  // A pinned native body needs only its executed point's triangle, never the
  // future suffix's terrain. This is geometric support, not a motion permission.
@@ -83,5 +92,5 @@ export function createConfirmedTerrainSupport({residency,maxPieces=16384,maxActo
   for(const actor of actors){for(const point of [actor.start,actor.end]){if(!Number.isFinite(point?.x)||!Number.isFinite(point?.z))continue;const cx=Math.floor((point.x+24)/48),cz=Math.floor((point.z+24)/48),key=`${cx},${cz}`;if(!seen.has(key)){seen.add(key);const mesh=residency.get(cx,cz),visible=residency.getVisible(cx,cz),canonical=!!mesh&&!!inspect(mesh,cx,cz);chunks.push({cx,cz,manifest:!!manifest?.chunks?.some(chunk=>chunk.cx===cx&&chunk.cz===cz),resident:!!mesh,visible:!!mesh&&mesh===visible,canonical,...(!canonical?{details:inspectDetails(mesh,cx,cz)}:{})});}if(points.length<128){let exact=null,sampled=null;try{exact=residency.surface(point.x,point.z);sampled=sampleActorTerrain(point.x,point.z);}catch{}points.push({actorId:actor.actorId,x:point.x,z:point.z,exact:Number.isFinite(exact)?exact:null,sampled:Number.isFinite(sampled)?sampled:null});}}}
   return {manifestMatches:matches,chunks,points,pointLimit:128,note:'Endpoint diagnostics only; segment cuts and limits are not re-evaluated.'};
  }
- return {prepare,prepareNativeRoute,prepareNativeBody,audit,dispose(){closed=true;}};
+ return {prepare,prepareNativeRoute,prepareNativeResumeProposal,prepareNativeBody,audit,dispose(){closed=true;}};
 }

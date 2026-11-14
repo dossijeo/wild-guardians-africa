@@ -477,7 +477,9 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     if (elapsed !== null) {
       for (const binding of active.clockBindings) {
         if (!active?.retained?.has(binding.id)) continue;
-        const routeTime=binding.routeRecord?Math.min(elapsed,binding.routeRecord.safeUntil):elapsed;
+        // A scene can contain long-lived independent motors and a finite
+        // resumed body. Each binding retains its own data and revocation cap.
+        const routeTime=Math.min(elapsed,binding.routeRecord?.safeUntil??Infinity,binding.nativeResume?.endTime??Infinity);
         const value = binding.semantic === 'relative' ? routeTime - binding.epoch : routeTime;
         if (!Number.isFinite(value)) throw Error('Invalid remote presentation clock value');
         const submittedValue=floorFloat32(value);
@@ -724,7 +726,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       if(binding.nativeResume){
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeResumeReferenceCovered(binding.nativeResume,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeResumeReferenceCovered(binding.nativeResume,nativeWorldBoundary))throw Error('Native resume requires its applied world and causal clock');
         const resumeRecord=routeControl.admitResume(binding.nativeResume,{preparingWorldBoundary:preparing?packet.metadata.nativeWorldBoundary:null});
-        if(packet.metadata.clock.safeUntil<binding.nativeResume.worldBoundary.effectiveTime||packet.metadata.clock.safeUntil>binding.nativeResume.endTime)throw Error('Prepared clock exceeds native resume resources');
+        if(packet.metadata.clock.safeUntil<binding.nativeResume.worldBoundary.effectiveTime)throw Error('Prepared clock does not cover native resume resources');
         return {...binding,resumeRecord,...(!preparing?{routeRecord:resumeRecord.routeRecord}:{})};
       }
       if(binding.nativeSuspended){

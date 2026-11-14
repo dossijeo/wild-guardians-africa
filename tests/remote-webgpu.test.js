@@ -163,7 +163,8 @@ for(const [attest,stale] of [[true,false],[false,false],[true,true]])test(`a nat
   assert.throws(()=>native.bridge.resumeNativeGateRouteAfterGpuQuiescence({getPublication:()=>source,resumeHandle}),/retained resource preparation/);
   let aborted;const result=await native.bridge.resumeNativeGateRouteAfterGpuQuiescence({getPublication:()=>source,resumeHandle,prepareResources:async({resources,proposedWorldBoundary})=>{
    reference=nativeResumeReferenceFromProposal(resources);assert.equal(Object.hasOwn(resources,'assignmentSequence'),false);assert.equal(native.bridge.nativeRouteTiming(reference.expectedRouteHandle),null);assert.deepEqual(native.body(1),before);
-   const clock={...heldClock,safeUntil:resources.endTime,segments:[{start:at,end:resources.endTime,rate:1,realDuration:resources.endTime-at}]};f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'relative',epoch:at,nativeResume:reference});prepared=await preparedWorldDraw({...f,clock},proposedWorldBoundary);
+   // Other independent scene resources may outlive this worker's own table.
+   const clock=heldClock;f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'relative',epoch:at,nativeResume:reference});prepared=await preparedWorldDraw({...f,clock},proposedWorldBoundary);
    const active=f.host.inspect().activeSequence;f.host.present();assert.equal(f.host.inspect().activeSequence,active);assert.deepEqual(native.body(1),before);assert.equal(native.bridge.nativeRouteTiming(reference.expectedRouteHandle),null);
    resources.rows.fill(-1);resources.points.fill(-1);for(const gate of resources.gates)gate.rows.fill(-1);
    if(stale){aborted=assert.rejects(prepared.presented,{name:'AbortError'});assert.equal(native.advance(at+.1).status,'advanced');native.bridge.commitNativeCausalClock();}

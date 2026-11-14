@@ -1,3 +1,4 @@
+import {copyNativeResumeProposal} from '../world/native-resume-presentation.js';
 import {copyNativeRoutePresentation,NATIVE_ROUTE_PRESENTATION_WIDTH as sourceWidth} from '../world/native-route-presentation.js';
 import {ceilFloat32,floorFloat32} from './float32-time.js';
 
@@ -7,8 +8,17 @@ export const NATIVE_ROUTE_GPU_WIDTH=20;
 export const NATIVE_ROUTE_GPU_FIELDS=Object.freeze(['at','x','y','z','distance','phase','yaw','firstRemainingPoint','arrived','runPhase','walkPhase','carryPhase','runDistance','walkDistance','runRemaining','running','currentSpeed']);
 export function prepareNativeRouteGpuTable(support){
  if(support?.kind!=='native-route-terrain-support'||support.valid?.()!==true||!Array.isArray(support.actor?.segments))throw TypeError('Native route requires current terrain support');
- const presentation=copyNativeRoutePresentation(support.presentation),{rows:source,startTime:epoch,endTime}=presentation,{segments,startHeight,endHeight}=support.actor;
- if(presentation.executionScope==='unadmitted-desert-gate-candidate'||segments.length>16384||![startHeight,endHeight].every(Number.isFinite)||support.actor.actorId!==String(presentation.nativeRoute.actorId))throw TypeError('Unusable native route support');
+ const presentation=copyNativeRoutePresentation(support.presentation);
+ return packNativeMotion(support,presentation,presentation.nativeRoute.actorId,{nativeRoute:presentation.nativeRoute});
+}
+export function prepareNativeResumeGpuTable(support){
+ if(support?.kind!=='native-resume-terrain-support'||support.valid?.()!==true||!Array.isArray(support.actor?.segments))throw TypeError('Native resume requires current terrain support');
+ const presentation=copyNativeResumeProposal(support.presentation);
+ return packNativeMotion(support,presentation,presentation.actorId,{nativeResume:presentation.nativeResume});
+}
+function packNativeMotion(support,presentation,actorId,identity){
+ const {rows:source,startTime:epoch,endTime}=presentation,{segments,startHeight,endHeight}=support.actor;
+ if(presentation.executionScope==='unadmitted-desert-gate-candidate'||segments.length>16384||![startHeight,endHeight].every(Number.isFinite)||support.actor.actorId!==String(actorId))throw TypeError('Unusable native route support');
  const count=segments.length+1,columns=Math.min(count,256),width=columns*5,height=Math.ceil(count/columns),data=new Float32Array(width*height*4),duration=floorFloat32(endTime-epoch);
  let cursor=0,previous=epoch,x=source[1],y=startHeight,z=source[2];
  function write(row,at,xx,yy,zz,interior){
@@ -26,7 +36,7 @@ export function prepareNativeRouteGpuTable(support){
  if(previous!==endTime||Math.abs(x-source.at(-sourceWidth+1))>1e-8||Math.abs(y-endHeight)>1e-8||Math.abs(z-source.at(-sourceWidth+2))>1e-8||endTime>epoch&&!segments.length)throw TypeError('Incomplete native terrain support');
  write(count-1,endTime,x,endHeight,z,endTime);
  if(support.valid()!==true)throw Error('Native terrain support changed during preparation');
- return Object.freeze({data,count,columns,width,height,epoch,duration,nativeRoute:presentation.nativeRoute,presentation,start:Object.freeze({at:epoch,x:source[1],y:startHeight,z:source[2]}),end:Object.freeze({at:endTime,x:source.at(-sourceWidth+1),y:endHeight,z:source.at(-sourceWidth+2)})});
+ return Object.freeze({data,count,columns,width,height,epoch,duration,...identity,presentation,start:Object.freeze({at:epoch,x:source[1],y:startHeight,z:source[2]}),end:Object.freeze({at:endTime,x:source.at(-sourceWidth+1),y:endHeight,z:source.at(-sourceWidth+2)})});
 }
 
 // Picking/debugging mirrors the packed resource, not a second route executor.

@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [permiso de reanudación ligado a la asignación real](f-r4-native-resume-attestation-20261114.md).
+Último avance: [reanudación preparada del trabajador original](f-r4-prepared-native-resume-20261114.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio

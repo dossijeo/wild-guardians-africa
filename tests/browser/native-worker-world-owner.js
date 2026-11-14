@@ -9,7 +9,7 @@ import {createNativeIntentControlPublication} from '../../src/simulation/native-
 import {createTerrainPublication} from '../../src/simulation/terrain-publication.js';
 import {createWebGpuWorldClient} from '../../src/rendering/webgpu-world-client.js';
 const now=()=>performance.timeOrigin+performance.now();
-export async function auditNativeWorkerWorldOwner({runningTransition=false,carrying=false,gateWait=false,gateMotor=false,terrainSuspension=false}={}){
+export async function auditNativeWorkerWorldOwner({runningTransition=false,carrying=false,gateWait=false,gateMotor=false,terrainSuspension=false,resumeSuspension=false}={}){
  const long=false,watermarks=[],errors=[];
  const bytes=new Uint8Array(await(await fetch('/tests/fixtures/desierto983-d15-partial-state.json.gz')).arrayBuffer()),text=bytes[0]===31&&bytes[1]===139?await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text():new TextDecoder().decode(bytes),state=deserialize(text),template=structuredClone(state.workers[0]),module=await WebAssembly.compileStreaming(fetch('/src/world/wild-engine/spatial-savanna.wasm'));
  state.workers=[];state.tasks=[];state.plants=[];state.crates=[];state.spells=[];state.raid=null;state.elapsed=10;state.pauses=[];if(terrainSuspension){if(!gateWait)throw Error('Terrain suspension requires an admitted gate route');state.structures=[];state.villages=state.villages.slice(0,1);}
@@ -53,7 +53,7 @@ export async function auditNativeWorkerWorldOwner({runningTransition=false,carry
    await window.nativeWorkerWorldCheckpoint?.('start');
    const reused=await client.prepareNativeRoute(state.workers[0].id,route,{terrainManifest}),afterReuse=await client.inspect();
    if(!reused.reused||afterReuse.drawExecution.resourcesCreated!==before.drawExecution.resourcesCreated)throw Error('Identical native route recreated graphics');
-   if(terrainSuspension){const {auditNativeSuspendedTerrain}=await import('./native-suspended-terrain-cutover.js');finalReceipt=await auditNativeSuspendedTerrain({client,bridge,session,state,publication,publisher,preparer,started,ended,commit,before,prepared,reused,transportSession,errors,route,nativePreparation,camera});return finalReceipt;}
+   if(terrainSuspension){const {auditNativeSuspendedTerrain}=await import('./native-suspended-terrain-cutover.js');finalReceipt=await auditNativeSuspendedTerrain({client,bridge,session,state,publication,publisher,preparer,started,ended,commit,before,prepared,reused,transportSession,errors,route,nativePreparation,camera});if(resumeSuspension){const {auditNativeResumedWorker}=await import('./native-resumed-worker-cutover.js');const priorReceipt=finalReceipt;finalReceipt=null;finalReceipt=await auditNativeResumedWorker({prior:priorReceipt,client,bridge,session,state,publication,publisher,preparer,diagnostic,commit,transportSession,errors,camera});}return finalReceipt;}
    preparer.postMessage({kind:'block-control-preparation'});const block=await started;commit(false,4);let last=now();
    const advance=()=>{const at=now(),dt=(at-last)/1000;last=at;state.elapsed+=dt*4;if(bridge.advanceNativeRouteExecution(state.elapsed).status!=='advanced')throw Error('Native execution advance failed');commit(false,4);};
    pump=setInterval(()=>{try{advance();}catch(error){errors.push(String(error));}},20);const endBlock=await ended;clearInterval(pump);pump=null;advance();commit(true,4);await publication.fenceGpu();

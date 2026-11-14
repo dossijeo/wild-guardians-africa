@@ -2,7 +2,7 @@
 
 Actualizado: 2026-11-14. IDs acordados en la conversación; no se renumeran al avanzar.
 
-Último incremento de f-R4: [permiso de reanudación ligado a la asignación real](f-r4-native-resume-attestation-20261114.md).
+Último incremento de f-R4: [reanudación preparada del trabajador original](f-r4-prepared-native-resume-20261114.md).
 Publicaciones ordinarias y aceptación integrada de personajes autónomos siguen pendientes; no cambia el recuento de cierres.
 
 **Ningún punto principal está cerrado todavía.** Un subpunto marcado como nativo
@@ -191,9 +191,10 @@ no se simula progreso, no se concede tiempo futuro y no se descarta ese
 propietario incierto al abrir un Worker nuevo. Recuperar un dispositivo perdido
 real sí conserva la autoridad, como acredita el recibo de navegador. Las
 mutaciones coordinadas ya pueden adoptar el paquete preparado durante un
-bloqueo del preparador, incluido el caso de cuerpo suspendido y puerta fija.
-Reanudación/asignación, demás acciones y alimentación/aceptación ordinarias
-siguen dentro del criterio f-R4 pendiente.
+bloqueo del preparador, incluidos cuerpo suspendido/puerta fija y su reanudación
+preparada con el trabajador original. La reanudación cubre la entrada nativa
+explícita Idle a Walk; asignaciones ordinarias, demás acciones y alimentación/
+aceptación ordinarias siguen dentro del criterio f-R4 pendiente.
 
 **Cómo se informará el avance:** entrega cerrada y evidencia; entrega parcial
 y qué criterio falta; IDs aún pendientes; cambios de alcance descubiertos,
