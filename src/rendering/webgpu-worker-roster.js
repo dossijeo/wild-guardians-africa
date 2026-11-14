@@ -106,14 +106,14 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
    try{
     const phases={runningNode:motion.runningNode,resolve:(fallback,clip)=>motion.resolve(fallback,clip),sampleClip:()=>motion.sample(getPickTime()).running?'Run':'Walk_Skip',sampleForClip(clip){const pose=motion.sample(getPickTime()),field={Walk_Skip:'walkPhase',Run:'runPhase',Carry_Crate:'carryPhase'}[clip];if(!field)throw Error('Unsupported native picking clip');return pose[field];}};
     variant=actor.prepareNativeMotionVariant(phases,{clipBakes,clip:carrying?'Carry_Crate':!(actor.isBakedWalking?.()||actor.isBakedRunning?.())?'Walk_Skip':null});
-    const options={motion,getPickTime,materialAlternatives:variant.materialAlternatives,replicaSources:variant.replicaSources};
+    const options={motion,getPickTime,materialAlternatives:variant.materialAlternatives,replicaSources:variant.replicaSources,meshes:variant.materialAlternatives.map(item=>item.mesh)};
     binding=entry.motionBinding?entry.motionBinding.prepareReplacement(options):bindWebGpuActorMotion({root:actor.root,renderer,actorId,resourceRegistry,staged:true,...options});
     candidate={actor,motion,variant,binding,packet,crateId,nativeRoute:packet.nativeRoute,start:packet.startTime,end:packet.endTime};
    }catch(error){binding?.dispose();variant?.dispose();motion.dispose();throw error;}
-   await pipelineAdmission.prepareAndPublish(actor.root,{signal:controller.signal,include:actor.admissionObjects(),materialAlternatives:binding.materialAlternatives()},()=>{
+   await pipelineAdmission.prepareAndPublish(actor.root,{signal:controller.signal,include:variant.materialAlternatives.map(item=>item.mesh),materialAlternatives:binding.materialAlternatives()},()=>{
     check();if(!variant.valid()||!binding.canActivate())throw new DOMException('Native worker materials changed','AbortError');
     const previous=entry.nativeState,oldMotion=entry.motion,oldBinding=entry.motionBinding;
-    variant.activate();binding.activate();entry.motionBinding=binding;entry.motion=motion;entry.nativeState=candidate;entry.nativePending=null;entry.motionPreparing=null;adopted=true;
+    variant.activate();binding.activate();oldBinding?.detach();entry.motionBinding=binding;entry.motion=motion;entry.nativeState=candidate;entry.nativePending=null;entry.motionPreparing=null;adopted=true;
     if(previous)retireNative(previous);else if(oldBinding||oldMotion){const release=()=>{oldBinding?.dispose();oldMotion?.dispose();};if(typeof pipelineAdmission.deferRelease==='function')pipelineAdmission.deferRelease(actor.root,release);else release();}
    });
    if(!adopted)throw Error('Native worker preparation was not published');onSelectableChange();return {actorId,nativeRoute:candidate.nativeRoute,start:candidate.start,end:candidate.end};

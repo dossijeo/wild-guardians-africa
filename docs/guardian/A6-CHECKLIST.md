@@ -387,3 +387,6 @@ Avance parcial f-R4: [retención de slots de props](f-r4-retained-biome-slots-20
 
 
 Continuación parcial f-R4, 14 de noviembre: [Carry nativo y parámetros de ruta como datos](f-r4-native-carry-20261114.md). Caja de nueve piezas y cuerpo comparten fases C++, conservan rig/geometrías y admiten Walk ↔ Carry antes del relevo. GPU real: 15 dibujos durante 500 ms, cero fábricas en el primer render y drenaje al cerrar. La preparación de un relevo baja de 22 a 12 pipelines al retirar constantes de ruta del shader; quedan 213 buffers y 108 pares de bind groups/layouts, sin aceptación de reutilización completa. Siguen pendientes productor/ejecución ordinarios, Idle/puerta/acción, consecuencias e integración A–F/B/C. No cambian los cierres.
+
+
+Continuación parcial f-R4, 14 de noviembre: [materiales de la variante nativa utilizada](f-r4-native-selected-materials-20261114.md). El binder y la admisión conservan fuentes CPU y clips ocultos al preparar el relevo. Carry en GPU real reduce 213 a 90 buffers, 108 a 48 pares de bind groups/layouts y 12 a tres pipelines; primer render sin creaciones, geometrías y drenaje conservados. Quedan tres sombras idénticas recreadas y el resto del presupuesto, además de fases/ejecución ordinarias y aceptación integrada. Se documenta el patrón de material fuente de Three para la siguiente corrección; ningún cierre cambia.

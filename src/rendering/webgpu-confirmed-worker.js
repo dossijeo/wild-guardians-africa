@@ -32,6 +32,9 @@ export async function createWebGpuConfirmedWorker({scene,residency,state,actorId
  async function installBaked(bake,kind,{pipelineAdmission,signal:admissionSignal,motionBinding=null,isCurrent=()=>true}={}){
   const recovering=kind==='Worker_GetUp',falling=kind==='Fall',running=kind==='Run',harvesting=kind==='Harvest',idling=kind==='Idle',alerting=kind==='Alert',watering=kind==='Water',planting=kind==='Plant',carrying=kind==='Carry_Crate';if(closed||(recovering?bakedGetUp||pendingGetUp:falling?bakedFall||pendingFall:alerting?bakedAlert||pendingAlert:carrying?bakedCarry||pendingCarry:planting?bakedPlant||pendingPlant:watering?bakedWater||pendingWater:idling?bakedIdle||pendingIdle:harvesting?bakedHarvest||pendingHarvest:running?bakedRun||pendingRun:baked||pendingBaked))return false;
   if(typeof isCurrent!=='function'||motionBinding!==null&&(typeof motionBinding.originalMaterial!=='function'||typeof motionBinding.extend!=='function'||typeof pipelineAdmission?.prepareAndPublish!=='function'))throw TypeError('Invalid baked motion admission');
+  // A native variant owns only its selected GPU meshes. Newly cached clips
+  // remain hidden and use their unbound CPU sources until their own admission.
+  if(motionBinding?.isScoped){if(!nativePickVariant?.current())throw Error('Scoped motion has no active native variant');motionBinding=null;}
   if(bake?.meta?.species!==profile||bake.meta.clip!==kind||typeof pipelineAdmission?.prepare!=='function')throw TypeError('Invalid baked worker admission');
   if(admissionSignal?.aborted)throw new DOMException('Baked walking cancelled','AbortError');
   const live=rest.map(item=>({node:item.node,position:item.node.position.clone(),quaternion:item.node.quaternion.clone(),scale:item.node.scale.clone()})),visibility=meshRest.map(item=>({node:item.node,visible:item.node.visible}));let candidate;
