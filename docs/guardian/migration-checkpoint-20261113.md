@@ -293,3 +293,6 @@ Continuación parcial f-R4, 14 de noviembre: [sombras por material fuente](f-r4-
 
 
 Continuación parcial f-R4, 14 de noviembre: [Idle durante esperas nativas](f-r4-native-idle-20261114.md). El selector de la misma malla consume Idle/Run/Walk del reloj C++ finito; Carry conserva su fase y caja en el hold. El relevo retiene los clips ya admitidos para reutilizar programas. La prueba GPU de una espera nativa registra cuatro dibujos detenidos y once posteriores durante 500 ms, sin cambios CPU y sin shaders/pipelines nuevos al relevar. Falta conectar el dibujo de la hoja de puerta al mismo estado nativo, además de fases/acciones y autoridad ordinarias e integración A–F/B/C. No cambia ningún cierre.
+
+
+Continuación parcial f-R4, 14 de noviembre: [selección con el reloj presentado de cada asignación](f-r4-native-input-clock-20261114.md). El consumidor publica el tiempo float32 realmente enviado para cada referencia y origen, después de submit correcto; la entrada normal deja de usar el reloj global para rutas revocadas. Tres pruebas GPU seleccionan al personaje presentado y conservan recursos, dibujos durante bloqueo y drenaje. Hoja gráfica de puerta, autoridad ordinaria e integración A-F/B/C siguen pendientes; no cambian los cierres.

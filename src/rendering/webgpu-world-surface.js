@@ -1,4 +1,5 @@
 import {nativeFrameReadiness,rejectedNativeFrameTarget} from './webgpu-frame-recovery.js';
+import {captureNativeRoutePickFrame} from './native-route-pick-frame.js';
 import {installRemoteTexturePreparation} from './remote-texture-preparation.js';
 import {copyNativeWorldBoundary,reconcileNativeWorldResources,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {prepareNativeWorldFrameBoundary} from './webgpu-native-world-admission.js';
@@ -109,7 +110,7 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
  if(!Number.isSafeInteger(resourcePressureBytes)||resourcePressureBytes<0||!Number.isSafeInteger(resourceIdleBytes)||resourceIdleBytes<0)throw TypeError('Invalid resource pressure policy');
  if(signal!==undefined&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Invalid WebGPU startup signal');
  let grassOwner=null,grassTimeline=null,farCoverage=null,farShadow=null,farAbort=null,farShadowSuspended=false,farCoveragePhase=farVisualQueries?'waiting':'disabled',farCoverageError=null,farCoverageDetail=null,groundDepth=null,softDepth=null,depthController=null,blessingGlow=null;
- let preparedNativeWorldBoundary=null,nativeResumeTarget=null,nativeRejectedFrame=null,nativeRouteRejected=false,nativeRoutePreparations=0,nativePickTime=null,nativeRouteResourceRevision=0;
+ let preparedNativeWorldBoundary=null,nativeResumeTarget=null,nativeRejectedFrame=null,nativeRouteRejected=false,nativeRoutePreparations=0,nativePickFrame=null,nativeRouteResourceRevision=0;
  let remoteTexturePreparation=null,textureBindingInitialization=null,remoteClockBindings=null,remoteCameraBindings=null,remoteMotionGroup=null,remoteCameraEnvelope=null,remoteEnvelope=null,remoteCameraCompatible=true;let waterReflectionFrames=0;let renderer,scene,camera,vfxWorldLights,material,waterMaterial,waterAssetMaterial,waterEnvironment,waterReflection,residency,terrain,stream,roster,workers,crates,settlements,crops,agricultureVfx,blessingVfx,guardianAttack,sky,biomeProps,motionFeed,beastStyle,bakedWalk,bakedWalkBank,bakedAnimalRunBank,bakedAnimalAttackBank,bakedWorkerWalkBank,bakedWorkerRunBank,bakedWorkerHarvestBank,bakedWorkerIdleBank,bakedWorkerAlertBank,bakedWorkerWaterBank,bakedWorkerPlantBank,bakedWorkerCarryBank,bakedWorkerFallBank,bakedWorkerGetUpBank,visualClock,historicalClock=null,historicalActorIds=null,historicalWorkerIds=null,terrainSupport=null,ground,groundContacts=null,mudMaterial=null,mudPreparer=null,temporalShadow=null,timelinePump=null,historicalPreviewSupport=null,groundError=null,lightingNight=0,closed=false,recoveringPublication=false,cameraStructureEpoch=null,cameraStructureSequence=initialSequence,guardianCaptureRevision=0,selectableGeneration=0,pipelineAdmission=null,workerAssetBank=null,idleAssetBudget=null,resourceRegistry=null,rendererLease=null,biomePropsLease=null,characterData=null,biomePackAbort=null,chunkCoordinator=null,visibleCameraTerrain=null;
  const closeBakedResources=()=>closeBakedWalkResources({bank:bakedWalkBank,animalRunBank:bakedAnimalRunBank,animalAttackBank:bakedAnimalAttackBank,workerBank:bakedWorkerWalkBank,workerRunBank:bakedWorkerRunBank,workerHarvestBank:bakedWorkerHarvestBank,workerIdleBank:bakedWorkerIdleBank,workerAlertBank:bakedWorkerAlertBank,workerWaterBank:bakedWorkerWaterBank,workerPlantBank:bakedWorkerPlantBank,workerCarryBank:bakedWorkerCarryBank,workerFallBank:bakedWorkerFallBank,workerGetUpBank:bakedWorkerGetUpBank,bake:bakedWalk,admission:pipelineAdmission});
  const surfaceLeases=new Map(),releasedSurfaceResources=new WeakSet();let nextSurfaceResource=0;
@@ -251,15 +252,17 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
    try{
     terrainSupport??=createConfirmedTerrainSupport({residency});
     const support=terrainSupport.prepareNativeRoute(packet,{terrainManifest});if(!support?.valid())throw Error('Native route terrain support unavailable');
-    const result=await workers.prepareNativeRoute(actorId,support,{signal:routeSignal,getPickTime:()=>{if(!Number.isFinite(nativePickTime))throw Error('Native pick requires a consumer frame time');return nativePickTime;},isCurrent:()=>!closed});
+    const {nativeRoute,startTime}=support.presentation;
+    const result=await workers.prepareNativeRoute(actorId,support,{signal:routeSignal,getPickTime:()=>{if(!nativePickFrame)throw Error('Native pick requires a consumer frame time');return nativePickFrame.getTime(nativeRoute,startTime);},isCurrent:()=>!closed});
     if(!result.reused)nativeRouteResourceRevision++;nativeRouteRejected=false;return result;
    }finally{nativeRoutePreparations--;onPresentationReady();}
   }
   function releaseNativeRoute(actorId,ref){const result=workers?.releaseNativeRoute(actorId,ref)??false;if(result){nativeRouteResourceRevision++;nativeRouteRejected=false;onPresentationReady();}return result;}
   async function freezeNativePickTime(){
    if(!workers?.nativeRouteLease())return;
-   const value=await remoteGpu.inspectAsync(),sample=value.consumer?.samples?.at(-1);
-   if(closed||!Number.isFinite(sample?.clockElapsed))throw Error('Native consumer pick frame unavailable');nativePickTime=sample.clockElapsed;
+   nativePickFrame=null;
+   const value=await remoteGpu.inspectAsync();
+   if(closed)throw Error('Native consumer pick frame unavailable');nativePickFrame=captureNativeRoutePickFrame(value.consumer);
   }
   function remoteClockLease(){
    const native=workers?.nativeRouteLease();

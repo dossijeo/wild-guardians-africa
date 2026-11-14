@@ -1,4 +1,5 @@
 import { floorFloat32 } from './float32-time.js';
+import {copyNativeRouteReference} from '../world/native-route-reference.js';
 import { remoteCameraWithinEnvelope } from './remote-camera-envelope.js';
 import { createRemoteFrameTimeGuard } from './remote-frame-time-guard.js';
 import { scheduleRemoteFrame } from './remote-frame-scheduler.js';
@@ -68,6 +69,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   let active = null, pending = null, stopped = false, failed = false, deviceDestroyRequested = false, frameHandle = null, chain = Promise.resolve();
   let currentTexture = null, currentViews = new Map(), deviceConfigured = false;
   let previousFrameAt = null, sampleCursor = 0;
+  let nativeRouteFrame = null;
   let hidden = !!initiallyHidden, hiddenStartedAt = initiallyHidden ? absoluteNow() : null;
   let resourceSliceStarted = absoluteNow(), queuedMessages = 0;
   const samples = new Array(4096), errors = [];
@@ -427,6 +429,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     if (op.method === 'submit') {
       const buffers = op.args[0].map(buffer => encodeCommandBuffer(buffer, replay)).filter(Boolean);
       if (buffers.length) device.queue.submit(buffers);
+      return buffers.length > 0;
     } else if (!replay || (op.method === 'writeBuffer' && active?.replayWriteBuffers?.has(op.args[0][REF]))) {
       device.queue[op.method](...resolve(op.args)); metrics.queueWrites++;
       if (op.method === 'writeBuffer') {
@@ -436,7 +439,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       if (op.method === 'copyExternalImageToTexture') op.args[0]?.source?.close?.();
     }
   }
-  function patchPresentation(elapsed, camera) {
+  function patchPresentation(elapsed, camera, nativeTimes) {
     if (elapsed !== null) {
       for (const binding of active.clockBindings) {
         if (!active?.retained?.has(binding.id)) continue;
@@ -445,6 +448,9 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         if (!Number.isFinite(value)) throw Error('Invalid remote presentation clock value');
         const submittedValue=floorFloat32(value);
         device.queue.writeBuffer(resolve({ [REF]: binding.id }), binding.byteOffset, new Float32Array([submittedValue]));
+        if(binding.nativeRoute)nativeTimes.set(binding.nativeClockKey,{
+          nativeRoute:binding.nativeRoute,semantic:binding.semantic,epoch:binding.epoch,
+          elapsed:binding.semantic==='relative'?submittedValue+binding.epoch:submittedValue});
         if(binding.routeRecord)binding.routeRecord.lastDrawTime=Math.max(
           binding.routeRecord.lastDrawTime??-Infinity,
           Math.min(routeTime,binding.semantic==='relative'?submittedValue+binding.epoch:submittedValue));
@@ -530,10 +536,14 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       if (!next) for (const baseline of active.baselineWrites) device.queue.writeBuffer(resolve({ [REF]: baseline.id }), 0, baseline.bytes);
       // Preserve the original queue order (a buffer can change between passes).
       // Only the generation boundary is atomic, never reorder WebGPU operations.
+      const nativeTimes=new Map();let submitted=false;
       for (const op of active.operations) {
-        if (op.method === 'submit') patchPresentation(clockElapsed, camera);
-        applyQueue(op, !next);
+        if (op.method === 'submit') patchPresentation(clockElapsed, camera, nativeTimes);
+        if(applyQueue(op, !next)===true)submitted=true;
       }
+      // Publish input witnesses only after the actual command submissions have
+      // succeeded. A preparation, rejected frame or failed submit is no image.
+      if(submitted)nativeRouteFrame={sequence:active.sequence,clockElapsed,bindings:Array.from(nativeTimes.values())};
       metrics.nativeFrames++;
       frameTime.consume(timeTicket);
       if (!next) metrics.replayFrames++;
@@ -879,7 +889,9 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       }
       case 'clock-binding': {
         const key = `${message.id}:${message.binding.byteOffset}`;
-        clockBindings.set(key, { ...message.binding, id: message.id });
+        const nativeRoute=message.binding.nativeRoute?copyNativeRouteReference(message.binding.nativeRoute):null;
+        clockBindings.set(key, { ...message.binding, ...(nativeRoute?{nativeRoute,
+          nativeClockKey:JSON.stringify([nativeRoute,message.binding.semantic,message.binding.epoch])}:{}), id: message.id });
         if (!clockBindingKeys.has(message.id)) clockBindingKeys.set(message.id, new Set());
         clockBindingKeys.get(message.id).add(key); break;
       }
@@ -1085,7 +1097,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       }
       hidden = nextHidden;
     },
-    inspect: () => ({ ...metrics, hidden, resources: resources.size, pendingResources: pendingResources.size, activeSequence: active?.sequence || null, pendingSequence: pending?.sequence || null, queuedMessages, stagedOperations: stagedOperations.length,retainedPreparationResources:retainedPreparationSnapshot?.size??0,retainedPreparationBytes:retainedPreparationSnapshot?packetBytes(stagedOperations):0,preparationRecoveryRequired, obsoleteVersions: obsoleteVersions.size, failed, backend: 'webgpu', rafIndependent: true, adapterInfo, frameTime: frameTime.status(), frameTimings: frameTimings.slice(), fenceTimings: fenceTimings.slice(), lease: active?.metadata?.clock || null, nativeCausalClock:routeControl?.status().clock??null, nativeMutationHold:nativeMutationHold?.holdId??null,nativeMutationFloor,nativeMutationEpoch, cameraSafe: active?.metadata?.cameraSafe ?? false, cameraEnvelope: active?.metadata?.cameraEnvelope || null, clockBindings: active?.clockBindings.length || 0, cameraBindings: active?.cameraBindings.length || 0, clockAtHorizon: !!active?.metadata?.clock && frameTime.status().elapsed >= Math.min(routeControl?.status().clock?.committedThrough??Infinity,active.metadata.clock.safeUntil), errors: errors.slice(), samples: sampleCursor < samples.length ? samples.slice(0, sampleCursor) : [...samples.slice(sampleCursor % samples.length), ...samples.slice(0, sampleCursor % samples.length)] }),
+    inspect: () => ({ ...metrics, hidden, resources: resources.size, pendingResources: pendingResources.size, activeSequence: active?.sequence || null, pendingSequence: pending?.sequence || null, queuedMessages, stagedOperations: stagedOperations.length,retainedPreparationResources:retainedPreparationSnapshot?.size??0,retainedPreparationBytes:retainedPreparationSnapshot?packetBytes(stagedOperations):0,preparationRecoveryRequired, obsoleteVersions: obsoleteVersions.size, failed, backend: 'webgpu', rafIndependent: true, adapterInfo, frameTime: frameTime.status(), frameTimings: frameTimings.slice(), fenceTimings: fenceTimings.slice(), lease: active?.metadata?.clock || null, nativeCausalClock:routeControl?.status().clock??null, nativeMutationHold:nativeMutationHold?.holdId??null,nativeMutationFloor,nativeMutationEpoch, cameraSafe: active?.metadata?.cameraSafe ?? false, cameraEnvelope: active?.metadata?.cameraEnvelope || null, clockBindings: active?.clockBindings.length || 0, cameraBindings: active?.cameraBindings.length || 0, clockAtHorizon: !!active?.metadata?.clock && frameTime.status().elapsed >= Math.min(routeControl?.status().clock?.committedThrough??Infinity,active.metadata.clock.safeUntil), nativeRouteFrame: nativeRouteFrame ? structuredClone(nativeRouteFrame) : null, errors: errors.slice(), samples: sampleCursor < samples.length ? samples.slice(0, sampleCursor) : [...samples.slice(sampleCursor % samples.length), ...samples.slice(0, sampleCursor % samples.length)] }),
     dispose() {
       if (stopped) return disposalPromise; stopped = true;
       admittingFrame?.cancel();discardRetainedPreparations();

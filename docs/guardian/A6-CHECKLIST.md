@@ -2,7 +2,7 @@
 
 Actualizado: 2026-11-14. IDs acordados en la conversación; no se renumeran al avanzar.
 
-Último incremento de f-R4: [Idle/Run/Walk en las esperas nativas sobre los propietarios normales](f-r4-native-idle-20261114.md).
+Último incremento de f-R4: [selección con el reloj presentado de cada asignación](f-r4-native-input-clock-20261114.md).
 Publicaciones ordinarias y aceptación integrada de personajes autónomos siguen pendientes; no cambia el recuento de cierres.
 
 **Ningún punto principal está cerrado todavía.** Un subpunto marcado como nativo

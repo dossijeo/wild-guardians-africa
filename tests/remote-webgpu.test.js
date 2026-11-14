@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createRemoteWebGpuClient } from '../src/rendering/remote-webgpu-client.js';
 import { createRemoteWebGpuHost } from '../src/rendering/remote-webgpu-host.js';
+import {captureNativeRoutePickFrame} from '../src/rendering/native-route-pick-frame.js';
 import { createNativeIntentControlPublication } from '../src/simulation/native-intent-control-publication.js';
 import {createNativeRouteExecutionFixture} from './helpers/native-route-execution.js';
 
@@ -294,10 +295,12 @@ test('native revocation bypasses a resource FIFO blocked on a pending pipeline',
     nativeRoute:{actorId:7,routeHandle:first,assignmentSequence:1}});
   f.client.registerClockBinding(f.buffer,{byteOffset:4,semantic:'absolute',epoch:0,
     nativeRoute:{actorId:8,routeHandle:other,assignmentSequence:2}});
+  const firstRef={actorId:7,routeHandle:first,assignmentSequence:1},otherRef={actorId:8,routeHandle:other,assignmentSequence:2};
+  f.client.registerClockBinding(f.buffer,{byteOffset:8,semantic:'relative',epoch:10,nativeRoute:firstRef});
   const clock={version:1,epoch:0,elapsed:10,safeUntil:20,anchorAbsoluteMs:0,
     paused:false,segments:[{start:10,end:20,realDuration:10,rate:1}]};
   const receipt=f.frame(0,{clock});
-  await flush();await f.host.idle();f.host.present();await receipt;
+  await flush();await f.host.idle();assert.equal(f.host.inspect().nativeRouteFrame,null);f.host.present();await receipt;
   let release;
   f.gpu.device.createRenderPipelineAsync=()=>new Promise(resolve=>{release=resolve;});
   await f.host.handle({type:'create',method:'createRenderPipelineAsync',id:'blocked',descriptor:{}});
@@ -307,16 +310,43 @@ test('native revocation bypasses a resource FIFO blocked on a pending pipeline',
       args:[{__remoteGpuId:'blocked'}]}]}]}]);
   await flush();
   assert(f.host.inspect().queuedMessages>0);
-  authorityPort.postMessage(nativeControlEvent('RouteInvalidated',3,7,first,10.25));
+  authorityPort.postMessage(nativeControlEvent('RouteInvalidated',3,7,first,10.25000003));
   await flush();
   assert.equal(f.host.intentControlStatus().sequence,3);
   now=1000;f.host.present();
   const values=new Float32Array(f.gpu.buffers[0].data.buffer);
   assert.equal(values[0],10.25,'the revoked actor stops at its native application time');
   assert.equal(values[1],11,'the unrelated actor continues autonomously');
+  assert.equal(values[2],Math.fround(.25000003),'the relative actor uniform retains its own float32 precision');
+  const inspected=f.host.inspect(),pick=captureNativeRoutePickFrame(inspected);
+  assert.equal(inspected.nativeRouteFrame.clockElapsed,11);
+  assert.equal(pick.getTime(firstRef,10),values[2]+10,'input follows this exact submitted float32 uniform rather than the global frame time');
+  assert.notEqual(pick.getTime(firstRef,10),10.25000003,'input does not substitute the unquantized control boundary');
+  assert.equal(pick.getTime(otherRef,0,'absolute'),11);
+  assert.throws(()=>pick.getTime({...firstRef,assignmentSequence:3},10),/no submitted/);
+  inspected.nativeRouteFrame.bindings[0].elapsed=999;
+  assert.notEqual(f.host.inspect().nativeRouteFrame.bindings[0].elapsed,999,'inspection cannot rewrite the last submitted image');
   assert.equal(f.host.inspect().replayFrames,1);
   release({});await flush();await f.host.idle();
   assert.deepEqual(f.errors,[]);
+});
+
+test('a failed submission cannot publish new native input clocks',async()=>{
+ const [authorityPort,drawControlPort]=pair();let now=0;
+ const f=await fixture({}, {absoluteNow:()=>now,intentControl:{port:drawControlPort,authorityEpoch:'native-owner'}});
+ try{
+  const handle=nativeHandle(0),ref={actorId:7,routeHandle:handle,assignmentSequence:1};
+  authorityPort.postMessage(nativeControlEvent('RouteAssigned',1,7,handle,10));await flush();
+  f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'relative',epoch:10,nativeRoute:ref});
+  const clock={version:1,epoch:0,elapsed:10,safeUntil:20,anchorAbsoluteMs:0,paused:false,segments:[{start:10,end:20,realDuration:10,rate:1}]};
+  const receipt=f.frame(0,{clock});await flush();await f.host.idle();f.host.present();await receipt;
+  const before=f.host.inspect().nativeRouteFrame;
+  now=1000;f.gpu.device.queue.submit=()=>{throw Error('native submit failed');};f.host.present();
+  assert.equal(new Float32Array(f.gpu.buffers[0].data.buffer)[0],1,'the uniform write alone did occur');
+  assert.deepEqual(f.host.inspect().nativeRouteFrame,before);
+  assert.equal(f.host.inspect().failed,true);
+  assert.throws(()=>captureNativeRoutePickFrame(f.host.inspect()),/unavailable/);
+ }finally{f.host.dispose();f.client.dispose();}
 });
 
 test('real native causal watermarks, pause, speed and revocation control one prepared GPU packet outside a blocked resource FIFO',async()=>{
