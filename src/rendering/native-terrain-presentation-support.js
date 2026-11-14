@@ -10,7 +10,7 @@ export function assertNativeTerrainPresentationSupport({state,residency,view,par
   if(!Number.isFinite(entity.x)||!Number.isFinite(entity.z)||!view.changedKeys.has(`${Math.floor((entity.x+24)/48)},${Math.floor((entity.z+24)/48)}`))continue;
   const oldHeight=previous(entity.x,entity.z),newHeight=next(entity.x,entity.z);
   if(oldHeight===null&&newHeight===null||oldHeight!==null&&newHeight!==null&&Math.abs(oldHeight-newHeight)<=1e-6)continue;
-  if(participants.some(part=>{const claim=part.terrainSupport;return part.valid()===true&&claim?.entity===entity&&claim.x===entity.x&&claim.z===entity.z&&claim.previousHeight===oldHeight&&claim.nextHeight===newHeight;}))continue;
+  if(participants.some(part=>{return part.valid()===true&&(part.terrainSupports??[part.terrainSupport]).some(claim=>claim?.entity===entity&&claim.x===entity.x&&claim.z===entity.z&&claim.previousHeight===oldHeight&&claim.nextHeight===newHeight);}))continue;
   throw Error('Native terrain requires prepared support for entity '+entity.id);
  }
 }

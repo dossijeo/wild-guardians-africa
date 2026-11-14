@@ -2,7 +2,7 @@
 
 Actualizado: 2026-11-14. IDs acordados en la conversación; no se renumeran al avanzar.
 
-Último incremento de f-R4: [colocaciones preparadas sobre los originales](f-r4-prepared-placement-20261114.md).
+Último incremento de f-R4: [instancias de cultivos preparadas con el terreno](f-r4-prepared-crop-instances-20261114.md).
 Publicaciones ordinarias y aceptación integrada de personajes autónomos siguen pendientes; no cambia el recuento de cierres.
 
 **Ningún punto principal está cerrado todavía.** Un subpunto marcado como nativo

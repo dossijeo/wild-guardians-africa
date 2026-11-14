@@ -5,6 +5,8 @@ Continúa el [plan integrado](integrated-gpu-migration-plan-20261104.md) y los
 [comandos preparados de terreno](f-r4-prepared-terrain-commands-20261114.md).
 Los once padres A6 y e-R3/e-R4/f-R4 permanecen abiertos.
 
+Continúa con [instancias de cultivos preparadas con el terreno](f-r4-prepared-crop-instances-20261114.md); los cierres globales siguen pendientes.
+
 ## Cambio efectivo
 
 Los centros, muros sin puerta y cajas independientes preparan ahora su posición

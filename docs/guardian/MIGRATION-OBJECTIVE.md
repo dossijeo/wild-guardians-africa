@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [colocaciones preparadas sobre los originales](f-r4-prepared-placement-20261114.md).
+Último avance: [instancias de cultivos preparadas con el terreno](f-r4-prepared-crop-instances-20261114.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio
