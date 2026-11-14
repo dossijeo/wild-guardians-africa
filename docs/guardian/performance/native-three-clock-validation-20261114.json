@@ -1,0 +1,21 @@
+{
+  "newTests": 7,
+  "directedTests": 22,
+  "regressionTests": 127,
+  "fail": 0,
+  "skipped": 0,
+  "files": [
+    "tests/remote-presentation-clock.test.js",
+    "tests/native-route-control.test.js",
+    "tests/remote-webgpu.test.js",
+    "tests/native-intent-control-publication.test.js",
+    "tests/native-intent-control-cohort.test.js"
+  ],
+  "build": {
+    "backend": "webgpu-worker",
+    "remoteDraw": true,
+    "seconds": 45.25,
+    "exitCode": 0
+  },
+  "scope": "Real Three NodeUniformsGroup offsets and structural keys with a test backend; native route/control transport regression. No real-character locomotion acceptance."
+}

@@ -2,9 +2,17 @@
 // structure/cache keys. Registration occurs when a physical binding is updated,
 // never by discovering graph nodes during replay.
 const clockMetadata=Symbol.for('wild-guardians.remote-clock');
-export function markRemoteClockNode(node,semantic,epoch){
+export function markRemoteClockNode(node,semantic,epoch,nativeRoute=null){
  if(!node?.isNode||!['absolute','relative'].includes(semantic)||!Number.isFinite(epoch)||epoch<0)throw TypeError('Invalid remote clock node');
- Object.defineProperty(node,clockMetadata,{value:Object.freeze({semantic,epoch}),enumerable:false});
+ let route=null;
+ if(nativeRoute!==null){
+  const {actorId,assignmentSequence,routeHandle}=nativeRoute??{},id=value=>Number.isSafeInteger(value)&&value>0;
+  if(!id(actorId)||!id(assignmentSequence)||typeof routeHandle?.authorityEpoch!=='string'||!routeHandle.authorityEpoch||!id(routeHandle.session)||!Number.isSafeInteger(routeHandle.slot)||routeHandle.slot<0||!id(routeHandle.generation))throw TypeError('Invalid native route clock reference');
+  // A compiled uniform belongs to this exact assignment. Caller mutation must
+  // never retag an already admitted GPU binding for another route generation.
+  route=Object.freeze({actorId,assignmentSequence,routeHandle:Object.freeze({authorityEpoch:routeHandle.authorityEpoch,session:routeHandle.session,slot:routeHandle.slot,generation:routeHandle.generation})});
+ }
+ Object.defineProperty(node,clockMetadata,{value:Object.freeze({semantic,epoch,...(route?{nativeRoute:route}:{})}),enumerable:false});
  return node;
 }
 export function installRemoteClockBindings(renderer,remote){

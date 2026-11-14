@@ -70,3 +70,15 @@ test('clock metadata does not alter enumerable node structure or its structural 
  const node=uniform(1),keys=Object.keys(node),key=node.getCacheKey();markRemoteClockNode(node,'absolute',0);
  assert.deepEqual(Object.keys(node),keys);assert.equal(node.getCacheKey(),key);
 });
+
+test('a real Three uniform registers its captured native assignment at the physical buffer offset',()=>{
+ const reference={actorId:7,assignmentSequence:3,routeHandle:{authorityEpoch:'native-owner',session:1,slot:2,generation:4}},node=uniform(0),keys=Object.keys(node),key=node.getCacheKey();markRemoteClockNode(node,'relative',10,reference);
+ reference.actorId=99;reference.assignmentSequence=9;reference.routeHandle.generation=99;
+ const group=new NodeUniformsGroup('native',node.groupNode);group.addUniform(new NumberNodeUniform(new NodeUniform('padding','float',uniform(5))));group.addUniform(new NumberNodeUniform(new NodeUniform('native-time','float',node)));void group.buffer;
+ let buffer={id:1};const calls=[],backend={get:()=>({buffer}),updateBinding(){}},hook=installRemoteClockBindings({backend},{registerClockBinding:(target,metadata)=>calls.push({target,metadata})});
+ try{backend.updateBinding(group);backend.updateBinding(group);assert.equal(calls.length,1);assert.deepEqual(calls[0],{target:buffer,metadata:{byteOffset:4,semantic:'relative',epoch:10,nativeRoute:{actorId:7,assignmentSequence:3,routeHandle:{authorityEpoch:'native-owner',session:1,slot:2,generation:4}}}});assert(Object.isFrozen(calls[0].metadata.nativeRoute));assert(Object.isFrozen(calls[0].metadata.nativeRoute.routeHandle));buffer={id:2};backend.updateBinding(group);assert.equal(calls.length,2);assert.equal(calls[1].target,buffer);assert.deepEqual(Object.keys(node),keys);assert.equal(node.getCacheKey(),key);assert.throws(()=>markRemoteClockNode(node,'relative',10,reference),/redefine/);}finally{hook.dispose();}
+});
+
+for(const field of ['actorId','assignmentSequence','authorityEpoch','session','slot','generation'])test(`native clock tagging rejects invalid ${field} before binding`,()=>{
+ const reference={actorId:7,assignmentSequence:3,routeHandle:{authorityEpoch:'native-owner',session:1,slot:2,generation:4}};if(['actorId','assignmentSequence'].includes(field))reference[field]=0;else reference.routeHandle[field]=field==='authorityEpoch'?'':field==='slot'?-1:0;assert.throws(()=>markRemoteClockNode(uniform(0),'relative',10,reference),/native route/);
+});
