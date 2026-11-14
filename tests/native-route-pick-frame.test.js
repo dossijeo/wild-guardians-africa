@@ -6,6 +6,12 @@ const route=()=>({actorId:7,assignmentSequence:3,routeHandle:{authorityEpoch:'ow
 const binding=()=>({nativeRoute:route(),semantic:'relative',epoch:10,elapsed:10.25});
 const consumer=(bindings=[binding()])=>({failed:false,nativeRouteFrame:{sequence:1,clockElapsed:11,bindings}});
 
+test('suspended picks use their own submitted identity and cannot borrow the revoked route clock',()=>{
+ const worldBoundary={version:1,authorityEpoch:'owner',nativeSession:1,ticket:3,effectiveTime:10},nativeSuspended={kind:'native-suspended-body',version:1,nativeRoute:route(),bodyId:9,resumeGeneration:3,suspendedAt:10,worldBoundary},value=consumer([{nativeSuspended,semantic:'relative',epoch:10,elapsed:10.5}]);value.nativeRouteFrame.worldBoundary=worldBoundary;
+ const pick=captureNativeRoutePickFrame(value);assert.equal(pick.getSuspendedTime(nativeSuspended,10),10.5);assert.throws(()=>pick.getTime(route(),10),/no submitted/);assert.throws(()=>pick.getSuspendedTime({...nativeSuspended,bodyId:10},10),/no submitted/);
+ for(const boundary of [null,{...worldBoundary,ticket:2},{...worldBoundary,authorityEpoch:'other'}]){value.nativeRouteFrame.worldBoundary=boundary;assert.throws(()=>captureNativeRoutePickFrame(value),/world mismatch/);}
+});
+
 test('native pick frames copy times and require the exact submitted reference and clock origin',()=>{
  const value=consumer(),pick=captureNativeRoutePickFrame(value);
  value.nativeRouteFrame.bindings[0].elapsed=12;value.nativeRouteFrame.bindings[0].nativeRoute.routeHandle.generation++;

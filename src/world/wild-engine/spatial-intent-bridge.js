@@ -1,4 +1,5 @@
 import {nativeEntityNumericId as numericId} from '../native-entity-id.js';
+import {nativeSuspendedBodiesFromProposal} from '../native-suspended-body-reference.js';
 import {copyNativeGatePresentation} from '../native-gate-presentation.js';
 import {centerGeometry,centerServicePoint} from '../centers.js';
 import {contractExpired,PROFILES} from '../../simulation/workforce.js';
@@ -704,13 +705,14 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     if(result!==1)return outcome(result===0?'blocked':result===-4?'busy':result===-2?'unsupported':'invalid');
     if((protocol?protocol.ticket():wasm.nav_intent_barrier_proposal_ticket())!==1)throw Error('Native mutation proposal lost its ticket');
     const [nativeSession,ticket,sequence,time,clockSequence]=Array.from(new Float64Array(wasm.memory.buffer,protocol?protocol.ticketPtr():wasm.nav_intent_barrier_proposal_ticket_ptr(),6));
-    let receipt=null,preparedResources=null,answer=outcome('control-failed'),physicalCommitted=false,commitAttempted=false,commitFailed=false,committedValue={};
+    let receipt=null,preparedResources=null,answer=outcome('control-failed'),physicalCommitted=false,commitAttempted=false,commitFailed=false,committedValue={},suspendedBodies=Object.freeze([]);
     const preparationController=new AbortController(),abortPreparation=()=>preparationController.abort();signal?.addEventListener('abort',abortPreparation,{once:true});
     try{
       if(signal?.aborted)throw new DOMException('Native resource preparation cancelled','AbortError');
       if(prepareResources){
         const proposedWorldBoundary=copyNativeWorldBoundary({version:1,authorityEpoch:owner,nativeSession,ticket,effectiveTime:time}),
           resources=protocol?protocol.capture(proposedWorldBoundary):session.core.captureNativeWorldProposalResources(proposedWorldBoundary);
+        suspendedBodies=nativeSuspendedBodiesFromProposal(resources,proposedWorldBoundary);
         let stopWaiting;const interrupted=new Promise((resolve,reject)=>{stopWaiting=()=>reject(new DOMException('Native resource preparation cancelled','AbortError'));});interrupted.catch(()=>{});
         preparationController.signal.addEventListener('abort',stopWaiting,{once:true});
         const preparing=Promise.resolve().then(()=>prepareResources({proposedWorldBoundary,resources,signal:preparationController.signal})).then(handle=>{
@@ -738,6 +740,10 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
           committedWorldBoundary=copyNativeWorldBoundary({version:1,authorityEpoch:owner,nativeSession,ticket,effectiveTime:time});
         },nativeSession,ticket,sequence,time,clockSequence);
         if(committed.status===1&&!physicalCommitted)throw Error('Native mutation returned without a commit marker');
+        if(committed.status===1)for(const reference of suspendedBodies){
+          const actual=nativeSuspendedGateRoute(reference.nativeRoute.actorId),handle=actual?.resumeHandle,old=reference.nativeRoute.routeHandle;
+          if(!actual||actual.actorId!==reference.nativeRoute.actorId||actual.bodyId!==reference.bodyId||actual.suspendedAt!==reference.suspendedAt||handle.authorityEpoch!==old.authorityEpoch||handle.session!==old.session||handle.slot!==old.slot||handle.generation!==reference.resumeGeneration)throw Error('Committed native body differs from its proposed suspension');
+        }
         if(committed.status===1&&preparedResources&&preparedResources.commit({worldBoundary:nativeWorldBoundary(),resources:committed.value.resources})!==true)throw Error('Native prepared resources were not retained for publication');
         answer=committed.status===1?outcome('committed',{...committed.value,receipt,worldBoundary:nativeWorldBoundary()}):
           outcome(committed.status===-2?'stale':committed.status===-3?'invalid-receipt':committed.status===-6?'blocked':'stale');
@@ -757,7 +763,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
           flushNativeIntentControl();const latest=nativeCausalClock();
           if(!latest||wasm.nav_intent_clock_commit(latest.rate,latest.paused?1:0)<0)throw Error('Native clock cannot publish mutation boundary');
           flushNativeIntentControl();source.releaseGpuAfterMutation(receipt,{committed:physicalCommitted,
-            ...(physicalCommitted?{worldBoundary:nativeWorldBoundary()}:{})});
+            ...(physicalCommitted?{worldBoundary:nativeWorldBoundary(),...(suspendedBodies.length?{nativeSuspendedBodies:suspendedBodies}:{})}:{})});
         }catch(error){source.dispose('mutation-release-failed');answer=outcome(physicalCommitted?'committed-control-failed':'control-failed',
           {...committedValue,error:String(error?.message??error)});}
       }

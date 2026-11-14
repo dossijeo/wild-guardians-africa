@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createRemoteWebGpuClient } from '../src/rendering/remote-webgpu-client.js';
 import { createRemoteWebGpuHost } from '../src/rendering/remote-webgpu-host.js';
+import {nativeGateCrossingFixture} from './helpers/native-gate-crossings.js';
+import {nativeSuspendedBodiesFromProposal} from '../src/world/native-suspended-body-reference.js';
 import {captureNativeRoutePickFrame} from '../src/rendering/native-route-pick-frame.js';
 import { createNativeIntentControlPublication } from '../src/simulation/native-intent-control-publication.js';
 import {createNativeRouteExecutionFixture} from './helpers/native-route-execution.js';
@@ -113,6 +115,33 @@ test('a prepared world packet uploads a separate generation and adopts only the 
   assert.equal(outcome.status,'committed');await flush();assert.equal(f.host.inspect().activeSequence,1);f.host.present();await prepared.presented;
   assert.equal(f.host.inspect().activeSequence,2);assert.equal(new Float32Array(original.data.buffer)[0],1);assert.equal(f.host.inspect().frameTime.elapsed,10);assert.deepEqual(f.errors,[]);
  }finally{f.close();}
+});
+
+for(const attest of [true,false])test(`an actual native suspended body requires direct attestation (${attest}) and stops drawing after cancellation`,async()=>{
+ const native=nativeGateCrossingFixture(),[sourcePort,drawPort]=pair(),f=await fixture({capabilities:{width:20,height:10,format:'rgba8unorm',nativeSuspendedVersion:1}},{intentControl:{port:drawPort,session:'native-suspension'}});let source,prepared,reference;
+ try{
+  native.session.actorSectorRevision({worker:true});const origin=native.point(0,0);let exitZ;for(let z=6;z<=16;z+=2)if(native.w.spatial_execution_segment_clear(-32.2,z+.2,-17.2,z+.2,.28)===1){exitZ=z+.2;break;}assert(Number.isFinite(exitZ));
+  const route=native.route({points:[[.05,3],[-17.2-origin.x,exitZ-origin.z],[-32.2-origin.x,exitZ-origin.z]]});assert.equal(native.admit(route).status,'admitted');assert.equal(native.bridge.beginNativeRouteExecution().status,'started');const at=native.service.read(native.gates[0].id).at+.3;assert.equal(native.advance(at).status,'advanced');native.bridge.commitNativeCausalClock();
+  source=createNativeIntentControlPublication({port:sourcePort,session:'native-suspension',observe:native.bridge.observeNativeIntentControl});await source.ready;
+  if(!attest){const release=source.releaseGpuAfterMutation;source.releaseGpuAfterMutation=(receipt,options)=>release(receipt,{...options,nativeSuspendedBodies:[]});}
+  const clock={version:1,epoch:0,elapsed:at,safeUntil:Number.MAX_SAFE_INTEGER,anchorAbsoluteMs:0,paused:false,segments:[{start:at,end:Number.MAX_SAFE_INTEGER,rate:1,realDuration:Number.MAX_SAFE_INTEGER-at}]},shown=f.frame(1,{clock});await flush();await f.host.idle();f.host.present();await shown;
+  const original=f.gpu.buffers[0],result=await native.bridge.mutateNativeWorldAfterGpuQuiescence({getPublication:()=>source,mutation:{type:'removeChunks',chunks:[[-1,0]],releaseOnly:false},prepareResources:async({resources,proposedWorldBoundary})=>{
+   [reference]=nativeSuspendedBodiesFromProposal(resources,proposedWorldBoundary);assert(reference);assert.equal(native.bridge.nativeSuspendedGateRoute(reference.nativeRoute.actorId),null);
+   f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'relative',epoch:at,nativeSuspended:reference});prepared=await preparedWorldDraw({...f,clock},proposedWorldBoundary,77);
+   const count=f.gpu.submitted.length;f.host.present();assert.equal(f.gpu.submitted.length,count+1);assert.equal(f.host.inspect().activeSequence,1);assert.equal(new Float32Array(original.data.buffer)[0],1);
+   // The preparer owns these arrays, but cannot rewrite the authority proof.
+   resources.routeEffects.rows.fill(-1);
+   return {preparedWorldBoundary:prepared.preparedWorldBoundary,valid:prepared.valid,commit:data=>prepared.commit(data.worldBoundary),abort:prepared.abort};
+  }});
+  if(!attest){const rejected=assert.rejects(prepared.presented,/direct authority|obsolete/);await flush();await rejected;const before=f.gpu.submitted.length;f.host.present();assert.equal(f.host.inspect().activeSequence,1);assert.equal(f.gpu.submitted.length,before);assert.equal(f.host.inspect().failed,true);return;}
+  assert.equal(result.status,'committed',JSON.stringify(result));await flush();f.host.present();await prepared.presented;assert.equal(f.host.inspect().activeSequence,2);assert.equal(f.host.inspect().frameTime.elapsed,at);assert.equal(captureNativeRoutePickFrame(f.host.inspect()).getSuspendedTime(reference,at),at);assert.equal(new Float32Array(original.data.buffer)[0],1);
+  assert.equal(native.advance(at+.2).status,'advanced');native.bridge.commitNativeCausalClock();await flush();f.host.present();const status=f.host.inspect();assert(status.frameTime.elapsed<=at+.2);assert.equal(status.nativeCausalClock.committedThrough,at+.2);assert.equal(status.failed,false);
+  const count=f.gpu.submitted.length;assert.equal(native.bridge.cancelHomeIntent(`worker-${reference.nativeRoute.actorId}`),true);await flush();f.host.present();f.host.present();assert.equal(f.gpu.submitted.length,count,'a cancelled body never replays its held image');assert.deepEqual(f.errors,[]);
+ }finally{source?.dispose();f.client.dispose();await f.host.dispose();native.session.dispose();}
+});
+
+test('a draw owner without suspension support cannot silently accept the new clock as an ordinary clock',async()=>{
+ const f=await fixture();try{assert.throws(()=>f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'relative',epoch:10,nativeSuspended:{}}),/does not support/);assert.equal(f.client.inspect().clockBindings,0);}finally{f.client.dispose();await f.host.dispose();}
 });
 
 test('a cancelled ready world packet retains the displayed generation and cannot activate on a later different commit',async()=>{

@@ -1,3 +1,4 @@
+import {copyNativeSuspendedBodyReference} from '../world/native-suspended-body-reference.js';
 import {copyNativeRouteReference} from '../world/native-route-reference.js';
 import {copyNativeGateReference} from '../world/native-gate-reference.js';
 
@@ -5,7 +6,7 @@ import {copyNativeGateReference} from '../world/native-gate-reference.js';
 // structure/cache keys. Registration occurs when a physical binding is updated,
 // never by discovering graph nodes during replay.
 const clockMetadata=Symbol.for('wild-guardians.remote-clock');
-export function markRemoteClockNode(node,semantic,epoch,nativeRoute=null,nativeGate=null){
+export function markRemoteClockNode(node,semantic,epoch,nativeRoute=null,nativeGate=null,nativeSuspended=null){
  if(!node?.isNode||!['absolute','relative'].includes(semantic)||!Number.isFinite(epoch)||epoch<0)throw TypeError('Invalid remote clock node');
  let route=null;
  if(nativeRoute!==null){
@@ -13,9 +14,10 @@ export function markRemoteClockNode(node,semantic,epoch,nativeRoute=null,nativeG
   // never retag an already admitted GPU binding for another route generation.
   try{route=copyNativeRouteReference(nativeRoute);}catch{throw TypeError('Invalid native route clock reference');}
  }
- if(nativeGate!==null&&nativeRoute!==null)throw TypeError('Conflicting native clock references');
+ if([nativeRoute,nativeGate,nativeSuspended].filter(value=>value!==null).length>1)throw TypeError('Conflicting native clock references');
+ const suspended=nativeSuspended===null?null:copyNativeSuspendedBodyReference(nativeSuspended);
  const gate=nativeGate===null?null:copyNativeGateReference(nativeGate);
- Object.defineProperty(node,clockMetadata,{value:Object.freeze({semantic,epoch,...(route?{nativeRoute:route}:{}),...(gate?{nativeGate:gate}:{})}),enumerable:false});
+ Object.defineProperty(node,clockMetadata,{value:Object.freeze({semantic,epoch,...(route?{nativeRoute:route}:{}),...(gate?{nativeGate:gate}:{}),...(suspended?{nativeSuspended:suspended}:{})}),enumerable:false});
  return node;
 }
 export function installRemoteClockBindings(renderer,remote){

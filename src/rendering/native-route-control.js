@@ -1,3 +1,6 @@
+import {copyNativeSuspendedBodyReference,sameNativeSuspendedBodyReference} from '../world/native-suspended-body-reference.js';
+import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
+
 const eventTypes=new Set(['RouteAssigned','RouteInvalidated','RouteReplaced',
   'IntentChanged','RouteCompleted']);
 const id=value=>Number.isSafeInteger(value)&&value>0;
@@ -16,7 +19,9 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
      !Number.isSafeInteger(initialSequence)||initialSequence<0||
      initialTime!==null&&(!Number.isFinite(initialTime)||initialTime<0)||!Array.isArray(routes))
     throw TypeError('Invalid native route control identity');
-  const active=new Map();
+  const active=new Map(),actors=new Map();
+  const actorContext=actorId=>{let value=actors.get(actorId);if(!value){value={closed:false,latestSequence:0,state:null,current:null,revoked:null,proof:null};actors.set(actorId,value);}return value;};
+  const matches=(record,reference)=>!!record&&record.actorId===reference.actorId&&record.assignmentSequence===reference.assignmentSequence&&sameHandle(record.handle,reference.routeHandle);
   const assignments=new Set();
   for(const route of routes){
     if(!id(route?.actorId)||active.has(route.actorId)||!validHandle(route.routeHandle,authorityEpoch)||
@@ -25,9 +30,10 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
        route.startTime<0||initialTime===null||route.startTime>initialTime)
       throw TypeError('Invalid native route control baseline');
     assignments.add(route.assignmentSequence);
-    active.set(route.actorId,{actorId:route.actorId,handle:Object.freeze({...route.routeHandle}),
+    const actor=actorContext(route.actorId),record={actorId:route.actorId,handle:Object.freeze({...route.routeHandle}),
       assignmentSequence:route.assignmentSequence,startTime:route.startTime,
-      safeUntil:Infinity,lastDrawTime:null});
+      safeUntil:Infinity,lastDrawTime:null,actor};active.set(route.actorId,record);
+    actor.current=record;actor.state=1;actor.latestSequence=route.assignmentSequence;
   }
   let sequence=initialSequence,effectiveTime=initialTime??-Infinity,closed=false,clock=null;
   const counters={accepted:0,revoked:0,oldEpoch:0,admissions:0};
@@ -58,19 +64,49 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       const error=Error('Native route revocation arrived after its presented time');
       error.code='native-route-revocation-late';throw error;
     }
+    const actor=assigned?actorContext(event.actorId):actors.get(event.actorId);
     if(current&&revoked){
+      current.revokedSequence=event.sequence;current.revokedState=Number.isInteger(event.state)?event.state:null;
+      if(actor){actor.revoked=current;actor.current=null;actor.proof=null;}
       current.safeUntil=Math.min(current.safeUntil,event.effectiveTime);
       active.delete(event.actorId);counters.revoked++;
     }
-    if(assigned)active.set(event.actorId,{
-      actorId:event.actorId,handle:Object.freeze({...handle}),
+    if(assigned){const record={actorId:event.actorId,handle:Object.freeze({...handle}),
       assignmentSequence:event.sequence,startTime:event.effectiveTime,
-      safeUntil:Infinity,lastDrawTime:null});
+      safeUntil:Infinity,lastDrawTime:null,actor};active.set(event.actorId,record);actor.current=record;actor.proof=null;}
+    if(actor){actor.latestSequence=event.sequence;actor.state=assigned?1:Number.isInteger(event.state)?event.state:null;
+      if(!actor.current&&actor.state!==4){actor.closed=true;actors.delete(event.actorId);}}
     sequence=event.sequence;effectiveTime=event.effectiveTime;counters.accepted++;
     return true;
   }
+  function suspendedCurrent(reference,record,actor){
+    return !closed&&!!clock&&!actor.closed&&actors.get(reference.nativeRoute.actorId)===actor&&
+      actor.current===null&&actor.state===4&&actor.revoked===record&&record.revokedState===4&&
+      actor.latestSequence===record.revokedSequence&&record.safeUntil===reference.suspendedAt&&
+      sameNativeSuspendedBodyReference(actor.proof,reference);
+  }
   return {
     accept,
+    // Called only with facts delivered on the direct authority connection at
+    // physical release. Resource/preparation metadata cannot install a proof.
+    installSuspendedBodies(boundary,values=[]){
+      boundary=copyNativeWorldBoundary(boundary);
+      if(closed||!clock||!boundary||boundary.authorityEpoch!==authorityEpoch||boundary.nativeSession!==clock.nativeSession||boundary.effectiveTime!==clock.committedThrough||!Array.isArray(values)||values.length>32768)throw Error('Invalid native suspension attestation boundary');
+      const staged=[],ids=new Set(),bodies=new Set();
+      for(const value of values){const reference=copyNativeSuspendedBodyReference(value),actor=actors.get(reference.nativeRoute.actorId),record=actor?.revoked;
+        if(!sameNativeWorldBoundary(reference.worldBoundary,boundary)||ids.has(reference.nativeRoute.actorId)||bodies.has(reference.bodyId)||!actor||actor.closed||actor.current||actor.state!==4||actor.latestSequence!==record?.revokedSequence||record.revokedState!==4||!matches(record,reference.nativeRoute)||record.safeUntil!==reference.suspendedAt)throw Error('Native suspension attestation does not match its exact revocation');
+        ids.add(reference.nativeRoute.actorId);bodies.add(reference.bodyId);staged.push({actor,reference});}
+      for(const {actor,reference} of staged)actor.proof=reference;
+      return staged.length;
+    },
+    admitSuspended(value,{preparingWorldBoundary=null}={}){
+      const reference=copyNativeSuspendedBodyReference(value),actor=actors.get(reference.nativeRoute.actorId),record=actor?.current??actor?.revoked,boundary=copyNativeWorldBoundary(preparingWorldBoundary);
+      const pending=()=>!closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.nativeRoute.actorId)===actor&&actor.current===record&&active.get(reference.nativeRoute.actorId)===record&&actor.state===1&&sameNativeWorldBoundary(boundary,reference.worldBoundary)&&clock.committedThrough===reference.suspendedAt&&record.startTime<=reference.suspendedAt;
+      const current=()=>!!actor&&!!record&&suspendedCurrent(reference,record,actor);
+      if(reference.worldBoundary.authorityEpoch!==authorityEpoch||!clock||reference.worldBoundary.nativeSession!==clock.nativeSession||!matches(record,reference.nativeRoute)||!current()&&!pending()){
+        const error=Error('Native suspended body is obsolete or lacks direct authority proof');error.code='native-suspended-admission-obsolete';throw error;}
+      counters.admissions++;return Object.freeze({reference,isCurrent:current,isPrepared:()=>current()||pending()});
+    },
     acceptClock(message,{baseline=false}={}){
       if(closed)throw Error('Native route control is closed');
       const policy=!clock||message?.rate!==clock.rate||message?.paused!==clock.paused;
@@ -116,6 +152,6 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     status:()=>({authorityEpoch,sequence,effectiveTime:Number.isFinite(effectiveTime)?
       effectiveTime:null,active:active.size,closed,...counters,...(clock?{clock}:{} )}),
     dispose(){if(closed)return;closed=true;for(const record of active.values())
-      record.safeUntil=record.lastDrawTime??record.startTime;active.clear();},
+      record.safeUntil=record.lastDrawTime??record.startTime;active.clear();for(const actor of actors.values())actor.closed=true;actors.clear();},
   };
 }

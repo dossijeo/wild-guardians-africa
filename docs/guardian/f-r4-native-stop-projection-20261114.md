@@ -5,6 +5,8 @@ Continúa el [plan integrado](integrated-gpu-migration-plan-20261104.md) y la
 [conservación de asignaciones](f-r4-retained-native-terrain-20261114.md).
 Los once padres A6 y e-R3/e-R4/f-R4 permanecen abiertos.
 
+Continúa con [autoridad del cuerpo suspendido preparado](f-r4-native-suspended-body-control-20261114.md); la sustitución visual de Idle/puerta sigue pendiente.
+
 ## Cambio efectivo
 
 La propuesta de mundo de la autoridad prepara ahora las consecuencias completas

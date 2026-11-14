@@ -426,6 +426,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     },
     registerClockBinding(buffer, binding) {
       if (!buffer?.[REF] || !['absolute', 'relative'].includes(binding.semantic) || !Number.isInteger(binding.byteOffset) || binding.byteOffset < 0 || binding.byteOffset % 4) throw TypeError('Invalid remote clock binding');
+      if(binding.nativeSuspended&&capabilities.nativeSuspendedVersion!==1)throw Error('Draw owner does not support native suspended body authority');
       const key = `${buffer[REF]}:${binding.byteOffset}`;
       const captured=structuredClone(binding);
       clockBindings.set(key, captured);
