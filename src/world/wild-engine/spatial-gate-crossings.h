@@ -1,6 +1,6 @@
 // Admission at an intent event. The route stays in its existing slot and each
 // gate stores only references/intervals into that slot. No per-tick gate planner.
-struct GateCrossingBoundary {uint64_t gate;double distance,last;};
+uint32_t nextGateRouteGeneration(uint32_t generation){const uint32_t next=generation+2;return next?next:1;}
 bool gateRouteBindingsCoherent(const IntentState& s,const RouteSlot& route,uint32_t slot){
   if(route.gateReservations.empty())return false;
   for(uint64_t id:route.gateReservations){const auto found=s.gates.find(id);
@@ -87,8 +87,7 @@ int proveGateRouteAdmission(IntentState& s,const ActiveIntent& intent,RouteSlot&
 void publishGateRouteAdmission(IntentState& s,ActiveIntent& intent,uint32_t slot,RouteSlot& candidate,
     uint64_t bodyId,std::map<uint64_t,NativeGate>& proposed,const std::vector<GateCrossingBoundary>& boundaries){
   auto& old=s.routeSlots[slot];
-  candidate.active=true;candidate.generation=old.generation+2;
-  if(!candidate.generation)candidate.generation=1;
+  candidate.active=true;candidate.generation=nextGateRouteGeneration(old.generation);
   candidate.gateCandidate=false;candidate.gateAdmitted=!boundaries.empty();candidate.resumable=true;
   candidate.reserved=true;candidate.reservationBody=bodyId;
   for(const auto& boundary:boundaries){auto& gate=proposed.at(boundary.gate);

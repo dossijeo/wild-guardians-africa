@@ -1,6 +1,6 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
-Continuación 2026-11-14: [cuerpo y puerta suspendidos preparados](f-r4-prepared-native-suspension-20261114.md).
+Continuación 2026-11-14: [propuesta nativa de reanudación](f-r4-native-resume-proposal-20261114.md).
 Se conserva el orden A → B → C → D; la reproducción nativa avanza como componente, pero la admisión ordinaria y la aceptación integrada siguen pendientes.
 
 Revisión del 5 de noviembre de 2026. Rama de trabajo: `codex/guardian-3d-animation`. Este documento sustituye la secuencia del plan del 4 de noviembre; su versión anterior permanece en Git. Estado: plan de implementación, no arquitectura ya terminada.

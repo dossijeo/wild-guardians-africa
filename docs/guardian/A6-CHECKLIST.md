@@ -2,7 +2,7 @@
 
 Actualizado: 2026-11-14. IDs acordados en la conversación; no se renumeran al avanzar.
 
-Último incremento de f-R4: [cuerpo y puerta suspendidos preparados](f-r4-prepared-native-suspension-20261114.md).
+Último incremento de f-R4: [propuesta nativa de reanudación](f-r4-native-resume-proposal-20261114.md).
 Publicaciones ordinarias y aceptación integrada de personajes autónomos siguen pendientes; no cambia el recuento de cierres.
 
 **Ningún punto principal está cerrado todavía.** Un subpunto marcado como nativo
@@ -190,8 +190,10 @@ La política ante un canal irrecuperable es fallo explícito y ausencia de commi
 no se simula progreso, no se concede tiempo futuro y no se descarta ese
 propietario incierto al abrir un Worker nuevo. Recuperar un dispositivo perdido
 real sí conserva la autoridad, como acredita el recibo de navegador. Las
-mutaciones todavía congelan el paquete anterior: aplicar recursos nuevos y
-personajes reales pertenece al criterio f-R4 que sigue pendiente.
+mutaciones coordinadas ya pueden adoptar el paquete preparado durante un
+bloqueo del preparador, incluido el caso de cuerpo suspendido y puerta fija.
+Reanudación/asignación, demás acciones y alimentación/aceptación ordinarias
+siguen dentro del criterio f-R4 pendiente.
 
 **Cómo se informará el avance:** entrega cerrada y evidencia; entrega parcial
 y qué criterio falta; IDs aún pendientes; cambios de alcance descubiertos,

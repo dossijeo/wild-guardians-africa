@@ -27,6 +27,15 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_route_presentations(double session,double slot
   }
   return int(s.gateResult.size());
 }
+static int captureNativeGateRouteCurve(IntentState& s,const RouteSlot& route,const NativeGate& gate){
+  const double begin=route.startTime,end=routeTimeAtDistance(route,route.distances.back());
+  std::vector<double> times{begin,end};for(double at:gateMotionKnots(gate))if(at>begin&&at<end)times.push_back(at);
+  std::sort(times.begin(),times.end());times.erase(std::unique(times.begin(),times.end()),times.end());
+  s.gateResult={double(gate.id),double(gate.mechanism),double(gate.mesh->id),gate.hx,gate.hz};
+  const auto root=gateRootMatrix(gate);s.gateResult.insert(s.gateResult.end(),root.begin(),root.end());
+  for(double at:times)s.gateResult.insert(s.gateResult.end(),{at,gateOpening(gate,at)});
+  return int(times.size());
+}
 EMSCRIPTEN_KEEPALIVE int nav_gate_route_presentation(double session,double slot,double generation,double gateId){
   auto& s=state();s.gateResult.clear();if(nav_intent_route_points(session,slot,generation)<0||!integer(gateId))return -1;
   const auto& route=s.routeSlots[size_t(slot)];const uint64_t id=uint64_t(gateId);
@@ -34,14 +43,9 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_route_presentation(double session,double slot,
       std::find(route.gateReservations.begin(),route.gateReservations.end(),id)==route.gateReservations.end())return -1;
   const auto found=s.gates.find(id);if(found==s.gates.end()||!found->second.mesh)return -2;
   const auto& gate=found->second;
-  const double begin=route.startTime,end=routeTimeAtDistance(route,route.distances.back());
-  std::vector<double> times{begin,end};for(double at:gateMotionKnots(gate))if(at>begin&&at<end)times.push_back(at);
-  std::sort(times.begin(),times.end());times.erase(std::unique(times.begin(),times.end()),times.end());
-  s.gateResult={gateId,double(gate.mechanism),double(gate.mesh->id),gate.hx,gate.hz};
-  const auto root=gateRootMatrix(gate);s.gateResult.insert(s.gateResult.end(),root.begin(),root.end());
-  for(double at:times)s.gateResult.insert(s.gateResult.end(),{at,gateOpening(gate,at)});
-  return int(times.size());
+  return captureNativeGateRouteCurve(s,route,gate);
 }
+
 // Opt-in native admission only. It does not publish a GPU clock/permission or
 // activate the product runtime. Failure never installs a partial route/motor.
 EMSCRIPTEN_KEEPALIVE int nav_gate_admit_route(double session,double slot,double generation,
@@ -110,7 +114,11 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_route_resumable(double session,double slot,dou
 }
 EMSCRIPTEN_KEEPALIVE double nav_gate_route_suspensions(){return double(state().routeSuspensions);}
 EMSCRIPTEN_KEEPALIVE double nav_gate_route_resumptions(){return double(state().routeResumptions);}
-EMSCRIPTEN_KEEPALIVE int nav_gate_resume_route(double session,double slot,double generation){
+// Shared native candidate builder. Preparing a suffix does not publish an
+// assignment, release its pinned body, install a gate motor or advance time.
+static int prepareNativeGateRouteResume(double session,double slot,double generation,
+    RouteSlot& candidate,std::map<uint64_t,NativeGate>& proposed,
+    std::vector<GateCrossingBoundary>& boundaries,uint32_t& topology,uint64_t& bodyId){
   auto& s=state();s.timingRejection=0;s.reservationResult.fill(0);s.gateSweepResult.fill(0);s.gateStaticResult.fill(0);
   const auto old=suspendedGateRoute(session,slot,generation);if(!old)return -1;
   if(!gateStaticProofCurrent(s)||s.executionEnabled&&s.executionWorldStamp!=executionWorldStamp())return -2;
@@ -119,15 +127,88 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_resume_route(double session,double slot,double
      !(body.flags&1)||body.r!=old->radius||body.x!=old->executionPose[0]||body.z!=old->executionPose[1]||
      bool(body.flags&2)!=bool(old->motionFlags&32)||s.reservedBodies.count(old->reservationBody))return -3;
   const int previous=lazy_selected_context();if(previous!=old->profile)spatial_select_nav_profile_index(old->profile);
-  RouteSlot candidate;candidate.points.assign(old->points.begin()+size_t(old->executionPose[5])*2,old->points.end());
+  candidate.points.assign(old->points.begin()+size_t(old->executionPose[5])*2,old->points.end());
   int result=prepareRouteTiming(candidate,old->actor,body.x,body.z,s.effectiveTime,old->radius,2,old->motionFlags,old->executionPose[14],true);
-  const uint32_t topology=lazy_route_revision();if(previous!=old->profile)spatial_select_nav_profile_index(previous);
+  topology=lazy_route_revision();if(previous!=old->profile)spatial_select_nav_profile_index(previous);
   recordTimingResult(s,result);if(result!=1)return -7;
   const auto& pose=old->executionPose;candidate.motionOffset={pose[2],pose[3],pose[9],pose[10],pose[11],pose[12],pose[13]};
-  auto proposed=s.gates;std::vector<GateCrossingBoundary> boundaries;
+  proposed=s.gates;
   result=proveGateRouteAdmission(s,found->second,candidate,old->reservationBody,body,proposed,boundaries,false);
   if(result!=1)return result;
-  const uint64_t bodyId=old->reservationBody;found->second.topology=topology;
+  bodyId=old->reservationBody;return 1;
+}
+EMSCRIPTEN_KEEPALIVE int nav_gate_resume_route(double session,double slot,double generation){
+  RouteSlot candidate;std::map<uint64_t,NativeGate> proposed;
+  std::vector<GateCrossingBoundary> boundaries;uint32_t topology=0;uint64_t bodyId=0;
+  const int result=prepareNativeGateRouteResume(session,slot,generation,candidate,proposed,boundaries,topology,bodyId);
+  if(result!=1)return result;
+  auto& s=state();const auto found=s.activeIntents.find(candidate.actor);found->second.topology=topology;
   publishGateRouteAdmission(s,found->second,uint32_t(slot),candidate,bodyId,proposed,boundaries);s.routeResumptions++;
   nav_intent_route_timing(session,slot,double(s.routeSlots[size_t(slot)].generation));return 1;
+}
+
+// The same resume candidate can be prepared without making it executable.
+// Its existing transaction ticket expires on any changed native read-set member.
+EMSCRIPTEN_KEEPALIVE int nav_gate_resume_proposal_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int nav_gate_resume_proposal_stage(double session,double slot,double generation){
+  auto& s=state();if(s.barrierProposal.pending||s.worldMutationPreview)return -4;
+  PendingNativeResume draft;
+  const int result=prepareNativeGateRouteResume(session,slot,generation,draft.route,draft.gates,draft.boundaries,draft.topology,draft.body);
+  if(result!=1)return result;
+  const int staged=stageWorldMutationBoundary(nullptr,0);if(staged!=1)return staged;
+  auto& p=s.barrierProposal;p.kind=13;draft.slot=uint32_t(slot);draft.generation=uint32_t(generation);
+  const auto& route=draft.route;std::vector<double> knots{route.startTime};reservationKnots({&route},route.startTime,knots);
+  std::sort(knots.begin(),knots.end());knots.erase(std::unique(knots.begin(),knots.end()),knots.end());
+  for(size_t i=0;i<knots.size();i++){
+    const double at=knots[i];const auto pose=sampleRouteTiming(route,at),right=i+1<knots.size()?sampleRouteTiming(route,at+(knots[i+1]-at)*.5):pose;
+    draft.rows.insert(draft.rows.end(),{at,pose[0],pose[1],pose[2],pose[3],right[4],right[5],right[6],pose[9],pose[10],pose[11],pose[12],pose[13],pose[14],right[15],right[16]});
+  }
+  const auto& intent=s.activeIntents.at(route.actor);const auto& old=s.routeSlots[draft.slot];
+  draft.header={1,double(route.actor),double(draft.body),double(draft.generation),double(nextGateRouteGeneration(draft.generation)),double(route.profile),double(route.motionFlags),route.radius,
+    route.originX,route.originZ,route.startTime,routeTimeAtDistance(route,route.distances.back()),route.distances.back(),route.speed,route.runDistance,route.runSpeed,route.runBudget,double(route.timingMode),
+    double(route.points.size()/2),double(knots.size()),double(draft.slot),double(intent.assignmentSequence),old.suspendedAt,double(p.intents)};
+  p.resume=std::move(draft);return 1;
+}
+EMSCRIPTEN_KEEPALIVE int nav_gate_resume_proposal_snapshot(double session,double ticket){
+  auto& s=state();const auto& p=s.barrierProposal;if(!p.resume||p.kind!=13)return -1;
+  return takeWorldMutationBoundary(session,ticket,double(p.intents),p.at,double(p.clock),13);
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_gate_resume_proposal_header_ptr(){
+  const auto& p=state().barrierProposal;return p.pending&&p.kind==13&&p.resume?p.resume->header.data():nullptr;
+}
+EMSCRIPTEN_KEEPALIVE int nav_gate_resume_proposal_points(double session,double ticket){
+  const int valid=nav_gate_resume_proposal_snapshot(session,ticket);return valid==1?int(state().barrierProposal.resume->route.points.size()/2):valid;
+}
+EMSCRIPTEN_KEEPALIVE const float* nav_gate_resume_proposal_points_ptr(){
+  const auto& p=state().barrierProposal;return p.pending&&p.kind==13&&p.resume?p.resume->route.points.data():nullptr;
+}
+EMSCRIPTEN_KEEPALIVE int nav_gate_resume_proposal_rows(double session,double ticket){
+  const int valid=nav_gate_resume_proposal_snapshot(session,ticket);return valid==1?int(state().barrierProposal.resume->rows.size()/16):valid;
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_gate_resume_proposal_rows_ptr(){
+  const auto& p=state().barrierProposal;return p.pending&&p.kind==13&&p.resume?p.resume->rows.data():nullptr;
+}
+EMSCRIPTEN_KEEPALIVE int nav_gate_resume_proposal_commit(double session,double ticket,double sequence,double time,double clockSequence){
+  auto& s=state();if(!s.barrierProposal.resume)return -1;
+  const int valid=takeWorldMutationBoundary(session,ticket,sequence,time,clockSequence,13);if(valid!=1)return valid;
+  auto draft=std::move(*s.barrierProposal.resume);clearWorldMutationProposal(s.barrierProposal);
+  const auto found=s.activeIntents.find(draft.route.actor);found->second.topology=draft.topology;
+  publishGateRouteAdmission(s,found->second,draft.slot,draft.route,draft.body,draft.gates,draft.boundaries);s.routeResumptions++;
+  nav_intent_route_timing(session,double(draft.slot),double(s.routeSlots[draft.slot].generation));return 1;
+}
+
+EMSCRIPTEN_KEEPALIVE int nav_gate_resume_proposal_gates(double session,double ticket){
+  const int valid=nav_gate_resume_proposal_snapshot(session,ticket);if(valid!=1)return valid;
+  auto& s=state();s.gateResult.clear();for(uint64_t id:s.barrierProposal.resume->route.gateReservations)s.gateResult.push_back(double(id));return int(s.gateResult.size());
+}
+EMSCRIPTEN_KEEPALIVE int nav_gate_resume_proposal_gate(double session,double ticket,double gateId){
+  const int valid=nav_gate_resume_proposal_snapshot(session,ticket);if(valid!=1)return valid;
+  auto& s=state();s.gateResult.clear();if(!integer(gateId))return -1;const auto& draft=*s.barrierProposal.resume;const uint64_t id=uint64_t(gateId);
+  if(std::find(draft.route.gateReservations.begin(),draft.route.gateReservations.end(),id)==draft.route.gateReservations.end())return -1;
+  const auto found=draft.gates.find(id);if(found==draft.gates.end()||!found->second.mesh)return -2;
+  return captureNativeGateRouteCurve(s,draft.route,found->second);
+}
+EMSCRIPTEN_KEEPALIVE int nav_gate_resume_proposal_cancel(double session,double ticket){
+  const auto& p=state().barrierProposal;if(p.kind!=13||!p.resume)return 0;
+  return nav_intent_barrier_proposal_cancel(session,ticket);
 }

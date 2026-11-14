@@ -5,6 +5,8 @@ Continúa la [autoridad del cuerpo suspendido](f-r4-native-suspended-body-contro
 y el [plan integrado](integrated-gpu-migration-plan-20261104.md).
 Los once padres A6 y e-R3/e-R4/f-R4 siguen abiertos.
 
+Continúa con [propuesta nativa de reanudación](f-r4-native-resume-proposal-20261114.md); su admisión gráfica sigue pendiente.
+
 ## Cambio efectivo
 
 Las consecuencias de parada de la propuesta nativa cruzan ahora el canal de

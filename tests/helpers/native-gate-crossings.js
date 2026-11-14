@@ -2,8 +2,8 @@ import assert from 'node:assert/strict';
 import {createNativeRouteExecutionFixture as fixture} from './native-route-execution.js';
 import {createSpatialGateIntents} from '../../src/world/wild-engine/spatial-gate-intents.js';
 
-export function nativeGateCrossingFixture({materials=['zarzas'],positions=[0],opening=0,yaw=0,install=true,alignGrid=false}={}){
- const f=fixture(),p=f.point(0,0);f.session.core.setSettlement(p.x,p.z,24,24);
+export function nativeGateCrossingFixture({materials=['zarzas'],positions=[0],opening=0,yaw=0,install=true,alignGrid=false,core=null}={}){
+ const f=fixture(core?{core}:{}),p=f.point(0,0);f.session.core.setSettlement(p.x,p.z,24,24);
  const service=createSpatialGateIntents(f.session,f.state),gates=materials.map((material,i)=>({
   id:`structure-${990001+i}`,gate:true,status:'intact',material,...f.point(0,positions[i]),
   ...(alignGrid?{x:Math.round(p.x)-.05}:{}),gateOpen:opening,yaw}));

@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [cuerpo y puerta suspendidos preparados](f-r4-prepared-native-suspension-20261114.md).
+Último avance: [propuesta nativa de reanudación](f-r4-native-resume-proposal-20261114.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio
