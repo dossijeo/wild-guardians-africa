@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [instalación nativa del terreno preparado y medición del relevo gráfico pendiente](f-r4-native-prepared-terrain-20261114.md).
+Último avance: [relevo preparado medido por fases y comparación binaria exacta sin callback por byte](f-r4-prepared-handoff-20261114.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio
