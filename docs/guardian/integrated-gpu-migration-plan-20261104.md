@@ -1,6 +1,6 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
-Continuación 2026-11-14: [validación de admisión por fase reversible; relevo, autoridad normal y aceptación pendientes](f-r4-prepared-phase-validation-20261114.md).
+Continuación 2026-11-14: [aldeas sin cambios conservadas; admisión completa, autoridad normal y aceptación pendientes](f-r4-retained-villages-20261114.md).
 Se conserva el orden A → B → C → D; el replay preparado avanza, pero la admisión viva y la aceptación con personajes autónomos siguen pendientes.
 
 Revisión del 5 de noviembre de 2026. Rama de trabajo: `codex/guardian-3d-animation`. Este documento sustituye la secuencia del plan del 4 de noviembre; su versión anterior permanece en Git. Estado: plan de implementación, no arquitectura ya terminada.

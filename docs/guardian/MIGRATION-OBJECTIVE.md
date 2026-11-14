@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [tickets de admisión validados por fase reversible; relevo gráfico aún pendiente](f-r4-prepared-phase-validation-20261114.md).
+Último avance: [aldeas intactas conservadas tras avisos de terreno; cobertura previa de consumidores pendientes](f-r4-retained-villages-20261114.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio
