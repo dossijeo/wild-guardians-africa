@@ -31,6 +31,15 @@ test('terrain channel carries the native assignment retention proof only as a va
  const f=await fixture();try{await assert.rejects(f.producer.prepareNativeWorldResources({proposedWorldBoundary:boundary,resources:{...resources(),retainsNativeAssignments:1}}),/retention proof/);assert.equal(f.prepared.length,0);}finally{await f.dispose();}
 });
 
+test('terrain preparation owns copied native stop inputs and accounts for their bytes in its reservation',async()=>{
+ const rows=new Float64Array(26);rows.set([1,1,0,3,1,4,10,4]);rows[15]=10;rows[25]=2;const gates=Float64Array.from([990001,1,.5]);let observed;
+ const f=await fixture({prepareProposal:(messages,options,make)=>{observed=options.stopEffects;return make(messages);}});try{const h=await f.producer.prepareNativeWorldResources({proposedWorldBoundary:boundary,resources:{...resources(),retainsNativeAssignments:false,routeEffects:{version:1,rowWidth:26,rows},gateEffects:{version:1,rowWidth:3,rows:gates}}});assert(observed);assert.deepEqual(observed.routeEffects.rows,rows);assert.deepEqual(observed.gateEffects.rows,gates);rows.fill(-1);gates.fill(-1);assert.equal(observed.routeEffects.rows[0],1);assert.equal(observed.gateEffects.rows[2],.5);assert(f.receiver.status().retainedBytes>26*8+3*8);h.abort();}finally{await f.dispose();}
+});
+
+test('a supplied malformed stop envelope cannot disappear into the legacy empty-effects case',async()=>{
+ const f=await fixture({transformOutgoing:data=>{if(data.kind==='terrainProposal')data.stopEffects={};}});try{const rejected=assert.rejects(f.producer.prepareNativeWorldResources({proposedWorldBoundary:boundary,resources:resources()}),/disposed|cancelled/);await until(()=>f.errors.some(error=>error.message==='Missing native route stop effects'));assert.equal(f.prepared.length,0);assert.equal(f.receiver.status().closed,true);f.producer.dispose();await rejected;}finally{await f.dispose();}
+});
+
 test('a consumer proof for another world ticket rejects the terrain reservation before effect',async()=>{
  const f=await fixture({prepareProposal:(messages,options,make)=>({...make(messages),preparedWorldBoundary:{...options.proposedWorldBoundary,ticket:2}})});try{
   await assert.rejects(f.producer.prepareNativeWorldResources({proposedWorldBoundary:boundary,resources:resources()}),/commands identity/);await until(()=>f.aborts===1);assert.deepEqual([...f.live],[[0,1],[1,1]]);assert.equal(f.receiver.status().closed,false);

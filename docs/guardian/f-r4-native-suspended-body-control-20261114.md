@@ -5,6 +5,8 @@ Continúa las [consecuencias nativas de parada](f-r4-native-stop-projection-2026
 y el [plan integrado](integrated-gpu-migration-plan-20261104.md).
 Los once padres A6 y e-R3/e-R4/f-R4 siguen abiertos.
 
+Continúa con [cuerpo y puerta suspendidos preparados](f-r4-prepared-native-suspension-20261114.md).
+
 ## Cambio efectivo
 
 Una referencia de cuerpo suspendido puede prepararse para el ticket de mundo

@@ -131,7 +131,7 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
    if(result?.shadowTarget||!worldPass)return result;
    const passes=[result],targets=[...auxiliaryTargets.keys()];
    for(const target of targets){if(revision!==auxiliaryRevision)break;passes.push(await execute(item.object,item.signal,item.version,item.include,target,false,camera,scene,()=>revision===auxiliaryRevision,false,item.materialAlternatives));}
-   if(revision===auxiliaryRevision&&passes.length===targets.length+1&&passes.every(pass=>pass?.valid?.()))return {valid:()=>revision===auxiliaryRevision&&passes.every(pass=>pass.valid()),validAfterAttach:()=>revision===auxiliaryRevision&&passes.every(pass=>pass.validAfterAttach?.())};
+   if(revision===auxiliaryRevision&&passes.length===targets.length+1&&passes.every(pass=>pass?.valid?.()))return {valid:()=>revision===auxiliaryRevision&&passes.every(pass=>pass.valid()),validAfterAttach:options=>revision===auxiliaryRevision&&passes.every(pass=>pass.validAfterAttach?.(options))};
   }
  }
  function backgroundInputs(node){
@@ -272,8 +272,14 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
     // Only the expected scene attachment may change after preparation.
     // Descendant ownership, geometry, materials and pass state remain strict.
     const originalParent=baseInputs[renderPassInputs(target,passCamera,renderer).length+1];
-    const valid=(attachedRootParent=undefined)=>!closed&&!lostError&&renderer._initialized!==false&&renderer._isDeviceLost!==true&&version===generation&&!signal?.aborted&&(!isCurrent||isCurrent())&&!lightsChanged()&&shadowTargets.every(([light,map])=>light.shadow.map===map)&&sameInputs(baseInputs,pipelineInputs(object,currentTarget(),passCamera,renderer,include,attachedRootParent,targetScene))&&withMaterialAlternatives(alternatives,()=>sameInputs(inputs,pipelineInputs(object,currentTarget(),passCamera,renderer,include,attachedRootParent,targetScene)));
-    return {valid:()=>valid(),validAfterAttach:()=>originalParent!==null&&object.parent===originalParent?valid():originalParent===null&&object.parent===targetScene&&valid(null)};
+    const valid=(attachedRootParent=undefined,materialsPublished=false)=>{
+     if(closed||lostError||renderer._initialized===false||renderer._isDeviceLost===true||version!==generation||signal?.aborted||isCurrent&&!isCurrent()||lightsChanged()||shadowTargets.some(([light,map])=>light.shadow.map!==map))return false;
+     // An explicit atomic publisher may install only this exact compiled set.
+     // Compare the complete prepared inputs, never waive geometry/pass checks.
+     if(materialsPublished)return alternatives.length>0&&alternatives.every(item=>item.mesh.material===item.material)&&sameInputs(inputs,pipelineInputs(object,currentTarget(),passCamera,renderer,include,attachedRootParent,targetScene));
+     return sameInputs(baseInputs,pipelineInputs(object,currentTarget(),passCamera,renderer,include,attachedRootParent,targetScene))&&withMaterialAlternatives(alternatives,()=>sameInputs(inputs,pipelineInputs(object,currentTarget(),passCamera,renderer,include,attachedRootParent,targetScene)));
+    };
+    return {valid:()=>valid(),validAfterAttach:({materialsPublished=false}={})=>typeof materialsPublished==='boolean'&&(originalParent!==null&&object.parent===originalParent?valid(undefined,materialsPublished):originalParent===null&&object.parent===targetScene&&valid(null,materialsPublished))};
   }catch(error){
    if(error?.name==='GPUPipelineError'){const layouts=[];object.traverse(node=>{if(node.geometry)layouts.push({name:node.name||node.type,attributes:Object.keys(node.geometry.attributes),material:node.material?.name||node.material?.type});});error=Object.assign(new Error(error.message+' '+JSON.stringify(layouts),{cause:error}),{name:error.name});}
    // Three r180 may retain an unsuccessful pipeline in its internal cache.

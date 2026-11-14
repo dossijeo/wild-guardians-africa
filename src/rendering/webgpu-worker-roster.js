@@ -1,3 +1,5 @@
+import {copyNativeWorldStopEffects,nativeSuspendedBodiesFromProposal} from '../world/native-suspended-body-reference.js';
+import {copyNativeGatePresentation} from '../world/native-gate-presentation.js';
 import {copyNativeRoutePresentation} from '../world/native-route-presentation.js';
 import {sameNativeGatePresentations} from '../world/native-gate-presentation.js';
 import {createNativeGpuMotion} from './native-gpu-motion.js';
@@ -86,7 +88,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
   // Running/walking phases and their boundary belong to the native table.
   let requiresRun=false,requiresIdle=!carrying&&packet.rows.length===16;for(let i=0;i+16<packet.rows.length;i+=16){if(packet.rows[i+15]<=0&&!carrying)requiresIdle=true;if(packet.rows[i+14]!==0)requiresRun=true;}
   if(carrying&&requiresRun)throw Error('Native carrying route cannot use running poses');
-  const previous=entry.nativeState;if(previous&&sameNativeReference(previous.nativeRoute,packet.nativeRoute)&&previous.motion.valid()&&previous.variant.current()){const prior=previous.packet;if(!sameNativeGatePresentations(prior.gates,packet.gates)||previous.crateId!==crateId||['motionMode','motionFlags','profile','radius','executionScope','nativeCrossingAdmitted','startTime','endTime'].some(key=>prior[key]!==packet[key])||prior.rows.length!==packet.rows.length||prior.rows.some((value,index)=>!Object.is(value,packet.rows[index])))throw Error('Native assignment resource changed without a new identity');return {actorId,nativeRoute:previous.nativeRoute,start:previous.start,end:previous.end,reused:true};}
+  const previous=entry.nativeState;if(previous&&!previous.suspended&&sameNativeReference(previous.nativeRoute,packet.nativeRoute)&&previous.motion.valid()&&previous.variant.current()){const prior=previous.packet;if(!sameNativeGatePresentations(prior.gates,packet.gates)||previous.crateId!==crateId||['motionMode','motionFlags','profile','radius','executionScope','nativeCrossingAdmitted','startTime','endTime'].some(key=>prior[key]!==packet[key])||prior.rows.length!==packet.rows.length||prior.rows.some((value,index)=>!Object.is(value,packet.rows[index])))throw Error('Native assignment resource changed without a new identity');return {actorId,nativeRoute:previous.nativeRoute,start:previous.start,end:previous.end,reused:true};}
   entry.nativePending?.controller.abort();const controller=new AbortController(),pending={controller,stage:'loading',nativeRoute:packet.nativeRoute};entry.nativePending=pending;
   const abort=()=>controller.abort();signal?.addEventListener('abort',abort,{once:true});if(signal?.aborted)controller.abort();
   let candidate=null,adopted=false;
@@ -135,25 +137,60 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
   const entry=entries.get(actorId),value=entry?.nativeState,pending=entry?.nativePending;
   if(pending&&sameNativeReference(pending.nativeRoute,nativeRoute)){pending.controller.abort();entry.nativePending=null;}
   // A delayed old removal must not detach a replacement being prepared.
-  if(!value||!sameNativeReference(value.nativeRoute,nativeRoute)||pending&&!sameNativeReference(pending.nativeRoute,nativeRoute))return false;
+  if(!value||value.suspended||!sameNativeReference(value.nativeRoute,nativeRoute)||pending&&!sameNativeReference(pending.nativeRoute,nativeRoute))return false;
   entry.nativeState=null;entry.motionBinding=null;entry.motion=null;
   value.binding.detach();value.variant.deactivate();retireNative(value);entry.actor.update();onSelectableChange();return true;
  }
 
  // Retain an admitted assignment only when the native proposal preserves it
  // and every full-route terrain dependency retains its geometry and epoch.
- function prepareNativeTerrainRetention(view){
+ function prepareNativeTerrainRetention(view,{exclude=new Set()}={}){
   if(closed||!view||!(view.changedKeys instanceof Set)||[...entries.values()].some(entry=>entry.nativePending))throw Error('Native terrain assignment retention unavailable');
   const parts=[];
-  for(const [id,entry] of entries){const value=entry.nativeState;if(!value)continue;let active=true;
+  for(const [id,entry] of entries){const value=entry.nativeState;if(!value||exclude.has(id))continue;let active=true;
    const valid=()=>active&&!closed&&entries.get(id)===entry&&entry.nativeState===value&&!entry.nativePending&&value.motion.valid()&&value.variant.current()&&value.support.unchangedBy?.(view)===true;
    if(!valid())throw Error('Native terrain changes an admitted route support');
    const check=()=>{if(!valid())throw Error('Native retained assignment became stale');};
-   parts.push({object:value.actor.root,signal:entry.controller.signal,valid,eventRoots:()=>[value.actor.root],presentation:()=>({show:[],hide:[]}),activate(){check();return true;},attach:check,rollback(){},finalize(){check();return {retire(){active=false;},notify(){}};},rollbackFinalized(){},cancel(){active=false;}});
+   parts.push({object:value.actor.root,signal:entry.controller.signal,valid,...(value.suspended?{nativeBodyTerrainSupport:{entity:entry.entity,support:value.support,reference:value.support.reference}}:{}),eventRoots:()=>[value.actor.root],presentation:()=>({show:[],hide:[]}),activate(){check();return true;},attach:check,rollback(){},finalize(){check();return {retire(){active=false;},notify(){}};},rollbackFinalized(){},cancel(){active=false;}});
   }
   return parts;
  }
- function nativeRouteCurrent(actorId,ref){const entry=entries.get(actorId),value=entry?.nativeState;return !!value&&sameNativeReference(value.nativeRoute,ref)&&value.motion.valid()&&value.variant.current();}
+ // The terrain transaction owns staging and capture. No root/rig/geometry is
+ // rebuilt; the old binding stays live until all owners commit synchronously.
+ async function prepareNativeTerrainStops(view,{stopEffects,boundary,prepareBodySupport,getPickTime}={}){
+  const effects=copyNativeWorldStopEffects(stopEffects,boundary),references=effects?nativeSuspendedBodiesFromProposal(effects,boundary):[],parts=[],gates=new Map(),exclude=new Set();
+  if(!effects||effects.routeEffects.rows.length!==references.length*26||typeof prepareBodySupport!=='function'||typeof getPickTime!=='function')throw Error('Native stopped terrain requires pinned projected workers');
+  for(const reference of references){const id=`worker-${reference.nativeRoute.actorId}`,entry=entries.get(id);if(!entry?.nativeState||entry.nativeState.suspended||!sameNativeReference(entry.nativeState.nativeRoute,reference.nativeRoute))throw Error('Native stop has no matching admitted worker');exclude.add(id);}
+  try{
+   for(let i=0;i<references.length;i++){
+    const reference=references[i],id=`worker-${reference.nativeRoute.actorId}`,entry=entries.get(id),previous=entry.nativeState,entity=entry.entity,stamp=JSON.stringify(entity),row=effects.routeEffects.rows.subarray(i*26,(i+1)*26),pose=row.slice(8),foot=prepareBodySupport(reference,pose),carrying=!!previous.crateId;
+    if(!foot?.valid()||foot.unchangedBy(view)!==true||!previous.motion.valid()||!previous.variant.current())throw Error('Native stop changes its pinned body support');
+    const clipBakes=carrying?[]:await Promise.all([bakedWalkBank.get(entry.profile),...(previous.preparedRun?[bakedRunBank.get(entry.profile)]:[]),bakedIdleBank?.get(entry.profile)??Promise.reject(Error('Native stopped worker Idle bake unavailable'))]);
+    let candidate=null,active=true,activated=false,attached=false,capturing=false,finalized=false;
+    const ownerCurrent=()=>!closed&&entries.get(id)===entry&&!entry.nativePending&&JSON.stringify(entry.entity)===stamp&&foot.valid()&&foot.unchangedBy(view)===true;
+    if(!ownerCurrent()||entry.nativeState!==previous||!previous.motion.valid()||!previous.variant.current())throw Error('Native stopped worker changed during preparation');
+    const motion=previous.motion.prepareSuspended({reference,nativePose:pose,height:foot.point.height,isCurrent:()=>ownerCurrent()&&(entry.nativeState===previous||entry.nativeState===candidate)});let variant,binding;
+    try{const pickTime=()=>getPickTime(reference,previous.packet.startTime),phases={runningNode:motion.runningNode,idleNode:motion.idleNode,resolve:(fallback,clip,duration)=>motion.resolve(fallback,clip,duration),sampleClip:()=>carrying?'Carry_Crate':'Idle',sampleForClip:(clip,duration)=>motion.sampleForClip(pickTime(),clip,duration)};
+     variant=entry.actor.prepareNativeMotionVariant(phases,{clipBakes,clip:carrying?'Carry_Crate':entry.actor.isBakedIdle?.()?'Idle':null});binding=previous.binding.prepareReplacement({motion,getPickTime:pickTime,materialAlternatives:variant.materialAlternatives,replicaSources:variant.replicaSources,meshes:variant.materialAlternatives.map(item=>item.mesh)});
+     candidate={...previous,motion,variant,binding,support:foot,suspended:reference,start:reference.suspendedAt,end:Number.MAX_SAFE_INTEGER,preparedIdle:!carrying,gateParticipants:[]};
+    }catch(error){binding?.dispose();variant?.dispose();motion.dispose();throw error;}
+    const alternatives=binding.materialAlternatives(),valid=()=>active&&ownerCurrent()&&entry.nativeState===(attached?candidate:previous)&&(activated||capturing||previous.motion.valid())&&(attached?variant.current()&&binding.current():variant.valid()&&(capturing||binding.canActivate()));
+    const check=()=>{if(!valid())throw Error('Native stopped worker presentation became stale');};
+    function rollback(){if(!attached)return;binding.rollbackActivation();variant.rollbackActivation();entry.nativeState=previous;entry.motion=previous.motion;entry.motionBinding=previous.binding;attached=false;}
+    const part={object:entry.actor.root,signal:entry.controller.signal,include:alternatives.map(item=>item.mesh),materialAlternatives:alternatives,valid,nativeBodyTerrainSupport:{entity,support:foot,reference:foot.reference},eventRoots:()=>[entry.actor.root],presentation:()=>({show:[],hide:[]}),
+     capturePresentation(record){capturing=true;try{check();return binding.capturePresentation(record);}finally{capturing=false;}},
+     activate(){if(activated)throw Error('Native stop already activated');activated=true;try{check();return true;}catch(error){activated=false;throw error;}},
+     attach(){check();variant.activate();try{binding.activate();}catch(error){variant.rollbackActivation();throw error;}entry.nativeState=candidate;entry.motion=motion;entry.motionBinding=binding;attached=true;},rollback,
+     finalize(){check();if(!attached||finalized)throw Error('Native stop not attached');finalized=true;return {retire(){check();active=false;retireNative(previous);},notify(){onSelectableChange();}};},
+     rollbackFinalized(){finalized=false;},cancel(){if(!active)return false;if(finalized)throw Error('Native stopped worker already finalized');rollback();active=false;retireNative(candidate);return true;}};
+    parts.push(part);
+    for(const original of previous.packet.gates){let at=-1;for(let j=0;j<effects.gateEffects.rows.length;j+=3)if(effects.gateEffects.rows[j]===original.gateId){at=j;break;}if(at<0||effects.gateEffects.rows[at+1]!==original.mechanism)throw Error('Native stopped gate lacks its projected physical pose');const {nativeRoute,...shape}=original,presentation=copyNativeGatePresentation({...shape,worldBoundary:boundary,startTime:reference.suspendedAt,endTime:reference.suspendedAt,rows:Float64Array.from([reference.suspendedAt,effects.gateEffects.rows[at+2]])},{worldBoundary:boundary,startTime:reference.suspendedAt,endTime:reference.suspendedAt});if(!gates.has(presentation.gateId))gates.set(presentation.gateId,presentation);}
+   }
+   if(gates.size*3!==effects.gateEffects.rows.length)throw Error('Native stop includes an unowned gate motor');
+   parts.push(...prepareNativeTerrainRetention(view,{exclude}));return {parts,gates:[...gates.values()]};
+  }catch(error){for(const part of parts.reverse())part.cancel();throw error;}
+ }
+ function nativeRouteCurrent(actorId,ref){const entry=entries.get(actorId),value=entry?.nativeState;return !!value&&!value.suspended&&sameNativeReference(value.nativeRoute,ref)&&value.motion.valid()&&value.variant.current();}
  function nativeRouteLease(){const live=[...entries.values()].map(entry=>entry.nativeState).filter(Boolean);return live.length?{start:Math.max(...live.map(value=>value.start)),end:Math.max(...live.map(value=>value.end))}:null;}
 
  function remove(id,entry){entry.nativePending?.controller.abort();entry.nativePending=null;const native=entry.nativeState;entry.nativeState=null;if(native){entry.motionBinding=null;entry.motion=null;retireNative(native);}walkRetries.cancel(id);for(const token of entry.actionTokens?.values()??[])actionRetries.cancel(token);entry.motionPreparing?.controller.abort();if(historyRun?.entries.has(id))historyRun.invalid=true;onSelectableChange();entries.delete(id);entry.entity=null;entry.controller.abort();releaseRosterMotion(entry,pipelineAdmission);releaseRosterActor(entry.actor,pipelineAdmission);disposePendingRosterActor(entry,pipelineAdmission);}
@@ -195,5 +232,5 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
  function abortHistoricalMotion(){if(!historyRun)return;if(!experimentalHistoricalMotion.clock.status().active){cancelHistoricalMotion();return;}const run=historyRun;run.invalid=true;for(const value of run.installed)if(value.phaseSamples)try{value.entry.phase.hold();}catch{}for(const {entry} of run.moving)try{entry.motion.hold(experimentalHistoricalMotion.clock.elapsed);}catch{}}
  function cancelHistoricalMotion(){if(!historyRun)return;for(const value of historyRun.installed){if(value.kind==='moving')value.entry.motion.cancelAtStart();if(value.phaseSamples)value.entry.phase.reset();}const completed=historyRun;historyRun=null;for(const [id,entry] of completed.entries)if(entry.bakeResource)resumeBakedWalk(id,entry);}
  function setHistoricalActors(next){if(closed||historyRun)throw Error('Historical selection is busy');if(!Array.isArray(next)||next.some(id=>typeof id!=='string'||!id)||new Set(next).size!==next.length)throw TypeError('Invalid historical worker selection');ids.splice(0,ids.length,...next);selected.clear();for(const id of next)selected.add(id);for(const [id,entry] of entries){if(!selected.has(id))entry.motionPreparing?.controller.abort();else prepareLateHistoricalMotion(id,entry);}}
- return {sync,prepareNativeRoute,releaseNativeRoute,prepareNativeTerrainRetention,nativeRouteLease,nativeRouteCurrent,...(experimentalHistoricalMotion?{setHistoricalActors,historicalActorIds:()=>[...ids],prepareHistoricalMotion,startHistoricalMotion,historicalMotionCurrent,canFinishHistoricalMotion,finishHistoricalMotion,abortHistoricalMotion,cancelHistoricalMotion}:{}),...(import.meta.env?.DEV?{bindMotion(actorId,motion,renderer,getPickTime){const entry=entries.get(actorId);if(closed||!entry?.actor||entry.motionBinding)throw Error('Actor motion binding unavailable');const binding=bindWebGpuActorMotion({root:entry.actor.root,renderer,motion,actorId,getPickTime});entry.motionBinding=binding;return {dispose(){if(entry.motionBinding===binding)entry.motionBinding=null;binding.dispose();}};}}:{}),tick(now){assetBank.tick?.(now);},get(id){return entries.get(id)?.actor??null;},status(){let ready=0;for(const entry of entries.values())if(entry.actor)ready++;return {closed,count:entries.size,ready,pending:entries.size-ready,native: [...entries.values()].filter(entry=>entry.nativeState).length,nativePreparing:[...entries.values()].filter(entry=>entry.nativePending).length,assets:assetBank.status?.()??null};},dispose(){if(closed)return;closed=true;walkRetries.dispose();actionRetries.dispose();for(const [id,entry] of entries)remove(id,entry);if(ownsAssetBank)assetBank.dispose();}};
+ return {sync,prepareNativeRoute,releaseNativeRoute,prepareNativeTerrainRetention,prepareNativeTerrainStops,nativeRouteLease,nativeRouteCurrent,...(experimentalHistoricalMotion?{setHistoricalActors,historicalActorIds:()=>[...ids],prepareHistoricalMotion,startHistoricalMotion,historicalMotionCurrent,canFinishHistoricalMotion,finishHistoricalMotion,abortHistoricalMotion,cancelHistoricalMotion}:{}),...(import.meta.env?.DEV?{bindMotion(actorId,motion,renderer,getPickTime){const entry=entries.get(actorId);if(closed||!entry?.actor||entry.motionBinding)throw Error('Actor motion binding unavailable');const binding=bindWebGpuActorMotion({root:entry.actor.root,renderer,motion,actorId,getPickTime});entry.motionBinding=binding;return {dispose(){if(entry.motionBinding===binding)entry.motionBinding=null;binding.dispose();}};}}:{}),tick(now){assetBank.tick?.(now);},get(id){return entries.get(id)?.actor??null;},status(){let ready=0;for(const entry of entries.values())if(entry.actor)ready++;return {closed,count:entries.size,ready,pending:entries.size-ready,native: [...entries.values()].filter(entry=>entry.nativeState).length,nativePreparing:[...entries.values()].filter(entry=>entry.nativePending).length,assets:assetBank.status?.()??null};},dispose(){if(closed)return;closed=true;walkRetries.dispose();actionRetries.dispose();for(const [id,entry] of entries)remove(id,entry);if(ownsAssetBank)assetBank.dispose();}};
 }

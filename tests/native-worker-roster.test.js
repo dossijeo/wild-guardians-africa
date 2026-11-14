@@ -1,3 +1,4 @@
+import {createNativeGateGpuClock} from '../src/rendering/native-gate-gpu-clock.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
@@ -37,6 +38,26 @@ function sameGeometry(before){for(const item of before){assert.equal(item.mesh.g
 
 test('ordinary worker roster prepares a native graph on its existing rig and reuses an unchanged assignment',async()=>{
  const f=await fixture();try{const first=await f.start(),actor=f.roster.get(f.entity.id),root=actor.root,meshes=geometry(root),materials=meshes.map(item=>item.mesh.material),resources=f.registry.status().owned.length,anchor=root.position.clone();assert.equal(first.reused,undefined);assert.equal(f.roster.status().native,1);assert.equal(f.acquires,1);f.entity.x+=.1;f.entity.walkPhase+=1;f.roster.sync();assert(root.position.equals(anchor));const again=await f.start();assert.equal(again.reused,true);assert.equal(f.registry.status().owned.length,resources);assert.equal(f.roster.get(f.entity.id),actor);sameGeometry(meshes);assert.deepEqual(meshes.map(item=>item.mesh.material),materials);assert.deepEqual(f.errors,[]);}finally{f.close();}
+});
+
+async function prepareStop(f){
+ assert.equal(f.bridge.beginNativeRouteExecution().status,'started');const at=f.service.read(f.gates[0].id).at+.3;assert.equal(f.advance(at).status,'advanced');f.bridge.commitNativeCausalClock();f.pickTime=at;
+ const p=f.point(.05,5),ptr=f.w.spatial_world_proposal_float_ptr(6);new Float32Array(f.w.memory.buffer,ptr,6).set([p.x,p.z,.15,.15,0,0]);assert.equal(f.w.spatial_world_proposal_stage(2,0,6,0),1);assert.equal(f.w.nav_intent_barrier_proposal_ticket(),1);const ticket=Array.from(new Float64Array(f.w.memory.buffer,f.w.nav_intent_barrier_proposal_ticket_ptr(),6)),count=f.w.nav_intent_world_proposal_route_effects(...ticket.slice(0,2)),rows=Float64Array.from(new Float64Array(f.w.memory.buffer,f.w.nav_intent_world_proposal_route_effects_ptr(),count*26)),gateCount=f.w.nav_intent_world_proposal_gate_effects(...ticket.slice(0,2)),gateRows=Float64Array.from(new Float64Array(f.w.memory.buffer,f.w.nav_intent_world_proposal_gate_effects_ptr(),gateCount*3)),boundary={version:1,authorityEpoch:f.packet.nativeRoute.routeHandle.authorityEpoch,nativeSession:ticket[0],ticket:ticket[1],effectiveTime:ticket[3]},stopEffects={version:1,phase:'proposal',...boundary,retainsNativeAssignments:false,routeEffects:{version:1,rowWidth:26,rows},gateEffects:{version:1,rowWidth:3,rows:gateRows}};
+ assert.equal(count,1);assert.equal(rows[5],4);const view={changedKeys:new Set(),get:(x,z)=>f.residency.get(x,z)},projected=await f.roster.prepareNativeTerrainStops(view,{stopEffects,boundary,prepareBodySupport:(ref,pose)=>f.terrain.prepareNativeBody(ref,pose),getPickTime:f.getPickTime}),signal=new AbortController().signal,parts=[...projected.parts];
+ for(const gate of projected.gates){const owner=f.gateOwners.get(gate.entityId),participant=owner.prepareNativeGate({presentation:gate,motion:createNativeGateGpuClock(gate),getPickTime:f.getPickTime,signal});parts.push(participant.chunkParticipant());}
+ return {parts,ticket,boundary,stopEffects};
+}
+
+test('a projected stop prepares the original worker and fixed gate without changing their live materials or texture',async()=>{
+ const f=await fixture({gateHolds:'initial',withIdle:true});try{const assignment=await f.start(),actor=f.roster.get(f.entity.id),before=geometry(actor.root),materials=before.map(item=>item.mesh.material),anchor=actor.root.position.clone(),owned=f.registry.status().owned.filter(item=>item.namespace==='native-gpu-motion'),{parts,ticket}=await prepareStop(f);assert.equal(parts.length,2);assert.equal(f.registry.status().owned.filter(item=>item.namespace==='native-gpu-motion').length,1);assert.deepEqual(f.registry.status().owned.filter(item=>item.namespace==='native-gpu-motion'),owned);
+  let record=()=>{assert.notDeepEqual(before.map(item=>item.mesh.material),materials);assert.equal(f.roster.nativeRouteCurrent(f.entity.id,assignment.nativeRoute),true);};for(const part of parts){const next=record;record=()=>part.capturePresentation(next);}record();assert.deepEqual(before.map(item=>item.mesh.material),materials);assert(actor.root.position.equals(anchor));assert.equal(f.bridge.nativeSuspendedGateRoute(assignment.nativeRoute.actorId),null);
+  assert.equal(f.w.spatial_world_proposal_commit(...ticket.slice(0,5)),1);for(const part of parts)part.activate();for(const part of parts)part.attach();const releases=parts.map(part=>part.finalize());assert(parts.every(part=>part.valid()));for(const result of releases)result.retire();for(const result of releases)result.notify();sameGeometry(before);assert(actor.root.position.equals(anchor));assert.equal(f.roster.nativeRouteCurrent(f.entity.id,assignment.nativeRoute),false);assert.equal(f.roster.releaseNativeRoute(f.entity.id,assignment.nativeRoute),false);assert.equal(f.roster.status().native,1);assert.equal(f.roster.nativeRouteLease().end,Number.MAX_SAFE_INTEGER);assert.equal(f.acquires,1);f.flush();assert.equal(f.registry.status().owned.filter(item=>item.namespace==='native-gpu-motion').length,1);const restore=actor.preparePick();restore();assert.deepEqual(f.errors,[]);
+ }finally{f.close();}
+});
+
+test('rolling back a stopped worker restores its exact old binding, selected variant and shared data owner',async()=>{
+ const f=await fixture({gateHolds:'initial',withIdle:true});try{const assignment=await f.start(),actor=f.roster.get(f.entity.id),before=geometry(actor.root),materials=before.map(item=>item.mesh.material),{parts}=await prepareStop(f);for(const part of parts)part.activate();parts[0].attach();assert.equal(f.roster.nativeRouteCurrent(f.entity.id,assignment.nativeRoute),false);parts[0].rollback();for(const part of parts.reverse())part.cancel();f.flush();assert.deepEqual(before.map(item=>item.mesh.material),materials);assert.equal(f.roster.nativeRouteCurrent(f.entity.id,assignment.nativeRoute),true);assert.equal(f.registry.status().owned.filter(item=>item.namespace==='native-gpu-motion').length,1);assert.equal(f.bridge.nativeSuspendedGateRoute(assignment.nativeRoute.actorId),null);const restore=actor.preparePick();restore();assert.deepEqual(f.errors,[]);
+ }finally{f.close();}
 });
 
 test('terrain retention keeps the original native rig and rejects changes to its full route support',async()=>{

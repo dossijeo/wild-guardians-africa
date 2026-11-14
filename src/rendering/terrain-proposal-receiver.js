@@ -1,3 +1,4 @@
+import {copyNativeWorldStopEffects} from '../world/native-suspended-body-reference.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {sameTerrainResourcePayload} from '../world/terrain-resource-payload.js';
 import {estimateRetainedBytes} from '../simulation/retained-size.js';
@@ -24,10 +25,11 @@ export function createTerrainProposalReceiver({port,session,snapshot,prepare,val
   const item={id:data.id,sequence:data.sequence,baseSequence:data.baseSequence,epoch:data.epoch,boundary,controller:new AbortController(),phase:'preparing',messages:data.messages,charge:data.bytes+256*((data.messages?.length??0)+1)};
   const base=snapshot(),messages=data.messages;
   if(typeof data.epoch!=='string'||!data.epoch||!Number.isSafeInteger(data.sequence)||!base.idle||data.baseSequence!==base.sequence||data.sequence!==base.sequence+1||data.epoch!==base.epoch||!Array.isArray(messages)||!Number.isSafeInteger(data.bytes)||data.bytes<0||messages.length+1>Math.floor(maxHistory/2)||data.bytes+256*(messages.length+1)>Math.floor(maxHistoryBytes/2)){reply('terrainProposalRejected',item,{message:'Native terrain proposal boundary or capacity unavailable'});return true;}
-  const keys=new Set();let bytes=0;
+  const stopEffects=data.stopEffects===undefined?null:copyNativeWorldStopEffects(data.stopEffects,boundary);if(data.stopEffects!==undefined&&!stopEffects)throw Error('Missing native route stop effects');if(stopEffects&&stopEffects.retainsNativeAssignments!==data.retainsNativeAssignments)throw Error('Conflicting native stop and retention effects');
+  const keys=new Set();let bytes=stopEffects?stopEffects.routeEffects.rows.byteLength+stopEffects.gateEffects.rows.byteLength:0;
   for(const message of messages){const p=message?.payload,key=`${p?.cx},${p?.cz}`;if(message.sequence!==data.sequence||message.epoch!==data.epoch||!Number.isSafeInteger(message.revision)||message.revision<1||p?.capturedAt!==boundary.effectiveTime||keys.has(key))throw Error('Invalid native terrain proposal revision');keys.add(key);validate(p,message.revision,data.epoch);bytes+=estimateRetainedBytes(p);}
   if(bytes!==data.bytes)throw Error('Native terrain proposal byte reservation mismatch');slot=item;
-  Promise.resolve().then(()=>current(item)?prepare(messages,{signal:item.controller.signal,proposedWorldBoundary:boundary,retainsNativeAssignments:data.retainsNativeAssignments===true}):null).then(handle=>{
+  Promise.resolve().then(()=>current(item)?prepare(messages,{signal:item.controller.signal,proposedWorldBoundary:boundary,retainsNativeAssignments:data.retainsNativeAssignments===true,stopEffects}):null).then(handle=>{
    if(!current(item)){handle?.abort();if(slot===item){cancel();reply('terrainProposalInvalidated',item);}return;}
    item.handle=handle;
    if(!handle||['valid','commit','abort'].some(key=>typeof handle[key]!=='function')||handle.valid()!==true||handle.canonicalPropsUnmasked!==true){throw Error('Native terrain proposal GPU resources unavailable');}

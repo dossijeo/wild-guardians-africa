@@ -1,3 +1,4 @@
+import {copyNativeSuspendedBodyReference} from '../world/native-suspended-body-reference.js';
 import {historicalPhysicalActorIds} from '../simulation/worker-historical-physics-isolation.js';
 import {createActorTerrainSampler} from './webgpu-actor-terrain.js';
 import {copyNativeRoutePresentation,NATIVE_ROUTE_PRESENTATION_WIDTH} from '../world/native-route-presentation.js';
@@ -19,7 +20,7 @@ export function createConfirmedTerrainSupport({residency,maxPieces=16384,maxActo
   prior={mesh,cx,cz,geometry:mesh.geometry,positions,indices:index,positionArray:positions.array,indexArray:index.array,positionVersion:positions.version,indexVersion:index.version};cache.set(mesh,prior);return prior;
  }
  function stillValid(entry){const {mesh,cx,cz,geometry,positions,indices,positionArray,indexArray,positionVersion,indexVersion}=entry;if(residency.get(cx,cz)!==mesh||residency.getVisible(cx,cz)!==mesh||mesh.geometry!==geometry||geometry.getAttribute('position')!==positions||geometry.index!==indices||positions.array!==positionArray||indices.array!==indexArray||positions.version!==positionVersion||indices.version!==indexVersion)return false;return !!inspect(mesh,cx,cz);}
- function addCuts(cuts,a,b,budget){const delta=b-a;if(delta===0)return true;const low=Math.min(a,b),high=Math.max(a,b),first=Math.floor(low)+1,last=Math.ceil(high)-1;if(last-first+1>budget)return false;for(let n=first;n<=last;n++){const t=(n-a)/delta;if(t>0&&t<1)cuts.push(t);}return true;}
+ function addCuts(cuts,a,b,budget,axis){const delta=b-a;if(delta===0)return true;const low=Math.min(a,b),high=Math.max(a,b),first=Math.floor(low)+1,last=Math.ceil(high)-1;if(last-first+1>budget)return false;for(let n=first;n<=last;n++){const t=(n-a)/delta;if(t>0&&t<1)cuts.push({t,[axis]:n});}return true;}
  function prepare(preview,{actorIds=null}={}){
   if(closed)throw Error('Confirmed terrain support disposed');if(actorIds!==null&&(!Array.isArray(actorIds)||actorIds.length>maxActors||actorIds.some(id=>typeof id!=='string'||!id)||new Set(actorIds).size!==actorIds.length))throw TypeError('Invalid terrain support actor selection');const wanted=actorIds===null?null:new Set(actorIds),trace=preview?.trace,manifest=trace?.terrainManifest;if(!Number.isSafeInteger(preview?.sequence)||preview.sequence<1||preview.safeForAutonomousPlayback!==false||!Array.isArray(preview.reasons)||!preview.reasons.includes('visual-time-and-support-unverified')||preview.reasons.some(reason=>reason!=='visual-time-and-support-unverified')||!trace||!Array.isArray(trace.actors)||trace.actors.length>(wanted?4096:maxActors)||!Number.isFinite(trace.start)||!Number.isFinite(trace.end)||trace.start!==preview.start||trace.end!==preview.end||trace.end<trace.start||!residency.matchesManifest(manifest))return null;
   return preparePaths(trace,{wanted,sequence:preview.sequence,physicalIds:historicalPhysicalActorIds(trace),sourceLimit:maxSourceSegments,exactManifest:true});
@@ -33,6 +34,18 @@ export function createConfirmedTerrainSupport({residency,maxPieces=16384,maxActo
   const trace={start,end,terrainManifest,actors:[{actorId,continuous:true,timed:true,start:{at:start,x:rows[1],z:rows[2]},end:{at:end,x:rows.at(-width+1),z:rows.at(-width+2)},segments}]},result=preparePaths(trace,{wanted:null,sequence:presentation.nativeRoute.assignmentSequence,physicalIds:[],sourceLimit:maxNativeSourceSegments,exactManifest:false});
   return result?Object.freeze({kind:'native-route-terrain-support',presentation,actor:result.actors[0],valid:result.valid,unchangedBy:result.unchangedBy}):null;
  }
+ // A pinned native body needs only its executed point's triangle, never the
+ // future suffix's terrain. This is geometric support, not a motion permission.
+ function prepareNativeBody(value,nativePose){
+  if(closed)throw Error('Confirmed terrain support disposed');
+  const reference=copyNativeSuspendedBodyReference(value);
+  if(!(nativePose instanceof Float64Array)||nativePose.length!==18||!nativePose.every(Number.isFinite)||nativePose[7]!==reference.suspendedAt||nativePose[15]!==0||nativePose[16]!==0)return null;
+  const x=nativePose[0],z=nativePose[1],cx=Math.floor((x+24)/48),cz=Math.floor((z+24)/48),revision=residency.revisionAt?.(cx,cz);if(!revision||typeof revision.epoch!=='string')return null;
+  const point={at:reference.suspendedAt,x,z},manifest={epoch:revision.epoch,chunks:[{cx,cz,revision:revision.revision}]},actorId=String(reference.nativeRoute.actorId),trace={start:point.at,end:point.at,terrainManifest:manifest,actors:[{actorId,continuous:true,timed:true,start:point,end:point,segments:[]}]};
+  if(!residency.matchesManifest(manifest))return null;
+  const result=preparePaths(trace,{wanted:null,sequence:reference.nativeRoute.assignmentSequence,physicalIds:[],sourceLimit:maxNativeSourceSegments,exactManifest:false});
+  return result?Object.freeze({kind:'native-body-terrain-support',reference,point:Object.freeze({...point,height:result.actors[0].startHeight}),valid:result.valid,unchangedBy:result.unchangedBy}):null;
+ }
  // Private geometry-only kernel. Callers cannot weaken the historical entry's
  // safety checks by passing native data or arbitrary validation options to it.
  function preparePaths(trace,{wanted,sequence,physicalIds,sourceLimit,exactManifest}){
@@ -40,7 +53,22 @@ export function createConfirmedTerrainSupport({residency,maxPieces=16384,maxActo
   const manifestKeys=new Set(manifest.chunks.map(chunk=>`${chunk.cx},${chunk.cz}`)),used=new Map(),samples=new Map(),actors=[],ids=new Set();let count=0,sourceSegments=0;
   function entryAt(cx,cz){const key=`${cx},${cz}`;if(!manifestKeys.has(key))return null;const mesh=residency.get(cx,cz);if(!mesh||mesh!==residency.getVisible(cx,cz))return null;const entry=used.get(key)??inspect(mesh,cx,cz);if(entry)used.set(key,entry);return entry;}
   function sample(x,z){if(!Number.isFinite(x)||!Number.isFinite(z))return null;const key=`${x},${z}`;if(samples.has(key))return samples.get(key);const cx=Math.floor((x+24)/48),cz=Math.floor((z+24)/48);if(!entryAt(cx,cz))return null;const exact=residency.surface(x,z),actual=sampleActorTerrain(x,z);if(!Number.isFinite(exact)||!Number.isFinite(actual)||Math.abs(exact-actual)>heightTolerance)return null;const value={height:exact};samples.set(key,value);return value;}
-  function piece(out,t0,t1,x0,z0,x1,z1){const cuts=[0,1],budget=maxPieces-count;if(!addCuts(cuts,x0,x1,budget)||!addCuts(cuts,z0,z1,budget)||!addCuts(cuts,x0+z0,x1+z1,budget))return false;cuts.sort((x,y)=>x-y);const unique=cuts.filter((v,i)=>!i||v!==cuts[i-1]);for(let i=1;i<unique.length;i++){if(++count>maxPieces)return false;const r0=unique[i-1],r1=unique[i],middle=(r0+r1)*.5,xx0=x0+(x1-x0)*r0,zz0=z0+(z1-z0)*r0,xx1=x0+(x1-x0)*r1,zz1=z0+(z1-z0)*r1,mx=x0+(x1-x0)*middle,mz=z0+(z1-z0)*middle,entry=entryAt(Math.floor((mx+24)/48),Math.floor((mz+24)/48)),from=sample(xx0,zz0),to=sample(xx1,zz1);if(!entry||!from||!to)return false;const y0=residency.surfaceInChunk(entry.cx,entry.cz,xx0,zz0),y1=residency.surfaceInChunk(entry.cx,entry.cz,xx1,zz1),start=t0+(t1-t0)*r0,end=t0+(t1-t0)*r1;if(!Number.isFinite(y0)||!Number.isFinite(y1)||Math.abs(y0-from.height)>heightTolerance||Math.abs(y1-to.height)>heightTolerance||end<=start)return false;out.push(Object.freeze({t0:start,t1:end,x0:xx0,z0:zz0,y0:from.height,x1:xx1,z1:zz1,y1:to.height}));}return true;}
+  function piece(out,t0,t1,x0,z0,x1,z1){
+   const cuts=[{t:0,x:x0,z:z0},{t:1,x:x1,z:z1}],budget=maxPieces-count;
+   if(!addCuts(cuts,x0,x1,budget,'x')||!addCuts(cuts,z0,z1,budget,'z')||!addCuts(cuts,x0+z0,x1+z1,budget,'sum'))return false;
+   cuts.sort((a,b)=>a.t-b.t);const unique=[];for(const cut of cuts){const previous=unique.at(-1);if(previous?.t===cut.t)Object.assign(previous,cut);else unique.push({...cut});}
+   // Compute one shared intersection per grid plane, preserving its known
+   // coordinate and the exact native endpoints/times. Reusing it on both sides
+   // avoids selecting the adjacent chunk after a rounded parameter round-trip.
+   const points=unique.map(cut=>{const x=cut.x??(x0+(x1-x0)*cut.t),z=cut.z??(cut.sum===undefined?z0+(z1-z0)*cut.t:cut.sum-x);return {x,z,at:cut.t===0?t0:cut.t===1?t1:t0+(t1-t0)*cut.t};});
+   for(let i=1;i<points.length;i++){
+    if(++count>maxPieces)return false;const a=points[i-1],b=points[i],mx=(a.x+b.x)*.5,mz=(a.z+b.z)*.5,entry=entryAt(Math.floor((mx+24)/48),Math.floor((mz+24)/48)),from=sample(a.x,a.z),to=sample(b.x,b.z);
+    if(!entry||!from||!to)return false;
+    const y0=residency.surfaceInChunk(entry.cx,entry.cz,a.x,a.z),y1=residency.surfaceInChunk(entry.cx,entry.cz,b.x,b.z);
+    if(!Number.isFinite(y0)||!Number.isFinite(y1)||Math.abs(y0-from.height)>heightTolerance||Math.abs(y1-to.height)>heightTolerance||b.at<=a.at)return false;
+    out.push(Object.freeze({t0:a.at,t1:b.at,x0:a.x,z0:a.z,y0:from.height,x1:b.x,z1:b.z,y1:to.height}));
+   }return true;
+  }
   for(const actor of trace.actors){if(wanted&&!wanted.has(actor?.actorId))continue;const physical=physicalIds.includes(actor?.actorId);if(typeof actor?.actorId!=='string'||!actor.actorId||ids.has(actor.actorId)||!physical&&actor.continuous!==true||actor.timed!==true||!Array.isArray(actor.segments)||actor.start?.at!==trace.start||actor.end?.at!==trace.end)return null;ids.add(actor.actorId);if(physical){for(const frame of trace.physicsPoseSamples.samples){const pose=frame.poses?.find(p=>p.actorId===actor.actorId),box=frame.bounds?.find(b=>b.actorId===actor.actorId);if(!pose||!box||!sample(pose.root[0],pose.root[2]))return null;const x0=Math.floor((box.minX+24)/48),x1=Math.floor((box.maxX+24)/48),z0=Math.floor((box.minZ+24)/48),z1=Math.floor((box.maxZ+24)/48);if(![x0,x1,z0,z1].every(Number.isSafeInteger)||(x1-x0+1)*(z1-z0+1)>maxPieces-count)return null;for(let z=z0;z<=z1;z++)for(let x=x0;x<=x1;x++){if(++count>maxPieces||!entryAt(x,z))return null;}}actors.push(Object.freeze({actorId:actor.actorId,physical:true,segments:Object.freeze([])}));continue;}sourceSegments+=actor.segments.length;if(sourceSegments>sourceLimit)return null;let x=actor.start.x,z=actor.start.z,t=trace.start;const initial=sample(x,z),segments=[];if(!initial)return null;
    for(const segment of actor.segments){if(![segment?.t0,segment?.t1,segment?.x0,segment?.z0,segment?.x1,segment?.z1].every(Number.isFinite)||segment.t0<t||segment.t1<=segment.t0||segment.t1>trace.end||segment.x0!==x||segment.z0!==z)return null;if(segment.t0>t&&!piece(segments,t,segment.t0,x,z,x,z))return null;if(!piece(segments,segment.t0,segment.t1,x,z,segment.x1,segment.z1))return null;t=segment.t1;x=segment.x1;z=segment.z1;}
    if(x!==actor.end.x||z!==actor.end.z)return null;if(t<trace.end&&!piece(segments,t,trace.end,x,z,x,z))return null;const final=sample(x,z);if(!final)return null;actors.push(Object.freeze({actorId:actor.actorId,startHeight:initial.height,endHeight:final.height,segments:Object.freeze(segments)}));
@@ -55,5 +83,5 @@ export function createConfirmedTerrainSupport({residency,maxPieces=16384,maxActo
   for(const actor of actors){for(const point of [actor.start,actor.end]){if(!Number.isFinite(point?.x)||!Number.isFinite(point?.z))continue;const cx=Math.floor((point.x+24)/48),cz=Math.floor((point.z+24)/48),key=`${cx},${cz}`;if(!seen.has(key)){seen.add(key);const mesh=residency.get(cx,cz),visible=residency.getVisible(cx,cz),canonical=!!mesh&&!!inspect(mesh,cx,cz);chunks.push({cx,cz,manifest:!!manifest?.chunks?.some(chunk=>chunk.cx===cx&&chunk.cz===cz),resident:!!mesh,visible:!!mesh&&mesh===visible,canonical,...(!canonical?{details:inspectDetails(mesh,cx,cz)}:{})});}if(points.length<128){let exact=null,sampled=null;try{exact=residency.surface(point.x,point.z);sampled=sampleActorTerrain(point.x,point.z);}catch{}points.push({actorId:actor.actorId,x:point.x,z:point.z,exact:Number.isFinite(exact)?exact:null,sampled:Number.isFinite(sampled)?sampled:null});}}}
   return {manifestMatches:matches,chunks,points,pointLimit:128,note:'Endpoint diagnostics only; segment cuts and limits are not re-evaluated.'};
  }
- return {prepare,prepareNativeRoute,audit,dispose(){closed=true;}};
+ return {prepare,prepareNativeRoute,prepareNativeBody,audit,dispose(){closed=true;}};
 }

@@ -26,6 +26,13 @@ export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmi
    activate(){if(!current()||activated)throw Error('Native gate preparation became stale');binding.activate();activated=true;},
    finalize(){if(!current()||!activated)throw Error('Native gate not activated');binding.commit();finished=true;gatePreparation=null;retire(previous);previous=null;},
    cancel(){if(finished)return;finished=true;if(gatePreparation===participant)gatePreparation=null;if(activated)binding.rollback();retire(binding);}
+  };
+  participant.chunkParticipant=()=>{
+   if(!signal||!current())throw Error('Native gate chunk preparation unavailable');let active=true,armed=false,finalized=false;
+   const valid=()=>active&&current(),check=()=>{if(!valid())throw Error('Native gate chunk changed');};
+   return {object:wall,signal,include:[binding.mesh],materialAlternatives:participant.request.options.materialAlternatives,valid,eventRoots:()=>[wall],presentation:()=>({show:[],hide:[]}),capturePresentation:record=>{check();return binding.capturePresentation(record);},
+    activate(){check();if(armed)throw Error('Native gate chunk already armed');armed=true;return true;},attach(){check();if(!armed)throw Error('Native gate chunk not armed');participant.activate();},
+    rollback(){if(activated){binding.rollback();activated=false;}},finalize(){check();if(!activated||finalized)throw Error('Native gate chunk not attached');finalized=true;return {retire(){check();participant.finalize();active=false;},notify(){}};},rollbackFinalized(){finalized=false;},cancel(){if(!active)return false;active=false;participant.cancel();return true;}};
   };gatePreparation=participant;return participant;
  }
  return {group:slot.group,update,prepareNativeGate,get nativeGateLease(){return slot.active?.nativeGpuGate?.lease??null;},get ready(){return slot.ready;},get upToDate(){return slot.upToDate;},get parts(){return slot.active?.parts??[];},dispose(){if(closed)return;gatePreparation?.cancel();closed=true;slot.dispose();}};

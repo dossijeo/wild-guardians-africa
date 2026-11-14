@@ -1,3 +1,4 @@
+import {copyNativeWorldStopEffects} from '../world/native-suspended-body-reference.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {copyTerrainResourcePayload,sameTerrainResourcePayload} from '../world/terrain-resource-payload.js';
 import {estimateRetainedBytes} from './retained-size.js';
@@ -25,7 +26,7 @@ export function createTerrainProposalPublication({port,session,epoch,snapshot,st
   if(!boundary||typeof epoch!=='string'||!epoch||!Number.isSafeInteger(sequence)||closed||slot||!available()||!base.idle||base.sequence<0||sequence!==base.sequence+1||signal!==undefined&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw Error('Native terrain proposal publication unavailable');
   if(signal?.aborted)throw new DOMException('Native terrain proposal cancelled','AbortError');
   if(resources?.retainsNativeAssignments!==undefined&&typeof resources.retainsNativeAssignments!=='boolean')throw TypeError('Invalid native assignment retention proof');
-  const payloads=resourcePayloads(resources,boundary,true),messages=payloads.map(payload=>({payload,sequence,epoch,revision:base.revision(payload.cx,payload.cz)+1})),bytes=payloads.reduce((sum,p)=>sum+estimateRetainedBytes(p),0),capacity=limits();
+  const stopEffects=copyNativeWorldStopEffects(resources,boundary),stopBytes=stopEffects?stopEffects.routeEffects.rows.byteLength+stopEffects.gateEffects.rows.byteLength:0,payloads=resourcePayloads(resources,boundary,true),messages=payloads.map(payload=>({payload,sequence,epoch,revision:base.revision(payload.cx,payload.cz)+1})),bytes=payloads.reduce((sum,p)=>sum+estimateRetainedBytes(p),stopBytes),capacity=limits();
   // Keep room for comparing the actual publication with the owned preview.
   capacity.bytes=Math.floor(capacity.bytes/2);capacity.count=Math.floor(capacity.count/2);
   if(!Number.isSafeInteger(bytes)||bytes+256*(messages.length+1)>capacity.bytes||messages.length+1>capacity.count)throw Error('Native terrain proposal exceeds capacity');
@@ -33,7 +34,7 @@ export function createTerrainProposalPublication({port,session,epoch,snapshot,st
   const ready=new Promise((resolve,reject)=>{item.resolve=resolve;item.reject=reject;});
   item.onAbort=()=>abort(item,new DOMException('Native terrain proposal cancelled','AbortError'));signal?.addEventListener('abort',item.onAbort,{once:true});
   item.timer=setTimeout(()=>abort(item,Error('Native terrain proposal preparation timed out')),timeoutMs);
-  try{port.postMessage({kind:'terrainProposal',session,epoch,id:item.id,sequence,baseSequence:base.sequence,worldBoundary:boundary,retainsNativeAssignments:resources.retainsNativeAssignments===true,messages,bytes});}catch(error){abort(item,error);}
+  try{port.postMessage({kind:'terrainProposal',session,epoch,id:item.id,sequence,baseSequence:base.sequence,worldBoundary:boundary,retainsNativeAssignments:resources.retainsNativeAssignments===true,...(stopEffects?{stopEffects}:{}),messages,bytes});}catch(error){abort(item,error);}
   await ready;
   return {...(item.preparedWorldBoundary?{preparedWorldBoundary:item.preparedWorldBoundary}:{}),valid:()=>valid(item),commit({worldBoundary,resources:committed}={}){
    const current=snapshot();

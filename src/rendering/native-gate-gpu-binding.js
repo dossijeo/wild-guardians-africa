@@ -38,6 +38,11 @@ export function createNativeGateGpuBinding({wall,presentation,motion,getPickTime
   current:()=>!disposed&&activated&&wall.nativeGpuGate===binding&&wall.parts[0]===part&&mesh.material===material&&rootCurrent(),
   checkEntity(entity){if(entity.gate!==true||entity.status!=='intact'||entity.hp!==entity.maxHp||entity.material!==wall.nativeGateMaterial||!binding.current())throw Error('Native gate requires a prepared geometry or lifecycle transition');},
   sampleOpening:sample,
+  capturePresentation(record){
+   if(typeof record!=='function'||!binding.canActivate())throw Error('Native gate capture unavailable');const expected=mesh.material;let result,changed=false;
+   try{mesh.material=material;result=record();changed=mesh.material!==material;if(result&&typeof result.then==='function')throw Error('Native gate capture must be synchronous');}finally{mesh.material=expected;}
+   if(changed||!binding.canActivate())throw Error('Native gate capture changed ownership');return result;
+  },
   activate(){if(!binding.canActivate())throw Error('Native gate graphics changed during preparation');activated=true;wall.nativeGpuGate=binding;mesh.material=material;mesh.raycast=raycast;geometry.boundingBox=bounds;geometry.boundingSphere=sphere;},
   commit(){if(committed||!binding.current())throw Error('Native gate publication changed');committed=true;previous=null;},
   rollback(){if(!activated)return;if(committed||wall.nativeGpuGate!==binding)throw Error('Native gate replacement ownership changed');activated=false;wall.nativeGpuGate=previous;mesh.material=previous?.material??original;mesh.raycast=previous?.raycast??originalRaycast;geometry.boundingBox=previous?.bounds??originalBounds;geometry.boundingSphere=previous?.sphere??originalSphere;},

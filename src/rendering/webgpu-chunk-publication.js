@@ -56,7 +56,7 @@ export function createChunkPublicationCoordinator({admission,onError=()=>{},boot
   // these are the same objects that must be admitted, not extra warmups.
   const preparationOrder=requireShadowTarget?[...parts.filter(part=>part.side==='terrain'),...parts.filter(part=>part.side!=='terrain')]:parts;
   try{const requests=[];for(const part of preparationOrder){const objects=part.preparationObjects?.()??[part.object],roots=part.eventRoots();if(!Array.isArray(objects)||!objects.length||!objects.includes(part.object)||new Set(objects).size!==objects.length||objects.some(object=>!object?.isObject3D||!roots.includes(object)))throw TypeError('Invalid chunk batch preparation roots');for(const object of objects)requests.push({part,object});}
-   const tickets=[];for(const {part,object} of requests){if(!active||controller.signal.aborted)throw new DOMException('Chunk batch cancelled','AbortError');tickets.push(await admission.prepareTicket(object,{signal:controller.signal,include:part.include??[],...(requireShadowTarget?{requireShadowTarget:true}:{})}));}if(!active||closed||!ownersCurrent()||tickets.some(ticket=>typeof ticket?.valid!=='function'||!ticket.valid()))throw Error('Chunk batch admission became stale');
+   const tickets=[];for(const {part,object} of requests){if(!active||controller.signal.aborted)throw new DOMException('Chunk batch cancelled','AbortError');tickets.push(await admission.prepareTicket(object,{signal:controller.signal,include:part.include??[],...(part.materialAlternatives?{materialAlternatives:part.materialAlternatives}:{}),...(requireShadowTarget?{requireShadowTarget:true}:{})}));}if(!active||closed||!ownersCurrent()||tickets.some(ticket=>typeof ticket?.valid!=='function'||!ticket.valid()))throw Error('Chunk batch admission became stale');
    const valid=()=>active&&!closed&&!controller.signal.aborted&&ownersCurrent()&&tickets.every(ticket=>ticket.valid());
    // Select prepared objects for one synchronous recording, then restore the
    // exact live graph. Logical ownership and the batch reservation stay intact.
@@ -84,7 +84,7 @@ export function createChunkPublicationCoordinator({admission,onError=()=>{},boot
     if(committing||!valid()){cancel();throw Error('Chunk batch admission became stale');}
     const attached=[],finalizing=[],notifications=[];
     const assertCurrent=()=>{if(closed||controller.signal.aborted)throw Error('Chunk batch admission became stale');};
-    const assertValid=(afterAttach=false)=>{assertCurrent();if(!ownersCurrent()||tickets.some(ticket=>!(afterAttach?ticket.validAfterAttach?.()??ticket.valid():ticket.valid())))throw Error('Chunk batch admission became stale');};
+    const assertValid=(afterAttach=false)=>{assertCurrent();if(!ownersCurrent()||tickets.some((ticket,index)=>!(afterAttach?ticket.validAfterAttach?.({materialsPublished:!!requests[index].part.materialAlternatives?.length})??ticket.valid():ticket.valid())))throw Error('Chunk batch admission became stale');};
     committing=true;try{
      assertNoSynchronousObservers(scene,parts);
      // These opt-in owner phases must be synchronous and reversible, without
