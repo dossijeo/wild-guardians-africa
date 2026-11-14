@@ -228,11 +228,19 @@ test('native gate resources retain an abortable preparation until the caller com
  const draw={postMessage(){},terminate(){}},f=setup({remoteDraw:true,intentControlPort:{postMessage(){},start(){}},drawWorkerFactory:()=>draw});
  try{
   f.worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await f.client.ready;
-  const controller=new AbortController(),resources={worldBoundary:{ticket:3}},pending=f.client.prepareNativeGateResources(resources,{signal:controller.signal}),request=f.worker.messages.at(-1).message;
-  assert.equal(request.kind,'prepareNativeGateResources');assert.equal(request.resources,resources);
-  f.worker.onmessage({data:{kind:'nativeGateResourcesResult',id:request.id,result:{worldBoundary:resources.worldBoundary}}});const handle=await pending;
+  const controller=new AbortController(),resources={worldBoundary:{version:1,authorityEpoch:'owner',nativeSession:1,ticket:3,effectiveTime:10}},pending=f.client.prepareNativeGateResources(resources,{signal:controller.signal,minSequence:2}),request=f.worker.messages.at(-1).message;
+  assert.equal(request.kind,'prepareNativeGateResources');assert.equal(request.resources,resources);assert.equal(request.minSequence,2);
+  f.worker.onmessage({data:{kind:'nativeGateResourcesResult',id:request.id,result:{worldBoundary:resources.worldBoundary,preparedWorldBoundary:resources.worldBoundary}}});const handle=await pending;assert.deepEqual(handle.preparedWorldBoundary,resources.worldBoundary);
   assert.equal(handle.valid(),true);const commit={resources:{phase:'committed'}};assert.equal(handle.commit(commit),true);assert.equal(handle.valid(),false);assert.equal(f.worker.messages.at(-1).message.commit,commit);
   const count=f.worker.messages.length;controller.abort();handle.abort();assert.equal(f.worker.messages.length,count);
   const aborted=new AbortController(),waiting=f.client.prepareNativeGateResources(resources,{signal:aborted.signal});aborted.abort();await assert.rejects(waiting,{name:'AbortError'});assert.equal(f.worker.messages.at(-1).message.kind,'abortNativeGateResources');
+ }finally{f.client.dispose();}
+});
+
+test('an older material-only gate reply cannot certify a retained native command packet',async()=>{
+ const draw={postMessage(){},terminate(){}},f=setup({remoteDraw:true,intentControlPort:{postMessage(){}},drawWorkerFactory:()=>draw});try{
+  f.worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await f.client.ready;
+  const resources={worldBoundary:{version:1,authorityEpoch:'owner',nativeSession:1,ticket:3,effectiveTime:10}},pending=f.client.prepareNativeGateResources(resources),request=f.worker.messages.at(-1).message;
+  f.worker.onmessage({data:{kind:'nativeGateResourcesResult',id:request.id,result:{worldBoundary:resources.worldBoundary}}});await assert.rejects(pending,/lacks its prepared command receipt/);assert.equal(f.worker.messages.at(-1).message.kind,'abortNativeGateResources');assert.equal(f.client.status().phase,'running');
  }finally{f.client.dispose();}
 });

@@ -1,5 +1,6 @@
 import {createConfirmedCameraTreeIndex} from '../app/confirmed-camera-tree-index.js';
 import {createSharedCameraMailbox} from './shared-camera-mailbox.js';
+import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {createConfirmedCameraTerrain} from '../app/confirmed-camera-terrain.js';
 import {webGpuPresentationCapabilities} from './webgpu-presentation-capabilities.js';
 import {MAX_PENDING_PRESENTATION_INPUTS} from './presentation-input-limits.js';
@@ -57,14 +58,15 @@ export function createWebGpuWorldClient({canvas,session,snapshot,camera,width,he
   }catch(error){intentControlPort?.close?.();fail(error);}
  function invalidateGuardianGuide(){if(!guardianGuideLive)return;guardianGuideLive=false;guardianGuideGeneration++;if(phase==='running')try{worker.postMessage({kind:'guardian-guide-clear',generation:guardianGuideGeneration});}catch(error){fail(error);}}
  function postCamera(camera){cameraInFlight=true;try{worker.postMessage({kind:'camera',camera,cameraVersion});}catch(error){fail(error);}}
- async function prepareNativeGateResources(resources,{signal}={}){
-  if(phase!=='running'||!remoteDraw||!intentControlPort||signal?.aborted)throw Error('Native gate resources require direct draw control');
+ async function prepareNativeGateResources(resources,{signal,minSequence=-1}={}){
+  if(phase!=='running'||!remoteDraw||!intentControlPort||signal?.aborted||!Number.isSafeInteger(minSequence)||minSequence< -1)throw Error('Native gate resources require direct draw control');
   const id=nextId++;let stage='preparing';
   const abort=()=>{if(stage==='committed'||stage==='aborted')return;stage='aborted';const request=pending.get(id);pending.delete(id);request?.reject(new DOMException('Native gate preparation cancelled','AbortError'));worker.postMessage({kind:'abortNativeGateResources',id});};
   signal?.addEventListener('abort',abort,{once:true});
-  try{await new Promise((resolve,reject)=>{pending.set(id,{resolve,reject});worker.postMessage({kind:'prepareNativeGateResources',id,resources});});
-   if(stage==='aborted')throw new DOMException('Native gate preparation cancelled','AbortError');stage='ready';
-   return {valid:()=>phase==='running'&&stage==='ready'&&!signal?.aborted,commit(commit){if(phase!=='running'||stage!=='ready'||signal?.aborted)return false;worker.postMessage({kind:'commitNativeGateResources',id,commit});stage='committed';signal?.removeEventListener('abort',abort);return true;},abort(){abort();signal?.removeEventListener('abort',abort);}};
+  try{const prepared=await new Promise((resolve,reject)=>{pending.set(id,{resolve,reject});worker.postMessage({kind:'prepareNativeGateResources',id,resources,minSequence});});
+   if(stage==='aborted')throw new DOMException('Native gate preparation cancelled','AbortError');
+   if(!prepared.preparedWorldBoundary||!sameNativeWorldBoundary(copyNativeWorldBoundary(prepared.preparedWorldBoundary),copyNativeWorldBoundary(resources.worldBoundary)))throw Error('Native gate lacks its prepared command receipt');stage='ready';
+   return {preparedWorldBoundary:prepared.preparedWorldBoundary,valid:()=>phase==='running'&&stage==='ready'&&!signal?.aborted,commit(commit){if(phase!=='running'||stage!=='ready'||signal?.aborted)return false;worker.postMessage({kind:'commitNativeGateResources',id,commit});stage='committed';signal?.removeEventListener('abort',abort);return true;},abort(){abort();signal?.removeEventListener('abort',abort);}};
   }catch(error){abort();signal?.removeEventListener('abort',abort);throw error;}
  }
  function nativeRouteRequest(command){if(phase!=='running'||!remoteDraw||!intentControlPort)return Promise.reject(Error('Native route presentation requires direct draw control'));const id=nextId++;return new Promise((resolve,reject)=>{pending.set(id,{resolve,reject});try{worker.postMessage({...command,id});}catch(error){pending.delete(id);reject(error);}});}

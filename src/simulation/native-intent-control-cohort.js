@@ -53,10 +53,10 @@ export function createNativeIntentControlCohort({observe,onError=()=>{},publicat
     }catch(error){fail(error);throw error;}
     finally{if(boundary===transaction)boundary=null;}
   }
-  async function quiesceGpuForMutation(){
+  async function quiesceGpuForMutation(options){
     const transaction=begin('mutation');transaction.id=++nextHold;
     try{
-      transaction.receipts=await Promise.all(transaction.members.map(member=>member.quiesceGpuForMutation()));
+      transaction.receipts=await Promise.all(transaction.members.map(member=>member.quiesceGpuForMutation(options)));
       if(status().closed||boundary!==transaction)throw Error('Native GPU cohort hold became obsolete');
       const first=transaction.receipts[0];
       transaction.receipt=Object.freeze({...first,holdId:transaction.id});return transaction.receipt;

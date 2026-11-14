@@ -7,13 +7,13 @@ import {createNativeIntentControlPublication} from '../src/simulation/native-int
 import {createNativeRouteControl} from '../src/rendering/native-route-control.js';
 import {createNativeRouteExecutionFixture} from './helpers/native-route-execution.js';
 
-function consumer({baseline=true,quiesce=true,retire=true}={}){
+function consumer({baseline=true,quiesce=true,retire=true,prepared=false}={}){
  const {port1,port2}=new MessageChannel(),messages=[];let draw;
  const send=data=>port2.postMessage({...data,accepted:true});
  function ack(m){
   if(m.type==='IntentBaseline')send({type:'intent-control-applied',session:m.session,authorityEpoch:m.authorityEpoch,sequence:m.sequence,
    clockSequence:m.clock.clockSequence,clockIntentSequence:m.clock.intentSequence,clockCommittedThrough:m.clock.committedThrough});
-  if(m.type==='IntentMutationQuiesce')send({...m,type:'intent-mutation-quiesced'});
+  if(m.type==='IntentMutationQuiesce')send({...m,type:'intent-mutation-quiesced',...(prepared&&m.preparedWorldBoundary?{preparedFrameSequence:17}:{})});
   if(m.type==='IntentControlRetire')send({...m,type:'intent-control-drained'});
  }
  port2.onmessage=({data:m})=>{
@@ -43,6 +43,15 @@ function setup(){
  return {...f,cohort,errors,mutate:()=>f.bridge.addNativeBarrierAfterGpuQuiescence({getPublication:()=>cohort,
   ...f.point(2,0),halfX:.15,halfZ:.6}),dispose(){cohort.dispose();f.session.dispose();}};
 }
+
+test('the cohort forwards a prepared world requirement and rejects peers without the connection-bound frame witness',async()=>{
+ for(const prepared of [true,false]){const f=setup(),a=consumer({prepared});try{
+  await f.cohort.attach(a.port,'cohort');const status=f.cohort.status(),boundary={version:1,authorityEpoch:status.authorityEpoch,nativeSession:1,ticket:7,effectiveTime:status.sentTime},before=f.session.core.snapshot(),pending=f.cohort.quiesceGpuForMutation({preparedWorldBoundary:boundary});
+  if(prepared){const receipt=await pending;assert.deepEqual(receipt.preparedWorldBoundary,boundary);assert.equal(receipt.preparedFrameSequence,17);assert.deepEqual(a.messages.find(m=>m.type==='IntentMutationQuiesce').preparedWorldBoundary,boundary);f.cohort.releaseGpuAfterMutation(receipt,{committed:false});}
+  else{await assert.rejects(pending,/acknowledgement/);assert.equal(f.cohort.status().closed,true);}
+  assert.deepEqual(f.session.core.snapshot(),before);
+ }finally{a.dispose();f.dispose();}}
+});
 
 test('a pending replacement cannot be omitted from a conditioned world boundary, even before its baseline ACK',async()=>{
  const f=setup(),a=consumer(),b=consumer({baseline:false,retire:false});
@@ -103,7 +112,7 @@ test('the native owner rejects an individual receipt that omits another register
   second=createNativeIntentControlPublication({port:b.port,session:'individual',observe:f.bridge.observeNativeIntentControl});await second.ready;
   const before=f.session.core.snapshot(),mutate=()=>f.bridge.addNativeBarrierAfterGpuQuiescence({getPublication:()=>first,...f.point(2,0),halfX:.15,halfZ:.6});
   assert.equal((await mutate()).status,'control-consumers-mismatch');assert.deepEqual(f.session.core.snapshot(),before);
-  assert.equal((await f.bridge.prepareNativeGateMotionAfterGpuFence({getPublication:()=>first})).status,'control-consumers-mismatch');
+  assert.equal((await f.bridge.prepareNativeGateMotionAfterGpuFence({getPublication:()=>first,prepareResources:async()=>{throw Error('Unregistered cohort must not start preparation');}})).status,'control-consumers-mismatch');
   assert.equal(a.messages.some(m=>m.type==='IntentMutationQuiesce'),false);
   second.dispose();assert.equal((await mutate()).status,'control-consumers-mismatch');
   assert.deepEqual(f.session.core.snapshot(),before,'dropping a subscription cannot hide an undrained GPU');

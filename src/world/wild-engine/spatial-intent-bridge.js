@@ -11,7 +11,7 @@ import {targetReservationKey} from '../../simulation/raid-target-reservations.js
 import {actorBlockers} from '../../simulation/actor-motion.js';
 import {wallCollisionFrame} from '../wall-collision-frame.js';
 import {readNativeGateStaticWitness} from './spatial-gate-intents.js';
-import {copyNativeWorldBoundary} from '../native-world-boundary.js';
+import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../native-world-boundary.js';
 import {NATIVE_ROUTE_PRESENTATION_VERSION,NATIVE_ROUTE_PRESENTATION_WIDTH} from '../native-route-presentation.js';
 import {applyConfirmedTaskAssignments,notifyWorkerPlanningChange,
   observeTaskChanges,releaseTask,replaceTasks} from '../../simulation/tasks.js';
@@ -631,6 +631,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       if(wasm.nav_gate_motion_causal_version?.()!==1)throw Error('Rebuild causal gate motion service');
       let resources;
       const protocol={
+        preparedFrameRequired:true,
         ticket:()=>wasm.nav_gate_motion_world_ticket(),ticketPtr:()=>wasm.nav_intent_barrier_proposal_ticket_ptr(),
         snapshot:(session,ticket)=>wasm.nav_gate_motion_current(session,ticket),
         cancel:(session,ticket)=>wasm.nav_gate_motion_cancel(session,ticket),release(){},
@@ -717,14 +718,18 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
         });
         try{preparedResources=await Promise.race([preparing,interrupted]);}finally{preparationController.signal.removeEventListener('abort',stopWaiting);}
         if(!preparedResources||['valid','commit','abort'].some(key=>typeof preparedResources[key]!=='function')||preparedResources.valid()!==true)throw Error('Native resources were not prepared');
+        if(protocol?.preparedFrameRequired&&!preparedResources.preparedWorldBoundary)throw Error('Native gate requires a retained prepared command packet');
         if(epoch()!==owner||getPublication()!==source||source.status().closed||!coversGpuConsumers(source))return outcome('control-replaced');
         if((protocol?protocol.snapshot(nativeSession,ticket):wasm.spatial_world_proposal_resource_snapshot(nativeSession,ticket))!==1)return outcome('stale');
       }
-      receipt=await source.quiesceGpuForMutation();const current=source.status();
+      const preparedWorldBoundary=copyNativeWorldBoundary(preparedResources?.preparedWorldBoundary??null);
+      if(preparedWorldBoundary&&(preparedWorldBoundary.authorityEpoch!==owner||preparedWorldBoundary.nativeSession!==nativeSession||preparedWorldBoundary.ticket!==ticket||preparedWorldBoundary.effectiveTime!==time))throw Error('Prepared command packet names a different native mutation');
+      receipt=await source.quiesceGpuForMutation(preparedWorldBoundary?{preparedWorldBoundary}:undefined);const current=source.status();
       if(epoch()!==owner||getPublication()!==source||current.closed||current.session!==control.session||current.authorityEpoch!==owner||!coversGpuConsumers(source))
         answer=outcome('control-replaced');
       else if(receipt.authorityEpoch!==owner||receipt.session!==control.session||receipt.sequence!==sequence||
-         receipt.effectiveTime!==time||receipt.clockSequence!==clockSequence||!Number.isSafeInteger(receipt.holdId)||receipt.holdId<1)
+         receipt.effectiveTime!==time||receipt.clockSequence!==clockSequence||!Number.isSafeInteger(receipt.holdId)||receipt.holdId<1||
+         preparedWorldBoundary&&(!sameNativeWorldBoundary(receipt.preparedWorldBoundary,preparedWorldBoundary)||!Number.isSafeInteger(receipt.preparedFrameSequence)||receipt.preparedFrameSequence<1))
         answer=outcome('invalid-receipt');
       else{
         if(preparationController.signal.aborted||preparedResources&&preparedResources.valid()!==true)throw Error('Native prepared resources became stale');

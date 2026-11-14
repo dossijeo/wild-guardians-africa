@@ -81,7 +81,7 @@ self.onmessage=async({data})=>{try{if(data?.kind!=='initialize')updateSharedCame
  if(data.kind==='guardianAwakeningBegin'){surface?.guardianAttack?.beginAwakening(data.command);return;}
  if(data.kind==='prepareNativeGateResources'){
   const controller=new AbortController(),entry={controller,handle:null,resources:data.resources};
-  try{if(phase!=='running'||!remoteGpu||nativeGatePreparations.size)throw Error('Native gate preparation unavailable');nativeGatePreparations.set(data.id,entry);entry.handle=await surface.prepareNativeGateResources(data.resources,{signal:controller.signal});if(controller.signal.aborted)throw new DOMException('Native gate preparation cancelled','AbortError');postMessage({kind:'nativeGateResourcesResult',id:data.id,result:{worldBoundary:data.resources.worldBoundary}});}
+  try{if(phase!=='running'||!remoteGpu||nativeGatePreparations.size)throw Error('Native gate preparation unavailable');nativeGatePreparations.set(data.id,entry);entry.handle=await surface.prepareNativeGateResources(data.resources,{signal:controller.signal,minSequence:data.minSequence});if(controller.signal.aborted)throw new DOMException('Native gate preparation cancelled','AbortError');postMessage({kind:'nativeGateResourcesResult',id:data.id,result:{worldBoundary:data.resources.worldBoundary,preparedWorldBoundary:entry.handle.preparedWorldBoundary}});}
   catch(error){if(nativeGatePreparations.get(data.id)===entry)nativeGatePreparations.delete(data.id);entry.handle?.abort();if(phase==='running')postMessage({kind:'nativeGateResourcesError',id:data.id,message:String(error?.message??error)});}return;
  }
  if(data.kind==='commitNativeGateResources'||data.kind==='abortNativeGateResources'){

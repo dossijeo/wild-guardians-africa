@@ -72,6 +72,156 @@ function preparationDraw(f,buffer,metadata,pipeline=f.pipeline,upload=null){
  const group=f.client.device.createBindGroup({entries:[{binding:0,resource:{buffer}}]}),encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
  pass.setPipeline(pipeline);pass.setBindGroup(0,group);pass.draw(3);pass.end();f.client.device.queue.submit([encoder.finish()]);return f.client.endFrame();
 }
+function preparedWorldDraw(f,boundary,value=77,signal=null){
+ const metadata={clock:f.clock,nativeWorldBoundary:boundary};f.client.beginFrame({nativeWorldBoundary:boundary});
+ f.client.device.queue.writeBuffer(f.buffer,0,new Float32Array([value]));
+ const encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
+ pass.setPipeline(f.pipeline);pass.setBindGroup(0,f.group);pass.draw(3);pass.end();f.client.device.queue.submit([encoder.finish()]);return f.client.prepareNativeWorldFrame(metadata,{signal});
+}
+function textureCopies(f){
+ const textures=[],copies=[],groups=[],device=f.gpu.device,createEncoder=device.createCommandEncoder.bind(device),createGroup=device.createBindGroup.bind(device);
+ const dimensions=size=>Array.isArray(size)?[size[0],size[1]??1,size[2]??1]:[size.width,size.height??1,size.depthOrArrayLayers??1];
+ device.createTexture=descriptor=>{const size=dimensions(descriptor.size),texture={descriptor,levels:Array.from({length:descriptor.mipLevelCount??1},(_,m)=>new Uint8Array(Math.max(1,Math.floor(size[0]/2**m))*Math.max(1,Math.floor(size[1]/2**m))*size[2]*4)),createView:descriptor=>({texture,descriptor}),destroy(){this.destroyed=true;}};textures.push(texture);return texture;};
+ device.createBindGroup=descriptor=>{const group=createGroup(descriptor);groups.push(group);return group;};
+ device.queue.writeTexture=(destination,data,layout,size)=>{const [width,height,layers]=dimensions(size),mip=destination.mipLevel??0,origin=destination.origin??{},[x,y,z]=Array.isArray(origin)?origin:[origin.x??0,origin.y??0,origin.z??0],target=destination.texture,base=dimensions(target.descriptor.size),stride=Math.max(1,Math.floor(base[0]/2**mip)),rows=Math.max(1,Math.floor(base[1]/2**mip));for(let layer=0;layer<layers;layer++)for(let row=0;row<height;row++){const offset=(layout.offset??0)+(layer*(layout.rowsPerImage??height)+row)*(layout.bytesPerRow??width*4);target.levels[mip].set(data.subarray(offset,offset+width*4),((z+layer)*rows*stride+(y+row)*stride+x)*4);}f.gpu.calls.push(['writeTexture']);};
+ device.createCommandEncoder=(...args)=>{const encoder=createEncoder(...args),extra=[];return {...encoder,copyTextureToTexture(source,target,size){copies.push({source,target,size});extra.push(()=>target.texture.levels[target.mipLevel??0].set(source.texture.levels[source.mipLevel??0]));},finish(){const result=encoder.finish();result.copies=[...(result.copies??[]),...extra];return result;}};};
+ return {textures,copies,groups};
+}
+
+test('retained CPU texture updates fork only the changed texture and its views, preserving displayed pixels and every mip',async()=>{
+ const f=await nativePreparationFixture(),record=textureCopies(f);try{
+  const texture=f.client.device.createTexture({size:{width:4,height:2,depthOrArrayLayers:2},mipLevelCount:2,usage:7,format:'rgba8unorm'}),view=texture.createView(),group=f.client.device.createBindGroup({entries:[{binding:0,resource:view}]});
+  function frame(metadata,update){f.client.beginFrame(metadata);if(update)update();const encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});pass.setBindGroup(0,group);pass.draw(3);pass.end();f.client.device.queue.submit([encoder.finish()]);return f.client.endFrame();}
+  const first=frame({clock:f.clock},()=>{f.client.device.queue.writeTexture({texture},new Uint8Array(64).fill(1),{bytesPerRow:16,rowsPerImage:2},[4,2,2]);f.client.device.queue.writeTexture({texture,mipLevel:1},new Uint8Array(16).fill(2),{bytesPerRow:8,rowsPerImage:1},[2,1,2]);});await flush();await f.host.idle();f.host.present();await first;const original=record.textures[0],originalGroup=record.groups[0],created=f.client.inspect().resourcesCreated,committed=await f.commit();
+  await assert.rejects(frame({clock:f.clock},()=>f.client.device.queue.writeTexture({texture,origin:[1,0,1]},new Uint8Array(8).fill(9),{bytesPerRow:8},[2,1,1])),error=>error.resourcePreparationsRetained===true);
+  await f.client.device.queue.onSubmittedWorkDone();assert.equal(record.textures.length,2);assert.equal(f.host.inspect().textureForks,1);assert.deepEqual(record.copies.map(copy=>copy.size),[[4,2,2],[2,1,2]]);
+  assert(original.levels[0].every(value=>value===1));assert(original.levels[1].every(value=>value===2));const next=record.textures[1];assert(next.levels[1].every(value=>value===2));assert.deepEqual(Array.from(next.levels[0].slice(32,48)),[1,1,1,1,9,9,9,9,9,9,9,9,1,1,1,1]);assert.equal(originalGroup.descriptor.entries[0].resource.texture,original);assert.equal(record.groups.at(-1).descriptor.entries[0].resource.texture,next);assert.equal(f.client.inspect().resourcesCreated,created,'producer IDs and unchanged resources are reused');
+  const shown=frame({clock:f.clock,nativeWorldBoundary:committed.worldBoundary});await flush();await f.host.idle();f.host.present();await shown;assert.equal(f.host.inspect().failed,false);assert.deepEqual(f.errors,[]);
+ }finally{f.close();}
+});
+
+test('a prepared world packet uploads a separate generation and adopts only the exact direct commit without another producer turn',async()=>{
+ const f=await nativePreparationFixture();let prepared;
+ try{
+  const shown=f.frame(1,{clock:f.clock});await flush();await f.host.idle();f.host.present();await shown;const original=f.gpu.buffers[0],before=f.native.session.core.snapshot();
+  const outcome=await f.native.bridge.mutateNativeWorldAfterGpuQuiescence({getPublication:()=>f.source,mutation:{type:'addChunk',cx:4,cz:4},prepareResources:async({proposedWorldBoundary})=>{
+   prepared=await preparedWorldDraw(f,proposedWorldBoundary);assert.equal(prepared.valid(),true);assert.deepEqual(f.native.session.core.snapshot(),before);
+   assert.equal(new Float32Array(original.data.buffer)[0],1);assert.equal(new Float32Array(f.gpu.buffers.at(-1).data.buffer)[0],77);
+   f.host.present();f.host.present();assert.equal(f.host.inspect().activeSequence,1,'future metadata grants no draw');
+   return {preparedWorldBoundary:prepared.preparedWorldBoundary,valid:prepared.valid,commit:data=>prepared.commit(data.worldBoundary),abort:prepared.abort};
+  }});
+  assert.equal(outcome.status,'committed');await flush();assert.equal(f.host.inspect().activeSequence,1);f.host.present();await prepared.presented;
+  assert.equal(f.host.inspect().activeSequence,2);assert.equal(new Float32Array(original.data.buffer)[0],1);assert.equal(f.host.inspect().frameTime.elapsed,10);assert.deepEqual(f.errors,[]);
+ }finally{f.close();}
+});
+
+test('a cancelled ready world packet retains the displayed generation and cannot activate on a later different commit',async()=>{
+ const f=await nativePreparationFixture();try{
+  const shown=f.frame(1,{clock:f.clock});await flush();await f.host.idle();f.host.present();await shown;
+  const boundary={version:1,authorityEpoch:f.source.status().authorityEpoch,nativeSession:1,ticket:99,effectiveTime:10},prepared=await preparedWorldDraw(f,boundary);
+  prepared.abort();await assert.rejects(prepared.presented,{name:'AbortError'});await flush();f.host.present();assert.equal(f.host.inspect().activeSequence,1);assert.equal(f.host.inspect().pendingSequence,null);
+  const next=await f.commit();assert.equal(next.status,'committed');await flush();f.host.present();assert.equal(f.host.inspect().activeSequence,1);assert.deepEqual(f.errors,[]);
+ }finally{f.close();}
+});
+
+test('a prepared packet ready receipt waits for the actual upload fence while the prior image keeps drawing',async()=>{
+ const f=await nativePreparationFixture();let release;
+ try{
+  const shown=f.frame(1,{clock:f.clock});await flush();await f.host.idle();f.host.present();await shown;
+  const boundary={version:1,authorityEpoch:f.source.status().authorityEpoch,nativeSession:1,ticket:1,effectiveTime:10};
+  f.gpu.device.queue.onSubmittedWorkDone=()=>new Promise(resolve=>{release=resolve;});let ready=false;const pending=preparedWorldDraw(f,boundary).then(value=>{ready=true;return value;});pending.catch(()=>{});await flush();for(let i=0;i<1000&&!release;i++)await new Promise(resolve=>setTimeout(resolve,1));assert.equal(typeof release,'function');assert.equal(ready,false);
+  f.host.present();assert.equal(f.host.inspect().activeSequence,1);release();const prepared=await pending;assert.equal(ready,true);prepared.abort();await flush();
+ }finally{release?.();f.gpu.device.queue.onSubmittedWorkDone=async()=>{};f.close();}
+});
+
+test('prepared drawing preserves first-submit resource copies instead of silently treating them as replay',async()=>{
+ const f=await nativePreparationFixture();let prepared;try{
+  const source=f.client.device.createBuffer({size:16,usage:12});f.client.device.queue.writeBuffer(source,0,new Float32Array([333]));await flush();await f.host.idle();
+  const shown=f.frame(1,{clock:f.clock});await flush();await f.host.idle();f.host.present();await shown;
+  const result=await f.native.bridge.mutateNativeWorldAfterGpuQuiescence({getPublication:()=>f.source,mutation:{type:'addChunk',cx:4,cz:4},prepareResources:async({proposedWorldBoundary})=>{
+   const metadata={clock:f.clock,nativeWorldBoundary:proposedWorldBoundary};f.client.beginFrame({nativeWorldBoundary:proposedWorldBoundary});const encoder=f.client.device.createCommandEncoder();encoder.copyBufferToBuffer(source,0,f.buffer,0,4);const pass=encoder.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});pass.setPipeline(f.pipeline);pass.setBindGroup(0,f.group);pass.draw(3);pass.end();f.client.device.queue.submit([encoder.finish()]);prepared=await f.client.prepareNativeWorldFrame(metadata);assert.equal(new Float32Array(f.gpu.buffers[0].data.buffer)[0],1);return {preparedWorldBoundary:prepared.preparedWorldBoundary,valid:prepared.valid,commit:data=>prepared.commit(data.worldBoundary),abort:prepared.abort};
+  }});
+  assert.equal(result.status,'committed');await flush();f.host.present();await prepared.presented;assert.equal(new Float32Array(f.gpu.buffers[0].data.buffer)[0],333);const copies=f.gpu.calls.filter(call=>call[0]==='copy').length;f.host.present();assert.equal(f.gpu.calls.filter(call=>call[0]==='copy').length,copies);assert.equal(new Float32Array(f.gpu.buffers[0].data.buffer)[0],333);assert.deepEqual(f.errors,[]);
+ }finally{f.close();}
+});
+
+test('an already aborted prepared frame is cancelled before FIFO admission without stranding its RPC',async()=>{
+ const f=await nativePreparationFixture();try{
+  const controller=new AbortController();controller.abort();const boundary={version:1,authorityEpoch:f.source.status().authorityEpoch,nativeSession:1,ticket:1,effectiveTime:10};
+  await assert.rejects(preparedWorldDraw(f,boundary,77,controller.signal),/cancelled|unavailable/i);await flush();await f.host.idle();assert.equal(f.host.inspect().pendingSequence,null);assert.equal(f.host.inspect().failed,false);
+ }finally{f.close();}
+});
+
+test('a ready packet naming a different ticket never adopts the real native mutation',async()=>{
+ const f=await nativePreparationFixture();try{
+  const shown=f.frame(1,{clock:f.clock});await flush();await f.host.idle();f.host.present();await shown;const boundary={version:1,authorityEpoch:f.source.status().authorityEpoch,nativeSession:1,ticket:99,effectiveTime:10},prepared=await preparedWorldDraw(f,boundary);
+  const rejected=assert.rejects(prepared.presented,/invalidated/);const outcome=await f.commit();assert.equal(outcome.status,'committed');await flush();await rejected;f.host.present();assert.equal(f.host.inspect().activeSequence,1);assert.equal(f.host.inspect().pendingSequence,null);assert.deepEqual(f.errors,[]);
+ }finally{f.close();}
+});
+
+test('native consumer retirement invalidates its prepared successor before any later draw',async()=>{
+ const f=await nativePreparationFixture();try{
+  const shown=f.frame(1,{clock:f.clock});await flush();await f.host.idle();f.host.present();await shown;const boundary={version:1,authorityEpoch:f.source.status().authorityEpoch,nativeSession:1,ticket:1,effectiveTime:10},prepared=await preparedWorldDraw(f,boundary);
+  const rejected=assert.rejects(prepared.presented,/cancelled/);await f.source.retireGpu();await flush();await rejected;const draws=f.gpu.submitted.length;f.host.present();assert.equal(f.gpu.submitted.length,draws);assert.equal(prepared.valid(),false);assert.equal(f.host.inspect().pendingSequence,null);
+ }finally{f.close();}
+});
+
+test('prepared clock references are immutable even if the producer retags their logical buffer before the commit',async()=>{
+ const f=await nativePreparationFixture();let prepared,nativeGate;try{
+  const outcome=await f.native.bridge.mutateNativeWorldAfterGpuQuiescence({getPublication:()=>f.source,mutation:{type:'addChunk',cx:4,cz:4},prepareResources:async({proposedWorldBoundary})=>{
+   nativeGate={gateId:9,worldBoundary:proposedWorldBoundary};f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'relative',epoch:10,nativeGate});prepared=await preparedWorldDraw(f,proposedWorldBoundary);
+   f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'relative',epoch:10,nativeGate:{...nativeGate,gateId:999,worldBoundary:{...proposedWorldBoundary,authorityEpoch:'foreign'}}});await flush();
+   return {preparedWorldBoundary:prepared.preparedWorldBoundary,valid:prepared.valid,commit:data=>prepared.commit(data.worldBoundary),abort:prepared.abort};
+  }});
+  assert.equal(outcome.status,'committed');await flush();f.host.present();await prepared.presented;assert.equal(captureNativeRoutePickFrame(f.host.inspect()).getGateTime(nativeGate,10),10);assert.deepEqual(f.errors,[]);
+ }finally{f.close();}
+});
+
+test('a GPU copy cannot overwrite a prepared native presentation clock after consumer patching',async()=>{
+ const f=await nativePreparationFixture();try{
+  const boundary={version:1,authorityEpoch:f.source.status().authorityEpoch,nativeSession:1,ticket:1,effectiveTime:10},source=f.client.device.createBuffer({size:16,usage:12}),metadata={clock:f.clock,nativeWorldBoundary:boundary};
+  f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'relative',epoch:10,nativeGate:{gateId:9,worldBoundary:boundary}});f.client.beginFrame({nativeWorldBoundary:boundary});
+  const encoder=f.client.device.createCommandEncoder();encoder.copyBufferToBuffer(source,0,f.buffer,0,4);const pass=encoder.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});pass.setBindGroup(0,f.group);pass.draw(3);pass.end();f.client.device.queue.submit([encoder.finish()]);
+  await assert.rejects(f.client.prepareNativeWorldFrame(metadata),/clocks cannot be overwritten/);assert.equal(f.gpu.submitted.length,0);
+ }finally{f.close();}
+});
+
+test('cancelling a successor before quiescence prevents physical commit even if the caller reports its local handle as valid',async()=>{
+ const f=await nativePreparationFixture();try{
+  const before=f.native.session.core.snapshot(),outcome=await f.native.bridge.mutateNativeWorldAfterGpuQuiescence({getPublication:()=>f.source,mutation:{type:'addChunk',cx:4,cz:4},prepareResources:async({proposedWorldBoundary})=>{
+   const prepared=await preparedWorldDraw(f,proposedWorldBoundary);prepared.abort();await flush();await f.host.idle();
+   return {preparedWorldBoundary:proposedWorldBoundary,valid:()=>true,commit(){throw Error('Cancelled packet must not commit');},abort(){}};
+  }});
+  assert.equal(outcome.status,'control-failed');assert.deepEqual(f.native.session.core.snapshot(),before);assert.equal(f.host.inspect().failed,true);assert.equal(f.gpu.submitted.length,0);
+ }finally{f.close();}
+});
+
+test('the quiesced receipt retains its exact successor through late producer cancellation until native release',async()=>{
+ const f=await nativePreparationFixture();try{
+  const shown=f.frame(1,{clock:f.clock});await flush();await f.host.idle();f.host.present();await shown;
+  const outcome=await f.native.bridge.mutateNativeWorldAfterGpuQuiescence({getPublication:()=>f.source,mutation:{type:'addChunk',cx:4,cz:4},prepareResources:async({proposedWorldBoundary})=>{
+   const prepared=await preparedWorldDraw(f,proposedWorldBoundary);
+   return {preparedWorldBoundary:proposedWorldBoundary,valid:prepared.valid,commit(){prepared.abort();return true;},abort:prepared.abort};
+  }});
+  assert.equal(outcome.status,'committed');assert.equal(outcome.receipt.preparedFrameSequence,2);await flush();f.host.present();assert.equal(f.host.inspect().activeSequence,2);assert.deepEqual(f.host.inspect().nativeRouteFrame.worldBoundary,outcome.worldBoundary);assert.deepEqual(f.errors,[]);
+ }finally{f.close();}
+});
+
+test('a future world resource tag cannot prepare an unauthorized native actor assignment',async()=>{
+ const f=await nativePreparationFixture();try{
+  const boundary={version:1,authorityEpoch:f.source.status().authorityEpoch,nativeSession:1,ticket:1,effectiveTime:10};
+  f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'relative',epoch:10,nativeRoute:{actorId:999999,assignmentSequence:1,routeHandle:{authorityEpoch:boundary.authorityEpoch,session:1,slot:0,generation:1}}});
+  await assert.rejects(preparedWorldDraw(f,boundary),/unavailable|obsolete/);await flush();assert.equal(f.host.inspect().failed,false);assert.equal(f.gpu.submitted.length,0);assert.equal(f.host.inspect().pendingSequence,null);
+ }finally{f.close();}
+});
+
+test('upload-only command buffers cannot stand in for a prepared world image',async()=>{
+ const f=await nativePreparationFixture();try{
+  const boundary={version:1,authorityEpoch:f.source.status().authorityEpoch,nativeSession:1,ticket:1,effectiveTime:10},metadata={clock:f.clock,nativeWorldBoundary:boundary};
+  f.client.beginFrame({nativeWorldBoundary:boundary});const encoder=f.client.device.createCommandEncoder();encoder.clearBuffer(f.buffer);f.client.device.queue.submit([encoder.finish()]);
+  await assert.rejects(f.client.prepareNativeWorldFrame(metadata),/no canvas presentation pass/);assert.equal(f.gpu.submitted.length,0);
+ }finally{f.close();}
+});
 test('obsolete initialization survives until fresh commands use the same GPU buffer, without resending its upload',async()=>{
  const f=await nativePreparationFixture();try{
   const buffer=f.client.device.createBuffer({size:16,usage:72});await flush();await f.host.idle();const nativeBuffer=f.gpu.buffers[1],resourcesBefore=f.client.inspect().resourcesCreated;

@@ -382,11 +382,32 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
       if (metadata !== undefined) packet.metadata = structuredClone(metadata);
       packet.width = canvas.width; packet.height = canvas.height;
       metrics.framesPublished++;
-      return new Promise((resolve, reject) => {
+      const promise=new Promise((resolve, reject) => {
         pendingFrame = { sequence: packet.sequence, resolve, reject, retained, timing };
         send({ type: 'frame', packet });
         timing.endFrameReturnedAt = absoluteNow();
       });
+      pendingFrame.promise=promise;return promise;
+    },
+    whenFrameSettled:()=>pendingFrame?.promise??Promise.resolve(),
+    async prepareNativeWorldFrame(metadata,{signal}={}){
+      if(!frame)throw Error('No remote GPU frame transaction');
+      if(!sameNativeWorldBoundary(frame.metadata.nativeWorldBoundary??null,metadata?.nativeWorldBoundary??null))throw Error('A prepared frame cannot be retagged for another native world');
+      const packet=frame;frame=null;packet.metadata=structuredClone(metadata);packet.width=canvas.width;packet.height=canvas.height;
+      const worldBoundary=copyNativeWorldBoundary(metadata.nativeWorldBoundary),retained=packet.retained;delete packet.retained;
+      const timing=recordTiming(frameTimings,{sequence:packet.sequence,endFrameCalledAt:absoluteNow()});packet.transportTiming=timing;metrics.framesPublished++;
+      let phase='preparing',committed=false,resolveImage,rejectImage;
+      const presented=new Promise((resolve,reject)=>{resolveImage=resolve;rejectImage=reject;});presented.catch(()=>{});
+      const record={sequence:packet.sequence,retained,timing,promise:presented,resolve(value){phase='presented';resolveImage(value);},reject(error){phase='aborted';signal?.removeEventListener('abort',abort);rejectImage(error);}};pendingFrame=record;
+      const abort=()=>{signal?.removeEventListener('abort',abort);if(committed||phase==='aborted')return;phase='aborted';if(pendingFrame===record){pendingFrame=null;releaseReferences(retained);rejectImage(new DOMException('Prepared world frame cancelled','AbortError'));}if(!disposed&&!fatalError)send({type:'cancel-world-frame',version:1,sequence:packet.sequence});};
+      signal?.addEventListener('abort',abort,{once:true});
+      try{
+        const preparing=request({type:'prepare-world-frame',version:1,packet});if(signal?.aborted)abort();const ready=await preparing;
+        if(signal?.aborted)abort();
+        if(phase==='aborted'||ready.version!==1||ready.sequence!==packet.sequence||!ready.uploadsSubmitted||!sameNativeWorldBoundary(ready.worldBoundary,worldBoundary))throw Error('Prepared world frame unavailable');
+        if(phase==='preparing')phase='ready';
+        return {sequence:packet.sequence,preparedWorldBoundary:worldBoundary,presented,valid:()=>!disposed&&!fatalError&&!committed&&(phase==='ready'||phase==='presented'),commit(boundary){if(committed||phase!=='ready'&&phase!=='presented'||!sameNativeWorldBoundary(boundary,worldBoundary))return false;committed=true;signal?.removeEventListener('abort',abort);return true;},abort};
+      }catch(error){abort();throw error;}
     },
     cancelFrame() {
       if (!frame) return;

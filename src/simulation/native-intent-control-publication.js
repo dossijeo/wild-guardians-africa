@@ -1,6 +1,6 @@
 // Direct authority -> draw transport for the existing native intent protocol.
 // The native owner supplies the baseline/log; this sender keeps ACK cursors only.
-import {copyNativeWorldBoundary} from '../world/native-world-boundary.js';
+import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 export function createNativeIntentControlPublication({port,session,observe,
   controlOwner=null,onError=()=>{},timeoutMs=10000,absoluteNow=()=>performance.timeOrigin+performance.now()}={}){
   if(!port||typeof port.postMessage!=='function'||typeof observe!=='function'||
@@ -84,11 +84,11 @@ export function createNativeIntentControlPublication({port,session,observe,
       const hold=mutationHold;
       if(!hold||hold.receipt||data.session!==session||data.authorityEpoch!==authorityEpoch||data.fenceVersion!==1||
          data.accepted!==true||data.holdId!==hold.holdId||data.sequence!==hold.sequence||
-         data.effectiveTime!==hold.effectiveTime||data.clockSequence!==hold.clockSequence){
+         data.effectiveTime!==hold.effectiveTime||data.clockSequence!==hold.clockSequence||hold.preparedWorldBoundary&&(!sameNativeWorldBoundary(data.preparedWorldBoundary,hold.preparedWorldBoundary)||!Number.isSafeInteger(data.preparedFrameSequence)||data.preparedFrameSequence<1)){
         fail(Error('Invalid native mutation fence acknowledgement'));return;
       }
       hold.receipt=Object.freeze({authorityEpoch,session,holdId:hold.holdId,sequence:hold.sequence,
-        effectiveTime:hold.effectiveTime,clockSequence:hold.clockSequence});hold.resolve(hold.receipt);return;
+        effectiveTime:hold.effectiveTime,clockSequence:hold.clockSequence,...(hold.preparedWorldBoundary?{preparedWorldBoundary:hold.preparedWorldBoundary,preparedFrameSequence:data.preparedFrameSequence}:{})});hold.resolve(hold.receipt);return;
     }
     if(data?.type==='intent-control-fenced'){
       const fence=gpuFences.get(data.fenceId);
@@ -166,17 +166,18 @@ export function createNativeIntentControlPublication({port,session,observe,
          session,authorityEpoch,sequence,effectiveTime,fenceId,...(clock?{clockSequence:clock.clockSequence}:{})});}catch(error){fail(error);}
     });
   }
-  function quiesceGpuForMutation(){
+  function quiesceGpuForMutation({preparedWorldBoundary=null}={}){
     if(closed||retirement||appliedSequence===null||!clock||clock.intentSequence!==sentSequence||clock.committedThrough!==sentTime)
       return Promise.reject(Error('Native causal mutation boundary is not ready'));
     if(mutationHold||gpuFences.size)return Promise.reject(Error('Native GPU mutation boundary is busy'));
     if(!Number.isSafeInteger(nextMutationFence+1))return Promise.reject(Error('Native mutation fence identity exhausted'));
+    if(preparedWorldBoundary){preparedWorldBoundary=copyNativeWorldBoundary(preparedWorldBoundary);if(!preparedWorldBoundary||preparedWorldBoundary.authorityEpoch!==authorityEpoch||preparedWorldBoundary.nativeSession!==clock.nativeSession||preparedWorldBoundary.effectiveTime!==sentTime)throw Error('Invalid prepared native mutation boundary');}
     const holdId=++nextMutationFence,sequence=sentSequence,effectiveTime=sentTime,clockSequence=clock.clockSequence;
     return new Promise((resolve,reject)=>{
-      mutationHold={holdId,sequence,effectiveTime,clockSequence,resolve,reject,receipt:null,
+      mutationHold={holdId,sequence,effectiveTime,clockSequence,preparedWorldBoundary,resolve,reject,receipt:null,
         timer:setTimeout(()=>fail(Error('Native mutation fence timed out')),timeoutMs)};
       try{port.postMessage({type:'IntentMutationQuiesce',protocolVersion:2,fenceVersion:1,
-        session,authorityEpoch,holdId,sequence,effectiveTime,clockSequence});}catch(error){fail(error);}
+        session,authorityEpoch,holdId,sequence,effectiveTime,clockSequence,...(preparedWorldBoundary?{preparedWorldBoundary}:{})});}catch(error){fail(error);}
     });
   }
   function releaseGpuAfterMutation(receipt,{committed=false,worldBoundary:nextBoundary=null}={}){
@@ -187,6 +188,7 @@ export function createNativeIntentControlPublication({port,session,observe,
       throw Error('Native mutation hold is stale or its causal boundary is unpublished');
     if(committed){
       nextBoundary=copyNativeWorldBoundary(nextBoundary);
+      if(hold.preparedWorldBoundary&&!sameNativeWorldBoundary(hold.preparedWorldBoundary,nextBoundary))throw Error('Committed world differs from the retained prepared packet');
       if(!nextBoundary||nextBoundary.authorityEpoch!==authorityEpoch||nextBoundary.nativeSession!==clock.nativeSession||
          nextBoundary.effectiveTime!==sentTime||worldBoundary&&nextBoundary.ticket<=worldBoundary.ticket)
         throw Error('Native committed mutation requires a new world resource boundary');

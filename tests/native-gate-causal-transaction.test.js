@@ -12,7 +12,7 @@ function control(f){
  port2.onmessage=({data:m})=>{
   if(m.type==='IntentBaseline'){draw=createNativeRouteControl({authorityEpoch:m.authorityEpoch,initialSequence:m.sequence,initialTime:m.effectiveTime,routes:m.routes});draw.acceptClock(m.clock,{baseline:true});port2.postMessage({type:'intent-control-applied',session:'gate-causal',authorityEpoch:m.authorityEpoch,sequence:m.sequence,accepted:true,clockSequence:m.clock.clockSequence,clockIntentSequence:m.clock.intentSequence,clockCommittedThrough:m.clock.committedThrough});}
   else if(m.type==='IntentClock'){draw.acceptClock(m);port2.postMessage({type:'intent-clock-applied',session:'gate-causal',authorityEpoch:m.authorityEpoch,clockSequence:m.clockSequence,intentSequence:m.intentSequence,committedThrough:m.committedThrough,accepted:true});}
-  else if(m.type==='IntentMutationQuiesce'){requests.push(m);port2.postMessage({...m,type:'intent-mutation-quiesced',accepted:true});}
+  else if(m.type==='IntentMutationQuiesce'){requests.push(m);port2.postMessage({...m,type:'intent-mutation-quiesced',accepted:true,...(m.preparedWorldBoundary?{preparedFrameSequence:1}:{})});}
   else if(m.type==='IntentMutationRelease')requests.push(m);
   else if(m.type==='IntentControlClosed')draw?.dispose();
   else {draw.accept(m);port2.postMessage({type:'intent-control-applied',session:'gate-causal',authorityEpoch:m.authorityEpoch,sequence:m.sequence,accepted:true});}
@@ -27,7 +27,7 @@ test('causal gate motors require prepared resources and use the existing quiesce
   const absent=await f.bridge.prepareNativeGateMotionAfterGpuFence({getPublication:()=>c.source});assert.equal(absent.status,'resources-unavailable');assert.deepEqual(f.bridge.nativeGateMechanismPose(f.gates[0].id),before);
   const result=await f.bridge.prepareNativeGateMotionAfterGpuFence({getPublication:()=>c.source,prepareResources:async({resources})=>{
    prepared=copyNativeGateMotionResources(resources);assert.equal(prepared.gates.length,1);assert.equal(prepared.gates[0].rows[1],1);assert.equal(prepared.gates[0].rows.at(-1),0);assert.deepEqual(f.bridge.nativeGateMechanismPose(f.gates[0].id),before);assert.equal(c.requests.length,0,'preparation precedes the draw hold');
-   return {valid:()=>true,commit(value){assert.equal(f.bridge.nativeGateMechanismPose(f.gates[0].id).opening,1);assert.equal(value.resources.phase,'committed');assert.deepEqual(value.worldBoundary,resources.worldBoundary);committed++;return true;},abort(){aborted++;}};
+   return {preparedWorldBoundary:resources.worldBoundary,valid:()=>true,commit(value){assert.equal(f.bridge.nativeGateMechanismPose(f.gates[0].id).opening,1);assert.equal(value.resources.phase,'committed');assert.deepEqual(value.worldBoundary,resources.worldBoundary);committed++;return true;},abort(){aborted++;}};
   }});
   assert.equal(result.status,'committed');assert.equal(committed,1);assert.equal(aborted,1);assert.deepEqual(result.worldBoundary,prepared.worldBoundary);assert.equal(c.requests[0].type,'IntentMutationQuiesce');assert.deepEqual(f.bridge.nativeIntentControlBaseline().worldBoundary,result.worldBoundary);
   assert.equal(f.w.nav_gate_prepare_motion(1),-7,'the old immediate path cannot bypass a causal resource boundary');
@@ -47,7 +47,7 @@ test('failed or cancelled gate resources cannot change the native motor or obtai
 test('native gate resources become stale on a body change during graphical preparation',async()=>{
  const f=fixture(),c=control(f);let aborted=0;try{
   await c.source.ready;const before=f.bridge.nativeGateMechanismPose(f.gates[0].id),point=f.point(20,20);
-  const result=await f.bridge.prepareNativeGateMotionAfterGpuFence({getPublication:()=>c.source,prepareResources:async()=>{assert.equal(f.w.spatial_body_upsert(77,point.x,point.z,.2,1,1),1);return {valid:()=>true,commit(){throw Error('stale commit');},abort(){aborted++;}};}});
+  const result=await f.bridge.prepareNativeGateMotionAfterGpuFence({getPublication:()=>c.source,prepareResources:async({resources})=>{assert.equal(f.w.spatial_body_upsert(77,point.x,point.z,.2,1,1),1);return {preparedWorldBoundary:resources.worldBoundary,valid:()=>true,commit(){throw Error('stale commit');},abort(){aborted++;}};}});
   assert.equal(result.status,'stale');assert.equal(aborted,1);assert.deepEqual(f.bridge.nativeGateMechanismPose(f.gates[0].id),before);assert.equal(c.requests.length,0);
  }finally{c.close();f.session.dispose();}
 });
@@ -62,4 +62,19 @@ test('an empty causal cohort advances world motors on the same execution transac
   assert.equal(f.bridge.commitNativeCausalClock({paused:false}).clock.committedThrough,f.state.elapsed);
   assert.equal(f.w.nav_intent_set_time(f.state.elapsed+.1),0,'ordinary set_time cannot bypass native execution');
  }finally{f.session.dispose();}
+});
+
+test('a material-only preparation handle cannot authorize a causal gate motor effect',async()=>{
+ const f=fixture(),c=control(f);try{
+  await c.source.ready;const before=f.bridge.nativeGateMechanismPose(f.gates[0].id),outcome=await f.bridge.prepareNativeGateMotionAfterGpuFence({getPublication:()=>c.source,prepareResources:async()=>({valid:()=>true,commit(){throw Error('No command packet');},abort(){}})});
+  assert.equal(outcome.status,'control-failed');assert.match(outcome.error,/retained prepared command packet/);assert.deepEqual(f.bridge.nativeGateMechanismPose(f.gates[0].id),before);assert.equal(c.requests.length,0);
+ }finally{c.close();f.session.dispose();}
+});
+
+test('a publisher that only drains GPU cannot satisfy the prepared command receipt required by the causal gate',async()=>{
+ const f=fixture(),c=control(f);try{
+  await c.source.ready;const legacy=c.source.quiesceGpuForMutation;c.source.quiesceGpuForMutation=()=>legacy();
+  const before=f.bridge.nativeGateMechanismPose(f.gates[0].id),outcome=await f.bridge.prepareNativeGateMotionAfterGpuFence({getPublication:()=>c.source,prepareResources:async({resources})=>({preparedWorldBoundary:resources.worldBoundary,valid:()=>true,commit(){throw Error('Old receipt must not authorize the effect');},abort(){}})});
+  assert.equal(outcome.status,'invalid-receipt');assert.deepEqual(f.bridge.nativeGateMechanismPose(f.gates[0].id),before);
+ }finally{c.close();f.session.dispose();}
 });

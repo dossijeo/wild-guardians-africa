@@ -1,5 +1,7 @@
 # f-R4 parcial: motor de puerta preparado e independiente del actor
 
+Continuación: [corte con comandos ya retenidos](f-r4-prepared-world-commands-20261114.md). Resuelve la dependencia de otro turno del preparador para el corte de puerta; los demás límites de producto siguen abiertos.
+
 Fecha: 2026-11-14. Base: `73fa60859`. Rama: `codex/guardian-3d-animation`.
 Continúa el [plan integrado](integrated-gpu-migration-plan-20261104.md) y la
 [puerta original bajo tiempo nativo](f-r4-native-gate-graphics-20261114.md).
