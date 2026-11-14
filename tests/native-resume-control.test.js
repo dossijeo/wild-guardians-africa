@@ -25,8 +25,11 @@ test('prepared resume identity gets permission only from the exact issued assign
 test('a suspended state without a direct body proof cannot prepare or authorize resume',()=>{
  const f=fixture(1,{attest:false}),ref=reference();assert.throws(()=>f.control.admitResume(ref,{preparingWorldBoundary:resumeBoundary}),/attestation/);const seq=f.event(1,'RouteAssigned',ref.expectedRouteHandle,1);f.clock();assert.throws(()=>f.control.installResumedRoutes(resumeBoundary,[{reference:ref,assignmentSequence:seq}]),/source body/);f.control.dispose();
 });
-test('preparation expires on clock or control changes and cannot borrow a reused candidate generation',()=>{
- for(const change of ['clock','intent','assignment']){const f=fixture(),ref=reference(),pending=f.control.admitResume(ref,{preparingWorldBoundary:resumeBoundary});if(change==='clock')f.advance(20.1);else if(change==='intent'){f.event(1,'IntentChanged',null,4);f.clock();}else{f.event(1,'RouteAssigned',ref.expectedRouteHandle,1);f.clock();}assert.equal(pending.isPrepared(),false);assert.equal(pending.isCurrent(),false);assert.throws(()=>f.control.admitResume(ref,{preparingWorldBoundary:resumeBoundary}),/attestation/);f.control.dispose();}
+test('data preparation survives clock advancement but never acquires a movement permit',()=>{
+ const f=fixture(),ref=reference(),pending=f.control.admitResume(ref,{preparingWorldBoundary:resumeBoundary});f.advance(20.1);assert.equal(pending.isPrepared(),true);assert.equal(pending.isCurrent(),false);assert.equal(pending.routeRecord,null);assert.throws(()=>f.control.admitResume(ref),/attestation/);f.control.dispose();
+});
+test('actor transitions retire preparation and cannot borrow a reused candidate generation',()=>{
+ for(const change of ['intent','assignment']){const f=fixture(),ref=reference(),pending=f.control.admitResume(ref,{preparingWorldBoundary:resumeBoundary});if(change==='intent'){f.event(1,'IntentChanged',null,4);f.clock();}else{f.event(1,'RouteAssigned',ref.expectedRouteHandle,1);f.clock();}assert.equal(pending.isPrepared(),false);assert.equal(pending.isCurrent(),false);assert.throws(()=>f.control.admitResume(ref,{preparingWorldBoundary:resumeBoundary}),/attestation/);f.control.dispose();}
 });
 test('actual sequence comes from authority and an invalid set installs no prefix',()=>{
  const f=fixture(2),ra=reference(1,4),rb=reference(2,4),a=f.control.admitResume(ra,{preparingWorldBoundary:resumeBoundary});

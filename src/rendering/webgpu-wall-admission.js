@@ -23,6 +23,8 @@ export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmi
   const current=()=>!closed&&!finished&&!signal?.aborted&&gatePreparation===participant&&slot.upToDate&&slot.active===wall&&(activated?binding.current():binding.canActivate());
   const retire=value=>{if(!value)return;const release=()=>value.dispose();if(typeof pipelineAdmission.deferRelease==='function')pipelineAdmission.deferRelease(wall,release);else release();};
   const participant={request:{object:wall,options:{signal,include:[binding.mesh],materialAlternatives:[{mesh:binding.mesh,material:binding.material}]}},valid:current,
+   rollback(){if(!current())throw Error('Native gate rollback unavailable');if(activated){binding.rollback();activated=false;}},
+   retarget(presentation,options){if(!current()||activated)throw Error('Native gate retarget unavailable');return binding.retarget(presentation,options);},
    activate(){if(!current()||activated)throw Error('Native gate preparation became stale');binding.activate();activated=true;},
    finalize(){if(!current()||!activated)throw Error('Native gate not activated');binding.commit();finished=true;gatePreparation=null;retire(previous);previous=null;},
    cancel(){if(finished)return;finished=true;if(gatePreparation===participant)gatePreparation=null;if(activated)binding.rollback();retire(binding);}

@@ -84,6 +84,14 @@ self.onmessage=async({data})=>{try{if(data?.kind!=='initialize')updateSharedCame
   try{if(phase!=='running'||!remoteGpu||nativeGatePreparations.size)throw Error('Native gate preparation unavailable');nativeGatePreparations.set(data.id,entry);entry.handle=await surface[data.kind](data.resources,{signal:controller.signal,minSequence:data.minSequence,terrainManifest:data.terrainManifest});if(controller.signal.aborted)throw new DOMException('Native gate preparation cancelled','AbortError');postMessage({kind:'nativeGateResourcesResult',id:data.id,result:{worldBoundary:data.resources.worldBoundary,preparedWorldBoundary:entry.handle.preparedWorldBoundary}});}
   catch(error){if(nativeGatePreparations.get(data.id)===entry)nativeGatePreparations.delete(data.id);entry.handle?.abort();if(phase==='running')postMessage({kind:'nativeGateResourcesError',id:data.id,message:String(error?.message??error)});}return;
  }
+ if(data.kind==='invalidateNativeResumeResources'||data.kind==='refreshNativeResumeResources'){
+  const entry=nativeGatePreparations.get(data.id);if(!entry)return;
+  try{if(data.kind==='invalidateNativeResumeResources'){if(entry.handle?.invalidate?.()!==true)throw Error('Native resume invalidation unavailable');return;}
+   const reusable=await entry.handle.refresh(data.resources,{terrainManifest:data.terrainManifest});if(entry.controller.signal.aborted||nativeGatePreparations.get(data.id)!==entry)throw new DOMException('Native resume refresh cancelled','AbortError');
+   if(!reusable){nativeGatePreparations.delete(data.id);entry.controller.abort();entry.handle.abort();}else entry.resources=data.resources;
+   postMessage({kind:'nativeGateResourcesResult',id:data.id,result:{reusable,...(reusable?{worldBoundary:data.resources.worldBoundary,preparedWorldBoundary:entry.handle.preparedWorldBoundary}:{})}});
+  }catch(error){if(nativeGatePreparations.get(data.id)===entry)nativeGatePreparations.delete(data.id);entry.controller.abort();entry.handle?.abort();if(phase==='running')postMessage({kind:'nativeGateResourcesError',id:data.id,message:String(error?.message??error)});}return;
+ }
  if(data.kind==='commitNativeGateResources'||data.kind==='abortNativeGateResources'){
   const entry=nativeGatePreparations.get(data.id);if(!entry)return;
   nativeGatePreparations.delete(data.id);

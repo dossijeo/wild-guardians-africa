@@ -1,3 +1,4 @@
+import {nativeResumeSuccessor} from '../world/native-resume-reference.js';
 import {nativeFrameReadiness,rejectedNativeFrameTarget} from './webgpu-frame-recovery.js';
 import {captureNativeRoutePickFrame} from './native-route-pick-frame.js';
 import {copyNativeGateMotionResources} from '../world/native-gate-motion-resources.js';
@@ -291,7 +292,7 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
   function prepareNativeGateResources(value,options){return prepareNativeResources(copyNativeGateMotionResources(value),options);}
   function prepareNativeResumeResources(value,options){return prepareNativeResources(copyNativeResumeProposal(value),options);}
   async function prepareNativeResources(resources,{signal:callerSignal,minSequence=-1,terrainManifest}={}){
-   const resumed=resources.kind==='native-route-resume-proposal',boundary=resources.worldBoundary;
+   const resumed=resources.kind==='native-route-resume-proposal';let boundary=resources.worldBoundary;
    if(closed||!remoteGpu||!state||nativeGateProposal||!resumed&&resources.phase!=='proposal'||callerSignal?.aborted||!Number.isSafeInteger(minSequence)||minSequence< -1||terrain.status().nativeProposal||terrain.status().pending||terrain.status().presentationPending)throw Error('Native gate resource surface unavailable');
    const controller=new AbortController(),abort=()=>controller.abort(),item={descriptor:{phase:'preparing',worldBoundary:boundary},controller};nativeGateProposal=item;nativeRoutePreparations++;callerSignal?.addEventListener('abort',abort,{once:true});
    let participants=[],tickets=[],finished=false,preparedFrame=null,preparedSequence=null;
@@ -301,7 +302,8 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
    try{
     await waitNativePublication(minSequence,controller.signal);
     participants=settlements.prepareNativeGateMotors(resources,{signal:controller.signal,getPickTime:(ref,epoch)=>{if(!nativePickFrame)throw Error('Native gate input requires a consumer frame');return nativePickFrame.getGateTime(ref,epoch);}});
-    if(resumed){const support=terrainSupport.prepareNativeResumeProposal(resources,{terrainManifest});if(!support?.valid())throw Error('Native resume terrain support unavailable');participants.unshift(await workers.prepareNativeResumeProposal(support,{signal:controller.signal,getPickTime:()=>{if(!nativePickFrame)throw Error('Native resume input requires a consumer frame');return nativePickFrame.getResumeTime(resources.nativeResume,resources.startTime);}}));}
+    if(resumed){const support=terrainSupport.prepareNativeResumeProposal(resources,{terrainManifest});if(!support?.valid())throw Error('Native resume terrain support unavailable');participants.unshift(await workers.prepareNativeResumeProposal(support,{signal:controller.signal,getPickTime:(reference,epoch)=>{if(!nativePickFrame)throw Error('Native resume input requires a consumer frame');return nativePickFrame.getResumeTime(reference,epoch);}}));}
+    async function prepareFrame(){
     for(;;){
      if(!current()||participants.some(participant=>!participant.valid()))throw new DOMException('Native gate resources changed','AbortError');
      for(let i=0;i<participants.length;i++)if(!tickets[i]?.valid())tickets[i]=await pipelineAdmission.prepareTicket(participants[i].request.object,participants[i].request.options);
@@ -314,9 +316,22 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
     remoteGpu.beginFrame({nativeWorldBoundary:boundary});
     try{if(!renderScene())throw Error('Native prepared scene is not ready');preparedSequence=stream.status().sequence;preparedFrame=await remoteGpu.prepareNativeWorldFrame({...remoteFrameMetadata(boundary,resumed?{start:resources.startTime,end:resources.endTime}:null),nativeRouteResourceRevision:nativeRouteResourceRevision+1},{signal:controller.signal});}catch(error){remoteGpu.cancelFrame();throw error;}
     item.descriptor.phase='ready';
+    }
+    function invalidate(){if(!resumed||!current())return false;if(item.descriptor.phase==='invalidated')return true;preparedFrame?.abort();preparedFrame=null;for(const participant of [...participants].reverse())participant.rollback();item.descriptor.phase='invalidated';return true;}
+    async function refresh(value,{terrainManifest:nextManifest=terrainManifest}={}){
+     if(!resumed||!current())throw Error('Native resume refresh unavailable');const next=copyNativeResumeProposal(value);
+     if(!nativeResumeSuccessor(resources.nativeResume,next.nativeResume)||next.gates.length!==resources.gates.length||next.gates.some((gate,i)=>gate.gateId!==resources.gates[i].gateId))return false;
+     if(!invalidate())return false;
+     try{const support=terrainSupport.prepareNativeResumeProposal(next,{terrainManifest:nextManifest});if(!support?.valid())throw Error('Native resumed support unavailable');
+      if(!participants[0].retarget(support,{retagClock:remoteClockBindings.retagNativeResume})){cancel();return false;}
+      for(let i=0;i<next.gates.length;i++)if(!participants[i+1].retarget(next.gates[i],{retagClock:remoteClockBindings.retagNativeGate})){cancel();return false;}
+      resources=next;boundary=next.worldBoundary;terrainManifest=nextManifest;item.descriptor.worldBoundary=boundary;item.descriptor.phase='preparing';await prepareFrame();return true;
+     }catch(error){cancel();throw error;}
+    }
+    await prepareFrame();
     // The alternative-material tickets were consumed by activation/capture.
     // From here the retained immutable consumer packet proves resource readiness.
-    return {preparedWorldBoundary:boundary,valid:()=>current()&&stream.status().sequence===preparedSequence&&preparedFrame.valid()&&participants.every(participant=>participant.valid()),
+    return {get preparedWorldBoundary(){return boundary;},...(resumed?{refresh,invalidate}:{}),valid:()=>current()&&item.descriptor.phase==='ready'&&stream.status().sequence===preparedSequence&&preparedFrame?.valid()&&participants.every(participant=>participant.valid()),
      commit(data){const confirmed=resumed?data.resources:copyNativeGateMotionResources(data.resources);if(confirmed.phase!=='committed'||!sameNativeWorldBoundary(confirmed.worldBoundary,boundary)||!resumed&&!sameNativeGatePresentations(confirmed.gates,resources.gates)||!current()||!sameNativeWorldBoundary(data.worldBoundary,boundary)||participants.some(participant=>!participant.valid()))throw Error('Native graphical resources not retained');
       for(const participant of participants)participant.validateCommit?.(data);
       try{if(stream.status().sequence!==preparedSequence||!preparedFrame.commit(boundary))throw Error('Native prepared command packet unavailable');for(const participant of participants)participant.finalize(data);}catch(error){cancel();throw error;}
@@ -336,7 +351,7 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
   function remoteClockLease(preparedNative=null){
    const native=preparedNative??nativeResourceLease();
    if(!native)return remoteMotionGroup?remoteMotionGroup.remoteLease(visualClock,{blockers:remotePresentationBlockers()}):visualClock?.remoteLease?.()??null;
-   const base=visualClock.remoteLease(),elapsed=Math.max(base.elapsed,native.start);
+   const base=visualClock.remoteLease(),elapsed=preparedNative?native.start:Math.max(base.elapsed,native.start);
    // This paused envelope describes resident graph coverage. Only the direct
    // C++ lease can advance the draw clock; producer segments grant no time.
    return {...base,elapsed,safeUntil:Math.max(elapsed,native.end),paused:true,segments:[]};

@@ -116,7 +116,7 @@ export function createWebGpuSettlements({scene,state,residency,renderer=null,pip
  function nativeGateLease(){const live=[...entries.values()].map(entry=>entry.wall?.nativeGateLease).filter(Boolean);return live.length?{start:Math.max(...live.map(value=>value.start)),end:Math.max(...live.map(value=>value.end))}:null;}
  function prepareNativeGateMotors(resources,{getPickTime,signal}){
   const participants=[];
-  try{for(const gate of resources.gates){const entry=entries.get('s:'+gate.entityId);if(closed||entry?.kind!=='wall'||!entry.group.visible||!entry.wall?.upToDate)throw Error('Native gate motor wall not resident');const motion=createNativeGateGpuClock(gate);participants.push(entry.wall.prepareNativeGate({presentation:gate,motion,getPickTime:()=>getPickTime(motion.nativeGate,gate.startTime),signal}));}return participants;}
+  try{for(const gate of resources.gates){const entry=entries.get('s:'+gate.entityId);if(closed||entry?.kind!=='wall'||!entry.group.visible||!entry.wall?.upToDate)throw Error('Native gate motor wall not resident');const motion=createNativeGateGpuClock(gate);participants.push(entry.wall.prepareNativeGate({presentation:gate,motion,getPickTime:()=>getPickTime(motion.nativeGate,motion.status().installed.start.at),signal}));}return participants;}
   catch(error){for(const participant of participants)participant.cancel();throw error;}
  }
  function prepareVillageTerrain(view){

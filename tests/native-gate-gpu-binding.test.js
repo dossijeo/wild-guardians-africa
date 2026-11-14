@@ -8,6 +8,8 @@ import {gateMeshPrototype} from './helpers/gate-mesh-source.js';
 import {NativeWall} from '../src/rendering/walls.js';
 import {createNativeGateGpuBinding} from '../src/rendering/native-gate-gpu-binding.js';
 import {copyNativeRoutePresentation} from '../src/world/native-route-presentation.js';
+import {createNativeGateGpuClock} from '../src/rendering/native-gate-gpu-clock.js';
+import {installRemoteClockBindings} from '../src/rendering/remote-clock-bindings.js';
 
 function fixture({material='zarzas',reversing=false,yaw=0}={}){
  const f=nativeGateCrossingFixture({materials:[material],opening:reversing?1:0,yaw});
@@ -72,4 +74,16 @@ test('gate placement and immutable geometry mismatch reject before publishing a 
   f.parent.position.x-=1;const gate={...f.gate,positions:f.gate.positions.slice()};gate.positions[0]+=.1;
   assert.throws(()=>createNativeGateGpuBinding({wall:f.wall,presentation:gate,motion:f.motion,getPickTime:()=>10}),/geometry mismatch/);assert.equal(mesh.material,source);
  }finally{f.close();}
+});
+
+test('an unpublished gate refresh keeps its material and clock, updates input timing and seals on commit',()=>{
+ const f=fixture(),hook=installRemoteClockBindings({backend:{get(){return {};},updateBinding(){}}},{registerClockBinding(){throw Error('Uncompiled binding');}});let binding;
+ try{
+  const boundary={version:1,authorityEpoch:'gate-owner',nativeSession:1,ticket:3,effectiveTime:f.gate.startTime},gate={...f.gate,nativeRoute:undefined,worldBoundary:boundary},motion=createNativeGateGpuClock(gate);let at=gate.startTime;
+  binding=createNativeGateGpuBinding({wall:f.wall,presentation:gate,motion,getPickTime:()=>at});const material=binding.material,clock=motion.clockNode,key=clock.getCacheKey(),geometry=binding.mesh.geometry;
+  const start=gate.startTime+.5,next={...gate,worldBoundary:{...boundary,ticket:4,effectiveTime:start},startTime:start,endTime:start+2,rows:new Float64Array([start,0,start+1,.5,start+2,1])};
+  assert(binding.retarget(next,{retagClock:hook.retagNativeGate}));assert.equal(binding.material,material);assert.equal(motion.clockNode,clock);assert.equal(clock.getCacheKey(),key);assert.equal(binding.mesh.geometry,geometry);assert.equal(binding.lease.start,start);at=start+1;near(binding.sampleOpening(at),.5);
+  const bad={...next,worldBoundary:{...next.worldBoundary,ticket:5},positions:next.positions.slice()};bad.positions[0]+=.1;assert.equal(binding.retarget(bad,{retagClock:hook.retagNativeGate}),false);assert.equal(binding.nativeGate.worldBoundary.ticket,4);
+  binding.activate();assert.throws(()=>binding.retarget(next,{retagClock:hook.retagNativeGate}),/cannot be retargeted/);binding.rollback();binding.activate();binding.commit();assert(motion.status().sealed);assert.throws(()=>motion.retarget(next,{retagClock:hook.retagNativeGate}),/published/);
+ }finally{binding?.dispose();hook.dispose();f.close();}
 });

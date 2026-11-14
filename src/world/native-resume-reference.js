@@ -16,6 +16,10 @@ export function copyNativeResumeReference(value){
  return Object.freeze({kind:value.kind,version:1,actorId:value.actorId,bodyId:value.bodyId,sourceAssignmentSequence:value.sourceAssignmentSequence,sourceControlSequence:value.sourceControlSequence,suspendedAt:value.suspendedAt,endTime:value.endTime,sourceResumeHandle,expectedRouteHandle,worldBoundary});
 }
 export function sameNativeResumeReference(a,b){return !!a&&!!b&&sameNativeWorldBoundary(a.worldBoundary,b.worldBoundary)&&sameHandle(a.sourceResumeHandle,b.sourceResumeHandle)&&sameHandle(a.expectedRouteHandle,b.expectedRouteHandle)&&['actorId','bodyId','sourceAssignmentSequence','sourceControlSequence','suspendedAt','endTime'].every(key=>a[key]===b[key]);}
+// Resource reuse only; this relationship never grants an assignment or time.
+export function nativeResumeSuccessor(before,after){
+ return ['actorId','bodyId','sourceAssignmentSequence','suspendedAt'].every(key=>before[key]===after[key])&&sameHandle(before.sourceResumeHandle,after.sourceResumeHandle)&&sameHandle(before.expectedRouteHandle,after.expectedRouteHandle)&&after.worldBoundary.ticket>before.worldBoundary.ticket&&after.worldBoundary.effectiveTime>=before.worldBoundary.effectiveTime&&after.sourceControlSequence>=before.sourceControlSequence;
+}
 export function nativeResumeReferenceCovered(reference,boundary){const expected=reference.worldBoundary;return !!boundary&&expected.authorityEpoch===boundary.authorityEpoch&&expected.nativeSession===boundary.nativeSession&&boundary.ticket>=expected.ticket&&boundary.effectiveTime>=expected.effectiveTime;}
 export function nativeResumeReferenceFromProposal(value){
  const boundary=copyNativeWorldBoundary(value?.worldBoundary),ticket=value?.ticket;

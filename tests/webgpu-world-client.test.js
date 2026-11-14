@@ -251,3 +251,18 @@ test('an older material-only gate reply cannot certify a retained native command
   f.worker.onmessage({data:{kind:'nativeGateResourcesResult',id:request.id,result:{worldBoundary:resources.worldBoundary}}});await assert.rejects(pending,/lacks its prepared command receipt/);assert.equal(f.worker.messages.at(-1).message.kind,'abortNativeGateResources');assert.equal(f.client.status().phase,'running');
  }finally{f.client.dispose();}
 });
+
+for(const outcome of ['commit','incompatible','cancel'])test(`resume refresh retains its request owner and handles ${outcome}`,async()=>{
+ const draw={postMessage(){},terminate(){}},f=setup({remoteDraw:true,intentControlPort:{postMessage(){}},drawWorkerFactory:()=>draw});
+ try{
+  f.worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await f.client.ready;
+  const boundary={version:1,authorityEpoch:'owner',nativeSession:1,ticket:4,effectiveTime:20},resources={kind:'native-route-resume-proposal',worldBoundary:boundary},controller=new AbortController();
+  const preparing=f.client.prepareNativeResumeResources(resources,{signal:controller.signal}),request=f.worker.messages.at(-1).message;
+  f.worker.onmessage({data:{kind:'nativeGateResourcesResult',id:request.id,result:{preparedWorldBoundary:boundary}}});const handle=await preparing;
+  assert(handle.invalidate());assert.equal(handle.valid(),false);assert.equal(handle.commit({}),false);assert.deepEqual(f.worker.messages.at(-1).message,{kind:'invalidateNativeResumeResources',id:request.id});
+  const next={...resources,worldBoundary:{...boundary,ticket:5,effectiveTime:20.5}},manifest={epoch:'terrain',chunks:[]},refreshing=handle.refresh(next,{terrainManifest:manifest}),refresh=f.worker.messages.at(-1).message;
+  assert.deepEqual(refresh,{kind:'refreshNativeResumeResources',id:request.id,resources:next,terrainManifest:manifest});assert.equal(handle.valid(),false);
+  if(outcome==='cancel'){controller.abort();await assert.rejects(refreshing,{name:'AbortError'});assert.equal(f.worker.messages.at(-1).message.kind,'abortNativeGateResources');}
+  else{f.worker.onmessage({data:{kind:'nativeGateResourcesResult',id:request.id,result:outcome==='incompatible'?{reusable:false}:{reusable:true,preparedWorldBoundary:next.worldBoundary}}});assert.equal(await refreshing,outcome==='commit');if(outcome==='commit'){assert(handle.valid());assert.deepEqual(handle.preparedWorldBoundary,next.worldBoundary);assert(handle.commit({worldBoundary:next.worldBoundary}));}else{assert.equal(handle.valid(),false);assert.equal(handle.commit({}),false);}}
+ }finally{f.client.dispose();}
+});

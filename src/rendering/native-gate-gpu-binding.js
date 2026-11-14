@@ -8,14 +8,14 @@ import {structureMaterialReplica} from './structure-material-replica.js';
 // One rigid leaf on the existing wall mesh. The existing actor clock is shared
 // as data; neither this owner nor its input proxy advances an authoritative motor.
 export function createNativeGateGpuBinding({wall,presentation,motion,getPickTime}={}){
- const packet=copyNativeGatePresentation(presentation,presentation),installed=motion?.status?.().installed;
+ let packet=copyNativeGatePresentation(presentation,presentation);const installed=motion?.status?.().installed;
  if(packet.worldBoundary&&(installed?.nativeGate?.gateId!==packet.gateId||JSON.stringify(installed.nativeGate.worldBoundary)!==JSON.stringify(packet.worldBoundary)))throw Error('Native gate clock world mismatch');
  if(!wall?.isObject3D||wall.entityId!==packet.entityId||wall.nativeGateBinding||!wall.gate||wall.visual!==1||wall.lastStatus!=='intact'||wall.parts?.length!==1||typeof getPickTime!=='function'||!motion?.timeNode?.isNode||JSON.stringify(installed?.nativeRoute)!==JSON.stringify(packet.nativeRoute)||installed.start.at!==packet.startTime||installed.end.at!==packet.endTime)throw Error('Native gate graphics unavailable');
  const part=wall.parts[0],mesh=part.mesh,geometry=mesh.geometry;let previous=wall.nativeGpuGate??null;const original=previous?.originalMaterial??mesh.material,timeNode=motion.timeNode;
  if(!original?.isNodeMaterial||original.positionNode||original.normalNode||geometry.attributes.wgGatePosition?.count!==packet.leafFlags.length||geometry.attributes.wgGateNormal?.count!==packet.leafFlags.length||geometry.attributes.wgGateLeaf?.count!==packet.leafFlags.length||packet.modelId!==({zarzas:1,empalizada:2,reforzado:3}[wall.nativeGateMaterial]))throw Error('Native gate material or geometry unavailable');
  for(let i=0;i<packet.positions.length;i++)if(Math.abs(packet.positions[i]-geometry.attributes.wgGatePosition.array[i])>1e-6)throw Error('Native gate rest geometry mismatch');
  for(let i=0;i<packet.leafFlags.length;i++)if(packet.leafFlags[i]!==geometry.attributes.wgGateLeaf.array[i])throw Error('Native gate leaf partition mismatch');
- const root=new Matrix4().fromArray(packet.rootMatrix),hinge=new Vector3().fromArray(packet.hinge),duration=floorFloat32(packet.endTime-packet.startTime),rows=Array.from({length:6},(_,i)=>{const at=Math.min(i,packet.rows.length/2-1)*2;return new Vector2(ceilFloat32(packet.rows[at]-packet.startTime),Math.fround(packet.rows[at+1]));}),knots=uniformArray(rows,'vec2').setName('nativeGateKnots'),count=uniform(packet.rows.length/2,'int'),pivot=uniform(hinge);
+ const root=new Matrix4().fromArray(packet.rootMatrix),hinge=new Vector3().fromArray(packet.hinge);let duration=floorFloat32(packet.endTime-packet.startTime);const rows=Array.from({length:6},(_,i)=>{const at=Math.min(i,packet.rows.length/2-1)*2;return new Vector2(ceilFloat32(packet.rows[at]-packet.startTime),Math.fround(packet.rows[at+1]));}),knots=uniformArray(rows,'vec2').setName('nativeGateKnots'),count=uniform(packet.rows.length/2,'int'),pivot=uniform(hinge);
  const opening=Fn(()=>{const value=knots.element(int(0)).y.toVar();Loop({start:1,end:6},({i})=>{If(i.lessThan(count),()=>{const a=knots.element(i.sub(1)),b=knots.element(i),t=clamp(timeNode.sub(a.x).div(b.x.sub(a.x).max(1e-30)),0,1);value.assign(mix(value,b.y,t));});});return value;})();
  const angle=opening.mul(Math.PI/2).mul(attribute('wgGateLeaf','float'));
  const material=cloneWebGpuNodeMaterial(original);material.userData=original.userData;
@@ -38,13 +38,20 @@ export function createNativeGateGpuBinding({wall,presentation,motion,getPickTime
   current:()=>!disposed&&activated&&wall.nativeGpuGate===binding&&wall.parts[0]===part&&mesh.material===material&&rootCurrent(),
   checkEntity(entity){if(entity.gate!==true||entity.status!=='intact'||entity.hp!==entity.maxHp||entity.material!==wall.nativeGateMaterial||!binding.current())throw Error('Native gate requires a prepared geometry or lifecycle transition');},
   sampleOpening:sample,
+  retarget(value,{retagClock}={}){
+   if(disposed||committed||activated||!binding.canActivate()||typeof motion.retarget!=='function')throw Error('Native gate resource cannot be retargeted');
+   const next=copyNativeGatePresentation(value,value);
+   if(!packet.worldBoundary||!next.worldBoundary||['gateId','entityId','mechanism','modelId'].some(key=>packet[key]!==next[key])||['rootMatrix','hinge','positions','leafFlags'].some(key=>packet[key].length!==next[key].length||packet[key].some((v,i)=>!Object.is(v,next[key][i]))))return false;
+   if(motion.retarget(next,{retagClock})!==true)return false;
+   for(let i=0;i<6;i++){const at=Math.min(i,next.rows.length/2-1)*2;rows[i].set(ceilFloat32(next.rows[at]-next.startTime),Math.fround(next.rows[at+1]));}count.value=next.rows.length/2;duration=floorFloat32(next.endTime-next.startTime);packet=next;binding.nativeGate=motion.status().installed.nativeGate;binding.lease=Object.freeze({start:next.startTime,end:Number.MAX_SAFE_INTEGER});return true;
+  },
   capturePresentation(record){
    if(typeof record!=='function'||!binding.canActivate())throw Error('Native gate capture unavailable');const expected=mesh.material;let result,changed=false;
    try{mesh.material=material;result=record();changed=mesh.material!==material;if(result&&typeof result.then==='function')throw Error('Native gate capture must be synchronous');}finally{mesh.material=expected;}
    if(changed||!binding.canActivate())throw Error('Native gate capture changed ownership');return result;
   },
   activate(){if(!binding.canActivate())throw Error('Native gate graphics changed during preparation');activated=true;wall.nativeGpuGate=binding;mesh.material=material;mesh.raycast=raycast;geometry.boundingBox=bounds;geometry.boundingSphere=sphere;},
-  commit(){if(committed||!binding.current())throw Error('Native gate publication changed');committed=true;previous=null;},
+  commit(){if(committed||!binding.current())throw Error('Native gate publication changed');committed=true;motion.seal?.();previous=null;},
   rollback(){if(!activated)return;if(committed||wall.nativeGpuGate!==binding)throw Error('Native gate replacement ownership changed');activated=false;wall.nativeGpuGate=previous;mesh.material=previous?.material??original;mesh.raycast=previous?.raycast??originalRaycast;geometry.boundingBox=previous?.bounds??originalBounds;geometry.boundingSphere=previous?.sphere??originalSphere;},
   raycast,bounds,sphere,
   dispose(){if(disposed)return;disposed=true;if(wall.nativeGpuGate===binding){wall.nativeGpuGate=null;mesh.material=original;mesh.raycast=originalRaycast;geometry.boundingBox=originalBounds;geometry.boundingSphere=originalSphere;}unregister?.();material.dispose();}
