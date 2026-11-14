@@ -278,3 +278,6 @@ f-R4, e-R3/e-R4 y los once padres permanecen abiertos.
 
 
 Continuación parcial f-R4, 14 de noviembre: [preparación y relevo en los propietarios normales del trabajador](f-r4-native-worker-owners-20261114.md). WorldClient/Worker/Surface/roster preparan y confirman el primer dibujo; la misma asignación conserva los 1939 recursos del mundo de prueba. Relevo sobre el rig y geometría existentes, cero fábricas GPU en el primer render y 15 dibujos durante bloqueo de 500 ms. El productor ordinario de asignaciones, transiciones, demás intenciones y aceptación integrada siguen pendientes; no cambia el recuento de cierres.
+
+
+Continuación parcial f-R4, 14 de noviembre: [Run/Walk nativos sobre la misma malla](f-r4-native-run-walk-20261114.md). El shader consume los dos bakes originales y selecciona sus fases con C++, sin cambios CPU al cruzar el límite. La prueba con los dos Workers normales cruza ese límite durante un bloqueo de 500 ms; no crea recursos en el primer render. Quedan Carry, Idle/puerta/acción, productor/ejecución ordinarios e integración completa.

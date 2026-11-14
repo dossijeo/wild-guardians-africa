@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [preparación y relevo nativo en cliente/Worker/superficie/roster normales, con reutilización y cero fábricas en el primer render](f-r4-native-worker-owners-20261114.md).
+Último avance: [transición Run/Walk de la ruta nativa en la misma malla GPU y propietarios normales, sin escrituras periódicas de clip](f-r4-native-run-walk-20261114.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio

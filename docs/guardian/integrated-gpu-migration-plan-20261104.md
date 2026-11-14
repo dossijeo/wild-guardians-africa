@@ -1,6 +1,6 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
-Continuación 2026-11-14: [rutas GPU en cliente/Worker/superficie/roster normales, relevo y retención de recursos; productor ordinario y transiciones pendientes](f-r4-native-worker-owners-20261114.md).
+Continuación 2026-11-14: [transición Run/Walk en la misma malla GPU sobre propietarios normales; productor ordinario y demás transiciones pendientes](f-r4-native-run-walk-20261114.md).
 Se conserva el orden A → B → C → D; la reproducción nativa avanza como componente, pero la admisión ordinaria y la aceptación integrada siguen pendientes.
 
 Revisión del 5 de noviembre de 2026. Rama de trabajo: `codex/guardian-3d-animation`. Este documento sustituye la secuencia del plan del 4 de noviembre; su versión anterior permanece en Git. Estado: plan de implementación, no arquitectura ya terminada.
