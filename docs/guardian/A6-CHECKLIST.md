@@ -2,7 +2,7 @@
 
 Actualizado: 2026-11-14. IDs acordados en la conversación; no se renumeran al avanzar.
 
-Último incremento de f-R4: [comandos retenidos antes del commit físico](f-r4-prepared-world-commands-20261114.md).
+Último incremento de f-R4: [comandos preparados de terreno y props](f-r4-prepared-terrain-commands-20261114.md).
 Publicaciones ordinarias y aceptación integrada de personajes autónomos siguen pendientes; no cambia el recuento de cierres.
 
 **Ningún punto principal está cerrado todavía.** Un subpunto marcado como nativo

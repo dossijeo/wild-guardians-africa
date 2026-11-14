@@ -20,6 +20,18 @@ async function fixture({prepareProposal,receiverOptions={},producerOptions={},tr
  return {producer,receiver,errors,live,changes,prepared,initialChanges,get prepares(){return prepares;},get commits(){return commits;},get aborts(){return aborts;},async dispose(){producer.dispose();receiver.dispose();await tick();}};
 }
 
+test('terrain channel carries the prepared consumer boundary without activating logical terrain',async()=>{
+ const f=await fixture({prepareProposal:(messages,options,make)=>({...make(messages),preparedWorldBoundary:options.proposedWorldBoundary})});try{
+  const h=await f.producer.prepareNativeWorldResources({proposedWorldBoundary:boundary,resources:resources()});assert.deepEqual(h.preparedWorldBoundary,boundary);assert.equal(h.valid(),true);assert.deepEqual([...f.live],[[0,1],[1,1]]);h.abort();await until(()=>f.aborts===1);assert.equal(h.valid(),false);
+ }finally{await f.dispose();}
+});
+
+test('a consumer proof for another world ticket rejects the terrain reservation before effect',async()=>{
+ const f=await fixture({prepareProposal:(messages,options,make)=>({...make(messages),preparedWorldBoundary:{...options.proposedWorldBoundary,ticket:2}})});try{
+  await assert.rejects(f.producer.prepareNativeWorldResources({proposedWorldBoundary:boundary,resources:resources()}),/commands identity/);await until(()=>f.aborts===1);assert.deepEqual([...f.live],[[0,1],[1,1]]);assert.equal(f.receiver.status().closed,false);
+ }finally{await f.dispose();}
+});
+
 test('native delta prepares before publication and transfers its real batch once without rebuilding unchanged revisions',async()=>{
  const f=await fixture();try{
   const r=resources(),handle=await f.producer.prepareNativeWorldResources({proposedWorldBoundary:boundary,resources:r});

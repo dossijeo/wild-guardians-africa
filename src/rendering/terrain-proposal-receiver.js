@@ -3,7 +3,8 @@ import {sameTerrainResourcePayload} from '../world/terrain-resource-payload.js';
 import {estimateRetainedBytes} from '../simulation/retained-size.js';
 
 // Uses the real terrain/biome batch preparer and its reservations. No second
-// coordinator or live scene mutation is allowed while a proposal is preparing.
+// coordinator or persistent scene mutation is allowed during preparation. A
+// synchronous command capture restores its render selection before yielding.
 export function createTerrainProposalReceiver({port,session,snapshot,prepare,validate,maxHistory,maxHistoryBytes,onChange,onError}){
  let slot=null,closed=false,lastId=0;
  const reply=(kind,item,extra={})=>port.postMessage({kind,session,epoch:item.epoch,id:item.id,sequence:item.sequence,worldBoundary:item.boundary,...extra});
@@ -30,7 +31,8 @@ export function createTerrainProposalReceiver({port,session,snapshot,prepare,val
    if(!current(item)){handle?.abort();if(slot===item){cancel();reply('terrainProposalInvalidated',item);}return;}
    item.handle=handle;
    if(!handle||['valid','commit','abort'].some(key=>typeof handle[key]!=='function')||handle.valid()!==true||handle.canonicalPropsUnmasked!==true){throw Error('Native terrain proposal GPU resources unavailable');}
-   item.handle=handle;item.phase='ready';reply('terrainProposalReady',item);onChange();
+   const prepared=copyNativeWorldBoundary(handle.preparedWorldBoundary??null);if(prepared&&!sameNativeWorldBoundary(prepared,boundary))throw Error('Native terrain prepared commands identity mismatch');
+   item.handle=handle;item.phase='ready';reply('terrainProposalReady',item,prepared?{preparedWorldBoundary:prepared}:{});onChange();
   }).catch(error=>{if(slot!==item||closed)return;try{cancel();}finally{reply('terrainProposalRejected',item,{message:String(error.message??error)});}}).catch(onError);
   return true;
  }

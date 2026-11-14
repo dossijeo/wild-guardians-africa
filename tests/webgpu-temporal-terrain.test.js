@@ -54,6 +54,15 @@ function identityOptions({onPreparedIdentity,onDiscardIdentity,prepareBatch,sign
  return {scene:new Scene(),suppressed:[],signal,validateInstances(){},publicationEpoch:epoch=>epoch,publicationOrder:()=>++next,onPreparedIdentity,onDiscardIdentity,residency:{prepareRevision(){return token;}},biome:{ready:Promise.resolve(true),async requestSlots(){},prepareRevision(){return token;}},coordinator:{prepareBatch}};
 }
 
+test('unsupported presentation support aborts all prepared owners before dependent admission',async()=>{
+ const aborted=[],options=identityOptions({prepareBatch(){assert.fail('unsupported support reached GPU admission');}});
+ options.residency.prepareRevision=()=>({surfaceMesh:{},participant(){assert.fail('unsupported support consumed a participant');},abort(){aborted.push('terrain');}});
+ options.biome.prepareRevision=()=>({participant(){assert.fail('unsupported support consumed a participant');},abort(){aborted.push('biome');}});
+ options.prepareDependents=()=>assert.fail('unsupported support reached dependents');
+ options.validatePresentationSupport=view=>{assert.equal(view.changedKeys.has('0,0'),true);assert.ok(view.get(0,0));throw Error('unprepared entity support');};
+ await assert.rejects(prepareWebGpuTemporalTerrain([message(0,0)],options),/unprepared entity support/);assert.deepEqual(aborted,['biome','terrain']);
+});
+
 test('history receiver forwards only the identity of the batch it committed',async()=>{
  const {createConfirmedTerrainReceiver}=await import('../src/rendering/confirmed-terrain-receiver.js');
  const input=message(0,0),observed=[],discarded=[],applied=[],options=identityOptions({onPreparedIdentity:(payload,id)=>observed.push({payload,id}),onDiscardIdentity:(payload,id)=>discarded.push({payload,id}),prepareBatch:async()=>({commit:()=>true,abort:()=>true})});

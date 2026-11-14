@@ -11,7 +11,8 @@ function samePayloads(expected,actual){const map=new Map(actual.map(p=>[`${p.cx}
 
 // A single speculative revision set on the existing terrain channel. Preparing
 // does not stage/commit authority data. commit transfers the GPU reservation to
-// the next ordinary confirmed batch; that batch still owns visible activation.
+// the next ordinary confirmed batch for logical scene adoption. If the consumer
+// retained prepared commands, the direct physical release owns their display.
 export function createTerrainProposalPublication({port,session,epoch,snapshot,staged,limits,available,timeoutMs=10000}){
  let slot=null,serial=0,closed=false;
  const send=(kind,item)=>port.postMessage({kind,session,epoch,id:item.id,sequence:item.sequence,worldBoundary:item.boundary});
@@ -33,7 +34,7 @@ export function createTerrainProposalPublication({port,session,epoch,snapshot,st
   item.timer=setTimeout(()=>abort(item,Error('Native terrain proposal preparation timed out')),timeoutMs);
   try{port.postMessage({kind:'terrainProposal',session,epoch,id:item.id,sequence,baseSequence:base.sequence,worldBoundary:boundary,messages,bytes});}catch(error){abort(item,error);}
   await ready;
-  return {valid:()=>valid(item),commit({worldBoundary,resources:committed}={}){
+  return {...(item.preparedWorldBoundary?{preparedWorldBoundary:item.preparedWorldBoundary}:{}),valid:()=>valid(item),commit({worldBoundary,resources:committed}={}){
    const current=snapshot();
    if(slot!==item||item.phase!=='ready'||closed||item.signal?.aborted||current.sequence!==item.baseSequence||!sameNativeWorldBoundary(copyNativeWorldBoundary(worldBoundary),item.boundary)||committed?.kind!==item.kind||!item.messages.every(m=>current.revision(m.payload.cx,m.payload.cz)+1===m.revision)||!samePayloads(payloads,resourcePayloads(committed,item.boundary,false))||!samePayloads(payloads,staged()))throw Error('Native terrain proposal commit differs from preparation');
    send('terrainProposalCommit',item);clearTimeout(item.timer);item.timer=null;item.phase='armed';item.signal?.removeEventListener('abort',item.onAbort);return true;
@@ -46,6 +47,7 @@ export function createTerrainProposalPublication({port,session,epoch,snapshot,st
   if(data.kind==='terrainProposalInvalidated'){if(data.sequence!==item.sequence||!sameNativeWorldBoundary(copyNativeWorldBoundary(data.worldBoundary),item.boundary))throw Error('Native terrain proposal invalidation mismatch');abort(item,Error('Native terrain proposal became stale'));return true;}
   if(item.phase!=='preparing'||data.sequence!==item.sequence||!sameNativeWorldBoundary(copyNativeWorldBoundary(data.worldBoundary),item.boundary))throw Error('Native terrain proposal response mismatch');
   if(data.kind==='terrainProposalRejected'){abort(item,Error(data.message||'Native terrain proposal preparation rejected'));return true;}
+  const prepared=copyNativeWorldBoundary(data.preparedWorldBoundary??null);if(prepared&&!sameNativeWorldBoundary(prepared,item.boundary)){abort(item,Error('Native terrain prepared commands identity mismatch'));return true;}item.preparedWorldBoundary=prepared;
   item.phase='ready';item.resolve();item.resolve=item.reject=null;return true;
  }
  return {prepare,accept,onStage(payload){if(slot&&(slot.phase==='preparing'||!slot.messages.some(m=>sameTerrainResourcePayload(m.payload,payload))))abort(slot,Error('Native terrain proposal invalidated by staged resources'));},beforePublication(sequence){if(!slot)return;if(slot.phase!=='armed'){abort(slot);return;}if(sequence!==slot.sequence||!samePayloads(slot.messages.map(m=>m.payload),staged()))throw Error('Native terrain proposal publication differs from preparation');slot=null;},cancel(){if(slot)abort(slot);},dispose(){closed=true;if(slot)abort(slot);},status(){return slot?{phase:slot.phase,sequence:slot.sequence,worldBoundary:slot.boundary}:null;}};

@@ -35,6 +35,7 @@ export function createWebGpuReplacementSlot({pipelineAdmission,resourceRegistry=
   const valid=()=>!closed&&!finished&&!controller.signal.aborted&&prepared===item&&!pending&&active===(finalized?item:previous)&&desiredKey===(finalized?key:priorKey)&&object.parent===group&&object.visible===attached&&previous.object.parent===group;
   const check=()=>{if(!valid())throw Error('Prepared replacement became stale');};
   const participant={object,include:[object],signal:controller.signal,valid,eventRoots:()=>[object,previous.object],
+   presentation:()=>({show:[object],hide:[previous.object]}),
    activate(){check();if(activated)throw Error('Prepared replacement already activated');activated=true;return true;},
    attach(){check();if(!activated||attached)throw Error('Prepared replacement not activated');object.visible=true;attached=true;},
    rollback(){object.visible=false;attached=false;},

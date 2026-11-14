@@ -5,6 +5,8 @@ Continúa el [plan integrado](integrated-gpu-migration-plan-20261104.md) y el
 [motor preparado independiente del actor](f-r4-prepared-gate-motor-20261114.md).
 Los once padres A6 y e-R3/e-R4/f-R4 siguen abiertos.
 
+Continúa con [comandos preparados de terreno y props](f-r4-prepared-terrain-commands-20261114.md); los cierres globales siguen pendientes.
+
 ## Cambio efectivo
 
 El consumidor conserva ahora el paquete de dibujo del mundo propuesto antes

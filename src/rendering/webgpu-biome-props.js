@@ -211,6 +211,7 @@ export function createWebGpuBiomeProps({scene,state,pipelineAdmission=null,resou
    participant(){if(phase!=='prepared'||external)throw Error('Biome batch participant unavailable');if(!Number.isSafeInteger(publicationOrder)||publicationOrder<1)throw Error('Biome batch requires publication order');if(base?.pending||base?.visibleExtra)throw Error('Biome batch has an existing pending revision');const controller=new AbortController(),pending={controller,meshes:next,group},batch={controller,pending,finalized:null};external=batch;
     const current=()=>!closed&&phase==='logical'&&chunks.get(key)===entry&&versions.get(key)===revision&&entry.pending===pending&&!controller.signal.aborted;
     const participant={key,epoch:publicationEpoch,revision:publicationRevision,publicationOrder,side:'biome',object:group,signal:controller.signal,preparationObjects(){return [group,...retainedParents];},eventRoots(){return [...new Set([group,...(base?.meshes??[]).map(mesh=>mesh.parent&&mesh.parent!==scene?mesh.parent:mesh)])];},
+     presentation(){return {show:[group],hide:(base?.meshes??[]).filter(mesh=>!retained.has(mesh))};},
      activate(){if(phase!=='prepared'||base?.pending||base?.visibleExtra)throw Error('Biome batch activation is stale');token.applyLogical();entry.pending=pending;return true;},
      attach(){if(!current())throw new DOMException('Biome batch cancelled','AbortError');try{scene.add(group);if(!current())throw new DOMException('Biome batch cancelled','AbortError');}catch(error){if(group.parent===scene)group.removeFromParent();throw error;}},
      rollback(){if(group.parent===scene)group.removeFromParent();},
@@ -237,6 +238,7 @@ export function createWebGpuBiomeProps({scene,state,pipelineAdmission=null,resou
    if(phase!=='prepared'||leased)throw Error('Biome removal participant unavailable');leased=true;
    return {key,epoch:publicationEpoch,revision:publicationRevision,publicationOrder,side:'biome',object:group,signal:controller.signal,
     eventRoots(){return [...new Set([group,...(base?.meshes??[]).map(mesh=>mesh.parent&&mesh.parent!==scene?mesh.parent:mesh)])];},
+    presentation(){return {show:[group],hide:base?.meshes??[]};},
     activate(){if(phase!=='prepared'||!current()||chunks.get(key)!==base||versions.get(key)!==baseVersion)throw Error('Prepared biome removal is stale');validateTerrainResourceRemoval(payload);
      if(base){invalidateFar(base,'remove');indexProps(propChunks,key,base.instances,false);}chunks.delete(key);versions.set(key,revision);phase='logical';return true;},
     attach(){if(phase!=='logical'||!current()||chunks.has(key)||versions.get(key)!==revision)throw Error('Biome removal is stale');scene.add(group);},

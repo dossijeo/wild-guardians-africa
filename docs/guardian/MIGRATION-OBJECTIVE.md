@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [comandos retenidos antes del commit físico](f-r4-prepared-world-commands-20261114.md).
+Último avance: [comandos preparados de terreno y props](f-r4-prepared-terrain-commands-20261114.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio

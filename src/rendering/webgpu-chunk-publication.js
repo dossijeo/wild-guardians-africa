@@ -58,8 +58,27 @@ export function createChunkPublicationCoordinator({admission,onError=()=>{},boot
   try{const requests=[];for(const part of preparationOrder){const objects=part.preparationObjects?.()??[part.object],roots=part.eventRoots();if(!Array.isArray(objects)||!objects.length||!objects.includes(part.object)||new Set(objects).size!==objects.length||objects.some(object=>!object?.isObject3D||!roots.includes(object)))throw TypeError('Invalid chunk batch preparation roots');for(const object of objects)requests.push({part,object});}
    const tickets=[];for(const {part,object} of requests){if(!active||controller.signal.aborted)throw new DOMException('Chunk batch cancelled','AbortError');tickets.push(await admission.prepareTicket(object,{signal:controller.signal,include:part.include??[],...(requireShadowTarget?{requireShadowTarget:true}:{})}));}if(!active||closed||!ownersCurrent()||tickets.some(ticket=>typeof ticket?.valid!=='function'||!ticket.valid()))throw Error('Chunk batch admission became stale');
    const valid=()=>active&&!closed&&!controller.signal.aborted&&ownersCurrent()&&tickets.every(ticket=>ticket.valid());
-   return {valid,commit(){
-    if(!valid()){cancel();throw Error('Chunk batch admission became stale');}
+   // Select prepared objects for one synchronous recording, then restore the
+   // exact live graph. Logical ownership and the batch reservation stay intact.
+   function capturePresentation(record){
+    if(typeof record!=='function'||committing||!valid())throw Error('Chunk presentation capture unavailable');
+    assertNoSynchronousObservers(scene,parts);
+    const shown=new Set(),hidden=new Set(),allowed=new Set();
+    for(const part of parts){for(const root of part.eventRoots())root.traverse(object=>allowed.add(object));const selection=part.presentation?.();if(!selection||!Array.isArray(selection.show)||!Array.isArray(selection.hide))throw Error('Chunk owner has no prepared presentation');for(const object of selection.show)shown.add(object);for(const object of selection.hide)hidden.add(object);}
+    if([...shown,...hidden].some(object=>!object?.isObject3D||!allowed.has(object))||[...shown].some(object=>hidden.has(object)))throw Error('Conflicting prepared chunk presentation');
+    const attached=[],visibility=new Map([...shown,...hidden].map(object=>[object,object.visible]));let result,failure;
+    committing=true;
+    try{
+     for(const object of shown){if(object.parent===null){attached.push(object);scene.add(object);}object.visible=true;}
+     for(const object of hidden)object.visible=false;
+     if([...shown].some(object=>{let root=object;while(root.parent)root=root.parent;return root!==scene;}))throw Error('Prepared chunk presentation is detached from its scene');
+     result=record();if(result&&typeof result.then==='function')throw Error('Chunk presentation capture must be synchronous');
+    }catch(error){failure=error;}
+    finally{for(const [object,visible] of visibility)object.visible=visible;for(const object of attached.reverse())object.removeFromParent();committing=false;}
+    if(failure||!valid()){cancel();throw failure??Error('Chunk presentation changed while recording');}return result;
+   }
+   return {valid,capturePresentation,commit(){
+    if(committing||!valid()){cancel();throw Error('Chunk batch admission became stale');}
     const attached=[],finalizing=[],notifications=[];
     const assertCurrent=()=>{if(closed||controller.signal.aborted)throw Error('Chunk batch admission became stale');};
     const assertValid=(afterAttach=false)=>{assertCurrent();if(!ownersCurrent()||tickets.some(ticket=>!(afterAttach?ticket.validAfterAttach?.()??ticket.valid():ticket.valid())))throw Error('Chunk batch admission became stale');};

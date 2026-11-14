@@ -3,6 +3,7 @@ import {captureNativeRoutePickFrame} from './native-route-pick-frame.js';
 import {copyNativeGateMotionResources} from '../world/native-gate-motion-resources.js';
 import {sameNativeGatePresentations} from '../world/native-gate-presentation.js';
 import {installRemoteTexturePreparation} from './remote-texture-preparation.js';
+import {assertNativeTerrainPresentationSupport} from './native-terrain-presentation-support.js';
 import {copyNativeWorldBoundary,reconcileNativeWorldResources,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {prepareNativeWorldFrameBoundary} from './webgpu-native-world-admission.js';
 import {installWebGpuTextureBindingInitialization} from './webgpu-texture-binding-initialization.js';
@@ -148,11 +149,26 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
   if(state)sky=createWebGpuNativeSky({scene,pipelineAdmission,resourceRegistry,onError,...(waterEnvironment?{onEnvironment:(images,slope)=>waterEnvironment.install(images,state.biome==='volcanes'||state.biome==='desierto'?null:slope)}:{})});
   const earlyBiome=import.meta.env?.DEV&&experimentalMinimalWorld&&experimentalEarlyBiome;
   if(state&&(!(import.meta.env?.DEV&&experimentalMinimalWorld)||earlyBiome)){const biomeOwner=resourceRegistry.createBank({namespace:'world-biome',load:()=>createWebGpuBiomeProps({scene,state,pipelineAdmission,resourceRegistry,coordinator:chunkCoordinator,onGroundContactChange:event=>{if(event.kind==='replace')groundContacts?.replace(event.payload);else if(event.kind==='remove')groundContacts?.remove(event.cx,event.cz);if(grassTimeline)grassTimeline.biome(event);else if(event.kind==='replace')grassOwner?.syncChunk(`${event.payload.cx},${event.payload.cz}`);else if(event.kind==='remove')grassOwner?.removeChunk(`${event.cx},${event.cz}`);},onError,onSelectableChange:()=>{onSelectableChange();farCoverage?.retry();},initialLodEye:()=>{const pose=getBootstrapCamera?.()??initialCamera;return pose?[pose.x,pose.y,pose.z]:null;},instanceContract:experimentalBiomeAttributes?'attributes':'native',confirmedClock:visualClock,biomePack,demandDriven:!earlyBiome,imageLoader:(url,options)=>characterData.loadBitmap(url,options),byteLoader:(url,options)=>characterData.loadArrayBuffer(url,options),nativeBc7:renderer.hasFeature('texture-compression-bc'),bc7Loader:(url,options)=>characterData.loadNativeBc7(url,options),fluidMaterial:waterAssetMaterial??null,experimentalShadowCutout:experimentalBiomeShadowCutout,...(cameraTerrainEnabled?{onCameraTreeChunk}:{}),...(earlyBiome?{initialSlots:[0]}:{})}),validate:value=>typeof value?.dispose==='function'});biomePropsLease=await biomeOwner.acquire(state.biome);biomeProps=biomePropsLease.asset;checkBootstrap();if(earlyBiome){const props=biomeProps;void (async()=>{if(!await props.ready)return;for(let slot=1;slot<20&&!closed;slot++){await new Promise(resolve=>setTimeout(resolve,0));if(closed)return;await props.requestSlots([slot]);}})().catch(()=>{});}}
-  async function prepareNativeTerrainProposal(messages,{signal:proposalSignal}){
-   const suppressed=[...(state.suppressed??[])],unchanged=()=>!closed&&!proposalSignal.aborted&&JSON.stringify(state.suppressed??[])===JSON.stringify(suppressed);
-   const raw=messages.length?await prepareWebGpuTemporalTerrain(messages,{signal:proposalSignal,scene,residency,biome:biomeProps,coordinator:chunkCoordinator,publicationEpoch:livePublicationEpoch,publicationOrder:()=>publicationEpochs.order(),validateInstances:assertCoordinatedChunkInstances,suppressed,mudPreparer,prepareDependents:view=>settlements?.prepareVillageTerrain(view)??[],...(grassTimeline?{onPreparedIdentity:grassTimeline.prepared,onDiscardIdentity:grassTimeline.discarded}:{})}):null;
+  async function prepareNativeTerrainProposal(messages,{signal:proposalSignal,proposedWorldBoundary}){
+   const routesIdle=()=>{const status=workers?.status();return !status?.native&&!status?.nativePreparing;};
+   if(remoteGpu&&(nativeGateProposal||nativeRoutePreparations||!routesIdle()))throw Error('Native terrain commands require projected route assignments before recording moving actors');
+   const suppressed=[...(state.suppressed??[])],unchanged=()=>!closed&&!proposalSignal.aborted&&(!remoteGpu||routesIdle())&&JSON.stringify(state.suppressed??[])===JSON.stringify(suppressed);
+   const raw=messages.length?await prepareWebGpuTemporalTerrain(messages,{signal:proposalSignal,scene,residency,biome:biomeProps,coordinator:chunkCoordinator,publicationEpoch:livePublicationEpoch,publicationOrder:()=>publicationEpochs.order(),validateInstances:assertCoordinatedChunkInstances,suppressed,mudPreparer,...(remoteGpu?{validatePresentationSupport:view=>assertNativeTerrainPresentationSupport({state,residency,view})}:{}),prepareDependents:view=>settlements?.prepareVillageTerrain(view)??[],...(grassTimeline?{onPreparedIdentity:grassTimeline.prepared,onDiscardIdentity:grassTimeline.discarded}:{})}):null;
    try{await pipelineAdmission.completePreparation({signal:proposalSignal});if(!unchanged())throw new DOMException('Native terrain proposal cancelled','AbortError');}catch(error){raw?.abort();throw error;}
-   let active=true;return {canonicalPropsUnmasked:raw?.canonicalPropsUnmasked??true,valid:()=>active&&unchanged()&&(!raw||raw.valid()===true),commit(){if(!active||!unchanged()){raw?.abort();active=false;throw Error('Native terrain proposal suppression became stale');}active=false;return raw?.commit()??true;},abort(){if(!active)return false;active=false;return raw?.abort()??true;},identityFor:payload=>raw?.identityFor?.(payload)??null};
+   let active=true,preparedFrame=null,blocked=false;
+   const unblock=()=>{if(!blocked)return;blocked=false;nativeRoutePreparations--;onPresentationReady();};
+   try{if(remoteGpu){
+    const boundary=copyNativeWorldBoundary(proposedWorldBoundary);if(!boundary)throw Error('Native terrain frame requires a proposed boundary');
+    nativeRoutePreparations++;blocked=true;
+    try{await remoteGpu.whenFrameSettled();}catch(error){if(!['remote-frame-native-route-obsolete','remote-frame-native-mutation-obsolete'].includes(error?.code))throw error;}
+    if(!unchanged()||raw&&raw.valid()!==true)throw Error('Native terrain changed before recording');
+    remoteGpu.beginFrame({nativeWorldBoundary:boundary});sun.shadow.needsUpdate=true;renderer.shadowMap.needsUpdate=true;
+    try{const record=()=>{if(!renderScene())throw Error('Native prepared terrain scene is not ready');};if(raw)raw.capturePresentation(record);else record();preparedFrame=await remoteGpu.prepareNativeWorldFrame(remoteFrameMetadata(boundary),{signal:proposalSignal});}catch(error){remoteGpu.cancelFrame();throw error;}
+   }}catch(error){raw?.abort();preparedFrame?.abort();unblock();throw error;}
+   return {canonicalPropsUnmasked:raw?.canonicalPropsUnmasked??true,...(preparedFrame?{preparedWorldBoundary:preparedFrame.preparedWorldBoundary}:{}),valid:()=>active&&unchanged()&&(!raw||raw.valid()===true)&&(!preparedFrame||preparedFrame.valid()),
+    commit(){if(!active||!unchanged()){raw?.abort();preparedFrame?.abort();active=false;unblock();throw Error('Native terrain proposal suppression became stale');}active=false;
+     try{const result=raw?.commit()??true;if(result!==true)throw Error('Native prepared terrain batch not retained');if(preparedFrame){if(!preparedFrame.commit(preparedFrame.preparedWorldBoundary))throw Error('Native prepared terrain commands not retained');void preparedFrame.presented.then(unblock,error=>{unblock();if(!closed)onError(error);});}else unblock();return true;}catch(error){preparedFrame?.abort();unblock();throw error;}},
+    abort(){if(!active)return false;active=false;preparedFrame?.abort();unblock();return raw?.abort()??true;},identityFor:payload=>raw?.identityFor?.(payload)??null};
   }
   const nativePublicationWaiters=new Set();
   function wakeNativePublications(error=null){for(const item of nativePublicationWaiters){if(!error&&(stream?.status().sequence??-1)<item.sequence)continue;nativePublicationWaiters.delete(item);item.cleanup();error?item.reject(error):item.resolve();}}
@@ -252,7 +268,7 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
   // Resource preparation only. Permission and elapsed time remain owned by
   // native direct control on the draw Worker; this API cannot authorize either.
   async function prepareNativeRoute(actorId,packet,{terrainManifest,signal:routeSignal}={}){
-   const status=terrain.status();if(closed||!remoteGpu||!workers||!state||nativeFrameReadiness(nativeFrameState())!=='ready'||status.closed||status.pending||status.presentationPending)throw Error('Native route surface unavailable');
+   const status=terrain.status();if(closed||!remoteGpu||!workers||!state||nativeFrameReadiness(nativeFrameState())!=='ready'||status.closed||status.nativeProposal||status.pending||status.presentationPending)throw Error('Native route surface unavailable');
    nativeRoutePreparations++;
    try{
     terrainSupport??=createConfirmedTerrainSupport({residency});
@@ -264,7 +280,7 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
   }
   async function prepareNativeGateResources(value,{signal:callerSignal,minSequence=-1}={}){
    const resources=copyNativeGateMotionResources(value),boundary=resources.worldBoundary;
-   if(closed||!remoteGpu||!state||nativeGateProposal||resources.phase!=='proposal'||callerSignal?.aborted||!Number.isSafeInteger(minSequence)||minSequence< -1||terrain.status().pending||terrain.status().presentationPending)throw Error('Native gate resource surface unavailable');
+   if(closed||!remoteGpu||!state||nativeGateProposal||resources.phase!=='proposal'||callerSignal?.aborted||!Number.isSafeInteger(minSequence)||minSequence< -1||terrain.status().nativeProposal||terrain.status().pending||terrain.status().presentationPending)throw Error('Native gate resource surface unavailable');
    const controller=new AbortController(),abort=()=>controller.abort(),item={descriptor:{phase:'preparing',worldBoundary:boundary},controller};nativeGateProposal=item;nativeRoutePreparations++;callerSignal?.addEventListener('abort',abort,{once:true});
    let participants=[],tickets=[],finished=false,preparedFrame=null,preparedSequence=null;
    const current=()=>!closed&&!finished&&!controller.signal.aborted&&nativeGateProposal===item;

@@ -8,6 +8,31 @@ function fixture(){
  function part(key,side,extra={}){const controller=new AbortController(),name=key+':'+side,object=new Group();return {key,side,epoch:'e',revision:1,publicationOrder:1,object,signal:controller.signal,eventRoots(){return [object];},activate(){calls.push('activate '+name);return true;},attach(){calls.push('attach '+name);},rollback(){calls.push('rollback '+name);},finalize(){calls.push('finalize '+name);return {retire:()=>calls.push('retire '+name),notify:()=>calls.push('notify '+name)};},rollbackFinalized(){calls.push('undo '+name);},cancel(){calls.push('cancel '+name);},...extra};}
  return {coordinator,calls,errors,scene,part,get validations(){return validations;},invalidate(){valid=false;}};
 }
+
+function presentationFixture(){
+ const f=fixture(),old=new Group(),unchanged=new Group();f.scene.add(old,unchanged);
+ const parts=['terrain','biome'].map(side=>f.part('0,0',side));
+ for(const part of parts){part.eventRoots=()=>[part.object,old];part.presentation=()=>({show:[part.object],hide:[old]});}
+ return {...f,parts,old,unchanged};
+}
+
+test('prepared recording selects only the candidate graph and restores it before logical commit',async()=>{
+ const f=presentationFixture();try{const before=[...f.scene.children],batch=await f.coordinator.prepareBatch(f.parts,{scene:f.scene});
+  assert.equal(batch.capturePresentation(()=>{assert.equal(f.old.visible,false);assert.equal(f.unchanged.visible,true);assert.ok(f.parts.every(part=>part.object.parent===f.scene));assert.deepEqual(f.calls,[]);return 42;}),42);
+  assert.deepEqual(f.scene.children,before);assert.equal(f.old.visible,true);assert.ok(f.parts.every(part=>part.object.parent===null));assert.equal(batch.valid(),true);assert.equal(batch.commit(),true);assert.equal(f.calls.filter(call=>call.startsWith('activate')).length,2);
+ }finally{f.coordinator.dispose();}
+});
+
+for(const outcome of ['throw','promise','abort','commit'])test(`prepared recording restores visibility and parents on ${outcome}`,async()=>{
+ const f=presentationFixture(),controller=new AbortController();try{const batch=await f.coordinator.prepareBatch(f.parts,{scene:f.scene,signal:controller.signal}),before=[...f.scene.children];
+  assert.throws(()=>batch.capturePresentation(()=>{if(outcome==='throw')throw Error('recording failed');if(outcome==='promise')return Promise.resolve();if(outcome==='commit')return batch.commit();controller.abort();}),/recording failed|synchronous|changed|stale/);
+  assert.deepEqual(f.scene.children,before);assert.equal(f.old.visible,true);assert.ok(f.parts.every(part=>part.object.parent===null));assert.equal(batch.valid(),false);assert.equal(f.calls.some(call=>call.startsWith('activate')),false);assert.equal(f.calls.filter(call=>call.startsWith('cancel')).length,2);
+ }finally{f.coordinator.dispose();}
+});
+
+test('prepared recording rejects missing owner selection, outside objects and synchronous observers',async()=>{
+ for(const kind of ['missing','outside','observer']){const f=presentationFixture();try{if(kind==='missing')delete f.parts[0].presentation;if(kind==='outside')f.parts[0].presentation=()=>({show:[new Group()],hide:[]});if(kind==='observer')f.old.addEventListener('removed',()=>{});const before=[...f.scene.children],batch=await f.coordinator.prepareBatch(f.parts,{scene:f.scene});assert.throws(()=>batch.capturePresentation(()=>assert.fail('must not record')),/no prepared|Conflicting|synchronous/);assert.deepEqual(f.scene.children,before);assert.equal(f.old.visible,true);assert.deepEqual(f.calls,[]);}finally{f.coordinator.dispose();}}
+});
 test('dependent owners join the same reversible phases without inventing chunk revisions',async()=>{
  const f=fixture(),parts=['terrain','biome'].map(side=>f.part('0,0',side)),dependent=f.part('village','dependent',{valid:()=>true});try{const batch=await f.coordinator.prepareBatch(parts,{scene:f.scene,dependents:[dependent]});assert.equal(batch.valid(),true);batch.commit();assert.deepEqual(f.calls.filter(call=>call.startsWith('finalize ')),['finalize 0,0:terrain','finalize 0,0:biome','finalize village:dependent']);assert.equal(f.calls.filter(call=>call.startsWith('notify ')).length,3);assert.deepEqual(f.errors,[]);}finally{f.coordinator.dispose();}
 });
