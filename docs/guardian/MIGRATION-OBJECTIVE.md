@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [selección con el reloj presentado de cada asignación](f-r4-native-input-clock-20261114.md).
+Último avance: [puerta original y trabajador bajo el mismo tiempo nativo](f-r4-native-gate-graphics-20261114.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio

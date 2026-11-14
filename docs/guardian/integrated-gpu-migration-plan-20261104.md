@@ -1,6 +1,6 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
-Continuación 2026-11-14: [selección con el reloj presentado de cada asignación](f-r4-native-input-clock-20261114.md).
+Continuación 2026-11-14: [puerta original y trabajador bajo el mismo tiempo nativo](f-r4-native-gate-graphics-20261114.md).
 Se conserva el orden A → B → C → D; la reproducción nativa avanza como componente, pero la admisión ordinaria y la aceptación integrada siguen pendientes.
 
 Revisión del 5 de noviembre de 2026. Rama de trabajo: `codex/guardian-3d-animation`. Este documento sustituye la secuencia del plan del 4 de noviembre; su versión anterior permanece en Git. Estado: plan de implementación, no arquitectura ya terminada.

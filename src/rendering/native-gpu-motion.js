@@ -20,8 +20,9 @@ export function createNativeGpuMotion({actorId,support,anchorYaw=0,heightOffset=
  let disposed=false,lease=null;
  try{if(resourceRegistry){lease=resourceRegistry.adopt({namespace:'native-gpu-motion',key:String(++nextResource),bytes:table.data.byteLength,dispose:()=>texture.dispose()});lease.commit();}}catch(error){if(lease)lease.release();else texture.dispose();throw error;}
  const load=(index,column)=>textureLoad(texture,ivec2(index.mod(int(parameters.y)).mul(5).add(column),index.div(int(parameters.y))));
+ const timeNode=clamp(clockNode.sub(clockNode.abs().max(1).mul(.000000476837158203125)),float(0),parameters.z);
  const state=Fn(()=>{
-  const time=clamp(clockNode.sub(clockNode.abs().max(1).mul(.000000476837158203125)),float(0),parameters.z).toVar(),low=int(0).toVar(),high=int(parameters.x).toVar();
+  const time=timeNode.toVar(),low=int(0).toVar(),high=int(parameters.x).toVar();
   // Upper bound, then its predecessor: categorical values are right-continuous
   // at native knots. 15 bisections cover every supported 16385-row resource.
   Loop(15,()=>{If(low.lessThan(high),()=>{const middle=low.add(high).div(int(2)).toVar();If(load(middle,0).x.lessThanEqual(time),()=>{low.assign(middle.add(1));}).Else(()=>{high.assign(middle);});});});
@@ -35,7 +36,7 @@ export function createNativeGpuMotion({actorId,support,anchorYaw=0,heightOffset=
  // Reduce the epoch by the clip period before converting it to a GPU float.
  function idleDuration(duration){if(!Number.isFinite(duration)||duration<=0)throw Error('Native idle requires its clip duration');}
  function unbind(material){return unbindGpuMotionMaterial(bindings,material);}
- return {actorId,clockNode,bindingAnchor,phaseNode:state.get('phases').x,runPhaseNode:phases.Run,walkPhaseNode:phases.Walk_Skip,carryPhaseNode:phases.Carry_Crate,runningNode:state.get('mode').x,idleNode:state.get('mode').y.lessThanEqual(0),currentSpeedNode:state.get('mode').y,arrivedNode:state.get('mode').z,
+ return {actorId,clockNode,timeNode,bindingAnchor,phaseNode:state.get('phases').x,runPhaseNode:phases.Run,walkPhaseNode:phases.Walk_Skip,carryPhaseNode:phases.Carry_Crate,runningNode:state.get('mode').x,idleNode:state.get('mode').y.lessThanEqual(0),currentSpeedNode:state.get('mode').y,arrivedNode:state.get('mode').z,
   bind(material){if(disposed)throw Error('Native GPU motion disposed');return bindGpuMotionMaterial(bindings,material,transform);},unbind,
   resolve(fallback,clip,duration){if(disposed)throw Error('Native GPU motion disposed');if(clip==='Idle'){idleDuration(duration);let node=idlePhases.get(duration);if(!node){node=uniform(table.epoch%duration).add(state.get('mode').w);idlePhases.set(duration,node);}return node;}if(!Object.hasOwn(phases,clip))throw Error('Unsupported native animation phase');return phases[clip];},
   sampleForClip(at,clip,duration){if(disposed)throw Error('Native GPU motion disposed');const value=sampleNativeRouteGpuTable(table,at);if(clip==='Idle'){idleDuration(duration);return Math.fround(Math.fround(table.epoch%duration)+Math.fround(value.relativeTime));}if(!Object.hasOwn(phaseFields,clip))throw Error('Unsupported native animation phase');return value[phaseFields[clip]];},

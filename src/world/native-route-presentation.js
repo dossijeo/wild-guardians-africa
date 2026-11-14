@@ -1,4 +1,5 @@
 import {copyNativeRouteReference} from './native-route-reference.js';
+import {copyNativeGatePresentation} from './native-gate-presentation.js';
 import {copyNativeWorldBoundary} from './native-world-boundary.js';
 
 // A copied resource description, not permission to execute or replay a route.
@@ -28,5 +29,9 @@ export function copyNativeRoutePresentation(value){
   for(let column=0;column<width;column++)if(!Number.isFinite(rows[i+column]))throw TypeError('Invalid native presentation sample');
   if(i>0&&rows[i]<=rows[i-width]||!Number.isSafeInteger(rows[i+6])||rows[i+6]<0||![0,1].includes(rows[i+7])||![0,1].includes(rows[i+14])||rows[i+15]<0)throw TypeError('Invalid native presentation interval');
  }
- return Object.freeze({kind:value.kind,version:value.version,rowWidth:width,nativeRoute,worldBoundary,startTime:value.startTime,endTime:value.endTime,motionMode:value.motionMode,motionFlags,profile:value.profile,radius:value.radius,executionScope:value.executionScope,nativeCrossingAdmitted:value.nativeCrossingAdmitted,authorizedAutonomy:false,rows:rows.slice()});
+ const sources=value.gates??[];
+ if(!Array.isArray(sources)||sources.length>1024||sources.length&&!value.nativeCrossingAdmitted)throw TypeError('Invalid native route gate resources');
+ const gates=sources.map(gate=>copyNativeGatePresentation(gate,{nativeRoute,startTime:value.startTime,endTime:value.endTime}));
+ if(new Set(gates.map(gate=>gate.gateId)).size!==gates.length)throw TypeError('Duplicate native route gate resource');
+ return Object.freeze({kind:value.kind,version:value.version,rowWidth:width,nativeRoute,worldBoundary,startTime:value.startTime,endTime:value.endTime,motionMode:value.motionMode,motionFlags,profile:value.profile,radius:value.radius,executionScope:value.executionScope,nativeCrossingAdmitted:value.nativeCrossingAdmitted,authorizedAutonomy:false,rows:rows.slice(),gates:Object.freeze(gates)});
 }

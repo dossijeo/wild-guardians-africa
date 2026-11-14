@@ -253,19 +253,20 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
     terrainSupport??=createConfirmedTerrainSupport({residency});
     const support=terrainSupport.prepareNativeRoute(packet,{terrainManifest});if(!support?.valid())throw Error('Native route terrain support unavailable');
     const {nativeRoute,startTime}=support.presentation;
-    const result=await workers.prepareNativeRoute(actorId,support,{signal:routeSignal,getPickTime:()=>{if(!nativePickFrame)throw Error('Native pick requires a consumer frame time');return nativePickFrame.getTime(nativeRoute,startTime);},isCurrent:()=>!closed});
+    const result=await workers.prepareNativeRoute(actorId,support,{signal:routeSignal,getPickTime:()=>{if(!nativePickFrame)throw Error('Native pick requires a consumer frame time');return nativePickFrame.getTime(nativeRoute,startTime);},prepareGateParticipants:options=>settlements.prepareNativeRouteGates(options),isCurrent:()=>!closed});
     if(!result.reused)nativeRouteResourceRevision++;nativeRouteRejected=false;return result;
    }finally{nativeRoutePreparations--;onPresentationReady();}
   }
   function releaseNativeRoute(actorId,ref){const result=workers?.releaseNativeRoute(actorId,ref)??false;if(result){nativeRouteResourceRevision++;nativeRouteRejected=false;onPresentationReady();}return result;}
+  function nativeResourceLease(){const live=[workers?.nativeRouteLease(),settlements?.nativeGateLease()].filter(Boolean);return live.length?{start:Math.max(...live.map(value=>value.start)),end:Math.max(...live.map(value=>value.end))}:null;}
   async function freezeNativePickTime(){
-   if(!workers?.nativeRouteLease())return;
+   if(!nativeResourceLease())return;
    nativePickFrame=null;
    const value=await remoteGpu.inspectAsync();
    if(closed)throw Error('Native consumer pick frame unavailable');nativePickFrame=captureNativeRoutePickFrame(value.consumer);
   }
   function remoteClockLease(){
-   const native=workers?.nativeRouteLease();
+   const native=nativeResourceLease();
    if(!native)return remoteMotionGroup?remoteMotionGroup.remoteLease(visualClock,{blockers:remotePresentationBlockers()}):visualClock?.remoteLease?.()??null;
    const base=visualClock.remoteLease(),elapsed=Math.max(base.elapsed,native.start);
    // This paused envelope describes resident graph coverage. Only the direct

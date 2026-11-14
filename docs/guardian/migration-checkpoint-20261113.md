@@ -296,3 +296,6 @@ Continuación parcial f-R4, 14 de noviembre: [Idle durante esperas nativas](f-r4
 
 
 Continuación parcial f-R4, 14 de noviembre: [selección con el reloj presentado de cada asignación](f-r4-native-input-clock-20261114.md). El consumidor publica el tiempo float32 realmente enviado para cada referencia y origen, después de submit correcto; la entrada normal deja de usar el reloj global para rutas revocadas. Tres pruebas GPU seleccionan al personaje presentado y conservan recursos, dibujos durante bloqueo y drenaje. Hoja gráfica de puerta, autoridad ordinaria e integración A-F/B/C siguen pendientes; no cambian los cierres.
+
+
+Continuación parcial f-R4, 14 de noviembre: [puerta original y trabajador bajo el mismo tiempo nativo](f-r4-native-gate-graphics-20261114.md). La captura C++ copia los motores de las puertas reservadas; Settlements y el roster admiten el grupo con los tickets existentes. Malla/atributos conservados, giro GPU y entrada con tiempo consumido. Walk/Idle y Carry mantienen 15 dibujos durante 500 ms, primer render sin fábricas y relevo sin shaders/pipelines nuevos. Retiro gráfico del actor conserva la hoja y su selección; no prueba el retiro lógico C++ ni el motor sin intenciones. Siguen pendientes propuestas/commit del motor con recursos preparados, productor/ejecutor ordinarios y aceptación A-F/B/C; no cambian los cierres.

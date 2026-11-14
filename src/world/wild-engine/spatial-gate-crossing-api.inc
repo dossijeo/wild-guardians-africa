@@ -13,6 +13,35 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_route_admitted(double session,double slot,doub
   if(nav_intent_route_points(session,slot,generation)<0)return -1;
   return state().routeSlots[size_t(slot)].gateAdmitted?1:0;
 }
+// Read-only resource capture for one already admitted assignment. No motor,
+// crossing, route, execution clock or physical proof is changed by these reads.
+EMSCRIPTEN_KEEPALIVE int nav_gate_route_presentations_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int nav_gate_route_presentations(double session,double slot,double generation){
+  auto& s=state();s.gateResult.clear();if(nav_intent_route_points(session,slot,generation)<0)return -1;
+  const auto& route=s.routeSlots[size_t(slot)];
+  if(!route.gateAdmitted)return route.gateReservations.empty()?0:-1;
+  if(!route.reserved||!route.timingMode||!gateStaticProofCurrent(s))return -1;
+  for(uint64_t id:route.gateReservations){const auto found=s.gates.find(id);
+    if(found==s.gates.end()||!found->second.mesh)return -2;
+    s.gateResult.push_back(double(id));
+  }
+  return int(s.gateResult.size());
+}
+EMSCRIPTEN_KEEPALIVE int nav_gate_route_presentation(double session,double slot,double generation,double gateId){
+  auto& s=state();s.gateResult.clear();if(nav_intent_route_points(session,slot,generation)<0||!integer(gateId))return -1;
+  const auto& route=s.routeSlots[size_t(slot)];const uint64_t id=uint64_t(gateId);
+  if(!route.gateAdmitted||!route.reserved||!route.timingMode||!gateStaticProofCurrent(s)||
+      std::find(route.gateReservations.begin(),route.gateReservations.end(),id)==route.gateReservations.end())return -1;
+  const auto found=s.gates.find(id);if(found==s.gates.end()||!found->second.mesh)return -2;
+  const auto& gate=found->second;
+  const double begin=route.startTime,end=routeTimeAtDistance(route,route.distances.back());
+  std::vector<double> times{begin,end};for(double at:gateMotionKnots(gate))if(at>begin&&at<end)times.push_back(at);
+  std::sort(times.begin(),times.end());times.erase(std::unique(times.begin(),times.end()),times.end());
+  s.gateResult={gateId,double(gate.mechanism),double(gate.mesh->id),gate.hx,gate.hz};
+  const auto root=gateRootMatrix(gate);s.gateResult.insert(s.gateResult.end(),root.begin(),root.end());
+  for(double at:times)s.gateResult.insert(s.gateResult.end(),{at,gateOpening(gate,at)});
+  return int(times.size());
+}
 // Opt-in native admission only. It does not publish a GPU clock/permission or
 // activate the product runtime. Failure never installs a partial route/motor.
 EMSCRIPTEN_KEEPALIVE int nav_gate_admit_route(double session,double slot,double generation,

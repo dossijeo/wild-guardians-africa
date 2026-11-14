@@ -13,6 +13,8 @@ import {createWebGpuWorkerRoster} from '../src/rendering/webgpu-worker-roster.js
 import {createBakedWorkerWalkTexture,createBakedWorkerRunTexture,createBakedWorkerCarryTexture,createBakedWorkerIdleTexture} from '../src/rendering/webgpu-baked-walk.js';
 import {prepareWorkerClips} from '../src/rendering/worker-clips.js';
 import {createWebGpuResourceRegistry} from '../src/rendering/webgpu-resource-registry.js';
+import {createWebGpuAdmittedWall} from '../src/rendering/webgpu-wall-admission.js';
+import {gateMeshPrototype} from './helpers/gate-mesh-source.js';
 
 async function fixture({nativeMotion={},withRunning=false,initialRunning=false,profile:requestedProfile=null,carrying=false,withCarry=false,withIdle=false,gateHolds=false}={}){
  const f=gateHolds?nativeGateCrossingFixture(gateHolds==='initial'?{}:{materials:['zarzas','empalizada'],positions:[-3,3]}):createNativeRouteExecutionFixture(),scene=new THREE.Scene(),ground=new THREE.MeshBasicMaterial({side:THREE.DoubleSide}),residency=createWebGpuTerrainResidency({scene,material:ground}),chunks=[];f.state.workers=f.state.workers.slice(0,1);const entity=f.state.workers[0];if(requestedProfile){entity.profile=requestedProfile;if(!gateHolds)f.bridge.resetFromState(f.state);}entity.running=initialRunning;entity.walkPhase=entity.runPhase=entity.carryPhase=0;if(carrying){entity.status='carrying';entity.crateId='crate-900020';f.state.crates=[{id:entity.crateId,carrierId:entity.id,delivered:false}];}
@@ -23,8 +25,12 @@ async function fixture({nativeMotion={},withRunning=false,initialRunning=false,p
  const runMeta=withRunning?JSON.parse(await readFile(`public/content/gpu-worker-run/${profile}/walking.json`)):null,runBytes=withRunning?await readFile(`public/content/gpu-worker-run/${profile}/walking.bin`):null,runBake=withRunning?createBakedWorkerRunTexture(runMeta,runBytes.buffer.slice(runBytes.byteOffset,runBytes.byteOffset+runBytes.byteLength)):null;
  const carryMeta=withCarry?JSON.parse(await readFile(`public/content/gpu-worker-carry/${profile}/walking.json`)):null,carryBytes=withCarry?await readFile(`public/content/gpu-worker-carry/${profile}/walking.bin`):null,carryBake=withCarry?createBakedWorkerCarryTexture(carryMeta,carryBytes.buffer.slice(carryBytes.byteOffset,carryBytes.byteOffset+carryBytes.byteLength)):null;
  const renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:material=>new MeshStandardNodeMaterial({color:material.color})}},admission={prepare:async()=>{},deferRelease(_root,release){retired.push(release);},prepareAndPublish(root,options,publish){if(hold){return new Promise((resolve,reject)=>{const abort=()=>reject(new DOMException('Cancelled','AbortError'));options.signal?.addEventListener('abort',abort,{once:true});pending={root,options,finish(){options.signal?.removeEventListener('abort',abort);try{publish();resolve();}catch(error){reject(error);}}};});}publish();return Promise.resolve();}},bank={async acquire(){acquires++;const model=clone(asset.scene);return {model,clips:prepareWorkerClips(asset.animations),library,release(){releases++;const skeletons=new Set();model.traverse(node=>{if(node.isSkinnedMesh)skeletons.add(node.skeleton);});for(const skeleton of skeletons)skeleton.dispose();}};},dispose(){}},roster=createWebGpuWorkerRoster({scene,residency,state:f.state,renderer,assetBank:bank,bakedWalkBank:{get:async()=>bake},bakedIdleBank:idleBake?{get:async()=>idleBake}:null,bakedRunBank:runBake?{get:async()=>runBake}:null,bakedCarryBank:carryBake?{get:async()=>carryBake}:null,pipelineAdmission:admission,resourceRegistry:registry,onError:error=>errors.push(error),onBakedWalkError:(_profile,error)=>errors.push(error)});
+ admission.prepareManyAndPublish=(requests,publish)=>admission.prepareAndPublish(requests[0].object,{...requests[0].options,requests},publish);
+ const gateOwners=new Map(),gateTemplates=[];
+ for(const gate of f.gates??[]){const prototype=gateMeshPrototype(gate.material);prototype.material.dispose();prototype.material=new MeshStandardNodeMaterial({side:THREE.DoubleSide});gateTemplates.push(prototype);const owner=createWebGpuAdmittedWall({prototypes:{[gate.material+'_puerta']:prototype},entity:{...gate,hp:1,maxHp:1},elapsed:10,pipelineAdmission:admission});owner.group.position.set(gate.x,f.session.core.surface(gate.x,gate.z)+.025,gate.z);owner.group.rotation.y=gate.yaw??0;scene.add(owner.group);gateOwners.set(gate.id,owner);}
+ const prepareGateParticipants=({packet,motion,getPickTime,signal})=>{const result=[];try{for(const gate of packet.gates)result.push(gateOwners.get(gate.entityId).prepareNativeGate({presentation:gate,motion,getPickTime,signal}));return result;}catch(error){for(const participant of result)participant.cancel();throw error;}};
  roster.sync();
- return {...f,scene,runBake,bake,carryBake,idleBake,entity,residency,terrain,manifest,handle,packet,support,roster,registry,retired,errors,renderer,get acquires(){return acquires;},get releases(){return releases;},get pending(){return pending;},set hold(value){hold=value;},set pickTime(value){pickTime=value;},getPickTime:()=>pickTime,flush(){for(const release of retired.splice(0))release();},async start(){return roster.prepareNativeRoute(entity.id,support,{getPickTime:()=>pickTime});},next(motion={}){assert.equal(f.bridge.beginNativeRouteExecution().status,'started');assert.equal(f.advance(10.4).status,'advanced');const origin=f.bridge.sampleNativeRoute(handle,10.4);const nextHandle=f.worker(1,origin,f.point(-6,0),motion);const nextPacket=f.bridge.captureNativeRoutePresentation(nextHandle),nextSupport=terrain.prepareNativeRoute(nextPacket,{terrainManifest:manifest});assert(nextSupport);return {handle:nextHandle,packet:nextPacket,support:nextSupport};},close(){roster.dispose();for(const release of retired.splice(0))release();terrain.dispose();residency.dispose();ground.dispose();bake.dispose();runBake?.dispose();carryBake?.dispose();idleBake?.dispose();registry.dispose();f.session.dispose();}};
+ return {...f,scene,gateOwners,prepareGateParticipants,admission,runBake,bake,carryBake,idleBake,entity,residency,terrain,manifest,handle,packet,support,roster,registry,retired,errors,renderer,get acquires(){return acquires;},get releases(){return releases;},get pending(){return pending;},set hold(value){hold=value;},set pickTime(value){pickTime=value;},getPickTime:()=>pickTime,flush(){for(const release of retired.splice(0))release();},async start(){return roster.prepareNativeRoute(entity.id,support,{getPickTime:()=>pickTime,prepareGateParticipants});},next(motion={}){assert.equal(f.bridge.beginNativeRouteExecution().status,'started');assert.equal(f.advance(10.4).status,'advanced');const origin=f.bridge.sampleNativeRoute(handle,10.4);const nextHandle=f.worker(1,origin,f.point(-6,0),motion);const nextPacket=f.bridge.captureNativeRoutePresentation(nextHandle),nextSupport=terrain.prepareNativeRoute(nextPacket,{terrainManifest:manifest});assert(nextSupport);return {handle:nextHandle,packet:nextPacket,support:nextSupport};},close(){roster.dispose();for(const owner of gateOwners.values())owner.dispose();for(const release of retired.splice(0))release();terrain.dispose();residency.dispose();ground.dispose();bake.dispose();runBake?.dispose();carryBake?.dispose();idleBake?.dispose();registry.dispose();for(const template of gateTemplates)template.material.dispose();f.session.dispose();}};
 }
 function geometry(root){const result=[];root.traverse(node=>{if(node.isMesh&&!node.userData.wgCpuPickProxy)result.push({mesh:node,geometry:node.geometry,index:node.geometry.index,position:node.geometry.attributes.position});});return result;}
 function sameGeometry(before){for(const item of before){assert.equal(item.mesh.geometry,item.geometry);assert.equal(item.geometry.index,item.index);assert.equal(item.geometry.attributes.position,item.position);}}
@@ -60,6 +66,36 @@ test('reuse cannot bypass cancellation, caller validity or immutable assignment 
  await assert.rejects(f.roster.prepareNativeRoute(f.entity.id,f.support,{getPickTime:f.getPickTime,isCurrent:()=>false}),/unavailable/);
  const rows=f.packet.rows.slice();rows[4]+=.1;const changed={...f.support,presentation:{...f.packet,rows}};
  await assert.rejects(f.roster.prepareNativeRoute(f.entity.id,changed,{getPickTime:f.getPickTime}),/without a new identity/);assert.equal(f.roster.status().native,1);assert.equal(f.acquires,1);
+ }finally{f.close();}
+});
+
+test('a stale gate in a prepared native cohort leaves the actor and both original walls unchanged',async()=>{
+ const f=await fixture({gateHolds:true,withIdle:true});let pending;
+ try{
+  f.admission.prepareManyAndPublish=(requests,publish)=>new Promise((resolve,reject)=>{pending={requests,finish(){try{publish();resolve();}catch(error){reject(error);}}};});
+  const preparing=f.start();while(!pending)await new Promise(resolve=>setImmediate(resolve));assert.equal(pending.requests.length,3);
+  const actor=f.roster.get(f.entity.id),meshes=geometry(actor.root),materials=meshes.map(item=>item.mesh.material),owners=[...f.gateOwners.values()],walls=owners.map(owner=>owner.parts[0].mesh.material);
+  owners[1].group.position.x+=1;pending.finish();await assert.rejects(preparing,{name:'AbortError'});
+  assert.equal(f.roster.status().native,0);assert.deepEqual(meshes.map(item=>item.mesh.material),materials);assert.deepEqual(owners.map(owner=>owner.parts[0].mesh.material),walls);assert(owners.every(owner=>owner.nativeGateLease===null));f.flush();
+ }finally{f.close();}
+});
+
+test('a gate activation failure rolls back earlier gates before the native actor is published',async()=>{
+ const f=await fixture({gateHolds:true,withIdle:true});try{
+  const original=f.prepareGateParticipants;
+  await assert.rejects(f.roster.prepareNativeRoute(f.entity.id,f.support,{getPickTime:f.getPickTime,prepareGateParticipants(options){const participants=original(options);participants[1].activate=()=>{throw Error('gate activation failed');};return participants;}}),/gate activation failed/);
+  assert.equal(f.roster.status().native,0);assert([...f.gateOwners.values()].every(owner=>owner.nativeGateLease===null));f.flush();
+  // The failed cohort relinquishes its slots, so the same real resources can
+  // subsequently be admitted through the normal shared operation.
+  await f.start();assert.equal(f.roster.status().native,1);assert([...f.gateOwners.values()].every(owner=>owner.nativeGateLease!==null));
+ }finally{f.close();}
+});
+
+test('reusing an assignment rejects a changed native gate curve under the same route reference',async()=>{
+ const f=await fixture({gateHolds:'initial',withIdle:true});try{
+  await f.start();const gate=f.packet.gates[0],rows=gate.rows.slice();rows[1]=.1;
+  await assert.rejects(f.roster.prepareNativeRoute(f.entity.id,{...f.support,presentation:{...f.packet,gates:[{...gate,rows}]}},{getPickTime:f.getPickTime,prepareGateParticipants:f.prepareGateParticipants}),/without a new identity/);
+  assert.equal(f.roster.status().native,1);assert([...f.gateOwners.values()].every(owner=>owner.nativeGateLease!==null));
  }finally{f.close();}
 });
 

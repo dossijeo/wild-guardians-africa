@@ -1,4 +1,5 @@
 import {nativeEntityNumericId as numericId} from '../native-entity-id.js';
+import {copyNativeGatePresentation} from '../native-gate-presentation.js';
 import {centerGeometry,centerServicePoint} from '../centers.js';
 import {contractExpired,PROFILES} from '../../simulation/workforce.js';
 import {observeGameEvents,repairCost} from '../../simulation/game.js';
@@ -827,9 +828,24 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       const values=[at,pose.x,pose.z,pose.distance,pose.phase,right.yaw,right.firstRemainingPoint,right.arrived?1:0,pose.runPhase??0,pose.walkPhase??0,pose.carryPhase??0,pose.runDistance??0,pose.walkDistance??0,pose.runRemaining??0,right.running?1:0,right.currentSpeed??(right.arrived?0:plan.speed)];
       if(!values.every(Number.isFinite))throw Error('Invalid native presentation sample');rows.set(values,i*NATIVE_ROUTE_PRESENTATION_WIDTH);
     }
+    const nativeRoute=Object.freeze({actorId:plan.actorId,assignmentSequence:plan.assignmentSequence,routeHandle:routeHandle(handle.session,handle.slot,handle.generation)});
+    if(wasm.nav_gate_route_presentations_version?.()!==1)throw Error('Rebuild native gate presentation service');
+    const count=wasm.nav_gate_route_presentations(handle.session,handle.slot,handle.generation);
+    if(count<0)throw Error('Native gate presentation unavailable');
+    const ids=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_result_ptr(),count)),gates=ids.map(id=>{
+      const entityId=`structure-${id}`,mechanism=nativeGateMechanism(entityId);
+      const knots=wasm.nav_gate_route_presentation(handle.session,handle.slot,handle.generation,id);
+      if(!mechanism||knots<1||knots>6)throw Error('Native gate presentation curve unavailable');
+      const data=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_result_ptr(),21+knots*2));
+      if(data[0]!==id||data[1]!==mechanism.mechanism||data[2]!==mechanism.modelId)throw Error('Native gate presentation identity mismatch');
+      return copyNativeGatePresentation({kind:'native-gate-presentation',version:1,nativeRoute,gateId:id,entityId,mechanism:data[1],modelId:data[2],
+        startTime:plan.startTime,endTime:plan.endTime,rootMatrix:data.slice(5,21),hinge:[data[3],0,data[4]],
+        positions:mechanism.positions,leafFlags:mechanism.leafFlags,rows:Float64Array.from(data.slice(21)),authorizedAutonomy:false},
+        {nativeRoute,startTime:plan.startTime,endTime:plan.endTime});
+    });
     return Object.freeze({kind:'native-route-presentation',version:NATIVE_ROUTE_PRESENTATION_VERSION,rowWidth:NATIVE_ROUTE_PRESENTATION_WIDTH,
-      nativeRoute:Object.freeze({actorId:plan.actorId,assignmentSequence:plan.assignmentSequence,routeHandle:routeHandle(handle.session,handle.slot,handle.generation)}),
-      worldBoundary,startTime:plan.startTime,endTime:plan.endTime,motionMode:plan.motionMode??'animal',motionFlags:plan.motionFlags??0,profile:plan.profile,radius:plan.radius,executionScope:plan.executionScope,nativeCrossingAdmitted:plan.nativeCrossingAdmitted===true,authorizedAutonomy:false,rows});
+      nativeRoute,
+      worldBoundary,startTime:plan.startTime,endTime:plan.endTime,motionMode:plan.motionMode??'animal',motionFlags:plan.motionFlags??0,profile:plan.profile,radius:plan.radius,executionScope:plan.executionScope,nativeCrossingAdmitted:plan.nativeCrossingAdmitted===true,authorizedAutonomy:false,rows,gates:Object.freeze(gates)});
   };
   const beginNativeRouteExecution=()=>{
     syncBoundaryTime();const result=wasm.nav_intent_execution_begin();

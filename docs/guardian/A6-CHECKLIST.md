@@ -2,7 +2,7 @@
 
 Actualizado: 2026-11-14. IDs acordados en la conversación; no se renumeran al avanzar.
 
-Último incremento de f-R4: [selección con el reloj presentado de cada asignación](f-r4-native-input-clock-20261114.md).
+Último incremento de f-R4: [puerta original y trabajador bajo el mismo tiempo nativo](f-r4-native-gate-graphics-20261114.md).
 Publicaciones ordinarias y aceptación integrada de personajes autónomos siguen pendientes; no cambia el recuento de cierres.
 
 **Ningún punto principal está cerrado todavía.** Un subpunto marcado como nativo
@@ -396,3 +396,6 @@ Continuación parcial f-R4, 14 de noviembre: [sombras por material fuente](f-r4-
 
 
 Continuación parcial f-R4, 14 de noviembre: [Idle durante esperas nativas](f-r4-native-idle-20261114.md). El selector de la misma malla consume Idle/Run/Walk del reloj C++ finito; Carry conserva su fase y caja en el hold. El relevo retiene los clips ya admitidos para reutilizar programas. La prueba GPU de una espera nativa registra cuatro dibujos detenidos y once posteriores durante 500 ms, sin cambios CPU y sin shaders/pipelines nuevos al relevar. Falta conectar el dibujo de la hoja de puerta al mismo estado nativo, además de fases/acciones y autoridad ordinarias e integración A–F/B/C. No cambia ningún cierre.
+
+
+Continuación parcial f-R4, 14 de noviembre: [puerta original y trabajador bajo el mismo tiempo nativo](f-r4-native-gate-graphics-20261114.md). La captura C++ copia los motores de las puertas reservadas; Settlements y el roster admiten el grupo con los tickets existentes. Malla/atributos conservados, giro GPU y entrada con tiempo consumido. Walk/Idle y Carry mantienen 15 dibujos durante 500 ms, primer render sin fábricas y relevo sin shaders/pipelines nuevos. Retiro gráfico del actor conserva la hoja y su selección; no prueba el retiro lógico C++ ni el motor sin intenciones. Siguen pendientes propuestas/commit del motor con recursos preparados, productor/ejecutor ordinarios y aceptación A-F/B/C; no cambian los cierres.

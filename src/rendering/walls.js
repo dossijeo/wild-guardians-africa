@@ -46,6 +46,7 @@ export class NativeWall extends THREE.Group {
         throw Error('Native gate binding requires an explicit geometry/lifecycle transition');
       this.applyNativeGatePose(entity.nativeGatePose);return;
     }
+    if(this.nativeGpuGate){this.nativeGpuGate.checkEntity(entity);return;}
     const target=entity.hp/entity.maxHp;let visual=target;
     if(entity.wallPresentation&&(Number.isFinite(elapsed)||entity.status==='collapsing'))visual=wallVisualAt(entity,elapsed??entity.wallPresentation.at);
     else if(entity.status==='ruined')visual=0;
@@ -77,8 +78,11 @@ export class NativeWall extends THREE.Group {
         if(bridge.color)geometry.setAttribute('color',new THREE.BufferAttribute(bridge.color,3));
         if(bridge.visibility)geometry.setAttribute('ambientVisibility',new THREE.BufferAttribute(bridge.visibility.slice(),1));
         const material=prototype.material.clone(),releaseMaterialReplica=prototype.material[structureMaterialReplica]?.(material);material.polygonOffset=stage.role===1;material.polygonOffsetFactor=-1;material.polygonOffsetUnits=-1;material.userData.blessingObject=this.blessingUniform;
+        // Stable inputs are present at first admission. Adding attributes while
+        // a replacement is staged would change the visible geometry cache key.
+        if(material.isNodeMaterial&&bridge.leafFlags){geometry.setAttribute('wgGatePosition',new THREE.BufferAttribute(bridge.pos.slice(),3));geometry.setAttribute('wgGateNormal',new THREE.BufferAttribute(bridge.normal.slice(),3));geometry.setAttribute('wgGateLeaf',new THREE.BufferAttribute(Float32Array.from(bridge.leafFlags),1));}
         geometry.computeBoundingBox();const bounds=geometry.boundingBox;material.userData.blessingWallBounds={value:new THREE.Vector4(bounds.min.x,bounds.min.y,Math.max(.01,bounds.max.x-bounds.min.x),Math.max(.01,bounds.max.y-bounds.min.y))};
-        const mesh=new THREE.Mesh(geometry,material);mesh.castShadow=mesh.receiveShadow=true;this.add(mesh);this.parts.push({mesh,bridge,releaseMaterialReplica});
+        const mesh=new THREE.Mesh(geometry,material);mesh.castShadow=mesh.receiveShadow=true;this.add(mesh);this.parts.push({mesh,bridge,sourceMaterial:prototype.material,releaseMaterialReplica});
       }
     }
     stages.forEach((stage,i)=>{
@@ -94,7 +98,7 @@ export class NativeWall extends THREE.Group {
   }
   bindNativeGateMechanism(mechanism){
     const model={zarzas:1,empalizada:2,reforzado:3}[this.nativeGateMaterial],part=this.parts[0];
-    if(this.nativeGateBinding||!this.gate||this.visual!==1||this.lastStatus!=='intact'||this.parts.length!==1||
+    if(this.nativeGateBinding||this.nativeGpuGate||!this.gate||this.visual!==1||this.lastStatus!=='intact'||this.parts.length!==1||
        mechanism?.version!==1||mechanism.entityId!==this.entityId||mechanism.modelId!==model||mechanism.collisionModel!=='kinematic-union'||
        !mechanism.authorityEpoch||!Number.isSafeInteger(mechanism.nativeSession)||mechanism.nativeSession<1||
        !Number.isSafeInteger(mechanism.mechanism)||mechanism.mechanism<1||
@@ -133,6 +137,6 @@ export class NativeWall extends THREE.Group {
     const ao=mesh.geometry.attributes.ambientVisibility;if(ao){for(let i=0;i<ao.count;i++)ao.array[i]=bridge.visibility[i]+(1-bridge.visibility[i])*(bridge.leafFlags[i]?pose.opening:0);ao.needsUpdate=true;}
     mesh.geometry.computeBoundingBox();mesh.geometry.computeBoundingSphere();
   }
-  disposeParts(){for(const {mesh,releaseMaterialReplica} of this.parts){releaseMaterialReplica?.();mesh.geometry.dispose();mesh.material.dispose();this.remove(mesh);}this.parts=[];}
+  disposeParts(){this.nativeGpuGate?.dispose();for(const {mesh,releaseMaterialReplica} of this.parts){releaseMaterialReplica?.();mesh.geometry.dispose();mesh.material.dispose();this.remove(mesh);}this.parts=[];}
   dispose(){this.disposeParts();}
 }

@@ -1,4 +1,5 @@
 import {copyNativeRoutePresentation} from '../world/native-route-presentation.js';
+import {sameNativeGatePresentations} from '../world/native-gate-presentation.js';
 import {createNativeGpuMotion} from './native-gpu-motion.js';
 import {isWorkerIncapacitatedPresentation} from './worker-incapacitated-presentation.js';
 import {createBakedWalkRetry} from './baked-walk-retry.js';
@@ -74,17 +75,18 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
   Promise.resolve().then(()=>pipelineAdmission.prepareAndPublish(actor.root,{signal:controller.signal,include:actor.admissionObjects?.()??[],materialAlternatives:binding.materialAlternatives()},()=>{if(!current())return;binding.activate();entry.motion=motion;entry.motionBinding=binding;entry.motionPreparing=null;adopted=true;})).then(()=>{if(adopted)onSelectableChange();}).catch(error=>{if(current())onBakedWalkError(entry.profile,error);}).finally(()=>{if(entry.motionPreparing===pending)entry.motionPreparing=null;if(entry.bakeResource&&!closed&&entries.get(id)===entry)resumeBakedWalk(id,entry);if(!adopted){const release=()=>{binding.dispose();motion.dispose();};if(typeof pipelineAdmission.deferRelease==='function')pipelineAdmission.deferRelease(actor.root,release);else release();}});
  }
  function retireNative(value){
+  for(const participant of value.gateParticipants??[])participant.cancel();
   const release=()=>{value.binding.dispose();value.variant.dispose();value.motion.dispose();};
   if(typeof pipelineAdmission?.deferRelease==='function')pipelineAdmission.deferRelease(value.actor.root,release);else release();
  }
  function nativeLocomotionEntity(entry,carrying,allowGateWait=false){const entity=entry.entity;return entity&&!entity.recovery&&!entity.recoveryExitRemaining&&!entity.fallRemaining&&!entity.incapacitated&&(!entity.gateWaiting||allowGateWait)&&(carrying?carryingConfirmed(entity):!entity.crateId&&['walking','arriving','returning'].includes(entity.status));}
- async function prepareNativeRoute(actorId,support,{getPickTime,signal,isCurrent=()=>true}={}){
+ async function prepareNativeRoute(actorId,support,{getPickTime,signal,isCurrent=()=>true,prepareGateParticipants=null}={}){
   const entry=entries.get(actorId),packet=copyNativeRoutePresentation(support?.presentation),carrying=(packet.motionFlags&8)!==0,crateId=carrying?entry?.entity?.crateId:null;
   if(closed||!entry||historyRun||typeof getPickTime!=='function'||typeof isCurrent!=='function'||typeof pipelineAdmission?.prepareAndPublish!=='function'||packet?.motionMode!=='worker'||support.valid?.()!==true||signal?.aborted||isCurrent()!==true||!nativeLocomotionEntity(entry,carrying,packet.nativeCrossingAdmitted)||!!(packet.motionFlags&48))throw Error('Native worker preparation unavailable');
   // Running/walking phases and their boundary belong to the native table.
   let requiresRun=false,requiresIdle=!carrying&&packet.rows.length===16;for(let i=0;i+16<packet.rows.length;i+=16){if(packet.rows[i+15]<=0&&!carrying)requiresIdle=true;if(packet.rows[i+14]!==0)requiresRun=true;}
   if(carrying&&requiresRun)throw Error('Native carrying route cannot use running poses');
-  const previous=entry.nativeState;if(previous&&sameNativeReference(previous.nativeRoute,packet.nativeRoute)&&previous.motion.valid()&&previous.variant.current()){const prior=previous.packet;if(previous.crateId!==crateId||['motionMode','motionFlags','profile','radius','executionScope','nativeCrossingAdmitted','startTime','endTime'].some(key=>prior[key]!==packet[key])||prior.rows.length!==packet.rows.length||prior.rows.some((value,index)=>!Object.is(value,packet.rows[index])))throw Error('Native assignment resource changed without a new identity');return {actorId,nativeRoute:previous.nativeRoute,start:previous.start,end:previous.end,reused:true};}
+  const previous=entry.nativeState;if(previous&&sameNativeReference(previous.nativeRoute,packet.nativeRoute)&&previous.motion.valid()&&previous.variant.current()){const prior=previous.packet;if(!sameNativeGatePresentations(prior.gates,packet.gates)||previous.crateId!==crateId||['motionMode','motionFlags','profile','radius','executionScope','nativeCrossingAdmitted','startTime','endTime'].some(key=>prior[key]!==packet[key])||prior.rows.length!==packet.rows.length||prior.rows.some((value,index)=>!Object.is(value,packet.rows[index])))throw Error('Native assignment resource changed without a new identity');return {actorId,nativeRoute:previous.nativeRoute,start:previous.start,end:previous.end,reused:true};}
   entry.nativePending?.controller.abort();const controller=new AbortController(),pending={controller,stage:'loading',nativeRoute:packet.nativeRoute};entry.nativePending=pending;
   const abort=()=>controller.abort();signal?.addEventListener('abort',abort,{once:true});if(signal?.aborted)controller.abort();
   let candidate=null,adopted=false;
@@ -109,12 +111,19 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
     binding=entry.motionBinding?entry.motionBinding.prepareReplacement(options):bindWebGpuActorMotion({root:actor.root,renderer,actorId,resourceRegistry,staged:true,...options});
     candidate={actor,motion,variant,binding,packet,crateId,preparedRun:needsRunning,preparedIdle:needsIdle,nativeRoute:packet.nativeRoute,start:packet.startTime,end:packet.endTime};
    }catch(error){binding?.dispose();variant?.dispose();motion.dispose();throw error;}
-   await pipelineAdmission.prepareAndPublish(actor.root,{signal:controller.signal,include:variant.materialAlternatives.map(item=>item.mesh),materialAlternatives:binding.materialAlternatives()},()=>{
+   candidate.gateParticipants=[];
+   if(packet.gates.length){if(typeof prepareGateParticipants!=='function'||typeof pipelineAdmission.prepareManyAndPublish!=='function')throw Error('Native gate resource admission unavailable');candidate.gateParticipants=prepareGateParticipants({packet,motion,getPickTime,signal:controller.signal});check();if(!Array.isArray(candidate.gateParticipants)||candidate.gateParticipants.length!==packet.gates.length)throw Error('Incomplete native gate resource preparation');}
+   const options={signal:controller.signal,include:variant.materialAlternatives.map(item=>item.mesh),materialAlternatives:binding.materialAlternatives()};
+   const publish=()=>{
     check();if(!variant.valid()||!binding.canActivate())throw new DOMException('Native worker materials changed','AbortError');
+    if(candidate.gateParticipants.some(participant=>!participant.valid()))throw new DOMException('Native gate materials changed','AbortError');
     const previous=entry.nativeState,oldMotion=entry.motion,oldBinding=entry.motionBinding;
-    variant.activate();binding.activate();oldBinding?.detach();entry.motionBinding=binding;entry.motion=motion;entry.nativeState=candidate;entry.nativePending=null;entry.motionPreparing=null;adopted=true;
+    for(const participant of candidate.gateParticipants)participant.activate();variant.activate();binding.activate();oldBinding?.detach();entry.motionBinding=binding;entry.motion=motion;entry.nativeState=candidate;entry.nativePending=null;entry.motionPreparing=null;adopted=true;
+    for(const participant of candidate.gateParticipants)participant.finalize();
     if(previous)retireNative(previous);else if(oldBinding||oldMotion){const release=()=>{oldBinding?.dispose();oldMotion?.dispose();};if(typeof pipelineAdmission.deferRelease==='function')pipelineAdmission.deferRelease(actor.root,release);else release();}
-   });
+   };
+   if(candidate.gateParticipants.length)await pipelineAdmission.prepareManyAndPublish([{object:actor.root,options},...candidate.gateParticipants.map(participant=>participant.request)],publish);
+   else await pipelineAdmission.prepareAndPublish(actor.root,options,publish);
    if(!adopted)throw Error('Native worker preparation was not published');onSelectableChange();return {actorId,nativeRoute:candidate.nativeRoute,start:candidate.start,end:candidate.end};
   }finally{
    signal?.removeEventListener('abort',abort);if(entry.nativePending===pending)entry.nativePending=null;if(entry.motionPreparing===pending)entry.motionPreparing=null;
