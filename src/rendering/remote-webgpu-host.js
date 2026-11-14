@@ -64,6 +64,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   let resolutionResources = null;
   let admittingFrame=null;
   let stagedOperations = [],retainedPreparationSnapshot=null,preparationRecoveryRequired=false,lastReceivedFrameSequence=0,retainedPreparationOperationCount=0;
+  let disposalPromise=null;
   let active = null, pending = null, stopped = false, failed = false, deviceDestroyRequested = false, frameHandle = null, chain = Promise.resolve();
   let currentTexture = null, currentViews = new Map(), deviceConfigured = false;
   let previousFrameAt = null, sampleCursor = 0;
@@ -639,6 +640,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     return [...result,...later];
   }
   async function handle(message) {
+    if(message.type==='dispose'){try{await api.dispose();reply(message,{disposed:true});}catch(error){reply(message,null,error);}return;}
     if (stopped || failed) return;
     if(nativeConsumerRetirement&&['operation','frame'].includes(message.type))throw Error('Native GPU consumer is retiring');
     switch (message.type) {
@@ -894,7 +896,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       case 'camera-mailbox': if (!cameraState) throw Error('Remote camera state unavailable'); else cameraState.setMailbox(message.mailbox); break;
       case 'push-error-scope': device.pushErrorScope(message.filter); break;
       case 'pop-error-scope': observeNative(message, device.popErrorScope(), error => error ? { message: error.message } : null); break;
-      case 'dispose': api.dispose(); break;
+
       default: throw Error(`Unknown remote GPU message ${message.type}`);
     }
   }
@@ -1085,7 +1087,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     },
     inspect: () => ({ ...metrics, hidden, resources: resources.size, pendingResources: pendingResources.size, activeSequence: active?.sequence || null, pendingSequence: pending?.sequence || null, queuedMessages, stagedOperations: stagedOperations.length,retainedPreparationResources:retainedPreparationSnapshot?.size??0,retainedPreparationBytes:retainedPreparationSnapshot?packetBytes(stagedOperations):0,preparationRecoveryRequired, obsoleteVersions: obsoleteVersions.size, failed, backend: 'webgpu', rafIndependent: true, adapterInfo, frameTime: frameTime.status(), frameTimings: frameTimings.slice(), fenceTimings: fenceTimings.slice(), lease: active?.metadata?.clock || null, nativeCausalClock:routeControl?.status().clock??null, nativeMutationHold:nativeMutationHold?.holdId??null,nativeMutationFloor,nativeMutationEpoch, cameraSafe: active?.metadata?.cameraSafe ?? false, cameraEnvelope: active?.metadata?.cameraEnvelope || null, clockBindings: active?.clockBindings.length || 0, cameraBindings: active?.cameraBindings.length || 0, clockAtHorizon: !!active?.metadata?.clock && frameTime.status().elapsed >= Math.min(routeControl?.status().clock?.committedThrough??Infinity,active.metadata.clock.safeUntil), errors: errors.slice(), samples: sampleCursor < samples.length ? samples.slice(0, sampleCursor) : [...samples.slice(sampleCursor % samples.length), ...samples.slice(0, sampleCursor % samples.length)] }),
     dispose() {
-      if (stopped) return; stopped = true;
+      if (stopped) return disposalPromise; stopped = true;
       admittingFrame?.cancel();discardRetainedPreparations();
       settleMutationSubmissions(Error('Remote GPU disposed during native mutation'));
       settleNativeControl(Error('Remote GPU disposed'));
@@ -1093,12 +1095,13 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       for (const job of pendingResources.values()) job.reject(Error('Remote GPU disposed'));
       pendingResources.clear();
       if (frameHandle !== null) cancelFrame(frameHandle);
-      device.queue.onSubmittedWorkDone().then(notifyNativeRetired,error=>{
+      disposalPromise=device.queue.onSubmittedWorkDone().then(notifyNativeRetired,error=>{
         if(deviceIsLost)notifyNativeRetired();else throw error;
       }).finally(() => {
         for (const [key, entry] of resources) if (key !== '@device') entry.value?.destroy?.();
         resources.clear(); context.unconfigure(); device.destroy();
-      }).catch(() => {});
+      });
+      disposalPromise.catch(()=>{});return disposalPromise;
     },
   };
   return api;

@@ -1485,3 +1485,26 @@ test('ordered admission waits for captured external image payloads, never their 
   finishCapture(); await ready;
   assert.equal(uploads, 1); assert.equal(closed, 1); assert.equal(fences, 0);
 });
+
+
+test('acknowledged remote disposal waits for the real native queue drain before retiring its control connection',async()=>{
+ const f=await nativePreparationFixture();let releaseDrain,finished=false;
+ try{
+  f.gpu.device.queue.onSubmittedWorkDone=()=>new Promise(resolve=>{releaseDrain=resolve;});
+  const closing=f.client.disposeAsync();assert.equal(f.client.disposeAsync(),closing);closing.then(()=>{finished=true;});const deadline=performance.now()+5000;while(!releaseDrain&&performance.now()<deadline)await new Promise(resolve=>setTimeout(resolve,0));assert.equal(typeof releaseDrain,'function');
+  assert.equal(finished,false);assert.equal(f.source.status().drained,false);const submissions=f.gpu.submitted.length;f.host.present();assert.equal(f.gpu.submitted.length,submissions);
+  releaseDrain();assert.deepEqual(await closing,{disposed:true});await flush();assert.equal(finished,true);assert.equal(f.source.status().drained,true);assert.equal(f.host.inspect().resources,0);assert.deepEqual(f.errors,[]);
+ }finally{releaseDrain?.();f.close();}
+});
+
+test('failed disposal RPC rejects without fabricating a successful close acknowledgement',async()=>{
+ let terminated=0;const f=await fixture({terminate:()=>{terminated++;}});
+ try{f.gpu.device.queue.onSubmittedWorkDone=()=>Promise.reject(Error('queue drain failed'));await assert.rejects(f.client.disposeAsync(),/queue drain failed/);assert.equal(terminated,0);assert.deepEqual(f.errors,[]);}finally{f.client.dispose();f.host.dispose();}
+ assert.equal(terminated,1);
+});
+
+
+test('a close RPC joins an already stopped host and survives expected device loss until its receipt',async()=>{
+ const f=await fixture();let releaseDrain,drains=0,settled=false;
+ try{f.gpu.device.queue.onSubmittedWorkDone=()=>{drains++;return new Promise(resolve=>{releaseDrain=resolve;});};const stopped=f.host.dispose(),closing=f.client.disposeAsync();closing.then(()=>{settled=true;});await flush();assert.equal(drains,1);assert.equal(settled,false);f.gpu.device.destroy();await flush();assert.equal(settled,false);releaseDrain();await stopped;assert.deepEqual(await closing,{disposed:true});assert.equal(drains,1);assert.deepEqual(f.errors,[]);}finally{releaseDrain?.();f.client.dispose();f.host.dispose();}
+});

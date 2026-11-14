@@ -18,7 +18,7 @@ function copyBytes(data, offset = 0, size) {
 
 export function createRemoteWebGpuClient({ port, capabilities, onError = () => {}, onPresented = () => {}, onNativeWorldBoundary = () => {}, terminate = () => {}, finalizationRegistryFactory = callback => typeof FinalizationRegistry === 'function' ? new FinalizationRegistry(callback) : null }) {
   let nextId = 0, sequence = 0, frame = null, pendingFrame = null, disposed = false, fatalError = null;
-  let outbound = Promise.resolve();
+  let outbound = Promise.resolve(),disposalPromise=null;
   let requiredWorldBoundary=null, texturePreparation=null;
   const pending = new Map(), clockBindings = new Map(), canvasViewIds = new Set();
   const weakResources = new Map(), retainedCounts = new Map(), deferredFinalizations = new Set();
@@ -342,6 +342,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
       }
     } else if (message.type === 'lost') {
       resolveLost(message.info);
+      if(disposalPromise)return; // The close RPC still requires its real queue-drain receipt.
       fatalError = Error(`WebGPU device lost: ${message.info?.reason || 'unknown'}: ${message.info?.message || ''}`);
       pendingFrame?.reject(fatalError);
       releaseReferences(pendingFrame?.retained); releaseReferences(frame?.retained);
@@ -416,6 +417,9 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     setCameraMailbox(mailbox) { send({ type: 'camera-mailbox', mailbox }); },
     inspect: () => ({ ...metrics, pendingFrame: pendingFrame?.sequence || null, openFrame: frame?.sequence || null, clockBindings: clockBindings.size, retainedResources: retainedCounts.size, weakResources: weakResources.size, finalizationAvailable: !!finalizer, frameTimings: frameTimings.slice(), fenceTimings: fenceTimings.slice(), backend: 'remote-webgpu', failed: !!fatalError }),
     inspectAsync: () => request({ type: 'inspect' }).then(consumer => ({ ...api.inspect(), consumer })),
+    // Stop/drain happens at the draw owner. A preparer closing its own port
+    // cannot certify that the independent queue stopped submitting.
+    disposeAsync(){if(disposalPromise)return disposalPromise;if(disposed)return Promise.reject(Error('Remote GPU already disposed without a drain receipt'));if(fatalError)return Promise.reject(fatalError);disposalPromise=request({type:'dispose'}).then(result=>{if(result?.disposed!==true)throw Error('Remote GPU close lacks its drain receipt');api.dispose();return result;});return disposalPromise;},
     dispose() {
       if (disposed) return;
       port.postMessage({ type: 'dispose' }); disposed = true;
