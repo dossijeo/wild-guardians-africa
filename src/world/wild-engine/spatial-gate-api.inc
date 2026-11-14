@@ -34,6 +34,7 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_bind_worker(double actor,double id){
 }
 EMSCRIPTEN_KEEPALIVE int nav_gate_reconcile(int enabled){
   auto& s=state();if(enabled!=0&&enabled!=1)return -1;
+  if(s.causalClock)return -7;
   for(const auto& [id,gate]:s.gates)if(gate.mesh||!gate.crossings.empty()){
     std::map<uint64_t,NativeGate> proposed;const int result=proposeGateMotion(s,enabled,proposed);if(result<0)return result;
     cancelGateMotionProposal(s);publishGateMotion(s,proposed);return int(s.gates.size());
@@ -85,12 +86,14 @@ EMSCRIPTEN_KEEPALIVE double nav_gate_prefix_segments(){return double(state().gat
 EMSCRIPTEN_KEEPALIVE int nav_gate_sweep_version(){return 1;}
 EMSCRIPTEN_KEEPALIVE int nav_gate_prepare_motion(int enabled){
   auto& s=state();std::map<uint64_t,NativeGate> proposed;
+  if(s.causalClock)return -7;
   const int result=proposeGateMotion(s,enabled,proposed);if(result<0)return result;
   cancelGateMotionProposal(s);
   publishGateMotion(s,proposed);return int(s.gates.size());
 }
 EMSCRIPTEN_KEEPALIVE int nav_gate_static_object_version(){return 1;}
 EMSCRIPTEN_KEEPALIVE int nav_gate_prepare_object_motion(int enabled){
+  if(state().causalClock)return -7;
   auto& s=state();std::map<uint64_t,NativeGate> proposed;
   const int result=proposeGateMotion(s,enabled,proposed,true);if(result<0)return result;
   cancelGateMotionProposal(s);publishGateMotion(s,proposed);return int(s.gates.size());
@@ -103,18 +106,30 @@ EMSCRIPTEN_KEEPALIVE double nav_gate_static_pairs(){return double(state().gateSt
 EMSCRIPTEN_KEEPALIVE double nav_gate_static_evaluations(){return double(state().gateStaticEvaluations);}
 EMSCRIPTEN_KEEPALIVE double nav_gate_static_rejected(){return double(state().gateStaticRejected);}
 EMSCRIPTEN_KEEPALIVE int nav_gate_motion_transaction_version(){return 1;}
-int stageGateMotion(int enabled,bool staticObjects){
+int stageGateMotion(int enabled,bool staticObjects,bool causal=false){
   auto& s=state();if(!s.session)return -1;if(s.gateMotionProposal.pending)return -4;
-  if(s.nextGateMotionTicket>=uint64_t(maxId)||spatialBodiesMutationRevision()==std::numeric_limits<uint64_t>::max())return -5;
+  if(causal?(!s.causalClock||s.clockThrough!=s.effectiveTime||s.clockIntentSequence!=s.intentSequence||s.barrierProposal.pending):s.causalClock)return -7;
+  if((causal?s.nextBarrierProposal:s.nextGateMotionTicket)>=uint64_t(maxId)||spatialBodiesMutationRevision()==std::numeric_limits<uint64_t>::max())return -5;
   if(s.gates.empty())return -2;
   std::map<uint64_t,NativeGate> proposed;const int result=proposeGateMotion(s,enabled,proposed,staticObjects);if(result<0)return result;
-  auto& p=s.gateMotionProposal;p.pending=true;p.session=s.session;p.ticket=++s.nextGateMotionTicket;
+  auto& p=s.gateMotionProposal;p.pending=true;p.causal=causal;p.session=s.session;p.ticket=causal?++s.nextBarrierProposal:++s.nextGateMotionTicket;
   p.at=s.effectiveTime;p.bodies=spatialBodiesMutationRevision();p.entities=s.entityRevision;
   p.factsSequence=s.sequence;p.intents=s.intentSequence;p.reservations=s.residencyPinRevision;
   p.world=executionWorldStamp();p.clockSequence=s.clockSequence;p.gates.swap(proposed);return 1;
 }
 EMSCRIPTEN_KEEPALIVE int nav_gate_motion_stage(int enabled){return stageGateMotion(enabled,false);}
 EMSCRIPTEN_KEEPALIVE int nav_gate_motion_stage_objects(int enabled){return stageGateMotion(enabled,true);}
+EMSCRIPTEN_KEEPALIVE int nav_gate_motion_causal_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int nav_gate_motion_stage_causal(int enabled,int objects){if(objects!=0&&objects!=1)return -1;return stageGateMotion(enabled,objects==1,true);}
+EMSCRIPTEN_KEEPALIVE int nav_gate_motion_world_ticket(){
+  auto& s=state();s.barrierProposalResult.fill(0);const auto& p=s.gateMotionProposal;
+  if(!p.pending||!p.causal)return 0;
+  s.barrierProposalResult={double(p.session),double(p.ticket),double(p.intents),p.at,double(p.clockSequence),12};return 1;
+}
+EMSCRIPTEN_KEEPALIVE int nav_gate_motion_current(double session,double ticket){
+  const auto& s=state();const auto& p=s.gateMotionProposal;
+  return p.pending&&p.causal&&session==double(p.session)&&ticket==double(p.ticket)&&gateMotionProposalCurrent(s)?1:0;
+}
 EMSCRIPTEN_KEEPALIVE int nav_gate_motion_ticket(){
   auto& s=state();s.gateMotionResult.fill(0);const auto& p=s.gateMotionProposal;if(!p.pending)return 0;
   s.gateMotionResult={double(p.session),double(p.ticket),double(p.intents),p.at,double(p.gates.size())};return 1;
@@ -128,11 +143,19 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_motion_cancel(double session,double ticket){
 EMSCRIPTEN_KEEPALIVE int nav_gate_motion_commit(double session,double ticket,double sequence,double time){
   auto& s=state();const auto& p=s.gateMotionProposal;
   if(!integer(session)||!integer(ticket)||!p.pending||session!=double(p.session)||ticket!=double(p.ticket))return -1;
+  if(p.causal)return -3;
   if(!gateMotionProposalCurrent(s)){cancelGateMotionProposal(s);return -2;}
   // The authority bridge supplies these only after a fresh receipt from the
   // still-current draw connection. Native metadata is necessary, not evidence
   // of a transport receipt by itself and not a crossing/world-clearance permit.
   if(!integer(sequence,true)||sequence!=double(p.intents)||!std::isfinite(time)||time!=p.at){cancelGateMotionProposal(s);return -3;}
+  publishGateMotion(s,s.gateMotionProposal.gates);cancelGateMotionProposal(s);return 1;
+}
+EMSCRIPTEN_KEEPALIVE int nav_gate_motion_commit_causal(double session,double ticket,double sequence,double time,double clockSequence){
+  auto& s=state();const auto& p=s.gateMotionProposal;
+  if(!integer(session)||!integer(ticket)||!p.pending||!p.causal||session!=double(p.session)||ticket!=double(p.ticket))return -1;
+  if(!gateMotionProposalCurrent(s)||!s.causalClock||s.clockThrough!=s.effectiveTime||s.clockIntentSequence!=s.intentSequence){cancelGateMotionProposal(s);return -2;}
+  if(!integer(sequence,true)||sequence!=double(p.intents)||!std::isfinite(time)||time!=p.at||!integer(clockSequence)||clockSequence!=double(p.clockSequence)){cancelGateMotionProposal(s);return -3;}
   publishGateMotion(s,s.gateMotionProposal.gates);cancelGateMotionProposal(s);return 1;
 }
 EMSCRIPTEN_KEEPALIVE int nav_gate_body_sweep_certified(double id){

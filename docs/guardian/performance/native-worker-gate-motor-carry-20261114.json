@@ -1,0 +1,1091 @@
+{
+  "result": {
+    "scope": "Production WorldClient -> WorldWorker -> WorldSurface -> existing worker roster, real original worker and real C++/draw control. Explicit native resource input, not ordinary gameplay producer or full all-intent acceptance.",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "gateWait": true,
+    "gateHolds": [
+      {
+        "gateId": 990001,
+        "distance": 0,
+        "from": 10,
+        "until": 10.6,
+        "drawsHeld": 5,
+        "drawsAfter": 10,
+        "first": {
+          "x": -11.75,
+          "z": -17.8,
+          "distance": 0,
+          "phase": 0,
+          "yaw": 0,
+          "firstRemainingPoint": 0,
+          "arrived": false,
+          "at": 10.05,
+          "duration": 11.71111093450476,
+          "runPhase": 0,
+          "walkPhase": 0,
+          "carryPhase": 0,
+          "runDistance": 0,
+          "walkDistance": 0,
+          "runRemaining": 0,
+          "running": false,
+          "currentSpeed": 0
+        },
+        "last": {
+          "x": -11.75,
+          "z": -17.8,
+          "distance": 0,
+          "phase": 0,
+          "yaw": 0,
+          "firstRemainingPoint": 0,
+          "arrived": false,
+          "at": 10.549999999999999,
+          "duration": 11.71111093450476,
+          "runPhase": 0,
+          "walkPhase": 0,
+          "carryPhase": 0,
+          "runDistance": 0,
+          "walkDistance": 0,
+          "runRemaining": 0,
+          "running": false,
+          "currentSpeed": 0
+        }
+      }
+    ],
+    "gates": {
+      "before": [
+        {
+          "entityId": "structure-990001",
+          "mesh": 431,
+          "geometry": 149,
+          "positionVersion": 1,
+          "normalVersion": 1,
+          "positionHash": 603722329,
+          "opening": 0,
+          "nativeRoute": {
+            "actorId": 900011,
+            "assignmentSequence": 2,
+            "routeHandle": {
+              "authorityEpoch": "1e13bae3-ee32-4ab1-b495-c8a7233220a6/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 3
+            }
+          },
+          "nativeGate": null
+        }
+      ],
+      "after": [
+        {
+          "entityId": "structure-990001",
+          "mesh": 431,
+          "geometry": 149,
+          "positionVersion": 1,
+          "normalVersion": 1,
+          "positionHash": 603722329,
+          "opening": 1,
+          "nativeRoute": {
+            "actorId": 900011,
+            "assignmentSequence": 2,
+            "routeHandle": {
+              "authorityEpoch": "1e13bae3-ee32-4ab1-b495-c8a7233220a6/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 3
+            }
+          },
+          "nativeGate": null
+        }
+      ],
+      "replaced": [
+        {
+          "entityId": "structure-990001",
+          "mesh": 431,
+          "geometry": 149,
+          "positionVersion": 1,
+          "normalVersion": 1,
+          "positionHash": 603722329,
+          "opening": 1,
+          "nativeRoute": {
+            "actorId": 900011,
+            "assignmentSequence": 5,
+            "routeHandle": {
+              "authorityEpoch": "1e13bae3-ee32-4ab1-b495-c8a7233220a6/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 7
+            }
+          },
+          "nativeGate": null
+        }
+      ],
+      "final": [
+        {
+          "entityId": "structure-990001",
+          "mesh": 431,
+          "geometry": 149,
+          "positionVersion": 1,
+          "normalVersion": 1,
+          "positionHash": 603722329,
+          "opening": 1,
+          "nativeRoute": {
+            "actorId": 900011,
+            "assignmentSequence": 5,
+            "routeHandle": {
+              "authorityEpoch": "1e13bae3-ee32-4ab1-b495-c8a7233220a6/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 7
+            }
+          },
+          "nativeGate": null
+        }
+      ]
+    },
+    "carrying": true,
+    "rig": {
+      "before": {
+        "attachments": [
+          {
+            "id": 576,
+            "geometry": 152,
+            "index": 0
+          },
+          {
+            "id": 577,
+            "geometry": 153,
+            "index": 1
+          },
+          {
+            "id": 578,
+            "geometry": 154,
+            "index": 2
+          },
+          {
+            "id": 579,
+            "geometry": 155,
+            "index": 3
+          },
+          {
+            "id": 580,
+            "geometry": 156,
+            "index": 4
+          },
+          {
+            "id": 581,
+            "geometry": 157,
+            "index": 5
+          },
+          {
+            "id": 582,
+            "geometry": 158,
+            "index": 6
+          },
+          {
+            "id": 583,
+            "geometry": 159,
+            "index": 7
+          },
+          {
+            "id": 584,
+            "geometry": 160,
+            "index": 8
+          }
+        ],
+        "poseHash": 919440637
+      },
+      "after": {
+        "attachments": [
+          {
+            "id": 576,
+            "geometry": 152,
+            "index": 0
+          },
+          {
+            "id": 577,
+            "geometry": 153,
+            "index": 1
+          },
+          {
+            "id": 578,
+            "geometry": 154,
+            "index": 2
+          },
+          {
+            "id": 579,
+            "geometry": 155,
+            "index": 3
+          },
+          {
+            "id": 580,
+            "geometry": 156,
+            "index": 4
+          },
+          {
+            "id": 581,
+            "geometry": 157,
+            "index": 5
+          },
+          {
+            "id": 582,
+            "geometry": 158,
+            "index": 6
+          },
+          {
+            "id": 583,
+            "geometry": 159,
+            "index": 7
+          },
+          {
+            "id": 584,
+            "geometry": 160,
+            "index": 8
+          }
+        ],
+        "poseHash": 919440637
+      },
+      "replaced": {
+        "attachments": [
+          {
+            "id": 576,
+            "geometry": 152,
+            "index": 0
+          },
+          {
+            "id": 577,
+            "geometry": 153,
+            "index": 1
+          },
+          {
+            "id": 578,
+            "geometry": 154,
+            "index": 2
+          },
+          {
+            "id": 579,
+            "geometry": 155,
+            "index": 3
+          },
+          {
+            "id": 580,
+            "geometry": 156,
+            "index": 4
+          },
+          {
+            "id": 581,
+            "geometry": 157,
+            "index": 5
+          },
+          {
+            "id": 582,
+            "geometry": 158,
+            "index": 6
+          },
+          {
+            "id": 583,
+            "geometry": 159,
+            "index": 7
+          },
+          {
+            "id": 584,
+            "geometry": 160,
+            "index": 8
+          }
+        ],
+        "poseHash": 919440637
+      }
+    },
+    "runningTransition": false,
+    "transition": null,
+    "inputPick": {
+      "at": 11.920839786529541,
+      "frameSequence": 36,
+      "result": {
+        "entityId": "worker-900011",
+        "hitPoint": {
+          "x": -11.549018549943973,
+          "y": 12.349258278986659,
+          "z": -16.06709727684783
+        },
+        "point": {
+          "x": -12.663043478260906,
+          "z": -17.765425692019257
+        },
+        "sequence": 0
+      }
+    },
+    "gateInput": {
+      "entityId": "structure-990001",
+      "hitPoint": {
+        "x": -12.1280548405647,
+        "y": 12.247439646720908,
+        "z": -16.388798007170386
+      },
+      "point": {
+        "x": -13.258616094727667,
+        "z": -17.924568583713132
+      },
+      "sequence": 1
+    },
+    "prepared": {
+      "actorId": "worker-900011",
+      "nativeRoute": {
+        "actorId": 900011,
+        "assignmentSequence": 2,
+        "routeHandle": {
+          "authorityEpoch": "1e13bae3-ee32-4ab1-b495-c8a7233220a6/1",
+          "session": 1,
+          "slot": 0,
+          "generation": 3
+        }
+      },
+      "start": 10,
+      "end": 21.71111093450476,
+      "qaLastRenderFactories": {
+        "createBuffer": 0,
+        "createTexture": 0,
+        "createSampler": 0,
+        "createBindGroup": 0,
+        "createBindGroupLayout": 0,
+        "createPipelineLayout": 0,
+        "createShaderModule": 0,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 0,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "qaCumulativeFactories": {
+        "createBuffer": 1378,
+        "createTexture": 25,
+        "createSampler": 26,
+        "createBindGroup": 444,
+        "createBindGroupLayout": 114,
+        "createPipelineLayout": 40,
+        "createShaderModule": 67,
+        "createRenderPipeline": 2,
+        "createRenderPipelineAsync": 40,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      }
+    },
+    "reused": {
+      "actorId": "worker-900011",
+      "nativeRoute": {
+        "actorId": 900011,
+        "assignmentSequence": 2,
+        "routeHandle": {
+          "authorityEpoch": "1e13bae3-ee32-4ab1-b495-c8a7233220a6/1",
+          "session": 1,
+          "slot": 0,
+          "generation": 3
+        }
+      },
+      "start": 10,
+      "end": 21.71111093450476,
+      "reused": true,
+      "qaLastRenderFactories": {
+        "createBuffer": 0,
+        "createTexture": 0,
+        "createSampler": 0,
+        "createBindGroup": 0,
+        "createBindGroupLayout": 0,
+        "createPipelineLayout": 0,
+        "createShaderModule": 0,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 0,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "qaCumulativeFactories": {
+        "createBuffer": 1378,
+        "createTexture": 25,
+        "createSampler": 26,
+        "createBindGroup": 444,
+        "createBindGroupLayout": 114,
+        "createPipelineLayout": 40,
+        "createShaderModule": 67,
+        "createRenderPipeline": 2,
+        "createRenderPipelineAsync": 40,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      }
+    },
+    "replacement": {
+      "actorId": "worker-900011",
+      "nativeRoute": {
+        "actorId": 900011,
+        "assignmentSequence": 5,
+        "routeHandle": {
+          "authorityEpoch": "1e13bae3-ee32-4ab1-b495-c8a7233220a6/1",
+          "session": 1,
+          "slot": 0,
+          "generation": 7
+        }
+      },
+      "start": 11.999479492187499,
+      "end": 13.398958277949577,
+      "qaLastRenderFactories": {
+        "createBuffer": 0,
+        "createTexture": 0,
+        "createSampler": 0,
+        "createBindGroup": 0,
+        "createBindGroupLayout": 0,
+        "createPipelineLayout": 0,
+        "createShaderModule": 0,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 0,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "qaCumulativeFactories": {
+        "createBuffer": 1477,
+        "createTexture": 26,
+        "createSampler": 27,
+        "createBindGroup": 496,
+        "createBindGroupLayout": 166,
+        "createPipelineLayout": 40,
+        "createShaderModule": 67,
+        "createRenderPipeline": 2,
+        "createRenderPipelineAsync": 40,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      }
+    },
+    "oldRelease": false,
+    "released": true,
+    "before": {
+      "generation": "30fe9b56-3dfb-4cd1-a2ef-551122c1d814",
+      "resourcesCreated": 2181,
+      "workers": {
+        "closed": false,
+        "count": 1,
+        "ready": 1,
+        "pending": 0,
+        "native": 1,
+        "nativePreparing": 0,
+        "assets": {
+          "closed": false,
+          "idle": {
+            "idle": 0,
+            "estimatedBytes": 0,
+            "maxBytes": 100663296
+          },
+          "textureFailure": null,
+          "profiles": [
+            {
+              "profile": "olderFemale",
+              "ready": true,
+              "textured": true,
+              "refs": 1,
+              "pending": 0
+            }
+          ]
+        }
+      }
+    },
+    "afterReuse": {
+      "resourcesCreated": 2181
+    },
+    "after": {
+      "generation": "30fe9b56-3dfb-4cd1-a2ef-551122c1d814",
+      "resourcesCreated": 2181,
+      "workers": {
+        "closed": false,
+        "count": 1,
+        "ready": 1,
+        "pending": 0,
+        "native": 1,
+        "nativePreparing": 0,
+        "assets": {
+          "closed": false,
+          "idle": {
+            "idle": 0,
+            "estimatedBytes": 0,
+            "maxBytes": 100663296
+          },
+          "textureFailure": null,
+          "profiles": [
+            {
+              "profile": "olderFemale",
+              "ready": true,
+              "textured": true,
+              "refs": 1,
+              "pending": 0
+            }
+          ]
+        }
+      }
+    },
+    "final": {
+      "generation": "30fe9b56-3dfb-4cd1-a2ef-551122c1d814",
+      "workers": {
+        "closed": false,
+        "count": 1,
+        "ready": 1,
+        "pending": 0,
+        "native": 0,
+        "nativePreparing": 0,
+        "assets": {
+          "closed": false,
+          "idle": {
+            "idle": 0,
+            "estimatedBytes": 0,
+            "maxBytes": 100663296
+          },
+          "textureFailure": null,
+          "profiles": [
+            {
+              "profile": "olderFemale",
+              "ready": true,
+              "textured": true,
+              "refs": 1,
+              "pending": 0
+            }
+          ]
+        }
+      },
+      "gpuErrors": 0
+    },
+    "block": {
+      "start": 1794659410212.73,
+      "end": 1794659410712.83,
+      "blockedMs": 500.10009765625,
+      "drawFrames": 15,
+      "minClock": 10.084900390625,
+      "maxClock": 11.920839843749999
+    },
+    "frames": [
+      {
+        "at": 1794659410238.92,
+        "intervalMs": 33.324951171875,
+        "drawMs": 1.75,
+        "replay": true,
+        "clockElapsed": 10.084900390625,
+        "safeUntil": 10.084900390625,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794659410272.25,
+        "intervalMs": 33.330078125,
+        "drawMs": 2.7099609375,
+        "replay": true,
+        "clockElapsed": 10.1647802734375,
+        "safeUntil": 10.1647802734375,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794659410305.58,
+        "intervalMs": 33.330078125,
+        "drawMs": 2.074951171875,
+        "replay": true,
+        "clockElapsed": 10.3245595703125,
+        "safeUntil": 10.3245595703125,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794659410338.915,
+        "intervalMs": 33.3349609375,
+        "drawMs": 2.1298828125,
+        "replay": true,
+        "clockElapsed": 10.484519531250001,
+        "safeUntil": 10.484519531250001,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794659410372.25,
+        "intervalMs": 33.3349609375,
+        "drawMs": 2.205078125,
+        "replay": true,
+        "clockElapsed": 10.560500000000001,
+        "safeUntil": 10.560500000000001,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794659410405.46,
+        "intervalMs": 33.2099609375,
+        "drawMs": 1.544921875,
+        "replay": true,
+        "clockElapsed": 10.724419921875,
+        "safeUntil": 10.724419921875,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794659410438.79,
+        "intervalMs": 33.330078125,
+        "drawMs": 1.60498046875,
+        "replay": true,
+        "clockElapsed": 10.881120117187502,
+        "safeUntil": 10.881120117187502,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794659410472.22,
+        "intervalMs": 33.429931640625,
+        "drawMs": 1.574951171875,
+        "replay": true,
+        "clockElapsed": 10.965240234375,
+        "safeUntil": 10.965240234375,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794659410505.6199,
+        "intervalMs": 33.39990234375,
+        "drawMs": 1.66015625,
+        "replay": true,
+        "clockElapsed": 11.121080078125,
+        "safeUntil": 11.121080078125,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794659410538.915,
+        "intervalMs": 33.295166015625,
+        "drawMs": 1.83984375,
+        "replay": true,
+        "clockElapsed": 11.2850595703125,
+        "safeUntil": 11.2850595703125,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794659410572.24,
+        "intervalMs": 33.324951171875,
+        "drawMs": 1.7900390625,
+        "replay": true,
+        "clockElapsed": 11.365099609375,
+        "safeUntil": 11.365099609375,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794659410605.46,
+        "intervalMs": 33.219970703125,
+        "drawMs": 1.4599609375,
+        "replay": true,
+        "clockElapsed": 11.524940429687499,
+        "safeUntil": 11.524940429687499,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794659410638.9,
+        "intervalMs": 33.43994140625,
+        "drawMs": 1.440185546875,
+        "replay": true,
+        "clockElapsed": 11.684799804687499,
+        "safeUntil": 11.684799804687499,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794659410672.2249,
+        "intervalMs": 33.324951171875,
+        "drawMs": 1.610107421875,
+        "replay": true,
+        "clockElapsed": 11.764780273437498,
+        "safeUntil": 11.764780273437498,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794659410705.55,
+        "intervalMs": 33.3251953125,
+        "drawMs": 1.4599609375,
+        "replay": true,
+        "clockElapsed": 11.920839843749999,
+        "safeUntil": 11.920839843749999,
+        "cameraVersion": null
+      }
+    ],
+    "errors": [],
+    "motor": {
+      "begin": 11.999479492187499,
+      "prior": {
+        "version": 1,
+        "authorityEpoch": "1e13bae3-ee32-4ab1-b495-c8a7233220a6/1",
+        "nativeSession": 1,
+        "entityId": "structure-990001",
+        "gateId": 990001,
+        "modelId": 1,
+        "mechanism": 1,
+        "collisionModel": "kinematic-union",
+        "supportClass": "flat-native-datum",
+        "visualClass": "intact-full-health",
+        "baseY": 11.520172500610352,
+        "supportMin": 11.495172288338745,
+        "supportMax": 11.495172288338745,
+        "sampledAt": 11.999479492187499,
+        "opening": 1,
+        "rootMatrix": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          -11.8,
+          11.520172500610352,
+          -16.400000000000002,
+          1
+        ],
+        "leafMatrix": [
+          6.123233995736766e-17,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          -1,
+          0,
+          6.123233995736766e-17,
+          0,
+          -0.62,
+          0,
+          0.62,
+          1
+        ],
+        "authorizedPassage": false,
+        "authorizedAutonomy": false
+      },
+      "outcome": {
+        "status": "committed",
+        "authorizedAutonomy": false,
+        "authorizedPassage": false,
+        "resources": {
+          "version": 1,
+          "kind": 12,
+          "phase": "committed",
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "1e13bae3-ee32-4ab1-b495-c8a7233220a6/1",
+            "nativeSession": 1,
+            "ticket": 1,
+            "effectiveTime": 11.999479492187499
+          },
+          "gates": [
+            {
+              "kind": "native-gate-presentation",
+              "version": 1,
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "1e13bae3-ee32-4ab1-b495-c8a7233220a6/1",
+                "nativeSession": 1,
+                "ticket": 1,
+                "effectiveTime": 11.999479492187499
+              },
+              "gateId": 990001,
+              "entityId": "structure-990001",
+              "mechanism": 1,
+              "modelId": 1,
+              "startTime": 11.999479492187499,
+              "endTime": 12.599479492187498,
+              "rootMatrix": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                -11.8,
+                11.520172500610352,
+                -16.400000000000002,
+                1
+              ],
+              "hinge": [
+                -0.62,
+                0,
+                0
+              ],
+              "positions": {
+                "componentType": "Float32Array",
+                "length": 52245,
+                "sha256": "7e119a86c43ec0932d3a7c4af72f55dec35a8b0e23412614948b67f4d91bcad0"
+              },
+              "leafFlags": {
+                "componentType": "Uint8Array",
+                "length": 17415,
+                "sha256": "9375b3059edd47d396b25ca55eb8d6aba57d2ced1b9896e8b8e2e7ef419a3b8c"
+              },
+              "rows": [
+                11.999479492187499,
+                1,
+                12.599479492187498,
+                0
+              ],
+              "authorizedAutonomy": false
+            }
+          ],
+          "capture": "geometry-sha256-and-exact-curve"
+        },
+        "receipt": {
+          "authorityEpoch": "1e13bae3-ee32-4ab1-b495-c8a7233220a6/1",
+          "session": "native-world-036f4558-b804-412c-a066-e3b8dc222b7a",
+          "holdId": 1,
+          "sequence": 6,
+          "effectiveTime": 11.999479492187499,
+          "clockSequence": 30
+        },
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "1e13bae3-ee32-4ab1-b495-c8a7233220a6/1",
+          "nativeSession": 1,
+          "ticket": 1,
+          "effectiveTime": 11.999479492187499
+        }
+      },
+      "adopted": [
+        {
+          "entityId": "structure-990001",
+          "mesh": 431,
+          "geometry": 149,
+          "positionVersion": 1,
+          "normalVersion": 1,
+          "positionHash": 603722329,
+          "opening": 1,
+          "nativeGate": {
+            "gateId": 990001,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "1e13bae3-ee32-4ab1-b495-c8a7233220a6/1",
+              "nativeSession": 1,
+              "ticket": 1,
+              "effectiveTime": 11.999479492187499
+            }
+          }
+        }
+      ],
+      "closed": [
+        {
+          "entityId": "structure-990001",
+          "mesh": 431,
+          "geometry": 149,
+          "positionVersion": 1,
+          "normalVersion": 1,
+          "positionHash": 603722329,
+          "opening": 9.934107070286302e-8,
+          "nativeGate": {
+            "gateId": 990001,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "1e13bae3-ee32-4ab1-b495-c8a7233220a6/1",
+              "nativeSession": 1,
+              "ticket": 1,
+              "effectiveTime": 11.999479492187499
+            }
+          }
+        }
+      ],
+      "firstRenderFactories": {
+        "createBuffer": 0,
+        "createTexture": 0,
+        "createSampler": 0,
+        "createBindGroup": 0,
+        "createBindGroupLayout": 0,
+        "createPipelineLayout": 0,
+        "createShaderModule": 0,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 0,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "cumulativeFactories": {
+        "createBuffer": 1486,
+        "createTexture": 26,
+        "createSampler": 27,
+        "createBindGroup": 500,
+        "createBindGroupLayout": 170,
+        "createPipelineLayout": 40,
+        "createShaderModule": 67,
+        "createRenderPipeline": 2,
+        "createRenderPipelineAsync": 40,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "frames": [
+        {
+          "at": 1794659412605.615,
+          "intervalMs": 33.320068359375,
+          "drawMs": 1.030029296875,
+          "replay": true,
+          "clockElapsed": 11.999479492187499,
+          "safeUntil": 11.999479492187499,
+          "cameraVersion": null
+        },
+        {
+          "at": 1794659412638.955,
+          "intervalMs": 33.340087890625,
+          "drawMs": 0.89990234375,
+          "replay": true,
+          "clockElapsed": 12.1637998046875,
+          "safeUntil": 12.1637998046875,
+          "cameraVersion": null
+        },
+        {
+          "at": 1794659412672.25,
+          "intervalMs": 33.294921875,
+          "drawMs": 0.724853515625,
+          "replay": true,
+          "clockElapsed": 12.3237998046875,
+          "safeUntil": 12.3237998046875,
+          "cameraVersion": null
+        },
+        {
+          "at": 1794659412705.63,
+          "intervalMs": 33.3798828125,
+          "drawMs": 0.840087890625,
+          "replay": true,
+          "clockElapsed": 12.4038603515625,
+          "safeUntil": 12.4038603515625,
+          "cameraVersion": null
+        },
+        {
+          "at": 1794659412738.96,
+          "intervalMs": 33.330078125,
+          "drawMs": 0.77001953125,
+          "replay": true,
+          "clockElapsed": 12.5637197265625,
+          "safeUntil": 12.5637197265625,
+          "cameraVersion": null
+        },
+        {
+          "at": 1794659412772.29,
+          "intervalMs": 33.330078125,
+          "drawMs": 0.7099609375,
+          "replay": true,
+          "clockElapsed": 12.723759765625,
+          "safeUntil": 12.723759765625,
+          "cameraVersion": null
+        },
+        {
+          "at": 1794659412805.575,
+          "intervalMs": 33.284912109375,
+          "drawMs": 0.735107421875,
+          "replay": true,
+          "clockElapsed": 12.803679687499999,
+          "safeUntil": 12.803679687499999,
+          "cameraVersion": null
+        },
+        {
+          "at": 1794659412838.915,
+          "intervalMs": 33.340087890625,
+          "drawMs": 0.905029296875,
+          "replay": true,
+          "clockElapsed": 12.963540039062499,
+          "safeUntil": 12.963540039062499,
+          "cameraVersion": null
+        },
+        {
+          "at": 1794659412872.2449,
+          "intervalMs": 33.329833984375,
+          "drawMs": 0.77001953125,
+          "replay": true,
+          "clockElapsed": 13.123459960937499,
+          "safeUntil": 13.123459960937499,
+          "cameraVersion": null
+        },
+        {
+          "at": 1794659412905.56,
+          "intervalMs": 33.315185546875,
+          "drawMs": 0.7548828125,
+          "replay": true,
+          "clockElapsed": 13.203599609374999,
+          "safeUntil": 13.203599609374999,
+          "cameraVersion": null
+        },
+        {
+          "at": 1794659412938.935,
+          "intervalMs": 33.375,
+          "drawMs": 0.7998046875,
+          "replay": true,
+          "clockElapsed": 13.363459960937499,
+          "safeUntil": 13.363459960937499,
+          "cameraVersion": null
+        },
+        {
+          "at": 1794659412972.2449,
+          "intervalMs": 33.309814453125,
+          "drawMs": 0.840087890625,
+          "replay": true,
+          "clockElapsed": 13.523259765624998,
+          "safeUntil": 13.523259765624998,
+          "cameraVersion": null
+        },
+        {
+          "at": 1794659413005.57,
+          "intervalMs": 33.3251953125,
+          "drawMs": 0.85986328125,
+          "replay": true,
+          "clockElapsed": 13.603379882812497,
+          "safeUntil": 13.603379882812497,
+          "cameraVersion": null
+        },
+        {
+          "at": 1794659413038.99,
+          "intervalMs": 33.419921875,
+          "drawMs": 0.699951171875,
+          "replay": true,
+          "clockElapsed": 13.763259765624998,
+          "safeUntil": 13.763259765624998,
+          "cameraVersion": null
+        },
+        {
+          "at": 1794659413072.26,
+          "intervalMs": 33.27001953125,
+          "drawMs": 0.760009765625,
+          "replay": true,
+          "clockElapsed": 13.923259765624998,
+          "safeUntil": 13.923259765624998,
+          "cameraVersion": null
+        }
+      ],
+      "block": {
+        "start": 1794659412587.5,
+        "end": 1794659413087.545,
+        "blockedMs": 500.044921875
+      },
+      "workers": {
+        "closed": false,
+        "count": 0,
+        "ready": 0,
+        "pending": 0,
+        "native": 0,
+        "nativePreparing": 0,
+        "assets": {
+          "closed": false,
+          "idle": {
+            "idle": 1,
+            "estimatedBytes": 37632264,
+            "maxBytes": 100663296
+          },
+          "textureFailure": null,
+          "profiles": [
+            {
+              "profile": "olderFemale",
+              "ready": true,
+              "textured": true,
+              "refs": 0,
+              "pending": 0
+            }
+          ]
+        }
+      },
+      "actorCount": 0
+    },
+    "drained": true
+  },
+  "errors": [],
+  "consoleErrors": [],
+  "httpFailures": []
+}

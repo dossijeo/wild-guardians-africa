@@ -623,8 +623,33 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     const count=wasm.nav_gate_mechanism_world_vertices(numericId(gateId));if(count<3||count>100000)throw Error('Invalid native gate world geometry');
     return Float64Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_mechanism_world_ptr(),count*3));
   };
-  const prepareNativeGateMotionAfterGpuFence=async({getPublication,enabled,staticObjects=false}={})=>{
+  const prepareNativeGateMotionAfterGpuFence=async({getPublication,enabled,staticObjects=false,prepareResources=null,signal=null}={})=>{
     if(!initialized||!owningState)throw Error('Reset the native intent session first');
+    if(nativeCausalClock()){
+      if(typeof prepareResources!=='function')return {status:'resources-unavailable',authorizedAutonomy:false,authorizedPassage:false};
+      if(typeof staticObjects!=='boolean'||enabled!==undefined&&typeof enabled!=='boolean'||signal!==null&&typeof signal?.addEventListener!=='function')throw TypeError('Invalid causal gate resource preparation');
+      if(wasm.nav_gate_motion_causal_version?.()!==1)throw Error('Rebuild causal gate motion service');
+      let resources;
+      const protocol={
+        ticket:()=>wasm.nav_gate_motion_world_ticket(),ticketPtr:()=>wasm.nav_intent_barrier_proposal_ticket_ptr(),
+        snapshot:(session,ticket)=>wasm.nav_gate_motion_current(session,ticket),
+        cancel:(session,ticket)=>wasm.nav_gate_motion_cancel(session,ticket),release(){},
+        capture(boundary){
+          const {nativeSession,ticket,effectiveTime}=boundary,count=wasm.nav_gate_motion_presentations(nativeSession,ticket);
+          if(count<0)throw Error('Native gate proposal graphics unavailable');
+          const ids=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_result_ptr(),count));
+          const gates=ids.map(id=>{const entityId=`structure-${id}`,mesh=nativeGateMechanism(entityId),knots=wasm.nav_gate_motion_presentation(nativeSession,ticket,id);
+            if(!mesh||knots<1||knots>6)throw Error('Native gate proposal curve unavailable');
+            const data=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_result_ptr(),21+knots*2)),rows=Float64Array.from(data.slice(21)),endTime=rows.at(-2);
+            if(data[0]!==id||data[1]!==mesh.mechanism||data[2]!==mesh.modelId)throw Error('Native gate proposal identity mismatch');
+            return copyNativeGatePresentation({kind:'native-gate-presentation',version:1,worldBoundary:boundary,gateId:id,entityId,mechanism:data[1],modelId:data[2],startTime:effectiveTime,endTime,rootMatrix:data.slice(5,21),hinge:[data[3],0,data[4]],positions:mesh.positions,leafFlags:mesh.leafFlags,rows,authorizedAutonomy:false},{worldBoundary:boundary,startTime:effectiveTime,endTime});
+          });
+          resources=Object.freeze({version:1,kind:12,phase:'proposal',worldBoundary:boundary,gates:Object.freeze(gates)});return resources;
+        }
+      };
+      return commitNativeWorldProposal(getPublication,()=>wasm.nav_gate_motion_stage_causal((enabled??(!owningState.pauses?.length&&!owningState.result&&!owningState.initialPreparation))?1:0,staticObjects?1:0),
+        (mark,...boundary)=>{const result=wasm.nav_gate_motion_commit_causal(...boundary);if(result!==1)return {status:result};const committed=Object.freeze({...resources,phase:'committed'});mark({resources:committed});return {status:1,value:{resources:committed}};},prepareResources,signal,protocol);
+    }
     if(typeof getPublication!=='function'||enabled!==undefined&&typeof enabled!=='boolean'||typeof staticObjects!=='boolean')
       throw TypeError('Expected current native control publication and gate boundary facts');
     if(wasm.nav_gate_motion_transaction_version?.()!==1)throw Error('Rebuild native gate transaction service');
@@ -662,7 +687,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
   // First conditioned world mutation, opt-in. Geometry and affected-route
   // preflight remain native; this bridge only carries an immutable input and
   // an exact receipt from the current direct draw connection.
-  const commitNativeWorldProposal=async(getPublication,stage,commit,prepareResources=null,signal=null)=>{
+  const commitNativeWorldProposal=async(getPublication,stage,commit,prepareResources=null,signal=null,protocol=null)=>{
     if(!initialized||!owningState)throw Error('Reset the native intent session first');
     if(typeof getPublication!=='function')throw TypeError('Expected current native control publication');
     if(wasm.nav_intent_barrier_proposal_version?.()!==1)throw Error('Rebuild native world proposal service');
@@ -676,15 +701,15 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
        control.clockSequence!==clock.clockSequence||owningState.elapsed!==clock.committedThrough)return outcome('control-boundary-mismatch');
     const result=stage();
     if(result!==1)return outcome(result===0?'blocked':result===-4?'busy':result===-2?'unsupported':'invalid');
-    if(wasm.nav_intent_barrier_proposal_ticket()!==1)throw Error('Native barrier proposal lost its ticket');
-    const [nativeSession,ticket,sequence,time,clockSequence]=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6));
+    if((protocol?protocol.ticket():wasm.nav_intent_barrier_proposal_ticket())!==1)throw Error('Native mutation proposal lost its ticket');
+    const [nativeSession,ticket,sequence,time,clockSequence]=Array.from(new Float64Array(wasm.memory.buffer,protocol?protocol.ticketPtr():wasm.nav_intent_barrier_proposal_ticket_ptr(),6));
     let receipt=null,preparedResources=null,answer=outcome('control-failed'),physicalCommitted=false,commitAttempted=false,commitFailed=false,committedValue={};
     const preparationController=new AbortController(),abortPreparation=()=>preparationController.abort();signal?.addEventListener('abort',abortPreparation,{once:true});
     try{
       if(signal?.aborted)throw new DOMException('Native resource preparation cancelled','AbortError');
       if(prepareResources){
         const proposedWorldBoundary=copyNativeWorldBoundary({version:1,authorityEpoch:owner,nativeSession,ticket,effectiveTime:time}),
-          resources=session.core.captureNativeWorldProposalResources(proposedWorldBoundary);
+          resources=protocol?protocol.capture(proposedWorldBoundary):session.core.captureNativeWorldProposalResources(proposedWorldBoundary);
         let stopWaiting;const interrupted=new Promise((resolve,reject)=>{stopWaiting=()=>reject(new DOMException('Native resource preparation cancelled','AbortError'));});interrupted.catch(()=>{});
         preparationController.signal.addEventListener('abort',stopWaiting,{once:true});
         const preparing=Promise.resolve().then(()=>prepareResources({proposedWorldBoundary,resources,signal:preparationController.signal})).then(handle=>{
@@ -693,7 +718,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
         try{preparedResources=await Promise.race([preparing,interrupted]);}finally{preparationController.signal.removeEventListener('abort',stopWaiting);}
         if(!preparedResources||['valid','commit','abort'].some(key=>typeof preparedResources[key]!=='function')||preparedResources.valid()!==true)throw Error('Native resources were not prepared');
         if(epoch()!==owner||getPublication()!==source||source.status().closed||!coversGpuConsumers(source))return outcome('control-replaced');
-        if(wasm.spatial_world_proposal_resource_snapshot(nativeSession,ticket)!==1)return outcome('stale');
+        if((protocol?protocol.snapshot(nativeSession,ticket):wasm.spatial_world_proposal_resource_snapshot(nativeSession,ticket))!==1)return outcome('stale');
       }
       receipt=await source.quiesceGpuForMutation();const current=source.status();
       if(epoch()!==owner||getPublication()!==source||current.closed||current.session!==control.session||current.authorityEpoch!==owner||!coversGpuConsumers(source))
@@ -717,8 +742,8 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     finally{
       signal?.removeEventListener('abort',abortPreparation);preparationController.abort();
       if(preparedResources)try{preparedResources.abort();}catch{}
-      wasm.spatial_world_proposal_resource_release?.(nativeSession,ticket);
-      wasm.nav_intent_barrier_proposal_cancel(nativeSession,ticket);
+      if(protocol){protocol.release(nativeSession,ticket);protocol.cancel(nativeSession,ticket);}
+      else{wasm.spatial_world_proposal_resource_release?.(nativeSession,ticket);wasm.nav_intent_barrier_proposal_cancel(nativeSession,ticket);}
       if(commitFailed&&!source.status().closed)source.dispose('mutation-commit-failed');
       if(receipt&&!source.status().closed){
         try{

@@ -1,10 +1,11 @@
 import {copyNativeRouteReference} from '../world/native-route-reference.js';
+import {copyNativeGateReference} from '../world/native-gate-reference.js';
 
 // Symbol metadata is intentionally non-enumerable: it must not alter TSL graph
 // structure/cache keys. Registration occurs when a physical binding is updated,
 // never by discovering graph nodes during replay.
 const clockMetadata=Symbol.for('wild-guardians.remote-clock');
-export function markRemoteClockNode(node,semantic,epoch,nativeRoute=null){
+export function markRemoteClockNode(node,semantic,epoch,nativeRoute=null,nativeGate=null){
  if(!node?.isNode||!['absolute','relative'].includes(semantic)||!Number.isFinite(epoch)||epoch<0)throw TypeError('Invalid remote clock node');
  let route=null;
  if(nativeRoute!==null){
@@ -12,7 +13,9 @@ export function markRemoteClockNode(node,semantic,epoch,nativeRoute=null){
   // never retag an already admitted GPU binding for another route generation.
   try{route=copyNativeRouteReference(nativeRoute);}catch{throw TypeError('Invalid native route clock reference');}
  }
- Object.defineProperty(node,clockMetadata,{value:Object.freeze({semantic,epoch,...(route?{nativeRoute:route}:{})}),enumerable:false});
+ if(nativeGate!==null&&nativeRoute!==null)throw TypeError('Conflicting native clock references');
+ const gate=nativeGate===null?null:copyNativeGateReference(nativeGate);
+ Object.defineProperty(node,clockMetadata,{value:Object.freeze({semantic,epoch,...(route?{nativeRoute:route}:{}),...(gate?{nativeGate:gate}:{})}),enumerable:false});
  return node;
 }
 export function installRemoteClockBindings(renderer,remote){

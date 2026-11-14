@@ -9,7 +9,7 @@ import {createNativeIntentControlPublication} from '../../src/simulation/native-
 import {createTerrainPublication} from '../../src/simulation/terrain-publication.js';
 import {createWebGpuWorldClient} from '../../src/rendering/webgpu-world-client.js';
 const now=()=>performance.timeOrigin+performance.now();
-export async function auditNativeWorkerWorldOwner({runningTransition=false,carrying=false,gateWait=false}={}){
+export async function auditNativeWorkerWorldOwner({runningTransition=false,carrying=false,gateWait=false,gateMotor=false}={}){
  const long=false,watermarks=[],errors=[];
  const bytes=new Uint8Array(await(await fetch('/tests/fixtures/desierto983-d15-partial-state.json.gz')).arrayBuffer()),text=bytes[0]===31&&bytes[1]===139?await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text():new TextDecoder().decode(bytes),state=deserialize(text),template=structuredClone(state.workers[0]),module=await WebAssembly.compileStreaming(fetch('/src/world/wild-engine/spatial-savanna.wasm'));
  state.workers=[];state.tasks=[];state.plants=[];state.crates=[];state.spells=[];state.raid=null;state.elapsed=10;state.pauses=[];
@@ -62,7 +62,7 @@ export async function auditNativeWorkerWorldOwner({runningTransition=false,carry
     if(before.qaNativeGates?.length!==1||after.qaNativeGates?.length!==1)throw Error('Normal settlement owner did not draw the native gate');
     const first=before.qaNativeGates[0],last=after.qaNativeGates[0];
     for(const key of ['mesh','geometry','positionVersion','normalVersion','positionHash'])if(first[key]!==last[key])throw Error('Native gate changed CPU geometry while drawing '+key);
-    if(first.opening!==0||Math.abs(last.opening-bridge.nativeGateMechanismPose(first.entityId).opening)>3e-6)throw Error('Native submitted gate curve did not match the C++ motor');
+    if(first.opening!==0||Math.abs(last.opening-bridge.nativeGateMechanismPose(first.entityId).opening)>3e-6)throw Error('Native submitted gate curve did not match the C++ motor '+JSON.stringify({first,last,pose:bridge.nativeGateMechanismPose(first.entityId),frame:after.drawExecution.consumer.nativeRouteFrame}));
    }
    const inputFrame=captureNativeRoutePickFrame(after.drawExecution.consumer),pickAt=inputFrame.getTime(route.nativeRoute,route.startTime),pickPose=bridge.sampleNativeRoute(handle,pickAt),pickCamera=new PerspectiveCamera(45,640/360,.1,500);
    pickCamera.position.set(camera.x,camera.y,camera.z);pickCamera.lookAt(camera.targetX,camera.targetY,camera.targetZ);pickCamera.updateMatrixWorld(true);
@@ -110,7 +110,32 @@ export async function auditNativeWorkerWorldOwner({runningTransition=false,carry
     if(!gateInput)throw Error('Native gate input failed after actor resource release');
    }
    if(!released||final.workers.native!==0||final.phase!=='running'||errors.length)throw Error('Production native worker release failed '+JSON.stringify({released,errors}));
+   let motor=null;
+   if(gateMotor){
+    if(!gateWait)throw Error('Independent gate motor requires the admitted gate fixture');
+    const retiredActorId=state.workers[0].id;if(!bridge.retireActor(retiredActorId)||w.spatial_body_remove(1)!==1)throw Error('Native logical actor retirement failed');
+    state.workers=[];state.crates=[];bridge.applyEvents(state,[{type:'worker',id:retiredActorId,remove:true}]);commit(true,4);
+    const prior=bridge.nativeGateMechanismPose('structure-990001'),outcome=await bridge.prepareNativeGateMotionAfterGpuFence({getPublication:()=>publication,prepareResources:async({resources,signal})=>{
+     const handle=await client.prepareNativeGateResources(resources,{signal});publisher.commit(2);client.presentationPort.postMessage({kind:'publication',session:transportSession,publication:{session:transportSession,sequence:2,elapsed:state.elapsed,physicsPose:null,snapshot:serializeConfirmedState(state),events:[]}});
+     const removedDeadline=performance.now()+10000;while((await client.inspect()).state.sequence<2){if(performance.now()>removedDeadline)throw Error('Logical retirement publication unavailable');await new Promise(resolve=>setTimeout(resolve,4));}return handle;
+    }});
+    if(outcome.status!=='committed')throw Error('Independent prepared gate commit failed '+JSON.stringify({outcome,errors,status:client.status()}));
+    const adoptedDeadline=performance.now()+10000;let adopted;
+    do{adopted=await client.inspect();if(adopted.drawExecution.consumer.nativeRouteFrame?.worldBoundary?.ticket===outcome.worldBoundary.ticket)break;if(performance.now()>adoptedDeadline)throw Error('Independent gate boundary did not reach its consumer');await new Promise(resolve=>setTimeout(resolve,4));}while(true);
+    const firstGateRender=adopted.qaNativeGateFirstRenders?.find(entry=>entry.nativeGate.gateId===990001&&JSON.stringify(entry.nativeGate.worldBoundary)===JSON.stringify(outcome.worldBoundary));
+    if(Object.values(firstGateRender?.factories??{missing:1}).some(Boolean))throw Error('Independent gate first render created resources '+JSON.stringify(firstGateRender));
+    for(const factory of ['createShaderModule','createPipelineLayout','createRenderPipeline','createRenderPipelineAsync'])if(adopted.qaCumulativeFactories[factory]!==prepared.qaCumulativeFactories[factory])throw Error('Independent gate recreated its unchanged '+factory);
+    const begin=state.elapsed,motorStarted=new Promise(resolve=>{blockStarted=resolve;}),motorEnded=new Promise(resolve=>{blockEnded=resolve;});commit(false,4);preparer.postMessage({kind:'block-control-preparation'});const motorBlock=await motorStarted;let previous=now();
+    // The same native execution transaction advances a coherent empty cohort;
+    // the independent gate never derives permission from its resource lifetime.
+    const advanceMotor=()=>{const at=now();state.elapsed+=(at-previous)/1000*4;previous=at;const result=bridge.advanceNativeRouteExecution(state.elapsed);if(result.status!=='advanced'||result.routes!==0)throw Error('Independent gate execution failed '+JSON.stringify(result));commit(false,4);};
+    pump=setInterval(()=>{try{advanceMotor();}catch(error){errors.push(String(error));}},20);const motorEnd=await motorEnded;clearInterval(pump);pump=null;advanceMotor();
+    commit(true,4);await publication.fenceGpu();const closed=await client.inspect(),frames=closed.drawExecution.consumer.samples.filter(frame=>frame.at>=motorBlock.start&&frame.at<=motorEnd.end),pose=bridge.nativeGateMechanismPose('structure-990001');
+    if(frames.length<2||pose.opening!==0||closed.qaNativeGates?.length!==1||Math.abs(closed.qaNativeGates[0].opening)>3e-6||closed.workers.count!==0||closed.workers.native!==0||w.nav_intent_worker_count()!==0||errors.length)throw Error('Independent gate motor did not close on C++ time '+JSON.stringify({frames,pose,gates:closed.qaNativeGates,workers:closed.workers,errors}));
+    for(const key of ['mesh','geometry','positionVersion','normalVersion','positionHash'])if(closed.qaNativeGates[0][key]!==before.qaNativeGates[0][key])throw Error('Independent gate replaced original CPU geometry '+key);
+    motor={begin,prior,outcome,adopted:adopted.qaNativeGates,closed:closed.qaNativeGates,firstRenderFactories:firstGateRender.factories,cumulativeFactories:adopted.qaCumulativeFactories,frames,block:{start:motorBlock.start,end:motorEnd.end,blockedMs:motorEnd.end-motorBlock.start},workers:closed.workers,actorCount:w.nav_intent_worker_count()};
+   }
    const result={scope:'Production WorldClient -> WorldWorker -> WorldSurface -> existing worker roster, real original worker and real C++/draw control. Explicit native resource input, not ordinary gameplay producer or full all-intent acceptance.',adapter:after.drawExecution.consumer.adapterInfo,gateWait,gateHolds,gates:gateWait?{before:before.qaNativeGates,after:after.qaNativeGates,replaced:replaced.qaNativeGates,final:final.qaNativeGates}:null,carrying,rig:carrying||gateWait?{before:before.qaNativeRig,after:after.qaNativeRig,replaced:replaced.qaNativeRig}:null,runningTransition,transition,inputPick,gateInput,prepared,reused,replacement,oldRelease,released,before:{generation:before.inspectionGeneration,resourcesCreated:before.drawExecution.resourcesCreated,workers:before.workers},afterReuse:{resourcesCreated:afterReuse.drawExecution.resourcesCreated},after:{generation:after.inspectionGeneration,resourcesCreated:after.drawExecution.resourcesCreated,workers:after.workers},final:{generation:final.inspectionGeneration,workers:final.workers,gpuErrors:final.drawExecution.consumer.gpuErrors},block:{start:block.start,end:endBlock.end,blockedMs:endBlock.end-block.start,drawFrames:frames.length,minClock:Math.min(...frames.map(f=>f.clockElapsed)),maxClock:Math.max(...frames.map(f=>f.clockElapsed))},frames,errors};
-   await window.nativeWorkerWorldCheckpoint?.();finalReceipt=result;return result;
+   result.motor=motor;await window.nativeWorkerWorldCheckpoint?.();finalReceipt=result;return result;
   }finally{clearInterval(pump);publisher?.dispose();client?.dispose();try{if(publication&&finalReceipt){const drainDeadline=performance.now()+10000;while(!publication.status().drained&&performance.now()<drainDeadline)await new Promise(resolve=>setTimeout(resolve,4));finalReceipt.drained=publication.status().drained;if(!finalReceipt.drained)throw Error('Production native worker GPU did not drain before authority disposal');}}finally{publication?.dispose();diagnostic.port1.close();session.dispose();}}
 }

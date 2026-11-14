@@ -1,5 +1,6 @@
 import { floorFloat32 } from './float32-time.js';
 import {copyNativeRouteReference} from '../world/native-route-reference.js';
+import {copyNativeGateReference,nativeGateReferenceCovered} from '../world/native-gate-reference.js';
 import { remoteCameraWithinEnvelope } from './remote-camera-envelope.js';
 import { createRemoteFrameTimeGuard } from './remote-frame-time-guard.js';
 import { scheduleRemoteFrame } from './remote-frame-scheduler.js';
@@ -448,8 +449,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         if (!Number.isFinite(value)) throw Error('Invalid remote presentation clock value');
         const submittedValue=floorFloat32(value);
         device.queue.writeBuffer(resolve({ [REF]: binding.id }), binding.byteOffset, new Float32Array([submittedValue]));
-        if(binding.nativeRoute)nativeTimes.set(binding.nativeClockKey,{
-          nativeRoute:binding.nativeRoute,semantic:binding.semantic,epoch:binding.epoch,
+        if(binding.nativeRoute||binding.nativeGate)nativeTimes.set(binding.nativeClockKey,{
+          ...(binding.nativeRoute?{nativeRoute:binding.nativeRoute}:{nativeGate:binding.nativeGate}),semantic:binding.semantic,epoch:binding.epoch,
           elapsed:binding.semantic==='relative'?submittedValue+binding.epoch:submittedValue});
         if(binding.routeRecord)binding.routeRecord.lastDrawTime=Math.max(
           binding.routeRecord.lastDrawTime??-Infinity,
@@ -543,7 +544,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       }
       // Publish input witnesses only after the actual command submissions have
       // succeeded. A preparation, rejected frame or failed submit is no image.
-      if(submitted)nativeRouteFrame={sequence:active.sequence,clockElapsed,bindings:Array.from(nativeTimes.values())};
+      if(submitted)nativeRouteFrame={sequence:active.sequence,clockElapsed,worldBoundary:active.metadata?.nativeWorldBoundary??null,bindings:Array.from(nativeTimes.values())};
       metrics.nativeFrames++;
       frameTime.consume(timeTicket);
       if (!next) metrics.replayFrames++;
@@ -648,6 +649,26 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       result.push(op);
     }
     return [...result,...later];
+  }
+  // Obsolete drawing can leave uniform initialization waiting for the next
+  // image. Admission must be able to finish those uploads without replaying
+  // that image or changing the last good generation. Reuse the existing COW
+  // buffers; every byte is submitted before a real queue fence is acknowledged.
+  function submitRetainedUniformPreparations(){
+    if(!retainedPreparationSnapshot||!stagedOperations.length||pending||admittingFrame||nativeMutationHold||nativeConsumerRetirement||preparationRecoveryRequired)return false;
+    const keys=new Set();
+    for(const op of stagedOperations){
+      if(op.method!=='writeBuffer'){metrics.retainedFenceBlock={method:op.method};return false;}
+      const key=op.args[0][REF],entry=resources.get(key),prior=retainedPreparationSnapshot.get(key);
+      if(!entry?.uniformShadow||prior&&prior!==entry){metrics.retainedFenceBlock={key,uniform:!!entry?.uniformShadow,generation:entry?.generation,prior:prior?.generation};return false;}keys.add(key);
+    }
+    for(const key of keys)if(!forkPublishedBuffer(key))throw Error('Retained uniform preparation lost its copy-on-write owner');
+    const operations=stagedOperations;stagedOperations=[];retainedPreparationOperationCount=0;
+    for(const op of operations)applyQueue(op);
+    const retained=retainedPreparationSnapshot;retainedPreparationSnapshot=null;releaseSnapshot(retained);
+    metrics.retainedUniformUploads=(metrics.retainedUniformUploads||0)+operations.length;
+    for(const entry of pendingRetirement)tryRetire(entry);
+    return true;
   }
   async function handle(message) {
     if(message.type==='dispose'){try{await api.dispose();reply(message,{disposed:true});}catch(error){reply(message,null,error);}return;}
@@ -766,6 +787,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         try{packet.admittedClockBindings=Array.from(clockBindings.values())
           .filter(binding=>packet.resourceSnapshot.has(binding.id))
           .map(binding=>{
+            if(binding.nativeGate){if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeGateReferenceCovered(binding.nativeGate,nativeWorldBoundary)||!nativeGateReferenceCovered(binding.nativeGate,packet.metadata.nativeWorldBoundary))throw Error('Native gate requires its applied world and causal clock');return {...binding};}
             if(!binding.nativeRoute)return {...binding};
             if(!routeControl)throw Error('Native route control unavailable');
             if(!packet.metadata?.clock)throw Error('Native route requires a presentation clock lease');
@@ -861,10 +883,11 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       }
       case 'fence': {
         const timing = recordTiming(fenceTimings, { requestId: message.requestId || null, producerRequestedAt: message.producerRequestedAt ?? null, workerReceivedAt: message.receivedAt ?? absoluteNow(), startedAt: absoluteNow(), caller: message.caller?.split('\n').find(line => line.includes('.js:') && !line.includes('remote-webgpu-client')) || null }, 128);
+        submitRetainedUniformPreparations();
         if (stagedOperations.length) {
           timing.finishedAt = absoluteNow(); timing.rejected = 'uncommitted-published-resources';
           const details = stagedOperations.slice(0, 8).map(op => ({ method: op.method, resources: [...writtenResources(op)].map(id => ({ id, kind: resources.get(id)?.kind, label: resources.get(id)?.descriptor?.label, usage: resources.get(id)?.descriptor?.usage, size: resources.get(id)?.descriptor?.size })) }));
-          reply(message, null, Error(`A fence cannot cover uncommitted changes to a published frame; publish the next frame first. Deferred: ${JSON.stringify(details)}\n${message.caller || ''}`));
+          reply(message, null, Error(`A fence cannot cover uncommitted changes to a published frame; publish the next frame first. State: ${JSON.stringify({retained:!!retainedPreparationSnapshot,pending:!!pending,admitting:!!admittingFrame,hold:!!nativeMutationHold,retiring:!!nativeConsumerRetirement,recovery:preparationRecoveryRequired,block:metrics.retainedFenceBlock})}. Deferred: ${JSON.stringify(details)}\n${message.caller || ''}`));
           break;
         }
         // Native onSubmittedWorkDone captures this queue prefix immediately; its
@@ -889,9 +912,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       }
       case 'clock-binding': {
         const key = `${message.id}:${message.binding.byteOffset}`;
-        const nativeRoute=message.binding.nativeRoute?copyNativeRouteReference(message.binding.nativeRoute):null;
-        clockBindings.set(key, { ...message.binding, ...(nativeRoute?{nativeRoute,
-          nativeClockKey:JSON.stringify([nativeRoute,message.binding.semantic,message.binding.epoch])}:{}), id: message.id });
+        const nativeRoute=message.binding.nativeRoute?copyNativeRouteReference(message.binding.nativeRoute):null,nativeGate=message.binding.nativeGate?copyNativeGateReference(message.binding.nativeGate):null;
+        if(nativeRoute&&nativeGate)throw Error('Conflicting native clock references');
+        clockBindings.set(key, { ...message.binding, ...(nativeRoute?{nativeRoute}:{}),...(nativeGate?{nativeGate}:{}),
+          ...((nativeRoute||nativeGate)?{nativeClockKey:JSON.stringify([nativeRoute?'route':'gate',nativeRoute??nativeGate,message.binding.semantic,message.binding.epoch])}:{}), id: message.id });
         if (!clockBindingKeys.has(message.id)) clockBindingKeys.set(message.id, new Set());
         clockBindingKeys.get(message.id).add(key); break;
       }

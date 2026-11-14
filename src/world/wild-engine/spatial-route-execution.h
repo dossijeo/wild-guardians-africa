@@ -44,15 +44,35 @@ int beginRouteExecution(IntentState& s){
   }
   s.entityRevision++;return 1;
 }
+// Only a coherent native execution cohort may authorize presentation time.
+// Check structural membership at intent events; ordinary execution already
+// checks its bindings and mutation stamp, without revalidating route geometry.
+bool causalClockCohortReady(IntentState& s){
+  if(!gateStaticProofCurrent(s)||s.executionEnabled&&s.executionWorldStamp!=executionWorldStamp()||
+     !s.reservedBodies.empty()&&!s.executionEnabled)return false;
+  if(s.clockProofSequence==s.intentSequence)return true;
+  for(const auto& [actor,intent]:s.activeIntents)if(intent.state==PlanningState::RouteActive){
+    if(intent.slot>=s.routeSlots.size())return false;
+    const auto& route=s.routeSlots[intent.slot];
+    if(!route.reserved||!route.hasExecution||!executionBindingCoherent(s,route.reservationBody,intent.slot))return false;
+  }
+  s.clockProofSequence=s.intentSequence;return true;
+}
 int advanceRouteExecution(IntentState& s,double at){
   if(!std::isfinite(at)||at<s.effectiveTime)return -1;
-  if(!s.executionEnabled)return -2;
+  // The world's native motors outlive their requesting actors. An empty,
+  // coherent causal cohort still advances on the same authority transaction;
+  // it cannot use set_time or a presentation/resource lease to bypass pause.
+  if(!s.executionEnabled){
+    if(!s.causalClock||!s.reservedBodies.empty())return -2;
+    if(!causalClockCohortReady(s))return -3;
+  }
   if(at==s.effectiveTime)return 0;
   if(s.causalClock&&s.clockPaused)return -5;
   // Known overlay/residency transactions extend the surviving cohort's proof.
   // Untracked terrain edits and whole-world resets still fail closed: one
   // mutation-counter check per cohort, never route collision/validity queries.
-  if(s.executionWorldStamp!=executionWorldStamp()||!gateStaticProofCurrent(s))return -4;
+  if(s.executionEnabled&&s.executionWorldStamp!=executionWorldStamp()||!gateStaticProofCurrent(s))return -4;
   struct Move {uint32_t slot;std::array<double,18> pose;};
   std::vector<Move> moves;moves.reserve(s.reservedBodies.size());
   for(const auto& [body,slot]:s.reservedBodies){

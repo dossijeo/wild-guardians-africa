@@ -1,4 +1,22 @@
 EMSCRIPTEN_KEEPALIVE int nav_gate_mechanism_version(){return 1;}
+// Canonical copies from the ineffective motor proposal, sharing the existing
+// geometry and controller. Each row is an affine opening knot, not a JS solver.
+EMSCRIPTEN_KEEPALIVE int nav_gate_motion_presentations(double session,double ticket){
+  auto& s=state();s.gateResult.clear();const auto& p=s.gateMotionProposal;
+  if(!p.pending||!p.causal||session!=double(p.session)||ticket!=double(p.ticket)||!gateMotionProposalCurrent(s))return -1;
+  for(const auto& [id,gate]:p.gates){if(!gate.crossings.empty())continue;if(!gate.mesh||gate.status!=0)return -2;s.gateResult.push_back(double(id));}
+  return int(s.gateResult.size());
+}
+EMSCRIPTEN_KEEPALIVE int nav_gate_motion_presentation(double session,double ticket,double id){
+  auto& s=state();s.gateResult.clear();const auto& p=s.gateMotionProposal;
+  if(!p.pending||!p.causal||session!=double(p.session)||ticket!=double(p.ticket)||!gateMotionProposalCurrent(s)||!integer(id)||!p.gates.count(uint64_t(id)))return -1;
+  const auto& gate=p.gates.at(uint64_t(id));if(!gate.mesh||gate.status!=0||!gate.crossings.empty())return -2;
+  const double begin=p.at;auto times=gateMotionKnots(gate);times.push_back(begin);
+  times.erase(std::remove_if(times.begin(),times.end(),[&](double at){return at<begin;}),times.end());
+  std::sort(times.begin(),times.end());times.erase(std::unique(times.begin(),times.end()),times.end());
+  s.gateResult={id,double(gate.mechanism),double(gate.mesh->id),gate.hx,gate.hz};const auto root=gateRootMatrix(gate);s.gateResult.insert(s.gateResult.end(),root.begin(),root.end());
+  for(double at:times)s.gateResult.insert(s.gateResult.end(),{at,gateOpening(gate,at)});return int(times.size());
+}
 EMSCRIPTEN_KEEPALIVE int nav_gate_mechanism_install(double id,int modelId){
   auto& s=state();if(!s.session||!integer(id)||!s.gates.count(uint64_t(id))||s.nextGateMechanism>=uint64_t(maxId))return -4;
   if(!gateStaticProofCurrent(s))return -5;

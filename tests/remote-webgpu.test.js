@@ -85,6 +85,39 @@ test('obsolete initialization survives until fresh commands use the same GPU buf
   assert.equal(f.host.inspect().retainedPreparationResources,0);assert.equal(f.host.inspect().stagedOperations,0);f.host.present();assert.equal(f.gpu.calls.filter(c=>c[0]==='writeBuffer').length,1);assert.equal(f.errors.length,0);
  }finally{f.close();}
 });
+
+test('retained native uniforms can finish admission behind a real fence without modifying the last displayed buffers',async()=>{
+ const f=await nativePreparationFixture();try{
+  const initial=f.frame(1,{clock:f.clock});await flush();await f.host.idle();f.host.present();await initial;
+  const displayed=f.gpu.buffers[0],committed=await f.commit();
+  await assert.rejects(f.frame(2,{clock:f.clock}),error=>error.resourcePreparationsRetained===true);assert.equal(f.host.inspect().stagedOperations,1);
+  const extra=f.client.device.createBuffer({size:16,usage:72});f.client.device.queue.writeBuffer(extra,0,new Uint32Array([123]));await flush();await f.host.idle();
+  await f.client.device.queue.onSubmittedWorkDone();
+  assert.equal(f.host.inspect().stagedOperations,0);assert.equal(f.host.inspect().retainedPreparationResources,0);assert.equal(f.host.inspect().retainedUniformUploads,2);
+  assert.equal(new Float32Array(displayed.data.buffer)[0],1,'the active image still owns its old uniform generation');
+  const next=f.frame(3,{clock:f.clock,nativeWorldBoundary:committed.worldBoundary});await flush();await f.host.idle();f.host.present();await next;
+  assert.equal(f.host.inspect().failed,false);assert.deepEqual(f.errors,[]);
+ }finally{f.close();}
+});
+
+test('independent gate resource coverage never grants time beyond the direct native causal clock',async()=>{
+ const f=await nativePreparationFixture({absoluteNow:()=>1e8});try{
+  const committed=await f.commit();assert.equal(committed.status,'committed');await flush();
+  const nativeGate={gateId:9,worldBoundary:committed.worldBoundary},clock={...f.clock,safeUntil:Number.MAX_SAFE_INTEGER,segments:[{start:10,end:Number.MAX_SAFE_INTEGER,rate:1,realDuration:Number.MAX_SAFE_INTEGER-10}]};
+  f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'relative',epoch:10,nativeGate});
+  const shown=f.frame(0,{clock,nativeWorldBoundary:committed.worldBoundary});await flush();await f.host.idle();f.host.present();await shown;
+  const status=f.host.inspect();assert.equal(status.nativeRouteFrame.clockElapsed,10);assert.equal(captureNativeRoutePickFrame(status).getGateTime(nativeGate,10),10);assert.equal(status.clockAtHorizon,true);assert.deepEqual(f.errors,[]);
+ }finally{f.close();}
+});
+
+test('independent gate clocks reject uncommitted and foreign native world references',async()=>{
+ for(const foreign of [false,true]){const f=await nativePreparationFixture();try{
+  const committed=await f.commit();assert.equal(committed.status,'committed');await flush();
+  const worldBoundary={...committed.worldBoundary,...(foreign?{authorityEpoch:'foreign'}:{ticket:committed.worldBoundary.ticket+1})};
+  f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'relative',epoch:10,nativeGate:{gateId:9,worldBoundary}});
+  const rejected=assert.rejects(f.frame(0,{clock:f.clock,nativeWorldBoundary:committed.worldBoundary}),/applied world and causal clock/);await flush();await f.host.idle();await rejected;assert.equal(f.gpu.submitted.length,0);
+ }finally{f.close();}}
+});
 test('native commit cancels an obsolete frame waiting for an unused pipeline, preserving only its uploads',async()=>{
  const f=await nativePreparationFixture();let release;
  try{

@@ -9,6 +9,7 @@ import {structureMaterialReplica} from './structure-material-replica.js';
 // as data; neither this owner nor its input proxy advances an authoritative motor.
 export function createNativeGateGpuBinding({wall,presentation,motion,getPickTime}={}){
  const packet=copyNativeGatePresentation(presentation,presentation),installed=motion?.status?.().installed;
+ if(packet.worldBoundary&&(installed?.nativeGate?.gateId!==packet.gateId||JSON.stringify(installed.nativeGate.worldBoundary)!==JSON.stringify(packet.worldBoundary)))throw Error('Native gate clock world mismatch');
  if(!wall?.isObject3D||wall.entityId!==packet.entityId||wall.nativeGateBinding||!wall.gate||wall.visual!==1||wall.lastStatus!=='intact'||wall.parts?.length!==1||typeof getPickTime!=='function'||!motion?.timeNode?.isNode||JSON.stringify(installed?.nativeRoute)!==JSON.stringify(packet.nativeRoute)||installed.start.at!==packet.startTime||installed.end.at!==packet.endTime)throw Error('Native gate graphics unavailable');
  const part=wall.parts[0],mesh=part.mesh,geometry=mesh.geometry;let previous=wall.nativeGpuGate??null;const original=previous?.originalMaterial??mesh.material,timeNode=motion.timeNode;
  if(!original?.isNodeMaterial||original.positionNode||original.normalNode||geometry.attributes.wgGatePosition?.count!==packet.leafFlags.length||geometry.attributes.wgGateNormal?.count!==packet.leafFlags.length||geometry.attributes.wgGateLeaf?.count!==packet.leafFlags.length||packet.modelId!==({zarzas:1,empalizada:2,reforzado:3}[wall.nativeGateMaterial]))throw Error('Native gate material or geometry unavailable');
@@ -32,7 +33,7 @@ export function createNativeGateGpuBinding({wall,presentation,motion,getPickTime
  }
  function raycast(raycaster,hits){rotation.makeRotationY(-sample(getPickTime())*Math.PI/2);proxy.matrixWorld.copy(mesh.matrixWorld);const found=[];Mesh.prototype.raycast.call(proxy,raycaster,found);for(const hit of found){hit.object=mesh;hits.push(hit);}}
  function rootCurrent(){wall.updateWorldMatrix(true,true);return mesh.matrixWorld.elements.every((value,i)=>Math.abs(value-root.elements[i])<=1e-5);}
- const binding={material,mesh,originalMaterial:original,originalRaycast,originalBounds,originalSphere,lease:Object.freeze({start:packet.startTime,end:packet.endTime}),nativeRoute:packet.nativeRoute,
+ const binding={material,mesh,originalMaterial:original,originalRaycast,originalBounds,originalSphere,lease:Object.freeze({start:packet.startTime,end:packet.worldBoundary?Number.MAX_SAFE_INTEGER:packet.endTime}),nativeRoute:packet.nativeRoute,nativeGate:installed.nativeGate??null,
   canActivate:()=>!disposed&&!activated&&wall.parts[0]===part&&(wall.nativeGpuGate??null)===previous&&mesh.material===(previous?.material??original)&&rootCurrent(),
   current:()=>!disposed&&activated&&wall.nativeGpuGate===binding&&wall.parts[0]===part&&mesh.material===material&&rootCurrent(),
   checkEntity(entity){if(entity.gate!==true||entity.status!=='intact'||entity.hp!==entity.maxHp||entity.material!==wall.nativeGateMaterial||!binding.current())throw Error('Native gate requires a prepared geometry or lifecycle transition');},

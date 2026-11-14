@@ -71,9 +71,13 @@ test('a gate motor change invalidates a staged barrier even if world, body, cloc
  const f=fixture();try{
   const gate={id:'structure-990001',gate:true,status:'intact',material:'zarzas',...f.point(0,0),gateOpen:0},
    service=createSpatialGateIntents(f.session,f.state);assert(service.register(gate));
-  assert.equal(f.bridge.commitNativeCausalClock().status,'committed');assert.equal(stage(f,f.point(30,30)),1);const t=ticket(f);
+  assert.equal(f.bridge.commitNativeCausalClock().status,'committed');
+  assert.equal(f.w.nav_gate_motion_stage_causal(0,0),1);assert.equal(f.w.nav_gate_motion_world_ticket(),1);
+  const motor=Array.from(new Float64Array(f.w.memory.buffer,f.w.nav_intent_barrier_proposal_ticket_ptr(),5));
+  assert.equal(stage(f,f.point(30,30)),1);const t=ticket(f);
   const revisions=f.session.core.snapshot(),sequence=f.w.nav_intent_transition_sequence(),clock=f.bridge.nativeCausalClock();
-  assert.equal(service.prepareMotion({enabled:false}).status,'prepared');
+  assert.equal(service.prepareMotion({enabled:false}).status,'unsupported','legacy immediate reconciliation cannot bypass causal preparation');
+  assert.equal(f.w.nav_gate_motion_commit_causal(...motor),1);
   assert.deepEqual(f.session.core.snapshot(),revisions);assert.equal(f.w.nav_intent_transition_sequence(),sequence);
   assert.deepEqual(f.bridge.nativeCausalClock(),clock);
   const before=f.session.core.snapshot();assert.equal(commit(f,t),-2);assert.deepEqual(f.session.core.snapshot(),before);

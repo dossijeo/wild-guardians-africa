@@ -26,7 +26,7 @@ struct NativeGate {
 };
 // A transient transaction proposal, not another live gate/planning model.
 struct NativeGateMotionProposal {
-  bool pending=false;uint32_t session=0;uint64_t ticket=0;
+  bool pending=false,causal=false;uint32_t session=0;uint64_t ticket=0;
   double at=0;
   uint64_t bodies=0,entities=0,factsSequence=0,intents=0,reservations=0;
   uint64_t clockSequence=0;

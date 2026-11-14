@@ -33,3 +33,16 @@ test('malformed and conflicting consumer clock data cannot become a pick frame',
  assert.throws(()=>captureNativeRoutePickFrame(consumer([binding(),{...binding(),elapsed:10.5}])) ,/Conflicting/);
  assert.equal(captureNativeRoutePickFrame(consumer([binding(),binding()])).getTime(route(),10),10.25);
 });
+
+test('independent gate picks require their exact submitted clock and an applied world covering its resource boundary',()=>{
+ const worldBoundary={version:1,authorityEpoch:'owner',nativeSession:1,ticket:3,effectiveTime:10},nativeGate={gateId:8,worldBoundary},entry={nativeGate,semantic:'relative',epoch:10,elapsed:10.25},value=consumer([entry]);value.nativeRouteFrame.worldBoundary=worldBoundary;
+ const pick=captureNativeRoutePickFrame(value);entry.elapsed=11;
+ assert.equal(pick.getGateTime(nativeGate,10),10.25);
+ assert.throws(()=>pick.getGateTime({...nativeGate,gateId:9},10),/no submitted/);
+ assert.throws(()=>pick.getGateTime(nativeGate,9),/no submitted/);
+ for(const boundary of [null,{...worldBoundary,ticket:2},{...worldBoundary,authorityEpoch:'other'},{...worldBoundary,nativeSession:2},{...worldBoundary,effectiveTime:9}]){
+  value.nativeRouteFrame.worldBoundary=boundary;assert.throws(()=>captureNativeRoutePickFrame(value),/world mismatch/);
+ }
+ value.nativeRouteFrame.worldBoundary={...worldBoundary,ticket:4,effectiveTime:12};assert.equal(captureNativeRoutePickFrame(value).getGateTime(nativeGate,10),11);
+ entry.nativeRoute=route();assert.throws(()=>captureNativeRoutePickFrame(value),/world mismatch/);
+});
