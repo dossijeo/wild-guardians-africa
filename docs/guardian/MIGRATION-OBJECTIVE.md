@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [relevo preparado medido por fases y comparación binaria exacta sin callback por byte](f-r4-prepared-handoff-20261114.md).
+Último avance: [tickets de admisión validados por fase reversible; relevo gráfico aún pendiente](f-r4-prepared-phase-validation-20261114.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio

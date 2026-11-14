@@ -54,7 +54,30 @@ export function createChunkPublicationCoordinator({admission,onError=()=>{},boot
   try{const requests=[];for(const part of preparationOrder){const objects=part.preparationObjects?.()??[part.object],roots=part.eventRoots();if(!Array.isArray(objects)||!objects.length||!objects.includes(part.object)||new Set(objects).size!==objects.length||objects.some(object=>!object?.isObject3D||!roots.includes(object)))throw TypeError('Invalid chunk batch preparation roots');for(const object of objects)requests.push({part,object});}
    const tickets=[];for(const {object} of requests){if(!active||controller.signal.aborted)throw new DOMException('Chunk batch cancelled','AbortError');tickets.push(await admission.prepareTicket(object,{signal:controller.signal,...(requireShadowTarget?{requireShadowTarget:true}:{})}));}if(!active||closed||tickets.some(ticket=>typeof ticket?.valid!=='function'||!ticket.valid()))throw Error('Chunk batch admission became stale');
    const valid=()=>active&&!closed&&!controller.signal.aborted&&tickets.every(ticket=>ticket.valid());
-   return {valid,commit(){if(!valid()){cancel();throw Error('Chunk batch admission became stale');}const attached=[],finalizing=[],notifications=[],assertValid=()=>{if(closed||controller.signal.aborted||tickets.some((ticket,index)=>!(attached.includes(requests[index].part)?ticket.validAfterAttach?.()??ticket.valid():ticket.valid())))throw Error('Chunk batch admission became stale');};committing=true;try{assertNoSynchronousObservers(scene,parts);for(const part of parts){if(part.activate()===false)throw Error('Chunk batch activation rejected');assertValid();}for(const part of parts){attached.push(part);part.attach();assertValid();}for(const part of parts){finalizing.push(part);const result=part.finalize();if(!result||typeof result.retire!=='function'||typeof result.notify!=='function')throw TypeError('Invalid chunk batch finalization');notifications.push(result);assertValid();}for(const [key,group] of groups){published.set(key,{epoch:group.epoch,revision:group.revision,order:group.order,explicit:true});latestOrders.set(key,{order:group.order,base:JSON.stringify([group.epoch,group.revision])});}committing=false;active=false;release();for(const result of notifications)try{result.retire();}catch(error){try{onError(error);}catch{}}for(const result of notifications)try{result.notify();}catch(error){try{onError(error);}catch{}}return true;}catch(error){for(const part of finalizing.reverse())try{part.rollbackFinalized();}catch(failure){try{onError(failure);}catch{}}for(const part of attached.reverse())try{part.rollback();}catch(failure){try{onError(failure);}catch{}}committing=false;cancel();throw error;}},abort:cancel};
+   return {valid,commit(){
+    if(!valid()){cancel();throw Error('Chunk batch admission became stale');}
+    const attached=[],finalizing=[],notifications=[];
+    const assertCurrent=()=>{if(closed||controller.signal.aborted)throw Error('Chunk batch admission became stale');};
+    const assertValid=(afterAttach=false)=>{assertCurrent();if(tickets.some(ticket=>!(afterAttach?ticket.validAfterAttach?.()??ticket.valid():ticket.valid())))throw Error('Chunk batch admission became stale');};
+    committing=true;try{
+     assertNoSynchronousObservers(scene,parts);
+     // These opt-in owner phases must be synchronous and reversible, without
+     // rendering, notification or retirement. Validate the complete read set at each
+     // phase boundary instead of rescanning every subtree after every member.
+     // Cancellation/disposal still stops the very next member immediately.
+     for(const part of parts){if(part.activate()===false)throw Error('Chunk batch activation rejected');assertCurrent();}
+     assertValid();
+     for(const part of parts){attached.push(part);part.attach();assertCurrent();}
+     assertValid(true);
+     for(const part of parts){finalizing.push(part);const result=part.finalize();if(!result||typeof result.retire!=='function'||typeof result.notify!=='function')throw TypeError('Invalid chunk batch finalization');notifications.push(result);assertCurrent();}
+     assertValid(true);
+     for(const [key,group] of groups){published.set(key,{epoch:group.epoch,revision:group.revision,order:group.order,explicit:true});latestOrders.set(key,{order:group.order,base:JSON.stringify([group.epoch,group.revision])});}
+     committing=false;active=false;release();
+     for(const result of notifications)try{result.retire();}catch(error){try{onError(error);}catch{}}
+     for(const result of notifications)try{result.notify();}catch(error){try{onError(error);}catch{}}
+     return true;
+    }catch(error){for(const part of finalizing.reverse())try{part.rollbackFinalized();}catch(failure){try{onError(failure);}catch{}}for(const part of attached.reverse())try{part.rollback();}catch(failure){try{onError(failure);}catch{}}committing=false;cancel();throw error;}
+   },abort:cancel};
   }catch(error){cancel();throw error;}
  }
  // The owners must also retire their own participants. This method only
