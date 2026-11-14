@@ -161,7 +161,10 @@ for(const [attest,stale] of [[true,false],[false,false],[true,true]])test(`a nat
   const before=native.body(1),resumeHandle=native.bridge.nativeSuspendedGateRoute(held.nativeRoute.actorId).resumeHandle;
   if(!attest){const release=source.releaseGpuAfterMutation;source.releaseGpuAfterMutation=(receipt,options)=>release(receipt,{...options,nativeResumedRoutes:[]});}
   assert.throws(()=>native.bridge.resumeNativeGateRouteAfterGpuQuiescence({getPublication:()=>source,resumeHandle}),/retained resource preparation/);
-  let aborted;const result=await native.bridge.resumeNativeGateRouteAfterGpuQuiescence({getPublication:()=>source,resumeHandle,prepareResources:async({resources,proposedWorldBoundary})=>{
+  const staged=native.bridge.prepareNativeGateResumeProposal(resumeHandle);assert.equal(staged.status,'proposed');
+  const revalidated=native.bridge.revalidateNativeGateResumeProposal(staged.proposal.ticket);assert.equal(revalidated.status,'revalidated');
+  const wrong=await native.bridge.resumeNativeGateRouteAfterGpuQuiescence({getPublication:()=>source,resumeHandle,proposalTicket:staged.proposal.ticket,prepareResources(){throw Error('Wrong ticket prepared resources');}});assert.notEqual(wrong.status,'committed');assert(native.bridge.captureNativeGateResumeProposal(revalidated.proposal.ticket));
+  let aborted;const result=await native.bridge.resumeNativeGateRouteAfterGpuQuiescence({getPublication:()=>source,resumeHandle,proposalTicket:revalidated.proposal.ticket,prepareResources:async({resources,proposedWorldBoundary})=>{
    reference=nativeResumeReferenceFromProposal(resources);assert.equal(Object.hasOwn(resources,'assignmentSequence'),false);assert.equal(native.bridge.nativeRouteTiming(reference.expectedRouteHandle),null);assert.deepEqual(native.body(1),before);
    // Other independent scene resources may outlive this worker's own table.
    const clock=heldClock;f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'relative',epoch:at,nativeResume:reference});prepared=await preparedWorldDraw({...f,clock},proposedWorldBoundary);

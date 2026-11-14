@@ -1031,14 +1031,46 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     try{const proposal=captureNativeGateResumeProposal(ticket);if(!proposal)throw Error('Native resume proposal expired during capture');return outcome('proposed',{proposal});}catch(error){wasm.nav_gate_resume_proposal_cancel(t[0],t[1]);throw error;}
   };
   const cancelNativeGateResumeProposal=ticket=>ticket?.kind==='native-route-resume-proposal-ticket'&&ticket.authorityEpoch===epoch()&&wasm.nav_gate_resume_proposal_cancel(ticket.session,ticket.ticket)===1;
-  const resumeNativeGateRouteAfterGpuQuiescence=({getPublication,resumeHandle,prepareResources,signal=null}={})=>{
+  // Revalidate a late result from its native-owned suspended identity, never
+  // caller-supplied replacement handles. A fresh ticket/data set requires fresh
+  // graphical admission; this operation cannot renew the old GPU permission.
+  const revalidateNativeGateResumeProposal=ticket=>{
+    const outcome=(status,extra={})=>({status,authorizedAutonomy:false,authorizedPassage:false,...extra});
+    if(ticket?.kind!=='native-route-resume-proposal-ticket'||ticket.authorityEpoch!==epoch()||wasm.nav_gate_resume_proposal_version?.()!==1||wasm.nav_intent_barrier_proposal_ticket()!==1)return outcome('stale');
+    const t=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6));
+    if(t[0]!==ticket.session||t[1]!==ticket.ticket||t[5]!==13)return outcome('stale');
+    // The pending header is retained after a clock change. It identifies only
+    // the source body; all current geometry/physics/timing is proved anew by
+    // prepareNativeGateResumeProposal after cancelling the obsolete ticket.
+    const pointer=wasm.nav_gate_resume_proposal_header_ptr();if(!pointer)return outcome('stale');
+    const h=Array.from(new Float64Array(wasm.memory.buffer,pointer,24)),source=routeHandle(t[0],h[20],h[3]),previousTicket=Object.freeze({kind:ticket.kind,authorityEpoch:ticket.authorityEpoch,session:ticket.session,ticket:ticket.ticket});
+    if(h[0]!==1||![h[1],h[2],h[3],h[21]].every(value=>Number.isSafeInteger(value)&&value>0)||!Number.isSafeInteger(h[20])||h[20]<0)throw Error('Native pending resume identity unavailable');
+    if(!cancelNativeGateResumeProposal(previousTicket))return outcome('stale');
+    const result=prepareNativeGateResumeProposal(source);
+    if(result.status!=='proposed')return {...result,previousTicket};
+    const p=result.proposal;
+    if(p.actorId!==h[1]||p.bodyId!==h[2]||p.sourceAssignmentSequence!==h[21]||p.suspendedAt!==h[22]){cancelNativeGateResumeProposal(p.ticket);return outcome('stale',{previousTicket});}
+    return outcome('revalidated',{previousTicket,proposal:p,requiresResourcePreparation:true});
+  };
+  const resumeNativeGateRouteAfterGpuQuiescence=({getPublication,resumeHandle,proposalTicket=null,prepareResources,signal=null}={})=>{
     if(typeof prepareResources!=='function'||signal!==null&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Native resume requires retained resource preparation');
     if(wasm.nav_gate_resume_proposal_version?.()!==1)throw Error('Rebuild native resume proposal service');
     let candidate=null;
+    const stage=()=>{
+      if(resumeHandle?.authorityEpoch!==epoch())return -1;
+      if(proposalTicket===null)return wasm.nav_gate_resume_proposal_stage(resumeHandle.session,resumeHandle.slot,resumeHandle.generation);
+      if(proposalTicket?.kind!=='native-route-resume-proposal-ticket'||proposalTicket.authorityEpoch!==epoch()||proposalTicket.session!==resumeHandle.session||wasm.nav_intent_barrier_proposal_ticket()!==1)return -1;
+      const t=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6));
+      if(t[0]!==proposalTicket.session||t[1]!==proposalTicket.ticket||t[5]!==13)return -1;
+      const pointer=wasm.nav_gate_resume_proposal_header_ptr();if(!pointer)return -1;
+      const h=new Float64Array(wasm.memory.buffer,pointer,24);
+      if(h[20]!==resumeHandle.slot||h[3]!==resumeHandle.generation)return -1;
+      return wasm.nav_gate_resume_proposal_snapshot(t[0],t[1]);
+    };
     const protocol={preparedFrameRequired:true,ticket:()=>wasm.nav_intent_barrier_proposal_ticket(),ticketPtr:()=>wasm.nav_intent_barrier_proposal_ticket_ptr(),
       snapshot:(session,ticket)=>wasm.nav_gate_resume_proposal_snapshot(session,ticket),cancel:(session,ticket)=>wasm.nav_gate_resume_proposal_cancel(session,ticket),release(){},
       capture(boundary){candidate=captureNativeGateResumeProposal(Object.freeze({kind:'native-route-resume-proposal-ticket',authorityEpoch:boundary.authorityEpoch,session:boundary.nativeSession,ticket:boundary.ticket}));if(!candidate)throw Error('Native resume resources unavailable');return candidate;}};
-    return commitNativeWorldProposal(getPublication,()=>resumeHandle?.authorityEpoch===epoch()?wasm.nav_gate_resume_proposal_stage(resumeHandle.session,resumeHandle.slot,resumeHandle.generation):-1,
+    return commitNativeWorldProposal(getPublication,stage,
       (mark,...boundary)=>{const status=wasm.nav_gate_resume_proposal_commit(...boundary);if(status!==1)return {status};mark();
         const plan=nativeRouteTiming(candidate.expectedRouteHandle);if(!plan||plan.actorId!==candidate.actorId)throw Error('Native resumed assignment unavailable');
         const started=beginNativeRouteExecution();if(started.status!=='started')throw Error('Native resumed execution could not establish its causal boundary');
@@ -1430,7 +1462,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     structureFor:id=>structuresById.get(numericId(id))??null,
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
-    intentChanges,routePoints,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,captureNativeRoutePresentation,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,resumeNativeGateRouteAfterGpuQuiescence,prepareNativeGateResumeProposal,captureNativeGateResumeProposal,cancelNativeGateResumeProposal,
+    intentChanges,routePoints,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,captureNativeRoutePresentation,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,resumeNativeGateRouteAfterGpuQuiescence,prepareNativeGateResumeProposal,captureNativeGateResumeProposal,cancelNativeGateResumeProposal,revalidateNativeGateResumeProposal,
     beginNativeRouteExecution,advanceNativeRouteExecution,stopNativeRouteExecution,nativeRouteExecution,
     projectRouteProgress,processEventBoundary,requestReroute,
     registerAttackIntent,planAttackCrop,planAttackWall,replanAttackRoute,
@@ -2349,7 +2381,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     nativeGateMechanism:bridge.nativeGateMechanism,nativeGateMechanismPose:bridge.nativeGateMechanismPose,nativeGateMechanismSegment:bridge.nativeGateMechanismSegment,
     nativeGateMechanismWorldVertices:bridge.nativeGateMechanismWorldVertices,
     admitNativeGateRoute:bridge.admitNativeGateRoute,nativeGateCrossings:bridge.nativeGateCrossings,
-    nativeSuspendedGateRoute:bridge.nativeSuspendedGateRoute,suspendNativeGateRoute:bridge.suspendNativeGateRoute,resumeNativeGateRoute:bridge.resumeNativeGateRoute,resumeNativeGateRouteAfterGpuQuiescence:bridge.resumeNativeGateRouteAfterGpuQuiescence,prepareNativeGateResumeProposal:bridge.prepareNativeGateResumeProposal,captureNativeGateResumeProposal:bridge.captureNativeGateResumeProposal,cancelNativeGateResumeProposal:bridge.cancelNativeGateResumeProposal,
+    nativeSuspendedGateRoute:bridge.nativeSuspendedGateRoute,suspendNativeGateRoute:bridge.suspendNativeGateRoute,resumeNativeGateRoute:bridge.resumeNativeGateRoute,resumeNativeGateRouteAfterGpuQuiescence:bridge.resumeNativeGateRouteAfterGpuQuiescence,prepareNativeGateResumeProposal:bridge.prepareNativeGateResumeProposal,captureNativeGateResumeProposal:bridge.captureNativeGateResumeProposal,cancelNativeGateResumeProposal:bridge.cancelNativeGateResumeProposal,revalidateNativeGateResumeProposal:bridge.revalidateNativeGateResumeProposal,
     prepareNativeGateMotionAfterGpuFence:bridge.prepareNativeGateMotionAfterGpuFence,
     reserveNativeRoute:bridge.reserveNativeRoute,
     prepareNativeRouteMotion:bridge.prepareNativeRouteMotion,
