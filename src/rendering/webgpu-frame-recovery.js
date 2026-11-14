@@ -4,7 +4,7 @@ import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-w
 // invalidation). Retained uploads still require a genuinely applied native
 // delta and freshly recorded passes, never a new tag on the rejected commands.
 export function isPreparedFrameInvalidation(error) {
-  return error?.code === 'historical-playback-invalidated' || error?.code === 'remote-frame-native-mutation-obsolete';
+  return error?.code === 'historical-playback-invalidated' || error?.code === 'remote-frame-native-mutation-obsolete' || error?.code === 'remote-frame-native-route-obsolete';
 }
 
 function sameOwner(a,b){return !!a&&!!b&&a.authorityEpoch===b.authorityEpoch&&a.nativeSession===b.nativeSession;}

@@ -597,6 +597,18 @@ test('native permission is checked after resource preparation, preventing late r
   assert.equal(f.gpu.submitted.length,0);
 });
 
+test('an obsolete route packet retains the healthy device and last frame until a prepared replacement arrives',async()=>{
+ const [authorityPort,drawControlPort]=pair(),f=await fixture({}, {absoluteNow:()=>0,intentControl:{port:drawControlPort,authorityEpoch:'native-owner'}}),old=nativeHandle(0),next=nativeHandle(1),clock=at=>({version:1,epoch:0,elapsed:at,safeUntil:at,anchorAbsoluteMs:0,paused:true,segments:[]});
+ try{
+  authorityPort.postMessage(nativeControlEvent('RouteAssigned',1,7,old,10));await flush();f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'absolute',epoch:0,nativeRoute:{actorId:7,routeHandle:old,assignmentSequence:1}});
+  const first=f.frame(0,{clock:clock(10)});await flush();await f.host.idle();f.host.present();await first;const buffers=f.gpu.buffers.length,active=f.host.inspect().activeSequence;
+  authorityPort.postMessage(nativeControlEvent('RouteInvalidated',2,7,old,11));await flush();const late=f.frame(0,{clock:clock(11)}),rejected=assert.rejects(late,error=>error.code==='remote-frame-native-route-obsolete'&&error.resourcePreparationsRetained===true);await flush();await f.host.idle();await rejected;
+  assert.equal(f.host.inspect().failed,false);assert.equal(f.host.inspect().activeSequence,active);assert.equal(f.client.requiredNativeWorldBoundary(),null);assert.equal(f.gpu.buffers.length,buffers);
+  authorityPort.postMessage(nativeControlEvent('RouteAssigned',3,7,next,11));await flush();f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'absolute',epoch:0,nativeRoute:{actorId:7,routeHandle:next,assignmentSequence:3}});
+  const fresh=f.frame(0,{clock:clock(11)});await flush();await f.host.idle();f.host.present();await fresh;assert.equal(f.host.inspect().failed,false);assert.notEqual(f.host.inspect().activeSequence,active);assert.equal(f.gpu.buffers.length,buffers);
+ }finally{f.client.dispose();f.host.dispose();}
+});
+
 test('direct native GPU fence waits for submitted GPU work while bypassing a blocked resource FIFO',async()=>{
  const [authorityPort,drawControlPort]=pair(),messages=[];authorityPort.onmessage=({data})=>messages.push(data);
  const f=await fixture({}, {absoluteNow:()=>0,intentControl:{port:drawControlPort,authorityEpoch:'native-owner'}});

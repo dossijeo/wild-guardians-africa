@@ -275,3 +275,6 @@ perfil olderFemale utiliza sus texturas y bake originales. Esto sustituye la
 limitación de triángulos en esta prueba de componente; no conecta todavía las
 asignaciones a WorldSurface/rosters ordinarios ni sus cambios de clip/recuperación.
 f-R4, e-R3/e-R4 y los once padres permanecen abiertos.
+
+
+Continuación parcial f-R4, 14 de noviembre: [preparación y relevo en los propietarios normales del trabajador](f-r4-native-worker-owners-20261114.md). WorldClient/Worker/Surface/roster preparan y confirman el primer dibujo; la misma asignación conserva los 1939 recursos del mundo de prueba. Relevo sobre el rig y geometría existentes, cero fábricas GPU en el primer render y 15 dibujos durante bloqueo de 500 ms. El productor ordinario de asignaciones, transiciones, demás intenciones y aceptación integrada siguen pendientes; no cambia el recuento de cierres.

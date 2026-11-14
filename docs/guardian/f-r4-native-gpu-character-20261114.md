@@ -104,8 +104,8 @@ diagnóstico. Estas cifras no son una declaración de suite global verde.
 Consumir las asignaciones completas en los rosters/WorldSurface ordinarios,
 preparar y sustituir sus alternativas de material/animación de forma reversible,
 y conectar su vigencia al cambio físico y a la recuperación. La prueba utiliza
-esos componentes originales en un montaje de QA; no introduce la funcionalidad
-essencial sólo en un flujo QA ni declara entregada la integración que falta.
+esos componentes originales en un montaje de QA y no acredita su alimentación
+ordinaria. El siguiente [incremento conecta los propietarios de producto](f-r4-native-worker-owners-20261114.md); su productor automático continúa pendiente.
 
 También quedan cambios Run/Walk/Carry/espera/acción en una ruta completa,
 animal AttackCrops, puertas y conflictos móviles con personajes, mutaciones con

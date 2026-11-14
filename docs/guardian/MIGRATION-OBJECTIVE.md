@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [ruta nativa GPU y animación del trabajador original con preparador bloqueado y cero fábricas tardías](f-r4-native-gpu-character-20261114.md).
+Último avance: [preparación y relevo nativo en cliente/Worker/superficie/roster normales, con reutilización y cero fábricas en el primer render](f-r4-native-worker-owners-20261114.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio

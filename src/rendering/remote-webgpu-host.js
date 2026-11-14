@@ -600,7 +600,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     if(closeImages)closePreparationImages(stagedOperations);stagedOperations=[];retainedPreparationOperationCount=0;releaseSnapshot(old);
     for(const entry of pendingRetirement)tryRetire(entry);
   }
-  function rejectPreparedFrame(packet,reason,wasPending=false){
+  function rejectPreparedFrame(packet,reason,wasPending=false,cause='native-world'){
     if(!wasPending)validateOperations(packet.operations);
     const groups=wasPending?[{operations:packet.operations,source:packet.resourceSnapshot},{operations:stagedOperations,source:retainedPreparationSnapshot}]:
       [{operations:stagedOperations,source:retainedPreparationSnapshot},{operations:packet.operations,source:null}];
@@ -622,7 +622,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       closePreparationImages(groups.flatMap(group=>group.operations));
       discardRetainedPreparations(false);
     }
-    port.postMessage({type:'frame-obsolete',sequence:packet.sequence,reason,resourcePreparationsRetained:retained});
+    port.postMessage({type:'frame-obsolete',sequence:packet.sequence,reason,cause,resourcePreparationsRetained:retained});
   }
   function retainedPreparationsFor(operations){
     if(!retainedPreparationSnapshot)return stagedOperations;
@@ -751,7 +751,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         packet.nativeMutationEpoch=message.nativeMutationEpoch;
         // Resolve permissions after all resource awaits. A direct revocation may
         // have arrived while this generation waited for a model or pipeline.
-        packet.admittedClockBindings=Array.from(clockBindings.values())
+        try{packet.admittedClockBindings=Array.from(clockBindings.values())
           .filter(binding=>packet.resourceSnapshot.has(binding.id))
           .map(binding=>{
             if(!binding.nativeRoute)return {...binding};
@@ -760,7 +760,13 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
             const routeRecord=routeControl.admit(binding.nativeRoute);
             if(packet.metadata.clock.safeUntil<routeRecord.startTime)throw Error('Prepared clock does not cover native route assignment');
             return {...binding,routeRecord};
-          });
+          });}catch(error){
+          if(error?.code!=='native-route-admission-obsolete')throw error;
+          // The same healthy-device preparation retention applies when direct
+          // route control overtakes a packet on the resource channel. It grants
+          // no route/time and does not turn this into a physical world change.
+          rejectPreparedFrame({...packet,operations:message.packet.operations},error.message,false,'native-route');break;
+        }
         classifyBufferOwnership(packet);
         const writeCounts = new Map();
         for (const op of packet.operations) if (op.method === 'writeBuffer') {

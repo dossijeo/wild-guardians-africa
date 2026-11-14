@@ -206,3 +206,20 @@ test('quality follows the initial Worker and can change while it is initializing
 test('awakening selection is sent immediately, deduplicated and remains presentation-only',async()=>{
  const {client,worker}=setup();try{client.setAwakeningSelection(true,'wall-1');assert.deepEqual(worker.messages.at(-1).message,{kind:'awakening-selection',selecting:true,targetId:'wall-1'});const count=worker.messages.length;client.setAwakeningSelection(true,'wall-1');assert.equal(worker.messages.length,count);assert.throws(()=>client.setAwakeningSelection(true,''),/selection/);worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await client.ready;client.setAwakeningSelection(false,null);assert.deepEqual(worker.messages.at(-1).message,{kind:'awakening-selection',selecting:false,targetId:null});}finally{client.dispose();}
 });
+
+
+test('native route resources use the ordinary request owner and require independent direct control',async()=>{
+ const simple=setup();simple.worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await simple.client.ready;
+ await assert.rejects(simple.client.prepareNativeRoute('worker-1',{}),/direct draw control/);simple.client.dispose();
+ const draw={postMessage(){},terminate(){}},control={postMessage(){}},f=setup({remoteDraw:true,intentControlPort:control,drawWorkerFactory:()=>draw});f.worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await f.client.ready;
+ const packet={rows:new Float64Array([1,2])},manifest={epoch:'e',chunks:[]};let done=false;
+ const preparing=f.client.prepareNativeRoute('worker-1',packet,{terrainManifest:manifest}).then(value=>{done=true;return value;}),request=f.worker.messages.at(-1).message;
+ assert.equal(request.kind,'prepareNativeRoute');assert.equal(request.actorId,'worker-1');assert.equal(request.packet,packet);assert.equal(request.terrainManifest,manifest);
+ f.worker.onmessage({data:{kind:'firstFrame'}});await Promise.resolve();assert.equal(done,false);
+ const receipt={actorId:'worker-1',nativeRoute:{assignmentSequence:2}};f.worker.onmessage({data:{kind:'nativeRouteResult',id:request.id,result:receipt}});assert.equal(await preparing,receipt);
+ const release=f.client.releaseNativeRoute('worker-1',receipt.nativeRoute),removal=f.worker.messages.at(-1).message;assert.equal(removal.kind,'releaseNativeRoute');
+ f.worker.onmessage({data:{kind:'nativeRouteResult',id:removal.id,result:false}});assert.equal(await release,false);
+ const rejected=f.client.prepareNativeRoute('worker-1',packet,{terrainManifest:manifest}),failed=f.worker.messages.at(-1).message;
+ f.worker.onmessage({data:{kind:'nativeRouteError',id:failed.id,message:'route superseded'}});await assert.rejects(rejected,/superseded/);
+ assert.equal(f.client.status().phase,'running');f.client.dispose();f.worker.onmessage({data:{kind:'disposed'}});
+});

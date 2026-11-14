@@ -2,7 +2,7 @@
 
 Actualizado: 2026-11-14. IDs acordados en la conversación; no se renumeran al avanzar.
 
-Último incremento de f-R4: [ruta completa y fases nativas en GPU sobre el trabajador original](f-r4-native-gpu-character-20261114.md).
+Último incremento de f-R4: [preparación/relevo de rutas en propietarios normales con reutilización](f-r4-native-worker-owners-20261114.md).
 Publicaciones ordinarias y aceptación integrada de personajes autónomos siguen pendientes; no cambia el recuento de cierres.
 
 **Ningún punto principal está cerrado todavía.** Un subpunto marcado como nativo
