@@ -212,3 +212,48 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_resume_proposal_cancel(double session,double t
   const auto& p=state().barrierProposal;if(p.kind!=13||!p.resume)return 0;
   return nav_intent_barrier_proposal_cancel(session,ticket);
 }
+
+// Compare immutable motion data separately from its execution origin. All
+// values are native doubles: no epsilon, hash or caller-supplied replacement
+// data may make different motion appear equivalent. False is conservative.
+static bool sameNativeResumeMotion(const PendingNativeResume& a,const PendingNativeResume& b){
+  if(a.slot!=b.slot||a.generation!=b.generation||a.body!=b.body||a.route.points!=b.route.points||a.route.gateReservations!=b.route.gateReservations||a.rows.size()!=b.rows.size())return false;
+  for(size_t i=0;i<a.header.size();i++)if(i!=10&&i!=11&&i!=23&&a.header[i]!=b.header[i])return false;
+  if(a.header[11]-a.header[10]!=b.header[11]-b.header[10])return false;
+  for(size_t i=0;i<a.rows.size();i++){
+    const double oldValue=i%16?a.rows[i]:a.rows[i]-a.route.startTime,newValue=i%16?b.rows[i]:b.rows[i]-b.route.startTime;
+    if(oldValue!=newValue)return false;
+  }
+  return true;
+}
+static bool sameNativeResumeGates(IntentState& s,const PendingNativeResume& a,const PendingNativeResume& b){
+  if(a.route.gateReservations!=b.route.gateReservations)return false;
+  for(uint64_t id:a.route.gateReservations){
+    const auto old=a.gates.find(id),next=b.gates.find(id);
+    if(old==a.gates.end()||next==b.gates.end()||!old->second.mesh||old->second.mesh!=next->second.mesh)return false;
+    if(captureNativeGateRouteCurve(s,a.route,old->second)<1)return false;const auto values=s.gateResult;
+    if(captureNativeGateRouteCurve(s,b.route,next->second)<1||values.size()!=s.gateResult.size())return false;
+    for(size_t i=0;i<values.size();i++){
+      const bool time=i>=21&&(i-21)%2==0;
+      if((time?values[i]-a.route.startTime:values[i])!=(time?s.gateResult[i]-b.route.startTime:s.gateResult[i]))return false;
+    }
+  }
+  return true;
+}
+EMSCRIPTEN_KEEPALIVE int nav_gate_resume_revalidation_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int nav_gate_resume_proposal_revalidate(double session,double ticket){
+  auto& s=state();auto& p=s.barrierProposal;
+  if(!p.pending||p.kind!=13||!p.resume||session!=double(p.session)||ticket!=double(p.ticket))return -1;
+  // This read identifies only the old native draft. Rebuilding below performs
+  // the complete current body/world/gate/reservation proof at effectiveTime.
+  auto old=std::move(*p.resume);clearWorldMutationProposal(p);
+  const int result=nav_gate_resume_proposal_stage(session,double(old.slot),double(old.generation));if(result!=1)return result;
+  auto& next=*s.barrierProposal.resume;
+  next.timeTranslation={1,ticket,double(s.barrierProposal.ticket),old.header[10],old.header[11],next.header[10],next.header[11],
+    sameNativeResumeMotion(old,next)?1.:0.,sameNativeResumeGates(s,old,next)?1.:0.};
+  return 1;
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_gate_resume_proposal_time_translation_ptr(double session,double ticket){
+  const auto& p=state().barrierProposal;
+  return p.pending&&p.kind==13&&p.resume&&session==double(p.session)&&ticket==double(p.ticket)&&p.resume->timeTranslation[0]==1?p.resume->timeTranslation.data():nullptr;
+}

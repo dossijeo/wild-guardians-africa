@@ -185,6 +185,9 @@ struct PendingNativeResume {
   std::vector<GateCrossingBoundary> boundaries;
   std::vector<double> rows;
   std::array<double,24> header{};
+  // Evidence about the previous native-owned draft, never an execution grant.
+  // Kept only in the one current proposal; cancelling it drops the evidence.
+  std::array<double,9> timeTranslation{};
   uint32_t slot=0,generation=0,topology=0;
   uint64_t body=0;
 };

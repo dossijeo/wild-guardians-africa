@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [renovación de datos de reanudación con recursos retenidos](f-r4-reusable-native-resume-20261114.md).
+Último avance: [comparación nativa de descripción y origen temporal](f-r4-native-resume-time-translation-20261114.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio

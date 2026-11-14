@@ -1039,18 +1039,21 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     if(ticket?.kind!=='native-route-resume-proposal-ticket'||ticket.authorityEpoch!==epoch()||wasm.nav_gate_resume_proposal_version?.()!==1||wasm.nav_intent_barrier_proposal_ticket()!==1)return outcome('stale');
     const t=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6));
     if(t[0]!==ticket.session||t[1]!==ticket.ticket||t[5]!==13)return outcome('stale');
-    // The pending header is retained after a clock change. It identifies only
-    // the source body; all current geometry/physics/timing is proved anew by
-    // prepareNativeGateResumeProposal after cancelling the obsolete ticket.
-    const pointer=wasm.nav_gate_resume_proposal_header_ptr();if(!pointer)return outcome('stale');
-    const h=Array.from(new Float64Array(wasm.memory.buffer,pointer,24)),source=routeHandle(t[0],h[20],h[3]),previousTicket=Object.freeze({kind:ticket.kind,authorityEpoch:ticket.authorityEpoch,session:ticket.session,ticket:ticket.ticket});
-    if(h[0]!==1||![h[1],h[2],h[3],h[21]].every(value=>Number.isSafeInteger(value)&&value>0)||!Number.isSafeInteger(h[20])||h[20]<0)throw Error('Native pending resume identity unavailable');
-    if(!cancelNativeGateResumeProposal(previousTicket))return outcome('stale');
-    const result=prepareNativeGateResumeProposal(source);
-    if(result.status!=='proposed')return {...result,previousTicket};
-    const p=result.proposal;
-    if(p.actorId!==h[1]||p.bodyId!==h[2]||p.sourceAssignmentSequence!==h[21]||p.suspendedAt!==h[22]){cancelNativeGateResumeProposal(p.ticket);return outcome('stale',{previousTicket});}
-    return outcome('revalidated',{previousTicket,proposal:p,requiresResourcePreparation:true});
+    if(wasm.nav_gate_resume_revalidation_version?.()!==1)throw Error('Rebuild native resume revalidation service');
+    const previousTicket=Object.freeze({kind:ticket.kind,authorityEpoch:ticket.authorityEpoch,session:ticket.session,ticket:ticket.ticket});
+    syncBoundaryTime();flushNativeIntentControl();
+    const status=wasm.nav_gate_resume_proposal_revalidate(ticket.session,ticket.ticket);
+    if(status!==1)return outcome(status===-1?'stale':status===-3?'body-mismatch':status===-4?'busy':status===0?'conflict':status===-6?'unknown':status===-8?'blocked':'unsupported',{previousTicket});
+    if(wasm.nav_intent_barrier_proposal_ticket()!==1)throw Error('Native revalidation lost its proposal');
+    const current=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6)),nextTicket=Object.freeze({...previousTicket,session:current[0],ticket:current[1]});
+    try{
+      const proposal=captureNativeGateResumeProposal(nextTicket),pointer=wasm.nav_gate_resume_proposal_time_translation_ptr(current[0],current[1]);
+      if(!proposal||!pointer)throw Error('Native time translation evidence unavailable');
+      const values=Array.from(new Float64Array(wasm.memory.buffer,pointer,9));
+      if(values[0]!==1||values[1]!==ticket.ticket||values[2]!==nextTicket.ticket||values[5]!==proposal.startTime||values[6]!==proposal.endTime||![values[7],values[8]].every(value=>value===0||value===1)||!values.every(Number.isFinite))throw Error('Invalid native time translation evidence');
+      const timeTranslation=Object.freeze({kind:'native-resume-time-translation',version:1,previousTicket,ticket:nextTicket,sourceResumeHandle:proposal.sourceResumeHandle,previousStartTime:values[3],previousEndTime:values[4],startTime:values[5],endTime:values[6],sameNativeMotion:values[7]===1,sameNativeGates:values[8]===1,authorizedAutonomy:false,authorizedPassage:false});
+      return outcome('revalidated',{previousTicket,proposal,timeTranslation,requiresResourcePreparation:true});
+    }catch(error){cancelNativeGateResumeProposal(nextTicket);throw error;}
   };
   const resumeNativeGateRouteAfterGpuQuiescence=({getPublication,resumeHandle,proposalTicket=null,prepareResources,signal=null}={})=>{
     if(typeof prepareResources!=='function'||signal!==null&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Native resume requires retained resource preparation');

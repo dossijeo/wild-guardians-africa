@@ -2,7 +2,7 @@
 
 Actualizado: 2026-11-14. IDs acordados en la conversación; no se renumeran al avanzar.
 
-Último incremento de f-R4: [renovación de datos de reanudación con recursos retenidos](f-r4-reusable-native-resume-20261114.md).
+Último incremento de f-R4: [comparación nativa de descripción y origen temporal](f-r4-native-resume-time-translation-20261114.md).
 Publicaciones ordinarias y aceptación integrada de personajes autónomos siguen pendientes; no cambia el recuento de cierres.
 
 **Ningún punto principal está cerrado todavía.** Un subpunto marcado como nativo
