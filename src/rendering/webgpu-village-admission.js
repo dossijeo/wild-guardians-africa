@@ -8,5 +8,5 @@ export function createWebGpuAdmittedVillage({pipelineAdmission,resourceRegistry=
   if(closed)return;if(typeof key!=='string'||typeof build!=='function')throw TypeError('Invalid village layout');
   slot.request(key,()=>{const object=build();if(!object?.isGroup)throw TypeError('Village layout must be a group');return object;});
  }
- return {group:slot.group,update,get ready(){return slot.ready;},get upToDate(){return slot.upToDate;},get meshes(){return slot.active?.children??[];},dispose(){if(closed)return;closed=true;slot.dispose();}};
+ return {group:slot.group,update,prepareParticipant:(key,build)=>slot.prepareParticipant(key,build),get activeKey(){return slot.activeKey;},get ready(){return slot.ready;},get upToDate(){return slot.upToDate;},get meshes(){return slot.active?.children??[];},dispose(){if(closed)return;closed=true;slot.dispose();}};
 }

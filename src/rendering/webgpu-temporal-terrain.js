@@ -5,15 +5,16 @@ import {deserializeConfirmedState} from '../simulation/confirmed-live-state.js';
 import {validateTerrainResourceRemoval} from '../world/terrain-resource-removal.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 
-export async function prepareWebGpuTemporalTerrain(messages,{signal,scene,residency,biome,coordinator,publicationEpoch,publicationOrder,validateInstances,suppressed,requireShadowTarget=false,mudPreparer=null,onPreparedIdentity=null,onDiscardIdentity=null}={}){
+export async function prepareWebGpuTemporalTerrain(messages,{signal,scene,residency,biome,coordinator,publicationEpoch,publicationOrder,validateInstances,suppressed,requireShadowTarget=false,mudPreparer=null,onPreparedIdentity=null,onDiscardIdentity=null,prepareDependents=null}={}){
  if(!Array.isArray(messages)||!messages.length||!scene?.isScene||typeof requireShadowTarget!=='boolean'||typeof residency?.prepareRevision!=='function'||typeof biome?.prepareRevision!=='function'||typeof biome?.requestSlots!=='function'||typeof coordinator?.prepareBatch!=='function'||typeof publicationEpoch!=='function'||typeof publicationOrder!=='function'||typeof validateInstances!=='function')throw TypeError('Invalid temporal terrain preparation');
  if(onPreparedIdentity!==null&&typeof onPreparedIdentity!=='function'||onDiscardIdentity!==null&&(typeof onDiscardIdentity!=='function'||onPreparedIdentity===null))throw TypeError('Invalid temporal identity observer');
+ if(prepareDependents!==null&&typeof prepareDependents!=='function')throw TypeError('Invalid terrain dependents preparer');
  if(!Array.isArray(suppressed)||suppressed.some(id=>typeof id!=='string'))throw TypeError('Temporal terrain requires boundary suppression');
  const check=()=>{if(signal?.aborted)throw new DOMException('Temporal terrain preparation cancelled','AbortError');};const keys=new Set(),slots=new Set(),removed=new Set(suppressed),sequence=messages[0]?.sequence,epoch=messages[0]?.epoch??null;
  for(const message of messages){const payload=message?.payload,key=`${payload?.cx},${payload?.cz}`;if(!Number.isSafeInteger(sequence)||sequence<0||message?.sequence!==sequence||(message.epoch??null)!==epoch||!Number.isSafeInteger(payload?.cx)||!Number.isSafeInteger(payload?.cz)||!Number.isSafeInteger(message?.revision)||message.revision<1||keys.has(key))throw TypeError('Invalid temporal terrain boundary');keys.add(key);if(payload.removed!==undefined){validateTerrainResourceRemoval(payload);if(typeof residency.prepareRemoval!=='function'||typeof biome.prepareRemoval!=='function')throw Error('Prepared graphical terrain retirement unavailable');}else{validateInstances(payload);for(let slot=0;slot<payload.instances.length;slot++)if(payload.instances[slot].some(item=>!removed.has(item.id)))slots.add(slot);}}
  check();if(!await biome.ready)throw Error('Biome resources unavailable');check();if(messages.some(message=>!message.payload.removed))await biome.requestSlots([...slots]);check();
  if(mudPreparer!==null&&typeof mudPreparer?.prepare!=='function')throw TypeError('Invalid mud preparer');
- const tokens=[],identities=[],removalIdentities=[];let canonicalPropsUnmasked=true;
+ const tokens=[],identities=[],removalIdentities=[],surfaceMeshes=new Map();let canonicalPropsUnmasked=true,dependents=[];
  // Discard every observed identity even if one observer itself fails. A
  // partially registered callback is included because it may already have
  // installed entries before throwing.
@@ -23,14 +24,16 @@ export async function prepareWebGpuTemporalTerrain(messages,{signal,scene,reside
    check();const {payload,revision,sequence,epoch}=message,order=publicationOrder(),options={publicationEpoch:publicationEpoch(epoch),publicationOrder:order},identity=onPreparedIdentity?{key:`${payload.cx},${payload.cz}`,epoch:epoch??null,revision,sequence,publicationOrder:order}:null;
    if(payload.removed){
     const terrainToken=residency.prepareRemoval(payload,revision,epoch??null,{...options,sequence});if(!terrainToken)throw Error('Terrain removal preparation is stale');tokens.push(terrainToken);
+    surfaceMeshes.set(`${payload.cx},${payload.cz}`,null);
     const biomeToken=biome.prepareRemoval(payload,revision,{epoch:epoch??null,sequence},options);if(!biomeToken)throw Error('Biome removal preparation is stale');tokens.push(biomeToken);
     removalIdentities.push({payload,identity:{key:`${payload.cx},${payload.cz}`,epoch:epoch??null,revision,sequence,publicationOrder:order,removed:true}});continue;
    }
    if(onDiscardIdentity)identities.push({payload,identity});onPreparedIdentity?.(payload,identity);
    let mudGeometry=null,terrainToken=residency.prepareRetainedRevision?.(payload,revision,epoch??null,options);try{if(!terrainToken){if(mudPreparer){mudGeometry=await mudPreparer.prepare(payload,revision,{signal});check();}terrainToken=residency.prepareRevision(payload,revision,epoch??null,{...options,mudGeometry,mudPrepared:!!mudPreparer});if(!terrainToken)throw Error('Terrain preparation is stale');mudGeometry=null;}}finally{mudGeometry?.dispose();}
-   tokens.push(terrainToken);const biomePrepare=terrainToken.visualReadmission?biome.prepareVisualReadmission:biome.prepareRevision;if(typeof biomePrepare!=='function')throw Error('Biome visual readmission is unavailable');canonicalPropsUnmasked&&=payload.instances.every(items=>items.every(item=>!removed.has(item.id)));const biomeToken=biomePrepare.call(biome,payload,revision,{epoch:epoch??null,sequence},{...options,suppressed:[...removed],retainUnchangedSlots:true});if(!biomeToken)throw Error('Biome preparation is unavailable or stale');tokens.push(biomeToken);
+   tokens.push(terrainToken);surfaceMeshes.set(`${payload.cx},${payload.cz}`,terrainToken.surfaceMesh);const biomePrepare=terrainToken.visualReadmission?biome.prepareVisualReadmission:biome.prepareRevision;if(typeof biomePrepare!=='function')throw Error('Biome visual readmission is unavailable');canonicalPropsUnmasked&&=payload.instances.every(items=>items.every(item=>!removed.has(item.id)));const biomeToken=biomePrepare.call(biome,payload,revision,{epoch:epoch??null,sequence},{...options,suppressed:[...removed],retainUnchangedSlots:true});if(!biomeToken)throw Error('Biome preparation is unavailable or stale');tokens.push(biomeToken);
   }
-  const parts=tokens.map(token=>token.participant()),rawBatch=await coordinator.prepareBatch(parts,{signal,scene,...(requireShadowTarget?{requireShadowTarget:true}:{})});
+  if(prepareDependents){const preparedDependents=prepareDependents({get(cx,cz){const key=`${cx},${cz}`;return surfaceMeshes.has(key)?surfaceMeshes.get(key):(residency.getVisible??residency.get).call(residency,cx,cz);},changedKeys:new Set(surfaceMeshes.keys())});if(!Array.isArray(preparedDependents))throw TypeError('Invalid prepared terrain dependents');dependents=preparedDependents;}check();
+  const parts=tokens.map(token=>token.participant()),rawBatch=await coordinator.prepareBatch(parts,{signal,scene,...(dependents.length?{dependents}:{}),...(requireShadowTarget?{requireShadowTarget:true}:{})});
   if(!rawBatch||typeof rawBatch.commit!=='function'||typeof rawBatch.abort!=='function')throw TypeError('Invalid prepared temporal batch');
   const batch=Object.isExtensible(rawBatch)&&!Object.hasOwn(rawBatch,'canonicalPropsUnmasked')?rawBatch:{valid:()=>rawBatch.valid?.()===true,commit:()=>rawBatch.commit(),abort:()=>rawBatch.abort()};
   Object.defineProperty(batch,'canonicalPropsUnmasked',{value:canonicalPropsUnmasked});
@@ -44,7 +47,7 @@ export async function prepareWebGpuTemporalTerrain(messages,{signal,scene,reside
   const onAbort=()=>{try{abort();}catch{}};
   signal?.addEventListener('abort',onAbort,{once:true});if(signal?.aborted){abort();throw new DOMException('Temporal terrain preparation cancelled','AbortError');}
   return {canonicalPropsUnmasked,valid:()=>active&&!committing&&batch.valid?.()===true,commit(){if(!active)throw Error('Temporal terrain batch is no longer active');let result;committing=true;try{result=batch.commit();}catch(error){committing=false;try{abort();}catch{}throw error;}committing=false;active=false;detach();if(result!==true){const error=discard();if(error)throw error;}else{committedIdentities=new WeakMap([...identities,...removalIdentities].map(({payload,identity})=>[payload,identity]));identities.length=0;removalIdentities.length=0;}return result;},abort,identityFor(payload){return committedIdentities?.get(payload)??null;}};
- }catch(error){for(const token of tokens.reverse())try{token.abort();}catch{}discard();throw error;}
+ }catch(error){for(const part of [...dependents].reverse())try{part.cancel();}catch{}for(const token of tokens.reverse())try{token.abort();}catch{}discard();throw error;}
 }
 
 // Recovery can install a versioned baseline into a fresh graphical owner. A

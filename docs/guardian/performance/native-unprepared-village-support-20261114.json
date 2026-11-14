@@ -1,0 +1,287 @@
+{
+  "ok": false,
+  "mode": "prepared-native-village-support",
+  "control": "QA_NATIVE_VILLAGE_UNPREPARED=true removes only the native proposal dependent-preparation callback through a guarded source route; gates remain strict.",
+  "error": "Prepared native first frame created unexpected GPU resources",
+  "details": {
+    "sequence": 8,
+    "before": 1844,
+    "after": 1844,
+    "created": [
+      {
+        "id": "Buffer:2372",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "Buffer:2373",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "BindGroup:2374",
+        "method": "createBindGroup",
+        "label": "bindGroup_object"
+      },
+      {
+        "id": "Buffer:2375",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "Buffer:2376",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "BindGroup:2377",
+        "method": "createBindGroup",
+        "label": "bindGroup_object"
+      },
+      {
+        "id": "Buffer:2378",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "Buffer:2379",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "BindGroup:2380",
+        "method": "createBindGroup",
+        "label": "bindGroup_object"
+      },
+      {
+        "id": "Buffer:2381",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "Buffer:2382",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "BindGroup:2383",
+        "method": "createBindGroup",
+        "label": "bindGroup_object"
+      },
+      {
+        "id": "Buffer:2384",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "Buffer:2385",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "BindGroup:2386",
+        "method": "createBindGroup",
+        "label": "bindGroup_object"
+      },
+      {
+        "id": "Buffer:2387",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "Buffer:2388",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "BindGroup:2389",
+        "method": "createBindGroup",
+        "label": "bindGroup_object"
+      },
+      {
+        "id": "Buffer:2390",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "Buffer:2391",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "BindGroup:2392",
+        "method": "createBindGroup",
+        "label": "bindGroup_object"
+      },
+      {
+        "id": "Buffer:2393",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "Buffer:2394",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "BindGroup:2395",
+        "method": "createBindGroup",
+        "label": "bindGroup_object"
+      },
+      {
+        "id": "Buffer:2396",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "Buffer:2397",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "BindGroup:2398",
+        "method": "createBindGroup",
+        "label": "bindGroup_object"
+      },
+      {
+        "id": "Buffer:2399",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "Buffer:2400",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "BindGroup:2401",
+        "method": "createBindGroup",
+        "label": "bindGroup_object"
+      },
+      {
+        "id": "Buffer:2402",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "Buffer:2403",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "BindGroup:2404",
+        "method": "createBindGroup",
+        "label": "bindGroup_object"
+      },
+      {
+        "id": "Buffer:2405",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "Buffer:2406",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "BindGroup:2407",
+        "method": "createBindGroup",
+        "label": "bindGroup_object"
+      },
+      {
+        "id": "Buffer:2408",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "Buffer:2409",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "BindGroup:2410",
+        "method": "createBindGroup",
+        "label": "bindGroup_object"
+      },
+      {
+        "id": "Buffer:2411",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "Buffer:2412",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "BindGroup:2413",
+        "method": "createBindGroup",
+        "label": "bindGroup_object"
+      },
+      {
+        "id": "Buffer:2414",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "Buffer:2415",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "BindGroup:2416",
+        "method": "createBindGroup",
+        "label": "bindGroup_object"
+      },
+      {
+        "id": "Buffer:2417",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "Buffer:2418",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "BindGroup:2419",
+        "method": "createBindGroup",
+        "label": "bindGroup_object"
+      },
+      {
+        "id": "Buffer:2420",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "Buffer:2421",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "BindGroup:2422",
+        "method": "createBindGroup",
+        "label": "bindGroup_object"
+      },
+      {
+        "id": "Buffer:2423",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "Buffer:2424",
+        "method": "createBuffer",
+        "label": "bindingBuffer_object"
+      },
+      {
+        "id": "BindGroup:2425",
+        "method": "createBindGroup",
+        "label": "bindGroup_object"
+      }
+    ]
+  },
+  "creationsByType": {
+    "createBuffer": 36,
+    "createBindGroup": 18
+  }
+}

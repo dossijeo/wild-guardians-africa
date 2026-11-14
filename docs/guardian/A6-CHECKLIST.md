@@ -2,7 +2,7 @@
 
 Actualizado: 2026-11-14. IDs acordados en la conversación; no se renumeran al avanzar.
 
-Último incremento de f-R4: [color preparado con geometría visible, sin factories tardías y con paridad GPU exacta](f-r4-prepared-color-context-20261114.md).
+Último incremento de f-R4: [aldeas preparadas junto al terreno cuyo apoyo cambia, sin admisión tardía](f-r4-prepared-village-support-20261114.md).
 Publicaciones vivas y aceptación de personajes autónomos siguen pendientes; no cambia el recuento de cierres.
 
 **Ningún punto principal está cerrado todavía.** Un subpunto marcado como nativo

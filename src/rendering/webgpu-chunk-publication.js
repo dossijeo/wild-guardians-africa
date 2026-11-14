@@ -41,10 +41,14 @@ export function createChunkPublicationCoordinator({admission,onError=()=>{},boot
  // Compile all members while their chunks are reserved; commit remains a
  // synchronous operation so no render or unrelated task observes a prefix.
  // Owners must provide genuinely reversible activation and finalization.
- async function prepareBatch(parts,{signal,scene,requireShadowTarget=false}={}){
+ async function prepareBatch(parts,{signal,scene,requireShadowTarget=false,dependents=[]}={}){
   if(closed||typeof admission.prepareTicket!=='function'||!scene?.isScene||!Array.isArray(parts)||!parts.length||typeof requireShadowTarget!=='boolean'||signal!==undefined&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Invalid chunk batch preparation');
   const groups=new Map();for(const part of parts){if(typeof part?.key!=='string'||!part.key||!Number.isSafeInteger(part.revision)||part.revision<1||part.epoch!==null&&(typeof part.epoch!=='string'||!part.epoch)||!Number.isSafeInteger(part.publicationOrder)||part.publicationOrder<1||!['terrain','biome'].includes(part.side)||!part.object?.isObject3D||!part.signal||typeof part.signal.addEventListener!=='function'||['activate','attach','rollback','finalize','rollbackFinalized','cancel','eventRoots'].some(name=>typeof part[name]!=='function'))throw TypeError('Invalid chunk batch participant');let group=groups.get(part.key);if(!group){group={epoch:part.epoch,revision:part.revision,order:part.publicationOrder,sides:new Set()};groups.set(part.key,group);}if(group.epoch!==part.epoch||group.revision!==part.revision||group.order!==part.publicationOrder||group.sides.has(part.side))throw Error('Conflicting chunk batch participants');group.sides.add(part.side);}
   for(const [key,group] of groups){const previous=published.get(key),seen=latestOrders.get(key);if(group.sides.size!==2||reservations.has(key)||[...entries.values()].some(entry=>entry.key===key)||seen&&group.order<=seen.order||previous?.explicit&&group.order<=previous.order)throw Error('Chunk batch unavailable');}
+  // Dependent owners share admission and the reversible phases, but do not
+  // invent another terrain/biome revision or participate in chunk ordering.
+  if(!Array.isArray(dependents)||new Set(dependents).size!==dependents.length||dependents.some(part=>parts.includes(part)||!part?.object?.isObject3D||!part.signal||typeof part.signal.addEventListener!=='function'||['valid','activate','attach','rollback','finalize','rollbackFinalized','cancel','eventRoots'].some(name=>typeof part[name]!=='function')))throw TypeError('Invalid chunk batch dependents');
+  parts=[...parts,...dependents];const ownersCurrent=()=>parts.every(part=>part.valid===undefined||part.valid()===true);
   const controller=new AbortController(),listeners=[];let active=true,committing=false;const release=()=>{for(const [target,listener] of listeners)target.removeEventListener('abort',listener);for(const key of groups.keys())if(reservations.get(key)===controller)reservations.delete(key);};const cancel=()=>{if(!active)return;if(committing){controller.abort();return;}active=false;controller.abort();release();for(const part of [...parts].reverse())try{part.cancel();}catch(error){try{onError(error);}catch{}}};controller.signal.addEventListener('abort',cancel,{once:true});
   for(const key of groups.keys())reservations.set(key,controller);for(const target of [signal,...parts.map(part=>part.signal)].filter(Boolean)){const listener=()=>cancel();listeners.push([target,listener]);target.addEventListener('abort',listener,{once:true});if(target.aborted){cancel();throw new DOMException('Chunk batch cancelled','AbortError');}}
   // Recovery has no draw loop yet. Give every real terrain receiver in the
@@ -52,13 +56,13 @@ export function createChunkPublicationCoordinator({admission,onError=()=>{},boot
   // these are the same objects that must be admitted, not extra warmups.
   const preparationOrder=requireShadowTarget?[...parts.filter(part=>part.side==='terrain'),...parts.filter(part=>part.side!=='terrain')]:parts;
   try{const requests=[];for(const part of preparationOrder){const objects=part.preparationObjects?.()??[part.object],roots=part.eventRoots();if(!Array.isArray(objects)||!objects.length||!objects.includes(part.object)||new Set(objects).size!==objects.length||objects.some(object=>!object?.isObject3D||!roots.includes(object)))throw TypeError('Invalid chunk batch preparation roots');for(const object of objects)requests.push({part,object});}
-   const tickets=[];for(const {object} of requests){if(!active||controller.signal.aborted)throw new DOMException('Chunk batch cancelled','AbortError');tickets.push(await admission.prepareTicket(object,{signal:controller.signal,...(requireShadowTarget?{requireShadowTarget:true}:{})}));}if(!active||closed||tickets.some(ticket=>typeof ticket?.valid!=='function'||!ticket.valid()))throw Error('Chunk batch admission became stale');
-   const valid=()=>active&&!closed&&!controller.signal.aborted&&tickets.every(ticket=>ticket.valid());
+   const tickets=[];for(const {part,object} of requests){if(!active||controller.signal.aborted)throw new DOMException('Chunk batch cancelled','AbortError');tickets.push(await admission.prepareTicket(object,{signal:controller.signal,include:part.include??[],...(requireShadowTarget?{requireShadowTarget:true}:{})}));}if(!active||closed||!ownersCurrent()||tickets.some(ticket=>typeof ticket?.valid!=='function'||!ticket.valid()))throw Error('Chunk batch admission became stale');
+   const valid=()=>active&&!closed&&!controller.signal.aborted&&ownersCurrent()&&tickets.every(ticket=>ticket.valid());
    return {valid,commit(){
     if(!valid()){cancel();throw Error('Chunk batch admission became stale');}
     const attached=[],finalizing=[],notifications=[];
     const assertCurrent=()=>{if(closed||controller.signal.aborted)throw Error('Chunk batch admission became stale');};
-    const assertValid=(afterAttach=false)=>{assertCurrent();if(tickets.some(ticket=>!(afterAttach?ticket.validAfterAttach?.()??ticket.valid():ticket.valid())))throw Error('Chunk batch admission became stale');};
+    const assertValid=(afterAttach=false)=>{assertCurrent();if(!ownersCurrent()||tickets.some(ticket=>!(afterAttach?ticket.validAfterAttach?.()??ticket.valid():ticket.valid())))throw Error('Chunk batch admission became stale');};
     committing=true;try{
      assertNoSynchronousObservers(scene,parts);
      // These opt-in owner phases must be synchronous and reversible, without

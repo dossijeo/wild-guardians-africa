@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [contexto de color admitido por defecto, validado con geometría visible y comparación GPU exacta](f-r4-prepared-color-context-20261114.md).
+Último avance: [aldeas con apoyo cambiado preparadas antes del efecto físico, conservando sus buffers](f-r4-prepared-village-support-20261114.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio

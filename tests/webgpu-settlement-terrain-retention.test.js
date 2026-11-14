@@ -20,6 +20,34 @@ async function fixture(){
  return {scene,state,requests,errors,owner,terrain,heights,group,visible,snapshots,async publish(index){requests[index].resolve();await turn();await turn();},async dispose(){owner.dispose();await turn();for(const mesh of meshes){mesh.geometry.dispose();mesh.material.dispose();}globalThis.fetch=originalFetch;if(originalBitmap===undefined)delete globalThis.createImageBitmap;else globalThis.createImageBitmap=originalBitmap;}};
 }
 
+function proposed(f,height){const prior=f.heights.get('0,0'),mesh=f.terrain(height);f.heights.set('0,0',prior);return {mesh,view:{changedKeys:new Set(['0,0']),get:(cx,cz)=>cx===0&&cz===0?mesh:f.heights.get(cx+','+cz)??null}};}
+
+test('proposed equivalent village support allocates no replacement and leaves live residency intact',async()=>{
+ const f=await fixture();try{const old=f.visible()[0],live=f.heights.get('0,0'),proposal=proposed(f,2);assert.deepEqual(f.owner.prepareVillageTerrain(proposal.view),[]);assert.equal(f.heights.get('0,0'),live);assert.deepEqual(f.visible(),[old]);assert.equal(f.requests.length,1);}finally{await f.dispose();}
+});
+
+test('changed proposed support stages actual shared village geometry before the physical terrain commit',async()=>{
+ const f=await fixture();try{const old=f.visible()[0],live=f.heights.get('0,0'),proposal=proposed(f,5),[part]=f.owner.prepareVillageTerrain(proposal.view),candidate=part.object.children[0];assert.equal(candidate.geometry,old.geometry);assert.equal(candidate.material,old.material);assert.equal(candidate.position.y,5.018);assert.equal(f.heights.get('0,0'),live);assert.deepEqual(f.visible(),[old]);assert.equal(f.owner.status().selectableReady,true);assert.equal(f.requests.length,1);f.owner.sync();assert.equal(part.valid(),true);
+  f.heights.set('0,0',proposal.mesh);part.activate();part.attach();const result=part.finalize();result.retire();result.notify();assert.deepEqual(f.visible(),[candidate]);assert.equal(old.parent,null);assert.equal(f.owner.status().selectableReady,true);assert.equal(f.requests.length,1,'confirmation must not start late village admission');assert.deepEqual(f.errors,[]);
+ }finally{await f.dispose();}
+});
+
+test('a failed proposed village publication rolls back without starting confirmed admission',async()=>{
+ const f=await fixture();try{const old=f.visible()[0],live=f.heights.get('0,0'),proposal=proposed(f,5),[part]=f.owner.prepareVillageTerrain(proposal.view);f.heights.set('0,0',proposal.mesh);part.activate();part.attach();part.finalize();part.rollbackFinalized();part.rollback();f.heights.set('0,0',live);part.cancel();f.owner.terrainChanged();assert.deepEqual(f.visible(),[old]);assert.equal(f.requests.length,1);assert.equal(f.owner.status().selectableReady,true);assert.deepEqual(f.errors,[]);}finally{await f.dispose();}
+});
+
+for(const mutation of ['layout','culture','removal'])test(`a proposed village rejects a later ${mutation} change before becoming effective`,async()=>{
+ const f=await fixture();try{const proposal=proposed(f,5),[part]=f.owner.prepareVillageTerrain(proposal.view);assert.equal(part.valid(),true);if(mutation==='layout')f.state.villages[0].buildings[0].yaw=.8;else if(mutation==='culture')f.state.villages[0].culture='other';else f.state.villages=[];assert.equal(part.valid(),false);part.cancel();assert.equal(f.requests.length,1);}finally{await f.dispose();}
+});
+
+test('a proposed village rechecks its retained support from a chunk outside the mutation',async()=>{
+ const f=await fixture();try{f.terrain(3,'1,0');f.state.villages[0].buildings.push({key:'hut',x:49,z:2});f.owner.sync();await until(()=>f.requests.length===2);await f.publish(1);const proposal=proposed(f,5),[part]=f.owner.prepareVillageTerrain(proposal.view);assert.equal(part.valid(),true);f.terrain(8,'1,0');assert.equal(part.valid(),false);part.cancel();assert.equal(f.requests.length,2);}finally{await f.dispose();}
+});
+
+test('partial dependent preparation failure releases its staged candidates and permits a retry',async()=>{
+ const f=await fixture();try{const old=f.visible()[0],proposal=proposed(f,5);f.state.villages.push({id:'not-ready',culture:'qa',buildings:[{key:'house',x:2,z:1}]});assert.throws(()=>f.owner.prepareVillageTerrain(proposal.view),/unavailable/);f.state.villages.pop();assert.deepEqual(f.visible(),[old]);const [part]=f.owner.prepareVillageTerrain(proposal.view);assert.equal(part.valid(),true);part.cancel();assert.equal(f.requests.length,1);assert.equal(f.owner.status().selectableReady,true);}finally{await f.dispose();}
+});
+
 test('confirmed village retains actual objects and camera geometry through unrelated terrain notifications',async()=>{
  const f=await fixture();try{const old=f.visible()[0],geometry=old.geometry,material=old.material,camera=f.snapshots.at(-1);
   for(let n=0;n<30;n++){f.owner.terrainChanged();f.owner.sync();}await turn();

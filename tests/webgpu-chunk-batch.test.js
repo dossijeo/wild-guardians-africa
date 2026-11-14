@@ -8,6 +8,21 @@ function fixture(){
  function part(key,side,extra={}){const controller=new AbortController(),name=key+':'+side,object=new Group();return {key,side,epoch:'e',revision:1,publicationOrder:1,object,signal:controller.signal,eventRoots(){return [object];},activate(){calls.push('activate '+name);return true;},attach(){calls.push('attach '+name);},rollback(){calls.push('rollback '+name);},finalize(){calls.push('finalize '+name);return {retire:()=>calls.push('retire '+name),notify:()=>calls.push('notify '+name)};},rollbackFinalized(){calls.push('undo '+name);},cancel(){calls.push('cancel '+name);},...extra};}
  return {coordinator,calls,errors,scene,part,get validations(){return validations;},invalidate(){valid=false;}};
 }
+test('dependent owners join the same reversible phases without inventing chunk revisions',async()=>{
+ const f=fixture(),parts=['terrain','biome'].map(side=>f.part('0,0',side)),dependent=f.part('village','dependent',{valid:()=>true});try{const batch=await f.coordinator.prepareBatch(parts,{scene:f.scene,dependents:[dependent]});assert.equal(batch.valid(),true);batch.commit();assert.deepEqual(f.calls.filter(call=>call.startsWith('finalize ')),['finalize 0,0:terrain','finalize 0,0:biome','finalize village:dependent']);assert.equal(f.calls.filter(call=>call.startsWith('notify ')).length,3);assert.deepEqual(f.errors,[]);}finally{f.coordinator.dispose();}
+});
+
+for(const phase of ['before','attach','finalize'])test(`a dependent read set changed ${phase} rolls the whole terrain batch back`,async()=>{
+ const f=fixture(),parts=['terrain','biome'].map(side=>f.part('0,0',side));let current=true;const dependent=f.part('village','dependent',{valid:()=>current});try{if(phase!=='before'){const run=dependent[phase];dependent[phase]=()=>{const result=run();current=false;return result;};}const batch=await f.coordinator.prepareBatch(parts,{scene:f.scene,dependents:[dependent]});if(phase==='before')current=false;assert.equal(phase==='before'?batch.valid():true,phase!=='before');assert.throws(()=>batch.commit(),/stale/);assert.equal(f.calls.some(call=>/^(retire|notify) /.test(call)),false);assert.equal(f.calls.filter(call=>call.startsWith('cancel ')).length,3);if(phase==='finalize')assert.equal(f.calls.filter(call=>call.startsWith('undo ')).length,3);assert.deepEqual(f.errors,[]);}finally{f.coordinator.dispose();}
+});
+
+test('a dependent tree observer rejects publication before any owner activates',async()=>{
+ const f=fixture(),parts=['terrain','biome'].map(side=>f.part('0,0',side)),dependent=f.part('village','dependent',{valid:()=>true});try{const batch=await f.coordinator.prepareBatch(parts,{scene:f.scene,dependents:[dependent]});dependent.object.addEventListener('removed',()=>{});assert.throws(()=>batch.commit(),/synchronous/);assert.equal(f.calls.some(call=>call.startsWith('activate ')),false);assert.equal(f.calls.filter(call=>call.startsWith('cancel ')).length,3);}finally{f.coordinator.dispose();}
+});
+
+for(const approval of [false,undefined,null,0])test(`a dependent requires explicit valid=true, rejecting ${String(approval)}`,async()=>{
+ const f=fixture(),parts=['terrain','biome'].map(side=>f.part('0,0',side)),dependent=f.part('village','dependent',{valid:()=>approval});try{await assert.rejects(f.coordinator.prepareBatch(parts,{scene:f.scene,dependents:[dependent]}),/stale/);assert.equal(f.calls.some(call=>call.startsWith('activate ')),false);assert.equal(f.calls.filter(call=>call.startsWith('cancel ')).length,3);}finally{f.coordinator.dispose();}
+});
 test('batch prepares all chunks before ordered publication and notifications',async()=>{
  const f=fixture(),parts=['0,0','1,0'].flatMap(key=>['terrain','biome'].map(side=>f.part(key,side))),batch=await f.coordinator.prepareBatch(parts,{scene:f.scene});assert.deepEqual(f.calls,[]);assert.equal(batch.commit(),true);assert.deepEqual(f.calls.map(call=>call.split(' ')[0]),['activate','activate','activate','activate','attach','attach','attach','attach','finalize','finalize','finalize','finalize','retire','retire','retire','retire','notify','notify','notify','notify']);assert.deepEqual(f.errors,[]);f.coordinator.dispose();
 });
