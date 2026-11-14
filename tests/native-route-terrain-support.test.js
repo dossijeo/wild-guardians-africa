@@ -5,6 +5,7 @@ import {createNativeRouteExecutionFixture} from './helpers/native-route-executio
 import {createWebGpuTerrainResidency} from '../src/rendering/webgpu-terrain-residency.js';
 import {createConfirmedTerrainSupport} from '../src/rendering/confirmed-terrain-support.js';
 import {copyNativeRoutePresentation,NATIVE_ROUTE_PRESENTATION_WIDTH as width} from '../src/world/native-route-presentation.js';
+import {createChunkPublicationCoordinator} from '../src/rendering/webgpu-chunk-publication.js';
 
 function fixture(options={}){
  const native=createNativeRouteExecutionFixture(),scene=new THREE.Scene(),material=new THREE.MeshBasicMaterial({side:THREE.DoubleSide}),residency=createWebGpuTerrainResidency({scene,material}),chunks=[];
@@ -32,6 +33,14 @@ test('native support retains unchanged meshes when an unrelated chunk is replace
 
 test('native height proof expires when a used triangle buffer changes or its owner is disposed',()=>{
  const f=fixture();try{const result=f.support.prepareNativeRoute(f.packet,{terrainManifest:f.terrainManifest}),part=result.actor.segments[0],mesh=f.residency.get(Math.floor((part.x0+24)/48),Math.floor((part.z0+24)/48));mesh.geometry.attributes.position.needsUpdate=true;assert.equal(result.valid(),false);const next=f.support.prepareNativeRoute(f.packet,{terrainManifest:f.terrainManifest});assert(next?.valid());f.support.dispose();assert.equal(next.valid(),false);assert.throws(()=>f.support.prepareNativeRoute(f.packet,{terrainManifest:f.terrainManifest}),/disposed/);}finally{f.close();}
+});
+
+test('native support names every full-route chunk that must retain its confirmed revision',()=>{
+ const f=fixture();try{const result=f.support.prepareNativeRoute(f.packet,{terrainManifest:f.terrainManifest});assert(result?.valid());assert.equal(result.unchangedBy({changedKeys:new Set(['1,1'])}),true);const part=result.actor.segments.at(-1),key=`${Math.floor((part.x1+24)/48)},${Math.floor((part.z1+24)/48)}`;assert.equal(result.unchangedBy({changedKeys:new Set([key])}),false);assert.equal(result.unchangedBy({}),false);assert.equal(result.valid(),true);}finally{f.close();}
+});
+
+test('a real retained terrain revision preserves native support on the same mesh and epoch',()=>{
+ const f=createNativeRouteExecutionFixture(),scene=new THREE.Scene(),material=new THREE.MeshBasicMaterial({side:THREE.DoubleSide}),admission={prepare(){},async prepareManyAndPublish(){throw Error('Unexpected legacy publication');},deferRelease(_object,release){release();}},coordinator=createChunkPublicationCoordinator({admission}),residency=createWebGpuTerrainResidency({scene,material,pipelineAdmission:admission,coordinator}),terrain=createConfirmedTerrainSupport({residency});try{f.session.core.selectChunk(0,0);const payload=f.session.core.chunkPayload(),first=residency.prepareRevision(payload,1,'terrain',{publicationOrder:1}).participant();first.activate();first.attach();let result=first.finalize();result.retire();result.notify();const handle=f.worker(1,f.point(-6,0),f.point(6,0)),packet=f.bridge.captureNativeRoutePresentation(handle),manifest={epoch:'terrain',chunks:[{cx:0,cz:0,revision:1}]},support=terrain.prepareNativeRoute(packet,{terrainManifest:manifest}),mesh=residency.get(0,0);assert(support?.valid());assert.equal(support.unchangedBy({changedKeys:new Set(['0,0']),get:()=>mesh}),true);const part=residency.prepareRetainedRevision(payload,2,'terrain',{publicationOrder:2}).participant();part.activate();part.attach();result=part.finalize();result.retire();result.notify();assert.equal(residency.revisionAt(0,0).revision,2);assert.equal(residency.matchesManifest(manifest),false);assert.equal(support.valid(),true);assert.equal(residency.get(0,0),mesh);mesh.geometry.attributes.position.needsUpdate=true;assert.equal(support.valid(),false);}finally{terrain.dispose();residency.dispose();coordinator.dispose();material.dispose();f.session.dispose();}
 });
 
 test('long native assignments use the complete timetable rather than historical segment limits',()=>{

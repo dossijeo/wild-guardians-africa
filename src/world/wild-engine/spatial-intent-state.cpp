@@ -176,6 +176,7 @@ struct Change {
   bool flag;
 };
 struct PendingBarrierProposal {
+  bool retainsRoutes=false;
   bool pending=false;uint32_t session=0;uint64_t ticket=0;
   double at=0;uint64_t bodies=0,entities=0,facts=0,intents=0,reservations=0,clock=0,gates=0;
   std::array<uint64_t,3> world{};
@@ -281,7 +282,7 @@ struct IntentState {
   uint64_t nextGateMotionTicket=0;
   uint64_t gateRevision=0,nextBarrierProposal=0;
   PendingBarrierProposal barrierProposal;
-  bool worldMutationPreview=false;
+  bool worldMutationPreview=false,worldPreviewRetainsRoutes=true;
   std::array<double,6> barrierProposalResult{};
   std::array<double,5> gateMotionResult{};
   uint64_t gateStaticPairs=0,gateStaticEvaluations=0,gateStaticRejected=0;
@@ -938,7 +939,7 @@ int spatialIntentBeginWorldPreview(){
   if(!s.session||!s.causalClock||s.clockThrough!=s.effectiveTime||s.clockIntentSequence!=s.intentSequence||
      !gateStaticProofCurrent(s)||s.executionEnabled&&s.executionWorldStamp!=executionWorldStamp())return -2;
   if(s.nextBarrierProposal>=uint64_t(maxId)||spatialBodiesMutationRevision()==std::numeric_limits<uint64_t>::max())return -5;
-  s.worldMutationPreview=true;return 1;
+  s.worldPreviewRetainsRoutes=true;s.worldMutationPreview=true;return 1;
 }
 void spatialIntentEndWorldPreview(){state().worldMutationPreview=false;}
 int stageWorldMutationBoundary(const SpatialStaticMutation* shapes,int count){
@@ -954,6 +955,7 @@ int stageWorldMutationBoundary(const SpatialStaticMutation* shapes,int count){
   auto& p=s.barrierProposal;p.pending=true;p.session=s.session;p.ticket=++s.nextBarrierProposal;p.at=s.effectiveTime;
   p.bodies=spatialBodiesMutationRevision();p.entities=s.entityRevision;p.facts=s.sequence;p.intents=s.intentSequence;
   p.reservations=s.residencyPinRevision;p.clock=s.clockSequence;p.gates=s.gateRevision;p.world=executionWorldStamp();
+  p.retainsRoutes=count<0?s.worldPreviewRetainsRoutes:affected.empty();
   return 1;
 }
 int spatialIntentStageBarrier(const SpatialBarrierProposalInput& input,const SpatialStaticMutation& shape){
@@ -995,6 +997,13 @@ int spatialIntentWorldProposalSnapshot(std::array<double,6>& out){
   const int valid=takeWorldMutationBoundary(double(p.session),double(p.ticket),double(p.intents),p.at,double(p.clock),2);
   if(valid!=1)return valid;
   out={double(p.session),double(p.ticket),double(p.intents),p.at,double(p.clock),double(p.kind)};return 1;
+}
+// A read-only consequence of the existing complete native mutation preflight.
+// No direct stop means no held-disc/gate stop closure can be introduced by it.
+extern "C" EMSCRIPTEN_KEEPALIVE int nav_intent_world_proposal_retains_routes(double session,double ticket){
+  auto& s=state();const auto& p=s.barrierProposal;
+  const int current=takeWorldMutationBoundary(session,ticket,double(p.intents),p.at,double(p.clock),2);
+  return current==1?(p.retainsRoutes?1:0):current;
 }
 extern "C" EMSCRIPTEN_KEEPALIVE int nav_intent_barrier_proposal_version(){return 1;}
 extern "C" EMSCRIPTEN_KEEPALIVE int nav_intent_barrier_proposal_ticket(){
@@ -1086,7 +1095,7 @@ void nav_intent_reset(){
   if(!s.gates.empty())spatialGateSupportChanged();
   s.gates.clear();s.gateBodyActors.clear();s.gateInput.clear();s.gateResult.clear();
   cancelGateMotionProposal(s);s.gateMotionResult.fill(0);
-  s.barrierProposal=PendingBarrierProposal{};s.barrierProposalResult.fill(0);s.gateRevision=0;s.worldMutationPreview=false;
+  s.barrierProposal=PendingBarrierProposal{};s.barrierProposalResult.fill(0);s.gateRevision=0;s.worldMutationPreview=false;s.worldPreviewRetainsRoutes=true;
   s.routeHoldResult.clear();s.routeKnotResult.clear();s.gateWaitSegments=0;
   s.gateStaticPairs=s.gateStaticEvaluations=s.gateStaticRejected=0;s.gateStaticResult.fill(0);
   s.gateStaticProofs=0;s.gateStaticWorldStamp.fill(0);

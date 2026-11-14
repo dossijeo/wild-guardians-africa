@@ -5,6 +5,8 @@ Continúa el [plan integrado](integrated-gpu-migration-plan-20261104.md) y las
 [colocaciones originales](f-r4-prepared-placement-20261114.md).
 Los once padres A6 y e-R3/e-R4/f-R4 permanecen abiertos.
 
+Continúa con [terreno preparado con asignaciones nativas conservadas](f-r4-retained-native-terrain-20261114.md); los cierres globales siguen pendientes.
+
 ## Cambio efectivo
 
 El propietario normal de cultivos participa ahora en el mismo batch de terreno,

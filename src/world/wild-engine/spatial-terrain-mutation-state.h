@@ -39,7 +39,8 @@ SpatialStaticTicket terrainMutationBefore(IntentState& s,const SpatialStaticMuta
       x=nx;z=nz;
     }
   }
-  if(!ticket.preview)retireMutationRoutes(s,affected,s.terrainRevocations);return ticket;
+  if(ticket.preview){if(!affected.empty())s.worldPreviewRetainsRoutes=false;}
+  else retireMutationRoutes(s,affected,s.terrainRevocations);return ticket;
 }
 void terrainMutationCommitted(IntentState& s,const SpatialStaticTicket& ticket){
   gateStaticMutationCommitted(s,ticket,{1,0,0});

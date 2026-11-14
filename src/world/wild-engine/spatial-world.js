@@ -223,6 +223,7 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
   function captureNativeWorldProposalResources({nativeSession,ticket,effectiveTime}={}){
     if(!generated||wasm.spatial_world_proposal_resource_version?.()!==1)throw Error('Rebuild native proposal resource projection');
     if(wasm.spatial_world_proposal_resource_snapshot(nativeSession,ticket)!==1)throw Error('Native proposal resources are unavailable or stale');
+    const retention=wasm.nav_intent_world_proposal_retains_routes?.(nativeSession,ticket);if(retention!==0&&retention!==1)throw Error('Native proposal route retention proof unavailable');
     const h=Array.from(new Float64Array(wasm.memory.buffer,wasm.spatial_world_proposal_resource_header_ptr(),9)),count=h[5];
     if(h[0]!==1||h[1]!==nativeSession||h[2]!==ticket||h[3]!==effectiveTime||!Number.isSafeInteger(h[4])||h[4]<6||h[4]>11||!Number.isSafeInteger(count)||count<0||count>32768)throw Error('Native proposal resource identity mismatch');
     const rows=Array.from(new Int32Array(wasm.memory.buffer,wasm.spatial_world_proposal_resource_changes_ptr(),count*3)),chunks=[],removed=[],seen=new Set();
@@ -232,7 +233,7 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
       if(operation===2){removed.push(Object.freeze({cx,cz}));continue;}
       chunks.push(copiedNativeResourcePayload(index,cx,cz,wasm.spatial_world_proposal_resource_buffer_ptr,wasm.spatial_world_proposal_resource_buffer_bytes));
     }
-    return Object.freeze({version:1,phase:'proposal',nativeSession,ticket,effectiveTime,kind:h[4],chunks:Object.freeze(chunks),removed:Object.freeze(removed)});
+    return Object.freeze({version:1,phase:'proposal',nativeSession,ticket,effectiveTime,kind:h[4],retainsNativeAssignments:retention===1,chunks:Object.freeze(chunks),removed:Object.freeze(removed)});
   }
   function props(){
     return spatialProps(wasm);

@@ -45,6 +45,10 @@ test('a changed crop read set prevents physical admission and leaves the old arr
  const f=await fixture();try{const mesh=crops(f.scene)[0],array=mesh.instanceMatrix.array,parts=await f.roster.prepareTerrainSupport(f.view),batch=await f.batch(parts);f.state.plants[0].growth=1;assert.equal(batch.valid(),false);assert.throws(()=>batch.commit(),/stale/);assert.equal(mesh.instanceMatrix.array,array);assert.equal(array[13],1);}finally{f.dispose();}
 });
 
+test('native time may advance before adoption when the prepared crop instance inputs remain unchanged',async()=>{
+ const f=await fixture();try{const mesh=crops(f.scene)[0],parts=await f.roster.prepareTerrainSupport(f.view),batch=await f.batch(parts);f.state.elapsed+=.08;assert.equal(batch.valid(),true);f.map.set('0,0',f.future);batch.commit();assert.equal(mesh.instanceMatrix.array[13],4);assert.equal(f.registry.status().owned.some(item=>item.namespace==='crop-terrain-preparation'),false);}finally{f.dispose();}
+});
+
 test('capacity growth prepares one hidden replacement and restores the old batch on cancellation',async()=>{
  const f=await fixture();try{const old=crops(f.scene)[0];for(let i=0;i<8;i++)f.state.plants.push({...f.state.plants[0],id:'extra-'+i,x:2+i*.1});const parts=await f.roster.prepareTerrainSupport(f.view),next=crops(f.scene).find(mesh=>mesh!==old),batch=await f.batch(parts);assert.ok(next.instanceMatrix.count>=10);assert.equal(next.visible,false);assert.equal(old.visible,true);batch.capturePresentation(()=>{assert.equal(old.visible,false);assert.equal(next.visible,true);assert.equal(next.count,10);});assert.equal(old.visible,true);assert.equal(next.visible,false);batch.abort();assert.equal(next.parent,null);assert.equal(old.parent,f.scene);assert.equal(old.visible,true);assert.equal(f.registry.status().owned.filter(item=>item.namespace==='crop-terrain-preparation').length,0);}finally{f.dispose();}
 });

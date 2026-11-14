@@ -26,6 +26,11 @@ test('terrain channel carries the prepared consumer boundary without activating 
  }finally{await f.dispose();}
 });
 
+test('terrain channel carries the native assignment retention proof only as a validated boolean',async()=>{
+ for(const proof of [true,false,undefined]){let observed;const f=await fixture({prepareProposal:(messages,options,make)=>{observed=options.retainsNativeAssignments;return make(messages);}});try{const h=await f.producer.prepareNativeWorldResources({proposedWorldBoundary:boundary,resources:{...resources(),...(proof===undefined?{}:{retainsNativeAssignments:proof})}});assert.equal(observed,proof===true);h.abort();}finally{await f.dispose();}}
+ const f=await fixture();try{await assert.rejects(f.producer.prepareNativeWorldResources({proposedWorldBoundary:boundary,resources:{...resources(),retainsNativeAssignments:1}}),/retention proof/);assert.equal(f.prepared.length,0);}finally{await f.dispose();}
+});
+
 test('a consumer proof for another world ticket rejects the terrain reservation before effect',async()=>{
  const f=await fixture({prepareProposal:(messages,options,make)=>({...make(messages),preparedWorldBoundary:{...options.proposedWorldBoundary,ticket:2}})});try{
   await assert.rejects(f.producer.prepareNativeWorldResources({proposedWorldBoundary:boundary,resources:resources()}),/commands identity/);await until(()=>f.aborts===1);assert.deepEqual([...f.live],[[0,1],[1,1]]);assert.equal(f.receiver.status().closed,false);

@@ -31,7 +31,7 @@ export function createConfirmedTerrainSupport({residency,maxPieces=16384,maxActo
   const {rows,startTime:start,endTime:end}=presentation,width=NATIVE_ROUTE_PRESENTATION_WIDTH,actorId=String(presentation.nativeRoute.actorId),segments=[];
   for(let i=width;i<rows.length;i+=width)segments.push({t0:rows[i-width],t1:rows[i],x0:rows[i-width+1],z0:rows[i-width+2],x1:rows[i+1],z1:rows[i+2]});
   const trace={start,end,terrainManifest,actors:[{actorId,continuous:true,timed:true,start:{at:start,x:rows[1],z:rows[2]},end:{at:end,x:rows.at(-width+1),z:rows.at(-width+2)},segments}]},result=preparePaths(trace,{wanted:null,sequence:presentation.nativeRoute.assignmentSequence,physicalIds:[],sourceLimit:maxNativeSourceSegments,exactManifest:false});
-  return result?Object.freeze({kind:'native-route-terrain-support',presentation,actor:result.actors[0],valid:result.valid}):null;
+  return result?Object.freeze({kind:'native-route-terrain-support',presentation,actor:result.actors[0],valid:result.valid,unchangedBy:result.unchangedBy}):null;
  }
  // Private geometry-only kernel. Callers cannot weaken the historical entry's
  // safety checks by passing native data or arbitrary validation options to it.
@@ -45,7 +45,7 @@ export function createConfirmedTerrainSupport({residency,maxPieces=16384,maxActo
    for(const segment of actor.segments){if(![segment?.t0,segment?.t1,segment?.x0,segment?.z0,segment?.x1,segment?.z1].every(Number.isFinite)||segment.t0<t||segment.t1<=segment.t0||segment.t1>trace.end||segment.x0!==x||segment.z0!==z)return null;if(segment.t0>t&&!piece(segments,t,segment.t0,x,z,x,z))return null;if(!piece(segments,segment.t0,segment.t1,x,z,segment.x1,segment.z1))return null;t=segment.t1;x=segment.x1;z=segment.z1;}
    if(x!==actor.end.x||z!==actor.end.z)return null;if(t<trace.end&&!piece(segments,t,trace.end,x,z,x,z))return null;const final=sample(x,z);if(!final)return null;actors.push(Object.freeze({actorId:actor.actorId,startHeight:initial.height,endHeight:final.height,segments:Object.freeze(segments)}));
   }
-  if(wanted&&ids.size!==wanted.size)return null;const entries=[...used.values()];if(!residency.matchesManifest(manifest)||entries.some(entry=>!stillValid(entry)))return null;const snapshot=structuredClone(exactManifest?manifest:{epoch:manifest.epoch,chunks:manifest.chunks.filter(chunk=>used.has(`${chunk.cx},${chunk.cz}`))});return Object.freeze({sequence,start:trace.start,end:trace.end,actors:Object.freeze(actors),valid(){return !closed&&residency.matchesManifest(snapshot)&&entries.every(stillValid);}});
+  if(wanted&&ids.size!==wanted.size)return null;const entries=[...used.values()];if(!residency.matchesManifest(manifest)||entries.some(entry=>!stillValid(entry)))return null;const snapshot=structuredClone(exactManifest?manifest:{epoch:manifest.epoch,chunks:manifest.chunks.filter(chunk=>used.has(`${chunk.cx},${chunk.cz}`))});return Object.freeze({sequence,start:trace.start,end:trace.end,actors:Object.freeze(actors),unchangedBy(view){return !!view&&view.changedKeys instanceof Set&&entries.every(entry=>!view.changedKeys.has(`${entry.cx},${entry.cz}`)||view.get?.(entry.cx,entry.cz)===entry.mesh);},valid(){return !closed&&(exactManifest||typeof residency.revisionAt!=='function'?residency.matchesManifest(snapshot):entries.every(entry=>residency.revisionAt(entry.cx,entry.cz)?.epoch===snapshot.epoch))&&entries.every(stillValid);}});
  }
  function audit(preview){
   const manifest=preview?.trace?.terrainManifest,actors=preview?.trace?.actors;if(closed||!Array.isArray(actors))return {reason:'unavailable'};
