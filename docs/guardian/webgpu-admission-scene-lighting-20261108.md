@@ -1,5 +1,7 @@
 # WebGPU admission: scene and lighting identity
 
+**2026-11-14 follow-up:** [Real shadow bindings](f-r4-prepared-shadow-bindings-20261114.md) now use the existing identity adapter for the actual shadow camera on the normal path. The color-pass option described below remains opt-in with its validation requirements unchanged.
+
 ## Finding
 
 In a saved savanna night raid, the instrumented Three.js r180 node cache reported 57 draw-time builds for animal materials that had previously been prepared for the same object and material. The admission used a different scene and a different `LightsNode` from the actual draw. Supplying the real scene alone was insufficient: although both lists contained the same six lights, their node identities differed and contributed to the dynamic cache key.

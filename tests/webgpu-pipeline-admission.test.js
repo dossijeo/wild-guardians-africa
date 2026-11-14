@@ -6,6 +6,34 @@ import {uniform} from 'three/tsl';
 import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
 import {closeWebGpuRenderer} from '../src/rendering/webgpu-world-surface.js';
 
+test('resource completion waits for its queue prefix while later preparations remain independent',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),calls=[];let finish;
+ const renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone(){calls.push('fence');return new Promise(resolve=>{finish=resolve;});}}}},compileAsync(object){calls.push(object.name);return Promise.resolve();}},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),first=new THREE.Group(),second=new THREE.Group();first.name='first';second.name='second';
+ try{await admission.prepare(first);let completed=false;const pending=admission.completePreparation().then(()=>{completed=true;});await admission.prepare(second);assert.equal(completed,false);assert.deepEqual(calls,['first','fence','second']);finish();await pending;assert.equal(completed,true);}finally{finish?.();admission.dispose();}
+});
+
+for(const reason of ['abort','dispose','loss'])test(`resource completion stops waiting on ${reason} without requiring the driver fence to finish`,async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),controller=new AbortController();let finish,lose;
+ const renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone:()=>new Promise(resolve=>{finish=resolve;})},lost:new Promise(resolve=>{lose=resolve;})}},compileAsync:()=>Promise.resolve()},admission=createWebGpuPipelineAdmission({renderer,scene,camera});
+ try{const pending=admission.completePreparation({signal:controller.signal});pending.catch(()=>{});if(reason==='abort')controller.abort();else if(reason==='dispose')admission.dispose();else lose({message:'device unavailable'});await assert.rejects(pending,/cancel|closed|lost/i);finish();await Promise.resolve();}finally{finish?.();admission.dispose();}
+});
+
+for(const synchronous of [false,true])test(`resource completion preserves a ${synchronous?'synchronous':'asynchronous'} queue failure`,async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),error=Error('queue prefix failed'),renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone(){if(synchronous)throw error;return Promise.reject(error);}}}},compileAsync:()=>Promise.resolve()},admission=createWebGpuPipelineAdmission({renderer,scene,camera});
+ try{await assert.rejects(admission.completePreparation(),failure=>failure===error);}finally{admission.dispose();}
+});
+
+for(const sharedSceneLighting of [false,true])for(const outcome of ['resolve','reject','throw'])test(`shadow admission uses its actual light node with shared color lighting ${sharedSceneLighting} and restores ownership on ${outcome}`,async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Mesh(),light=new THREE.DirectionalLight();object.castShadow=true;light.castShadow=true;light.shadow.map=new THREE.RenderTarget(8,8);
+ const makeNode=()=>({lights:[],getLights(){return this.lights;},setLights(value){this.lights=value;}}),main=makeNode(),shadow=makeNode(),mainLights=main.lights,shadowLights=shadow.lights,oldMain={},oldShadow={},marker={},lists=new Map([[camera,{lightsNode:oldMain,lightsArray:[light]}],[light.shadow.camera,{lightsNode:oldShadow,lightsArray:[light]}]]);let entered=false,finish;
+ const renderer={backend:{isWebGPUBackend:true},_wgCompileSceneReference:marker,_renderLists:{get(root,c){assert.equal(root,object);return lists.get(c);}},lighting:{getNode(root,c){assert.equal(root,scene);return c===camera?main:c===light.shadow.camera?shadow:null;}},
+  compileAsync(root,c,target){assert.equal(root,object);assert.equal(c,camera);assert.equal(target,scene);assert.equal(lists.get(c).lightsNode,sharedSceneLighting?main:oldMain);if(sharedSceneLighting)main.setLights(lists.get(c).lightsArray);return Promise.resolve();},
+  compileShadowAsync(root,target,c,sun){entered=true;assert.equal(root,object);assert.equal(target,scene);assert.equal(c,camera);assert.equal(sun,light);assert.equal(this._wgCompileSceneReference,scene);assert.equal(lists.get(light.shadow.camera).lightsNode,shadow);assert.equal(lists.get(camera).lightsNode,oldMain);shadow.setLights(lists.get(light.shadow.camera).lightsArray);if(outcome==='throw')throw Error('shadow setup failure');return new Promise((resolve,reject)=>{finish=()=>outcome==='reject'?reject(Error('shadow compile failure')):resolve();});}},
+  admission=createWebGpuPipelineAdmission({renderer,scene,camera,shadowLights:[light],includeShadowPass:true,sharedSceneLighting});
+ try{const pending=admission.prepare(object);pending.catch(()=>{});for(let n=0;n<20&&!entered;n++)await Promise.resolve();assert.equal(entered,true);assert.equal(renderer._wgCompileSceneReference,marker);assert.equal(lists.get(camera).lightsNode,oldMain);assert.equal(lists.get(light.shadow.camera).lightsNode,oldShadow);assert.equal(main.lights,mainLights);assert.equal(shadow.lights,shadowLights);finish?.();if(outcome==='resolve')await pending;else await assert.rejects(pending,/shadow (setup|compile) failure/);
+ }finally{finish?.();admission.dispose();object.geometry.dispose();object.material.dispose();light.shadow.map.dispose();}
+});
+
 test('stable key admission invalidates object materials and supports the independent sky transaction',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),material=new THREE.MeshBasicMaterial(),mesh=new THREE.Mesh(new THREE.BoxGeometry(),material),invalidated=[];
  const renderer={backend:{isWebGPUBackend:true},_wgMaterialKeys:{invalidate:m=>invalidated.push(m)},compileAsync:async()=>{}},admission=createWebGpuPipelineAdmission({renderer,scene,camera});

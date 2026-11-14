@@ -66,8 +66,8 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
  const cancelled=new Promise(resolve=>{cancel=()=>resolve(Error('Pipeline admission cancelled'));});
  let lostError=null;
  const lost=renderer.backend.device?.lost?.then(info=>{lostError=Error('WebGPU device lost: '+(info?.message||info?.reason||'unknown'));return lostError;});
- // Queue completion protects resource lifetime, not admission. Several
- // objects share a fence, and later compilations continue while it is pending.
+ // Deferred-release fences protect resource lifetime. Several objects share
+ // one fence, and later compilations continue while it is pending.
  function scheduleUploads(){if(uploadScheduled||uploadActive||!uploadBatch.size)return;uploadScheduled=true;setTimeout(flushUploads,0);}
  // Snapshot both sides of an object's ownership path: callers may detach a
  // child or retire its parent after compilation has started.
@@ -241,7 +241,11 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
        try{
         for(const current of lights.keys()){const shadow=current.shadow;shadows.push([shadow,shadow.autoUpdate,shadow.needsUpdate]);shadow.autoUpdate=false;shadow.needsUpdate=false;}
         object.traverse(node=>{if(node.isMesh||node.isLine||node.isPoints){culling.push([node,node.frustumCulled]);node.frustumCulled=false;}});
-        for(const [node] of included)node.visible=true;object.visible=true;shadowPending=withMaterialAlternatives(alternatives,()=>renderer.compileShadowAsync(object,targetScene,passCamera,light));
+        for(const [node] of included)node.visible=true;object.visible=true;
+        // RenderObjects also keys shadow bindings by the scene/camera lights
+        // node. Compile against the same node as ShadowNode.renderShadow.
+        const compileShadow=()=>renderer.compileShadowAsync(object,targetScene,passCamera,light);
+        shadowPending=withMaterialAlternatives(alternatives,()=>compileWithAdmissionSceneLighting(renderer,object,light.shadow.camera,targetScene,compileShadow));
        }finally{
         object.visible=visible;for(const [node,value] of included)node.visible=value;for(const [node,value] of culling)node.frustumCulled=value;
         for(const [shadow,autoUpdate,needsUpdate] of shadows){shadow.autoUpdate=autoUpdate;shadow.needsUpdate=needsUpdate;}
@@ -283,6 +287,18 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
   notifyShadowTargets,
   status(){const describe=object=>{const meshes=[];let count=0;object?.traverse?.(node=>{if(!(node.isMesh||node.isLine||node.isPoints))return;count++;if(meshes.length<6)meshes.push({name:node.name||node.type,ground:node.userData?.ground===true,slot:node.userData?.nativePropSlot??null,material:Array.isArray(node.material)?node.material.map(item=>item?.name||item?.type):node.material?.name||node.material?.type});});return {name:object?.name||object?.type||'background',meshCount:count,meshes};};return {closed,queued:queue.length,active,inflightCompiles,shadowWaiters:targetWaiters.size,uploads:uploadingObjects.size,structuralRevision,compilesStarted,compilesSettled,queueHead:queue.slice(0,8).map(item=>describe(item.object)),queueTail:queue.slice(-8).map(item=>describe(item.object)),compiling:[...compileStarts].map(([object,at])=>({...describe(object),ageMs:performance.now()-at,children:object.children?.map(child=>child.name||child.type)}))};},
   get structuralRevision(){return structuralRevision;},
+  // A native publication also needs the resource FIFO and its uploads complete,
+  // not only compiled pipelines. Fence the existing queue prefix without
+  // holding the preparation scheduler or the independent old-world draw loop.
+  async completePreparation({signal}={}){
+   if(signal!==undefined&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Invalid preparation signal');
+   if(closed)throw Error('Pipeline admission closed');
+   if(signal?.aborted)throw new DOMException('GPU preparation cancelled','AbortError');
+   const version=generation;
+   await waitForCompilation(renderer.backend.device.queue.onSubmittedWorkDone(),signal);
+   if(closed||version!==generation)throw Error('Pipeline admission closed');
+   if(lostError||renderer._isDeviceLost===true||renderer._initialized===false)throw lostError??Error('WebGPU renderer unavailable after preparation');
+  },
   // A color/clear fallback can keep rendering while the real scene's
   // background pipeline compiles. Replacing an existing node is not yet
   // supported: Three mutates one cached background material per scene.

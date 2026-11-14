@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [aldeas intactas conservadas tras avisos de terreno; cobertura previa de consumidores pendientes](f-r4-retained-villages-20261114.md).
+Último avance: [contexto de sombras y prefijo GPU completos antes de solicitar quiescencia](f-r4-prepared-shadow-bindings-20261114.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio

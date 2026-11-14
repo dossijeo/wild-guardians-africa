@@ -318,7 +318,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     const value = device.createBuffer(descriptor);
     device.queue.writeBuffer(value, 0, shadow);
     setResource(key, { ...entry, value, descriptor, uniformShadow: shadow });
-    metrics.uniformForks++; metrics.uniformForkBytes += descriptor.size;
+    metrics.uniformForks++; metrics.uniformForkBytes += descriptor.size; metrics.uniformForkLastAt = absoluteNow();
     // Bind groups are immutable native objects. Recreate just the groups that
     // reference the fork; old packets keep their original native groups.
     rebuildDependentBindings(key);
@@ -344,6 +344,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     setResource(key, { ...entry, value, descriptor });
     metrics.bufferForks = (metrics.bufferForks || 0) + 1;
     metrics.bufferForkBytes = (metrics.bufferForkBytes || 0) + descriptor.size;
+    metrics.bufferForkLastAt = absoluteNow();
     rebuildDependentBindings(key);
     return true;
   }
@@ -387,7 +388,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         runPass(encoder, entry.commands, false); value = encoder.finish();
       } else continue;
       setResource(dependent, { ...entry, value });
-      metrics.bindingForks++;
+      metrics.bindingForks++; metrics.bindingForkLastAt = absoluteNow();
       rebuildDependentBindings(dependent);
     }
   }
