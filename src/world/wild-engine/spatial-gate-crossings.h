@@ -105,18 +105,24 @@ void publishGateRouteAdmission(IntentState& s,ActiveIntent& intent,uint32_t slot
   if(s.executionEnabled){s.executionEvaluations++;projectExecutedPose(s,old,sampleRouteTiming(old,s.effectiveTime));}
   emitIntentChange(s,intent);
 }
+bool gateCrossingReleaseStopsOthers(const NativeGate& gate,const RouteSlot& route,double now){
+  const auto lease=gate.crossings.find(route.actor);
+  return lease!=gate.crossings.end()&&lease->second.generation==route.generation&&
+    (gateOpening(gate,now)!=gate.target||gateMotionPending(gate,now));
+}
 void releaseGateCrossings(IntentState& s,const RouteSlot& route){
   if(route.gateReservations.empty())return;
   cancelGateMotionProposal(s);
   for(uint64_t id:route.gateReservations){const auto found=s.gates.find(id);if(found==s.gates.end())continue;
     auto& gate=found->second;const auto lease=gate.crossings.find(route.actor);
     if(lease==gate.crossings.end()||lease->second.generation!=route.generation)continue;
+    const bool freeze=gateCrossingReleaseStopsOthers(gate,route,s.effectiveTime);
     gate.crossings.erase(lease);
     const double current=gateOpening(gate,s.effectiveTime);
     // A stopped body must not inherit the motor proof for its former moving
     // trajectory. Freezing is a subset of the certified motion and cannot sweep
     // over it. Revoke other promises affected by this clock change iteratively.
-    if(current!=gate.target||gateMotionPending(gate,s.effectiveTime)){
+    if(freeze){
       gate.from=gate.target=current;gate.at=s.effectiveTime;gate.precedingMotor=false;
       for(const auto& [actor,crossing]:gate.crossings)s.stoppedGateRouteActors.insert(actor);
     }

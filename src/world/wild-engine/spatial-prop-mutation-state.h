@@ -15,7 +15,7 @@ SpatialStaticTicket propMutationBefore(IntentState& s,const SpatialStaticMutatio
   if(!mutationAffectedRoutes(s,shapes,count,0,s.propMutationCandidates,s.propMutationSegments,affected,true)){
     ticket.allowed=false;s.propMutationRejected++;return ticket;
   }
-  if(ticket.preview){if(!affected.empty())s.worldPreviewRetainsRoutes=false;}
+  if(ticket.preview){if(!affected.empty())s.worldPreviewRetainsRoutes=false;s.worldPreviewStoppedRoutes.insert(affected.begin(),affected.end());}
   else retireMutationRoutes(s,affected,s.propMutationRevocations);return ticket;
 }
 void propMutationCommitted(IntentState& s,const SpatialStaticTicket& ticket,int terrainDelta){

@@ -39,7 +39,7 @@ SpatialStaticTicket terrainMutationBefore(IntentState& s,const SpatialStaticMuta
       x=nx;z=nz;
     }
   }
-  if(ticket.preview){if(!affected.empty())s.worldPreviewRetainsRoutes=false;}
+  if(ticket.preview){if(!affected.empty())s.worldPreviewRetainsRoutes=false;s.worldPreviewStoppedRoutes.insert(affected.begin(),affected.end());}
   else retireMutationRoutes(s,affected,s.terrainRevocations);return ticket;
 }
 void terrainMutationCommitted(IntentState& s,const SpatialStaticTicket& ticket){

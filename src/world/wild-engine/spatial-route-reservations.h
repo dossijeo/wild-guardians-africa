@@ -179,6 +179,23 @@ void reservationBodyRemoving(IntentState& s,uint64_t id){
 // disc. Retire precisely the conflicting reservations, then process their held
 // discs too. This work is event-driven, deterministic and iterative (no recursive
 // chain of stops). Task/target leases survive; only their routes need replanning.
+// Shared read-only conflict visitor for actual stops and proposal projection.
+// The caller owns transition/event writes; geometry and timetable tests stay here.
+template<class Excluded,class Visit> void visitStoppedReservationConflicts(
+    const IntentState& s,uint64_t id,Excluded excluded,Visit visit){
+  SpatialBodyView stopped;if(!spatialReadBody(id,stopped))return;
+  for(uint64_t actor:reservationBodyCandidates(s,stopped)){
+    if(excluded(actor))continue;
+    const auto found=s.activeIntents.find(actor);
+    if(found==s.activeIntents.end()||found->second.state!=PlanningState::RouteActive)continue;
+    const auto& intent=found->second;const auto& route=s.routeSlots[intent.slot];
+    if(!route.reserved||route.reservationBody==id)continue;
+    SpatialBodyView other;
+    if(!spatialReadBody(route.reservationBody,other)||!reservationParticipates(other,stopped))continue;
+    double at;
+    if(reservationConflict({&route},{nullptr,stopped.x,stopped.z},route.radius+stopped.r,s.effectiveTime,at))visit(actor,at);
+  }
+}
 void drainStoppedReservations(IntentState& s){
   if(s.drainingStops)return;
   s.drainingStops=true;
@@ -193,20 +210,12 @@ void drainStoppedReservations(IntentState& s){
       continue;
     }
     const uint64_t id=*s.stoppedReservationBodies.begin();s.stoppedReservationBodies.erase(id);
-    SpatialBodyView stopped;if(!spatialReadBody(id,stopped))continue;
-    for(uint64_t actor:reservationBodyCandidates(s,stopped)){
-      const auto found=s.activeIntents.find(actor);
-      if(found==s.activeIntents.end()||found->second.state!=PlanningState::RouteActive)continue;
-      auto& intent=found->second;auto& route=s.routeSlots[intent.slot];
-      if(!route.reserved||route.reservationBody==id)continue;
-      SpatialBodyView other;
-      if(!spatialReadBody(route.reservationBody,other)||!reservationParticipates(other,stopped))continue;
-      double at;
-      if(!reservationConflict({&route},{nullptr,stopped.x,stopped.z},route.radius+stopped.r,s.effectiveTime,at))continue;
+    visitStoppedReservationConflicts(s,id,[](uint64_t){return false;},[&](uint64_t actor,double at){
+      auto& intent=s.activeIntents.at(actor);const auto& route=s.routeSlots[intent.slot];
       reservationWitness(s,1,id,actor,at,intent.slot,route.generation);
       stopRouteForEvent(s,intent);
       s.invalidations++;s.executionStopInvalidations++;emitIntentChange(s,intent);
-    }
+    });
   }
   s.drainingStops=false;
   if(s.executionEnabled&&s.reservedBodies.empty()){s.executionEnabled=false;s.residencyPinRevision++;}

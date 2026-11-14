@@ -30,7 +30,7 @@ SpatialStaticTicket residencyMutationBefore(IntentState& s,const SpatialResidenc
     // A drawing/resource eviction cannot cancel an authorized simulation route.
     ticket.allowed=false;s.residencyRejected++;return ticket;
   }
-  if(ticket.preview){if(!affected.empty())s.worldPreviewRetainsRoutes=false;}
+  if(ticket.preview){if(!affected.empty())s.worldPreviewRetainsRoutes=false;s.worldPreviewStoppedRoutes.insert(affected.begin(),affected.end());}
   else retireMutationRoutes(s,affected,s.residencyRevocations);return ticket;
 }
 void residencyMutationCommitted(IntentState& s,const SpatialStaticTicket& ticket,int count){

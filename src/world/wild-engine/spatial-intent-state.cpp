@@ -177,6 +177,7 @@ struct Change {
 };
 struct PendingBarrierProposal {
   bool retainsRoutes=false;
+  std::vector<double> routeEffects,gateEffects;
   bool pending=false;uint32_t session=0;uint64_t ticket=0;
   double at=0;uint64_t bodies=0,entities=0,facts=0,intents=0,reservations=0,clock=0,gates=0;
   std::array<uint64_t,3> world{};
@@ -283,6 +284,7 @@ struct IntentState {
   uint64_t gateRevision=0,nextBarrierProposal=0;
   PendingBarrierProposal barrierProposal;
   bool worldMutationPreview=false,worldPreviewRetainsRoutes=true;
+  std::set<uint64_t> worldPreviewStoppedRoutes;
   std::array<double,6> barrierProposalResult{};
   std::array<double,5> gateMotionResult{};
   uint64_t gateStaticPairs=0,gateStaticEvaluations=0,gateStaticRejected=0;
@@ -496,13 +498,18 @@ void releaseRoute(IntentState& s,ActiveIntent& intent){
 }
 // Suspension retains the ONE allocated slot, but revokes its executable handle.
 // Cancel/target changes still use releaseRoute and permanently discard it.
-bool suspendRoute(IntentState& s,ActiveIntent& intent){
+bool routeCanSuspend(const IntentState& s,const ActiveIntent& intent){
   if(s.resettingBodies||intent.state!=PlanningState::RouteActive||intent.animal||intent.slot>=s.routeSlots.size())return false;
-  auto& route=s.routeSlots[intent.slot];
+  const auto& route=s.routeSlots[intent.slot];
   if(!route.active||route.suspended||!route.resumable||!route.reserved||route.generation!=intent.generation)return false;
   const auto pose=route.hasExecution?route.executionPose:sampleRouteTiming(route,route.startTime);
   SpatialBodyView body;
-  if(pose[6]||!spatialReadBody(route.reservationBody,body)||body.x!=pose[0]||body.z!=pose[1])return false;
+  return !pose[6]&&spatialReadBody(route.reservationBody,body)&&body.x==pose[0]&&body.z==pose[1];
+}
+bool suspendRoute(IntentState& s,ActiveIntent& intent){
+  if(!routeCanSuspend(s,intent))return false;
+  auto& route=s.routeSlots[intent.slot];
+  const auto pose=route.hasExecution?route.executionPose:sampleRouteTiming(route,route.startTime);
   intent.revokedSlot=intent.slot;intent.revokedGeneration=intent.generation;
   clearRouteDependencies(s,intent);releaseGateCrossings(s,route);
   s.reservedBodies.erase(route.reservationBody);route.reserved=false;
@@ -939,9 +946,42 @@ int spatialIntentBeginWorldPreview(){
   if(!s.session||!s.causalClock||s.clockThrough!=s.effectiveTime||s.clockIntentSequence!=s.intentSequence||
      !gateStaticProofCurrent(s)||s.executionEnabled&&s.executionWorldStamp!=executionWorldStamp())return -2;
   if(s.nextBarrierProposal>=uint64_t(maxId)||spatialBodiesMutationRevision()==std::numeric_limits<uint64_t>::max())return -5;
-  s.worldPreviewRetainsRoutes=true;s.worldMutationPreview=true;return 1;
+  s.worldPreviewRetainsRoutes=true;s.worldPreviewStoppedRoutes.clear();s.worldMutationPreview=true;return 1;
 }
 void spatialIntentEndWorldPreview(){state().worldMutationPreview=false;}
+// Transient consequence rows on the existing proposal, never another world or
+// route store. Expand the same held-disc/gate closure using shared predicates.
+// Rows describe actors by old assignment identity; they do not predict control
+// sequence numbers, publish handles or grant execution/presentation time.
+bool projectWorldRouteStops(const IntentState& s,const std::set<uint64_t>& seeds,
+    std::vector<double>& rows,std::vector<double>& gates){
+  std::set<uint64_t> pending=seeds,stopped=seeds,processed,frozen;
+  while(!pending.empty()){
+    const uint64_t actor=*pending.begin();pending.erase(actor);
+    if(!processed.insert(actor).second)continue;
+    const auto found=s.activeIntents.find(actor);
+    if(found==s.activeIntents.end()||found->second.state!=PlanningState::RouteActive)return false;
+    const auto& intent=found->second;if(intent.slot>=s.routeSlots.size())return false;
+    const auto& route=s.routeSlots[intent.slot];SpatialBodyView body;
+    if(!route.active||!route.reserved||route.generation!=intent.generation||
+       !spatialReadBody(route.reservationBody,body))return false;
+    auto pose=route.hasExecution?route.executionPose:sampleRouteTiming(route,s.effectiveTime);
+    if(body.x!=pose[0]||body.z!=pose[1])return false;
+    const bool suspend=routeCanSuspend(s,intent);uint32_t next=suspend?route.generation+1:0;if(suspend&&!next)next=1;
+    rows.insert(rows.end(),{double(actor),double(intent.assignmentSequence),double(intent.slot),double(route.generation),
+      double(route.reservationBody),double(int(suspend?PlanningState::WaitingBlocked:PlanningState::NeedsPlan)),s.effectiveTime,double(next)});
+    pose[15]=pose[16]=0;rows.insert(rows.end(),pose.begin(),pose.end());
+    for(uint64_t id:route.gateReservations){const auto gate=s.gates.find(id);
+      if(gate==s.gates.end()||frozen.count(id)||!gateCrossingReleaseStopsOthers(gate->second,route,s.effectiveTime))continue;
+      frozen.insert(id);gates.insert(gates.end(),{double(id),double(gate->second.mechanism),gateOpening(gate->second,s.effectiveTime)});
+      for(const auto& [other,crossing]:gate->second.crossings)if(stopped.insert(other).second)pending.insert(other);
+    }
+    if(s.executionEnabled&&(suspend||!s.resettingBodies&&!s.removingBodies.count(route.reservationBody)))
+      visitStoppedReservationConflicts(s,route.reservationBody,[&](uint64_t other){return stopped.count(other)>0;},
+        [&](uint64_t other,double){if(stopped.insert(other).second)pending.insert(other);});
+  }
+  return true;
+}
 int stageWorldMutationBoundary(const SpatialStaticMutation* shapes,int count){
   auto& s=state();if(s.barrierProposal.pending)return -4;
   if(!s.session||!s.causalClock||s.clockThrough!=s.effectiveTime||s.clockIntentSequence!=s.intentSequence||
@@ -952,7 +992,8 @@ int stageWorldMutationBoundary(const SpatialStaticMutation* shapes,int count){
   if(count>=0&&!staticMutationPreflight(s,shapes,count))return 0;
   std::set<uint64_t> affected;uint64_t candidates=0,segments=0;
   if(count>=0&&s.executionEnabled&&!mutationAffectedRoutes(s,shapes,count,0,candidates,segments,affected))return -2;
-  auto& p=s.barrierProposal;p.pending=true;p.session=s.session;p.ticket=++s.nextBarrierProposal;p.at=s.effectiveTime;
+  std::vector<double> routes,gates;if(!projectWorldRouteStops(s,count<0?s.worldPreviewStoppedRoutes:affected,routes,gates))return -2;
+  auto& p=s.barrierProposal;p.routeEffects=std::move(routes);p.gateEffects=std::move(gates);p.pending=true;p.session=s.session;p.ticket=++s.nextBarrierProposal;p.at=s.effectiveTime;
   p.bodies=spatialBodiesMutationRevision();p.entities=s.entityRevision;p.facts=s.sequence;p.intents=s.intentSequence;
   p.reservations=s.residencyPinRevision;p.clock=s.clockSequence;p.gates=s.gateRevision;p.world=executionWorldStamp();
   p.retainsRoutes=count<0?s.worldPreviewRetainsRoutes:affected.empty();
@@ -968,7 +1009,7 @@ int spatialIntentStageWorld(const SpatialWorldProposalInput& input,const Spatial
   auto& p=state().barrierProposal;p.kind=input.kind;p.worldInput=input;return 1;
 }
 void clearWorldMutationProposal(PendingBarrierProposal& p){
-  p.pending=false;p.kind=0;p.worldInput=SpatialWorldProposalInput{};
+  p.pending=false;p.kind=0;p.worldInput=SpatialWorldProposalInput{};p.routeEffects.clear();p.gateEffects.clear();
 }
 int takeWorldMutationBoundary(double session,double ticket,double sequence,double time,double clockSequence,int kind){
   auto& s=state();const auto& p=s.barrierProposal;
@@ -1002,9 +1043,18 @@ int spatialIntentWorldProposalSnapshot(std::array<double,6>& out){
 // No direct stop means no held-disc/gate stop closure can be introduced by it.
 extern "C" EMSCRIPTEN_KEEPALIVE int nav_intent_world_proposal_retains_routes(double session,double ticket){
   auto& s=state();const auto& p=s.barrierProposal;
-  const int current=takeWorldMutationBoundary(session,ticket,double(p.intents),p.at,double(p.clock),2);
+  const int current=takeWorldMutationBoundary(session,ticket,double(p.intents),p.at,double(p.clock),p.kind==1?1:2);
   return current==1?(p.retainsRoutes?1:0):current;
 }
+extern "C" EMSCRIPTEN_KEEPALIVE int nav_intent_world_proposal_effects_version(){return 1;}
+extern "C" EMSCRIPTEN_KEEPALIVE int nav_intent_world_proposal_route_effects(double session,double ticket){
+  const int valid=nav_intent_world_proposal_retains_routes(session,ticket);return valid<0?valid:int(state().barrierProposal.routeEffects.size()/26);
+}
+extern "C" EMSCRIPTEN_KEEPALIVE const double* nav_intent_world_proposal_route_effects_ptr(){return state().barrierProposal.routeEffects.data();}
+extern "C" EMSCRIPTEN_KEEPALIVE int nav_intent_world_proposal_gate_effects(double session,double ticket){
+  const int valid=nav_intent_world_proposal_retains_routes(session,ticket);return valid<0?valid:int(state().barrierProposal.gateEffects.size()/3);
+}
+extern "C" EMSCRIPTEN_KEEPALIVE const double* nav_intent_world_proposal_gate_effects_ptr(){return state().barrierProposal.gateEffects.data();}
 extern "C" EMSCRIPTEN_KEEPALIVE int nav_intent_barrier_proposal_version(){return 1;}
 extern "C" EMSCRIPTEN_KEEPALIVE int nav_intent_barrier_proposal_ticket(){
   auto& s=state();s.barrierProposalResult.fill(0);const auto& p=s.barrierProposal;if(!p.pending)return 0;
@@ -1095,7 +1145,7 @@ void nav_intent_reset(){
   if(!s.gates.empty())spatialGateSupportChanged();
   s.gates.clear();s.gateBodyActors.clear();s.gateInput.clear();s.gateResult.clear();
   cancelGateMotionProposal(s);s.gateMotionResult.fill(0);
-  s.barrierProposal=PendingBarrierProposal{};s.barrierProposalResult.fill(0);s.gateRevision=0;s.worldMutationPreview=false;s.worldPreviewRetainsRoutes=true;
+  s.barrierProposal=PendingBarrierProposal{};s.barrierProposalResult.fill(0);s.gateRevision=0;s.worldMutationPreview=false;s.worldPreviewRetainsRoutes=true;s.worldPreviewStoppedRoutes.clear();
   s.routeHoldResult.clear();s.routeKnotResult.clear();s.gateWaitSegments=0;
   s.gateStaticPairs=s.gateStaticEvaluations=s.gateStaticRejected=0;s.gateStaticResult.fill(0);
   s.gateStaticProofs=0;s.gateStaticWorldStamp.fill(0);

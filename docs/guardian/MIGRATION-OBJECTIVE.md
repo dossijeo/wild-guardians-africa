@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [terreno preparado con asignaciones nativas conservadas](f-r4-retained-native-terrain-20261114.md).
+Último avance: [consecuencias nativas preparadas de una parada](f-r4-native-stop-projection-20261114.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio

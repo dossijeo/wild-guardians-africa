@@ -5,6 +5,8 @@ Continúa el [plan integrado](integrated-gpu-migration-plan-20261104.md) y los
 [cultivos preparados](f-r4-prepared-crop-instances-20261114.md).
 Los once padres A6 y e-R3/e-R4/f-R4 permanecen abiertos.
 
+Continúa con [consecuencias nativas preparadas de una parada](f-r4-native-stop-projection-20261114.md); su presentación gráfica y los cierres globales siguen pendientes.
+
 ## Cambio efectivo
 
 Las mutaciones de residencia, props y terreno ya pueden preparar una imagen con
