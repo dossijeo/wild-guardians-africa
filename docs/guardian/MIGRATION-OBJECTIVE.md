@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [aldeas con apoyo cambiado preparadas antes del efecto físico, conservando sus buffers](f-r4-prepared-village-support-20261114.md).
+Último avance: [retención verificada de centros, muros, cultivos y cajas sobre terreno cambiado](f-r4-retained-terrain-consumers-20261114.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio

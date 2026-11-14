@@ -1,0 +1,285 @@
+{
+  "runtime": "Node 20 + Vite 5181 + hardware WebGPU Edge",
+  "directedTests": 104,
+  "fail": 0,
+  "skipped": 0,
+  "syntaxChecks": [
+    "tests/browser/webgpu-temporal-ground-worker.js",
+    "tools/experiments/audit_webgpu_temporal_ground.mjs"
+  ],
+  "productionBase": "cb29ec41c",
+  "productionCodeChanged": false,
+  "runs": [
+    {
+      "mode": "prepared-native-structure-support",
+      "ok": true,
+      "mutations": 8,
+      "firstDrawFactoryDeltas": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "firstDrawLateCreationMessages": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "cameraLodAdmission": {
+        "view": {
+          "x": 47.847511768341064,
+          "y": 110,
+          "z": -1.8993682503700255,
+          "targetX": 47.847511768341064,
+          "targetY": 0,
+          "targetZ": -1.9993682503700256
+        },
+        "requested": {
+          "ready": true,
+          "selectableReady": true,
+          "loadedSlots": 16,
+          "chunks": 9,
+          "meshes": 43,
+          "materials": 16,
+          "sharedMaterials": false,
+          "instanceContract": "native",
+          "failure": null
+        },
+        "backgroundResourceTypes": {
+          "createBindGroupLayout": 16,
+          "createBuffer": 40,
+          "createBindGroup": 16,
+          "createShaderModule": 8,
+          "createPipelineLayout": 8,
+          "createRenderPipelineAsync": 8
+        },
+        "ready": {
+          "ready": true,
+          "selectableReady": true,
+          "loadedSlots": 16,
+          "chunks": 9,
+          "meshes": 44,
+          "materials": 16,
+          "sharedMaterials": false,
+          "instanceContract": "native",
+          "failure": null
+        },
+        "startedAt": 1794625707083,
+        "completedAt": 1794625707349.2002,
+        "renderAttempts": 4,
+        "factoriesInsideDraws": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "backgroundFactories": 96,
+        "backgroundCreationMessages": 96,
+        "firstSteadyRender": {
+          "startedAt": 1794625707327,
+          "recordedAt": 1794625707333.2002,
+          "completedAt": 1794625707348.9001,
+          "createdBefore": 2198,
+          "createdAfter": 2198,
+          "factoriesBefore": 2198,
+          "factoriesAfter": 2198,
+          "created": []
+        },
+        "worldUnchanged": true
+      },
+      "gpuErrors": 0,
+      "errors": [],
+      "disposalAndGpuDrainVerified": true
+    },
+    {
+      "mode": "prepared-native-damaged-structure-support",
+      "ok": true,
+      "mutations": 8,
+      "firstDrawFactoryDeltas": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "firstDrawLateCreationMessages": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "cameraLodAdmission": {
+        "view": {
+          "x": 47.847511768341064,
+          "y": 110,
+          "z": -1.8993682503700255,
+          "targetX": 47.847511768341064,
+          "targetY": 0,
+          "targetZ": -1.9993682503700256
+        },
+        "requested": {
+          "ready": true,
+          "selectableReady": true,
+          "loadedSlots": 16,
+          "chunks": 9,
+          "meshes": 43,
+          "materials": 16,
+          "sharedMaterials": false,
+          "instanceContract": "native",
+          "failure": null
+        },
+        "backgroundResourceTypes": {
+          "createBindGroupLayout": 16,
+          "createBuffer": 40,
+          "createBindGroup": 16,
+          "createShaderModule": 8,
+          "createPipelineLayout": 8,
+          "createRenderPipelineAsync": 8
+        },
+        "ready": {
+          "ready": true,
+          "selectableReady": true,
+          "loadedSlots": 16,
+          "chunks": 9,
+          "meshes": 44,
+          "materials": 16,
+          "sharedMaterials": false,
+          "instanceContract": "native",
+          "failure": null
+        },
+        "startedAt": 1794625723015.9,
+        "completedAt": 1794625723282.4,
+        "renderAttempts": 4,
+        "factoriesInsideDraws": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "backgroundFactories": 96,
+        "backgroundCreationMessages": 96,
+        "firstSteadyRender": {
+          "startedAt": 1794625723259.9,
+          "recordedAt": 1794625723266.5,
+          "completedAt": 1794625723282,
+          "createdBefore": 2292,
+          "createdAfter": 2292,
+          "factoriesBefore": 2292,
+          "factoriesAfter": 2292,
+          "created": []
+        },
+        "worldUnchanged": true
+      },
+      "gpuErrors": 0,
+      "errors": [],
+      "disposalAndGpuDrainVerified": true
+    },
+    {
+      "mode": "prepared-native-economy-support",
+      "ok": true,
+      "mutations": 8,
+      "firstDrawFactoryDeltas": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "firstDrawLateCreationMessages": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "cameraLodAdmission": {
+        "view": {
+          "x": 47.847511768341064,
+          "y": 110,
+          "z": -1.8993682503700255,
+          "targetX": 47.847511768341064,
+          "targetY": 0,
+          "targetZ": -1.9993682503700256
+        },
+        "requested": {
+          "ready": true,
+          "selectableReady": true,
+          "loadedSlots": 16,
+          "chunks": 9,
+          "meshes": 43,
+          "materials": 16,
+          "sharedMaterials": false,
+          "instanceContract": "native",
+          "failure": null
+        },
+        "backgroundResourceTypes": {
+          "createBindGroupLayout": 16,
+          "createBuffer": 40,
+          "createBindGroup": 16,
+          "createShaderModule": 8,
+          "createPipelineLayout": 8,
+          "createRenderPipelineAsync": 8
+        },
+        "ready": {
+          "ready": true,
+          "selectableReady": true,
+          "loadedSlots": 16,
+          "chunks": 9,
+          "meshes": 44,
+          "materials": 16,
+          "sharedMaterials": false,
+          "instanceContract": "native",
+          "failure": null
+        },
+        "startedAt": 1794625740582.7,
+        "completedAt": 1794625740882.7,
+        "renderAttempts": 5,
+        "factoriesInsideDraws": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "backgroundFactories": 96,
+        "backgroundCreationMessages": 96,
+        "firstSteadyRender": {
+          "startedAt": 1794625740855.3,
+          "recordedAt": 1794625740863,
+          "completedAt": 1794625740882.0999,
+          "createdBefore": 2489,
+          "createdAfter": 2489,
+          "factoriesBefore": 2489,
+          "factoriesAfter": 2489,
+          "created": []
+        },
+        "worldUnchanged": true
+      },
+      "gpuErrors": 0,
+      "errors": [],
+      "disposalAndGpuDrainVerified": true
+    }
+  ]
+}
