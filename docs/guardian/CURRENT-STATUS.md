@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+**Native Home route source, 2026-11-15:** [Complete native corridor and Game projection](e-r3-native-home-route-source-20261115.md) reuse the existing stationary body, proposal, timetable and reservations. The actual endpoint stays held until prepared retirement. The Home graphical consumer, arrival retirement and fresh restoration admission remain pending; A6/A/B/C stay open.
+
 **Expired-contract delivery, 2026-11-15:** [Native held body pending Home](e-r3-native-delivery-home-pending-20261115.md) preserves returning semantics, single credit and task exclusion on the same native body. NVIDIA/Turing: 96 preparation creations, zero after READY and 50 draws during a 1.8 s preparer stall. The moving Home route and its arrival remain pending; no A6/A/B/C closure changes.
 
 **Native candidate cancellation, 2026-11-15:** [Graphical rollback and removal follow-up](e-r3-native-delivery-live-consumer-20261115.md) fixes first bindings without a replacement source and retires both candidate and prior Idle owner on removal. Parent-module control reproduces both failures, including 8 retained resources; corrected regression is 63/63 and final lifecycle selection 10/10, with product build passing. Logical Home/Idle/cancellation availability and A6/A/B/C remain pending.

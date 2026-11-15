@@ -19,7 +19,7 @@ function workerSnapshot(worker){
     profile:worker.profile,raidReturn:worker.raidReturn};
 }
 export function notifyWorkerPlanningChange(state,worker){
-  if(!worker.taskId){if(worker.nativeRouteAdmission!=='native-delivery')delete worker.nativeRouteAdmission;delete worker.nativeTaskAction;}
+  if(!worker.taskId){if(!['native-delivery','native-home'].includes(worker.nativeRouteAdmission))delete worker.nativeRouteAdmission;delete worker.nativeTaskAction;}
   const listeners=taskObservers.get(state);
   if(!listeners?.size)return;
   const event={type:'worker',worker:workerSnapshot(worker)};

@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuación de Home: [corredor nativo y proyección en Game](e-r3-native-home-route-source-20261115.md) sobre el mismo cuerpo y protocolo común, sin tarea ficticia. La ruta y la retención de su extremo se validan en ambos módulos nativos; el consumidor gráfico, la retirada al llegar y la admisión nueva al restaurar siguen pendientes. No cambia ningún cierre A6/A/B/C.
+
 Continuación de entrega con contrato terminado: [cuerpo retenido para Home](e-r3-native-delivery-home-pending-20261115.md). El resultado preparado conserva `returning`, cobra una sola vez y excluye nuevas tareas sobre el mismo cuerpo. NVIDIA/Turing: 96 recursos al preparar, cero después de READY y 50 dibujos durante bloqueo. La ruta Home ejecutable y su llegada siguen pendientes; no cambia ningún cierre A6/A/B/C.
 
 Continuación del consumidor de entrega: [Carry → Idle → tarea genuina siguiente en el consumidor real](e-r3-native-delivery-live-consumer-20261115.md), para entrega sin puertas y contrato activo. Pasan 538 pruebas; NVIDIA/Turing conserva el actor y sus geometrías, con 96/98 recursos al preparar, cero después de READY y 52/54 dibujos durante bloqueos. Home, Idle inicial, puertas, productor ordinario y recuperación integral siguen pendientes; no cambia ningún cierre A6/A/B/C.

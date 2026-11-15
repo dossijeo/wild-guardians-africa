@@ -1,6 +1,7 @@
 import {advanceWorkerRecovery} from './worker-recovery.js';
 import {nativeEntityNumericId} from '../world/native-entity-id.js';
 import {copyNativeTaskConsequenceAttestation} from '../world/native-task-consequence.js';
+import {copyNativeHomeRouteAttestation} from '../world/native-home-route.js';
 import {copyNativeTaskSettlementAttestation} from '../world/native-task-settlement.js';
 import {notifySettlement} from './settlement-observers.js';
 import {dispatchLocalGameEvent} from './game-event-observers.js';
@@ -1310,6 +1311,15 @@ export function projectNativeCrateDeliveryConsequence(s,w,preview,native){
   if(preview.tutorial.completedEvent)emit(s,'TutorialCompleted',{workerId:w.id,targetId:crate.id});
   return crate;
 }
+// Read only the owning native Home execution. The route is task-free, and
+// reaching its end keeps the body/returning status until prepared retirement.
+export function projectNativeHomeRouteExecution(s,w,native){
+  const execution=native?.nativeHomeRouteExecution?.(w.id);if(!execution)return null;
+  const binding=copyNativeHomeRouteAttestation(execution.binding),r=binding.reference,source=r.sourceSettlement.reference,home=source.home,village=s.villages.find(v=>nativeEntityNumericId(v.id)===home.villageId),entry=village?.entry??village,crate=s.crates.find(c=>nativeEntityNumericId(c.id)===source.crateId);
+  if(!s.workers.includes(w)||w.status!=='returning'||w.incapacitated||w.recovery||w.recoveryExitRemaining||w.fallRemaining||w.raidReturn||w.taskId||w.crateId||w.nativeRouteAdmission!==undefined&&w.nativeRouteAdmission!=='native-home'||execution.actorId!==nativeEntityNumericId(w.id)||execution.bodyId!==r.bodyId||execution.executedThrough!==s.elapsed||execution.villageId!==home.villageId||nativeEntityNumericId(w.villageId)!==home.villageId||entry?.x!==home.x||entry?.z!==home.z||!crate?.delivered||crate.carrierId)throw Error('Native Home projection is not the executed game boundary');
+  const changed=w.nativeRouteAdmission!=='native-home';Object.assign(w,{x:execution.x,z:execution.z,heading:execution.yaw,runPhase:execution.runPhase,walkPhase:execution.walkPhase,carryPhase:execution.carryPhase,runRemaining:execution.runRemaining,running:execution.running,gateWaiting:!execution.arrived&&execution.currentSpeed===0,path:null,nativeRouteAdmission:'native-home'});
+  if(changed)notifyWorkerPlanningChange(s,w);return execution;
+}
 export function prepareHarvestConsequence(s,w,t,target){
   if(!w||!t||!target||t.kind!=='harvest'||w.taskId!==t.id||t.workerId!==w.id||t.targetId!==target.id||w.crateId||!isMature(target)||!target.harvestRequested)return null;
   let value=rational(cropSpec(target.species).base_harvest_value);
@@ -1576,6 +1586,7 @@ function updateWorkers(s,dt,nav) {
         continue;
       }
       const p=profile(w),center=s.structures.find(c=>c.id===w.centerId),village=s.villages.find(v=>v.id===w.villageId);
+      if(nativeExecutionActive&&w.nativeRouteAdmission==='native-home'){if(!nav.intentTaskPlanner?.projectNativeHomeExecution(s,w))throw Error('Native Home has no current execution projection');continue;}
       if(nativeExecutionActive&&w.status==='returning'&&nav.intentTaskPlanner?.nativeSettledWorkerExecution?.(w.id)?.binding.reference.home){if(!nav.intentTaskPlanner.projectNativeSettledWorkerExecution(s,w))throw Error('Native pending Home has no current execution projection');continue;}
       if(['fleeing','returning','incapacitated'].includes(w.status)) {
         const home={...(village.entry??village),id:`home-${village.id}`};
@@ -1805,7 +1816,7 @@ export function tick(s,seconds,nav,{clockRate=1}={}) {
       nativeExecution=nav.intentTaskPlanner.nativeGameExecutionState();
     }
     if(nativeExecution<0)throw Error('Native game execution still requires projection for this intention class');
-    if(nativeExecution===1&&(nav.dynamicBodies||s.raid||s.workers.some(w=>!(w.nativeRouteAdmission==='native-delivery'&&nav.intentTaskPlanner.projectNativeDeliveryExecution(s,w))&&!(nav.intentTaskPlanner.nativeSettledWorkerExecution?.(w.id)&&nav.intentTaskPlanner.projectNativeSettledWorkerExecution(s,w))&&(!w.taskId||!['walking','waiting-task','acting'].includes(w.status)||w.status==='acting'&&(w.nativeRouteAdmission!=='native-action'||!nav.intentTaskPlanner.nativeTaskActionExecution(w.id))||w.crateId)||w.raidReturn||w.incapacitated||w.recovery||w.fallRemaining>0||contractExpired(w,s)&&!nav.intentTaskPlanner.nativeSettledWorkerExecution?.(w.id)?.binding.reference.home)||s.structures.some(structure=>structure.gate&&structure.status!=='ruined')))throw Error('Native task game cohort contains an unsupported mover');
+    if(nativeExecution===1&&(nav.dynamicBodies||s.raid||s.workers.some(w=>!(w.nativeRouteAdmission==='native-home'&&nav.intentTaskPlanner.projectNativeHomeExecution(s,w))&&!(w.nativeRouteAdmission==='native-delivery'&&nav.intentTaskPlanner.projectNativeDeliveryExecution(s,w))&&!(nav.intentTaskPlanner.nativeSettledWorkerExecution?.(w.id)&&nav.intentTaskPlanner.projectNativeSettledWorkerExecution(s,w))&&(!w.taskId||!['walking','waiting-task','acting'].includes(w.status)||w.status==='acting'&&(w.nativeRouteAdmission!=='native-action'||!nav.intentTaskPlanner.nativeTaskActionExecution(w.id))||w.crateId)||w.raidReturn||w.incapacitated||w.recovery||w.fallRemaining>0||contractExpired(w,s)&&!nav.intentTaskPlanner.nativeSettledWorkerExecution?.(w.id)?.binding.reference.home&&!nav.intentTaskPlanner.nativeHomeRouteExecution?.(w.id))||s.structures.some(structure=>structure.gate&&structure.status!=='ruined')))throw Error('Native task game cohort contains an unsupported mover');
     prepareClockEvents(s,nav);
     // Version-1 saves can contain an active area without exposure bookkeeping.
     // Mark once on restoration; static plants need no per-frame exposure scan.

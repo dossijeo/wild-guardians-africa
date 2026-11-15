@@ -4,10 +4,18 @@ import {nativeTaskActionActor,nativeTaskActionReferenceFromProposal,sameNativeTa
 import {nativeTaskConsequenceReferenceFromProposal,sameNativeTaskConsequenceReference} from './native-task-consequence.js';
 import {nativeTaskSettlementReferenceFromProposal,sameNativeTaskSettlementReference} from './native-task-settlement.js';
 
+import {nativeHomeRouteReferenceFromProposal,sameNativeHomeRouteReference} from './native-home-route.js';
+
 // Transport/resource identities only. Compatibility is reported by the current
 // native revalidation; none of these profiles can issue an execution permission.
 const routeCompatible=translation=>translation.sameFloat32Motion&&translation.sameFloat32Gates;
 const profiles=Object.freeze({
+  'home-route':Object.freeze({
+    proposalKind:'native-home-route-proposal',templateField:'preparedHomeRouteTemplate',bindingField:'nativeHomeRouteBinding',releaseField:'nativeHomes',
+    reference:nativeHomeRouteReferenceFromProposal,sameReference:sameNativeHomeRouteReference,compatible:routeCompatible,
+    receiptCompatible:(receipt,prepared)=>receipt.nativeHomeRouteVersion===1&&sameNativeHomeRouteReference(receipt.preparedHomeRouteTemplate,prepared),
+    attest(native,reference,preparedReference){const actual=issuedRoute(native,reference),fact=native.nativeHomeRouteBinding(reference.actorId);if(!fact||!sameNativeHomeRouteReference(fact.reference,reference)||!sameNativeHomeRouteReference(fact.preparedReference,preparedReference)||fact.assignmentSequence!==actual.assignmentSequence)throw Error('Native Home resource association unavailable');return fact;}
+  }),
   'task-settlement':Object.freeze({
     proposalKind:'native-task-settlement-proposal',templateField:'preparedTaskSettlementTemplate',bindingField:'nativeTaskSettlementBinding',releaseField:'nativeSettlements',
     reference:nativeTaskSettlementReferenceFromProposal,sameReference:sameNativeTaskSettlementReference,

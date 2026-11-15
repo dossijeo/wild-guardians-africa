@@ -125,8 +125,9 @@ export function validateSnapshot(state,{livePhysics=false}={}) {
       const pending=['pending-resources','pending-action-resources'].includes(worker.nativeRouteAdmission)&&worker.status==='waiting-task'&&worker.path===null,
         executing=worker.nativeRouteAdmission==='native-task'&&worker.status==='walking'&&Array.isArray(worker.path)&&worker.path.length===0,
         acting=worker.nativeRouteAdmission==='native-action'&&worker.status==='acting'&&Array.isArray(worker.path)&&worker.path.length===0,
-        carrying=worker.nativeRouteAdmission==='native-delivery'&&worker.status==='carrying'&&!worker.taskId&&Array.isArray(worker.path)&&worker.path.length===0;
-      if(!carrying&&(!worker.taskId||!pending&&!executing&&!acting))throw Error('Solicitud de recursos nativa inválida');
+        carrying=worker.nativeRouteAdmission==='native-delivery'&&worker.status==='carrying'&&!worker.taskId&&Array.isArray(worker.path)&&worker.path.length===0,
+        returning=worker.nativeRouteAdmission==='native-home'&&worker.status==='returning'&&!worker.taskId&&!worker.crateId&&worker.path===null;
+      if(!carrying&&!returning&&(!worker.taskId||!pending&&!executing&&!acting))throw Error('Solicitud de recursos nativa inválida');
     }
     if(worker.nativeDelivery!==undefined||worker.nativeRouteAdmission==='native-delivery'){
       const delivery=worker.nativeDelivery;

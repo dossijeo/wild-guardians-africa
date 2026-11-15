@@ -150,6 +150,11 @@ struct NativeTaskSettlementBinding {
   std::shared_ptr<const NativeTaskConsequenceBinding> source;
   std::vector<uint64_t> sourceGates;
 };
+struct NativeHomeRouteOrigin {std::array<double,24> header{};uint64_t ticket=0;};
+struct NativeHomeRouteBinding {
+  NativeHomeRouteOrigin prepared,actual;uint64_t assignmentSequence=0;
+  std::shared_ptr<const NativeTaskSettlementBinding> source;
+};
 struct ActiveIntent {
   uint64_t actor=0,task=0,target=0;
   PlanningState state=PlanningState::NeedsPlan;
@@ -194,6 +199,7 @@ struct NativeTaskStartBinding {
   uint64_t assignmentSequence=0;
 };
 struct RouteSlot {
+  std::shared_ptr<const NativeHomeRouteBinding> homeBinding;
   std::shared_ptr<const NativeTaskStartBinding> startBinding;
   std::shared_ptr<const NativeTaskConsequenceBinding> consequenceBinding;
   std::vector<float> points;
@@ -238,6 +244,7 @@ struct PendingNativeMotionDraft {
   std::array<double,2> taskIdentity{};
   std::array<double,3> taskPhaseSeed{};
   std::optional<NativeTaskStartOrigin> previousStart;
+  std::optional<NativeHomeRouteOrigin> previousHome;
   std::shared_ptr<const NativeTaskSettlementBinding> stationarySource;
   // Evidence about the previous native-owned draft, never an execution grant.
   // Kept only in the one current proposal; cancelling it drops the evidence.
@@ -266,7 +273,7 @@ struct PendingTaskSettlementDraft {
   std::array<double,8> timeTranslation{};
 };
 struct PendingBarrierProposal {
-  std::optional<PendingNativeMotionDraft> resume,start;
+  std::optional<PendingNativeMotionDraft> resume,start,home;
   std::optional<PendingTaskActionDraft> action;
   std::optional<PendingTaskConsequenceDraft> consequence;
   std::optional<PendingTaskSettlementDraft> settlement;
@@ -364,7 +371,8 @@ struct IntentState {
   std::vector<double> taskActionBindingResult;
   std::vector<double> taskConsequenceBindingResult;
   std::array<double,30> deliveryExecutionResult{};
-  std::vector<double> taskSettlementBindingResult;
+  std::vector<double> taskSettlementBindingResult,homeBindingResult;
+  std::array<double,30> homeExecutionResult{};
   std::set<uint64_t> stoppedReservationBodies,removingBodies;
   std::set<uint64_t> stoppedGateRouteActors;
   uint64_t executionAdvances=0,executionEvaluations=0,executionBodyUpdates=0,executionStopInvalidations=0;
@@ -449,8 +457,9 @@ bool nativeSettlementBodyCurrent(const IntentState& s,const ActiveIntent& intent
   !s.reservedBodies.count(worker->second.body)&&!s.suspendedBodies.count(worker->second.body)&&center!=s.targets.end()&&center->second.active&&center->second.kind==4&&center->second.status==0;
 }
 bool nativeDeliveryBodyCurrent(const IntentState&,const ActiveIntent&);
+bool nativeHomeBodyCurrent(const IntentState&,const ActiveIntent&);
 bool nativeTaskActionsCoherent(const IntentState& s){
-  for(const auto& [actor,intent]:s.activeIntents)if(intent.actionBinding&&!nativeTaskActionBodyCurrent(s,intent)||intent.delivery&&!nativeDeliveryBodyCurrent(s,intent)||intent.settlementBinding&&!nativeSettlementBodyCurrent(s,intent))return false;
+  for(const auto& [actor,intent]:s.activeIntents)if(intent.actionBinding&&!nativeTaskActionBodyCurrent(s,intent)||intent.delivery&&!nativeDeliveryBodyCurrent(s,intent)||intent.settlementBinding&&!nativeSettlementBodyCurrent(s,intent)||intent.home&&intent.state==PlanningState::RouteActive&&intent.slot<s.routeSlots.size()&&s.routeSlots[intent.slot].homeBinding&&!nativeHomeBodyCurrent(s,intent))return false;
   return true;
 }
 const ActiveIntent* nativeTaskActionForBody(const IntentState& s,uint64_t id){
@@ -635,7 +644,7 @@ void releaseRoute(IntentState& s,ActiveIntent& intent){
       }
       if(route.suspended)s.suspendedBodies.erase(route.reservationBody);
       route.suspended=route.resumable=false;route.motionOffset.fill(0);route.suspendedAt=0;
-      route.startBinding.reset();route.consequenceBinding.reset();route.active=route.pendingResources=false;route.points.clear();route.distances.clear();route.timingMode=0;
+      route.startBinding.reset();route.consequenceBinding.reset();route.homeBinding.reset();route.active=route.pendingResources=false;route.points.clear();route.distances.clear();route.timingMode=0;
       route.holds.clear();route.waitGate=0;route.gateCandidate=false;route.departureTime=0;
       route.gateReservations.clear();route.gateAdmitted=false;
       route.generation++;
@@ -1156,12 +1165,12 @@ int spatialIntentStageWorld(const SpatialWorldProposalInput& input,const Spatial
   auto& p=state().barrierProposal;p.kind=input.kind;p.worldInput=input;return 1;
 }
 void clearWorldMutationProposal(PendingBarrierProposal& p){
-  p.pending=false;p.kind=0;p.resume.reset();p.start.reset();p.action.reset();p.consequence.reset();p.settlement.reset();p.worldInput=SpatialWorldProposalInput{};p.routeEffects.clear();p.gateEffects.clear();
+  p.pending=false;p.kind=0;p.resume.reset();p.start.reset();p.home.reset();p.action.reset();p.consequence.reset();p.settlement.reset();p.worldInput=SpatialWorldProposalInput{};p.routeEffects.clear();p.gateEffects.clear();
 }
 int takeWorldMutationBoundary(double session,double ticket,double sequence,double time,double clockSequence,int kind){
   auto& s=state();const auto& p=s.barrierProposal;
   if(!integer(session)||!integer(ticket)||!p.pending||session!=double(p.session)||ticket!=double(p.ticket)||
-     (kind==1?p.kind!=1:(kind>=13&&kind<=17)?p.kind!=kind:p.kind<2||p.kind>11))return -1;
+     (kind==1?p.kind!=1:(kind>=13&&kind<=18)?p.kind!=kind:p.kind<2||p.kind>11))return -1;
   const bool current=p.session==s.session&&p.at==s.effectiveTime&&p.bodies==spatialBodiesMutationRevision()&&
     p.bodies!=std::numeric_limits<uint64_t>::max()&&p.entities==s.entityRevision&&p.facts==s.sequence&&
     p.intents==s.intentSequence&&p.reservations==s.residencyPinRevision&&p.clock==s.clockSequence&&
@@ -2276,6 +2285,7 @@ EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_execution_ptr(){return state
 #include "spatial-task-action-proposal.inc"
 #include "spatial-task-consequence-proposal.inc"
 #include "spatial-task-settlement-proposal.inc"
+#include "spatial-home-route-proposal.inc"
 EMSCRIPTEN_KEEPALIVE double nav_intent_execution_advances(){return double(state().executionAdvances);}
 EMSCRIPTEN_KEEPALIVE double nav_intent_execution_evaluations(){return double(state().executionEvaluations);}
 EMSCRIPTEN_KEEPALIVE double nav_intent_execution_body_updates(){return double(state().executionBodyUpdates);}

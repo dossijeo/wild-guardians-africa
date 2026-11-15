@@ -85,8 +85,12 @@ EMSCRIPTEN_KEEPALIVE int nav_task_settlement_binding_actors(){
 }
 static const NativeTaskConsequenceBinding* taskSettlementSource(double actor,double ticket,const std::vector<uint64_t>** gates=nullptr){
  const auto& s=state();if(!integer(actor)||!integer(ticket,true))return nullptr;
- if(ticket){const auto& p=s.barrierProposal;if(!p.pending||p.kind!=17||!p.settlement||ticket!=double(p.ticket)||actor!=p.settlement->header[1])return nullptr;if(gates)*gates=&p.settlement->sourceGates;return p.settlement->source.get();}
- const auto b=currentTaskSettlementBinding(actor);if(!b)return nullptr;if(gates)*gates=&b->sourceGates;return b->source.get();
+ const NativeTaskSettlementBinding* b=nullptr;
+ if(ticket){const auto& p=s.barrierProposal;if(!p.pending||ticket!=double(p.ticket))return nullptr;
+  if(p.kind==17&&p.settlement&&actor==p.settlement->header[1]){if(gates)*gates=&p.settlement->sourceGates;return p.settlement->source.get();}
+  if(p.kind==18&&p.home&&actor==p.home->header[1])b=p.home->stationarySource.get();
+ }else {b=currentTaskSettlementBinding(actor);if(!b){const auto found=s.activeIntents.find(uint64_t(actor));if(found!=s.activeIntents.end()&&nativeHomeBodyCurrent(s,found->second))b=s.routeSlots[found->second.slot].homeBinding->source.get();}}
+ if(!b)return nullptr;if(gates)*gates=&b->sourceGates;return b->source.get();
 }
 EMSCRIPTEN_KEEPALIVE int nav_task_settlement_source_snapshot(double actor,double ticket){
  auto& s=state();s.taskConsequenceBindingResult.clear();const std::vector<uint64_t>* gates=nullptr;const auto b=taskSettlementSource(actor,ticket,&gates);if(!b)return 0;

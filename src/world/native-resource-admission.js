@@ -9,8 +9,8 @@ import {nativeResourceAdmissionProfile} from './native-resource-admission-profil
 export function createNativeResourceAdmission({wasm,isReady,simulationTime,epoch,
   syncBoundaryTime,flushNativeIntentControl,nativeCausalClock,coversGpuConsumers,
   nativeWorldBoundary,commitWorldBoundary,captureWorldProposalResources,
-  nativeSuspendedGateRoute,nativeRouteTiming,nativeTaskStartBinding,nativeTaskActionBinding,nativeTaskConsequenceBinding,nativeTaskSettlementBinding}){
-  const native={nativeSuspendedGateRoute,nativeRouteTiming,nativeTaskStartBinding,nativeTaskActionBinding,nativeTaskConsequenceBinding,nativeTaskSettlementBinding};
+  nativeSuspendedGateRoute,nativeRouteTiming,nativeTaskStartBinding,nativeTaskActionBinding,nativeTaskConsequenceBinding,nativeTaskSettlementBinding,nativeHomeRouteBinding}){
+  const native={nativeSuspendedGateRoute,nativeRouteTiming,nativeTaskStartBinding,nativeTaskActionBinding,nativeTaskConsequenceBinding,nativeTaskSettlementBinding,nativeHomeRouteBinding};
   return async function commitNativeWorldProposal(getPublication,stage,commit,prepareResources=null,signal=null,protocol=null){
     const motion=nativeResourceAdmissionProfile(protocol?.motionKind),
       {reference:fromProposal,sameReference:sameTemplate,templateField,bindingField,releaseField}=motion;
