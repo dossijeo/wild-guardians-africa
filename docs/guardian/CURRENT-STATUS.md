@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+**Native delivery live consumer, 2026-11-15:** [Carry to Idle and a genuine next task](e-r3-native-delivery-live-consumer-20261115.md) now use the existing Surface, retained ports and actual GPU drain, for ungated delivery with an active contract. Regression: 538/538. NVIDIA/Turing: 96/98 preparation creations, zero after READY, 52/54 draws during 1.8 s preparer blocks; original actor/geometry retained. Home, gated delivery, initial Idle, fresh stationary bootstrap, ordinary producer and full recovery remain pending; A6/A/B/C stay open.
+
 **Native settlement consumer components, 2026-11-15:** [Resident Idle and genuine next-task preparation](e-r3-native-delivery-presentation-20261115.md) preserve the original actor/body/geometry and share the existing clock, terrain and retained resource port. Roster regression: 521/521; final transport selection: 78/78. Actual draw-host capture/submission/adoption remains pending; the capability and stationary-baseline guards stay in place. A6 and A/B/C remain open.
 
 **Native settlement source, 2026-11-15:** [Carry arrival, coherent credit and stationary ownership](e-r3-native-delivery-settlement-20261115.md) now share the native owner and resource-admission transactor. A genuine next task retains that body until its prepared route commits. Its graphical successor, genuine Home, initial Idle, ordinary producer and full recovery remain pending; no closure changes.

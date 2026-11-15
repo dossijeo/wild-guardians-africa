@@ -1,6 +1,6 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
-Continuación del consumidor de entrega: [Idle sobre el actor residente y siguiente tarea genuina](e-r3-native-delivery-presentation-20261115.md). Control, reloj, soporte, variante reversible y canal están implementados como componentes; 521 pruebas de regresión del roster y 78 del incremento de transporte pasan. Captura/envío/adopción en el host gráfico siguen pendientes; no se anuncia la capacidad ni cambia ningún cierre A6/A/B/C.
+Continuación del consumidor de entrega: [Carry → Idle → tarea genuina siguiente en el consumidor real](e-r3-native-delivery-live-consumer-20261115.md), para entrega sin puertas y contrato activo. Pasan 538 pruebas; NVIDIA/Turing conserva el actor y sus geometrías, con 96/98 recursos al preparar, cero después de READY y 52/54 dibujos durante bloqueos. Home, Idle inicial, puertas, productor ordinario y recuperación integral siguen pendientes; no cambia ningún cierre A6/A/B/C.
 
 Continuación de la autoridad de entrega: [Carry → disponibilidad nativa → siguiente tarea](e-r3-native-delivery-settlement-20261115.md), con liquidación coherente y cuerpo conservado. El consumidor gráfico del relevo, Home, Idle inicial y productor ordinario siguen pendientes; no cambia ningún cierre.
 

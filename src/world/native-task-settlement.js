@@ -36,3 +36,12 @@ export function copyNativeTaskSettlementAttestation(value){
 }
 export const nativeTaskSettlementAttestationCovers=(proof,reference)=>sameNativeTaskSettlementReference(proof?.reference,reference)||sameNativeTaskSettlementReference(proof?.preparedReference,reference);
 export function nativeTaskSettlementReferenceCovered(reference,boundary){const w=reference.worldBoundary;return !!boundary&&w.authorityEpoch===boundary.authorityEpoch&&w.nativeSession===boundary.nativeSession&&boundary.ticket>=w.ticket&&boundary.effectiveTime>=w.effectiveTime;}
+export function copyNativeTaskSettlementResources(value){
+ if(value?.version!==1||value.kind!==17||value.phase!=='committed'||Object.keys(value).some(k=>!['version','kind','phase','worldBoundary','nativeTaskSettlementBinding'].includes(k)))throw TypeError('Invalid native task settlement resources');
+ const worldBoundary=copyNativeWorldBoundary(value.worldBoundary),nativeTaskSettlementBinding=copyNativeTaskSettlementAttestation(value.nativeTaskSettlementBinding);
+ if(!sameNativeWorldBoundary(worldBoundary,nativeTaskSettlementBinding.reference.worldBoundary))throw TypeError('Native settlement resource boundary mismatch');
+ return Object.freeze({version:1,kind:17,phase:'committed',worldBoundary,nativeTaskSettlementBinding});
+}
+export function nativeTaskSettlementPresentationMatches(proposal,value,binding){
+ try{const prepared=nativeTaskSettlementReferenceFromProposal(proposal),resources=copyNativeTaskSettlementResources(value),proof=copyNativeTaskSettlementAttestation(binding),actual=resources.nativeTaskSettlementBinding;return nativeTaskSettlementAttestationCovers(proof,prepared)&&actual.settlementSequence===proof.settlementSequence&&sameNativeTaskSettlementReference(actual.reference,proof.reference)&&sameNativeTaskSettlementReference(actual.preparedReference,proof.preparedReference);}catch{return false;}
+}

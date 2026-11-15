@@ -14,7 +14,7 @@ import {copyNativeTaskActionReference,sameNativeTaskActionReference,nativeTaskAc
 const clockMetadata=Symbol.for('wild-guardians.remote-clock');
 export function markRemoteClockNode(node,semantic,epoch,nativeRoute=null,nativeGate=null,nativeSuspended=null,nativeResume=null,period=null,resourceEnd=null,nativeStart=null,nativeAction=null,nativeConsequence=null,nativeSettlement=null){
  if(!node?.isNode||!['absolute','relative','origin-modulo'].includes(semantic)||!Number.isFinite(epoch)||epoch<0)throw TypeError('Invalid remote clock node');
- if(semantic==='origin-modulo'?nativeResume===null&&nativeStart===null&&nativeConsequence===null||!Number.isFinite(period)||period<=0:period!==null)throw TypeError('Invalid native origin phase clock');
+ if(semantic==='origin-modulo'?nativeResume===null&&nativeStart===null&&nativeConsequence===null&&nativeSettlement===null||!Number.isFinite(period)||period<=0:period!==null)throw TypeError('Invalid native origin phase clock');
  if(resourceEnd!==null&&(!Number.isFinite(resourceEnd)||resourceEnd<epoch))throw TypeError('Invalid native clock resource end');
  let route=null;
  if(nativeRoute!==null){
@@ -24,7 +24,7 @@ export function markRemoteClockNode(node,semantic,epoch,nativeRoute=null,nativeG
  }
  if([nativeRoute,nativeGate,nativeSuspended,nativeResume,nativeStart,nativeAction,nativeConsequence,nativeSettlement].filter(value=>value!==null).length>1)throw TypeError('Conflicting native clock references');
  const settlement=nativeSettlement===null?null:copyNativeTaskSettlementReference(nativeSettlement);
- if(settlement&&(semantic!=='relative'||epoch!==settlement.worldBoundary.effectiveTime||resourceEnd!==null))throw TypeError('Invalid native settlement phase clock');
+ if(settlement&&(!['relative','origin-modulo'].includes(semantic)||epoch!==settlement.worldBoundary.effectiveTime||resourceEnd!==null))throw TypeError('Invalid native settlement phase clock');
  const action=nativeAction===null?null:copyNativeTaskActionReference(nativeAction);
  if(action&&(semantic!=='relative'||epoch!==action.startTime||resourceEnd!==null))throw TypeError('Invalid native action phase clock');
  const suspended=nativeSuspended===null?null:copyNativeSuspendedBodyReference(nativeSuspended);

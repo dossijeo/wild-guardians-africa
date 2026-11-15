@@ -1,5 +1,7 @@
 # Consumidor gráfico del relevo de entrega
 
+Último incremento: [consumidor real Carry → Idle → tarea siguiente](e-r3-native-delivery-live-consumer-20261115.md), con 538 pruebas y ensayo de hardware sobre el mismo actor. Las entradas siguientes conservan la evidencia de los componentes anteriores y sus límites en ese momento. Los cierres A6/A/B/C continúan abiertos.
+
 Continúa el [propietario nativo de entrega](e-r3-native-delivery-settlement-20261115.md), bajo el [plan principal](integrated-gpu-migration-plan-20261104.md). Este registro comienza con el control de permisos del consumidor; no acredita todavía el relevo visual ni cambia los cierres A6.
 
 Se leyó el código real de Dawn, revisión `922930e3193753e58591f14a96ab116e5d630964`: [`ObjectStorage.h`, `FillReservationImpl`](https://github.com/google/dawn/blob/922930e3193753e58591f14a96ab116e5d630964/src/dawn/wire/server/ObjectStorage.h#L262) verifica estado reservado y generación; [`ServerDevice.cpp`](https://github.com/google/dawn/blob/922930e3193753e58591f14a96ab116e5d630964/src/dawn/wire/server/ServerDevice.cpp) cancela el resultado asíncrono si su reserva ya no es la vigente. Se adapta la verificación del propietario que originó la preparación al control existente; no se añade una dependencia o registro físico.
