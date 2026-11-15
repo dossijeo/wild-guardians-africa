@@ -1,4 +1,5 @@
-import {copyNativeHomeRouteReference,copyNativeHomeRouteAttestation,nativeHomeRouteAttestationCovers} from '../world/native-home-route.js';
+import {copyNativeHomeArrivalReference,copyNativeHomeArrivalAttestation,sameNativeHomeArrivalReference} from '../world/native-home-arrival.js';
+import {copyNativeHomeRouteReference,copyNativeHomeRouteAttestation,nativeHomeRouteAttestationCovers,sameNativeHomeRouteReference} from '../world/native-home-route.js';
 import {sameNativeTaskSettlementReference} from '../world/native-task-settlement.js';
 import {copyNativeTaskRequestReference,nativeTaskRequestMatchesStart} from '../world/native-task-request-reference.js';
 import {copyNativeTaskStartReference} from '../world/native-task-start-reference.js';
@@ -164,6 +165,19 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       const reference=copyNativeTaskSettlementReference(value),actor=actors.get(reference.actorId),boundary=copyNativeWorldBoundary(preparingWorldBoundary),current=proofLeaseCurrent(reference,actor,'settlementProof',nativeTaskSettlementAttestationCovers,settlementRecordCurrent),pending=()=>consequenceCurrent(reference.sourceCarry.reference,actor)&&sameCarryProof(actor.consequenceProof,reference.sourceCarry)&&sameNativeWorldBoundary(boundary,reference.worldBoundary)&&sequence>=reference.sourceControlSequence&&clock.committedThrough>=reference.worldBoundary.effectiveTime;
       if(reference.worldBoundary.authorityEpoch!==authorityEpoch||!clock||reference.worldBoundary.nativeSession!==clock.nativeSession||!current()&&!pending()){const error=Error('Native settlement is obsolete or lacks direct Carry/body proof');error.code='native-settlement-admission-obsolete';throw error;}
       counters.admissions++;return Object.freeze({reference,isCurrent:current,isPrepared:()=>current()||pending(),get settlementRecord(){return current()?actor.settlementRecord:null;},get executionEpoch(){return current()?actor.settlementProof.reference.worldBoundary.effectiveTime:null;}});
+    },
+    admitHomeArrival(value,{preparingWorldBoundary=null}={}){
+      const reference=copyNativeHomeArrivalReference(value),boundary=copyNativeWorldBoundary(preparingWorldBoundary),actor=actors.get(reference.actorId),record=actor?.current,source=actor?.homeProof,w=reference.worldBoundary,home=reference.sourceHome;
+      const sameSource=!!source&&source.assignmentSequence===home.assignmentSequence&&sameNativeHomeRouteReference(source.reference,home.reference)&&sameNativeHomeRouteReference(source.preparedReference,home.preparedReference)&&JSON.stringify(source.gateIds)===JSON.stringify(home.gateIds);
+      const prepared=()=>sameSource&&!closed&&!!clock&&sameNativeWorldBoundary(boundary,w)&&w.authorityEpoch===authorityEpoch&&w.nativeSession===clock.nativeSession&&w.effectiveTime<=clock.committedThrough&&reference.sourceControlSequence<=sequence&&actor.homeProof===source&&actor.current===record&&homeRecordCurrent(home.reference,actor);
+      if(!prepared()){const error=Error('Native Home absence lacks its exact current source and prepared boundary');error.code='native-home-arrival-admission-obsolete';throw error;}
+      // The existing revoked record is updated by the direct ordered log. This
+      // lease validates a single retirement at release, never movement/draw time.
+      const validateCommitted=value=>{
+        const proof=copyNativeHomeArrivalAttestation(value),r=proof.reference,at=r.worldBoundary.effectiveTime;
+        if(closed||!clock||!sameNativeHomeArrivalReference(proof.preparedReference,reference)||proof.retiredSequence!==sequence||clock.intentSequence!==sequence||clock.committedThrough!==at||r.worldBoundary.nativeSession!==clock.nativeSession||actors.has(reference.actorId)||active.has(reference.actorId)||!actor.closed||actor.current!==null||actor.latestSequence!==proof.retiredSequence||actor.state!==5||actor.revoked!==record||record.revokedSequence!==proof.retiredSequence||record.revokedState!==5||record.safeUntil!==at||record.assignmentSequence!==home.assignmentSequence||!sameHandle(record.handle,home.reference.expectedRouteHandle))throw Error('Native Home absence lacks its issued retirement');return proof;
+      };
+      counters.admissions++;return Object.freeze({reference,isPrepared:prepared,validateCommitted});
     },
     installHomes(boundary,values=[],{bootstrap=false}={}){
       boundary=copyNativeWorldBoundary(boundary);

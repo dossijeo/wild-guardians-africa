@@ -1,5 +1,7 @@
 # Ausencia Home reversible en el roster residente
 
+Actualización posterior: [ausencia Home en el consumidor real](e-r3-native-home-absence-consumer-20261115.md), con admisión directa y hardware. El alcance descrito debajo corresponde al incremento previo; restauración nueva y aceptación integrada siguen pendientes.
+
 Continúa la [llegada y retirada nativa](e-r3-native-home-arrival-source-20261115.md). El roster gráfico existente puede preparar la ausencia del mismo actor, restaurarla al cancelar y conservar sus recursos Home hasta presentar el resultado. **El transporte, Surface y admisión directa de esta ausencia todavía están pendientes**; la capacidad gráfica no se anuncia y las protecciones actuales permanecen. No cambia ningún cierre A6/e-R3/e-R4/f-R4/A/B/C.
 
 ## Referencias y decisión

@@ -1,0 +1,347 @@
+{
+  "date": "2026-11-15",
+  "branch": "codex/guardian-3d-animation",
+  "sourceBaseCommit": "b9fd3e234",
+  "scope": "Ungated actual prepared absence through original Surface/resource/direct ports and GPU drain after the real native Home endpoint. Source is in-page, minimal desert with a wider initial camera and explicit independent Home fixture B. Native time advances to the complete endpoint as in the action/delivery checkpoints; no claim of real-time playback of the full corridor, fresh restoration, ordinary producer or full recovery.",
+  "research": [
+    {
+      "source": "https://github.com/mrdoob/three.js/blob/r180/src/renderers/common/Renderer.js#L2645",
+      "read": [
+        "Renderer._projectObject visibility skip"
+      ],
+      "decision": "Capture absence synchronously on the resident root, restore the still-presented graph before awaiting ACK; hide only on native retirement commit."
+    },
+    {
+      "source": "https://github.com/mrdoob/three.js/blob/r180/src/core/Object3D.js#L772",
+      "read": [
+        "Object3D.remove without shared-resource destruction"
+      ],
+      "decision": "Keep shared actor/world resource lifetimes separate from participation; existing deferred retirement after presented packet."
+    },
+    {
+      "source": "https://github.com/google/dawn/blob/922930e3193753e58591f14a96ab116e5d630964/src/dawn/wire/server/ObjectStorage.h#L240",
+      "read": [
+        "FillReservationImpl state/generation validation"
+      ],
+      "decision": "Bind the retained absence only to its exact prepared source identity and the direct issued native revocation; no completion or body registry."
+    },
+    {
+      "source": "https://github.com/google/dawn/blob/922930e3193753e58591f14a96ab116e5d630964/src/dawn/wire/server/ServerQueue.cpp#L35",
+      "read": [
+        "DoQueueOnSubmittedWorkDone and OnQueueWorkDone identity/completion"
+      ],
+      "decision": "Emit HomeArrivalVersion1 only after the real retained packet is ready and submitted queue work drains. No ACK fabricated by the source and no extra timer/queue."
+    }
+  ],
+  "regression": {
+    "passed": 667,
+    "failed": 0,
+    "skipped": 0,
+    "files": 63,
+    "durationMs": 121806.2107,
+    "fileList": [
+      "tests/native-task-settlement-proposal.test.js",
+      "tests/native-task-settlement-game.test.js",
+      "tests/settlement-notification.test.js",
+      "tests/native-task-consequence-proposal.test.js",
+      "tests/native-task-consequence-game.test.js",
+      "tests/native-task-consequence-admission.test.js",
+      "tests/native-task-consequence-control.test.js",
+      "tests/native-task-consequence-graphics.test.js",
+      "tests/native-task-consequence-crops.test.js",
+      "tests/delivery-consequence-data.test.js",
+      "tests/harvest-consequence.test.js",
+      "tests/agricultural-power.test.js",
+      "tests/closest-center-delivery.test.js",
+      "tests/native-task-action-binding.test.js",
+      "tests/native-task-action-game-execution.test.js",
+      "tests/native-task-action-restoration.test.js",
+      "tests/native-task-action-proposal.test.js",
+      "tests/native-task-action-clock.test.js",
+      "tests/native-task-start-proposal.test.js",
+      "tests/native-task-start-binding.test.js",
+      "tests/native-task-start-graphics.test.js",
+      "tests/native-resource-preparation-channel.test.js",
+      "tests/native-admission-vertical.test.js",
+      "tests/spatial-native-causal-clock.test.js",
+      "tests/spatial-native-route-execution.test.js",
+      "tests/spatial-native-route-reservations.test.js",
+      "tests/spatial-native-gate-transactions.test.js",
+      "tests/spatial-native-gate-resume.test.js",
+      "tests/spatial-native-gate-crossings.test.js",
+      "tests/spatial-native-gate-waits.test.js",
+      "tests/native-gate-causal-transaction.test.js",
+      "tests/native-gate-gpu-binding.test.js",
+      "tests/remote-webgpu.test.js",
+      "tests/native-route-pick-frame.test.js",
+      "tests/native-resume-control.test.js",
+      "tests/native-resume-graphics.test.js",
+      "tests/native-resume-time-translation.test.js",
+      "tests/money-rational-add.test.js",
+      "tests/money-decimal.test.js",
+      "tests/acceptance-economic-boundaries.test.js",
+      "tests/repair-settlement-evidence.test.js",
+      "tests/native-task-settlement-clock.test.js",
+      "tests/native-task-settlement-control.test.js",
+      "tests/native-task-settlement-gpu-motion.test.js",
+      "tests/native-task-settlement-graphics.test.js",
+      "tests/native-task-settlement-remote.test.js",
+      "tests/native-task-settlement-publication.test.js",
+      "tests/spatial-native-worker-home.test.js",
+      "tests/native-home-route-proposal.test.js",
+      "tests/native-home-route-game.test.js",
+      "tests/acceptance-workforce.test.js",
+      "tests/prepared-save-load.test.js",
+      "tests/save-game.test.js",
+      "tests/crop-task-queue.test.js",
+      "tests/native-home-route-graphics.test.js",
+      "tests/native-home-route-control.test.js",
+      "tests/native-home-route-remote.test.js",
+      "tests/native-home-route-clock.test.js",
+      "tests/native-home-arrival-proposal.test.js",
+      "tests/native-home-arrival-game.test.js",
+      "tests/native-home-arrival-graphics.test.js",
+      "tests/native-home-arrival-control.test.js",
+      "tests/native-home-arrival-remote.test.js"
+    ],
+    "log": ".cache/native-home-absence-scoped-final-regression.log"
+  },
+  "protocolDirected": {
+    "passed": 31,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 12420.2087,
+    "log": ".cache/native-home-absence-gated-boundary-directed.log",
+    "includedInRegression": true
+  },
+  "controls": {
+    "parentRoster": {
+      "revision": "b9fd3e234",
+      "loader": ".cache/native-home-absence-parent-roster-loader.mjs",
+      "log": ".cache/native-home-absence-parent-roster-control.log",
+      "failed": 1,
+      "skipped": 8,
+      "failure": "A stale returning publication sets root.visible=true after the old Home motion has retired. Current implementation retains the same nativePending/adopting state until confirmed home publication. Only this parent module was substituted; not a whole-parent benchmark."
+    },
+    "negativeProtocol": [
+      "Missing retained template",
+      "Old actor Home clock still referenced by absent packet",
+      "Missing issued retirement fact",
+      "Unsupported consumer capability",
+      "Tampered actual ACK version/template/frame",
+      "Substituted retired sequence, foreign source and stale/disposed control",
+      "Submitted queue drain delayed while original endpoint remains physically owned",
+      "Gated Home arrival template remains explicitly unsupported in Surface and host until dedicated gate graphics are implemented."
+    ]
+  },
+  "gpu": {
+    "command": "PLAYWRIGHT_MODULE=<installed playwright path> QA_BASE_URL=http://127.0.0.1:5181 QA_NATIVE_HOME_ARRIVAL=true OUTPUT=.cache/native-home-absence-gpu-first.json .cache/tooling/node20.exe tools/guardian/audit_native_first_task_world_owner.mjs",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "nativeHomeArrivalVersion": 1,
+    "preparedFrameSequence": 234,
+    "actorId": 900011,
+    "bodyId": 1,
+    "sourceHomeAssignment": 8,
+    "retiredSequence": 9,
+    "preparedBoundary": {
+      "version": 1,
+      "authorityEpoch": "1fa82393-15cf-485e-b719-fa1cfd4d6abf/1",
+      "nativeSession": 1,
+      "ticket": 11,
+      "effectiveTime": 123.62827945569862
+    },
+    "actualBoundary": {
+      "version": 1,
+      "authorityEpoch": "1fa82393-15cf-485e-b719-fa1cfd4d6abf/1",
+      "nativeSession": 1,
+      "ticket": 12,
+      "effectiveTime": 125.50827945569824
+    },
+    "nativeEndpoint": {
+      "actorId": 900011,
+      "bodyId": 1,
+      "villageId": 1,
+      "x": 60,
+      "z": 0,
+      "yaw": 0,
+      "runPhase": 24.791666666666668,
+      "walkPhase": 169.00683410654656,
+      "carryPhase": 17.695585076999535,
+      "runRemaining": 0,
+      "arrived": true,
+      "executedThrough": 123.62827945569862,
+      "destination": {
+        "x": 60,
+        "z": 0
+      }
+    },
+    "nativeBoundaryAdvance": {
+      "from": 49.69422515559045,
+      "to": 123.62827945569862
+    },
+    "preparedCalls": 1,
+    "staleReturningPublicationAcknowledged": true,
+    "resourcesBefore": 2911,
+    "resourcesReady": 2911,
+    "resourcesAfter": 2911,
+    "resourcesPrepared": 0,
+    "resourcesAfterReady": 0,
+    "actorRootsBefore": [
+      681,
+      682
+    ],
+    "actorRootsAfter": [
+      682
+    ],
+    "survivingActorRootBonesGeometryMaterialIdsUnchanged": true,
+    "worldInstanceBatchesUnchanged": true,
+    "noPostReadyUniformBindingBufferTextureForks": true,
+    "nativeBodyRemovedAndWorkerInactiveVerifiedByHarness": true,
+    "ledgerUnchangedAfterArrival": true,
+    "readyStillPresentedEndpointPickVerifiedByHarness": true,
+    "retiredHomeClockRejected": true,
+    "absentPicks": [
+      {
+        "entityId": "village-1",
+        "hitPoint": {
+          "x": 60.36404490431774,
+          "y": 16.720705321190863,
+          "z": -0.7412724931921417
+        },
+        "point": {
+          "x": 60.567268623024255,
+          "z": -1.1550790067700234
+        },
+        "sequence": 12
+      },
+      {
+        "entityId": "village-1",
+        "hitPoint": {
+          "x": 59.21435331579569,
+          "y": 18.432840233900237,
+          "z": 1.5997429697836054
+        },
+        "point": {
+          "x": 60.81590909090851,
+          "z": -1.6613636363654791
+        },
+        "sequence": 12
+      },
+      {
+        "entityId": "village-1",
+        "hitPoint": {
+          "x": 60.11935870966478,
+          "y": 16.721646569388838,
+          "z": -0.2430396010184097
+        },
+        "point": {
+          "x": 60.321973094171646,
+          "z": -0.6556053811702753
+        },
+        "sequence": 12
+      },
+      {
+        "entityId": "village-1",
+        "hitPoint": {
+          "x": 59.2193995599256,
+          "y": 18.720132298699355,
+          "z": 1.589467748452833
+        },
+        "point": {
+          "x": 61.06796338672774,
+          "z": -2.1745995423336666
+        },
+        "sequence": 12
+      }
+    ],
+    "independent": {
+      "before": {
+        "x": -15.081448651102324,
+        "z": 2.200000047683716,
+        "distance": 122.71854181215451,
+        "phase": 113.62827945569862,
+        "yaw": 1.5707963267948966,
+        "firstRemainingPoint": 10,
+        "arrived": false,
+        "at": 123.62827945569862,
+        "duration": 122.22221321529813,
+        "runPhase": 0,
+        "walkPhase": 170.44241918354794,
+        "carryPhase": 0,
+        "runDistance": 0,
+        "walkDistance": 122.71854181215451,
+        "runRemaining": 0,
+        "running": false,
+        "currentSpeed": 1.08
+      },
+      "after": {
+        "x": -10.243048651103203,
+        "z": 2.200000047683716,
+        "distance": 127.55694181215364,
+        "phase": 118.10827945569781,
+        "yaw": 1.5707963267948966,
+        "firstRemainingPoint": 10,
+        "arrived": false,
+        "at": 128.1082794556978,
+        "duration": 122.22221321529813,
+        "runPhase": 0,
+        "walkPhase": 177.16241918354672,
+        "carryPhase": 0,
+        "runDistance": 0,
+        "walkDistance": 127.55694181215364,
+        "runRemaining": 0,
+        "running": false,
+        "currentSpeed": 1.08
+      }
+    },
+    "block": {
+      "start": 1794770749810.665,
+      "end": 1794770751610.695,
+      "committedAt": 1794770749849.815,
+      "drawFrames": 52
+    },
+    "nativeConsumerRetirementDrained": true,
+    "gpuErrors": 0,
+    "errors": {
+      "errors": 0,
+      "consoleErrors": 0,
+      "httpFailures": 0,
+      "requestFailures": 0
+    },
+    "screenshots": [
+      "native-home-absence-before-20261115.png",
+      "native-home-absence-after-20261115.png"
+    ],
+    "visualReview": "Same wide initial camera, original desert/village/world, surviving independent worker moves. Captured endpoint before absence and scene after original actor removal. Not full-game visual parity.",
+    "scopeBoundary": "Source Home gateIds is empty. Final added gate guard rejects nonempty lists; it does not change the hardware execution path."
+  },
+  "nativeArtifacts": {
+    "changed": false,
+    "sourceRevision": "214f2a758",
+    "canonicalStandaloneAndPthreadTestsIncluded": true
+  },
+  "pending": [
+    "Fresh admission of moving Home saves and inactive completed-Home cohorts; historical HomeArrival facts remain forbidden as bootstrap permissions",
+    "Active Idle contract expiry, initial Idle and remaining completion/cancellation classes",
+    "Gated consumers and ordinary producer for all intention classes",
+    "Healthy-device incremental recovery including the earlier3123-resource case",
+    "A6 and integrated A/B/C acceptance before D"
+  ],
+  "closuresChanged": false,
+  "productBuild": {
+    "status": "pass",
+    "seconds": 46.51,
+    "log": ".cache/native-home-absence-scoped-product-build.log",
+    "warnings": "Existing chunk-size and pthread memory-growth warnings."
+  },
+  "protectedOriginalFiles": {
+    "checked": 16,
+    "exact": true,
+    "exception": "confirmed-presentation-stream.js intentionally committed in an earlier increment and unchanged here."
+  }
+}

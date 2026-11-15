@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuación de Home: [retirada en el consumidor real](e-r3-native-home-absence-consumer-20261115.md), con paquete de ausencia y revocación nativa exactos. NVIDIA/Turing: cero creaciones al preparar y después de READY (2911 constantes), 52 dibujos durante bloqueo de 1,8 s, un actor retirado y los demás recursos conservados. La publicación antigua no lo resucita; selección y drenaje correctos. Restauración nueva, otras clases, productor ordinario y recuperación integral siguen pendientes; no cambia ningún cierre A6/A/B/C.
+
 Continuación de Home: [ausencia reversible sobre el roster residente](e-r3-native-home-absence-roster-20261115.md). La captura restaura enseguida la visibilidad y selección anteriores; el commit nativo oculta el actor y la presentación permite retirar su propietario Home. No añade recursos de movimiento. Faltan el transporte/Surface, admisión directa y hardware de esta ausencia; la capacidad no se anuncia ni cambia ningún cierre A6/A/B/C.
 
 Continuación de Home: [llegada y retirada nativa preparada](e-r3-native-home-arrival-source-20261115.md). El cuerpo permanece retenido hasta el commit de su extremo ejecutado; sólo entonces se elimina por el registro existente y se proyecta `home`. Una secuencia nativa distingue la retirada preparada de una etiqueta JS o fila sin cuerpo. La ausencia gráfica preparada sigue pendiente y los canales reales aún rechazan esa clase; no cambia ningún cierre A6/A/B/C.

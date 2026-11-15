@@ -1,3 +1,4 @@
+import {copyNativeHomeArrivalAttestation,sameNativeHomeArrivalReference} from '../world/native-home-arrival.js';
 import {copyNativeTaskSettlementReference,sameNativeTaskSettlementReference,copyNativeTaskSettlementAttestation} from '../world/native-task-settlement.js';
 import {copyNativeHomeRouteReference,sameNativeHomeRouteReference,copyNativeHomeRouteAttestation} from '../world/native-home-route.js';
 import {copyNativeTaskConsequenceReference,sameNativeTaskConsequenceReference,copyNativeTaskConsequenceAttestation} from '../world/native-task-consequence.js';
@@ -400,6 +401,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     },
     whenFrameSettled:()=>pendingFrame?.promise??Promise.resolve(),
     async prepareNativeWorldFrame(metadata,{signal}={}){
+      if(metadata?.nativeHomeArrivalTemplate&&capabilities.nativeHomeArrivalVersion!==1)throw Error('Draw owner does not support native Home absence');
       if(metadata?.nativeHomeRouteTemplate&&capabilities.nativeHomeRouteVersion!==1)throw Error('Draw owner does not support native Home routes');
       if(metadata?.nativeTaskSettlementTemplate&&capabilities.nativeTaskSettlementVersion!==1)throw Error('Draw owner does not support native settlements');
       if(metadata?.nativeTaskConsequenceTemplate&&capabilities.nativeTaskConsequenceVersion!==1)throw Error('Draw owner does not support native consequences');
@@ -423,7 +425,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
         if(phase==='aborted'||ready.version!==1||ready.sequence!==packet.sequence||!ready.uploadsSubmitted||!sameNativeWorldBoundary(ready.worldBoundary,worldBoundary))throw Error('Prepared world frame unavailable');
         if(phase==='preparing')phase='ready';
         return {sequence:packet.sequence,preparedWorldBoundary:worldBoundary,presented,valid:()=>!disposed&&!fatalError&&!committed&&(phase==='ready'||phase==='presented'),commit(boundary,value=null){
-          const [template,copy,same]=metadata.nativeHomeRouteTemplate?[metadata.nativeHomeRouteTemplate,copyNativeHomeRouteAttestation,sameNativeHomeRouteReference]:metadata.nativeTaskSettlementTemplate?[metadata.nativeTaskSettlementTemplate,copyNativeTaskSettlementAttestation,sameNativeTaskSettlementReference]:metadata.nativeTaskConsequenceTemplate?[metadata.nativeTaskConsequenceTemplate,copyNativeTaskConsequenceAttestation,sameNativeTaskConsequenceReference]:metadata.nativeTaskActionTemplate?[metadata.nativeTaskActionTemplate,copyNativeTaskActionAttestation,sameNativeTaskActionReference]:metadata.nativeTaskStartTemplate?[metadata.nativeTaskStartTemplate,copyNativeTaskStartAttestation,sameNativeTaskStartReference]:[metadata.nativeResumeTemplate,copyNativeResumeAttestation,sameNativeResumeReference],binding=value===null?null:copy(value);
+          const [template,copy,same]=metadata.nativeHomeArrivalTemplate?[metadata.nativeHomeArrivalTemplate,copyNativeHomeArrivalAttestation,sameNativeHomeArrivalReference]:metadata.nativeHomeRouteTemplate?[metadata.nativeHomeRouteTemplate,copyNativeHomeRouteAttestation,sameNativeHomeRouteReference]:metadata.nativeTaskSettlementTemplate?[metadata.nativeTaskSettlementTemplate,copyNativeTaskSettlementAttestation,sameNativeTaskSettlementReference]:metadata.nativeTaskConsequenceTemplate?[metadata.nativeTaskConsequenceTemplate,copyNativeTaskConsequenceAttestation,sameNativeTaskConsequenceReference]:metadata.nativeTaskActionTemplate?[metadata.nativeTaskActionTemplate,copyNativeTaskActionAttestation,sameNativeTaskActionReference]:metadata.nativeTaskStartTemplate?[metadata.nativeTaskStartTemplate,copyNativeTaskStartAttestation,sameNativeTaskStartReference]:[metadata.nativeResumeTemplate,copyNativeResumeAttestation,sameNativeResumeReference],binding=value===null?null:copy(value);
           if(committed||phase!=='ready'&&phase!=='presented'||(binding?!template||!same(binding.preparedReference,template)||!sameNativeWorldBoundary(binding.reference.worldBoundary,boundary):!sameNativeWorldBoundary(boundary,worldBoundary)))return false;
           committed=true;signal?.removeEventListener('abort',abort);return true;
         },abort};
