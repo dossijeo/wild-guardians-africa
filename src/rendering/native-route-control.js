@@ -89,7 +89,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     }
     const actor=assigned||event.type==='IntentChanged'&&event.state===6?actorContext(event.actorId):actors.get(event.actorId);
     const retiringCarry=current&&actor?.consequenceProof&&consequenceCurrent(actor.consequenceProof.reference,actor)?actor.consequenceProof:null;
-    const keepSettlement=!!actor&&!current&&event.type==='IntentChanged'&&event.state===6&&!!taskRequest&&[6,7].includes(actor.state)&&!!(actor.settlementProof||actor.settlementSource);
+    const keepSettlement=!!actor&&!actor.settlementProof?.reference.home&&!current&&event.type==='IntentChanged'&&event.state===6&&!!taskRequest&&[6,7].includes(actor.state)&&!!(actor.settlementProof||actor.settlementSource);
     if(actor?.settlementRecord?.lastDrawTime!==null&&actor?.settlementRecord?.lastDrawTime!==undefined&&event.effectiveTime<actor.settlementRecord.lastDrawTime){const error=Error('Native settlement revocation arrived after its presented time');error.code='native-settlement-revocation-late';throw error;}
     if(actor?.actionRecord&&actor.actionRecord.lastDrawTime!==null&&event.effectiveTime<actor.actionRecord.lastDrawTime){const error=Error('Native action revocation arrived after its presented time');error.code='native-action-revocation-late';throw error;}
     const sourceSuspension=assigned&&actor?.proof&&suspendedCurrent(actor.proof,actor.revoked,actor)?{reference:actor.proof,sequence:actor.latestSequence}:null;
@@ -137,7 +137,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     return !closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.actorId)===actor&&actor.state===1&&active.get(reference.actorId)===record&&!!record&&actor.latestSequence===record.assignmentSequence&&sameHandle(record.handle,reference.expectedRouteHandle)&&record.startTime===proof?.reference.worldBoundary.effectiveTime&&proof?.assignmentSequence===record.assignmentSequence&&nativeTaskConsequenceAttestationCovers(proof,reference);
   }
   function sameCarryProof(a,b){try{return JSON.stringify(copyNativeTaskConsequenceAttestation(a))===JSON.stringify(copyNativeTaskConsequenceAttestation(b));}catch{return false;}}
-  function settlementState(actor,proof){return actor.state===7&&actor.latestSequence===proof.settlementSequence||actor.state===6&&actor.pendingTaskRequest?.requestSequence===actor.latestSequence&&actor.latestSequence>proof.settlementSequence;}
+  function settlementState(actor,proof){return actor.state===7&&actor.latestSequence===proof.settlementSequence||!proof.reference.home&&actor.state===6&&actor.pendingTaskRequest?.requestSequence===actor.latestSequence&&actor.latestSequence>proof.settlementSequence;}
   function settlementCurrent(reference,actor){const proof=actor?.settlementProof,record=actor?.settlementRecord;return !closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.actorId)===actor&&actor.current===null&&!!proof&&!!record&&record.settlementSequence===proof.settlementSequence&&settlementState(actor,proof)&&nativeTaskSettlementAttestationCovers(proof,reference);}
   return {
     accept,

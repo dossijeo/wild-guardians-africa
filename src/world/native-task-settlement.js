@@ -6,6 +6,7 @@ const poseKeys=['x','z','yaw','radius','runPhase','walkPhase','carryPhase','runR
 const sameCarry=(a,b)=>a.assignmentSequence===b.assignmentSequence&&sameNativeTaskConsequenceReference(a.reference,b.reference)&&sameNativeTaskConsequenceReference(a.preparedReference,b.preparedReference)&&JSON.stringify(a.gateIds)===JSON.stringify(b.gateIds);
 export function copyNativeTaskSettlementReference(value){
  if(value?.kind!=='native-task-settlement-reference'||value.version!==1)throw TypeError('Invalid native task settlement reference');
+ const home=value.home;if(home!==undefined&&(!home||!id(home.villageId)||!Number.isFinite(home.x)||!Number.isFinite(home.z)||Math.abs(home.x)>=2147483000||Math.abs(home.z)>=2147483000||Object.keys(home).some(k=>!['villageId','x','z'].includes(k))))throw TypeError('Invalid native settlement Home destination');
  const sourceCarry=copyNativeTaskConsequenceAttestation(value.sourceCarry),r=sourceCarry.reference,worldBoundary=copyNativeWorldBoundary(value.worldBoundary),pose=value.pose;
  if(!worldBoundary||worldBoundary.authorityEpoch!==r.worldBoundary.authorityEpoch||worldBoundary.nativeSession!==r.worldBoundary.nativeSession||worldBoundary.ticket<=r.worldBoundary.ticket||worldBoundary.effectiveTime<r.endTime||
     ['actorId','bodyId','crateId','centerId'].some(key=>!id(value[key])||value[key]!==r[key])||!id(value.sourceControlSequence)||value.sourceControlSequence<sourceCarry.assignmentSequence||
@@ -13,12 +14,12 @@ export function copyNativeTaskSettlementReference(value){
     pose.radius<=0||pose.radius>2||['runPhase','walkPhase','carryPhase','runRemaining'].some(key=>pose[key]<0)||pose.x!==Math.fround(r.destination.x)||pose.z!==Math.fround(r.destination.z)||pose.radius!==r.sourceAction.reference.radius)
   throw TypeError('Native task settlement differs from its arrived Carry body');
  return Object.freeze({kind:value.kind,version:1,actorId:value.actorId,bodyId:value.bodyId,crateId:value.crateId,centerId:value.centerId,sourceControlSequence:value.sourceControlSequence,
-  sourceCarry,worldBoundary,pose:Object.freeze(Object.fromEntries(poseKeys.map(key=>[key,pose[key]]))),profile:value.profile});
+  sourceCarry,worldBoundary,pose:Object.freeze(Object.fromEntries(poseKeys.map(key=>[key,pose[key]]))),profile:value.profile,...(home?{home:Object.freeze({villageId:home.villageId,x:home.x,z:home.z})}:{})});
 }
 export const sameNativeTaskSettlementReference=(a,b)=>{try{return JSON.stringify(copyNativeTaskSettlementReference(a))===JSON.stringify(copyNativeTaskSettlementReference(b));}catch{return false;}};
 export function nativeTaskSettlementSuccessor(previous,next){
  const a=copyNativeTaskSettlementReference(previous),b=copyNativeTaskSettlementReference(next);
- return ['actorId','bodyId','crateId','centerId','profile'].every(key=>a[key]===b[key])&&sameCarry(a.sourceCarry,b.sourceCarry)&&JSON.stringify(a.pose)===JSON.stringify(b.pose)&&
+ return ['actorId','bodyId','crateId','centerId','profile'].every(key=>a[key]===b[key])&&JSON.stringify(a.home)===JSON.stringify(b.home)&&sameCarry(a.sourceCarry,b.sourceCarry)&&JSON.stringify(a.pose)===JSON.stringify(b.pose)&&
   b.sourceControlSequence>=a.sourceControlSequence&&a.worldBoundary.authorityEpoch===b.worldBoundary.authorityEpoch&&a.worldBoundary.nativeSession===b.worldBoundary.nativeSession&&b.worldBoundary.effectiveTime>=a.worldBoundary.effectiveTime&&(b.worldBoundary.ticket>a.worldBoundary.ticket||sameNativeTaskSettlementReference(a,b));
 }
 export function copyNativeTaskSettlementProposal(value){

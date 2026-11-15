@@ -32,7 +32,7 @@ test('a retained settlement ticket is busy to other mutations and a changed body
 });
 
 test('both canonical native artifacts expose the same complete settlement ABI',async()=>{
- const names=['nav_task_settlement_proposal_version','nav_task_settlement_proposal_stage','nav_task_settlement_proposal_snapshot','nav_task_settlement_proposal_header_ptr','nav_task_settlement_proposal_cancel','nav_task_settlement_proposal_revalidate','nav_task_settlement_proposal_time_translation_ptr','nav_task_settlement_proposal_commit_bound','nav_task_settlement_binding_snapshot','nav_task_settlement_binding_ptr','nav_task_settlement_binding_actors','nav_task_settlement_source_snapshot','nav_task_settlement_action_source_snapshot','nav_task_settlement_action_source_restore'];
+ const names=['nav_task_settlement_proposal_home_version','nav_task_settlement_proposal_stage_home','nav_task_settlement_proposal_version','nav_task_settlement_proposal_stage','nav_task_settlement_proposal_snapshot','nav_task_settlement_proposal_header_ptr','nav_task_settlement_proposal_cancel','nav_task_settlement_proposal_revalidate','nav_task_settlement_proposal_time_translation_ptr','nav_task_settlement_proposal_commit_bound','nav_task_settlement_binding_snapshot','nav_task_settlement_binding_ptr','nav_task_settlement_binding_actors','nav_task_settlement_source_snapshot','nav_task_settlement_action_source_snapshot','nav_task_settlement_action_source_restore'];
  const exports=new Set(WebAssembly.Module.exports(new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm'))).map(e=>e.name));for(const name of names)assert(exports.has(name),name);
  const {default:factory}=await import('../public/wild-engine/spatial-threaded.mjs'),runtime=await createThreadedSpatialWorld(factory);try{for(const name of names)assert.equal(typeof runtime.core.wasm[name],'function',name);}finally{await runtime.dispose();}
 });
@@ -45,4 +45,16 @@ test('the graphical consumer rejects a stationary source baseline until its own 
 test('a settled worker cannot be rebound to another otherwise unowned native body',()=>{
  const f=nativeTaskSettlementFixture();try{const p=f.prepareSettlement();assert.equal(p.status,'proposed');assert.equal(f.commitSettlement(p.proposal),1);const binding=f.planner.nativeTaskSettlementBinding(f.actor),body=f.body(1);assert.equal(f.w.spatial_body_upsert(7,body[1]+20,body[2]+20,.28,0,1),1);assert.equal(f.w.nav_gate_bind_worker(Number(f.actor.split('-').at(-1)),7),0);assert.deepEqual(f.body(1),body);assert.deepEqual(f.planner.nativeTaskSettlementBinding(f.actor),binding);
  }finally{f.close();}
+});
+
+// Source-only ABI evidence: this does not grant a moving Home corridor.
+test('Home disposition retains the arrived native body, excludes task eligibility and rejects legacy replacement or cancellation',()=>{
+ const f=nativeTaskSettlementFixture();try{const home={villageId:6001,x:f.worker.x+8,z:f.worker.z+4},before=JSON.stringify(f.state),body=f.body(1),p=f.prepareSettlement({home});assert.equal(p.status,'proposed');assert.deepEqual(p.proposal.nativeSettlement.home,home);assert.equal(JSON.stringify(f.state),before);assert.equal(f.commitSettlement(p.proposal),1);const b=f.planner.nativeTaskSettlementBinding(f.actor);assert.deepEqual(b.reference.home,home);assert.equal(f.w.nav_intent_game_execution_state(),1);assert.equal(f.w.nav_intent_plan_home(b.reference.actorId,body[1],body[2],home.x,home.z),-2);assert.equal(f.w.nav_intent_cancel_home(b.reference.actorId),0);assert.equal(f.w.nav_intent_finish(b.reference.actorId),0);assert.deepEqual(f.planner.nativeTaskSettlementBinding(f.actor),b);f.advance(.3);assert.deepEqual(f.body(1),body);assert.equal(f.planner.nativeDeliveryExecution(f.actor),null);assert.equal(f.planner.pendingTaskRoute(f.actor),null);
+ }finally{f.close();}
+});
+test('Home revalidation preserves its exact destination and cancellation leaves the actual Carry current',()=>{
+ const f=nativeTaskSettlementFixture();try{const home={villageId:6001,x:f.worker.x+8,z:f.worker.z+4},p=f.prepareSettlement({home});assert.equal(p.status,'proposed');f.advance(.2);const next=f.planner.revalidateNativeTaskSettlementProposal(p.proposal.ticket);assert.equal(next.status,'revalidated');assert(next.timeTranslation.sameSourceState);assert.deepEqual(next.proposal.nativeSettlement.home,home);assert.equal(f.commitSettlement(next.proposal,p.proposal),1);const b=f.planner.nativeTaskSettlementBinding(f.actor);assert.deepEqual(b.preparedReference.home,home);const bad=structuredClone(b);bad.reference.home.x++;assert.throws(()=>copyNativeTaskSettlementAttestation(bad),/prepared source/);
+ }finally{f.close();}
+ const g=nativeTaskSettlementFixture();try{const p=g.prepareSettlement({home:{villageId:6001,x:g.worker.x+8,z:g.worker.z+4}});assert(g.planner.cancelNativeTaskSettlementProposal(p.proposal.ticket));assert(g.planner.nativeTaskConsequenceBinding(g.actor));assert.equal(g.planner.nativeTaskSettlementBinding(g.actor),null);for(const home of [{villageId:0,x:1,z:1},{villageId:1,x:NaN,z:0},{villageId:1,x:0,z:Infinity}])assert.throws(()=>g.prepareSettlement({home}),/Home destination/);
+ }finally{g.close();}
 });

@@ -119,7 +119,7 @@ struct Task {uint64_t id,center,target,assigned;double created,rank;int kind;};
 // A committed route belongs to the native session. It remains pinned while an
 // actor uses it; speculative task batches never acquire a route handle.
 enum class PlanningState:int {NeedsPlan=0,RouteActive=1,ActionActive=2,
-  WaitingUnknown=3,WaitingBlocked=4,Cancelled=5,AwaitingResources=6,IdleActive=7};
+  WaitingUnknown=3,WaitingBlocked=4,Cancelled=5,AwaitingResources=6,StationaryActive=7};
 struct TaskActionResourceRequest {int kind=0;double duration=0,heading=0,requestedAt=0;};
 struct RestoredTaskActionSource {
   uint64_t requestSequence=0;double initialElapsed=0;
@@ -440,11 +440,11 @@ bool nativeTaskActionBodyCurrent(const IntentState& s,const ActiveIntent& intent
     worker->second.x==body.x&&worker->second.z==body.z&&!s.reservedBodies.count(worker->second.body)&&!s.suspendedBodies.count(worker->second.body);
 }
 bool nativeSettlementBodyCurrent(const IntentState& s,const ActiveIntent& intent){
- if(!intent.settlementBinding||!intent.requiresResources||intent.animal||intent.home||intent.retreat||intent.delivery||intent.actionBinding||intent.restoredActionSource||
-    (intent.state!=PlanningState::IdleActive&&intent.state!=PlanningState::AwaitingResources)||
-    (intent.state==PlanningState::IdleActive&&intent.task)||(intent.state==PlanningState::AwaitingResources&&(!intent.task||intent.slot>=s.routeSlots.size()||!s.routeSlots[intent.slot].pendingResources||s.routeSlots[intent.slot].generation!=intent.generation)))return false;
+ if(!intent.settlementBinding||!intent.requiresResources||intent.animal||intent.retreat||intent.delivery||intent.actionBinding||intent.restoredActionSource||
+    (intent.state!=PlanningState::StationaryActive&&intent.state!=PlanningState::AwaitingResources)||
+    (intent.state==PlanningState::StationaryActive&&intent.task)||(intent.state==PlanningState::AwaitingResources&&(!intent.task||intent.slot>=s.routeSlots.size()||!s.routeSlots[intent.slot].pendingResources||s.routeSlots[intent.slot].generation!=intent.generation)))return false;
  const auto& b=*intent.settlementBinding;const auto& h=b.actual.header;const auto worker=s.workers.find(intent.actor);const auto center=s.targets.find(uint64_t(h[4]));SpatialBodyView body;
- return b.settlementSequence&&double(intent.actor)==h[1]&&worker!=s.workers.end()&&worker->second.bodyBound&&double(worker->second.body)==h[2]&&double(worker->second.center)==h[4]&&
+ return worker!=s.workers.end()&&(h[21]?intent.home&&!intent.task&&intent.state==PlanningState::StationaryActive&&intent.approachKnown&&intent.approachX==float(h[22])&&intent.approachZ==float(h[23])&&!worker->second.eligible:!intent.home)&&b.settlementSequence&&double(intent.actor)==h[1]&&worker!=s.workers.end()&&worker->second.bodyBound&&double(worker->second.body)==h[2]&&double(worker->second.center)==h[4]&&
   spatialReadBody(worker->second.body,body)&&body.kind==0&&body.flags==int(h[19])&&body.x==h[9]&&body.z==h[10]&&body.r==h[12]&&worker->second.x==body.x&&worker->second.z==body.z&&
   !s.reservedBodies.count(worker->second.body)&&!s.suspendedBodies.count(worker->second.body)&&center!=s.targets.end()&&center->second.active&&center->second.kind==4&&center->second.status==0;
 }
@@ -596,7 +596,7 @@ uint64_t emitIntentChange(IntentState& s,ActiveIntent& intent){
   const IntentEvent event=intent.state==PlanningState::RouteActive?
     (intent.revokedGeneration?IntentEvent::RouteReplaced:IntentEvent::RouteAssigned):
     intent.revokedGeneration?
-      ((intent.state==PlanningState::ActionActive||intent.state==PlanningState::IdleActive)?IntentEvent::RouteCompleted:
+      ((intent.state==PlanningState::ActionActive||intent.state==PlanningState::StationaryActive)?IntentEvent::RouteCompleted:
         IntentEvent::RouteInvalidated):IntentEvent::IntentChanged;
   const uint64_t transitionSequence=++s.intentSequence;
   if(intent.state==PlanningState::AwaitingResources){intent.resourceRequestSequence=transitionSequence;intent.resourceRequestedAt=s.effectiveTime;if(intent.restoredActionSource){intent.restoredActionSource->requestSequence=transitionSequence;if(intent.actionRequest)intent.actionRequest->requestedAt=s.effectiveTime;}}
@@ -2783,7 +2783,7 @@ int workerHomeRoute(double actorId,double startX,double startZ,
   }
   const auto prior=s.activeIntents.find(actor);
   if(prior!=s.activeIntents.end()){
-    if(prior->second.animal||prior->second.state==PlanningState::ActionActive)
+    if(prior->second.requiresResources||prior->second.animal||prior->second.state==PlanningState::ActionActive)
       return -2;
     releaseIntent(s,actor,PlanningState::Cancelled);
     s.activeIntents.erase(actor);
@@ -2827,7 +2827,7 @@ int nav_intent_cancel_home(double actorId){
   if(!integer(actorId))return 0;
   IntentState& s=state();const uint64_t actor=uint64_t(actorId);
   const auto found=s.activeIntents.find(actor);
-  if(found==s.activeIntents.end()||!found->second.home)return 0;
+  if(found==s.activeIntents.end()||!found->second.home||found->second.requiresResources)return 0;
   releaseIntent(s,actor,PlanningState::Cancelled);
   s.activeIntents.erase(actor);
   return 1;

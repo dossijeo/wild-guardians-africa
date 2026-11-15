@@ -1278,11 +1278,11 @@ function freezeConsequenceData(value){if(value&&typeof value==='object'){for(con
 export function prepareCrateDeliveryConsequence(s,w,crate,center){
   if(!w||!crate||!center||w.status!=='carrying'||w.crateId!==crate.id||crate.delivered||crate.carrierId!==w.id||w.centerId!==center.id||center.kind!=='center'||!operational(center)||Object.hasOwn(s.ledger.entries,`deliver:${crate.id}`))return null;
   const power=previewMultiplyPowerSettlement(s,crate),ended=contractExpired(w,s)||s.time>=profile(w).end,
-    tutorialComplete=['observe','harvest'].includes(s.tutorial.step);
+    tutorialComplete=['observe','harvest'].includes(s.tutorial.step),village=ended?s.villages.find(v=>v.id===w.villageId):null,home=village?.entry??village;
   return freezeConsequenceData({kind:'crate-delivery-consequence-preview',version:1,authorizedConsequences:false,
     workerId:w.id,crateId:crate.id,centerId:center.id,species:crate.species,sourcePlantId:crate.sourcePlantId,
     center:{x:center.x,z:center.z,yaw:center.yaw,status:center.status},baseValue:rational(crate.value.n,crate.value.d),
-    multiplySettlement:power,income:add(crate.value,power.extraIncome),status:ended?'returning':'idle',
+    multiplySettlement:power,income:add(crate.value,power.extraIncome),status:ended?'returning':'idle',...(home?{home:{villageId:nativeEntityNumericId(village.id),x:home.x,z:home.z}}:{}),
     tutorial:{harvestCompleted:true,step:tutorialComplete?'done':s.tutorial.step,completedEvent:tutorialComplete&&!s.tutorial.basicSkipped}});
 }
 export function crateDeliveryConsequenceCurrent(s,w,crate,center,preview){
@@ -1294,7 +1294,7 @@ export function crateDeliveryConsequenceCurrent(s,w,crate,center,preview){
 export function projectNativeCrateDeliveryConsequence(s,w,preview,native){
   const execution=native?.nativeSettledWorkerExecution?.(w.id),binding=execution&&copyNativeTaskSettlementAttestation(execution.binding),r=binding?.reference,
     crate=s.crates.find(c=>c.id===w.crateId),center=s.structures.find(c=>c.id===w.centerId),id=nativeEntityNumericId;
-  if(!execution||!r||!crate||!center||preview?.status!=='idle'||w.nativeRouteAdmission!=='native-delivery'||w.status!=='carrying'||w.taskId||
+  if(!execution||!r||!crate||!center||!['idle','returning'].includes(preview?.status)||JSON.stringify(preview.home)!==JSON.stringify(r.home)||w.nativeRouteAdmission!=='native-delivery'||w.status!=='carrying'||w.taskId||
     execution.executedThrough!==s.elapsed||r.worldBoundary.effectiveTime!==s.elapsed||r.actorId!==id(w.id)||r.crateId!==id(crate.id)||r.centerId!==id(center.id)||
     execution.actorId!==r.actorId||execution.bodyId!==r.bodyId||execution.crateId!==r.crateId||execution.centerId!==r.centerId||execution.x!==w.x||execution.z!==w.z||
     !crateDeliveryConsequenceCurrent(s,w,crate,center,preview))throw Error('Native delivery settlement is not the committed game boundary');
@@ -1303,7 +1303,7 @@ export function projectNativeCrateDeliveryConsequence(s,w,preview,native){
   // after the rest of the source result is coherent. This adds no event queue.
   if(!transact(s.ledger,`deliver:${crate.id}`,add(crate.value,extraIncome),{notify:(ledger,transactionId,delta)=>{notification={ledger,transactionId,delta};}}))throw Error('Native delivery was already credited');
   crate.multiplyIncome=extraIncome;crate.delivered=true;crate.carrierId=null;crateBecameInactive(s.crates);
-  Object.assign(w,{x:execution.x,z:execution.z,heading:execution.yaw,runPhase:execution.runPhase,walkPhase:execution.walkPhase,carryPhase:execution.carryPhase,runRemaining:execution.runRemaining,crateId:null,deliveryApproach:null,status:'idle',path:null,running:false,gateWaiting:false});delete w.nativeDelivery;delete w.nativeRouteAdmission;
+  Object.assign(w,{x:execution.x,z:execution.z,heading:execution.yaw,runPhase:execution.runPhase,walkPhase:execution.walkPhase,carryPhase:execution.carryPhase,runRemaining:execution.runRemaining,crateId:null,deliveryApproach:null,status:preview.status,path:null,running:false,gateWaiting:false});delete w.nativeDelivery;delete w.nativeRouteAdmission;
   s.tutorial.harvestCompleted=true;s.tutorial.step=preview.tutorial.step;
   if(notification)notifySettlement(notification.ledger,notification.transactionId,notification.delta);
   notifyWorkerPlanningChange(s,w);emit(s,'CrateDelivered',{workerId:w.id,targetId:crate.id,species:crate.species,multiplyIncome:crate.multiplyIncome});
@@ -1576,6 +1576,7 @@ function updateWorkers(s,dt,nav) {
         continue;
       }
       const p=profile(w),center=s.structures.find(c=>c.id===w.centerId),village=s.villages.find(v=>v.id===w.villageId);
+      if(nativeExecutionActive&&w.status==='returning'&&nav.intentTaskPlanner?.nativeSettledWorkerExecution?.(w.id)?.binding.reference.home){if(!nav.intentTaskPlanner.projectNativeSettledWorkerExecution(s,w))throw Error('Native pending Home has no current execution projection');continue;}
       if(['fleeing','returning','incapacitated'].includes(w.status)) {
         const home={...(village.entry??village),id:`home-${village.id}`};
         if(nav.intentTaskPlanner&&workerAtVillageEntry(w,home,nav)){
@@ -1804,7 +1805,7 @@ export function tick(s,seconds,nav,{clockRate=1}={}) {
       nativeExecution=nav.intentTaskPlanner.nativeGameExecutionState();
     }
     if(nativeExecution<0)throw Error('Native game execution still requires projection for this intention class');
-    if(nativeExecution===1&&(nav.dynamicBodies||s.raid||s.workers.some(w=>!(w.nativeRouteAdmission==='native-delivery'&&nav.intentTaskPlanner.projectNativeDeliveryExecution(s,w))&&!(nav.intentTaskPlanner.nativeSettledWorkerExecution?.(w.id)&&nav.intentTaskPlanner.projectNativeSettledWorkerExecution(s,w))&&(!w.taskId||!['walking','waiting-task','acting'].includes(w.status)||w.status==='acting'&&(w.nativeRouteAdmission!=='native-action'||!nav.intentTaskPlanner.nativeTaskActionExecution(w.id))||w.crateId)||w.raidReturn||w.incapacitated||w.recovery||w.fallRemaining>0||contractExpired(w,s))||s.structures.some(structure=>structure.gate&&structure.status!=='ruined')))throw Error('Native task game cohort contains an unsupported mover');
+    if(nativeExecution===1&&(nav.dynamicBodies||s.raid||s.workers.some(w=>!(w.nativeRouteAdmission==='native-delivery'&&nav.intentTaskPlanner.projectNativeDeliveryExecution(s,w))&&!(nav.intentTaskPlanner.nativeSettledWorkerExecution?.(w.id)&&nav.intentTaskPlanner.projectNativeSettledWorkerExecution(s,w))&&(!w.taskId||!['walking','waiting-task','acting'].includes(w.status)||w.status==='acting'&&(w.nativeRouteAdmission!=='native-action'||!nav.intentTaskPlanner.nativeTaskActionExecution(w.id))||w.crateId)||w.raidReturn||w.incapacitated||w.recovery||w.fallRemaining>0||contractExpired(w,s)&&!nav.intentTaskPlanner.nativeSettledWorkerExecution?.(w.id)?.binding.reference.home)||s.structures.some(structure=>structure.gate&&structure.status!=='ruined')))throw Error('Native task game cohort contains an unsupported mover');
     prepareClockEvents(s,nav);
     // Version-1 saves can contain an active area without exposure bookkeeping.
     // Mark once on restoration; static plants need no per-frame exposure scan.

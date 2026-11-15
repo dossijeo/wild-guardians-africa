@@ -34,3 +34,8 @@ test('source baselines reconstruct current Idle and pending-task stationary asso
  const f=fixture();let idle,pending;try{const crate=f.state.crates[0],center=f.state.structures.find(c=>c.id===f.worker.centerId),preview=prepareCrateDeliveryConsequence(f.state,f.worker,crate,center),p=f.prepareSettlement().proposal;assert.equal(f.commitSettlement(p),1);projectNativeCrateDeliveryConsequence(f.state,f.worker,preview,f.planner);f.sync();idle=controlFor(f.planner.nativeIntentControlBaseline());assert(idle.admitSettlement(p.nativeSettlement).isCurrent());claim(f);f.sync();pending=controlFor(f.planner.nativeIntentControlBaseline());assert(pending.admitSettlement(p.nativeSettlement).isCurrent());
  }finally{idle?.dispose();pending?.dispose();f.close();}
 });
+
+test('the same direct consumer holds a returning disposition without interpreting it as permission for a task',()=>{
+ const f=fixture();try{const home={villageId:6001,x:f.worker.x+8,z:f.worker.z+4},p=f.prepareSettlement({home}).proposal,lease=f.control.admitSettlement(p.nativeSettlement,{preparingWorldBoundary:p.worldBoundary});assert(lease.isPrepared());assert.equal(lease.isCurrent(),false);assert.equal(f.commitSettlement(p),1);f.sync();const b=f.planner.nativeTaskSettlementBinding(f.actor);assert.equal(f.control.installSettlements(b.reference.worldBoundary,[b]),1);assert(lease.isCurrent());assert.deepEqual(lease.reference.home,home);f.advance(.2);f.sync();assert(lease.isCurrent());assert.equal(f.planner.pendingTaskRoute(f.actor),null);assert.equal(f.w.nav_intent_retire_actor(b.reference.actorId),1);f.sync();assert.equal(lease.isCurrent(),false);
+ }finally{f.close();}
+});
