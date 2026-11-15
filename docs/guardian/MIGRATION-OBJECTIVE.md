@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [reanudación preparada con inicio nativo actual](f-r4-deferred-native-resume-20261115.md).
+Último avance: [reservas ordinarias de tareas pendientes de recursos](e-r3-native-task-resource-requests-20261115.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio

@@ -66,7 +66,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       const error=Error('Native route revocation arrived after its presented time');
       error.code='native-route-revocation-late';throw error;
     }
-    const actor=assigned?actorContext(event.actorId):actors.get(event.actorId);
+    const actor=assigned||event.type==='IntentChanged'&&event.state===6?actorContext(event.actorId):actors.get(event.actorId);
     const sourceSuspension=assigned&&actor?.proof&&suspendedCurrent(actor.proof,actor.revoked,actor)?{reference:actor.proof,sequence:actor.latestSequence}:null;
     if(current&&revoked){
       current.revokedSequence=event.sequence;current.revokedState=Number.isInteger(event.state)?event.state:null;
@@ -78,7 +78,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       assignmentSequence:event.sequence,startTime:event.effectiveTime,
       safeUntil:Infinity,lastDrawTime:null,actor,sourceSuspension};active.set(event.actorId,record);actor.current=record;actor.proof=null;}
     if(actor){actor.resumeProof=null;actor.latestSequence=event.sequence;actor.state=assigned?1:Number.isInteger(event.state)?event.state:null;
-      if(!actor.current&&actor.state!==4){actor.closed=true;actors.delete(event.actorId);}}
+      if(!actor.current&&actor.state!==4&&actor.state!==6){actor.closed=true;actors.delete(event.actorId);}}
     sequence=event.sequence;effectiveTime=event.effectiveTime;counters.accepted++;
     return true;
   }

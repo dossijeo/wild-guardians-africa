@@ -2,7 +2,7 @@
 
 Actualizado: 2026-11-15. IDs acordados en la conversación; no se renumeran al avanzar.
 
-Último incremento de f-R4: [reanudación preparada con inicio nativo actual](f-r4-deferred-native-resume-20261115.md).
+Último incremento del camino crítico: [reservas ordinarias de tareas pendientes de recursos](e-r3-native-task-resource-requests-20261115.md).
 Publicaciones ordinarias y aceptación integrada de personajes autónomos siguen pendientes; no cambia el recuento de cierres.
 
 **Ningún punto principal está cerrado todavía.** Un subpunto marcado como nativo

@@ -118,7 +118,7 @@ struct Task {uint64_t id,center,target,assigned;double created,rank;int kind;};
 // A committed route belongs to the native session. It remains pinned while an
 // actor uses it; speculative task batches never acquire a route handle.
 enum class PlanningState:int {NeedsPlan=0,RouteActive=1,ActionActive=2,
-  WaitingUnknown=3,WaitingBlocked=4,Cancelled=5};
+  WaitingUnknown=3,WaitingBlocked=4,Cancelled=5,AwaitingResources=6};
 struct ActiveIntent {
   uint64_t actor=0,task=0,target=0;
   PlanningState state=PlanningState::NeedsPlan;
@@ -135,6 +135,7 @@ struct ActiveIntent {
   uint32_t revokedSlot=0,revokedGeneration=0;
   int dependencyProfile=-1;
   std::set<std::pair<int,int>> routeSectors;
+  bool requiresResources=false;uint64_t resourceRequestSequence=0;double resourceRequestedAt=0;
   uint64_t assignmentSequence=0;
   double assignedAt=0;
   int timingMode=0;
@@ -163,7 +164,7 @@ struct RouteSlot {
   uint64_t actor=0;
   int timingMode=0,profile=0;
   int motionFlags=0;double runDistance=0,runSpeed=0,runBudget=0;
-  uint32_t generation=0;bool active=false;
+  uint32_t generation=0;bool active=false,pendingResources=false;
   // Admission fence in the existing slot, not a duplicate trajectory store.
   bool reserved=false;uint64_t reservationBody=0;
   bool hasExecution=false;
@@ -220,6 +221,7 @@ struct IntentState {
   std::array<double,8> plantResult{};
   uint64_t nextPlantLease=1,centerRevision=0;
   std::vector<double> changes,results;
+  std::array<double,13> pendingTaskRouteResult{};
   std::vector<float> routes;
   std::vector<std::pair<uint64_t,uint64_t>> proposals;
   std::unordered_map<uint64_t,ActiveIntent> activeIntents;
@@ -438,12 +440,12 @@ void subscribeRouteSegment(IntentState& s,ActiveIntent& intent,
 void indexRouteDependencies(IntentState& s,ActiveIntent& intent){
   clearRouteDependencies(s,intent);
   if(intent.profile<0||intent.profile>=6)return;
-  if(intent.state!=PlanningState::RouteActive&&
+  if(intent.state!=PlanningState::RouteActive&&intent.state!=PlanningState::AwaitingResources&&
      intent.state!=PlanningState::WaitingUnknown&&
      intent.state!=PlanningState::WaitingBlocked)return;
   intent.dependencyProfile=intent.profile;
   s.profileParticipants[intent.profile].insert(intent.actor);
-  if(intent.state!=PlanningState::RouteActive){
+  if(intent.state!=PlanningState::RouteActive&&intent.state!=PlanningState::AwaitingResources){
     s.waitingSubscribers[intent.profile].insert(intent.actor);return;
   }
   if(intent.slot>=s.routeSlots.size())return;
@@ -476,6 +478,7 @@ void emitIntentChange(IntentState& s,ActiveIntent& intent){
       (intent.state==PlanningState::ActionActive?IntentEvent::RouteCompleted:
         IntentEvent::RouteInvalidated):IntentEvent::IntentChanged;
   const uint64_t transitionSequence=++s.intentSequence;
+  if(intent.state==PlanningState::AwaitingResources){intent.resourceRequestSequence=transitionSequence;intent.resourceRequestedAt=s.effectiveTime;}
   if(event==IntentEvent::RouteAssigned||event==IntentEvent::RouteReplaced){
     intent.assignmentSequence=transitionSequence;intent.assignedAt=s.effectiveTime;
   }
@@ -495,7 +498,7 @@ void releaseRoute(IntentState& s,ActiveIntent& intent){
   if(intent.slot<s.routeSlots.size()){
     RouteSlot& route=s.routeSlots[intent.slot];
     if(route.active&&route.generation==intent.generation){
-      if(!route.suspended){intent.revokedSlot=intent.slot;intent.revokedGeneration=intent.generation;}
+      if(!route.suspended&&!route.pendingResources){intent.revokedSlot=intent.slot;intent.revokedGeneration=intent.generation;}
       releaseGateCrossings(s,route);
       if(route.reserved){
         s.residencyPinRevision++;
@@ -505,7 +508,7 @@ void releaseRoute(IntentState& s,ActiveIntent& intent){
       }
       if(route.suspended)s.suspendedBodies.erase(route.reservationBody);
       route.suspended=route.resumable=false;route.motionOffset.fill(0);route.suspendedAt=0;
-      route.active=false;route.points.clear();route.distances.clear();route.timingMode=0;
+      route.active=route.pendingResources=false;route.points.clear();route.distances.clear();route.timingMode=0;
       route.holds.clear();route.waitGate=0;route.gateCandidate=false;route.departureTime=0;
       route.gateReservations.clear();route.gateAdmitted=false;
       route.generation++;
@@ -1824,7 +1827,7 @@ double nav_intent_candidate_count(){return double(state().candidates);}
 int nav_intent_discard(){clearProposal(state());return 1;}
 // A proposal is stale after any entity delta, topology/portal/sector mutation
 // or movement-profile change. JS commits the same assignments only on success.
-int nav_intent_commit(){
+static int commitTaskProposal(bool pendingResources){
   IntentState& s=state();
   if(!s.proposalOpen||s.plannedEntityRevision!=s.entityRevision||
     s.plannedGraphRevision!=lazy_route_revision()||
@@ -1852,11 +1855,11 @@ int nav_intent_commit(){
     RouteSlot& route=s.routeSlots[slot];
     route.points.assign(s.routes.begin()+offset,s.routes.begin()+offset+count);
     route.actor=workerId;route.originX=s.workers.at(workerId).x;route.originZ=s.workers.at(workerId).z;
-    route.active=true;route.generation++;
+    route.active=true;route.pendingResources=pendingResources;route.generation++;
     if(!route.generation)route.generation=1;
     ActiveIntent intent{workerId,taskId,s.tasks.at(taskId).target,
-      PlanningState::RouteActive,slot,route.generation,lazy_route_revision()};
-    intent.profile=lazy_selected_context();
+      pendingResources?PlanningState::AwaitingResources:PlanningState::RouteActive,slot,route.generation,lazy_route_revision()};
+    intent.requiresResources=pendingResources;intent.profile=lazy_selected_context();
     s.activeIntents.insert_or_assign(workerId,intent);
     s.byTarget[intent.target].insert(workerId);
     s.byTask[intent.task].insert(workerId);
@@ -1865,6 +1868,11 @@ int nav_intent_commit(){
   if(!s.proposals.empty())s.entityRevision++;
   const int committed=int(s.proposals.size());clearProposal(s);return committed;
 }
+int nav_intent_commit(){return commitTaskProposal(false);}
+// Claim the SAME global task batch without issuing an executable route.
+// The allocated slot is the sole native draft; no second route registry.
+EMSCRIPTEN_KEEPALIVE int nav_intent_commit_resource_requests(){return commitTaskProposal(true);}
+#include "spatial-task-resource-requests.inc"
 // Drain only changes caused by confirmed events or a committed task batch.
 // Ordinary movement and ticks do not invoke the planner or emit rows.
 EMSCRIPTEN_KEEPALIVE int nav_intent_protocol_version(){return intentProtocolVersion;}
@@ -1959,7 +1967,7 @@ int nav_intent_route_points(double session,double slot,double generation){
     session!=double(s.session)||slot>=s.routeSlots.size()||
     generation>double(UINT32_MAX))return -1;
   const RouteSlot& route=s.routeSlots[size_t(slot)];
-  return route.active&&!route.suspended&&route.generation==uint32_t(generation)?
+  return route.active&&!route.suspended&&!route.pendingResources&&route.generation==uint32_t(generation)?
     int(route.points.size()/2):-1;
 }
 const float* nav_intent_route_ptr(double session,double slot,double generation){
@@ -1968,7 +1976,7 @@ const float* nav_intent_route_ptr(double session,double slot,double generation){
      slot>=s.routeSlots.size()||!integer(generation)||
      generation>double(UINT32_MAX))return nullptr;
   const RouteSlot& route=s.routeSlots[size_t(slot)];
-  return route.active&&!route.suspended&&route.generation==uint32_t(generation)?
+  return route.active&&!route.suspended&&!route.pendingResources&&route.generation==uint32_t(generation)?
     route.points.data():nullptr;
 }
 EMSCRIPTEN_KEEPALIVE int nav_intent_route_timing(double session,double slot,double generation){
@@ -2279,11 +2287,11 @@ int nav_intent_reconcile_topology(){
       spatial_select_nav_profile_index(intent.profile);
     const uint32_t revision=lazy_route_revision();
     if(intent.topology==revision)continue;
-    if(intent.state==PlanningState::RouteActive&&activeRouteClear(s,intent)){
+    if((intent.state==PlanningState::RouteActive||intent.state==PlanningState::AwaitingResources)&&activeRouteClear(s,intent)){
       intent.topology=revision;
       continue;
     }
-    if(intent.state==PlanningState::RouteActive||
+    if(intent.state==PlanningState::RouteActive||intent.state==PlanningState::AwaitingResources||
        intent.state==PlanningState::WaitingUnknown||
        intent.state==PlanningState::WaitingBlocked)
       affected.emplace_back(actor,revision);
@@ -2399,14 +2407,14 @@ int nav_intent_replan_pending_routes(){
       // Replanning must not silently reuse a possibly spent worker run budget.
       // The next motion-preparation event supplies current policy facts again.
       route.timingMode=0;intent.timingMode=0;
-      route.active=true;route.generation++;
+      route.active=true;route.pendingResources=intent.requiresResources;route.generation++;
       if(!route.generation)route.generation=1;
       intent.slot=slot;intent.generation=route.generation;
       intent.routeCursor=0;
-      intent.state=PlanningState::RouteActive;intent.topology=lazy_route_revision();
+      intent.state=intent.requiresResources?PlanningState::AwaitingResources:PlanningState::RouteActive;intent.topology=lazy_route_revision();
       planned++;
     }
-    if(intent.state!=PlanningState::RouteActive){
+    if(intent.state!=PlanningState::RouteActive&&intent.state!=PlanningState::AwaitingResources){
       intent.state=service.unknown?PlanningState::WaitingUnknown:PlanningState::WaitingBlocked;
       intent.topology=lazy_route_revision();
     }
@@ -2420,6 +2428,7 @@ int nav_intent_replan_pending_routes(){
     const auto found=s.activeIntents.find(actor);
     if(found!=s.activeIntents.end()&&
        (found->second.state==PlanningState::RouteActive||
+        found->second.state==PlanningState::AwaitingResources||
         found->second.state==PlanningState::WaitingUnknown||
         found->second.state==PlanningState::WaitingBlocked)){
       found->second.topology=finalRevision;
@@ -2437,6 +2446,7 @@ int nav_intent_request_reroute(double actorId){
   const auto found=s.activeIntents.find(uint64_t(actorId));
   if(found==s.activeIntents.end()||
      (found->second.state!=PlanningState::RouteActive&&
+      found->second.state!=PlanningState::AwaitingResources&&
       found->second.state!=PlanningState::WaitingUnknown&&
       found->second.state!=PlanningState::WaitingBlocked))return 0;
   ActiveIntent& intent=found->second;

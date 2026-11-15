@@ -17,6 +17,12 @@ El [incremento del trabajador original en GPU](f-r4-native-gpu-character-2026111
 prueba ruta completa, fases y control causal con preparación bloqueada como
 componente; la alimentación ordinaria y las transiciones siguen pendientes.
 
+Continuación del 15 de noviembre: el [lote ordinario pendiente de recursos](e-r3-native-task-resource-requests-20261115.md)
+puede reservar tareas como `AwaitingResources=6` en el mismo registro nativo,
+sin emitir handles ejecutables ni detener el cohort que ya se ejecuta. Replanteo,
+cancelación y restauración conservan esa distinción. Falta preparar y admitir la
+primera asignación desde esa solicitud; no activa la partida ni cierra e-R3/f-R4.
+
 Hay modificaciones locales previas en simulación, escena, carga y QA. No forman
 parte de los commits de esta corrección ni deben descartarse.
 

@@ -353,8 +353,17 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     session.actorSectorRevision({worker:true});
     const restored=wasm.nav_intent_restore_assigned_tasks();
     if(restored<0)throw Error(`Native assigned-task restoration failed: ${restored}`);
+    for(const worker of state.workers)if(worker.nativeRouteAdmission==='pending-resources'&&wasm.nav_intent_require_route_resources?.(numericId(worker.id))!==1)throw Error('Native saved resource request could not be restored');
     const routed=restored?wasm.nav_intent_replan_pending_routes():0;
     return {restored,routed};
+  };
+  const pendingTaskRoute=actorId=>{
+    if(wasm.nav_intent_task_resource_request_version?.()!==1)throw Error('Rebuild native task resource requests');
+    if(wasm.nav_intent_pending_task_route(Number.isSafeInteger(actorId)&&actorId>0?actorId:numericId(actorId))!==1)return null;
+    const a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_pending_task_route_ptr(),13));
+    const count=wasm.nav_intent_pending_task_route_points(a[4],a[5],a[6],a[7]);
+    if(count!==a[12]||!Number.isSafeInteger(count)||count<1)throw Error('Invalid native task resource request');
+    return Object.freeze({kind:'native-task-route-request',version:1,actorId:a[1],taskId:a[2],targetId:a[3],requestHandle:Object.freeze({kind:'native-task-route-request-handle',authorityEpoch:epoch(),session:a[4],slot:a[5],generation:a[6]}),requestSequence:a[7],requestedAt:a[8],profile:a[9],origin:Object.freeze({x:a[10],z:a[11]}),points:Float32Array.from(new Float32Array(wasm.memory.buffer,wasm.nav_intent_pending_task_route_points_ptr(a[4],a[5],a[6],a[7]),count*2)),authorizedAutonomy:false});
   };
   const proposalRoute=row=>{
     const {routeOffset,routeCount}=row,total=wasm.nav_intent_route_point_count();
@@ -1482,7 +1491,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     nativeIntentControlBaseline,nativeWorldResourceBoundary,observeNativeIntentControl,flushNativeIntentControl,nativeCausalClock,commitNativeCausalClock,
     restoreAssignedTasks,restoreAttackIntents,restoreRetreatIntents,
     restoreHomeIntents,
-    proposalRoute,
+    proposalRoute,pendingTaskRoute,
     getDamagedWalls:()=>getDamaged('wall'),
     getDamagedCenters:()=>getDamaged('center'),
     structureFor:id=>structuresById.get(numericId(id))??null,
@@ -1505,6 +1514,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     finishAction:actorId=>wasm.nav_intent_finish(numericId(actorId))===1,
     discard:()=>wasm.nav_intent_discard(),
     commit:()=>wasm.nav_intent_commit(),
+    commitResourceRequests:()=>{if(wasm.nav_intent_task_resource_request_version?.()!==1)throw Error('Rebuild native task resource requests');return wasm.nav_intent_commit_resource_requests();},
     sequence:()=>sequence};
   // Timestamp at authoritative mutation boundaries, not when a renderer or a
   // delayed resource job drains the log. Read-only route access stays untouched.
@@ -1515,7 +1525,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     'planAttackWall','replanAttackRoute','planRetreatRoute','planHomeRoute',
     'cancelHomeIntent','reconsiderWallOpportunity','markAttackActive',
     'finishAttackIntent','cancelAttackIntent','retireActor','reconcileTopology',
-    'replanPendingRoutes','markActionActive','finishAction','commit']){
+    'replanPendingRoutes','markActionActive','finishAction','commit','commitResourceRequests']){
     const operation=api[name];
     api[name]=(...args)=>{
       syncBoundaryTime();
@@ -1814,7 +1824,8 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     }
     return result;
   };
-  const commitTaskBatchToState=(state,plan,{navVersion}={})=>{
+  const commitTaskBatchToState=(state,plan,{navVersion,pendingResources=false}={})=>{
+    if(typeof pendingResources!=='boolean')throw TypeError('Invalid native route resource policy');
     if(plan!==lastPlan||!Number.isFinite(navVersion))
       throw Error('Native proposal is not the current planning batch');
     if(pendingTaskEvents.length||pendingWorldEvents.length)
@@ -1846,13 +1857,13 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     }
     // Validate the JS side before committing WASM. A stale native revision
     // rejects the whole lease; no JS task or worker has changed yet.
-    applyConfirmedTaskAssignments(state,assignments,navVersion,{validateOnly:true});
-    const committed=bridge.commit();
+    applyConfirmedTaskAssignments(state,assignments,navVersion,{validateOnly:true,pendingResources});
+    const committed=pendingResources?bridge.commitResourceRequests():bridge.commit();
     if(committed!==assignments.length){
       lastPlan=null;bridge.resetFromState(state);
       throw Error('Native task proposal became stale before commit');
     }
-    const count=applyConfirmedTaskAssignments(state,assignments,navVersion);
+    const count=applyConfirmedTaskAssignments(state,assignments,navVersion,{pendingResources});
     pendingNativeChanges=true;
     for(const row of plan){
       const task=tasksByNumericId.get(row.taskId);
@@ -2141,20 +2152,20 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
         const interaction=['repair','initial','water'].includes(task.kind);
         const destination=interaction?{
           id:`native-point-${task.id}`,x:endpoint.x,z:endpoint.z}:target;
-        worker.path=path;worker.destinationId=destination.id;
+        delete worker.nativeRouteAdmission;worker.path=path;worker.destinationId=destination.id;
         worker.pathVersion=navVersion;
         worker.taskApproach=interaction?{taskId:task.id,destination}:null;
         if(worker.status==='waiting-task'){
           worker.status='walking';notifyWorkerPlanningChange(state,worker);
         }
-      }else if(change.state===0||change.state===3||change.state===4){
+      }else if(change.state===0||change.state===3||change.state===4||change.state===6){
         const target=task&&targetFor(task.targetId);
         if(!task||!target||'alive' in target&&!target.alive||target.delivered){
           releaseTask(state,worker);worker.status='idle';worker.path=null;
           notifyWorkerPlanningChange(state,worker);
           if(task)replaceTasks(state,state.tasks.filter(item=>item.id!==task.id));
         }else{
-          worker.path=null;worker.status='waiting-task';
+          worker.path=null;worker.status='waiting-task';if(change.state===6)worker.nativeRouteAdmission='pending-resources';
           notifyWorkerPlanningChange(state,worker);
         }
       }else if(change.state===5){
@@ -2401,7 +2412,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     nativeCausalClock:bridge.nativeCausalClock,commitNativeCausalClock:bridge.commitNativeCausalClock,
     observeNativeIntentControl:bridge.observeNativeIntentControl,
     flushNativeIntentControl:bridge.flushNativeIntentControl,
-    intentChanges:bridge.intentChanges,routePoints:bridge.routePoints,
+    intentChanges:bridge.intentChanges,pendingTaskRoute:bridge.pendingTaskRoute,routePoints:bridge.routePoints,
     nativeRouteTiming:bridge.nativeRouteTiming,nativeRouteTimeKnots:bridge.nativeRouteTimeKnots,sampleNativeRoute:bridge.sampleNativeRoute,captureNativeRoutePresentation:bridge.captureNativeRoutePresentation,
     nativeGateRouteSweep:bridge.nativeGateRouteSweep,
     nativeGateMechanism:bridge.nativeGateMechanism,nativeGateMechanismPose:bridge.nativeGateMechanismPose,nativeGateMechanismSegment:bridge.nativeGateMechanismSegment,

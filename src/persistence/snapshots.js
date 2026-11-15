@@ -120,6 +120,7 @@ export function validateSnapshot(state,{livePhysics=false}={}) {
     }
   }
   for(const worker of state.workers){
+    if(worker.nativeRouteAdmission!==undefined&&(worker.nativeRouteAdmission!=='pending-resources'||!worker.taskId||worker.status!=='waiting-task'||worker.path!==null))throw Error('Solicitud de recursos nativa inválida');
     if(worker.gateWaiting!==undefined&&typeof worker.gateWaiting!=='boolean')throw new Error('Espera de puerta inválida');
     if(worker.terrainAvoidance!==undefined&&(!Array.isArray(worker.terrainAvoidance)||worker.terrainAvoidance.length>8||worker.terrainAvoidance.some(p=>!p||!Number.isFinite(p.x)||!Number.isFinite(p.z))))throw new Error('Desvío de terreno inválido');
     if(worker.crateId){
