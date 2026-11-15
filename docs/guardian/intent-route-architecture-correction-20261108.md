@@ -55,6 +55,12 @@ prepara y revalida identidad, cuerpo y fases en el mismo slot de propuestas.
 No libera la reserva ni admite efectos; la asociación del clip preparado y el
 commit causal de la acción siguen pendientes. No cambia el estado de cierre.
 
+Las [variantes de acción sobre el cuerpo admitido](e-r3-native-worker-action-variants-20261115.md)
+reutilizan sus mallas/geometrías y las texturas originales, incluyendo los
+accesorios de Water y su picking. Su selección y reversión usan el binding
+existente; aún falta enlazar el reloj y el commit de acción. No cierra admisión
+ordinaria, efectos ni aceptación integrada.
+
 Hay modificaciones locales previas en simulación, escena, carga y QA. No forman
 parte de los commits de esta corrección ni deben descartarse.
 

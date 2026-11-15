@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [candidato nativo de acción](e-r3-native-task-action-proposal-20261115.md), con reserva retenida y revalidación desde la llegada ejecutada; la admisión gráfica de la acción sigue pendiente.
+Último avance: [variantes de acción sobre el cuerpo admitido](e-r3-native-worker-action-variants-20261115.md), con geometrías y texturas reutilizadas; el reloj y el commit de la acción siguen pendientes.
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio

@@ -2,7 +2,7 @@
 
 Actualizado: 2026-11-15. IDs acordados en la conversación; no se renumeran al avanzar.
 
-Último incremento del camino crítico: [candidato nativo de acción](e-r3-native-task-action-proposal-20261115.md), con reserva retenida y revalidación desde la llegada ejecutada; la admisión gráfica de la acción sigue pendiente.
+Último incremento del camino crítico: [variantes de acción sobre el cuerpo admitido](e-r3-native-worker-action-variants-20261115.md), con geometrías y texturas reutilizadas; el reloj y el commit de la acción siguen pendientes.
 Publicaciones ordinarias y aceptación integrada de personajes autónomos siguen pendientes; no cambia el recuento de cierres.
 
 **Ningún punto principal está cerrado todavía.** Un subpunto marcado como nativo

@@ -1,0 +1,118 @@
+{
+  "version": 1,
+  "date": "2026-11-15",
+  "baseCommit": "1ba3c040e6e29e15e5067c648801562119c6cfe1",
+  "scope": "Prepare bounded action clip variants through the existing actor/material/motion owners, reuse the admitted body geometry and resident bake textures, add only required Water rigid meshes and roll back ownership safely. Native action clock/retained packet/commit/effects and ordinary producer remain pending.",
+  "sourceHashes": {
+    "src/rendering/webgpu-baked-walk.js": "5b58e808708c5666a51cb346a94fe3ed5bb2a2f213698434d39c48edcd1ef484",
+    "src/rendering/webgpu-confirmed-worker.js": "e08f0734b7053af8c23f1ced1319b700ac4cff25c5aab3a24ab0927eae889fb4",
+    "src/rendering/worker-tool-visibility.js": "e3587c2a112a496596fac43e43c7dba3b2289c03fa632be17d8afd54246ba765",
+    "tests/native-worker-action-variant.test.js": "4a4cf9cfd6eb2d75e6455229a1d555ac2567625d12006f6fdc42563bf46af11a"
+  },
+  "unchangedContextHashes": {
+    "src/world/wild-engine/spatial-savanna.wasm": "8eb9cd4206d171f78cf1d7eeea99a9b9f515cdf8b36d2a29b7140ad118cd47e9",
+    "public/wild-engine/spatial-threaded.wasm": "8504fec297a6d6ee4c203cb54f0060e388ec7ed743790937fdbdfd1eb318116f",
+    "src/world/native-task-action-presentation.js": "1a900bba8a835136075e9731370f32d4e6d07e0e0217360151c5ee522d92327a",
+    "src/simulation/game.js": "744e505ce303e1ebaddd18ba3579a194ac8c82f06261ab9e161c942afc8c72e4"
+  },
+  "directed": {
+    "tests": 118,
+    "pass": 118,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "regression": {
+    "tests": 1927,
+    "pass": 1922,
+    "fail": 5,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "wideSelectionFiles": 177,
+  "knownFailures": [
+    "the intent bridge projects a scaled gate using the physical wall frame",
+    "loading during a committed strike applies its damage frame exactly once",
+    "event-fed native intent bridge replays live state and only changes on explicit deltas",
+    "late crate admission is rejected after drop and retries a later pickup",
+    "confirmed harvest installs its sampled GPU horizon and cancels on changed target"
+  ],
+  "newCases": 13,
+  "functionalEvidence": "Real glTF assets and baked clips for all four worker profiles. Body/tool vertex comparisons against original rig, body geometry identity, six shared-geometry Water attachment meshes, clip-aware picking, original color/shadow WGSL generation, retired source binding, candidate corruption rejection, cancellation and actual scoped motion binding replacement/rollback.",
+  "graphicsLimit": "New tests use diagnostic phase nodes and Three shader builders; they do not authorize or execute a native action on a GPU. Existing GPU regressions below retain their previous scope.",
+  "lifecycleRegression": "A focused case first reproduced lost original child visibility after retiring a predecessor while Harvest remained current. Canonical model visibility now outlives variants; the final full selection includes that passing case.",
+  "build": {
+    "nativeRebuilt": false,
+    "productSeconds": 46.68,
+    "warnings": "Existing chunk size/mixed import warnings"
+  },
+  "browserSyntax": {
+    "files": 367,
+    "scripts": 309,
+    "failures": []
+  },
+  "gpu": {
+    "record": "native-worker-action-variants-gpu-regression-20261115.json",
+    "source": "Existing SpatialGameSession in-page first-task scenario with real product preparation/draw workers; not new action rendering or ordinary source producer proof",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "block": {
+      "start": 1794721253021.1802,
+      "end": 1794721254821.25,
+      "committedAt": 1794721253026.115,
+      "drawFrames": 54,
+      "minClock": 13.119999999999933,
+      "maxClock": 14.739999999999899,
+      "resourcesAfterReady": 0
+    },
+    "drained": true
+  },
+  "resumeGpu": {
+    "record": "native-worker-action-variants-resume-gpu-20261115.json",
+    "block": {
+      "start": 1794721274098.295,
+      "end": 1794721275898.355,
+      "committedAt": 1794721274112.31,
+      "drawFrames": 53,
+      "minClock": 60.816297002722166,
+      "maxClock": 62.37629700272241,
+      "resourcesAfterReady": 0
+    },
+    "drained": true,
+    "metricLimit": "Tool does not record requestFailures"
+  },
+  "research": [
+    {
+      "project": "Babylon.js",
+      "revision": "8.0.0",
+      "source": "https://github.com/BabylonJS/Babylon.js/blob/8.0.0/packages/dev/core/src/BakedVertexAnimation/bakedVertexAnimationManager.ts",
+      "functions": [
+        "bind",
+        "setAnimationParameters"
+      ],
+      "lines": [
+        "125-138",
+        "158-160"
+      ],
+      "decision": "Keep resident texture ownership and parameterize clip/frame selection; adapt to existing Three/TSL banks without adding a dependency."
+    },
+    {
+      "project": "Babylon.js",
+      "revision": "8.0.0",
+      "source": "https://github.com/BabylonJS/Babylon.js/blob/8.0.0/packages/dev/core/src/Shaders/ShadersInclude/bakedVertexAnimation.fx",
+      "lines": [
+        "8-25"
+      ],
+      "decision": "Evaluate frame selection and canonical baked matrices on the GPU; preserve Wild Guardians clip timing and bases."
+    }
+  ],
+  "checks": [
+    "Owned JavaScript syntax and diff whitespace checks",
+    "Four owned hashes and four unchanged context hashes frozen throughout final tests/build/two GPU regressions"
+  ],
+  "acceptanceClosed": []
+}
