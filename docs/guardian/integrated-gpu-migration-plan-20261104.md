@@ -1,5 +1,7 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuación del consumidor: [Harvest → Carry con preparación incremental y selección GPU](e-r3-native-consequence-presentation-20261115.md), sobre el actor y lote existentes; 54 fotogramas durante bloqueo, cero asignaciones después de READY. Entrega preparada, productor ordinario y recuperación integral siguen pendientes; no cambia ningún cierre.
+
 Continuación 2026-11-15: [restauración de acciones con progreso y admisión nueva](e-r3-native-action-restoration-20261115.md), sobre el mismo propietario nativo y reloj común; productor ordinario, consecuencias preparadas y recuperación integral siguen pendientes.
 Continuación de autoridad: [consecuencia nativa Harvest y propietario Carry](e-r3-native-harvest-consequence-source-20261115.md), con proyección en Game y transactor común. La preparación gráfica del cultivo/caja, sus consumidores y el productor ordinario siguen pendientes; no cambia ningún cierre.
 Se conserva el orden A → B → C → D; la reproducción nativa avanza como componente, pero la admisión ordinaria y la aceptación integrada siguen pendientes.

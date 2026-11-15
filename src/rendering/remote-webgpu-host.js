@@ -1,3 +1,4 @@
+import {copyNativeTaskConsequenceReference,sameNativeTaskConsequenceReference,nativeTaskConsequenceReferenceCovered,copyNativeTaskConsequenceAttestation} from '../world/native-task-consequence.js';
 import {copyNativeTaskStartReference,sameNativeTaskStartReference,nativeTaskStartReferenceCovered} from '../world/native-task-start-reference.js';
 import {copyNativeTaskStartAttestation} from '../world/native-task-start-attestation.js';
 import {nativeTaskActionRemainingDuration,copyNativeTaskActionReference,sameNativeTaskActionReference,nativeTaskActionReferenceCovered} from '../world/native-task-action-presentation.js';
@@ -47,7 +48,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     if(!pending)return;const stale=pending;pending=null;
     if(stale.preparedWorldBoundary&&frameWorldCurrent(stale)){
       stale.admittedClockBindings=admitClockBindings(stale);
-      if(stale.admittedMotionBinding){let end=Math.max(stale.metadata.clock.safeUntil,stale.admittedMotionBinding.reference.endTime);for(const binding of stale.admittedClockBindings){if(binding.nativeResume||binding.nativeStart||binding.nativeAction)end=Math.max(end,binding.motionRecord.executionEnd,binding.resourceEnd===undefined?0:binding.motionRecord.executionEpoch+(binding.resourceEnd-binding.epoch));else if((binding.nativeRoute||binding.nativeGate||binding.nativeSuspended)&&binding.resourceEnd!==undefined)end=Math.max(end,binding.executionEpoch===undefined?binding.resourceEnd:binding.executionEpoch+(binding.resourceEnd-binding.epoch));}stale.admittedClockCoverageEnd=end;}
+      if(stale.admittedMotionBinding){let end=Math.max(stale.metadata.clock.safeUntil,stale.admittedMotionBinding.reference.endTime);for(const binding of stale.admittedClockBindings){if(binding.nativeResume||binding.nativeStart||binding.nativeConsequence||binding.nativeAction)end=Math.max(end,binding.motionRecord.executionEnd,binding.resourceEnd===undefined?0:binding.motionRecord.executionEpoch+(binding.resourceEnd-binding.epoch));else if((binding.nativeRoute||binding.nativeGate||binding.nativeSuspended)&&binding.resourceEnd!==undefined)end=Math.max(end,binding.executionEpoch===undefined?binding.resourceEnd:binding.executionEpoch+(binding.resourceEnd-binding.epoch));}stale.admittedClockCoverageEnd=end;}
       stale.nativeMutationEpoch=nativeMutationEpoch;pending=stale;return;
     }
     if(stale.initializedPreparation)port.postMessage({type:'frame-obsolete',sequence:stale.sequence,reason,resourcePreparationsRetained:true});
@@ -490,19 +491,19 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         // A scene can contain long-lived independent motors and a finite
         // resumed body. Each binding retains its own data and revocation cap.
         const executionEpoch=binding.motionRecord?.executionEpoch??binding.executionEpoch??binding.epoch;
-        const scoped=!!(binding.nativeRoute||binding.nativeGate||binding.nativeSuspended||binding.nativeResume||binding.nativeStart||binding.nativeAction),bindingTime=!scoped&&active.admittedMotionBinding?Math.min(elapsed,active.metadata.clock.safeUntil):elapsed;
-        const resumeCeiling=(binding.nativeResume||binding.nativeStart)&&binding.resourceEnd!==undefined?executionEpoch+(binding.resourceEnd-binding.epoch):binding.motionRecord?.executionEnd??binding.nativeResume?.endTime??binding.nativeStart?.endTime??Infinity;
+        const scoped=!!(binding.nativeRoute||binding.nativeGate||binding.nativeSuspended||binding.nativeResume||binding.nativeStart||binding.nativeConsequence||binding.nativeAction),bindingTime=!scoped&&active.admittedMotionBinding?Math.min(elapsed,active.metadata.clock.safeUntil):elapsed;
+        const resumeCeiling=(binding.nativeResume||binding.nativeStart||binding.nativeConsequence)&&binding.resourceEnd!==undefined?executionEpoch+(binding.resourceEnd-binding.epoch):binding.motionRecord?.executionEnd??binding.nativeResume?.endTime??binding.nativeStart?.endTime??binding.nativeConsequence?.endTime??Infinity;
         const routeTime=Math.min(bindingTime,binding.routeRecord?.safeUntil??binding.actionRecord?.safeUntil??Infinity,resumeCeiling);
-        const resourceCeiling=binding.resourceEnd??binding.nativeResume?.endTime??binding.nativeStart?.endTime??(active.admittedMotionBinding?active.metadata.clock.safeUntil:Infinity);
-        const resourceTime=Math.min(resourceCeiling,(binding.nativeResume||binding.nativeStart||binding.executionEpoch!==undefined)?binding.epoch+Math.max(0,routeTime-executionEpoch):routeTime);
+        const resourceCeiling=binding.resourceEnd??binding.nativeResume?.endTime??binding.nativeStart?.endTime??binding.nativeConsequence?.endTime??(active.admittedMotionBinding?active.metadata.clock.safeUntil:Infinity);
+        const resourceTime=Math.min(resourceCeiling,(binding.nativeResume||binding.nativeStart||binding.nativeConsequence||binding.executionEpoch!==undefined)?binding.epoch+Math.max(0,routeTime-executionEpoch):routeTime);
         // Finite actions retain their declared duration. Do not add the age to
         // a large absolute epoch and subtract it again before its float upload.
         const value=binding.nativeAction?(routeTime>=binding.motionRecord.executionEnd?nativeTaskActionRemainingDuration(binding.nativeAction.request):Math.min(nativeTaskActionRemainingDuration(binding.nativeAction.request),Math.max(0,routeTime-executionEpoch))):binding.semantic==='origin-modulo'?executionEpoch%binding.period:binding.semantic==='relative'?resourceTime-binding.epoch:resourceTime;
         if (!Number.isFinite(value)) throw Error('Invalid remote presentation clock value');
         const submittedValue=binding.semantic==='origin-modulo'?Math.fround(value):floorFloat32(value);
         device.queue.writeBuffer(resolve({ [REF]: binding.id }), binding.byteOffset, new Float32Array([submittedValue]));
-        if(binding.semantic!=='origin-modulo'&&(binding.nativeRoute||binding.nativeGate||binding.nativeSuspended||binding.nativeResume||binding.nativeStart||binding.nativeAction))nativeTimes.set(binding.nativeClockKey,{
-          ...(binding.nativeRoute?{nativeRoute:binding.nativeRoute}:binding.nativeGate?{nativeGate:binding.nativeGate}:binding.nativeResume?{nativeResume:binding.nativeResume}:binding.nativeStart?{nativeStart:binding.nativeStart}:binding.nativeAction?{nativeAction:binding.nativeAction,relativeTime:submittedValue}:{nativeSuspended:binding.nativeSuspended}),semantic:binding.semantic,epoch:binding.epoch,...((binding.nativeResume||binding.nativeStart||binding.nativeAction)?{executionEpoch}:{}),
+        if(binding.semantic!=='origin-modulo'&&(binding.nativeRoute||binding.nativeGate||binding.nativeSuspended||binding.nativeResume||binding.nativeStart||binding.nativeConsequence||binding.nativeAction))nativeTimes.set(binding.nativeClockKey,{
+          ...(binding.nativeRoute?{nativeRoute:binding.nativeRoute}:binding.nativeGate?{nativeGate:binding.nativeGate}:binding.nativeResume?{nativeResume:binding.nativeResume}:binding.nativeStart?{nativeStart:binding.nativeStart}:binding.nativeConsequence?{nativeConsequence:binding.nativeConsequence}:binding.nativeAction?{nativeAction:binding.nativeAction,relativeTime:submittedValue}:{nativeSuspended:binding.nativeSuspended}),semantic:binding.semantic,epoch:binding.epoch,...((binding.nativeResume||binding.nativeStart||binding.nativeConsequence||binding.nativeAction)?{executionEpoch}:{}),
           elapsed:binding.semantic==='relative'?submittedValue+binding.epoch:submittedValue});
         if(binding.routeRecord&&binding.semantic!=='origin-modulo')binding.routeRecord.lastDrawTime=Math.max(
           binding.routeRecord.lastDrawTime??-Infinity,
@@ -737,7 +738,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       boundary.nativeSession!==status.clock.nativeSession||boundary.effectiveTime>status.clock.committedThrough||
       nativeWorldBoundary&&boundary.ticket<=nativeWorldBoundary.ticket||clock.safeUntil<boundary.effectiveTime||clock.elapsed>boundary.effectiveTime)
       throw Error('Prepared frame requires a new native world proposal boundary and covering resources');
-    if([packet.metadata.nativeTaskStartTemplate,packet.metadata.nativeResumeTemplate,packet.metadata.nativeTaskActionTemplate].filter(Boolean).length>1)throw Error('Conflicting native prepared templates');
+    if([packet.metadata.nativeTaskStartTemplate,packet.metadata.nativeResumeTemplate,packet.metadata.nativeTaskActionTemplate,packet.metadata.nativeTaskConsequenceTemplate].filter(Boolean).length>1)throw Error('Conflicting native prepared templates');
+    if(packet.metadata.nativeTaskConsequenceTemplate){const ref=copyNativeTaskConsequenceReference(packet.metadata.nativeTaskConsequenceTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native consequence template');routeControl.admitConsequence(ref,{preparingWorldBoundary:boundary});}
     if(packet.metadata.nativeTaskActionTemplate){const ref=copyNativeTaskActionReference(packet.metadata.nativeTaskActionTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native action template');routeControl.admitAction(ref,{preparingWorldBoundary:boundary});}
     if(packet.metadata.nativeTaskStartTemplate){const ref=copyNativeTaskStartReference(packet.metadata.nativeTaskStartTemplate);if(packet.metadata.nativeResumeTemplate||!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid first-task template');}
     if(packet.metadata.nativeResumeTemplate){const ref=copyNativeResumeReference(packet.metadata.nativeResumeTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid deferred native resume template');}
@@ -751,6 +753,13 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         if(preparing&&!motionRecord.isCurrent()&&!sameNativeTaskActionReference(binding.nativeAction,packet.metadata.nativeTaskActionTemplate))throw Error('Pending action clock differs from its retained template');
         if(packet.metadata.clock.safeUntil<binding.nativeAction.startTime)throw Error('Prepared clock does not cover native action');
         return {...binding,motionRecord,actionRecord:motionRecord.actionRecord};
+      }
+      if(binding.nativeConsequence){
+        if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeTaskConsequenceReferenceCovered(binding.nativeConsequence,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeTaskConsequenceReferenceCovered(binding.nativeConsequence,nativeWorldBoundary))throw Error('Native consequence requires its exact template and causal world');
+        const motionRecord=routeControl.admitConsequence(binding.nativeConsequence,{preparingWorldBoundary:preparing?packet.metadata.nativeWorldBoundary:null});
+        if(preparing&&!motionRecord.isCurrent()&&!sameNativeTaskConsequenceReference(binding.nativeConsequence,packet.metadata.nativeTaskConsequenceTemplate))throw Error('Pending consequence clock differs from its retained template');
+        if(packet.metadata.clock.safeUntil<binding.nativeConsequence.worldBoundary.effectiveTime)throw Error('Prepared clock does not cover native consequence');
+        return {...binding,motionRecord,...(!preparing?{routeRecord:motionRecord.routeRecord}:{})};
       }
       if(binding.nativeStart){
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeTaskStartReferenceCovered(binding.nativeStart,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeTaskStartReferenceCovered(binding.nativeStart,nativeWorldBoundary))throw Error('Native first task requires its exact prepared template and causal world');
@@ -1068,15 +1077,17 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       case 'clock-binding': {
         if(message.binding.resourceEnd!==undefined&&(!Number.isFinite(message.binding.resourceEnd)||message.binding.resourceEnd<message.binding.epoch))throw Error('Invalid native clock resource end');
         if(message.binding.executionEpoch!==undefined)throw Error('A preparer cannot set the execution origin');
-        if(message.binding.semantic==='origin-modulo'&&(!(message.binding.nativeResume||message.binding.nativeStart)||!Number.isFinite(message.binding.period)||message.binding.period<=0))throw Error('Invalid native origin phase binding');
+        if(message.binding.semantic==='origin-modulo'&&(!(message.binding.nativeResume||message.binding.nativeStart||message.binding.nativeConsequence)||!Number.isFinite(message.binding.period)||message.binding.period<=0))throw Error('Invalid native origin phase binding');
         const key = `${message.id}:${message.binding.byteOffset}`;const prior=clockBindings.get(key);
         const nativeRoute=message.binding.nativeRoute?copyNativeRouteReference(message.binding.nativeRoute):null,nativeGate=message.binding.nativeGate?copyNativeGateReference(message.binding.nativeGate):null;
         const nativeResume=message.binding.nativeResume?copyNativeResumeReference(message.binding.nativeResume):null,nativeStart=message.binding.nativeStart?copyNativeTaskStartReference(message.binding.nativeStart):null;
         const nativeSuspended=message.binding.nativeSuspended?copyNativeSuspendedBodyReference(message.binding.nativeSuspended):null,nativeAction=message.binding.nativeAction?copyNativeTaskActionReference(message.binding.nativeAction):null;
-        if([nativeRoute,nativeGate,nativeSuspended,nativeResume,nativeStart,nativeAction].filter(Boolean).length>1)throw Error('Conflicting native clock references');
+        const nativeConsequence=message.binding.nativeConsequence?copyNativeTaskConsequenceReference(message.binding.nativeConsequence):null;
+        if(nativeConsequence&&message.binding.epoch!==nativeConsequence.worldBoundary.effectiveTime)throw Error('Invalid native consequence clock epoch');
+        if([nativeRoute,nativeGate,nativeSuspended,nativeResume,nativeStart,nativeAction,nativeConsequence].filter(Boolean).length>1)throw Error('Conflicting native clock references');
         if(nativeAction&&(message.binding.semantic!=='relative'||message.binding.epoch!==nativeAction.startTime||message.binding.resourceEnd!==undefined))throw Error('Invalid native action phase clock');
-        clockBindings.set(key, { ...message.binding, ...(nativeRoute?{nativeRoute}:{}),...(nativeGate?{nativeGate}:{}),...(nativeSuspended?{nativeSuspended}:{}),...(nativeResume?{nativeResume}:{}),...(nativeStart?{nativeStart}:{}),...(nativeAction?{nativeAction}:{}),
-          ...((nativeRoute||nativeGate||nativeSuspended||nativeResume||nativeStart||nativeAction)?{nativeClockKey:JSON.stringify([nativeRoute?'route':nativeGate?'gate':nativeResume?'resume':nativeStart?'start':nativeAction?'action':'suspended',nativeRoute??nativeGate??nativeSuspended??nativeResume??nativeStart??nativeAction,message.binding.semantic,message.binding.epoch])}:{}), ...(prior?.executionEpoch!==undefined&&JSON.stringify(prior.nativeGate)===JSON.stringify(nativeGate)&&prior.epoch===message.binding.epoch?{executionEpoch:prior.executionEpoch}:{}),id: message.id });
+        clockBindings.set(key, { ...message.binding, ...(nativeRoute?{nativeRoute}:{}),...(nativeGate?{nativeGate}:{}),...(nativeSuspended?{nativeSuspended}:{}),...(nativeResume?{nativeResume}:{}),...(nativeStart?{nativeStart}:{}),...(nativeAction?{nativeAction}:{}),...(nativeConsequence?{nativeConsequence}:{}),
+          ...((nativeRoute||nativeGate||nativeSuspended||nativeResume||nativeStart||nativeAction||nativeConsequence)?{nativeClockKey:JSON.stringify([nativeRoute?'route':nativeGate?'gate':nativeResume?'resume':nativeStart?'start':nativeConsequence?'consequence':nativeAction?'action':'suspended',nativeRoute??nativeGate??nativeSuspended??nativeResume??nativeStart??nativeAction??nativeConsequence,message.binding.semantic,message.binding.epoch])}:{}), ...(prior?.executionEpoch!==undefined&&JSON.stringify(prior.nativeGate)===JSON.stringify(nativeGate)&&prior.epoch===message.binding.epoch?{executionEpoch:prior.executionEpoch}:{}),id: message.id });
         if (!clockBindingKeys.has(message.id)) clockBindingKeys.set(message.id, new Set());
         clockBindingKeys.get(message.id).add(key); break;
       }
@@ -1161,13 +1172,14 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
              intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});
              throw Error('Native mutation lacks its retained prepared command packet');
            }
-           if([message.preparedTaskActionTemplate,message.preparedTaskStartTemplate,message.preparedResumeTemplate].filter(Boolean).length>1)throw Error('Conflicting native quiescence templates');
+           if([message.preparedTaskActionTemplate,message.preparedTaskStartTemplate,message.preparedResumeTemplate,message.preparedTaskConsequenceTemplate].filter(Boolean).length>1)throw Error('Conflicting native quiescence templates');
+           if(message.preparedTaskConsequenceTemplate){const ref=copyNativeTaskConsequenceReference(message.preparedTaskConsequenceTemplate);if(!sameNativeTaskConsequenceReference(ref,pending?.metadata?.nativeTaskConsequenceTemplate))throw Error('Native quiescence lacks its consequence template');const bindings=admitClockBindings(pending,true);if(!bindings.some(b=>b.nativeConsequence&&sameNativeTaskConsequenceReference(b.nativeConsequence,ref)))throw Error('Native consequence has no prepared clock binding');}
            if(message.preparedTaskActionTemplate){const ref=copyNativeTaskActionReference(message.preparedTaskActionTemplate);if(!sameNativeTaskActionReference(ref,pending?.metadata?.nativeTaskActionTemplate)){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw Error('Native quiescence lacks its action template');}routeControl.admitAction(ref,{preparingWorldBoundary:preparedWorldBoundary});}
            if(message.preparedTaskStartTemplate&&(message.preparedResumeTemplate||!sameNativeTaskStartReference(copyNativeTaskStartReference(message.preparedTaskStartTemplate),pending?.metadata?.nativeTaskStartTemplate))){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw Error('Native quiescence lacks its first-task template');}
            if(message.preparedResumeTemplate&&!sameNativeResumeReference(copyNativeResumeReference(message.preparedResumeTemplate),pending?.metadata?.nativeResumeTemplate)){
              intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw Error('Native quiescence lacks its deferred template');
            }
-           if(message.preparedResumeTemplate||message.preparedTaskStartTemplate||message.preparedTaskActionTemplate)try{admitClockBindings(pending,true);}catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
+           if(message.preparedResumeTemplate||message.preparedTaskStartTemplate||message.preparedTaskActionTemplate||message.preparedTaskConsequenceTemplate)try{admitClockBindings(pending,true);}catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
            lastNativeMutationFence=message.holdId;nativeMutationHold={...message,quiesced:false};
            if(preparedWorldBoundary)nativeMutationHold.preparedFrameSequence=pending.sequence;
            Promise.resolve(device.queue.onSubmittedWorkDone()).then(()=>{
@@ -1176,6 +1188,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
              intentControl.port.postMessage({type:'intent-mutation-quiesced',fenceVersion:1,session:intentControl.session,
                authorityEpoch:message.authorityEpoch,holdId:message.holdId,sequence:message.sequence,
                effectiveTime:message.effectiveTime,clockSequence:message.clockSequence,accepted:true,
+               ...(message.preparedTaskConsequenceTemplate?{nativeTaskConsequenceVersion:1,preparedTaskConsequenceTemplate:copyNativeTaskConsequenceReference(message.preparedTaskConsequenceTemplate)}:{}),
                ...(preparedWorldBoundary?{preparedWorldBoundary,preparedFrameSequence:nativeMutationHold.preparedFrameSequence}:{})});
            }).catch(error=>fail(error));return;
          }
@@ -1188,27 +1201,34 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
               status.clock.committedThrough<hold.effectiveTime||typeof message.committed!=='boolean')throw Error('Invalid native mutation release boundary');
            if(message.nativeResumedRoutes!==undefined&&(!Array.isArray(message.nativeResumedRoutes)||!message.committed||message.nativeResumedRoutes.some(value=>value?.reference?.sourceControlSequence!==hold.sequence)))throw Error('Uncommitted or mismatched native resume attestation');
            if(message.nativeStartedRoutes!==undefined&&(!Array.isArray(message.nativeStartedRoutes)||!message.committed||message.nativeStartedRoutes.some(value=>value?.reference?.sourceControlSequence!==hold.sequence)))throw Error('Uncommitted or mismatched native first-task attestation');
+           if(message.nativeConsequences!==undefined&&(!Array.isArray(message.nativeConsequences)||!message.committed||message.nativeConsequences.some(v=>v?.reference?.sourceControlSequence!==hold.sequence)))throw Error('Uncommitted or mismatched native consequence attestation');
            if(message.nativeActions!==undefined&&(!Array.isArray(message.nativeActions)||!message.committed||message.nativeActions.some(value=>value?.reference?.sourceControlSequence!==hold.sequence)))throw Error('Uncommitted or mismatched native action attestation');
            if(message.nativeSuspendedBodies!==undefined&&(!Array.isArray(message.nativeSuspendedBodies)||!message.committed))throw Error('Uncommitted native suspension attestation');
            if(message.committed){
              const boundary=copyNativeWorldBoundary(message.worldBoundary??null);
-             if(hold.preparedWorldBoundary&&!hold.preparedResumeTemplate&&!hold.preparedTaskStartTemplate&&!hold.preparedTaskActionTemplate&&!sameNativeWorldBoundary(hold.preparedWorldBoundary,boundary))throw Error('Native release differs from its prepared command receipt');
+             if(hold.preparedWorldBoundary&&!hold.preparedResumeTemplate&&!hold.preparedTaskStartTemplate&&!hold.preparedTaskActionTemplate&&!hold.preparedTaskConsequenceTemplate&&!sameNativeWorldBoundary(hold.preparedWorldBoundary,boundary))throw Error('Native release differs from its prepared command receipt');
              if(worldBoundaryRequired&&(!boundary||boundary.authorityEpoch!==status.authorityEpoch||
                 boundary.nativeSession!==status.clock.nativeSession||boundary.effectiveTime!==message.effectiveTime||
                 nativeWorldBoundary&&boundary.ticket<=nativeWorldBoundary.ticket))throw Error('Invalid committed world resource boundary');
+             if(hold.preparedTaskConsequenceTemplate){
+               if(message.nativeActions?.length||message.nativeStartedRoutes?.length||message.nativeSuspendedBodies?.length||message.nativeResumedRoutes?.length||message.nativeConsequences?.length!==1||!pending||pending.sequence!==hold.preparedFrameSequence)throw Error('Native consequence lost its retained frame');
+               const binding=copyNativeTaskConsequenceAttestation(message.nativeConsequences[0]);if(!sameNativeTaskConsequenceReference(binding.preparedReference,hold.preparedTaskConsequenceTemplate))throw Error('Native consequence names another retained template');
+               pending.admittedMotionBinding=binding;pending.admittedWorldBoundary=boundary;
+               for(const [key,clock] of clockBindings)if(clock.nativeGate&&sameNativeWorldBoundary(clock.nativeGate.worldBoundary,binding.preparedReference.worldBoundary)){if(!binding.gateIds.includes(clock.nativeGate.gateId))throw Error('Native consequence did not attest its gate');clockBindings.set(key,{...clock,executionEpoch:binding.reference.worldBoundary.effectiveTime});}
+             }else if(message.nativeConsequences?.length)throw Error('Native consequence lacks its retained template');
              if(hold.preparedTaskActionTemplate){
-               if(message.nativeStartedRoutes?.length||message.nativeSuspendedBodies?.length||message.nativeResumedRoutes?.length||message.nativeActions?.length!==1||!pending||pending.sequence!==hold.preparedFrameSequence)throw Error('Native action lost its retained frame');
+               if(message.nativeConsequences?.length||message.nativeStartedRoutes?.length||message.nativeSuspendedBodies?.length||message.nativeResumedRoutes?.length||message.nativeActions?.length!==1||!pending||pending.sequence!==hold.preparedFrameSequence)throw Error('Native action lost its retained frame');
                const binding=copyNativeTaskActionAttestation(message.nativeActions[0]);if(!sameNativeTaskActionReference(binding.preparedReference,hold.preparedTaskActionTemplate))throw Error('Native action names another retained template');
                pending.admittedMotionBinding=binding;pending.admittedWorldBoundary=boundary;
              }else if(message.nativeActions?.length)throw Error('Native action lacks a retained template');
              if(hold.preparedTaskStartTemplate){
-               if(message.nativeActions?.length||message.nativeSuspendedBodies?.length||message.nativeResumedRoutes?.length||message.nativeStartedRoutes?.length!==1||!pending||pending.sequence!==hold.preparedFrameSequence)throw Error('First task lost its retained frame');
+               if(message.nativeConsequences?.length||message.nativeActions?.length||message.nativeSuspendedBodies?.length||message.nativeResumedRoutes?.length||message.nativeStartedRoutes?.length!==1||!pending||pending.sequence!==hold.preparedFrameSequence)throw Error('First task lost its retained frame');
                const binding=copyNativeTaskStartAttestation(message.nativeStartedRoutes[0]);if(!sameNativeTaskStartReference(binding.preparedReference,hold.preparedTaskStartTemplate))throw Error('First task names another retained template');
                pending.admittedMotionBinding=binding;pending.admittedWorldBoundary=boundary;
                for(const [key,clock] of clockBindings)if(clock.nativeGate&&sameNativeWorldBoundary(clock.nativeGate.worldBoundary,binding.preparedReference.worldBoundary)){if(!binding.gateIds.includes(clock.nativeGate.gateId))throw Error('First task did not attest its gate');clockBindings.set(key,{...clock,executionEpoch:binding.reference.worldBoundary.effectiveTime});}
              }else if(message.nativeStartedRoutes?.length)throw Error('First-task attestation lacks a retained template');
              if(hold.preparedResumeTemplate){
-               if(message.nativeActions?.length||message.nativeStartedRoutes?.length||message.nativeSuspendedBodies?.length||message.nativeResumedRoutes?.length!==1||!pending||pending.sequence!==hold.preparedFrameSequence)throw Error('Deferred native resume lost its prepared frame');
+               if(message.nativeConsequences?.length||message.nativeActions?.length||message.nativeStartedRoutes?.length||message.nativeSuspendedBodies?.length||message.nativeResumedRoutes?.length!==1||!pending||pending.sequence!==hold.preparedFrameSequence)throw Error('Deferred native resume lost its prepared frame');
                const binding=copyNativeResumeAttestation(message.nativeResumedRoutes[0]);if(!sameNativeResumeReference(binding.preparedReference,hold.preparedResumeTemplate))throw Error('Native resume names another prepared template');
                pending.admittedMotionBinding=binding;pending.admittedWorldBoundary=boundary;
                for(const [key,clock] of clockBindings)if(clock.nativeGate&&sameNativeWorldBoundary(clock.nativeGate.worldBoundary,binding.preparedReference.worldBoundary)){
@@ -1219,6 +1239,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
              routeControl.installResumedRoutes(boundary,message.nativeResumedRoutes??[]);
              routeControl.installStartedRoutes(boundary,message.nativeStartedRoutes??[]);
              routeControl.installActions(boundary,message.nativeActions??[]);
+             routeControl.installConsequences(boundary,message.nativeConsequences??[]);
              if(hold.preparedTaskActionTemplate)pending.admittedActionRecord=routeControl.admitAction(hold.preparedTaskActionTemplate);
              nativeWorldBoundary=boundary;
              nativeMutationEpoch++;
@@ -1278,6 +1299,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
            nativeWorldBoundary=copyNativeWorldBoundary(message.worldBoundary??null);
            if(message.nativeStartedRoutes!==undefined)routeControl.installStartedRoutes(nativeWorldBoundary,message.nativeStartedRoutes,{bootstrap:true});
            if(message.nativeActions!==undefined)routeControl.installActions(nativeWorldBoundary,message.nativeActions,{bootstrap:true});
+           if(message.nativeConsequences!==undefined)routeControl.installConsequences(nativeWorldBoundary,message.nativeConsequences,{bootstrap:true});
            if(nativeWorldBoundary&&(nativeWorldBoundary.authorityEpoch!==message.authorityEpoch||
               nativeWorldBoundary.nativeSession!==message.clock?.nativeSession||
               nativeWorldBoundary.effectiveTime>message.clock.committedThrough))throw Error('Invalid native world resource baseline');

@@ -13,7 +13,7 @@ export async function createNativeAdmissionVertical({planner,elapsed,kind,onPrep
   let currentKind=kind,profile=nativeResourceAdmissionProfile(kind);
   const [sourcePort,drawPort]=pair();
   const graphics=await fixture({capabilities:{width:20,height:10,format:'rgba8unorm',
-    nativeTaskStartVersion:1,nativeDeferredResumeVersion:1,nativeTaskActionVersion:1,nativeTaskActionRestoreVersion:1,
+    nativeTaskStartVersion:1,nativeTaskConsequenceVersion:1,nativeDeferredResumeVersion:1,nativeTaskActionVersion:1,nativeTaskActionRestoreVersion:1,
     nativeTaskActionClockVersion:1,nativeResumeVersion:1,nativeSuspendedVersion:1}},
     {intentControl:{port:drawPort,session:'admission-vertical'},absoluteNow:()=>Number.MAX_SAFE_INTEGER});
   const {port1,port2}=new MessageChannel(),errors=[],packets=[];
@@ -33,10 +33,10 @@ export async function createNativeAdmissionVertical({planner,elapsed,kind,onPrep
       onError:error=>errors.push(error),prepare:async(method,resources,options)=>{
         preparations++;
         await onPrepare({method,resources,options,source,...graphics});
-        const reference=profile.reference(resources),acting=currentKind==='task-action';
+        const reference=profile.reference(resources),acting=currentKind==='task-action',consequence=currentKind==='task-consequence';
         graphics.client.registerClockBinding(graphics.buffer,{byteOffset:0,semantic:'relative',epoch:resources.startTime,...(acting?{}:{resourceEnd:resources.endTime}),
-          ...(acting?{nativeAction:reference}:currentKind==='task-start'?{nativeStart:reference}:{nativeResume:reference})});
-        const templateKey=acting?'actionTemplate':currentKind==='task-start'?'startTemplate':'resumeTemplate';
+          ...(acting?{nativeAction:reference}:consequence?{nativeConsequence:reference}:currentKind==='task-start'?{nativeStart:reference}:{nativeResume:reference})});
+        const templateKey=acting?'actionTemplate':consequence?'consequenceTemplate':currentKind==='task-start'?'startTemplate':'resumeTemplate';
         const packet=await preparedWorldDraw({...graphics,clock,[templateKey]:reference},resources.worldBoundary,0,options.signal);
         packet.presented.catch(()=>{});packets.push(packet);
         // If a test hook fails after preparation, this owner retires the packet.
@@ -53,7 +53,7 @@ export async function createNativeAdmissionVertical({planner,elapsed,kind,onPrep
       async run(invoke,{signal=null,kind:nextKind=currentKind}={}){
         if(active)throw Error('Admission vertical already running');
         profile=nativeResourceAdmissionProfile(nextKind);currentKind=nextKind;active=true;
-        const method=currentKind==='task-action'?'prepareNativeTaskActionResources':currentKind==='task-start'?'prepareNativeTaskStartResources':'prepareNativeResumeResources';
+        const method=currentKind==='task-consequence'?'prepareNativeTaskConsequenceResources':currentKind==='task-action'?'prepareNativeTaskActionResources':currentKind==='task-start'?'prepareNativeTaskStartResources':'prepareNativeResumeResources';
         committedPacket={};committedPacket.promise=new Promise(resolve=>{committedPacket.resolve=resolve;});
         try{return await invoke({getPublication:()=>source,signal,
           prepareResources:({resources,signal,deferredStart})=>connection[method](resources,{signal,deferredStart})});}

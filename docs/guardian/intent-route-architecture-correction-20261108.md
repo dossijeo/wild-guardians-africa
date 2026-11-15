@@ -1,5 +1,7 @@
 # Corrección de autoridad y autonomía de rutas — 2026-11-08
 
+Continuación del consumidor: [Harvest → Carry con preparación incremental y selección GPU](e-r3-native-consequence-presentation-20261115.md), sobre el actor y lote existentes; 54 fotogramas durante bloqueo, cero asignaciones después de READY. Entrega preparada, productor ordinario y recuperación integral siguen pendientes; no cambia ningún cierre.
+
 ## Estado
 
 Continuación de autoridad: [consecuencia nativa Harvest y propietario Carry](e-r3-native-harvest-consequence-source-20261115.md), con proyección en Game y transactor común. La preparación gráfica del cultivo/caja, sus consumidores y el productor ordinario siguen pendientes; no cambia ningún cierre.

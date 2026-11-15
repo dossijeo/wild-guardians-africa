@@ -1,3 +1,4 @@
+import {copyNativeTaskConsequenceReference,nativeTaskConsequenceReferenceCovered} from '../world/native-task-consequence.js';
 import {copyNativeTaskStartReference,nativeTaskStartReferenceCovered} from '../world/native-task-start-reference.js';
 import {nativeTaskActionRemainingDuration,copyNativeTaskActionReference,nativeTaskActionReferenceCovered} from '../world/native-task-action-presentation.js';
 import {copyNativeResumeReference,nativeResumeReferenceCovered} from '../world/native-resume-reference.js';
@@ -6,6 +7,7 @@ import {copyNativeRouteReference} from '../world/native-route-reference.js';
 import {copyNativeGateReference,nativeGateReferenceCovered} from '../world/native-gate-reference.js';
 
 const clockKey=(route,semantic,epoch)=>JSON.stringify([copyNativeRouteReference(route),semantic,epoch]);
+const consequenceClockKey=(value,semantic,epoch)=>JSON.stringify(['consequence',copyNativeTaskConsequenceReference(value),semantic,epoch]);
 const startClockKey=(start,semantic,epoch)=>JSON.stringify(['start',copyNativeTaskStartReference(start),semantic,epoch]);
 const actionClockKey=(action,epoch)=>JSON.stringify(['action',copyNativeTaskActionReference(action),'relative',epoch]);
 const resumeClockKey=(resume,semantic,epoch)=>JSON.stringify(['resume',copyNativeResumeReference(resume),semantic,epoch]);
@@ -19,24 +21,25 @@ export function captureNativeRoutePickFrame(consumer){
  if(consumer?.failed||!Number.isSafeInteger(frame?.sequence)||frame.sequence<=0||!Number.isFinite(frame.clockElapsed)||!Array.isArray(frame.bindings))throw Error('Native consumer pick frame unavailable');
  const times=new Map(),origins=new Map(),actionAges=new Map();
  for(const binding of frame.bindings){
-  const {nativeRoute,nativeGate,nativeSuspended,nativeResume,nativeStart,nativeAction,semantic,epoch,elapsed}=binding??{};
+  const {nativeRoute,nativeGate,nativeSuspended,nativeResume,nativeStart,nativeAction,nativeConsequence,semantic,epoch,elapsed}=binding??{};
   if(!['relative','absolute'].includes(semantic)||!Number.isFinite(epoch)||epoch<0||!Number.isFinite(elapsed)||elapsed<epoch)throw Error('Invalid native consumer pick clock');
   if(nativeGate&&(nativeRoute||!nativeGateReferenceCovered(copyNativeGateReference(nativeGate),frame.worldBoundary)))throw Error('Native gate pick world mismatch');
-  if([nativeRoute,nativeGate,nativeSuspended,nativeResume,nativeStart,nativeAction].filter(Boolean).length!==1)throw Error('Conflicting native consumer pick references');
+  if([nativeRoute,nativeGate,nativeSuspended,nativeResume,nativeStart,nativeAction,nativeConsequence].filter(Boolean).length!==1)throw Error('Conflicting native consumer pick references');
   if(nativeSuspended&&!nativeSuspendedBodyReferenceCovered(copyNativeSuspendedBodyReference(nativeSuspended),frame.worldBoundary))throw Error('Native suspended pick world mismatch');
   if(nativeResume&&!nativeResumeReferenceCovered(copyNativeResumeReference(nativeResume),frame.worldBoundary))throw Error('Native resume pick world mismatch');
   if(nativeStart&&!nativeTaskStartReferenceCovered(copyNativeTaskStartReference(nativeStart),frame.worldBoundary))throw Error('Native first-task pick world mismatch');
+  if(nativeConsequence&&!nativeTaskConsequenceReferenceCovered(copyNativeTaskConsequenceReference(nativeConsequence),frame.worldBoundary))throw Error('Native consequence pick world mismatch');
   if(nativeAction){
    const reference=copyNativeTaskActionReference(nativeAction),age=binding.relativeTime,origin=binding.executionEpoch,key=actionClockKey(reference,epoch);
    if(semantic!=='relative'||epoch!==reference.startTime||!nativeTaskActionReferenceCovered(reference,frame.worldBoundary)||!Number.isFinite(age)||age<0||age>nativeTaskActionRemainingDuration(reference.request)||Math.fround(age)!==age||elapsed!==epoch+age||!Number.isFinite(origin)||origin<epoch||origin>frame.clockElapsed||origin+age>frame.clockElapsed||actionAges.has(key)&&actionAges.get(key)!==age||origins.has(key)&&origins.get(key)!==origin)throw Error('Invalid native action pick phase');
    actionAges.set(key,age);origins.set(key,origin);
   }
-  const key=nativeAction?actionClockKey(nativeAction,epoch):nativeStart?startClockKey(nativeStart,semantic,epoch):nativeResume?resumeClockKey(nativeResume,semantic,epoch):nativeSuspended?suspendedClockKey(nativeSuspended,semantic,epoch):nativeGate?gateClockKey(nativeGate,semantic,epoch):clockKey(nativeRoute,semantic,epoch);
-  if(nativeResume||nativeStart){const reference=nativeStart??nativeResume,origin=binding.executionEpoch??reference.worldBoundary.effectiveTime;if(!Number.isFinite(origin)||origin<reference.worldBoundary.effectiveTime||origin>frame.clockElapsed||origins.has(key)&&origins.get(key)!==origin)throw Error('Conflicting native resume execution origin');origins.set(key,origin);}
+  const key=nativeAction?actionClockKey(nativeAction,epoch):nativeStart?startClockKey(nativeStart,semantic,epoch):nativeConsequence?consequenceClockKey(nativeConsequence,semantic,epoch):nativeResume?resumeClockKey(nativeResume,semantic,epoch):nativeSuspended?suspendedClockKey(nativeSuspended,semantic,epoch):nativeGate?gateClockKey(nativeGate,semantic,epoch):clockKey(nativeRoute,semantic,epoch);
+  if(nativeResume||nativeStart||nativeConsequence){const reference=nativeStart??nativeResume??nativeConsequence,origin=binding.executionEpoch??reference.worldBoundary.effectiveTime;if(!Number.isFinite(origin)||origin<reference.worldBoundary.effectiveTime||origin>frame.clockElapsed||origins.has(key)&&origins.get(key)!==origin)throw Error('Conflicting native resume execution origin');origins.set(key,origin);}
   if(times.has(key)&&times.get(key)!==elapsed)throw Error('Conflicting native consumer pick clocks');
   times.set(key,elapsed);
  }
- return Object.freeze({sequence:frame.sequence,getActionElapsed(nativeAction){const key=actionClockKey(nativeAction,nativeAction.startTime);if(!actionAges.has(key))throw Error('Native action has no submitted pick clock');return actionAges.get(key);},getActionExecutionTime(nativeAction){const key=actionClockKey(nativeAction,nativeAction.startTime);if(!actionAges.has(key))throw Error('Native action has no submitted pick clock');return origins.get(key)+actionAges.get(key);},getStartExecutionTime(nativeStart,epoch,semantic='relative'){const key=startClockKey(nativeStart,semantic,epoch);if(!times.has(key))throw Error('Native first task has no submitted pick clock');return origins.get(key)+(times.get(key)-epoch);},getStartTime(nativeStart,epoch,semantic='relative'){const key=startClockKey(nativeStart,semantic,epoch);if(!times.has(key))throw Error('Native first task has no submitted pick clock');return times.get(key);},getResumeExecutionTime(nativeResume,epoch,semantic='relative'){
+ return Object.freeze({sequence:frame.sequence,getActionElapsed(nativeAction){const key=actionClockKey(nativeAction,nativeAction.startTime);if(!actionAges.has(key))throw Error('Native action has no submitted pick clock');return actionAges.get(key);},getActionExecutionTime(nativeAction){const key=actionClockKey(nativeAction,nativeAction.startTime);if(!actionAges.has(key))throw Error('Native action has no submitted pick clock');return origins.get(key)+actionAges.get(key);},getConsequenceExecutionTime(value,epoch,semantic='relative'){const key=consequenceClockKey(value,semantic,epoch);if(!times.has(key))throw Error('Native consequence has no submitted pick clock');return origins.get(key)+(times.get(key)-epoch);},getConsequenceTime(value,epoch,semantic='relative'){const key=consequenceClockKey(value,semantic,epoch);if(!times.has(key))throw Error('Native consequence has no submitted pick clock');return times.get(key);},getStartExecutionTime(nativeStart,epoch,semantic='relative'){const key=startClockKey(nativeStart,semantic,epoch);if(!times.has(key))throw Error('Native first task has no submitted pick clock');return origins.get(key)+(times.get(key)-epoch);},getStartTime(nativeStart,epoch,semantic='relative'){const key=startClockKey(nativeStart,semantic,epoch);if(!times.has(key))throw Error('Native first task has no submitted pick clock');return times.get(key);},getResumeExecutionTime(nativeResume,epoch,semantic='relative'){
   const key=resumeClockKey(nativeResume,semantic,epoch);if(!times.has(key))throw Error('Native resume has no submitted pick clock');return origins.get(key)+(times.get(key)-epoch);
  },getResumeTime(nativeResume,epoch,semantic='relative'){
   const key=resumeClockKey(nativeResume,semantic,epoch);if(!times.has(key))throw Error('Native resume has no submitted pick clock');return times.get(key);

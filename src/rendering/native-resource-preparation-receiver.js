@@ -1,5 +1,5 @@
-const prepareKinds=new Set(['prepareNativeGateResources','prepareNativeResumeResources','prepareNativeTaskStartResources','prepareNativeTaskActionResources']);
-const refreshKinds=new Set(['invalidateNativeResumeResources','refreshNativeResumeResources','invalidateNativeTaskStartResources','refreshNativeTaskStartResources','invalidateNativeTaskActionResources','refreshNativeTaskActionResources']);
+const prepareKinds=new Set(['prepareNativeGateResources','prepareNativeResumeResources','prepareNativeTaskStartResources','prepareNativeTaskActionResources','prepareNativeTaskConsequenceResources']);
+const refreshKinds=new Set(['invalidateNativeResumeResources','refreshNativeResumeResources','invalidateNativeTaskStartResources','refreshNativeTaskStartResources','invalidateNativeTaskActionResources','refreshNativeTaskActionResources','invalidateNativeTaskConsequenceResources','refreshNativeTaskConsequenceResources']);
 
 // Retained handles stay in the existing graphical owner. An endpoint carries
 // only resource declarations, receipts and lifecycle commands, never functions.
@@ -21,7 +21,7 @@ export function createNativeResourcePreparationReceiver({prepare,isRunning,postM
   const item=entry;if(!item||item.id!==data.id){if(data.id>lastId)throw Error('Unknown native resource request');return true;}
   if(refreshKinds.has(data.kind))return (async()=>{
    try{
-    const starting=item.resources?.kind==='native-task-start-proposal',acting=item.resources?.kind==='native-task-action-proposal';if(data.kind.includes('TaskStart')!==starting||data.kind.includes('TaskAction')!==acting)throw Error('Native resource request class mismatch');
+    const starting=item.resources?.kind==='native-task-start-proposal',acting=item.resources?.kind==='native-task-action-proposal',consequence=item.resources?.kind==='native-task-consequence-proposal';if(data.kind.includes('TaskStart')!==starting||data.kind.includes('TaskAction')!==acting||data.kind.includes('TaskConsequence')!==consequence)throw Error('Native resource request class mismatch');
     if(data.kind.startsWith('invalidate')){if(item.handle?.invalidate?.()!==true)throw Error('Native resume invalidation unavailable');return;}
     const reusable=await item.handle.refresh(data.resources,{terrainManifest:data.terrainManifest});
     if(closed||item.controller.signal.aborted||entry!==item)throw new DOMException('Native resume refresh cancelled','AbortError');
@@ -33,7 +33,7 @@ export function createNativeResourcePreparationReceiver({prepare,isRunning,postM
   try{if(data.kind==='commitNativeGateResources'){if(item.handle?.commit(data.commit)!==true)throw Error('Native gate resources not committed');onCommit();}else{item.controller.abort();item.handle?.abort();}}
   catch(error){item.controller.abort();item.handle?.abort();onError(error);}return true;
  }
- function receipt(item){return {worldBoundary:item.resources.worldBoundary,preparedWorldBoundary:item.handle.preparedWorldBoundary,...(item.handle.preparedResumeTemplate?{preparedResumeTemplate:item.handle.preparedResumeTemplate}:{}),...(item.handle.preparedTaskStartTemplate?{preparedTaskStartTemplate:item.handle.preparedTaskStartTemplate}:{}),...(item.handle.preparedTaskActionTemplate?{preparedTaskActionTemplate:item.handle.preparedTaskActionTemplate}:{})};}
+ function receipt(item){return {worldBoundary:item.resources.worldBoundary,preparedWorldBoundary:item.handle.preparedWorldBoundary,...(item.handle.preparedResumeTemplate?{preparedResumeTemplate:item.handle.preparedResumeTemplate}:{}),...(item.handle.preparedTaskStartTemplate?{preparedTaskStartTemplate:item.handle.preparedTaskStartTemplate}:{}),...(item.handle.preparedTaskActionTemplate?{preparedTaskActionTemplate:item.handle.preparedTaskActionTemplate}:{}),...(item.handle.preparedTaskConsequenceTemplate?{preparedTaskConsequenceTemplate:item.handle.preparedTaskConsequenceTemplate}:{})};}
  return {accept,dispose(){if(closed)return;closed=true;cancel();},status:()=>({closed,pending:entry?.id??null,lastId})};
 }
 

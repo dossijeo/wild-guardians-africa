@@ -1,3 +1,4 @@
+import {copyNativeTaskConsequenceReference,sameNativeTaskConsequenceReference,copyNativeTaskConsequenceAttestation} from '../world/native-task-consequence.js';
 import {sameNativeTaskStartReference} from '../world/native-task-start-reference.js';
 import {copyNativeTaskActionReference,sameNativeTaskActionReference} from '../world/native-task-action-presentation.js';
 import {copyNativeTaskStartAttestation} from '../world/native-task-start-attestation.js';
@@ -397,6 +398,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     },
     whenFrameSettled:()=>pendingFrame?.promise??Promise.resolve(),
     async prepareNativeWorldFrame(metadata,{signal}={}){
+      if(metadata?.nativeTaskConsequenceTemplate&&capabilities.nativeTaskConsequenceVersion!==1)throw Error('Draw owner does not support native consequences');
       if(metadata?.nativeTaskActionTemplate&&capabilities.nativeTaskActionVersion!==1)throw Error('Draw owner does not support retained native actions');
       if(metadata?.nativeTaskActionTemplate?.request.sourceRequest&&capabilities.nativeTaskActionRestoreVersion!==1)throw Error('Draw owner does not support restored native actions');
       if(metadata?.nativeTaskStartTemplate&&capabilities.nativeTaskStartVersion!==1)throw Error('Draw owner does not support native first task');
@@ -416,7 +418,11 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
         if(signal?.aborted)abort();
         if(phase==='aborted'||ready.version!==1||ready.sequence!==packet.sequence||!ready.uploadsSubmitted||!sameNativeWorldBoundary(ready.worldBoundary,worldBoundary))throw Error('Prepared world frame unavailable');
         if(phase==='preparing')phase='ready';
-        return {sequence:packet.sequence,preparedWorldBoundary:worldBoundary,presented,valid:()=>!disposed&&!fatalError&&!committed&&(phase==='ready'||phase==='presented'),commit(boundary,value=null){const acting=!!metadata.nativeTaskActionTemplate,starting=!!metadata.nativeTaskStartTemplate,binding=value===null?null:(acting?copyNativeTaskActionAttestation:starting?copyNativeTaskStartAttestation:copyNativeResumeAttestation)(value);if(committed||phase!=='ready'&&phase!=='presented'||(binding?!(acting?metadata.nativeTaskActionTemplate:starting?metadata.nativeTaskStartTemplate:metadata.nativeResumeTemplate)||!(acting?sameNativeTaskActionReference:starting?sameNativeTaskStartReference:sameNativeResumeReference)(binding.preparedReference,acting?metadata.nativeTaskActionTemplate:starting?metadata.nativeTaskStartTemplate:metadata.nativeResumeTemplate)||!sameNativeWorldBoundary(binding.reference.worldBoundary,boundary):!sameNativeWorldBoundary(boundary,worldBoundary)))return false;committed=true;signal?.removeEventListener('abort',abort);return true;},abort};
+        return {sequence:packet.sequence,preparedWorldBoundary:worldBoundary,presented,valid:()=>!disposed&&!fatalError&&!committed&&(phase==='ready'||phase==='presented'),commit(boundary,value=null){
+          const [template,copy,same]=metadata.nativeTaskConsequenceTemplate?[metadata.nativeTaskConsequenceTemplate,copyNativeTaskConsequenceAttestation,sameNativeTaskConsequenceReference]:metadata.nativeTaskActionTemplate?[metadata.nativeTaskActionTemplate,copyNativeTaskActionAttestation,sameNativeTaskActionReference]:metadata.nativeTaskStartTemplate?[metadata.nativeTaskStartTemplate,copyNativeTaskStartAttestation,sameNativeTaskStartReference]:[metadata.nativeResumeTemplate,copyNativeResumeAttestation,sameNativeResumeReference],binding=value===null?null:copy(value);
+          if(committed||phase!=='ready'&&phase!=='presented'||(binding?!template||!same(binding.preparedReference,template)||!sameNativeWorldBoundary(binding.reference.worldBoundary,boundary):!sameNativeWorldBoundary(boundary,worldBoundary)))return false;
+          committed=true;signal?.removeEventListener('abort',abort);return true;
+        },abort};
       }catch(error){abort();throw error;}
     },
     cancelFrame() {
@@ -436,14 +442,15 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     },
     registerClockBinding(buffer, binding) {
       if (!buffer?.[REF] || !['absolute', 'relative', 'origin-modulo'].includes(binding.semantic) || !Number.isInteger(binding.byteOffset) || binding.byteOffset < 0 || binding.byteOffset % 4) throw TypeError('Invalid remote clock binding');
-      if(binding.semantic==='origin-modulo'&&(!(binding.nativeResume||binding.nativeStart)||!Number.isFinite(binding.period)||binding.period<=0))throw TypeError('Invalid native origin phase binding');
-      if(binding.semantic==='origin-modulo'&&(binding.nativeStart?capabilities.nativeTaskStartVersion:capabilities.nativeDeferredResumeVersion)!==1)throw Error('Draw owner does not support native origin phase clocks');
+      if(binding.semantic==='origin-modulo'&&(!(binding.nativeResume||binding.nativeStart||binding.nativeConsequence)||!Number.isFinite(binding.period)||binding.period<=0))throw TypeError('Invalid native origin phase binding');
+      if(binding.semantic==='origin-modulo'&&(binding.nativeConsequence?capabilities.nativeTaskConsequenceVersion:binding.nativeStart?capabilities.nativeTaskStartVersion:capabilities.nativeDeferredResumeVersion)!==1)throw Error('Draw owner does not support native origin phase clocks');
+      if(binding.nativeConsequence){if(capabilities.nativeTaskConsequenceVersion!==1)throw Error('Draw owner does not support native consequence authority');const r=copyNativeTaskConsequenceReference(binding.nativeConsequence);if(binding.epoch!==r.worldBoundary.effectiveTime||[binding.nativeRoute,binding.nativeGate,binding.nativeSuspended,binding.nativeResume,binding.nativeStart,binding.nativeAction].some(Boolean))throw TypeError('Invalid native consequence clock');}
       if(binding.nativeStart&&capabilities.nativeTaskStartVersion!==1)throw Error('Draw owner does not support native first task authority');
       if(binding.nativeAction){
         if(capabilities.nativeTaskActionClockVersion!==1)throw Error('Draw owner does not support native action clocks');
         const action=copyNativeTaskActionReference(binding.nativeAction);
         if(action.request.sourceRequest&&capabilities.nativeTaskActionRestoreVersion!==1)throw Error('Draw owner does not support restored native actions');
-        if(binding.semantic!=='relative'||binding.epoch!==action.startTime||binding.resourceEnd!==undefined||[binding.nativeRoute,binding.nativeGate,binding.nativeSuspended,binding.nativeResume,binding.nativeStart].some(Boolean))throw TypeError('Invalid native action phase clock');
+        if(binding.semantic!=='relative'||binding.epoch!==action.startTime||binding.resourceEnd!==undefined||[binding.nativeRoute,binding.nativeGate,binding.nativeSuspended,binding.nativeResume,binding.nativeStart,binding.nativeConsequence].some(Boolean))throw TypeError('Invalid native action phase clock');
       }
       if(binding.nativeResume&&capabilities.nativeResumeVersion!==1)throw Error('Draw owner does not support native resume authority');
       if(binding.nativeSuspended&&capabilities.nativeSuspendedVersion!==1)throw Error('Draw owner does not support native suspended body authority');

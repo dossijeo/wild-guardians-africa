@@ -1,5 +1,7 @@
 # Consecuencia nativa Harvest y propietario Carry en la autoridad
 
+Continuación posterior: [consumidor real de cultivo/Carry, selección y reutilización](e-r3-native-consequence-presentation-20261115.md). El alcance de autoridad descrito abajo es histórico; la nueva evidencia amplía el componente sin cerrar A6 ni el productor ordinario.
+
 Continúa los [datos semánticos de Harvest](e-r3-harvest-consequence-data-20261115.md).
 Wild Engine puede preparar la ruta completa de entrega de una cosecha terminada
 y sustituir su acción por Carry en un único commit. La proyección en `Game` usa

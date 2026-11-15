@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuación del consumidor: [Harvest → Carry con preparación incremental y selección GPU](e-r3-native-consequence-presentation-20261115.md), sobre el actor y lote existentes; 54 fotogramas durante bloqueo, cero asignaciones después de READY. Entrega preparada, productor ordinario y recuperación integral siguen pendientes; no cambia ningún cierre.
+
 Estado: **en ejecución; no completado**.
 
 Último avance: [restauración de acciones con progreso y admisión nueva](e-r3-native-action-restoration-20261115.md), sobre el mismo propietario nativo y reloj común; productor ordinario, consecuencias preparadas y recuperación integral siguen pendientes.

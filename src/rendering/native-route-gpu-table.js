@@ -1,3 +1,4 @@
+import {copyNativeTaskConsequenceProposal} from '../world/native-task-consequence.js';
 import {copyNativeResumeProposal} from '../world/native-resume-presentation.js';
 import {copyNativeTaskStartProposal} from '../world/native-task-start-presentation.js';
 import {copyNativeRoutePresentation,NATIVE_ROUTE_PRESENTATION_WIDTH as sourceWidth} from '../world/native-route-presentation.js';
@@ -21,6 +22,11 @@ export function prepareNativeTaskStartGpuTable(support){
  if(support?.kind!=='native-task-start-terrain-support'||support.valid?.()!==true||!Array.isArray(support.actor?.segments))throw TypeError('Native task start requires current terrain support');
  const presentation=copyNativeTaskStartProposal(support.presentation);
  return packNativeMotion(support,presentation,presentation.actorId,{nativeStart:presentation.nativeStart});
+}
+export function prepareNativeTaskConsequenceGpuTable(support){
+ if(support?.kind!=='native-task-consequence-terrain-support'||support.valid?.()!==true||!Array.isArray(support.actor?.segments))throw TypeError('Native consequence requires current terrain support');
+ const presentation=copyNativeTaskConsequenceProposal(support.presentation);
+ return packNativeMotion(support,presentation,presentation.actorId,{nativeConsequence:presentation.nativeConsequence});
 }
 function packNativeMotion(support,presentation,actorId,identity){
  const {rows:source,startTime:epoch,endTime}=presentation,{segments,startHeight,endHeight}=support.actor;

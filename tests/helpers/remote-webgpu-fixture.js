@@ -55,7 +55,7 @@ const flush = async () => { for (let i = 0; i < 40; i++) await Promise.resolve()
 
 
 function preparedWorldDraw(f,boundary,value=77,signal=null){
- const metadata={clock:f.clock,nativeWorldBoundary:boundary,...(f.resumeTemplate?{nativeResumeTemplate:f.resumeTemplate,nativeResumeTemplateCoverageEnd:f.resumeTemplate.endTime}:{}),...(f.startTemplate?{nativeTaskStartTemplate:f.startTemplate}:{}),...(f.actionTemplate?{nativeTaskActionTemplate:f.actionTemplate}:{})};f.client.beginFrame({nativeWorldBoundary:boundary});
+ const metadata={clock:f.clock,nativeWorldBoundary:boundary,...(f.resumeTemplate?{nativeResumeTemplate:f.resumeTemplate,nativeResumeTemplateCoverageEnd:f.resumeTemplate.endTime}:{}),...(f.startTemplate?{nativeTaskStartTemplate:f.startTemplate}:{}),...(f.actionTemplate?{nativeTaskActionTemplate:f.actionTemplate}:{}),...(f.consequenceTemplate?{nativeTaskConsequenceTemplate:f.consequenceTemplate}:{})};f.client.beginFrame({nativeWorldBoundary:boundary});
  f.client.device.queue.writeBuffer(f.buffer,0,new Float32Array([value]));
  const encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
  pass.setPipeline(f.pipeline);pass.setBindGroup(0,f.group);pass.draw(3);pass.end();f.client.device.queue.submit([encoder.finish()]);return f.client.prepareNativeWorldFrame(metadata,{signal});
