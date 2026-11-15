@@ -10,6 +10,7 @@ import {copyNativeTaskActionRestoreReference,sameNativeTaskActionRestoreReferenc
 import {copyNativeTaskActionAttestation,nativeTaskActionAttestationCovers} from '../world/native-task-action-attestation.js';
 import {sameNativeTaskActionReference} from '../world/native-task-action-presentation.js';
 import {copyNativeTaskConsequenceReference,copyNativeTaskConsequenceAttestation,nativeTaskConsequenceAttestationCovers} from '../world/native-task-consequence.js';
+import {copyNativeTaskSettlementReference,copyNativeTaskSettlementAttestation,nativeTaskSettlementAttestationCovers} from '../world/native-task-settlement.js';
 
 const eventTypes=new Set(['RouteAssigned','RouteInvalidated','RouteReplaced',
   'IntentChanged','RouteCompleted']);
@@ -30,7 +31,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
      initialTime!==null&&(!Number.isFinite(initialTime)||initialTime<0)||!Array.isArray(routes)||!Array.isArray(pendingTaskRequests)||!Array.isArray(pendingActionRequests))
     throw TypeError('Invalid native route control identity');
   const active=new Map(),actors=new Map();
-  const actorContext=actorId=>{let value=actors.get(actorId);if(!value){value={closed:false,latestSequence:0,state:null,current:null,revoked:null,proof:null,resumeProof:null,startProof:null,consequenceProof:null,pendingTaskRequest:null,pendingActionRequest:null,actionSourceRequest:null,actionProof:null,actionRecord:null};actors.set(actorId,value);}return value;};
+  const actorContext=actorId=>{let value=actors.get(actorId);if(!value){value={closed:false,latestSequence:0,state:null,current:null,revoked:null,proof:null,resumeProof:null,startProof:null,consequenceProof:null,settlementProof:null,settlementRecord:null,settlementSource:null,pendingTaskRequest:null,pendingActionRequest:null,actionSourceRequest:null,actionProof:null,actionRecord:null};actors.set(actorId,value);}return value;};
   const matches=(record,reference)=>!!record&&record.actorId===reference.actorId&&record.assignmentSequence===reference.assignmentSequence&&sameHandle(record.handle,reference.routeHandle);
   const assignments=new Set();
   for(const route of routes){
@@ -87,6 +88,9 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       error.code='native-route-revocation-late';throw error;
     }
     const actor=assigned||event.type==='IntentChanged'&&event.state===6?actorContext(event.actorId):actors.get(event.actorId);
+    const retiringCarry=current&&actor?.consequenceProof&&consequenceCurrent(actor.consequenceProof.reference,actor)?actor.consequenceProof:null;
+    const keepSettlement=!!actor&&!current&&event.type==='IntentChanged'&&event.state===6&&!!taskRequest&&[6,7].includes(actor.state)&&!!(actor.settlementProof||actor.settlementSource);
+    if(actor?.settlementRecord?.lastDrawTime!==null&&actor?.settlementRecord?.lastDrawTime!==undefined&&event.effectiveTime<actor.settlementRecord.lastDrawTime){const error=Error('Native settlement revocation arrived after its presented time');error.code='native-settlement-revocation-late';throw error;}
     if(actor?.actionRecord&&actor.actionRecord.lastDrawTime!==null&&event.effectiveTime<actor.actionRecord.lastDrawTime){const error=Error('Native action revocation arrived after its presented time');error.code='native-action-revocation-late';throw error;}
     const sourceSuspension=assigned&&actor?.proof&&suspendedCurrent(actor.proof,actor.revoked,actor)?{reference:actor.proof,sequence:actor.latestSequence}:null;
     if(current&&revoked){
@@ -99,8 +103,10 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     if(assigned){const record={actorId:event.actorId,handle:Object.freeze({...handle}),
       assignmentSequence:event.sequence,startTime:event.effectiveTime,
       safeUntil:Infinity,lastDrawTime:null,actor,sourceSuspension,sourceTaskRequest,sourceAction};active.set(event.actorId,record);actor.current=record;actor.proof=null;}
-    if(actor){if(actor.actionRecord)actor.actionRecord.safeUntil=Math.min(actor.actionRecord.safeUntil,event.effectiveTime);actor.actionSourceRequest=event.state===2?actor.pendingActionRequest:null;actor.pendingActionRequest=actionRequest;actor.actionProof=null;actor.actionRecord=null;actor.startProof=null;actor.consequenceProof=null;actor.pendingTaskRequest=taskRequest;actor.resumeProof=null;actor.latestSequence=event.sequence;actor.state=assigned?1:Number.isInteger(event.state)?event.state:null;
-      if(!actor.current&&actor.state!==2&&actor.state!==4&&actor.state!==6){actor.closed=true;actors.delete(event.actorId);}}
+    if(actor){
+      if(!keepSettlement){if(actor.settlementRecord)actor.settlementRecord.safeUntil=Math.min(actor.settlementRecord.safeUntil,event.effectiveTime);actor.settlementProof=null;actor.settlementRecord=null;actor.settlementSource=event.type==='RouteCompleted'&&event.state===7&&retiringCarry?{proof:retiringCarry,record:current}:null;}
+      if(actor.actionRecord)actor.actionRecord.safeUntil=Math.min(actor.actionRecord.safeUntil,event.effectiveTime);actor.actionSourceRequest=event.state===2?actor.pendingActionRequest:null;actor.pendingActionRequest=actionRequest;actor.actionProof=null;actor.actionRecord=null;actor.startProof=null;actor.consequenceProof=null;actor.pendingTaskRequest=taskRequest;actor.resumeProof=null;actor.latestSequence=event.sequence;actor.state=assigned?1:Number.isInteger(event.state)?event.state:null;
+      if(!actor.current&&actor.state!==2&&actor.state!==4&&actor.state!==6&&actor.state!==7){actor.closed=true;actors.delete(event.actorId);}}
     sequence=event.sequence;effectiveTime=event.effectiveTime;counters.accepted++;
     return true;
   }
@@ -130,8 +136,27 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     const record=actor?.current,proof=actor?.consequenceProof;
     return !closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.actorId)===actor&&actor.state===1&&active.get(reference.actorId)===record&&!!record&&actor.latestSequence===record.assignmentSequence&&sameHandle(record.handle,reference.expectedRouteHandle)&&record.startTime===proof?.reference.worldBoundary.effectiveTime&&proof?.assignmentSequence===record.assignmentSequence&&nativeTaskConsequenceAttestationCovers(proof,reference);
   }
+  function sameCarryProof(a,b){try{return JSON.stringify(copyNativeTaskConsequenceAttestation(a))===JSON.stringify(copyNativeTaskConsequenceAttestation(b));}catch{return false;}}
+  function settlementState(actor,proof){return actor.state===7&&actor.latestSequence===proof.settlementSequence||actor.state===6&&actor.pendingTaskRequest?.requestSequence===actor.latestSequence&&actor.latestSequence>proof.settlementSequence;}
+  function settlementCurrent(reference,actor){const proof=actor?.settlementProof,record=actor?.settlementRecord;return !closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.actorId)===actor&&actor.current===null&&!!proof&&!!record&&record.settlementSequence===proof.settlementSequence&&settlementState(actor,proof)&&nativeTaskSettlementAttestationCovers(proof,reference);}
   return {
     accept,
+    installSettlements(boundary,values=[],{bootstrap=false}={}){
+      boundary=copyNativeWorldBoundary(boundary);
+      if(closed||!clock||typeof bootstrap!=='boolean'||!Array.isArray(values)||values.length>32768||!bootstrap&&(!boundary||boundary.effectiveTime!==clock.committedThrough)||boundary&&(boundary.authorityEpoch!==authorityEpoch||boundary.nativeSession!==clock.nativeSession))throw Error('Invalid native settlement boundary');
+      const staged=[],ids=new Set(),bodies=new Set();
+      for(const input of values){const value=copyNativeTaskSettlementAttestation(input),r=value.reference,world=r.worldBoundary,actor=actors.get(r.actorId),source=actor?.settlementSource,old=source?.record;
+        if(world.authorityEpoch!==authorityEpoch||world.nativeSession!==clock.nativeSession||world.effectiveTime>clock.committedThrough||value.settlementSequence>sequence||boundary&&(world.ticket>boundary.ticket||world.effectiveTime>boundary.effectiveTime)||ids.has(r.actorId)||bodies.has(r.bodyId)||actor?.closed||actor?.current||actor?.actionProof||actor?.proof||
+          (bootstrap?actor&&!settlementState(actor,value):!sameNativeWorldBoundary(world,boundary)||!actor||!settlementState(actor,value)||actor.revoked!==old||old.revokedState!==7||old.revokedSequence!==value.settlementSequence||old.safeUntil!==world.effectiveTime||!sameHandle(old.handle,r.sourceCarry.reference.expectedRouteHandle)||old.assignmentSequence!==r.sourceCarry.assignmentSequence||!sameCarryProof(source.proof,r.sourceCarry)))throw Error('Native settlement differs from its issued body or source Carry');
+        ids.add(r.actorId);bodies.add(r.bodyId);staged.push(value);
+      }
+      for(const value of staged){const r=value.reference,actor=actorContext(r.actorId);if(actor.state===null){actor.state=7;actor.latestSequence=value.settlementSequence;}actor.settlementProof=value;actor.settlementRecord={actorId:r.actorId,bodyId:r.bodyId,settlementSequence:value.settlementSequence,startTime:r.worldBoundary.effectiveTime,safeUntil:Infinity,lastDrawTime:null};}return staged.length;
+    },
+    admitSettlement(value,{preparingWorldBoundary=null}={}){
+      const reference=copyNativeTaskSettlementReference(value),actor=actors.get(reference.actorId),boundary=copyNativeWorldBoundary(preparingWorldBoundary),current=()=>settlementCurrent(reference,actor),pending=()=>consequenceCurrent(reference.sourceCarry.reference,actor)&&sameCarryProof(actor.consequenceProof,reference.sourceCarry)&&sameNativeWorldBoundary(boundary,reference.worldBoundary)&&sequence>=reference.sourceControlSequence&&clock.committedThrough>=reference.worldBoundary.effectiveTime;
+      if(reference.worldBoundary.authorityEpoch!==authorityEpoch||!clock||reference.worldBoundary.nativeSession!==clock.nativeSession||!current()&&!pending()){const error=Error('Native settlement is obsolete or lacks direct Carry/body proof');error.code='native-settlement-admission-obsolete';throw error;}
+      counters.admissions++;return Object.freeze({reference,isCurrent:current,isPrepared:()=>current()||pending(),get settlementRecord(){return current()?actor.settlementRecord:null;},get executionEpoch(){return current()?actor.settlementProof.reference.worldBoundary.effectiveTime:null;}});
+    },
     installConsequences(boundary,values=[],{bootstrap=false}={}){
       boundary=copyNativeWorldBoundary(boundary);
       if(closed||!clock||typeof bootstrap!=='boolean'||!Array.isArray(values)||values.length>32768||!bootstrap&&(!boundary||boundary.effectiveTime!==clock.committedThrough)||boundary&&(boundary.authorityEpoch!==authorityEpoch||boundary.nativeSession!==clock.nativeSession))throw Error('Invalid native consequence boundary');
@@ -241,7 +266,10 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
         if(record.lastDrawTime!==null&&record.lastDrawTime>message.committedThrough)
           throw Error('Native causal clock arrived after presented time');
       }
-      for(const actor of actors.values())if(actor.actionRecord&&(actor.actionProof.reference.worldBoundary.nativeSession!==message.nativeSession||actor.actionRecord.lastDrawTime!==null&&actor.actionRecord.lastDrawTime>message.committedThrough))throw Error('Invalid native action clock boundary');
+      for(const actor of actors.values()){
+        if(actor.actionRecord&&(actor.actionProof.reference.worldBoundary.nativeSession!==message.nativeSession||actor.actionRecord.lastDrawTime!==null&&actor.actionRecord.lastDrawTime>message.committedThrough))throw Error('Invalid native action clock boundary');
+        if(actor.settlementRecord&&(actor.settlementProof.reference.worldBoundary.nativeSession!==message.nativeSession||actor.settlementRecord.lastDrawTime!==null&&actor.settlementRecord.lastDrawTime>message.committedThrough))throw Error('Invalid native settlement clock boundary');
+      }
       clock=Object.freeze({...message});effectiveTime=message.committedThrough;return true;
     },
     clockLease(visualEpoch,resourceCeiling=Infinity){
@@ -266,6 +294,6 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     status:()=>({authorityEpoch,sequence,effectiveTime:Number.isFinite(effectiveTime)?
       effectiveTime:null,active:active.size,closed,...counters,...(clock?{clock}:{} )}),
     dispose(){if(closed)return;closed=true;for(const record of active.values())
-      record.safeUntil=record.lastDrawTime??record.startTime;active.clear();for(const actor of actors.values()){if(actor.actionRecord)actor.actionRecord.safeUntil=actor.actionRecord.lastDrawTime??actor.actionRecord.startTime;actor.closed=true;}actors.clear();},
+      record.safeUntil=record.lastDrawTime??record.startTime;active.clear();for(const actor of actors.values()){if(actor.actionRecord)actor.actionRecord.safeUntil=actor.actionRecord.lastDrawTime??actor.actionRecord.startTime;if(actor.settlementRecord)actor.settlementRecord.safeUntil=actor.settlementRecord.lastDrawTime??actor.settlementRecord.startTime;actor.closed=true;}actors.clear();},
   };
 }

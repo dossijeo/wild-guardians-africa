@@ -1,0 +1,13 @@
+# Consumidor gráfico del relevo de entrega
+
+Continúa el [propietario nativo de entrega](e-r3-native-delivery-settlement-20261115.md), bajo el [plan principal](integrated-gpu-migration-plan-20261104.md). Este registro comienza con el control de permisos del consumidor; no acredita todavía el relevo visual ni cambia los cierres A6.
+
+Se leyó el código real de Dawn, revisión `922930e3193753e58591f14a96ab116e5d630964`: [`ObjectStorage.h`, `FillReservationImpl`](https://github.com/google/dawn/blob/922930e3193753e58591f14a96ab116e5d630964/src/dawn/wire/server/ObjectStorage.h#L262) verifica estado reservado y generación; [`ServerDevice.cpp`](https://github.com/google/dawn/blob/922930e3193753e58591f14a96ab116e5d630964/src/dawn/wire/server/ServerDevice.cpp) cancela el resultado asíncrono si su reserva ya no es la vigente. Se adapta la verificación del propietario que originó la preparación al control existente; no se añade una dependencia o registro físico.
+
+`NativeRouteControl` distingue la candidata de entrega del cuerpo estacionario efectivamente emitido. La preparación exige la asociación Carry exacta y su reloj; una candidata no es ejecutable. La instalación comprueba la revocación de esa ruta, su procedencia, secuencia y frontera antes de hacer actual la nueva asociación. Los lotes se validan por completo antes de instalarlos. El cuerpo sigue siendo actual si llega una reclamación de tarea real antes de instalar la asociación gráfica o mientras espera su ruta; deja de serlo al emitirse la ruta siguiente o retirarse el actor. No se reinicia su origen temporal al reclamar trabajo.
+
+La restauración del control desde un baseline usa los hechos actuales de C++, incluidos los cuerpos que ya esperan tarea. Esta capacidad interna no sustituye la preparación gráfica del actor: el host mantiene el guard del baseline estacionario mientras falta esa ruta de preparación.
+
+Las cuatro pruebas nuevas de control usan propuestas, commits, eventos, reclamación de tarea y asociaciones reales de WASM. Junto a los controles de consecuencia y reanudación existentes: **16/16 pruebas correctas**, sin omisiones. No ejecutan una GPU. El reloj, transporte, variante original Idle y comprobación gráfica del relevo son los siguientes consumidores pendientes.
+
+Para la variante se ha leído también [Three r180, `AnimationMixer._activateAction`/`_deactivateAction`](https://github.com/mrdoob/three.js/blob/r180/src/animation/AnimationMixer.js#L123): conserva y reutiliza enlaces de propiedades, cuenta sus usos y restaura el estado original al desactivarlos. La continuación debe ampliar el propietario de variantes ya existente, con activación reversible y residencia compartida, sin sustituir el rig o renderer.
