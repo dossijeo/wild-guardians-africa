@@ -1,5 +1,7 @@
 # Home en el consumidor gráfico existente
 
+Actualización posterior: [llegada y retirada nativa preparada](e-r3-native-home-arrival-source-20261115.md). El nuevo incremento cubre fuente y proyección; la ausencia gráfica preparada continúa pendiente. El alcance de hardware descrito debajo sigue limitado al movimiento Home.
+
 Continúa la [ruta Home nativa](e-r3-native-home-route-source-20261115.md) del [plan principal](integrated-gpu-migration-plan-20261104.md). El mismo actor residente pasa de la disponibilidad estacionaria con contrato terminado al corredor Home genuino. La preparación precede a la transferencia del cuerpo y el consumidor exige su asignación nativa real. **La llegada y retirada al entrar en la aldea siguen pendientes**; no cambia ningún cierre A6/e-R3/e-R4/f-R4/A/B/C.
 
 ## Referencias y decisiones

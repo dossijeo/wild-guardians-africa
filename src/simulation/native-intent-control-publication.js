@@ -178,7 +178,8 @@ export function createNativeIntentControlPublication({port,session,observe,
          session,authorityEpoch,sequence,effectiveTime,fenceId,...(clock?{clockSequence:clock.clockSequence}:{})});}catch(error){fail(error);}
     });
   }
-  function quiesceGpuForMutation({preparedWorldBoundary=null,preparedResumeTemplate=null,preparedTaskStartTemplate=null,preparedTaskActionTemplate=null,preparedTaskConsequenceTemplate=null,preparedTaskSettlementTemplate=null,preparedHomeRouteTemplate=null}={}){
+  function quiesceGpuForMutation({preparedWorldBoundary=null,preparedResumeTemplate=null,preparedTaskStartTemplate=null,preparedTaskActionTemplate=null,preparedTaskConsequenceTemplate=null,preparedTaskSettlementTemplate=null,preparedHomeRouteTemplate=null,preparedHomeArrivalTemplate=null}={}){
+    if(preparedHomeArrivalTemplate!==null)throw Error('Native Home arrival requires prepared graphical admission');
     if(closed||retirement||appliedSequence===null||!clock||clock.intentSequence!==sentSequence||clock.committedThrough!==sentTime)
       return Promise.reject(Error('Native causal mutation boundary is not ready'));
     if(mutationHold||gpuFences.size)return Promise.reject(Error('Native GPU mutation boundary is busy'));
@@ -199,7 +200,8 @@ export function createNativeIntentControlPublication({port,session,observe,
         session,authorityEpoch,holdId,sequence,effectiveTime,clockSequence,...(preparedWorldBoundary?{preparedWorldBoundary}:{}),...(preparedResumeTemplate?{preparedResumeTemplate}:{}),...(preparedTaskStartTemplate?{preparedTaskStartTemplate}:{}),...(preparedTaskActionTemplate?{preparedTaskActionTemplate}:{}),...(preparedTaskConsequenceTemplate?{preparedTaskConsequenceTemplate}:{}),...(preparedTaskSettlementTemplate?{preparedTaskSettlementTemplate}:{}),...(preparedHomeRouteTemplate?{preparedHomeRouteTemplate}:{})});}catch(error){fail(error);}
     });
   }
-  function releaseGpuAfterMutation(receipt,{committed=false,worldBoundary:nextBoundary=null,nativeSuspendedBodies=[],nativeResumedRoutes=[],nativeStartedRoutes=[],nativeActions=[],nativeConsequences=[],nativeSettlements=[],nativeHomes=[]}={}){
+  function releaseGpuAfterMutation(receipt,{committed=false,worldBoundary:nextBoundary=null,nativeSuspendedBodies=[],nativeResumedRoutes=[],nativeStartedRoutes=[],nativeActions=[],nativeConsequences=[],nativeSettlements=[],nativeHomes=[],nativeHomeArrivals=[]}={}){
+    if(!Array.isArray(nativeHomeArrivals)||nativeHomeArrivals.length)throw Error('Native Home arrival requires prepared graphical admission');
     const hold=mutationHold;
     if(typeof committed!=='boolean')throw TypeError('Expected native mutation commit outcome');
     if(closed||!hold||!hold.receipt||receipt!==hold.receipt||!clock||clock.intentSequence!==sentSequence||

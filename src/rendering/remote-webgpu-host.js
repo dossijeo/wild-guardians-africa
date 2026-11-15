@@ -1230,6 +1230,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
            }).catch(error=>fail(error));return;
          }
          if(message?.type==='IntentMutationRelease'){
+           if(message.nativeHomeArrivals!==undefined&&(!Array.isArray(message.nativeHomeArrivals)||message.nativeHomeArrivals.length))throw Error('Native Home arrival requires prepared graphical admission');
            const status=routeControl?.status(),hold=nativeMutationHold;
            if(!hold?.quiesced||!status?.clock||status.closed||message.protocolVersion!==2||message.fenceVersion!==1||
               message.authorityEpoch!==status.authorityEpoch||message.holdId!==hold.holdId||
@@ -1338,6 +1339,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
          }
         let accepted;
         if(message?.type==='IntentBaseline'){
+          if(message.nativeHomeArrivals!==undefined&&(!Array.isArray(message.nativeHomeArrivals)||message.nativeHomeArrivals.length))throw Error('Native Home arrival requires prepared graphical admission');
           if(message.nativeHomes!==undefined&&(!Array.isArray(message.nativeHomes)||message.nativeHomes.length))throw Error('Native Home routes require prepared graphical admission');
           if(message.nativeSettlements!==undefined&&(!Array.isArray(message.nativeSettlements)||message.nativeSettlements.length))throw Error('Native settled bodies require prepared graphical admission');
           if(routeControl||message.protocolVersion!==2||!Array.isArray(message.routes)||

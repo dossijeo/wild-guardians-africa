@@ -1,3 +1,4 @@
+import {nativeHomeArrivalReferenceFromProposal,sameNativeHomeArrivalReference,copyNativeHomeArrivalAttestation} from './native-home-arrival.js';
 import {nativeResumeReferenceFromProposal,sameNativeResumeReference} from './native-resume-reference.js';
 import {nativeTaskStartReferenceFromProposal,sameNativeTaskStartReference} from './native-task-start-reference.js';
 import {nativeTaskActionActor,nativeTaskActionReferenceFromProposal,sameNativeTaskActionReference} from './native-task-action-presentation.js';
@@ -10,6 +11,12 @@ import {nativeHomeRouteReferenceFromProposal,sameNativeHomeRouteReference} from 
 // native revalidation; none of these profiles can issue an execution permission.
 const routeCompatible=translation=>translation.sameFloat32Motion&&translation.sameFloat32Gates;
 const profiles=Object.freeze({
+  'home-arrival':Object.freeze({
+    proposalKind:'native-home-arrival-proposal',templateField:'preparedHomeArrivalTemplate',bindingField:'nativeHomeArrivalBinding',releaseField:'nativeHomeArrivals',
+    reference:nativeHomeArrivalReferenceFromProposal,sameReference:sameNativeHomeArrivalReference,compatible:translation=>translation.sameSourceState,
+    receiptCompatible:(receipt,prepared)=>receipt.nativeHomeArrivalVersion===1&&sameNativeHomeArrivalReference(receipt.preparedHomeArrivalTemplate,prepared),
+    attest(native,reference,preparedReference,protocol){const fact=copyNativeHomeArrivalAttestation(protocol.binding());if(!sameNativeHomeArrivalReference(fact.reference,reference)||!sameNativeHomeArrivalReference(fact.preparedReference,preparedReference))throw Error('Native Home arrival receipt unavailable');return fact;}
+  }),
   'home-route':Object.freeze({
     proposalKind:'native-home-route-proposal',templateField:'preparedHomeRouteTemplate',bindingField:'nativeHomeRouteBinding',releaseField:'nativeHomes',
     reference:nativeHomeRouteReferenceFromProposal,sameReference:sameNativeHomeRouteReference,compatible:routeCompatible,

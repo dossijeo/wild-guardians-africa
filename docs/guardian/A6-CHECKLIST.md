@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+Continuación de Home: [llegada y retirada nativa preparada](e-r3-native-home-arrival-source-20261115.md). El cuerpo permanece retenido hasta el commit de su extremo ejecutado; sólo entonces se elimina por el registro existente y se proyecta `home`. Una secuencia nativa distingue la retirada preparada de una etiqueta JS o fila sin cuerpo. La ausencia gráfica preparada sigue pendiente y los canales reales aún rechazan esa clase; no cambia ningún cierre A6/A/B/C.
+
 Continuación de Home: [consumidor gráfico sobre el actor residente](e-r3-native-home-route-consumer-20261115.md), con plantilla y asignación directa reales. NVIDIA/Turing conserva actores y geometrías: 98 recursos al preparar, cero después de READY y 52 dibujos durante bloqueo de 1,8 s; selección y drenaje final correctos. La llegada/retirada, restauración nueva, productor ordinario y recuperación integral siguen pendientes. No cambia ningún cierre A6/A/B/C.
 
 Continuación de Home: [corredor nativo y proyección en Game](e-r3-native-home-route-source-20261115.md) sobre el mismo cuerpo y protocolo común, sin tarea ficticia. La ruta y la retención de su extremo se validan en ambos módulos nativos; el consumidor gráfico, la retirada al llegar y la admisión nueva al restaurar siguen pendientes. No cambia ningún cierre A6/A/B/C.

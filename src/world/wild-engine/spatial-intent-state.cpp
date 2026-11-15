@@ -30,6 +30,7 @@
 // JS owns the game entities. Only confirmed, ordered deltas enter this index.
 // Planning is speculative; commit validates both entity and graph revisions.
 extern "C" {
+int spatial_body_remove(double);
 int spatial_world_route_cached(float,float,float,float);
 const float* spatial_world_route_ptr();
 int spatial_world_route_reason();
@@ -62,7 +63,7 @@ enum class IntentEvent:int {RouteAssigned=1,RouteInvalidated=2,RouteReplaced=3,
   IntentChanged=4,RouteCompleted=5};
 constexpr double maxId=9007199254740991.0;
 constexpr double pi=3.14159265358979323846;
-struct Worker {uint64_t id,center;double x,z;bool eligible,actionActive;double rank;bool bodyBound=false;uint64_t body=0;};
+struct Worker {uint64_t id,center;double x,z;bool eligible,actionActive;double rank;bool bodyBound=false;uint64_t body=0,inactiveSequence=0;};
 #include "spatial-gate-state.h"
 // Target kind: 0 direct, 1 ordinary crop, 2 banana, 3 wall, 4 center.
 struct Target {
@@ -272,11 +273,19 @@ struct PendingTaskSettlementDraft {
   std::optional<NativeTaskSettlementOrigin> previous;
   std::array<double,8> timeTranslation{};
 };
+struct PendingHomeArrivalDraft {
+  std::array<double,24> header{};
+  std::shared_ptr<const NativeHomeRouteBinding> source;
+  std::optional<std::array<double,24>> previous;
+  uint64_t previousTicket=0;
+  std::array<double,8> timeTranslation{};
+};
 struct PendingBarrierProposal {
   std::optional<PendingNativeMotionDraft> resume,start,home;
   std::optional<PendingTaskActionDraft> action;
   std::optional<PendingTaskConsequenceDraft> consequence;
   std::optional<PendingTaskSettlementDraft> settlement;
+  std::optional<PendingHomeArrivalDraft> homeArrival;
   bool retainsRoutes=false;
   std::vector<double> routeEffects,gateEffects;
   bool pending=false;uint32_t session=0;uint64_t ticket=0;
@@ -373,6 +382,7 @@ struct IntentState {
   std::array<double,30> deliveryExecutionResult{};
   std::vector<double> taskSettlementBindingResult,homeBindingResult;
   std::array<double,30> homeExecutionResult{};
+  std::array<double,52> homeArrivalResult{};
   std::set<uint64_t> stoppedReservationBodies,removingBodies;
   std::set<uint64_t> stoppedGateRouteActors;
   uint64_t executionAdvances=0,executionEvaluations=0,executionBodyUpdates=0,executionStopInvalidations=0;
@@ -1165,12 +1175,12 @@ int spatialIntentStageWorld(const SpatialWorldProposalInput& input,const Spatial
   auto& p=state().barrierProposal;p.kind=input.kind;p.worldInput=input;return 1;
 }
 void clearWorldMutationProposal(PendingBarrierProposal& p){
-  p.pending=false;p.kind=0;p.resume.reset();p.start.reset();p.home.reset();p.action.reset();p.consequence.reset();p.settlement.reset();p.worldInput=SpatialWorldProposalInput{};p.routeEffects.clear();p.gateEffects.clear();
+  p.pending=false;p.kind=0;p.resume.reset();p.start.reset();p.home.reset();p.action.reset();p.consequence.reset();p.settlement.reset();p.homeArrival.reset();p.worldInput=SpatialWorldProposalInput{};p.routeEffects.clear();p.gateEffects.clear();
 }
 int takeWorldMutationBoundary(double session,double ticket,double sequence,double time,double clockSequence,int kind){
   auto& s=state();const auto& p=s.barrierProposal;
   if(!integer(session)||!integer(ticket)||!p.pending||session!=double(p.session)||ticket!=double(p.ticket)||
-     (kind==1?p.kind!=1:(kind>=13&&kind<=18)?p.kind!=kind:p.kind<2||p.kind>11))return -1;
+     (kind==1?p.kind!=1:(kind>=13&&kind<=19)?p.kind!=kind:p.kind<2||p.kind>11))return -1;
   const bool current=p.session==s.session&&p.at==s.effectiveTime&&p.bodies==spatialBodiesMutationRevision()&&
     p.bodies!=std::numeric_limits<uint64_t>::max()&&p.entities==s.entityRevision&&p.facts==s.sequence&&
     p.intents==s.intentSequence&&p.reservations==s.residencyPinRevision&&p.clock==s.clockSequence&&
@@ -1305,7 +1315,7 @@ void nav_intent_reset(){
   if(!s.gates.empty())spatialGateSupportChanged();
   s.gates.clear();s.gateBodyActors.clear();s.gateInput.clear();s.gateResult.clear();
   cancelGateMotionProposal(s);s.gateMotionResult.fill(0);
-  s.barrierProposal=PendingBarrierProposal{};s.barrierProposalResult.fill(0);s.gateRevision=0;s.worldMutationPreview=false;s.worldPreviewRetainsRoutes=true;s.worldPreviewStoppedRoutes.clear();
+  s.barrierProposal=PendingBarrierProposal{};s.barrierProposalResult.fill(0);s.homeArrivalResult.fill(0);s.gateRevision=0;s.worldMutationPreview=false;s.worldPreviewRetainsRoutes=true;s.worldPreviewStoppedRoutes.clear();
   s.routeHoldResult.clear();s.routeKnotResult.clear();s.gateWaitSegments=0;
   s.gateStaticPairs=s.gateStaticEvaluations=s.gateStaticRejected=0;s.gateStaticResult.fill(0);
   s.gateStaticProofs=0;s.gateStaticWorldStamp.fill(0);
@@ -1627,7 +1637,8 @@ int nav_intent_apply_changes(double sequence,int count){
     }else if(change.kind==1){
       Worker next{change.id,change.center,change.x,change.z,change.flag,change.target!=0,change.rank};
       if(const auto old=s.workers.find(change.id);old!=s.workers.end()){
-        next.bodyBound=old->second.bodyBound;next.body=old->second.body;}
+        next.bodyBound=old->second.bodyBound;next.body=old->second.body;
+        if(!next.eligible&&!next.actionActive&&!next.bodyBound&&!next.body&&next.x==old->second.x&&next.z==old->second.z)next.inactiveSequence=old->second.inactiveSequence;}
       s.workers.insert_or_assign(change.id,next);
     }else if(change.kind==2){
       auto found=s.targets.find(change.id);
@@ -2286,6 +2297,7 @@ EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_execution_ptr(){return state
 #include "spatial-task-consequence-proposal.inc"
 #include "spatial-task-settlement-proposal.inc"
 #include "spatial-home-route-proposal.inc"
+#include "spatial-home-arrival-proposal.inc"
 EMSCRIPTEN_KEEPALIVE double nav_intent_execution_advances(){return double(state().executionAdvances);}
 EMSCRIPTEN_KEEPALIVE double nav_intent_execution_evaluations(){return double(state().executionEvaluations);}
 EMSCRIPTEN_KEEPALIVE double nav_intent_execution_body_updates(){return double(state().executionBodyUpdates);}

@@ -31,7 +31,7 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_bind_worker(double actor,double id){
   const auto intent=s.activeIntents.find(uint64_t(actor));if(intent!=s.activeIntents.end()&&(intent->second.actionBinding||intent->second.settlementBinding||intent->second.restoredActionSource&&(worker.bodyBound||body.x!=worker.x||body.z!=worker.z||!(body.flags&1)||(body.flags&2))))return 0;
   if(worker.bodyBound&&(s.reservedBodies.count(worker.body)||s.suspendedBodies.count(worker.body)))return 0;
   cancelGateMotionProposal(s);if(worker.bodyBound)s.gateBodyActors.erase(worker.body);
-  worker.bodyBound=true;worker.body=uint64_t(id);s.gateBodyActors.insert_or_assign(worker.body,worker.id);return 1;
+  worker.bodyBound=true;worker.body=uint64_t(id);worker.inactiveSequence=0;s.gateBodyActors.insert_or_assign(worker.body,worker.id);return 1;
 }
 EMSCRIPTEN_KEEPALIVE int nav_gate_reconcile(int enabled){
   auto& s=state();if(enabled!=0&&enabled!=1)return -1;
