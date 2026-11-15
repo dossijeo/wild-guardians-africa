@@ -1,5 +1,7 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuación de Home: [ausencia reversible sobre el roster residente](e-r3-native-home-absence-roster-20261115.md). La captura restaura enseguida la visibilidad y selección anteriores; el commit nativo oculta el actor y la presentación permite retirar su propietario Home. No añade recursos de movimiento. Faltan el transporte/Surface, admisión directa y hardware de esta ausencia; la capacidad no se anuncia ni cambia ningún cierre A6/A/B/C.
+
 Continuación de Home: [llegada y retirada nativa preparada](e-r3-native-home-arrival-source-20261115.md). El cuerpo permanece retenido hasta el commit de su extremo ejecutado; sólo entonces se elimina por el registro existente y se proyecta `home`. Una secuencia nativa distingue la retirada preparada de una etiqueta JS o fila sin cuerpo. La ausencia gráfica preparada sigue pendiente y los canales reales aún rechazan esa clase; no cambia ningún cierre A6/A/B/C.
 
 Continuación de Home: [consumidor gráfico sobre el actor residente](e-r3-native-home-route-consumer-20261115.md), con plantilla y asignación directa reales. NVIDIA/Turing conserva actores y geometrías: 98 recursos al preparar, cero después de READY y 52 dibujos durante bloqueo de 1,8 s; selección y drenaje final correctos. La llegada/retirada, restauración nueva, productor ordinario y recuperación integral siguen pendientes. No cambia ningún cierre A6/A/B/C.

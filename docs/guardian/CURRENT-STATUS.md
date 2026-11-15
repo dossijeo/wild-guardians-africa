@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+**Reversible Home absence component, 2026-11-15:** [The existing resident roster participant](e-r3-native-home-absence-roster-20261115.md) restores visibility immediately after capture, preserves the presented selection while READY, hides only on native commit and retires its old Home owner after presentation. No replacement motion resources. Transport/Surface, direct admission and hardware absence remain pending; capability and A6/A/B/C closures are unchanged.
+
 **Native Home arrival source, 2026-11-15:** [Prepared endpoint retirement and Game projection](e-r3-native-home-arrival-source-20261115.md) retain the body until the conditioned commit, then revoke the route and remove the body through the existing registry. A native retirement sequence prevents a semantic home label or reconstructed unbound row from granting inactivity. Prepared graphical absence remains pending and the actual channels still reject this class; A6/A/B/C stay open.
 
 **Native Home graphical consumer, 2026-11-15:** [Resident actor and actual retained admission](e-r3-native-home-route-consumer-20261115.md) now use the existing resource/control ports. NVIDIA/Turing: 98 preparation creations, zero after READY, 52 draws during a 1.8 s stall, unchanged actor geometry, correct picking and final queue drain. Arrival retirement, fresh restoration, ordinary producer and full 3123-resource recovery remain pending; A6/A/B/C stay open.

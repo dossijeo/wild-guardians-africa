@@ -1,5 +1,7 @@
 # Llegada Home y retirada nativa preparada
 
+Actualización posterior: [participante de ausencia reversible en el roster](e-r3-native-home-absence-roster-20261115.md). La conexión a Surface, admisión directa y hardware sigue pendiente; no se anuncia la capacidad gráfica de retirada.
+
 Continúa el [consumidor Home sobre el actor residente](e-r3-native-home-route-consumer-20261115.md) y el [plan principal](integrated-gpu-migration-plan-20261104.md). Wild Engine puede preparar la retirada del cuerpo que ha ejecutado el corredor completo hasta la entrada real de su aldea y proyectar después `home` en Game. **La ausencia gráfica preparada todavía no está implementada**: la publicación y el host reales rechazan esa clase. No cambia ningún cierre A6/e-R3/e-R4/f-R4/A/B/C.
 
 ## Referencias aplicadas
