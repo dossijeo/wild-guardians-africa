@@ -1,5 +1,9 @@
 # Guardián 3D: fuente, pipeline e integración
 
+Migración activa: [entrada operativa y herramientas de apoyo](MIGRATION-OPERATIONS.md),
+con [traspaso a Sol](MIGRATION-SUPPORT-HANDOFF.md). El plan integrado y la corrección
+de A6 enlazados allí siguen siendo la autoridad.
+
 El retrato 2D deformable se sustituye en `NativeGuardian` por un GLB animado con Three.js 0.180.0. Se conservan las fases, botones, textos, reproducción de voz y eventos del tutorial. La fase 2 conecta Grow, Multiply, Shield y Attack con una invocación única en el mundo. Véase [PHASE2.md](PHASE2.md) para integración, balance, vídeos y límites de rendimiento pendientes.
 
 Para editar animales y granjeros, consultar primero la [guía de fallos, soluciones y validación de actores](ACTOR_EDITING_GUIDE.md). Incluye métodos descartados, límites de las herramientas y una plantilla de revisión por modelo.
