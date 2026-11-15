@@ -34,6 +34,8 @@ La [continuidad de fases de primera tarea](e-r3-first-task-phase-continuity-2026
 conserva ahora los tiempos acumulados de Run/Walk/Carry desde el candidato
 nativo, incluida su revalidación y posterior suspensión/reanudación. Reutiliza
 la textura preparada y mantiene abiertos los mismos pendientes de integración.
+Su commit asíncrono despierta también el gate existente de reconciliación;
+preparar recursos o rechazar una plantilla no publica una asignación lógica.
 
 Hay modificaciones locales previas en simulación, escena, carga y QA. No forman
 parte de los commits de esta corrección ni deben descartarse.

@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "date": "2026-11-15",
+  "baseCommit": "265c1d6f508c5db20ed289b2379e91612b9b6b51",
+  "scope": "Notify the existing game reconciliation gate after a first-task asynchronous physical commit. Does not activate ordinary native execution or action admission.",
+  "sourceHashes": {
+    "src/world/wild-engine/spatial-intent-bridge.js": "e451b6aded5fe103ad66056fed718e52a419e2f2a99c33f62ee22d7b182544fe",
+    "tests/remote-webgpu.test.js": "e57f2e3d7d6c54531e9f89a449a1e833ed6eb0330643aa01acc9810675aa3e7b"
+  },
+  "remote": {
+    "tests": 123,
+    "pass": 123,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "source": {
+    "tests": 17,
+    "pass": 17,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "sourceFiles": [
+    "tests/spatial-task-event-planning.test.js",
+    "tests/spatial-task-route-cache.test.js",
+    "tests/worker-first-task.test.js",
+    "tests/native-intent-control-authority.test.js",
+    "tests/native-task-resource-requests.test.js"
+  ],
+  "checks": [
+    "node --check for both owned JS files",
+    "git diff --check"
+  ],
+  "nativeWasm": "src/world/wild-engine/spatial-savanna.wasm",
+  "gpu": "Not rerun: render/resource code unchanged by this notification-only increment. Earlier phase-continuity evidence retains its own source hashes.",
+  "research": {
+    "project": "Godot",
+    "revision": "4.4-stable",
+    "source": "scene/3d/physics/rigid_body_3d.cpp",
+    "functions": [
+      "_sync_body_state",
+      "_body_state_changed"
+    ],
+    "decision": "Notification follows the confirmed physical fact; do not feed projection back as a second physical update. Existing pendingNativeChanges flag reused; full position projection remains pending."
+  },
+  "acceptanceClosed": []
+}

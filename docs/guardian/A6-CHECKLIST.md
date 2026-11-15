@@ -2,7 +2,7 @@
 
 Actualizado: 2026-11-15. IDs acordados en la conversación; no se renumeran al avanzar.
 
-Último incremento del camino crítico: [continuidad de fases en la primera tarea](e-r3-first-task-phase-continuity-20261115.md), sobre la admisión gráfica retenida existente.
+Último incremento del camino crítico: [fases y reconciliación de primera tarea](e-r3-first-task-phase-continuity-20261115.md), sobre la admisión gráfica retenida existente.
 Publicaciones ordinarias y aceptación integrada de personajes autónomos siguen pendientes; no cambia el recuento de cierres.
 
 **Ningún punto principal está cerrado todavía.** Un subpunto marcado como nativo

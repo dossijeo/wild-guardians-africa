@@ -66,3 +66,31 @@ otra llamada a `moveWorker`. La llegada necesita su propia admisión de acción 
 consecuencias antes de retirar la reserva; no basta con trasladar el booleano de
 llegada al controlador heredado. Permanecen pendientes las demás intenciones,
 cancelación/restauración completas y la aceptación integrada A/B/C.
+
+## Reconciliación tras el commit asíncrono
+
+Un segundo ajuste conecta la terminación asíncrona con el gate existente
+`needsReconciliation`: la primera asignación nativa ya no necesita esperar otro
+evento de tarea o topología para que el controlador pueda consumirla. Se marca
+`pendingNativeChanges` únicamente después de `committed` o de
+`committed-control-failed` en la misma época de autoridad. El segundo resultado
+significa que el efecto físico ya ocurrió; un fallo posterior del canal gráfico
+no puede ocultarlo. Preparar, cancelar o rechazar una plantilla no anuncia por
+sí mismo una asignación. No se añade sondeo por tick ni un segundo log.
+
+Se consultó [Godot 4.4-stable, `RigidBody3D::_sync_body_state` y `_body_state_changed`](https://github.com/godotengine/godot/blob/4.4-stable/scene/3d/physics/rigid_body_3d.cpp)
+(134–166): proyecta el estado físico confirmado y evita la notificación que lo
+devolvería al servidor como otra transformación. Aquí se conserva la distinción
+entre hecho autoritativo y notificación para su consumidor, usando el booleano
+ya existente. La proyección de posiciones del controlador ordinario aún queda
+pendiente; este ajuste no implementa esa parte de Godot ni otro ejecutor.
+
+La [comprobación de reconciliación](performance/native-first-task-reconciliation-validation-20261115.json)
+registra 123 casos del transporte remoto y 17 del planificador/control de
+autoridad, todos correctos sin omisiones. Los cuatro escenarios de primera tarea
+parten del gate limpio y verifican que no despierta durante la preparación;
+commit real y fallo de atestación posterior despiertan, mientras una plantilla
+rechazada no lo hace. La cancelación conserva su evento ordinario existente.
+Se comprueba también sintaxis y el diff. No se repite la prueba GPU: este ajuste
+solo modifica la notificación de reconciliación, y la evidencia GPU anterior
+conserva sus hashes y alcance propios. No cambia ningún criterio de cierre.
