@@ -68,7 +68,8 @@
       "tests/agricultural-power.test.js"
     ],
     "log": ".cache/native-consequence-directed.log",
-    "overlapsDirected": true
+    "overlapsDirected": true,
+    "phase": "Initial native handoff; follow-up sources validated separately below"
   },
   "parentComparison": {
     "test": "Combo attack counts one logical hit; active raid survives roundtrip",
@@ -142,5 +143,41 @@
     "full recovery and A/B/C acceptance",
     "3123-resource recovery reuse criterion"
   ],
-  "closuresChanged": false
+  "closuresChanged": false,
+  "consumerAndInitialPoseFollowup": {
+    "parent": "9d9bcff5c4b94bcc300dc76dfbeb87e7041e0261",
+    "requiredReceipt": {
+      "nativeTaskConsequenceVersion": 1,
+      "preparedTaskConsequenceTemplate": "exact retained reference"
+    },
+    "oldRealConsumer": "does not acknowledge this protocol; native commit denied before effects",
+    "initialPose": "Game adopts native Carry yaw and phases before CropPicked listeners",
+    "tests": {
+      "total": 55,
+      "pass": 55,
+      "fail": 0,
+      "skip": 0,
+      "files": [
+        "tests/native-task-consequence-game.test.js",
+        "tests/native-task-consequence-proposal.test.js",
+        "tests/native-admission-vertical.test.js",
+        "tests/native-resource-preparation-channel.test.js",
+        "tests/native-task-action-binding.test.js"
+      ],
+      "log": ".cache/native-consequence-consumer-and-pose-final.log",
+      "overlapsEarlierCounts": true
+    },
+    "preliminaryPoseFailure": ".cache/native-consequence-initial-pose-red.log",
+    "sourceHashes": {
+      "src/simulation/game.js": "a01a67696ddede96f924a99a1b215bcb90ac3a9149ff9d7a9460597642b98faf",
+      "src/world/native-resource-admission.js": "b1669c20d23e4c1e0e9cfab3878ffadf190d08802f52d0297241572eca71dc3c",
+      "src/world/native-resource-admission-profiles.js": "0859c9064751162565fa461ce4b2432b10b7dfac9ea5bf1e358d7878da2d9410",
+      "tests/native-task-consequence-game.test.js": "6701a0a38fee01efb0440250cdf635fe51f0f684b03d017453665513541b6e45"
+    },
+    "productBuild": {
+      "status": "passed",
+      "seconds": 43.11,
+      "log": ".cache/native-consequence-consumer-rollback-final-build.log"
+    }
+  }
 }

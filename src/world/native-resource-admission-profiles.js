@@ -12,6 +12,7 @@ const profiles=Object.freeze({
     templateField:'preparedTaskConsequenceTemplate',bindingField:'nativeTaskConsequenceBinding',releaseField:'nativeConsequences',
     reference:nativeTaskConsequenceReferenceFromProposal,sameReference:sameNativeTaskConsequenceReference,
     compatible:routeCompatible,
+    receiptCompatible(receipt,preparedReference){return receipt.nativeTaskConsequenceVersion===1&&sameNativeTaskConsequenceReference(receipt.preparedTaskConsequenceTemplate,preparedReference);},
     attest(native,reference,preparedReference){
       const actual=issuedRoute(native,reference),fact=native.nativeTaskConsequenceBinding(reference.actorId);
       if(!fact||!sameNativeTaskConsequenceReference(fact.reference,reference)||

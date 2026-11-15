@@ -88,3 +88,20 @@ durante la preparación, readmisión de entrega, cancelación/drop, liquidación
 siguiente tarea, productor ordinario y recuperación integral. La reconstrucción
 anterior de 3123 recursos sigue sin satisfacer el criterio de reutilización;
 este incremento no hace otra prueba gráfica ni certifica ausencia de tirones.
+
+## Confirmación de consumidor y pose de la frontera
+
+El perfil nuevo exige además que el recibo de drenaje confirme explícitamente
+`nativeTaskConsequenceVersion:1` y la plantilla preparada exacta. Un consumidor
+anterior que ignore el nuevo campo no permite efectuar el commit: se abortan los
+recursos candidatos y se conservan acción, cuerpo, cultivo e ID. Los consumidores
+gráficos reales todavía no implementan esa confirmación. El doble de fuente la
+declara expresamente, sin convertirse por ello en evidencia GPU.
+
+La proyección adopta también orientación, fases y presupuesto de carrera de la
+pose nativa inicial de Carry antes de ejecutar los listeners. Una prueba que
+observa `CropPicked` reprodujo la orientación anterior de Harvest retenida hasta
+el retorno asíncrono; ahora el listener observa la nueva frontera completa. Se
+prueban asimismo recibos sin versión, de versión incorrecta, sin plantilla o de
+otra caja: ninguno aplica efectos. Validación adicional: 55/55 pruebas en cinco
+archivos, sin omisiones; los recuentos se solapan con los anteriores.

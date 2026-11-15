@@ -1309,7 +1309,7 @@ export function projectNativeHarvestConsequence(s,w,preview,native){
   let loss=null;const value=harvestMicroLoss(s,target,preview.baseValue,detail=>{loss=detail;}),crate={...preview.crate,value,multiplyPower:target.multiplyPower??null,...(preview.crate.blessingSourceIds?{blessingSourceIds:[...preview.crate.blessingSourceIds]}:{})};
   // Publish a coherent source state before any listener can run or allocate IDs.
   s.nextId++;target.alive=false;target.harvestRequested=false;target.multiplyHarvest=false;delete target.multiplyPower;cropBecameInactive(s.plants);s.crates.push(crate);
-  Object.assign(w,{taskId:null,taskApproach:null,crateId:crate.id,status:'carrying',path:[],running:false,gateWaiting:false,nativeRouteAdmission:'native-delivery',nativeDelivery:{version:1,crateId:crate.id,centerId:center.id},deliveryApproach:{...reference.destination,crateId:crate.id,centerId:center.id},actionRemaining:0});delete w.nativeTaskAction;
+  Object.assign(w,{x:execution.x,z:execution.z,heading:execution.yaw,runPhase:execution.runPhase,walkPhase:execution.walkPhase,carryPhase:execution.carryPhase,runRemaining:execution.runRemaining,taskId:null,taskApproach:null,crateId:crate.id,status:'carrying',path:[],running:execution.running,gateWaiting:!execution.arrived&&execution.currentSpeed===0,nativeRouteAdmission:'native-delivery',nativeDelivery:{version:1,crateId:crate.id,centerId:center.id},deliveryApproach:{...reference.destination,crateId:crate.id,centerId:center.id},actionRemaining:0});delete w.nativeTaskAction;
   replaceTasks(s,s.tasks.filter(t=>t!==task));notifyWorkerPlanningChange(s,w);
   if(loss)emit(s,'MicroeventHarvestLossApplied',loss);
   emit(s,'CropPicked',{workerId:w.id,targetId:target.id,crateId:crate.id});

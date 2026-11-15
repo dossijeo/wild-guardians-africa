@@ -11,10 +11,10 @@ import {createThreadedSpatialWorld} from '../src/world/wild-engine/spatial-threa
 
 // Source component contract only: a deterministic drain/retained-packet double.
 // It does not exercise a GPU queue, graphical resources or a consumer channel.
-function sourceAdmission(f,{prepare=()=>{},drain=()=>{}}={}){
+function sourceAdmission(f,{prepare=()=>{},drain=()=>{},receipt=record=>record}={}){
  let status={closed:false,session:'source-consequence'},released=null,commits=0,aborts=0;
  const source={status:()=>({...status}),ownsGpuConsumer:consumer=>consumer===source,
-  async quiesceGpuForMutation(options){const before={...status};await drain(options);return {authorityEpoch:before.authorityEpoch,session:before.session,sequence:before.sentSequence,effectiveTime:before.sentTime,clockSequence:before.clockSequence,holdId:1,preparedWorldBoundary:options.preparedWorldBoundary,preparedFrameSequence:1};},
+  async quiesceGpuForMutation(options){const before={...status};await drain(options);return receipt({authorityEpoch:before.authorityEpoch,session:before.session,sequence:before.sentSequence,effectiveTime:before.sentTime,clockSequence:before.clockSequence,holdId:1,preparedWorldBoundary:options.preparedWorldBoundary,preparedFrameSequence:1,nativeTaskConsequenceVersion:1,preparedTaskConsequenceTemplate:options.preparedTaskConsequenceTemplate});},
   releaseGpuAfterMutation(receipt,data){released=data;},dispose(){status.closed=true;}};
  const stop=f.planner.observeNativeIntentControl({gpuConsumer:{publication:source,owner:source},
   onBaseline:b=>{status={...status,authorityEpoch:b.authorityEpoch,sentSequence:b.sequence,sentTime:b.effectiveTime,clockSequence:b.clock.clockSequence};},
@@ -26,7 +26,7 @@ function sourceAdmission(f,{prepare=()=>{},drain=()=>{}}={}){
 test('the shared source admission projects Harvest exactly once before retaining its consequence resources',async()=>{
  const f=nativeTaskConsequenceFixture();let admission,stop;
  try{const oldPower=f.target.multiplyPower,ledger=structuredClone(f.state.ledger),seen=[],next=f.state.nextId;
-  stop=observeGameEvents(f.state,event=>{if(event.type==='CropPicked'||event.type==='MicroeventHarvestLossApplied'){seen.push(event.type);assert.equal(f.worker.status,'carrying');assert.equal(f.worker.taskId,null);assert.equal(f.target.alive,false);assert.equal(f.state.nextId,next+1);assert.equal(f.state.crates.length,1);}});
+  stop=observeGameEvents(f.state,event=>{if(event.type==='CropPicked'||event.type==='MicroeventHarvestLossApplied'){seen.push(event.type);assert.equal(f.worker.status,'carrying');assert.equal(f.worker.taskId,null);assert.equal(f.target.alive,false);assert.equal(f.state.nextId,next+1);assert.equal(f.state.crates.length,1);const pose=f.planner.nativeDeliveryExecution(f.actor);assert.equal(f.worker.heading,pose.yaw);for(const key of ['runPhase','walkPhase','carryPhase','runRemaining','running'])assert.equal(f.worker[key],pose[key]);}});
   admission=sourceAdmission(f);const result=await admission.run();assert.equal(result.status,'committed',JSON.stringify(result));assert.equal(admission.counters().commits,1);assert.equal(admission.released.committed,true);assert.equal(admission.released.nativeConsequences.length,1);assert(seen.includes('CropPicked'));assert.deepEqual(f.state.ledger,ledger);assert.equal(f.state.crates[0].multiplyPower,oldPower??null);assert.equal(f.worker.nativeRouteAdmission,'native-delivery');assert.deepEqual(f.worker.nativeDelivery,{version:1,crateId:f.worker.crateId,centerId:f.center.id});
   const body=f.body(1),peer=f.body(3);tick(f.state,.2,f.nav);assert.notDeepEqual(f.body(1),body);assert.notDeepEqual(f.body(3),peer);assert.equal(f.worker.x,f.state.crates[0].x);assert.equal(f.worker.z,f.state.crates[0].z);assert.deepEqual(f.state.ledger,ledger);assert.equal(f.state.crates[0].delivered,false);
   const saved=deserialize(serialize(f.state));assert.deepEqual(saved.workers[0].nativeDelivery,f.worker.nativeDelivery);assert.equal(saved.workers[0].nativeDelivery.nativeRoute,undefined);
@@ -69,4 +69,11 @@ test('an unsupported saved delivery rejects restoration before replacing its liv
 test('pthread uses the same source consequence admission, Game projection and Carry execution',async()=>{
  const {default:factory}=await import('../public/wild-engine/spatial-threaded.mjs'),runtime=await createThreadedSpatialWorld(factory);let f,admission;
  try{f=nativeTaskConsequenceFixture({core:runtime.core});admission=sourceAdmission(f);const result=await admission.run();assert.equal(result.status,'committed',JSON.stringify(result));const body=f.body(1);tick(f.state,.2,f.nav);assert.notDeepEqual(f.body(1),body);assert.equal(f.worker.x,f.state.crates[0].x);assert.equal(f.state.crates[0].delivered,false);}finally{admission?.close();f?.close();await runtime.dispose();}
+});
+
+
+test('a consumer must explicitly acknowledge the exact versioned consequence template before its native commit',async()=>{
+ for(const alter of [r=>{delete r.nativeTaskConsequenceVersion;return r;},r=>({...r,nativeTaskConsequenceVersion:0}),r=>({...r,preparedTaskConsequenceTemplate:null}),r=>({...r,preparedTaskConsequenceTemplate:{...r.preparedTaskConsequenceTemplate,crateId:r.preparedTaskConsequenceTemplate.crateId+1}})]){
+  const f=nativeTaskConsequenceFixture();let admission;try{const body=f.body(1),next=f.state.nextId;admission=sourceAdmission(f,{receipt:alter});const result=await admission.run();assert.equal(result.status,'invalid-receipt',JSON.stringify(result));assert.equal(admission.counters().commits,0);assert.equal(admission.released.committed,false);assert.equal(f.state.crates.length,0);assert.equal(f.state.nextId,next);assert(f.target.alive);assert.deepEqual(f.body(1),body);assert(f.planner.nativeTaskActionBinding(f.actor));assert.equal(f.planner.nativeTaskConsequenceBinding(f.actor),null);}finally{admission?.close();f.close();}
+ }
 });

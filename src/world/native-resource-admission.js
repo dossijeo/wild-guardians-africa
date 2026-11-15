@@ -63,7 +63,8 @@ export function createNativeResourceAdmission({wasm,isReady,simulationTime,epoch
         answer=outcome('control-replaced');
       else if(receipt.authorityEpoch!==owner||receipt.session!==control.session||receipt.sequence!==quiescence.sentSequence||
          receipt.effectiveTime!==quiescence.sentTime||receipt.clockSequence!==quiescence.clockSequence||!Number.isSafeInteger(receipt.holdId)||receipt.holdId<1||
-         preparedWorldBoundary&&(!sameNativeWorldBoundary(receipt.preparedWorldBoundary,preparedWorldBoundary)||!Number.isSafeInteger(receipt.preparedFrameSequence)||receipt.preparedFrameSequence<1))
+         preparedWorldBoundary&&(!sameNativeWorldBoundary(receipt.preparedWorldBoundary,preparedWorldBoundary)||!Number.isSafeInteger(receipt.preparedFrameSequence)||receipt.preparedFrameSequence<1)||
+         motion.receiptCompatible&&motion.receiptCompatible(receipt,preparedMotionTemplate)!==true)
         answer=outcome('invalid-receipt');
       else{
         if(preparationController.signal.aborted||preparedResources&&preparedResources.valid()!==true)throw Error('Native prepared resources became stale');
