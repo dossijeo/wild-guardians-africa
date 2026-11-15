@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [asociación nativa entre recursos preparados y primera asignación](e-r3-native-task-start-binding-20261115.md).
+Último avance: [primera tarea con admisión gráfica retenida](e-r3-first-task-gpu-admission-20261115.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio

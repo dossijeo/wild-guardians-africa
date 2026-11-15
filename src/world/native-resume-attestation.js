@@ -1,4 +1,5 @@
-import {ceilFloat32,floorFloat32} from '../float32-time.js';
+import {nativeMotionPresentationMatches} from './native-motion-presentation-match.js';
+import {floorFloat32} from '../float32-time.js';
 import {copyNativeResumeReference,nativeResumeSuccessor,sameNativeResumeReference} from './native-resume-reference.js';
 
 // A typed fact received ONLY on the direct authority channel. Copying this
@@ -19,6 +20,5 @@ export function nativeResumeAttestationCovers(value,reference){return sameNative
 export function nativeResumePresentationMatches(prepared,actual,value){
  const binding=copyNativeResumeAttestation(value),route=actual?.nativeRoute,reference=binding.reference;
  if(!sameNativeResumeReference(binding.preparedReference,prepared.nativeResume)||route?.actorId!==reference.actorId||route.assignmentSequence!==binding.assignmentSequence||JSON.stringify(route.routeHandle)!==JSON.stringify(reference.expectedRouteHandle)||actual.startTime!==reference.worldBoundary.effectiveTime||actual.endTime!==reference.endTime||['motionMode','motionFlags','profile','radius'].some(key=>actual[key]!==prepared[key])||actual.rows.length!==prepared.rows.length||actual.gates.length!==prepared.gates.length)return false;
- for(let i=0;i<actual.rows.length;i++)if((i%16?Math.fround(actual.rows[i]):ceilFloat32(actual.rows[i]-actual.startTime))!==(i%16?Math.fround(prepared.rows[i]):ceilFloat32(prepared.rows[i]-prepared.startTime)))return false;
- return actual.gates.every((gate,i)=>{const old=prepared.gates[i];return binding.gateIds.includes(gate.gateId)&&['gateId','entityId','mechanism','modelId'].every(key=>gate[key]===old[key])&&['rootMatrix','hinge','positions','leafFlags'].every(key=>gate[key].length===old[key].length&&gate[key].every((v,j)=>Object.is(v,old[key][j])))&&gate.rows.length===old.rows.length&&gate.rows.every((v,j)=>(j%2?Math.fround(v):ceilFloat32(v-actual.startTime))===(j%2?Math.fround(old.rows[j]):ceilFloat32(old.rows[j]-prepared.startTime)));});
+ return nativeMotionPresentationMatches(prepared,actual,binding.gateIds);
 }

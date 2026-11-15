@@ -48,6 +48,6 @@ test('Float32 projection identifies equal render samples despite subtraction dif
  assert(observed,'test must exercise a native-double difference, not just identical inputs');
 });
 
-test('a changed Float32 timing representation still requires graphical preparation',()=>{
- const f=fixture(31.75);try{assert.equal(f.advance(31.95).status,'advanced');f.bridge.commitNativeCausalClock();const result=f.bridge.revalidateNativeGateResumeProposal(f.proposal.ticket);assert.equal(result.status,'revalidated');assert.equal(result.timeTranslation.sameFloat32Motion,false);assert.equal(result.requiresResourcePreparation,true);assert.equal(result.authorizedAutonomy,false);assert.equal(f.bridge.nativeRouteTiming(result.proposal.expectedRouteHandle),null);}finally{f.session.dispose();}
+test('an exact speed knot no longer creates a spurious Float32 difference under a clock-only shift',()=>{
+ const f=fixture(31.75);try{assert.equal(f.advance(31.95).status,'advanced');f.bridge.commitNativeCausalClock();const result=f.bridge.revalidateNativeGateResumeProposal(f.proposal.ticket);assert.equal(result.status,'revalidated');assert.equal(result.timeTranslation.sameFloat32Motion,true);assert.equal(result.requiresResourcePreparation,true);assert.equal(result.authorizedAutonomy,false);assert.equal(f.bridge.nativeRouteTiming(result.proposal.expectedRouteHandle),null);}finally{f.session.dispose();}
 });

@@ -87,10 +87,18 @@ std::array<double,18> sampleRouteTiming(const RouteSlot& route,double at){
     elapsed=waiting?routeMotionTimeAtDistance(route,hold->distance):
       std::clamp(at-route.startTime-(hold?hold->delay:0),0.0,routeMotionTimeAtDistance(route,length)),
     runSeconds=route.runDistance>0?route.runDistance/route.runSpeed:0,
-    runningDistance=std::min(route.runDistance,elapsed*route.runSpeed),
-    distance=waiting?hold->distance:at>=endTime?length:
-      std::min(length,runningDistance+std::max(0.0,elapsed-runSeconds)*route.speed),
-    runDistance=std::min(route.runDistance,distance),walkDistance=distance-runDistance;
+    runningDistance=std::min(route.runDistance,elapsed*route.runSpeed);
+  double distance=waiting?hold->distance:at>=endTime?length:
+    std::min(length,runningDistance+std::max(0.0,elapsed-runSeconds)*route.speed);
+  // At a native vertex's EXACT published time, retain that pinned vertex.
+  // Inverting a rounded absolute knot can otherwise put it on the adjacent
+  // edge by an ulp and manufacture tiny off-edge terrain intervals. This is
+  // identity at a known knot, never an epsilon or a change to interior motion.
+  const auto nearby=std::lower_bound(route.distances.begin(),route.distances.end(),distance);
+  if(nearby!=route.distances.end()&&at==routeTimeAtDistance(route,*nearby))distance=*nearby;
+  else if(nearby!=route.distances.begin()&&at==routeTimeAtDistance(route,*std::prev(nearby)))distance=*std::prev(nearby);
+  if(route.runDistance>0&&at==routeTimeAtDistance(route,route.runDistance))distance=route.runDistance;
+  const double runDistance=std::min(route.runDistance,distance),walkDistance=distance-runDistance;
   const auto next=std::upper_bound(route.distances.begin(),route.distances.end(),distance);
   const size_t index=size_t(next-route.distances.begin());
   const bool geometricEnd=index==route.distances.size(),arrived=geometricEnd&&(route.holds.empty()||at>=endTime),worker=route.timingMode==2,
@@ -104,7 +112,8 @@ std::array<double,18> sampleRouteTiming(const RouteSlot& route,double at){
       az=segment?route.points[(segment-1)*2+1]:route.originZ,
       bx=route.points[segment*2],bz=route.points[segment*2+1],span=route.distances[segment]-from,
       fraction=span>0?std::clamp((distance-from)/span,0.0,1.0):1;
-    x=ax+(bx-ax)*fraction;z=az+(bz-az)*fraction;
+    x=distance==from?ax:distance==route.distances[segment]?bx:ax+(bx-ax)*fraction;
+    z=distance==from?az:distance==route.distances[segment]?bz:az+(bz-az)*fraction;
     if(span>0)yaw=std::atan2(bx-ax,bz-az);
     if(geometricEnd){x=route.points[route.points.size()-2];z=route.points.back();}
   }

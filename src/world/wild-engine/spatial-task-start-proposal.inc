@@ -115,7 +115,8 @@ EMSCRIPTEN_KEEPALIVE int nav_task_start_proposal_commit_bound(double session,dou
   const uint64_t actor=draft.route.actor;
   const int result=nav_task_start_proposal_commit(session,ticket,sequence,time,clockSequence);if(result!=1)return result;
   const auto& intent=s.activeIntents.at(actor);binding->assignmentSequence=intent.assignmentSequence;
-  s.routeSlots[intent.slot].startBinding=std::move(binding);return 1;
+  s.routeSlots[intent.slot].startBinding=std::move(binding);
+  spatialRecordMotionResourceBoundary(session,ticket,time,14);return 1;
 }
 static const NativeTaskStartBinding* currentTaskStartBinding(double actor){
   auto& s=state();if(!integer(actor))return nullptr;const auto found=s.activeIntents.find(uint64_t(actor));

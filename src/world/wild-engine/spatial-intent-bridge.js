@@ -1,3 +1,4 @@
+import {nativeTaskStartReferenceFromProposal,sameNativeTaskStartReference} from '../native-task-start-reference.js';
 import {copyNativeTaskRequestReference} from '../native-task-request-reference.js';
 import {copyNativeTaskStartAttestation} from '../native-task-start-attestation.js';
 import {sameNativeResumeReference} from '../native-resume-reference.js';
@@ -721,6 +722,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
   // preflight remain native; this bridge only carries an immutable input and
   // an exact receipt from the current direct draw connection.
   const commitNativeWorldProposal=async(getPublication,stage,commit,prepareResources=null,signal=null,protocol=null)=>{
+    const starting=protocol?.motionKind==='task-start',fromProposal=starting?nativeTaskStartReferenceFromProposal:nativeResumeReferenceFromProposal,sameTemplate=starting?sameNativeTaskStartReference:sameNativeResumeReference,templateField=starting?'preparedTaskStartTemplate':'preparedResumeTemplate',bindingField=starting?'nativeTaskStartBinding':'nativeResumeBinding',releaseField=starting?'nativeStartedRoutes':'nativeResumedRoutes';
     if(!initialized||!owningState)throw Error('Reset the native intent session first');
     if(typeof getPublication!=='function')throw TypeError('Expected current native control publication');
     if(wasm.nav_intent_barrier_proposal_version?.()!==1)throw Error('Rebuild native world proposal service');
@@ -736,8 +738,8 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     if(result!==1)return outcome(result===0?'blocked':result===-4?'busy':result===-2?'unsupported':'invalid');
     if((protocol?protocol.ticket():wasm.nav_intent_barrier_proposal_ticket())!==1)throw Error('Native mutation proposal lost its ticket');
     let [nativeSession,ticket,sequence,time,clockSequence]=Array.from(new Float64Array(wasm.memory.buffer,protocol?protocol.ticketPtr():wasm.nav_intent_barrier_proposal_ticket_ptr(),6));
-    const initialWorld=nativeWorldBoundary(),worldUnchanged=()=>initialWorld===null?nativeWorldBoundary()===null:sameNativeWorldBoundary(initialWorld,nativeWorldBoundary());let preparedResumeTemplate=null;
-    let receipt=null,preparedResources=null,answer=outcome('control-failed'),physicalCommitted=false,commitAttempted=false,commitFailed=false,committedValue={},suspendedBodies=Object.freeze([]),resumeReferences=Object.freeze([]),resumedRoutes=Object.freeze([]);
+    const initialWorld=nativeWorldBoundary(),worldUnchanged=()=>initialWorld===null?nativeWorldBoundary()===null:sameNativeWorldBoundary(initialWorld,nativeWorldBoundary());let preparedMotionTemplate=null;
+    let receipt=null,preparedResources=null,answer=outcome('control-failed'),physicalCommitted=false,commitAttempted=false,commitFailed=false,committedValue={},suspendedBodies=Object.freeze([]),motionReferences=Object.freeze([]),motionRoutes=Object.freeze([]);
     let stoppedCommit=null;const stopCommit=(status,extra={})=>{stoppedCommit=outcome(status,extra);throw stoppedCommit;};
     const preparationController=new AbortController(),abortPreparation=()=>preparationController.abort();signal?.addEventListener('abort',abortPreparation,{once:true});
     try{
@@ -746,7 +748,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
         const proposedWorldBoundary=copyNativeWorldBoundary({version:1,authorityEpoch:owner,nativeSession,ticket,effectiveTime:time}),
           resources=protocol?protocol.capture(proposedWorldBoundary):session.core.captureNativeWorldProposalResources(proposedWorldBoundary);
         suspendedBodies=nativeSuspendedBodiesFromProposal(resources,proposedWorldBoundary);
-        if(resources?.kind==='native-route-resume-proposal')resumeReferences=Object.freeze([nativeResumeReferenceFromProposal(resources)]);
+        if(resources?.kind==='native-route-resume-proposal'||resources?.kind==='native-task-start-proposal')motionReferences=Object.freeze([fromProposal(resources)]);
         let stopWaiting;const interrupted=new Promise((resolve,reject)=>{stopWaiting=()=>reject(new DOMException('Native resource preparation cancelled','AbortError'));});interrupted.catch(()=>{});
         preparationController.signal.addEventListener('abort',stopWaiting,{once:true});
         const preparing=Promise.resolve().then(()=>prepareResources({proposedWorldBoundary,resources,signal:preparationController.signal,...(protocol?.deferred?{deferredStart:true}:{})})).then(handle=>{
@@ -757,15 +759,15 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
         if(protocol?.preparedFrameRequired&&!preparedResources.preparedWorldBoundary)throw Error('Native gate requires a retained prepared command packet');
         if(epoch()!==owner||getPublication()!==source||source.status().closed||!coversGpuConsumers(source))return outcome('control-replaced');
         if(protocol?.deferred){
-          preparedResumeTemplate=resumeReferences[0];
-          if(!sameNativeResumeReference(preparedResources.preparedResumeTemplate,preparedResumeTemplate))throw Error('Native resume lacks its retained deferred template');
+          preparedMotionTemplate=motionReferences[0];
+          if(!sameTemplate(preparedResources[templateField],preparedMotionTemplate))throw Error('Native resume lacks its retained deferred template');
           if(!worldUnchanged()||!protocol.retained(nativeSession,ticket))return outcome('stale');
         }else if((protocol?protocol.snapshot(nativeSession,ticket):wasm.spatial_world_proposal_resource_snapshot(nativeSession,ticket))!==1)return outcome('stale');
       }
       const preparedWorldBoundary=copyNativeWorldBoundary(preparedResources?.preparedWorldBoundary??null);
       if(preparedWorldBoundary&&(preparedWorldBoundary.authorityEpoch!==owner||preparedWorldBoundary.nativeSession!==nativeSession||preparedWorldBoundary.ticket!==ticket||preparedWorldBoundary.effectiveTime!==time))throw Error('Prepared command packet names a different native mutation');
       const quiescence=protocol?.deferred?source.status():{sentSequence:sequence,sentTime:time,clockSequence};
-      receipt=await source.quiesceGpuForMutation(preparedWorldBoundary?{preparedWorldBoundary,...(preparedResumeTemplate?{preparedResumeTemplate}:{})}:undefined);const current=source.status();
+      receipt=await source.quiesceGpuForMutation(preparedWorldBoundary?{preparedWorldBoundary,...(preparedMotionTemplate?{[templateField]:preparedMotionTemplate}:{})}:undefined);const current=source.status();
       if(epoch()!==owner||getPublication()!==source||current.closed||current.session!==control.session||current.authorityEpoch!==owner||!coversGpuConsumers(source))
         answer=outcome('control-replaced');
       else if(receipt.authorityEpoch!==owner||receipt.session!==control.session||receipt.sequence!==quiescence.sentSequence||
@@ -783,7 +785,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
           if(fresh.status!=='revalidated')stopCommit(fresh.status);
           [nativeSession,ticket,sequence,time,clockSequence]=Array.from(new Float64Array(wasm.memory.buffer,protocol.ticketPtr(),6));
           if(!fresh.timeTranslation.sameFloat32Motion||!fresh.timeTranslation.sameFloat32Gates)stopCommit('resources-changed',{timeTranslation:fresh.timeTranslation});
-          resumeReferences=Object.freeze([nativeResumeReferenceFromProposal(fresh.proposal)]);
+          motionReferences=Object.freeze([fromProposal(fresh.proposal)]);
         }
         commitAttempted=true;
         const committed=commit(value=>{physicalCommitted=true;committedValue=value??{};
@@ -794,12 +796,13 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
           const actual=nativeSuspendedGateRoute(reference.nativeRoute.actorId),handle=actual?.resumeHandle,old=reference.nativeRoute.routeHandle;
           if(!actual||actual.actorId!==reference.nativeRoute.actorId||actual.bodyId!==reference.bodyId||actual.suspendedAt!==reference.suspendedAt||handle.authorityEpoch!==old.authorityEpoch||handle.session!==old.session||handle.slot!==old.slot||handle.generation!==reference.resumeGeneration)throw Error('Committed native body differs from its proposed suspension');
         }
-        if(committed.status===1)resumedRoutes=Object.freeze(resumeReferences.map(reference=>{
+        if(committed.status===1)motionRoutes=Object.freeze(motionReferences.map(reference=>{
           const actual=nativeRouteTiming(reference.expectedRouteHandle);
           if(!actual||actual.actorId!==reference.actorId||actual.startTime!==reference.worldBoundary.effectiveTime||actual.endTime!==reference.endTime||actual.assignmentSequence<=reference.sourceControlSequence||nativeSuspendedGateRoute(reference.actorId)!==null)throw Error('Committed native resume differs from its proposed assignment');
-          return Object.freeze({reference,assignmentSequence:actual.assignmentSequence,...(preparedResumeTemplate?{preparedReference:preparedResumeTemplate,projectionVersion:1,gateIds:protocol.gateIds()}: {})});
+          if(starting){const fact=nativeTaskStartBinding(reference.actorId);if(!fact||!sameTemplate(fact.reference,reference)||!sameTemplate(fact.preparedReference,preparedMotionTemplate)||fact.assignmentSequence!==actual.assignmentSequence)throw Error('Native first-task resource association unavailable');return fact;}
+          return Object.freeze({reference,assignmentSequence:actual.assignmentSequence,...(preparedMotionTemplate?{preparedReference:preparedMotionTemplate,projectionVersion:1,gateIds:protocol.gateIds()}: {})});
         }));
-        if(committed.status===1&&preparedResources&&preparedResources.commit({worldBoundary:nativeWorldBoundary(),resources:committed.value.resources,...(preparedResumeTemplate?{nativeResumeBinding:resumedRoutes[0]}:{})})!==true)throw Error('Native prepared resources were not retained for publication');
+        if(committed.status===1&&preparedResources&&preparedResources.commit({worldBoundary:nativeWorldBoundary(),resources:committed.value.resources,...(preparedMotionTemplate?{[bindingField]:motionRoutes[0]}:{})})!==true)throw Error('Native prepared resources were not retained for publication');
         answer=committed.status===1?outcome('committed',{...committed.value,receipt,worldBoundary:nativeWorldBoundary(),...(protocol?.deferred?{timeTranslation:protocol.timeTranslation()}:{})}):
           outcome(committed.status===-2?'stale':committed.status===-3?'invalid-receipt':committed.status===-6?'blocked':'stale');
       }
@@ -818,7 +821,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
           flushNativeIntentControl();const latest=nativeCausalClock();
           if(!latest||wasm.nav_intent_clock_commit(latest.rate,latest.paused?1:0)<0)throw Error('Native clock cannot publish mutation boundary');
           flushNativeIntentControl();source.releaseGpuAfterMutation(receipt,{committed:physicalCommitted,
-            ...(physicalCommitted?{worldBoundary:nativeWorldBoundary(),...(suspendedBodies.length?{nativeSuspendedBodies:suspendedBodies}:{}),...(resumedRoutes.length?{nativeResumedRoutes:resumedRoutes}:{})}:{})});
+            ...(physicalCommitted?{worldBoundary:nativeWorldBoundary(),...(suspendedBodies.length?{nativeSuspendedBodies:suspendedBodies}:{}),...(motionRoutes.length?{[releaseField]:motionRoutes}:{})}:{})});
         }catch(error){source.dispose('mutation-release-failed');answer=outcome(physicalCommitted?'committed-control-failed':'control-failed',
           {...committedValue,error:String(error?.message??error)});}
       }
@@ -1149,6 +1152,25 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
         const plan=nativeRouteTiming(candidate.expectedRouteHandle);if(!plan||plan.actorId!==candidate.actorId)throw Error('Native resumed assignment unavailable');
         const started=beginNativeRouteExecution();if(started.status!=='started')throw Error('Native resumed execution could not establish its causal boundary');
         const nativeRoute=Object.freeze({actorId:plan.actorId,routeHandle:candidate.expectedRouteHandle,assignmentSequence:plan.assignmentSequence}),resources=Object.freeze({version:1,kind:13,phase:'committed',worldBoundary:nativeWorldBoundary(),nativeRoute,presentation:captureNativeRoutePresentation(candidate.expectedRouteHandle)});mark({resources,nativeRoute});return {status:1,value:{resources,nativeRoute}};
+      },prepareResources,signal,protocol);
+  };
+  // Genuine first assignment: one retained packet, current native revalidation,
+  // and the source-owned bound origin; no fabricated suspension or sequence.
+  const startNativeTaskRouteAfterGpuQuiescence=({getPublication,request,policy,prepareResources,signal=null}={})=>{
+    if(typeof prepareResources!=='function'||signal!==null&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('First task requires retained resource preparation');
+    let candidate=null,translation=null,preparedTicket=null;
+    const protocol={preparedFrameRequired:true,deferred:true,motionKind:'task-start',
+      retained(session,ticket){if(wasm.nav_intent_barrier_proposal_ticket()!==1)return false;const t=new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6);return t[0]===session&&t[1]===ticket&&t[5]===14;},
+      revalidate(session,ticket){const result=revalidateNativeTaskStartProposal({kind:'native-task-start-proposal-ticket',authorityEpoch:epoch(),session,ticket});if(result.status==='revalidated'){candidate=result.proposal;translation=result.timeTranslation;}return result;},
+      timeTranslation:()=>translation,gateIds:()=>candidate.gates.map(gate=>gate.gateId),
+      ticket:()=>wasm.nav_intent_barrier_proposal_ticket(),ticketPtr:()=>wasm.nav_intent_barrier_proposal_ticket_ptr(),
+      snapshot:(session,ticket)=>wasm.nav_task_start_proposal_snapshot(session,ticket),cancel:(session,ticket)=>wasm.nav_task_start_proposal_cancel(session,ticket),release(){},
+      capture(boundary){candidate=captureNativeTaskStartProposal({kind:'native-task-start-proposal-ticket',authorityEpoch:boundary.authorityEpoch,session:boundary.nativeSession,ticket:boundary.ticket});if(!candidate)throw Error('Native first-task resources unavailable');preparedTicket=candidate.ticket.ticket;return candidate;}};
+    return commitNativeWorldProposal(getPublication,()=>{const result=prepareNativeTaskStartProposal(request,policy);return result.status==='proposed'?1:result.status==='busy'?-4:0;},
+      (mark,...boundary)=>{const status=wasm.nav_task_start_proposal_commit_bound(...boundary,preparedTicket);if(status!==1)return {status};mark();
+        const plan=nativeRouteTiming(candidate.expectedRouteHandle);if(!plan||plan.actorId!==candidate.actorId)throw Error('First native assignment unavailable');
+        if(beginNativeRouteExecution().status!=='started')throw Error('First native assignment could not establish its causal boundary');
+        const nativeRoute=Object.freeze({actorId:plan.actorId,routeHandle:candidate.expectedRouteHandle,assignmentSequence:plan.assignmentSequence}),resources=Object.freeze({version:1,kind:14,phase:'committed',worldBoundary:nativeWorldBoundary(),nativeRoute,presentation:captureNativeRoutePresentation(candidate.expectedRouteHandle)});mark({resources,nativeRoute});return {status:1,value:{resources,nativeRoute}};
       },prepareResources,signal,protocol);
   };
   const resumeNativeGateRoute=resumeHandle=>{
@@ -1530,7 +1552,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     nativeIntentControlBaseline,nativeWorldResourceBoundary,observeNativeIntentControl,flushNativeIntentControl,nativeCausalClock,commitNativeCausalClock,
     restoreAssignedTasks,restoreAttackIntents,restoreRetreatIntents,
     restoreHomeIntents,
-    proposalRoute,pendingTaskRoute,nativeTaskStartBinding,
+    proposalRoute,pendingTaskRoute,nativeTaskStartBinding,startNativeTaskRouteAfterGpuQuiescence,
     getDamagedWalls:()=>getDamaged('wall'),
     getDamagedCenters:()=>getDamaged('center'),
     structureFor:id=>structuresById.get(numericId(id))??null,
@@ -2451,7 +2473,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     nativeCausalClock:bridge.nativeCausalClock,commitNativeCausalClock:bridge.commitNativeCausalClock,
     observeNativeIntentControl:bridge.observeNativeIntentControl,
     flushNativeIntentControl:bridge.flushNativeIntentControl,
-    intentChanges:bridge.intentChanges,pendingTaskRoute:bridge.pendingTaskRoute,nativeTaskStartBinding:bridge.nativeTaskStartBinding,routePoints:bridge.routePoints,
+    intentChanges:bridge.intentChanges,pendingTaskRoute:bridge.pendingTaskRoute,nativeTaskStartBinding:bridge.nativeTaskStartBinding,startNativeTaskRouteAfterGpuQuiescence:bridge.startNativeTaskRouteAfterGpuQuiescence,routePoints:bridge.routePoints,
     nativeRouteTiming:bridge.nativeRouteTiming,nativeRouteTimeKnots:bridge.nativeRouteTimeKnots,sampleNativeRoute:bridge.sampleNativeRoute,captureNativeRoutePresentation:bridge.captureNativeRoutePresentation,
     nativeGateRouteSweep:bridge.nativeGateRouteSweep,
     nativeGateMechanism:bridge.nativeGateMechanism,nativeGateMechanismPose:bridge.nativeGateMechanismPose,nativeGateMechanismSegment:bridge.nativeGateMechanismSegment,

@@ -1,3 +1,4 @@
+import {nativeMotionPresentationMatches} from './native-motion-presentation-match.js';
 import {floorFloat32} from '../float32-time.js';
 import {copyNativeTaskStartReference,sameNativeTaskStartReference} from './native-task-start-reference.js';
 
@@ -8,3 +9,9 @@ export function copyNativeTaskStartAttestation(value){
  return Object.freeze({reference,preparedReference,assignmentSequence,projectionVersion:1,gateIds:Object.freeze([...gateIds])});
 }
 export function nativeTaskStartAttestationCovers(value,reference){return sameNativeTaskStartReference(value?.reference,reference)||sameNativeTaskStartReference(value?.preparedReference,reference);}
+
+export function nativeTaskStartPresentationMatches(prepared,actual,value){
+ const binding=copyNativeTaskStartAttestation(value),route=actual?.nativeRoute,reference=binding.reference;
+ if(!sameNativeTaskStartReference(binding.preparedReference,prepared.nativeStart)||route?.actorId!==reference.actorId||route.assignmentSequence!==binding.assignmentSequence||JSON.stringify(route.routeHandle)!==JSON.stringify(reference.expectedRouteHandle)||actual.startTime!==reference.worldBoundary.effectiveTime||actual.endTime!==reference.endTime)return false;
+ return nativeMotionPresentationMatches(prepared,actual,binding.gateIds);
+}

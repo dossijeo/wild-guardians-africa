@@ -33,9 +33,8 @@ test('an arbitrary older prepared ticket cannot be rebound through a chain of re
  }finally{f.close();}
 });
 
-test('a shifted frontier with a different Float32 projection requires changed data before binding the original resources',()=>{
- const f=fixture();try{const p=f.prepare();f.advance(10.4);assert.equal(f.planner.revalidateNativeTaskStartProposal(p.ticket).status,'revalidated');assert.equal(commit(f,p),-9);assert.equal(f.planner.nativeTaskStartBinding(p.actorId),null);assert.equal(f.planner.pendingTaskRoute(p.actorId).requestSequence,p.requestSequence);
- }finally{f.close();}
+test('exact native corner and speed knots preserve the resource projection through fractional clock shifts',()=>{
+ for(const at of [10.02,10.4,1000.1]){const f=fixture();try{const p=f.prepare();f.advance(at);const next=f.planner.revalidateNativeTaskStartProposal(p.ticket);assert.equal(next.status,'revalidated');assert.equal(next.timeTranslation.sameFloat32Motion,true);assert.equal(commit(f,p),1);assert.deepEqual(f.planner.nativeTaskStartBinding(p.actorId).preparedReference,nativeTaskStartReferenceFromProposal(p));}finally{f.close();}}
 });
 
 test('revocation retires the native association and invalidates already admitted resource leases',()=>{

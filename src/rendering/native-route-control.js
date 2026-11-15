@@ -112,6 +112,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
   }
   return {
     accept,
+    startGateExecutionEpoch(gate){for(const actor of actors.values()){const proof=actor.startProof;if(proof&&startCurrent(proof.reference,actor)&&proof.gateIds.includes(gate.gateId)&&sameNativeWorldBoundary(proof.preparedReference.worldBoundary,gate.worldBoundary))return actor.current.startTime;}return null;},
     installStartedRoutes(boundary,values=[],{bootstrap=false}={}){
       boundary=copyNativeWorldBoundary(boundary);
       if(closed||!clock||typeof bootstrap!=='boolean'||!Array.isArray(values)||values.length>32768||!bootstrap&&(!boundary||boundary.effectiveTime!==clock.committedThrough)||boundary&&(boundary.authorityEpoch!==authorityEpoch||boundary.nativeSession!==clock.nativeSession))throw Error('Invalid native started route boundary');

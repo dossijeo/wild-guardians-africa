@@ -1,4 +1,5 @@
 import {copyNativeResumeProposal} from '../world/native-resume-presentation.js';
+import {copyNativeTaskStartProposal} from '../world/native-task-start-presentation.js';
 import {copyNativeRoutePresentation,NATIVE_ROUTE_PRESENTATION_WIDTH as sourceWidth} from '../world/native-route-presentation.js';
 import {ceilFloat32,floorFloat32} from './float32-time.js';
 
@@ -15,6 +16,11 @@ export function prepareNativeResumeGpuTable(support){
  if(support?.kind!=='native-resume-terrain-support'||support.valid?.()!==true||!Array.isArray(support.actor?.segments))throw TypeError('Native resume requires current terrain support');
  const presentation=copyNativeResumeProposal(support.presentation);
  return packNativeMotion(support,presentation,presentation.actorId,{nativeResume:presentation.nativeResume});
+}
+export function prepareNativeTaskStartGpuTable(support){
+ if(support?.kind!=='native-task-start-terrain-support'||support.valid?.()!==true||!Array.isArray(support.actor?.segments))throw TypeError('Native task start requires current terrain support');
+ const presentation=copyNativeTaskStartProposal(support.presentation);
+ return packNativeMotion(support,presentation,presentation.actorId,{nativeStart:presentation.nativeStart});
 }
 function packNativeMotion(support,presentation,actorId,identity){
  const {rows:source,startTime:epoch,endTime}=presentation,{segments,startHeight,endHeight}=support.actor;

@@ -35,3 +35,6 @@ int spatialIntentBeginWorldPreview();
 void spatialIntentEndWorldPreview();
 
 int spatialIntentWorldProposalSnapshot(std::array<double,6>&);
+// A committed route changes its resource boundary while retaining every
+// terrain allocation. Share the existing canonical revision receipt.
+void spatialRecordMotionResourceBoundary(double session,double ticket,double time,int kind);

@@ -1,10 +1,11 @@
 import {nativeClockResourceEnd} from './native-clock-resource-end.js';
+import {nativeTaskStartSuccessor} from '../world/native-task-start-reference.js';
 import {nativeResumeSuccessor} from '../world/native-resume-reference.js';
 import {DataTexture,FloatType,NearestFilter,RGBAFormat,Vector3,Vector4} from 'three';
 import {Fn,If,Loop,clamp,float,int,ivec2,mix,struct,textureLoad,uniform,vec3,vec4} from 'three/tsl';
 import {markRemoteClockNode} from './remote-clock-bindings.js';
 import {bindGpuMotionMaterial,unbindGpuMotionMaterial,gpuActorLocalTransform} from './gpu-actor-motion-material.js';
-import {prepareNativeRouteGpuTable,prepareNativeResumeGpuTable,sampleNativeRouteGpuTable} from './native-route-gpu-table.js';
+import {prepareNativeRouteGpuTable,prepareNativeResumeGpuTable,prepareNativeTaskStartGpuTable,sampleNativeRouteGpuTable} from './native-route-gpu-table.js';
 import {copyNativeSuspendedBodyReference} from '../world/native-suspended-body-reference.js';
 import {floorFloat32} from './float32-time.js';
 import {nativeEntityNumericId} from '../world/native-entity-id.js';
@@ -24,6 +25,7 @@ export function createNativeResumeGpuMotion(options={}){
  if(options.support?.kind!=='native-resume-terrain-support')throw TypeError('Native resume requires proposal terrain support');
  return createMotion(options);
 }
+export function createNativeTaskStartGpuMotion(options={}){if(options.support?.kind!=='native-task-start-terrain-support')throw TypeError('Native first task requires proposal terrain support');return createMotion(options);}
 // One registry entry owns the immutable texture. Replacement presentations
 // retain it independently; the caller's existing GPU fence retires each owner.
 function routeData(table,resourceRegistry){
@@ -34,10 +36,10 @@ function routeData(table,resourceRegistry){
 }
 function createMotion({actorId,support,anchorYaw=0,heightOffset=0,anchorPosition=null,resourceRegistry=null},shared=null,suspension=null){
  if(typeof actorId!=='string'||!actorId||![anchorYaw,heightOffset].every(Number.isFinite)||anchorPosition!==null&&![anchorPosition?.x,anchorPosition?.y,anchorPosition?.z].every(Number.isFinite)||resourceRegistry!==null&&typeof resourceRegistry?.adopt!=='function')throw TypeError('Invalid native GPU motion configuration');
- let table=shared?.table??(support?.kind==='native-resume-terrain-support'?prepareNativeResumeGpuTable(support):prepareNativeRouteGpuTable(support));
- if(nativeEntityNumericId(actorId)!==(table.nativeRoute?.actorId??table.nativeResume?.actorId))throw TypeError('Native GPU actor identity mismatch');
- const data=shared??routeData(table,resourceRegistry),releaseData=data.retain(),texture=data.texture,held=suspension?.pose??new Float64Array(18);let start=Object.freeze(suspension?{at:suspension.reference.suspendedAt,x:held[0],y:suspension.height+heightOffset,z:held[1]}:{...table.start,y:table.start.y+heightOffset}),end=Object.freeze(suspension?{...start}:{...table.end,y:table.end.y+heightOffset});const bindingAnchor=Object.freeze(anchorPosition?{x:anchorPosition.x,y:anchorPosition.y,z:anchorPosition.z}:{x:start.x,y:start.y,z:start.z}),clockNode=markRemoteClockNode(uniform(0),'relative',table.epoch,suspension?null:table.nativeRoute??null,null,suspension?.reference??null,suspension?null:table.nativeResume??null,null,suspension?Number.MAX_SAFE_INTEGER:nativeClockResourceEnd(table.epoch,table.end.at)),bindings=new Map(),idlePhases=new Map(),anchor=uniform(new Vector3(bindingAnchor.x,bindingAnchor.y,bindingAnchor.z)),parameters=uniform(new Vector4(table.count,table.columns,table.duration,anchorYaw)),heldFlag=uniform(suspension?1:0),heldPose=uniform(new Vector4(held[0],suspension?.height??0,held[1],held[4])),heldPhases=uniform(new Vector4(held[3],held[9],held[10],held[11])),heldArrived=uniform(held[6]);
- let executionEpoch=table.epoch;let disposed=false,sealed=!!suspension||!table.nativeResume;
+ let table=shared?.table??(support?.kind==='native-resume-terrain-support'?prepareNativeResumeGpuTable(support):support?.kind==='native-task-start-terrain-support'?prepareNativeTaskStartGpuTable(support):prepareNativeRouteGpuTable(support));
+ if(nativeEntityNumericId(actorId)!==(table.nativeRoute?.actorId??table.nativeResume?.actorId??table.nativeStart?.actorId))throw TypeError('Native GPU actor identity mismatch');
+ const data=shared??routeData(table,resourceRegistry),releaseData=data.retain(),texture=data.texture,held=suspension?.pose??new Float64Array(18);let start=Object.freeze(suspension?{at:suspension.reference.suspendedAt,x:held[0],y:suspension.height+heightOffset,z:held[1]}:{...table.start,y:table.start.y+heightOffset}),end=Object.freeze(suspension?{...start}:{...table.end,y:table.end.y+heightOffset});const bindingAnchor=Object.freeze(anchorPosition?{x:anchorPosition.x,y:anchorPosition.y,z:anchorPosition.z}:{x:start.x,y:start.y,z:start.z}),clockNode=markRemoteClockNode(uniform(0),'relative',table.epoch,suspension?null:table.nativeRoute??null,null,suspension?.reference??null,suspension?null:table.nativeResume??null,null,suspension?Number.MAX_SAFE_INTEGER:nativeClockResourceEnd(table.epoch,table.end.at),suspension?null:table.nativeStart??null),bindings=new Map(),idlePhases=new Map(),anchor=uniform(new Vector3(bindingAnchor.x,bindingAnchor.y,bindingAnchor.z)),parameters=uniform(new Vector4(table.count,table.columns,table.duration,anchorYaw)),heldFlag=uniform(suspension?1:0),heldPose=uniform(new Vector4(held[0],suspension?.height??0,held[1],held[4])),heldPhases=uniform(new Vector4(held[3],held[9],held[10],held[11])),heldArrived=uniform(held[6]);
+ let executionEpoch=table.epoch;let disposed=false,sealed=!!suspension||!(table.nativeResume||table.nativeStart);
  const load=(index,column)=>textureLoad(texture,ivec2(index.mod(int(parameters.y)).mul(5).add(column),index.div(int(parameters.y))));
  const relativeTime=clockNode.sub(clockNode.abs().max(1).mul(.000000476837158203125)),timeNode=clamp(relativeTime,float(0),parameters.z);
  const state=Fn(()=>{
@@ -52,7 +54,7 @@ function createMotion({actorId,support,anchorYaw=0,heightOffset=0,anchorPosition
   });return result;
  })();
  const transform=base=>Fn(()=>{const sampled=state.toVar();return gpuActorLocalTransform(base,sampled.get('pose').xyz.add(vec3(0,heightOffset,0)),sampled.get('pose').w,anchor,int(1).greaterThan(0));})();
- let installed=Object.freeze({start,end,segments:suspension?0:table.count-1,...(table.nativeRoute?{nativeRoute:table.nativeRoute}:{nativeResume:table.nativeResume}),...(suspension?{nativeSuspended:suspension.reference}:{})});
+ let installed=Object.freeze({start,end,segments:suspension?0:table.count-1,...(table.nativeRoute?{nativeRoute:table.nativeRoute}:table.nativeResume?{nativeResume:table.nativeResume}:{nativeStart:table.nativeStart}),...(suspension?{nativeSuspended:suspension.reference}:{})});
  const phases=Object.freeze({Walk_Skip:state.get('phases').z,Run:state.get('phases').y,Carry_Crate:state.get('phases').w}),phaseFields=Object.freeze({Walk_Skip:'walkPhase',Run:'runPhase',Carry_Crate:'carryPhase'});
  // Gate Idle follows logical time while locomotion phases stay frozen.
  // Reduce the epoch by the clip period before converting it to a GPU float.
@@ -65,35 +67,36 @@ function createMotion({actorId,support,anchorYaw=0,heightOffset=0,anchorPosition
  }
  function prepareSuspended({reference,nativePose,height,isCurrent}={}){
   if(disposed||suspension)throw Error('Native moving resource unavailable for suspension');
-  reference=copyNativeSuspendedBodyReference(reference);const route=reference.nativeRoute,old=table.nativeRoute??{actorId:table.nativeResume.actorId,assignmentSequence:route.assignmentSequence,routeHandle:table.nativeResume.expectedRouteHandle};
-  if(table.nativeResume&&route.assignmentSequence<=table.nativeResume.sourceControlSequence||route.actorId!==old.actorId||route.assignmentSequence!==old.assignmentSequence||['authorityEpoch','session','slot','generation'].some(key=>route.routeHandle[key]!==old.routeHandle[key])||!(nativePose instanceof Float64Array)||nativePose.length!==18||!nativePose.every(Number.isFinite)||[0,1,3,4,6,9,10,11].some(index=>!Number.isFinite(Math.fround(nativePose[index])))||![0,1].includes(nativePose[6])||nativePose[7]!==reference.suspendedAt||nativePose[15]!==0||nativePose[16]!==0||nativePose[17]!==2||reference.suspendedAt<executionEpoch||reference.suspendedAt>executionEpoch+(table.end.at-table.epoch)||!Number.isFinite(height)||!Number.isFinite(Math.fround(height))||typeof isCurrent!=='function'||isCurrent()!==true)throw TypeError('Invalid native suspended motion support');
+  reference=copyNativeSuspendedBodyReference(reference);const route=reference.nativeRoute,proposal=table.nativeResume??table.nativeStart,old=table.nativeRoute??{actorId:proposal.actorId,assignmentSequence:route.assignmentSequence,routeHandle:proposal.expectedRouteHandle};
+  if(proposal&&route.assignmentSequence<=proposal.sourceControlSequence||route.actorId!==old.actorId||route.assignmentSequence!==old.assignmentSequence||['authorityEpoch','session','slot','generation'].some(key=>route.routeHandle[key]!==old.routeHandle[key])||!(nativePose instanceof Float64Array)||nativePose.length!==18||!nativePose.every(Number.isFinite)||[0,1,3,4,6,9,10,11].some(index=>!Number.isFinite(Math.fround(nativePose[index])))||![0,1].includes(nativePose[6])||nativePose[7]!==reference.suspendedAt||nativePose[15]!==0||nativePose[16]!==0||nativePose[17]!==2||reference.suspendedAt<executionEpoch||reference.suspendedAt>executionEpoch+(table.end.at-table.epoch)||!Number.isFinite(height)||!Number.isFinite(Math.fround(height))||typeof isCurrent!=='function'||isCurrent()!==true)throw TypeError('Invalid native suspended motion support');
   return createMotion({actorId,support,anchorYaw,heightOffset,anchorPosition:bindingAnchor,resourceRegistry},data,{reference,pose:Float64Array.from(nativePose),height,isCurrent});
  }
  // Only an unpublished, exclusively owned candidate can replace data. The
  // renderer cancels its old retained packet before invoking this operation.
- function retargetNativeResume(nextSupport,{retagClock}={}){
-  if(disposed||sealed||suspension||!table.nativeResume||data.references()!==1||typeof retagClock!=='function')throw Error('Native resume data is already published or shared');
-  const next=prepareNativeResumeGpuTable(nextSupport),before=table.presentation,after=next.presentation;
-  if(!nativeResumeSuccessor(table.nativeResume,next.nativeResume)||['motionMode','motionFlags','profile','radius'].some(key=>before[key]!==after[key])||next.width!==table.width||next.height!==table.height||next.columns!==table.columns||next.data.length!==table.data.length)return false;
+ function retargetNativeProposal(nextSupport,{retagClock}={},starting=false){
+  const key=starting?'nativeStart':'nativeResume',pack=starting?prepareNativeTaskStartGpuTable:prepareNativeResumeGpuTable,successor=starting?nativeTaskStartSuccessor:nativeResumeSuccessor;
+  if(disposed||sealed||suspension||!table[key]||data.references()!==1||typeof retagClock!=='function')throw Error('Native resume data is already published or shared');
+  const next=pack(nextSupport),before=table.presentation,after=next.presentation;
+  if(!successor(table[key],next[key])||['motionMode','motionFlags','profile','radius'].some(key=>before[key]!==after[key])||next.width!==table.width||next.height!==table.height||next.columns!==table.columns||next.data.length!==table.data.length)return false;
   if(nextSupport.valid()!==true)throw Error('Native resume support changed before data replacement');
   // Retagging addresses the existing physical uniforms, not a shader rebuild.
   // The consumer still requires direct authority for the new proposal identity.
-  if(retagClock(clockNode,table.nativeResume,next.nativeResume,nativeClockResourceEnd(next.epoch,next.end.at))!==true)throw Error('Native resume clock was not retagged');
+  if(retagClock(clockNode,table[key],next[key],nativeClockResourceEnd(next.epoch,next.end.at))!==true)throw Error('Native resume clock was not retagged');
   const changed=next.data.some((value,index)=>!Object.is(value,table.data[index]));
   texture.image.data=next.data;if(changed)texture.needsUpdate=true;
   table=next;data.table=next;support=nextSupport;parameters.value.set(next.count,next.columns,next.duration,anchorYaw);
-  for(const [duration,entry] of idlePhases){if(table.nativeResume)retagClock(entry.base,entry.reference,next.nativeResume);entry.reference=next.nativeResume;entry.base.value=next.epoch%duration;}executionEpoch=next.epoch;
-  start=Object.freeze({...next.start,y:next.start.y+heightOffset});end=Object.freeze({...next.end,y:next.end.y+heightOffset});installed=Object.freeze({start,end,segments:next.count-1,nativeResume:next.nativeResume});
-  return Object.freeze({changedData:changed,nativeResume:next.nativeResume});
+  for(const [duration,entry] of idlePhases){if(table[key])retagClock(entry.base,entry.reference,next[key]);entry.reference=next[key];entry.base.value=next.epoch%duration;}executionEpoch=next.epoch;
+  start=Object.freeze({...next.start,y:next.start.y+heightOffset});end=Object.freeze({...next.end,y:next.end.y+heightOffset});installed=Object.freeze({start,end,segments:next.count-1,[key]:next[key]});
+  return Object.freeze({changedData:changed,[key]:next[key]});
  }
  function unbind(material){return unbindGpuMotionMaterial(bindings,material);}
  return {actorId,clockNode,timeNode,bindingAnchor,phaseNode:state.get('phases').x,runPhaseNode:phases.Run,walkPhaseNode:phases.Walk_Skip,carryPhaseNode:phases.Carry_Crate,runningNode:state.get('mode').x,idleNode:state.get('mode').y.lessThanEqual(0),currentSpeedNode:state.get('mode').y,arrivedNode:state.get('mode').z,
-  prepareSuspended,retargetNativeResume,setExecutionEpoch(at){if(disposed||sealed||!table.nativeResume||!Number.isFinite(at)||at<table.epoch)throw Error('Native execution origin unavailable');executionEpoch=at;},seal(){if(disposed)throw Error('Native GPU motion disposed');sealed=true;},
+  prepareSuspended,retargetNativeResume:(support,options)=>retargetNativeProposal(support,options),retargetNativeTaskStart:(support,options)=>retargetNativeProposal(support,options,true),setExecutionEpoch(at){if(disposed||sealed||!(table.nativeResume||table.nativeStart)||!Number.isFinite(at)||at<table.epoch)throw Error('Native execution origin unavailable');executionEpoch=at;},seal(){if(disposed)throw Error('Native GPU motion disposed');sealed=true;},
   bind(material){if(disposed)throw Error('Native GPU motion disposed');return bindGpuMotionMaterial(bindings,material,transform);},unbind,
-  resolve(fallback,clip,duration){if(disposed)throw Error('Native GPU motion disposed');if(clip==='Idle'){idleDuration(duration);let entry=idlePhases.get(duration);if(!entry){const base=uniform(table.epoch%duration);if(table.nativeResume&&!suspension)markRemoteClockNode(base,'origin-modulo',table.epoch,null,null,null,table.nativeResume,duration);entry={base,reference:table.nativeResume,node:base.add(state.get('mode').w)};idlePhases.set(duration,entry);}return entry.node;}if(!Object.hasOwn(phases,clip))throw Error('Unsupported native animation phase');return phases[clip];},
+  resolve(fallback,clip,duration){if(disposed)throw Error('Native GPU motion disposed');if(clip==='Idle'){idleDuration(duration);let entry=idlePhases.get(duration);if(!entry){const base=uniform(table.epoch%duration);if((table.nativeResume||table.nativeStart)&&!suspension)markRemoteClockNode(base,'origin-modulo',table.epoch,null,null,null,table.nativeResume??null,duration,null,table.nativeStart??null);entry={base,reference:table.nativeResume??table.nativeStart,node:base.add(state.get('mode').w)};idlePhases.set(duration,entry);}return entry.node;}if(!Object.hasOwn(phases,clip))throw Error('Unsupported native animation phase');return phases[clip];},
   sampleForClip(at,clip,duration){if(disposed)throw Error('Native GPU motion disposed');const value=sample(at);if(clip==='Idle'){idleDuration(duration);return Math.fround(Math.fround(executionEpoch%duration)+Math.fround(value.relativeTime));}if(!Object.hasOwn(phaseFields,clip))throw Error('Unsupported native animation phase');return value[phaseFields[clip]];},
   sample(at){if(disposed)throw Error('Native GPU motion disposed');const value=sample(at);return {...value,y:value.y+heightOffset,dx:value.x-bindingAnchor.x,dy:value.y+heightOffset-bindingAnchor.y,dz:value.z-bindingAnchor.z,yawDelta:value.yaw-anchorYaw};},
-  valid:()=>!disposed&&(suspension?suspension.isCurrent()===true:support.valid()===true),get texture(){return texture;},status(){return {disposed,sealed,sequence:table.nativeRoute?.assignmentSequence??null,...(table.nativeResume?{nativeResume:table.nativeResume}:{}),installed:disposed?null:installed,rows:table.count,columns:table.columns,bytes:table.data.byteLength,dataReferences:data.references(),...(suspension?{nativeSuspended:suspension.reference}:{})};},
+  valid:()=>!disposed&&(suspension?suspension.isCurrent()===true:support.valid()===true),get texture(){return texture;},status(){return {disposed,sealed,sequence:table.nativeRoute?.assignmentSequence??null,...(table.nativeResume?{nativeResume:table.nativeResume}:table.nativeStart?{nativeStart:table.nativeStart}:{}),installed:disposed?null:installed,rows:table.count,columns:table.columns,bytes:table.data.byteLength,dataReferences:data.references(),...(suspension?{nativeSuspended:suspension.reference}:{})};},
   dispose(){if(disposed)return;disposed=true;for(const material of [...bindings.keys()])unbind(material);releaseData();}
  };
 }

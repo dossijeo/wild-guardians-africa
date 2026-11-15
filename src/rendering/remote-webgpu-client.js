@@ -1,3 +1,5 @@
+import {sameNativeTaskStartReference} from '../world/native-task-start-reference.js';
+import {copyNativeTaskStartAttestation} from '../world/native-task-start-attestation.js';
 import {copyNativeResumeAttestation} from '../world/native-resume-attestation.js';
 import {sameNativeResumeReference} from '../world/native-resume-reference.js';
 // The producer owns Three's object graph, never the native GPU device. Only
@@ -393,6 +395,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     },
     whenFrameSettled:()=>pendingFrame?.promise??Promise.resolve(),
     async prepareNativeWorldFrame(metadata,{signal}={}){
+      if(metadata?.nativeTaskStartTemplate&&capabilities.nativeTaskStartVersion!==1)throw Error('Draw owner does not support native first task');
       if(metadata?.nativeResumeTemplate&&capabilities.nativeDeferredResumeVersion!==1)throw Error('Draw owner does not support native deferred resume');
       if(!frame)throw Error('No remote GPU frame transaction');
       if(!sameNativeWorldBoundary(frame.metadata.nativeWorldBoundary??null,metadata?.nativeWorldBoundary??null))throw Error('A prepared frame cannot be retagged for another native world');
@@ -409,7 +412,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
         if(signal?.aborted)abort();
         if(phase==='aborted'||ready.version!==1||ready.sequence!==packet.sequence||!ready.uploadsSubmitted||!sameNativeWorldBoundary(ready.worldBoundary,worldBoundary))throw Error('Prepared world frame unavailable');
         if(phase==='preparing')phase='ready';
-        return {sequence:packet.sequence,preparedWorldBoundary:worldBoundary,presented,valid:()=>!disposed&&!fatalError&&!committed&&(phase==='ready'||phase==='presented'),commit(boundary,value=null){const binding=value===null?null:copyNativeResumeAttestation(value);if(committed||phase!=='ready'&&phase!=='presented'||(binding?!metadata.nativeResumeTemplate||!sameNativeResumeReference(binding.preparedReference,metadata.nativeResumeTemplate)||!sameNativeWorldBoundary(binding.reference.worldBoundary,boundary):!sameNativeWorldBoundary(boundary,worldBoundary)))return false;committed=true;signal?.removeEventListener('abort',abort);return true;},abort};
+        return {sequence:packet.sequence,preparedWorldBoundary:worldBoundary,presented,valid:()=>!disposed&&!fatalError&&!committed&&(phase==='ready'||phase==='presented'),commit(boundary,value=null){const starting=!!metadata.nativeTaskStartTemplate,binding=value===null?null:(starting?copyNativeTaskStartAttestation:copyNativeResumeAttestation)(value);if(committed||phase!=='ready'&&phase!=='presented'||(binding?!(starting?metadata.nativeTaskStartTemplate:metadata.nativeResumeTemplate)||!(starting?sameNativeTaskStartReference:sameNativeResumeReference)(binding.preparedReference,starting?metadata.nativeTaskStartTemplate:metadata.nativeResumeTemplate)||!sameNativeWorldBoundary(binding.reference.worldBoundary,boundary):!sameNativeWorldBoundary(boundary,worldBoundary)))return false;committed=true;signal?.removeEventListener('abort',abort);return true;},abort};
       }catch(error){abort();throw error;}
     },
     cancelFrame() {
@@ -429,8 +432,9 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     },
     registerClockBinding(buffer, binding) {
       if (!buffer?.[REF] || !['absolute', 'relative', 'origin-modulo'].includes(binding.semantic) || !Number.isInteger(binding.byteOffset) || binding.byteOffset < 0 || binding.byteOffset % 4) throw TypeError('Invalid remote clock binding');
-      if(binding.semantic==='origin-modulo'&&(!binding.nativeResume||!Number.isFinite(binding.period)||binding.period<=0))throw TypeError('Invalid native origin phase binding');
-      if(binding.semantic==='origin-modulo'&&capabilities.nativeDeferredResumeVersion!==1)throw Error('Draw owner does not support native origin phase clocks');
+      if(binding.semantic==='origin-modulo'&&(!(binding.nativeResume||binding.nativeStart)||!Number.isFinite(binding.period)||binding.period<=0))throw TypeError('Invalid native origin phase binding');
+      if(binding.semantic==='origin-modulo'&&(binding.nativeStart?capabilities.nativeTaskStartVersion:capabilities.nativeDeferredResumeVersion)!==1)throw Error('Draw owner does not support native origin phase clocks');
+      if(binding.nativeStart&&capabilities.nativeTaskStartVersion!==1)throw Error('Draw owner does not support native first task authority');
       if(binding.nativeResume&&capabilities.nativeResumeVersion!==1)throw Error('Draw owner does not support native resume authority');
       if(binding.nativeSuspended&&capabilities.nativeSuspendedVersion!==1)throw Error('Draw owner does not support native suspended body authority');
       const key = `${buffer[REF]}:${binding.byteOffset}`;

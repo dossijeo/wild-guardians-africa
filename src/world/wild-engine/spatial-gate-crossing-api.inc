@@ -198,6 +198,7 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_resume_proposal_commit(double session,double t
   auto draft=std::move(*s.barrierProposal.resume);clearWorldMutationProposal(s.barrierProposal);
   const auto found=s.activeIntents.find(draft.route.actor);found->second.topology=draft.topology;
   publishGateRouteAdmission(s,found->second,draft.slot,draft.route,draft.body,draft.gates,draft.boundaries);s.routeResumptions++;
+  spatialRecordMotionResourceBoundary(session,ticket,time,13);
   nav_intent_route_timing(session,double(draft.slot),double(s.routeSlots[draft.slot].generation));return 1;
 }
 

@@ -1,9 +1,11 @@
+import {copyNativeTaskStartReference,nativeTaskStartReferenceCovered} from '../world/native-task-start-reference.js';
 import {copyNativeResumeReference,nativeResumeReferenceCovered} from '../world/native-resume-reference.js';
 import {copyNativeSuspendedBodyReference,nativeSuspendedBodyReferenceCovered} from '../world/native-suspended-body-reference.js';
 import {copyNativeRouteReference} from '../world/native-route-reference.js';
 import {copyNativeGateReference,nativeGateReferenceCovered} from '../world/native-gate-reference.js';
 
 const clockKey=(route,semantic,epoch)=>JSON.stringify([copyNativeRouteReference(route),semantic,epoch]);
+const startClockKey=(start,semantic,epoch)=>JSON.stringify(['start',copyNativeTaskStartReference(start),semantic,epoch]);
 const resumeClockKey=(resume,semantic,epoch)=>JSON.stringify(['resume',copyNativeResumeReference(resume),semantic,epoch]);
 const suspendedClockKey=(body,semantic,epoch)=>JSON.stringify(['suspended',copyNativeSuspendedBodyReference(body),semantic,epoch]);
 const gateClockKey=(gate,semantic,epoch)=>JSON.stringify(['gate',copyNativeGateReference(gate),semantic,epoch]);
@@ -15,18 +17,19 @@ export function captureNativeRoutePickFrame(consumer){
  if(consumer?.failed||!Number.isSafeInteger(frame?.sequence)||frame.sequence<=0||!Number.isFinite(frame.clockElapsed)||!Array.isArray(frame.bindings))throw Error('Native consumer pick frame unavailable');
  const times=new Map(),origins=new Map();
  for(const binding of frame.bindings){
-  const {nativeRoute,nativeGate,nativeSuspended,nativeResume,semantic,epoch,elapsed}=binding??{};
+  const {nativeRoute,nativeGate,nativeSuspended,nativeResume,nativeStart,semantic,epoch,elapsed}=binding??{};
   if(!['relative','absolute'].includes(semantic)||!Number.isFinite(epoch)||epoch<0||!Number.isFinite(elapsed)||elapsed<epoch)throw Error('Invalid native consumer pick clock');
   if(nativeGate&&(nativeRoute||!nativeGateReferenceCovered(copyNativeGateReference(nativeGate),frame.worldBoundary)))throw Error('Native gate pick world mismatch');
-  if([nativeRoute,nativeGate,nativeSuspended,nativeResume].filter(Boolean).length!==1)throw Error('Conflicting native consumer pick references');
+  if([nativeRoute,nativeGate,nativeSuspended,nativeResume,nativeStart].filter(Boolean).length!==1)throw Error('Conflicting native consumer pick references');
   if(nativeSuspended&&!nativeSuspendedBodyReferenceCovered(copyNativeSuspendedBodyReference(nativeSuspended),frame.worldBoundary))throw Error('Native suspended pick world mismatch');
   if(nativeResume&&!nativeResumeReferenceCovered(copyNativeResumeReference(nativeResume),frame.worldBoundary))throw Error('Native resume pick world mismatch');
-  const key=nativeResume?resumeClockKey(nativeResume,semantic,epoch):nativeSuspended?suspendedClockKey(nativeSuspended,semantic,epoch):nativeGate?gateClockKey(nativeGate,semantic,epoch):clockKey(nativeRoute,semantic,epoch);
-  if(nativeResume){const origin=binding.executionEpoch??nativeResume.worldBoundary.effectiveTime;if(!Number.isFinite(origin)||origin<nativeResume.worldBoundary.effectiveTime||origin>frame.clockElapsed||origins.has(key)&&origins.get(key)!==origin)throw Error('Conflicting native resume execution origin');origins.set(key,origin);}
+  if(nativeStart&&!nativeTaskStartReferenceCovered(copyNativeTaskStartReference(nativeStart),frame.worldBoundary))throw Error('Native first-task pick world mismatch');
+  const key=nativeStart?startClockKey(nativeStart,semantic,epoch):nativeResume?resumeClockKey(nativeResume,semantic,epoch):nativeSuspended?suspendedClockKey(nativeSuspended,semantic,epoch):nativeGate?gateClockKey(nativeGate,semantic,epoch):clockKey(nativeRoute,semantic,epoch);
+  if(nativeResume||nativeStart){const reference=nativeStart??nativeResume,origin=binding.executionEpoch??reference.worldBoundary.effectiveTime;if(!Number.isFinite(origin)||origin<reference.worldBoundary.effectiveTime||origin>frame.clockElapsed||origins.has(key)&&origins.get(key)!==origin)throw Error('Conflicting native resume execution origin');origins.set(key,origin);}
   if(times.has(key)&&times.get(key)!==elapsed)throw Error('Conflicting native consumer pick clocks');
   times.set(key,elapsed);
  }
- return Object.freeze({sequence:frame.sequence,getResumeExecutionTime(nativeResume,epoch,semantic='relative'){
+ return Object.freeze({sequence:frame.sequence,getStartExecutionTime(nativeStart,epoch,semantic='relative'){const key=startClockKey(nativeStart,semantic,epoch);if(!times.has(key))throw Error('Native first task has no submitted pick clock');return origins.get(key)+(times.get(key)-epoch);},getStartTime(nativeStart,epoch,semantic='relative'){const key=startClockKey(nativeStart,semantic,epoch);if(!times.has(key))throw Error('Native first task has no submitted pick clock');return times.get(key);},getResumeExecutionTime(nativeResume,epoch,semantic='relative'){
   const key=resumeClockKey(nativeResume,semantic,epoch);if(!times.has(key))throw Error('Native resume has no submitted pick clock');return origins.get(key)+(times.get(key)-epoch);
  },getResumeTime(nativeResume,epoch,semantic='relative'){
   const key=resumeClockKey(nativeResume,semantic,epoch);if(!times.has(key))throw Error('Native resume has no submitted pick clock');return times.get(key);

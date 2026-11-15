@@ -1907,6 +1907,12 @@ static std::vector<double> surfaceGridCorners;
 static std::vector<uint8_t> surfaceGridValid;
 static std::vector<Prop> farVisualProps;
 static uint64_t farVisualRevision=0;
+void spatialRecordMotionResourceBoundary(double session,double ticket,double time,int kind){
+  if(!worldResourcePublication)worldResourcePublication=new WorldResourcePublication();
+  auto& publication=*worldResourcePublication;publication.changes.clear();publication.prepared.reset();
+  publication.header={1,session,ticket,time,double(kind),0,double(terrainInputRevision),double(overlayRevision),double(residencyRevision)};
+  publication.valid=true;
+}
 extern "C" {
 EMSCRIPTEN_KEEPALIVE int spatial_execution_segment_clear(double x,double z,double nx,double nz,double radius){
   return executionSegmentClear(x,z,nx,nz,radius);

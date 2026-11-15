@@ -1,4 +1,5 @@
 import {copyNativeResumeProposal} from '../world/native-resume-presentation.js';
+import {copyNativeTaskStartProposal} from '../world/native-task-start-presentation.js';
 import {copyNativeSuspendedBodyReference} from '../world/native-suspended-body-reference.js';
 import {historicalPhysicalActorIds} from '../simulation/worker-historical-physics-isolation.js';
 import {createActorTerrainSampler} from './webgpu-actor-terrain.js';
@@ -92,5 +93,5 @@ export function createConfirmedTerrainSupport({residency,maxPieces=16384,maxActo
   for(const actor of actors){for(const point of [actor.start,actor.end]){if(!Number.isFinite(point?.x)||!Number.isFinite(point?.z))continue;const cx=Math.floor((point.x+24)/48),cz=Math.floor((point.z+24)/48),key=`${cx},${cz}`;if(!seen.has(key)){seen.add(key);const mesh=residency.get(cx,cz),visible=residency.getVisible(cx,cz),canonical=!!mesh&&!!inspect(mesh,cx,cz);chunks.push({cx,cz,manifest:!!manifest?.chunks?.some(chunk=>chunk.cx===cx&&chunk.cz===cz),resident:!!mesh,visible:!!mesh&&mesh===visible,canonical,...(!canonical?{details:inspectDetails(mesh,cx,cz)}:{})});}if(points.length<128){let exact=null,sampled=null;try{exact=residency.surface(point.x,point.z);sampled=sampleActorTerrain(point.x,point.z);}catch{}points.push({actorId:actor.actorId,x:point.x,z:point.z,exact:Number.isFinite(exact)?exact:null,sampled:Number.isFinite(sampled)?sampled:null});}}}
   return {manifestMatches:matches,chunks,points,pointLimit:128,note:'Endpoint diagnostics only; segment cuts and limits are not re-evaluated.'};
  }
- return {prepare,prepareNativeRoute,prepareNativeResumeProposal,prepareNativeBody,audit,dispose(){closed=true;}};
+ return {prepare,prepareNativeRoute,prepareNativeResumeProposal,prepareNativeTaskStartProposal(value,{terrainManifest}={}){if(closed)throw Error('Confirmed terrain support disposed');let presentation;try{presentation=copyNativeTaskStartProposal(value);}catch{return null;}return prepareNativeMotion(presentation,terrainManifest,String(presentation.actorId),'native-task-start-terrain-support');},prepareNativeBody,audit,dispose(){closed=true;}};
 }

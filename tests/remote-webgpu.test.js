@@ -8,6 +8,9 @@ import {nativeResumeReferenceFromProposal} from '../src/world/native-resume-refe
 import {captureNativeRoutePickFrame} from '../src/rendering/native-route-pick-frame.js';
 import { createNativeIntentControlPublication } from '../src/simulation/native-intent-control-publication.js';
 import {createNativeRouteExecutionFixture} from './helpers/native-route-execution.js';
+import {nativeTaskRequestFixture} from './helpers/native-task-resource-requests.js';
+import {nativeTaskStartReferenceFromProposal} from '../src/world/native-task-start-reference.js';
+import {releaseTask,notifyWorkerPlanningChange} from '../src/simulation/tasks.js';
 
 function pair() {
   const a = {}, b = {};
@@ -76,7 +79,7 @@ function preparationDraw(f,buffer,metadata,pipeline=f.pipeline,upload=null){
  pass.setPipeline(pipeline);pass.setBindGroup(0,group);pass.draw(3);pass.end();f.client.device.queue.submit([encoder.finish()]);return f.client.endFrame();
 }
 function preparedWorldDraw(f,boundary,value=77,signal=null){
- const metadata={clock:f.clock,nativeWorldBoundary:boundary,...(f.resumeTemplate?{nativeResumeTemplate:f.resumeTemplate,nativeResumeTemplateCoverageEnd:f.resumeTemplate.endTime}:{})};f.client.beginFrame({nativeWorldBoundary:boundary});
+ const metadata={clock:f.clock,nativeWorldBoundary:boundary,...(f.resumeTemplate?{nativeResumeTemplate:f.resumeTemplate,nativeResumeTemplateCoverageEnd:f.resumeTemplate.endTime}:{}),...(f.startTemplate?{nativeTaskStartTemplate:f.startTemplate}:{})};f.client.beginFrame({nativeWorldBoundary:boundary});
  f.client.device.queue.writeBuffer(f.buffer,0,new Float32Array([value]));
  const encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
  pass.setPipeline(f.pipeline);pass.setBindGroup(0,f.group);pass.draw(3);pass.end();f.client.device.queue.submit([encoder.finish()]);return f.client.prepareNativeWorldFrame(metadata,{signal});
@@ -189,12 +192,36 @@ for(const [attest,stale,deferred=false,missingTemplate=false,cancelDuringDrain=f
  }finally{source?.dispose();f.client.dispose();await f.host.dispose();native.session.dispose();}
 });
 
+for(const mode of ['current','missing-template','cancel-during-drain','missing-attestation'])test(`a first-task retained packet requires its genuine request and direct assignment (${mode})`,async()=>{
+ const native=nativeTaskRequestFixture({bindBodies:true});native.claim();const planner=native.planner,[sourcePort,drawPort]=pair(),f=await fixture({capabilities:{width:20,height:10,format:'rgba8unorm',nativeTaskStartVersion:1,nativeDeferredResumeVersion:1}},{intentControl:{port:drawPort,session:'first-task'},absoluteNow:()=>Number.MAX_SAFE_INTEGER});let source,prepared,reference;
+ try{
+  source=createNativeIntentControlPublication({port:sourcePort,session:'first-task',observe:planner.observeNativeIntentControl});await source.ready;
+  const b=planner.nativeRouteTiming(native.b),bReference={actorId:b.actorId,routeHandle:native.b,assignmentSequence:b.assignmentSequence},clock={version:1,epoch:0,elapsed:10,safeUntil:b.endTime,anchorAbsoluteMs:0,paused:false,segments:[{start:10,end:b.endTime,rate:1,realDuration:b.endTime-10}]};
+  f.client.registerClockBinding(f.buffer,{byteOffset:12,semantic:'relative',epoch:10,nativeRoute:bReference,resourceEnd:b.endTime});const shown=f.frame(1,{clock});await flush();await f.host.idle();f.host.present();await shown;
+  const advance=at=>{native.state.elapsed=at;assert.equal(planner.advanceNativeRouteExecution(at).status,'advanced');planner.commitNativeCausalClock();};
+  const quiesce=source.quiesceGpuForMutation;source.quiesceGpuForMutation=async options=>{const receipt=await quiesce(options);advance(native.state.elapsed+.02);if(mode==='cancel-during-drain'){const worker=native.state.workers[0];releaseTask(native.state,worker);worker.status='idle';notifyWorkerPlanningChange(native.state,worker);planner.flushTaskEvents();planner.commitNativeCausalClock();}return receipt;};
+  if(mode==='missing-attestation'){const release=source.releaseGpuAfterMutation;source.releaseGpuAfterMutation=(receipt,options)=>release(receipt,{...options,nativeStartedRoutes:[]});}
+  const request=planner.pendingTaskRoute(native.state.tasks[0].workerId),result=await planner.startNativeTaskRouteAfterGpuQuiescence({getPublication:()=>source,request,policy:{bodyId:1,radius:.28,urgent:true,runRemaining:4},prepareResources:async({resources,proposedWorldBoundary,deferredStart})=>{
+   assert.equal(deferredStart,true);reference=nativeTaskStartReferenceFromProposal(resources);assert.equal(planner.nativeRouteTiming(reference.expectedRouteHandle),null);assert.equal(resources.nativeResume,undefined);f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'relative',epoch:10,nativeStart:reference,resourceEnd:resources.endTime});f.client.registerClockBinding(f.buffer,{byteOffset:4,semantic:'origin-modulo',epoch:10,nativeStart:reference,period:3.8});
+   prepared=await preparedWorldDraw({...f,clock,...(mode==='missing-template'?{}:{startTemplate:reference})},proposedWorldBoundary);advance(12);const active=f.host.inspect().activeSequence;f.host.present();assert.equal(f.host.inspect().activeSequence,active);return {preparedWorldBoundary:prepared.preparedWorldBoundary,...(mode==='missing-template'?{}:{preparedTaskStartTemplate:reference}),valid:prepared.valid,commit:data=>prepared.commit(data.worldBoundary,data.nativeTaskStartBinding),abort:prepared.abort};
+  }});
+  if(mode==='current'){assert.equal(result.status,'committed',JSON.stringify(result));await flush();f.host.present();await prepared.presented;assert.equal(f.host.inspect().activeSequence,prepared.sequence);const frame=captureNativeRoutePickFrame(f.host.inspect());assert.equal(frame.getStartTime(reference,10),10);assert.equal(frame.getStartExecutionTime(reference,10),12.02);assert.equal(planner.nativeTaskStartBinding(reference.actorId).assignmentSequence,result.nativeRoute.assignmentSequence);assert.equal(f.host.inspect().failed,false);assert.deepEqual(f.errors,[]);
+   // A third body starts its other genuine claimed task while the first body
+   // remains an authorized nativeStart motor in this same retained scene.
+   const nextRequest=planner.pendingTaskRoute(native.state.tasks[1].workerId),buffer=f.client.device.createBuffer({size:16,usage:72});f.group=f.client.device.createBindGroup({entries:[{binding:0,resource:{buffer:f.buffer}},{binding:1,resource:{buffer}}]});let nextReference,nextPacket;
+   const next=await planner.startNativeTaskRouteAfterGpuQuiescence({getPublication:()=>source,request:nextRequest,policy:{bodyId:3,radius:.28,urgent:true,runRemaining:4},prepareResources:async({resources,proposedWorldBoundary})=>{nextReference=nativeTaskStartReferenceFromProposal(resources);f.client.registerClockBinding(buffer,{byteOffset:0,semantic:'relative',epoch:resources.startTime,nativeStart:nextReference,resourceEnd:resources.endTime});nextPacket=await preparedWorldDraw({...f,clock,startTemplate:nextReference},proposedWorldBoundary);advance(12.3);return {preparedWorldBoundary:nextPacket.preparedWorldBoundary,preparedTaskStartTemplate:nextReference,valid:nextPacket.valid,commit:data=>nextPacket.commit(data.worldBoundary,data.nativeTaskStartBinding),abort:nextPacket.abort};}});
+   assert.equal(next.status,'committed',JSON.stringify(next));await flush();f.host.present();await nextPacket.presented;const current=captureNativeRoutePickFrame(f.host.inspect());assert(current.getStartExecutionTime(reference,10)>12.02);assert.equal(current.getStartExecutionTime(nextReference,nextReference.worldBoundary.effectiveTime),12.32);assert.equal(f.host.inspect().failed,false);assert(planner.nativeRouteTiming(result.nativeRoute.routeHandle));assert(planner.nativeRouteTiming(next.nativeRoute.routeHandle));assert(planner.nativeRouteTiming(native.b));assert.deepEqual(f.errors,[]);
+  }
+  else{assert.notEqual(result.status,'committed',JSON.stringify(result));if(prepared)await assert.rejects(prepared.presented);if(mode==='cancel-during-drain'){assert.equal(result.status,'resources-changed',JSON.stringify(result));assert.equal(planner.pendingTaskRoute(reference.actorId),null);assert.equal(source.status().closed,false);assert.equal(f.host.inspect().failed,false);}else if(mode==='missing-template')assert.equal(planner.nativeRouteTiming(reference.expectedRouteHandle),null);else assert.equal(result.status,'committed-control-failed');}
+ }finally{source?.dispose();f.client.dispose();await f.host.dispose();native.close();}
+});
+
 test('a draw owner without resume support refuses the candidate clock',async()=>{
  const f=await fixture();try{assert.throws(()=>f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'relative',epoch:10,nativeResume:{}}),/does not support/);assert.equal(f.client.inspect().clockBindings,0);}finally{f.client.dispose();await f.host.dispose();}
 });
 
 test('a preparer cannot inject direct native execution bindings into a packet',async()=>{
- const f=await fixture();try{for(const key of ['admittedWorldBoundary','admittedResumeBinding','admittedClockBindings','admittedClockCoverageEnd'])await assert.rejects(f.host.handle({type:'frame',packet:{sequence:1,operations:[],[key]:{}}}),/producer cannot supply/);assert.equal(f.gpu.submitted.length,0);assert.equal(f.host.inspect().activeSequence,null);}finally{f.client.dispose();await f.host.dispose();}
+ const f=await fixture();try{for(const key of ['admittedWorldBoundary','admittedResumeBinding','admittedMotionBinding','admittedClockBindings','admittedClockCoverageEnd'])await assert.rejects(f.host.handle({type:'frame',packet:{sequence:1,operations:[],[key]:{}}}),/producer cannot supply/);assert.equal(f.gpu.submitted.length,0);assert.equal(f.host.inspect().activeSequence,null);}finally{f.client.dispose();await f.host.dispose();}
 });
 
 test('a draw owner without suspension support cannot silently accept the new clock as an ordinary clock',async()=>{
