@@ -2,7 +2,7 @@
 
 Actualizado: 2026-11-15. IDs acordados en la conversación; no se renumeran al avanzar.
 
-Último incremento del camino crítico: [ejecución de tareas nativas en Game.tick](e-r3-native-task-game-execution-20261115.md), con llegada retenida hasta admitir los recursos de acción.
+Último incremento del camino crítico: [candidato nativo de acción](e-r3-native-task-action-proposal-20261115.md), con reserva retenida y revalidación desde la llegada ejecutada; la admisión gráfica de la acción sigue pendiente.
 Publicaciones ordinarias y aceptación integrada de personajes autónomos siguen pendientes; no cambia el recuento de cierres.
 
 **Ningún punto principal está cerrado todavía.** Un subpunto marcado como nativo

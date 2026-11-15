@@ -1,6 +1,6 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
-Continuación 2026-11-15: [ejecución de tareas nativas en Game.tick](e-r3-native-task-game-execution-20261115.md), con llegada retenida hasta admitir los recursos de acción.
+Continuación 2026-11-15: [candidato nativo de acción](e-r3-native-task-action-proposal-20261115.md), con reserva retenida y revalidación desde la llegada ejecutada; la admisión gráfica de la acción sigue pendiente.
 Se conserva el orden A → B → C → D; la reproducción nativa avanza como componente, pero la admisión ordinaria y la aceptación integrada siguen pendientes.
 
 Revisión del 5 de noviembre de 2026. Rama de trabajo: `codex/guardian-3d-animation`. Este documento sustituye la secuencia del plan del 4 de noviembre; su versión anterior permanece en Git. Estado: plan de implementación, no arquitectura ya terminada.

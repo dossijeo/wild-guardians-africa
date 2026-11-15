@@ -1,5 +1,6 @@
 import {nativeTaskStartReferenceFromProposal,sameNativeTaskStartReference} from '../native-task-start-reference.js';
 import {copyNativeTaskRequestReference} from '../native-task-request-reference.js';
+import {copyNativeTaskActionRequest,copyNativeTaskActionProposal,sameNativeTaskActionRequest,NATIVE_TASK_ACTION_KINDS} from '../native-task-action-presentation.js';
 import {copyNativeTaskStartAttestation} from '../native-task-start-attestation.js';
 import {sameNativeResumeReference} from '../native-resume-reference.js';
 import {nativeEntityNumericId as numericId} from '../native-entity-id.js';
@@ -1005,7 +1006,45 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     const id=typeof actorId==='number'?actorId:numericId(actorId);
     if(wasm.nav_intent_task_execution_version?.()!==1||wasm.nav_intent_task_action_request_snapshot(id)!==1)return null;
     const a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_task_action_request_ptr(),14));
-    return Object.freeze({kind:'native-task-action-resource-request',version:1,nativeRoute:Object.freeze({actorId:a[1],routeHandle:routeHandle(a[4],a[5],a[6]),assignmentSequence:a[7]}),taskId:a[2],targetId:a[3],bodyId:a[8],requestedAt:a[9],actionKind:['harvest','initial','water','crate','repair'][a[10]],duration:a[11],heading:a[12],executedThrough:a[13],authorizedAutonomy:false});
+    return copyNativeTaskActionRequest({kind:'native-task-action-resource-request',version:1,nativeRoute:{actorId:a[1],routeHandle:routeHandle(a[4],a[5],a[6]),assignmentSequence:a[7]},taskId:a[2],targetId:a[3],bodyId:a[8],requestedAt:a[9],actionKind:NATIVE_TASK_ACTION_KINDS[a[10]],duration:a[11],heading:a[12],executedThrough:a[13],authorizedAutonomy:false});
+  };
+  const captureNativeTaskActionProposal=ticket=>{
+    if(ticket?.kind!=='native-task-action-proposal-ticket'||ticket.authorityEpoch!==epoch()||wasm.nav_task_action_proposal_snapshot(ticket.session,ticket.ticket)!==1)return null;
+    const h=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_task_action_proposal_header_ptr(),24));
+    if(wasm.nav_intent_barrier_proposal_ticket()!==1)return null;
+    const t=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6));
+    if(!h.every(Number.isFinite)||h[0]!==1||h[15]!==t[3]||h[21]!==t[2]||t[0]!==ticket.session||t[1]!==ticket.ticket||t[5]!==15||!Number.isInteger(h[9]))throw Error('Invalid native task action draft');
+    return copyNativeTaskActionProposal({kind:'native-task-action-proposal',version:1,ticket,worldBoundary:{version:1,authorityEpoch:epoch(),nativeSession:t[0],ticket:t[1],effectiveTime:t[3]},request:{kind:'native-task-action-resource-request',version:1,nativeRoute:{actorId:h[1],routeHandle:routeHandle(t[0],h[5],h[6]),assignmentSequence:h[7]},taskId:h[2],targetId:h[3],bodyId:h[4],requestedAt:h[8],actionKind:NATIVE_TASK_ACTION_KINDS[h[9]],duration:h[10],heading:h[11],executedThrough:h[15],authorizedAutonomy:false},sourceControlSequence:h[21],origin:{x:h[12],z:h[13]},radius:h[14],startTime:h[15],endTime:h[16],runPhase:h[17],walkPhase:h[18],carryPhase:h[19],runRemaining:h[20],profile:h[22],motionFlags:h[23],authorizedAutonomy:false,authorizedConsequences:false});
+  };
+  const prepareNativeTaskActionProposal=value=>{
+    const request=copyNativeTaskActionRequest(value),handle=request.nativeRoute.routeHandle,outcome=(status,extra={})=>({status,authorizedAutonomy:false,authorizedConsequences:false,...extra});
+    if(handle.authorityEpoch!==epoch())return outcome('stale');
+    if(wasm.nav_task_action_proposal_version?.()!==1)throw Error('Rebuild native task action proposal');
+    syncBoundaryTime();flushNativeIntentControl();
+    if(!sameNativeTaskActionRequest(request,nativeTaskActionRequest(request.nativeRoute.actorId)))return outcome('stale');
+    const result=wasm.nav_task_action_proposal_stage(request.nativeRoute.actorId,handle.session,handle.slot,handle.generation,request.nativeRoute.assignmentSequence,request.taskId,request.targetId,request.bodyId,request.requestedAt,NATIVE_TASK_ACTION_KINDS.indexOf(request.actionKind),request.duration,request.heading);
+    if(result!==1)return outcome(result===-1?'stale':result===-3?'body-mismatch':result===-4?'busy':'unsupported');
+    if(wasm.nav_intent_barrier_proposal_ticket()!==1)throw Error('Native task action proposal lost its ticket');
+    const t=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6)),ticket=Object.freeze({kind:'native-task-action-proposal-ticket',authorityEpoch:epoch(),session:t[0],ticket:t[1]});
+    try{const proposal=captureNativeTaskActionProposal(ticket);if(!proposal)throw Error('Native task action proposal expired during capture');return outcome('proposed',{proposal});}catch(error){wasm.nav_task_action_proposal_cancel(t[0],t[1]);throw error;}
+  };
+  const cancelNativeTaskActionProposal=ticket=>ticket?.kind==='native-task-action-proposal-ticket'&&ticket.authorityEpoch===epoch()&&wasm.nav_task_action_proposal_cancel(ticket.session,ticket.ticket)===1;
+  const revalidateNativeTaskActionProposal=ticket=>{
+    const outcome=(status,extra={})=>({status,authorizedAutonomy:false,authorizedConsequences:false,...extra});
+    if(ticket?.kind!=='native-task-action-proposal-ticket'||ticket.authorityEpoch!==epoch()||wasm.nav_intent_barrier_proposal_ticket()!==1)return outcome('stale');
+    const old=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6));
+    if(old[0]!==ticket.session||old[1]!==ticket.ticket||old[5]!==15)return outcome('stale');
+    syncBoundaryTime();flushNativeIntentControl();const result=wasm.nav_task_action_proposal_revalidate(ticket.session,ticket.ticket);
+    if(result!==1)return outcome(result===-1?'stale':result===-3?'body-mismatch':result===-4?'busy':'unsupported');
+    if(wasm.nav_intent_barrier_proposal_ticket()!==1)throw Error('Native task action revalidation lost its ticket');
+    const t=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6)),nextTicket=Object.freeze({...ticket,session:t[0],ticket:t[1]});
+    try{
+      const proposal=captureNativeTaskActionProposal(nextTicket),ptr=wasm.nav_task_action_proposal_time_translation_ptr(t[0],t[1]);
+      if(!proposal||!ptr)throw Error('Native task action revalidation evidence unavailable');
+      const a=Array.from(new Float64Array(wasm.memory.buffer,ptr,8));
+      if(!a.every(Number.isFinite)||a[0]!==1||a[1]!==ticket.ticket||a[2]!==nextTicket.ticket||a[5]!==proposal.startTime||a[6]!==proposal.endTime||![0,1].includes(a[7]))throw Error('Invalid native task action time translation');
+      return outcome('revalidated',{proposal,timeTranslation:Object.freeze({kind:'native-task-action-time-translation',version:1,previousTicket:Object.freeze({...ticket}),ticket:nextTicket,previousStartTime:a[3],previousEndTime:a[4],startTime:a[5],endTime:a[6],sameSourceState:a[7]===1,authorizedAutonomy:false,authorizedConsequences:false})});
+    }catch(error){wasm.nav_task_action_proposal_cancel(t[0],t[1]);throw error;}
   };
   const prepareNativeRouteMotion=(handle,{radius,urgent=false,flight=false,slow=false,
     carrying=false,recovering=false,incapacitated=false,runRemaining=0,waitForGates=false}={})=>{
@@ -1596,6 +1635,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     findPlantingSite,releasePlantingSite,
     intentChanges,routePoints,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,captureNativeRoutePresentation,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,resumeNativeGateRouteAfterGpuQuiescence,prepareNativeGateResumeProposal,captureNativeGateResumeProposal,cancelNativeGateResumeProposal,revalidateNativeGateResumeProposal,prepareNativeTaskStartProposal,captureNativeTaskStartProposal,revalidateNativeTaskStartProposal,cancelNativeTaskStartProposal,
     beginNativeRouteExecution,advanceNativeRouteExecution,stopNativeRouteExecution,nativeRouteExecution,nativeGameExecutionState,advanceNativeGameExecution,nativeTaskExecution,requestNativeTaskActionResources,nativeTaskActionRequest,
+    prepareNativeTaskActionProposal,captureNativeTaskActionProposal,revalidateNativeTaskActionProposal,cancelNativeTaskActionProposal,
     projectRouteProgress,processEventBoundary,requestReroute,
     registerAttackIntent,planAttackCrop,planAttackWall,replanAttackRoute,
     planRetreatRoute,planHomeRoute,
@@ -2545,5 +2585,6 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     advanceNativeRouteExecution:bridge.advanceNativeRouteExecution,
     stopNativeRouteExecution:bridge.stopNativeRouteExecution,nativeRouteExecution:bridge.nativeRouteExecution,
     nativeGameExecutionState:bridge.nativeGameExecutionState,advanceNativeGameExecution:bridge.advanceNativeGameExecution,nativeTaskExecution:bridge.nativeTaskExecution,projectNativeTaskExecution,requestNativeTaskActionResources:bridge.requestNativeTaskActionResources,nativeTaskActionRequest:bridge.nativeTaskActionRequest,
+    prepareNativeTaskActionProposal:bridge.prepareNativeTaskActionProposal,captureNativeTaskActionProposal:bridge.captureNativeTaskActionProposal,revalidateNativeTaskActionProposal:bridge.revalidateNativeTaskActionProposal,cancelNativeTaskActionProposal:bridge.cancelNativeTaskActionProposal,
     discard:bridge.discard,commit:bridge.commit,sequence:bridge.sequence};
 }

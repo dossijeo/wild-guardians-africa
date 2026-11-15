@@ -50,6 +50,11 @@ solicita recursos de acción sin conceder efectos. Guardar y cargar exige nueva
 admisión. El productor ordinario, admitir esas acciones y las demás clases siguen
 pendientes; los mismos criterios de integración permanecen abiertos.
 
+El [candidato de acción desde una llegada ejecutada](e-r3-native-task-action-proposal-20261115.md)
+prepara y revalida identidad, cuerpo y fases en el mismo slot de propuestas.
+No libera la reserva ni admite efectos; la asociación del clip preparado y el
+commit causal de la acción siguen pendientes. No cambia el estado de cierre.
+
 Hay modificaciones locales previas en simulación, escena, carga y QA. No forman
 parte de los commits de esta corrección ni deben descartarse.
 

@@ -210,8 +210,13 @@ struct PendingNativeMotionDraft {
   uint32_t slot=0,generation=0,topology=0;
   uint64_t body=0;
 };
+struct PendingTaskActionDraft {
+  std::array<double,24> header{};
+  std::array<double,8> timeTranslation{};
+};
 struct PendingBarrierProposal {
   std::optional<PendingNativeMotionDraft> resume,start;
+  std::optional<PendingTaskActionDraft> action;
   bool retainsRoutes=false;
   std::vector<double> routeEffects,gateEffects;
   bool pending=false;uint32_t session=0;uint64_t ticket=0;
@@ -1052,12 +1057,12 @@ int spatialIntentStageWorld(const SpatialWorldProposalInput& input,const Spatial
   auto& p=state().barrierProposal;p.kind=input.kind;p.worldInput=input;return 1;
 }
 void clearWorldMutationProposal(PendingBarrierProposal& p){
-  p.pending=false;p.kind=0;p.resume.reset();p.start.reset();p.worldInput=SpatialWorldProposalInput{};p.routeEffects.clear();p.gateEffects.clear();
+  p.pending=false;p.kind=0;p.resume.reset();p.start.reset();p.action.reset();p.worldInput=SpatialWorldProposalInput{};p.routeEffects.clear();p.gateEffects.clear();
 }
 int takeWorldMutationBoundary(double session,double ticket,double sequence,double time,double clockSequence,int kind){
   auto& s=state();const auto& p=s.barrierProposal;
   if(!integer(session)||!integer(ticket)||!p.pending||session!=double(p.session)||ticket!=double(p.ticket)||
-     (kind==1?p.kind!=1:(kind==13||kind==14)?p.kind!=kind:p.kind<2||p.kind>11))return -1;
+     (kind==1?p.kind!=1:(kind==13||kind==14||kind==15)?p.kind!=kind:p.kind<2||p.kind>11))return -1;
   const bool current=p.session==s.session&&p.at==s.effectiveTime&&p.bodies==spatialBodiesMutationRevision()&&
     p.bodies!=std::numeric_limits<uint64_t>::max()&&p.entities==s.entityRevision&&p.facts==s.sequence&&
     p.intents==s.intentSequence&&p.reservations==s.residencyPinRevision&&p.clock==s.clockSequence&&
@@ -2159,6 +2164,7 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_route_execution(double session,double slot,d
 }
 EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_execution_ptr(){return state().executionResult.data();}
 #include "spatial-task-execution.inc"
+#include "spatial-task-action-proposal.inc"
 EMSCRIPTEN_KEEPALIVE double nav_intent_execution_advances(){return double(state().executionAdvances);}
 EMSCRIPTEN_KEEPALIVE double nav_intent_execution_evaluations(){return double(state().executionEvaluations);}
 EMSCRIPTEN_KEEPALIVE double nav_intent_execution_body_updates(){return double(state().executionBodyUpdates);}

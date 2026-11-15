@@ -1,0 +1,141 @@
+{
+  "version": 1,
+  "date": "2026-11-15",
+  "baseCommit": "80d428b48cb7cd38fd31c32d2fbc88933a58ffae",
+  "scope": "A native action candidate is prepared/revalidated from a real Game arrival in the existing mutation slot, retaining its route and body. No action commit, GPU action admission, action consequences or ordinary producer is enabled.",
+  "sourceHashes": {
+    "src/world/wild-engine/spatial-intent-state.cpp": "db056de25374846e9b2d8fd36bf53ba733adc96d1559479b3704ca040d0bcd57",
+    "src/world/wild-engine/spatial-task-action-proposal.inc": "4767e05e618058f23e142a610014ccca8bf07a32d673a79210f5960c3359645c",
+    "src/world/wild-engine/spatial-intent-bridge.js": "fea2cce5692ef86b3990c7372ef7ddaec7d7344e0641247c66002afbc2b78835",
+    "src/world/native-task-action-presentation.js": "1a900bba8a835136075e9731370f32d4e6d07e0e0217360151c5ee522d92327a",
+    "src/world/wild-engine/spatial-savanna.wasm": "8eb9cd4206d171f78cf1d7eeea99a9b9f515cdf8b36d2a29b7140ad118cd47e9",
+    "public/wild-engine/spatial-threaded.mjs": "51f99e50c2ef2063bc49228acfdbaed7e9ea804cbb0456be25dfd7e371ce0a58",
+    "public/wild-engine/spatial-threaded.wasm": "8504fec297a6d6ee4c203cb54f0060e388ec7ed743790937fdbdfd1eb318116f",
+    "tests/native-task-action-proposal.test.js": "2d748ad786504614a5d3a6405223d51bf4e31c26646a9920616ee4c7d34a3532",
+    "tests/native-task-game-execution.test.js": "91e313e0e30557c4826128cc5fdae2601a7e52ecce7f1691cf0bada505f66beb",
+    "tests/helpers/native-task-game-execution.js": "0c94848afa242b2481a2327245decd693bb65674a7aa28047f0bde3b444c168b"
+  },
+  "unchangedContextHashes": {
+    "src/simulation/game.js": "744e505ce303e1ebaddd18ba3579a194ac8c82f06261ab9e161c942afc8c72e4",
+    "src/world/wild-engine/spatial-task-execution.inc": "c2d36e854bf1b69c5810bdc021b6a49d0750ccfb873361949480c8b4d32e061f",
+    "tests/native-frame-continuation.test.js": "7e0d6b81f72347049361205df262788b6171c12091175124632e68449439d2f5",
+    "tests/webgpu-guardian-worker-boundary.test.js": "91db1da2dce63c3d7c1818f565f1d038ec84a0362be2bbd1ae80ffd6b05aab0c"
+  },
+  "directed": {
+    "tests": 104,
+    "pass": 104,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "regression": {
+    "tests": 1914,
+    "pass": 1909,
+    "fail": 5,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "wideSelectionFiles": 176,
+  "knownFailures": [
+    "the intent bridge projects a scaled gate using the physical wall frame",
+    "loading during a committed strike applies its damage frame exactly once",
+    "event-fed native intent bridge replays live state and only changes on explicit deltas",
+    "late crate admission is rejected after drop and retries a later pickup",
+    "confirmed harvest installs its sampled GPU horizon and cancels on changed target"
+  ],
+  "newCases": 12,
+  "functionalEvidence": "Real Game.tick with genuine global task claims and actual standalone/pthread WASM; the route admissions in the fixture remain manual. B continues executing during A preparation. Covers exact source/cached phases, stale requests, cancellation/replan/body removal, occupied-body rebinding rejection, shared-slot exclusivity, protocol isolation, pre-arrival rejection, no mutable aliases and save/session invalidation.",
+  "revalidationLimit": "sameSourceState compares native identity/policy/pose/phases only. It is not a Float32 projection compatibility proof, retained GPU packet, action grant or effect permit.",
+  "build": {
+    "nativeStandaloneAndPthread": true,
+    "productSeconds": 43.39,
+    "warnings": "Existing chunk size/mixed imports and pthread memory growth warnings"
+  },
+  "browserSyntax": {
+    "files": 367,
+    "scripts": 309,
+    "failures": []
+  },
+  "gpu": {
+    "record": "native-task-action-proposal-gpu-regression-20261115.json",
+    "source": "Existing SpatialGameSession in-page first-task scenario with real product preparation/draw workers; not new action rendering or ordinary source producer proof",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "block": {
+      "start": 1794719027870.065,
+      "end": 1794719029670.135,
+      "committedAt": 1794719027879.0798,
+      "drawFrames": 54,
+      "minClock": 13.139999999999933,
+      "maxClock": 14.779999999999898,
+      "resourcesAfterReady": 0
+    },
+    "drained": true
+  },
+  "resumeGpu": {
+    "record": "native-task-action-proposal-resume-gpu-20261115.json",
+    "block": {
+      "start": 1794719048914.635,
+      "end": 1794719050714.71,
+      "committedAt": 1794719048929.3552,
+      "drawFrames": 54,
+      "minClock": 60.79629700272216,
+      "maxClock": 62.416297002722416,
+      "resourcesAfterReady": 0
+    },
+    "drained": true,
+    "metricLimit": "Tool does not record requestFailures"
+  },
+  "research": [
+    {
+      "project": "Godot",
+      "revision": "4.4-stable",
+      "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/animation/animation_mixer.cpp",
+      "functions": [
+        "_blend_process TYPE_METHOD",
+        "_call_object"
+      ],
+      "lines": [
+        "1553-1579",
+        "1908-1925"
+      ],
+      "decision": "Separate update/evaluation from effect callbacks and revalidate source identity before deferred application. Existing native mutation owner retained; no dependency."
+    }
+  ],
+  "checks": [
+    "Owned JavaScript syntax and diff whitespace checks",
+    "10 source hashes and four context hashes unchanged throughout the full verification",
+    "Subsequent EOF-only fixture normalization verified byte-for-byte and followed by 22 passing actual Game/action tests; final source hashes recorded separately"
+  ],
+  "acceptanceClosed": [],
+  "verificationSourceHashes": {
+    "src/world/wild-engine/spatial-intent-state.cpp": "db056de25374846e9b2d8fd36bf53ba733adc96d1559479b3704ca040d0bcd57",
+    "src/world/wild-engine/spatial-task-action-proposal.inc": "4767e05e618058f23e142a610014ccca8bf07a32d673a79210f5960c3359645c",
+    "src/world/wild-engine/spatial-intent-bridge.js": "fea2cce5692ef86b3990c7372ef7ddaec7d7344e0641247c66002afbc2b78835",
+    "src/world/native-task-action-presentation.js": "1a900bba8a835136075e9731370f32d4e6d07e0e0217360151c5ee522d92327a",
+    "src/world/wild-engine/spatial-savanna.wasm": "8eb9cd4206d171f78cf1d7eeea99a9b9f515cdf8b36d2a29b7140ad118cd47e9",
+    "public/wild-engine/spatial-threaded.mjs": "51f99e50c2ef2063bc49228acfdbaed7e9ea804cbb0456be25dfd7e371ce0a58",
+    "public/wild-engine/spatial-threaded.wasm": "8504fec297a6d6ee4c203cb54f0060e388ec7ed743790937fdbdfd1eb318116f",
+    "tests/native-task-action-proposal.test.js": "2d748ad786504614a5d3a6405223d51bf4e31c26646a9920616ee4c7d34a3532",
+    "tests/native-task-game-execution.test.js": "91e313e0e30557c4826128cc5fdae2601a7e52ecce7f1691cf0bada505f66beb",
+    "tests/helpers/native-task-game-execution.js": "a35484d286bf5197cfad6e66cc554da61f6a5f8563c2577f72b8270a4735f509"
+  },
+  "postVerificationWhitespaceNormalization": {
+    "file": "tests/helpers/native-task-game-execution.js",
+    "beforeSha256": "a35484d286bf5197cfad6e66cc554da61f6a5f8563c2577f72b8270a4735f509",
+    "afterSha256": "0c94848afa242b2481a2327245decd693bb65674a7aa28047f0bde3b444c168b",
+    "change": "Remove a single blank line at EOF detected by staged diff check; executable text unchanged.",
+    "directed": {
+      "tests": 22,
+      "pass": 22,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    },
+    "syntax": "node --check helper passed"
+  }
+}
