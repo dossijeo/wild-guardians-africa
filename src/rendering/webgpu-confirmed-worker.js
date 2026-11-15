@@ -59,8 +59,8 @@ export async function createWebGpuConfirmedWorker({scene,residency,state,actorId
    presentations=[baked,bakedRun,bakedCarry,bakedGetUp,bakedFall,bakedIdle,bakedAlert,bakedWater,bakedPlant,bakedHarvest].filter(Boolean),
    visibility=presentations.map(value=>({value,enabled:value.isEnabled()}));
   if(closed||!selected||[bakedGetUp,bakedFall,bakedAlert,bakedWater,bakedPlant,bakedHarvest].some(value=>value?.isEnabled()))throw Error('Native locomotion variant unavailable');
-  const previous=nativePickVariant,prepared=selected.prepareMaterialVariant(nextPhaseSource,{clipBakes,allowDisabled:clip!==null});let released=false,active=false;
-  const unchanged=()=>visibility.every(item=>item.value.isEnabled()===item.enabled),ownsSelected=()=>[baked,bakedRun,bakedCarry,bakedIdle].includes(selected),
+  const previous=nativePickVariant,prepared=selected.prepareMaterialVariant(nextPhaseSource,{clipBakes,allowDisabled:clip!==null}),sourceVisibility=[];model.traverse(node=>{if(node.isMesh)sourceVisibility.push({node,visible:node.visible});});let released=false,active=false;
+  const unchanged=()=>visibility.every(item=>item.value.isEnabled()===item.enabled)&&sourceVisibility.every(item=>item.node.visible===item.visible),ownsSelected=()=>[baked,bakedRun,bakedCarry,bakedIdle].includes(selected),
    current=()=>!released&&!closed&&ownsSelected()&&selected.isEnabled()&&nativePickVariant===token;
   const token={materialAlternatives:prepared.materialAlternatives,replicaSources:prepared.replicaSources,valid:()=>!released&&!active&&!closed&&nativePickVariant===previous&&ownsSelected()&&unchanged()&&prepared.valid(),
    activate(){
@@ -70,10 +70,11 @@ export async function createWebGpuConfirmedWorker({scene,residency,state,actorId
     if(!selected.isEnabled())selected.set(0,{advance:false});for(const value of presentations)value.hideSources();active=true;nativePickVariant=token;
    },current,
    rollbackActivation(){
-    if(released||!active||nativePickVariant!==token||visibility.some(item=>item.value!==selected&&item.value.isEnabled()!==item.enabled))throw Error('Native motion activation cannot be rolled back');
+    if(released||!active||nativePickVariant!==token||presentations.some(value=>value.isEnabled()!==(value===selected)))throw Error('Native motion activation cannot be rolled back');
     prepared.rollbackActivation();
-    if(!visibility.find(item=>item.value===selected).enabled)selected.disable();
-    if(!unchanged())throw Error('Native motion source changed');previous?.restoreExtraMeshes();nativePickVariant=previous;active=false;
+    for(const item of visibility)if(item.enabled)item.value.restoreVisibility();else item.value.disable();
+    previous?.restoreExtraMeshes();for(const item of sourceVisibility)item.node.visible=item.visible;
+    if(!unchanged())throw Error('Native motion source changed');nativePickVariant=previous;active=false;
    },hideExtraMeshes:()=>prepared.hideExtraMeshes(),restoreExtraMeshes:()=>prepared.restoreExtraMeshes(),
    deactivate(){if(nativePickVariant===token){prepared.deactivate();nativePickVariant=null;}},
    preparePick:()=>{if(!current())throw Error('Native motion pick unavailable');return prepared.preparePick();},

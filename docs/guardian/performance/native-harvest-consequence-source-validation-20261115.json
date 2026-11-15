@@ -179,5 +179,61 @@
       "seconds": 43.11,
       "log": ".cache/native-consequence-consumer-rollback-final-build.log"
     }
+  },
+  "carryRollbackFollowup": {
+    "parent": "75e3a6875cbafedfb2587f2c68444d7cc5b7b4dd",
+    "scope": "Existing prepared actor variant rollback, original youngMale Carry model/body/9 crate parts; no native consequence GPU integration",
+    "research": {
+      "source": "https://github.com/mrdoob/three.js/blob/r180/src/renderers/common/Renderer.js#L844-L963",
+      "inspectedLocally": "node_modules/three/src/renderers/common/Renderer.js, compileAsync saves lines 854-857 and restores lines 954-958 before awaiting compilation",
+      "version": "0.180.0",
+      "sha256": "9a91bd98d9f898098f086ad9b1fcb297cc88e9a5bb931f7432ddcae25511a8ee",
+      "adapted": "Restore exact previous owned presentation state after checking activated candidate; no renderer or dependency added"
+    },
+    "tests": {
+      "tests": 165,
+      "pass": 164,
+      "fail": 1,
+      "skip": 0,
+      "files": [
+        "tests/native-worker-action-variant.test.js",
+        "tests/native-task-start-graphics.test.js",
+        "tests/native-task-action-graphics.test.js",
+        "tests/native-worker-roster.test.js",
+        "tests/webgpu-actor-motion-binding.test.js",
+        "tests/webgpu-baked-walk.test.js",
+        "tests/webgpu-confirmed-worker-clock.test.js",
+        "tests/webgpu-worker-roster.test.js",
+        "tests/webgpu-worker-baked-walk.test.js"
+      ],
+      "log": ".cache/native-carry-rollback-directed.log",
+      "overlapsEarlierNativeGraphicsCounts": true
+    },
+    "preliminaryFailure": {
+      "log": ".cache/native-carry-rollback-red.log",
+      "error": "Native motion activation cannot be rolled back"
+    },
+    "parentComparison": {
+      "parent": "9d9bcff5c4b94bcc300dc76dfbeb87e7041e0261",
+      "test": "confirmed harvest installs its sampled GPU horizon and cancels on changed target",
+      "file": "tests/webgpu-worker-roster.test.js:185",
+      "method": "Read-only ESM loader returns both original rendering modules at original URLs; all other files unchanged. Stub actor does not instantiate either changed class. Same isolated failure and complete error payload.",
+      "sameErrorPayload": true,
+      "errorPayloadSha256": "91fd1179dda6005dd82e60406cf91d991141c0b4f709d1fdd5ecba3ad189b9b3",
+      "currentLog": ".cache/native-carry-rollback-roster-isolated.log",
+      "parentLog": ".cache/native-carry-rollback-roster-parent.log"
+    },
+    "productBuild": {
+      "status": "passed",
+      "seconds": 43.11,
+      "log": ".cache/native-consequence-consumer-rollback-final-build.log"
+    },
+    "hardwareGpu": false,
+    "sourceHashes": {
+      "src/rendering/webgpu-confirmed-worker.js": "474d87bdb33d7c64e8f2c0dc7a0d4c6fb6200fbc99a517691d067c9b2ced538d",
+      "src/rendering/webgpu-baked-walk.js": "0caaf8b71962601c8ff14ee538389076d0499eaea9559f78597365ff35e24ec9",
+      "tests/native-worker-action-variant.test.js": "c26701f972819ba2670bd20d034e1aa455e5cc930a61432b8ab3dfc707bdc5fb"
+    },
+    "closuresChanged": false
   }
 }

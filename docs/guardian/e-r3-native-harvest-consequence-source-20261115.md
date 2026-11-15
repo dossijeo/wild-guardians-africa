@@ -105,3 +105,29 @@ el retorno asíncrono; ahora el listener observa la nueva frontera completa. Se
 prueban asimismo recibos sin versión, de versión incorrecta, sin plantilla o de
 otra caja: ninguno aplica efectos. Validación adicional: 55/55 pruebas en cinco
 archivos, sin omisiones; los recuentos se solapan con los anteriores.
+
+## Preparación reversible de Carry en el actor original
+
+Se contrastó la restauración con el código local de Three.js 0.180.0,
+[`Renderer.compileAsync`](https://github.com/mrdoob/three.js/blob/r180/src/renderers/common/Renderer.js#L844-L963),
+que conserva y restaura el contexto anterior de preparación. Se aplica ese patrón
+al propietario existente de variantes del actor: comprobar el estado que dejó
+la activación y restituir el estado anterior exacto al abortar, sin otro renderer.
+
+La prueba con el modelo y los clips originales de `youngMale` reprodujo el
+rechazo al pasar de la variante de acción a Carry: el rollback exigía que la
+variante anterior siguiese habilitada aunque la activación acababa de ocultarla.
+Ahora comprueba la selección activada y restaura la selección y visibilidad
+originales. El propietario baked restaura la visibilidad sin reiniciar fases,
+uniforms ni matrices de enlace. También conserva los flags de las mallas de
+autoría que pueden estar bajo padres ocultos.
+
+La prueba carga Carry bajo demanda, conserva el actor y la asociación anteriores,
+comprueba las nueve piezas originales de caja, revierte materiales/geometrías/
+visibilidad/fases y vuelve a activar la candidata. Es una prueba de presentación
+con activos reales y servicios simulados; no ejecuta un dispositivo GPU real.
+La regresión de nueve archivos produce 165 pruebas: 164 aprobadas y un fallo
+histórico del horizonte Harvest con actor simulado. Se reproduce con las
+versiones anteriores de los dos módulos modificados, manteniendo el resto del
+árbol, y coincide el error completo. Compilación de producto aprobada. No activa
+la consecuencia gráfica ni cierra la reutilización de los 3123 recursos.

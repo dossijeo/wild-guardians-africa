@@ -16,8 +16,8 @@ import {PROFILES} from '../src/simulation/workforce.js';
 
 const fetcher=async url=>{const bytes=await readFile('public'+url);return {ok:true,json:async()=>JSON.parse(bytes),arrayBuffer:async()=>bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength)};};
 const admission={prepare:async()=>{},async prepareAndPublish(_root,_options,publish){publish();}};
-async function fixture(profile='youngMale',{retireSourceBinding=false}={}){
- const clips=['Walk_Skip','Harvest','Plant','Water','Idle'],values=await Promise.all(clips.map(clip=>loadBakedWorkerWalkAsset(profile,{clip,fetcher,subtle:webcrypto.subtle}))),bakes=new Map(clips.map((clip,i)=>[clip,values[i]])),library=JSON.parse(await readFile('public/content/worker-actions.json'))[profile];
+async function fixture(profile='youngMale',{retireSourceBinding=false,withCarry=false}={}){
+ const clips=['Walk_Skip','Harvest','Plant','Water','Idle',...(withCarry?['Carry_Crate']:[])],values=await Promise.all(clips.map(clip=>loadBakedWorkerWalkAsset(profile,{clip,fetcher,subtle:webcrypto.subtle}))),bakes=new Map(clips.map((clip,i)=>[clip,values[i]])),library=JSON.parse(await readFile('public/content/worker-actions.json'))[profile];
  const renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:()=>new MeshStandardNodeMaterial()}},scene=new Scene();
  async function make(){const asset=await actorAsset(bakes.get('Walk_Skip').meta.source),entity={id:'w',profile,status:'walking',running:false,walkPhase:0,x:0,z:0,taskId:'t'},state={workers:[entity],tasks:[{id:'t',kind:'initial'}],elapsed:0},model=asset.scene,actor=await createWebGpuConfirmedWorker({scene,residency:{get:()=>null},state,actorId:'w',renderer,assetBank:{async acquire(){return {model,clips:prepareWorkerClips(asset.animations),library,release(){}};}}});actor.root.visible=true;return {actor,entity,state,model};}
  const gpu=await make(),cpu=await make();let oldMotion,oldBinding;
@@ -119,4 +119,17 @@ test('retiring an older tool variant preserves its successor and the successor c
  const f=await fixture();let old,next;
  try{const attachments=f.bakes.get('Water').meta.attachments.map(value=>f.gpu.model.getObjectByName(value.name)),before=attachments.map(node=>node.visible);old=prepare(f,['Plant','Water','Idle']);old.variant.activate();next=prepare(f,['Harvest']);next.variant.activate();old.variant.dispose();assert(next.variant.current());assert(attachments.every(node=>!node.visible));next.variant.deactivate();assert.deepEqual(attachments.map(node=>node.visible),before);
  }finally{next?.variant.dispose();old?.variant.dispose();f.close();}
+});
+
+
+test('a Carry candidate can restore the previous action, native binding and authored box visibility without replacing its actor',async()=>{
+ const f=await fixture('youngMale',{withCarry:true});let old,next,oldBinding,nextBinding;const oldMotion=createConfirmedGpuMotion({actorId:'w',clock:uniform(0)}),nextMotion=createConfirmedGpuMotion({actorId:'w',clock:uniform(0)});
+ try{f.gpu.entity.walkPhase=.375;f.gpu.actor.update();f.gpu.actor.root.visible=true;oldMotion.bootstrap({at:0,x:0,y:0,z:0});nextMotion.bootstrap({at:0,x:0,y:0,z:0});old=prepare(f,['Harvest']);oldBinding=bindWebGpuActorMotion({root:f.gpu.actor.root,renderer:f.renderer,motion:oldMotion,actorId:'w',getPickTime:()=>0,staged:true,materialAlternatives:old.variant.materialAlternatives,replicaSources:old.variant.replicaSources,meshes:old.variant.materialAlternatives.map(i=>i.mesh)});old.variant.activate();oldBinding.activate();
+  await f.gpu.actor.installBakedCarry(f.bakes.get('Carry_Crate'),{pipelineAdmission:admission,motionBinding:oldBinding});assert(old.variant.current());assert(oldBinding.current());assert.equal(f.gpu.actor.isBakedCarrying(),false);
+  const root=f.gpu.actor.root,before=[];root.traverse(mesh=>{if(mesh.isMesh)before.push({mesh,geometry:mesh.geometry,material:mesh.material,visible:mesh.visible,phaseOffset:mesh._wgWalkPhaseOffset,clockWeight:mesh._wgWalkClockWeight});});
+  next=f.gpu.actor.prepareNativeMotionVariant({resolve:()=>uniform(0),sampleForClip:()=>0},{clip:'Carry_Crate'});const box=next.materialAlternatives.filter(i=>i.mesh._wgWalkAttachmentIndex!==undefined);assert.equal(box.length,9);
+  nextBinding=oldBinding.prepareReplacement({motion:nextMotion,getPickTime:()=>0,materialAlternatives:next.materialAlternatives,replicaSources:next.replicaSources,meshes:next.materialAlternatives.map(i=>i.mesh)});assert(nextBinding.canActivate());next.activate();nextBinding.activate();assert(next.current());assert(nextBinding.current());assert.equal(f.gpu.actor.isBakedWalking(),false);assert.equal(f.gpu.actor.isBakedCarrying(),true);assert(box.every(i=>i.mesh.visible));
+  nextBinding.rollbackActivation();next.rollbackActivation();assert(old.variant.current());assert(oldBinding.current());assert.equal(f.gpu.actor.root,root);assert.equal(f.gpu.actor.isBakedWalking(),true);assert.equal(f.gpu.actor.isBakedCarrying(),false);assert(box.every(i=>!i.mesh.visible));for(const item of before){assert.equal(item.mesh.geometry,item.geometry);assert.equal(item.mesh.material,item.material);assert.equal(item.mesh._wgWalkPhaseOffset,item.phaseOffset);assert.equal(item.mesh._wgWalkClockWeight,item.clockWeight);assert.equal(item.mesh.visible,item.visible,JSON.stringify({name:item.mesh.name,attachment:item.mesh._wgWalkAttachmentIndex,index:before.indexOf(item)}));}
+  assert(next.valid());next.activate();nextBinding.activate();assert(next.current());assert(nextBinding.current());
+ }finally{nextBinding?.dispose();next?.dispose();oldBinding?.dispose();old?.variant.dispose();nextMotion.dispose();oldMotion.dispose();f.close();}
 });
