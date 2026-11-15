@@ -30,6 +30,11 @@ avanzando durante la espera. Quedan el productor y ejecutor ordinarios, acciones
 y consecuencias, las demás clases y la aceptación; no activa la partida ni
 cierra e-R3/f-R4.
 
+La [continuidad de fases de primera tarea](e-r3-first-task-phase-continuity-20261115.md)
+conserva ahora los tiempos acumulados de Run/Walk/Carry desde el candidato
+nativo, incluida su revalidación y posterior suspensión/reanudación. Reutiliza
+la textura preparada y mantiene abiertos los mismos pendientes de integración.
+
 Hay modificaciones locales previas en simulación, escena, carga y QA. No forman
 parte de los commits de esta corrección ni deben descartarse.
 

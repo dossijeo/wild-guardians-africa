@@ -200,6 +200,7 @@ struct PendingNativeMotionDraft {
   std::vector<double> rows;
   std::array<double,24> header{};
   std::array<double,2> taskIdentity{};
+  std::array<double,3> taskPhaseSeed{};
   std::optional<NativeTaskStartOrigin> previousStart;
   // Evidence about the previous native-owned draft, never an execution grant.
   // Kept only in the one current proposal; cancelling it drops the evidence.

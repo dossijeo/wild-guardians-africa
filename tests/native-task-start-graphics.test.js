@@ -11,6 +11,18 @@ import {installRemoteClockBindings} from '../src/rendering/remote-clock-bindings
 import {nativeTaskStartPresentationMatches} from '../src/world/native-task-start-attestation.js';
 
 const retagger=()=>installRemoteClockBindings({backend:{get:()=>({buffer:null}),updateBinding(){}}},{registerClockBinding(){throw Error('Uncompiled node has no physical binding');}});
+test('retained first-task GPU samples preserve nonzero source phases without allocating a second texture',()=>{
+ const seed={runPhase:23.125,walkPhase:41.75,carryPhase:9.5},f=nativeTaskStartGraphicsFixture(seed),registry=createWebGpuResourceRegistry(),hook=retagger();let motion;
+ try{motion=createNativeTaskStartGpuMotion({actorId:'worker-900011',support:f.support(),resourceRegistry:registry});const texture=motion.texture,version=texture.version;
+  let sample=motion.sample(f.proposal.startTime);for(const name of Object.keys(seed))assert.equal(sample[name],seed[name]);
+  f.advance(12);const refreshed=f.planner.revalidateNativeTaskStartProposal(f.proposal.ticket);assert.equal(refreshed.status,'revalidated');
+  assert.equal(motion.retargetNativeTaskStart(f.support(refreshed.proposal),{retagClock:hook.retagNativeTaskStart}).changedData,false);
+  assert.equal(motion.texture,texture);assert.equal(texture.version,version);assert.equal(registry.status().owned.length,1);
+  const actual=f.commit(refreshed.proposal);f.advance(12.25);const executed=f.planner.nativeRouteExecution(actual.nativeRoute.routeHandle);sample=motion.sample(12.25);
+  for(const name of Object.keys(seed))assert(Math.abs(sample[name]-executed[name])<1e-5,`${name}: ${sample[name]} vs ${executed[name]}`);
+  assert(Math.abs(sample.runPhase-seed.runPhase-.25)<1e-5);assert.equal(sample.walkPhase,seed.walkPhase);assert.equal(sample.carryPhase,seed.carryPhase);
+ }finally{motion?.dispose();hook.dispose();registry.dispose();f.close();}
+});
 test('first-task resources use the same terrain, packed data and GPU motion as the actually issued route',()=>{
  const f=nativeTaskStartGraphicsFixture();let pending,actual;try{const support=f.support(),table=prepareNativeTaskStartGpuTable(support);assert(support?.valid());assert.equal(f.terrain.prepareNativeRoute(f.proposal,{terrainManifest:f.terrainManifest}),null);assert.throws(()=>prepareNativeRouteGpuTable(support));pending=createNativeTaskStartGpuMotion({actorId:'worker-900011',support});assert.equal(pending.status().sequence,null);assert.equal(pending.status().nativeResume,undefined);assert.deepEqual(pending.clockNode[Symbol.for('wild-guardians.remote-clock')].nativeStart,table.nativeStart);assert.equal(f.planner.nativeRouteTiming(f.proposal.expectedRouteHandle),null);
   const presentation=f.commit(),issued=f.terrain.prepareNativeRoute(presentation,{terrainManifest:f.terrainManifest});assert.deepEqual(table.data,prepareNativeRouteGpuTable(issued).data);assert(nativeTaskStartPresentationMatches(support.presentation,presentation,f.planner.nativeTaskStartBinding(f.proposal.actorId)));actual=createNativeGpuMotion({actorId:'worker-900011',support:issued});for(let i=0;i<=40;i++){const at=presentation.startTime+(presentation.endTime-presentation.startTime)*i/40;assert.deepEqual(pending.sample(at),actual.sample(at));for(const clip of ['Walk_Skip','Run','Idle'])assert.equal(pending.sampleForClip(at,clip,3.8),actual.sampleForClip(at,clip,3.8));}

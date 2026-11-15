@@ -1113,12 +1113,12 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
   };
   const revalidateNativeGateResumeProposal=ticket=>revalidateNativeMotionProposal(ticket);
   const revalidateNativeTaskStartProposal=ticket=>revalidateNativeMotionProposal(ticket,true);
-  const prepareNativeTaskStartProposal=(request,{bodyId,radius,urgent=false,flight=false,slow=false,carrying=false,recovering=false,incapacitated=false,runRemaining=0}={})=>{
+  const prepareNativeTaskStartProposal=(request,{bodyId,radius,urgent=false,flight=false,slow=false,carrying=false,recovering=false,incapacitated=false,runRemaining=0,runPhase=0,walkPhase=0,carryPhase=0}={})=>{
     const facts=[urgent,flight,slow,carrying,recovering,incapacitated],outcome=(status,extra={})=>({status,authorizedAutonomy:false,authorizedPassage:false,...extra}),handle=request?.requestHandle;
-    if(!Number.isSafeInteger(bodyId)||bodyId<=0||!Number.isFinite(radius)||radius<=0||radius>2||facts.some(value=>typeof value!=='boolean')||!Number.isFinite(runRemaining)||runRemaining<0||runRemaining>1e9)throw TypeError('Invalid native task start body or policy');
+    if(!Number.isSafeInteger(bodyId)||bodyId<=0||!Number.isFinite(radius)||radius<=0||radius>2||facts.some(value=>typeof value!=='boolean')||!Number.isFinite(runRemaining)||runRemaining<0||runRemaining>1e9||[runPhase,walkPhase,carryPhase].some(value=>!Number.isFinite(value)||value<0))throw TypeError('Invalid native task start body or policy');
     if(request?.kind!=='native-task-route-request'||handle?.kind!=='native-task-route-request-handle'||handle.authorityEpoch!==epoch())return outcome('stale');
-    if(wasm.nav_task_start_proposal_version?.()!==1)throw Error('Rebuild native task start proposal');
-    syncBoundaryTime();flushNativeIntentControl();const flags=facts.reduce((value,enabled,bit)=>value|(enabled?1<<bit:0),0),result=wasm.nav_task_start_proposal_stage(handle.session,handle.slot,handle.generation,request.requestSequence,bodyId,radius,flags,runRemaining);
+    if(wasm.nav_task_start_proposal_version?.()!==1||wasm.nav_task_start_proposal_phase_version?.()!==1)throw Error('Rebuild native task start proposal');
+    syncBoundaryTime();flushNativeIntentControl();const flags=facts.reduce((value,enabled,bit)=>value|(enabled?1<<bit:0),0),result=wasm.nav_task_start_proposal_stage_with_phases(handle.session,handle.slot,handle.generation,request.requestSequence,bodyId,radius,flags,runRemaining,runPhase,walkPhase,carryPhase);
     if(result!==1)return outcome(result===-1?'stale':result===-3?'body-mismatch':result===-4?'busy':result===0?'conflict':result===-6?'unknown':result===-8?'blocked':'unsupported');
     if(wasm.nav_intent_barrier_proposal_ticket()!==1)throw Error('Native task start proposal lost its ticket');
     const t=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6)),ticket=Object.freeze({kind:'native-task-start-proposal-ticket',authorityEpoch:epoch(),session:t[0],ticket:t[1]});

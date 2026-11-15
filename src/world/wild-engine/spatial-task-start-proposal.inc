@@ -11,9 +11,10 @@ static bool taskStartBodyCurrent(IntentState& s,const PendingNativeMotionDraft& 
     !s.reservedBodies.count(draft.body)&&!s.suspendedBodies.count(draft.body);
 }
 EMSCRIPTEN_KEEPALIVE int nav_task_start_proposal_version(){return 1;}
-EMSCRIPTEN_KEEPALIVE int nav_task_start_proposal_stage(double session,double slot,double generation,double requestSequence,
-    double bodyId,double radius,int flags,double runBudget){
+static int stageNativeTaskStartProposal(double session,double slot,double generation,double requestSequence,
+    double bodyId,double radius,int flags,double runBudget,const std::array<double,3>& phaseSeed){
   auto& s=state();if(s.barrierProposal.pending||s.worldMutationPreview)return -4;
+  for(double phase:phaseSeed)if(!std::isfinite(phase)||phase<0)return -1;
   if(!integer(bodyId))return -1;
   const auto source=pendingTaskRoute(session,slot,generation,requestSequence);if(!source)return -1;
   if(!gateStaticProofCurrent(s)||s.executionEnabled&&s.executionWorldStamp!=executionWorldStamp())return -2;
@@ -23,11 +24,14 @@ EMSCRIPTEN_KEEPALIVE int nav_task_start_proposal_stage(double session,double slo
      worker->second.x!=body.x||worker->second.z!=body.z||
      s.reservedBodies.count(uint64_t(bodyId))||s.suspendedBodies.count(uint64_t(bodyId)))return -3;
   PendingNativeMotionDraft draft;draft.slot=uint32_t(slot);draft.generation=uint32_t(generation);draft.body=uint64_t(bodyId);
-  draft.taskIdentity={double(intent.task),double(intent.target)};draft.route.points=source->points;
+  draft.taskIdentity={double(intent.task),double(intent.target)};draft.taskPhaseSeed=phaseSeed;draft.route.points=source->points;
   const int previous=lazy_selected_context();if(previous!=intent.profile)spatial_select_nav_profile_index(intent.profile);
   int result=prepareRouteTiming(draft.route,source->actor,body.x,body.z,s.effectiveTime,radius,2,flags,runBudget,true);
   draft.topology=lazy_route_revision();if(previous!=intent.profile)spatial_select_nav_profile_index(previous);
   recordTimingResult(s,result);if(result!=1)return -7;
+  // First admission changes ownership, not the worker's accumulated clip time.
+  // Seed the one native timetable before capturing immutable resource samples.
+  for(size_t i=0;i<phaseSeed.size();i++)draft.route.motionOffset[i+2]=phaseSeed[i];
   draft.gates=s.gates;result=proveGateRouteAdmission(s,intent,draft.route,draft.body,body,draft.gates,draft.boundaries,false);
   if(result!=1)return result;
   const int staged=stageWorldMutationBoundary(nullptr,0);if(staged!=1)return staged;
@@ -36,6 +40,16 @@ EMSCRIPTEN_KEEPALIVE int nav_task_start_proposal_stage(double session,double slo
     route.originX,route.originZ,route.startTime,routeTimeAtDistance(route,route.distances.back()),route.distances.back(),route.speed,route.runDistance,route.runSpeed,route.runBudget,double(route.timingMode),
     double(route.points.size()/2),double(draft.rows.size()/16),double(draft.slot),double(intent.resourceRequestSequence),intent.resourceRequestedAt,double(p.intents)};
   p.start=std::move(draft);return 1;
+}
+// Preserve the original raw ABI; callers with existing worker state use phases.
+EMSCRIPTEN_KEEPALIVE int nav_task_start_proposal_stage(double session,double slot,double generation,double requestSequence,
+    double bodyId,double radius,int flags,double runBudget){
+  return stageNativeTaskStartProposal(session,slot,generation,requestSequence,bodyId,radius,flags,runBudget,{});
+}
+EMSCRIPTEN_KEEPALIVE int nav_task_start_proposal_phase_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int nav_task_start_proposal_stage_with_phases(double session,double slot,double generation,double requestSequence,
+    double bodyId,double radius,int flags,double runBudget,double runPhase,double walkPhase,double carryPhase){
+  return stageNativeTaskStartProposal(session,slot,generation,requestSequence,bodyId,radius,flags,runBudget,{runPhase,walkPhase,carryPhase});
 }
 EMSCRIPTEN_KEEPALIVE int nav_task_start_proposal_snapshot(double session,double ticket){
   const auto& p=state().barrierProposal;if(!p.start||p.kind!=14)return -1;
@@ -88,7 +102,7 @@ EMSCRIPTEN_KEEPALIVE int nav_task_start_proposal_revalidate(double session,doubl
   auto& s=state();auto& p=s.barrierProposal;
   if(!p.pending||p.kind!=14||!p.start||session!=double(p.session)||ticket!=double(p.ticket))return -1;
   auto old=std::move(*p.start);clearWorldMutationProposal(p);
-  const int result=nav_task_start_proposal_stage(session,old.slot,old.generation,old.header[21],double(old.body),old.route.radius,old.route.motionFlags,old.route.runBudget);
+  const int result=stageNativeTaskStartProposal(session,old.slot,old.generation,old.header[21],double(old.body),old.route.radius,old.route.motionFlags,old.route.runBudget,old.taskPhaseSeed);
   if(result!=1)return result;
   auto& next=*s.barrierProposal.start;
   next.previousStart=NativeTaskStartOrigin{old.header,old.taskIdentity,uint64_t(ticket)};

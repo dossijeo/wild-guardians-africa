@@ -11,6 +11,49 @@ function prepare(f,options={}){const result=f.planner.prepareNativeTaskStartProp
 function ticket(f){assert.equal(f.w.nav_intent_barrier_proposal_ticket(),1);return Array.from(new Float64Array(f.w.memory.buffer,f.w.nav_intent_barrier_proposal_ticket_ptr(),6));}
 const commit=(f,t=ticket(f))=>f.w.nav_task_start_proposal_commit(...t.slice(0,5));
 
+test('first admission retains cumulative clip phases through delayed preparation, execution and native resume',()=>{
+ for(const carrying of [false,true]){const f=fixture();try{
+  const seed={runPhase:23.125,walkPhase:41.75,carryPhase:9.5},p=prepare(f,{...seed,carrying}),request=f.request();
+  assert.deepEqual(Array.from(p.rows.slice(8,11)),Object.values(seed));
+  f.advance(12);const refreshed=f.planner.revalidateNativeTaskStartProposal(p.ticket);
+  assert.equal(refreshed.status,'revalidated');assert(refreshed.timeTranslation.sameFloat32Motion);
+  assert.deepEqual(Array.from(refreshed.proposal.rows.slice(8,11)),Object.values(seed));
+  assert.equal(commit(f),1);const issued=f.planner.intentChanges().at(-1);f.control.accept(issued);
+  assert.deepEqual(f.planner.captureNativeRoutePresentation(issued.routeHandle).rows,refreshed.proposal.rows);
+  f.advance(12.25);const pose=f.planner.nativeRouteExecution(issued.routeHandle);
+  assert.equal(pose.executedThrough,12.25);
+  assert.equal(pose.runPhase,seed.runPhase+(carrying?0:.25));
+  assert.equal(pose.walkPhase,seed.walkPhase);
+  assert.equal(pose.carryPhase,seed.carryPhase+(carrying?.25*1.5:0));
+  assert.equal(f.body(1).x,pose.x);assert.equal(f.body(1).z,pose.z);
+  const suspended=f.planner.suspendNativeGateRoute(issued.routeHandle);assert.equal(suspended.status,'suspended');
+  for(const event of f.planner.intentChanges())f.control.accept(event);
+  f.advance(12.5);const resumed=f.planner.prepareNativeGateResumeProposal(suspended.suspendedRoute.resumeHandle);
+  assert.equal(resumed.status,'proposed');
+  assert.deepEqual(Array.from(resumed.proposal.rows.slice(8,11)),[pose.runPhase,pose.walkPhase,pose.carryPhase]);
+  assert.equal(f.planner.pendingTaskRoute(request.actorId),null);
+ }finally{f.close();}}
+});
+
+test('invalid phase seeds cannot stage a task candidate or consume its pending request',()=>{
+ const f=fixture();try{const request=f.request();for(const name of ['runPhase','walkPhase','carryPhase'])for(const value of [-1,NaN,Infinity,'2',null]){
+  assert.throws(()=>f.planner.prepareNativeTaskStartProposal(request,{bodyId:1,radius:.28,[name]:value}),/policy/);
+  assert.equal(f.w.nav_intent_barrier_proposal_ticket(),0);assert.deepEqual(f.request(),request);
+ }
+ const h=request.requestHandle;
+ assert.equal(f.w.nav_task_start_proposal_stage_with_phases(h.session,h.slot,h.generation,request.requestSequence,1,.28,0,0,0,-1,0),-1);
+ assert.equal(f.w.nav_intent_barrier_proposal_ticket(),0);assert.deepEqual(f.request(),request);
+ }finally{f.close();}
+});
+
+test('the original raw task-stage ABI still seeds zero phases',()=>{
+ const f=fixture();try{const request=f.request(),h=request.requestHandle;
+  assert.equal(f.w.nav_task_start_proposal_stage(h.session,h.slot,h.generation,request.requestSequence,1,.28,0,0),1);
+  const t=ticket(f),p=f.planner.captureNativeTaskStartProposal({kind:'native-task-start-proposal-ticket',authorityEpoch:f.planner.authorityEpoch,session:t[0],ticket:t[1]});
+  assert.deepEqual(Array.from(p.rows.slice(8,11)),[0,0,0]);assert.equal(commit(f,t),1);
+ }finally{f.close();}
+});
+
 test('a genuine task request prepares native temporal resources without assigning, reserving or moving its body',()=>{
  const f=fixture();try{const before=f.planner.nativeIntentControlBaseline(),bodies=[f.body(1),f.body(2),f.body(3)],request=f.request(),p=prepare(f),t=ticket(f);assert.equal(t[5],14);assert.equal(p.kind,'native-task-start-proposal');assert.equal(p.taskId,request.taskId);assert.equal(p.targetId,request.targetId);assert.equal(p.requestSequence,request.requestSequence);assert.deepEqual(p.sourceRequestHandle,request.requestHandle);assert.equal(p.requestedAt,10);assert.equal(p.startTime,10);assert(p.endTime>10);assert.equal(p.motionFlags,1);assert.equal(p.runBudget,4);assert.equal(p.authorizedAutonomy,false);assert.equal(p.authorizedPassage,false);for(const key of ['nativeRoute','assignmentSequence','sourceAssignmentSequence','sourceResumeHandle','suspendedAt'])assert.equal(Object.hasOwn(p,key),false);assert.equal(f.planner.nativeRouteTiming(p.expectedRouteHandle),null);assert.equal(f.planner.routePoints(p.sourceRequestHandle),null);assert.deepEqual(f.request(),request);assert.deepEqual(f.planner.nativeIntentControlBaseline(),before);assert.deepEqual([f.body(1),f.body(2),f.body(3)],bodies);assert.equal(f.w.nav_intent_world_proposal_retains_routes(t[0],t[1]),-1);assert.equal(f.w.nav_gate_resume_proposal_snapshot(t[0],t[1]),-1);assert.notEqual(f.w.spatial_world_proposal_commit(...t.slice(0,5)),1);assert.equal(f.planner.captureNativeTaskStartProposal(p.ticket).bodyId,1);assert.throws(()=>copyNativeRoutePresentation(p));assert.throws(()=>copyNativeResumeProposal(p));assert.deepEqual(copyNativeTaskStartProposal(p).rows,p.rows);
  }finally{f.close();}
