@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+**Native delivery data, 2026-11-15:** [Read-only delivery consequence data](e-r3-native-delivery-consequence-data-20261115.md) shares the ordinary agricultural-power calculation; 50/50 directed tests pass. Native/GPU settlement, coherent credit notifications and the next intention remain pending; no closure changes.
+
 **Migration update, 2026-11-15:** follow the [integrated plan](integrated-gpu-migration-plan-20261104.md) and its [A6 correction](intent-route-architecture-correction-20261108.md). The [current audit and continuation](migration-checkpoint-20261113.md) records e-R1/e-R2/f-R1/f-R2/f-R3 closed in their native scope; e-R3/e-R4/f-R4 remain open. Overall A/B/C acceptance remains open. Latest native admission work: [saved action restoration with fresh admission](e-r3-native-action-restoration-20261115.md); ordinary route feed, active consequences, full recovery, ordinary authority and integrated acceptance remain pending. [Native Harvest consequence source and Carry ownership](e-r3-native-harvest-consequence-source-20261115.md) now commit on the common native owner and project Game state; prepared crop/crate graphics, consumer associations and ordinary feed remain pending. This is source-component validation, not GPU continuity or resource-reuse acceptance. October entries below are historical, scoped evidence.
 
 

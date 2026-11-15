@@ -6,7 +6,7 @@ export {observeGameEvents,observePresentationGameEvents,notifyConfirmedPresentat
 import {firstCenterWithinVillage} from '../tutorial/center-placement.js';
 import {GUARDIAN_ATTACK_TIMING} from './guardian-timing.js';
 import {attackTarget,attackTargetAvailable,attackGestureActive,applyGuardianAttack} from './guardian-combat.js';
-import {commitAgriculturalPower,growthPowerStep,settleMultiplyPower} from './agricultural-power.js';
+import {commitAgriculturalPower,growthPowerStep,settleMultiplyPower,previewMultiplyPowerSettlement} from './agricultural-power.js';
 import {awakeningState,recordAgriculturalCare,recordAwakeningEvent,evaluateAwakeningDay,startAwakeningDay} from './awakenings.js';
 import {AWAKENINGS} from './awakening-config.js';
 import {blessingTarget,previewBlessing,loseBlessing,blessingPresentationSource} from './blessings.js';
@@ -1272,6 +1272,21 @@ export function planRepairAccess(s,target,nav){
 }
 // Semantic consequence data only, never an action/effect permission. The same
 // rules serve ordinary completion and future native resource preparation.
+function freezeConsequenceData(value){if(value&&typeof value==='object'){for(const child of Object.values(value))freezeConsequenceData(child);Object.freeze(value);}return value;}
+export function prepareCrateDeliveryConsequence(s,w,crate,center){
+  if(!w||!crate||!center||w.status!=='carrying'||w.crateId!==crate.id||crate.delivered||crate.carrierId!==w.id||w.centerId!==center.id||center.kind!=='center'||!operational(center)||Object.hasOwn(s.ledger.entries,`deliver:${crate.id}`))return null;
+  const power=previewMultiplyPowerSettlement(s,crate),ended=contractExpired(w,s)||s.time>=profile(w).end,
+    tutorialComplete=['observe','harvest'].includes(s.tutorial.step);
+  return freezeConsequenceData({kind:'crate-delivery-consequence-preview',version:1,authorizedConsequences:false,
+    workerId:w.id,crateId:crate.id,centerId:center.id,species:crate.species,sourcePlantId:crate.sourcePlantId,
+    center:{x:center.x,z:center.z,yaw:center.yaw,status:center.status},baseValue:rational(crate.value.n,crate.value.d),
+    multiplySettlement:power,income:add(crate.value,power.extraIncome),status:ended?'returning':'idle',
+    tutorial:{harvestCompleted:true,step:tutorialComplete?'done':s.tutorial.step,completedEvent:tutorialComplete&&!s.tutorial.basicSkipped}});
+}
+export function crateDeliveryConsequenceCurrent(s,w,crate,center,preview){
+  if(preview?.kind!=='crate-delivery-consequence-preview'||preview.version!==1||preview.authorizedConsequences!==false)return false;
+  const current=prepareCrateDeliveryConsequence(s,w,crate,center);return current!==null&&JSON.stringify(current)===JSON.stringify(preview);
+}
 export function prepareHarvestConsequence(s,w,t,target){
   if(!w||!t||!target||t.kind!=='harvest'||w.taskId!==t.id||t.workerId!==w.id||t.targetId!==target.id||w.crateId||!isMature(target)||!target.harvestRequested)return null;
   let value=rational(cropSpec(target.species).base_harvest_value);
@@ -1285,8 +1300,7 @@ export function prepareHarvestConsequence(s,w,t,target){
   const microLoss=previewHarvestMicroLoss(s,target,value),crate={id:`crate-${s.nextId}`,sourcePlantId:target.id,species:target.species,x:w.x,z:w.z,value:microLoss.value,...passive,
     multiplyPower:target.multiplyPower?structuredClone(target.multiplyPower):null,profile:w.profile,carrierId:w.id,delivered:false,centerId:w.centerId};
   // Every nested object here is owned by this preview; never freeze live state.
-  const freeze=value=>{if(value&&typeof value==='object'){for(const child of Object.values(value))freeze(child);Object.freeze(value);}return value;};
-  return freeze({kind:'harvest-consequence-preview',version:1,workerId:w.id,taskId:t.id,targetId:target.id,nextId:s.nextId,
+  return freezeConsequenceData({kind:'harvest-consequence-preview',version:1,workerId:w.id,taskId:t.id,targetId:target.id,nextId:s.nextId,
     baseValue:value,microLoss,crate,authorizedConsequences:false});
 }
 export function harvestConsequenceCurrent(s,w,t,target,preview){

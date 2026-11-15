@@ -76,14 +76,28 @@ export function growthPowerStep(s){
     }
   };
 }
+function multiplySettlement(s,crate){
+  if(!crate.multiplyPower||crate.multiplyPowerSettled)return null;
+  const day=crate.multiplyPower.day===undefined?s.day:crate.multiplyPower.day,
+    a=s.agriculturalPower?.days?.[day]?.multiply,
+    next=add(a?.liquidated??zero(),crate.multiplyPower.amount);
+  if(compare(next,a?.committed??zero())>0)throw new Error('Potencia de cosecha excede lo comprometido');
+  const paid=floor(next),coins=paid-BigInt(a?.paid??'0');
+  return {day,next,paid:String(paid),income:rational(coins)};
+}
+// Data for a prepared delivery, not a settlement grant. Read the current daily
+// account again at commit: another crate can change its fractional carry.
+export function previewMultiplyPowerSettlement(s,crate){
+  const effect=multiplySettlement(s,crate),copy=value=>Object.freeze(rational(value.n,value.d));
+  return Object.freeze({kind:'multiply-power-settlement-preview',version:1,authorizedConsequences:false,
+    applies:effect!==null,day:effect?.day??null,extraIncome:copy(effect?.income??zero()),
+    account:effect?Object.freeze({liquidated:copy(effect.next),consumed:copy(effect.next),paid:effect.paid}):null});
+}
 export function settleMultiplyPower(s,crate){
-  if(!crate.multiplyPower||crate.multiplyPowerSettled)return zero();
-  const a=row(s,crate.multiplyPower.day).multiply;
-  const next=add(a.liquidated,crate.multiplyPower.amount);
-  if(compare(next,a.committed)>0)throw new Error('Potencia de cosecha excede lo comprometido');
-  const paid=floor(next),coins=paid-BigInt(a.paid);
-  a.liquidated=next;a.consumed=next;a.paid=String(paid);crate.multiplyPowerSettled=true;
-  return rational(coins);
+  const effect=multiplySettlement(s,crate);if(!effect)return zero();
+  const a=row(s,effect.day).multiply;
+  a.liquidated=effect.next;a.consumed=effect.next;a.paid=effect.paid;crate.multiplyPowerSettled=true;
+  return effect.income;
 }
 export function agriculturalPowerReport(s,day=s.day){
   const days=s.agriculturalPower?.days[day];

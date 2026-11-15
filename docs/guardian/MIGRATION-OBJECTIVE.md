@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuación de la entrega: [datos semánticos y liquidación sin efectos anticipados](e-r3-native-delivery-consequence-data-20261115.md), con el cálculo económico ordinario común y 50/50 pruebas. El relevo nativo/gráfico y el cobro preparado siguen pendientes; no cambia ningún cierre.
+
 Continuación del consumidor: [Harvest → Carry con preparación incremental y selección GPU](e-r3-native-consequence-presentation-20261115.md), sobre el actor y lote existentes; 54 fotogramas durante bloqueo, cero asignaciones después de READY. Entrega preparada, productor ordinario y recuperación integral siguen pendientes; no cambia ningún cierre.
 
 Estado: **en ejecución; no completado**.
