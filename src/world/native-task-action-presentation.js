@@ -52,3 +52,4 @@ export function sameNativeTaskActionReference(a,b){
 // duration obtained by subtracting absolute times. A new epoch can reuse them.
 export function sameNativeTaskActionSource(a,b){return !!a&&!!b&&sameNativeTaskActionRequest(a.request,b.request)&&parameters.every(k=>a[k]===b[k])&&a.origin.x===b.origin.x&&a.origin.z===b.origin.z;}
 export function nativeTaskActionSuccessor(a,b){return sameNativeTaskActionSource(a,b)&&b.worldBoundary.ticket>a.worldBoundary.ticket&&b.startTime>=a.startTime&&b.sourceControlSequence>=a.sourceControlSequence;}
+export function nativeTaskActionReferenceCovered(reference,boundary){const expected=reference.worldBoundary;return !!boundary&&expected.authorityEpoch===boundary.authorityEpoch&&expected.nativeSession===boundary.nativeSession&&boundary.ticket>=expected.ticket&&boundary.effectiveTime>=expected.effectiveTime;}

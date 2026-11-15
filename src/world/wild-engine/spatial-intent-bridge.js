@@ -1032,7 +1032,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
   const nativeTaskActionBinding=actorId=>readTaskAction(actorId)?.binding??null;
   const nativeTaskActionExecution=actorId=>{
     const row=readTaskAction(actorId);if(!row)return null;const r=row.binding.reference;
-    return Object.freeze({kind:'native-task-action-execution',version:1,binding:row.binding,executedThrough:row.executedThrough,elapsed:Math.min(r.request.duration,Math.max(0,row.executedThrough-r.startTime)),remaining:Math.max(0,r.endTime-row.executedThrough),completed:row.executedThrough>=r.endTime});
+    return Object.freeze({kind:'native-task-action-execution',version:1,binding:row.binding,executedThrough:row.executedThrough,elapsed:row.executedThrough>=r.endTime?r.request.duration:Math.min(r.request.duration,Math.max(0,row.executedThrough-r.startTime)),remaining:Math.max(0,r.endTime-row.executedThrough),completed:row.executedThrough>=r.endTime});
   };
   const captureNativeTaskActionProposal=ticket=>{
     if(ticket?.kind!=='native-task-action-proposal-ticket'||ticket.authorityEpoch!==epoch()||wasm.nav_task_action_proposal_snapshot(ticket.session,ticket.ticket)!==1)return null;

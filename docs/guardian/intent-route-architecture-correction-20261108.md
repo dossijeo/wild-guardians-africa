@@ -68,6 +68,12 @@ usa el reloj común; finalizar antes de tiempo se rechaza. El coordinador de
 recursos/recibo GPU y la proyección/consecuencia de partida siguen pendientes;
 `Game.tick` no activa esta clase por un fallback. No cambia el recuento de cierre.
 
+El [reloj gráfico de la acción emitida](e-r3-native-action-draw-clock-20261115.md)
+usa la asociación directa para limitar la fase relativa y conserva el valor
+enviado al uniform para selección. Todavía rechaza candidatos pendientes: faltan
+clips, paquete retenido/liberación y ejecución/consecuencias de la partida. No
+activa el productor ordinario ni cierra criterios de A6.
+
 Hay modificaciones locales previas en simulación, escena, carga y QA. No forman
 parte de los commits de esta corrección ni deben descartarse.
 

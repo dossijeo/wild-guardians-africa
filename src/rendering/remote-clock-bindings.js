@@ -4,12 +4,13 @@ import {copyNativeSuspendedBodyReference} from '../world/native-suspended-body-r
 import {copyNativeRouteReference} from '../world/native-route-reference.js';
 import {copyNativeGateReference} from '../world/native-gate-reference.js';
 import {sameNativeWorldBoundary} from '../world/native-world-boundary.js';
+import {copyNativeTaskActionReference,sameNativeTaskActionReference,nativeTaskActionSuccessor} from '../world/native-task-action-presentation.js';
 
 // Symbol metadata is intentionally non-enumerable: it must not alter TSL graph
 // structure/cache keys. Registration occurs when a physical binding is updated,
 // never by discovering graph nodes during replay.
 const clockMetadata=Symbol.for('wild-guardians.remote-clock');
-export function markRemoteClockNode(node,semantic,epoch,nativeRoute=null,nativeGate=null,nativeSuspended=null,nativeResume=null,period=null,resourceEnd=null,nativeStart=null){
+export function markRemoteClockNode(node,semantic,epoch,nativeRoute=null,nativeGate=null,nativeSuspended=null,nativeResume=null,period=null,resourceEnd=null,nativeStart=null,nativeAction=null){
  if(!node?.isNode||!['absolute','relative','origin-modulo'].includes(semantic)||!Number.isFinite(epoch)||epoch<0)throw TypeError('Invalid remote clock node');
  if(semantic==='origin-modulo'?nativeResume===null&&nativeStart===null||!Number.isFinite(period)||period<=0:period!==null)throw TypeError('Invalid native origin phase clock');
  if(resourceEnd!==null&&(!Number.isFinite(resourceEnd)||resourceEnd<epoch))throw TypeError('Invalid native clock resource end');
@@ -19,12 +20,14 @@ export function markRemoteClockNode(node,semantic,epoch,nativeRoute=null,nativeG
   // never retag an already admitted GPU binding for another route generation.
   try{route=copyNativeRouteReference(nativeRoute);}catch{throw TypeError('Invalid native route clock reference');}
  }
- if([nativeRoute,nativeGate,nativeSuspended,nativeResume,nativeStart].filter(value=>value!==null).length>1)throw TypeError('Conflicting native clock references');
+ if([nativeRoute,nativeGate,nativeSuspended,nativeResume,nativeStart,nativeAction].filter(value=>value!==null).length>1)throw TypeError('Conflicting native clock references');
+ const action=nativeAction===null?null:copyNativeTaskActionReference(nativeAction);
+ if(action&&(semantic!=='relative'||epoch!==action.startTime||resourceEnd!==null))throw TypeError('Invalid native action phase clock');
  const suspended=nativeSuspended===null?null:copyNativeSuspendedBodyReference(nativeSuspended);
  const resume=nativeResume===null?null:copyNativeResumeReference(nativeResume),start=nativeStart===null?null:copyNativeTaskStartReference(nativeStart);
  const gate=nativeGate===null?null:copyNativeGateReference(nativeGate);
  if(Object.hasOwn(node,clockMetadata))throw TypeError('Cannot redefine remote clock node');
- Object.defineProperty(node,clockMetadata,{value:Object.freeze({semantic,epoch,...(period===null?{}:{period}),...(resourceEnd===null?{}:{resourceEnd}),...(route?{nativeRoute:route}:{}),...(gate?{nativeGate:gate}:{}),...(suspended?{nativeSuspended:suspended}:{}),...(resume?{nativeResume:resume}:{}),...(start?{nativeStart:start}:{})}),enumerable:false,configurable:resume!==null||gate!==null||start!==null});
+ Object.defineProperty(node,clockMetadata,{value:Object.freeze({semantic,epoch,...(period===null?{}:{period}),...(resourceEnd===null?{}:{resourceEnd}),...(route?{nativeRoute:route}:{}),...(gate?{nativeGate:gate}:{}),...(suspended?{nativeSuspended:suspended}:{}),...(resume?{nativeResume:resume}:{}),...(start?{nativeStart:start}:{}),...(action?{nativeAction:action}:{})}),enumerable:false,configurable:resume!==null||gate!==null||start!==null||action!==null});
  return node;
 }
 export function installRemoteClockBindings(renderer,remote){
@@ -41,7 +44,7 @@ export function installRemoteClockBindings(renderer,remote){
    if(!metadata)continue;
    if(!Number.isSafeInteger(uniform.offset)||uniform.offset<0||uniform.itemSize!==1)throw Error('Invalid remote clock uniform layout');
    remote.registerClockBinding(buffer,{byteOffset:uniform.offset*4,...metadata});
-   if(metadata.nativeResume||metadata.nativeGate||metadata.nativeStart){let entries=nodeBindings.get(node);if(!entries){entries=[];nodeBindings.set(node,entries);}if(!entries.some(entry=>entry.group.deref()===binding&&entry.byteOffset===uniform.offset*4))entries.push({group:new WeakRef(binding),byteOffset:uniform.offset*4});}
+   if(metadata.nativeResume||metadata.nativeGate||metadata.nativeStart||metadata.nativeAction){let entries=nodeBindings.get(node);if(!entries){entries=[];nodeBindings.set(node,entries);}if(!entries.some(entry=>entry.group.deref()===binding&&entry.byteOffset===uniform.offset*4))entries.push({group:new WeakRef(binding),byteOffset:uniform.offset*4});}
   }
   registered.set(binding,buffer);
   return result;
@@ -52,7 +55,11 @@ export function installRemoteClockBindings(renderer,remote){
   for(const entry of nodeBindings.get(node)??[]){const group=entry.group.deref();if(!group)continue;live.push(entry);const buffer=registered.get(group);if(buffer&&backend.get(group).buffer===buffer)remote.registerClockBinding(buffer,{byteOffset:entry.byteOffset,...next});}
   Object.defineProperty(node,clockMetadata,{value:next,enumerable:false,configurable:true});nodeBindings.set(node,live);return true;
  }
- return {retagNativeTaskStart(node,previous,value,resourceEnd=null){
+ return {retagNativeTaskAction(node,previous,value){
+  const before=copyNativeTaskActionReference(previous),after=copyNativeTaskActionReference(value),metadata=node?.[clockMetadata];
+  if(disposed||!sameNativeTaskActionReference(metadata?.nativeAction,before)||metadata.epoch!==before.startTime||!nativeTaskActionSuccessor(before,after))throw Error('Native action clock cannot be retagged');
+  return replace(node,Object.freeze({...metadata,epoch:after.startTime,nativeAction:after}));
+ },retagNativeTaskStart(node,previous,value,resourceEnd=null){
   const before=copyNativeTaskStartReference(previous),after=copyNativeTaskStartReference(value),metadata=node?.[clockMetadata];
   if(disposed||!sameNativeTaskStartReference(metadata?.nativeStart,before)||metadata.epoch!==before.worldBoundary.effectiveTime||!nativeTaskStartSuccessor(before,after))throw Error('Native task start clock cannot be retagged');
   if(metadata.resourceEnd!==undefined&&(!Number.isFinite(resourceEnd)||resourceEnd<after.worldBoundary.effectiveTime))throw Error('Native task start clock requires its new resource end');

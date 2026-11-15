@@ -1,5 +1,6 @@
 import {copyNativeTaskStartReference,sameNativeTaskStartReference,nativeTaskStartReferenceCovered} from '../world/native-task-start-reference.js';
 import {copyNativeTaskStartAttestation} from '../world/native-task-start-attestation.js';
+import {copyNativeTaskActionReference,nativeTaskActionReferenceCovered} from '../world/native-task-action-presentation.js';
 import {copyNativeResumeAttestation} from '../world/native-resume-attestation.js';
 import {sameNativeResumeReference} from '../world/native-resume-reference.js';
 import {copyNativeResumeReference,nativeResumeReferenceCovered} from '../world/native-resume-reference.js';
@@ -488,21 +489,24 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         // A scene can contain long-lived independent motors and a finite
         // resumed body. Each binding retains its own data and revocation cap.
         const executionEpoch=binding.motionRecord?.executionEpoch??binding.executionEpoch??binding.epoch;
-        const scoped=!!(binding.nativeRoute||binding.nativeGate||binding.nativeSuspended||binding.nativeResume||binding.nativeStart),bindingTime=!scoped&&active.admittedMotionBinding?Math.min(elapsed,active.metadata.clock.safeUntil):elapsed;
+        const scoped=!!(binding.nativeRoute||binding.nativeGate||binding.nativeSuspended||binding.nativeResume||binding.nativeStart||binding.nativeAction),bindingTime=!scoped&&active.admittedMotionBinding?Math.min(elapsed,active.metadata.clock.safeUntil):elapsed;
         const resumeCeiling=(binding.nativeResume||binding.nativeStart)&&binding.resourceEnd!==undefined?executionEpoch+(binding.resourceEnd-binding.epoch):binding.motionRecord?.executionEnd??binding.nativeResume?.endTime??binding.nativeStart?.endTime??Infinity;
-        const routeTime=Math.min(bindingTime,binding.routeRecord?.safeUntil??Infinity,resumeCeiling);
+        const routeTime=Math.min(bindingTime,binding.routeRecord?.safeUntil??binding.actionRecord?.safeUntil??Infinity,resumeCeiling);
         const resourceCeiling=binding.resourceEnd??binding.nativeResume?.endTime??binding.nativeStart?.endTime??(active.admittedMotionBinding?active.metadata.clock.safeUntil:Infinity);
         const resourceTime=Math.min(resourceCeiling,(binding.nativeResume||binding.nativeStart||binding.executionEpoch!==undefined)?binding.epoch+Math.max(0,routeTime-executionEpoch):routeTime);
-        const value=binding.semantic==='origin-modulo'?executionEpoch%binding.period:binding.semantic==='relative'?resourceTime-binding.epoch:resourceTime;
+        // Finite actions retain their declared duration. Do not add the age to
+        // a large absolute epoch and subtract it again before its float upload.
+        const value=binding.nativeAction?(routeTime>=binding.motionRecord.executionEnd?binding.nativeAction.request.duration:Math.min(binding.nativeAction.request.duration,Math.max(0,routeTime-executionEpoch))):binding.semantic==='origin-modulo'?executionEpoch%binding.period:binding.semantic==='relative'?resourceTime-binding.epoch:resourceTime;
         if (!Number.isFinite(value)) throw Error('Invalid remote presentation clock value');
         const submittedValue=binding.semantic==='origin-modulo'?Math.fround(value):floorFloat32(value);
         device.queue.writeBuffer(resolve({ [REF]: binding.id }), binding.byteOffset, new Float32Array([submittedValue]));
-        if(binding.semantic!=='origin-modulo'&&(binding.nativeRoute||binding.nativeGate||binding.nativeSuspended||binding.nativeResume||binding.nativeStart))nativeTimes.set(binding.nativeClockKey,{
-          ...(binding.nativeRoute?{nativeRoute:binding.nativeRoute}:binding.nativeGate?{nativeGate:binding.nativeGate}:binding.nativeResume?{nativeResume:binding.nativeResume}:binding.nativeStart?{nativeStart:binding.nativeStart}:{nativeSuspended:binding.nativeSuspended}),semantic:binding.semantic,epoch:binding.epoch,...((binding.nativeResume||binding.nativeStart)?{executionEpoch}:{}),
+        if(binding.semantic!=='origin-modulo'&&(binding.nativeRoute||binding.nativeGate||binding.nativeSuspended||binding.nativeResume||binding.nativeStart||binding.nativeAction))nativeTimes.set(binding.nativeClockKey,{
+          ...(binding.nativeRoute?{nativeRoute:binding.nativeRoute}:binding.nativeGate?{nativeGate:binding.nativeGate}:binding.nativeResume?{nativeResume:binding.nativeResume}:binding.nativeStart?{nativeStart:binding.nativeStart}:binding.nativeAction?{nativeAction:binding.nativeAction,relativeTime:submittedValue}:{nativeSuspended:binding.nativeSuspended}),semantic:binding.semantic,epoch:binding.epoch,...((binding.nativeResume||binding.nativeStart||binding.nativeAction)?{executionEpoch}:{}),
           elapsed:binding.semantic==='relative'?submittedValue+binding.epoch:submittedValue});
         if(binding.routeRecord&&binding.semantic!=='origin-modulo')binding.routeRecord.lastDrawTime=Math.max(
           binding.routeRecord.lastDrawTime??-Infinity,
           Math.min(routeTime,binding.semantic==='relative'?submittedValue+executionEpoch:submittedValue));
+        if(binding.actionRecord)binding.actionRecord.lastDrawTime=Math.max(binding.actionRecord.lastDrawTime??-Infinity,Math.min(routeTime,executionEpoch+submittedValue));
       }
     }
     if (camera) for (const binding of active.cameraBindings) {
@@ -738,6 +742,14 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   }
   function admitClockBindings(packet,preparing=false){
     return (packet.preparedClockBindings??Array.from(clockBindings.values())).filter(binding=>packet.resourceSnapshot.has(binding.id)).map(original=>{let binding=original;
+      if(binding.nativeAction){
+        if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeTaskActionReferenceCovered(binding.nativeAction,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeTaskActionReferenceCovered(binding.nativeAction,nativeWorldBoundary))throw Error('Native action requires its applied world and causal clock');
+        // Only an actually issued action is supported here. Pending action
+        // templates need their retained-packet release contract before admission.
+        const motionRecord=routeControl.admitAction(binding.nativeAction);
+        if(packet.metadata.clock.safeUntil<binding.nativeAction.startTime)throw Error('Prepared clock does not cover native action');
+        return {...binding,motionRecord,actionRecord:motionRecord.actionRecord};
+      }
       if(binding.nativeStart){
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeTaskStartReferenceCovered(binding.nativeStart,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeTaskStartReferenceCovered(binding.nativeStart,nativeWorldBoundary))throw Error('Native first task requires its exact prepared template and causal world');
         const motionRecord=routeControl.admitStart(binding.nativeStart,{preparingWorldBoundary:preparing?packet.metadata.nativeWorldBoundary:null});
@@ -1058,10 +1070,11 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         const key = `${message.id}:${message.binding.byteOffset}`;const prior=clockBindings.get(key);
         const nativeRoute=message.binding.nativeRoute?copyNativeRouteReference(message.binding.nativeRoute):null,nativeGate=message.binding.nativeGate?copyNativeGateReference(message.binding.nativeGate):null;
         const nativeResume=message.binding.nativeResume?copyNativeResumeReference(message.binding.nativeResume):null,nativeStart=message.binding.nativeStart?copyNativeTaskStartReference(message.binding.nativeStart):null;
-        const nativeSuspended=message.binding.nativeSuspended?copyNativeSuspendedBodyReference(message.binding.nativeSuspended):null;
-        if([nativeRoute,nativeGate,nativeSuspended,nativeResume,nativeStart].filter(Boolean).length>1)throw Error('Conflicting native clock references');
-        clockBindings.set(key, { ...message.binding, ...(nativeRoute?{nativeRoute}:{}),...(nativeGate?{nativeGate}:{}),...(nativeSuspended?{nativeSuspended}:{}),...(nativeResume?{nativeResume}:{}),...(nativeStart?{nativeStart}:{}),
-          ...((nativeRoute||nativeGate||nativeSuspended||nativeResume||nativeStart)?{nativeClockKey:JSON.stringify([nativeRoute?'route':nativeGate?'gate':nativeResume?'resume':nativeStart?'start':'suspended',nativeRoute??nativeGate??nativeSuspended??nativeResume??nativeStart,message.binding.semantic,message.binding.epoch])}:{}), ...(prior?.executionEpoch!==undefined&&JSON.stringify(prior.nativeGate)===JSON.stringify(nativeGate)&&prior.epoch===message.binding.epoch?{executionEpoch:prior.executionEpoch}:{}),id: message.id });
+        const nativeSuspended=message.binding.nativeSuspended?copyNativeSuspendedBodyReference(message.binding.nativeSuspended):null,nativeAction=message.binding.nativeAction?copyNativeTaskActionReference(message.binding.nativeAction):null;
+        if([nativeRoute,nativeGate,nativeSuspended,nativeResume,nativeStart,nativeAction].filter(Boolean).length>1)throw Error('Conflicting native clock references');
+        if(nativeAction&&(message.binding.semantic!=='relative'||message.binding.epoch!==nativeAction.startTime||message.binding.resourceEnd!==undefined))throw Error('Invalid native action phase clock');
+        clockBindings.set(key, { ...message.binding, ...(nativeRoute?{nativeRoute}:{}),...(nativeGate?{nativeGate}:{}),...(nativeSuspended?{nativeSuspended}:{}),...(nativeResume?{nativeResume}:{}),...(nativeStart?{nativeStart}:{}),...(nativeAction?{nativeAction}:{}),
+          ...((nativeRoute||nativeGate||nativeSuspended||nativeResume||nativeStart||nativeAction)?{nativeClockKey:JSON.stringify([nativeRoute?'route':nativeGate?'gate':nativeResume?'resume':nativeStart?'start':nativeAction?'action':'suspended',nativeRoute??nativeGate??nativeSuspended??nativeResume??nativeStart??nativeAction,message.binding.semantic,message.binding.epoch])}:{}), ...(prior?.executionEpoch!==undefined&&JSON.stringify(prior.nativeGate)===JSON.stringify(nativeGate)&&prior.epoch===message.binding.epoch?{executionEpoch:prior.executionEpoch}:{}),id: message.id });
         if (!clockBindingKeys.has(message.id)) clockBindingKeys.set(message.id, new Set());
         clockBindingKeys.get(message.id).add(key); break;
       }

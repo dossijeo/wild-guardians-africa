@@ -1,4 +1,5 @@
 import {sameNativeTaskStartReference} from '../world/native-task-start-reference.js';
+import {copyNativeTaskActionReference} from '../world/native-task-action-presentation.js';
 import {copyNativeTaskStartAttestation} from '../world/native-task-start-attestation.js';
 import {copyNativeResumeAttestation} from '../world/native-resume-attestation.js';
 import {sameNativeResumeReference} from '../world/native-resume-reference.js';
@@ -435,6 +436,11 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
       if(binding.semantic==='origin-modulo'&&(!(binding.nativeResume||binding.nativeStart)||!Number.isFinite(binding.period)||binding.period<=0))throw TypeError('Invalid native origin phase binding');
       if(binding.semantic==='origin-modulo'&&(binding.nativeStart?capabilities.nativeTaskStartVersion:capabilities.nativeDeferredResumeVersion)!==1)throw Error('Draw owner does not support native origin phase clocks');
       if(binding.nativeStart&&capabilities.nativeTaskStartVersion!==1)throw Error('Draw owner does not support native first task authority');
+      if(binding.nativeAction){
+        if(capabilities.nativeTaskActionClockVersion!==1)throw Error('Draw owner does not support native action clocks');
+        const action=copyNativeTaskActionReference(binding.nativeAction);
+        if(binding.semantic!=='relative'||binding.epoch!==action.startTime||binding.resourceEnd!==undefined||[binding.nativeRoute,binding.nativeGate,binding.nativeSuspended,binding.nativeResume,binding.nativeStart].some(Boolean))throw TypeError('Invalid native action phase clock');
+      }
       if(binding.nativeResume&&capabilities.nativeResumeVersion!==1)throw Error('Draw owner does not support native resume authority');
       if(binding.nativeSuspended&&capabilities.nativeSuspendedVersion!==1)throw Error('Draw owner does not support native suspended body authority');
       const key = `${buffer[REF]}:${binding.byteOffset}`;

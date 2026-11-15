@@ -11,6 +11,10 @@ import {createNativeRouteExecutionFixture} from './helpers/native-route-executio
 import {nativeTaskRequestFixture} from './helpers/native-task-resource-requests.js';
 import {nativeTaskStartReferenceFromProposal} from '../src/world/native-task-start-reference.js';
 import {releaseTask,notifyWorkerPlanningChange} from '../src/simulation/tasks.js';
+import {createNativeTaskGameFixture} from './helpers/native-task-game-execution.js';
+import {tick} from '../src/simulation/game.js';
+import {nativeTaskActionReferenceFromProposal} from '../src/world/native-task-action-presentation.js';
+import {floorFloat32} from '../src/float32-time.js';
 
 function pair() {
   const a = {}, b = {};
@@ -18,6 +22,63 @@ function pair() {
   b.postMessage = data => queueMicrotask(() => a.onmessage?.({ data: structuredClone(data) }));
   return [a, b];
 }
+
+// The conditioned action ABI is exercised as a native component here. The
+// ordinary action resource coordinator is deliberately not enabled by this test.
+async function nativeActionClockFixture({late=false,advance=.25,absoluteStart=null}={}){
+ const native=createNativeTaskGameFixture();tick(native.state,native.proposals[0].endTime-native.state.elapsed+.05,native.nav);
+ if(absoluteStart!==null){native.state.elapsed=absoluteStart;assert.equal(native.planner.advanceNativeRouteExecution(absoluteStart).status,'advanced');native.planner.commitNativeCausalClock();}
+ const actor=native.state.workers[0].id,planner=native.planner,p=planner.prepareNativeTaskActionProposal(planner.nativeTaskActionRequest(actor));assert.equal(p.status,'proposed');
+ if(late){native.state.elapsed+=.3;assert.equal(planner.advanceNativeRouteExecution(native.state.elapsed).status,'advanced');planner.commitNativeCausalClock();assert.equal(planner.revalidateNativeTaskActionProposal(p.proposal.ticket).status,'revalidated');}
+ assert.equal(native.w.nav_intent_barrier_proposal_ticket(),1);const tuple=Array.from(new Float64Array(native.w.memory.buffer,native.w.nav_intent_barrier_proposal_ticket_ptr(),6));assert.equal(native.w.nav_task_action_proposal_commit_bound(...tuple.slice(0,5),p.proposal.ticket.ticket),1);planner.commitNativeCausalClock();
+ const proof=planner.nativeTaskActionBinding(actor);native.state.elapsed+=advance;assert.equal(planner.advanceNativeRouteExecution(native.state.elapsed).status,'advanced');planner.commitNativeCausalClock();
+ const [sourcePort,drawPort]=pair(),f=await fixture({capabilities:{width:20,height:10,format:'rgba8unorm',nativeTaskActionClockVersion:1}},{intentControl:{port:drawPort,session:'action-clock'},absoluteNow:()=>1000});let source;
+ try{
+  source=createNativeIntentControlPublication({port:sourcePort,session:'action-clock',observe:planner.observeNativeIntentControl,absoluteNow:()=>1000});await source.ready;
+  // Apply a real later native world boundary; the raw component ABI does not
+  // write the JS coordinator's committed-world cookie.
+  const changed=await planner.mutateNativeWorldAfterGpuQuiescence({getPublication:()=>source,mutation:{type:'addChunk',cx:4,cz:4}});assert.equal(changed.status,'committed',JSON.stringify(changed));await flush();
+  const clock={version:1,epoch:0,elapsed:native.state.elapsed,safeUntil:native.state.elapsed+10,anchorAbsoluteMs:1000,paused:false,segments:[{start:native.state.elapsed,end:native.state.elapsed+10,rate:1,realDuration:10}]};
+  return {...f,native,source,planner,proof,reference:nativeTaskActionReferenceFromProposal(p.proposal),clock,boundary:changed.worldBoundary,async close(){source.dispose();f.client.dispose();await f.host.dispose();native.close();}};
+ }catch(error){source?.dispose();f.client.dispose();await f.host.dispose();native.close();throw error;}
+}
+
+for(const late of [false,true])test(`an issued native action patches only its bounded relative phase and publishes the same pick age (${late?'retained origin':'exact origin'})`,async()=>{
+ const f=await nativeActionClockFixture({late});try{
+  f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'relative',epoch:f.reference.startTime,nativeAction:f.reference});
+  const other=f.planner.nativeIntentControlBaseline().routes[0];assert(other);const otherReference={actorId:other.actorId,routeHandle:other.routeHandle,assignmentSequence:other.assignmentSequence};f.client.registerClockBinding(f.buffer,{byteOffset:4,semantic:'relative',epoch:other.startTime,nativeRoute:otherReference});
+  const shown=f.frame(99,{clock:f.clock,nativeWorldBoundary:f.boundary});await flush();await f.host.idle();f.host.present();await shown;
+  const age=new Float32Array(f.gpu.buffers[0].data.buffer)[0],expected=floorFloat32(f.native.state.elapsed-f.proof.reference.startTime);assert.equal(age,expected);assert(age>.24&&age<.26);assert.notEqual(age,99);
+  const frame=f.host.inspect().nativeRouteFrame,pick=captureNativeRoutePickFrame(f.host.inspect());assert.equal(frame.bindings[0].relativeTime,age);assert.equal(frame.bindings[0].executionEpoch,f.proof.reference.startTime);assert.equal(pick.getActionElapsed(f.reference),age);assert.equal(pick.getActionExecutionTime(f.reference),f.proof.reference.startTime+age);assert.equal(new Float32Array(f.gpu.buffers[0].data.buffer)[1],floorFloat32(f.native.state.elapsed-other.startTime));assert.equal(pick.getTime(otherReference,other.startTime),other.startTime+new Float32Array(f.gpu.buffers[0].data.buffer)[1]);assert.equal(f.native.state.crates.length,0);assert.deepEqual(f.errors,[]);
+  const draws=f.gpu.submitted.length;assert.equal(f.native.w.nav_intent_retire_actor(f.reference.request.nativeRoute.actorId),1);f.planner.intentChanges();f.planner.commitNativeCausalClock();await flush();f.host.present();assert.equal(f.gpu.submitted.length,draws,'revoked action cannot replay its old packet');assert.deepEqual(f.errors,[]);
+ }finally{await f.close();}
+});
+
+test('a long-lived action packet never plays beyond the declared action duration',async()=>{
+ const f=await nativeActionClockFixture({advance:3});try{f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'relative',epoch:f.reference.startTime,nativeAction:f.reference});const shown=f.frame(0,{clock:f.clock,nativeWorldBoundary:f.boundary});await flush();await f.host.idle();f.host.present();await shown;const age=new Float32Array(f.gpu.buffers[0].data.buffer)[0];assert.equal(age,floorFloat32(f.reference.request.duration));assert.equal(captureNativeRoutePickFrame(f.host.inspect()).getActionElapsed(f.reference),age);assert.deepEqual(f.errors,[]);}finally{await f.close();}
+});
+
+test('an action reaching a rounded absolute end submits the terminal declared phase',async()=>{
+ const f=await nativeActionClockFixture({absoluteStart:1e15,advance:2.375});try{assert.equal(f.proof.reference.endTime-f.proof.reference.startTime,2.375);assert.equal(f.proof.reference.request.duration,2.4);assert.equal(f.planner.nativeTaskActionExecution(f.reference.request.nativeRoute.actorId).completed,true);assert.equal(f.planner.nativeTaskActionExecution(f.reference.request.nativeRoute.actorId).elapsed,2.4);f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'relative',epoch:f.reference.startTime,nativeAction:f.reference});const shown=f.frame(0,{clock:f.clock,nativeWorldBoundary:f.boundary});await flush();await f.host.idle();f.host.present();await shown;assert.equal(new Float32Array(f.gpu.buffers[0].data.buffer)[0],floorFloat32(2.4));assert.deepEqual(f.errors,[]);}finally{await f.close();}
+});
+
+test('action clocks fail closed when the draw owner lacks their capability',async()=>{
+ const f=await fixture();try{assert.throws(()=>f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'relative',epoch:10,nativeAction:{}}),/does not support/);assert.equal(f.client.inspect().clockBindings,0);}finally{f.client.dispose();await f.host.dispose();}
+});
+
+for(const mode of ['changed-source','future-world','wrong-epoch','absolute-clock','resource-extension','mixed-route'])test(`native action clock admission rejects ${mode}`,async()=>{
+ const f=await nativeActionClockFixture();try{
+  const action=structuredClone(f.reference),binding={byteOffset:0,semantic:'relative',epoch:action.startTime,nativeAction:action};
+  if(mode==='changed-source')action.request.heading+=.1;
+  if(mode==='future-world')action.worldBoundary.ticket=f.boundary.ticket+1;
+  if(mode==='wrong-epoch')binding.epoch++;
+  if(mode==='absolute-clock')binding.semantic='absolute';
+  if(mode==='resource-extension')binding.resourceEnd=action.endTime+100;
+  if(mode==='mixed-route')binding.nativeRoute=action.request.nativeRoute;
+  if(['wrong-epoch','absolute-clock','resource-extension','mixed-route'].includes(mode)){assert.throws(()=>f.client.registerClockBinding(f.buffer,binding),/action phase clock/);assert.equal(f.client.inspect().clockBindings,0);}
+  else{f.client.registerClockBinding(f.buffer,binding);const rejected=assert.rejects(f.frame(0,{clock:f.clock,nativeWorldBoundary:f.boundary}),mode==='future-world'?/applied world and causal clock/:/obsolete/);await flush();await f.host.idle();await rejected;assert.equal(f.gpu.submitted.length,0);}
+ }finally{await f.close();}
+});
 
 test('native boundary observers wake only after the validated direct requirement is installed',()=>{
  const errors=[],seen=[],port={postMessage(){},close(){}},boundary={version:1,authorityEpoch:'owner',nativeSession:1,ticket:2,effectiveTime:10};let client;
