@@ -13,7 +13,7 @@ export async function createNativeAdmissionVertical({planner,elapsed,kind,onPrep
   let currentKind=kind,profile=nativeResourceAdmissionProfile(kind);
   const [sourcePort,drawPort]=pair();
   const graphics=await fixture({capabilities:{width:20,height:10,format:'rgba8unorm',
-    nativeTaskStartVersion:1,nativeDeferredResumeVersion:1,nativeTaskActionVersion:1,
+    nativeTaskStartVersion:1,nativeDeferredResumeVersion:1,nativeTaskActionVersion:1,nativeTaskActionRestoreVersion:1,
     nativeTaskActionClockVersion:1,nativeResumeVersion:1,nativeSuspendedVersion:1}},
     {intentControl:{port:drawPort,session:'admission-vertical'},absoluteNow:()=>Number.MAX_SAFE_INTEGER});
   const {port1,port2}=new MessageChannel(),errors=[],packets=[];

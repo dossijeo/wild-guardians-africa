@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [proyección de acciones nativas en Game](e-r3-native-action-game-projection-20261115.md), con reloj ejecutado y progreso semántico; productor ordinario, commit de consecuencias y restauración siguen pendientes.
+Último avance: [restauración de acciones con progreso y admisión nueva](e-r3-native-action-restoration-20261115.md), sobre el mismo propietario nativo y reloj común; productor ordinario, consecuencias preparadas y recuperación integral siguen pendientes.
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio

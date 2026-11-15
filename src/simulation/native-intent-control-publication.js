@@ -1,6 +1,7 @@
 import {copyNativeTaskStartReference,sameNativeTaskStartReference} from '../world/native-task-start-reference.js';
 import {copyNativeTaskStartAttestation} from '../world/native-task-start-attestation.js';
 import {copyNativeTaskActionReference,sameNativeTaskActionReference} from '../world/native-task-action-presentation.js';
+import {nativeTaskActionActor} from '../world/native-task-action-presentation.js';
 import {copyNativeTaskActionAttestation} from '../world/native-task-action-attestation.js';
 import {copyNativeResumeAttestation} from '../world/native-resume-attestation.js';
 import {sameNativeResumeReference} from '../world/native-resume-reference.js';
@@ -216,7 +217,7 @@ export function createNativeIntentControlPublication({port,session,observe,
     const starts=nativeStartedRoutes.map(input=>{const value=copyNativeTaskStartAttestation(input),{reference,assignmentSequence}=value;if(!sameNativeWorldBoundary(reference.worldBoundary,nextBoundary)||reference.sourceControlSequence!==hold.sequence||assignmentSequence>sentSequence||actors.has(reference.actorId)||bodyIds.has(reference.bodyId))throw Error('Native started route differs from its authority boundary');actors.add(reference.actorId);bodyIds.add(reference.bodyId);return value;});
     if(starts.length&&!hold.preparedTaskStartTemplate)throw Error('First-task attestation lacks a retained template');
     if(!Array.isArray(nativeActions)||nativeActions.length>32768||!committed&&nativeActions.length)throw TypeError('Invalid committed native actions');
-    const actions=nativeActions.map(input=>{const value=copyNativeTaskActionAttestation(input),r=value.reference,q=r.request,actor=q.nativeRoute.actorId;if(!sameNativeWorldBoundary(r.worldBoundary,nextBoundary)||r.sourceControlSequence!==hold.sequence||value.actionSequence>sentSequence||actors.has(actor)||bodyIds.has(q.bodyId))throw Error('Native action differs from its authority boundary');actors.add(actor);bodyIds.add(q.bodyId);return value;});
+    const actions=nativeActions.map(input=>{const value=copyNativeTaskActionAttestation(input),r=value.reference,q=r.request,actor=nativeTaskActionActor(q);if(!sameNativeWorldBoundary(r.worldBoundary,nextBoundary)||r.sourceControlSequence!==hold.sequence||value.actionSequence>sentSequence||actors.has(actor)||bodyIds.has(q.bodyId))throw Error('Native action differs from its authority boundary');actors.add(actor);bodyIds.add(q.bodyId);return value;});
     if(actions.length&&!hold.preparedTaskActionTemplate)throw Error('Native action lacks its retained template');
     if(committed&&hold.preparedTaskActionTemplate&&(bodies.length||resumes.length||starts.length||actions.length!==1||!sameNativeTaskActionReference(actions[0].preparedReference,hold.preparedTaskActionTemplate)))throw Error('Native action differs from its retained template');
     if(committed&&hold.preparedTaskStartTemplate&&(actions.length||bodies.length||resumes.length||starts.length!==1||!sameNativeTaskStartReference(starts[0].preparedReference,hold.preparedTaskStartTemplate)))throw Error('First task differs from its retained template');

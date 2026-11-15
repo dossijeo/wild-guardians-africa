@@ -1,6 +1,6 @@
 import {Vector3} from 'three';
 import {Fn,clamp,float,int,uniform} from 'three/tsl';
-import {copyNativeTaskActionReference,nativeTaskActionSuccessor} from '../world/native-task-action-presentation.js';
+import {nativeTaskActionActor,nativeTaskActionRemainingDuration,copyNativeTaskActionReference,nativeTaskActionSuccessor} from '../world/native-task-action-presentation.js';
 import {nativeEntityNumericId} from '../world/native-entity-id.js';
 import {floorFloat32} from './float32-time.js';
 import {markRemoteClockNode} from './remote-clock-bindings.js';
@@ -12,17 +12,17 @@ import {bindGpuMotionMaterial,unbindGpuMotionMaterial,gpuActorLocalTransform} fr
 export function createNativeTaskActionGpuMotion({actorId,support,anchorPosition=null,anchorYaw=0,heightOffset=0}={}){
  let reference=copyNativeTaskActionReference(support?.reference);
  const q=reference.request;
- if(support?.kind!=='native-task-action-terrain-support'||support.valid?.()!==true||nativeEntityNumericId(actorId)!==q.nativeRoute.actorId||![anchorYaw,heightOffset,support.point?.height].every(n=>Number.isFinite(n)&&Number.isFinite(Math.fround(n)))||support.point.x!==reference.origin.x||support.point.z!==reference.origin.z||support.point.at!==reference.startTime||anchorPosition!==null&&![anchorPosition?.x,anchorPosition?.y,anchorPosition?.z].every(n=>Number.isFinite(n)&&Number.isFinite(Math.fround(n)))||reference.motionFlags&56)throw TypeError('Invalid native action GPU support');
- const f=Math.fround,duration=floorFloat32(q.duration),kind=q.actionKind,clipNames=Object.freeze(kind==='initial'?['Plant','Water']:kind==='water'?['Water']:kind==='repair'?['Idle']:['Harvest']);
+ if(support?.kind!=='native-task-action-terrain-support'||support.valid?.()!==true||nativeEntityNumericId(actorId)!==nativeTaskActionActor(q)||![anchorYaw,heightOffset,support.point?.height].every(n=>Number.isFinite(n)&&Number.isFinite(Math.fround(n)))||support.point.x!==reference.origin.x||support.point.z!==reference.origin.z||support.point.at!==reference.startTime||anchorPosition!==null&&![anchorPosition?.x,anchorPosition?.y,anchorPosition?.z].every(n=>Number.isFinite(n)&&Number.isFinite(Math.fround(n)))||reference.motionFlags&56)throw TypeError('Invalid native action GPU support');
+ const f=Math.fround,duration=floorFloat32(q.duration),span=nativeTaskActionRemainingDuration(q),remaining=floorFloat32(span),initial=floorFloat32(q.initialElapsed??0),kind=q.actionKind,clipNames=Object.freeze(kind==='initial'?['Plant','Water']:kind==='water'?['Water']:kind==='repair'?['Idle']:['Harvest']);
  if(q.duration>0&&duration===0)throw RangeError('Native action duration cannot be projected');
  const bindingAnchor=Object.freeze(anchorPosition?{x:anchorPosition.x,y:anchorPosition.y,z:anchorPosition.z}:{x:reference.origin.x,y:support.point.height+heightOffset,z:reference.origin.z});
  if(![bindingAnchor.x,bindingAnchor.y,bindingAnchor.z,support.point.height+heightOffset,q.heading-anchorYaw].every(n=>Number.isFinite(n)&&Number.isFinite(f(n))))throw TypeError('Native action transform cannot be projected');
- const clockNode=markRemoteClockNode(uniform(0),'relative',reference.startTime,null,null,null,null,null,null,null,reference),timeNode=clamp(clockNode,float(0),float(duration)),fraction=duration?timeNode.div(float(duration)):float(0),progress=fraction.mul(float(7.2)),clipNode=kind==='initial'?progress.lessThan(float(3.8)).select(int(0),int(1)):int(0),bindings=new Map(),anchor=uniform(new Vector3(bindingAnchor.x,bindingAnchor.y,bindingAnchor.z)),position=uniform(new Vector3(reference.origin.x,support.point.height+heightOffset,reference.origin.z)),yaw=uniform(q.heading-anchorYaw),phases=new Map();
+ const clockNode=markRemoteClockNode(uniform(0),'relative',reference.startTime,null,null,null,null,null,null,null,reference),durationNode=uniform(duration),initialNode=uniform(initial),spanNode=uniform(remaining),timeNode=clamp(initialNode.add(clamp(clockNode,float(0),spanNode)),float(0),durationNode),fraction=kind==='repair'?float(0):timeNode.div(durationNode),progress=fraction.mul(float(7.2)),clipNode=kind==='initial'?progress.lessThan(float(3.8)).select(int(0),int(1)):int(0),bindings=new Map(),anchor=uniform(new Vector3(bindingAnchor.x,bindingAnchor.y,bindingAnchor.z)),position=uniform(new Vector3(reference.origin.x,support.point.height+heightOffset,reference.origin.z)),yaw=uniform(q.heading-anchorYaw),phases=new Map();
  let disposed=false,sealed=false;
  const valid=()=>!disposed&&support.valid()===true;
  const transform=base=>Fn(()=>gpuActorLocalTransform(base,position,yaw,anchor,int(1).greaterThan(0)))();
  function check(){if(disposed)throw Error('Native action GPU motion disposed');}
- function sampleAge(age){check();if(!Number.isFinite(age)||age<0||age>q.duration||Math.fround(age)!==age)throw TypeError('Native action input requires a submitted relative float');return Math.min(age,duration);}
+ function sampleAge(age){check();if(!Number.isFinite(age)||age<0||age>span||Math.fround(age)!==age)throw TypeError('Native action input requires a submitted relative float');return Math.min(duration,f(initial+Math.min(age,remaining)));}
  function clipAt(age){return kind==='initial'&&f(f(sampleAge(age)/duration)*f(7.2))>=f(3.8)?'Water':clipNames[0];}
  function clipDuration(clip,value){if(!clipNames.includes(clip)||!Number.isFinite(value)||value<=0||!Number.isFinite(f(value)))throw TypeError('Invalid native action clip');}
  function resolve(_fallback,clip,value){

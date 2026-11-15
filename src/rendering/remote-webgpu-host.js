@@ -1,6 +1,6 @@
 import {copyNativeTaskStartReference,sameNativeTaskStartReference,nativeTaskStartReferenceCovered} from '../world/native-task-start-reference.js';
 import {copyNativeTaskStartAttestation} from '../world/native-task-start-attestation.js';
-import {copyNativeTaskActionReference,sameNativeTaskActionReference,nativeTaskActionReferenceCovered} from '../world/native-task-action-presentation.js';
+import {nativeTaskActionRemainingDuration,copyNativeTaskActionReference,sameNativeTaskActionReference,nativeTaskActionReferenceCovered} from '../world/native-task-action-presentation.js';
 import {copyNativeTaskActionAttestation} from '../world/native-task-action-attestation.js';
 import {copyNativeResumeAttestation} from '../world/native-resume-attestation.js';
 import {sameNativeResumeReference} from '../world/native-resume-reference.js';
@@ -497,7 +497,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         const resourceTime=Math.min(resourceCeiling,(binding.nativeResume||binding.nativeStart||binding.executionEpoch!==undefined)?binding.epoch+Math.max(0,routeTime-executionEpoch):routeTime);
         // Finite actions retain their declared duration. Do not add the age to
         // a large absolute epoch and subtract it again before its float upload.
-        const value=binding.nativeAction?(routeTime>=binding.motionRecord.executionEnd?binding.nativeAction.request.duration:Math.min(binding.nativeAction.request.duration,Math.max(0,routeTime-executionEpoch))):binding.semantic==='origin-modulo'?executionEpoch%binding.period:binding.semantic==='relative'?resourceTime-binding.epoch:resourceTime;
+        const value=binding.nativeAction?(routeTime>=binding.motionRecord.executionEnd?nativeTaskActionRemainingDuration(binding.nativeAction.request):Math.min(nativeTaskActionRemainingDuration(binding.nativeAction.request),Math.max(0,routeTime-executionEpoch))):binding.semantic==='origin-modulo'?executionEpoch%binding.period:binding.semantic==='relative'?resourceTime-binding.epoch:resourceTime;
         if (!Number.isFinite(value)) throw Error('Invalid remote presentation clock value');
         const submittedValue=binding.semantic==='origin-modulo'?Math.fround(value):floorFloat32(value);
         device.queue.writeBuffer(resolve({ [REF]: binding.id }), binding.byteOffset, new Float32Array([submittedValue]));
@@ -1269,7 +1269,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           if(routeControl||message.protocolVersion!==2||!Array.isArray(message.routes)||
              !Number.isFinite(message.effectiveTime))throw Error('Invalid or repeated native intent baseline');
            routeControl=createNativeRouteControl({authorityEpoch:message.authorityEpoch,
-             initialSequence:message.sequence,initialTime:message.effectiveTime,routes:message.routes,pendingTaskRequests:message.pendingTaskRequests??[]});
+             initialSequence:message.sequence,initialTime:message.effectiveTime,routes:message.routes,pendingTaskRequests:message.pendingTaskRequests??[],pendingActionRequests:message.pendingActionRequests??[]});
            if(message.consumerToken!==undefined&&(typeof message.consumerToken!=='string'||!message.consumerToken))throw Error('Invalid native consumer identity');
            nativeConsumerToken=message.consumerToken??null;
            if(message.clock)routeControl.acceptClock(message.clock,{baseline:true});

@@ -2,6 +2,8 @@
 
 ## Estado
 
+Continuación del 15 de noviembre: [restauración de acciones con progreso y admisión nueva](e-r3-native-action-restoration-20261115.md). No crea rutas ficticias ni restaura permisos; consecuencias, productor ordinario y recuperación integral siguen pendientes. No cambia ningún cierre A6.
+
 **A6 reabierto; A y la arquitectura completa no están cerrados.** Las pruebas
 históricas existentes demuestran reproducción de estados pasados, no ejecución
 autónoma de una intención. No autorizan continuar B1–B7 como si esta dependencia

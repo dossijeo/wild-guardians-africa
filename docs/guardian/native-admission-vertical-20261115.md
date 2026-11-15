@@ -129,3 +129,5 @@ harness se verificaron con su selección afectada, sin repetir GPU/build.
 La documentación de estado del plan sigue siendo la fuente de cierre A6. Este
 documento describe la pieza entregada y cómo usarla, sin crear otro checklist
 global ni convertir número de pruebas/commits en porcentaje de avance.
+
+Continuación posterior: [restauración de acciones](e-r3-native-action-restoration-20261115.md) reutiliza este mismo contrato para una declaración fresca, con la familia `task-action` y cinco casos comunes en `native-task-action-restoration.test.js`. No añade otro transactor ni cola; los límites de esta entrega histórica se conservan.

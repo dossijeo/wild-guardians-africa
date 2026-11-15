@@ -8,6 +8,7 @@ import {MeshStandardNodeMaterial,WebGPURenderer,NodeMaterial} from 'three/webgpu
 import Renderer from '../node_modules/three/src/renderers/common/Renderer.js';
 import {clone} from 'three/addons/utils/SkeletonUtils.js';
 import {createNativeTaskGameFixture} from './helpers/native-task-game-execution.js';
+import {nativeActionSave,restoreNativeActionGame} from './helpers/native-task-action-restoration.js';
 import {tick} from '../src/simulation/game.js';
 import {nativeTaskActionReferenceFromProposal,copyNativeTaskActionReference} from '../src/world/native-task-action-presentation.js';
 import {createWebGpuTerrainResidency} from '../src/rendering/webgpu-terrain-residency.js';
@@ -87,6 +88,20 @@ test('an unpublished action retargets the same graph and clock without allocatin
 // These five declarations exercise graphical math, not ordinary task admission.
 for(const [kind,logical] of [['initial',7.2],['water',3.4],['harvest',3.6],['crate',1],['repair',0]])test(`${kind}: finite graphical phases follow the authored worker timing without a JS timer`,async()=>{
  const f=await fixture();let motion;try{const duration=logical/1.5,reference=copyNativeTaskActionReference({...f.reference,request:{...f.reference.request,actionKind:kind,duration},endTime:f.reference.startTime+duration}),support=f.terrain.prepareNativeTaskAction(reference);motion=createNativeTaskActionGpuMotion({actorId:f.actorId,support,anchorPosition:{x:2,y:3,z:4},anchorYaw:.2,heightOffset:.025});assert.deepEqual(motion.clockNode[Symbol.for('wild-guardians.remote-clock')].nativeAction,reference);assert.equal(motion.clockNode.value,0);for(const u of [0,.2,.53,.8,1]){const age=floorFloat32(duration*u),selected=motion.sampleClip(age),clipTime=motion.sampleForClip(age,selected,f.bakes.get(selected).meta.duration),progress=logical*u;assert.equal(selected,kind==='initial'?(progress<3.8?'Plant':'Water'):kind==='water'?'Water':kind==='repair'?'Idle':'Harvest');const expected=kind==='repair'?0:kind==='initial'?(selected==='Plant'?progress:progress-3.8):f.bakes.get(selected).meta.duration*u;assert(Math.abs(clipTime-expected)<.000002,`${clipTime} != ${expected}`);assert(motion.resolve(null,selected,f.bakes.get(selected).meta.duration).isNode);assert.equal(motion.sample(age).currentSpeed,0);}assert.throws(()=>motion.sampleForClip(.1,'Unknown',1));assert.equal(motion.clockNode.value,0);assert.equal(f.planner.nativeTaskActionBinding(f.actorId),null);}finally{motion?.dispose();f.close();}
+});
+
+test('a genuinely restored Initial action samples saved Water progress in its compiled actor graph',async()=>{
+ const source=restoreNativeActionGame(nativeActionSave({kind:'initial',progress:3}).saved,{admitPeer:false}),f=await fixture();let motion,variant;
+ const gpu=new WebGPURenderer({canvas:{width:1,height:1,style:{},addEventListener(){},removeEventListener(){},getContext(){return null;}}});gpu.hasFeature=()=>true;
+ try{const request=source.planner.nativeTaskActionRequest(source.actor),candidate=source.planner.prepareNativeTaskActionProposal(request);assert.equal(candidate.status,'proposed');const reference=nativeTaskActionReferenceFromProposal(candidate.proposal);
+  // Same generated terrain, but an actual fresh native declaration: no invented
+  // route handle, action receipt, or restarted authored animation.
+  motion=createNativeTaskActionGpuMotion({actorId:source.actor,support:f.terrain.prepareNativeTaskAction(reference)});assert.equal(motion.sampleClip(0),'Water');assert(Math.abs(motion.sampleForClip(0,'Water',f.bakes.get('Water').meta.duration)-.7)<.000002);
+  const remaining=request.duration-request.initialElapsed;assert.equal(motion.sampleClip(floorFloat32(remaining)),'Water');assert(Math.abs(motion.sampleForClip(floorFloat32(remaining),'Water',f.bakes.get('Water').meta.duration)-3.4)<.000003);assert.throws(()=>motion.sample(Math.fround(request.duration)),/submitted relative float/);
+  const actor=f.roster.get(f.actorId),phases={clipNames:motion.clipNames,clipNode:motion.clipNode,resolve:motion.resolve,sampleClip:()=>motion.sampleClip(0),sampleForClip:(clip,duration)=>motion.sampleForClip(0,clip,duration)};variant=actor.prepareNativeMotionVariant(phases,{clipBakes:motion.clipNames.map(c=>f.bakes.get(c)),clip:actor.isBakedRunning()?'Run':'Walk_Skip'});
+  let clocks=0;for(const {mesh,material} of variant.materialAlternatives){const saved=mesh.material;try{mesh.material=material;const builder=gpu.backend.createNodeBuilder(mesh,gpu);builder.scene=f.scene;builder.camera=new PerspectiveCamera();builder.build();assert.match(builder.vertexShader,/clamp/);for(const group of builder.getBindings())for(const binding of group.bindings??[])for(const u of binding.uniforms??[]){const tag=u.nodeUniform?.node?.[Symbol.for('wild-guardians.remote-clock')];if(tag?.nativeAction){clocks++;assert.deepEqual(tag.nativeAction,reference);assert.equal(tag.nativeAction.request.initialElapsed,request.initialElapsed);assert.equal(tag.nativeAction.request.nativeRoute,undefined);}}}finally{mesh.material=saved;}}
+  assert(clocks>0);assert.equal(source.planner.nativeTaskActionBinding(source.actor),null);assert.deepEqual(f.errors,[]);
+ }finally{variant?.dispose();motion?.dispose();f.close();source.close();}
 });
 
 test('the real action binding compiles its typed clock and fixed transform for color and original shadow',async()=>{

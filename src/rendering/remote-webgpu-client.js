@@ -398,6 +398,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     whenFrameSettled:()=>pendingFrame?.promise??Promise.resolve(),
     async prepareNativeWorldFrame(metadata,{signal}={}){
       if(metadata?.nativeTaskActionTemplate&&capabilities.nativeTaskActionVersion!==1)throw Error('Draw owner does not support retained native actions');
+      if(metadata?.nativeTaskActionTemplate?.request.sourceRequest&&capabilities.nativeTaskActionRestoreVersion!==1)throw Error('Draw owner does not support restored native actions');
       if(metadata?.nativeTaskStartTemplate&&capabilities.nativeTaskStartVersion!==1)throw Error('Draw owner does not support native first task');
       if(metadata?.nativeResumeTemplate&&capabilities.nativeDeferredResumeVersion!==1)throw Error('Draw owner does not support native deferred resume');
       if(!frame)throw Error('No remote GPU frame transaction');
@@ -441,6 +442,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
       if(binding.nativeAction){
         if(capabilities.nativeTaskActionClockVersion!==1)throw Error('Draw owner does not support native action clocks');
         const action=copyNativeTaskActionReference(binding.nativeAction);
+        if(action.request.sourceRequest&&capabilities.nativeTaskActionRestoreVersion!==1)throw Error('Draw owner does not support restored native actions');
         if(binding.semantic!=='relative'||binding.epoch!==action.startTime||binding.resourceEnd!==undefined||[binding.nativeRoute,binding.nativeGate,binding.nativeSuspended,binding.nativeResume,binding.nativeStart].some(Boolean))throw TypeError('Invalid native action phase clock');
       }
       if(binding.nativeResume&&capabilities.nativeResumeVersion!==1)throw Error('Draw owner does not support native resume authority');

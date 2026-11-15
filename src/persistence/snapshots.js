@@ -1,3 +1,4 @@
+import {copyNativeTaskActionProgress} from '../world/native-task-action-presentation.js';
 import {validDamageProfile} from '../simulation/raid-agricultural-impact.js';
 import {validateAwakenings} from '../simulation/awakenings.js';
 import {validateBlessings} from '../simulation/blessings.js';
@@ -121,14 +122,15 @@ export function validateSnapshot(state,{livePhysics=false}={}) {
   }
   for(const worker of state.workers){
     if(worker.nativeRouteAdmission!==undefined){
-      const pending=worker.nativeRouteAdmission==='pending-resources'&&worker.status==='waiting-task'&&worker.path===null,
+      const pending=['pending-resources','pending-action-resources'].includes(worker.nativeRouteAdmission)&&worker.status==='waiting-task'&&worker.path===null,
         executing=worker.nativeRouteAdmission==='native-task'&&worker.status==='walking'&&Array.isArray(worker.path)&&worker.path.length===0,
         acting=worker.nativeRouteAdmission==='native-action'&&worker.status==='acting'&&Array.isArray(worker.path)&&worker.path.length===0;
       if(!worker.taskId||!pending&&!executing&&!acting)throw Error('Solicitud de recursos nativa inválida');
     }
-    if(worker.nativeTaskAction!==undefined||worker.nativeRouteAdmission==='native-action'){
-      const action=worker.nativeTaskAction,task=state.tasks.find(t=>t.id===worker.taskId);
-      if(worker.nativeRouteAdmission!=='native-action'||!action||typeof action!=='object'||Array.isArray(action)||action.version!==1||Object.keys(action).some(k=>!['version','kind','duration','elapsed'].includes(k))||!task||task.workerId!==worker.id||task.kind!==action.kind||!['harvest','initial','water','crate','repair'].includes(action.kind)||!Number.isFinite(action.duration)||action.duration<0||action.duration>3600||(action.kind==='repair'?action.duration!==0:action.duration<=0)||!Number.isFinite(action.elapsed)||action.elapsed<0||action.elapsed>action.duration||worker.actionRemaining!==Math.max(0,action.duration-action.elapsed)||worker.running!==false||worker.gateWaiting!==false)throw Error('Progreso de acción nativa inválido');
+    if(worker.nativeTaskAction!==undefined||['native-action','pending-action-resources'].includes(worker.nativeRouteAdmission)){
+      let action;try{action=copyNativeTaskActionProgress(worker.nativeTaskAction);}catch{throw Error('Progreso de acción nativa inválido');}
+      const task=state.tasks.find(t=>t.id===worker.taskId);
+      if(!['native-action','pending-action-resources'].includes(worker.nativeRouteAdmission)||!task||task.workerId!==worker.id||task.kind!==action.kind||worker.actionRemaining!==Math.max(0,action.duration-action.elapsed)||worker.running!==false||worker.gateWaiting!==false)throw Error('Progreso de acción nativa inválido');
     }
     if(worker.gateWaiting!==undefined&&typeof worker.gateWaiting!=='boolean')throw new Error('Espera de puerta inválida');
     if(worker.terrainAvoidance!==undefined&&(!Array.isArray(worker.terrainAvoidance)||worker.terrainAvoidance.length>8||worker.terrainAvoidance.some(p=>!p||!Number.isFinite(p.x)||!Number.isFinite(p.z))))throw new Error('Desvío de terreno inválido');

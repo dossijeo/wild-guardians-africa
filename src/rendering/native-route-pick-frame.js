@@ -1,5 +1,5 @@
 import {copyNativeTaskStartReference,nativeTaskStartReferenceCovered} from '../world/native-task-start-reference.js';
-import {copyNativeTaskActionReference,nativeTaskActionReferenceCovered} from '../world/native-task-action-presentation.js';
+import {nativeTaskActionRemainingDuration,copyNativeTaskActionReference,nativeTaskActionReferenceCovered} from '../world/native-task-action-presentation.js';
 import {copyNativeResumeReference,nativeResumeReferenceCovered} from '../world/native-resume-reference.js';
 import {copyNativeSuspendedBodyReference,nativeSuspendedBodyReferenceCovered} from '../world/native-suspended-body-reference.js';
 import {copyNativeRouteReference} from '../world/native-route-reference.js';
@@ -28,7 +28,7 @@ export function captureNativeRoutePickFrame(consumer){
   if(nativeStart&&!nativeTaskStartReferenceCovered(copyNativeTaskStartReference(nativeStart),frame.worldBoundary))throw Error('Native first-task pick world mismatch');
   if(nativeAction){
    const reference=copyNativeTaskActionReference(nativeAction),age=binding.relativeTime,origin=binding.executionEpoch,key=actionClockKey(reference,epoch);
-   if(semantic!=='relative'||epoch!==reference.startTime||!nativeTaskActionReferenceCovered(reference,frame.worldBoundary)||!Number.isFinite(age)||age<0||age>reference.request.duration||Math.fround(age)!==age||elapsed!==epoch+age||!Number.isFinite(origin)||origin<epoch||origin>frame.clockElapsed||origin+age>frame.clockElapsed||actionAges.has(key)&&actionAges.get(key)!==age||origins.has(key)&&origins.get(key)!==origin)throw Error('Invalid native action pick phase');
+   if(semantic!=='relative'||epoch!==reference.startTime||!nativeTaskActionReferenceCovered(reference,frame.worldBoundary)||!Number.isFinite(age)||age<0||age>nativeTaskActionRemainingDuration(reference.request)||Math.fround(age)!==age||elapsed!==epoch+age||!Number.isFinite(origin)||origin<epoch||origin>frame.clockElapsed||origin+age>frame.clockElapsed||actionAges.has(key)&&actionAges.get(key)!==age||origins.has(key)&&origins.get(key)!==origin)throw Error('Invalid native action pick phase');
    actionAges.set(key,age);origins.set(key,origin);
   }
   const key=nativeAction?actionClockKey(nativeAction,epoch):nativeStart?startClockKey(nativeStart,semantic,epoch):nativeResume?resumeClockKey(nativeResume,semantic,epoch):nativeSuspended?suspendedClockKey(nativeSuspended,semantic,epoch):nativeGate?gateClockKey(nativeGate,semantic,epoch):clockKey(nativeRoute,semantic,epoch);

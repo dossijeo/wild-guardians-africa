@@ -1,6 +1,6 @@
 import {nativeResumeReferenceFromProposal,sameNativeResumeReference} from './native-resume-reference.js';
 import {nativeTaskStartReferenceFromProposal,sameNativeTaskStartReference} from './native-task-start-reference.js';
-import {nativeTaskActionReferenceFromProposal,sameNativeTaskActionReference} from './native-task-action-presentation.js';
+import {nativeTaskActionActor,nativeTaskActionReferenceFromProposal,sameNativeTaskActionReference} from './native-task-action-presentation.js';
 
 // Transport/resource identities only. Compatibility is reported by the current
 // native revalidation; none of these profiles can issue an execution permission.
@@ -36,7 +36,7 @@ const profiles=Object.freeze({
     reference:nativeTaskActionReferenceFromProposal,sameReference:sameNativeTaskActionReference,
     compatible:translation=>translation.sameSourceState,
     attest(native,reference,preparedReference){
-      const fact=native.nativeTaskActionBinding(reference.request.nativeRoute.actorId);
+      const fact=native.nativeTaskActionBinding(nativeTaskActionActor(reference.request));
       if(!fact||!sameNativeTaskActionReference(fact.reference,reference)||
         !sameNativeTaskActionReference(fact.preparedReference,preparedReference))
         throw Error('Native action resource association unavailable');

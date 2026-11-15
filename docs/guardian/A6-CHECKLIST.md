@@ -2,7 +2,7 @@
 
 Actualizado: 2026-11-15. IDs acordados en la conversación; no se renumeran al avanzar.
 
-Último incremento del camino crítico: [proyección de acciones nativas en Game](e-r3-native-action-game-projection-20261115.md), con reloj ejecutado y progreso semántico; productor ordinario, commit de consecuencias y restauración siguen pendientes.
+Último incremento del camino crítico: [restauración de acciones con progreso y admisión nueva](e-r3-native-action-restoration-20261115.md), sobre el mismo propietario nativo y reloj común; productor ordinario, consecuencias preparadas y recuperación integral siguen pendientes.
 Publicaciones ordinarias y aceptación integrada de personajes autónomos siguen pendientes; no cambia el recuento de cierres.
 
 **Ningún punto principal está cerrado todavía.** Un subpunto marcado como nativo

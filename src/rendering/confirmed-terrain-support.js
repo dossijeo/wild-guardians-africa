@@ -1,6 +1,6 @@
 import {copyNativeResumeProposal} from '../world/native-resume-presentation.js';
 import {copyNativeTaskStartProposal} from '../world/native-task-start-presentation.js';
-import {copyNativeTaskActionReference} from '../world/native-task-action-presentation.js';
+import {copyNativeTaskActionReference,nativeTaskActionActor} from '../world/native-task-action-presentation.js';
 import {copyNativeSuspendedBodyReference} from '../world/native-suspended-body-reference.js';
 import {historicalPhysicalActorIds} from '../simulation/worker-historical-physics-isolation.js';
 import {createActorTerrainSampler} from './webgpu-actor-terrain.js';
@@ -61,7 +61,7 @@ export function createConfirmedTerrainSupport({residency,maxPieces=16384,maxActo
   if(closed)throw Error('Confirmed terrain support disposed');
   const reference=copyNativeTaskActionReference(value),{x,z}=reference.origin,cx=Math.floor((x+24)/48),cz=Math.floor((z+24)/48),revision=residency.revisionAt?.(cx,cz);
   if(!revision||typeof revision.epoch!=='string')return null;
-  const point={at:reference.startTime,x,z},manifest={epoch:revision.epoch,chunks:[{cx,cz,revision:revision.revision}]},actorId=String(reference.request.nativeRoute.actorId),trace={start:point.at,end:point.at,terrainManifest:manifest,actors:[{actorId,continuous:true,timed:true,start:point,end:point,segments:[]}]};
+  const point={at:reference.startTime,x,z},manifest={epoch:revision.epoch,chunks:[{cx,cz,revision:revision.revision}]},actorId=String(nativeTaskActionActor(reference.request)),trace={start:point.at,end:point.at,terrainManifest:manifest,actors:[{actorId,continuous:true,timed:true,start:point,end:point,segments:[]}]};
   if(!residency.matchesManifest(manifest))return null;
   const result=preparePaths(trace,{wanted:null,sequence:null,physicalIds:[],sourceLimit:maxNativeSourceSegments,exactManifest:false});
   return result?Object.freeze({kind:'native-task-action-terrain-support',reference,point:Object.freeze({...point,height:result.actors[0].startHeight}),valid:result.valid,unchangedBy:result.unchangedBy}):null;

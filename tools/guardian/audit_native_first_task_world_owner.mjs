@@ -13,7 +13,7 @@ try{
  await page.goto((process.env.QA_BASE_URL??'http://127.0.0.1:5181')+'/tests/browser/native-first-task-world-owner.html');
  await page.waitForFunction(()=>typeof window.runNativeFirstTaskWorldOwner==='function');
  let result;
- try{result=await Promise.race([page.evaluate(action=>window.runNativeFirstTaskWorldOwner({action}),process.env.QA_NATIVE_ACTION==='true'),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('First-task owner audit timed out')),120000);})]);}
+ try{result=await Promise.race([page.evaluate(options=>window.runNativeFirstTaskWorldOwner(options),{action:process.env.QA_NATIVE_ACTION==='true',restore:process.env.QA_NATIVE_ACTION_RESTORE==='true'}),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('First-task owner audit timed out')),120000);})]);}
  catch(error){await writeFile(output,JSON.stringify({error:String(error),errors,consoleErrors,httpFailures,requestFailures},null,2)+'\n');throw error;}
  await writeFile(output,JSON.stringify({result,errors,consoleErrors,httpFailures,requestFailures},null,2)+'\n');
  if(errors.length||consoleErrors.length||httpFailures.length||requestFailures.length||/swiftshader|software/i.test(JSON.stringify(result.adapter))||!result.adapter.vendor||result.final.gpuErrors||result.drained!==true)throw Error(JSON.stringify({errors,consoleErrors,httpFailures,requestFailures,result}));
