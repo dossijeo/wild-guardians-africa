@@ -1,0 +1,33 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {nativeTaskConsequenceFixture} from './helpers/native-task-consequence.js';
+import {copyNativeTaskConsequenceProposal,nativeTaskConsequenceReferenceFromProposal,nativeTaskConsequencePresentationMatches} from '../src/world/native-task-consequence.js';
+import {releaseTask,notifyWorkerPlanningChange} from '../src/simulation/tasks.js';
+
+test('a native consequence stages a real complete Carry route while retaining its action and body',()=>{
+ const f=nativeTaskConsequenceFixture();try{const body=f.body(1),state=JSON.stringify(f.state),tasks=f.w.nav_intent_task_count(),sequence=f.w.nav_intent_transition_sequence(),p=f.prepare();assert.equal(p.status,'proposed');const proposal=copyNativeTaskConsequenceProposal(p.proposal);assert.equal(proposal.motionFlags,8);assert.equal(proposal.crateId,f.state.nextId);assert.equal(proposal.sourceAction.actionSequence,f.source.actionSequence);assert.equal(proposal.authorizedConsequences,false);assert.equal(proposal.authorizedAutonomy,false);assert.equal(proposal.nativeStart,undefined);assert.equal(proposal.nativeResume,undefined);assert.equal(proposal.nativeRoute,undefined);assert.equal(proposal.sourceRequestHandle,undefined);assert(proposal.distance>0);assert(proposal.endTime>proposal.startTime);assert(Math.hypot(proposal.points.at(-2)-f.destination.x,proposal.points.at(-1)-f.destination.z)<.00001);assert.equal(f.planner.nativeTaskConsequenceBinding(f.actor),null);assert.equal(f.w.nav_intent_task_count(),tasks);assert.equal(f.w.nav_intent_transition_sequence(),sequence);assert.deepEqual(f.body(1),body);assert.equal(JSON.stringify(f.state),state);assert.equal(f.planner.finishAction(f.actor),false);assert.equal(f.planner.cancelNativeTaskConsequenceProposal(proposal.ticket),true);assert(f.planner.nativeTaskActionBinding(f.actor));}finally{f.close();}
+});
+
+test('the source native commit atomically replaces its action with the real Carry owner and semantic result',()=>{
+ const f=nativeTaskConsequenceFixture();try{const p=f.prepare();assert.equal(p.status,'proposed');const body=f.body(1),peer=f.body(3),tasks=f.w.nav_intent_task_count(),sequence=f.w.nav_intent_transition_sequence(),nativeTicket=f.tuple();assert.equal(f.commitSourceOnly(p.proposal),1);const binding=f.planner.nativeTaskConsequenceBinding(f.actor);assert(binding);assert.equal(binding.assignmentSequence,sequence+1);assert.equal(binding.reference.sourceAction.actionSequence,f.source.actionSequence);assert.equal(f.planner.nativeTaskActionBinding(f.actor),null);assert.equal(f.w.nav_intent_task_count(),tasks-1);assert.deepEqual(f.body(1),body);assert.equal(f.w.nav_intent_game_execution_state(),1);const packet=f.planner.captureNativeRoutePresentation(binding.reference.expectedRouteHandle);assert(nativeTaskConsequencePresentationMatches(p.proposal,packet,binding));assert.equal(packet.motionFlags,8);assert.equal(f.w.nav_intent_finish(Number(f.actor.split('-').at(-1))),0);f.advance(.2);assert.notDeepEqual(f.body(1),body);assert.notDeepEqual(f.body(3),peer);assert.equal(f.w.nav_intent_delivery_execution(Number(f.actor.split('-').at(-1))),1);const row=Array.from(new Float64Array(f.w.memory.buffer,f.w.nav_intent_delivery_execution_ptr(),30));assert.equal(row[12],f.body(1)[1]);assert.equal(row[13],f.body(1)[2]);assert.equal(row[3],p.proposal.crateId);assert.equal(f.w.nav_task_consequence_proposal_commit_bound(...nativeTicket.slice(0,5),p.proposal.ticket.ticket),-1);
+ // This test intentionally stops at the native ABI; ordinary source projection
+ // and the prepared GPU consequence must still authorize their own publication.
+ assert.equal(f.state.crates.length,0);
+ }finally{f.close();}
+});
+
+test('late native consequence revalidation preserves its exact source, phases and retained projection',()=>{
+ const f=nativeTaskConsequenceFixture();try{const first=f.prepare();assert.equal(first.status,'proposed');const body=f.body(1),peer=f.body(3);f.advance(.7);const next=f.planner.revalidateNativeTaskConsequenceProposal(first.proposal.ticket);assert.equal(next.status,'revalidated');assert(next.timeTranslation.sameFloat32Motion);assert(next.timeTranslation.sameFloat32Gates);assert.deepEqual(next.proposal.sourceAction,first.proposal.sourceAction);assert.deepEqual(f.body(1),body);assert.notDeepEqual(f.body(3),peer);assert(next.proposal.startTime>first.proposal.startTime);assert.equal(f.commitSourceOnly(first.proposal),1);const binding=f.planner.nativeTaskConsequenceBinding(f.actor);assert.deepEqual(binding.preparedReference,nativeTaskConsequenceReferenceFromProposal(first.proposal));assert.deepEqual(binding.reference,nativeTaskConsequenceReferenceFromProposal(next.proposal));}finally{f.close();}
+});
+
+test('neither an incomplete action nor an old source sequence can stage its consequence',()=>{
+ const f=nativeTaskConsequenceFixture({progress:.6});try{assert.equal(f.prepare().status,'incomplete');assert.equal(f.w.nav_task_consequence_proposal_stage(Number(f.actor.split('-').at(-1)),f.source.reference.worldBoundary.nativeSession,f.source.actionSequence,f.policy.crateId,Number(f.center.id.split('-').at(-1)),f.destination.x,f.destination.z),-2);f.advance(2);assert.equal(f.planner.prepareNativeTaskConsequenceProposal({...f.source,actionSequence:f.source.actionSequence+1},f.policy).status,'stale');assert.equal(f.planner.nativeTaskConsequenceBinding(f.actor),null);assert(f.planner.nativeTaskActionBinding(f.actor));}finally{f.close();}
+});
+
+test('cancellation while a consequence is preparing cannot consume its crop or obtain a delivery grant',()=>{
+ const f=nativeTaskConsequenceFixture();try{const first=f.prepare();assert.equal(first.status,'proposed');releaseTask(f.state,f.worker);f.worker.status='idle';notifyWorkerPlanningChange(f.state,f.worker);f.planner.flushTaskEvents();f.planner.commitNativeCausalClock();assert.equal(f.planner.nativeTaskActionBinding(f.actor),null);assert.equal(f.planner.nativeTaskConsequenceBinding(f.actor),null);assert.notEqual(f.commitSourceOnly(first.proposal),1);assert(f.target.alive);assert.equal(f.state.crates.length,0);}finally{f.close();}
+});
+
+test('unknown and genuinely blocked center routes cannot release the original action',()=>{
+ for(const additionalChunks of [[],[{cx:2,cz:-1},{cx:2,cz:0},{cx:2,cz:1}]]){const f=nativeTaskConsequenceFixture({nearCenter:false,admitPeer:false,additionalChunks});try{const body=f.body(1),first=f.prepare();assert.equal(first.status,additionalChunks.length?'blocked':'unknown');assert.deepEqual(f.body(1),body);assert(f.planner.nativeTaskActionBinding(f.actor));assert.equal(f.planner.nativeTaskConsequenceBinding(f.actor),null);assert.equal(f.state.crates.length,0);}finally{f.close();}}
+});

@@ -102,8 +102,9 @@ std::set<uint64_t> reservationBodyCandidates(const IntentState& s,const SpatialB
   return reservationBoxCandidates(s,body.x-body.r,body.z-body.r,body.x+body.r,body.z+body.r);
 }
 bool reserveRouteClear(IntentState& s,const ActiveIntent& intent,const RouteSlot& route,
-    uint64_t body,const SpatialBodyView& physical,bool suffix=false){
-  if(nativeTaskActionForBody(s,body))return false;
+    uint64_t body,const SpatialBodyView& physical,bool suffix=false,const NativeTaskActionBinding* transferFrom=nullptr){
+  if(const auto action=nativeTaskActionForBody(s,body);action&&
+     (!transferFrom||action->actionBinding.get()!=transferFrom||!nativeTaskActionBodyCurrent(s,*action)||action->actor!=route.actor||s.effectiveTime<transferFrom->actual[16]))return false;
   const ReservationPath path{&route};
   double minX=route.originX,maxX=route.originX,minZ=route.originZ,maxZ=route.originZ;
   for(size_t i=0;i<route.points.size();i+=2){

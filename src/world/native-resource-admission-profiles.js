@@ -1,11 +1,25 @@
 import {nativeResumeReferenceFromProposal,sameNativeResumeReference} from './native-resume-reference.js';
 import {nativeTaskStartReferenceFromProposal,sameNativeTaskStartReference} from './native-task-start-reference.js';
 import {nativeTaskActionActor,nativeTaskActionReferenceFromProposal,sameNativeTaskActionReference} from './native-task-action-presentation.js';
+import {nativeTaskConsequenceReferenceFromProposal,sameNativeTaskConsequenceReference} from './native-task-consequence.js';
 
 // Transport/resource identities only. Compatibility is reported by the current
 // native revalidation; none of these profiles can issue an execution permission.
 const routeCompatible=translation=>translation.sameFloat32Motion&&translation.sameFloat32Gates;
 const profiles=Object.freeze({
+  'task-consequence':Object.freeze({
+    proposalKind:'native-task-consequence-proposal',
+    templateField:'preparedTaskConsequenceTemplate',bindingField:'nativeTaskConsequenceBinding',releaseField:'nativeConsequences',
+    reference:nativeTaskConsequenceReferenceFromProposal,sameReference:sameNativeTaskConsequenceReference,
+    compatible:routeCompatible,
+    attest(native,reference,preparedReference){
+      const actual=issuedRoute(native,reference),fact=native.nativeTaskConsequenceBinding(reference.actorId);
+      if(!fact||!sameNativeTaskConsequenceReference(fact.reference,reference)||
+        !sameNativeTaskConsequenceReference(fact.preparedReference,preparedReference)||fact.assignmentSequence!==actual.assignmentSequence)
+        throw Error('Native consequence resource association unavailable');
+      return fact;
+    }
+  }),
   resume:Object.freeze({
     proposalKind:'native-route-resume-proposal',
     templateField:'preparedResumeTemplate',bindingField:'nativeResumeBinding',releaseField:'nativeResumedRoutes',

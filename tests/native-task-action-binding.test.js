@@ -50,8 +50,8 @@ test('native action age follows the one executed clock while its body stays held
  }finally{f.close();}
 });
 
-test('finishing a native action is rejected before its end and revokes its permission exactly once at completion',()=>{
- const f=fixture();try{const binding=commit(f,prepare(f)),lease=f.control.admitAction(binding.reference);advance(f,binding.reference.endTime-.01);assert.equal(f.planner.finishAction(f.actor),false);assert(lease.isCurrent());advance(f,binding.reference.endTime);assert(f.planner.nativeTaskActionExecution(f.actor).completed);const record=lease.actionRecord;record.lastDrawTime=f.state.elapsed;assert.equal(f.planner.finishAction(f.actor),true);synchronize(f);assert.equal(lease.isCurrent(),false);assert.equal(record.safeUntil,f.state.elapsed);assert.equal(f.planner.finishAction(f.actor),false);assert.equal(f.planner.nativeTaskActionBinding(f.actor),null);assert.equal(f.state.crates.length,0);
+test('completion keeps the action body and permission until a prepared consequence replaces it',()=>{
+ const f=fixture();try{const binding=commit(f,prepare(f)),lease=f.control.admitAction(binding.reference);advance(f,binding.reference.endTime-.01);assert.equal(f.planner.finishAction(f.actor),false);assert(lease.isCurrent());advance(f,binding.reference.endTime);assert(f.planner.nativeTaskActionExecution(f.actor).completed);const record=lease.actionRecord;record.lastDrawTime=f.state.elapsed;assert.equal(f.planner.finishAction(f.actor),false);synchronize(f);assert.equal(lease.isCurrent(),true);assert.equal(record.safeUntil,Infinity);assert.equal(f.planner.finishAction(f.actor),false);assert.deepEqual(f.planner.nativeTaskActionBinding(f.actor),binding);assert.equal(f.state.crates.length,0);
  }finally{f.close();}
 });
 

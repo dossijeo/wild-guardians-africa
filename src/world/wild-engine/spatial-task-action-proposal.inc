@@ -102,11 +102,12 @@ EMSCRIPTEN_KEEPALIVE int nav_task_action_proposal_commit_bound(double session,do
   releaseRoute(s,intent);intent.state=PlanningState::ActionActive;intent.actionBinding=binding;
   binding->actionSequence=emitIntentChange(s,intent);s.entityRevision++;return 1;
 }
-static void appendTaskActionBinding(IntentState& s,const ActiveIntent& intent){
-  const auto& b=*intent.actionBinding;auto& out=s.taskActionBindingResult;
+static void appendTaskActionBindingData(IntentState& s,const NativeTaskActionBinding& b){
+  auto& out=s.taskActionBindingResult;
   out.insert(out.end(),{1,double(b.actionSequence),double(s.session),double(b.preparedTicket),double(b.actualTicket),s.effectiveTime});
   out.insert(out.end(),b.prepared.begin(),b.prepared.end());out.insert(out.end(),b.actual.begin(),b.actual.end());
 }
+static void appendTaskActionBinding(IntentState& s,const ActiveIntent& intent){appendTaskActionBindingData(s,*intent.actionBinding);}
 EMSCRIPTEN_KEEPALIVE int nav_task_action_binding_snapshot(double actorId){
   auto& s=state();s.taskActionBindingResult.clear();if(!integer(actorId))return 0;
   const auto found=s.activeIntents.find(uint64_t(actorId));if(found==s.activeIntents.end()||!found->second.actionBinding)return 0;

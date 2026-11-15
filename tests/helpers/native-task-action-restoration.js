@@ -18,12 +18,13 @@ export function nativeActionSave({progress=.6,core=null,kind='harvest'}={}){
   return {saved:deserialize(serialize(f.state)),oldBinding:f.planner.nativeTaskActionBinding(actor)};
  }finally{f.close();}
 }
-export function restoreNativeActionGame(saved,{core=null,admitPeer=true}={}){
+export function restoreNativeActionGame(saved,{core=null,admitPeer=true,additionalChunks=[]}={}){
  const state=deserialize(serialize(saved)),loaded=new Map();
  if(core){const first=state.villages[0];core.generate(state.seed,Math.floor((first.x+24)/48),Math.floor((first.z+24)/48),state.biome,state);}
  const session=createSpatialGameSession(module,state,{...(core?{core}:{}),loaded:()=>loaded,onData:data=>loaded.set(`${data.cx},${data.cz}`,data)});
  try{
   for(let z=-1;z<=1;z++)for(let x=-1;x<=1;x++){if(session.core.selectChunk(x,z)<0)session.core.addChunk(x,z);loaded.set(`${x},${z}`,session.core.chunkPayload());}
+  for(const {cx,cz} of additionalChunks){if(session.core.selectChunk(cx,cz)<0)session.core.addChunk(cx,cz);loaded.set(`${cx},${cz}`,session.core.chunkPayload());}
   const planner=createEventDrivenTaskPlanner(session);planner.resetFromState(state);const w=session.core.wasm;
   for(const [i,worker] of state.workers.entries()){const id=i?3:1;assert.equal(w.spatial_body_upsert(id,worker.x,worker.z,.28,0,1),1);assert.equal(w.nav_gate_bind_worker(Number(worker.id.split('-').at(-1)),id),1);}
   assert.equal(planner.commitNativeCausalClock().status,'committed');

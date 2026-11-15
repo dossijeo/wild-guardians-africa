@@ -131,6 +131,17 @@ struct NativeTaskActionBinding {
   int bodyFlags=0;
   std::optional<RestoredTaskActionSource> restoredSource;
 };
+struct NativeTaskConsequenceOrigin {
+  std::array<double,24> header{};
+  // version, source task/target, created crate, delivery center, destination X/Z,
+  // source action sequence. Semantic effects are committed with the handoff.
+  std::array<double,8> effect{};
+  std::shared_ptr<const NativeTaskActionBinding> source;
+  uint64_t ticket=0;
+};
+struct NativeTaskConsequenceBinding {
+  NativeTaskConsequenceOrigin prepared,actual;uint64_t assignmentSequence=0;
+};
 struct ActiveIntent {
   uint64_t actor=0,task=0,target=0;
   PlanningState state=PlanningState::NeedsPlan;
@@ -156,6 +167,7 @@ struct ActiveIntent {
   std::optional<TaskActionResourceRequest> actionRequest;
   std::optional<RestoredTaskActionSource> restoredActionSource;
   std::shared_ptr<const NativeTaskActionBinding> actionBinding;
+  bool delivery=false;uint64_t carriedTarget=0;
 };
 struct RouteHold {
   double distance=0,from=0,until=0,delay=0;
@@ -174,6 +186,7 @@ struct NativeTaskStartBinding {
 };
 struct RouteSlot {
   std::shared_ptr<const NativeTaskStartBinding> startBinding;
+  std::shared_ptr<const NativeTaskConsequenceBinding> consequenceBinding;
   std::vector<float> points;
   // Execution timing belongs to this same versioned route, not another plan.
   // Modes 1 (animal walk) / 2 (worker rules) are static candidates, not autonomy.
@@ -229,9 +242,16 @@ struct PendingTaskActionDraft {
   std::optional<std::array<double,24>> previousHeader;
   uint64_t previousTicket=0;
 };
+struct PendingTaskConsequenceDraft {
+  PendingNativeMotionDraft motion;
+  std::array<double,8> effect{};
+  std::shared_ptr<const NativeTaskActionBinding> source;
+  std::optional<NativeTaskConsequenceOrigin> previous;
+};
 struct PendingBarrierProposal {
   std::optional<PendingNativeMotionDraft> resume,start;
   std::optional<PendingTaskActionDraft> action;
+  std::optional<PendingTaskConsequenceDraft> consequence;
   bool retainsRoutes=false;
   std::vector<double> routeEffects,gateEffects;
   bool pending=false;uint32_t session=0;uint64_t ticket=0;
@@ -324,6 +344,8 @@ struct IntentState {
   std::array<double,8> taskActionRestoreSourceResult{};
   std::vector<double> taskActionRestoreSourcesResult;
   std::vector<double> taskActionBindingResult;
+  std::vector<double> taskConsequenceBindingResult;
+  std::array<double,30> deliveryExecutionResult{};
   std::set<uint64_t> stoppedReservationBodies,removingBodies;
   std::set<uint64_t> stoppedGateRouteActors;
   uint64_t executionAdvances=0,executionEvaluations=0,executionBodyUpdates=0,executionStopInvalidations=0;
@@ -398,8 +420,9 @@ bool nativeTaskActionBodyCurrent(const IntentState& s,const ActiveIntent& intent
     spatialReadBody(worker->second.body,body)&&body.kind==0&&body.flags==binding.bodyFlags&&body.x==h[12]&&body.z==h[13]&&body.r==h[14]&&
     worker->second.x==body.x&&worker->second.z==body.z&&!s.reservedBodies.count(worker->second.body)&&!s.suspendedBodies.count(worker->second.body);
 }
+bool nativeDeliveryBodyCurrent(const IntentState&,const ActiveIntent&);
 bool nativeTaskActionsCoherent(const IntentState& s){
-  for(const auto& [actor,intent]:s.activeIntents)if(intent.actionBinding&&!nativeTaskActionBodyCurrent(s,intent))return false;
+  for(const auto& [actor,intent]:s.activeIntents)if(intent.actionBinding&&!nativeTaskActionBodyCurrent(s,intent)||intent.delivery&&!nativeDeliveryBodyCurrent(s,intent))return false;
   return true;
 }
 const ActiveIntent* nativeTaskActionForBody(const IntentState& s,uint64_t id){
@@ -582,7 +605,7 @@ void releaseRoute(IntentState& s,ActiveIntent& intent){
       }
       if(route.suspended)s.suspendedBodies.erase(route.reservationBody);
       route.suspended=route.resumable=false;route.motionOffset.fill(0);route.suspendedAt=0;
-      route.startBinding.reset();route.active=route.pendingResources=false;route.points.clear();route.distances.clear();route.timingMode=0;
+      route.startBinding.reset();route.consequenceBinding.reset();route.active=route.pendingResources=false;route.points.clear();route.distances.clear();route.timingMode=0;
       route.holds.clear();route.waitGate=0;route.gateCandidate=false;route.departureTime=0;
       route.gateReservations.clear();route.gateAdmitted=false;
       route.generation++;
@@ -619,7 +642,7 @@ void stopRouteForEvent(IntentState& s,ActiveIntent& intent){
   if(suspendRoute(s,intent))return;
   releaseRoute(s,intent);intent.state=PlanningState::NeedsPlan;
 }
-void releaseIntent(IntentState& s,uint64_t actor,PlanningState next){
+void releaseIntent(IntentState& s,uint64_t actor,PlanningState next,bool notify=true){
   const auto found=s.activeIntents.find(actor);
   if(found==s.activeIntents.end())return;
   ActiveIntent& intent=found->second;
@@ -636,8 +659,8 @@ void releaseIntent(IntentState& s,uint64_t actor,PlanningState next){
   }
   intent.blockedCropGroups.clear();
   releaseRoute(s,intent);intent.state=next;
-  emitIntentChange(s,intent);
-  intent.task=0;intent.target=0;s.invalidations++;
+  if(notify)emitIntentChange(s,intent);
+  intent.task=0;intent.target=0;if(notify)s.invalidations++;
 }
 #include "spatial-route-reservations.h"
 bool gateStaticProofCurrent(const IntentState&);
@@ -1103,12 +1126,12 @@ int spatialIntentStageWorld(const SpatialWorldProposalInput& input,const Spatial
   auto& p=state().barrierProposal;p.kind=input.kind;p.worldInput=input;return 1;
 }
 void clearWorldMutationProposal(PendingBarrierProposal& p){
-  p.pending=false;p.kind=0;p.resume.reset();p.start.reset();p.action.reset();p.worldInput=SpatialWorldProposalInput{};p.routeEffects.clear();p.gateEffects.clear();
+  p.pending=false;p.kind=0;p.resume.reset();p.start.reset();p.action.reset();p.consequence.reset();p.worldInput=SpatialWorldProposalInput{};p.routeEffects.clear();p.gateEffects.clear();
 }
 int takeWorldMutationBoundary(double session,double ticket,double sequence,double time,double clockSequence,int kind){
   auto& s=state();const auto& p=s.barrierProposal;
   if(!integer(session)||!integer(ticket)||!p.pending||session!=double(p.session)||ticket!=double(p.ticket)||
-     (kind==1?p.kind!=1:(kind==13||kind==14||kind==15)?p.kind!=kind:p.kind<2||p.kind>11))return -1;
+     (kind==1?p.kind!=1:(kind>=13&&kind<=16)?p.kind!=kind:p.kind<2||p.kind>11))return -1;
   const bool current=p.session==s.session&&p.at==s.effectiveTime&&p.bodies==spatialBodiesMutationRevision()&&
     p.bodies!=std::numeric_limits<uint64_t>::max()&&p.entities==s.entityRevision&&p.facts==s.sequence&&
     p.intents==s.intentSequence&&p.reservations==s.residencyPinRevision&&p.clock==s.clockSequence&&
@@ -2216,6 +2239,7 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_route_execution(double session,double slot,d
 EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_execution_ptr(){return state().executionResult.data();}
 #include "spatial-task-execution.inc"
 #include "spatial-task-action-proposal.inc"
+#include "spatial-task-consequence-proposal.inc"
 EMSCRIPTEN_KEEPALIVE double nav_intent_execution_advances(){return double(state().executionAdvances);}
 EMSCRIPTEN_KEEPALIVE double nav_intent_execution_evaluations(){return double(state().executionEvaluations);}
 EMSCRIPTEN_KEEPALIVE double nav_intent_execution_body_updates(){return double(state().executionBodyUpdates);}
@@ -3416,7 +3440,7 @@ int nav_intent_finish(double actorId){
   if(!integer(actorId))return 0;
   IntentState& s=state();const uint64_t actor=uint64_t(actorId);
   const auto found=s.activeIntents.find(actor);if(found==s.activeIntents.end())return 0;
-  if(found->second.requiresResources&&(!found->second.actionBinding||!nativeTaskActionBodyCurrent(s,found->second)||s.effectiveTime<found->second.actionBinding->actual[16]))return 0;
+  if(found->second.requiresResources)return 0;
   const uint64_t taskId=found->second.task;
   releaseIntent(s,actor,PlanningState::Cancelled);
   s.activeIntents.erase(actor);

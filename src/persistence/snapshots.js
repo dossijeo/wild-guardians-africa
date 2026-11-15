@@ -124,8 +124,13 @@ export function validateSnapshot(state,{livePhysics=false}={}) {
     if(worker.nativeRouteAdmission!==undefined){
       const pending=['pending-resources','pending-action-resources'].includes(worker.nativeRouteAdmission)&&worker.status==='waiting-task'&&worker.path===null,
         executing=worker.nativeRouteAdmission==='native-task'&&worker.status==='walking'&&Array.isArray(worker.path)&&worker.path.length===0,
-        acting=worker.nativeRouteAdmission==='native-action'&&worker.status==='acting'&&Array.isArray(worker.path)&&worker.path.length===0;
-      if(!worker.taskId||!pending&&!executing&&!acting)throw Error('Solicitud de recursos nativa inválida');
+        acting=worker.nativeRouteAdmission==='native-action'&&worker.status==='acting'&&Array.isArray(worker.path)&&worker.path.length===0,
+        carrying=worker.nativeRouteAdmission==='native-delivery'&&worker.status==='carrying'&&!worker.taskId&&Array.isArray(worker.path)&&worker.path.length===0;
+      if(!carrying&&(!worker.taskId||!pending&&!executing&&!acting))throw Error('Solicitud de recursos nativa inválida');
+    }
+    if(worker.nativeDelivery!==undefined||worker.nativeRouteAdmission==='native-delivery'){
+      const delivery=worker.nativeDelivery;
+      if(worker.nativeRouteAdmission!=='native-delivery'||delivery?.version!==1||Object.keys(delivery).some(key=>!['version','crateId','centerId'].includes(key))||delivery.crateId!==worker.crateId||delivery.centerId!==worker.centerId||!worker.crateId||worker.taskId)throw Error('Transporte nativo inválido');
     }
     if(worker.nativeTaskAction!==undefined||['native-action','pending-action-resources'].includes(worker.nativeRouteAdmission)){
       let action;try{action=copyNativeTaskActionProgress(worker.nativeTaskAction);}catch{throw Error('Progreso de acción nativa inválido');}

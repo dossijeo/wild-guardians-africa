@@ -10,6 +10,17 @@ bool executionBindingCoherent(const IntentState& s,uint64_t body,uint32_t slot){
      (!route.gateAdmitted||gateRouteBindingsCoherent(s,route,slot))&&
     (active->second.animal||s.workers.count(route.actor));
 }
+bool nativeDeliveryBodyCurrent(const IntentState& s,const ActiveIntent& intent){
+ if(!intent.delivery||!intent.requiresResources||intent.animal||intent.home||intent.retreat||intent.task||intent.state!=PlanningState::RouteActive||intent.slot>=s.routeSlots.size())return false;
+ const auto& route=s.routeSlots[intent.slot];const auto& binding=route.consequenceBinding;const auto worker=s.workers.find(intent.actor);
+ const auto cargo=s.targets.find(intent.carriedTarget),center=s.targets.find(intent.target);SpatialBodyView body;
+ return binding&&binding->assignmentSequence==intent.assignmentSequence&&binding->actual.effect[3]==double(intent.carriedTarget)&&binding->actual.effect[4]==double(intent.target)&&
+  route.hasExecution&&(route.motionFlags&8)&&executionBindingCoherent(s,route.reservationBody,intent.slot)&&
+  worker!=s.workers.end()&&worker->second.bodyBound&&worker->second.body==route.reservationBody&&worker->second.center==intent.target&&
+  spatialReadBody(route.reservationBody,body)&&body.kind==0&&(body.flags&1)&&!(body.flags&2)&&body.x==route.executionPose[0]&&body.z==route.executionPose[1]&&body.r==route.radius&&
+  worker->second.x==body.x&&worker->second.z==body.z&&cargo!=s.targets.end()&&!cargo->second.active&&cargo->second.x==body.x&&cargo->second.z==body.z&&
+  center!=s.targets.end()&&center->second.kind==4&&center->second.active&&center->second.status==0;
+}
 void projectExecutedPose(IntentState& s,RouteSlot& route,const std::array<double,18>& pose){
   SpatialBodyView before;spatialReadBody(route.reservationBody,before);
   spatialMoveBodyFromIntent(route.reservationBody,pose[0],pose[1]);
@@ -22,6 +33,7 @@ void projectExecutedPose(IntentState& s,RouteSlot& route,const std::array<double
   if(!intent.animal){
     auto& worker=s.workers.at(route.actor);worker.x=pose[0];worker.z=pose[1];
     intent.runBudget=pose[14];
+    if(intent.delivery&&intent.carriedTarget){auto crate=s.targets.find(intent.carriedTarget);if(crate!=s.targets.end()){crate->second.x=pose[0];crate->second.z=pose[1];}}
   }
   // Keep full inverse spatial subscriptions until a structural event. Advancing
   // a cursor never rescans/reindexes the polyline on ordinary logical steps.

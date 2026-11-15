@@ -8,6 +8,7 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_game_execution_state(){
  if(!s.gates.empty()||!s.suspendedBodies.empty())return -1;
  for(const auto& [actor,intent]:s.activeIntents){
   if(intent.state==PlanningState::Cancelled)continue;
+  if(intent.delivery){if(!nativeDeliveryBodyCurrent(s,intent))return -1;continue;}
   if(intent.animal||intent.home||intent.retreat||!intent.task||!intent.requiresResources)return -1;
   if(intent.state==PlanningState::ActionActive&&!nativeTaskActionBodyCurrent(s,intent))return -1;
  }

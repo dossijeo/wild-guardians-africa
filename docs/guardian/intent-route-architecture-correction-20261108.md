@@ -2,7 +2,7 @@
 
 ## Estado
 
-Preparación de la siguiente frontera: [datos de consecuencia Harvest sin efectos](e-r3-harvest-consequence-data-20261115.md), reutilizados por la finalización ordinaria. La propuesta/commit nativos y el relevo al transporte siguen pendientes; no cambia ningún cierre.
+Continuación de autoridad: [consecuencia nativa Harvest y propietario Carry](e-r3-native-harvest-consequence-source-20261115.md), con proyección en Game y transactor común. La preparación gráfica del cultivo/caja, sus consumidores y el productor ordinario siguen pendientes; no cambia ningún cierre.
 
 Continuación del 15 de noviembre: [restauración de acciones con progreso y admisión nueva](e-r3-native-action-restoration-20261115.md). No crea rutas ficticias ni restaura permisos; consecuencias, productor ordinario y recuperación integral siguen pendientes. No cambia ningún cierre A6.
 

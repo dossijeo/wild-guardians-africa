@@ -1,0 +1,146 @@
+{
+  "date": "2026-11-15",
+  "parent": "2e86b093fb6fadc44949f036b660d97fddfca80f",
+  "scope": "Actual native Harvest-to-Carry source handoff, common resource-admission profile and Game projection. Crop/crate prepared graphics and consumer transport are not connected; no GPU continuity acceptance.",
+  "nativeBuild": {
+    "standalone": "passed",
+    "pthread": "passed",
+    "log": ".cache/native-consequence-final-source-build.log",
+    "canonicalExports": 21
+  },
+  "directed": {
+    "tests": 31,
+    "pass": 31,
+    "fail": 0,
+    "skip": 0,
+    "log": ".cache/native-consequence-source-tests-expanded.log",
+    "files": [
+      "tests/native-task-consequence-proposal.test.js",
+      "tests/native-task-consequence-game.test.js",
+      "tests/native-task-action-binding.test.js"
+    ]
+  },
+  "regression": {
+    "tests": 425,
+    "pass": 424,
+    "fail": 1,
+    "skip": 0,
+    "files": [
+      "tests/native-admission-vertical.test.js",
+      "tests/native-gate-causal-transaction.test.js",
+      "tests/native-gate-gpu-binding.test.js",
+      "tests/native-gate-resume-proposal.test.js",
+      "tests/native-resource-preparation-channel.test.js",
+      "tests/native-task-action-binding.test.js",
+      "tests/native-task-action-clock.test.js",
+      "tests/native-task-action-game-execution.test.js",
+      "tests/native-task-action-graphics.test.js",
+      "tests/native-task-action-proposal.test.js",
+      "tests/native-task-action-restoration.test.js",
+      "tests/native-task-consequence-game.test.js",
+      "tests/native-task-consequence-proposal.test.js",
+      "tests/native-task-game-execution.test.js",
+      "tests/native-task-resource-requests.test.js",
+      "tests/native-task-start-binding.test.js",
+      "tests/native-task-start-graphics.test.js",
+      "tests/native-task-start-proposal.test.js",
+      "tests/spatial-native-gate-crossings.test.js",
+      "tests/spatial-native-gate-mechanism.test.js",
+      "tests/spatial-native-gate-multiwaits.test.js",
+      "tests/spatial-native-gate-objects.test.js",
+      "tests/spatial-native-gate-resume.test.js",
+      "tests/spatial-native-gate-reversal.test.js",
+      "tests/spatial-native-gate-route-acceptance.test.js",
+      "tests/spatial-native-gate-sweep.test.js",
+      "tests/spatial-native-gate-transactions.test.js",
+      "tests/spatial-native-gate-waits.test.js",
+      "tests/spatial-native-route-execution.test.js",
+      "tests/spatial-native-route-reservations.test.js",
+      "tests/spatial-native-route-timing.test.js",
+      "tests/native-route-control.test.js",
+      "tests/native-route-presentation.test.js",
+      "tests/native-route-pick-frame.test.js",
+      "tests/native-route-terrain-support.test.js",
+      "tests/harvest-consequence.test.js",
+      "tests/game.test.js",
+      "tests/save-game.test.js",
+      "tests/microevent-harvest.test.js",
+      "tests/agricultural-power.test.js"
+    ],
+    "log": ".cache/native-consequence-directed.log",
+    "overlapsDirected": true
+  },
+  "parentComparison": {
+    "test": "Combo attack counts one logical hit; active raid survives roundtrip",
+    "file": "tests/game.test.js:144",
+    "error": "Plan de incursión incoherente",
+    "parent": "2e86b093fb6fadc44949f036b660d97fddfca80f",
+    "method": "Read-only ESM loader substitutes six changed tracked JavaScript modules at original URLs from parent, all other files and current binary unchanged; this legacy fixture uses injected navigation. No working file replaced. Same test, failure type and validator site; source line numbers after insertion differ.",
+    "log": ".cache/native-consequence-parent-game-failure.log",
+    "globalFailureInventoryNotClaimed": true
+  },
+  "productBuild": {
+    "status": "passed",
+    "seconds": 49.81,
+    "log": ".cache/native-consequence-product-build.log",
+    "warnings": [
+      "existing mixed dynamic/static imports",
+      "existing chunk size warning",
+      "existing pthread ALLOW_MEMORY_GROWTH compiler warning"
+    ]
+  },
+  "sourceAdmissionDouble": {
+    "nativeWasm": "real",
+    "drainAndRetainedHandle": "deterministic double",
+    "hardwareGpu": false,
+    "consumerTransport": false
+  },
+  "preservation": {
+    "files": 17,
+    "unchangedByteHashes": true
+  },
+  "sources": {
+    "public/wild-engine/spatial-threaded.mjs": "1eb276407e802002a86663936a50f85c0c70a4811c2d7ee5326405379f2a242f",
+    "public/wild-engine/spatial-threaded.wasm": "a2c9b26e45748e3f40384178a4149a03d3e42969302e5ead0532fae99e23e17c",
+    "src/world/wild-engine/spatial-savanna.wasm": "a38ebf5ebeabe6cbcf58eb1ba48458b4853d61a5087cfcd40c288d8ec09214e6",
+    "src/world/wild-engine/spatial-intent-state.cpp": "b308e56e69e38a1269c12021b75b45ff5a222e7ac25828c7d2a4a42567c8ec5b",
+    "src/world/wild-engine/spatial-route-execution.h": "18cf8c098cd2879e57130268d9dbbf79d2fe648b9cd6edec31959342974b394d",
+    "src/world/wild-engine/spatial-route-reservations.h": "70c12f1d72464ade8f325a86cf9880778a96cfad78efdcde5f963b821b0c3ce6",
+    "src/world/wild-engine/spatial-gate-crossings.h": "52c76660836ac586112702424958ee02155a163452a9922b60422e305dafc930",
+    "src/world/wild-engine/spatial-task-execution.inc": "562284a70589bf5489e2ebc3f3bb1690d95782c8604863b27b2709c7575ab1c6",
+    "src/world/wild-engine/spatial-task-action-proposal.inc": "579781a3e4a37416d860ec6417d7c93cc5f93404368b909f80c84e01387337b9",
+    "src/world/wild-engine/spatial-task-consequence-proposal.inc": "eaae3049eb5ddfeb01b8832de5dc69fc727dd38e7f578a250eff8a923745bb3f",
+    "src/world/wild-engine/spatial-intent-bridge.js": "c22eb959717b9ada3fb15486299aa38c429cd2afbbf357ff8151dfe4a79827fe",
+    "src/world/native-task-consequence.js": "c7055e4e92c9edf23fea9c6687536398dbaa0d82a17524f5d95f165480d903a2",
+    "src/world/native-resource-admission.js": "a1c28c039be2d3c72a1c74456c482dc7ec6003d06ef77df1c7b6646dfd76fe72",
+    "src/world/native-resource-admission-profiles.js": "9d373ed0ac0d31d36ff2d8554ca49ddaa407c14fc72c27a8d6ca3b5d8da2ce1f",
+    "src/simulation/game.js": "a397031e73ca37641cbd8c0e60b2cb23361a20d12b891ef8f6b6dac93c3875e7",
+    "src/simulation/tasks.js": "392e98d4314abdbc354f3c6eae488a755c989d404e08790d86e2999984a67550",
+    "src/persistence/snapshots.js": "0005aeb4bd71e8c4cc30c02326e789ce21f603596697027e9c358688bd5d3bb2",
+    "tools/build-spatial-savanna-wasm.sh": "9b0dd691989dd2cf61ff039bd64922cf1de4fe3563320f7913a71f66681e737e",
+    "tests/helpers/native-task-action-restoration.js": "e04997e9818b0e6283ee38e0099a8b727194aca5434b9ee8cf351989c673377b",
+    "tests/helpers/native-task-consequence.js": "c32189e4cdead50982e066cb44f27e5a8b4edc4cf1746c0e0c912c727ee11c13",
+    "tests/native-task-consequence-game.test.js": "f0e97d208c1681e46ecea4eac08c7a3847ccae686396e295b25134b79dd1ab96",
+    "tests/native-task-consequence-proposal.test.js": "4be46f599f3f7b18672cee72fe96ec20e8ddd8222ad96a2773a07f0020ee09c1",
+    "tests/native-task-action-binding.test.js": "bdb72d45b78f61b9d3916c3e6f27e9b93c90942dc55dce976a093d33713bb57f"
+  },
+  "research": [
+    {
+      "source": "https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourCrowd.cpp#L749-L848",
+      "read": "updateMoveRequest, lines 789-791 and 836-842",
+      "adapted": "Deferred candidate verifies the same origin before adoption; existing full native route, timing, reservation and gate proofs retained. No queue, partial-path fallback or dependency copied."
+    }
+  ],
+  "pending": [
+    "prepared removal of crop and original Carry/crate graphics",
+    "typed direct-consumer transport and mandatory capabilities",
+    "publication coherence during retained preparation",
+    "fresh delivery save/load admission",
+    "delivery cancellation/drop and other target owners",
+    "prepared delivery settlement and next intent",
+    "ordinary authority producer",
+    "full recovery and A/B/C acceptance",
+    "3123-resource recovery reuse criterion"
+  ],
+  "closuresChanged": false
+}
