@@ -570,6 +570,17 @@ test('native retirement bypasses blocked preparation, freezes every submission a
  }finally{drain?.();releasePipeline?.({});source?.dispose();f.host.dispose();native.session.dispose();}
 });
 
+test('a late producer frame is cancelled without poisoning an accepted native retirement drain',async()=>{
+ const native=createNativeRouteExecutionFixture(),[sourcePort,drawPort]=pair();let source,drain;
+ const f=await fixture({}, {intentControl:{port:drawPort,session:'retired-late-frame'}}),original=f.gpu.device.queue.onSubmittedWorkDone;
+ try{
+  native.worker(1,native.point(-6,0),native.point(6,0));native.bridge.beginNativeRouteExecution();native.bridge.commitNativeCausalClock();
+  source=createNativeIntentControlPublication({port:sourcePort,session:'retired-late-frame',observe:native.bridge.observeNativeIntentControl});await source.ready;
+  f.gpu.device.queue.onSubmittedWorkDone=()=>new Promise(resolve=>{drain=resolve;});const retired=source.retireGpu();retired.catch(()=>{});await flush();assert.equal(f.host.intentControlStatus().retiring,true);const submissions=f.gpu.submitted.length,writes=f.gpu.calls.filter(c=>c[0]==='writeBuffer').length;
+  f.client.device.queue.writeBuffer(f.buffer,0,new Float32Array([99]));const error=await f.frame(2).then(()=>null,error=>error);assert.equal(error?.code,'remote-frame-native-mutation-obsolete');await f.host.idle();assert.equal(f.host.inspect().failed,false);assert.equal(f.gpu.submitted.length,submissions);assert.equal(f.gpu.calls.filter(c=>c[0]==='writeBuffer').length,writes);assert.equal(source.status().drained,false);f.gpu.device.queue.onSubmittedWorkDone=original;drain();drain=null;await retired;assert.equal(source.status().drained,true);assert.equal(f.host.intentControlStatus().drained,true);assert.deepEqual(f.errors,[]);
+ }finally{f.gpu.device.queue.onSubmittedWorkDone=original;drain?.();source?.dispose();f.client.dispose();await f.host.dispose();native.session.dispose();}
+});
+
 test('a pending operation cannot resume and submit after a native retirement receipt',async()=>{
  const native=createNativeRouteExecutionFixture(),[sourcePort,drawPort]=pair();let source,releasePipeline;
  const f=await fixture({}, {intentControl:{port:drawPort,session:'retired-operation'}});

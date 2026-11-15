@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+Continuación de Home: [consumidor gráfico sobre el actor residente](e-r3-native-home-route-consumer-20261115.md), con plantilla y asignación directa reales. NVIDIA/Turing conserva actores y geometrías: 98 recursos al preparar, cero después de READY y 52 dibujos durante bloqueo de 1,8 s; selección y drenaje final correctos. La llegada/retirada, restauración nueva, productor ordinario y recuperación integral siguen pendientes. No cambia ningún cierre A6/A/B/C.
+
 Continuación de Home: [corredor nativo y proyección en Game](e-r3-native-home-route-source-20261115.md) sobre el mismo cuerpo y protocolo común, sin tarea ficticia. La ruta y la retención de su extremo se validan en ambos módulos nativos; el consumidor gráfico, la retirada al llegar y la admisión nueva al restaurar siguen pendientes. No cambia ningún cierre A6/A/B/C.
 
 Continuación de entrega con contrato terminado: [cuerpo retenido para Home](e-r3-native-delivery-home-pending-20261115.md). El resultado preparado conserva `returning`, cobra una sola vez y excluye nuevas tareas sobre el mismo cuerpo. NVIDIA/Turing: 96 recursos al preparar, cero después de READY y 50 dibujos durante bloqueo. La ruta Home ejecutable y su llegada siguen pendientes; no cambia ningún cierre A6/A/B/C.

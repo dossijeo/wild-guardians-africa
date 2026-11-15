@@ -1,3 +1,4 @@
+import {nativeHomeRouteFixture} from './helpers/native-home-route.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {MessageChannel} from 'node:worker_threads';
@@ -105,4 +106,10 @@ test('wrong-session and unsolicited responses close the connection and invalidat
 test('aborting before the handshake does not dispatch a resource request',async()=>{
  const {port1,port2}=new MessageChannel(),messages=[];port2.onmessage=({data})=>messages.push(data);const connection=createNativeResourcePreparationConnection({port:port1,session:'game'});connection.ready.catch(()=>{});
  try{const controller=new AbortController(),preparing=connection.prepareNativeGateResources(resource(),{signal:controller.signal});controller.abort();await assert.rejects(preparing,{name:'AbortError'});assert.equal(messages.length,0);}finally{connection.dispose();port2.close();}
+});
+
+test('genuine Home preparation, invalidation and refresh retain their typed template on the existing direct endpoint',async()=>{
+ const native=nativeHomeRouteFixture();let current=null,committed=null;const f=setup({prepare:async(kind,resources)=>{assert.equal(kind,'prepareNativeHomeRouteResources');current=resources;return {get preparedWorldBoundary(){return current.worldBoundary;},get preparedHomeRouteTemplate(){return current.nativeHome;},valid:()=>true,invalidate:()=>true,async refresh(next){current=next;return true;},commit(data){committed=data;return true;},abort(){}};}});
+ try{const p=native.prepareHome().proposal;await f.connection.ready;const handle=await f.connection.prepareNativeHomeRouteResources(p,{minSequence:2,terrainManifest:{epoch:'terrain',chunks:[]}});assert.deepEqual(handle.preparedHomeRouteTemplate,p.nativeHome);assert(handle.invalidate());const body=native.body(1);native.advance(.2);assert.deepEqual(native.body(1),body);const next=native.planner.revalidateNativeHomeRouteProposal(p.ticket);assert.equal(next.status,'revalidated');assert(await handle.refresh(next.proposal));assert.deepEqual(handle.preparedHomeRouteTemplate,next.proposal.nativeHome);assert.equal(native.commitHome(next.proposal),1);const binding=native.planner.nativeHomeRouteBinding(native.actor);assert(handle.commit({nativeHomeRouteBinding:binding}));await flush();assert.deepEqual(committed.nativeHomeRouteBinding,binding);assert.equal(f.connection.status().retained,0);assert.deepEqual(f.errors,[]);
+ }finally{f.close();native.close();}
 });

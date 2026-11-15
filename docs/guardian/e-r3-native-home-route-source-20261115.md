@@ -1,5 +1,7 @@
 # Ruta Home nativa y proyección en Game
 
+Actualización posterior: [consumidor Home sobre el mismo actor residente](e-r3-native-home-route-consumer-20261115.md). El alcance descrito debajo corresponde al incremento de fuente; la llegada/retirada y restauración nueva siguen pendientes.
+
 Continúa el [cuerpo retenido tras la entrega](e-r3-native-delivery-home-pending-20261115.md) y el [plan principal](integrated-gpu-migration-plan-20261104.md). Wild Engine puede ahora preparar y admitir el corredor Home genuino desde ese propietario, conservar sus fases y proyectar el movimiento en Game. La llegada mantiene el cuerpo protegido hasta una retirada preparada. **El consumidor gráfico de Home y su retirada todavía están pendientes**; e-R3/e-R4/f-R4 y A6/A/B/C siguen abiertos.
 
 ## Referencia aplicada
