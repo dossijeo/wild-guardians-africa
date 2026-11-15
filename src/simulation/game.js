@@ -37,7 +37,7 @@ import {createPlant,advancePlant,waterPlant,isMature,contiguousGroup} from './cr
 import {activeCrops,cropBecameInactive} from './active-crops.js';
 import {activeCrates,crateBecameInactive} from './active-crates.js';
 import {retireFarmHistory} from './retire-farm-history.js';
-import {harvestMicroLoss} from '../microevents/economy.js';
+import {harvestMicroLoss,previewHarvestMicroLoss} from '../microevents/economy.js';
 import {workerEntityLookup} from './worker-entity-lookup.js';
 import {enqueue,taskEnqueuer,reserveTasks,releaseTask,replaceTasks,
   notifyWorkerPlanningChange,notifyWorkerPlanningRoster,taskPlanningRevision} from './tasks.js';
@@ -1268,6 +1268,32 @@ export function planRepairAccess(s,target,nav){
   }
   return {status:'safe',updates:[...byId.values()]};
 }
+// Semantic consequence data only, never an action/effect permission. The same
+// rules serve ordinary completion and future native resource preparation.
+export function prepareHarvestConsequence(s,w,t,target){
+  if(!w||!t||!target||t.kind!=='harvest'||w.taskId!==t.id||t.workerId!==w.id||t.targetId!==target.id||w.crateId||!isMature(target)||!target.harvestRequested)return null;
+  let value=rational(cropSpec(target.species).base_harvest_value);
+  if(profile(w).male)value=multiply(value,6,5);
+  if(!target.multiplyPower&&(target.multiplyHarvest||spellAt(s,'multiply',target)))value=multiply(value,2);
+  if(target.harvestBonus)value=multiply(value,100+target.harvestBonus,100);
+  const influence=blessingInfluence(s,target),passive=influence.harvestPercent?
+    {blessingBonus:rational(Math.floor(cropSpec(target.species).base_harvest_value*influence.harvestPercent/100)),
+      blessingPercent:influence.harvestPercent,blessingSourceIds:[...influence.sourceIds]}:{};
+  if(passive.blessingBonus)value=add(value,passive.blessingBonus);
+  const microLoss=previewHarvestMicroLoss(s,target,value),crate={id:`crate-${s.nextId}`,sourcePlantId:target.id,species:target.species,x:w.x,z:w.z,value:microLoss.value,...passive,
+    multiplyPower:target.multiplyPower?structuredClone(target.multiplyPower):null,profile:w.profile,carrierId:w.id,delivered:false,centerId:w.centerId};
+  // Every nested object here is owned by this preview; never freeze live state.
+  const freeze=value=>{if(value&&typeof value==='object'){for(const child of Object.values(value))freeze(child);Object.freeze(value);}return value;};
+  return freeze({kind:'harvest-consequence-preview',version:1,workerId:w.id,taskId:t.id,targetId:target.id,nextId:s.nextId,
+    baseValue:value,microLoss,crate,authorizedConsequences:false});
+}
+export function harvestConsequenceCurrent(s,w,t,target,preview){
+  if(preview?.kind!=='harvest-consequence-preview'||preview.version!==1||preview.authorizedConsequences!==false)return false;
+  const current=prepareHarvestConsequence(s,w,t,target);
+  // Compare this small semantic result, not a game snapshot or a tick/pose
+  // sequence: unrelated actors must not force resource preparation to restart.
+  return current!==null&&JSON.stringify(current)===JSON.stringify(preview);
+}
 function completeTask(s,w,t,target,nav) {
   // Native arrival/action resources authorize their phase, not its effects.
   // Consequences need their own prepared resource boundary before any writes.
@@ -1276,19 +1302,14 @@ function completeTask(s,w,t,target,nav) {
     if(!canWaterFrom(w,target,nav)){releaseTask(s,w);w.status='idle';w.path=null;notifyWorkerPlanningChange(s,w);return;}
     if(target.alive&&!target.blessing){waterPlant(target);emit(s,'WaterSatisfied',{workerId:w.id,targetId:target.id});}
   } else if(t.kind==='harvest') {
-    if(isMature(target)&&target.harvestRequested) {
-      let value=rational(cropSpec(target.species).base_harvest_value);
-      if(profile(w).male)value=multiply(value,6,5);
-      if(!target.multiplyPower&&(target.multiplyHarvest||spellAt(s,'multiply',target)))value=multiply(value,2);
-      if(target.harvestBonus)value=multiply(value,100+target.harvestBonus,100);
-      const influence=blessingInfluence(s,target),passive=influence.harvestPercent?
-        {blessingBonus:rational(Math.floor(cropSpec(target.species).base_harvest_value*influence.harvestPercent/100)),
-          blessingPercent:influence.harvestPercent,blessingSourceIds:[...influence.sourceIds]}:{};
-      if(passive.blessingBonus)value=add(value,passive.blessingBonus);
-      if(s.microevents?.pendingLosses[target.id])value=harvestMicroLoss(s,target,value,detail=>emit(s,'MicroeventHarvestLossApplied',detail));
+    const consequence=prepareHarvestConsequence(s,w,t,target);
+    if(consequence) {
+      const value=harvestMicroLoss(s,target,consequence.baseValue,detail=>emit(s,'MicroeventHarvestLossApplied',detail));
       target.alive=false;target.harvestRequested=false;target.multiplyHarvest=false;
       cropBecameInactive(s.plants);
-      const crate={id:`crate-${s.nextId++}`,sourcePlantId:target.id,species:target.species,x:w.x,z:w.z,value,...passive,multiplyPower:target.multiplyPower??null,profile:w.profile,carrierId:w.id,delivered:false,centerId:w.centerId};delete target.multiplyPower;s.crates.push(crate);w.crateId=crate.id;w.status='carrying';w.path=null;emit(s,'CropPicked',{workerId:w.id,targetId:target.id,crateId:crate.id});
+      // Preserve the existing observable event order: a loss listener may have
+      // changed IDs or actor state. The ordinary path allocates only now.
+      const crate={...consequence.crate,id:`crate-${s.nextId++}`,sourcePlantId:target.id,species:target.species,x:w.x,z:w.z,value,profile:w.profile,carrierId:w.id,centerId:w.centerId,multiplyPower:target.multiplyPower??null,...(consequence.crate.blessingSourceIds?{blessingSourceIds:[...consequence.crate.blessingSourceIds]}:{})};delete target.multiplyPower;s.crates.push(crate);w.crateId=crate.id;w.status='carrying';w.path=null;emit(s,'CropPicked',{workerId:w.id,targetId:target.id,crateId:crate.id});
     }
   } else if(t.kind==='crate') {target.carrierId=w.id;w.crateId=target.id;target.centerId=w.centerId;w.status='carrying';w.path=null;}
   else if(t.kind==='repair') {

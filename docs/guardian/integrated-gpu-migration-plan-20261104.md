@@ -1,6 +1,7 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
 Continuación 2026-11-15: [restauración de acciones con progreso y admisión nueva](e-r3-native-action-restoration-20261115.md), sobre el mismo propietario nativo y reloj común; productor ordinario, consecuencias preparadas y recuperación integral siguen pendientes.
+Preparación de la siguiente frontera: [datos de consecuencia Harvest sin efectos](e-r3-harvest-consequence-data-20261115.md), reutilizados por la finalización ordinaria. La propuesta/commit nativos y el relevo al transporte siguen pendientes; no cambia ningún cierre.
 Se conserva el orden A → B → C → D; la reproducción nativa avanza como componente, pero la admisión ordinaria y la aceptación integrada siguen pendientes.
 
 Revisión del 5 de noviembre de 2026. Rama de trabajo: `codex/guardian-3d-animation`. Este documento sustituye la secuencia del plan del 4 de noviembre; su versión anterior permanece en Git. Estado: plan de implementación, no arquitectura ya terminada.
