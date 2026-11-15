@@ -1,12 +1,12 @@
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from './native-world-boundary.js';
-import {copyNativeHomeRouteAttestation,sameNativeHomeRouteReference} from './native-home-route.js';
+import {copyNativeHomeRouteAttestation,sameNativeHomeRouteReference,nativeHomeRouteSource} from './native-home-route.js';
 
 const id=n=>Number.isSafeInteger(n)&&n>0;
 const poseKeys=['x','z','yaw','radius','runPhase','walkPhase','carryPhase','runRemaining'];
 const sameHome=(a,b)=>a.assignmentSequence===b.assignmentSequence&&sameNativeHomeRouteReference(a.reference,b.reference)&&sameNativeHomeRouteReference(a.preparedReference,b.preparedReference)&&JSON.stringify(a.gateIds)===JSON.stringify(b.gateIds);
 export function copyNativeHomeArrivalReference(value){
  if(value?.kind!=='native-home-arrival-reference'||value.version!==1)throw TypeError('Invalid native Home arrival reference');
- const sourceHome=copyNativeHomeRouteAttestation(value.sourceHome),r=sourceHome.reference,held=r.sourceSettlement.reference,home=held.home,worldBoundary=copyNativeWorldBoundary(value.worldBoundary),pose=value.pose;
+ const sourceHome=copyNativeHomeRouteAttestation(value.sourceHome),r=sourceHome.reference,held=nativeHomeRouteSource(r),home=held.home,worldBoundary=copyNativeWorldBoundary(value.worldBoundary),pose=value.pose;
  if(!worldBoundary||worldBoundary.authorityEpoch!==r.worldBoundary.authorityEpoch||worldBoundary.nativeSession!==r.worldBoundary.nativeSession||worldBoundary.ticket<=r.worldBoundary.ticket||worldBoundary.effectiveTime<r.endTime||
   value.actorId!==r.actorId||value.bodyId!==r.bodyId||!id(value.sourceControlSequence)||value.sourceControlSequence<sourceHome.assignmentSequence||value.profile!==held.profile||
   !Number.isSafeInteger(value.bodyFlags)||value.bodyFlags<0||value.bodyFlags>0x7fffffff||!(value.bodyFlags&1)||value.bodyFlags&2||

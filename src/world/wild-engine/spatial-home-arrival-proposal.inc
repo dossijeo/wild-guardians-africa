@@ -15,10 +15,10 @@ static int stageHomeArrival(double actor,double session,double assignment){
  const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end()||!nativeHomeBodyCurrent(s,found->second))return -2;
  const auto& intent=found->second;const auto& route=s.routeSlots[intent.slot];const auto& pose=route.executionPose;
  if(double(intent.assignmentSequence)!=assignment||pose[6]!=1)return -2;
- const auto& source=route.homeBinding->source->actual.header;SpatialBodyView body;if(!spatialReadBody(route.reservationBody,body))return -2;
+ const auto source=homeRouteSourceView(route.homeBinding->source.get(),route.homeBinding->requestSource.get());SpatialBodyView body;if(!spatialReadBody(route.reservationBody,body))return -2;
  PendingHomeArrivalDraft d;d.source=route.homeBinding;
- d.header={1,actor,double(route.reservationBody),source[21],assignment,double(s.intentSequence),double(intent.slot),double(intent.generation),
-  pose[0],pose[1],pose[4],route.radius,pose[9],pose[10],pose[11],pose[14],s.effectiveTime,source[22],source[23],double(intent.profile),double(body.flags),route.startTime,routeTimeAtDistance(route,route.distances.back()),double(d.source->actual.ticket)};
+ d.header={1,actor,double(route.reservationBody),double(source.village),assignment,double(s.intentSequence),double(intent.slot),double(intent.generation),
+  pose[0],pose[1],pose[4],route.radius,pose[9],pose[10],pose[11],pose[14],s.effectiveTime,source.homeX,source.homeZ,double(intent.profile),double(body.flags),route.startTime,routeTimeAtDistance(route,route.distances.back()),double(d.source->actual.ticket)};
  if(!homeArrivalSourceCurrent(s,d))return -2;
  const int staged=stageWorldMutationBoundary(nullptr,0);if(staged!=1)return staged;
  auto& p=s.barrierProposal;p.kind=19;p.homeArrival=std::move(d);s.homeArrivalResult.fill(0);return 1;

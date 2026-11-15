@@ -126,7 +126,7 @@ export function validateSnapshot(state,{livePhysics=false}={}) {
         executing=worker.nativeRouteAdmission==='native-task'&&worker.status==='walking'&&Array.isArray(worker.path)&&worker.path.length===0,
         acting=worker.nativeRouteAdmission==='native-action'&&worker.status==='acting'&&Array.isArray(worker.path)&&worker.path.length===0,
         carrying=worker.nativeRouteAdmission==='native-delivery'&&worker.status==='carrying'&&!worker.taskId&&Array.isArray(worker.path)&&worker.path.length===0,
-        returning=worker.nativeRouteAdmission==='native-home'&&worker.status==='returning'&&!worker.taskId&&!worker.crateId&&worker.path===null;
+        returning=['native-home','pending-home-resources'].includes(worker.nativeRouteAdmission)&&worker.status==='returning'&&!worker.taskId&&!worker.crateId&&worker.path===null;
       if(!carrying&&!returning&&(!worker.taskId||!pending&&!executing&&!acting))throw Error('Solicitud de recursos nativa inválida');
     }
     if(worker.nativeDelivery!==undefined||worker.nativeRouteAdmission==='native-delivery'){

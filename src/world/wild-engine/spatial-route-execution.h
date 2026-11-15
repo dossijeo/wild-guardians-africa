@@ -24,12 +24,12 @@ bool nativeDeliveryBodyCurrent(const IntentState& s,const ActiveIntent& intent){
 bool nativeHomeBodyCurrent(const IntentState& s,const ActiveIntent& intent){
  if(!intent.home||!intent.requiresResources||intent.animal||intent.retreat||intent.delivery||intent.task||intent.lease||intent.state!=PlanningState::RouteActive||intent.slot>=s.routeSlots.size())return false;
  const auto& route=s.routeSlots[intent.slot];const auto& b=route.homeBinding;const auto worker=s.workers.find(intent.actor);SpatialBodyView body;
- if(!b||!b->source||!b->source->actual.header[21]||!route.hasExecution||route.motionFlags||worker==s.workers.end())return false;
- const auto& h=b->actual.header;const auto& source=b->source->actual.header;
+ if(!b||!route.hasExecution||route.motionFlags||worker==s.workers.end())return false;
+ const auto source=homeRouteSourceView(b->source.get(),b->requestSource.get());if(!source.village||source.actor!=intent.actor)return false;const auto& h=b->actual.header;
  return b->assignmentSequence==intent.assignmentSequence&&double(route.generation)==h[4]&&double(intent.slot)==h[20]&&route.startTime==h[10]&&
-  intent.approachKnown&&intent.approachX==float(source[22])&&intent.approachZ==float(source[23])&&worker->second.bodyBound&&!worker->second.eligible&&
+  intent.approachKnown&&intent.approachX==float(source.homeX)&&intent.approachZ==float(source.homeZ)&&worker->second.bodyBound&&!worker->second.eligible&&
   worker->second.body==route.reservationBody&&double(route.reservationBody)==h[2]&&executionBindingCoherent(s,route.reservationBody,intent.slot)&&
-  spatialReadBody(route.reservationBody,body)&&body.kind==0&&body.flags==int(source[19])&&body.x==route.executionPose[0]&&body.z==route.executionPose[1]&&body.r==route.radius&&
+  spatialReadBody(route.reservationBody,body)&&body.kind==0&&body.flags==source.bodyFlags&&body.x==route.executionPose[0]&&body.z==route.executionPose[1]&&body.r==route.radius&&
   worker->second.x==body.x&&worker->second.z==body.z;
 }
 void projectExecutedPose(IntentState& s,RouteSlot& route,const std::array<double,18>& pose){

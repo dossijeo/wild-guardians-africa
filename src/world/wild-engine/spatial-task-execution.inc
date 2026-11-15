@@ -8,6 +8,7 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_game_execution_state(){
  if(!s.gates.empty()||!s.suspendedBodies.empty())return -1;
  for(const auto& [actor,intent]:s.activeIntents){
   if(intent.state==PlanningState::Cancelled)continue;
+  if(intent.homeRequest){if(!nativeHomeRequestBodyCurrent(s,intent))return -1;continue;}
   if(intent.delivery){if(!nativeDeliveryBodyCurrent(s,intent))return -1;continue;}
   if(intent.home&&intent.slot<s.routeSlots.size()&&s.routeSlots[intent.slot].homeBinding){if(!nativeHomeBodyCurrent(s,intent))return -1;continue;}
   if(intent.settlementBinding){if(!nativeSettlementBodyCurrent(s,intent))return -1;continue;}

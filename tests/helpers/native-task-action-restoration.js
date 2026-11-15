@@ -11,8 +11,8 @@ const module=new WebAssembly.Module(readFileSync(new URL('../../src/world/wild-e
 function tuple(w){assert.equal(w.nav_intent_barrier_proposal_ticket(),1);return Array.from(new Float64Array(w.memory.buffer,w.nav_intent_barrier_proposal_ticket_ptr(),6));}
 // Source-only setup: a genuine executed arrival/action, then semantic save.
 // Actual direct/resource/GPU receipt admission is exercised by the vertical.
-export function nativeActionSave({progress=.6,core=null,kind='harvest'}={}){
- const f=createNativeTaskGameFixture({core,taskKind:kind});try{
+export function nativeActionSave({progress=.6,core=null,kind='harvest',runBudget=4}={}){
+ const f=createNativeTaskGameFixture({core,taskKind:kind,runBudget});try{
   const actor=f.state.workers[0].id;tick(f.state,f.proposals[0].endTime-f.state.elapsed+.05,f.nav);
   const p=f.planner.prepareNativeTaskActionProposal(f.planner.nativeTaskActionRequest(actor));assert.equal(p.status,'proposed');assert.equal(f.w.nav_task_action_proposal_commit_bound(...tuple(f.w).slice(0,5),p.proposal.ticket.ticket),1);f.planner.commitNativeCausalClock();f.planner.projectNativeTaskActionExecution(f.state,f.state.workers[0]);tick(f.state,progress,f.nav);
   return {saved:deserialize(serialize(f.state)),oldBinding:f.planner.nativeTaskActionBinding(actor)};

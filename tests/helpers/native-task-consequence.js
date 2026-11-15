@@ -5,8 +5,8 @@ import {centerDeliveryPoint} from '../../src/world/centers.js';
 
 // Native source component setup only: trusted action/commit ABI. Hardware and
 // receipt admission are tested by the shared vertical, not granted here.
-export function nativeTaskConsequenceFixture({progress=3,nearCenter=true,admitPeer=true,core=null,additionalChunks=[]}={}){
- const {saved}=nativeActionSave({progress});
+export function nativeTaskConsequenceFixture({progress=3,nearCenter=true,admitPeer=true,core=null,additionalChunks=[],runBudget=4}={}){
+ const {saved}=nativeActionSave({progress,runBudget});
  if(nearCenter){const worker=saved.workers[0],center=saved.structures.find(s=>s.id===worker.centerId);center.x=worker.x-6;center.z=worker.z+6;}
  if(admitPeer){const worker=saved.workers[1],task=saved.tasks.find(t=>t.id===worker.taskId),target=saved.plants.find(p=>p.id===task.targetId);target.x=worker.x+12;}
  // The nearby authored checkpoint is generated BEFORE the fresh native owner.
