@@ -1,10 +1,9 @@
-import {Vector3} from 'three';
-import {Fn,clamp,float,int,uniform} from 'three/tsl';
+import {clamp,float,int,uniform} from 'three/tsl';
 import {nativeTaskActionActor,nativeTaskActionRemainingDuration,copyNativeTaskActionReference,nativeTaskActionSuccessor} from '../world/native-task-action-presentation.js';
 import {nativeEntityNumericId} from '../world/native-entity-id.js';
 import {floorFloat32} from './float32-time.js';
 import {markRemoteClockNode} from './remote-clock-bindings.js';
-import {bindGpuMotionMaterial,unbindGpuMotionMaterial,gpuActorLocalTransform} from './gpu-actor-motion-material.js';
+import {createNativeStationaryGpuTransform} from './native-stationary-gpu-transform.js';
 
 // The existing actor's stationary transform and finite clip selector. Geometry,
 // baked matrices and physical time remain with their existing owners. Sampling
@@ -15,12 +14,9 @@ export function createNativeTaskActionGpuMotion({actorId,support,anchorPosition=
  if(support?.kind!=='native-task-action-terrain-support'||support.valid?.()!==true||nativeEntityNumericId(actorId)!==nativeTaskActionActor(q)||![anchorYaw,heightOffset,support.point?.height].every(n=>Number.isFinite(n)&&Number.isFinite(Math.fround(n)))||support.point.x!==reference.origin.x||support.point.z!==reference.origin.z||support.point.at!==reference.startTime||anchorPosition!==null&&![anchorPosition?.x,anchorPosition?.y,anchorPosition?.z].every(n=>Number.isFinite(n)&&Number.isFinite(Math.fround(n)))||reference.motionFlags&56)throw TypeError('Invalid native action GPU support');
  const f=Math.fround,duration=floorFloat32(q.duration),span=nativeTaskActionRemainingDuration(q),remaining=floorFloat32(span),initial=floorFloat32(q.initialElapsed??0),kind=q.actionKind,clipNames=Object.freeze(kind==='initial'?['Plant','Water']:kind==='water'?['Water']:kind==='repair'?['Idle']:['Harvest']);
  if(q.duration>0&&duration===0)throw RangeError('Native action duration cannot be projected');
- const bindingAnchor=Object.freeze(anchorPosition?{x:anchorPosition.x,y:anchorPosition.y,z:anchorPosition.z}:{x:reference.origin.x,y:support.point.height+heightOffset,z:reference.origin.z});
- if(![bindingAnchor.x,bindingAnchor.y,bindingAnchor.z,support.point.height+heightOffset,q.heading-anchorYaw].every(n=>Number.isFinite(n)&&Number.isFinite(f(n))))throw TypeError('Native action transform cannot be projected');
- const clockNode=markRemoteClockNode(uniform(0),'relative',reference.startTime,null,null,null,null,null,null,null,reference),durationNode=uniform(duration),initialNode=uniform(initial),spanNode=uniform(remaining),timeNode=clamp(initialNode.add(clamp(clockNode,float(0),spanNode)),float(0),durationNode),fraction=kind==='repair'?float(0):timeNode.div(durationNode),progress=fraction.mul(float(7.2)),clipNode=kind==='initial'?progress.lessThan(float(3.8)).select(int(0),int(1)):int(0),bindings=new Map(),anchor=uniform(new Vector3(bindingAnchor.x,bindingAnchor.y,bindingAnchor.z)),position=uniform(new Vector3(reference.origin.x,support.point.height+heightOffset,reference.origin.z)),yaw=uniform(q.heading-anchorYaw),phases=new Map();
+ const clockNode=markRemoteClockNode(uniform(0),'relative',reference.startTime,null,null,null,null,null,null,null,reference),durationNode=uniform(duration),initialNode=uniform(initial),spanNode=uniform(remaining),timeNode=clamp(initialNode.add(clamp(clockNode,float(0),spanNode)),float(0),durationNode),fraction=kind==='repair'?float(0):timeNode.div(durationNode),progress=fraction.mul(float(7.2)),clipNode=kind==='initial'?progress.lessThan(float(3.8)).select(int(0),int(1)):int(0),stationary=createNativeStationaryGpuTransform({origin:reference.origin,height:support.point.height,heading:q.heading,anchorPosition,anchorYaw,heightOffset,label:'action'}),{bindingAnchor}=stationary,phases=new Map();
  let disposed=false,sealed=false;
  const valid=()=>!disposed&&support.valid()===true;
- const transform=base=>Fn(()=>gpuActorLocalTransform(base,position,yaw,anchor,int(1).greaterThan(0)))();
  function check(){if(disposed)throw Error('Native action GPU motion disposed');}
  function sampleAge(age){check();if(!Number.isFinite(age)||age<0||age>span||Math.fround(age)!==age)throw TypeError('Native action input requires a submitted relative float');return Math.min(duration,f(initial+Math.min(age,remaining)));}
  function clipAt(age){return kind==='initial'&&f(f(sampleAge(age)/duration)*f(7.2))>=f(3.8)?'Water':clipNames[0];}
@@ -40,11 +36,11 @@ export function createNativeTaskActionGpuMotion({actorId,support,anchorPosition=
   return f(u*f(value));
  }
  return {actorId,clockNode,timeNode,clipNode,clipNames,bindingAnchor,resolve,sampleForClip,sampleClip(age){sampleAge(age);return clipAt(age);},
-  bind(material){check();return bindGpuMotionMaterial(bindings,material,transform);},unbind:material=>unbindGpuMotionMaterial(bindings,material),
+  bind(material){check();return stationary.bind(material);},unbind:stationary.unbind,
   // Stationary pick transform takes the submitted age, never a second timer.
-  sample(age){sampleAge(age);return {x:f(reference.origin.x),y:f(support.point.height+heightOffset),z:f(reference.origin.z),yaw:f(q.heading),dx:f(reference.origin.x)-bindingAnchor.x,dy:f(support.point.height+heightOffset)-bindingAnchor.y,dz:f(reference.origin.z)-bindingAnchor.z,yawDelta:f(q.heading-anchorYaw),currentSpeed:0,running:0};},
+  sample(age){sampleAge(age);return stationary.sample();},
   retargetNativeTaskAction(nextSupport,{retagClock}={}){check();if(sealed||typeof retagClock!=='function')throw Error('Native action GPU motion already published');const next=copyNativeTaskActionReference(nextSupport?.reference);if(nextSupport?.kind!=='native-task-action-terrain-support'||nextSupport.valid?.()!==true||!nativeTaskActionSuccessor(reference,next)||nextSupport.point.height!==support.point.height||nextSupport.point.x!==next.origin.x||nextSupport.point.z!==next.origin.z||nextSupport.point.at!==next.startTime)return false;if(retagClock(clockNode,reference,next)!==true)throw Error('Native action clock was not retagged');reference=next;support=nextSupport;return Object.freeze({changedData:false,nativeAction:reference});},
   seal(){check();sealed=true;},valid,status(){const point={x:reference.origin.x,y:support.point.height+heightOffset,z:reference.origin.z};return {disposed,sealed,nativeAction:reference,installed:disposed?null:Object.freeze({start:Object.freeze({at:reference.startTime,...point}),end:Object.freeze({at:reference.endTime,...point}),segments:0,nativeAction:reference})};},
-  dispose(){if(disposed)return;disposed=true;for(const material of [...bindings.keys()])unbindGpuMotionMaterial(bindings,material);phases.clear();}
+  dispose(){if(disposed)return;disposed=true;stationary.dispose();phases.clear();}
  };
 }

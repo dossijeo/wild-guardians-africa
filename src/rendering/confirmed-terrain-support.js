@@ -1,4 +1,5 @@
 import {copyNativeTaskConsequenceProposal} from '../world/native-task-consequence.js';
+import {copyNativeTaskSettlementReference} from '../world/native-task-settlement.js';
 import {copyNativeResumeProposal} from '../world/native-resume-presentation.js';
 import {copyNativeTaskStartProposal} from '../world/native-task-start-presentation.js';
 import {copyNativeTaskActionReference,nativeTaskActionActor} from '../world/native-task-action-presentation.js';
@@ -60,12 +61,21 @@ export function createConfirmedTerrainSupport({residency,maxPieces=16384,maxActo
  }
  function prepareNativeTaskAction(value){
   if(closed)throw Error('Confirmed terrain support disposed');
-  const reference=copyNativeTaskActionReference(value),{x,z}=reference.origin,cx=Math.floor((x+24)/48),cz=Math.floor((z+24)/48),revision=residency.revisionAt?.(cx,cz);
+  const reference=copyNativeTaskActionReference(value);
+  return prepareStationaryPoint(reference,reference.origin,reference.startTime,String(nativeTaskActionActor(reference.request)),'native-task-action-terrain-support');
+ }
+ function prepareNativeTaskSettlement(value){
+  if(closed)throw Error('Confirmed terrain support disposed');
+  const reference=copyNativeTaskSettlementReference(value);
+  return prepareStationaryPoint(reference,reference.pose,reference.worldBoundary.effectiveTime,String(reference.actorId),'native-task-settlement-terrain-support');
+ }
+ function prepareStationaryPoint(reference,{x,z},at,actorId,kind){
+  const cx=Math.floor((x+24)/48),cz=Math.floor((z+24)/48),revision=residency.revisionAt?.(cx,cz);
   if(!revision||typeof revision.epoch!=='string')return null;
-  const point={at:reference.startTime,x,z},manifest={epoch:revision.epoch,chunks:[{cx,cz,revision:revision.revision}]},actorId=String(nativeTaskActionActor(reference.request)),trace={start:point.at,end:point.at,terrainManifest:manifest,actors:[{actorId,continuous:true,timed:true,start:point,end:point,segments:[]}]};
+  const point={at,x,z},manifest={epoch:revision.epoch,chunks:[{cx,cz,revision:revision.revision}]},trace={start:point.at,end:point.at,terrainManifest:manifest,actors:[{actorId,continuous:true,timed:true,start:point,end:point,segments:[]}]};
   if(!residency.matchesManifest(manifest))return null;
   const result=preparePaths(trace,{wanted:null,sequence:null,physicalIds:[],sourceLimit:maxNativeSourceSegments,exactManifest:false});
-  return result?Object.freeze({kind:'native-task-action-terrain-support',reference,point:Object.freeze({...point,height:result.actors[0].startHeight}),valid:result.valid,unchangedBy:result.unchangedBy}):null;
+  return result?Object.freeze({kind,reference,point:Object.freeze({...point,height:result.actors[0].startHeight}),valid:result.valid,unchangedBy:result.unchangedBy}):null;
  }
  // Private geometry-only kernel. Callers cannot weaken the historical entry's
  // safety checks by passing native data or arbitrary validation options to it.
@@ -104,5 +114,5 @@ export function createConfirmedTerrainSupport({residency,maxPieces=16384,maxActo
   for(const actor of actors){for(const point of [actor.start,actor.end]){if(!Number.isFinite(point?.x)||!Number.isFinite(point?.z))continue;const cx=Math.floor((point.x+24)/48),cz=Math.floor((point.z+24)/48),key=`${cx},${cz}`;if(!seen.has(key)){seen.add(key);const mesh=residency.get(cx,cz),visible=residency.getVisible(cx,cz),canonical=!!mesh&&!!inspect(mesh,cx,cz);chunks.push({cx,cz,manifest:!!manifest?.chunks?.some(chunk=>chunk.cx===cx&&chunk.cz===cz),resident:!!mesh,visible:!!mesh&&mesh===visible,canonical,...(!canonical?{details:inspectDetails(mesh,cx,cz)}:{})});}if(points.length<128){let exact=null,sampled=null;try{exact=residency.surface(point.x,point.z);sampled=sampleActorTerrain(point.x,point.z);}catch{}points.push({actorId:actor.actorId,x:point.x,z:point.z,exact:Number.isFinite(exact)?exact:null,sampled:Number.isFinite(sampled)?sampled:null});}}}
   return {manifestMatches:matches,chunks,points,pointLimit:128,note:'Endpoint diagnostics only; segment cuts and limits are not re-evaluated.'};
  }
- return {prepare,prepareNativeRoute,prepareNativeResumeProposal,prepareNativeTaskConsequenceProposal(value,{terrainManifest}={}){if(closed)throw Error('Confirmed terrain support disposed');let presentation;try{presentation=copyNativeTaskConsequenceProposal(value);}catch{return null;}return prepareNativeMotion(presentation,terrainManifest,String(presentation.actorId),'native-task-consequence-terrain-support');},prepareNativeTaskStartProposal(value,{terrainManifest}={}){if(closed)throw Error('Confirmed terrain support disposed');let presentation;try{presentation=copyNativeTaskStartProposal(value);}catch{return null;}return prepareNativeMotion(presentation,terrainManifest,String(presentation.actorId),'native-task-start-terrain-support');},prepareNativeBody,prepareNativeTaskAction,audit,dispose(){closed=true;}};
+ return {prepare,prepareNativeRoute,prepareNativeResumeProposal,prepareNativeTaskConsequenceProposal(value,{terrainManifest}={}){if(closed)throw Error('Confirmed terrain support disposed');let presentation;try{presentation=copyNativeTaskConsequenceProposal(value);}catch{return null;}return prepareNativeMotion(presentation,terrainManifest,String(presentation.actorId),'native-task-consequence-terrain-support');},prepareNativeTaskStartProposal(value,{terrainManifest}={}){if(closed)throw Error('Confirmed terrain support disposed');let presentation;try{presentation=copyNativeTaskStartProposal(value);}catch{return null;}return prepareNativeMotion(presentation,terrainManifest,String(presentation.actorId),'native-task-start-terrain-support');},prepareNativeBody,prepareNativeTaskAction,prepareNativeTaskSettlement,audit,dispose(){closed=true;}};
 }

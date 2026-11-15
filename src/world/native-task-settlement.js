@@ -35,3 +35,4 @@ export function copyNativeTaskSettlementAttestation(value){
  return Object.freeze({kind:value.kind,version:1,projectionVersion:1,settlementSequence:value.settlementSequence,reference,preparedReference});
 }
 export const nativeTaskSettlementAttestationCovers=(proof,reference)=>sameNativeTaskSettlementReference(proof?.reference,reference)||sameNativeTaskSettlementReference(proof?.preparedReference,reference);
+export function nativeTaskSettlementReferenceCovered(reference,boundary){const w=reference.worldBoundary;return !!boundary&&w.authorityEpoch===boundary.authorityEpoch&&w.nativeSession===boundary.nativeSession&&boundary.ticket>=w.ticket&&boundary.effectiveTime>=w.effectiveTime;}
