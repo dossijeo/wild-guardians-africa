@@ -50,9 +50,14 @@ test('causal clock reset retires its epoch and cannot preserve a previous presen
 test('a clock policy boundary invalidates an older staged gate proposal even at the same logical time and intent sequence',()=>{
  const f=nativeGateCrossingFixture();try{
   const result=f.admit(f.route());assert.equal(result.status,'admitted');f.bridge.beginNativeRouteExecution();f.bridge.commitNativeCausalClock();
-  const before=f.service.read(f.gates[0].id);assert.equal(f.w.nav_gate_motion_stage_objects(1),1);assert.equal(f.w.nav_gate_motion_ticket(),1);
-  const ticket=Array.from(new Float64Array(f.w.memory.buffer,f.w.nav_gate_motion_ticket_ptr(),5));
-  f.bridge.commitNativeCausalClock({paused:true});assert.equal(f.w.nav_gate_motion_commit(ticket[0],ticket[1],ticket[2],ticket[3]),-2);
+  const before=f.service.read(f.gates[0].id),clock=f.bridge.nativeCausalClock();
+  assert.equal(f.w.nav_gate_motion_stage_objects(1),-7,'the immediate path cannot stage a motor under causal execution');
+  assert.equal(f.w.nav_gate_motion_stage_causal(1,1),1);assert.equal(f.w.nav_gate_motion_world_ticket(),1);
+  const ticket=Array.from(new Float64Array(f.w.memory.buffer,f.w.nav_intent_barrier_proposal_ticket_ptr(),6));
+  assert.equal(ticket[4],clock.clockSequence);assert.equal(ticket[5],12);
+  const paused=f.bridge.commitNativeCausalClock({paused:true}).clock;
+  assert.equal(paused.committedThrough,clock.committedThrough);assert.equal(paused.intentSequence,clock.intentSequence);assert(paused.clockSequence>clock.clockSequence);
+  assert.equal(f.w.nav_gate_motion_commit_causal(...ticket.slice(0,5)),-2);
   assert.deepEqual(f.service.read(f.gates[0].id),before);
  }finally{f.session.dispose();}
 });

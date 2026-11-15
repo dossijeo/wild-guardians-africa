@@ -7,6 +7,19 @@ Evidencia estructurada: [recibos, hashes, comandos y límites](performance/migra
 Procedimiento reproducible: [operaciones](MIGRATION-OPERATIONS.md). Base observada:
 `44b6d40dd`, con los cambios locales de Sol y otros trabajos conservados.
 
+Seguimiento sobre `6b4c0e52e`: corregida la prueba de política del reloj que
+usaba la API de puertas anterior al contrato causal. El núcleo rechazaba
+correctamente `nav_gate_motion_stage_objects` con `-7`; no era un permiso que
+faltase conceder. La prueba conserva ese rechazo y utiliza ahora
+`nav_gate_motion_stage_causal`, el ticket de mundo con secuencia de reloj y
+`nav_gate_motion_commit_causal`. Exige que sólo cambie la política/secuencia del
+reloj, manteniendo tiempo e intenciones, y que el commit antiguo sea rechazado
+con `-2` sin cambiar la puerta. Pasan 38/38 casos de reloj, puertas causales,
+quiescencia y admisión común, cero skips. [Evidencia de la corrección](performance/native-causal-clock-test-validation-20261115.json).
+No cambia producción ni reinterpreta los fallos históricos siguientes como éxito;
+se conservan sus recibos originales. No se repiten GPU/build por este ajuste
+exclusivo de prueba y documentación.
+
 ## Herramientas de apoyo: comprobadas
 
 - Siete pruebas pasan, cero skips/TODO: imports transitivos, guards obligatorios,
