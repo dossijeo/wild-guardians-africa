@@ -1,0 +1,235 @@
+{
+  "version": 1,
+  "date": "2026-11-15",
+  "baseCommit": "b7c3da0eda1282ba9ffa3f2c3c9742449a9dfcb8",
+  "scope": "Game.tick projects actually issued native actions at the executed common clock, keeps body/task after completion pending consequence resources, serializes only semantic progress, and rejects restoration before resetting the current session. Ordinary producer/consequence commit/restoration/integrated acceptance remain pending.",
+  "sourceHashes": {
+    "src/world/wild-engine/spatial-task-execution.inc": "1cea8fbe0fffb6e41057f34ed6d3556ef9c46fd9b46de934bf947e500eba171d",
+    "src/world/wild-engine/spatial-intent-bridge.js": "b2da741809e2a6597e48fad528eb6020eda281c7691fab7a5d8ed3f3ad65047e",
+    "src/simulation/game.js": "5705853b7df2bbd2e4fa66901b583e2c58e13782a891719eb4d967ee863cdc49",
+    "src/simulation/tasks.js": "fe76a4e59a2678eaa40fcd5c3a9f01d342e82b0d3f38e47ae78712cf1ddda414",
+    "src/persistence/snapshots.js": "ccac88ba00949d60640375e37893b9e7ca7134b1c019d37e0ec9e7223008f8a4",
+    "src/world/wild-engine/spatial-savanna.wasm": "171904aaa2b6874e559072b0e64a5f42ddb092aea0474025bb254afeb7fec03d",
+    "public/wild-engine/spatial-threaded.wasm": "b0d27d9a33a8fbc68e3fa741c16f54a97871171842ea305ada4def79e50740be",
+    "tests/native-task-action-binding.test.js": "7b6b578b758bd992bb09e815ce15dc029c20dc0ff63320532a76e5dbe0470f9b",
+    "tests/remote-webgpu.test.js": "6f20406f009537cd24d265deb49cd554cd9345a4db4f932bac4763e360d7b994",
+    "tests/native-task-action-game-execution.test.js": "a7a783dbbd29e71dcc9421d36dde7e45f44499786d5c14953151e549b4250f6e"
+  },
+  "contextHashesAtBroadStart": {
+    "public/wild-engine/spatial-threaded.mjs": "5b7f1c54eac355a09503f4d9861c0adceaa02f6546511511306d742dabe748d9",
+    "src/world/wild-engine/spatial-intent-state.cpp": "3c8a586c25fde28115517461dbfb03f5ba4a22317f39a95e6d7028a1ff3fcf94",
+    "src/world/wild-engine/spatial-task-action-proposal.inc": "073cf218482ddd17e159c9a843090be694885d2569a570193dc3c94c19d5ecb7",
+    "src/world/wild-engine/spatial-route-execution.h": "c6ac3fa1f78ce7699ba03d73112cec4702ce1964a7af6ded3315c542039bd4a2",
+    "src/rendering/remote-webgpu-host.js": "3a7417df5d02c67719a3df2acfcd957fb8d0fb5d3bcf50af8272553c61d804b3",
+    "src/rendering/webgpu-world-surface.js": "f59e1169b1c7efa63260602a1612ac4cbc91e8a95ba152c0c67b673803964611",
+    "src/rendering/webgpu-worker-roster.js": "ab8372078b51f85943f9a0b95cd5fac9c4c71b553b8eb29c81bb22d3dd0588a5",
+    "src/rendering/native-task-action-gpu-motion.js": "3e4b2884f6016fe8047739a94e04046ab6bbdbf190b0a3751bc15f8d8ae4b166",
+    "tests/browser/native-first-task-world-owner.js": "4b0ebe666eefe52e97348f3d8ae8760efaa45531172b29dad533ba23439327c1",
+    "src/world/native-resource-admission.js": "a28f73422d8252341c605bd6b805bad9711e2345c08333b2243c2df986b4f508",
+    "src/world/native-resource-admission-profiles.js": "c1d558c464f594adc818ff431a666e65b534a0f43c00fa2d5a4e36c3f4208f28",
+    "src/simulation/native-resource-preparation-client.js": "58daabfb45ad81c44dc622965ad61967415b9fb5854aa19b4302dc6e5bb2e6af",
+    "tests/helpers/native-admission-contract.js": "cac3f24c0cadd8d82bdd88588d0b835376a1644f50965808717535c06b7d036d",
+    "tests/helpers/native-admission-vertical.js": "661297c2fee190ef137e4c65e5d18e7f7908691c334993feae5fea5076aba561",
+    "tests/native-admission-vertical.test.js": "dd00ac3f71515a7e3aaa23d458b487d283484eca719fe76b3e9a9a7b9ef1693c"
+  },
+  "finalTestContextHashes": {
+    "public/wild-engine/spatial-threaded.mjs": "5b7f1c54eac355a09503f4d9861c0adceaa02f6546511511306d742dabe748d9",
+    "src/world/wild-engine/spatial-intent-state.cpp": "3c8a586c25fde28115517461dbfb03f5ba4a22317f39a95e6d7028a1ff3fcf94",
+    "src/world/wild-engine/spatial-task-action-proposal.inc": "073cf218482ddd17e159c9a843090be694885d2569a570193dc3c94c19d5ecb7",
+    "src/world/wild-engine/spatial-route-execution.h": "c6ac3fa1f78ce7699ba03d73112cec4702ce1964a7af6ded3315c542039bd4a2",
+    "src/rendering/remote-webgpu-host.js": "3a7417df5d02c67719a3df2acfcd957fb8d0fb5d3bcf50af8272553c61d804b3",
+    "src/rendering/webgpu-world-surface.js": "f59e1169b1c7efa63260602a1612ac4cbc91e8a95ba152c0c67b673803964611",
+    "src/rendering/webgpu-worker-roster.js": "ab8372078b51f85943f9a0b95cd5fac9c4c71b553b8eb29c81bb22d3dd0588a5",
+    "src/rendering/native-task-action-gpu-motion.js": "3e4b2884f6016fe8047739a94e04046ab6bbdbf190b0a3751bc15f8d8ae4b166",
+    "tests/browser/native-first-task-world-owner.js": "4b0ebe666eefe52e97348f3d8ae8760efaa45531172b29dad533ba23439327c1",
+    "src/world/native-resource-admission.js": "a28f73422d8252341c605bd6b805bad9711e2345c08333b2243c2df986b4f508",
+    "src/world/native-resource-admission-profiles.js": "c1d558c464f594adc818ff431a666e65b534a0f43c00fa2d5a4e36c3f4208f28",
+    "src/simulation/native-resource-preparation-client.js": "58daabfb45ad81c44dc622965ad61967415b9fb5854aa19b4302dc6e5bb2e6af",
+    "tests/helpers/native-admission-contract.js": "ad0ebd88dd52b688e7b4be8207657430e0f8dee99d29ac3d97d09947bb23816b",
+    "tests/helpers/native-admission-vertical.js": "661297c2fee190ef137e4c65e5d18e7f7908691c334993feae5fea5076aba561",
+    "tests/native-admission-vertical.test.js": "5ba4e928802240665be9c0a5426217deaf3173c00072b9fcd933372698320816",
+    "tests/helpers/remote-webgpu-fixture.js": "c5986d84f9f102b30f27960f4bd602713f2b2ef7d0a18d8e2dc24b42a87f7726"
+  },
+  "concurrentValidation": {
+    "changedContextFiles": [
+      "tests/helpers/native-admission-contract.js",
+      "tests/native-admission-vertical.test.js"
+    ],
+    "change": "The other task added a chained route-arrival-action case and adjusted only its test contract during verification. Production source and owned tests remained frozen. The final checksum assertion noticed those test-only edits after all checks had passed.",
+    "resolution": "Run the final shared contract file once (11/11); preserve the completed broad/build/GPU evidence and do not repeat unchanged production checks.",
+    "supplemental": {
+      "tests": 11,
+      "pass": 11,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    }
+  },
+  "preservedPreexistingFileHashes": {
+    "docs/guardian/gpu-animation/eyelid-shadow-animal-buffalo-settled/openOriginal.png": "3a5e1bb81198872e37d8302b14e91341cdd4e5dd77f1b6c921bcb5971554efc6",
+    "docs/guardian/webgpu-stable-raid-qa.md": "c7356699d916cbed7945ab500fead9bbada6d9f8baa40bf568892df99883610c",
+    "docs/lighting/tree-near-retexture/performance/mobility-guarded-world-stop.json": "eacd911505f3e91e52432be46bae46da5dce654cb8891161f94247ab974a7366",
+    "src/rendering/character-preload.js": "b1637fb2ed5d0cf0aa12a1ab5eac5923319a0096413071d28376992314be2835",
+    "src/rendering/confirmed-presentation-stream.js": "8f55f279d554e0826b40673f374f15926fb074c23dc0ab119c1a0409727bea72",
+    "src/rendering/destruction-effects-native.js": "0f3e27f5b379370c53e5472a921b6c983708abf07fa65bd08cc1fe829e473aae",
+    "src/rendering/destruction-native.js": "363ffd6447b051739da75d65a6a2be1431094f0df588361158de83023ceab7b4",
+    "src/rendering/scene.js": "1cfefd4f86dee90af82300fe6762a29408d798dbb852605f5b30a45493c198da",
+    "src/simulation/worker-game-runtime.js": "d1bbedaf3ae9278c9bc49317c3f074900a8feee70d721ff42820100f5e980f4b",
+    "tests/browser/mobility-worker-latency.js": "8f7a12e9ce88c83ed3fbda4973c000465aff479c0d17129ab3abf848e9567b56",
+    "tests/character-preload.test.js": "5d757f97f606638f9f4e73086583947a92c774c261d2310c2101635831664383",
+    "tests/historical-event-boundaries.test.js": "1f2558f7ba2dcb889872fb2e455f14f8506243c54c314d570b85221d0cb2d013",
+    "tests/worker-game-runtime.test.js": "5f150f6c0071e8ab1b571d65f8fdb299a238d754ecf0476cedc6bb0d50387c27",
+    "tools/experiments/audit-character-primer-coverage.mjs": "828820af7495133ee15a95f90085a65edc042283388b660f9078d22b1d604f0e",
+    "tools/experiments/audit_worker_attack_gl.mjs": "65ba19872859982378fc50c1f5496f8fad4c1347ce1e8779ad575213385a9b98",
+    "tools/guardian/audit_pending_worker_game_wall.mjs": "bfd5365cb026aa330ff1c357250bfb5e1dbb88eec579ecceaa53dd9608a68225",
+    "public/wild-engine/spatial-threaded.worker.mjs": "7e6dad4bca61807357acfcb3789c781deaca3e20214ccd76dd82ddcb0be0a153"
+  },
+  "newGameCases": 10,
+  "sharedContractCasesAtBroadStart": 10,
+  "sharedContractCasesFinal": 11,
+  "directed": {
+    "tests": 249,
+    "pass": 249,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "regression": {
+    "tests": 2006,
+    "pass": 2001,
+    "fail": 5,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "wideSelectionFiles": 182,
+  "knownFailures": [
+    "the intent bridge projects a scaled gate using the physical wall frame",
+    "loading during a committed strike applies its damage frame exactly once",
+    "event-fed native intent bridge replays live state and only changes on explicit deltas",
+    "late crate admission is rejected after drop and retries a later pickup",
+    "confirmed harvest installs its sampled GPU horizon and cancels on changed target"
+  ],
+  "functionalEvidence": [
+    "Actual executed task arrivals, explicit trusted action ABI in component fixture, real Game.tick and actual native stationary action binding",
+    "Projection validates source/task/owner/kind/executed frontier before writes; no legacy JS mover/clearance or JS action countdown",
+    "Completed actions retain tasks, crops, crates, economy and physical body while consequences await resources",
+    "The same common clock advances after the last route releases its body and two native actions remain",
+    "Pause/rate changes, cancellation before next native interval, semantic save progress without handles/attestations and explicit fresh-admission restore guard",
+    "WASM pthread executes the same Game action projection; actual GPU admission is covered separately by retained-packet tests"
+  ],
+  "persistenceLimit": "Semantic serialization is implemented. Restoring an active native action is explicitly rejected before resetting the current session; fresh stationary action admission from saved progress is still pending.",
+  "build": {
+    "native": "Canonical standalone and pthread rebuilds passed with the existing build script exports and flags; generated pthread JS was unchanged",
+    "productSeconds": 43.0
+  },
+  "browserSyntax": {
+    "files": 367,
+    "scripts": 309,
+    "failures": []
+  },
+  "gpu": {
+    "gpu-regression": {
+      "record": "native-action-game-projection-gpu-regression-20261115.json",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": ""
+      },
+      "block": {
+        "start": 1794732880680.88,
+        "end": 1794732882480.95,
+        "committedAt": 1794732880687.79,
+        "drawFrames": 53,
+        "minClock": 13.379999999999928,
+        "maxClock": 14.959999999999894,
+        "resourcesAfterReady": 0
+      },
+      "drained": true,
+      "sourceLimit": "Existing SpatialGameSession in page plus real preparer/draw workers; not the new Game action projection in the ordinary authority Worker",
+      "requestFailures": "recorded, empty"
+    },
+    "action-gpu-regression": {
+      "record": "native-action-game-projection-action-gpu-regression-20261115.json",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": ""
+      },
+      "block": {
+        "start": 1794732898172.755,
+        "end": 1794732899972.8298,
+        "committedAt": 1794732898177.68,
+        "drawFrames": 54,
+        "minClock": 13.139999999999933,
+        "maxClock": 14.779999999999898,
+        "resourcesAfterReady": 0
+      },
+      "drained": true,
+      "sourceLimit": "Existing SpatialGameSession in page plus real preparer/draw workers; not the new Game action projection in the ordinary authority Worker",
+      "requestFailures": "recorded, empty"
+    },
+    "resume-gpu": {
+      "record": "native-action-game-projection-resume-gpu-20261115.json",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": ""
+      },
+      "block": {
+        "start": 1794732924495.065,
+        "end": 1794732926295.125,
+        "committedAt": 1794732924504.935,
+        "drawFrames": 54,
+        "minClock": 60.77629700272216,
+        "maxClock": 62.35629700272241,
+        "resourcesAfterReady": 0
+      },
+      "drained": true,
+      "sourceLimit": "Existing SpatialGameSession in page plus real preparer/draw workers; not the new Game action projection in the ordinary authority Worker",
+      "requestFailures": "not recorded by this audit"
+    }
+  },
+  "actionGpuRegression": {
+    "block": {
+      "start": 1794732903660.39,
+      "end": 1794732905460.4248,
+      "committedAt": 1794732903663.29,
+      "drawFrames": 54,
+      "minClock": 24.85050177092218,
+      "maxClock": 26.450501770922145
+    },
+    "age": 1.619999885559082,
+    "resourcesPrepared": 98,
+    "resourcesAfterReady": 0,
+    "rigUnchanged": true,
+    "limit": "Existing scoped Harvest regression, foreground crop retains input precedence. No ordinary effect, restore, full reuse budget or closure of the 3,123-resource case."
+  },
+  "research": [
+    {
+      "project": "Godot",
+      "revision": "4.4-stable",
+      "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/3d/physics/rigid_body_3d.cpp",
+      "functions": [
+        "_sync_body_state",
+        "_body_state_changed"
+      ],
+      "lines": "134-166",
+      "decision": "Project native physics state while suppressing an echo back to the physical owner; reuse the current projectedPositions map."
+    },
+    {
+      "project": "Godot",
+      "revision": "4.4-stable",
+      "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/animation/animation_player.cpp",
+      "functions": [
+        "_process_playback_data",
+        "_blend_post_process"
+      ],
+      "lines": "193-235,307-335",
+      "decision": "Clamp completed progress and validate the same current identity before finalization. Game effects still require source-owned resource admission, never an animation or GPU callback."
+    }
+  ],
+  "acceptanceClosed": []
+}

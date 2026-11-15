@@ -19,7 +19,7 @@ function workerSnapshot(worker){
     profile:worker.profile,raidReturn:worker.raidReturn};
 }
 export function notifyWorkerPlanningChange(state,worker){
-  if(!worker.taskId)delete worker.nativeRouteAdmission;
+  if(!worker.taskId){delete worker.nativeRouteAdmission;delete worker.nativeTaskAction;}
   const listeners=taskObservers.get(state);
   if(!listeners?.size)return;
   const event={type:'worker',worker:workerSnapshot(worker)};
@@ -186,6 +186,7 @@ export function applyConfirmedTaskAssignments(state,assignments,navVersion,
     cancelIdle(worker);
     task.workerId=worker.id;task.blocked=false;
     worker.taskId=task.id;worker.status=pendingResources?'waiting-task':'walking';worker.path=pendingResources?null:path;
+    delete worker.nativeTaskAction;
     if(pendingResources)worker.nativeRouteAdmission='pending-resources';else delete worker.nativeRouteAdmission;
     worker.destinationId=pendingResources?null:destination.id;worker.pathVersion=navVersion;
     if(!pendingResources&&['repair','initial','water'].includes(task.kind))
@@ -199,6 +200,7 @@ export function applyConfirmedTaskAssignments(state,assignments,navVersion,
 }
 export function releaseTask(state,worker) {
   delete worker.nativeRouteAdmission;
+  delete worker.nativeTaskAction;
   const t=state.tasks.find(t=>t.id===worker.taskId);
   worker.taskId=null;
   worker.taskApproach=null;

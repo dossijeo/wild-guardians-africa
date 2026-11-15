@@ -1269,6 +1269,9 @@ export function planRepairAccess(s,target,nav){
   return {status:'safe',updates:[...byId.values()]};
 }
 function completeTask(s,w,t,target,nav) {
+  // Native arrival/action resources authorize their phase, not its effects.
+  // Consequences need their own prepared resource boundary before any writes.
+  if(w.nativeRouteAdmission!==undefined)throw Error('Native task consequences require prepared resources');
   if(t.kind==='initial'||t.kind==='water') {
     if(!canWaterFrom(w,target,nav)){releaseTask(s,w);w.status='idle';w.path=null;notifyWorkerPlanningChange(s,w);return;}
     if(target.alive&&!target.blessing){waterPlant(target);emit(s,'WaterSatisfied',{workerId:w.id,targetId:target.id});}
@@ -1571,6 +1574,15 @@ function updateWorkers(s,dt,nav) {
       }
       const target=findPlant(t.targetId)??findCrate(t.targetId)??s.structures.find(e=>e.id===t.targetId);
       if(!target || ('alive' in target&&(!target.alive||target.blessing))) {replaceTasks(s,s.tasks.filter(q=>q.id!==t.id));w.taskId=null;w.status='idle';w.path=null;notifyWorkerPlanningChange(s,w);continue;}
+      if(nativeExecutionActive){
+        const action=nav.intentTaskPlanner.projectNativeTaskActionExecution(s,w);
+        if(action){
+          // Completion is a native fact, not an effects/resource grant. Keep
+          // the body and task while consequences await their admission.
+          continue;
+        }
+        if(w.status==='acting'||w.nativeRouteAdmission==='native-action')throw Error('Native task has no current action projection');
+      }
       if(w.status==='walking') {
         const executed=nativeExecutionActive?nav.intentTaskPlanner.projectNativeTaskExecution(s,w):null;
         if(executed){
@@ -1709,7 +1721,7 @@ export function tick(s,seconds,nav,{clockRate=1}={}) {
       nativeExecution=nav.intentTaskPlanner.nativeGameExecutionState();
     }
     if(nativeExecution<0)throw Error('Native game execution still requires projection for this intention class');
-    if(nativeExecution===1&&(nav.dynamicBodies||s.raid||s.workers.some(w=>!w.taskId||!['walking','waiting-task'].includes(w.status)||w.crateId||w.raidReturn||w.incapacitated||w.recovery||w.fallRemaining>0||contractExpired(w,s))||s.structures.some(structure=>structure.gate&&structure.status!=='ruined')))throw Error('Native task game cohort contains an unsupported mover');
+    if(nativeExecution===1&&(nav.dynamicBodies||s.raid||s.workers.some(w=>!w.taskId||!['walking','waiting-task','acting'].includes(w.status)||w.status==='acting'&&(w.nativeRouteAdmission!=='native-action'||!nav.intentTaskPlanner.nativeTaskActionExecution(w.id))||w.crateId||w.raidReturn||w.incapacitated||w.recovery||w.fallRemaining>0||contractExpired(w,s))||s.structures.some(structure=>structure.gate&&structure.status!=='ruined')))throw Error('Native task game cohort contains an unsupported mover');
     prepareClockEvents(s,nav);
     // Version-1 saves can contain an active area without exposure bookkeeping.
     // Mark once on restoration; static plants need no per-frame exposure scan.

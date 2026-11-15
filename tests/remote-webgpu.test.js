@@ -1,3 +1,4 @@
+import {pair,fakeGpu,flush,fixture,preparedWorldDraw} from './helpers/remote-webgpu-fixture.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createRemoteWebGpuClient } from '../src/rendering/remote-webgpu-client.js';
@@ -16,13 +17,6 @@ import {tick} from '../src/simulation/game.js';
 import {nativeTaskActionReferenceFromProposal} from '../src/world/native-task-action-presentation.js';
 import {copyNativeTaskActionResources} from '../src/world/native-task-action-attestation.js';
 import {floorFloat32} from '../src/float32-time.js';
-
-function pair() {
-  const a = {}, b = {};
-  a.postMessage = data => queueMicrotask(() => b.onmessage?.({ data: structuredClone(data) }));
-  b.postMessage = data => queueMicrotask(() => a.onmessage?.({ data: structuredClone(data) }));
-  return [a, b];
-}
 
 // The conditioned action ABI is exercised as a native component here. The
 // ordinary action resource coordinator is deliberately not enabled by this test.
@@ -78,14 +72,15 @@ for(const mode of ['exact','late','missing-template','missing-attestation','canc
   const advance=dt=>{native.state.elapsed+=dt;assert.equal(planner.advanceNativeRouteExecution(native.state.elapsed).status,'advanced');planner.commitNativeCausalClock();};
   const quiesce=source.quiesceGpuForMutation;source.quiesceGpuForMutation=async options=>{const receipt=await quiesce(options);if(mode==='late')advance(.02);if(mode==='cancel-during-drain'){releaseTask(native.state,native.state.workers[0]);native.state.workers[0].status='idle';notifyWorkerPlanningChange(native.state,native.state.workers[0]);planner.flushTaskEvents();planner.commitNativeCausalClock();}return receipt;};
   if(mode==='missing-attestation'){const release=source.releaseGpuAfterMutation;source.releaseGpuAfterMutation=(receipt,options)=>release(receipt,{...options,nativeActions:[]});}
+  assert.equal(planner.needsReconciliation(native.nav.version),false);
   const body=native.body(1),other=native.body(3),request=planner.nativeTaskActionRequest(actor),result=await planner.startNativeTaskActionAfterGpuQuiescence({getPublication:()=>source,request,prepareResources:async({resources,proposedWorldBoundary})=>{
    reference=nativeTaskActionReferenceFromProposal(resources);assert.equal(planner.nativeTaskActionBinding(actor),null);f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'relative',epoch:resources.startTime,nativeAction:reference});
    prepared=await preparedWorldDraw({...f,clock,...(mode==='missing-template'?{}:{actionTemplate:reference})},proposedWorldBoundary);
    f.host.present();assert.equal(planner.nativeTaskActionBinding(actor),null);assert.deepEqual(native.body(1),body);if(mode==='late')advance(.3);
    return {preparedWorldBoundary:prepared.preparedWorldBoundary,preparedTaskActionTemplate:reference,valid:prepared.valid,commit:data=>prepared.commit(data.worldBoundary,data.nativeTaskActionBinding),abort:prepared.abort};
   }});
-  if(['exact','late'].includes(mode)){assert.equal(result.status,'committed',JSON.stringify(result));assert.deepEqual(copyNativeTaskActionResources(result.resources),result.resources);assert.equal(result.resources.kind,15);assert.throws(()=>copyNativeTaskActionResources({...result.resources,kind:14}));assert.throws(()=>copyNativeTaskActionResources({...result.resources,worldBoundary:{...result.resources.worldBoundary,ticket:result.resources.worldBoundary.ticket+1}}));await flush();f.host.present();await prepared.presented;const proof=planner.nativeTaskActionBinding(actor),pick=captureNativeRoutePickFrame(f.host.inspect());assert.equal(pick.getActionElapsed(reference),0);assert.equal(pick.getActionExecutionTime(reference),proof.reference.startTime);assert.deepEqual(native.body(1),body);assert.equal(planner.nativeRouteTiming(reference.request.nativeRoute.routeHandle),null);assert.equal(native.state.crates.length,0);if(mode==='late'){assert(proof.reference.startTime>reference.startTime+.3);assert(Math.hypot(native.body(3).x-other.x,native.body(3).z-other.z)>.1);}advance(.2);await flush();f.host.present();const current=captureNativeRoutePickFrame(f.host.inspect());assert(current.getActionElapsed(reference)>.19);assert.deepEqual(f.errors,[]);}
-  else{assert.notEqual(result.status,'committed',JSON.stringify(result));if(prepared)await assert.rejects(prepared.presented);if(mode==='missing-attestation')assert.equal(result.status,'committed-control-failed');else{assert.equal(planner.nativeTaskActionBinding(actor),null);if(mode==='cancel-during-drain'){assert.equal(result.status,'resources-changed');assert.equal(source.status().closed,false);}}}
+  if(['exact','late'].includes(mode)){assert.equal(result.status,'committed',JSON.stringify(result));assert.equal(planner.needsReconciliation(native.nav.version),true);assert.deepEqual(copyNativeTaskActionResources(result.resources),result.resources);assert.equal(result.resources.kind,15);assert.throws(()=>copyNativeTaskActionResources({...result.resources,kind:14}));assert.throws(()=>copyNativeTaskActionResources({...result.resources,worldBoundary:{...result.resources.worldBoundary,ticket:result.resources.worldBoundary.ticket+1}}));await flush();f.host.present();await prepared.presented;const proof=planner.nativeTaskActionBinding(actor),pick=captureNativeRoutePickFrame(f.host.inspect());assert.equal(pick.getActionElapsed(reference),0);assert.equal(pick.getActionExecutionTime(reference),proof.reference.startTime);assert.deepEqual(native.body(1),body);assert.equal(planner.nativeRouteTiming(reference.request.nativeRoute.routeHandle),null);assert.equal(native.state.crates.length,0);if(mode==='late'){assert(proof.reference.startTime>reference.startTime+.3);assert(Math.hypot(native.body(3).x-other.x,native.body(3).z-other.z)>.1);}advance(.2);await flush();f.host.present();const current=captureNativeRoutePickFrame(f.host.inspect());assert(current.getActionElapsed(reference)>.19);assert.deepEqual(f.errors,[]);}
+  else{assert.notEqual(result.status,'committed',JSON.stringify(result));if(prepared)await assert.rejects(prepared.presented);if(mode==='missing-attestation'){assert.equal(result.status,'committed-control-failed');assert.equal(planner.needsReconciliation(native.nav.version),true);}else{assert.equal(planner.nativeTaskActionBinding(actor),null);if(mode==='cancel-during-drain'){assert.equal(result.status,'resources-changed');assert.equal(source.status().closed,false);}}}
  }finally{source?.dispose();f.client.dispose();await f.host.dispose();native.close();}
 });
 
@@ -116,47 +111,6 @@ test('native boundary observers wake only after the validated direct requirement
  client=createRemoteWebGpuClient({port,capabilities:{width:20,height:10,format:'rgba8unorm'},onError:error=>errors.push(error),onNativeWorldBoundary:value=>seen.push([value,client.requiredNativeWorldBoundary()])});
  try{port.onmessage({data:{type:'native-world-boundary',worldBoundary:boundary}});assert.deepEqual(seen,[[boundary,boundary]]);port.onmessage({data:{type:'native-world-boundary',worldBoundary:{...boundary,ticket:1}}});assert.equal(seen.length,1);assert.match(errors[0].message,/regressed/);assert.deepEqual(client.requiredNativeWorldBoundary(),boundary);}finally{client.dispose();}
 });
-function fakeGpu() {
-  const calls = [], buffers = [], submitted = [];
-  let textureVersion = 0, commandVersion = 0;
-  let resolveLost;
-  const device = {
-    lost: new Promise(resolve => { resolveLost = resolve; }),
-    queue: {
-      writeBuffer(buffer, offset, data) { buffer.data.set(new Uint8Array(data.buffer || data, data.byteOffset || 0, data.byteLength), offset); calls.push(['writeBuffer', offset, Array.from(new Uint8Array(data.buffer || data, data.byteOffset || 0, data.byteLength))]); },
-      writeTexture() { calls.push(['writeTexture']); },
-      submit(commands) { for (const command of commands) { assert(!submitted.includes(command)); for (const copy of command.copies || []) copy(); submitted.push(command); calls.push(['submit', command]); } },
-      onSubmittedWorkDone: async () => {},
-    },
-    createBuffer(descriptor) {
-      const data = new Uint8Array(descriptor.size);
-      const buffer = { data, descriptor, destroyed: false, mapAsync: async () => {}, getMappedRange(offset = 0, size = descriptor.size) { assert.equal(offset, 0); assert.equal(size, descriptor.size); return data.buffer; }, unmap() { calls.push(['unmap']); }, destroy() { this.destroyed = true; } };
-      buffers.push(buffer); return buffer;
-    },
-    createTexture: descriptor => ({descriptor,createView: view=>({descriptor:view}),destroy(){}}),
-    createBindGroup: descriptor => ({ descriptor }),
-    createBindGroupLayout: descriptor => ({ descriptor }),
-    createQuerySet: descriptor => ({ descriptor }),
-    createRenderPipelineAsync: async descriptor => ({ descriptor }),
-    createCommandEncoder() {
-      const record = { id: ++commandVersion, passes: [] };
-      return {
-        beginRenderPass(descriptor) {
-          record.passes.push(descriptor);
-          return { setPipeline() {}, setBindGroup() {}, setVertexBuffer() {}, setIndexBuffer() {}, draw() { calls.push(['draw']); }, end() {} };
-        },
-        copyBufferToBuffer(source, sourceOffset, destination, destinationOffset, size) { calls.push(['copy']); if (source) (record.copies ||= []).push(() => destination.data.set(source.data.slice(sourceOffset, sourceOffset + size), destinationOffset)); },
-        resolveQuerySet(querySet, firstQuery, queryCount, destination, offset) { (record.copies ||= []).push(() => new Uint32Array(destination.data.buffer, offset, queryCount * 2).fill(77)); },
-        finish: () => record,
-      };
-    },
-    destroy() { calls.push(['deviceDestroy']); resolveLost({ reason: 'destroyed', message: 'Explicit native destruction' }); },
-  };
-  const context = { configure() {}, unconfigure() {}, getCurrentTexture() { const version = ++textureVersion; return { createView: () => ({ version }) }; } };
-  return { device, context, calls, buffers, submitted };
-}
-const flush = async () => { for (let i = 0; i < 40; i++) await Promise.resolve(); };
-
 async function nativePreparationFixture(hostOptions={}){
  const native=createNativeRouteExecutionFixture(),[sourcePort,drawPort]=pair();let source;
  const f=await fixture({}, {intentControl:{port:drawPort,session:'retained-preparation'},...hostOptions});
@@ -169,12 +123,6 @@ function preparationDraw(f,buffer,metadata,pipeline=f.pipeline,upload=null){
  f.client.beginFrame(metadata);if(upload!==null)f.client.device.queue.writeBuffer(buffer,0,new Uint32Array([upload]));
  const group=f.client.device.createBindGroup({entries:[{binding:0,resource:{buffer}}]}),encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
  pass.setPipeline(pipeline);pass.setBindGroup(0,group);pass.draw(3);pass.end();f.client.device.queue.submit([encoder.finish()]);return f.client.endFrame();
-}
-function preparedWorldDraw(f,boundary,value=77,signal=null){
- const metadata={clock:f.clock,nativeWorldBoundary:boundary,...(f.resumeTemplate?{nativeResumeTemplate:f.resumeTemplate,nativeResumeTemplateCoverageEnd:f.resumeTemplate.endTime}:{}),...(f.startTemplate?{nativeTaskStartTemplate:f.startTemplate}:{}),...(f.actionTemplate?{nativeTaskActionTemplate:f.actionTemplate}:{})};f.client.beginFrame({nativeWorldBoundary:boundary});
- f.client.device.queue.writeBuffer(f.buffer,0,new Float32Array([value]));
- const encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
- pass.setPipeline(f.pipeline);pass.setBindGroup(0,f.group);pass.draw(3);pass.end();f.client.device.queue.submit([encoder.finish()]);return f.client.prepareNativeWorldFrame(metadata,{signal});
 }
 function textureCopies(f){
  const textures=[],copies=[],groups=[],device=f.gpu.device,createEncoder=device.createCommandEncoder.bind(device),createGroup=device.createBindGroup.bind(device);
@@ -580,27 +528,6 @@ function nativeControlEvent(type,sequence,actorId,handle,time){
     revokedRouteHandle:type==='RouteInvalidated'?handle:null};
 }
 const nativeHandle=slot=>({authorityEpoch:'native-owner',session:1,slot,generation:1});
-
-async function fixture(clientOptions = {}, hostOptions = {}) {
-  const [producerPort, consumerPort] = pair(), gpu = fakeGpu(), errors = [];
-  const host = createRemoteWebGpuHost({ ...gpu, canvas: { width: 20, height: 10 }, port: consumerPort, requestFrame: () => 0, cancelFrame() {}, ...hostOptions });
-  const client = createRemoteWebGpuClient({ port: producerPort, capabilities: { width: 20, height: 10, format: 'rgba8unorm' }, onError: error => errors.push(error), ...clientOptions });
-  client.context.configure({ device: client.device, format: 'rgba8unorm' });
-  const buffer = client.device.createBuffer({ size: 16, usage: 72 });
-  const group = client.device.createBindGroup({ entries: [{ binding: 0, resource: { buffer } }] });
-  const pipeline = client.device.createRenderPipeline({ label: 'test' });
-  await flush(); await host.idle();
-  function frame(value, metadata = {}) {
-    client.beginFrame(metadata);
-    client.device.queue.writeBuffer(buffer, 0, new Float32Array([value]));
-    const encoder = client.device.createCommandEncoder();
-    const pass = encoder.beginRenderPass({ colorAttachments: [{ view: client.context.getCurrentTexture().createView(), loadOp: 'clear', storeOp: 'store' }] });
-    pass.setPipeline(pipeline); pass.setBindGroup(0, group); pass.draw(3); pass.end();
-    client.device.queue.submit([encoder.finish()]);
-    return client.endFrame();
-  }
-  return { client, host, gpu, errors, buffer, group, pipeline, frame };
-}
 
 test('remote drawing continues during delayed pipeline preparation, using fresh command buffers and swapchain views', async () => {
   const f = await fixture();

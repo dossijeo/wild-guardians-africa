@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [admisión de acciones con paquete GPU retenido](e-r3-native-task-action-admission-20261115.md), con drenaje directo y Harvest en GPU real; productor ordinario, consecuencias y persistencia siguen pendientes.
+Último avance: [proyección de acciones nativas en Game](e-r3-native-action-game-projection-20261115.md), con reloj ejecutado y progreso semántico; productor ordinario, commit de consecuencias y restauración siguen pendientes.
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio

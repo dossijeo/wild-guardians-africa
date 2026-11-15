@@ -1,0 +1,1309 @@
+{
+  "result": {
+    "scope": "Genuine ordinary first task through original worker/preparer/retained packet/direct source/native exact commit, with B continuously executing. Full ordinary gameplay activation remains pending.",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "preparedCalls": 1,
+    "reference": {
+      "kind": "native-task-start-reference",
+      "version": 1,
+      "actorId": 900011,
+      "bodyId": 1,
+      "taskId": 920001,
+      "targetId": 900099,
+      "requestSequence": 3,
+      "requestedAt": 10,
+      "sourceControlSequence": 3,
+      "endTime": 19.080501770922304,
+      "sourceRequestHandle": {
+        "kind": "native-task-route-request-handle",
+        "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+        "session": 1,
+        "slot": 1,
+        "generation": 1
+      },
+      "expectedRouteHandle": {
+        "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+        "session": 1,
+        "slot": 1,
+        "generation": 3
+      },
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+        "nativeSession": 1,
+        "ticket": 1,
+        "effectiveTime": 10
+      }
+    },
+    "binding": {
+      "reference": {
+        "kind": "native-task-start-reference",
+        "version": 1,
+        "actorId": 900011,
+        "bodyId": 1,
+        "taskId": 920001,
+        "targetId": 900099,
+        "requestSequence": 3,
+        "requestedAt": 10,
+        "sourceControlSequence": 3,
+        "endTime": 22.42050177092223,
+        "sourceRequestHandle": {
+          "kind": "native-task-route-request-handle",
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "session": 1,
+          "slot": 1,
+          "generation": 1
+        },
+        "expectedRouteHandle": {
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "session": 1,
+          "slot": 1,
+          "generation": 3
+        },
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        }
+      },
+      "preparedReference": {
+        "kind": "native-task-start-reference",
+        "version": 1,
+        "actorId": 900011,
+        "bodyId": 1,
+        "taskId": 920001,
+        "targetId": 900099,
+        "requestSequence": 3,
+        "requestedAt": 10,
+        "sourceControlSequence": 3,
+        "endTime": 19.080501770922304,
+        "sourceRequestHandle": {
+          "kind": "native-task-route-request-handle",
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "session": 1,
+          "slot": 1,
+          "generation": 1
+        },
+        "expectedRouteHandle": {
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "session": 1,
+          "slot": 1,
+          "generation": 3
+        },
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 1,
+          "effectiveTime": 10
+        }
+      },
+      "assignmentSequence": 4,
+      "projectionVersion": 1,
+      "gateIds": []
+    },
+    "nativeRoute": {
+      "actorId": 900011,
+      "routeHandle": {
+        "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+        "session": 1,
+        "slot": 1,
+        "generation": 3
+      },
+      "assignmentSequence": 4
+    },
+    "worldBoundary": {
+      "version": 1,
+      "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+      "nativeSession": 1,
+      "ticket": 2,
+      "effectiveTime": 13.339999999999929
+    },
+    "timeTranslation": {
+      "kind": "native-task-start-time-translation",
+      "version": 2,
+      "previousTicket": {
+        "kind": "native-task-start-proposal-ticket",
+        "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+        "session": 1,
+        "ticket": 1
+      },
+      "ticket": {
+        "kind": "native-task-start-proposal-ticket",
+        "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+        "session": 1,
+        "ticket": 2
+      },
+      "sourceRequestHandle": {
+        "kind": "native-task-route-request-handle",
+        "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+        "session": 1,
+        "slot": 1,
+        "generation": 1
+      },
+      "requestSequence": 3,
+      "previousStartTime": 10,
+      "previousEndTime": 19.080501770922304,
+      "startTime": 13.339999999999929,
+      "endTime": 22.42050177092223,
+      "sameNativeMotion": false,
+      "sameNativeGates": true,
+      "sameFloat32Motion": true,
+      "sameFloat32Gates": true,
+      "authorizedAutonomy": false,
+      "authorizedPassage": false
+    },
+    "inputPick": {
+      "entityId": "worker-900011",
+      "hitPoint": {
+        "x": -13.902194731422433,
+        "y": 16.78994371521621,
+        "z": -3.817589693226223
+      },
+      "point": {
+        "x": -14.029452437224265,
+        "z": -5.210974242081026
+      },
+      "sequence": 0
+    },
+    "independentInputPick": {
+      "entityId": "worker-900012",
+      "hitPoint": {
+        "x": -12.437807420776664,
+        "y": 16.719556731347843,
+        "z": 2.342540185308154
+      },
+      "point": {
+        "x": -12.477774132626736,
+        "z": 1.2862068517799372
+      },
+      "sequence": 0
+    },
+    "pose": {
+      "x": -13.91537088623703,
+      "z": -3.9618595464067905,
+      "distance": 3.8879997253417975,
+      "phase": 1.619999885559082,
+      "yaw": 1.6124389058934852,
+      "firstRemainingPoint": 0,
+      "arrived": false,
+      "at": 14.95999988555901,
+      "duration": 9.0805017709223,
+      "runPhase": 24.744999885559082,
+      "walkPhase": 41.75,
+      "carryPhase": 9.5,
+      "runDistance": 3.8879997253417975,
+      "walkDistance": 0,
+      "runRemaining": 0.1120002746582025,
+      "running": true,
+      "currentSpeed": 2.4000000000000004
+    },
+    "independent": {
+      "before": {
+        "x": -17.8,
+        "z": 2.2,
+        "distance": 0,
+        "phase": 0,
+        "yaw": 1.5707963228212536,
+        "firstRemainingPoint": 0,
+        "arrived": false,
+        "at": 10,
+        "duration": 11.111110934504758,
+        "runPhase": 0,
+        "walkPhase": 0,
+        "carryPhase": 0,
+        "runDistance": 0,
+        "walkDistance": 0,
+        "runRemaining": 0,
+        "running": false,
+        "currentSpeed": 1.08
+      },
+      "ready": {
+        "x": -14.192800000000076,
+        "z": 2.2000000143337255,
+        "distance": 3.6071999999999234,
+        "phase": 3.339999999999929,
+        "yaw": 1.5707963228212536,
+        "firstRemainingPoint": 0,
+        "arrived": false,
+        "at": 13.339999999999929,
+        "duration": 11.111110934504758,
+        "runPhase": 0,
+        "walkPhase": 5.009999999999894,
+        "carryPhase": 0,
+        "runDistance": 0,
+        "walkDistance": 3.6071999999999234,
+        "runRemaining": 0,
+        "running": false,
+        "currentSpeed": 1.08
+      },
+      "after": {
+        "x": -12.443200473785401,
+        "z": 2.200000021286009,
+        "distance": 5.3567995262145995,
+        "phase": 4.9599995613098145,
+        "yaw": 1.5707963228212536,
+        "firstRemainingPoint": 0,
+        "arrived": false,
+        "at": 14.959999561309814,
+        "duration": 11.111110934504758,
+        "runPhase": 0,
+        "walkPhase": 7.439999341964722,
+        "carryPhase": 0,
+        "runDistance": 0,
+        "walkDistance": 5.3567995262145995,
+        "runRemaining": 0,
+        "running": false,
+        "currentSpeed": 1.08
+      }
+    },
+    "before": {
+      "resourcesCreated": 2070,
+      "generation": "b348ec26-fd4e-4fed-9540-e947beddbcb0",
+      "rig": {
+        "attachments": [],
+        "poseHash": 316746334
+      }
+    },
+    "ready": {
+      "resourcesCreated": 2172,
+      "rig": {
+        "attachments": [],
+        "poseHash": 316746334
+      },
+      "renderFactories": {
+        "createBuffer": 0,
+        "createTexture": 0,
+        "createSampler": 0,
+        "createBindGroup": 0,
+        "createBindGroupLayout": 0,
+        "createPipelineLayout": 0,
+        "createShaderModule": 0,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 0,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "factories": {
+        "createBuffer": 1304,
+        "createTexture": 30,
+        "createSampler": 31,
+        "createBindGroup": 526,
+        "createBindGroupLayout": 84,
+        "createPipelineLayout": 42,
+        "createShaderModule": 66,
+        "createRenderPipeline": 2,
+        "createRenderPipelineAsync": 42,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      }
+    },
+    "after": {
+      "resourcesCreated": 2172,
+      "rig": {
+        "attachments": [],
+        "poseHash": 316746334
+      },
+      "workers": {
+        "closed": false,
+        "count": 2,
+        "ready": 2,
+        "pending": 0,
+        "native": 2,
+        "nativePreparing": 0,
+        "assets": {
+          "closed": false,
+          "idle": {
+            "idle": 0,
+            "estimatedBytes": 0,
+            "maxBytes": 100663296
+          },
+          "textureFailure": null,
+          "profiles": [
+            {
+              "profile": "youngMale",
+              "ready": true,
+              "textured": true,
+              "refs": 2,
+              "pending": 0
+            }
+          ]
+        }
+      },
+      "renderFactories": {
+        "createBuffer": 0,
+        "createTexture": 0,
+        "createSampler": 0,
+        "createBindGroup": 0,
+        "createBindGroupLayout": 0,
+        "createPipelineLayout": 0,
+        "createShaderModule": 0,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 0,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "factories": {
+        "createBuffer": 1304,
+        "createTexture": 30,
+        "createSampler": 31,
+        "createBindGroup": 526,
+        "createBindGroupLayout": 84,
+        "createPipelineLayout": 42,
+        "createShaderModule": 66,
+        "createRenderPipeline": 2,
+        "createRenderPipelineAsync": 42,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      }
+    },
+    "preparationBlock": {
+      "start": 1794732877323.1848,
+      "end": 1794732879123.2449,
+      "drawFrames": 54
+    },
+    "block": {
+      "start": 1794732880680.88,
+      "end": 1794732882480.95,
+      "committedAt": 1794732880687.79,
+      "drawFrames": 53,
+      "minClock": 13.379999999999928,
+      "maxClock": 14.959999999999894,
+      "resourcesAfterReady": 0
+    },
+    "final": {
+      "gpuErrors": 0
+    },
+    "frames": [
+      {
+        "at": 1794732880716.8,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 66.570068359375,
+        "drawMs": 2.85498046875,
+        "replay": false,
+        "clockElapsed": 13.379999999999928,
+        "safeUntil": 13.379999999999928,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732880750.1501,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.35009765625,
+        "drawMs": 2.869873046875,
+        "replay": true,
+        "clockElapsed": 13.419999999999927,
+        "safeUntil": 13.419999999999927,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732880783.5352,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.385009765625,
+        "drawMs": 1.89990234375,
+        "replay": true,
+        "clockElapsed": 13.439999999999927,
+        "safeUntil": 13.439999999999927,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732880816.9001,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.364990234375,
+        "drawMs": 2.510009765625,
+        "replay": true,
+        "clockElapsed": 13.479999999999926,
+        "safeUntil": 13.479999999999926,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732880850.195,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.294921875,
+        "drawMs": 2.445068359375,
+        "replay": true,
+        "clockElapsed": 13.519999999999925,
+        "safeUntil": 13.519999999999925,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732880883.5251,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.330078125,
+        "drawMs": 2.530029296875,
+        "replay": true,
+        "clockElapsed": 13.539999999999925,
+        "safeUntil": 13.539999999999925,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732880916.875,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.349853515625,
+        "drawMs": 2.385009765625,
+        "replay": true,
+        "clockElapsed": 13.579999999999924,
+        "safeUntil": 13.579999999999924,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732880950.205,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.330078125,
+        "drawMs": 2.4599609375,
+        "replay": true,
+        "clockElapsed": 13.619999999999923,
+        "safeUntil": 13.619999999999923,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732880983.53,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.324951171875,
+        "drawMs": 2.530029296875,
+        "replay": true,
+        "clockElapsed": 13.639999999999922,
+        "safeUntil": 13.639999999999922,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881016.865,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.3349609375,
+        "drawMs": 1.72021484375,
+        "replay": true,
+        "clockElapsed": 13.679999999999922,
+        "safeUntil": 13.679999999999922,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881050.09,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.22509765625,
+        "drawMs": 2.5400390625,
+        "replay": true,
+        "clockElapsed": 13.71999999999992,
+        "safeUntil": 13.71999999999992,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881083.56,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.469970703125,
+        "drawMs": 2.659912109375,
+        "replay": true,
+        "clockElapsed": 13.73999999999992,
+        "safeUntil": 13.73999999999992,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881116.9102,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.35009765625,
+        "drawMs": 2.574951171875,
+        "replay": true,
+        "clockElapsed": 13.77999999999992,
+        "safeUntil": 13.77999999999992,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881150.2002,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.2900390625,
+        "drawMs": 2.094970703125,
+        "replay": true,
+        "clockElapsed": 13.819999999999919,
+        "safeUntil": 13.819999999999919,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881183.5452,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.344970703125,
+        "drawMs": 2.094970703125,
+        "replay": true,
+        "clockElapsed": 13.839999999999918,
+        "safeUntil": 13.839999999999918,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881216.885,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.33984375,
+        "drawMs": 2.41015625,
+        "replay": true,
+        "clockElapsed": 13.879999999999917,
+        "safeUntil": 13.879999999999917,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881250.2002,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.315185546875,
+        "drawMs": 2.4248046875,
+        "replay": true,
+        "clockElapsed": 13.919999999999916,
+        "safeUntil": 13.919999999999916,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881283.5251,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.324951171875,
+        "drawMs": 2.98486328125,
+        "replay": true,
+        "clockElapsed": 13.939999999999916,
+        "safeUntil": 13.939999999999916,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881316.875,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.349853515625,
+        "drawMs": 1.905029296875,
+        "replay": true,
+        "clockElapsed": 13.979999999999915,
+        "safeUntil": 13.979999999999915,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881350.0752,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.2001953125,
+        "drawMs": 2.184814453125,
+        "replay": true,
+        "clockElapsed": 14.019999999999914,
+        "safeUntil": 14.019999999999914,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881383.52,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.44482421875,
+        "drawMs": 1.695068359375,
+        "replay": true,
+        "clockElapsed": 14.039999999999914,
+        "safeUntil": 14.039999999999914,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881416.8352,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.315185546875,
+        "drawMs": 1.724853515625,
+        "replay": true,
+        "clockElapsed": 14.079999999999913,
+        "safeUntil": 14.079999999999913,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881450.155,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.31982421875,
+        "drawMs": 2.235107421875,
+        "replay": true,
+        "clockElapsed": 14.119999999999912,
+        "safeUntil": 14.119999999999912,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881483.51,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.35498046875,
+        "drawMs": 1.97509765625,
+        "replay": true,
+        "clockElapsed": 14.139999999999912,
+        "safeUntil": 14.139999999999912,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881516.83,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.320068359375,
+        "drawMs": 1.85009765625,
+        "replay": true,
+        "clockElapsed": 14.179999999999911,
+        "safeUntil": 14.179999999999911,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881550.2551,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.425048828125,
+        "drawMs": 1.60498046875,
+        "replay": true,
+        "clockElapsed": 14.21999999999991,
+        "safeUntil": 14.21999999999991,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881583.5352,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.280029296875,
+        "drawMs": 2.18994140625,
+        "replay": true,
+        "clockElapsed": 14.23999999999991,
+        "safeUntil": 14.23999999999991,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881616.9102,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.375,
+        "drawMs": 2.18994140625,
+        "replay": true,
+        "clockElapsed": 14.279999999999909,
+        "safeUntil": 14.279999999999909,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881650.145,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.23486328125,
+        "drawMs": 2.0400390625,
+        "replay": true,
+        "clockElapsed": 14.319999999999908,
+        "safeUntil": 14.319999999999908,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881683.54,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.39501953125,
+        "drawMs": 2.27001953125,
+        "replay": true,
+        "clockElapsed": 14.339999999999907,
+        "safeUntil": 14.339999999999907,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881716.87,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.330078125,
+        "drawMs": 1.635009765625,
+        "replay": true,
+        "clockElapsed": 14.379999999999907,
+        "safeUntil": 14.379999999999907,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881750.1501,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.280029296875,
+        "drawMs": 1.7548828125,
+        "replay": true,
+        "clockElapsed": 14.419999999999906,
+        "safeUntil": 14.419999999999906,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881783.665,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.514892578125,
+        "drawMs": 2.304931640625,
+        "replay": true,
+        "clockElapsed": 14.439999999999905,
+        "safeUntil": 14.439999999999905,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881816.9602,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.295166015625,
+        "drawMs": 1.794921875,
+        "replay": true,
+        "clockElapsed": 14.479999999999905,
+        "safeUntil": 14.479999999999905,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881850.25,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.289794921875,
+        "drawMs": 1.830078125,
+        "replay": true,
+        "clockElapsed": 14.519999999999904,
+        "safeUntil": 14.519999999999904,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881883.55,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.300048828125,
+        "drawMs": 2.10498046875,
+        "replay": true,
+        "clockElapsed": 14.539999999999903,
+        "safeUntil": 14.539999999999903,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881916.8901,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.340087890625,
+        "drawMs": 1.534912109375,
+        "replay": true,
+        "clockElapsed": 14.579999999999902,
+        "safeUntil": 14.579999999999902,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881950.215,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.324951171875,
+        "drawMs": 2.070068359375,
+        "replay": true,
+        "clockElapsed": 14.619999999999902,
+        "safeUntil": 14.619999999999902,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732881983.5352,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.320068359375,
+        "drawMs": 1.909912109375,
+        "replay": true,
+        "clockElapsed": 14.639999999999901,
+        "safeUntil": 14.639999999999901,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732882016.895,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.35986328125,
+        "drawMs": 1.8349609375,
+        "replay": true,
+        "clockElapsed": 14.6799999999999,
+        "safeUntil": 14.6799999999999,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732882050.215,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.320068359375,
+        "drawMs": 2.030029296875,
+        "replay": true,
+        "clockElapsed": 14.7199999999999,
+        "safeUntil": 14.7199999999999,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732882083.59,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.375,
+        "drawMs": 1.719970703125,
+        "replay": true,
+        "clockElapsed": 14.739999999999899,
+        "safeUntil": 14.739999999999899,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732882116.885,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.294921875,
+        "drawMs": 1.675048828125,
+        "replay": true,
+        "clockElapsed": 14.779999999999898,
+        "safeUntil": 14.779999999999898,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732882150.205,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.320068359375,
+        "drawMs": 2.06005859375,
+        "replay": true,
+        "clockElapsed": 14.819999999999897,
+        "safeUntil": 14.819999999999897,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732882183.5752,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.3701171875,
+        "drawMs": 1.664794921875,
+        "replay": true,
+        "clockElapsed": 14.839999999999897,
+        "safeUntil": 14.839999999999897,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732882216.925,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.349853515625,
+        "drawMs": 1.64501953125,
+        "replay": true,
+        "clockElapsed": 14.879999999999896,
+        "safeUntil": 14.879999999999896,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732882250.205,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.280029296875,
+        "drawMs": 1.844970703125,
+        "replay": true,
+        "clockElapsed": 14.919999999999895,
+        "safeUntil": 14.919999999999895,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732882283.5452,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.340087890625,
+        "drawMs": 2.054931640625,
+        "replay": true,
+        "clockElapsed": 14.939999999999895,
+        "safeUntil": 14.939999999999895,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732882316.86,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.31494140625,
+        "drawMs": 1.7900390625,
+        "replay": true,
+        "clockElapsed": 14.959999999999894,
+        "safeUntil": 14.959999999999894,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732882350.27,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.409912109375,
+        "drawMs": 1.989990234375,
+        "replay": true,
+        "clockElapsed": 14.959999999999894,
+        "safeUntil": 14.959999999999894,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732882383.58,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.31005859375,
+        "drawMs": 2.014892578125,
+        "replay": true,
+        "clockElapsed": 14.959999999999894,
+        "safeUntil": 14.959999999999894,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732882416.915,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.3349609375,
+        "drawMs": 1.804931640625,
+        "replay": true,
+        "clockElapsed": 14.959999999999894,
+        "safeUntil": 14.959999999999894,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794732882450.195,
+        "sequence": 28,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 13.339999999999929
+        },
+        "intervalMs": 33.280029296875,
+        "drawMs": 2.06494140625,
+        "replay": true,
+        "clockElapsed": 14.959999999999894,
+        "safeUntil": 14.959999999999894,
+        "cameraVersion": null
+      }
+    ],
+    "errors": [],
+    "resourcePreparation": {
+      "transport": "dedicated-native-resource-port",
+      "phase": "running",
+      "fault": null,
+      "pending": 0,
+      "retained": 0
+    },
+    "retirement": {
+      "authorityEpoch": "ffbb231a-1feb-4080-bf3b-a62532ef53e4/1",
+      "session": "first-task-cd2eba1b-8a70-4ceb-815a-9bf8d879a70b",
+      "retirementId": "5a698910-af14-445f-8888-74cb788e2ddc",
+      "sequence": 4,
+      "effectiveTime": 14.959999999999894,
+      "clockSequence": 252
+    },
+    "drained": true
+  },
+  "errors": [],
+  "consoleErrors": [],
+  "httpFailures": [],
+  "requestFailures": []
+}

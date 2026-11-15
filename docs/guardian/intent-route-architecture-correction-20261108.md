@@ -89,6 +89,15 @@ persistencia y coherencia de publicaciones ordinarias siguen pendientes.
 La preparación de 98 recursos en este escenario reducido no cierra el caso
 de 3.123 ni los presupuestos integrados. No cambia ningún cierre de A6.
 
+La [proyección de acciones nativas en Game](e-r3-native-action-game-projection-20261115.md)
+consume ahora el mismo reloj ejecutado y conserva el cuerpo estacionario,
+incluso tras terminar la última ruta. La finalización mantiene tarea y cuerpo
+hasta admitir sus consecuencias; no usa el contador JS ni aplica efectos
+anticipados. Se serializa el progreso semántico, pero restaurar una acción
+sigue exigiendo una admisión estacionaria nueva y se rechaza antes del reset.
+Productor ordinario, consecuencias y restauración siguen pendientes; no cambia
+ningún cierre de A6 ni la aceptación A/B/C.
+
 Hay modificaciones locales previas en simulación, escena, carga y QA. No forman
 parte de los commits de esta corrección ni deben descartarse.
 

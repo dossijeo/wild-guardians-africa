@@ -1,6 +1,4 @@
-import {sameNativeTaskStartReference,nativeTaskStartReferenceFromProposal} from '../world/native-task-start-reference.js';
-import {sameNativeTaskActionReference,nativeTaskActionReferenceFromProposal} from '../world/native-task-action-presentation.js';
-import {sameNativeResumeReference,nativeResumeReferenceFromProposal} from '../world/native-resume-reference.js';
+import {nativeResourceAdmissionProfile} from '../world/native-resource-admission-profiles.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 
 // The existing retained-resource protocol, shared by presentation coordination
@@ -12,7 +10,7 @@ export function createNativeResourcePreparationClient({allocateId,pending,postMe
  function prepareNativeTaskStartResources(resources,options={}){if(resources?.kind!=='native-task-start-proposal')return Promise.reject(TypeError('Expected first-task proposal'));return prepareNativeResources(resources,{...options,deferredStart:options.deferredStart??true},true,true);}
  function prepareNativeTaskActionResources(resources,options={}){if(resources?.kind!=='native-task-action-proposal')return Promise.reject(TypeError('Expected native action proposal'));return prepareNativeResources(resources,{...options,deferredStart:options.deferredStart??true},true,false,true);}
  async function prepareNativeResources(resources,{signal,minSequence=-1,terrainManifest,deferredStart=false}={},resumed=false,starting=false,acting=false){
-  const same=acting?sameNativeTaskActionReference:starting?sameNativeTaskStartReference:sameNativeResumeReference,reference=acting?nativeTaskActionReferenceFromProposal:starting?nativeTaskStartReferenceFromProposal:nativeResumeReferenceFromProposal,templateKey=acting?'preparedTaskActionTemplate':starting?'preparedTaskStartTemplate':'preparedResumeTemplate';
+  const {sameReference:same,reference,templateField:templateKey}=nativeResourceAdmissionProfile(acting?'task-action':starting?'task-start':'resume');
   if(!isRunning()||!hasDirectControl()||signal?.aborted||!Number.isSafeInteger(minSequence)||minSequence< -1)throw Error('Native gate resources require direct draw control');
   if(typeof deferredStart!=='boolean'||deferredStart&&!resumed||(starting||acting)&&!deferredStart)throw TypeError('Invalid native deferred start');
   const id=allocateId();let stage='preparing';

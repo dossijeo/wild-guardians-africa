@@ -75,8 +75,8 @@ test('a stationary action can keep its causal clock after the remaining route is
  const f=fixture();try{const binding=commit(f,prepare(f));assert.equal(f.w.nav_intent_retire_actor(Number(f.state.workers[1].id.split('-').at(-1))),1);synchronize(f);assert.equal(f.w.nav_intent_route_reservation_count(),0);advance(f,f.state.elapsed+.2);assert(f.planner.nativeTaskActionExecution(f.actor).elapsed>.19);assert.equal(f.planner.nativeIntentControlBaseline().routes.length,0);assert(f.control.admitAction(binding.reference).isCurrent());}finally{f.close();}
 });
 
-test('unprojected source actions cannot fall through to legacy Game movement or task consequences',()=>{
- const f=fixture();try{commit(f,prepare(f));const at=f.state.elapsed,body=f.body(1);assert.equal(f.planner.nativeGameExecutionState(),-1);assert.throws(()=>tick(f.state,.1,f.nav),/projection for this intention class/);assert.equal(f.state.elapsed,at);assert.deepEqual(f.body(1),body);assert.equal(f.state.crates.length,0);}finally{f.close();}
+test('the source game projects an issued action without legacy movement or task consequences',()=>{
+ const f=fixture();try{commit(f,prepare(f));const at=f.state.elapsed,body=f.body(1);assert.equal(f.planner.nativeGameExecutionState(),1);tick(f.state,.1,f.nav);assert(f.state.elapsed>at);assert.equal(f.state.workers[0].status,'acting');assert.deepEqual(f.body(1),body);assert.equal(f.state.crates.length,0);}finally{f.close();}
 });
 
 test('action attestation validation rejects a changed source, projection, or guessed early action sequence',()=>{
