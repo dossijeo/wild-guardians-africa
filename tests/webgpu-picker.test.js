@@ -4,6 +4,13 @@ import * as THREE from 'three';
 import {createWebGpuPicker,createCutoutHitTest,webGpuPickerReady} from '../src/rendering/webgpu-picker.js';
 import {confirmedSpellContact,pickedSpellCommand} from '../src/app/spell-placement.js';
 
+test('actor picking excludes retired invisible variants and their old clock callbacks before raycasting',()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(45,1,.1,100),root=new THREE.Group(),geometry=new THREE.BoxGeometry(1,2,1),material=new THREE.MeshBasicMaterial(),live=new THREE.Mesh(geometry,material),retired=new THREE.Mesh(geometry,material),hiddenParent=new THREE.Group(),hiddenChild=new THREE.Mesh(geometry,material);let prepared=0,restored=0;
+ camera.position.set(0,1,10);camera.lookAt(0,1,0);camera.updateProjectionMatrix();live.position.y=1;retired.visible=false;hiddenParent.visible=false;retired.raycast=hiddenChild.raycast=()=>{throw Error('Retired native action has no submitted clock');};hiddenParent.add(hiddenChild);root.add(live,retired,hiddenParent);scene.add(root);
+ const actor={root,preparePick(){prepared++;return ()=>{restored++;};}},state={workers:[{id:'worker-1',status:'carrying'}]},picker=createWebGpuPicker({scene,camera,state,animals:{get:()=>null},workers:{get:()=>actor},cropBounds:()=>[]});
+ try{assert.equal(picker.pick({x:0,y:0}).entityId,'worker-1');assert.equal(prepared,1);assert.equal(restored,1);live.visible=false;assert.equal(picker.pick({x:0,y:0}).entityId,null);assert.equal(restored,2);}finally{geometry.dispose();material.dispose();}
+});
+
 test('grouped terrain remains selectable and occludes entities behind it',()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(45,1,.1,100),group=new THREE.Group(),floor=new THREE.Mesh(new THREE.PlaneGeometry(20,20),new THREE.MeshBasicMaterial({side:THREE.DoubleSide}));
  camera.position.set(0,5,10);camera.lookAt(0,0,0);camera.updateProjectionMatrix();floor.rotation.x=-Math.PI/2;floor.userData.ground=true;group.add(floor);scene.add(group);
