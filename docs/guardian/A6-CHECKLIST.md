@@ -2,7 +2,7 @@
 
 Actualizado: 2026-11-15. IDs acordados en la conversación; no se renumeran al avanzar.
 
-Último incremento del camino crítico: [reloj gráfico de la acción emitida](e-r3-native-action-draw-clock-20261115.md), con fase relativa y selección desde el uniform enviado; clips, paquete retenido y ejecución de partida siguen pendientes.
+Último incremento del camino crítico: [fase de acción sobre el actor residente](e-r3-native-action-actor-phase-20261115.md), con clips, materiales y terreno compartidos; paquete retenido, admisión y ejecución ordinaria siguen pendientes.
 Publicaciones ordinarias y aceptación integrada de personajes autónomos siguen pendientes; no cambia el recuento de cierres.
 
 **Ningún punto principal está cerrado todavía.** Un subpunto marcado como nativo

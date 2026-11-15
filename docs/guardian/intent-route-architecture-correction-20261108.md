@@ -74,6 +74,12 @@ enviado al uniform para selección. Todavía rechaza candidatos pendientes: falt
 clips, paquete retenido/liberación y ejecución/consecuencias de la partida. No
 activa el productor ordinario ni cierra criterios de A6.
 
+La [fase sobre el actor residente](e-r3-native-action-actor-phase-20261115.md)
+ya prepara los clips y el transform fijo usando el roster, materiales y soporte
+de terreno existentes. Conserva el cuerpo y permite cancelar o cargar una
+acción ya emitida como componente. Faltan su paquete retenido, la admisión
+ordinaria y las consecuencias; no cambia el estado de cierre de A6.
+
 Hay modificaciones locales previas en simulación, escena, carga y QA. No forman
 parte de los commits de esta corrección ni deben descartarse.
 

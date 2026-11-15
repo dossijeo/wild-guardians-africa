@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [reloj gráfico de la acción emitida](e-r3-native-action-draw-clock-20261115.md), con fase relativa y selección desde el uniform enviado; clips, paquete retenido y ejecución de partida siguen pendientes.
+Último avance: [fase de acción sobre el actor residente](e-r3-native-action-actor-phase-20261115.md), con clips, materiales y terreno compartidos; paquete retenido, admisión y ejecución ordinaria siguen pendientes.
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio
