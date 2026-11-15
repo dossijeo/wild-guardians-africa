@@ -43,6 +43,13 @@ avances. Sus recibos no autorizan movimiento; conectar el productor/ejecutor
 ordinario y las acciones sigue pendiente. La prueba GPU aún usa una fuente de
 componente y no cierra e-R3/e-R4/f-R4 ni la aceptación A/B/C.
 
+La [ejecución de tareas nativas en Game.tick](e-r3-native-task-game-execution-20261115.md)
+proyecta ya la pose ejecutada del mismo cuerpo, sin movimiento ni polilínea JS,
+para un cohort de tareas previamente admitido. La llegada retiene la reserva y
+solicita recursos de acción sin conceder efectos. Guardar y cargar exige nueva
+admisión. El productor ordinario, admitir esas acciones y las demás clases siguen
+pendientes; los mismos criterios de integración permanecen abiertos.
+
 Hay modificaciones locales previas en simulación, escena, carga y QA. No forman
 parte de los commits de esta corrección ni deben descartarse.
 

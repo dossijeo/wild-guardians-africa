@@ -7,10 +7,11 @@ import {createSpatialIntentBridge} from '../../src/world/wild-engine/spatial-int
 
 const module=new WebAssembly.Module(readFileSync(new URL(
  '../../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
-export function createNativeRouteExecutionFixture({core=null,onNativeWorldResources=null,onData=null,onRelease=null}={}){
+export function createNativeRouteExecutionFixture({core=null,onNativeWorldResources=null,onData=null,onRelease=null,configureState=null}={}){
  const state=deserialize(gunzipSync(readFileSync(new URL(
   '../fixtures/desierto983-d15-partial-state.json.gz',import.meta.url))).toString()),template=structuredClone(state.workers[0]);
  state.workers=[];state.tasks=[];state.plants=[];state.crates=[];state.spells=[];state.raid=null;state.elapsed=10;
+ configureState?.(state);
  if(core){const first=state.villages[0];core.generate(state.seed,Math.floor((first.x+24)/48),
   Math.floor((first.z+24)/48),state.biome,state);}
  const loaded=new Map(),session=createSpatialGameSession(module,state,{

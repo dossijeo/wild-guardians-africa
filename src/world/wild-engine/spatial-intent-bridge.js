@@ -356,7 +356,12 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     session.actorSectorRevision({worker:true});
     const restored=wasm.nav_intent_restore_assigned_tasks();
     if(restored<0)throw Error(`Native assigned-task restoration failed: ${restored}`);
-    for(const worker of state.workers)if(worker.nativeRouteAdmission==='pending-resources'&&wasm.nav_intent_require_route_resources?.(numericId(worker.id))!==1)throw Error('Native saved resource request could not be restored');
+    for(const worker of state.workers)if(worker.nativeRouteAdmission==='pending-resources'||worker.nativeRouteAdmission==='native-task'){
+      if(wasm.nav_intent_require_route_resources?.(numericId(worker.id))!==1)throw Error('Native saved resource request could not be restored');
+      // A save contains the executed position/phases, never a reusable native
+      // route or permission. Re-admission starts from that position on load.
+      if(worker.nativeRouteAdmission==='native-task'){worker.nativeRouteAdmission='pending-resources';worker.status='waiting-task';worker.path=null;worker.running=false;worker.gateWaiting=false;worker.taskApproach=null;}
+    }
     const routed=restored?wasm.nav_intent_replan_pending_routes():0;
     return {restored,routed};
   };
@@ -972,6 +977,36 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     return {...decodeMotionSample(new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_execution_ptr(),18)),
       executedThrough:wasm.nav_intent_effective_time()};
   };
+  const nativeGameExecutionState=()=>{
+    if(typeof wasm.nav_intent_game_execution_state==='function')return wasm.nav_intent_game_execution_state();
+    if(nativeCausalClock())throw Error('Rebuild native task execution projection');
+    return 0;
+  };
+  const advanceNativeGameExecution=(at,{rate=1}={})=>{
+    if(nativeGameExecutionState()!==1||!Number.isFinite(at)||at<owningState.elapsed||!Number.isFinite(rate)||rate<=0||rate>1000000)throw Error('Native task execution cannot advance this game cohort');
+    if(wasm.nav_intent_clock_commit(rate,0)<0)throw Error('Native task clock policy rejected');
+    // No observer runs between the native advance and Game adopting this time.
+    // The new watermark is committed only after the same step's semantic work.
+    const result=wasm.nav_intent_execution_advance(at);if(result<0)throw Error(`Native task execution rejected: ${result}`);
+    return result;
+  };
+  const nativeTaskExecution=actorId=>{
+    const id=typeof actorId==='number'?actorId:numericId(actorId);
+    if(wasm.nav_intent_task_execution_version?.()!==1||wasm.nav_intent_task_execution(id)!==1)return null;
+    const a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_task_execution_ptr(),31));
+    return Object.freeze({kind:'native-task-execution',version:1,nativeRoute:Object.freeze({actorId:a[1],routeHandle:routeHandle(a[4],a[5],a[6]),assignmentSequence:a[7]}),taskId:a[2],targetId:a[3],bodyId:a[8],executedThrough:a[9],requiresResources:a[10]===1,endpoint:Object.freeze({x:a[11],z:a[12]}),...decodeMotionSample(a.slice(13))});
+  };
+  const requestNativeTaskActionResources=(actorId,{kind,duration,heading}={})=>{
+    const code={harvest:0,initial:1,water:2,crate:3,repair:4}[kind];
+    if(code===undefined||!Number.isFinite(duration)||duration<0||!Number.isFinite(heading))throw TypeError('Invalid native task action declaration');
+    syncBoundaryTime();return wasm.nav_intent_task_action_request(numericId(actorId),code,duration,heading)===1;
+  };
+  const nativeTaskActionRequest=actorId=>{
+    const id=typeof actorId==='number'?actorId:numericId(actorId);
+    if(wasm.nav_intent_task_execution_version?.()!==1||wasm.nav_intent_task_action_request_snapshot(id)!==1)return null;
+    const a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_task_action_request_ptr(),14));
+    return Object.freeze({kind:'native-task-action-resource-request',version:1,nativeRoute:Object.freeze({actorId:a[1],routeHandle:routeHandle(a[4],a[5],a[6]),assignmentSequence:a[7]}),taskId:a[2],targetId:a[3],bodyId:a[8],requestedAt:a[9],actionKind:['harvest','initial','water','crate','repair'][a[10]],duration:a[11],heading:a[12],executedThrough:a[13],authorizedAutonomy:false});
+  };
   const prepareNativeRouteMotion=(handle,{radius,urgent=false,flight=false,slow=false,
     carrying=false,recovering=false,incapacitated=false,runRemaining=0,waitForGates=false}={})=>{
     const facts=[urgent,flight,slow,carrying,recovering,incapacitated];
@@ -1189,6 +1224,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
   const projectRouteProgress=state=>{
     let accepted=0;
     for(const actors of [state.workers,state.raid?.animals??[]])for(const actor of actors){
+      if(nativeTaskExecution(actor.id))continue;
       const path=actor.path;
       if(!Array.isArray(path)||path.length>4096||
          path.some(point=>!Number.isFinite(point.x)||!Number.isFinite(point.z)))
@@ -1559,7 +1595,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
     intentChanges,routePoints,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,captureNativeRoutePresentation,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,resumeNativeGateRouteAfterGpuQuiescence,prepareNativeGateResumeProposal,captureNativeGateResumeProposal,cancelNativeGateResumeProposal,revalidateNativeGateResumeProposal,prepareNativeTaskStartProposal,captureNativeTaskStartProposal,revalidateNativeTaskStartProposal,cancelNativeTaskStartProposal,
-    beginNativeRouteExecution,advanceNativeRouteExecution,stopNativeRouteExecution,nativeRouteExecution,
+    beginNativeRouteExecution,advanceNativeRouteExecution,stopNativeRouteExecution,nativeRouteExecution,nativeGameExecutionState,advanceNativeGameExecution,nativeTaskExecution,requestNativeTaskActionResources,nativeTaskActionRequest,
     projectRouteProgress,processEventBoundary,requestReroute,
     registerAttackIntent,planAttackCrop,planAttackWall,replanAttackRoute,
     planRetreatRoute,planHomeRoute,
@@ -2096,6 +2132,18 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     dirty=wasDirty;
     return bridge.requestReroute(worker.id);
   };
+  const adoptNativeTaskExecution=(worker,execution)=>{
+    Object.assign(worker,{x:execution.x,z:execution.z,heading:execution.yaw,runPhase:execution.runPhase,walkPhase:execution.walkPhase,carryPhase:execution.carryPhase,runRemaining:execution.runRemaining,running:execution.running,gateWaiting:!execution.arrived&&execution.currentSpeed===0});
+    projectedPositions.set(numericId(worker.id),[execution.x,execution.z]);
+    if(!Array.isArray(worker.path)||worker.path.length)worker.path=[];
+  };
+  const projectNativeTaskExecution=(state,worker)=>{
+    if(state!==sourceState&&state!==observedTaskState)throw Error('Native task projection belongs to another game');
+    const execution=bridge.nativeTaskExecution(worker.id);if(!execution)return null;
+    const task=state.tasks.find(value=>value.id===worker.taskId);
+    if(!task||numericId(task.id)!==execution.taskId||numericId(task.targetId)!==execution.targetId||task.workerId!==worker.id||execution.executedThrough!==state.elapsed)throw Error('Native task projection is not the executed game boundary');
+    adoptNativeTaskExecution(worker,execution);return execution;
+  };
   const reconcileWorkerRoutes=(state,{navVersion}={})=>{
     if(!Number.isFinite(navVersion))throw TypeError('Expected a navigation revision');
     const changes=bridge.intentChanges();
@@ -2203,17 +2251,18 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
       if(!worker||!worker.taskId||numericId(worker.taskId)!==change.taskId)continue;
       const task=tasks.get(change.taskId);
       if(change.state===1){
-        const coordinates=bridge.routePoints(change.routeHandle);
-        if(!coordinates||coordinates.length<2||coordinates.length%2)
+        const execution=bridge.nativeTaskExecution(worker.id),coordinates=execution?null:bridge.routePoints(change.routeHandle);
+        if(!execution&&(!coordinates||coordinates.length<2||coordinates.length%2))
           throw Error('Native active intention has no valid route');
-        const path=Array.from({length:coordinates.length/2},(_,index)=>
+        const path=execution?[]:Array.from({length:coordinates.length/2},(_,index)=>
           ({x:coordinates[index*2],z:coordinates[index*2+1]}));
-        const endpoint=path.at(-1),target=task&&targetFor(task.targetId);
+        const endpoint=execution?.endpoint??path.at(-1),target=task&&targetFor(task.targetId);
         if(!target)throw Error('Native reroute lost its JS task target');
         const interaction=['repair','initial','water'].includes(task.kind);
         const destination=interaction?{
           id:`native-point-${task.id}`,x:endpoint.x,z:endpoint.z}:target;
-        delete worker.nativeRouteAdmission;worker.path=path;worker.destinationId=destination.id;
+        if(execution){if(execution.executedThrough!==state.elapsed||execution.taskId!==change.taskId||execution.nativeRoute.assignmentSequence!==change.sequence)throw Error('Native task assignment projection is stale');adoptNativeTaskExecution(worker,execution);worker.nativeRouteAdmission='native-task';}else delete worker.nativeRouteAdmission;
+        worker.path=path;worker.destinationId=destination.id;
         worker.pathVersion=navVersion;
         worker.taskApproach=interaction?{taskId:task.id,destination}:null;
         if(worker.status==='waiting-task'){
@@ -2226,7 +2275,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
           notifyWorkerPlanningChange(state,worker);
           if(task)replaceTasks(state,state.tasks.filter(item=>item.id!==task.id));
         }else{
-          worker.path=null;worker.status='waiting-task';if(change.state===6)worker.nativeRouteAdmission='pending-resources';
+          worker.path=null;worker.status='waiting-task';if(change.state===6||worker.nativeRouteAdmission==='native-task')worker.nativeRouteAdmission='pending-resources';
           notifyWorkerPlanningChange(state,worker);
         }
       }else if(change.state===5){
@@ -2495,5 +2544,6 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     beginNativeRouteExecution:bridge.beginNativeRouteExecution,
     advanceNativeRouteExecution:bridge.advanceNativeRouteExecution,
     stopNativeRouteExecution:bridge.stopNativeRouteExecution,nativeRouteExecution:bridge.nativeRouteExecution,
+    nativeGameExecutionState:bridge.nativeGameExecutionState,advanceNativeGameExecution:bridge.advanceNativeGameExecution,nativeTaskExecution:bridge.nativeTaskExecution,projectNativeTaskExecution,requestNativeTaskActionResources:bridge.requestNativeTaskActionResources,nativeTaskActionRequest:bridge.nativeTaskActionRequest,
     discard:bridge.discard,commit:bridge.commit,sequence:bridge.sequence};
 }

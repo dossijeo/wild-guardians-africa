@@ -120,6 +120,7 @@ struct Task {uint64_t id,center,target,assigned;double created,rank;int kind;};
 // actor uses it; speculative task batches never acquire a route handle.
 enum class PlanningState:int {NeedsPlan=0,RouteActive=1,ActionActive=2,
   WaitingUnknown=3,WaitingBlocked=4,Cancelled=5,AwaitingResources=6};
+struct TaskActionResourceRequest {int kind=0;double duration=0,heading=0,requestedAt=0;};
 struct ActiveIntent {
   uint64_t actor=0,task=0,target=0;
   PlanningState state=PlanningState::NeedsPlan;
@@ -142,6 +143,7 @@ struct ActiveIntent {
   int timingMode=0;
   double timingRadius=0;
   int motionFlags=0;double runBudget=0;
+  std::optional<TaskActionResourceRequest> actionRequest;
 };
 struct RouteHold {
   double distance=0,from=0,until=0,delay=0;
@@ -297,6 +299,8 @@ struct IntentState {
   bool executionEnabled=false,bodyDomainActive=false,drainingStops=false,resettingBodies=false;
   std::array<uint64_t,3> executionWorldStamp{};
   std::array<double,18> executionResult{};
+  std::array<double,31> taskExecutionResult{};
+  std::array<double,14> taskActionRequestResult{};
   std::set<uint64_t> stoppedReservationBodies,removingBodies;
   std::set<uint64_t> stoppedGateRouteActors;
   uint64_t executionAdvances=0,executionEvaluations=0,executionBodyUpdates=0,executionStopInvalidations=0;
@@ -497,6 +501,7 @@ void emitIntentChange(IntentState& s,ActiveIntent& intent){
   const uint64_t transitionSequence=++s.intentSequence;
   if(intent.state==PlanningState::AwaitingResources){intent.resourceRequestSequence=transitionSequence;intent.resourceRequestedAt=s.effectiveTime;}
   if(event==IntentEvent::RouteAssigned||event==IntentEvent::RouteReplaced){
+    intent.actionRequest.reset();
     intent.assignmentSequence=transitionSequence;intent.assignedAt=s.effectiveTime;
   }
   s.intentChanges.insert(s.intentChanges.end(),{double(intent.actor),
@@ -511,6 +516,7 @@ void emitIntentChange(IntentState& s,ActiveIntent& intent){
 }
 void releaseGateCrossings(IntentState&,const RouteSlot&);
 void releaseRoute(IntentState& s,ActiveIntent& intent){
+  intent.actionRequest.reset();
   clearRouteDependencies(s,intent);
   if(intent.slot<s.routeSlots.size()){
     RouteSlot& route=s.routeSlots[intent.slot];
@@ -2152,6 +2158,7 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_route_execution(double session,double slot,d
   s.executionResult=route.executionPose;return 1;
 }
 EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_execution_ptr(){return state().executionResult.data();}
+#include "spatial-task-execution.inc"
 EMSCRIPTEN_KEEPALIVE double nav_intent_execution_advances(){return double(state().executionAdvances);}
 EMSCRIPTEN_KEEPALIVE double nav_intent_execution_evaluations(){return double(state().executionEvaluations);}
 EMSCRIPTEN_KEEPALIVE double nav_intent_execution_body_updates(){return double(state().executionBodyUpdates);}
@@ -3341,6 +3348,7 @@ int nav_intent_action_active(double actorId){
   if(!integer(actorId))return 0;
   IntentState& s=state();const auto it=s.activeIntents.find(uint64_t(actorId));
   if(it==s.activeIntents.end()||it->second.state!=PlanningState::RouteActive)return 0;
+  if(it->second.requiresResources)return 0;
   const auto& route=s.routeSlots[it->second.slot];
   if(route.resumable&&route.reserved&&(!route.hasExecution||route.executionPose[6]!=1))return 0;
   if(s.executionEnabled&&route.reserved&&route.hasExecution&&route.executionPose[6]!=1)return 0;

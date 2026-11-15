@@ -1355,7 +1355,7 @@ function reserveAvailableTasks(s,nav){
     planner.reconcileWorkerRoutes(s,{navVersion:nav.version});
     const plan=planner.planIfNeeded(s.elapsed);
     if(plan!==null){
-      planner.commitTaskBatchToState(s,plan,{navVersion:nav.version});
+      planner.commitTaskBatchToState(s,plan,{navVersion:nav.version,...(planner.nativeGameExecutionState?.()===1?{pendingResources:true}:{})});
       planner.reconcileWorkerRoutes(s,{navVersion:nav.version});
     }
     return;
@@ -1448,6 +1448,7 @@ export function workerAtVillageEntry(worker,entry,nav){
   return nav.workerMotionClear?.(worker,entry,radius)??
     nav.segmentClear?.(worker,entry,radius,null,true)??false;
 }
+const taskActionDuration=(kind,speed)=>(kind==='initial'?7.2:kind==='water'?3.4:kind==='harvest'?3.6:kind==='repair'?3.8:1)/speed;
 function updateWorkers(s,dt,nav) {
   nav.dynamicBodies?.sync(s);
   const reserve=()=>{if(!nav.tickProfile)return reserveAvailableTasks(s,nav);const started=performance.now();try{return reserveAvailableTasks(s,nav);}finally{nav.tickProfile.reservations+=performance.now()-started;}};
@@ -1470,6 +1471,7 @@ function updateWorkers(s,dt,nav) {
   };
   const newArrivals=[];
   const nativeTasks=!!nav.intentTaskPlanner;
+  const nativeExecutionActive=nav.intentTaskPlanner?.nativeGameExecutionState?.()===1;
   if(!s.raid&&s.time<300)for(const w of s.workers){
     if(w.status!=='arriving'||w.raidReturn||w.incapacitated||w.fallRemaining>0||w.recovery||contractExpired(w,s)||s.time>=profile(w).end)continue;
     if(!s.structures.some(c=>c.id===w.centerId&&operational(c)))continue;
@@ -1570,6 +1572,17 @@ function updateWorkers(s,dt,nav) {
       const target=findPlant(t.targetId)??findCrate(t.targetId)??s.structures.find(e=>e.id===t.targetId);
       if(!target || ('alive' in target&&(!target.alive||target.blessing))) {replaceTasks(s,s.tasks.filter(q=>q.id!==t.id));w.taskId=null;w.status='idle';w.path=null;notifyWorkerPlanningChange(s,w);continue;}
       if(w.status==='walking') {
+        const executed=nativeExecutionActive?nav.intentTaskPlanner.projectNativeTaskExecution(s,w):null;
+        if(executed){
+          if(executed.arrived){
+            const heading=t.kind==='initial'||t.kind==='water'?Math.atan2(target.x-w.x,target.z-w.z):w.heading;
+            if(!nav.intentTaskPlanner.requestNativeTaskActionResources(w.id,{kind:t.kind,duration:t.kind==='repair'?0:taskActionDuration(t.kind,p.speed),heading}))throw Error('Native task arrival could not request its action resources');
+          }
+          // An executed arrival still owns its body. Resource preparation must
+          // precede action admission and the existing task consequences.
+          continue;
+        }
+        if(nativeExecutionActive)throw Error('Native task has no current execution projection');
         let destination=target;
         if(t.kind==='repair'){
           if(w.taskApproach?.taskId!==t.id||w.path===null){
@@ -1604,7 +1617,7 @@ function updateWorkers(s,dt,nav) {
           motion:{urgent:(urgency?urgency.urgent(w):urgentWork(s,w))}})) {
           if(t.kind==='repair'){completeTask(s,w,t,target,nav);urgency?.invalidate();continue;}
           if(t.kind==='initial'||t.kind==='water')w.heading=Math.atan2(target.x-w.x,target.z-w.z);
-          w.status='acting';w.actionRemaining=(t.kind==='initial'?7.2:t.kind==='water'?3.4:t.kind==='harvest'?3.6:t.kind==='repair'?3.8:1)/p.speed;
+          w.status='acting';w.actionRemaining=taskActionDuration(t.kind,p.speed);
           nav.intentTaskPlanner?.markActionActive(w.id);
           notifyWorkerPlanningChange(s,w);
         }else if(w.path===null){
@@ -1681,10 +1694,22 @@ function prepareClockEvents(s,nav){
   if(s.dayPlan&&!s.dayPlan.done&&s.time>=s.dayPlan.at){s.dayPlan.done=s.postgame||spawnRaid(s,s.dayPlan,nav,true)!==false;}
   if(s.nightPlan&&!s.nightPlan.done&&s.time>=s.nightPlan.at&&(!s.dayPlan||activeRaidEntryPlan(s)!==s.dayPlan)){s.nightPlan.done=!s.nightPlan.group?.length||spawnRaid(s,s.nightPlan,nav)!==false;}
 }
-export function tick(s,seconds,nav) {
+export function tick(s,seconds,nav,{clockRate=1}={}) {
   if(!Number.isFinite(seconds)||seconds<0)throw new Error('Paso temporal inválido');
+  if(!Number.isFinite(clockRate)||clockRate<=0||clockRate>1000000)throw TypeError('Invalid native game clock rate');
+  if(seconds>1e-9&&!s.pauses.length&&!s.result&&!nav.intentTaskPlanner&&s.workers.some(worker=>worker.nativeRouteAdmission!==undefined))throw Error('Native task state requires resource admission before legacy movement');
   let left=seconds;
   while(left>1e-9 && !s.pauses.length && !s.result) {
+    let nativeExecution=nav.intentTaskPlanner?.nativeGameExecutionState?.()??0;
+    if(nativeExecution<0)throw Error('Native game execution still requires projection for this intention class');
+    if(nativeExecution!==0){
+      // Commands received since the last step revoke/replace at the current
+      // boundary, before the old timetable can move a body for another step.
+      reconcileNativeIntents(s,nav);nav.intentTaskPlanner.flushTaskEvents();
+      nativeExecution=nav.intentTaskPlanner.nativeGameExecutionState();
+    }
+    if(nativeExecution<0)throw Error('Native game execution still requires projection for this intention class');
+    if(nativeExecution===1&&(nav.dynamicBodies||s.raid||s.workers.some(w=>!w.taskId||!['walking','waiting-task'].includes(w.status)||w.crateId||w.raidReturn||w.incapacitated||w.recovery||w.fallRemaining>0||contractExpired(w,s))||s.structures.some(structure=>structure.gate&&structure.status!=='ruined')))throw Error('Native task game cohort contains an unsupported mover');
     prepareClockEvents(s,nav);
     // Version-1 saves can contain an active area without exposure bookkeeping.
     // Mark once on restoration; static plants need no per-frame exposure scan.
@@ -1694,6 +1719,10 @@ export function tick(s,seconds,nav) {
     const boundaries=clockEdges.filter(t=>t>s.time+1e-9).map(t=>t-s.time);
     const magicBoundaries=s.spells.filter(a=>a.remaining>1e-9).map(a=>a.remaining);
     const step=Math.min(left,.1,...boundaries,...magicBoundaries);left-=step;
+    if(nativeExecution===1){
+      if(s.workers.some(w=>s.time+step>=profile(w).end))throw Error('Native task game cohort reached an unsupported return boundary');
+      nav.intentTaskPlanner.advanceNativeGameExecution(s.elapsed+step,{rate:clockRate});
+    }
     s.elapsed+=step;
     const nextTime=Math.min(600,s.time+step);
     s.time=clockEdges.find(boundary=>Math.abs(nextTime-boundary)<1e-9)??nextTime;
@@ -1740,6 +1769,7 @@ export function tick(s,seconds,nav) {
     // must not move for time that elapsed before they existed.
     prepareClockEvents(s,nav);
     if(s.time>=600 && !s.raid && !s.result && (!s.nightPlan?.group?.length||s.nightPlan.done))closeNight(s);
+    if(nativeExecution===1&&!['committed','unchanged'].includes(nav.intentTaskPlanner.commitNativeCausalClock({rate:clockRate,paused:!!s.pauses.length||!!s.result}).status))throw Error('Native task step could not commit its causal boundary');
   }
 }
 export function advanceReal(s,seconds,nav,{nightFastForward=true,onTick=null,onClockSegment=null}={}) {
@@ -1750,7 +1780,7 @@ export function advanceReal(s,seconds,nav,{nightFastForward=true,onTick=null,onC
     const speed=nightFastForward&&s.time>=300&&!s.raid?5:1;
     const untilBoundary=Math.min(...clockBoundaries(s).filter(t=>t>s.time+1e-9).map(t=>(t-s.time)/speed));
     const real=Math.min(left,.02,untilBoundary);left-=real;
-    const start=onClockSegment?s.elapsed:0;tick(s,real*speed,nav);
+    const start=onClockSegment?s.elapsed:0;tick(s,real*speed,nav,{clockRate:speed});
     if(onClockSegment&&s.elapsed>start)onClockSegment({start,end:s.elapsed,realDuration:(s.elapsed-start)/speed,rate:speed});
     if(onTick)onTick();
   }
