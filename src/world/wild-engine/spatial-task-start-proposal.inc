@@ -8,7 +8,7 @@ static bool taskStartBodyCurrent(IntentState& s,const PendingNativeMotionDraft& 
     worker!=s.workers.end()&&gateBody(worker->second,body)&&worker->second.body==draft.body&&
     (body.flags&1)&&!(body.flags&2)&&!(draft.route.motionFlags&32)&&body.r==draft.route.radius&&
     body.x==draft.route.originX&&body.z==draft.route.originZ&&worker->second.x==body.x&&worker->second.z==body.z&&
-    !s.reservedBodies.count(draft.body)&&!s.suspendedBodies.count(draft.body);
+    !s.reservedBodies.count(draft.body)&&!s.suspendedBodies.count(draft.body)&&intent.settlementBinding==draft.stationarySource&&(!draft.stationarySource||nativeSettlementBodyCurrent(s,intent));
 }
 EMSCRIPTEN_KEEPALIVE int nav_task_start_proposal_version(){return 1;}
 static int stageNativeTaskStartProposal(double session,double slot,double generation,double requestSequence,
@@ -23,8 +23,9 @@ static int stageNativeTaskStartProposal(double session,double slot,double genera
      !(body.flags&1)||(body.flags&2)||(flags&32)||body.r!=radius||body.x!=source->originX||body.z!=source->originZ||
      worker->second.x!=body.x||worker->second.z!=body.z||
      s.reservedBodies.count(uint64_t(bodyId))||s.suspendedBodies.count(uint64_t(bodyId)))return -3;
+  if(intent.settlementBinding){const auto& h=intent.settlementBinding->actual.header;if(!nativeSettlementBodyCurrent(s,intent)||phaseSeed!=std::array<double,3>{h[13],h[14],h[15]})return -3;}
   PendingNativeMotionDraft draft;draft.slot=uint32_t(slot);draft.generation=uint32_t(generation);draft.body=uint64_t(bodyId);
-  draft.taskIdentity={double(intent.task),double(intent.target)};draft.taskPhaseSeed=phaseSeed;draft.route.points=source->points;
+  draft.taskIdentity={double(intent.task),double(intent.target)};draft.taskPhaseSeed=phaseSeed;draft.stationarySource=intent.settlementBinding;draft.route.points=source->points;
   const int previous=lazy_selected_context();if(previous!=intent.profile)spatial_select_nav_profile_index(intent.profile);
   int result=prepareRouteTiming(draft.route,source->actor,body.x,body.z,s.effectiveTime,radius,2,flags,runBudget,true);
   draft.topology=lazy_route_revision();if(previous!=intent.profile)spatial_select_nav_profile_index(previous);
@@ -32,7 +33,7 @@ static int stageNativeTaskStartProposal(double session,double slot,double genera
   // First admission changes ownership, not the worker's accumulated clip time.
   // Seed the one native timetable before capturing immutable resource samples.
   for(size_t i=0;i<phaseSeed.size();i++)draft.route.motionOffset[i+2]=phaseSeed[i];
-  draft.gates=s.gates;result=proveGateRouteAdmission(s,intent,draft.route,draft.body,body,draft.gates,draft.boundaries,false);
+  draft.gates=s.gates;result=proveGateRouteAdmission(s,intent,draft.route,draft.body,body,draft.gates,draft.boundaries,false,nullptr,draft.stationarySource.get());
   if(result!=1)return result;
   const int staged=stageWorldMutationBoundary(nullptr,0);if(staged!=1)return staged;
   auto& p=s.barrierProposal;p.kind=14;captureNativeMotionRows(draft);const auto& route=draft.route;
@@ -105,6 +106,7 @@ EMSCRIPTEN_KEEPALIVE int nav_task_start_proposal_revalidate(double session,doubl
   const int result=stageNativeTaskStartProposal(session,old.slot,old.generation,old.header[21],double(old.body),old.route.radius,old.route.motionFlags,old.route.runBudget,old.taskPhaseSeed);
   if(result!=1)return result;
   auto& next=*s.barrierProposal.start;
+  if(old.stationarySource!=next.stationarySource){clearWorldMutationProposal(s.barrierProposal);return -2;}
   next.previousStart=NativeTaskStartOrigin{old.header,old.taskIdentity,uint64_t(ticket)};
   next.timeTranslation={2,ticket,double(s.barrierProposal.ticket),old.header[10],old.header[11],next.header[10],next.header[11],
     sameNativeMotionDraft(old,next)?1.:0.,sameNativeMotionGates(s,old,next)?1.:0.,

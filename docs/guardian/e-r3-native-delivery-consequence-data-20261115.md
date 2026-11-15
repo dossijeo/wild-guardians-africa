@@ -1,5 +1,7 @@
 # Datos de la consecuencia de llegada de Carry
 
+Continuación posterior: [relevo de fuente y liquidación nativa](e-r3-native-delivery-settlement-20261115.md). Los datos preparados de este incremento ya se usan en la proyección de fuente; el consumidor gráfico del relevo permanece pendiente.
+
 Sigue al [consumidor Harvest → Carry](e-r3-native-consequence-presentation-20261115.md), bajo el [plan principal](integrated-gpu-migration-plan-20261104.md). Es el primer incremento de la entrega preparada: datos semánticos y cálculo económico común. No implementa ni autoriza todavía el commit nativo de entrega, la variante posterior o su transporte gráfico; ningún cierre A6 cambia.
 
 Se consultó la implementación real de [Flecs v4.0.4, `flecs_defer_set`, `src/stage.c`](https://github.com/SanderMertens/flecs/blob/v4.0.4/src/stage.c#L297), que conserva valores propios de una modificación diferida sin incorporarlos inmediatamente a la entidad. Se aplica el principio de datos preparados propios sobre las reglas existentes de Game; no se incorpora una cola, ECS, base de datos ni dependencia nueva.

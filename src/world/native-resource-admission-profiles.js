@@ -2,11 +2,19 @@ import {nativeResumeReferenceFromProposal,sameNativeResumeReference} from './nat
 import {nativeTaskStartReferenceFromProposal,sameNativeTaskStartReference} from './native-task-start-reference.js';
 import {nativeTaskActionActor,nativeTaskActionReferenceFromProposal,sameNativeTaskActionReference} from './native-task-action-presentation.js';
 import {nativeTaskConsequenceReferenceFromProposal,sameNativeTaskConsequenceReference} from './native-task-consequence.js';
+import {nativeTaskSettlementReferenceFromProposal,sameNativeTaskSettlementReference} from './native-task-settlement.js';
 
 // Transport/resource identities only. Compatibility is reported by the current
 // native revalidation; none of these profiles can issue an execution permission.
 const routeCompatible=translation=>translation.sameFloat32Motion&&translation.sameFloat32Gates;
 const profiles=Object.freeze({
+  'task-settlement':Object.freeze({
+    proposalKind:'native-task-settlement-proposal',templateField:'preparedTaskSettlementTemplate',bindingField:'nativeTaskSettlementBinding',releaseField:'nativeSettlements',
+    reference:nativeTaskSettlementReferenceFromProposal,sameReference:sameNativeTaskSettlementReference,
+    compatible:translation=>translation.sameSourceState,
+    receiptCompatible:(receipt,prepared)=>receipt.nativeTaskSettlementVersion===1&&sameNativeTaskSettlementReference(receipt.preparedTaskSettlementTemplate,prepared),
+    attest(native,reference,preparedReference){const fact=native.nativeTaskSettlementBinding(reference.actorId);if(!fact||!sameNativeTaskSettlementReference(fact.reference,reference)||!sameNativeTaskSettlementReference(fact.preparedReference,preparedReference))throw Error('Native settlement resource association unavailable');return fact;}
+  }),
   'task-consequence':Object.freeze({
     proposalKind:'native-task-consequence-proposal',
     templateField:'preparedTaskConsequenceTemplate',bindingField:'nativeTaskConsequenceBinding',releaseField:'nativeConsequences',

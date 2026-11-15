@@ -1287,6 +1287,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
          }
         let accepted;
         if(message?.type==='IntentBaseline'){
+          if(message.nativeSettlements!==undefined&&(!Array.isArray(message.nativeSettlements)||message.nativeSettlements.length))throw Error('Native settled bodies require prepared graphical admission');
           if(routeControl||message.protocolVersion!==2||!Array.isArray(message.routes)||
              !Number.isFinite(message.effectiveTime))throw Error('Invalid or repeated native intent baseline');
            routeControl=createNativeRouteControl({authorityEpoch:message.authorityEpoch,

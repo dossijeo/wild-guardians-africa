@@ -6,11 +6,12 @@ import {copyNativeTaskActionProgress,nativeTaskActionActor,copyNativeTaskActionR
 import {copyNativeTaskActionAttestation} from '../native-task-action-attestation.js';
 import {copyNativeTaskStartAttestation} from '../native-task-start-attestation.js';
 import {copyNativeTaskConsequenceProposal,copyNativeTaskConsequenceAttestation,copyNativeTaskConsequenceReference} from '../native-task-consequence.js';
+import {copyNativeTaskSettlementReference,copyNativeTaskSettlementProposal,copyNativeTaskSettlementAttestation} from '../native-task-settlement.js';
 import {nativeEntityNumericId as numericId} from '../native-entity-id.js';
 import {copyNativeGatePresentation} from '../native-gate-presentation.js';
 import {centerGeometry,centerServicePoint,centerDeliveryPoint} from '../centers.js';
 import {contractExpired,PROFILES} from '../../simulation/workforce.js';
-import {observeGameEvents,repairCost,prepareHarvestConsequence,harvestConsequenceCurrent,projectNativeHarvestConsequence} from '../../simulation/game.js';
+import {observeGameEvents,repairCost,prepareHarvestConsequence,harvestConsequenceCurrent,projectNativeHarvestConsequence,prepareCrateDeliveryConsequence,crateDeliveryConsequenceCurrent,projectNativeCrateDeliveryConsequence} from '../../simulation/game.js';
 import {BALANCE} from '../../simulation/balance.js';
 import {activeCrops} from '../../simulation/active-crops.js';
 import {workerEntityLookup} from '../../simulation/worker-entity-lookup.js';
@@ -566,9 +567,9 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     const clock=nativeCausalClock();
     if(clock&&(clock.intentSequence!==wasm.nav_intent_transition_sequence()||clock.committedThrough!==wasm.nav_intent_effective_time()))
       throw Error('Commit the native causal clock before attaching a new draw consumer');
-    const pendingTaskRequests=nativeTaskRequestReferences(),pendingActionRequests=nativeTaskActionRestoreReferences(),nativeStartedRoutes=Array.from({length:count},(_,i)=>nativeTaskStartBinding(data[i*6])).filter(Boolean),nativeActions=nativeTaskActionBindings(),nativeConsequences=Array.from({length:count},(_,i)=>nativeTaskConsequenceBinding(data[i*6])).filter(Boolean);
+    const pendingTaskRequests=nativeTaskRequestReferences(),pendingActionRequests=nativeTaskActionRestoreReferences(),nativeStartedRoutes=Array.from({length:count},(_,i)=>nativeTaskStartBinding(data[i*6])).filter(Boolean),nativeActions=nativeTaskActionBindings(),nativeSettlements=nativeTaskSettlementBindings(),nativeConsequences=Array.from({length:count},(_,i)=>nativeTaskConsequenceBinding(data[i*6])).filter(Boolean);
     return {type:'IntentBaseline',protocolVersion:2,authorityEpoch:epoch(),worldBoundary:nativeWorldBoundary(),...(clock?{clock}:{}),
-      sequence:wasm.nav_intent_transition_sequence(),effectiveTime:wasm.nav_intent_effective_time(),...(pendingTaskRequests.length?{pendingTaskRequests}:{}),...(pendingActionRequests.length?{pendingActionRequests}:{}),...(nativeStartedRoutes.length?{nativeStartedRoutes}:{}),...(nativeActions.length?{nativeActions}:{}),...(nativeConsequences.length?{nativeConsequences}:{}),
+      sequence:wasm.nav_intent_transition_sequence(),effectiveTime:wasm.nav_intent_effective_time(),...(pendingTaskRequests.length?{pendingTaskRequests}:{}),...(pendingActionRequests.length?{pendingActionRequests}:{}),...(nativeStartedRoutes.length?{nativeStartedRoutes}:{}),...(nativeActions.length?{nativeActions}:{}),...(nativeConsequences.length?{nativeConsequences}:{}),...(nativeSettlements.length?{nativeSettlements}:{}),
       routes:Array.from({length:count},(_,index)=>{
         const at=index*6;
         return {actorId:data[at],routeHandle:routeHandle(data[at+1],data[at+2],data[at+3]),
@@ -749,7 +750,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     commitWorldBoundary:boundary=>{committedWorldBoundary=boundary;},
     captureWorldProposalResources:boundary=>session.core.captureNativeWorldProposalResources(boundary),
     nativeSuspendedGateRoute:actorId=>nativeSuspendedGateRoute(actorId),nativeRouteTiming,nativeTaskStartBinding,
-    nativeTaskActionBinding:actorId=>nativeTaskActionBinding(actorId),nativeTaskConsequenceBinding:actorId=>nativeTaskConsequenceBinding(actorId)
+    nativeTaskActionBinding:actorId=>nativeTaskActionBinding(actorId),nativeTaskConsequenceBinding:actorId=>nativeTaskConsequenceBinding(actorId),nativeTaskSettlementBinding:actorId=>nativeTaskSettlementBinding(actorId)
   });
   const addNativeBarrierAfterGpuQuiescence=({getPublication,x,z,halfX,halfZ,yaw=0,passMask=0}={})=>{
     if(![x,z,halfX,halfZ,yaw].every(Number.isFinite)||halfX<=0||halfZ<=0||halfX>100||halfZ>100||
@@ -1079,9 +1080,9 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     if(result!==1)return outcome(result===-1?'stale':'unsupported');
     flushNativeIntentControl();return outcome('suspended',{suspendedRoute:nativeSuspendedGateRoute(actorId)});
   };
-  const readTaskConsequenceSource=(actor,ticket=0)=>{
-    if(wasm.nav_task_consequence_source_snapshot(actor,ticket)!==1)throw Error('Native consequence source unavailable');
-    return readTaskActionBindings(1,id=>wasm.nav_task_consequence_source_restore(id,ticket)===1?taskActionRestoreSource(Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_task_action_restore_source_ptr(),8))):null)[0].binding;
+  const readTaskConsequenceSource=(actor,ticket=0,settlement=false)=>{
+    if((settlement?wasm.nav_task_settlement_action_source_snapshot(actor,ticket):wasm.nav_task_consequence_source_snapshot(actor,ticket))!==1)throw Error('Native consequence source unavailable');
+    return readTaskActionBindings(1,id=>(settlement?wasm.nav_task_settlement_action_source_restore(id,ticket):wasm.nav_task_consequence_source_restore(id,ticket))===1?taskActionRestoreSource(Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_task_action_restore_source_ptr(),8))):null)[0].binding;
   };
   // Resource draft only. There is intentionally no predicted assignment log
   // sequence or executable NativeRoutePresentation in this envelope.
@@ -1179,21 +1180,78 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     try{const proposal=captureNativeTaskConsequenceProposal(ticket);if(!proposal)throw Error('Native consequence expired during capture');return outcome('proposed',{proposal});}catch(error){wasm.nav_task_consequence_proposal_cancel(t[0],t[1]);throw error;}
   };
   const cancelNativeTaskConsequenceProposal=ticket=>ticket?.kind==='native-task-consequence-proposal-ticket'&&ticket.authorityEpoch===epoch()&&wasm.nav_task_consequence_proposal_cancel(ticket.session,ticket.ticket)===1;
-  const nativeTaskConsequenceBinding=actorId=>{
+  const readTaskConsequenceBinding=(actorId,ticket=0,settlement=false)=>{
     if(wasm.nav_task_consequence_proposal_version?.()!==1)return null;
-    const actor=typeof actorId==='number'?actorId:numericId(actorId);if(wasm.nav_task_consequence_binding_snapshot(actor)!==1)return null;
+    const actor=typeof actorId==='number'?actorId:numericId(actorId);if((settlement?wasm.nav_task_settlement_source_snapshot(actor,ticket):wasm.nav_task_consequence_binding_snapshot(actor))!==1)return null;
     const a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_task_consequence_binding_ptr(),61));if(a[0]!==1||!a.every(Number.isFinite)||!Number.isSafeInteger(a[60])||a[60]<0||a[60]>1024)throw Error('Invalid native consequence binding');
-    const gateIds=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_task_consequence_binding_ptr()+61*8,a[60])),sourceAction=readTaskConsequenceSource(actor),effect=a.slice(52,60);
+    const gateIds=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_task_consequence_binding_ptr()+61*8,a[60])),sourceAction=readTaskConsequenceSource(actor,ticket,settlement),effect=a.slice(52,60);
     if(effect[0]!==1||effect[1]!==sourceAction.reference.request.taskId||effect[2]!==sourceAction.reference.request.targetId||effect[7]!==sourceAction.actionSequence)throw Error('Native consequence effect differs from its source');
     const ref=(h,ticket)=>copyNativeTaskConsequenceReference({kind:'native-task-consequence-reference',version:1,actorId:h[1],bodyId:h[2],sourceAction,crateId:effect[3],centerId:effect[4],destination:{x:effect[5],z:effect[6]},expectedRouteHandle:routeHandle(wasm.nav_intent_session(),h[20],h[4]),sourceControlSequence:h[23],endTime:h[11],worldBoundary:{version:1,authorityEpoch:epoch(),nativeSession:wasm.nav_intent_session(),ticket,effectiveTime:h[10]}});
     return copyNativeTaskConsequenceAttestation({kind:'native-task-consequence-attestation',version:1,projectionVersion:1,assignmentSequence:a[1],preparedReference:ref(a.slice(4,28),a[2]),reference:ref(a.slice(28,52),a[3]),gateIds});
   };
+  const nativeTaskConsequenceBinding=actorId=>readTaskConsequenceBinding(actorId);
   const nativeDeliveryExecution=actorId=>{
     const actor=typeof actorId==='number'?actorId:numericId(actorId);
     if(wasm.nav_intent_delivery_execution?.(actor)!==1)return null;
     const a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_delivery_execution_ptr(),30)),binding=nativeTaskConsequenceBinding(actor);
     if(a[0]!==1||!a.every(Number.isFinite)||!binding||binding.assignmentSequence!==a[8])throw Error('Invalid native delivery execution');
     return Object.freeze({kind:'native-delivery-execution',version:1,actorId:a[1],bodyId:a[2],crateId:a[3],centerId:a[4],nativeRoute:Object.freeze({actorId:a[1],routeHandle:routeHandle(a[5],a[6],a[7]),assignmentSequence:a[8]}),executedThrough:a[9],sourceTaskId:a[10],sourceTargetId:a[11],binding,...decodeMotionSample(a.slice(12))});
+  };
+  const settlementReference=(h,ticket,sourceCarry)=>copyNativeTaskSettlementReference({kind:'native-task-settlement-reference',version:1,actorId:h[1],bodyId:h[2],crateId:h[3],centerId:h[4],sourceControlSequence:h[6],sourceCarry,
+    worldBoundary:{version:1,authorityEpoch:epoch(),nativeSession:wasm.nav_intent_session(),ticket,effectiveTime:h[17]},pose:{x:h[9],z:h[10],yaw:h[11],radius:h[12],runPhase:h[13],walkPhase:h[14],carryPhase:h[15],runRemaining:h[16]},profile:h[18]});
+  const captureNativeTaskSettlementProposal=ticket=>{
+    if(ticket?.kind!=='native-task-settlement-proposal-ticket'||ticket.authorityEpoch!==epoch()||wasm.nav_task_settlement_proposal_snapshot?.(ticket.session,ticket.ticket)!==1)return null;
+    const h=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_task_settlement_proposal_header_ptr(),24));if(h[0]!==1||!h.every(Number.isFinite))throw Error('Invalid native settlement header');
+    const source=readTaskConsequenceBinding(h[1],ticket.ticket,true),nativeSettlement=settlementReference(h,ticket.ticket,source);
+    return copyNativeTaskSettlementProposal({kind:'native-task-settlement-proposal',version:1,ticket,worldBoundary:nativeSettlement.worldBoundary,nativeSettlement});
+  };
+  const prepareNativeTaskSettlementProposal=source=>{
+    const carry=copyNativeTaskConsequenceAttestation(source),r=carry.reference,outcome=(status,extra={})=>({status,authorizedAutonomy:false,authorizedConsequences:false,...extra});
+    if(r.worldBoundary.authorityEpoch!==epoch())return outcome('stale');if(wasm.nav_task_settlement_proposal_version?.()!==1)throw Error('Rebuild native task settlement');
+    syncBoundaryTime();flushNativeIntentControl();const current=nativeTaskConsequenceBinding(r.actorId);if(!current||JSON.stringify(current)!==JSON.stringify(carry))return outcome('stale');
+    const result=wasm.nav_task_settlement_proposal_stage(r.actorId,r.worldBoundary.nativeSession,carry.assignmentSequence);if(result!==1)return outcome(result===-4?'busy':result===-2?'unsupported':'stale');
+    if(wasm.nav_intent_barrier_proposal_ticket()!==1)throw Error('Native settlement lost its ticket');const t=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6)),ticket={kind:'native-task-settlement-proposal-ticket',authorityEpoch:epoch(),session:t[0],ticket:t[1]};
+    try{return outcome('proposed',{proposal:captureNativeTaskSettlementProposal(ticket)});}catch(error){wasm.nav_task_settlement_proposal_cancel(t[0],t[1]);throw error;}
+  };
+  const cancelNativeTaskSettlementProposal=ticket=>ticket?.kind==='native-task-settlement-proposal-ticket'&&ticket.authorityEpoch===epoch()&&wasm.nav_task_settlement_proposal_cancel(ticket.session,ticket.ticket)===1;
+  const revalidateNativeTaskSettlementProposal=ticket=>{
+    const outcome=(status,extra={})=>({status,authorizedAutonomy:false,authorizedConsequences:false,...extra});
+    if(ticket?.kind!=='native-task-settlement-proposal-ticket'||ticket.authorityEpoch!==epoch())return outcome('stale');syncBoundaryTime();flushNativeIntentControl();
+    const result=wasm.nav_task_settlement_proposal_revalidate(ticket.session,ticket.ticket);if(result!==1)return outcome(result===-4?'busy':'stale');if(wasm.nav_intent_barrier_proposal_ticket()!==1)throw Error('Native settlement revalidation lost its ticket');
+    const t=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6)),next={kind:ticket.kind,authorityEpoch:epoch(),session:t[0],ticket:t[1]};
+    try{const proposal=captureNativeTaskSettlementProposal(next),p=wasm.nav_task_settlement_proposal_time_translation_ptr(next.session,next.ticket);if(!proposal||!p)throw Error('Native settlement revalidation lost its evidence '+JSON.stringify({proposal:!!proposal,pointer:p,next,tuple:t}));const a=Array.from(new Float64Array(wasm.memory.buffer,p,8));if(a[0]!==1||a[1]!==ticket.ticket||a[2]!==next.ticket||a[5]!==proposal.worldBoundary.effectiveTime||!a.every(Number.isFinite)||![0,1].includes(a[7]))throw Error('Invalid native settlement translation');return outcome('revalidated',{proposal,timeTranslation:Object.freeze({kind:'native-task-settlement-time-translation',version:1,previousTicket:ticket,ticket:next,previousStartTime:a[3],startTime:a[5],sameSourceState:a[7]===1})});}catch(error){cancelNativeTaskSettlementProposal(next);throw error;}
+  };
+  const nativeTaskSettlementBinding=actorId=>{
+    const actor=typeof actorId==='number'?actorId:numericId(actorId);if(wasm.nav_task_settlement_binding_snapshot?.(actor)!==1)return null;
+    const a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_task_settlement_binding_ptr(),52));if(a[0]!==1||!a.every(Number.isFinite))throw Error('Invalid native settlement binding');const source=readTaskConsequenceBinding(actor,0,true);
+    return copyNativeTaskSettlementAttestation({kind:'native-task-settlement-attestation',version:1,projectionVersion:1,settlementSequence:a[1],preparedReference:settlementReference(a.slice(4,28),a[2],source),reference:settlementReference(a.slice(28,52),a[3],source)});
+  };
+  const nativeTaskSettlementBindings=()=>{
+    if(wasm.nav_task_settlement_binding_actors===undefined)return Object.freeze([]);const count=wasm.nav_task_settlement_binding_actors();if(!Number.isSafeInteger(count)||count<0||count>32768)throw Error('Invalid native settled body count');
+    const actors=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_task_settlement_binding_ptr(),count));return Object.freeze(actors.map(actor=>{const binding=nativeTaskSettlementBinding(actor);if(!binding)throw Error('Native settled body lost its source');return binding;}));
+  };
+  const nativeSettledWorkerExecution=actorId=>{
+    const binding=nativeTaskSettlementBinding(actorId);if(!binding)return null;const r=binding.reference;
+    return Object.freeze({kind:'native-settled-worker-execution',version:1,actorId:r.actorId,bodyId:r.bodyId,crateId:r.crateId,centerId:r.centerId,binding,executedThrough:wasm.nav_intent_effective_time(),...r.pose});
+  };
+  const startNativeTaskSettlementAfterGpuQuiescence=({actorId,getPublication,prepareResources,signal=null}={})=>{
+    if(typeof prepareResources!=='function'||signal!==null&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Native settlement requires retained resource preparation');
+    const actor=typeof actorId==='number'?actorId:numericId(actorId),state=owningState,worker=state?.workers.find(w=>numericId(w.id)===actor),crate=state?.crates.find(c=>c.id===worker?.crateId),center=state?.structures.find(c=>c.id===worker?.centerId),preview=state&&prepareCrateDeliveryConsequence(state,worker,crate,center),source=nativeTaskConsequenceBinding(actor);
+    if(!preview||preview.status!=='idle'||!source)return Promise.resolve({status:'unsupported',authorizedAutonomy:false,authorizedConsequences:false});
+    const current=()=>owningState===state&&state.workers.includes(worker)&&state.crates.includes(crate)&&state.structures.includes(center)&&worker.nativeRouteAdmission==='native-delivery'&&crateDeliveryConsequenceCurrent(state,worker,crate,center,preview);
+    let candidate=null,translation=null,preparedTicket=null;
+    const protocol={preparedFrameRequired:true,deferred:true,motionKind:'task-settlement',
+      retained(session,ticket){if(!current()||wasm.nav_intent_barrier_proposal_ticket()!==1)return false;const a=new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6);return a[0]===session&&a[1]===ticket&&a[5]===17;},
+      revalidate(session,ticket){if(!current())return {status:'stale'};const result=revalidateNativeTaskSettlementProposal({kind:'native-task-settlement-proposal-ticket',authorityEpoch:epoch(),session,ticket});if(result.status==='revalidated'){candidate=result.proposal;translation=result.timeTranslation;}return result;},
+      timeTranslation:()=>translation,ticket:()=>wasm.nav_intent_barrier_proposal_ticket(),ticketPtr:()=>wasm.nav_intent_barrier_proposal_ticket_ptr(),
+      snapshot:(session,ticket)=>wasm.nav_task_settlement_proposal_snapshot(session,ticket),cancel:(session,ticket)=>wasm.nav_task_settlement_proposal_cancel(session,ticket),release(){},
+      capture(boundary){candidate=captureNativeTaskSettlementProposal({kind:'native-task-settlement-proposal-ticket',authorityEpoch:boundary.authorityEpoch,session:boundary.nativeSession,ticket:boundary.ticket});if(!candidate)throw Error('Native settlement resources unavailable');preparedTicket=candidate.ticket.ticket;return candidate;}};
+    return commitNativeWorldProposal(getPublication,()=>{if(!current())return -2;const p=prepareNativeTaskSettlementProposal(source);return p.status==='proposed'?1:p.status==='busy'?-4:-2;},(mark,...boundary)=>{
+      if(!current())return {status:-2};const status=wasm.nav_task_settlement_proposal_commit_bound(...boundary,preparedTicket);if(status!==1)return {status};mark();
+      projectNativeCrateDeliveryConsequence(state,worker,preview,{nativeSettledWorkerExecution});
+      const binding=nativeTaskSettlementBinding(actor),resources=Object.freeze({version:1,kind:17,phase:'committed',worldBoundary:nativeWorldBoundary(),nativeTaskSettlementBinding:binding});
+      mark({resources,nativeTaskSettlementBinding:binding});return {status:1,value:{resources,nativeTaskSettlementBinding:binding}};
+    },prepareResources,signal,protocol);
   };
   const startNativeTaskConsequenceAfterGpuQuiescence=({actorId,getPublication,prepareResources,signal=null}={})=>{
     if(typeof prepareResources!=='function'||signal!==null&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Native consequence requires retained resource preparation');
@@ -1669,6 +1727,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     beginNativeRouteExecution,advanceNativeRouteExecution,stopNativeRouteExecution,nativeRouteExecution,nativeGameExecutionState,advanceNativeGameExecution,nativeTaskExecution,requestNativeTaskActionResources,nativeTaskActionRequest,
     startNativeTaskActionAfterGpuQuiescence,prepareNativeTaskActionProposal,captureNativeTaskActionProposal,revalidateNativeTaskActionProposal,cancelNativeTaskActionProposal,
     nativeTaskActionBinding,nativeTaskActionBindings,nativeTaskActionExecution,nativeTaskActionRestoreReferences,
+    startNativeTaskSettlementAfterGpuQuiescence,nativeTaskSettlementBinding,nativeTaskSettlementBindings,nativeSettledWorkerExecution,prepareNativeTaskSettlementProposal,captureNativeTaskSettlementProposal,revalidateNativeTaskSettlementProposal,cancelNativeTaskSettlementProposal,
     nativeTaskConsequenceBinding,nativeDeliveryExecution,startNativeTaskConsequenceAfterGpuQuiescence,prepareNativeTaskConsequenceProposal,captureNativeTaskConsequenceProposal,revalidateNativeTaskConsequenceProposal,cancelNativeTaskConsequenceProposal,
     projectRouteProgress,processEventBoundary,requestReroute,
     registerAttackIntent,planAttackCrop,planAttackWall,replanAttackRoute,
@@ -2027,12 +2086,16 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
         id:`native-point-${task.id}`,x:row.approach.x,z:row.approach.z}:target;
       assignments.push({taskId:task.id,workerId:worker.id,path,destination});
     }
+    if(!pendingResources&&assignments.some(a=>bridge.nativeTaskSettlementBinding(a.workerId)))throw Error('Native stationary ownership requires prepared task resources');
     // Validate the JS side before committing WASM. A stale native revision
     // rejects the whole lease; no JS task or worker has changed yet.
     applyConfirmedTaskAssignments(state,assignments,navVersion,{validateOnly:true,pendingResources});
     const committed=pendingResources?bridge.commitResourceRequests():bridge.commit();
     if(committed!==assignments.length){
-      lastPlan=null;bridge.resetFromState(state);
+      lastPlan=null;dirty=true;
+      // A rejected unpublished batch cannot reset bodies/clocks already owned
+      // by the native cohort or invalidate its retained GPU associations.
+      if(!bridge.nativeCausalClock())bridge.resetFromState(state);
       throw Error('Native task proposal became stale before commit');
     }
     const count=applyConfirmedTaskAssignments(state,assignments,navVersion,{pendingResources});
@@ -2226,6 +2289,12 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     if(worker.nativeRouteAdmission!=='native-delivery'||worker.status!=='carrying'||worker.taskId||!crate||crate.delivered||crate.carrierId!==worker.id||!center||center.status!=='intact'||semantic?.version!==1||semantic.crateId!==crate.id||semantic.centerId!==center.id||numericId(crate.id)!==execution.crateId||numericId(center.id)!==execution.centerId||execution.executedThrough!==state.elapsed)throw Error('Native delivery projection is not the executed game boundary');
     adoptNativeTaskExecution(worker,execution);crate.x=worker.x;crate.z=worker.z;return execution;
   };
+  const projectNativeSettledWorkerExecution=(state,worker)=>{
+    if(state!==sourceState&&state!==observedTaskState)throw Error('Native idle projection belongs to another game');const execution=bridge.nativeSettledWorkerExecution(worker.id);if(!execution)return null;
+    const crate=state.crates.find(c=>numericId(c.id)===execution.crateId),pending=worker.status==='waiting-task'&&worker.nativeRouteAdmission==='pending-resources'&&!!worker.taskId&&worker.path===null;
+    if(execution.executedThrough!==state.elapsed||worker.crateId||numericId(worker.centerId)!==execution.centerId||!crate?.delivered||crate.carrierId||!(pending||worker.status==='idle'&&!worker.taskId&&!worker.nativeRouteAdmission&&!worker.path?.length))throw Error('Native idle projection is not the executed game boundary');
+    Object.assign(worker,{x:execution.x,z:execution.z,heading:execution.yaw,runPhase:execution.runPhase,walkPhase:execution.walkPhase,carryPhase:execution.carryPhase,runRemaining:execution.runRemaining,running:false,gateWaiting:false});projectedPositions.set(numericId(worker.id),[worker.x,worker.z]);return execution;
+  };
   const projectNativeTaskActionExecution=(state,worker)=>{
     if(state!==sourceState&&state!==observedTaskState)throw Error('Native action projection belongs to another game');
     const execution=bridge.nativeTaskActionExecution(worker.id);if(!execution)return null;
@@ -2256,6 +2325,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     const targetFor=taskTargetLookup(state);
     for(const change of latest.values()){
       const worker=workers.get(change.actorId);
+      if(worker&&change.state===7){if(!projectNativeSettledWorkerExecution(state,worker))throw Error('Native idle transition lost its body');continue;}
       if(worker&&homeRoutes.has(change.actorId)&&
         ['returning','fleeing','incapacitated'].includes(worker.status)){
         if(change.state===0){
@@ -2659,6 +2729,9 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
       return result;
     },prepareNativeTaskActionProposal:bridge.prepareNativeTaskActionProposal,captureNativeTaskActionProposal:bridge.captureNativeTaskActionProposal,revalidateNativeTaskActionProposal:bridge.revalidateNativeTaskActionProposal,cancelNativeTaskActionProposal:bridge.cancelNativeTaskActionProposal,
     nativeTaskActionBinding:bridge.nativeTaskActionBinding,nativeTaskActionBindings:bridge.nativeTaskActionBindings,nativeTaskActionExecution:bridge.nativeTaskActionExecution,nativeTaskActionRestoreReferences:bridge.nativeTaskActionRestoreReferences,projectNativeTaskActionExecution,
+    async startNativeTaskSettlementAfterGpuQuiescence(options){const owner=bridge.authorityEpoch,result=await bridge.startNativeTaskSettlementAfterGpuQuiescence(options);if(bridge.authorityEpoch===owner&&result.resources){pendingNativeChanges=true;const state=sourceState??observedTaskState,worker=state?.workers.find(w=>numericId(w.id)===result.nativeTaskSettlementBinding.reference.actorId);if(worker)projectNativeSettledWorkerExecution(state,worker);}return result;},
+    projectNativeSettledWorkerExecution,
+    nativeTaskSettlementBinding:bridge.nativeTaskSettlementBinding,nativeTaskSettlementBindings:bridge.nativeTaskSettlementBindings,nativeSettledWorkerExecution:bridge.nativeSettledWorkerExecution,prepareNativeTaskSettlementProposal:bridge.prepareNativeTaskSettlementProposal,captureNativeTaskSettlementProposal:bridge.captureNativeTaskSettlementProposal,revalidateNativeTaskSettlementProposal:bridge.revalidateNativeTaskSettlementProposal,cancelNativeTaskSettlementProposal:bridge.cancelNativeTaskSettlementProposal,
     nativeTaskConsequenceBinding:bridge.nativeTaskConsequenceBinding,nativeDeliveryExecution:bridge.nativeDeliveryExecution,projectNativeDeliveryExecution,
     async startNativeTaskConsequenceAfterGpuQuiescence(options){
       const owner=bridge.authorityEpoch,result=await bridge.startNativeTaskConsequenceAfterGpuQuiescence(options);
