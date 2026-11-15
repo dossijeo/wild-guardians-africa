@@ -92,7 +92,7 @@ test('QA-052/143: founding changes territorial center assignment while current s
   const w=s.workers[0],center=s.structures[0],origin=w.villageId,contract=w.contractDay;
   assert.ok(w.x>10);assert.equal(w.centerId,center.id);
   const payload={units:[{key:'house',kind:'Edificio',min:[0,0,0],max:[.125,.125,.125]}]};
-  Game.foundVillage(s,'new-village','suajili',26,0,payload,nav);
+  Game.foundVillage(s,'new-village',s.culture,26,0,payload,nav);
   const village=s.villages.at(-1);assert.equal(center.villageId,village.id);assert.equal(center.culture,'mapungubwe');
   assert.equal(w.villageId,origin);assert.equal(w.centerId,center.id);assert.equal(w.contractDay,contract);
   const loaded=deserialize(serialize(s));assert.equal(loaded.workers[0].villageId,origin);
@@ -113,7 +113,7 @@ test('QA-052: territorial choice respects full detours and excludes unreachable 
       if(b.x===26){if(scenario==='new-unreachable')return null;if(scenario==='detour')return [{x:100,z:100},{x:b.x,z:b.z}];}
       return nav.path(a,b);
     }};
-    Game.foundVillage(s,'found','suajili',26,0,payload,routes);
+    Game.foundVillage(s,'found',s.culture,26,0,payload,routes);
     assert.equal(s.structures[0].villageId,scenario==='old-unreachable'?s.villages[1].id:s.villages[0].id);
     assert.equal(s.workers[0].villageId,s.villages[0].id);
   }
