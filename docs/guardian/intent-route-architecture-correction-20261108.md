@@ -22,8 +22,10 @@ puede reservar tareas como `AwaitingResources=6` en el mismo registro nativo,
 sin emitir handles ejecutables ni detener el cohort que ya se ejecuta. Replanteo,
 cancelación y restauración conservan esa distinción. El [candidato nativo de primera ruta](e-r3-native-task-start-proposal-20261115.md)
 ya prepara y revalida su tiempo, cuerpo, puertas y reservas antes de emitir la
-asignación real. Falta preparar sus recursos y completar la admisión gráfica;
-no activa la partida ni cierra e-R3/f-R4.
+asignación real. La [asociación de recursos en el slot nativo](e-r3-native-task-start-binding-20261115.md)
+conserva ahora el origen preparado exacto y permite proyectarlo a consumidores
+nuevos junto con su asignación real. Falta preparar sus recursos y completar la
+admisión gráfica; no activa la partida ni cierra e-R3/f-R4.
 
 Hay modificaciones locales previas en simulación, escena, carga y QA. No forman
 parte de los commits de esta corrección ni deben descartarse.

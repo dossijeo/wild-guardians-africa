@@ -1,3 +1,5 @@
+import {copyNativeTaskRequestReference} from '../native-task-request-reference.js';
+import {copyNativeTaskStartAttestation} from '../native-task-start-attestation.js';
 import {sameNativeResumeReference} from '../native-resume-reference.js';
 import {nativeEntityNumericId as numericId} from '../native-entity-id.js';
 import {nativeResumeReferenceFromProposal} from '../native-resume-reference.js';
@@ -365,6 +367,22 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     if(count!==a[12]||!Number.isSafeInteger(count)||count<1)throw Error('Invalid native task resource request');
     return Object.freeze({kind:'native-task-route-request',version:1,actorId:a[1],taskId:a[2],targetId:a[3],requestHandle:Object.freeze({kind:'native-task-route-request-handle',authorityEpoch:epoch(),session:a[4],slot:a[5],generation:a[6]}),requestSequence:a[7],requestedAt:a[8],profile:a[9],origin:Object.freeze({x:a[10],z:a[11]}),points:Float32Array.from(new Float32Array(wasm.memory.buffer,wasm.nav_intent_pending_task_route_points_ptr(a[4],a[5],a[6],a[7]),count*2)),authorizedAutonomy:false});
   };
+  const taskRequestReference=(a,session)=>copyNativeTaskRequestReference({kind:'native-task-route-request-reference',version:1,actorId:a[0],taskId:a[1],targetId:a[2],requestHandle:{kind:'native-task-route-request-handle',authorityEpoch:epoch(),session,slot:a[3],generation:a[4]},requestSequence:a[5],requestedAt:a[6]});
+  const nativeTaskRequestReferences=()=>{
+    if(typeof wasm.nav_intent_task_requests_snapshot!=='function')return [];
+    const count=wasm.nav_intent_task_requests_snapshot();if(count<0||count>32768)throw Error('Invalid native task request snapshot');
+    const rows=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_task_requests_snapshot_ptr(),count*8)),session=wasm.nav_intent_session();
+    return Array.from({length:count},(_,i)=>taskRequestReference(rows.slice(i*8,i*8+8),session));
+  };
+  const nativeTaskStartBinding=actorId=>{
+    if(wasm.nav_task_start_binding_version?.()!==1)return null;
+    const actor=Number.isSafeInteger(actorId)&&actorId>0?actorId:numericId(actorId);if(wasm.nav_task_start_binding_snapshot(actor)!==1)return null;
+    const a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_task_start_binding_snapshot_ptr(),54)),session=wasm.nav_intent_session();
+    if(a[0]!==1||!a.every(Number.isFinite))throw Error('Invalid native start binding snapshot');
+    const ref=(h,ticket)=>({kind:'native-task-start-reference',version:1,actorId:h[1],bodyId:h[2],taskId:a[52],targetId:a[53],requestSequence:h[21],requestedAt:h[22],sourceControlSequence:h[23],endTime:h[11],sourceRequestHandle:{kind:'native-task-route-request-handle',...routeHandle(session,h[20],h[3])},expectedRouteHandle:routeHandle(session,h[20],h[4]),worldBoundary:{version:1,authorityEpoch:epoch(),nativeSession:session,ticket,effectiveTime:h[10]}});
+    const count=wasm.nav_task_start_binding_gates(actor);if(count<0||count>1024)throw Error('Invalid native start binding gates');
+    return copyNativeTaskStartAttestation({reference:ref(a.slice(28,52),a[3]),preparedReference:ref(a.slice(4,28),a[2]),assignmentSequence:a[1],projectionVersion:1,gateIds:Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_result_ptr(),count))});
+  };
   const proposalRoute=row=>{
     const {routeOffset,routeCount}=row,total=wasm.nav_intent_route_point_count();
     if(!Number.isInteger(routeOffset)||!Number.isInteger(routeCount)||routeCount<1||
@@ -468,6 +486,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     if(remaining<=0)return [];
     const data=Array.from(new Float64Array(wasm.memory.buffer,
       wasm.nav_intent_change_ptr()+offset*15*8,remaining*15));
+    const requestReferences=new Map((data.some((value,i)=>i%15===1&&value===6)?nativeTaskRequestReferences():[]).map(value=>[value.actorId,value]));
     const types=['','RouteAssigned','RouteInvalidated','RouteReplaced',
       'IntentChanged','RouteCompleted'];
     return Array.from({length:remaining},(_,index)=>{
@@ -481,7 +500,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
         topologyRevision:data[at+7],sequence:data[at+8],effectiveTime:data[at+9],
         revokedRouteHandle:data[at+12]?
           routeHandle(data[at+10],data[at+11],data[at+12]):null,
-        type:types[data[at+13]],protocolVersion:2,authorityEpoch:epoch()};
+        type:types[data[at+13]],protocolVersion:2,authorityEpoch:epoch(),...(data[at+1]===6?{taskRequest:requestReferences.get(data[at])?.requestSequence===data[at+8]?requestReferences.get(data[at]):null}:{})};
     });
   };
   const nativeCausalClock=()=>{
@@ -520,12 +539,13 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     syncBoundaryTime();
     const count=wasm.nav_intent_control_snapshot();
     if(count<0)throw Error('Native intent control baseline is incoherent');
-    const data=new Float64Array(wasm.memory.buffer,wasm.nav_intent_control_snapshot_ptr(),count*6);
+    const data=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_control_snapshot_ptr(),count*6));
     const clock=nativeCausalClock();
     if(clock&&(clock.intentSequence!==wasm.nav_intent_transition_sequence()||clock.committedThrough!==wasm.nav_intent_effective_time()))
       throw Error('Commit the native causal clock before attaching a new draw consumer');
+    const pendingTaskRequests=nativeTaskRequestReferences(),nativeStartedRoutes=Array.from({length:count},(_,i)=>nativeTaskStartBinding(data[i*6])).filter(Boolean);
     return {type:'IntentBaseline',protocolVersion:2,authorityEpoch:epoch(),worldBoundary:nativeWorldBoundary(),...(clock?{clock}:{}),
-      sequence:wasm.nav_intent_transition_sequence(),effectiveTime:wasm.nav_intent_effective_time(),
+      sequence:wasm.nav_intent_transition_sequence(),effectiveTime:wasm.nav_intent_effective_time(),...(pendingTaskRequests.length?{pendingTaskRequests}:{}),...(nativeStartedRoutes.length?{nativeStartedRoutes}:{}),
       routes:Array.from({length:count},(_,index)=>{
         const at=index*6;
         return {actorId:data[at],routeHandle:routeHandle(data[at+1],data[at+2],data[at+3]),
@@ -1510,7 +1530,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     nativeIntentControlBaseline,nativeWorldResourceBoundary,observeNativeIntentControl,flushNativeIntentControl,nativeCausalClock,commitNativeCausalClock,
     restoreAssignedTasks,restoreAttackIntents,restoreRetreatIntents,
     restoreHomeIntents,
-    proposalRoute,pendingTaskRoute,
+    proposalRoute,pendingTaskRoute,nativeTaskStartBinding,
     getDamagedWalls:()=>getDamaged('wall'),
     getDamagedCenters:()=>getDamaged('center'),
     structureFor:id=>structuresById.get(numericId(id))??null,
@@ -2431,7 +2451,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     nativeCausalClock:bridge.nativeCausalClock,commitNativeCausalClock:bridge.commitNativeCausalClock,
     observeNativeIntentControl:bridge.observeNativeIntentControl,
     flushNativeIntentControl:bridge.flushNativeIntentControl,
-    intentChanges:bridge.intentChanges,pendingTaskRoute:bridge.pendingTaskRoute,routePoints:bridge.routePoints,
+    intentChanges:bridge.intentChanges,pendingTaskRoute:bridge.pendingTaskRoute,nativeTaskStartBinding:bridge.nativeTaskStartBinding,routePoints:bridge.routePoints,
     nativeRouteTiming:bridge.nativeRouteTiming,nativeRouteTimeKnots:bridge.nativeRouteTimeKnots,sampleNativeRoute:bridge.sampleNativeRoute,captureNativeRoutePresentation:bridge.captureNativeRoutePresentation,
     nativeGateRouteSweep:bridge.nativeGateRouteSweep,
     nativeGateMechanism:bridge.nativeGateMechanism,nativeGateMechanismPose:bridge.nativeGateMechanismPose,nativeGateMechanismSegment:bridge.nativeGateMechanismSegment,

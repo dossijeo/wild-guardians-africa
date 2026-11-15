@@ -41,3 +41,15 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_require_route_resources(double actor){
      found->second.state!=PlanningState::NeedsPlan)return 0;
   found->second.requiresResources=true;return 1;
 }
+// Bootstrap projection of pending request identities; no points or permission.
+EMSCRIPTEN_KEEPALIVE int nav_intent_task_requests_snapshot(){
+  auto& s=state();s.pendingTaskControlSnapshot.clear();std::vector<uint64_t> actors;
+  for(const auto& [actor,intent]:s.activeIntents)if(intent.state==PlanningState::AwaitingResources)actors.push_back(actor);
+  std::sort(actors.begin(),actors.end());
+  for(uint64_t actor:actors){const auto& i=s.activeIntents.at(actor);
+    if(pendingTaskRoute(s.session,i.slot,i.generation,double(i.resourceRequestSequence)))
+      s.pendingTaskControlSnapshot.insert(s.pendingTaskControlSnapshot.end(),{double(actor),double(i.task),double(i.target),double(i.slot),double(i.generation),double(i.resourceRequestSequence),i.resourceRequestedAt,double(i.profile)});
+  }
+  return int(s.pendingTaskControlSnapshot.size()/8);
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_intent_task_requests_snapshot_ptr(){return state().pendingTaskControlSnapshot.data();}

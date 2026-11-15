@@ -2,7 +2,7 @@
 
 Actualizado: 2026-11-15. IDs acordados en la conversación; no se renumeran al avanzar.
 
-Último incremento del camino crítico: [candidato de primera ruta desde la tarea nativa](e-r3-native-task-start-proposal-20261115.md).
+Último incremento del camino crítico: [asociación nativa entre recursos preparados y primera asignación](e-r3-native-task-start-binding-20261115.md).
 Publicaciones ordinarias y aceptación integrada de personajes autónomos siguen pendientes; no cambia el recuento de cierres.
 
 **Ningún punto principal está cerrado todavía.** Un subpunto marcado como nativo

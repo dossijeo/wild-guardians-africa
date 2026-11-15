@@ -1224,13 +1224,14 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           if(routeControl||message.protocolVersion!==2||!Array.isArray(message.routes)||
              !Number.isFinite(message.effectiveTime))throw Error('Invalid or repeated native intent baseline');
            routeControl=createNativeRouteControl({authorityEpoch:message.authorityEpoch,
-             initialSequence:message.sequence,initialTime:message.effectiveTime,routes:message.routes});
+             initialSequence:message.sequence,initialTime:message.effectiveTime,routes:message.routes,pendingTaskRequests:message.pendingTaskRequests??[]});
            if(message.consumerToken!==undefined&&(typeof message.consumerToken!=='string'||!message.consumerToken))throw Error('Invalid native consumer identity');
            nativeConsumerToken=message.consumerToken??null;
            if(message.clock)routeControl.acceptClock(message.clock,{baseline:true});
            if(message.worldBoundaryVersion!==undefined&&message.worldBoundaryVersion!==1)throw Error('Unsupported native world resource boundary');
            worldBoundaryRequired=message.worldBoundaryVersion===1;
            nativeWorldBoundary=copyNativeWorldBoundary(message.worldBoundary??null);
+           if(message.nativeStartedRoutes!==undefined)routeControl.installStartedRoutes(nativeWorldBoundary,message.nativeStartedRoutes,{bootstrap:true});
            if(nativeWorldBoundary&&(nativeWorldBoundary.authorityEpoch!==message.authorityEpoch||
               nativeWorldBoundary.nativeSession!==message.clock?.nativeSession||
               nativeWorldBoundary.effectiveTime>message.clock.committedThrough))throw Error('Invalid native world resource baseline');

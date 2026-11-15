@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <limits>
 #include <map>
+#include <memory>
 #include <optional>
 #include <queue>
 #include <set>
@@ -146,7 +147,19 @@ struct RouteHold {
   double distance=0,from=0,until=0,delay=0;
   uint64_t gate=0;
 };
+// Immutable association metadata owned by the current native route version.
+// No geometry, trajectory or second body registry is retained here.
+struct NativeTaskStartOrigin {
+  std::array<double,24> header{};
+  std::array<double,2> taskIdentity{};
+  uint64_t ticket=0;
+};
+struct NativeTaskStartBinding {
+  NativeTaskStartOrigin prepared,actual;
+  uint64_t assignmentSequence=0;
+};
 struct RouteSlot {
+  std::shared_ptr<const NativeTaskStartBinding> startBinding;
   std::vector<float> points;
   // Execution timing belongs to this same versioned route, not another plan.
   // Modes 1 (animal walk) / 2 (worker rules) are static candidates, not autonomy.
@@ -187,6 +200,7 @@ struct PendingNativeMotionDraft {
   std::vector<double> rows;
   std::array<double,24> header{};
   std::array<double,2> taskIdentity{};
+  std::optional<NativeTaskStartOrigin> previousStart;
   // Evidence about the previous native-owned draft, never an execution grant.
   // Kept only in the one current proposal; cancelling it drops the evidence.
   std::array<double,11> timeTranslation{};
@@ -223,6 +237,7 @@ struct IntentState {
   uint64_t nextPlantLease=1,centerRevision=0;
   std::vector<double> changes,results;
   std::array<double,13> pendingTaskRouteResult{};
+  std::vector<double> pendingTaskControlSnapshot,startBindingResult;
   std::vector<float> routes;
   std::vector<std::pair<uint64_t,uint64_t>> proposals;
   std::unordered_map<uint64_t,ActiveIntent> activeIntents;
@@ -509,7 +524,7 @@ void releaseRoute(IntentState& s,ActiveIntent& intent){
       }
       if(route.suspended)s.suspendedBodies.erase(route.reservationBody);
       route.suspended=route.resumable=false;route.motionOffset.fill(0);route.suspendedAt=0;
-      route.active=route.pendingResources=false;route.points.clear();route.distances.clear();route.timingMode=0;
+      route.startBinding.reset();route.active=route.pendingResources=false;route.points.clear();route.distances.clear();route.timingMode=0;
       route.holds.clear();route.waitGate=0;route.gateCandidate=false;route.departureTime=0;
       route.gateReservations.clear();route.gateAdmitted=false;
       route.generation++;

@@ -1,3 +1,6 @@
+import {copyNativeTaskRequestReference,nativeTaskRequestMatchesStart} from '../world/native-task-request-reference.js';
+import {copyNativeTaskStartReference} from '../world/native-task-start-reference.js';
+import {copyNativeTaskStartAttestation,nativeTaskStartAttestationCovers} from '../world/native-task-start-attestation.js';
 import {copyNativeResumeAttestation,nativeResumeAttestationCovers} from '../world/native-resume-attestation.js';
 import {copyNativeResumeReference,sameNativeResumeReference} from '../world/native-resume-reference.js';
 import {copyNativeSuspendedBodyReference,sameNativeSuspendedBodyReference} from '../world/native-suspended-body-reference.js';
@@ -16,13 +19,13 @@ function validHandle(handle,epoch){return handle?.authorityEpoch===epoch&&
 // movement model. No points, bodies, targets or collision predicates live here.
 // Admission resolves a stable record once. Revocation updates that exact record
 // even if preparation has not finished; drawing only reads its time limit.
-export function createNativeRouteControl({authorityEpoch,initialSequence=0,initialTime=null,routes=[]}={}){
+export function createNativeRouteControl({authorityEpoch,initialSequence=0,initialTime=null,routes=[],pendingTaskRequests=[]}={}){
   if(typeof authorityEpoch!=='string'||!authorityEpoch||
      !Number.isSafeInteger(initialSequence)||initialSequence<0||
-     initialTime!==null&&(!Number.isFinite(initialTime)||initialTime<0)||!Array.isArray(routes))
+     initialTime!==null&&(!Number.isFinite(initialTime)||initialTime<0)||!Array.isArray(routes)||!Array.isArray(pendingTaskRequests))
     throw TypeError('Invalid native route control identity');
   const active=new Map(),actors=new Map();
-  const actorContext=actorId=>{let value=actors.get(actorId);if(!value){value={closed:false,latestSequence:0,state:null,current:null,revoked:null,proof:null,resumeProof:null};actors.set(actorId,value);}return value;};
+  const actorContext=actorId=>{let value=actors.get(actorId);if(!value){value={closed:false,latestSequence:0,state:null,current:null,revoked:null,proof:null,resumeProof:null,startProof:null,pendingTaskRequest:null};actors.set(actorId,value);}return value;};
   const matches=(record,reference)=>!!record&&record.actorId===reference.actorId&&record.assignmentSequence===reference.assignmentSequence&&sameHandle(record.handle,reference.routeHandle);
   const assignments=new Set();
   for(const route of routes){
@@ -36,6 +39,10 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       assignmentSequence:route.assignmentSequence,startTime:route.startTime,
       safeUntil:Infinity,lastDrawTime:null,actor};active.set(route.actorId,record);
     actor.current=record;actor.state=1;actor.latestSequence=route.assignmentSequence;
+  }
+  for(const input of pendingTaskRequests){const request=copyNativeTaskRequestReference(input);
+    if(actors.has(request.actorId)||request.requestHandle.authorityEpoch!==authorityEpoch||request.requestSequence>initialSequence||initialTime===null||request.requestedAt>initialTime)throw TypeError('Invalid native pending request baseline');
+    const actor=actorContext(request.actorId);actor.state=6;actor.latestSequence=request.requestSequence;actor.pendingTaskRequest=request;
   }
   let sequence=initialSequence,effectiveTime=initialTime??-Infinity,closed=false,clock=null;
   const counters={accepted:0,revoked:0,oldEpoch:0,admissions:0};
@@ -54,6 +61,8 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
         ['RouteInvalidated','RouteCompleted','RouteReplaced'].includes(event.type)&&!revoked||
         clock&&handle&&handle.session!==clock.nativeSession)
       throw Error('Invalid native route transition identity');
+    const taskRequest=event.state===6&&event.taskRequest?copyNativeTaskRequestReference(event.taskRequest):null;
+    if(taskRequest&&(taskRequest.actorId!==event.actorId||taskRequest.taskId!==event.taskId||taskRequest.targetId!==event.targetId||taskRequest.requestSequence!==event.sequence||taskRequest.requestedAt!==event.effectiveTime||taskRequest.requestHandle.authorityEpoch!==authorityEpoch||clock&&taskRequest.requestHandle.session!==clock.nativeSession))throw Error('Native request event identity mismatch');
     const current=active.get(event.actorId);
     if(current&&revoked&&!sameHandle(current.handle,revoked))
       throw Error('Native route revocation does not match the active version');
@@ -74,10 +83,11 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       current.safeUntil=Math.min(current.safeUntil,event.effectiveTime);
       active.delete(event.actorId);counters.revoked++;
     }
+    const sourceTaskRequest=assigned?actor?.pendingTaskRequest??null:null;
     if(assigned){const record={actorId:event.actorId,handle:Object.freeze({...handle}),
       assignmentSequence:event.sequence,startTime:event.effectiveTime,
-      safeUntil:Infinity,lastDrawTime:null,actor,sourceSuspension};active.set(event.actorId,record);actor.current=record;actor.proof=null;}
-    if(actor){actor.resumeProof=null;actor.latestSequence=event.sequence;actor.state=assigned?1:Number.isInteger(event.state)?event.state:null;
+      safeUntil:Infinity,lastDrawTime:null,actor,sourceSuspension,sourceTaskRequest};active.set(event.actorId,record);actor.current=record;actor.proof=null;}
+    if(actor){actor.startProof=null;actor.pendingTaskRequest=taskRequest;actor.resumeProof=null;actor.latestSequence=event.sequence;actor.state=assigned?1:Number.isInteger(event.state)?event.state:null;
       if(!actor.current&&actor.state!==4&&actor.state!==6){actor.closed=true;actors.delete(event.actorId);}}
     sequence=event.sequence;effectiveTime=event.effectiveTime;counters.accepted++;
     return true;
@@ -96,8 +106,28 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     const record=actor?.current,proof=actor?.resumeProof;
     return !closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.actorId)===actor&&actor.state===1&&active.get(reference.actorId)===record&&!!record&&actor.latestSequence===record.assignmentSequence&&sameHandle(record.handle,reference.expectedRouteHandle)&&record.startTime===proof?.reference.worldBoundary.effectiveTime&&proof?.assignmentSequence===record.assignmentSequence&&nativeResumeAttestationCovers(proof,reference);
   }
+  function startCurrent(reference,actor){
+    const record=actor?.current,proof=actor?.startProof;
+    return !closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.actorId)===actor&&actor.state===1&&active.get(reference.actorId)===record&&!!record&&actor.latestSequence===record.assignmentSequence&&sameHandle(record.handle,reference.expectedRouteHandle)&&proof?.assignmentSequence===record.assignmentSequence&&record.startTime===proof.reference.worldBoundary.effectiveTime&&nativeTaskStartAttestationCovers(proof,reference);
+  }
   return {
     accept,
+    installStartedRoutes(boundary,values=[],{bootstrap=false}={}){
+      boundary=copyNativeWorldBoundary(boundary);
+      if(closed||!clock||typeof bootstrap!=='boolean'||!Array.isArray(values)||values.length>32768||!bootstrap&&(!boundary||boundary.effectiveTime!==clock.committedThrough)||boundary&&(boundary.authorityEpoch!==authorityEpoch||boundary.nativeSession!==clock.nativeSession))throw Error('Invalid native started route boundary');
+      const staged=[],ids=new Set(),bodies=new Set();
+      for(const input of values){const value=copyNativeTaskStartAttestation(input),r=value.reference,actor=actors.get(r.actorId),record=actor?.current,world=r.worldBoundary;
+        if(world.authorityEpoch!==authorityEpoch||world.nativeSession!==clock.nativeSession||world.effectiveTime>clock.committedThrough||boundary&&(world.ticket>boundary.ticket||world.effectiveTime>boundary.effectiveTime)||!bootstrap&&!sameNativeWorldBoundary(world,boundary)||ids.has(r.actorId)||bodies.has(r.bodyId)||!record||actor.closed||actor.state!==1||active.get(r.actorId)!==record||actor.latestSequence!==record.assignmentSequence||record.assignmentSequence!==value.assignmentSequence||!sameHandle(record.handle,r.expectedRouteHandle)||record.startTime!==world.effectiveTime||!bootstrap&&!nativeTaskRequestMatchesStart(record.sourceTaskRequest,r))throw Error('Native start attestation differs from issued route or request');
+        ids.add(r.actorId);bodies.add(r.bodyId);staged.push({actor,value});
+      }
+      for(const {actor,value} of staged)actor.startProof=value;return staged.length;
+    },
+    admitStart(value,{preparingWorldBoundary=null}={}){
+      const reference=copyNativeTaskStartReference(value),actor=actors.get(reference.actorId),boundary=copyNativeWorldBoundary(preparingWorldBoundary);
+      const current=()=>startCurrent(reference,actor),pending=()=>!closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.actorId)===actor&&actor.state===6&&actor.latestSequence===reference.requestSequence&&nativeTaskRequestMatchesStart(actor.pendingTaskRequest,reference)&&sameNativeWorldBoundary(boundary,reference.worldBoundary)&&sequence>=reference.sourceControlSequence&&clock.committedThrough>=reference.worldBoundary.effectiveTime;
+      if(reference.worldBoundary.authorityEpoch!==authorityEpoch||!clock||reference.worldBoundary.nativeSession!==clock.nativeSession||!current()&&!pending()){const error=Error('Native start is obsolete or lacks direct request/assignment proof');error.code='native-start-admission-obsolete';throw error;}
+      counters.admissions++;return Object.freeze({reference,isCurrent:current,isPrepared:()=>current()||pending(),get routeRecord(){return current()?actor.current:null;},get executionEpoch(){return current()?actor.current.startTime:null;},get executionEnd(){return current()?actor.startProof.reference.endTime:null;}});
+    },
     installResumedRoutes(boundary,values=[]){
       boundary=copyNativeWorldBoundary(boundary);
       if(closed||!clock||!boundary||boundary.authorityEpoch!==authorityEpoch||boundary.nativeSession!==clock.nativeSession||boundary.effectiveTime!==clock.committedThrough||!Array.isArray(values)||values.length>32768)throw Error('Invalid native resumed route attestation boundary');
@@ -151,6 +181,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
          clock&&policy&&message.anchorAbsoluteMs<clock.anchorAbsoluteMs||
          message.paused&&message.anchorLogicalTime!==message.committedThrough)
         throw Error('Invalid native causal clock boundary');
+      for(const actor of actors.values())if(actor.pendingTaskRequest&&actor.pendingTaskRequest.requestHandle.session!==message.nativeSession)throw Error('Invalid native pending request session');
       for(const record of active.values()){
         if(record.handle.session!==message.nativeSession)throw Error('Invalid native causal clock session');
         if(record.lastDrawTime!==null&&record.lastDrawTime>message.committedThrough)
