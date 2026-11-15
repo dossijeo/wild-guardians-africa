@@ -139,6 +139,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
       if(closed||!nativeResourcePreparation)return Promise.reject(Error('Native resource preparation unavailable'));
       return nativeResourcePreparation.prepareNativeResumeResources(resources,options);
     },
+    prepareNativeTaskActionResources(resources,options){
+      if(closed||!nativeResourcePreparation)return Promise.reject(Error('Native resource preparation unavailable'));
+      return nativeResourcePreparation.prepareNativeTaskActionResources(resources,options);
+    },
     prepareNativeTaskStartResources(resources,options){
       if(closed||!nativeResourcePreparation)return Promise.reject(Error('Native resource preparation unavailable'));
       return nativeResourcePreparation.prepareNativeTaskStartResources(resources,options);

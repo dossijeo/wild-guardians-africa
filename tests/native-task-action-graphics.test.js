@@ -22,6 +22,7 @@ import {actorAsset} from './helpers/actor-geometry.js';
 import {prepareWorkerClips} from '../src/rendering/worker-clips.js';
 import {installRemoteClockBindings} from '../src/rendering/remote-clock-bindings.js';
 import {floorFloat32} from '../src/float32-time.js';
+import {createWebGpuPicker} from '../src/rendering/webgpu-picker.js';
 
 const fetcher=async url=>{const bytes=await readFile('public'+url);return {ok:true,json:async()=>JSON.parse(bytes),arrayBuffer:async()=>bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength)};};
 async function fixture({bootstrap=false}={}){
@@ -62,6 +63,17 @@ test('a fresh action consumer can roll back to its original materials before adm
 
 test('a changed task or unrelated action receipt cannot finalize a graphical candidate',async()=>{
  const f=await fixture();let part;try{part=await f.roster.prepareNativeTaskActionProposal(f.support,{getPickAge:f.getPickAge});part.activate();const proof=f.commit(),foreign=structuredClone(proof);foreign.reference.request.bodyId++;foreign.preparedReference.request.bodyId++;assert.throws(()=>part.validateCommit({nativeTaskActionBinding:foreign}),/issued source/);assert(part.valid());part.finalize({nativeTaskActionBinding:proof});assert.equal(f.roster.releaseNativeTaskAction(f.actorId,{...proof,actionSequence:proof.actionSequence+1}),false);assert.equal(f.roster.status().native,1);assert.deepEqual(f.errors,[]);}finally{part?.cancel();f.close();}
+});
+
+test('normal on-demand picking follows the stationary action transform and animated body at submitted ages',async()=>{
+ const f=await fixture();let part;try{part=await f.roster.prepareNativeTaskActionProposal(f.support,{getPickAge:f.getPickAge});part.activate();const proof=f.commit();part.finalize({nativeTaskActionBinding:proof});f.flush();const camera=new PerspectiveCamera(45,1,.1,100),{x,z}=proof.reference.origin,y=f.residency.surface(x,z);camera.position.set(x,y+3,z+6);camera.lookAt(x,y+.8,z);camera.updateMatrixWorld(true);const picker=createWebGpuPicker({scene:f.scene,camera,state:f.state,animals:{get:()=>null},workers:f.roster,cropBounds:()=>[]});
+  for(const age of [.1,.8,1.6]){f.pickAge=floorFloat32(age);let hit=null;for(const height of [.7,1,1.3,.4,1.5]){const point=new Vector3(x,y+height,z).project(camera),result=picker.pick({x:point.x,y:point.y});if(result.entityId===f.actorId){hit=result;break;}}assert(hit,'action age '+age+' had no body hit');assert.equal(hit.entityId,f.actorId);}assert.deepEqual(f.errors,[]);
+ }finally{part?.cancel();f.close();}
+});
+
+test('an instantaneous graphical declaration keeps its typed physical clock in the actual shader binding',async()=>{
+ const f=await fixture();let motion,variant;const gpu=new WebGPURenderer({canvas:{width:1,height:1,style:{},addEventListener(){},removeEventListener(){},getContext(){return null;}}});gpu.hasFeature=()=>true;
+ try{const reference=copyNativeTaskActionReference({...f.reference,request:{...f.reference.request,actionKind:'repair',duration:0},endTime:f.reference.startTime});motion=createNativeTaskActionGpuMotion({actorId:f.actorId,support:f.terrain.prepareNativeTaskAction(reference)});const actor=f.roster.get(f.actorId),phases={clipNames:motion.clipNames,clipNode:motion.clipNode,resolve:motion.resolve,sampleClip:()=>motion.sampleClip(0),sampleForClip:(clip,duration)=>motion.sampleForClip(0,clip,duration)};variant=actor.prepareNativeMotionVariant(phases,{clipBakes:[f.bakes.get('Idle')],clip:actor.isBakedRunning()?'Run':'Walk_Skip'});const {mesh,material}=variant.materialAlternatives[0],saved=mesh.material;try{mesh.material=material;const builder=gpu.backend.createNodeBuilder(mesh,gpu);builder.scene=f.scene;builder.camera=new PerspectiveCamera();builder.build();const tags=builder.getBindings().flatMap(g=>g.bindings??[]).flatMap(b=>b.uniforms??[]).map(u=>u.nodeUniform?.node?.[Symbol.for('wild-guardians.remote-clock')]).filter(t=>t?.nativeAction);assert(tags.length>0);assert(tags.every(t=>t.nativeAction.request.duration===0));assert.match(builder.vertexShader,/clamp/);assert.equal(motion.sampleForClip(0,'Idle',f.bakes.get('Idle').meta.duration),0);}finally{mesh.material=saved;}assert.equal(f.planner.nativeTaskActionBinding(f.actorId),null);}finally{variant?.dispose();motion?.dispose();f.close();}
 });
 
 test('stationary action terrain depends on its current foot and rejects changed triangles',async()=>{

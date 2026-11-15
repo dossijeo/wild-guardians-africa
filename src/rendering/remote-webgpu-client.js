@@ -1,6 +1,7 @@
 import {sameNativeTaskStartReference} from '../world/native-task-start-reference.js';
-import {copyNativeTaskActionReference} from '../world/native-task-action-presentation.js';
+import {copyNativeTaskActionReference,sameNativeTaskActionReference} from '../world/native-task-action-presentation.js';
 import {copyNativeTaskStartAttestation} from '../world/native-task-start-attestation.js';
+import {copyNativeTaskActionAttestation} from '../world/native-task-action-attestation.js';
 import {copyNativeResumeAttestation} from '../world/native-resume-attestation.js';
 import {sameNativeResumeReference} from '../world/native-resume-reference.js';
 // The producer owns Three's object graph, never the native GPU device. Only
@@ -396,6 +397,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     },
     whenFrameSettled:()=>pendingFrame?.promise??Promise.resolve(),
     async prepareNativeWorldFrame(metadata,{signal}={}){
+      if(metadata?.nativeTaskActionTemplate&&capabilities.nativeTaskActionVersion!==1)throw Error('Draw owner does not support retained native actions');
       if(metadata?.nativeTaskStartTemplate&&capabilities.nativeTaskStartVersion!==1)throw Error('Draw owner does not support native first task');
       if(metadata?.nativeResumeTemplate&&capabilities.nativeDeferredResumeVersion!==1)throw Error('Draw owner does not support native deferred resume');
       if(!frame)throw Error('No remote GPU frame transaction');
@@ -413,7 +415,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
         if(signal?.aborted)abort();
         if(phase==='aborted'||ready.version!==1||ready.sequence!==packet.sequence||!ready.uploadsSubmitted||!sameNativeWorldBoundary(ready.worldBoundary,worldBoundary))throw Error('Prepared world frame unavailable');
         if(phase==='preparing')phase='ready';
-        return {sequence:packet.sequence,preparedWorldBoundary:worldBoundary,presented,valid:()=>!disposed&&!fatalError&&!committed&&(phase==='ready'||phase==='presented'),commit(boundary,value=null){const starting=!!metadata.nativeTaskStartTemplate,binding=value===null?null:(starting?copyNativeTaskStartAttestation:copyNativeResumeAttestation)(value);if(committed||phase!=='ready'&&phase!=='presented'||(binding?!(starting?metadata.nativeTaskStartTemplate:metadata.nativeResumeTemplate)||!(starting?sameNativeTaskStartReference:sameNativeResumeReference)(binding.preparedReference,starting?metadata.nativeTaskStartTemplate:metadata.nativeResumeTemplate)||!sameNativeWorldBoundary(binding.reference.worldBoundary,boundary):!sameNativeWorldBoundary(boundary,worldBoundary)))return false;committed=true;signal?.removeEventListener('abort',abort);return true;},abort};
+        return {sequence:packet.sequence,preparedWorldBoundary:worldBoundary,presented,valid:()=>!disposed&&!fatalError&&!committed&&(phase==='ready'||phase==='presented'),commit(boundary,value=null){const acting=!!metadata.nativeTaskActionTemplate,starting=!!metadata.nativeTaskStartTemplate,binding=value===null?null:(acting?copyNativeTaskActionAttestation:starting?copyNativeTaskStartAttestation:copyNativeResumeAttestation)(value);if(committed||phase!=='ready'&&phase!=='presented'||(binding?!(acting?metadata.nativeTaskActionTemplate:starting?metadata.nativeTaskStartTemplate:metadata.nativeResumeTemplate)||!(acting?sameNativeTaskActionReference:starting?sameNativeTaskStartReference:sameNativeResumeReference)(binding.preparedReference,acting?metadata.nativeTaskActionTemplate:starting?metadata.nativeTaskStartTemplate:metadata.nativeResumeTemplate)||!sameNativeWorldBoundary(binding.reference.worldBoundary,boundary):!sameNativeWorldBoundary(boundary,worldBoundary)))return false;committed=true;signal?.removeEventListener('abort',abort);return true;},abort};
       }catch(error){abort();throw error;}
     },
     cancelFrame() {

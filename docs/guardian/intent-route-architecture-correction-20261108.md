@@ -80,6 +80,15 @@ de terreno existentes. Conserva el cuerpo y permite cancelar o cargar una
 acción ya emitida como componente. Faltan su paquete retenido, la admisión
 ordinaria y las consecuencias; no cambia el estado de cierre de A6.
 
+La [admisión de acciones con paquete GPU retenido](e-r3-native-task-action-admission-20261115.md)
+ya conecta Surface, puerto de preparación y drenaje GPU directo antes del
+commit nativo. Harvest dibuja en el cuerpo original durante el bloqueo del
+preparador; B continúa y el paquete listo no crea recursos al reproducirse.
+La fuente del ensayo sigue en la página: productor ordinario, consecuencias,
+persistencia y coherencia de publicaciones ordinarias siguen pendientes.
+La preparación de 98 recursos en este escenario reducido no cierra el caso
+de 3.123 ni los presupuestos integrados. No cambia ningún cierre de A6.
+
 Hay modificaciones locales previas en simulación, escena, carga y QA. No forman
 parte de los commits de esta corrección ni deben descartarse.
 

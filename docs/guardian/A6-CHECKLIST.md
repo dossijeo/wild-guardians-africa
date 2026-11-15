@@ -2,7 +2,7 @@
 
 Actualizado: 2026-11-15. IDs acordados en la conversación; no se renumeran al avanzar.
 
-Último incremento del camino crítico: [fase de acción sobre el actor residente](e-r3-native-action-actor-phase-20261115.md), con clips, materiales y terreno compartidos; paquete retenido, admisión y ejecución ordinaria siguen pendientes.
+Último incremento del camino crítico: [admisión de acciones con paquete GPU retenido](e-r3-native-task-action-admission-20261115.md), con drenaje directo y Harvest en GPU real; productor ordinario, consecuencias y persistencia siguen pendientes.
 Publicaciones ordinarias y aceptación integrada de personajes autónomos siguen pendientes; no cambia el recuento de cierres.
 
 **Ningún punto principal está cerrado todavía.** Un subpunto marcado como nativo

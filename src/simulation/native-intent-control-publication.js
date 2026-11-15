@@ -1,5 +1,7 @@
 import {copyNativeTaskStartReference,sameNativeTaskStartReference} from '../world/native-task-start-reference.js';
 import {copyNativeTaskStartAttestation} from '../world/native-task-start-attestation.js';
+import {copyNativeTaskActionReference,sameNativeTaskActionReference} from '../world/native-task-action-presentation.js';
+import {copyNativeTaskActionAttestation} from '../world/native-task-action-attestation.js';
 import {copyNativeResumeAttestation} from '../world/native-resume-attestation.js';
 import {sameNativeResumeReference} from '../world/native-resume-reference.js';
 // Direct authority -> draw transport for the existing native intent protocol.
@@ -172,23 +174,25 @@ export function createNativeIntentControlPublication({port,session,observe,
          session,authorityEpoch,sequence,effectiveTime,fenceId,...(clock?{clockSequence:clock.clockSequence}:{})});}catch(error){fail(error);}
     });
   }
-  function quiesceGpuForMutation({preparedWorldBoundary=null,preparedResumeTemplate=null,preparedTaskStartTemplate=null}={}){
+  function quiesceGpuForMutation({preparedWorldBoundary=null,preparedResumeTemplate=null,preparedTaskStartTemplate=null,preparedTaskActionTemplate=null}={}){
     if(closed||retirement||appliedSequence===null||!clock||clock.intentSequence!==sentSequence||clock.committedThrough!==sentTime)
       return Promise.reject(Error('Native causal mutation boundary is not ready'));
     if(mutationHold||gpuFences.size)return Promise.reject(Error('Native GPU mutation boundary is busy'));
     if(!Number.isSafeInteger(nextMutationFence+1))return Promise.reject(Error('Native mutation fence identity exhausted'));
+    if([preparedResumeTemplate,preparedTaskStartTemplate,preparedTaskActionTemplate].filter(Boolean).length>1)throw Error('Conflicting native prepared templates');
+    if(preparedTaskActionTemplate){preparedTaskActionTemplate=copyNativeTaskActionReference(preparedTaskActionTemplate);if(!preparedWorldBoundary)throw Error('Native action requires a prepared packet');}
     if(preparedTaskStartTemplate){preparedTaskStartTemplate=copyNativeTaskStartReference(preparedTaskStartTemplate);if(preparedResumeTemplate||!preparedWorldBoundary)throw Error('First task requires its own prepared packet');}
     if(preparedResumeTemplate){preparedResumeTemplate=copyNativeResumeReference(preparedResumeTemplate);if(!preparedWorldBoundary)throw Error('Deferred resume requires a prepared packet');}
-    if(preparedWorldBoundary){preparedWorldBoundary=copyNativeWorldBoundary(preparedWorldBoundary);if(!preparedWorldBoundary||preparedWorldBoundary.authorityEpoch!==authorityEpoch||preparedWorldBoundary.nativeSession!==clock.nativeSession||((preparedResumeTemplate||preparedTaskStartTemplate)?preparedWorldBoundary.effectiveTime>sentTime||!sameNativeWorldBoundary((preparedResumeTemplate??preparedTaskStartTemplate).worldBoundary,preparedWorldBoundary)||(preparedResumeTemplate??preparedTaskStartTemplate).sourceControlSequence>sentSequence:preparedWorldBoundary.effectiveTime!==sentTime))throw Error('Invalid prepared native mutation boundary');}
+    if(preparedWorldBoundary){preparedWorldBoundary=copyNativeWorldBoundary(preparedWorldBoundary);if(!preparedWorldBoundary||preparedWorldBoundary.authorityEpoch!==authorityEpoch||preparedWorldBoundary.nativeSession!==clock.nativeSession||((preparedResumeTemplate||preparedTaskStartTemplate||preparedTaskActionTemplate)?preparedWorldBoundary.effectiveTime>sentTime||!sameNativeWorldBoundary((preparedResumeTemplate??preparedTaskStartTemplate??preparedTaskActionTemplate).worldBoundary,preparedWorldBoundary)||(preparedResumeTemplate??preparedTaskStartTemplate??preparedTaskActionTemplate).sourceControlSequence>sentSequence:preparedWorldBoundary.effectiveTime!==sentTime))throw Error('Invalid prepared native mutation boundary');}
     const holdId=++nextMutationFence,sequence=sentSequence,effectiveTime=sentTime,clockSequence=clock.clockSequence;
     return new Promise((resolve,reject)=>{
-      mutationHold={holdId,sequence,effectiveTime,clockSequence,preparedWorldBoundary,preparedResumeTemplate,preparedTaskStartTemplate,resolve,reject,receipt:null,
+      mutationHold={holdId,sequence,effectiveTime,clockSequence,preparedWorldBoundary,preparedResumeTemplate,preparedTaskStartTemplate,preparedTaskActionTemplate,resolve,reject,receipt:null,
         timer:setTimeout(()=>fail(Error('Native mutation fence timed out')),timeoutMs)};
       try{port.postMessage({type:'IntentMutationQuiesce',protocolVersion:2,fenceVersion:1,
-        session,authorityEpoch,holdId,sequence,effectiveTime,clockSequence,...(preparedWorldBoundary?{preparedWorldBoundary}:{}),...(preparedResumeTemplate?{preparedResumeTemplate}:{}),...(preparedTaskStartTemplate?{preparedTaskStartTemplate}:{})});}catch(error){fail(error);}
+        session,authorityEpoch,holdId,sequence,effectiveTime,clockSequence,...(preparedWorldBoundary?{preparedWorldBoundary}:{}),...(preparedResumeTemplate?{preparedResumeTemplate}:{}),...(preparedTaskStartTemplate?{preparedTaskStartTemplate}:{}),...(preparedTaskActionTemplate?{preparedTaskActionTemplate}:{})});}catch(error){fail(error);}
     });
   }
-  function releaseGpuAfterMutation(receipt,{committed=false,worldBoundary:nextBoundary=null,nativeSuspendedBodies=[],nativeResumedRoutes=[],nativeStartedRoutes=[]}={}){
+  function releaseGpuAfterMutation(receipt,{committed=false,worldBoundary:nextBoundary=null,nativeSuspendedBodies=[],nativeResumedRoutes=[],nativeStartedRoutes=[],nativeActions=[]}={}){
     const hold=mutationHold;
     if(typeof committed!=='boolean')throw TypeError('Expected native mutation commit outcome');
     if(closed||!hold||!hold.receipt||receipt!==hold.receipt||!clock||clock.intentSequence!==sentSequence||
@@ -196,7 +200,7 @@ export function createNativeIntentControlPublication({port,session,observe,
       throw Error('Native mutation hold is stale or its causal boundary is unpublished');
     if(committed){
       nextBoundary=copyNativeWorldBoundary(nextBoundary);
-      if(hold.preparedWorldBoundary&&!hold.preparedResumeTemplate&&!hold.preparedTaskStartTemplate&&!sameNativeWorldBoundary(hold.preparedWorldBoundary,nextBoundary))throw Error('Committed world differs from the retained prepared packet');
+      if(hold.preparedWorldBoundary&&!hold.preparedResumeTemplate&&!hold.preparedTaskStartTemplate&&!hold.preparedTaskActionTemplate&&!sameNativeWorldBoundary(hold.preparedWorldBoundary,nextBoundary))throw Error('Committed world differs from the retained prepared packet');
       if(!nextBoundary||nextBoundary.authorityEpoch!==authorityEpoch||nextBoundary.nativeSession!==clock.nativeSession||
          nextBoundary.effectiveTime!==sentTime||worldBoundary&&nextBoundary.ticket<=worldBoundary.ticket)
         throw Error('Native committed mutation requires a new world resource boundary');
@@ -211,12 +215,16 @@ export function createNativeIntentControlPublication({port,session,observe,
     if(!Array.isArray(nativeStartedRoutes)||nativeStartedRoutes.length>32768||!committed&&nativeStartedRoutes.length)throw TypeError('Invalid committed native started routes');
     const starts=nativeStartedRoutes.map(input=>{const value=copyNativeTaskStartAttestation(input),{reference,assignmentSequence}=value;if(!sameNativeWorldBoundary(reference.worldBoundary,nextBoundary)||reference.sourceControlSequence!==hold.sequence||assignmentSequence>sentSequence||actors.has(reference.actorId)||bodyIds.has(reference.bodyId))throw Error('Native started route differs from its authority boundary');actors.add(reference.actorId);bodyIds.add(reference.bodyId);return value;});
     if(starts.length&&!hold.preparedTaskStartTemplate)throw Error('First-task attestation lacks a retained template');
-    if(committed&&hold.preparedTaskStartTemplate&&(bodies.length||resumes.length||starts.length!==1||!sameNativeTaskStartReference(starts[0].preparedReference,hold.preparedTaskStartTemplate)))throw Error('First task differs from its retained template');
-    if(committed&&hold.preparedResumeTemplate&&(starts.length||(bodies.length||resumes.length!==1||!sameNativeResumeReference(resumes[0].preparedReference,hold.preparedResumeTemplate))))throw Error('Deferred resume does not match the retained template');
+    if(!Array.isArray(nativeActions)||nativeActions.length>32768||!committed&&nativeActions.length)throw TypeError('Invalid committed native actions');
+    const actions=nativeActions.map(input=>{const value=copyNativeTaskActionAttestation(input),r=value.reference,q=r.request,actor=q.nativeRoute.actorId;if(!sameNativeWorldBoundary(r.worldBoundary,nextBoundary)||r.sourceControlSequence!==hold.sequence||value.actionSequence>sentSequence||actors.has(actor)||bodyIds.has(q.bodyId))throw Error('Native action differs from its authority boundary');actors.add(actor);bodyIds.add(q.bodyId);return value;});
+    if(actions.length&&!hold.preparedTaskActionTemplate)throw Error('Native action lacks its retained template');
+    if(committed&&hold.preparedTaskActionTemplate&&(bodies.length||resumes.length||starts.length||actions.length!==1||!sameNativeTaskActionReference(actions[0].preparedReference,hold.preparedTaskActionTemplate)))throw Error('Native action differs from its retained template');
+    if(committed&&hold.preparedTaskStartTemplate&&(actions.length||bodies.length||resumes.length||starts.length!==1||!sameNativeTaskStartReference(starts[0].preparedReference,hold.preparedTaskStartTemplate)))throw Error('First task differs from its retained template');
+    if(committed&&hold.preparedResumeTemplate&&(actions.length||starts.length||(bodies.length||resumes.length!==1||!sameNativeResumeReference(resumes[0].preparedReference,hold.preparedResumeTemplate))))throw Error('Deferred resume does not match the retained template');
     port.postMessage({type:'IntentMutationRelease',protocolVersion:2,fenceVersion:1,session,authorityEpoch,
       holdId:hold.holdId,heldSequence:hold.sequence,heldTime:hold.effectiveTime,heldClockSequence:hold.clockSequence,
       sequence:sentSequence,effectiveTime:sentTime,clockSequence:clock.clockSequence,committed,
-      ...(committed?{worldBoundary:nextBoundary,...(bodies.length?{nativeSuspendedBodies:bodies}:{}),...(resumes.length?{nativeResumedRoutes:resumes}:{}),...(starts.length?{nativeStartedRoutes:starts}:{})}:{})});
+      ...(committed?{worldBoundary:nextBoundary,...(bodies.length?{nativeSuspendedBodies:bodies}:{}),...(resumes.length?{nativeResumedRoutes:resumes}:{}),...(starts.length?{nativeStartedRoutes:starts}:{}),...(actions.length?{nativeActions:actions}:{})}:{})});
     if(committed)worldBoundary=nextBoundary;
     clearTimeout(hold.timer);mutationHold=null;return true;
   }

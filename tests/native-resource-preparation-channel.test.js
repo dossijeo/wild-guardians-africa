@@ -5,6 +5,9 @@ import {createNativeResourcePreparationConnection} from '../src/simulation/nativ
 import {attachNativeResourcePreparationEndpoint} from '../src/rendering/native-resource-preparation-receiver.js';
 import {nativeTaskRequestFixture} from './helpers/native-task-resource-requests.js';
 import {nativeTaskStartReferenceFromProposal} from '../src/world/native-task-start-reference.js';
+import {createNativeTaskGameFixture} from './helpers/native-task-game-execution.js';
+import {tick} from '../src/simulation/game.js';
+import {nativeTaskActionReferenceFromProposal} from '../src/world/native-task-action-presentation.js';
 
 const boundary={version:1,authorityEpoch:'source',nativeSession:1,ticket:3,effectiveTime:10};
 const resource=()=>({version:1,kind:12,phase:'proposal',worldBoundary:{...boundary}});
@@ -28,6 +31,17 @@ test('a genuine first-task declaration crosses the retained endpoint while indep
   await assert.rejects(f.connection.prepareNativeTaskStartResources(proposal),/already pending/);
   const commit={worldBoundary:proposal.worldBoundary};assert(handle.commit(commit));assert.equal(handle.commit(commit),false);await flush();assert.deepEqual(committed,commit);assert.equal(f.connection.status().retained,0);assert.deepEqual(f.errors,[]);
  }finally{finish.resolve();f.close();native.close();}
+});
+
+test('an actual arrived action declaration retains its own resource class through the existing port and refresh',async()=>{
+ const native=createNativeTaskGameFixture();tick(native.state,native.proposals[0].endTime-native.state.elapsed+.05,native.nav);const actor=native.state.workers[0].id,proposal=native.planner.prepareNativeTaskActionProposal(native.planner.nativeTaskActionRequest(actor)).proposal;let current=proposal,prepared=0,invalidated=0,committed;
+ const f=setup({prepare:async(kind,resources,options)=>{assert.equal(kind,'prepareNativeTaskActionResources');assert.equal(options.deferredStart,true);assert.equal(resources.kind,'native-task-action-proposal');prepared++;return {get preparedWorldBoundary(){return current.worldBoundary;},get preparedTaskActionTemplate(){return nativeTaskActionReferenceFromProposal(current);},valid:()=>true,invalidate(){invalidated++;return true;},refresh(next){current=next;return true;},commit(data){committed=data;return true;},abort(){}};}});
+ try{await f.connection.ready;const handle=await f.connection.prepareNativeTaskActionResources(proposal);assert(handle.valid());assert.deepEqual(handle.preparedTaskActionTemplate,nativeTaskActionReferenceFromProposal(proposal));assert.equal(native.planner.nativeTaskActionBinding(actor),null);assert(handle.invalidate());native.state.elapsed+=.2;native.planner.advanceNativeRouteExecution(native.state.elapsed);native.planner.commitNativeCausalClock();const next=native.planner.revalidateNativeTaskActionProposal(proposal.ticket).proposal;assert(await handle.refresh(next));assert.deepEqual(handle.preparedTaskActionTemplate,nativeTaskActionReferenceFromProposal(next));assert.equal(prepared,1);assert.equal(invalidated,1);assert(handle.commit({worldBoundary:next.worldBoundary}));await flush();assert.deepEqual(committed,{worldBoundary:next.worldBoundary});assert.equal(f.connection.status().retained,0);assert.deepEqual(f.errors,[]);}finally{f.close();native.close();}
+});
+
+test('the action resource port rejects a template from another declaration',async()=>{
+ const native=createNativeTaskGameFixture();tick(native.state,native.proposals[0].endTime-native.state.elapsed+.05,native.nav);const proposal=native.planner.prepareNativeTaskActionProposal(native.planner.nativeTaskActionRequest(native.state.workers[0].id)).proposal;
+ const f=setup({prepare:async()=>({preparedWorldBoundary:proposal.worldBoundary,preparedTaskActionTemplate:{},abort(){}})});try{await f.connection.ready;await assert.rejects(f.connection.prepareNativeTaskActionResources(proposal),/template receipt/);assert.equal(f.connection.status().retained,0);assert.equal(native.planner.nativeTaskActionBindings().length,0);}finally{f.close();native.close();}
 });
 
 test('abort during preparation disposes a handle that arrives late and permits a later request',async()=>{

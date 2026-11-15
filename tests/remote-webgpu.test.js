@@ -14,6 +14,7 @@ import {releaseTask,notifyWorkerPlanningChange} from '../src/simulation/tasks.js
 import {createNativeTaskGameFixture} from './helpers/native-task-game-execution.js';
 import {tick} from '../src/simulation/game.js';
 import {nativeTaskActionReferenceFromProposal} from '../src/world/native-task-action-presentation.js';
+import {copyNativeTaskActionResources} from '../src/world/native-task-action-attestation.js';
 import {floorFloat32} from '../src/float32-time.js';
 
 function pair() {
@@ -64,6 +65,36 @@ test('an action reaching a rounded absolute end submits the terminal declared ph
 
 test('action clocks fail closed when the draw owner lacks their capability',async()=>{
  const f=await fixture();try{assert.throws(()=>f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'relative',epoch:10,nativeAction:{}}),/does not support/);assert.equal(f.client.inspect().clockBindings,0);}finally{f.client.dispose();await f.host.dispose();}
+});
+
+for(const mode of ['exact','late','missing-template','missing-attestation','cancel-during-drain'])test('native action admission requires its retained packet and actual direct identity ('+mode+')',async()=>{
+ const native=createNativeTaskGameFixture();tick(native.state,native.proposals[0].endTime-native.state.elapsed+.05,native.nav);
+ const planner=native.planner,actor=native.state.workers[0].id,[sourcePort,drawPort]=pair(),f=await fixture({capabilities:{width:20,height:10,format:'rgba8unorm',nativeTaskActionClockVersion:1,nativeTaskActionVersion:1}},{intentControl:{port:drawPort,session:'action-admission'},absoluteNow:()=>Number.MAX_SAFE_INTEGER});let source,prepared,reference;
+ try{
+  source=createNativeIntentControlPublication({port:sourcePort,session:'action-admission',observe:planner.observeNativeIntentControl});await source.ready;
+  const start=native.state.elapsed,b=planner.nativeIntentControlBaseline().routes.find(r=>r.actorId!==Number(actor.split('-').at(-1))),bRef={actorId:b.actorId,routeHandle:b.routeHandle,assignmentSequence:b.assignmentSequence},clock={version:1,epoch:0,elapsed:start,safeUntil:start+10,anchorAbsoluteMs:0,paused:false,segments:[{start,end:start+10,rate:1,realDuration:10}]};
+  f.client.registerClockBinding(f.buffer,{byteOffset:4,semantic:'relative',epoch:b.startTime,nativeRoute:bRef});
+  const shown=f.frame(1,{clock});await flush();await f.host.idle();f.host.present();await shown;
+  const advance=dt=>{native.state.elapsed+=dt;assert.equal(planner.advanceNativeRouteExecution(native.state.elapsed).status,'advanced');planner.commitNativeCausalClock();};
+  const quiesce=source.quiesceGpuForMutation;source.quiesceGpuForMutation=async options=>{const receipt=await quiesce(options);if(mode==='late')advance(.02);if(mode==='cancel-during-drain'){releaseTask(native.state,native.state.workers[0]);native.state.workers[0].status='idle';notifyWorkerPlanningChange(native.state,native.state.workers[0]);planner.flushTaskEvents();planner.commitNativeCausalClock();}return receipt;};
+  if(mode==='missing-attestation'){const release=source.releaseGpuAfterMutation;source.releaseGpuAfterMutation=(receipt,options)=>release(receipt,{...options,nativeActions:[]});}
+  const body=native.body(1),other=native.body(3),request=planner.nativeTaskActionRequest(actor),result=await planner.startNativeTaskActionAfterGpuQuiescence({getPublication:()=>source,request,prepareResources:async({resources,proposedWorldBoundary})=>{
+   reference=nativeTaskActionReferenceFromProposal(resources);assert.equal(planner.nativeTaskActionBinding(actor),null);f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'relative',epoch:resources.startTime,nativeAction:reference});
+   prepared=await preparedWorldDraw({...f,clock,...(mode==='missing-template'?{}:{actionTemplate:reference})},proposedWorldBoundary);
+   f.host.present();assert.equal(planner.nativeTaskActionBinding(actor),null);assert.deepEqual(native.body(1),body);if(mode==='late')advance(.3);
+   return {preparedWorldBoundary:prepared.preparedWorldBoundary,preparedTaskActionTemplate:reference,valid:prepared.valid,commit:data=>prepared.commit(data.worldBoundary,data.nativeTaskActionBinding),abort:prepared.abort};
+  }});
+  if(['exact','late'].includes(mode)){assert.equal(result.status,'committed',JSON.stringify(result));assert.deepEqual(copyNativeTaskActionResources(result.resources),result.resources);assert.equal(result.resources.kind,15);assert.throws(()=>copyNativeTaskActionResources({...result.resources,kind:14}));assert.throws(()=>copyNativeTaskActionResources({...result.resources,worldBoundary:{...result.resources.worldBoundary,ticket:result.resources.worldBoundary.ticket+1}}));await flush();f.host.present();await prepared.presented;const proof=planner.nativeTaskActionBinding(actor),pick=captureNativeRoutePickFrame(f.host.inspect());assert.equal(pick.getActionElapsed(reference),0);assert.equal(pick.getActionExecutionTime(reference),proof.reference.startTime);assert.deepEqual(native.body(1),body);assert.equal(planner.nativeRouteTiming(reference.request.nativeRoute.routeHandle),null);assert.equal(native.state.crates.length,0);if(mode==='late'){assert(proof.reference.startTime>reference.startTime+.3);assert(Math.hypot(native.body(3).x-other.x,native.body(3).z-other.z)>.1);}advance(.2);await flush();f.host.present();const current=captureNativeRoutePickFrame(f.host.inspect());assert(current.getActionElapsed(reference)>.19);assert.deepEqual(f.errors,[]);}
+  else{assert.notEqual(result.status,'committed',JSON.stringify(result));if(prepared)await assert.rejects(prepared.presented);if(mode==='missing-attestation')assert.equal(result.status,'committed-control-failed');else{assert.equal(planner.nativeTaskActionBinding(actor),null);if(mode==='cancel-during-drain'){assert.equal(result.status,'resources-changed');assert.equal(source.status().closed,false);}}}
+ }finally{source?.dispose();f.client.dispose();await f.host.dispose();native.close();}
+});
+
+test('native action admission cannot consume a locally ready packet before its actual queue drain',async()=>{
+ const native=createNativeTaskGameFixture();tick(native.state,native.proposals[0].endTime-native.state.elapsed+.05,native.nav);const planner=native.planner,actor=native.state.workers[0].id,[sourcePort,drawPort]=pair(),f=await fixture({capabilities:{width:20,height:10,format:'rgba8unorm',nativeTaskActionClockVersion:1,nativeTaskActionVersion:1}},{intentControl:{port:drawPort,session:'action-drain'},absoluteNow:()=>Number.MAX_SAFE_INTEGER});let source,prepared,reference,releaseDrain,signalDrain;const draining=new Promise(resolve=>{signalDrain=resolve;});
+ try{source=createNativeIntentControlPublication({port:sourcePort,session:'action-drain',observe:planner.observeNativeIntentControl});await source.ready;const at=native.state.elapsed,clock={version:1,epoch:0,elapsed:at,safeUntil:at+10,anchorAbsoluteMs:0,paused:false,segments:[{start:at,end:at+10,rate:1,realDuration:10}]},before=native.body(1),original=f.gpu.device.queue.onSubmittedWorkDone;
+  const pending=planner.startNativeTaskActionAfterGpuQuiescence({getPublication:()=>source,request:planner.nativeTaskActionRequest(actor),prepareResources:async({resources,proposedWorldBoundary})=>{reference=nativeTaskActionReferenceFromProposal(resources);f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'relative',epoch:resources.startTime,nativeAction:reference});prepared=await preparedWorldDraw({...f,clock,actionTemplate:reference},proposedWorldBoundary);f.gpu.device.queue.onSubmittedWorkDone=()=>new Promise(resolve=>{releaseDrain=resolve;signalDrain();});return {preparedWorldBoundary:prepared.preparedWorldBoundary,preparedTaskActionTemplate:reference,valid:prepared.valid,commit:data=>prepared.commit(data.worldBoundary,data.nativeTaskActionBinding),abort:prepared.abort};}});
+  await draining;assert.equal(planner.nativeTaskActionBinding(actor),null);assert.deepEqual(native.body(1),before);assert.equal(f.gpu.submitted.length,0);native.state.elapsed+=.2;planner.advanceNativeRouteExecution(native.state.elapsed);planner.commitNativeCausalClock();assert.equal(planner.nativeTaskActionBinding(actor),null);f.gpu.device.queue.onSubmittedWorkDone=original;releaseDrain();const result=await pending;assert.equal(result.status,'committed',JSON.stringify(result));await flush();f.host.present();await prepared.presented;assert.equal(captureNativeRoutePickFrame(f.host.inspect()).getActionElapsed(reference),0);assert.deepEqual(native.body(1),before);assert.deepEqual(f.errors,[]);
+ }finally{releaseDrain?.();source?.dispose();f.client.dispose();await f.host.dispose();native.close();}
 });
 
 for(const mode of ['changed-source','future-world','wrong-epoch','absolute-clock','resource-extension','mixed-route'])test(`native action clock admission rejects ${mode}`,async()=>{
@@ -140,7 +171,7 @@ function preparationDraw(f,buffer,metadata,pipeline=f.pipeline,upload=null){
  pass.setPipeline(pipeline);pass.setBindGroup(0,group);pass.draw(3);pass.end();f.client.device.queue.submit([encoder.finish()]);return f.client.endFrame();
 }
 function preparedWorldDraw(f,boundary,value=77,signal=null){
- const metadata={clock:f.clock,nativeWorldBoundary:boundary,...(f.resumeTemplate?{nativeResumeTemplate:f.resumeTemplate,nativeResumeTemplateCoverageEnd:f.resumeTemplate.endTime}:{}),...(f.startTemplate?{nativeTaskStartTemplate:f.startTemplate}:{})};f.client.beginFrame({nativeWorldBoundary:boundary});
+ const metadata={clock:f.clock,nativeWorldBoundary:boundary,...(f.resumeTemplate?{nativeResumeTemplate:f.resumeTemplate,nativeResumeTemplateCoverageEnd:f.resumeTemplate.endTime}:{}),...(f.startTemplate?{nativeTaskStartTemplate:f.startTemplate}:{}),...(f.actionTemplate?{nativeTaskActionTemplate:f.actionTemplate}:{})};f.client.beginFrame({nativeWorldBoundary:boundary});
  f.client.device.queue.writeBuffer(f.buffer,0,new Float32Array([value]));
  const encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
  pass.setPipeline(f.pipeline);pass.setBindGroup(0,f.group);pass.draw(3);pass.end();f.client.device.queue.submit([encoder.finish()]);return f.client.prepareNativeWorldFrame(metadata,{signal});

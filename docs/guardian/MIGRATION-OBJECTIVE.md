@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [fase de acción sobre el actor residente](e-r3-native-action-actor-phase-20261115.md), con clips, materiales y terreno compartidos; paquete retenido, admisión y ejecución ordinaria siguen pendientes.
+Último avance: [admisión de acciones con paquete GPU retenido](e-r3-native-task-action-admission-20261115.md), con drenaje directo y Harvest en GPU real; productor ordinario, consecuencias y persistencia siguen pendientes.
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio

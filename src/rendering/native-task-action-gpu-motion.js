@@ -27,7 +27,10 @@ export function createNativeTaskActionGpuMotion({actorId,support,anchorPosition=
  function clipDuration(clip,value){if(!clipNames.includes(clip)||!Number.isFinite(value)||value<=0||!Number.isFinite(f(value)))throw TypeError('Invalid native action clip');}
  function resolve(_fallback,clip,value){
   check();clipDuration(clip,value);const key=`${clip}:${value}`;let node=phases.get(key);if(node)return node;
-  node=kind==='repair'?float(0):kind==='initial'?(clip==='Plant'?progress.min(float(3.8)):progress.sub(float(3.8)).max(float(0))):fraction.mul(float(value));
+  // Keep the native binding in the compiled graph even for an instantaneous
+  // repair. Its clamped zero phase carries the same per-actor revocation and
+  // submitted-input provenance as every other action; it adds no time span.
+  node=kind==='repair'?timeNode:kind==='initial'?(clip==='Plant'?progress.min(float(3.8)):progress.sub(float(3.8)).max(float(0))):fraction.mul(float(value));
   phases.set(key,node);return node;
  }
  function sampleForClip(age,clip,value){
