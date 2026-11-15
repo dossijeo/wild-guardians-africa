@@ -485,18 +485,20 @@ bool nativeTaskActionBodyCurrent(const IntentState& s,const ActiveIntent& intent
     worker->second.x==body.x&&worker->second.z==body.z&&!s.reservedBodies.count(worker->second.body)&&!s.suspendedBodies.count(worker->second.body);
 }
 bool nativeSettlementBodyCurrent(const IntentState& s,const ActiveIntent& intent){
+ const bool pendingHome=intent.home&&intent.homeRequest&&!intent.task&&!intent.target&&!intent.generation&&intent.state==PlanningState::AwaitingResources;
  if(!intent.settlementBinding||!intent.requiresResources||intent.animal||intent.retreat||intent.delivery||intent.actionBinding||intent.restoredActionSource||
     (intent.state!=PlanningState::StationaryActive&&intent.state!=PlanningState::AwaitingResources)||
-    (intent.state==PlanningState::StationaryActive&&intent.task)||(intent.state==PlanningState::AwaitingResources&&(!intent.task||intent.slot>=s.routeSlots.size()||!s.routeSlots[intent.slot].pendingResources||s.routeSlots[intent.slot].generation!=intent.generation)))return false;
+    (intent.state==PlanningState::StationaryActive&&intent.task)||(intent.state==PlanningState::AwaitingResources&&!pendingHome&&(!intent.task||intent.slot>=s.routeSlots.size()||!s.routeSlots[intent.slot].pendingResources||s.routeSlots[intent.slot].generation!=intent.generation)))return false;
  const auto& b=*intent.settlementBinding;const auto& h=b.actual.header;const auto worker=s.workers.find(intent.actor);const auto center=s.targets.find(uint64_t(h[4]));SpatialBodyView body;
- return worker!=s.workers.end()&&(h[21]?intent.home&&!intent.task&&intent.state==PlanningState::StationaryActive&&intent.approachKnown&&intent.approachX==float(h[22])&&intent.approachZ==float(h[23])&&!worker->second.eligible:!intent.home)&&b.settlementSequence&&double(intent.actor)==h[1]&&worker!=s.workers.end()&&worker->second.bodyBound&&double(worker->second.body)==h[2]&&double(worker->second.center)==h[4]&&
+ return worker!=s.workers.end()&&(h[21]?intent.home&&!intent.task&&intent.state==PlanningState::StationaryActive&&intent.approachKnown&&intent.approachX==float(h[22])&&intent.approachZ==float(h[23])&&!worker->second.eligible:!intent.home||pendingHome&&!worker->second.eligible)&&b.settlementSequence&&double(intent.actor)==h[1]&&worker!=s.workers.end()&&worker->second.bodyBound&&double(worker->second.body)==h[2]&&double(worker->second.center)==h[4]&&
   spatialReadBody(worker->second.body,body)&&body.kind==0&&body.flags==int(h[19])&&body.x==h[9]&&body.z==h[10]&&body.r==h[12]&&worker->second.x==body.x&&worker->second.z==body.z&&
   !s.reservedBodies.count(worker->second.body)&&!s.suspendedBodies.count(worker->second.body)&&center!=s.targets.end()&&center->second.active&&center->second.kind==4&&center->second.status==0;
 }
 bool nativeDeliveryBodyCurrent(const IntentState&,const ActiveIntent&);
 bool nativeHomeBodyCurrent(const IntentState&,const ActiveIntent&);
 bool nativeHomeRequestBodyCurrent(const IntentState& s,const ActiveIntent& intent){
- if(!intent.homeRequest||!intent.home||!intent.requiresResources||intent.task||intent.target||intent.lease||intent.animal||intent.retreat||intent.delivery||intent.settlementBinding||intent.state!=PlanningState::AwaitingResources||intent.generation)return false;
+ if(!intent.homeRequest||!intent.home||!intent.requiresResources||intent.task||intent.target||intent.lease||intent.animal||intent.retreat||intent.delivery||intent.state!=PlanningState::AwaitingResources||intent.generation)return false;
+ if(intent.settlementBinding&&(!nativeSettlementBodyCurrent(s,intent)||intent.settlementBinding->actual.header[21]))return false;
  const auto& r=*intent.homeRequest;const auto worker=s.workers.find(intent.actor);SpatialBodyView body;
  return r.actor==intent.actor&&r.session==s.session&&r.sequence==intent.resourceRequestSequence&&r.body&&worker!=s.workers.end()&&!worker->second.eligible&&!worker->second.actionActive&&worker->second.bodyBound&&worker->second.body==r.body&&
   worker->second.x==r.x&&worker->second.z==r.z&&spatialReadBody(r.body,body)&&body.x==r.x&&body.z==r.z&&body.r==r.radius&&body.kind==0&&body.flags==r.bodyFlags&&

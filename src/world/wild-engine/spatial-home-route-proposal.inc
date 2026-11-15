@@ -13,7 +13,7 @@ static int stageHomeRoute(double actor,double session,double sourceSequence){
  if(!integer(actor)||session!=double(s.session)||!integer(sourceSequence))return -1;
  const auto found=s.activeIntents.find(uint64_t(actor));
  if(found==s.activeIntents.end()||!found->second.home||!(found->second.homeRequest?nativeHomeRequestBodyCurrent(s,found->second):nativeSettlementBodyCurrent(s,found->second)))return -2;
- PendingNativeMotionDraft d;d.stationarySource=found->second.settlementBinding;d.homeRequestSource=found->second.homeRequest;
+ PendingNativeMotionDraft d;d.homeRequestSource=found->second.homeRequest;if(!d.homeRequestSource)d.stationarySource=found->second.settlementBinding;
  const auto h=homeRouteSourceView(d.stationarySource.get(),d.homeRequestSource.get());if(!h.village||double(h.sequence)!=sourceSequence)return -2;
  d.body=h.body;d.slot=uint32_t(s.routeSlots.size());
  for(uint32_t i=0;i<s.routeSlots.size();i++)if(!s.routeSlots[i].active){d.slot=i;break;}

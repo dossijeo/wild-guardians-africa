@@ -1536,6 +1536,17 @@ function reconcileNativeIntents(s,nav){
     nav.intentTaskPlanner.reconcileWorkerRoutes(s,{navVersion:nav.version});
   }
 }
+function expireNativeIdleContracts(s,nav){
+  const planner=nav.intentTaskPlanner;
+  for(const w of s.workers)if(w.status==='idle'&&(contractExpired(w,s)||s.time>=profile(w).end)&&planner.nativeSettledWorkerExecution?.(w.id))planner.requestNativeIdleHome(s,w);
+}
+function nativeReturnBoundarySupported(w,planner){
+  const settled=planner.nativeSettledWorkerExecution?.(w.id);
+  return w.status==='home'&&planner.nativeWorkerHomeInactive?.(w.id)||
+    !!planner.nativeHomeRouteExecution?.(w.id)||
+    w.nativeRouteAdmission==='pending-home-resources'&&!!planner.nativeHomeRequestReference?.(w.id)||
+    !!settled&&(settled.binding.reference.home&&w.status==='returning'||w.status==='idle'&&!w.taskId&&!w.nativeRouteAdmission);
+}
 // A worker's clearance disc has entered the village doorway once its center
 // is within one body radius of the entry. Requiring the exact point can trap
 // the first person in a queue: the final centimeter would overlap the person
@@ -1821,7 +1832,7 @@ export function tick(s,seconds,nav,{clockRate=1}={}) {
     if(nativeExecution!==0){
       // Commands received since the last step revoke/replace at the current
       // boundary, before the old timetable can move a body for another step.
-      reconcileNativeIntents(s,nav);nav.intentTaskPlanner.flushTaskEvents();
+      expireNativeIdleContracts(s,nav);reconcileNativeIntents(s,nav);nav.intentTaskPlanner.flushTaskEvents();
       nativeExecution=nav.intentTaskPlanner.nativeGameExecutionState();
     }
     if(nativeExecution<0)throw Error('Native game execution still requires projection for this intention class');
@@ -1836,12 +1847,13 @@ export function tick(s,seconds,nav,{clockRate=1}={}) {
     const magicBoundaries=s.spells.filter(a=>a.remaining>1e-9).map(a=>a.remaining);
     const step=Math.min(left,.1,...boundaries,...magicBoundaries);left-=step;
     if(nativeExecution===1){
-      if(s.workers.some(w=>s.time+step>=profile(w).end))throw Error('Native task game cohort reached an unsupported return boundary');
+      if(s.workers.some(w=>s.time+step>=profile(w).end&&!nativeReturnBoundarySupported(w,nav.intentTaskPlanner)))throw Error('Native task game cohort reached an unsupported return boundary');
       nav.intentTaskPlanner.advanceNativeGameExecution(s.elapsed+step,{rate:clockRate});
     }
     s.elapsed+=step;
     const nextTime=Math.min(600,s.time+step);
     s.time=clockEdges.find(boundary=>Math.abs(nextTime-boundary)<1e-9)??nextTime;
+    if(nativeExecution===1)expireNativeIdleContracts(s,nav);
     for(const kind of Object.keys(s.cooldowns)) {
       if(kind!=='shield'&&kind!=='attack'){s.cooldowns[kind]=0;continue;}
       const remaining=s.cooldowns[kind]-step;

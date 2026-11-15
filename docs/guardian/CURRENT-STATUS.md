@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+**Idle contract expiry, 2026-11-16:** [Current native Idle to a fresh Home request](e-r3-native-idle-home-20261116.md) retains the same physical body and historical settlement. Daily expiry and exact profile-end crossing pass in both native modules; real control/resource ports with a simulated GPU and reversible original-asset roster pass. Immediate Home during Idle adoption in Surface and hardware validation remain pending, as do initial Idle, other task finals, gates, ordinary producer and full3123 incremental recovery. No A6/A/B/C closure changes.
+
 **Moving Home restoration, 2026-11-15:** [Fresh task-free request and resident admission](e-r3-native-home-restoration-20261115.md) preserve semantic pose and budget while waiting, including initialization before the first causal clock. NVIDIA/Turing: 100 preparation creations, zero after READY, 53 draws during a 1.8 s stall, unchanged actor/batch identities, picking and final drain pass. Live-world replacement, initial/expired Idle, gates, ordinary producer and full3123 incremental recovery remain pending; A6/e-R3/e-R4/f-R4/A/B/C stay open.
 
 **Inactive Home restoration, 2026-11-15:** [Fresh semantic absence](e-r3-native-home-inactive-restoration-20261115.md) uses the existing native Worker record and empty causal clock. No previous Home route or body is restored; a retained body after intent reset prevents certification. Moving Home restoration, ordinary producer and full incremental recovery remain pending; A6/e-R3/e-R4/f-R4/A/B/C remain open.

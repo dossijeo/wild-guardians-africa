@@ -15,3 +15,10 @@ export function copyNativeHomeRequestReference(value){
   home:Object.freeze({villageId:home.villageId,x:home.x,z:home.z}),pose:Object.freeze(Object.fromEntries(poseFields.map(k=>[k,pose[k]])))});
 }
 export function sameNativeHomeRequestReference(a,b){try{return JSON.stringify(copyNativeHomeRequestReference(a))===JSON.stringify(copyNativeHomeRequestReference(b));}catch{return false;}}
+// Both inputs have already passed their typed boundary validation. This links
+// a new request to the actual held Idle; it grants no execution by itself.
+export function nativeHomeRequestContinuesIdle(request,settlement){
+ const r=settlement?.reference,w=r?.worldBoundary;
+ return !!request&&!!r&&!r.home&&request.actorId===r.actorId&&request.bodyId===r.bodyId&&request.profile===r.profile&&
+  request.authorityEpoch===w.authorityEpoch&&request.nativeSession===w.nativeSession&&request.requestSequence>settlement.settlementSequence&&request.requestedAt>=w.effectiveTime&&poseFields.every(k=>request.pose[k]===r.pose[k]);
+}

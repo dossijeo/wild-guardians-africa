@@ -1,7 +1,7 @@
 import {copyNativeHomeArrivalReference,copyNativeHomeArrivalAttestation,sameNativeHomeArrivalReference} from '../world/native-home-arrival.js';
 import {copyNativeHomeRouteReference,copyNativeHomeRouteAttestation,nativeHomeRouteAttestationCovers,sameNativeHomeRouteReference} from '../world/native-home-route.js';
 import {sameNativeTaskSettlementReference} from '../world/native-task-settlement.js';
-import {copyNativeHomeRequestReference,sameNativeHomeRequestReference} from '../world/native-home-request-reference.js';
+import {copyNativeHomeRequestReference,sameNativeHomeRequestReference,nativeHomeRequestContinuesIdle} from '../world/native-home-request-reference.js';
 import {copyNativeTaskRequestReference,nativeTaskRequestMatchesStart} from '../world/native-task-request-reference.js';
 import {copyNativeTaskStartReference} from '../world/native-task-start-reference.js';
 import {copyNativeTaskStartAttestation,nativeTaskStartAttestationCovers} from '../world/native-task-start-attestation.js';
@@ -83,7 +83,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     const taskRequest=event.state===6&&event.taskRequest?copyNativeTaskRequestReference(event.taskRequest):null;
     const actionRequest=event.state===6&&event.actionRequest?copyNativeTaskActionRestoreReference(event.actionRequest):null;
     const homeRequest=event.state===6&&event.homeRequest?copyNativeHomeRequestReference(event.homeRequest):null;
-    if(event.homeRequest&&!homeRequest||homeRequest&&(taskRequest||actionRequest||homeRequest.actorId!==event.actorId||event.taskId!==0||event.targetId!==0||homeRequest.requestSequence!==event.sequence||homeRequest.requestedAt!==event.effectiveTime||homeRequest.authorityEpoch!==authorityEpoch||clock&&homeRequest.nativeSession!==clock.nativeSession))throw Error('Native Home request event identity mismatch');
+    if(event.homeRequest&&!homeRequest||homeRequest&&(taskRequest||actionRequest||homeRequest.actorId!==event.actorId||event.taskId!==null&&event.taskId!==0||event.targetId!==null&&event.targetId!==0||homeRequest.requestSequence!==event.sequence||homeRequest.requestedAt!==event.effectiveTime||homeRequest.authorityEpoch!==authorityEpoch||clock&&homeRequest.nativeSession!==clock.nativeSession))throw Error('Native Home request event identity mismatch');
     if(event.actionRequest&&!actionRequest||taskRequest&&actionRequest||actionRequest&&(actionRequest.actorId!==event.actorId||actionRequest.taskId!==event.taskId||actionRequest.targetId!==event.targetId||actionRequest.requestSequence!==event.sequence||actionRequest.requestedAt!==event.effectiveTime||actionRequest.authorityEpoch!==authorityEpoch||clock&&actionRequest.nativeSession!==clock.nativeSession))throw Error('Native action request event identity mismatch');
     if(taskRequest&&(taskRequest.actorId!==event.actorId||taskRequest.taskId!==event.taskId||taskRequest.targetId!==event.targetId||taskRequest.requestSequence!==event.sequence||taskRequest.requestedAt!==event.effectiveTime||taskRequest.requestHandle.authorityEpoch!==authorityEpoch||clock&&taskRequest.requestHandle.session!==clock.nativeSession))throw Error('Native request event identity mismatch');
     const current=active.get(event.actorId);
@@ -100,7 +100,8 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     }
     const actor=assigned||event.type==='IntentChanged'&&event.state===6?actorContext(event.actorId):actors.get(event.actorId);
     const retiringCarry=current&&actor?.consequenceProof&&consequenceCurrent(actor.consequenceProof.reference,actor)?actor.consequenceProof:null;
-    const keepSettlement=!!actor&&!actor.settlementProof?.reference.home&&!current&&event.type==='IntentChanged'&&event.state===6&&!!taskRequest&&[6,7].includes(actor.state)&&!!(actor.settlementProof||actor.settlementSource);
+    if(homeRequest&&actor?.settlementProof&&!nativeHomeRequestContinuesIdle(homeRequest,actor.settlementProof))throw Error('Native Home request differs from its held Idle body');
+    const keepSettlement=!!actor&&!actor.settlementProof?.reference.home&&!current&&event.type==='IntentChanged'&&event.state===6&&!!(taskRequest||homeRequest)&&[6,7].includes(actor.state)&&!!(actor.settlementProof||actor.settlementSource);
     if(actor?.settlementRecord?.lastDrawTime!==null&&actor?.settlementRecord?.lastDrawTime!==undefined&&event.effectiveTime<actor.settlementRecord.lastDrawTime){const error=Error('Native settlement revocation arrived after its presented time');error.code='native-settlement-revocation-late';throw error;}
     if(actor?.actionRecord&&actor.actionRecord.lastDrawTime!==null&&event.effectiveTime<actor.actionRecord.lastDrawTime){const error=Error('Native action revocation arrived after its presented time');error.code='native-action-revocation-late';throw error;}
     const sourceSuspension=assigned&&actor?.proof&&suspendedCurrent(actor.proof,actor.revoked,actor)?{reference:actor.proof,sequence:actor.latestSequence}:null;
@@ -151,7 +152,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
   function sameSettlementProof(a,b){return !!a&&!!b&&a.settlementSequence===b.settlementSequence&&sameNativeTaskSettlementReference(a.reference,b.reference)&&sameNativeTaskSettlementReference(a.preparedReference,b.preparedReference);}
   function homeRecordCurrent(reference,actor){const record=actor?.current,proof=actor?.homeProof;return !closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.actorId)===actor&&actor.state===1&&active.get(reference.actorId)===record&&!!record&&actor.latestSequence===record.assignmentSequence&&sameHandle(record.handle,reference.expectedRouteHandle)&&record.startTime===proof?.reference.worldBoundary.effectiveTime&&proof?.assignmentSequence===record.assignmentSequence;}
   function sameCarryProof(a,b){try{return JSON.stringify(copyNativeTaskConsequenceAttestation(a))===JSON.stringify(copyNativeTaskConsequenceAttestation(b));}catch{return false;}}
-  function settlementState(actor,proof){return actor.state===7&&actor.latestSequence===proof.settlementSequence||!proof.reference.home&&actor.state===6&&actor.pendingTaskRequest?.requestSequence===actor.latestSequence&&actor.latestSequence>proof.settlementSequence;}
+  function settlementState(actor,proof){return actor.state===7&&actor.latestSequence===proof.settlementSequence||!proof.reference.home&&actor.state===6&&actor.latestSequence>proof.settlementSequence&&(actor.pendingTaskRequest?.requestSequence===actor.latestSequence||actor.pendingHomeRequest?.requestSequence===actor.latestSequence&&nativeHomeRequestContinuesIdle(actor.pendingHomeRequest,proof));}
   function settlementRecordCurrent(reference,actor){const proof=actor?.settlementProof,record=actor?.settlementRecord;return !closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.actorId)===actor&&actor.current===null&&!!proof&&!!record&&record.settlementSequence===proof.settlementSequence&&settlementState(actor,proof);}
   function settlementCurrent(reference,actor){return settlementRecordCurrent(reference,actor)&&nativeTaskSettlementAttestationCovers(actor.settlementProof,reference);}
   // Immutable proof associations are checked once per installation. Every replay still

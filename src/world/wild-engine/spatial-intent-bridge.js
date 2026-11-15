@@ -1274,6 +1274,14 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     if(wasm.nav_home_requests_snapshot===undefined)return Object.freeze([]);const count=wasm.nav_home_requests_snapshot();if(!Number.isSafeInteger(count)||count<0||count>32768)throw Error('Invalid pending native Home cohort');
     const data=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_home_requests_ptr(),count*19));return Object.freeze(Array.from({length:count},(_,i)=>{const r=nativeHomeRequestReference(data[i*19+1]);if(!r)throw Error('Native Home request lost its physical owner');return r;}));
   };
+  const requestNativeIdleHome=(source,home)=>{
+    const held=copyNativeTaskSettlementAttestation(source),r=held.reference;
+    if(r.home||r.worldBoundary.authorityEpoch!==epoch()||JSON.stringify(nativeTaskSettlementBinding(r.actorId))!==JSON.stringify(held))throw Error('Native Idle Home source is not current');
+    if(typeof wasm.nav_intent_idle_home_request!=='function')throw Error('Rebuild native Idle Home request');
+    syncBoundaryTime();
+    if(wasm.nav_intent_idle_home_request(r.actorId,r.worldBoundary.nativeSession,held.settlementSequence,home.villageId,home.x,home.z)!==1)throw Error('Native Idle Home request rejected');
+    const request=nativeHomeRequestReference(r.actorId);if(!request)throw Error('Native Idle Home lost its physical owner');return request;
+  };
   const readHomeRouteSource=(actor,ticket=0)=>{
     const sourceRequest=nativeHomeRequestReference(actor,ticket);if(sourceRequest)return {sourceRequest};
     if(wasm.nav_home_route_source_snapshot(actor,ticket)!==1)throw Error('Native Home stationary source unavailable');
@@ -1868,7 +1876,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     startNativeTaskActionAfterGpuQuiescence,prepareNativeTaskActionProposal,captureNativeTaskActionProposal,revalidateNativeTaskActionProposal,cancelNativeTaskActionProposal,
     nativeTaskActionBinding,nativeTaskActionBindings,nativeTaskActionExecution,nativeTaskActionRestoreReferences,
     nativeWorkerHomeInactive,startNativeHomeArrivalAfterGpuQuiescence,prepareNativeHomeArrivalProposal,captureNativeHomeArrivalProposal,revalidateNativeHomeArrivalProposal,cancelNativeHomeArrivalProposal,
-    startNativeHomeRouteAfterGpuQuiescence,nativeHomeRequestReference,nativeHomeRequestReferences,nativeHomeRouteBinding,nativeHomeRouteBindings,nativeHomeRouteExecution,prepareNativeHomeRouteProposal,captureNativeHomeRouteProposal,revalidateNativeHomeRouteProposal,cancelNativeHomeRouteProposal,
+    requestNativeIdleHome,startNativeHomeRouteAfterGpuQuiescence,nativeHomeRequestReference,nativeHomeRequestReferences,nativeHomeRouteBinding,nativeHomeRouteBindings,nativeHomeRouteExecution,prepareNativeHomeRouteProposal,captureNativeHomeRouteProposal,revalidateNativeHomeRouteProposal,cancelNativeHomeRouteProposal,
     startNativeTaskSettlementAfterGpuQuiescence,nativeTaskSettlementBinding,nativeTaskSettlementBindings,nativeSettledWorkerExecution,prepareNativeTaskSettlementProposal,captureNativeTaskSettlementProposal,revalidateNativeTaskSettlementProposal,cancelNativeTaskSettlementProposal,
     nativeTaskConsequenceBinding,nativeDeliveryExecution,startNativeTaskConsequenceAfterGpuQuiescence,prepareNativeTaskConsequenceProposal,captureNativeTaskConsequenceProposal,revalidateNativeTaskConsequenceProposal,cancelNativeTaskConsequenceProposal,
     projectRouteProgress,processEventBoundary,requestReroute,
@@ -2439,6 +2447,15 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     if(execution.executedThrough!==state.elapsed||worker.crateId||numericId(worker.centerId)!==execution.centerId||!crate?.delivered||crate.carrierId||!(returning||pending||!home&&worker.status==='idle'&&!worker.taskId&&!worker.nativeRouteAdmission&&!worker.path?.length))throw Error('Native idle projection is not the executed game boundary');
     Object.assign(worker,{x:execution.x,z:execution.z,heading:execution.yaw,runPhase:execution.runPhase,walkPhase:execution.walkPhase,carryPhase:execution.carryPhase,runRemaining:execution.runRemaining,running:false,gateWaiting:false});projectedPositions.set(numericId(worker.id),[worker.x,worker.z]);return execution;
   };
+  const requestNativeIdleHome=(state,worker)=>{
+    if(state!==sourceState&&state!==observedTaskState)throw Error('Native Idle Home belongs to another game');
+    if(!state.workers.includes(worker)||worker.status!=='idle'||worker.taskId||worker.crateId||worker.nativeRouteAdmission||worker.path?.length||worker.incapacitated||worker.recovery||worker.recoveryExitRemaining||worker.fallRemaining||worker.raidReturn||state.raid||!contractExpired(worker,state)&&state.time<(profileEnd.get(worker.profile)??0))throw Error('Native Idle Home requires a finished idle contract');
+    const execution=projectNativeSettledWorkerExecution(state,worker),village=state.villages.find(v=>v.id===worker.villageId),home=village?.entry??village;
+    if(!execution||execution.binding.reference.home||!home)throw Error('Native Idle Home requires its actual stationary source');
+    const request=bridge.requestNativeIdleHome(execution.binding,{villageId:numericId(village.id),x:home.x,z:home.z});
+    Object.assign(worker,{status:'returning',path:null,nativeRouteAdmission:'pending-home-resources',running:false,gateWaiting:false});
+    notifyWorkerPlanningChange(state,worker);pendingNativeChanges=true;return request;
+  };
   const projectNativeTaskActionExecution=(state,worker)=>{
     if(state!==sourceState&&state!==observedTaskState)throw Error('Native action projection belongs to another game');
     const execution=bridge.nativeTaskActionExecution(worker.id);if(!execution)return null;
@@ -2879,7 +2896,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     nativeWorkerHomeInactive:bridge.nativeWorkerHomeInactive,prepareNativeHomeArrivalProposal:bridge.prepareNativeHomeArrivalProposal,captureNativeHomeArrivalProposal:bridge.captureNativeHomeArrivalProposal,revalidateNativeHomeArrivalProposal:bridge.revalidateNativeHomeArrivalProposal,cancelNativeHomeArrivalProposal:bridge.cancelNativeHomeArrivalProposal,
     async startNativeHomeArrivalAfterGpuQuiescence(options){const owner=bridge.authorityEpoch,result=await bridge.startNativeHomeArrivalAfterGpuQuiescence(options);if(bridge.authorityEpoch===owner&&result.resources)pendingNativeChanges=true;return result;},
     async startNativeHomeRouteAfterGpuQuiescence(options){const owner=bridge.authorityEpoch,result=await bridge.startNativeHomeRouteAfterGpuQuiescence(options);if(bridge.authorityEpoch===owner&&result.resources)pendingNativeChanges=true;return result;},
-    projectNativeSettledWorkerExecution,
+    requestNativeIdleHome,projectNativeSettledWorkerExecution,
     nativeTaskSettlementBinding:bridge.nativeTaskSettlementBinding,nativeTaskSettlementBindings:bridge.nativeTaskSettlementBindings,nativeSettledWorkerExecution:bridge.nativeSettledWorkerExecution,prepareNativeTaskSettlementProposal:bridge.prepareNativeTaskSettlementProposal,captureNativeTaskSettlementProposal:bridge.captureNativeTaskSettlementProposal,revalidateNativeTaskSettlementProposal:bridge.revalidateNativeTaskSettlementProposal,cancelNativeTaskSettlementProposal:bridge.cancelNativeTaskSettlementProposal,
     nativeTaskConsequenceBinding:bridge.nativeTaskConsequenceBinding,nativeDeliveryExecution:bridge.nativeDeliveryExecution,projectNativeDeliveryExecution,
     async startNativeTaskConsequenceAfterGpuQuiescence(options){
