@@ -7,7 +7,7 @@ const sameCarry=(a,b)=>a.assignmentSequence===b.assignmentSequence&&sameNativeTa
 export function copyNativeTaskSettlementReference(value){
  if(value?.kind!=='native-task-settlement-reference'||value.version!==1)throw TypeError('Invalid native task settlement reference');
  const sourceCarry=copyNativeTaskConsequenceAttestation(value.sourceCarry),r=sourceCarry.reference,worldBoundary=copyNativeWorldBoundary(value.worldBoundary),pose=value.pose;
- if(!worldBoundary||worldBoundary.authorityEpoch!==r.worldBoundary.authorityEpoch||worldBoundary.nativeSession!==r.worldBoundary.nativeSession||worldBoundary.effectiveTime<r.endTime||
+ if(!worldBoundary||worldBoundary.authorityEpoch!==r.worldBoundary.authorityEpoch||worldBoundary.nativeSession!==r.worldBoundary.nativeSession||worldBoundary.ticket<=r.worldBoundary.ticket||worldBoundary.effectiveTime<r.endTime||
     ['actorId','bodyId','crateId','centerId'].some(key=>!id(value[key])||value[key]!==r[key])||!id(value.sourceControlSequence)||value.sourceControlSequence<sourceCarry.assignmentSequence||
     !Number.isInteger(value.profile)||value.profile<0||value.profile>31||!pose||poseKeys.some(key=>!Number.isFinite(pose[key]))||Object.keys(pose).some(key=>!poseKeys.includes(key))||
     pose.radius<=0||pose.radius>2||['runPhase','walkPhase','carryPhase','runRemaining'].some(key=>pose[key]<0)||pose.x!==Math.fround(r.destination.x)||pose.z!==Math.fround(r.destination.z)||pose.radius!==r.sourceAction.reference.radius)
@@ -19,7 +19,7 @@ export const sameNativeTaskSettlementReference=(a,b)=>{try{return JSON.stringify
 export function nativeTaskSettlementSuccessor(previous,next){
  const a=copyNativeTaskSettlementReference(previous),b=copyNativeTaskSettlementReference(next);
  return ['actorId','bodyId','crateId','centerId','profile'].every(key=>a[key]===b[key])&&sameCarry(a.sourceCarry,b.sourceCarry)&&JSON.stringify(a.pose)===JSON.stringify(b.pose)&&
-  b.sourceControlSequence>=a.sourceControlSequence&&a.worldBoundary.authorityEpoch===b.worldBoundary.authorityEpoch&&a.worldBoundary.nativeSession===b.worldBoundary.nativeSession&&b.worldBoundary.effectiveTime>=a.worldBoundary.effectiveTime;
+  b.sourceControlSequence>=a.sourceControlSequence&&a.worldBoundary.authorityEpoch===b.worldBoundary.authorityEpoch&&a.worldBoundary.nativeSession===b.worldBoundary.nativeSession&&b.worldBoundary.effectiveTime>=a.worldBoundary.effectiveTime&&(b.worldBoundary.ticket>a.worldBoundary.ticket||sameNativeTaskSettlementReference(a,b));
 }
 export function copyNativeTaskSettlementProposal(value){
  if(value?.kind!=='native-task-settlement-proposal'||value.version!==1)throw TypeError('Invalid native task settlement proposal');

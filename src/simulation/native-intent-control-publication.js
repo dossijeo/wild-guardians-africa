@@ -1,3 +1,4 @@
+import {copyNativeTaskSettlementReference,sameNativeTaskSettlementReference,copyNativeTaskSettlementAttestation} from '../world/native-task-settlement.js';
 import {copyNativeTaskConsequenceReference,sameNativeTaskConsequenceReference,copyNativeTaskConsequenceAttestation} from '../world/native-task-consequence.js';
 import {copyNativeTaskStartReference,sameNativeTaskStartReference} from '../world/native-task-start-reference.js';
 import {copyNativeTaskStartAttestation} from '../world/native-task-start-attestation.js';
@@ -94,11 +95,11 @@ export function createNativeIntentControlPublication({port,session,observe,
       const hold=mutationHold;
       if(!hold||hold.receipt||data.session!==session||data.authorityEpoch!==authorityEpoch||data.fenceVersion!==1||
          data.accepted!==true||data.holdId!==hold.holdId||data.sequence!==hold.sequence||
-         data.effectiveTime!==hold.effectiveTime||data.clockSequence!==hold.clockSequence||hold.preparedTaskConsequenceTemplate&&(data.nativeTaskConsequenceVersion!==1||!sameNativeTaskConsequenceReference(data.preparedTaskConsequenceTemplate,hold.preparedTaskConsequenceTemplate))||hold.preparedWorldBoundary&&(!sameNativeWorldBoundary(data.preparedWorldBoundary,hold.preparedWorldBoundary)||!Number.isSafeInteger(data.preparedFrameSequence)||data.preparedFrameSequence<1)){
+         data.effectiveTime!==hold.effectiveTime||data.clockSequence!==hold.clockSequence||hold.preparedTaskSettlementTemplate&&(data.nativeTaskSettlementVersion!==1||!sameNativeTaskSettlementReference(data.preparedTaskSettlementTemplate,hold.preparedTaskSettlementTemplate))||hold.preparedTaskConsequenceTemplate&&(data.nativeTaskConsequenceVersion!==1||!sameNativeTaskConsequenceReference(data.preparedTaskConsequenceTemplate,hold.preparedTaskConsequenceTemplate))||hold.preparedWorldBoundary&&(!sameNativeWorldBoundary(data.preparedWorldBoundary,hold.preparedWorldBoundary)||!Number.isSafeInteger(data.preparedFrameSequence)||data.preparedFrameSequence<1)){
         fail(Error('Invalid native mutation fence acknowledgement'));return;
       }
       hold.receipt=Object.freeze({authorityEpoch,session,holdId:hold.holdId,sequence:hold.sequence,
-        effectiveTime:hold.effectiveTime,clockSequence:hold.clockSequence,...(hold.preparedTaskConsequenceTemplate?{nativeTaskConsequenceVersion:1,preparedTaskConsequenceTemplate:hold.preparedTaskConsequenceTemplate}:{}),...(hold.preparedWorldBoundary?{preparedWorldBoundary:hold.preparedWorldBoundary,preparedFrameSequence:data.preparedFrameSequence}:{})});hold.resolve(hold.receipt);return;
+        effectiveTime:hold.effectiveTime,clockSequence:hold.clockSequence,...(hold.preparedTaskSettlementTemplate?{nativeTaskSettlementVersion:data.nativeTaskSettlementVersion,preparedTaskSettlementTemplate:hold.preparedTaskSettlementTemplate}:{}),...(hold.preparedTaskConsequenceTemplate?{nativeTaskConsequenceVersion:1,preparedTaskConsequenceTemplate:hold.preparedTaskConsequenceTemplate}:{}),...(hold.preparedWorldBoundary?{preparedWorldBoundary:hold.preparedWorldBoundary,preparedFrameSequence:data.preparedFrameSequence}:{})});hold.resolve(hold.receipt);return;
     }
     if(data?.type==='intent-control-fenced'){
       const fence=gpuFences.get(data.fenceId);
@@ -176,26 +177,27 @@ export function createNativeIntentControlPublication({port,session,observe,
          session,authorityEpoch,sequence,effectiveTime,fenceId,...(clock?{clockSequence:clock.clockSequence}:{})});}catch(error){fail(error);}
     });
   }
-  function quiesceGpuForMutation({preparedWorldBoundary=null,preparedResumeTemplate=null,preparedTaskStartTemplate=null,preparedTaskActionTemplate=null,preparedTaskConsequenceTemplate=null}={}){
+  function quiesceGpuForMutation({preparedWorldBoundary=null,preparedResumeTemplate=null,preparedTaskStartTemplate=null,preparedTaskActionTemplate=null,preparedTaskConsequenceTemplate=null,preparedTaskSettlementTemplate=null}={}){
     if(closed||retirement||appliedSequence===null||!clock||clock.intentSequence!==sentSequence||clock.committedThrough!==sentTime)
       return Promise.reject(Error('Native causal mutation boundary is not ready'));
     if(mutationHold||gpuFences.size)return Promise.reject(Error('Native GPU mutation boundary is busy'));
     if(!Number.isSafeInteger(nextMutationFence+1))return Promise.reject(Error('Native mutation fence identity exhausted'));
-    if([preparedResumeTemplate,preparedTaskStartTemplate,preparedTaskActionTemplate,preparedTaskConsequenceTemplate].filter(Boolean).length>1)throw Error('Conflicting native prepared templates');
+    if([preparedResumeTemplate,preparedTaskStartTemplate,preparedTaskActionTemplate,preparedTaskConsequenceTemplate,preparedTaskSettlementTemplate].filter(Boolean).length>1)throw Error('Conflicting native prepared templates');
+    if(preparedTaskSettlementTemplate){preparedTaskSettlementTemplate=copyNativeTaskSettlementReference(preparedTaskSettlementTemplate);if(!preparedWorldBoundary)throw Error('Native settlement requires a prepared packet');}
     if(preparedTaskConsequenceTemplate){preparedTaskConsequenceTemplate=copyNativeTaskConsequenceReference(preparedTaskConsequenceTemplate);if(!preparedWorldBoundary)throw Error('Native consequence requires a prepared packet');}
     if(preparedTaskActionTemplate){preparedTaskActionTemplate=copyNativeTaskActionReference(preparedTaskActionTemplate);if(!preparedWorldBoundary)throw Error('Native action requires a prepared packet');}
     if(preparedTaskStartTemplate){preparedTaskStartTemplate=copyNativeTaskStartReference(preparedTaskStartTemplate);if(preparedResumeTemplate||!preparedWorldBoundary)throw Error('First task requires its own prepared packet');}
     if(preparedResumeTemplate){preparedResumeTemplate=copyNativeResumeReference(preparedResumeTemplate);if(!preparedWorldBoundary)throw Error('Deferred resume requires a prepared packet');}
-    if(preparedWorldBoundary){preparedWorldBoundary=copyNativeWorldBoundary(preparedWorldBoundary);if(!preparedWorldBoundary||preparedWorldBoundary.authorityEpoch!==authorityEpoch||preparedWorldBoundary.nativeSession!==clock.nativeSession||((preparedResumeTemplate||preparedTaskStartTemplate||preparedTaskActionTemplate||preparedTaskConsequenceTemplate)?preparedWorldBoundary.effectiveTime>sentTime||!sameNativeWorldBoundary((preparedResumeTemplate??preparedTaskStartTemplate??preparedTaskActionTemplate??preparedTaskConsequenceTemplate).worldBoundary,preparedWorldBoundary)||(preparedResumeTemplate??preparedTaskStartTemplate??preparedTaskActionTemplate??preparedTaskConsequenceTemplate).sourceControlSequence>sentSequence:preparedWorldBoundary.effectiveTime!==sentTime))throw Error('Invalid prepared native mutation boundary');}
+    if(preparedWorldBoundary){preparedWorldBoundary=copyNativeWorldBoundary(preparedWorldBoundary);if(!preparedWorldBoundary||preparedWorldBoundary.authorityEpoch!==authorityEpoch||preparedWorldBoundary.nativeSession!==clock.nativeSession||((preparedResumeTemplate||preparedTaskStartTemplate||preparedTaskActionTemplate||preparedTaskConsequenceTemplate||preparedTaskSettlementTemplate)?preparedWorldBoundary.effectiveTime>sentTime||!sameNativeWorldBoundary((preparedResumeTemplate??preparedTaskStartTemplate??preparedTaskActionTemplate??preparedTaskConsequenceTemplate??preparedTaskSettlementTemplate).worldBoundary,preparedWorldBoundary)||(preparedResumeTemplate??preparedTaskStartTemplate??preparedTaskActionTemplate??preparedTaskConsequenceTemplate??preparedTaskSettlementTemplate).sourceControlSequence>sentSequence:preparedWorldBoundary.effectiveTime!==sentTime))throw Error('Invalid prepared native mutation boundary');}
     const holdId=++nextMutationFence,sequence=sentSequence,effectiveTime=sentTime,clockSequence=clock.clockSequence;
     return new Promise((resolve,reject)=>{
-      mutationHold={holdId,sequence,effectiveTime,clockSequence,preparedWorldBoundary,preparedResumeTemplate,preparedTaskStartTemplate,preparedTaskActionTemplate,preparedTaskConsequenceTemplate,resolve,reject,receipt:null,
+      mutationHold={holdId,sequence,effectiveTime,clockSequence,preparedWorldBoundary,preparedResumeTemplate,preparedTaskStartTemplate,preparedTaskActionTemplate,preparedTaskConsequenceTemplate,preparedTaskSettlementTemplate,resolve,reject,receipt:null,
         timer:setTimeout(()=>fail(Error('Native mutation fence timed out')),timeoutMs)};
       try{port.postMessage({type:'IntentMutationQuiesce',protocolVersion:2,fenceVersion:1,
-        session,authorityEpoch,holdId,sequence,effectiveTime,clockSequence,...(preparedWorldBoundary?{preparedWorldBoundary}:{}),...(preparedResumeTemplate?{preparedResumeTemplate}:{}),...(preparedTaskStartTemplate?{preparedTaskStartTemplate}:{}),...(preparedTaskActionTemplate?{preparedTaskActionTemplate}:{}),...(preparedTaskConsequenceTemplate?{preparedTaskConsequenceTemplate}:{})});}catch(error){fail(error);}
+        session,authorityEpoch,holdId,sequence,effectiveTime,clockSequence,...(preparedWorldBoundary?{preparedWorldBoundary}:{}),...(preparedResumeTemplate?{preparedResumeTemplate}:{}),...(preparedTaskStartTemplate?{preparedTaskStartTemplate}:{}),...(preparedTaskActionTemplate?{preparedTaskActionTemplate}:{}),...(preparedTaskConsequenceTemplate?{preparedTaskConsequenceTemplate}:{}),...(preparedTaskSettlementTemplate?{preparedTaskSettlementTemplate}:{})});}catch(error){fail(error);}
     });
   }
-  function releaseGpuAfterMutation(receipt,{committed=false,worldBoundary:nextBoundary=null,nativeSuspendedBodies=[],nativeResumedRoutes=[],nativeStartedRoutes=[],nativeActions=[],nativeConsequences=[]}={}){
+  function releaseGpuAfterMutation(receipt,{committed=false,worldBoundary:nextBoundary=null,nativeSuspendedBodies=[],nativeResumedRoutes=[],nativeStartedRoutes=[],nativeActions=[],nativeConsequences=[],nativeSettlements=[]}={}){
     const hold=mutationHold;
     if(typeof committed!=='boolean')throw TypeError('Expected native mutation commit outcome');
     if(closed||!hold||!hold.receipt||receipt!==hold.receipt||!clock||clock.intentSequence!==sentSequence||
@@ -203,7 +205,7 @@ export function createNativeIntentControlPublication({port,session,observe,
       throw Error('Native mutation hold is stale or its causal boundary is unpublished');
     if(committed){
       nextBoundary=copyNativeWorldBoundary(nextBoundary);
-      if(hold.preparedWorldBoundary&&!hold.preparedResumeTemplate&&!hold.preparedTaskStartTemplate&&!hold.preparedTaskActionTemplate&&!hold.preparedTaskConsequenceTemplate&&!sameNativeWorldBoundary(hold.preparedWorldBoundary,nextBoundary))throw Error('Committed world differs from the retained prepared packet');
+      if(hold.preparedWorldBoundary&&!hold.preparedResumeTemplate&&!hold.preparedTaskStartTemplate&&!hold.preparedTaskActionTemplate&&!hold.preparedTaskConsequenceTemplate&&!hold.preparedTaskSettlementTemplate&&!sameNativeWorldBoundary(hold.preparedWorldBoundary,nextBoundary))throw Error('Committed world differs from the retained prepared packet');
       if(!nextBoundary||nextBoundary.authorityEpoch!==authorityEpoch||nextBoundary.nativeSession!==clock.nativeSession||
          nextBoundary.effectiveTime!==sentTime||worldBoundary&&nextBoundary.ticket<=worldBoundary.ticket)
         throw Error('Native committed mutation requires a new world resource boundary');
@@ -222,16 +224,20 @@ export function createNativeIntentControlPublication({port,session,observe,
     const actions=nativeActions.map(input=>{const value=copyNativeTaskActionAttestation(input),r=value.reference,q=r.request,actor=nativeTaskActionActor(q);if(!sameNativeWorldBoundary(r.worldBoundary,nextBoundary)||r.sourceControlSequence!==hold.sequence||value.actionSequence>sentSequence||actors.has(actor)||bodyIds.has(q.bodyId))throw Error('Native action differs from its authority boundary');actors.add(actor);bodyIds.add(q.bodyId);return value;});
     if(!Array.isArray(nativeConsequences)||nativeConsequences.length>32768||!committed&&nativeConsequences.length)throw TypeError('Invalid committed native consequences');
     const consequences=nativeConsequences.map(input=>{const value=copyNativeTaskConsequenceAttestation(input),r=value.reference;if(!sameNativeWorldBoundary(r.worldBoundary,nextBoundary)||r.sourceControlSequence!==hold.sequence||value.assignmentSequence>sentSequence||actors.has(r.actorId)||bodyIds.has(r.bodyId))throw Error('Native consequence differs from its authority boundary');actors.add(r.actorId);bodyIds.add(r.bodyId);return value;});
+    if(!Array.isArray(nativeSettlements)||nativeSettlements.length>32768||!committed&&nativeSettlements.length)throw TypeError('Invalid committed native settlements');
+    const settlements=nativeSettlements.map(input=>{const value=copyNativeTaskSettlementAttestation(input),r=value.reference;if(!sameNativeWorldBoundary(r.worldBoundary,nextBoundary)||r.sourceControlSequence!==hold.sequence||value.settlementSequence>sentSequence||actors.has(r.actorId)||bodyIds.has(r.bodyId))throw Error('Native settlement differs from its authority boundary');actors.add(r.actorId);bodyIds.add(r.bodyId);return value;});
+    if(settlements.length&&!hold.preparedTaskSettlementTemplate)throw Error('Native settlement lacks its retained template');
+    if(committed&&hold.preparedTaskSettlementTemplate&&(bodies.length||resumes.length||starts.length||actions.length||consequences.length||settlements.length!==1||!sameNativeTaskSettlementReference(settlements[0].preparedReference,hold.preparedTaskSettlementTemplate)))throw Error('Native settlement differs from its retained template');
     if(consequences.length&&!hold.preparedTaskConsequenceTemplate)throw Error('Native consequence lacks its retained template');
-    if(committed&&hold.preparedTaskConsequenceTemplate&&(bodies.length||resumes.length||starts.length||actions.length||consequences.length!==1||!sameNativeTaskConsequenceReference(consequences[0].preparedReference,hold.preparedTaskConsequenceTemplate)))throw Error('Native consequence differs from its retained template');
+    if(committed&&hold.preparedTaskConsequenceTemplate&&(settlements.length||bodies.length||resumes.length||starts.length||actions.length||consequences.length!==1||!sameNativeTaskConsequenceReference(consequences[0].preparedReference,hold.preparedTaskConsequenceTemplate)))throw Error('Native consequence differs from its retained template');
     if(actions.length&&!hold.preparedTaskActionTemplate)throw Error('Native action lacks its retained template');
-    if(committed&&hold.preparedTaskActionTemplate&&(consequences.length||bodies.length||resumes.length||starts.length||actions.length!==1||!sameNativeTaskActionReference(actions[0].preparedReference,hold.preparedTaskActionTemplate)))throw Error('Native action differs from its retained template');
-    if(committed&&hold.preparedTaskStartTemplate&&(consequences.length||actions.length||bodies.length||resumes.length||starts.length!==1||!sameNativeTaskStartReference(starts[0].preparedReference,hold.preparedTaskStartTemplate)))throw Error('First task differs from its retained template');
-    if(committed&&hold.preparedResumeTemplate&&(consequences.length||actions.length||starts.length||(bodies.length||resumes.length!==1||!sameNativeResumeReference(resumes[0].preparedReference,hold.preparedResumeTemplate))))throw Error('Deferred resume does not match the retained template');
+    if(committed&&hold.preparedTaskActionTemplate&&(settlements.length||consequences.length||bodies.length||resumes.length||starts.length||actions.length!==1||!sameNativeTaskActionReference(actions[0].preparedReference,hold.preparedTaskActionTemplate)))throw Error('Native action differs from its retained template');
+    if(committed&&hold.preparedTaskStartTemplate&&(settlements.length||consequences.length||actions.length||bodies.length||resumes.length||starts.length!==1||!sameNativeTaskStartReference(starts[0].preparedReference,hold.preparedTaskStartTemplate)))throw Error('First task differs from its retained template');
+    if(committed&&hold.preparedResumeTemplate&&(settlements.length||consequences.length||actions.length||starts.length||(bodies.length||resumes.length!==1||!sameNativeResumeReference(resumes[0].preparedReference,hold.preparedResumeTemplate))))throw Error('Deferred resume does not match the retained template');
     port.postMessage({type:'IntentMutationRelease',protocolVersion:2,fenceVersion:1,session,authorityEpoch,
       holdId:hold.holdId,heldSequence:hold.sequence,heldTime:hold.effectiveTime,heldClockSequence:hold.clockSequence,
       sequence:sentSequence,effectiveTime:sentTime,clockSequence:clock.clockSequence,committed,
-      ...(committed?{worldBoundary:nextBoundary,...(bodies.length?{nativeSuspendedBodies:bodies}:{}),...(resumes.length?{nativeResumedRoutes:resumes}:{}),...(starts.length?{nativeStartedRoutes:starts}:{}),...(actions.length?{nativeActions:actions}:{}),...(consequences.length?{nativeConsequences:consequences}:{})}:{})});
+      ...(committed?{worldBoundary:nextBoundary,...(bodies.length?{nativeSuspendedBodies:bodies}:{}),...(resumes.length?{nativeResumedRoutes:resumes}:{}),...(starts.length?{nativeStartedRoutes:starts}:{}),...(actions.length?{nativeActions:actions}:{}),...(consequences.length?{nativeConsequences:consequences}:{}),...(settlements.length?{nativeSettlements:settlements}:{})}:{})});
     if(committed)worldBoundary=nextBoundary;
     clearTimeout(hold.timer);mutationHold=null;return true;
   }

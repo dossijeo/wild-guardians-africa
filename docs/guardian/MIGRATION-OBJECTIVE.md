@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuación del consumidor de entrega: [Idle sobre el actor residente y siguiente tarea genuina](e-r3-native-delivery-presentation-20261115.md). Control, reloj, soporte, variante reversible y canal están implementados como componentes; 521 pruebas de regresión del roster y 78 del incremento de transporte pasan. Captura/envío/adopción en el host gráfico siguen pendientes; no se anuncia la capacidad ni cambia ningún cierre A6/A/B/C.
+
 Continuación de la autoridad de entrega: [Carry → disponibilidad nativa → siguiente tarea](e-r3-native-delivery-settlement-20261115.md), con liquidación coherente y cuerpo conservado. El consumidor gráfico del relevo, Home, Idle inicial y productor ordinario siguen pendientes; no cambia ningún cierre.
 
 Continuación de la entrega: [datos semánticos y liquidación sin efectos anticipados](e-r3-native-delivery-consequence-data-20261115.md), con el cálculo económico ordinario común y 50/50 pruebas. El relevo nativo/gráfico y el cobro preparado siguen pendientes; no cambia ningún cierre.

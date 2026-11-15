@@ -1,0 +1,90 @@
+{
+  "date": "2026-11-15",
+  "scope": "Native delivery consumer components: typed clock, terrain, resident Idle/next-task roster and retained port. Real Idle capture/submission/adoption is still pending. No A6, e-R3/e-R4/f-R4, A/B/C or historical 3123-resource recovery closure.",
+  "research": [
+    {
+      "project": "Three.js",
+      "revision": "r180 / installed 0.180.0",
+      "files": [
+        "src/animation/AnimationMixer.js",
+        "src/animation/AnimationAction.js"
+      ],
+      "decision": "Adapt reversible shared binding activation and existing baked looping; no new rig, clock or dependency."
+    },
+    {
+      "project": "Dawn",
+      "revision": "922930e3193753e58591f14a96ab116e5d630964",
+      "files": [
+        "src/dawn/wire/server/ObjectStorage.h",
+        "src/dawn/wire/server/ServerDevice.cpp",
+        "src/dawn/wire/server/ServerQueue.cpp"
+      ],
+      "decision": "Retain exact generation and callback/hold correlation on the existing channel. Source receipt requires actual consumer version/template ACK."
+    }
+  ],
+  "tests": [
+    {
+      "commit": "035d77d96",
+      "tests": 32,
+      "pass": 32,
+      "skipped": 0,
+      "log": ".cache/native-settlement-motion-directed.log"
+    },
+    {
+      "commit": "d20a75d81",
+      "files": 45,
+      "tests": 521,
+      "pass": 521,
+      "skipped": 0,
+      "log": ".cache/native-settlement-roster-regression.log"
+    },
+    {
+      "scope": "Final transport and affected source/control/clock/graphics selection, committed with this record",
+      "files": 10,
+      "tests": 78,
+      "pass": 78,
+      "skipped": 0,
+      "log": ".cache/native-settlement-transport-regression.log"
+    }
+  ],
+  "build": {
+    "status": "pass",
+    "seconds": 43.77,
+    "command": ".cache/tooling/node20.exe node_modules/vite/bin/vite.js build",
+    "log": ".cache/native-settlement-transport-product-build.log",
+    "warnings": "Existing dynamic-import/chunk-size warnings. No C++ or native artifact changes in this increment."
+  },
+  "hardwareRegression": {
+    "scope": "Harvest to Carry on actual Surface/resource/direct consumer ports with original resident actors and crop batch. A stale semantic publication is drained before confirmed crop/crate state; source owner is in-page and independent B remains the explicit Home fixture. This does not close ordinary producer, settlement, recovery or whole-game acceptance.",
+    "artifact": "native-delivery-presentation-carry-regression-20261115.json",
+    "sha256": "06f593efdf099673b9365b72e3047b432a29ab828646ec4e5e5b6067158baadd",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "drawsDuringConsequencePreparationBlock": 53,
+    "blockMilliseconds": 1800.034912109375,
+    "resourcesPrepared": 536,
+    "resourcesCreatedAfterReady": 0,
+    "inputEntity": "worker-900011",
+    "drained": true,
+    "gpuErrors": 0,
+    "errors": [],
+    "consoleErrors": [],
+    "httpFailures": [],
+    "requestFailures": [],
+    "limits": "Existing Harvest-to-Carry regression. Does not exercise new Idle hardware submission or prove global resource-recovery acceptance."
+  },
+  "preservation": {
+    "otherOriginalFilesWithUnchangedByteHashes": 16,
+    "intentionallyChangedPreviously": "confirmed-presentation-stream.js was committed by the preceding consequence increment; no edits to it in this increment."
+  },
+  "remaining": [
+    "remote GPU host/client staged packet, typed clock replay and real submitted drain for settlement",
+    "Surface capture/adoption and stale publication drain through Idle/next-task claim",
+    "new Idle hardware proof, bootstrap/recovery as actual admitted resources",
+    "genuine Home, initial Idle, ordinary producer/all classes and remaining integrated migration plan"
+  ]
+}

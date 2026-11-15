@@ -8,6 +8,8 @@ import {nativeTaskStartReferenceFromProposal} from '../src/world/native-task-sta
 import {createNativeTaskGameFixture} from './helpers/native-task-game-execution.js';
 import {tick} from '../src/simulation/game.js';
 import {nativeTaskActionReferenceFromProposal} from '../src/world/native-task-action-presentation.js';
+import {nativeTaskSettlementFixture} from './helpers/native-task-settlement.js';
+import {nativeTaskSettlementReferenceFromProposal} from '../src/world/native-task-settlement.js';
 
 const boundary={version:1,authorityEpoch:'source',nativeSession:1,ticket:3,effectiveTime:10};
 const resource=()=>({version:1,kind:12,phase:'proposal',worldBoundary:{...boundary}});
@@ -42,6 +44,18 @@ test('an actual arrived action declaration retains its own resource class throug
 test('the action resource port rejects a template from another declaration',async()=>{
  const native=createNativeTaskGameFixture();tick(native.state,native.proposals[0].endTime-native.state.elapsed+.05,native.nav);const proposal=native.planner.prepareNativeTaskActionProposal(native.planner.nativeTaskActionRequest(native.state.workers[0].id)).proposal;
  const f=setup({prepare:async()=>({preparedWorldBoundary:proposal.worldBoundary,preparedTaskActionTemplate:{},abort(){}})});try{await f.connection.ready;await assert.rejects(f.connection.prepareNativeTaskActionResources(proposal),/template receipt/);assert.equal(f.connection.status().retained,0);assert.equal(native.planner.nativeTaskActionBindings().length,0);}finally{f.close();native.close();}
+});
+
+test('the same retained port carries stationary preparation, invalidation, refresh and its exact issued association',async()=>{
+ const native=nativeTaskSettlementFixture(),proposal=native.prepareSettlement().proposal,started=deferred(),finish=deferred();let current=proposal,committed,prepared=0,invalidated=0;
+ const f=setup({prepare:async(kind,resources,options)=>{assert.equal(kind,'prepareNativeTaskSettlementResources');assert.equal(options.deferredStart,true);assert.equal(resources.kind,'native-task-settlement-proposal');prepared++;started.resolve();await finish.promise;return {get preparedWorldBoundary(){return current.worldBoundary;},get preparedTaskSettlementTemplate(){return nativeTaskSettlementReferenceFromProposal(current);},valid:()=>true,invalidate(){invalidated++;return true;},refresh(next){current=next;return true;},commit(data){committed=data;return true;},abort(){}};}});
+ try{await f.connection.ready;const preparing=f.connection.prepareNativeTaskSettlementResources(proposal);await started.promise;const peer=native.body(3);native.advance(.2);assert.notDeepEqual(native.body(3),peer);assert.equal(native.planner.nativeTaskSettlementBinding(native.actor),null);finish.resolve();const handle=await preparing;assert(handle.valid());assert.deepEqual(handle.preparedTaskSettlementTemplate,proposal.nativeSettlement);await assert.rejects(f.connection.prepareNativeTaskSettlementResources(proposal),/already pending/);assert(handle.invalidate());const next=native.planner.revalidateNativeTaskSettlementProposal(proposal.ticket);assert.equal(next.status,'revalidated');assert(await handle.refresh(next.proposal));assert.deepEqual(handle.preparedTaskSettlementTemplate,next.proposal.nativeSettlement);assert.equal(prepared,1);assert.equal(invalidated,1);assert.equal(native.commitSettlement(next.proposal),1);const data={nativeTaskSettlementBinding:native.planner.nativeTaskSettlementBinding(native.actor)};assert(handle.commit(data));assert.equal(handle.commit(data),false);await flush();assert.deepEqual(committed,data);assert.equal(f.connection.status().retained,0);assert.deepEqual(f.errors,[]);}finally{finish.resolve();f.close();native.close();}
+});
+
+test('a stationary port receipt cannot name another prepared body pose or opt out of deferred admission',async()=>{
+ const native=nativeTaskSettlementFixture(),proposal=native.prepareSettlement().proposal,foreign=structuredClone(proposal.nativeSettlement);foreign.pose.yaw+=.1;
+ const f=setup({prepare:async()=>({preparedWorldBoundary:proposal.worldBoundary,preparedTaskSettlementTemplate:foreign,abort(){}})});
+ try{await f.connection.ready;await assert.rejects(f.connection.prepareNativeTaskSettlementResources(proposal,{deferredStart:false}),/deferred start/);await assert.rejects(f.connection.prepareNativeTaskActionResources(proposal),/action proposal/);await assert.rejects(f.connection.prepareNativeTaskSettlementResources(proposal),/template receipt/);assert.equal(f.connection.status().retained,0);assert.equal(native.planner.nativeTaskSettlementBinding(native.actor),null);}finally{f.close();native.close();}
 });
 
 test('abort during preparation disposes a handle that arrives late and permits a later request',async()=>{

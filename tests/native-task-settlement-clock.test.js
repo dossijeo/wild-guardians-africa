@@ -24,6 +24,11 @@ test('stationary clocks cannot borrow a route, a finite action, a resource exten
  const r=source();assert.throws(()=>tag(uniform(0),r,'absolute'),/settlement phase clock/);assert.throws(()=>tag(uniform(0),r,'relative',r.worldBoundary.effectiveTime+1),/settlement phase clock/);assert.throws(()=>tag(uniform(0),r,'relative',null,{actorId:r.actorId,assignmentSequence:r.sourceCarry.assignmentSequence,routeHandle:r.sourceCarry.reference.expectedRouteHandle}),/Conflicting/);assert.throws(()=>markRemoteClockNode(uniform(0),'relative',r.worldBoundary.effectiveTime+1,null,null,null,null,null,null,null,null,null,r),/settlement phase clock/);
 });
 
+test('stationary references require their own newer native ticket and retagging cannot reuse a ticket at another time',()=>{
+ const r=source(),node=tag(uniform(0),r),hook=installRemoteClockBindings({backend:{get:()=>({buffer:null}),updateBinding(){}}},{registerClockBinding(){}});
+ try{assert.throws(()=>copyNativeTaskSettlementReference({...r,worldBoundary:{...r.worldBoundary,ticket:r.sourceCarry.reference.worldBoundary.ticket}}),/arrived Carry/);assert.throws(()=>hook.retagNativeTaskSettlement(node,r,r),/cannot be retagged/);assert.throws(()=>hook.retagNativeTaskSettlement(node,r,{...r,worldBoundary:{...r.worldBoundary,effectiveTime:r.worldBoundary.effectiveTime+.1}}),/cannot be retagged/);}finally{hook.dispose();}
+});
+
 test('stationary picks retain exact submitted float ages, actual issued origins and native world coverage',()=>{
  const r=later(source(),1e12),epoch=r.worldBoundary.effectiveTime,age=Math.fround(.1234567),executionEpoch=epoch+.25,binding={nativeSettlement:r,semantic:'relative',epoch,executionEpoch,elapsed:epoch+age,relativeTime:age},consumer={nativeRouteFrame:{sequence:1,clockElapsed:executionEpoch+.2,worldBoundary:r.worldBoundary,bindings:[binding]}};
  const pick=captureNativeRoutePickFrame(consumer);assert.equal(pick.getSettlementElapsed(r),age);assert.notEqual(binding.elapsed-epoch,age);assert.equal(pick.getSettlementExecutionTime(r),executionEpoch+age);assert.throws(()=>pick.getSettlementElapsed({...r,pose:{...r.pose,yaw:r.pose.yaw+.1}}),/no submitted/);

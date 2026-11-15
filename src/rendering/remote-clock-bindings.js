@@ -63,7 +63,7 @@ export function installRemoteClockBindings(renderer,remote){
  }
  return {retagNativeTaskSettlement(node,previous,value){
   const before=copyNativeTaskSettlementReference(previous),after=copyNativeTaskSettlementReference(value),metadata=node?.[clockMetadata];
-  if(disposed||!sameNativeTaskSettlementReference(metadata?.nativeSettlement,before)||metadata.epoch!==before.worldBoundary.effectiveTime||!nativeTaskSettlementSuccessor(before,after))throw Error('Native settlement clock cannot be retagged');
+  if(disposed||!sameNativeTaskSettlementReference(metadata?.nativeSettlement,before)||metadata.epoch!==before.worldBoundary.effectiveTime||after.worldBoundary.ticket<=before.worldBoundary.ticket||!nativeTaskSettlementSuccessor(before,after))throw Error('Native settlement clock cannot be retagged');
   return replace(node,Object.freeze({...metadata,epoch:after.worldBoundary.effectiveTime,nativeSettlement:after}));
  },retagNativeTaskConsequence(node,previous,value,resourceEnd=null){
   const before=copyNativeTaskConsequenceReference(previous),after=copyNativeTaskConsequenceReference(value),metadata=node?.[clockMetadata];
