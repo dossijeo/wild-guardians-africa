@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [reservas ordinarias de tareas pendientes de recursos](e-r3-native-task-resource-requests-20261115.md).
+Último avance: [candidato de primera ruta desde la tarea nativa](e-r3-native-task-start-proposal-20261115.md).
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio

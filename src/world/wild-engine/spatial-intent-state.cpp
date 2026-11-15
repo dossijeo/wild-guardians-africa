@@ -179,13 +179,14 @@ struct Change {
 };
 struct GateCrossingBoundary {uint64_t gate;double distance,last;};
 // A single pending replacement in the existing mutation reservation. It owns
-// only the candidate already built by resume, never another IntentState/world.
-struct PendingNativeResume {
+// only an unpublished motion candidate, never another IntentState/world.
+struct PendingNativeMotionDraft {
   RouteSlot route;
   std::map<uint64_t,NativeGate> gates;
   std::vector<GateCrossingBoundary> boundaries;
   std::vector<double> rows;
   std::array<double,24> header{};
+  std::array<double,2> taskIdentity{};
   // Evidence about the previous native-owned draft, never an execution grant.
   // Kept only in the one current proposal; cancelling it drops the evidence.
   std::array<double,11> timeTranslation{};
@@ -193,7 +194,7 @@ struct PendingNativeResume {
   uint64_t body=0;
 };
 struct PendingBarrierProposal {
-  std::optional<PendingNativeResume> resume;
+  std::optional<PendingNativeMotionDraft> resume,start;
   bool retainsRoutes=false;
   std::vector<double> routeEffects,gateEffects;
   bool pending=false;uint32_t session=0;uint64_t ticket=0;
@@ -1029,12 +1030,12 @@ int spatialIntentStageWorld(const SpatialWorldProposalInput& input,const Spatial
   auto& p=state().barrierProposal;p.kind=input.kind;p.worldInput=input;return 1;
 }
 void clearWorldMutationProposal(PendingBarrierProposal& p){
-  p.pending=false;p.kind=0;p.resume.reset();p.worldInput=SpatialWorldProposalInput{};p.routeEffects.clear();p.gateEffects.clear();
+  p.pending=false;p.kind=0;p.resume.reset();p.start.reset();p.worldInput=SpatialWorldProposalInput{};p.routeEffects.clear();p.gateEffects.clear();
 }
 int takeWorldMutationBoundary(double session,double ticket,double sequence,double time,double clockSequence,int kind){
   auto& s=state();const auto& p=s.barrierProposal;
   if(!integer(session)||!integer(ticket)||!p.pending||session!=double(p.session)||ticket!=double(p.ticket)||
-     (kind==1?p.kind!=1:kind==13?p.kind!=13:p.kind<2||p.kind>11))return -1;
+     (kind==1?p.kind!=1:(kind==13||kind==14)?p.kind!=kind:p.kind<2||p.kind>11))return -1;
   const bool current=p.session==s.session&&p.at==s.effectiveTime&&p.bodies==spatialBodiesMutationRevision()&&
     p.bodies!=std::numeric_limits<uint64_t>::max()&&p.entities==s.entityRevision&&p.facts==s.sequence&&
     p.intents==s.intentSequence&&p.reservations==s.residencyPinRevision&&p.clock==s.clockSequence&&
