@@ -61,6 +61,13 @@ accesorios de Water y su picking. Su selección y reversión usan el binding
 existente; aún falta enlazar el reloj y el commit de acción. No cierra admisión
 ordinaria, efectos ni aceptación integrada.
 
+La [identidad y tiempo de la acción nativa](e-r3-native-action-identity-20261115.md)
+conserva la asociación de origen y la transición realmente emitida, protege el
+cuerpo estacionario y entrega sus hechos al estado inicial del control. La edad
+usa el reloj común; finalizar antes de tiempo se rechaza. El coordinador de
+recursos/recibo GPU y la proyección/consecuencia de partida siguen pendientes;
+`Game.tick` no activa esta clase por un fallback. No cambia el recuento de cierre.
+
 Hay modificaciones locales previas en simulación, escena, carga y QA. No forman
 parte de los commits de esta corrección ni deben descartarse.
 

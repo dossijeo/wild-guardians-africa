@@ -103,6 +103,7 @@ std::set<uint64_t> reservationBodyCandidates(const IntentState& s,const SpatialB
 }
 bool reserveRouteClear(IntentState& s,const ActiveIntent& intent,const RouteSlot& route,
     uint64_t body,const SpatialBodyView& physical,bool suffix=false){
+  if(nativeTaskActionForBody(s,body))return false;
   const ReservationPath path{&route};
   double minX=route.originX,maxX=route.originX,minZ=route.originZ,maxZ=route.originZ;
   for(size_t i=0;i<route.points.size();i+=2){

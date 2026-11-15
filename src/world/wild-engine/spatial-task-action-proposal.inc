@@ -22,6 +22,7 @@ static int stageTaskActionProposal(double actorId,double session,double slot,dou
      body.r!=route->radius||body.x!=route->executionPose[0]||body.z!=route->executionPose[1]||
      worker->second.x!=body.x||worker->second.z!=body.z)return -3;
   const double end=s.effectiveTime+duration;if(!std::isfinite(end)||end<s.effectiveTime||duration>0&&end==s.effectiveTime)return -2;
+  for(double value:{duration,heading,body.x,body.z,body.r,route->executionPose[9],route->executionPose[10],route->executionPose[11],route->executionPose[14]})if(!std::isfinite(float(value)))return -2;
   const int staged=stageWorldMutationBoundary(nullptr,0);if(staged!=1)return staged;
   auto& p=s.barrierProposal;p.kind=15;p.action.emplace();
   p.action->header={1,actorId,taskId,targetId,bodyId,slot,generation,assignment,requestedAt,double(kind),duration,heading,
@@ -55,8 +56,45 @@ EMSCRIPTEN_KEEPALIVE int nav_task_action_proposal_revalidate(double session,doub
   const auto& next=p.action->header;bool same=true;
   for(size_t i=0;i<h.size();i++)if(i!=15&&i!=16&&i!=21&&h[i]!=next[i])same=false;
   // Identity/pose/phase equality is NOT a Float32 shader compatibility proof.
+  p.action->previousHeader=h;p.action->previousTicket=uint64_t(ticket);
   p.action->timeTranslation={1,ticket,double(p.ticket),h[15],h[16],next[15],next[16],same?1.:0.};return 1;
 }
+// Trusted source ABI, like other conditioned native mutations. The embedding
+// must obtain its exact direct-consumer drain and retained packet before use.
+// Only an issued native transition can become an action identity.
+EMSCRIPTEN_KEEPALIVE int nav_task_action_binding_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int nav_task_action_proposal_commit_bound(double session,double ticket,double sequence,double time,double clockSequence,double preparedTicket){
+  auto& s=state();const auto& p=s.barrierProposal;
+  if(!p.pending||p.kind!=15||!p.action||!integer(preparedTicket))return -1;
+  const int valid=takeWorldMutationBoundary(session,ticket,sequence,time,clockSequence,15);if(valid!=1)return valid;
+  const auto draft=*p.action;const auto& h=draft.header;const uint64_t actor=uint64_t(h[1]);
+  const auto* route=executedTaskRoute(s,actor);SpatialBodyView body;
+  if(!route||route->executionPose[6]!=1||double(route->reservationBody)!=h[4]||!spatialReadBody(route->reservationBody,body)||body.x!=h[12]||body.z!=h[13]||body.r!=h[14]){clearWorldMutationProposal(s.barrierProposal);return -2;}
+  auto binding=std::make_shared<NativeTaskActionBinding>();binding->actual=h;binding->actualTicket=uint64_t(ticket);binding->preparedTicket=uint64_t(preparedTicket);binding->bodyFlags=body.flags;
+  if(preparedTicket==ticket)binding->prepared=h;
+  else if(draft.previousHeader&&preparedTicket==double(draft.previousTicket)&&draft.timeTranslation[7]==1)binding->prepared=*draft.previousHeader;
+  else return -9;
+  clearWorldMutationProposal(s.barrierProposal);auto& intent=s.activeIntents.at(actor);
+  releaseRoute(s,intent);intent.state=PlanningState::ActionActive;intent.actionBinding=binding;
+  binding->actionSequence=emitIntentChange(s,intent);s.entityRevision++;return 1;
+}
+static void appendTaskActionBinding(IntentState& s,const ActiveIntent& intent){
+  const auto& b=*intent.actionBinding;auto& out=s.taskActionBindingResult;
+  out.insert(out.end(),{1,double(b.actionSequence),double(s.session),double(b.preparedTicket),double(b.actualTicket),s.effectiveTime});
+  out.insert(out.end(),b.prepared.begin(),b.prepared.end());out.insert(out.end(),b.actual.begin(),b.actual.end());
+}
+EMSCRIPTEN_KEEPALIVE int nav_task_action_binding_snapshot(double actorId){
+  auto& s=state();s.taskActionBindingResult.clear();if(!integer(actorId))return 0;
+  const auto found=s.activeIntents.find(uint64_t(actorId));if(found==s.activeIntents.end()||!found->second.actionBinding)return 0;
+  if(!nativeTaskActionBodyCurrent(s,found->second))return -1;
+  appendTaskActionBinding(s,found->second);return 1;
+}
+EMSCRIPTEN_KEEPALIVE int nav_task_action_bindings_snapshot(){
+  auto& s=state();s.taskActionBindingResult.clear();std::vector<uint64_t> actors;
+  for(const auto& [actor,intent]:s.activeIntents)if(intent.actionBinding){if(!nativeTaskActionBodyCurrent(s,intent))return -1;actors.push_back(actor);}
+  std::sort(actors.begin(),actors.end());for(uint64_t actor:actors)appendTaskActionBinding(s,s.activeIntents.at(actor));return int(actors.size());
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_task_action_binding_snapshot_ptr(){return state().taskActionBindingResult.data();}
 EMSCRIPTEN_KEEPALIVE const double* nav_task_action_proposal_time_translation_ptr(double session,double ticket){
   const auto& p=state().barrierProposal;
   return p.pending&&p.kind==15&&p.action&&session==double(p.session)&&ticket==double(p.ticket)&&p.action->timeTranslation[0]==1?p.action->timeTranslation.data():nullptr;

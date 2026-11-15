@@ -32,3 +32,23 @@ export function copyNativeTaskActionProposal(value){
     !Number.isInteger(value.motionFlags)||value.motionFlags<0||value.motionFlags>63||['runPhase','walkPhase','carryPhase','runRemaining'].some(k=>!Number.isFinite(value[k])||value[k]<0))throw TypeError('Invalid native task action boundary or pose');
  return Object.freeze({kind:value.kind,version:1,ticket:Object.freeze({kind:ticket.kind,authorityEpoch:ticket.authorityEpoch,session:ticket.session,ticket:ticket.ticket}),worldBoundary,request,sourceControlSequence:value.sourceControlSequence,origin:Object.freeze({x:value.origin.x,z:value.origin.z}),radius:value.radius,profile:value.profile,motionFlags:value.motionFlags,startTime:value.startTime,endTime:value.endTime,runPhase:value.runPhase,walkPhase:value.walkPhase,carryPhase:value.carryPhase,runRemaining:value.runRemaining,authorizedAutonomy:false,authorizedConsequences:false});
 }
+
+const referenceFields=['request','worldBoundary','sourceControlSequence','origin','radius','profile','motionFlags','startTime','endTime','runPhase','walkPhase','carryPhase','runRemaining'];
+const parameters=['radius','profile','motionFlags','runPhase','walkPhase','carryPhase','runRemaining'];
+function actionReference(proposal){
+ return Object.freeze({kind:'native-task-action-reference',version:1,...Object.fromEntries(referenceFields.map(k=>[k,proposal[k]]))});
+}
+export function nativeTaskActionReferenceFromProposal(value){return copyNativeTaskActionReference(actionReference(copyNativeTaskActionProposal(value)));}
+export function copyNativeTaskActionReference(value){
+ if(value?.kind!=='native-task-action-reference'||value.version!==1||Object.keys(value).some(k=>!['kind','version',...referenceFields].includes(k)))throw TypeError('Invalid native task action reference');
+ const b=value.worldBoundary,p=copyNativeTaskActionProposal({...Object.fromEntries(referenceFields.map(k=>[k,value[k]])),kind:'native-task-action-proposal',version:1,ticket:{kind:'native-task-action-proposal-ticket',authorityEpoch:b?.authorityEpoch,session:b?.nativeSession,ticket:b?.ticket},authorizedAutonomy:false,authorizedConsequences:false});
+ if([p.request.duration,p.request.heading,p.origin.x,p.origin.z,p.radius,p.runPhase,p.walkPhase,p.carryPhase,p.runRemaining].some(n=>!Number.isFinite(Math.fround(n))))throw TypeError('Native action parameters are not representable');
+ return actionReference(p);
+}
+export function sameNativeTaskActionReference(a,b){
+ return !!a&&!!b&&sameNativeTaskActionRequest(a.request,b.request)&&['version','authorityEpoch','nativeSession','ticket','effectiveTime'].every(k=>a.worldBoundary[k]===b.worldBoundary[k])&&['startTime','endTime','sourceControlSequence',...parameters].every(k=>a[k]===b[k])&&a.origin.x===b.origin.x&&a.origin.z===b.origin.z;
+}
+// Projection v1 uses fixed body parameters and request.duration, never a
+// duration obtained by subtracting absolute times. A new epoch can reuse them.
+export function sameNativeTaskActionSource(a,b){return !!a&&!!b&&sameNativeTaskActionRequest(a.request,b.request)&&parameters.every(k=>a[k]===b[k])&&a.origin.x===b.origin.x&&a.origin.z===b.origin.z;}
+export function nativeTaskActionSuccessor(a,b){return sameNativeTaskActionSource(a,b)&&b.worldBoundary.ticket>a.worldBoundary.ticket&&b.startTime>=a.startTime&&b.sourceControlSequence>=a.sourceControlSequence;}

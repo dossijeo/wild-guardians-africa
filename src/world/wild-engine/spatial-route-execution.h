@@ -48,6 +48,7 @@ int beginRouteExecution(IntentState& s){
 // Check structural membership at intent events; ordinary execution already
 // checks its bindings and mutation stamp, without revalidating route geometry.
 bool causalClockCohortReady(IntentState& s){
+  if(!nativeTaskActionsCoherent(s))return false;
   if(!gateStaticProofCurrent(s)||s.executionEnabled&&s.executionWorldStamp!=executionWorldStamp()||
      !s.reservedBodies.empty()&&!s.executionEnabled)return false;
   if(s.clockProofSequence==s.intentSequence)return true;
@@ -60,6 +61,7 @@ bool causalClockCohortReady(IntentState& s){
 }
 int advanceRouteExecution(IntentState& s,double at){
   if(!std::isfinite(at)||at<s.effectiveTime)return -1;
+  if(!nativeTaskActionsCoherent(s))return -3;
   // The world's native motors outlive their requesting actors. An empty,
   // coherent causal cohort still advances on the same authority transaction;
   // it cannot use set_time or a presentation/resource lease to bypass pause.

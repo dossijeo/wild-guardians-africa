@@ -121,6 +121,11 @@ struct Task {uint64_t id,center,target,assigned;double created,rank;int kind;};
 enum class PlanningState:int {NeedsPlan=0,RouteActive=1,ActionActive=2,
   WaitingUnknown=3,WaitingBlocked=4,Cancelled=5,AwaitingResources=6};
 struct TaskActionResourceRequest {int kind=0;double duration=0,heading=0,requestedAt=0;};
+struct NativeTaskActionBinding {
+  std::array<double,24> prepared{},actual{};
+  uint64_t preparedTicket=0,actualTicket=0,actionSequence=0;
+  int bodyFlags=0;
+};
 struct ActiveIntent {
   uint64_t actor=0,task=0,target=0;
   PlanningState state=PlanningState::NeedsPlan;
@@ -144,6 +149,7 @@ struct ActiveIntent {
   double timingRadius=0;
   int motionFlags=0;double runBudget=0;
   std::optional<TaskActionResourceRequest> actionRequest;
+  std::shared_ptr<const NativeTaskActionBinding> actionBinding;
 };
 struct RouteHold {
   double distance=0,from=0,until=0,delay=0;
@@ -213,6 +219,8 @@ struct PendingNativeMotionDraft {
 struct PendingTaskActionDraft {
   std::array<double,24> header{};
   std::array<double,8> timeTranslation{};
+  std::optional<std::array<double,24>> previousHeader;
+  uint64_t previousTicket=0;
 };
 struct PendingBarrierProposal {
   std::optional<PendingNativeMotionDraft> resume,start;
@@ -306,6 +314,7 @@ struct IntentState {
   std::array<double,18> executionResult{};
   std::array<double,31> taskExecutionResult{};
   std::array<double,14> taskActionRequestResult{};
+  std::vector<double> taskActionBindingResult;
   std::set<uint64_t> stoppedReservationBodies,removingBodies;
   std::set<uint64_t> stoppedGateRouteActors;
   uint64_t executionAdvances=0,executionEvaluations=0,executionBodyUpdates=0,executionStopInvalidations=0;
@@ -370,6 +379,30 @@ bool integer(double value,bool allowZero=false){
     value<=maxId&&std::floor(value)==value;
 }
 bool coordinate(double value){return std::isfinite(value)&&std::abs(value)<2147483000.0;}
+bool nativeTaskActionBodyCurrent(const IntentState& s,const ActiveIntent& intent){
+  if(!intent.actionBinding||intent.state!=PlanningState::ActionActive||intent.animal||intent.home||intent.retreat||!intent.requiresResources)return false;
+  const auto& binding=*intent.actionBinding;const auto& h=binding.actual;
+  const auto worker=s.workers.find(intent.actor);const auto task=s.tasks.find(intent.task);SpatialBodyView body;
+  return binding.actionSequence&&double(intent.actor)==h[1]&&double(intent.task)==h[2]&&double(intent.target)==h[3]&&
+    worker!=s.workers.end()&&worker->second.bodyBound&&double(worker->second.body)==h[4]&&
+    task!=s.tasks.end()&&task->second.assigned==intent.actor&&task->second.target==intent.target&&
+    spatialReadBody(worker->second.body,body)&&body.kind==0&&body.flags==binding.bodyFlags&&body.x==h[12]&&body.z==h[13]&&body.r==h[14]&&
+    worker->second.x==body.x&&worker->second.z==body.z&&!s.reservedBodies.count(worker->second.body)&&!s.suspendedBodies.count(worker->second.body);
+}
+bool nativeTaskActionsCoherent(const IntentState& s){
+  for(const auto& [actor,intent]:s.activeIntents)if(intent.actionBinding&&!nativeTaskActionBodyCurrent(s,intent))return false;
+  return true;
+}
+const ActiveIntent* nativeTaskActionForBody(const IntentState& s,uint64_t id){
+  const auto owner=s.gateBodyActors.find(id);if(owner==s.gateBodyActors.end())return nullptr;
+  const auto intent=s.activeIntents.find(owner->second);
+  return intent!=s.activeIntents.end()&&intent->second.actionBinding?&intent->second:nullptr;
+}
+bool nativeTaskActionBodyCanChange(const IntentState& s,uint64_t id,const SpatialBodyView& proposed){
+  const auto* intent=nativeTaskActionForBody(s,id);if(!intent)return true;
+  const auto& binding=*intent->actionBinding;const auto& h=binding.actual;
+  return proposed.kind==0&&proposed.flags==binding.bodyFlags&&proposed.x==h[12]&&proposed.z==h[13]&&proposed.r==h[14];
+}
 std::array<uint64_t,3> executionWorldStamp(){
   return {spatial_execution_revision(0),spatial_execution_revision(1),spatial_execution_revision(2)};
 }
@@ -496,7 +529,7 @@ bool intentHasSuspendedRoute(const IntentState& s,const ActiveIntent& intent){
   const auto& route=s.routeSlots[intent.slot];
   return route.active&&route.suspended&&route.actor==intent.actor&&route.generation==intent.generation;
 }
-void emitIntentChange(IntentState& s,ActiveIntent& intent){
+uint64_t emitIntentChange(IntentState& s,ActiveIntent& intent){
   indexRouteDependencies(s,intent);
   const IntentEvent event=intent.state==PlanningState::RouteActive?
     (intent.revokedGeneration?IntentEvent::RouteReplaced:IntentEvent::RouteAssigned):
@@ -518,10 +551,12 @@ void emitIntentChange(IntentState& s,ActiveIntent& intent){
     double(intent.revokedGeneration),double(int(event)),double(intentProtocolVersion)});
   intent.revokedSlot=0;intent.revokedGeneration=0;
   drainStoppedReservations(s);
+  return transitionSequence;
 }
 void releaseGateCrossings(IntentState&,const RouteSlot&);
 void releaseRoute(IntentState& s,ActiveIntent& intent){
   intent.actionRequest.reset();
+  intent.actionBinding.reset();
   clearRouteDependencies(s,intent);
   if(intent.slot<s.routeSlots.size()){
     RouteSlot& route=s.routeSlots[intent.slot];
@@ -1143,7 +1178,7 @@ SpatialStaticTicket spatialIntentStaticBefore(const SpatialStaticMutation* shape
 }
 void spatialIntentStaticCommitted(const SpatialStaticTicket& ticket){staticMutationCommitted(state(),ticket);}
 bool spatialIntentBodyCanChange(uint64_t id,const SpatialBodyView& proposed){
-  auto& s=state();if(!gateMechanismBodyCanChange(s,proposed)||!gateMotionBodyCanChange(s,proposed)||!reservationBodyCanChange(s,id,proposed))return false;
+  auto& s=state();if(!nativeTaskActionBodyCanChange(s,id,proposed)||!gateMechanismBodyCanChange(s,proposed)||!gateMotionBodyCanChange(s,proposed)||!reservationBodyCanChange(s,id,proposed))return false;
   if(s.bodyDomainActive){SpatialBodyView previous;const bool exists=spatialReadBody(id,previous);
     updateResidencyPinRevision(s,exists?&previous:nullptr,&proposed);}
   return true;
@@ -1151,6 +1186,8 @@ bool spatialIntentBodyCanChange(uint64_t id,const SpatialBodyView& proposed){
 void spatialIntentBodyRemoving(uint64_t id){
   auto& s=state();SpatialBodyView previous;
   if(const auto binding=s.gateBodyActors.find(id);binding!=s.gateBodyActors.end()){
+    const auto intent=s.activeIntents.find(binding->second);
+    if(intent!=s.activeIntents.end()&&intent->second.actionBinding){releaseIntent(s,intent->first,PlanningState::Cancelled);s.activeIntents.erase(intent);}
     if(const auto worker=s.workers.find(binding->second);worker!=s.workers.end())worker->second.bodyBound=false;
     s.gateBodyActors.erase(binding);
   }
@@ -1159,6 +1196,8 @@ void spatialIntentBodyRemoving(uint64_t id){
 }
 void spatialIntentBodiesResetting(){
   auto& s=state();
+  std::vector<uint64_t> actions;for(const auto& [actor,intent]:s.activeIntents)if(intent.actionBinding)actions.push_back(actor);
+  std::sort(actions.begin(),actions.end());for(uint64_t actor:actions){releaseIntent(s,actor,PlanningState::Cancelled);s.activeIntents.erase(actor);}
   for(auto& [id,worker]:s.workers)worker.bodyBound=false;s.gateBodyActors.clear();
   s.resettingBodies=true;
   while(!s.reservedBodies.empty())reservationBodyRemoving(s,s.reservedBodies.begin()->first);
@@ -1213,7 +1252,7 @@ void nav_intent_reset(){
 #endif
 #endif
   s.byBlockedCropGroup.clear();s.wallOpportunityActors.clear();
-  s.routeSlots.clear();s.intentChanges.clear();s.controlSnapshot.clear();s.intentResult.fill(0);
+  s.routeSlots.clear();s.intentChanges.clear();s.controlSnapshot.clear();s.taskActionBindingResult.clear();s.intentResult.fill(0);
   s.timingResult.fill(0);s.sampleResult.fill(0);s.routeTimeSamples=0;s.timingRejection=0;
   s.reservedBodies.clear();s.suspendedBodies.clear();s.reservationResult.fill(0);
   s.routeSuspensions=s.routeResumptions=0;s.suspendedRouteResult.fill(0);
@@ -1411,6 +1450,7 @@ int nav_intent_apply_changes(double sequence,int count){
   std::vector<Change> parsed(static_cast<size_t>(count));
   for(int i=0;i<count;i++)
     if(!parse(s.changes.data()+size_t(i)*changeWidth,parsed[size_t(i)]))return 0;
+  for(const auto& change:parsed)if(change.kind==1&&change.op){const auto active=s.activeIntents.find(change.id);if(active!=s.activeIntents.end()&&active->second.actionBinding){const auto& h=active->second.actionBinding->actual;if(change.x!=h[12]||change.z!=h[13])return 0;}}
   if(s.executionEnabled)for(const auto& change:parsed){
     if(change.kind!=1||!change.op)continue;
     const auto active=s.activeIntents.find(change.id);
@@ -3365,6 +3405,7 @@ int nav_intent_finish(double actorId){
   if(!integer(actorId))return 0;
   IntentState& s=state();const uint64_t actor=uint64_t(actorId);
   const auto found=s.activeIntents.find(actor);if(found==s.activeIntents.end())return 0;
+  if(found->second.requiresResources&&(!found->second.actionBinding||!nativeTaskActionBodyCurrent(s,found->second)||s.effectiveTime<found->second.actionBinding->actual[16]))return 0;
   const uint64_t taskId=found->second.task;
   releaseIntent(s,actor,PlanningState::Cancelled);
   s.activeIntents.erase(actor);

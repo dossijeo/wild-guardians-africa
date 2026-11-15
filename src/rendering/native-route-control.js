@@ -5,6 +5,8 @@ import {copyNativeResumeAttestation,nativeResumeAttestationCovers} from '../worl
 import {copyNativeResumeReference,sameNativeResumeReference} from '../world/native-resume-reference.js';
 import {copyNativeSuspendedBodyReference,sameNativeSuspendedBodyReference} from '../world/native-suspended-body-reference.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
+import {copyNativeTaskActionReference} from '../world/native-task-action-presentation.js';
+import {copyNativeTaskActionAttestation,nativeTaskActionAttestationCovers} from '../world/native-task-action-attestation.js';
 
 const eventTypes=new Set(['RouteAssigned','RouteInvalidated','RouteReplaced',
   'IntentChanged','RouteCompleted']);
@@ -16,7 +18,7 @@ function validHandle(handle,epoch){return handle?.authorityEpoch===epoch&&
   id(handle.generation);}
 
 // A permission mirror of the existing native intent log, not a navigation or
-// movement model. No points, bodies, targets or collision predicates live here.
+// movement model. It owns no independent body motion or collision simulation.
 // Admission resolves a stable record once. Revocation updates that exact record
 // even if preparation has not finished; drawing only reads its time limit.
 export function createNativeRouteControl({authorityEpoch,initialSequence=0,initialTime=null,routes=[],pendingTaskRequests=[]}={}){
@@ -25,7 +27,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
      initialTime!==null&&(!Number.isFinite(initialTime)||initialTime<0)||!Array.isArray(routes)||!Array.isArray(pendingTaskRequests))
     throw TypeError('Invalid native route control identity');
   const active=new Map(),actors=new Map();
-  const actorContext=actorId=>{let value=actors.get(actorId);if(!value){value={closed:false,latestSequence:0,state:null,current:null,revoked:null,proof:null,resumeProof:null,startProof:null,pendingTaskRequest:null};actors.set(actorId,value);}return value;};
+  const actorContext=actorId=>{let value=actors.get(actorId);if(!value){value={closed:false,latestSequence:0,state:null,current:null,revoked:null,proof:null,resumeProof:null,startProof:null,pendingTaskRequest:null,actionProof:null,actionRecord:null};actors.set(actorId,value);}return value;};
   const matches=(record,reference)=>!!record&&record.actorId===reference.actorId&&record.assignmentSequence===reference.assignmentSequence&&sameHandle(record.handle,reference.routeHandle);
   const assignments=new Set();
   for(const route of routes){
@@ -76,6 +78,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       error.code='native-route-revocation-late';throw error;
     }
     const actor=assigned||event.type==='IntentChanged'&&event.state===6?actorContext(event.actorId):actors.get(event.actorId);
+    if(actor?.actionRecord&&actor.actionRecord.lastDrawTime!==null&&event.effectiveTime<actor.actionRecord.lastDrawTime){const error=Error('Native action revocation arrived after its presented time');error.code='native-action-revocation-late';throw error;}
     const sourceSuspension=assigned&&actor?.proof&&suspendedCurrent(actor.proof,actor.revoked,actor)?{reference:actor.proof,sequence:actor.latestSequence}:null;
     if(current&&revoked){
       current.revokedSequence=event.sequence;current.revokedState=Number.isInteger(event.state)?event.state:null;
@@ -87,8 +90,8 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     if(assigned){const record={actorId:event.actorId,handle:Object.freeze({...handle}),
       assignmentSequence:event.sequence,startTime:event.effectiveTime,
       safeUntil:Infinity,lastDrawTime:null,actor,sourceSuspension,sourceTaskRequest};active.set(event.actorId,record);actor.current=record;actor.proof=null;}
-    if(actor){actor.startProof=null;actor.pendingTaskRequest=taskRequest;actor.resumeProof=null;actor.latestSequence=event.sequence;actor.state=assigned?1:Number.isInteger(event.state)?event.state:null;
-      if(!actor.current&&actor.state!==4&&actor.state!==6){actor.closed=true;actors.delete(event.actorId);}}
+    if(actor){if(actor.actionRecord)actor.actionRecord.safeUntil=Math.min(actor.actionRecord.safeUntil,event.effectiveTime);actor.actionProof=null;actor.actionRecord=null;actor.startProof=null;actor.pendingTaskRequest=taskRequest;actor.resumeProof=null;actor.latestSequence=event.sequence;actor.state=assigned?1:Number.isInteger(event.state)?event.state:null;
+      if(!actor.current&&actor.state!==2&&actor.state!==4&&actor.state!==6){actor.closed=true;actors.delete(event.actorId);}}
     sequence=event.sequence;effectiveTime=event.effectiveTime;counters.accepted++;
     return true;
   }
@@ -110,8 +113,28 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     const record=actor?.current,proof=actor?.startProof;
     return !closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.actorId)===actor&&actor.state===1&&active.get(reference.actorId)===record&&!!record&&actor.latestSequence===record.assignmentSequence&&sameHandle(record.handle,reference.expectedRouteHandle)&&proof?.assignmentSequence===record.assignmentSequence&&record.startTime===proof.reference.worldBoundary.effectiveTime&&nativeTaskStartAttestationCovers(proof,reference);
   }
+  function actionCurrent(reference,actor){
+    return !closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.request.nativeRoute.actorId)===actor&&actor.state===2&&actor.current===null&&actor.actionRecord?.actionSequence===actor.latestSequence&&actor.actionProof?.actionSequence===actor.latestSequence&&nativeTaskActionAttestationCovers(actor.actionProof,reference);
+  }
   return {
     accept,
+    installActions(boundary,values=[],{bootstrap=false}={}){
+      boundary=copyNativeWorldBoundary(boundary);
+      if(closed||!clock||typeof bootstrap!=='boolean'||!Array.isArray(values)||values.length>32768||!bootstrap&&(!boundary||boundary.effectiveTime!==clock.committedThrough)||boundary&&(boundary.authorityEpoch!==authorityEpoch||boundary.nativeSession!==clock.nativeSession))throw Error('Invalid native action boundary');
+      const staged=[],ids=new Set(),bodies=new Set();
+      for(const input of values){const proof=copyNativeTaskActionAttestation(input),r=proof.reference,q=r.request,actorId=q.nativeRoute.actorId,actor=actors.get(actorId),world=r.worldBoundary,revoked=actor?.revoked;
+        if(world.authorityEpoch!==authorityEpoch||world.nativeSession!==clock.nativeSession||world.effectiveTime>clock.committedThrough||proof.actionSequence>sequence||boundary&&(world.ticket>boundary.ticket||world.effectiveTime>boundary.effectiveTime)||!bootstrap&&!sameNativeWorldBoundary(world,boundary)||ids.has(actorId)||bodies.has(q.bodyId)||
+          (bootstrap?!!actor:!actor||actor.closed||actor.current!==null||actor.state!==2||actor.latestSequence!==proof.actionSequence||!!actor.actionRecord||!revoked||revoked.revokedState!==2||revoked.revokedSequence!==proof.actionSequence||revoked.safeUntil!==world.effectiveTime||!matches(revoked,q.nativeRoute)))throw Error('Native action attestation differs from its issued transition');
+        ids.add(actorId);bodies.add(q.bodyId);staged.push({actorId,actor,proof});
+      }
+      for(const item of staged){const actor=item.actor??actorContext(item.actorId);actor.state=2;actor.latestSequence=item.proof.actionSequence;actor.actionProof=item.proof;actor.actionRecord={actorId:item.actorId,actor,reference:item.proof.reference,actionSequence:item.proof.actionSequence,startTime:item.proof.reference.startTime,safeUntil:Infinity,lastDrawTime:null};}return staged.length;
+    },
+    admitAction(value,{preparingWorldBoundary=null}={}){
+      const reference=copyNativeTaskActionReference(value),q=reference.request,actor=actors.get(q.nativeRoute.actorId),boundary=copyNativeWorldBoundary(preparingWorldBoundary);
+      const current=()=>actionCurrent(reference,actor),pending=()=>!closed&&!!clock&&!!actor&&!actor.closed&&actors.get(q.nativeRoute.actorId)===actor&&actor.state===1&&actor.latestSequence===actor.current?.assignmentSequence&&matches(actor.current,q.nativeRoute)&&sameNativeWorldBoundary(boundary,reference.worldBoundary)&&sequence>=reference.sourceControlSequence&&clock.committedThrough>=reference.startTime;
+      if(reference.worldBoundary.authorityEpoch!==authorityEpoch||!clock||reference.worldBoundary.nativeSession!==clock.nativeSession||!current()&&!pending()){const error=Error('Native action is obsolete or lacks direct authority proof');error.code='native-action-admission-obsolete';throw error;}
+      counters.admissions++;return Object.freeze({reference,isCurrent:current,isPrepared:()=>current()||pending(),get actionRecord(){return current()?actor.actionRecord:null;},get executionEpoch(){return current()?actor.actionProof.reference.startTime:null;},get executionEnd(){return current()?actor.actionProof.reference.endTime:null;}});
+    },
     startGateExecutionEpoch(gate){for(const actor of actors.values()){const proof=actor.startProof;if(proof&&startCurrent(proof.reference,actor)&&proof.gateIds.includes(gate.gateId)&&sameNativeWorldBoundary(proof.preparedReference.worldBoundary,gate.worldBoundary))return actor.current.startTime;}return null;},
     installStartedRoutes(boundary,values=[],{bootstrap=false}={}){
       boundary=copyNativeWorldBoundary(boundary);
@@ -188,6 +211,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
         if(record.lastDrawTime!==null&&record.lastDrawTime>message.committedThrough)
           throw Error('Native causal clock arrived after presented time');
       }
+      for(const actor of actors.values())if(actor.actionRecord&&(actor.actionProof.reference.worldBoundary.nativeSession!==message.nativeSession||actor.actionRecord.lastDrawTime!==null&&actor.actionRecord.lastDrawTime>message.committedThrough))throw Error('Invalid native action clock boundary');
       clock=Object.freeze({...message});effectiveTime=message.committedThrough;return true;
     },
     clockLease(visualEpoch,resourceCeiling=Infinity){
@@ -212,6 +236,6 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     status:()=>({authorityEpoch,sequence,effectiveTime:Number.isFinite(effectiveTime)?
       effectiveTime:null,active:active.size,closed,...counters,...(clock?{clock}:{} )}),
     dispose(){if(closed)return;closed=true;for(const record of active.values())
-      record.safeUntil=record.lastDrawTime??record.startTime;active.clear();for(const actor of actors.values())actor.closed=true;actors.clear();},
+      record.safeUntil=record.lastDrawTime??record.startTime;active.clear();for(const actor of actors.values()){if(actor.actionRecord)actor.actionRecord.safeUntil=actor.actionRecord.lastDrawTime??actor.actionRecord.startTime;actor.closed=true;}actors.clear();},
   };
 }

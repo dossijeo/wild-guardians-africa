@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [variantes de acción sobre el cuerpo admitido](e-r3-native-worker-action-variants-20261115.md), con geometrías y texturas reutilizadas; el reloj y el commit de la acción siguen pendientes.
+Último avance: [identidad y tiempo de la acción nativa](e-r3-native-action-identity-20261115.md), con propiedad física y estado inicial de control; el paquete gráfico y la ejecución de partida siguen pendientes.
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio

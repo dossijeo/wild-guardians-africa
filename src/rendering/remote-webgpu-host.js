@@ -1252,6 +1252,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
            worldBoundaryRequired=message.worldBoundaryVersion===1;
            nativeWorldBoundary=copyNativeWorldBoundary(message.worldBoundary??null);
            if(message.nativeStartedRoutes!==undefined)routeControl.installStartedRoutes(nativeWorldBoundary,message.nativeStartedRoutes,{bootstrap:true});
+           if(message.nativeActions!==undefined)routeControl.installActions(nativeWorldBoundary,message.nativeActions,{bootstrap:true});
            if(nativeWorldBoundary&&(nativeWorldBoundary.authorityEpoch!==message.authorityEpoch||
               nativeWorldBoundary.nativeSession!==message.clock?.nativeSession||
               nativeWorldBoundary.effectiveTime>message.clock.committedThrough))throw Error('Invalid native world resource baseline');
