@@ -1,3 +1,4 @@
+import {copyNativeResumeAttestation,nativeResumePresentationMatches} from '../world/native-resume-attestation.js';
 import {nativeResumeSuccessor} from '../world/native-resume-reference.js';
 import {nativeFrameReadiness,rejectedNativeFrameTarget} from './webgpu-frame-recovery.js';
 import {captureNativeRoutePickFrame} from './native-route-pick-frame.js';
@@ -291,8 +292,8 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
   }
   function prepareNativeGateResources(value,options){return prepareNativeResources(copyNativeGateMotionResources(value),options);}
   function prepareNativeResumeResources(value,options){return prepareNativeResources(copyNativeResumeProposal(value),options);}
-  async function prepareNativeResources(resources,{signal:callerSignal,minSequence=-1,terrainManifest}={}){
-   const resumed=resources.kind==='native-route-resume-proposal';let boundary=resources.worldBoundary;
+  async function prepareNativeResources(resources,{signal:callerSignal,minSequence=-1,terrainManifest,deferredStart=false}={}){
+   const resumed=resources.kind==='native-route-resume-proposal';let boundary=resources.worldBoundary;if(typeof deferredStart!=='boolean'||deferredStart&&!resumed)throw TypeError('Invalid native deferred template');
    if(closed||!remoteGpu||!state||nativeGateProposal||!resumed&&resources.phase!=='proposal'||callerSignal?.aborted||!Number.isSafeInteger(minSequence)||minSequence< -1||terrain.status().nativeProposal||terrain.status().pending||terrain.status().presentationPending)throw Error('Native gate resource surface unavailable');
    const controller=new AbortController(),abort=()=>controller.abort(),item={descriptor:{phase:'preparing',worldBoundary:boundary},controller};nativeGateProposal=item;nativeRoutePreparations++;callerSignal?.addEventListener('abort',abort,{once:true});
    let participants=[],tickets=[],finished=false,preparedFrame=null,preparedSequence=null;
@@ -314,7 +315,7 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
     if(!current()||participants.some(participant=>!participant.valid())||tickets.some(ticket=>!ticket.valid()))throw Error('Native gate changed before frame capture');
     for(const participant of participants)participant.activate();
     remoteGpu.beginFrame({nativeWorldBoundary:boundary});
-    try{if(!renderScene())throw Error('Native prepared scene is not ready');preparedSequence=stream.status().sequence;preparedFrame=await remoteGpu.prepareNativeWorldFrame({...remoteFrameMetadata(boundary,resumed?{start:resources.startTime,end:resources.endTime}:null),nativeRouteResourceRevision:nativeRouteResourceRevision+1},{signal:controller.signal});}catch(error){remoteGpu.cancelFrame();throw error;}
+    try{if(!renderScene())throw Error('Native prepared scene is not ready');preparedSequence=stream.status().sequence;preparedFrame=await remoteGpu.prepareNativeWorldFrame({...remoteFrameMetadata(boundary,resumed?{start:resources.startTime,end:resources.endTime}:null),nativeRouteResourceRevision:nativeRouteResourceRevision+1,...(deferredStart?{nativeResumeTemplate:resources.nativeResume}:{})},{signal:controller.signal});}catch(error){remoteGpu.cancelFrame();throw error;}
     item.descriptor.phase='ready';
     }
     function invalidate(){if(!resumed||!current())return false;if(item.descriptor.phase==='invalidated')return true;preparedFrame?.abort();preparedFrame=null;for(const participant of [...participants].reverse())participant.rollback();item.descriptor.phase='invalidated';return true;}
@@ -331,11 +332,11 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
     await prepareFrame();
     // The alternative-material tickets were consumed by activation/capture.
     // From here the retained immutable consumer packet proves resource readiness.
-    return {get preparedWorldBoundary(){return boundary;},...(resumed?{refresh,invalidate}:{}),valid:()=>current()&&item.descriptor.phase==='ready'&&stream.status().sequence===preparedSequence&&preparedFrame?.valid()&&participants.every(participant=>participant.valid()),
-     commit(data){const confirmed=resumed?data.resources:copyNativeGateMotionResources(data.resources);if(confirmed.phase!=='committed'||!sameNativeWorldBoundary(confirmed.worldBoundary,boundary)||!resumed&&!sameNativeGatePresentations(confirmed.gates,resources.gates)||!current()||!sameNativeWorldBoundary(data.worldBoundary,boundary)||participants.some(participant=>!participant.valid()))throw Error('Native graphical resources not retained');
+    return {...(deferredStart?{get preparedResumeTemplate(){return resources.nativeResume;}}:{}),get preparedWorldBoundary(){return boundary;},...(resumed?{refresh,invalidate}:{}),valid:()=>current()&&item.descriptor.phase==='ready'&&stream.status().sequence===preparedSequence&&preparedFrame?.valid()&&participants.every(participant=>participant.valid()),
+     commit(data){const confirmed=resumed?data.resources:copyNativeGateMotionResources(data.resources),binding=deferredStart?copyNativeResumeAttestation(data.nativeResumeBinding):null,committedBoundary=binding?.reference.worldBoundary??boundary;if(deferredStart&&!nativeResumePresentationMatches(resources,confirmed.presentation,binding))throw Error('Deferred native resources differ from their issued motion');if(confirmed.phase!=='committed'||!sameNativeWorldBoundary(confirmed.worldBoundary,committedBoundary)||!resumed&&!sameNativeGatePresentations(confirmed.gates,resources.gates)||!current()||!sameNativeWorldBoundary(data.worldBoundary,committedBoundary)||participants.some(participant=>!participant.valid()))throw Error('Native graphical resources not retained');
       for(const participant of participants)participant.validateCommit?.(data);
-      try{if(stream.status().sequence!==preparedSequence||!preparedFrame.commit(boundary))throw Error('Native prepared command packet unavailable');for(const participant of participants)participant.finalize(data);}catch(error){cancel();throw error;}
-      finished=true;nativeGateProposal=null;callerSignal?.removeEventListener('abort',abort);preparedNativeWorldBoundary=boundary;nativeRouteResourceRevision++;nativeRouteRejected=false;onSelectableChange();
+      try{if(stream.status().sequence!==preparedSequence||!preparedFrame.commit(committedBoundary,binding))throw Error('Native prepared command packet unavailable');for(const participant of participants)participant.finalize(data);}catch(error){cancel();throw error;}
+      finished=true;nativeGateProposal=null;callerSignal?.removeEventListener('abort',abort);preparedNativeWorldBoundary=committedBoundary;nativeRouteResourceRevision++;nativeRouteRejected=false;onSelectableChange();
       void preparedFrame.presented.then(()=>{nativeRoutePreparations--;onPresentationReady();},error=>{nativeRoutePreparations--;if(!closed)onError(error);});return true;
      },abort:cancel};
    }catch(error){cancel();throw error;}

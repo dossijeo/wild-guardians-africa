@@ -81,7 +81,7 @@ self.onmessage=async({data})=>{try{if(data?.kind!=='initialize')updateSharedCame
  if(data.kind==='guardianAwakeningBegin'){surface?.guardianAttack?.beginAwakening(data.command);return;}
  if(data.kind==='prepareNativeGateResources'||data.kind==='prepareNativeResumeResources'){
   const controller=new AbortController(),entry={controller,handle:null,resources:data.resources};
-  try{if(phase!=='running'||!remoteGpu||nativeGatePreparations.size)throw Error('Native gate preparation unavailable');nativeGatePreparations.set(data.id,entry);entry.handle=await surface[data.kind](data.resources,{signal:controller.signal,minSequence:data.minSequence,terrainManifest:data.terrainManifest});if(controller.signal.aborted)throw new DOMException('Native gate preparation cancelled','AbortError');postMessage({kind:'nativeGateResourcesResult',id:data.id,result:{worldBoundary:data.resources.worldBoundary,preparedWorldBoundary:entry.handle.preparedWorldBoundary}});}
+  try{if(phase!=='running'||!remoteGpu||nativeGatePreparations.size)throw Error('Native gate preparation unavailable');nativeGatePreparations.set(data.id,entry);entry.handle=await surface[data.kind](data.resources,{signal:controller.signal,minSequence:data.minSequence,terrainManifest:data.terrainManifest,deferredStart:data.deferredStart});if(controller.signal.aborted)throw new DOMException('Native gate preparation cancelled','AbortError');postMessage({kind:'nativeGateResourcesResult',id:data.id,result:{worldBoundary:data.resources.worldBoundary,preparedWorldBoundary:entry.handle.preparedWorldBoundary,...(entry.handle.preparedResumeTemplate?{preparedResumeTemplate:entry.handle.preparedResumeTemplate}:{})}});}
   catch(error){if(nativeGatePreparations.get(data.id)===entry)nativeGatePreparations.delete(data.id);entry.handle?.abort();if(phase==='running')postMessage({kind:'nativeGateResourcesError',id:data.id,message:String(error?.message??error)});}return;
  }
  if(data.kind==='invalidateNativeResumeResources'||data.kind==='refreshNativeResumeResources'){
@@ -89,7 +89,7 @@ self.onmessage=async({data})=>{try{if(data?.kind!=='initialize')updateSharedCame
   try{if(data.kind==='invalidateNativeResumeResources'){if(entry.handle?.invalidate?.()!==true)throw Error('Native resume invalidation unavailable');return;}
    const reusable=await entry.handle.refresh(data.resources,{terrainManifest:data.terrainManifest});if(entry.controller.signal.aborted||nativeGatePreparations.get(data.id)!==entry)throw new DOMException('Native resume refresh cancelled','AbortError');
    if(!reusable){nativeGatePreparations.delete(data.id);entry.controller.abort();entry.handle.abort();}else entry.resources=data.resources;
-   postMessage({kind:'nativeGateResourcesResult',id:data.id,result:{reusable,...(reusable?{worldBoundary:data.resources.worldBoundary,preparedWorldBoundary:entry.handle.preparedWorldBoundary}:{})}});
+   postMessage({kind:'nativeGateResourcesResult',id:data.id,result:{reusable,...(reusable?{worldBoundary:data.resources.worldBoundary,preparedWorldBoundary:entry.handle.preparedWorldBoundary,...(entry.handle.preparedResumeTemplate?{preparedResumeTemplate:entry.handle.preparedResumeTemplate}:{})}:{})}});
   }catch(error){if(nativeGatePreparations.get(data.id)===entry)nativeGatePreparations.delete(data.id);entry.controller.abort();entry.handle?.abort();if(phase==='running')postMessage({kind:'nativeGateResourcesError',id:data.id,message:String(error?.message??error)});}return;
  }
  if(data.kind==='commitNativeGateResources'||data.kind==='abortNativeGateResources'){

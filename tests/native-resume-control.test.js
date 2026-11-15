@@ -44,3 +44,14 @@ test('resume references copy identities, validate generation wrap, and never fab
  for(const mutate of [v=>v.bodyId=0,v=>v.sourceControlSequence=0,v=>v.expectedRouteHandle.generation=7,v=>v.worldBoundary.nativeSession=2,v=>v.suspendedAt=21,v=>v.endTime=19]){const v=reference();mutate(v);assert.throws(()=>copyNativeResumeReference(v),TypeError);}
  assert.equal(copyNativeResumeReference({...reference(),sourceResumeHandle:handle(1,0xfffffffe),expectedRouteHandle:handle(1,1)}).expectedRouteHandle.generation,1);
 });
+
+test('a deferred resource acquires its actual origin only from the direct issued assignment attestation',()=>{
+ const f=fixture(),prepared=reference(),pending=f.control.admitResume(prepared,{preparingWorldBoundary:prepared.worldBoundary});
+ try{f.advance(22);const actual={...prepared,endTime:27,worldBoundary:{...prepared.worldBoundary,ticket:3,effectiveTime:22}},sequence=f.event(1,'RouteAssigned',actual.expectedRouteHandle,1);f.clock();assert.equal(pending.isCurrent(),false);assert.equal(pending.executionEpoch,null);
+  f.control.installResumedRoutes(actual.worldBoundary,[{reference:actual,preparedReference:prepared,projectionVersion:1,gateIds:[7],assignmentSequence:sequence}]);assert(pending.isCurrent());assert.equal(pending.executionEpoch,22);assert.equal(pending.executionEnd,27);assert.equal(pending.routeRecord.startTime,22);assert(f.control.admitResume(actual).isCurrent());assert(f.control.admitResume(prepared).isCurrent());f.advance(24);assert(pending.isCurrent());f.event(1,'RouteInvalidated',actual.expectedRouteHandle,4);assert.equal(pending.isCurrent(),false);
+ }finally{f.control.dispose();}
+});
+
+test('a deferred attestation cannot substitute another source, duration, projection or gate set',()=>{
+ for(const mutate of [v=>v.preparedReference.bodyId=99,v=>v.reference.endTime++,v=>v.projectionVersion=2,v=>v.gateIds=[7,7]]){const f=fixture(),prepared=reference();try{f.advance(22);const actual={...prepared,endTime:27,worldBoundary:{...prepared.worldBoundary,ticket:3,effectiveTime:22}},sequence=f.event(1,'RouteAssigned',actual.expectedRouteHandle,1);f.clock();const value=structuredClone({reference:actual,preparedReference:prepared,projectionVersion:1,gateIds:[7],assignmentSequence:sequence});mutate(value);assert.throws(()=>f.control.installResumedRoutes(actual.worldBoundary,[value]));assert.throws(()=>f.control.admitResume(prepared),/attestation/);}finally{f.control.dispose();}}
+});

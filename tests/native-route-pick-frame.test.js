@@ -57,3 +57,10 @@ test('independent gate picks require their exact submitted clock and an applied 
  value.nativeRouteFrame.worldBoundary={...worldBoundary,ticket:4,effectiveTime:12};assert.equal(captureNativeRoutePickFrame(value).getGateTime(nativeGate,10),11);
  entry.nativeRoute=route();assert.throws(()=>captureNativeRoutePickFrame(value),/world mismatch/);
 });
+
+test('a deferred resume pick separates submitted resource time from its confirmed execution origin',()=>{
+ const worldBoundary={version:1,authorityEpoch:'owner',nativeSession:1,ticket:2,effectiveTime:20},sourceResumeHandle={authorityEpoch:'owner',session:1,slot:0,generation:4},nativeResume={kind:'native-route-resume-reference',version:1,actorId:1,bodyId:1,sourceAssignmentSequence:1,sourceControlSequence:2,suspendedAt:10,endTime:25,sourceResumeHandle,expectedRouteHandle:{...sourceResumeHandle,generation:6},worldBoundary},entry={nativeResume,semantic:'relative',epoch:20,elapsed:20.25,executionEpoch:22},value=consumer([entry]);value.nativeRouteFrame.clockElapsed=22.25;value.nativeRouteFrame.worldBoundary={...worldBoundary,ticket:3,effectiveTime:22};
+ const pick=captureNativeRoutePickFrame(value);assert.equal(pick.getResumeTime(nativeResume,20),20.25);assert.equal(pick.getResumeExecutionTime(nativeResume,20),22.25);assert.throws(()=>pick.getResumeExecutionTime(nativeResume,21),/no submitted/);
+ for(const origin of [NaN,19,23])assert.throws(()=>captureNativeRoutePickFrame({...value,nativeRouteFrame:{...value.nativeRouteFrame,bindings:[{...entry,executionEpoch:origin}]}}),/origin/);
+ assert.throws(()=>captureNativeRoutePickFrame({...value,nativeRouteFrame:{...value.nativeRouteFrame,bindings:[entry,{...entry,executionEpoch:21}]}}),/origin/);
+});

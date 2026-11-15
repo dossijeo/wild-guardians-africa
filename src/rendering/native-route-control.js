@@ -1,3 +1,4 @@
+import {copyNativeResumeAttestation,nativeResumeAttestationCovers} from '../world/native-resume-attestation.js';
 import {copyNativeResumeReference,sameNativeResumeReference} from '../world/native-resume-reference.js';
 import {copyNativeSuspendedBodyReference,sameNativeSuspendedBodyReference} from '../world/native-suspended-body-reference.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
@@ -93,7 +94,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
   }
   function resumeCurrent(reference,actor){
     const record=actor?.current,proof=actor?.resumeProof;
-    return !closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.actorId)===actor&&actor.state===1&&active.get(reference.actorId)===record&&!!record&&actor.latestSequence===record.assignmentSequence&&sameHandle(record.handle,reference.expectedRouteHandle)&&record.startTime===reference.worldBoundary.effectiveTime&&proof?.assignmentSequence===record.assignmentSequence&&sameNativeResumeReference(proof.reference,reference);
+    return !closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.actorId)===actor&&actor.state===1&&active.get(reference.actorId)===record&&!!record&&actor.latestSequence===record.assignmentSequence&&sameHandle(record.handle,reference.expectedRouteHandle)&&record.startTime===proof?.reference.worldBoundary.effectiveTime&&proof?.assignmentSequence===record.assignmentSequence&&nativeResumeAttestationCovers(proof,reference);
   }
   return {
     accept,
@@ -101,9 +102,9 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       boundary=copyNativeWorldBoundary(boundary);
       if(closed||!clock||!boundary||boundary.authorityEpoch!==authorityEpoch||boundary.nativeSession!==clock.nativeSession||boundary.effectiveTime!==clock.committedThrough||!Array.isArray(values)||values.length>32768)throw Error('Invalid native resumed route attestation boundary');
       const staged=[],ids=new Set(),bodies=new Set();
-      for(const value of values){const reference=copyNativeResumeReference(value?.reference),actor=actors.get(reference.actorId),record=actor?.current,source=record?.sourceSuspension;
+      for(const input of values){const value=copyNativeResumeAttestation(input),reference=value.reference,actor=actors.get(reference.actorId),record=actor?.current,source=record?.sourceSuspension;
         if(!sameNativeWorldBoundary(reference.worldBoundary,boundary)||ids.has(reference.actorId)||bodies.has(reference.bodyId)||!actor||actor.closed||actor.state!==1||active.get(reference.actorId)!==record||!record||actor.latestSequence!==record.assignmentSequence||value.assignmentSequence!==record.assignmentSequence||record.assignmentSequence<=reference.sourceControlSequence||!source||source.sequence>reference.sourceControlSequence||!resumeSourceMatches(reference,source.reference)||!sameHandle(record.handle,reference.expectedRouteHandle)||record.startTime!==boundary.effectiveTime)throw Error('Native resume attestation does not match its issued assignment and source body');
-        ids.add(reference.actorId);bodies.add(reference.bodyId);staged.push({actor,proof:Object.freeze({reference,assignmentSequence:record.assignmentSequence})});}
+        ids.add(reference.actorId);bodies.add(reference.bodyId);staged.push({actor,proof:value});}
       for(const {actor,proof} of staged)actor.resumeProof=proof;return staged.length;
     },
     admitResume(value,{preparingWorldBoundary=null}={}){
@@ -112,7 +113,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       // draw grant: only the actual, exact direct assignment can make current().
       const current=()=>resumeCurrent(reference,actor),pending=()=>!closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.actorId)===actor&&sameNativeWorldBoundary(boundary,reference.worldBoundary)&&sequence>=reference.sourceControlSequence&&clock.committedThrough>=reference.worldBoundary.effectiveTime&&!!actor.proof&&suspendedCurrent(actor.proof,actor.revoked,actor)&&resumeSourceMatches(reference,actor.proof);
       if(reference.worldBoundary.authorityEpoch!==authorityEpoch||!clock||reference.worldBoundary.nativeSession!==clock.nativeSession||!current()&&!pending()){const error=Error('Native resume is obsolete or lacks direct assignment attestation');error.code='native-resume-admission-obsolete';throw error;}
-      counters.admissions++;return Object.freeze({reference,isCurrent:current,isPrepared:()=>current()||pending(),get routeRecord(){return current()?actor.current:null;}});
+      counters.admissions++;return Object.freeze({reference,isCurrent:current,isPrepared:()=>current()||pending(),get routeRecord(){return current()?actor.current:null;},get executionEpoch(){return current()?actor.current.startTime:null;},get executionEnd(){return current()?actor.resumeProof.reference.endTime:null;}});
     },
     // Called only with facts delivered on the direct authority connection at
     // physical release. Resource/preparation metadata cannot install a proof.

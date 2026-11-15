@@ -244,6 +244,16 @@ test('native resume resources use the retained transaction with their own reques
  }finally{f.client.dispose();}
 });
 
+for(const mode of ['retain','missing','wrong-refresh'])test(`a deferred resume requires an exact retained template receipt (${mode})`,async()=>{
+ const draw={postMessage(){},terminate(){}},f=setup({remoteDraw:true,intentControlPort:{postMessage(){},start(){}},drawWorkerFactory:()=>draw});
+ try{f.worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await f.client.ready;const worldBoundary={version:1,authorityEpoch:'owner',nativeSession:1,ticket:4,effectiveTime:20},sourceResumeHandle={authorityEpoch:'owner',session:1,slot:0,generation:4},template={kind:'native-route-resume-reference',version:1,actorId:1,bodyId:1,sourceAssignmentSequence:1,sourceControlSequence:2,suspendedAt:10,endTime:25,sourceResumeHandle,expectedRouteHandle:{...sourceResumeHandle,generation:6},worldBoundary},resources={...template,kind:'native-route-resume-proposal',startTime:20,ticket:{kind:'native-route-resume-proposal-ticket',authorityEpoch:'owner',session:1,ticket:4},authorizedAutonomy:false,authorizedPassage:false};
+  const preparing=f.client.prepareNativeResumeResources(resources,{deferredStart:true}),request=f.worker.messages.at(-1).message;assert.equal(request.deferredStart,true);f.worker.onmessage({data:{kind:'nativeGateResourcesResult',id:request.id,result:{preparedWorldBoundary:worldBoundary,...(mode==='missing'?{}:{preparedResumeTemplate:template})}}});
+  if(mode==='missing'){await assert.rejects(preparing,/template receipt/);assert.equal(f.worker.messages.at(-1).message.kind,'abortNativeGateResources');return;}
+  const handle=await preparing;assert.deepEqual(handle.preparedResumeTemplate,template);const nextWorld={...worldBoundary,ticket:5,effectiveTime:21},next={...resources,worldBoundary:nextWorld,startTime:21,endTime:26,ticket:{...resources.ticket,ticket:5}},nextTemplate={...template,worldBoundary:nextWorld,endTime:26},refreshing=handle.refresh(next);f.worker.onmessage({data:{kind:'nativeGateResourcesResult',id:request.id,result:{reusable:true,preparedWorldBoundary:nextWorld,preparedResumeTemplate:mode==='wrong-refresh'?{...nextTemplate,bodyId:99}:nextTemplate}}});
+  if(mode==='wrong-refresh'){await assert.rejects(refreshing,/deferred template/);assert.equal(handle.valid(),false);}else{assert.equal(await refreshing,true);assert.deepEqual(handle.preparedResumeTemplate,nextTemplate);assert(handle.valid());handle.abort();assert.equal(handle.valid(),false);}
+ }finally{f.client.dispose();}
+});
+
 test('an older material-only gate reply cannot certify a retained native command packet',async()=>{
  const draw={postMessage(){},terminate(){}},f=setup({remoteDraw:true,intentControlPort:{postMessage(){}},drawWorkerFactory:()=>draw});try{
   f.worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await f.client.ready;

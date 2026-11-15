@@ -1,3 +1,4 @@
+import {sameNativeResumeReference} from '../native-resume-reference.js';
 import {nativeEntityNumericId as numericId} from '../native-entity-id.js';
 import {nativeResumeReferenceFromProposal} from '../native-resume-reference.js';
 import {nativeSuspendedBodiesFromProposal} from '../native-suspended-body-reference.js';
@@ -705,8 +706,10 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     const result=stage();
     if(result!==1)return outcome(result===0?'blocked':result===-4?'busy':result===-2?'unsupported':'invalid');
     if((protocol?protocol.ticket():wasm.nav_intent_barrier_proposal_ticket())!==1)throw Error('Native mutation proposal lost its ticket');
-    const [nativeSession,ticket,sequence,time,clockSequence]=Array.from(new Float64Array(wasm.memory.buffer,protocol?protocol.ticketPtr():wasm.nav_intent_barrier_proposal_ticket_ptr(),6));
+    let [nativeSession,ticket,sequence,time,clockSequence]=Array.from(new Float64Array(wasm.memory.buffer,protocol?protocol.ticketPtr():wasm.nav_intent_barrier_proposal_ticket_ptr(),6));
+    const initialWorld=nativeWorldBoundary(),worldUnchanged=()=>initialWorld===null?nativeWorldBoundary()===null:sameNativeWorldBoundary(initialWorld,nativeWorldBoundary());let preparedResumeTemplate=null;
     let receipt=null,preparedResources=null,answer=outcome('control-failed'),physicalCommitted=false,commitAttempted=false,commitFailed=false,committedValue={},suspendedBodies=Object.freeze([]),resumeReferences=Object.freeze([]),resumedRoutes=Object.freeze([]);
+    let stoppedCommit=null;const stopCommit=(status,extra={})=>{stoppedCommit=outcome(status,extra);throw stoppedCommit;};
     const preparationController=new AbortController(),abortPreparation=()=>preparationController.abort();signal?.addEventListener('abort',abortPreparation,{once:true});
     try{
       if(signal?.aborted)throw new DOMException('Native resource preparation cancelled','AbortError');
@@ -717,26 +720,42 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
         if(resources?.kind==='native-route-resume-proposal')resumeReferences=Object.freeze([nativeResumeReferenceFromProposal(resources)]);
         let stopWaiting;const interrupted=new Promise((resolve,reject)=>{stopWaiting=()=>reject(new DOMException('Native resource preparation cancelled','AbortError'));});interrupted.catch(()=>{});
         preparationController.signal.addEventListener('abort',stopWaiting,{once:true});
-        const preparing=Promise.resolve().then(()=>prepareResources({proposedWorldBoundary,resources,signal:preparationController.signal})).then(handle=>{
+        const preparing=Promise.resolve().then(()=>prepareResources({proposedWorldBoundary,resources,signal:preparationController.signal,...(protocol?.deferred?{deferredStart:true}:{})})).then(handle=>{
           if(preparationController.signal.aborted){handle?.abort?.();throw new DOMException('Native resource preparation cancelled','AbortError');}return handle;
         });
         try{preparedResources=await Promise.race([preparing,interrupted]);}finally{preparationController.signal.removeEventListener('abort',stopWaiting);}
         if(!preparedResources||['valid','commit','abort'].some(key=>typeof preparedResources[key]!=='function')||preparedResources.valid()!==true)throw Error('Native resources were not prepared');
         if(protocol?.preparedFrameRequired&&!preparedResources.preparedWorldBoundary)throw Error('Native gate requires a retained prepared command packet');
         if(epoch()!==owner||getPublication()!==source||source.status().closed||!coversGpuConsumers(source))return outcome('control-replaced');
-        if((protocol?protocol.snapshot(nativeSession,ticket):wasm.spatial_world_proposal_resource_snapshot(nativeSession,ticket))!==1)return outcome('stale');
+        if(protocol?.deferred){
+          preparedResumeTemplate=resumeReferences[0];
+          if(!sameNativeResumeReference(preparedResources.preparedResumeTemplate,preparedResumeTemplate))throw Error('Native resume lacks its retained deferred template');
+          if(!worldUnchanged()||!protocol.retained(nativeSession,ticket))return outcome('stale');
+        }else if((protocol?protocol.snapshot(nativeSession,ticket):wasm.spatial_world_proposal_resource_snapshot(nativeSession,ticket))!==1)return outcome('stale');
       }
       const preparedWorldBoundary=copyNativeWorldBoundary(preparedResources?.preparedWorldBoundary??null);
       if(preparedWorldBoundary&&(preparedWorldBoundary.authorityEpoch!==owner||preparedWorldBoundary.nativeSession!==nativeSession||preparedWorldBoundary.ticket!==ticket||preparedWorldBoundary.effectiveTime!==time))throw Error('Prepared command packet names a different native mutation');
-      receipt=await source.quiesceGpuForMutation(preparedWorldBoundary?{preparedWorldBoundary}:undefined);const current=source.status();
+      const quiescence=protocol?.deferred?source.status():{sentSequence:sequence,sentTime:time,clockSequence};
+      receipt=await source.quiesceGpuForMutation(preparedWorldBoundary?{preparedWorldBoundary,...(preparedResumeTemplate?{preparedResumeTemplate}:{})}:undefined);const current=source.status();
       if(epoch()!==owner||getPublication()!==source||current.closed||current.session!==control.session||current.authorityEpoch!==owner||!coversGpuConsumers(source))
         answer=outcome('control-replaced');
-      else if(receipt.authorityEpoch!==owner||receipt.session!==control.session||receipt.sequence!==sequence||
-         receipt.effectiveTime!==time||receipt.clockSequence!==clockSequence||!Number.isSafeInteger(receipt.holdId)||receipt.holdId<1||
+      else if(receipt.authorityEpoch!==owner||receipt.session!==control.session||receipt.sequence!==quiescence.sentSequence||
+         receipt.effectiveTime!==quiescence.sentTime||receipt.clockSequence!==quiescence.clockSequence||!Number.isSafeInteger(receipt.holdId)||receipt.holdId<1||
          preparedWorldBoundary&&(!sameNativeWorldBoundary(receipt.preparedWorldBoundary,preparedWorldBoundary)||!Number.isSafeInteger(receipt.preparedFrameSequence)||receipt.preparedFrameSequence<1))
         answer=outcome('invalid-receipt');
       else{
         if(preparationController.signal.aborted||preparedResources&&preparedResources.valid()!==true)throw Error('Native prepared resources became stale');
+        if(protocol?.deferred){
+          if(!worldUnchanged())stopCommit('stale');
+          // A clock can advance during the drain. A new intent transition may
+          // require another actor's graphical resources and cannot borrow it.
+          if(nativeCausalClock()?.intentSequence!==quiescence.sentSequence)stopCommit('resources-changed');
+          const fresh=protocol.revalidate(nativeSession,ticket);
+          if(fresh.status!=='revalidated')stopCommit(fresh.status);
+          [nativeSession,ticket,sequence,time,clockSequence]=Array.from(new Float64Array(wasm.memory.buffer,protocol.ticketPtr(),6));
+          if(!fresh.timeTranslation.sameFloat32Motion||!fresh.timeTranslation.sameFloat32Gates)stopCommit('resources-changed',{timeTranslation:fresh.timeTranslation});
+          resumeReferences=Object.freeze([nativeResumeReferenceFromProposal(fresh.proposal)]);
+        }
         commitAttempted=true;
         const committed=commit(value=>{physicalCommitted=true;committedValue=value??{};
           committedWorldBoundary=copyNativeWorldBoundary({version:1,authorityEpoch:owner,nativeSession,ticket,effectiveTime:time});
@@ -749,13 +768,13 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
         if(committed.status===1)resumedRoutes=Object.freeze(resumeReferences.map(reference=>{
           const actual=nativeRouteTiming(reference.expectedRouteHandle);
           if(!actual||actual.actorId!==reference.actorId||actual.startTime!==reference.worldBoundary.effectiveTime||actual.endTime!==reference.endTime||actual.assignmentSequence<=reference.sourceControlSequence||nativeSuspendedGateRoute(reference.actorId)!==null)throw Error('Committed native resume differs from its proposed assignment');
-          return Object.freeze({reference,assignmentSequence:actual.assignmentSequence});
+          return Object.freeze({reference,assignmentSequence:actual.assignmentSequence,...(preparedResumeTemplate?{preparedReference:preparedResumeTemplate,projectionVersion:1,gateIds:protocol.gateIds()}: {})});
         }));
-        if(committed.status===1&&preparedResources&&preparedResources.commit({worldBoundary:nativeWorldBoundary(),resources:committed.value.resources})!==true)throw Error('Native prepared resources were not retained for publication');
-        answer=committed.status===1?outcome('committed',{...committed.value,receipt,worldBoundary:nativeWorldBoundary()}):
+        if(committed.status===1&&preparedResources&&preparedResources.commit({worldBoundary:nativeWorldBoundary(),resources:committed.value.resources,...(preparedResumeTemplate?{nativeResumeBinding:resumedRoutes[0]}:{})})!==true)throw Error('Native prepared resources were not retained for publication');
+        answer=committed.status===1?outcome('committed',{...committed.value,receipt,worldBoundary:nativeWorldBoundary(),...(protocol?.deferred?{timeTranslation:protocol.timeTranslation()}:{})}):
           outcome(committed.status===-2?'stale':committed.status===-3?'invalid-receipt':committed.status===-6?'blocked':'stale');
       }
-    }catch(error){commitFailed=commitAttempted;answer=outcome(physicalCommitted?'committed-control-failed':'control-failed',
+    }catch(error){commitFailed=commitAttempted;answer=stoppedCommit!==null&&error===stoppedCommit?stoppedCommit:outcome(physicalCommitted?'committed-control-failed':'control-failed',
       {...committedValue,error:String(error?.message??error)});}
     finally{
       signal?.removeEventListener('abort',abortPreparation);preparationController.abort();
@@ -1039,7 +1058,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     if(ticket?.kind!=='native-route-resume-proposal-ticket'||ticket.authorityEpoch!==epoch()||wasm.nav_gate_resume_proposal_version?.()!==1||wasm.nav_intent_barrier_proposal_ticket()!==1)return outcome('stale');
     const t=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6));
     if(t[0]!==ticket.session||t[1]!==ticket.ticket||t[5]!==13)return outcome('stale');
-    if(wasm.nav_gate_resume_revalidation_version?.()!==1)throw Error('Rebuild native resume revalidation service');
+    if(wasm.nav_gate_resume_revalidation_version?.()!==2)throw Error('Rebuild native resume revalidation service');
     const previousTicket=Object.freeze({kind:ticket.kind,authorityEpoch:ticket.authorityEpoch,session:ticket.session,ticket:ticket.ticket});
     syncBoundaryTime();flushNativeIntentControl();
     const status=wasm.nav_gate_resume_proposal_revalidate(ticket.session,ticket.ticket);
@@ -1049,16 +1068,17 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     try{
       const proposal=captureNativeGateResumeProposal(nextTicket),pointer=wasm.nav_gate_resume_proposal_time_translation_ptr(current[0],current[1]);
       if(!proposal||!pointer)throw Error('Native time translation evidence unavailable');
-      const values=Array.from(new Float64Array(wasm.memory.buffer,pointer,9));
-      if(values[0]!==1||values[1]!==ticket.ticket||values[2]!==nextTicket.ticket||values[5]!==proposal.startTime||values[6]!==proposal.endTime||![values[7],values[8]].every(value=>value===0||value===1)||!values.every(Number.isFinite))throw Error('Invalid native time translation evidence');
-      const timeTranslation=Object.freeze({kind:'native-resume-time-translation',version:1,previousTicket,ticket:nextTicket,sourceResumeHandle:proposal.sourceResumeHandle,previousStartTime:values[3],previousEndTime:values[4],startTime:values[5],endTime:values[6],sameNativeMotion:values[7]===1,sameNativeGates:values[8]===1,authorizedAutonomy:false,authorizedPassage:false});
+      const values=Array.from(new Float64Array(wasm.memory.buffer,pointer,11));
+      if(values[0]!==2||values[1]!==ticket.ticket||values[2]!==nextTicket.ticket||values[5]!==proposal.startTime||values[6]!==proposal.endTime||![values[7],values[8],values[9],values[10]].every(value=>value===0||value===1)||!values.every(Number.isFinite))throw Error('Invalid native time translation evidence');
+      const timeTranslation=Object.freeze({kind:'native-resume-time-translation',version:2,previousTicket,ticket:nextTicket,sourceResumeHandle:proposal.sourceResumeHandle,previousStartTime:values[3],previousEndTime:values[4],startTime:values[5],endTime:values[6],sameNativeMotion:values[7]===1,sameNativeGates:values[8]===1,sameFloat32Motion:values[9]===1,sameFloat32Gates:values[10]===1,authorizedAutonomy:false,authorizedPassage:false});
       return outcome('revalidated',{previousTicket,proposal,timeTranslation,requiresResourcePreparation:true});
     }catch(error){cancelNativeGateResumeProposal(nextTicket);throw error;}
   };
-  const resumeNativeGateRouteAfterGpuQuiescence=({getPublication,resumeHandle,proposalTicket=null,prepareResources,signal=null}={})=>{
+  const resumeNativeGateRouteAfterGpuQuiescence=({getPublication,resumeHandle,proposalTicket=null,prepareResources,signal=null,deferredStart=false}={})=>{
+    if(typeof deferredStart!=='boolean')throw TypeError('Invalid native resume start policy');
     if(typeof prepareResources!=='function'||signal!==null&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Native resume requires retained resource preparation');
     if(wasm.nav_gate_resume_proposal_version?.()!==1)throw Error('Rebuild native resume proposal service');
-    let candidate=null;
+    let candidate=null,translation=null;
     const stage=()=>{
       if(resumeHandle?.authorityEpoch!==epoch())return -1;
       if(proposalTicket===null)return wasm.nav_gate_resume_proposal_stage(resumeHandle.session,resumeHandle.slot,resumeHandle.generation);
@@ -1070,7 +1090,10 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       if(h[20]!==resumeHandle.slot||h[3]!==resumeHandle.generation)return -1;
       return wasm.nav_gate_resume_proposal_snapshot(t[0],t[1]);
     };
-    const protocol={preparedFrameRequired:true,ticket:()=>wasm.nav_intent_barrier_proposal_ticket(),ticketPtr:()=>wasm.nav_intent_barrier_proposal_ticket_ptr(),
+    const protocol={preparedFrameRequired:true,deferred:deferredStart,
+      retained(session,ticket){if(wasm.nav_intent_barrier_proposal_ticket()!==1)return false;const t=new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6);return t[0]===session&&t[1]===ticket&&t[5]===13;},
+      revalidate(session,ticket){const result=revalidateNativeGateResumeProposal({kind:'native-route-resume-proposal-ticket',authorityEpoch:epoch(),session,ticket});if(result.status==='revalidated'){candidate=result.proposal;translation=result.timeTranslation;}return result;},timeTranslation:()=>translation,gateIds:()=>candidate.gates.map(gate=>gate.gateId),
+      ticket:()=>wasm.nav_intent_barrier_proposal_ticket(),ticketPtr:()=>wasm.nav_intent_barrier_proposal_ticket_ptr(),
       snapshot:(session,ticket)=>wasm.nav_gate_resume_proposal_snapshot(session,ticket),cancel:(session,ticket)=>wasm.nav_gate_resume_proposal_cancel(session,ticket),release(){},
       capture(boundary){candidate=captureNativeGateResumeProposal(Object.freeze({kind:'native-route-resume-proposal-ticket',authorityEpoch:boundary.authorityEpoch,session:boundary.nativeSession,ticket:boundary.ticket}));if(!candidate)throw Error('Native resume resources unavailable');return candidate;}};
     return commitNativeWorldProposal(getPublication,stage,

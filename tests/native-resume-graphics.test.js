@@ -67,6 +67,11 @@ test('a later suspension of the issued resumed route retains its table rather th
   assert.throws(()=>motion.prepareSuspended({...options,reference:{...reference,nativeRoute:{...actual.nativeRoute,assignmentSequence:f.proposal.sourceControlSequence}}}),/support/);const version=motion.texture.version;held=motion.prepareSuspended(options);assert.equal(held.texture,motion.texture);assert.equal(held.texture.version,version);assert.equal(registry.status().owned.length,1);motion.dispose();assert.equal(held.valid(),true);assert.equal(held.status().dataReferences,1);assert.equal(held.clockNode[Symbol.for('wild-guardians.remote-clock')].nativeResume,undefined);assert.deepEqual(held.clockNode[Symbol.for('wild-guardians.remote-clock')].nativeSuspended,reference);
  }finally{held?.dispose();motion?.dispose();registry.dispose();f.close();}
 });
+
+test('native resource clock coverage includes the terminal row after the conservative time margin',()=>{
+ const f=fixture();let motion;
+ try{motion=createNativeResumeGpuMotion({actorId:'worker-900011',support:f.terrain.prepareNativeResumeProposal(f.proposal,{terrainManifest:f.terrainManifest})});const end=motion.clockNode[Symbol.for('wild-guardians.remote-clock')].resourceEnd;assert(end>f.proposal.endTime);const final=motion.sample(end);assert.equal(final.arrived,1);assert.equal(final.currentSpeed,0);assert.equal(final.firstRemainingPoint,f.proposal.points.length/2);assert.equal(f.bridge.nativeRouteTiming(f.proposal.expectedRouteHandle),null);}finally{motion?.dispose();f.close();}
+});
 test('malformed proposal geometry, foreign gates and guessed sequences cannot enter graphics preparation',()=>{
  const f=fixture();try{for(const mutate of [v=>v.assignmentSequence=99,v=>v.nativeRoute={actorId:v.actorId,assignmentSequence:99,routeHandle:v.expectedRouteHandle},v=>v.authorizedPassage=true,v=>v.rows[16]=v.rows[0],v=>v.rows[1]=NaN,v=>v.origin.x++,v=>v.points=new Float64Array(v.points),v=>v.expectedRouteHandle.generation++,v=>v.gates[0].worldBoundary.ticket++,v=>v.motionMode='animal']){const value=structuredClone(f.proposal);mutate(value);assert.throws(()=>copyNativeResumeProposal(value),TypeError);assert.equal(f.terrain.prepareNativeResumeProposal(value,{terrainManifest:f.terrainManifest}),null);}}finally{f.close();}
 });

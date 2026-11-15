@@ -25,7 +25,9 @@ function packNativeMotion(support,presentation,actorId,identity){
   while(cursor+sourceWidth<source.length&&source[cursor+sourceWidth]<=interior)cursor+=sourceWidth;
   const next=Math.min(cursor+sourceWidth,source.length-sourceWidth),span=source[next]-source[cursor],fraction=span>0?Math.max(0,Math.min(1,(at-source[cursor])/span)):0;
   const interpolate=column=>source[cursor+column]+(source[next+column]-source[cursor+column])*fraction,offset=row*NATIVE_ROUTE_GPU_WIDTH;
-  data.set([ceilFloat32(at-epoch),xx,yy,zz,interpolate(3),interpolate(4),source[cursor+5],source[cursor+6],source[cursor+7],interpolate(8),interpolate(9),interpolate(10),interpolate(11),interpolate(12),interpolate(13),source[cursor+14],source[cursor+15],0,0,0],offset);
+  // The decoder clamps to the finite Float32 duration. The final row must use
+  // that same endpoint; its four-ulp clock margin still prevents early arrival.
+  data.set([row===count-1?duration:ceilFloat32(at-epoch),xx,yy,zz,interpolate(3),interpolate(4),source[cursor+5],source[cursor+6],source[cursor+7],interpolate(8),interpolate(9),interpolate(10),interpolate(11),interpolate(12),interpolate(13),source[cursor+14],source[cursor+15],0,0,0],offset);
   if(!data.subarray(offset,offset+NATIVE_ROUTE_GPU_WIDTH).every(Number.isFinite)||row>0&&data[offset]<=data[offset-NATIVE_ROUTE_GPU_WIDTH])throw TypeError('Native route intervals cannot be represented on GPU');
  }
  for(let i=0;i<segments.length;i++){

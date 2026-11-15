@@ -8,8 +8,10 @@ import {sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 // structure/cache keys. Registration occurs when a physical binding is updated,
 // never by discovering graph nodes during replay.
 const clockMetadata=Symbol.for('wild-guardians.remote-clock');
-export function markRemoteClockNode(node,semantic,epoch,nativeRoute=null,nativeGate=null,nativeSuspended=null,nativeResume=null){
- if(!node?.isNode||!['absolute','relative'].includes(semantic)||!Number.isFinite(epoch)||epoch<0)throw TypeError('Invalid remote clock node');
+export function markRemoteClockNode(node,semantic,epoch,nativeRoute=null,nativeGate=null,nativeSuspended=null,nativeResume=null,period=null,resourceEnd=null){
+ if(!node?.isNode||!['absolute','relative','origin-modulo'].includes(semantic)||!Number.isFinite(epoch)||epoch<0)throw TypeError('Invalid remote clock node');
+ if(semantic==='origin-modulo'?nativeResume===null||!Number.isFinite(period)||period<=0:period!==null)throw TypeError('Invalid native origin phase clock');
+ if(resourceEnd!==null&&(!Number.isFinite(resourceEnd)||resourceEnd<epoch))throw TypeError('Invalid native clock resource end');
  let route=null;
  if(nativeRoute!==null){
   // A compiled uniform belongs to this exact assignment. Caller mutation must
@@ -21,7 +23,7 @@ export function markRemoteClockNode(node,semantic,epoch,nativeRoute=null,nativeG
  const resume=nativeResume===null?null:copyNativeResumeReference(nativeResume);
  const gate=nativeGate===null?null:copyNativeGateReference(nativeGate);
  if(Object.hasOwn(node,clockMetadata))throw TypeError('Cannot redefine remote clock node');
- Object.defineProperty(node,clockMetadata,{value:Object.freeze({semantic,epoch,...(route?{nativeRoute:route}:{}),...(gate?{nativeGate:gate}:{}),...(suspended?{nativeSuspended:suspended}:{}),...(resume?{nativeResume:resume}:{})}),enumerable:false,configurable:resume!==null||gate!==null});
+ Object.defineProperty(node,clockMetadata,{value:Object.freeze({semantic,epoch,...(period===null?{}:{period}),...(resourceEnd===null?{}:{resourceEnd}),...(route?{nativeRoute:route}:{}),...(gate?{nativeGate:gate}:{}),...(suspended?{nativeSuspended:suspended}:{}),...(resume?{nativeResume:resume}:{})}),enumerable:false,configurable:resume!==null||gate!==null});
  return node;
 }
 export function installRemoteClockBindings(renderer,remote){
@@ -49,13 +51,15 @@ export function installRemoteClockBindings(renderer,remote){
   for(const entry of nodeBindings.get(node)??[]){const group=entry.group.deref();if(!group)continue;live.push(entry);const buffer=registered.get(group);if(buffer&&backend.get(group).buffer===buffer)remote.registerClockBinding(buffer,{byteOffset:entry.byteOffset,...next});}
   Object.defineProperty(node,clockMetadata,{value:next,enumerable:false,configurable:true});nodeBindings.set(node,live);return true;
  }
- return {retagNativeGate(node,previous,value){
+ return {retagNativeGate(node,previous,value,resourceEnd=null){
   const before=copyNativeGateReference(previous),after=copyNativeGateReference(value),metadata=node?.[clockMetadata],a=before.worldBoundary,b=after.worldBoundary;
   if(disposed||metadata?.nativeGate?.gateId!==before.gateId||!sameNativeWorldBoundary(metadata.nativeGate.worldBoundary,a)||metadata.epoch!==a.effectiveTime||before.gateId!==after.gateId||a.authorityEpoch!==b.authorityEpoch||a.nativeSession!==b.nativeSession||b.ticket<=a.ticket||b.effectiveTime<a.effectiveTime)throw Error('Native gate clock cannot be retagged');
-  return replace(node,Object.freeze({...metadata,epoch:b.effectiveTime,nativeGate:after}));
- },retagNativeResume(node,previous,value){
+  if(metadata.resourceEnd!==undefined&&(!Number.isFinite(resourceEnd)||resourceEnd<b.effectiveTime))throw Error('Native gate clock requires its new resource end');
+  return replace(node,Object.freeze({...metadata,epoch:b.effectiveTime,...(metadata.resourceEnd===undefined?{}:{resourceEnd}),nativeGate:after}));
+ },retagNativeResume(node,previous,value,resourceEnd=null){
   const before=copyNativeResumeReference(previous),after=copyNativeResumeReference(value),metadata=node?.[clockMetadata];
   if(disposed||!sameNativeResumeReference(metadata?.nativeResume,before)||metadata.epoch!==before.worldBoundary.effectiveTime||!nativeResumeSuccessor(before,after))throw Error('Native resume clock cannot be retagged');
-  return replace(node,Object.freeze({...metadata,epoch:after.worldBoundary.effectiveTime,nativeResume:after}));
+  if(metadata.resourceEnd!==undefined&&(!Number.isFinite(resourceEnd)||resourceEnd<after.worldBoundary.effectiveTime))throw Error('Native resume clock requires its new resource end');
+  return replace(node,Object.freeze({...metadata,epoch:after.worldBoundary.effectiveTime,...(metadata.resourceEnd===undefined?{}:{resourceEnd}),nativeResume:after}));
  },dispose(){if(disposed)return;disposed=true;if(backend.updateBinding===updateBinding)backend.updateBinding=original;}};
 }

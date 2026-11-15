@@ -1,3 +1,5 @@
+import {copyNativeResumeAttestation} from '../world/native-resume-attestation.js';
+import {sameNativeResumeReference} from '../world/native-resume-reference.js';
 // Direct authority -> draw transport for the existing native intent protocol.
 // The native owner supplies the baseline/log; this sender keeps ACK cursors only.
 import {copyNativeResumeReference} from '../world/native-resume-reference.js';
@@ -168,18 +170,19 @@ export function createNativeIntentControlPublication({port,session,observe,
          session,authorityEpoch,sequence,effectiveTime,fenceId,...(clock?{clockSequence:clock.clockSequence}:{})});}catch(error){fail(error);}
     });
   }
-  function quiesceGpuForMutation({preparedWorldBoundary=null}={}){
+  function quiesceGpuForMutation({preparedWorldBoundary=null,preparedResumeTemplate=null}={}){
     if(closed||retirement||appliedSequence===null||!clock||clock.intentSequence!==sentSequence||clock.committedThrough!==sentTime)
       return Promise.reject(Error('Native causal mutation boundary is not ready'));
     if(mutationHold||gpuFences.size)return Promise.reject(Error('Native GPU mutation boundary is busy'));
     if(!Number.isSafeInteger(nextMutationFence+1))return Promise.reject(Error('Native mutation fence identity exhausted'));
-    if(preparedWorldBoundary){preparedWorldBoundary=copyNativeWorldBoundary(preparedWorldBoundary);if(!preparedWorldBoundary||preparedWorldBoundary.authorityEpoch!==authorityEpoch||preparedWorldBoundary.nativeSession!==clock.nativeSession||preparedWorldBoundary.effectiveTime!==sentTime)throw Error('Invalid prepared native mutation boundary');}
+    if(preparedResumeTemplate){preparedResumeTemplate=copyNativeResumeReference(preparedResumeTemplate);if(!preparedWorldBoundary)throw Error('Deferred resume requires a prepared packet');}
+    if(preparedWorldBoundary){preparedWorldBoundary=copyNativeWorldBoundary(preparedWorldBoundary);if(!preparedWorldBoundary||preparedWorldBoundary.authorityEpoch!==authorityEpoch||preparedWorldBoundary.nativeSession!==clock.nativeSession||(preparedResumeTemplate?preparedWorldBoundary.effectiveTime>sentTime||!sameNativeWorldBoundary(preparedResumeTemplate.worldBoundary,preparedWorldBoundary)||preparedResumeTemplate.sourceControlSequence>sentSequence:preparedWorldBoundary.effectiveTime!==sentTime))throw Error('Invalid prepared native mutation boundary');}
     const holdId=++nextMutationFence,sequence=sentSequence,effectiveTime=sentTime,clockSequence=clock.clockSequence;
     return new Promise((resolve,reject)=>{
-      mutationHold={holdId,sequence,effectiveTime,clockSequence,preparedWorldBoundary,resolve,reject,receipt:null,
+      mutationHold={holdId,sequence,effectiveTime,clockSequence,preparedWorldBoundary,preparedResumeTemplate,resolve,reject,receipt:null,
         timer:setTimeout(()=>fail(Error('Native mutation fence timed out')),timeoutMs)};
       try{port.postMessage({type:'IntentMutationQuiesce',protocolVersion:2,fenceVersion:1,
-        session,authorityEpoch,holdId,sequence,effectiveTime,clockSequence,...(preparedWorldBoundary?{preparedWorldBoundary}:{})});}catch(error){fail(error);}
+        session,authorityEpoch,holdId,sequence,effectiveTime,clockSequence,...(preparedWorldBoundary?{preparedWorldBoundary}:{}),...(preparedResumeTemplate?{preparedResumeTemplate}:{})});}catch(error){fail(error);}
     });
   }
   function releaseGpuAfterMutation(receipt,{committed=false,worldBoundary:nextBoundary=null,nativeSuspendedBodies=[],nativeResumedRoutes=[]}={}){
@@ -190,7 +193,7 @@ export function createNativeIntentControlPublication({port,session,observe,
       throw Error('Native mutation hold is stale or its causal boundary is unpublished');
     if(committed){
       nextBoundary=copyNativeWorldBoundary(nextBoundary);
-      if(hold.preparedWorldBoundary&&!sameNativeWorldBoundary(hold.preparedWorldBoundary,nextBoundary))throw Error('Committed world differs from the retained prepared packet');
+      if(hold.preparedWorldBoundary&&!hold.preparedResumeTemplate&&!sameNativeWorldBoundary(hold.preparedWorldBoundary,nextBoundary))throw Error('Committed world differs from the retained prepared packet');
       if(!nextBoundary||nextBoundary.authorityEpoch!==authorityEpoch||nextBoundary.nativeSession!==clock.nativeSession||
          nextBoundary.effectiveTime!==sentTime||worldBoundary&&nextBoundary.ticket<=worldBoundary.ticket)
         throw Error('Native committed mutation requires a new world resource boundary');
@@ -199,9 +202,10 @@ export function createNativeIntentControlPublication({port,session,observe,
     const bodies=nativeSuspendedBodies.map(copyNativeSuspendedBodyReference),actors=new Set(),bodyIds=new Set();
     for(const reference of bodies){if(!sameNativeWorldBoundary(reference.worldBoundary,nextBoundary)||actors.has(reference.nativeRoute.actorId)||bodyIds.has(reference.bodyId))throw Error('Native suspended body differs from committed world boundary');actors.add(reference.nativeRoute.actorId);bodyIds.add(reference.bodyId);}
     if(!Array.isArray(nativeResumedRoutes)||nativeResumedRoutes.length>32768||!committed&&nativeResumedRoutes.length)throw TypeError('Invalid committed native resumed routes');
-    const resumes=nativeResumedRoutes.map(value=>{const reference=copyNativeResumeReference(value?.reference),assignmentSequence=value.assignmentSequence;
+    const resumes=nativeResumedRoutes.map(input=>{const value=copyNativeResumeAttestation(input),{reference,assignmentSequence}=value;
       if(!sameNativeWorldBoundary(reference.worldBoundary,nextBoundary)||reference.sourceControlSequence!==hold.sequence||!Number.isSafeInteger(assignmentSequence)||assignmentSequence<=reference.sourceControlSequence||assignmentSequence>sentSequence||actors.has(reference.actorId)||bodyIds.has(reference.bodyId))throw Error('Native resumed route differs from its committed authority boundary');
-      actors.add(reference.actorId);bodyIds.add(reference.bodyId);return {reference,assignmentSequence};});
+      actors.add(reference.actorId);bodyIds.add(reference.bodyId);return value;});
+    if(committed&&hold.preparedResumeTemplate&&(bodies.length||resumes.length!==1||!sameNativeResumeReference(resumes[0].preparedReference,hold.preparedResumeTemplate)))throw Error('Deferred resume does not match the retained template');
     port.postMessage({type:'IntentMutationRelease',protocolVersion:2,fenceVersion:1,session,authorityEpoch,
       holdId:hold.holdId,heldSequence:hold.sequence,heldTime:hold.effectiveTime,heldClockSequence:hold.clockSequence,
       sequence:sentSequence,effectiveTime:sentTime,clockSequence:clock.clockSequence,committed,
