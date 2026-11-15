@@ -31,6 +31,7 @@
 // Planning is speculative; commit validates both entity and graph revisions.
 extern "C" {
 int spatial_body_remove(double);
+int spatial_body_count();
 int spatial_world_route_cached(float,float,float,float);
 const float* spatial_world_route_ptr();
 int spatial_world_route_reason();

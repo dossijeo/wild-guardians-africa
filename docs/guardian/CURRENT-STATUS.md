@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+**Inactive Home restoration, 2026-11-15:** [Fresh semantic absence](e-r3-native-home-inactive-restoration-20261115.md) uses the existing native Worker record and empty causal clock. No previous Home route or body is restored; a retained body after intent reset prevents certification. Moving Home restoration, ordinary producer and full incremental recovery remain pending; A6/e-R3/e-R4/f-R4/A/B/C remain open.
+
 **Home arrival live consumer, 2026-11-15:** [Prepared absence and exact direct native retirement](e-r3-native-home-absence-consumer-20261115.md) now share the existing ports and Surface. NVIDIA/Turing: zero preparation or post-READY creations (2911 constant), 52 draws during a 1.8 s stall, one actor removed with the surviving actor and world batches retained. Stale returning publication cannot resurrect it; picking and final drain pass. Fresh admission, remaining classes, ordinary producer and full3123 recovery remain pending; A6/A/B/C stay open.
 
 **Reversible Home absence component, 2026-11-15:** [The existing resident roster participant](e-r3-native-home-absence-roster-20261115.md) restores visibility immediately after capture, preserves the presented selection while READY, hides only on native commit and retires its old Home owner after presentation. No replacement motion resources. Transport/Surface, direct admission and hardware absence remain pending; capability and A6/A/B/C closures are unchanged.

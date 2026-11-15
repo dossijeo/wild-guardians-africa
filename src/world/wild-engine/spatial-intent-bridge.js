@@ -85,6 +85,12 @@ const taskTargetLookup=state=>{
     id.startsWith('crate-')?crate(id):structure(id);
 };
 
+function inactiveHomeEntry(state,worker){
+  if(!worker||worker.status!=='home'||worker.taskId||worker.crateId||worker.nativeRouteAdmission!==undefined||worker.nativeTaskAction!==undefined||worker.nativeDelivery!==undefined||worker.path?.length||worker.incapacitated||worker.recovery||worker.recoveryExitRemaining||worker.fallRemaining>0||worker.raidReturn||worker.running!==false||worker.gateWaiting!==false)return null;
+  const village=state.villages.find(v=>v.id===worker.villageId),entry=village?.entry??village;
+  return entry&&Number.isFinite(entry.x)&&Number.isFinite(entry.z)&&worker.x===entry.x&&worker.z===entry.z?entry:null;
+}
+
 function normalizeNativeActionRestoration(state,wasm){
   if(state.workers.some(w=>w.nativeRouteAdmission==='native-home'))throw Error('Native Home restoration requires fresh route resource admission');
   if(state.workers.some(w=>w.nativeRouteAdmission==='native-delivery'||w.nativeDelivery!==undefined))throw Error('Native delivery restoration requires fresh consequence resource admission');
@@ -231,6 +237,14 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
           .map(center=>centerAccessRow(center,state)),
         ...tasks.map(task=>taskRow(task))];
       apply(rows);
+      // Initial semantic absence grants no route or body permission. A reused
+      // core can retain old bodies after nav_intent_reset; never bless those
+      // as inactive merely because their new JS row says home.
+      if(wasm.spatial_body_count()===0)for(const worker of workers){
+        const entry=inactiveHomeEntry(state,worker);if(!entry)continue;
+        if(wasm.nav_home_inactive_restore_version?.()!==1)throw Error('Rebuild native inactive Home restoration');
+        if(wasm.nav_intent_restore_home_inactive(numericId(worker.id),entry.x,entry.z)!==1)throw Error('Native inactive Home declaration rejected');
+      }
       structuresById.clear();
       cropsById.clear();
       cropObjects.clear();
@@ -1297,8 +1311,8 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     try{const proposal=captureNativeHomeArrivalProposal(next),ptr=wasm.nav_home_arrival_proposal_time_translation_ptr(next.session,next.ticket);if(!proposal||!ptr)throw Error('Native Home arrival revalidation lost its evidence');const a=Array.from(new Float64Array(wasm.memory.buffer,ptr,8));if(a[0]!==1||a[1]!==ticket.ticket||a[2]!==next.ticket||a[5]!==proposal.worldBoundary.effectiveTime||!a.every(Number.isFinite)||![0,1].includes(a[7]))throw Error('Invalid native Home arrival translation');return outcome('revalidated',{proposal,timeTranslation:Object.freeze({kind:'native-home-arrival-time-translation',version:1,previousTicket:ticket,ticket:next,previousStartTime:a[3],startTime:a[5],sameSourceState:a[7]===1})});}catch(error){cancelNativeHomeArrivalProposal(next);throw error;}
   };
   const nativeWorkerHomeInactive=actorId=>{
-    const actor=typeof actorId==='number'?actorId:numericId(actorId),worker=owningState?.workers.find(w=>numericId(w.id)===actor);if(!worker||worker.status!=='home'||worker.taskId||worker.crateId||worker.nativeRouteAdmission!==undefined||worker.path?.length||worker.incapacitated||worker.recovery||worker.recoveryExitRemaining||worker.fallRemaining>0||worker.raidReturn||worker.running!==false||worker.gateWaiting!==false)return false;
-    const village=owningState.villages.find(v=>v.id===worker.villageId),entry=village?.entry??village;return !!entry&&worker.x===entry.x&&worker.z===entry.z&&wasm.nav_intent_worker_inactive?.(actor)===1;
+    const actor=typeof actorId==='number'?actorId:numericId(actorId),worker=owningState?.workers.find(w=>numericId(w.id)===actor);
+    return !!inactiveHomeEntry(owningState,worker)&&wasm.nav_intent_worker_inactive?.(actor)===1;
   };
   const startNativeHomeArrivalAfterGpuQuiescence=({actorId,getPublication,prepareResources,signal=null}={})=>{
     if(typeof prepareResources!=='function'||signal!==null&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Native Home arrival requires retained resource preparation');

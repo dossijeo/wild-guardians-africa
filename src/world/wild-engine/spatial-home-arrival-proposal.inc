@@ -51,8 +51,24 @@ EMSCRIPTEN_KEEPALIVE int nav_home_arrival_proposal_commit_bound(double session,d
 }
 EMSCRIPTEN_KEEPALIVE const double* nav_home_arrival_result_ptr(){return state().homeArrivalResult.data();}
 
+// A semantic save may start with workers already inside their village. Declare
+// that absence only with an empty physical domain before clock/execution
+// admission. Resetting the intent index alone does not empty the body registry.
+EMSCRIPTEN_KEEPALIVE int nav_home_inactive_restore_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int nav_intent_restore_home_inactive(double actor,double x,double z){
+ auto& s=state();if(!integer(actor)||!std::isfinite(x)||!std::isfinite(z))return -1;
+ const auto found=s.workers.find(uint64_t(actor));if(found==s.workers.end())return 0;
+ auto& worker=found->second;
+ if(s.causalClock||s.executionEnabled||s.bodyDomainActive||s.barrierProposal.pending||s.worldMutationPreview||spatial_body_count()!=0||
+    !s.reservedBodies.empty()||!s.suspendedBodies.empty()||worker.eligible||worker.actionActive||worker.bodyBound||worker.body||
+    worker.x!=x||worker.z!=z||s.activeIntents.count(uint64_t(actor)))return -2;
+ if(worker.inactiveSequence)return 1;
+ ActiveIntent absence;absence.actor=uint64_t(actor);absence.state=PlanningState::Cancelled;
+ worker.inactiveSequence=emitIntentChange(s,absence);s.entityRevision++;return 1;
+}
+
 // Read the existing worker/intent records, not a historical completion map.
 EMSCRIPTEN_KEEPALIVE int nav_intent_worker_inactive(double actor){
  const auto& s=state();if(!integer(actor))return 0;const auto w=s.workers.find(uint64_t(actor));
- return w!=s.workers.end()&&w->second.inactiveSequence&&!w->second.eligible&&!w->second.bodyBound&&!w->second.body&&!s.activeIntents.count(uint64_t(actor))?1:0;
+ return w!=s.workers.end()&&w->second.inactiveSequence&&!w->second.eligible&&!w->second.actionActive&&!w->second.bodyBound&&!w->second.body&&!s.activeIntents.count(uint64_t(actor))?1:0;
 }

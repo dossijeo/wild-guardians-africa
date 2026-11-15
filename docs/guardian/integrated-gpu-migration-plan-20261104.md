@@ -1,5 +1,7 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuación de Home: [restauración de trabajadores ya inactivos](e-r3-native-home-inactive-restoration-20261115.md). La carga declara su ausencia sobre el registro nativo nuevo, sin cuerpos, corredores o permisos gráficos anteriores; el reloj vacío existente admite la cohorte en casa y los compañeros activos conservan su admisión normal. Home aún en movimiento, productor ordinario y recuperación integral siguen pendientes; no cambia ningún cierre A6/A/B/C.
+
 Continuación de Home: [retirada en el consumidor real](e-r3-native-home-absence-consumer-20261115.md), con paquete de ausencia y revocación nativa exactos. NVIDIA/Turing: cero creaciones al preparar y después de READY (2911 constantes), 52 dibujos durante bloqueo de 1,8 s, un actor retirado y los demás recursos conservados. La publicación antigua no lo resucita; selección y drenaje correctos. Restauración nueva, otras clases, productor ordinario y recuperación integral siguen pendientes; no cambia ningún cierre A6/A/B/C.
 
 Continuación de Home: [ausencia reversible sobre el roster residente](e-r3-native-home-absence-roster-20261115.md). La captura restaura enseguida la visibilidad y selección anteriores; el commit nativo oculta el actor y la presentación permite retirar su propietario Home. No añade recursos de movimiento. Faltan el transporte/Surface, admisión directa y hardware de esta ausencia; la capacidad no se anuncia ni cambia ningún cierre A6/A/B/C.
