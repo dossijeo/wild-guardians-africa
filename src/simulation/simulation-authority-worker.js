@@ -42,6 +42,11 @@ self.onmessage=async ({data})=>{
   if(data?.kind==='dispose'){terrainPublication?.dispose();authority?.dispose();authority=null;close();return;}
   if(fatalTerrainError&&data.kind!=='inspectTerrainRecoveryHandoff'&&!(data.kind==='reattachTerrain'&&data.historicalHandoff!==undefined))throw Error('Terrain history session failed: '+String(fatalTerrainError.message??fatalTerrainError));
    if(!authority)throw Error('Simulation authority is not ready');
+   if(data.kind==='attachNativeResourcePreparation'){
+    try{const result=await authority.attachNativeResourcePreparation(data.port,session);postMessage({kind:'nativeResourcePreparationAttached',session,...result});}
+    catch(error){data.port?.close?.();postMessage({kind:'nativeResourcePreparationAttachError',session,message:String(error?.message??error)});}
+    return;
+   }
    if(data.kind==='attachNativeIntentControl'){
     try{
       const result=await authority.attachNativeIntentControl(data.port,session);

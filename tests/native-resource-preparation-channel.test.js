@@ -1,0 +1,80 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {MessageChannel} from 'node:worker_threads';
+import {createNativeResourcePreparationConnection} from '../src/simulation/native-resource-preparation-connection.js';
+import {attachNativeResourcePreparationEndpoint} from '../src/rendering/native-resource-preparation-receiver.js';
+import {nativeTaskRequestFixture} from './helpers/native-task-resource-requests.js';
+import {nativeTaskStartReferenceFromProposal} from '../src/world/native-task-start-reference.js';
+
+const boundary={version:1,authorityEpoch:'source',nativeSession:1,ticket:3,effectiveTime:10};
+const resource=()=>({version:1,kind:12,phase:'proposal',worldBoundary:{...boundary}});
+const deferred=()=>{let resolve;return {promise:new Promise(r=>{resolve=r;}),resolve:value=>resolve(value)};};
+const flush=()=>new Promise(resolve=>setTimeout(resolve,5));
+function setup({prepare,timeoutMs=1000}={}){
+ const {port1,port2}=new MessageChannel(),calls=[],errors=[];let live=true;
+ const endpoint=attachNativeResourcePreparationEndpoint({port:port2,session:'game',isRunning:()=>live,onError:error=>errors.push(error),prepare:prepare??(async(kind,resources)=>({preparedWorldBoundary:resources.worldBoundary,valid:()=>true,commit:data=>{calls.push(['commit',data]);return true;},abort:()=>calls.push(['abort'])}))});
+ const connection=createNativeResourcePreparationConnection({port:port1,session:'game',timeoutMs,onError:error=>errors.push(error)});
+ return {connection,endpoint,calls,errors,port1,port2,close(){connection.dispose();endpoint.dispose();port1.close();port2.close();live=false;}};
+}
+
+test('a genuine first-task declaration crosses the retained endpoint while independent native execution advances',async()=>{
+ const native=nativeTaskRequestFixture({bindBodies:true}),started=deferred(),finish=deferred();native.claim();
+ const request=native.planner.pendingTaskRoute(native.state.tasks[0].workerId),proposal=native.planner.prepareNativeTaskStartProposal(request,{bodyId:1,radius:.28,runPhase:4,walkPhase:7}).proposal,reference=nativeTaskStartReferenceFromProposal(proposal);
+ let received,committed;
+ const f=setup({prepare:async(kind,resources,options)=>{received={kind,resources,options};started.resolve();await finish.promise;return {preparedWorldBoundary:resources.worldBoundary,preparedTaskStartTemplate:nativeTaskStartReferenceFromProposal(resources),valid:()=>true,commit:data=>{committed=data;return true;},abort(){}};}});
+ try{await f.connection.ready;const preparing=f.connection.prepareNativeTaskStartResources(proposal,{minSequence:2,terrainManifest:{epoch:'terrain',chunks:[]}});await started.promise;
+  assert.equal(f.connection.status().pending,1);const before=native.body(2);native.advance(12);assert(native.body(2).x>before.x);assert.deepEqual(native.planner.pendingTaskRoute(request.actorId),request);
+  finish.resolve();const handle=await preparing;assert.equal(received.kind,'prepareNativeTaskStartResources');assert.equal(received.options.deferredStart,true);assert.equal(received.options.minSequence,2);assert.deepEqual(received.resources.rows,proposal.rows);assert.notEqual(received.resources.rows,proposal.rows);assert.deepEqual(handle.preparedTaskStartTemplate,reference);assert(handle.valid());
+  await assert.rejects(f.connection.prepareNativeTaskStartResources(proposal),/already pending/);
+  const commit={worldBoundary:proposal.worldBoundary};assert(handle.commit(commit));assert.equal(handle.commit(commit),false);await flush();assert.deepEqual(committed,commit);assert.equal(f.connection.status().retained,0);assert.deepEqual(f.errors,[]);
+ }finally{finish.resolve();f.close();native.close();}
+});
+
+test('abort during preparation disposes a handle that arrives late and permits a later request',async()=>{
+ const started=deferred(),finish=deferred();let aborted=0,count=0;
+ const f=setup({prepare:async(kind,resources)=>{if(++count===1){started.resolve();await finish.promise;}return {preparedWorldBoundary:resources.worldBoundary,valid:()=>true,commit:()=>true,abort(){aborted++;}};}});
+ try{await f.connection.ready;const controller=new AbortController(),preparing=f.connection.prepareNativeGateResources(resource(),{signal:controller.signal});await started.promise;controller.abort();await assert.rejects(preparing,{name:'AbortError'});await flush();finish.resolve();await flush();assert.equal(aborted,1);assert.equal(f.connection.status().pending,0);
+  const next=await f.connection.prepareNativeGateResources(resource());assert(next.valid());next.abort();await flush();assert.equal(aborted,2);
+ }finally{finish.resolve();f.close();}
+});
+
+test('abort after ready retires its proxy and releases capacity for the next request',async()=>{
+ const f=setup();try{await f.connection.ready;const controller=new AbortController(),handle=await f.connection.prepareNativeGateResources(resource(),{signal:controller.signal});controller.abort();assert.equal(handle.valid(),false);assert.equal(handle.commit({}),false);assert.equal(f.connection.status().retained,0);await flush();const next=await f.connection.prepareNativeGateResources(resource());next.abort();}finally{f.close();}
+});
+
+test('the retained endpoint supports invalidate and refresh without a new preparation',async()=>{
+ let prepared=0,invalidated=0,refreshed=0;const current=resource();
+ const f=setup({prepare:async(kind,resources)=>{prepared++;return {get preparedWorldBoundary(){return current.worldBoundary;},valid:()=>true,invalidate(){invalidated++;return true;},refresh(next){refreshed++;current.worldBoundary=next.worldBoundary;return true;},commit:()=>true,abort(){}};}});
+ try{await f.connection.ready;const initial={kind:'native-route-resume-proposal',worldBoundary:current.worldBoundary},handle=await f.connection.prepareNativeResumeResources(initial);assert(handle.invalidate());assert.equal(handle.valid(),false);const next={...initial,worldBoundary:{...boundary,ticket:4,effectiveTime:12}};assert(await handle.refresh(next));assert(handle.valid());assert.deepEqual(handle.preparedWorldBoundary,next.worldBoundary);assert.equal(prepared,1);assert.equal(invalidated,1);assert.equal(refreshed,1);handle.abort();}finally{f.close();}
+});
+
+test('incompatible refresh and failed refresh both release the retained proxy',async()=>{
+ for(const result of [false,'reject']){const f=setup({prepare:async(kind,resources)=>({preparedWorldBoundary:resources.worldBoundary,valid:()=>true,refresh:()=>{if(result==='reject')throw Error('changed');return false;},commit:()=>true,abort(){}})});try{await f.connection.ready;const resources={kind:'native-route-resume-proposal',worldBoundary:boundary},handle=await f.connection.prepareNativeResumeResources(resources);if(result==='reject')await assert.rejects(handle.refresh(resources),/changed/);else assert.equal(await handle.refresh(resources),false);assert.equal(f.connection.status().retained,0);assert.equal(handle.valid(),false);}finally{f.close();}}
+});
+
+test('a duplicate refresh cannot release the first refresh or its retained reservation',async()=>{
+ const started=deferred(),finish=deferred(),f=setup({prepare:async(kind,resources)=>({preparedWorldBoundary:resources.worldBoundary,valid:()=>true,refresh:async()=>{started.resolve();await finish.promise;return true;},commit:()=>true,abort(){}})});
+ try{await f.connection.ready;const resources={kind:'native-route-resume-proposal',worldBoundary:boundary},handle=await f.connection.prepareNativeResumeResources(resources),refreshing=handle.refresh(resources);await started.promise;
+  await assert.rejects(handle.refresh(resources),/already pending/);assert.equal(f.connection.status().retained,1);finish.resolve();assert(await refreshing);assert(handle.valid());assert.equal(f.connection.status().retained,1);await assert.rejects(f.connection.prepareNativeGateResources(resource()),/already pending/);handle.abort();
+ }finally{finish.resolve();f.close();}
+ const g=setup();try{await g.connection.ready;const handle=await g.connection.prepareNativeGateResources(resource());assert.equal(handle.refresh,undefined);assert.equal(handle.invalidate,undefined);handle.abort();}finally{g.close();}
+});
+
+test('connection disposal invalidates ready proxies and rejects a pending preparation',async()=>{
+ const f=setup();try{await f.connection.ready;const handle=await f.connection.prepareNativeGateResources(resource());f.connection.dispose();assert.equal(handle.valid(),false);assert.equal(handle.commit({}),false);await flush();assert.equal(f.endpoint.status().closed,true);}finally{f.close();}
+ const started=deferred(),finish=deferred(),g=setup({prepare:async()=>{started.resolve();await finish.promise;return {abort(){}};}});try{await g.connection.ready;const pending=g.connection.prepareNativeGateResources(resource());await started.promise;g.connection.dispose();await assert.rejects(pending,/disposed/);}finally{finish.resolve();g.close();}
+});
+
+test('preparation timeout cancels the existing retained handle without closing the healthy endpoint',async()=>{
+ const started=deferred(),finish=deferred(),f=setup({timeoutMs:30,prepare:async()=>{started.resolve();await finish.promise;return {abort(){}};}});
+ try{await f.connection.ready;const pending=f.connection.prepareNativeGateResources(resource());await started.promise;await assert.rejects(pending,/timed out/);await flush();assert.equal(f.connection.status().phase,'running');assert.equal(f.endpoint.status().pending,null);}finally{finish.resolve();f.close();}
+});
+
+test('wrong-session and unsolicited responses close the connection and invalidate retained handles',async()=>{
+ for(const response of [{session:'foreign',kind:'nativeGateResourcesResult',id:1},{session:'game',kind:'nativeGateResourcesResult',id:999}]){const f=setup();try{await f.connection.ready;const handle=await f.connection.prepareNativeGateResources(resource());f.port2.postMessage(response);await flush();assert.equal(f.connection.status().phase,'failed');assert.equal(handle.valid(),false);assert.equal(f.errors.length,1);}finally{f.close();}}
+});
+
+test('aborting before the handshake does not dispatch a resource request',async()=>{
+ const {port1,port2}=new MessageChannel(),messages=[];port2.onmessage=({data})=>messages.push(data);const connection=createNativeResourcePreparationConnection({port:port1,session:'game'});connection.ready.catch(()=>{});
+ try{const controller=new AbortController(),preparing=connection.prepareNativeGateResources(resource(),{signal:controller.signal});controller.abort();await assert.rejects(preparing,{name:'AbortError'});assert.equal(messages.length,0);}finally{connection.dispose();port2.close();}
+});

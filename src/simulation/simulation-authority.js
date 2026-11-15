@@ -1,5 +1,6 @@
 import {createHistoricalEventBoundaryCapture} from './historical-event-boundaries.js';
 import {createNativeIntentControlCohort} from './native-intent-control-cohort.js';
+import {createNativeResourcePreparationConnection} from './native-resource-preparation-connection.js';
 import {createTutorialGuideRevision} from './tutorial-guide-revision.js';
 import {captureMudInputs} from './mud-terrain-input.js';
 import {captureSpatialFarState} from '../world/wild-engine/spatial-far-state.js';
@@ -50,6 +51,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
  const tutorialGuideTracker=createTutorialGuideRevision(),game=(restoringPhysics?deserializeConfirmedState:deserialize)(snapshot),loaded=new Map(),savedWaitBindings=game.workerRaidWaitBindings??null,presentationHeadings=presentationWorkerHeadingSeed===null?null:createPresentationWorkerHeadings(presentationWorkerHeadingSeed,{initialWorkerIds:game.workers.map(worker=>worker.id)});delete game.workerRaidWaitBindings;delete game.workerPhysicsCheckpoint;delete game.workerNativeAuthorityCheckpoint;let session,stopTasks,stopWorld,stopEvents,stopSettlements,physics=null,physicsInitializing=false,tutorial=null,closed=false,sequence=0,events=[],settlements=[],trackMicroIncome=false,trackedActor=null,trackMotionPeers=false,trackWorldMotion=observeWorldMotion,stopMotion=null,motionSegments=null,terrainGeneration=0,reportedTerrainGeneration=0;
   let guardianMetadata=null,guardianMetadataFailure=null,guardianTerrainEpoch=null,guardianTerrainManifest=null,activeHistoricalCapture=null;
   let nativeIntentControl=null;
+  let nativeResourcePreparation=null;
   let pendingNativeWorldResources=[];
  try{
   const withMud=data=>mudPresentation&&session.field.c.biome==='mangrove'?{...data,mudInputs:captureMudInputs(session.field,data.cx,data.cz,data.terrain.positions)}:data;
@@ -122,6 +124,25 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   function requireGuardianMetadata(){if(!guardianMetadata)throw Error(guardianMetadataFailure?`Guardian metadata unavailable: ${guardianMetadataFailure}`:'Guardian metadata unavailable');}
   function setGuardianTerrainEpoch(epoch,manifest=null){if(closed||epoch!==null&&(typeof epoch!=='string'||!epoch)||manifest!==null&&(manifest?.epoch!==epoch||!Array.isArray(manifest.chunks)))throw TypeError('Invalid guardian terrain epoch');guardianTerrainEpoch=epoch;guardianTerrainManifest=manifest===null?null:structuredClone(manifest);}
   return {
+    async attachNativeResourcePreparation(port,transportSession){
+      if(closed||nativeResourcePreparation&&!['closed','failed'].includes(nativeResourcePreparation.status().phase))throw Error('Native resource attachment unavailable');
+      nativeResourcePreparation?.dispose();
+      const connection=createNativeResourcePreparationConnection({port,session:transportSession});nativeResourcePreparation=connection;
+      try{return await connection.ready;}catch(error){if(nativeResourcePreparation===connection)nativeResourcePreparation=null;connection.dispose();throw error;}
+    },
+    nativeResourcePreparationStatus:()=>nativeResourcePreparation?.status()??null,
+    prepareNativeGateResources(resources,options){
+      if(closed||!nativeResourcePreparation)return Promise.reject(Error('Native resource preparation unavailable'));
+      return nativeResourcePreparation.prepareNativeGateResources(resources,options);
+    },
+    prepareNativeResumeResources(resources,options){
+      if(closed||!nativeResourcePreparation)return Promise.reject(Error('Native resource preparation unavailable'));
+      return nativeResourcePreparation.prepareNativeResumeResources(resources,options);
+    },
+    prepareNativeTaskStartResources(resources,options){
+      if(closed||!nativeResourcePreparation)return Promise.reject(Error('Native resource preparation unavailable'));
+      return nativeResourcePreparation.prepareNativeTaskStartResources(resources,options);
+    },
     attachNativeIntentControl(port,transportSession){
       if(closed)return Promise.reject(Error('Native intent control attachment unavailable'));
       return nativeIntentControl.attach(port,transportSession);
@@ -328,7 +349,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     const preparedState=prepareTransportSnapshots?prepareConfirmedStateTransport(game,{projectPaths:projectedPaths}):null;const result={sequence,value,...(pausedQuiescent?{pausedQuiescent:true}:{}),...(tutorialGuideRevision===null?{}:{tutorialGuideRevision}),...(projectedPaths?{presentationPaths:'head-v1'}:{}),...(nativeAuthorityCheckpoint?{nativeAuthorityCheckpoint}:{}),...(presentationWorkerHeadings?.length?{presentationWorkerHeadings}:{}),...(terrainCheckpoint?{terrainCheckpoint}:{}),...(command.steps!==undefined?{stepsExecuted}:{}),...(clockCapture?{clockSegments:clockCapture}:{}),...(eventBoundaries&&emitted.length?{historicalEventBoundaries:eventBoundaries.finish(emitted)}:{}),...(motionTrace?{motionTrace}:{}),...(worldMotionTrace?{worldMotionTrace}:{}),...(motionInvalidation?{motionInvalidation}:{}),...(rejection?{rejection}:{}),...(commandLoadedChunks.length?{commandLoadedChunks}:{}),...(physical===undefined?{}:{physicsCheckpoint:physical&&command.physicsCheckpoint==='encoded'?encodePhysicsCheckpoint(physical):physical}),residency:resident,physicsPose:physicsPoses?.[0]??null,...(physicsPoses?.length>1?{physicsPoses}:{}),elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,...(emittedSettlements.length?{settlements:emittedSettlements}:{}),...(emitted.length?{presentationJournalVersion:2}:{}),presentationJournal:lifecycle,...(!checkpointRaidWaitsOnly||command.kind==='snapshot'?{raidWaitBindings:captureRaidWaitBindings(game,nav)}:{}),saveAvailable:saveAvailable(),snapshot:preparedState?null:(projectedPaths?serializeConfirmedPresentationState(game):serializeConfirmedState(game)),terrainChanged:takeTerrainChanged()};if(preparedState){Object.defineProperty(result,'snapshot',{enumerable:true,configurable:true,get:()=>preparedState.snapshot});Object.defineProperty(result,authoritySnapshotFields,{value:preparedState.fields});}if(tutorial)result.tutorialUpdate=tutorial.updateStatus(projectedPaths?JSON.stringify(game):result.snapshot);if(pendingNativeWorldResources.length){result.nativeWorldResources=pendingNativeWorldResources;pendingNativeWorldResources=[];}hasPublishedSnapshot=true;return result;
    },
    publishResidentTerrainForQa(publish){if(closed||typeof publish!=='function')throw TypeError('Invalid terrain bootstrap');const selected=session.core.currentChunk();try{for(const key of loaded.keys()){const [x,z]=parseSimulationChunkKey(key);if(session.core.selectChunk(x,z)<0)throw Error('Resident native chunk disappeared: '+key);publish(withMud(session.core.chunkPayload()),game.elapsed);}}finally{if(selected&&session.core.selectChunk(selected.cx,selected.cz)<0)throw Error('Could not restore selected native chunk');}},
-    dispose(){if(closed)return;closed=true;nativeIntentControl?.dispose();presentationJournal.dispose();stopMotion?.();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{session.dispose();}},
+    dispose(){if(closed)return;closed=true;nativeResourcePreparation?.dispose();nativeIntentControl?.dispose();presentationJournal.dispose();stopMotion?.();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{session.dispose();}},
   };
  }catch(error){stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();session?.dispose();throw error;}
 }

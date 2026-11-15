@@ -6,6 +6,11 @@ import {workerPresentationProfile} from '../src/app/worker-presentation-profile.
 import {webGpuWorkerBakedWalking} from '../src/rendering/webgpu-presentation-capabilities.js';
 import {MAX_PENDING_PRESENTATION_INPUTS} from '../src/rendering/presentation-input-limits.js';
 import {createSharedCameraMailbox} from '../src/rendering/shared-camera-mailbox.js';
+
+test('the graphical owner transfers a resource endpoint separately from direct draw control',async()=>{
+ const draw={postMessage(){},terminate(){}},control={postMessage(){}},f=setup({remoteDraw:true,intentControlPort:control,drawWorkerFactory:()=>draw});
+ try{f.worker.onmessage({data:{kind:'ready',backend:'WebGPU'}});await f.client.ready;const port={postMessage(){}};assert(f.client.attachNativeResourcePreparation(port));assert.deepEqual(f.worker.messages.at(-1),{message:{kind:'attachNativeResourcePreparation',session:'s',port},transfer:[port]});}finally{f.client.dispose();}
+});
 function setup(options={}){const worker={messages:[],postMessage(message,transfer){this.messages.push({message,transfer});},terminate(){this.terminated=true;}},ports=[],client=createWebGpuWorldClient({canvas:{transferControlToOffscreen:()=>({canvas:true})},session:'s',snapshot:'{}',...options,workerFactory:()=>worker,channelFactory:()=>{const a={close(){this.closed=true;}},b={close(){this.closed=true;}};ports.push(a,b);return {port1:a,port2:b};}});return {worker,ports,client};}
 test('remote drawing gives the canvas only to a window-owned GPU worker and closes both owners',async()=>{
  const draw={messages:[],postMessage(message,transfer){this.messages.push({message,transfer});},terminate(){this.terminated=true;}};

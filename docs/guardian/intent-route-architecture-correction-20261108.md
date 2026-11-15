@@ -37,6 +37,12 @@ la textura preparada y mantiene abiertos los mismos pendientes de integración.
 Su commit asíncrono despierta también el gate existente de reconciliación;
 preparar recursos o rechazar una plantilla no publica una asignación lógica.
 
+El [canal de preparación de la autoridad](e-r3-native-resource-channel-20261115.md)
+reutiliza ese protocolo en los propietarios existentes, fuera de la cola de
+avances. Sus recibos no autorizan movimiento; conectar el productor/ejecutor
+ordinario y las acciones sigue pendiente. La prueba GPU aún usa una fuente de
+componente y no cierra e-R3/e-R4/f-R4 ni la aceptación A/B/C.
+
 Hay modificaciones locales previas en simulación, escena, carga y QA. No forman
 parte de los commits de esta corrección ni deben descartarse.
 

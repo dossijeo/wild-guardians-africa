@@ -1,5 +1,20 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {createSimulationAuthorityClient} from '../src/simulation/simulation-authority-client.js';import {createMainSnapshotEncoder} from '../src/simulation/main-thread-snapshot-transport.js';
 function fixture(capacity=2){const sent=[],worker={postMessage:m=>sent.push(m),terminate(){this.terminated=true;}},client=createSimulationAuthorityClient({snapshot:'{}',chunkKeys:[],session:'s',capacity,workerFactory:()=>worker});return {client,worker,sent,receive:data=>worker.onmessage({data})};}
+
+test('resource attachment bypasses the in-flight command without reserving a game sequence',async()=>{
+ const f=fixture(4);f.receive({kind:'ready',session:'s'});await f.client.ready;
+ const first=f.client.submit({kind:'snapshot'}),port={postMessage(){},close(){}},attachment=f.client.attachNativeResourcePreparation(port),second=f.client.submit({kind:'pause',reason:'fixture'});
+ assert.equal(f.sent.at(-1).kind,'attachNativeResourcePreparation');assert.equal(f.client.status().inflight,1);
+ f.receive({kind:'result',session:'s',sequence:1});await first.result;assert.equal(f.sent.at(-1).command.sequence,2);
+ f.receive({kind:'nativeResourcePreparationAttached',session:'s',version:1});assert.deepEqual(await attachment,{version:1,session:'s'});
+ f.receive({kind:'result',session:'s',sequence:2});await second.result;assert.equal(f.client.status().next,3);f.client.dispose();
+});
+
+test('resource attachment failure and disposal settle the separate RPC without hiding command results',async()=>{
+ const f=fixture();f.receive({kind:'ready',session:'s'});await f.client.ready;const port={postMessage(){},close(){this.closed=true;}};
+ const first=f.client.attachNativeResourcePreparation(port);f.receive({kind:'nativeResourcePreparationAttachError',session:'s',message:'unavailable'});await assert.rejects(first,/unavailable/);assert.equal(f.client.status().state,'ready');
+ const next=f.client.attachNativeResourcePreparation(port),rejected=assert.rejects(next,/disposed/);f.client.dispose();await rejected;assert(port.closed);
+});
 test('native control attachment runs between commands without consuming a game sequence',async()=>{
  const f=fixture(4);f.receive({kind:'ready',session:'s'});await f.client.ready;
  const first=f.client.submit({kind:'snapshot'}),second=f.client.submit({kind:'pause',reason:'fixture'});

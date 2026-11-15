@@ -57,6 +57,12 @@ self.onmessage=async({data})=>{
   if(data?.session!==session||!runtime)throw Error('Invalid runtime host session');
   if(data.kind==='dispose'){if(monitor!==null)clearInterval(monitor);if(recoveryTimer!==null)clearTimeout(recoveryTimer);recoveryWatchdog?.dispose();recoveryWatchdog=null;recoveryReplay?.dispose();visualStream?.fail(Error('Simulation authority disposed'));recoveryJournal?.dispose();snapshotPreparation?.clear();snapshotPreparation=null;recoveryBase=null;recoveryBaseBytes=0;runtime.dispose();inputRouter.clear();runtime=null;close();return;}
    if(data.kind==='activateClock'){if(!Number.isSafeInteger(data.id))throw TypeError('Invalid clock activation');runtime.activateClock();postMessage({kind:'clockActivated',session,id:data.id});return;}
+   if(data.kind==='attachNativeResourcePreparation'){
+    if(!Number.isSafeInteger(data.id)||data.id<1||!data.port)throw TypeError('Invalid native resource attachment');
+    try{const result=await authorityClient.attachNativeResourcePreparation(data.port);postMessage({kind:'nativeResourcePreparationAttached',session,id:data.id,...result});}
+    catch(error){data.port.close?.();postMessage({kind:'nativeResourcePreparationAttachError',session,id:data.id,message:String(error?.message??error)});}
+    return;
+   }
    if(data.kind==='attachNativeIntentControl'){
     if(!Number.isSafeInteger(data.id)||data.id<1||!data.port)throw TypeError('Invalid native intent control attachment');
     try{const result=await authorityClient.attachNativeIntentControl(data.port);

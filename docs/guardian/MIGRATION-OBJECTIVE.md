@@ -2,7 +2,7 @@
 
 Estado: **en ejecución; no completado**.
 
-Último avance: [fases y reconciliación de primera tarea](e-r3-first-task-phase-continuity-20261115.md), sobre la admisión gráfica retenida existente.
+Último avance: [canal de preparación desde la autoridad](e-r3-native-resource-channel-20261115.md), sobre la admisión gráfica retenida existente.
 f-R4 sigue parcial; quedan e-R3/e-R4/f-R4 y la aceptación integrada A/B/C.
 
 ## Objetivo y orden obligatorio

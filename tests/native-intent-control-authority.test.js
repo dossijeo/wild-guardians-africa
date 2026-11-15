@@ -5,12 +5,23 @@ import {gunzipSync} from 'node:zlib';
 import {MessageChannel} from 'node:worker_threads';
 import {createSimulationAuthority} from '../src/simulation/simulation-authority.js';
 import {createNativeRouteControl} from '../src/rendering/native-route-control.js';
+import {attachNativeResourcePreparationEndpoint} from '../src/rendering/native-resource-preparation-receiver.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL(
   '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 const snapshot=gunzipSync(readFileSync(new URL(
   './fixtures/sabana712-d1-native-active-raid.json.gz',import.meta.url))).toString();
 const chunks=Array.from({length:9},(_,i)=>`${i%3+1},${Math.floor(i/3)-1}`);
+
+test('the actual authority advances commands while its independent resource endpoint is preparing',async()=>{
+ const authority=createSimulationAuthority(module,snapshot,chunks),reference=createSimulationAuthority(module,snapshot,chunks),{port1,port2}=new MessageChannel();let finish,started;
+ const entered=new Promise(resolve=>{started=resolve;}),waiting=new Promise(resolve=>{finish=resolve;}),boundary={version:1,authorityEpoch:'resource-declaration',nativeSession:1,ticket:3,effectiveTime:0};
+ const endpoint=attachNativeResourcePreparationEndpoint({port:port2,session:'source',isRunning:()=>true,prepare:async()=>{started();await waiting;return {preparedWorldBoundary:boundary,valid:()=>true,commit:()=>true,abort(){}};}});
+ try{assert.deepEqual(await authority.attachNativeResourcePreparation(port1,'source'),{version:1,session:'source'});const preparing=authority.prepareNativeGateResources({version:1,kind:12,phase:'proposal',worldBoundary:boundary});await entered;
+  for(let sequence=1;sequence<=3;sequence++){const command={kind:'advance',sequence,seconds:.05,nightFastForward:false,steps:2},actual=authority.execute(command),expected=reference.execute(command);assert.equal(actual.snapshot,expected.snapshot);assert.deepEqual(actual.events,expected.events);}
+  assert.equal(authority.nativeResourcePreparationStatus().pending,1);finish();const handle=await preparing;assert(handle.valid());handle.abort();
+ }finally{finish();authority.dispose();reference.dispose();endpoint.dispose();}
+});
 
 function receiver(session='control-session',{autoDrain=true}={}){
   const {port1,port2}=new MessageChannel(),messages=[],errors=[];
