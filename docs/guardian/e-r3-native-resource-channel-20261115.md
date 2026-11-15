@@ -95,3 +95,14 @@ de la autoridad: cuerpo nativo, política de tarea, avance causal y proyección 
 lo realmente ejecutado sin otro `moveWorker`. La llegada necesita preparación
 de acción y consecuencias antes de retirar la reserva. Quedan también las demás
 clases, cancelación/restauración completas y la aceptación integrada A/B/C.
+
+## Comprobación ampliada de los arneses del Worker
+
+La selección amplia posterior detectó que dos arneses que evalúan el bucle real
+del Worker, sustituyendo su bootstrap, retiraban los imports sin inyectar el
+receptor recién extraído. Se corrigen sus dependencias usando las funciones
+reales del módulo común, conservando las mismas aserciones de continuación,
+invalidación histórica y feedback del guardián. Los
+[26 casos de ambos arneses](performance/native-resource-worker-harness-validation-20261115.json)
+pasan sin omisiones. La corrección solo cambia pruebas y documentación; no es
+un nuevo mecanismo de ejecución ni cierra la integración pendiente.

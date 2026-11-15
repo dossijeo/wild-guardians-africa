@@ -4,6 +4,7 @@ import {readFileSync} from 'node:fs';
 import {DirectionalLight,PerspectiveCamera} from 'three';
 import ShadowNode from 'three/src/nodes/lighting/ShadowNode.js';
 import {nativeFrameReadiness,rejectedNativeFrameTarget,isPreparedFrameInvalidation} from '../src/rendering/webgpu-frame-recovery.js';
+import {createNativeResourcePreparationReceiver,attachNativeResourcePreparationEndpoint} from '../src/rendering/native-resource-preparation-receiver.js';
 
 const world=ticket=>({version:1,authorityEpoch:'native',nativeSession:1,ticket,effectiveTime:10});
 const old=world(1),next=world(2),future=world(3),error=()=>Object.assign(Error('old recording'),{code:'remote-frame-native-mutation-obsolete',resourcePreparationsRetained:true});
@@ -59,7 +60,7 @@ function workerFixture(){
  const remote={beginFrame:metadata=>begins.push(metadata),endFrame:async()=>{if(reject)throw error();},cancelFrame(){}};
  let source=readFileSync('src/rendering/webgpu-world-worker.js','utf8').replace(/^import .*;\r?\n/gm,'').replaceAll('import.meta.env.DEV','false');
  source+="\nphase='running';recoveryEnabled=true;surface=testSurface;remoteGpu=testRemote;return {draw,resumePreparation,onmessage:self.onmessage,get phase(){return phase;}};";
- const self={},worker=new Function('self','testSurface','testRemote','createWebGpuSurfaceOwner','postMessage','isPreparedFrameInvalidation','requestAnimationFrame','cancelAnimationFrame','setTimeout','clearTimeout','close',source)(self,surface,remote,()=>({signal:new AbortController().signal,close:async()=>{phaseClosed++;}}),m=>notices.push(m),isPreparedFrameInvalidation,fn=>{const id=++serial;scheduled.set(id,fn);return id;},id=>scheduled.delete(id),(fn,delay)=>{const id=++serial;timers.set(id,{fn,delay});return id;},id=>timers.delete(id),()=>{});
+ const self={},worker=new Function('self','testSurface','testRemote','createWebGpuSurfaceOwner','postMessage','isPreparedFrameInvalidation','requestAnimationFrame','cancelAnimationFrame','setTimeout','clearTimeout','close','createNativeResourcePreparationReceiver','attachNativeResourcePreparationEndpoint',source)(self,surface,remote,()=>({signal:new AbortController().signal,close:async()=>{phaseClosed++;}}),m=>notices.push(m),isPreparedFrameInvalidation,fn=>{const id=++serial;scheduled.set(id,fn);return id;},id=>scheduled.delete(id),(fn,delay)=>{const id=++serial;timers.set(id,{fn,delay});return id;},id=>timers.delete(id),()=>{},createNativeResourcePreparationReceiver,attachNativeResourcePreparationEndpoint);
  return {worker,surface,notices,begins,recorded,timers,scheduled,set readiness(value){readiness=value;},set reject(value){reject=value;},get finishes(){return finishes;},get closed(){return phaseClosed;}};
 }
 test('actual Worker retains the owner, parks without recording an unapplied world, and presents fresh commands',async()=>{

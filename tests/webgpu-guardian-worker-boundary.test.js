@@ -1,4 +1,5 @@
 import {isPreparedFrameInvalidation} from '../src/rendering/webgpu-frame-recovery.js';
+import {createNativeResourcePreparationReceiver,attachNativeResourcePreparationEndpoint} from '../src/rendering/native-resource-preparation-receiver.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -22,7 +23,7 @@ function workerMessage(surface,messages,{recovery=false,onClose=()=>{}}={}){
  let source=readFileSync(new URL('../src/rendering/webgpu-world-worker.js',import.meta.url),'utf8');
  source=source.replace(/^import .*;\r?\n/gm,'').replaceAll('import.meta.env.DEV','false');
  source=source.replace("function fail(error){", "phase='running';recoveryEnabled=testRecovery;surface=testSurface;function fail(error){");
- const worker={};new Function('self','testSurface','createWebGpuSurfaceOwner','beginWebGpuGuardianImpact','postMessage','isPreparedFrameInvalidation','testRecovery',source)(worker,surface,()=>({close:async()=>{onClose();}}),beginWebGpuGuardianImpact,message=>messages.push(message),isPreparedFrameInvalidation,recovery);return worker.onmessage;
+ const worker={};new Function('self','testSurface','createWebGpuSurfaceOwner','beginWebGpuGuardianImpact','postMessage','isPreparedFrameInvalidation','testRecovery','createNativeResourcePreparationReceiver','attachNativeResourcePreparationEndpoint',source)(worker,surface,()=>({close:async()=>{onClose();}}),beginWebGpuGuardianImpact,message=>messages.push(message),isPreparedFrameInvalidation,recovery,createNativeResourcePreparationReceiver,attachNativeResourcePreparationEndpoint);return worker.onmessage;
 }
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
 async function setup({onCommit=()=>{}}={}){

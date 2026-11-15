@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "date": "2026-11-15",
+  "baseCommit": "95e19d9061c23d622325937e040f1b730fbe1e75",
+  "scope": "Inject the existing real retained-resource receiver in two Worker bootstrap harnesses; runtime unchanged by this repair. No integrated acceptance claimed.",
+  "sourceHashes": {
+    "tests/native-frame-continuation.test.js": "7e0d6b81f72347049361205df262788b6171c12091175124632e68449439d2f5",
+    "tests/webgpu-guardian-worker-boundary.test.js": "91db1da2dce63c3d7c1818f565f1d038ec84a0362be2bbd1ae80ffd6b05aab0c",
+    "src/rendering/webgpu-world-worker.js": "a3b40431189df6feca3b981b25a7d62d36050408b32573c73ac1cf52e7cf4f7e",
+    "src/rendering/native-resource-preparation-receiver.js": "2c3c0005901a2f49b96a0754d5183da33622302156ea83a7d057f12b4b376634"
+  },
+  "command": [
+    ".cache/tooling/node20.exe",
+    "--test",
+    "tests/native-frame-continuation.test.js",
+    "tests/webgpu-guardian-worker-boundary.test.js"
+  ],
+  "results": {
+    "tests": 26,
+    "pass": 26,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "acceptanceClosed": []
+}
