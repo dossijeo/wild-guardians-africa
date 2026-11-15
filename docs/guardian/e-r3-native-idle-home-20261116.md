@@ -1,5 +1,7 @@
 # Idle nativo pasa a Home al vencer el contrato
 
+Continuación: [Surface y consumidor GPU del Home inmediato](e-r3-native-idle-home-consumer-20261116.md), con los resultados hardware y el alcance actualizado.
+
 Avance de componente sobre `4117b084f`, 2026-11-16. e-R3/e-R4/f-R4 y A6/A/B/C siguen abiertos. El siguiente pendiente de esta vertical es admitir la publicación Home que llega mientras Surface adopta Idle y comprobar el relevo en el consumidor GPU real; Idle inicial, vencimiento de tareas activas o pendientes, puertas y productor ordinario conservan sus pendientes.
 
 ## Referencia y decisión

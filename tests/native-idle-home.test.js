@@ -47,12 +47,13 @@ test('a pending next task cannot cross expiry by retaining its preceding Idle bo
  }finally{f.close();}
 });
 
-test('a Home request born from Idle uses the existing prepared route and actual resource/control ports',async()=>{
+for(const immediate of [false,true])test(`a Home request born from Idle uses the existing resource/control ports (${immediate?'during Idle commit':'after Idle adoption'})`,async()=>{
  const f=nativeTaskSettlementFixture();let vertical;try{
   const body=f.body(1);
-  vertical=await createNativeAdmissionVertical({planner:f.planner,elapsed:f.state.elapsed,kind:'task-settlement',onPrepare({resources}){if(resources.kind===18){tick(f.state,.2,f.nav);assert.deepEqual(f.body(1),body);}},onDrain(){if(f.worker.nativeRouteAdmission==='pending-home-resources')tick(f.state,.1,f.nav);else f.advance(.1);}});
+  vertical=await createNativeAdmissionVertical({planner:f.planner,elapsed:f.state.elapsed,kind:'task-settlement',onPrepare({resources}){if(resources.kind===18){tick(f.state,.2,f.nav);assert.deepEqual(f.body(1),body);}},onDrain(){if(f.worker.nativeRouteAdmission==='pending-home-resources')tick(f.state,.1,f.nav);else f.advance(.1);},onCommit({data}){if(immediate&&data.resources.kind===17){assert.equal(f.worker.status,'idle');f.worker.contractDay=f.state.day-1;f.planner.requestNativeIdleHome(f.state,f.worker);f.planner.commitNativeCausalClock();}}});
   const idle=await vertical.run(options=>f.planner.startNativeTaskSettlementAfterGpuQuiescence({actorId:f.actor,...options}));assert.equal(idle.status,'committed',JSON.stringify({status:idle.status,error:idle.error}));await vertical.present();
-  f.worker.contractDay=f.state.day-1;tick(f.state,.1,f.nav);const request=f.planner.nativeHomeRequestReference(f.actor),peer=f.body(3),ledger=structuredClone(f.state.ledger);
+  if(immediate){assert.equal(f.worker.nativeRouteAdmission,'pending-home-resources');assert.equal(f.planner.projectNativeSettledWorkerExecution(f.state,f.worker).binding.settlementSequence,idle.nativeTaskSettlementBinding.settlementSequence);}
+  if(!immediate)f.worker.contractDay=f.state.day-1;tick(f.state,.1,f.nav);const request=f.planner.nativeHomeRequestReference(f.actor),peer=f.body(3),ledger=structuredClone(f.state.ledger);
   const result=await vertical.run(options=>f.planner.startNativeHomeRouteAfterGpuQuiescence({actorId:f.actor,...options}),{kind:'home-route'});assert.equal(result.status,'committed',JSON.stringify({status:result.status,error:result.error}));await vertical.present();
   assert.deepEqual(result.nativeHomeRouteBinding.reference.sourceRequest,request);assert.equal(result.nativeHomeRouteBinding.reference.sourceSettlement,undefined);assert.equal(f.planner.nativeTaskSettlementBinding(f.actor),null);assert.deepEqual(f.body(1),body);assert.notDeepEqual(f.body(3),peer);assert.deepEqual(f.state.ledger,ledger);
   tick(f.state,.2,f.nav);assert.notDeepEqual(f.body(1),body);assert.equal(f.worker.nativeRouteAdmission,'native-home');assert.equal(f.worker.taskId,null);assert.equal(f.worker.crateId,null);assert.deepEqual(vertical.errors,[]);

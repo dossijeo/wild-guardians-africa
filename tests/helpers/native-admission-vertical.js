@@ -10,7 +10,7 @@ import {prepareHomeAbsenceDraw} from './native-home-arrival-remote.js';
 // its existing operation; tests only vary the request and the relevant facts.
 // Real WASM, source publication, resource MessageChannel, client and draw host;
 // deterministic fake GPU queue. Hardware/visual acceptance remains separate.
-export async function createNativeAdmissionVertical({planner,elapsed,kind,onPrepare=()=>{},onReady=()=>{},onDrain=()=>{}}){
+export async function createNativeAdmissionVertical({planner,elapsed,kind,onPrepare=()=>{},onReady=()=>{},onDrain=()=>{},onCommit=()=>{}}){
   let currentKind=kind,profile=nativeResourceAdmissionProfile(kind);
   const [sourcePort,drawPort]=pair();
   const graphics=await fixture({capabilities:{width:20,height:10,format:'rgba8unorm',
@@ -43,7 +43,7 @@ export async function createNativeAdmissionVertical({planner,elapsed,kind,onPrep
         // If a test hook fails after preparation, this owner retires the packet.
         try{await onReady({packet,reference,source,...graphics});}catch(error){packet.abort();throw error;}
         return {preparedWorldBoundary:packet.preparedWorldBoundary,[profile.templateField]:reference,
-          valid:packet.valid,commit(data){commits++;const result=packet.commit(data.worldBoundary,data[profile.bindingField]);committedPacket.resolve(result);return result;},
+          valid:packet.valid,commit(data){commits++;const result=packet.commit(data.worldBoundary,data[profile.bindingField]);onCommit({data,source,...graphics});committedPacket.resolve(result);return result;},
           abort(){aborts++;packet.abort();}};
       }});
     connection=createNativeResourcePreparationConnection({port:port1,session:'vertical-resources',onError:error=>errors.push(error)});

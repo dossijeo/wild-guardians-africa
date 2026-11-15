@@ -8,7 +8,7 @@ import {copyNativeTaskActionAttestation} from '../native-task-action-attestation
 import {copyNativeTaskStartAttestation} from '../native-task-start-attestation.js';
 import {copyNativeTaskConsequenceProposal,copyNativeTaskConsequenceAttestation,copyNativeTaskConsequenceReference} from '../native-task-consequence.js';
 import {copyNativeHomeRouteProposal,copyNativeHomeRouteReference,copyNativeHomeRouteAttestation,nativeHomeRouteSource,nativeHomeRouteSourceSequence} from '../native-home-route.js';
-import {copyNativeHomeRequestReference,sameNativeHomeRequestReference} from '../native-home-request-reference.js';
+import {copyNativeHomeRequestReference,sameNativeHomeRequestReference,nativeHomeRequestContinuesIdle} from '../native-home-request-reference.js';
 import {copyNativeTaskSettlementReference,copyNativeTaskSettlementProposal,copyNativeTaskSettlementAttestation} from '../native-task-settlement.js';
 import {nativeEntityNumericId as numericId} from '../native-entity-id.js';
 import {copyNativeGatePresentation} from '../native-gate-presentation.js';
@@ -2444,7 +2444,8 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     if(state!==sourceState&&state!==observedTaskState)throw Error('Native idle projection belongs to another game');const execution=bridge.nativeSettledWorkerExecution(worker.id);if(!execution)return null;
     const home=execution.binding.reference.home,village=home&&state.villages.find(v=>numericId(v.id)===home.villageId),destination=village?.entry??village,returning=!!home&&numericId(worker.villageId)===home.villageId&&worker.status==='returning'&&!worker.taskId&&!worker.nativeRouteAdmission&&!worker.path?.length&&destination?.x===home.x&&destination?.z===home.z;
     const crate=state.crates.find(c=>numericId(c.id)===execution.crateId),pending=!home&&worker.status==='waiting-task'&&worker.nativeRouteAdmission==='pending-resources'&&!!worker.taskId&&worker.path===null;
-    if(execution.executedThrough!==state.elapsed||worker.crateId||numericId(worker.centerId)!==execution.centerId||!crate?.delivered||crate.carrierId||!(returning||pending||!home&&worker.status==='idle'&&!worker.taskId&&!worker.nativeRouteAdmission&&!worker.path?.length))throw Error('Native idle projection is not the executed game boundary');
+    const pendingHome=!home&&worker.nativeRouteAdmission==='pending-home-resources'&&nativeHomeRequestContinuesIdle(bridge.nativeHomeRequestReference(worker.id),execution.binding)&&!!projectNativeHomeExecution(state,worker);
+    if(execution.executedThrough!==state.elapsed||worker.crateId||numericId(worker.centerId)!==execution.centerId||!crate?.delivered||crate.carrierId||!(returning||pending||pendingHome||!home&&worker.status==='idle'&&!worker.taskId&&!worker.nativeRouteAdmission&&!worker.path?.length))throw Error('Native idle projection is not the executed game boundary');
     Object.assign(worker,{x:execution.x,z:execution.z,heading:execution.yaw,runPhase:execution.runPhase,walkPhase:execution.walkPhase,carryPhase:execution.carryPhase,runRemaining:execution.runRemaining,running:false,gateWaiting:false});projectedPositions.set(numericId(worker.id),[worker.x,worker.z]);return execution;
   };
   const requestNativeIdleHome=(state,worker)=>{
