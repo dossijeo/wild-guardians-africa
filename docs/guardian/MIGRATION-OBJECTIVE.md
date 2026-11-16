@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuacion de la politica Idle: [paseo preparado22 en Surface y GPU originales](e-r3-native-idle-stroll-surface-20261116.md). La publicacion nueva adopta WALK ejecutado y Surface vuelve a ready. NVIDIA/Turing conserva actor/geometria/bancos y los IDs residentes; distingue copias nativas de uniformes y verifica cero asignaciones tras READY. Tick ordinario, descanso/tarea/Home desde la pose actual y carga semantica siguen pendientes. Recuperacion integral de 3123 recursos y cierres A6/A/B/C siguen abiertos.
+
+
 Continuacion de la politica Idle: [vista ejecutada del paseo22 en Game y transporte vivo](e-r3-native-idle-stroll-live-game-20261116.md). Copia pose, fases y WALK de la fuente actual despues de la adquisicion; al llegar no adelanta REST ni RNG. El codec vivo valida la semantica sin handles/corredores. Cohorte del tick y guardado siguen cerrados hasta sus fuentes/restauracion; perder el propietario no permite fallback JS. Faltan Surface/hardware y relevos completos. Recuperacion integral de 3123 recursos y cierres A6/A/B/C siguen abiertos.
 
 
