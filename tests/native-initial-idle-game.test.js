@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {nativeInitialIdleRequestFixture} from './helpers/native-initial-idle-request.js';
+import {nativeInitialIdleGameFixture} from './helpers/native-initial-idle-game.js';
 import {restoreNativeActionGame} from './helpers/native-task-action-restoration.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {tick} from '../src/simulation/game.js';
@@ -28,7 +29,7 @@ test('an unbound declaration grants no body reference and gains one fresh sequen
  const f=nativeInitialIdleRequestFixture({bound:false});try{
   assert.equal(f.planner.requestNativeInitialIdleResources(f.state,f.worker).request,null);const sequence=f.w.nav_intent_transition_sequence(),before=structuredClone(f.worker);
   assert.equal(f.planner.projectNativeInitialIdleRequest(f.state,f.worker),null);assert.equal(f.planner.requestNativeInitialIdleResources(f.state,f.worker).request,null);assert.equal(f.w.nav_intent_transition_sequence(),sequence);assert.equal(f.w.spatial_body_count(),0);
-  assert.throws(()=>tick(f.state,.1,{intentTaskPlanner:f.planner}),/requires prepared execution admission/);assert.deepEqual(f.worker,before);
+  assert.deepEqual(f.worker,before);assert(f.planner.projectNativeInitialIdleDeclaration(f.state,f.worker));
   f.bind();const request=f.planner.projectNativeInitialIdleRequest(f.state,f.worker);assert(request);assert(request.requestSequence>sequence);assert.equal(request.bodyId,1);
  }finally{f.close();}
 });
@@ -56,10 +57,10 @@ test('cold declaration restoration precedes all physical binding in the new nati
 });
 
 for(const profile of PROFILES)test(`a fresh load restores initial ${profile.id} semantics, never an old physical or graphical permission`,()=>{
- const source=nativeInitialIdleRequestFixture({profile:profile.id,mode:'watch'});let saved,old;try{old=source.planner.requestNativeInitialIdleResources(source.state,source.worker).request;saved=deserialize(serialize(source.state));}finally{source.close();}
+ const source=nativeInitialIdleGameFixture({profile:profile.id,mode:'watch'});let saved,old;try{old=source.planner.requestNativeInitialIdleResources(source.state,source.worker).request;saved=deserialize(serialize(source.state));}finally{source.close();}
  const f=restoreNativeActionGame(saved,{admitPeer:false});try{
   const request=f.planner.projectNativeInitialIdleRequest(f.state,f.worker);assert(request);assert.notEqual(request.authorityEpoch,old.authorityEpoch);assert.equal(request.workerProfile,profile.id);assert.deepEqual(request.pose,old.pose);assert.deepEqual(request.idleState,old.idleState);assert.deepEqual(f.worker,saved.workers[0]);assert.equal(f.planner.nativeTaskStartBinding(f.actor),null);assert.equal(f.planner.nativeTaskSettlementBinding(f.actor),null);assert.equal(f.planner.nativeTaskActionBinding(f.actor),null);assert.equal(f.planner.nativeHomeRequestReference(f.actor),null);
-  const before=serialize(f.state),body=f.body(1);assert.throws(()=>tick(f.state,.1,f.nav),/requires prepared execution admission/);assert.equal(serialize(f.state),before);assert.deepEqual(f.body(1),body);assert.equal(f.planner.nativeGameExecutionState(),-1);
+  const body=f.body(1);tick(f.state,.1,f.nav);assert.deepEqual(f.worker,saved.workers[0]);assert.deepEqual(f.body(1),body);assert.equal(f.planner.nativeGameExecutionState(),1);assert.equal(f.state.elapsed,saved.elapsed+.1);
  }finally{f.close();}
 });
 

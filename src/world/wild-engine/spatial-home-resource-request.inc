@@ -40,6 +40,24 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_idle_home_request(double actor,double sessio
  intent.target=0;intent.home=true;intent.state=PlanningState::AwaitingResources;intent.approachKnown=true;intent.approachX=float(homeX);intent.approachZ=float(homeZ);intent.homeRequest=std::move(request);worker.eligible=false;
  intent.homeRequest->sequence=emitIntentChange(s,intent);s.entityRevision++;return 1;
 }
+// A genuine initial Idle may expire before graphics, or even its first body,
+// have been admitted. Retarget that semantic source on the same intent owner.
+EMSCRIPTEN_KEEPALIVE int nav_intent_initial_idle_home_request(double actor,double session,double sourceSequence,double village,double homeX,double homeZ){
+ auto& s=state();if(!integer(actor)||session!=double(s.session)||!integer(sourceSequence)||!integer(village)||!coordinate(homeX)||!coordinate(homeZ))return -1;
+ const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end())return 0;auto& intent=found->second;
+ const auto worker=s.workers.find(uint64_t(actor));if(worker==s.workers.end())return -2;
+ if(intent.homeRequest){const auto& r=*intent.homeRequest;
+  const bool current=r.body?nativeHomeRequestBodyCurrent(s,intent):intent.home&&intent.state==PlanningState::AwaitingResources&&!intent.task&&!intent.target&&!intent.generation&&intent.requiresResources&&!intent.lease&&r.actor==intent.actor&&r.session==s.session&&r.sequence==intent.resourceRequestSequence&&!worker->second.bodyBound&&!worker->second.body&&!worker->second.eligible&&!worker->second.actionActive&&!worker->second.inactiveSequence&&worker->second.x==r.x&&worker->second.z==r.z;
+  if(!current||r.initialIdleSourceSequence!=uint64_t(sourceSequence))return -2;
+  return r.village==uint64_t(village)&&r.homeX==homeX&&r.homeZ==homeZ?1:-3;
+ }
+ if(!nativeInitialIdleRequestCurrent(s,intent)||intent.initialIdleRequest->sequence!=uint64_t(sourceSequence))return -2;
+ for(const auto& [id,task]:s.tasks)if(task.assigned==uint64_t(actor))return -2;
+ auto request=std::make_shared<NativeHomeResourceRequest>();static_cast<NativeWorkerPoseResourceRequest&>(*request)=*intent.initialIdleRequest;
+ request->initialIdleSourceSequence=uint64_t(sourceSequence);request->village=uint64_t(village);request->homeX=homeX;request->homeZ=homeZ;request->at=s.effectiveTime;
+ intent.initialIdleRequest.reset();intent.homeRequest=std::move(request);intent.home=true;intent.state=PlanningState::AwaitingResources;intent.approachKnown=true;intent.approachX=float(homeX);intent.approachZ=float(homeZ);worker->second.eligible=false;
+ intent.homeRequest->sequence=emitIntentChange(s,intent);s.entityRevision++;return 1;
+}
 EMSCRIPTEN_KEEPALIVE int nav_home_request_snapshot(double actor,double ticket){
  auto& s=state();s.homeRequestResult.fill(0);if(!integer(actor)||!integer(ticket,true))return 0;
  if(ticket){const auto& p=s.barrierProposal;return p.pending&&p.kind==18&&p.home&&actor==p.home->header[1]&&ticket==double(p.ticket)&&snapshotHomeRequest(s,p.home->homeRequestSource.get())?1:0;}

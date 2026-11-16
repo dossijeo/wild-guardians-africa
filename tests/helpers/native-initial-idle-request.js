@@ -6,15 +6,16 @@ import {PROFILES} from '../../src/simulation/workforce.js';
 
 // An authored initial Idle, with no preceding task, delivery or permission.
 // Only the independent peer, when requested, receives a genuine TaskStart.
-export function nativeInitialIdleRequestFixture({core=null,bound=true,peer=false,mode='rest',profile='youngMale',declareRequest=peer,admitPeer=peer}={}){
+export function nativeInitialIdleRequestFixture({core=null,bound=true,peer=false,mode='rest',profile='youngMale',declareRequest=peer,admitPeer=peer,configureState=null}={}){
  const f=createNativeRouteExecutionFixture({core}),state=f.state,w=f.w;
  state.workers=state.workers.slice(0,peer?2:1);state.time=100;state.tasks=[];state.plants=[];state.nextId=Math.max(state.nextId,1000000);
  for(const [i,worker] of state.workers.entries())Object.assign(worker,f.point(-6,i?6:0),{profile,contractDay:state.day,status:'idle',taskId:null,path:null,crateId:null,heading:.37,runPhase:23.25,walkPhase:7.125,carryPhase:9.5,runRemaining:40,running:false,gateWaiting:false,recovery:null,recoveryExitRemaining:0,fallRemaining:0,raidReturn:false,idleState:null});
  const worker=state.workers[0],actor=Number(worker.id.split('-').at(-1));
  if(mode!==null)worker.idleState={anchorId:`farm-${worker.centerId}`,mode,elapsed:.7,remaining:2.3,rng:0xfabcde98,approachRetry:.6};
  if(peer){const b=state.workers[1],target=createPlant('plant-900099','mijo',f.point(6,6).x,f.point(6,6).z,b.centerId);target.growth=999999;target.harvestRequested=true;state.plants=[target];state.tasks=[{id:'task-920002',kind:'harvest',centerId:b.centerId,targetId:target.id,created:0,workerId:null}];}
+ configureState?.(state,{point:f.point});
  const planner=createEventDrivenTaskPlanner(f.session);planner.resetFromState(state);f.session.actorSectorRevision({worker:true});
- const bind=()=>{assert.equal(w.spatial_body_upsert(1,worker.x,worker.z,.28,0,1),1);assert.equal(w.nav_gate_bind_worker(actor,1),1);};
+ const bind=()=>{assert.equal(w.nav_intent_set_time(state.elapsed),1);assert.equal(w.spatial_body_upsert(1,worker.x,worker.z,.28,0,1),1);assert.equal(w.nav_gate_bind_worker(actor,1),1);};
  const args=()=>{const idle=worker.idleState,match=idle&&/^(farm-plant|farm-structure|village)-(\d+)$/.exec(idle.anchorId);return [actor,PROFILES.findIndex(p=>p.id===worker.profile),idle?{rest:1,watch:2,walk:3}[idle.mode]:0,idle?.elapsed??0,idle?.remaining??0,idle?.rng??0,match?['','farm-plant','farm-structure','village'].indexOf(match[1]):0,match?Number(match[2]):0,idle?.approachRetry??0,worker.heading,worker.runPhase,worker.walkPhase,worker.carryPhase,worker.runRemaining];};
  const stopTasks=planner.observeTasks(state),stopWorld=planner.observeWorld(state);
  try{

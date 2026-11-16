@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+**Pending initial Idle on the native Game clock, 2026-11-16:** [Retained Idle, real task preemption and fresh Home](e-r3-native-initial-idle-clock-20261116.md) keep body/phase/private RNG while an admitted peer advances. Contract expiry creates Home from the actual initial source, including before its first body. A live causal cohort rejects new unbound requests before mutation. Initial graphical admission, full Idle policy and ordinary production remain pending; no A6/A/B/C closure changes.
+
+
 **Initial Idle Game declaration and restoration, 2026-11-16:** [Explicit semantic declaration, retained-source checking and fresh loading](e-r3-native-initial-idle-game-20261116.md) preserve pose, phases, private RNG and anchor without restoring execution permissions. Preflight preserves the current session/consumers on failure; loading requires a fresh physical world. Game advance remains rejected until prepared admission. Native clock/cohort integration, task/Home before READY, graphical admission and full Idle policy remain pending; no A6/A/B/C closure changes.
 
 

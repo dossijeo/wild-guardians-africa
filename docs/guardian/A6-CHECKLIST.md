@@ -1,5 +1,8 @@
 # Seguimiento de cierre de A6
 
+Continuacion de Idle inicial: [espera en el reloj comun, tarea y Home](e-r3-native-initial-idle-clock-20261116.md). Game retiene cuerpo, fases y RNG mientras un companero admitido avanza. El vencimiento crea Home sobre la fuente real incluso antes del primer cuerpo; una tarea usa la admision pendiente existente. Nacimientos sin cuerpo se rechazan antes de alterar una cohorte viva. Faltan admision grafica inicial, politica completa de Idle y productor ordinario; no cambia ningun cierre A6/A/B/C.
+
+
 Continuacion de Idle inicial: [declaracion de Game, comprobacion y carga semantica nueva](e-r3-native-initial-idle-game-20261116.md). Conserva pose, fases, RNG y ancla sin recuperar permisos anteriores; valida antes de sustituir la sesion y exige un mundo fisico nuevo. La clase aun rechaza avanzar Game antes de su admision preparada. Faltan reloj/cohorte, tarea/Home previo a READY, consumidor y politica completa de Idle; no cambia ningun cierre A6/A/B/C.
 
 

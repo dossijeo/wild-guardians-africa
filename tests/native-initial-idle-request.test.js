@@ -46,7 +46,7 @@ test('initial Idle birth preserves another prepared TaskStart candidate for exac
 for(const threaded of [false,true])test(`pending initial Idle holds one body while the existing native TaskStart peer advances (${threaded?'pthread':'standalone'})`,async()=>{
  let runtime,f;try{
   if(threaded){const {default:factory}=await import('../public/wild-engine/spatial-threaded.mjs');runtime=await createThreadedSpatialWorld(factory);}
-  f=nativeInitialIdleRequestFixture({peer:true,...(runtime?{core:runtime.core}:{})});const ref=f.planner.nativeInitialIdleRequestReference(f.actor),body=f.body(1),peer=f.body(3),semantics=structuredClone(f.worker.idleState),rng=f.state.rng;assert(f.peerBinding);f.advance(.5);assert.deepEqual(f.body(1),body);assert.notDeepEqual(f.body(3),peer);assert.deepEqual(f.planner.nativeInitialIdleRequestReference(f.actor),ref);assert.deepEqual(f.worker.idleState,semantics);assert.equal(f.state.rng,rng);assert.equal(f.planner.nativeGameExecutionState(),-1);assert.equal(f.planner.nativeCausalClock().committedThrough,f.state.elapsed);
+  f=nativeInitialIdleRequestFixture({peer:true,...(runtime?{core:runtime.core}:{})});const ref=f.planner.nativeInitialIdleRequestReference(f.actor),body=f.body(1),peer=f.body(3),semantics=structuredClone(f.worker.idleState),rng=f.state.rng;assert(f.peerBinding);f.advance(.5);assert.deepEqual(f.body(1),body);assert.notDeepEqual(f.body(3),peer);assert.deepEqual(f.planner.nativeInitialIdleRequestReference(f.actor),ref);assert.deepEqual(f.worker.idleState,semantics);assert.equal(f.state.rng,rng);assert.equal(f.planner.nativeGameExecutionState(),1);assert.equal(f.planner.nativeCausalClock().committedThrough,f.state.elapsed);
  }finally{f?.close();await runtime?.dispose();}
 });
 

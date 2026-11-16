@@ -11,11 +11,14 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_request_initial_idle(double actor,double wor
  const auto& worker=found->second;const auto center=s.targets.find(worker.center);SpatialBodyView body;
  if(!worker.eligible||worker.actionActive||worker.inactiveSequence||!worker.center||center==s.targets.end()||!center->second.active||center->second.kind!=4||center->second.status!=0)return -2;
  if(worker.bodyBound&&(!worker.body||!spatialReadBody(worker.body,body)||body.kind!=0||!(body.flags&1)||(body.flags&2)||body.x!=worker.x||body.z!=worker.z||body.r<=0||body.r>2||s.reservedBodies.count(worker.body)||s.suspendedBodies.count(worker.body)))return -2;
+ // Cold declarations precede binding. A live causal cohort must never gain
+ // an unbound request that would make its already admitted peers incoherent.
+ if(!worker.bodyBound&&(s.causalClock||s.executionEnabled))return -4;
  for(const auto& [id,task]:s.tasks)if(task.assigned==uint64_t(actor))return -2;
  if(const auto previous=s.activeIntents.find(uint64_t(actor));previous!=s.activeIntents.end()){
   const auto& intent=previous->second;const auto* r=intent.initialIdleRequest.get();
   if(!r)return -2;
-  if((worker.bodyBound?!nativeInitialIdleRequestBodyCurrent(s,intent):r->body!=0)||r->center!=worker.center||r->x!=worker.x||r->z!=worker.z)return -2;
+  if(!nativeInitialIdleRequestCurrent(s,intent))return -2;
   return r->workerProfile==int(workerProfile)&&r->mode==int(mode)&&r->elapsed==elapsed&&r->remaining==remaining&&r->rng==uint32_t(rng)&&r->anchorKind==int(anchorKind)&&r->anchor==uint64_t(anchor)&&r->approachRetry==approachRetry&&r->yaw==yaw&&r->runPhase==runPhase&&r->walkPhase==walkPhase&&r->carryPhase==carryPhase&&r->runRemaining==runRemaining?1:-3;
  }
  auto request=std::make_shared<NativeInitialIdleResourceRequest>();request->actor=uint64_t(actor);request->session=s.session;request->center=worker.center;request->at=s.effectiveTime;
@@ -25,11 +28,16 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_request_initial_idle(double actor,double wor
  ActiveIntent intent;intent.actor=request->actor;intent.requiresResources=true;intent.lease=false;intent.state=PlanningState::AwaitingResources;intent.profile=request->profile;intent.initialIdleRequest=std::move(request);
  auto& stored=s.activeIntents.emplace(intent.actor,std::move(intent)).first->second;stored.initialIdleRequest->sequence=emitIntentChange(s,stored);s.entityRevision++;return 1;
 }
+static int snapshotInitialIdleRequest(IntentState& s,const NativeInitialIdleResourceRequest& r){
+ s.initialIdleRequestResult={1,double(r.actor),double(r.session),double(r.sequence),r.at,double(r.center),double(r.body),double(r.profile),double(r.bodyFlags),r.x,r.z,r.yaw,r.radius,r.runPhase,r.walkPhase,r.carryPhase,r.runRemaining,double(r.workerProfile),double(r.mode),r.elapsed,r.remaining,double(r.rng),double(r.anchorKind),double(r.anchor),r.approachRetry};return 1;
+}
+EMSCRIPTEN_KEEPALIVE int nav_initial_idle_declaration_snapshot(double actor){
+ auto& s=state();s.initialIdleRequestResult.fill(0);if(!integer(actor))return 0;
+ const auto found=s.activeIntents.find(uint64_t(actor));return found!=s.activeIntents.end()&&nativeInitialIdleRequestCurrent(s,found->second)?snapshotInitialIdleRequest(s,*found->second.initialIdleRequest):0;
+}
 EMSCRIPTEN_KEEPALIVE int nav_initial_idle_request_snapshot(double actor){
  auto& s=state();s.initialIdleRequestResult.fill(0);if(!integer(actor))return 0;
- const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end()||!nativeInitialIdleRequestBodyCurrent(s,found->second))return 0;
- const auto& r=*found->second.initialIdleRequest;
- s.initialIdleRequestResult={1,double(r.actor),double(r.session),double(r.sequence),r.at,double(r.center),double(r.body),double(r.profile),double(r.bodyFlags),r.x,r.z,r.yaw,r.radius,r.runPhase,r.walkPhase,r.carryPhase,r.runRemaining,double(r.workerProfile),double(r.mode),r.elapsed,r.remaining,double(r.rng),double(r.anchorKind),double(r.anchor),r.approachRetry};return 1;
+ const auto found=s.activeIntents.find(uint64_t(actor));return found!=s.activeIntents.end()&&nativeInitialIdleRequestBodyCurrent(s,found->second)?snapshotInitialIdleRequest(s,*found->second.initialIdleRequest):0;
 }
 EMSCRIPTEN_KEEPALIVE const double* nav_initial_idle_request_ptr(){return state().initialIdleRequestResult.data();}
 EMSCRIPTEN_KEEPALIVE int nav_initial_idle_requests_snapshot(){

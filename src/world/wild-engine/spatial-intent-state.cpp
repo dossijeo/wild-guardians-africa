@@ -160,7 +160,7 @@ struct NativeWorkerPoseResourceRequest {
 };
 // Binding the first physical body completes the request; it grants no route.
 struct NativeHomeResourceRequest:NativeWorkerPoseResourceRequest {
- uint64_t village=0;double homeX=0,homeZ=0;
+ uint64_t village=0,initialIdleSourceSequence=0;double homeX=0,homeZ=0;
 };
 struct NativeInitialIdleResourceRequest:NativeWorkerPoseResourceRequest {
  uint64_t center=0,anchor=0;int workerProfile=0,mode=0,anchorKind=0;
@@ -514,12 +514,15 @@ bool nativeHomeRequestBodyCurrent(const IntentState& s,const ActiveIntent& inten
   worker->second.x==r.x&&worker->second.z==r.z&&spatialReadBody(r.body,body)&&body.x==r.x&&body.z==r.z&&body.r==r.radius&&body.kind==0&&body.flags==r.bodyFlags&&
   !s.reservedBodies.count(r.body)&&!s.suspendedBodies.count(r.body);
 }
-bool nativeInitialIdleRequestBodyCurrent(const IntentState& s,const ActiveIntent& intent){
+bool nativeInitialIdleRequestCurrent(const IntentState& s,const ActiveIntent& intent){
  if(!intent.initialIdleRequest||intent.home||intent.task||intent.target||intent.lease||!intent.requiresResources||intent.animal||intent.retreat||intent.delivery||intent.actionBinding||intent.restoredActionSource||intent.settlementBinding||intent.homeRequest||intent.state!=PlanningState::AwaitingResources||intent.generation)return false;
  const auto& r=*intent.initialIdleRequest;const auto worker=s.workers.find(intent.actor);const auto center=s.targets.find(r.center);SpatialBodyView body;
- return r.actor==intent.actor&&r.session==s.session&&r.sequence==intent.resourceRequestSequence&&r.body&&worker!=s.workers.end()&&worker->second.center==r.center&&!worker->second.actionActive&&worker->second.bodyBound&&worker->second.body==r.body&&
-  worker->second.x==r.x&&worker->second.z==r.z&&spatialReadBody(r.body,body)&&body.x==r.x&&body.z==r.z&&body.r==r.radius&&body.kind==0&&body.flags==r.bodyFlags&&
-  center!=s.targets.end()&&center->second.active&&center->second.kind==4&&center->second.status==0&&!s.reservedBodies.count(r.body)&&!s.suspendedBodies.count(r.body);
+ if(r.actor!=intent.actor||r.session!=s.session||r.sequence!=intent.resourceRequestSequence||worker==s.workers.end()||worker->second.center!=r.center||worker->second.actionActive||worker->second.inactiveSequence||worker->second.x!=r.x||worker->second.z!=r.z||center==s.targets.end()||!center->second.active||center->second.kind!=4||center->second.status!=0)return false;
+ if(!r.body)return !worker->second.bodyBound&&!worker->second.body;
+ return worker->second.bodyBound&&worker->second.body==r.body&&spatialReadBody(r.body,body)&&body.x==r.x&&body.z==r.z&&body.r==r.radius&&body.kind==0&&body.flags==r.bodyFlags&&!s.reservedBodies.count(r.body)&&!s.suspendedBodies.count(r.body);
+}
+bool nativeInitialIdleRequestBodyCurrent(const IntentState& s,const ActiveIntent& intent){
+ return intent.initialIdleRequest&&intent.initialIdleRequest->body&&nativeInitialIdleRequestCurrent(s,intent);
 }
 bool nativeTaskActionsCoherent(const IntentState& s){
   for(const auto& [actor,intent]:s.activeIntents)if(intent.initialIdleRequest&&!nativeInitialIdleRequestBodyCurrent(s,intent))return false;
@@ -2046,7 +2049,7 @@ static int commitTaskProposal(bool pendingResources){
     if(task==s.tasks.end()||worker==s.workers.end()||task->second.assigned||
       !worker->second.eligible){clearProposal(s);return 0;}
     const auto old=s.activeIntents.find(workerId);if(old!=s.activeIntents.end()&&old->second.settlementBinding&&(!pendingResources||!nativeSettlementBodyCurrent(s,old->second))){clearProposal(s);return 0;}
-    if(old!=s.activeIntents.end()&&old->second.initialIdleRequest&&(!pendingResources||!nativeInitialIdleRequestBodyCurrent(s,old->second))){clearProposal(s);return 0;}
+    if(old!=s.activeIntents.end()&&old->second.initialIdleRequest&&(!pendingResources||!nativeInitialIdleRequestCurrent(s,old->second))){clearProposal(s);return 0;}
   }
   for(const auto& [taskId,workerId]:s.proposals){
     s.tasks.at(taskId).assigned=workerId;s.workers.at(workerId).eligible=false;
