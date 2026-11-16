@@ -1,0 +1,70 @@
+// Initial stationary presentation residency on the existing body owner. This
+// does not execute rest/watch policy, consume RNG or manufacture a task/route.
+static bool initialIdleBodySourceCurrent(const IntentState& s,const PendingBarrierProposal::InitialIdleBodyDraft& d){
+ const auto& h=d.header;const auto found=s.activeIntents.find(uint64_t(h[1]));
+ return found!=s.activeIntents.end()&&nativeInitialIdleRequestBodyCurrent(s,found->second)&&found->second.initialIdleRequest==d.source&&
+  d.source->mode>=1&&d.source->mode<=2&&h[2]==double(d.source->body)&&h[3]==double(d.source->sequence)&&h[4]==d.source->at&&h[7]==double(d.source->profile);
+}
+static int stageInitialIdleBody(double actor,double session,double requestSequence){
+ auto& s=state();if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
+ if(!integer(actor)||session!=double(s.session)||!integer(requestSequence))return -1;
+ const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end()||!nativeInitialIdleRequestBodyCurrent(s,found->second))return -2;
+ const auto source=found->second.initialIdleRequest;if(source->sequence!=uint64_t(requestSequence)||source->mode<1||source->mode>2)return -2;
+ PendingBarrierProposal::InitialIdleBodyDraft d;d.source=source;d.header={1,actor,double(source->body),double(source->sequence),source->at,s.effectiveTime,double(s.intentSequence),double(source->profile)};
+ const int staged=stageWorldMutationBoundary(nullptr,0);if(staged!=1)return staged;
+ auto& p=s.barrierProposal;p.kind=20;p.initialIdleBody=std::move(d);return 1;
+}
+EMSCRIPTEN_KEEPALIVE int nav_initial_idle_body_proposal_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int nav_initial_idle_body_proposal_stage(double actor,double session,double requestSequence){return stageInitialIdleBody(actor,session,requestSequence);}
+EMSCRIPTEN_KEEPALIVE int nav_initial_idle_body_proposal_snapshot(double session,double ticket){
+ const auto& p=state().barrierProposal;if(!p.pending||p.kind!=20||!p.initialIdleBody)return -1;
+ return takeWorldMutationBoundary(session,ticket,double(p.intents),p.at,double(p.clock),20);
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_initial_idle_body_proposal_header_ptr(){const auto& p=state().barrierProposal;return p.pending&&p.kind==20&&p.initialIdleBody?p.initialIdleBody->header.data():nullptr;}
+EMSCRIPTEN_KEEPALIVE int nav_initial_idle_body_proposal_cancel(double session,double ticket){
+ auto& p=state().barrierProposal;if(!p.pending||p.kind!=20||session!=double(p.session)||ticket!=double(p.ticket))return 0;clearWorldMutationProposal(p);return 1;
+}
+EMSCRIPTEN_KEEPALIVE int nav_initial_idle_body_proposal_revalidate(double session,double ticket){
+ auto& s=state();auto& p=s.barrierProposal;if(!p.pending||p.kind!=20||!p.initialIdleBody||session!=double(p.session)||ticket!=double(p.ticket))return -1;
+ auto old=std::move(*p.initialIdleBody);clearWorldMutationProposal(p);
+ const int result=stageInitialIdleBody(old.header[1],session,old.header[3]);if(result!=1)return result;
+ auto& next=*p.initialIdleBody;bool same=old.source==next.source;
+ for(size_t i=0;i<old.header.size();i++)if(i!=5&&i!=6&&old.header[i]!=next.header[i])same=false;
+ next.previous=NativeInitialIdleBodyOrigin{old.header,uint64_t(ticket)};
+ next.timeTranslation={1,ticket,double(p.ticket),old.header[5],old.header[5],next.header[5],next.header[5],same?1.:0.};return 1;
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_initial_idle_body_proposal_time_translation_ptr(double session,double ticket){
+ const auto& p=state().barrierProposal;return p.pending&&p.kind==20&&p.initialIdleBody&&session==double(p.session)&&ticket==double(p.ticket)&&p.initialIdleBody->timeTranslation[0]==1?p.initialIdleBody->timeTranslation.data():nullptr;
+}
+EMSCRIPTEN_KEEPALIVE int nav_initial_idle_body_proposal_commit_bound(double session,double ticket,double sequence,double time,double clockSequence,double preparedTicket){
+ auto& s=state();const auto& p=s.barrierProposal;if(!p.pending||p.kind!=20||!p.initialIdleBody||!integer(preparedTicket))return -1;
+ const int valid=takeWorldMutationBoundary(session,ticket,sequence,time,clockSequence,20);if(valid!=1)return valid;
+ if(!initialIdleBodySourceCurrent(s,*p.initialIdleBody)){clearWorldMutationProposal(s.barrierProposal);return -2;}
+ const auto& d=*p.initialIdleBody;auto binding=std::make_shared<NativeInitialIdleBodyBinding>();binding->source=d.source;binding->actual={d.header,uint64_t(ticket)};
+ if(preparedTicket==ticket)binding->prepared=binding->actual;
+ else if(d.previous&&preparedTicket==double(d.previous->ticket)&&d.timeTranslation[7]==1)binding->prepared=*d.previous;
+ else return -9;
+ const uint64_t actor=uint64_t(d.header[1]);clearWorldMutationProposal(s.barrierProposal);auto& intent=s.activeIntents.at(actor);
+ intent.initialIdleRequest.reset();intent.initialIdleBodyBinding=binding;intent.state=PlanningState::StationaryActive;
+ auto& worker=s.workers.at(actor);worker.eligible=true;worker.actionActive=false;
+ binding->bodySequence=emitIntentChange(s,intent);s.entityRevision++;spatialRecordMotionResourceBoundary(session,ticket,time,20);return 1;
+}
+static const NativeInitialIdleBodyBinding* currentInitialIdleBodyBinding(double actor){
+ const auto& s=state();if(!integer(actor))return nullptr;const auto found=s.activeIntents.find(uint64_t(actor));
+ return found!=s.activeIntents.end()&&nativeInitialIdleBodyCurrent(s,found->second)?found->second.initialIdleBodyBinding.get():nullptr;
+}
+EMSCRIPTEN_KEEPALIVE int nav_initial_idle_body_binding_snapshot(double actor){
+ auto& s=state();auto& out=s.initialIdleBodyBindingResult;out.clear();const auto b=currentInitialIdleBodyBinding(actor);if(!b)return 0;
+ out={1,double(b->bodySequence),double(b->prepared.ticket),double(b->actual.ticket)};out.insert(out.end(),b->prepared.header.begin(),b->prepared.header.end());out.insert(out.end(),b->actual.header.begin(),b->actual.header.end());return 1;
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_initial_idle_body_binding_ptr(){return state().initialIdleBodyBindingResult.data();}
+EMSCRIPTEN_KEEPALIVE int nav_initial_idle_body_binding_actors(){
+ auto& s=state();auto& out=s.initialIdleBodyBindingResult;out.clear();std::vector<uint64_t> actors;
+ for(const auto& [actor,intent]:s.activeIntents)if(intent.initialIdleBodyBinding){if(!nativeInitialIdleBodyCurrent(s,intent))return -1;actors.push_back(actor);}
+ std::sort(actors.begin(),actors.end());for(auto actor:actors)out.push_back(double(actor));return int(actors.size());
+}
+EMSCRIPTEN_KEEPALIVE int nav_initial_idle_body_source_snapshot(double actor,double ticket){
+ auto& s=state();s.initialIdleRequestResult.fill(0);if(!integer(actor)||!integer(ticket,true))return 0;
+ if(ticket){const auto& p=s.barrierProposal;if(p.pending&&p.kind==20&&p.initialIdleBody&&ticket==double(p.ticket)&&actor==p.initialIdleBody->header[1]&&initialIdleBodySourceCurrent(s,*p.initialIdleBody))return snapshotInitialIdleRequest(s,*p.initialIdleBody->source);return 0;}
+ const auto binding=currentInitialIdleBodyBinding(actor);return binding?snapshotInitialIdleRequest(s,*binding->source):0;
+}

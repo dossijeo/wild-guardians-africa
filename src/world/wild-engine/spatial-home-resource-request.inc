@@ -51,9 +51,12 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_initial_idle_home_request(double actor,doubl
   if(!current||r.initialIdleSourceSequence!=uint64_t(sourceSequence))return -2;
   return r.village==uint64_t(village)&&r.homeX==homeX&&r.homeZ==homeZ?1:-3;
  }
- if(!nativeInitialIdleRequestCurrent(s,intent)||intent.initialIdleRequest->sequence!=uint64_t(sourceSequence))return -2;
+ const NativeWorkerPoseResourceRequest* held=nullptr;
+ if(nativeInitialIdleRequestCurrent(s,intent)&&intent.initialIdleRequest->sequence==uint64_t(sourceSequence))held=intent.initialIdleRequest.get();
+ else if(nativeInitialIdleBodyCurrent(s,intent)&&intent.state==PlanningState::StationaryActive&&intent.initialIdleBodyBinding->bodySequence==uint64_t(sourceSequence))held=intent.initialIdleBodyBinding->source.get();
+ if(!held)return -2;
  for(const auto& [id,task]:s.tasks)if(task.assigned==uint64_t(actor))return -2;
- auto request=std::make_shared<NativeHomeResourceRequest>();static_cast<NativeWorkerPoseResourceRequest&>(*request)=*intent.initialIdleRequest;
+ auto request=std::make_shared<NativeHomeResourceRequest>();static_cast<NativeWorkerPoseResourceRequest&>(*request)=*held;
  request->initialIdleSourceSequence=uint64_t(sourceSequence);request->village=uint64_t(village);request->homeX=homeX;request->homeZ=homeZ;request->at=s.effectiveTime;
  intent.initialIdleRequest.reset();intent.homeRequest=std::move(request);intent.home=true;intent.state=PlanningState::AwaitingResources;intent.approachKnown=true;intent.approachX=float(homeX);intent.approachZ=float(homeZ);worker->second.eligible=false;
  intent.homeRequest->sequence=emitIntentChange(s,intent);s.entityRevision++;return 1;

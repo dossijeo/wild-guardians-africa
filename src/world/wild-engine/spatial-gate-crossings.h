@@ -73,7 +73,7 @@ int gateCrossingFixedClear(const NativeGate& gate,const RouteSlot& route,const S
 }
 int proveGateRouteAdmission(IntentState& s,const ActiveIntent& intent,RouteSlot& candidate,
     uint64_t bodyId,const SpatialBodyView& body,std::map<uint64_t,NativeGate>& proposed,
-    std::vector<GateCrossingBoundary>& boundaries,bool requireGate=true,const NativeTaskActionBinding* transferFrom=nullptr,const NativeTaskSettlementBinding* stationaryFrom=nullptr,const NativeHomeResourceRequest* homeRequestFrom=nullptr){
+    std::vector<GateCrossingBoundary>& boundaries,bool requireGate=true,const NativeTaskActionBinding* transferFrom=nullptr,const NativeTaskSettlementBinding* stationaryFrom=nullptr,const NativeHomeResourceRequest* homeRequestFrom=nullptr,const NativeInitialIdleBodyBinding* initialIdleBodyFrom=nullptr){
   int result=compileGateCrossings(s,candidate,proposed,boundaries,requireGate);
   if(result==1)for(uint64_t id:candidate.gateReservations){
     result=gateCrossingFixedClear(proposed.at(id),candidate,body);if(result!=1)break;
@@ -81,7 +81,7 @@ int proveGateRouteAdmission(IntentState& s,const ActiveIntent& intent,RouteSlot&
   }
   recordTimingResult(s,result);if(result!=1)return -7;
   s.reservationChecks++;
-  if(!reserveRouteClear(s,intent,candidate,bodyId,body,!requireGate,transferFrom,stationaryFrom,homeRequestFrom))return 0;
+  if(!reserveRouteClear(s,intent,candidate,bodyId,body,!requireGate,transferFrom,stationaryFrom,homeRequestFrom,initialIdleBodyFrom))return 0;
   const int objects=gateSweepStaticObjects(s,proposed,true);return objects==1?1:objects;
 }
 void publishGateRouteAdmission(IntentState& s,ActiveIntent& intent,uint32_t slot,RouteSlot& candidate,

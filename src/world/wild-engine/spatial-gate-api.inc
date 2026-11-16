@@ -28,7 +28,7 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_bind_worker(double actor,double id){
   if(found==s.workers.end()||!spatialReadBody(uint64_t(id),body)||body.kind!=0)return 0;
   const auto old=s.gateBodyActors.find(uint64_t(id));if(old!=s.gateBodyActors.end()&&old->second!=uint64_t(actor))return 0;
   auto& worker=found->second;if(worker.bodyBound&&worker.body==uint64_t(id))return 1;
-  const auto intent=s.activeIntents.find(uint64_t(actor));if(intent!=s.activeIntents.end()&&(intent->second.actionBinding||intent->second.settlementBinding||(intent->second.restoredActionSource||intent->second.homeRequest||intent->second.initialIdleRequest)&&(worker.bodyBound||body.x!=worker.x||body.z!=worker.z||!(body.flags&1)||(body.flags&2))))return 0;
+  const auto intent=s.activeIntents.find(uint64_t(actor));if(intent!=s.activeIntents.end()&&(intent->second.actionBinding||intent->second.settlementBinding||intent->second.initialIdleBodyBinding||(intent->second.restoredActionSource||intent->second.homeRequest||intent->second.initialIdleRequest)&&(worker.bodyBound||body.x!=worker.x||body.z!=worker.z||!(body.flags&1)||(body.flags&2))))return 0;
   if(worker.bodyBound&&(s.reservedBodies.count(worker.body)||s.suspendedBodies.count(worker.body)))return 0;
   NativeWorkerPoseResourceRequest* request=intent==s.activeIntents.end()?nullptr:intent->second.homeRequest?static_cast<NativeWorkerPoseResourceRequest*>(intent->second.homeRequest.get()):intent->second.initialIdleRequest.get();
   if(request&&(id==0||body.r<=0||body.r>2))return 0;

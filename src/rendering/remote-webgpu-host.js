@@ -1349,6 +1349,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
          }
         let accepted;
         if(message?.type==='IntentBaseline'){
+          if(message.nativeInitialIdleBodies!==undefined&&(!Array.isArray(message.nativeInitialIdleBodies)||message.nativeInitialIdleBodies.length))throw Error('Native initial Idle bodies require prepared graphical admission');
           if(message.nativeHomeArrivals!==undefined&&(!Array.isArray(message.nativeHomeArrivals)||message.nativeHomeArrivals.length))throw Error('Native Home arrival requires prepared graphical admission');
           if(message.nativeHomes!==undefined&&(!Array.isArray(message.nativeHomes)||message.nativeHomes.length))throw Error('Native Home routes require prepared graphical admission');
           if(message.nativeSettlements!==undefined&&(!Array.isArray(message.nativeSettlements)||message.nativeSettlements.length))throw Error('Native settled bodies require prepared graphical admission');

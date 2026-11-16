@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuacion de Idle inicial: [propiedad nativa del cuerpo inicial retenido](e-r3-native-initial-idle-body-source-20261116.md). La fuente admite descanso/vigilancia ya inicializados sobre el mismo cuerpo y reloj, conserva pose/fases/RNG y permite relevos reales a tarea o Home. La carga crea otra peticion; el bootstrap grafico aun rechaza esta clase. Faltan transactor/consumidor preparado y politica completa; no cambia ningun cierre A6/A/B/C.
+
+
 Continuacion de Idle inicial: [variante compartida Idle/Alert sobre el actor residente](e-r3-native-idle-alert-variant-20261116.md). El selector existente prepara ambos clips originales, conserva actor/geometrias/materiales/clave estructural y permite revertir una vigilancia activa. Es preparacion grafica, sin permiso nativo nuevo ni consumidor Idle inicial completo. Faltan su admision estacionaria y politica completa; no cambia ningun cierre A6/A/B/C.
 
 

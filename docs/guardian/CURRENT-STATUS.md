@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+**Initial held body source, 2026-11-16:** [Native initial body ownership](e-r3-native-initial-idle-body-source-20261116.md) retains initialized rest/watch on the same body and clock, preserves pose/phases/RNG and supports genuine TaskStart/Home transfers. Fresh loading creates another request; graphical bootstrap still rejects this class. Prepared transactor/consumer and full policy remain pending; no A6/A/B/C closure changes.
+
+
 **Resident Idle/Alert preparation, 2026-11-16:** [One prepared selector reuses both original clips](e-r3-native-idle-alert-variant-20261116.md), actor, bones, geometry, materials and structural program keys. An active watch pose can be restored after rollback. This is a preparation primitive, without a new native execution permission or complete initial Idle consumer. Stationary admission and full policy remain pending; no A6/A/B/C closure changes.
 
 
