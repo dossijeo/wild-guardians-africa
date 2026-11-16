@@ -5,7 +5,7 @@ import {captureNativeRoutePickFrame} from '../../src/rendering/native-route-pick
 // Component acceptance through the real original-actor Surface/ports/Host.
 // Uses actual Game projection/contract API; ordinary Game producer scheduling
 // and full-game/healthy3123 recovery remain separate acceptance requirements.
-export async function auditNativeIdleCycleWorldOwner(c,{repeat=false,home=false,stroll=false,strollRest=false}={}){
+export async function auditNativeIdleCycleWorldOwner(c,{repeat=false,home=false,stroll=false,strollRest=false,strollRestHome=false}={}){
  const {state,planner,w,client,publisher,publication,preparer,resourceConnection,b,starts,ends,waitStart,waitEnd,now,errors,pick,commit}=c,worker=state.workers[0],rng=state.rng,records=[];
  const body=()=>{const count=w.spatial_bodies_near(0,0,1e6),rows=new Float64Array(w.memory.buffer,w.spatial_bodies_result_ptr(),count*6);for(let i=0;i<count;i++)if(rows[i*6]===1)return Array.from(rows.slice(i*6,i*6+6));return null;},heldBody=body(),pose=planner.nativeInitialIdleBodyBinding(worker.id).reference.sourceRequest.pose;
  const shape=o=>o.actors.map(a=>({root:a.root,bones:a.bones,meshes:a.meshes.map(m=>[m.id,m.geometry])})),publish=sequence=>{publisher.commit(sequence);client.presentationPort.postMessage({kind:'publication',session:c.transportSession,publication:{session:c.transportSession,sequence,elapsed:state.elapsed,physicsPose:null,snapshot:c.serialize(state),events:[]}});};
@@ -27,7 +27,7 @@ export async function auditNativeIdleCycleWorldOwner(c,{repeat=false,home=false,
    preparer.postMessage({kind:'block-control-preparation',durationMs:1800});await second;
    return {preparedWorldBoundary:handle.preparedWorldBoundary,[template]:handle[template],valid:handle.valid,abort:handle.abort,commit(data){
     committedAt=now();issued=true;if(kind==='stroll')strollMoving=true;else if(kind==='cycle'){strollMoving=false;stationaryBody=body();}
-    if(kind==='cycle'&&home){
+    if(kind==='cycle'&&(home||strollRestHome&&index===6)){
      // Publish the acquisition before issuing the genuine trusted Home ABI.
      // The existing Game API requests Home from that actual cycle owner.
      commit(false);worker.contractDay=state.day-1;planner.requestNativeIdleHome(state,worker);homeRequested=true;commit(false);
@@ -70,6 +70,7 @@ export async function auditNativeIdleCycleWorldOwner(c,{repeat=false,home=false,
   const entry={kind,reference,binding,worldBoundary:admitted.worldBoundary,age,...(kind==='cycle'?{watchKnot:nativeIdleCycleWatchKnot(reference,binding.reference.worldBoundary.effectiveTime)}:{}),inputPick,peerPick,peer:{before:peerBefore,after:peerAfter},before:{resourcesCreated:before.drawExecution.resourcesCreated,owners:before.qaResidentOwners},ready:{resourcesCreated:ready.drawExecution.resourcesCreated,owners:ready.qaResidentOwners},after:{resourcesCreated:after.drawExecution.resourcesCreated,owners:after.qaResidentOwners},resourcesPrepared:ready.drawExecution.resourcesCreated-before.drawExecution.resourcesCreated,resourcesAfterReady:after.drawExecution.resourcesCreated-ready.drawExecution.resourcesCreated,factoriesPrepared:delta,preparationBlock:{start:starts[index].start,end:ends[index].end,drawFrames:prior.length},block:{start:starts[index+1].start,end:ends[index+1].end,committedAt,drawFrames:samples.length},frames:samples};
   entry.inactiveMaterialRestorations=inactiveMaterialRestorations;entry.resourceIdentity={retainedGeometryAndBankIds:unchangedImmutable.map(r=>r.reference),replacedMotionData:changedMotionData.map(r=>({reference:r.reference,label:r.label,retired:removed.has(r.reference)})),createdOrRetired:trace};entry.hostAllocations=hostAllocations;entry.adoption={readiness:after.nativeFrameReadiness,preparedPublicationSequence:ready.state.sequence,adoptedPublicationSequence:after.state.sequence};entry.inputCheckpoint={sourceWatermarkHeld:true,peerPickPose};if(kind==='cycle'&&(delta.createTexture??0)!==0)throw Error('Cycle rebuilt resident clip textures '+JSON.stringify(delta));
   if((repeat&&index===4||strollRest&&index===6)&&['createShaderModule','createRenderPipeline','createRenderPipelineAsync','createPipelineLayout'].some(k=>delta[k])){window.nativeIdleCycleFailure={kind,index,delta,trace,allShaders:retired.qaResourceTrace.filter(r=>r.kind==='createShaderModule')};throw Error('Following cycle recompiled an unchanged programme '+JSON.stringify(delta));}
+  const duplicateShaders=trace.filter(r=>r.kind==='createShaderModule'&&r.sameSourceAs!==null);entry.duplicateShaderSources=duplicateShaders;if(strollRestHome&&index===8&&duplicateShaders.length){window.nativeIdleCycleFailure={kind,index,delta,duplicateShaders,trace,allShaders:retired.qaResourceTrace.filter(r=>r.kind==='createShaderModule')};throw Error('Home recompiled an already prepared shader source '+JSON.stringify(delta));}
   records.push(entry);await window.nativeFirstTaskCheckpoint?.('cycle-'+kind+'-'+index+'-confirmed');inputPaused=false;return entry;
  }
  try{
@@ -81,7 +82,7 @@ export async function auditNativeIdleCycleWorldOwner(c,{repeat=false,home=false,
    const deadline=performance.now()+10000;while(!planner.nativeIdleStrollExecution(worker.id)?.arrived){if(performance.now()>deadline)throw Error('Native stroll did not reach its actual endpoint');await new Promise(requestAnimationFrame);}
    project();const arrivedSequence=sequence++;publish(arrivedSequence);
    const adoptionDeadline=performance.now()+10000;for(;;){const snapshot=await client.inspect();if(snapshot.state.sequence>=arrivedSequence&&snapshot.nativeFrameReadiness==='ready')break;if(performance.now()>adoptionDeadline)throw Error('Actual endpoint WALK publication was not adopted');await new Promise(requestAnimationFrame);}
-   await stage(6,'cycle');
+   await stage(6,'cycle');if(strollRestHome)await stage(8,'home');
   }
   clearInterval(pump);pump=null;commit(true);
   // Stop only the preparer's ordinary draw loop through its existing visibility
@@ -90,6 +91,6 @@ export async function auditNativeIdleCycleWorldOwner(c,{repeat=false,home=false,
   preparer.postMessage({kind:'presentation-visibility',hidden:true});const deadline=performance.now()+2000;
   for(;;){const settled=await client.inspect();if(!settled.drawExecution.pendingFrame&&!settled.drawExecution.openFrame)break;if(performance.now()>deadline)throw Error('Cycle producer did not settle before retirement');await new Promise(requestAnimationFrame);}
   await publication.fenceGpu();
-  const final=await client.inspect();return {scope:'Original resident actor/geometry/clip banks through actual Surface, ports, Host and hardware; actual Game phase/contract API, not ordinary producer/full policy/full3123 recovery.',repeat,immediateHome:home,stroll,strollRest,records,adapter:final.drawExecution.consumer.adapterInfo,final:{gpuErrors:final.drawExecution.consumer.gpuErrors},errors};
+  const final=await client.inspect();return {scope:'Original resident actor/geometry/clip banks through actual Surface, ports, Host and hardware; actual Game phase/contract API, not ordinary producer/full policy/full3123 recovery.',repeat,immediateHome:home,stroll,strollRest,strollRestHome,records,adapter:final.drawExecution.consumer.adapterInfo,final:{gpuErrors:final.drawExecution.consumer.gpuErrors},errors};
  }finally{if(pump)clearInterval(pump);commit(true);}
 }

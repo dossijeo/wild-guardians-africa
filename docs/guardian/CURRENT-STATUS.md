@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+Continuacion de Idle: [Home actual en Game y consumidor originales](e-r3-native-idle-current-home-consumer-20261116.md). Control/Game/puertos/roster/Surface adquieren Home desde el ciclo 21 real posterior al paseo 22, incluido el callback inmediato sin marcador REST manual. NVIDIA/Turing conserva 577 IDs de geometria/texturas y reutiliza programas en descanso/Home; dos conjuntos retirados fijos por actor, textura 22 retirada tras fence y cero asignaciones tras READY. Preparar aun crea uniformes/bind groups y datos Home. Faltan TaskStart actual, tarea/Home movil, restauracion/cohort/producer y recuperacion integral de 3123; cierres A6/A/B/C siguen abiertos.
+
+
 Continuacion de Idle: [fuente Home desde el ciclo actual](e-r3-native-idle-current-home-source-20261116.md). La ABI nativa retiene cuerpo/pose/fases de 21 con origen 20/22 y prepara Home mediante la peticion/ruta existentes, sin historia de permisos ni nuevo cuerpo. Standalone/pthread y regresion validados; faltan control tipado, Game, roster/Surface y GPU de este caso. Productor ordinario, restauracion movil, recuperacion integral de 3123 y cierres A6/A/B/C siguen abiertos.
 
 

@@ -1,3 +1,4 @@
+import {nativeIdleCycleBodyState} from './native-idle-cycle-body-source.js';
 const id=n=>Number.isSafeInteger(n)&&n>0;
 const fields=['kind','version','authorityEpoch','nativeSession','actorId','bodyId','bodyFlags','requestSequence','requestedAt','profile','home','pose'];
 const poseFields=['x','z','yaw','radius','runPhase','walkPhase','carryPhase','runRemaining'];
@@ -27,4 +28,14 @@ export function nativeHomeRequestContinuesIdle(request,settlement){
 export function nativeHomeRequestContinuesInitialIdle(request,initial){
  return !!request&&!!initial&&['authorityEpoch','nativeSession','actorId','bodyId','bodyFlags','profile'].every(k=>request[k]===initial[k])&&
   request.requestSequence>initial.requestSequence&&request.requestedAt>=initial.requestedAt&&poseFields.every(k=>request.pose[k]===initial.pose[k]);
+}
+
+// Link a new Home request to the actual acquired cycle, not its older body
+// declaration or the stroll which originally reached this stationary pose.
+// Typed inputs cross their own boundaries before this continuation check.
+export function nativeHomeRequestContinuesIdleCycle(request,cycle){
+ const r=cycle?.reference,w=r?.worldBoundary;if(!request||!r||!w)return false;
+ const q=nativeIdleCycleBodyState(r.sourceBody);
+ return request.actorId===r.actorId&&request.bodyId===r.bodyId&&request.bodyFlags===q.bodyFlags&&request.profile===q.profile&&
+  request.authorityEpoch===w.authorityEpoch&&request.nativeSession===w.nativeSession&&request.requestSequence>cycle.cycleSequence&&request.requestedAt>=w.effectiveTime&&poseFields.every(k=>request.pose[k]===q.pose[k]);
 }
