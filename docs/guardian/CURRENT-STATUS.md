@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+Continuacion de la politica Idle: [paseo22 en el control directo existente](e-r3-native-idle-stroll-control-20261116.md). La fuente publica su asociacion nativa exacta y el permiso distingue preparacion, adquisicion y presentacion instalada. Contrasta el WALK emitido y el ciclo presentado; rechaza programas alterados, bootstrap y watermark ajeno. Faltan transactor/puertos, consumidor GPU22, Game y fuente estacionaria posterior. Recuperacion integral de 3123 recursos y cierres A6/A/B/C siguen abiertos.
+
+
 Continuacion de la politica Idle: [referencia tipada y adaptador de la fuente del paseo22](e-r3-native-idle-stroll-data-20261116.md). Captura, revalidacion, cancelacion y lectura de la asociacion/pose reales usan handles y valores acotados, sin cadenas de permisos ni consumo de RNG en JS. La preparacion comprueba Game21 ejecutado; un arranque grafico con22 activo falla cerrado. Faltan transactor/puertos/control y consumidor preparado22, Game y fuente estacionaria posterior. Recuperacion integral de 3123 recursos y cierres A6/A/B/C siguen abiertos.
 
 

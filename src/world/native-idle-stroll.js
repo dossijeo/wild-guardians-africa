@@ -56,6 +56,7 @@ export function copyNativeIdleStrollAttestation(value){
  return Object.freeze({kind:value.kind,version:1,projectionVersion:1,assignmentSequence:value.assignmentSequence,reference,preparedReference,gateIds:Object.freeze([...ids])});
 }
 export const nativeIdleStrollAttestationCovers=(proof,reference)=>sameNativeIdleStrollReference(proof?.reference,reference)||sameNativeIdleStrollReference(proof?.preparedReference,reference);
+export function sameNativeIdleStrollAttestation(a,b){try{return JSON.stringify(copyNativeIdleStrollAttestation(a))===JSON.stringify(copyNativeIdleStrollAttestation(b));}catch{return false;}}
 export function nativeIdleStrollPresentationMatches(prepared,actual,value){
  const b=copyNativeIdleStrollAttestation(value),r=b.reference,route=actual?.nativeRoute;
  return sameNativeIdleStrollReference(b.preparedReference,prepared.nativeIdleStroll)&&route?.actorId===r.actorId&&route.assignmentSequence===b.assignmentSequence&&sameHandle(route.routeHandle,r.expectedRouteHandle)&&actual.startTime===r.worldBoundary.effectiveTime&&actual.endTime===r.endTime&&nativeMotionPresentationMatches(prepared,actual,b.gateIds);
