@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+**Resident Idle/Alert preparation, 2026-11-16:** [One prepared selector reuses both original clips](e-r3-native-idle-alert-variant-20261116.md), actor, bones, geometry, materials and structural program keys. An active watch pose can be restored after rollback. This is a preparation primitive, without a new native execution permission or complete initial Idle consumer. Stationary admission and full policy remain pending; no A6/A/B/C closure changes.
+
+
 **Initial Idle pending control metadata, 2026-11-16:** [The existing control/host transports the actual bound request](e-r3-native-initial-idle-control-20261116.md) with session, sequence and causal watermark checks. It grants no executable binding. Home/task handoffs revoke old metadata; Home preserves the exact held body and pose. Initial graphical admission and full Idle/Alert/ambient policy remain pending; no A6/A/B/C closure changes.
 
 

@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuacion de Idle inicial: [variante compartida Idle/Alert sobre el actor residente](e-r3-native-idle-alert-variant-20261116.md). El selector existente prepara ambos clips originales, conserva actor/geometrias/materiales/clave estructural y permite revertir una vigilancia activa. Es preparacion grafica, sin permiso nativo nuevo ni consumidor Idle inicial completo. Faltan su admision estacionaria y politica completa; no cambia ningun cierre A6/A/B/C.
+
+
 Continuacion de Idle inicial: [peticion pendiente en el control grafico existente](e-r3-native-initial-idle-control-20261116.md). Eventos y baseline transportan la referencia con cuerpo, ligada a sesion/secuencia/reloj, sin conceder ejecucion. Los relevos a Home/tarea revocan los datos anteriores y Home conserva exactamente cuerpo y pose. Faltan admision grafica inicial y politica completa Idle/Alert/paseo; no cambia ningun cierre A6/A/B/C.
 
 

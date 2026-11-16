@@ -16,15 +16,15 @@ import {PROFILES} from '../src/simulation/workforce.js';
 
 const fetcher=async url=>{const bytes=await readFile('public'+url);return {ok:true,json:async()=>JSON.parse(bytes),arrayBuffer:async()=>bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength)};};
 const admission={prepare:async()=>{},async prepareAndPublish(_root,_options,publish){publish();}};
-async function fixture(profile='youngMale',{retireSourceBinding=false,withCarry=false}={}){
- const clips=['Walk_Skip','Harvest','Plant','Water','Idle',...(withCarry?['Carry_Crate']:[])],values=await Promise.all(clips.map(clip=>loadBakedWorkerWalkAsset(profile,{clip,fetcher,subtle:webcrypto.subtle}))),bakes=new Map(clips.map((clip,i)=>[clip,values[i]])),library=JSON.parse(await readFile('public/content/worker-actions.json'))[profile];
- const renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:()=>new MeshStandardNodeMaterial()}},scene=new Scene();
+async function fixture(profile='youngMale',{retireSourceBinding=false,withCarry=false,withAlert=false}={}){
+ const clips=['Walk_Skip','Harvest','Plant','Water','Idle',...(withCarry?['Carry_Crate']:[]),...(withAlert?['Alert']:[])],values=await Promise.all(clips.map(clip=>loadBakedWorkerWalkAsset(profile,{clip,fetcher,subtle:webcrypto.subtle}))),bakes=new Map(clips.map((clip,i)=>[clip,values[i]])),library=JSON.parse(await readFile('public/content/worker-actions.json'))[profile];
+ let conversions=0;const renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:()=>{conversions++;return new MeshStandardNodeMaterial();}}},scene=new Scene();
  async function make(){const asset=await actorAsset(bakes.get('Walk_Skip').meta.source),entity={id:'w',profile,status:'walking',running:false,walkPhase:0,x:0,z:0,taskId:'t'},state={workers:[entity],tasks:[{id:'t',kind:'initial'}],elapsed:0},model=asset.scene,actor=await createWebGpuConfirmedWorker({scene,residency:{get:()=>null},state,actorId:'w',renderer,assetBank:{async acquire(){return {model,clips:prepareWorkerClips(asset.animations),library,release(){}};}}});actor.root.visible=true;return {actor,entity,state,model};}
  const gpu=await make(),cpu=await make();let oldMotion,oldBinding;
  if(retireSourceBinding){oldMotion=createConfirmedGpuMotion({actorId:'w',clock:uniform(0)});oldMotion.bootstrap({at:0,x:0,y:0,z:0});oldBinding=bindWebGpuActorMotion({root:gpu.actor.root,renderer,motion:oldMotion,actorId:'w',getPickTime:()=>0});}
  await gpu.actor.installBakedWalk(bakes.get('Walk_Skip'),{pipelineAdmission:admission,...(oldBinding?{motionBinding:oldBinding}:{})});oldBinding?.dispose();oldMotion?.dispose();
  gpu.actor.root.visible=true;assert.equal(gpu.actor.isBakedWalking(),true);
- return {gpu,cpu,bakes,scene,renderer,speed:PROFILES.find(p=>p.id===profile).speed,close(){gpu.actor.dispose();cpu.actor.dispose();for(const bake of values)bake.dispose();}};
+ return {gpu,cpu,bakes,scene,renderer,speed:PROFILES.find(p=>p.id===profile).speed,get conversions(){return conversions;},close(){gpu.actor.dispose();cpu.actor.dispose();for(const bake of values)bake.dispose();}};
 }
 function phases(names){
  const clipNode=uniform(0),phase=uniform(0),canonical=[...names];
@@ -34,8 +34,8 @@ function prepare(f,names){const source=phases(names),variant=f.gpu.actor.prepare
 function visibleMeshes(root){const result=[];root.traverse(node=>{if(node.isMesh&&node.visible&&node.userData.wgCpuPickProxy)result.push(node);});return result;}
 function comparePose(f,variant,source,clip,time){
  source.clipNode.value=source.clipNames.indexOf(clip);source.phase.value=time;
- const cpu=f.cpu;cpu.entity.status=clip==='Idle'?'idle':'acting';cpu.state.tasks[0].kind=clip==='Harvest'?'harvest':'initial';
- if(clip==='Idle')cpu.entity.idleState={mode:'rest',elapsed:time};
+ const cpu=f.cpu,stationary=clip==='Idle'||clip==='Alert';cpu.entity.status=stationary?'idle':'acting';cpu.state.tasks[0].kind=clip==='Harvest'?'harvest':'initial';
+ if(stationary)cpu.entity.idleState={mode:clip==='Alert'?'watch':'rest',elapsed:time};
  else cpu.entity.actionRemaining=(clip==='Harvest'?3.6-time*3.6/f.bakes.get(clip).meta.duration:7.2-(clip==='Water'?3.8:0)-time)/f.speed;
  cpu.actor.update();cpu.actor.root.updateMatrixWorld(true);f.gpu.actor.root.updateMatrixWorld(true);
  const restore=variant.preparePick();let maximum=0;
@@ -52,6 +52,45 @@ function comparePose(f,variant,source,clip,time){
  }finally{restore();}
  return maximum;
 }
+
+async function enableAlert(f){
+ Object.assign(f.gpu.entity,{status:'idle',taskId:null,idleState:{mode:'watch',elapsed:.7}});
+ await f.gpu.actor.installBakedAlert(f.bakes.get('Alert'),{pipelineAdmission:admission});f.gpu.actor.update();f.gpu.actor.root.visible=true;
+ assert.equal(f.gpu.actor.isBakedAlert(),true);assert.equal(f.gpu.actor.isBakedWalking(),false);
+}
+
+for(const profile of BAKED_WORKER_WALK_PROFILES)test(`${profile}: one prepared Idle/Alert selector reuses the resident watch actor and both original poses`,async()=>{
+ const f=await fixture(profile,{withAlert:true});let variant;try{
+  await enableAlert(f);const root=f.gpu.actor.root,bones=[],geometry=[];root.traverse(node=>{if(node.isBone)bones.push(node);if(node.isMesh)geometry.push({mesh:node,geometry:node.geometry,index:node.geometry.index});});
+  const source=phases(['Idle','Alert']);variant=f.gpu.actor.prepareNativeMotionVariant(source,{clip:'Alert',clipBakes:[f.bakes.get('Idle'),f.bakes.get('Alert')]});assert(variant.valid());assert(variant.materialAlternatives.every(item=>item.mesh._wgWalkAttachmentIndex===undefined));
+  const materials=variant.materialAlternatives.map(item=>item.material),keys=()=>materials.flatMap(value=>Array.isArray(value)?value:[value]).map(material=>material.customProgramCacheKey()),programKeys=keys(),conversions=f.conversions;variant.activate();comparePose(f,variant,source,'Alert',.7);let nodes=0;root.traverse(()=>nodes++);
+  for(const [clip,time] of [['Idle',.4],['Alert',1.2],['Idle',2.3],['Alert',3.1],['Idle',.2]]){comparePose(f,variant,source,clip,time);assert.deepEqual(variant.materialAlternatives.map(item=>item.material),materials);assert.deepEqual(keys(),programKeys);assert.equal(f.conversions,conversions);let current=0;root.traverse(()=>current++);assert.equal(current,nodes);assert(variant.current());}
+  assert.equal(f.gpu.actor.root,root);const after=[];root.traverse(node=>{if(node.isBone)after.push(node);});assert.deepEqual(after,bones);for(const item of geometry){assert.equal(item.mesh.geometry,item.geometry);assert.equal(item.geometry.index,item.index);}
+  variant.rollbackActivation();assert(variant.valid());assert.equal(f.gpu.actor.isBakedAlert(),true);assert.equal(f.gpu.actor.isBakedWalking(),false);
+ }finally{variant?.dispose();f.close();}
+});
+
+test('an active watch presentation can prepare and roll back a native walking replacement on its existing geometry',async()=>{
+ const f=await fixture('youngMale',{withAlert:true});let variant;try{
+  await enableAlert(f);const root=f.gpu.actor.root,before=[];root.traverse(node=>{if(node.isMesh)before.push({node,visible:node.visible,geometry:node.geometry,material:node.material});});
+  variant=f.gpu.actor.prepareNativeMotionVariant({resolve:()=>uniform(0),sampleForClip:()=>0},{clip:'Walk_Skip'});assert(variant.valid());assert.equal(f.gpu.actor.isBakedAlert(),true);variant.activate();assert(variant.current());assert.equal(f.gpu.actor.isBakedWalking(),true);assert.equal(f.gpu.actor.isBakedAlert(),false);variant.rollbackActivation();assert(variant.valid());assert.equal(f.gpu.actor.isBakedAlert(),true);assert.equal(f.gpu.actor.isBakedWalking(),false);for(const item of before){assert.equal(item.node.geometry,item.geometry);assert.equal(item.node.material,item.material);assert.equal(item.node.visible,item.visible);}
+ }finally{variant?.dispose();f.close();}
+});
+
+test('Idle/Alert selection compiles both resident clip textures for the actual Three color and shadow builders',async()=>{
+ const f=await fixture('youngMale',{withAlert:true}),gpu=new WebGPURenderer({canvas:{width:1,height:1,style:{},addEventListener(){},removeEventListener(){},getContext(){return null;}}});gpu.hasFeature=()=>true;let variant;
+ try{await enableAlert(f);variant=f.gpu.actor.prepareNativeMotionVariant(phases(['Idle','Alert']),{clip:'Alert',clipBakes:[f.bakes.get('Idle'),f.bakes.get('Alert')]});const body=variant.materialAlternatives[0],saved=body.mesh.material;
+  const verify=builder=>{builder.build();const textures=new Set([...builder.vertexShader.matchAll(/textureLoad\(\s*([A-Za-z0-9_]+)/g)].map(match=>match[1]));assert(textures.size>=2);assert.match(builder.vertexShader,/if\s*\(/);};
+  try{body.mesh.material=body.material;const builder=gpu.backend.createNodeBuilder(body.mesh,gpu);builder.scene=f.scene;builder.camera=new PerspectiveCamera();verify(builder);const shadowScene=new Scene(),shadow=new NodeMaterial();shadow.isShadowPassMaterial=true;shadow.colorNode=vec4(0,0,0,1);shadowScene.overrideMaterial=shadow;let seen=false;Renderer.prototype.renderObject.call({_handleObjectFunction(object,material){seen=true;assert.equal(material.positionNode,body.material.positionNode);const old=object.material;try{object.material=material;const pass=gpu.backend.createNodeBuilder(object,gpu);pass.scene=shadowScene;pass.camera=new PerspectiveCamera();verify(pass);}finally{object.material=old;}}},body.mesh,shadowScene,{},body.mesh.geometry,body.material,null,null);assert(seen);}finally{body.mesh.material=saved;}
+ }finally{variant?.dispose();f.close();}
+});
+
+test('incomplete, duplicate or incompatible Idle/Alert banks leave the original watch untouched',async()=>{
+ const f=await fixture('youngMale',{withAlert:true});try{
+  await enableAlert(f);const root=f.gpu.actor.root,before=[];root.traverse(node=>{if(node.isMesh)before.push({node,geometry:node.geometry,material:node.material,visible:node.visible});});const alert=f.bakes.get('Alert'),idle=f.bakes.get('Idle'),wrong={...alert,meta:{...alert.meta,sourceSha256:'foreign'}};
+  for(const [source,bakes] of [[phases(['Idle','Alert']),[idle]],[phases(['Idle','Alert','Alert']),[idle,alert]],[phases(['Idle','Alert']),[idle,wrong]]]){assert.throws(()=>f.gpu.actor.prepareNativeMotionVariant(source,{clip:'Alert',clipBakes:bakes}));assert.equal(f.gpu.actor.isBakedAlert(),true);for(const item of before){assert.equal(item.node.geometry,item.geometry);assert.equal(item.node.material,item.material);assert.equal(item.node.visible,item.visible);}}
+ }finally{f.close();}
+});
 
 for(const profile of BAKED_WORKER_WALK_PROFILES)test(`${profile}: prepared actions reuse admitted body geometry and select original Plant/Water tools for picking`,async()=>{
  const f=await fixture(profile,{retireSourceBinding:true});let variant;
