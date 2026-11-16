@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuacion de Idle inicial: [asociacion del cuerpo inicial en el control directo](e-r3-native-initial-idle-body-control-20261116.md). El registro existente exige peticion, adquisicion y reloj nativos exactos; conserva el cuerpo al pedir tarea/Home y revoca su permiso al relevarlo o retirarlo. Aun faltan transactor por puertos, consumidor preparado y politica completa; el bootstrap historico sigue rechazado. No cambia ningun cierre A6/A/B/C.
+
+
 Continuacion de Idle inicial: [propiedad nativa del cuerpo inicial retenido](e-r3-native-initial-idle-body-source-20261116.md). La fuente admite descanso/vigilancia ya inicializados sobre el mismo cuerpo y reloj, conserva pose/fases/RNG y permite relevos reales a tarea o Home. La carga crea otra peticion; el bootstrap grafico aun rechaza esta clase. Faltan transactor/consumidor preparado y politica completa; no cambia ningun cierre A6/A/B/C.
 
 

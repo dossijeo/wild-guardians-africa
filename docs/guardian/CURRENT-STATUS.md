@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+**Initial body direct control, 2026-11-16:** [The existing actor record validates initial body ownership](e-r3-native-initial-idle-body-control-20261116.md) against its exact request, acquisition and native clock. Task/Home requests retain the held record; movement or removal revokes it. Port transactor, prepared consumer and full policy remain pending; historical bootstrap still rejects this class. No A6/A/B/C closure changes.
+
+
 **Initial held body source, 2026-11-16:** [Native initial body ownership](e-r3-native-initial-idle-body-source-20261116.md) retains initialized rest/watch on the same body and clock, preserves pose/phases/RNG and supports genuine TaskStart/Home transfers. Fresh loading creates another request; graphical bootstrap still rejects this class. Prepared transactor/consumer and full policy remain pending; no A6/A/B/C closure changes.
 
 
