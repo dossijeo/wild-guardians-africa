@@ -1,3 +1,4 @@
+import {copyNativeIdleStrollProposal} from '../world/native-idle-stroll.js';
 import {copyNativeHomeRouteProposal} from '../world/native-home-route.js';
 import {copyNativeTaskConsequenceProposal} from '../world/native-task-consequence.js';
 import {copyNativeResumeProposal} from '../world/native-resume-presentation.js';
@@ -32,6 +33,10 @@ export function prepareNativeTaskConsequenceGpuTable(support){
 export function prepareNativeHomeRouteGpuTable(support){
  if(support?.kind!=='native-home-route-terrain-support'||support.valid?.()!==true||!Array.isArray(support.actor?.segments))throw TypeError('Native Home route requires current terrain support');
  const presentation=copyNativeHomeRouteProposal(support.presentation);return packNativeMotion(support,presentation,presentation.actorId,{nativeHome:presentation.nativeHome});
+}
+export function prepareNativeIdleStrollGpuTable(support){
+ if(support?.kind!=='native-idle-stroll-terrain-support'||support.valid?.()!==true||!Array.isArray(support.actor?.segments))throw TypeError('Native Idle stroll requires current terrain support');
+ const presentation=copyNativeIdleStrollProposal(support.presentation);return packNativeMotion(support,presentation,presentation.actorId,{nativeStroll:presentation.nativeIdleStroll});
 }
 function packNativeMotion(support,presentation,actorId,identity){
  const {rows:source,startTime:epoch,endTime}=presentation,{segments,startHeight,endHeight}=support.actor;

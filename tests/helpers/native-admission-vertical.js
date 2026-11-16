@@ -15,7 +15,7 @@ export async function createNativeAdmissionVertical({planner,elapsed,kind,retain
   const [sourcePort,drawPort]=pair();
   const graphics=await fixture({capabilities:{width:20,height:10,format:'rgba8unorm',
     nativeTaskStartVersion:1,nativeTaskSettlementVersion:1,nativeInitialIdleBodyVersion:1,nativeIdleCycleVersion:1,nativeTaskConsequenceVersion:1,nativeDeferredResumeVersion:1,nativeTaskActionVersion:1,nativeTaskActionRestoreVersion:1,
-    nativeTaskActionClockVersion:1,nativeResumeVersion:1,nativeSuspendedVersion:1,nativeHomeRouteVersion:1,nativeHomeArrivalVersion:1}},
+    nativeTaskActionClockVersion:1,nativeResumeVersion:1,nativeSuspendedVersion:1,nativeHomeRouteVersion:1,nativeIdleStrollVersion:1,nativeHomeArrivalVersion:1}},
     {intentControl:{port:drawPort,session:'admission-vertical'},absoluteNow:()=>Number.MAX_SAFE_INTEGER});
   if(retainStaticBuffer){graphics.staticBuffer=graphics.client.device.createBuffer({size:36,usage:40});graphics.client.device.queue.writeBuffer(graphics.staticBuffer,0,new Float32Array([0,0,0,1,0,0,0,1,0]));}
   const {port1,port2}=new MessageChannel(),errors=[],packets=[];
@@ -35,10 +35,10 @@ export async function createNativeAdmissionVertical({planner,elapsed,kind,retain
       onError:error=>errors.push(error),prepare:async(method,resources,options)=>{
         preparations++;
         await onPrepare({method,resources,options,source,...graphics});
-        const reference=profile.reference(resources),acting=currentKind==='task-action',consequence=currentKind==='task-consequence',home=currentKind==='home-route',arrival=currentKind==='home-arrival',initialBody=currentKind==='initial-idle-body',cycle=currentKind==='idle-cycle',settlement=currentKind==='task-settlement';
+        const reference=profile.reference(resources),acting=currentKind==='task-action',consequence=currentKind==='task-consequence',home=currentKind==='home-route',stroll=currentKind==='idle-stroll',arrival=currentKind==='home-arrival',initialBody=currentKind==='initial-idle-body',cycle=currentKind==='idle-cycle',settlement=currentKind==='task-settlement';
         if(!arrival)graphics.client.registerClockBinding(graphics.buffer,{byteOffset:0,semantic:'relative',epoch:initialBody||cycle||settlement?resources.worldBoundary.effectiveTime:resources.startTime,...(acting||initialBody||cycle||settlement?{}:{resourceEnd:resources.endTime}),
-          ...(cycle?{nativeIdleCycle:reference}:initialBody?{nativeInitialIdleBody:reference}:settlement?{nativeSettlement:reference}:acting?{nativeAction:reference}:consequence?{nativeConsequence:reference}:home?{nativeHome:reference}:currentKind==='task-start'?{nativeStart:reference}:{nativeResume:reference})});
-        const templateKey=cycle?'cycleTemplate':initialBody?'initialBodyTemplate':settlement?'settlementTemplate':acting?'actionTemplate':consequence?'consequenceTemplate':home?'homeTemplate':currentKind==='task-start'?'startTemplate':'resumeTemplate';
+          ...(stroll?{nativeStroll:reference}:cycle?{nativeIdleCycle:reference}:initialBody?{nativeInitialIdleBody:reference}:settlement?{nativeSettlement:reference}:acting?{nativeAction:reference}:consequence?{nativeConsequence:reference}:home?{nativeHome:reference}:currentKind==='task-start'?{nativeStart:reference}:{nativeResume:reference})});
+        const templateKey=stroll?'strollTemplate':cycle?'cycleTemplate':initialBody?'initialBodyTemplate':settlement?'settlementTemplate':acting?'actionTemplate':consequence?'consequenceTemplate':home?'homeTemplate':currentKind==='task-start'?'startTemplate':'resumeTemplate';
         const packet=arrival?await prepareHomeAbsenceDraw({...graphics,clock},resources):await preparedWorldDraw({...graphics,clock,[templateKey]:reference},resources.worldBoundary,0,options.signal);
         packet.presented.catch(()=>{});packets.push(packet);
         // If a test hook fails after preparation, this owner retires the packet.
@@ -55,7 +55,7 @@ export async function createNativeAdmissionVertical({planner,elapsed,kind,retain
       async run(invoke,{signal=null,kind:nextKind=currentKind}={}){
         if(active)throw Error('Admission vertical already running');
         profile=nativeResourceAdmissionProfile(nextKind);currentKind=nextKind;active=true;
-        const method=currentKind==='idle-cycle'?'prepareNativeIdleCycleResources':currentKind==='initial-idle-body'?'prepareNativeInitialIdleBodyResources':currentKind==='task-settlement'?'prepareNativeTaskSettlementResources':currentKind==='task-consequence'?'prepareNativeTaskConsequenceResources':currentKind==='task-action'?'prepareNativeTaskActionResources':currentKind==='home-route'?'prepareNativeHomeRouteResources':currentKind==='home-arrival'?'prepareNativeHomeArrivalResources':currentKind==='task-start'?'prepareNativeTaskStartResources':'prepareNativeResumeResources';
+        const method=currentKind==='idle-stroll'?'prepareNativeIdleStrollResources':currentKind==='idle-cycle'?'prepareNativeIdleCycleResources':currentKind==='initial-idle-body'?'prepareNativeInitialIdleBodyResources':currentKind==='task-settlement'?'prepareNativeTaskSettlementResources':currentKind==='task-consequence'?'prepareNativeTaskConsequenceResources':currentKind==='task-action'?'prepareNativeTaskActionResources':currentKind==='home-route'?'prepareNativeHomeRouteResources':currentKind==='home-arrival'?'prepareNativeHomeArrivalResources':currentKind==='task-start'?'prepareNativeTaskStartResources':'prepareNativeResumeResources';
         committedPacket={};committedPacket.promise=new Promise(resolve=>{committedPacket.resolve=resolve;});
         try{return await invoke({getPublication:()=>source,signal,
           prepareResources:({resources,signal,deferredStart})=>connection[method](resources,{signal,deferredStart})});}
