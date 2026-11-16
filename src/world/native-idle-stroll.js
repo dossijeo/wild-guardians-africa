@@ -1,4 +1,6 @@
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from './native-world-boundary.js';
+import {copyNativeRouteReference} from './native-route-reference.js';
+import {copyNativeRoutePresentation} from './native-route-presentation.js';
 import {copyNativeIdleCycleNextRequest} from './native-idle-cycle.js';
 import {copyNativePresentationSamples} from './native-presentation-samples.js';
 import {copyNativeGatePresentation} from './native-gate-presentation.js';
@@ -61,4 +63,11 @@ export function sameNativeIdleStrollAttestation(a,b){try{return JSON.stringify(c
 export function nativeIdleStrollPresentationMatches(prepared,actual,value){
  const b=copyNativeIdleStrollAttestation(value),r=b.reference,route=actual?.nativeRoute;
  return sameNativeIdleStrollReference(b.preparedReference,prepared.nativeIdleStroll)&&route?.actorId===r.actorId&&route.assignmentSequence===b.assignmentSequence&&sameHandle(route.routeHandle,r.expectedRouteHandle)&&actual.startTime===r.worldBoundary.effectiveTime&&actual.endTime===r.endTime&&nativeMotionPresentationMatches(prepared,actual,b.gateIds);
+}
+
+export function copyNativeIdleStrollResources(value){
+ if(value?.version!==1||value.kind!==22||value.phase!=='committed'||!only(value,['version','kind','phase','worldBoundary','nativeRoute','nativeIdleStrollBinding','presentation']))throw TypeError('Invalid native Idle stroll resources');
+ const worldBoundary=copyNativeWorldBoundary(value.worldBoundary),nativeRoute=copyNativeRouteReference(value.nativeRoute),nativeIdleStrollBinding=copyNativeIdleStrollAttestation(value.nativeIdleStrollBinding),presentation=copyNativeRoutePresentation(value.presentation),r=nativeIdleStrollBinding.reference;
+ if(!sameNativeWorldBoundary(worldBoundary,r.worldBoundary)||presentation.worldBoundary&&!sameNativeWorldBoundary(presentation.worldBoundary,worldBoundary)||nativeRoute.actorId!==r.actorId||nativeRoute.assignmentSequence!==nativeIdleStrollBinding.assignmentSequence||!sameHandle(nativeRoute.routeHandle,r.expectedRouteHandle)||JSON.stringify(presentation.nativeRoute)!==JSON.stringify(nativeRoute)||presentation.startTime!==r.worldBoundary.effectiveTime||presentation.endTime!==r.endTime||presentation.profile!==r.profile||presentation.radius!==r.pose.radius||presentation.motionMode!=='worker'||presentation.motionFlags!==0||presentation.rows[1]!==r.pose.x||presentation.rows[2]!==r.pose.z||[8,9,10,13].some((index,i)=>presentation.rows[index]!==[r.pose.runPhase,r.pose.walkPhase,r.pose.carryPhase,r.pose.runRemaining][i])||presentation.gates.length!==nativeIdleStrollBinding.gateIds.length||presentation.gates.some(g=>!nativeIdleStrollBinding.gateIds.includes(g.gateId)))throw TypeError('Native Idle stroll resource association mismatch');
+ return Object.freeze({version:1,kind:22,phase:'committed',worldBoundary,nativeRoute,nativeIdleStrollBinding,presentation});
 }

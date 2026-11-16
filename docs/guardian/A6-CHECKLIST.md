@@ -1,5 +1,8 @@
 # Seguimiento de cierre de A6
 
+Continuacion de la politica Idle: [paseo22 sobre el actor y bancos originales](e-r3-native-idle-stroll-roster-20261116.md). El reemplazo preparado conserva actor/geometria/indices y restaura material y visibilidad al cancelar. Exige ciclo21 y fase Game genuinos, recursos confirmados y asociaciones coincidentes; una liberacion vieja no retira al sucesor. GLB/roster/builders reales con renderer simulado: faltan Surface, Game22 y hardware. Recuperacion integral de 3123 recursos y cierres A6/A/B/C siguen abiertos.
+
+
 Continuacion de la politica Idle: [kernel, reloj y Host directo del paseo22](e-r3-native-idle-stroll-gpu-clock-20261116.md). Reutiliza el programa finito Home con permiso propio, conserva identidades al reajustar y usa el float enviado para picking. La retirada conserva el origen adquirido; el ciclo anterior sigue visible mientras se prepara. Fuente/puertos/Host reales con GPU simulada: faltan actor/Surface originales, hardware, Game y fuente estacionaria posterior. Recuperacion integral de 3123 recursos y cierres A6/A/B/C siguen abiertos.
 
 
