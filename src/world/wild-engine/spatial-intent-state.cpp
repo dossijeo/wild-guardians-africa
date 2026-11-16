@@ -160,7 +160,8 @@ struct NativeWorkerPoseResourceRequest {
 };
 // Binding the first physical body completes the request; it grants no route.
 struct NativeHomeResourceRequest:NativeWorkerPoseResourceRequest {
- uint64_t village=0,initialIdleSourceSequence=0,idleCycleSourceSequence=0;double homeX=0,homeZ=0;
+ uint64_t village=0,initialIdleSourceSequence=0,idleCycleSourceSequence=0,idleStrollSourceSequence=0;
+ uint32_t idleStrollSourceGeneration=0;double homeX=0,homeZ=0;
 };
 struct NativeInitialIdleResourceRequest:NativeWorkerPoseResourceRequest {
  uint64_t center=0,anchor=0;int workerProfile=0,mode=0,anchorKind=0;
@@ -587,15 +588,30 @@ bool nativeInitialIdleBodyCurrent(const IntentState& s,const ActiveIntent& inten
   spatialReadBody(r.body,body)&&body.kind==0&&body.flags==r.bodyFlags&&body.x==r.x&&body.z==r.z&&body.r==r.radius&&!s.reservedBodies.count(r.body)&&!s.suspendedBodies.count(r.body)&&
   center!=s.targets.end()&&center->second.active&&center->second.kind==4&&center->second.status==0;
 }
+// A suspended stroll retains the ONE original slot and its executed pose. Home
+// may consume that held owner; it must not manufacture an arrived21/initial20.
+static bool nativeHeldIdleStrollBodyCurrent(const IntentState& s,const ActiveIntent& intent,uint64_t sequence,uint32_t generation){
+ const bool held=intent.state==PlanningState::WaitingBlocked&&!intent.home&&!intent.homeRequest;
+ const bool home=intent.state==PlanningState::AwaitingResources&&intent.home&&intent.homeRequest&&intent.homeRequest->idleStrollSourceSequence==sequence&&intent.homeRequest->idleStrollSourceGeneration==generation;
+ if((!held&&!home)||!intent.requiresResources||intent.task||intent.target||intent.lease||intent.animal||intent.retreat||intent.delivery||intent.actionBinding||intent.restoredActionSource||intent.settlementBinding||intent.initialIdleRequest||intent.initialIdleBodyBinding||intent.idleCycle||!generation||intent.generation!=generation||intent.slot>=s.routeSlots.size())return false;
+ const auto& route=s.routeSlots[intent.slot];const auto& b=route.idleStrollBinding;const auto& p=route.executionPose;const auto worker=s.workers.find(intent.actor);SpatialBodyView body;
+ if(!b||!route.active||!route.suspended||!route.resumable||route.reserved||route.pendingResources||!route.hasExecution||route.actor!=intent.actor||route.generation!=generation||p[6]||b->assignmentSequence!=sequence||intent.assignmentSequence!=sequence||route.reservationBody!=uint64_t(b->actual.header[2])||route.startTime!=b->actual.header[10]||route.suspendedAt<route.startTime||route.suspendedAt>=b->actual.header[11]||route.profile!=intent.profile||worker==s.workers.end()||(home&&worker->second.eligible)||worker->second.actionActive||worker->second.inactiveSequence||!worker->second.bodyBound||worker->second.body!=route.reservationBody||double(worker->second.center)!=b->semantic[3])return false;
+ const auto suspended=s.suspendedBodies.find(route.reservationBody);
+ if(suspended==s.suspendedBodies.end()||suspended->second!=intent.slot||s.reservedBodies.count(route.reservationBody)||!spatialReadBody(route.reservationBody,body)||body.kind!=0||double(body.flags)!=b->semantic[4]||body.r!=route.radius||body.x!=p[0]||body.z!=p[1]||worker->second.x!=body.x||worker->second.z!=body.z)return false;
+ if(home){const auto& r=*intent.homeRequest;if(r.initialIdleSourceSequence||r.idleCycleSourceSequence||r.body!=route.reservationBody||r.profile!=intent.profile||r.bodyFlags!=body.flags||r.radius!=body.r||r.at<route.suspendedAt||r.sequence<=sequence||r.x!=p[0]||r.z!=p[1]||r.yaw!=p[4]||r.runPhase!=p[9]||r.walkPhase!=p[10]||r.carryPhase!=p[11]||r.runRemaining!=p[14])return false;}
+ return true;
+}
 bool nativeHomeRequestBodyCurrent(const IntentState& s,const ActiveIntent& intent){
- if(!intent.homeRequest||!intent.home||!intent.requiresResources||intent.task||intent.target||intent.lease||intent.animal||intent.retreat||intent.delivery||intent.state!=PlanningState::AwaitingResources||intent.generation)return false;
+ if(!intent.homeRequest||!intent.home||!intent.requiresResources||intent.task||intent.target||intent.lease||intent.animal||intent.retreat||intent.delivery||intent.state!=PlanningState::AwaitingResources)return false;
+ const auto& r=*intent.homeRequest;const bool stroll=r.idleStrollSourceSequence&&nativeHeldIdleStrollBodyCurrent(s,intent,r.idleStrollSourceSequence,r.idleStrollSourceGeneration);
+ if(r.idleStrollSourceSequence?!stroll:intent.generation!=0)return false;
  if(intent.settlementBinding&&(!nativeSettlementBodyCurrent(s,intent)||intent.settlementBinding->actual.header[21]))return false;
  if(intent.initialIdleBodyBinding&&!nativeInitialIdleBodyCurrent(s,intent))return false;
  if(intent.homeRequest->idleCycleSourceSequence&&(!intent.idleCycle||intent.idleCycle->binding->cycleSequence!=intent.homeRequest->idleCycleSourceSequence||!nativeIdleCycleBodyCurrent(s,intent)))return false;
- const auto& r=*intent.homeRequest;const auto worker=s.workers.find(intent.actor);SpatialBodyView body;
+ const auto worker=s.workers.find(intent.actor);SpatialBodyView body;
  return r.actor==intent.actor&&r.session==s.session&&r.sequence==intent.resourceRequestSequence&&r.body&&worker!=s.workers.end()&&!worker->second.eligible&&!worker->second.actionActive&&worker->second.bodyBound&&worker->second.body==r.body&&
   worker->second.x==r.x&&worker->second.z==r.z&&spatialReadBody(r.body,body)&&body.x==r.x&&body.z==r.z&&body.r==r.radius&&body.kind==0&&body.flags==r.bodyFlags&&
-  !s.reservedBodies.count(r.body)&&!s.suspendedBodies.count(r.body);
+  !s.reservedBodies.count(r.body)&&(stroll||!s.suspendedBodies.count(r.body));
 }
 bool nativeInitialIdleRequestCurrent(const IntentState& s,const ActiveIntent& intent){
  if(!intent.initialIdleRequest||intent.home||intent.task||intent.target||intent.lease||!intent.requiresResources||intent.animal||intent.retreat||intent.delivery||intent.actionBinding||intent.restoredActionSource||intent.settlementBinding||intent.initialIdleBodyBinding||intent.homeRequest||intent.state!=PlanningState::AwaitingResources||intent.generation)return false;

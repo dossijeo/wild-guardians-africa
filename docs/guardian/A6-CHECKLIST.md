@@ -1,5 +1,8 @@
 # Seguimiento de cierre de A6
 
+Continuacion de Idle: [fuente Home desde el paseo suspendido](e-r3-native-idle-moving-home-source-20261116.md). La peticion Home existente conserva slot, cuerpo y pose/fases ejecutadas de 22 despues de la suspension preparada; valida asignacion y generacion exactas, sin inventar20/21 ni consumir RNG. Faltan su integracion control/Game/puertos/roster/Surface, tarea durante paseo, restauracion/cohort/producer y recuperacion integral de 3123; A6/A/B/C siguen abiertos.
+
+
 Continuacion de Idle: [TaskStart actual en los puertos y consumidor originales](e-r3-native-idle-current-task-consumer-20261116.md). El relevo21 de origen22 a TaskStart14 conserva el actor, geometria y bancos existentes. NVIDIA/Turing conserva 582 IDs residentes, no crea shaders/pipelines al relevar y no asigna despues de READY; prepara 70 recursos de protocolo y copias internas de uniformes/bindings separadas. Faltan tarea/Home movil, restauracion/cohort/producer y recuperacion integral de 3123; A6/A/B/C siguen abiertos.
 
 
