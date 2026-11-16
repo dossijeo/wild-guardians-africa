@@ -30,6 +30,8 @@ Un descanso posterior al paseo puede guardarse como semántica estacionaria. Al 
 
 **Build de producto correcto en 49.02 s**. Los18 inputs/artefactos nativos se conservan exactamente, sin recompilación; también los 16 archivos locales protegidos y el helper pthread original. Comandos, conjunto y hashes en [la validación](performance/native-idle-arrival-data-validation-20261116.json).
 
+Corrección posterior de formato: se elimina sólo una línea vacía final en la fixture del canal. Pasan de nuevo los19 casos nuevos; la validación distingue los hashes usados por la regresión de los finales. No cambia ningún statement ni la entrada del build de producto.
+
 No se mide GPU en este incremento: recursos retenidos y drenaje son dobles deterministas. Faltan adaptar los lectores del origen en terreno/kernel/roster/Surface y medir el relevo sobre el actor original. La evidencia GPU histórica del paseo22 no prueba este consumidor22 →21 ni la recuperación integral de 3123 recursos.
 
 ## Continuación del plan
