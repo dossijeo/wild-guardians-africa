@@ -40,6 +40,22 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_idle_home_request(double actor,double sessio
  intent.target=0;intent.home=true;intent.state=PlanningState::AwaitingResources;intent.approachKnown=true;intent.approachX=float(homeX);intent.approachZ=float(homeZ);intent.homeRequest=std::move(request);worker.eligible=false;
  intent.homeRequest->sequence=emitIntentChange(s,intent);s.entityRevision++;return 1;
 }
+// Retarget the actual finite stationary cycle, including a body moved by Idle.
+// This replaces only the semantic goal. The same body and current cycle remain
+// retained until the existing prepared Home route acquires its real boundary.
+EMSCRIPTEN_KEEPALIVE int nav_intent_idle_cycle_home_request(double actor,double session,double cycleSequence,double village,double homeX,double homeZ){
+ auto& s=state();if(!integer(actor)||session!=double(s.session)||!integer(cycleSequence)||!integer(village)||!coordinate(homeX)||!coordinate(homeZ))return -1;
+ if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
+ const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end())return 0;auto& intent=found->second;
+ if(intent.homeRequest){const auto& r=*intent.homeRequest;if(r.idleCycleSourceSequence!=uint64_t(cycleSequence)||!nativeHomeRequestBodyCurrent(s,intent))return -2;return r.village==uint64_t(village)&&r.homeX==homeX&&r.homeZ==homeZ?1:-3;}
+ if(!nativeIdleCycleCurrent(s,intent)||intent.idleCycle->binding->cycleSequence!=uint64_t(cycleSequence))return -2;
+ for(const auto& [id,task]:s.tasks)if(task.assigned==uint64_t(actor))return -2;
+ const auto& cycle=*intent.idleCycle->binding;auto request=std::make_shared<NativeHomeResourceRequest>();static_cast<NativeWorkerPoseResourceRequest&>(*request)=cycle.source;
+ request->idleCycleSourceSequence=cycle.cycleSequence;request->initialIdleSourceSequence=cycle.body?cycle.body->bodySequence:0;
+ request->village=uint64_t(village);request->homeX=homeX;request->homeZ=homeZ;request->at=s.effectiveTime;
+ intent.homeRequest=std::move(request);intent.home=true;intent.state=PlanningState::AwaitingResources;intent.approachKnown=true;intent.approachX=float(homeX);intent.approachZ=float(homeZ);s.workers.at(intent.actor).eligible=false;
+ intent.homeRequest->sequence=emitIntentChange(s,intent);s.entityRevision++;return 1;
+}
 // A genuine initial Idle may expire before graphics, or even its first body,
 // have been admitted. Retarget that semantic source on the same intent owner.
 EMSCRIPTEN_KEEPALIVE int nav_intent_initial_idle_home_request(double actor,double session,double sourceSequence,double village,double homeX,double homeZ){

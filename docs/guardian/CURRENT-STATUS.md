@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+Continuacion de Idle: [fuente Home desde el ciclo actual](e-r3-native-idle-current-home-source-20261116.md). La ABI nativa retiene cuerpo/pose/fases de 21 con origen 20/22 y prepara Home mediante la peticion/ruta existentes, sin historia de permisos ni nuevo cuerpo. Standalone/pthread y regresion validados; faltan control tipado, Game, roster/Surface y GPU de este caso. Productor ordinario, restauracion movil, recuperacion integral de 3123 y cierres A6/A/B/C siguen abiertos.
+
+
 Continuacion de la politica Idle: [descanso tras paseo en consumidor y GPU originales](e-r3-native-idle-arrival-consumer-20261116.md). Terrain/kernel/roster/Surface usan el extremo real 22 y adoptan REST 21. NVIDIA/Turing conserva 533 IDs de geometria/bancos y reutiliza shaders/pipelines al volver al descanso; retira la textura 22 tras fence y no asigna tras READY. Retencion acotada de materiales compilados en el actor existente. Preparar aun crea buffers/bind groups. Faltan tarea/Home actuales, restauracion movil y cohort/producer ordinarios; recuperacion integral de 3123 y cierres A6/A/B/C siguen abiertos.
 
 

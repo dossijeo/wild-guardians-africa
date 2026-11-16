@@ -7,9 +7,11 @@ static std::array<double,26> idleCycleBodySourceData(const NativeIdleCycleBodySo
 static bool nativeIdleCycleBodyCurrent(const IntentState& s,const ActiveIntent& intent){
  if(!intent.idleCycle||!intent.idleCycle->binding)return false;const auto& b=*intent.idleCycle->binding;const auto& q=b.source;
  if(b.body)return q.kind==20&&b.body==intent.initialIdleBodyBinding&&nativeInitialIdleBodyCurrent(s,intent);
- if(q.kind!=22||intent.initialIdleBodyBinding||intent.initialIdleRequest||intent.settlementBinding||intent.homeRequest||intent.actionBinding||intent.restoredActionSource||intent.animal||intent.retreat||intent.delivery||intent.task||intent.target||intent.home||intent.lease||intent.generation||!intent.requiresResources||intent.state!=PlanningState::StationaryActive)return false;
+ const bool pendingHome=intent.home&&intent.homeRequest&&intent.state==PlanningState::AwaitingResources&&intent.homeRequest->idleCycleSourceSequence==b.cycleSequence;
+ const bool idle=!intent.home&&!intent.homeRequest&&intent.state==PlanningState::StationaryActive;
+ if(q.kind!=22||intent.initialIdleBodyBinding||intent.initialIdleRequest||intent.settlementBinding||intent.actionBinding||intent.restoredActionSource||intent.animal||intent.retreat||intent.delivery||intent.task||intent.target||intent.lease||intent.generation||!intent.requiresResources||(!idle&&!pendingHome))return false;
  const auto worker=s.workers.find(intent.actor);const auto center=s.targets.find(q.center);SpatialBodyView body;
- return q.actor==intent.actor&&q.session==s.session&&q.sequence&&q.body&&intent.profile==q.profile&&worker!=s.workers.end()&&worker->second.center==q.center&&worker->second.eligible&&!worker->second.actionActive&&!worker->second.inactiveSequence&&worker->second.bodyBound&&worker->second.body==q.body&&worker->second.x==q.x&&worker->second.z==q.z&&
+ return q.actor==intent.actor&&q.session==s.session&&q.sequence&&q.body&&intent.profile==q.profile&&worker!=s.workers.end()&&worker->second.center==q.center&&worker->second.eligible==!pendingHome&&!worker->second.actionActive&&!worker->second.inactiveSequence&&worker->second.bodyBound&&worker->second.body==q.body&&worker->second.x==q.x&&worker->second.z==q.z&&
   spatialReadBody(q.body,body)&&body.kind==0&&body.flags==q.bodyFlags&&body.x==q.x&&body.z==q.z&&body.r==q.radius&&!s.reservedBodies.count(q.body)&&!s.suspendedBodies.count(q.body)&&center!=s.targets.end()&&center->second.active&&center->second.kind==4&&center->second.status==0;
 }
 static bool nativeIdleCycleCurrent(const IntentState& s,const ActiveIntent& intent){

@@ -160,7 +160,7 @@ struct NativeWorkerPoseResourceRequest {
 };
 // Binding the first physical body completes the request; it grants no route.
 struct NativeHomeResourceRequest:NativeWorkerPoseResourceRequest {
- uint64_t village=0,initialIdleSourceSequence=0;double homeX=0,homeZ=0;
+ uint64_t village=0,initialIdleSourceSequence=0,idleCycleSourceSequence=0;double homeX=0,homeZ=0;
 };
 struct NativeInitialIdleResourceRequest:NativeWorkerPoseResourceRequest {
  uint64_t center=0,anchor=0;int workerProfile=0,mode=0,anchorKind=0;
@@ -591,6 +591,7 @@ bool nativeHomeRequestBodyCurrent(const IntentState& s,const ActiveIntent& inten
  if(!intent.homeRequest||!intent.home||!intent.requiresResources||intent.task||intent.target||intent.lease||intent.animal||intent.retreat||intent.delivery||intent.state!=PlanningState::AwaitingResources||intent.generation)return false;
  if(intent.settlementBinding&&(!nativeSettlementBodyCurrent(s,intent)||intent.settlementBinding->actual.header[21]))return false;
  if(intent.initialIdleBodyBinding&&!nativeInitialIdleBodyCurrent(s,intent))return false;
+ if(intent.homeRequest->idleCycleSourceSequence&&(!intent.idleCycle||intent.idleCycle->binding->cycleSequence!=intent.homeRequest->idleCycleSourceSequence||!nativeIdleCycleBodyCurrent(s,intent)))return false;
  const auto& r=*intent.homeRequest;const auto worker=s.workers.find(intent.actor);SpatialBodyView body;
  return r.actor==intent.actor&&r.session==s.session&&r.sequence==intent.resourceRequestSequence&&r.body&&worker!=s.workers.end()&&!worker->second.eligible&&!worker->second.actionActive&&worker->second.bodyBound&&worker->second.body==r.body&&
   worker->second.x==r.x&&worker->second.z==r.z&&spatialReadBody(r.body,body)&&body.x==r.x&&body.z==r.z&&body.r==r.radius&&body.kind==0&&body.flags==r.bodyFlags&&
