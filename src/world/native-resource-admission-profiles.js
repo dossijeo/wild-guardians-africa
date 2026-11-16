@@ -1,3 +1,4 @@
+import {nativeIdleCycleReferenceFromProposal,sameNativeIdleCycleReference} from './native-idle-cycle.js';
 import {nativeHomeArrivalReferenceFromProposal,sameNativeHomeArrivalReference,copyNativeHomeArrivalAttestation} from './native-home-arrival.js';
 import {nativeResumeReferenceFromProposal,sameNativeResumeReference} from './native-resume-reference.js';
 import {nativeTaskStartReferenceFromProposal,sameNativeTaskStartReference} from './native-task-start-reference.js';
@@ -12,6 +13,12 @@ import {nativeInitialIdleBodyReferenceFromProposal,sameNativeInitialIdleBodyRefe
 // native revalidation; none of these profiles can issue an execution permission.
 const routeCompatible=translation=>translation.sameFloat32Motion&&translation.sameFloat32Gates;
 const profiles=Object.freeze({
+  'idle-cycle':Object.freeze({
+    proposalKind:'native-idle-cycle-proposal',templateField:'preparedIdleCycleTemplate',bindingField:'nativeIdleCycleBinding',releaseField:'nativeIdleCycles',
+    reference:nativeIdleCycleReferenceFromProposal,sameReference:sameNativeIdleCycleReference,compatible:translation=>translation.compatible===true,
+    receiptCompatible:(receipt,prepared)=>receipt.nativeIdleCycleVersion===1&&sameNativeIdleCycleReference(receipt.preparedIdleCycleTemplate,prepared),
+    attest(native,reference,preparedReference){const fact=native.nativeIdleCycleBinding(reference.actorId);if(!fact||!sameNativeIdleCycleReference(fact.reference,reference)||!sameNativeIdleCycleReference(fact.preparedReference,preparedReference))throw Error('Native Idle cycle association unavailable');return fact;}
+  }),
   'initial-idle-body':Object.freeze({
     proposalKind:'native-initial-idle-body-proposal',templateField:'preparedInitialIdleBodyTemplate',bindingField:'nativeInitialIdleBodyBinding',releaseField:'nativeInitialIdleBodies',
     reference:nativeInitialIdleBodyReferenceFromProposal,sameReference:sameNativeInitialIdleBodyReference,compatible:translation=>translation.compatible===true,

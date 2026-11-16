@@ -55,3 +55,5 @@ export function copyNativeIdleCycleNextRequest(value){
  return Object.freeze({kind:value.kind,version:1,sourceCycle,requestSequence:value.requestSequence,requestedAt:value.requestedAt,idleState});
 }
 export function sameNativeIdleCycleNextRequest(a,b){try{return JSON.stringify(copyNativeIdleCycleNextRequest(a))===JSON.stringify(copyNativeIdleCycleNextRequest(b));}catch{return false;}}
+
+export const nativeIdleCycleReferenceFromProposal=value=>copyNativeIdleCycleProposal(value).nativeIdleCycle;

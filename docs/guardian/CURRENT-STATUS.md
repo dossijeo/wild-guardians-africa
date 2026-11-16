@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+**Native Idle cycle prepared source transaction, 2026-11-16:** [Family21 uses the existing admission factory and transport](e-r3-native-idle-cycle-admission-20261116.md), with exact body, pose, contract, anchor, private sequence, receipt and post-drain revalidation. Real native source/ports use a simulated retained-resource consumer; GPU21 drawing, Game projection/persistence and hardware evidence remain pending. No graphical capability or A6/A/B/C closure changes; ordinary producer and full3123 incremental recovery remain open.
+
+
 **Native Idle cycle direct control, 2026-11-16:** [Acquisition and successor use the existing actor/control record](e-r3-native-idle-cycle-control-20261116.md), with exact admitted source, native program, sequence and clock checks. Pending Task/Home retains the body and freezes its phase; replacement/removal revokes it. Baseline metadata grants no permission and Host still rejects historical21 bootstrap. Prepared21 consumer/transactor and Game projection/persistence remain pending; no A6/A/B/C closure changes.
 
 

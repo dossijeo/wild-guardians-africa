@@ -1,5 +1,8 @@
 # Seguimiento de cierre de A6
 
+Continuacion de la politica Idle: [familia 21 en el transactor y transporte existentes](e-r3-native-idle-cycle-admission-20261116.md). La propuesta comprueba cuerpo, pose, contrato, ancla y secuencia privada; prepara una vez, drena, revalida y publica el recibo nativo exacto. Los puertos conservan el tipo tambien al renovar recursos. La prueba usa fuente/puertos reales y consumidor simulado: faltan dibujo GPU21, proyeccion/persistencia de Game y evidencia en hardware. No se anuncia capacidad grafica ni cambia ningun cierre A6/A/B/C; productor ordinario y recuperacion integral de 3123 recursos siguen abiertos.
+
+
 Continuacion de la politica Idle: [ciclo y siguiente peticion en el control directo existente](e-r3-native-idle-cycle-control-20261116.md). Los eventos llevan adquisicion y sucesor tipados; el permiso exige fuente previa admitida, secuencia, programa y reloj nativos exactos. Conserva el registro al esperar tarea/Home y congela la fase al interrumpir; otra adquisicion o retirada lo revoca. El baseline transporta datos sin conceder permiso y Host aun rechaza su arranque historico. Faltan consumidor/transactor preparados 21 y proyeccion/persistencia de Game; politica completa, productor ordinario y recuperacion integral siguen abiertos. Ningun cierre A6/A/B/C cambia.
 
 

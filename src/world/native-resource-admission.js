@@ -9,8 +9,8 @@ import {nativeResourceAdmissionProfile} from './native-resource-admission-profil
 export function createNativeResourceAdmission({wasm,isReady,simulationTime,epoch,
   syncBoundaryTime,flushNativeIntentControl,nativeCausalClock,coversGpuConsumers,
   nativeWorldBoundary,commitWorldBoundary,captureWorldProposalResources,
-  nativeSuspendedGateRoute,nativeRouteTiming,nativeTaskStartBinding,nativeTaskActionBinding,nativeTaskConsequenceBinding,nativeTaskSettlementBinding,nativeHomeRouteBinding,nativeInitialIdleBodyBinding}){
-  const native={nativeSuspendedGateRoute,nativeRouteTiming,nativeTaskStartBinding,nativeTaskActionBinding,nativeTaskConsequenceBinding,nativeTaskSettlementBinding,nativeHomeRouteBinding,nativeInitialIdleBodyBinding};
+  nativeSuspendedGateRoute,nativeRouteTiming,nativeTaskStartBinding,nativeTaskActionBinding,nativeTaskConsequenceBinding,nativeTaskSettlementBinding,nativeHomeRouteBinding,nativeInitialIdleBodyBinding,nativeIdleCycleBinding}){
+  const native={nativeSuspendedGateRoute,nativeRouteTiming,nativeTaskStartBinding,nativeTaskActionBinding,nativeTaskConsequenceBinding,nativeTaskSettlementBinding,nativeHomeRouteBinding,nativeInitialIdleBodyBinding,nativeIdleCycleBinding};
   return async function commitNativeWorldProposal(getPublication,stage,commit,prepareResources=null,signal=null,protocol=null){
     const motion=nativeResourceAdmissionProfile(protocol?.motionKind),
       {reference:fromProposal,sameReference:sameTemplate,templateField,bindingField,releaseField}=motion;

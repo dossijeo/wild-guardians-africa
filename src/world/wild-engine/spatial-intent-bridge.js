@@ -1,3 +1,4 @@
+import {LOCOMOTION} from '../../simulation/locomotion-calibration.js';
 import {copyNativeHomeArrivalReference,copyNativeHomeArrivalProposal,copyNativeHomeArrivalAttestation,sameNativeHomeArrivalReference} from '../native-home-arrival.js';
 import {createNativeResourceAdmission} from '../native-resource-admission.js';
 import {nativeTaskStartReferenceFromProposal} from '../native-task-start-reference.js';
@@ -11,7 +12,7 @@ import {copyNativeHomeRouteProposal,copyNativeHomeRouteReference,copyNativeHomeR
 import {copyNativeHomeRequestReference,sameNativeHomeRequestReference,nativeHomeRequestContinuesIdle,nativeHomeRequestContinuesInitialIdle} from '../native-home-request-reference.js';
 import {copyNativeInitialIdleRequestReference,copyNativeInitialIdleDeclarationReference} from '../native-initial-idle-request-reference.js';
 import {copyNativeInitialIdleBodyReference,copyNativeInitialIdleBodyProposal,copyNativeInitialIdleBodyAttestation} from '../native-initial-idle-body.js';
-import {copyNativeIdleCycleReference,copyNativeIdleCycleProposal,copyNativeIdleCycleAttestation,copyNativeIdleCycleNextRequest} from '../native-idle-cycle.js';
+import {copyNativeIdleCycleReference,copyNativeIdleCycleProposal,copyNativeIdleCycleAttestation,copyNativeIdleCycleNextRequest,sameNativeIdleCycleNextRequest} from '../native-idle-cycle.js';
 import {nativeInitialIdleDeclaration,nativeInitialIdleInitialization,nativeInitialIdleRetainedState,nativeInitialIdleSavedState} from '../native-initial-idle-state.js';
 import {cancelIdle} from '../../simulation/idle.js';
 import {copyNativeTaskSettlementReference,copyNativeTaskSettlementProposal,copyNativeTaskSettlementAttestation} from '../native-task-settlement.js';
@@ -788,7 +789,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     commitWorldBoundary:boundary=>{committedWorldBoundary=boundary;},
     captureWorldProposalResources:boundary=>session.core.captureNativeWorldProposalResources(boundary),
     nativeSuspendedGateRoute:actorId=>nativeSuspendedGateRoute(actorId),nativeRouteTiming,nativeTaskStartBinding,
-    nativeTaskActionBinding:actorId=>nativeTaskActionBinding(actorId),nativeTaskConsequenceBinding:actorId=>nativeTaskConsequenceBinding(actorId),nativeTaskSettlementBinding:actorId=>nativeTaskSettlementBinding(actorId),nativeHomeRouteBinding:actorId=>nativeHomeRouteBinding(actorId),nativeInitialIdleBodyBinding:actorId=>nativeInitialIdleBodyBinding(actorId)
+    nativeTaskActionBinding:actorId=>nativeTaskActionBinding(actorId),nativeTaskConsequenceBinding:actorId=>nativeTaskConsequenceBinding(actorId),nativeTaskSettlementBinding:actorId=>nativeTaskSettlementBinding(actorId),nativeHomeRouteBinding:actorId=>nativeHomeRouteBinding(actorId),nativeInitialIdleBodyBinding:actorId=>nativeInitialIdleBodyBinding(actorId),nativeIdleCycleBinding:actorId=>nativeIdleCycleBinding(actorId)
   });
   const addNativeBarrierAfterGpuQuiescence=({getPublication,x,z,halfX,halfZ,yaw=0,passMask=0}={})=>{
     if(![x,z,halfX,halfZ,yaw].every(Number.isFinite)||halfX<=0||halfZ<=0||halfX>100||halfZ>100||
@@ -1353,6 +1354,30 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     if(a[0]!==1||!a.every(Number.isFinite)||!binding||a[2]!==binding.reference.bodyId||a[3]!==binding.cycleSequence||![1,2].includes(a[5])||![0,1].includes(a[10])||![0,1,-2,-6].includes(a[11])||a[13]!==binding.reference.worldBoundary.effectiveTime+binding.reference.duration)throw Error('Invalid native Idle cycle execution');
     return Object.freeze({kind:'native-idle-cycle-execution',version:1,actorId:a[1],bodyId:a[2],binding,executedThrough:a[4],idleState:Object.freeze({anchorId:binding.reference.anchor.id,mode:a[5]===1?'rest':'watch',elapsed:a[6],remaining:a[7],rng:a[8],approachRetry:a[9]}),finished:a[10]===1,nextStatus:a[11],nextSequence:a[12],endTime:a[13]});
   };
+  // Read the genuine stationary owner and original farm anchor. This does
+  // not project/advance Game or make a stochastic choice in JavaScript.
+  const idleCycleSource=actor=>{
+    const state=owningState,worker=state?.workers.find(w=>numericId(w.id)===actor),body=nativeInitialIdleBodyBinding(actor);
+    if(!worker||!body||worker.nativeRouteAdmission!=='native-idle'||contractExpired(worker,state)||state.time>=PROFILES.find(p=>p.id===worker.profile)?.end)return null;
+    try{
+      const semantic=nativeInitialIdleRetainedState(state,worker,{canonical:true}),q=body.reference.sourceRequest;
+      if(worker.profile!==q.workerProfile||numericId(worker.centerId)!==q.centerId||Object.entries(semantic.pose).some(([k,v])=>v!==q.pose[k]))return null;
+      const cycle=nativeIdleCycleBinding(actor),next=cycle?nativeIdleCycleNextRequest(actor):null,initial=cycle?next?.idleState:q.idleState;
+      if(!initial||initial.mode==='walk'||JSON.stringify(semantic.idleState)!==JSON.stringify(initial))return null;
+      const center=state.structures.find(c=>c.id===worker.centerId),anchor=idleFarmAnchor(state,worker,center),match=/^(farm-plant|farm-structure|village)-(\d+)$/.exec(anchor.id),calibration=LOCOMOTION.sources.find(c=>c.profile===worker.profile);
+      if(!match||anchor.id!==initial.anchorId||!calibration||![anchor.x,anchor.z,anchor.idleRadius].every(Number.isFinite))return null;
+      return {state,worker,body,next,anchor:{kind:['','farm-plant','farm-structure','village'].indexOf(match[1]),id:Number(match[2]),x:anchor.x,z:anchor.z,radius:anchor.idleRadius},sequence:next?.requestSequence??body.bodySequence,calibration};
+    }catch{return null;}
+  };
+  const sameIdleCycleSource=(a,b)=>!!a&&!!b&&a.state===b.state&&a.worker===b.worker&&JSON.stringify(a.body)===JSON.stringify(b.body)&&(!a.next&&!b.next||sameNativeIdleCycleNextRequest(a.next,b.next))&&JSON.stringify(a.anchor)===JSON.stringify(b.anchor);
+  const prepareNativeIdleCycleProposal=actorId=>{
+    const actor=typeof actorId==='number'?actorId:numericId(actorId),outcome=(status,extra={})=>({status,authorizedAutonomy:false,authorizedPassage:false,...extra});
+    if(wasm.nav_idle_cycle_version?.()!==1)throw Error('Rebuild native Idle cycle admission');syncBoundaryTime();flushNativeIntentControl();const source=idleCycleSource(actor);if(!source)return outcome('unsupported');
+    const a=source.anchor,c=source.calibration,status=wasm.nav_idle_cycle_proposal_stage(actor,wasm.nav_intent_session(),source.sequence,a.kind,a.id,a.x,a.z,a.radius,c.idleSeconds,c.alertSeconds);
+    if(status!==1)return outcome(status===-4?'busy':status===-2?'unsupported':'stale');
+    if(wasm.nav_intent_barrier_proposal_ticket()!==1)throw Error('Native Idle cycle lost its proposal ticket');const t=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6)),ticket={kind:'native-idle-cycle-proposal-ticket',authorityEpoch:epoch(),session:t[0],ticket:t[1]};
+    try{return outcome('proposed',{proposal:captureNativeIdleCycleProposal(ticket)});}catch(error){wasm.nav_idle_cycle_proposal_cancel(t[0],t[1]);throw error;}
+  };
   const captureNativeIdleCycleProposal=ticket=>{
     if(ticket?.kind!=='native-idle-cycle-proposal-ticket'||ticket.authorityEpoch!==epoch()||wasm.nav_idle_cycle_proposal_snapshot(ticket.session,ticket.ticket)!==1)return null;
     const h=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_idle_cycle_proposal_header_ptr(),24));if(h[0]!==1||!h.every(Number.isFinite))throw Error('Invalid native Idle cycle proposal');const body=nativeInitialIdleBodyBinding(h[1]);if(!body)throw Error('Native Idle cycle lost its physical ancestry');const nativeIdleCycle=idleCycleReference(h,ticket.ticket,body);
@@ -1501,6 +1526,22 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     return commitNativeWorldProposal(getPublication,()=>{if(!current())return -2;const p=prepareNativeHomeRouteProposal(source);return p.status==='proposed'?1:p.status==='busy'?-4:p.status==='conflict'?0:-2;},(mark,...boundary)=>{
       if(!current())return {status:-2};const status=wasm.nav_home_route_proposal_commit_bound(...boundary,preparedTicket);if(status!==1)return {status};mark();if(fresh&&beginNativeRouteExecution().status!=='started')throw Error('Restored Home could not establish its native execution boundary');projectNativeHomeRouteExecution(state,worker,{nativeHomeRouteExecution});
       const binding=nativeHomeRouteBinding(actor),nativeRoute=Object.freeze({actorId:actor,routeHandle:binding.reference.expectedRouteHandle,assignmentSequence:binding.assignmentSequence}),resources=Object.freeze({version:1,kind:18,phase:'committed',worldBoundary:nativeWorldBoundary(),nativeRoute,nativeHomeRouteBinding:binding,presentation:captureNativeRoutePresentation(binding.reference.expectedRouteHandle)});mark({resources,nativeRoute,nativeHomeRouteBinding:binding});return {status:1,value:{resources,nativeRoute,nativeHomeRouteBinding:binding}};
+    },prepareResources,signal,protocol);
+  };
+  const startNativeIdleCycleAfterGpuQuiescence=({actorId,getPublication,prepareResources,signal=null}={})=>{
+    if(typeof prepareResources!=='function'||signal!==null&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Native Idle cycle requires retained resource preparation');
+    const actor=typeof actorId==='number'?actorId:numericId(actorId),source=idleCycleSource(actor);if(!source)return Promise.resolve({status:'unsupported',authorizedAutonomy:false,authorizedPassage:false});
+    const current=()=>sameIdleCycleSource(source,idleCycleSource(actor));let candidate=null,translation=null,preparedTicket=null;
+    const protocol={preparedFrameRequired:true,deferred:true,motionKind:'idle-cycle',
+      retained(session,ticket){if(!current()||wasm.nav_intent_barrier_proposal_ticket()!==1)return false;const a=new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6);return a[0]===session&&a[1]===ticket&&a[5]===21;},
+      revalidate(session,ticket){if(!current())return {status:'stale'};const result=revalidateNativeIdleCycleProposal({kind:'native-idle-cycle-proposal-ticket',authorityEpoch:epoch(),session,ticket});if(result.status==='revalidated'){candidate=result.proposal;translation=result.timeTranslation;}return result;},
+      timeTranslation:()=>translation,ticket:()=>wasm.nav_intent_barrier_proposal_ticket(),ticketPtr:()=>wasm.nav_intent_barrier_proposal_ticket_ptr(),
+      snapshot:(session,ticket)=>wasm.nav_idle_cycle_proposal_snapshot(session,ticket),cancel:(session,ticket)=>wasm.nav_idle_cycle_proposal_cancel(session,ticket),release(){},
+      capture(boundary){candidate=captureNativeIdleCycleProposal({kind:'native-idle-cycle-proposal-ticket',authorityEpoch:boundary.authorityEpoch,session:boundary.nativeSession,ticket:boundary.ticket});if(!candidate)throw Error('Native Idle cycle resources unavailable');preparedTicket=candidate.ticket.ticket;return candidate;}};
+    return commitNativeWorldProposal(getPublication,()=>{if(!current())return -2;const p=prepareNativeIdleCycleProposal(actor);return p.status==='proposed'?1:p.status==='busy'?-4:-2;},(mark,...boundary)=>{
+      if(!current())return {status:-2};const status=wasm.nav_idle_cycle_proposal_commit_bound(...boundary,preparedTicket);if(status!==1)return {status};mark();
+      const binding=nativeIdleCycleBinding(actor),resources=Object.freeze({version:1,kind:21,phase:'committed',worldBoundary:nativeWorldBoundary(),nativeIdleCycleBinding:binding});
+      mark({resources,nativeIdleCycleBinding:binding});return {status:1,value:{resources,nativeIdleCycleBinding:binding}};
     },prepareResources,signal,protocol);
   };
   const startNativeInitialIdleBodyAfterGpuQuiescence=({actorId,getPublication,prepareResources,signal=null}={})=>{
@@ -2030,7 +2071,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     startNativeTaskActionAfterGpuQuiescence,prepareNativeTaskActionProposal,captureNativeTaskActionProposal,revalidateNativeTaskActionProposal,cancelNativeTaskActionProposal,
     nativeTaskActionBinding,nativeTaskActionBindings,nativeTaskActionExecution,nativeTaskActionRestoreReferences,
     nativeWorkerHomeInactive,startNativeHomeArrivalAfterGpuQuiescence,prepareNativeHomeArrivalProposal,captureNativeHomeArrivalProposal,revalidateNativeHomeArrivalProposal,cancelNativeHomeArrivalProposal,
-    nativeIdleCycleBinding,nativeIdleCycleBindings,nativeIdleCycleNextRequest,nativeIdleCycleExecution,captureNativeIdleCycleProposal,revalidateNativeIdleCycleProposal,cancelNativeIdleCycleProposal,
+    nativeIdleCycleBinding,nativeIdleCycleBindings,nativeIdleCycleNextRequest,nativeIdleCycleExecution,prepareNativeIdleCycleProposal,startNativeIdleCycleAfterGpuQuiescence,captureNativeIdleCycleProposal,revalidateNativeIdleCycleProposal,cancelNativeIdleCycleProposal,
     nativeInitialIdleRequestReference,nativeInitialIdleRequestReferences,nativeInitialIdleDeclarationReference,requestNativeInitialIdleHome,requestNativeInitialIdleBodyHome,nativeInitialIdleBodyBinding,nativeInitialIdleBodyBindings,nativeInitialIdleBodyState,prepareNativeInitialIdleBodyProposal,captureNativeInitialIdleBodyProposal,revalidateNativeInitialIdleBodyProposal,cancelNativeInitialIdleBodyProposal,startNativeInitialIdleBodyAfterGpuQuiescence,requestNativeIdleHome,startNativeHomeRouteAfterGpuQuiescence,nativeHomeRequestReference,nativeHomeRequestReferences,nativeHomeRouteBinding,nativeHomeRouteBindings,nativeHomeRouteExecution,prepareNativeHomeRouteProposal,captureNativeHomeRouteProposal,revalidateNativeHomeRouteProposal,cancelNativeHomeRouteProposal,
     startNativeTaskSettlementAfterGpuQuiescence,nativeTaskSettlementBinding,nativeTaskSettlementBindings,nativeSettledWorkerExecution,prepareNativeTaskSettlementProposal,captureNativeTaskSettlementProposal,revalidateNativeTaskSettlementProposal,cancelNativeTaskSettlementProposal,
     nativeTaskConsequenceBinding,nativeDeliveryExecution,startNativeTaskConsequenceAfterGpuQuiescence,prepareNativeTaskConsequenceProposal,captureNativeTaskConsequenceProposal,revalidateNativeTaskConsequenceProposal,cancelNativeTaskConsequenceProposal,
@@ -3089,7 +3130,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     async startNativeHomeArrivalAfterGpuQuiescence(options){const owner=bridge.authorityEpoch,result=await bridge.startNativeHomeArrivalAfterGpuQuiescence(options);if(bridge.authorityEpoch===owner&&result.resources)pendingNativeChanges=true;return result;},
     async startNativeHomeRouteAfterGpuQuiescence(options){const owner=bridge.authorityEpoch,result=await bridge.startNativeHomeRouteAfterGpuQuiescence(options);if(bridge.authorityEpoch===owner&&result.resources)pendingNativeChanges=true;return result;},
     nativeInitialIdleRequestReference:bridge.nativeInitialIdleRequestReference,nativeInitialIdleRequestReferences:bridge.nativeInitialIdleRequestReferences,nativeInitialIdleDeclarationReference:bridge.nativeInitialIdleDeclarationReference,requestNativeInitialIdleResources,projectNativeInitialIdleRequest,projectNativeInitialIdleDeclaration,requestNativeIdleHome,projectNativeSettledWorkerExecution,
-    nativeIdleCycleBinding:bridge.nativeIdleCycleBinding,nativeIdleCycleBindings:bridge.nativeIdleCycleBindings,nativeIdleCycleNextRequest:bridge.nativeIdleCycleNextRequest,nativeIdleCycleExecution:bridge.nativeIdleCycleExecution,captureNativeIdleCycleProposal:bridge.captureNativeIdleCycleProposal,revalidateNativeIdleCycleProposal:bridge.revalidateNativeIdleCycleProposal,cancelNativeIdleCycleProposal:bridge.cancelNativeIdleCycleProposal,
+    nativeIdleCycleBinding:bridge.nativeIdleCycleBinding,nativeIdleCycleBindings:bridge.nativeIdleCycleBindings,nativeIdleCycleNextRequest:bridge.nativeIdleCycleNextRequest,nativeIdleCycleExecution:bridge.nativeIdleCycleExecution,prepareNativeIdleCycleProposal:bridge.prepareNativeIdleCycleProposal,async startNativeIdleCycleAfterGpuQuiescence(options){const owner=bridge.authorityEpoch,result=await bridge.startNativeIdleCycleAfterGpuQuiescence(options);if(bridge.authorityEpoch===owner&&result.resources)pendingNativeChanges=true;return result;},captureNativeIdleCycleProposal:bridge.captureNativeIdleCycleProposal,revalidateNativeIdleCycleProposal:bridge.revalidateNativeIdleCycleProposal,cancelNativeIdleCycleProposal:bridge.cancelNativeIdleCycleProposal,
     nativeInitialIdleBodyBinding:bridge.nativeInitialIdleBodyBinding,nativeInitialIdleBodyBindings:bridge.nativeInitialIdleBodyBindings,nativeInitialIdleBodyState:bridge.nativeInitialIdleBodyState,prepareNativeInitialIdleBodyProposal:bridge.prepareNativeInitialIdleBodyProposal,captureNativeInitialIdleBodyProposal:bridge.captureNativeInitialIdleBodyProposal,revalidateNativeInitialIdleBodyProposal:bridge.revalidateNativeInitialIdleBodyProposal,cancelNativeInitialIdleBodyProposal:bridge.cancelNativeInitialIdleBodyProposal,projectNativeInitialIdleBody,
     async startNativeInitialIdleBodyAfterGpuQuiescence(options){const owner=bridge.authorityEpoch,result=await bridge.startNativeInitialIdleBodyAfterGpuQuiescence(options);if(bridge.authorityEpoch===owner&&result.resources){pendingNativeChanges=true;const state=sourceState??observedTaskState,worker=state?.workers.find(w=>numericId(w.id)===result.nativeInitialIdleBodyBinding.reference.actorId);if(worker)projectNativeInitialIdleBody(state,worker);}return result;},
     nativeTaskSettlementBinding:bridge.nativeTaskSettlementBinding,nativeTaskSettlementBindings:bridge.nativeTaskSettlementBindings,nativeSettledWorkerExecution:bridge.nativeSettledWorkerExecution,prepareNativeTaskSettlementProposal:bridge.prepareNativeTaskSettlementProposal,captureNativeTaskSettlementProposal:bridge.captureNativeTaskSettlementProposal,revalidateNativeTaskSettlementProposal:bridge.revalidateNativeTaskSettlementProposal,cancelNativeTaskSettlementProposal:bridge.cancelNativeTaskSettlementProposal,
