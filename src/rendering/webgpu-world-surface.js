@@ -1,3 +1,4 @@
+import {nativeIdleCycleBodyState} from '../world/native-idle-cycle-body-source.js';
 import {copyNativeIdleCycleProposal,copyNativeIdleCycleAttestation,copyNativeIdleCycleResources,nativeIdleCyclePresentationMatches,nativeIdleCycleSuccessor} from '../world/native-idle-cycle.js';
 import {copyNativeIdleStrollProposal,copyNativeIdleStrollAttestation,copyNativeIdleStrollResources,nativeIdleStrollPresentationMatches,nativeIdleStrollSuccessor} from '../world/native-idle-stroll.js';
 import {nativeIdleStrollLiveState} from '../world/native-idle-stroll-state.js';
@@ -383,7 +384,7 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
        };onPresentationReady();await waitNativePublication(preparedSequence+1,controller.signal,projected);if(nativeGateProposal===item)nativeGateProposal=null;}
        if(arrival){const r=binding.reference,home=nativeHomeRouteSource(r.sourceHome.reference).home,projected=()=>{const worker=state.workers.find(w=>w.id===`worker-${r.actorId}`);return !!worker&&worker.status==='home'&&worker.nativeRouteAdmission===undefined&&!worker.taskId&&!worker.crateId&&worker.villageId===`village-${home.villageId}`&&worker.x===home.x&&worker.z===home.z;};onPresentationReady();await waitNativePublication(-1,controller.signal,projected);if(nativeGateProposal===item)nativeGateProposal=null;}
        if(home){const r=binding.reference,projected=()=>{const worker=state.workers.find(w=>w.id===`worker-${r.actorId}`);return !!worker&&worker.status==='returning'&&worker.nativeRouteAdmission==='native-home'&&!worker.taskId&&!worker.crateId&&worker.villageId===`village-${nativeHomeRouteSource(r).home.villageId}`;};onPresentationReady();await waitNativePublication(-1,controller.signal,projected);if(nativeGateProposal===item)nativeGateProposal=null;}
-       if(cycle){const q=binding.reference.sourceBody.reference.sourceRequest,p=q.pose,projected=()=>{
+       if(cycle){const q=nativeIdleCycleBodyState(binding.reference.sourceBody),p=q.pose,projected=()=>{
         const worker=state.workers.find(w=>w.id===`worker-${q.actorId}`);
         if(!worker||worker.profile!==q.workerProfile||nativeEntityNumericId(worker.centerId)!==q.centerId||worker.crateId||worker.incapacitated||worker.recovery||worker.recoveryExitRemaining||worker.fallRemaining||worker.raidReturn||worker.running!==false||worker.gateWaiting!==false||worker.heading!==p.yaw||['x','z','runPhase','walkPhase','carryPhase','runRemaining'].some(k=>worker[k]!==p[k]))return false;
         const idle=worker.status==='idle'&&worker.nativeRouteAdmission==='native-idle'&&!worker.taskId&&worker.path===null&&!!worker.idleState&&['rest','watch'].includes(worker.idleState.mode),

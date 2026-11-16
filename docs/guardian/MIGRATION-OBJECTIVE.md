@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuacion de la politica Idle: [descanso tras paseo en consumidor y GPU originales](e-r3-native-idle-arrival-consumer-20261116.md). Terrain/kernel/roster/Surface usan el extremo real 22 y adoptan REST 21. NVIDIA/Turing conserva 533 IDs de geometria/bancos y reutiliza shaders/pipelines al volver al descanso; retira la textura 22 tras fence y no asigna tras READY. Retencion acotada de materiales compilados en el actor existente. Preparar aun crea buffers/bind groups. Faltan tarea/Home actuales, restauracion movil y cohort/producer ordinarios; recuperacion integral de 3123 y cierres A6/A/B/C siguen abiertos.
+
+
 Continuacion de la politica Idle: [fuente actual tipada y relevo paseo-descanso](e-r3-native-idle-arrival-data-20261116.md). La union20/22 usa la pose ejecutada y secuencia real, sin historial de permisos. Control exige paseo admitido, RouteCompleted y watermark; transactor/puertos conservan WALK hasta el commit y Game proyecta REST despues. Repeticion y carga estacionaria nueva pasan en ambos modulos. Faltan consumidor original GPU, tarea/Home, restauracion movil y cohort/producer ordinarios. Recuperacion integral de 3123 recursos y cierres A6/A/B/C siguen abiertos.
 
 

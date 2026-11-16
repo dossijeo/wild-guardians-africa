@@ -1,3 +1,4 @@
+import {nativeIdleCycleBodyState} from '../world/native-idle-cycle-body-source.js';
 import {copyNativeIdleStrollProposal} from '../world/native-idle-stroll.js';
 import {copyNativeIdleCycleReference} from '../world/native-idle-cycle.js';
 import {copyNativeHomeRouteProposal} from '../world/native-home-route.js';
@@ -76,7 +77,7 @@ export function createConfirmedTerrainSupport({residency,maxPieces=16384,maxActo
  function prepareNativeIdleCycle(value){
   if(closed)throw Error('Confirmed terrain support disposed');
   const reference=copyNativeIdleCycleReference(value);
-  return prepareStationaryPoint(reference,reference.sourceBody.reference.sourceRequest.pose,reference.worldBoundary.effectiveTime,String(reference.actorId),'native-idle-cycle-terrain-support');
+  return prepareStationaryPoint(reference,nativeIdleCycleBodyState(reference.sourceBody).pose,reference.worldBoundary.effectiveTime,String(reference.actorId),'native-idle-cycle-terrain-support');
  }
  function prepareNativeInitialIdleBody(value){
   if(closed)throw Error('Confirmed terrain support disposed');

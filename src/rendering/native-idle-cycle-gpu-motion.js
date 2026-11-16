@@ -1,3 +1,4 @@
+import {nativeIdleCycleBodyState} from '../world/native-idle-cycle-body-source.js';
 import {uniform,int} from 'three/tsl';
 import {copyNativeIdleCycleReference,nativeIdleCycleSuccessor,nativeIdleCycleWatchKnot} from '../world/native-idle-cycle.js';
 import {nativeEntityNumericId} from '../world/native-entity-id.js';
@@ -9,9 +10,9 @@ import {floorFloat32} from './float32-time.js';
 // the same graph; the native clock selects phase, never a JS timer or RNG.
 export function createNativeIdleCycleGpuMotion({actorId,support,anchorPosition=null,anchorYaw=0,heightOffset=0}={}){
  let reference=copyNativeIdleCycleReference(support?.reference);
- function supported(value,r){const p=r.sourceBody.reference.sourceRequest.pose;return value?.kind==='native-idle-cycle-terrain-support'&&value.valid?.()===true&&value.point?.x===p.x&&value.point.z===p.z&&value.point.at===r.worldBoundary.effectiveTime&&Number.isFinite(value.point.height)&&Number.isFinite(Math.fround(value.point.height));}
+ function supported(value,r){const p=nativeIdleCycleBodyState(r.sourceBody).pose;return value?.kind==='native-idle-cycle-terrain-support'&&value.valid?.()===true&&value.point?.x===p.x&&value.point.z===p.z&&value.point.at===r.worldBoundary.effectiveTime&&Number.isFinite(value.point.height)&&Number.isFinite(Math.fround(value.point.height));}
  if(!supported(support,reference)||nativeEntityNumericId(actorId)!==reference.actorId||![anchorYaw,heightOffset].every(n=>Number.isFinite(n)&&Number.isFinite(Math.fround(n)))||anchorPosition!==null&&![anchorPosition?.x,anchorPosition?.y,anchorPosition?.z].every(n=>Number.isFinite(n)&&Number.isFinite(Math.fround(n))))throw TypeError('Invalid native Idle cycle GPU support');
- const source=reference,pose=source.sourceBody.reference.sourceRequest.pose,clockNode=markRemoteClockNode(uniform(0),'relative',reference.worldBoundary.effectiveTime,null,null,null,null,null,null,null,null,null,null,null,null,reference),
+ const source=reference,pose=nativeIdleCycleBodyState(source.sourceBody).pose,clockNode=markRemoteClockNode(uniform(0),'relative',reference.worldBoundary.effectiveTime,null,null,null,null,null,null,null,null,null,null,null,null,reference),
   end=floorFloat32(source.duration),watchKnotNode=markRemoteClockNode(uniform(nativeIdleCycleWatchKnot(reference)),'idle-cycle-watch-knot',reference.worldBoundary.effectiveTime,null,null,null,null,null,null,null,null,null,null,null,null,reference),timeNode=clockNode.clamp(0,uniform(end)),
   clipNames=Object.freeze(['Idle','Alert']),clipNode=timeNode.greaterThanEqual(watchKnotNode).or(uniform(source.initialState.mode==='watch'?1:0,'int').equal(1)).select(int(1),int(0)),
   offsetHigh=Math.fround(source.watchStartOffset),offsetLow=Math.fround(source.watchStartOffset-offsetHigh),watchTime=timeNode.sub(uniform(offsetHigh)).sub(uniform(offsetLow)).max(0),
