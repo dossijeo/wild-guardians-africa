@@ -35,6 +35,8 @@ int spatialIntentBeginWorldPreview();
 void spatialIntentEndWorldPreview();
 // Explicit stop on the same prepared world transaction; no fake geometry.
 int spatialIntentStopIdleStroll(const SpatialWorldProposalInput&);
+int spatialIntentRevalidateIdleStrollStop(double,double,std::array<double,8>&);
+int spatialIntentTakeIdleStrollStop(double,double,double,double,double,double,SpatialWorldProposalInput&,std::array<double,5>&);
 
 int spatialIntentWorldProposalSnapshot(std::array<double,6>&);
 // A committed route changes its resource boundary while retaining every

@@ -212,6 +212,7 @@ struct WorldResourcePublication {
   std::shared_ptr<WorldResourcePreview> prepared;
   bool valid=false;
   std::array<double,9> header{};
+  std::array<double,5> stopBinding{};
   std::vector<int32_t> changes;
 };
 WILD_SAMPLING_LOCAL WorldResourcePublication* worldResourcePublication=nullptr;
@@ -1911,7 +1912,7 @@ void spatialRecordMotionResourceBoundary(double session,double ticket,double tim
   if(!worldResourcePublication)worldResourcePublication=new WorldResourcePublication();
   auto& publication=*worldResourcePublication;publication.changes.clear();publication.prepared.reset();
   publication.header={1,session,ticket,time,double(kind),0,double(terrainInputRevision),double(overlayRevision),double(residencyRevision)};
-  publication.valid=true;
+  publication.stopBinding.fill(0);publication.valid=true;
 }
 extern "C" {
 EMSCRIPTEN_KEEPALIVE int spatial_execution_segment_clear(double x,double z,double nx,double nz,double radius){
@@ -3045,6 +3046,15 @@ int stageWorldProposal(int kind,int mode,int floatCount,int intCount,bool captur
 }
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stage(int kind,int mode,int floatCount,int intCount){return stageWorldProposal(kind,mode,floatCount,intCount,false);}
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stage_resources(int kind,int mode,int floatCount,int intCount){return stageWorldProposal(kind,mode,floatCount,intCount,true);}
+// The original world preview for kind12 owns no terrain buffers. Refresh its
+// receipt only after native recomputation; other families keep exact snapshots.
+EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_revalidate_stop(double session,double ticket){
+  if(!worldResourcePreview||worldResourcePreview->header[4]!=12||worldResourcePreview->header[1]!=session||worldResourcePreview->header[2]!=ticket)return -1;
+  std::array<double,8> translation{};const int result=spatialIntentRevalidateIdleStrollStop(session,ticket,translation);
+  if(result!=1){if(result!=-1)worldResourcePreview.reset();return result;}
+  std::array<double,6> identity{};if(spatialIntentWorldProposalSnapshot(identity)!=1){worldResourcePreview.reset();return -2;}
+  auto& h=worldResourcePreview->header;h[2]=identity[1];h[3]=identity[3];return 1;
+}
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_resource_version(){return 1;}
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_resource_snapshot(double session,double ticket){
   if(!worldResourcePreview)return 0;
@@ -3089,7 +3099,7 @@ EMSCRIPTEN_KEEPALIVE int spatial_world_resource_prepared_snapshot(double session
 }
 EMSCRIPTEN_KEEPALIVE void* spatial_world_resource_buffer_ptr(int index,int field){return worldResourceBuffer(worldResourcePublication?worldResourcePublication->prepared.get():nullptr,index,field).first;}
 EMSCRIPTEN_KEEPALIVE int spatial_world_resource_buffer_bytes(int index,int field){return int(worldResourceBuffer(worldResourcePublication?worldResourcePublication->prepared.get():nullptr,index,field).second);}
-EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_commit(double session,double ticket,double sequence,double time,double clockSequence){
+int commitWorldProposal(double session,double ticket,double sequence,double time,double clockSequence,bool stopBound,double preparedTicket){
   const bool hasPrepared=worldResourcePreview&&worldResourcePreview->header[1]==session&&worldResourcePreview->header[2]==ticket;
   if(hasPrepared&&spatial_world_proposal_resource_snapshot(session,ticket)!=1)return -2;
   struct ApplyingGuard {WorldResourcePreview* previous;~ApplyingGuard(){worldResourcePreviewApplying=previous;}} applyingGuard{worldResourcePreviewApplying};
@@ -3097,8 +3107,9 @@ EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_commit(double session,double tic
   // semantics. Keep its canonical path until that owner uses protected commits.
   const bool installingPrepared=hasPrepared&&(worldResourcePreview->header[4]==6||worldResourcePreview->header[4]==8||worldResourcePreview->header[4]==9&&spatialIntentPropsProtected()||worldResourcePreview->header[4]==10&&spatialIntentTerrainProtected());
   worldResourcePreviewApplying=installingPrepared?worldResourcePreview.get():nullptr;
-  SpatialWorldProposalInput input;const int valid=spatialIntentTakeWorld(session,ticket,sequence,time,clockSequence,input);
+  std::array<double,5> stopBinding{};SpatialWorldProposalInput input;const int valid=stopBound?spatialIntentTakeIdleStrollStop(session,ticket,sequence,time,clockSequence,preparedTicket,input,stopBinding):spatialIntentTakeWorld(session,ticket,sequence,time,clockSequence,input);
   if(valid!=1)return valid;worldProposalResult.clear();
+  if(!stopBound&&input.kind==12)stopBinding={1,ticket,time,ticket,time};
   std::map<std::pair<int,int>,int> resources;
   struct ResourceGuard {
     std::map<std::pair<int,int>,int>* previous;
@@ -3117,9 +3128,17 @@ EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_commit(double session,double tic
       double(terrainInputRevision),double(overlayRevision),double(residencyRevision)};
     publication.prepared.reset();
     if(hasPrepared&&(installingPrepared||input.kind==11)&&worldResourcePreview->changes==publication.changes)publication.prepared=worldResourcePreview;
-    publication.valid=true;
+    publication.stopBinding=stopBinding;publication.valid=true;
   }
   return result==1?1:-6;
+}
+EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_commit(double session,double ticket,double sequence,double time,double clockSequence){return commitWorldProposal(session,ticket,sequence,time,clockSequence,false,0);}
+EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stop_commit_bound(double session,double ticket,double sequence,double time,double clockSequence,double preparedTicket){return commitWorldProposal(session,ticket,sequence,time,clockSequence,true,preparedTicket);}
+// One receipt on the existing last committed world publication, not a history
+// of permissions. The authority attests the prepared/current frontier pair.
+EMSCRIPTEN_KEEPALIVE const double* spatial_world_stop_binding_ptr(){
+  if(spatial_world_resource_snapshot()!=1||worldResourcePublication->header[4]!=12)return nullptr;
+  const auto& p=*worldResourcePublication;return p.stopBinding[0]==1&&p.stopBinding[3]==p.header[2]&&p.stopBinding[4]==p.header[3]?p.stopBinding.data():nullptr;
 }
 int spatial_walkable(int x,int z){return walkable(x,z);}
 int spatial_edge(int x,int z,int nx,int nz){return std::abs(x-nx)+std::abs(z-nz)==1&&edge(x,z,nx,nz);}

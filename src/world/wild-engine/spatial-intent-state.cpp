@@ -379,6 +379,12 @@ struct PendingBarrierProposal {
   };
   std::optional<IdleCycleDraft> idleCycle;
   std::optional<PendingNativeMotionDraft> idleStroll;
+  struct IdleStrollStopDraft {
+    uint64_t preparedTicket=0;double preparedAt=0;
+    std::vector<double> preparedRoutes,preparedGates;
+    std::array<double,8> translation{};
+  };
+  std::optional<IdleStrollStopDraft> idleStrollStop;
   bool retainsRoutes=false;
   std::vector<double> routeEffects,gateEffects;
   bool pending=false;uint32_t session=0;uint64_t ticket=0;
@@ -1350,10 +1356,12 @@ int spatialIntentStageBarrier(const SpatialBarrierProposalInput& input,const Spa
 int spatialIntentStageWorld(const SpatialWorldProposalInput& input,const SpatialStaticMutation* shapes,int count){
   if(input.kind<2)return -1;
   const int result=stageWorldMutationBoundary(shapes,count);if(result!=1)return result;
-  auto& p=state().barrierProposal;p.kind=input.kind;p.worldInput=input;return 1;
+  auto& p=state().barrierProposal;p.kind=input.kind;p.worldInput=input;
+  if(input.kind==12)p.idleStrollStop=PendingBarrierProposal::IdleStrollStopDraft{p.ticket,p.at,p.routeEffects,p.gateEffects,{}};
+  return 1;
 }
 void clearWorldMutationProposal(PendingBarrierProposal& p){
-  p.pending=false;p.kind=0;p.resume.reset();p.start.reset();p.home.reset();p.action.reset();p.consequence.reset();p.settlement.reset();p.homeArrival.reset();p.initialIdleBody.reset();p.idleCycle.reset();p.idleStroll.reset();p.worldInput=SpatialWorldProposalInput{};p.routeEffects.clear();p.gateEffects.clear();
+  p.pending=false;p.kind=0;p.resume.reset();p.start.reset();p.home.reset();p.action.reset();p.consequence.reset();p.settlement.reset();p.homeArrival.reset();p.initialIdleBody.reset();p.idleCycle.reset();p.idleStroll.reset();p.idleStrollStop.reset();p.worldInput=SpatialWorldProposalInput{};p.routeEffects.clear();p.gateEffects.clear();
 }
 int takeWorldMutationBoundary(double session,double ticket,double sequence,double time,double clockSequence,int kind){
   auto& s=state();const auto& p=s.barrierProposal;
@@ -1372,6 +1380,38 @@ int takeWorldMutationBoundary(double session,double ticket,double sequence,doubl
 int spatialIntentTakeBarrier(double session,double ticket,double sequence,double time,double clockSequence,SpatialBarrierProposalInput& out){
   const int result=takeWorldMutationBoundary(session,ticket,sequence,time,clockSequence,1);if(result!=1)return result;
   auto& p=state().barrierProposal;out=p.input;clearWorldMutationProposal(p);return 1;
+}
+// Refresh only the final stop frontier; immutable route/gate owners must still
+// match the original preparation. Keep one bounded origin, never a chain.
+int spatialIntentRevalidateIdleStrollStop(double session,double ticket,std::array<double,8>& translation){
+  auto& s=state();auto& p=s.barrierProposal;
+  if(!integer(session)||!integer(ticket)||!p.pending||p.kind!=12||!p.idleStrollStop||session!=double(p.session)||ticket!=double(p.ticket))return -1;
+  if(p.session!=s.session||p.facts!=s.sequence||p.intents!=s.intentSequence||p.gates!=s.gateRevision||p.world!=executionWorldStamp()){
+    clearWorldMutationProposal(p);return -2;
+  }
+  // Entity/body revisions advance on execution ticks. Reprove the current
+  // bodies and original source instead of treating movement as stale assets.
+  auto origin=std::move(*p.idleStrollStop);const auto input=std::move(p.worldInput);clearWorldMutationProposal(p);
+  int result=spatialIntentBeginWorldPreview();if(result!=1)return result;
+  result=spatialIntentStopIdleStroll(input);spatialIntentEndWorldPreview();if(result!=1)return result;
+  result=spatialIntentStageWorld(input,nullptr,-1);if(result!=1)return result;
+  const auto& routes=p.routeEffects;const auto& gates=p.gateEffects;
+  bool same=routes.size()==origin.preparedRoutes.size()&&gates.size()==origin.preparedGates.size();
+  for(size_t i=0;same&&i<routes.size();i+=26)for(size_t j=0;j<8;j++)if(j!=6&&routes[i+j]!=origin.preparedRoutes[i+j]){same=false;break;}
+  for(size_t i=0;same&&i<gates.size();i+=3)if(gates[i]!=origin.preparedGates[i]||gates[i+1]!=origin.preparedGates[i+1])same=false;
+  origin.translation={1,double(origin.preparedTicket),double(p.ticket),origin.preparedAt,p.at,same?1.:0.,double(routes.size()/26),double(gates.size()/3)};
+  translation=origin.translation;p.idleStrollStop=std::move(origin);return 1;
+}
+int spatialIntentTakeIdleStrollStop(double session,double ticket,double sequence,double time,double clockSequence,double preparedTicket,SpatialWorldProposalInput& out,std::array<double,5>& receipt){
+  const auto& p=state().barrierProposal;
+  if(!integer(preparedTicket)||!p.pending||p.kind!=12||!p.idleStrollStop)return -1;
+  const auto& origin=*p.idleStrollStop;
+  if(preparedTicket!=double(p.ticket)&&(preparedTicket!=double(origin.preparedTicket)||origin.translation[0]!=1||origin.translation[5]!=1))return -9;
+  const std::array<double,5> proof{1,preparedTicket,preparedTicket==double(p.ticket)?p.at:origin.preparedAt,double(p.ticket),p.at};
+  const int result=spatialIntentTakeWorld(session,ticket,sequence,time,clockSequence,out);if(result==1)receipt=proof;return result;
+}
+extern "C" EMSCRIPTEN_KEEPALIVE const double* nav_idle_stroll_stop_proposal_translation_ptr(double session,double ticket){
+  const auto& p=state().barrierProposal;return p.pending&&p.kind==12&&p.idleStrollStop&&session==double(p.session)&&ticket==double(p.ticket)&&p.idleStrollStop->translation[0]==1?p.idleStrollStop->translation.data():nullptr;
 }
 int spatialIntentTakeWorld(double session,double ticket,double sequence,double time,double clockSequence,SpatialWorldProposalInput& out){
   const int result=takeWorldMutationBoundary(session,ticket,sequence,time,clockSequence,2);if(result!=1)return result;

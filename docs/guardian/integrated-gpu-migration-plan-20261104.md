@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuacion de Idle: [revalidacion nativa de la parada movil](e-r3-native-idle-stroll-stop-revalidation-source-20261117.md). La fuente12 recompone la parada en la frontera final y conserva un origen preparado acotado. Rechaza el token anterior si cambia el cierre de cuerpos/motores y publica un recibo nativo preparado/adquirido. Pasan 1617 pruebas/142 archivos, ambos modulos, GPU previa con 681 IDs conservados y build. Falta la referencia tipada, refresco/admision GPU con autoridad continua y relevo Home; tarea/restauracion/cohort/producer y recuperacion integral de 3123 siguen pendientes. A6/A/B/C permanecen abiertos.
+
+
 Continuacion de Idle: [suspension grafica del paseo en propietarios existentes](e-r3-native-idle-stroll-stop-consumer-20261117.md). Codec/canal de terreno/Surface adoptan la familia12 sin chunks ficticios; roster/picking usan la epoca del movimiento retenido. NVIDIA/Turing conserva 679 IDs, cero shaders/pipelines y cero asignaciones tras READY. Preparar crea 68 recursos de protocolo y 120 copias de uniformes/bindings del Host (13408 bytes). Pasa 231/21 y build. La autoridad se mantiene durante preparacion: falta revalidacion movil antes del relevo Home, ademas de tarea/restauracion/cohort/producer y recuperacion integral de 3123. A6/A/B/C siguen abiertos.
 
 
