@@ -1,7 +1,8 @@
 import {copyNativeHomeArrivalReference,copyNativeHomeArrivalAttestation,sameNativeHomeArrivalReference} from '../world/native-home-arrival.js';
 import {copyNativeHomeRouteReference,copyNativeHomeRouteAttestation,nativeHomeRouteAttestationCovers,sameNativeHomeRouteReference} from '../world/native-home-route.js';
 import {sameNativeTaskSettlementReference} from '../world/native-task-settlement.js';
-import {copyNativeHomeRequestReference,sameNativeHomeRequestReference,nativeHomeRequestContinuesIdle} from '../world/native-home-request-reference.js';
+import {copyNativeHomeRequestReference,sameNativeHomeRequestReference,nativeHomeRequestContinuesIdle,nativeHomeRequestContinuesInitialIdle} from '../world/native-home-request-reference.js';
+import {copyNativeInitialIdleRequestReference} from '../world/native-initial-idle-request-reference.js';
 import {copyNativeTaskRequestReference,nativeTaskRequestMatchesStart} from '../world/native-task-request-reference.js';
 import {copyNativeTaskStartReference} from '../world/native-task-start-reference.js';
 import {copyNativeTaskStartAttestation,nativeTaskStartAttestationCovers} from '../world/native-task-start-attestation.js';
@@ -29,13 +30,13 @@ function validHandle(handle,epoch){return handle?.authorityEpoch===epoch&&
 // movement model. It owns no independent body motion or collision simulation.
 // Admission resolves a stable record once. Revocation updates that exact record
 // even if preparation has not finished; drawing only reads its time limit.
-export function createNativeRouteControl({authorityEpoch,initialSequence=0,initialTime=null,routes=[],pendingTaskRequests=[],pendingActionRequests=[],pendingHomeRequests=[]}={}){
+export function createNativeRouteControl({authorityEpoch,initialSequence=0,initialTime=null,routes=[],pendingTaskRequests=[],pendingActionRequests=[],pendingHomeRequests=[],pendingInitialIdleRequests=[]}={}){
   if(typeof authorityEpoch!=='string'||!authorityEpoch||
      !Number.isSafeInteger(initialSequence)||initialSequence<0||
-     initialTime!==null&&(!Number.isFinite(initialTime)||initialTime<0)||!Array.isArray(routes)||!Array.isArray(pendingTaskRequests)||!Array.isArray(pendingActionRequests)||!Array.isArray(pendingHomeRequests))
+     initialTime!==null&&(!Number.isFinite(initialTime)||initialTime<0)||!Array.isArray(routes)||!Array.isArray(pendingTaskRequests)||!Array.isArray(pendingActionRequests)||!Array.isArray(pendingHomeRequests)||!Array.isArray(pendingInitialIdleRequests))
     throw TypeError('Invalid native route control identity');
   const active=new Map(),actors=new Map();
-  const actorContext=actorId=>{let value=actors.get(actorId);if(!value){value={closed:false,latestSequence:0,state:null,current:null,revoked:null,proof:null,resumeProof:null,startProof:null,consequenceProof:null,homeProof:null,settlementProof:null,settlementRecord:null,settlementSource:null,pendingTaskRequest:null,pendingActionRequest:null,pendingHomeRequest:null,actionSourceRequest:null,actionProof:null,actionRecord:null};actors.set(actorId,value);}return value;};
+  const actorContext=actorId=>{let value=actors.get(actorId);if(!value){value={closed:false,latestSequence:0,state:null,taskId:null,targetId:null,current:null,revoked:null,proof:null,resumeProof:null,startProof:null,consequenceProof:null,homeProof:null,settlementProof:null,settlementRecord:null,settlementSource:null,pendingTaskRequest:null,pendingActionRequest:null,pendingHomeRequest:null,pendingInitialIdleRequest:null,actionSourceRequest:null,actionProof:null,actionRecord:null};actors.set(actorId,value);}return value;};
   const matches=(record,reference)=>!!record&&record.actorId===reference.actorId&&record.assignmentSequence===reference.assignmentSequence&&sameHandle(record.handle,reference.routeHandle);
   const assignments=new Set();
   for(const route of routes){
@@ -52,19 +53,24 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
   }
   for(const input of pendingTaskRequests){const request=copyNativeTaskRequestReference(input);
     if(actors.has(request.actorId)||request.requestHandle.authorityEpoch!==authorityEpoch||request.requestSequence>initialSequence||initialTime===null||request.requestedAt>initialTime)throw TypeError('Invalid native pending request baseline');
-    const actor=actorContext(request.actorId);actor.state=6;actor.latestSequence=request.requestSequence;actor.pendingTaskRequest=request;
+    const actor=actorContext(request.actorId);actor.state=6;actor.latestSequence=request.requestSequence;actor.pendingTaskRequest=request;actor.taskId=request.taskId;actor.targetId=request.targetId;assignments.add(request.requestSequence);
   }
   for(const input of pendingActionRequests){const request=copyNativeTaskActionRestoreReference(input);
     if(actors.has(request.actorId)||request.authorityEpoch!==authorityEpoch||request.requestSequence>initialSequence||initialTime===null||request.requestedAt>initialTime)throw TypeError('Invalid native pending action baseline');
-    const actor=actorContext(request.actorId);actor.state=6;actor.latestSequence=request.requestSequence;actor.pendingActionRequest=request;
+    const actor=actorContext(request.actorId);actor.state=6;actor.latestSequence=request.requestSequence;actor.pendingActionRequest=request;actor.taskId=request.taskId;actor.targetId=request.targetId;assignments.add(request.requestSequence);
   }
   for(const input of pendingHomeRequests){const request=copyNativeHomeRequestReference(input);
     if(actors.has(request.actorId)||request.authorityEpoch!==authorityEpoch||request.requestSequence>initialSequence||initialTime===null||request.requestedAt>initialTime)throw TypeError('Invalid native pending Home baseline');
-    const actor=actorContext(request.actorId);actor.state=6;actor.latestSequence=request.requestSequence;actor.pendingHomeRequest=request;
+    const actor=actorContext(request.actorId);actor.state=6;actor.latestSequence=request.requestSequence;actor.pendingHomeRequest=request;assignments.add(request.requestSequence);
+  }
+  for(const input of pendingInitialIdleRequests){const request=copyNativeInitialIdleRequestReference(input);
+    if(actors.has(request.actorId)||assignments.has(request.requestSequence)||request.authorityEpoch!==authorityEpoch||request.requestSequence>initialSequence||initialTime===null||request.requestedAt>initialTime)throw TypeError('Invalid native pending initial Idle baseline');
+    const actor=actorContext(request.actorId);actor.state=6;actor.latestSequence=request.requestSequence;actor.pendingInitialIdleRequest=request;assignments.add(request.requestSequence);
   }
   let sequence=initialSequence,effectiveTime=initialTime??-Infinity,closed=false,clock=null;
   const counters={accepted:0,revoked:0,oldEpoch:0,admissions:0};
   const homeRequestCurrent=(request,actor)=>!closed&&!!clock&&!!actor&&!actor.closed&&actors.get(request.actorId)===actor&&actor.state===6&&actor.current===null&&actor.latestSequence===request.requestSequence&&request.authorityEpoch===authorityEpoch&&request.nativeSession===clock.nativeSession&&request.requestSequence<=clock.intentSequence&&sameNativeHomeRequestReference(actor.pendingHomeRequest,request);
+  const initialIdleRequestCurrent=(request,actor)=>!closed&&!!clock&&!!actor&&!actor.closed&&actors.get(request.actorId)===actor&&actor.state===6&&actor.current===null&&actor.latestSequence===request.requestSequence&&request.authorityEpoch===authorityEpoch&&request.nativeSession===clock.nativeSession&&request.requestSequence<=clock.intentSequence&&actor.pendingInitialIdleRequest===request;
   function accept(event){
     if(closed)throw Error('Native route control is closed');
     if(event?.authorityEpoch!==authorityEpoch){counters.oldEpoch++;return false;}
@@ -83,6 +89,8 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     const taskRequest=event.state===6&&event.taskRequest?copyNativeTaskRequestReference(event.taskRequest):null;
     const actionRequest=event.state===6&&event.actionRequest?copyNativeTaskActionRestoreReference(event.actionRequest):null;
     const homeRequest=event.state===6&&event.homeRequest?copyNativeHomeRequestReference(event.homeRequest):null;
+    const initialIdleRequest=event.state===6&&event.initialIdleRequest?copyNativeInitialIdleRequestReference(event.initialIdleRequest):null;
+    if(event.initialIdleRequest&&!initialIdleRequest||initialIdleRequest&&(event.type!=='IntentChanged'||handle||revoked||taskRequest||actionRequest||homeRequest||initialIdleRequest.actorId!==event.actorId||event.taskId!==null&&event.taskId!==0||event.targetId!==null&&event.targetId!==0||initialIdleRequest.requestSequence!==event.sequence||initialIdleRequest.requestedAt!==event.effectiveTime||initialIdleRequest.authorityEpoch!==authorityEpoch||clock&&initialIdleRequest.nativeSession!==clock.nativeSession))throw Error('Native initial Idle request event identity mismatch');
     if(event.homeRequest&&!homeRequest||homeRequest&&(taskRequest||actionRequest||homeRequest.actorId!==event.actorId||event.taskId!==null&&event.taskId!==0||event.targetId!==null&&event.targetId!==0||homeRequest.requestSequence!==event.sequence||homeRequest.requestedAt!==event.effectiveTime||homeRequest.authorityEpoch!==authorityEpoch||clock&&homeRequest.nativeSession!==clock.nativeSession))throw Error('Native Home request event identity mismatch');
     if(event.actionRequest&&!actionRequest||taskRequest&&actionRequest||actionRequest&&(actionRequest.actorId!==event.actorId||actionRequest.taskId!==event.taskId||actionRequest.targetId!==event.targetId||actionRequest.requestSequence!==event.sequence||actionRequest.requestedAt!==event.effectiveTime||actionRequest.authorityEpoch!==authorityEpoch||clock&&actionRequest.nativeSession!==clock.nativeSession))throw Error('Native action request event identity mismatch');
     if(taskRequest&&(taskRequest.actorId!==event.actorId||taskRequest.taskId!==event.taskId||taskRequest.targetId!==event.targetId||taskRequest.requestSequence!==event.sequence||taskRequest.requestedAt!==event.effectiveTime||taskRequest.requestHandle.authorityEpoch!==authorityEpoch||clock&&taskRequest.requestHandle.session!==clock.nativeSession))throw Error('Native request event identity mismatch');
@@ -99,6 +107,8 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       error.code='native-route-revocation-late';throw error;
     }
     const actor=assigned||event.type==='IntentChanged'&&event.state===6?actorContext(event.actorId):actors.get(event.actorId);
+    if(initialIdleRequest&&(current||actor.taskId||actor.targetId||actor.state!==null&&actor.state!==6||actor.pendingInitialIdleRequest||actor.pendingTaskRequest||actor.pendingActionRequest||actor.pendingHomeRequest||actor.proof||actor.startProof||actor.actionProof||actor.consequenceProof||actor.settlementProof||actor.settlementSource||actor.homeProof))throw Error('Native initial Idle request cannot replace an existing owner');
+    if(homeRequest&&actor?.pendingInitialIdleRequest&&!nativeHomeRequestContinuesInitialIdle(homeRequest,actor.pendingInitialIdleRequest))throw Error('Native Home request differs from its pending initial Idle body');
     const retiringCarry=current&&actor?.consequenceProof&&consequenceCurrent(actor.consequenceProof.reference,actor)?actor.consequenceProof:null;
     if(homeRequest&&actor?.settlementProof&&!nativeHomeRequestContinuesIdle(homeRequest,actor.settlementProof))throw Error('Native Home request differs from its held Idle body');
     const keepSettlement=!!actor&&!actor.settlementProof?.reference.home&&!current&&event.type==='IntentChanged'&&event.state===6&&!!(taskRequest||homeRequest)&&[6,7].includes(actor.state)&&!!(actor.settlementProof||actor.settlementSource);
@@ -119,7 +129,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       if(!keepSettlement){if(actor.settlementRecord)actor.settlementRecord.safeUntil=Math.min(actor.settlementRecord.safeUntil,event.effectiveTime);actor.settlementProof=null;actor.settlementRecord=null;actor.settlementSource=event.type==='RouteCompleted'&&event.state===7&&retiringCarry?{proof:retiringCarry,record:current}:null;}
       if(actor.actionRecord)actor.actionRecord.safeUntil=Math.min(actor.actionRecord.safeUntil,event.effectiveTime);actor.actionSourceRequest=event.state===2?actor.pendingActionRequest:null;actor.pendingActionRequest=actionRequest;actor.actionProof=null;actor.actionRecord=null;actor.startProof=null;actor.consequenceProof=null;actor.homeProof=null;actor.pendingTaskRequest=taskRequest;actor.resumeProof=null;actor.latestSequence=event.sequence;actor.state=assigned?1:Number.isInteger(event.state)?event.state:null;
       if(!actor.current&&actor.state!==2&&actor.state!==4&&actor.state!==6&&actor.state!==7){actor.closed=true;actors.delete(event.actorId);}}
-    if(actor)actor.pendingHomeRequest=homeRequest;
+    if(actor){actor.pendingHomeRequest=homeRequest;actor.pendingInitialIdleRequest=initialIdleRequest;actor.taskId=event.taskId??null;actor.targetId=event.targetId??null;}
     sequence=event.sequence;effectiveTime=event.effectiveTime;counters.accepted++;
     return true;
   }
@@ -161,6 +171,9 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
   // checks the live owner, sequence, state and route; revocation clears the proof.
   function proofLeaseCurrent(reference,actor,field,covers,recordCurrent){let observedProof=null,matchesProof=false;return ()=>{const proof=actor?.[field]??null;if(proof!==observedProof){observedProof=proof;matchesProof=!!proof&&covers(proof,reference);}return matchesProof&&recordCurrent(reference,actor);};}
   return {
+    // Metadata only. It cannot authorize drawing, movement or installation of
+    // an executable binding and expires with the existing actor/control record.
+    pendingInitialIdleRequest(actorId){const actor=actors.get(actorId),request=actor?.pendingInitialIdleRequest;return request&&initialIdleRequestCurrent(request,actor)?request:null;},
     accept,
     installSettlements(boundary,values=[],{bootstrap=false}={}){
       boundary=copyNativeWorldBoundary(boundary);
@@ -312,6 +325,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
        for(const actor of actors.values()){
          if(actor.pendingTaskRequest&&actor.pendingTaskRequest.requestHandle.session!==message.nativeSession)throw Error('Invalid native pending request session');
          if(actor.pendingHomeRequest&&actor.pendingHomeRequest.nativeSession!==message.nativeSession)throw Error('Invalid native pending Home session');
+         if(actor.pendingInitialIdleRequest&&actor.pendingInitialIdleRequest.nativeSession!==message.nativeSession)throw Error('Invalid native pending initial Idle session');
        }
       for(const record of active.values()){
         if(record.handle.session!==message.nativeSession)throw Error('Invalid native causal clock session');

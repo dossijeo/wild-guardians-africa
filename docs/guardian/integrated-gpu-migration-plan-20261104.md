@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuacion de Idle inicial: [peticion pendiente en el control grafico existente](e-r3-native-initial-idle-control-20261116.md). Eventos y baseline transportan la referencia con cuerpo, ligada a sesion/secuencia/reloj, sin conceder ejecucion. Los relevos a Home/tarea revocan los datos anteriores y Home conserva exactamente cuerpo y pose. Faltan admision grafica inicial y politica completa Idle/Alert/paseo; no cambia ningun cierre A6/A/B/C.
+
+
 Continuacion de Idle inicial: [espera en el reloj comun, tarea y Home](e-r3-native-initial-idle-clock-20261116.md). Game retiene cuerpo, fases y RNG mientras un companero admitido avanza. El vencimiento crea Home sobre la fuente real incluso antes del primer cuerpo; una tarea usa la admision pendiente existente. Nacimientos sin cuerpo se rechazan antes de alterar una cohorte viva. Faltan admision grafica inicial, politica completa de Idle y productor ordinario; no cambia ningun cierre A6/A/B/C.
 
 

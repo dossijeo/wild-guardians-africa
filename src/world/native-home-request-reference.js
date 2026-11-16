@@ -22,3 +22,9 @@ export function nativeHomeRequestContinuesIdle(request,settlement){
  return !!request&&!!r&&!r.home&&request.actorId===r.actorId&&request.bodyId===r.bodyId&&request.profile===r.profile&&
   request.authorityEpoch===w.authorityEpoch&&request.nativeSession===w.nativeSession&&request.requestSequence>settlement.settlementSequence&&request.requestedAt>=w.effectiveTime&&poseFields.every(k=>request.pose[k]===r.pose[k]);
 }
+// Pending initial Idle has no settlement history. Both inputs have already
+// crossed their typed boundaries; this checks their immutable held body once.
+export function nativeHomeRequestContinuesInitialIdle(request,initial){
+ return !!request&&!!initial&&['authorityEpoch','nativeSession','actorId','bodyId','bodyFlags','profile'].every(k=>request[k]===initial[k])&&
+  request.requestSequence>initial.requestSequence&&request.requestedAt>=initial.requestedAt&&poseFields.every(k=>request.pose[k]===initial.pose[k]);
+}

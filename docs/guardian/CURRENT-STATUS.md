@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+**Initial Idle pending control metadata, 2026-11-16:** [The existing control/host transports the actual bound request](e-r3-native-initial-idle-control-20261116.md) with session, sequence and causal watermark checks. It grants no executable binding. Home/task handoffs revoke old metadata; Home preserves the exact held body and pose. Initial graphical admission and full Idle/Alert/ambient policy remain pending; no A6/A/B/C closure changes.
+
+
 **Pending initial Idle on the native Game clock, 2026-11-16:** [Retained Idle, real task preemption and fresh Home](e-r3-native-initial-idle-clock-20261116.md) keep body/phase/private RNG while an admitted peer advances. Contract expiry creates Home from the actual initial source, including before its first body. A live causal cohort rejects new unbound requests before mutation. Initial graphical admission, full Idle policy and ordinary production remain pending; no A6/A/B/C closure changes.
 
 
