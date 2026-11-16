@@ -1,3 +1,5 @@
+import {auditNativeIdleCycleWorldOwner} from './native-idle-cycle-world-owner.js';
+import {createPlant} from '../../src/simulation/crops.js';
 import {nativeInitialIdleBodyReferenceFromProposal} from '../../src/world/native-initial-idle-body.js';
 import {nativeHomeArrivalReferenceFromProposal} from '../../src/world/native-home-arrival.js';
 import {nativeHomeRouteReferenceFromProposal} from '../../src/world/native-home-route.js';
@@ -21,7 +23,9 @@ import {createNativeResourcePreparationConnection} from '../../src/simulation/na
 
 // A is claimed by the ordinary global task planner. It never receives a Home,
 // executable handle or suspended route before its retained GPU resources exist.
-export async function auditNativeFirstTaskWorldOwner({action=false,restore=false,consequence=false,settlement=false,settlementHome=false,homeRoute=false,homeArrival=false,homeRestore=false,idleHome=false,initialIdleBody=false,initialIdleMode='watch',initialIdleHome=false}={}){
+export async function auditNativeFirstTaskWorldOwner({action=false,restore=false,consequence=false,settlement=false,settlementHome=false,homeRoute=false,homeArrival=false,homeRestore=false,idleHome=false,initialIdleBody=false,initialIdleMode='watch',initialIdleHome=false,initialIdleCycle=false,initialIdleCycleRepeat=false,initialIdleCycleHome=false}={}){
+ if(initialIdleCycleRepeat||initialIdleCycleHome)initialIdleCycle=true;
+ if(initialIdleCycle){initialIdleBody=true;if(initialIdleHome)throw Error('Cycle Home uses its own source21 option');}
  if(initialIdleHome)initialIdleBody=true;
  if(initialIdleBody&&(action||restore||consequence||settlement||settlementHome||homeRoute||homeArrival||homeRestore||idleHome)||!['rest','watch'].includes(initialIdleMode))throw Error('Initial body audit requires its own initialized source');
  if(idleHome&&(restore||homeRestore||settlementHome||homeArrival))throw Error('Idle Home audit requires a genuine active-contract Idle');
@@ -50,6 +54,7 @@ export async function auditNativeFirstTaskWorldOwner({action=false,restore=false
   // the checked clear corridor before creating the intent authority; the real
   // village at x=60 is outside that loaded world. Ordinary village entry and
   // streaming acceptance are covered by the integrated migration gates.
+  if(initialIdleCycle){const a=state.workers[0];Object.assign(a.idleState,{anchorId:'farm-plant-900098',remaining:initialIdleMode==='rest'||initialIdleCycleRepeat?.25:2.3,rng:0x12345678});state.plants.push(createPlant('plant-900098','mijo',a.x,a.z,a.centerId));state.villages.find(v=>v.id===a.villageId).entry={...end};}
   if(initialIdleHome)state.villages.find(v=>v.id===state.workers[0].villageId).entry={...end};
  }
 
@@ -126,6 +131,7 @@ export async function auditNativeFirstTaskWorldOwner({action=false,restore=false
    receipt={scope:'Authored initialized initial '+initialIdleMode+' with no preceding task, Carry or settlement; actual Surface/retained/resource/direct ports and GPU drain on the original actor. B remains the independent native Home fixture. Full Idle policy, ordinary producer and healthy3123 recovery remain pending.',initialIdleBody:true,mode:initialIdleMode,adapter:consumer.adapterInfo,reference,binding:actual,worldBoundary:admitted.worldBoundary,timeTranslation:admitted.timeTranslation,age,pose,inputPick,independentInputPick,independent:{before:peerBefore,after:peerAfter},preparedCalls:calls,before:{resourcesCreated:before.drawExecution.resourcesCreated,owners:before.qaResidentOwners,rig:before.qaNativeRig},ready:{resourcesCreated:ready.drawExecution.resourcesCreated,owners:ready.qaResidentOwners,rig:ready.qaNativeRig},after:{resourcesCreated:after.drawExecution.resourcesCreated,owners:after.qaResidentOwners,rig:after.qaNativeRig,workers:after.workers},resourcesPrepared:ready.drawExecution.resourcesCreated-before.drawExecution.resourcesCreated,resourcesAfterReady:after.drawExecution.resourcesCreated-ready.drawExecution.resourcesCreated,preparationBlock:{start:starts[0].start,end:ends[0].end,drawFrames:preparationFrames.length},block:{start:starts[1].start,end:ends[1].end,committedAt,drawFrames:frames.length},resourcePreparation:{transport:'dedicated-native-resource-port',...resourceConnection.status()},final:{gpuErrors:consumer.gpuErrors},frames,errors};
    const shape=owners=>owners.actors.map(actor=>({root:actor.root,bones:actor.bones,meshes:actor.meshes.map(mesh=>[mesh.id,mesh.geometry])}));
    if(JSON.stringify(shape(before.qaResidentOwners))!==JSON.stringify(shape(after.qaResidentOwners))||JSON.stringify(before.qaResidentOwners.instances)!==JSON.stringify(after.qaResidentOwners.instances)||JSON.stringify(ready.qaResidentOwners)!==JSON.stringify(after.qaResidentOwners))throw Error('Initial body replaced an unchanged actor, geometry or instance owner');
+   if(initialIdleCycle){receipt.cycle=await auditNativeIdleCycleWorldOwner({state,planner,w,client,publisher,publication,preparer,resourceConnection,b,starts,ends,waitStart,waitEnd,now,errors,pick,commit,transportSession,serialize:serializeConfirmedState},{repeat:initialIdleCycleRepeat,home:initialIdleCycleHome});receipt.final.gpuErrors=receipt.cycle.final.gpuErrors;return receipt;}
    if(initialIdleHome){
     const homeBefore=await client.inspect(),homeStart=waitStart(2),homeEnd=waitEnd(2),homeBlocked=waitStart(3),homeBlockedEnd=waitEnd(3),request=planner.nativeHomeRequestReference(worker.id);let homeReady,homeReference,homeCommittedAt;
     if(!request||worker.nativeRouteAdmission!=='pending-home-resources'||!planner.nativeInitialIdleBodyBinding(worker.id)||planner.nativeTaskSettlementBinding(worker.id))throw Error('Immediate initial Home lost its actual held source');

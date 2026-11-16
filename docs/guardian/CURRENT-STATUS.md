@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+**Native Idle cycle original consumer, 2026-11-16:** [Prepared21 now uses the resident actor and Surface](e-r3-native-idle-cycle-consumer-20261116.md). NVIDIA/Turing passes rest/watch, following REST and immediate Home while retaining the533-577 live immutable protocol IDs in each case with no static-buffer/texture native copies. Following REST reuses shaders/pipelines. Redundant crop attribute dirtying is corrected; native uniform copies are accounted separately from protocol IDs, with zero allocations after READY. Game21 projection/persistence, strolling/approach/anchors and ordinary producer remain pending. Healthy full3123 recovery and A6/A/B/C remain open.
+
+
 **Native Idle cycle phase graph and direct draw clock, 2026-11-16:** [Family21 has typed prepared Host admission and submitted-float picking](e-r3-native-idle-cycle-gpu-clock-20261116.md). Only its phase is capped; the independent peer continues. The identity test retains the static buffer and accounts for a changed16-byte uniform plus dependent binding, distinguishing protocol IDs from native allocations. Original roster/Surface integration, Game and hardware evidence remain pending; ordinary producer, healthy full3123 recovery and A6/A/B/C remain open.
 
 

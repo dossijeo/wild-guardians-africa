@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuacion de la politica Idle: [consumidor preparado 21 sobre el actor y Surface residentes](e-r3-native-idle-cycle-consumer-20261116.md). Descanso/vigilancia, siguiente REST y Home inmediato pasan en NVIDIA/Turing conservando los 533-577 IDs residentes de cada caso y sin copiar buffers estaticos ni texturas. El ciclo repetido reutiliza shaders/pipelines; se corrige la suciedad redundante de atributos de cultivos. Se contabilizan tambien las copias nativas de uniformes, distintas de los IDs de protocolo; cero asignaciones tras READY. Faltan proyeccion/persistencia Game21, paseo/aproximacion/anclas y productor ordinario. Recuperacion integral de 3123 recursos y cierres A6/A/B/C siguen abiertos.
+
+
 Continuacion de la politica Idle: [grafo de fase y reloj del consumidor directo 21](e-r3-native-idle-cycle-gpu-clock-20261116.md). El Host exige plantilla, reloj y adquisicion preparados exactos; acota solo la fase Idle y permite continuar al companero. Picking usa el float realmente enviado. La prueba de identidades conserva el buffer estatico y distingue la copia temporal de 16 bytes y su binding, sin confundir cero IDs nuevos con cero asignaciones GPU. Falta integrar roster/Surface originales, Game y evidencia en hardware; productor ordinario, recuperacion integral de 3123 recursos y cierres A6/A/B/C siguen abiertos.
 
 

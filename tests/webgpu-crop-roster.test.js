@@ -5,6 +5,21 @@ import {createWebGpuBlessingVfx} from '../src/rendering/webgpu-blessing-vfx.js';
 import {authoredCropHeight} from '../src/rendering/crop-authored-height.js';
 import {createWebGpuLoadingFocus} from '../src/rendering/webgpu-loading-focus.js';
 const models=Array.from({length:40},(_,i)=>({meta:{height:1+(i%5),foliageRadius:1+(i%5)}}));
+test('unchanged publications preserve crop GPU versions while real pose and blessing changes dirty only their own attributes',async()=>{
+ const previous=globalThis.fetch;globalThis.fetch=async()=>({ok:true,json:async()=>[{source:'Cultivos',url:'/crop.glb'}]});
+ const model=new THREE.Group(),geometry=new THREE.BoxGeometry(),material=new THREE.MeshStandardMaterial();
+ for(let crop=0;crop<8;crop++)for(let stage=1;stage<=5;stage++){const mesh=new THREE.Mesh(geometry,material);mesh.userData={cropIndex:crop,stage,height:stage,foliageRadius:1};model.add(mesh);}
+ const floor=new THREE.Mesh(new THREE.PlaneGeometry(100,100),new THREE.MeshBasicMaterial({side:THREE.DoubleSide}));floor.rotation.x=-Math.PI/2;floor.updateMatrixWorld(true);
+ const plant={id:'plant-1',species:'mijo',x:1.125,z:0,rotation:.31,alive:true,growth:cropSpec('mijo').growth_seconds},state={elapsed:0,plants:[plant]},scene=new Scene(),renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:source=>new MeshStandardNodeMaterial().copy(source)}},roster=createWebGpuCropRoster({scene,state,residency:{get:()=>floor},renderer,loadCropModel:async()=>({scene:model}),blessingVisibleAt:()=>7.00000001});
+ try{
+  await roster.prepare();const mesh=scene.children.find(item=>item.isInstancedMesh&&item.count===1);assert(mesh);
+  const attributes=[mesh.instanceMatrix,mesh.geometry.getAttribute('iGrowth'),mesh.geometry.getAttribute('iBlessing')],versions=()=>attributes.map(attribute=>attribute.version),initial=versions();
+  state.elapsed=10;plant.x+=1e-9;roster.sync();roster.sync();assert.deepEqual(versions(),initial,'metadata changes below GPU precision must not discard pending uploads or dirty resident buffers');
+  plant.x+=.5;roster.sync();assert.deepEqual(versions(),[initial[0]+1,initial[1],initial[2]]);const moved=versions();roster.sync();assert.deepEqual(versions(),moved);
+  plant.blessing={at:7};roster.sync();assert.deepEqual(versions(),[moved[0],moved[1],moved[2]+1]);const blessed=versions();roster.sync();assert.deepEqual(versions(),blessed);assert.equal(attributes[2].getY(0),Math.fround(7.00000001));
+  roster.setAwakeningSelection(true,plant.id);assert.deepEqual(versions(),blessed,'an already blessed crop is not an awakening candidate');plant.blessing=null;roster.sync();assert.deepEqual(versions(),[blessed[0],blessed[1],blessed[2]+1]);assert.equal(attributes[2].getW(0),2);assert.equal(scene.children.find(item=>item.isInstancedMesh&&item.count===1),mesh);
+ }finally{roster.dispose();floor.geometry.dispose();floor.material.dispose();geometry.dispose();material.dispose();globalThis.fetch=previous;}
+});
 test('loading material decoration is installed before crop admission',async()=>{
  const previous=globalThis.fetch;globalThis.fetch=async()=>({ok:true,json:async()=>[{source:'Cultivos',url:'/crop.glb'}]});const model=new THREE.Group(),geometry=new THREE.BoxGeometry(),material=new THREE.MeshStandardMaterial();for(let crop=0;crop<8;crop++)for(let stage=1;stage<=5;stage++){const mesh=new THREE.Mesh(geometry,material);mesh.userData={cropIndex:crop,stage,height:1,foliageRadius:1};model.add(mesh);}const focus=createWebGpuLoadingFocus({camera:new THREE.PerspectiveCamera()}),requests=[],scene=new Scene(),renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:source=>new MeshStandardNodeMaterial().copy(source)}},admission={prepare(mesh){requests.push(mesh.material.outputNode);return Promise.resolve();}},roster=createWebGpuCropRoster({scene,state:{plants:[]},residency:{},renderer,pipelineAdmission:admission,decorateMaterial:value=>focus.configure(value),loadCropModel:async()=>({scene:model})});
  try{await roster.prepare();roster.preferSpecies('maiz');await new Promise(resolve=>setImmediate(resolve));assert.equal(requests.length,1);assert.equal(requests[0],focus.node);}finally{roster.dispose();geometry.dispose();material.dispose();globalThis.fetch=previous;}

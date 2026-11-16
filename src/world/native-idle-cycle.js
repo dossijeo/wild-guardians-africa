@@ -74,3 +74,13 @@ export function nativeIdleCycleWatchKnot(value,executionEpoch=value.worldBoundar
  }
  bits[0]=first;if(!Number.isFinite(f[0]))throw RangeError('Native Idle watch knot exceeds float32');return f[0];
 }
+
+export function copyNativeIdleCycleResources(value){
+ if(value?.version!==1||value.kind!==21||value.phase!=='committed'||Object.keys(value).some(k=>!['version','kind','phase','worldBoundary','nativeIdleCycleBinding'].includes(k)))throw TypeError('Invalid native Idle cycle resources');
+ const worldBoundary=copyNativeWorldBoundary(value.worldBoundary),nativeIdleCycleBinding=copyNativeIdleCycleAttestation(value.nativeIdleCycleBinding);
+ if(!sameNativeWorldBoundary(worldBoundary,nativeIdleCycleBinding.reference.worldBoundary))throw TypeError('Native Idle cycle resource boundary mismatch');
+ return Object.freeze({version:1,kind:21,phase:'committed',worldBoundary,nativeIdleCycleBinding});
+}
+export function nativeIdleCyclePresentationMatches(proposal,value,binding){
+ try{const prepared=nativeIdleCycleReferenceFromProposal(proposal),resources=copyNativeIdleCycleResources(value),proof=copyNativeIdleCycleAttestation(binding);return nativeIdleCycleAttestationCovers(proof,prepared)&&sameNativeIdleCycleAttestation(resources.nativeIdleCycleBinding,proof);}catch{return false;}
+}

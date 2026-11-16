@@ -374,7 +374,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     const d=entry.descriptor,size=Array.isArray(d.size)||ArrayBuffer.isView(d.size)?Array.from(d.size):[d.size.width,d.size.height??1,d.size.depthOrArrayLayers??1],value=device.createTexture(d),encoder=device.createCommandEncoder();
     for(let mipLevel=0;mipLevel<(d.mipLevelCount??1);mipLevel++)encoder.copyTextureToTexture({texture:entry.value,mipLevel},{texture:value,mipLevel},[Math.max(1,Math.floor(size[0]/2**mipLevel)),Math.max(1,Math.floor((size[1]??1)/2**mipLevel)),size[2]??1]);
     device.queue.submit([encoder.finish()]);setResource(key,{...entry,value});rebuildDependentBindings(key);
-    metrics.textureForks=(metrics.textureForks||0)+1;metrics.textureForkMipLevels=(metrics.textureForkMipLevels||0)+(d.mipLevelCount??1);return true;
+    metrics.textureForks=(metrics.textureForks||0)+1;metrics.textureForkMipLevels=(metrics.textureForkMipLevels||0)+(d.mipLevelCount??1);metrics.textureForkLastResource={reference:key,label:d.label??'',size:d.size,format:d.format,usage:d.usage};return true;
   }
   function forkPublishedReadOnlyBuffer(key, entry) {
     // COPY_SRC must have been reserved at allocation; mapping buffers and
@@ -397,6 +397,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     metrics.bufferForks = (metrics.bufferForks || 0) + 1;
     metrics.bufferForkBytes = (metrics.bufferForkBytes || 0) + descriptor.size;
     metrics.bufferForkLastAt = absoluteNow();
+    metrics.bufferForkLastResource = {reference:key,label:descriptor.label??'',size:descriptor.size,usage:descriptor.usage};
     rebuildDependentBindings(key);
     return true;
   }

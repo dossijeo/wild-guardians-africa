@@ -88,7 +88,13 @@ export function createWebGpuCropRoster({scene,state,residency,renderer,camera=nu
   for(let i=0;i<entries.length;i++){const {plant,y,sample}=entries[i];matrix.position.set(plant.x,y,plant.z);matrix.rotation.set(0,plant.rotation??0,0);matrix.scale.setScalar(1);matrix.updateMatrix();matrices.set(matrix.matrix.elements,i*16);const seed=Number(String(plant.id).replace(/\D/g,''))||0;growth.set(sample.bridge===undefined?[sample.sy,sample.sr,sample.open,seed]:[sample.t,sample.e,seed,0],i*4);const at=plant.blessing?(blessingVisibleAt?.(plant.id)??0):0;blessing.set([plant.blessing&&Number.isFinite(at)?1:0,Number.isFinite(at)?at:0,plant.blessing?(blessingWoundAt?.(plant.id)??-1000):-1000,awakeningMode(plant.id)],i*4);}
   return entries.map(({plant,y,sample})=>({id:plant.id,x:plant.x,y,z:plant.z,sample}));
  }
- function writeBatch(index,entries,item){const growth=item.geometry.getAttribute(typeof index==='string'?'iBridge':'iGrowth'),blessing=item.geometry.getAttribute('iBlessing');item.entries=encodeBatch(entries,item.mesh.instanceMatrix.array,growth.array,blessing.array);item.mesh.count=entries.length;item.mesh.visible=entries.length>0;item.mesh.instanceMatrix.needsUpdate=true;growth.needsUpdate=true;blessing.needsUpdate=true;}
+ // Match the stored GPU precision before dirtying an attribute. Several
+ // publications may precede a draw; an unchanged one must preserve both the
+ // pending changed version and every already resident, unchanged buffer.
+ function attributeWriter(attribute){
+  let changed=false;return {set(values,offset=0){for(let i=0;i<values.length;i++){const value=Math.fround(values[i]);if(Object.is(attribute.array[offset+i],value))continue;attribute.array[offset+i]=value;changed=true;}},commit(){if(changed)attribute.needsUpdate=true;}};
+ }
+ function writeBatch(index,entries,item){const attributes=[item.mesh.instanceMatrix,item.geometry.getAttribute(typeof index==='string'?'iBridge':'iGrowth'),item.geometry.getAttribute('iBlessing')],writers=attributes.map(attributeWriter);item.entries=encodeBatch(entries,...writers);item.mesh.count=entries.length;item.mesh.visible=entries.length>0;for(const writer of writers)writer.commit();}
  async function prepareTerrainSupport(view,options){return (await prepareCropPresentation(view,options)).parts;}
  async function prepareCropPresentation(view,{signal=abort.signal,removedPlantId=null}={}){
   if(!view||typeof view.get!=='function'||view!==residency&&!(view.changedKeys instanceof Set))throw TypeError('Invalid proposed crop terrain');

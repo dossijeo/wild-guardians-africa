@@ -1702,6 +1702,7 @@ test('readonly storage forks by native copy, retains GPU contents and preserves 
   assert.deepEqual(Array.from(new Uint32Array(old.data.buffer)), [1, 70, 3, 4]);
   assert.deepEqual(Array.from(new Uint32Array(fork.data.buffer)), [1, 70, 90, 4]);
   assert.equal(f.host.inspect().bufferForks, 1); assert.equal(f.host.inspect().stagedOperations, 0);
+  assert.deepEqual(f.host.inspect().bufferForkLastResource,{reference:f.storage.__remoteGpuId,label:'',size:16,usage:old.descriptor.usage|8});
   f.host.present(); assert.equal(old.destroyed, false);
   receipt = f.render(); await flush(); await f.host.idle(); f.host.present(); await receipt;
   assert.equal(f.host.inspect().activeSequence, 2); assert.equal(f.errors.length, 0);
