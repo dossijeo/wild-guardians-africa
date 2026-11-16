@@ -4,6 +4,7 @@ import {sameNativeTaskSettlementReference} from '../world/native-task-settlement
 import {copyNativeHomeRequestReference,sameNativeHomeRequestReference,nativeHomeRequestContinuesIdle,nativeHomeRequestContinuesInitialIdle} from '../world/native-home-request-reference.js';
 import {copyNativeInitialIdleRequestReference,sameNativeInitialIdleRequestReference} from '../world/native-initial-idle-request-reference.js';
 import {copyNativeInitialIdleBodyReference,copyNativeInitialIdleBodyAttestation,nativeInitialIdleBodyAttestationCovers} from '../world/native-initial-idle-body.js';
+import {copyNativeIdleCycleReference,copyNativeIdleCycleAttestation,copyNativeIdleCycleNextRequest,sameNativeIdleCycleAttestation,nativeIdleCycleAttestationCovers} from '../world/native-idle-cycle.js';
 import {copyNativeTaskRequestReference,nativeTaskRequestMatchesStart} from '../world/native-task-request-reference.js';
 import {copyNativeTaskStartReference} from '../world/native-task-start-reference.js';
 import {copyNativeTaskStartAttestation,nativeTaskStartAttestationCovers} from '../world/native-task-start-attestation.js';
@@ -31,13 +32,13 @@ function validHandle(handle,epoch){return handle?.authorityEpoch===epoch&&
 // movement model. It owns no independent body motion or collision simulation.
 // Admission resolves a stable record once. Revocation updates that exact record
 // even if preparation has not finished; drawing only reads its time limit.
-export function createNativeRouteControl({authorityEpoch,initialSequence=0,initialTime=null,routes=[],pendingTaskRequests=[],pendingActionRequests=[],pendingHomeRequests=[],pendingInitialIdleRequests=[]}={}){
+export function createNativeRouteControl({authorityEpoch,initialSequence=0,initialTime=null,routes=[],pendingTaskRequests=[],pendingActionRequests=[],pendingHomeRequests=[],pendingInitialIdleRequests=[],nativeIdleCycles=[],pendingIdleCycleRequests=[]}={}){
   if(typeof authorityEpoch!=='string'||!authorityEpoch||
      !Number.isSafeInteger(initialSequence)||initialSequence<0||
-     initialTime!==null&&(!Number.isFinite(initialTime)||initialTime<0)||!Array.isArray(routes)||!Array.isArray(pendingTaskRequests)||!Array.isArray(pendingActionRequests)||!Array.isArray(pendingHomeRequests)||!Array.isArray(pendingInitialIdleRequests))
+     initialTime!==null&&(!Number.isFinite(initialTime)||initialTime<0)||!Array.isArray(routes)||!Array.isArray(pendingTaskRequests)||!Array.isArray(pendingActionRequests)||!Array.isArray(pendingHomeRequests)||!Array.isArray(pendingInitialIdleRequests)||!Array.isArray(nativeIdleCycles)||!Array.isArray(pendingIdleCycleRequests))
     throw TypeError('Invalid native route control identity');
   const active=new Map(),actors=new Map();
-  const actorContext=actorId=>{let value=actors.get(actorId);if(!value){value={closed:false,latestSequence:0,state:null,taskId:null,targetId:null,current:null,revoked:null,proof:null,resumeProof:null,startProof:null,consequenceProof:null,homeProof:null,settlementProof:null,settlementRecord:null,settlementSource:null,initialIdleBodyProof:null,initialIdleBodyRecord:null,initialIdleBodySource:null,pendingTaskRequest:null,pendingActionRequest:null,pendingHomeRequest:null,pendingInitialIdleRequest:null,actionSourceRequest:null,actionProof:null,actionRecord:null};actors.set(actorId,value);}return value;};
+  const actorContext=actorId=>{let value=actors.get(actorId);if(!value){value={closed:false,latestSequence:0,state:null,taskId:null,targetId:null,current:null,revoked:null,proof:null,resumeProof:null,startProof:null,consequenceProof:null,homeProof:null,settlementProof:null,settlementRecord:null,settlementSource:null,initialIdleBodyProof:null,initialIdleBodyRecord:null,initialIdleBodySource:null,idleCycleProof:null,idleCycleRecord:null,idleCycleSource:null,pendingIdleCycleRequest:null,pendingTaskRequest:null,pendingActionRequest:null,pendingHomeRequest:null,pendingInitialIdleRequest:null,actionSourceRequest:null,actionProof:null,actionRecord:null};actors.set(actorId,value);}return value;};
   const matches=(record,reference)=>!!record&&record.actorId===reference.actorId&&record.assignmentSequence===reference.assignmentSequence&&sameHandle(record.handle,reference.routeHandle);
   const assignments=new Set();
   for(const route of routes){
@@ -68,6 +69,15 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     if(actors.has(request.actorId)||assignments.has(request.requestSequence)||request.authorityEpoch!==authorityEpoch||request.requestSequence>initialSequence||initialTime===null||request.requestedAt>initialTime)throw TypeError('Invalid native pending initial Idle baseline');
     const actor=actorContext(request.actorId);actor.state=6;actor.latestSequence=request.requestSequence;actor.pendingInitialIdleRequest=request;assignments.add(request.requestSequence);
   }
+  const cycleBodies=new Set();
+  for(const input of nativeIdleCycles){const binding=copyNativeIdleCycleAttestation(input),r=binding.reference;
+    if(actors.has(r.actorId)||cycleBodies.has(r.bodyId)||assignments.has(binding.cycleSequence)||r.worldBoundary.authorityEpoch!==authorityEpoch||binding.cycleSequence>initialSequence||r.sourceControlSequence!==binding.cycleSequence-1||initialTime===null||r.worldBoundary.effectiveTime>initialTime)throw TypeError('Invalid native Idle cycle baseline');
+    const actor=actorContext(r.actorId);actor.state=7;actor.latestSequence=binding.cycleSequence;actor.idleCycleSource={binding,fromBaseline:true,phaseUntil:Infinity};cycleBodies.add(r.bodyId);assignments.add(binding.cycleSequence);
+  }
+  for(const input of pendingIdleCycleRequests){const request=copyNativeIdleCycleNextRequest(input),actor=actors.get(request.sourceCycle.reference.actorId);
+    if(!actor||actor.pendingIdleCycleRequest||!sameNativeIdleCycleAttestation(actor.idleCycleSource?.binding,request.sourceCycle)||assignments.has(request.requestSequence)||request.requestSequence>initialSequence||initialTime===null||request.requestedAt>initialTime)throw TypeError('Invalid native pending Idle cycle baseline');
+    actor.pendingIdleCycleRequest=request;actor.latestSequence=request.requestSequence;assignments.add(request.requestSequence);
+  }
   let sequence=initialSequence,effectiveTime=initialTime??-Infinity,closed=false,clock=null;
   const counters={accepted:0,revoked:0,oldEpoch:0,admissions:0};
   const homeRequestCurrent=(request,actor)=>!closed&&!!clock&&!!actor&&!actor.closed&&actors.get(request.actorId)===actor&&actor.state===6&&actor.current===null&&actor.latestSequence===request.requestSequence&&request.authorityEpoch===authorityEpoch&&request.nativeSession===clock.nativeSession&&request.requestSequence<=clock.intentSequence&&sameNativeHomeRequestReference(actor.pendingHomeRequest,request);
@@ -95,6 +105,10 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     if(event.homeRequest&&!homeRequest||homeRequest&&(taskRequest||actionRequest||homeRequest.actorId!==event.actorId||event.taskId!==null&&event.taskId!==0||event.targetId!==null&&event.targetId!==0||homeRequest.requestSequence!==event.sequence||homeRequest.requestedAt!==event.effectiveTime||homeRequest.authorityEpoch!==authorityEpoch||clock&&homeRequest.nativeSession!==clock.nativeSession))throw Error('Native Home request event identity mismatch');
     if(event.actionRequest&&!actionRequest||taskRequest&&actionRequest||actionRequest&&(actionRequest.actorId!==event.actorId||actionRequest.taskId!==event.taskId||actionRequest.targetId!==event.targetId||actionRequest.requestSequence!==event.sequence||actionRequest.requestedAt!==event.effectiveTime||actionRequest.authorityEpoch!==authorityEpoch||clock&&actionRequest.nativeSession!==clock.nativeSession))throw Error('Native action request event identity mismatch');
     if(taskRequest&&(taskRequest.actorId!==event.actorId||taskRequest.taskId!==event.taskId||taskRequest.targetId!==event.targetId||taskRequest.requestSequence!==event.sequence||taskRequest.requestedAt!==event.effectiveTime||taskRequest.requestHandle.authorityEpoch!==authorityEpoch||clock&&taskRequest.requestHandle.session!==clock.nativeSession))throw Error('Native request event identity mismatch');
+    const idleCycle=event.idleCycle===undefined?null:copyNativeIdleCycleAttestation(event.idleCycle),idleCycleNext=event.idleCycleNext===undefined?null:copyNativeIdleCycleNextRequest(event.idleCycleNext);
+    if((idleCycle||idleCycleNext)&&(event.type!=='IntentChanged'||event.state!==7||handle||revoked||event.taskId!==null&&event.taskId!==0||event.targetId!==null&&event.targetId!==0||event.taskRequest||event.actionRequest||event.homeRequest||event.initialIdleRequest||idleCycle&&idleCycleNext))throw Error('Native Idle cycle event conflicts with another owner');
+    if(idleCycle&&(idleCycle.reference.actorId!==event.actorId||idleCycle.cycleSequence!==event.sequence||idleCycle.reference.sourceControlSequence!==event.sequence-1||idleCycle.reference.worldBoundary.effectiveTime!==event.effectiveTime||idleCycle.reference.worldBoundary.authorityEpoch!==authorityEpoch||clock&&idleCycle.reference.worldBoundary.nativeSession!==clock.nativeSession))throw Error('Native Idle cycle acquisition identity mismatch');
+    if(idleCycleNext&&(idleCycleNext.sourceCycle.reference.actorId!==event.actorId||idleCycleNext.requestSequence!==event.sequence||idleCycleNext.requestedAt!==event.effectiveTime||idleCycleNext.sourceCycle.reference.worldBoundary.authorityEpoch!==authorityEpoch||clock&&idleCycleNext.sourceCycle.reference.worldBoundary.nativeSession!==clock.nativeSession))throw Error('Native Idle cycle successor identity mismatch');
     const current=active.get(event.actorId);
     if(current&&revoked&&!sameHandle(current.handle,revoked))
       throw Error('Native route revocation does not match the active version');
@@ -108,6 +122,12 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       error.code='native-route-revocation-late';throw error;
     }
     const actor=assigned||event.type==='IntentChanged'&&event.state===6?actorContext(event.actorId):actors.get(event.actorId);
+    if(idleCycle&&(!actor||current||!cyclePreparationSourceMatches(idleCycle.reference,actor)))throw Error('Native Idle cycle acquisition has no exact admitted body source');
+    if(idleCycleNext&&(!actor||actor.state!==7||actor.pendingIdleCycleRequest||!sameNativeIdleCycleAttestation(actor.idleCycleSource?.binding,idleCycleNext.sourceCycle)||actor.latestSequence!==idleCycleNext.sourceCycle.cycleSequence))throw Error('Native Idle cycle successor has no current native cycle');
+    if(actor?.idleCycleSource&&event.type==='IntentChanged'&&event.state===7&&!idleCycle&&!idleCycleNext)throw Error('Native Idle cycle event omitted its typed source');
+    const keepIdleCycle=!!actor?.idleCycleSource&&!current&&event.type==='IntentChanged'&&(!!idleCycleNext||event.state===6&&!!(taskRequest||homeRequest)&&[6,7].includes(actor.state));
+    if(keepIdleCycle&&homeRequest&&!cycleHomeMatches(homeRequest,actor.idleCycleSource.binding))throw Error('Native Home differs from its held Idle cycle body');
+    if(actor?.idleCycleRecord?.lastDrawTime!=null&&event.effectiveTime<actor.idleCycleRecord.lastDrawTime){const error=Error('Native Idle cycle revocation arrived after its presented time');error.code='native-idle-cycle-revocation-late';throw error;}
     if(initialIdleRequest&&(current||actor.taskId||actor.targetId||actor.state!==null&&actor.state!==6||actor.pendingInitialIdleRequest||actor.pendingTaskRequest||actor.pendingActionRequest||actor.pendingHomeRequest||actor.proof||actor.startProof||actor.actionProof||actor.consequenceProof||actor.settlementProof||actor.settlementSource||actor.homeProof||actor.initialIdleBodyProof||actor.initialIdleBodySource))throw Error('Native initial Idle request cannot replace an existing owner');
     if(homeRequest&&actor?.pendingInitialIdleRequest&&!nativeHomeRequestContinuesInitialIdle(homeRequest,actor.pendingInitialIdleRequest))throw Error('Native Home request differs from its pending initial Idle body');
     const initialBodyRequest=actor?.initialIdleBodySource?.request;
@@ -131,8 +151,11 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     const sourceHome=assigned&&actor?.settlementProof?.reference.home&&settlementCurrent(actor.settlementProof.reference,actor)?actor.settlementProof:null,sourceTaskRequest=assigned?actor?.pendingTaskRequest??null:null,sourceAction=assigned&&actor?.actionProof&&actionCurrent(actor.actionProof.reference,actor)?actor.actionProof:null;
     if(assigned){const record={actorId:event.actorId,handle:Object.freeze({...handle}),
       assignmentSequence:event.sequence,startTime:event.effectiveTime,
-      safeUntil:Infinity,lastDrawTime:null,actor,sourceSuspension,sourceTaskRequest,sourceAction,sourceHome,sourceHomeRequest:actor?.pendingHomeRequest??null,sourceInitialIdleBody:actor?.initialIdleBodySource?.request??null};active.set(event.actorId,record);actor.current=record;actor.proof=null;}
+      safeUntil:Infinity,lastDrawTime:null,actor,sourceSuspension,sourceTaskRequest,sourceAction,sourceHome,sourceHomeRequest:actor?.pendingHomeRequest??null,sourceInitialIdleBody:actor?.initialIdleBodySource?.request??null,sourceIdleCycle:actor?.idleCycleSource?.binding??null};active.set(event.actorId,record);actor.current=record;actor.proof=null;}
     if(actor){
+      if(!keepIdleCycle){if(actor.idleCycleRecord)actor.idleCycleRecord.safeUntil=Math.min(actor.idleCycleRecord.safeUntil,event.effectiveTime);actor.idleCycleProof=null;actor.idleCycleRecord=null;actor.idleCycleSource=idleCycle?{binding:idleCycle,fromBaseline:false,phaseUntil:Infinity}:null;actor.pendingIdleCycleRequest=null;}
+      else if(event.state===6){actor.idleCycleSource.phaseUntil=Math.min(actor.idleCycleSource.phaseUntil,event.effectiveTime);if(actor.idleCycleRecord)actor.idleCycleRecord.phaseUntil=Math.min(actor.idleCycleRecord.phaseUntil,event.effectiveTime);}
+      if(idleCycleNext)actor.pendingIdleCycleRequest=idleCycleNext;
       if(!keepInitialBody){if(actor.initialIdleBodyRecord)actor.initialIdleBodyRecord.safeUntil=Math.min(actor.initialIdleBodyRecord.safeUntil,event.effectiveTime);actor.initialIdleBodyProof=null;actor.initialIdleBodyRecord=null;actor.initialIdleBodySource=completedInitialBody;}
       if(!keepSettlement){if(actor.settlementRecord)actor.settlementRecord.safeUntil=Math.min(actor.settlementRecord.safeUntil,event.effectiveTime);actor.settlementProof=null;actor.settlementRecord=null;actor.settlementSource=event.type==='RouteCompleted'&&event.state===7&&retiringCarry?{proof:retiringCarry,record:current}:null;}
       if(actor.actionRecord)actor.actionRecord.safeUntil=Math.min(actor.actionRecord.safeUntil,event.effectiveTime);actor.actionSourceRequest=event.state===2?actor.pendingActionRequest:null;actor.pendingActionRequest=actionRequest;actor.actionProof=null;actor.actionRecord=null;actor.startProof=null;actor.consequenceProof=null;actor.homeProof=null;actor.pendingTaskRequest=taskRequest;actor.resumeProof=null;actor.latestSequence=event.sequence;actor.state=assigned?1:Number.isInteger(event.state)?event.state:null;
@@ -177,6 +200,15 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
   function settlementCurrent(reference,actor){return settlementRecordCurrent(reference,actor)&&nativeTaskSettlementAttestationCovers(actor.settlementProof,reference);}
   function initialBodyState(actor,proof){return actor.state===7&&actor.latestSequence===proof.bodySequence||actor.state===6&&actor.latestSequence>proof.bodySequence&&(actor.pendingTaskRequest?.requestSequence===actor.latestSequence||actor.pendingHomeRequest?.requestSequence===actor.latestSequence);}
   function initialBodyRecordCurrent(reference,actor){const proof=actor?.initialIdleBodyProof,record=actor?.initialIdleBodyRecord;return !closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.actorId)===actor&&actor.current===null&&!!proof&&!!record&&record.bodySequence===proof.bodySequence&&proof.bodySequence<=clock.intentSequence&&initialBodyState(actor,proof);}
+  function cycleHomeMatches(request,proof){const r=proof.reference,q=r.sourceBody.reference.sourceRequest;return request.requestSequence>proof.cycleSequence&&request.requestedAt>=r.worldBoundary.effectiveTime&&nativeHomeRequestContinuesInitialIdle(request,q);}
+  function cycleState(actor,proof){return actor.state===7&&(actor.latestSequence===proof.cycleSequence||actor.pendingIdleCycleRequest?.sourceCycle.cycleSequence===proof.cycleSequence&&actor.latestSequence===actor.pendingIdleCycleRequest.requestSequence)||actor.state===6&&actor.latestSequence>proof.cycleSequence&&(actor.pendingTaskRequest?.requestSequence===actor.latestSequence||actor.pendingHomeRequest?.requestSequence===actor.latestSequence);}
+  function cycleRecordCurrent(reference,actor){const proof=actor?.idleCycleProof,record=actor?.idleCycleRecord;return !closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.actorId)===actor&&actor.current===null&&!!proof&&!!record&&actor.idleCycleSource?.binding===proof&&record.cycleSequence===proof.cycleSequence&&proof.cycleSequence<=clock.intentSequence&&cycleState(actor,proof);}
+  function cyclePreparationSourceMatches(reference,actor){
+    if(!actor||actor.closed||actor.current||actor.state!==7)return false;
+    if(reference.sourceCycleSequence===0){const proof=actor.initialIdleBodyProof;return !!proof&&initialBodyRecordCurrent(proof.reference,actor)&&JSON.stringify(proof)===JSON.stringify(reference.sourceBody);}
+    const proof=actor.idleCycleProof,request=actor.pendingIdleCycleRequest;
+    return !!proof&&!!request&&cycleRecordCurrent(proof.reference,actor)&&proof.cycleSequence===reference.sourceCycleSequence&&actor.latestSequence===request.requestSequence&&request.idleState.mode==='rest'&&JSON.stringify(request.idleState)===JSON.stringify(reference.initialState)&&JSON.stringify(proof.reference.sourceBody)===JSON.stringify(reference.sourceBody);
+  }
   // Immutable proof associations are checked once per installation. Every replay still
   // checks the live owner, sequence, state and route; revocation clears the proof.
   function proofLeaseCurrent(reference,actor,field,covers,recordCurrent){let observedProof=null,matchesProof=false;return ()=>{const proof=actor?.[field]??null;if(proof!==observedProof){observedProof=proof;matchesProof=!!proof&&covers(proof,reference);}return matchesProof&&recordCurrent(reference,actor);};}
@@ -184,7 +216,26 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     // Metadata only. It cannot authorize drawing, movement or installation of
     // an executable binding and expires with the existing actor/control record.
     pendingInitialIdleRequest(actorId){const actor=actors.get(actorId),request=actor?.pendingInitialIdleRequest;return request&&initialIdleRequestCurrent(request,actor)?request:null;},
+    pendingIdleCycleRequest(actorId){const actor=actors.get(actorId),request=actor?.pendingIdleCycleRequest;return !closed&&!!clock&&!!request&&!actor.closed&&actor.state===7&&actor.current===null&&actor.latestSequence===request.requestSequence&&request.requestSequence<=clock.intentSequence?request:null;},
     accept,
+    installIdleCycles(boundary,values=[],{bootstrap=false}={}){
+      boundary=copyNativeWorldBoundary(boundary);
+      if(closed||!clock||bootstrap!==false||!boundary||boundary.authorityEpoch!==authorityEpoch||boundary.nativeSession!==clock.nativeSession||boundary.effectiveTime!==clock.committedThrough||!Array.isArray(values)||values.length>32768)throw Error('Native Idle cycle requires prepared admission at its current boundary');
+      const staged=[],ids=new Set(),bodies=new Set();
+      for(const input of values){const value=copyNativeIdleCycleAttestation(input),r=value.reference,actor=actors.get(r.actorId),source=actor?.idleCycleSource;
+        if(!sameNativeWorldBoundary(r.worldBoundary,boundary)||value.cycleSequence>sequence||value.cycleSequence>clock.intentSequence||ids.has(r.actorId)||bodies.has(r.bodyId)||!actor||actor.closed||actor.current||actor.actionProof||actor.settlementProof||actor.initialIdleBodyProof||actor.idleCycleProof||!source||source.fromBaseline||!sameNativeIdleCycleAttestation(value,source.binding)||actor.latestSequence>clock.intentSequence||!cycleState(actor,value))throw Error('Native Idle cycle differs from its issued program or current owner');
+        ids.add(r.actorId);bodies.add(r.bodyId);staged.push({actor,source});
+      }
+      for(const {actor,source} of staged){const value=source.binding,r=value.reference;actor.idleCycleProof=value;actor.idleCycleRecord={actorId:r.actorId,bodyId:r.bodyId,cycleSequence:value.cycleSequence,startTime:r.worldBoundary.effectiveTime,phaseUntil:Math.min(r.worldBoundary.effectiveTime+r.duration,source.phaseUntil),safeUntil:Infinity,lastDrawTime:null};}return staged.length;
+    },
+    admitIdleCycle(value,{preparingWorldBoundary=null}={}){
+      const reference=copyNativeIdleCycleReference(value),actor=actors.get(reference.actorId),boundary=copyNativeWorldBoundary(preparingWorldBoundary),source=reference.sourceCycleSequence?actor?.idleCycleProof:actor?.initialIdleBodyProof,next=actor?.pendingIdleCycleRequest,sourceMatches=cyclePreparationSourceMatches(reference,actor),current=proofLeaseCurrent(reference,actor,'idleCycleProof',nativeIdleCycleAttestationCovers,cycleRecordCurrent);
+      let observed=null,issuedMatches=false;
+      const issued=()=>{const found=actor?.idleCycleSource??null;if(found!==observed){observed=found;issuedMatches=!!found&&!found.fromBaseline&&nativeIdleCycleAttestationCovers(found.binding,reference);}return issuedMatches&&!closed&&!!clock&&!actor.closed&&actors.get(reference.actorId)===actor&&actor.current===null&&cycleState(actor,observed.binding);};
+      const pending=()=>sourceMatches&&!closed&&!!clock&&!actor.closed&&actors.get(reference.actorId)===actor&&actor.current===null&&actor.state===7&&(reference.sourceCycleSequence?actor.idleCycleProof===source&&actor.pendingIdleCycleRequest===next&&cycleRecordCurrent(source.reference,actor):actor.initialIdleBodyProof===source&&initialBodyRecordCurrent(source.reference,actor))&&sameNativeWorldBoundary(boundary,reference.worldBoundary)&&clock.intentSequence>=reference.sourceControlSequence&&sequence>=reference.sourceControlSequence&&clock.committedThrough>=reference.worldBoundary.effectiveTime;
+      if(reference.worldBoundary.authorityEpoch!==authorityEpoch||!clock||reference.worldBoundary.nativeSession!==clock.nativeSession||!current()&&!pending()&&!issued()){const error=Error('Native Idle cycle is obsolete or lacks its admitted source');error.code='native-idle-cycle-admission-obsolete';throw error;}
+      counters.admissions++;return Object.freeze({reference,isCurrent:current,isPrepared:()=>current()||pending()||issued(),get idleCycleRecord(){return current()?actor.idleCycleRecord:null;},get executionEpoch(){return current()?actor.idleCycleProof.reference.worldBoundary.effectiveTime:null;},get executionEnd(){return current()?actor.idleCycleRecord.phaseUntil:null;}});
+    },
     installInitialIdleBodies(boundary,values=[],{bootstrap=false}={}){
       boundary=copyNativeWorldBoundary(boundary);
       if(closed||!clock||bootstrap!==false||!boundary||boundary.authorityEpoch!==authorityEpoch||boundary.nativeSession!==clock.nativeSession||boundary.effectiveTime!==clock.committedThrough||!Array.isArray(values)||values.length>32768)throw Error('Native initial Idle body requires prepared admission at its current boundary');
@@ -287,6 +338,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       const staged=[],ids=new Set(),bodies=new Set();
       for(const input of values){const value=copyNativeTaskStartAttestation(input),r=value.reference,actor=actors.get(r.actorId),record=actor?.current,world=r.worldBoundary;
         if(record?.sourceInitialIdleBody&&r.bodyId!==record.sourceInitialIdleBody.bodyId)throw Error('Native start differs from its held initial Idle body');
+        if(record?.sourceIdleCycle&&r.bodyId!==record.sourceIdleCycle.reference.bodyId)throw Error('Native start differs from its held Idle cycle body');
         if(world.authorityEpoch!==authorityEpoch||world.nativeSession!==clock.nativeSession||world.effectiveTime>clock.committedThrough||boundary&&(world.ticket>boundary.ticket||world.effectiveTime>boundary.effectiveTime)||!bootstrap&&!sameNativeWorldBoundary(world,boundary)||ids.has(r.actorId)||bodies.has(r.bodyId)||!record||actor.closed||actor.state!==1||active.get(r.actorId)!==record||actor.latestSequence!==record.assignmentSequence||record.assignmentSequence!==value.assignmentSequence||!sameHandle(record.handle,r.expectedRouteHandle)||record.startTime!==world.effectiveTime||!bootstrap&&!nativeTaskRequestMatchesStart(record.sourceTaskRequest,r))throw Error('Native start attestation differs from issued route or request');
         ids.add(r.actorId);bodies.add(r.bodyId);staged.push({actor,value});
       }
@@ -294,7 +346,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     },
     admitStart(value,{preparingWorldBoundary=null}={}){
       const reference=copyNativeTaskStartReference(value),actor=actors.get(reference.actorId),boundary=copyNativeWorldBoundary(preparingWorldBoundary);
-      const current=()=>startCurrent(reference,actor),pending=()=>!closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.actorId)===actor&&actor.state===6&&actor.latestSequence===reference.requestSequence&&nativeTaskRequestMatchesStart(actor.pendingTaskRequest,reference)&&(!actor.initialIdleBodySource||reference.bodyId===actor.initialIdleBodySource.request.bodyId)&&sameNativeWorldBoundary(boundary,reference.worldBoundary)&&sequence>=reference.sourceControlSequence&&clock.committedThrough>=reference.worldBoundary.effectiveTime;
+      const current=()=>startCurrent(reference,actor),pending=()=>!closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.actorId)===actor&&actor.state===6&&actor.latestSequence===reference.requestSequence&&nativeTaskRequestMatchesStart(actor.pendingTaskRequest,reference)&&(!actor.initialIdleBodySource||reference.bodyId===actor.initialIdleBodySource.request.bodyId)&&(!actor.idleCycleSource||reference.bodyId===actor.idleCycleSource.binding.reference.bodyId)&&sameNativeWorldBoundary(boundary,reference.worldBoundary)&&sequence>=reference.sourceControlSequence&&clock.committedThrough>=reference.worldBoundary.effectiveTime;
       if(reference.worldBoundary.authorityEpoch!==authorityEpoch||!clock||reference.worldBoundary.nativeSession!==clock.nativeSession||!current()&&!pending()){const error=Error('Native start is obsolete or lacks direct request/assignment proof');error.code='native-start-admission-obsolete';throw error;}
       counters.admissions++;return Object.freeze({reference,isCurrent:current,isPrepared:()=>current()||pending(),get routeRecord(){return current()?actor.current:null;},get executionEpoch(){return current()?actor.current.startTime:null;},get executionEnd(){return current()?actor.startProof.reference.endTime:null;}});
     },
@@ -355,6 +407,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
          if(actor.pendingTaskRequest&&actor.pendingTaskRequest.requestHandle.session!==message.nativeSession)throw Error('Invalid native pending request session');
          if(actor.pendingHomeRequest&&actor.pendingHomeRequest.nativeSession!==message.nativeSession)throw Error('Invalid native pending Home session');
          if(actor.pendingInitialIdleRequest&&actor.pendingInitialIdleRequest.nativeSession!==message.nativeSession)throw Error('Invalid native pending initial Idle session');
+         if(actor.idleCycleSource&&(actor.idleCycleSource.binding.reference.worldBoundary.nativeSession!==message.nativeSession||actor.idleCycleSource.binding.cycleSequence>message.intentSequence||actor.idleCycleSource.binding.reference.worldBoundary.effectiveTime>message.committedThrough))throw Error('Invalid native Idle cycle clock session or acquisition');
        }
       for(const record of active.values()){
         if(record.handle.session!==message.nativeSession)throw Error('Invalid native causal clock session');
@@ -365,6 +418,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
         if(actor.actionRecord&&(actor.actionProof.reference.worldBoundary.nativeSession!==message.nativeSession||actor.actionRecord.lastDrawTime!==null&&actor.actionRecord.lastDrawTime>message.committedThrough))throw Error('Invalid native action clock boundary');
         if(actor.settlementRecord&&(actor.settlementProof.reference.worldBoundary.nativeSession!==message.nativeSession||actor.settlementRecord.lastDrawTime!==null&&actor.settlementRecord.lastDrawTime>message.committedThrough))throw Error('Invalid native settlement clock boundary');
         if(actor.initialIdleBodyRecord&&(actor.initialIdleBodyProof.reference.worldBoundary.nativeSession!==message.nativeSession||actor.initialIdleBodyRecord.lastDrawTime!==null&&actor.initialIdleBodyRecord.lastDrawTime>message.committedThrough))throw Error('Invalid native initial Idle body clock boundary');
+        if(actor.idleCycleRecord&&actor.idleCycleRecord.lastDrawTime!==null&&actor.idleCycleRecord.lastDrawTime>message.committedThrough)throw Error('Invalid native Idle cycle clock boundary');
       }
       clock=Object.freeze({...message});effectiveTime=message.committedThrough;return true;
     },
@@ -390,6 +444,6 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     status:()=>({authorityEpoch,sequence,effectiveTime:Number.isFinite(effectiveTime)?
       effectiveTime:null,active:active.size,closed,...counters,...(clock?{clock}:{} )}),
     dispose(){if(closed)return;closed=true;for(const record of active.values())
-      record.safeUntil=record.lastDrawTime??record.startTime;active.clear();for(const actor of actors.values()){if(actor.actionRecord)actor.actionRecord.safeUntil=actor.actionRecord.lastDrawTime??actor.actionRecord.startTime;if(actor.settlementRecord)actor.settlementRecord.safeUntil=actor.settlementRecord.lastDrawTime??actor.settlementRecord.startTime;if(actor.initialIdleBodyRecord)actor.initialIdleBodyRecord.safeUntil=actor.initialIdleBodyRecord.lastDrawTime??actor.initialIdleBodyRecord.startTime;actor.closed=true;}actors.clear();},
+      record.safeUntil=record.lastDrawTime??record.startTime;active.clear();for(const actor of actors.values()){if(actor.actionRecord)actor.actionRecord.safeUntil=actor.actionRecord.lastDrawTime??actor.actionRecord.startTime;if(actor.settlementRecord)actor.settlementRecord.safeUntil=actor.settlementRecord.lastDrawTime??actor.settlementRecord.startTime;if(actor.initialIdleBodyRecord)actor.initialIdleBodyRecord.safeUntil=actor.initialIdleBodyRecord.lastDrawTime??actor.initialIdleBodyRecord.startTime;if(actor.idleCycleRecord)actor.idleCycleRecord.safeUntil=actor.idleCycleRecord.lastDrawTime??actor.idleCycleRecord.startTime;actor.closed=true;}actors.clear();},
   };
 }

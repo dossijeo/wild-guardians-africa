@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+**Native Idle cycle direct control, 2026-11-16:** [Acquisition and successor use the existing actor/control record](e-r3-native-idle-cycle-control-20261116.md), with exact admitted source, native program, sequence and clock checks. Pending Task/Home retains the body and freezes its phase; replacement/removal revokes it. Baseline metadata grants no permission and Host still rejects historical21 bootstrap. Prepared21 consumer/transactor and Game projection/persistence remain pending; no A6/A/B/C closure changes.
+
+
 **Native finite Idle cycle source, 2026-11-16:** [The original rest/watch program and private stream now have a native source](e-r3-native-idle-cycle-source-20261116.md) on the existing body/clock. A deadline resolves one subsequent rest or pending-stroll request; pending movement grants no route. The former held-body consumer rejects the timed owner. Prepared21 control/consumer, Game projection/save, approach, actual stroll execution, anchor changes and ordinary producer remain pending; no A6/A/B/C closure changes.
 
 

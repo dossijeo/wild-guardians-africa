@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuacion de la politica Idle: [ciclo y siguiente peticion en el control directo existente](e-r3-native-idle-cycle-control-20261116.md). Los eventos llevan adquisicion y sucesor tipados; el permiso exige fuente previa admitida, secuencia, programa y reloj nativos exactos. Conserva el registro al esperar tarea/Home y congela la fase al interrumpir; otra adquisicion o retirada lo revoca. El baseline transporta datos sin conceder permiso y Host aun rechaza su arranque historico. Faltan consumidor/transactor preparados 21 y proyeccion/persistencia de Game; politica completa, productor ordinario y recuperacion integral siguen abiertos. Ningun cierre A6/A/B/C cambia.
+
+
 Continuacion de la politica Idle: [ciclo temporal nativo con la secuencia privada original](e-r3-native-idle-cycle-source-20261116.md). La fuente prepara descanso/vigilancia completos sobre el cuerpo existente y resuelve una sola peticion posterior de descanso o paseo al llegar a su frontera. Conserva reloj, RNG privado, doce intentos locales y cuerpo; un paseo pendiente no concede movimiento. La fase retenida anterior ya no sirve como consumidor de este ciclo. Faltan control/consumidor preparados de la familia 21, proyeccion/guardado de Game, aproximacion, ejecucion del paseo, cambios de ancla y productor ordinario; ningun cierre A6/A/B/C cambia.
 
 

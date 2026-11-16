@@ -5,10 +5,11 @@ import {LOCOMOTION} from '../../src/simulation/locomotion-calibration.js';
 
 // Trusted source ABI fixture, not a graphical21 permission or ordinary Game
 // producer. An actual initial20 body precedes the finite native policy cycle.
-export function nativeIdleCycleFixture({mode='rest',profile='youngMale',rng=0xfabcde98,remaining=2.3,peer=false,core=null,beforeBodyCommit=null}={}){
- const f=nativeInitialIdleRequestFixture({mode,profile,peer,core,configureState(state){
+export function nativeIdleCycleFixture({mode='rest',profile='youngMale',rng=0xfabcde98,remaining=2.3,peer=false,core=null,beforeBodyCommit=null,configureState=null}={}){
+ const f=nativeInitialIdleRequestFixture({mode,profile,peer,core,configureState(state,context){
   const worker=state.workers[0];worker.idleState.anchorId='farm-plant-900098';worker.idleState.rng=rng;worker.idleState.remaining=remaining;
   state.plants.push(createPlant('plant-900098','mijo',worker.x,worker.z,worker.centerId));
+  configureState?.(state,context);
  }});
  try{
   f.planner.requestNativeInitialIdleResources(f.state,f.worker);assert(['committed','unchanged'].includes(f.planner.commitNativeCausalClock().status));

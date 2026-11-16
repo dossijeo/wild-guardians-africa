@@ -34,3 +34,24 @@ export function copyNativeIdleCycleAttestation(value){
  if(value.cycleSequence<=reference.sourceControlSequence||!nativeIdleCycleSuccessor(preparedReference,reference))throw TypeError('Native Idle cycle has no actual prepared association');
  return Object.freeze({kind:value.kind,version:1,projectionVersion:1,cycleSequence:value.cycleSequence,reference,preparedReference});
 }
+export const nativeIdleCycleAttestationCovers=(proof,reference)=>sameNativeIdleCycleReference(proof?.reference,reference)||sameNativeIdleCycleReference(proof?.preparedReference,reference);
+export function sameNativeIdleCycleAttestation(a,b){return !!a&&!!b&&a.cycleSequence===b.cycleSequence&&sameNativeIdleCycleReference(a.reference,b.reference)&&sameNativeIdleCycleReference(a.preparedReference,b.preparedReference);}
+
+// A native semantic successor, not a walking reservation or graphic permit.
+// The path stays in the native owner; control needs only its immutable target.
+export function copyNativeIdleCycleNextRequest(value){
+ if(value?.kind!=='native-idle-cycle-next-request'||value.version!==1||Object.keys(value).some(k=>!['kind','version','sourceCycle','requestSequence','requestedAt','idleState'].includes(k)))throw TypeError('Invalid native Idle cycle next request');
+ const sourceCycle=copyNativeIdleCycleAttestation(value.sourceCycle),r=sourceCycle.reference,s=value.idleState;
+ if(!id(value.requestSequence)||value.requestSequence<=sourceCycle.cycleSequence||!Number.isFinite(value.requestedAt)||r.worldBoundary.effectiveTime+r.duration-value.requestedAt>1e-9||!s||s.anchorId!==r.anchor.id||s.elapsed!==0)throw TypeError('Native Idle successor differs from its cycle or deadline');
+ let idleState;
+ if(s.mode==='rest'){
+  idleState=copyNativeInitialIdleState(s);
+  if(idleState.remaining!==r.durations.rest*(2+Math.floor(idleState.rng/4294967296*3)))throw TypeError('Native Idle successor has a different rest duration');
+ }else{
+  const d=s.destination;
+  if(s.mode!=='walk'||Object.keys(s).some(k=>!['anchorId','mode','elapsed','remaining','rng','approachRetry','pathVersion','destination'].includes(k))||s.remaining!==0||!Number.isSafeInteger(s.rng)||s.rng<0||s.rng>0xffffffff||!Number.isFinite(s.approachRetry)||s.approachRetry<0||!Number.isSafeInteger(s.pathVersion)||s.pathVersion<0||!d||Object.keys(d).some(k=>!['id','x','z'].includes(k))||d.id!==`idle-worker-${r.actorId}`||!['x','z'].every(k=>Number.isFinite(d[k])&&Number.isFinite(Math.fround(d[k])))||Math.hypot(d.x-r.anchor.x,d.z-r.anchor.z)>r.anchor.radius+1e-9||Math.hypot(d.x-r.sourceBody.reference.sourceRequest.pose.x,d.z-r.sourceBody.reference.sourceRequest.pose.z)<.75)throw TypeError('Invalid native pending stroll semantics');
+  idleState=Object.freeze({...s,destination:Object.freeze({id:d.id,x:d.x,z:d.z})});
+ }
+ return Object.freeze({kind:value.kind,version:1,sourceCycle,requestSequence:value.requestSequence,requestedAt:value.requestedAt,idleState});
+}
+export function sameNativeIdleCycleNextRequest(a,b){try{return JSON.stringify(copyNativeIdleCycleNextRequest(a))===JSON.stringify(copyNativeIdleCycleNextRequest(b));}catch{return false;}}
