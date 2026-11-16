@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuacion de la politica Idle: [fase ejecutada21 y carga semantica en Game](e-r3-native-idle-cycle-game-20261116.md). El tick proyecta descanso/vigilancia y conserva la vigilancia terminada mientras REST o paseo esperan recursos; tarea y vencimiento de contrato usan los relevos genuinos. La carga reconstruye permisos nuevos y la misma intencion desde el RNG privado en ambos modulos. NVIDIA/Turing pasa REST y Home con Game, sin la asignacion manual anterior de la fase deseada; recursos residentes conservados y cero asignaciones tras READY. Paseo ejecutable/aproximacion/anclas, productor ordinario, recuperacion integral de 3123 y cierres A6/A/B/C siguen abiertos.
+
+
 Continuacion de la politica Idle: [consumidor preparado 21 sobre el actor y Surface residentes](e-r3-native-idle-cycle-consumer-20261116.md). Descanso/vigilancia, siguiente REST y Home inmediato pasan en NVIDIA/Turing conservando los 533-577 IDs residentes de cada caso y sin copiar buffers estaticos ni texturas. El ciclo repetido reutiliza shaders/pipelines; se corrige la suciedad redundante de atributos de cultivos. Se contabilizan tambien las copias nativas de uniformes, distintas de los IDs de protocolo; cero asignaciones tras READY. Faltan proyeccion/persistencia Game21, paseo/aproximacion/anclas y productor ordinario. Recuperacion integral de 3123 recursos y cierres A6/A/B/C siguen abiertos.
 
 

@@ -87,9 +87,9 @@ test('a next native REST can prepare another cycle only from its actual semantic
   const first=f.propose();f.commit(first);assert.equal(f.planner.prepareNativeIdleCycleProposal(f.actor).status,'unsupported');
   f.advance(first.header[23]);const next=f.planner.nativeIdleCycleNextRequest(f.actor);assert.equal(next.idleState.mode,'rest');
   assert.equal(f.planner.prepareNativeIdleCycleProposal(f.actor).status,'unsupported','Old Game semantics cannot stand in for the issued next request');
-  // A semantic projection fixture only; the ordinary Game projector remains
-  // pending. Permission is still obtained through the real native transaction.
-  f.worker.idleState=structuredClone(next.idleState);p=await protocol(f);const body=f.body(1),rng=f.state.rng;
+  // Project the actual held watch. The REST request remains intention until
+  // permission is obtained through the real native transaction.
+  f.planner.projectNativeIdleCycle(f.state,f.worker);p=await protocol(f);const body=f.body(1),rng=f.state.rng;
   const result=await p.run();assert.equal(result.status,'committed',JSON.stringify(result));assert.equal(result.nativeIdleCycleBinding.reference.sourceCycleSequence,next.sourceCycle.cycleSequence);assert.deepEqual(result.nativeIdleCycleBinding.reference.initialState,next.idleState);assert.deepEqual(f.body(1),body);assert.equal(f.state.rng,rng);
  }finally{await p?.close();f.close();}
 });

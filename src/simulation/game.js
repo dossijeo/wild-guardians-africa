@@ -1538,7 +1538,7 @@ function reconcileNativeIntents(s,nav){
 }
 function expireNativeIdleContracts(s,nav){
   const planner=nav.intentTaskPlanner;
-  for(const w of s.workers)if(w.status==='idle'&&(contractExpired(w,s)||s.time>=profile(w).end)&&(w.nativeRouteAdmission==='pending-idle-resources'||planner.nativeInitialIdleBodyState?.(w.id)||planner.nativeSettledWorkerExecution?.(w.id)))planner.requestNativeIdleHome(s,w);
+  for(const w of s.workers)if(w.status==='idle'&&(contractExpired(w,s)||s.time>=profile(w).end)&&(w.nativeRouteAdmission==='pending-idle-resources'||planner.nativeInitialIdleBodyState?.(w.id)||planner.nativeIdleCycleExecution?.(w.id)||planner.nativeSettledWorkerExecution?.(w.id)))planner.requestNativeIdleHome(s,w);
 }
 function nativeReturnBoundarySupported(w,planner){
   const settled=planner.nativeSettledWorkerExecution?.(w.id);
@@ -1546,7 +1546,7 @@ function nativeReturnBoundarySupported(w,planner){
     !!planner.nativeHomeRouteExecution?.(w.id)||
     w.nativeRouteAdmission==='pending-home-resources'&&!!planner.nativeHomeRequestReference?.(w.id)||
     w.nativeRouteAdmission==='pending-idle-resources'&&w.status==='idle'&&!w.taskId&&!!planner.nativeInitialIdleRequestReference?.(w.id)||
-    w.nativeRouteAdmission==='native-idle'&&w.status==='idle'&&!w.taskId&&!!planner.nativeInitialIdleBodyState?.(w.id)||
+    w.nativeRouteAdmission==='native-idle'&&w.status==='idle'&&!w.taskId&&!!(planner.nativeInitialIdleBodyState?.(w.id)||planner.nativeIdleCycleExecution?.(w.id))||
     !!settled&&(settled.binding.reference.home&&w.status==='returning'||w.status==='idle'&&!w.taskId&&!w.nativeRouteAdmission);
 }
 // A worker's clearance disc has entered the village doorway once its center
@@ -1608,7 +1608,7 @@ function updateWorkers(s,dt,nav) {
       // Physical initialization may precede the first causal clock. A saved
       // Home still waits for admission and must never enter the legacy mover.
       if(w.nativeRouteAdmission==='pending-idle-resources'){const held=nativeExecutionActive?nav.intentTaskPlanner?.projectNativeInitialIdleRequest(s,w):nav.intentTaskPlanner?.projectNativeInitialIdleDeclaration(s,w);if(!held)throw Error('Pending initial Idle has no current native source');continue;}
-      if(w.nativeRouteAdmission==='native-idle'){if(!nativeExecutionActive||!nav.intentTaskPlanner?.projectNativeInitialIdleBody(s,w))throw Error('Native initial Idle has no current body owner');continue;}
+      if(w.nativeRouteAdmission==='native-idle'){if(!nativeExecutionActive||!(nav.intentTaskPlanner?.projectNativeIdleCycle?.(s,w)||nav.intentTaskPlanner?.projectNativeInitialIdleBody(s,w)))throw Error('Native initial Idle has no current body owner');continue;}
       if(w.nativeRouteAdmission==='pending-home-resources'){if(nativeExecutionActive&&!nav.intentTaskPlanner?.projectNativeHomeExecution(s,w))throw Error('Pending Home has no current native source');continue;}
       if(nativeExecutionActive&&w.nativeRouteAdmission==='native-home'){if(!nav.intentTaskPlanner?.projectNativeHomeExecution(s,w))throw Error('Native Home has no current execution projection');continue;}
       if(nativeExecutionActive&&w.status==='returning'&&nav.intentTaskPlanner?.nativeSettledWorkerExecution?.(w.id)?.binding.reference.home){if(!nav.intentTaskPlanner.projectNativeSettledWorkerExecution(s,w))throw Error('Native pending Home has no current execution projection');continue;}
@@ -1833,7 +1833,7 @@ export function tick(s,seconds,nav,{clockRate=1}={}) {
   while(left>1e-9 && !s.pauses.length && !s.result) {
     for(const worker of s.workers){
       if(worker.nativeRouteAdmission==='pending-idle-resources'&&!nav.intentTaskPlanner?.projectNativeInitialIdleDeclaration(s,worker)&&!nav.intentTaskPlanner?.projectNativeInitialIdleBody?.(s,worker))throw Error('Pending initial Idle has no current native declaration');
-      if(worker.nativeRouteAdmission==='native-idle'&&!nav.intentTaskPlanner?.projectNativeInitialIdleBody?.(s,worker))throw Error('Native initial Idle has no current body owner');
+      if(worker.nativeRouteAdmission==='native-idle'&&!(nav.intentTaskPlanner?.projectNativeIdleCycle?.(s,worker)||nav.intentTaskPlanner?.projectNativeInitialIdleBody?.(s,worker)))throw Error('Native initial Idle has no current body owner');
     }
     let nativeExecution=nav.intentTaskPlanner?.nativeGameExecutionState?.()??0;
     if(nativeExecution<0)throw Error('Native game execution still requires projection for this intention class');
@@ -1844,7 +1844,7 @@ export function tick(s,seconds,nav,{clockRate=1}={}) {
       nativeExecution=nav.intentTaskPlanner.nativeGameExecutionState();
     }
     if(nativeExecution<0)throw Error('Native game execution still requires projection for this intention class');
-    if(nativeExecution===1&&(nav.dynamicBodies||s.raid||s.workers.some(w=>!(w.status==='home'&&nav.intentTaskPlanner.nativeWorkerHomeInactive?.(w.id))&&(!(['native-home','pending-home-resources'].includes(w.nativeRouteAdmission)&&nav.intentTaskPlanner.projectNativeHomeExecution(s,w))&&!(w.nativeRouteAdmission==='native-delivery'&&nav.intentTaskPlanner.projectNativeDeliveryExecution(s,w))&&!(w.nativeRouteAdmission==='pending-idle-resources'&&nav.intentTaskPlanner.projectNativeInitialIdleRequest(s,w))&&!(nav.intentTaskPlanner.nativeInitialIdleBodyState?.(w.id)&&nav.intentTaskPlanner.projectNativeInitialIdleBody(s,w))&&!(nav.intentTaskPlanner.nativeSettledWorkerExecution?.(w.id)&&nav.intentTaskPlanner.projectNativeSettledWorkerExecution(s,w))&&(!w.taskId||!['walking','waiting-task','acting'].includes(w.status)||w.status==='acting'&&(w.nativeRouteAdmission!=='native-action'||!nav.intentTaskPlanner.nativeTaskActionExecution(w.id))||w.crateId)||w.raidReturn||w.incapacitated||w.recovery||w.fallRemaining>0||contractExpired(w,s)&&!nav.intentTaskPlanner.nativeSettledWorkerExecution?.(w.id)?.binding.reference.home&&!nav.intentTaskPlanner.nativeHomeRouteExecution?.(w.id)&&!(w.nativeRouteAdmission==='pending-home-resources'&&nav.intentTaskPlanner.nativeHomeRequestReference?.(w.id))))||s.structures.some(structure=>structure.gate&&structure.status!=='ruined')))throw Error('Native task game cohort contains an unsupported mover');
+    if(nativeExecution===1&&(nav.dynamicBodies||s.raid||s.workers.some(w=>!(w.status==='home'&&nav.intentTaskPlanner.nativeWorkerHomeInactive?.(w.id))&&(!(['native-home','pending-home-resources'].includes(w.nativeRouteAdmission)&&nav.intentTaskPlanner.projectNativeHomeExecution(s,w))&&!(w.nativeRouteAdmission==='native-delivery'&&nav.intentTaskPlanner.projectNativeDeliveryExecution(s,w))&&!(w.nativeRouteAdmission==='pending-idle-resources'&&nav.intentTaskPlanner.projectNativeInitialIdleRequest(s,w))&&!(nav.intentTaskPlanner.nativeIdleCycleExecution?.(w.id)&&nav.intentTaskPlanner.projectNativeIdleCycle(s,w))&&!(nav.intentTaskPlanner.nativeInitialIdleBodyState?.(w.id)&&nav.intentTaskPlanner.projectNativeInitialIdleBody(s,w))&&!(nav.intentTaskPlanner.nativeSettledWorkerExecution?.(w.id)&&nav.intentTaskPlanner.projectNativeSettledWorkerExecution(s,w))&&(!w.taskId||!['walking','waiting-task','acting'].includes(w.status)||w.status==='acting'&&(w.nativeRouteAdmission!=='native-action'||!nav.intentTaskPlanner.nativeTaskActionExecution(w.id))||w.crateId)||w.raidReturn||w.incapacitated||w.recovery||w.fallRemaining>0||contractExpired(w,s)&&!nav.intentTaskPlanner.nativeSettledWorkerExecution?.(w.id)?.binding.reference.home&&!nav.intentTaskPlanner.nativeHomeRouteExecution?.(w.id)&&!(w.nativeRouteAdmission==='pending-home-resources'&&nav.intentTaskPlanner.nativeHomeRequestReference?.(w.id))))||s.structures.some(structure=>structure.gate&&structure.status!=='ruined')))throw Error('Native task game cohort contains an unsupported mover');
     prepareClockEvents(s,nav);
     // Version-1 saves can contain an active area without exposure bookkeeping.
     // Mark once on restoration; static plants need no per-frame exposure scan.

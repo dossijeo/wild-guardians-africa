@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+**Native Idle cycle Game projection and semantic load, 2026-11-16:** [Game adopts executed21 phases and restores fresh permissions](e-r3-native-idle-cycle-game-20261116.md). Terminal watch remains current while REST/stroll are only requested; ordinary task/contract handling uses genuine successors. Both modules reproduce pending intent from private RNG on semantic load. NVIDIA/Turing passes following REST/Home with actual Game APIs, retained resident resources and zero allocations after READY. Stroll execution/approach/anchors, ordinary producer, healthy3123 recovery and A6/A/B/C remain open.
+
+
 **Native Idle cycle original consumer, 2026-11-16:** [Prepared21 now uses the resident actor and Surface](e-r3-native-idle-cycle-consumer-20261116.md). NVIDIA/Turing passes rest/watch, following REST and immediate Home while retaining the533-577 live immutable protocol IDs in each case with no static-buffer/texture native copies. Following REST reuses shaders/pipelines. Redundant crop attribute dirtying is corrected; native uniform copies are accounted separately from protocol IDs, with zero allocations after READY. Game21 projection/persistence, strolling/approach/anchors and ordinary producer remain pending. Healthy full3123 recovery and A6/A/B/C remain open.
 
 

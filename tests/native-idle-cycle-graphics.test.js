@@ -33,8 +33,8 @@ for(const profile of PROFILES)for(const mode of ['rest','watch'])test(`${profile
 test('a following native REST keeps the original actor and old-cycle release cannot retire it',async()=>{
  const f=await nativeIdleCycleGraphicsFixture({mode:'watch',remaining:.03});let first,second;try{
   const actor=f.roster.get(f.actor),before=meshes(actor.root);first=await f.roster.prepareNativeIdleCycleProposal(f.support,{getPickAge:f.getPickAge});first.activate();const a=f.commit();first.finalize(a);f.flush();f.advance(.2);const request=f.planner.nativeIdleCycleNextRequest(f.nativeActor);assert.equal(request.idleState.mode,'rest');
-  // Semantic fixture only; ordinary Game21 projection remains a later step.
-  f.worker.idleState=structuredClone(request.idleState);f.sync();const next=f.prepare();second=await f.roster.prepareNativeIdleCycleProposal(next.support,{getPickAge:f.getPickAge});second.activate();second.rollback();assert(second.valid());second.activate();const b=f.commit(next.proposal);second.finalize(b);f.flush();assert.equal(f.roster.releaseNativeIdleCycle(f.actor,a.nativeIdleCycleBinding),false);assert.equal(f.roster.get(f.actor),actor);assert.equal(f.acquires,1);for(const item of before)assert.equal(item.mesh.geometry,item.geometry);assert.deepEqual(f.errors,[]);
+  // Keep the actual held watch while its next REST programme prepares.
+  f.planner.projectNativeIdleCycle(f.nativeState,f.worker);f.sync();const next=f.prepare();second=await f.roster.prepareNativeIdleCycleProposal(next.support,{getPickAge:f.getPickAge});second.activate();second.rollback();assert(second.valid());second.activate();const b=f.commit(next.proposal);second.finalize(b);f.flush();assert.equal(f.roster.releaseNativeIdleCycle(f.actor,a.nativeIdleCycleBinding),false);assert.equal(f.roster.get(f.actor),actor);assert.equal(f.acquires,1);for(const item of before)assert.equal(item.mesh.geometry,item.geometry);assert.deepEqual(f.errors,[]);
  }finally{second?.cancel();first?.cancel();f.close();}
 });
 

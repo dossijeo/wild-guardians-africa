@@ -1,20 +1,18 @@
 import {nativeIdleCycleReferenceFromProposal,nativeIdleCycleWatchKnot} from '../../src/world/native-idle-cycle.js';
 import {captureNativeRoutePickFrame} from '../../src/rendering/native-route-pick-frame.js';
-import {cancelIdle} from '../../src/simulation/idle.js';
 
 // Component acceptance through the real original-actor Surface/ports/Host.
-// This fixture mirrors native private phase explicitly; it is not the pending
-// ordinary Game21 producer or a full-game/healthy3123 recovery measurement.
+// Uses actual Game projection/contract API; ordinary Game producer scheduling
+// and full-game/healthy3123 recovery remain separate acceptance requirements.
 export async function auditNativeIdleCycleWorldOwner(c,{repeat=false,home=false}={}){
  const {state,planner,w,client,publisher,publication,preparer,resourceConnection,b,starts,ends,waitStart,waitEnd,now,errors,pick,commit}=c,worker=state.workers[0],rng=state.rng,records=[];
  const body=()=>{const count=w.spatial_bodies_near(0,0,1e6),rows=new Float64Array(w.memory.buffer,w.spatial_bodies_result_ptr(),count*6);for(let i=0;i<count;i++)if(rows[i*6]===1)return Array.from(rows.slice(i*6,i*6+6));return null;},heldBody=body(),pose=planner.nativeInitialIdleBodyBinding(worker.id).reference.sourceRequest.pose;
  const shape=o=>o.actors.map(a=>({root:a.root,bones:a.bones,meshes:a.meshes.map(m=>[m.id,m.geometry])})),publish=sequence=>{publisher.commit(sequence);client.presentationPort.postMessage({kind:'publication',session:c.transportSession,publication:{session:c.transportSession,sequence,elapsed:state.elapsed,physicsPose:null,snapshot:c.serialize(state),events:[]}});};
- let issued=false,preparingNext=false,homeRequested=false,inputPaused=false,pump,sequence=2;
+ let issued=false,homeRequested=false,inputPaused=false,pump,sequence=2;
  function project(){
   if(homeRequested){if(!planner.projectNativeHomeExecution(state,worker))throw Error('Cycle Home lost its native body');return;}
   if(!issued){if(!planner.projectNativeInitialIdleBody(state,worker))throw Error('Cycle preparation lost its admitted source20');return;}
-  const view=planner.nativeIdleCycleExecution(worker.id);if(!view)throw Error('Cycle lost its current native phase');
-  if(!preparingNext)worker.idleState=structuredClone(view.idleState);
+  if(!planner.projectNativeIdleCycle(state,worker))throw Error('Cycle lost its current native Game phase');
  }
  function startPump(){commit(false);pump=setInterval(()=>{if(inputPaused)return;try{const previous=state.elapsed;state.elapsed+=.02;const result=planner.advanceNativeRouteExecution(state.elapsed);if(result.status!=='advanced'){state.elapsed=previous;throw Error('Cycle cohort stopped '+JSON.stringify(result));}commit(false);project();if(!homeRequested&&JSON.stringify(body())!==JSON.stringify(heldBody)||state.rng!==rng)throw Error('Cycle changed physical body or world RNG');}catch(e){if(pump)clearInterval(pump);pump=null;errors.push(String(e));}},20);}
  async function stage(index,kind='cycle'){
@@ -26,13 +24,11 @@ export async function auditNativeIdleCycleWorldOwner(c,{repeat=false,home=false}
    if(Object.values(ready.qaLastRenderFactories??{missing:1}).some(Boolean)||JSON.stringify(body())!==JSON.stringify(heldBody))throw Error('Cycle preparation rendered factories or moved the held body');
    preparer.postMessage({kind:'block-control-preparation',durationMs:1800});await second;
    return {preparedWorldBoundary:handle.preparedWorldBoundary,[template]:handle[template],valid:handle.valid,abort:handle.abort,commit(data){
-    committedAt=now();issued=true;preparingNext=false;
+    committedAt=now();issued=true;
     if(kind==='cycle'&&home){
      // Publish the acquisition before issuing the genuine trusted Home ABI.
-     // Ordinary Game21 Home projection remains a separate migration task.
-     commit(false);const village=state.villages.find(v=>v.id===worker.villageId),goal=village.entry,source=data.nativeIdleCycleBinding.reference.sourceBody;worker.contractDay=state.day-1;
-     if(w.nav_intent_initial_idle_home_request(Number(worker.id.split('-').at(-1)),w.nav_intent_session(),source.bodySequence,Number(village.id.split('-').at(-1)),goal.x,goal.z)!==1)throw Error('Cycle immediate Home request rejected');
-     cancelIdle(worker);Object.assign(worker,{status:'returning',nativeRouteAdmission:'pending-home-resources'});homeRequested=true;commit(false);
+     // The existing Game API requests Home from that actual cycle owner.
+     commit(false);worker.contractDay=state.day-1;planner.requestNativeIdleHome(state,worker);homeRequested=true;commit(false);
     }
     const result=handle.commit(data);if(kind==='cycle'&&!homeRequested)project();if(kind==='home')planner.projectNativeHomeExecution(state,worker);publish(sequence++);return result;
    }};
@@ -64,7 +60,7 @@ export async function auditNativeIdleCycleWorldOwner(c,{repeat=false,home=false}
  }
  try{
   startPump();await stage(2);
-  if(repeat){const next=planner.nativeIdleCycleNextRequest(worker.id);if(next?.idleState.mode!=='rest')throw Error('Repeat fixture must reach a genuine pending REST');preparingNext=true;worker.idleState=structuredClone(next.idleState);publish(sequence++);await stage(4);}
+  if(repeat){const next=planner.nativeIdleCycleNextRequest(worker.id);if(next?.idleState.mode!=='rest')throw Error('Repeat fixture must reach a genuine pending REST');project();publish(sequence++);await stage(4);}
   if(home)await stage(4,'home');
   clearInterval(pump);pump=null;commit(true);
   // Stop only the preparer's ordinary draw loop through its existing visibility
@@ -73,6 +69,6 @@ export async function auditNativeIdleCycleWorldOwner(c,{repeat=false,home=false}
   preparer.postMessage({kind:'presentation-visibility',hidden:true});const deadline=performance.now()+2000;
   for(;;){const settled=await client.inspect();if(!settled.drawExecution.pendingFrame&&!settled.drawExecution.openFrame)break;if(performance.now()>deadline)throw Error('Cycle producer did not settle before retirement');await new Promise(requestAnimationFrame);}
   await publication.fenceGpu();
-  const final=await client.inspect();return {scope:'Original resident actor/geometry/clip banks through actual Surface, ports, Host and hardware; semantic phase fixture only, not ordinary Game/full policy/full3123 recovery.',repeat,immediateHome:home,records,adapter:final.drawExecution.consumer.adapterInfo,final:{gpuErrors:final.drawExecution.consumer.gpuErrors},errors};
+  const final=await client.inspect();return {scope:'Original resident actor/geometry/clip banks through actual Surface, ports, Host and hardware; actual Game phase/contract API, not ordinary producer/full policy/full3123 recovery.',repeat,immediateHome:home,records,adapter:final.drawExecution.consumer.adapterInfo,final:{gpuErrors:final.drawExecution.consumer.gpuErrors},errors};
  }finally{if(pump)clearInterval(pump);commit(true);}
 }

@@ -56,8 +56,8 @@ for(const transition of ['Task','Home'])test(`a genuine pending ${transition} fr
 test('a following REST cycle changes its native permission while retaining the same low-level graphical resources',async()=>{
  const f=await fixture({mode:'watch',remaining:.03});try{
   const first=await f.run();assert.equal(first.status,'committed',JSON.stringify(first));await f.v.present();f.advance(.2);await f.draw();const next=f.planner.nativeIdleCycleNextRequest(f.actor);assert.equal(next.idleState.mode,'rest');
-  // Semantic state fixture; no ordinary Game producer claim.
-  f.worker.idleState=structuredClone(next.idleState);const buffers=f.v.gpu.buffers.slice(),created=f.v.client.inspect().resourcesCreated,before=f.v.host.inspect(),geometry=buffers.find(b=>b.descriptor.size===36);
+  // Actual Game phase projection; ordinary resource scheduling is separate.
+  f.planner.projectNativeIdleCycle(f.state,f.worker);const buffers=f.v.gpu.buffers.slice(),created=f.v.client.inspect().resourcesCreated,before=f.v.host.inspect(),geometry=buffers.find(b=>b.descriptor.size===36);
   const second=await f.run();assert.equal(second.status,'committed',JSON.stringify(second));await f.v.present();f.advance(.1);const consumer=await f.draw(),cycle=consumer.nativeRouteFrame.bindings.find(b=>b.nativeIdleCycle);assert.equal(cycle.nativeIdleCycle.sourceCycleSequence,first.nativeIdleCycleBinding.cycleSequence);assert.equal(cycle.executionEpoch,second.nativeIdleCycleBinding.reference.worldBoundary.effectiveTime);assert.equal(f.v.client.inspect().resourcesCreated,created);assert.deepEqual(f.v.gpu.buffers.slice(buffers.length).map(b=>b.descriptor.size),[16]);assert.equal(consumer.uniformForks-before.uniformForks,1);assert.equal(consumer.bindingForks-before.bindingForks,1);assert.equal(consumer.resources,before.resources);assert.equal(geometry.destroyed,false);assert.equal(f.v.gpu.buffers.find(b=>b.descriptor.size===36),geometry);assert.deepEqual(f.v.errors,[]);
  }finally{await f.close();}
 });

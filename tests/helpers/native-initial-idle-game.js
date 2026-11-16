@@ -9,6 +9,7 @@ export function nativeInitialIdleGameFixture(options={}){
   // Authored Home goal on the fixture's verified clear corridor. The source
   // fixture's imported village is outside that deliberately small world.
   const village=state.villages.find(v=>v.id===state.workers[0].villageId);village.entry=point(6,0);
+  options.configureState?.(state,{point});
  }});
  try{
   f.planner.requestNativeInitialIdleResources(f.state,f.worker);
