@@ -9,7 +9,7 @@ const flush=()=>new Promise(r=>setImmediate(r));
 // Actual source/publication and both transports; retained GPU and drain receipts
 // are deterministic doubles. This helper does not render a graphical21 frame.
 export async function idleCycleAdmissionProtocol(f,{onPrepare=()=>{},onDrain=()=>{},onCommit=()=>{},receipt=m=>m,release=m=>m,admit=null,onRelease=()=>{},kind='idle-cycle'}={}){
- const home=kind==='home-route',profile=nativeResourceAdmissionProfile(kind),prepareMethod=home?'prepareNativeHomeRouteResources':'prepareNativeIdleCycleResources',invoke=home?'startNativeHomeRouteAfterGpuQuiescence':'startNativeIdleCycleAfterGpuQuiescence';
+ const task=kind==='task-start',home=kind==='home-route',profile=nativeResourceAdmissionProfile(kind),prepareMethod=task?'prepareNativeTaskStartResources':home?'prepareNativeHomeRouteResources':'prepareNativeIdleCycleResources',invoke=task?'startNativeTaskRouteAfterGpuQuiescence':home?'startNativeHomeRouteAfterGpuQuiescence':'startNativeIdleCycleAfterGpuQuiescence';
  const session='idle-cycle-admission',{port1,port2}=new MessageChannel(),resourcePorts=new MessageChannel(),requests=[],errors=[];
  let preparations=0,commits=0,aborts=0,refreshes=0,resolveReleased;
  const released=new Promise(resolve=>{resolveReleased=resolve;});
@@ -18,7 +18,7 @@ export async function idleCycleAdmissionProtocol(f,{onPrepare=()=>{},onDrain=()=
   else if(m.type==='IntentClock')port2.postMessage({type:'intent-clock-applied',session,authorityEpoch:m.authorityEpoch,clockSequence:m.clockSequence,intentSequence:m.intentSequence,committedThrough:m.committedThrough,accepted:true});
   else if(m.type==='IntentMutationQuiesce'){
    requests.push(m);await onDrain(m);
-   port2.postMessage(receipt({...m,type:'intent-mutation-quiesced',accepted:true,preparedFrameSequence:1,[home?'nativeHomeRouteVersion':'nativeIdleCycleVersion']:1}));
+   port2.postMessage(receipt({...m,type:'intent-mutation-quiesced',accepted:true,preparedFrameSequence:1,[task?'nativeTaskStartVersion':home?'nativeHomeRouteVersion':'nativeIdleCycleVersion']:1}));
   }else if(m.type==='IntentMutationRelease'){requests.push(release(m));onRelease(m);resolveReleased(m);}
   else if(m.type!=='IntentControlClosed')port2.postMessage({type:'intent-control-applied',session,authorityEpoch:m.authorityEpoch,sequence:m.sequence,accepted:true});
  };
@@ -34,7 +34,7 @@ export async function idleCycleAdmissionProtocol(f,{onPrepare=()=>{},onDrain=()=
  const connection=createNativeResourcePreparationConnection({port:resourcePorts.port1,session:'cycle-resources',timeoutMs:2000});
  await Promise.all([source.ready,connection.ready]);
  return {source,connection,requests,errors,released,counters:()=>({preparations,commits,aborts,refreshes}),
-  run(signal){return f.planner[invoke]({actorId:f.actor,getPublication:()=>source,prepareResources:({resources,signal,deferredStart})=>connection[prepareMethod](resources,{signal,deferredStart}),signal});},
+  run(signal){return f.planner[invoke]({actorId:f.actor,...(task?{request:f.planner.pendingTaskRoute(f.actor),policy:{bodyId:1,radius:.28,urgent:false,runRemaining:f.worker.runRemaining,runPhase:f.worker.runPhase,walkPhase:f.worker.walkPhase,carryPhase:f.worker.carryPhase}}:{}),getPublication:()=>source,prepareResources:({resources,signal,deferredStart})=>connection[prepareMethod](resources,{signal,deferredStart}),signal});},
   async close(){connection.dispose();endpoint.dispose();source.dispose();port2.close();await flush();}
  };
 }
