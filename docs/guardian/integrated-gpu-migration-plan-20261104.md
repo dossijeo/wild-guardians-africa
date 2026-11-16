@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuacion de Idle: [fuente TaskStart desde la pose posterior al paseo](e-r3-native-idle-current-task-source-20261116.md). La asignacion pendiente conserva el ciclo21 de origen22 y su cuerpo; el preparador14 existente valida fases/presupuesto y adquiere la ruta sin una fuente inicial ficticia. Fuente/control directo probados en standalone/pthread. Faltan puertos/roster/Surface/GPU de este relevo, productor ordinario, restauracion movil y recuperacion integral de 3123; A6/A/B/C siguen abiertos.
+
+
 Continuacion de Idle: [Home actual en Game y consumidor originales](e-r3-native-idle-current-home-consumer-20261116.md). Control/Game/puertos/roster/Surface adquieren Home desde el ciclo 21 real posterior al paseo 22, incluido el callback inmediato sin marcador REST manual. NVIDIA/Turing conserva 577 IDs de geometria/texturas y reutiliza programas en descanso/Home; dos conjuntos retirados fijos por actor, textura 22 retirada tras fence y cero asignaciones tras READY. Preparar aun crea uniformes/bind groups y datos Home. Faltan TaskStart actual, tarea/Home movil, restauracion/cohort/producer y recuperacion integral de 3123; cierres A6/A/B/C siguen abiertos.
 
 

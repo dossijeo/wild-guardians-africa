@@ -2139,9 +2139,9 @@ static int commitTaskProposal(bool pendingResources){
     const auto old=s.activeIntents.find(workerId);if(old!=s.activeIntents.end()&&old->second.settlementBinding&&(!pendingResources||!nativeSettlementBodyCurrent(s,old->second))){clearProposal(s);return 0;}
     if(old!=s.activeIntents.end()&&old->second.initialIdleRequest&&(!pendingResources||!nativeInitialIdleRequestCurrent(s,old->second))){clearProposal(s);return 0;}
     if(old!=s.activeIntents.end()&&old->second.initialIdleBodyBinding&&(!pendingResources||!nativeInitialIdleBodyCurrent(s,old->second))){clearProposal(s);return 0;}
-    // Current-pose TaskStart is a separate prepared handoff. Until supported,
-    // planning cannot discard a post-stroll stationary owner to bypass it.
-    if(old!=s.activeIntents.end()&&old->second.idleCycle&&!old->second.initialIdleBodyBinding){clearProposal(s);return 0;}
+    // A moved stationary body retains its actual cycle through the pending
+    // task request. Only prepared TaskStart may acquire its next trajectory.
+    if(old!=s.activeIntents.end()&&old->second.idleCycle&&!old->second.initialIdleBodyBinding&&(!pendingResources||!nativeIdleCycleCurrent(s,old->second))){clearProposal(s);return 0;}
   }
   for(const auto& [taskId,workerId]:s.proposals){
     s.tasks.at(taskId).assigned=workerId;s.workers.at(workerId).eligible=false;
@@ -2155,8 +2155,9 @@ static int commitTaskProposal(bool pendingResources){
     const auto existing=s.activeIntents.find(workerId);
     const auto stationary=existing!=s.activeIntents.end()?existing->second.settlementBinding:nullptr;
     const auto initialIdleBody=existing!=s.activeIntents.end()?existing->second.initialIdleBodyBinding:nullptr;
+    const auto cycle=existing!=s.activeIntents.end()&&!initialIdleBody?existing->second.idleCycle:nullptr;
     if(existing!=s.activeIntents.end()){
-      if(!stationary&&!initialIdleBody)releaseIntent(s,workerId,PlanningState::Cancelled);
+      if(!stationary&&!initialIdleBody&&!cycle)releaseIntent(s,workerId,PlanningState::Cancelled);
       else {auto owners=s.byTarget.find(existing->second.target);if(owners!=s.byTarget.end()){owners->second.erase(workerId);if(owners->second.empty())s.byTarget.erase(owners);}clearRouteDependencies(s,existing->second);}
     }
     uint32_t slot=uint32_t(s.routeSlots.size());
@@ -2169,7 +2170,7 @@ static int commitTaskProposal(bool pendingResources){
     if(!route.generation)route.generation=1;
     ActiveIntent intent{workerId,taskId,s.tasks.at(taskId).target,
       pendingResources?PlanningState::AwaitingResources:PlanningState::RouteActive,slot,route.generation,lazy_route_revision()};
-    intent.requiresResources=pendingResources;intent.profile=lazy_selected_context();intent.settlementBinding=stationary;intent.initialIdleBodyBinding=initialIdleBody;
+    intent.requiresResources=pendingResources;intent.profile=lazy_selected_context();intent.settlementBinding=stationary;intent.initialIdleBodyBinding=initialIdleBody;intent.idleCycle=cycle;
     s.activeIntents.insert_or_assign(workerId,intent);
     s.byTarget[intent.target].insert(workerId);
     s.byTask[intent.task].insert(workerId);

@@ -108,7 +108,7 @@ bool reserveRouteClear(IntentState& s,const ActiveIntent& intent,const RouteSlot
     const bool stationary=stationaryFrom&&action->settlementBinding.get()==stationaryFrom&&nativeSettlementBodyCurrent(s,*action)&&action->actor==route.actor;
     const bool home=homeRequestFrom&&action->homeRequest.get()==homeRequestFrom&&nativeHomeRequestBodyCurrent(s,*action)&&action->actor==route.actor;
     const bool initial=initialIdleBodyFrom&&action->initialIdleBodyBinding.get()==initialIdleBodyFrom&&nativeInitialIdleBodyCurrent(s,*action)&&action->actor==route.actor;
-    const bool cycle=idleCycleFrom&&action->idleCycle&&action->idleCycle->binding.get()==idleCycleFrom&&nativeIdleCycleCurrent(s,*action)&&action->actor==route.actor;
+    const bool cycle=idleCycleFrom&&action->idleCycle&&action->idleCycle->binding.get()==idleCycleFrom&&nativeIdleCycleBodyCurrent(s,*action)&&action->actor==route.actor;
     if(!task&&!stationary&&!home&&!initial&&!cycle)return false;
   }
   const ReservationPath path{&route};
