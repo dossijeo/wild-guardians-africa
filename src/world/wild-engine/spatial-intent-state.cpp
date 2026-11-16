@@ -173,6 +173,23 @@ struct NativeInitialIdleBodyBinding {
  NativeInitialIdleBodyOrigin prepared,actual;uint64_t bodySequence=0;
  std::shared_ptr<const NativeInitialIdleResourceRequest> source;
 };
+// One finite original rest/watch cycle on the existing stationary body. Future
+// phase data is immutable; the stochastic next request is resolved once at its
+// native deadline and never grants a walking route by itself.
+struct NativeIdleCycleOrigin {std::array<double,24> header{};uint64_t ticket=0;};
+struct NativeIdleCycleBinding {
+ NativeIdleCycleOrigin prepared,actual;uint64_t cycleSequence=0;
+ std::shared_ptr<const NativeInitialIdleBodyBinding> body;
+};
+struct NativeIdleCycleDecision {
+ int status=0;std::array<double,6> state{};double x=0,z=0;
+ uint64_t topology=0,sequence=0;double requestedAt=0;
+ std::vector<float> points;
+};
+struct NativeIdleCycle {
+ std::shared_ptr<const NativeIdleCycleBinding> binding;
+ NativeIdleCycleDecision next;
+};
 struct NativeHomeRouteSourceView {
  uint64_t actor=0,body=0,sequence=0,village=0;
  double at=0,x=0,z=0,yaw=0,radius=0,runPhase=0,walkPhase=0,carryPhase=0,runRemaining=0,homeX=0,homeZ=0;
@@ -220,6 +237,7 @@ struct ActiveIntent {
   std::shared_ptr<NativeHomeResourceRequest> homeRequest;
   std::shared_ptr<NativeInitialIdleResourceRequest> initialIdleRequest;
   std::shared_ptr<const NativeInitialIdleBodyBinding> initialIdleBodyBinding;
+  std::shared_ptr<NativeIdleCycle> idleCycle;
   std::shared_ptr<const NativeTaskActionBinding> actionBinding;
   bool delivery=false;uint64_t carriedTarget=0;
   std::shared_ptr<const NativeTaskSettlementBinding> settlementBinding;
@@ -333,6 +351,12 @@ struct PendingBarrierProposal {
    std::optional<NativeInitialIdleBodyOrigin> previous;std::array<double,8> timeTranslation{};
   };
   std::optional<InitialIdleBodyDraft> initialIdleBody;
+  struct IdleCycleDraft {
+   std::array<double,24> header{};std::shared_ptr<const NativeInitialIdleBodyBinding> body;
+   std::shared_ptr<NativeIdleCycle> previousCycle;
+   std::optional<NativeIdleCycleOrigin> previous;std::array<double,8> timeTranslation{};
+  };
+  std::optional<IdleCycleDraft> idleCycle;
   bool retainsRoutes=false;
   std::vector<double> routeEffects,gateEffects;
   bool pending=false;uint32_t session=0;uint64_t ticket=0;
@@ -429,6 +453,9 @@ struct IntentState {
   std::array<double,30> deliveryExecutionResult{};
   std::vector<double> taskSettlementBindingResult,homeBindingResult;
   std::vector<double> initialIdleBodyBindingResult;
+  std::vector<double> idleCycleBindingResult;
+  std::array<double,14> idleCycleExecutionResult{};
+  std::array<double,14> idleCycleNextResult{};
   std::array<double,30> homeExecutionResult{};
   std::array<double,52> homeArrivalResult{};
   std::array<double,19> homeRequestResult{};
@@ -729,6 +756,7 @@ void releaseRoute(IntentState& s,ActiveIntent& intent){
   intent.actionBinding.reset();
   intent.settlementBinding.reset();
   intent.initialIdleBodyBinding.reset();
+  intent.idleCycle.reset();
   clearRouteDependencies(s,intent);
   if(intent.slot<s.routeSlots.size()){
     RouteSlot& route=s.routeSlots[intent.slot];
@@ -803,6 +831,7 @@ void releaseIntent(IntentState& s,uint64_t actor,PlanningState next,bool notify=
 #include "spatial-route-reservations.h"
 bool gateStaticProofCurrent(const IntentState&);
 bool gateRouteBindingsCoherent(const IntentState&,const RouteSlot&,uint32_t);
+#include "spatial-idle-cycle.h"
 #include "spatial-route-execution.h"
 #include "spatial-gate-controller.h"
 #include "spatial-gate-mechanism.h"
@@ -1264,12 +1293,12 @@ int spatialIntentStageWorld(const SpatialWorldProposalInput& input,const Spatial
   auto& p=state().barrierProposal;p.kind=input.kind;p.worldInput=input;return 1;
 }
 void clearWorldMutationProposal(PendingBarrierProposal& p){
-  p.pending=false;p.kind=0;p.resume.reset();p.start.reset();p.home.reset();p.action.reset();p.consequence.reset();p.settlement.reset();p.homeArrival.reset();p.initialIdleBody.reset();p.worldInput=SpatialWorldProposalInput{};p.routeEffects.clear();p.gateEffects.clear();
+  p.pending=false;p.kind=0;p.resume.reset();p.start.reset();p.home.reset();p.action.reset();p.consequence.reset();p.settlement.reset();p.homeArrival.reset();p.initialIdleBody.reset();p.idleCycle.reset();p.worldInput=SpatialWorldProposalInput{};p.routeEffects.clear();p.gateEffects.clear();
 }
 int takeWorldMutationBoundary(double session,double ticket,double sequence,double time,double clockSequence,int kind){
   auto& s=state();const auto& p=s.barrierProposal;
   if(!integer(session)||!integer(ticket)||!p.pending||session!=double(p.session)||ticket!=double(p.ticket)||
-     (kind==1?p.kind!=1:(kind>=13&&kind<=20)?p.kind!=kind:p.kind<2||p.kind>11))return -1;
+     (kind==1?p.kind!=1:(kind>=13&&kind<=21)?p.kind!=kind:p.kind<2||p.kind>11))return -1;
   const bool current=p.session==s.session&&p.at==s.effectiveTime&&p.bodies==spatialBodiesMutationRevision()&&
     p.bodies!=std::numeric_limits<uint64_t>::max()&&p.entities==s.entityRevision&&p.facts==s.sequence&&
     p.intents==s.intentSequence&&p.reservations==s.residencyPinRevision&&p.clock==s.clockSequence&&
@@ -2392,6 +2421,7 @@ EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_execution_ptr(){return state
 #include "spatial-home-resource-request.inc"
 #include "spatial-initial-idle-resource-request.inc"
 #include "spatial-initial-idle-body-proposal.inc"
+#include "spatial-idle-cycle-proposal.inc"
 #include "spatial-home-route-proposal.inc"
 #include "spatial-home-arrival-proposal.inc"
 EMSCRIPTEN_KEEPALIVE double nav_intent_execution_advances(){return double(state().executionAdvances);}

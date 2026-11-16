@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuacion de la politica Idle: [ciclo temporal nativo con la secuencia privada original](e-r3-native-idle-cycle-source-20261116.md). La fuente prepara descanso/vigilancia completos sobre el cuerpo existente y resuelve una sola peticion posterior de descanso o paseo al llegar a su frontera. Conserva reloj, RNG privado, doce intentos locales y cuerpo; un paseo pendiente no concede movimiento. La fase retenida anterior ya no sirve como consumidor de este ciclo. Faltan control/consumidor preparados de la familia 21, proyeccion/guardado de Game, aproximacion, ejecucion del paseo, cambios de ancla y productor ordinario; ningun cierre A6/A/B/C cambia.
+
+
 Continuacion de la politica Idle: [inicializacion estacionaria con la semantica original](e-r3-native-initial-idle-initialization-20261116.md). Una declaracion nueva puede inicializar descanso en su ancla real sin navegar, avanzar tiempo ni consumir RNG. Comparte el inicializador de Idle existente y publica Game solo tras aceptar la fuente nativa; rechaza actores que necesitan aproximacion y declaraciones ya pendientes. La politica temporal/Alert/paseo, aproximacion, productor ordinario y recuperacion integral siguen abiertos; no cambia ningun cierre A6/A/B/C.
 
 

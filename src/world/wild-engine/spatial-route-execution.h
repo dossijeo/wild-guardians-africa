@@ -109,6 +109,9 @@ int advanceRouteExecution(IntentState& s,double at){
   }
   // All metadata preflight/sampling precedes every physical write. Body moves
   // use a native-only entry point, not JS upserts or per-step contact checks.
+  std::vector<std::pair<uint64_t,NativeIdleCycleDecision>> idleDecisions;
+  for(const auto& [actor,intent]:s.activeIntents)if(nativeIdleCycleCurrent(s,intent)&&!intent.idleCycle->next.status&&nativeIdleCycleFinished(*intent.idleCycle,at))
+    idleDecisions.emplace_back(actor,chooseNativeIdleCycleNext(s,*intent.idleCycle));
   s.effectiveTime=at;s.executionAdvances++;
   const uint64_t updates=s.executionBodyUpdates;
   for(const auto& move:moves){
@@ -117,5 +120,6 @@ int advanceRouteExecution(IntentState& s,double at){
     projectExecutedPose(s,route,move.pose);
   }
   if(updates!=s.executionBodyUpdates)s.entityRevision++;
+  for(auto& [actor,next]:idleDecisions)publishNativeIdleCycleDecision(s,s.activeIntents.at(actor),std::move(next));
   return int(moves.size());
 }

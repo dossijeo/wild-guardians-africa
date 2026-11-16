@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+**Native finite Idle cycle source, 2026-11-16:** [The original rest/watch program and private stream now have a native source](e-r3-native-idle-cycle-source-20261116.md) on the existing body/clock. A deadline resolves one subsequent rest or pending-stroll request; pending movement grants no route. The former held-body consumer rejects the timed owner. Prepared21 control/consumer, Game projection/save, approach, actual stroll execution, anchor changes and ordinary producer remain pending; no A6/A/B/C closure changes.
+
+
 **Stationary Idle initialization, 2026-11-16:** [A fresh native declaration can share the original Idle initializer](e-r3-native-initial-idle-initialization-20261116.md) at its actual farm anchor, without navigation, time or RNG advancement. Game changes only after native acceptance; existing pending declarations and actors needing approach reject initialization. Timed policy, Alert/stroll, approach, ordinary producer and integrated recovery remain open; no A6/A/B/C closure changes.
 
 
