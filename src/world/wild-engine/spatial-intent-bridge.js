@@ -1,6 +1,6 @@
 import {LOCOMOTION} from '../../simulation/locomotion-calibration.js';
 import {copyNativeIdleCycleBodySource,nativeIdleCycleBodyState} from '../native-idle-cycle-body-source.js';
-import {copyNativeIdleStrollReference,copyNativeIdleStrollProposal,copyNativeIdleStrollAttestation,nativeIdleStrollContinuesNext} from '../native-idle-stroll.js';
+import {copyNativeIdleStrollReference,copyNativeIdleStrollProposal,copyNativeIdleStrollAttestation,sameNativeIdleStrollAttestation,nativeIdleStrollContinuesNext} from '../native-idle-stroll.js';
 import {copyNativeHomeArrivalReference,copyNativeHomeArrivalProposal,copyNativeHomeArrivalAttestation,sameNativeHomeArrivalReference} from '../native-home-arrival.js';
 import {createNativeResourceAdmission} from '../native-resource-admission.js';
 import {nativeTaskStartReferenceFromProposal} from '../native-task-start-reference.js';
@@ -849,6 +849,17 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       kind=10;mode=m.replace?1:0;floats=m.sites.flatMap(s=>[s.x,s.z,s.hx,s.hz,s.waterFalloff??6]);
     }else if(m.type==='publishPreparedChunk'){
       if(!id(m.id))throw TypeError('Invalid native prepared chunk ID');kind=11;integers=[m.id];
+    }else if(m.type==='stopIdleStroll'){
+      if(typeof prepareResources!=='function')throw TypeError('Native stroll stop requires retained prepared resources');
+      const binding=copyNativeIdleStrollAttestation(m.binding),r=binding.reference,h=r.expectedRouteHandle;
+      if(h.authorityEpoch!==epoch()||h.session!==wasm.nav_intent_session()||!sameNativeIdleStrollAttestation(binding,nativeIdleStrollBinding(r.actorId)))return Promise.resolve({status:'stale',authorizedAutonomy:false,authorizedPassage:false});
+      const split=value=>[Number(BigInt(value)&0xffffffffn)|0,Math.floor(value/4294967296)];
+      const prepare=prepareResources;prepareResources=async options=>{
+        const handle=await prepare(options);
+        if(!handle?.preparedWorldBoundary){handle?.abort?.();throw Error('Native stroll stop requires a retained command packet');}
+        return handle;
+      };
+      kind=12;integers=[...split(h.session),...split(r.actorId),h.slot|0,h.generation|0,...split(binding.assignmentSequence)];
     }else throw TypeError('Unsupported native world mutation');
     // Only serialization into the authority-owned temporary input buffers.
     return commitNativeWorldProposal(getPublication,()=>{
@@ -870,6 +881,12 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       if(onNativeWorldResources)onNativeWorldResources({...resources,worldBoundary:nativeWorldBoundary()});
       return {status:1,value:{ids,resources}};
     },prepareResources,signal);
+  };
+  const stopNativeIdleStrollAfterGpuQuiescence=({actorId,getPublication,prepareResources,signal=null}={})=>{
+    if(typeof prepareResources!=='function')throw TypeError('Native stroll stop requires retained prepared resources');
+    const binding=nativeIdleStrollBinding(actorId);
+    if(!binding)return Promise.resolve({status:'unsupported',authorizedAutonomy:false,authorizedPassage:false});
+    return mutateNativeWorldAfterGpuQuiescence({getPublication,mutation:{type:'stopIdleStroll',binding},signal,prepareResources});
   };
   const mutateNativeOverlayAfterGpuQuiescence=mutateNativeWorldAfterGpuQuiescence;
   const sampleNativeRoute=(handle,at)=>{
@@ -2164,7 +2181,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     structureFor:id=>structuresById.get(numericId(id))??null,
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
-    intentChanges,routePoints,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,captureNativeRoutePresentation,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,resumeNativeGateRouteAfterGpuQuiescence,prepareNativeGateResumeProposal,captureNativeGateResumeProposal,cancelNativeGateResumeProposal,revalidateNativeGateResumeProposal,prepareNativeTaskStartProposal,captureNativeTaskStartProposal,revalidateNativeTaskStartProposal,cancelNativeTaskStartProposal,
+    intentChanges,routePoints,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,captureNativeRoutePresentation,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,resumeNativeGateRouteAfterGpuQuiescence,prepareNativeGateResumeProposal,captureNativeGateResumeProposal,cancelNativeGateResumeProposal,revalidateNativeGateResumeProposal,prepareNativeTaskStartProposal,captureNativeTaskStartProposal,revalidateNativeTaskStartProposal,cancelNativeTaskStartProposal,
     beginNativeRouteExecution,advanceNativeRouteExecution,stopNativeRouteExecution,nativeRouteExecution,nativeGameExecutionState,advanceNativeGameExecution,nativeTaskExecution,requestNativeTaskActionResources,nativeTaskActionRequest,
     startNativeTaskActionAfterGpuQuiescence,prepareNativeTaskActionProposal,captureNativeTaskActionProposal,revalidateNativeTaskActionProposal,cancelNativeTaskActionProposal,
     nativeTaskActionBinding,nativeTaskActionBindings,nativeTaskActionExecution,nativeTaskActionRestoreReferences,
@@ -3227,7 +3244,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     nativeWorldResourceBoundary:bridge.nativeWorldResourceBoundary,
     addNativeBarrierAfterGpuQuiescence:bridge.addNativeBarrierAfterGpuQuiescence,
     mutateNativeOverlayAfterGpuQuiescence:bridge.mutateNativeOverlayAfterGpuQuiescence,
-    mutateNativeWorldAfterGpuQuiescence:bridge.mutateNativeWorldAfterGpuQuiescence,
+    mutateNativeWorldAfterGpuQuiescence:bridge.mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence:bridge.stopNativeIdleStrollAfterGpuQuiescence,
     nativeCausalClock:bridge.nativeCausalClock,commitNativeCausalClock:bridge.commitNativeCausalClock,
     observeNativeIntentControl:bridge.observeNativeIntentControl,
     flushNativeIntentControl:bridge.flushNativeIntentControl,

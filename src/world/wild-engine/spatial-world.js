@@ -200,10 +200,11 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     const status=wasm.spatial_world_resource_snapshot();
     if(status!==1)throw Error(status<0?'Native world resource projection is stale':'Native world resource projection is unavailable');
     const h=Array.from(new Float64Array(wasm.memory.buffer,wasm.spatial_world_resource_header_ptr(),9)),count=h[5];
-    if(h[0]!==1||h[1]!==nativeSession||h[2]!==ticket||h[3]!==effectiveTime||!Number.isSafeInteger(h[4])||h[4]<2||h[4]>11||
+    if(h[0]!==1||h[1]!==nativeSession||h[2]!==ticket||h[3]!==effectiveTime||!Number.isSafeInteger(h[4])||h[4]<2||h[4]>12||
        !Number.isSafeInteger(count)||count<0||count>32768)throw Error('Native resource projection does not match the committed proposal');
     // Selection can grow WASM memory. Copy the journal before selecting any
     // chunk, then copy the canonical payloads using the existing export path.
+    if(h[4]===12&&count!==0)throw Error('Native stroll stop changed world geometry');
     const rows=Array.from(new Int32Array(wasm.memory.buffer,wasm.spatial_world_resource_changes_ptr(),count*3)),
       selected=chunk?{cx:chunk.cx,cz:chunk.cz}:null,upserts=[],removed=[],keys=new Set();
     const prepared=wasm.spatial_world_resource_prepared_snapshot?.(nativeSession,ticket)===1;let selectedChanged=false;
@@ -229,7 +230,8 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     const routeEffects=effects('nav_intent_world_proposal_route_effects','nav_intent_world_proposal_route_effects_ptr',26),gateEffects=effects('nav_intent_world_proposal_gate_effects','nav_intent_world_proposal_gate_effects_ptr',3);
     if((routeEffects.rows.length===0)!==(retention===1))throw Error('Native mutation retention/effect mismatch');
     const h=Array.from(new Float64Array(wasm.memory.buffer,wasm.spatial_world_proposal_resource_header_ptr(),9)),count=h[5];
-    if(h[0]!==1||h[1]!==nativeSession||h[2]!==ticket||h[3]!==effectiveTime||!Number.isSafeInteger(h[4])||h[4]<6||h[4]>11||!Number.isSafeInteger(count)||count<0||count>32768)throw Error('Native proposal resource identity mismatch');
+    if(h[0]!==1||h[1]!==nativeSession||h[2]!==ticket||h[3]!==effectiveTime||!Number.isSafeInteger(h[4])||h[4]<6||h[4]>12||!Number.isSafeInteger(count)||count<0||count>32768)throw Error('Native proposal resource identity mismatch');
+    if(h[4]===12&&(count!==0||retention!==0||!routeEffects.rows.length))throw Error('Native stroll stop lacks its body-only effects');
     const rows=Array.from(new Int32Array(wasm.memory.buffer,wasm.spatial_world_proposal_resource_changes_ptr(),count*3)),chunks=[],removed=[],seen=new Set();
     for(let index=0;index<count;index++){
       const [operation,cx,cz]=rows.slice(index*3,index*3+3),key=cx+','+cz;

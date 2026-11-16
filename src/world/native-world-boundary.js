@@ -28,7 +28,8 @@ export function reconcileNativeWorldResources({publication,admitted,previous=nul
  for(const record of records){
   if(!record||record.version!==1||Object.keys(record).some(key=>!['version','worldBoundary','kind','chunks','removed'].includes(key))||
      !Array.isArray(record.chunks)||!Array.isArray(record.removed))throw TypeError('Invalid native world resource record');
-  if(![6,7,8,9,10,11].includes(record.kind))throw Error('Native graphical resource family is not implemented');
+  if(![6,7,8,9,10,11,12].includes(record.kind))throw Error('Native graphical resource family is not implemented');
+  if(record.kind===12&&(record.chunks.length||record.removed.length))throw Error('Native body-only stop changed world geometry');
   if(record.kind===7?record.chunks.length>0:record.removed.length>0)throw Error('Native resource operation does not match its family');
   const next=copyNativeWorldBoundary(record.worldBoundary);
   if(!next||next.effectiveTime>publication.elapsed||boundary&&(next.authorityEpoch!==boundary.authorityEpoch||next.nativeSession!==boundary.nativeSession||

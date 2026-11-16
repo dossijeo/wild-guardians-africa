@@ -4,7 +4,7 @@ import {copyTerrainResourcePayload,sameTerrainResourcePayload} from '../world/te
 import {estimateRetainedBytes} from './retained-size.js';
 
 function resourcePayloads(resources,boundary,proposal){
- if(resources?.version!==1||proposal&&resources.phase!=='proposal'||!Number.isSafeInteger(resources.kind)||resources.kind<6||resources.kind>11||resources.kind===7&&resources.chunks?.length>0||resources.kind!==7&&resources.removed?.length>0||resources.nativeSession!==boundary.nativeSession||resources.ticket!==boundary.ticket||resources.effectiveTime!==boundary.effectiveTime||!Array.isArray(resources.chunks)||!Array.isArray(resources.removed))throw Error('Native terrain proposal resource identity mismatch');
+ if(resources?.version!==1||proposal&&resources.phase!=='proposal'||!Number.isSafeInteger(resources.kind)||resources.kind<6||resources.kind>12||resources.kind===12&&resources.chunks?.length>0||resources.kind===7&&resources.chunks?.length>0||resources.kind!==7&&resources.removed?.length>0||resources.nativeSession!==boundary.nativeSession||resources.ticket!==boundary.ticket||resources.effectiveTime!==boundary.effectiveTime||!Array.isArray(resources.chunks)||!Array.isArray(resources.removed))throw Error('Native terrain proposal resource identity mismatch');
  const keys=new Set(),payloads=[...resources.chunks,...resources.removed.map(({cx,cz})=>({authority:'spatial-wasm',cx,cz,removed:true}))].map(value=>copyTerrainResourcePayload(value,boundary.effectiveTime));
  for(const p of payloads){const key=`${p.cx},${p.cz}`;if(keys.has(key))throw Error('Duplicate native terrain proposal chunk');keys.add(key);}return payloads;
 }
@@ -27,6 +27,7 @@ export function createTerrainProposalPublication({port,session,epoch,snapshot,st
   if(signal?.aborted)throw new DOMException('Native terrain proposal cancelled','AbortError');
   if(resources?.retainsNativeAssignments!==undefined&&typeof resources.retainsNativeAssignments!=='boolean')throw TypeError('Invalid native assignment retention proof');
   const stopEffects=copyNativeWorldStopEffects(resources,boundary),stopBytes=stopEffects?stopEffects.routeEffects.rows.byteLength+stopEffects.gateEffects.rows.byteLength:0,payloads=resourcePayloads(resources,boundary,true),messages=payloads.map(payload=>({payload,sequence,epoch,revision:base.revision(payload.cx,payload.cz)+1})),bytes=payloads.reduce((sum,p)=>sum+estimateRetainedBytes(p),stopBytes),capacity=limits();
+  if(resources.kind===12&&(!stopEffects?.routeEffects.rows.length||resources.retainsNativeAssignments!==false))throw Error('Native stroll stop lacks body-only effects');
   // Keep room for comparing the actual publication with the owned preview.
   capacity.bytes=Math.floor(capacity.bytes/2);capacity.count=Math.floor(capacity.count/2);
   if(!Number.isSafeInteger(bytes)||bytes+256*(messages.length+1)>capacity.bytes||messages.length+1>capacity.count)throw Error('Native terrain proposal exceeds capacity');

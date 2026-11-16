@@ -48,7 +48,14 @@ test('ACK-like, old, incomplete or masked resource proofs cannot grant a native 
 });
 
 test('unsupported native visuals and conflicting or future metadata are explicit failures',()=>{
- for(const kind of [2,3,4,5,12]){const f=fixture();f.publication.nativeWorldResources[0].kind=kind;assert.throws(()=>reconcileNativeWorldResources(f),/family/);}
+ for(const kind of [2,3,4,5,13]){const f=fixture();f.publication.nativeWorldResources[0].kind=kind;assert.throws(()=>reconcileNativeWorldResources(f),/family/);}
  for(const change of [{version:2},{future:true},{chunks:null},{removed:[{cx:0,cz:0}]}]){const f=fixture();Object.assign(f.publication.nativeWorldResources[0],change);assert.throws(()=>reconcileNativeWorldResources(f));}
  const f=fixture();f.publication.nativeWorldResources[0].chunks.push({cx:0,cz:0});assert.throws(()=>reconcileNativeWorldResources(f),/Conflicting/);
+});
+
+
+test('body-only native stop requires an applied empty prepared boundary and rejects invented geometry',()=>{
+ const f=fixture(),record=f.publication.nativeWorldResources[0];record.kind=12;record.chunks=[];f.admitted={...f.admitted,changes:[],empty:true,nativeWorldBoundary:record.worldBoundary};assert.deepEqual(reconcileNativeWorldResources(f),record.worldBoundary);
+ delete f.admitted.empty;assert.throws(()=>reconcileNativeWorldResources(f),/lack/);f.admitted.empty=true;
+ for(const side of ['chunks','removed']){record[side]=[{cx:0,cz:0}];assert.throws(()=>reconcileNativeWorldResources(f),/body-only/);record[side]=[];}
 });

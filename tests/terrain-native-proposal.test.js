@@ -104,3 +104,20 @@ test('a channel without a versioned epoch refuses native preparation before any 
 test('an exception from the real validity check still aborts its already allocated GPU owner',async()=>{
  const f=await fixture({prepareProposal:(m,o,make)=>({...make(m),valid(){throw Error('actual GPU validity failure');}})});try{await assert.rejects(f.producer.prepareNativeWorldResources({proposedWorldBoundary:boundary,resources:resources()}),/actual GPU validity failure/);await until(()=>f.aborts===1);assert.equal(f.commits,1);assert.equal(f.receiver.status().nativeProposal,null);assert.deepEqual(f.errors,[]);}finally{await f.dispose();}
 });
+
+
+test('body-only native stop uses the existing terrain channel without touching chunk revisions',async()=>{
+ const rows=new Float64Array(26);rows.set([1,1,0,3,1,4,10,4]);rows[15]=10;rows[25]=2;let observed;
+ const f=await fixture({prepareProposal:(messages,options,make)=>{observed=options;assert.deepEqual(messages,[]);return {...make(messages),preparedWorldBoundary:options.proposedWorldBoundary};}});
+ try{
+  const stop={...resources([],[]),kind:12,retainsNativeAssignments:false,routeEffects:{version:1,rowWidth:26,rows},gateEffects:{version:1,rowWidth:3,rows:new Float64Array()}},live=[...f.live],changes=f.changes.length,prepares=f.prepares,commits=f.commits,h=await f.producer.prepareNativeWorldResources({proposedWorldBoundary:boundary,resources:stop});
+  assert.deepEqual(observed.stopEffects.routeEffects.rows,rows);assert.deepEqual(h.preparedWorldBoundary,boundary);assert(h.valid());assert(h.commit({worldBoundary:boundary,resources:{...stop,phase:'committed'}}));f.producer.commit(1);await until(()=>f.receiver.ready(1));f.receiver.confirm(1,10);assert.equal(f.commits,commits+1);assert.deepEqual(f.receiver.admittedBoundary(1).nativeWorldBoundary,boundary);assert.deepEqual(f.producer.manifest().chunks,[{cx:0,cz:0,revision:1},{cx:1,cz:0,revision:1}]);assert.deepEqual([...f.live],live);assert.equal(f.changes.length,changes);assert.equal(f.prepares,prepares);assert.deepEqual(f.errors,[]);
+ }finally{await f.dispose();}
+});
+
+test('body-only native stop rejects geometry or missing suspension before preparing',async()=>{
+ const f=await fixture();try{
+  for(const invalid of [{...resources(),kind:12},{...resources([],[]),kind:12},{...resources([],[]),kind:12,retainsNativeAssignments:true}])await assert.rejects(f.producer.prepareNativeWorldResources({proposedWorldBoundary:boundary,resources:invalid}),/identity mismatch|body-only effects/);
+  assert.equal(f.prepared.length,0);
+ }finally{await f.dispose();}
+});
