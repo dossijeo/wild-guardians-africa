@@ -176,10 +176,18 @@ struct NativeInitialIdleBodyBinding {
 // One finite original rest/watch cycle on the existing stationary body. Future
 // phase data is immutable; the stochastic next request is resolved once at its
 // native deadline and never grants a walking route by itself.
+// Bounded stationary source metadata. A completed stroll supplies its actual
+// endpoint; it never masquerades as an initial body or retains route ancestry.
+struct NativeIdleCycleBodySource:NativeWorkerPoseResourceRequest {
+ uint64_t center=0,anchor=0;int kind=0,workerProfile=0,anchorKind=0;
+ std::array<double,6> initial{};
+};
+struct NativeIdleStrollBinding;
 struct NativeIdleCycleOrigin {std::array<double,24> header{};uint64_t ticket=0;};
 struct NativeIdleCycleBinding {
  NativeIdleCycleOrigin prepared,actual;uint64_t cycleSequence=0;
  std::shared_ptr<const NativeInitialIdleBodyBinding> body;
+ NativeIdleCycleBodySource source;
 };
 struct NativeIdleCycleDecision {
  int status=0;std::array<double,6> state{};double x=0,z=0;
@@ -365,6 +373,7 @@ struct PendingBarrierProposal {
   struct IdleCycleDraft {
    std::array<double,24> header{};std::shared_ptr<const NativeInitialIdleBodyBinding> body;
    std::shared_ptr<NativeIdleCycle> previousCycle;
+   std::shared_ptr<const NativeIdleStrollBinding> strollSource;NativeIdleCycleBodySource source;
    std::optional<NativeIdleCycleOrigin> previous;std::array<double,8> timeTranslation{};
   };
   std::optional<IdleCycleDraft> idleCycle;
@@ -468,6 +477,7 @@ struct IntentState {
   std::vector<double> idleCycleBindingResult;
   std::array<double,14> idleCycleExecutionResult{};
   std::array<double,14> idleCycleNextResult{};
+  std::array<double,26> idleCycleSourceResult{};
   std::vector<double> idleStrollBindingResult;
   std::array<double,42> idleStrollExecutionResult{};
   std::array<double,30> homeExecutionResult{};
@@ -561,6 +571,8 @@ bool nativeSettlementBodyCurrent(const IntentState& s,const ActiveIntent& intent
   !s.reservedBodies.count(worker->second.body)&&!s.suspendedBodies.count(worker->second.body)&&center!=s.targets.end()&&center->second.active&&center->second.kind==4&&center->second.status==0;
 }
 bool nativeDeliveryBodyCurrent(const IntentState&,const ActiveIntent&);
+static bool nativeIdleCycleBodyCurrent(const IntentState&,const ActiveIntent&);
+static bool nativeIdleCycleCurrent(const IntentState&,const ActiveIntent&);
 bool nativeHomeBodyCurrent(const IntentState&,const ActiveIntent&);
 bool nativeInitialIdleBodyCurrent(const IntentState& s,const ActiveIntent& intent){
  if(!intent.initialIdleBodyBinding||!intent.requiresResources||intent.animal||intent.retreat||intent.delivery||intent.actionBinding||intent.restoredActionSource||intent.settlementBinding||intent.initialIdleRequest)return false;
@@ -595,7 +607,7 @@ bool nativeInitialIdleRequestBodyCurrent(const IntentState& s,const ActiveIntent
  return intent.initialIdleRequest&&intent.initialIdleRequest->body&&nativeInitialIdleRequestCurrent(s,intent);
 }
 bool nativeTaskActionsCoherent(const IntentState& s){
-  for(const auto& [actor,intent]:s.activeIntents)if(intent.initialIdleBodyBinding&&!nativeInitialIdleBodyCurrent(s,intent))return false;
+  for(const auto& [actor,intent]:s.activeIntents)if(intent.initialIdleBodyBinding&&!nativeInitialIdleBodyCurrent(s,intent)||intent.idleCycle&&!nativeIdleCycleBodyCurrent(s,intent))return false;
   for(const auto& [actor,intent]:s.activeIntents)if(intent.initialIdleRequest&&!nativeInitialIdleRequestBodyCurrent(s,intent))return false;
    for(const auto& [actor,intent]:s.activeIntents)if(intent.homeRequest&&!nativeHomeRequestBodyCurrent(s,intent))return false;
   for(const auto& [actor,intent]:s.activeIntents)if(intent.actionBinding&&!nativeTaskActionBodyCurrent(s,intent)||intent.delivery&&!nativeDeliveryBodyCurrent(s,intent)||intent.settlementBinding&&!nativeSettlementBodyCurrent(s,intent)||intent.home&&intent.state==PlanningState::RouteActive&&intent.slot<s.routeSlots.size()&&s.routeSlots[intent.slot].homeBinding&&!nativeHomeBodyCurrent(s,intent))return false;
@@ -604,7 +616,7 @@ bool nativeTaskActionsCoherent(const IntentState& s){
 const ActiveIntent* nativeTaskActionForBody(const IntentState& s,uint64_t id){
   const auto owner=s.gateBodyActors.find(id);if(owner==s.gateBodyActors.end())return nullptr;
   const auto intent=s.activeIntents.find(owner->second);
-  return intent!=s.activeIntents.end()&&(intent->second.actionBinding||intent->second.restoredActionSource||intent->second.settlementBinding||intent->second.homeRequest||intent->second.initialIdleRequest||intent->second.initialIdleBodyBinding)?&intent->second:nullptr;
+  return intent!=s.activeIntents.end()&&(intent->second.actionBinding||intent->second.restoredActionSource||intent->second.settlementBinding||intent->second.homeRequest||intent->second.initialIdleRequest||intent->second.initialIdleBodyBinding||intent->second.idleCycle)?&intent->second:nullptr;
 }
 bool nativeTaskActionBodyCanChange(const IntentState& s,uint64_t id,const SpatialBodyView& proposed){
   const auto* intent=nativeTaskActionForBody(s,id);if(!intent)return true;
@@ -859,6 +871,7 @@ bool gateRouteBindingsCoherent(const IntentState&,const RouteSlot&,uint32_t);
 #include "spatial-terrain-mutation-state.h"
 #include "spatial-gate-transactions.h"
 #include "spatial-gate-crossings.h"
+#include "spatial-idle-stroll-source.h"
 void invalidateDependents(IntentState& s,const Change& change){
   if(change.kind==1){
     if(!change.op){
@@ -1402,7 +1415,7 @@ void spatialIntentBodyRemoving(uint64_t id){
   auto& s=state();SpatialBodyView previous;
   if(const auto binding=s.gateBodyActors.find(id);binding!=s.gateBodyActors.end()){
     const auto intent=s.activeIntents.find(binding->second);
-    if(intent!=s.activeIntents.end()&&(intent->second.actionBinding||intent->second.restoredActionSource||intent->second.homeRequest||intent->second.initialIdleRequest||intent->second.initialIdleBodyBinding)){releaseIntent(s,intent->first,PlanningState::Cancelled);s.activeIntents.erase(intent);}
+    if(intent!=s.activeIntents.end()&&(intent->second.actionBinding||intent->second.restoredActionSource||intent->second.homeRequest||intent->second.initialIdleRequest||intent->second.initialIdleBodyBinding||intent->second.idleCycle)){releaseIntent(s,intent->first,PlanningState::Cancelled);s.activeIntents.erase(intent);}
     if(const auto worker=s.workers.find(binding->second);worker!=s.workers.end())worker->second.bodyBound=false;
     s.gateBodyActors.erase(binding);
   }
@@ -1411,7 +1424,7 @@ void spatialIntentBodyRemoving(uint64_t id){
 }
 void spatialIntentBodiesResetting(){
   auto& s=state();
-  std::vector<uint64_t> actions;for(const auto& [actor,intent]:s.activeIntents)if(intent.actionBinding||intent.restoredActionSource||intent.settlementBinding||intent.homeRequest||intent.initialIdleRequest||intent.initialIdleBodyBinding)actions.push_back(actor);
+  std::vector<uint64_t> actions;for(const auto& [actor,intent]:s.activeIntents)if(intent.actionBinding||intent.restoredActionSource||intent.settlementBinding||intent.homeRequest||intent.initialIdleRequest||intent.initialIdleBodyBinding||intent.idleCycle)actions.push_back(actor);
   std::sort(actions.begin(),actions.end());for(uint64_t actor:actions){releaseIntent(s,actor,PlanningState::Cancelled);s.activeIntents.erase(actor);}
   for(auto& [id,worker]:s.workers)worker.bodyBound=false;s.gateBodyActors.clear();
   s.resettingBodies=true;
@@ -2125,6 +2138,9 @@ static int commitTaskProposal(bool pendingResources){
     const auto old=s.activeIntents.find(workerId);if(old!=s.activeIntents.end()&&old->second.settlementBinding&&(!pendingResources||!nativeSettlementBodyCurrent(s,old->second))){clearProposal(s);return 0;}
     if(old!=s.activeIntents.end()&&old->second.initialIdleRequest&&(!pendingResources||!nativeInitialIdleRequestCurrent(s,old->second))){clearProposal(s);return 0;}
     if(old!=s.activeIntents.end()&&old->second.initialIdleBodyBinding&&(!pendingResources||!nativeInitialIdleBodyCurrent(s,old->second))){clearProposal(s);return 0;}
+    // Current-pose TaskStart is a separate prepared handoff. Until supported,
+    // planning cannot discard a post-stroll stationary owner to bypass it.
+    if(old!=s.activeIntents.end()&&old->second.idleCycle&&!old->second.initialIdleBodyBinding){clearProposal(s);return 0;}
   }
   for(const auto& [taskId,workerId]:s.proposals){
     s.tasks.at(taskId).assigned=workerId;s.workers.at(workerId).eligible=false;

@@ -13,7 +13,7 @@ static int stageIdleStroll(double actor,double session,double sourceSequence){
  const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end()||!nativeIdleCycleCurrent(s,found->second))return -2;
  PendingNativeMotionDraft d;d.idleCycleSource=found->second.idleCycle;const auto& cycle=*d.idleCycleSource;const auto& next=cycle.next;
  if(!idleCycleAnchorCurrent(s,cycle.binding->actual.header)||!nativeIdleCycleFinished(cycle,s.effectiveTime)||next.status!=1||next.state[0]!=3||double(next.sequence)!=sourceSequence)return -2;
- const auto& q=*cycle.binding->body->source;const auto& h=cycle.binding->actual.header;
+ const auto& q=cycle.binding->source;const auto& h=cycle.binding->actual.header;
  d.body=q.body;d.slot=uint32_t(s.routeSlots.size());for(uint32_t i=0;i<s.routeSlots.size();i++)if(!s.routeSlots[i].active){d.slot=i;break;}
  d.generation=d.slot<s.routeSlots.size()?s.routeSlots[d.slot].generation:0;
  const int previous=lazy_selected_context();if(previous!=q.profile)spatial_select_nav_profile_index(q.profile);
@@ -29,7 +29,7 @@ static int stageIdleStroll(double actor,double session,double sourceSequence){
  if(result==1){result=prepareRouteTiming(d.route,uint64_t(actor),q.x,q.z,s.effectiveTime,q.radius,2,0,q.runRemaining,true);if(result==1){d.route.motionOffset[2]=q.runPhase;d.route.motionOffset[3]=q.walkPhase;d.route.motionOffset[4]=q.carryPhase;}}
  d.topology=lazy_route_revision();if(previous!=q.profile)spatial_select_nav_profile_index(previous);if(result!=1)return result;
  SpatialBodyView body;if(!spatialReadBody(d.body,body))return -3;d.gates=s.gates;s.reservationResult.fill(0);
- result=proveGateRouteAdmission(s,found->second,d.route,d.body,body,d.gates,d.boundaries,false,nullptr,nullptr,nullptr,cycle.binding->body.get());if(result!=1)return result;
+ result=proveGateRouteAdmission(s,found->second,d.route,d.body,body,d.gates,d.boundaries,false,nullptr,nullptr,nullptr,cycle.binding->body.get(),cycle.binding.get());if(result!=1)return result;
  result=stageWorldMutationBoundary(nullptr,0);if(result!=1)return result;
  auto& p=s.barrierProposal;p.kind=22;captureNativeMotionRows(d);const auto& route=d.route;
  d.header={1,actor,double(d.body),double(d.generation),double(nextGateRouteGeneration(d.generation)),double(route.profile),double(route.motionFlags),route.radius,
@@ -71,14 +71,6 @@ EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_proposal_commit_bound(double session,do
  if(draft.slot==s.routeSlots.size())s.routeSlots.emplace_back();publishGateRouteAdmission(s,intent,draft.slot,draft.route,draft.body,draft.gates,draft.boundaries);
  binding->assignmentSequence=intent.assignmentSequence;s.routeSlots[intent.slot].idleStrollBinding=std::move(binding);s.entityRevision++;spatialRecordMotionResourceBoundary(session,ticket,time,22);return 1;
 }
-static const NativeIdleStrollBinding* currentIdleStroll(double actor){
- const auto& s=state();if(!integer(actor))return nullptr;const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end())return nullptr;const auto& intent=found->second;
- if(intent.task||intent.target||intent.home||intent.delivery||intent.animal||intent.retreat||!intent.requiresResources||intent.state!=PlanningState::RouteActive||intent.slot>=s.routeSlots.size())return nullptr;
- const auto& route=s.routeSlots[intent.slot];const auto& b=route.idleStrollBinding;const auto worker=s.workers.find(intent.actor);SpatialBodyView body;
- if(!b||!route.hasExecution||route.motionFlags||b->assignmentSequence!=intent.assignmentSequence||double(route.generation)!=b->actual.header[4]||double(intent.slot)!=b->actual.header[20]||route.startTime!=b->actual.header[10]||!executionBindingCoherent(s,route.reservationBody,intent.slot)||worker==s.workers.end()||!worker->second.bodyBound||worker->second.body!=route.reservationBody||double(worker->second.center)!=b->semantic[3]||
-  !spatialReadBody(route.reservationBody,body)||body.kind!=0||double(body.flags)!=b->semantic[4]||body.r!=route.radius||body.x!=route.executionPose[0]||body.z!=route.executionPose[1]||worker->second.x!=body.x||worker->second.z!=body.z)return nullptr;
- return b.get();
-}
 EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_binding_snapshot(double actor){auto& s=state();auto& out=s.idleStrollBindingResult;out.clear();const auto b=currentIdleStroll(actor);if(!b)return 0;out={1,double(b->assignmentSequence),double(b->prepared.ticket),double(b->actual.ticket)};out.insert(out.end(),b->prepared.header.begin(),b->prepared.header.end());out.insert(out.end(),b->actual.header.begin(),b->actual.header.end());out.insert(out.end(),b->semantic.begin(),b->semantic.end());return 1;}
 EMSCRIPTEN_KEEPALIVE const double* nav_idle_stroll_binding_ptr(){return state().idleStrollBindingResult.data();}
 EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_binding_actors(){auto& s=state();auto& out=s.idleStrollBindingResult;out.clear();std::vector<uint64_t> actors;for(const auto& [actor,intent]:s.activeIntents)if(intent.state==PlanningState::RouteActive&&intent.slot<s.routeSlots.size()&&s.routeSlots[intent.slot].idleStrollBinding){if(!currentIdleStroll(double(actor)))return -1;actors.push_back(actor);}std::sort(actors.begin(),actors.end());for(auto id:actors)out.push_back(double(id));return int(actors.size());}
@@ -92,7 +84,7 @@ EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_execution(double actor){
  const std::array<double,6> phase={3,0,0,m[15],retry,age};std::copy(phase.begin(),phase.end(),out.begin()+30);
  // Pure original cancelWalk blueprint, observable only after actual arrival.
  // It has no new intent sequence/permission and cannot start resting by itself.
- if(route.executionPose[6]==1){uint32_t rng=uint32_t(m[15]);const double remaining=m[17]*(2+std::floor(idleCycleRandom(rng)*3));const std::array<double,6> rest={1,0,remaining,double(rng),retry,0};std::copy(rest.begin(),rest.end(),out.begin()+36);}
+ if(route.executionPose[6]==1){const auto rest=idleStrollRestState(*b,s.effectiveTime);std::copy(rest.begin(),rest.end(),out.begin()+36);}
  return 1;
 }
 EMSCRIPTEN_KEEPALIVE const double* nav_idle_stroll_execution_ptr(){return state().idleStrollExecutionResult.data();}

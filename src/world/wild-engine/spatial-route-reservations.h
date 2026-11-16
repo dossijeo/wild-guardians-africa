@@ -102,13 +102,14 @@ std::set<uint64_t> reservationBodyCandidates(const IntentState& s,const SpatialB
   return reservationBoxCandidates(s,body.x-body.r,body.z-body.r,body.x+body.r,body.z+body.r);
 }
 bool reserveRouteClear(IntentState& s,const ActiveIntent& intent,const RouteSlot& route,
-    uint64_t body,const SpatialBodyView& physical,bool suffix=false,const NativeTaskActionBinding* transferFrom=nullptr,const NativeTaskSettlementBinding* stationaryFrom=nullptr,const NativeHomeResourceRequest* homeRequestFrom=nullptr,const NativeInitialIdleBodyBinding* initialIdleBodyFrom=nullptr){
+    uint64_t body,const SpatialBodyView& physical,bool suffix=false,const NativeTaskActionBinding* transferFrom=nullptr,const NativeTaskSettlementBinding* stationaryFrom=nullptr,const NativeHomeResourceRequest* homeRequestFrom=nullptr,const NativeInitialIdleBodyBinding* initialIdleBodyFrom=nullptr,const NativeIdleCycleBinding* idleCycleFrom=nullptr){
   if(const auto action=nativeTaskActionForBody(s,body);action){
     const bool task=transferFrom&&action->actionBinding.get()==transferFrom&&nativeTaskActionBodyCurrent(s,*action)&&action->actor==route.actor&&s.effectiveTime>=transferFrom->actual[16];
     const bool stationary=stationaryFrom&&action->settlementBinding.get()==stationaryFrom&&nativeSettlementBodyCurrent(s,*action)&&action->actor==route.actor;
     const bool home=homeRequestFrom&&action->homeRequest.get()==homeRequestFrom&&nativeHomeRequestBodyCurrent(s,*action)&&action->actor==route.actor;
     const bool initial=initialIdleBodyFrom&&action->initialIdleBodyBinding.get()==initialIdleBodyFrom&&nativeInitialIdleBodyCurrent(s,*action)&&action->actor==route.actor;
-    if(!task&&!stationary&&!home&&!initial)return false;
+    const bool cycle=idleCycleFrom&&action->idleCycle&&action->idleCycle->binding.get()==idleCycleFrom&&nativeIdleCycleCurrent(s,*action)&&action->actor==route.actor;
+    if(!task&&!stationary&&!home&&!initial&&!cycle)return false;
   }
   const ReservationPath path{&route};
   double minX=route.originX,maxX=route.originX,minZ=route.originZ,maxZ=route.originZ;

@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {nativeIdleCycleFixture} from './helpers/native-idle-cycle.js';
+import {nativeIdleStrollSourceFixture as fixture} from './helpers/native-idle-stroll-source.js';
 import {createThreadedSpatialWorld} from '../src/world/wild-engine/spatial-thread-runtime.js';
 import {PROFILES} from '../src/simulation/workforce.js';
 import {updateIdle} from '../src/simulation/idle.js';
@@ -8,26 +9,7 @@ import {emit} from '../src/simulation/game.js';
 
 // Trusted source ABI only. No graphical22 permission or Game22 projection is
 // manufactured by these tests; ordinary Game must reject this new cohort.
-function fixture(options={}){
- const f=nativeIdleCycleFixture({mode:'watch',remaining:.03,rng:0,...options});
- try{
-  const oracle=structuredClone(f.worker),p=f.propose();assert.equal(p.status,1);f.commit(p);
-  updateIdle(oracle,f.anchor,p.header[23],f.oracleNavigation,f.state.seed);f.advance(p.header[23]);
-  const next=f.next();assert.equal(next.data[6],3);assert.equal(oracle.idleState.mode,'walk');
-  const read=(name,n)=>Array.from(new Float64Array(f.w.memory.buffer,f.w[name](),n));
-  return {...f,oracle,decision:next,
-   stage(sequence=next.data[4],session=f.w.nav_intent_session()){
-    const status=f.w.nav_idle_stroll_proposal_stage(f.actor,session,sequence);if(status!==1)return {status};
-    const tuple=f.tuple(),count=f.w.nav_idle_stroll_proposal_points(...tuple.slice(0,2)),rows=f.w.nav_idle_stroll_proposal_rows(...tuple.slice(0,2));
-    return {status,ticket:tuple[1],header:read('nav_idle_stroll_proposal_header_ptr',24),semantic:read('nav_idle_stroll_proposal_semantic_ptr',20),
-     points:Array.from(new Float32Array(f.w.memory.buffer,f.w.nav_idle_stroll_proposal_points_ptr(),count*2)),rows:read('nav_idle_stroll_proposal_rows_ptr',rows*16)};
-   },
-   commitStroll(prepared){const t=f.tuple();assert.equal(f.w.nav_idle_stroll_proposal_commit_bound(...t.slice(0,5),prepared.ticket),1);assert.equal(f.planner.beginNativeRouteExecution().status,'started');assert.equal(f.planner.commitNativeCausalClock().status,'committed');},
-   stroll(){return f.w.nav_idle_stroll_execution(f.actor)===1?read('nav_idle_stroll_execution_ptr',42):null;},
-   strollBinding(){return f.w.nav_idle_stroll_binding_snapshot(f.actor)===1?read('nav_idle_stroll_binding_ptr',72):null;}
-  };
- }catch(error){f.close();throw error;}
-}
+
 function close(a,b,tolerance=1e-8){assert(Math.abs(a-b)<=tolerance,`${a} != ${b}`);}
 
 test('stroll preparation and cancellation retain the genuine cycle, body and RNG while the peer advances',()=>{
@@ -55,7 +37,7 @@ for(const profile of PROFILES)test(`${profile.id} walks on the existing native k
   const duration=p.header[11]-p.header[10],step=Math.min(.1,duration/2);updateIdle(f.oracle,f.anchor,step,f.oracleNavigation,f.state.seed);f.advance(step);const moving=f.stroll();
   close(moving[12],f.oracle.x);close(moving[13],f.oracle.z);close(moving[16],f.oracle.heading);close(moving[21],worker.runPhase);close(moving[22],f.oracle.walkPhase);close(moving[23],worker.carryPhase);assert.equal(moving[27],0);assert.equal(moving[30],3);assert.equal(moving[33],f.decision.data[9]);assert.deepEqual(moving.slice(36),[0,0,0,0,0,0]);assert.notDeepEqual(f.body(1),body);
   const remaining=p.header[11]-f.state.elapsed;updateIdle(f.oracle,f.anchor,remaining+.01,f.oracleNavigation,f.state.seed);f.advance(remaining+.01);const arrived=f.stroll();assert.equal(arrived[18],1);assert.equal(arrived[12],p.points.at(-2));assert.equal(arrived[13],p.points.at(-1));assert.equal(arrived[30],3);assert.equal(arrived[36],1);assert.equal(arrived[39],f.oracle.idleState.rng);close(arrived[38],f.oracle.idleState.remaining);assert.equal(f.oracle.idleState.mode,'rest');assert.equal(f.w.nav_intent_transition_sequence(),seq);
-  const endpoint=f.body(1),phase=arrived.slice(12);f.advance(.2);assert.deepEqual(f.body(1),endpoint);assert.deepEqual(f.stroll().slice(12),phase);assert.equal(f.w.nav_intent_transition_sequence(),seq);assert.deepEqual(f.worker,worker);assert.equal(f.state.rng,worldRng);assert.equal(f.w.nav_idle_cycle_proposal_stage(f.actor,f.w.nav_intent_session(),seq,1,900098,f.anchor.x,f.anchor.z,3,f.calibration.idleSeconds,f.calibration.alertSeconds),-2);
+  const endpoint=f.body(1),phase=arrived.slice(12);f.advance(.2);assert.deepEqual(f.body(1),endpoint);assert.deepEqual(f.stroll().slice(12),phase);assert.equal(f.w.nav_intent_transition_sequence(),seq);assert.deepEqual(f.worker,worker);assert.equal(f.state.rng,worldRng);assert.equal(f.w.nav_idle_cycle_proposal_stage(f.actor,f.w.nav_intent_session(),seq,1,900098,f.anchor.x,f.anchor.z,3,f.calibration.idleSeconds,f.calibration.alertSeconds),1);const rest=f.tuple();assert.equal(f.w.nav_idle_cycle_proposal_cancel(rest[0],rest[1]),1);assert.deepEqual(f.body(1),endpoint);assert.equal(f.stroll()[30],3);
  }finally{f.close();}
 });
 

@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuacion de la politica Idle: [descanso nativo desde el extremo real del paseo](e-r3-native-idle-arrival-source-20261116.md). La fuente21 distingue20/22, conserva cuerpo/pose/fases y adquiere REST sin adelantar RNG durante preparacion. Repite ciclos y paseos desde la ultima posicion con metadatos acotados en standalone/pthread. Faltan union tipada, consumidor grafico y Game de ese origen, tarea/Home y restauracion/cohorte ordinarios. Recuperacion integral de 3123 recursos y cierres A6/A/B/C siguen abiertos.
+
+
 Continuacion de la politica Idle: [paseo preparado22 en Surface y GPU originales](e-r3-native-idle-stroll-surface-20261116.md). La publicacion nueva adopta WALK ejecutado y Surface vuelve a ready. NVIDIA/Turing conserva actor/geometria/bancos y los IDs residentes; distingue copias nativas de uniformes y verifica cero asignaciones tras READY. Tick ordinario, descanso/tarea/Home desde la pose actual y carga semantica siguen pendientes. Recuperacion integral de 3123 recursos y cierres A6/A/B/C siguen abiertos.
 
 

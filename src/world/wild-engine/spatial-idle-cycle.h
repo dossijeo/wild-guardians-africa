@@ -1,11 +1,23 @@
 // Original private xorshift32 stream. Like idle.js, return the NEW state;
 // Unity.Mathematics uses the same shifts but a different output convention.
 static double idleCycleRandom(uint32_t& rng){rng^=rng<<13;rng^=rng>>17;rng^=rng<<5;return double(rng)/4294967296.;}
-static bool nativeIdleCycleCurrent(const IntentState& s,const ActiveIntent& intent){
- return intent.idleCycle&&intent.idleCycle->binding&&intent.state==PlanningState::StationaryActive&&
-  !intent.task&&!intent.target&&!intent.home&&intent.idleCycle->binding->body==intent.initialIdleBodyBinding&&
-  nativeInitialIdleBodyCurrent(s,intent);
+static std::array<double,26> idleCycleBodySourceData(const NativeIdleCycleBodySource& q){
+ return {1,double(q.kind),double(q.actor),double(q.body),double(q.session),double(q.sequence),q.at,double(q.profile),double(q.workerProfile),double(q.center),double(q.bodyFlags),q.x,q.z,q.yaw,q.radius,q.runPhase,q.walkPhase,q.carryPhase,q.runRemaining,double(q.anchorKind),double(q.anchor),q.initial[0],q.initial[1],q.initial[2],q.initial[3],q.initial[4]};
 }
+static bool nativeIdleCycleBodyCurrent(const IntentState& s,const ActiveIntent& intent){
+ if(!intent.idleCycle||!intent.idleCycle->binding)return false;const auto& b=*intent.idleCycle->binding;const auto& q=b.source;
+ if(b.body)return q.kind==20&&b.body==intent.initialIdleBodyBinding&&nativeInitialIdleBodyCurrent(s,intent);
+ if(q.kind!=22||intent.initialIdleBodyBinding||intent.initialIdleRequest||intent.settlementBinding||intent.homeRequest||intent.actionBinding||intent.restoredActionSource||intent.animal||intent.retreat||intent.delivery||intent.task||intent.target||intent.home||intent.lease||intent.generation||!intent.requiresResources||intent.state!=PlanningState::StationaryActive)return false;
+ const auto worker=s.workers.find(intent.actor);const auto center=s.targets.find(q.center);SpatialBodyView body;
+ return q.actor==intent.actor&&q.session==s.session&&q.sequence&&q.body&&intent.profile==q.profile&&worker!=s.workers.end()&&worker->second.center==q.center&&worker->second.eligible&&!worker->second.actionActive&&!worker->second.inactiveSequence&&worker->second.bodyBound&&worker->second.body==q.body&&worker->second.x==q.x&&worker->second.z==q.z&&
+  spatialReadBody(q.body,body)&&body.kind==0&&body.flags==q.bodyFlags&&body.x==q.x&&body.z==q.z&&body.r==q.radius&&!s.reservedBodies.count(q.body)&&!s.suspendedBodies.count(q.body)&&center!=s.targets.end()&&center->second.active&&center->second.kind==4&&center->second.status==0;
+}
+static bool nativeIdleCycleCurrent(const IntentState& s,const ActiveIntent& intent){
+ return intent.state==PlanningState::StationaryActive&&!intent.task&&!intent.target&&!intent.home&&nativeIdleCycleBodyCurrent(s,intent);
+}
+static const NativeIdleStrollBinding* currentIdleStroll(double actor);
+static std::optional<NativeIdleCycleBodySource> arrivedIdleStrollCycleSource(const IntentState&,const ActiveIntent&,uint64_t);
+static bool idleStrollCycleReleaseClear(IntentState&,uint64_t);
 static double nativeIdleCycleEnd(const NativeIdleCycle& cycle){const auto& h=cycle.binding->actual.header;return h[5]+h[23];}
 // Preserve idle.js's explicit remaining>1e-9 boundary, including accumulated
 // .1-step rounding. This is a semantic deadline, not a new simulation clock.
@@ -23,7 +35,7 @@ static bool idleCycleAnchorCurrent(const IntentState& s,const std::array<double,
  return h[9]==1?(a.kind==1||a.kind==2)&&a.active&&a.x==h[11]&&a.z==h[12]:h[9]==2&&a.kind==4&&a.active&&a.status==0;
 }
 static NativeIdleCycleDecision chooseNativeIdleCycleNext(const IntentState& s,const NativeIdleCycle& cycle){
- NativeIdleCycleDecision next;const auto& h=cycle.binding->actual.header;const auto& q=*cycle.binding->body->source;
+ NativeIdleCycleDecision next;const auto& h=cycle.binding->actual.header;const auto& q=cycle.binding->source;
  if(!idleCycleAnchorCurrent(s,h)){next.status=-2;return next;}
  auto state=sampleNativeIdleCycle(cycle,nativeIdleCycleEnd(cycle));uint32_t rng=uint32_t(state[3]);
  if(idleCycleRandom(rng)<1./3.&&std::hypot(q.x-h[11],q.z-h[12])<=h[13]){
