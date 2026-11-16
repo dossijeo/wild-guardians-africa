@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+Continuación de Idle inicial: [petición semántica nativa sin historial ficticio](e-r3-native-initial-idle-request-20261116.md). Conserva pose, perfil, descanso/vigilancia, fases, RNG y ancla en el mismo propietario; el cuerpo queda retenido y una tarea real puede sustituir la petición mediante recursos pendientes. Pasan 732 pruebas y ambos módulos nativos. El proyector de Game, admisión gráfica y ejecución de los ciclos/paseo siguen pendientes; no se activa la partida ni cambia ningún cierre A6/A/B/C.
+
 Continuación de Idle: [Home inmediato durante adopción de Surface](e-r3-native-idle-home-consumer-20261116.md) sobre el mismo cuerpo y actor. NVIDIA/Turing: 96/98 recursos al preparar Idle/Home, cero tras READY; 54 dibujos del Idle durante el bloqueo inicial de Home y 53 posteriores, con identidades, selección y drenaje conservados. Idle inicial, otras tareas/finales, puertas, productor ordinario y recuperación integral siguen pendientes. No cambia ningún cierre A6/A/B/C.
 
 Continuación de Idle: [fin del contrato y nueva petición Home](e-r3-native-idle-home-20261116.md) sobre el mismo cuerpo, sin modificar la liquidación histórica. Pasan vencimiento diario y frontera horaria en ambos módulos, puertos reales con GPU simulada y roster original reversible. Falta el relevo inmediato durante adopción Idle en Surface y su comprobación en hardware; Idle inicial, otras tareas/finales, puertas, productor ordinario y recuperación integral siguen pendientes. No cambia ningún cierre A6/A/B/C.

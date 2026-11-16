@@ -152,12 +152,19 @@ struct NativeTaskSettlementBinding {
   std::shared_ptr<const NativeTaskConsequenceBinding> source;
   std::vector<uint64_t> sourceGates;
 };
-// Fresh semantic Home request in the same intent owner. Binding the first
-// physical body completes its immutable source; this grants no route.
-struct NativeHomeResourceRequest {
- uint64_t actor=0,session=0,sequence=0,village=0,body=0;
- double at=0,homeX=0,homeZ=0,x=0,z=0,yaw=0,runPhase=0,walkPhase=0,carryPhase=0,runRemaining=0,radius=0;
+// Shared pose metadata in the existing intent owner, never a body registry.
+struct NativeWorkerPoseResourceRequest {
+ uint64_t actor=0,session=0,sequence=0,body=0;
+ double at=0,x=0,z=0,yaw=0,runPhase=0,walkPhase=0,carryPhase=0,runRemaining=0,radius=0;
  int profile=1,bodyFlags=0;
+};
+// Binding the first physical body completes the request; it grants no route.
+struct NativeHomeResourceRequest:NativeWorkerPoseResourceRequest {
+ uint64_t village=0;double homeX=0,homeZ=0;
+};
+struct NativeInitialIdleResourceRequest:NativeWorkerPoseResourceRequest {
+ uint64_t center=0,anchor=0;int workerProfile=0,mode=0,anchorKind=0;
+ double elapsed=0,remaining=0,approachRetry=0;uint32_t rng=0;
 };
 struct NativeHomeRouteSourceView {
  uint64_t actor=0,body=0,sequence=0,village=0;
@@ -204,6 +211,7 @@ struct ActiveIntent {
   std::optional<TaskActionResourceRequest> actionRequest;
   std::optional<RestoredTaskActionSource> restoredActionSource;
   std::shared_ptr<NativeHomeResourceRequest> homeRequest;
+  std::shared_ptr<NativeInitialIdleResourceRequest> initialIdleRequest;
   std::shared_ptr<const NativeTaskActionBinding> actionBinding;
   bool delivery=false;uint64_t carriedTarget=0;
   std::shared_ptr<const NativeTaskSettlementBinding> settlementBinding;
@@ -410,6 +418,8 @@ struct IntentState {
   std::array<double,52> homeArrivalResult{};
   std::array<double,19> homeRequestResult{};
   std::vector<double> homeRequestsResult;
+  std::array<double,25> initialIdleRequestResult{};
+  std::vector<double> initialIdleRequestsResult;
   std::set<uint64_t> stoppedReservationBodies,removingBodies;
   std::set<uint64_t> stoppedGateRouteActors;
   uint64_t executionAdvances=0,executionEvaluations=0,executionBodyUpdates=0,executionStopInvalidations=0;
@@ -504,7 +514,15 @@ bool nativeHomeRequestBodyCurrent(const IntentState& s,const ActiveIntent& inten
   worker->second.x==r.x&&worker->second.z==r.z&&spatialReadBody(r.body,body)&&body.x==r.x&&body.z==r.z&&body.r==r.radius&&body.kind==0&&body.flags==r.bodyFlags&&
   !s.reservedBodies.count(r.body)&&!s.suspendedBodies.count(r.body);
 }
+bool nativeInitialIdleRequestBodyCurrent(const IntentState& s,const ActiveIntent& intent){
+ if(!intent.initialIdleRequest||intent.home||intent.task||intent.target||intent.lease||!intent.requiresResources||intent.animal||intent.retreat||intent.delivery||intent.actionBinding||intent.restoredActionSource||intent.settlementBinding||intent.homeRequest||intent.state!=PlanningState::AwaitingResources||intent.generation)return false;
+ const auto& r=*intent.initialIdleRequest;const auto worker=s.workers.find(intent.actor);const auto center=s.targets.find(r.center);SpatialBodyView body;
+ return r.actor==intent.actor&&r.session==s.session&&r.sequence==intent.resourceRequestSequence&&r.body&&worker!=s.workers.end()&&worker->second.center==r.center&&!worker->second.actionActive&&worker->second.bodyBound&&worker->second.body==r.body&&
+  worker->second.x==r.x&&worker->second.z==r.z&&spatialReadBody(r.body,body)&&body.x==r.x&&body.z==r.z&&body.r==r.radius&&body.kind==0&&body.flags==r.bodyFlags&&
+  center!=s.targets.end()&&center->second.active&&center->second.kind==4&&center->second.status==0&&!s.reservedBodies.count(r.body)&&!s.suspendedBodies.count(r.body);
+}
 bool nativeTaskActionsCoherent(const IntentState& s){
+  for(const auto& [actor,intent]:s.activeIntents)if(intent.initialIdleRequest&&!nativeInitialIdleRequestBodyCurrent(s,intent))return false;
    for(const auto& [actor,intent]:s.activeIntents)if(intent.homeRequest&&!nativeHomeRequestBodyCurrent(s,intent))return false;
   for(const auto& [actor,intent]:s.activeIntents)if(intent.actionBinding&&!nativeTaskActionBodyCurrent(s,intent)||intent.delivery&&!nativeDeliveryBodyCurrent(s,intent)||intent.settlementBinding&&!nativeSettlementBodyCurrent(s,intent)||intent.home&&intent.state==PlanningState::RouteActive&&intent.slot<s.routeSlots.size()&&s.routeSlots[intent.slot].homeBinding&&!nativeHomeBodyCurrent(s,intent))return false;
   return true;
@@ -512,7 +530,7 @@ bool nativeTaskActionsCoherent(const IntentState& s){
 const ActiveIntent* nativeTaskActionForBody(const IntentState& s,uint64_t id){
   const auto owner=s.gateBodyActors.find(id);if(owner==s.gateBodyActors.end())return nullptr;
   const auto intent=s.activeIntents.find(owner->second);
-  return intent!=s.activeIntents.end()&&(intent->second.actionBinding||intent->second.restoredActionSource||intent->second.settlementBinding||intent->second.homeRequest)?&intent->second:nullptr;
+  return intent!=s.activeIntents.end()&&(intent->second.actionBinding||intent->second.restoredActionSource||intent->second.settlementBinding||intent->second.homeRequest||intent->second.initialIdleRequest)?&intent->second:nullptr;
 }
 bool nativeTaskActionBodyCanChange(const IntentState& s,uint64_t id,const SpatialBodyView& proposed){
   const auto* intent=nativeTaskActionForBody(s,id);if(!intent)return true;
@@ -1307,7 +1325,7 @@ void spatialIntentBodyRemoving(uint64_t id){
   auto& s=state();SpatialBodyView previous;
   if(const auto binding=s.gateBodyActors.find(id);binding!=s.gateBodyActors.end()){
     const auto intent=s.activeIntents.find(binding->second);
-    if(intent!=s.activeIntents.end()&&(intent->second.actionBinding||intent->second.restoredActionSource||intent->second.homeRequest)){releaseIntent(s,intent->first,PlanningState::Cancelled);s.activeIntents.erase(intent);}
+    if(intent!=s.activeIntents.end()&&(intent->second.actionBinding||intent->second.restoredActionSource||intent->second.homeRequest||intent->second.initialIdleRequest)){releaseIntent(s,intent->first,PlanningState::Cancelled);s.activeIntents.erase(intent);}
     if(const auto worker=s.workers.find(binding->second);worker!=s.workers.end())worker->second.bodyBound=false;
     s.gateBodyActors.erase(binding);
   }
@@ -1316,7 +1334,7 @@ void spatialIntentBodyRemoving(uint64_t id){
 }
 void spatialIntentBodiesResetting(){
   auto& s=state();
-  std::vector<uint64_t> actions;for(const auto& [actor,intent]:s.activeIntents)if(intent.actionBinding||intent.restoredActionSource||intent.settlementBinding||intent.homeRequest)actions.push_back(actor);
+  std::vector<uint64_t> actions;for(const auto& [actor,intent]:s.activeIntents)if(intent.actionBinding||intent.restoredActionSource||intent.settlementBinding||intent.homeRequest||intent.initialIdleRequest)actions.push_back(actor);
   std::sort(actions.begin(),actions.end());for(uint64_t actor:actions){releaseIntent(s,actor,PlanningState::Cancelled);s.activeIntents.erase(actor);}
   for(auto& [id,worker]:s.workers)worker.bodyBound=false;s.gateBodyActors.clear();
   s.resettingBodies=true;
@@ -1353,7 +1371,7 @@ void nav_intent_reset(){
   s.gates.clear();s.gateBodyActors.clear();s.gateInput.clear();s.gateResult.clear();
   cancelGateMotionProposal(s);s.gateMotionResult.fill(0);
   s.barrierProposal=PendingBarrierProposal{};s.barrierProposalResult.fill(0);s.homeArrivalResult.fill(0);s.gateRevision=0;s.worldMutationPreview=false;s.worldPreviewRetainsRoutes=true;s.worldPreviewStoppedRoutes.clear();
-  s.homeRequestResult.fill(0);s.homeRequestsResult.clear();
+  s.homeRequestResult.fill(0);s.homeRequestsResult.clear();s.initialIdleRequestResult.fill(0);s.initialIdleRequestsResult.clear();
   s.routeHoldResult.clear();s.routeKnotResult.clear();s.gateWaitSegments=0;
   s.gateStaticPairs=s.gateStaticEvaluations=s.gateStaticRejected=0;s.gateStaticResult.fill(0);
   s.gateStaticProofs=0;s.gateStaticWorldStamp.fill(0);
@@ -2028,6 +2046,7 @@ static int commitTaskProposal(bool pendingResources){
     if(task==s.tasks.end()||worker==s.workers.end()||task->second.assigned||
       !worker->second.eligible){clearProposal(s);return 0;}
     const auto old=s.activeIntents.find(workerId);if(old!=s.activeIntents.end()&&old->second.settlementBinding&&(!pendingResources||!nativeSettlementBodyCurrent(s,old->second))){clearProposal(s);return 0;}
+    if(old!=s.activeIntents.end()&&old->second.initialIdleRequest&&(!pendingResources||!nativeInitialIdleRequestBodyCurrent(s,old->second))){clearProposal(s);return 0;}
   }
   for(const auto& [taskId,workerId]:s.proposals){
     s.tasks.at(taskId).assigned=workerId;s.workers.at(workerId).eligible=false;
@@ -2335,6 +2354,7 @@ EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_execution_ptr(){return state
 #include "spatial-task-consequence-proposal.inc"
 #include "spatial-task-settlement-proposal.inc"
 #include "spatial-home-resource-request.inc"
+#include "spatial-initial-idle-resource-request.inc"
 #include "spatial-home-route-proposal.inc"
 #include "spatial-home-arrival-proposal.inc"
 EMSCRIPTEN_KEEPALIVE double nav_intent_execution_advances(){return double(state().executionAdvances);}
