@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuacion de Idle inicial: [declaracion de Game, comprobacion y carga semantica nueva](e-r3-native-initial-idle-game-20261116.md). Conserva pose, fases, RNG y ancla sin recuperar permisos anteriores; valida antes de sustituir la sesion y exige un mundo fisico nuevo. La clase aun rechaza avanzar Game antes de su admision preparada. Faltan reloj/cohorte, tarea/Home previo a READY, consumidor y politica completa de Idle; no cambia ningun cierre A6/A/B/C.
+
+
 Continuación de Idle inicial: [petición semántica nativa sin historial ficticio](e-r3-native-initial-idle-request-20261116.md). Conserva pose, perfil, descanso/vigilancia, fases, RNG y ancla en el mismo propietario; el cuerpo queda retenido y una tarea real puede sustituir la petición mediante recursos pendientes. Pasan 732 pruebas y ambos módulos nativos. El proyector de Game, admisión gráfica y ejecución de los ciclos/paseo siguen pendientes; no se activa la partida ni cambia ningún cierre A6/A/B/C.
 
 Continuación de Idle: [Home inmediato durante adopción de Surface](e-r3-native-idle-home-consumer-20261116.md) sobre el mismo cuerpo y actor. NVIDIA/Turing: 96/98 recursos al preparar Idle/Home, cero tras READY; 54 dibujos del Idle durante el bloqueo inicial de Home y 53 posteriores, con identidades, selección y drenaje conservados. Idle inicial, otras tareas/finales, puertas, productor ordinario y recuperación integral siguen pendientes. No cambia ningún cierre A6/A/B/C.

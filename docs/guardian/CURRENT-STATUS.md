@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+**Initial Idle Game declaration and restoration, 2026-11-16:** [Explicit semantic declaration, retained-source checking and fresh loading](e-r3-native-initial-idle-game-20261116.md) preserve pose, phases, private RNG and anchor without restoring execution permissions. Preflight preserves the current session/consumers on failure; loading requires a fresh physical world. Game advance remains rejected until prepared admission. Native clock/cohort integration, task/Home before READY, graphical admission and full Idle policy remain pending; no A6/A/B/C closure changes.
+
+
 **Initial Idle source request, 2026-11-16:** [Fresh semantic declaration on the existing native intent/body](e-r3-native-initial-idle-request-20261116.md) retains profile, pose, rest/watch state, phases, private RNG and anchor without inventing Carry/settlement history. A genuine pending-resource task can replace it; its peer advances while the body stays held. 732 selected tests and both native builds pass. Game projection, initial graphical admission and full rest/watch/ambient-walk execution remain pending; no ordinary activation or A6/A/B/C closure changes.
 
 **Immediate Idle to Home consumer, 2026-11-16:** [The existing Surface adopts Idle even when Home is requested immediately](e-r3-native-idle-home-consumer-20261116.md). NVIDIA/Turing: 96/98 preparation creations for Idle/Home, zero after READY; 54 old-Idle draws during the initial Home preparation stall and 53 afterward. Resident actors/batches, picking, single credit and real final drain pass. Initial Idle, other task finals, gates, ordinary producer, live-world replacement and full3123 incremental recovery remain pending; no A6/A/B/C closure changes.

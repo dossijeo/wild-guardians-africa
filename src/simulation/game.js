@@ -1825,6 +1825,7 @@ export function tick(s,seconds,nav,{clockRate=1}={}) {
   if(!Number.isFinite(seconds)||seconds<0)throw new Error('Paso temporal inválido');
   if(!Number.isFinite(clockRate)||clockRate<=0||clockRate>1000000)throw TypeError('Invalid native game clock rate');
   if(seconds>1e-9&&!s.pauses.length&&!s.result&&!nav.intentTaskPlanner&&s.workers.some(worker=>worker.nativeRouteAdmission!==undefined))throw Error('Native task state requires resource admission before legacy movement');
+  if(seconds>1e-9&&!s.pauses.length&&!s.result&&s.workers.some(worker=>worker.nativeRouteAdmission==='pending-idle-resources'))throw Error('Initial native Idle still requires prepared execution admission');
   let left=seconds;
   while(left>1e-9 && !s.pauses.length && !s.result) {
     let nativeExecution=nav.intentTaskPlanner?.nativeGameExecutionState?.()??0;

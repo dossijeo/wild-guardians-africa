@@ -1,4 +1,5 @@
 import {copyNativeTaskActionProgress} from '../world/native-task-action-presentation.js';
+import {nativeInitialIdleDeclaration} from '../world/native-initial-idle-state.js';
 import {validDamageProfile} from '../simulation/raid-agricultural-impact.js';
 import {validateAwakenings} from '../simulation/awakenings.js';
 import {validateBlessings} from '../simulation/blessings.js';
@@ -126,8 +127,10 @@ export function validateSnapshot(state,{livePhysics=false}={}) {
         executing=worker.nativeRouteAdmission==='native-task'&&worker.status==='walking'&&Array.isArray(worker.path)&&worker.path.length===0,
         acting=worker.nativeRouteAdmission==='native-action'&&worker.status==='acting'&&Array.isArray(worker.path)&&worker.path.length===0,
         carrying=worker.nativeRouteAdmission==='native-delivery'&&worker.status==='carrying'&&!worker.taskId&&Array.isArray(worker.path)&&worker.path.length===0,
-        returning=['native-home','pending-home-resources'].includes(worker.nativeRouteAdmission)&&worker.status==='returning'&&!worker.taskId&&!worker.crateId&&worker.path===null;
-      if(!carrying&&!returning&&(!worker.taskId||!pending&&!executing&&!acting))throw Error('Solicitud de recursos nativa inválida');
+        returning=['native-home','pending-home-resources'].includes(worker.nativeRouteAdmission)&&worker.status==='returning'&&!worker.taskId&&!worker.crateId&&worker.path===null,
+        initialIdle=worker.nativeRouteAdmission==='pending-idle-resources';
+      if(initialIdle)nativeInitialIdleDeclaration(state,worker,{canonical:true});
+      if(!initialIdle&&!carrying&&!returning&&(!worker.taskId||!pending&&!executing&&!acting))throw Error('Solicitud de recursos nativa inválida');
     }
     if(worker.nativeDelivery!==undefined||worker.nativeRouteAdmission==='native-delivery'){
       const delivery=worker.nativeDelivery;
