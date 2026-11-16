@@ -2939,6 +2939,7 @@ int applyWorldProposalInput(const SpatialWorldProposalInput& input){
     if(result)worldProposalResult={x,z,added-1};
   }
 #endif
+  if(input.kind==12)result=spatialIntentStopIdleStroll(input);
   return result;
 }
 EMSCRIPTEN_KEEPALIVE float* spatial_world_proposal_float_ptr(int count){
@@ -2958,7 +2959,8 @@ EMSCRIPTEN_KEEPALIVE int spatial_world_resource_snapshot(){
 }
 EMSCRIPTEN_KEEPALIVE const double* spatial_world_resource_header_ptr(){return worldResourcePublication?worldResourcePublication->header.data():nullptr;}
 EMSCRIPTEN_KEEPALIVE const int32_t* spatial_world_resource_changes_ptr(){return worldResourcePublication?worldResourcePublication->changes.data():nullptr;}
-// 2–5 overlays; 6/7 residency; 8/9 props; 10 terrain; 11 pthread publication.
+// 2–5 overlays; 6/7 residency; 8/9 props; 10 terrain; 11 pthread publication;
+// 12 explicitly stops a native Idle stroll without changing world geometry.
 int stageWorldProposal(int kind,int mode,int floatCount,int intCount,bool captureResources){
   if(captureResources&&kind<6)return -2;
   WorldResourcePreview candidate;
@@ -3017,6 +3019,10 @@ int stageWorldProposal(int kind,int mode,int floatCount,int intCount,bool captur
 #ifndef __EMSCRIPTEN_PTHREADS__
     return -1;
 #endif
+  }else if(kind==12){
+    if(mode||floatCount||intCount!=8)return -1;
+    for(int i:{1,3,7})if(ids[i]<0||ids[i]>0x1fffff)return -1;
+    if((!ids[0]&&!ids[1])||(!ids[2]&&!ids[3])||!ids[5]||(!ids[6]&&!ids[7]))return -1;
   }else return -1;
   const SpatialWorldProposalInput input{kind,mode,f,ids};
   if(kind>=6){

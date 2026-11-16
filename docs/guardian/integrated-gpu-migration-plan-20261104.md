@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuacion de Idle: [parada explicita preparada del paseo en el mundo nativo](e-r3-native-idle-stroll-stop-source-20261116.md). La familia12 usa el cierre existente de cuerpos/puertas y su frontera exacta, sin obstaculo ficticio ni cambios de geometria. Conserva cuerpo/slot para Home y rechaza candidatos temporales obsoletos. Faltan codec/control/puertos, batch grafico sin terreno y relevo Home completo; tarea/restauracion/cohort/producer y recuperacion integral de 3123 siguen pendientes. A6/A/B/C permanecen abiertos.
+
+
 Continuacion de Idle: [fuente Home desde el paseo suspendido](e-r3-native-idle-moving-home-source-20261116.md). La peticion Home existente conserva slot, cuerpo y pose/fases ejecutadas de 22 despues de la suspension preparada; valida asignacion y generacion exactas, sin inventar20/21 ni consumir RNG. Faltan su integracion control/Game/puertos/roster/Surface, tarea durante paseo, restauracion/cohort/producer y recuperacion integral de 3123; A6/A/B/C siguen abiertos.
 
 

@@ -1277,6 +1277,22 @@ int spatialIntentBeginWorldPreview(){
   s.worldPreviewRetainsRoutes=true;s.worldPreviewStoppedRoutes.clear();s.worldMutationPreview=true;return 1;
 }
 void spatialIntentEndWorldPreview(){state().worldMutationPreview=false;}
+int spatialIntentStopIdleStroll(const SpatialWorldProposalInput& input){
+ if(input.kind!=12||input.mode||!input.floats.empty()||input.integers.size()!=8)return -1;
+ const auto& ids=input.integers;
+ for(int i:{1,3,7})if(ids[i]<0||ids[i]>0x1fffff)return -1;
+ const auto id=[&](int offset){return uint64_t(uint32_t(ids[offset]))|(uint64_t(uint32_t(ids[offset+1]))<<32);};
+ auto& s=state();const uint64_t session=id(0),actor=id(2),assignment=id(6);const uint32_t slot=uint32_t(ids[4]),generation=uint32_t(ids[5]);
+ if(!session||!actor||!assignment||!generation)return -1;
+ if(session!=s.session)return 0;
+ const auto binding=currentIdleStroll(double(actor));const auto found=s.activeIntents.find(actor);
+ if(!binding||found==s.activeIntents.end()||binding->assignmentSequence!=assignment||found->second.slot!=slot||found->second.generation!=generation||!routeCanSuspend(s,found->second))return 0;
+ // The existing world preflight expands the same held-disc/gate stop closure.
+ // Neither preview nor resource capture mutates this actor or its trajectory.
+ if(s.worldMutationPreview){s.worldPreviewStoppedRoutes.insert(actor);s.worldPreviewRetainsRoutes=false;return 1;}
+ if(!suspendRoute(s,found->second))return 0;
+ emitIntentChange(s,found->second);drainStoppedReservations(s);s.entityRevision++;return 1;
+}
 // Transient consequence rows on the existing proposal, never another world or
 // route store. Expand the same held-disc/gate closure using shared predicates.
 // Rows describe actors by old assignment identity; they do not predict control
@@ -1342,7 +1358,7 @@ void clearWorldMutationProposal(PendingBarrierProposal& p){
 int takeWorldMutationBoundary(double session,double ticket,double sequence,double time,double clockSequence,int kind){
   auto& s=state();const auto& p=s.barrierProposal;
   if(!integer(session)||!integer(ticket)||!p.pending||session!=double(p.session)||ticket!=double(p.ticket)||
-     (kind==1?p.kind!=1:(kind>=13&&kind<=22)?p.kind!=kind:p.kind<2||p.kind>11))return -1;
+     (kind==1?p.kind!=1:(kind>=13&&kind<=22)?p.kind!=kind:p.kind<2||p.kind>12))return -1;
   const bool current=p.session==s.session&&p.at==s.effectiveTime&&p.bodies==spatialBodiesMutationRevision()&&
     p.bodies!=std::numeric_limits<uint64_t>::max()&&p.entities==s.entityRevision&&p.facts==s.sequence&&
     p.intents==s.intentSequence&&p.reservations==s.residencyPinRevision&&p.clock==s.clockSequence&&
