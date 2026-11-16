@@ -2,6 +2,7 @@ import {copyNativeWorldBoundary,sameNativeWorldBoundary} from './native-world-bo
 import {copyNativeRouteReference} from './native-route-reference.js';
 import {copyNativeRoutePresentation} from './native-route-presentation.js';
 import {copyNativeIdleCycleNextRequest} from './native-idle-cycle.js';
+import {copyNativeIdleCycleBodySource,nativeIdleCycleBodyState} from './native-idle-cycle-body-source.js';
 import {copyNativePresentationSamples} from './native-presentation-samples.js';
 import {copyNativeGatePresentation} from './native-gate-presentation.js';
 import {nativeMotionPresentationMatches} from './native-motion-presentation-match.js';
@@ -36,8 +37,16 @@ export function nativeIdleStrollSuccessor(previous,next){
  return sameProgram(a,b)&&a.worldBoundary.authorityEpoch===b.worldBoundary.authorityEpoch&&a.worldBoundary.nativeSession===b.worldBoundary.nativeSession&&(b.worldBoundary.ticket>a.worldBoundary.ticket||sameNativeIdleStrollReference(a,b))&&b.worldBoundary.effectiveTime>=a.worldBoundary.effectiveTime&&b.sourceControlSequence>=a.sourceControlSequence&&floorFloat32(b.endTime-b.worldBoundary.effectiveTime)===floorFloat32(a.endTime-a.worldBoundary.effectiveTime);
 }
 export function nativeIdleStrollContinuesNext(reference,value){
- try{const r=copyNativeIdleStrollReference(reference),n=copyNativeIdleCycleNextRequest(value),q=n.sourceCycle.reference.sourceBody.reference.sourceRequest,a=n.sourceCycle.reference.anchor,s=n.idleState;
+ try{const r=copyNativeIdleStrollReference(reference),n=copyNativeIdleCycleNextRequest(value),q=nativeIdleCycleBodyState(n.sourceCycle.reference.sourceBody),a=n.sourceCycle.reference.anchor,s=n.idleState;
   return s.mode==='walk'&&r.actorId===q.actorId&&r.bodyId===q.bodyId&&r.centerId===q.centerId&&r.profile===q.profile&&r.workerProfile===q.workerProfile&&r.bodyFlags===q.bodyFlags&&r.sourceCycleSequence===n.sourceCycle.cycleSequence&&r.sourceDecisionSequence===n.requestSequence&&r.requestedAt===n.requestedAt&&r.worldBoundary.authorityEpoch===q.authorityEpoch&&r.worldBoundary.nativeSession===q.nativeSession&&poseKeys.every(k=>r.pose[k]===q.pose[k])&&anchorId(r.anchor)===a.id&&['x','z','radius'].every(k=>r.anchor[k]===a[k])&&r.walkRng===s.rng&&r.approachRetry===s.approachRetry&&r.destination.x===s.destination.x&&r.destination.z===s.destination.z;
+ }catch{return false;}
+}
+// A body snapshot is metadata until its exact native cycle acquisition. During
+// preparation it must continue the currently admitted, actually finished stroll.
+export function nativeIdleStrollArrivalSourceMatches(value,proof){
+ try{const q=copyNativeIdleCycleBodySource(value),b=copyNativeIdleStrollAttestation(proof),r=b.reference,p=q.pose,s=q.idleState;
+  let rng=r.walkRng;rng^=rng<<13;rng^=rng>>>17;rng^=rng<<5;rng>>>=0;
+  return q.kind==='native-idle-stroll-arrival-source'&&q.sourceSequence===b.assignmentSequence&&q.sourceAt===r.endTime&&q.authorityEpoch===r.worldBoundary.authorityEpoch&&q.nativeSession===r.worldBoundary.nativeSession&&q.actorId===r.actorId&&q.bodyId===r.bodyId&&q.bodyFlags===r.bodyFlags&&q.centerId===r.centerId&&q.profile===r.profile&&q.workerProfile===r.workerProfile&&p.x===Math.fround(r.destination.x)&&p.z===Math.fround(r.destination.z)&&['radius','runPhase','carryPhase','runRemaining'].every(k=>p[k]===r.pose[k])&&p.walkPhase>=r.pose.walkPhase&&s.anchorId===anchorId(r.anchor)&&s.rng===rng&&s.approachRetry===Math.max(0,r.approachRetry-(r.endTime-r.worldBoundary.effectiveTime));
  }catch{return false;}
 }
 const proposalFields=['kind','version','ticket','worldBoundary','nativeIdleStroll','actorId','bodyId','expectedRouteHandle','sourceControlSequence','profile','motionFlags','radius','origin','startTime','endTime','distance','speed','runDistance','runSpeed','runBudget','motionMode','rowWidth','rows','points','gates','authorizedAutonomy','authorizedPassage'];

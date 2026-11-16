@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuacion de la politica Idle: [fuente actual tipada y relevo paseo-descanso](e-r3-native-idle-arrival-data-20261116.md). La union20/22 usa la pose ejecutada y secuencia real, sin historial de permisos. Control exige paseo admitido, RouteCompleted y watermark; transactor/puertos conservan WALK hasta el commit y Game proyecta REST despues. Repeticion y carga estacionaria nueva pasan en ambos modulos. Faltan consumidor original GPU, tarea/Home, restauracion movil y cohort/producer ordinarios. Recuperacion integral de 3123 recursos y cierres A6/A/B/C siguen abiertos.
+
+
 Continuacion de la politica Idle: [descanso nativo desde el extremo real del paseo](e-r3-native-idle-arrival-source-20261116.md). La fuente21 distingue20/22, conserva cuerpo/pose/fases y adquiere REST sin adelantar RNG durante preparacion. Repite ciclos y paseos desde la ultima posicion con metadatos acotados en standalone/pthread. Faltan union tipada, consumidor grafico y Game de ese origen, tarea/Home y restauracion/cohorte ordinarios. Recuperacion integral de 3123 recursos y cierres A6/A/B/C siguen abiertos.
 
 

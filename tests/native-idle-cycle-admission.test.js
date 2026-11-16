@@ -1,44 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {MessageChannel} from 'node:worker_threads';
 import {nativeIdleCycleFixture} from './helpers/native-idle-cycle.js';
-import {createNativeIntentControlPublication} from '../src/simulation/native-intent-control-publication.js';
-import {createNativeResourcePreparationConnection} from '../src/simulation/native-resource-preparation-connection.js';
-import {attachNativeResourcePreparationEndpoint} from '../src/rendering/native-resource-preparation-receiver.js';
+import {idleCycleAdmissionProtocol as protocol} from './helpers/native-idle-cycle-admission.js';
 import {nativeResourceAdmissionProfile} from '../src/world/native-resource-admission-profiles.js';
 
 const flush=()=>new Promise(r=>setImmediate(r));
 // Real WASM, authority/publication and both MessageChannels. The consumer only
 // simulates a retained resource receipt/drain: this is NOT a graphical21 test.
-async function protocol(f,{onPrepare=()=>{},onDrain=()=>{},onCommit=()=>{},receipt=m=>m,release=m=>m}={}){
- const session='idle-cycle-admission',{port1,port2}=new MessageChannel(),resourcePorts=new MessageChannel(),requests=[],errors=[];
- let preparations=0,commits=0,aborts=0,refreshes=0,resolveReleased;
- const released=new Promise(resolve=>{resolveReleased=resolve;});
- port2.onmessage=async({data:m})=>{
-  if(m.type==='IntentBaseline')port2.postMessage({type:'intent-control-applied',session,authorityEpoch:m.authorityEpoch,sequence:m.sequence,accepted:true,clockSequence:m.clock.clockSequence,clockIntentSequence:m.clock.intentSequence,clockCommittedThrough:m.clock.committedThrough});
-  else if(m.type==='IntentClock')port2.postMessage({type:'intent-clock-applied',session,authorityEpoch:m.authorityEpoch,clockSequence:m.clockSequence,intentSequence:m.intentSequence,committedThrough:m.committedThrough,accepted:true});
-  else if(m.type==='IntentMutationQuiesce'){
-   requests.push(m);await onDrain(m);
-   port2.postMessage(receipt({...m,type:'intent-mutation-quiesced',accepted:true,preparedFrameSequence:1,nativeIdleCycleVersion:1}));
-  }else if(m.type==='IntentMutationRelease'){requests.push(release(m));resolveReleased(m);}
-  else if(m.type!=='IntentControlClosed')port2.postMessage({type:'intent-control-applied',session,authorityEpoch:m.authorityEpoch,sequence:m.sequence,accepted:true});
- };
- const source=createNativeIntentControlPublication({port:port1,session,observe:f.planner.observeNativeIntentControl,onError:e=>errors.push(e.message),timeoutMs:2000});
- const endpoint=attachNativeResourcePreparationEndpoint({port:resourcePorts.port2,session:'cycle-resources',isRunning:()=>true,
-  async prepare(kind,resources,options){
-   assert.equal(kind,'prepareNativeIdleCycleResources');preparations++;await onPrepare(resources,options);
-   return {get preparedWorldBoundary(){return resources.worldBoundary;},get preparedIdleCycleTemplate(){return resources.nativeIdleCycle;},valid:()=>true,
-    invalidate(){return true;},refresh(next){refreshes++;resources=next;return true;},
-    commit(value){commits++;onCommit(value);return true;},abort(){aborts++;}};
-  }
- });
- const connection=createNativeResourcePreparationConnection({port:resourcePorts.port1,session:'cycle-resources',timeoutMs:2000});
- await Promise.all([source.ready,connection.ready]);
- return {source,connection,requests,errors,released,counters:()=>({preparations,commits,aborts,refreshes}),
-  run(signal){return f.planner.startNativeIdleCycleAfterGpuQuiescence({actorId:f.actor,getPublication:()=>source,prepareResources:({resources,signal})=>connection.prepareNativeIdleCycleResources(resources,{signal}),signal});},
-  async close(){connection.dispose();endpoint.dispose();source.dispose();port2.close();await flush();}
- };
-}
 
 for(const mode of ['rest','watch'])test(`native ${mode} cycle uses one common transaction and actual revalidated source while its peer advances`,async()=>{
  const f=nativeIdleCycleFixture({mode,peer:true});let p,prepared;try{
