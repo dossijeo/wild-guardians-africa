@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuacion de la politica Idle: [fuente preparada del paseo nativo22](e-r3-native-idle-stroll-source-20261116.md). Ejecuta la decision WALK genuina sobre las reservas, reloj y cuerpo existentes; una revision de navegacion consulta el mismo destino sin consumir RNG. La llegada retiene el extremo y solo ofrece el REST deseado, sin permiso para ejecutarlo. Fuente standalone/pthread y regresion validadas; faltan referencia/adquisicion grafica22, Game y fuente estacionaria posterior. Recuperacion integral de 3123 recursos y cierres A6/A/B/C siguen abiertos.
+
+
 Continuacion de la politica Idle: [fase ejecutada21 y carga semantica en Game](e-r3-native-idle-cycle-game-20261116.md). El tick proyecta descanso/vigilancia y conserva la vigilancia terminada mientras REST o paseo esperan recursos; tarea y vencimiento de contrato usan los relevos genuinos. La carga reconstruye permisos nuevos y la misma intencion desde el RNG privado en ambos modulos. NVIDIA/Turing pasa REST y Home con Game, sin la asignacion manual anterior de la fase deseada; recursos residentes conservados y cero asignaciones tras READY. Paseo ejecutable/aproximacion/anclas, productor ordinario, recuperacion integral de 3123 y cierres A6/A/B/C siguen abiertos.
 
 

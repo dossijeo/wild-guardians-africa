@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+Continuacion de la politica Idle: [fuente preparada del paseo nativo22](e-r3-native-idle-stroll-source-20261116.md). Ejecuta la decision WALK genuina sobre las reservas, reloj y cuerpo existentes; una revision de navegacion consulta el mismo destino sin consumir RNG. La llegada retiene el extremo y solo ofrece el REST deseado, sin permiso para ejecutarlo. Fuente standalone/pthread y regresion validadas; faltan referencia/adquisicion grafica22, Game y fuente estacionaria posterior. Recuperacion integral de 3123 recursos y cierres A6/A/B/C siguen abiertos.
+
+
 **Native Idle cycle Game projection and semantic load, 2026-11-16:** [Game adopts executed21 phases and restores fresh permissions](e-r3-native-idle-cycle-game-20261116.md). Terminal watch remains current while REST/stroll are only requested; ordinary task/contract handling uses genuine successors. Both modules reproduce pending intent from private RNG on semantic load. NVIDIA/Turing passes following REST/Home with actual Game APIs, retained resident resources and zero allocations after READY. Stroll execution/approach/anchors, ordinary producer, healthy3123 recovery and A6/A/B/C remain open.
 
 
