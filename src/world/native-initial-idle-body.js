@@ -25,6 +25,7 @@ export function copyNativeInitialIdleBodyProposal(value){
  if(!sameNativeWorldBoundary(worldBoundary,nativeInitialIdleBody.worldBoundary)||t?.kind!=='native-initial-idle-body-proposal-ticket'||Object.keys(t).some(k=>!['kind','authorityEpoch','session','ticket'].includes(k))||t.authorityEpoch!==worldBoundary.authorityEpoch||t.session!==worldBoundary.nativeSession||t.ticket!==worldBoundary.ticket)throw TypeError('Native initial Idle body ticket differs from its resources');
  return Object.freeze({kind:value.kind,version:1,ticket:Object.freeze({...t}),worldBoundary,nativeInitialIdleBody,authorizedAutonomy:false,authorizedPassage:false});
 }
+export const nativeInitialIdleBodyReferenceFromProposal=value=>copyNativeInitialIdleBodyProposal(value).nativeInitialIdleBody;
 export function copyNativeInitialIdleBodyAttestation(value){
  if(value?.kind!=='native-initial-idle-body-attestation'||value.version!==1||value.projectionVersion!==1||!id(value.bodySequence)||Object.keys(value).some(k=>!['kind','version','projectionVersion','bodySequence','reference','preparedReference'].includes(k)))throw TypeError('Invalid native initial Idle body attestation');
  const reference=copyNativeInitialIdleBodyReference(value.reference),preparedReference=copyNativeInitialIdleBodyReference(value.preparedReference);
@@ -32,9 +33,13 @@ export function copyNativeInitialIdleBodyAttestation(value){
  return Object.freeze({kind:value.kind,version:1,projectionVersion:1,bodySequence:value.bodySequence,reference,preparedReference});
 }
 export const nativeInitialIdleBodyAttestationCovers=(proof,reference)=>sameNativeInitialIdleBodyReference(proof?.reference,reference)||sameNativeInitialIdleBodyReference(proof?.preparedReference,reference);
+export function nativeInitialIdleBodyReferenceCovered(reference,boundary){const w=reference.worldBoundary;return !!boundary&&w.authorityEpoch===boundary.authorityEpoch&&w.nativeSession===boundary.nativeSession&&boundary.ticket>=w.ticket&&boundary.effectiveTime>=w.effectiveTime;}
 export function copyNativeInitialIdleBodyResources(value){
  if(value?.version!==1||value.kind!==20||value.phase!=='committed'||Object.keys(value).some(k=>!['version','kind','phase','worldBoundary','nativeInitialIdleBodyBinding'].includes(k)))throw TypeError('Invalid native initial Idle body resources');
  const worldBoundary=copyNativeWorldBoundary(value.worldBoundary),nativeInitialIdleBodyBinding=copyNativeInitialIdleBodyAttestation(value.nativeInitialIdleBodyBinding);
  if(!sameNativeWorldBoundary(worldBoundary,nativeInitialIdleBodyBinding.reference.worldBoundary))throw TypeError('Native initial Idle body resource boundary mismatch');
  return Object.freeze({version:1,kind:20,phase:'committed',worldBoundary,nativeInitialIdleBodyBinding});
+}
+export function nativeInitialIdleBodyPresentationMatches(proposal,value,binding){
+ try{const prepared=nativeInitialIdleBodyReferenceFromProposal(proposal),resources=copyNativeInitialIdleBodyResources(value),proof=copyNativeInitialIdleBodyAttestation(binding),actual=resources.nativeInitialIdleBodyBinding;return nativeInitialIdleBodyAttestationCovers(proof,prepared)&&actual.bodySequence===proof.bodySequence&&sameNativeInitialIdleBodyReference(actual.reference,proof.reference)&&sameNativeInitialIdleBodyReference(actual.preparedReference,proof.preparedReference);}catch{return false;}
 }

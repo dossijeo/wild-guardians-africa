@@ -6,11 +6,18 @@ import {nativeTaskConsequenceReferenceFromProposal,sameNativeTaskConsequenceRefe
 import {nativeTaskSettlementReferenceFromProposal,sameNativeTaskSettlementReference} from './native-task-settlement.js';
 
 import {nativeHomeRouteReferenceFromProposal,sameNativeHomeRouteReference} from './native-home-route.js';
+import {nativeInitialIdleBodyReferenceFromProposal,sameNativeInitialIdleBodyReference} from './native-initial-idle-body.js';
 
 // Transport/resource identities only. Compatibility is reported by the current
 // native revalidation; none of these profiles can issue an execution permission.
 const routeCompatible=translation=>translation.sameFloat32Motion&&translation.sameFloat32Gates;
 const profiles=Object.freeze({
+  'initial-idle-body':Object.freeze({
+    proposalKind:'native-initial-idle-body-proposal',templateField:'preparedInitialIdleBodyTemplate',bindingField:'nativeInitialIdleBodyBinding',releaseField:'nativeInitialIdleBodies',
+    reference:nativeInitialIdleBodyReferenceFromProposal,sameReference:sameNativeInitialIdleBodyReference,compatible:translation=>translation.compatible===true,
+    receiptCompatible:(receipt,prepared)=>receipt.nativeInitialIdleBodyVersion===1&&sameNativeInitialIdleBodyReference(receipt.preparedInitialIdleBodyTemplate,prepared),
+    attest(native,reference,preparedReference){const fact=native.nativeInitialIdleBodyBinding(reference.actorId);if(!fact||!sameNativeInitialIdleBodyReference(fact.reference,reference)||!sameNativeInitialIdleBodyReference(fact.preparedReference,preparedReference))throw Error('Native initial Idle body association unavailable');return fact;}
+  }),
   'home-arrival':Object.freeze({
     proposalKind:'native-home-arrival-proposal',templateField:'preparedHomeArrivalTemplate',bindingField:'nativeHomeArrivalBinding',releaseField:'nativeHomeArrivals',
     reference:nativeHomeArrivalReferenceFromProposal,sameReference:sameNativeHomeArrivalReference,compatible:translation=>translation.sameSourceState,

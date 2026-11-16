@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+**Prepared initial body consumer, 2026-11-16:** [The existing ports, Surface and draw owner admit initialized rest/watch](e-r3-native-initial-idle-body-consumer-20261116.md) without previous Task/Carry, retaining actor/geometry and submitted-clock picking. NVIDIA/Turing:98 creations during preparation,0 after READY; immediate Home also retains owners with98/0. Private phase remains held. Full Idle policy, ordinary producer, other classes/gates and healthy3123 recovery remain open; no A6/A/B/C closure changes.
+
+
 **Initial body direct control, 2026-11-16:** [The existing actor record validates initial body ownership](e-r3-native-initial-idle-body-control-20261116.md) against its exact request, acquisition and native clock. Task/Home requests retain the held record; movement or removal revokes it. Port transactor, prepared consumer and full policy remain pending; historical bootstrap still rejects this class. No A6/A/B/C closure changes.
 
 

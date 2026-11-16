@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuacion de Idle inicial: [consumidor preparado sobre el cuerpo inicial real](e-r3-native-initial-idle-body-consumer-20261116.md). Puertos, Surface, control y picking admiten descanso/vigilancia inicializados sin tarea/Carry previos y conservan actor/geometrias. NVIDIA/Turing: 98 recursos durante preparacion y cero tras READY; Home inmediato tambien conserva propietarios y usa 98/0. La fase privada permanece retenida: politica completa, productor ordinario, otras clases/puertas y recuperacion integral de 3123 recursos siguen abiertos. No cambia ningun cierre A6/A/B/C.
+
+
 Continuacion de Idle inicial: [asociacion del cuerpo inicial en el control directo](e-r3-native-initial-idle-body-control-20261116.md). El registro existente exige peticion, adquisicion y reloj nativos exactos; conserva el cuerpo al pedir tarea/Home y revoca su permiso al relevarlo o retirarlo. Aun faltan transactor por puertos, consumidor preparado y politica completa; el bootstrap historico sigue rechazado. No cambia ningun cierre A6/A/B/C.
 
 
