@@ -18,7 +18,7 @@ El control contrasta tipo, actor, secuencia, handle, origen temporal y petición
 
 Resultados y hashes en [la validación](performance/native-idle-stroll-control-validation-20261116.json).
 
-- **11 pruebas nuevas:** cuatro perfiles; cuerpo retenido y compañero en marcha; adquisición/revalidación frente a instalación; rechazo sin ciclo presentado; primer movimiento sin compañero; lotes atómicos y programas falsificados; evento omitido o ajeno sin avanzar cursor; watermark retrasado; retiro y generación no resucitable.
+- **10 pruebas nuevas:** cuatro perfiles; cuerpo retenido y compañero en marcha; adquisición/revalidación frente a instalación; rechazo sin ciclo presentado; primer movimiento sin compañero; lotes atómicos y programas falsificados; evento omitido o ajeno sin avanzar cursor; watermark retrasado; retiro y generación no resucitable.
 - **188/188 pruebas dirigidas en 18 archivos**, 99924.4122 ms: fuentes 20/21/22, controles Idle/Home/reanudación/acciones/entrega y preparación/puertos anteriores, selección y reloj causal.
 - **Build de producto correcto en 46.15 s.** Las cinco entradas de código conservan sus hashes durante ambos trabajos. Las 17 entradas nativas siguen idénticas, sin recompilar. Se preservan los 16 archivos locales ajenos protegidos y el helper pthread original.
 

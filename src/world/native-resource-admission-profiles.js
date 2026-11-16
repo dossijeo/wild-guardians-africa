@@ -1,4 +1,5 @@
 import {nativeIdleCycleReferenceFromProposal,sameNativeIdleCycleReference} from './native-idle-cycle.js';
+import {nativeIdleStrollReferenceFromProposal,sameNativeIdleStrollReference} from './native-idle-stroll.js';
 import {nativeHomeArrivalReferenceFromProposal,sameNativeHomeArrivalReference,copyNativeHomeArrivalAttestation} from './native-home-arrival.js';
 import {nativeResumeReferenceFromProposal,sameNativeResumeReference} from './native-resume-reference.js';
 import {nativeTaskStartReferenceFromProposal,sameNativeTaskStartReference} from './native-task-start-reference.js';
@@ -13,6 +14,12 @@ import {nativeInitialIdleBodyReferenceFromProposal,sameNativeInitialIdleBodyRefe
 // native revalidation; none of these profiles can issue an execution permission.
 const routeCompatible=translation=>translation.sameFloat32Motion&&translation.sameFloat32Gates;
 const profiles=Object.freeze({
+  'idle-stroll':Object.freeze({
+    proposalKind:'native-idle-stroll-proposal',templateField:'preparedIdleStrollTemplate',bindingField:'nativeIdleStrollBinding',releaseField:'nativeStrolls',
+    reference:nativeIdleStrollReferenceFromProposal,sameReference:sameNativeIdleStrollReference,compatible:translation=>translation.sameRelativeProgram&&translation.sameRelativeGateProgram,
+    receiptCompatible:(receipt,prepared)=>receipt.nativeIdleStrollVersion===1&&sameNativeIdleStrollReference(receipt.preparedIdleStrollTemplate,prepared),
+    attest(native,reference,preparedReference){const actual=issuedRoute(native,reference),fact=native.nativeIdleStrollBinding(reference.actorId);if(!fact||!sameNativeIdleStrollReference(fact.reference,reference)||!sameNativeIdleStrollReference(fact.preparedReference,preparedReference)||fact.assignmentSequence!==actual.assignmentSequence)throw Error('Native Idle stroll resource association unavailable');return fact;}
+  }),
   'idle-cycle':Object.freeze({
     proposalKind:'native-idle-cycle-proposal',templateField:'preparedIdleCycleTemplate',bindingField:'nativeIdleCycleBinding',releaseField:'nativeIdleCycles',
     reference:nativeIdleCycleReferenceFromProposal,sameReference:sameNativeIdleCycleReference,compatible:translation=>translation.compatible===true,

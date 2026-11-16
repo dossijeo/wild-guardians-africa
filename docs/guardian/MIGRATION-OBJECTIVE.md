@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuacion de la politica Idle: [paseo22 en el transactor y los puertos existentes](e-r3-native-idle-stroll-admission-20261116.md). Prepara una vez, drena, revalida el programa nativo y publica asociacion/clock antes del relevo. Template, version y familia son propios; cancelacion y renovacion conservan cuerpo, destino y RNG. Fuente/control/canales reales con recibo simulado: faltan consumidor GPU22, Game y fuente estacionaria posterior. Recuperacion integral de 3123 recursos y cierres A6/A/B/C siguen abiertos.
+
+
 Continuacion de la politica Idle: [paseo22 en el control directo existente](e-r3-native-idle-stroll-control-20261116.md). La fuente publica su asociacion nativa exacta y el permiso distingue preparacion, adquisicion y presentacion instalada. Contrasta el WALK emitido y el ciclo presentado; rechaza programas alterados, bootstrap y watermark ajeno. Faltan transactor/puertos, consumidor GPU22, Game y fuente estacionaria posterior. Recuperacion integral de 3123 recursos y cierres A6/A/B/C siguen abiertos.
 
 
