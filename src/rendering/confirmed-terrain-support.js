@@ -1,3 +1,4 @@
+import {copyNativeIdleCycleReference} from '../world/native-idle-cycle.js';
 import {copyNativeHomeRouteProposal} from '../world/native-home-route.js';
 import {copyNativeTaskConsequenceProposal} from '../world/native-task-consequence.js';
 import {copyNativeTaskSettlementReference} from '../world/native-task-settlement.js';
@@ -71,6 +72,11 @@ export function createConfirmedTerrainSupport({residency,maxPieces=16384,maxActo
   const reference=copyNativeTaskSettlementReference(value);
   return prepareStationaryPoint(reference,reference.pose,reference.worldBoundary.effectiveTime,String(reference.actorId),'native-task-settlement-terrain-support');
  }
+ function prepareNativeIdleCycle(value){
+  if(closed)throw Error('Confirmed terrain support disposed');
+  const reference=copyNativeIdleCycleReference(value);
+  return prepareStationaryPoint(reference,reference.sourceBody.reference.sourceRequest.pose,reference.worldBoundary.effectiveTime,String(reference.actorId),'native-idle-cycle-terrain-support');
+ }
  function prepareNativeInitialIdleBody(value){
   if(closed)throw Error('Confirmed terrain support disposed');
   const reference=copyNativeInitialIdleBodyReference(value);
@@ -121,5 +127,5 @@ export function createConfirmedTerrainSupport({residency,maxPieces=16384,maxActo
   for(const actor of actors){for(const point of [actor.start,actor.end]){if(!Number.isFinite(point?.x)||!Number.isFinite(point?.z))continue;const cx=Math.floor((point.x+24)/48),cz=Math.floor((point.z+24)/48),key=`${cx},${cz}`;if(!seen.has(key)){seen.add(key);const mesh=residency.get(cx,cz),visible=residency.getVisible(cx,cz),canonical=!!mesh&&!!inspect(mesh,cx,cz);chunks.push({cx,cz,manifest:!!manifest?.chunks?.some(chunk=>chunk.cx===cx&&chunk.cz===cz),resident:!!mesh,visible:!!mesh&&mesh===visible,canonical,...(!canonical?{details:inspectDetails(mesh,cx,cz)}:{})});}if(points.length<128){let exact=null,sampled=null;try{exact=residency.surface(point.x,point.z);sampled=sampleActorTerrain(point.x,point.z);}catch{}points.push({actorId:actor.actorId,x:point.x,z:point.z,exact:Number.isFinite(exact)?exact:null,sampled:Number.isFinite(sampled)?sampled:null});}}}
   return {manifestMatches:matches,chunks,points,pointLimit:128,note:'Endpoint diagnostics only; segment cuts and limits are not re-evaluated.'};
  }
- return {prepare,prepareNativeRoute,prepareNativeResumeProposal,prepareNativeHomeRouteProposal(value,{terrainManifest}={}){if(closed)throw Error('Confirmed terrain support disposed');let presentation;try{presentation=copyNativeHomeRouteProposal(value);}catch{return null;}return prepareNativeMotion(presentation,terrainManifest,String(presentation.actorId),'native-home-route-terrain-support');},prepareNativeTaskConsequenceProposal(value,{terrainManifest}={}){if(closed)throw Error('Confirmed terrain support disposed');let presentation;try{presentation=copyNativeTaskConsequenceProposal(value);}catch{return null;}return prepareNativeMotion(presentation,terrainManifest,String(presentation.actorId),'native-task-consequence-terrain-support');},prepareNativeTaskStartProposal(value,{terrainManifest}={}){if(closed)throw Error('Confirmed terrain support disposed');let presentation;try{presentation=copyNativeTaskStartProposal(value);}catch{return null;}return prepareNativeMotion(presentation,terrainManifest,String(presentation.actorId),'native-task-start-terrain-support');},prepareNativeBody,prepareNativeTaskAction,prepareNativeTaskSettlement,prepareNativeInitialIdleBody,audit,dispose(){closed=true;}};
+ return {prepare,prepareNativeRoute,prepareNativeResumeProposal,prepareNativeHomeRouteProposal(value,{terrainManifest}={}){if(closed)throw Error('Confirmed terrain support disposed');let presentation;try{presentation=copyNativeHomeRouteProposal(value);}catch{return null;}return prepareNativeMotion(presentation,terrainManifest,String(presentation.actorId),'native-home-route-terrain-support');},prepareNativeTaskConsequenceProposal(value,{terrainManifest}={}){if(closed)throw Error('Confirmed terrain support disposed');let presentation;try{presentation=copyNativeTaskConsequenceProposal(value);}catch{return null;}return prepareNativeMotion(presentation,terrainManifest,String(presentation.actorId),'native-task-consequence-terrain-support');},prepareNativeTaskStartProposal(value,{terrainManifest}={}){if(closed)throw Error('Confirmed terrain support disposed');let presentation;try{presentation=copyNativeTaskStartProposal(value);}catch{return null;}return prepareNativeMotion(presentation,terrainManifest,String(presentation.actorId),'native-task-start-terrain-support');},prepareNativeBody,prepareNativeTaskAction,prepareNativeTaskSettlement,prepareNativeInitialIdleBody,prepareNativeIdleCycle,audit,dispose(){closed=true;}};
 }

@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuacion de la politica Idle: [grafo de fase y reloj del consumidor directo 21](e-r3-native-idle-cycle-gpu-clock-20261116.md). El Host exige plantilla, reloj y adquisicion preparados exactos; acota solo la fase Idle y permite continuar al companero. Picking usa el float realmente enviado. La prueba de identidades conserva el buffer estatico y distingue la copia temporal de 16 bytes y su binding, sin confundir cero IDs nuevos con cero asignaciones GPU. Falta integrar roster/Surface originales, Game y evidencia en hardware; productor ordinario, recuperacion integral de 3123 recursos y cierres A6/A/B/C siguen abiertos.
+
+
 Continuacion de la politica Idle: [familia 21 en el transactor y transporte existentes](e-r3-native-idle-cycle-admission-20261116.md). La propuesta comprueba cuerpo, pose, contrato, ancla y secuencia privada; prepara una vez, drena, revalida y publica el recibo nativo exacto. Los puertos conservan el tipo tambien al renovar recursos. La prueba usa fuente/puertos reales y consumidor simulado: faltan dibujo GPU21, proyeccion/persistencia de Game y evidencia en hardware. No se anuncia capacidad grafica ni cambia ningun cierre A6/A/B/C; productor ordinario y recuperacion integral de 3123 recursos siguen abiertos.
 
 

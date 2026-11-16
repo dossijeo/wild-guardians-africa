@@ -1,3 +1,4 @@
+import {ceilFloat32} from '../float32-time.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from './native-world-boundary.js';
 import {copyNativeInitialIdleBodyAttestation} from './native-initial-idle-body.js';
 import {copyNativeInitialIdleState} from './native-initial-idle-request-reference.js';
@@ -57,3 +58,19 @@ export function copyNativeIdleCycleNextRequest(value){
 export function sameNativeIdleCycleNextRequest(a,b){try{return JSON.stringify(copyNativeIdleCycleNextRequest(a))===JSON.stringify(copyNativeIdleCycleNextRequest(b));}catch{return false;}}
 
 export const nativeIdleCycleReferenceFromProposal=value=>copyNativeIdleCycleProposal(value).nativeIdleCycle;
+
+export function nativeIdleCycleReferenceCovered(reference,boundary){const w=reference.worldBoundary;return !!boundary&&w.authorityEpoch===boundary.authorityEpoch&&w.nativeSession===boundary.nativeSession&&boundary.ticket>=w.ticket&&boundary.effectiveTime>=w.effectiveTime;}
+
+// Encode the native absolute-time comparison in the ordered nonnegative f32
+// domain. Standard lower_bound halving; at most31 comparisons at admission,
+// never a per-draw policy decision. Retiming uses the actual execution origin.
+export function nativeIdleCycleWatchKnot(value,executionEpoch=value.worldBoundary.effectiveTime){
+ const r=copyNativeIdleCycleReference(value);
+ if(!Number.isFinite(executionEpoch)||executionEpoch<r.worldBoundary.effectiveTime)throw TypeError('Invalid native Idle cycle execution origin');
+ if(r.initialState.mode==='watch')return 0;
+ const f=new Float32Array(1),bits=new Uint32Array(f.buffer);f[0]=ceilFloat32(r.duration);let first=0,length=bits[0]+1;
+ while(length){const half=Math.floor(length/2),mid=first+half;bits[0]=mid;
+  if((executionEpoch+r.watchStartOffset)-(executionEpoch+f[0])>1e-9){first=mid+1;length-=half+1;}else length=half;
+ }
+ bits[0]=first;if(!Number.isFinite(f[0]))throw RangeError('Native Idle watch knot exceeds float32');return f[0];
+}

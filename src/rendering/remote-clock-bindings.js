@@ -1,3 +1,4 @@
+import {copyNativeIdleCycleReference,sameNativeIdleCycleReference,nativeIdleCycleSuccessor} from '../world/native-idle-cycle.js';
 import {copyNativeHomeRouteReference,sameNativeHomeRouteReference,nativeHomeRouteSuccessor} from '../world/native-home-route.js';
 import {copyNativeTaskConsequenceReference,sameNativeTaskConsequenceReference,nativeTaskConsequenceSuccessor} from '../world/native-task-consequence.js';
 import {copyNativeTaskSettlementReference,sameNativeTaskSettlementReference,nativeTaskSettlementSuccessor} from '../world/native-task-settlement.js';
@@ -14,8 +15,9 @@ import {copyNativeInitialIdleBodyReference,sameNativeInitialIdleBodyReference,na
 // structure/cache keys. Registration occurs when a physical binding is updated,
 // never by discovering graph nodes during replay.
 const clockMetadata=Symbol.for('wild-guardians.remote-clock');
-export function markRemoteClockNode(node,semantic,epoch,nativeRoute=null,nativeGate=null,nativeSuspended=null,nativeResume=null,period=null,resourceEnd=null,nativeStart=null,nativeAction=null,nativeConsequence=null,nativeSettlement=null,nativeHome=null,nativeInitialIdleBody=null){
- if(!node?.isNode||!['absolute','relative','origin-modulo'].includes(semantic)||!Number.isFinite(epoch)||epoch<0)throw TypeError('Invalid remote clock node');
+export function markRemoteClockNode(node,semantic,epoch,nativeRoute=null,nativeGate=null,nativeSuspended=null,nativeResume=null,period=null,resourceEnd=null,nativeStart=null,nativeAction=null,nativeConsequence=null,nativeSettlement=null,nativeHome=null,nativeInitialIdleBody=null,nativeIdleCycle=null){
+ if(!node?.isNode||!['absolute','relative','origin-modulo','idle-cycle-watch-knot'].includes(semantic)||!Number.isFinite(epoch)||epoch<0)throw TypeError('Invalid remote clock node');
+ if(semantic==='idle-cycle-watch-knot'&&nativeIdleCycle===null)throw TypeError('Native watch knot requires its cycle');
  if(semantic==='origin-modulo'?nativeResume===null&&nativeStart===null&&nativeConsequence===null&&nativeSettlement===null&&nativeHome===null||!Number.isFinite(period)||period<=0:period!==null)throw TypeError('Invalid native origin phase clock');
  if(resourceEnd!==null&&(!Number.isFinite(resourceEnd)||resourceEnd<epoch))throw TypeError('Invalid native clock resource end');
  let route=null;
@@ -24,7 +26,9 @@ export function markRemoteClockNode(node,semantic,epoch,nativeRoute=null,nativeG
   // never retag an already admitted GPU binding for another route generation.
   try{route=copyNativeRouteReference(nativeRoute);}catch{throw TypeError('Invalid native route clock reference');}
  }
- if([nativeRoute,nativeGate,nativeSuspended,nativeResume,nativeStart,nativeAction,nativeConsequence,nativeSettlement,nativeHome,nativeInitialIdleBody].filter(value=>value!==null).length>1)throw TypeError('Conflicting native clock references');
+ if([nativeRoute,nativeGate,nativeSuspended,nativeResume,nativeStart,nativeAction,nativeConsequence,nativeSettlement,nativeHome,nativeInitialIdleBody,nativeIdleCycle].filter(value=>value!==null).length>1)throw TypeError('Conflicting native clock references');
+ const cycle=nativeIdleCycle===null?null:copyNativeIdleCycleReference(nativeIdleCycle);
+ if(cycle&&(!['relative','idle-cycle-watch-knot'].includes(semantic)||epoch!==cycle.worldBoundary.effectiveTime||resourceEnd!==null))throw TypeError('Invalid native Idle cycle clock');
  const initialBody=nativeInitialIdleBody===null?null:copyNativeInitialIdleBodyReference(nativeInitialIdleBody);
  if(initialBody&&(semantic!=='relative'||epoch!==initialBody.worldBoundary.effectiveTime||resourceEnd!==null))throw TypeError('Invalid native initial Idle body clock');
  const home=nativeHome===null?null:copyNativeHomeRouteReference(nativeHome);
@@ -39,7 +43,7 @@ export function markRemoteClockNode(node,semantic,epoch,nativeRoute=null,nativeG
  if(consequence&&epoch!==consequence.worldBoundary.effectiveTime)throw TypeError('Invalid native consequence clock epoch');
  const gate=nativeGate===null?null:copyNativeGateReference(nativeGate);
  if(Object.hasOwn(node,clockMetadata))throw TypeError('Cannot redefine remote clock node');
- Object.defineProperty(node,clockMetadata,{value:Object.freeze({semantic,epoch,...(period===null?{}:{period}),...(resourceEnd===null?{}:{resourceEnd}),...(route?{nativeRoute:route}:{}),...(gate?{nativeGate:gate}:{}),...(suspended?{nativeSuspended:suspended}:{}),...(resume?{nativeResume:resume}:{}),...(start?{nativeStart:start}:{}),...(action?{nativeAction:action}:{}),...(consequence?{nativeConsequence:consequence}:{}),...(settlement?{nativeSettlement:settlement}:{}),...(home?{nativeHome:home}:{}),...(initialBody?{nativeInitialIdleBody:initialBody}:{})}),enumerable:false,configurable:resume!==null||gate!==null||start!==null||action!==null||consequence!==null||settlement!==null||home!==null||initialBody!==null});
+ Object.defineProperty(node,clockMetadata,{value:Object.freeze({semantic,epoch,...(period===null?{}:{period}),...(resourceEnd===null?{}:{resourceEnd}),...(route?{nativeRoute:route}:{}),...(gate?{nativeGate:gate}:{}),...(suspended?{nativeSuspended:suspended}:{}),...(resume?{nativeResume:resume}:{}),...(start?{nativeStart:start}:{}),...(action?{nativeAction:action}:{}),...(consequence?{nativeConsequence:consequence}:{}),...(settlement?{nativeSettlement:settlement}:{}),...(home?{nativeHome:home}:{}),...(initialBody?{nativeInitialIdleBody:initialBody}:{}),...(cycle?{nativeIdleCycle:cycle}:{})}),enumerable:false,configurable:resume!==null||gate!==null||start!==null||action!==null||consequence!==null||settlement!==null||home!==null||initialBody!==null||cycle!==null});
  return node;
 }
 export function installRemoteClockBindings(renderer,remote){
@@ -56,7 +60,7 @@ export function installRemoteClockBindings(renderer,remote){
    if(!metadata)continue;
    if(!Number.isSafeInteger(uniform.offset)||uniform.offset<0||uniform.itemSize!==1)throw Error('Invalid remote clock uniform layout');
    remote.registerClockBinding(buffer,{byteOffset:uniform.offset*4,...metadata});
-   if(metadata.nativeResume||metadata.nativeGate||metadata.nativeStart||metadata.nativeAction||metadata.nativeConsequence||metadata.nativeSettlement||metadata.nativeHome||metadata.nativeInitialIdleBody){let entries=nodeBindings.get(node);if(!entries){entries=[];nodeBindings.set(node,entries);}if(!entries.some(entry=>entry.group.deref()===binding&&entry.byteOffset===uniform.offset*4))entries.push({group:new WeakRef(binding),byteOffset:uniform.offset*4});}
+   if(metadata.nativeResume||metadata.nativeGate||metadata.nativeStart||metadata.nativeAction||metadata.nativeConsequence||metadata.nativeSettlement||metadata.nativeHome||metadata.nativeInitialIdleBody||metadata.nativeIdleCycle){let entries=nodeBindings.get(node);if(!entries){entries=[];nodeBindings.set(node,entries);}if(!entries.some(entry=>entry.group.deref()===binding&&entry.byteOffset===uniform.offset*4))entries.push({group:new WeakRef(binding),byteOffset:uniform.offset*4});}
   }
   registered.set(binding,buffer);
   return result;
@@ -67,7 +71,11 @@ export function installRemoteClockBindings(renderer,remote){
   for(const entry of nodeBindings.get(node)??[]){const group=entry.group.deref();if(!group)continue;live.push(entry);const buffer=registered.get(group);if(buffer&&backend.get(group).buffer===buffer)remote.registerClockBinding(buffer,{byteOffset:entry.byteOffset,...next});}
   Object.defineProperty(node,clockMetadata,{value:next,enumerable:false,configurable:true});nodeBindings.set(node,live);return true;
  }
- return {retagNativeInitialIdleBody(node,previous,value){
+ return {retagNativeIdleCycle(node,previous,value){
+  const before=copyNativeIdleCycleReference(previous),after=copyNativeIdleCycleReference(value),metadata=node?.[clockMetadata];
+  if(disposed||!sameNativeIdleCycleReference(metadata?.nativeIdleCycle,before)||metadata.epoch!==before.worldBoundary.effectiveTime||!nativeIdleCycleSuccessor(before,after))throw Error('Native Idle cycle clock cannot be retagged');
+  return replace(node,Object.freeze({...metadata,epoch:after.worldBoundary.effectiveTime,nativeIdleCycle:after}));
+ },retagNativeInitialIdleBody(node,previous,value){
   const before=copyNativeInitialIdleBodyReference(previous),after=copyNativeInitialIdleBodyReference(value),metadata=node?.[clockMetadata];
   if(disposed||!sameNativeInitialIdleBodyReference(metadata?.nativeInitialIdleBody,before)||metadata.epoch!==before.worldBoundary.effectiveTime||!nativeInitialIdleBodySuccessor(before,after))throw Error('Native initial Idle body clock cannot be retagged');
   return replace(node,Object.freeze({...metadata,epoch:after.worldBoundary.effectiveTime,nativeInitialIdleBody:after}));

@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+**Native Idle cycle phase graph and direct draw clock, 2026-11-16:** [Family21 has typed prepared Host admission and submitted-float picking](e-r3-native-idle-cycle-gpu-clock-20261116.md). Only its phase is capped; the independent peer continues. The identity test retains the static buffer and accounts for a changed16-byte uniform plus dependent binding, distinguishing protocol IDs from native allocations. Original roster/Surface integration, Game and hardware evidence remain pending; ordinary producer, healthy full3123 recovery and A6/A/B/C remain open.
+
+
 **Native Idle cycle prepared source transaction, 2026-11-16:** [Family21 uses the existing admission factory and transport](e-r3-native-idle-cycle-admission-20261116.md), with exact body, pose, contract, anchor, private sequence, receipt and post-drain revalidation. Real native source/ports use a simulated retained-resource consumer; GPU21 drawing, Game projection/persistence and hardware evidence remain pending. No graphical capability or A6/A/B/C closure changes; ordinary producer and full3123 incremental recovery remain open.
 
 
