@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuacion de la politica Idle: [referencia tipada y adaptador de la fuente del paseo22](e-r3-native-idle-stroll-data-20261116.md). Captura, revalidacion, cancelacion y lectura de la asociacion/pose reales usan handles y valores acotados, sin cadenas de permisos ni consumo de RNG en JS. La preparacion comprueba Game21 ejecutado; un arranque grafico con22 activo falla cerrado. Faltan transactor/puertos/control y consumidor preparado22, Game y fuente estacionaria posterior. Recuperacion integral de 3123 recursos y cierres A6/A/B/C siguen abiertos.
+
+
 Continuacion de la politica Idle: [fuente preparada del paseo nativo22](e-r3-native-idle-stroll-source-20261116.md). Ejecuta la decision WALK genuina sobre las reservas, reloj y cuerpo existentes; una revision de navegacion consulta el mismo destino sin consumir RNG. La llegada retiene el extremo y solo ofrece el REST deseado, sin permiso para ejecutarlo. Fuente standalone/pthread y regresion validadas; faltan referencia/adquisicion grafica22, Game y fuente estacionaria posterior. Recuperacion integral de 3123 recursos y cierres A6/A/B/C siguen abiertos.
 
 
