@@ -1834,6 +1834,7 @@ export function tick(s,seconds,nav,{clockRate=1}={}) {
     for(const worker of s.workers){
       if(worker.nativeRouteAdmission==='pending-idle-resources'&&!nav.intentTaskPlanner?.projectNativeInitialIdleDeclaration(s,worker)&&!nav.intentTaskPlanner?.projectNativeInitialIdleBody?.(s,worker))throw Error('Pending initial Idle has no current native declaration');
       if(worker.nativeRouteAdmission==='native-idle'&&!(nav.intentTaskPlanner?.projectNativeIdleCycle?.(s,worker)||nav.intentTaskPlanner?.projectNativeInitialIdleBody?.(s,worker)))throw Error('Native initial Idle has no current body owner');
+      if(worker.nativeRouteAdmission==='native-idle-stroll'&&!nav.intentTaskPlanner?.projectNativeIdleStroll?.(s,worker))throw Error('Native Idle stroll has no current body owner');
     }
     let nativeExecution=nav.intentTaskPlanner?.nativeGameExecutionState?.()??0;
     if(nativeExecution<0)throw Error('Native game execution still requires projection for this intention class');

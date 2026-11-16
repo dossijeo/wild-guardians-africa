@@ -142,7 +142,7 @@ test('Raid drops a carried crate, frees tasks and preserves its value',()=>{
   spawnRaid(s,{group:['warthog']},nav);assert.equal(w.crateId,null);assert.equal(s.crates[0].carrierId,null);assert.equal(numberOf(s.ledger.balance),665);assert.equal(w.status,'fleeing');
 });
 test('Combo attack counts one logical hit; active raid survives roundtrip',()=>{
-  const s=setup();s.time=320;spawnRaid(s,{group:['warthog']},nav);const a=s.raid.animals[0],center=s.structures[0];
+  const s=setup();s.time=320;s.nightPlan={at:320,done:true,group:['warthog']};spawnRaid(s,s.nightPlan,nav);const a=s.raid.animals[0],center=s.structures[0];
   a.targetId=center.id;a.status='attacking';a.animation='Weapon_Combo_2';a.attackRemaining=1;a.hitApplied=false;a.hitsRemaining=3;a.attackId='combo';
   updateRaid(s,.3,nav);assert.equal(center.hp,600);assert.equal(a.hitsRemaining,3);const loaded=deserialize(serialize(s));
   updateRaid(loaded,.7,nav);assert.equal(loaded.structures[0].hp,580);assert.equal(loaded.raid.animals[0].hitsRemaining,2);

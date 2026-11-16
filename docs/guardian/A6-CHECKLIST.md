@@ -1,5 +1,8 @@
 # Seguimiento de cierre de A6
 
+Continuacion de la politica Idle: [vista ejecutada del paseo22 en Game y transporte vivo](e-r3-native-idle-stroll-live-game-20261116.md). Copia pose, fases y WALK de la fuente actual despues de la adquisicion; al llegar no adelanta REST ni RNG. El codec vivo valida la semantica sin handles/corredores. Cohorte del tick y guardado siguen cerrados hasta sus fuentes/restauracion; perder el propietario no permite fallback JS. Faltan Surface/hardware y relevos completos. Recuperacion integral de 3123 recursos y cierres A6/A/B/C siguen abiertos.
+
+
 Continuacion de la politica Idle: [paseo22 sobre el actor y bancos originales](e-r3-native-idle-stroll-roster-20261116.md). El reemplazo preparado conserva actor/geometria/indices y restaura material y visibilidad al cancelar. Exige ciclo21 y fase Game genuinos, recursos confirmados y asociaciones coincidentes; una liberacion vieja no retira al sucesor. GLB/roster/builders reales con renderer simulado: faltan Surface, Game22 y hardware. Recuperacion integral de 3123 recursos y cierres A6/A/B/C siguen abiertos.
 
 

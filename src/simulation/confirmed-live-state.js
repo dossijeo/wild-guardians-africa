@@ -21,4 +21,4 @@ export function prepareConfirmedStateTransport(state,{projectPaths=false}={}){
  let snapshot=null;return {fields,get snapshot(){return snapshot??='{'+[...fields].map(([key,value])=>JSON.stringify(key)+':'+value).join(',')+'}';}};
 }
 export function deserializeConfirmedState(source){const state=JSON.parse(source);validateSnapshot(state,{livePhysics:true});return state;}
-export function confirmedStateSaveAvailable(state){return !(state.raid?.animals??[]).some(a=>a.magicDown||a.magicImpact&&state.elapsed>=guardianImpactTime(a.magicImpact)&&state.elapsed-guardianImpactTime(a.magicImpact)<.5);}
+export function confirmedStateSaveAvailable(state){return !(state.workers??[]).some(w=>w.nativeRouteAdmission==='native-idle-stroll')&&!(state.raid?.animals??[]).some(a=>a.magicDown||a.magicImpact&&state.elapsed>=guardianImpactTime(a.magicImpact)&&state.elapsed-guardianImpactTime(a.magicImpact)<.5);}
