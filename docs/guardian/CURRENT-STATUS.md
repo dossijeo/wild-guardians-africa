@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+**Stationary Idle initialization, 2026-11-16:** [A fresh native declaration can share the original Idle initializer](e-r3-native-initial-idle-initialization-20261116.md) at its actual farm anchor, without navigation, time or RNG advancement. Game changes only after native acceptance; existing pending declarations and actors needing approach reject initialization. Timed policy, Alert/stroll, approach, ordinary producer and integrated recovery remain open; no A6/A/B/C closure changes.
+
+
 **Prepared initial body consumer, 2026-11-16:** [The existing ports, Surface and draw owner admit initialized rest/watch](e-r3-native-initial-idle-body-consumer-20261116.md) without previous Task/Carry, retaining actor/geometry and submitted-clock picking. NVIDIA/Turing:98 creations during preparation,0 after READY; immediate Home also retains owners with98/0. Private phase remains held. Full Idle policy, ordinary producer, other classes/gates and healthy3123 recovery remain open; no A6/A/B/C closure changes.
 
 

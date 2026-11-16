@@ -9,6 +9,12 @@ function seedFor(worker,seed){
   return value>>>0||1;
 }
 function random(idle){let x=idle.rng;x^=x<<13;x^=x>>>17;x^=x<<5;idle.rng=x>>>0;return idle.rng/4294967296;}
+// Shared semantic birth state. This does not choose a path, advance a timer or
+// consume either the private cosmetic stream or the world event stream.
+export function createIdleState(worker,anchor,seed){
+  const source=L.sources.find(s=>s.profile===worker.profile);
+  return {anchorId:anchor.id,mode:'rest',elapsed:0,rng:seedFor(worker,seed),remaining:source.idleSeconds*2};
+}
 export function cancelIdle(worker){
   if(worker.idleState?.mode==='walk'){worker.path=null;worker.destinationId=null;}
   worker.idleState=null;worker.running=false;
@@ -18,7 +24,7 @@ export function updateIdle(worker,anchor,seconds,nav,seed,gates=[],state=null,wo
   let idle=worker.idleState;
   if(!idle||idle.anchorId!==anchor.id){
     cancelIdle(worker);
-    idle=worker.idleState={anchorId:anchor.id,mode:'rest',elapsed:0,rng:seedFor(worker,seed),remaining:source.idleSeconds*2};
+    idle=worker.idleState=createIdleState(worker,anchor,seed);
   }
   worker.running=false;idle.approachRetry=Math.max(0,(idle.approachRetry??0)-seconds);
   if(idle.mode!=='walk'&&idle.approachRetry===0&&anchor.idleRadius&&Math.hypot(worker.x-anchor.x,worker.z-anchor.z)>anchor.idleRadius){

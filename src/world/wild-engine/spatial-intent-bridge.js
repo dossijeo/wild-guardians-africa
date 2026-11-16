@@ -11,14 +11,14 @@ import {copyNativeHomeRouteProposal,copyNativeHomeRouteReference,copyNativeHomeR
 import {copyNativeHomeRequestReference,sameNativeHomeRequestReference,nativeHomeRequestContinuesIdle,nativeHomeRequestContinuesInitialIdle} from '../native-home-request-reference.js';
 import {copyNativeInitialIdleRequestReference,copyNativeInitialIdleDeclarationReference} from '../native-initial-idle-request-reference.js';
 import {copyNativeInitialIdleBodyReference,copyNativeInitialIdleBodyProposal,copyNativeInitialIdleBodyAttestation} from '../native-initial-idle-body.js';
-import {nativeInitialIdleDeclaration,nativeInitialIdleRetainedState,nativeInitialIdleSavedState} from '../native-initial-idle-state.js';
+import {nativeInitialIdleDeclaration,nativeInitialIdleInitialization,nativeInitialIdleRetainedState,nativeInitialIdleSavedState} from '../native-initial-idle-state.js';
 import {cancelIdle} from '../../simulation/idle.js';
 import {copyNativeTaskSettlementReference,copyNativeTaskSettlementProposal,copyNativeTaskSettlementAttestation} from '../native-task-settlement.js';
 import {nativeEntityNumericId as numericId} from '../native-entity-id.js';
 import {copyNativeGatePresentation} from '../native-gate-presentation.js';
 import {centerGeometry,centerServicePoint,centerDeliveryPoint} from '../centers.js';
 import {contractExpired,PROFILES} from '../../simulation/workforce.js';
-import {observeGameEvents,repairCost,prepareHarvestConsequence,harvestConsequenceCurrent,projectNativeHarvestConsequence,prepareCrateDeliveryConsequence,crateDeliveryConsequenceCurrent,projectNativeCrateDeliveryConsequence,projectNativeHomeRouteExecution} from '../../simulation/game.js';
+import {observeGameEvents,idleFarmAnchor,repairCost,prepareHarvestConsequence,harvestConsequenceCurrent,projectNativeHarvestConsequence,prepareCrateDeliveryConsequence,crateDeliveryConsequenceCurrent,projectNativeCrateDeliveryConsequence,projectNativeHomeRouteExecution} from '../../simulation/game.js';
 import {BALANCE} from '../../simulation/balance.js';
 import {activeCrops} from '../../simulation/active-crops.js';
 import {workerEntityLookup} from '../../simulation/worker-entity-lookup.js';
@@ -1341,10 +1341,15 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     const data=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_initial_idle_requests_ptr(),count*25));return Object.freeze(Array.from({length:count},(_,i)=>{const r=nativeInitialIdleRequestReference(data[i*25+1]);if(!r)throw Error('Initial native Idle lost its current body');return r;}));
   };
   const declareNativeInitialIdleRequest=(worker,options)=>{
-    const semantic=nativeInitialIdleDeclaration(owningState,worker,options);
+    if(options?.initialize!==undefined&&typeof options.initialize!=='boolean')throw TypeError('Invalid native initial Idle initialization option');
+    const declared=nativeInitialIdleDeclaration(owningState,worker,options);
+    const initialize=options?.initialize===true&&worker.idleState==null;
+    if(initialize&&nativeInitialIdleDeclarationReference(worker.id))throw Error('Native initial Idle initialization requires a fresh declaration');
+    const semantic=initialize?nativeInitialIdleInitialization(owningState,worker,idleFarmAnchor(owningState,worker,owningState.structures.find(c=>c.id===worker.centerId)),options):declared;
     if(wasm.nav_initial_idle_request_version?.()!==1)throw Error('Rebuild native initial Idle declaration');
     session.actorSectorRevision({worker:true});syncBoundaryTime();
     if(wasm.nav_intent_request_initial_idle(...semantic.args)!==1)throw Error('Native initial Idle declaration rejected');
+    if(initialize)worker.idleState={...semantic.idleState};
     return {...semantic,request:nativeInitialIdleRequestReference(worker.id)};
   };
   const requestNativeIdleHome=(source,home)=>{

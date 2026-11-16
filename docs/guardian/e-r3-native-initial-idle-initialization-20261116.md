@@ -1,0 +1,15 @@
+# Inicialización estacionaria original de Idle
+
+Continúa el [consumidor inicial preparado](e-r3-native-initial-idle-body-consumer-20261116.md), sobre `8ff8ce2cc`. La declaración nueva admite `initialize:true` para crear el descanso original cuando el trabajador ya está dentro de su ancla real. No avanza su fase ni ejecuta todavía la política temporal completa.
+
+Se consultó el código real de [Random de Unity.Mathematics, revisión f53664de](https://github.com/Unity-Technologies/Unity.Mathematics/blob/f53664de3dad88869a91ef8ebdbecf356e1312d5/src/Unity.Mathematics/random.cs): conserva estado uint32 por componente y usa desplazamientos 13/17/5. Su constructor avanza el estado y NextState devuelve el valor anterior; esas convenciones difieren de Wild Guardians. Se conserva íntegramente nuestra semilla FNV por persona y la secuencia privada original, compartiendo el inicializador existente en lugar de añadir otro generador.
+
+También se leyeron `requestMoveTarget`, `resetMoveTarget` y `updateMoveRequest` de [DetourCrowd v1.6.0](https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourCrowd.cpp): conservan agente y distinguen petición pendiente de movimiento válido. Se aplica esa separación a nuestra fuente: no se convierte en descanso un trabajador que necesita aproximarse ni se reemplaza silenciosamente una declaración pendiente.
+
+`createIdleState` es el mismo constructor puro que utiliza ahora `updateIdle`; conserva ancla, modo rest, tiempo cero, duración Idle original por dos y semilla. La nueva declaración usa `idleFarmAnchor` existente, con sus cultivos vivos, desempates y punto de servicio. Sólo permite la región donde `updateIdle(...,0)` permanece estacionario. No consulta rutas, consume azar ni altera cuerpo o reloj.
+
+El puente prepara esos datos antes de llamar al propietario nativo. Sólo tras su aceptación publica el estado privado en Game y su marcador pendiente; un rechazo físico conserva el estado anterior. Una repetición sobre el estado ya inicializado es idempotente. Una declaración fría puede inicializar antes de enlazar el cuerpo, sin obtener por ello permiso gráfico. Una declaración nula ya existente sigue retenida y no puede convertirse mediante esta opción: falta su transición nativa de política.
+
+Las nueve pruebas nuevas comparan los cuatro perfiles con la ejecución original a tiempo cero; cubren rechazos por aproximación, fuente previa y cuerpo inválido, idempotencia, guardado semántico, enlace físico posterior y admisión del cuerpo20 por los puertos reales sin historial inventado. Esta última usa la cola GPU simulada del Host. Resultados de regresión, build y preservación en [la validación](performance/native-initial-idle-initialization-validation-20261116.json). No se atribuyen a esta inicialización nuevas mediciones hardware.
+
+Continúan pendientes aproximación nativa, reloj/fases y decisiones completas de rest/watch/paseo, avance de RNG durante esas decisiones, productor ordinario, otras clases/puertas, nacimiento en una partida viva, sustitución de mundo y recuperación incremental de los 3123 recursos sanos. No cambia ningún cierre A6/e-R3/e-R4/f-R4/A/B/C.
