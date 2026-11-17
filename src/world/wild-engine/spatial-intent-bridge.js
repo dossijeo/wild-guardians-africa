@@ -2966,6 +2966,9 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     if(state!==sourceState&&state!==observedTaskState)throw Error('Native Idle stroll belongs to another game');
     const view=bridge.nativeIdleStrollExecution(worker.id)??bridge.nativeIdleStrollHeldExecution(worker.id);if(!view)return null;const r=view.sourceReference??view.binding.reference,p=view.pose,actor=numericId(worker.id),anchorId=`${r.anchor.kind===1?'farm-plant':'farm-structure'}-${r.anchor.id}`,destination={id:`idle-${worker.id}`,x:r.destination.x,z:r.destination.z},previous=projectedPositions.get(actor);
     if(!state.workers.includes(worker)||view.executedThrough!==state.elapsed||view.actorId!==actor||view.bodyId!==r.bodyId||worker.profile!==r.workerProfile||numericId(worker.centerId)!==r.centerId||previous&&(worker.x!==previous[0]||worker.z!==previous[1]))throw Error('Native Idle stroll is not the executed game boundary');
+    // The held physical source survives while Home acquires resources. Keep
+    // its genuine semantic Home owner instead of reinstating the old WALK.
+    if(worker.status==='returning'&&worker.nativeRouteAdmission==='pending-home-resources'&&nativeHomeRequestContinuesHeldIdleStroll(bridge.nativeHomeRequestReference(worker.id),view)&&projectNativeHomeExecution(state,worker))return view;
     if(worker.nativeRouteAdmission==='pending-stroll-resources'){
       if(!r.sourceRequest||!restoredStrollMatchesWorker(state,worker,r.sourceRequest))throw Error('Native restored stroll has no matching saved Game source');
     }else if(worker.nativeRouteAdmission==='native-idle'){

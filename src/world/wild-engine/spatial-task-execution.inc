@@ -5,9 +5,16 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_game_execution_state(){
  const auto& s=state();if(!s.executionEnabled&&!s.causalClock)return 0;
  // Other movers must gain their own source projection before sharing Game.tick.
  // Their existing native clocks and component consumers remain supported.
- if(!s.gates.empty()||!s.suspendedBodies.empty())return -1;
+ if(!s.gates.empty())return -1;
+ // A prepared stopped22 keeps its exact body while the rest of the cohort
+ // advances. Other suspended classes still need their own Game projection.
+ for(const auto& [body,slot]:s.suspendedBodies){
+  const auto actor=s.gateBodyActors.find(body);if(actor==s.gateBodyActors.end())return -1;
+  const auto found=s.activeIntents.find(actor->second);if(found==s.activeIntents.end()||found->second.slot!=slot||!nativeHeldIdleStrollBodyCurrent(s,found->second,found->second.assignmentSequence,found->second.generation))return -1;
+ }
  for(const auto& [actor,intent]:s.activeIntents){
   if(intent.state==PlanningState::Cancelled)continue;
+  if(nativeHeldIdleStrollBodyCurrent(s,intent,intent.assignmentSequence,intent.generation))continue;
   if(intent.strollRequest){if(!nativeIdleStrollRequestBodyCurrent(s,intent))return -1;continue;}
   if(intent.state==PlanningState::RouteActive&&intent.slot<s.routeSlots.size()&&s.routeSlots[intent.slot].idleStrollBinding){if(!currentIdleStroll(double(actor)))return -1;continue;}
   if(intent.heldIdleTaskSource){if(!nativeHeldIdleTaskBodyCurrent(s,intent))return -1;continue;}

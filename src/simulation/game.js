@@ -1538,7 +1538,7 @@ function reconcileNativeIntents(s,nav){
 }
 function expireNativeIdleContracts(s,nav){
   const planner=nav.intentTaskPlanner;
-  for(const w of s.workers)if(w.status==='idle'&&(contractExpired(w,s)||s.time>=profile(w).end)&&(w.nativeRouteAdmission==='pending-idle-resources'||w.nativeRouteAdmission==='pending-stroll-resources'||planner.nativeInitialIdleBodyState?.(w.id)||planner.nativeIdleCycleExecution?.(w.id)||planner.nativeSettledWorkerExecution?.(w.id)))planner.requestNativeIdleHome(s,w);
+  for(const w of s.workers)if(w.status==='idle'&&(contractExpired(w,s)||s.time>=profile(w).end)&&(w.nativeRouteAdmission==='pending-idle-resources'||w.nativeRouteAdmission==='pending-stroll-resources'||planner.nativeInitialIdleBodyState?.(w.id)||planner.nativeIdleCycleExecution?.(w.id)||planner.nativeIdleStrollHeldExecution?.(w.id)||planner.nativeSettledWorkerExecution?.(w.id)))planner.requestNativeIdleHome(s,w);
 }
 function nativeReturnBoundarySupported(w,planner){
   const settled=planner.nativeSettledWorkerExecution?.(w.id);
@@ -1547,6 +1547,7 @@ function nativeReturnBoundarySupported(w,planner){
     w.nativeRouteAdmission==='pending-home-resources'&&!!planner.nativeHomeRequestReference?.(w.id)||
     w.nativeRouteAdmission==='pending-idle-resources'&&w.status==='idle'&&!w.taskId&&!!planner.nativeInitialIdleRequestReference?.(w.id)||
     w.nativeRouteAdmission==='pending-stroll-resources'&&w.status==='idle'&&!w.taskId&&!!planner.nativeIdleStrollRequestReference?.(w.id)||
+    w.nativeRouteAdmission==='native-idle-stroll'&&w.status==='idle'&&!w.taskId&&!!planner.nativeIdleStrollHeldExecution?.(w.id)||
     w.nativeRouteAdmission==='native-idle'&&w.status==='idle'&&!w.taskId&&!!(planner.nativeInitialIdleBodyState?.(w.id)||planner.nativeIdleCycleExecution?.(w.id))||
     !!settled&&(settled.binding.reference.home&&w.status==='returning'||w.status==='idle'&&!w.taskId&&!w.nativeRouteAdmission);
 }

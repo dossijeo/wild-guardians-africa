@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuacion e-R3: [parada22 en cohorte Game](e-r3-native-idle-stroll-stop-game-20261117.md). Solo la suspension22 con fuente fisica exacta puede esperar mientras avanza un companero y consumirse en Task/Home genuinos. Referencia: pausa por agente en codigo Godot4.4; sin nueva dependencia. Pasan1868 pruebas/168 archivos,42 dirigidas (16 nuevas), GPU parada->Task/Home y build;62 inputs nativos congelados. Productor ordinario, parada automatica durante WALK, otros finales/puertas, guardado y recuperacion incremental de3123 siguen pendientes. Continuidad historica85.62/41.01ms y siete fallos previos quedan abiertos; A6/A/B/C abiertos, D no iniciado.
+
+
 Continuacion A4/C: [presupuesto al reanudar recursos](a4-resource-continuation-budget-20261117.md). Las operaciones vuelven al presupuesto existente tras esperar dependencias/submit; la medicion incluye trabajo reanudado y fecha/metodo del maximo. No hay nueva cola ni dependencia. Pasan 1852 pruebas/167 archivos, 171 dirigidas (4 nuevas), GPU con/sin traza y build;62 inputs nativos exactos. El maximo anterior ya precedia la preparacion. El pico historico85.62ms y continuidad integrada siguen abiertos: no se prueba su causa ni ausencia total de tirones. Productor/cohort, otros finales/puertas y recuperacion de3123 pendientes; A6/A/B/C abiertos, D no iniciado.
 
 
