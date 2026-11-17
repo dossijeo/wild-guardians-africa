@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuacion de Idle: [publicacion/control del paseo restaurado](e-r3-native-idle-stroll-restoration-control-20261117.md). La peticion vinculada real viaja en baseline/evento y el control exige su fuente exacta, asociacion22, watermark e instalacion. El relevo asincrono reutiliza ambos puertos; cancelacion y cambios Task/Home/ancla/contrato invalidan la fuente anterior. Pasan 1838 pruebas/165 archivos, 53 especificas (26 nuevas) y build; los62 inputs nativos permanecen exactos, sin repetir GPU. Faltan roster/Surface/recursos/GPU de restauracion, productor/cohort integral, otros finales/puertas y recuperacion incremental de3123. Siete fallos antiguos siguen pendientes paraC; A6/A/B/C abiertos, D no iniciado.
+
+
 Continuacion de Idle: [guardado/carga WALK en Game](e-r3-native-idle-stroll-restoration-game-20261117.md). Snapshot semantico, declaracion nueva, espera antes/despues del cuerpo y ejecucion22 conservan pose/fases/destino/RNG; Task/Home durante espera conservan la fuente real. Pasan 1812 pruebas/163 archivos, 19 nuevas, ambos WASM, regresion Task GPU y build. La interfaz de guardado sigue cerrada hasta consumidor grafico. Faltan publicacion/control/puertos/roster/Surface/GPU de restauracion, productor/cohort integral y otros finales/puertas; recuperacion incremental de3123 y siete fallos antiguos siguen pendientes. A6/A/B/C no se cierran; D no se inicia.
 
 
