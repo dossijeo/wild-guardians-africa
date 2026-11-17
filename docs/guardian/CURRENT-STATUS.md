@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+Continuacion e-R3: [control directo Farm24](e-r3-native-farm-arrival-stop-control-20261117.md). Control original comparte validacion12/24, conserva fuente admitida Farm23 y exige revocacion/reloj/instalacion exactos para leer pose retenida. Referencia: codigo Id<T> de wgpu26.0.1. Pasan2287 pruebas/225 archivos (una omision opcional),69 dirigidas y build;64 inputs nativos exactos sin recompilar. Faltan admision/publicacion/puertos/consumidor24 y relevos Task/Home. Sin hardware nuevo; continuidad y recuperacion3123 pendientes. A6/A/B/C abiertos,D no iniciado.
+
+
 Continuacion e-R3: [proyeccion Farm retenido](e-r3-native-farm-arrival-held-projection-20261117.md). Lectura nativa del mismo cuerpo/slot suspendido y generacion exacta; Game conserva arriving, pose/fases/presupuesto, sin Idle ficticio. Guardado semantico restaura una declaracion nueva; tick/productor/guardado UI/baseline siguen cerrados. Referencias: codigo DetourCrowd1.6.0/Godot4.4. Pasan2269 pruebas/224 archivos (una omision opcional),72 dirigidas y build; ambos WASM recompilados,64 inputs nativos exactos. Faltan control/admision/puertos/consumidor24 y relevos Task/Home. Sin hardware nuevo; continuidad y recuperacion3123 pendientes. A6/A/B/C abiertos,D no iniciado.
 
 
