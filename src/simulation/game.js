@@ -1,8 +1,8 @@
 import {advanceWorkerRecovery} from './worker-recovery.js';
 import {nativeEntityNumericId} from '../world/native-entity-id.js';
 import {copyNativeTaskConsequenceAttestation} from '../world/native-task-consequence.js';
-import {copyNativeFarmArrivalRouteAttestation} from '../world/native-farm-arrival-route.js';
-import {nativeFarmArrivalState,nativeFarmArrivalExecutionState} from '../world/native-farm-arrival-state.js';
+import {copyNativeFarmArrivalRouteAttestation,copyNativeFarmArrivalHeldExecution} from '../world/native-farm-arrival-route.js';
+import {nativeFarmArrivalState,nativeFarmArrivalExecutionState,nativeFarmArrivalHeldState} from '../world/native-farm-arrival-state.js';
 import {copyNativeHomeRouteAttestation,nativeHomeRouteSource} from '../world/native-home-route.js';
 import {copyNativeTaskSettlementAttestation} from '../world/native-task-settlement.js';
 import {notifySettlement} from './settlement-observers.js';
@@ -1330,9 +1330,19 @@ export function projectNativeHomeRouteExecution(s,w,native){
 }
 // Semantic mirror of the current native cache. It does not execute a route,
 // advance time, choose another path or turn physical arrival into Idle/Task.
+function projectNativeHeldFarmArrival(s,w,value){
+  const held=copyNativeFarmArrivalHeldExecution(value),r=held.sourceReference,q=r.sourceRequest,first=w.nativeRouteAdmission==='pending-farm-arrival-resources',already=w.nativeRouteAdmission==='native-farm-arrival-held';
+  if(!first&&!already&&w.nativeRouteAdmission!=='native-farm-arrival')throw Error('Native held farm arrival projection requires its semantic marker');
+  const semantic=first?nativeFarmArrivalState(s,w,{canonical:true}):already?nativeFarmArrivalHeldState(s,w):nativeFarmArrivalExecutionState(s,w);
+  if(held.actorId!==nativeEntityNumericId(w.id)||held.bodyId!==r.bodyId||held.executedThrough!==s.elapsed||q.centerId!==semantic.centerId||q.workerProfile!==w.profile||q.requestedAt>s.elapsed||w.radius!==undefined&&w.radius!==held.pose.radius||Object.keys(semantic.goal).some(k=>semantic.goal[k]!==q.goal[k])||first&&Object.keys(semantic.pose).some(k=>semantic.pose[k]!==q.pose[k])||already&&Object.keys(semantic.pose).some(k=>semantic.pose[k]!==held.pose[k]))throw Error('Native held farm arrival projection is not the executed game boundary');
+  const p=held.pose;Object.assign(w,{x:p.x,z:p.z,heading:p.yaw,runPhase:p.runPhase,walkPhase:p.walkPhase,carryPhase:p.carryPhase,runRemaining:p.runRemaining,running:false,gateWaiting:false,path:null,destinationId:null,idleState:null,nativeRouteAdmission:'native-farm-arrival-held'});
+  if(!already)notifyWorkerPlanningChange(s,w);return held;
+}
 export function projectNativeFarmArrivalRouteExecution(s,w,native){
   const execution=native?.nativeFarmArrivalRouteExecution?.(w.id);
   if(!execution){
+    const held=native?.nativeFarmArrivalHeldExecution?.(w.id);if(held)return projectNativeHeldFarmArrival(s,w,held);
+    if(w.nativeRouteAdmission==='native-farm-arrival-held')throw Error('Held farm arrival has no current native physical source');
     if(w.nativeRouteAdmission!=='pending-farm-arrival-resources')return null;
     const source=native?.nativeFarmArrivalRequestReference?.(w.id)??native?.nativeFarmArrivalDeclarationReference?.(w.id),semantic=nativeFarmArrivalState(s,w,{canonical:true});
     if(!source||source.actorId!==nativeEntityNumericId(w.id)||source.centerId!==semantic.centerId||source.workerProfile!==w.profile||source.requestedAt>s.elapsed||Object.keys(semantic.pose).some(k=>source.pose[k]!==semantic.pose[k])||Object.keys(semantic.goal).some(k=>source.goal[k]!==semantic.goal[k]))throw Error('Pending farm arrival has no current native semantic source');

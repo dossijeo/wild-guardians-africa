@@ -1,8 +1,8 @@
 import {copyNativeIdleStrollRequestReference,copyNativeIdleStrollDeclarationReference,sameNativeIdleStrollRequestReference} from '../native-idle-stroll-request-reference.js';
 import {copyNativeFarmArrivalRequestReference,copyNativeFarmArrivalDeclarationReference} from '../native-farm-arrival-request-reference.js';
-import {copyNativeFarmArrivalRouteProposal,copyNativeFarmArrivalRouteReference,copyNativeFarmArrivalRouteAttestation,copyNativeFarmArrivalRouteResources} from '../native-farm-arrival-route.js';
+import {copyNativeFarmArrivalRouteProposal,copyNativeFarmArrivalRouteReference,copyNativeFarmArrivalRouteAttestation,copyNativeFarmArrivalRouteResources,copyNativeFarmArrivalHeldExecution} from '../native-farm-arrival-route.js';
 import {sameNativeFarmArrivalRequestReference} from '../native-farm-arrival-request-reference.js';
-import {nativeFarmArrivalState,nativeFarmArrivalExecutionState} from '../native-farm-arrival-state.js';
+import {nativeFarmArrivalState,nativeFarmArrivalExecutionState,nativeFarmArrivalHeldState} from '../native-farm-arrival-state.js';
 import {LOCOMOTION} from '../../simulation/locomotion-calibration.js';
 import {copyNativeRouteReference} from '../native-route-reference.js';
 import {nativeIdleStrollStopCodec,nativeFarmArrivalStopCodec} from '../native-worker-route-stop-codec.js';
@@ -124,9 +124,9 @@ function restoredStrollMatchesWorker(state,worker,request){
   try{const {pose,idleState:i,anchor:a}=restoredStrollGameState(state,worker);return Object.keys(pose).every(k=>pose[k]===request.pose[k])&&['kind','id','x','z','radius'].every(k=>a[k]===request.anchor[k])&&i.rng===request.walkRng&&i.approachRetry===request.approachRetry&&i.destination.x===request.destination.x&&i.destination.z===request.destination.z;}catch{return false;}
 }
 function normalizeNativeIntentRestoration(state,wasm){
-  const farmArrivals=state.workers.filter(w=>['pending-farm-arrival-resources','native-farm-arrival'].includes(w.nativeRouteAdmission));
+  const farmArrivals=state.workers.filter(w=>['pending-farm-arrival-resources','native-farm-arrival','native-farm-arrival-held'].includes(w.nativeRouteAdmission));
   if(farmArrivals.length&&(wasm.nav_farm_arrival_request_version?.()!==1||wasm.spatial_body_count()!==0))throw Error('Native farm arrival restoration requires a fresh supported world');
-  for(const worker of farmArrivals)if(worker.nativeRouteAdmission==='native-farm-arrival')nativeFarmArrivalExecutionState(state,worker);else nativeFarmArrivalState(state,worker,{canonical:true});
+  for(const worker of farmArrivals)if(worker.nativeRouteAdmission==='native-farm-arrival-held')nativeFarmArrivalHeldState(state,worker);else if(worker.nativeRouteAdmission==='native-farm-arrival')nativeFarmArrivalExecutionState(state,worker);else nativeFarmArrivalState(state,worker,{canonical:true});
   const initialIdles=state.workers.filter(w=>['pending-idle-resources','native-idle'].includes(w.nativeRouteAdmission));
   if(initialIdles.length&&(wasm.nav_initial_idle_request_version?.()!==1||typeof wasm.nav_intent_request_initial_idle!=='function'))throw Error('Rebuild native initial Idle restoration');
   if(initialIdles.length&&wasm.spatial_body_count()!==0)throw Error('Native initial Idle restoration requires a fresh physical world');
@@ -156,7 +156,7 @@ function normalizeNativeIntentRestoration(state,wasm){
     return {worker,action};});
   for(const {worker,action} of prepared){worker.nativeTaskAction=action;worker.nativeRouteAdmission='pending-action-resources';worker.status='waiting-task';worker.path=null;worker.taskApproach=null;worker.running=false;worker.gateWaiting=false;}
   for(const worker of homes){worker.nativeRouteAdmission='pending-home-resources';worker.running=false;worker.gateWaiting=false;}
-  for(const worker of farmArrivals)if(worker.nativeRouteAdmission==='native-farm-arrival')Object.assign(worker,{nativeRouteAdmission:'pending-farm-arrival-resources',running:false,gateWaiting:false});
+  for(const worker of farmArrivals)if(['native-farm-arrival','native-farm-arrival-held'].includes(worker.nativeRouteAdmission))Object.assign(worker,{nativeRouteAdmission:'pending-farm-arrival-resources',running:false,gateWaiting:false});
   for(const worker of initialIdles)worker.nativeRouteAdmission='pending-idle-resources';
   for(const {worker,home} of strolls)if(home)Object.assign(worker,home);else worker.nativeRouteAdmission='pending-stroll-resources';
 }
@@ -647,6 +647,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     const data=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_control_snapshot_ptr(),count*6));
     if(nativeIdleStrollBindings().length)throw Error('Native Idle strolls require prepared graphical admission');
     if((wasm.nav_farm_arrival_route_binding_actors?.()??0)!==0)throw Error('Native farm arrival routes require prepared graphical admission');
+    if((wasm.nav_farm_arrival_held_actors?.()??0)!==0)throw Error('Native held farm arrival bodies require prepared graphical admission');
     const clock=nativeCausalClock();
     if(clock&&(clock.intentSequence!==wasm.nav_intent_transition_sequence()||clock.committedThrough!==wasm.nav_intent_effective_time()))
       throw Error('Commit the native causal clock before attaching a new draw consumer');
@@ -1758,6 +1759,18 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     const count=wasm.nav_farm_arrival_route_binding_gates(actor);if(!Number.isSafeInteger(count)||count<0||count>1024)throw Error('Invalid native farm arrival gates');const gateIds=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_result_ptr(),count));
     return copyNativeFarmArrivalRouteAttestation({kind:'native-farm-arrival-route-attestation',version:1,projectionVersion:1,assignmentSequence:a[1],preparedReference:farmArrivalRouteReference(a.slice(4,28),a[2],source,destination),reference:farmArrivalRouteReference(a.slice(28,52),a[3],source,destination),gateIds});
   };
+  const nativeFarmArrivalHeldExecution=actorId=>{
+    const actor=typeof actorId==='number'?actorId:numericId(actorId);if(typeof wasm.nav_intent_farm_arrival_held_execution!=='function')return null;
+    if(typeof wasm.nav_farm_arrival_held_source_snapshot!=='function')throw Error('Rebuild native held farm arrival source');
+    if(wasm.nav_intent_farm_arrival_held_execution(actor)!==1)return null;
+    const a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_farm_arrival_execution_ptr(),30));
+    if(wasm.nav_farm_arrival_held_source_snapshot(actor)!==1)throw Error('Native held farm arrival lost its source');
+    const b=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_farm_arrival_route_binding_ptr(),29)),q=farmArrivalSourceReference(Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_farm_arrival_request_ptr(),23)),actor,true);
+    if(b[0]!==1||!b.every(Number.isFinite)||!Number.isSafeInteger(b[21])||b[21]<0||b[21]>4096)throw Error('Invalid native held farm arrival source header');
+    const r=farmArrivalRouteReference(b.slice(3,27),b[2],q,[1,b[27],b[28],b[21]]);
+    if(a[0]!==1||!a.every(Number.isFinite)||a[1]!==r.actorId||a[2]!==r.bodyId||a[3]!==q.centerId||a[4]!==q.nativeSession||a[5]!==r.expectedRouteHandle.slot||a[7]!==b[1]||a[8]<a[19]||a[9]!==q.goal.x||a[10]!==q.goal.z||a[11]!==q.requestSequence||a[18]!==0||a[27]!==0||a[28]!==0||a[29]!==2)throw Error('Invalid native held farm arrival execution');
+    return copyNativeFarmArrivalHeldExecution({kind:'native-farm-arrival-held-execution',version:1,actorId:a[1],bodyId:a[2],sourceReference:r,assignmentSequence:b[1],resumeHandle:routeHandle(a[4],a[5],a[6]),suspendedAt:a[19],executedThrough:a[8],pose:{x:a[12],z:a[13],yaw:a[16],radius:q.pose.radius,runPhase:a[21],walkPhase:a[22],carryPhase:a[23],runRemaining:a[26]}});
+  };
   const nativeFarmArrivalRouteBindings=()=>{
     if(!wasm.nav_farm_arrival_route_binding_actors)return Object.freeze([]);const count=wasm.nav_farm_arrival_route_binding_actors();if(!Number.isSafeInteger(count)||count<0||count>32768)throw Error('Invalid native farm arrival route count');const actors=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_farm_arrival_route_binding_ptr(),count));
     return Object.freeze(actors.map(actor=>{const binding=nativeFarmArrivalRouteBinding(actor);if(!binding)throw Error('Native farm arrival lost its association');return binding;}));
@@ -2445,7 +2458,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     nativeIdleStrollDeclarationReference,requestNativeRestoredIdleStrollHome,nativeIdleStrollRequestReference,nativeIdleStrollSourceRequestReference,nativeIdleStrollRequestReferences,
     startNativeIdleStrollAfterGpuQuiescence,nativeIdleStrollBinding,nativeIdleStrollBindings,nativeIdleStrollExecution,nativeIdleStrollHeldExecution,prepareNativeIdleStrollStopProposal,captureNativeIdleStrollStopProposal,revalidateNativeIdleStrollStopProposal,cancelNativeIdleStrollStopProposal,nativeIdleStrollStopBinding,prepareNativeFarmArrivalStopProposal,captureNativeFarmArrivalStopProposal,revalidateNativeFarmArrivalStopProposal,cancelNativeFarmArrivalStopProposal,nativeFarmArrivalStopBinding,prepareNativeIdleStrollProposal,captureNativeIdleStrollProposal,revalidateNativeIdleStrollProposal,cancelNativeIdleStrollProposal,
     nativeIdleCycleBinding,nativeIdleCycleBindings,nativeIdleCycleNextRequest,nativeIdleCycleExecution,prepareNativeIdleCycleProposal,startNativeIdleCycleAfterGpuQuiescence,captureNativeIdleCycleProposal,revalidateNativeIdleCycleProposal,cancelNativeIdleCycleProposal,
-    prepareNativeFarmArrivalRouteProposal,captureNativeFarmArrivalRouteProposal,revalidateNativeFarmArrivalRouteProposal,cancelNativeFarmArrivalRouteProposal,nativeFarmArrivalRouteSourceRequestReference,nativeFarmArrivalRouteBinding,nativeFarmArrivalRouteBindings,nativeFarmArrivalRouteExecution,
+    prepareNativeFarmArrivalRouteProposal,captureNativeFarmArrivalRouteProposal,revalidateNativeFarmArrivalRouteProposal,cancelNativeFarmArrivalRouteProposal,nativeFarmArrivalRouteSourceRequestReference,nativeFarmArrivalRouteBinding,nativeFarmArrivalRouteBindings,nativeFarmArrivalRouteExecution,nativeFarmArrivalHeldExecution,
     nativeFarmArrivalRequestReference,nativeFarmArrivalRequestReferences,nativeFarmArrivalDeclarationReference,
     startNativeFarmArrivalAfterGpuQuiescence,nativeInitialIdleRequestReference,nativeInitialIdleRequestReferences,nativeInitialIdleDeclarationReference,requestNativeInitialIdleHome,requestNativeInitialIdleBodyHome,nativeInitialIdleBodyBinding,nativeInitialIdleBodyBindings,nativeInitialIdleBodyState,requestNativeIdleCycleHome,requestNativeIdleStrollHome,prepareNativeInitialIdleBodyProposal,captureNativeInitialIdleBodyProposal,revalidateNativeInitialIdleBodyProposal,cancelNativeInitialIdleBodyProposal,startNativeInitialIdleBodyAfterGpuQuiescence,requestNativeIdleHome,startNativeHomeRouteAfterGpuQuiescence,nativeHomeRequestReference,nativeHomeRequestReferences,nativeHomeRouteBinding,nativeHomeRouteBindings,nativeHomeRouteExecution,prepareNativeHomeRouteProposal,captureNativeHomeRouteProposal,revalidateNativeHomeRouteProposal,cancelNativeHomeRouteProposal,
     startNativeTaskSettlementAfterGpuQuiescence,nativeTaskSettlementBinding,nativeTaskSettlementBindings,nativeSettledWorkerExecution,prepareNativeTaskSettlementProposal,captureNativeTaskSettlementProposal,revalidateNativeTaskSettlementProposal,cancelNativeTaskSettlementProposal,
@@ -3016,7 +3029,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
   const projectNativeHomeExecution=(state,worker)=>{if(state!==sourceState&&state!==observedTaskState)throw Error('Native Home projection belongs to another game');const execution=projectNativeHomeRouteExecution(state,worker,bridge);if(execution)projectedPositions.set(numericId(worker.id),[worker.x,worker.z]);return execution;};
   const projectNativeFarmArrivalExecution=(state,worker)=>{
     if(state!==sourceState&&state!==observedTaskState)throw Error('Native farm arrival projection belongs to another game');
-    const execution=projectNativeFarmArrivalRouteExecution(state,worker,bridge);if(execution?.kind==='native-farm-arrival-route-execution')projectedPositions.set(numericId(worker.id),[worker.x,worker.z]);return execution;
+    const execution=projectNativeFarmArrivalRouteExecution(state,worker,bridge);if(['native-farm-arrival-route-execution','native-farm-arrival-held-execution'].includes(execution?.kind))projectedPositions.set(numericId(worker.id),[worker.x,worker.z]);return execution;
   };
   const projectFarmArrivalSource=(state,worker,bound)=>{
     if(state!==sourceState&&state!==observedTaskState)throw Error('Native farm arrival belongs to another game');if(worker.nativeRouteAdmission!=='pending-farm-arrival-resources')return null;
@@ -3579,7 +3592,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     async startNativeHomeArrivalAfterGpuQuiescence(options){const owner=bridge.authorityEpoch,result=await bridge.startNativeHomeArrivalAfterGpuQuiescence(options);if(bridge.authorityEpoch===owner&&result.resources)pendingNativeChanges=true;return result;},
     async startNativeFarmArrivalAfterGpuQuiescence(options){const owner=bridge.authorityEpoch,result=await bridge.startNativeFarmArrivalAfterGpuQuiescence(options);if(bridge.authorityEpoch===owner&&result.resources){pendingNativeChanges=true;const state=sourceState??observedTaskState,worker=state?.workers.find(w=>numericId(w.id)===result.nativeFarmArrivalBinding.reference.actorId);if(worker)projectNativeFarmArrivalExecution(state,worker);}return result;},
     async startNativeHomeRouteAfterGpuQuiescence(options){const owner=bridge.authorityEpoch,result=await bridge.startNativeHomeRouteAfterGpuQuiescence(options);if(bridge.authorityEpoch===owner&&result.resources)pendingNativeChanges=true;return result;},
-    prepareNativeFarmArrivalRouteProposal:bridge.prepareNativeFarmArrivalRouteProposal,captureNativeFarmArrivalRouteProposal:bridge.captureNativeFarmArrivalRouteProposal,revalidateNativeFarmArrivalRouteProposal:bridge.revalidateNativeFarmArrivalRouteProposal,cancelNativeFarmArrivalRouteProposal:bridge.cancelNativeFarmArrivalRouteProposal,nativeFarmArrivalRouteSourceRequestReference:bridge.nativeFarmArrivalRouteSourceRequestReference,nativeFarmArrivalRouteBinding:bridge.nativeFarmArrivalRouteBinding,nativeFarmArrivalRouteBindings:bridge.nativeFarmArrivalRouteBindings,nativeFarmArrivalRouteExecution:bridge.nativeFarmArrivalRouteExecution,
+    prepareNativeFarmArrivalRouteProposal:bridge.prepareNativeFarmArrivalRouteProposal,captureNativeFarmArrivalRouteProposal:bridge.captureNativeFarmArrivalRouteProposal,revalidateNativeFarmArrivalRouteProposal:bridge.revalidateNativeFarmArrivalRouteProposal,cancelNativeFarmArrivalRouteProposal:bridge.cancelNativeFarmArrivalRouteProposal,nativeFarmArrivalRouteSourceRequestReference:bridge.nativeFarmArrivalRouteSourceRequestReference,nativeFarmArrivalRouteBinding:bridge.nativeFarmArrivalRouteBinding,nativeFarmArrivalRouteBindings:bridge.nativeFarmArrivalRouteBindings,nativeFarmArrivalRouteExecution:bridge.nativeFarmArrivalRouteExecution,nativeFarmArrivalHeldExecution:bridge.nativeFarmArrivalHeldExecution,
     nativeFarmArrivalRequestReference:bridge.nativeFarmArrivalRequestReference,nativeFarmArrivalRequestReferences:bridge.nativeFarmArrivalRequestReferences,nativeFarmArrivalDeclarationReference:bridge.nativeFarmArrivalDeclarationReference,requestNativeFarmArrivalResources,projectNativeFarmArrivalRequest,projectNativeFarmArrivalDeclaration,projectNativeFarmArrivalExecution,
     nativeInitialIdleRequestReference:bridge.nativeInitialIdleRequestReference,nativeInitialIdleRequestReferences:bridge.nativeInitialIdleRequestReferences,nativeInitialIdleDeclarationReference:bridge.nativeInitialIdleDeclarationReference,requestNativeInitialIdleResources,projectNativeInitialIdleRequest,projectNativeInitialIdleDeclaration,requestNativeIdleHome,projectNativeSettledWorkerExecution,
     async startNativeIdleStrollAfterGpuQuiescence(options){const owner=bridge.authorityEpoch,result=await bridge.startNativeIdleStrollAfterGpuQuiescence(options);if(bridge.authorityEpoch===owner&&result.resources){pendingNativeChanges=true;const state=sourceState??observedTaskState,worker=state?.workers.find(w=>numericId(w.id)===result.nativeIdleStrollBinding.reference.actorId);if(worker)projectNativeIdleStroll(state,worker);}return result;},

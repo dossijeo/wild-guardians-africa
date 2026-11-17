@@ -1,4 +1,4 @@
-import {nativeFarmArrivalState,nativeFarmArrivalExecutionState} from '../world/native-farm-arrival-state.js';
+import {nativeFarmArrivalState,nativeFarmArrivalExecutionState,nativeFarmArrivalHeldState} from '../world/native-farm-arrival-state.js';
 import {copyNativeTaskActionProgress} from '../world/native-task-action-presentation.js';
 import {nativeInitialIdleSavedState} from '../world/native-initial-idle-state.js';
 import {nativeIdleStrollSavedState} from '../world/native-idle-stroll-state.js';
@@ -130,8 +130,8 @@ export function validateSnapshot(state,{livePhysics=false}={}) {
         acting=worker.nativeRouteAdmission==='native-action'&&worker.status==='acting'&&Array.isArray(worker.path)&&worker.path.length===0,
         carrying=worker.nativeRouteAdmission==='native-delivery'&&worker.status==='carrying'&&!worker.taskId&&Array.isArray(worker.path)&&worker.path.length===0,
         returning=['native-home','pending-home-resources'].includes(worker.nativeRouteAdmission)&&worker.status==='returning'&&!worker.taskId&&!worker.crateId&&worker.path===null,
-        farmArrival=['pending-farm-arrival-resources','native-farm-arrival'].includes(worker.nativeRouteAdmission),initialIdle=['pending-idle-resources','native-idle'].includes(worker.nativeRouteAdmission),strolling=worker.nativeRouteAdmission==='native-idle-stroll'||worker.nativeRouteAdmission==='pending-stroll-resources';
-      if(farmArrival){if(worker.nativeRouteAdmission==='native-farm-arrival')nativeFarmArrivalExecutionState(state,worker);else nativeFarmArrivalState(state,worker,{canonical:true});}
+        farmArrival=['pending-farm-arrival-resources','native-farm-arrival','native-farm-arrival-held'].includes(worker.nativeRouteAdmission),initialIdle=['pending-idle-resources','native-idle'].includes(worker.nativeRouteAdmission),strolling=worker.nativeRouteAdmission==='native-idle-stroll'||worker.nativeRouteAdmission==='pending-stroll-resources';
+      if(farmArrival){if(worker.nativeRouteAdmission==='native-farm-arrival-held')nativeFarmArrivalHeldState(state,worker);else if(worker.nativeRouteAdmission==='native-farm-arrival')nativeFarmArrivalExecutionState(state,worker);else nativeFarmArrivalState(state,worker,{canonical:true});}
       if(initialIdle)nativeInitialIdleSavedState(state,worker,{canonical:true});
       if(strolling)nativeIdleStrollSavedState(state,worker);
       if(!farmArrival&&!strolling&&!initialIdle&&!carrying&&!returning&&(!worker.taskId||!pending&&!executing&&!acting))throw Error('Solicitud de recursos nativa inválida');

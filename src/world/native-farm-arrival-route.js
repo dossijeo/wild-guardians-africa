@@ -68,3 +68,14 @@ export function copyNativeFarmArrivalRouteResources(value){
  if(!sameNativeWorldBoundary(worldBoundary,r.worldBoundary)||!sameNativeWorldBoundary(presentation.worldBoundary,worldBoundary)||nativeRoute.actorId!==r.actorId||nativeRoute.assignmentSequence!==nativeFarmArrivalBinding.assignmentSequence||!sameHandle(nativeRoute.routeHandle,r.expectedRouteHandle)||JSON.stringify(presentation.nativeRoute)!==JSON.stringify(nativeRoute)||presentation.startTime!==r.worldBoundary.effectiveTime||presentation.endTime!==r.endTime||presentation.profile!==r.sourceRequest.profile||presentation.radius!==r.sourceRequest.pose.radius||presentation.motionMode!=='worker'||presentation.motionFlags!==r.motionFlags||!sourceSamplesMatch(presentation.rows,r)||presentation.gates.length!==nativeFarmArrivalBinding.gateIds.length||presentation.gates.some(g=>!nativeFarmArrivalBinding.gateIds.includes(g.gateId)))throw TypeError('Native farm arrival resource association mismatch');
  return Object.freeze({version:1,kind:23,phase:'committed',worldBoundary,nativeRoute,nativeFarmArrivalBinding,presentation});
 }
+
+// Actual logical source retained by the one suspended slot. The resume handle
+// identifies that held allocation; it is not an executable route permission.
+const heldFarmPoseKeys=Object.freeze(['x','z','yaw','radius','runPhase','walkPhase','carryPhase','runRemaining']);
+export function copyNativeFarmArrivalHeldExecution(value){
+ const r=copyNativeFarmArrivalRouteReference(value?.sourceReference),q=r.sourceRequest,p=value.pose,h=value.resumeHandle,g=r.expectedRouteHandle;
+ if(value.kind!=='native-farm-arrival-held-execution'||value.version!==1||!only(value,['kind','version','actorId','bodyId','sourceReference','assignmentSequence','resumeHandle','suspendedAt','executedThrough','pose'])||value.actorId!==r.actorId||value.bodyId!==r.bodyId||!id(value.assignmentSequence)||value.assignmentSequence<=r.sourceControlSequence||
+  !only(h,['authorityEpoch','session','slot','generation'])||!sameHandle({...h,generation:g.generation},g)||h.generation!==(g.generation===0xffffffff?1:g.generation+1)||
+  !finite(value.suspendedAt)||value.suspendedAt<r.worldBoundary.effectiveTime||value.suspendedAt>=r.endTime||!Number.isFinite(value.executedThrough)||value.executedThrough<value.suspendedAt||!only(p,heldFarmPoseKeys)||!heldFarmPoseKeys.every(k=>finite(p[k]))||p.radius!==q.pose.radius||['x','z'].some(k=>Math.abs(p[k])>=2147483000)||['runPhase','walkPhase','carryPhase','runRemaining'].some(k=>p[k]<0))throw TypeError('Invalid current held native farm arrival source');
+ return Object.freeze({kind:value.kind,version:1,actorId:r.actorId,bodyId:r.bodyId,sourceReference:r,assignmentSequence:value.assignmentSequence,resumeHandle:Object.freeze({...h}),suspendedAt:value.suspendedAt,executedThrough:value.executedThrough,pose:Object.freeze(Object.fromEntries(heldFarmPoseKeys.map(k=>[k,p[k]])))});
+}

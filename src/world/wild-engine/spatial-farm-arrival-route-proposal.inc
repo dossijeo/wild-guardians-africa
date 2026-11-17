@@ -93,6 +93,7 @@ EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_proposal_commit_bound(double ses
  binding->assignmentSequence=intent.assignmentSequence;s.routeSlots[intent.slot].farmArrivalBinding=std::move(binding);s.entityRevision++;spatialRecordMotionResourceBoundary(session,ticket,time,23);return 1;
 }
 static const NativeFarmArrivalRouteBinding* currentFarmArrivalRoute(double actor){const auto& s=state();if(!integer(actor))return nullptr;const auto found=s.activeIntents.find(uint64_t(actor));return found!=s.activeIntents.end()&&nativeFarmArrivalBodyCurrent(s,found->second)?s.routeSlots[found->second.slot].farmArrivalBinding.get():nullptr;}
+static const NativeFarmArrivalRouteBinding* currentHeldFarmArrivalRoute(double actor){const auto& s=state();if(!integer(actor))return nullptr;const auto found=s.activeIntents.find(uint64_t(actor));return found!=s.activeIntents.end()&&nativeHeldFarmArrivalBodyCurrent(s,found->second)?s.routeSlots[found->second.slot].farmArrivalBinding.get():nullptr;}
 EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_binding_snapshot(double actor){auto& s=state();auto& out=s.farmArrivalRouteBindingResult;out.clear();const auto b=currentFarmArrivalRoute(actor);if(!b)return 0;out={1,double(b->assignmentSequence),double(b->prepared.ticket),double(b->actual.ticket)};out.insert(out.end(),b->prepared.header.begin(),b->prepared.header.end());out.insert(out.end(),b->actual.header.begin(),b->actual.header.end());return 1;}
 EMSCRIPTEN_KEEPALIVE const double* nav_farm_arrival_route_binding_ptr(){return state().farmArrivalRouteBindingResult.data();}
 // Bounded metadata from the same route owner. Reuse execution scratch so typed
@@ -101,7 +102,9 @@ EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_destination_snapshot(double acto
  auto& s=state();auto& out=s.farmArrivalExecutionResult;out.fill(0);if(!currentFarmArrivalRoute(actor))return 0;
  const auto& route=s.routeSlots[s.activeIntents.at(uint64_t(actor)).slot];out[0]=1;out[1]=route.points.empty()?route.originX:route.points[route.points.size()-2];out[2]=route.points.empty()?route.originZ:route.points.back();out[3]=double(route.points.size()/2);return 1;
 }
-EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_binding_actors(){auto& s=state();auto& out=s.farmArrivalRouteBindingResult;out.clear();std::vector<uint64_t> actors;for(const auto& [actor,intent]:s.activeIntents)if(intent.state==PlanningState::RouteActive&&intent.slot<s.routeSlots.size()&&s.routeSlots[intent.slot].farmArrivalBinding){if(!currentFarmArrivalRoute(double(actor)))return -1;actors.push_back(actor);}std::sort(actors.begin(),actors.end());for(auto id:actors)out.push_back(double(id));return int(actors.size());}
+static int farmArrivalBindingActors(bool held){auto& s=state();auto& out=s.farmArrivalRouteBindingResult;out.clear();std::vector<uint64_t> actors;for(const auto& [actor,intent]:s.activeIntents)if(intent.state==(held?PlanningState::WaitingBlocked:PlanningState::RouteActive)&&intent.slot<s.routeSlots.size()&&s.routeSlots[intent.slot].farmArrivalBinding){if(!(held?currentHeldFarmArrivalRoute(double(actor)):currentFarmArrivalRoute(double(actor))))return -1;actors.push_back(actor);}std::sort(actors.begin(),actors.end());for(auto id:actors)out.push_back(double(id));return int(actors.size());}
+EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_binding_actors(){return farmArrivalBindingActors(false);}
+EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_held_actors(){return farmArrivalBindingActors(true);}
 EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_binding_gates(double actor){auto& s=state();s.gateResult.clear();if(!currentFarmArrivalRoute(actor))return -1;for(auto id:s.routeSlots[s.activeIntents.at(uint64_t(actor)).slot].gateReservations)s.gateResult.push_back(double(id));return int(s.gateResult.size());}
 EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_source_snapshot(double actor,double ticket){
  auto& s=state();s.farmArrivalRequestResult.fill(0);const NativeFarmArrivalResourceRequest* r=nullptr;
@@ -109,10 +112,19 @@ EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_source_snapshot(double actor,dou
  else if(const auto b=currentFarmArrivalRoute(actor);b)r=b->requestSource.get();
  return r?snapshotFarmArrivalRequest(s,*r):0;
 }
-EMSCRIPTEN_KEEPALIVE int nav_intent_farm_arrival_execution(double actor){
- auto& s=state();auto& out=s.farmArrivalExecutionResult;out.fill(0);const auto b=currentFarmArrivalRoute(actor);if(!b)return 0;
+static int farmArrivalExecutionSnapshot(double actor,bool held){
+ auto& s=state();auto& out=s.farmArrivalExecutionResult;out.fill(0);const auto b=held?currentHeldFarmArrivalRoute(actor):currentFarmArrivalRoute(actor);if(!b)return 0;
  const auto& intent=s.activeIntents.at(uint64_t(actor));const auto& route=s.routeSlots[intent.slot];const auto& r=*b->requestSource;
  const std::array<double,12> header={1,actor,double(r.body),double(r.center),double(s.session),double(intent.slot),double(intent.generation),double(intent.assignmentSequence),s.effectiveTime,r.targetX,r.targetZ,double(r.sequence)};
- std::copy(header.begin(),header.end(),out.begin());std::copy(route.executionPose.begin(),route.executionPose.end(),out.begin()+12);return 1;
+ std::copy(header.begin(),header.end(),out.begin());std::copy(route.executionPose.begin(),route.executionPose.end(),out.begin()+12);
+ if(held){out[19]=route.suspendedAt;out[27]=out[28]=0;out[29]=2;}return 1;
+}
+EMSCRIPTEN_KEEPALIVE int nav_intent_farm_arrival_execution(double actor){return farmArrivalExecutionSnapshot(actor,false);}
+EMSCRIPTEN_KEEPALIVE int nav_intent_farm_arrival_held_execution(double actor){return farmArrivalExecutionSnapshot(actor,true);}
+EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_held_source_snapshot(double actor){
+ auto& s=state();auto& out=s.farmArrivalRouteBindingResult;out.clear();const auto b=currentHeldFarmArrivalRoute(actor);if(!b)return 0;
+ const auto& route=s.routeSlots[s.activeIntents.at(uint64_t(actor)).slot];out.resize(29);out[0]=1;out[1]=double(b->assignmentSequence);out[2]=double(b->actual.ticket);
+ std::copy(b->actual.header.begin(),b->actual.header.end(),out.begin()+3);out[27]=route.points.empty()?route.originX:route.points[route.points.size()-2];out[28]=route.points.empty()?route.originZ:route.points.back();
+ return snapshotFarmArrivalRequest(s,*b->requestSource);
 }
 EMSCRIPTEN_KEEPALIVE const double* nav_intent_farm_arrival_execution_ptr(){return state().farmArrivalExecutionResult.data();}

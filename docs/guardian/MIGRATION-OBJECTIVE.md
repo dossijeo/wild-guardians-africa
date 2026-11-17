@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuacion e-R3: [proyeccion Farm retenido](e-r3-native-farm-arrival-held-projection-20261117.md). Lectura nativa del mismo cuerpo/slot suspendido y generacion exacta; Game conserva arriving, pose/fases/presupuesto, sin Idle ficticio. Guardado semantico restaura una declaracion nueva; tick/productor/guardado UI/baseline siguen cerrados. Referencias: codigo DetourCrowd1.6.0/Godot4.4. Pasan2269 pruebas/224 archivos (una omision opcional),72 dirigidas y build; ambos WASM recompilados,64 inputs nativos exactos. Faltan control/admision/puertos/consumidor24 y relevos Task/Home. Sin hardware nuevo; continuidad y recuperacion3123 pendientes. A6/A/B/C abiertos,D no iniciado.
+
+
 Continuacion e-R3: [datos y asociacion Farm24](e-r3-native-farm-arrival-stop-data-20261117.md). Esquema/adapter existentes compartidos12/24, etiquetas y generacion exactas; journal nativo de ultima publicacion identifica la fuente elegida, no solo dependencias detenidas. Referencia: codigo Id<T> de wgpu26.0.1. Pasan2250 pruebas/223 archivos (una omision opcional),89 dirigidas y build; standalone/pthread recompilados,64 inputs/artefactos congelados. Faltan proyeccion/control/puertos/consumidor y relevos Game; no hardware24. Siguen pendientes huecos y recuperacion3123. A6/A/B/C abiertos,D no iniciado.
 
 
