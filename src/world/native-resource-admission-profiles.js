@@ -1,3 +1,4 @@
+import {nativeFarmArrivalStopReferenceFromProposal,sameNativeFarmArrivalStopReference} from './native-farm-arrival-stop.js';
 import {nativeIdleStrollStopReferenceFromProposal,sameNativeIdleStrollStopReference} from './native-idle-stroll-stop.js';
 import {nativeIdleCycleReferenceFromProposal,sameNativeIdleCycleReference} from './native-idle-cycle.js';
 import {nativeIdleStrollReferenceFromProposal,sameNativeIdleStrollReference} from './native-idle-stroll.js';
@@ -16,6 +17,12 @@ import {nativeInitialIdleBodyReferenceFromProposal,sameNativeInitialIdleBodyRefe
 // native revalidation; none of these profiles can issue an execution permission.
 const routeCompatible=translation=>translation.sameFloat32Motion&&translation.sameFloat32Gates;
 const profiles=Object.freeze({
+  'farm-arrival-stop':Object.freeze({
+    proposalKind:24,templateField:'preparedFarmArrivalStopTemplate',bindingField:'nativeFarmArrivalStopBinding',releaseField:'nativeFarmArrivalStops',projectedStop:true,
+    reference:nativeFarmArrivalStopReferenceFromProposal,sameReference:sameNativeFarmArrivalStopReference,compatible:translation=>translation.sameResourceOwners===true,
+    receiptCompatible:(receipt,prepared)=>receipt.nativeFarmArrivalStopVersion===1&&sameNativeFarmArrivalStopReference(receipt.preparedFarmArrivalStopTemplate,prepared),
+    attest(native,reference,preparedReference,protocol){const fact=protocol.binding(reference,preparedReference);if(!fact?.projection||!sameNativeFarmArrivalStopReference(fact.reference,reference)||!sameNativeFarmArrivalStopReference(fact.preparedReference,preparedReference))throw Error('Native farm arrival stop final association unavailable');return fact;}
+  }),
   'idle-stroll-stop':Object.freeze({
     proposalKind:12,templateField:'preparedIdleStrollStopTemplate',bindingField:'nativeIdleStrollStopBinding',releaseField:'nativeStrollStops',projectedStop:true,
     reference:nativeIdleStrollStopReferenceFromProposal,sameReference:sameNativeIdleStrollStopReference,compatible:translation=>translation.sameResourceOwners===true,

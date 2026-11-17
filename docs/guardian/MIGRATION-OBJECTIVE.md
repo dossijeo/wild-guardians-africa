@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuacion e-R3: [admision y publicacion de control Farm24](e-r3-native-farm-arrival-stop-admission-20261117.md). Fuente comparte transactor12/24 y revalida pose/propietarios; publicador original exige plantilla/ACK/version24 y libera asociacion final nativa con proyeccion. Referencia: codigo Queue/LifetimeTracker de wgpu26.0.1. Pasan2308 pruebas/226 archivos (una omision opcional),91 dirigidas y build;64 inputs nativos exactos sin recompilar. MessagePort real, recursos/drain/frame simulados. Faltan puertos de preparacion/consumidor24 y relevos Task/Home. Sin hardware nuevo; continuidad y recuperacion3123 pendientes. A6/A/B/C abiertos,D no iniciado.
+
+
 Continuacion e-R3: [control directo Farm24](e-r3-native-farm-arrival-stop-control-20261117.md). Control original comparte validacion12/24, conserva fuente admitida Farm23 y exige revocacion/reloj/instalacion exactos para leer pose retenida. Referencia: codigo Id<T> de wgpu26.0.1. Pasan2287 pruebas/225 archivos (una omision opcional),69 dirigidas y build;64 inputs nativos exactos sin recompilar. Faltan admision/publicacion/puertos/consumidor24 y relevos Task/Home. Sin hardware nuevo; continuidad y recuperacion3123 pendientes. A6/A/B/C abiertos,D no iniciado.
 
 

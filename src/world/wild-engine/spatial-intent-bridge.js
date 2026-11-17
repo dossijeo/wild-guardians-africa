@@ -1,6 +1,6 @@
 import {copyNativeIdleStrollRequestReference,copyNativeIdleStrollDeclarationReference,sameNativeIdleStrollRequestReference} from '../native-idle-stroll-request-reference.js';
 import {copyNativeFarmArrivalRequestReference,copyNativeFarmArrivalDeclarationReference} from '../native-farm-arrival-request-reference.js';
-import {copyNativeFarmArrivalRouteProposal,copyNativeFarmArrivalRouteReference,copyNativeFarmArrivalRouteAttestation,copyNativeFarmArrivalRouteResources,copyNativeFarmArrivalHeldExecution} from '../native-farm-arrival-route.js';
+import {copyNativeFarmArrivalRouteProposal,copyNativeFarmArrivalRouteReference,copyNativeFarmArrivalRouteAttestation,copyNativeFarmArrivalRouteResources,copyNativeFarmArrivalHeldExecution,sameNativeFarmArrivalRouteAttestation} from '../native-farm-arrival-route.js';
 import {sameNativeFarmArrivalRequestReference} from '../native-farm-arrival-request-reference.js';
 import {nativeFarmArrivalState,nativeFarmArrivalExecutionState,nativeFarmArrivalHeldState} from '../native-farm-arrival-state.js';
 import {LOCOMOTION} from '../../simulation/locomotion-calibration.js';
@@ -893,6 +893,11 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       kind=10;mode=m.replace?1:0;floats=m.sites.flatMap(s=>[s.x,s.z,s.hx,s.hz,s.waterFalloff??6]);
     }else if(m.type==='publishPreparedChunk'){
       if(!id(m.id))throw TypeError('Invalid native prepared chunk ID');kind=11;integers=[m.id];
+    }else if(m.type==='stopFarmArrival'){
+      if(typeof prepareResources!=='function')throw TypeError('Native farm arrival stop requires retained prepared resources');
+      const binding=copyNativeFarmArrivalRouteAttestation(m.binding),r=binding.reference,h=r.expectedRouteHandle;
+      if(h.authorityEpoch!==epoch()||h.session!==wasm.nav_intent_session()||!sameNativeFarmArrivalRouteAttestation(binding,nativeFarmArrivalRouteBinding(r.actorId)))return Promise.resolve({status:'stale',authorizedAutonomy:false,authorizedPassage:false});
+      return stopNativeFarmArrivalAfterGpuQuiescence({actorId:r.actorId,getPublication,prepareResources,signal});
     }else if(m.type==='stopIdleStroll'){
       if(typeof prepareResources!=='function')throw TypeError('Native stroll stop requires retained prepared resources');
       const binding=copyNativeIdleStrollAttestation(m.binding),r=binding.reference,h=r.expectedRouteHandle;
@@ -925,22 +930,24 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       return {status:1,value:{ids,resources}};
     },prepareResources,signal);
   };
-  const stopNativeIdleStrollAfterGpuQuiescence=({actorId,getPublication,prepareResources,signal=null}={})=>{
-    if(typeof prepareResources!=='function')throw TypeError('Native stroll stop requires retained prepared resources');
-    const binding=nativeIdleStrollBinding(actorId);if(!binding)return Promise.resolve({status:'unsupported',authorizedAutonomy:false,authorizedPassage:false});
-    const actor=binding.reference.actorId,current=()=>sameNativeIdleStrollAttestation(binding,nativeIdleStrollBinding(actor));let candidate=null,preparedTicket=null,sourceTicket=null,translation=null;
-    const protocol={preparedFrameRequired:true,deferred:true,motionKind:'idle-stroll-stop',
-      retained(session,ticket){if(!current()||wasm.nav_intent_barrier_proposal_ticket()!==1)return false;const a=new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6);return a[0]===session&&a[1]===ticket&&a[5]===12;},
-      revalidate(){if(!current())return {status:'stale'};const result=revalidateNativeIdleStrollStopProposal(sourceTicket);if(result.status==='revalidated'){candidate=result.proposal;sourceTicket=result.ticket;translation=result.timeTranslation;}return result;},
-      binding(reference,preparedReference){return nativeIdleStrollStopBinding(reference,preparedReference,{projection:{version:1,routeEffects:candidate.routeEffects,gateEffects:candidate.gateEffects}});},
-      timeTranslation:()=>translation,ticket:()=>wasm.nav_intent_barrier_proposal_ticket(),ticketPtr:()=>wasm.nav_intent_barrier_proposal_ticket_ptr(),release(session,ticket){wasm.spatial_world_proposal_resource_release?.(session,ticket);},cancel(){if(sourceTicket)cancelNativeIdleStrollStopProposal(sourceTicket);},
-      capture(boundary){candidate=captureNativeIdleStrollStopProposal(sourceTicket);if(!candidate||!sameNativeWorldBoundary(candidate.worldBoundary,boundary))throw Error('Native moving stop resources unavailable');preparedTicket=sourceTicket.ticket;return candidate;}};
-    return commitNativeWorldProposal(getPublication,()=>{if(!current())return -2;const p=prepareNativeIdleStrollStopProposal(actor);if(p.status==='proposed'){sourceTicket=p.ticket;return 1;}return p.status==='busy'?-4:p.status==='blocked'?0:-2;},(mark,...boundary)=>{
+  const stopNativeWorkerRouteAfterGpuQuiescence=(kind,{actorId,getPublication,prepareResources,signal=null}={})=>{
+    if(typeof prepareResources!=='function')throw TypeError(kind===24?'Native farm arrival stop requires retained prepared resources':'Native stroll stop requires retained prepared resources');
+    const binding=workerRouteStopSource(kind,actorId);if(!binding)return Promise.resolve({status:'unsupported',authorizedAutonomy:false,authorizedPassage:false});
+    const actor=binding.reference.actorId,current=()=>(kind===24?sameNativeFarmArrivalRouteAttestation:sameNativeIdleStrollAttestation)(binding,workerRouteStopSource(kind,actor));let candidate=null,preparedTicket=null,sourceTicket=null,translation=null;
+    const protocol={preparedFrameRequired:true,deferred:true,motionKind:kind===24?'farm-arrival-stop':'idle-stroll-stop',
+      retained(session,ticket){if(!current()||wasm.nav_intent_barrier_proposal_ticket()!==1)return false;const a=new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6);return a[0]===session&&a[1]===ticket&&a[5]===kind;},
+      revalidate(){if(!current())return {status:'stale'};const result=revalidateNativeWorkerRouteStopProposal(kind,sourceTicket);if(result.status==='revalidated'){candidate=result.proposal;sourceTicket=result.ticket;translation=result.timeTranslation;}return result;},
+      binding(reference,preparedReference){return nativeWorkerRouteStopBinding(kind,reference,preparedReference,{projection:{version:1,routeEffects:candidate.routeEffects,gateEffects:candidate.gateEffects}});},
+      timeTranslation:()=>translation,ticket:()=>wasm.nav_intent_barrier_proposal_ticket(),ticketPtr:()=>wasm.nav_intent_barrier_proposal_ticket_ptr(),release(session,ticket){wasm.spatial_world_proposal_resource_release?.(session,ticket);},cancel(){if(sourceTicket)cancelNativeWorkerRouteStopProposal(kind,sourceTicket);},
+      capture(boundary){candidate=captureNativeWorkerRouteStopProposal(kind,sourceTicket);if(!candidate||!sameNativeWorldBoundary(candidate.worldBoundary,boundary))throw Error('Native moving stop resources unavailable');preparedTicket=sourceTicket.ticket;return candidate;}};
+    return commitNativeWorldProposal(getPublication,()=>{if(!current())return -2;const p=prepareNativeWorkerRouteStopProposal(kind,actor);if(p.status==='proposed'){sourceTicket=p.ticket;return 1;}return p.status==='busy'?-4:p.status==='blocked'?0:-2;},(mark,...boundary)=>{
       if(!current())return {status:-2};const status=wasm.spatial_world_proposal_stop_commit_bound(...boundary,preparedTicket);if(status!==1)return {status};mark();
-      const resources=session.publishNativeWorldResources(committedWorldBoundary);if(resources.kind!==12)throw Error('Native stop committed another resource family');if(onNativeWorldResources)onNativeWorldResources({...resources,worldBoundary:nativeWorldBoundary()});
+      const resources=session.publishNativeWorldResources(committedWorldBoundary);if(resources.kind!==kind)throw Error('Native stop committed another resource family');if(onNativeWorldResources)onNativeWorldResources({...resources,worldBoundary:nativeWorldBoundary()});
       mark({ids:[],resources});return {status:1,value:{ids:[],resources}};
     },prepareResources,signal,protocol);
   };
+  const stopNativeIdleStrollAfterGpuQuiescence=options=>stopNativeWorkerRouteAfterGpuQuiescence(12,options);
+  const stopNativeFarmArrivalAfterGpuQuiescence=options=>stopNativeWorkerRouteAfterGpuQuiescence(24,options);
   const mutateNativeOverlayAfterGpuQuiescence=mutateNativeWorldAfterGpuQuiescence;
   const sampleNativeRoute=(handle,at)=>{
     if(handle?.authorityEpoch!==epoch()||
@@ -2450,7 +2457,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     structureFor:id=>structuresById.get(numericId(id))??null,
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
-    intentChanges,routePoints,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,captureNativeRoutePresentation,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,resumeNativeGateRouteAfterGpuQuiescence,prepareNativeGateResumeProposal,captureNativeGateResumeProposal,cancelNativeGateResumeProposal,revalidateNativeGateResumeProposal,prepareNativeTaskStartProposal,captureNativeTaskStartProposal,revalidateNativeTaskStartProposal,cancelNativeTaskStartProposal,
+    intentChanges,routePoints,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,captureNativeRoutePresentation,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence,stopNativeFarmArrivalAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,resumeNativeGateRouteAfterGpuQuiescence,prepareNativeGateResumeProposal,captureNativeGateResumeProposal,cancelNativeGateResumeProposal,revalidateNativeGateResumeProposal,prepareNativeTaskStartProposal,captureNativeTaskStartProposal,revalidateNativeTaskStartProposal,cancelNativeTaskStartProposal,
     beginNativeRouteExecution,advanceNativeRouteExecution,stopNativeRouteExecution,nativeRouteExecution,nativeGameExecutionState,advanceNativeGameExecution,nativeTaskExecution,requestNativeTaskActionResources,nativeTaskActionRequest,
     startNativeTaskActionAfterGpuQuiescence,prepareNativeTaskActionProposal,captureNativeTaskActionProposal,revalidateNativeTaskActionProposal,cancelNativeTaskActionProposal,
     nativeTaskActionBinding,nativeTaskActionBindings,nativeTaskActionExecution,nativeTaskActionRestoreReferences,
@@ -3553,7 +3560,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     nativeWorldResourceBoundary:bridge.nativeWorldResourceBoundary,
     addNativeBarrierAfterGpuQuiescence:bridge.addNativeBarrierAfterGpuQuiescence,
     mutateNativeOverlayAfterGpuQuiescence:bridge.mutateNativeOverlayAfterGpuQuiescence,
-    mutateNativeWorldAfterGpuQuiescence:bridge.mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence:bridge.stopNativeIdleStrollAfterGpuQuiescence,
+    mutateNativeWorldAfterGpuQuiescence:bridge.mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence:bridge.stopNativeIdleStrollAfterGpuQuiescence,stopNativeFarmArrivalAfterGpuQuiescence:bridge.stopNativeFarmArrivalAfterGpuQuiescence,
     nativeCausalClock:bridge.nativeCausalClock,commitNativeCausalClock:bridge.commitNativeCausalClock,
     observeNativeIntentControl:bridge.observeNativeIntentControl,
     flushNativeIntentControl:bridge.flushNativeIntentControl,
