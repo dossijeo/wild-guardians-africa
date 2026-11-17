@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuacion e-R3: [Farm24 en canales de preparacion](e-r3-native-farm-arrival-stop-ports-20261117.md). Terreno conserva plantilla24, efectos propios, reserva de bytes y asociacion final hasta adopcion confirmada; cliente/receptor nativo compartidos y conexion directa mantienen el recibo tipado sin comandos nuevos. Referencia: codigo LifetimeTracker/Id<T> de wgpu26.0.1. Pasan2329 pruebas/227 archivos (una omision opcional),96 dirigidas y build;64 inputs nativos exactos sin recompilar. Canales reales, GPU/drain/frame simulados; falta consumidor24 y relevos Task/Home. Continuidad y recuperacion3123 pendientes. A6/A/B/C abiertos,D no iniciado.
+
+
 Continuacion e-R3: [admision y publicacion de control Farm24](e-r3-native-farm-arrival-stop-admission-20261117.md). Fuente comparte transactor12/24 y revalida pose/propietarios; publicador original exige plantilla/ACK/version24 y libera asociacion final nativa con proyeccion. Referencia: codigo Queue/LifetimeTracker de wgpu26.0.1. Pasan2308 pruebas/226 archivos (una omision opcional),91 dirigidas y build;64 inputs nativos exactos sin recompilar. MessagePort real, recursos/drain/frame simulados. Faltan puertos de preparacion/consumidor24 y relevos Task/Home. Sin hardware nuevo; continuidad y recuperacion3123 pendientes. A6/A/B/C abiertos,D no iniciado.
 
 
