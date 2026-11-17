@@ -3,6 +3,13 @@
 // Like NavigationAgent3D's target/desired distance, this declares intent only;
 // a later prepared route must prove topology, bodies and graphical resources.
 EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_request_version(){return 1;}
+// Read the actual owner before declaring a semantic Game source. This shares
+// the existing scratch buffer; it creates no request, body or permission.
+EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_goal_snapshot(double actor){
+ auto& s=state();s.farmArrivalRequestResult.fill(0);if(!integer(actor))return 0;const auto worker=s.workers.find(uint64_t(actor));if(worker==s.workers.end())return 0;
+ const auto center=s.targets.find(worker->second.center);if(center==s.targets.end()||center->second.kind!=4||!center->second.active||center->second.status!=0||!center->second.serviceKnown)return 0;
+ const auto& c=center->second;const auto& w=worker->second;s.farmArrivalRequestResult[0]=1;s.farmArrivalRequestResult[1]=double(w.center);s.farmArrivalRequestResult[2]=c.serviceX;s.farmArrivalRequestResult[3]=c.serviceZ;s.farmArrivalRequestResult[4]=c.x;s.farmArrivalRequestResult[5]=c.z;s.farmArrivalRequestResult[6]=2;s.farmArrivalRequestResult[7]=w.x;s.farmArrivalRequestResult[8]=w.z;return 1;
+}
 EMSCRIPTEN_KEEPALIVE int nav_intent_request_farm_arrival(double actor,double workerProfile,double yaw,
  double runPhase,double walkPhase,double carryPhase,double runRemaining){
  auto& s=state();if(!integer(actor)||!integer(workerProfile,true)||workerProfile>3)return -1;

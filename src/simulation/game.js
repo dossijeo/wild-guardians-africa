@@ -1453,7 +1453,7 @@ function reserveAvailableTasks(s,nav){
     planner.reconcileWorkerRoutes(s,{navVersion:nav.version});
     const plan=planner.planIfNeeded(s.elapsed);
     if(plan!==null){
-      planner.commitTaskBatchToState(s,plan,{navVersion:nav.version,...(planner.nativeGameExecutionState?.()===1||s.workers.some(w=>w.nativeRouteAdmission==='pending-idle-resources'||w.nativeRouteAdmission==='pending-stroll-resources')?{pendingResources:true}:{})});
+      planner.commitTaskBatchToState(s,plan,{navVersion:nav.version,...(planner.nativeGameExecutionState?.()===1||s.workers.some(w=>w.nativeRouteAdmission==='pending-farm-arrival-resources'||w.nativeRouteAdmission==='pending-idle-resources'||w.nativeRouteAdmission==='pending-stroll-resources')?{pendingResources:true}:{})});
       planner.reconcileWorkerRoutes(s,{navVersion:nav.version});
     }
     return;
@@ -1609,6 +1609,7 @@ function updateWorkers(s,dt,nav) {
       const p=profile(w),center=s.structures.find(c=>c.id===w.centerId),village=s.villages.find(v=>v.id===w.villageId);
       // Physical initialization may precede the first causal clock. A saved
       // Home still waits for admission and must never enter the legacy mover.
+      if(w.nativeRouteAdmission==='pending-farm-arrival-resources'){const held=nativeExecutionActive?nav.intentTaskPlanner?.projectNativeFarmArrivalRequest(s,w):nav.intentTaskPlanner?.projectNativeFarmArrivalDeclaration(s,w);if(!held)throw Error('Pending farm arrival has no current native source');continue;}
       if(w.nativeRouteAdmission==='pending-stroll-resources'){const held=nativeExecutionActive?nav.intentTaskPlanner?.projectNativeIdleStrollRequest?.(s,w):nav.intentTaskPlanner?.projectNativeIdleStrollDeclaration?.(s,w);if(!held)throw Error('Pending restored stroll has no current native source');continue;}
       if(w.nativeRouteAdmission==='native-idle-stroll'){if(!nativeExecutionActive||!nav.intentTaskPlanner?.projectNativeIdleStroll?.(s,w))throw Error('Native restored stroll has no current native body');continue;}
       if(w.nativeRouteAdmission==='pending-idle-resources'){const held=nativeExecutionActive?nav.intentTaskPlanner?.projectNativeInitialIdleRequest(s,w):nav.intentTaskPlanner?.projectNativeInitialIdleDeclaration(s,w);if(!held)throw Error('Pending initial Idle has no current native source');continue;}
@@ -1836,6 +1837,7 @@ export function tick(s,seconds,nav,{clockRate=1}={}) {
   let left=seconds;
   while(left>1e-9 && !s.pauses.length && !s.result) {
     for(const worker of s.workers){
+      if(worker.nativeRouteAdmission==='pending-farm-arrival-resources'){if(!nav.intentTaskPlanner?.projectNativeFarmArrivalDeclaration?.(s,worker))throw Error('Pending farm arrival has no current native declaration');}
       if(worker.nativeRouteAdmission==='pending-stroll-resources'&&!(nav.intentTaskPlanner?.projectNativeIdleStrollDeclaration?.(s,worker)||nav.intentTaskPlanner?.projectNativeIdleStroll?.(s,worker)))throw Error('Pending restored stroll has no current native declaration');
       if(worker.nativeRouteAdmission==='pending-idle-resources'&&!nav.intentTaskPlanner?.projectNativeInitialIdleDeclaration(s,worker)&&!nav.intentTaskPlanner?.projectNativeInitialIdleBody?.(s,worker))throw Error('Pending initial Idle has no current native declaration');
       if(worker.nativeRouteAdmission==='native-idle'&&!(nav.intentTaskPlanner?.projectNativeIdleCycle?.(s,worker)||nav.intentTaskPlanner?.projectNativeInitialIdleBody?.(s,worker)))throw Error('Native initial Idle has no current body owner');
@@ -1850,7 +1852,7 @@ export function tick(s,seconds,nav,{clockRate=1}={}) {
       nativeExecution=nav.intentTaskPlanner.nativeGameExecutionState();
     }
     if(nativeExecution<0)throw Error('Native game execution still requires projection for this intention class');
-    if(nativeExecution===1&&(nav.dynamicBodies||s.raid||s.workers.some(w=>!(w.status==='home'&&nav.intentTaskPlanner.nativeWorkerHomeInactive?.(w.id))&&(!(['native-home','pending-home-resources'].includes(w.nativeRouteAdmission)&&nav.intentTaskPlanner.projectNativeHomeExecution(s,w))&&!(w.nativeRouteAdmission==='native-delivery'&&nav.intentTaskPlanner.projectNativeDeliveryExecution(s,w))&&!(w.nativeRouteAdmission==='pending-idle-resources'&&nav.intentTaskPlanner.projectNativeInitialIdleRequest(s,w))&&!(w.nativeRouteAdmission==='pending-stroll-resources'&&nav.intentTaskPlanner.projectNativeIdleStrollRequest(s,w))&&!(w.nativeRouteAdmission==='native-idle-stroll'&&nav.intentTaskPlanner.projectNativeIdleStroll(s,w))&&!(nav.intentTaskPlanner.nativeIdleCycleExecution?.(w.id)&&nav.intentTaskPlanner.projectNativeIdleCycle(s,w))&&!(nav.intentTaskPlanner.nativeInitialIdleBodyState?.(w.id)&&nav.intentTaskPlanner.projectNativeInitialIdleBody(s,w))&&!(nav.intentTaskPlanner.nativeSettledWorkerExecution?.(w.id)&&nav.intentTaskPlanner.projectNativeSettledWorkerExecution(s,w))&&(!w.taskId||!['walking','waiting-task','acting'].includes(w.status)||w.status==='acting'&&(w.nativeRouteAdmission!=='native-action'||!nav.intentTaskPlanner.nativeTaskActionExecution(w.id))||w.crateId)||w.raidReturn||w.incapacitated||w.recovery||w.fallRemaining>0||contractExpired(w,s)&&!nav.intentTaskPlanner.nativeSettledWorkerExecution?.(w.id)?.binding.reference.home&&!nav.intentTaskPlanner.nativeHomeRouteExecution?.(w.id)&&!(w.nativeRouteAdmission==='pending-home-resources'&&nav.intentTaskPlanner.nativeHomeRequestReference?.(w.id))))||s.structures.some(structure=>structure.gate&&structure.status!=='ruined')))throw Error('Native task game cohort contains an unsupported mover');
+    if(nativeExecution===1&&(nav.dynamicBodies||s.raid||s.workers.some(w=>!(w.status==='home'&&nav.intentTaskPlanner.nativeWorkerHomeInactive?.(w.id))&&(!(['native-home','pending-home-resources'].includes(w.nativeRouteAdmission)&&nav.intentTaskPlanner.projectNativeHomeExecution(s,w))&&!(w.nativeRouteAdmission==='native-delivery'&&nav.intentTaskPlanner.projectNativeDeliveryExecution(s,w))&&!(w.nativeRouteAdmission==='pending-farm-arrival-resources'&&nav.intentTaskPlanner.projectNativeFarmArrivalRequest(s,w))&&!(w.nativeRouteAdmission==='pending-idle-resources'&&nav.intentTaskPlanner.projectNativeInitialIdleRequest(s,w))&&!(w.nativeRouteAdmission==='pending-stroll-resources'&&nav.intentTaskPlanner.projectNativeIdleStrollRequest(s,w))&&!(w.nativeRouteAdmission==='native-idle-stroll'&&nav.intentTaskPlanner.projectNativeIdleStroll(s,w))&&!(nav.intentTaskPlanner.nativeIdleCycleExecution?.(w.id)&&nav.intentTaskPlanner.projectNativeIdleCycle(s,w))&&!(nav.intentTaskPlanner.nativeInitialIdleBodyState?.(w.id)&&nav.intentTaskPlanner.projectNativeInitialIdleBody(s,w))&&!(nav.intentTaskPlanner.nativeSettledWorkerExecution?.(w.id)&&nav.intentTaskPlanner.projectNativeSettledWorkerExecution(s,w))&&(!w.taskId||!['walking','waiting-task','acting'].includes(w.status)||w.status==='acting'&&(w.nativeRouteAdmission!=='native-action'||!nav.intentTaskPlanner.nativeTaskActionExecution(w.id))||w.crateId)||w.raidReturn||w.incapacitated||w.recovery||w.fallRemaining>0||contractExpired(w,s)&&!nav.intentTaskPlanner.nativeSettledWorkerExecution?.(w.id)?.binding.reference.home&&!nav.intentTaskPlanner.nativeHomeRouteExecution?.(w.id)&&!(w.nativeRouteAdmission==='pending-home-resources'&&nav.intentTaskPlanner.nativeHomeRequestReference?.(w.id))))||s.structures.some(structure=>structure.gate&&structure.status!=='ruined')))throw Error('Native task game cohort contains an unsupported mover');
     prepareClockEvents(s,nav);
     // Version-1 saves can contain an active area without exposure bookkeeping.
     // Mark once on restoration; static plants need no per-frame exposure scan.
@@ -1860,10 +1862,8 @@ export function tick(s,seconds,nav,{clockRate=1}={}) {
     const boundaries=clockEdges.filter(t=>t>s.time+1e-9).map(t=>t-s.time);
     const magicBoundaries=s.spells.filter(a=>a.remaining>1e-9).map(a=>a.remaining);
     const step=Math.min(left,.1,...boundaries,...magicBoundaries);left-=step;
-    if(nativeExecution===1){
-      if(s.workers.some(w=>s.time+step>=profile(w).end&&!nativeReturnBoundarySupported(w,nav.intentTaskPlanner)))throw Error('Native task game cohort reached an unsupported return boundary');
-      nav.intentTaskPlanner.advanceNativeGameExecution(s.elapsed+step,{rate:clockRate});
-    }
+    if(s.workers.some(w=>(nativeExecution===1||w.nativeRouteAdmission==='pending-farm-arrival-resources')&&s.time+step>=profile(w).end&&!nativeReturnBoundarySupported(w,nav.intentTaskPlanner)))throw Error('Native task game cohort reached an unsupported return boundary');
+    if(nativeExecution===1)nav.intentTaskPlanner.advanceNativeGameExecution(s.elapsed+step,{rate:clockRate});
     s.elapsed+=step;
     const nextTime=Math.min(600,s.time+step);
     s.time=clockEdges.find(boundary=>Math.abs(nextTime-boundary)<1e-9)??nextTime;

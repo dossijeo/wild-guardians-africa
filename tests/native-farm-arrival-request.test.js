@@ -37,9 +37,9 @@ for(const threaded of [false,true])test(`${threaded?'pthread':'standalone'} pend
  let runtime,f;try{
   if(threaded){const {default:factory}=await import('../public/wild-engine/spatial-threaded.mjs');runtime=await createThreadedSpatialWorld(factory);}
   f=fixture({core:runtime?.core,peer:true});assert.equal(f.declare(),1);assert.equal(f.planner.commitNativeCausalClock().status,'committed');const source=f.read(),body=f.body(1),peer=f.body(3);f.advance(.3);assert.deepEqual(f.body(1),body);assert.notDeepEqual(f.body(3),peer);assert.deepEqual(f.read(),source);
-  // Game projection has not been integrated yet; this must not activate a
-  // legacy mover or falsely claim the whole Game cohort supports this class.
-  assert.equal(f.planner.nativeGameExecutionState(),-1);
+  // The pending class now has a Game projection. Game still requires its
+  // exact semantic marker and source before advancing any member of a cohort.
+  assert.equal(f.planner.nativeGameExecutionState(),1);
  }finally{f?.close();await runtime?.dispose();}
 });
 
@@ -69,9 +69,10 @@ test('changed native service point invalidates the old arrival goal and cannot a
  }finally{f.close();}
 });
 
-test('a task cannot silently overwrite a pending arrival before its prepared handoff exists',()=>{
+test('only a pending prepared Task claim can replace farm arrival while retaining its actual body',()=>{
  const f=fixture();try{
   const target=createPlant(`plant-${f.state.nextId++}`,'mijo',f.point(6,0).x,f.point(6,0).z,f.worker.centerId);target.growth=999999;target.harvestRequested=true;f.state.plants.push(target);emit(f.state,'CropPlaced',{targetId:target.id});f.planner.flushWorldEvents();assert.equal(f.declare(),1);const source=f.read(),body=f.body(1);assert.equal(f.planner.commitNativeCausalClock().status,'committed');enqueue(f.state,f.worker.centerId,'harvest',target.id);f.planner.flushWorldEvents();f.planner.flushTaskEvents();
-  for(const pendingResources of [false,true]){const rows=f.planner.planIfNeeded(f.state.elapsed);assert.equal(rows.filter(r=>r.status===1).length,1);assert.throws(()=>f.planner.commitTaskBatchToState(f.state,rows,{navVersion:1,pendingResources}),/became stale/);assert.equal(f.worker.taskId,null);assert.deepEqual(f.body(1),body);assert.deepEqual(f.read(),source);}
+  const legacy=f.planner.planIfNeeded(f.state.elapsed);assert.equal(legacy.filter(r=>r.status===1).length,1);assert.throws(()=>f.planner.commitTaskBatchToState(f.state,legacy,{navVersion:1}),/became stale/);assert.equal(f.worker.taskId,null);assert.deepEqual(f.body(1),body);assert.deepEqual(f.read(),source);
+  const pending=f.planner.planIfNeeded(f.state.elapsed);assert.equal(f.planner.commitTaskBatchToState(f.state,pending,{navVersion:1,pendingResources:true}),1);assert.equal(f.worker.nativeRouteAdmission,'pending-resources');assert.deepEqual(f.body(1),body);assert.equal(f.read(),null);assert.equal(f.planner.nativeTaskStartBinding(f.actor),null);assert.equal(f.w.spatial_body_upsert(1,body.x+.1,body.z,body.radius,0,1),0);
  }finally{f.close();}
 });

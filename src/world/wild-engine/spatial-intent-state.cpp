@@ -2269,7 +2269,7 @@ static int commitTaskProposal(bool pendingResources){
     const auto worker=s.workers.find(workerId);
     if(task==s.tasks.end()||worker==s.workers.end()||task->second.assigned||
       !worker->second.eligible){clearProposal(s);return 0;}
-    const auto old=s.activeIntents.find(workerId);if(old!=s.activeIntents.end()&&old->second.farmArrivalRequest){clearProposal(s);return 0;}if(old!=s.activeIntents.end()&&old->second.strollRequest&&(!pendingResources||!nativeIdleStrollRequestCurrent(s,old->second))){clearProposal(s);return 0;}if(old!=s.activeIntents.end()&&old->second.settlementBinding&&(!pendingResources||!nativeSettlementBodyCurrent(s,old->second))){clearProposal(s);return 0;}
+    const auto old=s.activeIntents.find(workerId);if(old!=s.activeIntents.end()&&old->second.farmArrivalRequest&&(!pendingResources||!nativeFarmArrivalRequestCurrent(s,old->second))){clearProposal(s);return 0;}if(old!=s.activeIntents.end()&&old->second.strollRequest&&(!pendingResources||!nativeIdleStrollRequestCurrent(s,old->second))){clearProposal(s);return 0;}if(old!=s.activeIntents.end()&&old->second.settlementBinding&&(!pendingResources||!nativeSettlementBodyCurrent(s,old->second))){clearProposal(s);return 0;}
     if(old!=s.activeIntents.end()&&old->second.initialIdleRequest&&(!pendingResources||!nativeInitialIdleRequestCurrent(s,old->second))){clearProposal(s);return 0;}
     if(old!=s.activeIntents.end()&&old->second.initialIdleBodyBinding&&(!pendingResources||!nativeInitialIdleBodyCurrent(s,old->second))){clearProposal(s);return 0;}
     if(old!=s.activeIntents.end()&&old->second.slot<s.routeSlots.size()&&s.routeSlots[old->second.slot].idleStrollBinding&&(!pendingResources||old->second.profile!=lazy_selected_context()||!nativeHeldIdleStrollBodyCurrent(s,old->second,old->second.assignmentSequence,old->second.generation))){clearProposal(s);return 0;}
@@ -2287,7 +2287,9 @@ static int commitTaskProposal(bool pendingResources){
     const size_t count=size_t(s.results[at+4])*2;
     if(offset+count>s.routes.size())continue;
     const auto existing=s.activeIntents.find(workerId);
-    const auto heldIdle=existing!=s.activeIntents.end()&&existing->second.strollRequest?std::static_pointer_cast<const NativeWorkerPoseResourceRequest>(existing->second.strollRequest):existing!=s.activeIntents.end()&&existing->second.slot<s.routeSlots.size()&&s.routeSlots[existing->second.slot].idleStrollBinding?captureHeldIdleTaskSource(s,existing->second):nullptr;
+    // The same pose-only transfer also retains a pending farm arrival. No
+    // Idle/route history is fabricated; only prepared TaskStart may move it.
+    const auto heldIdle=existing!=s.activeIntents.end()&&existing->second.farmArrivalRequest?std::static_pointer_cast<const NativeWorkerPoseResourceRequest>(existing->second.farmArrivalRequest):existing!=s.activeIntents.end()&&existing->second.strollRequest?std::static_pointer_cast<const NativeWorkerPoseResourceRequest>(existing->second.strollRequest):existing!=s.activeIntents.end()&&existing->second.slot<s.routeSlots.size()&&s.routeSlots[existing->second.slot].idleStrollBinding?captureHeldIdleTaskSource(s,existing->second):nullptr;
     const auto stationary=existing!=s.activeIntents.end()?existing->second.settlementBinding:nullptr;
     const auto initialIdleBody=existing!=s.activeIntents.end()?existing->second.initialIdleBodyBinding:nullptr;
     const auto cycle=existing!=s.activeIntents.end()&&!initialIdleBody?existing->second.idleCycle:nullptr;

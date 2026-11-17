@@ -1,3 +1,4 @@
+import {nativeFarmArrivalState} from '../world/native-farm-arrival-state.js';
 import {copyNativeTaskActionProgress} from '../world/native-task-action-presentation.js';
 import {nativeInitialIdleSavedState} from '../world/native-initial-idle-state.js';
 import {nativeIdleStrollSavedState} from '../world/native-idle-stroll-state.js';
@@ -129,10 +130,11 @@ export function validateSnapshot(state,{livePhysics=false}={}) {
         acting=worker.nativeRouteAdmission==='native-action'&&worker.status==='acting'&&Array.isArray(worker.path)&&worker.path.length===0,
         carrying=worker.nativeRouteAdmission==='native-delivery'&&worker.status==='carrying'&&!worker.taskId&&Array.isArray(worker.path)&&worker.path.length===0,
         returning=['native-home','pending-home-resources'].includes(worker.nativeRouteAdmission)&&worker.status==='returning'&&!worker.taskId&&!worker.crateId&&worker.path===null,
-        initialIdle=['pending-idle-resources','native-idle'].includes(worker.nativeRouteAdmission),strolling=worker.nativeRouteAdmission==='native-idle-stroll'||worker.nativeRouteAdmission==='pending-stroll-resources';
+        farmArrival=worker.nativeRouteAdmission==='pending-farm-arrival-resources',initialIdle=['pending-idle-resources','native-idle'].includes(worker.nativeRouteAdmission),strolling=worker.nativeRouteAdmission==='native-idle-stroll'||worker.nativeRouteAdmission==='pending-stroll-resources';
+      if(farmArrival)nativeFarmArrivalState(state,worker,{canonical:true});
       if(initialIdle)nativeInitialIdleSavedState(state,worker,{canonical:true});
       if(strolling)nativeIdleStrollSavedState(state,worker);
-      if(!strolling&&!initialIdle&&!carrying&&!returning&&(!worker.taskId||!pending&&!executing&&!acting))throw Error('Solicitud de recursos nativa inválida');
+      if(!farmArrival&&!strolling&&!initialIdle&&!carrying&&!returning&&(!worker.taskId||!pending&&!executing&&!acting))throw Error('Solicitud de recursos nativa inválida');
     }
     if(worker.nativeDelivery!==undefined||worker.nativeRouteAdmission==='native-delivery'){
       const delivery=worker.nativeDelivery;

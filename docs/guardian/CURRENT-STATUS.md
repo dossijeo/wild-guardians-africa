@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+Continuacion e-R3: [llegada pendiente tipada y Game](e-r3-native-farm-arrival-game-20261117.md). Referencias propias y getter nativo de objetivo/pose validan la fuente antes de declararla. Game retiene el cuerpo mientras avanza un Task peer y transfiere tareas reales, incluso al madurar un cultivo dentro del tick, a recursos Task14 pendientes; tambien antes del primer cuerpo. Reutiliza la transferencia de pose existente, sin Idle/Home ficticios ni cola nueva. Pasan 2025 pruebas en 210 archivos (una omision opcional), 34 dirigidas, build y regresion GPU; ambos WASM reconstruidos. GPU conserva 569 IDs; 30 recursos nuevos de pisadas y maximo global 95.13 ms mantienen C abierto. Faltan control/publicacion, ruta y recibo grafico de llegada, Home y productor ordinario; A6/A/B/C abiertos, D no iniciado. Continuidad y recuperacion incremental integral de 3123 siguen pendientes.
+
+
 Continuacion e-R3: [fuente nativa de llegada a granja](e-r3-native-farm-arrival-request-20261117.md). La peticion propia conserva pose, centro y punto de servicio, sin tarea/Home/Idle ficticios ni permiso ejecutable. Adapta la separacion objetivo/tolerancia/ruta del codigo Godot 4.4 sobre los propietarios existentes. Pasan 2004 pruebas en 208 archivos (una comparacion opcional omitida), 13 nuevas y build; ambos modulos se reconstruyen. Faltan referencia tipada, proyeccion Game/control, ruta y recursos graficos, llegada y relevos antes de activar esta clase. A6/A/B/C abiertos, D no iniciado; continuidad y recuperacion incremental integral de 3123 pendientes.
 
 
