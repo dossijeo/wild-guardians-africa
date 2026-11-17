@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuacion e-R3: [proyeccion semantica de llegada nativa](e-r3-native-farm-arrival-route-projection-20261117.md). Game refleja la cache fisica real y restaura pose/fases/presupuesto en una declaracion nueva, sin permisos guardados ni Idle ficticio. Referencia: codigo Rapier.js. Conserva asignacion original de Task; tick/productor y guardado UI siguen cerrados hasta el relevo preparado. Pasan 2101 pruebas/214 archivos (una omision opcional), 110 dirigidas y build; 64 inputs nativos exactos, sin recompilar ni repetir GPU. Faltan relevo/recibo/control/puertos/consumidor, finales/cohort y recuperacion incremental de 3.123. A6/A/B/C abiertos, D no iniciado.
+
+
 Continuacion e-R3: [referencia tipada del corredor de llegada](e-r3-native-farm-arrival-route-data-20261117.md). El bridge reutiliza captura/revalidacion y datos propios; distingue servicio/extremo y conserva llegada cero, sin permiso nuevo. Referencia: codigo Rapier v0.22.0. Getter acotado evita copiar el corredor o enumerar el cohort en lecturas de ejecucion, sin cache nueva. Pasan 2083 pruebas/213 archivos (una comparacion opcional omitida), 92 dirigidas, ambos WASM y build; no se repite GPU. Faltan Game/control/recibo/puertos/consumidor, finales y cohort de llegada, productor integral y recuperacion incremental de 3.123. A6/A/B/C abiertos, D no iniciado.
 
 

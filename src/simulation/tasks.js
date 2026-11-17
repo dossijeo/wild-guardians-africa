@@ -19,7 +19,7 @@ function workerSnapshot(worker){
     profile:worker.profile,raidReturn:worker.raidReturn};
 }
 export function notifyWorkerPlanningChange(state,worker){
-  if(!worker.taskId){if(!['native-delivery','native-home','pending-home-resources','pending-farm-arrival-resources','pending-idle-resources','pending-stroll-resources','native-idle-stroll','native-idle'].includes(worker.nativeRouteAdmission))delete worker.nativeRouteAdmission;delete worker.nativeTaskAction;}
+  if(!worker.taskId){if(!['native-delivery','native-home','pending-home-resources','pending-farm-arrival-resources','native-farm-arrival','pending-idle-resources','pending-stroll-resources','native-idle-stroll','native-idle'].includes(worker.nativeRouteAdmission))delete worker.nativeRouteAdmission;delete worker.nativeTaskAction;}
   const listeners=taskObservers.get(state);
   if(!listeners?.size)return;
   const event={type:'worker',worker:workerSnapshot(worker)};
