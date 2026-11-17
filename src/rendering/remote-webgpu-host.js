@@ -29,6 +29,7 @@ import {validRemoteTexturePreparation} from './remote-texture-preparation.js';
 import {rejectedFramePreparations,closePreparationImages} from './remote-frame-preparations.js';
 const REF = '__remoteGpuId';
 const CURRENT = '@canvas';
+const NATIVE_ADMISSION_OBSOLETE=new Set(['native-route-admission-obsolete','native-idle-cycle-admission-obsolete','native-initial-idle-body-admission-obsolete','native-settlement-admission-obsolete','native-home-arrival-admission-obsolete','native-idle-stroll-admission-obsolete','native-home-admission-obsolete','native-consequence-admission-obsolete','native-action-admission-obsolete','native-start-admission-obsolete','native-resume-admission-obsolete','native-stroll-stop-admission-obsolete','native-suspended-admission-obsolete']);
 const CREATION = new Set(['createBuffer','createTexture','createSampler','createBindGroup','createBindGroupLayout','createPipelineLayout','createShaderModule','createQuerySet','createRenderPipeline','createRenderPipelineAsync','createComputePipeline','createComputePipelineAsync']);
 const QUEUE = new Set(['writeBuffer','writeTexture','copyExternalImageToTexture','submit']);
 const COMMANDS = new Set(['copyBufferToBuffer','copyBufferToTexture','copyTextureToBuffer','copyTextureToTexture','clearBuffer','resolveQuerySet','insertDebugMarker','pushDebugGroup','popDebugGroup']);
@@ -1002,12 +1003,21 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         if(preparing&&cancelledWorldFrames.delete(message.packet.sequence)){rejectPreparedFrame(message.packet,'Prepared world frame cancelled');reply(message,null,Error('Prepared world frame cancelled'));break;}
         if(!Array.isArray(message.packet.operations)||message.packet.operations.length>maxFrameOperations||packetBytes(message.packet)>maxFrameBytes)throw Error('Remote frame exceeds safety limit');
         if(preparationRecoveryRequired){rejectPreparedFrame(message.packet,'Rejected preparation requires a fresh surface');break;}
-        const boundary=preparing?validatePreparedWorldBoundary(message.packet):null;
+        let boundary=null;
         const controller=new AbortController();let cancel;const cancelled=new Promise(resolve=>{cancel=()=>{controller.abort();resolve();};});
         const admission={packet:message.packet,cancel,controller,prepared:preparing};admittingFrame=admission;
         let preparedReady=false;
         const current=()=>!stopped&&!failed&&!nativeConsumerRetirement&&!controller.signal.aborted&&message.nativeMutationEpoch===nativeMutationEpoch&&(preparing||frameWorldCurrent(message.packet));
         try{
+        if(preparing){
+          try{boundary=validatePreparedWorldBoundary(message.packet);}catch(error){
+            if(!NATIVE_ADMISSION_OBSOLETE.has(error?.code))throw error;
+            // Direct intent control can overtake preparation/cancellation on
+            // the resource port. Reuse the existing obsolete-frame path;
+            // malformed packets and unrelated errors still fail the device.
+            rejectPreparedFrame(message.packet,error.message,false,'native-route');break;
+          }
+        }
         if(!preparing&&!frameWorldCurrent(message.packet)){
           rejectPreparedFrame(message.packet,'Prepared resources do not match the committed native world');break;
         }
@@ -1058,7 +1068,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         // Resolve permissions after all resource awaits. A direct revocation may
         // have arrived while this generation waited for a model or pipeline.
         try{packet.admittedClockBindings=admitClockBindings(packet,preparing);}catch(error){
-          if(error?.code!=='native-route-admission-obsolete')throw error;
+          if(!NATIVE_ADMISSION_OBSOLETE.has(error?.code))throw error;
           // The same healthy-device preparation retention applies when direct
           // route control overtakes a packet on the resource channel. It grants
           // no route/time and does not turn this into a physical world change.

@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+Continuacion e-R3: [productor en cohortes restauradas](e-r3-native-intent-production-restoration-20261117.md). La autoridad vincula cuerpos una vez y despacha propuestas existentes con secuencia de publicacion, cancelacion y una sola preparacion. Referencia: codigo DetourCrowd1.6.0; sin dependencia ni cola nueva. Pasan 648 pruebas/76 archivos y14 nuevas; una comparacion nativa opcional omitida expresamente. GPU de verticales existentes y build pasan;62 inputs nativos sin cambios. Falta validar el productor con roster/Surface/Workers/GPU originales y completar origenes/finales, cohortes/puertas/raid, parada de WALK, guardado y recuperacion incremental de3123. Continuidad85.62/41.01ms y siete fallos previos siguen abiertos; A6/A/B/C abiertos, D no iniciado.
+
+
 Continuacion e-R3: [parada22 en cohorte Game](e-r3-native-idle-stroll-stop-game-20261117.md). Solo la suspension22 con fuente fisica exacta puede esperar mientras avanza un companero y consumirse en Task/Home genuinos. Referencia: pausa por agente en codigo Godot4.4; sin nueva dependencia. Pasan1868 pruebas/168 archivos,42 dirigidas (16 nuevas), GPU parada->Task/Home y build;62 inputs nativos congelados. Productor ordinario, parada automatica durante WALK, otros finales/puertas, guardado y recuperacion incremental de3123 siguen pendientes. Continuidad historica85.62/41.01ms y siete fallos previos quedan abiertos; A6/A/B/C abiertos, D no iniciado.
 
 

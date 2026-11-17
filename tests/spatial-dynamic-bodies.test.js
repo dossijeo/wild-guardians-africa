@@ -83,8 +83,8 @@ test('native local detour produces clear deterministic segments in real terrain'
 import {createSpatialDynamicBodies} from '../src/world/wild-engine/spatial-dynamic-bodies.js';
 test('dynamic bridge publishes ordered changes and releases its session',{skip:!binary&&'Build and select a candidate WASM'},()=>{
  const m=new WebAssembly.Module(readFileSync(binary)),w=new WebAssembly.Instance(m,{env:{emscripten_notify_memory_growth(){}}}).exports;w._initialize?.();const bridge=createSpatialDynamicBodies(w);
- bridge.publish('worker',{x:0,z:0,radius:.5,kind:0,flags:1});bridge.publish('animal',{x:2,z:0,radius:.5,kind:1,flags:1});assert.equal(bridge.clear('worker',{x:0,z:0},{x:3,z:0},1),false);
- bridge.publish('animal',{x:2,z:5,radius:.5,kind:1,flags:1});assert.equal(bridge.clear('worker',{x:0,z:0},{x:3,z:0},1),true);assert.equal(bridge.remove('animal'),true);assert.equal(bridge.remove('animal'),false);bridge.dispose();assert.equal(w.spatial_body_count(),0);assert.throws(()=>bridge.remove('worker'));
+ const workerId=bridge.publish('worker',{x:0,z:0,radius:.5,kind:0,flags:1}),animalId=bridge.publish('animal',{x:2,z:0,radius:.5,kind:1,flags:1});assert.equal(bridge.id('worker'),workerId);assert.equal(bridge.id('animal'),animalId);assert.equal(bridge.id('unknown'),undefined);assert.equal(bridge.clear('worker',{x:0,z:0},{x:3,z:0},1),false);
+ assert.equal(bridge.publish('animal',{x:2,z:5,radius:.5,kind:1,flags:1}),animalId);assert.equal(bridge.clear('worker',{x:0,z:0},{x:3,z:0},1),true);assert.equal(bridge.remove('animal'),true);assert.equal(bridge.id('animal'),undefined);assert.equal(bridge.remove('animal'),false);bridge.dispose();assert.throws(()=>bridge.id('worker'));assert.equal(w.spatial_body_count(),0);assert.throws(()=>bridge.remove('worker'));
 });
 import {createDynamicBodyProjection} from '../src/world/wild-engine/spatial-dynamic-projection.js';
 test('dynamic projection publishes changes, retirements and lifecycle in order',()=>{
