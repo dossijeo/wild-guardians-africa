@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuacion e-R3: [fuente nativa de llegada a granja](e-r3-native-farm-arrival-request-20261117.md). La peticion propia conserva pose, centro y punto de servicio, sin tarea/Home/Idle ficticios ni permiso ejecutable. Adapta la separacion objetivo/tolerancia/ruta del codigo Godot 4.4 sobre los propietarios existentes. Pasan 2004 pruebas en 208 archivos (una comparacion opcional omitida), 13 nuevas y build; ambos modulos se reconstruyen. Faltan referencia tipada, proyeccion Game/control, ruta y recursos graficos, llegada y relevos antes de activar esta clase. A6/A/B/C abiertos, D no iniciado; continuidad y recuperacion incremental integral de 3123 pendientes.
+
+
 Continuacion e-R3: [productor restaurado en Workers/GPU originales](e-r3-native-intent-production-world-owner-20261117.md). La autoridad consulta el publicador real de terreno y Surface inicializa su soporte sin ruta legacy previa. NVIDIA/Turing conserva 569 IDs residentes, picking y drenaje; 54/53 dibujos durante bloqueos de 1800 ms. Se contabilizan 300 recursos preparados y 30 nuevos de pisadas tras READY: no es cero asignacion de escena. Maximos 119.23 ms en bootstrap y 66.80 ms en adopcion mantienen C abierto. Faltan otros origenes/finales/cohortes/puertas/raid, parada WALK, guardado y recuperacion incremental integral de 3123; A6/A/B/C abiertos, D no iniciado.
 
 
