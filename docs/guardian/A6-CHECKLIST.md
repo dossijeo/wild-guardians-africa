@@ -1,5 +1,8 @@
 # Seguimiento de cierre de A6
 
+Continuacion e-R3: [Farm23 en actor y banco originales](e-r3-native-farm-arrival-route-graphics-20261117.md). El roster prepara/adopta/retargetea sobre la misma raiz, geometria e indices con una adquisicion del banco; exige fuente y asociacion23 exactas. Referencia: implementaciones Mesh.copy/SkeletonUtils.clone de Three r180. Pasan 2215 pruebas/221 archivos (una omision opcional), 17 nuevas y build; 64 inputs nativos exactos. GLB/bakes y compilacion TSL reales, renderer/admision simulados; no hardware. Faltan Surface, capacidad Worker, relevos/cohort y recuperacion incremental de 3.123. A6/A/B/C abiertos, D no iniciado.
+
+
 Continuacion e-R3: [recibo y reloj de llegada en cliente/Host](e-r3-native-farm-arrival-route-remote-20261117.md). Host exige plantilla/frame/reloj relativo exactos, espera drain y solo instala la asociacion emitida; picking conserva edad cero/origen real al adoptar. Referencia: codigo wgpu26.0.1. Pasan 2198 pruebas/220 archivos (una omision opcional), 257 dirigidas y build; 64 inputs nativos exactos, sin recompilar. Transporte/dispositivo de tests simulados; Worker aun no anuncia Farm. Faltan roster/Surface, hardware, relevos/cohort y recuperacion incremental de 3.123. A6/A/B/C abiertos, D no iniciado.
 
 
