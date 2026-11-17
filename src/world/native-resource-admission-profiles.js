@@ -8,6 +8,7 @@ import {nativeTaskActionActor,nativeTaskActionReferenceFromProposal,sameNativeTa
 import {nativeTaskConsequenceReferenceFromProposal,sameNativeTaskConsequenceReference} from './native-task-consequence.js';
 import {nativeTaskSettlementReferenceFromProposal,sameNativeTaskSettlementReference} from './native-task-settlement.js';
 
+import {nativeFarmArrivalRouteReferenceFromProposal,sameNativeFarmArrivalRouteReference} from './native-farm-arrival-route.js';
 import {nativeHomeRouteReferenceFromProposal,sameNativeHomeRouteReference} from './native-home-route.js';
 import {nativeInitialIdleBodyReferenceFromProposal,sameNativeInitialIdleBodyReference} from './native-initial-idle-body.js';
 
@@ -44,6 +45,12 @@ const profiles=Object.freeze({
     reference:nativeHomeArrivalReferenceFromProposal,sameReference:sameNativeHomeArrivalReference,compatible:translation=>translation.sameSourceState,
     receiptCompatible:(receipt,prepared)=>receipt.nativeHomeArrivalVersion===1&&sameNativeHomeArrivalReference(receipt.preparedHomeArrivalTemplate,prepared),
     attest(native,reference,preparedReference,protocol){const fact=copyNativeHomeArrivalAttestation(protocol.binding());if(!sameNativeHomeArrivalReference(fact.reference,reference)||!sameNativeHomeArrivalReference(fact.preparedReference,preparedReference))throw Error('Native Home arrival receipt unavailable');return fact;}
+  }),
+  'farm-arrival':Object.freeze({
+    proposalKind:'native-farm-arrival-route-proposal',templateField:'preparedFarmArrivalTemplate',bindingField:'nativeFarmArrivalBinding',releaseField:'nativeFarmArrivals',
+    reference:nativeFarmArrivalRouteReferenceFromProposal,sameReference:sameNativeFarmArrivalRouteReference,compatible:routeCompatible,
+    receiptCompatible:(receipt,prepared)=>receipt.nativeFarmArrivalVersion===1&&sameNativeFarmArrivalRouteReference(receipt.preparedFarmArrivalTemplate,prepared),
+    attest(native,reference,preparedReference){const actual=issuedRoute(native,reference),fact=native.nativeFarmArrivalRouteBinding(reference.actorId);if(!fact||!sameNativeFarmArrivalRouteReference(fact.reference,reference)||!sameNativeFarmArrivalRouteReference(fact.preparedReference,preparedReference)||fact.assignmentSequence!==actual.assignmentSequence)throw Error('Native farm arrival resource association unavailable');return fact;}
   }),
   'home-route':Object.freeze({
     proposalKind:'native-home-route-proposal',templateField:'preparedHomeRouteTemplate',bindingField:'nativeHomeRouteBinding',releaseField:'nativeHomes',

@@ -1,5 +1,8 @@
 # Seguimiento de cierre de A6
 
+Continuacion e-R3: [adquisicion preparada de llegada en fuente](e-r3-native-farm-arrival-route-admission-20261117.md). Farm23 reutiliza el transactor y exige version/plantilla/frame exactos antes de adquirir; conserva Task genuino concurrente y reporta fallos posteriores al commit. Referencia: codigo wgpu26.0.1. Pasan 2137 pruebas/216 archivos (una omision opcional), 146 dirigidas y build; 64 inputs nativos exactos, sin recompilar ni repetir GPU. Dobles de paquete/drain no acreditan consumidor grafico. Faltan emision/liberacion/puertos/consumidor, finales/cohort y recuperacion incremental de 3.123. A6/A/B/C abiertos, D no iniciado.
+
+
 Continuacion e-R3: [asociacion de llegada en control directo](e-r3-native-farm-arrival-route-control-20261117.md). El evento real23 conserva la peticion exacta y el registro existente; replay exige reloj e instalacion, sin admision generica ni bootstrap de otra familia. Publicacion/Host originales transportan el evento; referencia: codigo DetourCrowd1.6.0. Pasan 2119 pruebas/215 archivos (una omision opcional), 128 dirigidas y build; 64 inputs nativos exactos, sin recompilar ni repetir GPU. Faltan recibo/liberacion/puertos/consumidor, finales/cohort y recuperacion incremental de 3.123. A6/A/B/C abiertos, D no iniciado.
 
 
