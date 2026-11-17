@@ -2330,6 +2330,15 @@ int nav_intent_retire_actor(double actorId){
   s.planningCallsByActor.erase(actor);
   return 1;
 }
+// A read-only fingerprint of the route just stopped on the existing slot.
+// No event-history lookup or retained registry of old assignments is needed.
+EMSCRIPTEN_KEEPALIVE int nav_intent_stopped_route_matches(double actor,double session,double slot,double generation,double assignment,double body,double expectedState,double at){
+  const auto& s=state();if(!integer(actor)||!integer(session)||!integer(slot,true)||slot>double(UINT32_MAX)||!integer(generation)||generation>double(UINT32_MAX)||!integer(assignment)||!integer(body)||!std::isfinite(at)||at<0||session!=double(s.session)||slot>=s.routeSlots.size()||(expectedState!=0&&expectedState!=4))return 0;
+  const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end())return 0;const auto& intent=found->second;const auto& route=s.routeSlots[size_t(slot)];
+  if(double(intent.state)!=expectedState||double(intent.assignmentSequence)!=assignment||route.actor!=uint64_t(actor)||route.reservationBody!=uint64_t(body))return 0;
+  if(expectedState==4){uint32_t next=uint32_t(generation)+1;if(!next)next=1;return intentHasSuspendedRoute(s,intent)&&intent.slot==uint32_t(slot)&&route.generation==next&&route.suspendedAt==at;}
+  return !route.active&&!route.suspended&&!intent.generation&&route.generation==uint32_t(uint32_t(generation)+1);
+}
 int nav_intent_actor(double actorId){
   IntentState& s=state();s.intentResult.fill(0);
   if(!integer(actorId))return 0;
