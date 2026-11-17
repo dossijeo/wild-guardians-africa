@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuacion de Idle: [Home desde el paseo suspendido en el consumidor original](e-r3-native-idle-moving-home-consumer-20261117.md). Roster/Surface/puertos/Host conservan la presentacion suspendida y adquieren Home18 desde la pose real22. NVIDIA/Turing conserva 678 IDs de geometria/bancos, retira solo el dato de ruta22 sustituido y reutiliza shaders/pipelines. Cada bloqueo de 1800 ms conserva 54 frames; prepara 70 recursos de protocolo y 120 copias de uniformes/bindings (13664 bytes), sin asignaciones tras READY. Pasan 1727 pruebas/153 archivos y build. Tarea/restauracion movil, otros finales/puertas, productor/cohort ordinarios y recuperacion incremental integral de 3123 siguen pendientes. A6/A/B/C siguen abiertos.
+
+
 Continuacion de Idle: [fuente tipada y peticion Home desde el paseo suspendido](e-r3-native-idle-moving-home-data-20261117.md). La lectura retenida22 conserva pose/fases/retry y distingue procedencia de permiso ejecutable. Proyeccion/peticion de Game y control directo mantienen el cuerpo durante Home pendiente; la suspension antigua sigue estricta. Pasan 1719 pruebas/152 archivos, standalone/pthread y build. La parada anterior se revalida en NVIDIA/Turing con los binarios nuevos: 678 IDs conservados y cero asignaciones tras READY; no es aun Home grafico. Faltan roster/Surface/GPU de este origen, tarea/restauracion/cohort/producer, otros finales/puertas y recuperacion incremental integral de 3123. A6/A/B/C siguen abiertos.
 
 
