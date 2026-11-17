@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuacion de Idle: [control directo de la parada movil preparada](e-r3-native-idle-stroll-stop-control-20261117.md). El permiso de metadatos conserva propietarios mientras avanza la autoridad; adquiere solo las revocaciones finales con su watermark y mantiene estricta la suspension anterior. NeedsPlan conserva el registro existente sin reloj de cuerpo. Pasan 399 pruebas/39 archivos, GPU previa con 679 IDs conservados y build. Faltan template/puertos y pose/fases/picking GPU finales con autoridad continua, antes de Home; tarea/restauracion/cohort/producer y recuperacion integral de 3123 siguen pendientes. A6/A/B/C permanecen abiertos.
+
+
 Continuacion de Idle: [referencia tipada y adaptador de la parada movil](e-r3-native-idle-stroll-stop-data-20261117.md). Propietarios inmutables y poses copiadas conservan el sobre12; captura/revalidacion/cancelacion y recibo contrastan frontera, asignacion, cuerpo y generacion nativos sin historial nuevo. Pasan 269 pruebas/24 archivos, standalone/pthread, GPU anterior con 681 IDs conservados y build. Faltan template/puertos/control y admision GPU final con autoridad continua, antes de Home; tarea/restauracion/cohort/producer y recuperacion integral de 3123 siguen abiertos. A6/A/B/C no se cierran.
 
 

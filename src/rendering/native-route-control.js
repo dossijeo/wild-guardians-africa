@@ -13,6 +13,7 @@ import {copyNativeTaskStartAttestation,nativeTaskStartAttestationCovers} from '.
 import {copyNativeResumeAttestation,nativeResumeAttestationCovers} from '../world/native-resume-attestation.js';
 import {copyNativeResumeReference,sameNativeResumeReference} from '../world/native-resume-reference.js';
 import {copyNativeSuspendedBodyReference,sameNativeSuspendedBodyReference} from '../world/native-suspended-body-reference.js';
+import {copyNativeIdleStrollStopReference,copyNativeIdleStrollStopAttestation,nativeIdleStrollStopAttestationCovers} from '../world/native-idle-stroll-stop.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {copyNativeTaskActionReference,nativeTaskActionActor} from '../world/native-task-action-presentation.js';
 import {copyNativeTaskActionRestoreReference,sameNativeTaskActionRestoreReference} from '../world/native-task-action-restore-reference.js';
@@ -167,7 +168,8 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       if(!keepInitialBody){if(actor.initialIdleBodyRecord)actor.initialIdleBodyRecord.safeUntil=Math.min(actor.initialIdleBodyRecord.safeUntil,event.effectiveTime);actor.initialIdleBodyProof=null;actor.initialIdleBodyRecord=null;actor.initialIdleBodySource=completedInitialBody;}
       if(!keepSettlement){if(actor.settlementRecord)actor.settlementRecord.safeUntil=Math.min(actor.settlementRecord.safeUntil,event.effectiveTime);actor.settlementProof=null;actor.settlementRecord=null;actor.settlementSource=event.type==='RouteCompleted'&&event.state===7&&retiringCarry?{proof:retiringCarry,record:current}:null;}
       if(actor.actionRecord)actor.actionRecord.safeUntil=Math.min(actor.actionRecord.safeUntil,event.effectiveTime);actor.actionSourceRequest=event.state===2?actor.pendingActionRequest:null;actor.pendingActionRequest=actionRequest;actor.actionProof=null;actor.actionRecord=null;actor.startProof=null;actor.consequenceProof=null;actor.homeProof=null;actor.strollProof=null;actor.pendingTaskRequest=taskRequest;actor.resumeProof=null;actor.latestSequence=event.sequence;actor.state=assigned?1:Number.isInteger(event.state)?event.state:null;
-      if(!actor.current&&actor.state!==2&&actor.state!==4&&actor.state!==6&&actor.state!==7){actor.closed=true;actors.delete(event.actorId);}}
+      // NeedsPlan retains its existing intent and revoked record, never a draw clock.
+      if(!actor.current&&actor.state!==0&&actor.state!==2&&actor.state!==4&&actor.state!==6&&actor.state!==7){actor.closed=true;actors.delete(event.actorId);}}
     if(actor){actor.pendingHomeRequest=homeRequest;actor.pendingInitialIdleRequest=initialIdleRequest;actor.taskId=event.taskId??null;actor.targetId=event.targetId??null;}
     sequence=event.sequence;effectiveTime=event.effectiveTime;counters.accepted++;
     return true;
@@ -177,6 +179,10 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       actor.current===null&&actor.state===4&&actor.revoked===record&&record.revokedState===4&&
       actor.latestSequence===record.revokedSequence&&record.safeUntil===reference.suspendedAt&&
       sameNativeSuspendedBodyReference(actor.proof,reference);
+  }
+  const stopBody=(reference,owner)=>copyNativeSuspendedBodyReference({kind:'native-suspended-body',version:1,nativeRoute:owner.nativeRoute,worldBoundary:reference.worldBoundary,bodyId:owner.bodyId,resumeGeneration:owner.resumeGeneration,suspendedAt:reference.worldBoundary.effectiveTime});
+  function stoppedRecordCurrent(owner,boundary,actor,record){
+    return !closed&&!!clock&&!!actor&&!!record&&!actor.closed&&actors.get(owner.nativeRoute.actorId)===actor&&actor.current===null&&actor.state===owner.state&&actor.revoked===record&&record.revokedState===owner.state&&actor.latestSequence===record.revokedSequence&&actor.latestSequence<=clock.intentSequence&&record.safeUntil===boundary.effectiveTime&&matches(record,owner.nativeRoute);
   }
   function resumeSourceMatches(reference,proof){
     const source=reference.sourceResumeHandle,old=proof?.nativeRoute;
@@ -304,7 +310,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
         if(!sameNativeWorldBoundary(r.worldBoundary,boundary)||value.assignmentSequence>sequence||value.assignmentSequence>clock.intentSequence||ids.has(r.actorId)||bodies.has(r.bodyId)||!actor||actor.closed||actor.state!==1||active.get(r.actorId)!==record||!record||actor.latestSequence!==record.assignmentSequence||actor.strollProof||actor.proof||actor.startProof||actor.homeProof||actor.actionProof||actor.settlementProof||actor.idleCycleProof||record.assignmentSequence!==value.assignmentSequence||record.startTime!==boundary.effectiveTime||!sameHandle(record.handle,r.expectedRouteHandle)||!record.sourceIdleCycleAdmitted||!sameNativeIdleStrollAttestation(value,record.issuedStroll)||!nativeIdleStrollContinuesNext(r,record.sourceIdleCycleNext)||!nativeIdleStrollContinuesNext(value.preparedReference,record.sourceIdleCycleNext))throw Error('Native Idle stroll differs from its issued program or selected source');
         ids.add(r.actorId);bodies.add(r.bodyId);staged.push({actor,value});
       }
-      for(const {actor,value} of staged)actor.strollProof=value;return staged.length;
+      for(const {actor,value} of staged){actor.strollProof=value;actor.current.strollAdmitted=true;}return staged.length;
     },
     admitStroll(value,{preparingWorldBoundary=null}={}){
       const reference=copyNativeIdleStrollReference(value),actor=actors.get(reference.actorId),boundary=copyNativeWorldBoundary(preparingWorldBoundary),source=actor?.pendingIdleCycleRequest,
@@ -409,6 +415,35 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
         ids.add(reference.nativeRoute.actorId);bodies.add(reference.bodyId);staged.push({actor,reference});}
       for(const {actor,reference} of staged)actor.proof=reference;
       return staged.length;
+    },
+    // Whole-stop preparation is metadata, never a legacy suspended-body clock.
+    // Installation belongs exclusively to the direct authority's release.
+    installStrollStops(boundary,values=[],{bootstrap=false}={}){
+      boundary=copyNativeWorldBoundary(boundary);
+      if(closed||!clock||bootstrap!==false||!boundary||boundary.authorityEpoch!==authorityEpoch||boundary.nativeSession!==clock.nativeSession||boundary.effectiveTime!==clock.committedThrough||!Array.isArray(values)||values.length>32768)throw Error('Invalid native moving stop attestation boundary');
+      const staged=[],ids=new Set(),bodies=new Set();
+      for(const input of values){const proof=copyNativeIdleStrollStopAttestation(input),r=proof.reference,root=actors.get(r.sourceRoute.actorId),rootRecord=root?.revoked,sourceOwner=r.routes.find(owner=>owner.nativeRoute.actorId===r.sourceRoute.actorId);
+        if(!sameNativeWorldBoundary(r.worldBoundary,boundary)||!rootRecord?.strollAdmitted||!rootRecord.issuedStroll||rootRecord.issuedStroll.reference.bodyId!==sourceOwner.bodyId||!matches(rootRecord,r.sourceRoute))throw Error('Native moving stop lacks its admitted stroll source');
+        for(const owner of r.routes){const actor=actors.get(owner.nativeRoute.actorId),record=actor?.revoked;
+          if(ids.has(owner.nativeRoute.actorId)||bodies.has(owner.bodyId)||!stoppedRecordCurrent(owner,boundary,actor,record)||record.stopProof||proof.preparedReference.worldBoundary.effectiveTime<record.startTime)throw Error('Native moving stop differs from its exact revocations');
+          const reference=owner.state===4?stopBody(r,owner):null;
+          if(actor.proof&&(reference===null||!sameNativeSuspendedBodyReference(actor.proof,reference)))throw Error('Native moving stop changed an installed body proof');
+          ids.add(owner.nativeRoute.actorId);bodies.add(owner.bodyId);staged.push({actor,record,proof,reference});
+        }
+      }
+      // All validation precedes every write, including a bad later proof.
+      for(const {actor,record,proof,reference} of staged){record.stopProof=proof;actor.proof=reference;}
+      return staged.length;
+    },
+    admitStrollStop(value,{preparingWorldBoundary=null}={}){
+      const reference=copyNativeIdleStrollStopReference(value),boundary=copyNativeWorldBoundary(preparingWorldBoundary),root=actors.get(reference.sourceRoute.actorId),rootRecord=root?.current??root?.revoked,
+        owners=reference.routes.map(owner=>{const actor=actors.get(owner.nativeRoute.actorId);return {owner,actor,record:actor?.current??actor?.revoked};});
+      const pending=()=>!closed&&!!clock&&sameNativeWorldBoundary(boundary,reference.worldBoundary)&&clock.committedThrough>=reference.worldBoundary.effectiveTime&&!!rootRecord?.strollAdmitted&&!!root?.strollProof&&strollRecordCurrent(root.strollProof.reference,root)&&owners.every(({owner,actor,record})=>!!actor&&!actor.closed&&actors.get(owner.nativeRoute.actorId)===actor&&actor.current===record&&active.get(owner.nativeRoute.actorId)===record&&actor.state===1&&matches(record,owner.nativeRoute)&&record.startTime<=reference.worldBoundary.effectiveTime);
+      let observed=null,covers=false,actualBodies=[];
+      const current=()=>{const proof=rootRecord?.stopProof??null;if(proof!==observed){observed=proof;covers=!!proof&&nativeIdleStrollStopAttestationCovers(proof,reference);actualBodies=covers?proof.reference.routes.map(owner=>owner.state===4?stopBody(proof.reference,owner):null):[];}
+        return covers&&owners.every(({owner,actor,record},i)=>record?.stopProof===proof&&stoppedRecordCurrent(owner,proof.reference.worldBoundary,actor,record)&&(owner.state===4?suspendedCurrent(actualBodies[i],record,actor):actor.proof===null));};
+      if(reference.worldBoundary.authorityEpoch!==authorityEpoch||!clock||reference.worldBoundary.nativeSession!==clock.nativeSession||!matches(rootRecord,reference.sourceRoute)||!current()&&!pending()){const error=Error('Native moving stop is obsolete or lacks its admitted stroll');error.code='native-stroll-stop-admission-obsolete';throw error;}
+      counters.admissions++;return Object.freeze({reference,isCurrent:current,isPrepared:()=>current()||pending(),get binding(){return current()?observed:null;}});
     },
     admitSuspended(value,{preparingWorldBoundary=null}={}){
       const reference=copyNativeSuspendedBodyReference(value),actor=actors.get(reference.nativeRoute.actorId),record=actor?.current??actor?.revoked,boundary=copyNativeWorldBoundary(preparingWorldBoundary);
