@@ -578,8 +578,13 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   function present() {
     if (stopped || failed) return;
     frameHandle = requestFrame(present);
+    draw();
+  }
+  function draw(trigger = 'raf') {
+    if (stopped || failed) return;
     if (hidden) return;
-    if(nativeMutationHold||nativeConsumerRetirement)return; // No submission during a native boundary or retirement.
+    if(nativeConsumerRetirement)return;
+    if(nativeMutationHold){nativeMutationHold.presentationMissed=true;return;} // No submission between drain and release.
     if(intentControl&&!routeControl)return; // A prepared image is not a native baseline.
     if (!deviceConfigured || (!active && !pending)) return;
     try {
@@ -661,7 +666,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       metrics.nativeFrames++;
       frameTime.consume(timeTicket);
       if (!next) metrics.replayFrames++;
-      samples[sampleCursor++ % samples.length] = { at: startedAt,sequence:active.sequence,nativeWorldBoundary:frameBoundary(active),intervalMs: previousFrameAt === null ? null : startedAt - previousFrameAt, drawMs: absoluteNow() - startedAt, replay: !next, clockElapsed, safeUntil: effectiveLease?.safeUntil ?? null, cameraVersion: camera?.version ?? null };
+      samples[sampleCursor++ % samples.length] = { at: startedAt,sequence:active.sequence,trigger,nativeWorldBoundary:frameBoundary(active),intervalMs: previousFrameAt === null ? null : startedAt - previousFrameAt, drawMs: absoluteNow() - startedAt, replay: !next, clockElapsed, safeUntil: effectiveLease?.safeUntil ?? null, cameraVersion: camera?.version ?? null };
       previousFrameAt = startedAt;
       if (next) {
         active.transportTiming.firstDrawStartedAt = startedAt;
@@ -1489,7 +1494,12 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
            if(!message.committed&&pending?.preparedWorldBoundary)cancelPreparedWorldFrame(pending.sequence);
            if(message.committed&&worldBoundaryRequired)publishWorldBoundary();
            settleMutationSubmissions();
-           metrics.nativeMutationReleasedAt=absoluteNow();return;
+            metrics.nativeMutationReleasedAt=absoluteNow();
+            // Finish a presentation missed during this hold as soon as its
+            // direct release is installed. Reuse all normal draw validations;
+            // do not create another RAF chain or replay a revoked generation.
+            if(hold.presentationMissed)draw('mutation-release');
+            return;
          }
          if(message?.type==='IntentControlFence'){
           const status=routeControl?.status();

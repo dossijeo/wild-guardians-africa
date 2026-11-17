@@ -30,6 +30,9 @@ try{
  page.on('requestfailed',request=>requestFailures.push({url:request.url(),failure:request.failure()}));
  await page.exposeFunction('nativeFirstTaskCheckpoint',label=>page.locator('#native-first-task').screenshot({path:output.replace(/\.json$/,`-${label}.png`)}));
  await page.goto((process.env.QA_BASE_URL??'http://127.0.0.1:5181')+'/tests/browser/native-first-task-world-owner.html');
+ const releaseDelayMs=Number(process.env.QA_NATIVE_MUTATION_RELEASE_DELAY_MS??0);
+ if(![0,30,50,100].includes(releaseDelayMs))throw Error('Unsupported mutation release test delay');
+ await page.evaluate(ms=>{window.nativeFirstTaskMutationReleaseDelayMs=ms;},releaseDelayMs);
  await page.waitForFunction(()=>typeof window.runNativeFirstTaskWorldOwner==='function');
  if(traceSession)traceClockAnchor=await page.evaluate(()=>{const mark=performance.mark('native-audit-trace-origin');return {name:mark.name,absoluteMs:performance.timeOrigin+mark.startTime};});
  let result;

@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+Continuacion A6/C3: [presentacion pendiente al liberar barrera](native-mutation-release-presentation-20261118.md). El Host termina la RAF perdida al recibir release validado, misma cadena y todos los guards/fences. Referencia: codigo DisplayScheduler de Chromium140 y LifetimeTracker wgpu26. GPU Home con demoras30/50/100ms conserva639/640/640 IDs,70 preparados/0 tardios; traza sitúa dibujo8.47ms antes de siguiente RAF. Task normal646 IDs/0 tardios. Holds largos y maximos113.44/128.13ms permanecen observables, sin atribucion ni garantia cero tirones. Display observado30Hz explica base33.3ms. Pasan309 dirigidas y build; regresion agregada2531/2532 con una omision,12 casos recuperados con WASM explicito. A6/A/B/C abiertos,D no iniciado; siguen finales/cohort/productor/recuperacion3123.
+
+
 Continuacion e-R3: [Farm retenido a Home en consumidor original](e-r3-native-farm-moving-home-consumer-20261118.md). Control/admision/puertos/actor/Surface/Host conservan cuerpo hasta18, sin Idle ficticio. NVIDIA/Turing conserva642 IDs inmutables, retira solo tabla Farm, prepara70 recursos y crea0 despues de READY;0 shaders/pipelines nuevos, ACK18/picking/adopcion5/drain reales. Regresiones GPU Farm-Task646 IDs e Idle-Home678,0 tardios. Home127 muestras/max61.22ms; captura764/max92.54ms. RAF intermedia sin draw dentro del intercambio y guard de barrera global: continuidad de quiescencia queda pendiente A6, sin retirar seguridad del fence. Pasan2524 pruebas/238 archivos (una omision opcional),157 dirigidas y build;64 inputs nativos sin cambios. Faltan continuidad/finales/cohort/productor/recuperacion3123. A6/A/B/C abiertos,D no iniciado.
 
 
