@@ -341,6 +341,7 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
    item.cancel=cancel;
    try{
     await waitNativePublication(minSequence,controller.signal);
+     terrainSupport??=createConfirmedTerrainSupport({residency});
     if(stroll||cycle||initialBody||arrival||home||consequence||settling){stream.holdPresentation({releaseOnInput:false});publicationHeld=true;}
     participants=cycle||initialBody||arrival||acting||settling?[]:settlements.prepareNativeGateMotors(resources,{signal:controller.signal,getPickTime:(ref,epoch)=>{if(!nativePickFrame)throw Error('Native gate input requires a consumer frame');return nativePickFrame.getGateTime(ref,epoch);}});
     if(arrival)participants.unshift(await workers.prepareNativeHomeArrivalProposal(resources,{signal:controller.signal}));

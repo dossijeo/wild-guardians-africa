@@ -4,8 +4,8 @@ import {urgentWork} from './locomotion.js';
 // Dispatch existing native requests at authority boundaries. Like DetourCrowd's
 // updateMoveRequest, requests stay on their agents and results revalidate their
 // source. There is no copied request queue, movement clock or retry timer here.
-export function createNativeIntentProduction({state,planner,bodyId,getPublication,getResources,publicationSequence,onError=()=>{}}){
- if(!state||!planner||[bodyId,getPublication,getResources,publicationSequence,onError].some(f=>typeof f!=='function'))throw TypeError('Invalid native intent production');
+export function createNativeIntentProduction({state,planner,bodyId,getPublication,getResources,publicationSequence,terrainManifest=()=>null,onError=()=>{}}){
+ if(!state||!planner||[bodyId,getPublication,getResources,publicationSequence,terrainManifest,onError].some(f=>typeof f!=='function'))throw TypeError('Invalid native intent production');
  let closed=false,fault=null,active=null,last=null;
  function next(onlyActor=null){
   // Rotate the existing roster after the last attempt. A blocked native source
@@ -61,12 +61,15 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   }
   const publication=getPublication(),resources=getResources();
   if(!publication?.status().coherent||publication.status().closed||resources?.status().phase!=='running'||resources.status().pending||resources.status().retained)return Promise.resolve(null);
+  // Geometry revisions come from the existing terrain publisher. A source
+  // without that owner yet waits for a real boundary, not a fabricated stamp.
+  const manifest=terrainManifest();if(!manifest)return Promise.resolve(null);
   const request=next();if(!request)return Promise.resolve(null);
   const transaction={controller:new AbortController(),actorId:request.actorId,kind:request.kind,source:sourceIdentity(request),obsolete:false,promise:null,minSequence:publicationSequence()};active=transaction;
   transaction.promise=(async()=>{
    try{
     const {operation,prepare,...options}=request,result=await planner[operation]({...options,getPublication,signal:transaction.controller.signal,
-     prepareResources:({resources:proposal,signal,deferredStart})=>resources[prepare](proposal,{signal,deferredStart,minSequence:transaction.minSequence})});
+     prepareResources:({resources:proposal,signal,deferredStart})=>resources[prepare](proposal,{signal,deferredStart,minSequence:transaction.minSequence,terrainManifest:manifest})});
     if(closed)return null;
     if(transaction.obsolete&&result.status==='control-failed'){last={actorId:request.actorId,kind:request.kind,status:'cancelled'};return {...result,status:'cancelled'};}
     last={actorId:request.actorId,kind:request.kind,status:result.status,...(result.error?{error:String(result.error)}:{})};

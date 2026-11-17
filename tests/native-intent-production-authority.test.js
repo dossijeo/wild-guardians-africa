@@ -105,3 +105,12 @@ test('changed ordinary run urgency cancels a pending Task14 even when its reques
   assert.deepEqual(f.records[1].resources.sourceRequestHandle,request);assert(f.records[1].resources.runDistance>0);assert.equal(f.records[0].committed,false);assert.deepEqual(f.faults,[]);assert.deepEqual(f.errors,[]);
  }finally{release();await f?.close();source.close();}
 });
+
+
+test('ordinary native production waits for the terrain publisher and forwards its exact current manifest',async()=>{
+ let manifest=null,reads=0;const f=await nativeProductionAuthority(nativeIdleStrollGameSave().state,{getTerrainManifest(){reads++;return manifest;}});try{
+  f.snapshot();await f.present();assert.equal(f.records.length,0);assert.equal(f.authority.nativeIntentProductionStatus().phase,'idle');assert(reads>0);
+  manifest={epoch:'real-publisher-test',chunks:[{cx:0,cz:0,revision:7}]};f.snapshot();await untilProduction(f,()=>f.records.some(r=>r.kind==='idle-stroll'&&r.committed));
+  assert.deepEqual(f.records[0].terrainManifest,manifest);assert.deepEqual(f.faults,[]);assert.deepEqual(f.errors,[]);
+ }finally{await f.close();}
+});

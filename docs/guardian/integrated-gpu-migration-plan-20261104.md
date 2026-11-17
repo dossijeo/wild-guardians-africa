@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuacion e-R3: [productor restaurado en Workers/GPU originales](e-r3-native-intent-production-world-owner-20261117.md). La autoridad consulta el publicador real de terreno y Surface inicializa su soporte sin ruta legacy previa. NVIDIA/Turing conserva 569 IDs residentes, picking y drenaje; 54/53 dibujos durante bloqueos de 1800 ms. Se contabilizan 300 recursos preparados y 30 nuevos de pisadas tras READY: no es cero asignacion de escena. Maximos 119.23 ms en bootstrap y 66.80 ms en adopcion mantienen C abierto. Faltan otros origenes/finales/cohortes/puertas/raid, parada WALK, guardado y recuperacion incremental integral de 3123; A6/A/B/C abiertos, D no iniciado.
+
+
 Continuacion e-R3: [productor en cohortes restauradas](e-r3-native-intent-production-restoration-20261117.md). La autoridad vincula cuerpos una vez y despacha propuestas existentes con secuencia de publicacion, cancelacion y una sola preparacion. Referencia: codigo DetourCrowd1.6.0; sin dependencia ni cola nueva. Pasan 648 pruebas/76 archivos y14 nuevas; una comparacion nativa opcional omitida expresamente. GPU de verticales existentes y build pasan;62 inputs nativos sin cambios. Falta validar el productor con roster/Surface/Workers/GPU originales y completar origenes/finales, cohortes/puertas/raid, parada de WALK, guardado y recuperacion incremental de3123. Continuidad85.62/41.01ms y siete fallos previos siguen abiertos; A6/A/B/C abiertos, D no iniciado.
 
 
