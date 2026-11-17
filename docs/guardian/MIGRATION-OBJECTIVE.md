@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuacion de Idle: [referencia tipada del paseo restaurado](e-r3-native-idle-stroll-restoration-data-20261117.md). El bridge copia la peticion nativa nueva y su22 preparado/adquirido, valida la procedencia explicita y conserva llegada cero sin inventar21 ni permisos antiguos. Pasan 1793 pruebas/162 archivos, 30 especificas (ocho nuevas) y build; los62 inputs nativos permanecen exactos, sin repetir GPU. Faltan guardado/carga Game, publicacion/control y consumidor/GPU de restauracion; otros finales/puertas, productor/cohort y recuperacion incremental integral de3123 siguen pendientes. Los siete fallos antiguos siguen abiertos paraC. A6/A/B/C no se cierran.
+
+
 Continuacion de Idle: [fuente nativa de restauracion del paseo](e-r3-native-idle-stroll-restoration-source-20261117.md). Una declaracion WALK nueva conserva pose/fases/destino/RNG guardados y adquiere un22 preparado sobre el cuerpo exacto, sin permisos antiguos ni20/21 ficticios; tambien conserva la llegada de longitud cero. Pasan 1785 pruebas/161 archivos, 43 especificas (15 nuevas), ambos WASM, regresion Task GPU y build. Falta guardado/carga Game, fuente tipada/publicacion/control y consumidor/GPU de restauracion; otros finales/puertas, productor/cohort y recuperacion incremental integral de 3123 siguen abiertos. Los siete fallos antiguos siguen pendientes de C. A6/A/B/C no se cierran.
 
 
