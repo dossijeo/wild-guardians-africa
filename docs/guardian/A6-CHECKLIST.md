@@ -1,5 +1,8 @@
 # Seguimiento de cierre de A6
 
+Continuacion de Idle: [paseo restaurado en consumidor original](e-r3-native-idle-stroll-restoration-consumer-20261117.md). Roster/Surface/puertos/GPU adquieren22 desde la peticion nueva conservando actor y recursos residentes, sin20/21 ficticios; tambien pasa llegada cero. NVIDIA/Turing conserva IDs sin retiros y cero asignaciones tras READY; la primera variante Walk/Idle se prepara y contabiliza antes. Pasan 1848 pruebas/166 archivos, 21 especificas (10 nuevas), tres ejecuciones GPU y build;62 inputs nativos exactos. Falta productor/cohort ordinario, otros finales/puertas, parada durante WALK activo y recuperacion integral de3123. El pico observado de85.62ms en preparacion queda abierto paraC, aunque la repeticion midio34.47ms. Interfaz de guardado y siete fallos antiguos siguen pendientes; A6/A/B/C abiertos, D no iniciado.
+
+
 Continuacion de Idle: [publicacion/control del paseo restaurado](e-r3-native-idle-stroll-restoration-control-20261117.md). La peticion vinculada real viaja en baseline/evento y el control exige su fuente exacta, asociacion22, watermark e instalacion. El relevo asincrono reutiliza ambos puertos; cancelacion y cambios Task/Home/ancla/contrato invalidan la fuente anterior. Pasan 1838 pruebas/165 archivos, 53 especificas (26 nuevas) y build; los62 inputs nativos permanecen exactos, sin repetir GPU. Faltan roster/Surface/recursos/GPU de restauracion, productor/cohort integral, otros finales/puertas y recuperacion incremental de3123. Siete fallos antiguos siguen pendientes paraC; A6/A/B/C abiertos, D no iniciado.
 
 
