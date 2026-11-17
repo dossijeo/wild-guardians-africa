@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+Continuacion e-R3: [Farm24 en Surface/Workers originales](e-r3-native-farm-arrival-stop-surface-20261117.md). Plantilla/recibo24, snapshot retenido antes del recibo y reconciliacion vacia real; Worker anuncia parada/reloj version1. Referencia: codigo Queue/LifetimeTracker de wgpu26.0.1. GPU NVIDIA conserva641 IDs, prepara68 recursos y crea0 tras READY;54 frames durante bloqueo1800ms,61 tras commit, adopcion/picking/drain reales. Idle12 conserva679 IDs/0 tardios. Persisten intervalos64.27ms tras parada y86.81ms previos de Farm23 en ventanas capturadas: no acredita ausencia de tirones ni recuperacion3123. Pasan2396 pruebas/230 archivos (una omision opcional),105 dirigidas y build;64 inputs nativos exactos. Faltan relevos/finales/cohort/productor. A6/A/B/C abiertos,D no iniciado.
+
+
 Continuacion e-R3: [Farm24 en actor y roster](e-r3-native-farm-arrival-stop-graphics-20261117.md). Misma raiz/geometrias/indices, una adquisicion del modelo y tabla de movimiento compartida; shaders reales conservan texturas/datos/version. Recibo final24 y pose retenida exacta, Game sigue arriving sin Idle ficticio. Referencia: codigo Mesh.copy/SkeletonUtils.clone de Three r180. Pasan2391 pruebas/230 archivos (una omision opcional),82 dirigidas y build;64 inputs nativos exactos sin recompilar. Renderer/admision/picking presentado simulados; faltan Surface/capacidad Worker24, hardware y relevos Task/Home. Continuidad y recuperacion3123 pendientes. A6/A/B/C abiertos,D no iniciado.
 
 

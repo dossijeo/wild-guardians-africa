@@ -406,12 +406,12 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
     // private RNG, destination, contract and all other policy fields stay pinned.
     let finalFoot=null,finalAt=null;
     const executionFields=new Set(['x','z','heading','runPhase','walkPhase','carryPhase','runRemaining']),strollSource=previous.nativeIdleStrollBinding?.reference,farmSource=previous.nativeFarmArrivalBinding?.reference;
-    let idlePolicy=null;
+    let idlePolicy=null,validatingFarmSource=null;
     const policy=value=>{
      if(farmSource){
       // A held Farm stays arriving. Only the exact final native pose can
       // normalize its held marker; Task/Home policy changes revoke this part.
-      const p=candidate?.nativeHeldFarmArrival?.pose,held=value.nativeRouteAdmission==='native-farm-arrival-held';
+      const p=(candidate?.nativeHeldFarmArrival??validatingFarmSource)?.pose,held=value.nativeRouteAdmission==='native-farm-arrival-held';
       if(held&&(!p||value.running!==false||value.gateWaiting!==false||value.heading!==p.yaw||!['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(k=>value[k]===p[k])))return null;
       if(typeof value.running!=='boolean'||typeof value.gateWaiting!=='boolean'||!held&&value.nativeRouteAdmission!=='native-farm-arrival')return null;
       return JSON.stringify({...Object.fromEntries(Object.entries(value).filter(([key])=>!executionFields.has(key))),nativeRouteAdmission:'native-farm-arrival',running:false,gateWaiting:false});
@@ -456,10 +456,13 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
      finalize(){check();if(!attached||finalized)throw Error('Native stop not attached');finalized=true;return {retire(){check();active=false;retireNative(previous);},notify(){onSelectableChange();}};},
      rollbackFinalized(){finalized=false;},cancel(){if(!active)return false;if(finalized)throw Error('Native stopped worker already finalized');rollback();active=false;retireNative(candidate);return true;}};
     if(template)part.acceptNativeStopBinding=input=>{
-     check();const proof=(farm?copyNativeFarmArrivalStopAttestation:copyNativeIdleStrollStopAttestation)(input),r=proof.reference,owner=r.routes.find(v=>v.nativeRoute.actorId===reference.nativeRoute.actorId),index=r.routes.indexOf(owner);
+     if(!farm)check();const proof=(farm?copyNativeFarmArrivalStopAttestation:copyNativeIdleStrollStopAttestation)(input),r=proof.reference,owner=r.routes.find(v=>v.nativeRoute.actorId===reference.nativeRoute.actorId),index=r.routes.indexOf(owner);
      if(!proof.projection||!(farm?sameNativeFarmArrivalStopReference:sameNativeIdleStrollStopReference)(proof.preparedReference,template)||!owner||owner.state!==4)throw Error('Native stopped worker lacks its final source');
      const actual={...reference,worldBoundary:r.worldBoundary,suspendedAt:r.worldBoundary.effectiveTime},actualPose=Float64Array.from(proof.projection.routeEffects.rows.slice(index*26+8,(index+1)*26)),support=prepareBodySupport(actual,actualPose);
      const farmHeld=farmSource?copyNativeFarmArrivalHeldExecution({kind:'native-farm-arrival-held-execution',version:1,actorId:farmSource.actorId,bodyId:farmSource.bodyId,sourceReference:farmSource,assignmentSequence:previous.nativeFarmArrivalBinding.assignmentSequence,resumeHandle:{...actual.nativeRoute.routeHandle,generation:actual.resumeGeneration},suspendedAt:actual.suspendedAt,executedThrough:actual.suspendedAt,pose:{x:actualPose[0],z:actualPose[1],yaw:actualPose[4],radius:farmSource.sourceRequest.pose.radius,runPhase:actualPose[9],walkPhase:actualPose[10],carryPhase:actualPose[11],runRemaining:actualPose[14]}}):null;
+     // The confirmed state receiver applies its held mirror before this receipt.
+     // Permit normalization only while checking this already validated proof.
+     if(farm){validatingFarmSource=farmHeld;try{check();}finally{validatingFarmSource=null;}}
      if(!support?.valid()||support.unchangedBy(view)!==true)throw Error('Native stopped worker changed final support');finalAt=actual.suspendedAt;finalFoot=support;candidate.support=support;candidate.suspended=actual;candidate.start=actual.suspendedAt;
      if(strollSource){const age=actual.suspendedAt-strollSource.worldBoundary.effectiveTime;candidate.nativeHeldIdleStroll=copyNativeIdleStrollHeldExecution({kind:'native-idle-stroll-held-execution',version:1,actorId:strollSource.actorId,bodyId:strollSource.bodyId,sourceReference:strollSource,assignmentSequence:previous.nativeIdleStrollBinding.assignmentSequence,resumeHandle:{...actual.nativeRoute.routeHandle,generation:actual.resumeGeneration},suspendedAt:actual.suspendedAt,executedThrough:actual.suspendedAt,pose:{x:actualPose[0],z:actualPose[1],yaw:actualPose[4],radius:strollSource.pose.radius,runPhase:actualPose[9],walkPhase:actualPose[10],carryPhase:actualPose[11],runRemaining:actualPose[14]},walkState:{mode:'walk',rng:strollSource.walkRng,age,approachRetry:Math.max(0,strollSource.approachRetry-age)}});}
      if(farmHeld)candidate.nativeHeldFarmArrival=farmHeld;
