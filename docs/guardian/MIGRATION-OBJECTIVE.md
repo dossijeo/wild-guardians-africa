@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuacion e-R3: [terreno, tabla GPU, reloj y picking de llegada](e-r3-native-farm-arrival-route-clock-20261117.md). Farm usa el programa existente; revalidar datos relativos iguales conserva textura/uniforme/buffer/registro sin marcar subida. Referencias: codigo Rapier.js y Three r180. Cero llegada usa un knot; picking distingue edad enviada/origen real. Pasan 2179 pruebas/219 archivos (una omision opcional), 227 dirigidas y build; 64 inputs nativos exactos, sin recompilar ni repetir hardware. Cliente remoto aun cerrado hasta implementar consumidor; no acredita recuperacion integral de 3.123. A6/A/B/C abiertos, D no iniciado.
+
+
 Continuacion e-R3: [puertos y contrato de publicacion de llegada](e-r3-native-farm-arrival-route-ports-20261117.md). Las conexiones existentes conservan plantilla23 y validan acuse/liberacion exactos, clases y reservas; una imagen generica del Host no basta. Referencia: codigo wgpu26.0.1. Pasan 2160 pruebas/217 archivos (una omision opcional), 198 dirigidas y build; 64 inputs nativos exactos, sin recompilar ni repetir GPU. Preparador/drain positivos son dobles; Host aun no anuncia Farm. Faltan reloj/picking/consumidor grafico, finales/cohort y recuperacion incremental de 3.123. A6/A/B/C abiertos, D no iniciado.
 
 

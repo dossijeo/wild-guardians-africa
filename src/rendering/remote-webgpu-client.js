@@ -409,6 +409,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
       if(metadata?.nativeIdleStrollStopTemplate&&capabilities.nativeIdleStrollStopVersion!==1)throw Error('Draw owner does not support native moving stops');
       if(metadata?.nativeHomeArrivalTemplate&&capabilities.nativeHomeArrivalVersion!==1)throw Error('Draw owner does not support native Home absence');
       if(metadata?.nativeIdleStrollTemplate&&capabilities.nativeIdleStrollVersion!==1)throw Error('Draw owner does not support native Idle strolls');
+      if(metadata?.nativeFarmArrivalTemplate)throw Error('Draw owner does not yet support native farm arrival frames');
       if(metadata?.nativeHomeRouteTemplate&&capabilities.nativeHomeRouteVersion!==1)throw Error('Draw owner does not support native Home routes');
       if(metadata?.nativeInitialIdleBodyTemplate&&capabilities.nativeInitialIdleBodyVersion!==1)throw Error('Draw owner does not support native initial Idle bodys');
       if(metadata?.nativeIdleCycleTemplate&&capabilities.nativeIdleCycleVersion!==1)throw Error('Draw owner does not support native Idle cycles');
@@ -456,6 +457,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
       releaseReferences(retained);
     },
     registerClockBinding(buffer, binding) {
+      if(binding?.nativeFarmArrival)throw Error('Draw owner does not yet support native farm arrival authority');
       if (!buffer?.[REF] || !['absolute', 'relative', 'origin-modulo','idle-cycle-watch-knot','stop-value'].includes(binding.semantic) || !Number.isInteger(binding.byteOffset) || binding.byteOffset < 0 || binding.byteOffset % 4) throw TypeError('Invalid remote clock binding');
       if(binding.semantic==='stop-value'&&!binding.nativeStopped)throw TypeError('Native stopped value requires its body');
       if(binding.nativeStopped){if(capabilities.nativeIdleStrollStopClockVersion!==1)throw Error('Draw owner does not support native final stopped values');copyNativeStoppedClock(binding);}
