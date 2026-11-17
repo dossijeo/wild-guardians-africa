@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuacion e-R3: [Farm retenido a Task en Surface/GPU](e-r3-native-farm-moving-task-surface-20261117.md). Mismo actor/Surface/Workers/puertos/Host; Task genuina encolada al llegar, parada24, solicitud6 y adquisicion14. NVIDIA/Turing conserva646 IDs inmutables, retira solo tabla Farm, prepara70 recursos y crea0 despues de READY;0 shaders/pipelines nuevos,54 dibujos por bloqueo y ACK14/picking/adopcion5/drain reales. Idle retenido a Task conserva683 IDs/0 tardios. Relevo129 muestras/max34.89ms; captura global785/max139.89ms y5 huecos>50ms en montaje inicial, sin atribucion causal ni garantia sin tirones. Pasan2461 pruebas/234 archivos (una omision opcional),133 dirigidas y build;64 inputs nativos sin cambios. Faltan Home/finales/cohort/productor/recuperacion3123. A6/A/B/C abiertos,D no iniciado.
+
+
 Continuacion e-R3: [actor original Farm retenido a Task](e-r3-native-farm-moving-task-graphics-20261117.md). Roster comparte continuacion12/24 sin Idle ficticio: pose/politica exactas, activacion/rollback y adquisicion14 sobre misma raiz/geometrias/indices/bancos. Nueva tabla solo para trayectoria Task; propietario retenido se retira al adquirir. Referencias: codigo Mesh.copy/SkeletonUtils.clone de Three r180. Pasan2461 pruebas/234 archivos (una omision opcional),133 dirigidas y build;64 inputs nativos sin cambios. Renderer/admision/frame simulado; faltan Surface/Host/hardware del relevo, Home/finales/cohort/productor. Intervalos y recuperacion3123 abiertos. A6/A/B/C abiertos,D no iniciado.
 
 

@@ -39,7 +39,7 @@ export function createNativeIdleStrollGpuMotion(options={}){if(options.support?.
 // One registry entry owns the immutable texture. Replacement presentations
 // retain it independently; the caller's existing GPU fence retires each owner.
 function routeData(table,resourceRegistry){
- const texture=new DataTexture(table.data,table.width,table.height,RGBAFormat,FloatType);if(table.nativeStroll)texture.name=`wg-native-idle-stroll-route:${table.nativeStroll.actorId}:${table.nativeStroll.sourceDecisionSequence}`;texture.minFilter=texture.magFilter=NearestFilter;texture.generateMipmaps=false;texture.needsUpdate=true;
+ const texture=new DataTexture(table.data,table.width,table.height,RGBAFormat,FloatType);if(table.nativeStroll)texture.name=`wg-native-idle-stroll-route:${table.nativeStroll.actorId}:${table.nativeStroll.sourceDecisionSequence}`;else if(table.nativeFarmArrival)texture.name=`wg-native-farm-arrival-route:${table.nativeFarmArrival.actorId}:${table.nativeFarmArrival.sourceRequest.requestSequence}`;texture.minFilter=texture.magFilter=NearestFilter;texture.generateMipmaps=false;texture.needsUpdate=true;
  let refs=0,lease=null,closed=false;
  try{if(resourceRegistry){lease=resourceRegistry.adopt({namespace:'native-gpu-motion',key:String(++nextResource),bytes:table.data.byteLength,dispose:()=>texture.dispose()});lease.commit();}}catch(error){if(lease)lease.release();else texture.dispose();throw error;}
  return {table,texture,retain(){if(closed)throw Error('Native route data retired');refs++;let released=false;return ()=>{if(released)return;released=true;if(--refs===0){closed=true;if(lease)lease.release();else texture.dispose();}};},references:()=>refs};
