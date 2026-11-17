@@ -1,5 +1,8 @@
 # Seguimiento de cierre de A6
 
+Continuacion e-R3: [publicacion/control de llegada pendiente](e-r3-native-farm-arrival-control-20261117.md). Baseline/eventos y Host originales validan la fuente vinculada en el slot existente, con identidad y watermark causal; la declaracion sin cuerpo no concede permiso. Rechaza alias, mezclas y revocaciones inventadas; Task genuino conserva el cuerpo. Pasan 1652 pruebas/147 archivos (1 omision opcional), 50 dirigidas y build; 63 inputs nativos exactos, sin recompilar ni repetir GPU. Faltan ruta/recibo/consumidor grafico, finales/Home y productor ordinario de llegada. A6/A/B/C abiertos, D no iniciado; continuidad y recuperacion incremental integral de 3123 pendientes.
+
+
 Continuacion e-R3: [llegada pendiente tipada y Game](e-r3-native-farm-arrival-game-20261117.md). Referencias propias y getter nativo de objetivo/pose validan la fuente antes de declararla. Game retiene el cuerpo mientras avanza un Task peer y transfiere tareas reales, incluso al madurar un cultivo dentro del tick, a recursos Task14 pendientes; tambien antes del primer cuerpo. Reutiliza la transferencia de pose existente, sin Idle/Home ficticios ni cola nueva. Pasan 2025 pruebas en 210 archivos (una omision opcional), 34 dirigidas, build y regresion GPU; ambos WASM reconstruidos. GPU conserva 569 IDs; 30 recursos nuevos de pisadas y maximo global 95.13 ms mantienen C abierto. Faltan control/publicacion, ruta y recibo grafico de llegada, Home y productor ordinario; A6/A/B/C abiertos, D no iniciado. Continuidad y recuperacion incremental integral de 3123 siguen pendientes.
 
 
