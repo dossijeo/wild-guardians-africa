@@ -1,0 +1,33 @@
+# Farm retenido → Home en el consumidor original
+
+Continúa la [fuente Farm→Home y Game](e-r3-native-farm-moving-home-source-20261117.md) según el [plan principal](integrated-gpu-migration-plan-20261104.md). El mismo cuerpo Farm23 detenido por24 conserva su permiso gráfico mientras Home espera y adquiere18 en el controlador, los puertos, el actor, Surface y Host originales. Se reutiliza el protocolo Home existente. No hay dependencia, registro de cuerpos, fence ni variante de arquitectura nuevos. A6/A/B/C siguen abiertos; D no iniciado.
+
+## Código consultado y decisión
+
+Se reconsultan [`RawId::zip/unzip` e `Id<T>` de wgpu v26.0.1](https://github.com/gfx-rs/wgpu/blob/v26.0.1/wgpu-core/src/id.rs#L45), [`Queue::on_submitted_work_done`](https://github.com/gfx-rs/wgpu/blob/v26.0.1/wgpu-core/src/device/queue.rs#L1435) y [`LifetimeTracker::add_work_done_closure`](https://github.com/gfx-rs/wgpu/blob/v26.0.1/wgpu-core/src/device/life.rs#L345). Se conservan familia/generación en el propietario existente y la retirada después del envío que usa el recurso. [`Mesh.copy` de Three r180](https://github.com/mrdoob/three.js/blob/r180/src/objects/Mesh.js#L112) comparte geometrías/materiales: el relevo mantiene el actor y sus bancos, cambiando sólo la trayectoria/bindings necesarios. Los hashes del código real consultado figuran en la evidencia.
+
+## Propiedad, admisión y actor
+
+El controlador usa la consulta de cuerpo detenido existente para Idle/Farm, con sus asociaciones y proyección final instaladas. La vista privada incluye actor/cuerpo de esa asociación; el vínculo Home comparte las dos comprobaciones tipadas, sin convertir Farm en Idle. La solicitud Home6 mantiene el permiso detenido, cierra el permiso genérico de suspensión y exige el watermark causal real. Una prueba sin instalar, sin proyección o con otro actor/cuerpo/perfil/pose/época no puede ascender a permiso. La ruta18 cierra el permiso anterior y sólo queda vigente con su asociación exacta instalada.
+
+La admisión cruza los puertos de recursos y control originales y exige la plantilla/ACK18/version1 existentes. Comprueba una preparación/commit sin refresh, traducción temporal tardía, progreso del Task independiente y cuerpo retenido. Abort, frame/versión/plantilla incorrectos, plantilla ausente, recibo sustituido y retirada durante el drain no adquieren18.
+
+El roster reconoce el origen Farm de Home y mantiene válido el cuerpo durante la activación/rollback del candidato. Normaliza sólo la cancelación semántica de Home, fijando pose y demás política. La raíz, mallas, geometrías, índices y bancos se conservan; los shaders reales de color/sombra usan la referencia Home y las texturas originales. El picking usa el actor residente antes/después del relevo. Cancelar retira sólo el candidato; adquirir retira la trayectoria Farm obsoleta.
+
+Se generaliza el diagnóstico de cuerpo detenido y su expectativa en Idle. La antigua negativa que rechazaba todo Home procedente de Farm deja de describir la capacidad nueva: conserva las pruebas sin instalar/metadatos y convierte el caso con proyección en una pose falsificada. Los casos positivos nuevos utilizan solicitudes Home reales del kernel.
+
+## GPU original y límites de continuidad
+
+La ejecución NVIDIA/Turing conserva642 IDs inmutables de buffers de geometría/texturas, incluidos los bancos. Retira únicamente la textura Farm identificada por actor/solicitud. Prepara70 recursos:36 uniform buffers de uso72, una textura Home65×1, un sampler,16 bind groups y16 layouts. Crea cero shaders/pipelines y cero recursos después de READY; no copia buffers/texturas residentes. Revalida el inicio de19,28 a21,64, adopta la publicación5 y completa ACK18, selección de ambos actores y drain real. Hay54 dibujos durante preparación bloqueada1800 ms y53 después del commit con el preparador aún bloqueado.
+
+El arnés comparte ahora el relevo de Task/Home. La regresión GPU Farm→Task conserva646 IDs/70 preparados/0 tardíos, con49/54 dibujos en sus bloqueos y adopción5. Idle detenido→Home conserva678 IDs/70 preparados/0 tardíos,54/54 dibujos y adopción8. Las tres ejecuciones usan los binarios nativos actuales y se hacen sin tests/build de CPU simultáneos. El cultivo Task y la entrada de aldea Home se autoran antes de crear la autoridad; la entrada Home está en el corredor cargado original, no es un traslado vivo de aldea. El peer Home permanece explícito y la fuente está en la página: todavía no es el productor/cohort completo de partida.
+
+La ventana Home tiene127 muestras del Host, máximo61,22 ms y p95 de33,45 ms. La captura completa tiene764 muestras, máximo92,54 ms y cinco intervalos superiores a50 ms; también hay66,77 ms en una ventana anterior de Farm23. `drawMs` mide el trabajo del Host, no tiempo GPU ni compositor. Se conservan la traza de145.076.811 bytes/635.339 eventos y el detalle del hueco.
+
+El intervalo Home abarca el cambio de propietario: la RAF726 entra en `present` y vuelve en0,016 ms sin dibujar entre las RAF725/727. El código del Host suspende envíos bajo `nativeMutationHold` o retirada. Es evidencia de un frame omitido dentro del intercambio; la coincidencia con la barrera es una inferencia, sin telemetría directa del valor de cada guard ni atribución de todos los intervalos. La continuidad durante la quiescencia queda como siguiente pendiente arquitectónico A6. No se elimina la barrera sin probar la seguridad de los envíos/recursos; cero creaciones tardías no demuestra cero tirones.
+
+## Validación y seguimiento
+
+Los44 casos nuevos son12 de controlador,21 de gráficos y11 de admisión. Pasan157 dirigidos,2.524 de regresión seleccionada/238 archivos (una omisión opcional) y build. El primer grupo pasa50/51; el único fallo es el regex antiguo del diagnóstico Idle. Tras actualizarlo y ampliar el grupo pasan79/79. Los controles negativos de lectura eliminan sólo el vínculo Home del controlador —se acepta indebidamente otro cuerpo— o sólo la plantilla18 del paquete GPU —el Host rechaza antes del commit18, con el mismo cuerpo y Home pendiente—. No modifican el producto.
+
+La [evidencia](performance/native-farm-moving-home-consumer-validation-20261118.json) congela389 entradas y64 inputs/artefactos nativos idénticos a `ba53c3a03`, sin recompilar. Conserva los16 archivos locales ajenos, el worker pthread sin seguimiento y los bytes anteriores de los cuatro documentos principales. Los siete fallos históricos fuera de la selección permanecen abiertos. Quedan la continuidad de la barrera, finales, productor/cohort completos, guardado/recuperación y reutilización de los3.123 recursos. No se cierran A6/A/B/C ni se inicia D.

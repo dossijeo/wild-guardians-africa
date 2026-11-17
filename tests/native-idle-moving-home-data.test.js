@@ -47,7 +47,7 @@ test('held source substitutions and a pending barrier cannot issue Home or chang
 
 test('direct Home request must match the privately held final pose before any owner changes',()=>{
  const f=fixture();try{
-  f.pauseControl(true);f.pauseClock(true);f.requestHome();const event=f.events.at(-1);assert(event.homeRequest);const bad=structuredClone(event);bad.homeRequest.pose.x+=.1;assert.throws(()=>f.c.accept(bad),/actual stopped stroll/);assert(f.heldLease.isCurrent());
+  f.pauseControl(true);f.pauseClock(true);f.requestHome();const event=f.events.at(-1);assert(event.homeRequest);const bad=structuredClone(event);bad.homeRequest.pose.x+=.1;assert.throws(()=>f.c.accept(bad),/actual stopped worker/);assert(f.heldLease.isCurrent());
   f.c.accept(event);assert(!f.heldLease.isCurrent(),'unacknowledged sequence grants no draw');f.acceptLastClock();assert(f.heldLease.isCurrent());assert.equal(f.legacy.isCurrent(),false);
  }finally{f.close();}
 });

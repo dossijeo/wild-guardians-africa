@@ -1,5 +1,8 @@
 # Seguimiento de cierre de A6
 
+Continuacion e-R3: [Farm retenido a Home en consumidor original](e-r3-native-farm-moving-home-consumer-20261118.md). Control/admision/puertos/actor/Surface/Host conservan cuerpo hasta18, sin Idle ficticio. NVIDIA/Turing conserva642 IDs inmutables, retira solo tabla Farm, prepara70 recursos y crea0 despues de READY;0 shaders/pipelines nuevos, ACK18/picking/adopcion5/drain reales. Regresiones GPU Farm-Task646 IDs e Idle-Home678,0 tardios. Home127 muestras/max61.22ms; captura764/max92.54ms. RAF intermedia sin draw dentro del intercambio y guard de barrera global: continuidad de quiescencia queda pendiente A6, sin retirar seguridad del fence. Pasan2524 pruebas/238 archivos (una omision opcional),157 dirigidas y build;64 inputs nativos sin cambios. Faltan continuidad/finales/cohort/productor/recuperacion3123. A6/A/B/C abiertos,D no iniciado.
+
+
 Continuacion e-R3: [fuente Farm retenido a Home y Game](e-r3-native-farm-moving-home-source-20261117.md). Nucleo Home detenido compartido con entrada Farm explicita: misma pose/cuerpo/slot hasta adquirir18, sin Idle ficticio ni nueva tarea. Game solicita Home al vencer contrato/hora250/300; Task independiente avanza. Solo lectura retenida admite contrato vencido, declaraciones Farm nuevas siguen cerradas. Referencias: codigo DetourCrowd1.6.0/Godot4.4-stable. Pasan2480 pruebas/235 archivos (una omision opcional),155 dirigidas y build; ambos WASM y modulo pthread recompilados,64 inputs nativos/7 cambios. Falta control/admision/puertos/actor/Surface/GPU Farm-Home y finales/cohort/productor. GPU anterior cbf31c436 no acredita nuevos binarios; intervalos y recuperacion3123 abiertos. A6/A/B/C abiertos,D no iniciado.
 
 

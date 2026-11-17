@@ -6,7 +6,7 @@ import {nativeIdleCycleBodyState} from '../world/native-idle-cycle-body-source.j
 import {copyNativeHomeArrivalReference,copyNativeHomeArrivalAttestation,sameNativeHomeArrivalReference} from '../world/native-home-arrival.js';
 import {copyNativeHomeRouteReference,copyNativeHomeRouteAttestation,nativeHomeRouteAttestationCovers,sameNativeHomeRouteReference} from '../world/native-home-route.js';
 import {sameNativeTaskSettlementReference} from '../world/native-task-settlement.js';
-import {copyNativeHomeRequestReference,sameNativeHomeRequestReference,nativeHomeRequestContinuesIdle,nativeHomeRequestContinuesInitialIdle,nativeHomeRequestContinuesIdleCycle,nativeHomeRequestContinuesHeldIdleStroll} from '../world/native-home-request-reference.js';
+import {copyNativeHomeRequestReference,sameNativeHomeRequestReference,nativeHomeRequestContinuesIdle,nativeHomeRequestContinuesInitialIdle,nativeHomeRequestContinuesIdleCycle,nativeHomeRequestContinuesHeldWorker} from '../world/native-home-request-reference.js';
 import {copyNativeInitialIdleRequestReference,sameNativeInitialIdleRequestReference} from '../world/native-initial-idle-request-reference.js';
 import {copyNativeInitialIdleBodyReference,copyNativeInitialIdleBodyAttestation,nativeInitialIdleBodyAttestationCovers} from '../world/native-initial-idle-body.js';
 import {copyNativeIdleCycleReference,copyNativeIdleCycleAttestation,copyNativeIdleCycleNextRequest,sameNativeIdleCycleAttestation,nativeIdleCycleAttestationCovers} from '../world/native-idle-cycle.js';
@@ -174,11 +174,11 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     if(idleCycleNext&&(!actor||actor.state!==7||actor.pendingIdleCycleRequest||!sameNativeIdleCycleAttestation(actor.idleCycleSource?.binding,idleCycleNext.sourceCycle)||actor.latestSequence!==idleCycleNext.sourceCycle.cycleSequence))throw Error('Native Idle cycle successor has no current native cycle');
     if(actor?.idleCycleSource&&event.type==='IntentChanged'&&event.state===7&&!idleCycle&&!idleCycleNext)throw Error('Native Idle cycle event omitted its typed source');
     const stoppedRouteSourceRequired=!!actor?.stoppedProjection||!current&&actor?.revoked?.revokedState===4&&!!(actor.revoked.issuedStroll||actor.revoked.issuedFarmArrival);
-    const heldStrollHome=homeRequest&&actor?.stoppedProjection?stoppedHomeSource(actor):null;
-    if(homeRequest&&stoppedRouteSourceRequired&&(!heldStrollHome||!nativeHomeRequestContinuesHeldIdleStroll(homeRequest,heldStrollHome)))throw Error('Native Home differs from its actual stopped stroll body');
-    const heldTaskSource=taskRequest?(stoppedHomeSource(actor)??stoppedWorkerSource(actor,farmStopFamily)):null;
+    const heldHomeSource=homeRequest&&actor?.stoppedProjection?stoppedHomeSource(actor):null;
+    if(homeRequest&&stoppedRouteSourceRequired&&(!heldHomeSource||!nativeHomeRequestContinuesHeldWorker(homeRequest,heldHomeSource)))throw Error('Native Home differs from its actual stopped worker body');
+    const heldTaskSource=taskRequest?stoppedHomeSource(actor):null;
     if(taskRequest&&stoppedRouteSourceRequired&&!heldTaskSource)throw Error('Native task request lacks its actual stopped worker body');
-    const keepStoppedBody=!!(heldStrollHome||heldTaskSource)&&!current&&event.type==='IntentChanged'&&event.state===6;
+    const keepStoppedBody=!!(heldHomeSource||heldTaskSource)&&!current&&event.type==='IntentChanged'&&event.state===6;
     const keepIdleCycle=!!actor?.idleCycleSource&&!current&&event.type==='IntentChanged'&&(!!idleCycleNext||event.state===6&&!!(taskRequest||homeRequest)&&[6,7].includes(actor.state));
     if(keepIdleCycle&&homeRequest&&!cycleHomeMatches(homeRequest,actor.idleCycleSource.binding))throw Error('Native Home differs from its held Idle cycle body');
     if(actor?.idleCycleRecord?.lastDrawTime!=null&&event.effectiveTime<actor.idleCycleRecord.lastDrawTime){const error=Error('Native Idle cycle revocation arrived after its presented time');error.code='native-idle-cycle-revocation-late';throw error;}
@@ -233,14 +233,14 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     return !closed&&!!clock&&!!actor&&!!record&&!actor.closed&&actors.get(owner.nativeRoute.actorId)===actor&&actor.current===null&&actor.state===owner.state&&actor.revoked===record&&record.revokedState===owner.state&&actor.latestSequence===record.revokedSequence&&actor.latestSequence<=clock.intentSequence&&record.safeUntil===boundary.effectiveTime&&matches(record,owner.nativeRoute);
   }
   // A child request retains the installed allocation, including family and
-  // generation. Home still accepts only its existing stroll source.
+  // generation. Each child links its own typed source and final native pose.
   function stoppedWorkerSource(actor,family){
     const record=actor?.revoked,proof=record?.stopProof,source=record?.[family.issued],body=actor?.proof;
     if(proof?.kind!==family.codec.attestationKind||!record?.[family.admitted]||!source||!body||actor.stoppedProjection?.proof!==proof||!matches(record,proof.reference.sourceRoute)||!matches(record,body.nativeRoute)||body.bodyId!==source.reference.bodyId||body.nativeRoute.assignmentSequence!==source.assignmentSequence)return null;
     const farm=family===farmStopFamily,radius=farm?source.reference.sourceRequest.pose.radius:source.reference.pose.radius;
-    return {kind:farm?'native-farm-arrival-held-execution':'native-idle-stroll-held-execution',sourceReference:source.reference,assignmentSequence:source.assignmentSequence,resumeHandle:{...body.nativeRoute.routeHandle,generation:body.resumeGeneration},suspendedAt:body.suspendedAt,pose:actor.stoppedProjection.homePose(radius)};
+    return {kind:farm?'native-farm-arrival-held-execution':'native-idle-stroll-held-execution',actorId:source.reference.actorId,bodyId:source.reference.bodyId,sourceReference:source.reference,assignmentSequence:source.assignmentSequence,resumeHandle:{...body.nativeRoute.routeHandle,generation:body.resumeGeneration},suspendedAt:body.suspendedAt,pose:actor.stoppedProjection.homePose(radius)};
   }
-  function stoppedHomeSource(actor){return stoppedWorkerSource(actor,strollStopFamily);}
+  function stoppedHomeSource(actor){return stoppedWorkerSource(actor,strollStopFamily)??stoppedWorkerSource(actor,farmStopFamily);}
   function stoppedHomeCurrent(actor,record,body){
     const request=record?.stoppedHomeRequest;
     return !!request&&!closed&&!!clock&&!actor.closed&&actors.get(request.actorId)===actor&&actor.current===null&&actor.revoked===record&&actor.state===6&&record.revokedState===4&&record.safeUntil===body.suspendedAt&&actor.latestSequence===request.requestSequence&&request.requestSequence<=clock.intentSequence&&actor.pendingHomeRequest===request&&sameNativeSuspendedBodyReference(actor.proof,body);

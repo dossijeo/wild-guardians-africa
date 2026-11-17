@@ -53,3 +53,6 @@ export function nativeHomeRequestContinuesHeldFarmArrival(request,source){
  return !!request&&source?.kind==='native-farm-arrival-held-execution'&&!!q&&!!h&&request.actorId===source.actorId&&request.bodyId===source.bodyId&&request.bodyFlags===q.bodyFlags&&request.profile===q.profile&&
   request.authorityEpoch===r.worldBoundary.authorityEpoch&&request.nativeSession===r.worldBoundary.nativeSession&&request.requestSequence>source.assignmentSequence&&request.requestedAt>=source.suspendedAt&&poseFields.every(k=>request.pose[k]===source.pose[k]);
 }
+export function nativeHomeRequestContinuesHeldWorker(request,source){
+ return nativeHomeRequestContinuesHeldIdleStroll(request,source)||nativeHomeRequestContinuesHeldFarmArrival(request,source);
+}
