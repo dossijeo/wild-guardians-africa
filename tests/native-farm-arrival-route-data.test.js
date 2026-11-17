@@ -69,7 +69,7 @@ test('retired route handles retain readable historical values but no current nat
 });
 
 test('typed source reads do not open baseline, generic intent events or ordinary Game admission',()=>{
- const f=fixture();try{const p=propose(f);commit(f,p);assert(f.planner.nativeFarmArrivalRouteBinding(f.actor));assert.throws(()=>f.planner.nativeIntentControlBaseline(),/farm arrival routes require prepared graphical admission/);assert.throws(()=>f.planner.intentChanges(),/farm arrival routes require prepared graphical admission/);assert.equal(f.planner.nativeGameExecutionState(),-1);}finally{f.close();}
+ const f=fixture();try{const p=propose(f);commit(f,p);assert(f.planner.nativeFarmArrivalRouteBinding(f.actor));assert.throws(()=>f.planner.nativeIntentControlBaseline(),/farm arrival routes require prepared graphical admission/);assert.deepEqual(f.planner.intentChanges().find(e=>e.nativeFarmArrival)?.nativeFarmArrival,f.planner.nativeFarmArrivalRouteBinding(f.actor));assert.equal(f.planner.nativeGameExecutionState(),-1);}finally{f.close();}
 });
 
 test('execution reads use fixed-size native metadata without copying route points or enumerating the cohort',()=>{

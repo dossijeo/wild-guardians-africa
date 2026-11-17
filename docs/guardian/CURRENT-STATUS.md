@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+Continuacion e-R3: [asociacion de llegada en control directo](e-r3-native-farm-arrival-route-control-20261117.md). El evento real23 conserva la peticion exacta y el registro existente; replay exige reloj e instalacion, sin admision generica ni bootstrap de otra familia. Publicacion/Host originales transportan el evento; referencia: codigo DetourCrowd1.6.0. Pasan 2119 pruebas/215 archivos (una omision opcional), 128 dirigidas y build; 64 inputs nativos exactos, sin recompilar ni repetir GPU. Faltan recibo/liberacion/puertos/consumidor, finales/cohort y recuperacion incremental de 3.123. A6/A/B/C abiertos, D no iniciado.
+
+
 Continuacion e-R3: [proyeccion semantica de llegada nativa](e-r3-native-farm-arrival-route-projection-20261117.md). Game refleja la cache fisica real y restaura pose/fases/presupuesto en una declaracion nueva, sin permisos guardados ni Idle ficticio. Referencia: codigo Rapier.js. Conserva asignacion original de Task; tick/productor y guardado UI siguen cerrados hasta el relevo preparado. Pasan 2101 pruebas/214 archivos (una omision opcional), 110 dirigidas y build; 64 inputs nativos exactos, sin recompilar ni repetir GPU. Faltan relevo/recibo/control/puertos/consumidor, finales/cohort y recuperacion incremental de 3.123. A6/A/B/C abiertos, D no iniciado.
 
 

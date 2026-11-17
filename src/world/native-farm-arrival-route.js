@@ -56,6 +56,7 @@ export function copyNativeFarmArrivalRouteAttestation(value){
  if(!id(value.assignmentSequence)||value.assignmentSequence<=reference.sourceControlSequence||!nativeFarmArrivalRouteSuccessor(preparedReference,reference)||!Array.isArray(ids)||ids.length>1024||ids.some(n=>!id(n))||new Set(ids).size!==ids.length)throw TypeError('Native farm arrival has no prepared association');
  return Object.freeze({kind:value.kind,version:1,projectionVersion:1,assignmentSequence:value.assignmentSequence,reference,preparedReference,gateIds:Object.freeze([...ids])});
 }
+export function sameNativeFarmArrivalRouteAttestation(a,b){try{return JSON.stringify(copyNativeFarmArrivalRouteAttestation(a))===JSON.stringify(copyNativeFarmArrivalRouteAttestation(b));}catch{return false;}}
 export const nativeFarmArrivalRouteAttestationCovers=(proof,reference)=>sameNativeFarmArrivalRouteReference(proof?.reference,reference)||sameNativeFarmArrivalRouteReference(proof?.preparedReference,reference);
 export function nativeFarmArrivalRoutePresentationMatches(prepared,actual,value){
  const b=copyNativeFarmArrivalRouteAttestation(value),r=b.reference,route=actual?.nativeRoute;
