@@ -113,7 +113,16 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   const frameTimings = [], fenceTimings = [];
   function recordTiming(ring, value, limit = 256) { ring.push(value); if (ring.length > limit) ring.shift(); return value; }
   const frameTime = createRemoteFrameTimeGuard();
-  const metrics = { nativeFrames: 0, replayFrames: 0, packets: 0, computePackets: 0, commands: 0, queueWrites: 0, gpuErrors: 0, cameraUpdatesRejected: 0, uniformForks: 0, uniformForkBytes: 0, bindingForks: 0, resourceRetirements: 0, dependencyVisits: 0, retirementChecks: 0, producerReleases: 0, hiddenMs: 0, visibilityTransitions: 0, resourceTaskYields: 0, resourceJobMaxMs: 0, resourceJobMaxType: null };
+  const metrics = { nativeFrames: 0, replayFrames: 0, packets: 0, computePackets: 0, commands: 0, queueWrites: 0, gpuErrors: 0, cameraUpdatesRejected: 0, uniformForks: 0, uniformForkBytes: 0, bindingForks: 0, resourceRetirements: 0, dependencyVisits: 0, retirementChecks: 0, producerReleases: 0, hiddenMs: 0, visibilityTransitions: 0, resourceTaskYields: 0, resourceJobMaxMs: 0, resourceJobMaxType: null, resourceJobMaxStage: null, resourceJobMaxAt: null };
+  function resourceJob(type,stage,run){
+    const started=absoluteNow();
+    try{return run();}finally{const elapsed=absoluteNow()-started;if(elapsed>metrics.resourceJobMaxMs){metrics.resourceJobMaxMs=elapsed;metrics.resourceJobMaxType=type;metrics.resourceJobMaxStage=stage;metrics.resourceJobMaxAt=started;}}
+  }
+  function resourceBudget(){
+    if(absoluteNow()-resourceSliceStarted<resourceSliceMs)return null;
+    metrics.resourceTaskYields++;
+    return Promise.resolve(yieldResourceTask()).then(()=>{resourceSliceStarted=absoluteNow();});
+  }
   function settleNativeControl(error=null){
     const current=routeControl?.status();
     for(const waiter of nativeControlWaiters){
@@ -257,16 +266,16 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       // happens to be in the global alias table when asynchronous work finishes.
       const previous = resolutionResources; resolutionResources = entry.dependencyEntries;
       try {
-        const result = build();
+        // Measure the actual factory, including builds resumed after dependency
+        // promises. Dispatch time alone ends at the first await, not at this call.
+        const result = resourceJob(entry.kind,'build',build);
         if (result?.then) result.then(finished, failedJob);
         else finished(result);
       } catch (error) { failedJob(error); }
       finally { resolutionResources = previous; }
     };
     if (waiting) waiting.then(async () => {
-      if (absoluteNow() - resourceSliceStarted >= resourceSliceMs) {
-        metrics.resourceTaskYields++; await yieldResourceTask(); resourceSliceStarted = absoluteNow();
-      }
+      const yielding=resourceBudget();if(yielding)await yielding;
       start();
     }).catch(failedJob);
     else start();
@@ -950,7 +959,12 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       case 'operation': {
         if(message.nativeMutationEpoch===undefined)message.nativeMutationEpoch=nativeMutationEpoch;
         const readiness = waitForResources(references(message.op));
-        if (readiness) await readiness;
+        if (readiness) {
+          await readiness;
+          // A dependency can resume this continuation long after dispatch's
+          // slice expired. Re-enter the existing budget before native work.
+          const yielding=resourceBudget();if(yielding)await yielding;
+        }
         if(stopped||failed||nativeConsumerRetirement)throw Error('Native GPU consumer is retiring or closed');
         if(message.op.method==='submit'){
           if(intentControl&&!routeControl&&[...references(message.op)].some(key=>key===CURRENT||resources.get(key)?.currentView))
@@ -958,6 +972,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           // Standalone resource/diagnostic submissions share the same queue as
           // drawing. They cannot slip between the captured drain and release.
           await waitMutationSubmission();
+          const yielding=resourceBudget();if(yielding)await yielding;
+          if(stopped||failed||nativeConsumerRetirement)throw nativeRetiringError();
           if(message.nativeMutationEpoch!==nativeMutationEpoch)
             throw Error('Native mutation invalidated a pending standalone GPU submission');
           if(!drawCommandsCurrent(message.op,nativeWorldBoundary))throw Error('Standalone drawing resources do not match the committed native world');
@@ -969,7 +985,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           // the next atomic generation, even if Three issued them before render.
           if (stagedOperations.length >= maxFrameOperations) throw Error('Remote preparation exceeds safety limit');
           stagedOperations.push(message.op);
-        } else applyQueue(message.op);
+        } else resourceJob(message.op.method,'queue',()=>applyQueue(message.op));
         break;
       }
       case 'configure':
@@ -1232,13 +1248,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       // A resolved pipeline can unlock thousands of queued promise callbacks.
       // Admit resource jobs in interruptible tasks so they cannot monopolize a
       // single microtask checkpoint while the independent draw loop is ready.
-      if (absoluteNow() - resourceSliceStarted >= resourceSliceMs) {
-        metrics.resourceTaskYields++; await yieldResourceTask(); resourceSliceStarted = absoluteNow();
-      }
-      const started = absoluteNow();
-      const job = handle(message);
-      const synchronousMs = absoluteNow() - started;
-      if (synchronousMs > metrics.resourceJobMaxMs) { metrics.resourceJobMaxMs = synchronousMs; metrics.resourceJobMaxType = message.method || message.type; }
+      const yielding=resourceBudget();if(yielding)await yielding;
+      const job = resourceJob(message.method || message.op?.method || message.type,'dispatch',()=>handle(message));
       await job;
     }).catch(error => {
       // Work from the retiring producer cannot submit again. Its cancellation

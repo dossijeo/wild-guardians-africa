@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuacion A4/C: [presupuesto al reanudar recursos](a4-resource-continuation-budget-20261117.md). Las operaciones vuelven al presupuesto existente tras esperar dependencias/submit; la medicion incluye trabajo reanudado y fecha/metodo del maximo. No hay nueva cola ni dependencia. Pasan 1852 pruebas/167 archivos, 171 dirigidas (4 nuevas), GPU con/sin traza y build;62 inputs nativos exactos. El maximo anterior ya precedia la preparacion. El pico historico85.62ms y continuidad integrada siguen abiertos: no se prueba su causa ni ausencia total de tirones. Productor/cohort, otros finales/puertas y recuperacion de3123 pendientes; A6/A/B/C abiertos, D no iniciado.
+
+
 Continuacion de Idle: [paseo restaurado en consumidor original](e-r3-native-idle-stroll-restoration-consumer-20261117.md). Roster/Surface/puertos/GPU adquieren22 desde la peticion nueva conservando actor y recursos residentes, sin20/21 ficticios; tambien pasa llegada cero. NVIDIA/Turing conserva IDs sin retiros y cero asignaciones tras READY; la primera variante Walk/Idle se prepara y contabiliza antes. Pasan 1848 pruebas/166 archivos, 21 especificas (10 nuevas), tres ejecuciones GPU y build;62 inputs nativos exactos. Falta productor/cohort ordinario, otros finales/puertas, parada durante WALK activo y recuperacion integral de3123. El pico observado de85.62ms en preparacion queda abierto paraC, aunque la repeticion midio34.47ms. Interfaz de guardado y siete fallos antiguos siguen pendientes; A6/A/B/C abiertos, D no iniciado.
 
 
