@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+Continuacion de Idle: [parada movil con pose final en el consumidor original](e-r3-native-idle-stroll-stop-final-consumer-20261117.md). Transactor/puertos/Surface/Host adquieren los valores nativos finales sobre el actor retenido mientras avanzan autoridad y paseo. NVIDIA/Turing dibuja 54 frames durante 1800 ms de bloqueo, conserva 679 IDs y no asigna tras READY; prepara 68 recursos de protocolo y 138 copias de uniformes/bindings (18432 bytes). La pose se instala una vez en los snapshots existentes. Pasan 1709 pruebas/151 archivos y build. Puertas/NeedsPlan, Home desde suspension, tarea/restauracion/cohort/producer y recuperacion incremental integral de 3123 siguen pendientes. A6/A/B/C permanecen abiertos.
+
+
 Continuacion de Idle: [template tipado de parada movil en el canal de terreno](e-r3-native-idle-stroll-stop-terrain-20261117.md). El slot existente conserva propietarios y efectos copiados, contabiliza los metadatos y exige el template exacto en preparador/ACK. Surface y el commit temporal siguen cerrados al relevo revalidado hasta integrar la pose final. Pasan 571 pruebas/42 archivos y build; la GPU anterior no se presenta como evidencia nueva. Faltan transactor y pose/fases/picking GPU finales con autoridad continua antes de Home; tarea/restauracion/cohort/producer y recuperacion integral de 3123 siguen pendientes. A6/A/B/C permanecen abiertos.
 
 

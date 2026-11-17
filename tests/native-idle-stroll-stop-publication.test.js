@@ -68,7 +68,7 @@ test('prepared stop needs its own packet, issued owners and exclusive template; 
  }finally{await f.close();}
 });
 
-test('Host rejects an unsupported moving-stop template instead of acknowledging a legacy packet',async()=>{
+test('Host rejects a malformed moving-stop template instead of acknowledging a legacy packet',async()=>{
  const native=createNativeRouteExecutionFixture(),[sourcePort,drawPort]=pair(),f=await remoteFixture({}, {intentControl:{port:drawPort,session:'unsupported-stop'}});let source;
  try{
   native.worker(1,native.point(-6,0),native.point(6,0));native.bridge.beginNativeRouteExecution();native.bridge.commitNativeCausalClock();
@@ -76,6 +76,6 @@ test('Host rejects an unsupported moving-stop template instead of acknowledging 
   // Injecting an unsupported field tests fail-closed dispatch. This is neither
   // a native proof nor a retained moving-stop graphical resource.
   const post=sourcePort.postMessage;sourcePort.postMessage=m=>post(m.type==='IntentMutationQuiesce'?{...m,preparedIdleStrollStopTemplate:{unsupported:true}}:m);
-  await assert.rejects(source.quiesceGpuForMutation(),/acknowledgement/);await flush();assert.equal(f.gpu.submitted.length,0);assert(f.errors.some(error=>/prepared final-pose support/.test(error.message)));
+  await assert.rejects(source.quiesceGpuForMutation(),/acknowledgement/);await flush();assert.equal(f.gpu.submitted.length,0);assert(f.errors.some(error=>/native Idle stroll stop reference|native stop reference/i.test(error.message)));
  }finally{source?.dispose();f.client.dispose();await f.host.dispose();native.session.dispose();}
 });

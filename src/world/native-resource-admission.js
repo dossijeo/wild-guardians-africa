@@ -38,7 +38,7 @@ export function createNativeResourceAdmission({wasm,isReady,simulationTime,epoch
       if(prepareResources){
         const proposedWorldBoundary=copyNativeWorldBoundary({version:1,authorityEpoch:owner,nativeSession,ticket,effectiveTime:time}),
           resources=protocol?protocol.capture(proposedWorldBoundary):captureWorldProposalResources(proposedWorldBoundary);
-        suspendedBodies=nativeSuspendedBodiesFromProposal(resources,proposedWorldBoundary);
+        suspendedBodies=motion.projectedStop?Object.freeze([]):nativeSuspendedBodiesFromProposal(resources,proposedWorldBoundary);
         if(resources?.kind===motion.proposalKind)motionReferences=Object.freeze([fromProposal(resources)]);
         let stopWaiting;const interrupted=new Promise((resolve,reject)=>{stopWaiting=()=>reject(new DOMException('Native resource preparation cancelled','AbortError'));});interrupted.catch(()=>{});
         preparationController.signal.addEventListener('abort',stopWaiting,{once:true});
@@ -91,7 +91,7 @@ export function createNativeResourceAdmission({wasm,isReady,simulationTime,epoch
         if(committed.status===1)motionRoutes=Object.freeze(motionReferences.map(reference=>
           motion.attest(native,reference,preparedMotionTemplate,protocol)));
         if(committed.status===1&&preparedResources&&preparedResources.commit({worldBoundary:nativeWorldBoundary(),resources:committed.value.resources,...(preparedMotionTemplate?{[bindingField]:motionRoutes[0]}:{})})!==true)throw Error('Native prepared resources were not retained for publication');
-        answer=committed.status===1?outcome('committed',{...committed.value,receipt,worldBoundary:nativeWorldBoundary(),...(protocol?.deferred?{timeTranslation:protocol.timeTranslation()}:{})}):
+        answer=committed.status===1?outcome('committed',{...committed.value,receipt,worldBoundary:nativeWorldBoundary(),...(motion.projectedStop?{[bindingField]:motionRoutes[0]}:{}),...(protocol?.deferred?{timeTranslation:protocol.timeTranslation()}:{})}):
           outcome(committed.status===-2?'stale':committed.status===-3?'invalid-receipt':committed.status===-6?'blocked':'stale');
       }
     }catch(error){commitFailed=commitAttempted;answer=stoppedCommit!==null&&error===stoppedCommit?stoppedCommit:outcome(physicalCommitted?'committed-control-failed':'control-failed',

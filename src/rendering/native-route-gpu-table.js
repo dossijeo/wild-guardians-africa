@@ -67,7 +67,11 @@ function packNativeMotion(support,presentation,actorId,identity){
 // The preparing worker never advances or publishes positions through this API.
 export function sampleNativeRouteGpuTable(table,at){
  if(!Number.isFinite(at)||at<table.epoch)throw TypeError('Invalid native route sample time');
- const raw=floorFloat32(at-table.epoch),margin=Math.fround(Math.max(Math.abs(raw),1)*.000000476837158203125),time=Math.max(0,Math.min(Math.fround(raw-margin),table.duration)),{data,count}=table;
+ return sampleNativeRouteGpuTableRelative(table,floorFloat32(at-table.epoch));
+}
+export function sampleNativeRouteGpuTableRelative(table,raw){
+ if(!Number.isFinite(raw)||raw<0||Math.fround(raw)!==raw)throw TypeError('Invalid submitted native route age');
+ const margin=Math.fround(Math.max(Math.abs(raw),1)*.000000476837158203125),time=Math.max(0,Math.min(Math.fround(raw-margin),table.duration)),{data,count}=table;
  let low=0,high=count;while(low<high){const middle=Math.floor((low+high)/2);if(data[middle*NATIVE_ROUTE_GPU_WIDTH]<=time)low=middle+1;else high=middle;}
  const index=Math.max(0,low-1),offset=index*NATIVE_ROUTE_GPU_WIDTH,next=Math.min(index+1,count-1)*NATIVE_ROUTE_GPU_WIDTH,span=data[next]-data[offset],fraction=span>0?Math.max(0,Math.min(1,(time-data[offset])/span)):0,result={};
  for(let column=1;column<NATIVE_ROUTE_GPU_FIELDS.length;column++)result[NATIVE_ROUTE_GPU_FIELDS[column]]=[6,7,8,15,16].includes(column)?data[offset+column]:data[offset+column]+(data[next+column]-data[offset+column])*fraction;

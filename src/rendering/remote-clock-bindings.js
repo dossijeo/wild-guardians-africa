@@ -11,11 +11,17 @@ import {copyNativeGateReference} from '../world/native-gate-reference.js';
 import {sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {copyNativeTaskActionReference,sameNativeTaskActionReference,nativeTaskActionSuccessor} from '../world/native-task-action-presentation.js';
 import {copyNativeInitialIdleBodyReference,sameNativeInitialIdleBodyReference,nativeInitialIdleBodySuccessor} from '../world/native-initial-idle-body.js';
+import {copyNativeStoppedClock} from './native-stopped-clock.js';
 
 // Symbol metadata is intentionally non-enumerable: it must not alter TSL graph
 // structure/cache keys. Registration occurs when a physical binding is updated,
 // never by discovering graph nodes during replay.
 const clockMetadata=Symbol.for('wild-guardians.remote-clock');
+export function markRemoteStoppedNode(node,reference,epoch,field=null){
+ if(!node?.isNode||Object.hasOwn(node,clockMetadata))throw TypeError('Invalid or already marked stopped uniform');
+ const metadata=copyNativeStoppedClock({nativeStopped:reference,epoch,semantic:field===null?'relative':'stop-value',...(field===null?{}:{stopField:field})});
+ Object.defineProperty(node,clockMetadata,{value:metadata,enumerable:false});return node;
+}
 export function markRemoteClockNode(node,semantic,epoch,nativeRoute=null,nativeGate=null,nativeSuspended=null,nativeResume=null,period=null,resourceEnd=null,nativeStart=null,nativeAction=null,nativeConsequence=null,nativeSettlement=null,nativeHome=null,nativeInitialIdleBody=null,nativeIdleCycle=null,nativeStroll=null){
  if(!node?.isNode||!['absolute','relative','origin-modulo','idle-cycle-watch-knot'].includes(semantic)||!Number.isFinite(epoch)||epoch<0)throw TypeError('Invalid remote clock node');
  if(semantic==='idle-cycle-watch-knot'&&nativeIdleCycle===null)throw TypeError('Native watch knot requires its cycle');

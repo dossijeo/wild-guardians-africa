@@ -1,3 +1,4 @@
+import {nativeIdleStrollStopReferenceFromProposal,sameNativeIdleStrollStopReference} from './native-idle-stroll-stop.js';
 import {nativeIdleCycleReferenceFromProposal,sameNativeIdleCycleReference} from './native-idle-cycle.js';
 import {nativeIdleStrollReferenceFromProposal,sameNativeIdleStrollReference} from './native-idle-stroll.js';
 import {nativeHomeArrivalReferenceFromProposal,sameNativeHomeArrivalReference,copyNativeHomeArrivalAttestation} from './native-home-arrival.js';
@@ -14,6 +15,12 @@ import {nativeInitialIdleBodyReferenceFromProposal,sameNativeInitialIdleBodyRefe
 // native revalidation; none of these profiles can issue an execution permission.
 const routeCompatible=translation=>translation.sameFloat32Motion&&translation.sameFloat32Gates;
 const profiles=Object.freeze({
+  'idle-stroll-stop':Object.freeze({
+    proposalKind:12,templateField:'preparedIdleStrollStopTemplate',bindingField:'nativeIdleStrollStopBinding',releaseField:'nativeStrollStops',projectedStop:true,
+    reference:nativeIdleStrollStopReferenceFromProposal,sameReference:sameNativeIdleStrollStopReference,compatible:translation=>translation.sameResourceOwners===true,
+    receiptCompatible:(receipt,prepared)=>receipt.nativeIdleStrollStopVersion===1&&sameNativeIdleStrollStopReference(receipt.preparedIdleStrollStopTemplate,prepared),
+    attest(native,reference,preparedReference,protocol){const fact=protocol.binding(reference,preparedReference);if(!fact?.projection||!sameNativeIdleStrollStopReference(fact.reference,reference)||!sameNativeIdleStrollStopReference(fact.preparedReference,preparedReference))throw Error('Native moving stop final association unavailable');return fact;}
+  }),
   'idle-stroll':Object.freeze({
     proposalKind:'native-idle-stroll-proposal',templateField:'preparedIdleStrollTemplate',bindingField:'nativeIdleStrollBinding',releaseField:'nativeStrolls',
     reference:nativeIdleStrollReferenceFromProposal,sameReference:sameNativeIdleStrollReference,compatible:translation=>translation.sameRelativeProgram&&translation.sameRelativeGateProgram,

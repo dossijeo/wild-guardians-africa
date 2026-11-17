@@ -52,9 +52,32 @@ export function copyNativeIdleStrollStopTicket(value){
 }
 export function nativeIdleStrollStopTicketFromProposal(value){const r=nativeIdleStrollStopReferenceFromProposal(value),b=r.worldBoundary;return copyNativeIdleStrollStopTicket({kind:'native-idle-stroll-stop-proposal-ticket',authorityEpoch:b.authorityEpoch,session:b.nativeSession,ticket:b.ticket,sourceRoute:r.sourceRoute});}
 export function copyNativeIdleStrollStopAttestation(value){
- if(value?.kind!=='native-idle-stroll-stop-attestation'||value.version!==1||value.projectionVersion!==1||!only(value,['kind','version','projectionVersion','reference','preparedReference']))throw TypeError('Invalid native stroll stop attestation');
+ if(value?.kind!=='native-idle-stroll-stop-attestation'||value.version!==1||value.projectionVersion!==1||!only(value,['kind','version','projectionVersion','reference','preparedReference','projection']))throw TypeError('Invalid native stroll stop attestation');
  const reference=copyNativeIdleStrollStopReference(value.reference),preparedReference=copyNativeIdleStrollStopReference(value.preparedReference);
  if(!sameNativeIdleStrollStopReference(preparedReference,reference)&&!nativeIdleStrollStopSuccessor(preparedReference,reference))throw TypeError('Native stop differs from its prepared resource owners');
- return Object.freeze({kind:value.kind,version:1,projectionVersion:1,reference,preparedReference});
+ const projection=value.projection===undefined?null:copyNativeIdleStrollStopProjection(value.projection,reference);
+ return Object.freeze({kind:value.kind,version:1,projectionVersion:1,reference,preparedReference,...(projection?{projection}:{})});
 }
 export const nativeIdleStrollStopAttestationCovers=(proof,reference)=>sameNativeIdleStrollStopReference(proof?.reference,reference)||sameNativeIdleStrollStopReference(proof?.preparedReference,reference);
+
+// Owned final values, distinct from immutable authority identities. A copy is
+// not a presentation permission; the native source and direct release attest it.
+export function copyNativeIdleStrollStopProjection(value,reference){
+ if(value?.version!==1||!only(value,['version','routeEffects','gateEffects']))throw TypeError('Invalid native stop projection');
+ reference=copyNativeIdleStrollStopReference(reference);const b=reference.worldBoundary;
+ const effect=(input,width)=>{const rows=input?.rows;if(!(rows instanceof Float64Array)&&!Array.isArray(rows)||rows.length>32768*width||rows.length%width||input?.version!==1||input?.rowWidth!==width)throw TypeError('Invalid native stop projection rows');return {...input,rows:rows instanceof Float64Array?rows:Float64Array.from(rows)};};
+ const proposal=copyNativeIdleStrollStopProposal({version:1,phase:'proposal',kind:12,nativeSession:b.nativeSession,ticket:b.ticket,effectiveTime:b.effectiveTime,worldBoundary:b,nativeStop:reference,retainsNativeAssignments:false,routeEffects:effect(value.routeEffects,26),gateEffects:effect(value.gateEffects,3),chunks:[],removed:[],authorizedAutonomy:false,authorizedPassage:false});
+ // Final attestation values are immutable snapshots, including their rows.
+ // Unlike proposal buffers, they can be shared with a preparer without aliasing
+ // writable data into the later direct-authority release.
+ const frozen=input=>Object.freeze({version:1,rowWidth:input.rowWidth,rows:Object.freeze(Array.from(input.rows))});
+ return Object.freeze({version:1,routeEffects:frozen(proposal.routeEffects),gateEffects:frozen(proposal.gateEffects)});
+}
+export function copyNativeIdleStrollStoppedBody(value){
+ if(value?.kind!=='native-idle-stroll-stopped-body'||value.version!==1||!only(value,['kind','version','stop','actorId'])||!id(value.actorId))throw TypeError('Invalid native stopped body selector');
+ const stop=copyNativeIdleStrollStopReference(value.stop),owner=stop.routes.find(r=>r.nativeRoute.actorId===value.actorId);
+ if(owner?.state!==4)throw TypeError('Native stopped body selector requires a suspended owner');
+ return Object.freeze({kind:value.kind,version:1,stop,actorId:value.actorId});
+}
+export const sameNativeIdleStrollStoppedBody=(a,b)=>!!a&&!!b&&a.actorId===b.actorId&&sameNativeIdleStrollStopReference(a.stop,b.stop);
+export const NATIVE_STOP_POSE_FIELDS=Object.freeze({x:0,z:1,phase:3,yaw:4,arrived:6,runPhase:9,walkPhase:10,carryPhase:11});

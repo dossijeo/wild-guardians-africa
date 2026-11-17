@@ -1,6 +1,6 @@
 import {LOCOMOTION} from '../../simulation/locomotion-calibration.js';
 import {copyNativeRouteReference} from '../native-route-reference.js';
-import {copyNativeIdleStrollStopReference,copyNativeIdleStrollStopProposal,copyNativeIdleStrollStopTicket,nativeIdleStrollStopTicketFromProposal,copyNativeIdleStrollStopAttestation} from '../native-idle-stroll-stop.js';
+import {copyNativeIdleStrollStopReference,copyNativeIdleStrollStopProposal,copyNativeIdleStrollStopTicket,nativeIdleStrollStopTicketFromProposal,copyNativeIdleStrollStopAttestation,copyNativeIdleStrollStopProjection} from '../native-idle-stroll-stop.js';
 import {copyNativeIdleCycleBodySource,nativeIdleCycleBodyState} from '../native-idle-cycle-body-source.js';
 import {copyNativeIdleStrollReference,copyNativeIdleStrollProposal,copyNativeIdleStrollAttestation,sameNativeIdleStrollAttestation,nativeIdleStrollContinuesNext} from '../native-idle-stroll.js';
 import {copyNativeHomeArrivalReference,copyNativeHomeArrivalProposal,copyNativeHomeArrivalAttestation,sameNativeHomeArrivalReference} from '../native-home-arrival.js';
@@ -889,9 +889,19 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
   };
   const stopNativeIdleStrollAfterGpuQuiescence=({actorId,getPublication,prepareResources,signal=null}={})=>{
     if(typeof prepareResources!=='function')throw TypeError('Native stroll stop requires retained prepared resources');
-    const binding=nativeIdleStrollBinding(actorId);
-    if(!binding)return Promise.resolve({status:'unsupported',authorizedAutonomy:false,authorizedPassage:false});
-    return mutateNativeWorldAfterGpuQuiescence({getPublication,mutation:{type:'stopIdleStroll',binding},signal,prepareResources});
+    const binding=nativeIdleStrollBinding(actorId);if(!binding)return Promise.resolve({status:'unsupported',authorizedAutonomy:false,authorizedPassage:false});
+    const actor=binding.reference.actorId,current=()=>sameNativeIdleStrollAttestation(binding,nativeIdleStrollBinding(actor));let candidate=null,preparedTicket=null,sourceTicket=null,translation=null;
+    const protocol={preparedFrameRequired:true,deferred:true,motionKind:'idle-stroll-stop',
+      retained(session,ticket){if(!current()||wasm.nav_intent_barrier_proposal_ticket()!==1)return false;const a=new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6);return a[0]===session&&a[1]===ticket&&a[5]===12;},
+      revalidate(){if(!current())return {status:'stale'};const result=revalidateNativeIdleStrollStopProposal(sourceTicket);if(result.status==='revalidated'){candidate=result.proposal;sourceTicket=result.ticket;translation=result.timeTranslation;}return result;},
+      binding(reference,preparedReference){return nativeIdleStrollStopBinding(reference,preparedReference,{projection:{version:1,routeEffects:candidate.routeEffects,gateEffects:candidate.gateEffects}});},
+      timeTranslation:()=>translation,ticket:()=>wasm.nav_intent_barrier_proposal_ticket(),ticketPtr:()=>wasm.nav_intent_barrier_proposal_ticket_ptr(),release(session,ticket){wasm.spatial_world_proposal_resource_release?.(session,ticket);},cancel(){if(sourceTicket)cancelNativeIdleStrollStopProposal(sourceTicket);},
+      capture(boundary){candidate=captureNativeIdleStrollStopProposal(sourceTicket);if(!candidate||!sameNativeWorldBoundary(candidate.worldBoundary,boundary))throw Error('Native moving stop resources unavailable');preparedTicket=sourceTicket.ticket;return candidate;}};
+    return commitNativeWorldProposal(getPublication,()=>{if(!current())return -2;const p=prepareNativeIdleStrollStopProposal(actor);if(p.status==='proposed'){sourceTicket=p.ticket;return 1;}return p.status==='busy'?-4:p.status==='blocked'?0:-2;},(mark,...boundary)=>{
+      if(!current())return {status:-2};const status=wasm.spatial_world_proposal_stop_commit_bound(...boundary,preparedTicket);if(status!==1)return {status};mark();
+      const resources=session.publishNativeWorldResources(committedWorldBoundary);if(resources.kind!==12)throw Error('Native stop committed another resource family');if(onNativeWorldResources)onNativeWorldResources({...resources,worldBoundary:nativeWorldBoundary()});
+      mark({ids:[],resources});return {status:1,value:{ids:[],resources}};
+    },prepareResources,signal,protocol);
   };
   const mutateNativeOverlayAfterGpuQuiescence=mutateNativeWorldAfterGpuQuiescence;
   const sampleNativeRoute=(handle,at)=>{
@@ -1428,7 +1438,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       return outcome('revalidated',{ticket,proposal,timeTranslation:Object.freeze({kind:'native-idle-stroll-stop-translation',version:1,preparedTicket:a[1],actualTicket:a[2],preparedAt:a[3],effectiveTime:a[4],sameResourceOwners:a[5]===1,routeCount:a[6],gateCount:a[7]})});
     }catch(error){cancelNativeIdleStrollStopProposal(ticket);throw error;}
   };
-  const nativeIdleStrollStopBinding=(reference,preparedReference=reference)=>{
+  const nativeIdleStrollStopBinding=(reference,preparedReference=reference,{projection=null}={})=>{
     if(typeof wasm.nav_intent_stopped_route_matches!=='function')throw Error('Rebuild native stopped route identity verification');
     const proof=copyNativeIdleStrollStopAttestation({kind:'native-idle-stroll-stop-attestation',version:1,projectionVersion:1,reference,preparedReference}),b=proof.reference.worldBoundary,p=proof.preparedReference.worldBoundary;
     if(b.authorityEpoch!==epoch()||b.nativeSession!==wasm.nav_intent_session())return null;const ptr=wasm.spatial_world_stop_binding_ptr?.();if(!ptr)return null;
@@ -1436,7 +1446,16 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     const h=Array.from(new Float64Array(wasm.memory.buffer,wasm.spatial_world_resource_header_ptr(),9));if(h[0]!==1||h[1]!==b.nativeSession||h[2]!==b.ticket||h[3]!==b.effectiveTime||h[4]!==12||h[5]!==0)return null;
     for(const owner of proof.reference.routes){const h=owner.nativeRoute.routeHandle;if(wasm.nav_intent_stopped_route_matches(owner.nativeRoute.actorId,h.session,h.slot,h.generation,owner.nativeRoute.assignmentSequence,owner.bodyId,owner.state,b.effectiveTime)!==1)return null;if(owner.state===4){const held=nativeSuspendedGateRoute(owner.nativeRoute.actorId),handle=owner.nativeRoute.routeHandle;if(!held||held.bodyId!==owner.bodyId||held.suspendedAt!==b.effectiveTime||held.resumeHandle.session!==handle.session||held.resumeHandle.slot!==handle.slot||held.resumeHandle.generation!==owner.resumeGeneration)return null;}else{if(wasm.nav_intent_actor(owner.nativeRoute.actorId)!==1||new Float64Array(wasm.memory.buffer,wasm.nav_intent_actor_ptr(),10)[1]!==0)return null;}}
     for(const g of proof.reference.gates)if(nativeGateMechanismPose(g.gateId)?.mechanism!==g.mechanism)return null;
-    return proof;
+    if(projection===null)return proof;
+    const values=copyNativeIdleStrollStopProjection(projection,proof.reference);
+    for(let i=0;i<proof.reference.routes.length;i++){
+      const owner=proof.reference.routes[i];if(owner.state!==4)return null;
+      if(!nativeSuspendedGateRoute(owner.nativeRoute.actorId))return null;
+      const actual=new Float64Array(wasm.memory.buffer,wasm.nav_gate_suspended_route_ptr(),27),pose=values.routeEffects.rows.slice(i*26+8,(i+1)*26);
+      if(pose.some((value,k)=>value!==actual[k+9]))return null;
+    }
+    for(let i=0;i<proof.reference.gates.length;i++){const g=proof.reference.gates[i],actual=nativeGateMechanismPose(g.gateId);if(!actual||actual.opening!==values.gateEffects.rows[i*3+2])return null;}
+    return copyNativeIdleStrollStopAttestation({...proof,projection:values});
   };
   const nativeIdleStrollExecution=actorId=>{
     const actor=typeof actorId==='number'?actorId:numericId(actorId);if(wasm.nav_idle_stroll_execution?.(actor)!==1)return null;const a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_idle_stroll_execution_ptr(),42)),binding=nativeIdleStrollBinding(actor),r=binding?.reference;
