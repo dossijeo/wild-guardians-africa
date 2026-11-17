@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuacion e-R3: [Farm24 en actor y roster](e-r3-native-farm-arrival-stop-graphics-20261117.md). Misma raiz/geometrias/indices, una adquisicion del modelo y tabla de movimiento compartida; shaders reales conservan texturas/datos/version. Recibo final24 y pose retenida exacta, Game sigue arriving sin Idle ficticio. Referencia: codigo Mesh.copy/SkeletonUtils.clone de Three r180. Pasan2391 pruebas/230 archivos (una omision opcional),82 dirigidas y build;64 inputs nativos exactos sin recompilar. Renderer/admision/picking presentado simulados; faltan Surface/capacidad Worker24, hardware y relevos Task/Home. Continuidad y recuperacion3123 pendientes. A6/A/B/C abiertos,D no iniciado.
+
+
 Continuacion e-R3: [cliente y Host Farm24](e-r3-native-farm-arrival-stop-remote-20261117.md). Paquete retenido exige plantilla24, reloj relativo y todos los valores finales; ACK tras promesa de drain y liberacion instala prueba nativa exacta. Commit local usa copia de metadata, no objetos del caller. Referencia: codigo Queue/LifetimeTracker de wgpu26.0.1. Pasan2374 pruebas/229 archivos (una omision opcional),110 dirigidas y build;64 inputs nativos exactos sin recompilar. Dispositivo/triangulo simulados; faltan Surface/roster/capacidad Worker24 y relevos Task/Home. Continuidad y recuperacion3123 pendientes. A6/A/B/C abiertos,D no iniciado.
 
 

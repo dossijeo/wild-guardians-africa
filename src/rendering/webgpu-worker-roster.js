@@ -1,4 +1,6 @@
 import {copyNativeIdleStrollStopReference,copyNativeIdleStrollStopAttestation,sameNativeIdleStrollStopReference} from '../world/native-idle-stroll-stop.js';
+import {copyNativeFarmArrivalStopReference,copyNativeFarmArrivalStopAttestation,sameNativeFarmArrivalStopReference} from '../world/native-farm-arrival-stop.js';
+import {copyNativeFarmArrivalHeldExecution} from '../world/native-farm-arrival-route.js';
 import {nativeIdleStrollSavedState} from '../world/native-idle-stroll-state.js';
 import {nativeIdleCycleBodyState} from '../world/native-idle-cycle-body-source.js';
 import {copyNativeIdleCycleReference,copyNativeIdleCycleAttestation,nativeIdleCycleAttestationCovers,sameNativeIdleCycleReference} from '../world/native-idle-cycle.js';
@@ -386,24 +388,34 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
  }
  // The terrain transaction owns staging and capture. No root/rig/geometry is
  // rebuilt; the old binding stays live until all owners commit synchronously.
- async function prepareNativeTerrainStops(view,{stopEffects,boundary,prepareBodySupport,getPickTime,nativeIdleStrollStopTemplate=null,getStoppedProjection=null}={}){
-  const template=nativeIdleStrollStopTemplate===null?null:copyNativeIdleStrollStopReference(nativeIdleStrollStopTemplate);if(template?.gates.length)throw Error('Native moving stop gate projection requires its prepared motor uniforms');
+ async function prepareNativeTerrainStops(view,{stopEffects,boundary,prepareBodySupport,getPickTime,nativeIdleStrollStopTemplate=null,nativeFarmArrivalStopTemplate=null,getStoppedProjection=null}={}){
+  if(nativeIdleStrollStopTemplate!==null&&nativeFarmArrivalStopTemplate!==null)throw Error('Native stop mixes source families');
+  const farm=nativeFarmArrivalStopTemplate!==null,template=farm?copyNativeFarmArrivalStopReference(nativeFarmArrivalStopTemplate):nativeIdleStrollStopTemplate===null?null:copyNativeIdleStrollStopReference(nativeIdleStrollStopTemplate);if(template?.gates.length)throw Error('Native moving stop gate projection requires its prepared motor uniforms');
   if(template&&typeof getStoppedProjection!=='function')throw Error('Native moving stop requires its submitted projection reader');
   const effects=copyNativeWorldStopEffects(stopEffects,boundary),references=effects?nativeSuspendedBodiesFromProposal(effects,boundary):[],parts=[],gates=new Map(),exclude=new Set();
   if(!effects||effects.routeEffects.rows.length!==references.length*26||typeof prepareBodySupport!=='function'||typeof getPickTime!=='function')throw Error('Native stopped terrain requires pinned projected workers');
   for(const reference of references){const id=`worker-${reference.nativeRoute.actorId}`,entry=entries.get(id);if(!entry?.nativeState||entry.nativeState.suspended||!sameNativeReference(entry.nativeState.nativeRoute,reference.nativeRoute))throw Error('Native stop has no matching admitted worker');exclude.add(id);}
+  if(farm){const source=entries.get(`worker-${template.sourceRoute.actorId}`)?.nativeState;if(!source?.nativeFarmArrivalBinding||!sameNativeReference(source.nativeRoute,template.sourceRoute))throw Error('Native Farm stop lacks its original admitted source');}
   try{
    for(let i=0;i<references.length;i++){
     const reference=references[i],id=`worker-${reference.nativeRoute.actorId}`,entry=entries.get(id),previous=entry.nativeState,entity=entry.entity,stamp=JSON.stringify(entity),row=effects.routeEffects.rows.subarray(i*26,(i+1)*26),pose=row.slice(8),foot=prepareBodySupport(reference,pose),carrying=!!previous.crateId;
     if(!foot?.valid()||foot.unchangedBy(view)!==true||!previous.motion.valid()||!previous.variant.current())throw Error('Native stop changes its pinned body support');
     const clipBakes=carrying?[]:await Promise.all([bakedWalkBank.get(entry.profile),...(previous.preparedRun?[bakedRunBank.get(entry.profile)]:[]),bakedIdleBank?.get(entry.profile)??Promise.reject(Error('Native stopped worker Idle bake unavailable'))]);
     let candidate=null,active=true,activated=false,attached=false,capturing=false,finalized=false;
-    // Only these fields are advanced by projectNativeIdleStroll. Intention,
+    // Only native execution fields may advance while the same source prepares. Intention,
     // private RNG, destination, contract and all other policy fields stay pinned.
     let finalFoot=null,finalAt=null;
-    const executionFields=new Set(['x','z','heading','runPhase','walkPhase','carryPhase','runRemaining']),strollSource=previous.nativeIdleStrollBinding?.reference;
+    const executionFields=new Set(['x','z','heading','runPhase','walkPhase','carryPhase','runRemaining']),strollSource=previous.nativeIdleStrollBinding?.reference,farmSource=previous.nativeFarmArrivalBinding?.reference;
     let idlePolicy=null;
     const policy=value=>{
+     if(farmSource){
+      // A held Farm stays arriving. Only the exact final native pose can
+      // normalize its held marker; Task/Home policy changes revoke this part.
+      const p=candidate?.nativeHeldFarmArrival?.pose,held=value.nativeRouteAdmission==='native-farm-arrival-held';
+      if(held&&(!p||value.running!==false||value.gateWaiting!==false||value.heading!==p.yaw||!['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(k=>value[k]===p[k])))return null;
+      if(typeof value.running!=='boolean'||typeof value.gateWaiting!=='boolean'||!held&&value.nativeRouteAdmission!=='native-farm-arrival')return null;
+      return JSON.stringify({...Object.fromEntries(Object.entries(value).filter(([key])=>!executionFields.has(key))),nativeRouteAdmission:'native-farm-arrival',running:false,gateWaiting:false});
+     }
      // Confirmed Home intent may replace WALK while the physical source stays
      // suspended. Normalize only its exact semantic cancellation fields; all
      // other policy and the acquired final pose remain pinned.
@@ -428,7 +440,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
     if(policyStamp!==null)idlePolicy=JSON.parse(policyStamp);
     const bodyOwnerCurrent=()=>!closed&&entries.get(id)===entry&&(template?policyStamp!==null&&policy(entry.entity)===policyStamp:JSON.stringify(entry.entity)===stamp)&&(finalFoot??foot).valid()&&(finalFoot??foot).unchangedBy(view)===true&&(!template||previous.support.valid()&&previous.support.unchangedBy(view)===true),ownerCurrent=()=>bodyOwnerCurrent()&&!entry.nativePending;
     if(!ownerCurrent()||entry.nativeState!==previous||!previous.motion.valid()||!previous.variant.current())throw Error('Native stopped worker changed during preparation');
-    const selector=template?{kind:'native-idle-stroll-stopped-body',version:1,stop:template,actorId:reference.nativeRoute.actorId}:null;
+    const selector=template?{kind:farm?'native-farm-arrival-stopped-body':'native-idle-stroll-stopped-body',version:1,stop:template,actorId:reference.nativeRoute.actorId}:null;
     const motion=(template?previous.motion.prepareStopped:previous.motion.prepareSuspended)({reference:selector??reference,nativePose:pose,height:foot.point.height,isCurrent:()=>bodyOwnerCurrent()&&(entry.nativeState===previous||entry.nativeState===candidate||candidate?.nativeHeldIdleStroll&&entry.nativeState===entry.nativePending?.candidate&&(nativeHomeRequestContinuesHeldIdleStroll(entry.nativePending?.nativeHome?.sourceRequest,candidate.nativeHeldIdleStroll)||taskStartContinuesHeldStroll(entry.nativePending?.candidate?.packet,candidate.nativeHeldIdleStroll))),...(template?{getProjection:()=>getStoppedProjection(selector,previous.motion.clockEpoch)}:{})});let variant,binding;
     try{const pickTime=()=>template?getStoppedProjection(selector,motion.clockEpoch).at:getPickTime(reference,motion.clockEpoch),phases={runningNode:motion.runningNode,idleNode:motion.idleNode,resolve:(fallback,clip,duration)=>motion.resolve(fallback,clip,duration),sampleClip:()=>carrying?'Carry_Crate':'Idle',sampleForClip:(clip,duration)=>motion.sampleForClip(pickTime(),clip,duration)};
      variant=entry.actor.prepareNativeMotionVariant(phases,{clipBakes,clip:carrying?'Carry_Crate':entry.actor.isBakedIdle?.()?'Idle':null});binding=previous.binding.prepareReplacement({motion,getPickTime:pickTime,materialAlternatives:variant.materialAlternatives,replicaSources:variant.replicaSources,meshes:variant.materialAlternatives.map(item=>item.mesh)});
@@ -444,11 +456,13 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
      finalize(){check();if(!attached||finalized)throw Error('Native stop not attached');finalized=true;return {retire(){check();active=false;retireNative(previous);},notify(){onSelectableChange();}};},
      rollbackFinalized(){finalized=false;},cancel(){if(!active)return false;if(finalized)throw Error('Native stopped worker already finalized');rollback();active=false;retireNative(candidate);return true;}};
     if(template)part.acceptNativeStopBinding=input=>{
-     check();const proof=copyNativeIdleStrollStopAttestation(input),r=proof.reference,owner=r.routes.find(v=>v.nativeRoute.actorId===reference.nativeRoute.actorId),index=r.routes.indexOf(owner);
-     if(!proof.projection||!sameNativeIdleStrollStopReference(proof.preparedReference,template)||!owner||owner.state!==4)throw Error('Native stopped worker lacks its final source');
+     check();const proof=(farm?copyNativeFarmArrivalStopAttestation:copyNativeIdleStrollStopAttestation)(input),r=proof.reference,owner=r.routes.find(v=>v.nativeRoute.actorId===reference.nativeRoute.actorId),index=r.routes.indexOf(owner);
+     if(!proof.projection||!(farm?sameNativeFarmArrivalStopReference:sameNativeIdleStrollStopReference)(proof.preparedReference,template)||!owner||owner.state!==4)throw Error('Native stopped worker lacks its final source');
      const actual={...reference,worldBoundary:r.worldBoundary,suspendedAt:r.worldBoundary.effectiveTime},actualPose=Float64Array.from(proof.projection.routeEffects.rows.slice(index*26+8,(index+1)*26)),support=prepareBodySupport(actual,actualPose);
+     const farmHeld=farmSource?copyNativeFarmArrivalHeldExecution({kind:'native-farm-arrival-held-execution',version:1,actorId:farmSource.actorId,bodyId:farmSource.bodyId,sourceReference:farmSource,assignmentSequence:previous.nativeFarmArrivalBinding.assignmentSequence,resumeHandle:{...actual.nativeRoute.routeHandle,generation:actual.resumeGeneration},suspendedAt:actual.suspendedAt,executedThrough:actual.suspendedAt,pose:{x:actualPose[0],z:actualPose[1],yaw:actualPose[4],radius:farmSource.sourceRequest.pose.radius,runPhase:actualPose[9],walkPhase:actualPose[10],carryPhase:actualPose[11],runRemaining:actualPose[14]}}):null;
      if(!support?.valid()||support.unchangedBy(view)!==true)throw Error('Native stopped worker changed final support');finalAt=actual.suspendedAt;finalFoot=support;candidate.support=support;candidate.suspended=actual;candidate.start=actual.suspendedAt;
      if(strollSource){const age=actual.suspendedAt-strollSource.worldBoundary.effectiveTime;candidate.nativeHeldIdleStroll=copyNativeIdleStrollHeldExecution({kind:'native-idle-stroll-held-execution',version:1,actorId:strollSource.actorId,bodyId:strollSource.bodyId,sourceReference:strollSource,assignmentSequence:previous.nativeIdleStrollBinding.assignmentSequence,resumeHandle:{...actual.nativeRoute.routeHandle,generation:actual.resumeGeneration},suspendedAt:actual.suspendedAt,executedThrough:actual.suspendedAt,pose:{x:actualPose[0],z:actualPose[1],yaw:actualPose[4],radius:strollSource.pose.radius,runPhase:actualPose[9],walkPhase:actualPose[10],carryPhase:actualPose[11],runRemaining:actualPose[14]},walkState:{mode:'walk',rng:strollSource.walkRng,age,approachRetry:Math.max(0,strollSource.approachRetry-age)}});}
+     if(farmHeld)candidate.nativeHeldFarmArrival=farmHeld;
      return true;
     };
     parts.push(part);
