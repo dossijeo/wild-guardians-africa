@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuacion de Idle: [template y recibo de parada movil en el canal directo](e-r3-native-idle-stroll-stop-publication-20261117.md). El mismo hold exige identidad preparada, version propia y atestacion final; rechaza sustituciones, omisiones y mezcla con cuerpos antiguos. El Host rechaza explicitamente esta familia hasta conectar la pose final. Pasan 556 pruebas/41 archivos y build, sin repetir la GPU del commit anterior. Faltan transactor/terreno y muestreo GPU final con autoridad continua antes de Home; tarea/restauracion/cohort/producer y recuperacion integral de 3123 siguen pendientes. A6/A/B/C permanecen abiertos.
+
+
 Continuacion de Idle: [control directo de la parada movil preparada](e-r3-native-idle-stroll-stop-control-20261117.md). El permiso de metadatos conserva propietarios mientras avanza la autoridad; adquiere solo las revocaciones finales con su watermark y mantiene estricta la suspension anterior. NeedsPlan conserva el registro existente sin reloj de cuerpo. Pasan 399 pruebas/39 archivos, GPU previa con 679 IDs conservados y build. Faltan template/puertos y pose/fases/picking GPU finales con autoridad continua, antes de Home; tarea/restauracion/cohort/producer y recuperacion integral de 3123 siguen pendientes. A6/A/B/C permanecen abiertos.
 
 
