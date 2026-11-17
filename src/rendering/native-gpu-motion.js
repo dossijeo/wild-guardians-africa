@@ -1,4 +1,5 @@
-import {copyNativeIdleStrollStoppedBody,NATIVE_STOP_POSE_FIELDS} from '../world/native-idle-stroll-stop.js';
+import {NATIVE_STOP_POSE_FIELDS} from '../world/native-worker-route-stop-codec.js';
+import {copyNativeStoppedBodySelector} from './native-stopped-clock.js';
 import {nativeIdleStrollSuccessor} from '../world/native-idle-stroll.js';
 import {nativeFarmArrivalRouteSuccessor} from '../world/native-farm-arrival-route.js';
 import {nativeHomeRouteSuccessor} from '../world/native-home-route.js';
@@ -80,8 +81,8 @@ function createMotion({actorId,support,anchorYaw=0,heightOffset=0,anchorPosition
  }
  function validateSuspendedInputs({reference,nativePose,height,isCurrent}={}){
   if(disposed||suspension)throw Error('Native moving resource unavailable for suspension');
-  reference=copyNativeSuspendedBodyReference(reference);const route=reference.nativeRoute,proposal=table.nativeResume??table.nativeStart??table.nativeConsequence??table.nativeHome??table.nativeStroll,old=table.nativeRoute??{actorId:proposal.actorId,assignmentSequence:route.assignmentSequence,routeHandle:proposal.expectedRouteHandle};
-  if(proposal&&route.assignmentSequence<=proposal.sourceControlSequence||route.actorId!==old.actorId||route.assignmentSequence!==old.assignmentSequence||['authorityEpoch','session','slot','generation'].some(key=>route.routeHandle[key]!==old.routeHandle[key])||!(nativePose instanceof Float64Array)||nativePose.length!==18||!nativePose.every(Number.isFinite)||[0,1,3,4,6,9,10,11].some(index=>!Number.isFinite(Math.fround(nativePose[index])))||![0,1].includes(nativePose[6])||nativePose[7]!==reference.suspendedAt||nativePose[15]!==0||nativePose[16]!==0||nativePose[17]!==2||reference.suspendedAt<executionEpoch||reference.suspendedAt>executionEpoch+(table.end.at-table.epoch)||!Number.isFinite(height)||!Number.isFinite(Math.fround(height))||typeof isCurrent!=='function'||isCurrent()!==true)throw TypeError('Invalid native suspended motion support');
+  reference=copyNativeSuspendedBodyReference(reference);const route=reference.nativeRoute,proposal=table.nativeResume??table.nativeStart??table.nativeConsequence??table.nativeHome??table.nativeStroll??table.nativeFarmArrival,old=table.nativeRoute??{actorId:proposal.actorId,assignmentSequence:route.assignmentSequence,routeHandle:proposal.expectedRouteHandle};
+  if(table.nativeFarmArrival&&(reference.bodyId!==table.nativeFarmArrival.bodyId||reference.suspendedAt>=executionEpoch+(table.end.at-table.epoch))||proposal&&route.assignmentSequence<=proposal.sourceControlSequence||route.actorId!==old.actorId||route.assignmentSequence!==old.assignmentSequence||['authorityEpoch','session','slot','generation'].some(key=>route.routeHandle[key]!==old.routeHandle[key])||!(nativePose instanceof Float64Array)||nativePose.length!==18||!nativePose.every(Number.isFinite)||[0,1,3,4,6,9,10,11].some(index=>!Number.isFinite(Math.fround(nativePose[index])))||![0,1].includes(nativePose[6])||nativePose[7]!==reference.suspendedAt||nativePose[15]!==0||nativePose[16]!==0||nativePose[17]!==2||reference.suspendedAt<executionEpoch||reference.suspendedAt>executionEpoch+(table.end.at-table.epoch)||!Number.isFinite(height)||!Number.isFinite(Math.fround(height))||typeof isCurrent!=='function'||isCurrent()!==true)throw TypeError('Invalid native suspended motion support');
   return reference;
  }
  function prepareSuspended({reference,nativePose,height,isCurrent}={}){
@@ -90,8 +91,7 @@ function createMotion({actorId,support,anchorYaw=0,heightOffset=0,anchorPosition
   return createMotion({actorId,support,anchorYaw,heightOffset,anchorPosition:bindingAnchor,resourceRegistry},data,{reference,pose:Float64Array.from(nativePose),height,isCurrent});
  }
  function prepareStopped({reference,nativePose,height,isCurrent,getProjection}={}){
-  if(table.nativeFarmArrival)throw Error('Native farm arrival stop requires prepared lifecycle');
-  const stop=copyNativeIdleStrollStoppedBody(reference),owner=stop.stop.routes.find(r=>r.nativeRoute.actorId===stop.actorId),b=stop.stop.worldBoundary;
+  const stop=copyNativeStoppedBodySelector(reference),owner=stop.stop.routes.find(r=>r.nativeRoute.actorId===stop.actorId),b=stop.stop.worldBoundary;
   const body={kind:'native-suspended-body',version:1,nativeRoute:owner.nativeRoute,worldBoundary:b,bodyId:owner.bodyId,resumeGeneration:owner.resumeGeneration,suspendedAt:b.effectiveTime};
   if(typeof getProjection!=='function')throw TypeError('Stopped motion requires its submitted projection');
   validateSuspendedInputs({reference:body,nativePose,height,isCurrent});

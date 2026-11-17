@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuacion e-R3: [reloj y picking Farm detenido](e-r3-native-farm-arrival-stop-clock-20261117.md). Selector12/24 en reloj y kernel TSL existentes; misma textura/datos/version, pose final real despues del giro y picking desde frame presentado. Rechaza tiempos anteriores a parada; cliente no reutiliza capacidad Idle para Farm. Referencia: codigo NodeUtils de Three r180. Pasan2347 pruebas/228 archivos (una omision opcional),64 dirigidas y build;64 inputs nativos exactos sin recompilar. TSL real, frame/backend/GPU simulados; falta Host/Surface/roster24 y relevos Task/Home. Continuidad y recuperacion3123 pendientes. A6/A/B/C abiertos,D no iniciado.
+
+
 Continuacion e-R3: [Farm24 en canales de preparacion](e-r3-native-farm-arrival-stop-ports-20261117.md). Terreno conserva plantilla24, efectos propios, reserva de bytes y asociacion final hasta adopcion confirmada; cliente/receptor nativo compartidos y conexion directa mantienen el recibo tipado sin comandos nuevos. Referencia: codigo LifetimeTracker/Id<T> de wgpu26.0.1. Pasan2329 pruebas/227 archivos (una omision opcional),96 dirigidas y build;64 inputs nativos exactos sin recompilar. Canales reales, GPU/drain/frame simulados; falta consumidor24 y relevos Task/Home. Continuidad y recuperacion3123 pendientes. A6/A/B/C abiertos,D no iniciado.
 
 
