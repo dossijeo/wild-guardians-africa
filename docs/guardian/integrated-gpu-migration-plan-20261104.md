@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuacion e-R3: [Farm retenido a solicitud Task/TaskStart nativos](e-r3-native-farm-moving-task-source-20261117.md). Captura compartida conserva cuerpo/fases/presupuesto, solo publica solicitud6 y adquiere movimiento con14. Game reconoce Farm retenido exacto y reclama Task incluso por maduracion dentro del tick, sin Idle ni mover JS; otro Task avanza. Referencias: codigo DetourCrowd1.6.0/Godot4.4-stable. Pasan2412 pruebas/231 archivos (una omision opcional),189 dirigidas y build; ambos WASM recompilados,64 inputs nativos exactos/4 cambios. Fuente/ABI de confianza: faltan control/admision/puertos/actor/Surface del relevo, Home/finales/cohort/productor. Sin hardware nuevo; intervalos y recuperacion3123 abiertos. A6/A/B/C abiertos,D no iniciado.
+
+
 Continuacion e-R3: [Farm24 en Surface/Workers originales](e-r3-native-farm-arrival-stop-surface-20261117.md). Plantilla/recibo24, snapshot retenido antes del recibo y reconciliacion vacia real; Worker anuncia parada/reloj version1. Referencia: codigo Queue/LifetimeTracker de wgpu26.0.1. GPU NVIDIA conserva641 IDs, prepara68 recursos y crea0 tras READY;54 frames durante bloqueo1800ms,61 tras commit, adopcion/picking/drain reales. Idle12 conserva679 IDs/0 tardios. Persisten intervalos64.27ms tras parada y86.81ms previos de Farm23 en ventanas capturadas: no acredita ausencia de tirones ni recuperacion3123. Pasan2396 pruebas/230 archivos (una omision opcional),105 dirigidas y build;64 inputs nativos exactos. Faltan relevos/finales/cohort/productor. A6/A/B/C abiertos,D no iniciado.
 
 

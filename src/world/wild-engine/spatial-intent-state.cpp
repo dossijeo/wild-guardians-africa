@@ -637,7 +637,7 @@ static bool nativeHeldIdleStrollBodyCurrent(const IntentState& s,const ActiveInt
  return true;
 }
 // A task claim retains executed/restored pose values. Its ONE route
-// slot owns the new unpublished request; the former22 corridor is discarded.
+// slot owns the new unpublished request; the former corridor is discarded.
 static bool nativeHeldIdleTaskBodyCurrent(const IntentState& s,const ActiveIntent& intent){
  if(!intent.heldIdleTaskSource||!intent.requiresResources||!intent.lease||intent.state!=PlanningState::AwaitingResources||!intent.task||!intent.target||intent.animal||intent.home||intent.retreat||intent.delivery||intent.actionBinding||intent.restoredActionSource||intent.settlementBinding||intent.initialIdleRequest||intent.initialIdleBodyBinding||intent.idleCycle||intent.homeRequest||intent.slot>=s.routeSlots.size())return false;
  const auto& r=*intent.heldIdleTaskSource;const auto& route=s.routeSlots[intent.slot];const auto worker=s.workers.find(intent.actor);const auto task=s.tasks.find(intent.task);const auto target=s.targets.find(intent.target);SpatialBodyView body;
@@ -646,9 +646,9 @@ static bool nativeHeldIdleTaskBodyCurrent(const IntentState& s,const ActiveInten
  if(!r.body)return !worker->second.bodyBound&&!worker->second.body;
  return worker->second.bodyBound&&worker->second.body==r.body&&spatialReadBody(r.body,body)&&body.kind==0&&body.flags==r.bodyFlags&&body.r==r.radius&&body.x==r.x&&body.z==r.z&&!s.reservedBodies.count(r.body)&&!s.suspendedBodies.count(r.body);
 }
-static std::shared_ptr<const NativeWorkerPoseResourceRequest> captureHeldIdleTaskSource(const IntentState& s,const ActiveIntent& intent){
+static std::shared_ptr<const NativeWorkerPoseResourceRequest> captureHeldWorkerTaskSource(const IntentState& s,const ActiveIntent& intent){
  const auto& route=s.routeSlots[intent.slot];const auto& p=route.executionPose;auto r=std::make_shared<NativeWorkerPoseResourceRequest>();
- r->actor=intent.actor;r->session=s.session;r->sequence=intent.assignmentSequence;r->body=route.reservationBody;r->at=route.suspendedAt;r->profile=intent.profile;r->bodyFlags=int(route.idleStrollBinding->semantic[4]);r->radius=route.radius;
+ r->actor=intent.actor;r->session=s.session;r->sequence=intent.assignmentSequence;r->body=route.reservationBody;r->at=route.suspendedAt;r->profile=intent.profile;r->bodyFlags=route.farmArrivalBinding?route.farmArrivalBinding->requestSource->bodyFlags:int(route.idleStrollBinding->semantic[4]);r->radius=route.radius;
  r->x=p[0];r->z=p[1];r->yaw=p[4];r->runPhase=p[9];r->walkPhase=p[10];r->carryPhase=p[11];r->runRemaining=p[14];return r;
 }
 bool nativeHomeRequestBodyCurrent(const IntentState& s,const ActiveIntent& intent){
@@ -2289,7 +2289,8 @@ static int commitTaskProposal(bool pendingResources){
     if(old!=s.activeIntents.end()&&old->second.slot<s.routeSlots.size()&&s.routeSlots[old->second.slot].idleStrollBinding&&(!pendingResources||old->second.profile!=lazy_selected_context()||!nativeHeldIdleStrollBodyCurrent(s,old->second,old->second.assignmentSequence,old->second.generation))){clearProposal(s);return 0;}
     // Moving/arrived farm routes need their own prepared successor, never an
     // immediate Task replacement that releases an executing physical owner.
-    if(old!=s.activeIntents.end()&&old->second.state==PlanningState::RouteActive&&old->second.slot<s.routeSlots.size()&&s.routeSlots[old->second.slot].farmArrivalBinding){clearProposal(s);return 0;}
+    // Only the exact Farm24 held owner can seed an unpublished Task request.
+    if(old!=s.activeIntents.end()&&old->second.slot<s.routeSlots.size()&&s.routeSlots[old->second.slot].farmArrivalBinding&&(!pendingResources||old->second.profile!=lazy_selected_context()||!nativeHeldFarmArrivalBodyCurrent(s,old->second))){clearProposal(s);return 0;}
     // A moved stationary body retains its actual cycle through the pending
     // task request. Only prepared TaskStart may acquire its next trajectory.
     if(old!=s.activeIntents.end()&&old->second.idleCycle&&!old->second.initialIdleBodyBinding&&(!pendingResources||!nativeIdleCycleCurrent(s,old->second))){clearProposal(s);return 0;}
@@ -2306,7 +2307,7 @@ static int commitTaskProposal(bool pendingResources){
     const auto existing=s.activeIntents.find(workerId);
     // The same pose-only transfer also retains a pending farm arrival. No
     // Idle/route history is fabricated; only prepared TaskStart may move it.
-    const auto heldIdle=existing!=s.activeIntents.end()&&existing->second.farmArrivalRequest?std::static_pointer_cast<const NativeWorkerPoseResourceRequest>(existing->second.farmArrivalRequest):existing!=s.activeIntents.end()&&existing->second.strollRequest?std::static_pointer_cast<const NativeWorkerPoseResourceRequest>(existing->second.strollRequest):existing!=s.activeIntents.end()&&existing->second.slot<s.routeSlots.size()&&s.routeSlots[existing->second.slot].idleStrollBinding?captureHeldIdleTaskSource(s,existing->second):nullptr;
+    const auto heldIdle=existing!=s.activeIntents.end()&&existing->second.farmArrivalRequest?std::static_pointer_cast<const NativeWorkerPoseResourceRequest>(existing->second.farmArrivalRequest):existing!=s.activeIntents.end()&&existing->second.strollRequest?std::static_pointer_cast<const NativeWorkerPoseResourceRequest>(existing->second.strollRequest):existing!=s.activeIntents.end()&&existing->second.slot<s.routeSlots.size()&&(s.routeSlots[existing->second.slot].idleStrollBinding||s.routeSlots[existing->second.slot].farmArrivalBinding)?captureHeldWorkerTaskSource(s,existing->second):nullptr;
     const auto stationary=existing!=s.activeIntents.end()?existing->second.settlementBinding:nullptr;
     const auto initialIdleBody=existing!=s.activeIntents.end()?existing->second.initialIdleBodyBinding:nullptr;
     const auto cycle=existing!=s.activeIntents.end()&&!initialIdleBody?existing->second.idleCycle:nullptr;
